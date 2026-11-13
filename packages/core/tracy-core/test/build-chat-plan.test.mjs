@@ -206,3 +206,85 @@ test('a renamed service is one change, and every block that shows the services r
       'Cardio tennis'
     ])
 })
+
+// Child list rows (#606, #615): a block with `lists` shows each list with its rows in plain words.
+const withLists = (lists, extra = {}) => {
+  const p = structuredClone(plan())
+  p.rows = [
+    { id: 'row-a', label: 'Tuesday, 18:00', sources: [{ kind: 'website', name: 'Website' }] },
+    { id: 'row-b', label: 'Beginners', sources: [{ kind: 'website', name: 'Website' }] }
+  ]
+  const block = p.pages.find((pg) => pg.id === 'services').blocks[0]
+  block.lists = lists
+  Object.assign(p, extra)
+  return { plan: p, block: () => planCardOf(p).pages.find((pg) => pg.id === 'services').blocks[0] }
+}
+
+test('a block without lists has no lists on the card, and the sample shows its one list with rows', () => {
+  const p = plan()
+  const card = planCardOf(p)
+  for (const [i, page] of card.pages.entries())
+    for (const [j, block] of page.blocks.entries())
+      if (!p.pages[i].blocks[j].lists) assert.equal('lists' in block, false)
+  // The sample's Services block holds one list with rows and one planned empty: only the first is shown.
+  const services = card.pages.find((pg) => pg.id === 'services').blocks[0]
+  assert.deepEqual(services.lists, [
+    {
+      head: 'Adult coaching, sessions',
+      rows: [{ label: 'Tuesday and Thursday, 18:00 to 19:00' }, { label: 'Saturday, 9:00 to 10:00' }]
+    }
+  ])
+})
+
+test('a list shows its rows by label, in plan order, headed by its item and name', () => {
+  const { plan: p, block } = withLists([
+    { name: 'sessions', item: 's1', rows: [{ data: 'row-b' }, { data: 'row-a' }] }
+  ])
+  assert.deepEqual(block().lists, [
+    { head: 'Adult coaching, sessions', rows: [{ label: 'Beginners' }, { label: 'Tuesday, 18:00' }] }
+  ])
+  // The card renders the plan's order as given: reversing the block's data changes nothing about the lists.
+  p.pages.find((pg) => pg.id === 'services').blocks[0].data.reverse()
+  assert.deepEqual(planCardOf(p).pages.find((pg) => pg.id === 'services').blocks[0].lists[0].rows.length, 2)
+})
+
+test('a row that points at a fact shows its value, and one that points at a page shows its name', () => {
+  const { block } = withLists([
+    { name: 'links', rows: [{ data: 'phone' }, { page: 'about' }, { data: 'unknown-id' }] }
+  ])
+  assert.deepEqual(block().lists, [{ head: 'Links', rows: [{ label: '04 000 0000' }, { label: 'About' }] }])
+})
+
+test('nested lists keep their level, and a list planned empty shows nothing', () => {
+  const { block } = withLists([
+    {
+      name: 'steps',
+      rows: [
+        {
+          data: 'row-a',
+          lists: [
+            { name: 'notes', rows: [{ data: 'row-b' }] },
+            { name: 'none', rows: [] }
+          ]
+        }
+      ]
+    },
+    { name: 'sessions', item: 's2', rows: [] }
+  ])
+  assert.deepEqual(block().lists, [
+    {
+      head: 'Steps',
+      rows: [{ label: 'Tuesday, 18:00', lists: [{ head: 'Notes', rows: [{ label: 'Beginners' }] }] }]
+    }
+  ])
+})
+
+test('the rows report of dropped rows reaches the card as left out reasons, never as codes', () => {
+  const reason = 'This row is longer than the section can show, so it is not shown.'
+  const { plan: p } = withLists([], {
+    leftOut: [{ what: 'Tuesday, 18:00', kind: 'item', reason }]
+  })
+  const card = planCardOf(p)
+  assert.deepEqual(card.leftOut, [{ what: 'Tuesday, 18:00', kind: 'item', reason }])
+  assert.equal(JSON.stringify(card).includes('row_value_over_limit'), false)
+})

@@ -64,6 +64,44 @@ function holdsOf(block, plan, serviceIds) {
   return { facts, counts }
 }
 
+const MAX_LIST_DEPTH = 3
+const capitalised = (text) => text.charAt(0).toUpperCase() + text.slice(1)
+
+/**
+ * The child lists of one block as the card shows them: each list headed by its item's label and its name, each row by
+ * the label of the row it names, the value of the fact it names or the name of the page it names. A row that names
+ * nothing the plan holds is left out (never invented), and a list with no rows is not shown. Rows keep the plan's
+ * order; nested lists follow their row, at most three levels deep.
+ */
+function listsOf(lists, plan, depth = 1) {
+  if (!Array.isArray(lists) || depth > MAX_LIST_DEPTH) return []
+  const out = []
+  for (const list of lists) {
+    const rows = []
+    for (const row of list.rows ?? []) {
+      const label = rowLabelOf(row, plan)
+      if (label === null) continue
+      const nested = listsOf(row.lists, plan, depth + 1)
+      rows.push(nested.length > 0 ? { label, lists: nested } : { label })
+    }
+    if (rows.length === 0) continue
+    const item = list.item ? plan.items.find((i) => i.id === list.item) : null
+    out.push({ head: item ? `${item.label}, ${list.name}` : capitalised(list.name), rows })
+  }
+  return out
+}
+
+/** What a planned row reads as: a row's label, a fact's value, an item's label or a page's name; null if unknown. */
+function rowLabelOf(row, plan) {
+  if (row.page !== undefined) return plan.pages.find((p) => p.id === row.page)?.name ?? null
+  const id = row.data
+  const found =
+    (plan.rows ?? []).find((r) => r.id === id)?.label ??
+    plan.facts.find((f) => f.id === id)?.value ??
+    plan.items.find((i) => i.id === id)?.label
+  return found ?? null
+}
+
 /**
  * The plan card's content.
  * @param {any} plan - a Contract B plan
@@ -111,12 +149,16 @@ export function planCardOf(plan) {
     pages: plan.pages.map((p) => ({
       id: p.id,
       name: p.name,
-      blocks: p.blocks.map((b) => ({
-        id: b.id,
-        label: b.label,
-        reason: b.reason,
-        holds: holdsOf(b, plan, serviceIds)
-      }))
+      blocks: p.blocks.map((b) => {
+        const lists = listsOf(b.lists, plan)
+        return {
+          id: b.id,
+          label: b.label,
+          reason: b.reason,
+          holds: holdsOf(b, plan, serviceIds),
+          ...(lists.length > 0 ? { lists } : {})
+        }
+      })
     })),
     pictures: {
       own: { frames: plan.pictures.own.frames, from: [...(plan.pictures.own.from ?? [])] },

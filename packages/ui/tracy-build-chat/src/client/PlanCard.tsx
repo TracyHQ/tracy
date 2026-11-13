@@ -20,6 +20,7 @@
 import { IconCloseOutlineRegular } from '@deepseek-ai/dsh-client-ui-primitives'
 import {
   type BlockHolds,
+  type BlockList,
   type PlanCard as Card,
   changedFieldsOf,
   type PlanDraft,
@@ -74,6 +75,29 @@ function holdsText(t: Translate, holds: BlockHolds): string {
   )
   const text = [...facts, ...counts].join(', ')
   return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+/** The child lists of a block, each with its rows in the plan's order; a row's own lists follow it, indented. */
+function BlockLists({ lists }: { lists: BlockList[] }) {
+  return (
+    <div className="tv-bc-lists">
+      {lists.map((l, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: lists come in the plan's order and have no id
+        <section key={i} className="tv-bc-list">
+          <div className="tv-bc-lh">{l.head}</div>
+          <ul className="tv-bc-rows">
+            {l.rows.map((r, j) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: two rows may read the same
+              <li key={j}>
+                {r.label}
+                {r.lists && <BlockLists lists={r.lists} />}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  )
 }
 
 function languageName(tag: string, locale: string): string {
@@ -344,6 +368,7 @@ export function PlanCard({
                   >
                     {holdsText(t, b.holds)}
                   </Value>
+                  {b.lists && <BlockLists lists={b.lists} />}
                 </li>
               ))}
             </ol>

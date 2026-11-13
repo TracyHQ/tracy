@@ -193,14 +193,24 @@ export const CSS = `
 .tv-bc-ph { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-weight: 500; }
 .tv-bc-n { color: var(--muted-foreground); font-weight: 400; font-size: 12.5px; }
 .tv-bc-page ol { margin: 0; padding: 0 12px 8px; list-style: none; counter-reset: tv-bc-b; }
-.tv-bc-page li {
+.tv-bc-page ol > li {
   display: grid; grid-template-columns: 22px 130px minmax(0, 1fr); align-items: start; gap: 0 8px;
   counter-increment: tv-bc-b;
 }
-.tv-bc-page li::before {
+.tv-bc-page ol > li::before {
   content: counter(tv-bc-b); color: var(--muted-foreground); font-size: 12px; padding-top: 6px; text-align: right;
 }
 .tv-bc-bn { font-size: 13px; padding-top: 5px; }
+.tv-bc-lists { grid-column: 3; min-width: 0; padding-bottom: 4px; }
+.tv-bc-list { margin-top: 2px; }
+.tv-bc-lh { font-size: 12.5px; color: var(--muted-foreground); padding-top: 2px; overflow-wrap: break-word; }
+.tv-bc-rows { margin: 0; padding: 0 0 0 14px; list-style: none; font-size: 13px; }
+.tv-bc-rows li { position: relative; padding: 1px 0; line-height: 1.45; overflow-wrap: break-word; min-width: 0; }
+.tv-bc-rows li::before {
+  content: ''; position: absolute; left: -10px; top: .72em; width: 4px; height: 4px; border-radius: 50%;
+  background: var(--muted-foreground);
+}
+.tv-bc-rows .tv-bc-lists { padding-left: 0; }
 .tv-bc-plain { margin: 0; padding-left: 18px; font-size: 13px; }
 .tv-bc-plain li { margin: 2px 0; }
 .tv-bc-dropped { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
@@ -210,8 +220,8 @@ export const CSS = `
 @container (max-width: 560px) {
   .tv-bc-kv { grid-template-columns: 1fr; gap: 0; }
   .tv-bc-kv .tv-bc-k { padding-top: 6px; padding-bottom: 0; }
-  .tv-bc-page li { grid-template-columns: 18px minmax(0, 1fr); }
-  .tv-bc-page li .tv-bc-val { grid-column: 2; }
+  .tv-bc-page ol > li { grid-template-columns: 18px minmax(0, 1fr); }
+  .tv-bc-page ol > li > .tv-bc-val, .tv-bc-page ol > li > .tv-bc-lists { grid-column: 2; }
   /* A source never breaks inside a word: when the row is narrow it drops under the value */
   .tv-bc-val-row { flex-wrap: wrap; row-gap: 0; }
   .tv-bc-opt { flex-wrap: wrap; row-gap: 0; }

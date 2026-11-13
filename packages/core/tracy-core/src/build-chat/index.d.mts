@@ -129,6 +129,11 @@ export interface PlanFact {
 export type BlockHolds =
   | { services: string[] }
   | { facts: string[]; counts: { kind: string; count: number }[] }
+/** One child list of a block as the card shows it; a list planned empty is not on the card. */
+export interface BlockList {
+  head: string
+  rows: { label: string; lists?: BlockList[] }[]
+}
 export interface PlanCard {
   planId: string
   revision: number
@@ -140,7 +145,7 @@ export interface PlanCard {
   pages: {
     id: string
     name: string
-    blocks: { id: string; label: string; reason: string; holds: BlockHolds }[]
+    blocks: { id: string; label: string; reason: string; holds: BlockHolds; lists?: BlockList[] }[]
   }[]
   pictures: { own: { frames: number; from: string[] }; generated: { frames: number; reason?: string } }
   assumptions: { id: string; said: string }[]

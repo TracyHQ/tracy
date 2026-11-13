@@ -335,6 +335,18 @@
         "count": 12
       }
     ],
+    "rows": [
+      {
+        "id": "s1-row-1",
+        "label": "Tuesday and Thursday, 18:00 to 19:00",
+        "sources": [{ "kind": "website", "name": "Website" }]
+      },
+      {
+        "id": "s1-row-2",
+        "label": "Saturday, 9:00 to 10:00",
+        "sources": [{ "kind": "website", "name": "Website" }]
+      }
+    ],
     "pages": [
       {
         "id": "home",
@@ -416,6 +428,10 @@
             "source": "template",
             "label": "One section each",
             "data": ["s1", "s2", "s3", "s4"],
+            "lists": [
+              { "name": "sessions", "item": "s1", "rows": [{ "data": "s1-row-1" }, { "data": "s1-row-2" }] },
+              { "name": "sessions", "item": "s2", "rows": [] }
+            ],
             "reason": "Each service gets its own section."
           }
         ]
