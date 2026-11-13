@@ -2,6 +2,8 @@
 // Pure: the template, the brand step's record and the placed blocks in, the two plan sections and the assumptions they
 // bring out. The brand step itself is unchanged; this only reads its record.
 import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
+import { ownPicturesOf } from './picture-frames.mjs'
+import { assignPictures } from './picture-policy.mjs'
 
 const HEX_COLOUR = /^#[0-9a-fA-F]{6}$/
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -65,46 +67,63 @@ export function lookOf(template, brand) {
   return { look: { template: { slug, name, version }, accent, logo }, assumptions }
 }
 
-/** How many image frames a placed block holds: its image fields, and its item image fields once per item shown. */
-function framesOf(block, description, data) {
-  const images = (fields) => list(fields).filter((f) => f?.type === 'image').length
-  const items = block.data.filter((id) => data.byId.get(id)?.what === 'item').length
-  return images(description.fields) + images(description.itemFields) * items
-}
+/** A label that stands in, for counting only, for an own photo the pictures step labels before it places it. */
+const TO_BE_LABELLED = 'to be labelled'
+const count = (n, one, many) => `${n} ${n === 1 ? one : many}`
 
 /**
- * The pictures summary: frames filled by the business's own labelled photos, and frames to be generated, at most
- * `MAX_GENERATED_FRAMES`. Frames above that cap are reported as left out. The pictures step (#595) assigns each photo
- * to a frame; this is the count the customer approves.
+ * The pictures summary, counted by the picture policy (`picture-policy.mjs`, #595): frames filled by the business's own
+ * photos (an unlabelled own photo counts: the pictures step labels it before use), and frames to be generated, at most
+ * `MAX_GENERATED_FRAMES`, never for a person. Items an image block drops for lack of an own photo leave the pages and
+ * are reported as left out, as are frames that stay without a picture. The pictures step assigns each photo to a frame;
+ * this is the count the customer approves.
  * @param {object[]} pages placed pages of the plan
  * @param {Map<string, object>} blocks block id -> its description (block store or library)
  * @param {ReturnType<import('./plan-data.mjs').planDataOf>} data
+ * @returns {{pictures: object, leftOut: object[], pages: object[]}} `pages` with the dropped items taken out
  */
 export function picturesOf(pages, blocks, data) {
-  let frames = 0
-  for (const page of pages)
-    for (const block of page.blocks) frames += framesOf(block, blocks.get(block.block) ?? {}, data)
-  const photos = data.items.filter((i) => i.kind === 'gallery' && isText(data.byId.get(i.id).source.label))
-  const own = Math.min(frames, photos.length)
-  const missing = frames - own
-  const generated = Math.min(missing, MAX_GENERATED_FRAMES)
-  const from = [...new Set(photos.flatMap((p) => p.sources.map((s) => s.name)))]
-  const pictures = {
-    own: { frames: own, from: own > 0 ? from : [] },
+  const pictures = ownPicturesOf(data).map((p) =>
+    p.stock || isText(p.label) ? p : { ...p, label: TO_BE_LABELLED }
+  )
+  const { frames, reduced, counts } = assignPictures({ pages, blocks, data, pictures })
+  const from = [...new Set(frames.filter((f) => f.source === 'own').flatMap((f) => f.from))]
+  const summary = {
+    own: { frames: counts.own, from: counts.own > 0 ? from : [] },
     generated: {
-      frames: generated,
-      ...(generated > 0 ? { reason: 'Some picture spots have no fitting photo of yours.' } : {})
+      frames: counts.generated,
+      ...(counts.generated > 0 ? { reason: 'Some picture spots have no fitting photo of yours.' } : {})
     }
   }
-  const leftOut =
-    missing > generated
-      ? [
-          {
-            what: `${missing - generated} picture spots`,
-            kind: 'feature',
-            reason: `At most ${MAX_GENERATED_FRAMES} pictures are generated for a site, so these spots stay without a picture.`
-          }
-        ]
-      : []
-  return { pictures, leftOut }
+  const leftOut = reduced.map(({ item }) => ({
+    what: data.byId.get(item)?.entry?.label ?? item,
+    kind: 'item',
+    reason:
+      'It has no photo of yours, and its section is complete without it, so no picture is generated for it.'
+  }))
+  const none = (reason) => frames.filter((f) => f.source === 'none' && f.reason === reason).length
+  const people = none('no_generated_people')
+  if (people > 0)
+    leftOut.push({
+      what: count(people, 'picture spot of a person', 'picture spots of people'),
+      kind: 'feature',
+      reason:
+        'Pictures of people are never generated, so these spots show no picture until you add your own photo.'
+    })
+  const capped = none('generated_cap')
+  if (capped > 0)
+    leftOut.push({
+      what: count(capped, 'picture spot', 'picture spots'),
+      kind: 'feature',
+      reason: `At most ${MAX_GENERATED_FRAMES} pictures are generated for a site, so these spots stay without a picture.`
+    })
+  const dropped = new Set(reduced.map((r) => `${r.page}.${r.block}.${r.item}`))
+  const kept = list(pages).map((page) => ({
+    ...page,
+    blocks: page.blocks.map((block) => ({
+      ...block,
+      data: block.data.filter((id) => !dropped.has(`${page.id}.${block.id}.${id}`))
+    }))
+  }))
+  return { pictures: summary, leftOut, pages: kept }
 }

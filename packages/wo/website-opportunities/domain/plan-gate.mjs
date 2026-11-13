@@ -213,14 +213,14 @@ export function gatePlan(composition, context) {
     language: context.language,
     facts: context.data.facts,
     items: context.data.items,
-    pages: extra.pages,
+    pages: pictures.pages,
     look: context.look,
     pictures: pictures.pictures,
     assumptions: [
       ...context.assumptions,
       ...list(composition.assumptions)
         .map((a, i) => ({ id: `model-${i + 1}`, field: a?.field, said: a?.said }))
-        .filter((a) => onKeptPage(a.field, extra.pages))
+        .filter((a) => onKeptPage(a.field, pictures.pages))
     ],
     leftOut: [...modelLeftOut, ...dropped.leftOut, ...extra.leftOut, ...pictures.leftOut]
   }

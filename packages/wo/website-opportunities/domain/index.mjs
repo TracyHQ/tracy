@@ -145,6 +145,17 @@ export { gatePlan } from './plan-gate.mjs'
 export { placeExtraData } from './plan-placement.mjs'
 export { lookOf, picturesOf } from './plan-look-pictures.mjs'
 export { planDataOf } from './plan-data.mjs'
+export { PEOPLE_FRAME_KINDS, framesOfPlan, ownPicturesOf } from './picture-frames.mjs'
+export {
+  PICTURE_LABELLING_PROMPT_FILE,
+  PicturePolicyError,
+  isLabelled,
+  labelOwnPictures,
+  labellingRequest
+} from './picture-labelling.mjs'
+export { FRAME_SOURCES, pictureProblemsOf, videoFits } from './picture-policy-check.mjs'
+export { assignPictures } from './picture-policy.mjs'
+export { blocksOf, picturesStep } from './picture-step.mjs'
 export {
   PAGE_WRITER_PROMPT_FILE,
   PAGE_WRITE_ATTEMPTS,
