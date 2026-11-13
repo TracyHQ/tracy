@@ -15,11 +15,14 @@
 // (a heading `#`, a list `-`, `*`, `+` or `1.` or a quote `>` at the start, `**strong**`, `__strong__`, `*soft*`,
 // a `code` span, a `[link](target)`), no line break (LF, CR, U+2028, U+2029) and no other control character. A value
 // made only of spaces and invisible characters (zero width, format characters, fillers) is empty. No `<` or `>` either,
-// even outside a tag (`we <3 roses`): the write step refuses one before any door (`markup_forbidden`, #597), since a
-// blank site contract slot refuses it and an HTML or codes place reads it as markup, so it goes back to the writer here,
-// where a rewrite can still fix it.
+// even outside a tag (`we <3 roses`), and no `((` before a letter (`f((x))`, `((free))`), which the template's
+// converter turns into a tag: the order check refuses both (`markup_forbidden`, #597, a stop), since a blank site
+// contract slot refuses `<` and `>` and an HTML or codes place reads them as markup, so they go back to the writer here,
+// where a rewrite still fixes them. Every value the order check refuses for its markup is refused here first
+// (`domain-copy-markup-first.test.mjs`). A `((` or `))` before anything else (`Open (weekdays (9 to 5))`) is words.
 import { aboutThePageOf } from './copy-about-the-page.mjs'
 import { visibleLength } from './draft-write-length.mjs'
+import { MARKER_START } from './draft-write-tags.mjs'
 import { tokensIn } from './needs-profile-grounding.mjs'
 import { inventedDataOf } from './page-writer-data-guard.mjs'
 
@@ -76,6 +79,12 @@ export function fieldValueProblems(field, value, { known, foreign, avoid } = {})
   if (MARKUP.test(value)) problems.push({ code: 'markup', message: 'plain text only, no HTML tags' })
   else if (/[<>]/.test(value))
     problems.push({ code: 'angle_bracket', message: 'plain text only: no < or > character' })
+  if (MARKER_START.test(value))
+    problems.push({
+      code: 'template_code',
+      message:
+        'plain text only: no double parenthesis before a letter, the template reads it as a code; use single parentheses'
+    })
   if (LINE_BREAK.test(value)) problems.push({ code: 'line_break', message: 'one line only: no line break' })
   else if (CONTROL.test(value))
     problems.push({ code: 'control_character', message: 'no tab or other control character' })

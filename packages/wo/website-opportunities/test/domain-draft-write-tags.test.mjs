@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { runsCodeIn } from '../domain/draft-write-markup.mjs'
-import { readTags } from '../domain/draft-write-tags.mjs'
+import { balanced, readTags } from '../domain/draft-write-tags.mjs'
 import { markupNotDeclared } from '../domain/write-order-check-entries.mjs'
 
 /** [case, value, the rule the guard must report, or null when the value runs nothing]. */
@@ -19,10 +19,28 @@ const CASES = [
   ['handler after a quoted > in a span', '<span title="a>" onmouseover="f(1)">a</span>', 'event_handler'],
   ['handler after a backtick value', '<img src=`x` onerror=x()>', 'event_handler'],
   ['handler in an unclosed tag', 'Hello <img src=x onerror=x() ', 'event_handler'],
-  ['handler in a marker', '((span onclick=x()))a((/span))', 'event_handler'],
-  ['handler in a marker, a ) in its quoted value', '((span onclick="f(1)"))a((/span))', 'event_handler'],
-  ['handler after an empty comment', '<!--><img src=x onerror=x()>-->', 'event_handler'],
-  ['handler inside a textarea', '<textarea><img src=x onerror=x()></textarea>', 'event_handler'],
+  ['handler in a marker', '((span onclick=go))a((/span))', 'event_handler'],
+  ['handler in a marker, parens in it', '((span onclick=x()))a((/span))', 'marker_unread'],
+  // The converter reads no marker with a parenthesis inside: the reader reports it, never lets it through.
+  ['handler in a marker, a ) in its quoted value', '((span onclick="f(1)"))a((/span))', 'marker_unread'],
+  ['handler after an empty comment', '<!--><img src=x onerror=x()>-->', 'markup_unread'],
+  ['handler inside a textarea', '<textarea><img src=x onerror=x()></textarea>', 'raw_text_element'],
+  ['a comment hiding a quote', '<!--<a title="--><a href="javascript:x">', 'markup_unread'],
+  ['a processing instruction hiding a quote', '<? <a title="?><a href="javascript:x">', 'markup_unread'],
+  ['a title element hiding a quote', '<title><a title="</title><a href="javascript:x">', 'raw_text_element'],
+  ['a bogus end tag', 'Fresh </ x> stems', 'markup_unread'],
+  [
+    'markup three levels down an attribute',
+    '<a title="<b title=\'<img src=x onerror=f()>\'>">a</a>',
+    'markup_in_attribute'
+  ],
+  ['a marker in an attribute', '<span title="((img src=x))">a</span>', 'markup_in_attribute'],
+  ['an open quote', 'Hi <span class="a', 'markup_unbalanced'],
+  ['an open tag', 'Hi <span class="a"', 'markup_unbalanced'],
+  ['an element never closed', 'Hi <span class="a">there', 'markup_unbalanced'],
+  ['a closing tag with no opening', 'Hi there</span>', 'markup_unbalanced'],
+  ['wrong nesting', '<b><span>a</b></span>', 'markup_unbalanced'],
+  ['a marker never closed', '((span))a', 'markup_unbalanced'],
   ['handler on a closing tag', '<span>a</span onclick=x()>', 'event_handler'],
   ['javascript: split by a tab', '<a href="java\tscript:x()">a</a>', 'code_address'],
   ['javascript: split by a line break', '<a href="java\nscript:x()">a</a>', 'code_address'],
@@ -35,7 +53,8 @@ const CASES = [
   ['vbscript:', '<a href="vbscript:x">a</a>', 'code_address'],
   ['data: an HTML document', '<a href="data:text/html;base64,PHNjcmlwdD4=">a</a>', 'code_address'],
   ['data: an SVG picture', '<img src="data:image/svg+xml;base64,PHN2Zz4=">', 'code_address'],
-  ['javascript: in a marker, parens in its value', '((a href="javascript:x()"))a((/a))', 'code_address'],
+  ['javascript: in a marker, parens in its value', '((a href="javascript:x()"))a((/a))', 'marker_unread'],
+  ['javascript: in a marker', '((a href="javascript:x"))a((/a))', 'code_address'],
   ['style expression(', '<span style="width:expression(x())">a</span>', 'code_in_attribute'],
   [
     'style expression( behind a CSS escape',
@@ -52,10 +71,17 @@ const CASES = [
   [
     'noscript breakout',
     '<noscript><p title="</noscript><img src=x onerror=x()>"></noscript>',
-    'event_handler'
+    'raw_text_element'
   ],
   ['a marker the reader cannot read', 'Fresh ((span onclick=f(1) stems', 'marker_unread'],
-  ['a stray closing marker', 'Fresh stems))', 'marker_unread'],
+  ['a marker start that never closes', 'Call us ((free today', 'marker_unread'],
+  ['a stray closing parenthesis pair', 'Fresh stems))', null],
+  ['nested parentheses', 'Open (weekdays (9 to 5))', null],
+  ['an emoticon', 'See you soon ((:', null],
+  ['words that name a scheme', 'Data: we keep only what you send', null],
+  ['a scheme in a title attribute', '<span title="Learn JavaScript: fast">a</span>', null],
+  ['a line break and an emphasis marker', 'THE((br/)) ((span))DRILL((/span))', null],
+  ['a void tag closed by a slash', 'One<br/>two<br>three', null],
   ['a data: PNG picture', '<img src="data:image/png;base64,AAAA">', null],
   ['an emphasis span', 'Fresh <span class="a">stems</span>', null],
   ['a plain link', '<a href="https://example.test/a">Go</a>', null],
@@ -85,7 +111,7 @@ test('the order check refuses every value the guard refuses, in an html field an
         assert.notEqual(markupNotDeclared({ value, declared: declared(write) }), null, `${name} (${write})`)
 })
 
-test('a quoted > or ) is part of the value; a marker ends at )) outside quotes', () => {
+test('a quoted > is part of a tag; a marker is read as the converter reads it, up to the first ))', () => {
   const [tag] = readTags('<span title="a>b" class=c>x</span>').tags
   assert.deepEqual(
     tag.attrs.map((a) => [a.name, a.value]),
@@ -94,7 +120,7 @@ test('a quoted > or ) is part of the value; a marker ends at )) outside quotes',
       ['class', 'c']
     ]
   )
-  const read = readTags('((span title="f(1)"))x((/span))')
+  const read = readTags('((span class="a"))x((/span))')
   assert.deepEqual(
     read.tags.map((t) => [t.form, t.name, t.close]),
     [
@@ -102,7 +128,16 @@ test('a quoted > or ) is part of the value; a marker ends at )) outside quotes',
       ['marker', 'span', true]
     ]
   )
-  assert.equal(read.tags[0].attrs[0].value, 'f(1)')
+  assert.equal(read.tags[0].attrs[0].value, 'a')
   assert.equal(read.strays, 0)
-  assert.equal(readTags('a (( b').strays, 1)
+  assert.equal(readTags('((span title="f(1)"))x').strays, 1)
+  assert.equal(readTags('a (( b )) c ((: f(x))').strays, 0)
+  assert.equal(readTags('f((x)) y').tags[0].name, 'x')
+})
+
+test('a value whose tags nest and close is balanced; anything left open or closed out of order is not', () => {
+  for (const value of ['a <b>c</b>', '((p))a((span))b((/span))((/p))', 'a<br>b<br/>c', 'plain', 'a </br> b'])
+    assert.equal(balanced(readTags(value)), true, value)
+  for (const value of ['<b>a', 'a</b>', '<b><i>a</b></i>', '<span/>a', '<b title="a>x</b>', '((p))a'])
+    assert.equal(balanced(readTags(value)), false, value)
 })

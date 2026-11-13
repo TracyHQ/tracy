@@ -3,7 +3,9 @@
 // keeps, for every shown field of the block and of its items, the text the HTML must show (`libraryExpectsOf`), and the
 // guard holds the HTML to it (`libraryHtmlProblems`): a field the HTML does not show means the HTML was rendered from
 // other values than the order (`library_html_stale`), and markup that runs code never reaches the site
-// (`library_html_unsafe`). Pure.
+// (`library_html_unsafe`): the HTML is read by the write guard's own reader (`runsCodeIn`), so `<img/onerror>` and an
+// entity-hidden `javascript:` address are found as in any other value written as HTML. Pure.
+import { runsCodeIn } from './draft-write-markup.mjs'
 import { reviewerName } from './library-reviews-names.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -15,7 +17,6 @@ const escapeHtml = (value) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
-const UNSAFE = [/<script\b/i, /<iframe\b/i, /\son[a-z]+\s*=/i, /javascript\s*:/i, /<style\b/i]
 
 /** The text the HTML shows for one order entry, escaped as the renderer writes it; null when it shows none. */
 function shownOf(entry) {
@@ -42,6 +43,6 @@ export function libraryHtmlProblems(op, report) {
   if (html.trim() === '') report('library_html_stale', { op: op.key, entry: null, via: 'empty' })
   for (const x of list(op.expects))
     if (!html.includes(x.shown)) report('library_html_stale', { op: op.key, entry: x.entry })
-  for (const rule of UNSAFE)
-    if (rule.test(html)) report('library_html_unsafe', { op: op.key, rule: rule.source })
+  const rules = runsCodeIn(html)
+  if (rules.length) report('library_html_unsafe', { op: op.key, rules })
 }

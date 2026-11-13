@@ -8,7 +8,8 @@
 //   slot_missing                 a contract value with no slot, or a slot the blank site contract does not have
 //   empty_text_node              an empty value at a text node (the node would be gone: one space keeps it)
 //   markup_forbidden             markup in a value whose field declares no such inline part, a tag sent through the
-//                                contract, content map markers at an HTML place, or a tag at an ACM data place
+//                                contract, content map markers at an HTML place, a tag at an ACM data place, or a tag,
+//                                comment or other `<!`, `<?`, `</` form in a plain text column (a title, an alias)
 //   icon_not_in_list             a network class the template's icon font lacks, an icon not in the icon library
 //   picture_without_alt          a shown picture with no alt text
 //   picture_web_address_only     a picture known only by its web address: pictures come from stored bytes
@@ -17,15 +18,18 @@
 //   block_not_approved           a block of the order the approved plan does not place
 //   pair_incomplete              one half of a button (label, address) or of an icon pair written without the other
 //   library_html_stale           a library block's HTML that does not show a shown field of the order
-//   library_html_unsafe          a library block's HTML with markup that runs code (script, on* handler, javascript:)
-//   markup_runs_code             any other value written as HTML (an HTML piece, a value with tags or markers, a
-//                                created record's HTML) with markup that runs code, or any value or record column that
-//                                is an address running code (`javascript:`, however its letters are hidden)
+//   library_html_unsafe          a library block's HTML with anything `runsCodeIn` refuses
+//   markup_runs_code             any other value written as HTML (an HTML piece, a value with a tag or a marker start,
+//                                a created record's HTML) with anything `runsCodeIn` refuses, or a value written where
+//                                an address is written (a link field, a link or picture slot, an address attribute
+//                                piece, a record's link) that is an address running code. Words are never an address.
 import { DraftWriteError, lengthOf } from './draft-write-error.mjs'
 import { heldInLeaf } from './draft-write-held.mjs'
 import { doorLength, visibleLength, visibleTextOf } from './draft-write-length.mjs'
 import { libraryHtmlProblems } from './draft-write-library-check.mjs'
 import { addressRunsCode, runsCodeIn } from './draft-write-markup.mjs'
+import { addressAt, linkOf, PLAIN_COLUMNS, plainAt, TAG_START } from './draft-write-place-kinds.mjs'
+import { MARKER_START } from './draft-write-tags.mjs'
 import { heldTextsOf } from './plan-withheld.mjs'
 import { placesOfOrder } from './write-order-check.mjs'
 import { markupNotDeclared } from './write-order-check-entries.mjs'
@@ -33,12 +37,17 @@ import { markupNotDeclared } from './write-order-check-entries.mjs'
 const list = (value) => (Array.isArray(value) ? value : [])
 /** The words a value shows (`visibleTextOf`): kept for the built site check, which reads it. */
 export const visibleOf = visibleTextOf
-/** Whether a value is written as HTML: an HTML piece, or a value carrying tags or markers. */
-const asHtml = (loc, text) => Boolean(loc?.xpath) || /<|\(\(|\)\)/.test(text)
+/** Whether a value is written as HTML: an HTML piece, or a value carrying a tag or a marker. */
+const asHtml = (loc, text) => Boolean(loc?.xpath) || /[<>]/.test(text) || MARKER_START.test(text)
 
-/** Markup that runs code in a value written as HTML, or an address that runs code anywhere. */
-function codeProblems(at, text, html, report) {
-  const rules = html ? runsCodeIn(text) : addressRunsCode(text) ? ['code_address'] : []
+/**
+ * Markup that runs code in a value written as HTML; an address that runs code where an address is written (`address`:
+ * a link field, a link or picture slot, an address attribute piece, a record's link). Words are never read as an
+ * address: `Data: we keep only what you send` is prose.
+ */
+function codeProblems(at, text, { html, address }, report) {
+  const rules = html ? runsCodeIn(text) : []
+  if (address && addressRunsCode(text)) rules.push('code_address')
   if (rules.length) report('markup_runs_code', { ...at, rules, length: lengthOf(text) })
 }
 
@@ -67,15 +76,30 @@ function valueProblems(op, value, ctx, report) {
   if (loc.nestedJson && !loc.xpath && /<\/?[a-z]/i.test(text))
     report('markup_forbidden', { ...at, via: 'tag_at_codes_place' })
   if (value.rule?.startsWith('icon_class') && !ctx.classes.has(text)) report('icon_not_in_list', at)
-  codeProblems(at, text, asHtml(loc, text), report)
+  if (plainAt(loc) && TAG_START.test(text)) report('markup_forbidden', { ...at, via: 'tag_in_plain_column' })
+  codeProblems(at, text, { html: asHtml(loc, text), address: addressAt(loc, e, slot) }, report)
 }
 
-/** The columns and HTML an operation sends besides its values (a created record's title, alias, link, HTML). */
+/**
+ * The columns and HTML an operation sends besides its values: a created record's title and alias hold no tag at all
+ * (they are plain text), its link no code address, its HTML no markup that runs code.
+ */
 function columnProblems(op, report) {
-  for (const [column, text] of Object.entries(op.fields ?? {}))
-    if (typeof text === 'string') codeProblems({ op: op.key, column }, text, asHtml(null, text), report)
+  for (const [column, text] of Object.entries(op.fields ?? {})) {
+    if (typeof text !== 'string') continue
+    if (PLAIN_COLUMNS.has(column) && TAG_START.test(text))
+      report('markup_forbidden', { op: op.key, column, via: 'tag_in_plain_column' })
+    codeProblems(
+      { op: op.key, column },
+      text,
+      { html: asHtml(null, text), address: column === 'link' },
+      report
+    )
+  }
+  const link = linkOf(op)
+  if (link !== null) codeProblems({ op: op.key, column: 'link' }, link, { address: true }, report)
   if (typeof op.html === 'string' && op.kind !== 'library.create')
-    codeProblems({ op: op.key, column: 'html' }, op.html, true, report)
+    codeProblems({ op: op.key, column: 'html' }, op.html, { html: true }, report)
 }
 
 function orderProblems(order, { approved, iconKeys }, report) {
@@ -113,6 +137,7 @@ function textsOf(plan) {
   for (const op of plan.ops) {
     for (const v of list(op.values)) if (typeof v.value === 'string') texts.push(v.value)
     if (op.alt) texts.push(op.alt)
+    if (linkOf(op) !== null) texts.push(linkOf(op))
     for (const column of Object.values(op.fields ?? {})) if (typeof column === 'string') texts.push(column)
     if (typeof op.html === 'string') texts.push(op.html, visibleTextOf(op.html))
   }
