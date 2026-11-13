@@ -50,7 +50,7 @@ export function draftAiQuickstart({ kit, contentMap, lock, decisions = {}, measu
     report.references = { total: references.total, byClass: references.byClass, classed: references.classed }
   // Text fields whose stored value carries inline markup the format does not describe, under one owned class;
   // draft.mjs writes nothing while the class has no owner ticket.
-  const inlineMarkup = inlineMarkupReport({ blocks, contentMap, decisions })
+  const inlineMarkup = inlineMarkupReport({ blocks, contentMap, decisions, kit })
   report.inlineMarkup = inlineMarkup.entry
   return { blockStore, pageRecipes, report, coverage, references, inlineMarkup }
 }

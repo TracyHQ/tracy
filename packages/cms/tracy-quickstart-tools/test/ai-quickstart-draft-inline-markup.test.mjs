@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url'
 import {
   inlineMarkupFieldsOf,
   inlineMarkupReport,
+  inlineOf,
   markupOf
 } from '../ai-quickstart/lib/draft-inline-markup.mjs'
 
@@ -65,10 +66,35 @@ test('the markers of a sample name its elements', () => {
 })
 
 test('a text field with markup in any stored place is listed; a piece of a stored value is not', () => {
-  assert.deepEqual(inlineMarkupFieldsOf(blocks, contentMap), [
-    { block: 'block-1', field: 'heading', markup: ['br', 'span'] },
-    { block: 'block-2', field: 'price', markup: ['span'] }
+  assert.deepEqual(
+    inlineMarkupFieldsOf(blocks, contentMap).map(({ places: _places, ref: _ref, ...f }) => f),
+    [
+      { block: 'block-1', field: 'heading', markup: ['br', 'span'] },
+      { block: 'block-2', field: 'price', markup: ['span'] }
+    ]
+  )
+})
+
+test('a field declares the emphasis shape of its demo value, read from the kit, else from the content map markers', () => {
+  const kitInline = new Map([
+    ['module-1.0', [{ tag: 'br' }, { tag: 'span', attrs: 'class="accent"', text: 'bread', at: 'end' }]]
   ])
+  const samples = new Map(contentMap.slots.map((s) => [s.key, s.sample]))
+  assert.deepEqual(inlineOf(['module-1.0'], ['br', 'span'], kitInline, samples), {
+    emphasis: [{ tag: 'br' }, { tag: 'span', attrs: 'class="accent"', at: 'end' }],
+    from: 'template-kit'
+  })
+  assert.deepEqual(inlineOf(['module-2.0', 'module-2.1'], ['span'], new Map(), samples), {
+    emphasis: [{ tag: 'span', attrs: '', at: 'end' }],
+    from: 'content-map'
+  })
+  assert.deepEqual(inlineOf(['module-2.2'], ['li', 'ul'], new Map(), samples), {
+    emphasis: [],
+    wrapper: ['ul', 'li'],
+    from: 'content-map'
+  })
+  const report = inlineMarkupReport({ blocks: structuredClone(blocks), contentMap, decisions: decided })
+  assert.equal(report.entry.fields[0].ref, undefined, 'the report carries no field object')
 })
 
 test('the class is owned only with a name, a reason and an owner ticket', () => {

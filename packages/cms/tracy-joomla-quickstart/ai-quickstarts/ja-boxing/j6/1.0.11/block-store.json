@@ -273,7 +273,17 @@
           "type": "text",
           "limit": 29,
           "limitFrom": "kit frame (390px 29, 1440px 38)",
-          "slot": "module-156.2"
+          "slot": "module-156.2",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "start"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "section-cta-label",
@@ -322,7 +332,20 @@
           "type": "text",
           "limit": 30,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 30 (demo 11 characters on 1 line(s)), 768px 42 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the limit is the smallest reading, 30 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-157.20"
+          "slot": "module-157.20",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -461,7 +484,20 @@
           "type": "text",
           "limit": 32,
           "limitFrom": "kit frame (390px 32, 1440px 60)",
-          "slot": "module-160.0"
+          "slot": "module-160.0",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -553,7 +589,20 @@
             "article-14.7",
             "article-2.7",
             "article-15.7"
-          ]
+          ],
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "link",
@@ -757,7 +806,20 @@
           "type": "text",
           "limit": 32,
           "limitFrom": "kit frame (390px 32, 1440px 59)",
-          "slot": "module-163.16"
+          "slot": "module-163.16",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -939,7 +1001,20 @@
           "type": "text",
           "limit": 32,
           "limitFrom": "kit frame (390px 32, 1440px 60)",
-          "slot": "module-165.0"
+          "slot": "module-165.0",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "hero-image",
@@ -977,7 +1052,16 @@
             "module-165.7",
             "module-165.8",
             "module-165.9"
-          ]
+          ],
+          "inline": {
+            "emphasis": [],
+            "wrapper": [
+              "p",
+              "ul",
+              "li"
+            ],
+            "from": "content-map"
+          }
         }
       ],
       "from": {
@@ -1012,7 +1096,20 @@
           "type": "text",
           "limit": 33,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 33 (demo 13 characters on 1 line(s)), 768px 46 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 33 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-166.17"
+          "slot": "module-166.17",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -1176,7 +1273,17 @@
           "type": "text",
           "limit": 36,
           "limitFrom": "kit frame (390px 36, 1440px 57)",
-          "slot": "module-169.0"
+          "slot": "module-169.0",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "inside"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -1306,7 +1413,15 @@
           "type": "text",
           "limit": 50,
           "limitFrom": "kit frame (390px 85, 1440px 50)",
-          "slot": "module-175.2"
+          "slot": "module-175.2",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "email",
@@ -1507,7 +1622,17 @@
           "type": "text",
           "limit": 19,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes: 390px 19 (demo 10 characters on 1 line(s)), 768px 39 (demo 10 characters on 1 line(s)), 1440px 62 (demo 11 characters on 3 line(s)); the limit is the smallest reading, 19 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-162.16"
+          "slot": "module-162.16",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "stat-paragraph",
@@ -1604,7 +1729,17 @@
                   "module-162.14",
                   "module-162.15"
                 ]
-              ]
+              ],
+              "inline": {
+                "emphasis": [
+                  {
+                    "tag": "span",
+                    "attrs": "",
+                    "at": "end"
+                  }
+                ],
+                "from": "template-kit"
+              }
             },
             {
               "name": "intro",
@@ -1629,7 +1764,15 @@
                   "module-162.29",
                   "module-162.30"
                 ]
-              ]
+              ],
+              "inline": {
+                "emphasis": [
+                  {
+                    "tag": "br"
+                  }
+                ],
+                "from": "template-kit"
+              }
             },
             {
               "name": "page",
@@ -2264,7 +2407,20 @@
           "type": "text",
           "limit": 30,
           "limitFrom": "kit frame (390px 30, 1440px 55)",
-          "slot": "module-158.0"
+          "slot": "module-158.0",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -2335,7 +2491,20 @@
             "article-14.7",
             "article-15.7",
             "article-16.7"
-          ]
+          ],
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "link",
@@ -2579,7 +2748,20 @@
           "type": "text",
           "limit": 28,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 28 (demo 21 characters on 1 line(s)), 768px 40 (demo 21 characters on 1 line(s)), 1440px 47 (demo 21 characters on 2 line(s)); the limit is the smallest reading, 28 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-184.1"
+          "slot": "module-184.1",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "content-map"
+          }
         }
       ],
       "from": {
@@ -2620,7 +2802,17 @@
             "module-167.1",
             "module-167.2",
             "module-167.3"
-          ]
+          ],
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "name",
@@ -2777,7 +2969,17 @@
             "module-188.1",
             "module-188.2",
             "module-188.3"
-          ]
+          ],
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "name",
@@ -2934,7 +3136,17 @@
             "module-189.1",
             "module-189.2",
             "module-189.3"
-          ]
+          ],
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "name",
@@ -3093,7 +3305,20 @@
           "type": "text",
           "limit": 33,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 37 (demo 9 characters on 1 line(s)), 768px 36 (demo 9 characters on 1 line(s)), 1440px 33 (demo 9 characters on 1 line(s)); the limit is the smallest reading, 33 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-172.10"
+          "slot": "module-172.10",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "content-map"
+          }
         }
       ],
       "itemFields": [
@@ -3183,7 +3408,20 @@
           "type": "text",
           "limit": 32,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 32 (demo 9 characters on 1 line(s)), 768px 47 (demo 9 characters on 1 line(s)), 1440px 92 (demo 9 characters on 2 line(s)); the limit is the smallest reading, 32 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-183.7"
+          "slot": "module-183.7",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -3207,7 +3445,14 @@
           "type": "text",
           "limit": 613,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 613 (demo 559 characters on 15 line(s)), 768px 613 (demo 559 characters on 9 line(s)), 1440px 627 (demo 559 characters on 13 line(s)); the limit is the smallest reading, 613 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-183.2"
+          "slot": "module-183.2",
+          "inline": {
+            "emphasis": [],
+            "wrapper": [
+              "p"
+            ],
+            "from": "content-map"
+          }
         },
         {
           "name": "quote-author-image",
@@ -3291,7 +3536,20 @@
           "type": "text",
           "limit": 30,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 30 (demo 11 characters on 1 line(s)), 768px 42 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the limit is the smallest reading, 30 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-190.20"
+          "slot": "module-190.20",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -3447,7 +3705,15 @@
           "slots": [
             "module-177.2",
             "module-177.3"
-          ]
+          ],
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "navigation-url",
@@ -3467,7 +3733,14 @@
           "slots": [
             "module-177.6",
             "module-177.7"
-          ]
+          ],
+          "inline": {
+            "emphasis": [],
+            "wrapper": [
+              "p"
+            ],
+            "from": "content-map"
+          }
         },
         {
           "name": "paragraph",
@@ -3868,7 +4141,16 @@
           "type": "text",
           "limit": 707,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/our-trainers/darlene-robertson: 390px 707 (demo 602 characters on 19 line(s)), 768px 869 (demo 602 characters on 11 line(s)), 1440px 869 (demo 602 characters on 12 line(s)); the limit is the smallest reading, 707 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-180.2"
+          "slot": "module-180.2",
+          "inline": {
+            "emphasis": [],
+            "wrapper": [
+              "p",
+              "ul",
+              "li"
+            ],
+            "from": "content-map"
+          }
         },
         {
           "name": "person-name-2",
@@ -3876,7 +4158,20 @@
           "type": "text",
           "limit": 30,
           "limitFrom": "kit frame (390px 30, 1440px 54)",
-          "slot": "module-180.11"
+          "slot": "module-180.11",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         }
       ],
       "lists": [
@@ -3975,7 +4270,20 @@
           "type": "text",
           "limit": 34,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/our-trainers/darlene-robertson: 390px 34 (demo 13 characters on 1 line(s)), 768px 46 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 34 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-181.18"
+          "slot": "module-181.18",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -4079,7 +4387,20 @@
           "type": "text",
           "limit": 30,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/our-trainers/darlene-robertson: 390px 30 (demo 13 characters on 1 line(s)), 768px 43 (demo 13 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 30 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-182.16"
+          "slot": "module-182.16",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -4285,7 +4606,20 @@
           "type": "text",
           "limit": 27,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 27 (demo 12 characters on 1 line(s)), 768px 40 (demo 12 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 27 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "article-16.13"
+          "slot": "article-16.13",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph-3",
@@ -4301,7 +4635,20 @@
           "type": "text",
           "limit": 33,
           "limitFrom": "kit frame (390px 33, 1440px 55)",
-          "slot": "article-16.31"
+          "slot": "article-16.31",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph-4",
@@ -4612,7 +4959,20 @@
           "type": "text",
           "limit": 31,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 31 (demo 12 characters on 1 line(s)), 768px 44 (demo 12 characters on 1 line(s)), 1440px 54 (demo 12 characters on 2 line(s)); the limit is the smallest reading, 31 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-159.0"
+          "slot": "module-159.0",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -4652,7 +5012,20 @@
           "slots": [
             "article-16.7",
             "article-14.7"
-          ]
+          ],
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "link",
@@ -4773,7 +5146,20 @@
           "type": "text",
           "limit": 30,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /pages/j-content/category-blog/never-boxed-before: 390px 30 (demo 10 characters on 1 line(s)), 768px 42 (demo 10 characters on 1 line(s)), 1440px 55 (demo 10 characters on 2 line(s)); the limit is the smallest reading, 30 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-191.0"
+          "slot": "module-191.0",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "br"
+              },
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "template-kit"
+          }
         },
         {
           "name": "paragraph",
@@ -5004,7 +5390,17 @@
           "type": "text",
           "limit": 64,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 64 (demo 13 characters on 3 line(s)), 768px 95 (demo 13 characters on 3 line(s)), 1440px 126 (demo 13 characters on 3 line(s)); the limit is the smallest reading, 64 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "languageString-46373076.0"
+          "slot": "languageString-46373076.0",
+          "inline": {
+            "emphasis": [
+              {
+                "tag": "span",
+                "attrs": "",
+                "at": "end"
+              }
+            ],
+            "from": "content-map"
+          }
         },
         {
           "name": "punches-lead",

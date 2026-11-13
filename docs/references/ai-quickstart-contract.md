@@ -4,6 +4,9 @@ sources:
   - packages/wo/website-opportunities/domain/ai-quickstart-contract.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-field-keys.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-inline.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-mapping-seo.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-mapping-coverage.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-references.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-inline-markup.mjs
   - packages/wo/website-opportunities/domain/place-content-roles.mjs
@@ -192,11 +195,33 @@ is the first link inside the HTML that slot `module-163.12` stores. A trainer ca
 (`iconOf: "network"`, `storage: "class-name"`).
 
 **Inline markup inside a text value.** A text field's stored value may carry inline markup: an accent span or a line
-break in a heading, a styled unit in a price, a paragraph wrapper around a body. This version of the format does not
-describe that markup; the draft lists every such field in `draft-report.json` (`inlineMarkup`: one class, its owner
-tickets #584 and #585, the fields). Meanwhile a build writes a field whose place is an xpath piece as text inside the
-element that piece names, and for any other text field replaces the words of the stored value and keeps its outer
-wrapper element; no check enforces this yet.
+break in a heading, a styled unit in a price, a paragraph wrapper around a body. Every such field (the draft report's
+class `inline-markup-in-text`, `inlineMarkup` in `draft-report.json`) declares it with `inline`:
+
+```json
+"inline": { "emphasis": [{ "tag": "br" }, { "tag": "span", "attrs": "", "at": "end" }], "from": "template-kit" }
+"inline": { "emphasis": [], "wrapper": ["p", "ul", "li"], "from": "content-map" }
+```
+
+- `emphasis` is the emphasis shape the demo value carries, in the template kit's own notation (`template-kit.json`,
+  the `inline` of the field's slots, without the demo words): `{"tag": "br"}` a line break, `{"tag": "span", "attrs",
+  "at"}` an accent span with its attributes and where it sits in the words (`start`, `end`, `inside`). The draft reads
+  it from the kit; for a slot the kit lists without it, from the content map's `((br/))` and `((span))` markers of the
+  sample (`from: "content-map"`). Each part is listed once for the field, whichever of its places carries it.
+- `wrapper` lists the block elements the stored value is wrapped in (`p`, and `ul`, `li` for a body with a highlight
+  list).
+- **The rule.** The build keeps the template's wrapper element(s) around the words. The writer supplies words plus an
+  optional emphasis part, never markup; the build wraps that part the way the demo does (the content map's markers,
+  which a JA ACM block reads; where the demo stores real HTML, as an article field or a page heading does, the same
+  tags as real elements), so the look of the demo is kept. Plain words are always valid: a value with no emphasis part
+  is written as words alone.
+- **Owners.** The write step (#597) writes such a value: the words, the emphasis part inside the declared tags, the
+  wrapper kept. The gate (#585) flags a broken look: an emphasis part left out of its span, a wrapper lost, raw
+  markers printed.
+- The check fails a field the draft report lists in the class without `inline`, or whose `inline` leaves out a tag
+  the report found in its value (`ai-quickstart-inline.mjs`).
+- The Claude Cowork plugin's `content.contract` apply (0.24.85) refuses `<` and `>` in a value (`SLOT_NOT_CONTENT`):
+  markers carry no angle bracket and pass it; a real HTML element goes through another door, which #597 owns.
 
 **A child field is stored on its parent's record.** Every stored place of a child field, and every `keyAt` location, is
 on the record of its parent place (the block's record for `lists`, the item's record for `itemLists`). A place on
@@ -428,8 +453,8 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   prints), or one column outside the content map (`{"entity": "module-180", "column": "title"}`). Every place the
   draft report lists outside the store or unlisted (other than `kept`, whose reason is in the report) on a module or
   custom field row the file writes nowhere must be named here, and a declared entity no location names must be too.
-- **`inlineMarkup`**: `{class, count, owners}`, the fields whose stored value carries inline markup and the ticket that
-  decides how such a value is written.
+- **`inlineMarkup`**: `{class, count, owners}`, the class of the fields whose stored value carries inline markup (each
+  declares its `inline` in the block store) and its owners: the write step (#597) and the gate (#585).
 - **`networkIconClasses`**: the template's table from a social network to the class of its own icon font,
   `{"classes": {"<network>": "<class>"}, "why": "<how the classes were confirmed>"}`. Required when the store has an
   icon field with `iconOf: "network"` and `storage: "class-name"`. Each key is a network the build recognises (the

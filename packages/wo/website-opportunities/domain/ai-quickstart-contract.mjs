@@ -12,6 +12,7 @@ import {
   sharedPlaceProblems,
   sharedPlacesOf
 } from './ai-quickstart-field-keys.mjs'
+import { inlineCoverageProblems, inlineShapeProblems } from './ai-quickstart-inline.mjs'
 import { mappingProblems } from './ai-quickstart-mapping.mjs'
 import { ROLE_VOCABULARY_V3, isBlockType, isRole } from './place-content-roles.mjs'
 
@@ -220,6 +221,7 @@ function blockStoreProblems(store, report) {
   })
   insideProblems(store, ids, report)
   sharedPlaceProblems(store, report)
+  inlineShapeProblems(store, report)
 }
 
 /** A field keyed to a page type (`pageType`) names a page type whose recipe places its block. */
@@ -311,6 +313,8 @@ export function checkAiQuickstartContract({
       pageRecipes,
       draftReport
     })
+  // A text field the draft report finds carrying inline markup declares it (`inline`).
+  if (isObject(blockStore)) inlineCoverageProblems(blockStore, draftReport, reporter(BLOCK_STORE_FILE))
   const sharedPlaces = isObject(blockStore) ? sharedPlacesOf(blockStore).length : 0
   return { ok: problems.length === 0, blocks: blocks.length, problems, sharedPlaces }
 }

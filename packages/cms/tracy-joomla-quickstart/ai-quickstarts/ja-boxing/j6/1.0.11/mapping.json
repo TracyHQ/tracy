@@ -12061,7 +12061,8 @@
     "class": "inline-markup-in-text",
     "count": 35,
     "owners": {
-      "#585": "how a value that carries inline markup is written (which wrapper and which inner element keep the template's look; the mapping file of #584 gives each such field the location of its stored element and leaves the markup to this ticket), and the gate that catches a broken look when such a value is written as plain words"
+      "#597": "writes such a value: the words, plus the optional emphasis part the field declares, wrapped the way the demo does (the content map's ((br/)) and ((span)) markers), inside the wrapper elements the field declares; never markup the writer returns",
+      "#585": "the gate that catches a broken look when such a value is written: an emphasis part left out of its span, a wrapper lost, raw markers printed"
     }
   }
 }
