@@ -5,6 +5,7 @@
 // A location has the shape a content map slot already uses, so the existing write functions take it unchanged:
 //   { "entity": "module-160", "column": "params", "jsonPath": ["main-section"], "xpath": "/html/body/div" }
 // `jsonPath` and `xpath` are optional; `entity: "page"` names the page the build creates (the SEO fields).
+import { CHILD_LIST_KEYS, rowCountProblems, sameRows } from './ai-quickstart-child-lists.mjs'
 
 /** The business facts of the site form, each declared once and fanned out to every place the template shows it. */
 export const BUSINESS_FACTS = Object.freeze({
@@ -100,6 +101,69 @@ function blockMappingProblems(block, entry, ctx) {
   for (const name of Object.keys(mappedItems))
     if (!storeItemFields.some((f) => f.name === name))
       ctx.report(`${at}.itemFields[${name}]`, `"${name}" is not an item field of the block`)
+  childMappingProblems(block, entry, at, CHILD_LIST_KEYS, (key) => (key === 'lists' ? 1 : maxItems), {
+    ...ctx,
+    judge,
+    storeAt: `blocks[${block.id}]`
+  })
+}
+
+/**
+ * The locations of the child lists of `owner` (a block, or a child list for its nested lists), the way item fields
+ * are placed: every child field gives, per parent place, one location per row; at least `places(key)` parent
+ * places, rows within the list's counts, and the fields of one list agree row for row.
+ */
+function childMappingProblems(owner, entry, at, keys, places, ctx) {
+  for (const key of keys) {
+    const lists = Array.isArray(owner[key]) ? owner[key].filter((l) => isName(l?.name)) : []
+    const mapped = isObject(entry?.[key]) ? entry[key] : {}
+    if (entry?.[key] !== undefined && !isObject(entry[key]))
+      ctx.report(`${at}.${key}`, `${key} must map a child list name to its fields`)
+    for (const list of lists) {
+      const listAt = `${at}.${key}[${list.name}]`
+      const storeAt = `${ctx.storeAt}.${key}[${list.name}]`
+      const listEntry = mapped[list.name]
+      if (!isObject(listEntry)) {
+        ctx.report(listAt, `no mapping for child list "${list.name}"`)
+        continue
+      }
+      const fields = Array.isArray(list.fields) ? list.fields.filter((f) => isName(f?.name)) : []
+      const mappedFields = isObject(listEntry.fields) ? listEntry.fields : {}
+      let agreed = null
+      for (const field of fields) {
+        const fieldAt = `${listAt}.fields[${field.name}]`
+        const perPlace = mappedFields[field.name]
+        const rows =
+          Array.isArray(perPlace) && perPlace.every(Array.isArray) ? perPlace.map((r) => r.length) : null
+        if (!rows) {
+          ctx.report(fieldAt, `no locations for child field "${field.name}": per parent place, one per row`)
+          continue
+        }
+        const want = places(key)
+        if (Number.isInteger(want) && rows.length < want)
+          ctx.report(fieldAt, `${rows.length} parent places for ${want}: every parent place lists its rows`)
+        if (agreed && !sameRows(agreed, rows))
+          ctx.report(fieldAt, `rows per parent place ${rows.join(', ')} differ from ${agreed.join(', ')}`)
+        if (!agreed) {
+          agreed = rows
+          rowCountProblems(rows, list.items, fieldAt, ctx.report)
+        }
+        perPlace.forEach((locs, p) =>
+          locs.forEach((loc, r) =>
+            ctx.judge(field, loc, `${fieldAt}[${p}][${r}]`, `${storeAt}.fields[${field.name}]`)
+          )
+        )
+      }
+      for (const name of Object.keys(mappedFields))
+        if (!fields.some((f) => f.name === name))
+          ctx.report(`${listAt}.fields[${name}]`, `"${name}" is not a field of the child list`)
+      const rowsTotal = agreed ? agreed.reduce((a, b) => a + b, 0) : null
+      childMappingProblems(list, listEntry, listAt, ['lists'], () => rowsTotal, { ...ctx, storeAt })
+    }
+    for (const name of Object.keys(mapped))
+      if (!lists.some((l) => l.name === name))
+        ctx.report(`${at}.${key}[${name}]`, `"${name}" is not a child list declared in the block store`)
+  }
 }
 
 function factsProblems(facts, report) {

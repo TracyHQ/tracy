@@ -158,6 +158,16 @@ test('an image field without a frame fails', () => {
   })
 })
 
+test('an icon field without a frame fails', () => {
+  const set = valid()
+  delete blockOf(set, 'services-grid').itemFields.find((f) => f.name === 'icon').frame
+  assertOneProblem(set, {
+    file: 'block-store.json',
+    at: 'blocks[services-grid].itemFields[icon].frame',
+    message: /an icon field needs a frame/
+  })
+})
+
 test('a recipe naming a block the store lacks fails', () => {
   const set = valid()
   set.pageRecipes.recipes[0].blocks.push('gallery-wall')

@@ -46,13 +46,80 @@
           { "entity": "module-13", "column": "params", "jsonPath": ["items", "0", "icon"] },
           { "entity": "module-13", "column": "params", "jsonPath": ["items", "1", "icon"] },
           { "entity": "module-13", "column": "params", "jsonPath": ["items", "2", "icon"] }
+        ],
+        "link": [
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "0", "link"] },
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "1", "link"] },
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "2", "link"] }
         ]
+      },
+      "itemLists": {
+        "sessions": {
+          "fields": {
+            "day": [
+              [
+                {
+                  "entity": "module-13",
+                  "column": "params",
+                  "jsonPath": ["items", "0", "sessions", "0", "day"]
+                },
+                {
+                  "entity": "module-13",
+                  "column": "params",
+                  "jsonPath": ["items", "0", "sessions", "1", "day"]
+                }
+              ],
+              [
+                {
+                  "entity": "module-13",
+                  "column": "params",
+                  "jsonPath": ["items", "1", "sessions", "0", "day"]
+                }
+              ],
+              []
+            ],
+            "time": [
+              [
+                {
+                  "entity": "module-13",
+                  "column": "params",
+                  "jsonPath": ["items", "0", "sessions", "0", "time"]
+                },
+                {
+                  "entity": "module-13",
+                  "column": "params",
+                  "jsonPath": ["items", "0", "sessions", "1", "time"]
+                }
+              ],
+              [
+                {
+                  "entity": "module-13",
+                  "column": "params",
+                  "jsonPath": ["items", "1", "sessions", "0", "time"]
+                }
+              ],
+              []
+            ]
+          }
+        }
       },
       "designLines": [{ "entity": "module-13", "column": "params", "jsonPath": ["layout"] }]
     },
     "footer-main": {
       "fields": {
         "copyright": { "entity": "module-14", "column": "content" }
+      },
+      "lists": {
+        "opening-hours": {
+          "fields": {
+            "line": [
+              [
+                { "entity": "module-14", "column": "params", "jsonPath": ["hours", "0"] },
+                { "entity": "module-14", "column": "params", "jsonPath": ["hours", "1"] }
+              ]
+            ]
+          }
+        }
       }
     }
   },

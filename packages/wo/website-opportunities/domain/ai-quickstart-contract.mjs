@@ -4,6 +4,7 @@
 //
 // The format is documented in `docs/references/ai-quickstart-contract.md`. Data kinds are roles of the vocabulary
 // `place-content-roles/3`; block types are `BLOCK_TYPES`, both in `place-content-roles.mjs`.
+import { CHILD_LIST_KEYS, childListProblems } from './ai-quickstart-child-lists.mjs'
 import { mappingProblems } from './ai-quickstart-mapping.mjs'
 import { ROLE_VOCABULARY_V3, isBlockType, isRole } from './place-content-roles.mjs'
 
@@ -49,11 +50,14 @@ function fieldProblems(field, at, report) {
     report(`${at}.kind`, `${JSON.stringify(field.kind)} is not a data kind of place-content-roles/3`)
   if (type === 'text' && !isWhole(field.limit, 1))
     report(`${at}.limit`, 'a text field needs a limit: the most characters it holds at the narrowest width')
-  if (
-    type === 'image' &&
-    !(isObject(field.frame) && isWhole(field.frame.width, 1) && isWhole(field.frame.height, 1))
-  )
+  const framed = isObject(field.frame) && isWhole(field.frame.width, 1) && isWhole(field.frame.height, 1)
+  if (type === 'image' && !framed)
     report(`${at}.frame`, 'an image field needs a frame {width, height} in pixels')
+  if (type === 'icon' && !framed)
+    report(
+      `${at}.frame`,
+      'an icon field needs a frame {width, height}: the box the icon is drawn in, in pixels'
+    )
 }
 
 function fieldListProblems(block, key, at, report, names) {
@@ -107,20 +111,47 @@ export function blockProblems(block, at, report) {
   fieldListProblems(block, 'fields', at, report, names)
   fieldListProblems(block, 'itemFields', at, report, names)
   storedPlaceProblems(block, at, report)
+  childListProblems(
+    block,
+    at,
+    { keys: CHILD_LIST_KEYS, places: (key) => (key === 'lists' ? 1 : itemPlacesOf(block)), names },
+    { report, fieldProblems, itemsProblems }
+  )
+}
+
+/**
+ * The stored item places of a repeating block: as many as its item fields store, else its maximum. The child lists
+ * of each item (`itemLists`) store their rows per item place, in the same order.
+ */
+export function itemPlacesOf(block) {
+  const stored = (Array.isArray(block?.itemFields) ? block.itemFields : [])
+    .map((f) => (Array.isArray(f?.slots) ? f.slots.length : 0))
+    .filter((n) => n > 0)
+  if (stored.length) return Math.max(...stored)
+  return Number.isInteger(block?.items?.max) ? block.items.max : null
 }
 
 /**
  * The rules a block store answers alone from the stored places a draft records (`slot` on a field, `slots` on an
- * item field: one per item). They hold whether the mapping file is written or pending: an item field stored for
- * fewer items than the block takes, and a design line typed as content.
+ * item field: one per item). They hold whether the mapping file is written or pending: an item field with no stored
+ * places that is not derived, an item field stored for fewer items than the block takes, and a design line typed as
+ * content.
  */
 function storedPlaceProblems(block, at, report) {
   const fields = Array.isArray(block.fields) ? block.fields.filter(isObject) : []
   const itemFields = Array.isArray(block.itemFields) ? block.itemFields.filter(isObject) : []
   const max = Number.isInteger(block.items?.max) ? block.items.max : null
   for (const field of itemFields) {
-    if (field.slots === undefined || max === null) continue
     const fieldAt = `${at}.itemFields[${label(field.name, '?')}].slots`
+    if (field.slots === undefined) {
+      if (!isName(field.derived))
+        report(
+          fieldAt,
+          'an item field lists its stored place per item (slots), or says what it is derived from (derived)'
+        )
+      continue
+    }
+    if (max === null) continue
     if (!Array.isArray(field.slots) || !field.slots.every(isName))
       report(fieldAt, 'slots must list the stored place of the field, one per item')
     else if (field.slots.length < max)
