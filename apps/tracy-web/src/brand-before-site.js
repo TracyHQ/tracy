@@ -5,6 +5,9 @@
 // of their own, reads the brand file the run wrote as the look record (`brandLookOf`), and keeps the record with the
 // step's files like a build does (`dispose`).
 //
+// The input is a research revision (`{revisionId}`) or a brief held in memory (`{brief, logoFile?}`, written to the run's
+// folder and given to the bench as `--brief-file`), never both.
+//
 // The attempts are the engine's (`step-chain.js`): at most `STEP_CHAIN_ATTEMPTS` per step, no rerun of an error marked
 // `noRerun` or of an attempt under a stopped signal, and record lines of the engine's shape, written with the engine's
 // own record helpers (`step-chain-record.js`). The engine's `attempt` itself is a closure inside
@@ -105,19 +108,33 @@ function spendOfRecord(record) {
  *   Promise<object | null>, now?: () => number, readJson?: (file: string) => Promise<object>}} deps `steps`: the step
  *   chain's steps (`createStepChainSteps`); `briefOf`: the stored research brief of a revision (for example
  *   `briefOfRevision` of `brand-step/brand-control.js`)
- * @returns {(input: {revisionId: string, kitRef: string, siteLanguage?: string, signal?: AbortSignal}) =>
+ * @returns {(input: {revisionId?: string, brief?: object, logoFile?: string, kitRef: string, siteLanguage?: string, signal?: AbortSignal}) =>
  *   Promise<{record: object, records: object[], usd: number | null, knownUsd?: number, prompt: object, runId: string}>}
  * @throws {BrandStepError} `brand_step_failed` (`noRerun`: its attempts are spent) with the record and the stop report
  */
 export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson }) {
   const read = readJson ?? (async (file) => JSON.parse(await readFile(file, 'utf8')))
-  return async function brandBeforeSite({ revisionId, kitRef, siteLanguage, signal }) {
-    if (!revisionId || !kitRef) throw new TypeError('the brand step needs a research revision and a kit')
-    const brief = await briefOf(revisionId)
+  return async function brandBeforeSite({
+    revisionId,
+    brief: given,
+    logoFile,
+    kitRef,
+    siteLanguage,
+    signal
+  }) {
+    if (!kitRef) throw new TypeError('the brand step needs a kit')
+    if (revisionId && (given || logoFile))
+      throw new TypeError('the brand step takes a research revision or a brief, not both')
+    if (!revisionId && !given) throw new TypeError('the brand step needs a research revision or a brief')
+    const brief = given ?? (await briefOf(revisionId))
     if (!brief)
       throw Object.assign(new Error(`no research brief for revision ${revisionId}`), {
         code: 'brief_missing'
       })
+    // What the record lines say about the input: its kind and name, never the brief itself.
+    const source = revisionId
+      ? { kind: 'revision', revisionId }
+      : { kind: 'brief-file', logo: logoFile ? 'file' : 'none' }
     sequence += 1
     // A run id of its own, so the step's files and record never mix with a build's.
     const runId = `brand-before-site-${now()}-${sequence}`
@@ -125,7 +142,9 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
     const ctx = {
       runId,
       contract: { id: kitRef },
-      brief: { researchRevisionId: revisionId },
+      brief: revisionId
+        ? { researchRevisionId: revisionId }
+        : { researchBrief: given, ...(logoFile ? { logoFile } : {}) },
       normalized: siteLanguage ? { languages: [siteLanguage] } : {},
       signal: halt
     }
@@ -135,7 +154,7 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
       const kit = await attemptStep(run, 'kit', {}, (inputs, n) => steps.kit(ctx, inputs, how(n)))
       const brand = kit.stop
         ? kit
-        : await attemptStep(run, 'brand', { kit: kit.value }, async (inputs, n) => {
+        : await attemptStep(run, 'brand', { kit: kit.value, source }, async (inputs, n) => {
             const ran = await steps.brand(ctx, inputs, how(n))
             const file = ran?.value?.file
             if (!file) return ran

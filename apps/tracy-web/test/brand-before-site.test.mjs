@@ -200,3 +200,44 @@ test('an unknown spend stays unknown, with the known part beside it', async () =
   assert.equal(out.knownUsd, 0.1)
   assert.deepEqual(out.prompt, { file: 'brand-step.system.md', version: 10 })
 })
+
+test('a brief given in memory runs the step without reading a revision, and the record names the input kind', async () => {
+  const { steps, seen } = fakeSteps('brand/brand-file.json')
+  const ctxs = []
+  const brand = steps.brand
+  steps.brand = (ctx, inputs, how) => {
+    ctxs.push(ctx.brief)
+    return brand(ctx, inputs, how)
+  }
+  let asked = 0
+  const brandBeforeSite = createBrandBeforeSite({
+    steps,
+    briefOf: async () => {
+      asked += 1
+      return brief
+    },
+    readJson
+  })
+  const out = await brandBeforeSite({ brief, logoFile: 'invented-logo.png', kitRef: 'example-court@1.0.0' })
+  assert.equal(asked, 0)
+  assert.deepEqual(ctxs, [{ researchBrief: brief, logoFile: 'invented-logo.png' }])
+  assert.equal(out.record.accent.hex, '#8a2c6c')
+  const line = out.records.find((r) => r.step === 'brand')
+  assert.deepEqual(line.inputs.source, { kind: 'brief-file', logo: 'file' })
+  assert.equal(JSON.stringify(line.inputs).includes('Harrow Lane'), false)
+  assert.equal(seen.brand[0].revision, undefined)
+  const rev = await run(fakeSteps('brand/brand-file.json').steps)
+  assert.deepEqual(rev.records.find((r) => r.step === 'brand').inputs.source, {
+    kind: 'revision',
+    revisionId: 'rev-1'
+  })
+})
+
+test('a revision and a brief together, or neither, never start a step', async () => {
+  const { steps, seen } = fakeSteps('brand/brand-file.json')
+  const make = createBrandBeforeSite({ steps, briefOf: async () => brief, readJson })
+  await assert.rejects(make({ revisionId: 'rev-1', brief, kitRef: 'k@1' }), TypeError)
+  await assert.rejects(make({ revisionId: 'rev-1', logoFile: 'x.png', kitRef: 'k@1' }), TypeError)
+  await assert.rejects(make({ kitRef: 'k@1' }), TypeError)
+  assert.deepEqual(seen.kit, [])
+})

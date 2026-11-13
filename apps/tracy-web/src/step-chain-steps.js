@@ -15,6 +15,7 @@
 import { mkdir, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
+import { brandInputResolver } from './step-chain-brand-input.js'
 import { runCli as brandCli } from './brand-step/brand-cli.js'
 import { brandRunDir } from './brand-step/brand-wiring.js'
 import { CHAIN_BENCH_CHECK_FAILED, chainBenchFailure } from './lib/chain-bench-verdict.js'
@@ -180,6 +181,7 @@ export function createStepChainSteps(deps) {
   const stepDir = async (ctx, step, how) =>
     path.join(await folderOf(ctx), Number(how?.attempt) > 1 ? `${step}-attempt-${Number(how.attempt)}` : step)
   const revisionOf = (ctx) => String(ctx.brief?.researchRevisionId ?? '')
+  const brandInputOf = brandInputResolver(stepError)
   const exists = (file) =>
     stat(file).then(
       (f) => f.isFile() && f.size > 0,
@@ -238,16 +240,33 @@ export function createStepChainSteps(deps) {
       return { value: { ref, doc: kit.doc, contentMap: map?.doc ?? null }, usd: 0 }
     },
 
+    // The brand input is a research revision (`ctx.brief.researchRevisionId`) or a brief held in memory
+    // (`ctx.brief.researchBrief`, an object, with an optional `ctx.brief.logoFile` path), never both, never neither.
+    // A brief is written once into the run's own folder and every attempt reads that same file (`--brief-file`).
     async brand(ctx, { kit }, how) {
       const { signal } = how
+      const input = brandInputOf(ctx)
       const dir = await stepDir(ctx, 'brand', how)
+      let source
+      if (input.brief) {
+        const briefFile = path.join(await folderOf(ctx), 'brand-input', 'brief.json')
+        await mkdir(path.dirname(briefFile), { recursive: true })
+        // 'wx': a rerun finds the file it stored and reads it as it is.
+        await writeFile(briefFile, `${JSON.stringify(input.brief, null, 2)}\n`, { flag: 'wx' }).catch((e) => {
+          if (e?.code !== 'EEXIST') throw e
+        })
+        source = [
+          '--brief-file',
+          path.resolve(briefFile),
+          ...(input.logoFile ? ['--logo-file', path.resolve(input.logoFile)] : [])
+        ]
+      } else source = ['--brief-revision', input.revisionId]
       const ran = await benchRun(
         'brand',
         [
           '--kit',
           kit.ref,
-          '--brief-revision',
-          revisionOf(ctx),
+          ...source,
           ...(ctx.normalized?.languages?.[0] ? ['--site-language', ctx.normalized.languages[0]] : []),
           ...NO_CAPS
         ],
