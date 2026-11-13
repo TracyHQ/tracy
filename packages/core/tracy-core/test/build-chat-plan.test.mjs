@@ -104,6 +104,7 @@ test('look, pictures, assumptions and left out come straight from the plan', () 
   assert.deepEqual(card.look, {
     template: 'JA Boxing',
     accent: '#1f7a4d',
+    accentDark: null,
     logo: { kind: 'own', source: 'Instagram profile picture' }
   })
   assert.deepEqual(card.pictures, {
@@ -294,4 +295,33 @@ test('the rows report of dropped rows reaches the card as left out reasons, neve
   const card = planCardOf(p)
   assert.deepEqual(card.leftOut, [{ what: 'Tuesday, 18:00', kind: 'item', reason }])
   assert.equal(JSON.stringify(card).includes('row_value_over_limit'), false)
+})
+
+test('a dark theme accent reaches the card beside the light one; without it the light one is the only one', () => {
+  const p = plan()
+  p.look.accent = '#111111'
+  p.look.accentDark = '#f5f5f5'
+  assert.deepEqual(
+    { accent: planCardOf(p).look.accent, accentDark: planCardOf(p).look.accentDark },
+    { accent: '#111111', accentDark: '#f5f5f5' }
+  )
+  assert.equal(planCardOf(plan()).look.accentDark, null)
+})
+
+test('a system drawn logo is a text logo, and its temporary logo assumption is listed on the card', () => {
+  const p = plan()
+  p.look.logo = { kind: 'text' }
+  const said = 'Your logo is a temporary one made from your business name; you can replace it later.'
+  p.assumptions = [...(p.assumptions ?? []), { id: 'logo', field: 'look.logo', said }]
+  const card = planCardOf(p)
+  assert.deepEqual(card.look.logo, { kind: 'text' })
+  assert.ok(card.assumptions.some((a) => a.id === 'logo' && a.said === said))
+})
+
+test('a dropped row keeps only its reason: field, limit and length never reach the card', () => {
+  const reason = 'This row is longer than the section can show, so it is not shown.'
+  const { plan: p } = withLists([], {
+    leftOut: [{ what: 'Tuesday, 18:00', kind: 'item', reason, field: 'time', limit: 40, length: 63 }]
+  })
+  assert.deepEqual(planCardOf(p).leftOut, [{ what: 'Tuesday, 18:00', kind: 'item', reason }])
 })

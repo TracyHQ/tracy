@@ -232,4 +232,29 @@ export const CSS = `
   .tv-bc-edit { flex-wrap: wrap; row-gap: 6px; }
   .tv-bc-edit input { flex: 1 0 100%; }
 }
+
+/* The quiet row of one tracy_build call (BuildToolRow): dsh's own process row, the business name beside it */
+.tv-bc-toolrow-sum { margin-left: 6px; color: var(--muted-foreground); overflow-wrap: normal; word-break: keep-all; }
+
+/* The plan review bar (ReviewBar): the shape of dsh's plan review panel, in Tracy tokens */
+.tv-bc-review-frame { display: flex; justify-content: center; padding: 6px 16px 10px; container-type: inline-size; }
+.tv-bc-review {
+  box-sizing: border-box; display: flex; flex-direction: column; width: 100%; overflow: hidden;
+  border: 1px solid var(--border); border-radius: 16px; background: var(--card); color: var(--card-foreground);
+  font-size: 14px; line-height: 1.5;
+}
+.tv-bc-review * { box-sizing: border-box; }
+.tv-bc-review-strip {
+  padding: 10px 16px; font-weight: 500; overflow-wrap: break-word;
+  background: color-mix(in oklab, var(--primary) 10%, var(--card)); color: var(--primary);
+}
+.tv-bc-review-body { padding: 12px 16px 4px; min-width: 0; }
+.tv-bc-review-body p { margin: 0 0 4px; overflow-wrap: break-word; }
+.tv-bc-review-q { font-weight: 500; }
+.tv-bc-review-foot {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px;
+  padding: 8px 16px 12px;
+}
+.tv-bc-review-err { min-height: 16px; font-size: 12px; color: var(--destructive); }
+.tv-bc-review-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-left: auto; }
 `

@@ -1,0 +1,322 @@
+// The build chat plugin's REAL registration path in a browser (#609): `apply` of `src/client/index.tsx`, fed a
+// recorded build session whose `tracy_build` results have the shape `build-tool.mjs` returns (fixture
+// `fixtures/build-chat-plugin.tsx`). It checks what the owner sees and can press: no tool JSON, one template card,
+// one living plan card in the latest plan's turn, inline edits through the draft door, the plan review bar from the
+// question id alone, nothing outside a build session, nothing with the switch off. No model key: the results are
+// recorded shapes with invented data.
+//
+// LIMIT: like the scenario runner, the bundle drops CSS, so this proves content and actions, not the look.
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+import path from 'node:path'
+import { test } from 'node:test'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { build } from 'esbuild'
+import {
+  applyPlanEdit,
+  checkPlanEdit
+} from '../../../../wo/website-opportunities/domain/build-contract-plan-edit.mjs'
+import { approvalOf, planReviewRequestOf } from '../../src/build-chat/index.mjs'
+import { STAGES, stageDocuments, TEMPLATES } from '../fixtures/build-chat/stages.mjs'
+
+const here = path.dirname(fileURLToPath(import.meta.url))
+const root = path.resolve(here, '../../../../..')
+const require = createRequire(import.meta.url)
+const fromAskForm = { paths: [path.join(root, 'packages/ui/tracy-ask-form')] }
+const playwright = await import(
+  pathToFileURL(require.resolve('playwright', { paths: [path.join(root, 'apps/tracy-host')] })).href
+)
+const chromium = playwright.chromium ?? playwright.default?.chromium
+
+const BUILD = 'session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e'
+const OTHER = 'session-1a2b3c4d-4b5a-4968-8778-695a4b3c2d1e'
+const PLAN = stageDocuments(STAGES.find((s) => s.name === 'plan')).scenario.plan
+const NAME = 'Sunrise Tennis Club'
+
+/** The session log of a build chat: research, templates, a plan, then an edit asked in the chat. */
+function recordedSession() {
+  let seq = 0
+  const call = (turn, callId, args) => ({
+    type: 'tool/call',
+    seq: ++seq,
+    data: { turn, name: 'tracy_build', callId, arguments: JSON.stringify(args) }
+  })
+  const result = (turn, callId, value) => ({
+    type: 'tool/result',
+    seq: ++seq,
+    surfaceOp: 'append',
+    data: {
+      turn,
+      message: {
+        source: { callId },
+        isError: false,
+        content: [{ type: 'text', text: JSON.stringify(value) }]
+      }
+    }
+  })
+  const review = planReviewRequestOf(PLAN)
+  return [
+    call(0, 'c-research', { action: 'research', links: ['https://sunrise-tennis.example'] }),
+    result(0, 'c-research', { profile: { business: NAME, counts: { services: 4 } } }),
+    call(1, 'c-templates', { action: 'templates' }),
+    result(1, 'c-templates', { options: TEMPLATES, none: false }),
+    call(2, 'c-plan', { action: 'plan' }),
+    result(2, 'c-plan', { plan: { id: PLAN.id, revision: PLAN.revision }, review }),
+    call(3, 'c-edit', { action: 'edit', changes: [{ field: 'look.accent', value: '#1f7a4d' }] }),
+    result(3, 'c-edit', { plan: { id: PLAN.id, revision: PLAN.revision }, review }),
+    call(3, 'c-stale', { action: 'edit', changes: [] }),
+    result(3, 'c-stale', { stale: true, next: 'The plan changed meanwhile.' })
+  ]
+}
+
+/** tracy-web's build draft doors, answered in the runner: the draft, the template pick, the plan edits. */
+function draftDoors(plan) {
+  const state = { plan: structuredClone(plan), lastEdit: null, template: null, requests: [] }
+  const body = () => ({
+    draft: {
+      id: 'draft-1',
+      plan: state.plan,
+      lastEdit: state.lastEdit,
+      canUndo: state.lastEdit !== null,
+      template: state.template
+    }
+  })
+  return {
+    state,
+    async handle(route) {
+      const request = route.request()
+      const url = new URL(request.url())
+      const sent = request.postDataJSON?.() ?? null
+      state.requests.push({ method: request.method(), path: url.pathname, body: sent })
+      const json = (value, status = 200) =>
+        route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(value) })
+      if (url.pathname === '/api/build-draft' && request.method() === 'GET') return json(body())
+      if (url.pathname === '/api/build-draft/template') {
+        state.template = sent.template
+        return json(body())
+      }
+      if (url.pathname === '/api/build-draft/plan-edits') {
+        const checked = checkPlanEdit(sent.edit, state.plan)
+        if (!checked.ok) return json({ code: 'INVALID_EDIT' }, 422)
+        state.plan = applyPlanEdit(state.plan, sent.edit)
+        state.lastEdit = sent.edit
+        return json(body())
+      }
+      return json({ code: 'NOT_FOUND' }, 404)
+    }
+  }
+}
+
+const bundled = await build({
+  stdin: {
+    contents: readFileSync(path.join(here, 'fixtures/build-chat-plugin.tsx'), 'utf8'),
+    resolveDir: path.join(here, 'fixtures'),
+    loader: 'tsx'
+  },
+  bundle: true,
+  format: 'iife',
+  write: false,
+  outdir: path.join(here, 'out'),
+  jsx: 'automatic',
+  logLevel: 'silent',
+  loader: { '.css': 'empty', '.module.css': 'local-css' },
+  alias: {
+    react: path.dirname(require.resolve('react/package.json', fromAskForm)),
+    'react-dom': path.dirname(require.resolve('react-dom/package.json', fromAskForm))
+  }
+})
+const bundle = bundled.outputFiles.find((f) => f.path.endsWith('.js'))?.text
+
+/** One page with the plugin applied; `hidden` is what `/api/ui` answers. */
+async function open(browser, { viewport, theme = 'light', hidden = [], plan = PLAN }) {
+  const page = await browser.newPage({ viewport })
+  page.setDefaultTimeout(5000)
+  const errors = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  const dark = theme === 'dark' ? ' class="dark" data-ds-dark-theme=""' : ''
+  const html = `<!doctype html><html data-theme="${theme}"${dark}><body><div id="root"></div></body></html>`
+  const doors = draftDoors(plan)
+  await page.route('http://build-chat.test/**', (route) => {
+    const p = new URL(route.request().url()).pathname
+    if (p === '/api/ui')
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ hidden }) })
+    if (p.startsWith('/api/build-draft')) return doors.handle(route)
+    return route.fulfill({ status: 200, contentType: 'text/html', body: html })
+  })
+  await page.goto('http://build-chat.test/')
+  await page.addScriptTag({ content: bundle })
+  return { page, errors, doors, text: () => page.locator('#root').innerText() }
+}
+
+const launch = () =>
+  chromium
+    .launch({ channel: 'chrome', args: ['--disable-features=MacAppCodeSignClone'] })
+    .catch(() => chromium.launch({ args: ['--disable-features=MacAppCodeSignClone'] }))
+
+test('the real plugin draws the build chat from recorded tracy_build results, phone and desktop, light and dark', async (t) => {
+  const browser = await launch()
+  try {
+    for (const viewport of [
+      { name: 'phone', width: 390, height: 844 },
+      { name: 'desktop', width: 1280, height: 800 }
+    ])
+      for (const theme of ['light', 'dark'])
+        await t.test(`${viewport.name}, ${theme}`, async () => {
+          const { page, errors, doors, text } = await open(browser, { viewport, theme })
+          await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
+          const card = page.getByRole('article', { name: `${NAME} site plan` })
+          await card.waitFor()
+
+          // The rows say what happened in plain words; the stale answer is the model's alone; no JSON anywhere.
+          const all = await text()
+          for (const line of [
+            'Read 1 source',
+            NAME,
+            'Found designs for your site',
+            'Prepared your site plan',
+            'Updated your site plan'
+          ])
+            assert.ok(all.includes(line), line)
+          assert.doesNotMatch(all, /[{}]|"plan"|revision|stale/i)
+          assert.equal(await page.locator('[data-call="c-stale"] [data-build-tool]').count(), 0)
+
+          // One template card in its own turn; one living plan card, in the turn of the latest plan.
+          assert.equal(
+            await page
+              .locator('[data-turn="1"]')
+              .getByRole('button', { name: 'Use JA Boxing', exact: true })
+              .count(),
+            1
+          )
+          assert.equal(await page.getByRole('article').count(), 1, 'one living plan')
+          assert.equal(await page.locator('[data-turn="3"]').getByRole('article').count(), 1)
+          assert.equal(
+            await page.locator('[data-turn="2"]').getByRole('article').count(),
+            0,
+            'the older plan turn shows none'
+          )
+          assert.equal(
+            await page.getByRole('region', { name: 'Building your site' }).count(),
+            0,
+            'no build run yet'
+          )
+
+          // The pick goes through the template door.
+          await page.getByRole('button', { name: 'Use JA Boxing', exact: true }).click()
+          await page.getByText('Chosen: JA Boxing').waitFor()
+          assert.ok(
+            doors.state.requests.some((r) => r.method === 'PUT' && r.path === '/api/build-draft/template')
+          )
+
+          // An inline edit goes through the plan edit door, and the card follows the draft it answers with.
+          await card.getByRole('button', { name: 'Edit Tagline: Tennis for every age and level' }).click()
+          await card.getByRole('textbox', { name: 'New value for Tagline' }).fill('Tennis for every age')
+          await page.keyboard.press('Enter')
+          await card.locator('[data-changed][data-field]').first().waitFor()
+          const edit = doors.state.requests.find((r) => r.path === '/api/build-draft/plan-edits')
+          assert.equal(
+            checkPlanEdit(edit.body.edit, PLAN).ok,
+            true,
+            'the edit the card sent passes the contract'
+          )
+          assert.match(await card.innerText(), /Tennis for every age/)
+
+          // The plan review request as dsh's question tool passes it: no detail, no intent. The bar still claims it.
+          const asked = planReviewRequestOf(PLAN).questions.map(({ id, question, options }) => ({
+            id,
+            question,
+            options,
+            multiSelect: false
+          }))
+          await page.evaluate((qs) => window.probe.ask(qs), asked)
+          const bar = page.getByRole('region', { name: 'Approve this plan?' })
+          await bar.waitFor()
+          assert.match(await bar.innerText(), new RegExp(`${NAME} site plan`))
+          assert.match(await bar.innerText(), /5 pages, 4 services/)
+          await bar.getByRole('button', { name: 'Approve', exact: true }).click()
+          await page.waitForFunction(() => window.probe.answered().length === 1)
+          const [reply] = await page.evaluate(() => window.probe.answered())
+          assert.deepEqual(reply, { answers: [{ id: 'plan-review', selected: ['Approve'] }] })
+          assert.ok(approvalOf(doors.state.plan, reply), 'approvalOf reads the answer unchanged')
+
+          // An engine question stays dsh's own card.
+          await page.evaluate(() =>
+            window.probe.ask([
+              {
+                id: 'main-button',
+                question: 'What should the main button do?',
+                options: [{ label: 'Book a court' }],
+                multiSelect: false
+              }
+            ])
+          )
+          await page.locator('[data-dsh-question]').waitFor()
+          assert.deepEqual(errors, [])
+          await page.close()
+        })
+  } finally {
+    await browser.close()
+  }
+})
+
+test('a dark theme accent and a temporary logo: both swatches labelled, the temporary logo line shown', async () => {
+  const browser = await launch()
+  try {
+    const plan = structuredClone(PLAN)
+    plan.look.accent = '#111111'
+    plan.look.accentDark = '#f5f5f5'
+    plan.look.logo = { kind: 'text' }
+    const said = 'Your logo is a temporary one made from your business name. You can replace it later.'
+    plan.assumptions = [...(plan.assumptions ?? []), { id: 'logo', field: 'look.logo', said }]
+    const { page, errors } = await open(browser, { viewport: { width: 390, height: 844 }, plan })
+    await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
+    const look = page.getByRole('article').getByRole('region', { name: 'Look', exact: true })
+    await look.waitFor()
+    const text = await look.innerText()
+    assert.match(text, /Accent colour, light theme\s*#111111/)
+    assert.match(text, /Accent colour, dark theme\s*#f5f5f5/)
+    assert.match(text, /Your business name as text/)
+    assert.equal(
+      await look.getByRole('button', { name: /Edit Accent colour, dark theme/ }).count(),
+      0,
+      'not editable yet'
+    )
+    assert.match(await page.getByRole('article').innerText(), new RegExp(said.replace('.', '\\.')))
+    assert.doesNotMatch(await page.locator('#root').innerText(), /logo-made|from-logo/)
+    assert.deepEqual(errors, [])
+  } finally {
+    await browser.close()
+  }
+})
+
+test('outside a build chat session, and with the switch off, the plugin draws nothing', async () => {
+  const browser = await launch()
+  try {
+    const other = await open(browser, { viewport: { width: 1280, height: 800 } })
+    await other.page.evaluate(([id, events]) => window.probe.load(id, events), [OTHER, recordedSession()])
+    await other.page.evaluate(() =>
+      window.probe.ask([
+        {
+          id: 'plan-review',
+          question: 'Approve this plan?',
+          options: [{ label: 'Approve' }],
+          multiSelect: false
+        }
+      ])
+    )
+    await other.page.locator('[data-dsh-question]').waitFor()
+    assert.equal((await other.text()).trim(), 'Approve this plan?', 'only the stand in for dsh question card')
+    assert.equal(await other.page.locator('[class*="tv-bc"]').count(), 0)
+    assert.deepEqual(other.errors, [])
+
+    const off = await open(browser, { viewport: { width: 1280, height: 800 }, hidden: ['chat-build'] })
+    await off.page.waitForFunction(() => window.probe.registered().length === 0)
+    await off.page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
+    assert.equal(await off.page.locator('[class*="tv-bc"], [data-build-tool]').count(), 0)
+    assert.equal(await off.page.getByRole('article').count(), 0)
+    assert.deepEqual(off.errors, [])
+  } finally {
+    await browser.close()
+  }
+})

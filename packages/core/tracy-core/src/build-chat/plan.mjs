@@ -14,7 +14,9 @@
 import { BUILD_CHAT_STRINGS } from './conversation.mjs'
 
 const PLAN_EDIT_SCHEMA = 'tracy-build-plan-edit/v1'
-const REVIEW_ID = 'plan-review'
+/** The id of the plan review request: the one question the tool's guard admits beside the engine's own. */
+export const PLAN_REVIEW_ID = 'plan-review'
+const REVIEW_ID = PLAN_REVIEW_ID
 
 /** Translate with the English source; a plugin passes its bound locale instead. */
 const english = (key, vars = {}) =>
@@ -135,6 +137,8 @@ export function planCardOf(plan) {
     look: {
       template: plan.look.template.name,
       accent: plan.look.accent,
+      // The dark theme's accent when it differs from the light one (#616); shown, not offered for editing yet.
+      accentDark: typeof plan.look.accentDark === 'string' ? plan.look.accentDark : null,
       logo:
         plan.look.logo.kind === 'own'
           ? { kind: 'own', source: plan.look.logo.source }

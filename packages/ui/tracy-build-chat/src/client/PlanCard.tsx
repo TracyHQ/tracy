@@ -237,6 +237,8 @@ export function PlanCard({
     }
   }
 
+  // A dark theme accent (#616) is shown beside the light one, each labelled; the owner cannot edit it yet.
+  const accentDark = card.look.accentDark
   const logo =
     card.look.logo.kind === 'own'
       ? t('plan.look.logoOwn', { source: card.look.logo.source ?? '' })
@@ -312,11 +314,11 @@ export function PlanCard({
           <Row label={t('plan.look.template')}>
             <Value field="look.template">{card.look.template}</Value>
           </Row>
-          <Row label={t('plan.look.accent')}>
+          <Row label={t(accentDark === null ? 'plan.look.accent' : 'plan.look.accentLight')}>
             <EditableValue
               ctx={ctx}
               field="look.accent"
-              label={t('plan.look.accent')}
+              label={t(accentDark === null ? 'plan.look.accent' : 'plan.look.accentLight')}
               current={card.look.accent}
               text={card.look.accent}
             >
@@ -324,6 +326,14 @@ export function PlanCard({
               {card.look.accent}
             </EditableValue>
           </Row>
+          {accentDark !== null && (
+            <Row label={t('plan.look.accentDark')}>
+              <Value field="look.accentDark">
+                <span className="tv-bc-swatch" style={{ background: accentDark }} aria-hidden />
+                {accentDark}
+              </Value>
+            </Row>
+          )}
           <Row label={t('plan.look.logoLight')}>
             <Value field="look.logo">{logo}</Value>
           </Row>

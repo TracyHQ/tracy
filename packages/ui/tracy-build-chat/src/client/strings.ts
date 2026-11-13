@@ -47,6 +47,8 @@ export const en = {
   'plan.look': 'Look',
   'plan.look.template': 'Template',
   'plan.look.accent': 'Accent colour',
+  'plan.look.accentLight': 'Accent colour, light theme',
+  'plan.look.accentDark': 'Accent colour, dark theme',
   'plan.look.logoLight': 'Logo on light',
   'plan.look.logoDark': 'Logo on dark',
   'plan.look.logoOwn': 'Your logo, from {source}',
@@ -84,7 +86,16 @@ export const en = {
   'plan.cancel': 'Cancel',
   'plan.changed': 'Changed',
   'plan.undo': 'Undo',
-  'plan.undoLabel': 'Undo last change'
+  'plan.undoLabel': 'Undo last change',
+  'tool.research.one': 'Read {count} source',
+  'tool.research.other': 'Read {count} sources',
+  'tool.research.none': 'Read about your business',
+  'tool.working': 'Working on your site plan',
+  'tool.templates': 'Found designs for your site',
+  'tool.plan': 'Prepared your site plan',
+  'tool.edit': 'Updated your site plan',
+  'tool.stopped': 'This step could not finish',
+  'review.failed': 'Your answer was not sent. Try again.'
 } as const
 
 export type StringKey = keyof typeof en

@@ -147,7 +147,12 @@ export interface PlanCard {
   name: string
   facts: PlanFact[]
   language: string
-  look: { template: string; accent: string; logo: { kind: string; source?: string } }
+  look: {
+    template: string
+    accent: string
+    accentDark: string | null
+    logo: { kind: string; source?: string }
+  }
   services: { id: string; field: string; label: string; source: string }[]
   pages: {
     id: string
@@ -206,3 +211,25 @@ export declare function approvalOf(
   reply: { answers?: { id: string; selected?: string[] }[] } | null,
   t?: BuildChatT
 ): { plan: { id: string; revision: number } } | null
+
+export declare const BUILD_TOOL: 'tracy_build'
+export declare const PLAN_REVIEW_ID: 'plan-review'
+export type BuildToolResult =
+  | { kind: 'research'; business: string }
+  | { kind: 'templates'; options: TemplateOption[]; none: boolean }
+  | { kind: 'plan'; id: string; revision: number }
+  | { kind: 'running' | 'stopped' | 'quiet' }
+export declare function buildToolResultOf(text: unknown): BuildToolResult | null
+export type BuildToolRow =
+  | { kind: 'research'; sources: number; business: string }
+  | { kind: 'working'; step: string }
+  | { kind: 'templates' | 'plan' | 'edit' | 'stopped' }
+export declare function buildToolRowOf(rawArgs: unknown, text: string | null): BuildToolRow | null
+export interface BuildToolFold {
+  calls: Readonly<Record<string, string>>
+  templates: { turn: number; seq: number; options: TemplateOption[]; none: boolean } | null
+  plan: { turn: number; seq: number; id: string; revision: number } | null
+}
+// biome-ignore lint/suspicious/noExplicitAny: a dsh session event, duck-typed
+export declare function buildToolFoldOf(state: BuildToolFold | undefined, event: any): BuildToolFold
+export declare function isPlanReviewRequest(questions: unknown): boolean
