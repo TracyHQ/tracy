@@ -34,7 +34,10 @@ const profile = {
     }))
   }
 }
-/** A features block shaped like JA Boxing's: a heading and two icon fields of a 100 by 100 frame per item. */
+/**
+ * A features block shaped like JA Boxing's: a heading, a text and one icon kept in two files per item (a dark base and
+ * its light version, `variantOf`), drawn for the item's heading and text (`for`), as JA Boxing's block-157 declares.
+ */
 const blockStore = {
   blocks: [
     {
@@ -45,12 +48,16 @@ const blockStore = {
       itemFields: [
         { name: 'heading-2', kind: 'editorial.heading', type: 'text', limit: 36 },
         { name: 'paragraph-2', kind: 'editorial.paragraph', type: 'text', limit: 106 },
-        ...['item-icon', 'item-icon-2'].map((name) => ({
-          name,
+        ...[
+          { name: 'item-icon', theme: 'dark' },
+          { name: 'item-icon-2', theme: 'light', variantOf: 'item-icon' }
+        ].map((pair) => ({
+          ...pair,
           kind: 'editorial.item_icon',
           type: 'icon',
           frame: { width: 100, height: 100 },
-          storage: 'image-file'
+          storage: 'image-file',
+          for: ['heading-2', 'paragraph-2']
         }))
       ]
     }
@@ -170,6 +177,15 @@ test('a ranking that passes on the re-run fills the icons from the library by ea
   assert.ok(!asked[0].candidates.includes('dice-six'))
   assert.equal(asked[0].candidates[0], 'tooth')
   assert.equal(named(ITEMS[1]), 'first-aid')
-  assert.ok(icons.every((i) => i.source === 'library' && i.variants.light && i.variants.dark))
+  // Each member of the dark and light pair carries the version of its own theme, and both show the same icon.
+  const theme = { 'item-icon': 'dark', 'item-icon-2': 'light' }
+  assert.ok(icons.every((i) => i.source === 'library' && Object.keys(i.variants).join() === theme[i.field]))
+  for (const item of ITEMS) {
+    const pair = icons.filter((i) => i.item === item || i.id.includes(`.${item}.`))
+    assert.deepEqual(
+      pair.map((i) => i.icon.name),
+      [named(item), named(item)]
+    )
+  }
   assert.ok(!icons.some((i) => i.icon.name === 'boxing-glove'))
 })
