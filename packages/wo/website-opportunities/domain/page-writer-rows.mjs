@@ -103,9 +103,19 @@ export function rowContextOf(fields) {
 }
 
 /**
- * The values of every OTHER row of the plan data, for the copy check of a row's copy field (`other_row_data`): a tip
- * of one step must not carry the times of a session. The row's own values and its parent rows' values are its own, a
- * value too short to tell (under 3 characters) is never matched.
+ * Whether a row value is data a copy field could leak, not an ordinary word: it holds a digit (a time, a price, a
+ * phone number, a date), it is a link or an email address, or it is a phrase of at least 3 words. A single word or a
+ * short name ("Glaze", "Mon", "Odile Brannoch") never is: copy may use it freely.
+ */
+export const isDataLike = (value) =>
+  /\p{N}/u.test(value) ||
+  /@|:\/\/|^www\.|\.[a-z]{2,}\//i.test(value) ||
+  String(value).trim().split(/\s+/).length >= 3
+
+/**
+ * The data like values (`isDataLike`) of every OTHER row of the plan data, for the copy check of a row's copy field
+ * (`other_row_data`): a tip of one step must not carry the times of a session. The row's own values and its parent
+ * rows' values are its own.
  */
 export function foreignValuesOf(rowData, data) {
   const own = new Set()
@@ -115,6 +125,6 @@ export function foreignValuesOf(rowData, data) {
   for (const [id, record] of data.rowsById ?? new Map())
     if (id !== rowData)
       for (const parts of Object.values(record.values))
-        for (const p of parts) if (!own.has(p) && [...p].length >= 3) out.add(p)
+        for (const p of parts) if (!own.has(p) && isDataLike(p)) out.add(p)
   return [...out]
 }

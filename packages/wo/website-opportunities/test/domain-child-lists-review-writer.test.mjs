@@ -8,7 +8,9 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { checkBuildDocument } from '../domain/build-contract.mjs'
 import { writePages } from '../domain/page-writer.mjs'
+import { fieldValueProblems } from '../domain/page-copy-check.mjs'
 import { pageFieldsOf } from '../domain/page-writer-fields.mjs'
+import { foreignValuesOf } from '../domain/page-writer-rows.mjs'
 import { placeLimitsOf } from '../domain/field-place-limits.mjs'
 import { needsProfileOf } from '../domain/needs-profile.mjs'
 import { composePlan } from '../domain/plan-composer.mjs'
@@ -39,6 +41,38 @@ test('a row copy field that carries another row data is sent back once, then fai
   const own = scriptedWriter((key) => (key === TIP(grid) ? 'Wedge the clay first' : 'Calm practice'))
   const copy = await writePages({ plan, profile, blockStore: potteryStore(), model: own })
   assert.equal(copy.pages[0].fields.find((f) => f.key === TIP(grid)).value, 'Wedge the clay first')
+})
+
+test('only data like values of other rows count: times and phrases, never a plain word or a short name', () => {
+  const record = (id, values, parent = null) => [id, { id, owner: 'service-x', parent, values, rows: [] }]
+  const data = {
+    rowsById: new Map([
+      record('step-1', { 'step.title': ['Throw the pot'] }),
+      record('step-1-tip', { 'step.description': ['Keep it wet'] }, 'step-1'),
+      record('step-2', { 'step.title': ['Glaze'] }),
+      record('session-1', { 'offering.schedule': ['Mon', '10:00 to 12:00'] }),
+      record('teacher-link', { 'person.social_url': ['https://instagram.com/invented.teacher'] })
+    ])
+  }
+  const foreign = foreignValuesOf('step-1-tip', data)
+  assert.deepEqual(foreign.sort(), ['10:00 to 12:00', 'https://instagram.com/invented.teacher'].sort())
+  const field = { name: 'tip', type: 'text', kind: 'step.description', limit: 60 }
+  const codes = (value) => fieldValueProblems(field, value, { foreign }).map((p) => p.code)
+  assert.deepEqual(codes('Dry the bowl before you glaze it'), [])
+  assert.deepEqual(codes('Come back every Mon'), [])
+  assert.deepEqual(codes('Sat 10:00 to 12:00'), ['other_row_data'])
+  // A phrase of three words or more is data too, matched whole: its own words alone are fine.
+  const steps = foreignValuesOf('step-2', data)
+  assert.ok(steps.includes('Throw the pot'))
+  assert.deepEqual(
+    fieldValueProblems(field, 'Throw the pot first', { foreign: steps }).map((p) => p.code),
+    ['other_row_data']
+  )
+  assert.deepEqual(fieldValueProblems(field, 'Throw gently', { foreign: steps }), [])
+  assert.match(
+    fieldValueProblems(field, 'Sat 10:00 to 12:00', { foreign }).at(-1).message,
+    /belongs to another row/
+  )
 })
 
 test('a row value too long for its field is left out by the plan, so the writer never stops on it', async () => {
