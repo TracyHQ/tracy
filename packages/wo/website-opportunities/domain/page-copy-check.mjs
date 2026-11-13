@@ -5,9 +5,11 @@
 // limit. It never measures against demo copy, and it has no floor: a short value that says what it must is never sent
 // back to be made longer, so nothing is padded to reach a length.
 //
-// Length unit: a limit counts CODE POINTS (`charCount`), the unit Contract A states for `limit` ("the most characters
-// it holds"), so an accented letter or an emoji counts once, whatever its UTF-16 length. Data values are measured with
-// the same count (`page-writer-request.mjs`).
+// Length unit: a limit counts the characters a visitor reads, in CODE POINTS (`charCount`, which is `visibleLength` of
+// `draft-write-length.mjs`): tags and markers out, entities read, white space runs as one space, NFC, so an accented
+// letter or an emoji counts once, whatever its UTF-16 length or its decomposition. It is the unit Contract A states for
+// `limit` ("the most characters it holds"), the unit of the order check and of the write guard, and the plugin door's
+// own count. Data values are measured with the same count (`page-writer-request.mjs`).
 //
 // Plain text, the only form a text field holds: one line of characters a reader sees. No HTML tag, no markdown marker
 // (a heading `#`, a list `-`, `*`, `+` or `1.` or a quote `>` at the start, `**strong**`, `__strong__`, `*soft*`,
@@ -17,6 +19,7 @@
 // blank site contract slot refuses it and an HTML or codes place reads it as markup, so it goes back to the writer here,
 // where a rewrite can still fix it.
 import { aboutThePageOf } from './copy-about-the-page.mjs'
+import { visibleLength } from './draft-write-length.mjs'
 import { tokensIn } from './needs-profile-grounding.mjs'
 import { inventedDataOf } from './page-writer-data-guard.mjs'
 
@@ -40,8 +43,8 @@ const MARKDOWN = [
 /** The field types the writer writes: text only. Links, numbers, images and icons come from data or the picture step. */
 export const WRITER_FIELD_TYPES = Object.freeze(['text'])
 
-/** How many characters a value holds: one per code point, not per UTF-16 unit (the unit of every limit). */
-export const charCount = (value) => [...String(value)].length
+/** How many characters a visitor reads of a value: the unit of every limit (`draft-write-length.mjs`). */
+export const charCount = (value) => visibleLength(value)
 
 /**
  * The problems of one written value against its declared field. An empty list means the value fits.

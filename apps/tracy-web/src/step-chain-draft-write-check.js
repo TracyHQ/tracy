@@ -1,7 +1,7 @@
 // The read back of a draft write (#597): after every door call the record is read from the site and compared with what
 // was meant: the columns a created record, a copy or a library module was sent (title, alias, menutype, home, link,
 // catid, content, the rows cut, the elements removed), every value at its location (an HTML piece read as its node's
-// text), a module's pages, a contract apply's slots and removed slots, the site identity, and the bytes behind an
+// text), a module's pages, a contract apply's record columns whole, the site identity, and the bytes behind an
 // uploaded path. A difference stops the write with `read_back_mismatch`, naming the operation, the column or slot and
 // lengths, never the customer's text.
 import { createHash } from 'node:crypto'
@@ -147,14 +147,21 @@ export async function readAssignment(op, id, menuids, ctx) {
   if (!holds(menuids, got)) throw mismatch(op, 'pages', menuids, got)
 }
 
-/** A contract apply's slots and removed slots as the site holds them. */
-export async function readContract(op, changes, removes, ctx) {
-  const read = await ctx.doors.read({ slots: [...Object.keys(changes), ...removes] })
+/**
+ * A contract apply's record columns as the site holds them, whole: every slot it wrote holds its value, every slot it
+ * removed is gone, and every other slot of those columns (`before`, read before the apply) holds what it held.
+ */
+export async function readContract(op, changes, removes, ctx, before = {}) {
+  const others = Object.keys(before)
+  const read = await ctx.doors.read({ slots: [...Object.keys(changes), ...removes, ...others] })
   for (const [slot, value] of Object.entries(changes))
     if (read[slot] !== value) throw mismatch(op, 'slot', value, read[slot], { slot })
   for (const slot of removes)
     if (read[slot] !== null && read[slot] !== undefined)
       throw mismatch(op, 'removed slot', null, read[slot], { slot })
+  for (const slot of others)
+    if ((read[slot] ?? null) !== (before[slot] ?? null))
+      throw mismatch(op, 'untouched slot', before[slot], read[slot], { slot })
 }
 
 /** The bytes behind an uploaded path. */

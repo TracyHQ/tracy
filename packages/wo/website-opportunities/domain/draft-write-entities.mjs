@@ -130,11 +130,16 @@ function codePoint(n) {
   return String.fromCodePoint(n)
 }
 
-/** A text with every character reference read. */
-export function decodeEntities(text) {
+/**
+ * A text with every character reference read, as a browser reads it (a legacy name or a number without its
+ * semicolon too). `strict`: only references closed by their semicolon, as the plugin's `html_entity_decode` reads
+ * them (`draft-write-length.mjs doorLength`).
+ */
+export function decodeEntities(text, { strict = false } = {}) {
   return String(text).replace(
-    /&(?:#[xX]([0-9a-fA-F]+);?|#(\d+);?|([a-zA-Z][a-zA-Z0-9]*)(;?))/g,
-    (m, hex, dec, name, semi) => {
+    /&(?:#[xX]([0-9a-fA-F]+)(;?)|#(\d+)(;?)|([a-zA-Z][a-zA-Z0-9]*)(;?))/g,
+    (m, hex, hexSemi, dec, decSemi, name, semi) => {
+      if (strict && !(hexSemi || decSemi || semi)) return m
       if (hex !== undefined) return codePoint(Number.parseInt(hex, 16))
       if (dec !== undefined) return codePoint(Number(dec))
       if (!semi && !LEGACY.has(name) && !/^[a-zA-Z](acute|grave|circ|uml|tilde|ring|cedil)$/.test(name))

@@ -44,6 +44,8 @@ async function assign(op, id, menuids, ctx) {
   await readAssignment(op, id, menuids, ctx)
 }
 
+const list = (value) => (Array.isArray(value) ? value : [])
+
 export const RUN = {
   async create(op, ctx) {
     if (!CREATED_KINDS.includes(op.recordKind))
@@ -74,6 +76,9 @@ export const RUN = {
   async 'contract.apply'(op, ctx) {
     const changes = {}
     for (const v of op.values) changes[v.loc.slot] = String(resolved(v.value, ctx))
+    // Every slot of the record columns the apply writes, read before it: the read back compares them whole.
+    const whole = list(op.whole).filter((k) => !(k in changes) && !list(op.removes).includes(k))
+    const before = whole.length ? await ctx.doors.read({ slots: whole }) : {}
     const { revision } = await ctx.doors.inspect()
     await ctx.doors.contract({
       applyId: ctx.applyId(op, 'apply'),
@@ -81,7 +86,7 @@ export const RUN = {
       changes,
       removes: op.removes
     })
-    await readContract(op, changes, op.removes ?? [], ctx)
+    await readContract(op, changes, op.removes ?? [], ctx, before)
   },
   async 'record.patch'(op, ctx) {
     const row = await ctx.doors.get({ kind: op.recordKind, id: op.sourceId })

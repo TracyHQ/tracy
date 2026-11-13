@@ -30,6 +30,16 @@ export function entriesOfOrder(order) {
   return ids
 }
 
+/** How many entries an order holds (`in`), and of each kind: `{in, field, picture, icon, menu, seo, look}`. */
+export function entryCountsOf(order) {
+  const out = { in: 0, field: 0, picture: 0, icon: 0, menu: 0, seo: 0, look: 0 }
+  for (const { kind } of entriesOfOrder(order)) {
+    out.in += 1
+    out[kind] += 1
+  }
+  return out
+}
+
 /**
  * The coverage of a plan.
  * @returns {{in: number, written: number, skipped: number, conflicted: number, conflicts: string[],
@@ -78,8 +88,11 @@ export function draftWriteCoverage(order, plan) {
 
 /**
  * The counts a run reports, from the plan alone: entries `written` (carried by an operation), `conflicted` (lost a
- * place and written nowhere) and `skipped` (a reason, no conflict), each entry counted once; `conflicts`: the entry
- * ids of every conflict row, written or not, never the words.
+ * place and written nowhere) and `skipped` (a reason, no conflict), each entry counted once, so
+ * `in = written + skipped + conflicted` where `in` counts every entry of the order (`plan.entries`): its field entries
+ * and also its pictures, icons, each page's menu item and three SEO entries, and the look. A field entry is one entry
+ * however many places it fans out to. `conflicts`: the ids of every entry that lost a place, each once, an entry written
+ * elsewhere included (so it can be longer than `conflicted`). `entries`: `plan.entries` as it is.
  */
 export function planCountsOf(plan) {
   const written = new Set(list(plan.ops).flatMap((op) => list(op.entries)))
@@ -91,6 +104,7 @@ export function planCountsOf(plan) {
       .filter((id) => !written.has(id) && !lost.has(id))
   )
   return {
+    ...(plan.entries ? { in: plan.entries.in, entries: plan.entries } : {}),
     ops: list(plan.ops).length,
     written: written.size,
     skipped: skipped.size,

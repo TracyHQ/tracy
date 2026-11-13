@@ -10,7 +10,15 @@
 //   stored(order, ctx)       the stored picture of every frame and icon the order shows: `{<frame>: {id, mime?}}`
 //   blankContract(kit)       the blank site contract's content map of the kit (its slots, limits and `opensEmpty`)
 //   drawInitials(draw)       optional: draws an initials picture (default: `lib/initials-avatar.js`)
+//   keepTrial(trial, ctx)    optional: keeps `{order, plan, report}` of the run, done or failed, for a local trial run
+//                            (the write result a trial run saves; draft-write-step.md, "The step's value"). It holds
+//                            the customer's words: never wired to a stored record of a customer build.
 //   builds.keep(build, ctx)  optional (`deps.builds`): keeps the finished build (`buildResultOf`) a revision starts from
+//
+// The step's value is `{report, order, plan, build, recorded}`, and a failure's `error.value` is `{report, order, plan,
+// recorded}` (`plan` null when the guards refused it, `report` null when nothing ran). The engine stores only
+// `recorded` (`recordedValue`), never the order or the plan, which hold the customer's words. The engine hands the value of a
+// done write to no one (`apply` keeps its counts), so a trial run takes the three through `keepTrial`.
 //
 // A revision run (#599: the plan step found the previous build, `inputs.plan.previous`) writes only what the revision
 // changed, on a record of its own (`step-chain-draft-write-revision.js`).
@@ -47,15 +55,18 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds 
     ...inputs.kit.aiq,
     blankContract: wiring.blankContract?.(inputs.kit) ?? inputs.kit.aiq.blankContract
   }
-  const plan = writePlanOf(order, aiq, {
-    stored: (await wiring.stored?.(order, ctx)) ?? {},
-    withheld: inputs.plan?.profile?.withheld,
-    approved: inputs.plan?.plan,
-    iconKeys: (iconLibrary?.()?.icons ?? []).map((icon) => icon?.name)
-  })
-  const record = (await wiring.record?.(ctx)) ?? {}
-  const previous = inputs.plan?.previous ?? null
+  let plan = null
+  const keep = (report) =>
+    typeof wiring.keepTrial === 'function' ? wiring.keepTrial({ order, plan, report }, ctx) : undefined
   try {
+    plan = writePlanOf(order, aiq, {
+      stored: (await wiring.stored?.(order, ctx)) ?? {},
+      withheld: inputs.plan?.profile?.withheld,
+      approved: inputs.plan?.plan,
+      iconKeys: (iconLibrary?.()?.icons ?? []).map((icon) => icon?.name)
+    })
+    const record = (await wiring.record?.(ctx)) ?? {}
+    const previous = inputs.plan?.previous ?? null
     const run = {
       plan,
       doors: await wiring.doors(ctx),
@@ -81,9 +92,12 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds 
       ops: opsRecordOf(plan)
     })
     await builds?.keep?.(build, ctx)
+    await keep(report)
     return {
       value: {
         report,
+        order,
+        plan,
         build: { ref: build.ref, previous: build.previous, kept: typeof builds?.keep === 'function' },
         recorded: {
           ops: plan.ops.length,
@@ -97,8 +111,25 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds 
       usd: 0
     }
   } catch (error) {
-    // The report says exactly which operations ran; a half site is never left silent.
-    if (error?.report) error.value = { report: error.report }
+    // The report says exactly which operations ran; a half site is never left silent. A plan the guards refused has
+    // no report: the order and the error's problems say why.
+    const report = error?.report ?? null
+    // `recorded`: what the engine stores of the failure, never the order's or the plan's words.
+    const recorded = report
+      ? {
+          report: {
+            status: report.status ?? null,
+            counts: report.counts ?? null,
+            failed: report.failed ?? null
+          }
+        }
+      : null
+    if (error && typeof error === 'object') error.value = { report, order, plan, recorded }
+    try {
+      await keep(report)
+    } catch {
+      // A trial keeper that fails never hides the write's own failure.
+    }
     throw error
   }
 }

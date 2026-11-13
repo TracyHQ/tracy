@@ -12,6 +12,7 @@
 //   shareImage   the first own or generated picture the page shows (its hero first), else the home page's share
 //                image (`from: 'home'`), else the logo (`source: 'logo'`), else the first picture the site shows
 //                (`from: 'site'`); null only when the order has no picture and no logo picture.
+import { visibleLength } from './draft-write-length.mjs'
 import { seoLimitsOf } from './seo-limits.mjs'
 
 export { SEO_DESCRIPTION_LIMIT, SEO_TITLE_LIMIT, seoLimitsOf } from './seo-limits.mjs'
@@ -27,7 +28,8 @@ export function pagesInOrder(plan) {
 }
 
 const factOf = (facts, kind) => facts.find((f) => f.kind === kind && isText(f.value))?.value ?? null
-const length = (text) => [...text].length
+/** The unit of every limit: what a visitor reads, in code points (`draft-write-length.mjs`). */
+const length = (text) => visibleLength(text)
 const cut = (text, limit) => {
   const chars = [...text]
   return chars.length <= limit

@@ -3,8 +3,10 @@
 // the order entries it writes and the contract rules it follows; every order entry is written by exactly one operation
 // or listed in `skipped` with its reason (`draftWriteCoverage`). The guards of `draft-write-guards.mjs` run on the plan
 // before any door is called. Spec: docs/references/draft-write-step.md.
+import { entryCountsOf } from './draft-write-coverage.mjs'
 import { DraftWriteError } from './draft-write-error.mjs'
 import { guardPlan } from './draft-write-guards.mjs'
+import { inNfc } from './draft-write-length.mjs'
 import { libraryExpectsOf } from './draft-write-library-check.mjs'
 import { planBlocks } from './draft-write-plan-blocks.mjs'
 import { planCopies } from './draft-write-plan-copies.mjs'
@@ -141,7 +143,7 @@ export function writePlanOf(order, aiq, options = {}) {
         record: record.key,
         recordKind: record.recordKind
       })
-  const ops = opsOf(state)
+  const ops = inNfc(opsOf(state))
   for (const op of ops)
     if (op.unproven === 'created_record_frame' || op.unproven === 'initials_drawn_as_figure')
       sink.unproven.push({ code: op.unproven, op: op.key })
@@ -153,6 +155,8 @@ export function writePlanOf(order, aiq, options = {}) {
       plan: order.plan,
       template: { slug: order.template?.slug, version: order.template?.version }
     },
+    // How many entries the order holds, by kind: the `in` of `in = written + skipped + conflicted` (`planCountsOf`).
+    entries: entryCountsOf(order),
     ops,
     skipped: sink.skipped.filter((s) => !sink.consumed.has(s.entry)),
     // Two entries with other words for one place: one row per losing entry and place, ids only, never the words;

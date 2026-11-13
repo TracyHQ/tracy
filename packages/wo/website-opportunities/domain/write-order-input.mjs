@@ -1,6 +1,7 @@
 // The inputs of the write order (ticket #597): the declarations and the written pages by id, the position of a placed
 // block, and what is refused before anything is built (more than one home page, a customer answer longer than a field
 // it fills). Pure.
+import { visibleLength } from './draft-write-length.mjs'
 import { MAIN_BUTTON_LABEL, answerLimitOf } from './write-order-buttons.mjs'
 import { WriteOrderError } from './write-order-error.mjs'
 import { answeredLabelOf } from './write-order-fields.mjs'
@@ -45,11 +46,11 @@ export function refuseInput(plan, aiq, profile) {
     kind: MAIN_BUTTON_LABEL,
     library: list(aiq?.library)
   })
-  if (limit !== null && [...answer].length > limit)
+  if (limit !== null && visibleLength(answer) > limit)
     throw new WriteOrderError(
       'answer_over_limit',
-      `the main button answer has ${[...answer].length} characters; the smallest field it fills holds ${limit}`,
-      { kind: MAIN_BUTTON_LABEL, limit, length: [...answer].length }
+      `the main button answer has ${visibleLength(answer)} characters; the smallest field it fills holds ${limit}`,
+      { kind: MAIN_BUTTON_LABEL, limit, length: visibleLength(answer) }
     )
   return answer
 }

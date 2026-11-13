@@ -5,6 +5,9 @@ sources:
   - packages/wo/website-opportunities/domain/draft-write-guards.mjs
   - packages/wo/website-opportunities/domain/draft-write-library-check.mjs
   - packages/wo/website-opportunities/domain/draft-write-markup.mjs
+  - packages/wo/website-opportunities/domain/draft-write-tags.mjs
+  - packages/wo/website-opportunities/domain/draft-write-length.mjs
+  - packages/wo/website-opportunities/domain/draft-write-held.mjs
   - packages/wo/website-opportunities/domain/draft-write-coverage.mjs
   - packages/wo/website-opportunities/domain/draft-write-html-rest.mjs
   - packages/wo/website-opportunities/domain/draft-write-plan-hides.mjs
@@ -25,12 +28,13 @@ contract"). It has three parts:
 |---|---|---|
 | Plan | `packages/wo/website-opportunities/domain/draft-write-plan.mjs` (`writePlanOf`) | Pure. Turns the order and the kit into ordered door operations, then holds them to every guard before any door is called. |
 | Run | `apps/tracy-web/src/step-chain-draft-write.js` (`runDraftWrite`) | Runs the operations through injected doors (`step-chain-draft-write-kinds.js`), reads back everything each call changed (`step-chain-draft-write-check.js`), resumes a crashed run, and redoes a failing operation once. |
-| Step | `apps/tracy-web/src/step-chain-draft-write-step.js` (`draftWriteStep`) | The `write` step of `step-chain-draft-steps.js`. With no doors injected (`deps.draftWrite`), it stops with `write_not_ready_for_draft`; with no write order, with `write_order_missing`. It passes the names of the icon library the icons step chose from (`deps.iconLibrary`) as `iconKeys`. |
+| Step | `apps/tracy-web/src/step-chain-draft-write-step.js` (`draftWriteStep`) | The `write` step of `step-chain-draft-steps.js`. With no doors injected (`deps.draftWrite`), it stops with `write_not_ready_for_draft`; with no write order, with `write_order_missing`. It passes the names of the icon library the icons step chose from (`deps.iconLibrary`) as `iconKeys`. Its value is `{report, order, plan, build, recorded}`; a failure's `error.value` is `{report, order, plan, recorded}` (see "The step's value"). |
 
 ## The plan
 
 `writePlanOf(order, aiq, {stored, withheld, approved, iconKeys})` returns `{schema: 'tracy-draft-write-plan/v1',
-mainMenu, order, ops, skipped, conflicts, unproven, controls}`.
+mainMenu, order, entries, ops, skipped, conflicts, unproven, controls}`. Every text an operation sends is in NFC
+(`inNfc`, `draft-write-length.mjs`), so the door counts a letter and its accent once.
 
 - Every operation names the order entries it writes (`entries`) and the contract rules it follows (`rules`).
 - Every value names its entry or its rule.
@@ -38,13 +42,24 @@ mainMenu, order, ops, skipped, conflicts, unproven, controls}`.
   reason, or lost a conflict (`in = written + skipped + conflicted`, none unexplained, none written twice). An entry
   is **written** when an operation carries it (its words reach the site at one place at least), even when it lost
   another place; **conflicted** when it lost a place and no operation carries it; **skipped** otherwise, with its
-  reason. `planCountsOf(plan)` gives the same three counts from the plan alone, each entry once.
+  reason. `planCountsOf(plan)` gives the same three counts from the plan alone, each entry once, with `in` and
+  `entries` (`plan.entries`, `entryCountsOf(order)`).
+- **What an entry is.** `in` counts every entry of the order, not only its field entries: the field entries of every
+  place, its pictures (one per frame) and icons, one menu entry and three SEO entries (title, description, share
+  image) per page, and the look (`look.accent`, and `look.accentDark` when the order has one). A field entry is one
+  entry however many places it fans out to (a fact written at several places, an entry that wins one place and loses
+  another). So a count of the order's field entries alone is smaller than `written + skipped + conflicted`: on the
+  revision fixture of #599, 186 field entries, and 256 entries in all (186 fields, 35 pictures, 10 icons, 6 menu
+  entries, 18 SEO entries, 1 look) = 137 written + 95 skipped + 24 conflicted. `conflicts` lists each entry that lost
+  a place once (an entry written elsewhere included); `plan.conflicts` has one row per losing entry and place.
 - The plan stops before any operation when the order fails `checkWriteOrder` (`order_invalid`), when the kit has no
   blank contract slots (`kit_missing`: every slot guard would turn off), and when a created record is of a kind the
   write has no shape for (`record_kind_unsupported`: only `menuItem`, `article`, `category` and `contact` are made).
 
 Coverage of the JA Boxing florist fixture (`node --test` of `domain-draft-write-plan.test.mjs` prints it): 280
-entries in, 142 written, 124 skipped, 14 conflicted, none unexplained, none written twice; 64 operations.
+entries in (210 fields, 35 pictures, 10 icons, 6 menu, 18 SEO, 1 look), 142 written, 124 skipped, 14 conflicted, none
+unexplained, none written twice; 64 operations. `domain-draft-write-length.test.mjs` proves the sum on the guarded
+fixture.
 
 Run order:
 
@@ -142,13 +157,16 @@ memory site's scripted failure) is a failed call: the operation is redone once, 
 - An operation already `done` is skipped. A record marked `pending` is first looked up by its mark, then made.
 - After its calls every operation reads back what they changed: a made or patched record's sent columns and every
   value at its location (an HTML piece as its node's text, a removed element as gone), a module's pages, a contract
-  apply's slots and removed slots, an upload's bytes (`media`), the site identity.
+  apply's record columns whole, an upload's bytes (`media`), the site identity.
 - The untouched parts too: for every stored HTML value the operation wrote pieces of (a copy, a created record, a
   patched record), the value before and the value the site holds are read by the step's own reader
   (`draft-write-html-rest.mjs`, apart from the piece functions it checks), every element a piece names left out and
   every removed element gone, and must be equal. A piece function that escapes a sibling's entity twice, drops or
   moves a sibling, or closes a paragraph elsewhere is caught here (`what: 'untouched value'`, `at`: the element path).
-  A contract apply's value is read by its slots only.
+  A contract apply is read back whole: its operation lists `whole`, every blank site contract slot stored in the same
+  record column as a slot it writes or removes; the slots it does not write are read before the apply, and after it
+  every written slot holds its value, every removed slot is gone and every other slot of those columns holds what it
+  held (`what: 'untouched slot'`, the slot key).
 - A read back difference is redone once like any failing operation (a site may answer late); a second difference stops
   the write with `read_back_mismatch` (noRerun). It names the operation, the entity, slot, column and lengths, never
   the text.
@@ -159,23 +177,56 @@ memory site's scripted failure) is a failed call: the operation is redone once, 
   unproven flags. A `fatal` error (the process went away) is passed on as it is, with the same report. A
   `write_record_stale` report names what the stale record had done (`stale: {plan, revision, done, made, pending}`,
   operation keys only).
-- A run that ends reports `counts: {ops, written, skipped, conflicted, conflicts}` (`planCountsOf`), and the step's
-  `recorded` summary carries `conflicts: {count, entries}`: the entry ids, never the words.
+- A run that ends reports `counts: {in, entries, ops, written, skipped, conflicted, conflicts}` (`planCountsOf`), and
+  the step's `recorded` summary carries `conflicts: {count, entries}`: the entry ids, never the words.
+
+## The step's value
+
+`draftWriteStep` returns `{report, order, plan, build, recorded}`; a failure carries `error.value = {report, order,
+plan, recorded}` (`plan` is null when the guards refused it, `report` null when no operation ran). `order` and `plan`
+are the objects the step already holds (no copy). The engine stores `recorded` only (`recordedValue`): on success the
+counts, the conflicts' entry ids and the delta; on a failure `{report: {status, counts, failed}}`, or null. It never
+stores the order or the plan, which hold the customer's words.
+
+The engine hands the value of a done write to no one (its `apply` keeps the counts), so a local trial run takes the
+three through a hook: `deps.draftWrite.keepTrial({order, plan, report}, ctx)`, called once per attempt, done or failed.
+That is exactly the `--write-result` of the built site check (`write.json`, [built-site-check.md](built-site-check.md)).
+The hook was chosen over a larger stored value because the plan holds every value written (about 80 KB of JSON on the
+florist fixture, beside an order of about 390 KB) and the customer's words: it is kept only where a trial run asks for it. A hook that throws never
+hides the write's own failure. `apps/tracy-web/test/step-chain-draft-write-trial.test.mjs` proves both paths.
+
+## Text limits: one unit
+
+Every limit counts what a visitor reads, in code points (`visibleLength`, `draft-write-length.mjs`): an inline tag or
+marker that only styles words is nothing, any other tag (`br`, `p`) one space, an entity the character it shows, a run
+of white space one space, no space at either end, NFC. The writer check (`charCount` of `page-copy-check.mjs` is this
+function), the plan limits, the order check and the write guard all count it, so a value the writer and the order check
+let through is never refused at the guard for its length. It is the plugin door's own count (`SlotFit::seenLength`,
+`mb_strlen`), except that the door does not normalise; the plan sends NFC, so they agree. The guard also holds a
+contract slot to the door's count of its `maxCharacters` (`doorLength`, `unit: 'door'`): a text slot stored in a fixed
+width column (`title`, `name`, `alias`, `label`, ...), a link or a picture path counts its raw value, entities and all,
+and the door reads an entity only with its semicolon. Only the guard knows the slots, so only it can refuse that (the
+memory site refuses by the same count). Code points, not grapheme clusters: a flag shows as one glyph but the door
+counts two, and the kit's limits were measured in code points.
+
+Still counted in UTF-16 units elsewhere in the domain (other owners, not changed here): `plan-data.mjs`,
+`pinned-copy.mjs`, `site-answers.mjs`, `neutral-signature.mjs`, `fact-value-kinds.mjs`, `brief.mjs`,
+`ai-quickstart-labels.mjs`, `place-profile.mjs`, `demo-request.mjs`.
 
 ## Guards (before any door, `draft-write-guards.mjs`, all noRerun)
 
 | Code | Caught when |
 |---|---|
-| `text_over_limit` | a value is longer than its field limit, or than its contract slot's `maxCharacters` |
+| `text_over_limit` | a value is longer than its field limit (`unit: 'visible'`), or than its contract slot's `maxCharacters` as the door counts it (`unit: 'door'`); see "Text limits: one unit" |
 | `straight_quote_in_open_slot` | a straight double quote goes to a contract slot that opens empty |
 | `empty_text_node` | an empty value is sent to a text node (the write sends one space instead) |
-| `markup_forbidden` | a tag is sent through the contract, the map's codes are sent to an HTML place, a tag is sent to a codes place, or a field holds a tag its inline declaration does not list, an attribute its emphasis part does not declare (none declared, none allowed), or a tag in the other form than its `inline.write`. The order check (`checkWriteOrder`, `markupNotDeclared`) catches every field case first, where the writer can still redo it, and the page writer's copy check (`angle_bracket`) before that |
-| `markup_runs_code` | a value written as HTML (an HTML piece, a value with tags or markers, a created record's HTML) holds a code element (`script`, `iframe`, `style`, `svg` and the like), an `on*` handler or an address or style that runs code, in a tag or a marker, in any case, whatever entities, slashes or white space hide it; or any value or record column is an address that runs code (`javascript:`, `vbscript:`, `data:` other than a picture) (`draft-write-markup.mjs`) |
+| `markup_forbidden` | a tag is sent through the contract, the map's codes are sent to an HTML place, a tag is sent to a codes place, or a field holds a tag its inline declaration does not list, an attribute its emphasis part does not declare (none declared, none allowed), or a tag in the other form than its `inline.write`, an attribute on a closing tag, a comment, or any markup `runsCodeIn` refuses (`runs_code`). The order check (`checkWriteOrder`, `markupNotDeclared`) catches every field case first, where the writer can still redo it, and the page writer's copy check (`angle_bracket`) before that |
+| `markup_runs_code` | a value written as HTML (an HTML piece, a value with tags or markers, a created record's HTML) holds a code element (`script`, `iframe`, `style`, `svg` and the like), an `on*` handler or an address or style that runs code, in a tag or a marker, in any case, whatever entities, slashes, quotes (a `>` or `)` inside a quoted value) or white space hide it, markup inside an attribute value, or a `((` or `))` no marker reads (`marker_unread`); or any value or record column is an address that runs code (`javascript:`, `vbscript:`, `data:` other than a picture) (`draft-write-markup.mjs`). Tags and markers are read by one tokenizer (`draft-write-tags.mjs`) that the order check reads them with too |
 | `slot_missing` | a contract value with no slot, or a slot the blank site contract does not have |
 | `icon_not_in_list` | a network class is missing from `networkIconClasses`, or an image icon is missing from the icon library (`iconKeys`; with no library wired, none is in it) |
 | `picture_without_alt` | a shown picture has no alt text |
 | `picture_web_address_only`, `picture_not_stored` | a picture has no stored bytes (an initials picture is drawn instead) |
-| `held_text_in_value` | a held name or person, in any form, is in a value, an alt text, a record title or a library block's HTML; both sides are also read as a person reads them (`plainOf`: every reference decoded, accents and zero width characters out, white space as one space, tags read as a space or as nothing) |
+| `held_text_in_value` | a held name or person, in any form, is in a value, an alt text, a record column (title, alias, link) or a library block's HTML (`heldInLeaf(text, heldTexts)` of `draft-write-held.mjs`: entities read until the text stops changing, percent escapes read, `+` as a space, then as a person reads it with `plainOf`: accents and zero width characters out, white space as one space, tags read as a space or as nothing; whole words or slug form). Not caught: look-alike letters of another script, another word order, initials |
 | `block_not_approved` | a block is not placed by the approved plan |
 | `pair_incomplete` | one half of a button, or one version of an icon, is written without the other (block or item fields) |
 | `library_html_stale` | a library block's HTML does not show a shown field of the order (the heading, the label, the listing address escaped, each review's text, its reviewer as the block names them, its stars), or is empty |

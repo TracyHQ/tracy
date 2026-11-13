@@ -1,4 +1,5 @@
 // The place, picture, icon and page rules of `checkWriteOrder` (ticket #597), read from the order alone. Pure.
+import { visibleLength } from './draft-write-length.mjs'
 import { SEO_DESCRIPTION_LIMIT, SEO_TITLE_LIMIT } from './write-order-pages.mjs'
 import { titleKey } from './seo-limits.mjs'
 
@@ -7,7 +8,8 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
 const STATES = new Set(['show', 'hidden', 'fallback'])
 const PICTURE_SOURCES = new Set(['own', 'generated', 'initials', 'none'])
 const prefixOf = (id) => String(id).replace(/\.[^.]+$/, '')
-const length = (text) => [...String(text)].length
+/** The unit of every limit: what a visitor reads, in code points (`draft-write-length.mjs`). */
+const length = (text) => visibleLength(text)
 
 /** Every place's state is known, and `hidden` lists exactly the places and lists not shown. */
 export function stateProblems(places, order, report) {

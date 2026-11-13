@@ -25,7 +25,7 @@ test.
 | `contract` | `SLOT_NOT_CONTENT` | `<` or `>`; a straight double quote in a slot that opens empty |
 | `contract` | `HTML_SLOT_MISSING` | an empty string at a text node |
 | `contract` | `SLOT_EMPTY_STATE` | filling a slot whose sample is empty and that does not open empty, or emptying an occupied one |
-| `contract` | `SLOT_TOO_LONG` | over the slot's `maxCharacters` |
+| `contract` | `SLOT_TOO_LONG` | over the slot's `maxCharacters`, counted as the plugin counts it (`doorLength` of `draft-write-length.mjs`: what a visitor reads, in code points; a fixed width column, a link or a picture path counts its raw value) |
 | `contract` | `MARKERS_PRINTED_AS_WORDS` | content map markers at an HTML slot (memory only: the real site stores them and prints them as words) |
 | `contract` | `SLOT_NOT_REMOVABLE` | a `removes` slot that is not an element of an HTML value |
 | `contract` | `MODULE_TITLE_REQUIRED` | a module whose title the blank site emptied, written without its title in the same apply |

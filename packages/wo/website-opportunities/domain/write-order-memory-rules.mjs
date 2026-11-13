@@ -9,7 +9,8 @@
 //                      HTML_SLOT_MISSING                    an empty string at a text node
 //                      SLOT_EMPTY_STATE                     filling a slot whose sample is empty without `opensEmpty`,
 //                                                           or emptying a slot whose sample is not empty
-//                      SLOT_TOO_LONG                        over the slot's limit
+//                      SLOT_TOO_LONG                        over the slot's limit, counted as the plugin counts
+//                                                           it (`doorLength`: what a visitor reads, a raw column raw)
 //                      MARKERS_PRINTED_AS_WORDS             content map markers at an HTML slot (memory only: the real
 //                                                           site stores them and prints them as words)
 //                      SLOT_NOT_REMOVABLE                   a `removes` slot that is no node of an HTML value
@@ -22,6 +23,7 @@
 //                      NOT_FOUND                            a record, or the module of an assignment, that does not exist
 //   every write        APPLY_ID_REQUIRED                    no apply id
 import { isTextNode } from './draft-write-codec.mjs'
+import { doorLength } from './draft-write-length.mjs'
 
 export class DoorRefusal extends Error {
   constructor(code, message) {
@@ -50,7 +52,7 @@ export function checkContract({ expectedRevision, changes, removes }, { slots, r
       refuse('SLOT_EMPTY_STATE', `${key}: Content cannot activate an empty slot`)
     if (!blank(slot.sample) && blank(text))
       refuse('SLOT_EMPTY_STATE', `${key}: Content cannot remove an occupied slot`)
-    if (slot.maxCharacters && text.length > slot.maxCharacters) refuse('SLOT_TOO_LONG', key)
+    if (slot.maxCharacters && doorLength(slot, text) > slot.maxCharacters) refuse('SLOT_TOO_LONG', key)
     if (slot.xpath && /\(\(\/?[a-z]/i.test(text)) refuse('MARKERS_PRINTED_AS_WORDS', key)
   }
   for (const key of removes) {

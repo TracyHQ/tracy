@@ -43,11 +43,13 @@ node scripts/built-site-check/run.mjs (--site <local base address> | --pages <fo
 
 ### What a trial run saves for the tool
 
-The write step's value today is `{report, recorded}` (`apps/tracy-web/src/step-chain-draft-write-step.js`): neither the
-write plan nor the write order is in it. A trial run saves three files, all from the write step's inputs and run:
+The write step's value is `{report, order, plan, build, recorded}` (`apps/tracy-web/src/step-chain-draft-write-step.js`),
+and a failure's `error.value` is `{report, order, plan, recorded}`; the engine stores only `recorded`. A trial run wires
+`deps.draftWrite.keepTrial({order, plan, report}, ctx)`, which the step calls once per attempt, done or failed, and
+saves three files:
 
-- `order.json`: the write order the step read (`inputs.order.order`);
-- `write.json`: `{order, plan, report}`, the order again, the write plan `writePlanOf` made, and the run report;
+- `order.json`: the write order the step read (`trial.order`);
+- `write.json`: `{order, plan, report}` as the hook receives it;
 - `plan.json`: the approval `{plan, profile}` (`inputs.plan`), for the plan's pages and the held names.
 
 With `write.json` holding the order, `--write-order` is not needed.

@@ -2,7 +2,8 @@
 // to the kit's rules before any door is called. Pure. A failed guard throws `DraftWriteError` (noRerun) with every
 // problem found (entity, slot, entry and lengths; never the customer's text).
 //
-//   text_over_limit              a text longer than its field's limit, or than its blank contract slot's limit
+//   text_over_limit              a text longer than its field's limit (what a visitor reads, `visibleLength`), or than
+//                                its blank contract slot's `maxCharacters` as the plugin counts it (`doorLength`)
 //   straight_quote_in_open_slot  a straight double quote sent to a contract slot that opens empty (SLOT_NOT_CONTENT)
 //   slot_missing                 a contract value with no slot, or a slot the blank site contract does not have
 //   empty_text_node              an empty value at a text node (the node would be gone: one space keeps it)
@@ -20,21 +21,20 @@
 //   markup_runs_code             any other value written as HTML (an HTML piece, a value with tags or markers, a
 //                                created record's HTML) with markup that runs code, or any value or record column that
 //                                is an address running code (`javascript:`, however its letters are hidden)
-import { decodeEntities, plainOf } from './draft-write-entities.mjs'
 import { DraftWriteError, lengthOf } from './draft-write-error.mjs'
+import { heldInLeaf } from './draft-write-held.mjs'
+import { doorLength, visibleLength, visibleTextOf } from './draft-write-length.mjs'
 import { libraryHtmlProblems } from './draft-write-library-check.mjs'
 import { addressRunsCode, runsCodeIn } from './draft-write-markup.mjs'
-import { heldTextsOf, namesHeldInAnyForm } from './plan-withheld.mjs'
+import { heldTextsOf } from './plan-withheld.mjs'
 import { placesOfOrder } from './write-order-check.mjs'
 import { markupNotDeclared } from './write-order-check-entries.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
-const TAG = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
-const MARKER = /\(\(\/?([a-z][a-z0-9]*)\/?\)\)/gi
-/** The words a value shows: markers and tags left out, entities read. */
-export const visibleOf = (text) => decodeEntities(String(text).replace(MARKER, '').replace(TAG, ''))
+/** The words a value shows (`visibleTextOf`): kept for the built site check, which reads it. */
+export const visibleOf = visibleTextOf
 /** Whether a value is written as HTML: an HTML piece, or a value carrying tags or markers. */
-const asHtml = (loc, text) => Boolean(loc?.xpath) || /<|\(\(/.test(text)
+const asHtml = (loc, text) => Boolean(loc?.xpath) || /<|\(\(|\)\)/.test(text)
 
 /** Markup that runs code in a value written as HTML, or an address that runs code anywhere. */
 function codeProblems(at, text, html, report) {
@@ -51,13 +51,12 @@ function valueProblems(op, value, ctx, report) {
   const text = value.value
   const e = entry ? ctx.entries.get(entry) : null
   const slot = loc.slot ? ctx.kit.slots.get(loc.slot) : null
-  const limits = [
-    e?.type === 'text' ? e.limit : null,
-    op.kind === 'contract.apply' ? slot?.maxCharacters : null
-  ]
-  const limit = Math.min(...limits.filter((n) => Number.isInteger(n) && n > 0))
-  if (Number.isFinite(limit) && visibleOf(text).length > limit)
-    report('text_over_limit', { ...at, limit, length: visibleOf(text).length })
+  // The field's limit counts what a visitor reads; the slot's, what the plugin's door counts (a raw column counts raw).
+  if (e?.type === 'text' && Number.isInteger(e.limit) && e.limit > 0 && visibleLength(text) > e.limit)
+    report('text_over_limit', { ...at, limit: e.limit, length: visibleLength(text), unit: 'visible' })
+  const max = op.kind === 'contract.apply' ? slot?.maxCharacters : null
+  if (Number.isInteger(max) && max > 0 && doorLength(slot, text) > max)
+    report('text_over_limit', { ...at, limit: max, length: doorLength(slot, text), unit: 'door' })
   if (op.kind === 'contract.apply' && slot?.opensEmpty && text.includes('"'))
     report('straight_quote_in_open_slot', at)
   if (text === '' && /text\(\)(\[\d+\])?$/.test(loc.xpath ?? '')) report('empty_text_node', at)
@@ -106,19 +105,18 @@ function pictureProblems(op, report) {
 }
 
 /**
- * The texts of the plan a held name may not reach: every string value, alt text, record title and library HTML, each
- * also as a person reads it (`plainOf`: every entity read, accents, zero width characters and tags out, white space
- * as one space), so `O&#39;Brien`, `Zo&euml;`, `Kim&nbsp;Lee` and `Kim<br>Lee` match the held name.
+ * The texts of the plan a held name may not reach: every string value, alt text, record column (title, alias, link)
+ * and library HTML with the words it shows. Each is matched in every plain form by `heldInLeaf`.
  */
 function textsOf(plan) {
   const texts = []
   for (const op of plan.ops) {
     for (const v of list(op.values)) if (typeof v.value === 'string') texts.push(v.value)
     if (op.alt) texts.push(op.alt)
-    if (op.fields?.title) texts.push(op.fields.title, op.fields.alias)
-    if (typeof op.html === 'string') texts.push(op.html, visibleOf(op.html))
+    for (const column of Object.values(op.fields ?? {})) if (typeof column === 'string') texts.push(column)
+    if (typeof op.html === 'string') texts.push(op.html, visibleTextOf(op.html))
   }
-  return texts.flatMap((t) => [t, plainOf(t), plainOf(t, { joined: true })])
+  return texts
 }
 
 /**
@@ -146,8 +144,7 @@ export function guardPlan(plan, ctx) {
       report('pair_incomplete', { record: c.record, fields: c.fields })
   for (const pair of list(plan.pairs)) report('pair_incomplete', pair)
   const heldTexts = heldTextsOf(ctx.withheld)
-  const held = [...new Set(heldTexts.flatMap((t) => [t, plainOf(t)]))]
-  if (held.length && namesHeldInAnyForm(textsOf(plan), held))
+  if (heldTexts.length && textsOf(plan).some((t) => heldInLeaf(t, heldTexts)))
     report('held_text_in_value', { count: heldTexts.length })
   if (problems.length)
     throw new DraftWriteError(problems[0].code, `${problems.length} problem(s) before any door call`, {

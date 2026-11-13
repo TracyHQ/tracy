@@ -31,6 +31,17 @@ function identityOp(state, record) {
     rules: ['fact:name']
   }
 }
+/**
+ * The slots a contract apply's read back reads whole: every blank site contract slot stored in the same record column
+ * as a slot it writes or removes, so a value that changed a neighbour of its slot (a piece of the same stored HTML, a
+ * key of the same settings) is caught, not only the slot it named.
+ */
+function wholeSlotsOf(state, values, removes) {
+  const slots = state.kit.slots
+  const at = (s) => `${s?.entity}|${s?.column}`
+  const columns = new Set([...values.map((v) => at(v.loc)), ...removes.map((k) => at(slots.get(k)))])
+  return [...slots.values()].filter((s) => columns.has(at(s))).map((s) => s.key)
+}
 const RANK = { category: 1, article: 2, contact: 2, user: 2, tag: 2, userProfile: 2, field: 2 }
 
 /**
@@ -112,6 +123,7 @@ export function opsOf(state) {
         entity: r.entity,
         values: valuesOf(r),
         removes: list(r.contractRemoves),
+        whole: wholeSlotsOf(state, valuesOf(r), list(r.contractRemoves)),
         entries: r.entries,
         rules: [...r.rules, 'one_apply_per_record']
       })),
