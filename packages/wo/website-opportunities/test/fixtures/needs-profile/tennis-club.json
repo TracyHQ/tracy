@@ -1,0 +1,144 @@
+{
+  "note": "An invented business: no real club, place, person or account. Four services, one only in a social caption; the phone differs between the website and the Google listing.",
+  "research": {
+    "sources": [
+      {
+        "id": "site",
+        "origin": "website",
+        "ref": "https://brindlewick-tennis.example/",
+        "language": "en",
+        "text": "Brindlewick Tennis Club. Junior coaching for ages 6 to 15, Saturdays. Adult group lessons, $25 per session. Court hire from $18 an hour. Call us on +1 555 0142 778 or write to hello@brindlewick-tennis.example. 14 Quillmoor Lane, Fernhollow. Open Mo-Fr 07:00-22:00; Sa 08:00-18:00. Head coach Ilse Varrow has taught here for nine years. Book a court at https://brindlewick-tennis.example/book",
+        "pictures": [
+          {
+            "id": "p1",
+            "ref": "https://brindlewick-tennis.example/img/courts.jpg",
+            "alt": "Three clay courts at dusk"
+          }
+        ]
+      },
+      {
+        "id": "gmaps",
+        "origin": "google",
+        "ref": "invented-place-0001",
+        "fields": {
+          "business.name": "Brindlewick Tennis Club",
+          "contact.phone": "+1 555 0142 779",
+          "contact.address": "14 Quillmoor Lane, Fernhollow",
+          "contact.hours": "Mo-Fr 07:00-22:00; Sa 08:00-18:00"
+        },
+        "reviews": [
+          {
+            "author": "Mara Telling",
+            "text": "Friendly coaches and the courts are always swept.",
+            "rating": 5
+          },
+          { "author": "Osric Vale", "text": "My two kids love the junior coaching.", "rating": 4 }
+        ],
+        "pictures": [
+          {
+            "id": "g1",
+            "ref": "https://images.example/brindlewick/clubhouse.jpg",
+            "label": "Clubhouse terrace"
+          }
+        ]
+      },
+      {
+        "id": "insta",
+        "origin": "social",
+        "ref": "https://www.instagram.com/brindlewick_tennis_example",
+        "captions": [
+          "New this month: Cardio tennis on Thursday evenings, music on, rackets up!",
+          "Junior coaching is back this Saturday."
+        ],
+        "pictures": [{ "id": "i1", "ref": "https://images.example/brindlewick/cardio.jpg" }]
+      }
+    ]
+  },
+  "reading": {
+    "languages": [
+      { "source": "site", "language": "en" },
+      { "source": "gmaps", "language": "en" },
+      { "source": "insta", "language": "en" }
+    ],
+    "facts": [
+      {
+        "source": "site",
+        "kind": "business.name",
+        "value": "Brindlewick Tennis Club",
+        "evidence": "Brindlewick Tennis Club."
+      },
+      {
+        "source": "site",
+        "kind": "contact.phone",
+        "value": "+1 555 0142 778",
+        "evidence": "Call us on +1 555 0142 778"
+      },
+      {
+        "source": "site",
+        "kind": "contact.email",
+        "value": "hello@brindlewick-tennis.example",
+        "evidence": "write to hello@brindlewick-tennis.example"
+      },
+      {
+        "source": "site",
+        "kind": "contact.address",
+        "value": "14 Quillmoor Lane, Fernhollow",
+        "evidence": "14 Quillmoor Lane, Fernhollow."
+      },
+      {
+        "source": "site",
+        "kind": "contact.hours",
+        "value": "Mo-Fr 07:00-22:00; Sa 08:00-18:00",
+        "evidence": "Open Mo-Fr 07:00-22:00; Sa 08:00-18:00"
+      },
+      {
+        "source": "site",
+        "kind": "contact.cta_url",
+        "value": "https://brindlewick-tennis.example/book",
+        "evidence": "Book a court at https://brindlewick-tennis.example/book"
+      }
+    ],
+    "items": [
+      {
+        "source": "site",
+        "kind": "service",
+        "fields": {
+          "offering.name": "Junior coaching",
+          "offering.description": "For ages 6 to 15, Saturdays"
+        },
+        "evidence": "Junior coaching for ages 6 to 15, Saturdays."
+      },
+      {
+        "source": "site",
+        "kind": "service",
+        "fields": { "offering.name": "Adult group lessons", "offering.price": "$25 per session" },
+        "evidence": "Adult group lessons, $25 per session."
+      },
+      {
+        "source": "site",
+        "kind": "service",
+        "fields": { "offering.name": "Court hire", "offering.price": "from $18 an hour" },
+        "evidence": "Court hire from $18 an hour."
+      },
+      {
+        "source": "site",
+        "kind": "person",
+        "fields": { "person.name": "Ilse Varrow", "person.role": "Head coach" },
+        "evidence": "Head coach Ilse Varrow has taught here for nine years."
+      },
+      {
+        "source": "insta",
+        "kind": "service",
+        "fields": { "offering.name": "Cardio tennis", "offering.description": "Thursday evenings, music on" },
+        "evidence": "Cardio tennis on Thursday evenings, music on"
+      },
+      {
+        "source": "insta",
+        "kind": "service",
+        "fields": { "offering.name": "Junior coaching" },
+        "evidence": "Junior coaching is back this Saturday."
+      }
+    ],
+    "pictures": [{ "source": "insta", "picture": "i1", "label": "Players at a cardio tennis evening" }]
+  }
+}

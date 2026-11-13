@@ -113,6 +113,16 @@ export {
 } from './ai-quickstart-contract.mjs'
 export { BUSINESS_FACTS, SEO_FIELDS, SHARE_IMAGE_FRAME } from './ai-quickstart-mapping.mjs'
 export {
+  NEEDS_PROFILE_PROMPT_FILE,
+  NEEDS_PROFILE_SCHEMA,
+  NeedsProfileError,
+  buildNeedsProfile,
+  needsProfileOf,
+  needsProfileRequest
+} from './needs-profile.mjs'
+export { TRUST_ORDER } from './needs-profile-merge.mjs'
+export { MAX_QUESTIONS, QUESTION_TOPICS } from './needs-profile-questions.mjs'
+export {
   neutralItemName,
   SECTION_ACTIONS,
   sectionAction,
