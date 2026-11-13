@@ -7,9 +7,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { writePlanOf } from 'website-opportunities/domain/draft-write-plan.mjs'
-import { restoreBuild } from '../src/step-chain-draft-restore.js'
 import { revisedBy, SERVICE } from './draft-revision-edits.mjs'
-import { firstBuild, freshBuild, revisionRun, sameSite } from './draft-revision-run.mjs'
+import { firstBuild, freshBuild, restoreOf, revisionRun, sameSite } from './draft-revision-run.mjs'
 import { snapshotOf } from './draft-write-fixtures.mjs'
 
 const first = await firstBuild()
@@ -97,16 +96,11 @@ test('2. unaffected pages and blocks are untouched and cause no model call', () 
 test('3. the previous build can be restored: the whole memory site equals its snapshot before the revision', async () => {
   assert.notDeepEqual(after, before)
   const build = first.builds.get(run.write.build.ref)
-  const restored = await restoreBuild({
-    build,
-    previous: first.builds.get(first.ref),
-    doors: first.memory.doors,
-    record: {},
-    runId: 'restore-larkspur'
-  })
+  const restored = await restoreOf(first, build, { runId: 'restore-larkspur' })
   assert.equal(restored.status, 'done')
   assert.deepEqual(snapshotOf(first.memory), before)
   assert.deepEqual(restored.left, { uploads: [], assignments: [] })
   assert.equal(restored.current.ref, first.ref)
   assert.equal(restored.current.write.state.seq, build.write.state.seq + 1)
+  assert.equal(first.builds.currentRef, first.ref)
 })

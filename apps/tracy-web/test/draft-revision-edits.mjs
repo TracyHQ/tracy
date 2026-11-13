@@ -60,9 +60,9 @@ export const EDITS = {
 }
 
 /** Revision 2 of the florist's plan after one edit. */
-export function revisedBy(name) {
+export function revisedBy(name, edits = EDITS) {
   const draft = base()
-  EDITS[name](draft)
+  edits[name](draft)
   draft.plan.revision += 1
   return draft
 }

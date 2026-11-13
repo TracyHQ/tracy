@@ -52,8 +52,11 @@ export function wordsOf(seed, limit = 60) {
  * The fake build model of a revision run: the writer (by its prompt), the labelling (a call with images) and the icon
  * ranking. `calls`: every call; `pages`: the writer calls per page id. `leak(page, key)` returns a text the writer puts
  * before the words of that field (a writer that once named someone it was not given, for the held name case).
+ * `cross`: a writer that, like a real model, quotes in a long paragraph the first item another block of the same page
+ * shows (`Ask for our <label>.`), so a block's words depend on a value its own request does not carry. `seed(text)`:
+ * how the words are drawn (the default is deterministic; a counter makes the writer give new words on every call).
  */
-export function revisionModel({ leak } = {}) {
+export function revisionModel({ leak, cross = false, seed = (text) => text } = {}) {
   const calls = []
   const pages = {}
   const rank = firstCandidate()
@@ -71,14 +74,15 @@ export function revisionModel({ leak } = {}) {
       for (const block of user.blocks) {
         const { fields: asked, ...shown } = block
         for (const slot of asked) {
-          const seed = JSON.stringify([
+          const seedOf = JSON.stringify([
             slot.key,
             shown,
             user.business,
             user.page,
             user.rewrite ? 'again' : ''
           ])
-          const text = wordsOf(seed, slot.limit ?? 60)
+          const tail = cross ? quoteOf(user.blocks, block, slot) : ''
+          const text = `${wordsOf(seed(seedOf), (slot.limit ?? 60) - tail.length)}${tail}`
           const extra = leak?.(user.page.id, slot.key)
           fields[slot.key] = extra ? `${extra} ${text}`.slice(0, slot.limit ?? 200) : text
         }
@@ -89,6 +93,16 @@ export function revisionModel({ leak } = {}) {
     return JSON.stringify(rank(request))
   }
   return Object.assign(model, { calls, pages })
+}
+
+/** The quote a cross quoting writer adds to a long paragraph: the first item another block of the page shows. */
+function quoteOf(blocks, block, slot) {
+  if ((slot.limit ?? 0) < 80 || slot.kind !== 'editorial.paragraph') return ''
+  const seen = blocks
+    .filter((b) => b.id !== block.id)
+    .flatMap((b) => b.data ?? [])
+    .find((d) => d?.fields && typeof d.label === 'string')
+  return seen ? `. Ask for our ${seen.label}.` : ''
 }
 
 /** The approved draft of the florist at a plan revision: `{plan, profile}` as the build chat stores them. */
@@ -113,10 +127,24 @@ export const blankSite = (script = {}) =>
 const kitOf = () => ({ ...site.aiq, template: { slug: 'ja-boxing', version: '1.0.11' } })
 
 /**
- * The doors of the draft steps over a draft, a model, a memory site and the stores of builds and run records.
- * `builds`: a Map the steps keep each finished build in (`deps.builds`); `record`: the run record of the write.
+ * The build store of one site over a Map of builds by ref (`deps.builds`): `keep` stores a build and makes it the build
+ * the site holds (`builds.currentRef`), `current` answers that ref.
  */
-export function depsOf({ draft, model, memory, builds = new Map(), record = {} }) {
+export const buildStoreOf = (builds) => ({
+  read: async (ref) => structuredClone(builds.get(ref) ?? null),
+  keep: async (build) => {
+    builds.set(build.ref, structuredClone(build))
+    builds.currentRef = build.ref
+  },
+  current: async () => builds.currentRef ?? null
+})
+
+/**
+ * The doors of the draft steps over a draft, a model, a memory site and the stores of builds and run records.
+ * `builds`: a Map the steps keep each finished build in (`deps.builds`); `record`: the run record of the write;
+ * `pictures`: `{stored, openStored}` in place of the stored pictures below (new bytes, other stored ids).
+ */
+export function depsOf({ draft, model, memory, builds = new Map(), record = {}, pictures = {} }) {
   return {
     readEngineDraft: async (accountId) => (accountId === ACCOUNT ? draft.engine : null),
     draftPlanForBuild: async (accountId) => (accountId === ACCOUNT ? draft.approved : null),
@@ -124,12 +152,7 @@ export function depsOf({ draft, model, memory, builds = new Map(), record = {} }
     buildModel: async () => model,
     openDraftPicture: async (id) => ({ id, bytes: Buffer.from(`picture ${id}`), mime: 'image/png' }),
     iconLibrary,
-    builds: {
-      read: async (ref) => structuredClone(builds.get(ref) ?? null),
-      keep: async (build) => {
-        builds.set(build.ref, structuredClone(build))
-      }
-    },
+    builds: buildStoreOf(builds),
     draftWrite: {
       doors: async () => memory.doors,
       record: async () => record,
@@ -141,7 +164,8 @@ export function depsOf({ draft, model, memory, builds = new Map(), record = {} }
           ])
         ),
       openStored: async (id) => ({ bytes: Buffer.from(`bytes of ${id}`), mime: 'image/jpeg' }),
-      blankContract: () => site.kit.blankContract
+      blankContract: () => site.kit.blankContract,
+      ...pictures
     }
   }
 }

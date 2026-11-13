@@ -12,8 +12,7 @@
 //   pictures  the draft pictures opened, labelled by ONE vision call, assigned to every frame (`placeBuildPictures`);
 //             a picture whose own texts name a held text is refused (`refusedPicture`)
 //   icons     `selectBuildIcons` over the written copy and the placed frames
-//   order     the alt text hand-off (`step-chain-draft-alt.js`), `buildWriteOrder`, `checkWriteOrder`
-//   write     `draftWriteStep`: the write plan (every guard before any door) run on the blank site through the doors
+//   order, write   `step-chain-draft-steps-late.js`: the write order, and the write on the site through the doors
 //             `deps.draftWrite` injects; with none, `write_not_ready_for_draft` at once (noRerun), nothing written
 //
 // 🔒 ONE MODEL DOOR. Every model call (the writer, the labelling, the icon keywords and ranking) is made through the
@@ -23,24 +22,21 @@
 import { selectBuildIcons, placeBuildPictures } from 'website-opportunities/domain/picture-step.mjs'
 import { writePages } from 'website-opportunities/domain/page-writer.mjs'
 import { withoutWithheld } from 'website-opportunities/domain/plan-withheld.mjs'
-import { buildWriteOrder } from 'website-opportunities/domain/write-order.mjs'
-import { checkWriteOrder } from 'website-opportunities/domain/write-order-check.mjs'
-import { altCountsOf, altProblemsOf, withAltTexts } from './step-chain-draft-alt.js'
 import { refusedPicture, visionThrough, withDraftPictures } from './step-chain-draft-pictures.js'
-import { draftWriteStep } from './step-chain-draft-write-step.js'
 import { draftError, draftSource } from './step-chain-draft-source.js'
 import { keptModelOf, reuseOf, revisionOf, revisionRecordOf } from './step-chain-draft-revision.js'
+import { orderStep, writeStep } from './step-chain-draft-steps-late.js'
 
 /** The build model door's id in `LLM_DOORS`, the only door an assembled run spends. */
 export const ASSEMBLED_MODEL_DOOR = 'buildModel'
-/** At most this many problems of a failing write order are kept in the stop report. */
-const ORDER_PROBLEMS_KEPT = 20
 const list = (value) => (Array.isArray(value) ? value : [])
 
 /**
  * @param {{readEngineDraft?: Function, draftPlanForBuild?: Function, loadAiqKit?: (slug: string) => object | null,
  *   buildModel?: () => Promise<Function>, openDraftPicture?: Function, iconLibrary?: () => object,
- *   draftWrite?: object}} deps `draftWrite`: the site doors of the write step (`step-chain-draft-write-step.js`)
+ *   draftWrite?: object, builds?: object}} deps `draftWrite`: the site doors of the write step
+ *   (`step-chain-draft-write-step.js`); `builds`: the build store of revisions (`{read, keep, current}`,
+ *   `docs/references/draft-revision-run.md`)
  *   `buildModel`: the build model door's resolver (`build-draft/build-model.js` `buildModelDoor`), which throws
  *   `model_missing` when the door has no provider
  */
@@ -179,50 +175,9 @@ export function createDraftSteps(deps) {
       return { value: { ...icons, replies: model.replies, recorded }, usd: null, knownUsd: 0 }
     },
 
-    async order(ctx, { kit, plan, copy, pictures, icons }) {
-      const withheld = plan.profile?.withheld
-      const frames = withAltTexts(pictures.frames, {
-        profile: pictures.profile,
-        language: plan.plan.language,
-        withheld,
-        template: kit.aiq.template
-      })
-      const order = buildWriteOrder({
-        run: { id: ctx.runId ?? null, kind: 'build' },
-        aiq: { ...kit.aiq, ref: kit.ref },
-        approval: { plan: plan.plan, profile: pictures.profile },
-        writers: [{ pages: copy.pages, prompt: copy.prompt }],
-        pictures: { ...pictures, frames },
-        icons
-      })
-      const problems = checkWriteOrder(order)
-      if (problems.length)
-        throw draftError(
-          'write_order_check_failed',
-          `${problems.length} problem(s) in the write order: ${[...new Set(problems.map((p) => p.code))].join(', ')}`,
-          { problems: problems.slice(0, ORDER_PROBLEMS_KEPT), problemsCount: problems.length }
-        )
-      const alt = altProblemsOf(order, withheld)
-      if (alt.length)
-        throw draftError('alt_text_unusable', `${alt.length} placed picture(s) have no usable alt text`, {
-          problems: alt.slice(0, ORDER_PROBLEMS_KEPT),
-          problemsCount: alt.length
-        })
-      const recorded = {
-        pages: order.pages.length,
-        pictures: order.pictures.length,
-        icons: order.icons.length,
-        alts: altCountsOf(frames)
-      }
-      return { value: { order, recorded }, usd: 0 }
-    },
+    order: (ctx, inputs) => orderStep(ctx, inputs),
 
     /** The write of a draft run: through the injected site doors, or a typed stop when none are wired. */
-    async write(ctx, inputs) {
-      return draftWriteStep(deps.draftWrite, ctx, inputs, {
-        iconLibrary: deps.iconLibrary,
-        builds: deps.builds
-      })
-    }
+    write: (ctx, inputs) => writeStep(deps, ctx, inputs)
   }
 }
