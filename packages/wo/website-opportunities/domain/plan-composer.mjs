@@ -21,6 +21,7 @@ import { modelViewOf, planDataOf } from './plan-data.mjs'
 import { gatePlan } from './plan-gate.mjs'
 import { lookOf } from './plan-look-pictures.mjs'
 import { preflightContext, preflightDeclarations } from './plan-preflight.mjs'
+import { withoutWithheld } from './plan-withheld.mjs'
 
 export { PlanComposerError }
 export { buildPlanStep } from './plan-step.mjs'
@@ -179,7 +180,7 @@ export async function composePlan(input) {
     if (gated.ok)
       return {
         plan: gated.plan,
-        profile: context.profile,
+        profile: withoutWithheld(context.profile),
         attempts,
         placed: gated.placed,
         accounting: gated.accounting,

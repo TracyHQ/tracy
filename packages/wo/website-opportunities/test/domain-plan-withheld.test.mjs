@@ -6,7 +6,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { researchOf } from '../domain/needs-research.mjs'
-import { composerContextOf, planComposerRequest } from '../domain/plan-composer.mjs'
+import { composePlan, composerContextOf, planComposerRequest } from '../domain/plan-composer.mjs'
+import { planDataOf } from '../domain/plan-data.mjs'
 import { gatePlan } from '../domain/plan-gate.mjs'
 import { WITHHELD_REASON, withWithheld } from '../domain/plan-withheld.mjs'
 import {
@@ -17,6 +18,7 @@ import {
   goodComposition,
   library,
   pageRecipes,
+  scriptedModel,
   template
 } from './fixtures/plan-composer/invented-club.mjs'
 
@@ -102,4 +104,27 @@ test('a held business name is never shown, and a review naming a held person goe
     ['quote-my-two-kids-love-the-junior-coaching']
   )
   assert.deepEqual([...contextOf({ people: ['Osr'] }).data.withheld], [])
+})
+
+test('the profile composePlan hands the page writer holds nothing the owner keeps off the site', async () => {
+  const c = withoutTeam()
+  c.pages[0].blocks[1].data = ['contact-hours']
+  c.pages[0].blocks[5].data = ['contact-phone']
+  const { profile } = await composePlan({
+    profile: withWithheld(clubProfile(), { withheld: { name: true, people: ['Ilse Varrow', 'Osric Vale'] } }),
+    blockStore: blockStore(),
+    pageRecipes: pageRecipes(),
+    library: library(),
+    template: template(),
+    brand: brand(),
+    model: scriptedModel(JSON.stringify(c))
+  })
+  // The writer builds its data from this profile (`writePages`: `planDataOf(profile)`).
+  const ids = [...planDataOf(profile).byId.keys()]
+  assert.equal(ids.includes(COACH), false)
+  assert.equal(ids.includes('quote-my-two-kids-love-the-junior-coaching'), false)
+  assert.equal('business.name' in profile.facts, false)
+  assert.ok(
+    ids.includes('contact-phone') && ids.includes('quote-friendly-coaches-and-the-courts-are-always-swept')
+  )
 })

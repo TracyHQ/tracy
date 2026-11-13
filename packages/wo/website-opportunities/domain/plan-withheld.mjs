@@ -24,7 +24,14 @@ export const withWithheld = (profile, research) =>
     ? { ...profile, withheld: research.withheld }
     : profile
 
-const valueOf = (record, role) => record?.source?.fields?.[role]?.value
+/** Whether an item of `kind` with these profile `fields` names a held person (`held-reviews.mjs`, whole words). */
+function namesHeld(kind, fields, people) {
+  if (people.length === 0) return false
+  const names = (role) => heldNamesIn(fields?.[role]?.value, people).length > 0
+  if (kind === 'person') return names('person.name')
+  return kind === 'quote' && (names('quote.text') || names('quote.author_name'))
+}
+const peopleOf = (withheld) => (Array.isArray(withheld?.people) ? withheld.people : [])
 
 /**
  * The plan ids the owner keeps off the site: the business name facts while the name is held, every person a held name
@@ -36,17 +43,30 @@ const valueOf = (record, role) => record?.source?.fields?.[role]?.value
 export function withheldIdsOf(data, withheld) {
   const out = new Set()
   if (!withheld || typeof withheld !== 'object') return out
-  const people = Array.isArray(withheld.people) ? withheld.people : []
-  const names = (text) => people.length > 0 && heldNamesIn(text, people).length > 0
+  const people = peopleOf(withheld)
   for (const [id, record] of data.byId) {
     if (withheld.name === true && record.what === 'fact' && record.kind === 'business.name') out.add(id)
-    if (record.what !== 'item') continue
-    if (record.kind === 'person' && names(valueOf(record, 'person.name'))) out.add(id)
-    if (
-      record.kind === 'quote' &&
-      (names(valueOf(record, 'quote.text')) || names(valueOf(record, 'quote.author_name')))
-    )
-      out.add(id)
+    if (record.what === 'item' && namesHeld(record.kind, record.source?.fields, people)) out.add(id)
   }
   return out
+}
+
+/**
+ * The needs profile without what the owner keeps off the site: no business name while it is held, no held person and
+ * no review naming one. `composePlan` hands this profile on, so the page writer (which reads every fact and item of the
+ * profile it is given) never holds them. Other fact ids stay as they are: a held name drops its whole kind.
+ */
+export function withoutWithheld(profile) {
+  const withheld = profile?.withheld
+  if (!withheld || typeof withheld !== 'object') return profile
+  const people = peopleOf(withheld)
+  const facts = { ...profile.facts }
+  if (withheld.name === true) delete facts['business.name']
+  const items = Object.fromEntries(
+    Object.entries(profile.items ?? {}).map(([kind, values]) => [
+      kind,
+      (Array.isArray(values) ? values : []).filter((item) => !namesHeld(kind, item?.fields, people))
+    ])
+  )
+  return { ...profile, facts, items }
 }

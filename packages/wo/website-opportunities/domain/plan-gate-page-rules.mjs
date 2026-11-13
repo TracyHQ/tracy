@@ -2,6 +2,10 @@
 // P21), read once the reply has its shape. Each problem has a code and a message the model reads on its second
 // attempt (`plan-composer.mjs`: one more composition, then stop and report).
 // - `item_repeated_on_page` (P21): an item (a service, a person, a review) is shown by one block of a page, never two;
+//   except the subject of a detail page, which its page describes in several blocks (a class and its schedule). A
+//   detail page is a page of a type the template repeats per item (its recipe declares `pages` above one or
+//   `variants`: `itemPageTypesOf`, the write order's own reading), or whose recipe's main block shows one item at most;
+//   its subject is the one item its main block shows. Any other item shown twice on it is still a problem;
 // - `contact_channel_missing` (P13): every contact channel the business has is on the contact page (the page whose
 //   recipe's main block is a `contact` block), in a block with a field of that channel's kind; a block every recipe
 //   lists (a header, a footer) is drawn on every page, so kept on any page it counts. A channel no block the contact
@@ -11,6 +15,7 @@
 // - `map_without_address` (P14): a `map` block is kept only when it shows the business's address fact;
 // - `withheld_shown` (P2): nothing the owner keeps off the site is shown (`plan-withheld.mjs`).
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
+import { itemPageTypesOf } from './write-order-targets.mjs'
 
 /** The fact kinds of a contact channel: phone, email, address, booking link, social profile. */
 export const CONTACT_CHANNEL_KINDS = Object.freeze([
@@ -39,12 +44,28 @@ function shows(description, kind) {
   return Boolean(itemKind && GROUP_KINDS_V3[itemKind].allowedKinds.includes(kind))
 }
 
-function repeatedItems(page, at, { data, blocks }, problem) {
+/** The one item a detail page describes, or null: a page of another kind, or a main block of more than one item. */
+export function detailSubjectOf(page, { data, blocks, recipes }) {
+  const recipe = recipes.get(page.pageType)
+  const main = blocks.get(recipe?.mainBlock)
+  const perItem = itemPageTypesOf([...recipes.values()]).has(page.pageType)
+  if (!main || !(perItem || main.items?.max === 1)) return null
+  const shown = page.blocks
+    .filter((b) => b.block === main.id)
+    .flatMap((b) => b.data)
+    .filter((id) => data.byId.get(id)?.what === 'item' && shows(main, data.byId.get(id).kind))
+  return shown.length === 1 ? shown[0] : null
+}
+
+function repeatedItems(page, at, context, problem) {
+  const { data, blocks } = context
+  const subject = detailSubjectOf(page, context)
   const seen = new Map()
   page.blocks.forEach((block, j) =>
     block.data.forEach((id, k) => {
       const record = data.byId.get(id)
       if (record?.what !== 'item' || !shows(blocks.get(block.block), record.kind)) return
+      if (id === subject) return
       if (seen.has(id) && seen.get(id) !== j)
         problem(
           'item_repeated_on_page',
