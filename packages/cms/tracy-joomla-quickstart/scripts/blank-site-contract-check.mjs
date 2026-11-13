@@ -26,7 +26,7 @@ import {
   lockDump,
   removedEntities
 } from './blank-site-contract.mjs'
-import { writableSlotProblems } from './blank-site-contract-fit.mjs'
+import { kitUsesBySlot, writableSlotProblems } from './blank-site-contract-fit.mjs'
 import { blankSlot, emptiedSamples } from './blank-site-contract-samples.mjs'
 import { mappingLocations } from './door-proof-cases.mjs'
 
@@ -109,6 +109,7 @@ export function checkBlankSiteContract({ mapping, blockStore, released, blank, e
     ...(emptyHtml ? { emptyHtml } : {})
   })
   const blankSlots = blank.contentMap.slots ?? []
+  const uses = kitUsesBySlot(blockStore ?? {})
   if (json(blankSlots.map((s) => s.key)) !== json(keptSlots.map((s) => s.key)))
     add(
       'content-map.json',
@@ -118,7 +119,7 @@ export function checkBlankSiteContract({ mapping, blockStore, released, blank, e
   else
     keptSlots.forEach((s, i) => {
       if (emptied.has(s.key))
-        for (const why of writableSlotProblems(blankSlots[i], emptied.get(s.key).limit))
+        for (const why of writableSlotProblems(blankSlots[i], emptied.get(s.key).limit, uses.get(s.key)))
           add('content-map.json', `slots[${s.key}]`, `the build writes it, but ${why}`)
       if (json(blankSlots[i]) === json(blankSlot(s, emptied))) return
       add(

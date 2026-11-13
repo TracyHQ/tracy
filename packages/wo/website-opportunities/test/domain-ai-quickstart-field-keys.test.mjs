@@ -259,3 +259,23 @@ test('a stored place typed differently by two fields fails', () => {
   blockOf(set, 'hero-home').fields[2].slot = 'module-12.1'
   assertOneProblem(set, 'blocks[hero-home].fields[photo]', /module-12.1 is typed text by hero-home.heading/)
 })
+
+test('transparent is true on an image or icon field, and nowhere else (#584)', () => {
+  const ok = pending()
+  itemField(ok, 'icon').transparent = true
+  assert.deepEqual(checkAiQuickstartContract(ok).problems, [])
+  const notTrue = pending()
+  itemField(notTrue, 'icon').transparent = 'yes'
+  assertOneProblem(
+    notTrue,
+    `${GRID}.itemFields[icon].transparent`,
+    /transparent is true on an image or icon field/
+  )
+  const onText = pending()
+  itemField(onText, 'name').transparent = true
+  assertOneProblem(
+    onText,
+    `${GRID}.itemFields[name].transparent`,
+    /transparent is true on an image or icon field/
+  )
+})

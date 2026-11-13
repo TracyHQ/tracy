@@ -36,7 +36,7 @@ function visibleLength(value) {
 export function kitUsesBySlot(blockStore) {
   const out = new Map()
   const use = (key) => {
-    if (!out.has(key)) out.set(key, { whole: [], pieces: new Map(), links: 0, icons: 0 })
+    if (!out.has(key)) out.set(key, { whole: [], pieces: new Map(), links: 0, icons: 0, transparent: false })
     return out.get(key)
   }
   const add = (b, f, places) => {
@@ -45,6 +45,7 @@ export function kitUsesBySlot(blockStore) {
       const [key, xpath] = place.split('@')
       const u = use(key)
       const name = `${b.id}.${f.name}`
+      if (f.transparent === true) u.transparent = true
       if (f.type === 'link') u.links += 1
       else if (f.type === 'icon') u.icons += 1
       else if (Number.isInteger(f.limit)) {
@@ -124,9 +125,10 @@ export function writableSlot(slot, limit) {
 
 /**
  * Why the door would refuse a normal write into a slot the build writes, or [] (the contract check): its door limit
- * differs from the kit's limit, or it carries a keep flag.
+ * differs from the kit's limit, it carries a keep flag, or it takes only a picture on a transparent ground and no kit
+ * field stored there says so (`transparent: true`), so a build would send an opaque one.
  */
-export function writableSlotProblems(slot, limit) {
+export function writableSlotProblems(slot, limit, use) {
   const out = []
   if (slot.type === 'text' && Number.isInteger(limit) && doorLimitOf(slot) !== limit)
     out.push(
@@ -135,5 +137,9 @@ export function writableSlotProblems(slot, limit) {
   if (slot.customize === 'keep') out.push('it carries customize "keep", though the build writes it')
   if (slot.fit?.replace === 'keep')
     out.push('it carries fit.replace "keep": the door refuses every picture (SLOT_PICTURE_KEPT)')
+  if (slot.type === 'image' && slot.fit?.transparent === true && use && !use.transparent)
+    out.push(
+      'the door takes only a picture on a transparent ground here (fit.transparent), and no kit field stored here says transparent: true'
+    )
   return out
 }

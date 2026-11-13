@@ -8,6 +8,9 @@
 //   display name of the social network of the scope's link ("Facebook"), so they never carry a business's words.
 // - `for` (icon fields): the text fields of the same scope the icon illustrates.
 // - `variantOf` + `theme` (icon and image fields): the light and the dark version of one picture.
+// - `transparent` (image and icon fields, #584): `true` when the template draws the picture on a transparent ground
+//   (a cut-out over the hero, a logo, a signature): the build writes a PNG or WebP whose ground is transparent, and
+//   the door refuses an opaque file there (SLOT_IMAGE_OPAQUE).
 // - `derived`: what a field with no stored place is derived from, one of `DERIVED_FORMS`.
 // - `keyAt` + `pageType`: a row keyed to a page, and where the key is stored.
 // A scope is the block's own fields, the item fields (one item), or the fields of one child list (one row).
@@ -91,6 +94,11 @@ function scopeProblems(scope, report, { library }) {
       report(
         `${at}.iconOf`,
         `${JSON.stringify(field.iconOf)} is not an iconOf value of an icon field: ${quoted(ICON_OF)}`
+      )
+    if (field.transparent !== undefined && (field.transparent !== true || (!icon && field.type !== 'image')))
+      report(
+        `${at}.transparent`,
+        'transparent is true on an image or icon field the template draws on a transparent ground, and absent otherwise'
       )
     if (field.textOf !== undefined) {
       if (field.type !== 'text' || !TEXT_OF.includes(field.textOf))

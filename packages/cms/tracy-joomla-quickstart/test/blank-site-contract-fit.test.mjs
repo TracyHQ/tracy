@@ -90,3 +90,22 @@ test('an unmeasured fit is no limit: only the slot cap counts', () => {
     40
   )
 })
+
+test('a picture on a transparent ground needs a kit field that says so (#584)', () => {
+  const slot = {
+    key: 'module-1.7',
+    type: 'image',
+    fit: { kind: 'cutout', replace: 'photo', transparent: true }
+  }
+  const said = kitUsesBySlot({
+    blocks: [{ id: 'hero', fields: [{ name: 'p', type: 'image', transparent: true, slot: 'module-1.7' }] }]
+  })
+  const silent = kitUsesBySlot({
+    blocks: [{ id: 'hero', fields: [{ name: 'p', type: 'image', slot: 'module-1.7' }] }]
+  })
+  assert.deepEqual(writableSlotProblems(slot, null, said.get('module-1.7')), [])
+  assert.match(
+    writableSlotProblems(slot, null, silent.get('module-1.7')).join(),
+    /no kit field stored here says transparent: true/
+  )
+})

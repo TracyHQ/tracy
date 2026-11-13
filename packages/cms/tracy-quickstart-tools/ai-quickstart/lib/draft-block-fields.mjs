@@ -66,6 +66,9 @@ export function fieldOf(entry, slotIds, name, ctx, { item = false } = {}) {
     if (frame) field.frame = frame
     if (type === 'icon')
       field.storage = (entry.type ?? mapSlot.type) === 'image' ? 'image-file' : 'class-name'
+    // A picture the template draws on a transparent ground (the released slot's measured fit): a cut-out, a logo, a
+    // signature. An opaque file there covers what is drawn behind it, and the door refuses it (SLOT_IMAGE_OPAQUE).
+    if (keys.some((key) => ctx.mapSlots.get(key)?.fit?.transparent === true)) field.transparent = true
   }
   if (!item) field.slot = keys[0]
   else field.slots = keys

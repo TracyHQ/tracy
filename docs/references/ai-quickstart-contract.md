@@ -164,6 +164,14 @@ A field whose kind is `editorial.design_element` is a design value and must be t
   "frame": { "width": 64, "height": 64 }, "theme": "light", "variantOf": "item-icon", "for": ["heading", "paragraph"] }
 ```
 
+**Pictures on a transparent ground.** An image or icon field the template draws on a transparent ground (the cut-out
+boxer of a hero over its background photo and stripes, a logo, a signature, an avatar group, an icon) carries
+`transparent: true`, drafted from the released slot's measured `fit.transparent`. The build writes a PNG or WebP whose
+ground is transparent there (a cut-out made by removing the background, or an icon drawn on a transparent ground):
+measured on the JA Boxing hero, an opaque photo covers the headline and the stripes, and the door refuses it
+(`SLOT_IMAGE_OPAQUE`; an icon: `SLOT_PICTURE_KEPT`). The door reads the ground of a true colour file: the demo's own
+palette PNG reads opaque, so a build writes an RGBA file.
+
 ### Field keys beyond the type
 
 | Key | On | Allowed values |
@@ -173,6 +181,7 @@ A field whose kind is `editorial.design_element` is a design value and must be t
 | `textOf` | text fields with a `link` field in the same scope | `"network"` |
 | `for` | icon fields | text field names of the same scope |
 | `variantOf` | icon and image fields | the name of the base field of the same scope |
+| `transparent` | image and icon fields | `true`: the template draws the picture on a transparent ground |
 | `theme` | both members of a pair, required there | `"light"`, `"dark"` |
 | `derived` | a field with no stored place | `"the item page address"`, `"the page address"`, `"the page of the row"` |
 | `keyAt` | required with `derived: "the page of the row"` | the location(s) where the row's page key is stored, see below |
