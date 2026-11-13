@@ -1,6 +1,6 @@
 # STATUS — tracy-diner (JA Diner → EmDash)
 
-Version 0.1.1: release cut locally (not published) on 2026-11-13 from the release chain; every gate passes, `independent` signed by a fresh session on its own rebuild of the same artifact (D-K3); the source mirror was rebuilt and re-pinned (D-K2); the template kit reads `todo kit-zip-missing` (upload and approval are a person's). 0.1.0 is the published release.
+Version 0.1.1: release cut locally (not published) on 2026-11-13 from the release chain; every gate passes, `independent` signed by a fresh session on its own rebuild of the same artifact (D-K3); the source mirror was rebuilt and re-pinned (D-K2); the template kit is approved by the owner (D-K4, `contracts/0.1.1/template-kit.json`) and reads `todo kit-zip-missing` until a person attaches `template-kit-tracy-diner-0.1.1.zip` to the release. 0.1.0 is the published release.
 
 ## Next release (doc gaps from the 0.1.1 independent handover; they touch packed files, so 0.1.1 was not re-cut)
 - G1: the recipient tools (`audit.mjs`, `admin-session.mjs`, `admin-roundtrip.mjs`, `forms-check.mjs`, `qa-browser.mjs`) need a Playwright Chromium (`pnpm exec playwright install chromium`); `README.md` / `docs/checks-and-recovery.md` do not say so.
