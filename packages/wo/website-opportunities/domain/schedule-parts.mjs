@@ -1,22 +1,11 @@
-// Which field of a schedule row each part fills (ticket #615). A list row with two schedule fields shows the days in
-// the first and the times in the second (the needs profile prompt asks the parts in that order). One detector tells
-// each part day like, time like, mixed or neither, and every step uses it: the plan's fit (`plan-rows-fit.mjs`), the
-// page writer (`page-writer-rows.mjs`), the coverage (`plan-row-coverage.mjs`), and the test of the prompt's examples.
-//
-// The rule: NEVER LOSE A REAL SCHEDULE AND NEVER CUT INSIDE A RANGE.
-//
-// - Day like: `schedule-days.mjs` (day names and spans, daily, weekday and weekend words, short forms in groups).
-// - Time like: one time expression, `18:00`, `7.30`, `18h30`, `20h`, `6 pm`, `18 Uhr`, `noon`, `midnight`, or an hour
-//   range with its unit, read as ONE expression: `9 to 5`, `10-12`, `7 bis 22 Uhr`, `9-18h`, `9-5 pm`, `6 - 7.30 pm`,
-//   `9 a 13 h`, `9h-18h` (hyphen or en dash). An age range (`Kids 6 to 12`, `ages 6 to 12`) is not a time.
-// - A row of one part is split into days and times only when the cut is clean: the text before the first whole time
-//   expression reads as days and the text from it on reads as times (`Mo-Fr 7 bis 22 Uhr`, `Tue & Thu 6 - 7.30 pm`).
-//   A connecting word left at the end of the days (`de`, `from`, `von`) goes with the times.
-// - A row of one part that cannot be split cleanly is kept whole: in the times field when it holds a time expression
-//   (`Do 18 Uhr`, `18:00 Mon`), else in the days field (`By appointment`, `24/7`, a lone `Do`). Only a value longer
-//   than its field drops the row (`row_value_over_limit`, `plan-rows-fit.mjs`).
-// - A row of two parts must be days then times; times before days is not shown (`row_parts_order`).
-import { hasDays } from './schedule-days.mjs'
+// Which field of a schedule row each part fills (ticket #615): days first, times second, for the plan's fit, the page
+// writer and the coverage. A ONE PART row is split only when the WHOLE text is DAYS, one separator (space, colon, comma
+// or spaced dash), then TIMES: DAYS is one day group (`isDayGroup`, `schedule-days.mjs`), TIMES one clock time or one
+// range of two, with its units and an optional leading word kept with it (`Mo-Fr ab 18 Uhr`, `Sat 9 - noon`). The cut
+// is then checked: no digit or time word in the days, no day, comma or `and` in the times. Anything else stays whole
+// and unchanged: in the times when it holds a digit, else in the days (`Mon-Fri 9-5, Sat 10-2`, `By appointment`).
+// Only a value over its field's limit drops the row. A TWO PART row must be days then times (`row_parts_order`).
+import { hasDays, isDayGroup } from './schedule-days.mjs'
 
 export const SCHEDULE_KINDS = Object.freeze(['offering.schedule'])
 
@@ -37,9 +26,6 @@ const TIME_FORMS = [
   '(?<!\\p{L})(?:noon|midnight|midi|minuit|mittag|mitternacht)(?!\\p{L})'
 ]
 const TIME = new RegExp(TIME_FORMS.join('|'), 'iu')
-// A connecting word between the days and the times, moved to the times on a split.
-const LEAD_WORD = new RegExp('\\s+(?:from|von|ab|de|des|d\\u00e8s|desde|dalle|dalle ore|das|da)$', 'iu')
-
 /** What a part of a schedule row holds: `'day'`, `'time'`, `'mixed'` (both) or `'other'`. */
 export function partKindOf(part) {
   const day = hasDays(part)
@@ -47,19 +33,43 @@ export function partKindOf(part) {
   return day && time ? 'mixed' : day ? 'day' : time ? 'time' : 'other'
 }
 
-/** A mixed part cut cleanly into its days and its times (days before the whole first time expression), else null. */
-export function splitMixedPart(part) {
-  const text = String(part)
-  const at = TIME.exec(text)?.index
-  if (at === undefined || at === 0) return null
-  let days = text.slice(0, at).replace(/[\s,;:]+$/u, '')
-  let times = text.slice(at).trim()
-  const lead = LEAD_WORD.exec(days)
-  if (lead) {
-    days = days.slice(0, lead.index).replace(/[\s,;:]+$/u, '')
-    times = `${lead[0].trim()} ${times}`
+// The strict grammar of a one part row: DAYS, one separator, TIMES, nothing else (see the header).
+const HOUR = '(?:[01]?\\d|2[0-4])'
+const MIN = '[0-5]\\d'
+const UNITS = 'a\\.?\\s?m\\.?|p\\.?\\s?m\\.?|uhr|hrs?|h|noon|midnight'
+const CLOCK_WORDS =
+  'noon|midnight|midi|minuit|mittag|mitternacht|mediod[i\\u00ed]a|medianoche|mezzogiorno|mezzanotte|meio-dia|meia-noite'
+const CLOCK = `(?:(?:${HOUR}(?:[:.]${MIN}|\\s?h\\s?${MIN})?|(?:[01]\\d|2[0-4])${MIN})(?:\\s*(?:${UNITS}))?|${CLOCK_WORDS})`
+const RANGE = '\\s*[-\\u2013]\\s*|\\s+(?:to|till|until|thru|through|bis|\\u00e0|\\u00e0s|as|a|ao|al|alle)\\s+'
+const LINK = [
+  "from|at|until|till|after|before|ab|bis|um|von|\\u00e0 partir de|d\\u00e8s|jusqu['\\u2019]\\u00e0|de|des|das|da",
+  'desde(?: las)?|hasta(?: las)?|a partir de(?: las)?|de las|a partir das|at\\u00e9|dalle(?: ore)?|alle(?: ore)?|ore',
+  'fino alle'
+].join('|')
+const TIMES = new RegExp(`^(?:(?:${LINK})\\s+)?${CLOCK}(?:(?:${RANGE})${CLOCK})?$`, 'iu')
+const CUT = /\s*[:,]\s*|\s+[-\u2013]\s+|\s+/gu
+const TIME_WORD = new RegExp(`(?<!\\p{L})(?:${CLOCK_WORDS}|a\\.?m|p\\.?m|uhr)(?!\\p{L})`, 'iu')
+const LONE_TWO_LETTER_DAY = /(?<!\p{L})(?:mo|tu|we|th|fr|sa|su|di|mi|do|so)\.?(?!\p{L})/iu
+const JOINER = /[,;&+]|\s(?:and|und|et|y|e|plus)\s/iu
+
+/** Whether a cut passes the check made after it: days without a time, times without a day or a second time. */
+const cutHolds = (days, times) =>
+  isDayGroup(days) &&
+  !/\d/u.test(days) &&
+  !TIME_WORD.test(days) &&
+  !hasDays(times) &&
+  !LONE_TWO_LETTER_DAY.test(times) &&
+  !JOINER.test(times)
+
+/** A one part row split by the strict grammar into `[days, times]`, else null (the row is then kept whole). */
+export function splitOnePart(part) {
+  const text = String(part).trim()
+  for (const sep of text.matchAll(CUT)) {
+    const days = text.slice(0, sep.index)
+    const times = text.slice(sep.index + sep[0].length)
+    if (days && TIMES.test(times) && cutHolds(days, times)) return [days, times]
   }
-  return partKindOf(days) === 'day' && partKindOf(times) === 'time' ? [days, times] : null
+  return null
 }
 
 /**
@@ -69,10 +79,9 @@ export function splitMixedPart(part) {
  */
 export function daysAndTimesOf(parts) {
   if (parts.length === 1) {
-    const kind = partKindOf(parts[0])
-    if (kind === 'time') return [undefined, parts[0]]
-    if (kind === 'mixed') return splitMixedPart(parts[0]) ?? [undefined, parts[0]]
-    return [parts[0]]
+    const split = splitOnePart(parts[0])
+    if (split) return split
+    return /\d/u.test(String(parts[0])) ? [undefined, parts[0]] : [parts[0]]
   }
   if (parts.length !== 2) return parts
   const [first, second] = parts.map(partKindOf)

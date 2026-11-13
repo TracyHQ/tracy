@@ -217,9 +217,10 @@ and a block without `lists` shows no rows.
   an item leaves only that value off (the field follows its no-data rule), reported as kind `feature`
   ("Schedule of Invented Boxing"). The gate's `rows` report (each entry with its `code` and `reason`) says, for a row
   dropped with `row_value_over_limit`, which `field`, its `limit` and the part's `length`. A schedule of one part is
-  never lost and never cut inside a range: it is split into days and times only when the days end before the whole
-  time expression (`Mo-Fr 7 bis 22 Uhr`), else kept whole in the times when it holds a time and in the days when it
-  holds none (`By appointment`); only a value over its field's limit drops the row. A customer's answer is never dropped that way: it is held to the template's limits when it is settled, and
+  never lost and never cut inside a range: it is split into days and times only when the whole text is one day group,
+  one separator and one time expression (`Mo-Fr 7 bis 22 Uhr`, `Sat 9 - noon`, `Mon-Fri until 5pm`), else kept whole
+  and unchanged, in the times when it holds a digit (`Mon-Fri 9-5, Sat 10-2`) and in the days when it holds none
+  (`By appointment`); only a value over its field's limit drops the row. A customer's answer is never dropped that way: it is held to the template's limits when it is settled, and
   the gate reports one too long as the problem `answer_over_limit`.
 - A row field declaring `textOf: "network"` (Contract A) names the network of the row's link: the writer fills it from
   the link with the icon step's network detection (`from: 'data'`), never sends it to the model, and hides it when

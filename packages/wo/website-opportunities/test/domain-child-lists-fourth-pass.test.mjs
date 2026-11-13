@@ -72,8 +72,8 @@ test('a one part schedule is split into days and times, or kept whole, never gue
   for (const [parts, [days, times]] of split)
     assert.deepEqual(await written(parts, store), { days, times }, JSON.stringify(parts))
   assert.deepEqual(await written(['Mon', `19${EN_DASH}21`], store), { days: 'Mon', times: `19${EN_DASH}21` })
-  // A part with no clean cut is kept whole (`domain-schedule-clean-cut.test.mjs`), never dropped.
-  assert.deepEqual(await written(['Kids 6 to 12'], store), { days: 'Kids 6 to 12', times: '<hide>' })
+  // A part the grammar does not split is kept whole, in the times when it holds a digit (`domain-schedule-clean-cut.test.mjs`).
+  assert.deepEqual(await written(['Kids 6 to 12'], store), { days: '<hide>', times: 'Kids 6 to 12' })
   assert.deepEqual(await written(['Sunrise class'], store), { days: 'Sunrise class', times: '<hide>' })
   const both = 'Mon 9:00 to 17:00, Sat 10:00'
   assert.deepEqual(await written([both], store), { days: '<hide>', times: both })

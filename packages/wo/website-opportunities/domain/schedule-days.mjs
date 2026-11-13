@@ -7,6 +7,8 @@
 //   `Tutti i giorni`, `Todos os dias`, `Fim de semana`).
 // - Two letter forms are days only in a group joined by a hyphen, a slash, an ampersand, a plus, a comma or a word such
 //   as `and` (`Mo-Fr`, `Tu & Th`, `Di, Do`, `Sa + So`): a lone `Do` or `So` is ordinary text.
+// - A whole day group (`isDayGroup`): day words joined by range or list connectors, with an optional opener (`De lunes
+//   a viernes`, `Du lundi au vendredi`, `Mo bis Fr`), or a letter group as below; nothing else in the text.
 // - Single letters are days only in a group joined by slashes whose letters are all day letters of one language in
 //   week order (`M/W/F`, `T/Th`, `L/X/V`), or in a range of two such letters (`M-F`). `S, M, L` (sizes) and `W/R/F`
 //   are not days.
@@ -26,13 +28,13 @@ const DAY_WORDS = [
   'vendredi',
   'samedi',
   'dimanche',
-  'montag',
-  'dienstag',
-  'mittwoch',
-  'donnerstag',
-  'freitag',
-  'samstag',
-  'sonntag',
+  'montags?',
+  'dienstags?',
+  'mittwochs?',
+  'donnerstags?',
+  'freitags?',
+  'samstags?',
+  'sonntags?',
   'lunes',
   'martes',
   'mi[e\\u00e9]rcoles',
@@ -153,4 +155,30 @@ export function hasDays(text) {
   for (const [, from, to] of value.matchAll(LETTER_RANGE))
     if (inWeekOrder([from.toLowerCase(), to.toLowerCase()])) return true
   return false
+}
+
+// A whole day group: an optional opener, then day words joined by connectors, and nothing else.
+const ITEM = `(?:${ONE_DAY}|${TWO_LETTER_DAYS.join('|')})\\.?`
+const ITEM_JOIN =
+  '\\s*[-/&+,\\u2013]\\s*|\\s+(?:and|to|thru|through|till|until|et|au|\\u00e0|und|bis|a|al|y|e)\\s+'
+const GROUP = new RegExp(
+  `^(?:(?:from|de|du|von|dal|desde|da)\\s+)?(${ITEM}(?:(?:${ITEM_JOIN})${ITEM})*)$`,
+  'iu'
+)
+const SPLIT_JOIN = new RegExp(ITEM_JOIN, 'giu')
+const TWO_LETTER = new RegExp(`^(?:${TWO_LETTER_DAYS.join('|')})$`, 'iu')
+const WHOLE_SLASHES = /^\p{L}{1,2}\.?(?:\s*\/\s*\p{L}{1,2}\.?)+$/u
+const WHOLE_RANGE = /^(\p{L})\s*[-\u2013]\s*(\p{L})$/u
+
+/** Whether the whole text is one day group (a two letter form only with other days, letters only in week order). */
+export function isDayGroup(text) {
+  const value = String(text).trim()
+  const group = GROUP.exec(value)?.[1]
+  if (group !== undefined) {
+    const items = group.split(SPLIT_JOIN).map((item) => item.replace(/\.$/u, ''))
+    return items.length > 1 || !TWO_LETTER.test(items[0])
+  }
+  if (WHOLE_SLASHES.test(value)) return inWeekOrder(lettersOf(value))
+  const range = WHOLE_RANGE.exec(value)
+  return range !== null && inWeekOrder([range[1].toLowerCase(), range[2].toLowerCase()])
 }
