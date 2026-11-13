@@ -36,7 +36,10 @@ export const OWNER_STATEMENT =
 /** The person the owner asked to keep off the site, named in the statement. */
 export const HELD_PERSON = 'Brannoch Vey'
 
-/** A scripted answer that reads the owner's statement as facts, in rewritten labels. */
+/**
+ * A scripted answer that reads the owner's statement as facts, in rewritten labels: none copies a run of four of its
+ * words (`owner-echo.mjs`), each still rests on its quote (`ownerLabelGrounded`).
+ */
 export const ANSWER_READING_OWNER = Object.freeze({
   services: [
     { name: 'Glazing workshops', quote: 'Join our glazing workshops this month!', ref: 'post:instagram:c1' },
@@ -53,11 +56,11 @@ export const ANSWER_READING_OWNER = Object.freeze({
   ],
   serviceAreas: [],
   facts: [
-    { text: 'classes capped at six students', quote: 'Every class is capped at six students', ref: 'owner' }
+    { text: 'six students per class at most', quote: 'Every class is capped at six students', ref: 'owner' }
   ],
   keyMessages: [
     {
-      label: 'class capped at six students',
+      label: 'small classes of six',
       quotes: [{ quote: 'Every class is capped at six students', ref: 'owner' }]
     }
   ]

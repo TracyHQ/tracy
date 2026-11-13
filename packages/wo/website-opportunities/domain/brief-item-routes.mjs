@@ -78,6 +78,9 @@ export const BRIEF_ITEM_ROUTES = Object.freeze({
   'fact.socials': roles('contact.social_url'),
   'fact.contactChannels': roles('contact.cta_label', 'contact.cta_url'),
   'fact.otherPhones': roles('contact.phone'),
+  'fact.ownerStatement': notShown(
+    'What the owner typed about the business in the build chat (D46): its facts are research to write from, its words are never copy.'
+  ),
   'fact.facility': notShown(
     'An observed fact: read from photos for tone and frame descriptions, never a claim on the page.'
   ),

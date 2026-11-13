@@ -26,6 +26,7 @@ import {
 import { OWNER_STATEMENT_RULE, businessReadingSystemOf } from '../domain/owner-statement-prompt.mjs'
 import { OWNER_STATEMENT_KIND, ownerPassageOf } from '../domain/owner-statement.mjs'
 import { heldTextsOf } from '../domain/plan-withheld.mjs'
+import { HELD_NAME_STAND_IN, heldPassagesOf, withoutStandIn } from '../domain/reading-held-passages.mjs'
 import { BudgetExceededError } from './cost-ledger.js'
 import { visionCostCents } from './cost-prices.js'
 import { controlError } from './google-maps-research.js'
@@ -124,23 +125,22 @@ export const businessReadingCeilingCents = (model, prompt, maxTokens = MAX_OUTPU
  * Google's place facts (`google`, or null). Pure: the place executor and the build chat's research both read with it.
  * `ownerStatement` (decision D46): what the owner typed about the business in the build chat, read as a source whose
  * facts are true and whose words are never copy (`domain/owner-statement.mjs`). `withheld`: what the owner keeps off
- * the site (`{name?: true, people?: string[], names?: string[]}`, a research's `withheld`); every sentence of the
- * statement naming a held person, or the business name while it is held, never reaches the model. Both are left out of
- * the input when there is no statement, so a reading without one is the reading it was.
+ * the site (`{name?: true, people?: string[], names?: string[]}`, a research's `withheld`): no held text reaches the
+ * model, in any passage (`domain/reading-held-passages.mjs`). A held person's sentences (`heldTexts`) are taken out of
+ * every passage; the business name while it is held (`nameHeld: true`) is taken out of the statement with its sentences,
+ * masked with a neutral stand-in in every other passage, and the message's header names the business by that stand-in.
+ * The statement is left out of the input when it is blank, and `heldTexts` and `nameHeld` when nothing is held, so a
+ * reading with neither is the reading it was.
  */
 export function readingInputOf({ profile, google, collected, ownerStatement = null, withheld = null }) {
   const own = collected.filter((s) => SOURCES.includes(s.source))
   const name = profile.name ?? google?.name ?? null
-  const heldTexts = [
-    ...heldTextsOf(withheld ?? {}),
-    ...(withheld?.name === true && typeof name === 'string' ? [name] : [])
-  ]
-  const owner =
-    typeof ownerStatement === 'string' && ownerStatement.trim()
-      ? { ownerStatement, ...(heldTexts.length ? { heldTexts } : {}) }
-      : {}
+  const heldTexts = heldTextsOf(withheld ?? {})
+  const nameHeld = withheld?.name === true && typeof name === 'string' && name.trim() !== ''
   return {
-    ...owner,
+    ...(typeof ownerStatement === 'string' && ownerStatement.trim() ? { ownerStatement } : {}),
+    ...(heldTexts.length ? { heldTexts } : {}),
+    ...(nameHeld ? { nameHeld: true } : {}),
     bio: profile.bio ?? null,
     websitePages: collected.filter((s) => s.source === 'website').flatMap((s) => s.collected?.pages ?? []),
     posts: own.flatMap((s) => (s.collected?.posts ?? []).map((p) => ({ source: s.source, ...p }))),
@@ -166,13 +166,15 @@ export function readingInputOf({ profile, google, collected, ownerStatement = nu
  * quote besides the texts (`readingFactsOf`).
  * @param {{bio?: string | null, posts?: any[], reviews?: any[], websitePages?: any[], name?: string | null, trade?: string | null,
  *   googleTypes?: string[], categories?: {source: string, text: string}[], ownerStatement?: string | null,
- *   heldTexts?: string[],
+ *   heldTexts?: string[], nameHeld?: boolean,
  *   door: {state: string, door?: any, reason?: string}, held?: any,
  *   charge: (spec: object, call: () => Promise<any>) => Promise<any>, fetchImpl?: typeof fetch, now?: () => number,
  *   log?: any}} input
  * @returns {Promise<object | null>} the reading, or null when there is no text to read; with an owner statement it
  *   carries `ownerStatement: {read: true, heldOut, cut}` (how many of its sentences were held back, whether it was cut
- *   at its cap), or `{read: false, reason: 'held'}` when every sentence named something held
+ *   at its cap), or `{read: false, reason: 'held'}` when every sentence named something held. When the statement was
+ *   the only text and all of it was held, there is no reading (null): `ownerStatementRecordOf` gives the caller that
+ *   same record, so it can tell "nothing to read" from "everything held".
  */
 export async function readBusiness({
   bio = null,
@@ -185,6 +187,7 @@ export async function readBusiness({
   categories = [],
   ownerStatement = null,
   heldTexts = [],
+  nameHeld = false,
   door,
   held = null,
   charge,
@@ -192,13 +195,21 @@ export async function readBusiness({
   now = Date.now,
   log = console
 }) {
-  const sources = readingSourcesOf({ bio, posts, reviews, websitePages, ownerStatement, heldTexts })
+  const heldName = nameHeld && typeof name === 'string' && name.trim() ? name : null
+  const heldAll = [...heldTexts, ...(heldName ? [heldName] : [])]
+  const sources = readingSourcesOf({ bio, posts, reviews, websitePages, ownerStatement, heldTexts, heldName })
   if (!sources.length) return null
-  const owner = ownerRecordOf(ownerStatement, heldTexts)
+  const owner = ownerStatementRecordOf(ownerStatement, heldAll)
+  // The business is named by the stand-in while its name is held, in the header and in Google's and social facts.
+  const header = heldName ? HELD_NAME_STAND_IN : name
+  const done = heldName ? withoutStandIn : (read) => read
   const ready = door?.state === 'ready' ? door.door : null
   const version = businessReadingVersion(ready)
-  const facts = readingFactsOf({ googleTypes, categories })
-  const inputHash = inputHashOf(sources, name, trade, facts)
+  const facts = heldPassagesOf(readingFactsOf({ googleTypes, categories }), {
+    people: heldTexts,
+    name: heldName
+  })
+  const inputHash = inputHashOf(sources, header, trade, facts)
   // A held reading made before joined service lines kept every part gets them now, paying nothing (F10).
   if (held?.method === 'model' && held.version === version && held.inputHash === inputHash) {
     const kept = {
@@ -209,25 +220,28 @@ export async function readBusiness({
       services: withPostOfferings(withListedServiceParts(held.services, sources), sources)
     }
     // A held reading with no theme that never had its retry gets it now, alone: the whole reading is not paid again.
-    return ready && kept.uspRetry === undefined
-      ? retryUsp(kept, { ready, sources, name, trade, charge, fetchImpl, log })
-      : kept
+    return done(
+      ready && kept.uspRetry === undefined
+        ? await retryUsp(kept, { ready, sources, name: header, trade, charge, fetchImpl, log })
+        : kept
+    )
   }
   const at = new Date(now()).toISOString()
-  const rules = (reason, extra = {}) => ({
-    version: businessReadingVersion(null),
-    method: 'rules',
-    reason,
-    inputHash,
-    at,
-    ...readBusinessByRules(sources),
-    uspThemes: null,
-    uspThemesReason: `rules_${reason}`,
-    ...owner,
-    ...extra
-  })
+  const rules = (reason, extra = {}) =>
+    done({
+      version: businessReadingVersion(null),
+      method: 'rules',
+      reason,
+      inputHash,
+      at,
+      ...readBusinessByRules(sources),
+      uspThemes: null,
+      uspThemesReason: `rules_${reason}`,
+      ...owner,
+      ...extra
+    })
   if (!ready) return rules(door?.state === 'unavailable' ? 'unavailable' : 'not_configured')
-  const prompt = businessReadingPrompt(sources, { name, trade, facts })
+  const prompt = businessReadingPrompt(sources, { name: header, trade, facts })
   let answer
   try {
     answer = await charge(
@@ -254,14 +268,20 @@ export async function readBusiness({
   if (!String(answer.text ?? '').trim()) return rules('empty', { model: ready.model })
   const read = checkBusinessReading(answer.text, sources, { trade, facts })
   if (!read) return rules('unreadable', { model: ready.model })
-  return retryUsp(
-    { version, method: 'model', model: ready.model, inputHash, at, ...read, ...owner },
-    { ready, sources, name, trade, charge, fetchImpl, log }
+  return done(
+    await retryUsp(
+      { version, method: 'model', model: ready.model, inputHash, at, ...read, ...owner },
+      { ready, sources, name: header, trade, charge, fetchImpl, log }
+    )
   )
 }
 
-/** How the owner's statement was read, for the reading's record; nothing when the owner typed none (or only spaces). */
-function ownerRecordOf(statement, heldTexts) {
+/**
+ * How the owner's statement was read, for the reading's record (pure): `{ownerStatement: {read, heldOut, cut}}`, or
+ * `{ownerStatement: {read: false, reason: 'held'}}` when every sentence named something held; nothing (`{}`) when the
+ * owner typed none (or only spaces). `heldTexts`: the held people and, while it is held, the business name.
+ */
+export function ownerStatementRecordOf(statement, heldTexts = []) {
   if (typeof statement !== 'string' || !statement.trim()) return {}
   const { passage, heldOut, cut } = ownerPassageOf(statement, heldTexts)
   return { ownerStatement: passage ? { read: true, heldOut, cut } : { read: false, reason: 'held' } }

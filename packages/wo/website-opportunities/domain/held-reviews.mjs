@@ -1,6 +1,8 @@
 // Reviews that name someone a site brief holds off the site (#1791): a person named only in guest reviews waits for the
-// owner, so a review that names them is no testimonial the site may quote. Pure, no imports: the brief and the review
-// sources of the app both read it.
+// owner, so a review that names them is no testimonial the site may quote. Pure, its one import the held text matcher
+// (`held-text-match.mjs`): the brief and the review sources of the app both read it. A held name is found with accents
+// written or not, in full width letters, with zero width characters inside it, and across any run of spaces (#609).
+import { foldHeld, heldSpansIn } from './held-text-match.mjs'
 
 const nonEmpty = (s) => typeof s === 'string' && s.trim() !== ''
 
@@ -12,31 +14,22 @@ export const heldPeopleOf = (missing) =>
     .filter(nonEmpty)
 
 const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-/** The held names a text writes, as whole words. */
+/** The pattern of a held name as whole words in a folded text: any run of spaces or line breaks between its words. */
+const wholePatternOf = (name) => {
+  const body = foldHeld(name).trim().split(/\s+/u).map(escapeRe).join('\\s+')
+  return body ? new RegExp(`(?<![\\p{L}\\p{N}])${body}(?![\\p{L}\\p{N}])`, 'u') : null
+}
+/** The held names a text writes, as whole words (accents, width, zero width characters and case aside). */
 export const heldNamesIn = (text, names) =>
-  names.filter((n) =>
-    new RegExp(`(?<![\\p{L}\\p{N}])${escapeRe(n)}(?![\\p{L}\\p{N}])`, 'iu').test(String(text ?? ''))
-  )
+  names.filter((n) => wholePatternOf(n)?.test(foldHeld(text)) === true)
 
 /**
- * The pattern of a held name in slug form: its letters and digits word by word, any separator or none between them
- * (`pellam-orrick`, `pellam_orrick`, `PellamOrrick`), case ignored. A name of one word stays a whole word; a name of
- * two words or more is distinctive enough to be found inside a longer slug (`pellam-orrick2.jpg`).
+ * The held names a text writes in slug form (an address, a file name, an id): a name's letters and digits word by
+ * word, any separator or none between them (`pellam-orrick`, `pellam_orrick`, `PellamOrrick`), case and accents
+ * ignored. A name of one word stays a whole word; a name of two words or more is distinctive enough to be found inside
+ * a longer slug (`pellam-orrick2.jpg`). `held-text-match.mjs heldPatternOf`.
  */
-function slugPatternOf(name) {
-  const words = String(name ?? '')
-    .split(/[^\p{L}\p{N}]+/u)
-    .filter(Boolean)
-  if (words.length === 0) return null
-  const body = words.map(escapeRe).join('[^\\p{L}\\p{N}]*')
-  return words.length === 1
-    ? new RegExp(`(?<![\\p{L}\\p{N}])${body}(?![\\p{L}\\p{N}])`, 'iu')
-    : new RegExp(body, 'iu')
-}
-
-/** The held names a text writes in slug form (an address, a file name, an id), `slugPatternOf`. */
-export const heldSlugsIn = (text, names) =>
-  names.filter((n) => slugPatternOf(n)?.test(String(text ?? '')) === true)
+export const heldSlugsIn = (text, names) => names.filter((n) => heldSpansIn(text, [n]).length > 0)
 
 /** The reviews that name someone held off the site, each with `namesHeld` and its text (for `isHeldReviewQuote`). */
 export function reviewsNamingHeld(reviews, names) {

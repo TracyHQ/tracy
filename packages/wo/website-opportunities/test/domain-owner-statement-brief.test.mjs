@@ -9,7 +9,7 @@ import { test } from 'node:test'
 import * as domain from '../domain/index.mjs'
 import { renderBriefMarkdown, validateBrief } from '../domain/brief.mjs'
 import { checkBusinessReading, readingSourcesOf } from '../domain/business-reading.mjs'
-import { echoSentencesOf, echoesOwner } from '../domain/owner-statement.mjs'
+import { copiesOwner, ownerEchoOf } from '../domain/owner-echo.mjs'
 import { makeSiteBrief } from '../src/brief-research.js'
 
 const HSC = JSON.parse(
@@ -73,13 +73,13 @@ function brief() {
   )
 }
 
-test('the brief names the service the owner stated and holds none of the statement word for word', () => {
+test('the brief names the service the owner stated and copies no run of four words of the statement', () => {
   const made = brief()
   assert.deepEqual(validateBrief(made).errors ?? [], [])
   assert.ok(made.reading.services.some((s) => s.label === 'Beach fitness bootcamps'))
   assert.ok(made.reading.story.every((i) => i.source.kind !== 'owner-statement'))
-  const sentences = echoSentencesOf(STATEMENT)
-  assert.equal(sentences.length, 3)
+  const echo = ownerEchoOf([STATEMENT])
+  assert.equal(echo.sentences.length, 3)
   // Everything the brief says outside its facts' evidence (research records, never shown).
   const { facts: _facts, ...rest } = made
   const texts = []
@@ -89,9 +89,10 @@ test('the brief names the service the owner stated and holds none of the stateme
   }
   walk(rest)
   assert.deepEqual(
-    texts.filter((t) => echoesOwner(t, sentences)),
+    texts.filter((t) => copiesOwner(t, echo)),
     []
   )
+  // The whole markdown is too long for the in-order rule (any long text holds most small words in order): runs only.
   const markdown = renderBriefMarkdown(made)
-  assert.equal(echoesOwner(markdown, sentences), false)
+  assert.notEqual(copiesOwner(markdown, echo).rule, 'run')
 })

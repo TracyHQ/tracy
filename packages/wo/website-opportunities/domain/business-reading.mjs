@@ -33,6 +33,8 @@ import { websiteReadingSources } from './website-reading-sources.mjs'
 import { shownByReviewRule } from './brief-people.mjs'
 import { OFFERING_KIND_NOUNS, alternationOf, formsOf } from './trade-word-classes.mjs'
 import { OWNER_STATEMENT_KIND, ownerPassageOf, withoutOwnerEcho } from './owner-statement.mjs'
+import { ownerLabelGrounded } from './owner-echo.mjs'
+import { heldPassagesOf } from './reading-held-passages.mjs'
 
 // 3: services and audience may stand on repeated mentions, items carry their mentions, facts are read, and the reading
 // also picks the business's sub-trade (`sub-trades.mjs`), reads its Google types and social category, and proposes up
@@ -93,7 +95,8 @@ const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
  * @param {{bio?: string | null, posts?: any[], reviews?: any[], ownerStatement?: string | null, heldTexts?: string[]}}
  *   input `posts`: `{source, id, url, caption}`; `reviews`: `{author, text, source?}`; `ownerStatement`: what the
  *   owner typed, a passage `{ref: 'owner', kind: 'owner-statement'}` when not blank, less every sentence naming one of
- *   `heldTexts` (the held people and the held business name)
+ *   `heldTexts` (the held people) or `heldName` (the business name while it is held); in every other passage a held
+ *   person's sentences are taken out and the held business name is masked (`reading-held-passages.mjs`)
  * @returns {{ref: string, kind: 'owner-statement' | 'bio' | 'post' | 'review' | 'website', text: string, url?: string, author?: string, source?: string}[]}
  */
 export function readingSourcesOf({
@@ -102,10 +105,15 @@ export function readingSourcesOf({
   reviews = [],
   websitePages = [],
   ownerStatement = null,
-  heldTexts = []
+  heldTexts = [],
+  heldName = null
 } = {}) {
+  const held = { people: heldTexts, name: heldName }
   const out = []
-  const { passage } = ownerPassageOf(ownerStatement, heldTexts)
+  const { passage } = ownerPassageOf(ownerStatement, [
+    ...heldTexts,
+    ...(nonEmpty(heldName) ? [heldName] : [])
+  ])
   if (passage) out.push(passage)
   const bioText = withoutPlaceholders(bio)
   if (bioText) out.push({ ref: 'bio', kind: 'bio', text: bioText.slice(0, MAX_TEXT) })
@@ -137,11 +145,14 @@ export function readingSourcesOf({
     })
   }
   const website = websiteReadingSources(websitePages)
-  if (!website.length) return out.slice(0, MAX_SOURCES)
+  if (!website.length) return heldPassagesOf(out.slice(0, MAX_SOURCES), held)
   // Reserve space for reviews as well as own text; posts must not consume the entire reading budget.
   const own = out.filter((s) => s.kind !== 'review').slice(0, 10)
   const customer = out.filter((s) => s.kind === 'review')
-  return [...own, ...website, ...customer.slice(0, MAX_SOURCES - own.length - website.length)]
+  return heldPassagesOf(
+    [...own, ...website, ...customer.slice(0, MAX_SOURCES - own.length - website.length)],
+    held
+  )
 }
 
 // Google types that say nothing of what a business is.
@@ -303,7 +314,11 @@ export function checkBusinessReading(answer, sources, { trade = null, facts = []
         Boolean(label) &&
         quotedIn(quote, source) &&
         (group !== 'services' || !excludedPostOffer(source, quote)) &&
-        (group === 'team' ? comparable(quote).includes(comparable(label)) : labelQuoted(label, quote)) &&
+        (group === 'team'
+          ? comparable(quote).includes(comparable(label))
+          : source?.kind === OWNER_STATEMENT_KIND
+            ? ownerLabelGrounded(label, quote)
+            : labelQuoted(label, quote)) &&
         (group !== 'serviceAreas' || areaQuoteOk(quote, source)) &&
         (group !== 'facts' || source.kind !== 'review')
       if (!quoted) {
@@ -439,9 +454,12 @@ export function checkKeyMessages(raw, byRef, { names = [], praise = false } = {}
     }
     const own = quotes.some((x) => x.source.kind !== 'review')
     const reviews = new Set(quotes.filter((x) => x.source.kind === 'review').map((x) => x.source.ref))
+    // A point resting on the owner's statement is said in words of its own (D46), still grounded in its quotes.
+    const said = quotes.map((x) => x.quote).join(' ')
     ok =
       ok &&
-      labelQuoted(label, quotes.map((x) => x.quote).join(' ')) &&
+      (labelQuoted(label, said) ||
+        (quotes.some((x) => x.source.kind === OWNER_STATEMENT_KIND) && ownerLabelGrounded(label, said))) &&
       (own || reviews.size >= REPEATED_MIN_SOURCES) &&
       !kept.some((k) => comparable(k.label) === comparable(label))
     if (!ok || kept.length >= MAX_KEY_MESSAGES) {
@@ -553,7 +571,11 @@ const capital = (s) => s.charAt(0).toUpperCase() + s.slice(1)
  * all ages & levels"), the bio line that says where it coaches as its Story, and the lines that say where it serves
  * ("Locations across Dubai") as its service areas. No Team: only a model reads people.
  */
-export function readBusinessByRules(sources) {
+export function readBusinessByRules(all) {
+  // 🔒 The rules never read the owner's chat statement (D46): they can only copy its words, never rewrite them, so
+  // without a model it gives no item at all, and the reading says so (`ownerStatementSkipped`).
+  const sources = (Array.isArray(all) ? all : []).filter((s) => s?.kind !== OWNER_STATEMENT_KIND)
+  const skipped = sources.length < (Array.isArray(all) ? all.length : 0)
   // No key messages: only a model proposes them, and rules never invent one (#1791).
   const out = {
     services: [],
@@ -599,8 +621,11 @@ export function readBusinessByRules(sources) {
   for (const s of sources.filter((x) => x.kind !== 'review'))
     for (const m of s.text.matchAll(AUDIENCE_RE)) add('audience', m[1].replace(/&/g, 'and'), m[0], s)
   out.services = withPostOfferings(out.services, sources)
-  return withoutOwnerEcho(out, sources)
+  return skipped ? { ...withoutOwnerEcho(out, all), ownerStatementSkipped: RULES_SKIP_OWNER } : out
 }
+
+/** Why the rules read nothing of the owner's chat statement (`readBusinessByRules`). */
+export const RULES_SKIP_OWNER = 'rules_never_rewrite_owner_words'
 
 /** An explicit own-post offer survives model omissions, with exact evidence and no duplicate or invented label. */
 export function withPostOfferings(services, sources) {

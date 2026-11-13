@@ -11,7 +11,8 @@
 //   - the brief's evidence names that source `owner-statement`; the needs profile files it as source id
 //     `owner-statement` of origin `answer` ("Your answer", `needs-research.mjs`), distinct from `owner` (the Profile
 //     card's typed value, origin `website`).
-import { heldNamesIn, heldSlugsIn } from './held-reviews.mjs'
+import { withoutHeldSentences } from './held-text-match.mjs'
+import { copiesOwner, hasOwnerEcho, ownerEchoOf } from './owner-echo.mjs'
 
 /** The ref an owner statement passage is named by, in the reading's message and in each item's source. */
 export const OWNER_REF = 'owner'
@@ -21,9 +22,7 @@ export const OWNER_STATEMENT_KIND = 'owner-statement'
 export const OWNER_STATEMENT_SOURCE_REF = 'chat'
 /** The longest passage the reading sends, in characters: the cap of every other passage (`business-reading.mjs`). */
 export const OWNER_STATEMENT_MAX = 1500
-/** The shortest sentence the echo guard compares: shorter ones are everyday phrases, not the owner's copy. */
-export const MIN_ECHO_WORDS = 5
-/** Why an item was dropped for echoing the owner (`ownerEchoDropped`). */
+/** Why an item was dropped for echoing the owner (`ownerEchoDropped`): the guard of `owner-echo.mjs`. */
 export const OWNER_ECHO_WHY = 'copies_owner_statement'
 
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -40,18 +39,12 @@ const sentencesOf = (text) =>
     .map((s) => s.trim())
     .filter(Boolean)
 
-/** A text reduced to its words: lower case, letters and digits only, single spaces. */
-const wordsOf = (text) =>
-  String(text ?? '')
-    .toLowerCase()
-    .normalize('NFKC')
-    .replace(/[^\p{L}\p{N}]+/gu, ' ')
-    .trim()
-
 /**
- * The owner's statement as the reading's passage (pure), or null when it is absent or blank. Every sentence naming a
- * held text (a held person or the held business name, as whole words or in slug form, as `plan-withheld.mjs` matches
- * them) is taken out before anything is sent, so a held name never reaches the model. Cut at `OWNER_STATEMENT_MAX`.
+ * The owner's statement as the reading's passage (pure), or null when it is absent or blank. Every sentence a held
+ * text overlaps (a held person or the held business name, in any form `held-text-match.mjs` finds: accents, width,
+ * zero width characters, split across a line break or a sentence end, in slug form) is taken out before anything is
+ * sent, both halves of a name split over two sentences; so a held name never reaches the model. Cut at
+ * `OWNER_STATEMENT_MAX`.
  * @param {string | null | undefined} statement what the owner typed
  * @param {string[]} [held] the held texts (`plan-withheld.mjs` `heldTextsOf`, plus the business name while it is held)
  * @returns {{passage: {ref: string, kind: string, text: string} | null, heldOut: number, cut: boolean}}
@@ -59,13 +52,10 @@ const wordsOf = (text) =>
 export function ownerPassageOf(statement, held = []) {
   if (!isText(statement)) return { passage: null, heldOut: 0, cut: false }
   const names = list(held).filter(isText)
-  const sentences = sentencesOf(statement)
-  const kept = names.length
-    ? sentences.filter((s) => heldNamesIn(s, names).length === 0 && heldSlugsIn(s, names).length === 0)
-    : sentences
-  const whole = kept.join(' ')
+  const kept = names.length ? withoutHeldSentences(statement, names) : { text: statement, heldOut: 0 }
+  const whole = sentencesOf(kept.text).join(' ')
   const text = whole.slice(0, OWNER_STATEMENT_MAX).trim()
-  const heldOut = sentences.length - kept.length
+  const heldOut = kept.heldOut
   if (!text) return { passage: null, heldOut, cut: false }
   return {
     passage: { ref: OWNER_REF, kind: OWNER_STATEMENT_KIND, text },
@@ -74,53 +64,53 @@ export function ownerPassageOf(statement, held = []) {
   }
 }
 
-/** The sentences of a text of `MIN_ECHO_WORDS` words or more, as words: what the echo guard looks for. */
-export const echoSentencesOf = (text) =>
-  isText(text)
-    ? sentencesOf(text)
-        .map(wordsOf)
-        .filter((w) => w.split(' ').length >= MIN_ECHO_WORDS)
-    : []
-
-/** The owner's sentences the echo guard looks for, from the passage the reading read. */
-export function ownerSentencesOf(sources) {
+/** What the echo guard compares copy with, from the passage the reading read (`owner-echo.mjs ownerEchoOf`). */
+export function ownerEchoOfSources(sources) {
   const passage = list(sources).find((s) => s?.kind === OWNER_STATEMENT_KIND)
-  return passage ? echoSentencesOf(passage.text) : []
+  return ownerEchoOf(passage ? [passage.text] : [])
 }
 
-/** Whether a text holds one of the owner's sentences word for word (case, spacing and punctuation aside). */
-export function echoesOwner(text, sentences) {
-  if (!isText(text) || !sentences.length) return false
-  const words = ` ${wordsOf(text)} `
-  return sentences.some((s) => words.includes(` ${s} `))
-}
-
-// The copy a reading returns: each group's label, a key message's label, a USP theme's label, line and who.
-const COPY_GROUPS = ['services', 'audience', 'team', 'story', 'serviceAreas', 'facts']
-const copiesOf = (group, item) =>
-  group === 'uspThemes' ? [item?.label, item?.line, item?.who] : [item?.label, item?.role]
+/** The groups of a reading whose items carry copy: each one's label, and a team member's role. */
+export const COPY_GROUPS = Object.freeze(['services', 'audience', 'team', 'story', 'serviceAreas', 'facts'])
+/** The copy of an item of a group: what the site may say in words of its own (`keyMessages`, `uspThemes` too). */
+export const copyTextsOf = (group, item) =>
+  (group === 'uspThemes'
+    ? [item?.label, item?.line, item?.who, item?.accent]
+    : [item?.label, item?.role]
+  ).filter(isText)
+/** The public quotes an item stands on (its quote, mentions and quotes of a text other than the owner's statement). */
+const publicQuotesOf = (item) =>
+  [
+    ...(item?.source && !isOwnerStatement(item) ? [item.quote] : []),
+    ...list(item?.mentions)
+      .filter((m) => !isOwnerStatement(m))
+      .map((m) => m.quote),
+    ...list(item?.quotes)
+      .filter((q) => !isOwnerStatement(q))
+      .map((q) => q.quote)
+  ].filter(isText)
 
 /**
- * A reading without what echoes the owner (pure): every item, key message or USP theme whose copy holds one of the
- * owner's sentences of five words or more word for word is dropped, counted in `dropped` and recorded in
- * `ownerEchoDropped` (`{group, label, why}`), as `uspThemesDropped` records a dropped theme. A reading of texts with no
- * owner statement is returned as it is, the same object.
+ * A reading less every item whose copy copies the owner (pure, `owner-echo.mjs copiesOwner` against `echo`): every
+ * item, key message or USP theme whose label, role, line, who or accent copies the owner is dropped, counted in
+ * `dropped` and recorded in `ownerEchoDropped` (`{group, label, why}`); a reading left with no USP theme holds none
+ * (`uspThemes: null`, reason `rejected`), as the ladder records one. Without anything to compare, the same object.
  */
-export function withoutOwnerEcho(read, sources) {
-  const sentences = ownerSentencesOf(sources)
-  if (!read || !sentences.length) return read
+export function withoutEchoOf(read, echo) {
+  if (!read || typeof read !== 'object' || !hasOwnerEcho(echo)) return read
   const out = { ...read }
   const dropped = []
   for (const group of [...COPY_GROUPS, 'keyMessages', 'uspThemes']) {
     if (!Array.isArray(read[group])) continue
     out[group] = read[group].filter((item) => {
-      const echo = copiesOf(group, item).some((t) => echoesOwner(t, sentences))
-      if (echo) dropped.push({ group, label: String(item?.label ?? ''), why: OWNER_ECHO_WHY })
-      return !echo
+      const pub = publicQuotesOf(item)
+      const echoes = copyTextsOf(group, item).some((t) => copiesOwner(t, echo, pub))
+      if (echoes) dropped.push({ group, label: String(item?.label ?? ''), why: OWNER_ECHO_WHY })
+      return !echoes
     })
   }
   if (!dropped.length) return read
-  if (Array.isArray(read.uspThemes) && !out.uspThemes.length) {
+  if (Array.isArray(read.uspThemes) && read.uspThemes.length && !out.uspThemes.length) {
     out.uspThemes = null
     out.uspThemesReason = 'rejected'
   }
@@ -129,15 +119,33 @@ export function withoutOwnerEcho(read, sources) {
   return out
 }
 
+/** A reading of texts less what echoes the owner's statement among them (`withoutEchoOf`); none, the same object. */
+export const withoutOwnerEcho = (read, sources) => withoutEchoOf(read, ownerEchoOfSources(sources))
+
+/** Every quote of the owner's statement a reading holds: its items', mentions', key messages' and themes' quotes. */
+export function ownerQuotesOf(reading, depth = 0) {
+  if (!reading || typeof reading !== 'object' || depth > 5) return []
+  if (Array.isArray(reading)) return reading.flatMap((x) => ownerQuotesOf(x, depth + 1))
+  const own = isOwnerStatement(reading) && isText(reading.quote) ? [reading.quote] : []
+  return [
+    ...own,
+    ...Object.values(reading).flatMap((v) => (v && typeof v === 'object' ? ownerQuotesOf(v, depth + 1) : []))
+  ]
+}
+
 /**
  * A reading as the brief's copy reads it (pure): the owner's facts stay, the owner's words do not. Story, audience and
  * About facts read from the statement go (the brief says them in the source's own words: the About line, the hero's
  * self description, "in its own words"); a service keeps its name with that name as its quote (a service is described
  * only in the words of its quote); a team member, a service area keeps its label without a quote; no mention, key
- * message quote or USP theme quote of the statement is kept, and a message or theme left without a quote goes.
+ * message quote or USP theme quote of the statement is kept, and a message or theme left without a quote goes (no USP
+ * theme left: `uspThemes: null`, reason `rejected`, as `withoutEchoOf` records it). Then whatever copy is left is
+ * held to the echo guard against every quote of the statement the reading held (a reading stored before the guard,
+ * or a USP line kept on a review's quote that still repeats the owner).
  */
 export function readingWithoutOwnerQuotes(reading) {
   if (!reading || typeof reading !== 'object' || !holdsOwner(reading)) return reading
+  const echo = ownerEchoOf(ownerQuotesOf(reading))
   const own = (i) => isOwnerStatement(i)
   const noMentions = (i) =>
     Array.isArray(i?.mentions) ? { ...i, mentions: i.mentions.filter((m) => !own(m)) } : i
@@ -158,7 +166,11 @@ export function readingWithoutOwnerQuotes(reading) {
       out[key] = reading[key]
         .map((m) => (Array.isArray(m?.quotes) ? { ...m, quotes: m.quotes.filter((q) => !own(q)) } : m))
         .filter((m) => !Array.isArray(m?.quotes) || m.quotes.length > 0)
-  return out
+  if (Array.isArray(reading.uspThemes) && reading.uspThemes.length && !out.uspThemes.length) {
+    out.uspThemes = null
+    out.uspThemesReason = 'rejected'
+  }
+  return withoutEchoOf(out, echo)
 }
 
 /** Whether anything in a reading (an item, a mention, a quote) comes from the owner's statement. */

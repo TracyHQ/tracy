@@ -13,7 +13,7 @@ import {
   provenBy
 } from './needs-profile-grounding.mjs'
 import { MAX_ROW_DEPTH, groundRows } from './needs-profile-rows.mjs'
-import { echoSentencesOf, echoesOwner } from './owner-statement.mjs'
+import { copiesOwner, ownerEchoOf } from './owner-echo.mjs'
 
 const FACT_KINDS = new Set([...SINGLE_FACT_KINDS, ...LIST_FACT_KINDS])
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -37,7 +37,8 @@ const REASONS = Object.freeze({
   row_without_fields: 'the row holds no field the profile keeps',
   row_too_deep: `a row nested deeper than ${MAX_ROW_DEPTH} levels`,
   owner_statement_not_a_quote: "the owner's chat statement is never a quote the site shows",
-  summary_copies_owner: "the summary repeats a sentence of the owner's chat statement word for word"
+  summary_copies_owner:
+    "the summary copies the owner's chat statement (a run of four of its words, or most of one sentence)"
 })
 const drop = (code, what, scope = 'observation') => ({ ...what, code, reason: REASONS[code], scope })
 
@@ -159,15 +160,15 @@ export function modelObservations(reading, sources) {
     if (!source) continue
     const at = { ...what, source: source.id }
     // 🔒 The owner's chat statement (origin `answer`, D46) gives facts, never words: no quote of it, no summary
-    // repeating one of its sentences of five words or more.
+    // copying it (`owner-echo.mjs`: a run of four of its words, or most of one of its sentences).
     if (source.origin === 'answer' && it.kind === 'quote') {
       dropped.push(drop('owner_statement_not_a_quote', at))
       continue
     }
     if (source.origin === 'answer') {
-      const sentences = echoSentencesOf(byId.get(source.id)?.text)
+      const echo = ownerEchoOf([byId.get(source.id)?.text])
       for (const role of SUMMARY_ROLES)
-        if (echoesOwner(fields[role], sentences)) {
+        if (copiesOwner(fields[role], echo)) {
           dropped.push(drop('summary_copies_owner', { ...at, field: role, value: fields[role] }, 'field'))
           delete fields[role]
         }

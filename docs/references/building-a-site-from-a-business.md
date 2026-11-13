@@ -152,25 +152,49 @@ const reading = await readBusiness({ ...input, trade, door, held, charge, fetchI
 
 What comes back:
 
-- `input.ownerStatement` and `input.heldTexts` (the held people, plus the business name while `withheld.name` is true)
-  are present only when the statement holds words; without one the input, the prompt bytes and the reading are exactly
-  what they were.
+- `input.ownerStatement` is present only when the statement holds words; `input.heldTexts` (the held people) and
+  `input.nameHeld: true` (the business name is held) only when something is held. With neither, the input, the prompt
+  bytes and the reading are exactly what they were.
+- No held text reaches the model, in any passage and either call (the reading and its USP retry,
+  `reading-held-passages.mjs`). A held text is found in any form (`held-text-match.mjs`: accents written or not,
+  composed or decomposed, full width letters, zero width characters, its words split by spaces, a line break, a
+  sentence end or nothing). In the statement every sentence a held person or the held business name overlaps is taken
+  out, both halves of a name split over two sentences. In every other passage (bio, posts, reviews, website pages,
+  Google's types and social categories) a held person's sentences are taken out and a review they wrote goes whole,
+  while the held business name is masked with the stand-in `[business name]`, which is also how the message's header
+  names the business. The stand-in is a template placeholder, so no quote holding it stands, and copy that writes it
+  is dropped (`reading.standInDropped`).
 - The reading reads the statement as one passage `{ref: 'owner', kind: 'owner-statement'}`, first, capped at 1500
-  characters like every passage. Every sentence naming a held text (whole words or slug form) is taken out before the
-  model sees anything. The model's system message gains one rule (`owner-statement-prompt.mjs`, a draft awaiting
-  approval in #600): facts true, wording never copy.
+  characters like every passage. The model's system message gains one rule (`owner-statement-prompt.mjs`, a draft
+  awaiting approval in #600): facts true, wording never copy, and an item read from it named in words of its own.
 - `reading.ownerStatement`: `{read: true, heldOut, cut}` (sentences held back, whether the cap cut it), or
-  `{read: false, reason: 'held'}` when every sentence named something held. Absent when no statement was given.
-- Items read from it carry `source: {kind: 'owner-statement', ref: 'owner'}`. Any item, key message or USP theme whose
-  copy repeats a sentence of five words or more of the statement word for word is dropped and listed in
-  `reading.ownerEchoDropped` (`{group, label, why: 'copies_owner_statement'}`).
+  `{read: false, reason: 'held'}` when every sentence named something held. Absent when no statement was given. When
+  the statement was the only text and all of it was held, `readBusiness` returns null and `ownerStatementRecordOf`
+  gives the caller that same record.
+- Items read from it carry `source: {kind: 'owner-statement', ref: 'owner'}`. Their label is a rewrite, not words taken
+  from the quote (`owner-echo.mjs ownerLabelGrounded`): at least half its words are words of the quote, and every
+  number and capitalised word of it is in the quote. The rules reading (no model) never reads the statement at all
+  (`reading.ownerStatementSkipped`), since rules can only copy.
+- The echo guard (`owner-echo.mjs`): a copy text (an item's label or role, a key message's label, a USP theme's label,
+  line, who and accent, the brief's About line, a needs profile summary) copies the owner when it shares a run of four
+  words in a row with the statement (a script written without spaces counts characters: 8 Han or Hiragana characters,
+  16 Katakana, Thai, Lao, Khmer or Myanmar characters), or holds in order at least 60% of one of its sentences of five
+  words or more. Case, accents, width, punctuation, quote marks, emoji and spacing are folded first, and runs cross
+  sentence ends, bullets and semicolons. A copy text of up to three words only names a thing and passes; what a public
+  quote the item stands on also says is that text's wording and passes. A copy is dropped and listed in
+  `reading.ownerEchoDropped` (`{group, label, why: 'copies_owner_statement'}`); a reading left with no USP theme has
+  `uspThemes: null`, reason `rejected`.
 - The place profile files them under the source of kind `owner-statement` (ref `chat`); a story or audience item becomes
   a quote of kind `owner-statement`, the brief's field `ownerStatement`, never a story or post quote. The brief's copy
   (`readingWithoutOwnerQuotes`) keeps a service it stated by its name only, and no story, audience, About fact, key
-  message quote or USP quote of it.
+  message quote or USP quote of it; then it holds what copy is left to the echo guard against every quote of the
+  statement the reading holds. The brief names it as the source "owner's chat statement (facts only, never copy)", and
+  routes its field `fact.ownerStatement` as never shown (`brief-item-routes.mjs`).
 - The needs profile research (`researchOf`) reads that evidence as the source id `owner-statement` of origin `answer`,
-  which the plan shows as "Your answer". The needs profile drops a `quote` item from it, a summary repeating one of its
-  sentences, and never takes its phrases as the business's own words (`voice.ownWords`).
+  which the plan shows as "Your answer". The needs profile drops a `quote` item from it, a summary the echo guard calls a
+  copy, and never takes its phrases as the business's own words (`voice.ownWords`). Its language never decides the
+  site's (`siteLanguageOf`): the owner types in the app's language. With the statement as the only source the profile
+  has no language and the plan states its English default as an assumption.
 - Trust order: `website`, `answer`, `google`, `social`. An answer the customer gives to a plan question is applied after
   the merge (`plan-answers.mjs`, source `customer-answer`), so it always wins over the chat statement.
 

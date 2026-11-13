@@ -93,7 +93,11 @@ test("the statement's facts are read, and every item from it names the owner sta
     read[group].filter((i) => i.source.kind === 'owner-statement').map((i) => i.label)
   assert.deepEqual(fromOwner('services'), ['Kiln space rental'])
   assert.deepEqual(fromOwner('story'), ['family studio since 2009'])
-  assert.deepEqual(fromOwner('facts'), ['classes capped at six students'])
+  assert.deepEqual(fromOwner('facts'), ['six students per class at most'])
+  assert.deepEqual(
+    read.keyMessages.map((m) => m.label),
+    ['small classes of six']
+  )
   assert.deepEqual(read.services.find((i) => i.label === 'Kiln space rental').source, {
     kind: 'owner-statement',
     ref: 'owner'
@@ -164,8 +168,11 @@ test('a held name in slug form is held too, and the held business name through r
     ownerStatement: 'Corvane Clay Studio opened in a former bakery. We fire twice a week.',
     withheld: { name: true }
   })
-  assert.deepEqual(input.heldTexts, ['Corvane Clay Studio'])
-  const passage = readingSourcesOf(input).find((s) => s.kind === 'owner-statement')
+  assert.equal(input.nameHeld, true)
+  assert.equal('heldTexts' in input, false)
+  const passage = readingSourcesOf({ ...input, heldName: input.name }).find(
+    (s) => s.kind === 'owner-statement'
+  )
   assert.equal(passage.text, 'We fire twice a week.')
 })
 

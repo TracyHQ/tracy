@@ -5,7 +5,7 @@ import { BUSINESS_READING_SYSTEM } from './business-reading.mjs'
 import { OWNER_REF, OWNER_STATEMENT_KIND } from './owner-statement.mjs'
 
 /** The owner statement rule (draft, #600). */
-export const OWNER_STATEMENT_RULE = `- The text [${OWNER_REF}] (${OWNER_STATEMENT_KIND}) is the business owner's own statement, typed in a chat with us. The facts it states are true and may be used like the business's own bio: services, who it serves, its team, its story, its facts and what sets it apart. Its wording is never copy: every name, label, text, theme and line you write is rewritten in your own short words, never a sentence or a long phrase of it. Quotes of it stay exact, as for every text, and serve only as evidence.`
+export const OWNER_STATEMENT_RULE = `- The text [${OWNER_REF}] (${OWNER_STATEMENT_KIND}) is the business owner's own statement, typed in a chat with us. The facts it states are true and may be used like the business's own bio: services, who it serves, its team, its story, its facts and what sets it apart. Its wording is never copy. For anything read from [${OWNER_REF}], its name, label, text, theme, line and who are NOT taken from its quote, whatever the rules above say: write them in your own short words, never four or more of its words in a row (a name of up to three words, a service, a product or a person, may stay as written). They still say only what the quote says: at least half of their words are words of the quote, and every number, name and place in them is in the quote. Quotes of it stay exact, as for every text, and serve only as evidence.`
 
 /** The system message of a reading of these texts: the reading's own, plus the owner rule when the owner spoke. */
 export const businessReadingSystemOf = (sources) =>

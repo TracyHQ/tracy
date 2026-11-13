@@ -75,10 +75,14 @@ export function languageTag(value) {
  * their primary subtag (`en-US` beside `en-GB` is one language, not a mix); each option is the tag of its most trusted
  * source, region kept. Mixed sources default to the language of the most trusted source and offer every language seen,
  * most trusted first. A language given but not readable is listed in `unread` (`{source, said, from}`), never guessed.
+ * 🔒 The owner's chat statement (source `owner-statement`, D46) never decides it: the owner types in the app's language,
+ * not always the site's. With that statement alone there is none (null): the plan says its English default as an
+ * assumption the owner sees (`plan-composer.mjs`), never one guessed from the chat.
  * @param {{id: string, origin: string, language?: string}[]} sources
  * @param {Record<string, string>} read the language the model read per source id
  */
-export function siteLanguageOf(sources, read = {}) {
+export function siteLanguageOf(all, read = {}) {
+  const sources = all.filter((s) => s?.id !== 'owner-statement')
   const bySource = {}
   const unread = []
   for (const s of sources) {
