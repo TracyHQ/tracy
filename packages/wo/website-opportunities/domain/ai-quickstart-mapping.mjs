@@ -2,10 +2,19 @@
 // each business fact is written, which config lines are design, the SEO fields and the overrides. Called by
 // `checkAiQuickstartContract` (`ai-quickstart-contract.mjs`) with the blocks of the block store.
 //
-// A location has the shape a content map slot already uses, so the existing write functions take it unchanged:
-//   { "entity": "module-160", "column": "params", "jsonPath": ["main-section"], "xpath": "/html/body/div" }
-// `jsonPath` and `xpath` are optional; `entity: "page"` names the page the build creates (the SEO fields).
+// An entry is a location (the shape of a content map slot), a business fact or a derived source:
+// `ai-quickstart-mapping-entry.mjs`. `entity: "page"` names the page the build creates (the SEO fields). The rules
+// on stored places across the whole file (one writer per place, every entity declared, the SEO of every page type,
+// the build-sets references) are in `ai-quickstart-mapping-places.mjs`.
 import { CHILD_LIST_KEYS, rowCountProblems, sameRows } from './ai-quickstart-child-lists.mjs'
+import {
+  entryProblem,
+  isDerivedEntry,
+  isFactEntry,
+  locationKey,
+  locationProblem
+} from './ai-quickstart-mapping-entry.mjs'
+import { mappingPlaceProblems } from './ai-quickstart-mapping-places.mjs'
 
 /** The business facts of the site form, each declared once and fanned out to every place the template shows it. */
 export const BUSINESS_FACTS = Object.freeze({
@@ -22,20 +31,19 @@ export const SEO_FIELDS = Object.freeze(['title', 'description', 'shareImage'])
 export const SHARE_IMAGE_FRAME = Object.freeze({ width: 1200, height: 630 })
 export const MAPPING_SCHEMA = 'tracy-ai-quickstart-mapping/v1'
 
-const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
-const isName = (value) => typeof value === 'string' && value.trim() !== ''
+const FACT_KINDS = new Set(Object.values(BUSINESS_FACTS))
 
-/** Why `loc` is not a location, or null when it is one. */
-function locationProblem(loc) {
-  if (!isObject(loc)) return 'a location must be an object {entity, column, jsonPath?, xpath?}'
-  if (!isName(loc.entity) || !isName(loc.column)) return 'a location needs an entity and a column'
-  if (loc.jsonPath !== undefined && !(Array.isArray(loc.jsonPath) && loc.jsonPath.every(isName)))
-    return 'jsonPath must be a list of keys'
-  if (loc.xpath !== undefined && !isName(loc.xpath)) return 'xpath must be a non-empty string'
-  return null
+/** Whether a field place (`blocks[<id>]...fields[<name>]...`) is one a factExceptions entry {block, list?, field} names. */
+function isFactException(exceptions, fieldAt) {
+  return (Array.isArray(exceptions) ? exceptions : []).some((e) => {
+    if (!fieldAt.startsWith(`blocks[${e?.block}].`)) return false
+    if (e.list) return fieldAt.includes(`[${e.list}].fields[${e.field}]`)
+    return fieldAt.includes(`.fields[${e.field}]`) || fieldAt.includes(`.itemFields[${e.field}]`)
+  })
 }
 
-const locationKey = (loc) => JSON.stringify([loc.entity, loc.column, loc.jsonPath ?? [], loc.xpath ?? ''])
+const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+const isName = (value) => typeof value === 'string' && value.trim() !== ''
 
 function checkLocation(loc, at, report) {
   const problem = locationProblem(loc)
@@ -62,7 +70,20 @@ function blockMappingProblems(block, entry, ctx) {
   const maxItems = Number.isInteger(block.items?.max) ? block.items.max : 1
 
   const judge = (field, loc, fieldAt, storeAt) => {
-    if (!checkLocation(loc, fieldAt, ctx.report)) return
+    if (isFactEntry(loc) || isDerivedEntry(loc)) {
+      const problem = entryProblem(loc, field, ctx)
+      if (problem) ctx.report(fieldAt, problem)
+      else if (field.keyAt !== undefined && JSON.stringify(loc.keyAt) !== JSON.stringify(field.keyAt))
+        ctx.report(`${fieldAt}.keyAt`, "keyAt must repeat the store field's keyAt")
+      return
+    }
+    const problem = entryProblem(loc, field, ctx)
+    if (problem) return ctx.report(fieldAt, problem)
+    if (FACT_KINDS.has(field.kind) && !isFactException(ctx.factExceptions, fieldAt))
+      ctx.report(
+        fieldAt,
+        `field kind ${field.kind} is a business fact: write it as {fact}, or declare the field in factExceptions`
+      )
     const isDesignLine = designLines.has(locationKey(loc))
     if (field.type === 'design' && !isDesignLine)
       ctx.report(fieldAt, `design field "${field.name}" is not one of the block's designLines`)
@@ -89,6 +110,10 @@ function blockMappingProblems(block, entry, ctx) {
   for (const field of storeItemFields) {
     const fieldAt = `${at}.itemFields[${field.name}]`
     const locs = mappedItems[field.name]
+    if (isDerivedEntry(locs)) {
+      judge(field, locs, fieldAt, `blocks[${block.id}].itemFields[${field.name}]`)
+      continue
+    }
     if (!Array.isArray(locs)) {
       ctx.report(fieldAt, `no locations for item field "${field.name}": one per item, up to max`)
       continue
@@ -133,6 +158,10 @@ function childMappingProblems(owner, entry, at, keys, places, ctx) {
       for (const field of fields) {
         const fieldAt = `${listAt}.fields[${field.name}]`
         const perPlace = mappedFields[field.name]
+        if (isDerivedEntry(perPlace)) {
+          ctx.judge(field, perPlace, fieldAt, `${storeAt}.fields[${field.name}]`)
+          continue
+        }
         const rows =
           Array.isArray(perPlace) && perPlace.every(Array.isArray) ? perPlace.map((r) => r.length) : null
         if (!rows) {
@@ -201,8 +230,14 @@ function overridesProblems(overrides, report) {
     if (typeof entry.value !== 'string') report(`${at}.value`, 'a setting override needs a string value')
   })
   list('language', (entry, at) => {
-    if (!isObject(entry) || !isName(entry.key)) return report(at, 'a language override is {key, value}')
-    if (typeof entry.value !== 'string') report(`${at}.value`, 'a language override needs a string value')
+    if (!isObject(entry) || !isName(entry.key))
+      return report(at, 'a language override is {key, value | filledBy | keep}')
+    const filled = Array.isArray(entry.filledBy) && entry.filledBy.length > 0
+    if (typeof entry.value !== 'string' && !filled && !isName(entry.keep))
+      report(
+        at,
+        'a language override needs its value source: a string value, the fields it is filledBy, or keep with the reason'
+      )
   })
 }
 
@@ -214,6 +249,12 @@ function overridesProblems(overrides, report) {
  */
 export function mappingProblems(mapping, blocks, ctx) {
   const { report } = ctx
+  ctx = {
+    ...ctx,
+    facts: isObject(mapping?.facts) ? mapping.facts : {},
+    factKinds: BUSINESS_FACTS,
+    factExceptions: mapping?.factExceptions
+  }
   if (!isObject(mapping)) return report('', 'the mapping file must be a JSON object')
   if (mapping.schema !== MAPPING_SCHEMA) report('schema', `schema must be "${MAPPING_SCHEMA}"`)
   const entries = isObject(mapping.blocks) ? mapping.blocks : {}
@@ -223,10 +264,11 @@ export function mappingProblems(mapping, blocks, ctx) {
     if (!blocks.some((b) => b.id === id)) report(`blocks[${id}]`, `"${id}" is not a block of the store`)
   factsProblems(mapping.facts, report)
   if (!isObject(mapping.seo)) report('seo', `seo must give a location for ${SEO_FIELDS.join(', ')}`)
-  else
+  else if (mapping.seo.pageTypes === undefined)
     for (const name of SEO_FIELDS) {
       if (mapping.seo[name] === undefined) report(`seo.${name}`, 'missing location')
       else checkLocation(mapping.seo[name], `seo.${name}`, report)
     }
   overridesProblems(mapping.overrides, report)
+  mappingPlaceProblems(mapping, ctx)
 }

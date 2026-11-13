@@ -1,6 +1,15 @@
 {
   "$comment": "An invented mapping file for the invented block store next to this file. Locations use the content map shape (entity, column, jsonPath, xpath).",
   "schema": "tracy-ai-quickstart-mapping/v1",
+  "entities": {
+    "module-11": { "kind": "module", "identity": { "title": "Header", "module": "mod_custom" } },
+    "module-12": { "kind": "module", "identity": { "title": "Hero", "module": "mod_custom" } },
+    "module-13": { "kind": "module", "identity": { "title": "Services", "module": "mod_custom" } },
+    "module-14": { "kind": "module", "identity": { "title": "Footer", "module": "mod_custom" } },
+    "settings": { "kind": "globalConfiguration", "identity": { "file": "configuration.php" } },
+    "template-style-9": { "kind": "templateStyle", "identity": { "template": "example" } }
+  },
+  "library": { "position": "content-bottom" },
   "blocks": {
     "header-main": {
       "fields": {

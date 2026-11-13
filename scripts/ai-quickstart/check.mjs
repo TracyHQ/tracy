@@ -67,6 +67,9 @@ function readDeclaration(dir, file) {
   }
 }
 
+/** The draft report of a drafted folder (draft.mjs, ticket #583), read beside the three declarations. */
+export const DRAFT_REPORT_FILE = 'draft-report.json'
+
 /** The marker of a folder whose mapping file a later ticket writes. */
 export const MAPPING_PENDING_FILE = 'mapping.pending.json'
 
@@ -104,11 +107,18 @@ export function checkAiQuickstartFolder(dir) {
   const unreadable = [...(pending?.problems ?? []), ...read.filter((r) => r.problem).map((r) => r.problem)]
   if (unreadable.length > 0) return { ok: false, blocks: 0, problems: unreadable }
   const [blockStore, pageRecipes, mapping] = read.map((r) => r.doc)
+  // A drafted folder's report names the references the mapping file must set (build-sets) and the places it classes
+  // as a fact; the mapping file is checked against both.
+  const report = existsSync(path.join(dir, DRAFT_REPORT_FILE))
+    ? readDeclaration(dir, DRAFT_REPORT_FILE)
+    : null
+  if (report?.problem) return { ok: false, blocks: 0, problems: [report.problem] }
   const res = checkAiQuickstartContract({
     blockStore,
     pageRecipes,
     mapping,
-    mappingPending: Boolean(pending)
+    mappingPending: Boolean(pending),
+    draftReport: report?.doc
   })
   return pending ? { ...res, mappingPending: pending.ticket } : res
 }

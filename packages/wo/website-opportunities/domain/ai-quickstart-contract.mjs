@@ -281,11 +281,19 @@ function pageRecipesProblems(doc, blockIds, report) {
  * `mappingPending` (a folder whose mapping file another ticket writes, declared by `mapping.pending.json`) skips
  * only the rules that read the mapping file; every rule the block store and the page recipes answer alone still
  * holds, including the stored place rules (`storedPlaceProblems`).
- * @param {{blockStore: any, pageRecipes: any, mapping: any, mappingPending?: boolean}} declarations the parsed JSON files
+ * `draftReport` (the folder's draft-report.json, when it has one) makes the mapping file set every build-sets
+ * reference and every place the draft report classes as a fact.
+ * @param {{blockStore: any, pageRecipes: any, mapping: any, mappingPending?: boolean, draftReport?: any}} declarations the parsed JSON files
  * @returns {{ok: boolean, blocks: number, sharedPlaces: number, problems: Array<{file: string, at: string, message: string}>}}
  *   `sharedPlaces`: stored places more than one field uses; a build writes them within the smallest limit
  */
-export function checkAiQuickstartContract({ blockStore, pageRecipes, mapping, mappingPending = false }) {
+export function checkAiQuickstartContract({
+  blockStore,
+  pageRecipes,
+  mapping,
+  mappingPending = false,
+  draftReport
+}) {
   const problems = []
   const reporter = (file) => (at, message) => {
     problems.push({ file, at, message })
@@ -298,7 +306,10 @@ export function checkAiQuickstartContract({ blockStore, pageRecipes, mapping, ma
   if (!mappingPending)
     mappingProblems(mapping, blocks, {
       report: reporter(MAPPING_FILE),
-      reportStore: reporter(BLOCK_STORE_FILE)
+      reportStore: reporter(BLOCK_STORE_FILE),
+      blockStore,
+      pageRecipes,
+      draftReport
     })
   const sharedPlaces = isObject(blockStore) ? sharedPlacesOf(blockStore).length : 0
   return { ok: problems.length === 0, blocks: blocks.length, problems, sharedPlaces }
