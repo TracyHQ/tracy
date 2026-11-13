@@ -14,12 +14,14 @@
       // the generators write them, a formatter pass would be a breaking change.
       "!packages/cms/tracy-wordpress-quickstart/contracts/**",
       // An AI quickstart's generated declarations are written by its generator (`ai-quickstart/draft.mjs`,
-      // `measure-limits.mjs`) and compared byte for byte by a test that regenerates them: a formatter pass would
-      // make a fresh run differ from the committed files. `draft-decisions.json` is authored, so it stays formatted.
+      // `measure-limits.mjs`, `mapping.mjs`) and compared byte for byte by a test that regenerates them: a formatter
+      // pass would make a fresh run differ from the committed files. `draft-decisions.json` and
+      // `mapping-decisions.json` are authored, so they stay formatted.
       "!packages/cms/tracy-joomla-quickstart/ai-quickstarts/**/block-store.json",
       "!packages/cms/tracy-joomla-quickstart/ai-quickstarts/**/page-recipes.json",
       "!packages/cms/tracy-joomla-quickstart/ai-quickstarts/**/draft-report.json",
       "!packages/cms/tracy-joomla-quickstart/ai-quickstarts/**/measured-limits.json",
+      "!packages/cms/tracy-joomla-quickstart/ai-quickstarts/**/mapping.json",
       // Theme docs inventory written by the skill's `generate-docs.mjs`, whose `--check` compares it byte
       // for byte: a formatter pass makes that gate report it stale (measured 27/09 on wp-ja-vega).
       "!packages/cms/tracy-wordpress-theme/**/docs/generated/**",

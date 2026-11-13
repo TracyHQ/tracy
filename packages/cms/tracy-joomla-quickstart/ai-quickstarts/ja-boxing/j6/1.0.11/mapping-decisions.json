@@ -1,0 +1,284 @@
+{
+  "$comment": "Reviewed decisions that complete the mapping file of JA Boxing j6 1.0.11 (ticket #584). Read by packages/cms/tracy-quickstart-tools/ai-quickstart/mapping.mjs with block-store.json, page-recipes.json, draft-report.json and the contract's content-map.json. A place is a content map key (or <key>@<xpath>, a piece of a stored HTML value); every other location names an entity declared under entities. Each statement about the running template was checked on the restored 1.0.11 quickstart.",
+  "entities": {
+    "settings": {
+      "kind": "globalConfiguration",
+      "identity": { "file": "configuration.php" },
+      "why": "Joomla's global configuration: the installer writes it from what the installation is given (site name, mail sender name), so the blank site carries no value of its own"
+    },
+    "templateGlobal-ja_boxing": {
+      "kind": "templateGlobal",
+      "identity": { "template": "ja_boxing", "file": "local/etc/global.json" },
+      "why": "the T4 global settings of the template: T4 reads local/etc/global.json instead of etc/global.json when it exists, without merging, so the production step writes the whole file"
+    },
+    "siteSetting-236740385": {
+      "kind": "siteSetting",
+      "identity": { "template": "ja_boxing", "profile": "default", "key": "site_name" },
+      "sourceId": 236740385
+    },
+    "siteSetting-51638431": {
+      "kind": "siteSetting",
+      "identity": { "template": "ja_boxing", "profile": "default", "key": "site_slogan" },
+      "sourceId": 51638431
+    },
+    "siteSetting-79416186": {
+      "kind": "siteSetting",
+      "identity": { "template": "ja_boxing", "profile": "default", "key": "body_bg_img" },
+      "sourceId": 79416186
+    },
+    "acymConfiguration-from_name": {
+      "kind": "acymConfiguration",
+      "identity": { "name": "from_name" }
+    },
+    "acymConfiguration-replyto_name": {
+      "kind": "acymConfiguration",
+      "identity": { "name": "replyto_name" }
+    },
+    "acymConfiguration-replyto_email": {
+      "kind": "acymConfiguration",
+      "identity": { "name": "replyto_email" }
+    }
+  },
+  "facts": {
+    "name": [
+      {
+        "entity": "settings",
+        "column": "sitename",
+        "why": "the site name: the logo's title and alt text, the header text when no logo is set, the copyright line (MOD_FOOTER_LINE1 prints %sitename%) and the schema.org WebSite and Organization name on every page"
+      },
+      {
+        "entity": "settings",
+        "column": "fromname",
+        "why": "the sender name of the mail the site sends (contact form copies, account mail)"
+      },
+      {
+        "place": "module-162.0",
+        "why": "the masthead's default title, shown on a page that has no row of its own"
+      },
+      {
+        "entity": "acymConfiguration-from_name",
+        "column": "value",
+        "why": "the sender name of the newsletter the footer subscription form signs visitors up to"
+      },
+      {
+        "entity": "acymConfiguration-replyto_name",
+        "column": "value",
+        "why": "the reply-to name of the newsletter"
+      }
+    ],
+    "phone": [
+      { "place": "module-175.1", "why": "the footer contact column" },
+      {
+        "place": "module-175.0",
+        "as": "tel",
+        "why": "the link of the footer phone ('#' in the demo): a tel: link of the phone"
+      },
+      {
+        "place": "contact-1.2",
+        "why": "the contact page; the template prints it as a tel: link of its digits and in the page's schema.org data"
+      },
+      { "place": "module-177.14", "why": "the private training card (or CALL:), first item" },
+      { "place": "module-177.15", "why": "the private training card (or CALL:), second item" }
+    ],
+    "address": [
+      { "place": "module-175.2", "why": "the footer contact column" },
+      {
+        "place": "contact-1.1",
+        "why": "the contact page; the template builds its open in google maps link and the schema.org address from it"
+      }
+    ],
+    "email": [
+      { "place": "module-175.4", "why": "the footer contact column" },
+      {
+        "place": "module-175.3",
+        "as": "mailto",
+        "why": "the link of the footer email ('#' in the demo): a mailto: link of the email"
+      },
+      { "place": "contact-1.3", "why": "the contact page: where the contact form sends" },
+      { "place": "module-177.10", "why": "the private training card (PLEASE EMAIL:), first item" },
+      { "place": "module-177.11", "why": "the private training card (PLEASE EMAIL:), second item" },
+      {
+        "entity": "acymConfiguration-replyto_email",
+        "column": "value",
+        "why": "the reply-to address of the newsletter"
+      }
+    ],
+    "social": [
+      {
+        "place": "module-171.4",
+        "why": "the footer social links, first; its label and network icon follow the network of the link"
+      },
+      { "place": "module-171.5", "why": "the footer social links, second" },
+      { "place": "module-171.6", "why": "the footer social links, third" },
+      { "place": "module-171.7", "why": "the footer social links, fourth" }
+    ],
+    "logoLight": [
+      {
+        "place": "siteSetting-257986166.0",
+        "why": "site_logo, drawn on the light colour scheme in the header and the off-canvas menu (d-light)"
+      }
+    ],
+    "logoDark": [
+      {
+        "place": "siteSetting-211586990.0",
+        "why": "site_logo_dark, drawn on the dark colour scheme in the header and the off-canvas menu (d-dark)"
+      },
+      {
+        "place": "module-170.1",
+        "why": "the footer logo: the footer keeps its dark ground (footer_bg_color #1f1e1e) in both schemes, so it shows the logo made for a dark ground"
+      }
+    ]
+  },
+  "factExceptions": [
+    {
+      "block": "block-180",
+      "list": "social",
+      "field": "link",
+      "why": "the trainer page's social links are the trainer's own profiles, filled from the trainer's item, not the business's links"
+    }
+  ],
+  "notFacts": [
+    {
+      "fact": "map location",
+      "why": "the JA Google Map module 164 (position map, coordinates of Wall St) is printed only when the Site setting other_contact_map_modal is on, and it is off (etc/site/default.json); the open in google maps link is built from the contact address, a place of the address fact. Checked on the running 1.0.11 site: no page draws a map"
+    },
+    {
+      "fact": "opening hours",
+      "why": "no page shows opening hours: the times the template shows are class schedules (offering.schedule fields)"
+    },
+    {
+      "fact": "copyright line",
+      "why": "MOD_FOOTER_LINE1 prints the year and the site name, a place of the name fact; it carries no other business word"
+    }
+  ],
+  "seo": {
+    "menuItem": {
+      "title": [{ "entity": "page", "column": "params", "jsonPath": ["page_title"] }],
+      "description": [
+        { "entity": "page", "column": "params", "jsonPath": ["menu-meta_description"] },
+        { "entity": "page", "column": "params", "jsonPath": ["og_desc"] }
+      ],
+      "shareImage": [{ "entity": "page", "column": "params", "jsonPath": ["og_img"] }]
+    },
+    "article": {
+      "title": [{ "entity": "page", "column": "attribs", "jsonPath": ["article_page_title"] }],
+      "description": [{ "entity": "page", "column": "metadesc" }],
+      "shareImage": [{ "entity": "page", "column": "attribs", "jsonPath": ["og_img"] }]
+    },
+    "pageTypes": {
+      "home": "menuItem",
+      "news": "menuItem",
+      "featured-posts": "menuItem",
+      "authors": "menuItem",
+      "classes": "menuItem",
+      "contact": "menuItem",
+      "plans": "menuItem",
+      "about": "menuItem",
+      "learning-center": "menuItem",
+      "trainers": "menuItem",
+      "trainer": "menuItem",
+      "news-post": "article",
+      "class": "article",
+      "learning-post": "article",
+      "author": {
+        "record": "user",
+        "derived": "the author page is the template's author view of a person: the browser title is the person's name and role, the description their biography, and the share image the picture of the first post listed (T4 Open Graph); all three follow fields of the author-profile block",
+        "title": { "derived": "the person's name and role" },
+        "description": { "derived": "the person's biography" },
+        "shareImage": { "derived": "the picture of the first post the page lists" }
+      }
+    },
+    "why": "Checked on the running 1.0.11 site with the T4 Open Graph setting on: a page made from a menu item prints page_title as its title, menu-meta_description as its description and og_img as og:image; an article prints article_page_title, metadesc and its own og_img (else the og_img of the menu item it is reached through). JA Boxing ships Open Graph off; the override system_opengraph turns it on."
+  },
+  "library": {
+    "position": "section-6",
+    "pageTypes": {
+      "news-post": "main-bottom-1",
+      "class": "main-bottom-1",
+      "learning-post": "main-bottom-1",
+      "author": "main-bottom-1"
+    },
+    "why": "Measured on the running 1.0.11 site by publishing a probe block in section-6, main-bottom-1 and section-5 on every page: section-6 renders on the home layout (home, about, trainers, trainer, plans) and on the default layout (news, featured posts, authors, classes, contact, learning center), last before the footer, in the t4section chrome; an article page (detail-article layout: a post, a class, a learning post, an author page) has no section-6 and renders main-bottom-1 instead. section-5 renders on the home layout only and without a container."
+  },
+  "buildSets": {
+    "module-159:params:catid.0": {
+      "sets": "category",
+      "pageType": "class",
+      "why": "the related classes list reads the class pages from this category: the build writes the id of the category it files the class pages in"
+    },
+    "module-160:params:catid.0": {
+      "sets": "category",
+      "pageType": "class",
+      "why": "the home page class cards read the class pages from this category: the build writes the id of the category it files the class pages in"
+    }
+  },
+  "overrides": {
+    "settings": [
+      {
+        "location": { "entity": "siteSetting-236740385", "column": "value" },
+        "value": "",
+        "why": "the T4 site name stays empty, so the header and the logo's alt text print the global site name, a place of the name fact"
+      },
+      {
+        "location": { "entity": "siteSetting-51638431", "column": "value" },
+        "value": "",
+        "why": "the T4 slogan stays empty: the header prints no slogan"
+      },
+      {
+        "location": { "entity": "siteSetting-79416186", "column": "value" },
+        "value": "",
+        "why": "the body background: the demo photograph bg-cta.jpg is painted behind the top of every page (.bg-mask); a demo picture, so the blank site paints none"
+      },
+      {
+        "location": {
+          "entity": "templateGlobal-ja_boxing",
+          "column": "value",
+          "jsonPath": ["system_opengraph"]
+        },
+        "value": "1",
+        "why": "T4 Open Graph on: each page then prints its own title, description and share image (og:image) from its SEO fields"
+      }
+    ],
+    "language": [
+      {
+        "key": "MOD_FOOTER_LINE1",
+        "extension": "mod_footer",
+        "language": "en-GB",
+        "keep": "the copyright line prints the year and %sitename%, the global site name, a place of the name fact: it follows the fact with no override"
+      },
+      {
+        "key": "MOD_FOOTER_LINE2",
+        "extension": "mod_footer",
+        "language": "en-GB",
+        "value": "",
+        "why": "the Joomla licence notice of the copyright footer, a platform sentence: hidden by an empty value (the kit's hiddenBy)"
+      }
+    ]
+  },
+  "notEmptied": [
+    {
+      "entity": "module-179",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2) and is no block of the store: no build places it, so its row stays in the blank site trashed and unemptied"
+    },
+    {
+      "entity": "module-185",
+      "why": "module 185 (Memberships) is trashed in the demo (published -2), outside the content map and no block of the store: no build places it, so it stays trashed and unemptied"
+    },
+    {
+      "entity": "module-186",
+      "why": "module 186 (Kids credits) is trashed in the demo (published -2), outside the content map and no block of the store: no build places it, so it stays trashed and unemptied"
+    },
+    {
+      "entity": "module-164",
+      "why": "the JA Google Map module (position map) is printed only when other_contact_map_modal is on, and no block of the store holds it: no build places it"
+    }
+  ],
+  "demoFacts": {
+    "$comment": "The demo values of each business fact, as the template's own demo content holds them; the sweep test reads every content map place for them.",
+    "name": ["JA Boxing", "Getfit", "Gitfit"],
+    "phone": ["(239) 555-0108"],
+    "address": ["4517 Washington Ave", "Manchester, Kentucky 39495"],
+    "email": ["sale@getfit.com", "sale@no-reply.com"],
+    "logo": ["images/joomlart/logo/item-1.png", "images/joomlart/logo/item-2.png"]
+  }
+}
