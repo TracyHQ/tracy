@@ -117,16 +117,15 @@ export {
   TRACY_LIBRARY,
   TRACY_LIBRARY_DECLARATION,
   TRACY_REVIEWS_BLOCK_ID,
+  libraryEntryProblem,
   libraryItemProblem,
   tracyLibraryBlock
 } from './library.mjs'
-export {
-  REVIEWS_MAX,
-  googleListingUrl,
-  reviewerName,
-  reviewsToShow
-} from './library-reviews-content.mjs'
+export { REVIEWS_MAX, reviewsToShow } from './library-reviews-content.mjs'
+export { checkedListingUrl, googleListingUrl } from './library-reviews-listing.mjs'
+export { reviewerName, reviewerNameProblem } from './library-reviews-names.mjs'
 export { ReviewsBlockError, renderReviewsBlock, reviewsBlockCss } from './library-reviews-render.mjs'
+export { colourLiterals } from './library-style-check.mjs'
 export {
   NEEDS_PROFILE_PROMPT_FILE,
   NEEDS_PROFILE_SCHEMA,

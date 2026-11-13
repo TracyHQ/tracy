@@ -179,14 +179,38 @@ Blocks Tracy owns, for data a template has no block for, are declared in
   first variable the template sets wins. Only a role that is not a colour (`headingFont`, `bodyFont`, `radius`) may end
   with a literal `fallback` (a length, a number or a font keyword), so a library block never carries a colour of its own
   and follows the template in light and dark alike.
+- A `link` field carries a link kind of the vocabulary (a role ending in `_url`); `tracy-reviews` declares its
+  `listingUrl` as `contact.social_url`, the business's public profile link.
+- `positions` is the generic position `content`. The write step (#597) resolves it to a real position of the template
+  through the template's mapping file (`mapping.json`); nothing in the library declaration, the plan composer or the
+  block's render places the block on a page.
 - Each library block type has content rules (`libraryItemProblem`, `domain/library.mjs`). The rules gate refuses an
-  item the block would not show (code `library_rule`) and the extra data placement leaves it out with the reason.
+  item the block would not show (code `library_rule`, reported only when the item is of a kind the block shows; an
+  item of another kind is `wrong_item_kind` alone) and the extra data placement leaves it out with the reason.
 
-The first library block is `tracy-reviews` (#596): at most six reviews of four or five stars, in the reviewer's own words
-(never cut; a review longer than the text limit is set aside), each named by first name and initial and linked to the
-Google listing. `renderReviewsBlock` (`domain/library-reviews-render.mjs`) returns its markup and its stylesheet.
+The first library block is `tracy-reviews` (#596): at most six Google reviews of four or five stars, in the reviewer's
+own words (never cut; a review longer than the text limit is set aside), each linked to the Google listing.
 
-`checkLibraryDeclaration` checks the file; the command below runs it when called without folders.
+- **Google only.** A review is shown only when one of its sources has origin `google`; a website testimonial with stars
+  is set aside (`it is not a Google review`), refused by the gate and left out by placement. `renderReviewsBlock`
+  reads a needs profile item's source ids through `content.sources` (the profile's sources).
+- **Reviewer name.** Titles before the name (Dr, Mrs, Prof...) and suffixes after it (Jr, III, PhD...) are dropped,
+  then the first name and the initial of the last name part with a period ("Mara T."); a single name part is shown
+  alone; the first letter and the initial are capitals where the script has case. Google's placeholder "A Google
+  User", an empty name and a name longer than the author limit (40) set the review aside. Scripts written without
+  spaces or family name first keep the same simple rule (`domain/library-reviews-names.mjs` says why).
+- **Listing link.** `checkedListingUrl` (`domain/library-reviews-listing.mjs`) accepts https Google Maps addresses only:
+  `maps.google.<tld>`, `www.google.<tld>/maps/...`, `g.page`, `maps.app.goo.gl`, and the Maps link Tracy builds from a
+  place id (a Places API name `places/<id>` loses its prefix). Google's `/url?q=` redirect and every other host are
+  refused. A `listingUrl` the caller passes and the profile's Google source go through the same check; a missing or
+  refused link raises `ReviewsBlockError` `listing_missing`.
+
+`renderReviewsBlock` (`domain/library-reviews-render.mjs`) returns its markup and its stylesheet. Links read the
+template's accent text variable `--ds-c-accent-text` first, then `--body-link-color`, then `--color-primary`.
+
+`checkLibraryDeclaration` checks the file; the command below runs it when called without folders, and also checks
+every stylesheet of the library folder for colour literals (`colourLiterals`, `domain/library-style-check.mjs`, the
+same check the block's tests run).
 
 ## The contract check
 

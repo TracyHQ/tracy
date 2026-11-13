@@ -13,7 +13,9 @@
  * line printed for the folder says the mapping is pending. Both files at once is a problem.
  *
  * Run without folders, it also checks the Tracy library (`domain/library/tracy-library.json` of the WO package, ticket
- * #596): blocks Tracy owns, declared in the block store format, by `checkLibraryDeclaration`.
+ * #596): blocks Tracy owns, declared in the block store format, by `checkLibraryDeclaration`; and every stylesheet of
+ * the library folder for colour literals (`colourLiterals`, the check the block's own tests run), since a library block
+ * takes its colours from template design variables only.
  *
  *   node scripts/ai-quickstart/check.mjs                  every AI quickstart folder in the tree
  *   node scripts/ai-quickstart/check.mjs <folder>...      only those (a template packager's own draft)
@@ -30,6 +32,7 @@ import {
   formatProblem
 } from '../../packages/wo/website-opportunities/domain/ai-quickstart-contract.mjs'
 import { checkLibraryDeclaration } from '../../packages/wo/website-opportunities/domain/ai-quickstart-library.mjs'
+import { colourLiterals } from '../../packages/wo/website-opportunities/domain/library-style-check.mjs'
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const LIBRARY_PATH = 'packages/wo/website-opportunities/domain/library/tracy-library.json'
@@ -122,6 +125,31 @@ function checkLibrary() {
   return res.problems.length
 }
 
+/** The colour literals of one library stylesheet, as problems of the gate. */
+export function libraryStyleProblems(css, file) {
+  return colourLiterals(css).map((literal) => ({
+    file,
+    at: '',
+    message: `colour literal ${JSON.stringify(literal)}: a library block takes its colours from template design variables only`
+  }))
+}
+
+/** Check every stylesheet of the library folder, print one line each, and return how many problems they have. */
+function checkLibraryStyles() {
+  const rel = path.dirname(LIBRARY_PATH)
+  const dir = path.join(DEFAULT_ROOT, rel)
+  let count = 0
+  for (const file of readdirSync(dir)
+    .filter((f) => f.endsWith('.css'))
+    .sort()) {
+    const problems = libraryStyleProblems(readFileSync(path.join(dir, file), 'utf8'), file)
+    for (const p of problems) process.stderr.write(`${rel}/${formatProblem(p)}\n`)
+    process.stdout.write(`ai-quickstart-contract: ${rel}/${file}: ${problems.length} colour literal(s)\n`)
+    count += problems.length
+  }
+  return count
+}
+
 function main(argv) {
   const folders =
     argv.length > 0 ? argv.map((d) => path.resolve(d)) : discoverAiQuickstartFolders(DEFAULT_ROOT)
@@ -135,7 +163,7 @@ function main(argv) {
       `ai-quickstart-contract: ${rel}: ${res.blocks} block(s), ${res.problems.length} problem(s)${res.mappingPending ? `, ${MAPPING_FILE} pending (${res.mappingPending})` : ''}\n`
     )
   }
-  if (argv.length === 0) problemCount += checkLibrary()
+  if (argv.length === 0) problemCount += checkLibrary() + checkLibraryStyles()
   process.stdout.write(
     `ai-quickstart-contract: ${folders.length} AI quickstart(s) checked, ${problemCount} problem(s)\n`
   )

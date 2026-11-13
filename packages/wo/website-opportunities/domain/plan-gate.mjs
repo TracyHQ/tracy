@@ -3,7 +3,7 @@
 // - every data item of the plan exists in the needs profile (nothing invented);
 // - a kept block shows at least its minimum and at most its maximum items, of a kind its type shows;
 // - no design typed field is targeted;
-// - a Tracy library block shows only items its content rules accept (`library.mjs`);
+// - a Tracy library block shows only items its content rules accept (`plan-gate-items.mjs`, `library.mjs`);
 // - each block says why it fits, in words the customer can read;
 // - a page whose main block is missing is dropped, with the reason;
 // - data no block shows is placed in the fixed order of `plan-placement.mjs`, else reported;
@@ -12,8 +12,7 @@
 // second attempt.
 import { BUILD_PLAN_SCHEMA } from './build-contract-plan.mjs'
 import { checkBuildDocument } from './build-contract.mjs'
-import { libraryItemProblem } from './library.mjs'
-import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
+import { blockItemProblems } from './plan-gate-items.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
 import { placeExtraData } from './plan-placement.mjs'
 
@@ -44,45 +43,7 @@ function blockProblems(block, at, { data, blocks }, problem) {
       `${at}.data`,
       'a kept block shows at least one data item; leave the block out otherwise'
     )
-  const itemKind = BLOCK_TYPES[description.type]?.itemKind ?? null
-  const allowed = itemKind ? GROUP_KINDS_V3[itemKind].allowedKinds : []
-  let items = 0
-  block.data.forEach((id, i) => {
-    const entry = data.byId.get(id)
-    if (!entry)
-      return problem(
-        'invented_item',
-        `${at}.data[${i}]`,
-        `${JSON.stringify(id)} is not a fact or item of the needs profile`
-      )
-    if (entry.what !== 'item') return
-    items += 1
-    if (!allowed.includes(entry.kind))
-      problem(
-        'wrong_item_kind',
-        `${at}.data[${i}]`,
-        `a ${description.type} block cannot show ${entry.kind} item ${JSON.stringify(id)}`
-      )
-    const refused = libraryItemProblem(description, entry.source)
-    if (refused)
-      problem(
-        'library_rule',
-        `${at}.data[${i}]`,
-        `${description.id} does not show ${JSON.stringify(id)}: ${refused}`
-      )
-  })
-  if (itemKind && items < description.items.min)
-    problem(
-      'too_few_items',
-      `${at}.data`,
-      `block ${description.id} shows at least ${description.items.min} items, not ${items}`
-    )
-  if (itemKind && items > description.items.max)
-    problem(
-      'too_many_items',
-      `${at}.data`,
-      `block ${description.id} shows at most ${description.items.max} items, not ${items}`
-    )
+  blockItemProblems(block, description, at, data, problem)
   const fields = [...list(description.fields), ...list(description.itemFields)]
   list(block.targets).forEach((name, i) => {
     const field = fields.find((f) => f?.name === name)

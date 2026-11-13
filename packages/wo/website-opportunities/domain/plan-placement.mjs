@@ -3,11 +3,11 @@
 //   1. a template block of that item's own type: one already on the plan with room, else one of the store not placed;
 //   2. a template block whose fields fit: its type accepts the item's kind and its item fields carry the item's role;
 //   3. a Tracy library block of that type, styled through the template's design variables, for the items its content
-//      rules accept (`library.mjs`: a review of four or five stars, for example);
+//      rules accept (`library.mjs`: a Google review of four or five stars, for example);
 //   4. else a left out entry with the reason.
 // Photos are the exception to 4: a photo with no gallery block stays in the pictures pool (`plan-look-pictures.mjs`).
 // Pure: placed pages in, new pages, left out entries and what was placed out.
-import { libraryItemProblem } from './library.mjs'
+import { libraryEntryProblem } from './library.mjs'
 import { ITEM_KINDS } from './needs-profile-merge.mjs'
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { ITEM_NOUNS } from './plan-data.mjs'
@@ -95,7 +95,7 @@ export function placeExtraData(pages, { data, blocks, leftOutIds = new Set() }) 
     const library = descriptions.filter((d) => d.source === 'library' && ownTypeOf(d, kind))
     const refusedBy = new Map()
     for (const item of remaining) {
-      const reasons = library.map((d) => libraryItemProblem(d, data.byId.get(item.id)?.source))
+      const reasons = library.map((d) => libraryEntryProblem(d, data.byId.get(item.id)))
       if (library.length > 0 && reasons.every(Boolean)) refusedBy.set(item.id, reasons[0])
     }
     const fitting = remaining.filter((item) => !refusedBy.has(item.id))

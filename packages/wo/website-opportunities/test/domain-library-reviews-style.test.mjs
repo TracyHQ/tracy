@@ -6,44 +6,21 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { tracyLibraryBlock } from '../domain/library.mjs'
 import { renderReviewsBlock, reviewsBlockCss } from '../domain/library-reviews-render.mjs'
+import { COLOUR_FUNCTION, HEX, colourLiterals } from '../domain/library-style-check.mjs'
 
 const BLOCK = tracyLibraryBlock('tracy-reviews')
 const CONTENT = {
   heading: 'What members say',
   listingUrl: 'https://www.google.com/maps/search/?api=1&query=Example&query_place_id=invented-place-0001',
   reviews: [
-    { author: 'Mara Telling', text: 'Friendly coaches and the courts are always swept.', rating: 5 },
-    { author: 'Osric Vale', text: 'My two kids love the junior coaching.', rating: 4 }
+    {
+      author: 'Mara Telling',
+      text: 'Friendly coaches and the courts are always swept.',
+      rating: 5,
+      origin: 'google'
+    },
+    { author: 'Osric Vale', text: 'My two kids love the junior coaching.', rating: 4, origin: 'google' }
   ]
-}
-
-// Words a layout declaration may use. A colour name is not one of them, nor are `transparent` and `currentColor`.
-const LAYOUT_WORDS = new Set(
-  'grid flex column none solid underline auto auto-fill repeat minmax min fr pre-line 1fr inherit'.split(' ')
-)
-const COLOUR_FUNCTION = /\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix|light-dark)\s*\(/i
-const HEX = /#[0-9a-f]{3,8}\b/i
-
-/** Every colour literal of a stylesheet, as `property: token`. Empty when the sheet carries none. */
-function colourLiterals(css) {
-  const found = []
-  const body = css.replace(/\/\*[\s\S]*?\*\//g, '')
-  for (const [, prop, value] of body.matchAll(/([\w-]+)\s*:\s*([^;{}]+);/g)) {
-    if (HEX.test(value) || COLOUR_FUNCTION.test(value)) {
-      found.push(`${prop}: ${value.trim()}`)
-      continue
-    }
-    const words = value
-      .replace(/var\(\s*--[\w-]+/g, ' ')
-      .replace(/[(),]/g, ' ')
-      .split(/\s+/)
-      .filter(Boolean)
-    for (const word of words) {
-      if (/^-?\d*\.?\d+(?:px|rem|em|%|fr)?$/.test(word) || LAYOUT_WORDS.has(word)) continue
-      found.push(`${prop}: ${word}`)
-    }
-  }
-  return found
 }
 
 test('the block stylesheet carries no colour literal', () => {
@@ -64,6 +41,34 @@ test('the colour check fails on every kind of colour literal', () => {
   for (const value of ['red', 'white', 'transparent', 'currentColor', 'var(--color-primary, black)'])
     assert.ok(colourLiterals(sheet(value)).length > 0, value)
   assert.deepEqual(colourLiterals(sheet('var(--color-primary, var(--body-text-color))')), [])
+})
+
+test('the colour check also reads a last declaration with no semicolon and declarations inside at-rules', () => {
+  for (const css of [
+    '.a{color:red}',
+    '.a{border:1px solid red}',
+    '.a{color:var(--x,red)}',
+    '@media (min-width:1px){.a{color:white}}',
+    '@supports (display:grid){.a{background:#000}}',
+    '.a{color:red !important}',
+    '.a{fill:red;}'
+  ])
+    assert.ok(colourLiterals(css).length > 0, css)
+  assert.deepEqual(colourLiterals('@media (min-width:1px){.a{color:var(--x)}}'), [])
+  assert.deepEqual(colourLiterals('.a{margin:0 auto}\n.b{display:grid}'), [])
+})
+
+test('links prefer the template accent text variable, then the current link binding, with no colour literal', () => {
+  assert.deepEqual(BLOCK.designVariables.link.variables, [
+    '--ds-c-accent-text',
+    '--body-link-color',
+    '--color-primary'
+  ])
+  assert.match(
+    reviewsBlockCss(BLOCK),
+    /--tracy-reviews-link: var\(--ds-c-accent-text, var\(--body-link-color, var\(--color-primary\)\)\);/
+  )
+  assert.equal(BLOCK.designVariables.linkHover.variables[0], '--ds-c-accent-text-hover')
 })
 
 test('the markup carries no style, no colour attribute and no colour value', () => {

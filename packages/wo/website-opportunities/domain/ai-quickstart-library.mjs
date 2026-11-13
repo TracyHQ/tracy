@@ -5,6 +5,8 @@
 //
 // A design variable binding is `{variables: ["--name", ...], fallback?}`: the first variable the template sets wins.
 // `fallback` is allowed only for a role that is not a colour, so no library block ever carries a colour of its own.
+// A `link` field of a library block carries a link kind of the vocabulary (a role ending in `_url`), so a link is never
+// declared with a role of some other value.
 import { blockProblems } from './ai-quickstart-contract.mjs'
 import { ROLE_VOCABULARY_V3 } from './place-content-roles.mjs'
 
@@ -40,6 +42,17 @@ function designVariablesProblems(bindings, at, report) {
   }
 }
 
+/** A `link` field of a library block names a link kind of the vocabulary. */
+function linkFieldProblems(block, at, report) {
+  for (const key of ['fields', 'itemFields'])
+    for (const field of Array.isArray(block[key]) ? block[key] : [])
+      if (field?.type === 'link' && !(typeof field.kind === 'string' && field.kind.endsWith('_url')))
+        report(
+          `${at}.${key}[${field.name}].kind`,
+          'a link field carries a link kind of the vocabulary (a role ending in _url)'
+        )
+}
+
 /**
  * Check the Tracy library declaration.
  * @param {any} library the parsed `tracy-library.json`
@@ -67,6 +80,7 @@ export function checkLibraryDeclaration(library) {
     if (!isObject(block)) return
     if (block.source !== 'library') report(`${at}.source`, 'a Tracy library block declares source "library"')
     designVariablesProblems(block.designVariables, `${at}.designVariables`, report)
+    linkFieldProblems(block, at, report)
   })
   return { ok: problems.length === 0, blocks: ids.size, problems }
 }

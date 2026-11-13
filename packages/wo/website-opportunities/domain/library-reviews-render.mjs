@@ -3,20 +3,15 @@
 // declaration (`designVariables` in `tracy-library.json`), so the block takes the template's colours and fonts in
 // light and dark alike and never carries a colour of its own. Pure: content in, `{html, css}` out.
 import { readFileSync } from 'node:fs'
-import { REVIEW_MAX_STARS, googleListingUrl, reviewsToShow } from './library-reviews-content.mjs'
+import { REVIEW_MAX_STARS, reviewsToShow } from './library-reviews-content.mjs'
+import { ReviewsBlockError } from './library-reviews-error.mjs'
+import { checkedListingUrl, googleListingUrl } from './library-reviews-listing.mjs'
+
+export { ReviewsBlockError } from './library-reviews-error.mjs'
 
 export const REVIEWS_BLOCK_CSS_FILE = 'reviews-block.css'
 const LAYOUT_CSS = readFileSync(new URL(`./library/${REVIEWS_BLOCK_CSS_FILE}`, import.meta.url), 'utf8')
 export const REVIEWS_ROOT_CLASS = 'tracy-reviews'
-
-/** A failure of the reviews block, with a code the step chain reports (ADR 0047). */
-export class ReviewsBlockError extends Error {
-  constructor(code, message, details = {}) {
-    super(`${code}: ${message}`)
-    this.code = code
-    this.details = details
-  }
-}
 
 const escapeHtml = (value) =>
   String(value)
@@ -62,22 +57,26 @@ const DEFAULT_LABELS = Object.freeze({
 /**
  * Render the block.
  * @param {object} declaration the block's declaration (`tracyLibraryBlock('tracy-reviews')`)
- * @param {{heading?: string, reviews: object[], listingUrl?: string, google?: {ref?: string, name?: string},
- *   listingLabel?: string, labels?: {stars?: (n: number) => string}, id?: string, containerClass?: string}} content
- *   `listingUrl` or the profile's Google source in `google`; `listingLabel` is written in the site's language by the
+ * @param {{heading?: string, reviews: object[], sources?: Array<{id: string, origin: string}>, listingUrl?: string,
+ *   google?: {ref?: string, name?: string}, listingLabel?: string, labels?: {stars?: (n: number) => string},
+ *   id?: string, containerClass?: string}} content `reviews` are needs profile items (their source ids read through
+ *   `sources`, the profile's sources) or plain `{text, author, rating, origin}`: only Google reviews are shown;
+ *   `listingUrl` or the profile's Google source in `google`, both held to the same Google listing check
+ *   (`library-reviews-listing.mjs`); `listingLabel` is written in the site's language by the
  *   page writer; `containerClass` is the template's own page width class (Bootstrap's `container` by default, which
  *   T4 and T3 templates share), so the block lines up with the sections around it
  * @returns {{html: string, css: string, shown: object[], setAside: object[]}}
  */
 export function renderReviewsBlock(declaration, content) {
-  const listingUrl = content?.listingUrl ?? googleListingUrl(content?.google)
-  if (!isText(listingUrl) || !listingUrl.startsWith('https://'))
-    throw new ReviewsBlockError(
-      'listing_missing',
-      'the reviews block links to the Google listing, and there is none'
-    )
+  const listingUrl =
+    content?.listingUrl !== undefined
+      ? checkedListingUrl(content.listingUrl)
+      : googleListingUrl(content?.google)
+  const sources = Array.isArray(content?.sources) ? content.sources : []
   const { shown, setAside } = reviewsToShow(content?.reviews, {
     textLimit: fieldLimit(declaration, 'itemFields', 'text'),
+    authorLimit: fieldLimit(declaration, 'itemFields', 'author'),
+    origins: new Map(sources.map((s) => [s?.id, s?.origin])),
     max: declaration.items?.max
   })
   if (shown.length < (declaration.items?.min ?? 1))

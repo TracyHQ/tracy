@@ -9,6 +9,7 @@ import { composePlan, composerContextOf } from '../domain/plan-composer.mjs'
 import { gatePlan } from '../domain/plan-gate.mjs'
 import {
   REVIEWS,
+  SERVICES,
   blockStore,
   brand,
   clubProfile,
@@ -120,8 +121,65 @@ test('the gate refuses a composition that puts a review the library block does n
   assert.ok(gatePlan(c, contextOf()).ok)
 })
 
+test('an item of the wrong kind in the library block is reported once, as wrong_item_kind', () => {
+  const c = goodComposition()
+  c.pages[0].blocks.splice(-1, 0, {
+    block: 'tracy-reviews',
+    label: 'Reviews',
+    data: [REVIEWS[0], SERVICES[0]],
+    reason: 'What members say.'
+  })
+  const result = gatePlan(c, contextOf())
+  assert.deepEqual(
+    result.problems.map((p) => [p.code, p.at]),
+    [['wrong_item_kind', 'pages[0].blocks[5].data[1]']]
+  )
+})
+
+test('with the library block already on the plan, a review it refuses is left out with the reason', () => {
+  const c = goodComposition()
+  c.pages[0].blocks.splice(-1, 0, {
+    block: 'tracy-reviews',
+    label: 'Reviews',
+    data: [REVIEWS[0]],
+    reason: 'What members say.'
+  })
+  const { ok, plan, placed } = gatePlan(c, contextOf(profileWithRating('3')))
+  assert.equal(ok, true)
+  assert.deepEqual(placed, [])
+  const reviews = blocksOf(plan).find((b) => b.block === 'tracy-reviews')
+  assert.deepEqual(reviews.data, [REVIEWS[0]])
+  assert.deepEqual(
+    plan.leftOut.filter((l) => /Osric Vale/.test(l.what)),
+    [
+      {
+        what: 'Review by Osric Vale',
+        kind: 'item',
+        reason: 'Not shown in the Tracy section: only reviews of four or five stars are shown.'
+      }
+    ]
+  )
+})
+
+test('the listing link field is declared as a link with a link kind of the catalogue, not the rating role', () => {
+  const field = TRACY_LIBRARY[0].fields.find((f) => f.name === 'listingUrl')
+  assert.deepEqual([field.type, field.kind], ['link', 'contact.social_url'])
+  const doc = declaration()
+  doc.blocks[0].fields.find((f) => f.name === 'listingUrl').kind = 'quote.rating_or_source'
+  assert.deepEqual(ats(checkLibraryDeclaration(doc)), ['blocks[tracy-reviews].fields[listingUrl].kind'])
+})
+
+test('the declaration says the block takes the generic position content, resolved by the write step', () => {
+  assert.deepEqual(TRACY_LIBRARY[0].positions, ['content'])
+  assert.match(TRACY_LIBRARY_DECLARATION.$comment, /generic position "content"/)
+  assert.match(TRACY_LIBRARY_DECLARATION.$comment, /#597/)
+})
+
 test('content rules apply to library blocks only', () => {
-  const item = { fields: { 'quote.text': { value: 'Fine.' }, 'quote.rating_or_source': { value: '1' } } }
+  const item = {
+    origin: 'google',
+    fields: { 'quote.text': { value: 'Fine.' }, 'quote.rating_or_source': { value: '1' } }
+  }
   assert.equal(libraryItemProblem({ source: 'template', type: 'reviews' }, item), null)
   assert.match(libraryItemProblem(TRACY_LIBRARY[0], item), /four or five stars/)
 })

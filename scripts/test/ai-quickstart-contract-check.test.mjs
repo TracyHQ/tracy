@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { discoverAiQuickstartFolders } from '../ai-quickstart/check.mjs'
+import { discoverAiQuickstartFolders, libraryStyleProblems } from '../ai-quickstart/check.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const CHECK = path.join(ROOT, 'scripts/ai-quickstart/check.mjs')
@@ -108,4 +108,18 @@ test('run without folders, the command also checks the Tracy library declaration
   const res = run()
   assert.equal(res.status, 0, res.stderr)
   assert.match(res.stdout, /domain\/library\/tracy-library\.json: 1 library block\(s\), 0 problem\(s\)/)
+})
+
+test('run without folders, the command also checks the library stylesheets for colour literals (#596)', () => {
+  const res = run()
+  assert.equal(res.status, 0, res.stderr)
+  assert.match(res.stdout, /domain\/library\/reviews-block\.css: 0 colour literal\(s\)/)
+})
+
+test('a library stylesheet carrying a colour literal is a problem of the gate', () => {
+  assert.deepEqual(libraryStyleProblems('.a{color:var(--x)}', 'x.css'), [])
+  assert.deepEqual(
+    libraryStyleProblems('@media (min-width:1px){.a{color:white}}', 'x.css').map((p) => p.message),
+    ['colour literal "color: white": a library block takes its colours from template design variables only']
+  )
 })

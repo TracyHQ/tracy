@@ -1,5 +1,5 @@
 {
-  "$comment": "The Tracy library (ticket #596): blocks Tracy owns, for data a template has no block for. Each block is declared in the block store format of the AI quickstart contract (docs/references/ai-quickstart-contract.md) and checked by checkLibraryDeclaration. A library block is styled only through the template's design variables: designVariables binds each role the block's stylesheet reads to the template variables that give it, first one set wins.",
+  "$comment": "The Tracy library (ticket #596): blocks Tracy owns, for data a template has no block for. Each block is declared in the block store format of the AI quickstart contract (docs/references/ai-quickstart-contract.md) and checked by checkLibraryDeclaration. A library block is styled only through the template's design variables: designVariables binds each role the block's stylesheet reads to the template variables that give it, first one set wins. Positions: a library block declares the generic position \"content\"; the write step (#597) resolves it to a real position of the template through the template's mapping file (mapping.json). Nothing in the declaration places the block on a page.",
   "schema": "tracy-ai-quickstart-library/v1",
   "roleVocabularyVersion": "place-content-roles/3",
   "blocks": [
@@ -12,7 +12,7 @@
       "noData": { "rule": "hide" },
       "fields": [
         { "name": "heading", "kind": "editorial.heading", "type": "text", "limit": 40 },
-        { "name": "listingUrl", "kind": "quote.rating_or_source", "type": "link" },
+        { "name": "listingUrl", "kind": "contact.social_url", "type": "link" },
         { "name": "listingLabel", "kind": "editorial.button_label", "type": "text", "limit": 32 }
       ],
       "itemFields": [
@@ -24,8 +24,10 @@
         "accent": { "variables": ["--color-primary"] },
         "text": { "variables": ["--body-text-color"] },
         "heading": { "variables": ["--headings-color", "--body-text-color"] },
-        "link": { "variables": ["--body-link-color", "--color-primary"] },
-        "linkHover": { "variables": ["--body-link-hover-color", "--body-link-color"] },
+        "link": { "variables": ["--ds-c-accent-text", "--body-link-color", "--color-primary"] },
+        "linkHover": {
+          "variables": ["--ds-c-accent-text-hover", "--body-link-hover-color", "--body-link-color"]
+        },
         "surface": { "variables": ["--bg-item-1", "--body-bg-color"] },
         "border": { "variables": ["--border-color", "--body-text-color"] },
         "headingFont": { "variables": ["--heading-font-family", "--body-font-family"] },

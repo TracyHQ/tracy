@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { tracyLibraryBlock } from '../domain/library.mjs'
-import { googleListingUrl, reviewerName, reviewsToShow } from '../domain/library-reviews-content.mjs'
+import { googleListingUrl, reviewsToShow } from '../domain/library-reviews-content.mjs'
 import { ReviewsBlockError, renderReviewsBlock } from '../domain/library-reviews-render.mjs'
 
 const BLOCK = tracyLibraryBlock('tracy-reviews')
@@ -13,6 +13,7 @@ const review = (n, rating = 5, extra = {}) => ({
   author: `${FIRST[(n - 1) % FIRST.length]} Quorrin`,
   text: `Invented praise number ${n}.`,
   rating,
+  origin: 'google',
   ...extra
 })
 const textsOf = (html) => [...html.matchAll(/<blockquote[^>]*><p>([\s\S]*?)<\/p>/g)].map((m) => m[1])
@@ -79,26 +80,47 @@ test('needs profile items are read as they are: text, author and rating from the
   const item = {
     id: 'quote-1',
     kind: 'quote',
+    sources: ['gmaps'],
     fields: {
       'quote.text': { value: 'Friendly coaches and the courts are always swept.' },
       'quote.author_name': { value: 'Mara Telling' },
       'quote.rating_or_source': { value: '5' }
     }
   }
-  assert.deepEqual(reviewsToShow([item]).shown, [
+  assert.deepEqual(reviewsToShow([item], { origins: new Map([['gmaps', 'google']]) }).shown, [
     { text: 'Friendly coaches and the courts are always swept.', author: 'Mara T.', rating: 5 }
   ])
 })
 
-test('reviewers are shown as first name and initial', () => {
-  assert.equal(reviewerName('Mara Telling'), 'Mara T.')
-  assert.equal(reviewerName('osric van vale'), 'osric V.')
-  assert.equal(reviewerName('Ilse'), 'Ilse')
-  assert.equal(reviewerName('Jun K.'), 'Jun K.')
-  assert.equal(reviewerName('  Élodie   Ørsted '), 'Élodie Ø.')
-  assert.equal(reviewerName('Tamsin Brook-Hale \u{1F3BE}'), 'Tamsin B.')
-  assert.equal(reviewerName(' \u{1F3BE} '), null)
-  assert.equal(reviewsToShow([review(1, 5, { author: '' })]).shown.length, 0)
+test('only a review with a Google source is shown: a website testimonial with stars is set aside', () => {
+  const origins = new Map([
+    ['gmaps', 'google'],
+    ['site', 'website']
+  ])
+  const { shown, setAside } = reviewsToShow(
+    [
+      review(1, 5, { origin: 'website' }),
+      review(2, 5, { origin: undefined }),
+      review(3, 5, { origin: undefined, sources: ['site'] }),
+      review(4, 5, { origin: undefined, sources: ['site', 'gmaps'] }),
+      review(5, 5, { origin: undefined, origins: ['social', 'google'] }),
+      review(6, 5, { origin: undefined, sources: ['gmaps'] })
+    ],
+    { origins }
+  )
+  assert.deepEqual(
+    shown.map((r) => r.text),
+    ['Invented praise number 4.', 'Invented praise number 5.', 'Invented praise number 6.']
+  )
+  assert.deepEqual(
+    setAside.map((s) => [s.index, s.reason]),
+    [
+      [0, 'it is not a Google review'],
+      [1, 'it is not a Google review'],
+      [2, 'it is not a Google review']
+    ]
+  )
+  assert.equal(reviewsToShow([review(1, 5, { origin: undefined, sources: ['gmaps'] })]).shown.length, 0)
 })
 
 test('every reviewer name links to the Google listing, and so does the closing link', () => {
@@ -124,10 +146,12 @@ test('the Google listing link: a Google address as it is, a place id made a Maps
     googleListingUrl({ ref: 'https://maps.app.goo.gl/invented' }),
     'https://maps.app.goo.gl/invented'
   )
-  assert.equal(googleListingUrl({ ref: 'https://brindlewick-tennis.example/' }), null)
-  assert.equal(googleListingUrl({ ref: 'http://maps.google.com/x' }), null)
   assert.match(googleListingUrl({ ref: 'invented-place-0001' }), /query_place_id=invented-place-0001$/)
-  assert.equal(googleListingUrl({}), null)
+  for (const ref of ['https://brindlewick-tennis.example/', 'http://maps.google.com/x', undefined])
+    assert.throws(
+      () => googleListingUrl({ ref }),
+      (e) => e instanceof ReviewsBlockError && e.code === 'listing_missing'
+    )
 })
 
 test('no listing link or no review to show fails with a code, so the block is hidden, never shown half', () => {

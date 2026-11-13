@@ -2,9 +2,14 @@
 // the reviewer's own words (never cut, never edited), each named by first name and initial, with a link to the
 // business's Google listing. Pure: reviews in, what the block shows and what it set aside (with the reason) out.
 //
-// A review is a needs profile item of kind `quote` (`fields['quote.text'].value`, ...) or a plain
-// `{text, author, rating}`. A review without a rating is set aside: the block cannot say it has four or five stars.
-import { isGoogleHost } from './google-link.mjs'
+// A review is a needs profile item of kind `quote` (`fields['quote.text'].value`, ..., `sources: [<source id>]`) or a
+// plain `{text, author, rating, origin}`. Only a review with a Google source is shown: the block says its reviews are
+// Google reviews and links them to the Google listing, so a website testimonial with stars is set aside. A review
+// without a rating is set aside too: the block cannot say it has four or five stars.
+import { reviewerName, reviewerNameProblem } from './library-reviews-names.mjs'
+
+export { reviewerName } from './library-reviews-names.mjs'
+export { googleListingUrl } from './library-reviews-listing.mjs'
 
 export const REVIEWS_MAX = 6
 export const REVIEW_MIN_STARS = 4
@@ -17,6 +22,18 @@ const fieldOf = (review, role, plain) => {
   return review?.[plain]
 }
 
+/**
+ * The source origins of a review: its own `origin` or `origins`, and each of its `sources` read through `origins` (the
+ * needs profile's source id -> origin) or as a `{origin}` / `{kind}` record (a plan item's sources).
+ */
+function originsOf(review, origins) {
+  const out = new Set([review?.origin, ...(Array.isArray(review?.origins) ? review.origins : [])])
+  for (const source of Array.isArray(review?.sources) ? review.sources : [])
+    out.add(typeof source === 'string' ? origins?.get(source) : (source?.origin ?? source?.kind))
+  out.delete(undefined)
+  return out
+}
+
 /** A review as the block reads it: `{text, author, rating}`, the text exactly as written. */
 export function reviewOf(review) {
   const text = fieldOf(review, 'quote.text', 'text')
@@ -27,38 +44,22 @@ export function reviewOf(review) {
   return { text: typeof text === 'string' ? text : null, author: isText(author) ? author : null, rating }
 }
 
-const nameToken = (token) => token.replace(/[^\p{L}\p{M}'.-]/gu, '')
-
-/**
- * The reviewer as the block names them: first name and the initial of the last name ("Mara T."). A single name is
- * shown alone; a name already shortened keeps its own initial. Null when nothing readable is left.
- */
-export function reviewerName(author) {
-  const tokens = String(author ?? '')
-    .normalize('NFC')
-    .split(/\s+/)
-    .map(nameToken)
-    .filter((t) => /\p{L}/u.test(t))
-  if (tokens.length === 0) return null
-  const first = tokens[0]
-  if (tokens.length === 1) return first
-  const initial = [...tokens[tokens.length - 1]].find((c) => /\p{L}/u.test(c))
-  return `${first} ${initial.toLocaleUpperCase()}.`
-}
-
 /**
  * Why the block does not show this review, or null when it does.
  * @param {object} review a profile item or `{text, author, rating}`
- * @param {{textLimit?: number}} [options] the block's text limit: a longer review is set aside, never cut
+ * @param {{textLimit?: number, authorLimit?: number, origins?: Map<string, string>}} [options] the block's text and
+ *   author limits (a longer review or name is set aside, never cut); `origins` reads a profile item's source ids
  */
-export function reviewProblem(review, { textLimit = Infinity } = {}) {
+export function reviewProblem(review, { textLimit = Infinity, authorLimit = Infinity, origins } = {}) {
   const { text, author, rating } = reviewOf(review)
+  if (!originsOf(review, origins).has('google')) return 'it is not a Google review'
   if (!isText(text)) return 'it has no text'
   if (rating === null) return 'it has no star rating'
   if (rating < REVIEW_MIN_STARS || rating > REVIEW_MAX_STARS)
     return 'only reviews of four or five stars are shown'
   if (!Number.isInteger(rating)) return 'its star rating is not a whole number'
-  if (!reviewerName(author)) return 'it has no reviewer name'
+  const nameProblem = reviewerNameProblem(author, { limit: authorLimit })
+  if (nameProblem) return nameProblem
   if ([...text.trim()].length > textLimit)
     return 'it is longer than the section holds, and a review is never cut'
   return null
@@ -67,15 +68,15 @@ export function reviewProblem(review, { textLimit = Infinity } = {}) {
 /**
  * The reviews the block shows, in the order given, and the ones it sets aside.
  * @param {object[]} reviews
- * @param {{textLimit?: number, max?: number}} [options]
+ * @param {{textLimit?: number, authorLimit?: number, origins?: Map<string, string>, max?: number}} [options]
  * @returns {{shown: Array<{text: string, author: string, rating: number}>, setAside: Array<{index: number, reason: string}>}}
  */
-export function reviewsToShow(reviews, { textLimit = Infinity, max = REVIEWS_MAX } = {}) {
+export function reviewsToShow(reviews, { max = REVIEWS_MAX, ...rules } = {}) {
   const shown = []
   const setAside = []
   const seen = new Set()
   ;(Array.isArray(reviews) ? reviews : []).forEach((review, index) => {
-    const problem = reviewProblem(review, { textLimit })
+    const problem = reviewProblem(review, rules)
     if (problem) return setAside.push({ index, reason: problem })
     const { text, author, rating } = reviewOf(review)
     const key = text.trim().replace(/\s+/g, ' ').toLowerCase()
@@ -86,22 +87,4 @@ export function reviewsToShow(reviews, { textLimit = Infinity, max = REVIEWS_MAX
     shown.push({ text: text.trim(), author: reviewerName(author), rating })
   })
   return { shown, setAside }
-}
-
-/**
- * The link to the business's Google listing, from the Google source of the needs profile: its own address when it is
- * a Google link, else a Google Maps link built from the place id it names. Null when there is neither.
- * @param {{ref?: string, name?: string}} source `ref` of the profile's `google` source; `name` the business name
- */
-export function googleListingUrl({ ref, name } = {}) {
-  if (!isText(ref)) return null
-  const value = ref.trim()
-  try {
-    const url = new URL(value)
-    return url.protocol === 'https:' && isGoogleHost(url.hostname) ? url.href : null
-  } catch {
-    if (!/^[\w-]+$/.test(value)) return null
-    const query = encodeURIComponent(isText(name) ? name.trim() : value)
-    return `https://www.google.com/maps/search/?api=1&query=${query}&query_place_id=${encodeURIComponent(value)}`
-  }
 }
