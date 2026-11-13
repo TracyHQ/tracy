@@ -36,24 +36,53 @@ function firstLetterOf(word) {
   return /^\p{Script=Latin}$/u.test(base) ? base : letter.normalize('NFC')
 }
 
-/** The name in a label: without what it says in parentheses, nor what follows a comma (a title, a role). */
-const nameOfLabel = (label) =>
-  String(label ?? '')
+/** The name in a label: without what it says in parentheses, what follows a comma, nor a role before a colon. */
+function nameOfLabel(label) {
+  const name = String(label ?? '')
     .normalize('NFC')
     .replace(/\([^)]*\)?/gu, ' ')
     .split(/[,\uFF0C\u060C]/u)[0]
+  // "Head Coach: Mia Lee" names Mia Lee; a colon with no name after it keeps the whole label.
+  const after = name.split(/[:\uFF1A]/u).at(-1)
+  return /\p{L}/u.test(after) ? after : name
+}
+
+/** Titles before a name (lower case, without a final dot); `m` counts only written with its dot (`M.`). */
+const HONORIFICS = new Set(
+  'dr prof mr mrs ms miss mx herr frau mme mlle sr sra srta sig sig.ra dott ing don dona doña'.split(' ')
+)
+/** Role words that may lead a name ("Coach Mia"), left out only when a name word follows. */
+const ROLE_WORDS = new Set(
+  'coach head assistant trainer instructor teacher chef sensei captain manager owner founder director'.split(
+    ' '
+  )
+)
+/** Suffixes after a name; `sr` only as the last word (before a name it is the Spanish title). */
+const SUFFIXES = new Set('jr sr ii iii iv phd md msc bsc'.split(' '))
+const keyOf = (token) => token.toLowerCase().replace(/[.,]+$/u, '')
+const isTitle = (token) => token === 'M.' || HONORIFICS.has(keyOf(token)) || ROLE_WORDS.has(keyOf(token))
+
+/** The words of a name without its leading titles and roles and its trailing suffixes; one word always stays. */
+function nameWords(name) {
+  const tokens = name.split(/\s+/u).filter((t) => /\p{L}/u.test(t))
+  while (tokens.length > 1 && isTitle(tokens[0])) tokens.shift()
+  while (tokens.length > 1 && SUFFIXES.has(keyOf(tokens.at(-1)))) tokens.pop()
+  return tokens.join(' ')
+}
 
 /**
  * The initials of a person's name: the first letter of the first and of the last word, in the name's own script (a
  * Chinese, Cyrillic or Greek letter stays itself), a Latin letter with an accent, a stroke or a ligature folded to its
  * base letter (E acute is E, O with stroke is O, AE is A). What the label says in parentheses or after a comma (a role,
- * a title) is left out. A word whose first letter is a leading vowel (Thai, Lao) starts at its first consonant. Words
- * that start with no letter are skipped; a name with none gives "".
+ * a title) is left out, as are a role before a colon ("Head Coach: Mia Lee"), titles before the name (Dr, Prof, Mrs,
+ * Herr, Mme, Sra., Dott. and kin, and a role word such as Coach) and suffixes after it (Jr, Sr, III, PhD and kin),
+ * each only while another word of the name remains ("Coach" alone is C). A word whose first letter is a leading vowel
+ * (Thai, Lao) starts at its first consonant. Words that start with no letter are skipped; a name with none gives "".
  * @param {unknown} name
  * @returns {string}
  */
 export function initialsOf(name) {
-  const words = nameOfLabel(name)
+  const words = nameWords(nameOfLabel(name))
     .split(/[^\p{L}\p{M}\p{N}]+/u)
     .filter((w) => /^\p{L}/u.test(w))
   if (!words.length) return ''

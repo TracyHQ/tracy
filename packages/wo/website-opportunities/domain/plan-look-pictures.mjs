@@ -109,13 +109,20 @@ const EMPTY_FRAME_REASONS = Object.freeze({
 /** A label that stands in, for counting only, for an own photo the pictures step labels before it places it. */
 const TO_BE_LABELLED = 'to be labelled'
 const count = (n, one, many) => `${n} ${n === 1 ? one : many}`
+/**
+ * How the customer reads the generated count: an estimate, for the own photos are labelled only when the site is built,
+ * and every spot left without a fitting photo of theirs then gets a drawn picture (D45).
+ */
+const estimateOf = (n) =>
+  `About ${count(n, 'picture', 'pictures')} will be drawn for spots with no fitting photo of yours; the final count follows your photos.`
 
 /**
  * The pictures summary, counted by the picture policy (`picture-policy.mjs`, #595): frames filled by the business's own
  * photos (an unlabelled own photo counts: the pictures step labels it before use), and frames to be generated (every frame
  * that may be drawn and has no own photo, no cap, D45), never for a person. Items an image block drops for lack of an own photo leave the pages and
  * are reported as left out, as are frames that stay without a picture. The pictures step assigns each photo to a frame;
- * this is the count the customer approves.
+ * the generated count is an estimate the customer reads ("about N pictures will be drawn"), never a cap: a photo
+ * counted here that turns out unfit when it is labelled is replaced by a drawing.
  * @param {object[]} pages placed pages of the plan
  * @param {Map<string, object>} blocks block id -> its description (block store or library)
  * @param {ReturnType<import('./plan-data.mjs').planDataOf>} data
@@ -131,7 +138,7 @@ export function picturesOf(pages, blocks, data) {
     own: { frames: counts.own, from: counts.own > 0 ? from : [] },
     generated: {
       frames: counts.generated,
-      ...(counts.generated > 0 ? { reason: 'Some picture spots have no fitting photo of yours.' } : {})
+      ...(counts.generated > 0 ? { reason: estimateOf(counts.generated) } : {})
     }
   }
   const leftOut = reduced.map(({ item, reason }) => ({

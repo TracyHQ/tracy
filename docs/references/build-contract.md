@@ -157,9 +157,11 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   on every theme, each theme on its own (`accent`, `accentDark`); when no lightness reads, black on light and white on
   dark as for a logo with no hue. Never the template's accent.
 - **`pictures`**: `own.frames` filled by the business's own photos (with `from`, the sources), and `generated.frames`
-  to be generated, with a `reason` when above zero. There is no cap per site (D45): every frame that may be drawn and
-  has no own photo is counted. An item shown in several frames of the same declared shape on different pages is
-  drawn once and counted once; another shape, the same page or a frame without a declared size gets its own drawing.
+  to be generated, with a `reason` when above zero. `generated.frames` is an estimate, never a cap (D45): the
+  customer reads "about N pictures will be drawn", and the pictures step draws every drawable frame left without a
+  fitting own photo once the photos are labelled. An item shown in several frames on different pages whose aspect
+  ratios lie within 15% of each other is drawn once and counted once, at the largest width and height among them;
+  another ratio, the same page or a frame without a declared size gets its own drawing.
 - **`look`** also: an own logo names its `source`; a text logo has none.
 - **`assumptions`**: what was assumed where sources were silent or disagree. Each has a unique `id`, says what was
   assumed (`said`) and names the plan `field` it set, which must be a field the customer can change, so every

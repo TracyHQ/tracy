@@ -196,7 +196,7 @@ test('only gallery items are reduced before pictures are generated; every servic
   assert.equal(summary.pictures.generated.frames, result.counts.generated)
 })
 
-test('no cap on drawn pictures (D45): every drawable frame without an own photo is drawn, within the approved count', async () => {
+test('no cap on drawn pictures (D45): every drawable frame without an own photo is drawn, whatever the plan estimates', async () => {
   const blocks = pictureBlocks()
   blocks.set('service-cards', { ...blocks.get('service-cards'), items: { min: 4, max: 4 } })
   const plan = picturePlan()
@@ -224,8 +224,8 @@ test('no cap on drawn pictures (D45): every drawable frame without an own photo 
   assert.deepEqual(drawable, [], 'no drawable frame stays empty')
   const approved = picturePlan({ pictures: { own: { frames: 0, from: [] }, generated: { frames: 0 } } })
   const none = await run({ plan: approved })
-  assert.equal(none.counts.generated, 0)
-  assert.equal(frame(none, `home.home-b2.${SERVICES[0]}.photo`).reason, 'over_approved_count')
+  assert.ok(none.counts.generated > 0, 'an estimate of zero is not a cap')
+  assert.equal(frame(none, `home.home-b2.${SERVICES[0]}.photo`).source, 'generated')
 })
 
 test('no stock photo and no generated picture of a person appears', async () => {

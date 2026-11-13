@@ -61,7 +61,7 @@ test('every planned service stays: its own photo first, then a drawn one', async
   assert.equal(summary.leftOut.filter((e) => e.kind === 'item').length, 0)
 })
 
-test('a service with neither an own nor a drawn picture stays, with its picture frame left empty', async () => {
+test('a service without an own photo stays and is drawn even when the plan estimated no drawing (D45)', async () => {
   const plan = picturePlan({ pictures: { own: { frames: 1, from: [] }, generated: { frames: 0 } } })
   const result = await run({ plan })
   assert.deepEqual(result.reduced, [])
@@ -71,7 +71,7 @@ test('a service with neither an own nor a drawn picture stays, with its picture 
     [...SERVICES]
   )
   for (const f of services.filter((f) => f.item !== SERVICES[2]))
-    assert.deepEqual([f.source, f.reason], ['none', 'over_approved_count'], `${f.item} keeps an empty frame`)
+    assert.equal(f.source, 'generated', `${f.item} is drawn: the estimate is never a cap`)
 })
 
 test('a person without an own photo shows their initials, never an empty frame and never a drawn person', async () => {
@@ -125,7 +125,7 @@ test('a photo smaller than its frame needs is never enlarged into it', () => {
 
 test('a person photo below the floor is not used: the person shows their initials and the build says why', async () => {
   const profile = pictureProfile()
-  Object.assign(profile.items.person[0], { width: 300, height: 300 })
+  Object.assign(profile.items.person[0].fields['person.image'], { width: 300, height: 300 })
   const result = await run({ profile })
   assert.equal(frame(result, COACH_FRAME).source, 'initials')
   const unplaced = result.difference?.unplaced.find((u) => u.picture === `${COACH}:person.image`)

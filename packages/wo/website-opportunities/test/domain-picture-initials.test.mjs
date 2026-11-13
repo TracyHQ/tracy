@@ -59,7 +59,7 @@ test("a person item's own name field wins over a display label that carries a ro
   data.byId.get('person-mia').entry.label = 'Coach Mia'
   const decision = initialsDecisionOf({ person: 'person-mia' }, data)
   assert.equal(decision.substitute.initials, 'M')
-  // Without a name field the label is all there is: its role word stays.
+  // Without a name field the label is all there is: its leading role word is left out too (second review 13/11).
   delete data.byId.get('person-mia').source.fields['person.name']
-  assert.equal(initialsDecisionOf({ person: 'person-mia' }, data).substitute.initials, 'CM')
+  assert.equal(initialsDecisionOf({ person: 'person-mia' }, data).substitute.initials, 'M')
 })

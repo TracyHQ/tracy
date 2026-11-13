@@ -21,7 +21,7 @@ const PEOPLE = [
   ['person-oren-vale', 'Oren Vale']
 ]
 
-/** The florist with two invented staff on the home page, every bouquet on home, and no picture generated. */
+/** The florist with two invented staff on the home page and every bouquet on home; the plan estimates no drawing. */
 async function build() {
   const profile = boxingProfile()
   profile.items.person = PEOPLE.map(([id, name]) => ({
@@ -65,17 +65,21 @@ test('an initials frame goes through the order, the check and the memory site wi
   assert.ok(checkWriteOrder(broken).some((p) => p.code === 'person_picture_empty'))
 })
 
-test('a kept service with no picture keeps its text, and its frame is recorded hidden for the writer', async () => {
+test('a kept service whose picture frame ends empty keeps its text, and its frame is recorded hidden', async () => {
   const id = 'home.home-b4.service-wedding-table-set.image'
-  const frame = saved.pictures.frames.find((f) => f.id === id)
-  assert.deepEqual([frame.source, frame.reason], ['none', 'over_approved_count'])
-  const order = buildWriteOrder(saved)
+  // The policy draws every drawable frame (D45), so the empty frame a writer must still hide is set by hand here.
+  assert.equal(saved.pictures.frames.find((f) => f.id === id).source, 'generated')
+  const emptied = structuredClone(saved)
+  const frame = emptied.pictures.frames.find((f) => f.id === id)
+  for (const key of ['generate', 'reuses']) delete frame[key]
+  Object.assign(frame, { source: 'none', reason: 'drawing_unavailable' })
+  const order = buildWriteOrder(emptied)
   const item = placesOfOrder(order).find(({ place }) => place.at === 'home.home-b4.service-wedding-table-set')
   assert.equal(item.place.state, 'show')
   assert.equal(item.place.fields.find((e) => e.field === 'name').value, 'Wedding table set')
   const picture = order.pictures.find((p) => p.frame === id)
   assert.equal(picture.state, 'hidden')
-  assert.ok(order.hidden.some((h) => h.at === id && h.reason === 'over_approved_count' && h.picture === true))
+  assert.ok(order.hidden.some((h) => h.at === id && h.reason === 'drawing_unavailable' && h.picture === true))
   assert.deepEqual(checkWriteOrder(order), [])
   const { site } = await memorySite().apply(order)
   assert.deepEqual(site.pictures[id], { hidden: true })

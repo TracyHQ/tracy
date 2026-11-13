@@ -120,6 +120,15 @@ export function framesOfPlan(pages, blocks, data) {
 /** How the customer reads where an own picture came from, by its item's plan sources. */
 const fromOf = (data, itemId) => list(data.byId.get(itemId)?.entry?.sources).map((s) => s.name)
 
+/**
+ * The measured pixel size of a picture: the photo's own (its field's `width` and `height`), and for a gallery photo, the
+ * item itself, which is that photo. A service or a person item's size is never its photo's.
+ */
+function sizeOf(item, role, field) {
+  const from = field?.width > 0 && field?.height > 0 ? field : role === 'business.gallery_image' ? item : null
+  return from?.width > 0 && from?.height > 0 ? { width: from.width, height: from.height } : {}
+}
+
 /** A picture record of one image value of a profile item. */
 function recordOf(item, role, field, data) {
   const ref = field?.value
@@ -133,8 +142,7 @@ function recordOf(item, role, field, data) {
     label: isText(item.label) && role === 'business.gallery_image' ? item.label : null,
     ...(item.content ? { content: item.content } : {}),
     ...(typeof item.burnedInText === 'boolean' ? { burnedInText: item.burnedInText } : {}),
-    ...(item.width ? { width: item.width } : {}),
-    ...(item.height ? { height: item.height } : {}),
+    ...sizeOf(item, role, field),
     // Honoured when a source sets it; a picture the business published itself is its own (see the head of the file).
     stock: item.stock === true || item.origin === 'stock',
     from: fromOf(data, item.id)

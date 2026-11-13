@@ -10,7 +10,7 @@ import { IconSelectionError } from './icon-ranking.mjs'
 import { selectIcons } from './icon-selection.mjs'
 import { unfitReason } from './picture-fit.mjs'
 import { labelOwnPictures, PicturePolicyError } from './picture-labelling.mjs'
-import { approvedCountOf, assignPictures } from './picture-policy.mjs'
+import { assignPictures } from './picture-policy.mjs'
 import { planDataOf } from './plan-data.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -31,12 +31,13 @@ const leftOutOf = (frames) =>
     .map((f) => ({ frame: f.id, reason: f.reason }))
 
 /**
- * How the build differs from what the customer approved: the approved own and generated counts against the placed ones,
- * with every own picture left unplaced and every empty frame, each with its reason. Null when they agree.
+ * How the build differs from the plan's estimate: the estimated own and generated counts against the placed ones, with
+ * every own picture left unplaced and every empty frame, each with its reason. Null when they agree. The counts are a
+ * report only: every drawable frame without a fitting own photo is drawn whatever the estimate said (D45).
  */
 export function differenceOf(assignment, approved, pictures) {
-  const own = approved?.own?.frames
-  const want = { own: Number.isInteger(own) ? own : null, generated: approvedCountOf(approved).count }
+  const whole = (n) => (Number.isInteger(n) && n >= 0 ? n : null)
+  const want = { own: whole(approved?.own?.frames), generated: whole(approved?.generated?.frames) }
   const placed = { own: assignment.counts.own, generated: assignment.counts.generated }
   if (want.own === placed.own && want.generated === placed.generated) return null
   const used = new Set(assignment.frames.filter((f) => f.source === 'own').map((f) => f.picture))
@@ -71,21 +72,20 @@ const planPages = (plan, Failure) => {
  *   business's own channel); `vision` is the standard build model's vision call (the labelling)
  * @returns {Promise<{frames: object[], reduced: object[], droppedFrames: object[], counts: object, notes: object[],
  *   leftOut: object[], difference: object | null, labelled: string[], prompt: {file: string, sha256: string} | null}>}
- *   `difference` is set whenever the placed own or generated count is not the approved one (`differenceOf`)
+ *   `difference` is set whenever the placed own or generated count is not the plan's estimate (`differenceOf`)
  */
 export async function placeBuildPictures({ plan, profile, blockStore, library = [], vision, pictures = [] }) {
   planPages(plan, PicturePolicyError)
   const data = planDataOf(profile)
   const records = [...ownPicturesOf(data), ...list(pictures)]
   const labelling = await labelOwnPictures({ pictures: records, vision })
-  // A plan with no pictures summary approved nothing: the count is read as zero and reported (`approvedCountOf`).
+  // The plan's pictures summary is an estimate: it is compared with what is placed (`difference`), never a cap.
   const approved = plan.pictures ?? {}
   const assignment = assignPictures({
     pages: plan.pages,
     blocks: blocksOf(blockStore, library),
     data,
-    pictures: labelling.pictures,
-    approved
+    pictures: labelling.pictures
   })
   return {
     ...assignment,

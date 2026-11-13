@@ -1,5 +1,5 @@
-// When a picture is shown again (ticket #595, review 13/11): a drawing or an own photo of an item is reused only in a
-// frame of the same shape class (portrait, landscape or square, by the frame's declared size), never on the same page,
+// When a picture is shown again (ticket #595, two reviews of 13/11): a drawing or an own photo of an item is reused
+// only in a frame whose aspect ratio lies within 15% (by the frame's declared size), never on the same page,
 // and an unused own photo of the item comes before a reused one. A frame without a size reuses nothing. Invented club
 // and pictures; no model is called.
 //
@@ -75,7 +75,7 @@ function run(pages, { second = false, coachSecond = false } = {}) {
     width: 2400,
     height: 1200
   }))
-  return assignPictures({ pages, blocks: blocks(), data, pictures })
+  return { ...assignPictures({ pages, blocks: blocks(), data, pictures }), pictures }
 }
 const at = (result, id) => result.frames.find((f) => f.id === id)
 
@@ -182,7 +182,7 @@ test("a person's own photo repeats where it fits, the same page and another shap
     ],
     'the real photo twice, never initials beside it'
   )
-  assert.deepEqual(reuseProblemsOf(once.frames), [])
+  assert.deepEqual(reuseProblemsOf(once.frames, once.pictures), [])
   const two = run([about(['c1', 'coach-wide'], ['c2', 'coach-square'])], { coachSecond: true })
   assert.notEqual(at(two, 'about.c1.portrait').picture, at(two, 'about.c2.portrait').picture)
 })

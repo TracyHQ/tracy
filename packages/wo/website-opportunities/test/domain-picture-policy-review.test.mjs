@@ -163,20 +163,25 @@ async function approvedAsPlaced() {
   }
 }
 
-test('a missing or invalid approved count allows no generated picture and says so', async () => {
-  for (const generated of [undefined, { frames: 2.5 }, { frames: '1' }, { frames: null }, {}]) {
+test('a missing or invalid estimate still draws every drawable frame: the count is never a cap (D45)', async () => {
+  const drawn = (await run()).counts.generated
+  for (const generated of [
+    undefined,
+    { frames: 2.5 },
+    { frames: '1' },
+    { frames: null },
+    {},
+    { frames: 0 }
+  ]) {
     const plan = picturePlan({
       pictures: generated === undefined ? undefined : { own: { frames: 0 }, generated }
     })
     const result = await run({ plan })
-    assert.equal(result.counts.generated, 0, JSON.stringify(generated))
-    assert.equal(result.notes[0].code, 'approved_count_invalid')
+    assert.equal(result.counts.generated, drawn, JSON.stringify(generated))
+    assert.deepEqual(result.notes, [])
   }
   const generatedFrame = { id: 'x', source: 'generated', generate: { people: false, stock: false } }
-  assert.equal(
-    pictureProblemsOf({ frames: [generatedFrame] }, [], { generated: 0 })[0].code,
-    'generated_over_approved'
-  )
+  assert.deepEqual(pictureProblemsOf({ frames: [generatedFrame] }, []), [])
 })
 
 test('no plan is a typed error; a stock gallery item dropped from the plan says so truthfully', async () => {

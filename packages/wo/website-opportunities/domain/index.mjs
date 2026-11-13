@@ -301,7 +301,7 @@ export {
   labellingRequest
 } from './picture-labelling.mjs'
 export { FRAME_SOURCES, pictureProblemsOf, videoFits } from './picture-policy-check.mjs'
-export { approvedCountOf, assignPictures } from './picture-policy.mjs'
+export { assignPictures } from './picture-policy.mjs'
 export {
   blocksOf,
   differenceOf,
