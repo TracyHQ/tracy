@@ -113,18 +113,23 @@ function ctaChoices(facts) {
 }
 
 /**
- * The generic main button labels offered when none of the found ones fits the template's button, shortest last, per
- * site language (by primary subtag; a language without its own list takes the English one).
+ * The short main button label of each channel, offered when none of the found labels fits the template's button,
+ * per site language (by primary subtag; a language without its own list takes the English one). Only the channels the
+ * business has are offered (never `Call` without a phone); `contact` is the channel of a business with none found.
  */
-const MAIN_BUTTON_FALLBACKS = Object.freeze({ en: ['Contact', 'Call', 'Go'] })
-const fallbackLabelsOf = (language) =>
-  MAIN_BUTTON_FALLBACKS[primary(String(language?.value ?? 'en'))] ?? MAIN_BUTTON_FALLBACKS.en
+const MAIN_BUTTON_FALLBACKS = Object.freeze({
+  en: { book: 'Book', call: 'Call', email: 'Email', message: 'Message', visit: 'Visit', contact: 'Contact' }
+})
+const fallbackChoicesOf = (channels, language, fits) => {
+  const labels = MAIN_BUTTON_FALLBACKS[primary(String(language?.value ?? 'en'))] ?? MAIN_BUTTON_FALLBACKS.en
+  return channels.map((c) => ({ id: c.id, label: labels[c.id] })).filter((c) => c.label && fits(c))
+}
 /** The needs profile's note when the main button is not asked about: its field is shorter than every fallback. */
 const MAIN_BUTTON_NOT_ASKED = (max) => ({
   from: 'rules',
   kind: MAIN_BUTTON_KIND,
   code: 'main_button_not_asked',
-  reason: `the template's main button holds ${max} characters, fewer than any label Tracy offers, so the page writer words it`,
+  reason: `the template's main button holds ${max} characters, fewer than any label Tracy offers for the business's channels, so the page writer words it`,
   scope: 'question'
 })
 
@@ -152,14 +157,13 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
   const questions = [...asked.contact]
   const max = cappedLength(FREE_TEXT_MAX['main-button'], MAIN_BUTTON_KIND, limits)
   // Never offer a choice the answer settling would reject, and never a question without one (Contract B): when no
-  // label fits the template's button, the first generic fallback that fits is offered. A button shorter than every
-  // fallback (a store error) is not asked about: the writer words it, and the profile says why.
+  // label fits the template's button, the short labels of the business's own channels that fit are offered. A button
+  // shorter than the short label of every channel it has is not asked about: the writer words it, and the profile
+  // says why.
   const fits = (c) => [...c.label].length <= max
-  const fitting = ctaChoices(facts).filter(fits)
-  const fallback = fallbackLabelsOf(language)
-    .map((label) => ({ id: 'contact', label }))
-    .find(fits)
-  const cta = fitting.length ? fitting : fallback ? [fallback] : []
+  const channels = ctaChoices(facts)
+  const fitting = channels.filter(fits)
+  const cta = fitting.length ? fitting : fallbackChoicesOf(channels, language, fits)
   const notes = []
   if (cta.length)
     questions.push(

@@ -85,8 +85,8 @@ export function placeOrder(counts, children) {
 /** The rows of one list for one parent, fitted and cut at `place`'s room; the rest is reported. */
 function plannedList(child, candidates, place, at, ctx) {
   const { kept, dropped } = fitCandidates(child, candidates, roomOf(child, place), ctx.limits)
-  for (const { candidate: c, code } of dropped)
-    ctx.dropped.push(reported({ ...at, ...(c.data ? { row: c.data } : { page: c.page }) }, code))
+  for (const { candidate: c, code, detail } of dropped)
+    ctx.dropped.push(reported({ ...at, ...(c.data ? { row: c.data } : { page: c.page }) }, code, detail))
   if (kept.length < minOf(child))
     ctx.dropped.push(reported({ ...at, rows: kept.length, min: minOf(child) }, 'list_below_min'))
   const offset = firstRowOf(child, place)

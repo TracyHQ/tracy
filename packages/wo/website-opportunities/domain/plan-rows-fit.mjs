@@ -8,11 +8,14 @@
 //   prompt asks for that order).
 // - `row_parts_order`: a schedule written times first (its first part holds a time, a later part none) for a list that
 //   has several fields of that kind: a time is never written into a day field, the row is not shown.
+// - `row_part_unclear`: a schedule of one part the detector reads as neither days nor times, or as both without a
+//   clear split (`schedule-parts.mjs`): the part is never guessed into a field, the row is not shown.
 // - `row_value_over_limit`: a part longer than the field it fills holds (the smallest limit of a stored place the
-//   field shares, `field-place-limits.mjs`): a data value is never shortened.
+//   field shares, `field-place-limits.mjs`): a data value is never shortened. Its report entry also says which
+//   `field`, its `limit` and the part's `length`.
 // - A list with a link field of a social kind takes its links by the icon step's rules (`icon-row-links.mjs`): a
 //   shortened link, a host that is no known network, a bare handle and a second link to one network never take a row.
-import { rowPartsOf } from './schedule-parts.mjs'
+import { rowPartsOf, unplacedCodeOf } from './schedule-parts.mjs'
 import { rowLinksOf, linkFieldOf } from './icon-row-links.mjs'
 import { limitOf } from './field-place-limits.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
@@ -29,6 +32,7 @@ export const CHILD_LIST_REASONS = Object.freeze({
   row_parts_over_fields: 'This row has more parts than the section has places for, so it is not shown.',
   row_value_over_limit: 'This row is longer than the section can show, so it is not shown.',
   row_parts_order: 'The times of this row come before its days, so it is not shown.',
+  row_part_unclear: 'It is unclear whether this row gives days or times, so it is not shown.',
   social_link_shortened: 'This is a shortened link, so the network it leads to is unknown.',
   social_network_unknown: 'This link is not on a social network the section can show.',
   social_handle_without_network: 'This handle does not say which network it is on.',
@@ -43,8 +47,8 @@ export const NO_LIST_REASON = 'No section of the template shows rows like this o
 /** Every reason a left out row may carry, to tell row entries from other left out entries. */
 export const ROW_REASONS = new Set([...Object.values(CHILD_LIST_REASONS), NO_LIST_REASON])
 
-/** A rows report entry: its code and the customer's reason. */
-export const reported = (at, code) => ({ ...at, code, reason: CHILD_LIST_REASONS[code] })
+/** A rows report entry: its code, the customer's reason and any `detail` (`row_value_over_limit`: field, limit, length). */
+export const reported = (at, code, detail) => ({ ...at, code, reason: CHILD_LIST_REASONS[code], ...detail })
 
 /**
  * Whether a field of a list row takes the row's data: a text field of a data kind, a link or a number; not derived,
@@ -60,7 +64,10 @@ export const takesData = (f) =>
   typeof f?.kind === 'string' &&
   roleOrigin(f.kind) === 'data'
 const dataFields = (child) => list(child?.fields).filter(takesData)
-/** Why the row values (data kind -> parts) cannot fill a row of `child`, or null when they can. */
+/**
+ * Why the row values (data kind -> parts) cannot fill a row of `child`, or null when they can: a code, or for
+ * `row_value_over_limit` `{code, field, limit, length}` (use `misfitCodeOf` for the code alone).
+ */
 export function rowMisfitOf(child, values, placeLimits) {
   const fields = dataFields(child)
   for (const [kind, parts] of Object.entries(values ?? {})) {
@@ -69,15 +76,22 @@ export function rowMisfitOf(child, values, placeLimits) {
     if (parts.length > own.length) return 'row_parts_over_fields'
     // Schedule parts go days first, times after: a time in the days or a day in the times is never written.
     const placed = rowPartsOf(kind, parts, fields)
-    if (placed === null) return 'row_parts_order'
-    if (placed.some((part, n) => part !== undefined && charCount(part) > limitOf(own[n], placeLimits)))
-      return 'row_value_over_limit'
+    if (placed === null) return unplacedCodeOf(parts)
+    for (const [n, part] of placed.entries()) {
+      if (part === undefined) continue
+      const limit = limitOf(own[n], placeLimits)
+      const length = charCount(part)
+      if (length > limit) return { code: 'row_value_over_limit', field: own[n].name, limit, length }
+    }
   }
   return null
 }
+/** The code of a `rowMisfitOf` result. */
+export const misfitCodeOf = (misfit) => (typeof misfit === 'string' ? misfit : (misfit?.code ?? null))
 
 /**
- * The candidates of one list for one parent, fitted and cut: `{kept, dropped}` with each dropped `{candidate, code}`.
+ * The candidates of one list for one parent, fitted and cut: `{kept, dropped}` with each dropped `{candidate, code,
+ * detail?}` (`detail`: the field, limit and length of a `row_value_over_limit`).
  * @param {object} child the list's declaration
  * @param {Array<{data?: string, page?: string, values: object}>} candidates in data order
  * @param {number} room how many rows the parent place holds
@@ -86,9 +100,16 @@ export function fitCandidates(child, candidates, room, placeLimits) {
   const dropped = []
   const fitting = []
   for (const c of candidates) {
-    const code = c.page === undefined ? rowMisfitOf(child, c.values, placeLimits) : null
-    if (code) dropped.push({ candidate: c, code })
-    else fitting.push(c)
+    const misfit = c.page === undefined ? rowMisfitOf(child, c.values, placeLimits) : null
+    const code = misfitCodeOf(misfit)
+    if (!code) fitting.push(c)
+    else if (typeof misfit === 'string') dropped.push({ candidate: c, code })
+    else
+      dropped.push({
+        candidate: c,
+        code,
+        detail: { field: misfit.field, limit: misfit.limit, length: misfit.length }
+      })
   }
   const link = linkFieldOf(list(child?.fields))
   if (!link) {

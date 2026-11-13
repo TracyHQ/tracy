@@ -5,11 +5,16 @@
 // A time is never written into the days field and a day never into the times field. Pure.
 //
 // - Day like: a day name or a span of days in English, French, German, Spanish, Italian or Portuguese (`Mon`, `Tue and
-//   Thu`, `Lundi`, `Montag`), `daily`, `weekends`.
-// - Time like: `18:00`, `7.30`, `18h30`, `20h`, `6 pm`, `18 Uhr`, `noon`, `midnight`, `9 to 5`.
-// - A row of one part that is time like fills the times and leaves the days to their no-data rule; one that is mixed
-//   is split when the days come first and the times after (`Mon to Fri 9:00 to 17:00`), else the row is not shown
-//   (`row_parts_order`). A row of two parts must be days then times.
+//   Thu`, `Lundi`, `Montag`), its three letter form (`Lun-Ven`, `Gio`, `Seg`), `daily`, `weekends`; two letter and one
+//   letter forms only in a group joined by a hyphen, a slash, an ampersand, a comma or a word such as `and`
+//   (`Mo-Fr`, `Tu & Th`, `M/W/F`, `Di, Do`).
+// - Time like: `18:00`, `7.30`, `18h30`, `20h`, `6 pm`, `18 Uhr`, `noon`, `midnight`, `9 to 5`, `10-12` (hyphen or en
+//   dash). An age range (`Kids 6 to 12`, `ages 6 to 12`) is not a time.
+// - A row of one part that is time like fills the times and leaves the days to their no-data rule; one that is day
+//   like fills the days; one that is mixed is split when the days come first and the times after (`Mon to Fri 9:00
+//   to 17:00`); a mixed part whose times come first is not shown (`row_parts_order`), and a part the detector cannot
+//   read as days or times, or a mixed one it cannot split, is never guessed into a field (`row_part_unclear`). A row
+//   of two parts must be days then times.
 
 export const SCHEDULE_KINDS = Object.freeze(['offering.schedule'])
 
@@ -59,14 +64,57 @@ const DAY_WORDS = [
   'quinta',
   'sexta'
 ]
-const DAY = new RegExp(`(?<!\\p{L})(?:${DAY_WORDS.join('|')})(?!\\p{L})`, 'iu')
+// Three letter forms of the languages above that the full names do not already cover (`mon`, `tue` and so on do).
+const SHORT_DAYS = [
+  'lun',
+  'mar',
+  'mer',
+  'mi[eé]',
+  'jeu',
+  'jue',
+  'gio',
+  'ven',
+  'vie',
+  'sam',
+  's[aá]b',
+  'dim',
+  'dom'
+]
+const PT_SHORT_DAYS = ['seg', 'ter', 'qua', 'qui', 'sex']
+// Two and one letter forms (English, German): a day only in a group of days.
+const GROUP_ONLY_DAYS = [
+  'mo',
+  'tu',
+  'we',
+  'th',
+  'fr',
+  'sa',
+  'su',
+  'di',
+  'mi',
+  'do',
+  'so',
+  'm',
+  't',
+  'w',
+  'r',
+  'f',
+  's'
+]
+const ONE_DAY = [...DAY_WORDS, ...SHORT_DAYS, ...PT_SHORT_DAYS].join('|')
+const ANY_DAY = `(?:${[ONE_DAY, ...GROUP_ONLY_DAYS].join('|')})\\.?(?!\\p{L})`
+const GROUP_JOIN = '\\s*(?:[-/&+,\\u2013]|and|to|et|und|bis|au)\\s*'
+const DAY = new RegExp(`(?<!\\p{L})(?:(?:${ONE_DAY})(?!\\p{L})|${ANY_DAY}(?:${GROUP_JOIN}${ANY_DAY})+)`, 'iu')
+// A number range right after one of these words is an age range, not a time.
+const AGE_WORDS =
+  'kids|ages?|aged|child(?:ren)?|juniors?|teens?|years?|yrs|enfants|kinder|ni[nñ]os|bambini|crian[cç]as'
 const TIME_FORMS = [
   '\\d{1,2}[:.h]\\d{2}(?!\\d)',
   '\\d{1,2}\\s*(?:a\\.?m\\.?|p\\.?m\\.?)(?!\\p{L})',
   '\\d{1,2}\\s*h(?!\\p{L})',
   '\\d{1,2}\\s*uhr(?!\\p{L})',
   '(?<!\\p{L})(?:noon|midnight|midi|minuit|mittag|mitternacht)(?!\\p{L})',
-  '(?<![\\d.,])\\d{1,2}\\s*(?:-|to|until|till|\\u00e0|bis|a)\\s*\\d{1,2}(?![\\d.,:]|\\s*(?:%|\\p{L}))'
+  `(?<!(?:${AGE_WORDS})\\s*)(?<![\\d.,])\\d{1,2}\\s*(?:-|\\u2013|to|until|till|\\u00e0|bis|a)\\s*\\d{1,2}(?![\\d.,:]|\\s*(?:%|\\p{L}))`
 ]
 const TIME = new RegExp(TIME_FORMS.join('|'), 'iu')
 
@@ -89,18 +137,30 @@ export function splitMixedPart(part) {
 
 /**
  * The parts of a schedule row placed for a list with two schedule fields: `[days, times]`, either one undefined when
- * the row lacks it, or null when the parts cannot be placed without a day in the times or a time in the days.
+ * the row lacks it, or null when the parts cannot be placed without a day in the times, a time in the days or a
+ * guess (`unplacedCodeOf` says why).
  */
 export function daysAndTimesOf(parts) {
   if (parts.length === 1) {
     const kind = partKindOf(parts[0])
     if (kind === 'time') return [undefined, parts[0]]
+    if (kind === 'day') return [parts[0]]
     if (kind === 'mixed') return splitMixedPart(parts[0])
-    return [parts[0]]
+    return null
   }
   if (parts.length !== 2) return parts
   const [first, second] = parts.map(partKindOf)
   return ['day', 'other'].includes(first) && ['time', 'other'].includes(second) ? parts : null
+}
+
+/**
+ * Why `daysAndTimesOf` placed no parts: `row_parts_order` when a time comes before the days, `row_part_unclear` when
+ * a single part reads as neither days nor times, or as both in a way that cannot be split.
+ */
+export function unplacedCodeOf(parts) {
+  if (parts.length !== 1) return 'row_parts_order'
+  const text = String(parts[0])
+  return partKindOf(text) === 'mixed' && TIME.exec(text)?.index === 0 ? 'row_parts_order' : 'row_part_unclear'
 }
 
 /**

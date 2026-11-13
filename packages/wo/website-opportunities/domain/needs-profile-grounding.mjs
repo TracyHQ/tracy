@@ -92,7 +92,10 @@ const withoutMoney = (text) => String(text).replace(MONEY, ' ')
  * Whether a price `value` is in `evidence`: each of its amounts written as MONEY in the quote (never an equal number
  * that is not a price, `20` in "a 20 minute class"), its currency signs and its words.
  */
-function priceIn(value, evidence) {
+function priceIn(rawValue, rawEvidence) {
+  // A space, a no-break space or a narrow no-break space may group thousands (`1 200 €` is `€1,200`).
+  const joined = (text) => String(text).replace(/(?<=\d)[ \u00a0\u202f](?=\d{3}(?!\d))/gu, '')
+  const [value, evidence] = [joined(rawValue), joined(rawEvidence)]
   const amounts = amountsOf(value)
   const quoted = new Set(moneyIn(evidence))
   const words = tokenKey(evidence).split(' ')
@@ -164,11 +167,11 @@ export const evidenceLongEnough = (evidence) =>
 
 /**
  * Whether `evidence` proves one part of a row value (ticket #615): a row's quote is the row itself, so every part of
- * every data kind, a summary kind's included, must stand inside it, whole tokens in order (a phone, an email and a
- * link as for any fact).
+ * every data kind, a summary kind's included, must stand inside it, whole tokens in order (a phone, an email, a link
+ * and a price as for any fact: a row price is an amount the quote writes as money).
  */
 export function rowProvenBy(role, value, evidence) {
-  if (role === 'contact.phone' || role === 'contact.email' || role.endsWith('_url'))
+  if (PRICE_ROLES.has(role) || role === 'contact.phone' || role === 'contact.email' || role.endsWith('_url'))
     return literalIn(role, value, evidence)
   return tokensIn(value, evidence)
 }

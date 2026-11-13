@@ -138,16 +138,16 @@ test('the main button question always offers a choice that fits, falling back to
   const labels = (limit) => button(limit).choices.map((c) => c.label)
   assert.deepEqual(labels(12), ['Call us'])
   assert.deepEqual(labels(6), ['Call'])
-  assert.deepEqual(labels(3), ['Go'])
-  for (const limit of [12, 6, 3]) {
+  assert.deepEqual(labels(4), ['Call'])
+  for (const limit of [12, 6, 4]) {
     const problems = []
     questionProblems(button(limit), (at, message) => problems.push(`${at}: ${message}`))
     assert.deepEqual(problems, [], String(limit))
     assert.equal(button(limit).choices.filter((c) => c.recommended).length, 1)
   }
   // A typed label within the limit settles too, and the offered choice settles to its label.
-  const limits = new Map([['contact.cta_label', 3]])
-  const q = button(3)
+  const limits = new Map([['contact.cta_label', 4]])
+  const q = button(4)
   const settle = (fields) =>
     settleAnswers(
       { questions: [q], facts, sources: site },
@@ -155,9 +155,9 @@ test('the main button question always offers a choice that fits, falling back to
       limits
     )
   assert.equal(settle({ text: 'Hi' }).profile.facts['contact.cta_label'][0].value, 'Hi')
-  assert.equal(settle({ choice: q.choices[0].id }).profile.facts['contact.cta_label'][0].value, 'Go')
-  // A button shorter than every fallback is not asked about; the profile says why.
-  const none = ask(1)
+  assert.equal(settle({ choice: q.choices[0].id }).profile.facts['contact.cta_label'][0].value, 'Call')
+  // A button shorter than the short label of every channel the business has is not asked about; the profile says why.
+  const none = ask(3)
   assert.equal(
     none.questions.find((q) => q.topic === 'main-button'),
     undefined
