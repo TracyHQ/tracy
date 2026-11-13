@@ -5,19 +5,25 @@
 //   - a logo in black, white or grey only (no colour of it has a hue): black on a light theme and white on a dark theme,
 //     for the themes the template has, recorded as `ACCENT_LOGO_WITHOUT_HUE`, never the template's accent;
 //   - the kept accent is itself a colour measured from the logo: the business's own colour, `ACCENT_FROM_LOGO`;
-//   - any other kept accent (a logo with a hue the step could not wear, or a logo whose colours were never measured) is
-//     not covered by a rule: `ACCENT_UNSETTLED`, and no plan is composed from it.
+//   - a logo with a hue the step could not wear (D44): the logo colour with its hue kept and its lightness moved until
+//     buttons read on every theme (`brand-look-adjust.mjs`), `ACCENT_LOGO_ADJUSTED`; when no lightness reads, black on
+//     light and white on dark as for a logo with no hue, `ACCENT_LOGO_UNREADABLE`; never the template's accent;
+//   - a logo whose colours were never measured: `ACCENT_LOGO_UNMEASURED`, and no plan is composed from it.
 // `accentOfBrandFile` is the one place these rules live.
 import { MIN_RATIO, contrastOf, hexOf, isNeutral } from './brand-hue.mjs'
+import { adjustedAccentOf, adjustedSaid, logoColourOf } from './brand-look-adjust.mjs'
+import { brandColoursOf, themesOf, wordsOnAccentOf } from './brand-look-kit.mjs'
+
+export { themesOf }
 
 export const ACCENT_FROM_LOGO = 'logo'
 export const ACCENT_LOGO_WITHOUT_HUE = 'logo-without-hue'
 export const ACCENT_NO_LOGO = 'template-accent-no-logo'
-export const ACCENT_UNSETTLED = 'unsettled-kept-template'
+export const ACCENT_LOGO_ADJUSTED = 'logo-adjusted'
+export const ACCENT_LOGO_UNREADABLE = 'logo-hue-unreadable'
+export const ACCENT_LOGO_UNMEASURED = 'logo-colours-unmeasured'
 /** The accent of a logo with no hue, per theme. */
 export const NO_HUE_ACCENT = Object.freeze({ light: '#000000', dark: '#ffffff' })
-/** Plain text for an accent button when no text colour of the template reads on it. */
-const PLAIN_WORDS = Object.freeze(['#ffffff', '#000000'])
 
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -29,16 +35,6 @@ function logoColoursOf(brief) {
   return [...list(brand.colors).map((c) => c?.hex), brand.accent?.hex].map(hexOf).filter(Boolean)
 }
 
-/** The template's colours of the kit: the step chain's kit value `{ref, doc}` or the kit document itself. */
-const brandColoursOf = (kit) => kit?.doc?.site?.brandColours ?? kit?.site?.brandColours ?? null
-
-/** The themes the template has, by the ground of each of its sides; both when the kit names no side. */
-export function themesOf(kit) {
-  const sides = list(brandColoursOf(kit)?.sides)
-  const found = ['light', 'dark'].filter((theme) => sides.some((s) => s?.groundSide === theme))
-  return found.length ? found : ['light', 'dark']
-}
-
 /**
  * The black and white accent for the themes the template has: the accent of each theme, the colour words take on an
  * accent button (the template's own text colour for its accent, `primary.wordsOn`, that reads 3:1; else plain white or
@@ -48,14 +44,8 @@ export function themesOf(kit) {
 function noHueOf(kit) {
   const colours = brandColoursOf(kit)
   const themes = themesOf(kit)
-  const wordsOn = list(colours?.primary?.wordsOn).map(hexOf).filter(Boolean)
   const onAccent = {}
-  for (const theme of themes) {
-    const accent = NO_HUE_ACCENT[theme]
-    onAccent[theme] =
-      wordsOn.find((w) => contrastOf(w, accent) >= MIN_RATIO) ??
-      PLAIN_WORDS.find((w) => contrastOf(w, accent) >= MIN_RATIO)
-  }
+  for (const theme of themes) onAccent[theme] = wordsOnAccentOf(kit, NO_HUE_ACCENT[theme])
   for (const side of list(colours?.sides)) {
     const accent = NO_HUE_ACCENT[side?.groundSide === 'light' ? 'light' : 'dark']
     const ratio = contrastOf(accent, side?.ground)
@@ -67,14 +57,26 @@ function noHueOf(kit) {
   return { themes, onAccent }
 }
 
+/** Black on light and white on dark, for the themes the template has (the no hue rule), recorded as `from`. */
+function noHueAccentOf(kit, from, brandColour, why) {
+  if (!kit)
+    return { problem: 'the template kit is needed for a logo with no hue (its themes and button text)' }
+  const noHue = noHueOf(kit)
+  if (noHue.problem) return { problem: noHue.problem }
+  const [first, second] = noHue.themes
+  const dark = second ? { dark: NO_HUE_ACCENT[second] } : {}
+  return { hex: NO_HUE_ACCENT[first], ...dark, onAccent: noHue.onAccent, from, brandColour, say: null, why }
+}
+
 /**
  * The accent of one brand file.
  * @param {{brandFile: object, brief: object, kit: object}} input `kit`: the template kit the brand step ran on (the
- *   step chain's kit value `{ref, doc}` or the kit document); required when the logo has no hue
+ *   step chain's kit value `{ref, doc}` or the kit document); required when the logo has no hue or its colour is
+ *   adjusted. `minRatio` (3:1) only to test the fallback of an adjusted colour
  * @returns {{hex: string | null, dark?: string, onAccent?: Record<string, string>, from: string,
  *   brandColour: string | null, say: string | null, why: string | null} | {problem: string}}
  */
-export function accentOfBrandFile({ brandFile, brief, kit }) {
+export function accentOfBrandFile({ brandFile, brief, kit, minRatio = MIN_RATIO }) {
   const colours = brandFile?.colours ?? {}
   const why = isText(colours.why) ? colours.why : null
   const plain = (hex, from, extra = {}) => ({ hex, ...extra, from, brandColour: null, say: null, why })
@@ -96,19 +98,25 @@ export function accentOfBrandFile({ brandFile, brief, kit }) {
     return plain(kept, ACCENT_NO_LOGO)
   }
   const measured = logoColoursOf(brief)
-  if (measured.length > 0 && measured.every(isNeutral)) {
-    if (!kit)
-      return { problem: 'the template kit is needed for a logo with no hue (its themes and button text)' }
-    const noHue = noHueOf(kit)
-    if (noHue.problem) return { problem: noHue.problem }
-    const [first, second] = noHue.themes
-    return plain(NO_HUE_ACCENT[first], ACCENT_LOGO_WITHOUT_HUE, {
-      ...(second ? { dark: NO_HUE_ACCENT[second] } : {}),
-      onAccent: noHue.onAccent
-    })
-  }
+  if (measured.length > 0 && measured.every(isNeutral))
+    return noHueAccentOf(kit, ACCENT_LOGO_WITHOUT_HUE, null, why)
   // The step keeps the template's accent when the brand colour is that accent (the gate's own rule): the colour is the
   // business's all the same.
   if (kept && measured.includes(kept)) return plain(kept, ACCENT_FROM_LOGO)
-  return plain(null, ACCENT_UNSETTLED)
+  const logoColour = logoColourOf(brief)
+  if (!logoColour) return plain(null, ACCENT_LOGO_UNMEASURED)
+  if (!kit)
+    return { problem: 'the template kit is needed to adjust the logo colour (its themes and button text)' }
+  const adjusted = adjustedAccentOf(logoColour, kit, { minRatio })
+  if (!adjusted) return noHueAccentOf(kit, ACCENT_LOGO_UNREADABLE, logoColour, why)
+  const [first, second] = adjusted.themes
+  return {
+    hex: adjusted.accents[first],
+    ...(second ? { dark: adjusted.accents[second] } : {}),
+    onAccent: adjusted.onAccent,
+    from: ACCENT_LOGO_ADJUSTED,
+    brandColour: logoColour,
+    say: adjustedSaid(adjusted),
+    why
+  }
 }

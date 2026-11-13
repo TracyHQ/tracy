@@ -124,6 +124,11 @@ const composeClub = () =>
   })
 /** The brand step's look record of an invented business of #616's fixtures. */
 const recordOf = ({ brandFile, brief }) => brandLookOf({ brandFile, brief })
+/** A brand whose logo colours research never measured. */
+const unmeasured = ({ brandFile, brief }) => ({
+  brandFile,
+  brief: { brand: { ...brief.brand, colorsFrom: undefined } }
+})
 
 test(
   'research from an invented link: running at once, then the profile and its questions',
@@ -242,8 +247,8 @@ test(
     for (const [brandStep, code] of [
       [async () => ({ website: { colors: [{ hex: '#1F7A4D', role: 'primary' }] } }), 'brand_missing'],
       [async () => null, 'brand_missing'],
-      // The brand step kept the template accent for a blue logo: no rule of #616 covers it.
-      [async () => recordOf(brands.saltmarshKayaks()), 'brand_accent_unsettled']
+      // The brand step kept the template accent for a logo whose colours were never measured: no rule of #616 reads it.
+      [async () => recordOf(unmeasured(brands.saltmarshKayaks())), 'brand_logo_colours_unmeasured']
     ]) {
       const t = server({ buildModel: async () => model, brandStep, buildChatOn: async () => true })
       // A brand step that stopped for this template answers again as stopped: the next case starts afresh.

@@ -153,6 +153,9 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   light theme (`accent`) and white on the dark theme (`accentDark`). Without it, `accent` is worn on both themes.
   `accent` is the light theme's colour, or the only theme's colour when the template has one theme (a dark only
   template with a logo of no hue has `accent` white and no `accentDark`).
+  A logo with a hue the brand step could not wear (D44) keeps its hue with the lightness moved until buttons read 3:1
+  on every theme, each theme on its own (`accent`, `accentDark`); when no lightness reads, black on light and white on
+  dark as for a logo with no hue. Never the template's accent.
 - **`pictures`**: `own.frames` filled by the business's own photos (with `from`, the sources), and `generated.frames`
   to be generated, with a `reason` when above zero. There is no cap per site (D45): every frame that may be drawn and
   has no own photo is counted, and an item shown in several frames is drawn once and counted once.

@@ -123,6 +123,27 @@ export const saltmarshKayaks = () => ({
   })
 })
 
+/** A cider maker whose logo is a pale lemon the step could not wear on the template's buttons (it kept the accent). */
+export const lemonGroveCider = () => ({
+  brief: {
+    brand: {
+      name: 'Lemon Grove Cider',
+      colorsFrom: 'logo',
+      colors: [
+        { hex: '#3a3a3a', role: 'primary' },
+        { hex: '#fff3a8', role: 'accent' }
+      ],
+      logo: 'logo-lgc',
+      logoResearch: { status: 'found', chosen: { mediaId: 'logo-lgc', source: 'website' } }
+    }
+  },
+  brandFile: file({
+    colours: kept('The pale lemon reads on no button of the template, so the template accent stays.'),
+    material: { mediaId: 'logo-lgc' },
+    mark: 'cut'
+  })
+})
+
 /** An invented template kit with a light and a dark theme, and the colours its accent buttons take for words. */
 /** `themes` keeps only some of its sides: `['dark']` for a dark only template. */
 export const lightAndDarkKit = ({

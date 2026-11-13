@@ -12,7 +12,8 @@
  * 🔒 THE PLAN NEVER SHOWS THE TEMPLATE'S LOOK (decision D40). Compose reads the business's brand from
  * `brandStep({research, template, kit})`: the pre site brand step of #616 (`brand-before-site.js`), which answers its
  * look record (`brandLookOf`). The rules of what that record allows are #616's and live in the WO package: the plan
- * composer refuses no record (`brand_missing`) and a kept template accent no rule covers (`brand_accent_unsettled`)
+ * composer refuses no record (`brand_missing`) and a kept template accent whose logo colours were never measured
+ * (`brand_logo_colours_unmeasured`)
  * before any model call, and keeps the template accent only where the product owner's rule says so (no logo at all,
  * said to the customer). Nothing here re-decides them, and the composer is never asked for its test-only fallback.
  */

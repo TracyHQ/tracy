@@ -26,7 +26,7 @@ import { putComposed, recordFault } from './store.js'
 /** The failures that mean the business's own look could not be shown (#616): the owner reads the brand sentence. */
 const BRAND_CODES = new Set([
   'brand_missing',
-  'brand_accent_unsettled',
+  'brand_logo_colours_unmeasured',
   'brand_step_failed',
   'brand_file_unreadable',
   'brand_input_missing'

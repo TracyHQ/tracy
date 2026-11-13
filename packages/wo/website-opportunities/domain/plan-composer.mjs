@@ -69,7 +69,8 @@ export function blockMapOf(blockStore, library = []) {
  * in the result is the settled profile: the page writer reads its item fields. The look comes from the brand step's
  * record (`brandLookOf`, #616); only `allowTemplateLook: true`, for tests, keeps the old template fallback.
  * @throws {PlanComposerError} `answer_invalid` when an answer does not fit its question; `brand_missing` without a
- *   brand record; `brand_accent_unsettled` when the brand step kept the template accent in a case no rule covers
+ *   brand record; `brand_logo_colours_unmeasured` when the brand step kept the template accent and the logo's colours
+ *   were never measured
  */
 export function composerContextOf({
   profile: given,

@@ -3,6 +3,8 @@
 // gate runs it on every composed plan (`plan-gate.mjs`), so a line the model writes is held to it too. Pure.
 import {
   ACCENT_FROM_LOGO,
+  ACCENT_LOGO_ADJUSTED,
+  ACCENT_LOGO_UNREADABLE,
   ACCENT_LOGO_WITHOUT_HUE,
   ACCENT_NO_LOGO,
   NO_HUE_ACCENT
@@ -32,8 +34,8 @@ const NO_HUE_PAIRS = [
  * Every problem of the plan's look:
  * - `template_accent`: the template's accent while the recorded source is neither the no logo case nor the logo whose
  *   own colour it is;
- * - `neutral_accent`: a black, grey or white accent whose source is not a logo without hue, or not black on light and
- *   white on dark (a no logo plan keeps the template's own accent, neutral or not);
+ * - `neutral_accent`: a black, grey or white accent whose source is not a logo without hue (or a logo whose hue reads
+ *   at no lightness, D44), or not black on light and white on dark (a no logo plan keeps the template's own accent, neutral or not);
  * - `template_logo`: the template's logo, or a logo whose kind disagrees with its recorded source;
  * - `template_look_said`: a line naming the template's (or demo's) logo, or its colour or accent value outside the no
  *   logo case.
@@ -51,8 +53,11 @@ export function lookProblemsOf({ plan, template, lookSources }) {
   const templateAccent = lower(template?.accent)
   const from = lookSources?.accent?.from
   const noLogo = from === ACCENT_NO_LOGO
-  // A logo whose own colour is the template's accent wears it as the business's colour, recorded as such.
-  const ownColour = from === ACCENT_FROM_LOGO && lookSources?.accent?.sameAsTemplate === true
+  // A logo whose own colour (as measured, or adjusted to read, D44) is the template's accent wears it as the business's
+  // colour, recorded as such.
+  const ownColour =
+    (from === ACCENT_FROM_LOGO || from === ACCENT_LOGO_ADJUSTED) &&
+    lookSources?.accent?.sameAsTemplate === true
   if (templateAccent && [accent, accentDark].includes(templateAccent) && !noLogo && !ownColour)
     add(
       'template_accent',
@@ -62,7 +67,7 @@ export function lookProblemsOf({ plan, template, lookSources }) {
   const keptNoLogo = noLogo && accent === templateAccent && !accentDark
   if ((isNeutral(accent) || isNeutral(accentDark)) && !keptNoLogo) {
     const pair = NO_HUE_PAIRS.some(([a, d]) => a === accent && d === accentDark)
-    if (from !== ACCENT_LOGO_WITHOUT_HUE || !pair)
+    if ((from !== ACCENT_LOGO_WITHOUT_HUE && from !== ACCENT_LOGO_UNREADABLE) || !pair)
       add(
         'neutral_accent',
         'look.accent',

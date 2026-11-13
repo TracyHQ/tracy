@@ -6,14 +6,24 @@
 // `brand-look-accent.mjs` (the product owner's rules of 13/11), never by the template silently.
 import {
   ACCENT_FROM_LOGO,
+  ACCENT_LOGO_ADJUSTED,
+  ACCENT_LOGO_UNMEASURED,
+  ACCENT_LOGO_UNREADABLE,
   ACCENT_LOGO_WITHOUT_HUE,
   ACCENT_NO_LOGO,
-  ACCENT_UNSETTLED,
   accentOfBrandFile
 } from './brand-look-accent.mjs'
+import { unreadableSaid } from './brand-look-adjust.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 
-export { ACCENT_FROM_LOGO, ACCENT_LOGO_WITHOUT_HUE, ACCENT_NO_LOGO, ACCENT_UNSETTLED }
+export {
+  ACCENT_FROM_LOGO,
+  ACCENT_LOGO_ADJUSTED,
+  ACCENT_LOGO_UNMEASURED,
+  ACCENT_LOGO_UNREADABLE,
+  ACCENT_LOGO_WITHOUT_HUE,
+  ACCENT_NO_LOGO
+}
 
 /** The schema of the record `brandLookOf` returns, and the brand file version it reads (prompt v10). */
 export const BRAND_LOOK_SCHEMA = 'tracy-brand-look/v1'
@@ -62,7 +72,8 @@ const madeLogo = (brandFile) =>
  * The look record of one brand file: the accent with where it came from, and the logo with where it came from.
  * @param {{brandFile: object, brief: object, kit?: object}} input the brand step's brand file (version 10), the research
  *   brief it was made from (only `brief.brand` is read: the logo's colours and research source) and the template kit
- *   it ran on (`accentOfBrandFile`; required when the logo has no hue)
+ *   it ran on (`accentOfBrandFile`; required when the logo has no hue or its colour is adjusted); `minRatio` only to
+ *   test the fallback of an adjusted colour
  * @returns {{schema: string, kit: string, name: string | null, accent: ReturnType<typeof accentOfBrandFile>,
  *   logo: {kind: 'own', from: string, source: string, mediaId: string, mark: string} |
  *     {kind: 'made', from: string, mark: string, mediaId: string | null}}} a `made` logo is the temporary one the step
@@ -70,12 +81,12 @@ const madeLogo = (brandFile) =>
  * @throws {BrandStepError} `brand_file_unreadable` (`noRerun`) when the file is not a brand file of the version read
  *   here, or its colours cannot be read with the kit
  */
-export function brandLookOf({ brandFile, brief, kit }) {
+export function brandLookOf({ brandFile, brief, kit, minRatio }) {
   const unreadable = (why) => new BrandStepError('brand_file_unreadable', why, {}, { noRerun: true })
   if (!isObject(brandFile) || brandFile.kind !== 'brand-file') throw unreadable('not a brand file')
   if (brandFile.version !== BRAND_FILE_VERSION)
     throw unreadable(`brand file version ${JSON.stringify(brandFile.version)}, ${BRAND_FILE_VERSION} is read`)
-  const accent = accentOfBrandFile({ brandFile, brief, kit })
+  const accent = accentOfBrandFile({ brandFile, brief, kit, minRatio })
   if (accent.problem) throw unreadable(accent.problem)
   const material = brandFile.logo?.material
   const mark = brandFile.logo?.mark?.decision
@@ -121,6 +132,8 @@ const brandMissing = (why) => new PlanComposerError('brand_missing', why, {}, { 
 const ACCENT_NAMES = Object.freeze({
   [ACCENT_FROM_LOGO]: 'Your logo',
   [ACCENT_LOGO_WITHOUT_HUE]: 'Your logo, which has no colour',
+  [ACCENT_LOGO_ADJUSTED]: 'Your logo, made darker or lighter to read',
+  [ACCENT_LOGO_UNREADABLE]: 'Your logo, whose colour cannot read on buttons',
   [ACCENT_NO_LOGO]: 'The template, as you have no logo'
 })
 
@@ -130,16 +143,16 @@ const ACCENT_NAMES = Object.freeze({
  * made logo is a text logo on the plan (Contract B knows `own` and `text` only), with a line saying it is temporary.
  * @param {{slug: string, name: string, version: string, accent?: string}} template the chosen template
  * @param {object} record the record of `brandLookOf`
- * @throws {PlanComposerError} `brand_missing` when there is no record or it is broken; `brand_accent_unsettled` when
- *   the brand step kept the template's accent in a case no rule covers
+ * @throws {PlanComposerError} `brand_missing` when there is no record or it is broken;
+ *   `brand_logo_colours_unmeasured` when the logo's colours were never measured, so no rule can read its accent
  */
 export function lookOfBrandRecord(template, record) {
   if (!isBrandLook(record)) throw brandMissing('no brand step result was given')
   const from = record.accent?.from
-  if (from === ACCENT_UNSETTLED)
+  if (from === ACCENT_LOGO_UNMEASURED)
     throw new PlanComposerError(
-      'brand_accent_unsettled',
-      'the brand step kept the template accent for a logo that is not colourless; no rule covers it',
+      'brand_logo_colours_unmeasured',
+      'the brand step kept the template accent and the colours of the logo were never measured',
       { why: record.accent.why ?? null },
       { noRerun: true }
     )
@@ -150,12 +163,15 @@ export function lookOfBrandRecord(template, record) {
   const accentDark = HEX_COLOUR.test(record.accent.dark ?? '') ? record.accent.dark.toLowerCase() : null
   const sources = { accent: { from, name: ACCENT_NAMES[from] } }
   // The logo's own colour that happens to be the template's accent is said so, for the look check to accept it.
-  if (from === ACCENT_FROM_LOGO && accent === String(template?.accent ?? '').toLowerCase())
+  const ownColour = from === ACCENT_FROM_LOGO || from === ACCENT_LOGO_ADJUSTED
+  if (ownColour && [accent, accentDark].includes(String(template?.accent ?? '').toLowerCase()))
     sources.accent.sameAsTemplate = true
-  if (from === ACCENT_FROM_LOGO && isText(record.accent.say))
+  if (ownColour && isText(record.accent.say))
     assumptions.push({ id: 'accent', field: 'look.accent', said: record.accent.say })
   if (from === ACCENT_LOGO_WITHOUT_HUE)
     assumptions.push({ id: 'accent', field: 'look.accent', said: noHueSaid(accent, accentDark) })
+  if (from === ACCENT_LOGO_UNREADABLE)
+    assumptions.push({ id: 'accent', field: 'look.accent', said: unreadableSaid(accent, accentDark) })
   let logo
   if (record.logo?.kind === 'own' && isText(record.logo.source)) {
     logo = { kind: 'own', source: record.logo.source }

@@ -10,6 +10,7 @@ import { PlanComposerError, composePlan } from '../domain/plan-composer.mjs'
 import {
   fernAndFoxglove,
   harrowLaneBakery,
+  lightAndDarkKit,
   quaysidePianoCare,
   saltmarshKayaks
 } from './fixtures/plan-composer/invented-brands.mjs'
@@ -122,16 +123,22 @@ test('no logo at all: the made logo and the template accent, each said and recor
   )
 })
 
-test('a logo with a hue the step could not wear: no rule covers it, so no plan and no model call', async () => {
-  const record = brandLookOf(saltmarshKayaks())
-  assert.equal(record.accent.from, 'unsettled-kept-template')
+test('a logo with a hue the step could not wear: its colour adjusted to read composes a plan (D44)', async () => {
+  const record = brandLookOf({ ...saltmarshKayaks(), kit: lightAndDarkKit() })
+  assert.equal(record.accent.from, 'logo-adjusted')
+  assert.equal(record.accent.brandColour, '#2a6f97')
   assert.equal(JSON.stringify(record).includes(TEMPLATE_ACCENT), false)
   const { model, run } = compose(record)
-  await assert.rejects(
-    run,
-    (e) => e instanceof PlanComposerError && e.code === 'brand_accent_unsettled' && e.noRerun === true
+  const { plan, lookSources } = await run
+  assert.equal(model.calls.length, 1)
+  assert.equal(plan.look.accent, record.accent.hex)
+  assert.equal(checkBuildDocument(plan).ok, true)
+  assert.deepEqual(lookProblemsOf({ plan, template: template(), lookSources }), [])
+  // Without the kit the themes are unknown: the brand file cannot be read, and a second run cannot change it.
+  assert.throws(
+    () => brandLookOf(saltmarshKayaks()),
+    (e) => e instanceof BrandStepError && e.code === 'brand_file_unreadable' && e.noRerun === true
   )
-  assert.equal(model.calls.length, 0)
 })
 
 test('a file that is not a brand file of version 10 is refused with a code', () => {

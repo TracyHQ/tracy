@@ -112,7 +112,7 @@ test('a failure of the business look stops with the brand sentence; the gate loo
     'brand_missing',
     'brand_step_failed',
     'brand_file_unreadable',
-    'brand_accent_unsettled'
+    'brand_logo_colours_unmeasured'
   ])
     assert.deepEqual(stoppedOf({ code }), brand, code)
   for (const look of ['template_accent', 'neutral_accent', 'template_logo', 'template_look_said'])

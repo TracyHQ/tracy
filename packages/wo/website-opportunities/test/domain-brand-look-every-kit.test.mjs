@@ -1,4 +1,4 @@
-// The no hue rule (#616) over EVERY template kit in the repo: a logo in black and grey only, read against each real kit,
+// The no hue rule (#616) and the adjusted logo colour (D44) over EVERY template kit in the repo: a logo in black and grey only, read against each real kit,
 // gives black on a light theme and white on a dark one, for the themes the kit has, and never throws. The logo and the
 // brand file are invented; the kits are the repo's own contracts.
 import assert from 'node:assert/strict'
@@ -7,8 +7,9 @@ import { dirname, join } from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { brandLookOf, lookOfBrandRecord } from '../domain/brand-before-site.mjs'
-import { MIN_RATIO, contrastOf } from '../domain/brand-hue.mjs'
+import { MIN_RATIO, contrastOf, hexOfOklch, hueDistance, isNeutral, oklchOf } from '../domain/brand-hue.mjs'
 import { themesOf } from '../domain/brand-look-accent.mjs'
+import { groundsOf } from '../domain/brand-look-kit.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '../../../..')
 
@@ -73,5 +74,63 @@ test('a logo with no hue reads on every template kit of the repo: 0 throws', () 
       failed.push(`${file.slice(root.length + 1)}: ${error.message}`)
     }
   }
+  assert.deepEqual(failed, [])
+})
+
+/** Twelve hues, each as a pale and a very dark logo colour (OKLCH), rounded to #rrggbb. */
+function logoColours() {
+  const out = []
+  for (let h = 0; h < 360; h += 30)
+    for (const [L, C] of [
+      [0.92, 0.06],
+      [0.2, 0.05]
+    ])
+      out.push(hexOfOklch(L, C, h))
+  return out.filter((hex) => !isNeutral(hex))
+}
+
+test('a logo with a hue the step could not wear, on every kit, 12 hues pale and very dark: reads on every theme', () => {
+  const colours = logoColours()
+  assert.equal(colours.length, 24)
+  const failed = []
+  let runs = 0
+  let fallen = 0
+  let maxHue = 0
+  for (const file of kitFiles()) {
+    const doc = JSON.parse(readFileSync(file, 'utf8'))
+    if (!doc.site?.brandColours) continue
+    const kit = { ref: 'kit', doc }
+    for (const hex of colours) {
+      runs += 1
+      try {
+        const coloured = { brand: { ...brief.brand, colors: [{ hex, role: 'accent' }] } }
+        const record = brandLookOf({ brandFile: brandFileFor(doc), brief: coloured, kit })
+        const { look } = lookOfBrandRecord({ slug: 'kit', name: 'Kit', version: '1' }, record)
+        const themes = themesOf(kit)
+        const byTheme = { [themes[0]]: look.accent, ...(themes[1] ? { [themes[1]]: look.accentDark } : {}) }
+        for (const theme of themes) {
+          const accent = byTheme[theme]
+          assert.ok(contrastOf(record.accent.onAccent[theme], accent) >= MIN_RATIO, `${theme} words`)
+          for (const ground of groundsOf(kit, theme))
+            assert.ok(contrastOf(accent, ground) >= MIN_RATIO, `${accent} on ${ground}`)
+        }
+        if (record.accent.from === 'logo-hue-unreadable') fallen += 1
+        else {
+          assert.equal(record.accent.from, 'logo-adjusted')
+          for (const accent of Object.values(byTheme)) {
+            const d = hueDistance(oklchOf(hex).h, oklchOf(accent).h)
+            maxHue = Math.max(maxHue, d)
+            assert.ok(d < 3, `${hex} to ${accent}: hue moved ${d}`)
+          }
+        }
+      } catch (error) {
+        failed.push(`${file.slice(root.length + 1)} ${hex}: ${error.message}`)
+      }
+    }
+  }
+  console.log(
+    `adjusted accent: ${runs} runs, ${failed.length} failed, ${fallen} fell back, largest hue move ${maxHue.toFixed(2)}`
+  )
+  assert.ok(runs >= 17 * 24)
   assert.deepEqual(failed, [])
 })
