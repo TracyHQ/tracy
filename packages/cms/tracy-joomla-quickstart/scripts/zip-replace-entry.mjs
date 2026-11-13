@@ -1,5 +1,6 @@
 /**
- * Copy a zip archive with one entry replaced, every other entry kept as its exact compressed bytes.
+ * Copy a zip archive with one entry replaced (or new entries added, `addEntries`), every other entry kept as its
+ * exact compressed bytes.
  *
  * WHY not unzip and zip again: the blank site of an AI quickstart (ADR 0045) must carry the human quickstart's
  * template files unchanged, provably. Copying each entry's local record as it is keeps its bytes, CRC and time, so a
@@ -107,6 +108,55 @@ export function replaceEntry(zip, name, content) {
   const cd = Buffer.concat(centrals)
   const endAt = findEnd(zip)
   const end = Buffer.from(zip.subarray(endAt))
+  end.writeUInt32LE(cd.length, 12)
+  end.writeUInt32LE(offset, 16)
+  return Buffer.concat([...records, cd, end])
+}
+
+/**
+ * A new archive with `files` (`[name, Buffer]`, none of them in the archive yet) added after every entry, which are
+ * copied unchanged. Each new entry is deflated at a fixed level and takes the time and attributes of the entry
+ * `like` names, so the same input gives the same archive byte for byte.
+ */
+export function addEntries(zip, files, { like }) {
+  const entries = listEntries(zip)
+  const model = entries.find((e) => e.name === like)
+  if (!model) throw new Error(`the archive has no entry ${like}`)
+  for (const [name] of files)
+    if (entries.some((e) => e.name === name)) throw new Error(`the archive already has an entry ${name}`)
+  const endAt = findEnd(zip)
+  const cdOffset = zip.readUInt32LE(endAt + 16)
+  const records = [zip.subarray(0, cdOffset)]
+  const centrals = [zip.subarray(cdOffset, endAt)]
+  let offset = cdOffset
+  for (const [name, content] of files) {
+    const nameBuf = Buffer.from(name, 'utf8')
+    const body = deflateRawSync(content, { level: 9 })
+    const local = Buffer.alloc(30)
+    local.writeUInt32LE(LOCAL, 0)
+    local.writeUInt16LE(20, 4)
+    local.writeUInt16LE(8, 8)
+    local.writeUInt16LE(model.dosTime, 10)
+    local.writeUInt16LE(model.dosDate, 12)
+    local.writeUInt32LE(crc32(content), 14)
+    local.writeUInt32LE(body.length, 18)
+    local.writeUInt32LE(content.length, 22)
+    local.writeUInt16LE(nameBuf.length, 26)
+    const central = Buffer.alloc(46)
+    central.writeUInt32LE(CENTRAL, 0)
+    central.writeUInt16LE(model.central.readUInt16LE(4), 4)
+    local.copy(central, 6, 4, 26)
+    central.writeUInt16LE(nameBuf.length, 28)
+    central.writeUInt32LE(model.central.readUInt32LE(38), 38)
+    central.writeUInt32LE(offset, 42)
+    records.push(local, nameBuf, body)
+    centrals.push(central, nameBuf)
+    offset += 30 + nameBuf.length + body.length
+  }
+  const cd = Buffer.concat(centrals)
+  const end = Buffer.from(zip.subarray(endAt))
+  end.writeUInt16LE(entries.length + files.length, 8)
+  end.writeUInt16LE(entries.length + files.length, 10)
   end.writeUInt32LE(cd.length, 12)
   end.writeUInt32LE(offset, 16)
   return Buffer.concat([...records, cd, end])

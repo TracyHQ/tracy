@@ -9,9 +9,10 @@
  * report. Same input, same bytes out; running it on its own output changes nothing. Template files never pass through
  * here (the installer archive keeps them as they are, `zip-replace-entry.mjs`).
  *
- * The work is a list of steps (`BLANK_SITE_STEPS`), each `{id, run(ctx)}` over the parsed dump. A later step (for
- * example emptying the content fields a mapping file declares, ticket #584) is added to the list, not written into
- * these ones.
+ * The work is a list of steps (`BLANK_SITE_STEPS`), each `{id, run(ctx)}` over the parsed dump. A later step is
+ * added to the list, not written into these ones: with a mapping file, `emptyDeclaredFieldsStep`
+ * (`blank-site-empty-fields.mjs`, ticket #584) empties every content field it declares and puts the template and
+ * language files it writes in `ctx.files`, returned as `files`.
  */
 
 import { blankSecrets, findSecrets } from './blank-site-secrets.mjs'
@@ -107,11 +108,11 @@ export const BLANK_SITE_STEPS = [
 /**
  * @param {string} sql  the human quickstart's `custom.sql`
  * @param {{ steps?: { id: string, run: (ctx: object) => object }[] }} [options]
- * @returns {{ sql: string, report: object }}
+ * @returns {{ sql: string, report: object, files: Map<string, Buffer> }}
  */
 export function produceBlankSite(sql, { steps = BLANK_SITE_STEPS } = {}) {
   const dump = parseDump(sql)
-  const ctx = { dump, removed: new Map(), secrets: [] }
+  const ctx = { dump, removed: new Map(), secrets: [], files: new Map() }
   const before = countSite(dump)
   const results = {}
   for (const step of steps) results[step.id] = step.run(ctx)
@@ -126,7 +127,8 @@ export function produceBlankSite(sql, { steps = BLANK_SITE_STEPS } = {}) {
     }))
   return {
     sql: serializeDump(dump),
-    report: { before, after: countSite(dump), blockStore, secrets: ctx.secrets, steps: results }
+    report: { before, after: countSite(dump), blockStore, secrets: ctx.secrets, steps: results },
+    files: ctx.files
   }
 }
 
