@@ -250,3 +250,66 @@ test('a pending mapping file skips the mapping rules only; the block store rules
   assert.equal(res.problems[0].file, 'block-store.json')
   assert.equal(checkAiQuickstartContract({ ...pending, mappingPending: false }).ok, false)
 })
+
+/** The invented set with its mapping file pending: only the rules that read the mapping file are skipped. */
+const pendingOf = (set) => ({
+  blockStore: set.blockStore,
+  pageRecipes: set.pageRecipes,
+  mapping: undefined,
+  mappingPending: true
+})
+
+test('an item field stored for fewer items than the block takes fails from the block store alone', () => {
+  const set = valid()
+  const services = blockOf(set, 'services-grid')
+  for (const field of services.itemFields) field.slots = ['item-1.0', 'item-2.0', 'item-3.0']
+  assert.deepEqual(checkAiQuickstartContract(pendingOf(set)).problems, [])
+  services.itemFields.find((f) => f.name === 'price').slots.pop()
+  assertOneProblem(pendingOf(set), {
+    file: 'block-store.json',
+    at: 'blocks[services-grid].itemFields[price].slots',
+    message: /2 stored places for max 3 items/
+  })
+})
+
+test('a design line typed as content fails from the block store alone', () => {
+  const set = valid()
+  Object.assign(fieldOf(set, 'hero-home', 'background'), { slot: 'module-1.4' })
+  Object.assign(fieldOf(set, 'hero-home', 'lead'), { slot: 'module-1.4' })
+  assertOneProblem(pendingOf(set), {
+    file: 'block-store.json',
+    at: 'blocks[hero-home].fields[lead].type',
+    message: /design value typed as text.*type it design/
+  })
+  const drafted = valid()
+  Object.assign(fieldOf(drafted, 'hero-home', 'lead'), { designFrom: 'params.layout' })
+  assertOneProblem(pendingOf(drafted), {
+    file: 'block-store.json',
+    at: 'blocks[hero-home].fields[lead].type',
+    message: /design value typed as text/
+  })
+})
+
+test('a block placed inside a block the store lacks fails', () => {
+  const set = valid()
+  blockOf(set, 'footer-main').positions = ['inside:services-grid']
+  assert.deepEqual(checkAiQuickstartContract(set).problems, [])
+  blockOf(set, 'footer-main').positions = ['inside:nowhere']
+  assertOneProblem(pendingOf(set), {
+    file: 'block-store.json',
+    at: 'blocks[footer-main].positions',
+    message: /"inside:nowhere" names no block of the store/
+  })
+})
+
+test('a recipe variant naming a block the store lacks fails', () => {
+  const set = valid()
+  set.pageRecipes.recipes[1].variants = [{ blocks: ['header-main', 'services-grid'], pages: 1 }]
+  assert.deepEqual(checkAiQuickstartContract(set).problems, [])
+  set.pageRecipes.recipes[1].variants[0].blocks.push('ghost')
+  assertOneProblem(pendingOf(set), {
+    file: 'page-recipes.json',
+    at: 'recipes[services].variants[0].blocks[2]',
+    message: /"ghost" is not a block of the store/
+  })
+})

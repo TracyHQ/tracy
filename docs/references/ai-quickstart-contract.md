@@ -27,8 +27,9 @@ The three files sit in one folder. The contract check finds every folder under `
 released contract folder is never edited.
 
 A folder whose mapping file is written by a later ticket holds `mapping.pending.json` in its place, naming that
-ticket (`{"ticket": "#584"}`). The check then reads the block store and the page recipes alone, with every rule of
-those two files, and prints `mapping.json pending (#584)` for the folder. A marker beside a written `mapping.json`
+ticket (`{"ticket": "#584"}`). The check then skips only the rules that read the mapping file: every rule the block
+store and the page recipes answer alone still runs, including the stored place rules below, and it prints
+`mapping.json pending (#584)` for the folder. A marker beside a written `mapping.json`
 is a problem, so the marker is removed in the same change that writes the mapping.
 
 A complete invented example (no real template or business) is the test fixture set
@@ -76,11 +77,20 @@ The snippets below are excerpts of it.
 | `id` | unique in the store; page recipes and the mapping file name blocks by it |
 | `type` | a block type of `BLOCK_TYPES` |
 | `source` | optional: `template` (default) or `library`, a Tracy library block for data the template lacks (shape designed with Part 3) |
-| `positions` | the layout positions the block may be placed in, at least one |
+| `positions` | the layout positions the block may be placed in, at least one. `inside:<block id>` places the block inside another block of the store (a module whose list the container shows); the id must name a block of the store |
 | `items` | required on every block: `{min, max}`, whole numbers, `0 <= min <= max`, `max >= 1`. A block that shows one thing is `{min: 1, max: 1}` |
 | `noData` | required: `{"rule": "hide"}`, or `{"rule": "fallback", "fallback": "<what the block shows instead>"}` |
 | `fields` | the block's own fields, written once per placed block |
 | `itemFields` | optional: the fields of one item of a repeating block, written once per item |
+
+Optional keys a draft records for the mapping file and for a reviewer: `slot` on a field (its stored place, a
+content map key), `slots` on an item field (its stored place per item, in item order), `designFrom` on a design field
+(the config line it is), `limitFrom` (where a limit came from), `itemsFrom` (`{min, max}`: where each item count came
+from). The check reads two of them without the mapping file:
+
+- an item field with `slots` needs at least `items.max` of them: every item has the field, so every item has one shape;
+- a field that is not typed `design` but carries `designFrom`, or shares its `slot` with a design field of the block,
+  is a design value typed as content.
 
 A field is `{name, kind, type, ...}`, its name unique within the block:
 
@@ -107,7 +117,9 @@ A field whose kind is `editorial.design_element` is a design value and must be t
 ```
 
 `pageType` is unique; `blocks` is the author's order and names blocks of the store; `mainBlock` is one of them (a page
-whose main block is dropped is dropped, ADR 0046 decision 3).
+whose main block is dropped is dropped, ADR 0046 decision 3). Optional `variants` (`[{blocks, pages}]`) keep the other
+block orders demo pages of the type show (one item page shows one more related block); their blocks must name blocks
+of the store too. The build uses `blocks`; a variant is a composition the author made, kept so it is not lost.
 
 ## `mapping.json`
 

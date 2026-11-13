@@ -105,6 +105,58 @@ function blockProblems(block, at, report) {
   const names = new Set()
   fieldListProblems(block, 'fields', at, report, names)
   fieldListProblems(block, 'itemFields', at, report, names)
+  storedPlaceProblems(block, at, report)
+}
+
+/**
+ * The rules a block store answers alone from the stored places a draft records (`slot` on a field, `slots` on an
+ * item field: one per item). They hold whether the mapping file is written or pending: an item field stored for
+ * fewer items than the block takes, and a design line typed as content.
+ */
+function storedPlaceProblems(block, at, report) {
+  const fields = Array.isArray(block.fields) ? block.fields.filter(isObject) : []
+  const itemFields = Array.isArray(block.itemFields) ? block.itemFields.filter(isObject) : []
+  const max = Number.isInteger(block.items?.max) ? block.items.max : null
+  for (const field of itemFields) {
+    if (field.slots === undefined || max === null) continue
+    const fieldAt = `${at}.itemFields[${label(field.name, '?')}].slots`
+    if (!Array.isArray(field.slots) || !field.slots.every(isName))
+      report(fieldAt, 'slots must list the stored place of the field, one per item')
+    else if (field.slots.length < max)
+      report(
+        fieldAt,
+        `${field.slots.length} stored places for max ${max} items: every item needs the field, lower max or restructure`
+      )
+  }
+  const designSlots = new Set(fields.filter((f) => f.type === 'design' && isName(f.slot)).map((f) => f.slot))
+  for (const [key, list] of [
+    ['fields', fields],
+    ['itemFields', itemFields]
+  ])
+    for (const field of list) {
+      if (field.type === 'design' || typeof field.type !== 'string' || !FIELD_TYPE_SET.has(field.type))
+        continue
+      const places = [field.slot, ...(Array.isArray(field.slots) ? field.slots : [])]
+      if (field.designFrom !== undefined || places.some((p) => designSlots.has(p)))
+        report(
+          `${at}.${key}[${label(field.name, '?')}].type`,
+          `design value typed as ${field.type}: its stored place is a design line, type it design`
+        )
+    }
+}
+
+/** A position `inside:<id>` places a block inside another block of the store. */
+function insideProblems(store, ids, report) {
+  store.blocks.forEach((block, i) => {
+    if (!Array.isArray(block?.positions)) return
+    for (const position of block.positions) {
+      if (typeof position !== 'string' || !position.startsWith('inside:')) continue
+      const container = position.slice('inside:'.length)
+      const at = `blocks[${label(block.id, i)}].positions`
+      if (!ids.has(container)) report(at, `${JSON.stringify(position)} names no block of the store`)
+      else if (container === block.id) report(at, 'a block cannot be placed inside itself')
+    }
+  })
 }
 
 function blockStoreProblems(store, report) {
@@ -122,6 +174,7 @@ function blockStoreProblems(store, report) {
     if (isName(block?.id)) ids.add(block.id)
     blockProblems(block, at, report)
   })
+  insideProblems(store, ids, report)
 }
 
 function pageRecipesProblems(doc, blockIds, report) {
@@ -143,13 +196,25 @@ function pageRecipesProblems(doc, blockIds, report) {
     })
     if (!recipe.blocks.includes(recipe.mainBlock))
       report(`${at}.mainBlock`, 'mainBlock must be one of the blocks of the recipe')
+    if (recipe.variants === undefined) return
+    if (!Array.isArray(recipe.variants))
+      return report(`${at}.variants`, 'variants must be a list of {blocks, pages}')
+    recipe.variants.forEach((variant, v) => {
+      if (!Array.isArray(variant?.blocks) || variant.blocks.length === 0)
+        return report(`${at}.variants[${v}].blocks`, 'a variant lists its block order')
+      variant.blocks.forEach((id, j) => {
+        if (!blockIds.has(id))
+          report(`${at}.variants[${v}].blocks[${j}]`, `${JSON.stringify(id)} is not a block of the store`)
+      })
+    })
   })
 }
 
 /**
  * Check the three declarations of an AI quickstart together.
- * `mappingPending` (a folder whose mapping file another ticket writes, declared by `mapping.pending.json`) checks
- * the block store and the page recipes alone; every rule of those two files still holds.
+ * `mappingPending` (a folder whose mapping file another ticket writes, declared by `mapping.pending.json`) skips
+ * only the rules that read the mapping file; every rule the block store and the page recipes answer alone still
+ * holds, including the stored place rules (`storedPlaceProblems`).
  * @param {{blockStore: any, pageRecipes: any, mapping: any, mappingPending?: boolean}} declarations the parsed JSON files
  * @returns {{ok: boolean, blocks: number, problems: Array<{file: string, at: string, message: string}>}}
  */
