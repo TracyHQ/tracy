@@ -1,0 +1,565 @@
+{
+  "summary": {
+    "blocks": 44,
+    "fieldsByType": {
+      "image": 45,
+      "text": 231,
+      "link": 44,
+      "icon": 17,
+      "design": 2
+    },
+    "textLimits": {
+      "kitFrame390": 161,
+      "contentMapFitPhone": 36,
+      "measuredOnSite": 28,
+      "notDrawn": 6,
+      "missing": 0
+    },
+    "pageTypes": [
+      "home",
+      "news",
+      "news-post",
+      "featured-posts",
+      "authors",
+      "author",
+      "classes",
+      "class",
+      "contact",
+      "plans",
+      "about",
+      "learning-center",
+      "learning-post",
+      "trainers",
+      "trainer"
+    ],
+    "excludedPageGroups": 2,
+    "open": {
+      "unmeasured": 0,
+      "derived": 61,
+      "unlisted": 32,
+      "undecided": 0,
+      "skipped": 2,
+      "notInMap": 5,
+      "problems": 0,
+      "omitted": 2,
+      "notPlaced": 0
+    }
+  },
+  "unmeasured": [],
+  "derived": [
+    {
+      "block": "header",
+      "slot": "block-162.0",
+      "why": "a field of block-162"
+    },
+    {
+      "block": "header",
+      "slot": "block-176.1",
+      "why": "a field of block-176"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-101.0",
+      "why": "a field of header"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-159.0",
+      "why": "a field of body-pages_j-content_author-listting_author_admin"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-160.0",
+      "why": "a field of body-pages_j-content_author-listting_author_admin"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-161.0",
+      "why": "a field of body-pages_j-content_author-listting_author_admin"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-163.0",
+      "why": "a field of block-17"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-167.0",
+      "why": "a field of header"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-169.0",
+      "why": "a field of header"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-193.0",
+      "why": "a field of header"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-168.0",
+      "why": "a field of body-about-us_contact"
+    },
+    {
+      "block": "block-187",
+      "slot": "menuItem-197.0",
+      "why": "a field of block-178"
+    },
+    {
+      "block": "block-160",
+      "slot": "menuItem-189.0",
+      "why": "a menu label: the page title"
+    },
+    {
+      "block": "block-160",
+      "slot": "languageString-256948293.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "block-160",
+      "slot": "menuItem-188.0",
+      "why": "a menu label: the page title"
+    },
+    {
+      "block": "block-160",
+      "slot": "menuItem-190.0",
+      "why": "a menu label: the page title"
+    },
+    {
+      "block": "block-173",
+      "slot": "menuItem-188.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "block-173",
+      "slot": "menuItem-189.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "block-173",
+      "slot": "menuItem-190.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "block-17",
+      "slot": "menuItem-101.0",
+      "why": "a field of header"
+    },
+    {
+      "block": "news-list",
+      "slot": "article-8.15",
+      "why": "a field of body-pages_j-content_category-blog_boxings-finest-moments"
+    },
+    {
+      "block": "news-list",
+      "slot": "article-9.15",
+      "why": "a field of body-pages_j-content_category-blog_boxings-ultimate-showdown"
+    },
+    {
+      "block": "news-list",
+      "slot": "article-10.15",
+      "why": "a field of body-pages_j-content_category-blog_boxings-impact-on-culture"
+    },
+    {
+      "block": "news-list",
+      "slot": "article-11.15",
+      "why": "a field of body-pages_j-content_category-blog_boxing-and-mental-toughness"
+    },
+    {
+      "block": "featured-list",
+      "slot": "article-8.15",
+      "why": "a field of body-pages_j-content_category-blog_boxings-finest-moments"
+    },
+    {
+      "block": "featured-list",
+      "slot": "article-9.15",
+      "why": "a field of body-pages_j-content_category-blog_boxings-ultimate-showdown"
+    },
+    {
+      "block": "featured-list",
+      "slot": "article-10.15",
+      "why": "a field of body-pages_j-content_category-blog_boxings-impact-on-culture"
+    },
+    {
+      "block": "featured-list",
+      "slot": "article-11.15",
+      "why": "a field of body-pages_j-content_category-blog_boxing-and-mental-toughness"
+    },
+    {
+      "block": "block-158",
+      "slot": "article-1.15",
+      "why": "a field of body-pages_j-content_category-blog"
+    },
+    {
+      "block": "block-158",
+      "slot": "article-3.15",
+      "why": "a field of body-pages_j-content_category-blog"
+    },
+    {
+      "block": "class-list",
+      "slot": "menuItem-188.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "class-list",
+      "slot": "languageString-256948293.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "class-list",
+      "slot": "menuItem-190.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "class-list",
+      "slot": "menuItem-189.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "contact-details",
+      "slot": "menuItem-168.0",
+      "why": "a menu label: the page title"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-34322868.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-30910664.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-169039348.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-50724917.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-219823601.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-234398682.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-139204367.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "block-190",
+      "slot": "block-157.23",
+      "why": "a field of block-157"
+    },
+    {
+      "block": "block-177",
+      "slot": "menuItem-190.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "learning-list",
+      "slot": "article-24.12",
+      "why": "a field of body-pages_j-content_author-listting_author_gene_roberts"
+    },
+    {
+      "block": "learning-list",
+      "slot": "article-25.12",
+      "why": "a field of body-pages_j-content_author-listting_author_lorene_bass"
+    },
+    {
+      "block": "learning-list",
+      "slot": "article-26.12",
+      "why": "a field of body-pages_j-content_author-listting_author_lorene_bass"
+    },
+    {
+      "block": "learning-list",
+      "slot": "article-27.12",
+      "why": "a field of body-pages_j-content_author-listting_author_corey_gibson"
+    },
+    {
+      "block": "block-178",
+      "slot": "menuItem-197.0",
+      "why": "a menu label: the page title"
+    },
+    {
+      "block": "block-178",
+      "slot": "block-163.18",
+      "why": "a field of block-163"
+    },
+    {
+      "block": "block-182",
+      "slot": "block-163.18",
+      "why": "a field of block-163"
+    },
+    {
+      "block": "class-detail",
+      "slot": "languageString-90793445.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "class-detail",
+      "slot": "languageString-76896395.0",
+      "why": "a template string: a language override"
+    },
+    {
+      "block": "block-159",
+      "slot": "menuItem-189.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "block-159",
+      "slot": "languageString-256948293.0",
+      "why": "a field of block-160"
+    },
+    {
+      "block": "block-191",
+      "slot": "article-18.12",
+      "why": "a field of body-about-us_learning-center"
+    },
+    {
+      "block": "block-191",
+      "slot": "article-19.12",
+      "why": "a field of body-about-us_learning-center"
+    },
+    {
+      "block": "author-profile",
+      "slot": "menuItem-160.0",
+      "why": "a menu label: the page title"
+    },
+    {
+      "block": "author-profile",
+      "slot": "menuItem-159.0",
+      "why": "a menu label: the page title"
+    },
+    {
+      "block": "author-profile",
+      "slot": "menuItem-161.0",
+      "why": "a menu label: the page title"
+    },
+    {
+      "block": "author-profile",
+      "slot": "article-29.2",
+      "why": "a field of another page shown here"
+    }
+  ],
+  "unlisted": [
+    {
+      "block": "block-176",
+      "slot": "module-176.2",
+      "at": "title"
+    },
+    {
+      "block": "block-156",
+      "slot": "module-156.9",
+      "at": "title"
+    },
+    {
+      "block": "block-160",
+      "slot": "module-160.7",
+      "at": "link-btn.params"
+    },
+    {
+      "block": "block-163",
+      "slot": "module-163.19",
+      "at": "link-btn.params"
+    },
+    {
+      "block": "block-170",
+      "slot": "module-170.0",
+      "at": "content"
+    },
+    {
+      "block": "block-175",
+      "slot": "module-175.0",
+      "at": "content"
+    },
+    {
+      "block": "block-175",
+      "slot": "module-175.3",
+      "at": "content"
+    },
+    {
+      "block": "block-168",
+      "slot": "module-168.0",
+      "at": "title"
+    },
+    {
+      "block": "block-17",
+      "slot": "module-17.0",
+      "at": "title"
+    },
+    {
+      "block": "news-list",
+      "slot": "category-8.0",
+      "at": "title"
+    },
+    {
+      "block": "class-list",
+      "slot": "category-9.0",
+      "at": "title"
+    },
+    {
+      "block": "contact-details",
+      "slot": "contact-1.0",
+      "at": "name"
+    },
+    {
+      "block": "block-184",
+      "slot": "module-184.1",
+      "at": "main-section.params"
+    },
+    {
+      "block": "block-172",
+      "slot": "module-172.10",
+      "at": "main-section.params"
+    },
+    {
+      "block": "block-190",
+      "slot": "module-190.23",
+      "at": "top-desc.params"
+    },
+    {
+      "block": "learning-list",
+      "slot": "category-10.0",
+      "at": "title"
+    },
+    {
+      "block": "block-178",
+      "slot": "module-178.32",
+      "at": "title-btn.params"
+    },
+    {
+      "block": "block-178",
+      "slot": "module-178.33",
+      "at": "link-btn.params"
+    },
+    {
+      "block": "block-182",
+      "slot": "module-182.18",
+      "at": "title-btn.params"
+    },
+    {
+      "block": "block-182",
+      "slot": "module-182.19",
+      "at": "link-btn.params"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.17",
+      "at": "learning-features.learning-features0.learning_link.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.18",
+      "at": "learning-features.learning-features0.id_video.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.21",
+      "at": "learning-features.learning-features1.learning_link.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.22",
+      "at": "learning-features.learning-features1.id_video.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.25",
+      "at": "learning-features.learning-features2.learning_link.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.26",
+      "at": "learning-features.learning-features2.id_video.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.29",
+      "at": "learning-features.learning-features3.learning_link.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.30",
+      "at": "learning-features.learning-features3.id_video.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.33",
+      "at": "learning-features.learning-features4.learning_link.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.34",
+      "at": "learning-features.learning-features4.id_video.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.37",
+      "at": "learning-features.learning-features5.learning_link.attribs"
+    },
+    {
+      "block": "learning-post",
+      "slot": "article-18.38",
+      "at": "learning-features.learning-features5.id_video.attribs"
+    }
+  ],
+  "undecided": [],
+  "skipped": [
+    {
+      "kit": "body-pages_users_login-form",
+      "reason": "a system page (login, registration) of an account the build never creates"
+    },
+    {
+      "kit": "body-pages_users_registration-form",
+      "reason": "a system page (login, registration) of an account the build never creates"
+    }
+  ],
+  "notInMap": [
+    {
+      "block": "block-171",
+      "slot": "block-171.4.icon"
+    },
+    {
+      "block": "block-180",
+      "slot": "block-180.7.icon"
+    },
+    {
+      "block": "block-180",
+      "slot": "block-180.8.icon"
+    },
+    {
+      "block": "block-180",
+      "slot": "block-180.9.icon"
+    },
+    {
+      "block": "block-180",
+      "slot": "block-180.10.icon"
+    }
+  ],
+  "problems": [],
+  "omitted": [
+    {
+      "block": "block-156",
+      "slot": "module-156.7",
+      "why": "the hero's second button: empty in the demo, so the template never draws it and no box can be measured; the blank site keeps it empty"
+    },
+    {
+      "block": "block-156",
+      "slot": "module-156.8",
+      "why": "the link of the hero's second button, left out with its label"
+    }
+  ],
+  "notPlaced": []
+}

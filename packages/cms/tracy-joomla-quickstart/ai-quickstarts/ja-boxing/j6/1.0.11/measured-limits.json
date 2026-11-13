@@ -1,0 +1,133 @@
+{
+  "$comment": "Text limits measured at the narrowest width on a running copy of the template by measure-limits.mjs (ticket #583); draft.mjs reads them.",
+  "width": 390,
+  "measuredOn": "JA Boxing j6 human quickstart 1.0.8 (template ja_boxing 1.1.0), restored locally",
+  "limits": {
+    "module-176.1": {
+      "limit": 66,
+      "limitFrom": "measured at 1440px on the running template, page /: 1440px 66 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the block hides it at 390px (its box is drawn 0 by 0), so 1440px is the narrowest kit width that shows it"
+    },
+    "module-157.20": {
+      "limit": 30,
+      "limitFrom": "measured at 390px on the running template, page /: 390px 30 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-160.4": {
+      "limit": 11,
+      "limitFrom": "measured at 390px on the running template, page /: 390px 11 (demo 4 characters on 1 line(s)), 1440px 31 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-166.17": {
+      "limit": 33,
+      "limitFrom": "measured at 390px on the running template, page /: 390px 33 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-162.33": {
+      "limit": 16,
+      "limitFrom": "measured at 390px on the running template, page /classes: 390px 16 (demo 9 characters on 1 line(s)), 1440px 48 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-162.34": {
+      "limit": 10,
+      "limitFrom": "measured at 390px on the running template, page /classes: 390px 10 (demo 4 characters on 1 line(s)), 1440px 41 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-162.35": {
+      "limit": 29,
+      "limitFrom": "measured at 390px on the running template, page /classes: 390px 29 (demo 22 characters on 1 line(s)), 1440px 63 (demo 22 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-1.15": {
+      "limit": 34,
+      "limitFrom": "measured at 390px on the running template, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-6.15": {
+      "limit": 26,
+      "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "field-1.1": {
+      "limit": 29,
+      "limitFrom": "measured at 390px on the running template, page /about-us/contact: 390px 33 (demo 10 characters on 1 line(s)), 1440px 29 (demo 10 characters on 1 line(s)); the form field's placeholder repeated until it was wider than the field"
+    },
+    "module-184.0": {
+      "limit": 28,
+      "limitFrom": "measured at 390px on the running template, page /plans: 390px 28 (demo 21 characters on 1 line(s)), 1440px 47 (demo 21 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-189.24": {
+      "limit": 45,
+      "limitFrom": "measured at 390px on the running template, page /plans: 390px 45 (demo 12 characters on 1 line(s)), 1440px 94 (demo 12 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-172.2": {
+      "limit": 35,
+      "limitFrom": "measured at 390px on the running template, page /plans: 390px 35 (demo 9 characters on 1 line(s)), 1440px 61 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-188.0": {
+      "limit": 16,
+      "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-189.0": {
+      "limit": 16,
+      "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-183.7": {
+      "limit": 32,
+      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 32 (demo 9 characters on 1 line(s)), 1440px 92 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-183.8": {
+      "limit": 287,
+      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 287 (demo 255 characters on 7 line(s)), 1440px 329 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-183.6": {
+      "limit": 48,
+      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 48 (demo 10 characters on 1 line(s)), 1440px 59 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-190.20": {
+      "limit": 30,
+      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 30 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-177.16": {
+      "limit": 45,
+      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 45 (demo 15 characters on 1 line(s)), 1440px 81 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-18.12": {
+      "limit": 50,
+      "limitFrom": "measured at 390px on the running template, page /about-us/learning-center: 390px 70 (demo 41 characters on 2 line(s)), 1440px 50 (demo 41 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-181.18": {
+      "limit": 34,
+      "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 34 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-182.16": {
+      "limit": 30,
+      "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 30 (demo 13 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-16.13": {
+      "limit": 27,
+      "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 27 (demo 12 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-159.0": {
+      "limit": 31,
+      "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 31 (demo 12 characters on 1 line(s)), 1440px 54 (demo 12 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-191.0": {
+      "limit": 30,
+      "limitFrom": "measured at 390px on the running template, page /pages/j-content/category-blog/never-boxed-before: 390px 30 (demo 10 characters on 1 line(s)), 1440px 55 (demo 10 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-28.7": {
+      "limit": 36,
+      "limitFrom": "measured at 390px on the running template, page /pages/j-content/author-listting/author/admin: 390px 36 (demo 13 characters on 1 line(s)), 1440px 36 (demo 13 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-18.2": {
+      "limit": 273,
+      "limitFrom": "measured at 390px on the running template, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 273 (demo 255 characters on 6 line(s)), 1440px 310 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    }
+  },
+  "notFound": [
+    {
+      "slot": "module-156.7",
+      "why": "the demo shows no words there, so no box can be found to fill"
+    },
+    {
+      "slot": "module-162.0",
+      "why": "no shown box on /pages/users/login-form at 390 px holds the demo words"
+    },
+    {
+      "slot": "module-162.1",
+      "why": "no shown box on /pages/users/login-form at 390 px holds the demo words"
+    }
+  ]
+}

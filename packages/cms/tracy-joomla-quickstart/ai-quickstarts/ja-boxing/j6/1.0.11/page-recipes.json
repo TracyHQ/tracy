@@ -1,0 +1,380 @@
+{
+  "schema": "tracy-ai-quickstart-page-recipes/v1",
+  "orderFrom": "the kit pages at the widest measured width, where blocks sit in their layout positions",
+  "recipes": [
+    {
+      "pageType": "home",
+      "mainBlock": "block-156",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-156",
+        "block-157",
+        "block-160",
+        "block-161",
+        "block-163",
+        "block-165",
+        "block-166",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-home"]
+    },
+    {
+      "pageType": "news",
+      "mainBlock": "news-list",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-17",
+        "block-162",
+        "news-list",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-pages_j-content_category-blog"]
+    },
+    {
+      "pageType": "news-post",
+      "mainBlock": "news-post",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "news-post",
+        "block-191",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "pages": 11,
+      "variants": [
+        {
+          "blocks": [
+            "header",
+            "block-187",
+            "block-176",
+            "block-17",
+            "news-post",
+            "block-158",
+            "block-170",
+            "block-169",
+            "block-171",
+            "block-175",
+            "block-173",
+            "block-174",
+            "block-168"
+          ],
+          "pages": 1
+        }
+      ],
+      "from": [
+        "page-pages_j-content_blog-detail",
+        "page-pages_j-content_category-blog_never-boxed-before",
+        "page-pages_j-content_category-blog_boxing-legends-remembered",
+        "page-pages_j-content_category-blog_title-defense-strategies",
+        "page-pages_j-content_category-blog_inside-boxing-techniques",
+        "page-pages_j-content_category-blog_classic-boxing-rivalries",
+        "page-pages_j-content_category-blog_boxings-finest-moments",
+        "page-pages_j-content_category-blog_boxings-ultimate-showdown",
+        "page-pages_j-content_category-blog_boxings-impact-on-culture",
+        "page-pages_j-content_category-blog_boxing-and-mental-toughness",
+        "page-pages_j-content_category-blog_boxings-undisputed-champs",
+        "page-pages_j-content_category-blog_the-evolution-of-boxing"
+      ]
+    },
+    {
+      "pageType": "featured-posts",
+      "mainBlock": "featured-list",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-17",
+        "block-162",
+        "featured-list",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-pages_j-content_featured-articles"]
+    },
+    {
+      "pageType": "authors",
+      "mainBlock": "author-list",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-17",
+        "block-162",
+        "author-list",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-pages_j-content_author-listting"]
+    },
+    {
+      "pageType": "author",
+      "mainBlock": "author-profile",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "author-profile",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "pages": 8,
+      "from": [
+        "page-pages_j-content_author-listting_author_admin",
+        "page-pages_j-content_author-listting_author_drew_stokes",
+        "page-pages_j-content_author-listting_author_daniel_vasquez",
+        "page-pages_j-content_author-listting_author_franklin_wagner",
+        "page-pages_j-content_author-listting_author_lorene_bass",
+        "page-pages_j-content_author-listting_author_corey_gibson",
+        "page-pages_j-content_author-listting_author_cora_stephens",
+        "page-pages_j-content_author-listting_author_gene_roberts"
+      ]
+    },
+    {
+      "pageType": "classes",
+      "mainBlock": "class-list",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-162",
+        "class-list",
+        "block-166",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-classes"]
+    },
+    {
+      "pageType": "class",
+      "mainBlock": "class-detail",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "class-detail",
+        "block-159",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "pages": 4,
+      "from": [
+        "page-classes_advanced-boxing",
+        "page-classes_beginner-boxing",
+        "page-classes_group-boxing",
+        "page-classes_private-training"
+      ]
+    },
+    {
+      "pageType": "contact",
+      "mainBlock": "contact-details",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-162",
+        "contact-details",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-about-us_contact"]
+    },
+    {
+      "pageType": "plans",
+      "mainBlock": "block-184",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-184",
+        "block-167",
+        "block-188",
+        "block-189",
+        "block-172",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-plans"]
+    },
+    {
+      "pageType": "about",
+      "mainBlock": "block-183",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-183",
+        "block-190",
+        "block-163",
+        "block-177",
+        "block-166",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-about-us"]
+    },
+    {
+      "pageType": "learning-center",
+      "mainBlock": "learning-list",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-162",
+        "learning-list",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-about-us_learning-center"]
+    },
+    {
+      "pageType": "learning-post",
+      "mainBlock": "learning-post",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "learning-post",
+        "block-191",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "pages": 10,
+      "from": [
+        "page-about-us_learning-center_every-champ-was-a-beginner-at-some-point",
+        "page-about-us_learning-center_unforgettable-moments-in-boxing-history",
+        "page-about-us_learning-center_the-art-and-science-of-boxing-strategy",
+        "page-about-us_learning-center_boxing-legends-stories-of-great-fighters",
+        "page-about-us_learning-center_behind-the-scenes-of-boxing-training-camps",
+        "page-about-us_learning-center_the-impact-of-boxing-on-popular-culture",
+        "page-about-us_learning-center_global-perspectives-on-the-sport-of-boxing",
+        "page-about-us_learning-center_the-business-of-professional-boxing-promotions",
+        "page-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear",
+        "page-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches"
+      ]
+    },
+    {
+      "pageType": "trainers",
+      "mainBlock": "block-178",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-162",
+        "block-178",
+        "block-166",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "from": ["page-about-us_our-trainers"]
+    },
+    {
+      "pageType": "trainer",
+      "mainBlock": "block-180",
+      "blocks": [
+        "header",
+        "block-187",
+        "block-176",
+        "block-180",
+        "block-181",
+        "block-182",
+        "block-170",
+        "block-169",
+        "block-171",
+        "block-175",
+        "block-173",
+        "block-174",
+        "block-168"
+      ],
+      "pages": 1,
+      "from": ["page-about-us_our-trainers_darlene-robertson"]
+    }
+  ],
+  "excluded": [
+    {
+      "group": "group-pages_users_login-form",
+      "reason": "a system page: the login form of an account the build never creates"
+    },
+    {
+      "group": "group-pages_users_registration-form",
+      "reason": "a system page: the registration form of an account the build never creates"
+    }
+  ]
+}

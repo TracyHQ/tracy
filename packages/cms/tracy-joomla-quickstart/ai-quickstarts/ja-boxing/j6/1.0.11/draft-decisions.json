@@ -1,0 +1,368 @@
+{
+  "$comment": "Reviewed decisions that complete the drafted block store of JA Boxing j6 1.0.11 (ticket #583). Read by packages/cms/tracy-quickstart-tools/ai-quickstart/draft.mjs. Keys are kit block ids of contracts/ja-boxing/j6/1.0.11/template-kit.json; groups merge kit blocks of one layout by an id pattern. Every block type is a key of BLOCK_TYPES (place-content-roles.mjs).",
+  "onEveryPage": ["block-187"],
+  "nonVisual": {
+    "module-171.0": {
+      "limit": 40,
+      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+    },
+    "module-180.3": {
+      "limit": 40,
+      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+    },
+    "module-180.4": {
+      "limit": 40,
+      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+    },
+    "module-180.5": {
+      "limit": 40,
+      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+    },
+    "module-180.6": {
+      "limit": 40,
+      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+    },
+    "module-166.11": {
+      "limit": 125,
+      "why": "a gallery picture's alt text; at most 125 characters, the length screen readers read in one go"
+    }
+  },
+  "measureOn": {
+    "module-188.0": {
+      "path": "/plans",
+      "click": "Memberships"
+    },
+    "module-189.0": {
+      "path": "/plans",
+      "click": "Kids credits"
+    },
+    "module-162.33": {
+      "path": "/classes"
+    },
+    "module-162.34": {
+      "path": "/classes"
+    },
+    "module-162.35": {
+      "path": "/classes"
+    }
+  },
+  "sameBoxAs": {
+    "module-162.0": "module-162.2",
+    "module-162.1": "module-162.17"
+  },
+  "omit": {
+    "module-156.7": "the hero's second button: empty in the demo, so the template never draws it and no box can be measured; the blank site keeps it empty",
+    "module-156.8": "the link of the hero's second button, left out with its label"
+  },
+  "blocks": {
+    "header": {
+      "type": "header",
+      "position": "header",
+      "nav": true,
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the main menu rebuilt from the titles of the pages the build creates, with the template's logo when no logo is given"
+      },
+      "names": {
+        "siteSetting-257986166.0": "logo-light",
+        "siteSetting-211586990.0": "logo-dark"
+      }
+    },
+    "block-176": {
+      "type": "header",
+      "names": {
+        "module-176.1": "button-label"
+      },
+      "fields": [
+        {
+          "slot": "module-176.0",
+          "name": "button-link",
+          "kind": "contact.cta_url",
+          "type": "link"
+        }
+      ]
+    },
+    "block-187": {
+      "type": "header",
+      "nav": true,
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the phone menu rebuilt from the titles of the pages the build creates"
+      }
+    },
+    "block-156": {
+      "type": "hero"
+    },
+    "block-157": {
+      "type": "services"
+    },
+    "block-160": {
+      "type": "services"
+    },
+    "block-161": {
+      "type": "call_to_action"
+    },
+    "block-163": {
+      "type": "team",
+      "retype": {
+        "module-163.12": {
+          "kind": "person.social_url",
+          "type": "link",
+          "storage": "html: the person's social profile links, one list per person"
+        }
+      }
+    },
+    "block-165": {
+      "type": "steps"
+    },
+    "block-166": {
+      "type": "gallery"
+    },
+    "block-170": {
+      "type": "footer",
+      "names": {
+        "module-170.1": "logo"
+      }
+    },
+    "block-169": {
+      "type": "newsletter"
+    },
+    "block-171": {
+      "type": "footer"
+    },
+    "block-175": {
+      "type": "contact"
+    },
+    "block-173": {
+      "type": "footer",
+      "nav": true,
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the links of the pages the build creates for the business's services"
+      }
+    },
+    "block-174": {
+      "type": "footer",
+      "nav": true,
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the links of the main pages the build creates"
+      }
+    },
+    "block-168": {
+      "type": "footer"
+    },
+    "block-162": {
+      "type": "hero",
+      "listsAsFields": ["block-162.page"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the page title, and no intro line"
+      },
+      "names": {
+        "module-162.2": "title",
+        "module-162.17": "intro",
+        "module-162.1": "default-intro",
+        "module-162.0": "default-title"
+      }
+    },
+    "block-17": {
+      "type": "text",
+      "nav": true,
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the trail of page titles the CMS builds from the menu"
+      }
+    },
+    "block-158": {
+      "type": "posts",
+      "items": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "block-191": {
+      "type": "posts",
+      "items": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "block-184": {
+      "type": "pricing"
+    },
+    "block-167": {
+      "type": "pricing"
+    },
+    "block-188": {
+      "type": "pricing"
+    },
+    "block-189": {
+      "type": "pricing",
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "itemsWhy": "the kit could not measure the minimum (a closed tab); the same layout measured min 1 in the two open tabs (block-167, block-188)"
+    },
+    "block-172": {
+      "type": "pricing"
+    },
+    "block-183": {
+      "type": "about"
+    },
+    "block-190": {
+      "type": "services"
+    },
+    "block-177": {
+      "type": "services"
+    },
+    "block-178": {
+      "type": "team",
+      "retype": {
+        "module-178.24": {
+          "kind": "person.social_url",
+          "type": "link",
+          "storage": "html: the person's social profile links, one list per person"
+        }
+      }
+    },
+    "block-180": {
+      "type": "team",
+      "listsNumbered": ["block-180.social"]
+    },
+    "block-181": {
+      "type": "gallery"
+    },
+    "block-182": {
+      "type": "team",
+      "retype": {
+        "module-182.12": {
+          "kind": "person.social_url",
+          "type": "link",
+          "storage": "html: the person's social profile links, one list per person"
+        }
+      }
+    },
+    "block-159": {
+      "type": "services"
+    }
+  },
+  "groups": [
+    {
+      "match": "^body-pages_users_",
+      "skip": "a system page (login, registration) of an account the build never creates"
+    },
+    {
+      "match": "^body-pages_j-content_category-blog(--start-\\d+)?$",
+      "id": "news-list",
+      "type": "posts"
+    },
+    {
+      "match": "^body-pages_j-content_(category-blog_|blog-detail$)",
+      "id": "news-post",
+      "type": "posts",
+      "items": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    {
+      "match": "^body-pages_j-content_featured-articles(--start-\\d+)?$",
+      "id": "featured-list",
+      "type": "posts"
+    },
+    {
+      "match": "^body-pages_j-content_author-listting$",
+      "id": "author-list",
+      "type": "team"
+    },
+    {
+      "match": "^body-pages_j-content_author-listting_author_",
+      "id": "author-profile",
+      "type": "team"
+    },
+    {
+      "match": "^body-classes$",
+      "id": "class-list",
+      "type": "services"
+    },
+    {
+      "match": "^body-classes_",
+      "id": "class-detail",
+      "type": "services",
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "listsNumbered": ["article-16.video"]
+    },
+    {
+      "match": "^body-about-us_contact$",
+      "id": "contact-details",
+      "type": "contact"
+    },
+    {
+      "match": "^body-about-us_learning-center(--start-\\d+)?$",
+      "id": "learning-list",
+      "type": "posts"
+    },
+    {
+      "match": "^body-about-us_learning-center_",
+      "id": "learning-post",
+      "type": "posts",
+      "items": {
+        "min": 1,
+        "max": 1
+      }
+    }
+  ],
+  "pageTypes": {
+    "group-home": {
+      "listing": "home"
+    },
+    "group-pages_users_login-form": {
+      "skip": "a system page: the login form of an account the build never creates"
+    },
+    "group-pages_users_registration-form": {
+      "skip": "a system page: the registration form of an account the build never creates"
+    },
+    "group-pages_j-content_category-blog": {
+      "listing": "news",
+      "item": "news-post"
+    },
+    "group-pages_j-content_featured-articles": {
+      "listing": "featured-posts",
+      "item": "featured-post"
+    },
+    "group-pages_j-content_author-listting": {
+      "listing": "authors",
+      "item": "author"
+    },
+    "group-classes": {
+      "listing": "classes",
+      "item": "class"
+    },
+    "group-about-us_contact": {
+      "listing": "contact"
+    },
+    "group-plans": {
+      "listing": "plans"
+    },
+    "group-about-us": {
+      "listing": "about"
+    },
+    "group-about-us_learning-center": {
+      "listing": "learning-center",
+      "item": "learning-post"
+    },
+    "group-about-us_our-trainers": {
+      "listing": "trainers",
+      "item": "trainer"
+    }
+  }
+}

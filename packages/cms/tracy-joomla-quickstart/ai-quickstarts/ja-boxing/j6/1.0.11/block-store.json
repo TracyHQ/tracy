@@ -1,0 +1,3834 @@
+{
+  "schema": "tracy-ai-quickstart-block-store/v1",
+  "roleVocabularyVersion": "place-content-roles/3",
+  "template": {
+    "slug": "ja-boxing",
+    "version": "1.0.11"
+  },
+  "draftedBy": {
+    "tool": "tracy-ai-quickstart-draft/1",
+    "kit": "ja-boxing/j6/1.0.11",
+    "kitTool": "template-kit 3.1.0"
+  },
+  "blocks": [
+    {
+      "id": "header",
+      "type": "header",
+      "source": "template",
+      "positions": ["header"],
+      "items": {
+        "min": 1,
+        "max": 5
+      },
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the main menu rebuilt from the titles of the pages the build creates, with the template's logo when no logo is given"
+      },
+      "fields": [
+        {
+          "name": "logo-light",
+          "kind": "business.logo",
+          "type": "image",
+          "frame": {
+            "width": 195,
+            "height": 56
+          },
+          "slot": "siteSetting-257986166.0"
+        },
+        {
+          "name": "logo-dark",
+          "kind": "business.logo",
+          "type": "image",
+          "frame": {
+            "width": 195,
+            "height": 56
+          },
+          "slot": "siteSetting-211586990.0"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "label",
+          "kind": "editorial.menu_label",
+          "type": "text",
+          "slots": ["menuItem-101.0", "menuItem-193.0", "menuItem-167.0", "menuItem-169.0", "menuItem-152.0"],
+          "limit": 35,
+          "limitFrom": "the narrowest measured menu label: kit frame (390px 35, 1440px 56)"
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the page address"
+        }
+      ],
+      "from": {
+        "kit": ["header"],
+        "entity": null
+      }
+    },
+    {
+      "id": "block-176",
+      "type": "header",
+      "source": "template",
+      "positions": ["header-r"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 66,
+          "limitFrom": "measured at 1440px on the running template, page /: 1440px 66 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the block hides it at 390px (its box is drawn 0 by 0), so 1440px is the narrowest kit width that shows it",
+          "slot": "module-176.1"
+        },
+        {
+          "name": "button-link",
+          "kind": "contact.cta_url",
+          "type": "link",
+          "slot": "module-176.0"
+        }
+      ],
+      "from": {
+        "kit": ["block-176"],
+        "entity": "module-176"
+      }
+    },
+    {
+      "id": "block-187",
+      "type": "header",
+      "source": "template",
+      "positions": ["off-canvas"],
+      "items": {
+        "min": 1,
+        "max": 10
+      },
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the phone menu rebuilt from the titles of the pages the build creates"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "label",
+          "kind": "editorial.menu_label",
+          "type": "text",
+          "slots": [
+            "menuItem-156.0",
+            "menuItem-157.0",
+            "menuItem-158.0",
+            "menuItem-162.0",
+            "menuItem-164.0",
+            "menuItem-165.0",
+            "menuItem-166.0",
+            "menuItem-194.0",
+            "menuItem-195.0",
+            "menuItem-196.0"
+          ],
+          "limit": 18,
+          "limitFrom": "the narrowest measured menu label: content map fit (phone 18)"
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the page address"
+        }
+      ],
+      "from": {
+        "kit": ["block-187"],
+        "entity": "module-187"
+      }
+    },
+    {
+      "id": "block-156",
+      "type": "hero",
+      "source": "template",
+      "positions": ["hero"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 58,
+          "limitFrom": "kit frame (390px 85, 1440px 58)",
+          "slot": "module-156.3"
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 45,
+          "limitFrom": "kit frame (390px 45, 1440px 73)",
+          "slot": "module-156.4"
+        },
+        {
+          "name": "hero-image",
+          "kind": "business.hero_image",
+          "type": "image",
+          "frame": {
+            "width": 1440,
+            "height": 960
+          },
+          "slot": "module-156.0"
+        },
+        {
+          "name": "hero-image-2",
+          "kind": "business.hero_image",
+          "type": "image",
+          "frame": {
+            "width": 1175,
+            "height": 960
+          },
+          "slot": "module-156.1"
+        },
+        {
+          "name": "heading",
+          "kind": "claim.heading",
+          "type": "text",
+          "limit": 29,
+          "limitFrom": "kit frame (390px 29, 1440px 38)",
+          "slot": "module-156.2"
+        },
+        {
+          "name": "section-cta-label",
+          "kind": "contact.cta_label",
+          "type": "text",
+          "limit": 35,
+          "limitFrom": "kit frame (390px 35, 1440px 63)",
+          "slot": "module-156.5"
+        },
+        {
+          "name": "section-cta-url",
+          "kind": "contact.cta_url",
+          "type": "link",
+          "slot": "module-156.6"
+        }
+      ],
+      "from": {
+        "kit": ["block-156"],
+        "entity": "module-156"
+      }
+    },
+    {
+      "id": "block-157",
+      "type": "services",
+      "source": "template",
+      "positions": ["section-1"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "measured at 390px on the running template, page /: 390px 30 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-157.20"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 366,
+          "limitFrom": "kit frame (390px 366, 1440px 388)",
+          "slot": "module-157.21"
+        },
+        {
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 37,
+          "limitFrom": "content map fit (desktop 68, phone 37)",
+          "slot": "module-157.23"
+        },
+        {
+          "name": "navigation-url",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "module-157.22"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 36,
+          "limitFrom": "kit frame (390px 37, 1440px 36)",
+          "slots": ["module-157.0", "module-157.1", "module-157.2", "module-157.3"]
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 106,
+          "limitFrom": "kit frame (390px 114, 1440px 106)",
+          "slots": ["module-157.4", "module-157.5", "module-157.6", "module-157.7"]
+        },
+        {
+          "name": "navigation-url-2",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slots": ["module-157.8", "module-157.9", "module-157.10", "module-157.11"]
+        },
+        {
+          "name": "item-icon",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 100,
+            "height": 100
+          },
+          "storage": "image-file",
+          "slots": ["module-157.12", "module-157.13", "module-157.14", "module-157.15"]
+        },
+        {
+          "name": "item-icon-2",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 100,
+            "height": 100
+          },
+          "storage": "image-file",
+          "slots": ["module-157.16", "module-157.17", "module-157.18", "module-157.19"]
+        }
+      ],
+      "from": {
+        "kit": ["block-157"],
+        "entity": "module-157"
+      }
+    },
+    {
+      "id": "block-160",
+      "type": "services",
+      "source": "template",
+      "positions": ["section-2"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "kit frame (390px 32, 1440px 60)",
+          "slot": "module-160.0"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 369,
+          "limitFrom": "kit frame (390px 369, 1440px 387)",
+          "slot": "module-160.1"
+        },
+        {
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 34,
+          "limitFrom": "kit frame (390px 34, 1440px 76)",
+          "slot": "module-160.6"
+        },
+        {
+          "name": "stat-proof-image",
+          "kind": "stat.proof_image",
+          "type": "image",
+          "frame": {
+            "width": 216,
+            "height": 56
+          },
+          "slot": "module-160.2"
+        },
+        {
+          "name": "stat-context",
+          "kind": "stat.context",
+          "type": "text",
+          "limit": 15,
+          "limitFrom": "content map fit (desktop 108, phone 15)",
+          "slot": "module-160.3"
+        },
+        {
+          "name": "stat-value",
+          "kind": "stat.value",
+          "type": "text",
+          "limit": 11,
+          "limitFrom": "measured at 390px on the running template, page /: 390px 11 (demo 4 characters on 1 line(s)), 1440px 31 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-160.4"
+        },
+        {
+          "name": "stat-label",
+          "kind": "stat.label",
+          "type": "text",
+          "limit": 28,
+          "limitFrom": "content map fit (desktop 121, phone 28)",
+          "slot": "module-160.5"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "name",
+          "kind": "offering.name",
+          "type": "text",
+          "limit": 35,
+          "limitFrom": "kit frame of article-14.4 (390px 37, 1440px 35)",
+          "slots": ["article-16.4", "article-14.4", "article-2.4", "article-15.4"]
+        },
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 36,
+          "limitFrom": "content map fit of article-2.7 (desktop 36, phone 36)",
+          "slots": ["article-16.7", "article-14.7", "article-2.7", "article-15.7"]
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the item page address"
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 258,
+          "limitFrom": "kit frame of article-2.0 (390px 258, 1440px 277)",
+          "slots": ["article-16.0", "article-14.0", "article-2.0", "article-15.0"]
+        },
+        {
+          "name": "schedule",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 72,
+          "limitFrom": "kit frame of article-15.8 (390px 72, 1440px 108)",
+          "slots": ["article-16.8", "article-14.8", "article-2.9", "article-15.8"]
+        },
+        {
+          "name": "schedule-2",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "kit frame (390px 30, 1440px 51)",
+          "slots": ["article-16.9", "article-14.9", "article-2.10"]
+        },
+        {
+          "name": "schedule-3",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 50,
+          "limitFrom": "kit frame of article-2.11 (390px 70, 1440px 50)",
+          "slots": ["article-16.10", "article-14.10", "article-2.11"]
+        },
+        {
+          "name": "image",
+          "kind": "offering.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 295
+          },
+          "slots": ["article-16.5", "article-14.5", "article-2.5", "article-15.5"]
+        },
+        {
+          "name": "schedule-4",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 31,
+          "limitFrom": "kit frame (390px 31, 1440px 41)",
+          "slots": ["article-2.12"]
+        },
+        {
+          "name": "schedule-5",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 44,
+          "limitFrom": "kit frame (390px 72, 1440px 44)",
+          "slots": ["article-2.13"]
+        }
+      ],
+      "from": {
+        "kit": ["block-160"],
+        "entity": "module-160"
+      }
+    },
+    {
+      "id": "block-161",
+      "type": "call_to_action",
+      "source": "template",
+      "positions": ["section-3"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "claim-heading",
+          "kind": "claim.heading",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "kit frame (390px 30, 1440px 54)",
+          "slot": "module-161.0"
+        },
+        {
+          "name": "claim-notice",
+          "kind": "claim.notice",
+          "type": "text",
+          "limit": 39,
+          "limitFrom": "kit frame (390px 39, 1440px 115)",
+          "slot": "module-161.1"
+        },
+        {
+          "name": "cta-label",
+          "kind": "contact.cta_label",
+          "type": "text",
+          "limit": 35,
+          "limitFrom": "kit frame (390px 35, 1440px 167)",
+          "slot": "module-161.3"
+        },
+        {
+          "name": "cta-url",
+          "kind": "contact.cta_url",
+          "type": "link",
+          "slot": "module-161.4"
+        },
+        {
+          "name": "illustration",
+          "kind": "editorial.illustration",
+          "type": "image",
+          "frame": {
+            "width": 1440,
+            "height": 512
+          },
+          "slot": "module-161.2"
+        }
+      ],
+      "from": {
+        "kit": ["block-161"],
+        "entity": "module-161"
+      }
+    },
+    {
+      "id": "block-163",
+      "type": "team",
+      "source": "template",
+      "positions": ["section-4"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "kit frame (390px 32, 1440px 59)",
+          "slot": "module-163.16"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 118,
+          "limitFrom": "kit frame (390px 118, 1440px 135)",
+          "slot": "module-163.17"
+        },
+        {
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "kit frame (390px 32, 1440px 150)",
+          "slot": "module-163.18"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "image",
+          "kind": "person.image",
+          "type": "image",
+          "frame": {
+            "width": 350,
+            "height": 351
+          },
+          "slots": ["module-163.0", "module-163.1", "module-163.2", "module-163.3"]
+        },
+        {
+          "name": "name",
+          "kind": "person.name",
+          "type": "text",
+          "limit": 31,
+          "limitFrom": "kit frame of block-163.7 (390px 34, 1440px 31)",
+          "slots": ["module-163.4", "module-163.5", "module-163.6", "module-163.7"]
+        },
+        {
+          "name": "navigation-url",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slots": ["module-163.8", "module-163.9", "module-163.10", "module-163.11"]
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "person.social_url",
+          "type": "link",
+          "slots": ["module-163.12", "module-163.13", "module-163.14", "module-163.15"],
+          "storage": "html: the person's social profile links, one list per person"
+        }
+      ],
+      "from": {
+        "kit": ["block-163"],
+        "entity": "module-163"
+      }
+    },
+    {
+      "id": "block-165",
+      "type": "steps",
+      "source": "template",
+      "positions": ["section-5"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "kit frame (390px 32, 1440px 60)",
+          "slot": "module-165.0"
+        },
+        {
+          "name": "hero-image",
+          "kind": "business.hero_image",
+          "type": "image",
+          "frame": {
+            "width": 704,
+            "height": 733
+          },
+          "slot": "module-165.1"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "title",
+          "kind": "step.title",
+          "type": "text",
+          "limit": 18,
+          "limitFrom": "kit frame of block-165.4 (390px 18, 1440px 61)",
+          "slots": ["module-165.2", "module-165.3", "module-165.4", "module-165.5"]
+        },
+        {
+          "name": "description",
+          "kind": "step.description",
+          "type": "text",
+          "limit": 502,
+          "limitFrom": "content map fit (desktop 502, phone 502)",
+          "slots": ["module-165.6", "module-165.7", "module-165.8", "module-165.9"]
+        }
+      ],
+      "from": {
+        "kit": ["block-165"],
+        "entity": "module-165"
+      }
+    },
+    {
+      "id": "block-166",
+      "type": "gallery",
+      "source": "template",
+      "positions": ["section-6"],
+      "items": {
+        "min": 6,
+        "max": 6
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 33,
+          "limitFrom": "measured at 390px on the running template, page /: 390px 33 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-166.17"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 84,
+          "limitFrom": "kit frame (390px 84, 1440px 129)",
+          "slot": "module-166.18"
+        },
+        {
+          "name": "cta-label",
+          "kind": "contact.cta_label",
+          "type": "text",
+          "limit": 35,
+          "limitFrom": "kit frame (390px 35, 1440px 167)",
+          "slot": "module-166.19"
+        },
+        {
+          "name": "cta-url",
+          "kind": "contact.cta_url",
+          "type": "link",
+          "slot": "module-166.20"
+        },
+        {
+          "name": "stat-value",
+          "kind": "stat.value",
+          "type": "text",
+          "limit": 13,
+          "limitFrom": "kit frame (390px 25, 1440px 13)",
+          "slot": "module-166.0"
+        },
+        {
+          "name": "stat-label",
+          "kind": "stat.label",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "kit frame (390px 32, 1440px 26)",
+          "slot": "module-166.1"
+        },
+        {
+          "name": "stat-context",
+          "kind": "stat.context",
+          "type": "text",
+          "limit": 68,
+          "limitFrom": "kit frame (390px 68, 1440px 79)",
+          "slot": "module-166.2"
+        },
+        {
+          "name": "design-show-on",
+          "type": "design",
+          "slot": "module-166.3",
+          "designFrom": "gallery.isotope[show-on].0.params"
+        },
+        {
+          "name": "design-gutter",
+          "type": "design",
+          "slot": "module-166.4",
+          "designFrom": "gallery.isotope[gutter].0.params"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "gallery-image",
+          "kind": "business.gallery_image",
+          "type": "image",
+          "frame": {
+            "width": 448,
+            "height": 437
+          },
+          "slots": [
+            "module-166.5",
+            "module-166.6",
+            "module-166.7",
+            "module-166.8",
+            "module-166.9",
+            "module-166.10"
+          ]
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 125,
+          "limitFrom": "not drawn at any width: a gallery picture's alt text; at most 125 characters, the length screen readers read in one go",
+          "slots": [
+            "module-166.11",
+            "module-166.12",
+            "module-166.13",
+            "module-166.14",
+            "module-166.15",
+            "module-166.16"
+          ]
+        }
+      ],
+      "from": {
+        "kit": ["block-166"],
+        "entity": "module-166"
+      }
+    },
+    {
+      "id": "block-170",
+      "type": "footer",
+      "source": "template",
+      "positions": ["footinfo-1"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "logo",
+          "kind": "business.logo",
+          "type": "image",
+          "frame": {
+            "width": 195,
+            "height": 56
+          },
+          "slot": "module-170.1"
+        }
+      ],
+      "from": {
+        "kit": ["block-170"],
+        "entity": "module-170"
+      }
+    },
+    {
+      "id": "block-169",
+      "type": "newsletter",
+      "source": "template",
+      "positions": ["footinfo-2"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 36,
+          "limitFrom": "kit frame (390px 36, 1440px 57)",
+          "slot": "module-169.0"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 109,
+          "limitFrom": "kit frame (390px 109, 1440px 116)",
+          "slot": "module-169.1"
+        }
+      ],
+      "from": {
+        "kit": ["block-169"],
+        "entity": "module-169"
+      }
+    },
+    {
+      "id": "block-171",
+      "type": "footer",
+      "source": "template",
+      "positions": ["footnav-1"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "social-label",
+          "kind": "contact.social_label",
+          "type": "text",
+          "limit": 40,
+          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
+          "slots": ["module-171.0", "module-171.1", "module-171.2", "module-171.3"]
+        },
+        {
+          "name": "social-url",
+          "kind": "contact.social_url",
+          "type": "link",
+          "slots": ["module-171.4", "module-171.5", "module-171.6", "module-171.7"]
+        },
+        {
+          "name": "item-icon",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "slots": ["module-171.8", "module-171.9", "module-171.10", "module-171.11"]
+        }
+      ],
+      "from": {
+        "kit": ["block-171"],
+        "entity": "module-171"
+      }
+    },
+    {
+      "id": "block-175",
+      "type": "contact",
+      "source": "template",
+      "positions": ["footnav-2"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 23,
+          "limitFrom": "kit frame (390px 34, 1440px 23)",
+          "slot": "module-175.5"
+        },
+        {
+          "name": "phone",
+          "kind": "contact.phone",
+          "type": "text",
+          "limit": 25,
+          "limitFrom": "kit frame (390px 41, 1440px 25)",
+          "slot": "module-175.1"
+        },
+        {
+          "name": "address",
+          "kind": "contact.address",
+          "type": "text",
+          "limit": 50,
+          "limitFrom": "kit frame (390px 85, 1440px 50)",
+          "slot": "module-175.2"
+        },
+        {
+          "name": "email",
+          "kind": "contact.email",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "kit frame (390px 44, 1440px 30)",
+          "slot": "module-175.4"
+        }
+      ],
+      "from": {
+        "kit": ["block-175"],
+        "entity": "module-175"
+      }
+    },
+    {
+      "id": "block-173",
+      "type": "footer",
+      "source": "template",
+      "positions": ["footnav-3"],
+      "items": {
+        "min": 1,
+        "max": 2
+      },
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the links of the pages the build creates for the business's services"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 14,
+          "limitFrom": "kit frame (390px 14, 1440px 21)",
+          "slot": "module-173.0"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "label",
+          "kind": "editorial.menu_label",
+          "type": "text",
+          "slots": ["menuItem-191.0", "menuItem-192.0"],
+          "limit": 21,
+          "limitFrom": "the narrowest measured menu label: kit frame (390px 21, 1440px 30)"
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the page address"
+        }
+      ],
+      "from": {
+        "kit": ["block-173"],
+        "entity": "module-173"
+      }
+    },
+    {
+      "id": "block-174",
+      "type": "footer",
+      "source": "template",
+      "positions": ["footnav-4"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the links of the main pages the build creates"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 16,
+          "limitFrom": "kit frame (390px 16, 1440px 23)",
+          "slot": "module-174.0"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "label",
+          "kind": "editorial.menu_label",
+          "type": "text",
+          "slots": ["menuItem-184.0", "menuItem-185.0", "menuItem-186.0", "menuItem-187.0"],
+          "limit": 20,
+          "limitFrom": "the narrowest measured menu label: kit frame (390px 20, 1440px 30)"
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the page address"
+        }
+      ],
+      "from": {
+        "kit": ["block-174"],
+        "entity": "module-174"
+      }
+    },
+    {
+      "id": "block-168",
+      "type": "footer",
+      "source": "template",
+      "positions": ["copyright"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "from": {
+        "kit": ["block-168"],
+        "entity": "module-168"
+      }
+    },
+    {
+      "id": "block-162",
+      "type": "hero",
+      "source": "template",
+      "positions": ["masthead"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the page title, and no intro line"
+      },
+      "fields": [
+        {
+          "name": "default-title",
+          "kind": "business.name",
+          "type": "text",
+          "limitFrom": "the same box as module-162.2: content map fit of block-162.7 (desktop 27, phone 27)",
+          "slot": "module-162.0",
+          "limit": 27
+        },
+        {
+          "name": "default-intro",
+          "kind": "business.tagline",
+          "type": "text",
+          "limitFrom": "the same box as module-162.17: kit frame (390px 123, 1440px 197)",
+          "slot": "module-162.1",
+          "limit": 123
+        },
+        {
+          "name": "title",
+          "kind": "editorial.menu_label",
+          "type": "text",
+          "limit": 27,
+          "limitFrom": "content map fit of block-162.7 (desktop 27, phone 27)",
+          "slot": "module-162.2"
+        },
+        {
+          "name": "intro",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 123,
+          "limitFrom": "kit frame (390px 123, 1440px 197)",
+          "slot": "module-162.17"
+        },
+        {
+          "name": "stat-menu-label",
+          "kind": "editorial.menu_label",
+          "type": "text",
+          "limit": 27,
+          "limitFrom": "content map fit (desktop 27, phone 27)",
+          "slot": "module-162.16"
+        },
+        {
+          "name": "stat-paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 259,
+          "limitFrom": "content map fit (desktop 259, phone 259)",
+          "slot": "module-162.31"
+        },
+        {
+          "name": "stat-proof-image",
+          "kind": "stat.proof_image",
+          "type": "image",
+          "frame": {
+            "width": 216,
+            "height": 56
+          },
+          "slot": "module-162.32"
+        },
+        {
+          "name": "stat-context",
+          "kind": "stat.context",
+          "type": "text",
+          "limit": 16,
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 16 (demo 9 characters on 1 line(s)), 1440px 48 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-162.33"
+        },
+        {
+          "name": "stat-value",
+          "kind": "stat.value",
+          "type": "text",
+          "limit": 10,
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 10 (demo 4 characters on 1 line(s)), 1440px 41 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-162.34"
+        },
+        {
+          "name": "stat-label",
+          "kind": "stat.label",
+          "type": "text",
+          "limit": 29,
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 29 (demo 22 characters on 1 line(s)), 1440px 63 (demo 22 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-162.35"
+        }
+      ],
+      "from": {
+        "kit": ["block-162"],
+        "entity": "module-162"
+      }
+    },
+    {
+      "id": "block-17",
+      "type": "text",
+      "source": "template",
+      "positions": ["breadcrumbs"],
+      "items": {
+        "min": 1,
+        "max": 2
+      },
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the trail of page titles the CMS builds from the menu"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "label",
+          "kind": "editorial.menu_label",
+          "type": "text",
+          "slots": ["menuItem-163.0", "menuItem-155.0"],
+          "limit": 28,
+          "limitFrom": "the narrowest measured menu label: kit frame (390px 28, 1440px 139)"
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the page address"
+        }
+      ],
+      "from": {
+        "kit": ["block-17"],
+        "entity": "module-17"
+      }
+    },
+    {
+      "id": "news-list",
+      "type": "posts",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 2,
+        "max": 6
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "title",
+          "kind": "article.title",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "article-1.15",
+            "article-3.15",
+            "article-4.15",
+            "article-5.15",
+            "article-6.15",
+            "article-7.15"
+          ]
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the item page address"
+        },
+        {
+          "name": "lead",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 298,
+          "limitFrom": "kit frame of article-3.0 (390px 298, 1440px 312)",
+          "slots": ["article-1.0", "article-3.0", "article-4.0", "article-5.0", "article-6.0", "article-7.0"]
+        },
+        {
+          "name": "image",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 424
+          },
+          "slots": [
+            "article-1.16",
+            "article-3.16",
+            "article-4.16",
+            "article-5.16",
+            "article-6.16",
+            "article-7.16"
+          ]
+        }
+      ],
+      "from": {
+        "kit": ["body-pages_j-content_category-blog", "body-pages_j-content_category-blog--start-6"],
+        "entity": "category-8"
+      }
+    },
+    {
+      "id": "featured-list",
+      "type": "posts",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 2,
+        "max": 6
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "title",
+          "kind": "article.title",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "article-1.15",
+            "article-3.15",
+            "article-4.15",
+            "article-5.15",
+            "article-6.15",
+            "article-7.15"
+          ]
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the item page address"
+        },
+        {
+          "name": "lead",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 298,
+          "limitFrom": "kit frame of article-3.0 (390px 298, 1440px 312)",
+          "slots": ["article-1.0", "article-3.0", "article-4.0", "article-5.0", "article-6.0", "article-7.0"]
+        },
+        {
+          "name": "image",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 424
+          },
+          "slots": [
+            "article-1.16",
+            "article-3.16",
+            "article-4.16",
+            "article-5.16",
+            "article-6.16",
+            "article-7.16"
+          ]
+        }
+      ],
+      "from": {
+        "kit": ["body-pages_j-content_featured-articles", "body-pages_j-content_featured-articles--start-6"],
+        "entity": null
+      }
+    },
+    {
+      "id": "author-list",
+      "type": "team",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 4,
+        "max": 8
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "name",
+          "kind": "person.name",
+          "type": "text",
+          "limit": 33,
+          "limitFrom": "kit frame (390px 33, 1440px 49)",
+          "slots": ["user-44.0", "user-45.0", "user-46.0", "user-47.0", "user-48.0", "user-49.0", "user-51.0"]
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the item page address"
+        }
+      ],
+      "from": {
+        "kit": ["body-pages_j-content_author-listting"],
+        "entity": null
+      }
+    },
+    {
+      "id": "news-post",
+      "type": "posts",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "kind": "article.title",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "article-6.15"
+        },
+        {
+          "name": "lead",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 298,
+          "limitFrom": "kit frame of article-3.0 (390px 298, 1440px 312)",
+          "slot": "article-6.0"
+        },
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 44,
+          "limitFrom": "kit frame (390px 44, 1440px 94)",
+          "slot": "article-6.1"
+        },
+        {
+          "name": "lead-2",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 901,
+          "limitFrom": "kit frame (390px 916, 1440px 901)",
+          "slot": "article-6.2"
+        },
+        {
+          "name": "lead-3",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 77,
+          "limitFrom": "kit frame (390px 77, 1440px 116)",
+          "slot": "article-6.3"
+        },
+        {
+          "name": "lead-4",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 74,
+          "limitFrom": "kit frame (390px 74, 1440px 116)",
+          "slot": "article-6.4"
+        },
+        {
+          "name": "lead-5",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 72,
+          "limitFrom": "kit frame (390px 72, 1440px 107)",
+          "slot": "article-6.5"
+        },
+        {
+          "name": "lead-6",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 74,
+          "limitFrom": "kit frame (390px 74, 1440px 111)",
+          "slot": "article-6.6"
+        },
+        {
+          "name": "lead-7",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 492,
+          "limitFrom": "kit frame (390px 492, 1440px 525)",
+          "slot": "article-6.7"
+        },
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 42,
+          "limitFrom": "kit frame (390px 42, 1440px 91)",
+          "slot": "article-6.10"
+        },
+        {
+          "name": "lead-8",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 251,
+          "limitFrom": "kit frame (390px 251, 1440px 257)",
+          "slot": "article-6.11"
+        },
+        {
+          "name": "lead-9",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 295,
+          "limitFrom": "kit frame (390px 295, 1440px 419)",
+          "slot": "article-6.12"
+        },
+        {
+          "name": "lead-10",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 678,
+          "limitFrom": "kit frame (390px 678, 1440px 767)",
+          "slot": "article-6.13"
+        },
+        {
+          "name": "lead-11",
+          "kind": "article.lead",
+          "type": "text",
+          "limit": 506,
+          "limitFrom": "content map fit (desktop 528, phone 506)",
+          "slot": "article-6.14"
+        },
+        {
+          "name": "image",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 491,
+            "height": 303
+          },
+          "slot": "article-6.8"
+        },
+        {
+          "name": "image-2",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 491,
+            "height": 303
+          },
+          "slot": "article-6.9"
+        },
+        {
+          "name": "image-3",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 424
+          },
+          "slot": "article-6.16"
+        },
+        {
+          "name": "image-4",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 1014,
+            "height": 570
+          },
+          "slot": "article-6.17"
+        }
+      ],
+      "from": {
+        "kit": [
+          "body-pages_j-content_blog-detail",
+          "body-pages_j-content_category-blog_never-boxed-before",
+          "body-pages_j-content_category-blog_boxing-legends-remembered",
+          "body-pages_j-content_category-blog_title-defense-strategies",
+          "body-pages_j-content_category-blog_inside-boxing-techniques",
+          "body-pages_j-content_category-blog_classic-boxing-rivalries",
+          "body-pages_j-content_category-blog_boxings-finest-moments",
+          "body-pages_j-content_category-blog_boxings-ultimate-showdown",
+          "body-pages_j-content_category-blog_boxings-impact-on-culture",
+          "body-pages_j-content_category-blog_boxing-and-mental-toughness",
+          "body-pages_j-content_category-blog_boxings-undisputed-champs",
+          "body-pages_j-content_category-blog_the-evolution-of-boxing"
+        ],
+        "entity": "article-6"
+      }
+    },
+    {
+      "id": "block-158",
+      "type": "posts",
+      "source": "template",
+      "positions": ["main-bottom-1"],
+      "items": {
+        "min": 1,
+        "max": 2
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "kit frame (390px 30, 1440px 55)",
+          "slot": "module-158.0"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 118,
+          "limitFrom": "kit frame (390px 118, 1440px 135)",
+          "slot": "module-158.1"
+        }
+      ],
+      "from": {
+        "kit": ["block-158"],
+        "entity": "module-158"
+      }
+    },
+    {
+      "id": "class-list",
+      "type": "services",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 2,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "name",
+          "kind": "offering.name",
+          "type": "text",
+          "limit": 35,
+          "limitFrom": "kit frame of article-14.4 (390px 37, 1440px 35)",
+          "slots": ["article-2.4", "article-14.4", "article-15.4", "article-16.4"]
+        },
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 36,
+          "limitFrom": "content map fit (desktop 36, phone 36)",
+          "slots": ["article-2.7", "article-14.7", "article-15.7", "article-16.7"]
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the item page address"
+        },
+        {
+          "name": "schedule",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 72,
+          "limitFrom": "kit frame of article-15.8 (390px 72, 1440px 108)",
+          "slots": ["article-2.9", "article-14.8", "article-15.8", "article-16.8"]
+        },
+        {
+          "name": "schedule-2",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "kit frame of article-16.9 (390px 30, 1440px 51)",
+          "slots": ["article-2.10", "article-14.9", "article-16.9"]
+        },
+        {
+          "name": "schedule-3",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 50,
+          "limitFrom": "kit frame (390px 70, 1440px 50)",
+          "slots": ["article-2.11", "article-14.10", "article-16.10"]
+        },
+        {
+          "name": "schedule-4",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 31,
+          "limitFrom": "kit frame (390px 31, 1440px 41)",
+          "slots": ["article-2.12"]
+        },
+        {
+          "name": "schedule-5",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 44,
+          "limitFrom": "kit frame (390px 72, 1440px 44)",
+          "slots": ["article-2.13"]
+        },
+        {
+          "name": "image",
+          "kind": "offering.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 295
+          },
+          "slots": ["article-2.5", "article-14.5", "article-15.5", "article-16.5"]
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 258,
+          "limitFrom": "kit frame (390px 258, 1440px 277)",
+          "slots": ["article-2.0", "article-14.0", "article-15.0", "article-16.0"]
+        }
+      ],
+      "from": {
+        "kit": ["body-classes"],
+        "entity": "category-9"
+      }
+    },
+    {
+      "id": "contact-details",
+      "type": "contact",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 79,
+          "limitFrom": "kit frame (390px 79, 1440px 80)",
+          "slot": "contact-1.4"
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 29,
+          "limitFrom": "measured at 390px on the running template, page /about-us/contact: 390px 33 (demo 10 characters on 1 line(s)), 1440px 29 (demo 10 characters on 1 line(s)); the form field's placeholder repeated until it was wider than the field",
+          "slot": "field-1.1"
+        },
+        {
+          "name": "address",
+          "kind": "contact.address",
+          "type": "text",
+          "limit": 69,
+          "limitFrom": "kit frame (390px 69, 1440px 69)",
+          "slot": "contact-1.1"
+        },
+        {
+          "name": "phone",
+          "kind": "contact.phone",
+          "type": "text",
+          "limit": 22,
+          "limitFrom": "kit frame (390px 30, 1440px 22)",
+          "slot": "contact-1.2"
+        },
+        {
+          "name": "email",
+          "kind": "contact.email",
+          "type": "text",
+          "limit": 27,
+          "limitFrom": "kit frame (390px 36, 1440px 27)",
+          "slot": "contact-1.3"
+        }
+      ],
+      "from": {
+        "kit": ["body-about-us_contact"],
+        "entity": "contact-1"
+      }
+    },
+    {
+      "id": "block-184",
+      "type": "pricing",
+      "source": "template",
+      "positions": ["section-1"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 24,
+          "limitFrom": "kit frame (390px 24, 1440px 81)",
+          "slot": "module-188.24"
+        },
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 28,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 28 (demo 21 characters on 1 line(s)), 1440px 47 (demo 21 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-184.0"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 84,
+          "limitFrom": "kit frame (390px 84, 1440px 129)",
+          "slot": "module-184.2"
+        },
+        {
+          "name": "heading-3",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 42,
+          "limitFrom": "kit frame (390px 42, 1440px 91)",
+          "slot": "module-167.24"
+        },
+        {
+          "name": "heading-4",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 45,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 45 (demo 12 characters on 1 line(s)), 1440px 94 (demo 12 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-189.24"
+        }
+      ],
+      "from": {
+        "kit": ["block-184"],
+        "entity": "module-184"
+      }
+    },
+    {
+      "id": "block-167",
+      "type": "pricing",
+      "source": "template",
+      "positions": ["inside:block-184"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "price",
+          "kind": "package.price",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "content map fit (desktop 30, phone 30)",
+          "slots": ["module-167.0", "module-167.1", "module-167.2", "module-167.3"]
+        },
+        {
+          "name": "name",
+          "kind": "package.name",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "kit frame (390px 33, 1440px 26)",
+          "slots": ["module-167.4", "module-167.5", "module-167.6", "module-167.7"]
+        },
+        {
+          "name": "period",
+          "kind": "package.period",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "content map fit of block-167.9 (desktop 26, phone 34)",
+          "slots": ["module-167.8", "module-167.9", "module-167.10", "module-167.11"]
+        },
+        {
+          "name": "cta-label",
+          "kind": "package.cta_label",
+          "type": "text",
+          "limit": 19,
+          "limitFrom": "content map fit of block-167.13 (desktop 19, phone 19)",
+          "slots": ["module-167.12", "module-167.13", "module-167.14", "module-167.15"]
+        },
+        {
+          "name": "cta-url",
+          "kind": "package.cta_url",
+          "type": "link",
+          "slots": ["module-167.16", "module-167.17", "module-167.18", "module-167.19"]
+        },
+        {
+          "name": "features-list",
+          "kind": "package.features_list",
+          "type": "text",
+          "limit": 242,
+          "limitFrom": "content map fit (desktop 242, phone 242)",
+          "slots": ["module-167.20", "module-167.21", "module-167.22", "module-167.23"]
+        }
+      ],
+      "from": {
+        "kit": ["block-184 list block-167.item"],
+        "entity": "module-167"
+      }
+    },
+    {
+      "id": "block-188",
+      "type": "pricing",
+      "source": "template",
+      "positions": ["inside:block-184"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "price",
+          "kind": "package.price",
+          "type": "text",
+          "limit": 16,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": ["module-188.0", "module-188.1", "module-188.2", "module-188.3"]
+        },
+        {
+          "name": "name",
+          "kind": "package.name",
+          "type": "text",
+          "limit": 25,
+          "limitFrom": "content map fit (desktop 25, phone 32)",
+          "slots": ["module-188.4", "module-188.5", "module-188.6", "module-188.7"]
+        },
+        {
+          "name": "period",
+          "kind": "package.period",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "content map fit (desktop 26, phone 34)",
+          "slots": ["module-188.8", "module-188.9", "module-188.10", "module-188.11"]
+        },
+        {
+          "name": "cta-label",
+          "kind": "package.cta_label",
+          "type": "text",
+          "limit": 19,
+          "limitFrom": "content map fit (desktop 19, phone 19)",
+          "slots": ["module-188.12", "module-188.13", "module-188.14", "module-188.15"]
+        },
+        {
+          "name": "cta-url",
+          "kind": "package.cta_url",
+          "type": "link",
+          "slots": ["module-188.16", "module-188.17", "module-188.18", "module-188.19"]
+        },
+        {
+          "name": "features-list",
+          "kind": "package.features_list",
+          "type": "text",
+          "limit": 242,
+          "limitFrom": "content map fit (desktop 242, phone 242)",
+          "slots": ["module-188.20", "module-188.21", "module-188.22", "module-188.23"]
+        }
+      ],
+      "from": {
+        "kit": ["block-184 list block-188.item"],
+        "entity": "module-188"
+      }
+    },
+    {
+      "id": "block-189",
+      "type": "pricing",
+      "source": "template",
+      "positions": ["inside:block-184"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "price",
+          "kind": "package.price",
+          "type": "text",
+          "limit": 16,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": ["module-189.0", "module-189.1", "module-189.2", "module-189.3"]
+        },
+        {
+          "name": "name",
+          "kind": "package.name",
+          "type": "text",
+          "limit": 25,
+          "limitFrom": "content map fit (desktop 25, phone 32)",
+          "slots": ["module-189.4", "module-189.5", "module-189.6", "module-189.7"]
+        },
+        {
+          "name": "period",
+          "kind": "package.period",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "content map fit (desktop 26, phone 34)",
+          "slots": ["module-189.8", "module-189.9", "module-189.10", "module-189.11"]
+        },
+        {
+          "name": "cta-label",
+          "kind": "package.cta_label",
+          "type": "text",
+          "limit": 19,
+          "limitFrom": "content map fit (desktop 19, phone 19)",
+          "slots": ["module-189.12", "module-189.13", "module-189.14", "module-189.15"]
+        },
+        {
+          "name": "cta-url",
+          "kind": "package.cta_url",
+          "type": "link",
+          "slots": ["module-189.16", "module-189.17", "module-189.18", "module-189.19"]
+        },
+        {
+          "name": "features-list",
+          "kind": "package.features_list",
+          "type": "text",
+          "limit": 242,
+          "limitFrom": "content map fit (desktop 242, phone 242)",
+          "slots": ["module-189.20", "module-189.21", "module-189.22", "module-189.23"]
+        }
+      ],
+      "from": {
+        "kit": ["block-184 list block-189.item"],
+        "entity": "module-189"
+      }
+    },
+    {
+      "id": "block-172",
+      "type": "pricing",
+      "source": "template",
+      "positions": ["section-2"],
+      "items": {
+        "min": 1,
+        "max": 2
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 88,
+          "limitFrom": "kit frame (390px 88, 1440px 140)",
+          "slot": "module-172.11"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "price",
+          "kind": "offering.price",
+          "type": "text",
+          "limit": 11,
+          "limitFrom": "kit frame (390px 16, 1440px 11)",
+          "slots": ["module-172.0", "module-172.1"]
+        },
+        {
+          "name": "name",
+          "kind": "offering.name",
+          "type": "text",
+          "limit": 35,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 35 (demo 9 characters on 1 line(s)), 1440px 61 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": ["module-172.2", "module-172.3"]
+        },
+        {
+          "name": "price-note",
+          "kind": "offering.price_note",
+          "type": "text",
+          "limit": 36,
+          "limitFrom": "kit frame (390px 41, 1440px 36)",
+          "slots": ["module-172.4", "module-172.5"]
+        },
+        {
+          "name": "cta-label",
+          "kind": "offering.cta_label",
+          "type": "text",
+          "limit": 21,
+          "limitFrom": "kit frame (390px 26, 1440px 21)",
+          "slots": ["module-172.6", "module-172.7"]
+        },
+        {
+          "name": "cta-url",
+          "kind": "offering.cta_url",
+          "type": "link",
+          "slots": ["module-172.8", "module-172.9"]
+        }
+      ],
+      "from": {
+        "kit": ["block-172"],
+        "entity": "module-172"
+      }
+    },
+    {
+      "id": "block-183",
+      "type": "about",
+      "source": "template",
+      "positions": ["section-1"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 32 (demo 9 characters on 1 line(s)), 1440px 92 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-183.7"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 287,
+          "limitFrom": "kit frame (390px 287, 1440px 329)",
+          "slot": "module-183.1"
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 287,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 287 (demo 255 characters on 7 line(s)), 1440px 329 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-183.8"
+        },
+        {
+          "name": "quote-text",
+          "kind": "quote.text",
+          "type": "text",
+          "limit": 581,
+          "limitFrom": "content map fit (desktop 581, phone 581)",
+          "slot": "module-183.2"
+        },
+        {
+          "name": "quote-author-image",
+          "kind": "quote.author_image",
+          "type": "image",
+          "frame": {
+            "width": 120,
+            "height": 89
+          },
+          "slot": "module-183.3"
+        },
+        {
+          "name": "quote-author-image-2",
+          "kind": "quote.author_image",
+          "type": "image",
+          "frame": {
+            "width": 120,
+            "height": 89
+          },
+          "slot": "module-183.4"
+        },
+        {
+          "name": "quote-author-name",
+          "kind": "quote.author_name",
+          "type": "text",
+          "limit": 40,
+          "limitFrom": "kit frame (390px 40, 1440px 49)",
+          "slot": "module-183.5"
+        },
+        {
+          "name": "quote-author-context",
+          "kind": "quote.author_context",
+          "type": "text",
+          "limit": 48,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 48 (demo 10 characters on 1 line(s)), 1440px 59 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-183.6"
+        },
+        {
+          "name": "illustration",
+          "kind": "editorial.illustration",
+          "type": "image",
+          "frame": {
+            "width": 1078,
+            "height": 606
+          },
+          "slot": "module-183.0"
+        }
+      ],
+      "from": {
+        "kit": ["block-183"],
+        "entity": "module-183"
+      }
+    },
+    {
+      "id": "block-190",
+      "type": "services",
+      "source": "template",
+      "positions": ["section-1"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 30 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-190.20"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 366,
+          "limitFrom": "kit frame (390px 366, 1440px 388)",
+          "slot": "module-190.21"
+        },
+        {
+          "name": "navigation-url",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "module-190.22"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 36,
+          "limitFrom": "kit frame (390px 37, 1440px 36)",
+          "slots": ["module-190.0", "module-190.1", "module-190.2", "module-190.3"]
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 106,
+          "limitFrom": "kit frame (390px 114, 1440px 106)",
+          "slots": ["module-190.4", "module-190.5", "module-190.6", "module-190.7"]
+        },
+        {
+          "name": "navigation-url-2",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slots": ["module-190.8", "module-190.9", "module-190.10", "module-190.11"]
+        },
+        {
+          "name": "item-icon",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 100,
+            "height": 100
+          },
+          "storage": "image-file",
+          "slots": ["module-190.12", "module-190.13", "module-190.14", "module-190.15"]
+        },
+        {
+          "name": "item-icon-2",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 100,
+            "height": 100
+          },
+          "storage": "image-file",
+          "slots": ["module-190.16", "module-190.17", "module-190.18", "module-190.19"]
+        }
+      ],
+      "from": {
+        "kit": ["block-190"],
+        "entity": "module-190"
+      }
+    },
+    {
+      "id": "block-177",
+      "type": "services",
+      "source": "template",
+      "positions": ["section-5"],
+      "items": {
+        "min": 1,
+        "max": 2
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "image",
+          "kind": "offering.image",
+          "type": "image",
+          "frame": {
+            "width": 704,
+            "height": 529
+          },
+          "slots": ["module-177.0", "module-177.1"]
+        },
+        {
+          "name": "name",
+          "kind": "offering.name",
+          "type": "text",
+          "limit": 23,
+          "limitFrom": "content map fit (desktop 23, phone 23)",
+          "slots": ["module-177.2", "module-177.3"]
+        },
+        {
+          "name": "navigation-url",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slots": ["module-177.4", "module-177.5"]
+        },
+        {
+          "name": "description",
+          "kind": "offering.description",
+          "type": "text",
+          "limit": 323,
+          "limitFrom": "kit frame (390px 337, 1440px 323)",
+          "slots": ["module-177.6", "module-177.7"]
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 23,
+          "limitFrom": "content map fit (desktop 56, phone 23)",
+          "slots": ["module-177.8", "module-177.9"]
+        },
+        {
+          "name": "email",
+          "kind": "contact.email",
+          "type": "text",
+          "limit": 27,
+          "limitFrom": "kit frame (390px 27, 1440px 60)",
+          "slots": ["module-177.10", "module-177.11"]
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 29,
+          "limitFrom": "content map fit (desktop 65, phone 29)",
+          "slots": ["module-177.12", "module-177.13"]
+        },
+        {
+          "name": "phone",
+          "kind": "contact.phone",
+          "type": "text",
+          "limit": 24,
+          "limitFrom": "content map fit of block-177.15 (desktop 24, phone 36)",
+          "slots": ["module-177.14", "module-177.15"]
+        },
+        {
+          "name": "paragraph-3",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 45,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 45 (demo 15 characters on 1 line(s)), 1440px 81 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": ["module-177.16", "module-177.17"]
+        }
+      ],
+      "from": {
+        "kit": ["block-177"],
+        "entity": "module-177"
+      }
+    },
+    {
+      "id": "learning-list",
+      "type": "posts",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 2,
+        "max": 6
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "title",
+          "kind": "article.title",
+          "type": "text",
+          "limit": 50,
+          "limitFrom": "measured at 390px on the running template, page /about-us/learning-center: 390px 70 (demo 41 characters on 2 line(s)), 1440px 50 (demo 41 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "article-18.12",
+            "article-19.12",
+            "article-20.12",
+            "article-21.12",
+            "article-22.12",
+            "article-23.12"
+          ]
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the item page address"
+        },
+        {
+          "name": "image",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 424
+          },
+          "slots": [
+            "article-18.13",
+            "article-19.13",
+            "article-20.13",
+            "article-21.13",
+            "article-22.13",
+            "article-23.13"
+          ]
+        }
+      ],
+      "from": {
+        "kit": ["body-about-us_learning-center", "body-about-us_learning-center--start-6"],
+        "entity": "category-10"
+      }
+    },
+    {
+      "id": "block-178",
+      "type": "team",
+      "source": "template",
+      "positions": ["section-1"],
+      "items": {
+        "min": 1,
+        "max": 8
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "image",
+          "kind": "person.image",
+          "type": "image",
+          "frame": {
+            "width": 350,
+            "height": 351
+          },
+          "slots": [
+            "module-178.0",
+            "module-178.1",
+            "module-178.2",
+            "module-178.3",
+            "module-178.4",
+            "module-178.5",
+            "module-178.6",
+            "module-178.7"
+          ]
+        },
+        {
+          "name": "name",
+          "kind": "person.name",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "content map fit of block-178.12 (desktop 30, phone 32)",
+          "slots": [
+            "module-178.8",
+            "module-178.9",
+            "module-178.10",
+            "module-178.11",
+            "module-178.12",
+            "module-178.13",
+            "module-178.14",
+            "module-178.15"
+          ]
+        },
+        {
+          "name": "navigation-url",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slots": [
+            "module-178.16",
+            "module-178.17",
+            "module-178.18",
+            "module-178.19",
+            "module-178.20",
+            "module-178.21",
+            "module-178.22",
+            "module-178.23"
+          ]
+        },
+        {
+          "name": "paragraph",
+          "kind": "person.social_url",
+          "type": "link",
+          "slots": [
+            "module-178.24",
+            "module-178.25",
+            "module-178.26",
+            "module-178.27",
+            "module-178.28",
+            "module-178.29",
+            "module-178.30",
+            "module-178.31"
+          ],
+          "storage": "html: the person's social profile links, one list per person"
+        }
+      ],
+      "from": {
+        "kit": ["block-178"],
+        "entity": "module-178"
+      }
+    },
+    {
+      "id": "block-180",
+      "type": "team",
+      "source": "template",
+      "positions": ["section-1"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "person-image",
+          "kind": "person.image",
+          "type": "image",
+          "frame": {
+            "width": 704,
+            "height": 705
+          },
+          "slot": "module-180.0"
+        },
+        {
+          "name": "person-name",
+          "kind": "person.name",
+          "type": "text",
+          "limit": 36,
+          "limitFrom": "kit frame (390px 36, 1440px 52)",
+          "slot": "module-180.1"
+        },
+        {
+          "name": "person-bio",
+          "kind": "person.bio",
+          "type": "text",
+          "limit": 711,
+          "limitFrom": "content map fit (desktop 711, phone 711)",
+          "slot": "module-180.2"
+        },
+        {
+          "name": "person-name-2",
+          "kind": "person.name",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "kit frame (390px 30, 1440px 54)",
+          "slot": "module-180.11"
+        },
+        {
+          "name": "social-1-social-label",
+          "kind": "contact.social_label",
+          "type": "text",
+          "limit": 40,
+          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
+          "slot": "module-180.3"
+        },
+        {
+          "name": "social-2-social-label",
+          "kind": "contact.social_label",
+          "type": "text",
+          "limit": 40,
+          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
+          "slot": "module-180.4",
+          "optional": true
+        },
+        {
+          "name": "social-3-social-label",
+          "kind": "contact.social_label",
+          "type": "text",
+          "limit": 40,
+          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
+          "slot": "module-180.5",
+          "optional": true
+        },
+        {
+          "name": "social-4-social-label",
+          "kind": "contact.social_label",
+          "type": "text",
+          "limit": 40,
+          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
+          "slot": "module-180.6",
+          "optional": true
+        },
+        {
+          "name": "social-1-social-url",
+          "kind": "contact.social_url",
+          "type": "link",
+          "slot": "module-180.7"
+        },
+        {
+          "name": "social-2-social-url",
+          "kind": "contact.social_url",
+          "type": "link",
+          "slot": "module-180.8",
+          "optional": true
+        },
+        {
+          "name": "social-3-social-url",
+          "kind": "contact.social_url",
+          "type": "link",
+          "slot": "module-180.9",
+          "optional": true
+        },
+        {
+          "name": "social-4-social-url",
+          "kind": "contact.social_url",
+          "type": "link",
+          "slot": "module-180.10",
+          "optional": true
+        },
+        {
+          "name": "social-1-item-icon",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "slot": "module-180.12"
+        },
+        {
+          "name": "social-2-item-icon",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "slot": "module-180.13",
+          "optional": true
+        },
+        {
+          "name": "social-3-item-icon",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "slot": "module-180.14",
+          "optional": true
+        },
+        {
+          "name": "social-4-item-icon",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "slot": "module-180.15",
+          "optional": true
+        }
+      ],
+      "from": {
+        "kit": ["block-180"],
+        "entity": "module-180"
+      }
+    },
+    {
+      "id": "block-181",
+      "type": "gallery",
+      "source": "template",
+      "positions": ["section-2"],
+      "items": {
+        "min": 1,
+        "max": 6
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 34,
+          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 34 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-181.18"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 84,
+          "limitFrom": "kit frame (390px 84, 1440px 129)",
+          "slot": "module-181.19"
+        },
+        {
+          "name": "cta-label",
+          "kind": "contact.cta_label",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "kit frame (390px 32, 1440px 149)",
+          "slot": "module-181.20"
+        },
+        {
+          "name": "cta-url",
+          "kind": "contact.cta_url",
+          "type": "link",
+          "slot": "module-181.21"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "kit frame (390px 37, 1440px 32)",
+          "slots": [
+            "module-181.0",
+            "module-181.1",
+            "module-181.2",
+            "module-181.3",
+            "module-181.4",
+            "module-181.5"
+          ]
+        },
+        {
+          "name": "video",
+          "kind": "business.video",
+          "type": "link",
+          "slots": [
+            "module-181.6",
+            "module-181.7",
+            "module-181.8",
+            "module-181.9",
+            "module-181.10",
+            "module-181.11"
+          ]
+        },
+        {
+          "name": "gallery-image",
+          "kind": "business.gallery_image",
+          "type": "image",
+          "frame": {
+            "width": 448,
+            "height": 598
+          },
+          "slots": [
+            "module-181.12",
+            "module-181.13",
+            "module-181.14",
+            "module-181.15",
+            "module-181.16",
+            "module-181.17"
+          ]
+        }
+      ],
+      "from": {
+        "kit": ["block-181"],
+        "entity": "module-181"
+      }
+    },
+    {
+      "id": "block-182",
+      "type": "team",
+      "source": "template",
+      "positions": ["section-4"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 30 (demo 13 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-182.16"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 118,
+          "limitFrom": "kit frame (390px 118, 1440px 135)",
+          "slot": "module-182.17"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "image",
+          "kind": "person.image",
+          "type": "image",
+          "frame": {
+            "width": 350,
+            "height": 351
+          },
+          "slots": ["module-182.0", "module-182.1", "module-182.2", "module-182.3"]
+        },
+        {
+          "name": "name",
+          "kind": "person.name",
+          "type": "text",
+          "limit": 31,
+          "limitFrom": "kit frame of block-182.7 (390px 34, 1440px 31)",
+          "slots": ["module-182.4", "module-182.5", "module-182.6", "module-182.7"]
+        },
+        {
+          "name": "navigation-url",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slots": ["module-182.8", "module-182.9", "module-182.10", "module-182.11"]
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "person.social_url",
+          "type": "link",
+          "slots": ["module-182.12", "module-182.13", "module-182.14", "module-182.15"],
+          "storage": "html: the person's social profile links, one list per person"
+        }
+      ],
+      "from": {
+        "kit": ["block-182"],
+        "entity": "module-182"
+      }
+    },
+    {
+      "id": "class-detail",
+      "type": "services",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 258,
+          "limitFrom": "kit frame (390px 275, 1440px 258)",
+          "slot": "article-16.2"
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 258,
+          "limitFrom": "kit frame of article-2.0 (390px 258, 1440px 277)",
+          "slot": "article-16.0"
+        },
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 44,
+          "limitFrom": "kit frame (390px 44, 1440px 48)",
+          "slot": "article-16.1"
+        },
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 27,
+          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 27 (demo 12 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "article-16.13"
+        },
+        {
+          "name": "paragraph-3",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 78,
+          "limitFrom": "kit frame (390px 78, 1440px 125) (on body-classes_beginner-boxing)",
+          "slot": "article-16.14"
+        },
+        {
+          "name": "heading-3",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "kit frame (390px 37, 1440px 26)",
+          "slot": "article-16.17"
+        },
+        {
+          "name": "heading-4",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "kit frame (390px 37, 1440px 26)",
+          "slot": "article-16.21"
+        },
+        {
+          "name": "heading-5",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 24,
+          "limitFrom": "kit frame (390px 34, 1440px 24)",
+          "slot": "article-16.25"
+        },
+        {
+          "name": "heading-6",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "kit frame (390px 37, 1440px 26)",
+          "slot": "article-16.29"
+        },
+        {
+          "name": "paragraph-4",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 102,
+          "limitFrom": "kit frame (390px 108, 1440px 102)",
+          "slot": "article-16.30"
+        },
+        {
+          "name": "heading-7",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 33,
+          "limitFrom": "kit frame (390px 33, 1440px 55)",
+          "slot": "article-16.31"
+        },
+        {
+          "name": "paragraph-5",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 26,
+          "limitFrom": "kit frame (390px 37, 1440px 26) (on body-classes_group-boxing)",
+          "slot": "article-16.32"
+        },
+        {
+          "name": "heading-8",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 33, 1440px 17)",
+          "slot": "article-16.35"
+        },
+        {
+          "name": "paragraph-6",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 18,
+          "limitFrom": "kit frame (390px 31, 1440px 18) (on body-classes_private-training)",
+          "slot": "article-16.36"
+        },
+        {
+          "name": "paragraph-7",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 18,
+          "limitFrom": "kit frame (390px 34, 1440px 18)",
+          "slot": "article-16.37"
+        },
+        {
+          "name": "paragraph-8",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 33, 1440px 17) (on body-classes_group-boxing)",
+          "slot": "article-16.38"
+        },
+        {
+          "name": "paragraph-9",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 18,
+          "limitFrom": "kit frame (390px 31, 1440px 18)",
+          "slot": "article-16.39"
+        },
+        {
+          "name": "heading-9",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 32, 1440px 17) (on body-classes_private-training)",
+          "slot": "article-16.42"
+        },
+        {
+          "name": "paragraph-10",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 31, 1440px 17) (on body-classes_private-training)",
+          "slot": "article-16.43"
+        },
+        {
+          "name": "paragraph-11",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 32, 1440px 17)",
+          "slot": "article-16.44"
+        },
+        {
+          "name": "paragraph-12",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 31, 1440px 17)",
+          "slot": "article-16.45"
+        },
+        {
+          "name": "heading-10",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 31, 1440px 17) (on body-classes_group-boxing)",
+          "slot": "article-16.48"
+        },
+        {
+          "name": "paragraph-13",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 31, 1440px 17)",
+          "slot": "article-16.49"
+        },
+        {
+          "name": "heading-11",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 19,
+          "limitFrom": "content map fit (desktop 19, phone 33) (on body-classes_group-boxing)",
+          "slot": "article-16.54"
+        },
+        {
+          "name": "paragraph-14",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 31, 1440px 17)",
+          "slot": "article-16.55"
+        },
+        {
+          "name": "paragraph-15",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 19,
+          "limitFrom": "kit frame (390px 34, 1440px 19)",
+          "slot": "article-16.56"
+        },
+        {
+          "name": "paragraph-16",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 19,
+          "limitFrom": "kit frame (390px 33, 1440px 19)",
+          "slot": "article-16.57"
+        },
+        {
+          "name": "paragraph-17",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 20,
+          "limitFrom": "content map fit (desktop 20, phone 33)",
+          "slot": "article-16.50"
+        },
+        {
+          "name": "paragraph-18",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 17,
+          "limitFrom": "kit frame (390px 31, 1440px 17) (on body-classes_group-boxing)",
+          "slot": "article-16.58"
+        },
+        {
+          "name": "paragraph-19",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 19,
+          "limitFrom": "content map fit (desktop 19, phone 33)",
+          "slot": "article-16.51"
+        },
+        {
+          "name": "paragraph-20",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 19,
+          "limitFrom": "content map fit (desktop 19, phone 33)",
+          "slot": "article-16.59"
+        },
+        {
+          "name": "description",
+          "kind": "offering.description",
+          "type": "text",
+          "limit": 332,
+          "limitFrom": "kit frame (390px 344, 1440px 332)",
+          "slot": "article-16.3"
+        },
+        {
+          "name": "name",
+          "kind": "offering.name",
+          "type": "text",
+          "limit": 35,
+          "limitFrom": "kit frame of article-14.4 (390px 37, 1440px 35)",
+          "slot": "article-16.4"
+        },
+        {
+          "name": "image",
+          "kind": "offering.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 295
+          },
+          "slot": "article-16.5"
+        },
+        {
+          "name": "image-2",
+          "kind": "offering.image",
+          "type": "image",
+          "frame": {
+            "width": 1078,
+            "height": 607
+          },
+          "slot": "article-16.6"
+        },
+        {
+          "name": "description-2",
+          "kind": "offering.description",
+          "type": "text",
+          "limit": 118,
+          "limitFrom": "kit frame (390px 118, 1440px 129)",
+          "slot": "article-16.18"
+        },
+        {
+          "name": "description-3",
+          "kind": "offering.description",
+          "type": "text",
+          "limit": 110,
+          "limitFrom": "kit frame (390px 116, 1440px 110)",
+          "slot": "article-16.22"
+        },
+        {
+          "name": "description-4",
+          "kind": "offering.description",
+          "type": "text",
+          "limit": 81,
+          "limitFrom": "kit frame (390px 110, 1440px 81)",
+          "slot": "article-16.26"
+        },
+        {
+          "name": "item-icon",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 150,
+            "height": 150
+          },
+          "storage": "image-file",
+          "slot": "article-16.15"
+        },
+        {
+          "name": "item-icon-2",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 150,
+            "height": 150
+          },
+          "storage": "image-file",
+          "slot": "article-16.16"
+        },
+        {
+          "name": "item-icon-3",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 150,
+            "height": 150
+          },
+          "storage": "image-file",
+          "slot": "article-16.19"
+        },
+        {
+          "name": "item-icon-4",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 150,
+            "height": 150
+          },
+          "storage": "image-file",
+          "slot": "article-16.20"
+        },
+        {
+          "name": "item-icon-5",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 150,
+            "height": 150
+          },
+          "storage": "image-file",
+          "slot": "article-16.23"
+        },
+        {
+          "name": "item-icon-6",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 150,
+            "height": 150
+          },
+          "storage": "image-file",
+          "slot": "article-16.24"
+        },
+        {
+          "name": "item-icon-7",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 150,
+            "height": 150
+          },
+          "storage": "image-file",
+          "slot": "article-16.27"
+        },
+        {
+          "name": "item-icon-8",
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "frame": {
+            "width": 150,
+            "height": 150
+          },
+          "storage": "image-file",
+          "slot": "article-16.28"
+        },
+        {
+          "name": "video-1-gallery-image",
+          "kind": "business.gallery_image",
+          "type": "image",
+          "frame": {
+            "width": 1078,
+            "height": 607
+          },
+          "slot": "article-16.11"
+        },
+        {
+          "name": "video-2-gallery-image",
+          "kind": "business.gallery_image",
+          "type": "image",
+          "frame": {
+            "width": 344,
+            "height": 459
+          },
+          "slot": "article-16.33",
+          "optional": true
+        },
+        {
+          "name": "video-3-gallery-image",
+          "kind": "business.gallery_image",
+          "type": "image",
+          "frame": {
+            "width": 344,
+            "height": 459
+          },
+          "slot": "article-16.40",
+          "optional": true
+        },
+        {
+          "name": "video-4-gallery-image",
+          "kind": "business.gallery_image",
+          "type": "image",
+          "frame": {
+            "width": 344,
+            "height": 459
+          },
+          "slot": "article-16.46",
+          "optional": true
+        },
+        {
+          "name": "video-5-gallery-image",
+          "kind": "business.gallery_image",
+          "type": "image",
+          "frame": {
+            "width": 344,
+            "height": 459
+          },
+          "slot": "article-16.52",
+          "optional": true
+        },
+        {
+          "name": "video-1-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-16.12"
+        },
+        {
+          "name": "video-2-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-16.34",
+          "optional": true
+        },
+        {
+          "name": "video-3-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-16.41",
+          "optional": true
+        },
+        {
+          "name": "video-4-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-16.47",
+          "optional": true
+        },
+        {
+          "name": "video-5-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-16.53",
+          "optional": true
+        }
+      ],
+      "from": {
+        "kit": [
+          "body-classes_advanced-boxing",
+          "body-classes_beginner-boxing",
+          "body-classes_group-boxing",
+          "body-classes_private-training"
+        ],
+        "entity": "article-16"
+      }
+    },
+    {
+      "id": "block-159",
+      "type": "services",
+      "source": "template",
+      "positions": ["detail-bottom-1"],
+      "items": {
+        "min": 1,
+        "max": 2
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 31,
+          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 31 (demo 12 characters on 1 line(s)), 1440px 54 (demo 12 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-159.0"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 257,
+          "limitFrom": "kit frame (390px 287, 1440px 257)",
+          "slot": "module-159.1"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "name",
+          "kind": "offering.name",
+          "type": "text",
+          "limit": 35,
+          "limitFrom": "kit frame of article-14.4 (390px 37, 1440px 35)",
+          "slots": ["article-16.4", "article-14.4"]
+        },
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 36,
+          "limitFrom": "content map fit of article-2.7 (desktop 36, phone 36)",
+          "slots": ["article-16.7", "article-14.7"]
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the item page address"
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 258,
+          "limitFrom": "kit frame of article-2.0 (390px 258, 1440px 277)",
+          "slots": ["article-16.0", "article-14.0"]
+        },
+        {
+          "name": "schedule",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 72,
+          "limitFrom": "kit frame of article-15.8 (390px 72, 1440px 108)",
+          "slots": ["article-16.8", "article-14.8"]
+        },
+        {
+          "name": "schedule-2",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "kit frame (390px 30, 1440px 51)",
+          "slots": ["article-16.9", "article-14.9"]
+        },
+        {
+          "name": "schedule-3",
+          "kind": "offering.schedule",
+          "type": "text",
+          "limit": 50,
+          "limitFrom": "kit frame of article-2.11 (390px 70, 1440px 50)",
+          "slots": ["article-16.10", "article-14.10"]
+        },
+        {
+          "name": "image",
+          "kind": "offering.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 295
+          },
+          "slots": ["article-16.5", "article-14.5"]
+        }
+      ],
+      "from": {
+        "kit": ["block-159"],
+        "entity": "module-159"
+      }
+    },
+    {
+      "id": "block-191",
+      "type": "posts",
+      "source": "template",
+      "positions": ["main-bottom-2"],
+      "items": {
+        "min": 1,
+        "max": 2
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 30,
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/category-blog/never-boxed-before: 390px 30 (demo 10 characters on 1 line(s)), 1440px 55 (demo 10 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-191.0"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 118,
+          "limitFrom": "kit frame (390px 118, 1440px 135)",
+          "slot": "module-191.1"
+        }
+      ],
+      "from": {
+        "kit": ["block-191"],
+        "entity": "module-191"
+      }
+    },
+    {
+      "id": "author-profile",
+      "type": "team",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 1,
+        "max": 6
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 36,
+          "limitFrom": "kit frame (390px 36, 1440px 92)",
+          "slot": "tag-4.0"
+        },
+        {
+          "name": "bio",
+          "kind": "person.bio",
+          "type": "text",
+          "limit": 330,
+          "limitFrom": "kit frame (390px 330, 1440px 380)",
+          "slot": "userProfile-4400.0"
+        },
+        {
+          "name": "bio-2",
+          "kind": "person.bio",
+          "type": "text",
+          "limit": 248,
+          "limitFrom": "kit frame (390px 248, 1440px 291)",
+          "slot": "userProfile-4400.1"
+        },
+        {
+          "name": "bio-3",
+          "kind": "person.bio",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "kit frame (390px 32, 1440px 88)",
+          "slot": "userProfile-4400.2"
+        },
+        {
+          "name": "bio-4",
+          "kind": "person.bio",
+          "type": "text",
+          "limit": 33,
+          "limitFrom": "kit frame (390px 33, 1440px 90)",
+          "slot": "userProfile-4400.3"
+        },
+        {
+          "name": "bio-5",
+          "kind": "person.bio",
+          "type": "text",
+          "limit": 34,
+          "limitFrom": "kit frame (390px 34, 1440px 90)",
+          "slot": "userProfile-4400.4"
+        },
+        {
+          "name": "bio-6",
+          "kind": "person.bio",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "kit frame (390px 32, 1440px 87)",
+          "slot": "userProfile-4400.5"
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 34,
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "article-28.7",
+            "article-29.7",
+            "article-17.186",
+            "article-1.15",
+            "article-3.15",
+            "article-11.15"
+          ]
+        },
+        {
+          "name": "link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the item page address"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 298,
+          "limitFrom": "kit frame of article-3.0 (390px 298, 1440px 312)",
+          "slots": [
+            "article-28.2",
+            "article-29.0",
+            "article-17.0",
+            "article-1.0",
+            "article-3.0",
+            "article-11.0"
+          ]
+        },
+        {
+          "name": "image",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 424
+          },
+          "slots": ["article-1.16", "article-3.16", "article-11.16"]
+        }
+      ],
+      "from": {
+        "kit": [
+          "body-pages_j-content_author-listting_author_admin",
+          "body-pages_j-content_author-listting_author_drew_stokes",
+          "body-pages_j-content_author-listting_author_daniel_vasquez",
+          "body-pages_j-content_author-listting_author_franklin_wagner",
+          "body-pages_j-content_author-listting_author_lorene_bass",
+          "body-pages_j-content_author-listting_author_corey_gibson",
+          "body-pages_j-content_author-listting_author_cora_stephens",
+          "body-pages_j-content_author-listting_author_gene_roberts"
+        ],
+        "entity": null
+      }
+    },
+    {
+      "id": "learning-post",
+      "type": "posts",
+      "source": "template",
+      "positions": ["component"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "kind": "article.title",
+          "type": "text",
+          "limit": 43,
+          "limitFrom": "kit frame (390px 43, 1440px 51) (on body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing)",
+          "slot": "article-18.12"
+        },
+        {
+          "name": "paragraph",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 273,
+          "limitFrom": "kit frame (390px 273, 1440px 310)",
+          "slot": "article-18.0"
+        },
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 44,
+          "limitFrom": "kit frame (390px 44, 1440px 95)",
+          "slot": "article-18.1"
+        },
+        {
+          "name": "paragraph-2",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 426,
+          "limitFrom": "kit frame (390px 459, 1440px 426)",
+          "slot": "article-18.3"
+        },
+        {
+          "name": "paragraph-3",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 39,
+          "limitFrom": "kit frame (390px 39, 1440px 52)",
+          "slot": "article-18.4"
+        },
+        {
+          "name": "paragraph-4",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 41,
+          "limitFrom": "kit frame (390px 41, 1440px 52)",
+          "slot": "article-18.5"
+        },
+        {
+          "name": "paragraph-5",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 38,
+          "limitFrom": "kit frame (390px 38, 1440px 49)",
+          "slot": "article-18.6"
+        },
+        {
+          "name": "paragraph-6",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 38,
+          "limitFrom": "kit frame (390px 38, 1440px 51)",
+          "slot": "article-18.7"
+        },
+        {
+          "name": "paragraph-7",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 37,
+          "limitFrom": "kit frame (390px 37, 1440px 49)",
+          "slot": "article-18.8"
+        },
+        {
+          "name": "paragraph-8",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 39,
+          "limitFrom": "kit frame (390px 39, 1440px 50)",
+          "slot": "article-18.9"
+        },
+        {
+          "name": "paragraph-9",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 40,
+          "limitFrom": "kit frame (390px 40, 1440px 52)",
+          "slot": "article-18.10"
+        },
+        {
+          "name": "paragraph-10",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 38,
+          "limitFrom": "kit frame (390px 38, 1440px 49)",
+          "slot": "article-18.11"
+        },
+        {
+          "name": "paragraph-11",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 46,
+          "limitFrom": "kit frame (390px 46, 1440px 179)",
+          "slot": "module-179.14"
+        },
+        {
+          "name": "heading-2",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 38,
+          "limitFrom": "kit frame (390px 40, 1440px 38)",
+          "slot": "article-18.16"
+        },
+        {
+          "name": "heading-3",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 33,
+          "limitFrom": "kit frame (390px 34, 1440px 33)",
+          "slot": "article-18.20"
+        },
+        {
+          "name": "heading-4",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 35,
+          "limitFrom": "kit frame (390px 35, 1440px 35)",
+          "slot": "article-18.24"
+        },
+        {
+          "name": "heading-5",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 33,
+          "limitFrom": "kit frame (390px 35, 1440px 33)",
+          "slot": "article-18.28"
+        },
+        {
+          "name": "heading-6",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 34,
+          "limitFrom": "kit frame (390px 34, 1440px 34)",
+          "slot": "article-18.32"
+        },
+        {
+          "name": "heading-7",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 33,
+          "limitFrom": "kit frame (390px 34, 1440px 33)",
+          "slot": "article-18.36"
+        },
+        {
+          "name": "paragraph-12",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 273,
+          "limitFrom": "measured at 390px on the running template, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 273 (demo 255 characters on 6 line(s)), 1440px 310 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "article-18.2"
+        },
+        {
+          "name": "image",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 688,
+            "height": 424
+          },
+          "slot": "article-18.13"
+        },
+        {
+          "name": "image-2",
+          "kind": "article.image",
+          "type": "image",
+          "frame": {
+            "width": 1014,
+            "height": 570
+          },
+          "slot": "article-18.14"
+        },
+        {
+          "name": "illustration",
+          "kind": "editorial.illustration",
+          "type": "image",
+          "frame": {
+            "width": 448,
+            "height": 598
+          },
+          "slot": "article-18.15"
+        },
+        {
+          "name": "illustration-2",
+          "kind": "editorial.illustration",
+          "type": "image",
+          "frame": {
+            "width": 448,
+            "height": 597
+          },
+          "slot": "article-18.19"
+        },
+        {
+          "name": "illustration-3",
+          "kind": "editorial.illustration",
+          "type": "image",
+          "frame": {
+            "width": 448,
+            "height": 597
+          },
+          "slot": "article-18.23"
+        },
+        {
+          "name": "illustration-4",
+          "kind": "editorial.illustration",
+          "type": "image",
+          "frame": {
+            "width": 448,
+            "height": 598
+          },
+          "slot": "article-18.27"
+        },
+        {
+          "name": "illustration-5",
+          "kind": "editorial.illustration",
+          "type": "image",
+          "frame": {
+            "width": 448,
+            "height": 597
+          },
+          "slot": "article-18.31"
+        },
+        {
+          "name": "illustration-6",
+          "kind": "editorial.illustration",
+          "type": "image",
+          "frame": {
+            "width": 448,
+            "height": 597
+          },
+          "slot": "article-18.35"
+        }
+      ],
+      "from": {
+        "kit": [
+          "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point",
+          "body-about-us_learning-center_unforgettable-moments-in-boxing-history",
+          "body-about-us_learning-center_the-art-and-science-of-boxing-strategy",
+          "body-about-us_learning-center_boxing-legends-stories-of-great-fighters",
+          "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps",
+          "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture",
+          "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing",
+          "body-about-us_learning-center_the-business-of-professional-boxing-promotions",
+          "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear",
+          "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches"
+        ],
+        "entity": "article-18"
+      }
+    }
+  ]
+}
