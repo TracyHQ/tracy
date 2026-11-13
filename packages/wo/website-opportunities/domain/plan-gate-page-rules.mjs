@@ -3,9 +3,10 @@
 // attempt (`plan-composer.mjs`: one more composition, then stop and report).
 // - `item_repeated_on_page` (P21): an item (a service, a person, a review) is shown by one block of a page, never two;
 //   except the subject of a detail page, which its page describes in several blocks (a class and its schedule). A
-//   detail page is a page of a type the template repeats per item (its recipe declares `pages` above one or
-//   `variants`: `itemPageTypesOf`, the write order's own reading), or whose recipe's main block shows one item at most;
-//   its subject is the one item its main block shows. Any other item shown twice on it is still a problem;
+//   detail page is a page whose recipe's main block, in the plan, shows exactly one item, whatever the block's declared
+//   maximum (a trainer page with one trainer); a page of a type the template repeats per item (`itemPageTypesOf`) or
+//   whose main block holds one item at most is one as soon as that block shows its item. Its subject is that item. Any
+//   other item shown twice on it is still a problem;
 // - `contact_channel_missing` (P13): every contact channel the business has is on the contact page (the page whose
 //   recipe's main block is a `contact` block), in a block with a field of that channel's kind; a block every recipe
 //   lists (a header, a footer) is drawn on every page, so kept on any page it counts. A channel no block the contact
@@ -13,9 +14,11 @@
 // - `form_without_destination` (P16): a `newsletter` block (a form) is kept only when the business has an email its
 //   answers can go to;
 // - `map_without_address` (P14): a `map` block is kept only when it shows the business's address fact;
-// - `withheld_shown` (P2): nothing the owner keeps off the site is shown (`plan-withheld.mjs`).
+// - `withheld_shown` (P2): nothing the owner keeps off the site is shown (`plan-withheld.mjs`);
+// - `person_dropped_block_fits` (D43, was P6): the people are not left out while a block can show them
+//   (`plan-gate-people.mjs`).
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
-import { itemPageTypesOf } from './write-order-targets.mjs'
+import { droppedPeopleProblems } from './plan-gate-people.mjs'
 
 /** The fact kinds of a contact channel: phone, email, address, booking link, social profile. */
 export const CONTACT_CHANNEL_KINDS = Object.freeze([
@@ -44,12 +47,14 @@ function shows(description, kind) {
   return Boolean(itemKind && GROUP_KINDS_V3[itemKind].allowedKinds.includes(kind))
 }
 
-/** The one item a detail page describes, or null: a page of another kind, or a main block of more than one item. */
+/**
+ * The one item a detail page describes, or null: the one item its recipe's main block shows in the plan. Covers the
+ * page types the template repeats per item (`itemPageTypesOf`) and main blocks of one item at most, whose main block
+ * shows one item by construction, and any page whose main block happens to show one (a trainer page).
+ */
 export function detailSubjectOf(page, { data, blocks, recipes }) {
-  const recipe = recipes.get(page.pageType)
-  const main = blocks.get(recipe?.mainBlock)
-  const perItem = itemPageTypesOf([...recipes.values()]).has(page.pageType)
-  if (!main || !(perItem || main.items?.max === 1)) return null
+  const main = blocks.get(recipes.get(page.pageType)?.mainBlock)
+  if (!main) return null
   const shown = page.blocks
     .filter((b) => b.block === main.id)
     .flatMap((b) => b.data)
@@ -150,4 +155,5 @@ export function pageRuleProblems(composition, context, problem) {
     })
   })
   contactChannels(composition, context, problem)
+  droppedPeopleProblems(composition, context, problem)
 }

@@ -122,3 +122,39 @@ test('JA Boxing: no item_repeated_on_page on the real compositions, per page typ
   assert.deepEqual(counts, { home: 0, classes: 0, class: 0, contact: 0 })
   assert.equal(detailSubjectOf(schedule.pages[2], context), profile.items.service[0].id)
 })
+
+test('a trainer page: its one trainer in two blocks is no repeat; with two in its main block, no subject', () => {
+  const profile = boxingProfile()
+  profile.items.person = ['Tamsin Reed', 'Odile Brask'].map((name) => ({
+    id: `person-${name.toLowerCase().replace(' ', '-')}`,
+    kind: 'person',
+    fields: { 'person.name': { value: name, sources: ['site'] } },
+    sources: ['site']
+  }))
+  const context = composerContextOf({
+    profile,
+    answers: [{ schema: 'tracy-build-answer/v1', question: 'main-button', text: ANSWERED_LABEL }],
+    blockStore: boxingStore,
+    pageRecipes: boxingRecipes,
+    library: TRACY_LIBRARY,
+    template: { slug: 'ja-boxing', name: 'JA Boxing', version: '1.0.11', accent: '#c00000' },
+    brand: { website: { colors: [{ hex: '#9C3D54', role: 'primary' }] } },
+    allowTemplateLook: true
+  })
+  const [one, two] = profile.items.person.map((p) => p.id)
+  const trainer = (main, more) => {
+    const c = boxingComposition(profile)
+    c.pages.push({
+      pageType: 'trainer',
+      name: 'Trainer',
+      blocks: [block('block-180', main), block('block-182', more)]
+    })
+    return c
+  }
+  const single = trainer([one], [one, two])
+  assert.equal(detailSubjectOf(single.pages[5], context), one)
+  assert.deepEqual(repeats(single, context), [])
+  const pair = trainer([one, two], [one])
+  assert.equal(detailSubjectOf(pair.pages[5], context), null)
+  assert.deepEqual(repeats(pair, context), ['pages[5].blocks[1].data[0]'])
+})

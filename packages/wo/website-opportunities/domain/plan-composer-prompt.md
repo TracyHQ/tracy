@@ -42,6 +42,8 @@ Rules:
 12. A `newsletter` block is a form: keep it only when the business has an email its answers can go to.
 13. A `map` block shows the business's address fact; without an address, leave it out.
 14. What the owner keeps off the site is not in `business`: never name it.
+15. When the business has fewer people than a team block needs, show them in another block that can hold that many,
+    on a page whose recipe lists it. Leave them out only when no block can, and never add people to fill a block.
 
 Reply with JSON only, in this shape:
 

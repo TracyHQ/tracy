@@ -4,7 +4,8 @@
 //   2. a template block whose fields fit: its type accepts the item's kind and its item fields carry the item's role;
 //   3. a Tracy library block of that type, styled through the template's design variables, for the items its content
 //      rules accept (`library.mjs`: a Google review of four or five stars, for example);
-//   4. else a left out entry with the reason.
+//   4. else a left out entry with the reason (when the items are fewer than every block of their kind needs, it says so:
+//      D43, people are never made up to reach a block's minimum).
 // A photo with no gallery block stays in the pictures pool (`plan-look-pictures.mjs`) and is reported as such. A new
 // template block goes only on a page whose recipe lists it (`plan-placement-pages.mjs`). Facts are placed by
 // `plan-placement-facts.mjs`. Pure: placed pages in, new pages, left out entries (with the ids they name) and what was
@@ -106,6 +107,9 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
     }
     const fitting = remaining.filter((item) => !refusedBy.has(item.id))
     tier(fitting, kind, 'Tracy library block', (d) => library.includes(d))
+    // Fewer items than every template block of their kind needs (one coach, team blocks of two or more, D43).
+    const mins = descriptions.filter((d) => template(d) && accepts(d, kind)).map((d) => d.items.min)
+    const fewer = mins.length > 0 && remaining.length < Math.min(...mins) ? Math.min(...mins) : 0
     for (const item of remaining.filter((i) => refusedBy.has(i.id) || fitting.includes(i)))
       leftOut.push({
         id: item.id,
@@ -116,7 +120,9 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
             ? 'No photo section has room for it; it stays with your photos and may fill a picture spot of a page.'
             : refusedBy.has(item.id)
               ? `Not shown in the Tracy section: ${refusedBy.get(item.id)}.`
-              : `No section of the template or of the Tracy library can show more of your ${ITEM_NOUNS[kind] ?? 'items'}.`
+              : fewer
+                ? `Every section of the template for your ${ITEM_NOUNS[kind] ?? 'items'} shows at least ${fewer}, and you have ${remaining.length}; nobody is made up to fill it.`
+                : `No section of the template or of the Tracy library can show more of your ${ITEM_NOUNS[kind] ?? 'items'}.`
       })
   }
   return { pages: out, leftOut, placed }
