@@ -83,8 +83,10 @@ export function boxingComposition(profile) {
 
 /**
  * The saved step values of the boxing florist build, ready for `buildWriteOrder`.
- * @param {{profile?: object, composition?: object, label?: string, write?: Function, generated?: number}} [options]
- *   `generated`: the generated picture count the customer approved, in place of the composed plan's
+ * @param {{profile?: object, composition?: object, label?: string, write?: Function, generated?: number,
+ *   extend?: (plan: object) => void}} [options] `generated`: the generated picture count the customer approved, in
+ *   place of the composed plan's; `extend`: changes the composed plan before the copy and the pictures are made (a page
+ *   the rules gate would not compose, for a test of the write step)
  */
 export async function boxingFloristBuild(options = {}) {
   const research = options.profile ?? boxingProfile()
@@ -105,6 +107,7 @@ export async function boxingFloristBuild(options = {}) {
     planId: 'plan-boxing-florist',
     model: scriptedModel(reply, reply)
   })
+  options.extend?.(plan)
   const write = options.write ?? ((_key, slot) => `Written ${slot.kind}`)
   const writers = []
   for (const page of plan.pages) {
