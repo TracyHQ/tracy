@@ -2797,27 +2797,116 @@ export function keepSiteRowKeys(value, live) {
  * written row names wins (`keepSiteRowKeys`), and the path is no file on the site: the home slideshow, the offer cards
  * and the menu pages showed 33 broken pictures at /images/joomlart/... . A path is matched by its value, not its row, so a
  * row moved up keeps its own picture; a value the run chose (drawn, uploaded, emptied) is no seed path and still wins.
+ *
+ * 🔒 THE PICTURE IS FOUND BY WHAT IT IS, NOT WHERE THE SITE HOLDS IT (review of TracyHQ/tracy#572). Pairing the seed's
+ * `items[i].image` with the site's `items[i].image` holds only while the site's rows are in seed order: after an Apply
+ * moved rows, the next Apply gave each path another row's picture. The spot names its media-map item, and the importer
+ * writes that item's file name into the value it puts there (`seed-apply.mjs` `media()`, `filename` from `receiptFor`):
+ * the one picture on the entry's spots with that name is the item's, wherever it sits.
+ *
+ * 🔒 A NAME TWO FILES SHARE NAMES NEITHER (review of TracyHQ/tracy#572, round 2). `a/cover.jpg` and `b/cover.jpg` on one
+ * entry: the library keeps the second as `cover-2.jpg` (`ensureUniqueFilename`), so `cover.jpg` found the first picture
+ * for both paths and Apply wrote it twice. A name carried by two source files of the entry is not used, and a picture the
+ * name hands to two seed paths is given by name to neither. JA Restaurant and JA Diner share names across entries only
+ * (gallery/ and features-intro/).
+ *
+ * 🔒 THE LIBRARY RENAMES A NAME IT ALREADY HOLDS (TracyHQ/tracy, after #36). The upload asks `ensureUniqueFilename`, and
+ * EmDash 1.1.0 `MediaRepository.findAvailableFilename` (src/database/repositories/media.ts:438) keeps a name the library
+ * already holds (any case) as `<stem>-<n><ext>`, n = 2, 3, ..., split at the last dot. JA Restaurant (gallery/ and
+ * features-intro/ intro-1..5,8.jpg) and JA Diner (blog/, slideshow/, features/ item-1..4.jpg) share names across
+ * entries, so a fresh import names one entry's picture `intro-1-2.jpg`; matched by the bare name it was never found and
+ * the list kept the source path (404). A value's name is a source file's when it is that file's name or the name with
+ * the library's suffix; a value whose name fits two source files of the entry (`item.jpg`, `item-2.jpg`) is not used.
+ *
+ * 🔒 A SPOT IN A LIST IS NEVER PAIRED BY POSITION (review of TracyHQ/tracy#572, round 3). Comparing a row's other values
+ * with the seed row took two rows alike in every other value (the same title), swapped, for rows still in seed order,
+ * and swapped their pictures. Only a spot in no list (`hero`, `sample.image`) cannot move, and only there is the site's
+ * value at the spot taken without a name. A picture is one seed path's at most; every other path keeps the source path as written: a
+ * missing picture is seen, a wrong one is not.
  * @param {Record<string, unknown>} fields - what the run writes, by field @param {Record<string, unknown>} live - the
- * site's data @param {Record<string, unknown> | undefined} seedData - the seed's data of the entry @param {string[]}
- * targets - the media-map paths of the entry (`items[0].image`)
+ * site's data @param {Record<string, unknown> | undefined} seedData - the seed's data of the entry
+ * @param {Array<string | { path: string, file?: string }>} spots - the media-map spots of the entry (`items[0].image`)
+ * and the file of the item each names
  */
-export function keepImportedPictures(fields, live, seedData, targets) {
+export function keepImportedPictures(fields, live, seedData, spots) {
   const steps = (/** @type {string} */ p) => p.replace(/\[(\d+)\]/g, '.$1').split('.')
-  const at = (/** @type {unknown} */ data, /** @type {string} */ p) =>
-    steps(p).reduce((/** @type {any} */ node, k) => (node == null ? undefined : node[k]), data)
+  const at = (/** @type {unknown} */ data, /** @type {string[]} */ parts) =>
+    parts.reduce((/** @type {any} */ node, k) => (node == null ? undefined : node[k]), data)
+  const isRow = (/** @type {unknown} */ r) => r !== null && typeof r === 'object' && !Array.isArray(r)
+  const list = spots
+    .map((s) => (typeof s === 'string' ? { path: s } : s))
+    .filter((s) => typeof s?.path === 'string')
+  const nameOf = (/** @type {string | undefined} */ file) =>
+    typeof file === 'string' ? file.split('/').pop() : null
+  const keyOf = (/** @type {any} */ v) => v.id ?? JSON.stringify(v)
+  /** The library's name for a file named `name`: the name, or `<stem>-<n><ext>` with n >= 2 (`findAvailableFilename`). */
+  const isNameOf = (/** @type {unknown} */ filename, /** @type {string} */ name) => {
+    if (typeof filename !== 'string') return false
+    if (filename === name) return true
+    const dot = name.lastIndexOf('.')
+    const [stem, ext] = dot > 0 ? [name.slice(0, dot), name.slice(dot)] : [name, '']
+    if (!filename.startsWith(`${stem}-`) || !filename.endsWith(ext)) return false
+    const n = filename.slice(stem.length + 1, filename.length - ext.length)
+    return /^[1-9]\d*$/.test(n) && Number(n) >= 2
+  }
+  /** The pictures the site holds at the entry's spots, one per media item. */
+  const held = new Map()
+  for (const s of list) {
+    const v = at(live, steps(s.path))
+    if (isRow(v)) held.set(keyOf(v), v)
+  }
+  /** A file name → the source files of the entry that carry it: one name, two files, and the name says neither. */
+  const filesOf = new Map()
+  for (const s of list) {
+    const name = nameOf(s.file)
+    if (!name) continue
+    if (!filesOf.has(name)) filesOf.set(name, new Set())
+    filesOf.get(name).add(s.file)
+  }
+  /** The seed's path → the picture its name finds. */
+  const byName = new Map()
+  /** The seed's path → its first spot, for the position rule (a spot in no list). */
+  const spotOf = new Map()
+  for (const s of list) {
+    const parts = steps(s.path)
+    const was = at(seedData, parts)
+    if (typeof was !== 'string' || was === '' || spotOf.has(was)) continue
+    spotOf.set(was, parts)
+    const name = nameOf(s.file)
+    if (!name || filesOf.get(name).size > 1) continue
+    // A picture whose name fits two source files of the entry is neither's.
+    const named = [...held.values()].filter(
+      (v) =>
+        isNameOf(v.filename, name) && [...filesOf.keys()].filter((n) => isNameOf(v.filename, n)).length === 1
+    )
+    if (named.length === 1) byName.set(was, named[0])
+  }
+  // A picture the name hands to two seed paths is no one's by name.
+  const claims = (/** @type {Map<string, any>} */ m) => {
+    const n = new Map()
+    for (const v of m.values()) n.set(keyOf(v), (n.get(keyOf(v)) ?? 0) + 1)
+    return n
+  }
+  const byNameClaims = claims(byName)
+  for (const [was, v] of byName) if (byNameClaims.get(keyOf(v)) > 1) byName.delete(was)
   /** The seed's path → the picture the site holds in its place. */
   const imported = new Map()
-  for (const p of targets) {
-    const was = at(seedData, p)
-    const now = at(live, p)
-    if (typeof was === 'string' && was !== '' && now != null && now !== was && !imported.has(was))
-      imported.set(was, now)
+  for (const [was, parts] of spotOf) {
+    if (byName.has(was)) imported.set(was, byName.get(was))
+    else {
+      const now = at(live, parts)
+      // A spot in a list can have moved, and rows alike in every other value move unseen: never paired by position.
+      if (isRow(now) && !parts.some((k) => /^\d+$/.test(k))) imported.set(was, now)
+    }
   }
+  // And a picture is still one seed path's at most: two that claim it keep their source path.
+  const allClaims = claims(imported)
+  for (const [was, v] of imported) if (allClaims.get(keyOf(v)) > 1) imported.delete(was)
   if (imported.size === 0) return fields
   const out = structuredClone(fields)
-  for (const p of targets) {
-    const parts = steps(p)
-    const holder = parts.length > 1 ? at(out, parts.slice(0, -1).join('.')) : out
+  for (const s of list) {
+    const parts = steps(s.path)
+    const holder = parts.length > 1 ? at(out, parts.slice(0, -1)) : out
     const last = parts[parts.length - 1]
     if (holder === null || typeof holder !== 'object') continue
     const value = /** @type {any} */ (holder)[last]
@@ -3981,7 +4070,7 @@ async function main() {
       )
     return siteFields.get(collection)
   }
-  /** `collection/slug/locale` → the paths the importer fills with a file of the template (`seed/media-map.json`). */
+  /** `collection/slug/locale` → the paths the importer fills with a file of the template, and the file (`seed/media-map.json`). */
   const pictureSpotsOf = new Map()
   for (const item of Array.isArray(mediaMap?.items)
     ? mediaMap.items
@@ -3992,7 +4081,7 @@ async function main() {
       if (typeof t?.path !== 'string') continue
       const at = `${t.collection}/${t.slug}/${t.locale ?? seed.defaultLocale ?? 'en'}`
       if (!pictureSpotsOf.has(at)) pictureSpotsOf.set(at, [])
-      pictureSpotsOf.get(at).push(t.path)
+      pictureSpotsOf.get(at).push({ path: t.path, file: item.file })
     }
   /** The seed's own data of one entry: what the importer started from, before any row was trimmed. */
   const seedDataOf = (collection, slug, locale) =>
