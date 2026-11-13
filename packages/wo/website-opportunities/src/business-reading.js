@@ -27,6 +27,7 @@ import { BudgetExceededError } from './cost-ledger.js'
 import { visionCostCents } from './cost-prices.js'
 import { controlError } from './google-maps-research.js'
 import { requireHost } from './host.js'
+import { SOURCES } from './sources.js'
 import { modelTokensOf } from './wo-model-tokens.js'
 
 export const BUSINESS_READING_PURPOSE = 'business-reading'
@@ -104,6 +105,32 @@ export const businessReadingCeilingCents = (model, prompt, maxTokens = MAX_OUTPU
     promptTokens: Math.ceil(String(prompt).length / 3) + 1_000,
     completionTokens: maxTokens
   })
+
+/**
+ * The texts and facts a reading reads (`readBusiness`'s input less its trade, door and ledger), from a research's
+ * collected source rows (`collected`: the rows that were collected, in the `wo_source` shape), its merged profile and
+ * Google's place facts (`google`, or null). Pure: the place executor and the build chat's research both read with it.
+ */
+export function readingInputOf({ profile, google, collected }) {
+  const own = collected.filter((s) => SOURCES.includes(s.source))
+  return {
+    bio: profile.bio ?? null,
+    websitePages: collected.filter((s) => s.source === 'website').flatMap((s) => s.collected?.pages ?? []),
+    posts: own.flatMap((s) => (s.collected?.posts ?? []).map((p) => ({ source: s.source, ...p }))),
+    reviews: [
+      ...(Array.isArray(google?.reviews) ? google.reviews.map((r) => ({ ...r, source: 'google' })) : []),
+      ...Object.entries(profile.reviewSources ?? {}).flatMap(([source, group]) =>
+        (group?.reviews ?? []).map((r) => ({ ...r, source }))
+      )
+    ],
+    name: profile.name ?? google?.name ?? null,
+    // What the sub-trade may quote besides the texts: Google's types and each social profile's own category.
+    googleTypes: google ? [google.primaryType, ...(Array.isArray(google.types) ? google.types : [])] : [],
+    categories: own
+      .map((s) => ({ source: s.source, text: s.collected?.profile?.category }))
+      .filter((c) => typeof c.text === 'string' && c.text.trim())
+  }
+}
 
 /**
  * Read a business. `held`: the reading the place holds (kept when its texts and version are these). `charge(spec, call)`

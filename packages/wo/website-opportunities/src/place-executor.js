@@ -72,7 +72,12 @@ import {
 import { SEARCH_NETWORKS, SOCIAL_SEARCH_VERSION } from './research-again.js'
 import { sourceVersionOf } from './collector-versions.js'
 import { dropMisjudged } from './link-rejudge.js'
-import { BUSINESS_READING_DOOR, BUSINESS_READING_PURPOSE, readBusiness } from './business-reading.js'
+import {
+  BUSINESS_READING_DOOR,
+  BUSINESS_READING_PURPOSE,
+  readBusiness,
+  readingInputOf
+} from './business-reading.js'
 import { tradeOfPlace } from '../domain/trades.mjs'
 import { StaleLeaseError, checkpoint, fenced, heartbeat } from './store.js'
 import { HUB_COLLECTOR_VERSION } from './hub/local-cache.js'
@@ -1457,30 +1462,9 @@ export function createPlaceRunner(h) {
 
   /** The reading step of the profile stage: the bio, posts and reviews of this run's sources, read once. */
   async function readBusinessOf(ctx, profile, google, sources, held) {
-    const posts = sources
-      .filter((s) => SOURCES.includes(s.source) && s.collected_at)
-      .flatMap((s) => (s.collected?.posts ?? []).map((p) => ({ source: s.source, ...p })))
-    const reviews = [
-      ...(Array.isArray(google?.reviews) ? google.reviews.map((r) => ({ ...r, source: 'google' })) : []),
-      ...Object.entries(profile.reviewSources ?? {}).flatMap(([source, group]) =>
-        (group?.reviews ?? []).map((r) => ({ ...r, source }))
-      )
-    ]
     return readBusiness({
-      bio: profile.bio ?? null,
-      websitePages: sources
-        .filter((s) => s.source === 'website' && s.collected_at)
-        .flatMap((s) => s.collected?.pages ?? []),
-      posts,
-      reviews,
-      name: profile.name ?? google?.name ?? null,
+      ...readingInputOf({ profile, google, collected: sources.filter((s) => s.collected_at) }),
       trade: google ? tradeOfPlace({ primaryType: google.primaryType, types: google.types }) : null,
-      // What the sub-trade may quote besides the texts: Google's types and each social profile's own category.
-      googleTypes: google ? [google.primaryType, ...(Array.isArray(google.types) ? google.types : [])] : [],
-      categories: sources
-        .filter((s) => SOURCES.includes(s.source) && s.collected_at)
-        .map((s) => ({ source: s.source, text: s.collected?.profile?.category }))
-        .filter((c) => typeof c.text === 'string' && c.text.trim()),
       door: await h.businessReadingDoor(),
       held,
       charge: (spec, call) =>
