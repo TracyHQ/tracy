@@ -16,16 +16,21 @@ import { ITEM_NOUNS, planDataOf } from './plan-data.mjs'
 import { blockItemProblems } from './plan-gate-items.mjs'
 import { factFieldProblems } from './plan-gate-rules.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
+import { withheldWhatOf } from './plan-withheld.mjs'
 import { replanRows } from './plan-edit-rows.mjs'
+import { editedIdProblems } from './plan-edit-withheld.mjs'
+import { normalisedSiteName, withheldShowing } from './plan-site-name.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const FACT_VALUE = /^facts\[([^\]]+)\]\.value$/
 
 /** The customer's words for one gate problem of a block. */
-function customerMessage(code, block, description, data, id) {
+function customerMessage(code, block, description, data, id, withheld) {
   const noun = ITEM_NOUNS[BLOCK_TYPES[description.type]?.itemKind] ?? 'items'
   const items = block.data.filter((x) => data.byId.get(x)?.what === 'item').length
-  const name = data.byId.get(id)?.entry?.label ?? id
+  const record = data.byId.get(id)
+  // A held item is named by its neutral label: its own label or id can carry a held person's name.
+  const name = data.withheld?.has(id) ? withheldWhatOf(record, withheld) : (record?.entry?.label ?? id)
   const words = {
     too_few_items: `The ${block.label} section shows at least ${description.items.min} ${noun}; this change leaves ${items}.`,
     too_many_items: `The ${block.label} section shows at most ${description.items.max} ${noun}; this change gives it ${items}.`,
@@ -47,6 +52,10 @@ function profileAfterEdit(profile, edit) {
     const record = id && data.byId.get(id)
     if (record?.what !== 'fact') continue
     record.source.value = value
+    // The business name edited on the card is the customer's own choice of the name the site shows, as answering the
+    // site name question is: one rule decides which held name it shows (`withheldShowing`).
+    if (record.kind === 'business.name' && typeof value === 'string' && next.withheld?.name === true)
+      next.withheld = withheldShowing(next.withheld, normalisedSiteName(value))
     record.source.sources = [ANSWER_SOURCE]
     const conflict = list(next.conflicts).find((c) => c.id === record.source.conflict)
     if (conflict) Object.assign(conflict, { chosen: value, chosenBy: 'plan-edit' })
@@ -74,6 +83,9 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
       blocks: list(p?.blocks).map(({ lists: _lists, ...block }) => block)
     }))
   }
+  const edited = Array.isArray(edit?.changes) && edit.changes.every((c) => c && typeof c === 'object')
+  const early = edited ? editedIdProblems({ plan, edit, profile: profileAfterEdit(profile, edit) }) : []
+  if (early.length > 0) return failed(early)
   const checked = checkPlanEdit(edit, Array.isArray(plan?.pages) ? bare : plan)
   if (!checked.ok)
     return failed(
@@ -109,7 +121,11 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
       }
       const report = (code, where) => {
         const id = block.data[Number(/\.data\[(\d+)\]$/.exec(where)?.[1])]
-        problems.push({ code, at: where, message: customerMessage(code, block, description, data, id) })
+        problems.push({
+          code,
+          at: where,
+          message: customerMessage(code, block, description, data, id, profile?.withheld)
+        })
       }
       blockItemProblems(block, description, at, data, report)
       factFieldProblems(block, description, at, data, report)

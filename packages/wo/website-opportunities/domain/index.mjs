@@ -167,7 +167,7 @@ export {
   siteNameMissing,
   siteNameQuestionOf
 } from './plan-site-name-question.mjs'
-export { normalisedSiteName, siteNameMissingError } from './plan-site-name.mjs'
+export { normalisedSiteName, siteNameMissingError, withheldShowing } from './plan-site-name.mjs'
 export { gateEditedPlan } from './plan-edit-gate.mjs'
 export {
   NOT_DONE_REASONS,

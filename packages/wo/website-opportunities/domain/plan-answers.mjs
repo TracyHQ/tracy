@@ -7,7 +7,9 @@
 //   the plan's left out list, never invented;
 // - `site-language`: the site language (`plan.language`);
 // - `site-name`: the name the site shows while research keeps the business name off it (`plan-site-name.mjs`); a name
-//   longer than the template's business name fields is `site_name_too_long`, with `details.limit`.
+//   longer than the template's business name fields is `site_name_too_long` (`details.limit`), an empty one or one with
+//   a control character, markup or markdown is `site_name_invalid`; both carry `details.question` (the whole question)
+//   and `details.questionId`, so the chat asks again.
 // An answer that does not pass `checkAnswer` against its question, names no question of the profile, answers one
 // twice, or gives a value longer than the template's fields of that kind hold (`kindLimitsOf`; a fact is never
 // shortened, so it would stop the build after approval) is an `answer_invalid` error, never a silent ignore. A
@@ -16,7 +18,7 @@ import { checkAnswer } from './build-contract-questions.mjs'
 import { languageTag, MAIN_BUTTON_KIND } from './needs-profile-questions.mjs'
 import { conflictPlace } from './plan-conflicts.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
-import { settleSiteName, siteNameProblems } from './plan-site-name.mjs'
+import { settleSiteName, siteNameErrorDetails, siteNameProblems } from './plan-site-name.mjs'
 
 /** The source id an answer's value carries in the settled profile; its origin `answer` reads "Your answer". */
 export const ANSWER_SOURCE = 'customer-answer'
@@ -95,6 +97,7 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
   const questions = new Map(list(profile?.questions).map((q) => [q.id, q]))
   const seen = new Set()
   let tooLong
+  const nameProblems = []
   answers.forEach((answer, i) => {
     const question = questions.get(answer?.question)
     if (!question)
@@ -102,8 +105,12 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
     if (seen.has(question.id))
       problems.push({ at: `answers[${i}]`, message: 'the question is answered twice' })
     seen.add(question.id)
-    for (const p of checkAnswer(answer, question).problems)
-      problems.push({ at: `answers[${i}]${p.at ? `.${p.at}` : ''}`, message: p.message })
+    const isName = question.topic === 'site-name' && typeof answer?.text === 'string'
+    for (const p of checkAnswer(answer, question).problems) {
+      const found = { at: `answers[${i}]${p.at ? `.${p.at}` : ''}`, message: p.message }
+      problems.push(found)
+      if (isName) nameProblems.push(found)
+    }
     if (question.topic === 'site-language' && answer?.text !== undefined && !languageTag(answer.text))
       problems.push({ at: `answers[${i}].text`, message: 'not a language Tracy can read' })
     if (
@@ -112,10 +119,11 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
       !contactKindOf(answer.text.trim())
     )
       problems.push({ at: `answers[${i}].text`, message: 'not a phone number, an email address or a link' })
-    if (question.topic === 'site-name' && typeof answer?.text === 'string') {
+    if (isName) {
       const named = siteNameProblems(answer.text, limits, `answers[${i}].text`)
       problems.push(...named.problems)
-      tooLong ??= named.tooLong
+      if (named.tooLong) tooLong ??= named.tooLong
+      else nameProblems.push(...named.problems)
     }
     const fact = answer?.skipped ? null : factOfAnswer(answer, question)
     const limit = fact?.kind ? limits.get(fact.kind) : undefined
@@ -129,7 +137,14 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
     throw new PlanComposerError(
       'site_name_too_long',
       `the site name holds ${tooLong.length} characters, the template's business name at most ${tooLong.limit}`,
-      { question: 'site-name', ...tooLong, problems },
+      siteNameErrorDetails(profile, limits, { ...tooLong, problems }),
+      { noRerun: true }
+    )
+  if (nameProblems.length > 0)
+    throw new PlanComposerError(
+      'site_name_invalid',
+      `the site name is not plain text a site can show (${nameProblems.length} problem(s))`,
+      siteNameErrorDetails(profile, limits, { problems }),
       { noRerun: true }
     )
   if (problems.length > 0)

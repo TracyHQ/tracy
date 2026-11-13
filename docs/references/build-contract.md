@@ -367,8 +367,10 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
   have no choice); its answer is `{schema, question, text}`. Every earlier document stays valid and the schema stays
   `tracy-build-question/v1`. A reader that switches on `topic` must handle `site-name`, and one that renders the
   choices as buttons must show the free text field alone when there is none. The engine stops with
-  `site_name_missing` while the question is open (its `details.question` is the question to ask) and with
-  `site_name_too_long` (`details.limit`) when the name is longer than the template's business name fields. Sample:
+  `site_name_missing` while the question is open, `site_name_too_long` (`details.limit`, `length`, `problems`) when the
+  name is longer than the template's business name fields, and `site_name_invalid` (`details.problems`) when it is
+  empty or holds a control character, markup or markdown. All three carry `details.question` (the whole question to
+  ask again) and `details.questionId` (`"site-name"`). Sample:
   `sunrise-tennis-club-site-name` in `packages/wo/website-opportunities/test/fixtures/build-contract/`.
 
 - 13/11/2026 (#597), additive: a step may carry `noRerun: true` (failed on attempt 1, stopped without a re-run), and an

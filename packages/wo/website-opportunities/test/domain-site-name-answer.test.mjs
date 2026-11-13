@@ -100,7 +100,7 @@ test('3: an answer is trimmed with its white space collapsed, and an empty one i
   for (const text of ['', '   '])
     assert.throws(
       () => settleAnswers(pending(), [answer(text)], LIMITS),
-      (e) => e.code === 'answer_invalid' && e.noRerun === true
+      (e) => e.code === 'site_name_invalid' && e.noRerun === true
     )
   assert.throws(
     () => settleAnswers(pending(), [{ ...answer(OTHER), text: undefined, skipped: true }], LIMITS),
@@ -117,7 +117,8 @@ test('3: an answer of 21 characters fails when the limit is 20, with a typed err
       assert.equal(e.noRerun, true)
       assert.equal(e.details.limit, 20)
       assert.equal(e.details.length, 21)
-      assert.equal(e.details.question, 'site-name')
+      assert.equal(e.details.question.id, 'site-name')
+      assert.equal(e.details.questionId, 'site-name')
       return true
     }
   )
@@ -127,7 +128,7 @@ test('6: the answer gets the guards of other typed text: no control character, n
   for (const text of ['Ambermoor\u0007', 'Ambermoor\nBlooms', '<b>Ambermoor</b>', '**Ambermoor**'])
     assert.throws(
       () => settleAnswers(pending(), [answer(text)], LIMITS),
-      (e) => e.code === 'answer_invalid',
+      (e) => e.code === 'site_name_invalid',
       JSON.stringify(text)
     )
 })
