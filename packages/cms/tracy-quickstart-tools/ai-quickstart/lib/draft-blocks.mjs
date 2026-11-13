@@ -7,6 +7,7 @@
 // list; the first repeating list becomes `itemFields` with `items`; a list of a module the block contains becomes a
 // block of its own (`inside:<container>`). Menu labels and template strings are written by the build elsewhere (page
 // titles, language overrides) and are listed in `derived`, except in a navigation block, whose menu is its items.
+import { mapKeyOf } from './draft-fields.mjs'
 import { draftOne, listSlotIds } from './draft-one-block.mjs'
 
 const emptyReport = () => ({
@@ -26,8 +27,14 @@ const emptyReport = () => ({
  * no title row of its own) takes the measured limit of the box that draws it (`decisions.sameBoxAs`: key -> key).
  */
 function applySameBox(blocks, sameBoxAs, out) {
-  const fields = blocks.flatMap((b) => [...b.fields, ...(b.itemFields ?? [])])
-  const holds = (f, key) => f.slot === key || (f.slots ?? []).includes(key)
+  const childFields = (lists) => (lists ?? []).flatMap((l) => [...l.fields, ...childFields(l.lists)])
+  const fields = blocks.flatMap((b) => [
+    ...b.fields,
+    ...(b.itemFields ?? []),
+    ...childFields(b.lists),
+    ...childFields(b.itemLists)
+  ])
+  const holds = (f, key) => f.slot === key || (f.slots ?? []).flat().includes(key)
   for (const [key, target] of Object.entries(sameBoxAs ?? {})) {
     const field = fields.find((f) => holds(f, key) && !Number.isInteger(f.limit))
     const box = fields.find((f) => holds(f, target) && Number.isInteger(f.limit))
@@ -56,7 +63,10 @@ function placeOf(field, mapSlots) {
  * and unmeasured texts are not: the store block keeps the first page's fields and items, and takes from the others
  * only their limits (`mergeLimits`).
  */
-const MERGED_REPORT_KEYS = ['derived', 'unlisted', 'notInMap', 'omitted']
+const MERGED_REPORT_KEYS = ['derived', 'unlisted', 'notInMap', 'omitted', 'sparse']
+
+/** What one report entry is about: a stored place, a problem, or (a sparse entry) the first place it names. */
+const subjectOf = (e) => e.slot ?? e.problem ?? e.slots?.[0]
 
 /**
  * Adds a merged page's open entries to the report, once per block and slot, naming the page (`on`). An unlisted
@@ -69,7 +79,7 @@ function mergeReport(out, scratch, memberId, store, mapSlots) {
   const listed = placesOf(out.unlisted.filter((u) => u.block === store.id))
   for (const key of MERGED_REPORT_KEYS)
     for (const entry of scratch[key] ?? []) {
-      const same = (e) => e.block === entry.block && (e.slot ?? e.problem) === (entry.slot ?? entry.problem)
+      const same = (e) => e.block === entry.block && subjectOf(e) === subjectOf(entry)
       if (out[key].some(same)) continue
       if (key === 'unlisted') {
         const place = placeOf(entry, mapSlots)
@@ -86,6 +96,8 @@ function mergeReport(out, scratch, memberId, store, mapSlots) {
  * place in the block's `from.kit` list, not by its kit id, which may carry a demo person's name.
  */
 export function mergeLimits(store, member, memberIndex, mapSlots) {
+  mergeChildLimits(store.lists, member.lists, memberIndex)
+  mergeChildLimits(store.itemLists, member.itemLists, memberIndex)
   for (const key of ['fields', 'itemFields']) {
     const byPlace = new Map((member[key] ?? []).map((f) => [placeOf(f, mapSlots), f]))
     for (const field of store[key] ?? []) {
@@ -98,6 +110,40 @@ export function mergeLimits(store, member, memberIndex, mapSlots) {
         })
     }
   }
+}
+
+/** A child list of a merged page lines up by name: its text fields keep the least limit measured on any page. */
+function mergeChildLimits(storeLists, memberLists, memberIndex) {
+  for (const list of storeLists ?? []) {
+    const other = (memberLists ?? []).find((l) => l.name === list.name)
+    if (!other) continue
+    for (const field of list.fields) {
+      const o = other.fields.find((f) => f.name === field.name)
+      if (field.type !== 'text' || !Number.isInteger(o?.limit)) continue
+      if (!Number.isInteger(field.limit) || o.limit < field.limit)
+        Object.assign(field, { limit: o.limit, limitFrom: `${o.limitFrom} (on from.kit[${memberIndex}])` })
+    }
+    mergeChildLimits(list.lists, other.lists, memberIndex)
+  }
+}
+
+/** The kit's entry for every stored place it names (its limit and where it came from), by content map key. */
+function kitEntriesOf(kit) {
+  const entries = new Map()
+  const put = (e) => {
+    if (e?.id && !entries.has(mapKeyOf(e.id))) entries.set(mapKeyOf(e.id), e)
+  }
+  for (const b of kit.blocks ?? []) {
+    for (const s of [...(b.slots ?? []), ...(b.demoOwned ?? [])]) put(s)
+    for (const l of b.lists ?? []) {
+      for (const rs of l.rowSlots ?? []) {
+        put(rs)
+        for (const x of rs.slots ?? []) put(x)
+      }
+      for (const r of l.rows ?? []) for (const x of r.slots ?? []) put(x)
+    }
+  }
+  return entries
 }
 
 /**
@@ -136,6 +182,8 @@ export function draftBlocks({ kit, contentMap, decisions = {}, measured = {} }) 
     frames,
     shownAnywhere,
     measured: { ...nonVisual, ...measured },
+    kitEntries: kitEntriesOf(kit),
+    menuBlocks: contentMap.menuBlocks ?? {},
     decisionOf,
     storeKitIds
   }

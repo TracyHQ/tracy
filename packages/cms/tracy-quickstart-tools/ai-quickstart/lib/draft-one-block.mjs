@@ -8,7 +8,8 @@
 // masthead with a row per page), `listsNumbered` (a second repeating list written as numbered fields), `names`
 // (content map key -> field name), `design` (content map keys that are design values), `fields` (unlisted content map
 // slots added as fields: `{slot, name, kind, type}`), `retype` (content map key -> `{kind, type, storage}`: a value
-// the content map stores under the wrong role, such as a list of social links kept as one HTML paragraph).
+// the content map stores under the wrong role, such as a list of social links kept as one HTML paragraph), `lists` and
+// `itemLists` (child lists, draft-child-lists.mjs: their places are taken out of every other field and report list).
 import {
   baseNameOf,
   fieldOf,
@@ -17,9 +18,11 @@ import {
   nameAllocator,
   rowIdsOf
 } from './draft-block-fields.mjs'
+import { draftChildLists } from './draft-child-lists.mjs'
 import { mapKeyOf } from './draft-fields.mjs'
 import { designFieldsOf } from './draft-design-fields.mjs'
 import { applyItems, maxSourceOf, minSourceOf } from './draft-items.mjs'
+import { menuOf, navItems } from './draft-nav.mjs'
 
 const neutral = (key) => String(key).replace(/^module-/, 'block-')
 const entityOf = (id) => mapKeyOf(String(id).split('.')[0])
@@ -53,12 +56,38 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
   let itemsFrom = null
   const used = new Set()
   const nav = []
+  const claimed = new Set()
+  const childReport = {
+    unmeasured: (field, slot, limitFrom) => out.unmeasured.push({ block: id, field, slot, limitFrom }),
+    problem: (problem) => out.problems.push({ block: id, problem }),
+    claim: (key) => {
+      claimed.add(key)
+      used.add(key)
+      used.add(neutral(key))
+    }
+  }
+  const menu = decision.nav ? menuOf(decision, entity, ctx) : null
+  const menuLabels = (menu?.items ?? []).map((i) => i.label?.slot).filter(Boolean)
+  const repeating = lists.find((l) => l.rowKind === 'items' && Array.isArray(l.shown))
+  const childLists = {
+    lists: draftChildLists(decision.lists, [{ entity, fixed: {} }], 1, ctx, childReport),
+    itemLists: draftChildLists(
+      decision.itemLists,
+      (repeating?.shown ?? []).map((e) => ({ entity: e, fixed: {} })),
+      1,
+      ctx,
+      childReport
+    )
+  }
+  if (decision.itemLists?.length && !repeating)
+    childReport.problem('itemLists need a repeating list of records (a kit list of rowKind items)')
   const derived = (slot, why) => {
     if (!out.derived.some((d) => d.block === id && d.slot === slot))
       out.derived.push({ block: id, slot, why })
   }
   const add = (list, entry, ids, name, item = false, extra = {}) => {
     if ((decision.design ?? []).includes(mapKeyOf(ids[0]))) return
+    if (ids.some((x) => claimed.has(mapKeyOf(x)))) return
     const omitted = ctx.omit[mapKeyOf(ids[0])]
     if (omitted) {
       for (const x of ids) used.add(x)
@@ -82,6 +111,7 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
   if (own)
     for (const s of [...(kb.slots ?? []), ...(kb.demoOwned ?? [])]) {
       if (!s.id || used.has(s.id) || inLists.has(s.id) || nav.some((n) => n.id === s.id)) continue
+      if (claimed.has(mapKeyOf(s.id)) || menuLabels.includes(s.id)) continue
       if (s.ownedBy && s.ownedBy !== kb.id && ctx.storeKitIds.has(s.ownedBy))
         derived(s.id, `a field of ${s.ownedBy}`)
       else if (isDerivedSlot(s.id) && decision.nav && s.id.startsWith('menuItem-')) nav.push(s)
@@ -176,30 +206,15 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
       alloc(extra.name)
     )
   }
-  if (nav.length) {
-    const read = nav.map((s) => fieldOf(s, [s.id], 'label', ctx)?.field).filter((f) => f?.limit)
-    const least = read.sort((a, b) => a.limit - b.limit)[0]
-    const label = { name: 'label', kind: 'editorial.menu_label', type: 'text', slots: nav.map((s) => s.id) }
-    if (least)
-      Object.assign(label, {
-        limit: least.limit,
-        limitFrom: `the narrowest measured menu label: ${least.limitFrom}`
-      })
-    // Every label is offered for measuring: a submenu label may be folded away where the top level is drawn.
-    else
-      for (const s of nav)
-        out.unmeasured.push({ block: id, field: 'label', slot: s.id, limitFrom: 'no menu label measured' })
-    itemFields.push(label, {
-      name: 'link',
-      kind: 'editorial.navigation_url',
-      type: 'link',
-      derived: 'the page address'
-    })
-    items = { min: 1, max: nav.length }
-    itemsFrom = {
-      min: 'the rule default 1: a menu draws as many links as it is given (not measured)',
-      max: `the menu items the template stores (${nav.length})`
-    }
+  const ownSlot = new Map((kb.slots ?? []).map((s) => [s.id, s]))
+  const labels = menu
+    ? menuLabels.map((slot) => ownSlot.get(slot) ?? ctx.kitEntries.get(slot) ?? { id: slot })
+    : nav
+  if (labels.length) {
+    const drafted = navItems(labels, menu, ctx, out, id)
+    itemFields.push(...drafted.itemFields)
+    items = drafted.items
+    itemsFrom = drafted.itemsFrom
   }
   fields.push(...designFieldsOf({ entity, used, inLists, decision, ctx, alloc, out, id }))
   block.positions = [
@@ -212,6 +227,12 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
   block.fields = fields
   if (itemFields.length) block.itemFields = itemFields
   applyItems(block, decision, { items, from: itemsFrom }, out)
+  for (const key of ['lists', 'itemLists']) if (childLists[key].length) block[key] = childLists[key]
+  const itemPlaces = (block.itemFields ?? []).find((f) => Array.isArray(f.slots))?.slots.map(entityOf)
+  if (block.itemLists && itemPlaces && itemPlaces.join() !== (repeating?.shown ?? []).join())
+    childReport.problem(
+      'itemLists: the item places of the item fields and of the child lists are not in one order'
+    )
   block.from = { kit: [own ? kb.id : `${kb.id} list ${lists[0].id}`], entity }
   if (!decision.type) out.undecided.push(id)
   return block

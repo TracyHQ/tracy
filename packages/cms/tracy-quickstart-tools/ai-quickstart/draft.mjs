@@ -42,6 +42,13 @@ function main(argv) {
       version: manifest.quickstart?.version ?? ''
     }
   })
+  if (result.coverage.unaccounted.length) {
+    process.stderr.write(
+      `${result.coverage.unaccounted.length} stored place(s) of the content map are neither a field nor a classed report entry; nothing written:\n${result.coverage.unaccounted.map((k) => `  ${k}`).join('\n')}\n` +
+        'Declare each as a field (draft-decisions.json: fields, lists, itemLists) or class it (unlisted, outsideStore, removedWithPage).\n'
+    )
+    process.exit(1)
+  }
   write(path.join(out, 'block-store.json'), result.blockStore)
   write(path.join(out, 'page-recipes.json'), result.pageRecipes)
   const summary = summaryOf(result)
