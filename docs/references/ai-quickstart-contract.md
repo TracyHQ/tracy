@@ -360,6 +360,16 @@ A **location** has the shape a content map slot already uses, so the existing pl
   always 1200 by 630 (`SHARE_IMAGE_FRAME`).
 - **`overrides`**: `settings` (a location and the value written in the blank site: site name, body background) and
   `language` (a language key and its value: system and template strings).
+- **`networkIconClasses`**: the template's table from a social network to the class of its own icon font,
+  `{"classes": {"<network>": "<class>"}, "why": "<how the classes were confirmed>"}`. Required when the store has an
+  icon field with `iconOf: "network"` and `storage: "class-name"`. Each key is a network the build recognises (the
+  `network` of `SOCIAL_NETWORKS`, `domain/icon-social.mjs`: `facebook`, `instagram`, `x`, `tiktok`, `youtube`,
+  `linkedin`, `pinterest`, `threads`, `whatsapp`, `telegram`, `snapchat`); each value is a non empty class. List only a
+  class the shipped font really draws, confirmed on the running template (a class the font lacks shows a missing glyph
+  box). A network missing from the table is treated like a link to no known network: the write step hides the row's
+  icon with its link and writes nothing into the row (reason `social_icon_not_in_template`), the same spirit as the
+  rule that an icon with no known network is hidden with its link (`icon-row-links.mjs`). JA Boxing:
+  `{"facebook": "fab fa-facebook", "x": "fab fa-twitter", ...}`; its fonts draw no Threads mark, so `threads` is left out.
 
 ## The Tracy library
 

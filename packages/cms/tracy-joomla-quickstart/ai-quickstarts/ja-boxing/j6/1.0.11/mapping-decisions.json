@@ -193,6 +193,21 @@
     },
     "why": "Measured on the running 1.0.11 site by publishing a probe block in section-6, main-bottom-1 and section-5 on every page: section-6 renders on the home layout (home, about, trainers, trainer, plans) and on the default layout (news, featured posts, authors, classes, contact, learning center), last before the footer, in the t4section chrome; an article page (detail-article layout: a post, a class, a learning post, an author page) has no section-6 and renders main-bottom-1 instead. section-5 renders on the home layout only and without a container."
   },
+  "networkIconClasses": {
+    "classes": {
+      "facebook": "fab fa-facebook",
+      "instagram": "fab fa-instagram",
+      "x": "fab fa-twitter",
+      "tiktok": "fab fa-tiktok",
+      "youtube": "fab fa-youtube",
+      "linkedin": "fab fa-linkedin",
+      "pinterest": "fab fa-pinterest",
+      "whatsapp": "fab fa-whatsapp",
+      "telegram": "fab fa-telegram",
+      "snapchat": "fab fa-snapchat"
+    },
+    "why": "Checked on the running 1.0.11 site, every page of which loads Font Awesome Free 5.15.4 (all.min.css) and then Font Awesome 4.7 (font-awesome.min.css): each class was drawn in Chromium and its glyph compared with the font's missing glyph box. The Font Awesome 5 brand classes (fab fa-<name>) draw every network listed; the demo's other pattern, fa fa-<name> (footer and trainer intro), falls to the Font Awesome 4.7 font, which lacks tiktok. Neither font has a Threads glyph (fa-threads) or the X mark (fa-x-twitter), so threads is left out, and x takes the Twitter bird, the only mark the shipped fonts have for that network."
+  },
   "buildSets": {
     "module-159:params:catid.0": {
       "sets": "category",

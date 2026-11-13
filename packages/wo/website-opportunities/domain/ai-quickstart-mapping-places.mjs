@@ -8,9 +8,12 @@
 //   - every page type of the recipes has its title, description and share image (`seo.pageTypes`), the share image
 //     in the 1200x630 frame;
 //   - the library position names a template position (`library.position`, with per page type exceptions);
-//   - every build-sets reference and every unlisted `fact` place of the draft report is set by the mapping file.
+//   - every build-sets reference and every unlisted `fact` place of the draft report is set by the mapping file;
+//   - a store with a network icon kept as a class name (`iconOf: "network"`, `storage: "class-name"`) has the
+//     template's table from network to icon class (`networkIconClasses`), its networks those the build recognises.
 import { locationKey, locationProblem } from './ai-quickstart-mapping-entry.mjs'
-import { sharedPlacesOf } from './ai-quickstart-field-keys.mjs'
+import { scopesOf, sharedPlacesOf } from './ai-quickstart-field-keys.mjs'
+import { SOCIAL_NETWORKS } from './icon-social.mjs'
 
 const SEO_FIELDS = ['title', 'description', 'shareImage']
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -123,6 +126,41 @@ function draftReportProblems(mapping, writers, draftReport, report) {
       report('facts', `${e.slot} is classed fact by the draft report but is no fact place`)
 }
 
+/** Whether a block store has a network icon the template keeps as a class of its own icon font. */
+function hasClassNameNetworkIcon(blockStore) {
+  return (Array.isArray(blockStore?.blocks) ? blockStore.blocks : []).some(
+    (b, i) =>
+      isObject(b) &&
+      scopesOf(b, `blocks[${i}]`).some((scope) =>
+        scope.fields.some((f) => f?.iconOf === 'network' && f?.storage === 'class-name')
+      )
+  )
+}
+
+function networkIconProblems(table, blockStore, report) {
+  if (table === undefined) {
+    if (hasClassNameNetworkIcon(blockStore))
+      report(
+        'networkIconClasses',
+        'the store keeps a network icon as a class name: give the template icon class of each network'
+      )
+    return
+  }
+  const at = 'networkIconClasses'
+  if (!isObject(table) || !isObject(table.classes) || !isName(table.why))
+    return report(at, 'networkIconClasses is {classes: {<network>: <class>}, why}')
+  const known = SOCIAL_NETWORKS.map((n) => n.network)
+  for (const [network, cls] of Object.entries(table.classes)) {
+    if (!known.includes(network))
+      report(
+        `${at}.classes[${network}]`,
+        `"${network}" is not a network the build recognises: ${known.join(', ')}`
+      )
+    else if (!isName(cls))
+      report(`${at}.classes[${network}]`, 'the class names a glyph of the template icon font')
+  }
+}
+
 /** Every stored place problem of a mapping file (see the head of this file). */
 export function mappingPlaceProblems(mapping, { report, blockStore, pageRecipes, draftReport }) {
   const writers = writersOf(mapping)
@@ -131,4 +169,5 @@ export function mappingPlaceProblems(mapping, { report, blockStore, pageRecipes,
   seoProblems(mapping.seo, pageRecipes, report)
   libraryProblems(mapping.library, pageRecipes, report)
   draftReportProblems(mapping, writers, draftReport, report)
+  networkIconProblems(mapping.networkIconClasses, blockStore, report)
 }

@@ -123,6 +123,7 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
     notFacts: decisions.notFacts ?? [],
     seo: { shareImageFrame: { width: 1200, height: 630 }, ...decisions.seo },
     library: decisions.library,
+    ...(decisions.networkIconClasses ? { networkIconClasses: decisions.networkIconClasses } : {}),
     buildSets,
     overrides,
     notEmptied: decisions.notEmptied ?? [],

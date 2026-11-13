@@ -122,3 +122,33 @@ test('with a draft report, every build-sets reference and every fact place it cl
   })
   assert.deepEqual(problemsOf(set), [])
 })
+
+test('a store with a network icon kept as a class name needs the template network icon classes', () => {
+  const set = valid()
+  const icon = set.blockStore.blocks
+    .find((b) => b.id === 'services-grid')
+    .itemFields.find((f) => f.name === 'icon')
+  icon.storage = 'class-name'
+  icon.iconOf = 'network'
+  delete icon.frame
+  assert.ok(problemsOf(set).some((p) => p.startsWith('networkIconClasses: the store keeps a network icon')))
+  set.mapping.networkIconClasses = {
+    classes: { facebook: 'icon-fb', myspace: 'icon-ms', x: '' },
+    why: 'invented'
+  }
+  assert.deepEqual(
+    problemsOf(set).filter((p) => p.startsWith('networkIconClasses')),
+    [
+      'networkIconClasses.classes[myspace]: "myspace" is not a network the build recognises: facebook, instagram, x, tiktok, youtube, linkedin, pinterest, threads, whatsapp, telegram, snapchat',
+      'networkIconClasses.classes[x]: the class names a glyph of the template icon font'
+    ]
+  )
+  set.mapping.networkIconClasses = {
+    classes: { facebook: 'icon-fb' },
+    why: 'invented: the font of the template'
+  }
+  assert.deepEqual(
+    problemsOf(set).filter((p) => p.startsWith('networkIconClasses')),
+    []
+  )
+})
