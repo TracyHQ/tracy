@@ -21,7 +21,8 @@ function answerOf(question, item) {
 }
 
 // ../../core/tracy-core/src/build-chat/plan.mjs
-var REVIEW_ID = "plan-review";
+var PLAN_REVIEW_ID = "plan-review";
+var REVIEW_ID = PLAN_REVIEW_ID;
 var english = (key, vars = {}) => BUILD_CHAT_STRINGS[key].replace(/\{(\w+)\}/g, (_, name2) => String(vars[name2] ?? ""));
 var firstSource = (sources) => sources?.[0]?.name ?? "";
 var isWebsite = (alternative) => (alternative.sources ?? []).some((s) => s.kind === "website");
@@ -109,6 +110,8 @@ function planCardOf(plan) {
     look: {
       template: plan.look.template.name,
       accent: plan.look.accent,
+      // The dark theme's accent when it differs from the light one (#616); shown, not offered for editing yet.
+      accentDark: typeof plan.look.accentDark === "string" ? plan.look.accentDark : null,
       logo: plan.look.logo.kind === "own" ? { kind: "own", source: plan.look.logo.source } : { kind: plan.look.logo.kind }
     },
     services: services.map((s) => ({
@@ -170,6 +173,9 @@ function templateChoiceOf(templates) {
   const chosen = (options.find((t) => t.recommended === true) ?? options[0])?.slug ?? null;
   return { options, chosen, none: options.length === 0 };
 }
+
+// ../../core/tracy-core/src/build-chat/tool-results.mjs
+var EMPTY = Object.freeze({ calls: Object.freeze({}), templates: null, plan: null });
 
 // ../../core/tracy-core/src/build-chat/index.mjs
 var BUILD_SESSION = /^session-build-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
