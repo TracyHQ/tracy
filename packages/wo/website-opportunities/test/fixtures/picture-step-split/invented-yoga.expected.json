@@ -1,0 +1,443 @@
+{
+  "frames": [],
+  "reduced": [],
+  "droppedFrames": [],
+  "counts": {
+    "own": 0,
+    "generated": 0,
+    "none": 0,
+    "variants": 0
+  },
+  "notes": [],
+  "icons": [
+    {
+      "id": "home.home-b1.class-sunrise.item-icon",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "features-row",
+      "field": "item-icon",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "item": "class-sunrise",
+      "theme": "dark",
+      "words": ["Sunrise flow", "Class 1", "A slow practice as the day begins."],
+      "source": "library",
+      "icon": {
+        "name": "sun",
+        "set": "@phosphor-icons/core@2.1.1",
+        "weight": "regular"
+      },
+      "variants": {
+        "dark": {
+          "theme": "dark",
+          "icon": "sun",
+          "set": "@phosphor-icons/core@2.1.1",
+          "weight": "regular",
+          "width": 100,
+          "height": 100,
+          "paint": {
+            "glyph": "accent",
+            "plate": null
+          }
+        }
+      },
+      "sizeFrom": "the frame the block store declares",
+      "by": "model",
+      "reason": "ranked by the build model from the candidates of its words"
+    },
+    {
+      "id": "home.home-b1.class-sunrise.item-icon-2",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "features-row",
+      "field": "item-icon-2",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "item": "class-sunrise",
+      "theme": "light",
+      "variantOf": "item-icon",
+      "words": ["Sunrise flow", "Class 1", "A slow practice as the day begins."],
+      "source": "library",
+      "icon": {
+        "name": "sun",
+        "set": "@phosphor-icons/core@2.1.1",
+        "weight": "regular"
+      },
+      "variants": {
+        "light": {
+          "theme": "light",
+          "icon": "sun",
+          "set": "@phosphor-icons/core@2.1.1",
+          "weight": "regular",
+          "width": 100,
+          "height": 100,
+          "paint": {
+            "glyph": "accent",
+            "plate": null
+          }
+        }
+      },
+      "sizeFrom": "the frame the block store declares",
+      "by": "model",
+      "reason": "ranked by the build model from the candidates of its words"
+    },
+    {
+      "id": "home.home-b1.class-breath.item-icon",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "features-row",
+      "field": "item-icon",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "item": "class-breath",
+      "theme": "dark",
+      "words": ["Breathwork circle", "Class 2", "Learn to slow down and steady each breath."],
+      "source": "library",
+      "icon": {
+        "name": "wind",
+        "set": "@phosphor-icons/core@2.1.1",
+        "weight": "regular"
+      },
+      "variants": {
+        "dark": {
+          "theme": "dark",
+          "icon": "wind",
+          "set": "@phosphor-icons/core@2.1.1",
+          "weight": "regular",
+          "width": 100,
+          "height": 100,
+          "paint": {
+            "glyph": "accent",
+            "plate": null
+          }
+        }
+      },
+      "sizeFrom": "the frame the block store declares",
+      "by": "model",
+      "reason": "ranked by the build model from the candidates of its words"
+    },
+    {
+      "id": "home.home-b1.class-breath.item-icon-2",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "features-row",
+      "field": "item-icon-2",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "item": "class-breath",
+      "theme": "light",
+      "variantOf": "item-icon",
+      "words": ["Breathwork circle", "Class 2", "Learn to slow down and steady each breath."],
+      "source": "library",
+      "icon": {
+        "name": "wind",
+        "set": "@phosphor-icons/core@2.1.1",
+        "weight": "regular"
+      },
+      "variants": {
+        "light": {
+          "theme": "light",
+          "icon": "wind",
+          "set": "@phosphor-icons/core@2.1.1",
+          "weight": "regular",
+          "width": 100,
+          "height": 100,
+          "paint": {
+            "glyph": "accent",
+            "plate": null
+          }
+        }
+      },
+      "sizeFrom": "the frame the block store declares",
+      "by": "model",
+      "reason": "ranked by the build model from the candidates of its words"
+    },
+    {
+      "id": "home.home-b1.class-lotus.item-icon",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "features-row",
+      "field": "item-icon",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "item": "class-lotus",
+      "theme": "dark",
+      "words": ["Lotus meditation", "Class 3", "Sit still and settle the mind."],
+      "source": "library",
+      "icon": {
+        "name": "flower-lotus",
+        "set": "@phosphor-icons/core@2.1.1",
+        "weight": "regular"
+      },
+      "variants": {
+        "dark": {
+          "theme": "dark",
+          "icon": "flower-lotus",
+          "set": "@phosphor-icons/core@2.1.1",
+          "weight": "regular",
+          "width": 100,
+          "height": 100,
+          "paint": {
+            "glyph": "accent",
+            "plate": null
+          }
+        }
+      },
+      "sizeFrom": "the frame the block store declares",
+      "by": "model",
+      "reason": "ranked by the build model from the candidates of its words"
+    },
+    {
+      "id": "home.home-b1.class-lotus.item-icon-2",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "features-row",
+      "field": "item-icon-2",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "item": "class-lotus",
+      "theme": "light",
+      "variantOf": "item-icon",
+      "words": ["Lotus meditation", "Class 3", "Sit still and settle the mind."],
+      "source": "library",
+      "icon": {
+        "name": "flower-lotus",
+        "set": "@phosphor-icons/core@2.1.1",
+        "weight": "regular"
+      },
+      "variants": {
+        "light": {
+          "theme": "light",
+          "icon": "flower-lotus",
+          "set": "@phosphor-icons/core@2.1.1",
+          "weight": "regular",
+          "width": 100,
+          "height": 100,
+          "paint": {
+            "glyph": "accent",
+            "plate": null
+          }
+        }
+      },
+      "sizeFrom": "the frame the block store declares",
+      "by": "model",
+      "reason": "ranked by the build model from the candidates of its words"
+    },
+    {
+      "id": "home.home-b1.class-passes.item-icon",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "features-row",
+      "field": "item-icon",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "item": "class-passes",
+      "theme": "dark",
+      "words": ["Studio passes", "Class 4", "Ten visits, shared with a friend."],
+      "source": "none",
+      "reason": "no_candidate_icon"
+    },
+    {
+      "id": "home.home-b1.class-passes.item-icon-2",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "features-row",
+      "field": "item-icon-2",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "item": "class-passes",
+      "theme": "light",
+      "variantOf": "item-icon",
+      "words": ["Studio passes", "Class 4", "Ten visits, shared with a friend."],
+      "source": "none",
+      "reason": "no_candidate_icon"
+    },
+    {
+      "id": "home.home-b2.social-1-item-icon",
+      "page": "home",
+      "block": "home-b2",
+      "blockId": "trainer",
+      "field": "social-1-item-icon",
+      "kind": "editorial.item_icon",
+      "storage": "class-name",
+      "frame": null,
+      "case": "social",
+      "network": "instagram",
+      "link": "https://www.instagram.com/example.juniper.yoga",
+      "source": "network",
+      "by": "network",
+      "reason": "the instagram network of its link"
+    },
+    {
+      "id": "home.home-b2.social-2-item-icon",
+      "page": "home",
+      "block": "home-b2",
+      "blockId": "trainer",
+      "field": "social-2-item-icon",
+      "kind": "editorial.item_icon",
+      "storage": "class-name",
+      "frame": null,
+      "case": "social",
+      "network": null,
+      "link": null,
+      "source": "none",
+      "reason": "no_social_link"
+    },
+    {
+      "id": "home.home-b3.contact-social-url.item-icon",
+      "page": "home",
+      "block": "home-b3",
+      "blockId": "footer-social",
+      "field": "item-icon",
+      "kind": "editorial.item_icon",
+      "storage": "class-name",
+      "frame": null,
+      "case": "social",
+      "item": "contact-social-url",
+      "network": "instagram",
+      "link": "https://www.instagram.com/example.juniper.yoga",
+      "source": "network",
+      "by": "network",
+      "reason": "the instagram network of its link"
+    },
+    {
+      "id": "home.home-b3.contact-social-url-2.item-icon",
+      "page": "home",
+      "block": "home-b3",
+      "blockId": "footer-social",
+      "field": "item-icon",
+      "kind": "editorial.item_icon",
+      "storage": "class-name",
+      "frame": null,
+      "case": "social",
+      "item": "contact-social-url-2",
+      "network": null,
+      "link": "https://forum.example/juniper-hollow",
+      "source": "none",
+      "reason": "social_network_unknown"
+    },
+    {
+      "id": "class.class-b1.item-icon",
+      "page": "class",
+      "block": "class-b1",
+      "blockId": "class-detail",
+      "field": "item-icon",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "words": ["Evening wind down"],
+      "source": "library",
+      "icon": {
+        "name": "wind",
+        "set": "@phosphor-icons/core@2.1.1",
+        "weight": "regular"
+      },
+      "variants": {
+        "light": {
+          "theme": "light",
+          "icon": "wind",
+          "set": "@phosphor-icons/core@2.1.1",
+          "weight": "regular",
+          "width": 100,
+          "height": 100,
+          "paint": {
+            "glyph": "accent",
+            "plate": null
+          }
+        },
+        "dark": {
+          "theme": "dark",
+          "icon": "wind",
+          "set": "@phosphor-icons/core@2.1.1",
+          "weight": "regular",
+          "width": 100,
+          "height": 100,
+          "paint": {
+            "glyph": "accent",
+            "plate": null
+          }
+        }
+      },
+      "sizeFrom": "the frame the block store declares",
+      "by": "model",
+      "reason": "ranked by the build model from the candidates of its words"
+    },
+    {
+      "id": "class.class-b1.item-icon-2",
+      "page": "class",
+      "block": "class-b1",
+      "blockId": "class-detail",
+      "field": "item-icon-2",
+      "kind": "editorial.item_icon",
+      "storage": "image-file",
+      "frame": {
+        "width": 100,
+        "height": 100
+      },
+      "case": "content",
+      "source": "none",
+      "reason": "icon_item_undeclared"
+    }
+  ],
+  "iconCounts": {
+    "fields": 14,
+    "library": 7,
+    "social": 0,
+    "network": 2,
+    "hidden": 5,
+    "unexplained": 0
+  },
+  "iconPrompt": {
+    "file": "icon-ranking-prompt.md",
+    "sha256": "e61bfac1b76d7ba94654342d38c1978d069cc3ca93d771b8f692e411b8f11e06"
+  },
+  "iconKeywordsPrompt": null,
+  "leftOut": [],
+  "difference": null,
+  "labelled": [],
+  "prompt": null
+}

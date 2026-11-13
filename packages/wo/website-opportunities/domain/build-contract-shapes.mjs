@@ -55,11 +55,12 @@ export const CONTRACT_SHAPES = Object.freeze({
   'progress event': shape(['schema', 'planId', 'planRevision', 'run', 'seq', 'elapsedSeconds', 'steps']),
   outcome: shape(
     ['schema', 'planId', 'planRevision', 'run', 'result', 'elapsedSeconds', 'steps'],
-    ['stopped']
+    ['stopped', 'cancelled']
   ),
   run: shape(['id', 'kind'], ['edit']),
-  step: shape(['id', 'kind', 'label', 'state', 'attempt'], ['page']),
-  'stop report': shape(['step', 'reason', 'teamNotified'])
+  step: shape(['id', 'kind', 'label', 'state', 'attempt'], ['page', 'noRerun']),
+  'stop report': shape(['step', 'reason', 'teamNotified']),
+  'cancel report': shape(['teamNotified'])
 })
 
 /** Longest text, in code points, per field. A card shows a label on one line and a reason in a sentence or two. */

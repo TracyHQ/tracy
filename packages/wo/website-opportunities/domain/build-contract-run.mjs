@@ -3,7 +3,9 @@
 // "done" means every step, ending with the write step, completed without failure: an outcome of done that carries a
 // failed or unfinished step is rejected. A site check is not a build step this round (ADR 0047, decision 3), so done
 // never depends on one. A failing step is re-run once; "failed" means its second attempt failed and the build stopped:
-// the failed step is final, nothing is running any more and the write step never runs. A full build carries a look step, writer steps and a
+// the failed step is final, nothing is running any more and the write step never runs. A step that stops without a
+// re-run (a deterministic failure, the deadline, the run frame: `noRerun: true`) is failed on attempt 1 (#597). A run
+// the customer cancels ends `cancelled`: no failed step, nothing written, the Tracy team not told. A full build carries a look step, writer steps and a
 // pictures step before the write step; a partial re-run carries only the steps its plan edit needs, plus the write step.
 
 import { closedShapeProblems, textProblems } from './build-contract-shapes.mjs'
@@ -14,7 +16,7 @@ export const OUTCOME_SCHEMA = 'tracy-build-outcome/v1'
 export const STEP_KINDS = Object.freeze(['look', 'writer', 'pictures', 'write'])
 export const STEP_STATES = Object.freeze(['pending', 'running', 'done', 'failed'])
 export const RUN_KINDS = Object.freeze(['build', 'partial'])
-export const OUTCOME_RESULTS = Object.freeze(['done', 'stopped'])
+export const OUTCOME_RESULTS = Object.freeze(['done', 'stopped', 'cancelled'])
 /** At most one re-run per step (ADR 0047, decision 2). */
 export const MAX_ATTEMPTS = 2
 const SITE_CHECK_KINDS = new Set(['site-check', 'check', 'verify'])
@@ -50,11 +52,15 @@ function stepProblems(step, at, report) {
     report(`${at}.attempt`, `attempt is ${pendingAttempt} to ${MAX_ATTEMPTS}: a failing step is re-run once`)
   else if (step.state === 'pending' && step.attempt !== 0)
     report(`${at}.attempt`, 'a pending step has attempt 0')
-  else if (step.state === 'failed' && step.attempt !== MAX_ATTEMPTS)
+  else if (step.state === 'failed' && step.noRerun === true && step.attempt !== 1)
+    report(`${at}.attempt`, 'a step failed without a re-run (noRerun) failed on attempt 1')
+  else if (step.state === 'failed' && step.noRerun !== true && step.attempt !== MAX_ATTEMPTS)
     report(
       `${at}.attempt`,
-      'failed means the re-run failed too: a first failure is re-run, shown running attempt 2'
+      'failed means the re-run failed too: a first failure is re-run, shown running attempt 2, unless the step carries noRerun'
     )
+  if (step.noRerun !== undefined && (step.noRerun !== true || step.state !== 'failed'))
+    report(`${at}.noRerun`, 'noRerun is true, and only on a failed step that stopped without a re-run')
 }
 
 /**
@@ -133,7 +139,29 @@ export function progressProblems(event, report) {
   stepsProblems(event.steps, report, event.run?.kind)
 }
 
-/** Report every problem of a final outcome: done, or stopped at a step that failed twice. */
+/**
+ * A run the customer cancelled: no step failed, every unfinished step is pending, nothing was put on the site, and the
+ * Tracy team is not told (`cancelled: {teamNotified: false}`); there is no stop report.
+ */
+function cancelledProblems(outcome, report) {
+  if (outcome.stopped !== undefined) report('stopped', 'a cancelled outcome carries no stop report')
+  const cancel = outcome.cancelled
+  if (!isObject(cancel)) report('cancelled', 'a cancelled outcome carries {teamNotified: false}')
+  else {
+    closedShapeProblems(cancel, 'cancel report', 'cancelled', report)
+    if (cancel.teamNotified !== false)
+      report('cancelled.teamNotified', "a cancel is the customer's choice: the Tracy team is not told")
+  }
+  if (!Array.isArray(outcome.steps)) return
+  outcome.steps.forEach((step, i) => {
+    const at = `steps[${label(step?.id, i)}].state`
+    if (step?.state === 'failed') report(at, 'a cancelled run has no failed step')
+    else if (step?.kind === 'write' && step.state === 'done')
+      report(at, 'a cancelled run never put its pages on the site: the write step is not done')
+  })
+}
+
+/** Report every problem of a final outcome: done, stopped at a step that failed for good, or cancelled. */
 export function outcomeProblems(outcome, report) {
   if (!isObject(outcome)) return report('', 'an outcome must be a JSON object')
   closedShapeProblems(outcome, 'outcome', '', report)
@@ -146,7 +174,7 @@ export function outcomeProblems(outcome, report) {
   if (!OUTCOME_RESULTS.includes(outcome.result))
     return report(
       'result',
-      `result is "done" or "stopped", not ${JSON.stringify(outcome.result)}: a build never reports applied or complete`
+      `result is "done", "stopped" or "cancelled", not ${JSON.stringify(outcome.result)}: a build never reports applied or complete`
     )
   stepsProblems(outcome.steps, report, outcome.run?.kind)
   if (!Array.isArray(outcome.steps)) return
@@ -154,6 +182,9 @@ export function outcomeProblems(outcome, report) {
     if (step?.state === 'running')
       report(`steps[${label(step.id, i)}].state`, 'an outcome is final: no step is still running')
   })
+  if (outcome.result !== 'cancelled' && outcome.cancelled !== undefined)
+    report('cancelled', 'only a cancelled outcome carries a cancel report')
+  if (outcome.result === 'cancelled') return cancelledProblems(outcome, report)
   if (outcome.result === 'done') {
     if (outcome.stopped !== undefined) report('stopped', 'a done outcome carries no stop report')
     outcome.steps.forEach((step, i) => {

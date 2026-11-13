@@ -8,8 +8,9 @@
 // type and limit, and holds that copy carries no phone number, email address, URL or price the plan data does not hold
 // (`invented_data`), and that a child list row's copy carries no value of another row (`other_row_data`). Only the
 // failing fields go back to the model, in ONE more call for that page. A field that still fails throws a
-// `PageWriterError` with code `copy_check_failed`, every failing field and the `attempts` made, marked `noRerun`: the
-// writer made its own second attempt, so the build stops at once (ADR 0047, #591; #597).
+// `PageWriterError` with code `copy_check_failed`, the failing fields (key and problem codes, as many as the step
+// chain's record keeps) and the `attempts` made, marked `noRerun`: the writer made its own second attempt, so the build
+// stops at once (ADR 0047, #591; #597). `data_over_limit` is a plan matter a re-run repeats: `noRerun` too.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { charCount, checkPageCopy } from './page-copy-check.mjs'
@@ -101,6 +102,26 @@ async function writePage({ plan, page, fields, context, model, signal }) {
   return { id: page.id, fields: out, attempts, failing }
 }
 
+/**
+ * The step chain keeps at most this many bytes of an error's details as JSON and cuts heavier ones (the engine's
+ * `MAX_ERROR_DETAILS_BYTES`); the writer's details stay under it, with room for `attempts` and the count.
+ */
+export const WRITER_DETAILS_BYTES = 3800
+
+/** `{[name]: entries, [name + 'Count']: total}`, as many leading entries (each `shape`d) as fit the budget. */
+export function boundedDetails(name, entries, shape) {
+  const kept = []
+  let bytes = 0
+  for (const entry of entries) {
+    const shaped = shape(entry)
+    const size = Buffer.byteLength(JSON.stringify(shaped)) + 1
+    if (bytes + size > WRITER_DETAILS_BYTES) break
+    kept.push(shaped)
+    bytes += size
+  }
+  return { [name]: kept, [`${name}Count`]: entries.length }
+}
+
 /** Every data field whose value is longer than its field holds, on every page: a plan matter, never shortened. */
 function dataOverLimit(fieldsByPage) {
   return fieldsByPage
@@ -152,7 +173,8 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
     throw new PageWriterError(
       'data_over_limit',
       `${over.length} data value(s) are longer than their field holds: ${over.map((f) => `${f.key} (${f.length} of ${f.limit})`).join(', ')}`,
-      { fields: over }
+      boundedDetails('fields', over, (f) => f),
+      { noRerun: true }
     )
   const settled = await Promise.allSettled(
     plan.pages.map((page, i) => writePage({ plan, page, fields: fieldsByPage[i], context, model, signal }))
@@ -167,7 +189,14 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
     throw new PageWriterError(
       'copy_check_failed',
       `${failing.length} field(s) still fail the copy check after one rewrite: ${failing.map((f) => f.key).join(', ')}`,
-      { failing, pages, attempts: Math.max(...pages.map((p) => p.attempts.length)) },
+      {
+        ...boundedDetails('failing', failing, ({ page, key, problems }) => ({
+          page,
+          key,
+          problems: [...new Set(problems.map((p) => p.code))].slice(0, 5).map((code) => ({ code }))
+        })),
+        attempts: Math.max(...pages.map((p) => p.attempts.length))
+      },
       { noRerun: true }
     )
   return {

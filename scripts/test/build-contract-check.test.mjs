@@ -30,10 +30,16 @@ test('discovery finds the sample scenarios in the tree', () => {
   assert.ok(found.includes(path.relative(ROOT, HAPPY)), found.join('\n'))
 })
 
+test('discovery finds the stopped without a re-run and the cancelled samples (#597)', () => {
+  const found = discoverBuildScenarios(ROOT).map((f) => path.basename(f))
+  for (const name of ['stopped-without-rerun', 'cancelled'])
+    assert.ok(found.includes(`sunrise-tennis-club-${name}.build-scenario.json`), found.join('\n'))
+})
+
 test('the command passes on the sample scenarios', () => {
   const res = run(FIXTURES)
   assert.equal(res.status, 0, res.stderr)
-  assert.match(res.stdout, /2 file\(s\) checked, 0 problem\(s\)/)
+  assert.match(res.stdout, /4 file\(s\) checked, 0 problem\(s\)/)
 })
 
 test('the command fails and prints every problem with its file and place', (t) => {

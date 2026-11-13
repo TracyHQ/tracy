@@ -166,3 +166,60 @@ test('the doc and the code agree on every object field and text limit', () => {
     assert.deepEqual([...fromDoc[name]].sort(), [...fromCode[name]].sort(), `fields of ${name}`)
   assert.deepEqual(documentedLimits(doc), TEXT_LIMITS)
 })
+
+// #597, decided by the Contract B owner: two additive changes, every earlier sample stays valid untouched.
+const WITHOUT_RERUN = read('sunrise-tennis-club-stopped-without-rerun')
+const CANCELLED = read('sunrise-tennis-club-cancelled')
+const stepOf = (doc, id) => doc.steps.find((s) => s.id === id)
+
+test('a step that stops without a re-run is failed on attempt 1 with noRerun; the sample is valid', () => {
+  assert.deepEqual(lines(checkBuildScenario(WITHOUT_RERUN)), [])
+  const outcome = WITHOUT_RERUN.runs[0].outcome
+  assert.deepEqual(
+    [stepOf(outcome, 'generated-pictures').attempt, stepOf(outcome, 'generated-pictures').noRerun],
+    [1, true]
+  )
+  const without = structuredClone(outcome)
+  delete stepOf(without, 'generated-pictures').noRerun
+  assertProblem(checkBuildDocument(without), 'steps[generated-pictures].attempt', /re-run failed too/)
+  const twice = structuredClone(outcome)
+  stepOf(twice, 'generated-pictures').attempt = 2
+  assertProblem(
+    checkBuildDocument(twice),
+    'steps[generated-pictures].attempt',
+    /noRerun\) failed on attempt 1/
+  )
+  const onDone = structuredClone(HAPPY.runs[0].outcome)
+  onDone.steps[0].noRerun = true
+  assertProblem(checkBuildDocument(onDone), 'steps[look].noRerun', /only on a failed step/)
+  const notTrue = structuredClone(outcome)
+  stepOf(notTrue, 'generated-pictures').noRerun = false
+  assertProblem(checkBuildDocument(notTrue), 'steps[generated-pictures].noRerun', /noRerun is true/)
+})
+
+test('a run the customer cancelled ends cancelled: nothing failed, nothing written, the team not told', () => {
+  assert.deepEqual(lines(checkBuildScenario(CANCELLED)), [])
+  const outcome = CANCELLED.runs[0].outcome
+  assert.deepEqual(
+    [outcome.result, outcome.cancelled, outcome.stopped],
+    ['cancelled', { teamNotified: false }, undefined]
+  )
+  const told = structuredClone(outcome)
+  told.cancelled.teamNotified = true
+  assertProblem(checkBuildDocument(told), 'cancelled.teamNotified', /not told/)
+  const report = structuredClone(outcome)
+  report.stopped = { step: 'write', reason: 'cancelled', teamNotified: false }
+  assertProblem(checkBuildDocument(report), 'stopped', /no stop report/)
+  const failed = structuredClone(outcome)
+  Object.assign(stepOf(failed, 'generated-pictures'), { state: 'failed', attempt: 2 })
+  assertProblem(checkBuildDocument(failed), 'steps[generated-pictures].state', /no failed step/)
+  const missing = structuredClone(outcome)
+  delete missing.cancelled
+  assertProblem(checkBuildDocument(missing), 'cancelled', /teamNotified: false/)
+  const extra = structuredClone(outcome)
+  extra.cancelled.by = 'customer'
+  assertProblem(checkBuildDocument(extra), 'cancelled.by', /"by" is not a field of a cancel report/)
+  const onStopped = structuredClone(STOPPED.runs[0].outcome)
+  onStopped.cancelled = { teamNotified: false }
+  assertProblem(checkBuildDocument(onStopped), 'cancelled', /only a cancelled outcome/)
+})

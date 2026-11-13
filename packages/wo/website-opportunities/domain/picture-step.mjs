@@ -1,10 +1,10 @@
 // The pictures step of an AI quickstart build (ticket #595, spec #577): label the own pictures, then assign a picture to
-// every frame of the approved plan (`placePictures`); the icons follow the written copy (`selectBuildIcons`, #597).
+// every frame of the approved plan (`placeBuildPictures`); the icons follow the written copy (`selectBuildIcons`, #597).
 // Labelling comes first, always: no picture is placed without a label. A labelling failure throws `PicturePolicyError`
 // (`picture_labelling_failed`) for the step chain's stop and report rule (ADR 0047, #591): the step is re-run once
 // from the same inputs, then the build stops and the report names the `pictures` step.
 // Generating the pictures themselves is the drawer's work; this step only says which frames get one, and how.
-import { ownPicturesOf } from './picture-frames.mjs'
+import { framesOfPlan, ownPicturesOf } from './picture-frames.mjs'
 import { iconProblemsOf } from './icon-check.mjs'
 import { IconSelectionError } from './icon-ranking.mjs'
 import { selectIcons } from './icon-selection.mjs'
@@ -73,7 +73,7 @@ const planPages = (plan, Failure) => {
  *   leftOut: object[], difference: object | null, labelled: string[], prompt: {file: string, sha256: string} | null}>}
  *   `difference` is set whenever the placed own or generated count is not the approved one (`differenceOf`)
  */
-export async function placePictures({ plan, profile, blockStore, library = [], vision, pictures = [] }) {
+export async function placeBuildPictures({ plan, profile, blockStore, library = [], vision, pictures = [] }) {
   planPages(plan, PicturePolicyError)
   const data = planDataOf(profile)
   const records = [...ownPicturesOf(data), ...list(pictures)]
@@ -96,6 +96,17 @@ export async function placePictures({ plan, profile, blockStore, library = [], v
   }
 }
 
+/** Why `given` are not the placed frames of the plan whose frames are `planned`, or null when they are. */
+function framesMismatchOf(given, planned) {
+  const ids = new Set(planned.map((f) => f.id))
+  const foreign = given.filter((f) => !ids.has(f?.id)).map((f) => f?.id)
+  if (foreign.length)
+    return `${foreign.slice(0, 3).join(', ')} ${foreign.length > 1 ? 'are' : 'is'} not a frame of it`
+  if (planned.length > 0 && given.length === 0)
+    return `the plan has ${planned.length} frame(s) and none was given`
+  return null
+}
+
 /**
  * Select the icon of every icon typed field from the written copy (`icon-selection.mjs`), AFTER the page writers, then
  * cross-check it against the placed picture frames: an icon field given a picture is `icon_policy_broken`.
@@ -103,7 +114,7 @@ export async function placePictures({ plan, profile, blockStore, library = [], v
  *   iconLibrary?: {set: string, icons: object[]}, model?: Function, looks?: object, pictureFrames: object[]}} input
  *   `model` is the standard build model's text call (the icon keywords and ranking; required when the plan places a
  *   content icon field, `icon_ranker_missing` otherwise, never the vision call); `copy` is the page writers' output,
- *   needed when the plan places an icon field; `pictureFrames` the `frames` of `placePictures`
+ *   needed when the plan places an icon field; `pictureFrames` the `frames` of `placeBuildPictures` for the same plan
  * @returns {Promise<{icons: object[], iconCounts: object, notes: object[], iconPrompt: object | null,
  *   iconKeywordsPrompt: object | null}>} `notes`: the icon selection's (`icon_theme_undeclared`, `icons_all_hidden`)
  */
@@ -122,10 +133,16 @@ export async function selectBuildIcons({
   if (!Array.isArray(pictureFrames))
     throw new IconSelectionError(
       'picture_frames_missing',
-      'the icons are checked against the placed picture frames: give the frames of placePictures'
+      'the icons are checked against the placed picture frames: give the frames of placeBuildPictures'
     )
   const data = planDataOf(profile)
   const blocks = blocksOf(blockStore, library)
+  const strange = framesMismatchOf(pictureFrames, framesOfPlan(plan.pages, blocks, data))
+  if (strange)
+    throw new IconSelectionError(
+      'picture_frames_mismatch',
+      `the picture frames are not the placed frames of this plan: ${strange}`
+    )
   // The icon keywords and ranking are TEXT calls: they take `model` only, never the vision door.
   const icons = await selectIcons({ plan, data, blocks, copy, iconLibrary, model, looks })
   const crossed = iconProblemsOf(icons, { pictureFrames })
@@ -143,13 +160,13 @@ export async function selectBuildIcons({
 }
 
 /**
- * The whole pictures step in one call, as before the step chain split it (#597): `placePictures`, then
+ * The whole pictures step in one call, as before the step chain split it (#597): `placeBuildPictures`, then
  * `selectBuildIcons` over its frames. Same inputs and same output as the two run in turn; `notes` holds the
  * assignment's notes, then the icon selection's.
  * @returns {Promise<object>} the fields of both results
  */
 export async function picturesStep(input) {
-  const placed = await placePictures(input)
+  const placed = await placeBuildPictures(input)
   const icons = await selectBuildIcons({ ...input, pictureFrames: placed.frames })
   return { ...placed, ...icons, notes: [...placed.notes, ...icons.notes] }
 }

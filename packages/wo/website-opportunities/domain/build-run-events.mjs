@@ -1,36 +1,57 @@
 // The step chain's own step records turned into Contract B progress events and the final outcome (#597; Contract B:
-// `build-contract-run.mjs`, docs/references/build-contract.md). Pure: the engine's record lines in, one document out,
-// checked by the Contract B validators before it is returned, so the caller sends only a valid one.
+// `build-contract-run.mjs`, docs/references/build-contract.md). Pure: the engine's record lines, the steps running and
+// its stop in, one document out, checked by the Contract B validators, so the caller sends it only when `problems` is
+// empty.
 //
-// Engine steps map onto Contract B steps:
+// Engine steps map onto Contract B steps (`ENGINE_STEPS`; the build graph of #597):
 //   look              -> look
 //   writer:<pageId>   -> writer, with that page
-//   pictures + icons  -> one pictures step: failed if either failed, running if either runs, done when both are done
+//   pictures + icons  -> one pictures step: failed if either failed, running while either runs, done when both are
 //   order + write     -> write
-// Every other engine step (the doors, the kit, needs, brand, answers, plan, approval: the steps before approval) is not
-// a Contract B step and never shows. A site check is never a build step (ADR 0047, decision 3): no event carries one.
+// The steps before approval (`PRE_APPROVAL_STEPS`) are not a build run: a stop there gives no document
+// (`before_build_run`). Any other step name is `engine_step_unknown`, never shown as pending. A site check is never a
+// build step (ADR 0047, decision 3).
 //
-// Attempts. Contract B counts the engine's re-run: a failing step is re-run once, and `failed` is on attempt 2. A step
-// that made its own second attempt and stops at once (`noRerun`, the page writer's `copy_check_failed`) reports the
-// attempts it made (`details.attempts`), so it fails on attempt 2. A step that stops on its FIRST attempt without a
-// second try of its own (a deterministic `noRerun` stop, a stop by the deadline) is reported as it is, failed on
-// attempt 1: Contract B cannot express that, so the document comes back with its problems and is not sent.
+// Attempts are the engine's: a step that ran once is never shown on attempt 2. A step that stops for good on its first
+// attempt (its error was `noRerun`, the deadline, the run frame) is failed on attempt 1 with `noRerun: true`. A stop of
+// the run frame (`run`, attempts 0) and a run that ended before its write step completed (the engine's
+// `incompleteStop`: write, attempts 0) are carried by the write step when every other step is done, else by the first
+// step that did not finish. A run the customer cancelled is `cancelled`: nothing failed, nothing unfinished shows.
 import { OUTCOME_SCHEMA, PROGRESS_SCHEMA, outcomeProblems, progressProblems } from './build-contract-run.mjs'
 import { TEXT_LIMITS } from './build-contract-shapes.mjs'
 import { reporterFor } from './build-contract-shared.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
-/** The error codes of a step that already made its own second attempt when it stops (`noRerun`). */
-const SELF_RETRIED_CODES = new Set(['copy_check_failed'])
 const WRITER = 'writer:'
+/** Engine step name -> Contract B step; `writer:<pageId>` is a writer step of that page. */
+export const ENGINE_STEPS = Object.freeze({
+  look: { id: 'look', kind: 'look' },
+  pictures: { id: 'pictures', kind: 'pictures' },
+  icons: { id: 'pictures', kind: 'pictures' },
+  order: { id: 'write', kind: 'write' },
+  write: { id: 'write', kind: 'write' }
+})
+/** The steps before the customer's approval: not a build run, never in a Contract B run. */
+export const PRE_APPROVAL_STEPS = Object.freeze([
+  'doors',
+  'aiq',
+  'kit',
+  'needs',
+  'brand',
+  'answers',
+  'plan',
+  'approval'
+])
+/** The stop step the run frame names when it fails a run outside the steps. */
+export const FRAME_STEP = 'run'
+/** The engine's code of a run that ended before its write step completed (`incompleteStop`). */
+export const STEP_CHAIN_INCOMPLETE = 'STEP_CHAIN_INCOMPLETE'
 
 /** The Contract B step an engine step belongs to, or null for a step Contract B does not show. */
 export function contractStepOf(engineStep) {
-  if (engineStep === 'look') return { id: 'look', kind: 'look' }
+  if (Object.hasOwn(ENGINE_STEPS, engineStep)) return { ...ENGINE_STEPS[engineStep] }
   if (typeof engineStep === 'string' && engineStep.startsWith(WRITER) && engineStep.length > WRITER.length)
     return { id: engineStep, kind: 'writer', page: engineStep.slice(WRITER.length) }
-  if (engineStep === 'pictures' || engineStep === 'icons') return { id: 'pictures', kind: 'pictures' }
-  if (engineStep === 'order' || engineStep === 'write') return { id: 'write', kind: 'write' }
   return null
 }
 
@@ -44,57 +65,103 @@ export const buildEngineSteps = (pages) => [
   'write'
 ]
 
+const LABELS = {
+  look: 'Apply your colours and logo',
+  pictures: 'Place your photos and icons',
+  write: 'Put the pages on your site'
+}
 const labelOf = (step, pages) => {
-  if (step.kind === 'look') return 'Apply your colours and logo'
-  if (step.kind === 'pictures') return 'Place your photos and icons'
-  if (step.kind === 'write') return 'Put the pages on your site'
+  if (LABELS[step.kind]) return LABELS[step.kind]
   const name = list(pages).find((p) => p.id === step.page)?.name
   return typeof name === 'string' && name.trim() ? `Write the ${name.trim()} page` : 'Write a page'
 }
 
-/** The attempts a failed line stands for: its own, or the step's own second attempt (`details.attempts`). */
-function failedAttempt(line) {
-  const own = Number.isInteger(line?.details?.attempts) ? line.details.attempts : null
-  const self = own ?? (SELF_RETRIED_CODES.has(line?.code) ? 2 : 1)
-  return Math.max(line?.attempt ?? 1, self)
-}
+const known = (name) => contractStepOf(name) !== null || PRE_APPROVAL_STEPS.includes(name)
+const highest = (lines) => Math.max(0, ...lines.map((l) => l.attempt ?? 0))
 
-/** One engine step's state: `{state, attempt}` from its record lines, whether it runs, and the step the build stopped at. */
-function engineStateOf(name, { record, running, stop }) {
+/** One engine step that did not stop the run: `{state, attempt}` from its lines and whether it runs. */
+function memberState(name, { record, running, halted }) {
   const lines = record.filter((l) => l?.step === name)
   const last = lines.at(-1)
-  if (stop?.step === name)
-    return { state: 'failed', attempt: failedAttempt(last ?? { attempt: stop.attempts }) }
-  if (running.includes(name)) return { state: 'running', attempt: lines.length + 1 }
-  if (!last || last.outcome === 'stopped') return { state: 'pending', attempt: 0 }
-  if (last.outcome === 'done') return { state: 'done', attempt: last.attempt }
-  // A first failure being re-run: shown running on attempt 2 even before the second attempt starts.
-  if (last.outcome === 'failed, re-running') return { state: 'running', attempt: last.attempt + 1 }
-  return { state: 'failed', attempt: failedAttempt(last) }
+  if (!halted && running.includes(name)) return { state: 'running', attempt: highest(lines) + 1 }
+  if (last?.outcome === 'done') return { state: 'done', attempt: last.attempt }
+  // A first failure about to be re-run shows running on attempt 2; once the run has stopped it never finished.
+  if (!halted && last?.outcome === 'failed, re-running')
+    return { state: 'running', attempt: last.attempt + 1 }
+  return { state: 'pending', attempt: 0 }
 }
 
-/** The state of a Contract B step from its engine steps (`contractStepOf`): see the header for the rule. */
-function groupStateOf(states, stopped) {
-  const failed = states.find((s) => s.state === 'failed')
-  if (failed) return failed
+/** A Contract B step from its members' states (none failed). */
+function groupState(states, halted) {
   const attempt = Math.max(0, ...states.map((s) => s.attempt))
   if (states.every((s) => s.state === 'done')) return { state: 'done', attempt }
-  if (states.every((s) => s.state === 'pending')) return { state: 'pending', attempt: 0 }
-  // Part done, part not started: under way while the build runs; once it has stopped nothing runs, and the part done
-  // does not make the step done.
-  if (stopped && !states.some((s) => s.state === 'running')) return { state: 'pending', attempt: 0 }
+  if (halted || states.every((s) => s.state === 'pending')) return { state: 'pending', attempt: 0 }
   return { state: 'running', attempt: Math.max(1, attempt) }
 }
 
+/** The stop the record shows: the engine's, else a line that failed for good, else none. */
+function stopOf(record, stop) {
+  if (stop) return stop
+  const failed = record.find((l) => l?.outcome === 'failed')
+  return failed
+    ? { step: failed.step, attempts: failed.attempt, code: failed.code, error: failed.error }
+    : null
+}
+
 /**
- * The Contract B steps of a run, in order.
- * @param {{run: {kind: string}, pages: Array<{id: string, name?: string}>, record: object[], running?: string[],
- *   stop?: {step: string, attempts?: number} | null, engineSteps?: string[]}} input `record`: the engine's record
- *   lines (`{step, attempt, outcome, code?, details?}`); `running`: the engine steps under way; `stop`: the engine's
- *   stop (`run.stop`); `engineSteps`: the engine steps of the run (a full build: `buildEngineSteps(pages)`)
+ * The Contract B steps of a run, in order, with the problems of its input.
+ * @param {{pages: Array<{id: string, name?: string}>, record: object[], running?: string[], stop?: object | null,
+ *   engineSteps?: string[], cancelled?: boolean, final?: boolean}} input `record`: the engine's record lines;
+ *   `running`: the engine steps under way; `stop`: the engine's `run.stop`; `engineSteps`: the run's engine steps (a
+ *   full build: `buildEngineSteps(pages)`); `cancelled`: the customer cancelled the run; `final`: for the outcome
+ * @returns {{steps: object[], stop: object | null, problems: object[], before?: true}} `before`: the run stopped
+ *   before approval, no build run
  */
-export function contractStepsOf({ pages, record, running = [], stop = null, engineSteps }) {
-  const names = engineSteps ?? buildEngineSteps(pages)
+export function contractStepsOf(input) {
+  const { pages, running = [], engineSteps, cancelled = false, final = false } = input
+  const record = list(input.record)
+  const problems = []
+  const pageIds = list(pages).map((p) => p?.id)
+  pageIds.forEach((id, i) => {
+    if (pageIds.indexOf(id) !== i)
+      problems.push({
+        at: `pages[${i}]`,
+        code: 'page_twice',
+        message: `page ${JSON.stringify(id)} appears twice`
+      })
+  })
+  record.forEach((l, i) => {
+    if (!known(l?.step))
+      problems.push({
+        at: `record[${i}].step`,
+        code: 'engine_step_unknown',
+        message: `${JSON.stringify(l?.step)} is neither a Contract B step nor a step before approval`
+      })
+  })
+  for (const name of list(engineSteps))
+    if (!known(name))
+      problems.push({
+        at: 'engineSteps',
+        code: 'engine_step_unknown',
+        message: `${JSON.stringify(name)} is not known`
+      })
+  for (const name of list(running))
+    if (!known(name))
+      problems.push({
+        at: 'running',
+        code: 'engine_step_unknown',
+        message: `${JSON.stringify(name)} is not known`
+      })
+  let stop = cancelled ? null : stopOf(record, input.stop)
+  if (stop && PRE_APPROVAL_STEPS.includes(stop.step)) return { steps: [], stop, problems, before: true }
+  if (stop && stop.step !== FRAME_STEP && !contractStepOf(stop.step))
+    problems.push({
+      at: 'stop.step',
+      code: 'engine_step_unknown',
+      message: `${JSON.stringify(stop.step)} is not known`
+    })
+  const halted = Boolean(stop) || cancelled || final
+  const names = list(engineSteps ?? buildEngineSteps(pages))
   const groups = new Map()
   for (const name of names) {
     const step = contractStepOf(name)
@@ -102,80 +169,105 @@ export function contractStepsOf({ pages, record, running = [], stop = null, engi
     if (!groups.has(step.id)) groups.set(step.id, { step, members: [] })
     groups.get(step.id).members.push(name)
   }
-  const ctx = { record: list(record), running: list(running), stop }
-  return [...groups.values()].map(({ step, members }) => ({
+  const ctx = { record, running: list(running), halted }
+  const steps = [...groups.values()].map(({ step, members }) => ({
     ...step,
     label: labelOf(step, pages),
-    ...groupStateOf(
-      members.map((m) => engineStateOf(m, ctx)),
-      Boolean(stop)
-    )
+    ...groupState(
+      members.map((m) => memberState(m, ctx)),
+      halted
+    ),
+    members
   }))
+  // A final outcome with nothing stopped and an unfinished step ended before its write step: the engine's stop.
+  if (final && !stop && !cancelled && steps.some((s) => s.state !== 'done'))
+    stop = {
+      step: 'write',
+      attempts: 0,
+      code: STEP_CHAIN_INCOMPLETE,
+      error: 'the run ended before the write step completed'
+    }
+  if (stop) failCarrier(steps, stop, record)
+  return { steps: steps.map(({ members: _members, ...s }) => s), stop, problems }
 }
 
-const checked = (doc, check) => {
-  const problems = []
+/** Mark the Contract B step that carries the stop failed, on the attempts its engine step ran. */
+function failCarrier(steps, stop, record) {
+  const frame = stop.step === FRAME_STEP || ((stop.attempts ?? 0) === 0 && stop.step === 'write')
+  const others = steps.filter((s) => s.kind !== 'write')
+  const carrier = frame
+    ? others.every((s) => s.state === 'done')
+      ? steps.find((s) => s.kind === 'write')
+      : steps.find((s) => s.state !== 'done')
+    : steps.find((s) => s.members.includes(stop.step))
+  if (!carrier) return
+  const lines = record.filter((l) => l?.step === stop.step)
+  const attempt = Math.min(2, Math.max(1, stop.attempts ?? 0, highest(lines)))
+  Object.assign(carrier, { state: 'failed', attempt, ...(attempt < 2 ? { noRerun: true } : {}) })
+}
+
+const seconds = (value) => (Number.isFinite(value) && value > 0 ? Math.floor(value) : 0)
+const checked = (doc, check, problems) => {
   check(doc, reporterFor(problems))
   return { doc, problems }
 }
-const seconds = (value) => (Number.isFinite(value) && value > 0 ? Math.floor(value) : 0)
+const beforeBuildRun = (problems) => ({ doc: null, reason: 'before_build_run', problems })
 
 /**
  * A progress event of the run: a full snapshot of its steps.
  * @param {{planId: string, planRevision: number, run: {id: string, kind: 'build' | 'partial', edit?: string},
  *   seq: number, elapsedSeconds: number}} input plus the fields of `contractStepsOf`
- * @returns {{doc: object, problems: Array<{at: string, message: string}>}} `doc` is a `tracy-build-progress/v1`
- *   event; send it only when `problems` is empty
+ * @returns {{doc: object | null, problems: object[], reason?: 'before_build_run'}} a `tracy-build-progress/v1` event
  */
 export function progressEventOf(input) {
   const { planId, planRevision, run, seq, elapsedSeconds } = input
-  return checked(
-    {
-      schema: PROGRESS_SCHEMA,
-      planId,
-      planRevision,
-      run,
-      seq,
-      elapsedSeconds: seconds(elapsedSeconds),
-      steps: contractStepsOf({ ...input, running: input.stop ? [] : input.running })
-    },
-    progressProblems
-  )
+  const { steps, problems, before } = contractStepsOf({ ...input, final: false })
+  if (before) return beforeBuildRun(problems)
+  const doc = {
+    schema: PROGRESS_SCHEMA,
+    planId,
+    planRevision,
+    run,
+    seq,
+    elapsedSeconds: seconds(elapsedSeconds),
+    steps
+  }
+  return checked(doc, progressProblems, problems)
 }
 
 /**
- * The final outcome of the run: `done` only when the write step (order and write) completed and every step is done;
- * else `stopped` at the step the engine stopped at, its reason for the Tracy team.
+ * The final outcome: `done` only when every step, ending with the write step (order and write), completed;
+ * `cancelled` when the customer cancelled; else `stopped` at the step that carries the engine's stop.
  * @param {object} input the fields of `progressEventOf` without `seq`
- * @returns {{doc: object, problems: Array<{at: string, message: string}>}} `doc` is a `tracy-build-outcome/v1`
+ * @returns {{doc: object | null, problems: object[], reason?: 'before_build_run'}} a `tracy-build-outcome/v1`
  */
 export function outcomeOf(input) {
-  const { planId, planRevision, run, elapsedSeconds, stop = null } = input
-  const steps = contractStepsOf({ ...input, running: [] })
-  const done = !stop && steps.at(-1)?.kind === 'write' && steps.every((s) => s.state === 'done')
+  const { planId, planRevision, run, elapsedSeconds, cancelled = false } = input
+  const { steps, stop, problems, before } = contractStepsOf({ ...input, final: true })
+  if (before) return beforeBuildRun(problems)
   const failed = steps.find((s) => s.state === 'failed')
-  const reason = [stop?.code, stop?.error].filter(Boolean).join(': ') || 'the build did not finish'
-  return checked(
-    {
-      schema: OUTCOME_SCHEMA,
-      planId,
-      planRevision,
-      run,
-      result: done ? 'done' : 'stopped',
-      elapsedSeconds: seconds(elapsedSeconds),
-      steps,
-      ...(done
-        ? {}
-        : {
-            stopped: {
-              step: failed?.id ?? contractStepOf(stop?.step)?.id ?? 'write',
-              reason: [...reason].slice(0, TEXT_LIMITS.reason).join(''),
-              teamNotified: true
-            }
-          })
-    },
-    outcomeProblems
-  )
+  const result = cancelled ? 'cancelled' : stop ? 'stopped' : 'done'
+  const reason = [stop?.code, stop?.error].filter(Boolean).join(': ') || 'the build stopped'
+  const doc = {
+    schema: OUTCOME_SCHEMA,
+    planId,
+    planRevision,
+    run,
+    result,
+    elapsedSeconds: seconds(elapsedSeconds),
+    steps,
+    ...(result === 'cancelled' ? { cancelled: { teamNotified: false } } : {}),
+    ...(result === 'stopped'
+      ? {
+          stopped: {
+            step: failed?.id ?? 'write',
+            reason: [...reason].slice(0, TEXT_LIMITS.reason).join(''),
+            teamNotified: true
+          }
+        }
+      : {})
+  }
+  return checked(doc, outcomeProblems, problems)
 }
 
 /** The document of the run as it stands: the outcome when `final`, else a progress event (`seq` needed). */

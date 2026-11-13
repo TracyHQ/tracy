@@ -1,0 +1,233 @@
+{
+  "frames": [
+    {
+      "id": "home.home-b1.photo",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "hero-video",
+      "blockType": "hero",
+      "field": "photo",
+      "kind": "business.hero_image",
+      "place": "hero",
+      "shape": "unknown",
+      "people": false,
+      "source": "own",
+      "picture": "gallery-terrace",
+      "ref": "https://brindlewick-tennis.example/img/gallery-terrace.jpg",
+      "label": "Courts seen from the terrace",
+      "from": ["Website"]
+    },
+    {
+      "id": "home.home-b1.clip",
+      "page": "home",
+      "block": "home-b1",
+      "blockId": "hero-video",
+      "blockType": "hero",
+      "field": "clip",
+      "kind": "business.video",
+      "place": "video",
+      "shape": "unknown",
+      "people": false,
+      "source": "none",
+      "reason": "no_fitting_video"
+    },
+    {
+      "id": "home.home-b2.service-junior-coaching.photo",
+      "page": "home",
+      "block": "home-b2",
+      "blockId": "service-cards",
+      "blockType": "services",
+      "field": "photo",
+      "kind": "offering.image",
+      "place": "item",
+      "item": "service-junior-coaching",
+      "itemKind": "service",
+      "shape": "unknown",
+      "people": false,
+      "source": "generated",
+      "generate": {
+        "blockType": "services",
+        "item": "Junior coaching",
+        "people": false,
+        "stock": false
+      }
+    },
+    {
+      "id": "home.home-b2.service-court-hire.photo",
+      "page": "home",
+      "block": "home-b2",
+      "blockId": "service-cards",
+      "blockType": "services",
+      "field": "photo",
+      "kind": "offering.image",
+      "place": "item",
+      "item": "service-court-hire",
+      "itemKind": "service",
+      "shape": "unknown",
+      "people": false,
+      "source": "own",
+      "picture": "service-court-hire:offering.image",
+      "ref": "https://brindlewick-tennis.example/img/hire.jpg",
+      "label": "Invented label of service-court-hire:offering.image",
+      "from": ["Website"]
+    },
+    {
+      "id": "home.home-b3.gallery-https-brindlewick-tennis-example-img-courts-jpg.photo",
+      "page": "home",
+      "block": "home-b3",
+      "blockId": "gallery-strip",
+      "blockType": "gallery",
+      "field": "photo",
+      "kind": "business.gallery_image",
+      "place": "item",
+      "item": "gallery-https-brindlewick-tennis-example-img-courts-jpg",
+      "itemKind": "gallery",
+      "shape": "square",
+      "people": false,
+      "source": "own",
+      "picture": "gallery-https-brindlewick-tennis-example-img-courts-jpg",
+      "ref": "https://brindlewick-tennis.example/img/courts.jpg",
+      "label": "Three clay courts at dusk",
+      "from": ["Website"]
+    },
+    {
+      "id": "home.home-b3.gallery-https-images-example-brindlewick-clubhouse-jpg.photo",
+      "page": "home",
+      "block": "home-b3",
+      "blockId": "gallery-strip",
+      "blockType": "gallery",
+      "field": "photo",
+      "kind": "business.gallery_image",
+      "place": "item",
+      "item": "gallery-https-images-example-brindlewick-clubhouse-jpg",
+      "itemKind": "gallery",
+      "shape": "square",
+      "people": false,
+      "source": "own",
+      "picture": "gallery-https-images-example-brindlewick-clubhouse-jpg",
+      "ref": "https://images.example/brindlewick/clubhouse.jpg",
+      "label": "Clubhouse terrace",
+      "from": ["Google listing"]
+    },
+    {
+      "id": "home.home-b3.gallery-https-images-example-brindlewick-cardio-jpg.photo",
+      "page": "home",
+      "block": "home-b3",
+      "blockId": "gallery-strip",
+      "blockType": "gallery",
+      "field": "photo",
+      "kind": "business.gallery_image",
+      "place": "item",
+      "item": "gallery-https-images-example-brindlewick-cardio-jpg",
+      "itemKind": "gallery",
+      "shape": "square",
+      "people": false,
+      "source": "own",
+      "picture": "gallery-https-images-example-brindlewick-cardio-jpg",
+      "ref": "https://images.example/brindlewick/cardio.jpg",
+      "label": "Players at a cardio tennis evening",
+      "from": ["Social profile"]
+    },
+    {
+      "id": "team.team-b1.person-ilse-varrow.photo",
+      "page": "team",
+      "block": "team-b1",
+      "blockId": "team-cards",
+      "blockType": "team",
+      "field": "photo",
+      "kind": "person.image",
+      "place": "item",
+      "item": "person-ilse-varrow",
+      "itemKind": "person",
+      "shape": "square",
+      "people": true,
+      "never": "no_generated_people",
+      "source": "own",
+      "picture": "person-ilse-varrow:person.image",
+      "ref": "https://brindlewick-tennis.example/img/coach.jpg",
+      "label": "Invented label of person-ilse-varrow:person.image",
+      "from": ["Website"]
+    }
+  ],
+  "reduced": [
+    {
+      "page": "home",
+      "block": "home-b2",
+      "item": "service-cardio-tennis",
+      "reason": "no_own_photo"
+    },
+    {
+      "page": "home",
+      "block": "home-b2",
+      "item": "service-adult-group-lessons",
+      "reason": "no_own_photo"
+    }
+  ],
+  "droppedFrames": [
+    {
+      "frame": "home.home-b2.service-adult-group-lessons.photo",
+      "item": "service-adult-group-lessons",
+      "reason": "item_dropped"
+    },
+    {
+      "frame": "home.home-b2.service-cardio-tennis.photo",
+      "item": "service-cardio-tennis",
+      "reason": "item_dropped"
+    }
+  ],
+  "counts": {
+    "own": 6,
+    "generated": 1,
+    "none": 1,
+    "variants": 0
+  },
+  "notes": [],
+  "icons": [],
+  "iconCounts": {
+    "fields": 0,
+    "library": 0,
+    "social": 0,
+    "network": 0,
+    "hidden": 0,
+    "unexplained": 0
+  },
+  "iconPrompt": null,
+  "iconKeywordsPrompt": null,
+  "leftOut": [
+    {
+      "frame": "home.home-b1.clip",
+      "reason": "no_fitting_video"
+    }
+  ],
+  "difference": {
+    "approved": {
+      "own": 0,
+      "generated": 6
+    },
+    "placed": {
+      "own": 6,
+      "generated": 1
+    },
+    "unplaced": [
+      {
+        "picture": "gallery-crest",
+        "reason": "no_fitting_frame"
+      },
+      {
+        "picture": "gallery-stock-racket",
+        "reason": "stock"
+      }
+    ],
+    "empty": [
+      {
+        "frame": "home.home-b1.clip",
+        "reason": "no_fitting_video"
+      }
+    ]
+  },
+  "labelled": ["service-court-hire:offering.image", "person-ilse-varrow:person.image"],
+  "prompt": {
+    "file": "picture-labelling-prompt.md",
+    "sha256": "35260b27810ca6b0b0028734f43184bc80665d4713d983fcb694dd29319852ef"
+  }
+}

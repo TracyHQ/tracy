@@ -261,12 +261,15 @@ A run is the full build after approval (`run: {id, kind: "build"}`) or a partial
 - `state` is `pending` (attempt 0), `running`, `done` or `failed`. A failing step is re-run once, so `attempt` is at
   most 2; a first failure shows as `running` with attempt 2, and **`failed` means the re-run failed too**. A step that
   failed on its first attempt and then completed on its second is `done` with attempt 2, a valid run.
+- **A step that stops without a re-run** (a deterministic failure a re-run would repeat, the run's deadline, the run
+  frame failing outside the steps) is `failed` on **attempt 1** and carries `noRerun: true`. `noRerun` is only ever
+  `true`, only on a `failed` step, and only with attempt 1; a `failed` step without it is on attempt 2.
 - **Parallel group**: in a run, every `look`, `pictures` and `writer` step forms one parallel group: once the plan
   is approved (or the plan edit applied) they may run at the same time, in any order. The `write` step is not in the group:
   it runs alone, after every step of the group is done.
 - **A failed step is final**: at most one step of a run is failed, and every later event, and the outcome, still shows
-  it `failed` on attempt 2; the outcome is `stopped` naming that step. In the document where a step is failed and in
-  every later one:
+  it `failed` on the same attempt; the outcome is `stopped` naming that step. In the document where a step is failed
+  and in every later one:
   - no step is `running` (the build has stopped);
   - the write step is never `running` and never `done` (unless it is the failed step);
   - another step may be `done` only if it was `running` or `done` in an earlier event of the same run: steps of the
@@ -283,9 +286,21 @@ The outcome adds `result`:
   running step is rejected. Done does not depend on a site check.
 - **`stopped`**: exactly one step failed, and `stopped: {step, reason, teamNotified: true}` names it. The write step is
   never `done` in a stopped outcome. The chat shows the could not finish state; the Tracy team is told.
+- **`cancelled`**: the customer cancelled the run. No step is failed, every unfinished step is `pending`, the write step
+  is not `done`, there is no `stopped` report, and `cancelled: {teamNotified: false}`: a cancel is the customer's choice,
+  not a fault, so the Tracy team is not told.
 - Any other result, such as `applied` or `complete`, is rejected: a build never reports those.
 
 In a scenario a partial run builds the revision its edit produced, and a writer step names a page of that revision.
+
+### Changes for consumers
+
+- 13/11/2026 (#597), additive: a step may carry `noRerun: true` (failed on attempt 1, stopped without a re-run), and an
+  outcome may have `result: "cancelled"` with `cancelled: {teamNotified: false}` and no `stopped`. Every earlier
+  document stays valid. A reader that switches on `result` must handle `cancelled` (show it as cancelled, not as could
+  not finish), and a reader of a failed step must not assume attempt 2. Samples:
+  `sunrise-tennis-club-stopped-without-rerun` and `sunrise-tennis-club-cancelled` in
+  `packages/wo/website-opportunities/test/fixtures/build-contract/`.
 
 ## Closed shapes
 
@@ -322,14 +337,15 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `plan reference` | `id`, `revision` |
 | `change` | `field`, `value` |
 | `progress event` | `schema`, `planId`, `planRevision`, `run`, `seq`, `elapsedSeconds`, `steps` |
-| `outcome` | `schema`, `planId`, `planRevision`, `run`, `result`, `elapsedSeconds`, `steps`, `stopped?` |
+| `outcome` | `schema`, `planId`, `planRevision`, `run`, `result`, `elapsedSeconds`, `steps`, `stopped?`, `cancelled?` |
 | `run` | `id`, `kind`, `edit?` |
-| `step` | `id`, `kind`, `label`, `state`, `attempt`, `page?` |
+| `step` | `id`, `kind`, `label`, `state`, `attempt`, `page?`, `noRerun?` |
 | `stop report` | `step`, `reason`, `teamNotified` |
+| `cancel report` | `teamNotified` |
 
 `own pictures.from` is required when `frames` is above zero, `generated pictures.reason` when `frames` is above zero,
 `logo.source` for an own logo, `run.edit` for a partial run, `step.page` for a writer step, `outcome.stopped` for a
-stopped outcome, and `question.fact` for a `fact-conflict`. A `planned row` names exactly one of `data` and `page`.
+stopped outcome, `outcome.cancelled` for a cancelled outcome, and `question.fact` for a `fact-conflict`. A `planned row` names exactly one of `data` and `page`.
 
 ## Text limits
 

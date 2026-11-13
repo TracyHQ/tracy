@@ -277,8 +277,17 @@ export {
 } from './picture-labelling.mjs'
 export { FRAME_SOURCES, pictureProblemsOf, videoFits } from './picture-policy-check.mjs'
 export { approvedCountOf, assignPictures } from './picture-policy.mjs'
-export { blocksOf, differenceOf, picturesStep, placePictures, selectBuildIcons } from './picture-step.mjs'
 export {
+  blocksOf,
+  differenceOf,
+  picturesStep,
+  placeBuildPictures,
+  selectBuildIcons
+} from './picture-step.mjs'
+export {
+  ENGINE_STEPS,
+  FRAME_STEP,
+  PRE_APPROVAL_STEPS,
   buildEngineSteps,
   contractRunOf,
   contractStepOf,
@@ -286,7 +295,7 @@ export {
   outcomeOf,
   progressEventOf
 } from './build-run-events.mjs'
-export { researchOf } from './needs-research.mjs'
+export { FIELD_KINDS, HOURS_LIMIT, NO_KIND, researchOf } from './needs-research.mjs'
 export {
   PAGE_WRITER_PROMPT_FILE,
   PAGE_WRITE_ATTEMPTS,
