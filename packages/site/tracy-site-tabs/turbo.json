@@ -18,6 +18,7 @@
         "$TURBO_ROOT$/packages/tools/tracy-subprocess-docker/**",
         "$TURBO_ROOT$/packages/ui/tracy-chat-input/**",
         "$TURBO_ROOT$/packages/ui/tracy-sidebar/**",
+        "$TURBO_ROOT$/packages/wo/website-opportunities/**",
         "$TURBO_ROOT$/docs/references/**",
         "!$TURBO_ROOT$/**/.turbo/**",
         "!$TURBO_ROOT$/**/node_modules/**",
