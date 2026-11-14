@@ -13,6 +13,7 @@ import {
   BUILD_PARAMETERS,
   BUILD_RUNNING_SAY,
   BUILD_STOPPED_SAY,
+  PRIVATE_GUIDANCE_MARK,
   UNCHANGED_FALLBACK_SAY,
   createBuildTool
 } from '../src/host/build-tool.mjs'
@@ -223,7 +224,7 @@ test('long work answers running, and status returns the result when it is done',
   assert.deepEqual(first, {
     running: true,
     say: BUILD_RUNNING_SAY,
-    next: 'Say the sentence in say, then call tracy_build with action status to keep waiting.'
+    next: `${PRIVATE_GUIDANCE_MARK} Say the sentence in say, then call tracy_build with action status to keep waiting.`
   })
   const second = await run(tool, { action: 'status' })
   assert.deepEqual(second.plan, { id: 'plan-harbour-lane', revision: 1 })
@@ -475,7 +476,8 @@ test('templates come back as the card options; edit forwards changes and returns
     })
   })
   const tool = toolWith(web)
-  assert.deepEqual(await run(tool, { action: 'templates' }), { options: [option], none: false })
+  const shown = await run(tool, { action: 'templates' })
+  assert.deepEqual([shown.options, shown.none], [[option], false])
   const changes = [{ field: 'pages[home].name', value: 'Welcome' }]
   const edited = await run(tool, { action: 'edit', changes })
   assert.deepEqual(web.calls[1].body, { changes })
@@ -601,7 +603,7 @@ test('the issued questions are learned again from the engine door after a restar
   })
   const tool = toolWith(web, { events })
   const answer = await run(tool, { action: 'templates' })
-  assert.deepEqual(answer, { options: [], none: true })
+  assert.deepEqual([answer.options, answer.none], [[], true])
   const put = web.calls.find((c) => c.method === 'PUT')
   assert.deepEqual(put.body.answer, {
     schema: 'tracy-build-answer/v1',

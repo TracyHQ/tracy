@@ -149,11 +149,13 @@ export const CSS = `
 .tv-bc-cell { min-width: 0; }
 .tv-bc-val { padding: 4px 0; min-width: 0; }
 .tv-bc-val-row { display: flex; align-items: center; gap: 8px; min-height: 22px; }
-.tv-bc-v { display: inline-flex; align-items: center; gap: 6px; flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+.tv-bc-v { display: inline-flex; align-items: center; gap: 6px; flex: 1 1 auto; min-width: 0; max-width: 100%; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
 /* A value the owner can change: the whole row is a button, a pencil on hover, the just changed value tinted */
 .tv-bc-val-edit {
   width: calc(100% + 16px); min-height: 30px; margin: 0 -8px; padding: 4px 8px; border-radius: 8px;
   border: 1px solid transparent; background: transparent; color: inherit; font: inherit; text-align: left; cursor: text;
+  /* A long link wraps anywhere: a host button rule must not clip it to one line */
+  white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere;
 }
 .tv-bc-val:has(> .tv-bc-val-edit) { padding: 0; }
 .tv-bc-val-edit:hover:not([aria-disabled]) { background: color-mix(in oklab, var(--foreground) 5%, var(--card)); }
@@ -238,7 +240,11 @@ export const CSS = `
 /* The quiet row of one tracy_build call (BuildToolRow): dsh's own process row, the business name beside it */
 .tv-bc-toolrow-sum { margin-left: 6px; color: var(--muted-foreground); overflow-wrap: normal; word-break: keep-all; }
 /* The same row above the chat input while a call waits (WorkingDock) */
-.tv-bc-dock { box-sizing: border-box; width: 100%; padding: 0 4px 4px; min-width: 0; }
+/* It sits in the column of the chat: the width axis dsh gives the messages and the input, centred like them */
+.tv-bc-dock {
+  box-sizing: border-box; min-width: 0; margin: 0 auto; padding: 0 0 4px;
+  width: var(--dsh-chat-content-width, calc(100% - 32px)); max-width: 100%;
+}
 
 /* The plan review bar (ReviewBar): the shape of dsh's plan review panel, in Tracy tokens */
 .tv-bc-review-frame {

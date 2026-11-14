@@ -257,7 +257,7 @@ var REQUEST_MAX_LENGTH = 1e3;
 var REQUEST_TOO_LONG_SAY = `That request is too long. Please keep it to ${REQUEST_MAX_LENGTH} characters or fewer.`;
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? `That name is too long for this design. Please keep it to ${limit} characters or fewer.` : `That answer is too long. Please keep it to ${limit} characters or fewer.`;
 var SAY_MAX = 300;
-var BUILD_DESCRIPTION = "tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.";
+var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.';
 var BUILD_PARAMETERS = Object.freeze({
   type: "object",
   properties: {
@@ -288,6 +288,18 @@ var BUILD_PARAMETERS = Object.freeze({
   required: ["action"]
 });
 var DOOR = "/api/build-draft";
+var PRIVATE_GUIDANCE_MARK = "Private guidance for you only. Never quote it or put any part of it in your reply to the owner.";
+var privately = (next) => `${PRIVATE_GUIDANCE_MARK} ${next}`;
+function templatesNext(options) {
+  if (options.length === 0)
+    return "No ready design fits. Tell the owner plainly that no ready design fits their business yet, and that they can add a site with Add site.";
+  if (options.length === 1) {
+    const name2 = typeof options[0]?.name === "string" ? options[0].name : "it";
+    return `One design fits. The card shows it with the button "Use ${name2}". In one short line, ask the owner to confirm it with that button. Do not ask which one, there is only one.`;
+  }
+  return "Several designs fit. In one short line, ask the owner which one they like, using the buttons on the card.";
+}
+var COLOUR_EDIT_GUIDANCE = 'For a colour change call tracy_build with action edit and changes:[{field:"look.accent", value:"#RRGGBB"}], where the value is a six digit hex colour you choose for the colour the owner named (for example blue is #1F4E9C). The field name look.accent is exact.';
 var MISSING_STEPS = Object.freeze({
   NO_DRAFT: {
     missing: "research",
@@ -449,7 +461,7 @@ ${JSON.stringify(answer)}`;
       return {
         refused: true,
         problems,
-        next: "Tell the owner plainly, in their language, what could not be changed and why. Do not ask a question about it."
+        next: `If the change was a colour and you did not use the exact field, try once more. ${COLOUR_EDIT_GUIDANCE} Otherwise tell the owner plainly, in their language, what could not be changed and why, and that the plan card is where they can change it by hand. Do not ask a question about it.`
       };
     }
     return stopped(res.body?.say);
@@ -480,7 +492,7 @@ ${JSON.stringify(answer)}`;
         unchanged,
         revision: { changed: lines(result.revision?.changed), notDone },
         review,
-        next: `${unchanged ? "Nothing on the plan changed: say so plainly." : "Say what changed using the sentences in revision.changed, word for word."} Then say each entry of revision.notDone with its why. Do not say anything else changed. When an entry asks for the language, a value, the look or the number of pictures, tell the owner they can change it on the plan card. Then pass review to ask_user_question exactly as given.`
+        next: `${unchanged ? "Nothing on the plan changed: say so plainly." : "Say what changed using the sentences in revision.changed, word for word."} Then say each entry of revision.notDone with its why. Do not say anything else changed. When an entry asks for the language, a value, the look or the number of pictures, tell the owner they can change it on the plan card. Then call ask_user_question with review, unchanged.`
       };
     }
     if (state?.step === "brand")
@@ -500,7 +512,7 @@ ${JSON.stringify(answer)}`;
           say: ownerSay(state.say, UNCHANGED_FALLBACK_SAY),
           plan,
           review,
-          next: "The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied. Then pass review to ask_user_question exactly as given. Call plan with restart true only if the owner clearly asks to start the plan over."
+          next: "The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied. Then call ask_user_question with review, unchanged. Call plan with restart true only if the owner clearly asks to start the plan over."
         };
       return { plan, review };
     }
@@ -529,6 +541,10 @@ ${JSON.stringify(answer)}`;
     return finished(sessionId, state);
   }
   async function execute(rawArgs, exec) {
+    const result = await run(rawArgs, exec);
+    return typeof result?.next === "string" ? { ...result, next: privately(result.next) } : result;
+  }
+  async function run(rawArgs, exec) {
     const args = argsOf(rawArgs);
     const sessionId = exec?.agent?.session?.id;
     if (!isBuildChatSession(sessionId))
@@ -589,7 +605,7 @@ ${JSON.stringify(answer)}`;
     if (res.status < 200 || res.status >= 300) return refusal(res);
     if (action === "templates") {
       const { options, none } = templateChoiceOf(res.body?.templates);
-      return { options, none };
+      return { options, none, next: templatesNext(options) };
     }
     return settle(sessionId, res.body);
   }

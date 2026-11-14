@@ -67,7 +67,7 @@ export const tooLongSay = (question, limit) =>
 const SAY_MAX = 300
 
 export const BUILD_DESCRIPTION =
-  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.'
+  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.'
 
 export const BUILD_PARAMETERS = Object.freeze({
   type: 'object',
@@ -102,6 +102,32 @@ export const BUILD_PARAMETERS = Object.freeze({
 })
 
 const DOOR = '/api/build-draft'
+
+/**
+ * The mark every `next` carries. A `next` is guidance for the model, never something to tell the owner: a model that
+ * read "then pass review to ask_user_question" aloud once wrote half of it into its reply.
+ */
+export const PRIVATE_GUIDANCE_MARK =
+  'Private guidance for you only. Never quote it or put any part of it in your reply to the owner.'
+const privately = (/** @type {string} */ next) => `${PRIVATE_GUIDANCE_MARK} ${next}`
+
+/**
+ * What to say about the template card: with one design the owner confirms it, with several the owner picks one.
+ * @param {Array<{ name?: string }>} options
+ */
+export function templatesNext(options) {
+  if (options.length === 0)
+    return 'No ready design fits. Tell the owner plainly that no ready design fits their business yet, and that they can add a site with Add site.'
+  if (options.length === 1) {
+    const name = typeof options[0]?.name === 'string' ? options[0].name : 'it'
+    return `One design fits. The card shows it with the button "Use ${name}". In one short line, ask the owner to confirm it with that button. Do not ask which one, there is only one.`
+  }
+  return 'Several designs fit. In one short line, ask the owner which one they like, using the buttons on the card.'
+}
+
+/** The exact shape of a colour change, which the agent used to guess (it sent the field "main colour"). */
+export const COLOUR_EDIT_GUIDANCE =
+  'For a colour change call tracy_build with action edit and changes:[{field:"look.accent", value:"#RRGGBB"}], where the value is a six digit hex colour you choose for the colour the owner named (for example blue is #1F4E9C). The field name look.accent is exact.'
 
 /**
  * The 409 codes of the engine doors that name a step the build has not taken yet (`engine-route.js` of tracy-web):
@@ -364,7 +390,7 @@ export function createBuildTool({
       return {
         refused: true,
         problems,
-        next: 'Tell the owner plainly, in their language, what could not be changed and why. Do not ask a question about it.'
+        next: `If the change was a colour and you did not use the exact field, try once more. ${COLOUR_EDIT_GUIDANCE} Otherwise tell the owner plainly, in their language, what could not be changed and why, and that the plan card is where they can change it by hand. Do not ask a question about it.`
       }
     }
     return stopped(res.body?.say)
@@ -406,7 +432,7 @@ export function createBuildTool({
         unchanged,
         revision: { changed: lines(result.revision?.changed), notDone },
         review,
-        next: `${unchanged ? 'Nothing on the plan changed: say so plainly.' : 'Say what changed using the sentences in revision.changed, word for word.'} Then say each entry of revision.notDone with its why. Do not say anything else changed. When an entry asks for the language, a value, the look or the number of pictures, tell the owner they can change it on the plan card. Then pass review to ask_user_question exactly as given.`
+        next: `${unchanged ? 'Nothing on the plan changed: say so plainly.' : 'Say what changed using the sentences in revision.changed, word for word.'} Then say each entry of revision.notDone with its why. Do not say anything else changed. When an entry asks for the language, a value, the look or the number of pictures, tell the owner they can change it on the plan card. Then call ask_user_question with review, unchanged.`
       }
     }
     // The brand step (#616) prepares the business's own look the plan is composed from; the plan is asked for again.
@@ -429,7 +455,7 @@ export function createBuildTool({
           say: ownerSay(state.say, UNCHANGED_FALLBACK_SAY),
           plan,
           review,
-          next: 'The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied. Then pass review to ask_user_question exactly as given. Call plan with restart true only if the owner clearly asks to start the plan over.'
+          next: 'The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied. Then call ask_user_question with review, unchanged. Call plan with restart true only if the owner clearly asks to start the plan over.'
         }
       return { plan, review }
     }
@@ -466,8 +492,18 @@ export function createBuildTool({
     return finished(sessionId, state)
   }
 
-  /** @param {unknown} rawArgs @param {any} exec */
+  /**
+   * Every `next` the model reads is private guidance: it is marked so, once, here, so no step can forget it.
+   * @param {unknown} rawArgs @param {any} exec
+   */
   async function execute(rawArgs, exec) {
+    /** @type {any} */
+    const result = await run(rawArgs, exec)
+    return typeof result?.next === 'string' ? { ...result, next: privately(result.next) } : result
+  }
+
+  /** @param {unknown} rawArgs @param {any} exec */
+  async function run(rawArgs, exec) {
     const args = argsOf(rawArgs)
     const sessionId = exec?.agent?.session?.id
     if (!isBuildChatSession(sessionId))
@@ -537,7 +573,7 @@ export function createBuildTool({
     if (res.status < 200 || res.status >= 300) return refusal(res)
     if (action === 'templates') {
       const { options, none } = templateChoiceOf(res.body?.templates)
-      return { options, none }
+      return { options, none, next: templatesNext(options) }
     }
     return settle(sessionId, res.body)
   }
