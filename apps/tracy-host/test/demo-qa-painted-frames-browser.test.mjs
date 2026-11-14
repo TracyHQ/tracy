@@ -47,6 +47,12 @@ const PAGE = `<!doctype html><meta name="viewport" content="width=device-width, 
   .picture-holder .glyph::before { font-size: 16px }
   .gallery-item { width: 300px; height: 200px }
   .gallery-item img { opacity: 0; width: 300px; height: 200px }
+  .optional-card { width: 300px; position: relative; background: #eee; align-self: flex-start }
+  .optional-card > .content { padding: 24px }
+  .optional-card > .blog-image { position: absolute; inset: 0 }
+  .reserved-picture { width: 300px; height: 240px; position: relative }
+  .reserved-picture > .blog-image { position: absolute; inset: 0 }
+  .reserved-picture > p { margin: 0; position: relative }
 </style>
 <div class="row">
   <div id="painted-mask" class="img-icon">
@@ -55,6 +61,17 @@ const PAGE = `<!doctype html><meta name="viewport" content="width=device-width, 
   </div>
   <div id="painted-background" class="media-box"></div>
   <div id="icon-font" class="thumb"><i class="glyph"></i></div>
+</div>
+<div class="row">
+  <article class="optional-card"><div id="optional-background" class="blog-image"></div>
+    <div class="content"><h2>Community event</h2><p>A complete text card with a date, location and useful description.</p><a href="/">Read more</a></div>
+  </article>
+  <article class="reserved-picture"><div id="reserved-absolute" class="blog-image"></div>
+    <p>This caption does not fill the picture area reserved above and around it.</p>
+  </article>
+  <article class="optional-card"><div id="failed-background" class="blog-image"><img src="/missing.png" alt=""></div>
+    <div class="content"><h2>Community event</h2><p>A complete text card still needs its deliberately requested picture.</p></div>
+  </article>
 </div>
 <div class="row">
   <div id="empty" class="photo-frame"></div>
@@ -90,7 +107,9 @@ test(
       assert.deepEqual(flagged, [
         'div#colour-only.image-box',
         'div#empty.photo-frame',
+        'div#failed-background.blog-image',
         'div#hidden-picture.gallery-item',
+        'div#reserved-absolute.blog-image',
         'div#tiny-glyph.picture-holder'
       ])
     } finally {

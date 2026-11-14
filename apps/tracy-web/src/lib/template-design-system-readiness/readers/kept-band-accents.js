@@ -76,13 +76,29 @@ const insideOf = (/** @type {string} */ selector, /** @type {string} */ scope) =
   return rest === '' ? '&' : rest.replace(/^>\s*/, '')
 }
 
-/** The hexes a value paints as literals: a slot read's fallback (`var(--ds-c-accent, #f44141)`) is not one. */
-const literalHexes = (/** @type {string} */ value) =>
+/**
+ * The hexes a value paints as literals: a slot read's fallback (`var(--ds-c-accent, #f44141)`) is not one, nor
+ * the fallback of a template variable that aliases the slot (`--vds-accent: var(--ds-c-accent)` declared in the
+ * template's own sheets, read as `var(--vds-accent, #5e48db)`), which brand mode reaches the same way.
+ */
+const literalHexes = (/** @type {string} */ value, /** @type {Set<string>} */ aliases) =>
   [
     ...value
-      .replace(/var\(\s*--ds-[\w-]+\s*,[^()]*(\([^()]*\))?[^()]*\)/g, '')
+      .replace(/var\(\s*(--[\w-]+)\s*,[^()]*(\([^()]*\))?[^()]*\)/g, (read, name) =>
+        name.startsWith('--ds-') || aliases.has(name) ? '' : read
+      )
       .matchAll(/#[0-9a-f]{3,8}\b|%23[0-9a-f]{6}\b|rgba?\([^)]*\)/gi)
   ].map((m) => hexOf(m[0].replace(/^%23/, '#')))
+
+/** Custom properties the sheets set to a slot read (`--vds-accent: var(--ds-c-accent)`), in any rule. */
+const slotAliases = (/** @type {[string, string][]} */ sheets) =>
+  new Set(
+    sheets.flatMap(([, css]) =>
+      [...css.matchAll(/(--[\w-]+)\s*:\s*([^;{}]*)/g)]
+        .filter((m) => /var\(\s*--ds-/.test(m[2]) && !literalHexes(m[2], new Set()).length)
+        .map((m) => m[1])
+    )
+  )
 
 /**
  * @typedef {{ band: string, file: string, selector: string, inside: string, property: string, colour: string, kind: 'paintable' | 'locked', covered: boolean }} KeptAccent
@@ -115,6 +131,7 @@ export async function keptBandAccents(context) {
   ]
   const sheets = await templateSheets(context)
   if (!sheets) return null
+  const aliases = slotAliases(sheets)
   /** @type {KeptAccent[]} */
   const found = []
   for (const [file, raw] of sheets) {
@@ -128,7 +145,7 @@ export async function keptBandAccents(context) {
         if (i < 1) continue
         const property = decl.slice(0, i).trim().toLowerCase()
         const value = decl.slice(i + 1).trim()
-        const hit = literalHexes(value).find((h) => h && accents.includes(h))
+        const hit = literalHexes(value, aliases).find((h) => h && accents.includes(h))
         if (!hit) continue
         const alone = /^(#[0-9a-f]{3,8}|rgba?\([^)]*\))(\s*!important)?$/i.test(value)
         const custom = property.startsWith('--')

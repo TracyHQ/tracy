@@ -9136,6 +9136,35 @@ function hasContentContract(cwd, sitesRoot) {
 }
 var QUICKSTART_DESIGN_RULE = "Keep the quickstart's design: reuse its own sections and styles, and keep new text close to the length of the text it replaces (0.75\xD7 to 1.25\xD7).";
 
+// ../../wo/website-opportunities/domain/audio-source.mjs
+var isAudioSlot = (slot) => slot?.type === "url" && slot?.role === "business.audio";
+function audioSourceProblem(value) {
+  if (typeof value !== "string" || !value || /[\s\\<>"`{}|^#]/u.test(value)) return "unsupported audio source";
+  if (/%(?![0-9a-f]{2})/i.test(value)) return "invalid audio source encoding";
+  if (value.startsWith("//")) return "unsafe audio source path";
+  const remote = /^https:\/\//i.test(value);
+  const rawPath = (remote ? value.replace(/^https:\/\/[^/?#]+/i, "") : value).split("?")[0];
+  let path22;
+  try {
+    path22 = decodeURIComponent(rawPath);
+  } catch {
+    return "invalid audio source encoding";
+  }
+  if (!/\.mp3$/i.test(rawPath) || /%(?:2f|5c|25)/i.test(rawPath) || /[\\?#]/.test(path22) || [...path22].some((c) => c.charCodeAt(0) <= 32 || c.charCodeAt(0) === 127) || path22.replace(/^\/+/, "").split("/").some((p) => !p || p === "." || p === ".."))
+    return "unsafe audio source path";
+  if (remote) {
+    try {
+      const u = new URL(value);
+      return u.hostname && !u.username && !u.password ? null : "expected an HTTPS MP3 source";
+    } catch {
+      return "invalid HTTPS audio source";
+    }
+  }
+  return /^(?:\/(?:[a-zA-Z0-9_-]+\/)*)?(?:images|media)\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_.-]+\.mp3$/i.test(
+    path22
+  ) ? null : "expected an existing MP3 in the site media library";
+}
+
 // src/host/contract-check.mjs
 var IDENTITY_TOKENS = Object.freeze([
   "site.name",
@@ -9230,7 +9259,10 @@ function checkSlotValue(slot, value, { evidence = null } = {}) {
       limit: Number(slot.maxCharacters),
       length
     };
-  if (slot.type === "url") {
+  if (isAudioSlot(slot)) {
+    const problem = audioSourceProblem(value);
+    if (problem) return { rule: "audio", key, message: `Unsupported audio source: ${key}` };
+  } else if (slot.type === "url") {
     if (value.startsWith("//") || value.includes("\\"))
       return { rule: "url", key, message: `Unsupported CTA URL: ${key}` };
     if (value !== "" && !CTA_URL.test(value))

@@ -1,0 +1,3 @@
+- **Leave bare article-body placeholders unassigned during version 3 role proposals.** — #625 · `fix/ja-nova-readiness` · 2026-11-10
+  **Affects:** Joomla role proposals for unpaired bare `#` links in article `introtext` and `fulltext`. Existing list navigation, module calls to action, reviewed roles and real internal destinations keep their behavior.
+  **Why / Measured:** A bare `#` names no destination and should not receive a navigation role from the fallback rule. Six focused regression cases and ten affected capture-rule cases passed. Coverage includes field preservation, real destinations and named fragments, separate list groups, assigned-role carryover, module calls to action and version 2 behavior.

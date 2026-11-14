@@ -189,6 +189,39 @@ export function readDetails() {
         ...(current ? { current: true } : {})
       })
     }
+    const audioSources = []
+    for (const player of root.querySelectorAll('audio, .jp-jplayer')) {
+      if (player.tagName === 'AUDIO' && player.closest('.jp-jplayer')) continue
+      const native = player.tagName === 'AUDIO'
+      const state = native ? null : window.jQuery?.(player)?.data('jPlayer')
+      const audio = native ? player : state?.htmlElement?.audio
+      const raw = native
+        ? player.currentSrc ||
+          player.getAttribute('src') ||
+          player.querySelector('source[src]')?.getAttribute('src')
+        : state?.status?.media?.mp3
+      if (!raw) continue
+      let value, initializedSource
+      try {
+        value = new URL(raw, document.baseURI || location.href).href
+        initializedSource = new URL(
+          native ? player.currentSrc : state?.status?.src,
+          document.baseURI || location.href
+        ).href
+      } catch {
+        continue
+      }
+      audioSources.push({
+        element: player,
+        value,
+        entity: player.getAttribute('data-audio-entity'),
+        track: player.getAttribute('data-audio-track'),
+        mechanism: native ? 'native' : 'jplayer',
+        initialized: !!(native ? player.currentSrc : state?.status?.src) && initializedSource === value,
+        metadata: !!audio && audio.readyState >= 1 && Number.isFinite(audio.duration) && audio.duration > 0,
+        mediaError: audio ? (audio.error?.code ?? null) : 'unavailable'
+      })
+    }
     const texts = new Set()
     const inlineTexts = new Set()
     // How many shown elements print each text: a text printed by three elements is three slots, never one.
@@ -404,6 +437,9 @@ export function readDetails() {
       maps: maps.slice(0, 5),
       ...(pageSizeControl ? { pageSizeControl } : {}),
       links,
+      audioSources: audioSources
+        .filter((a) => ofRoot(a.element))
+        .map(({ element, ...source }) => ({ ...source, selector: describe(element) })),
       texts: [...texts],
       inlineTexts: [...inlineTexts],
       textCounts,

@@ -130,3 +130,56 @@ test('R10h is always left to a reviewer, with its judgement items listed', () =>
     assert.equal(r.notes.filter((n) => n.startsWith('judgement: ')).length, 13)
   }
 })
+
+test('audio capability requires an explicit supplied source and never accepts navigation, labels or ambiguous facts', () => {
+  const k = kit()
+  const p = plan()
+  const b = brief()
+  const block = k.blocks.find((x) => x.id === 'block-176')
+  block.source = { entity: 'article-7' }
+  const link = {
+    id: 'article-7.9',
+    action: 'media-source',
+    mediaKind: 'audio',
+    sourceSlot: 'article-7.9',
+    sourceBinding: {
+      entity: 'article-7',
+      column: 'attribs',
+      jsonPath: ['ctm_audio', 'audio-src', 2],
+      group: { id: 'article-7.audio.2', item: 2, kind: 'business' }
+    }
+  }
+  block.links.push(link)
+  const d = decisionOf(p, block.id)
+  const supplied = {
+    id: 'audio',
+    field: 'audio',
+    source: 'stated',
+    value: 'https://media.example/Track.mp3?key=A'
+  }
+  b.facts.push(supplied)
+  d.links.push({ link: link.id, leadsTo: supplied.value, labelSlot: null })
+  const result = () => checkPlan({ plan: p, kit: k, brief: b }).rules.find((r) => r.id === 'R10d')
+  assert.equal(result().failures.length, 0)
+  for (const invalid of [
+    'page-home',
+    'tel:123',
+    'https://media.example/Other.mp3',
+    'https://media.example/x.jpg'
+  ]) {
+    d.links.at(-1).leadsTo = invalid
+    assert.ok(result().failures.length, invalid)
+  }
+  d.links.at(-1).leadsTo = supplied.value
+  d.links.at(-1).labelSlot = 'block-176.1'
+  assert.ok(result().failures.length)
+  d.links.at(-1).labelSlot = null
+  link.sourceBinding.entity = 'article-8'
+  assert.ok(result().failures.length)
+  link.sourceBinding.entity = 'article-7'
+  block.links.push({ ...link })
+  assert.ok(result().failures.length)
+  block.links.pop()
+  b.facts.push({ ...supplied, id: 'duplicate' })
+  assert.ok(result().failures.length)
+})

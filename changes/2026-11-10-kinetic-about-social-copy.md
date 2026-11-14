@@ -1,0 +1,2 @@
+- **Keep the Kinetic team social link records through the explicit copy descriptor.** — template readiness maintainer · #625 · `fix/ja-kinetic-readiness` · 2026-11-10
+  **Affects:** JA Kinetic Joomla 1.0.11 ABOUT-2. The two module params declarations cover structured social links. Existing rewrite slots cover the other textual content; settings and image fields remain unchanged. This declaration is field-wide and must be reviewed if new uncovered text is added to either module.

@@ -1,0 +1,1230 @@
+{
+ "schema": "tracy-brand-measurement/v1",
+ "tag": "quickstart/ja-nova/j6",
+ "version": "1.0.12",
+ "template": "joomla-ja-nova",
+ "measuredAt": "2026-11-12T05:51:00.444Z",
+ "machine": "darwin-arm64",
+ "templateAccents": [
+  "#5e48db",
+  "#3014cc",
+  "#0066cc",
+  "#0d6efd",
+  "#0a58ca",
+  "#0a53be"
+ ],
+ "runs": [
+  {
+   "id": "brand:ffffff--a78f45",
+   "accent": "#a78f45",
+   "side": "dark",
+   "page": "/",
+   "adjusted": [
+    "accent-text:2.92→4.57",
+    "accent-text-hover:2.49→4.66",
+    "meta:3.35→4.63",
+    "brand:page:accent-text:3.15→5.07",
+    "brand:page:accent-fill:3.15→3.29",
+    "derived:meta:3.39→4.62"
+   ],
+   "spots": [
+    {
+     "scope": "page",
+     "words": [
+      {
+       "text": "Home",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34,
+       "need": 4.5
+      },
+      {
+       "text": "We make",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34,
+       "need": 3
+      },
+      {
+       "text": "grow faster",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34,
+       "need": 3
+      },
+      {
+       "text": "Start building",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34,
+       "need": 3
+      },
+      {
+       "text": "Share",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04,
+       "need": 3
+      },
+      {
+       "text": "greatest works,",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04,
+       "need": 3
+      },
+      {
+       "text": "investigation",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34,
+       "need": 3
+      },
+      {
+       "text": "IT services",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34,
+       "need": 3
+      },
+      {
+       "text": "1200+",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04,
+       "need": 3
+      },
+      {
+       "text": "35k",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04,
+       "need": 3
+      },
+      {
+       "text": "36k",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04,
+       "need": 3
+      },
+      {
+       "text": "220+",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04,
+       "need": 3
+      },
+      {
+       "text": "great assessing",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34,
+       "need": 3
+      },
+      {
+       "text": "Basic Plan",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04,
+       "need": 3
+      },
+      {
+       "text": "$19.50",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04,
+       "need": 3
+      },
+      {
+       "text": "questions",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34,
+       "need": 3
+      }
+     ],
+     "fills": [
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34
+      },
+      {
+       "el": "a.section-actions.btn",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04
+      },
+      {
+       "el": "a.section-actions.btn",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#a78f45",
+       "ground": "#222224",
+       "ratio": 5.04
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34
+      }
+     ],
+     "left": []
+    },
+    {
+     "scope": ".bg-purple",
+     "words": [
+      {
+       "text": "investigation",
+       "colour": "#a78f45",
+       "ground": "#2a2a2b",
+       "ratio": 4.55,
+       "need": 3
+      }
+     ],
+     "fills": [],
+     "left": []
+    },
+    {
+     "scope": ".bg-green",
+     "words": [
+      {
+       "text": "Lucy Reid",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Hubert Santos",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Admin",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      }
+     ],
+     "fills": [],
+     "left": []
+    },
+    {
+     "scope": ".t4-footer",
+     "words": [],
+     "fills": [
+      {
+       "el": "span.font-icon.fa-brands",
+       "colour": "#a78f45",
+       "ground": "#2a2a2b",
+       "ratio": 4.55
+      },
+      {
+       "el": "span.font-icon.fa-brands",
+       "colour": "#a78f45",
+       "ground": "#2a2a2b",
+       "ratio": 4.55
+      },
+      {
+       "el": "span.font-icon.fa-brands",
+       "colour": "#a78f45",
+       "ground": "#2a2a2b",
+       "ratio": 4.55
+      }
+     ],
+     "left": []
+    }
+   ]
+  },
+  {
+   "id": "brand:ffffff--a78f45",
+   "accent": "#a78f45",
+   "side": "light",
+   "page": "/",
+   "adjusted": [
+    "accent-text:2.92→4.57",
+    "accent-text-hover:2.49→4.66",
+    "meta:3.35→4.63",
+    "brand:page:accent-text:3.15→5.07",
+    "brand:page:accent-fill:3.15→3.29",
+    "derived:meta:3.39→4.62"
+   ],
+   "spots": [
+    {
+     "scope": "page",
+     "words": [
+      {
+       "text": "Home",
+       "colour": "#7f6d35",
+       "ground": "#ffffff",
+       "ratio": 5.07,
+       "need": 4.5
+      },
+      {
+       "text": "We make",
+       "colour": "#7f6d35",
+       "ground": "#ffffff",
+       "ratio": 5.07,
+       "need": 3
+      },
+      {
+       "text": "grow faster",
+       "colour": "#7f6d35",
+       "ground": "#ffffff",
+       "ratio": 5.07,
+       "need": 3
+      },
+      {
+       "text": "Start building",
+       "colour": "#7f6d35",
+       "ground": "#ffffff",
+       "ratio": 5.07,
+       "need": 3
+      },
+      {
+       "text": "Share",
+       "colour": "#7f6d35",
+       "ground": "#f9f9f9",
+       "ratio": 4.82,
+       "need": 3
+      },
+      {
+       "text": "greatest works,",
+       "colour": "#7f6d35",
+       "ground": "#f9f9f9",
+       "ratio": 4.82,
+       "need": 3
+      },
+      {
+       "text": "investigation",
+       "colour": "#7f6d35",
+       "ground": "#ffffff",
+       "ratio": 5.07,
+       "need": 3
+      },
+      {
+       "text": "IT services",
+       "colour": "#7f6d35",
+       "ground": "#ffffff",
+       "ratio": 5.07,
+       "need": 3
+      },
+      {
+       "text": "1200+",
+       "colour": "#7f6d35",
+       "ground": "#f9f9f9",
+       "ratio": 4.82,
+       "need": 3
+      },
+      {
+       "text": "35k",
+       "colour": "#7f6d35",
+       "ground": "#f9f9f9",
+       "ratio": 4.82,
+       "need": 3
+      },
+      {
+       "text": "36k",
+       "colour": "#7f6d35",
+       "ground": "#f9f9f9",
+       "ratio": 4.82,
+       "need": 3
+      },
+      {
+       "text": "220+",
+       "colour": "#7f6d35",
+       "ground": "#f9f9f9",
+       "ratio": 4.82,
+       "need": 3
+      },
+      {
+       "text": "great assessing",
+       "colour": "#7f6d35",
+       "ground": "#ffffff",
+       "ratio": 5.07,
+       "need": 3
+      },
+      {
+       "text": "Basic Plan",
+       "colour": "#7f6d35",
+       "ground": "#f9f9f9",
+       "ratio": 4.82,
+       "need": 3
+      },
+      {
+       "text": "$19.50",
+       "colour": "#7f6d35",
+       "ground": "#f9f9f9",
+       "ratio": 4.82,
+       "need": 3
+      },
+      {
+       "text": "questions",
+       "colour": "#7f6d35",
+       "ground": "#ffffff",
+       "ratio": 5.07,
+       "need": 3
+      }
+     ],
+     "fills": [
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#a38c44",
+       "ground": "#ffffff",
+       "ratio": 3.29
+      },
+      {
+       "el": "a.section-actions.btn",
+       "colour": "#a38c44",
+       "ground": "#ffffff",
+       "ratio": 3.29
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#a38c44",
+       "ground": "#f9f9f9",
+       "ratio": 3.12
+      },
+      {
+       "el": "a.section-actions.btn",
+       "colour": "#a38c44",
+       "ground": "#1d1d1f",
+       "ratio": 5.12
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#a38c44",
+       "ground": "#f9f9f9",
+       "ratio": 3.12
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#a38c44",
+       "ground": "#ffffff",
+       "ratio": 3.29
+      }
+     ],
+     "left": []
+    },
+    {
+     "scope": ".bg-purple",
+     "words": [
+      {
+       "text": "investigation",
+       "colour": "#a78f45",
+       "ground": "#1d1d1f",
+       "ratio": 5.34,
+       "need": 3
+      }
+     ],
+     "fills": [],
+     "left": []
+    },
+    {
+     "scope": ".bg-green",
+     "words": [
+      {
+       "text": "Lucy Reid",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Hubert Santos",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Admin",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#a78f45",
+       "ground": "#000000",
+       "ratio": 6.66,
+       "need": 4.5
+      }
+     ],
+     "fills": [],
+     "left": []
+    },
+    {
+     "scope": ".t4-footer",
+     "words": [],
+     "fills": [],
+     "left": []
+    }
+   ]
+  },
+  {
+   "id": "brand:ffffff--042515",
+   "accent": "#042515",
+   "side": "dark",
+   "page": "/",
+   "adjusted": [
+    "meta:3.35→4.63",
+    "brand:.bg-purple:accent-text:1.00→16.40",
+    "brand:.bg-purple:accent-fill:1.00→16.40",
+    "brand:.bg-green:accent-text:1.03→4.53",
+    "brand:.bg-green:accent-fill:1.03→3.04",
+    "brand:.t4-footer:accent-text:1.03→4.53",
+    "brand:.t4-footer:accent-fill:1.03→3.04",
+    "derived:accent-text:2.62→4.57",
+    "derived:accent-text-hover:3.38→4.59",
+    "derived:meta:3.39→4.62",
+    "derived:button-hover:4.24→4.54",
+    "derived:button-active:3.45→4.50",
+    "derived:brand:.bg-purple:accent-text:2.62→12.47",
+    "derived:brand:.bg-purple:accent-fill:2.62→12.47",
+    "derived:brand:.bg-green:accent-text:2.62→12.47",
+    "derived:brand:.bg-green:accent-fill:2.62→12.47",
+    "derived:brand:.t4-footer:accent-text:2.62→12.47",
+    "derived:brand:.t4-footer:accent-fill:2.62→12.47",
+    "derived:brand:page:accent-text:3.07→5.29",
+    "derived:brand:page:accent-fill:3.07→3.59"
+   ],
+   "spots": [
+    {
+     "scope": "page",
+     "words": [
+      {
+       "text": "Home",
+       "colour": "#7d9689",
+       "ground": "#1d1d1f",
+       "ratio": 5.29,
+       "need": 4.5
+      },
+      {
+       "text": "We make",
+       "colour": "#7d9689",
+       "ground": "#1d1d1f",
+       "ratio": 5.29,
+       "need": 3
+      },
+      {
+       "text": "grow faster",
+       "colour": "#7d9689",
+       "ground": "#1d1d1f",
+       "ratio": 5.29,
+       "need": 3
+      },
+      {
+       "text": "Start building",
+       "colour": "#7d9689",
+       "ground": "#1d1d1f",
+       "ratio": 5.29,
+       "need": 3
+      },
+      {
+       "text": "Share",
+       "colour": "#7d9689",
+       "ground": "#222224",
+       "ratio": 4.99,
+       "need": 3
+      },
+      {
+       "text": "greatest works,",
+       "colour": "#7d9689",
+       "ground": "#222224",
+       "ratio": 4.99,
+       "need": 3
+      },
+      {
+       "text": "investigation",
+       "colour": "#7d9689",
+       "ground": "#1d1d1f",
+       "ratio": 5.29,
+       "need": 3
+      },
+      {
+       "text": "IT services",
+       "colour": "#7d9689",
+       "ground": "#1d1d1f",
+       "ratio": 5.29,
+       "need": 3
+      },
+      {
+       "text": "1200+",
+       "colour": "#7d9689",
+       "ground": "#222224",
+       "ratio": 4.99,
+       "need": 3
+      },
+      {
+       "text": "35k",
+       "colour": "#7d9689",
+       "ground": "#222224",
+       "ratio": 4.99,
+       "need": 3
+      },
+      {
+       "text": "36k",
+       "colour": "#7d9689",
+       "ground": "#222224",
+       "ratio": 4.99,
+       "need": 3
+      },
+      {
+       "text": "220+",
+       "colour": "#7d9689",
+       "ground": "#222224",
+       "ratio": 4.99,
+       "need": 3
+      },
+      {
+       "text": "great assessing",
+       "colour": "#7d9689",
+       "ground": "#1d1d1f",
+       "ratio": 5.29,
+       "need": 3
+      },
+      {
+       "text": "Basic Plan",
+       "colour": "#7d9689",
+       "ground": "#222224",
+       "ratio": 4.99,
+       "need": 3
+      },
+      {
+       "text": "$19.50",
+       "colour": "#7d9689",
+       "ground": "#222224",
+       "ratio": 4.99,
+       "need": 3
+      },
+      {
+       "text": "questions",
+       "colour": "#7d9689",
+       "ground": "#1d1d1f",
+       "ratio": 5.29,
+       "need": 3
+      }
+     ],
+     "fills": [
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#62796d",
+       "ground": "#1d1d1f",
+       "ratio": 3.59
+      },
+      {
+       "el": "a.section-actions.btn",
+       "colour": "#62796d",
+       "ground": "#1d1d1f",
+       "ratio": 3.59
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#62796d",
+       "ground": "#222224",
+       "ratio": 3.38
+      },
+      {
+       "el": "a.section-actions.btn",
+       "colour": "#62796d",
+       "ground": "#1d1d1f",
+       "ratio": 3.59
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#62796d",
+       "ground": "#222224",
+       "ratio": 3.38
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#62796d",
+       "ground": "#1d1d1f",
+       "ratio": 3.59
+      }
+     ],
+     "left": []
+    },
+    {
+     "scope": ".bg-purple",
+     "words": [
+      {
+       "text": "investigation",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 3
+      },
+      {
+       "text": "Contact us",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      }
+     ],
+     "fills": [],
+     "left": []
+    },
+    {
+     "scope": ".bg-green",
+     "words": [
+      {
+       "text": "Latest news from us",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 3
+      },
+      {
+       "text": "Lucy Reid",
+       "colour": "#efefef",
+       "ground": "#000000",
+       "ratio": 18.26,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#efefef",
+       "ground": "#000000",
+       "ratio": 18.26,
+       "need": 4.5
+      },
+      {
+       "text": "Hubert Santos",
+       "colour": "#efefef",
+       "ground": "#000000",
+       "ratio": 18.26,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#efefef",
+       "ground": "#000000",
+       "ratio": 18.26,
+       "need": 4.5
+      },
+      {
+       "text": "Admin",
+       "colour": "#efefef",
+       "ground": "#000000",
+       "ratio": 18.26,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#efefef",
+       "ground": "#000000",
+       "ratio": 18.26,
+       "need": 4.5
+      },
+      {
+       "text": "View all our news",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      }
+     ],
+     "fills": [],
+     "left": []
+    },
+    {
+     "scope": ".t4-footer",
+     "words": [
+      {
+       "text": "You can find experts from all walks of l",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Users",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 3
+      },
+      {
+       "text": "Login Form",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Registration Form",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "User Profile",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "J!Pages",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 3
+      },
+      {
+       "text": "Error Page",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Offline Pages",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Typography",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Smart Search",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "J! Content",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 3
+      },
+      {
+       "text": "Blog",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Featured Articles",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Author listting",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Blog Detail",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Copyright © 2026 JA Nova. All Rights Res",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "is Free Software released under the",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "Joomla!",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      },
+      {
+       "text": "GNU General Public License.",
+       "colour": "#efefef",
+       "ground": "#2a2a2b",
+       "ratio": 12.47,
+       "need": 4.5
+      }
+     ],
+     "fills": [],
+     "left": []
+    }
+   ]
+  },
+  {
+   "id": "brand:ffffff--042515",
+   "accent": "#042515",
+   "side": "light",
+   "page": "/",
+   "adjusted": [
+    "meta:3.35→4.63",
+    "brand:.bg-purple:accent-text:1.00→16.40",
+    "brand:.bg-purple:accent-fill:1.00→16.40",
+    "brand:.bg-green:accent-text:1.03→4.53",
+    "brand:.bg-green:accent-fill:1.03→3.04",
+    "brand:.t4-footer:accent-text:1.03→4.53",
+    "brand:.t4-footer:accent-fill:1.03→3.04",
+    "derived:accent-text:2.62→4.57",
+    "derived:accent-text-hover:3.38→4.59",
+    "derived:meta:3.39→4.62",
+    "derived:button-hover:4.24→4.54",
+    "derived:button-active:3.45→4.50",
+    "derived:brand:.bg-purple:accent-text:2.62→12.47",
+    "derived:brand:.bg-purple:accent-fill:2.62→12.47",
+    "derived:brand:.bg-green:accent-text:2.62→12.47",
+    "derived:brand:.bg-green:accent-fill:2.62→12.47",
+    "derived:brand:.t4-footer:accent-text:2.62→12.47",
+    "derived:brand:.t4-footer:accent-fill:2.62→12.47",
+    "derived:brand:page:accent-text:3.07→5.29",
+    "derived:brand:page:accent-fill:3.07→3.59"
+   ],
+   "spots": [
+    {
+     "scope": "page",
+     "words": [
+      {
+       "text": "Home",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4,
+       "need": 4.5
+      },
+      {
+       "text": "We make",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4,
+       "need": 3
+      },
+      {
+       "text": "grow faster",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4,
+       "need": 3
+      },
+      {
+       "text": "Start building",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4,
+       "need": 3
+      },
+      {
+       "text": "Share",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58,
+       "need": 3
+      },
+      {
+       "text": "greatest works,",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58,
+       "need": 3
+      },
+      {
+       "text": "investigation",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4,
+       "need": 3
+      },
+      {
+       "text": "Join our team",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4,
+       "need": 4.5
+      },
+      {
+       "text": "IT services",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4,
+       "need": 3
+      },
+      {
+       "text": "1200+",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58,
+       "need": 3
+      },
+      {
+       "text": "35k",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58,
+       "need": 3
+      },
+      {
+       "text": "36k",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58,
+       "need": 3
+      },
+      {
+       "text": "220+",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58,
+       "need": 3
+      },
+      {
+       "text": "great assessing",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4,
+       "need": 3
+      },
+      {
+       "text": "Basic Plan",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58,
+       "need": 3
+      },
+      {
+       "text": "$19.50",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58,
+       "need": 3
+      },
+      {
+       "text": "questions",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4,
+       "need": 3
+      }
+     ],
+     "fills": [
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4
+      },
+      {
+       "el": "div.t4-mod-wrap.top-large",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4
+      },
+      {
+       "el": "div.t4-mod-wrap.top-blank",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4
+      },
+      {
+       "el": "div.t4-mod-wrap.top-blank",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4
+      },
+      {
+       "el": "a.section-actions.btn",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#042515",
+       "ground": "#f9f9f9",
+       "ratio": 15.58
+      },
+      {
+       "el": "a.btn.btn-primary",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4
+      },
+      {
+       "el": "div.t4-mod-wrap.top-medium",
+       "colour": "#042515",
+       "ground": "#ffffff",
+       "ratio": 16.4
+      }
+     ],
+     "left": []
+    },
+    {
+     "scope": ".bg-purple",
+     "words": [
+      {
+       "text": "The just apparatus you'll at any point n",
+       "colour": "#ffffff",
+       "ground": "#042515",
+       "ratio": 16.4,
+       "need": 3
+      },
+      {
+       "text": "investigation",
+       "colour": "#ffffff",
+       "ground": "#042515",
+       "ratio": 16.4,
+       "need": 3
+      },
+      {
+       "text": "More than 350 brands available",
+       "colour": "#ffffff",
+       "ground": "#042515",
+       "ratio": 16.4,
+       "need": 3
+      }
+     ],
+     "fills": [
+      {
+       "el": "a.btn.btn-light",
+       "colour": "#ffffff",
+       "ground": "#042515",
+       "ratio": 16.4
+      }
+     ],
+     "left": []
+    },
+    {
+     "scope": ".bg-green",
+     "words": [
+      {
+       "text": "Lucy Reid",
+       "colour": "#109856",
+       "ground": "#000000",
+       "ratio": 5.65,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#109856",
+       "ground": "#000000",
+       "ratio": 5.65,
+       "need": 4.5
+      },
+      {
+       "text": "Hubert Santos",
+       "colour": "#109856",
+       "ground": "#000000",
+       "ratio": 5.65,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#109856",
+       "ground": "#000000",
+       "ratio": 5.65,
+       "need": 4.5
+      },
+      {
+       "text": "Admin",
+       "colour": "#109856",
+       "ground": "#000000",
+       "ratio": 5.65,
+       "need": 4.5
+      },
+      {
+       "text": "Blog",
+       "colour": "#109856",
+       "ground": "#000000",
+       "ratio": 5.65,
+       "need": 4.5
+      }
+     ],
+     "fills": [],
+     "left": []
+    },
+    {
+     "scope": ".t4-footer",
+     "words": [],
+     "fills": [],
+     "left": []
+    }
+   ]
+  }
+ ]
+}

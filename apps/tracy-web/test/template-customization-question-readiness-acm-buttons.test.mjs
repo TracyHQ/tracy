@@ -17,6 +17,7 @@ import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { readContracts } from '../src/lib/contracts.js'
+import { unrenderedButton } from '../src/lib/template-customization-question-readiness/readers/joomla-acm-buttons.js'
 import { page5ButtonsLeadSomewhere } from '../src/lib/template-customization-question-readiness/rules/page-5-buttons-lead-somewhere.js'
 import { contextOf, zipOf } from './template-customization-question-readiness-fixtures.mjs'
 
@@ -122,4 +123,117 @@ test('PAGE-5: JA Tour 98 empty btn-link-2 is not flagged, also with a caption, b
     ),
     JSON.stringify(r.details)
   )
+})
+
+// Action expression from Vega's t4section.php (818aa55ff5285b535caaf28bc83fea9472a2f090bf3d968cf2d9a1971b29b723).
+const SECTION_CHROME = `<?php
+$moduleAction = '';
+if($params->get('section-link')) {
+  $moduleAction = '<div class="bottom-actions" data-aos="fade-up"><a class="section-actions btn btn-'.$params->get('type-btn').'" href="'.$params->get('link-btn').'">'.$params->get('title-btn').' <i class="fas fa-arrow-right"></i></a></div>';
+}`
+const CHROME_PATH = 'html/layouts/chromes/t4section.php'
+const VEGA_DIR = path.join(CONTRACTS, 'ja-vega/j6/1.0.9')
+const VEGA_MAP = JSON.parse(readFileSync(path.join(VEGA_DIR, 'content-map.json'), 'utf8'))
+const VEGA_LOCK = JSON.parse(readFileSync(path.join(VEGA_DIR, 'presentation-lock.json'), 'utf8'))
+const VEGA_BUTTONS = ['module-114.22', 'module-115.15', 'module-139.21', 'module-153.13', 'module-154.19']
+const hiddenSection = 'the t4section chrome prints it only if section-link, which is 0'
+
+for (const key of VEGA_BUTTONS)
+  test(`PAGE-5: Vega 1.0.9 ${key} is disabled by its source-proven section-link guard`, () => {
+    const slot = VEGA_MAP.slots.find((s) => s.key === key)
+    assert.ok(slot)
+    assert.equal(slot.sample, '#')
+    assert.equal(unrenderedButton(slot, VEGA_LOCK, new Map([[CHROME_PATH, SECTION_CHROME]])), hiddenSection)
+  })
+
+test('PAGE-5: Vega disabled section actions are noted, with no invented destination or acceptance', async () => {
+  const setting = {
+    platform: 'joomla',
+    label: 'JA Vega',
+    version: '1.0.9',
+    template: 'ja_vega',
+    install: { installer: { file: 'installer.zip' } }
+  }
+  const context = contextOf(
+    setting,
+    {
+      'installer.zip': zipOf({ [`templates/ja_vega/${CHROME_PATH}`]: SECTION_CHROME })
+    },
+    'quickstart/ja-vega/j6'
+  )
+  context.contracts = new Map([['quickstart/ja-vega/j6@1.0.9', { id: 'ja-vega/j6/1.0.9', dir: VEGA_DIR }]])
+  const result = await page5ButtonsLeadSomewhere.run(context)
+  assert.equal(result.status, 'live-only', result.message)
+  for (const key of VEGA_BUTTONS)
+    assert.ok(
+      result.details.some((line) => line.includes(`${key} (${hiddenSection})`)),
+      key
+    )
+})
+
+test('PAGE-5: absent, unknown and enabled section guards or unproven chrome stay conservative', () => {
+  const slot = VEGA_MAP.slots.find((s) => s.key === VEGA_BUTTONS[0])
+  const files = new Map([[CHROME_PATH, SECTION_CHROME]])
+  for (const value of [undefined, null, '', false, 'false', '1', 1, '00', 'unknown']) {
+    const lock = structuredClone(VEGA_LOCK)
+    const params = JSON.parse(lock.entities[slot.entity].params)
+    if (value === undefined) delete params['section-link']
+    else params['section-link'] = value
+    lock.entities[slot.entity].params = JSON.stringify(params)
+    assert.equal(unrenderedButton(slot, lock, files), null, `section-link=${String(value)}`)
+  }
+  for (const source of [
+    null,
+    new Map(),
+    new Map([[CHROME_PATH, SECTION_CHROME.replace("get('section-link')", "get('other-switch')")]]),
+    new Map([[CHROME_PATH, SECTION_CHROME + `\n$other = $params->get('link-btn');`]])
+  ])
+    assert.equal(unrenderedButton(slot, VEGA_LOCK, source), null)
+  for (const style of [undefined, 'unknown', 'JAxhtml']) {
+    const lock = structuredClone(VEGA_LOCK)
+    const params = JSON.parse(lock.entities[slot.entity].params)
+    if (style === undefined) delete params.style
+    else params.style = style
+    lock.entities[slot.entity].params = JSON.stringify(params)
+    assert.equal(unrenderedButton(slot, lock, files), null, `style=${String(style)}`)
+  }
+  const missingPosition = structuredClone(VEGA_LOCK)
+  delete missingPosition.entities[slot.entity].position
+  assert.equal(unrenderedButton(slot, missingPosition, files), null)
+  const malformed = structuredClone(VEGA_LOCK)
+  malformed.entities[slot.entity].params = '{broken'
+  assert.equal(unrenderedButton(slot, malformed, files), null)
+  const numericZero = structuredClone(VEGA_LOCK)
+  const zeroParams = JSON.parse(numericZero.entities[slot.entity].params)
+  zeroParams['section-link'] = 0
+  numericZero.entities[slot.entity].params = JSON.stringify(zeroParams)
+  assert.equal(unrenderedButton(slot, numericZero, files), hiddenSection)
+  assert.equal(unrenderedButton({ ...slot, column: 'other' }, VEGA_LOCK, files), null)
+  const noLayout = structuredClone(VEGA_LOCK)
+  for (const [key, row] of Object.entries(noLayout.entities))
+    if (row.group === 'layout') delete noLayout.entities[key]
+  assert.equal(unrenderedButton(slot, noLayout, files), null)
+  const conflict = structuredClone(VEGA_LOCK)
+  const layout = JSON.parse(conflict.entities['templateConfig-241167080'].value)
+  layout.layout.sections[5].contents[0].style = 'unknown'
+  conflict.entities['templateConfig-241167080'].value = JSON.stringify(layout)
+  assert.equal(unrenderedButton(slot, conflict, files), null)
+  assert.equal(unrenderedButton({ ...slot, jsonPath: ['other-link'] }, VEGA_LOCK, files), null)
+})
+
+test('PAGE-5: commented, quoted, dead or reassigned section guards cannot hide active actions', () => {
+  const slot = VEGA_MAP.slots.find((s) => s.key === VEGA_BUTTONS[0])
+  const body = SECTION_CHROME.replace('<?php', '')
+  const active = `$moduleAction = '<a href="#">Action</a>'; echo $moduleAction;`
+  for (const source of [
+    `<?php /* ${body} */ ${active}`,
+    `<?php ${body
+      .split('\n')
+      .map((line) => `// ${line}`)
+      .join('\n')}\n${active}`,
+    `<?php $example = "${body.replace(/"/g, '\\"')}"; ${active}`,
+    `<?php if (false) { ${body} } ${active}`,
+    `${SECTION_CHROME}\n${active}`
+  ])
+    assert.equal(unrenderedButton(slot, VEGA_LOCK, new Map([[CHROME_PATH, source]])), null)
 })

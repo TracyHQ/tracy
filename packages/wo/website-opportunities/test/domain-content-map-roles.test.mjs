@@ -187,3 +187,99 @@ test('the group plan read from a content map is the one the fill planner takes: 
   assert.equal(plan.writes.length, doc.bindings.length)
   for (const write of plan.writes) assert.ok(['empty', 'neutral'].includes(write.state), write.slotKey)
 })
+
+test('audio capability is a replaceable asset fact with neutral absence, not a kept illustration', () => {
+  assert.equal(domain.isRole('business.audio', 'place-content-roles/3'), true)
+  assert.equal(domain.isRole('business.audio', 'place-content-roles/2'), false)
+  assert.equal(domain.isFactRole('business.audio'), true)
+  assert.equal(domain.modeOfRole('business.audio'), 'asset')
+  // test-quality: contract a kept demo track would play the template's own audio on the customer's site
+  assert.equal(domain.KEEP_DECISION_BY_ROLE['business.audio'], 'replace')
+  // test-quality: contract without a customer audio fact the source is emptied, never filled with a stand-in
+  assert.deepEqual(domain.DEFAULT_NEUTRAL_BY_ROLE['business.audio'], { policy: 'empty' })
+})
+
+test('audio capability validates MP3 addresses and preserves case, query and installation root identity', async () => {
+  const { audioSourceProblem, audioSourceIdentity, audioDecisionProblem } = await import(
+    '../domain/audio-source.mjs'
+  )
+  for (const value of [
+    'images/audio/Track.mp3',
+    '/images/audio/Track.mp3',
+    'https://media.example/Track.mp3?token=Case%2FSignature&k=B',
+    '/sub/images/audio/Track.mp3',
+    'media/audio/Track.mp3',
+    '/sub/media/audio/Track.mp3?sig=A%2FB'
+  ])
+    assert.equal(audioSourceProblem(value), null, value)
+  for (const value of [
+    'http://media.example/a.mp3',
+    '//media.example/a.mp3',
+    'https://u:p@media.example/a.mp3',
+    'images/../private/a.mp3',
+    'images/%2e%2e/a.mp3',
+    'images/audio%2fa.mp3',
+    'images/a.mp3%00',
+    'images/a.php',
+    'images/a.mp3#fragment',
+    '/other/a.mp3',
+    'images\\a.mp3',
+    'javascript:alert(1)',
+    'https://media.example/a.mp3\n'
+  ])
+    assert.ok(audioSourceProblem(value), value)
+  assert.equal(
+    audioSourceIdentity('images/audio/Track.mp3', 'https://site.example/sub/'),
+    'https://site.example/sub/images/audio/Track.mp3'
+  )
+  assert.equal(
+    audioSourceIdentity('images/audio/Track.mp3', 'https://site.example/sub'),
+    'https://site.example/sub/images/audio/Track.mp3'
+  )
+  assert.equal(
+    audioSourceIdentity('/sub/images/audio/Track.mp3', 'https://site.example/sub/'),
+    'https://site.example/sub/images/audio/Track.mp3'
+  )
+  assert.notEqual(
+    audioSourceIdentity('https://media.example/Track.mp3?t=A'),
+    audioSourceIdentity('https://media.example/track.mp3?t=a')
+  )
+  // The Claude Cowork plugin roots /images and /media at the Joomla installation, including signed query bytes.
+  for (const dir of ['images', 'media']) {
+    for (const value of [`${dir}/audio/Track.mp3`, `/${dir}/audio/Track.mp3`, `/sub/${dir}/audio/Track.mp3`])
+      assert.equal(
+        audioSourceIdentity(value, 'https://site.example/sub/'),
+        `https://site.example/sub/${dir}/audio/Track.mp3`
+      )
+    assert.equal(
+      audioSourceIdentity(`/${dir}/audio/Track.mp3?sig=A%2FB&x=Case`, 'https://site.example/sub'),
+      `https://site.example/sub/${dir}/audio/Track.mp3?sig=A%2FB&x=Case`
+    )
+  }
+  assert.equal(audioSourceProblem("https://media.example/Track.mp3?sig=O'Hare%2F&x=Case"), null)
+  assert.equal(audioSourceProblem("media/audio/Track.mp3?sig=O'Hare%2F&x=Case"), null)
+  for (const value of [
+    'images/a.mp3?sig=%ZZ',
+    'https://media.example/a.mp3?sig=%',
+    'https://media.example/a%3Fb.mp3',
+    'https://media.example/a%23b.mp3',
+    'images/a%3fb.mp3',
+    'https://media.example/a//b.mp3',
+    'images/audio//a.mp3',
+    'media/a.mp3?sig=bad`query'
+  ])
+    assert.ok(audioSourceProblem(value), value)
+  const link = { action: 'media-source', mediaKind: 'audio', sourceSlot: 'article-1.2' }
+  const fact = { id: 'a', field: 'audio', value: 'https://media.example/Track.mp3?t=A', source: 'stated' }
+  assert.equal(audioDecisionProblem(link, fact.value, [fact]), null)
+  assert.ok(audioDecisionProblem(link, fact.value, [{ ...fact, onSite: false }]))
+  assert.ok(
+    audioDecisionProblem(link, fact.value, [
+      { ...fact, source: 'observed', evidence: [{ source: 'observed' }] }
+    ])
+  )
+  assert.ok(audioDecisionProblem(link, fact.value, [{ ...fact, source: null, evidence: [{}] }]))
+  assert.ok(audioDecisionProblem(link, fact.value, [fact, { ...fact, id: 'b' }]))
+  assert.ok(audioDecisionProblem(link, fact.value, [{ ...fact, field: 'website' }]))
+  assert.ok(audioDecisionProblem(link, 'https://media.example/other.mp3', [fact]))
+})

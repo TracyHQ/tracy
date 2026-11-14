@@ -119,6 +119,109 @@ test('a wrapping flex row of fixed cards leaves an orphan the same way', opts, a
 })
 
 test(
+  'a final category pager explains only its own remaining row and keeps the raw geometry',
+  opts,
+  async () => {
+    const pager = (
+      path,
+      {
+        next = false,
+        later = false,
+        missingEnd = false,
+        current = true,
+        foreign = false,
+        priorQuery = '',
+        topology = 'wrapped',
+        multiple = false
+      } = {}
+    ) =>
+      `<div class="com-content-category-blog__navigation"><div class="com-content-category-blog__pagination">
+    <nav aria-label="Pagination">${topology === 'direct' ? '' : `<div class="${topology === 'wrapped' ? 'pagination' : 'unsupported'}">`}<ul class="pagination">
+    <li class="page-item"><a href="${path}">First</a></li><li class="page-item"><a href="${path}">Previous</a></li>
+    <li class="page-item"><a href="${foreign ? '/another-list' : path}${priorQuery ? `?${priorQuery}` : ''}">1</a></li>
+    <li class="active page-item"><span ${current ? 'aria-current="true"' : ''}>2</span></li>
+    ${later ? `<li class="page-item"><a href="${path}?start=18">3</a></li>` : ''}
+    ${next ? `<li class="page-item"><a href="${path}?start=18">Next</a></li>` : '<li class="disabled page-item"><span>Next</span></li>'}
+    ${missingEnd ? '' : '<li class="disabled page-item"><span>End</span></li>'}
+    </ul>${multiple ? '<ul class="pagination"><li class="page-item">Other pager</li></ul>' : ''}${topology === 'direct' ? '' : '</div>'}</nav></div></div>`
+    const grid = `<div class="items-row grid">${cards(4)}</div>`
+    const cases = [
+      { path: '/direct', options: { topology: 'direct' }, proof: true },
+      { path: '/final', proof: true },
+      { path: '/unsupported-wrapper', options: { topology: 'unsupported' } },
+      { path: '/multiple-pagers', options: { topology: 'direct', multiple: true } },
+      { path: '/next', options: { next: true } },
+      { path: '/later', options: { later: true } },
+      { path: '/missing-end', options: { missingEnd: true } },
+      { path: '/no-current', options: { current: false } },
+      { path: '/foreign', options: { foreign: true } },
+      {
+        path: '/identity',
+        query: 'Itemid=101&catid=5',
+        options: { priorQuery: 'catid=5&Itemid=101' },
+        proof: true
+      },
+      { path: '/other-itemid', query: 'Itemid=101', options: { priorQuery: 'Itemid=102' } },
+      { path: '/other-category', query: 'catid=5', options: { priorQuery: 'catid=6' } },
+      { path: '/missing-filter', query: 'filter=featured' },
+      { path: '/extra-filter', options: { priorQuery: 'filter=featured' } },
+      { path: '/query-only', noPager: true },
+      { path: '/other-owner', separate: true },
+      { path: '/multiple-lists', extra: grid }
+    ]
+    for (const c of cases) {
+      const nav = c.noPager ? '' : pager(c.path, c.options)
+      PAGES[c.path] = `${head}<div class="wrap"><div class="com-content-category-blog blog donation-layout">
+      <div class="container-fluid com-content-category-blog__items blog-items">${grid}${c.extra ?? ''}</div>
+      ${c.separate ? '' : nav}</div>
+      ${c.separate ? `<div class="com-content-category-blog">${nav}</div>` : ''}</div>`
+    }
+    const { server, base } = await site()
+    const browser = await playwright.chromium.launch({ headless: true })
+    try {
+      const page = await (await browser.newContext()).newPage()
+      for (const c of cases) {
+        const path = `${c.path}?${c.query ? `${c.query}&` : ''}start=9`
+        const read = await readDemoPage(page, `${base}${path}`, path, { measurePages: true })
+        assert.deepEqual(
+          read.measures.map((m) => m.width),
+          [1440, 390],
+          c.path
+        )
+        const rows = read.measures.find((m) => m.width === 1440).orphanRows
+        assert.equal(rows.length, c.extra ? 2 : 1, c.path)
+        for (const row of rows) {
+          assert.deepEqual([row.perRow, row.lastRow, row.rows], [3, 1, 2], c.path)
+          assert.ok(row.gap > 300, c.path)
+          assert.equal(Boolean(row.pagination), Boolean(c.proof), c.path)
+        }
+        if (c.proof) {
+          const navigation = 'div.com-content-category-blog > .com-content-category-blog__navigation'
+          assert.equal(
+            rows[0].pagination.association.pager,
+            `${navigation} > .com-content-category-blog__pagination > nav[aria-label] > ${c.options?.topology === 'direct' ? '' : '.pagination > '}ul.pagination`,
+            c.path
+          )
+          assert.deepEqual(rows[0].pagination.pages, [
+            {
+              number: 1,
+              current: false,
+              href: `${c.path}${c.options?.priorQuery ? `?${c.options.priorQuery}` : ''}`
+            },
+            { number: 2, current: true, href: null }
+          ])
+          assert.deepEqual(rows[0].pagination.next, { disabled: true, href: null })
+          assert.deepEqual(rows[0].pagination.end, { disabled: true, href: null })
+        }
+      }
+    } finally {
+      await browser.close()
+      server.close()
+    }
+  }
+)
+
+test(
   'full rows, a centred, stretched or spread last row, one row, mixed items and a tag cloud are no orphan rows',
   opts,
   async () => {

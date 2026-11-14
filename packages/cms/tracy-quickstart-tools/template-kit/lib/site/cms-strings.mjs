@@ -73,6 +73,23 @@ export function shortPattern(value) {
   return new RegExp(`^${parts.join('.+?')}$`)
 }
 
+/** The one pattern proved by the matched language formats; competing or malformed identities stay unknown. */
+export function cmsFormatPattern(source) {
+  const formats = source?.formats
+  if (
+    !Array.isArray(formats) ||
+    !formats.length ||
+    !formats.some((f) => f?.file === source.file && f?.constant === source.constant)
+  )
+    return null
+  const patterns = formats.map((f) =>
+    typeof f?.file === 'string' && typeof f?.constant === 'string' && typeof f?.value === 'string'
+      ? shortPattern(f.value)
+      : null
+  )
+  return patterns.every((p) => p && p.source === patterns[0]?.source) ? patterns[0] : null
+}
+
 /**
  * @param {{lines: Array<{block: string, text: string, pageId?: string, path?: string, raw?: string}>, files: Array<{file: string, text: string}>, slotTexts?: string[], rankFile?: (file: string) => number}} o
  * @returns {{fixedTexts: object[], nameLines: object[]}} each `{block, text, pages, source: {file, constant}, placeholders}`
@@ -103,19 +120,25 @@ export function matchCmsStrings({ lines, files, slotTexts = [], rankFile = () =>
     if (!hit) continue
     // A short value is keyed by its line too: a content line that only seems to fit it is measured
     // and ruled out on its own, never taking a real CMS line of that value in the block down with it.
-    const key = hit.short ? `${l.block}|${hit.constant}|${text}` : `${l.block}|${hit.constant}`
+    const holder = l.holder ? `|${JSON.stringify(l.holder.path)}` : ''
+    const key = hit.short ? `${l.block}|${hit.constant}|${text}${holder}` : `${l.block}|${hit.constant}`
     const constants = [...new Set(hits.map((h) => h.constant))]
+    const matching = strings.filter((s) => s.pattern.test(text))
+    const formats = matching.some((s) => s.value.match(PLACEHOLDER))
+      ? matching.map(({ file, constant, value }) => ({ file, constant, value }))
+      : null
     const rec = by.get(key) ?? {
       block: l.block,
       text: String(l.text).replace(/\s+/g, ' ').trim(),
       source: {
         file: hit.file,
         constant: hit.constant,
-        ...(hit.short ? { short: true, constants } : {})
+        ...(hit.short ? { short: true, constants } : {}),
+        ...(formats ? { formats } : {})
       },
       placeholders: [...new Set(hit.value.match(PLACEHOLDER) ?? [])],
       printsName: NAME_PLACEHOLDER.test(hit.value),
-      at: l.path ? { path: l.path, raw: l.raw ?? l.block } : null,
+      at: l.path ? { path: l.path, raw: l.raw ?? l.block, ...(l.holder ? { holder: l.holder } : {}) } : null,
       pages: new Set()
     }
     if (l.pageId) rec.pages.add(l.pageId)
@@ -164,7 +187,14 @@ export function siteCmsTexts({ reads, idOf, cms, slotTexts, nameSetting }) {
   const lines = reads.flatMap((r) =>
     (r.textLines ?? [])
       .filter((l) => l.block)
-      .map((l) => ({ block: idOf(l.block, r), raw: l.block, path: r.path, text: l.text, pageId: r.pageId }))
+      .map((l) => ({
+        block: idOf(l.block, r),
+        raw: l.block,
+        path: r.path,
+        text: l.text,
+        pageId: r.pageId,
+        holder: l.holder
+      }))
   )
   const { fixedTexts, nameLines } = matchCmsStrings({
     lines,

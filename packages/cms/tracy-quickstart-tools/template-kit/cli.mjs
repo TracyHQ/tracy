@@ -40,8 +40,9 @@
 //   the row pair check (lib/row-pairs.mjs: rowPartsUnpaired), each with the reasons of reach-accepts.json in --out
 //   (lib/check-accepts.mjs), and stamps `tool` and `settledAt`.
 //   cli.mjs measure-fields --site <url> --out <dir> --contract <dir> --db-command '<client prefix>' --scratch-site
-//                 [--host-header <host>]   (WRITES to the site, each field set to a marker and put back: only on a
-//                 throwaway site rebuilt from the quickstart, which --scratch-site says it is; field-drives.json)
+//                 [--host-header <host>] [--slots <prefix,…>]   (WRITES to the site, each field set to a marker and put
+//                 back: only on a throwaway site rebuilt from the quickstart, which --scratch-site says it is;
+//                 field-drives.json; --slots measures only the slots whose id starts so, into the file already there)
 //   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
 //                 its shot; build --full runs it last)
 //   cli.mjs looks --kit <template-kit.json> [--images <dir>] --list [--to <worklist.json>]
@@ -240,6 +241,19 @@ function samples(o, out) {
   return samplesCut || inlineEmphasisMissing || inlineMarkupLost ? 1 : 0
 }
 
+/** The content map with only the slots whose id starts with one of `prefixes` (comma-separated), or all of them. */
+export function onlySlots(map, prefixes) {
+  const keep = prefixes?.split(',').filter(Boolean)
+  return keep?.length
+    ? { ...map, slots: map.slots.filter((s) => keep.some((p) => s.key.startsWith(p))) }
+    : map
+}
+
+/** Save a partial measurement without erasing unselected fields; a full run replaces the file. */
+export function writeFieldDrives(file, drives, partial) {
+  writeJson(file, partial ? { ...readIf(file), ...drives } : drives)
+}
+
 /** Measure what each stored field drives on a throwaway site, into field-drives.json. */
 async function measureFields(o, out) {
   if (o['scratch-site'] !== true || !str(o['db-command']))
@@ -252,10 +266,11 @@ async function measureFields(o, out) {
     hostHeader: str(o['host-header']),
     dbCommand: o['db-command'],
     kit: readJson(join(out, 'template-kit.json')),
-    map: readContractSamples(o.contract),
+    map: onlySlots(readContractSamples(o.contract), str(o.slots)),
     log
   })
-  writeJson(join(out, 'field-drives.json'), drives)
+  const file = join(out, 'field-drives.json')
+  writeFieldDrives(file, drives, Boolean(str(o.slots)))
   return Object.values(drives).some((d) => d.error) ? 1 : 0
 }
 

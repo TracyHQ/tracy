@@ -57,7 +57,7 @@ export function slotShapeChecks(kit, { map, contentCoverage }) {
     for (const s of textSlotsOf(b)) {
       const m = raw.get(s.id)
       if (m?.sample == null) continue
-      const want = sampleOf(m.sample)
+      const want = sampleOf(m.sample, m)
       if (want.demoChars.total && (s.sample !== want.sample || !same(s.demoChars, want.demoChars)))
         cut.set(s.id, b.id)
       if (want.inline.length && !same(s.inline, want.inline)) inline.set(s.id, b.id)

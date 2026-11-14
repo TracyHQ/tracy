@@ -1,0 +1,416 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-kinetic/j6/1.0.12",
+  "baseHash": "d2dbca83dddc2162931a1dbd6de5192311e00817db79e2ef8b88c22788729387",
+  "baseFiles": {
+    "manifest.json": "2aeba798b1443063e84de0683f62e23ede0b9282d98e36e5ebb81e7a6d3fb3d5",
+    "content-map.json": "671141b8ade05079217a906d4e1170af0d0f8ffb9e2c188fd5aa42bf6e205692",
+    "presentation-lock.json": "ffe55ebe4e59175d56a71fd75db9ddb7fb5ee9cbb8cf9c8430ece5a0ec7f018c"
+  },
+  "inputs": {},
+  "decisionsHash": "b0eff6a6f3a00c0435dce2f05b0dd2bb8534840856eded3e2aee60cfa50a2708",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-215",
+      "identity": {
+        "path": "home-menu/home-blueprint",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Blueprint",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home-menu"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-216",
+      "identity": {
+        "path": "home-menu/home-signal",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Signal",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home-menu"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-229",
+      "identity": {
+        "path": "pages/landing",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Landing",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing (com_content view=featured) in a showcase branch"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-230",
+      "identity": {
+        "path": "pages/kineticql",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Single Article",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "KineticQL is a sample article entry inside the template Pages showcase branch. The existing product decision of 2026-10-25 removes sample Pages entries from customer menus; this exact menu entry leaves navigation only, while article 75, its direct URL and featured exposure remain published."
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-253",
+      "identity": {
+        "path": "pages/engineering",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Engineering",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Engineering is a sample category-layout entry inside the template Pages showcase branch. The existing product decision of 2026-10-25 removes sample Pages entries from customer menus; category 29, its 31 published articles, direct URLs and the Product all-categories route remain available."
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-254",
+      "identity": {
+        "path": "pages/author",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Author",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "This menu opens one fixed demo author as a sample detail screen inside the template Pages showcase branch. The existing product decision of 2026-10-25 removes sample Pages entries from customer menus; the Product authors index and author-card destinations remain published and working."
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-213",
+      "label": "Home",
+      "where": "mainmenu/home-menu",
+      "rule": "keep.holds-kept-entry",
+      "reason": "holds the home page menuItem-214"
+    },
+    {
+      "key": "menuItem-214",
+      "label": "Terminal",
+      "where": "mainmenu/home-menu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-217",
+      "label": "Product",
+      "where": "mainmenu/product",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-218",
+      "label": "Features",
+      "where": "mainmenu/product/features",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-219",
+      "label": "Integrations",
+      "where": "mainmenu/product/integrations",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-220",
+      "label": "Changelog",
+      "where": "mainmenu/product/changelog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-221",
+      "label": "Blog",
+      "where": "mainmenu/product/blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-222",
+      "label": "FAQ",
+      "where": "mainmenu/product/faq",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-223",
+      "label": "Pricing",
+      "where": "mainmenu/pricing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-224",
+      "label": "Company",
+      "where": "mainmenu/company",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-225",
+      "label": "About",
+      "where": "mainmenu/company/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-226",
+      "label": "Team",
+      "where": "mainmenu/company/team",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-227",
+      "label": "Contact",
+      "where": "mainmenu/company/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-228",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-231",
+      "label": "All Tags",
+      "where": "mainmenu/pages/tags",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tags): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-232",
+      "label": "Search",
+      "where": "mainmenu/pages/search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-233",
+      "label": "Login",
+      "where": "mainmenu/pages/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-234",
+      "label": "Register",
+      "where": "mainmenu/pages/register",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-235",
+      "label": "Profile",
+      "where": "mainmenu/pages/profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-236",
+      "label": "Password Reset",
+      "where": "mainmenu/pages/reset",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=reset): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-237",
+      "label": "Username Reminder",
+      "where": "mainmenu/pages/remind",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=remind): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-238",
+      "label": "Features",
+      "where": "footer-product/footer-product-features",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-239",
+      "label": "Pricing",
+      "where": "footer-product/footer-product-pricing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-240",
+      "label": "Integrations",
+      "where": "footer-product/footer-product-integrations",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-241",
+      "label": "Changelog",
+      "where": "footer-product/footer-product-changelog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-242",
+      "label": "Blog",
+      "where": "footer-dev/footer-dev-blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-243",
+      "label": "KineticQL",
+      "where": "footer-dev/footer-dev-kineticql",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-244",
+      "label": "Search",
+      "where": "footer-dev/footer-dev-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-245",
+      "label": "All Tags",
+      "where": "footer-dev/footer-dev-tags",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tags): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-246",
+      "label": "About",
+      "where": "footer-company/footer-company-about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-247",
+      "label": "Team",
+      "where": "footer-company/footer-company-team",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-248",
+      "label": "FAQ",
+      "where": "footer-company/footer-company-faq",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-249",
+      "label": "Contact",
+      "where": "footer-company/footer-company-contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-250",
+      "label": "All Categories",
+      "where": "mainmenu/product/all-categories",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-251",
+      "label": "Article Archive",
+      "where": "mainmenu/product/article-archive",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-252",
+      "label": "Our Writers",
+      "where": "mainmenu/product/authors",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-269",
+      "label": "Privacy Policy",
+      "where": "legal/privacy-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-270",
+      "label": "Terms of Service",
+      "where": "legal/terms-of-service",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-185",
+      "label": "[Kinetic] Global - Main Menu",
+      "where": "mod_menu@menu",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 24 entries stay"
+    },
+    {
+      "key": "module-223",
+      "label": "Product",
+      "where": "mod_menu@footer-col-1",
+      "rule": "keep.default",
+      "reason": "renders footer-product: 4 entries stay"
+    },
+    {
+      "key": "module-224",
+      "label": "Developers",
+      "where": "mod_menu@footer-col-2",
+      "rule": "keep.default",
+      "reason": "renders footer-dev: 4 entries stay"
+    },
+    {
+      "key": "module-225",
+      "label": "Company",
+      "where": "mod_menu@footer-col-3",
+      "rule": "keep.default",
+      "reason": "renders footer-company: 4 entries stay"
+    },
+    {
+      "key": "module-227",
+      "label": "[Kinetic] Global - Off-canvas Menu",
+      "where": "mod_menu@offcanvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 24 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 6,
+    "modules": 0,
+    "kept": 43,
+    "unresolved": 0
+  }
+}

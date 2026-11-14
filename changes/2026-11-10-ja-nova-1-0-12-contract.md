@@ -1,0 +1,3 @@
+- **Add the JA Nova 1.0.12 content contract and version-scoped companions** — template readiness maintainers · #625 · `fix/ja-nova-readiness` · 2026-11-10
+  **Affects:** Joomla contract consumers can identify the local 1.0.12 package and its 226 owners, 1,694 slots and 30 pages. The navigation map retains the three showcase-item hides; copy declarations and the explicit no-worn-design declaration carry forward unchanged. Historical contracts and companions remain unchanged.
+  **Why / Measured:** Core files match the generated local package, and stock companion checks report no compatibility problems. No release pin, coverage, fit, demo baseline or approval is carried forward; fresh heading rendering remains unverified.

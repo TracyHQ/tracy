@@ -1,5 +1,9 @@
 // Load a contract folder (manifest, content-map, presentation-lock) and index its slots
 // in the canonical forms the matcher compares against.
+import {
+  isAudioSlot,
+  audioSourceIdentity
+} from '../../../../wo/website-opportunities/domain/audio-source.mjs'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -7,6 +11,15 @@ import { normText, normPath, normHref, basename, letterCount, alnumCount, compac
 import { inventoryPagesOf, wordpressPagePath } from './wordpress-page-path.mjs'
 
 const readJson = (dir, name) => JSON.parse(readFileSync(join(dir, name), 'utf8'))
+/** Candidate leaf address; capture and the writer validate the actual PRE/CODE DOM separately. */
+export const isLiteralPreSlot = (slot) =>
+  slot?.type === 'text' &&
+  !slot.leaf &&
+  typeof slot.xpath === 'string' &&
+  /^\/html\/body\/div(?:\/[a-z][a-z0-9-]*(?:\[[1-9][0-9]*\])?)*\/pre(?:\[[1-9][0-9]*\])?\/code(?:\[[1-9][0-9]*\])?\/text\(\)(?:\[1\])?$/.test(
+    slot.xpath
+  )
+
 /** sha256 of a contract file's bytes: the coverage file names the exact map and lock it measured. */
 export const fileSha256 = (dir, name) =>
   createHash('sha256')
@@ -73,13 +86,16 @@ export function loadContract(dir, siteUrl) {
     return key && entityByKey.has(key) ? key : undefined
   }
 
+  const code = new Map() // exact decoded literal PRE text -> [slot keys]
   const text = new Map() // normText(sample) -> [slot keys]
   const textCompact = new Map() // compact(normText(sample)) -> [slot keys]
   const textList = [] // [{norm, key}] for containment checks, longest first
   const image = new Map() // normPath -> [slot keys]
   const imageBase = new Map() // basename -> [slot keys] (weak evidence only)
   const url = new Map() // normHref -> [slot keys]
+  const audio = []
   const rawSample = new Map() // exact sample string -> [slot keys] (a video id, an e-mail address)
+  const socialAria = [] // exact ACM module/card/entry -> declared scalar and its derived network token
   const push = (m, k, v) => {
     if (!k) return
     const a = m.get(k)
@@ -88,6 +104,14 @@ export function loadContract(dir, siteUrl) {
   }
 
   for (const s of map.slots) {
+    if (isAudioSlot(s)) {
+      audio.push({ ...s, sourceIdentity: audioSourceIdentity(s.sample, siteUrl) })
+      continue
+    }
+    if (isLiteralPreSlot(s)) {
+      if (typeof s.sample === 'string') push(code, s.sample, s.key)
+      continue
+    }
     if (typeof s.sample === 'string' && s.sample.trim()) push(rawSample, s.sample.trim(), s.key)
     if (s.type === 'image') {
       const p = normPath(s.sample, siteUrl)
@@ -102,13 +126,53 @@ export function loadContract(dir, siteUrl) {
       // writes the whole value: each href in the sample is the slot's address.
       for (const m of String(s.sample ?? '').matchAll(/\(\(a\s[^()]*?\bhref="([^"]+)"/gi))
         push(url, normHref(m[1], siteUrl), s.key)
+      // ACM teams render each complete network|URL line from this one declared scalar, a team member's profile links
+      // (`person.social_url`) or plain navigation addresses.
+      if (
+        platform === 'joomla' &&
+        s.type === 'text' &&
+        s.column === 'params' &&
+        (s.role === 'editorial.navigation_url' || s.role === 'person.social_url') &&
+        s.nestedJson === 'jatools-config' &&
+        Array.isArray(s.jsonPath) &&
+        s.jsonPath.length === 3 &&
+        s.jsonPath[0] === 'teams' &&
+        s.jsonPath[1] === 'teams[socials]' &&
+        Number.isInteger(s.jsonPath[2]) &&
+        s.jsonPath[2] >= 0 &&
+        entityByKey.get(s.entity)?.kind === 'module' &&
+        entityByKey.get(s.entity)?.identity?.module === 'mod_ja_acm' &&
+        typeof s.sample === 'string'
+      ) {
+        const networks = []
+        for (const line of s.sample.split(/\r\n|\r|\n/)) {
+          // The template renders every nonempty URL, even a malformed one: keep its ordinal unproved.
+          const pipe = line.indexOf('|')
+          if (pipe < 0 || !line.slice(pipe + 1).trim()) continue
+          networks.push(null)
+          const entry = /^\s*([a-z][a-z0-9_-]*)\s*\|\s*(https?:\/\/[^\s|]+)\s*$/i.exec(line)
+          if (!entry) continue
+          try {
+            new URL(entry[2])
+          } catch {
+            continue
+          }
+          networks[networks.length - 1] = entry[1].toLowerCase()
+          push(url, normHref(entry[2], siteUrl), s.key)
+        }
+        const moduleId = entityByKey.get(s.entity).sourceId
+        if (Number.isInteger(moduleId) && moduleId > 0)
+          socialAria.push({ key: s.key, moduleId, row: s.jsonPath[2], networks })
+      }
       const n = normText(s.sample)
       if (!n) continue
       push(text, n, s.key)
       if (compact(n).length >= 4) push(textCompact, compact(n), s.key)
-      // A field that holds markup (<li>, ((li))) renders as several blocks: each text segment is that slot's text.
-      if (/<[a-z/][^>]*>|\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/i.test(s.sample)) {
-        for (const seg of String(s.sample).split(/<[^>]+>|\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/i)) {
+      // Markup and newline-delimited fields render as separate blocks; only complete segments keep their owner.
+      if (/[\r\n]|<[a-z/][^>]*>|\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/i.test(s.sample)) {
+        for (const seg of String(s.sample).split(
+          /[\r\n]+|<[^>]+>|\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/i
+        )) {
           const sn = normText(seg)
           // A phone number or a figure has digits and no letters: count both, as the page reader does.
           if (alnumCount(sn) >= 2 && sn !== n) {
@@ -130,11 +194,29 @@ export function loadContract(dir, siteUrl) {
   const PLACEHOLDER = /%(?:\d+\$)?[sdu]/g
   const patterns = []
   for (const s of map.slots) {
-    if (s.type !== 'text' || typeof s.sample !== 'string' || !PLACEHOLDER.test(s.sample)) continue
+    if (
+      isLiteralPreSlot(s) ||
+      s.type !== 'text' ||
+      typeof s.sample !== 'string' ||
+      !PLACEHOLDER.test(s.sample)
+    )
+      continue
     PLACEHOLDER.lastIndex = 0
     const fixed = s.sample.split(PLACEHOLDER).map((x) => normText(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
     if (letterCount(fixed.join('')) < 3) continue
-    patterns.push({ re: new RegExp(`^${fixed.join('\\s*(.+?)\\s*')}$`), key: s.key })
+    const numeric = (s.sample.match(PLACEHOLDER) ?? []).every((p) => /^%[du]$/.test(p))
+    patterns.push({
+      re: new RegExp(`^${fixed.join('\\s*(.+?)\\s*')}$`),
+      key: s.key,
+      // Only independent integer gaps project into composites; positional arguments and %s stay whole-value only.
+      fragment: numeric
+        ? new RegExp(
+            `(?<![\\p{L}\\p{N}.,+-])${fixed.join('\\s*(?:0|[1-9][0-9]*)\\s*')}(?![\\p{L}\\p{N}])`,
+            'gu'
+          )
+        : null,
+      length: s.sample.length
+    })
   }
 
   // Pages declared by the map: menu item id + route. `index.php?Itemid=<id>` opens any of them
@@ -189,7 +271,19 @@ export function loadContract(dir, siteUrl) {
     pages,
     lockedFiles,
     slotsByKey: new Map(map.slots.map((s) => [s.key, s])),
-    index: { text, textCompact, textList, patterns, image, imageBase, url, rawSample },
+    index: {
+      code,
+      text,
+      textCompact,
+      textList,
+      patterns,
+      image,
+      imageBase,
+      url,
+      rawSample,
+      socialAria,
+      audio
+    },
     template: manifest.template ?? manifest.theme,
     prefix: manifest.quickstart?.prefix ?? manifest.quickstart?.tablePrefix ?? ''
   }

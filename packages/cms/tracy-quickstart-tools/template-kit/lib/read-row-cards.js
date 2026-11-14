@@ -14,7 +14,14 @@
 export function readRowCards({ block, frames, texts }) {
   const root = document.querySelector(`[data-kit-block="${block}"]`)
   if (!root) return {}
-  const sig = (el) => `${el.tagName}.${[...el.classList].sort().join('.')}`
+  // A slider's state classes (`active`, `owl-item`, `swiper-slide-next`) differ between slides of one set, as in
+  // row-fix.js: left out of the signature, or the shown slides and the hidden ones read as two kinds of card.
+  const STATE = /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)/
+  const sig = (el) =>
+    `${el.tagName}.${[...el.classList]
+      .filter((c) => !STATE.test(c))
+      .sort()
+      .join('.')}`
   const norm = (s) =>
     String(s ?? '')
       .replace(/\(\([^)]*\)\)|<[^>]+>/g, ' ')
@@ -27,6 +34,10 @@ export function readRowCards({ block, frames, texts }) {
     const cs = getComputedStyle(el)
     return cs.visibility !== 'hidden' && cs.display !== 'none'
   }
+  // A looping slider prints copies of its slides around them: a row's picture or text is the slide's, never a copy's.
+  const copy = (el) => !!el.closest('.cloned, .swiper-slide-duplicate, .slick-cloned')
+  const pick = (els) =>
+    els.find((e) => !copy(e) && shown(e)) ?? els.find((e) => !copy(e)) ?? els.find(shown) ?? els[0] ?? null
   const all = [...root.querySelectorAll('*')].filter(
     (el) => !/^(SCRIPT|STYLE|NOSCRIPT|svg)$/i.test(el.tagName)
   )
@@ -40,14 +51,19 @@ export function readRowCards({ block, frames, texts }) {
       return have === want || (want.length >= 40 && have.startsWith(want))
     })
     const inner = hits.filter((el) => !hits.some((h) => h !== el && el.contains(h)))
-    const el = inner.find((e) => !used.has(e) && shown(e)) ?? inner.find((e) => !used.has(e))
+    const el = pick(inner.filter((e) => !used.has(e)))
     if (!el) continue
     used.add(el)
     textEls.push([id, el])
   }
+  // Rows that show the same demo picture tag the same elements: each row takes its own, in the order given, as two
+  // text slots with the same words do above (JA Symphony's gallery slides 1, 5 and 6 show one picture).
+  const taken = new Set()
   const elOf = (id) => {
-    const els = [...root.querySelectorAll(`[data-kit-frame~="${id}"]`)]
-    return els.find(shown) ?? els[0] ?? null
+    const els = [...root.querySelectorAll(`[data-kit-frame~="${id}"]`)].filter((e) => !taken.has(e))
+    const el = pick(els)
+    if (el) taken.add(el)
+    return el
   }
   const placed = frames.map((f) => ({ ...f, el: elOf(f.id) })).filter((f) => f.el)
   const out = {}

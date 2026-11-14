@@ -690,6 +690,10 @@ list, kept by every later run).
   `writeTo: {action: "template.siteSettings", template, key, file}`, `canHide: true` and the `frames` it covers; every
   frame painted behind with that picture says `writable: true` and `slotId`, its twins included. Tracy writes it with
   `apps/tracy-web/src/lib/joomla-t4-body-background.js` (Claude Cowork for Joomla 0.24.78+).
+  A picture a T4 layout paints behind the blocks (a section's `background_image`, an image slot of a
+  `templateConfig-<id>` entity of the content map) needs no setting slot: every frame painted behind with it says
+  `writable: true` and `writesTo`, the content map keys of every layout section holding that picture, its twins
+  included (`linkLayoutBackgrounds`, `lib/background-slot.mjs`), and the picture step writes the file into all of them.
   `cli.mjs setting-slots --out <dir> --contract <dir> --db-command <prefix> [--webroot <dir>]` settles a written kit
   again (no browser, no image; without `--webroot` the background slot the kit has is kept), then `pack`.
 - **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and

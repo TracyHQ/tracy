@@ -168,6 +168,7 @@ async function startRun(d, values) {
     const write = {
       door: d.makeDoor({ account: values.account, platform: 'joomla' }),
       siteKey: values.site,
+      ...(d.makeHost ? { host: async (payload) => (await d.makeHost(values.site))(payload) } : {}),
       kit: { ref: values.kit, doc: opened.doc },
       contentMap: map?.doc ?? null,
       last: lastRun?.report ?? null,

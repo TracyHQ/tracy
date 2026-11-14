@@ -81,3 +81,37 @@ export function settleBackgroundSlots(kit, settings, previous = []) {
     }
   return slots
 }
+
+/**
+ * Point the frames a T4 layout paints behind the blocks at the layout's own content map slots (changed in place). A
+ * layout section's background picture is an image slot of a `templateConfig-<id>` entity (`background_image` of a
+ * section of `etc/layout/<profile>.json`); the read pass sees it as a frame painted behind every block of every page
+ * using that layout, the first one the root, the others its twins. One picture may sit in the sections of several
+ * layouts: every frame showing it writes every such slot (`writesTo`, content map keys), so the picture changes
+ * wherever the demo showed it. A frame a setting slot holds (the page background) is left to it; a frame that no
+ * longer shows a layout's picture goes back to not writable.
+ * @param {object} kit
+ * @param {object} map the content map
+ * @returns {number} the frames pointed at a layout slot
+ */
+export function linkLayoutBackgrounds(kit, map) {
+  const keysOf = new Map()
+  for (const s of map.slots ?? [])
+    if (s.type === 'image' && String(s.entity ?? '').startsWith('templateConfig-') && s.sample)
+      keysOf.set(pictureKey(s.sample), [...(keysOf.get(pictureKey(s.sample)) ?? []), s.key])
+  let linked = 0
+  for (const f of kit.blocks.flatMap((b) => b.frames ?? [])) {
+    if (f.paintedBehind !== true || f.shownAs !== 'background' || f.slotId) continue
+    const keys = keysOf.get(pictureKey(f.picture))
+    if (keys) {
+      delete f.writableReason
+      delete f.sameFileAs
+      Object.assign(f, { writable: true, writesTo: keys })
+      linked++
+    } else if (f.writesTo) {
+      delete f.writesTo
+      Object.assign(f, { writable: false, writableReason: PAINTED_BEHIND_REASON })
+    }
+  }
+  return linked
+}

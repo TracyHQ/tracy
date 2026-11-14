@@ -623,3 +623,127 @@ test('an empty category page (no item of its own in the map, no item row shown) 
   assert.equal(by['body-blog'].lists[0].rowKind, 'items')
   assert.ok(kit.errors.some((e) => e.field === 'blocks[body-blog].lists[body-blog.items].min'))
 })
+
+test('a singleton keeps source-backed view capacity without a measured maximum or inferred minimum', () => {
+  const map = structuredClone(MAP)
+  map.itemLists = {
+    'category-5.items': {
+      block: null,
+      page: 'menuItem-102',
+      source: { kind: 'category', id: 'category-5', route: 'blog' },
+      min: null,
+      minFrom: 'unknown',
+      max: 9,
+      maxFrom: 'view-setting',
+      shown: ['article-1'],
+      rowSlots: [{ field: 'title', type: 'text', items: [{ item: 'article-1', slot: 'module-10.0' }] }]
+    }
+  }
+  const capture = structuredClone(CAPTURE)
+  capture.pages = capture.pages.filter((p) => !p.path.includes('?'))
+  const kit = kitOf({ map, capture })
+  const block = kit.blocks.find((b) => b.id === 'body-blog')
+  const list = block.lists.find((l) => l.id === 'category-5.items')
+  assert.deepEqual([list.min, list.max, list.maxSource], [null, 9, 'view-setting'])
+  assert.equal(list.maxEvidence, undefined, 'the source page capacity is not a measured row count')
+  assert.ok(kit.errors.some((e) => e.field === 'blocks[body-blog].lists[category-5.items].min'))
+  assert.ok(!kit.errors.some((e) => e.field === 'blocks[body-blog].lists[category-5.items].max'))
+  for (const extra of [
+    { max: null },
+    { max: 0 },
+    { max: -1 },
+    { max: 1.5 },
+    { max: '9' },
+    { maxFrom: 'demo-count' }
+  ]) {
+    const unknown = structuredClone(map)
+    Object.assign(unknown.itemLists['category-5.items'], extra)
+    assert.ok(
+      kitOf({ map: unknown, capture }).errors.some(
+        (e) => e.field === 'blocks[body-blog].lists[category-5.items].max'
+      )
+    )
+  }
+})
+
+test('assembled owned item slider closes only its missing minimum', () => {
+  const map = structuredClone(MAP)
+  map.fitGroups = {}
+  map.itemLists = {
+    'module-11.items': {
+      block: 'module-11',
+      min: null,
+      max: 2,
+      shown: ['article-1', 'article-2'],
+      rowSlots: []
+    }
+  }
+  const capture = structuredClone(CAPTURE)
+  Object.assign(capture.blocks['block-11'].widths[1440].details.repeats[0], { inSlider: true, shownCount: 2 })
+  const kit = kitOf({ map, capture })
+  const list = kit.blocks.find((b) => b.id === 'block-11').lists[0]
+  assert.deepEqual([list.min, list.minSource], [1, 'slider-or-tab'])
+  assert.ok(!kit.errors.some((e) => e.field === 'blocks[block-11].lists[block-11.items].min'))
+})
+
+test('audio capability keeps exact owner-bound source occurrences separate from image frames and navigation', async () => {
+  const { buildBlock } = await import('../template-kit/lib/kit-blocks.mjs')
+  const slots = [0, 2].map((row) => ({
+    key: `article-1.${row}`,
+    entity: 'article-1',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', row],
+    type: 'url',
+    role: 'business.audio',
+    group: { id: `article-1.audio.${row}`, kind: 'business', item: row },
+    sample: 'images/audio/Same.mp3'
+  }))
+  const map = { entities: [], slots, pages: [] }
+  const make = (audioSources) => {
+    const errors = []
+    const block = buildBlock({
+      rec: {
+        id: 'body-album',
+        source: 'article-1',
+        widths: { 1440: { pages: ['album'], details: { audioSources } } }
+      },
+      entity: 'article-1',
+      idx: indexMap(map),
+      samples: { matchOf: () => null },
+      errors,
+      minEvidence: {},
+      siteUrl: 'https://site.example/sub/',
+      aliasHosts: [],
+      widths: ['1440', '390']
+    })
+    return { block, errors }
+  }
+  const reads = [0, 2].map((track) => ({
+    entity: 'article-1',
+    track: String(track),
+    value: '/sub/images/audio/Same.mp3',
+    mechanism: 'jplayer',
+    initialized: true,
+    selector: `#player-${track}`
+  }))
+  const { block, errors } = make(reads)
+  assert.deepEqual(block.frames, [])
+  assert.equal(errors.filter((e) => e.kind === 'audio-source').length, 0)
+  assert.deepEqual(
+    block.links.map((l) => [l.id, l.action, l.mediaKind, l.sourceSlot]),
+    slots.map((s) => [s.key, 'media-source', 'audio', s.key])
+  )
+  assert.deepEqual(
+    block.links.map((l) => l.sourceBinding),
+    slots.map((s) => ({ entity: s.entity, column: s.column, jsonPath: s.jsonPath, group: s.group }))
+  )
+  assert.ok(
+    make([{ ...reads[0], entity: 'article-2' }, reads[1]]).errors.some((e) => e.kind === 'audio-source')
+  )
+  assert.ok(make([reads[0], reads[0], reads[1]]).errors.some((e) => e.kind === 'audio-source'))
+  assert.ok(
+    make([reads[0], { ...reads[1], value: '/sub/images/audio/same.mp3' }]).errors.some(
+      (e) => e.kind === 'audio-source'
+    )
+  )
+})

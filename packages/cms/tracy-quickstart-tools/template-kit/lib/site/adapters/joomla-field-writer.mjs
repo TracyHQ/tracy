@@ -7,6 +7,7 @@ const TABLES = {
   menuItem: 'menu',
   category: 'categories',
   contact: 'contact_details',
+  tag: 'tags',
   user: 'users'
 }
 const hex = (text) => Buffer.from(text, 'utf8').toString('hex')
@@ -25,20 +26,25 @@ export function joomlaFieldWriter({ prefix, entities, select, write }) {
       throw new Error(`no table for ${field.entity}.${field.column}`)
     return { table: `${prefix}${table}`, id: e.sourceId, column: field.column }
   }
+  // The column is quoted: `fulltext`, the article body's column, is a MySQL keyword.
   const store = ({ table, id, column }, text) =>
-    write(`UPDATE ${table} SET ${column}=x'${hex(text)}' WHERE id=${id}`)
+    write(`UPDATE ${table} SET \`${column}\`=x'${hex(text)}' WHERE id=${id}`)
   return {
     set(field, marker) {
       const place = placeOf(field)
-      const rows = select(`SELECT ${place.column} AS value FROM ${place.table} WHERE id=${place.id}`)
+      const rows = select(`SELECT \`${place.column}\` AS value FROM ${place.table} WHERE id=${place.id}`)
       if (rows.length !== 1) throw new Error(`${field.key}: no stored row`)
       const stored = rows[0].value ?? ''
       saved.set(field.key, { place, stored })
       if (!field.jsonPath?.length) return store(place, marker)
       const doc = JSON.parse(stored || '{}')
-      let at = doc
+      // `nestedJson`: the path starts inside a JSON string held under that key (an ACM module's `jatools-config`),
+      // as content-coverage/lib/inline-markup.mjs reads it; set at the top it would reach no page.
+      const inner = field.nestedJson ? JSON.parse(doc[field.nestedJson] || '{}') : doc
+      let at = inner
       for (const step of field.jsonPath.slice(0, -1)) at = at[step] ??= {}
       at[field.jsonPath.at(-1)] = marker
+      if (field.nestedJson) doc[field.nestedJson] = JSON.stringify(inner)
       return store(place, JSON.stringify(doc))
     },
     restore(field) {

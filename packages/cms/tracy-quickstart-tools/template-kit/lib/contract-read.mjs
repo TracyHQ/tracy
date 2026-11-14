@@ -6,6 +6,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
+import { isLiteralPreSlot } from '../../content-coverage/lib/contract.mjs'
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { inlineOf } from './inline-marks.mjs'
 import { withEmdashPages } from './site/adapters/emdash-map.mjs'
@@ -82,7 +83,7 @@ export function withInlineMarkup(map, coverage) {
   let taken = 0
   const slots = (map.slots ?? []).map((s) => {
     const markup = samples[s.key]
-    if (s.type !== 'text' || typeof markup !== 'string' || marks(s.sample)) return s
+    if (isLiteralPreSlot(s) || s.type !== 'text' || typeof markup !== 'string' || marks(s.sample)) return s
     if (normText(markup) !== normText(s.sample)) return s
     taken++
     return { ...s, sample: markup }

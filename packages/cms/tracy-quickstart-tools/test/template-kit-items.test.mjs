@@ -7,7 +7,7 @@ import { test } from 'node:test'
 import { noMinReason } from '../template-kit/lib/min-evidence.mjs'
 import { matchRepeat } from '../template-kit/lib/rows.mjs'
 
-import { itemListsOf, joinMeasuredTwins } from '../template-kit/lib/kit-item-lists.mjs'
+import { itemListsOf, joinMeasuredTwins, applyItemSliderMinima } from '../template-kit/lib/kit-item-lists.mjs'
 import { groupPages } from '../template-kit/lib/kit.mjs'
 import { minPlan } from '../template-kit/lib/pipeline.mjs'
 
@@ -193,4 +193,65 @@ test('a list measured under the map list id joins the map list and leaves, keepi
   assert.equal(fromMap.min, 2)
   assert.equal(fromMap.minFrom, 'measured')
   assert.deepEqual(fromMap.rowSlots, [{ field: 'title' }])
+})
+
+test('owned item slider minimum uses one exact visible repeat and preserves stronger evidence', () => {
+  const list = () => ({
+    id: 'block-5.items',
+    rowKind: 'items',
+    min: null,
+    max: 2,
+    shown: ['article-1', 'article-2']
+  })
+  const repeat = { path: [0, 1], count: 2, shownCount: 2, inSlider: true }
+  const field = 'blocks[block-5].lists[block-5.items].min'
+  const block = { id: 'block-5', lists: [list()] }
+  const errors = [
+    { kind: 'missing', field },
+    { kind: 'open-question', field },
+    { kind: 'missing', field: field + 'Other' }
+  ]
+  applyItemSliderMinima(block, [repeat, { ...repeat, count: 4 }], errors)
+  assert.deepEqual([block.lists[0].min, block.lists[0].minSource], [1, 'slider-or-tab'])
+  assert.equal(block.lists[0].minEvidence, undefined, 'this is a rule, not a measurement')
+  assert.deepEqual(errors, [
+    { kind: 'open-question', field },
+    { kind: 'missing', field: field + 'Other' }
+  ])
+  for (const override of [
+    { min: 2, minSource: 'measured' },
+    { min: 2, minSource: 'content map' }
+  ]) {
+    const kept = { ...list(), ...override }
+    applyItemSliderMinima({ id: 'block-5', lists: [kept] }, [repeat], [])
+    assert.deepEqual([kept.min, kept.minSource], [2, override.minSource])
+  }
+  for (const repeats of [
+    [],
+    [{ ...repeat, nested: true }],
+    [{ ...repeat, shownCount: 0 }],
+    [{ ...repeat, count: 3 }],
+    [{ ...repeat, inSlider: false }],
+    [repeat, { ...repeat, path: [0, 2] }]
+  ]) {
+    const unknown = list()
+    applyItemSliderMinima({ id: 'block-5', lists: [unknown] }, repeats, [])
+    assert.equal(unknown.min, null, 'unmatched, hidden, nested or ambiguous repeats stay unknown')
+  }
+  for (const extra of [
+    { id: 'category-3.items' },
+    { shown: ['article-1'], max: 1 },
+    { shown: [] },
+    { rowKind: 'slots' }
+  ]) {
+    const unknown = { ...list(), ...extra }
+    applyItemSliderMinima({ id: 'block-5', lists: [unknown] }, [repeat], [])
+    assert.equal(unknown.min, null, 'unowned, singleton, empty and social lists stay unknown')
+  }
+  const ambiguous = { id: 'block-5', lists: [list(), { ...list(), id: 'block-5.other' }] }
+  applyItemSliderMinima(ambiguous, [repeat], [])
+  assert.ok(
+    ambiguous.lists.every((l) => l.min === null),
+    'one repeat cannot prove two lists'
+  )
 })

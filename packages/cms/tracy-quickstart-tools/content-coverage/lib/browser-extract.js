@@ -189,7 +189,7 @@ export function extractPage() {
       role: el ? roleOf(el) : 'head',
       zone: el ? zoneOf(el) : undefined,
       look: el && (kind === 'image' || kind === 'text') ? lookOf(kind, el, extra) : undefined,
-      // Inside a code sample (<pre>, <code>): text capture never declares, on purpose.
+      // Code needs an exact structural observation; ordinary prose normalization is insufficient.
       ...(el && (kind === 'text' || kind === 'link') && el.closest('pre, code') ? { inCode: true } : {}),
       ...extra
     })
@@ -212,13 +212,27 @@ export function extractPage() {
     }
     return out
   }
+  const literalCodeOf = (el) => {
+    if (el?.tagName !== 'PRE' || el.childNodes.length !== 1 || el.parentElement?.closest('pre, code'))
+      return null
+    const code = el.firstChild
+    return code.nodeType === 1 &&
+      code.tagName === 'CODE' &&
+      code.childNodes.length === 1 &&
+      code.firstChild.nodeType === 3
+      ? code
+      : null
+  }
   for (const el of document.body.querySelectorAll('*')) {
     if (SKIP.has(el.tagName) || el.closest('svg, script, style, noscript, template')) continue
-    if (!blockish(el) && el.parentElement && el !== document.body) continue
-    const t = ownText(el).replace(/\s+/g, ' ').trim()
+    if (el.tagName === 'CODE' && literalCodeOf(el.parentElement) === el) continue
+    const code = literalCodeOf(el)
+    if (!code && !blockish(el) && el.parentElement && el !== document.body) continue
+    const t = (code ? code.firstChild.nodeValue : ownText(el)).replace(/\s+/g, ' ').trim()
     if (!t) continue
     const a = el.tagName === 'A' ? el : el.querySelector(':scope > a')
     const extra = { value: t, href: a ? a.getAttribute('href') : null }
+    if (code) extra.codeText = code.firstChild.nodeValue
     // A paragraph with inline code ("hold the line: <code>status</code> is an integer"): its slot sample has no code words.
     if (el.tagName !== 'CODE' && el.querySelector('code')) {
       const rest = ownText(el, true).replace(/\s+/g, ' ').trim()
@@ -281,15 +295,48 @@ export function extractPage() {
       add('image', img, { source, value: v })
     }
   }
-  for (const s of document.querySelectorAll(
-    'picture source[srcset], video source[src], video[src], audio[src], audio source[src]'
-  )) {
+  for (const s of document.querySelectorAll('picture source[srcset], video source[src], video[src]')) {
     const host = s.closest('picture, video, audio') || s
     for (const u of s.tagName === 'SOURCE' && s.srcset
       ? srcsetUrls(s.getAttribute('srcset'))
       : [s.getAttribute('src')])
       add('image', host, { source: s.tagName.toLowerCase(), value: u })
   }
+  const audioSources = []
+  for (const player of document.querySelectorAll('audio, .jp-jplayer')) {
+    if (player.tagName === 'AUDIO' && player.closest('.jp-jplayer')) continue
+    const native = player.tagName === 'AUDIO'
+    const state = native ? null : window.jQuery?.(player)?.data('jPlayer')
+    const audio = native ? player : state?.htmlElement?.audio
+    const raw = native
+      ? player.currentSrc ||
+        player.getAttribute('src') ||
+        player.querySelector('source[src]')?.getAttribute('src')
+      : state?.status?.media?.mp3
+    if (!raw) continue
+    let value, initializedSource
+    try {
+      value = new URL(raw, document.baseURI || location.href).href
+      initializedSource = new URL(
+        native ? player.currentSrc : state?.status?.src,
+        document.baseURI || location.href
+      ).href
+    } catch {
+      continue
+    }
+    audioSources.push({
+      element: player,
+      value,
+      entity: player.getAttribute('data-audio-entity'),
+      track: player.getAttribute('data-audio-track'),
+      mechanism: native ? 'native' : 'jplayer',
+      initialized: !!(native ? player.currentSrc : state?.status?.src) && initializedSource === value,
+      metadata: !!audio && audio.readyState >= 1 && Number.isFinite(audio.duration) && audio.duration > 0,
+      mediaError: audio ? (audio.error?.code ?? null) : 'unavailable'
+    })
+  }
+  for (const { element, ...source } of audioSources)
+    add('media', element, { ...source, mediaKind: 'audio', source: source.mechanism })
   for (const v of document.querySelectorAll('video[poster]'))
     add('image', v, { source: 'poster', value: v.getAttribute('poster') })
   for (const f of document.querySelectorAll('iframe[src]'))

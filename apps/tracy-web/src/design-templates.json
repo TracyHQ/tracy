@@ -385,6 +385,7 @@
       "demoTrimKeep": ["pages/kineticql"],
       "contractProfile": "ja-kinetic/j6/1.0.11",
       "contractFiles": {
+        "design-system-measurement.json": "ef755fea43dc308b6d74a0298bd8e775945b1f2fd9e76828b751990a032d81bd",
         "content-map.json": "e67f3a6da437206d89d0179be01a6d1f3e7c72a5dc6879b0228bd859ada3e339",
         "demo-trim-map.json": "8801fe0fcec64f2e74f53f443ac6c5668e9ccbd86ac38c564f74de3a3e465c3a",
         "manifest.json": "19e2087e4ecc8799968514cbb8aefa6cc35bc9f0195f774fd1e20892c2b28498",

@@ -35,12 +35,34 @@ const oneText = (texts) => {
 const titledOnPage = (controls, path) => (controls ?? []).some((c) => c.title && c.page === path)
 
 /** The title slot of one page, or null with the slots it could not tell apart. */
-function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, drives }) {
+function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, menuItemOf, drives, formats }) {
   const measured = Object.keys(drives).filter((id) => titledOnPage(drives[id]?.controls, page.path))
   if (measured.length === 1) return { slot: measured[0], from: 'field measurement' }
+  // Two fields printed at the title's size (a slide's second line styled as an h1): the title is the one in the h1.
+  const inH1 = measured.filter((id) =>
+    drives[id].controls.some((c) => c.title && c.page === page.path && c.tag === 'h1')
+  )
+  if (inH1.length === 1) return { slot: inH1[0], from: 'field measurement' }
   const text = normText(page.h1?.text ?? oneText(page.h1?.texts))
   if (!text) return { slot: null, candidates: measured }
-  const same = (id) => samples.get(id)?.type === 'text' && normText(samples.get(id).sample) === text
+  // An image's text alternative is read aloud, never printed as the page's heading.
+  const same = (id) =>
+    samples.get(id)?.type === 'text' &&
+    !String(samples.get(id).jsonPath?.at(-1) ?? '').endsWith('_alt') &&
+    normText(samples.get(id).sample) === text
+  // The page reading took the title from a parameter of the page's menu item (Joomla `page_title`): that field is it,
+  // even when the item's own title holds the same words.
+  if (page.h1?.via === 'menu-param' && page.h1.param) {
+    const param = ownersOf(page)
+      .flatMap((e) => slotsOfEntity.get(e) ?? [])
+      .filter((id) => {
+        const s = samples.get(id)
+        return (
+          same(id) && s.column === 'params' && s.jsonPath?.length === 1 && s.jsonPath[0] === page.h1.param
+        )
+      })
+    if (param.length === 1) return { slot: param[0], from: 'menu parameter' }
+  }
   // A link's label names another page, whatever words it shares with this page's title.
   const inBlock = (id) => {
     const block = blocks.get(id) ?? {}
@@ -52,9 +74,15 @@ function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, drives }) {
     if (named.length === 1) return { slot: named[0], from: 'page reading' }
     if (named.length > 1) return { slot: null, candidates: named }
   }
-  const own = ownersOf(page)
+  let own = ownersOf(page)
     .flatMap((e) => slotsOfEntity.get(e) ?? [])
     .filter(same)
+  // Joomla prints the title of the page's menu item as its h1 only through the page heading: beside the item the page
+  // shows (a category, an article) with the same words, it is the menu label.
+  if (own.length > 1 && page.h1?.via !== 'page-heading') {
+    const items = own.filter((id) => samples.get(id).entity !== menuItemOf(page))
+    if (items.length) own = items
+  }
   const shown = new Set()
   for (const id of Object.values(page.blocks ?? {}).flat()) {
     if (NAVIGATION.has(blocks.get(id)?.role)) continue
@@ -70,9 +98,12 @@ function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, drives }) {
   if (own.length > 1) return { slot: null, candidates: own }
   // The template may print the page entity's words inside a mark of its own (`#Squads` for a tag): matched so on the
   // page's own entity only, never on another item's words a block shows.
+  // Or inside a template string with one blank (`Tagged: %s`), a language string slot of the content map.
+  const fills = (words) =>
+    unmarked(words) === unmarked(text) || formats.some((f) => normText(f.replace('%s', words)) === text)
   const marked = ownersOf(page)
     .flatMap((e) => slotsOfEntity.get(e) ?? [])
-    .filter((id) => samples.get(id)?.type === 'text' && unmarked(samples.get(id).sample) === unmarked(text))
+    .filter((id) => samples.get(id)?.type === 'text' && fills(samples.get(id).sample))
   if (marked.length === 1) return { slot: marked[0], from: 'the page entity' }
   if (marked.length > 1) return { slot: null, candidates: marked }
   // Printed by nothing a block lists (an author's name on the author's page): the slot the site part read it from.
@@ -113,7 +144,11 @@ export function settlePageTitles(kit, { map, drives = {} }) {
     samples,
     slotsOfEntity,
     ownersOf,
-    drives
+    menuItemOf: (page) => idx.pageByPath.get(page.path.split('?')[0])?.entity,
+    drives,
+    formats: [...samples.values()]
+      .map((s) => (s.type === 'text' ? String(s.sample ?? '') : ''))
+      .filter((f) => f.split('%s').length === 2)
   }
   const titles = new Map()
   for (const page of kit.pages ?? []) {
@@ -121,8 +156,20 @@ export function settlePageTitles(kit, { map, drives = {} }) {
     page.titleSlot = t.slot
     delete page.titleCandidates
     if (t.candidates?.length) page.titleCandidates = t.candidates
-    if (t.slot) titles.set(t.slot, [...(titles.get(t.slot) ?? []), page.id])
   }
+  // A later page of a list (`?start=20`) prints the title of its first page: the slot settled there, when it is one
+  // of the slots this page could not tell apart.
+  const byPath = new Map((kit.pages ?? []).map((p) => [p.path, p]))
+  for (const page of kit.pages ?? []) {
+    if (page.titleSlot || !page.titleCandidates) continue
+    const first = byPath.get(page.path.replace(/[?&](limit)?start=\d+$/, ''))
+    if (first?.titleSlot && page.titleCandidates.includes(first.titleSlot)) {
+      page.titleSlot = first.titleSlot
+      delete page.titleCandidates
+    }
+  }
+  for (const page of kit.pages ?? [])
+    if (page.titleSlot) titles.set(page.titleSlot, [...(titles.get(page.titleSlot) ?? []), page.id])
   for (const b of kit.blocks) markSlots(b, titles)
   return kit
 }

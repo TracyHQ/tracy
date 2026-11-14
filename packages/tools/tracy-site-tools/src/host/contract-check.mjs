@@ -22,6 +22,8 @@
  * value to the component, as before this file.
  */
 
+import { isAudioSlot, audioSourceProblem } from '../../../../wo/website-opportunities/domain/audio-source.mjs'
+
 /**
  * Every identity token a page may carry — `Identity::NAMES` of `plg_system_tracyidentity` and
  * `IdentityTokens::NAMES` of the component, which must be equal. Closed on purpose: anything else in
@@ -180,7 +182,7 @@ export const opensEmpty = (slot) => !phpEmpty(slot?.opensEmpty)
  *   requiresEvidence?: unknown, siteIdentity?: unknown, opensEmpty?: unknown, label?: string }} ContractSlot
  *   One slot of an inspect answer (or of `content-map.json`); `current` is not read here.
  * @typedef {'evidence' | 'cannot-empty' | 'cannot-fill' | 'no-markup' | 'no-directive'
- *   | 'max-characters' | 'url' | 'image'} ContractRule
+ *   | 'max-characters' | 'url' | 'image' | 'audio'} ContractRule
  * @typedef {{ rule: ContractRule, key: string, message: string, limit?: number, length?: number }} ContractRefusal
  *   `message` is the component's own sentence, word for word — a caller that answers it as a
  *   `contract_failed` gets the `next` `refusalNext` already gives that sentence.
@@ -232,7 +234,10 @@ export function checkSlotValue(slot, value, { evidence = null } = {}) {
       limit: Number(slot.maxCharacters),
       length
     }
-  if (slot.type === 'url') {
+  if (isAudioSlot(slot)) {
+    const problem = audioSourceProblem(value)
+    if (problem) return { rule: 'audio', key, message: `Unsupported audio source: ${key}` }
+  } else if (slot.type === 'url') {
     // QC.php:554 — a scheme-relative address and a backslash, whatever the pattern says.
     if (value.startsWith('//') || value.includes('\\'))
       return { rule: 'url', key, message: `Unsupported CTA URL: ${key}` }

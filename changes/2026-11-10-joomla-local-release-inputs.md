@@ -1,0 +1,3 @@
+- **Build a Joomla quickstart from an explicit local pack and matching base contract.** — Quickstart release maintainers · #625 · `fix/ja-nova-readiness` · 2026-11-10
+  **Affects:** Release builders can pair `--from-dir` with `--base-contract-dir`. Local inputs require matching manifest, switch, part hashes and byte counts, and exact embedded pack identity. Their core contract files are snapshotted without repository companions; local mode refuses GitHub fallback. The default released-source route is unchanged.
+  **Why / Measured:** Focused synthetic CLI checks exercise input validation and refusal before build subprocesses, including installer and webroot/database shapes.

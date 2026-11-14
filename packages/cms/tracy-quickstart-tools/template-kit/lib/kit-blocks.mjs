@@ -1,5 +1,9 @@
 // The `blocks[]` of template-kit.json: per block what a planner may change (lists, picture frames, links)
 // and what it may not (template words, the demo business's own facts), joined from the capture and the map.
+import {
+  isAudioSlot,
+  audioSourceIdentity
+} from '../../../../wo/website-opportunities/domain/audio-source.mjs'
 import { labelLinks } from './link-labels.mjs'
 import { shownParagraphs } from './orphan-text.mjs'
 import { isFactRole } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
@@ -25,7 +29,7 @@ const short = (s, n = 60) => {
 }
 // A text slot's sample is the whole demo text (cut only past SAMPLE_CAP, a long article body): the writer aims its
 // length at it. Formatted samples (one part per line) are set later by formatTextSlots; an image path stays short.
-const sampleOfSlot = (x) => (x.type === 'text' ? sampleOf(x.sample).sample || null : short(x.sample))
+const sampleOfSlot = (x) => (x.type === 'text' ? sampleOf(x.sample, x).sample || null : short(x.sample))
 
 /**
  * The block's shown links, one per position (links repeating a label and an address are each kept), each with the
@@ -178,7 +182,7 @@ export function buildBlock({
     widths,
     errors
   })
-  const urlSlots = slots.filter((s) => s.type === 'url')
+  const urlSlots = slots.filter((s) => s.type === 'url' && !isAudioSlot(s))
   const labelSlot = new Map(slots.filter((s) => s.type === 'text').map((s) => [normText(s.sample), s]))
   const usedIds = new Set()
   // The address slots of icon-only rows (every text slot of the row is blank: JA Impact's "Follow us" icons print no
@@ -253,6 +257,39 @@ export function buildBlock({
     const same = links.find((l) => !l.target && !l.opens && normText(l.label ?? '') === normText(b.label))
     if (same && b.opens) same.opens = b.opens
     else if (b.labelId) links.push(b)
+  }
+  // A source belongs to its exact article/track, even when other tracks play the same file.
+  for (const s of slots.filter(isAudioSlot)) {
+    const track = String(s.jsonPath?.[2])
+    const reads = (desk?.audioSources ?? []).filter(
+      (a) =>
+        a.entity === s.entity &&
+        String(a.track) === track &&
+        audioSourceIdentity(a.value, siteUrl) === audioSourceIdentity(s.sample, siteUrl)
+    )
+    const bound =
+      s.column === 'attribs' &&
+      s.jsonPath?.[0] === 'ctm_audio' &&
+      s.jsonPath?.[1] === 'audio-src' &&
+      s.group?.id &&
+      reads.length === 1
+    if (!bound)
+      errors.push({
+        kind: 'audio-source',
+        field: `blocks[${id}].links[${neutralKey(s.key)}]`,
+        reason: 'audio source needs one exact article/track/source observation; no binding guessed'
+      })
+    links.push({
+      id: neutralKey(s.key),
+      action: 'media-source',
+      mediaKind: 'audio',
+      sourceSlot: neutralKey(s.key),
+      sourceBinding: { entity: s.entity, column: s.column, jsonPath: s.jsonPath, group: s.group },
+      target: s.sample,
+      sourceBase: siteUrl,
+      sourceUrl: audioSourceIdentity(s.sample, siteUrl),
+      observed: bound ? reads[0] : null
+    })
   }
   const labelOfText = new Map(links.filter((l) => l.labelId).map((l) => [normText(l.label), l.labelId]))
   const mapSlot = new Map((idx.map.slots ?? []).map((x) => [neutralKey(x.key), x]))

@@ -1,10 +1,42 @@
 // Runs a real Chromium (the Playwright apps/tracy-host installs); skipped when it is not installed.
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { createRequire } from 'node:module'
 import path from 'node:path'
 import { test } from 'node:test'
+import { fileURLToPath } from 'node:url'
 import { contextOptions, pageUrl, shootPages, walkPage } from '../shoot-pages.mjs'
+
+const script = new URL('../shoot-pages.mjs', import.meta.url)
+
+test('shoot-pages imports as a library without a process global', () => {
+  const result = spawnSync(
+    process.execPath,
+    [
+      '--input-type=module',
+      '--eval',
+      `import assert from 'node:assert/strict';
+       delete globalThis.process;
+       const shots = await import(${JSON.stringify(script.href)});
+       for (const name of ['pageUrl', 'contextOptions', 'walkPage', 'shootPages'])
+         assert.equal(typeof shots[name], 'function', name);`
+    ],
+    { encoding: 'utf8', timeout: 5000 }
+  )
+  assert.equal(result.status, 0, result.stderr)
+  assert.equal(result.stdout, '')
+})
+
+test('shoot-pages CLI without arguments keeps usage exit 2', () => {
+  const result = spawnSync(process.execPath, [fileURLToPath(script)], {
+    encoding: 'utf8',
+    timeout: 5000
+  })
+  assert.equal(result.status, 2, result.stderr)
+  assert.match(result.stderr, /^usage: shoot-pages\.mjs --base /)
+  assert.equal(result.stdout, '')
+})
 
 const ROOT = path.resolve(import.meta.dirname, '../../../../..')
 let chromium = null
@@ -77,5 +109,33 @@ test('a page that answers anything but 200 is a failed shot', { skip: !chromium 
     server.close()
     const { rmSync } = await import('node:fs')
     rmSync(out, { recursive: true, force: true })
+  }
+})
+
+// A finite entrance animation ignores reduced motion, while a decorative loop must never hold capture open.
+test('a long lazy page finishes its finite entrance animation and returns to the top', {
+  skip: !chromium
+}, async () => {
+  const browser = await chromium.launch()
+  try {
+    const context = await browser.newContext(contextOptions({ width: 390, height: 844 }))
+    const page = await context.newPage()
+    await page.setContent(`<html style="scroll-behavior:smooth"><body style="margin:0">
+      <div style="height:8000px">top</div><div id="lazy" style="height:200px;opacity:0">lazy content</div>
+      <script>
+      new IntersectionObserver(entries => {
+        if (entries.some(e => e.isIntersecting) && !window.started) {
+          window.started = true
+          document.querySelector('#lazy').animate([{opacity:0},{opacity:1}], {duration:4000,fill:'forwards'})
+        }
+      }).observe(document.querySelector('#lazy'))
+      document.body.animate([{color:'#111'},{color:'#222'}], {duration:1000,iterations:Infinity})
+      </script></body></html>`)
+    await walkPage(page)
+    assert.equal(await page.evaluate(() => window.started), true)
+    assert.equal(await page.evaluate(() => window.scrollY), 0)
+    assert.equal(await page.locator('#lazy').evaluate((el) => getComputedStyle(el).opacity), '1')
+  } finally {
+    await browser.close()
   }
 })

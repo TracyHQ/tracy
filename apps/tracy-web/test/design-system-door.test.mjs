@@ -964,15 +964,18 @@ test('contractFor refuses a release newer than the last one confirmed to wear th
   const kinetic = (version) => contractFor('joomla/ja-kinetic', { key: 'quickstart/ja-kinetic/j6', version })
   // 1.0.8 (feat/ds-role-variables): the release that reads the standard role variables; 1.0.9 (design system
   // dot 3): the call bar fix moved into the template source, its own contract without that patch; 1.0.10
-  // (TEXT-1 batch 1): built from 1.0.9, the same contract, the last checked
+  // (TEXT-1 batch 1): built from 1.0.9, the same contract; 1.0.11 and 1.0.12 (Joomla T4 batch 1): the same
+  // contract, 1.0.12 the last checked
   assert.deepEqual(kinetic('1.0.7'), { contract: 'joomla-ja-kinetic' })
   assert.deepEqual(kinetic('1.0.8'), { contract: 'joomla-ja-kinetic' })
   assert.deepEqual(kinetic('1.0.9'), { contract: 'joomla-ja-kinetic-source' })
   assert.deepEqual(kinetic('1.0.10'), { contract: 'joomla-ja-kinetic-source' })
-  assert.deepEqual(kinetic('1.0.11'), {
+  assert.deepEqual(kinetic('1.0.11'), { contract: 'joomla-ja-kinetic-source' })
+  assert.deepEqual(kinetic('1.0.12'), { contract: 'joomla-ja-kinetic-source' })
+  assert.deepEqual(kinetic('1.0.13'), {
     reason: 'TEMPLATE_VERSION_UNCHECKED',
-    upTo: '1.0.10',
-    have: '1.0.11'
+    upTo: '1.0.12',
+    have: '1.0.13'
   })
   // EmDash and WordPress the same way.
   const business = (version) =>

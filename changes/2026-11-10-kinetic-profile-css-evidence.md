@@ -1,0 +1,3 @@
+- **Kinetic 1.0.11 profile records its archived colour-slot compatibility check** — template readiness maintainers · #625 · `fix/ja-kinetic-readiness` · 2026-11-10
+  **Affects:** maintainers reviewing the design-system profile's checked release range. The 1.0.11 rationale now precedes the retained 1.0.10 history; palette rules, readiness flags and the held version bounds are unchanged.
+  **Why / Measured:** against checked 1.0.10, 55 of 62 stock-scope CSS sheets are byte-identical and seven change wrapping layouts or dark-logo selectors. All 1109 colour-slot reads remain; stock CSS-1 and CSS-2 pass. This static evidence does not establish unchanged appearance, layout, logo behaviour or full template readiness.

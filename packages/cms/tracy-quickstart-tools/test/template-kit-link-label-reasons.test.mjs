@@ -116,6 +116,34 @@ test('relabel drops every labelOf copy, and a settled kit passes the check', () 
   assert.ok(!JSON.stringify(kit).includes('labelOf'))
 })
 
+test('a pager number opening a result page of the list under another address is pagination', () => {
+  const pager = (n) => ({
+    id: `body-team.link-${n}`,
+    label: String(n),
+    target: `/authors/dana?start=${(n - 1) * 4}`,
+    action: 'page-control'
+  })
+  const kit = {
+    pages: [
+      // A menu page shows the author's list; the router writes its pager links to the author's own address.
+      { id: 'page-team', path: '/team', blocks: ['body-team'] },
+      { id: 'page-dana-2', path: '/authors/dana?start=4', blocks: ['body-author'] }
+    ],
+    blocks: [
+      { id: 'body-team', links: [pager(2), pager(4), { ...pager(5), target: '/authors/sam?start=16' }] },
+      { id: 'body-author', links: [] }
+    ],
+    checks: {},
+    errors: []
+  }
+  fixedLinkLabels(kit)
+  assert.deepEqual(
+    kit.blocks[0].links.map((l) => l.fixedLabel?.rule ?? null),
+    ['pagination', 'pagination', null],
+    'a list the kit never paged through is no proof'
+  )
+})
+
 test('a rating control: digits on links with no address are the control value, not a slot', () => {
   const kit = {
     pages: [{ id: 'page-news', path: '/news', blocks: ['body-news'] }],

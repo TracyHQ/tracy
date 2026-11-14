@@ -925,7 +925,7 @@ const fullInventory = () => {
   inv.users = [
     { id: '44', name: 'Drew Stokes ', username: 'Drew_Stokes', admin: '0' },
     { id: '52', name: 'Site Owner', username: 'owner', admin: '0' },
-    // The release's Super User wrote a post too, but a provision takes that account over.
+    // The release's administrator wrote a post too; its public name remains author content.
     { id: '42', name: 'Tracy Agent', username: 'tracyagent', admin: '1' }
   ]
   inv.user_profiles = [
@@ -952,6 +952,131 @@ const described = (run) =>
     .slots.map((s) =>
       [s.entity, s.column, (s.jsonPath ?? []).join('|'), s.type, s.sample, s.customize ?? '-'].join(' ')
     )
+
+test(
+  '--full-coverage keeps shipped administrator author names without exposing account fields',
+  needsPhp,
+  () => {
+    const inv = clean()
+    inv.content[0].created_by = '73'
+    inv.content.push(article('4', { alias: 'second-post', created_by: '74' }))
+    inv.users = [
+      { id: '73', name: 'Release Author', username: 'release-author', admin: '1' },
+      { id: '74', name: 'Other Author', username: 'other-author', admin: '0' },
+      { id: '75', name: 'Unused Administrator', username: 'unused-admin', admin: '1' },
+      { id: '76', name: 'Added Account', username: 'added-account', admin: '0' }
+    ].map((user) => ({
+      ...user,
+      password: 'synthetic-security-sentinel',
+      email: 'synthetic-security-sentinel',
+      groups: ['synthetic-security-sentinel'],
+      otpKey: 'synthetic-security-sentinel'
+    }))
+    inv.user_profiles = [
+      { user_id: '73', profile_key: 'profile.user_avatar', profile_value: '"images/owner.png"' },
+      { user_id: '74', profile_key: 'profile.user_jobtitle', profile_value: '"Editor"' }
+    ]
+    const run = capture(inv, { args: ['--full-coverage'] })
+    assertWritten(run)
+    const map = run.read('content-map.json')
+    const lock = run.read('presentation-lock.json')
+    const owner = map.entities.find((e) => e.key === 'user-73')
+    assert.deepEqual(owner, {
+      key: 'user-73',
+      kind: 'user',
+      identity: { username: 'release-author' },
+      sourceId: 73
+    })
+    for (const [id, name] of [
+      ['73', 'Release Author'],
+      ['74', 'Other Author']
+    ]) {
+      const slots = map.slots.filter((s) => s.entity === `user-${id}`)
+      assert.equal(slots.length, 1)
+      assert.equal(slots[0].key, `user-${id}.0`)
+      assert.equal(slots[0].column, 'name')
+      assert.equal(slots[0].sample, name)
+      assert.equal(slots[0].type, 'text')
+      assert.equal(slots[0].customize, 'keep')
+    }
+    assert.deepEqual(lock.entities['user-73'], { name: 'Release Author', username: 'release-author' })
+    assert.deepEqual(lock.entities['user-74'], { name: 'Other Author', username: 'other-author' })
+    assert.deepEqual(
+      map.entities.find((e) => e.key === 'userProfile-7303'),
+      {
+        key: 'userProfile-7303',
+        kind: 'userProfile',
+        identity: { field: 'user_avatar', user_id: '73' },
+        sourceId: 7303
+      }
+    )
+    assert.deepEqual(
+      map.entities.find((e) => e.key === 'userProfile-7401'),
+      {
+        key: 'userProfile-7401',
+        kind: 'userProfile',
+        identity: { field: 'user_jobtitle' },
+        identityReferences: { user_id: 'user-74' },
+        sourceId: 7401
+      }
+    )
+    for (const id of ['75', '76']) {
+      assert.ok(!map.entities.some((e) => e.key === `user-${id}`))
+      assert.ok(!lock.entities[`user-${id}`])
+    }
+    assert.ok(!('user' in lock.inventoryCounts) && !('userProfile' in lock.inventoryCounts))
+    assert.ok(!JSON.stringify([map, lock]).includes('synthetic-security-sentinel'))
+  }
+)
+
+test('--full-coverage refuses ambiguous shipped author usernames across admin categories', needsPhp, () => {
+  const inv = clean()
+  inv.content[0].created_by = '73'
+  inv.users = [
+    { id: '73', name: 'Release Author', username: 'same-author', admin: '1' },
+    { id: '74', name: 'Unused Account', username: 'same-author', admin: '0' }
+  ]
+  const run = capture(inv, { args: ['--full-coverage'] })
+  assertRefused(run)
+  assert.match(run.stderr, /user-73 \(user\).*matches 2 rows/)
+})
+
+test(
+  '--full-coverage keeps numeric administrator custom-field identities beside their public name',
+  needsPhp,
+  () => {
+    const inv = clean()
+    inv.content[0].created_by = '73'
+    inv.content.push(article('4', { alias: 'second-post', created_by: '74' }))
+    inv.users = [
+      { id: '73', name: 'Release Author', username: 'release-author', admin: '1' },
+      { id: '74', name: 'Other Author', username: 'other-author', admin: '0' }
+    ]
+    inv.fields = [{ id: '1', name: 'bio', context: 'com_users.user', state: '1', type: 'text' }]
+    inv.fields_values = [
+      { field_id: '1', item_id: '73', value: 'Owner biography' },
+      { field_id: '1', item_id: '74', value: 'Editor biography' }
+    ]
+    const run = capture(inv, { args: ['--full-coverage'] })
+    assertWritten(run)
+    const fields = run.read('content-map.json').entities.filter((e) => e.kind === 'fieldValue')
+    assert.deepEqual(fields, [
+      {
+        key: 'fieldValue-1000000073',
+        kind: 'fieldValue',
+        identity: { field: 'bio', context: 'com_users.user', item_id: '73' },
+        sourceId: 1000000073
+      },
+      {
+        key: 'fieldValue-1000000074',
+        kind: 'fieldValue',
+        identity: { field: 'bio', context: 'com_users.user' },
+        identityReferences: { item_id: 'user-74' },
+        sourceId: 1000000074
+      }
+    ])
+  }
+)
 
 test('--full-coverage declares the rest of what a visitor reads, each kept from Customize', needsPhp, () => {
   const args = ['--module-prefix', '', '--list-items']
@@ -991,6 +1116,7 @@ test('--full-coverage declares the rest of what a visitor reads, each kept from 
     'tag-4 title  text Boxer keep',
     'field-1 label  text Phone keep',
     'field-1 params hint text Your phone keep',
+    'user-42 name  text Tracy Agent keep',
     'user-44 name  text Drew Stokes  keep',
     'userProfile-4401 value  text Boxer keep',
     'userProfile-4403 value  image images/author/pic-4.jpg keep',
@@ -1028,16 +1154,18 @@ test('--full-coverage declares the rest of what a visitor reads, each kept from 
       .filter((e) => ['user', 'userProfile'].includes(e.kind))
       .map((e) => [e.key, e.identity, e.identityReferences ?? null, e.sourceId]),
     [
+      ['user-42', { username: 'tracyagent' }, null, 42],
       ['user-44', { username: 'Drew_Stokes' }, null, 44],
       ['userProfile-4401', { field: 'user_jobtitle' }, { user_id: 'user-44' }, 4401],
       ['userProfile-4403', { field: 'user_avatar' }, { user_id: 'user-44' }, 4403],
       ['userProfile-4404', { field: 'address1' }, { user_id: 'user-44' }, 4404],
-      // The Super User has no `user` entity (its username changes); its picture is matched by the account id.
+      // The existing administrator profile keeps its numeric identity beside the new public name slot.
       ['userProfile-4203', { field: 'user_avatar', user_id: '42' }, null, 4203]
     ]
   )
   // The lock keeps an author's name and username, never the account.
   const lock = run.read('presentation-lock.json')
+  assert.deepEqual(lock.entities['user-42'], { name: 'Tracy Agent', username: 'tracyagent' })
   assert.deepEqual(lock.entities['user-44'], { name: 'Drew Stokes ', username: 'Drew_Stokes' })
   // The plugin counts every row of a kind it governs; the lock says how many the release has.
   // People are not counted: every provision adds the owner's account.
@@ -2510,3 +2638,268 @@ test(
     )
   }
 )
+
+test(
+  'audio capability captures v3 track sources as URL facts without retyping the cover or losing row identity',
+  needsPhp,
+  () => {
+    const inv = fullInventory()
+    inv.content[1].attribs = JSON.stringify({
+      ctm_audio: {
+        'audio-src': { 0: 'images/audio/Same.mp3', 2: 'images/audio/Same.mp3' },
+        'audio-title': { 0: 'First track', 2: 'Second track' }
+      },
+      ctm_thumbnail: 'images/cover.jpg'
+    })
+    const run = capture(inv, {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage', '--role-vocabulary', '3'],
+      schemas: { features: ICONS_XML },
+      files: {
+        ...FULL_FILES,
+        'templates/tracy/contenttype/types/audio.xml':
+          '<form><fields name="attribs"><field name="ctm_audio" type="jaitems"><item name="audio-src" type="text"/><item name="audio-title" type="text"/></field><field name="ctm_thumbnail" type="media"/></fields></form>'
+      }
+    })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots
+    const tracks = slots.filter((s) => s.entity === 'article-3' && s.jsonPath?.[1] === 'audio-src')
+    assert.equal(tracks.length, 2)
+    assert.equal(new Set(tracks.map((s) => s.group.id)).size, 2)
+    for (const [row, s] of tracks.entries()) {
+      assert.equal(s.type, 'url')
+      assert.equal(s.role, 'business.audio')
+      assert.equal(s.customize, undefined)
+      assert.equal(s.sample, 'images/audio/Same.mp3')
+      assert.deepEqual(s.jsonPath, ['ctm_audio', 'audio-src', String(row * 2)])
+      assert.equal(s.column, 'attribs')
+    }
+    const cover = slots.find((s) => s.entity === 'article-3' && s.jsonPath?.[0] === 'ctm_thumbnail')
+    assert.equal(cover.type, 'image')
+    const previous = run.read('content-map.json')
+    for (const s of previous.slots.filter((s) => s.role === 'business.audio')) {
+      s.role = 'editorial.illustration'
+      s.customize = 'keep'
+    }
+    const successor = capture(inv, {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage', '--role-vocabulary', '3'],
+      previous,
+      schemas: { features: ICONS_XML },
+      files: {
+        ...FULL_FILES,
+        'templates/tracy/contenttype/types/audio.xml':
+          '<form><fields name="attribs"><field name="ctm_audio" type="jaitems"><item name="audio-src" type="text"/><item name="audio-title" type="text"/></field><field name="ctm_thumbnail" type="media"/></fields></form>'
+      }
+    })
+    assertWritten(successor)
+    assert.ok(
+      successor
+        .read('content-map.json')
+        .slots.filter((s) => s.jsonPath?.[1] === 'audio-src')
+        .every((s) => s.role === 'business.audio' && !s.customize)
+    )
+  }
+)
+
+test('literal PRE: real Cowork capture keeps leaf sample and literal length across whole units', {
+  skip:
+    needsPhp.skip ||
+    (!process.env.COWORK_SLOTS_HELPER &&
+      'set COWORK_SLOTS_HELPER to the real ContentSlots.php for cross-repo integration')
+}, () => {
+  const literal = ' <Widget>\n\tA &amp; B ((strong))Case((/strong)) '
+  const html = `Lead <b>words</b><pre><code>${literal.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</code></pre> Tail`
+  const run = capture(bodyInventory(html), {
+    helper: process.env.COWORK_SLOTS_HELPER,
+    args: ['--whole-units', '--inline-markup']
+  })
+  assertWritten(run)
+  const slots = run.read('content-map.json').slots.filter((s) => s.entity === 'module-2')
+  const code = slots.find((s) => s.xpath === '/html/body/div/pre/code/text()')
+  assert.ok(code, 'the code leaf must never merge into a root fragment')
+  assert.equal(code.sample, literal)
+  assert.equal(code.maxCharacters, [...literal].length * 2 + 20)
+  assert.equal(
+    slots.some((s) => s.xpath === '/html/body/div'),
+    false,
+    'whole-root prose cannot own or cross PRE'
+  )
+  assert.ok(
+    slots.some((s) => s.sample === 'Lead '),
+    'ordinary scalar whitespace follows the real helper'
+  )
+  const unsupported = capture(
+    bodyInventory('<p>Keep prose</p><pre><code><span>highlighted</span></code></pre>'),
+    {
+      helper: process.env.COWORK_SLOTS_HELPER,
+      args: ['--whole-units', '--inline-markup']
+    }
+  )
+  assertWritten(unsupported)
+  assert.equal(
+    unsupported.read('content-map.json').slots.some((s) => s.xpath?.includes('/pre')),
+    false
+  )
+})
+
+test('literal PRE: legacy bare PRE retains ordinary whole-root capture normalization', {
+  skip: needsPhp.skip || (!process.env.COWORK_SLOTS_HELPER && 'set real COWORK_SLOTS_HELPER for integration')
+}, () => {
+  const run = capture(bodyInventory('<pre>Legacy <b>words</b></pre>'), {
+    helper: process.env.COWORK_SLOTS_HELPER,
+    args: ['--whole-units']
+  })
+  assertWritten(run)
+  const slots = run.read('content-map.json').slots.filter((s) => s.entity === 'module-2')
+  assert.equal(slots.length, 1)
+  assert.equal(slots[0].xpath, '/html/body/div')
+  assert.equal(slots[0].sample, 'Legacy words')
+})
+
+const previousMapCapture = (html, previous) =>
+  capture(bodyInventory(html), {
+    helper: process.env.COWORK_SLOTS_HELPER || PER_TEXT_HELPER,
+    args: ['--whole-units', '--inline-markup'],
+    previous
+  })
+const previousMapBody = (map) => map.slots.filter((s) => s.entity === 'module-2')
+const reviewPreviousSlot = (slot) => {
+  slot.role = 'claim.heading'
+  slot.group = { id: 'reviewed.previous', kind: 'claim', item: 0 }
+}
+
+test(
+  'previous-map identity: inserting PRE preserves ordinary keys and carries only role/group',
+  needsPhp,
+  () => {
+    const ordinary = '<h2>Reviewed heading</h2><p>Reviewed paragraph</p>'
+    const first = previousMapCapture(ordinary)
+    assertWritten(first)
+    const previous = first.read('content-map.json')
+    const reviewed = previousMapBody(previous)
+    for (const slot of reviewed) {
+      reviewPreviousSlot(slot)
+      slot.fit = { stale: true }
+      slot.customize = 'stale'
+      slot.maxCharacters = 1
+      slot.requiresEvidence = true
+    }
+    const run = previousMapCapture(`<pre><code>new literal</code></pre>${ordinary}`, previous)
+    assertWritten(run)
+    const now = previousMapBody(run.read('content-map.json'))
+    for (const before of reviewed) {
+      const slot = now.find((s) => s.xpath === before.xpath)
+      assert.equal(slot.key, before.key)
+      assert.equal(slot.role, before.role)
+      assert.deepEqual(slot.group, before.group)
+      assert.equal('fit' in slot, false)
+      assert.notEqual(slot.customize, 'stale')
+      assert.notEqual(slot.maxCharacters, 1)
+      assert.equal(slot.requiresEvidence, false)
+    }
+    const literal = now.find((s) => s.xpath.includes('/pre/'))
+    assert.ok(!previous.slots.some((s) => s.key === literal.key), 'new leaf cannot reuse a prior key')
+    assert.equal(new Set(now.map((s) => s.key)).size, now.length)
+  }
+)
+
+test(
+  'previous-map identity: equal text at a different address never carries or reuses a key',
+  needsPhp,
+  () => {
+    const previous = previousMapCapture('<h2>Repeated words</h2>').read('content-map.json')
+    const before = previousMapBody(previous)[0]
+    reviewPreviousSlot(before)
+    const run = previousMapCapture('<p>Repeated words</p>', previous)
+    assertWritten(run)
+    const slot = previousMapBody(run.read('content-map.json'))[0]
+    assert.notEqual(slot.key, before.key)
+    assert.notEqual(slot.role, before.role)
+    assert.notEqual(slot.group?.id, before.group.id)
+  }
+)
+
+test('previous-map identity: ambiguous addresses or keys never choose a reviewed slot', needsPhp, () => {
+  const html = '<h2>Reviewed words</h2><p>Other words</p>'
+  const original = previousMapCapture(html).read('content-map.json')
+  for (const ambiguity of ['address', 'key', 'entity']) {
+    const previous = structuredClone(original)
+    const slot = previousMapBody(previous)[0]
+    reviewPreviousSlot(slot)
+    if (ambiguity === 'address') previous.slots.push({ ...slot, key: 'module-2.999' })
+    if (ambiguity === 'key') previousMapBody(previous)[1].key = slot.key
+    if (ambiguity === 'entity')
+      previous.entities.push({ ...previous.entities.find((e) => e.key === slot.entity) })
+    const run = previousMapCapture(html, previous)
+    assertWritten(run)
+    const now = previousMapBody(run.read('content-map.json'))[0]
+    assert.notEqual(now.key, slot.key, ambiguity)
+    assert.notEqual(now.role, slot.role, ambiguity)
+    assert.notEqual(now.group?.id, slot.group.id, ambiguity)
+    assert.equal(new Set(run.read('content-map.json').slots.map((s) => s.key)).size, original.slots.length)
+  }
+})
+
+test('previous-map identity: entity identity and every write-address component must agree', needsPhp, () => {
+  const html = '<h2>Reviewed words</h2>'
+  const original = previousMapCapture(html).read('content-map.json')
+  for (const field of [
+    'identity',
+    'kind',
+    'identityReferences',
+    'column',
+    'type',
+    'jsonPath',
+    'nestedJson',
+    'xpath'
+  ]) {
+    const previous = structuredClone(original)
+    const slot = previousMapBody(previous)[0]
+    reviewPreviousSlot(slot)
+    const entity = previous.entities.find((e) => e.key === slot.entity)
+    if (field === 'identity') entity.identity.note = 'another binding'
+    else if (field === 'kind') entity.kind = 'article'
+    else if (field === 'identityReferences') entity.identityReferences = { owner: 'article-3' }
+    else slot[field] = field === 'jsonPath' ? ['different'] : field === 'type' ? 'url' : 'different'
+    const run = previousMapCapture(html, previous)
+    assertWritten(run)
+    const now = previousMapBody(run.read('content-map.json'))[0]
+    assert.notEqual(now.key, slot.key, field)
+    assert.notEqual(now.role, slot.role, field)
+    assert.notEqual(now.group?.id, slot.group.id, field)
+  }
+})
+
+test('previous-map identity: literal samples require exact case whitespace and markup bytes', {
+  skip:
+    needsPhp.skip ||
+    (!process.env.COWORK_SLOTS_HELPER && 'set real COWORK_SLOTS_HELPER for literal recapture integration')
+}, () => {
+  const html = '<pre><code> A  B\n((em))Case((/em)) </code></pre>'
+  const original = previousMapCapture(html).read('content-map.json')
+  const exact = previousMapBody(original)[0].sample
+  for (const sample of [
+    exact,
+    exact.toLowerCase(),
+    exact.trim(),
+    exact.replace('  ', ' '),
+    exact.replaceAll(/\(\(\/?em\)\)/g, '')
+  ]) {
+    const previous = structuredClone(original)
+    const slot = previousMapBody(previous)[0]
+    slot.sample = sample
+    reviewPreviousSlot(slot)
+    const run = previousMapCapture(html, previous)
+    assertWritten(run)
+    const now = previousMapBody(run.read('content-map.json'))[0]
+    assert.equal(now.sample, exact)
+    if (sample === exact) {
+      assert.equal(now.key, slot.key)
+      assert.equal(now.role, slot.role)
+      assert.deepEqual(now.group, slot.group)
+    } else {
+      assert.notEqual(now.key, slot.key)
+      assert.notEqual(now.role, slot.role)
+      assert.notEqual(now.group?.id, slot.group.id)
+    }
+  }
+})

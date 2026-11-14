@@ -186,13 +186,15 @@ test(
 )
 
 test(
-  'text running past the right edge of a phone is reported, and one cut by an outer clip is not',
+  'text running past the right edge of a phone is reported; one cut by an outer clip, in a closed panel parked off screen or in a scrolling code box is not',
   opts,
   async () => {
     const { server, base } = await site()
     PAGES['/edge'] =
       `${head}<div style="width:2000px"><p style="margin-left:1200px;white-space:nowrap">Pushed out to the right of every screen</p></div>
-    <div style="width:100px;overflow:hidden"><p style="margin-left:300px;white-space:nowrap">Hidden by its parent</p></div>`
+    <div style="width:100px;overflow:hidden"><p style="margin-left:300px;white-space:nowrap">Hidden by its parent</p></div>
+    <aside style="position:fixed;top:0;left:0;width:330px;transform:translateX(390px)"><a href="/fine" style="display:block">Closed panel link</a></aside>
+    <div style="width:300px">Article text above a code block<pre style="overflow-x:auto;white-space:pre"><code>a code line far too long to fit on any phone screen at all, scrolled in its box</code></pre></div>`
     const browser = await playwright.chromium.launch({
       headless: true,
       args: ['--disable-features=MacAppCodeSignClone']
@@ -204,6 +206,44 @@ test(
       assert.equal(phone.textBoxes.length, 1)
       assert.match(phone.textBoxes[0].text, /Pushed out/)
       assert.ok(phone.textBoxes[0].right > 390 + 2)
+    } finally {
+      await browser.close()
+      server.close()
+    }
+  }
+)
+
+test(
+  'main headings exclude ancestor-clipped clones but retain partial headings and headings below the viewport',
+  opts,
+  async () => {
+    const { server, base } = await site()
+    PAGES['/clipped-headings'] = `${head}<style>
+      .window { width: 300px; overflow: hidden; position: relative }
+      .track { width: 1200px; display: flex; transform: translateX(-300px) }
+      .slide { flex: 0 0 300px }
+      .partial { position: relative; left: 280px; width: 200px }
+      .below { margin-top: 2000px }
+    </style>
+    <div class="window"><div class="track">
+      <div class="slide"><h1>Parked clone</h1></div>
+      <div class="slide"><h1>Readable title</h1></div>
+      <div class="slide"><h1>Other parked clone</h1></div>
+    </div></div>
+    <div class="window"><h1 class="partial">Partly readable title</h1></div>
+    <h1 class="below">Another visible heading below the fold</h1>`
+    const browser = await playwright.chromium.launch({ headless: true })
+    try {
+      const page = await (await browser.newContext()).newPage()
+      const r = await readDemoPage(page, `${base}/clipped-headings`, '/clipped-headings', {
+        measurePages: true
+      })
+      for (const m of r.measures)
+        assert.deepEqual(m.mainHeadings, [
+          'Readable title',
+          'Partly readable title',
+          'Another visible heading below the fold'
+        ])
     } finally {
       await browser.close()
       server.close()

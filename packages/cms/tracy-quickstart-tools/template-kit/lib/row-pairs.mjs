@@ -8,7 +8,7 @@
 //   rows[i].pairedSlots  ids of the block's text slots printed inside that card (the row's own slots left out)
 //   lists[].rowPairsFrom `measured`, or `declared` when a person wrote the pairs (never measured over)
 // Self-check `rowPartsUnpaired`: a list whose rows print in more than one part (a lone row and card rows) while a card
-// row pairs no slot, and the pairs are not declared. Count in `kit.checks`, the first lists in `kit.coverage.failures`;
+// row with no text slot of its own pairs no slot, and the pairs are not declared. Count in `kit.checks`, the first lists in `kit.coverage.failures`;
 // a list a person explained in `reach-accepts.json` (check-accepts.mjs) is still counted, listed in `kit.checkAccepts`.
 import { settleCheckParts } from './check-accepts.mjs'
 
@@ -57,7 +57,9 @@ function unpairedOf(kit) {
       const rows = each(list?.rows).filter((r) => typeof r?.printsIn === 'string')
       const parts = new Set(rows.map((r) => r.printsIn))
       if (parts.size < 2) continue
-      const lone = rows.filter((r) => r.printsIn !== 'block' && !each(r.pairedSlots).length)
+      // A row with text slots of its own already carries its texts with its picture: only a picture-only row is lone.
+      const ownText = (r) => each(r.slots).some((s) => s?.type === 'text')
+      const lone = rows.filter((r) => r.printsIn !== 'block' && !each(r.pairedSlots).length && !ownText(r))
       if (!lone.length) continue
       out.push({
         where: `lists[${list.id}]`,

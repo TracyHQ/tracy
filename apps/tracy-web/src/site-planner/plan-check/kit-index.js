@@ -32,6 +32,7 @@ export function indexKit(kit) {
 
   // Per block: every slot id, limits, row membership, frames, links, lists, fixed texts.
   const blockIx = new Map()
+  const audioLinkProblems = new Map()
   const linkIx = new Map() // link id -> kit link
   const slotOwner = new Map() // slot id -> block id
   const slotLimit = new Map()
@@ -88,6 +89,28 @@ export function indexKit(kit) {
     }
     for (const l of arr(b.links)) {
       o.links.set(l.id, l)
+      if (l.action === 'media-source') {
+        const s = l.sourceBinding
+        const row = s?.jsonPath?.[2]
+        const valid =
+          l.mediaKind === 'audio' &&
+          l.id === l.sourceSlot &&
+          !l.labelId &&
+          /^article-\d+$/.test(s?.entity ?? '') &&
+          s.column === 'attribs' &&
+          s.jsonPath?.length === 3 &&
+          s.jsonPath[0] === 'ctm_audio' &&
+          s.jsonPath[1] === 'audio-src' &&
+          /^(?:0|[1-9]\d*)$/.test(String(row)) &&
+          Number.isSafeInteger(Number(row)) &&
+          s.group?.id === `${s.entity}.audio.${Number(row)}` &&
+          s.group.item === Number(row) &&
+          s.group.kind === 'business' &&
+          [b.source?.entity, ...arr(b.source?.contains)].includes(s.entity)
+        if (!valid) audioLinkProblems.set(l.id, 'audio source has no exact article/track owner binding')
+      }
+      if (linkIx.has(l.id) && (l.action === 'media-source' || linkIx.get(l.id)?.action === 'media-source'))
+        audioLinkProblems.set(l.id, 'audio source id occurs more than once in the kit')
       linkIx.set(l.id, l)
     }
     o.fixed = arr(b.fixedText).map((t) => ({ ...t, block: b.id }))
@@ -164,6 +187,7 @@ export function indexKit(kit) {
     logoIds,
     blockIx,
     linkIx,
+    audioLinkProblems,
     slotOwner,
     slotOwnedBy,
     slotLimit,

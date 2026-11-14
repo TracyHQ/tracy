@@ -4,7 +4,7 @@
  * release") read the same pairs of contract row and dump row.
  */
 import { JOOMLA_TABLE_OF_KIND, rowsOfEntity } from './demo-database-tables.js'
-import { htmlTextPieces, normalText } from './joomla-row-text.js'
+import { htmlTextPieces, normalText, withoutNotation } from './joomla-row-text.js'
 import { counted } from './rule-findings.js'
 
 /**
@@ -77,35 +77,6 @@ function isT3DefaultLogo(row, slot) {
     sample === `templates/${row?.template}/images/${file}` ||
     sample === `plugins/system/t3/base/images/${file}`
   )
-}
-
-/** One tag of the content map's inline markup notation, without its double parentheses: `span class="a"`, `/span`, `br/`. */
-const NOTATION_TAG = /^\/?[a-zA-Z][a-zA-Z0-9]*(?:\s[^()]*)?\/?$/
-
-/**
- * A sample with the content map's inline markup notation (`((tag attrs))`, `((/tag))`, `((br/))`, written by
- * capture-contract.py `--inline-markup` through unit-markup.php) read as markup: each tag becomes a space, as
- * capture's `plain_text` and the kit's `partsOf` read it. Double parentheses that hold no tag stay words.
- * An indexOf loop, not a global regex, so a long sample costs one pass.
- * @param {string} sample
- */
-function withoutNotation(sample) {
-  let out = ''
-  let from = 0
-  for (;;) {
-    const open = sample.indexOf('((', from)
-    if (open < 0) break
-    const close = sample.indexOf('))', open + 2)
-    if (close < 0) break
-    if (NOTATION_TAG.test(sample.slice(open + 2, close))) {
-      out += `${sample.slice(from, open)} `
-      from = close + 2
-    } else {
-      out += sample.slice(from, open + 2)
-      from = open + 2
-    }
-  }
-  return out + sample.slice(from)
 }
 
 /**

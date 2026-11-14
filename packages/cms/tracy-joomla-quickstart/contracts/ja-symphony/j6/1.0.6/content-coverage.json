@@ -5101,5 +5101,19 @@
         "verdict": "right"
       }
     ]
+  },
+  "inlineMarkup": {
+    "measuredAt": "2026-11-07T12:29:08.294Z",
+    "dump": {
+      "file": "ja-symphony-j6-database-1.0.6.sql.gz",
+      "sha256": "977a10b657a06b00e5ae2dfacf9339b2cf874981cfc10b0c6bf4bfaedfcd717d"
+    },
+    "checked": 472,
+    "unread": 17,
+    "lost": 0,
+    "lostSlots": [],
+    "mismatched": 0,
+    "mismatchedSlots": [],
+    "samples": {}
   }
 }

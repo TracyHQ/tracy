@@ -430,7 +430,7 @@
     "quickstart/ja-symphony/j6": "1.0.1"
   },
   "maxVersion": {
-    "quickstart/ja-symphony/j6": "1.0.5"
+    "quickstart/ja-symphony/j6": "1.0.6"
   },
   "maxVersionNote": "1.0.5 21/10/2026 (TEXT-1 batch 1): built from 1.0.4 (release-batch.mjs --overlay); only css/template.css (.text-info, .star, .red read info-text, warn-text, danger-text) differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json). 1.0.4 19/10/2026 (dot 3): 1.0.3 with every stylesheet reading the design system role variables (VARS-1 role scan clean, design-system-roles.json ships), verified 0 computed differences and the same pixels against 1.0.3 (release-batch verify).",
   "minVersionNote": "1.0.1 = 1.0.0 with its stylesheets tokenized (release-batch.mjs build from this contract, installer zip sha256 2a2c09b1589e2ca5296e70a2c4a3e2b8f4be65838ab113ae8bfa83a5b21c828c; verified 0 computed differences, same pixels, 38/38 pages as released; tch contract ja-symphony/j6/1.0.1 and a template-profiles row); not yet published: ~/tracy-bench-work/RELEASE-DS-R3A.sh, after the Claude Cowork plugin carries the contract",

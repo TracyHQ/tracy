@@ -1,0 +1,170 @@
+{
+  "provenance": {
+    "kind": "synthetic",
+    "purpose": "Overlapping truncated selector ancestry and measured card containment; not a saved capture."
+  },
+  "page": {
+    "url": "https://fixture.invalid/index.php?Itemid=221",
+    "mapPages": [
+      {
+        "entity": "menuItem-221",
+        "route": "product/blog"
+      }
+    ],
+    "items": [
+      {
+        "kind": "text",
+        "value": "Example title",
+        "role": "content",
+        "tag": "h3",
+        "href": null,
+        "viewports": {
+          "desktop": {
+            "visible": true,
+            "count": 1,
+            "selector": "section.listing > div.content > div.cards > a.card:nth-of-type(4) > div.summary > h3.title",
+            "rect": {
+              "x": 10,
+              "y": 10,
+              "w": 50,
+              "h": 20
+            }
+          },
+          "phone": {
+            "visible": true,
+            "count": 1,
+            "selector": "section.listing > div.content > div.cards > a.card:nth-of-type(4) > div.summary > h3.title",
+            "rect": {
+              "x": 10,
+              "y": 10,
+              "w": 50,
+              "h": 20
+            }
+          }
+        },
+        "homes": [""],
+        "status": "matched",
+        "slots": ["article-134.12"]
+      },
+      {
+        "kind": "text",
+        "value": "Example summary",
+        "role": "content",
+        "tag": "p",
+        "href": null,
+        "viewports": {
+          "desktop": {
+            "visible": true,
+            "count": 1,
+            "selector": "section.listing > div.content > div.cards > a.card:nth-of-type(4) > div.summary > p.excerpt",
+            "rect": {
+              "x": 10,
+              "y": 10,
+              "w": 50,
+              "h": 20
+            }
+          },
+          "phone": {
+            "visible": true,
+            "count": 1,
+            "selector": "section.listing > div.content > div.cards > a.card:nth-of-type(4) > div.summary > p.excerpt",
+            "rect": {
+              "x": 10,
+              "y": 10,
+              "w": 50,
+              "h": 20
+            }
+          }
+        },
+        "homes": [""],
+        "status": "matched",
+        "slots": ["article-134.0"]
+      },
+      {
+        "kind": "link",
+        "source": "a",
+        "tag": "a",
+        "role": "content",
+        "value": "/index.php/product/blog/134-continuous-profiling-intro",
+        "viewports": {
+          "desktop": {
+            "visible": true,
+            "count": 1,
+            "selector": "div.shell > section.listing > div.content > div.cards > a.card:nth-of-type(4)",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 100,
+              "h": 100
+            }
+          },
+          "phone": {
+            "visible": true,
+            "count": 1,
+            "selector": "div.shell > section.listing > div.content > div.cards > a.card:nth-of-type(4)",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 100,
+              "h": 100
+            }
+          }
+        },
+        "homes": [""],
+        "status": "ignored"
+      }
+    ]
+  },
+  "map": {
+    "entities": [
+      {
+        "key": "category-22",
+        "kind": "category",
+        "sourceId": 22,
+        "identity": {
+          "path": "blog"
+        }
+      },
+      {
+        "key": "article-134",
+        "kind": "article",
+        "sourceId": 134,
+        "identityReferences": {
+          "catid": "category-22"
+        }
+      }
+    ],
+    "slots": [
+      {
+        "key": "article-134.0",
+        "entity": "article-134",
+        "column": "introtext",
+        "type": "text",
+        "sample": "Example summary",
+        "role": "editorial.paragraph"
+      },
+      {
+        "key": "article-134.12",
+        "entity": "article-134",
+        "column": "title",
+        "type": "text",
+        "sample": "Example title",
+        "role": "article.title"
+      }
+    ],
+    "pages": [
+      {
+        "entity": "menuItem-221",
+        "route": "product/blog",
+        "link": "index.php?option=com_content&view=category&layout=blog&id=22"
+      }
+    ]
+  },
+  "lock": {
+    "entities": {
+      "menuItem-221": {
+        "params": "{\"num_leading_articles\": 0, \"num_intro_articles\": 6}"
+      }
+    }
+  }
+}

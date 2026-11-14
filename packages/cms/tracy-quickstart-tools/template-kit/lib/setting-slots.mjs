@@ -10,7 +10,7 @@
 //   - template-background: the picture a template paints behind the blocks of many pages from one site setting
 //     (background-slot.mjs); every frame painted behind with it gets `writable: true` and `slotId`.
 // Read-only: nothing here measures or shoots; `cli.mjs setting-slots` settles a written kit again with it.
-import { settleBackgroundSlots } from './background-slot.mjs'
+import { linkLayoutBackgrounds, settleBackgroundSlots } from './background-slot.mjs'
 import { assignedAt, indexMap } from './map-index.mjs'
 
 const MAP_REASON =
@@ -123,6 +123,7 @@ export function settleSettingSlots(kit, { map, mapSettings = null, backgroundSet
   const backgroundsRead = backgroundSettings ?? kit.site.backgroundSettings ?? null
   delete kit.site.backgroundSettings
   const backgrounds = settleBackgroundSlots(kit, backgroundsRead, kit.site.settingSlots ?? [])
+  linkLayoutBackgrounds(kit, map)
   const maps = settings.map(mapLocationSlot)
   const tied = tieMapButtons(kit, indexMap({ entities: [], ...map }), maps)
   const mobiles = openMobileFields(kit)

@@ -75,12 +75,46 @@ export const normalText = (/** @type {unknown} */ text) =>
     .trim()
 
 /**
- * The text nodes of an HTML fragment, in order, each normalized; scripts, styles and comments out.
+ * One tag of the content map's inline markup notation, without its double parentheses: `span class="a"`, `/span`,
+ * `br/`. A quoted attribute value may hold parentheses (`g clip-path="url(#clip0)"` in an SVG icon).
+ */
+const NOTATION_TAG = /^\/?[a-zA-Z][a-zA-Z0-9]*(?:\s(?:[^()"']|"[^"]*"|'[^']*')*)?\/?$/
+
+/**
+ * A text with the content map's inline markup notation (`((tag attrs))`, `((/tag))`, `((br/))`, written by
+ * capture-contract.py `--inline-markup` through unit-markup.php, and kept so in the presentation lock's ACM fields)
+ * with each tag replaced by `tag`, as capture's `plain_text` and the kit's `partsOf` read it. Double parentheses
+ * that hold no tag stay words. An indexOf loop, not a global regex, so a long text costs one pass.
+ * @param {string} text
+ * @param {string} [tag] what a notation tag becomes: a space for words, `<>` to keep it a boundary between text pieces
+ */
+export function withoutNotation(text, tag = ' ') {
+  let out = ''
+  let from = 0
+  for (;;) {
+    const open = text.indexOf('((', from)
+    if (open < 0) break
+    const close = text.indexOf('))', open + 2)
+    if (close < 0) break
+    if (NOTATION_TAG.test(text.slice(open + 2, close))) {
+      out += text.slice(from, open) + tag
+      from = close + 2
+    } else {
+      out += text.slice(from, open + 2)
+      from = open + 2
+    }
+  }
+  return out + text.slice(from)
+}
+
+/**
+ * The text nodes of an HTML fragment, in order, each normalized; scripts, styles and comments out. A tag of the
+ * inline markup notation splits pieces as an HTML tag does, so an icon an ACM field holds as `((svg …))` is no text.
  * @param {unknown} html
  * @returns {string[]}
  */
 export function htmlTextPieces(html) {
-  return String(html ?? '')
+  return withoutNotation(String(html ?? ''), '<>')
     .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<!--[\s\S]*?-->/g, ' ')
     .split(/<[^>]*>/)

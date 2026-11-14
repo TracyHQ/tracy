@@ -3,6 +3,7 @@
 // content is laid out and how long each part is; `demoChars` counts the plain text of each part. Counted on the page
 // (the read pass's shown paragraphs and bullets) when the page shows the slot, else from the content map's markup.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
+import { isLiteralPreSlot } from '../../content-coverage/lib/contract.mjs'
 import { inlineOf } from './inline-marks.mjs'
 
 // A sample longer than this (a long article body) is cut, with an ellipsis; `demoChars` still counts the whole text.
@@ -73,7 +74,9 @@ export function partsOfSample(sample) {
  * @param {string} sample
  * @param {{paragraphs?: string[], bullets?: string[], texts?: string[]}} page
  */
-export function formatOf(sample, page = {}) {
+export function formatOf(sample, page = {}, slot) {
+  if (isLiteralPreSlot(slot))
+    return { paragraphs: 1, bullets: 0, formatFrom: 'content map', ...sampleOf(sample, slot) }
   const parts = partsOf(sample)
   const n = normText(sample)
   const holds = (t) => {
@@ -122,7 +125,13 @@ export function textSlotsOf(b) {
 }
 
 /** The sample of a text slot from a raw content map sample: every part whole, its lengths and its inline marks. */
-export const sampleOf = (raw) => {
+export const sampleOf = (raw, slot) => {
+  if (isLiteralPreSlot(slot))
+    return {
+      sample: String(raw ?? ''),
+      demoChars: { total: [...String(raw ?? '')].length, lead: null, bullets: [] },
+      inline: []
+    }
   const parts = partsOf(raw)
   return { sample: sampleOfParts(parts), demoChars: demoCharsOf(parts), inline: inlineOf(raw) }
 }
@@ -157,7 +166,7 @@ export function formatTextSlots({ blocks, slotOf, detailsOf }) {
     const page = detailsOf(b.id) ?? {}
     for (const s of textSlotsOf(b)) {
       const raw = slotOf(s.id)?.sample
-      if (raw != null) Object.assign(s, formatOf(raw, page))
+      if (raw != null) Object.assign(s, formatOf(raw, page, slotOf(s.id)))
     }
   }
 }
