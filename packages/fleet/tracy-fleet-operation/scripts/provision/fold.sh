@@ -284,7 +284,7 @@ tracy_site_db_exec "$LABEL" mariadb-dump --single-transaction --quick --hex-blob
 WANT="$(tracy_site_db_exec "$LABEL" mariadb -N -B -e "$TABLES_SQL; $OBJECTS_SQL" "$DB_NAME")"
 GOT="$(farm_user_sql -N -B -e "$TABLES_SQL; $OBJECTS_SQL" "$IDENT")"
 [ "$WANT" = "$GOT" ] || { echo "!! the farm copy of $DB_NAME does not have the same tables, routines, triggers and events" >&2; exit 1; }
-echo "==> database copied: $(printf '%s\n' "$WANT" | grep -c '[01]$') tables, $(printf '%s\n' "$WANT" | tail -n 1) in farm schema $IDENT"
+echo "==> database copied: $(printf '%s\n' "$WANT" | sed '$d' | grep -c '[01]$') tables, $(printf '%s\n' "$WANT" | tail -n 1) in farm schema $IDENT"
 
 # ── 5. the CMS config, and .htaccess — rewritten from inside the farm ──────────────────────────
 STEP="pointing the CMS at the farm database"

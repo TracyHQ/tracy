@@ -598,3 +598,23 @@ test('farm-site.php: .htaccess php_value/php_flag become .user.ini settings, and
     rmSync(dir, { recursive: true, force: true })
   }
 })
+
+test('heredocs: the pool and the farm compose render with no command run on the host, comments intact', () => {
+  const h = host()
+  try {
+    mkdirSync(join(h.srv, '_demos', 'fpm'), { recursive: true })
+    writeFileSync(join(h.srv, '_demos', 'fpm', 'demo1.conf'), '[demo1]\n')
+    const pool = h.bash('tracy_farm_render_pool demo1', {
+      TRACY_MAIL_URL: 'http://172.30.0.10:8080/_site-mail'
+    })
+    assert.equal(pool.status, 0, pool.stderr)
+    assert.equal(pool.stderr, '')
+    assert.ok(pool.stdout.includes('(Apache hands it `.php` files alone)'), 'pool comment intact')
+    const compose = h.bash('tracy_farm_render_compose', { TRACY_DEMOS_MAIL_NETWORK: '' })
+    assert.equal(compose.status, 0, compose.stderr)
+    assert.equal(compose.stderr, '')
+    assert.ok(compose.stdout.includes('(a `compose run` config test too)'), 'compose comment intact')
+  } finally {
+    h.dispose()
+  }
+})

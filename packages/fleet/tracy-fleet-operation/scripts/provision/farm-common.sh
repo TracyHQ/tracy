@@ -103,7 +103,7 @@ farm_image_ensure() {
     . "$(dirname "${BASH_SOURCE[0]}")/../lib/web-image.sh"
   fi
   if ! web="$(tracy_web_dir)" || [ ! -f "$web/build.sh" ] || [ ! -f "$web/demos.Dockerfile" ]; then
-    echo "!! the farm image $image is not on this host and no web/build.sh is beside these scripts to build it" >&2
+    echo "!! the farm image $image is not on this host and no web/build.sh is beside these scripts to build it (run this from the tracy-host container: docker exec tracy-tracy-host-1 bash /opt/tracy-fleet/provision/…)" >&2
     return 1
   fi
   echo "   the farm image $image is not built on this host — building it now: bash $web/build.sh demos" >&2
@@ -317,17 +317,64 @@ print("%s\t%s\t%s" % (code or "000", loc.strip(), title))
 '
 }
 
-# Two internal pages linked from the home page (plus `/` itself): what fold and unfold compare.
+# The paths fold and unfold compare, one per line: `/` itself; when `/` redirects to a page on the
+# probe host (a multilingual site sending `/` to `/en/`), that landing page after at most 3 hops;
+# then two internal pages linked from the landing page (or from `/`). Returns 1, with the reason on
+# stderr, for a redirect to another host, a loop, more than 3 hops, or a landing page that is not a 200.
 farm_probe_paths() {
-  local raw
-  raw="$(curl -s --max-time 60 -H "X-Forwarded-Host: $PROBE_HOST" -H "X-Forwarded-Proto: https" \
-    "http://127.0.0.1:$HOST_PORT/" || true)"
+  local path="/" hops=0 raw tail code loc body next seen="/" landing=""
+  while :; do
+    raw="$(curl -s -o - -w '\n__TRACY_PROBE__ %{http_code} %{redirect_url}' --max-time 60 \
+      -H "X-Forwarded-Host: $PROBE_HOST" -H "X-Forwarded-Proto: https" \
+      "http://127.0.0.1:$HOST_PORT$path" || true)"
+    tail="${raw##*$'\n'__TRACY_PROBE__ }"
+    body="${raw%$'\n'__TRACY_PROBE__*}"
+    code="${tail%% *}"; loc="${tail#* }"; [ "$loc" != "$tail" ] || loc=""
+    case "$code" in
+      301|302|303|307|308) ;;
+      *) break ;;
+    esac
+    # curl's redirect_url resolves a relative Location against the request: http://127.0.0.1:<HOST_PORT>/…
+    next="$(printf '%s' "$loc" | PROBE_HOST="$PROBE_HOST" HOST_PORT="$HOST_PORT" python3 -c '
+import os, sys
+from urllib.parse import urlsplit
+try:
+    u = urlsplit(sys.stdin.read().strip())
+    host, port = (u.hostname or "").lower(), u.port
+except ValueError:
+    sys.exit(1)
+if u.scheme not in ("", "http", "https") or u.username is not None or u.password is not None:
+    sys.exit(1)
+if host and host != os.environ["PROBE_HOST"].lower() and not (host == "127.0.0.1" and str(port) == os.environ["HOST_PORT"]):
+    sys.exit(1)
+path = u.path or "/"
+if not path.startswith("/"):
+    sys.exit(1)
+print(path + ("?" + u.query if u.query else ""))
+')" || { echo "!! $LABEL: $path redirects to [$loc], which is not a page on $PROBE_HOST" >&2; return 1; }
+    hops=$((hops + 1))
+    if [ "$hops" -gt 3 ]; then echo "!! $LABEL: / redirects more than 3 times (last: $loc)" >&2; return 1; fi
+    case "
+$seen
+" in *"
+$next
+"*) echo "!! $LABEL: / redirects in a loop (back to $next)" >&2; return 1 ;; esac
+    seen="$seen
+$next"
+    path="$next"; landing="$next"
+  done
+  if [ -n "$landing" ]; then
+    if [ "$code" != 200 ]; then
+      echo "!! $LABEL: / lands on $landing, which answers $code, not 200" >&2; return 1
+    fi
+  fi
   printf '/\n'
-  printf '%s' "$raw" | PROBE_HOST="$PROBE_HOST" python3 -c '
+  [ -z "$landing" ] || printf '%s\n' "$landing"
+  printf '%s' "$body" | PROBE_HOST="$PROBE_HOST" SELF="${landing:-/}" python3 -c '
 import os, re, sys
 from urllib.parse import urlsplit
 host = os.environ["PROBE_HOST"]
-seen, out = {"/"}, []
+seen, out = {"/", os.environ["SELF"]}, []
 skip = re.compile(r"^/(administrator|wp-admin|wp-login|wp-json|feed|xmlrpc)|\.(css|js|png|jpe?g|gif|svg|ico|webp|woff2?|ttf|xml|pdf|zip)$", re.I)
 for href in re.findall(r"<a\s[^>]*href=[\"\x27]([^\"\x27#]+)", sys.stdin.read(), re.I):
     u = urlsplit(href.strip())
@@ -350,11 +397,14 @@ print("\n".join(out))
 # Compare the answers recorded in BASELINE (one `path<TAB>code<TAB>location<TAB>title` per line) with
 # what WHERE answers now. Retries for a while: a farm just reloaded, a forwarder just started.
 farm_verify() {
-  local where="$1" path want got tries=0 bad
+  local where="$1" line path want got tries=0 bad
   while :; do
     bad=""
-    while IFS=$'\t' read -r path want; do
-      [ -n "$path" ] || continue
+    # Split by parameter expansion, not `IFS=<tab> read`: tab is IFS whitespace, so read would drop the
+    # trailing tab of a line whose title is empty (every redirect) and never equal what farm_probe prints.
+    while IFS= read -r line; do
+      [ -n "$line" ] || continue
+      path="${line%%$'\t'*}"; want="${line#*$'\t'}"
       got="$(farm_probe "$where" "$path")"
       if [ "$got" != "$want" ]; then bad="$bad
    $path: was [$want], now [$got]"; fi
@@ -369,10 +419,11 @@ farm_verify() {
   done
 }
 
-# The answers of the paths, from WHERE, as BASELINE lines. `/` must be a 200 with a title.
+# The answers of the paths, from WHERE, as BASELINE lines. `/` is a 200 with a title, or a redirect
+# to a page on the same host (kept as the redirect it is) whose landing page is one.
 farm_baseline() {
   local where="$1" paths path answer
-  paths="$(farm_probe_paths)"
+  paths="$(farm_probe_paths)" || return 1
   BASELINE=""
   while IFS= read -r path; do
     [ -n "$path" ] || continue
@@ -380,9 +431,18 @@ farm_baseline() {
     BASELINE="$BASELINE$path	$answer
 "
   done <<<"$paths"
-  case "$(printf '%s' "$BASELINE" | sed -n 1p | cut -f2)" in
+  local first land
+  first="$(printf '%s' "$BASELINE" | sed -n 1p)"
+  land="$(printf '%s' "$BASELINE" | sed -n 2p)"
+  case "$(printf '%s' "$first" | cut -f2)" in
     200) ;;
-    *) echo "!! $LABEL does not answer / with 200 today ($(printf '%s' "$BASELINE" | sed -n 1p)) — nothing to compare the move against" >&2
+    301|302|303|307|308)
+      # `/` is a redirect (farm_probe_paths followed it): the landing page is what must answer.
+      if [ "$(printf '%s' "$land" | cut -f2)" != 200 ] || [ -z "$(printf '%s' "$land" | cut -f4)" ]; then
+        echo "!! $LABEL: / redirects, but its landing page does not answer 200 with a title ($land)" >&2
+        return 1
+      fi ;;
+    *) echo "!! $LABEL does not answer / with 200 today ($first) — nothing to compare the move against" >&2
        return 1 ;;
   esac
   printf '%s' "$BASELINE" | sed 's/^/   baseline /' >&2

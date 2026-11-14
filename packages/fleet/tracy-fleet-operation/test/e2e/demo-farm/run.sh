@@ -200,6 +200,20 @@ INSERT INTO tr_workflow_associations (item_id, stage_id, extension) VALUES (@id,
 SQL
 check "the Joomla home page shows the article and its links" sh -c "[ \"\$(curl -s -H 'X-Forwarded-Host: $JH' http://127.0.0.1:$JP/ | grep -c 'Farm welcome')\" -ge 1 ]"
 
+# `/` of the Joomla demo redirects to its landing page on the same host, as a multilingual Joomla
+# sends `/` to `/en/`: fold must compare `/` as the redirect it is and the landing page behind it.
+# The redirect has an EMPTY body (so no <title>), as WordPress's own redirects do: a baseline line
+# ending in an empty title must verify equal.
+tracy_site_web_exec "$J" -i -- sh -c 'cat > tracyredir.php <<"PHP"
+<?php
+http_response_code(301);
+header("Location: https://" . $_SERVER["HTTP_X_FORWARDED_HOST"] . "/index.php");
+PHP
+printf "%s\n" "RewriteEngine On" "RewriteRule ^\$ /tracyredir.php [L]" | cat - .htaccess > .htaccess.new && mv .htaccess.new .htaccess'
+check "the Joomla home page redirects to /index.php on its own host" sh -c "curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -H 'X-Forwarded-Host: $JH' -H 'X-Forwarded-Proto: https' http://127.0.0.1:$JP/ | grep -E '^301 https?://[^/]+/index.php\$'"
+check "the redirect has no title" sh -c "[ -z \"\$(curl -s -H 'X-Forwarded-Host: $JH' http://127.0.0.1:$JP/ | grep -i '<title')\" ]"
+check "the landing page answers 200" [ "$(get "$JP" /index.php "$JH")" = 200 ]
+
 # What each demo answers before the farm: the pages the checks below compare against.
 declare -A BEFORE
 record() { # key port path host
@@ -522,7 +536,7 @@ INITIAL="$(bash "$SCRIPTS/webroot/webroot-backup.sh" --label "$J" --op initial-b
 echo "  initial backup: ${INITIAL:0:200}"
 check "the initial backup holds the farm schema's dump" sh -c "printf '%s' '$INITIAL' | python3 -c 'import json,sys; d=json.load(sys.stdin); sys.exit(0 if d[\"database\"][\"ok\"] else 1)'"
 tracy_site_db_exec "$J" mariadb "$JSCHEMA" -e "UPDATE tr_content SET title='Changed after the backup' WHERE alias='farm-welcome'"
-check "$J shows the change" sh -c "curl -s -H 'X-Forwarded-Host: $JH' http://127.0.0.1:$JP/ | grep 'Changed after the backup'"
+check "$J shows the change" sh -c "curl -s -H 'X-Forwarded-Host: $JH' http://127.0.0.1:$JP/index.php | grep 'Changed after the backup'"
 RESTORED="$(bash "$SCRIPTS/webroot/webroot-backup.sh" --label "$J" --op restore-everything --version 1 | tail -1)"
 echo "  restore: ${RESTORED:0:300}"
 check "Restore everything answers ok" sh -c "printf '%s' '$RESTORED' | python3 -c 'import json,sys; sys.exit(0 if json.load(sys.stdin)[\"ok\"] else 1)'"
