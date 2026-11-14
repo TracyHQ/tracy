@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-630-demo-farm-fold-redirects",
+  "kind": "fix",
+  "title": "Demo farm fold accepts a demo whose pages redirect (multilingual `/` → `/en/`, `/contact` → `/contact/`)",
+  "pr": 630,
+  "area": "fleet/demo-farm",
+  "cms": ["jo", "wp"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/demo-farm-baseline.test.mjs packages/fleet/tracy-fleet-operation/test/demo-farm.test.mjs",
+    "S2: Record the exit code and the result of each case whose name starts with 'baseline:', 'verify: a baseline line with an empty title' and 'heredocs: the pool and the farm compose render'."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "A `/` that redirects on its own host (absolute or relative Location) is kept as a redirect and its 200 landing page and links are baselined; a foreign host, userinfo, another local port, a loop, more than 3 hops or a non-200 landing page is refused.",
+    "A baseline line with an empty title (a redirect) verifies equal to the same answer; a changed Location differs.",
+    "Rendering the pool and the farm compose runs no command on the host (empty stderr) and keeps the comment text."
+  ],
+  "selectors": {
+    "baseline": "farm_probe_paths / farm_baseline in packages/fleet/tracy-fleet-operation/scripts/provision/farm-common.sh",
+    "verify": "farm_verify in the same file",
+    "render": "tracy_farm_render_pool and the farm compose in packages/fleet/tracy-fleet-operation/scripts/lib/demo-farm.sh"
+  },
+  "evidence": "14/11/2026 dev host: fold.sh refused business-joomla ('does not answer / with 200 today (/ 301 …/en/)') and ja-essence-wordpress / ja-kinetic-wordpress ('/contact: was [301 …/contact/], now [301 …/contact/<TAB>]'); with this branch's scripts all three folded and answered at their public URLs.",
+  "fence": "A redirect is followed only on the probe host or its own 127.0.0.1:<port>, at most 3 hops; every baseline line is compared byte for byte.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/demo-farm-baseline.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/demo-farm.test.mjs"
+    ],
+    "tests": [
+      "baseline: `/` that is a 200 keeps its own links",
+      "baseline: `/` that redirects on its own host is kept as a redirect",
+      "baseline: a redirect to another host is refused",
+      "baseline: a redirect loop and more than 3 hops are refused",
+      "baseline: a landing page that is not a 200 is refused",
+      "baseline: a Location with userinfo, another hostname or another local port is refused",
+      "verify: a baseline line with an empty title (a redirect) verifies equal",
+      "heredocs: the pool and the farm compose render with no command run on the host"
+    ]
+  }
+}
