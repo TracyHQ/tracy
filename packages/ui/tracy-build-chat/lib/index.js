@@ -229,6 +229,11 @@ function planReviewRequestOf(plan, t = english) {
     ]
   };
 }
+function approvalOf(plan, reply, t = english) {
+  const answer = reply?.answers?.find((a) => a.id === REVIEW_ID);
+  if (answer?.selected?.[0] !== t("review.approve")) return null;
+  return { plan: { id: plan.id, revision: plan.revision } };
+}
 
 // ../../core/tracy-core/src/build-chat/progress.mjs
 function templateChoiceOf(templates) {
@@ -253,15 +258,19 @@ var BUILD_DOOR_TIMEOUT_MS = 3e4;
 var BUILD_STOPPED_SAY = "Your site plan could not be prepared. The Tracy team has the details and will look into it.";
 var BUILD_RUNNING_SAY = "Still working on it. This can take a minute or two.";
 var UNCHANGED_FALLBACK_SAY = "Your plan has not changed. You can change any value on the plan card, or tell me to start the plan over.";
+var BUILD_BUILDING_SAY = "Your site is being built from the plan you approved. This takes a few minutes.";
+var BUILD_DONE_SAY = "Your site is built from the plan you approved.";
+var BUILD_FAILED_SAY = "Your site could not be built this time. The Tracy team has the details and will look into it.";
+var BUILD_LOCKED_SAY = "Your site is being built from the plan you approved, so the plan cannot change until the build ends.";
 var REQUEST_MAX_LENGTH = 1e3;
 var REQUEST_TOO_LONG_SAY = `That request is too long. Please keep it to ${REQUEST_MAX_LENGTH} characters or fewer.`;
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? `That name is too long for this design. Please keep it to ${limit} characters or fewer.` : `That answer is too long. Please keep it to ${limit} characters or fewer.`;
 var SAY_MAX = 300;
-var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.';
+var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change. Never say the site is built until a build result says built.';
 var BUILD_PARAMETERS = Object.freeze({
   type: "object",
   properties: {
-    action: { type: "string", enum: ["research", "templates", "plan", "edit", "status"] },
+    action: { type: "string", enum: ["research", "templates", "plan", "edit", "build", "status"] },
     links: {
       type: "array",
       items: { type: "string" },
@@ -288,6 +297,7 @@ var BUILD_PARAMETERS = Object.freeze({
   required: ["action"]
 });
 var DOOR = "/api/build-draft";
+var BUILDING = /* @__PURE__ */ new Set(["creating", "building"]);
 var PRIVATE_GUIDANCE_MARK = "Private guidance for you only. Never quote it or put any part of it in your reply to the owner.";
 var privately = (next) => `${PRIVATE_GUIDANCE_MARK} ${next}`;
 function templatesNext(options) {
@@ -381,6 +391,7 @@ function createBuildTool({
   const issued = /* @__PURE__ */ new Map();
   const reviews = /* @__PURE__ */ new Map();
   const stored = /* @__PURE__ */ new Map();
+  const shown = /* @__PURE__ */ new Map();
   const questionsOf = (sessionId) => {
     let known = issued.get(sessionId);
     if (!known) issued.set(sessionId, known = /* @__PURE__ */ new Map());
@@ -451,6 +462,12 @@ ${JSON.stringify(answer)}`;
   function refusal(res) {
     const missing = res.status === 409 ? MISSING_STEPS[res.body?.code] : void 0;
     if (missing) return { missing: missing.missing, next: missing.next };
+    if (res.status === 409 && res.body?.code === "BUILD_RUNNING")
+      return {
+        building: true,
+        say: BUILD_LOCKED_SAY,
+        next: "Say the sentence in say. Call tracy_build with action build to read how the build is going."
+      };
     if (res.status === 409)
       return {
         stale: true,
@@ -484,6 +501,7 @@ ${JSON.stringify(answer)}`;
       const review = planReviewRequestOf(result.plan);
       const ids = setOf(reviews, sessionId);
       for (const q of review.questions) ids.add(q.id);
+      shown.set(sessionId, { id: result.plan.id, revision: result.plan.revision });
       const lines = (v) => Array.isArray(v) ? v.filter((x) => typeof x === "string") : [];
       const notDone = (Array.isArray(result.revision?.notDone) ? result.revision.notDone : []).filter((e) => typeof e?.what === "string" && typeof e?.why === "string").map((e) => ({ what: e.what, why: e.why }));
       const unchanged = result.unchanged === true;
@@ -506,6 +524,7 @@ ${JSON.stringify(answer)}`;
       const ids = setOf(reviews, sessionId);
       for (const q of review.questions) ids.add(q.id);
       const plan = { id: result.plan.id, revision: result.plan.revision };
+      shown.set(sessionId, plan);
       if (result.unchanged === true)
         return {
           unchanged: true,
@@ -540,6 +559,78 @@ ${JSON.stringify(answer)}`;
       return { idle: true, next: "Nothing is running. Call tracy_build with action research first." };
     return finished(sessionId, state);
   }
+  async function approvedPlan(sessionId, assertion) {
+    const latest = repliesOf(eventsOf(sessionId)).filter((r) => r.id === PLAN_REVIEW_ID).at(-1);
+    let plan = shown.get(sessionId) ?? null;
+    if (!plan && latest) {
+      const res = await door(sessionId, assertion, "GET", "");
+      if (res === null) return null;
+      const current = res.body?.draft?.plan;
+      if (typeof current?.id === "string" && Number.isInteger(current?.revision))
+        plan = { id: current.id, revision: current.revision };
+    }
+    const approved = plan && latest ? approvalOf(plan, { answers: [latest] }) : null;
+    if (approved) return approved;
+    return {
+      refused: true,
+      next: "The owner has not approved the plan. Call ask_user_question with the review of the last plan result, and call build only after the owner pressed Approve."
+    };
+  }
+  function buildResult(body) {
+    const build2 = body?.build;
+    if (!build2) return stopped(BUILD_FAILED_SAY);
+    if (BUILDING.has(build2.state))
+      return {
+        building: true,
+        say: BUILD_BUILDING_SAY,
+        next: "Say the sentence in say. The task list card shows each step and keeps up by itself. Call tracy_build with action build again only when the owner asks how it is going. Never say the site is built yet."
+      };
+    if (build2.state === "done")
+      return {
+        built: true,
+        say: BUILD_DONE_SAY,
+        ...typeof build2.workspacePath === "string" ? { workspacePath: build2.workspacePath } : {},
+        next: "Say the sentence in say. Do not add anything about how it was built."
+      };
+    return stopped(BUILD_FAILED_SAY);
+  }
+  async function build(sessionId, assertion) {
+    const approved = await approvedPlan(sessionId, assertion);
+    if (approved === null) return stopped(BUILD_FAILED_SAY);
+    if ("refused" in approved) return approved;
+    const res = await door(sessionId, assertion, "POST", "/build", { plan: approved.plan });
+    if (res === null) return stopped(BUILD_FAILED_SAY);
+    if (res.status === 409 && res.body?.code === "STALE_PLAN")
+      return {
+        stale: true,
+        next: "The plan changed since the owner approved it. Call tracy_build with action status, then call ask_user_question with the new review."
+      };
+    if (res.status === 409 && res.body?.code === "ENGINE_BUSY")
+      return {
+        running: true,
+        say: BUILD_RUNNING_SAY,
+        next: "Say the sentence in say. Call tracy_build with action status, then action build again once it ended."
+      };
+    if (res.status === 409 && res.body?.code === "BUILT_FROM_OTHER_PLAN")
+      return {
+        building: true,
+        say: BUILD_LOCKED_SAY,
+        next: "Say the sentence in say. Call tracy_build with action build only to read the build of the plan already approved."
+      };
+    if (res.status < 200 || res.status >= 300) return refusal(res);
+    let body = res.body;
+    const start = now();
+    while (BUILDING.has(body?.build?.state) && now() - start < waitMs) {
+      await sleep(pollMs);
+      const polled = actorFor(sessionId);
+      if (polled === null) return stopped(BUILD_FAILED_SAY);
+      const read = await door(sessionId, polled, "GET", "/build");
+      if (read === null) return stopped(BUILD_FAILED_SAY);
+      if (read.status !== 200) return refusal(read);
+      body = read.body;
+    }
+    return buildResult(body);
+  }
   async function execute(rawArgs, exec) {
     const result = await run(rawArgs, exec);
     return typeof result?.next === "string" ? { ...result, next: privately(result.next) } : result;
@@ -550,10 +641,10 @@ ${JSON.stringify(answer)}`;
     if (!isBuildChatSession(sessionId))
       return { refused: true, next: "tracy_build works only in the build chat. Do not call it here." };
     const action = args.action;
-    if (!["research", "templates", "plan", "edit", "status"].includes(action))
+    if (!["research", "templates", "plan", "edit", "build", "status"].includes(action))
       return {
         refused: true,
-        next: "Call tracy_build with action research, templates, plan, edit or status."
+        next: "Call tracy_build with action research, templates, plan, edit, build or status."
       };
     let request;
     if (action === "research") {
@@ -590,6 +681,7 @@ ${JSON.stringify(answer)}`;
         { changes: changes.map((c) => ({ field: c.field, value: c.value })) }
       ];
     } else if (action === "templates") request = ["GET", "/templates"];
+    else if (action === "build") request = ["POST", "/build"];
     else request = ["GET", "/engine"];
     if (origin() === null) return stopped();
     const assertion = actorFor(sessionId);
@@ -600,6 +692,7 @@ ${JSON.stringify(answer)}`;
       const { question, limit } = replies.again;
       return askAgain(askRequestOf([question], []), tooLongSay(question, limit));
     }
+    if (action === "build") return build(sessionId, assertion);
     const res = await door(sessionId, assertion, request[0], request[1], request[2]);
     if (res === null) return stopped();
     if (res.status < 200 || res.status >= 300) return refusal(res);

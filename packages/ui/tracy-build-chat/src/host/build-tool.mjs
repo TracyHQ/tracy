@@ -15,14 +15,21 @@
  * `{ stopped: true, say }`: one plain sentence for the owner, no `ask`, no error text, no codes. And the guard refuses
  * any `ask_user_question` of a build session whose question ids the engine did not issue for that session.
  *
+ * APPROVING BUILDS (#610). Action `build` reads the owner's latest answer on the plan review bar (`approvalOf`): only
+ * Approve, for the plan last handed out with that review, posts it to `POST /build`, which creates the site and builds
+ * it. The door makes one site per draft, so a second call reads the same build. The tool never says built before the
+ * build's own outcome does.
+ *
  * AN OPEN QUESTION IS NOT A FAULT. A plan that needs one more answer from the owner first (the site name, a free text
  * question with no choice: dsh's card shows its text box alone) comes back as `{ ask, say?, next }`, and a typed reply
  * longer than its question holds is never stored: the owner is asked again with the limit in plain words.
  */
 import {
   answerOf,
+  approvalOf,
   askRequestOf,
   isBuildChatSession,
+  PLAN_REVIEW_ID,
   planReviewRequestOf,
   templateChoiceOf,
   textTooLongOf
@@ -48,6 +55,18 @@ export const BUILD_RUNNING_SAY = 'Still working on it. This can take a minute or
 export const UNCHANGED_FALLBACK_SAY =
   'Your plan has not changed. You can change any value on the plan card, or tell me to start the plan over.'
 
+/** Owner facing: said while the site is created and built from the approved plan (#610). Plain English, no dashes. */
+export const BUILD_BUILDING_SAY =
+  'Your site is being built from the plan you approved. This takes a few minutes.'
+/** Owner facing: said when the build ended with the site ready. */
+export const BUILD_DONE_SAY = 'Your site is built from the plan you approved.'
+/** Owner facing: said when the build stopped. The task list card shows which step; the team has the reason. */
+export const BUILD_FAILED_SAY =
+  'Your site could not be built this time. The Tracy team has the details and will look into it.'
+/** Owner facing: said when the owner asks for a change while the build runs. */
+export const BUILD_LOCKED_SAY =
+  'Your site is being built from the plan you approved, so the plan cannot change until the build ends.'
+
 /** The longest change request the owner may write, in characters (Contract B `request.text`, #617). */
 export const REQUEST_MAX_LENGTH = 1_000
 /** Owner facing: said when a written change request is longer than that. Plain English, no dashes. */
@@ -67,12 +86,12 @@ export const tooLongSay = (question, limit) =>
 const SAY_MAX = 300
 
 export const BUILD_DESCRIPTION =
-  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.'
+  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change. Never say the site is built until a build result says built.'
 
 export const BUILD_PARAMETERS = Object.freeze({
   type: 'object',
   properties: {
-    action: { type: 'string', enum: ['research', 'templates', 'plan', 'edit', 'status'] },
+    action: { type: 'string', enum: ['research', 'templates', 'plan', 'edit', 'build', 'status'] },
     links: {
       type: 'array',
       items: { type: 'string' },
@@ -102,6 +121,8 @@ export const BUILD_PARAMETERS = Object.freeze({
 })
 
 const DOOR = '/api/build-draft'
+/** The build states that are not an outcome yet. */
+const BUILDING = new Set(['creating', 'building'])
 
 /**
  * The mark every `next` carries. A `next` is guidance for the model, never something to tell the owner: a model that
@@ -266,6 +287,8 @@ export function createBuildTool({
   const reviews = new Map()
   /** @type {Map<string, Set<string>>} Per build session: the answers already stored, as `id + answer JSON`. */
   const stored = new Map()
+  /** @type {Map<string, {id: string, revision: number}>} Per build session: the plan last handed out with a review. */
+  const shown = new Map()
 
   /** @param {string} sessionId */
   const questionsOf = (sessionId) => {
@@ -378,6 +401,13 @@ export function createBuildTool({
     // A 409 that names a step not taken yet is not a stale plan: the agent takes that step, it does not retry.
     const missing = res.status === 409 ? MISSING_STEPS[res.body?.code] : undefined
     if (missing) return { missing: missing.missing, next: missing.next }
+    // The plan is frozen while its site is built (#610): a statement for the owner, never a retry.
+    if (res.status === 409 && res.body?.code === 'BUILD_RUNNING')
+      return {
+        building: true,
+        say: BUILD_LOCKED_SAY,
+        next: 'Say the sentence in say. Call tracy_build with action build to read how the build is going.'
+      }
     if (res.status === 409)
       return {
         stale: true,
@@ -421,6 +451,7 @@ export function createBuildTool({
       const review = planReviewRequestOf(result.plan)
       const ids = setOf(reviews, sessionId)
       for (const q of review.questions) ids.add(q.id)
+      shown.set(sessionId, { id: result.plan.id, revision: result.plan.revision })
       const lines = (/** @type {unknown} */ v) =>
         Array.isArray(v) ? v.filter((/** @type {unknown} */ x) => typeof x === 'string') : []
       const notDone = (Array.isArray(result.revision?.notDone) ? result.revision.notDone : [])
@@ -448,6 +479,7 @@ export function createBuildTool({
       const ids = setOf(reviews, sessionId)
       for (const q of review.questions) ids.add(q.id)
       const plan = { id: result.plan.id, revision: result.plan.revision }
+      shown.set(sessionId, plan)
       // The draft already held a plan: it was kept as it is, with the owner's edits (#609). Nothing was composed.
       if (result.unchanged === true)
         return {
@@ -493,6 +525,100 @@ export function createBuildTool({
   }
 
   /**
+   * The plan revision the owner approved: their latest answer on the plan review bar must be Approve, for the plan
+   * last handed out with that review. After a restart this process knows no plan: the draft door says the current one.
+   * @param {string} sessionId
+   * @param {string} assertion
+   * @returns {Promise<{plan: {id: string, revision: number}} | {refused: true, next: string} | null>} null on a fault
+   */
+  async function approvedPlan(sessionId, assertion) {
+    const latest = repliesOf(eventsOf(sessionId))
+      .filter((r) => r.id === PLAN_REVIEW_ID)
+      .at(-1)
+    let plan = shown.get(sessionId) ?? null
+    if (!plan && latest) {
+      const res = await door(sessionId, assertion, 'GET', '')
+      if (res === null) return null
+      const current = res.body?.draft?.plan
+      if (typeof current?.id === 'string' && Number.isInteger(current?.revision))
+        plan = { id: current.id, revision: current.revision }
+    }
+    const approved = plan && latest ? approvalOf(plan, { answers: [latest] }) : null
+    if (approved) return approved
+    return {
+      refused: true,
+      next: 'The owner has not approved the plan. Call ask_user_question with the review of the last plan result, and call build only after the owner pressed Approve.'
+    }
+  }
+
+  /**
+   * A build answer of the build door, shaped for the model: still building, built, or stopped with one plain sentence.
+   * @param {any} body
+   */
+  function buildResult(body) {
+    const build = body?.build
+    if (!build) return stopped(BUILD_FAILED_SAY)
+    if (BUILDING.has(build.state))
+      return {
+        building: true,
+        say: BUILD_BUILDING_SAY,
+        next: 'Say the sentence in say. The task list card shows each step and keeps up by itself. Call tracy_build with action build again only when the owner asks how it is going. Never say the site is built yet.'
+      }
+    if (build.state === 'done')
+      return {
+        built: true,
+        say: BUILD_DONE_SAY,
+        ...(typeof build.workspacePath === 'string' ? { workspacePath: build.workspacePath } : {}),
+        next: 'Say the sentence in say. Do not add anything about how it was built.'
+      }
+    return stopped(BUILD_FAILED_SAY)
+  }
+
+  /**
+   * Approve and build: one POST (the door makes one site per draft, so pressing twice is safe), then reading the build
+   * for the bounded time.
+   * @param {string} sessionId
+   * @param {string} assertion
+   */
+  async function build(sessionId, assertion) {
+    const approved = await approvedPlan(sessionId, assertion)
+    if (approved === null) return stopped(BUILD_FAILED_SAY)
+    if ('refused' in approved) return approved
+    const res = await door(sessionId, assertion, 'POST', '/build', { plan: approved.plan })
+    if (res === null) return stopped(BUILD_FAILED_SAY)
+    if (res.status === 409 && res.body?.code === 'STALE_PLAN')
+      return {
+        stale: true,
+        next: 'The plan changed since the owner approved it. Call tracy_build with action status, then call ask_user_question with the new review.'
+      }
+    if (res.status === 409 && res.body?.code === 'ENGINE_BUSY')
+      return {
+        running: true,
+        say: BUILD_RUNNING_SAY,
+        next: 'Say the sentence in say. Call tracy_build with action status, then action build again once it ended.'
+      }
+    if (res.status === 409 && res.body?.code === 'BUILT_FROM_OTHER_PLAN')
+      return {
+        building: true,
+        say: BUILD_LOCKED_SAY,
+        next: 'Say the sentence in say. Call tracy_build with action build only to read the build of the plan already approved.'
+      }
+    if (res.status < 200 || res.status >= 300) return refusal(res)
+    let body = res.body
+    const start = now()
+    while (BUILDING.has(body?.build?.state) && now() - start < waitMs) {
+      await sleep(pollMs)
+      const polled = actorFor(sessionId)
+      if (polled === null) return stopped(BUILD_FAILED_SAY)
+      const read = await door(sessionId, polled, 'GET', '/build')
+      if (read === null) return stopped(BUILD_FAILED_SAY)
+      if (read.status !== 200) return refusal(read)
+      body = read.body
+    }
+    return buildResult(body)
+  }
+
+  /**
    * Every `next` the model reads is private guidance: it is marked so, once, here, so no step can forget it.
    * @param {unknown} rawArgs @param {any} exec
    */
@@ -509,10 +635,10 @@ export function createBuildTool({
     if (!isBuildChatSession(sessionId))
       return { refused: true, next: 'tracy_build works only in the build chat. Do not call it here.' }
     const action = args.action
-    if (!['research', 'templates', 'plan', 'edit', 'status'].includes(action))
+    if (!['research', 'templates', 'plan', 'edit', 'build', 'status'].includes(action))
       return {
         refused: true,
-        next: 'Call tracy_build with action research, templates, plan, edit or status.'
+        next: 'Call tracy_build with action research, templates, plan, edit, build or status.'
       }
 
     /** @type {[string, string, unknown?]} */
@@ -556,6 +682,7 @@ export function createBuildTool({
         { changes: changes.map((/** @type {any} */ c) => ({ field: c.field, value: c.value })) }
       ]
     } else if (action === 'templates') request = ['GET', '/templates']
+    else if (action === 'build') request = ['POST', '/build']
     else request = ['GET', '/engine']
 
     if (origin() === null) return stopped()
@@ -567,6 +694,7 @@ export function createBuildTool({
       const { question, limit } = replies.again
       return askAgain(askRequestOf([question], []), tooLongSay(question, limit))
     }
+    if (action === 'build') return build(sessionId, assertion)
 
     const res = await door(sessionId, assertion, request[0], request[1], request[2])
     if (res === null) return stopped()

@@ -184,8 +184,34 @@ export interface DoorRefusal {
   say?: string
 }
 
+/** `POST /api/build-draft/build`: the owner approved this plan revision; the site is created and built from it (#610). */
+export interface BuildRequest {
+  plan: { id: string; revision: number }
+}
+
+/**
+ * What `POST /build` and `GET /build` answer. `build.state`: `creating` while the site is asked for, `building` while
+ * it is built, then the outcome (`done`, `stopped`, `cancelled`). `run` is the Contract B run the task list card draws
+ * (`tracy-build-progress/v1` events while it runs, the `tracy-build-outcome/v1` outcome once it ended). The same plan
+ * approved again answers the same build: one site per draft. 409 `STALE_PLAN` when the plan moved since it was shown,
+ * `BUILT_FROM_OTHER_PLAN` when another revision is already built, `ENGINE_BUSY` while a plan step runs; the plan, edit,
+ * research and compose doors answer 409 `BUILD_RUNNING` while the build is open.
+ */
+export interface BuildAnswerBody {
+  build: {
+    id: string
+    plan: { id: string; revision: number }
+    state: 'creating' | 'building' | 'done' | 'stopped' | 'cancelled'
+    siteKey?: string
+    workspacePath?: string
+  } | null
+  run: { events?: unknown[]; outcome?: unknown } | null
+}
+
 /** The doors, by name, as paths under `/api/build-draft`. */
 export const BUILD_DOORS = {
+  build: { method: 'POST', path: '/build' },
+  buildRun: { method: 'GET', path: '/build' },
   research: { method: 'POST', path: '/research' },
   compose: { method: 'POST', path: '/compose' },
   edit: { method: 'POST', path: '/edit' },

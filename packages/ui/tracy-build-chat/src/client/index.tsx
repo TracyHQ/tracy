@@ -27,7 +27,7 @@ import {
 import { planDefinition, templatesDefinition, workingDefinition } from './definitions'
 import { createReviewPresence } from './review-presence'
 import { ReviewBar, type PendingReview, selectPlanReview } from './ReviewBar'
-import { createDraftSource, EMPTY_BUILD_RUN_FEED, type BuildRunFeed } from './sources'
+import { createBuildRunFeed, createDraftSource, type BuildRunFeed } from './sources'
 import { CSS } from './styles'
 import { en, english, NS, type Translate } from './strings'
 import { LivePlan, makeTails, type TailDeps } from './tails'
@@ -114,7 +114,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
   const tailDeps: TailDeps = {
     drafts,
     reviews,
-    runs: deps.runs ?? EMPTY_BUILD_RUN_FEED,
+    runs: deps.runs ?? createBuildRunFeed(deps.fetch),
     t,
     fetch: deps.fetch,
     send: (sessionId, text) =>

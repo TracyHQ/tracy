@@ -10,6 +10,7 @@ import { test } from 'node:test'
 
 import {
   BUILD_DESCRIPTION,
+  BUILD_LOCKED_SAY,
   BUILD_PARAMETERS,
   BUILD_RUNNING_SAY,
   BUILD_STOPPED_SAY,
@@ -728,4 +729,99 @@ test('a typed reply past the limit is not stored: the owner is asked again with 
     puts.map((c) => c.body.answer.text),
     ['Riverside Courts']
   )
+})
+
+/** The log of a plan review the owner answered with the given button. */
+function reviewed(label) {
+  return [
+    { type: 'tool/call', data: { name: 'ask_user_question', callId: 'r1', arguments: '{}' } },
+    {
+      type: 'tool/result',
+      data: {
+        message: {
+          source: { callId: 'r1' },
+          content: [
+            { type: 'text', text: JSON.stringify({ answers: [{ id: 'plan-review', selected: [label] }] }) }
+          ]
+        }
+      }
+    }
+  ]
+}
+const COMPOSED = { body: { step: 'compose', state: 'done', result: { plan: PLAN, brand: 'own' } } }
+const building = (state, extra = {}) => ({
+  body: { build: { id: 'b1', plan: { id: PLAN.id, revision: 1 }, state, ...extra }, run: { events: [] } }
+})
+
+test('build approves the plan last shown, only after the owner pressed Approve, and reads the build until it ends', async () => {
+  const events = []
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': COMPOSED,
+    'POST /api/build-draft/build': building('creating'),
+    'GET /api/build-draft/build': [
+      building('building'),
+      building('done', { workspacePath: '/site/harbour-lane' })
+    ]
+  })
+  const tool = toolWith(web, { events })
+  await run(tool, { action: 'plan' })
+  // Not approved yet: no door is asked.
+  const early = await run(tool, { action: 'build' })
+  assert.equal(early.refused, true)
+  assert.equal(web.calls.filter((c) => c.path.endsWith('/build')).length, 0)
+  events.push(...reviewed('Approve'))
+  const answer = await run(tool, { action: 'build' })
+  assert.equal(answer.built, true)
+  assert.equal(answer.say, 'Your site is built from the plan you approved.')
+  assert.equal(answer.workspacePath, '/site/harbour-lane')
+  const post = web.calls.find((c) => c.method === 'POST' && c.path === '/api/build-draft/build')
+  assert.deepEqual(post.body, { plan: { id: PLAN.id, revision: 1 } })
+  assert.equal(post.headers['x-tracy-session'], SESSION)
+})
+
+test('Request changes is no approval, and a build still running after the wait says so without claiming it is built', async () => {
+  const changes = await run(toolWith(fakeWeb({}), { events: reviewed('Request changes') }), {
+    action: 'build'
+  })
+  assert.equal(changes.refused, true)
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': COMPOSED,
+    'POST /api/build-draft/build': building('creating'),
+    'GET /api/build-draft/build': building('building')
+  })
+  const tool = toolWith(web, { events: reviewed('Approve'), waitMs: 10_000 })
+  await run(tool, { action: 'plan' })
+  const answer = await run(tool, { action: 'build' })
+  assert.equal(answer.building, true)
+  assert.equal(answer.built, undefined)
+  assert.ok(answer.next.startsWith(PRIVATE_GUIDANCE_MARK))
+})
+
+test('after a restart the plan comes from the draft door; a stopped build is one plain sentence, never a question', async () => {
+  const web = fakeWeb({
+    'GET /api/build-draft': { body: { draft: { plan: { id: PLAN.id, revision: 4 } } } },
+    'POST /api/build-draft/build': building('stopped')
+  })
+  const answer = await run(toolWith(web, { events: reviewed('Approve') }), { action: 'build' })
+  assert.deepEqual(answer, {
+    stopped: true,
+    say: 'Your site could not be built this time. The Tracy team has the details and will look into it.'
+  })
+  assert.deepEqual(web.calls.find((c) => c.method === 'POST').body, { plan: { id: PLAN.id, revision: 4 } })
+  assert.equal(/[–—]/.test(JSON.stringify(answer)), false)
+})
+
+test('a plan that moved since approval, or a change asked while the build runs, is never retried blindly', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': COMPOSED,
+    'POST /api/build-draft/build': { status: 409, body: { code: 'STALE_PLAN' } },
+    'POST /api/build-draft/edit': { status: 409, body: { code: 'BUILD_RUNNING' } }
+  })
+  const tool = toolWith(web, { events: reviewed('Approve') })
+  await run(tool, { action: 'plan' })
+  assert.equal((await run(tool, { action: 'build' })).stale, true)
+  const edit = await run(tool, { action: 'edit', changes: [{ field: 'look.accent', value: '#1F4E9C' }] })
+  assert.equal(edit.building, true)
+  assert.equal(edit.say, BUILD_LOCKED_SAY)
+  assert.equal(edit.ask, undefined)
 })

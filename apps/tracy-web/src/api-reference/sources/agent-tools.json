@@ -2250,6 +2250,13 @@
       "description": "The customer's brand as their live site shows it — colours, fonts, logo, tagline, sample images — or any public site's, as a design template of its own: `brand:<host>`. action=\"read\" (url default: this site) → {manifest, brand, material}; NOT_EXTRACTED → extract it first. action=\"extract\" measures it (4–10 s); one measured in the last 30 days comes back as it stands, `reused: true`, unless refresh. pages:true also crawls its pages (\"Fork a site\"): write the customer's own pages from that list, never the source's words. action=\"list\" → every extracted brand. Refusals: BAD_URL (not a public site), NO_MATERIAL (could not be fetched from here: say so, offer to look in the browser). How it feeds a redesign: the tracy-design-inspiration skill."
     },
     {
+      "name": "tracy_build",
+      "plugin": "@tracy/dsh-build-chat",
+      "source": "packages/ui/tracy-build-chat/src/host/index.ts",
+      "platforms": null,
+      "description": null
+    },
+    {
       "name": "tracy_design_copy",
       "plugin": "@tracy/dsh-design-inspiration",
       "source": "packages/design/tracy-design-inspiration/src/host/index.ts",
