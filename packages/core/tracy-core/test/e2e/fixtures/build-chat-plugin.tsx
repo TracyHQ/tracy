@@ -30,6 +30,8 @@ const useVersion = () =>
   )
 
 const entries = new Set<{ options: Any; component: Any }>()
+/** dsh's fenced block folds for sent user text (`uiConversation.userTextFolds`): a fold draws a chip for its block. */
+const folds: Any[] = []
 const definitions: Any[] = []
 const sent: { sessionId: string; text: string; mode: string }[] = []
 const ctx = {
@@ -44,7 +46,16 @@ const ctx = {
     fn()
   },
   locale: { register: () => {} },
-  uiConversation: { events: { register: (d: Any) => definitions.push(d) } },
+  uiConversation: {
+    events: { register: (d: Any) => definitions.push(d) },
+    userTextFolds: {
+      register: (fold: Any) => {
+        folds.push(fold)
+        changed()
+        return () => folds.splice(folds.indexOf(fold), 1)
+      }
+    }
+  },
   slots: {
     inject: (_name: string, cb: () => () => void) => cb(),
     register(options: Any, component: Any) {
@@ -85,10 +96,42 @@ function publish(events: Any[]) {
 }
 
 const session: { id: string; events: Any[]; pending: Any } = { id: '', events: [], pending: null }
+
+/** The turn of each event: its own `data.turn`, else the turn the latest `turn/start` opened (a user message). */
+function turnsOf(events: Any[]): Map<Any, number> {
+  const of = new Map<Any, number>()
+  let open = 0
+  for (const e of events) {
+    if (e.type === 'turn/start') open = e.data.turn
+    of.set(e, Number.isInteger(e.data?.turn) ? e.data.turn : open)
+  }
+  return of
+}
+
+/** A sent user text as dsh draws it: a registered fold's block becomes its chip. */
+function userText(text: string) {
+  for (const fold of folds) {
+    const open = `\`\`\`${fold.fence}\n`
+    const at = text.indexOf(open)
+    if (at < 0) continue
+    const chip = fold.fold(text.slice(at), '')
+    if (chip) return <span data-chip={fold.fence}>{chip.label}</span>
+  }
+  return text
+}
+const textOf = (content: Any[]) =>
+  (content ?? [])
+    .filter((b: Any) => b.type === 'text')
+    .map((b: Any) => b.text)
+    .join('\n')
 const answered: unknown[] = []
 
 function Turn({ turn, data, last }: { turn: number; data: Map<string, unknown> | undefined; last: number }) {
+  const turnOf = turnsOf(session.events)
   const calls = session.events.filter((e) => e.type === 'tool/call' && e.data.turn === turn)
+  const said = session.events.filter(
+    (e) => (e.type === 'user/message' || e.type === 'assistant/message') && turnOf.get(e) === turn
+  )
   // dsh draws a turn's tail only once the turn ended (ui-chat turn-tail.ts publishes on turn/end).
   const ended = session.events.some((e) => e.type === 'turn/end' && e.data.turn === turn)
   const useChat = (select: Any) => select({ timeline: { turnOrder: [...Array(last + 1).keys()] } })
@@ -100,6 +143,17 @@ function Turn({ turn, data, last }: { turn: number; data: Map<string, unknown> |
   }
   return (
     <section data-turn={turn}>
+      {said.map((e) =>
+        e.type === 'user/message' ? (
+          <div key={e.seq} data-user-message="">
+            {userText(textOf(e.data.content))}
+          </div>
+        ) : (
+          <div key={e.seq} data-assistant-message="">
+            {textOf(e.data.message.content)}
+          </div>
+        )
+      )}
       {calls.map((call) => {
         const result = session.events.find(
           (e) => e.type === 'tool/result' && e.data.message.source.callId === call.data.callId
@@ -177,7 +231,8 @@ function Dock({ byTurn, turns }: { byTurn: Map<number, Map<string, unknown>>; tu
 function Chat() {
   useVersion()
   const byTurn = publish(session.events)
-  const turns = [...new Set(session.events.map((e) => e.data.turn as number))].sort((a, b) => a - b)
+  const turnOf = turnsOf(session.events)
+  const turns = [...new Set(session.events.map((e) => turnOf.get(e) as number))].sort((a, b) => a - b)
   const last = turns.at(-1) ?? 0
   return (
     <main data-session={session.id}>

@@ -1469,7 +1469,33 @@ export const PEOPLE_ROUTES = [
       }
     },
     answers:
-      "`{build: {id, plan: {id, revision}, state: 'creating' | 'building' | 'done' | 'stopped' | 'cancelled', siteKey?, workspacePath?} | null, run: {events: [tracy-build-progress/v1]} | {outcome: tracy-build-outcome/v1} | null}`"
+      "`{build: {id, plan: {id, revision}, state: 'creating' | 'building' | 'done' | 'stopped' | 'cancelled', siteKey?, workspacePath?, next?} | null, run: {events: [tracy-build-progress/v1]} | {outcome: tracy-build-outcome/v1} | null}`"
+  },
+  // src/build-draft/build-route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/build/handoff',
+    summary: 'Move my finished build chat to my new site',
+    description:
+      "Body `{conversation: [{role: 'user' | 'assistant', text}]}`: the build chat's messages as they were said (#611), at most 400, each at most 40000 characters. Only a done build moves: the door opens a chat on the site ahead of time as its owner (the same mechanism as the Website Opportunities hand off), queues ONE first message in it carrying that conversation and the approved plan the build ran, and answers the address to move to: the site's workspace on that chat with the Browser tab opened on the live site. The chat made ahead is kept on the build before it is prompted, and the prompt's request id is the build's own, so a retry prompts the same chat; a hand off already made answers its address again and sends nothing. 409 `BUILD_NOT_DONE` (no build, still running, stopped or cancelled), `HANDOFF_OPENING` (another request is opening the chat); 503 `HANDOFF_SESSION_FAILED`, `HANDOFF_PROMPT_FAILED`, `HANDOFF_UNAVAILABLE`; 400 `INVALID_REQUEST`. Called by a signed-in browser (the build chat), or by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`). 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['customer'],
+    auth: 'session-or-actor',
+    internal: true,
+    body: {
+      type: 'object',
+      required: ['conversation'],
+      properties: {
+        conversation: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['role', 'text'],
+            properties: { role: { type: 'string', enum: ['user', 'assistant'] }, text: { type: 'string' } }
+          }
+        }
+      }
+    },
+    answers: '`{next: string}`: the site workspace address, `/<siteKey>/s/<session>?open=browser&page=%2F`'
   },
   // src/build-draft/build-route.js
   {
@@ -1482,7 +1508,7 @@ export const PEOPLE_ROUTES = [
     auth: 'session-or-actor',
     internal: true,
     answers:
-      "`{build: {id, plan: {id, revision}, state: 'creating' | 'building' | 'done' | 'stopped' | 'cancelled', siteKey?, workspacePath?} | null, run: {events: [tracy-build-progress/v1]} | {outcome: tracy-build-outcome/v1} | null}`"
+      "`{build: {id, plan: {id, revision}, state: 'creating' | 'building' | 'done' | 'stopped' | 'cancelled', siteKey?, workspacePath?, next?} | null, run: {events: [tracy-build-progress/v1]} | {outcome: tracy-build-outcome/v1} | null}`"
   },
   // src/onboarding/route.js
   {

@@ -23,6 +23,7 @@ import { buildRunOf } from './build-progress.js'
 import { approveBuild, buildOpen, endBuild, planRefOf, readBuild, saveBuildSite } from './build-store.js'
 import { callerOf } from './caller.js'
 import { readEngineRow } from './engine-store.js'
+import { handOffBuild, handoffNextOfBuild } from './handoff-door.js'
 
 const BASE = '/api/build-draft/build'
 
@@ -30,7 +31,10 @@ const REFUSALS = {
   NOT_SIGNED_IN: [401, 'Call as the person who typed (x-tracy-actor) or with a session.'],
   NOT_BUILD_SESSION: [403, 'x-tracy-session must be the caller’s own build session.'],
   BUILD_CHAT_OFF: [403, 'The build chat is switched off on this server.'],
-  INVALID_REQUEST: [400, 'Send {plan: {id, revision}}, the plan the owner approved.'],
+  INVALID_REQUEST: [
+    400,
+    'Send {plan: {id, revision}} to approve a plan, or {conversation: [{role, text}]} to move a done build to its site.'
+  ],
   NO_DRAFT: [409, 'Research the business first: POST /api/build-draft/research.'],
   NO_PLAN: [409, 'The draft has no plan yet: POST /api/build-draft/compose.'],
   STALE_PLAN: [409, 'The plan changed since it was shown: show the current plan and ask for approval again.'],
@@ -38,7 +42,15 @@ const REFUSALS = {
   BUILT_FROM_OTHER_PLAN: [
     409,
     'This draft is built from another plan revision: GET /api/build-draft/build reads it.'
-  ]
+  ],
+  BUILD_NOT_DONE: [
+    409,
+    'Only a done build moves to its site: the build chat keeps a build that did not finish.'
+  ],
+  HANDOFF_OPENING: [409, 'The site chat is being opened by another request: ask again in a few seconds.'],
+  HANDOFF_UNAVAILABLE: [503, 'This server cannot open a chat on the site.'],
+  HANDOFF_SESSION_FAILED: [503, 'The site chat could not be opened: ask again.'],
+  HANDOFF_PROMPT_FAILED: [503, 'The site chat did not take the conversation: ask again.']
 }
 const refuse = (c, code) => {
   const [status, next] = REFUSALS[code]
@@ -55,7 +67,9 @@ export function buildSummaryOf(build, run) {
     plan: build.plan,
     state,
     ...(build.site?.siteKey ? { siteKey: build.site.siteKey } : {}),
-    ...(build.site?.workspacePath ? { workspacePath: build.site.workspacePath } : {})
+    ...(build.site?.workspacePath ? { workspacePath: build.site.workspacePath } : {}),
+    // Where the screen moved once the done build's chat moved to the site (#611).
+    ...(handoffNextOfBuild(build) ? { next: handoffNextOfBuild(build) } : {})
   }
 }
 
@@ -71,6 +85,10 @@ export function buildSummaryOf(build, run) {
  * @param {(siteKey: string) => Promise<{brief: object | null, job: object | null}>} deps.readRun the site's brief row
  *   and provision job
  * @param {(accountId: string, keepRun: string) => Promise<unknown>} [deps.prunePictures]
+ * @param {(input: {siteKey: string, email: string}) => Promise<string | null>} [deps.openSiteChat] opens a chat on the
+ *   site ahead of time (#611, `lib/site-session-ahead.js`)
+ * @param {(input: {siteKey: string, email: string, sessionId: string, requestId: string, text: string}) =>
+ *   Promise<boolean>} [deps.promptSiteChat] queues the first message in it
  * @param {() => number} [deps.now]
  * @param {{error: Function}} [deps.log]
  */
@@ -82,6 +100,8 @@ export function buildRunRoutes({
   startSite,
   readRun,
   prunePictures,
+  openSiteChat,
+  promptSiteChat,
   now = Date.now,
   log = console
 }) {
@@ -139,6 +159,16 @@ export function buildRunRoutes({
           })
       }
       return json(c, await answerOf(accountId), approved.created ? 201 : 200)
+    })
+  )
+
+  // A done build's chat moves to its site (#611, `handoff-door.js`).
+  app.post(
+    `${BASE}/handoff`,
+    door(async (c, accountId, email) => {
+      const body = await c.req.json().catch(() => null)
+      const made = await handOffBuild({ pool, accountId, email, body, openSiteChat, promptSiteChat, now })
+      return made.refusal ? refuse(c, made.refusal) : json(c, { next: made.next })
     })
   )
 

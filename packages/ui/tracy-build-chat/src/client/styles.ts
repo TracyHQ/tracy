@@ -271,4 +271,15 @@ export const CSS = `
 }
 .tv-bc-review-err { min-height: 16px; font-size: 12px; color: var(--destructive); }
 .tv-bc-review-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-left: auto; }
+
+/* The earlier conversation carried into the site chat (#611): the owner's messages as bubbles on the right, the
+   agent's answers as plain text on the left, as dsh draws a thread; the living plan card follows. */
+.tv-bc-past { display: flex; flex-direction: column; gap: 10px; margin: 4px 0 8px; font-size: 14px; line-height: 1.5; }
+.tv-bc-past-h { margin: 0; font-weight: 500; }
+.tv-bc-past-m p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.tv-bc-past-m[data-role="user"] {
+  align-self: flex-end; max-width: 85%; padding: 8px 12px; border-radius: 16px;
+  background: color-mix(in oklab, var(--foreground) 6%, var(--background)); color: var(--foreground);
+}
+.tv-bc-past-m[data-role="assistant"] { align-self: flex-start; max-width: 100%; color: var(--foreground); }
 `

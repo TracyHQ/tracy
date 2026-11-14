@@ -9,14 +9,16 @@
  * - `tool.call.toolview` keyed `tracy_build`: a quiet row in place of the call's JSON (`BuildToolRow.tsx`);
  * - `conversation.input.dock`: the same row above the chat input while a call waits (`WorkingDock.tsx`), since dsh
  *   folds the call's own row into the turn's collapsed process;
- * - three conversation node definitions that fold the calls into per turn values (`definitions.ts`).
+ * - five conversation node definitions that fold the calls into per turn values (`definitions.ts`);
+ * - once the build is done, the move to the new site's chat with the whole conversation, and in that chat the earlier
+ *   conversation and the plan, its first message folded into a chip (#611, `handoff.tsx`).
  *
  * A template pick is said in the chat as the owner through dsh's session verb (`sendToChat`, the draft untouched).
  *
  * Every visible piece is registered only while the UI switch `chat-build` is on, and draws nothing outside a build
  * chat session (`isBuildChatSession`). The definitions are state only and draw nothing themselves.
  */
-import { BUILD_TOOL, isBuildChatSession } from '@tracy/core/build-chat'
+import { BUILD_TOOL, HANDOFF_FENCE, isBuildChatSession } from '@tracy/core/build-chat'
 import { uiSwitches } from '@tracy/core/ui-switches'
 import { BuildToolRow, type ToolViewProps } from './BuildToolRow'
 import {
@@ -24,7 +26,13 @@ import {
   type ConversationFace,
   type SessionFace
 } from '../../../../site/tracy-site-tabs/src/client/chat-send'
-import { planDefinition, templatesDefinition, workingDefinition } from './definitions'
+import {
+  handoffDefinition,
+  historyDefinition,
+  planDefinition,
+  templatesDefinition,
+  workingDefinition
+} from './definitions'
 import { createReviewPresence } from './review-presence'
 import { ReviewBar, type PendingReview, selectPlanReview } from './ReviewBar'
 import { createBuildRunFeed, createDraftSource, type BuildRunFeed } from './sources'
@@ -60,7 +68,13 @@ interface ClientContext {
     bind?: (namespace: string) => Translate
   }
   slots: Slots
-  uiConversation: { events: { register: (definition: unknown) => (() => void) | void } }
+  uiConversation: {
+    events: { register: (definition: unknown) => (() => void) | void }
+    /** dsh's fenced block folds for sent user text: the hand off block reads as one chip (#611). */
+    userTextFolds?: {
+      register: (fold: { fence: string; fold: (block: string) => { label: string } | null }) => () => void
+    }
+  }
   /** dsh's conversation service: its session verb sends a message as the owner. */
   conversation?: ConversationFace
   /** dsh's sessions service: the session face of an id. */
@@ -122,7 +136,13 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
   }
   const tails = makeTails(tailDeps)
 
-  for (const definition of [templatesDefinition, planDefinition, workingDefinition])
+  for (const definition of [
+    templatesDefinition,
+    planDefinition,
+    workingDefinition,
+    historyDefinition,
+    handoffDefinition
+  ])
     ctx.effect(
       () => ctx.uiConversation.events.register(definition) ?? undefined,
       `tracy-build-chat: ${definition.kind}`
@@ -141,6 +161,17 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
   tail('tracy-build-chat-templates', tails.templates)
   tail('tracy-build-chat-plan', tails.plan)
   tail('tracy-build-chat-run', tails.run)
+  tail('tracy-build-chat-handoff', tails.handoff)
+
+  // The site chat's first message, carried from the build chat (#611): its raw block reads as one chip; the earlier
+  // conversation is drawn by the turn tail above. Presentation only: the agent still reads the whole block.
+  ctx.effect(() => {
+    const folds = ctx.uiConversation.userTextFolds
+    if (typeof folds?.register !== 'function') return
+    return whileShown(deps.switches, () =>
+      folds.register({ fence: HANDOFF_FENCE, fold: () => ({ label: t()('handoff.earlier') }) })
+    )
+  }, 'tracy-build-chat: the hand off chip')
 
   ctx.slots.inject('conversation.composer', () =>
     whileShown(deps.switches, () =>

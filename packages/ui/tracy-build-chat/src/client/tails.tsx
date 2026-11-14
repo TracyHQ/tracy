@@ -21,6 +21,10 @@ import { useEffect, useState, useSyncExternalStore } from 'react'
 import { BuildProgress } from './BuildProgress'
 import { BuildStopped } from './BuildStopped'
 import {
+  HANDOFF_KEY,
+  type HandoffValue,
+  HISTORY_KEY,
+  type HistoryValue,
   PLAN_KEY,
   type PlanValue,
   TEMPLATES_KEY,
@@ -28,6 +32,7 @@ import {
   type TurnTailOwnerLike,
   turnValueOf
 } from './definitions'
+import { EarlierConversation, MoveToSite } from './handoff'
 import { PlanCard } from './PlanCard'
 import { savePlanEdit, undoPlanEdit } from './save-plan-edit'
 import { saveTemplateChoice } from './save-template'
@@ -45,6 +50,8 @@ export interface TailDeps {
   fetch?: typeof fetch
   /** Sends one message to the chat as the owner (dsh's session verb, the draft untouched). */
   send?: (sessionId: string, text: string) => Promise<'sent' | 'no-chat' | 'failed'>
+  /** Moves the screen to another address of this origin (#611): the page's own navigation; a test passes its own. */
+  navigate?: (href: string) => void
 }
 
 export type TailProps = TurnTailOwnerLike & {
@@ -156,16 +163,20 @@ function PlanTail({ deps, value, sessionId }: { deps: TailDeps; value: PlanValue
 
 const noChat: NonNullable<TailProps['useChat']> = (select) => select({ timeline: { turnOrder: [] } })
 
+const goTo = (href: string) => window.location.assign(href)
+
 function RunTail({
   deps,
   sessionId,
   turn,
-  useChat
+  useChat,
+  history
 }: {
   deps: TailDeps
   sessionId: string
   turn: number
   useChat: NonNullable<TailProps['useChat']>
+  history: HistoryValue | null
 }) {
   const read = () => deps.runs.read(sessionId)
   const run = useSyncExternalStore(deps.runs.subscribe, read, read)
@@ -176,6 +187,15 @@ function RunTail({
     <>
       {run.outcome && <BuildStopped outcome={run.outcome} t={t} />}
       <BuildProgress run={run} t={t} />
+      {/* Done: the chat moves to the new site by itself (#611). A stopped or cancelled build stays here. */}
+      {run.outcome?.result === 'done' && (
+        <MoveToSite
+          sessionId={sessionId}
+          messages={history?.messages ?? []}
+          fetch={deps.fetch}
+          navigate={deps.navigate ?? goTo}
+        />
+      )}
     </>
   )
 }
@@ -203,7 +223,15 @@ export function makeTails(deps: TailDeps) {
           sessionId={props.sessionId as string}
           turn={props.turn?.turn}
           useChat={props.useChat ?? noChat}
+          history={turnValueOf<HistoryValue>(props, HISTORY_KEY)}
         />
-      ) : null
+      ) : null,
+    /** The site chat's first turn, carried from the build chat (#611): the earlier conversation and the plan. */
+    handoff: (props: TailProps) => {
+      const value = inBuild(props) ? null : turnValueOf<HandoffValue>(props, HANDOFF_KEY)
+      return !Array.isArray(value?.conversation) ? null : (
+        <EarlierConversation messages={value.conversation} plan={<LivePlan deps={deps} />} t={deps.t()} />
+      )
+    }
   }
 }

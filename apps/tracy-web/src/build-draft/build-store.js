@@ -121,3 +121,44 @@ export async function saveBuildLabel(pool, accountId, buildId, label) {
   })
   return kept
 }
+
+/** How long one hand off may hold its claim before another ask may take it (#611). */
+export const HANDOFF_CLAIM_MS = 30_000
+
+/**
+ * Claim the hand off of the done build `buildId` to its site's chat (#611), so two asks at once never open two chats.
+ * Answers `{handoff}` (the hand off as it stands: `{sessionId?, promptedAt?}`) when this ask holds it, or the
+ * refusal: `NOT_THIS_BUILD`, `HANDOFF_OPENING` (another ask holds a fresh claim). A hand off already prompted is
+ * answered as it is, without a claim (`{handoff, done: true}`).
+ */
+export async function claimHandoff(pool, accountId, buildId, now = Date.now) {
+  let found = null
+  const result = await changeDraft(pool, accountId, (row) => {
+    if (row.build?.id !== buildId) return { error: 'NOT_THIS_BUILD' }
+    const handoff = row.build.handoff ?? {}
+    if (handoff.promptedAt) {
+      found = handoff
+      return { error: 'PROMPTED' }
+    }
+    const held = Date.parse(String(handoff.claimedAt ?? ''))
+    if (Number.isFinite(held) && now() - held < HANDOFF_CLAIM_MS) return { error: 'HANDOFF_OPENING' }
+    found = { ...handoff, claimedAt: new Date(now()).toISOString() }
+    return { build: { ...row.build, handoff: found } }
+  })
+  if (result.error === 'PROMPTED') return { handoff: found, done: true }
+  if (result.error) return result
+  return { handoff: found }
+}
+
+/**
+ * Keep what the hand off reached: the chat made ahead (`sessionId`), then the first message it took (`promptedAt`).
+ * `release` ends the claim, so the next ask may try again at once.
+ */
+export function saveHandoff(pool, accountId, buildId, changes, { release = false } = {}) {
+  return changeDraft(pool, accountId, (row) => {
+    if (row.build?.id !== buildId) return { error: 'NOT_THIS_BUILD' }
+    const handoff = { ...row.build.handoff, ...changes }
+    if (release) delete handoff.claimedAt
+    return { build: { ...row.build, handoff } }
+  })
+}

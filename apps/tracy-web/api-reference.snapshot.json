@@ -25503,6 +25503,54 @@
           "x-internal": true
         }
       },
+      "/api/build-draft/build/handoff": {
+        "post": {
+          "operationId": "post_api_build_draft_build_handoff",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "conversation": {
+                      "items": {
+                        "properties": {
+                          "role": {
+                            "enum": ["user", "assistant"],
+                            "type": "string"
+                          },
+                          "text": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["role", "text"],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": ["conversation"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer"],
+          "x-internal": true
+        }
+      },
       "/api/build-draft/compose": {
         "post": {
           "operationId": "post_api_build_draft_compose",

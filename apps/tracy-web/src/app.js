@@ -119,7 +119,7 @@ import { PHOSPHOR_SET, phosphorCatalog } from './lib/picture-paint/icons/phospho
 import { createEngine } from './build-draft/engine.js'
 import { buildEngineRoutes } from './build-draft/engine-route.js'
 import { buildRunRoutes } from './build-draft/build-route.js'
-import { draftRunReader, draftSiteStarter } from './build-draft-build-wiring.js'
+import { draftRunReader, draftSiteChat, draftSiteStarter } from './build-draft-build-wiring.js'
 import { draftBrandStep, draftPictureReader, draftPictures, preSiteGatherer } from './build-draft-wiring.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
 import { agentDemoCapabilities, agentDemoCreateContext } from './opportunities-build/agent-demo.js'
@@ -1282,6 +1282,9 @@ export function buildApp(deps) {
           }),
         readRun: buildEngine.readRun ?? draftRunReader({ pool: deps.pool }),
         prunePictures: buildEngine.prunePictures ?? draftPictureStore.prune,
+        // A done build's chat moves to its site (#611): a chat opened ahead on the site, prompted as the owner.
+        // `buildEngine.openSiteChat` / `promptSiteChat` replace them in tests.
+        ...siteChatOf(buildEngine, deps),
         ...(deps.now ? { now: deps.now } : {})
       })
     )
@@ -2975,4 +2978,18 @@ export function placeMediaObjectsFor(config, fetchImpl) {
     local: storeObjects(config.artifactStore ?? null, fetchImpl),
     shared: storeObjects(config.placeMediaStore ?? null, fetchImpl)
   })
+}
+
+/** The build door's site chat doors (#611): a test's own, else the session made ahead on the site. */
+function siteChatOf(buildEngine, deps) {
+  const made = draftSiteChat({
+    pool: deps.pool,
+    config: deps.config,
+    seatDoor: deps.seatDoor ?? {},
+    fetchImpl: deps.fetchImpl ?? fetch
+  })
+  return {
+    openSiteChat: buildEngine.openSiteChat ?? made.openSiteChat,
+    promptSiteChat: buildEngine.promptSiteChat ?? made.promptSiteChat
+  }
 }

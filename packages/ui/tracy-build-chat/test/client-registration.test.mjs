@@ -101,12 +101,17 @@ function recorder() {
   return { ctx, live, definitions, of }
 }
 
-test('switch on: three turn tails, the review bar ahead of dsh, the working line, the tracy_build row', () => {
+test('switch on: four turn tails, the review bar ahead of dsh, the working line, the tracy_build row', () => {
   const r = recorder()
   client.applyWith(r.ctx, { switches: switchBoard(true) })
   assert.deepEqual(
     r.of('conversation.chat.turnTail').map((e) => e.options.id),
-    ['tracy-build-chat-templates', 'tracy-build-chat-plan', 'tracy-build-chat-run']
+    [
+      'tracy-build-chat-templates',
+      'tracy-build-chat-plan',
+      'tracy-build-chat-run',
+      'tracy-build-chat-handoff'
+    ]
   )
   assert.equal(r.of('conversation.composer')[0].options.priority, -20)
   assert.equal(r.of('tool.call.toolview')[0].options.key, 'tracy_build')
@@ -116,7 +121,13 @@ test('switch on: three turn tails, the review bar ahead of dsh, the working line
   )
   assert.deepEqual(
     r.definitions.map((d) => d.kind),
-    ['tracy_build:templates', 'tracy_build:plan', 'tracy_build:working']
+    [
+      'tracy_build:templates',
+      'tracy_build:plan',
+      'tracy_build:working',
+      'tracy_build:history',
+      'tracy_build:handoff'
+    ]
   )
 })
 
@@ -127,11 +138,11 @@ test('switch off: no visible piece is registered, and turning it off takes them 
   const flipped = recorder()
   const board = switchBoard(true)
   client.applyWith(flipped.ctx, { switches: board })
-  assert.equal(flipped.live.size, 6)
+  assert.equal(flipped.live.size, 7)
   board.flip(false)
   assert.equal(flipped.live.size, 0)
   board.flip(true)
-  assert.equal(flipped.live.size, 6)
+  assert.equal(flipped.live.size, 7)
 })
 
 test('outside a build chat session every piece draws nothing', () => {
@@ -143,6 +154,18 @@ test('outside a build chat session every piece draws nothing', () => {
     assert.equal(entry.component(owner(OTHER)), null, entry.options.id)
     assert.equal(entry.component({ ...owner(OTHER), sessionId: undefined }), null)
   }
+  // The site chat's first turn carried from the build chat (#611) draws its earlier conversation, outside a build
+  // session only.
+  const handoff = r.of('conversation.chat.turnTail').find((e) => e.options.id === 'tracy-build-chat-handoff')
+  const carried = {
+    turn: 0,
+    conversation: [{ role: 'user', text: 'Build my site.' }],
+    plan: null,
+    site: null
+  }
+  const site = (sessionId) => ({ sessionId, seq: 9, turn: { turn: 0, data: { get: () => carried } } })
+  assert.notEqual(handoff.component(site(OTHER)), null)
+  assert.equal(handoff.component(site(BUILD)), null)
   // In the build session the plan and template tails draw (the run tail draws its own empty feed as nothing).
   assert.notEqual(r.of('conversation.chat.turnTail')[1].component(owner(BUILD)), null)
   const view = { phase: 'result', block: { call: { argsRaw: '{"action":"plan"}' }, content: [] } }

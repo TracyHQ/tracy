@@ -98,7 +98,8 @@ export const en = {
   'tool.plan': 'Prepared your site plan',
   'tool.edit': 'Updated your site plan',
   'tool.stopped': 'This step could not finish',
-  'review.failed': 'Your answer was not sent. Try again.'
+  'review.failed': 'Your answer was not sent. Try again.',
+  'handoff.earlier': 'Earlier conversation'
 } as const
 
 export type StringKey = keyof typeof en

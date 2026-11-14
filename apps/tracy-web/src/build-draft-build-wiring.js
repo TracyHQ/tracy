@@ -17,6 +17,9 @@ import { freeLabelFor } from './opportunities-build/builds.js'
 import { saveBuildLabel } from './build-draft/build-store.js'
 import { CURRENT_BRIEF } from './lib/site-brief-row.js'
 import { mintSession } from './lib/session.js'
+import { promptSiteSession, siteSessionAhead } from './lib/site-session-ahead.js'
+import { siteRowOf } from './opportunities-build/build-store.js'
+import { accountByEmail, grantFor } from './seats/store.js'
 import { STEP_CHAIN_WORKFLOW } from './lib/step-chain-switch.js'
 
 const nameOf = (plan) => {
@@ -97,6 +100,33 @@ export function draftRunReader({ pool }) {
         ? { state: b.state, createdAt: b.created_at?.toISOString?.() ?? null, timings: b.timings }
         : null,
       job: jobs.rows[0] ? { state: jobs.rows[0].state } : null
+    }
+  }
+}
+
+/**
+ * The route's `openSiteChat` and `promptSiteChat` (#611): the done build's chat moves to its site through the EXISTING
+ * way of opening a chat on a site ahead of time, the one the Website Opportunities hand off uses
+ * (`lib/site-session-ahead.js`): a session made in the site's own workspace on a seat minted for the owner, then the
+ * first message queued in it as that owner. Only the site's owner: anyone else gets no chat.
+ * @param {{pool: import('pg').Pool, config: object, seatDoor?: object, fetchImpl?: typeof fetch}} deps
+ */
+export function draftSiteChat({ pool, config, seatDoor = {}, fetchImpl = fetch }) {
+  const ownedSite = async (siteKey, email) => {
+    const account = await accountByEmail(pool, email)
+    const grant = account ? await grantFor(pool, account.id, siteKey) : null
+    return grant?.role === 'owner' ? siteRowOf(pool, siteKey) : null
+  }
+  return {
+    openSiteChat: async ({ siteKey, email }) => {
+      const site = await ownedSite(siteKey, email)
+      return site ? siteSessionAhead({ config, seatDoor, fetchImpl, site, email }) : null
+    },
+    promptSiteChat: async ({ siteKey, email, sessionId, requestId, text }) => {
+      const site = await ownedSite(siteKey, email)
+      return site
+        ? promptSiteSession({ config, seatDoor, fetchImpl, site, email, sessionId, requestId, text })
+        : false
     }
   }
 }

@@ -58,6 +58,13 @@ export {
   templateOfChoice
 } from './progress.mjs'
 export {
+  buildHistoryFoldOf,
+  HANDOFF_FENCE,
+  HANDOFF_SCHEMA,
+  handoffFoldOf,
+  handoffOfText
+} from './handoff.mjs'
+export {
   BUILD_TOOL,
   buildToolFoldOf,
   buildToolResultOf,

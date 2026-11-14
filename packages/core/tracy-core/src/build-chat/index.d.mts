@@ -241,3 +241,26 @@ export interface BuildToolFold {
 // biome-ignore lint/suspicious/noExplicitAny: a dsh session event, duck-typed
 export declare function buildToolFoldOf(state: BuildToolFold | undefined, event: any): BuildToolFold
 export declare function isPlanReviewRequest(questions: unknown): boolean
+
+export declare const HANDOFF_FENCE: 'tracy-build-handoff'
+export declare const HANDOFF_SCHEMA: 'tracy-build-handoff/v1'
+export interface HandoffMessage {
+  role: 'user' | 'assistant'
+  text: string
+}
+export interface Handoff {
+  conversation: HandoffMessage[]
+  // biome-ignore lint/suspicious/noExplicitAny: the approved Contract B plan
+  plan: any
+  site: { siteKey?: string; name?: string } | null
+}
+export declare function handoffOfText(text: unknown): Handoff | null
+// biome-ignore lint/suspicious/noExplicitAny: a dsh session event, duck-typed
+export declare function buildHistoryFoldOf(state: HandoffMessage[] | undefined, event: any): HandoffMessage[]
+export interface HandoffFold {
+  openTurn: number | null
+  pending: Handoff | null
+  found: { turn: number; handoff: Handoff } | null
+}
+// biome-ignore lint/suspicious/noExplicitAny: a dsh session event, duck-typed
+export declare function handoffFoldOf(state: HandoffFold | undefined, event: any): HandoffFold
