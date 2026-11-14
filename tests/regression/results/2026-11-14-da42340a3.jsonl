@@ -1,0 +1,1 @@
+{"id":"REG-PR-630-demo-farm-fold-redirects","verdict":"PASS","commit":"da42340a38847332b104d710979e179bf1d8ce3e","ran_at":"2026-11-14T18:08:05.118Z","evidence":"tests/regression/.runs/2026-11-14-da42340a3/REG-PR-630-demo-farm-fold-redirects.log"}
