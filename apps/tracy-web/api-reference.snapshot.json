@@ -25442,6 +25442,67 @@
           "x-internal": true
         }
       },
+      "/api/build-draft/build": {
+        "get": {
+          "operationId": "get_api_build_draft_build",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["agent"],
+          "x-internal": true
+        },
+        "post": {
+          "operationId": "post_api_build_draft_build",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "plan": {
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "revision": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": ["id", "revision"],
+                      "type": "object"
+                    }
+                  },
+                  "required": ["plan"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["agent"],
+          "x-internal": true
+        }
+      },
       "/api/build-draft/compose": {
         "post": {
           "operationId": "post_api_build_draft_compose",

@@ -20,6 +20,7 @@ import { createDraft, editPlan } from './store.js'
 import { readEngineRequest } from './engine-request.js'
 import { callerOf } from './caller.js'
 import { requestRefusalOf } from './engine-revise.js'
+import { buildOpen } from './build-store.js'
 
 const BASE = '/api/build-draft'
 
@@ -36,7 +37,8 @@ const REFUSALS = {
   STALE_EDIT: [409, 'The plan changed meanwhile: read GET /api/build-draft/engine and edit again.'],
   REQUEST_TOO_LONG: [422, 'Send a change request of at most 1000 characters.'],
   REQUEST_EMPTY: [422, 'Send the change request the owner typed.'],
-  INVALID_EDIT: [422, 'The change does not fit the plan.']
+  INVALID_EDIT: [422, 'The change does not fit the plan.'],
+  BUILD_RUNNING: [409, 'The approved plan is being built: read GET /api/build-draft/build until it ends.']
 }
 const refuse = (c, code, extra = {}) => {
   const [status, next] = REFUSALS[code]
@@ -100,7 +102,10 @@ export function buildEngineRoutes({
         const body = readEngineRequest('research', await c.req.json().catch(() => null))
         if (!body) return refuse(c, 'INVALID_REQUEST')
         await createDraft(pool, accountId)
-        return answer(c, await engine.research(accountId, body, await readEngineRow(pool, accountId)))
+        const current = await readEngineRow(pool, accountId)
+        // An approved build reads its own snapshot; the draft it came from does not move until the build ends (#610).
+        if (buildOpen(current?.build)) return refuse(c, 'BUILD_RUNNING')
+        return answer(c, await engine.research(accountId, body, current))
       },
       { create: true }
     )
@@ -123,6 +128,7 @@ export function buildEngineRoutes({
       if (!body) return refuse(c, 'INVALID_REQUEST')
       const row = accountId ? await readEngineRow(pool, accountId) : null
       if (!row) return refuse(c, 'NO_DRAFT')
+      if (buildOpen(row.build)) return refuse(c, 'BUILD_RUNNING')
       if (!row.research?.profile) return refuse(c, 'NO_RESEARCH')
       const chosen = row.plan?.look?.template ?? row.template
       if (!chosen) return refuse(c, 'NO_TEMPLATE')

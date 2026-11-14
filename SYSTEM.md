@@ -924,6 +924,20 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `brand_input_missing` and never shows the template's look.
   The engine's own model calls (needs profile, plan composer) spend the `buildModel` door (Model & AI); the brand step
   spends the brand bench's doors.
+  Approving builds the site (#610, [`build-draft/build-route.js`](apps/tracy-web/src/build-draft/build-route.js)):
+  `POST /api/build-draft/build {plan}` (the `tracy_build` action `build`, only after the owner's Approve on the plan
+  review bar) writes `build_draft.build` (migration 219) in one transaction with the draft row: one build id per draft
+  and an immutable snapshot of the plan, the last edit, the needs profile and the research. While it is open the
+  shaping writes (plan, research, compose, answers, template) are refused `BUILD_RUNNING`, `draftPlanForBuild` and
+  `readEngineDraft` answer the snapshot, and `prune` keeps the snapshot's research run of draft pictures. It then asks
+  the existing create door `POST /api/sites` as the owner (`build-draft-build-wiring.js`, a minted session) with the
+  kit's site (`kit.site` of the AI quickstart manifest: platform, design, quickstart; none stops with `SITE_SOURCE_MISSING`), `buildId` = the build
+  id and `{workflow: 'step-chain/1', draftId, plan}` in place of a research revision; the create door checks the draft
+  holds that approved build (`lib/draft-build.js`) and starts the chain run with `brief: {workflow, draftId, plan}`.
+  `GET /api/build-draft/build` reads the site's `site_brief.timings.chain` and provision job into Contract B progress
+  and outcome ([`build-draft/build-progress.js`](apps/tracy-web/src/build-draft/build-progress.js), over
+  `progressEventOf` / `outcomeOf`), which the task list card polls; the first read that finds it ended closes the build.
+  Draft pictures keep their vision labels on `build_draft_picture.labels` (`brief-picture-labels.js`).
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
   row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,

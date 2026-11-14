@@ -337,6 +337,7 @@ import {
 } from './store.js'
 import { teardownSaid } from './teardown-said.js'
 import { researchRevisionOwned } from '../lib/research-revision.js'
+import { draftBuildApproved } from '../lib/draft-build.js'
 import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
 
 /** How long a call to a site's component may take. Why this number: the signal it feeds. */
@@ -2693,7 +2694,9 @@ export function sitesRoutes({
         goal: null,
         style: null,
         workflow: STEP_CHAIN_WORKFLOW,
-        researchRevisionId: body.researchRevisionId.toLowerCase()
+        ...(body.draftId !== undefined
+          ? { draftId: body.draftId.toLowerCase(), plan: { id: body.plan.id, revision: body.plan.revision } }
+          : { researchRevisionId: body.researchRevisionId.toLowerCase() })
       }
     }
     let agentDemoContext = null
@@ -3330,6 +3333,18 @@ export function sitesRoutes({
     return json(c, { ...resolved, answersWritten }, 200)
   })
 
+  /** Whether a press names a build draft as the step chain wants it: a draft id and the approved plan `{id, revision}`. */
+  function draftChainBody(body) {
+    return (
+      typeof body.draftId === 'string' &&
+      UUID.test(body.draftId) &&
+      typeof body.plan?.id === 'string' &&
+      body.plan.id.length > 0 &&
+      body.plan.id.length <= 200 &&
+      Number.isInteger(body.plan.revision)
+    )
+  }
+
   /**
    * Why a press asking for the step chain cannot have it, or null: the research revision must be the caller's own, and
    * the template enabled with the master switch on, and every model door the chain spends answerable. Nothing is claimed
@@ -3342,10 +3357,19 @@ export function sitesRoutes({
   async function stepChainRefusal(body, quickstart, accountId) {
     if (!briefs) return { code: 'STEP_CHAIN_UNAVAILABLE', status: 409 }
     if (body.brief !== undefined) return { code: 'STEP_CHAIN_BRIEF_GIVEN', status: 400 }
-    if (typeof body.researchRevisionId !== 'string' || !UUID.test(body.researchRevisionId))
+    // A build approved in the build chat (#610) names its draft and the approved plan instead of a research revision:
+    // the draft must be the caller's and hold an approved build of exactly that plan.
+    const fromDraft = body.draftId !== undefined
+    if (fromDraft) {
+      if (body.researchRevisionId !== undefined || !draftChainBody(body))
+        return { code: 'INVALID_BUILD_DRAFT', status: 400 }
+    } else if (typeof body.researchRevisionId !== 'string' || !UUID.test(body.researchRevisionId))
       return { code: 'INVALID_RESEARCH_REVISION', status: 400 }
     if (!stepChainEnabled({ quickstart })) return { code: 'STEP_CHAIN_OFF', status: 409 }
-    if (!(await researchRevisionOwned(pool, body.researchRevisionId, accountId)))
+    if (fromDraft) {
+      if (!(await draftBuildApproved(pool, { draftId: body.draftId, accountId, plan: body.plan })))
+        return { code: 'BUILD_DRAFT_NOT_APPROVED', status: 404 }
+    } else if (!(await researchRevisionOwned(pool, body.researchRevisionId, accountId)))
       return { code: 'RESEARCH_REVISION_UNKNOWN', status: 404 }
     // Every model door the chain spends, before anything is created: an empty door creates no base site (#591).
     if (chainDoors && (await chainDoors()).length > 0) return { code: 'STEP_CHAIN_DOORS_EMPTY', status: 409 }

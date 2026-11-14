@@ -3,7 +3,9 @@
  * built from the chat, tied to the account before any website opportunity or site exists.
  *
  * 🔒 ONE READ PATH. The plan card (through `GET /api/build-draft`) and the build engine (`draftPlanForBuild`) both read
- * `readDraft`, so the plan the owner approved is the plan that gets built. Every write is one transaction holding the
+ * `readDraft`, so the plan the owner approved is the plan that gets built. Once approved (#610, `build-store.js`), the
+ * build engine reads the snapshot taken at approval (`build.snapshot`) instead, and the shaping columns refuse every
+ * write (`BUILD_RUNNING`) until the build ends. Every write is one transaction holding the
  * account's row (`for update`), so two edits of the same revision cannot both apply.
  *
  * 🔒 ONLY THE ENGINE WRITES THE PLAN (#609). No model and no browser puts a plan: the writers are `putComposed` (a
@@ -26,7 +28,8 @@ const COLUMNS = [
   'fault',
   'undo_profile',
   'engine',
-  'brand'
+  'brand',
+  'build'
 ]
 
 /** The account's draft as the doors answer it, or null when it has none. */
@@ -36,26 +39,47 @@ export async function readDraft(pool, accountId) {
 }
 
 /**
- * What the build engine reads to build: the draft's living plan and the last edit applied to it (what a partial
- * re-run touches). Null when the account has no draft or the draft has no plan yet. The same read as the plan card's.
- * @returns {Promise<{draftId: string, plan: object, lastEdit: object | null} | null>}
+ * What the build engine reads to build: the draft's plan, the last edit applied to it (what a partial re-run touches)
+ * and the research it was gated with. Null when the account has no draft or the draft has no plan yet.
+ *
+ * 🔒 AN APPROVED BUILD READS ITS SNAPSHOT (#610). Once the owner approved a plan (`build-store.js approveBuild`), this
+ * answers the plan, edit and research frozen at approval, never the living draft: a newer research or a plan edit made
+ * meanwhile cannot change what is built. Before approval it is the same read as the plan card's, with `research` null.
+ * @returns {Promise<{draftId: string, plan: object, lastEdit: object | null, research: object | null} | null>}
  */
 export async function draftPlanForBuild(pool, accountId) {
-  const draft = await readDraft(pool, accountId)
-  return draft?.plan ? { draftId: draft.id, plan: draft.plan, lastEdit: draft.lastEdit } : null
+  const { rows } = await pool.query(
+    'select id, plan, last_edit, build from build_draft where account_id = $1',
+    [accountId]
+  )
+  const row = rows[0]
+  const snapshot = row?.build?.snapshot
+  if (snapshot)
+    return {
+      draftId: row.id,
+      plan: snapshot.plan,
+      lastEdit: snapshot.lastEdit ?? null,
+      research: snapshot.research
+    }
+  return row?.plan ? { draftId: row.id, plan: row.plan, lastEdit: row.last_edit, research: null } : null
 }
 
 /**
  * What the engine keeps beside the plan, never answered by a door: the settled needs profile, the research record and
- * the last system fault (a team report, never shown to the owner). Null when the account has no draft.
+ * the last system fault (a team report, never shown to the owner). Null when the account has no draft. Once a plan is
+ * approved it answers the approval's snapshot: its profile and research, and no fault (approval is refused while a
+ * step runs, and the fault column keeps every past fault, even one a later research replaced).
  * @returns {Promise<{draftId: string, needsProfile: object | null, research: object | null, fault: object | null} | null>}
  */
 export async function readEngineDraft(pool, accountId) {
   const { rows } = await pool.query(
-    'select id, needs_profile, research, fault from build_draft where account_id = $1',
+    'select id, needs_profile, research, fault, build from build_draft where account_id = $1',
     [accountId]
   )
   const row = rows[0]
+  const snapshot = row?.build?.snapshot
+  if (snapshot)
+    return { draftId: row.id, needsProfile: snapshot.profile, research: snapshot.research, fault: null }
   return row
     ? { draftId: row.id, needsProfile: row.needs_profile, research: row.research, fault: row.fault }
     : null
@@ -71,6 +95,19 @@ export async function createDraft(pool, accountId) {
   return { created: false, draft: await readDraft(pool, accountId) }
 }
 
+/** What the owner shapes: none of it changes while an approved build has not ended (#610). */
+const SHAPED = ['questions', 'answers', 'template', 'plan', 'needs_profile', 'research']
+
+/**
+ * Whether a write would change what the owner shaped while the draft's approved build has not ended. The build reads
+ * its own snapshot, so nothing would break, but the plan card would show a plan that is not the one being built.
+ */
+const buildHolds = (row, decided) =>
+  Boolean(row.build) &&
+  !row.build.endedAt &&
+  !decided.error &&
+  SHAPED.some((name) => Object.hasOwn(decided, name))
+
 /**
  * Change the account's draft in one transaction. `decide(row)` answers `{error, ...}` to refuse, or the columns to
  * write. Answers `{draft}`, `{error: 'NO_DRAFT'}` or the refusal. Also the writer of the engine state
@@ -83,7 +120,8 @@ export async function changeDraft(pool, accountId, decide) {
     const row = (
       await client.query('select * from build_draft where account_id = $1 for update', [accountId])
     ).rows[0]
-    const decided = row ? decide(row) : { error: 'NO_DRAFT' }
+    const asked = row ? decide(row) : { error: 'NO_DRAFT' }
+    const decided = row && buildHolds(row, asked) ? { error: 'BUILD_RUNNING' } : asked
     if (decided.error) {
       await client.query('rollback')
       return decided

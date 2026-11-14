@@ -230,3 +230,91 @@ test(
     assert.equal((await pool.query('select count(*)::int as n from site')).rows[0].n, 0)
   }
 )
+
+/** An approved build of a build chat draft (#610, `build_draft.build`), owned by `email`. */
+async function approvedDraftOf(pool, email) {
+  await seedReleases(pool)
+  const account = (await pool.query('insert into account (email) values ($1) returning id', [email])).rows[0]
+    .id
+  const plan = { id: 'plan-harbour', revision: 3, facts: [{ kind: 'business.name', value: 'Harbour Padel' }] }
+  const build = {
+    id: '5d2c1b0a-9e8f-4a7b-8c6d-5e4f3a2b1c0d',
+    plan: { id: plan.id, revision: plan.revision },
+    approvedAt: '2026-11-14T10:00:00.000Z',
+    snapshot: { plan, lastEdit: null, profile: {}, research: {} },
+    site: null,
+    refusal: null,
+    endedAt: null
+  }
+  const draft = (
+    await pool.query(
+      `insert into build_draft (account_id, plan, build) values ($1, $2::jsonb, $3::jsonb) returning id`,
+      [account, JSON.stringify(plan), JSON.stringify(build)]
+    )
+  ).rows[0].id
+  return { draftId: draft, plan: build.plan }
+}
+
+const pressDraft = ({ draftId, plan }, over = {}) => ({
+  label: 'harbourpadel',
+  platform: 'joomla',
+  design: 'ja-boxing',
+  quickstart: 'quickstart/ja-boxing/j6',
+  workflow: STEP_CHAIN_WORKFLOW,
+  draftId,
+  plan,
+  ...over
+})
+
+test(
+  'an approved build chat draft starts the frame with the draft and its plan, named by the plan',
+  opts,
+  async () => {
+    const { pool } = db
+    const draft = await approvedDraftOf(pool, 'owner@example.test')
+    const h = harness(pool)
+    const res = await h.post('owner@example.test', pressDraft(draft))
+    assert.equal(res.status, 202, await res.clone().text())
+    assert.equal(h.provisions.length, 1)
+    assert.equal(h.started.length, 1)
+    assert.equal(h.started[0].brief.workflow, STEP_CHAIN_WORKFLOW)
+    assert.equal(h.started[0].brief.draftId, draft.draftId)
+    assert.deepEqual(h.started[0].brief.plan, draft.plan)
+    assert.equal(h.started[0].brief.researchRevisionId, undefined)
+    assert.ok(h.started[0].accountId)
+  }
+)
+
+test(
+  'a draft that is not approved for that plan, or not the caller’s, is refused before anything is claimed',
+  opts,
+  async () => {
+    const { pool } = db
+    const draft = await approvedDraftOf(pool, 'owner@example.test')
+    await pool.query(`insert into account (email) values ('stranger@example.test')`)
+    const h = harness(pool)
+    const cases = [
+      ['stranger@example.test', pressDraft(draft), 404, 'BUILD_DRAFT_NOT_APPROVED'],
+      [
+        'owner@example.test',
+        pressDraft({ ...draft, plan: { id: 'plan-harbour', revision: 2 } }),
+        404,
+        'BUILD_DRAFT_NOT_APPROVED'
+      ],
+      ['owner@example.test', pressDraft({ ...draft, draftId: 'nope' }), 400, 'INVALID_BUILD_DRAFT'],
+      [
+        'owner@example.test',
+        pressDraft(draft, { researchRevisionId: draft.draftId }),
+        400,
+        'INVALID_BUILD_DRAFT'
+      ]
+    ]
+    for (const [email, body, status, code] of cases) {
+      const res = await h.post(email, body)
+      assert.equal(res.status, status, `${code}: ${await res.clone().text()}`)
+      assert.equal((await res.json()).code, code)
+    }
+    assert.equal(h.provisions.length, 0)
+    assert.equal(h.started.length, 0)
+  }
+)

@@ -9,7 +9,8 @@
  *
  * 🔒 A NEWER RESEARCH REPLACES THE PICTURES. One row per picture bytes of an account: research again on the same
  * bytes keeps the row and its id, moved to the new run. Once a research step has succeeded, `prune` deletes the rows
- * of every older run and their objects, so the draft holds exactly the pictures its current research names.
+ * of every older run and their objects, so the draft holds exactly the pictures its current research names, and the
+ * pictures of an approved build's research until that build ends (#610).
  */
 
 /** The executor's media budget (`executor.js` `MEDIA_BUDGET`), and its admission's parallel downloads. */
@@ -136,10 +137,18 @@ export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime })
     return { rows, setAside }
   }
 
-  /** Delete the account's pictures of every run but `run`, rows and objects. Answers how many went. */
+  /**
+   * Delete the account's pictures of every run but `run`, rows and objects. Answers how many went. 🔒 The research run
+   * of an approved build that has not ended is kept too (#610): its plan names those pictures, and the build opens them.
+   */
   async function prune(accountId, run) {
     const { rows } = await pool.query(
-      'delete from build_draft_picture where account_id = $1 and research_run <> $2 returning object_key',
+      `delete from build_draft_picture p where p.account_id = $1 and p.research_run <> $2
+         and not exists (
+           select 1 from build_draft d
+            where d.account_id = p.account_id and d.build is not null and d.build ->> 'endedAt' is null
+              and d.build -> 'snapshot' -> 'research' ->> 'pictureRun' = p.research_run::text)
+       returning p.object_key`,
       [accountId, run]
     )
     for (const r of rows) await objects?.delete?.(r.object_key).catch(() => false)

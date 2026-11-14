@@ -118,6 +118,8 @@ import { draftPlanForBuild, readEngineDraft } from './build-draft/store.js'
 import { PHOSPHOR_SET, phosphorCatalog } from './lib/picture-paint/icons/phosphor-set.js'
 import { createEngine } from './build-draft/engine.js'
 import { buildEngineRoutes } from './build-draft/engine-route.js'
+import { buildRunRoutes } from './build-draft/build-route.js'
+import { draftRunReader, draftSiteStarter } from './build-draft-build-wiring.js'
 import { draftBrandStep, draftPictureReader, draftPictures, preSiteGatherer } from './build-draft-wiring.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
 import { agentDemoCapabilities, agentDemoCreateContext } from './opportunities-build/agent-demo.js'
@@ -247,6 +249,7 @@ import { createStepChainEngine } from './sites/brief-engines/step-chain.js'
 import { createStepChainSteps } from './step-chain-steps.js'
 import { emptyChainDoors } from './step-chain-doors.js'
 import { researchBusinessName } from './lib/research-revision.js'
+import { draftBuildName } from './lib/draft-build.js'
 import { STEP_CHAIN_WORKFLOW } from './lib/step-chain-switch.js'
 import { createSiteBrand, setSiteBrand } from './sites/brief-engines/brand.js'
 import { createEmdashEngine } from './sites/brief-engines/emdash.js'
@@ -1258,6 +1261,28 @@ export function buildApp(deps) {
         engine: app.buildDraftEngine,
         buildSessionIdOf,
         buildChatOn
+      })
+    )
+    // Approving the plan (#610): the site through the create door, as the person who approved, and the build's run
+    // read back in Contract B. `buildEngine.startSite` / `readRun` replace them in tests.
+    app.route(
+      '/',
+      buildRunRoutes({
+        config: deps.config,
+        pool: deps.pool,
+        buildSessionIdOf,
+        buildChatOn,
+        startSite:
+          buildEngine.startSite ??
+          draftSiteStarter({
+            pool: deps.pool,
+            config: deps.config,
+            kits,
+            request: (path, init) => app.request(new URL(path, deps.config.origin).href, init)
+          }),
+        readRun: buildEngine.readRun ?? draftRunReader({ pool: deps.pool }),
+        prunePictures: buildEngine.prunePictures ?? draftPictureStore.prune,
+        ...(deps.now ? { now: deps.now } : {})
       })
     )
     // The first-run Welcome popup's animated scenes (`welcome/route.js`), before the dsh catch-all.
@@ -2320,7 +2345,10 @@ export function buildApp(deps) {
           // A step chain build names its site by the research it builds from; no model reads a brief it does not have.
           if (input.brief?.workflow === STEP_CHAIN_WORKFLOW)
             return {
-              name: await researchBusinessName(deps.pool, input.brief.researchRevisionId),
+              // A build approved in the build chat (#610) is named by its approved plan, not by a research revision.
+              name: input.brief.draftId
+                ? await draftBuildName(deps.pool, input.brief.draftId)
+                : await researchBusinessName(deps.pool, input.brief.researchRevisionId),
               nameFrom: 'answer',
               languages: []
             }

@@ -6,7 +6,8 @@
  * (`docs/references/ai-quickstart-contract.md`) and `kit-manifest.json`:
  *
  *   {"schema": "tracy-ai-quickstart-kit/v1", "released": true, "template": {slug, name, version},
- *    "trades": ["fitness"], "picture": "<image URL>", "reason": "<one line for the owner>"}
+ *    "trades": ["fitness"], "picture": "<image URL>", "reason": "<one line for the owner>",
+ *    "site": {"platform", "quickstart", "release"?}}   (the site a build installs, #610; optional)
  *
  * 🔒 ONE RULE DECIDES WHAT IS OFFERED. A kit is offered for a trade only when its manifest says it is released, lists
  * that trade (values of the engine's `TRADES`), carries a name, a picture and a reason, its mapping file is written
@@ -86,6 +87,22 @@ function manifestProblems(m, slug) {
   return problems
 }
 
+/**
+ * The site a build of this kit installs (#610), as the manifest names it: `site: {platform, design, quickstart, release?}`, the
+ * create door's own fields (`POST /api/sites`). Null when the manifest names none: such a kit is offered and planned,
+ * but its build stops with `SITE_SOURCE_MISSING` until the release that carries its blank site is pinned.
+ */
+function siteOf(m) {
+  const site = m?.site
+  if (!site || !isText(site.platform) || !isText(site.quickstart) || !isText(site.design)) return null
+  return {
+    platform: site.platform,
+    design: site.design,
+    quickstart: site.quickstart,
+    ...(site.release && typeof site.release === 'object' ? { release: site.release } : {})
+  }
+}
+
 /** One kit folder read and checked. */
 function readKit(dir, slug, library) {
   const pending = existsSync(path.join(dir, MAPPING_PENDING_FILE))
@@ -102,7 +119,7 @@ function readKit(dir, slug, library) {
   const template = m?.template
     ? { slug, name: m.template.name, version: m.template.version }
     : { slug, name: slug, version: path.basename(dir) }
-  const kit = { template, blockStore, pageRecipes, mapping, library }
+  const kit = { template, blockStore, pageRecipes, mapping, library, site: siteOf(m) }
   const offerProblems = [
     ...(manifest.problem ? [manifest.problem] : manifestProblems(m, slug)),
     ...(pending ? ['mapping file pending: the kit cannot be written to a site yet'] : [])

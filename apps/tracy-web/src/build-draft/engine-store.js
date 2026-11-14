@@ -8,7 +8,7 @@ import { changeDraft } from './store.js'
 /** What the engine reads of a draft: the state of its latest step and what that step's answer is made from. */
 export async function readEngineRow(pool, accountId) {
   const { rows } = await pool.query(
-    'select id, answers, template, plan, research, needs_profile, engine, brand from build_draft where account_id = $1',
+    'select id, answers, template, plan, research, needs_profile, engine, brand, build from build_draft where account_id = $1',
     [accountId]
   )
   return rows[0] ?? null

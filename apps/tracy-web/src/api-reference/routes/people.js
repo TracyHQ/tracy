@@ -1447,6 +1447,43 @@ export const PEOPLE_ROUTES = [
     answers:
       "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}`, `{step: 'compose', state: 'asking', say?, result: {questions, ask}}` or `{step, state: 'stopped', say, reason?}`"
   },
+  // src/build-draft/build-route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/build',
+    summary: 'Build my site from the plan I approved',
+    description:
+      "Body `{plan: {id, revision}}`: the plan revision the owner approved on the plan review bar (#610). Freezes the plan, the needs profile and the research in the draft (the engine reads only that snapshot), then asks `POST /api/sites` for the site with the step chain workflow, the draft and the plan, under one build id per draft: approving twice, at once, or again after a lost answer reads the same build and never makes a second site. A create door refusal is kept on the build and reaches the chat as a stopped outcome; approving again asks the create door again under the same id. While the build is open, the draft's plan, research and compose doors answer 409 `BUILD_RUNNING`. 201 when the build was made, 200 when it existed. 409 `STALE_PLAN` (the plan moved since it was shown), `BUILT_FROM_OTHER_PLAN`, `ENGINE_BUSY`, `NO_PLAN`, `NO_DRAFT`; 400 `INVALID_REQUEST`. Called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`), or by a signed-in browser. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['agent'],
+    auth: 'session-or-actor',
+    internal: true,
+    body: {
+      type: 'object',
+      required: ['plan'],
+      properties: {
+        plan: {
+          type: 'object',
+          required: ['id', 'revision'],
+          properties: { id: { type: 'string' }, revision: { type: 'integer' } }
+        }
+      }
+    },
+    answers:
+      "`{build: {id, plan: {id, revision}, state: 'creating' | 'building' | 'done' | 'stopped' | 'cancelled', siteKey?, workspacePath?} | null, run: {events: [tracy-build-progress/v1]} | {outcome: tracy-build-outcome/v1} | null}`"
+  },
+  // src/build-draft/build-route.js
+  {
+    method: 'GET',
+    path: '/api/build-draft/build',
+    summary: 'Read the build of my site and its progress',
+    description:
+      "The account's build and its run in Contract B, read from the site's step chain record: progress events while it runs, the outcome once it ended (the task list card draws only this). The first read that finds the run ended marks the build ended, and the pictures of a research the build no longer needs may go. `{build: null, run: null}` before any build. Called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`), or by a signed-in browser. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['agent'],
+    auth: 'session-or-actor',
+    internal: true,
+    answers:
+      "`{build: {id, plan: {id, revision}, state: 'creating' | 'building' | 'done' | 'stopped' | 'cancelled', siteKey?, workspacePath?} | null, run: {events: [tracy-build-progress/v1]} | {outcome: tracy-build-outcome/v1} | null}`"
+  },
   // src/onboarding/route.js
   {
     method: 'GET',

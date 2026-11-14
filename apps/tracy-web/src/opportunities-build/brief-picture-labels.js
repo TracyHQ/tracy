@@ -47,6 +47,13 @@ const TRANSIENT = new Set(['http_error', 'timeout'])
 const RETRY = 1
 
 const area = (m) => (Number(m.width) || 0) * (Number(m.height) || 0)
+/**
+ * The row an own picture keeps its labels on: a build draft's picture on `build_draft_picture` (#610: a build reads
+ * them again, and the draft is never labelled twice), an opportunity's on `wo_media`. Both have `id`, `account_id`
+ * and `labels`.
+ */
+const ownTableOf = (m) => (m.origin === 'draft' ? 'build_draft_picture' : 'wo_media')
+
 const entryOf = (vision, labels) => ({ key: vision.key, model: vision.door.model, labels })
 
 /**
@@ -72,6 +79,9 @@ export function createBriefPictureLabels({
     if (!ids.length || !accountId) return new Map()
     const { rows } = await pool.query(
       `select id::text as id, labels->'visionUnanswered'->>'reason' as reason from wo_media
+       where id::text = any($1::text[]) and account_id = $2 and labels->'visionUnanswered'->>'key' = $3
+       union all
+       select id::text as id, labels->'visionUnanswered'->>'reason' as reason from build_draft_picture
        where id::text = any($1::text[]) and account_id = $2 and labels->'visionUnanswered'->>'key' = $3`,
       [ids.map(String), accountId, vision.key]
     )
@@ -244,7 +254,7 @@ export function createBriefPictureLabels({
           // An opportunity's own picture keeps it on its row, beside where its label would be.
           if (kept && m.origin !== 'place' && accountId)
             await pool.query(
-              `update wo_media set labels = coalesce(labels, '{}'::jsonb) || jsonb_build_object('visionUnanswered', $2::jsonb)
+              `update ${ownTableOf(m)} set labels = coalesce(labels, '{}'::jsonb) || jsonb_build_object('visionUnanswered', $2::jsonb)
                where id::text = $1 and account_id = $3`,
               [
                 m.id,
@@ -263,8 +273,8 @@ export function createBriefPictureLabels({
         note.labelled += 1
         if (m.origin !== 'place' && accountId)
           await pool.query(
-            `update wo_media set labels = (coalesce(labels, '{}'::jsonb) - 'visionUnanswered') || jsonb_build_object('vision', $2::jsonb)
-             where id = $1 and account_id = $3`,
+            `update ${ownTableOf(m)} set labels = (coalesce(labels, '{}'::jsonb) - 'visionUnanswered') || jsonb_build_object('vision', $2::jsonb)
+             where id::text = $1 and account_id = $3`,
             [m.id, JSON.stringify({ ...entryOf(vision, got), at: new Date().toISOString() }), accountId]
           )
       }
