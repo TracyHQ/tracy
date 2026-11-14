@@ -15,6 +15,9 @@ set -euo pipefail
 MARK='# tracy: Host from X-Forwarded-Host (B7)'
 for d in /srv/tracy/*/; do
   label=$(basename "$d"); [ "$label" = host-dsh ] && continue
+  # A demo folded into the demo farm (lib/site-runtime.sh): its `<label>-web-1` is a forwarder with no
+  # Apache and no CMS image — refused for this one-time migration; unfold it first.
+  if [ -e "$d/runtime" ]; then echo "!! $label: served by the demo farm — unfold it first; skipped" >&2; continue; fi
   conf="$d/apache/tracy-noindex.conf"
   [ -f "$conf" ] || { echo "!! $label: no $conf"; continue; }
   if grep -qF "$MARK" "$conf"; then echo "$label: already patched"; continue; fi

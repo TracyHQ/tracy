@@ -12943,6 +12943,44 @@ function looksLikeMissingBinary(result) {
   const text6 = `${result.stderr ?? ""} ${result.spawnError ?? ""}`.toLowerCase();
   return text6.includes("executable file not found") || text6.includes("no such file or directory") || /\bnot found\b/.test(text6);
 }
+var FARM_DEMO_REFUSAL = "FARM_DEMO: this site is a template demo served by the demo farm, where the site tools do not run. Unfold it on the host (provision/unfold.sh <label>) to work on it.";
+function execContainerOf(argv) {
+  if (!Array.isArray(argv) || argv[0] !== "exec") return null;
+  return argv.find((arg) => /^[a-z0-9][a-z0-9-]*-web-1$/.test(String(arg))) ?? null;
+}
+async function isFarmForwarder(container, inspect = inspectRuntimeLabel) {
+  const now = Date.now();
+  const held = farmAnswers.get(container);
+  if (held !== void 0 && held.until >= now) return held.farm;
+  const farm = await inspect(container).catch(() => "") === "farm";
+  farmAnswers.set(container, { farm, until: now + 6e4 });
+  return farm;
+}
+var farmAnswers = /* @__PURE__ */ new Map();
+function inspectRuntimeLabel(container) {
+  const dockerHost = resolveDockerHost(void 0, process.env);
+  const argv = ["inspect", "--type", "container", "-f", '{{index .Config.Labels "tracy.runtime"}}', container];
+  const [cmd, args] = dockerHost ? ["env", [`DOCKER_HOST=${dockerHost}`, "docker", ...argv]] : ["docker", argv];
+  return new Promise((resolve) => {
+    execFile(
+      cmd,
+      args,
+      { timeout: 15e3, maxBuffer: 4096 },
+      (error, stdout) => resolve(error ? "" : String(stdout).trim())
+    );
+  });
+}
+function farmRefusedResult() {
+  return {
+    code: 126,
+    stdout: "",
+    stderr: `${FARM_DEMO_REFUSAL}
+`,
+    timedOut: false,
+    spawnError: void 0,
+    farmDemo: true
+  };
+}
 function dockerExec({ argv, stdin, timeoutMs, maxBuffer }) {
   const dockerHost = resolveDockerHost(void 0, process.env);
   const [cmd, args] = dockerHost ? ["env", [`DOCKER_HOST=${dockerHost}`, "docker", ...argv]] : ["docker", [...argv]];
@@ -47495,6 +47533,16 @@ function withNotes2(answer, notes) {
   return { ...a, normalized: all };
 }
 function runExec(config, input) {
+  return farmGuardedExec(config, input);
+}
+async function farmGuardedExec(config, input) {
+  const container = execContainerOf(input.argv);
+  const inspect = config.farmLabel ?? (config.exec ? null : void 0);
+  if (container !== null && inspect !== null && await isFarmForwarder(container, inspect))
+    return farmRefusedResult();
+  return runExecUnguarded(config, input);
+}
+function runExecUnguarded(config, input) {
   return (config.exec ?? dockerExec)(input);
 }
 function firstLine(text6) {

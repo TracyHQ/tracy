@@ -46,6 +46,22 @@ P="$HERE"
 SITE_DIR="$ROOT/$LABEL"
 [ -d "$SITE_DIR" ] || { echo "no site at $SITE_DIR" >&2; exit 1; }
 
+# A demo folded into the demo farm (lib/site-runtime.sh): its PHP and data are reached through the
+# runtime helpers, as the demo itself; "restart the web container" means nothing there (the farm
+# re-reads a changed file within opcache.revalidate_freq, web/demos/php-farm.ini) and is replaced by
+# a wait, never by a restart of the farm every other demo runs in.
+# shellcheck source=../lib/site-runtime.sh
+. "$P/../lib/site-runtime.sh"
+TRACY_PRIVATE_ROOT="$ROOT"
+RUNTIME="$(tracy_site_runtime "$LABEL")"
+in_web() {
+  if [ "$RUNTIME" = farm ]; then
+    tracy_site_web_exec "$LABEL" -- sh -c "${1//\/var\/www\/html/$(tracy_farm_docroot "$LABEL")}"
+  else
+    ( cd "$SITE_DIR" && docker compose exec -T web sh -c "$1" )
+  fi
+}
+
 TAG="prove-$(date -u +%Y%m%dT%H%M%SZ)"
 say() { printf '\n=== %s\n' "$1"; }
 secs() { local s=$1 e=$2; echo $(( e - s )); }
@@ -58,7 +74,7 @@ say "1/5  snapshot"
 t0=$(date +%s); "$P/snapshot.sh" --site "$SITE" --label "$LABEL" --root "$ROOT" --tag "$TAG"; t1=$(date +%s)
 SNAP_SECS=$(secs "$t0" "$t1")
 
-VERSION="$( ( cd "$SITE_DIR" && docker compose exec -T web sh -c \
+VERSION="$( ( in_web \
   'cd /var/www/html && php -r "\$x=@simplexml_load_file(\"administrator/manifests/files/joomla.xml\"); echo \$x?(string)\$x->version:\"\";"' ) 2>/dev/null | tr -d '\r\n ' )"
 LINE="$(printf '%s' "$VERSION" | cut -d. -f1,2)"
 say "site reports Joomla ${VERSION:-unknown}"
@@ -71,7 +87,9 @@ rm -rf "$(tracy_webroot_dir "$LABEL")/libraries"
 # that no longer exist, so the site serves 200 from memory until it is restarted. Asking
 # without the restart tests nothing, and reads "still up" as "the break did not take". The
 # restart makes the missing tree real, which is the state a half-failed hop actually leaves.
+if [ "$RUNTIME" = farm ]; then sleep 3; else
 ( cd "$SITE_DIR" && docker compose restart web >/dev/null 2>&1 ) || true
+fi
 BROKEN_HOME="$( "$P/verify.sh" --label "$LABEL" --root "$ROOT" --expect "$LINE" --json 2>/dev/null | grep -c '"passed": false' || true )"
 [ "$BROKEN_HOME" = "1" ] && echo "    verify correctly says FAIL" || echo "    !! verify did not notice the break"
 
@@ -87,10 +105,14 @@ sleep 5
 # ── 4. break it: database ───────────────────────────────────────────────────────────────
 say "4/5  dropping a table, then restoring again"
 DB_PASSWORD="$(sed -n 's/^DB_PASSWORD=//p' "$SITE_DIR/.env" | sed -n 1p)"
-PREFIX="$( ( cd "$SITE_DIR" && docker compose exec -T web sh -c \
+PREFIX="$( ( in_web \
   'cd /var/www/html && php -r "include \"configuration.php\"; \$c=new JConfig(); echo \$c->dbprefix;"' ) 2>/dev/null | tr -d '\r\n ' )"
+if [ "$RUNTIME" = farm ]; then
+  tracy_site_db_exec "$LABEL" mariadb "$(tracy_site_db_name "$LABEL")" -e "DROP TABLE IF EXISTS \`${PREFIX}extensions\`" || true
+else
 ( cd "$SITE_DIR" && docker compose exec -T db mariadb -uroot -p"$DB_PASSWORD" joomla \
     -e "DROP TABLE IF EXISTS \`${PREFIX}extensions\`" ) || true
+fi
 t0=$(date +%s); "$P/restore.sh" --site "$SITE" --label "$LABEL" --root "$ROOT" --tag "$TAG"; t1=$(date +%s)
 RESTORE2_SECS=$(secs "$t0" "$t1")
 sleep 5

@@ -1308,3 +1308,93 @@ test('a provision has a total limit and a silence limit, and a run stopped by ei
   assert.equal(failed?.reason, 'idle')
   assert.match(failed?.detail ?? '', /^no progress for 15 minutes; see /)
 })
+
+// ---------------------------------------------------------------------------------------------
+// the demo farm: a template demo's install ends with fold.sh (TRACY_DEMO_FARM=1)
+// ---------------------------------------------------------------------------------------------
+
+/** One provision job through a fake `run`: provision.sh answers a port, fold.sh answers `foldCode`. */
+async function provisionWith({ body, demoFarm, foldCode = 0 }) {
+  const dir = mkdtempSync(path.join(tmpdir(), 'tracy-host-fold-'))
+  const calls = []
+  const puts = []
+  try {
+    await runProvisionJob({
+      jobId: 'j-fold',
+      body,
+      config: { logDir: dir, privateRoot: '/srv/private', scriptsDir: '/opt/fleet', demoFarm },
+      jobs: { put: async (_id, value) => puts.push(value) },
+      run: async ({ args, onLine }) => {
+        calls.push(args)
+        if (args[0].endsWith('provision/provision.sh')) {
+          await onLine?.('TRACY_RESULT port=52011')
+          return { code: 0, tail: [] }
+        }
+        return { code: foldCode, tail: foldCode ? ['!! fold of demo-a failed at: dumping'] : ['==> folded'] }
+      }
+    })
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+  return { calls, done: puts.at(-1) }
+}
+
+for (const platform of ['joomla', 'wordpress'])
+  test(`a ${platform} demo install on a farm host ends with fold.sh, and the job keeps the demo's own port`, async () => {
+    const { calls, done } = await provisionWith({
+      body: { label: 'demo-a', site: 'demo-a', platform, demo: true },
+      demoFarm: true
+    })
+    assert.equal(calls.length, 2)
+    assert.deepEqual(calls[1], ['/opt/fleet/provision/fold.sh', 'demo-a', '--root', '/srv/private'])
+    assert.equal(done.state, 'done')
+    assert.equal(done.port, 52011)
+    assert.deepEqual(done.fold, { folded: true })
+  })
+
+test('a fold that fails leaves the install done — the demo runs on its own containers — and says why', async () => {
+  const { done } = await provisionWith({
+    body: { label: 'demo-a', site: 'demo-a', platform: 'joomla', demo: true },
+    demoFarm: true,
+    foldCode: 1
+  })
+  assert.equal(done.state, 'done')
+  assert.equal(done.port, 52011)
+  assert.equal(done.fold.folded, false)
+  assert.match(done.fold.reason, /fold\.sh exited 1/)
+  assert.match(done.fold.output, /fold of demo-a failed/)
+})
+
+test('no fold: the farm switched off, a customer site, an EmDash demo', async () => {
+  for (const [body, demoFarm] of [
+    [{ label: 'demo-a', site: 'demo-a', platform: 'joomla', demo: true }, false],
+    [{ label: 'cust-a', site: 'cust.example', platform: 'joomla' }, true],
+    [{ label: 'demo-e', site: 'demo-e', platform: 'emdash', demo: true }, true]
+  ]) {
+    const { calls, done } = await provisionWith({ body, demoFarm })
+    assert.ok(!calls.some((args) => args[0].endsWith('fold.sh')), JSON.stringify(body))
+    assert.equal(done.state, 'done')
+    assert.equal(done.fold, undefined)
+  }
+})
+
+test('the job says done only after fold.sh has returned: tracy-web asks go-live on `done`, and it must meet the folded demo', async () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'tracy-host-fold-order-'))
+  const order = []
+  try {
+    await runProvisionJob({
+      jobId: 'j-order',
+      body: { label: 'demo-a', site: 'demo-a', platform: 'joomla', demo: true },
+      config: { logDir: dir, privateRoot: '/srv/private', scriptsDir: '/opt/fleet', demoFarm: true },
+      jobs: { put: async (_id, value) => order.push(`put:${value.state ?? value.step}`) },
+      run: async ({ args, onLine }) => {
+        order.push(`run:${path.basename(args[0])}`)
+        if (args[0].endsWith('provision.sh')) await onLine?.('TRACY_RESULT port=52011')
+        return { code: 0, tail: [] }
+      }
+    })
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+  assert.ok(order.indexOf('run:fold.sh') < order.indexOf('put:done'), order.join(' '))
+})

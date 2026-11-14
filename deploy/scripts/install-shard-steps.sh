@@ -519,6 +519,14 @@ step_web_images() {
     run env DEFAULTS_ONLY=1 bash "$FLEET_DIR/web/build.sh" \
       || warn "web/build.sh reported failures (Joomla needs REPO_TOKEN until W5 ships the skill tree); site creation still works on upstream images"
   fi
+  # The demo farm image (web/DEMOS_IMAGE), on a shard switched to fold demos: built from the same
+  # tree, self-contained (no skill tree). Elsewhere the first fold builds it (farm-common.sh).
+  if [ "${TRACY_DEMO_FARM:-0}" = 1 ]; then
+    local web_dir="$FLEET_DIR/web"
+    [ "$SOURCE" != git ] || web_dir="$WORK/tch/packages/fleet/tracy-fleet-operation/web"
+    run bash "$web_dir/build.sh" demos \
+      || warn "web/build.sh demos reported failures; the first fold on this host builds the farm image instead"
+  fi
 }
 
 step_cloudflared() {

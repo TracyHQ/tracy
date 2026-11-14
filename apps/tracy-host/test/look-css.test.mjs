@@ -21,7 +21,8 @@ import {
   UNDO_ID,
   validateLookCssBody,
   WP_CUSTOM_CSS_PHP,
-  wpCustomCssArgv
+  wpCustomCssArgv,
+  wpCustomCssArgvFor
 } from '../src/look-css.js'
 
 const LABEL = 'lookwp1'
@@ -322,5 +323,34 @@ test('POST /_host/site site-look-css: 202 then a done job; a bad label or body i
   ]) {
     const refused = await signed(never, 'POST', '/_host/site', body)
     assert.equal(refused.status, 400, JSON.stringify(body))
+  }
+})
+
+test('wpCustomCssArgvFor: a folded WordPress demo runs the same wp eval in the farm, at its own docroot', async () => {
+  const { mkdtemp, mkdir, writeFile, rm } = await import('node:fs/promises')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const root = await mkdtemp(join(tmpdir(), 'look-css-farm-'))
+  try {
+    await mkdir(join(root, 'demo-w'))
+    await writeFile(join(root, 'demo-w', 'runtime'), 'farm\n')
+    const farm = await wpCustomCssArgvFor({ privateRoot: root, label: 'demo-w' })
+    const site = wpCustomCssArgv('demo-w-web-1')
+    assert.ok(!farm.includes('demo-w-web-1'))
+    assert.equal(farm[farm.indexOf('-u') + 1], 'www-data')
+    assert.ok(farm.includes('--env-file'))
+    assert.deepEqual(
+      farm.slice(farm.indexOf('tracy-demos-web') + 1),
+      site
+        .slice(site.indexOf('demo-w-web-1') + 1)
+        .map((a) => (a === '--path=/var/www/html' ? '--path=/site/demo-w/.webroot' : a))
+    )
+    await mkdir(join(root, 'cust'))
+    assert.deepEqual(
+      await wpCustomCssArgvFor({ privateRoot: root, label: 'cust' }),
+      wpCustomCssArgv('cust-web-1')
+    )
+  } finally {
+    await rm(root, { recursive: true, force: true })
   }
 })

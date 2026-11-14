@@ -34,6 +34,10 @@ done
   echo "need --label, --from and --to" >&2; exit 2; }
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
+# A demo folded into the demo farm has no runtime of its own to change (lib/site-runtime.sh).
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+tracy_refuse_if_farm "$ROOT/$LABEL" "$LABEL" "changing its PHP" || exit 1
 
 # Refused rather than guessed. The caller's next move is to snapshot and start an upgrade, and
 # a hop the update server will not serve is cheapest to find out about here.

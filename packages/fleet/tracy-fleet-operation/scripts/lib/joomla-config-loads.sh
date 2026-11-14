@@ -14,8 +14,20 @@
 # Prints why the copy's configuration does not load and returns 1; silent and 0 when it loads.
 tracy_joomla_config_refusal() {
   local said
-  if said="$( (cd "$1" && docker compose exec -T web php -d display_errors=stderr -r \
-      'define("_JEXEC", 1); require "/var/www/html/configuration.php"; new JConfig; echo "loaded";') 2>&1)" \
+  # A demo folded into the demo farm (marker `<site_dir>/runtime`): its PHP is the farm's, as the demo
+  # (lib/site-runtime.sh `tracy_site_web_exec`, whose docroot is where /var/www/html was).
+  local runtime php=(docker compose exec -T web php) docroot=/var/www/html
+  if ! declare -F tracy_runtime_of_dir >/dev/null; then
+    # shellcheck source=site-runtime.sh
+    . "$(dirname "${BASH_SOURCE[0]}")/site-runtime.sh"
+  fi
+  runtime="$(tracy_runtime_of_dir "$1" 2>&1)" || { echo "the copy's runtime is unknown: $runtime"; return 1; }
+  if [ "$runtime" = farm ]; then
+    php=(tracy_site_web_exec "$(basename "$1")" -- php)
+    docroot="$(tracy_farm_docroot "$(basename "$1")")"
+  fi
+  if said="$( (cd "$1" && "${php[@]}" -d display_errors=stderr -r \
+      'define("_JEXEC", 1); require "'"$docroot"'/configuration.php"; new JConfig; echo "loaded";') 2>&1)" \
      && [[ "$said" == *loaded* ]]; then
     return 0
   fi

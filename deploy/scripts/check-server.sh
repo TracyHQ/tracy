@@ -315,6 +315,36 @@ else
   fi
 fi
 
+# ── 7c: the demo farm, where this host folded demos ──────────────────────────────────────────────
+#
+# A folded template demo (fleet scripts/lib/demo-farm.sh) is served by `tracy-demos-web` (Apache + FPM)
+# and `tracy-demos-db` (MariaDB); its own `<label>-web-1` is a TCP forwarder (label tracy.runtime=farm),
+# which 7b probes like any site. One farm serves every folded demo, so an outage of either container
+# is every folded demo down at once: failed here, by name. Asked of the containers themselves — the
+# web's own health check (FPM answering its ping), the database answering a ping as its root.
+FOLDED="$(docker ps -a --filter label=tracy.runtime=farm --format '{{.Names}}' 2>/dev/null | sed -n 's/-web-1$//p' | sort)"
+if [ -z "$FOLDED" ] && ! [ "$(docker inspect -f '{{.Name}}' tracy-demos-web 2>/dev/null)" = /tracy-demos-web ]; then
+  ok "no demo farm on this host (no folded demo)"
+else
+  n_folded=$(printf '%s\n' "$FOLDED" | grep -c . || true)
+  farm_bad=""
+  for c in tracy-demos-web tracy-demos-db; do
+    [ "$(docker inspect -f '{{.State.Running}}' "$c" 2>/dev/null)" = true ] || farm_bad="$farm_bad $c(not running)"
+  done
+  if [ -z "$farm_bad" ]; then
+    docker exec tracy-demos-web curl -fsS -o /dev/null --max-time 5 http://127.0.0.1:8080/fpm-ping 2>/dev/null \
+      || farm_bad="$farm_bad tracy-demos-web(PHP-FPM does not answer its ping)"
+    docker exec tracy-demos-db sh -c 'MYSQL_PWD="$MARIADB_ROOT_PASSWORD" mariadb-admin -uroot --connect-timeout=5 ping' >/dev/null 2>&1 \
+      || farm_bad="$farm_bad tracy-demos-db(does not answer a ping)"
+  fi
+  if [ -n "$farm_bad" ]; then
+    fail "the demo farm is down:$farm_bad — $n_folded folded demo(s) are not served:$(printf ' %s' $FOLDED)" \
+      "docker compose --project-directory \$TRACY_PRIVATE_ROOT/_demos -f \$TRACY_PRIVATE_ROOT/_demos/compose.yml up -d (never down: the db volume holds every folded demo)"
+  else
+    ok "the demo farm serves $n_folded folded demo(s) (tracy-demos-web: FPM answers; tracy-demos-db: answers)"
+  fi
+fi
+
 # ── 8: the SPAs — read WHAT IS IN THE IMAGE, and ask whether the route answers ─────────────────
 # `check-local.sh` reads `dist/` in the repo tree because locally `dist/` IS what gets served. A server
 # has no repo: `apps/tracy-web/Dockerfile` COPYs the `dist/` folders into `/opt/tracy-web/static/`. Same

@@ -12,6 +12,21 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 [[ "$LABEL" =~ ^[a-z0-9][a-z0-9-]{0,62}$ ]] || exit 2
+# A demo folded into the demo farm (lib/site-runtime.sh): read in its pool's PHP, as the demo itself.
+. "$HERE/../lib/site-runtime.sh"
+RUNTIME="$(tracy_site_runtime "$LABEL")" || exit 1
+if [[ "$RUNTIME" == farm ]]; then
+  DOCROOT="$(tracy_farm_docroot "$LABEL")"
+  if tracy_site_web_exec "$LABEL" -- test -f "$DOCROOT/wp-load.php"; then
+    reader=settings-wordpress.php
+  elif tracy_site_web_exec "$LABEL" -- test -f "$DOCROOT/configuration.php"; then
+    reader=settings-joomla.php
+  else
+    exit 1
+  fi
+  tracy_site_web_exec "$LABEL" -i -e TRACY_DOCROOT="$DOCROOT" -- php < "$HERE/$reader"
+  exit
+fi
 CONTAINER="$(docker compose -f "$(tracy_compose_file "$LABEL")" ps -q web)"
 [[ -n "$CONTAINER" && "$CONTAINER" != *$'\n'* ]] || exit 1
 # Both PHP platforms are detected from their own files, not from caller input.

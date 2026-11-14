@@ -335,6 +335,35 @@ export const READ_ONLY_BLANKED_ENV = Object.freeze(['WORDPRESS_DB_PASSWORD'])
  * writing the database with it (survey 08/10/2026, H2). With the database password blanked as well, a
  * shell there serves nothing a read tool does not.
  */
+/**
+ * A template demo folded into the host's demo farm (fleet `scripts/lib/demo-farm.sh`): its
+ * `<label>-web-1` is a TCP forwarder (docker label `tracy.runtime=farm`) with no PHP, no CMS and no
+ * site files, and its PHP runs in the shared `tracy-demos-web`, which no seat may exec into (the
+ * docker proxy, `dsh/docker-proxy.haproxy.cfg`, allows exec into `*-web-1` names only). So a command
+ * for such a site is refused by name instead of landing in the forwarder. Template demos carry no
+ * seat (tracy-web's demo upsert grants none), so no person's agent is meant to reach one.
+ */
+export const FARM_DEMO_SHELL_REFUSAL =
+  'subprocess-docker: this site is a template demo served by the demo farm, where shell commands do not run. Unfold it on the host (provision/unfold.sh <label>) to work on it.'
+
+/**
+ * The docker argv that asks a site container which runtime it is (`tracy.runtime` label).
+ * @param {string} container
+ * @param {{ docker: string }} cfg
+ * @returns {string[]}
+ */
+export function runtimeLabelArgv(container, cfg) {
+  return [
+    cfg.docker,
+    'inspect',
+    '--type',
+    'container',
+    '-f',
+    '{{index .Config.Labels "tracy.runtime"}}',
+    container
+  ]
+}
+
 export const READ_ONLY_SHELL_REFUSAL =
   'subprocess-docker: this seat can only read the site, so shell commands do not run for it. Read files with read, grep or glob, and pages with tracy_site page.text; a change needs an owner or editor.'
 

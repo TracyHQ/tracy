@@ -43,6 +43,7 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { mkdir, readdir, readFile, rename, unlink, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { farmDocroot, siteRuntime, siteWebExecArgv } from './site-exec.js'
 
 /** The `kind` of `POST /_host/site` this module answers. */
 export const DS_SLOT_KIND = 'site-ds-slot'
@@ -258,6 +259,25 @@ export function dsSlotArgv(platform, container, mode = 'apply') {
   throw new TypeError(`no design-system slot on ${platform}`)
 }
 
+/**
+ * `dsSlotArgv` for a site as it runs today: a Joomla or WordPress demo folded into the demo farm
+ * (`site-exec.js`) runs the same script in its own pool's environment in `tracy-demos-web`, as
+ * www-data, its docroot where `/var/www/html` was — never in `<label>-web-1`, which is only its
+ * forwarder there. EmDash never folds.
+ * @param {{ privateRoot?: string, label: string, platform: 'emdash' | 'wordpress' | 'joomla',
+ *   mode?: 'read' | 'apply' | 'clear' | 'restore' }} input
+ * @returns {Promise<string[]>}
+ */
+export async function dsSlotArgvFor({ privateRoot, label, platform, mode = 'apply' }) {
+  const runtime = privateRoot && platform !== 'emdash' ? await siteRuntime(privateRoot, label) : 'site'
+  if (runtime === 'site') return dsSlotArgv(platform, `${label}-web-1`, mode)
+  const site = dsSlotArgv(platform, `${label}-web-1`, mode)
+  const cmd = site
+    .slice(site.indexOf(`${label}-web-1`) + 1)
+    .map((arg) => (arg === '--path=/var/www/html' ? `--path=${farmDocroot(label)}` : arg))
+  return siteWebExecArgv({ privateRoot, label, runtime, interactive: true, workdir: '/var/www/html' }, cmd)
+}
+
 const PLATFORMS = ['emdash', 'wordpress', 'joomla']
 
 /**
@@ -357,13 +377,13 @@ export const stateHash = (/** @type {string} */ s) => createHash('sha256').updat
 
 /**
  * Run the platform's script once in the site's container.
- * @param {{ run: Function, label: string, platform: any, request: Record<string, unknown> }} input
+ * @param {{ run: Function, label: string, platform: any, request: Record<string, unknown>, privateRoot?: string }} input
  */
-async function inSite({ run, label, platform, request }) {
+async function inSite({ run, label, platform, request, privateRoot }) {
   const mode = /** @type {'read' | 'apply' | 'clear' | 'restore'} */ (request.mode)
   const { code, tail } = await run({
     script: 'docker',
-    args: dsSlotArgv(platform, `${label}-web-1`, mode),
+    args: await dsSlotArgvFor({ privateRoot, label, platform, mode }),
     env: process.env,
     stdin: JSON.stringify(request),
     timeoutMs: DS_TIMEOUT_MS[mode === 'restore' ? 'undo' : mode]
@@ -465,7 +485,13 @@ export async function dsSlot({
   const platform = body.platform
   const store = path.join(config.privateRoot, label, DS_UNDO_DIR)
   if (body.mode === 'read') {
-    const r = await inSite({ run, label, platform, request: { mode: 'read' } })
+    const r = await inSite({
+      run,
+      label,
+      platform,
+      request: { mode: 'read' },
+      privateRoot: config.privateRoot
+    })
     if (r.ok !== true) throw new Error(String(r.error ?? 'no read').slice(0, 200))
     return { ok: true, slot: slotOf(r.slot), ...templateOf(platform, r) }
   }
@@ -488,7 +514,7 @@ export async function dsSlot({
               ...(p.maxTheme ? { maxTheme: p.maxTheme } : {})
             }
           : { mode: 'apply', html: p.html, module: p.module, title: p.module.title, ...templates }
-    const r = await inSite({ run, label, platform, request })
+    const r = await inSite({ run, label, platform, request, privateRoot: config.privateRoot })
     if (r.ok !== true) {
       if (r.code === 'DS_TEMPLATE_MOVED')
         return { ok: false, code: r.code, slot: slotOf(r.slot), ...templateOf(platform, r) }
@@ -522,7 +548,7 @@ export async function dsSlot({
       if (bare === null) return { ok: false, code: 'DS_NO_TEMPLATE_LOOK' }
       request.bare = bare
     }
-    const r = await inSite({ run, label, platform, request })
+    const r = await inSite({ run, label, platform, request, privateRoot: config.privateRoot })
     if (r.ok !== true) {
       if (typeof r.code === 'string') return { ok: false, code: r.code, ...templateOf(platform, r) }
       throw new Error(String(r.error ?? 'not taken off').slice(0, 200))
@@ -545,7 +571,9 @@ export async function dsSlot({
   }
   // undo
   const dir = path.join(store, String(body.id))
-  return undoOnce(dir, () => undoEntry({ dir, run, label, platform, now, id: body.id }))
+  return undoOnce(dir, () =>
+    undoEntry({ dir, run, label, platform, now, id: body.id, privateRoot: config.privateRoot })
+  )
 }
 
 /**
@@ -574,7 +602,7 @@ function undoOnce(dir, task) {
 }
 
 /** @param {{ dir: string, run: Function, label: string, platform: any, now: number, id: any }} input */
-async function undoEntry({ dir, run, label, platform, now, id }) {
+async function undoEntry({ dir, run, label, platform, now, id, privateRoot }) {
   let manifest
   let before
   let after
@@ -591,7 +619,8 @@ async function undoEntry({ dir, run, label, platform, now, id }) {
     run,
     label,
     platform,
-    request: { mode: 'restore', before, expect: after, title: manifest.title ?? undefined }
+    request: { mode: 'restore', before, expect: after, title: manifest.title ?? undefined },
+    privateRoot
   })
   if (r.conflict === true) return { ok: false, code: 'DS_CHANGED_SINCE' }
   if (r.ok !== true) throw new Error(String(r.error ?? 'not put back').slice(0, 200))

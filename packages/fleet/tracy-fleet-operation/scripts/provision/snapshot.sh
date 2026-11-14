@@ -67,15 +67,34 @@ DB_PASSWORD="$(sed -n 's/^DB_PASSWORD=//p' "$SITE_DIR/.env" 2>/dev/null | head -
 
 echo "==> snapshot $LABEL/$TAG"
 
+# Where the site's PHP and data are: its own `web`/`db` services, or — a demo folded into the demo
+# farm (lib/site-runtime.sh) — its pool in the farm and its own schema there, reached as its own
+# user. The dump and the two version reads go through the one helper either way.
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+TRACY_PRIVATE_ROOT="$ROOT"
+RUNTIME="$(tracy_site_runtime "$LABEL")"
+in_web() {
+  if [ "$RUNTIME" = farm ]; then tracy_site_web_exec "$LABEL" -- "$@"
+  else ( cd "$SITE_DIR" && docker compose exec -T web "$@" ); fi
+}
+dump_db() {
+  if [ "$RUNTIME" = farm ]; then
+    tracy_site_db_exec "$LABEL" mariadb-dump --single-transaction --quick \
+      --max-allowed-packet=256M --routines --events "$(tracy_site_db_name "$LABEL")"
+  else
+    ( cd "$SITE_DIR" && docker compose exec -T db \
+        mariadb-dump -uroot -p"$DB_PASSWORD" --single-transaction --quick \
+          --max-allowed-packet=256M --routines --events "$DB_NAME" )
+  fi
+}
+
 # ── the database ────────────────────────────────────────────────────────────────────────
 # --single-transaction so the dump is one point in time without locking the site out, and
 # --max-allowed-packet to match the import side: a real content table runs one statement past
 # the 16M default, and a dump that cannot be re-imported is not a restore point.
 echo "==> dumping database"
-( cd "$SITE_DIR" && docker compose exec -T db \
-    mariadb-dump -uroot -p"$DB_PASSWORD" --single-transaction --quick \
-      --max-allowed-packet=256M --routines --events "$DB_NAME" ) \
-  | gzip -c > "$WORK/db.sql.gz"
+dump_db | gzip -c > "$WORK/db.sql.gz"
 # A dump that failed halfway still leaves a file, and gzip still writes a valid trailer for
 # what it got. Check the archive is whole before anything treats it as a way back.
 gzip -t "$WORK/db.sql.gz"
@@ -92,9 +111,9 @@ tar -cf "$WORK/webroot.tar" -C "$(tracy_webroot_dir "$LABEL")" .
 # site wearing the same files.
 CURRENT_IMAGE="$(sed -n 's/^ *image: *//p' "$SITE_DIR/docker-compose.yml" | grep -v mariadb | sed -n 1p)"
 CURRENT_IMAGE="${CURRENT_IMAGE:-$WEB_IMAGE}"
-PHP_VERSION="$( ( cd "$SITE_DIR" && docker compose exec -T web php -r 'echo PHP_VERSION;' ) 2>/dev/null || echo "unknown" )"
-CMS_VERSION="$( ( cd "$SITE_DIR" && docker compose exec -T web sh -c \
-  'cd /var/www/html && php -r "\$x=simplexml_load_file(\"administrator/manifests/files/joomla.xml\"); echo (string)\$x->version;"' ) 2>/dev/null || echo "unknown" )"
+PHP_VERSION="$( in_web php -r 'echo PHP_VERSION;' 2>/dev/null || echo "unknown" )"
+CMS_VERSION="$( ( in_web sh -c \
+  'php -r "\$x=simplexml_load_file(\"administrator/manifests/files/joomla.xml\"); echo (string)\$x->version;"' ) 2>/dev/null || echo "unknown" )"
 
 python3 "$HERE/snapshot_meta.py" --build \
   --label "$LABEL" --tag "$TAG" --platform "$PLATFORM" \

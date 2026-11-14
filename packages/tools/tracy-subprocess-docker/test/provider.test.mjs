@@ -6,6 +6,7 @@
  */
 import assert from 'node:assert/strict'
 import { spawn as spawnProcess } from 'node:child_process'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { link, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -34,7 +35,8 @@ import {
   resolveSitesRoot,
   workdirDecision,
   blankedSecretFlags,
-  READ_ONLY_SHELL_REFUSAL
+  READ_ONLY_SHELL_REFUSAL,
+  FARM_DEMO_SHELL_REFUSAL
 } from '../src/route.mjs'
 
 function provider(cfg) {
@@ -1651,4 +1653,55 @@ test('spawn: a read-only seat runs no command in the container, and says what to
     }),
     (error) => error.message === READ_ONLY_SHELL_REFUSAL
   )
+})
+
+// ── a template demo folded into the demo farm ───────────────────────────────────────────────────
+// Its `<label>-web-1` is a forwarder labelled `tracy.runtime=farm`: no command runs there, and none
+// ever reaches the farm's own containers. Docker here is a script that answers the label.
+function fakeDockerAnswering(t, label) {
+  const dir = mkdtempSync(join(tmpdir(), 'subprocess-farm-'))
+  t.after(() => rmSync(dir, { recursive: true, force: true }))
+  const bin = join(dir, 'docker')
+  writeFileSync(bin, `#!/bin/sh\necho "$*" >> "${dir}/calls"\necho '${label}'\n`, { mode: 0o755 })
+  return { bin, calls: () => readFileSync(join(dir, 'calls'), 'utf8') }
+}
+
+test("spawnTerminal: a folded demo's forwarder is refused by name, and nothing is exec'd", async (t) => {
+  const docker = fakeDockerAnswering(t, 'farm')
+  const p = provider({ docker: docker.bin })
+  stubLocal(t, 'spawnTerminal', () => assert.fail('no terminal may open for a folded demo'))
+  await assert.rejects(
+    p.spawnTerminal({
+      argv: [MARKER, '--mode', 'workspace-write', '--root', '/site/wpdemo', '--', 'bash'],
+      cwd: '/site/wpdemo/.webroot',
+      env: {}
+    }),
+    { message: FARM_DEMO_SHELL_REFUSAL }
+  )
+  assert.match(docker.calls(), /inspect --type container -f .* wpdemo-web-1/)
+})
+
+/** The pre-execute listener `registerFarmGuard` adds, on a provider whose docker answers `label`. */
+function farmGuard(t, label) {
+  const docker = fakeDockerAnswering(t, label)
+  const p = provider({ docker: docker.bin })
+  p.logDenial = () => {}
+  let listener
+  p.registerFarmGuard({ on: (_event, fn) => (listener = fn) })
+  const call = (name, cwd = '/site/wpdemo') =>
+    listener({ name, arguments: {}, agent: { session: { header: { cwd } } } }, async () => 'next')
+  return { p, docker, call }
+}
+
+test('bash in a folded demo is denied before dispatch, naming unfold; other tools and per-site demos go on', async (t) => {
+  const farm = farmGuard(t, 'farm')
+  assert.deepEqual(await farm.call('bash'), { kind: 'deny', reason: FARM_DEMO_SHELL_REFUSAL })
+  assert.match(FARM_DEMO_SHELL_REFUSAL, /unfold/)
+  assert.equal(await farm.call('read'), 'next', 'a file tool reads the site folder on the harness side')
+  const site = farmGuard(t, '')
+  assert.equal(await site.call('bash'), 'next')
+  assert.equal(await site.call('bash'), 'next')
+  assert.equal(site.docker.calls().trim().split('\n').length, 1, 'the answer is remembered')
+  const nowhere = farmGuard(t, 'farm')
+  assert.equal(await nowhere.call('bash', '/elsewhere'), 'next', 'not a site: the other guards decide')
 })

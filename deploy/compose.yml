@@ -170,6 +170,10 @@ services:
       # `provision.sh` also refuses to hand out anything in 517xx, belt and braces: a reserved
       # list that is checked is worth more than a range that merely happens not to collide.
       PORT: ${TRACY_HOST_PORT:-51720}
+      # `1` = a Joomla/WordPress template demo install ends by folding the demo into this host's demo
+      # farm (provision.js foldDemo, fleet scripts/provision/fold.sh). Off by default: switched on per
+      # host, after which the first fold builds the farm image if the host lacks it.
+      TRACY_DEMO_FARM: ${TRACY_DEMO_FARM:-0}
     volumes:
       # The docker socket, unproxied — this process (provision.sh/webroot scripts) needs the
       # full API, unlike dsh below which only ever gets the narrowed docker-proxy.

@@ -68,6 +68,15 @@ if [ "$1" = compose ]; then
     stop|start) exit "\${FAKE_COMPOSE_FAIL:-0}" ;;
   esac
 fi
+# A demo folded into the demo farm: \`docker exec [-i] [-e K[=V]] <farm db> <cmd>\` reaches the test
+# server when the farm's database container is named after it (TRACY_DEMOS_DB_CONTAINER).
+if [ "$1" = exec ] && [ -n "\${TEST_DB_CONTAINER:-}" ]; then
+  args=("$@"); i=1
+  while [ "\${args[$i]}" = -i ] || [ "\${args[$i]}" = -e ]; do
+    if [ "\${args[$i]}" = -e ]; then i=$((i + 2)); else i=$((i + 1)); fi
+  done
+  if [ "\${args[$i]}" = "$TEST_DB_CONTAINER" ]; then exec "$REAL_DOCKER" "$@"; fi
+fi
 if [ "$1" = cp ] && [ "\${2:-}" = "\${FAKE_WEB_CONTAINER:-}:/app/." ] && [ -n "\${FAKE_WEB_SOURCE:-}" ]; then
   cp -R "$FAKE_WEB_SOURCE/." "$3/"
   exit $?
@@ -854,3 +863,134 @@ test('MariaDB: a damaged dump is refused before anything moves', mysqlOpts, () =
     s.dispose()
   }
 })
+
+// ── a demo folded into the demo farm: its own schema of the shared server, as its own user ─────────
+
+const FARM_SCHEMA = 'd_site_under_test_0a1b2c3d'
+const DEFINER_TEXT =
+  'CREATE DEFINER=`writer`@`localhost` VIEW v AS SELECT 1 | /*!50013 DEFINER=`w`@`h` SQL SECURITY DEFINER */ | /*!50017 DEFINER=`w`@`h`*/ | /*!50117 DEFINER=`w`@`h`*/'
+function farmDemo() {
+  for (const db of sql(
+    "SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE 'd\\_%' OR schema_name LIKE 'wordpress%'"
+  )
+    .split('\n')
+    .filter(Boolean)) {
+    sql(`DROP DATABASE \`${db}\``)
+  }
+  sql(`DROP USER IF EXISTS '${FARM_SCHEMA}'@'%'`)
+  sql(
+    `CREATE DATABASE ${FARM_SCHEMA} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER '${FARM_SCHEMA}'@'%' IDENTIFIED BY 'farmpw'; GRANT ALL PRIVILEGES ON \`${FARM_SCHEMA}\`.* TO '${FARM_SCHEMA}'@'%'`
+  )
+  sql(
+    "CREATE TABLE wp_posts (id INT PRIMARY KEY AUTO_INCREMENT, title VARCHAR(200)); INSERT INTO wp_posts (title) VALUES ('Hello world'); CREATE TABLE wp_options (name VARCHAR(64) PRIMARY KEY, value TEXT); INSERT INTO wp_options VALUES ('blogname', 'Before')",
+    FARM_SCHEMA
+  )
+  // A row whose TEXT holds every definer form a dump writes: a restore must give it back byte for byte.
+  sql(`INSERT INTO wp_options VALUES ('note', '${DEFINER_TEXT}')`, FARM_SCHEMA)
+  // A trigger, a routine and an event, made by the demo's own user as fold.sh leaves them: the backup
+  // dumps them (--routines --triggers --events) and the restore loads them back, definers dropped.
+  execFileSync(
+    REAL_DOCKER,
+    [
+      'exec',
+      '-i',
+      '-e',
+      'MYSQL_PWD=farmpw',
+      DB_CONTAINER,
+      'mariadb',
+      `-u${FARM_SCHEMA}`,
+      FARM_SCHEMA,
+      '-e',
+      'CREATE TRIGGER wp_posts_stamp BEFORE INSERT ON wp_posts FOR EACH ROW SET NEW.title = NEW.title; CREATE PROCEDURE wp_answer() SELECT 42; CREATE EVENT wp_sweep ON SCHEDULE EVERY 1 DAY DO DELETE FROM wp_options WHERE 1 = 0; CREATE VIEW wp_titles AS SELECT title FROM wp_posts'
+    ],
+    { encoding: 'utf8' }
+  )
+  // Another folded demo's schema on the same server: nothing here may touch it.
+  sql(
+    "CREATE DATABASE d_other_demo_99999999; CREATE TABLE d_other_demo_99999999.wp_posts (title TEXT); INSERT INTO d_other_demo_99999999.wp_posts VALUES ('other')"
+  )
+}
+function farmStack() {
+  const s = stack('wordpress')
+  writeFileSync(
+    join(s.srv, LABEL, '.env'),
+    `PLATFORM=wordpress\nDB_PASSWORD=t\nFARM_DB_NAME=${FARM_SCHEMA}\nFARM_DB_USER=${FARM_SCHEMA}\nFARM_DB_PASSWORD=farmpw\n`
+  )
+  writeFileSync(join(s.srv, LABEL, 'runtime'), 'farm\n')
+  return s
+}
+
+test(
+  'farm demo: backup dumps its farm schema as its own user, Restore everything restores inside that schema only, and the Before-restore point brings it back',
+  mysqlOpts,
+  () => {
+    farmDemo()
+    const s = farmStack()
+    const farmEnv = { TRACY_DEMOS_DB_CONTAINER: DB_CONTAINER }
+    const farmTitles = () =>
+      sql('SELECT title FROM wp_posts ORDER BY id', FARM_SCHEMA).split('\n').filter(Boolean)
+    try {
+      s.run(GIT, ['--op', 'ensure'], farmEnv)
+      const first = s.backup(['--op', 'initial-backup'], farmEnv)
+      assert.equal(first.database.ok, true, JSON.stringify(first))
+      assert.match(
+        s.git('tag', '-l', '--format=%(contents)', 'tracy-release/v1'),
+        /^Tracy-Database: sha256:[0-9a-f]{64} size:\d+ kind:mysql tables:2$/m
+      )
+      const good = s.create('Good', farmEnv)
+      sql(
+        "INSERT INTO wp_posts (title) VALUES ('Order 1001'); CREATE TABLE wp_plugin_log (id INT)",
+        FARM_SCHEMA
+      )
+      const done = s.restore(good.version, farmEnv)
+      assert.equal(done.ok, true, JSON.stringify(done))
+      assert.deepEqual(
+        done.steps.map((x) => `${x.step}:${x.state}`),
+        ['verify:done', 'before-restore:done', 'load:done', 'files:done', 'swap:done', 'check:done']
+      )
+      assert.deepEqual(farmTitles(), ['Hello world'])
+      assert.equal(
+        sql(
+          `SELECT CONCAT((SELECT COUNT(*) FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA='${FARM_SCHEMA}'), ' ', (SELECT COUNT(*) FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA='${FARM_SCHEMA}'), ' ', (SELECT COUNT(*) FROM information_schema.EVENTS WHERE EVENT_SCHEMA='${FARM_SCHEMA}'))`
+        ),
+        '1 1 1',
+        'the trigger, the routine and the event are restored'
+      )
+      assert.equal(
+        sql("SELECT value FROM wp_options WHERE name = 'note'", FARM_SCHEMA),
+        DEFINER_TEXT,
+        'a row holding definer text comes back byte for byte'
+      )
+      assert.equal(
+        sql('SELECT COUNT(*) FROM wp_titles', FARM_SCHEMA),
+        '1',
+        'the view is restored, as the demo user'
+      )
+      assert.deepEqual(
+        sql(
+          `SELECT table_name FROM information_schema.tables WHERE table_schema='${FARM_SCHEMA}' ORDER BY table_name`
+        )
+          .split('\n')
+          .filter(Boolean),
+        ['wp_options', 'wp_posts', 'wp_titles']
+      )
+      // No scratch or trash schema beside it, and the other demo's schema untouched.
+      assert.deepEqual(
+        sql(
+          "SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE 'd\\_%' ORDER BY 1"
+        ).split('\n'),
+        ['d_other_demo_99999999', FARM_SCHEMA]
+      )
+      assert.equal(sql('SELECT title FROM d_other_demo_99999999.wp_posts'), 'other')
+      const back = s.restore(done.beforeRestore.version, farmEnv)
+      assert.equal(back.ok, true, JSON.stringify(back))
+      assert.deepEqual(farmTitles(), ['Hello world', 'Order 1001'])
+      // Never the per-site `db` service, never the farm's root.
+      const calls = s.log()
+      assert.doesNotMatch(calls, /compose exec/)
+      assert.doesNotMatch(calls, /-uroot/)
+    } finally {
+      s.dispose()
+    }
+  }
+)

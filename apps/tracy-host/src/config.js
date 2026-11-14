@@ -125,6 +125,10 @@ export function readConfig(env) {
     // Demo QA runs and vision capture streams at once, and the tabs a QA run reads in (`browser-room.js`).
     browserRuns: browserRunsOf(env),
     demoQaTabs: demoQaTabsOf(env),
-    demoReadCacheBytes: demoReadCacheBytesOf(env)
+    demoReadCacheBytes: demoReadCacheBytesOf(env),
+    // Whether a Joomla/WordPress demo install ends by folding the demo into this host's demo farm
+    // (`provision.js` foldDemo, `scripts/provision/fold.sh`). Off unless `TRACY_DEMO_FARM=1`: a host
+    // runs today's per-site demos until it is switched on, and the farm image must be built there first.
+    demoFarm: env.TRACY_DEMO_FARM === '1'
   }
 }

@@ -641,3 +641,45 @@ test("step 5 drops this site's finished job records and keeps the ones still que
   assertGone(s, teardown(s))
   assert.deepEqual(readdirSync(jobs).sort(), ['neighbour.json', 'queued-look.json', 'this-teardown.json'])
 })
+
+// ── a demo folded into the demo farm (lib/site-runtime.sh, provision/farm-release.sh) ─────────────
+// Its pool, vhost, schema and user live in the shared farm, not in its own project: the farm lets go
+// of them FIRST (step 1b), then the forwarder project and the kept `<label>_db` volume go as for any site.
+test('a folded demo: the farm lets go of it before compose down, then the site goes as usual', () => {
+  const s = stand({ volumes: [`${LABEL}_db ${LABEL}`, `${NEIGHBOUR}_db ${NEIGHBOUR}`] })
+  writeFileSync(path.join(s.siteDir, 'runtime'), 'farm\n')
+  mkdirSync(path.join(s.siteDir, 'farm'))
+  writeFileSync(path.join(s.siteDir, 'farm', 'per-demo.compose.yml'), 'services: {}\n')
+  const run = teardown(s)
+  assertGone(s, run)
+  assert.match(run.stdout, /served by the demo farm — releasing its part of the farm first/)
+  assert.match(run.stdout, /the demo farm holds nothing of ja-vega-joomla any more/)
+  const seen = calls(s)
+  const released = seen.findIndex((c) => c === `network disconnect ${LABEL}_default tracy-demos-web`)
+  const down = seen.findIndex((c) => c.startsWith('compose down'))
+  assert.ok(released >= 0 && down > released, seen.join('\n'))
+  assertNeighbourUntouched(s)
+})
+
+test('a folded demo whose farm will not let go: the teardown stops with the site and its data whole', () => {
+  const s = stand()
+  writeFileSync(path.join(s.siteDir, 'runtime'), 'farm\n')
+  const demos = path.join(s.root, 'private', '_demos')
+  for (const d of ['apache', 'fpm', 'exec']) mkdirSync(path.join(demos, d), { recursive: true })
+  writeFileSync(path.join(demos, 'fpm', `${LABEL}.conf`), '; pool\n')
+  // The farm image is not on this host (the fake docker knows no `image inspect`): the re-apply fails.
+  const run = teardown(s)
+  assertKept(s, run)
+  assert.match(run.stderr, /the demo farm did not let go of ja-vega-joomla/)
+  assert.ok(!calls(s).some((c) => c.startsWith('compose down')), 'its own containers were not touched')
+  assert.match(table(s, 'volumes'), new RegExp(`^${LABEL}_db `, 'm'))
+})
+
+test('a runtime marker that cannot be read stops the teardown before anything is destroyed', () => {
+  const s = stand()
+  writeFileSync(path.join(s.siteDir, 'runtime'), 'nginx\n')
+  const run = teardown(s)
+  assertKept(s, run)
+  assert.match(run.stderr, /runtime marker cannot be read/)
+  assert.ok(!calls(s).some((c) => c.startsWith('compose down')))
+})
