@@ -162,7 +162,7 @@ pm.max_children = 4
 pm.process_idle_timeout = 20s
 pm.max_requests = 500
 request_terminate_timeout = 300s
-; Its own status, through its socket only (Apache hands it `.php` files alone): unfold.sh asks it which
+; Its own status, through its socket only (Apache hands it \`.php\` files alone): unfold.sh asks it which
 ; workers are busy before the copy (provision/farm-pool-status.php).
 pm.status_path = /fpm-status
 catch_workers_output = yes
@@ -332,7 +332,7 @@ COMPOSE
       retries: 3
       start_period: 10s
     # The base image declares VOLUME /var/www/html; a tmpfs there keeps docker from leaving an
-    # anonymous volume behind every container of this service (a `compose run` config test too).
+    # anonymous volume behind every container of this service (a \`compose run\` config test too).
     tmpfs:
       - /var/www/html:ro,size=1m
     volumes:

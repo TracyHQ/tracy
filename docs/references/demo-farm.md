@@ -41,7 +41,7 @@ only.
 1. Deploy a tracy-host that carries the farm (this branch or later).
 2. The farm image: the first fold builds it on its own (`web/build.sh demos`, the tag in
    [`web/DEMOS_IMAGE`](../../packages/fleet/tracy-fleet-operation/web/DEMOS_IMAGE)). To have it ready
-   beforehand: `bash /opt/tracy-fleet/web/build.sh demos` on the host, or dispatch
+   beforehand: `docker exec tracy-tracy-host-1 bash /opt/tracy-fleet/web/build.sh demos`, or dispatch
    `build-app-images` with `build_web_images=<host>` (it builds the farm image too).
 3. Set `TRACY_DEMO_FARM=1` in the host's deploy `.env` and redeploy tracy-host. From then on every
    Joomla/WordPress demo install ends by folding the demo. A fold that fails leaves the demo on its own
@@ -51,15 +51,18 @@ only.
 
 ## Folding the demos already on the host, one by one
 
-As root on the host (the scripts live under `/opt/tracy-fleet`):
+As root on the host, run the scripts inside the tracy-host container: its `/opt/tracy-fleet` is the
+copy installs use and the only one with `web/` (the farm image build needs `web/build.sh` and
+`demos.Dockerfile`). The copy synced to the host's own `/opt/tracy-fleet` by `deploy-host-dsh` has no
+`web/`, so a fold run there cannot build the farm image.
 
 ```bash
-bash /opt/tracy-fleet/provision/fold.sh <label>        # one demo; refuses customer sites and EmDash
+docker exec tracy-tracy-host-1 bash /opt/tracy-fleet/provision/fold.sh <label>  # one demo; refuses customer sites and EmDash
 cat /srv/tracy/<label>/runtime                          # farm
 curl -sI -H 'X-Forwarded-Host: <label>.<zone>' http://127.0.0.1:<HOST_PORT>/ | head -3
 ```
 
-`fold.sh` records `/` and two linked pages before it changes anything, checks the farm answers them
+`fold.sh` records `/` and two linked pages before it changes anything (when `/` redirects to a page on the demo's own host, as a multilingual Joomla does, it records `/` as that redirect, the landing page — followed at most 3 hops, it must be a 200 with a title — and two links from the landing page), checks the farm answers them
 the same way (code, redirect, `<title>`), switches, checks again, and only then writes the marker.
 Right before the database copy it stops the demo's own web container (the database keeps
 running), so no write lands after the dump; the demo is without a server until the forwarder takes
@@ -72,7 +75,7 @@ before the next.
 ## Rolling back
 
 ```bash
-bash /opt/tracy-fleet/provision/unfold.sh <label>      # the demo back on <label>-web-1 + <label>-db-1
+docker exec tracy-tracy-host-1 bash /opt/tracy-fleet/provision/unfold.sh <label>  # the demo back on <label>-web-1 + <label>-db-1
 ```
 
 It stops the demo's forwarder (the farm and its other demos keep serving), copies the demo's schema
