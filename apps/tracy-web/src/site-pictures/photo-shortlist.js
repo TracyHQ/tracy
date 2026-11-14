@@ -12,10 +12,18 @@ const QUALITY_RANK = { high: 0, medium: 1, unknown: 2, low: 3 }
 
 const bool = (x) => (typeof x === 'boolean' ? x : null)
 
-/** Lettering or a watermark: the brief label, else the vision label names the picture check also reads (P09). */
+/**
+ * Lettering or a watermark (P09, ADR 0043 section 2): the brief label `hasTextOrWatermark` (words, a logo, a stamp or a
+ * watermark written on the photo itself, not signs that are part of the scene), else the vision label names. Words
+ * added on top of the photo always count.
+ *
+ * 🔒 SCENE TEXT IS NOT LETTERING. From 11/11/2026 any `textPresence: present` refused the photo; on the measured Central
+ * Padel build (12/11/2026) that refused 239 of the business's 245 photos (its name on shirts, court banners, racket
+ * prints), left 8 for 37 frames and 10 frames to step 9b as template pictures. The looker reads the same rule
+ * (looker-prompt.md "stray lettering"), so a photo admitted here is not turned away there.
+ */
 export function letteringOf(a) {
-  // P09 forbids scene lettering too; a direct overlay-only false cannot override visible words.
-  if (a.textPresence === 'present' || a.hasTextOverlay === true) return true
+  if (a.hasTextOverlay === true) return true
   const own = bool(a.hasTextOrWatermark)
   if (own !== null) return own
   const vision = [

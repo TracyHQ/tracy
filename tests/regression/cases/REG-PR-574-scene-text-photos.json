@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-574-scene-text-photos",
+  "kind": "fix",
+  "title": "Text that belongs to the scene no longer refuses an owner photo; words written on the photo still do",
+  "pr": 574,
+  "area": "website-opportunities/pictures",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm both tests named in run.tests report ok."
+  ],
+  "expect": [
+    "A photo labelled textPresence present with hasTextOrWatermark false and hasTextOverlay false is usable (photoRefusal null).",
+    "The same photo with hasTextOrWatermark true, or hasTextOverlay true, is refused as 'lettering or a watermark'.",
+    "The picture check P09 passes the scene-text photo and fails the two lettered variants with 'carries lettering or a watermark'."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-pictures-photo-shortlist.test.mjs",
+      "apps/tracy-web/test/site-pictures-check.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "scene text survives brief mapping and does not refuse a photo; words on the photo itself still do (P09)",
+      "P09 passes text that belongs to the scene and fails words written on the photo itself"
+    ]
+  }
+}

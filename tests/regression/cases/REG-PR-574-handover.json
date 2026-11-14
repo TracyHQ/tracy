@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-574-handover",
+  "kind": "feat",
+  "title": "One press hands a demo site to its business owner through the Team, role, demo clock and address doors, each step reported",
+  "pr": 574,
+  "area": "website-opportunities/handover",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a disposable PostgreSQL server, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The first press answers team_invite done INVITED (POST /api/team/invite with role editor and the caller's cookie), owner_role skipped INVITE_PENDING, keep_demo done KEPT (demo_expires_at null, never clocked again), domain skipped NOT_ASKED.",
+    "Pressed again after the owner accepted: no second invitation, owner_role done PROMOTED (PATCH role owner), keep_demo skipped ALREADY_KEPT, domain done DNS_PENDING; complete true. A third press only skips.",
+    "A refused invitation answers 207 with team_invite failed and the later steps skipped; the demo keeps its clock.",
+    "An address door that is switched off answers domain not_available OWN_DOMAIN_DISABLED.",
+    "Another account's build answers 404; a bad email, an unknown field, the caller's own email, a frozen, deleted or unbuilt demo and the switch off are refused before any door is asked."
+  ],
+  "selectors": {
+    "door": "POST /api/website-opportunities/builds/:buildId/handover"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/website-opportunities-handover.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the first press invites the owner, keeps the demo for good and waits for them to accept before Owner",
+      "pressed again once the owner accepted: no second letter, Owner role, the domain connected",
+      "a failed step is reported (207) and nothing that depends on it runs: the demo keeps its clock",
+      "a deployment that cannot connect a domain answers that step not_available, never a made-up success",
+      "only the build’s own account, a live demo, and a well-formed body",
+      "keepDemo: kept once, already kept after, gone for a deleted demo; a frozen demo is thawed"
+    ]
+  }
+}

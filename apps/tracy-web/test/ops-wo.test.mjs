@@ -311,6 +311,14 @@ function createStandInPool({ role = 'admin', switchOn = true } = {}) {
       if (norm.startsWith('delete from rate_bucket')) {
         return { rows: [] }
       }
+      // The latest builds' share link opens (`lib/wo-demo-links.js` opensOf) and the sellers' outreach marks
+      // (`outreach-state.js`): none recorded in this world unless a test seeds them.
+      if (norm.includes('from wo_build b where b.id = any(')) {
+        return { rows: (state.demoOpens ?? []).filter((r) => params[0].includes(r.id)) }
+      }
+      if (norm.startsWith('select * from wo_outreach')) {
+        return { rows: (state.outreach ?? []).filter((r) => params[0].includes(r.opportunity_id)) }
+      }
       throw new Error(`Unexpected SQL in ops-wo test: ${norm}`)
     }
   }
@@ -901,6 +909,38 @@ test('the Live Queue carries the PageSpeed facts of the research profile', async
   assert.deepEqual(doc.opportunities.find((r) => r.name === 'Bếp Nhà Xứ Quảng').pageSpeed, facts)
   assert.equal(doc.opportunities.find((r) => r.name === 'Anan Saigon').pageSpeed, null)
   assert.ok(pool.state.queries.some((q) => q.sql.includes("p.profile->'pageSpeed' as page_speed")))
+})
+
+test('the Live Queue sets the current site score beside the latest demo’s own PageSpeed', async () => {
+  const pool = createStandInPool()
+  pool.state.opportunities[0].page_speed = { performance: 41, checkedAt: NOW_ISO }
+  pool.state.opportunities[1].page_speed = { performance: 34, checkedAt: '2026-11-01T08:00:00Z' }
+  pool.state.builds[0].built_pagespeed = {
+    url: 'https://anan-saigon.tracy.site/',
+    performance: 92,
+    checkedAt: '2026-11-12T09:00:00Z'
+  }
+  const doc = await (await requestWo({ pool })).json()
+  const row = (name) => doc.opportunities.find((r) => r.name === name)
+  assert.deepEqual(row('Anan Saigon').pagespeed, {
+    old: { score: 34, measuredAt: '2026-11-01T08:00:00.000Z' },
+    demo: { score: 92, measuredAt: '2026-11-12T09:00:00.000Z' }
+  })
+  // No build: no demo; the old score stays as research measured it.
+  assert.deepEqual(
+    doc.opportunities.find((r) => r.name !== 'Anan Saigon' && r.pagespeed?.old?.score === 41).pagespeed,
+    {
+      old: { score: 41, measuredAt: new Date(NOW_ISO).toISOString() },
+      demo: { reason: 'no_demo' }
+    }
+  )
+  // A demo PageSpeed could not reach keeps its reason, never a number.
+  pool.state.builds[0].built_pagespeed = { url: 'http://anan.tracy.test:51710/', reason: 'not_public' }
+  const again = await (await requestWo({ pool })).json()
+  assert.deepEqual(again.opportunities.find((r) => r.name === 'Anan Saigon').pagespeed.demo, {
+    reason: 'not_public'
+  })
+  assert.ok(pool.state.queries.some((q) => q.sql.includes("b.built->'pagespeed' as built_pagespeed")))
 })
 
 test('the Live Queue carries a short Google Places summary: amenities, reviews and stored photos', async () => {

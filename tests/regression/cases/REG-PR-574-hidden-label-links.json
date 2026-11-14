@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-574-hidden-label-links",
+  "kind": "fix",
+  "title": "A link whose label slot the plan hides is hidden with it before the plan check, so R10b sends no fix round for it",
+  "pr": 574,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "On the JA Boxing kit, a kept contact block that hides the map button's label and leaves the button undecided fails R10b before the planner step reads it; after, the button is in hiddenSlots with the reason, R10b passes and R24 reports nothing; a menu item label printed by the header and the mobile menu takes the header link with it.",
+    "A label the decision also writes, a label two kit blocks print (block-176.1) and a link the plan decided are left alone; a visible undecided link in a kept row and ambiguous row ownership still fail R10b."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-planner-hidden-links.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a link whose label slot the decision hides is hidden with it",
+      "a written label, a label other blocks print and a link the plan decided stay with the planner",
+      "a menu item label printed by the header and the mobile menu still takes the header link with it",
+      "a visible undecided child link remains a checker failure",
+      "ambiguous row ownership and contradictory parent decisions stay unresolved"
+    ]
+  }
+}

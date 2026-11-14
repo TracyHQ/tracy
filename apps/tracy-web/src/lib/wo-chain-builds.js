@@ -46,6 +46,49 @@ export function chainStepOf(chain) {
   return furthest < 0 ? null : CHAIN_IDS[furthest]
 }
 
+/** An error code as the steps write them (`CHAIN_BENCH_CHECK_FAILED`, `STEP_NINE_CHECK_FAILED`); anything else is `unknown`. */
+const codeOf = (value) =>
+  value == null || value === ''
+    ? null
+    : /^[A-Z][A-Z0-9_]{2,63}$/.test(String(value))
+      ? String(value)
+      : 'unknown'
+
+/**
+ * Where a finished chain run went wrong, in bounded fields only: the first step that failed (`timings.chain.failedStep`),
+ * that step's error code, and the Write step's own cause when the write did not end done. The free text of a step's error
+ * stays on the chain measurement; these fields go into `wo_build.qa` and the /ops/wo attention line, so a failed build
+ * names the step and the check that stopped it instead of only `QA_NEEDS_REVIEW`.
+ * @param {{ failedStep?: unknown, steps?: unknown } | null | undefined} chain
+ * @returns {{ failedStep: string | null, failedCode: string | null, writeCode: string | null }}
+ */
+export function chainFailureOf(chain) {
+  const steps = Array.isArray(chain?.steps) ? chain.steps : []
+  const named = typeof chain?.failedStep === 'string' ? chain.failedStep : null
+  const failedStep = named === null ? null : [...CHAIN_IDS, 'site'].includes(named) ? named : 'unknown'
+  const failed = named === null ? null : steps.findLast((entry) => entry?.step === named)
+  const write = steps.findLast((entry) => entry?.step === 'write')
+  return {
+    failedStep,
+    failedCode: codeOf(failed?.code ?? failed?.diagnostics?.write?.causeCode ?? null),
+    writeCode: write && write.outcome !== 'done' ? codeOf(write.diagnostics?.write?.causeCode ?? null) : null
+  }
+}
+
+/**
+ * The /ops/wo attention line of a failed chain build: the step and the code, e.g.
+ * `Build stopped at copy (CHAIN_BENCH_CHECK_FAILED); write: STEP_NINE_CHECK_FAILED`. Null when nothing names a step.
+ * @param {{ failedStep?: string | null, failedCode?: string | null, writeCode?: string | null } | null | undefined} failure
+ * @returns {string | null}
+ */
+export function chainFailureLine(failure) {
+  if (!failure?.failedStep && !failure?.writeCode) return null
+  const step = failure.failedStep ?? 'write'
+  const code = failure.failedCode ?? (step === 'write' ? failure.writeCode : null)
+  const write = failure.writeCode && step !== 'write' ? `; write: ${failure.writeCode}` : ''
+  return `Build stopped at ${step}${code ? ` (${code})` : ''}${write}`
+}
+
 /** Whether a brief row's run is still going. @param {string | null | undefined} state */
 export const chainRunOpen = (state) => OPEN_STATES.includes(String(state))
 

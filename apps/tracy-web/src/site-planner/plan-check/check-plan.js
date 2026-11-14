@@ -18,6 +18,7 @@ import { checkR01 } from './rules-ids.js'
 import { checkR23 } from './rules-kept-rows.js'
 import { checkR24 } from './rules-labels.js'
 import { checkR10h, checkR19 } from './rules-map-judgement.js'
+import { checkR26 } from './rules-social-icons.js'
 import { checkR04 } from './rules-menu.js'
 import { checkR08, checkR09, checkR11 } from './rules-notices-forms.js'
 import { checkR20 } from './rules-page-titles.js'
@@ -32,7 +33,7 @@ import { checkR21 } from './rules-trade-hidden.js'
 
 // The checker's version, stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title,
 // a failure text or the result shape changes, so two runs scored by different checkers are never compared as equal.
-export const CHECKER_VERSION = 'site-plan-check/8'
+export const CHECKER_VERSION = 'site-plan-check/9'
 
 const RUN_ORDER = [
   checkR00,
@@ -66,6 +67,7 @@ const RUN_ORDER = [
   checkR23,
   checkR24,
   checkR25,
+  checkR26,
   checkR10h
 ]
 

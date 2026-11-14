@@ -5,7 +5,7 @@
 // their text, so its input grows with the notebook only (ADR 0042 section 2). The fixed part is the same bytes in every
 // turn, so the provider's prefix cache reuses it. The partial answers are merged into one answer (mergeTurnAnswers)
 // before code puts the copy file together.
-import { pagesInWritingOrder } from './writer-input.js'
+import { LENGTH_WINDOW_NOTE, pagesInWritingOrder } from './writer-input.js'
 
 const block = (title, value) => [`## ${title}`, '', JSON.stringify(value), '']
 
@@ -23,6 +23,7 @@ export function fixedPart(input) {
     ...block('The brief facts the plan cites', input.facts),
     ...block('The reviews the plan quotes, in full', input.reviews),
     ...block('The kit: every block the plan uses', input.blocks),
+    ...block('The kit: how long each text slot is written', LENGTH_WINDOW_NOTE),
     ...block('The kit: footer column headings', input.footerHeadings),
     ...block(
       'The name slots the brand step hands over (write them as the home page seo entry)',

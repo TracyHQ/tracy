@@ -161,6 +161,8 @@ Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) m
    ([`public/wo-find-page.js`](apps/tracy-web/src/public/wo-find-page.js), see §8 "Website Opportunities").
    Demos for outside builders: `/v1/demos*` on the api host, Bearer **account token** with scope `demos` (not a seat key)
    ([`opportunities-build/public-demos-route.js`](apps/tracy-web/src/opportunities-build/public-demos-route.js), see §8 "Website Opportunities").
+   A demo's share link: `GET /d/<token>` and `GET /d/<token>/*`, **no session**: a 302 to the demo that counts the open
+   ([`opportunities-build/demo-link-route.js`](apps/tracy-web/src/opportunities-build/demo-link-route.js), see §8 "Website Opportunities").
 3. **Everything else → the dsh of the host holding the site** (`workspace/`): HTTP and WebSocket proxy, in three scopes
    `/<siteKey>/…`, `/new/…` and `/` ([`scope.js`](apps/tracy-web/src/workspace/scope.js)).
 
@@ -855,6 +857,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   Website Opportunities (migration 125, §8): `wo_preference`, `wo_opportunity`, `wo_job`, `wo_job_attempt`,
   `wo_source`, `wo_media`, `wo_profile`, `wo_revision` (immutable, a trigger blocks UPDATE), `wo_build`. Migration 126: `wo_media.caption/alt/dhash/labels`, `wo_build.pictures` (immutable picture plan + receipts).
   Migration 175 (`/v1/demos`): `wo_public_demo` (one request: `Idempotency-Key`, fingerprint of the whole body, body snapshot, opportunity + demo action, `sponsored`/`reserved_cents`, cancellation), `wo_sponsor_setting` (one row: number of live demos per account, model budget), `wo_demo_usage.kind` adds `external`.
+  Migration 215 (= the package's `0016-outreach-state.sql`, open layer): `wo_outreach` (one row per opportunity: when the seller marked it sent, replied, won or lost). Migration 216: `wo_demo_link` (a build's share link: random token, one live per build, `revoked_at`, `first_opened_at`), `wo_demo_open` (one counted open: time, path, `phone`/`desktop`; nothing that names the visitor). Migration 217 (`/v1/demos` webhooks): `wo_demo_webhook` (one live https address per account, the signing secret sealed with `lib/secret-box.js`, `since`), `wo_demo_webhook_event` (the outbox: frozen body, `dedupe_key`, attempts, `next_at`, delivered or given up; settled rows deleted after 30 days).
   Migration 134 (shared research, P1): `wo_place` (one real place, `current_snapshot_id`),
   `wo_place_identity` (google/osm/url/merge/tripadvisor → place), `wo_place_link` (the place's sources with evidence: identity, Google `websiteUri`,
   social links the place's own website points to — URLs sent by the client do NOT go here), `wo_place_job` (one research run per place, lease/fence like
@@ -1731,7 +1734,35 @@ path, so they survive Research again; rating and social counts stay `claims.stat
 
 **Deleting a saved opportunity (09/11/2026).** `DELETE /api/website-opportunities/:id` and `POST …/jobs/bulk` with `action: "delete"` + `opportunityIds` (open package, `src/opportunity-delete.js`): a demo still being built (builder `demoBuildRunning`: a build `requesting`/`provisioning`, or a queued demo action whose build is not `done`) answers 409 `DEMO_BUILD_RUNNING` before anything changes, so no site is made for a row that is gone; otherwise a live research job is cancelled through `cancelRequest`; then the builder's `prepareDelete` (`opportunities-build/demo-removal.js`) tears each live demo site down through the retention sweep's own `deleteDemo` + `teardown` (the site delete door acted as the building account, `app.js` `woDemoTeardown`) and drops `wo_quality_action_link` rows (no cascade); a teardown that cannot start answers 409 `DEMO_TEARDOWN_FAILED` and nothing is deleted. Then `wo_opportunity` goes and its own rows cascade. Shared place research, the quality runs, the cost ledger and stored picture bytes stay. A customer's own site (`candidate.ownSite`) answers 404. Bulk presses are recorded in `wo_bulk_request` (migration 207 / package 0011 allow `delete`).
 
+**Handing a demo over to its business (13/11/2026).** `POST /api/website-opportunities/builds/:buildId/handover` `{email, domain?}` (builder, `opportunities-build/handover.js`; not the agent hand-off `…/handoff`) writes nothing of its own except the demo clock: it asks the doors that already exist, through the builder's `request` with the caller's cookie and `Origin`, so each keeps its checks, rate limit, letters and records. `GET /api/team` reads the owner's seat; `POST /api/team/invite` invites them as an Editor; `PATCH /api/sites/:key/seats/:grant` promotes the seat to Owner only once it is accepted (ADR 0028: Owners are promoted, never invited; the next press promotes); `keepDemo` (`demo-retention.js`) sets `demo_expires_at = null` and stamps `demo_touched_at` (kept for good: never clocked, frozen, capped or swept); `PUT /api/sites/:key/address` `{kind: "custom"}` connects the owner's domain when asked. Each step answers `{step, state: done|skipped|failed|not_available, reason}`; one press per build at a time (advisory lock `wo-handover`); a failed step answers 207.
+
+**Trade must-haves (13/11/2026).** `domain/trade-must-haves.mjs` names what each trade's customers expect online and reads the old site's offer from the website source row research already wrote (`collected.pages`, `menus`, `bookings`; nothing fetched). The scoring rule `trade-must-haves` (weight 15) applies only when a caller passes the assessment: the Details answer's `mustHaves` (`src/must-haves-view.js`) carries it, its `scoreReason` and the outreach lines the latest live demo's brief backs (builder `demoOffersOf`); `GET /:id/outreach` adds them as `outreach.arguments`. Find, the list and the client score without it, unchanged.
+
 - **`/v1/demos` — an outside builder asks for a demo** (24/10/2026): a third door into the demo build flow, only on the api host, Bearer account token with scope `demos` (part A; seat key → 403 `ACCOUNT_TOKEN_REQUIRED`). Body `website-opportunities/demo-request/v1` or `/v2` ≤ 512 KiB; unknown fields (`accountId`, `ownSite`, `verified`, `objectKey`…) → 422. Each request is an immutable snapshot: a `wo_opportunity` of the account's own (provider `external:website-opportunities`, `place_id` null, writing only its own `wo_profile`/`wo_source`/`wo_media` — never the shared place tables), then it calls exactly `acceptDemoActions` (counts `wo_demo_usage` kind `external`, does not use up the daily quota of the Build demo button). Pictures: Tracy downloads them itself through `fetchLimited` + pinned fetch (every hop, IPv4/IPv6 separately, metadata), ≤ 24 pictures, 5 MiB/picture, 48 MiB/request, 40 MP, 60 s; a non-public URL → 422 before anything is downloaded or written. **One transaction** holds the account lock, checks replay by key (same body → same receipt, different body → 409), checks the `liveDemosPerAccount` cap (default 20 live demo sites through this door; deleting frees a place; expired but not deleted still counts; cancelled before the build starts does not) → 409 `DEMO_LIMIT_REACHED`, the model budget (only for demos of accounts without a connected AI account: holds `sponsoredDemoMaxCents`, monthly total `sponsoredMonthlyBudgetCents`) → 503 `SPONSOR_BUDGET_EXHAUSTED`, imports the snapshot and accepts the job. The numbers are set in `/ops/wo` › Settings › Demos for outside builders (`GET|PUT /api/ops/wo/public-demos`, table `wo_sponsor_setting`, not in the open package's settings). Status `queued|building|needs-review|ready|failed|cancelled`; `ready` only when QA `passed`; `retention` reads the WO demo clock, and reading does not extend it.
+- **Demo share links, outreach states and `/v1/demos` webhooks** (12/11/2026): every outreach draft of a ready demo
+  (`GET …/:id/outreach`, and the list rows' `outreach`) hands out the build's share link `<origin>/d/<token>` instead of
+  the demo's address, made on that first read through the builder's `shareLinksOf` (`lib/wo-demo-links.js`; the open
+  layer receives it as a function and reads none of the build tables). `/v1/demos` makes the link the first time a
+  finished demo is read (`site.shareUrl`). The `/d/<token>` door (no session) answers a 302 to the demo, the path asked
+  under it and the query kept, and writes one `wo_demo_open` row: time, path, device class. **Not counted:** HEAD,
+  prefetch/prerender, a User-Agent that is not a browser's or names a program (link previews, crawlers, mail scanners,
+  HTTP libraries, headless browsers), the signed-in account that owns the link (its `tracy_sess` is read, nothing set),
+  opens past 60 an hour per link (`rate_bucket`). A failed write never holds the redirect. Counts (`total`, `phone`,
+  `desktop`, `lastOpenedAt`, `firstOpenedAt`) are read on the opportunity and its list row (`demo.opens`), `/v1/demos`
+  (`opens`) and `/ops/wo` (`demoOpens`). `DELETE …/:id/demo/link` stops the live links (404 from then on); the next
+  outreach read makes a new one. The first open is recorded (`first_opened_at`) but not sent to the Inbox: the Inbox
+  skips a kind it cannot draw while its unread count still counts it, so that waits for an Inbox row of its own.
+  **Outreach state** (open layer, `website-opportunities/src/outreach-state.js`): `PUT …/:id/outreach/state` records
+  what the seller marks (`sent`, `replied`, `won`, `lost`, `none` clears), owner-only, nothing sent or read; shown as
+  `outreachState` on the detail, each list row and `/ops/wo`. **Webhooks** (`opportunities-build/demo-webhooks.js`):
+  `PUT|GET|DELETE /v1/demos/webhook` registers one https address per account (default port, no credentials, a host whose
+  every DNS answer is public, by the package's `assertPublicUrl`) with a `whsec_` secret answered once. The cron sweep
+  (`app.demoWebhooksTick`, every 5 s) makes events from **committed** rows only (the action's status, the counted opens)
+  for demos accepted since the webhook (`since`), each once (`dedupe_key`), with the body frozen; no build path calls it,
+  so a webhook can neither hold nor fail a build. Delivery claims due rows (`for update skip locked`, a 60 s lease),
+  POSTs through the crawler's pinned fetch (the dialled address checked again; no redirect followed; 10 s), signed
+  `X-Tracy-Signature: t=<unix>,v1=<hex HMAC-SHA256 of "<t>.<body>">`; 2xx delivers, anything else retries after 30 s
+  tripling to 6 h, 8 attempts in all; an account with no live address gives its pending events up.
 - The open layer touches Tracy through exactly two doors: `deps.host` (contract `src/host.js`, 15 functions `HOST_MEMBERS`, including `principalOf`/`displayNameOf` instead of reading the `account` table; Tracy adapter `apps/tracy-web/src/wo-host.js`) and `deps.builder` (`opportunities-build/route.js` `createWebsiteBuilder`: `routes`, `settingsOf`, `saveSettings`, `listedDemoOf`, `detailOf`, `demoFactsOf`, `demoJourneySql`, `templateChoicesOf`, `prepareDelete`, `demoBuildRunning`). No builder → no demo fields; stage is computed from research only.
 - The open layer does **not** import `opportunities-build/` and does **not** read the `wo_revision`/`wo_build`/`wo_demo_action` tables in SQL; stage/attention get the demo half through `demoJourneySql`. Tests: `packages/wo/website-opportunities/test/package-boundary.test.mjs` (no import escapes the package root, only declared deps), `apps/tracy-web/test/website-opportunities-open-journey.test.mjs` (a DB without the build tables), `scripts/test/tracy-web-wo-package-image.test.mjs` (image layout).
 - `tracy-web` image: the package is COPYed into `/opt/tracy-web/node_modules/website-opportunities` (the image's own lockfile cannot resolve `workspace:`); dev machine: the root `package.json` links the package with `workspace:*`.
@@ -2376,9 +2407,12 @@ approval or chain eligibility. Explicit custom indexes remain isolated from depl
 - **WO visual review:** the WO chain starts new planner runs with `--require-visual-review`, freezing
   `harness.visualReview = "kit-images/1"`. The additional V01 rule requires desktop page-group representatives,
   mobile images of kept pages and desktop images of every printed block. Evidence is the exact kit image hash
-  delivered in an answered model turn after its image-tool call. Missing coverage goes through the same fix rounds;
-  these runs keep image tools available instead of forcing text-only writing after 20 reads. A text-only model is
-  refused for this policy. Existing runs and standalone benches preserve their previous policy.
+  delivered in an answered model turn after its image-tool call. The first message names every image id V01 can
+  require (each page group's desktop and phone images, each block's desktop image) and asks for the group images first
+  and each block's image in the same call that reads the block, so round 0 can pass before the plan exists. Missing
+  coverage goes through the same fix rounds; these runs keep image tools available instead of forcing text-only
+  writing after 20 reads. A text-only model is refused for this policy. Existing runs and standalone benches preserve
+  their previous policy.
 
 ### Site writer bench (03/11/2026, [ADR 0042](docs/adr/0042-site-writer-trial-bench-copy-contract-and-check.md))
 

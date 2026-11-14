@@ -39,7 +39,13 @@ import {
 } from './looker-call.js'
 import { letteringRejection, negativeLookCache, negativeLookKey } from './looker-negative-cache.js'
 
-export const LOOK_CONCURRENCY = 4
+/**
+ * Looks in flight at once. Each look is one vision call that waits on the provider (35 to 56 s each on the local stand,
+ * 12/11/2026), so the pictures step's wall time is the looks divided by this. Once the shortlist kept the business's
+ * scene-text photos, a Central Padel build looked at every frame's real photo: 3483 s of looks, 42 minutes of picture
+ * step at 4 at once. Eight halves that wait; the provider calls are independent and the step's verdicts do not change.
+ */
+export const LOOK_CONCURRENCY = 8
 /** The sources whose picture the looker checks. */
 export const LOOKED_SOURCES = new Set(['owner-photo', 'owner-photo-extended', 'drawn'])
 export const LOOKER_RULE = Object.freeze({ id: 'L01', title: 'The looker passes every finished picture' })

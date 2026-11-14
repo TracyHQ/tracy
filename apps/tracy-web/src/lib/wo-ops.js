@@ -14,9 +14,12 @@
 import { readReleases, templateCards } from './quickstart-releases.js'
 import { bornSiteAddress } from './site-address.js'
 import { rateCountsOf } from './rate.js'
+import { opensOf } from './wo-demo-links.js'
+import { outreachStateShape } from 'website-opportunities/src/outreach-state.js'
 import { openSecret, sealSecret } from './secret-box.js'
 import { saveUiSwitches, uiSwitchOn } from './ui-setting.js'
 import { FENCED_ACTIONS, runFencedResearchAction } from './wo-operator-fence.js'
+import { chainFailureLine } from './wo-chain-builds.js'
 import { demoJourneySql } from '../opportunities-build/journey-sql.js'
 import { customerStatus, journeySql } from 'website-opportunities/src/wo-journey.js'
 import { menuVisionDoorFor } from 'website-opportunities/src/menu-photo-reading.js'
@@ -36,6 +39,7 @@ import {
   testProviderKey
 } from 'website-opportunities/src/ops/provider-keys.js'
 import { capabilityGroups, providerStates } from 'website-opportunities/src/ops/provider-states.js'
+import { demoPageSpeedOf, pagespeedPair } from 'website-opportunities/src/pagespeed.js'
 
 /** Tracy's half of the open layer's operator functions: its seal and its rate table (`wo-host.js` has the same). */
 const OPERATOR_HOST = Object.freeze({ openSecret, sealSecret, rateCountsOf })
@@ -238,8 +242,12 @@ function deriveOpportunityLifecycle(
 
     let attentionReason = null
     if (qaFailed) {
+      // A chain build names the step and the check that stopped it (`qa.chain`, demo-runner.js); a lost run says so.
+      const chainLine = qa?.reason === 'LOST_ON_RESTART' ? null : chainFailureLine(qa?.chain)
       attentionReason =
-        qa?.reason || `Demo QA gate failed after ${qaRepairs} repair round${qaRepairs === 1 ? '' : 's'}`
+        chainLine ||
+        qa?.reason ||
+        `Demo QA gate failed after ${qaRepairs} repair round${qaRepairs === 1 ? '' : 's'}`
     } else if (partialWarning) {
       attentionReason = `${blockedSources.map((s) => s.source).join(', ')} skipped (${blockedSources[0]?.reason || 'partial'})`
     }
@@ -755,7 +763,8 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         `select distinct on (r.opportunity_id)
                   b.id, r.opportunity_id, b.revision_id, b.site_key, b.site_job_id,
                   b.state, b.receipt, b.handoff, b.pictures, b.qa, b.qa_lease_until,
-                  b.created_at, b.updated_at, b.choice->>'cms' as cms, b.choice->'template' as template
+                  b.created_at, b.updated_at, b.choice->>'cms' as cms, b.choice->'template' as template,
+                  b.built->'pagespeed' as built_pagespeed
              from wo_build b
              join wo_revision r on r.id = b.revision_id
             order by r.opportunity_id, b.created_at desc, b.id desc`
@@ -782,6 +791,18 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
           order by a.opportunity_id, a.accepted_at desc, a.id desc`,
       [oppRes.rows.map((o) => o.id)]
     )
+
+    // The share link opens of each latest build (`wo-demo-links.js`) and what each seller marked of their outreach.
+    const [opensByBuild, outreachRes] = await Promise.all([
+      opensOf(
+        pool,
+        buildRes.rows.map((b) => b.id)
+      ),
+      pool.query('select * from wo_outreach where opportunity_id = any($1::uuid[])', [
+        oppRes.rows.map((o) => o.id)
+      ])
+    ])
+    const outreachByOpp = new Map(outreachRes.rows.map((r) => [r.opportunity_id, r]))
 
     const jobsByOpp = new Map(jobRes.rows.map((r) => [r.opportunity_id, r]))
     const sourcesByOpp = new Map()
@@ -967,6 +988,12 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         placeId: opp.provider_id || null,
         websiteUrl: candidate.website || candidate.websiteUrl || null,
         pageSpeed: opp.page_speed ?? null,
+        // The same score beside the latest demo's own (`opportunities-build/demo-pagespeed.js`): `{old: {score, measuredAt} |
+        // null, demo: {score, measuredAt} | {reason}}`.
+        pagespeed: pagespeedPair(
+          opp.page_speed ?? null,
+          latestBuild ? demoPageSpeedOf(latestBuild.built_pagespeed ?? null) : null
+        ),
         // Amenities offered, reviews kept and listing photos stored, from the research job's Place Details.
         googlePlace: opp.google_place
           ? { ...opp.google_place, photos: mediaByOpp.get(opp.id)?.googlePhotos ?? 0 }
@@ -997,6 +1024,10 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         demoSite: demoStatus === 'none' ? null : demoSlug,
         demoUrl: demoLabel ? bornSiteAddress(demoLabel, config) : demoSlug ? `https://${demoSlug}` : null,
         demoStatus,
+        // Counted opens of the latest build's share link; null while it never had one (`wo-demo-links.js`).
+        demoOpens: latestBuild ? (opensByBuild.get(latestBuild.id) ?? null) : null,
+        // What the seller marked of their outreach (`outreach-state.js`); `state: null` when nothing.
+        outreachState: outreachStateShape(outreachByOpp.get(opp.id) ?? null),
         demoAction: latestAction
           ? {
               status: latestAction.status,

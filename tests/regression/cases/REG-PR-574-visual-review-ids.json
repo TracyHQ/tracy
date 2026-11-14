@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-574-visual-review-ids",
+  "kind": "fix",
+  "title": "The planner's first message names every kit image visual review (V01) can require, while V01 still counts only images the planner opened",
+  "pr": 574,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "On the released JA Boxing kit, the visual review instruction names each page group's desktop and phone images and each block's desktop image by block id, including blocks whose image is shared and not named after the block.",
+    "For a plan keeping every page and printing every block, opening exactly the named ids passes V01; with no opens the same plan fails; forged references, unanswered requests and an incomplete catalogue still fail."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-planner-visual-review.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the first message names every image V01 can require, so a planner can open them before the plan exists",
+      "each page group is named with its desktop and every distinct phone image of its pages",
+      "tool names, forged refs and unanswered image requests never prove visual review",
+      "an incomplete image catalogue refuses coverage and historical bench checks remain unchanged"
+    ]
+  }
+}

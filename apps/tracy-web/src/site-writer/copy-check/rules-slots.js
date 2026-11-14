@@ -6,15 +6,16 @@
 // the total, the lead paragraph against the demo lead, and the average point against the average demo point. A short heading
 // (demo of 40 characters or less) keeps only its limit.
 import {
-  boundsOf,
   DEMO_FLOOR_RATIO,
   demoPointMean,
-  demoTotalFor,
+  lengthWindow,
+  partWindows,
   SHORT_DEMO_MAX,
   slotShape
 } from '../../lib/site-copy/slot-shape.js'
 
-import { iconsOf, iconClassOf, networkOfClass } from '../../lib/template-kit/icon-classes.js'
+import { networkOfClass } from '../../lib/template-kit/icon-classes.js'
+import { socialIconTargets } from '../../lib/template-kit/social-icon-targets.js'
 import { ownerPostExcerptFor } from '../../lib/site-copy/owner-post-excerpts.js'
 
 export const FLOOR_RATIO = DEMO_FLOOR_RATIO // W03: a text must reach this share of the demo text length ...
@@ -94,8 +95,9 @@ function partFaults(kit, items, excerpt = false) {
   if (!shape.points || items.length < 2) return []
   const out = []
   const points = shape.lead ? items.slice(1) : items
+  const windows = partWindows(kit)
   if (shape.lead) {
-    const lead = boundsOf(shape.leadChars, 0)
+    const lead = windows.lead
     const n = items[0].trim().length
     if (!excerpt && lead && n < lead.floor)
       out.push({
@@ -109,7 +111,7 @@ function partFaults(kit, items, excerpt = false) {
       })
   }
   const demoMean = demoPointMean(kit)
-  const part = boundsOf(demoMean === null ? null : Math.round(demoMean), 0)
+  const part = windows.point
   if (part && points.length) {
     const mean = Math.round(points.reduce((a, t) => a + t.trim().length, 0) / points.length)
     const demo = Math.round(demoMean)
@@ -127,58 +129,6 @@ function partFaults(kit, items, excerpt = false) {
   return out
 }
 
-// Compare explicit row metadata and the authoritative planned social fact. A class may be valid in the
-// template and still draw the wrong network for its link; a citation alone does not establish the link.
-function socialIconTargets({ plan, kit, brief }) {
-  const arr = (value) => (Array.isArray(value) ? value : [])
-  const icons = iconsOf(kit)
-  const blocks = new Map(arr(kit?.blocks).map((b) => [b?.id, b]))
-  const facts = new Map(arr(brief?.facts).map((f) => [f?.id, f]))
-  const out = new Map()
-  // The research brief calls Twitter "x"; the released kit names the same network "twitter".
-  const networkOf = (value) => {
-    const name = value.trim().toLowerCase()
-    return name === 'x' ? 'twitter' : name
-  }
-  const decisions = [...arr(plan?.sharedBlocks), ...arr(plan?.pages).flatMap((p) => arr(p?.blocks))]
-  for (const decision of decisions) {
-    if (decision?.decision !== 'keep') continue
-    const block = blocks.get(decision.block)
-    const hidden = new Set(arr(decision.hiddenSlots).map((s) => s?.slot))
-    for (const list of arr(block?.lists))
-      for (const row of arr(list?.rows)) {
-        const urls = arr(row?.slots).filter((s) => s?.type === 'url' && s.role === 'contact.social_url')
-        if (urls.length !== 1) continue
-        const url = urls[0]
-        const link = arr(decision.links).find((l) => l?.link === url.id)
-        const label = arr(block?.links).find((l) => l?.id === url.id)?.labelId
-        if (hidden.has(url.id) || (label && hidden.has(label))) continue
-        const match = /^social:(.+)$/.exec(String(link?.leadsTo ?? ''))
-        const fact = match && facts.get(match[1])
-        if (fact?.field !== 'socials' || typeof fact.value?.kind !== 'string') continue
-        const target = networkOf(fact.value.kind)
-        if (!target) continue
-        for (const icon of arr(row?.slots)) {
-          if (
-            icon?.type !== 'icon' ||
-            typeof icon.field !== 'string' ||
-            typeof icon.fieldValue !== 'string' ||
-            typeof icon.network !== 'string'
-          )
-            continue
-          const classes = icons.get(icon.id)?.classes
-          out.set(icon.field, {
-            target,
-            network: networkOf(icon.network),
-            value: icon.fieldValue,
-            expected: classes ? iconClassOf(classes, target) : null
-          })
-        }
-      }
-  }
-  return out
-}
-
 export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
   const socialTargets = socialIconTargets({ plan, kit: templateKit, brief })
   const returned = new Set(view.returns.map((r) => r.slot).filter(Boolean))
@@ -189,14 +139,16 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
     const kit = idx.kitSlots.get(s.slot)
     const exp = idx.expected.get(s.slot)
     if (!kit && !exp) continue
-    const limits = [kit?.maxCharacters, exp?.maxCharacters].filter((n) => typeof n === 'number' && n > 0)
-    const limit = limits.length ? Math.min(...limits) : null
     const chars = lengthOf(s.items)
-    const demo = demoTotalFor(kit ?? {}, s.items.length)
-    const bounds = kit ? boundsOf(demo) : null
     const excerpt = ownerPostExcerptFor(s, idx, brief)?.valid === true
-    const floor = bounds && !excerpt ? Math.min(bounds.floor, limit ?? Infinity) : 0
-    const ceiling = bounds ? Math.min(bounds.ceiling, limit ?? Infinity) : null
+    // The same window the writer is given for the slot (writer-input.js), for as many items as were written.
+    const { limit, demo, floor, ceiling } = lengthWindow({
+      slot: kit ?? null,
+      planLimit: exp?.maxCharacters ?? null,
+      written: s.items.length,
+      excerpt
+    })
+    const longDemo = ceiling !== null
     // A lead and points slot holds its lead paragraph and every point; otherwise the larger of the two counts.
     const shape = kit ? slotShape(kit) : null
     const allowed = shape?.lead
@@ -235,7 +187,8 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
         `${chars} characters, ceiling ${ceiling} (the ${demo} character demo text is the top)`,
         'over-demo'
       )
-    if (chars > 0 && kit && bounds) for (const d of partFaults(kit, s.items, excerpt)) fail(d.detail, d.cause)
+    if (chars > 0 && kit && longDemo)
+      for (const d of partFaults(kit, s.items, excerpt)) fail(d.detail, d.cause)
     if (s.items.length > allowed)
       fail(`${s.items.length} paragraphs, the kit allows ${allowed}`, 'paragraphs')
     if (!bad) R.w03.ok()

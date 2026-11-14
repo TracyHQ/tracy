@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-574-plan-kit-limits",
+  "kind": "fix",
+  "title": "The planner's answer gets each missing maxCharacters from the kit before the plan check, so R06 sends no fix round for it",
+  "pr": 574,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "On the JA Boxing kit, a plan whose kept copy entries (a block's own and its list rows') leave maxCharacters out or null fails R06 before the planner step reads it, and passes every rule after; the filled plan equals the plan with the limits written by hand, and the answer is not modified in place.",
+    "A maxCharacters the plan gives is kept (one above the kit limit still fails R06); a slot the kit gives no limit, a hidden block and a dropped page are left alone; the plan a fix round's change list leaves gets the same limits."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/site-planner-kit-limits.test.mjs"],
+    "needs": [],
+    "tests": [
+      "a copy entry without maxCharacters gets the kit limit R06 reads, and the plan passes every rule",
+      "a number the plan gives is kept, so R06 still fails one above the kit limit",
+      "a slot the kit gives no limit, a hidden block and a dropped page are left alone",
+      "the plan a fix round change list leaves gets the same limits"
+    ]
+  }
+}

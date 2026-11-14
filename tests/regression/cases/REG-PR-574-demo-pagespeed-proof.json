@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-574-demo-pagespeed-proof",
+  "kind": "feat",
+  "title": "A finished demo is measured with mobile PageSpeed beside the current site's score; outreach offers the proof line only with both",
+  "pr": 574,
+  "area": "website-opportunities/demo-pagespeed",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a disposable PostgreSQL server, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A stubbed PageSpeed answer is kept as the demo's score (mobile strategy, the demo address); a refusal, a network error, a timeout or an answer without a performance score keeps a reason and never a number.",
+    "A demo on a reserved or private address (*.test, localhost, a private IP, a port of its own) reads not_public and PageSpeed is never asked; the app's own build hook stores not_public for a *.localhost demo with no outbound call.",
+    "The measurement is merged into wo_build.built.pagespeed after the build facts, beside the picture, and a measurer that throws never fails the hook.",
+    "GET /api/website-opportunities/:id answers pagespeed {old, demo}; the list row's demo and /ops/wo carry the same; a build without a measurement reads not_measured, no build no_demo.",
+    "GET /api/website-opportunities/:id/outreach offers pagespeedProof 'Current site 34 → demo 92 on mobile' only when both scores exist and the demo scores higher; the drafts are worded as before."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-demo-pagespeed.test.mjs",
+      "apps/tracy-web/test/ops-wo.test.mjs",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a demo PageSpeed score is kept with its facts, measured on mobile at the demo address",
+      "a PageSpeed failure keeps its reason and never a number",
+      "a PageSpeed run that never answers ends at its bound as timeout, even when fetch ignores the abort",
+      "an address PageSpeed cannot reach is never sent to Google",
+      "no address, the operator switch and a missing key each keep their reason; a stand reads not_public first",
+      "the measurer reads the key and the switch from the runtime and the address Details gives the demo",
+      "a finished build keeps its PageSpeed beside its facts, merged into built, alongside its picture",
+      "a PageSpeed measurer that throws or a build without a site never fails the hook",
+      "the pair reads the old score and the demo view; the proof line only when both scored and the demo is faster",
+      "the Live Queue sets the current site score beside the latest demo’s own PageSpeed",
+      "Details sets the current site’s PageSpeed beside the demo’s own; outreach offers the proof line only with both"
+    ]
+  }
+}

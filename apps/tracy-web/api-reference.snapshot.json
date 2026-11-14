@@ -1,5 +1,5 @@
 {
-  "recorded": "2026-11-05",
+  "recorded": "2026-11-12",
   "public": {
     "components": {
       "schemas": {
@@ -17944,6 +17944,56 @@
           "x-audience": ["customer"]
         }
       },
+      "/d/{token}": {
+        "get": {
+          "operationId": "get_d_token_",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "token",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["public"]
+        }
+      },
+      "/d/{token}/{path}": {
+        "get": {
+          "operationId": "get_d_token_path_",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "token",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "path",
+              "name": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["public"]
+        }
+      },
       "/design-inspiration": {
         "get": {
           "operationId": "get_design_inspiration",
@@ -19257,6 +19307,50 @@
       "/v1/demos/options": {
         "get": {
           "operationId": "get_v1_demos_options",
+          "responses": {
+            "200": {}
+          },
+          "tags": ["API v1: Demos"],
+          "x-audience": ["public"]
+        }
+      },
+      "/v1/demos/webhook": {
+        "delete": {
+          "operationId": "delete_v1_demos_webhook",
+          "responses": {
+            "200": {}
+          },
+          "tags": ["API v1: Demos"],
+          "x-audience": ["public"]
+        },
+        "get": {
+          "operationId": "get_v1_demos_webhook",
+          "responses": {
+            "200": {}
+          },
+          "tags": ["API v1: Demos"],
+          "x-audience": ["public"]
+        },
+        "put": {
+          "operationId": "put_v1_demos_webhook",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "url": {
+                      "format": "uri",
+                      "maxLength": 2048,
+                      "type": "string"
+                    }
+                  },
+                  "required": ["url"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
           "responses": {
             "200": {}
           },
@@ -49708,6 +49802,51 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/builds/{buildId}/handover": {
+        "post": {
+          "operationId": "post_api_website_opportunities_builds_buildId_handover",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "buildId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "domain": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["email"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/capabilities": {
         "get": {
           "operationId": "get_api_website_opportunities_capabilities",
@@ -50983,6 +51122,32 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/demo/link": {
+        "delete": {
+          "operationId": "delete_api_website_opportunities_id_demo_link",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/{id}/demo/preview": {
         "get": {
           "operationId": "get_api_website_opportunities_id_demo_preview",
@@ -51359,6 +51524,49 @@
               }
             }
           ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
+      "/api/website-opportunities/{id}/outreach/state": {
+        "put": {
+          "operationId": "put_api_website_opportunities_id_outreach_state",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "state": {
+                      "enum": ["sent", "replied", "won", "lost", "none"],
+                      "type": "string"
+                    }
+                  },
+                  "required": ["state"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
           "responses": {
             "200": {}
           },
@@ -52462,6 +52670,56 @@
           ],
           "tags": ["MCP"],
           "x-audience": ["customer"]
+        }
+      },
+      "/d/{token}": {
+        "get": {
+          "operationId": "get_d_token_",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "token",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["public"]
+        }
+      },
+      "/d/{token}/{path}": {
+        "get": {
+          "operationId": "get_d_token_path_",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "token",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "path",
+              "name": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["public"]
         }
       },
       "/design-inspiration": {
@@ -54414,6 +54672,50 @@
       "/v1/demos/options": {
         "get": {
           "operationId": "get_v1_demos_options",
+          "responses": {
+            "200": {}
+          },
+          "tags": ["API v1: Demos"],
+          "x-audience": ["public"]
+        }
+      },
+      "/v1/demos/webhook": {
+        "delete": {
+          "operationId": "delete_v1_demos_webhook",
+          "responses": {
+            "200": {}
+          },
+          "tags": ["API v1: Demos"],
+          "x-audience": ["public"]
+        },
+        "get": {
+          "operationId": "get_v1_demos_webhook",
+          "responses": {
+            "200": {}
+          },
+          "tags": ["API v1: Demos"],
+          "x-audience": ["public"]
+        },
+        "put": {
+          "operationId": "put_v1_demos_webhook",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "url": {
+                      "format": "uri",
+                      "maxLength": 2048,
+                      "type": "string"
+                    }
+                  },
+                  "required": ["url"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
           "responses": {
             "200": {}
           },

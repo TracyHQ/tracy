@@ -1,0 +1,2 @@
+{"id":"REG-PR-574-handover","verdict":"PASS","commit":"2c6d1b2cb1c0d744b357d766404be697639b9845","ran_at":"2026-11-12T17:07:02.869Z","evidence":"tests/regression/.runs/2026-11-12-2c6d1b2cb/REG-PR-574-handover.log"}
+{"id":"REG-PR-574-trade-must-haves","verdict":"PASS","commit":"2c6d1b2cb1c0d744b357d766404be697639b9845","ran_at":"2026-11-12T17:07:03.010Z","evidence":"tests/regression/.runs/2026-11-12-2c6d1b2cb/REG-PR-574-trade-must-haves.log"}

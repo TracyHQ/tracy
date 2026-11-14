@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-574-chain-failure-named",
+  "kind": "fix",
+  "title": "A failed chain build names its first failed step and codes in wo_build.qa.chain and on /ops/wo",
+  "pr": 574,
+  "area": "website-opportunities/chain-diagnostics",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a disposable PostgreSQL server, run run.cmd.",
+    "S2: Confirm both tests named in run.tests report ok."
+  ],
+  "expect": [
+    "The measured Central Padel chain (copy CHAIN_BENCH_CHECK_FAILED, write STEP_NINE_CHECK_FAILED) stores failedStep copy, failedCode CHAIN_BENCH_CHECK_FAILED, writeCode STEP_NINE_CHECK_FAILED.",
+    "action.error and qa.reason stay QA_NEEDS_REVIEW.",
+    "No free text of a step error enters wo_build.qa.",
+    "The /ops/wo line reads 'Build stopped at copy (CHAIN_BENCH_CHECK_FAILED); write: STEP_NINE_CHECK_FAILED'; unknown step names and codes read 'unknown'."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-chain-progress.test.mjs",
+      "apps/tracy-web/test/ops-wo-chain-builds.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a failed chain names the step and the check that stopped it, in bounded codes only",
+      "a failed chain is named by its first failed step and code; free text and odd values never pass"
+    ]
+  }
+}

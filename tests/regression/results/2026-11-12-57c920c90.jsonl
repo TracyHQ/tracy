@@ -1,0 +1,4 @@
+{"id":"REG-PR-574-chain-failure-named","verdict":"PASS","commit":"57c920c902d56834a368ac4c453b4671ea7d0fff","ran_at":"2026-11-12T05:07:39.237Z","evidence":"tests/regression/.runs/2026-11-12-57c920c90/REG-PR-574-chain-failure-named.log"}
+{"id":"REG-PR-574-chain-repair-window","verdict":"PASS","commit":"57c920c902d56834a368ac4c453b4671ea7d0fff","ran_at":"2026-11-12T05:07:39.365Z","evidence":"tests/regression/.runs/2026-11-12-57c920c90/REG-PR-574-chain-repair-window.log"}
+{"id":"REG-PR-574-dead-claim-lost","verdict":"PASS","commit":"57c920c902d56834a368ac4c453b4671ea7d0fff","ran_at":"2026-11-12T05:08:11.644Z","evidence":"tests/regression/.runs/2026-11-12-57c920c90/REG-PR-574-dead-claim-lost.log"}
+{"id":"REG-PR-574-restart-resume","verdict":"PASS","commit":"57c920c902d56834a368ac4c453b4671ea7d0fff","ran_at":"2026-11-12T05:08:18.683Z","evidence":"tests/regression/.runs/2026-11-12-57c920c90/REG-PR-574-restart-resume.log"}
