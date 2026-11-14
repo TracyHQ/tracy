@@ -103,6 +103,67 @@ for (const cms of ['wordpress', 'joomla', 'emdash'])
     }
   })
 
+for (const cms of ['wordpress', 'joomla'])
+  test(`${cms} folded into the demo farm: the policy change is the farm's refresh, never apache2ctl in the forwarder`, () => {
+    const f = fixture(cms),
+      refreshed = [],
+      run = () => assert.fail('a folded demo has no Apache of its own to exec into'),
+      refresh = (root, label) => refreshed.push([root, label])
+    writeFileSync(path.join(f.directory, 'runtime'), 'farm\n')
+    try {
+      const result = reconcileFramePolicy({
+        root: f.root,
+        label: 'cafe',
+        policy: policy(B),
+        publicOrigin: B,
+        run,
+        refresh
+      })
+      assert.equal(result.state, 'updated')
+      assert.deepEqual(refreshed, [[f.root, 'cafe']])
+      assert.ok(
+        readFileSync(path.join(f.directory, 'apache/tracy-noindex.conf'), 'utf8').includes(
+          `frame-ancestors ${policy(B)}"`
+        )
+      )
+      // A refresh that fails puts the file back and refreshes again with it.
+      const failing = () => {
+        refreshed.push('failed')
+        if (refreshed.length === 2) throw new Error('config test failed')
+      }
+      assert.throws(() =>
+        reconcileFramePolicy({
+          root: f.root,
+          label: 'cafe',
+          policy: policy(A),
+          publicOrigin: A,
+          run,
+          refresh: failing
+        })
+      )
+      assert.ok(
+        readFileSync(path.join(f.directory, 'apache/tracy-noindex.conf'), 'utf8').includes(
+          `frame-ancestors ${policy(B)}"`
+        )
+      )
+      assert.equal(refreshed.length, 3)
+      // A marker this code cannot read is refused, not taken for a per-site container.
+      writeFileSync(path.join(f.directory, 'runtime'), 'nginx\n')
+      assert.throws(() =>
+        reconcileFramePolicy({
+          root: f.root,
+          label: 'cafe',
+          policy: policy(A),
+          publicOrigin: A,
+          run,
+          refresh
+        })
+      )
+    } finally {
+      f.clean()
+    }
+  })
+
 test('custom policies and none are preserved without Docker effects', () => {
   const f = fixture('wordpress'),
     file = path.join(f.directory, 'apache/tracy-noindex.conf')

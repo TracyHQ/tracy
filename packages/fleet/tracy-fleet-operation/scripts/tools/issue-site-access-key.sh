@@ -24,7 +24,7 @@ ROTATE=0
 LABEL="$1"
 [[ "$LABEL" =~ ^[a-z0-9][a-z0-9-]{0,62}$ ]] || { echo "issue-site-access-key: not a site label: $LABEL" >&2; exit 2; }
 
-exec python3 - "$TRACY_PRIVATE_ROOT" "$LABEL" "$ROTATE" <<'PY'
+python3 - "$TRACY_PRIVATE_ROOT" "$LABEL" "$ROTATE" <<'PY'
 import base64, hashlib, json, os, secrets, sys, time
 
 root, label, rotate = sys.argv[1], sys.argv[2], sys.argv[3] == '1'
@@ -68,3 +68,16 @@ else:
     state = 'kept'
 print('%s %s sha256:%s %s' % (label, kid, hashlib.sha256(key).hexdigest()[:12], state))
 PY
+
+# A demo folded into the demo farm (lib/site-runtime.sh) reads its key at /run/tracy-access/<label>/
+# inside the farm, which mounts a member's key folder only if it held a key when the farm compose was
+# rendered. A key just issued there, or rotated, is taken by re-rendering the demo's farm entry
+# (provision/farm-refresh.sh: mounts, pool, tested, then applied). Said on stderr: stdout is the one
+# line above, which callers read.
+. "$HERE/../lib/site-runtime.sh"
+if [ "$(tracy_site_runtime "$LABEL")" = farm ]; then
+  bash "$HERE/../provision/farm-refresh.sh" "$LABEL" --root "$TRACY_PRIVATE_ROOT" >&2 || {
+    echo "issue-site-access-key: !! the demo farm did not take $LABEL's key folder — run provision/farm-refresh.sh $LABEL" >&2
+    exit 1
+  }
+fi

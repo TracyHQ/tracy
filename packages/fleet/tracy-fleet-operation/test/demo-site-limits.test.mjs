@@ -10,12 +10,13 @@
  *   node --test packages/fleet/tracy-fleet-operation/test/demo-site-limits.test.mjs
  */
 import assert from 'node:assert/strict'
-import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { execFileSync, spawnSync } from 'node:child_process'
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
+import { pathWithFlock } from './flock-shim.mjs'
 
 const SCRIPTS = fileURLToPath(new URL('../scripts/', import.meta.url))
 
@@ -91,5 +92,91 @@ test('a customer site keeps the defaults, and an install that is not a demo remo
     assert.ok(compose.includes('      - --max-allowed-packet=256M\n'))
   } finally {
     s.dispose()
+  }
+})
+
+/**
+ * Through the REAL provision.sh, not the renderer alone: a fresh install writes its compose in its
+ * own platform_compose (step 3), and until 14/11/2026 the marker was written only inside the
+ * `PLATFORM_NEEDS_WEBROOT=1` block — so a fresh or installer-quickstart demo ran full-size and the
+ * demo farm (fold.sh), which takes only a marked demo, could not take it. `docker` is a shim that
+ * stops the run at the first `compose up`, after the compose file is written.
+ */
+function provisionFresh(label, demo) {
+  const dir = mkdtempSync(join(tmpdir(), 'tracy-lean-provision-'))
+  const bin = join(dir, 'bin')
+  mkdirSync(bin)
+  mkdirSync(join(dir, 'srv'))
+  mkdirSync(join(dir, 'sites'))
+  writeFileSync(
+    join(bin, 'docker'),
+    `#!/usr/bin/env bash
+case "$1 $2" in
+  "compose up") echo "stopped at compose up" >&2; exit 97 ;;
+  "network inspect") exit 1 ;;
+esac
+exit 0
+`
+  )
+  chmodSync(join(bin, 'docker'), 0o755)
+  const run = spawnSync(
+    'bash',
+    [
+      join(SCRIPTS, 'provision/provision.sh'),
+      '--site',
+      `${label}.example`,
+      '--label',
+      label,
+      '--platform',
+      'wordpress',
+      '--fresh',
+      '--root',
+      join(dir, 'srv')
+    ],
+    {
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        PATH: pathWithFlock(`${bin}:${process.env.PATH}`),
+        TRACY_DEMO_SITE: demo ? '1' : '',
+        TRACY_SITES_ROOT: join(dir, 'sites'),
+        TRACY_PRIVATE_ROOT: join(dir, 'srv'),
+        TRACY_PORT_LOCK: join(dir, 'port.lock'),
+        TRACY_WEB_ENV_FILE: '/dev/null',
+        TRACY_HOOKS_ENV: '/dev/null'
+      }
+    }
+  )
+  rmSync(`/var/lock/tracy-provision-${label}.lock`, { force: true })
+  const siteDir = join(dir, 'srv', label)
+  return { run, siteDir, dispose: () => rmSync(dir, { recursive: true, force: true }) }
+}
+
+test('a fresh demo install through provision.sh is lean too (the marker is not tied to a fetched webroot)', () => {
+  const label = `leanfresh${process.pid}`
+  const p = provisionFresh(label, true)
+  try {
+    assert.equal(p.run.status, 97, p.run.stderr.slice(-2000))
+    assert.ok(
+      existsSync(join(p.siteDir, 'apache', 'tracy-demo-limits.conf')),
+      'no lean marker on a fresh demo'
+    )
+    const compose = readFileSync(join(p.siteDir, 'docker-compose.yml'), 'utf8')
+    assert.ok(compose.includes(MOUNT), 'the fresh demo compose mounts no demo limits')
+    for (const flag of LEAN_DB) assert.ok(compose.includes(`      - ${flag}\n`), `missing ${flag}`)
+  } finally {
+    p.dispose()
+  }
+})
+
+test('a fresh install that is not a demo carries no marker through provision.sh', () => {
+  const label = `leancust${process.pid}`
+  const p = provisionFresh(label, false)
+  try {
+    assert.equal(p.run.status, 97, p.run.stderr.slice(-2000))
+    assert.equal(existsSync(join(p.siteDir, 'apache', 'tracy-demo-limits.conf')), false)
+    assert.ok(!readFileSync(join(p.siteDir, 'docker-compose.yml'), 'utf8').includes('tracy-demo-limits'))
+  } finally {
+    p.dispose()
   }
 })

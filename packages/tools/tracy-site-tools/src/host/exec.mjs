@@ -1645,6 +1645,74 @@ export function looksLikeMissingBinary(result) {
 }
 
 /**
+ * A template demo folded into the host's demo farm (fleet `scripts/lib/demo-farm.sh`): its
+ * `<label>-web-1` is a TCP forwarder (docker label `tracy.runtime=farm`) with no PHP, no CMS and no
+ * site files, and its PHP runs in the shared `tracy-demos-web`, which the docker proxy never lets a
+ * seat exec into (`dsh/docker-proxy.haproxy.cfg` allows `*-web-1` names only). An exec for such a
+ * site is answered with this instead of landing in the forwarder. Template demos carry no seat
+ * (tracy-web's demo upsert grants none), so no person's agent is meant to reach one.
+ */
+export const FARM_DEMO_REFUSAL =
+  'FARM_DEMO: this site is a template demo served by the demo farm, where the site tools do not run. Unfold it on the host (provision/unfold.sh <label>) to work on it.'
+
+/**
+ * The site container an exec argv names (`docker exec … <label>-web-1 …`), or null.
+ * @param {readonly string[]} argv
+ * @returns {string | null}
+ */
+export function execContainerOf(argv) {
+  if (!Array.isArray(argv) || argv[0] !== 'exec') return null
+  return argv.find((arg) => /^[a-z0-9][a-z0-9-]*-web-1$/.test(String(arg))) ?? null
+}
+
+/**
+ * Whether a site container is a folded demo's forwarder: its `tracy.runtime` label, asked of docker
+ * (set by the fleet's render-compose.sh, not by anything a site can write) and remembered a minute.
+ * A container docker cannot inspect is not called a forwarder: the exec then fails as it always did.
+ * @param {string} container
+ * @param {(container: string) => Promise<string>} [inspect] - the label's value; tests pass one.
+ * @returns {Promise<boolean>}
+ */
+export async function isFarmForwarder(container, inspect = inspectRuntimeLabel) {
+  const now = Date.now()
+  const held = farmAnswers.get(container)
+  if (held !== undefined && held.until >= now) return held.farm
+  const farm = (await inspect(container).catch(() => '')) === 'farm'
+  farmAnswers.set(container, { farm, until: now + 60_000 })
+  return farm
+}
+const farmAnswers = new Map()
+
+/**
+ * @param {string} container
+ * @returns {Promise<string>}
+ */
+function inspectRuntimeLabel(container) {
+  const dockerHost = resolveDockerHost(undefined, process.env)
+  const argv = ['inspect', '--type', 'container', '-f', '{{index .Config.Labels "tracy.runtime"}}', container]
+  const [cmd, args] = dockerHost
+    ? ['env', [`DOCKER_HOST=${dockerHost}`, 'docker', ...argv]]
+    : ['docker', argv]
+  return new Promise((resolve) => {
+    execFile(cmd, args, { timeout: 15_000, maxBuffer: 4096 }, (error, stdout) =>
+      resolve(error ? '' : String(stdout).trim())
+    )
+  })
+}
+
+/** What an exec into a folded demo's forwarder answers instead: a refusal, by name, run nowhere. */
+export function farmRefusedResult() {
+  return {
+    code: 126,
+    stdout: '',
+    stderr: `${FARM_DEMO_REFUSAL}\n`,
+    timedOut: false,
+    spawnError: undefined,
+    farmDemo: true
+  }
+}
+
+/**
  * The one impure runner: run a docker sub-argv, feeding stdin when given. On the fleet the daemon is
  * the socket proxy named by `TRACY_DOCKER_HOST`; locally it is the default. This is what
  * `config.exec` replaces in a test.

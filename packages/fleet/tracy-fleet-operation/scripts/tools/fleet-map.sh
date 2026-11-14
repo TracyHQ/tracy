@@ -72,6 +72,17 @@ for dir in /srv/tracy/*/; do
   else
     port=$(docker inspect "$container" --format '{{range $p,$v := .NetworkSettings.Ports}}{{range $v}}{{.HostPort}}{{end}}{{end}}' 2>/dev/null | sed -n 1p)
     [ -n "${port:-}" ] || port="?"
+    # A template demo folded into the demo farm (scripts/lib/demo-farm.sh): its <label>-web-1 is a
+    # forwarder and its <label>-db-1 is gone on purpose. Served while the farm runs, DOWN when it does
+    # not — the forwarder alone answers nothing.
+    if [ "$(docker inspect -f '{{index .Config.Labels "tracy.runtime"}}' "$container" 2>/dev/null)" = farm ]; then
+      if [ "$(docker inspect -f '{{.State.Running}}' tracy-demos-web 2>/dev/null)" = true ] \
+         && [ "$(docker inspect -f '{{.State.Running}}' tracy-demos-db 2>/dev/null)" = true ]; then
+        port="$port(farm)"
+      else
+        port="FARM-DOWN"
+      fi
+    fi
   fi
 
   if [ -d "$webroot/.git" ]; then

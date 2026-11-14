@@ -322,6 +322,11 @@ missing_web_images() {
     image="${line#*=}"
     docker image inspect "$image" >/dev/null 2>&1 || printf '%s\n' "$image"
   done < "$FLEET_DIR/web/IMAGE_TAGS"
+  # The farm image, where a farm runs (build_demos_image_if_needed).
+  if [ "$(docker inspect -f '{{.Name}}' tracy-demos-web 2>/dev/null)" = /tracy-demos-web ] || [ "${TRACY_DEMO_FARM:-0}" = 1 ]; then
+    image="$(demos_image)" || return 0
+    [ -z "$image" ] || docker image inspect "$image" >/dev/null 2>&1 || printf '%s\n' "$image"
+  fi
 }
 
 build_web_images_if_changed() {
@@ -335,7 +340,29 @@ build_web_images_if_changed() {
     # (web/build.sh context_for), which the tracy-host image does not carry yet (W5 follow-up).
     bash "$FLEET_DIR/web/build.sh" || echo "updater: web/build.sh reported failures; the missing images are listed in updater.json"
   fi
+  build_demos_image_if_needed
   missing_web_images > "$RUN_DIR/web-missing" || true
+}
+
+# The demo farm's image (web/DEMOS_IMAGE, demos.Dockerfile), built the same way as the site images:
+# on this host, before the new tracy-host goes live — but only on a host that runs a farm
+# (`tracy-demos-web` exists) or is switched to fold demos (TRACY_DEMO_FARM=1). A new DEMOS_IMAGE tag
+# is then ready before anything re-renders the farm onto it. A host that runs no farm builds it at
+# its first fold instead (provision/farm-common.sh `farm_image_ensure`). Never fails the update.
+demos_image() {
+  [ -f "$FLEET_DIR/web/DEMOS_IMAGE" ] || return 1
+  grep -v '^#' "$FLEET_DIR/web/DEMOS_IMAGE" | grep '=' | sed -n 1p | cut -d= -f2-
+}
+build_demos_image_if_needed() {
+  local image
+  image="$(demos_image)" || return 0
+  [ -n "$image" ] || return 0
+  if ! [ "$(docker inspect -f '{{.Name}}' tracy-demos-web 2>/dev/null)" = /tracy-demos-web ] && [ "${TRACY_DEMO_FARM:-0}" != 1 ]; then
+    return 0
+  fi
+  docker image inspect "$image" >/dev/null 2>&1 && return 0
+  echo "updater: the demo farm image $image is not on this host - building it (web/build.sh demos)"
+  bash "$FLEET_DIR/web/build.sh" demos || echo "updater: web/build.sh demos reported failures; $image is listed in updater.json"
 }
 
 apply_nginx() {

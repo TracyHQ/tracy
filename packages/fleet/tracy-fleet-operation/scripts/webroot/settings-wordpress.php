@@ -4,7 +4,8 @@ ini_set('display_errors', '0');
 ob_start();
 define('DISABLE_WP_CRON', true);
 define('WP_USE_THEMES', false);
-require '/var/www/html/wp-load.php';
+// TRACY_DOCROOT: where the site's files are in the container it runs in (a folded demo's farm docroot).
+require (getenv('TRACY_DOCROOT') ?: '/var/www/html') . '/wp-load.php';
 $theme = wp_get_theme();
 $answer = ['ok' => true, 'platform' => 'wordpress', 'version' => $wp_version,
  'title' => get_option('blogname'), 'language' => get_locale(),

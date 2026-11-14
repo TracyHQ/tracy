@@ -19,6 +19,7 @@ import {
   DS_UNDO_DIR,
   dsSlot,
   dsSlotArgv,
+  dsSlotArgvFor,
   EMDASH_DS_SCRIPT,
   JOOMLA_DS_PHP,
   parseDsLine,
@@ -684,5 +685,46 @@ test('two undos of one entry at once: one puts it back, the other is refused, ne
     )
   } finally {
     rmSync(privateRoot, { recursive: true, force: true })
+  }
+})
+
+// ── a demo folded into the demo farm (site-exec.js) ────────────────────────────────────────────
+test('dsSlotArgvFor: a folded demo runs the same script in the farm, as itself, at its own docroot', async () => {
+  const { mkdtemp, mkdir, writeFile, rm } = await import('node:fs/promises')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const root = await mkdtemp(join(tmpdir(), 'ds-slot-farm-'))
+  try {
+    await mkdir(join(root, 'demo-a'))
+    await mkdir(join(root, 'cust-b'))
+    await writeFile(join(root, 'demo-a', 'runtime'), 'farm\n')
+    for (const [platform, mode] of [
+      ['joomla', 'apply'],
+      ['wordpress', 'read'],
+      ['wordpress', 'apply']
+    ]) {
+      const site = dsSlotArgv(platform, 'demo-a-web-1', mode)
+      const farm = await dsSlotArgvFor({ privateRoot: root, label: 'demo-a', platform, mode })
+      assert.ok(farm.includes('tracy-demos-web'), `${platform} ${mode}: in the farm`)
+      assert.ok(!farm.includes('demo-a-web-1'), `${platform} ${mode}: never the forwarder`)
+      assert.deepEqual(farm.slice(farm.indexOf('--env-file'), farm.indexOf('--env-file') + 2), [
+        '--env-file',
+        join(root, '_demos', 'exec', 'demo-a.env')
+      ])
+      assert.equal(farm[farm.indexOf('-u') + 1], 'www-data')
+      assert.equal(farm[farm.indexOf('-w') + 1], '/site/demo-a/.webroot')
+      const tail = site.slice(site.indexOf('demo-a-web-1') + 1)
+      assert.deepEqual(
+        farm.slice(farm.indexOf('tracy-demos-web') + 1),
+        tail.map((a) => (a === '--path=/var/www/html' ? '--path=/site/demo-a/.webroot' : a))
+      )
+    }
+    // A site without the marker keeps today's argv, byte for byte.
+    assert.deepEqual(
+      await dsSlotArgvFor({ privateRoot: root, label: 'cust-b', platform: 'joomla', mode: 'apply' }),
+      dsSlotArgv('joomla', 'cust-b-web-1', 'apply')
+    )
+  } finally {
+    await rm(root, { recursive: true, force: true })
   }
 })

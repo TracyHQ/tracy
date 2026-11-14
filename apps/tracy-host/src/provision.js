@@ -360,12 +360,14 @@ export async function runProvisionJob({ jobId, body, config, jobs, run }) {
         }
       }
       const design = await provisionDesign({ body, run })
+      const fold = await foldDemo({ body, config, run, logPath })
       await jobs.put(jobId, {
         state: 'done',
         step: 'ready',
         port,
         ...(brand ? { brand } : {}),
-        ...(design ? { design } : {})
+        ...(design ? { design } : {}),
+        ...(fold ? { fold } : {})
       })
     } else {
       await jobs.put(jobId, {
@@ -389,6 +391,52 @@ export async function runProvisionJob({ jobId, body, config, jobs, run }) {
       step: 'provision',
       detail: String(error?.message ?? error).slice(0, 200)
     })
+  }
+}
+
+/** How long a fold may take: a dump + import of one demo's database and two page checks. */
+export const FOLD_TIMEOUT_MS = 15 * 60_000
+export const FOLD_IDLE_MS = 5 * 60_000
+
+/**
+ * The last step of a template demo's install on a host that runs the demo farm (`config.demoFarm`,
+ * env `TRACY_DEMO_FARM=1`): `fold.sh <label>` moves the demo, just installed and answering on its own
+ * containers, into the farm (`scripts/lib/demo-farm.sh`). Only a demo (`body.demo === true`) on
+ * Joomla or WordPress; EmDash demos and every customer site keep their own containers.
+ *
+ * 🔒 A FOLD THAT FAILS DOES NOT FAIL THE INSTALL. fold.sh puts the demo back exactly as it was on any
+ * failure, so the demo is installed and working on its own containers either way; the job says
+ * `fold: { folded: false, reason, output }` and the log has every line. The port in the job stays
+ * the demo's HOST_PORT: the forwarder that keeps the name `<label>-web-1` publishes it.
+ * @returns {Promise<null | {folded: boolean, reason?: string, output?: string[]}>} null = not asked
+ */
+export async function foldDemo({ body, config, run, logPath }) {
+  if (!config.demoFarm || body.demo !== true) return null
+  if (body.platform !== 'joomla' && body.platform !== 'wordpress') return null
+  try {
+    const { code, tail, timedOut } = await run({
+      script: 'bash',
+      args: [
+        path.join(config.scriptsDir, 'provision/fold.sh'),
+        String(body.label),
+        '--root',
+        String(config.privateRoot)
+      ],
+      env: { ...process.env },
+      logPath,
+      timeoutMs: FOLD_TIMEOUT_MS,
+      idleMs: FOLD_IDLE_MS
+    })
+    if (code === 0) return { folded: true }
+    return {
+      folded: false,
+      reason: timedOut
+        ? 'the fold timed out; the demo runs on its own containers'
+        : `fold.sh exited ${code}; the demo runs on its own containers`,
+      output: failedProvisionOutput(tail)
+    }
+  } catch (error) {
+    return { folded: false, reason: String(error?.message ?? error).slice(0, 200) }
   }
 }
 

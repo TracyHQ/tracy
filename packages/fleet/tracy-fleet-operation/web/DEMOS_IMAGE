@@ -1,0 +1,5 @@
+# The demo farm image (web/demos.Dockerfile): one Apache event + PHP-FPM 8.4 serving every folded
+# PHP demo on a host (scripts/provision/fold.sh). One line: `<base>=<image>`. A change to the
+# Dockerfile or to web/demos/ is a NEW tag here — build.sh refuses to relabel an image built from
+# other inputs, same rule as IMAGE_TAGS. Build it with `bash web/build.sh demos`.
+joomla:6-php8.4-fpm=tracy/web-demos:php8.4-fpm-20261114-r2

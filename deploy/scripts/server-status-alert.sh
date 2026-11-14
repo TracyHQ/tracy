@@ -110,6 +110,22 @@ if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
   containers_line="Containers: ${running} running, ${n_down} stopped, ${n_sick} unhealthy"
   for c in $down; do problems+=("down:$c"); details+=("container ${c} is stopped"); done
   for c in $sick; do problems+=("sick:$c"); details+=("container ${c} unhealthy"); done
+  # The demo farm (fleet scripts/lib/demo-farm.sh): one tracy-demos-web + tracy-demos-db serves every
+  # folded template demo, whose own <label>-web-1 is only a forwarder (label tracy.runtime=farm). A
+  # stopped or unhealthy farm container is already named above; a farm that is GONE while forwarders
+  # still point at it is not — and is every folded demo down. Said once, with how many it takes down.
+  folded="$(docker ps -a --filter label=tracy.runtime=farm --format '{{.Names}}' | grep -c . || true)"
+  if [ "$folded" -gt 0 ] || [ "$(docker inspect -f '{{.Name}}' tracy-demos-web 2>/dev/null)" = /tracy-demos-web ]; then
+    farm_state=up
+    for c in tracy-demos-web tracy-demos-db; do
+      if [ "$(docker inspect -f '{{.State.Running}}' "$c" 2>/dev/null)" != true ]; then
+        farm_state=down
+        problems+=("farm:$c")
+        details+=("demo farm ${c} is not running — ${folded} folded demo(s) down")
+      fi
+    done
+    containers_line="${containers_line}; demo farm ${farm_state} (${folded} folded demos)"
+  fi
   # Top 5 containers by memory: "name 1.2GiB".
   top="$(docker stats --no-stream --format '{{.MemUsage}}|{{.Name}}' 2>/dev/null \
     | awk -F'|' '{ split($1, a, " "); v = a[1]; n = v + 0;

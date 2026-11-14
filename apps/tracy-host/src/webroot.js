@@ -1454,6 +1454,111 @@ function composeProvesPhp(text, label) {
   })
 }
 
+/** The demo farm's files in a folded demo's private dir (`scripts/lib/demo-farm.sh`, `fold.sh`). */
+const FARM_RUNTIME_FILE = 'runtime'
+const FARM_KEPT_COMPOSE = 'farm/per-demo.compose.yml'
+const DEMO_LIMITS_CONF = 'apache/tracy-demo-limits.conf'
+const FORWARD_PORTS_LINE =
+  '      - "127.0.0.1:${HOST_PORT:?this site\'s .env has no HOST_PORT — refusing to publish it on a default port another site may hold}:80"'
+
+/**
+ * Is `text` exactly the forwarder compose `render-compose.sh` (`tracy_compose_forwarder`) writes for
+ * a demo folded into the demo farm — `<label>-web-1` as a haproxy TCP forwarder, no db, no webroot —
+ * in its isolated or shared form, with the bounded alias for a long label? Blank lines and whole-line
+ * comments dropped, every other line literal or a tight value class, as `composeProvesPhp`.
+ * `mint-agent-token.sh`'s `compose_is_forwarder` is the same table in awk.
+ * @param {string} text
+ * @param {string} label
+ * @returns {boolean}
+ */
+export function composeIsForwarder(text, label) {
+  if (!SAFE_SITE_LABEL.test(label)) return false
+  const lines = String(text)
+    .split('\n')
+    .filter((line) => !/^ *$/.test(line) && !/^ *#/.test(line))
+  const long = `${label}-web-1`.length > 63
+  const alias = `tracy-web-${createHash('sha256').update(label).digest('hex').slice(0, 32)}`
+  const named = (service) =>
+    long ? [`      ${service}:`, `        aliases: ["${alias}"]`] : [`      ${service}: {}`]
+  const value = (pre, test) => (line) => line.startsWith(pre) && test(line.slice(pre.length))
+  return [false, true].some((shared) => {
+    const form = [
+      'services:',
+      '  web:',
+      value('    image: ', (v) => IMAGE_VALUE.test(v)),
+      '    entrypoint: ["haproxy", "-db", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]',
+      '    restart: unless-stopped',
+      '    read_only: true',
+      '    security_opt: ["no-new-privileges:true"]',
+      '    mem_limit: 32m',
+      '    memswap_limit: 32m',
+      '    cpus: 0.5',
+      '    pids_limit: 64',
+      '    labels:',
+      '      tracy.runtime: farm',
+      '    environment:',
+      '      TRACY_DEMO_PORT: "${HOST_PORT:?this site\'s .env has no HOST_PORT}"',
+      '    volumes:',
+      value('      - ', (v) => {
+        const tail = '/forward.haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'
+        return v.endsWith(tail) && isAbsPath(v.slice(0, -tail.length))
+      }),
+      '    networks:',
+      ...(long ? ['      default:', `        aliases: ["${alias}"]`] : ['      default: {}']),
+      ...(shared ? named('tracy') : []),
+      '      farm: {}',
+      '    ports:',
+      FORWARD_PORTS_LINE,
+      'networks:',
+      '  default:',
+      '    external: true',
+      `    name: ${label}_default`,
+      ...(shared
+        ? ['  tracy:', '    external: true', value('    name: ', (v) => NETWORK_VALUE.test(v))]
+        : []),
+      '  farm:',
+      '    external: true',
+      value('    name: ', (v) => NETWORK_VALUE.test(v))
+    ]
+    return (
+      form.length === lines.length &&
+      form.every((want, i) => (typeof want === 'string' ? lines[i] === want : want(lines[i])))
+    )
+  })
+}
+
+/**
+ * The compose that speaks for a site's shape. Its own `docker-compose.yml` — except for a template
+ * demo folded into the demo farm: there that file is the forwarder, which proves nothing about the
+ * CMS, and the per-site compose fold.sh kept (`farm/per-demo.compose.yml`) stands in for it, so the
+ * folded demo gets exactly the answer it had before the fold. Only when all three hold: the runtime
+ * marker says `farm`, the compose is exactly the forwarder form for this label, and the demo's lean
+ * marker is there (fold.sh refuses anything else: a customer site never folds). A runtime marker that
+ * cannot be read, or a kept compose that is not one readable regular file, is `undefined` (unknown).
+ * @param {string} siteDir
+ * @param {string} label
+ * @param {string} text  the site's own compose, read
+ * @returns {Promise<string | undefined>}
+ */
+async function composeOfShape(siteDir, label, text) {
+  const marker = path.join(siteDir, FARM_RUNTIME_FILE)
+  const seen = await lstat(marker).then(
+    () => true,
+    (err) => (err?.code === 'ENOENT' ? false : undefined)
+  )
+  if (seen === undefined) return undefined
+  if (!seen) return text
+  const runtime = await readComposeFile(marker)
+  if (runtime === undefined || runtime.trim() !== 'farm') return undefined
+  if (!composeIsForwarder(text, label)) return text
+  const lean = await lstat(path.join(siteDir, DEMO_LIMITS_CONF)).then(
+    (st) => st.isFile(),
+    () => false
+  )
+  if (!lean) return text
+  return readComposeFile(path.join(siteDir, FARM_KEPT_COMPOSE))
+}
+
 /**
  * Is this an EmDash site, asked of every mark the fleet leaves in its directory?
  *
@@ -1483,6 +1588,8 @@ function composeProvesPhp(text, label) {
  * proof, so its road is byte for byte what it was; only a non-regular `.env` or compose there, or a
  * directory with no proof — a pre-06/09 `.env` beside a compose edited by hand or written by an older
  * generator — now refuses instead of answering, until the compose is re-rendered.
+ *
+ * A demo folded into the demo farm is asked of the per-site compose fold.sh kept (`composeOfShape`).
  *
  * @param {string} siteDir
  * @returns {Promise<'emdash'|'other'|'unknown'>}
@@ -1516,7 +1623,8 @@ export async function siteShape(siteDir) {
     )
     if (seen === undefined) return 'unknown'
     if (!seen) continue
-    const text = await readComposeFile(file)
+    let text = await readComposeFile(file)
+    if (text !== undefined && name === 'docker-compose.yml') text = await composeOfShape(siteDir, label, text)
     if (text === undefined) return 'unknown'
     if (mark.test(text)) marked = true
     if (proof(text)) proven = true

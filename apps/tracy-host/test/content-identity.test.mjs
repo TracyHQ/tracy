@@ -13,7 +13,9 @@ import {
   JOOMLA_SCRIPT,
   judgeWordPress,
   judgeDerive,
-  provisionLock
+  provisionLock,
+  FARM_JOOMLA_EXEC,
+  joomlaExecArgs
 } from '../src/content-identity.js'
 import { start } from '../src/server.js'
 
@@ -594,5 +596,50 @@ test('start: runs the pass in the background after the mtime pass, and TRACY_HOS
     assert.equal(await marked(jo), true)
   } finally {
     await rm(r.base, { recursive: true, force: true })
+  }
+})
+
+test('a folded Joomla demo: identity runs in the farm as the demo, under the same provision lock', async () => {
+  const { mkdtemp, mkdir, writeFile, rm } = await import('node:fs/promises')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const root = await mkdtemp(join(tmpdir(), 'identity-farm-'))
+  try {
+    await mkdir(join(root, 'demo-j'))
+    await writeFile(join(root, 'demo-j', 'runtime'), 'farm\n')
+    const args = await joomlaExecArgs({
+      label: 'demo-j',
+      siteDir: join(root, 'demo-j'),
+      config: { privateRoot: root },
+      name: 'content-identity'
+    })
+    assert.deepEqual(args.slice(0, 4), ['-c', FARM_JOOMLA_EXEC, 'content-identity', provisionLock('demo-j')])
+    const docker = args.slice(4)
+    assert.equal(docker[0], 'exec')
+    assert.ok(docker.includes('tracy-demos-web') && !docker.includes('demo-j-web-1'))
+    assert.ok(docker.includes('TRACY_DOCROOT=/site/demo-j/.webroot'))
+    assert.equal(docker[docker.indexOf('-u') + 1], 'www-data')
+    assert.equal(docker.at(-1), 'php')
+    const derive = await joomlaExecArgs({
+      label: 'demo-j',
+      siteDir: join(root, 'demo-j'),
+      config: { privateRoot: root },
+      name: 'contract-derive',
+      derive: true
+    })
+    assert.ok(derive.includes('TRACY_LABEL=demo-j'))
+    // A per-site Joomla keeps today's command, byte for byte.
+    await mkdir(join(root, 'cust'))
+    assert.deepEqual(
+      await joomlaExecArgs({
+        label: 'cust',
+        siteDir: join(root, 'cust'),
+        config: { privateRoot: root },
+        name: 'content-identity'
+      }),
+      ['-c', JOOMLA_EXEC, 'content-identity', provisionLock('cust'), join(root, 'cust')]
+    )
+  } finally {
+    await rm(root, { recursive: true, force: true })
   }
 })

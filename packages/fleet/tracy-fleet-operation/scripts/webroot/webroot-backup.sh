@@ -509,7 +509,17 @@ print("full" if d.get("ok") else "not", f["kind"] or "-", f["tables"] if f["tabl
   if [[ "$kind" != "$(tracy_backup_kind)" ]]; then
     echo "{\"ok\":false,\"code\":\"BACKUP_KIND_MISMATCH\",\"version\":$VERSION}"; return
   fi
-  if [[ "$kind" == mysql ]] && ! tracy_db_foreign_keys recover --plan "$STACK/.restore-foreign-keys.json" >&2; then
+  # A demo folded into the demo farm: its user owns ONE schema and nothing beside it, so the scratch
+  # and trash schemas below cannot exist for it — `restore_mysql_farm` restores inside that schema.
+  # A sync's cut (--only-tables) is a migrated site's road, never a template demo's: refused.
+  FARM_RESTORE=0
+  if [[ "$kind" == mysql && "$(tracy_backup_runtime)" == farm ]]; then
+    FARM_RESTORE=1
+    if [[ -n "$ONLY_TABLES" ]]; then
+      echo "{\"ok\":false,\"code\":\"FARM_DEMO_UNSUPPORTED\",\"version\":$VERSION,\"error\":\"a restore of chosen tables is not served for a demo in the demo farm — unfold it first\"}"; return
+    fi
+  fi
+  if [[ "$kind" == mysql && "$FARM_RESTORE" == 0 ]] && ! tracy_db_foreign_keys recover --plan "$STACK/.restore-foreign-keys.json" >&2; then
     restore_answer 0 RESTORE_FAILED verify 0 "the previous foreign-key cutover needs recovery"; return
   fi
   # 1. verify — the point's dump(s) hash to its tag (read just above, right before use).
@@ -539,7 +549,9 @@ print("full" if d.get("ok") else "not", f["kind"] or "-", f["tables"] if f["tabl
   BEFORE_SHA="$(python3 -c 'import json,sys; print(json.loads(sys.argv[1])["sha"])' "$BEFORE_JSON")"
 
   RESTORE_TABLES="$tables"
-  if [[ "$kind" == mysql ]]; then restore_mysql; else restore_sqlite; fi
+  if [[ "$FARM_RESTORE" == 1 ]]; then restore_mysql_farm
+  elif [[ "$kind" == mysql ]]; then restore_mysql
+  else restore_sqlite; fi
 }
 
 # Put the webroot back to the Before-restore point (rollback of step 4).
@@ -782,6 +794,69 @@ PYEOF
   tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`" >/dev/null 2>&1 || true
   step check done
   restore_answer 1 "" "" "" ""
+}
+
+# Restore everything for a demo folded into the demo farm (lib/site-runtime.sh). Its database is one
+# schema of the shared `tracy-demos-db`, reached as the demo's own user, granted on that schema only:
+# no scratch schema to load into first and no trash schema to swap into — and the farm's server is
+# never stopped or touched beyond that schema. So the steps differ from `restore_mysql`:
+#
+#   3. load    the point's dump is read whole (gzip CRC) and its CREATE TABLEs counted against the
+#              trailer — the site is untouched so far
+#   4. files   as `restore_mysql`
+#   5. swap    every table of the demo's schema dropped, the dump loaded into it. NOT all or nothing:
+#              the way back is the Before-restore point step 2 made — on a failure the schema is
+#              emptied again and that dump loaded, and the files reset to it
+#   6. check   the schema counts what the point counted (else the same way back)
+restore_mysql_farm() {
+  local db dump before_dump n live
+  db="$(tracy_backup_db_name)"
+  dump="$(tracy_backup_dir)/v$VERSION.mysql.gz"
+  before_dump="$(tracy_backup_dir)/v$(python3 -c 'import json,sys; print(json.loads(sys.argv[1])["version"])' "$BEFORE_JSON").mysql.gz"
+  [[ "$db" =~ ^[A-Za-z0-9_]{1,64}$ ]] || { step load failed; restore_answer 0 RESTORE_FAILED load 1 "the demo's farm schema is not on record; nothing on the site was changed"; return; }
+  # 3. the dump reads whole, and holds the tables the point recorded.
+  n="$(set -o pipefail; gzip -dc "$dump" | grep -c '^CREATE TABLE ' || true)"
+  if ! gzip -t "$dump" 2>/dev/null || [[ "$n" != "$RESTORE_TABLES" ]]; then
+    step load failed
+    restore_answer 0 RESTORE_FAILED load 1 "the dump holds $n tables, the backup recorded $RESTORE_TABLES; nothing on the site was changed"; return
+  fi
+  step load done
+  # 4. files.
+  local reset
+  if ! reset="$(TRACY_WEBROOT_LOCK_HELD=1 bash "$HERE/webroot-git.sh" --label "$LABEL" --op restore-reset --sha "$TARGET_SHA" | tail -1)"; then
+    files_back
+    step files failed
+    restore_answer 0 RESTORE_FAILED files 1 "the files could not be restored; they were put back as they were"; return
+  fi
+  RESTORE_FILES="$(python3 -c 'import json,sys; print(json.loads(sys.argv[1]).get("files", ""))' "$reset" 2>/dev/null || true)"
+  step files done
+  # 5. swap inside the one schema, 6. check — a failure of either loads the Before-restore dump back.
+  if farm_schema_load "$db" "$dump" && live="$(tracy_db_tables "$db")" \
+     && [[ "$(printf '%s\n' "$live" | grep -c . || true)" == "$RESTORE_TABLES" ]]; then
+    step swap done
+    step check done
+    restore_answer 1 "" "" "" ""
+    return
+  fi
+  local rolled=1
+  farm_schema_load "$db" "$before_dump" >&2 || rolled=0
+  files_back || rolled=0
+  step swap failed
+  restore_answer 0 RESTORE_FAILED swap "$rolled" "the point did not load into the demo's farm schema; the Before-restore point was loaded back"
+}
+
+# Empty the demo's own schema (its tables and views — never the schema itself, which its
+# user may not create again) and load one dump into it.
+farm_schema_load() {
+  local db="$1" dump="$2" drop
+  drop="$(tracy_db_exec mariadb -uroot -N -B -e "SELECT CONCAT('DROP ', IF(table_type='VIEW','VIEW','TABLE'), ' IF EXISTS \`', REPLACE(table_name,'\`','\`\`'), '\`;') FROM information_schema.tables WHERE table_schema='$db'" </dev/null)" || return 1
+  if [[ -n "$drop" ]]; then
+    printf 'SET FOREIGN_KEY_CHECKS=0;\n%s\n' "$drop" | tracy_db_exec mariadb -uroot "$db" >&2 || return 1
+  fi
+  # Definers dropped: a point made before the fold names the per-site server's root, which the demo's
+  # farm user may not be (fold.sh imports the same way). The objects then run as this user.
+  gzip -dc "$dump" | sed -E -f "$LIB_DIR/strip-definers.sed" \
+    | tracy_db_exec mariadb -uroot --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$db" >&2
 }
 
 restore_sqlite() {

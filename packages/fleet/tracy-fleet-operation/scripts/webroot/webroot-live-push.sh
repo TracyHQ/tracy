@@ -466,6 +466,15 @@ if isinstance(a, dict) and a.get("ok") is False:
 
 ( umask 077; mkdir -p "$PUSH_ROOT/previews" )
 sweep
+# "Push to live" is an imported site's road (`origin='migrated'`); a template demo folded into the
+# demo farm (lib/site-runtime.sh) never takes it, and its database is one farm schema the sync's
+# scratch schemas cannot sit beside. Refused before anything is read, locked or written.
+case "$(tracy_backup_runtime 2>/dev/null || echo unreadable)" in
+  site) ;;
+  farm) answer_refusal FARM_DEMO_UNSUPPORTED "$LABEL is a demo in the demo farm: Push to live is not served there — unfold it first"; exit 0 ;;
+  *) answer_refusal RUNTIME_UNKNOWN "the runtime marker of $LABEL cannot be read"; exit 0 ;;
+esac
+
 case "$OP" in
   preview|apply|undo) ;;
   *) echo "unknown op: $OP" >&2; exit 2 ;;

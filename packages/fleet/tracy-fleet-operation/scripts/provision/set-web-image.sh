@@ -42,6 +42,10 @@ esac
 _tracy_web_image_require_supported_php "$IMAGE" || exit 1
 
 SITE_DIR="$ROOT/$LABEL"
+# A demo folded into the demo farm has no runtime of its own to change (lib/site-runtime.sh).
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+tracy_refuse_if_farm "$SITE_DIR" "$LABEL" "changing its web image" || exit 1
 COMPOSE="$SITE_DIR/docker-compose.yml"
 [ -f "$COMPOSE" ] || { echo "no compose file at $COMPOSE" >&2; exit 1; }
 

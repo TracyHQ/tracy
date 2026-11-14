@@ -639,6 +639,12 @@ jobs:
             image="${line#*=}"
             docker image inspect "$image" >/dev/null 2>&1 || missing="$missing $image"
           done < packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS
+          # The demo farm image, on a host that runs a farm: a new DEMOS_IMAGE tag is built there
+          # before the farm is re-rendered onto it (the first fold builds it on its own otherwise).
+          if docker inspect tracy-demos-web >/dev/null 2>&1; then
+            image="$(grep -v '^#' packages/fleet/tracy-fleet-operation/web/DEMOS_IMAGE | grep '=' | sed -n 1p | cut -d= -f2-)"
+            docker image inspect "$image" >/dev/null 2>&1 || missing="$missing $image"
+          fi
           if [ -n "$missing" ]; then
             echo "::warning::not built on this host:$missing — new sites for those bases get the upstream image (no agent tools) until build-app-images is dispatched with build_web_images=<this host>"
           else
@@ -924,6 +930,8 @@ jobs:
           set -uo pipefail
           rc=0
           bash packages/fleet/tracy-fleet-operation/web/build.sh 2>&1 | tee "$RUNNER_TEMP/web-build.txt" || rc=$?
+          # The demo farm image (web/DEMOS_IMAGE) the same way: built only when this host lacks it.
+          bash packages/fleet/tracy-fleet-operation/web/build.sh demos 2>&1 | tee -a "$RUNNER_TEMP/web-build.txt" || rc=$?
           {
             echo "### Web images on ${{ inputs.build_web_images }}"
             echo

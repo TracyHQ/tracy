@@ -156,10 +156,12 @@ function restore(boot) {
   const block = lift(
     RESTORE,
     'echo "==> replacing database"',
-    '--init-command="SET FOREIGN_KEY_CHECKS=0" "$DB_NAME" )'
+    '--init-command="SET FOREIGN_KEY_CHECKS=0" "$DB_NAME" )\nfi'
   )
   const prelude = [
     `HERE=${JSON.stringify(path.dirname(RESTORE))}`,
+    // The per-site road (a demo in the demo farm imports into its farm schema instead).
+    'RUNTIME=site',
     `SITE_DIR=${JSON.stringify(s.siteDir)}`,
     `WORK=${JSON.stringify(s.work)}`,
     'DB_PASSWORD=pw0123456789; DB_NAME=joomla',

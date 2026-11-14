@@ -275,6 +275,23 @@ if [ -n "$SITE_NET_LISTED" ]; then
   esac
 fi
 
+# ── 1b. a demo folded into the demo farm: the farm lets go of it first ─────────────────────────
+# Its PHP pool, vhost, mounts, schema and database user live in the shared farm (lib/demo-farm.sh),
+# not in its own compose project, so `compose down` below would leave all of them behind — a vhost
+# still answering on a port the next site may be given, a schema nobody owns. farm-release.sh removes
+# exactly those (the farm is re-applied, never stopped; no other demo is touched), and the rest of
+# this teardown then removes the demo's own project — the forwarder and the kept `<label>_db`
+# volume — as for any site. A runtime marker that cannot be read stops here, before any data goes.
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+RUNTIME="$(tracy_runtime_of_dir "$SITE_DIR" "$LABEL" 2>&1)" \
+  || teardown_refuse "its runtime marker cannot be read ($RUNTIME) — nothing else was changed"
+if [ "$RUNTIME" = farm ] || [ -d "$SITE_DIR/farm" ]; then
+  echo "==> $LABEL is (or was being) served by the demo farm — releasing its part of the farm first"
+  bash "$HERE/farm-release.sh" "$LABEL" --root "$ROOT" \
+    || teardown_refuse "the demo farm did not let go of $LABEL (provision/farm-release.sh) — its own containers and data were not touched"
+fi
+
 # ── 2. the compose stack and its data ───────────────────────────────────────────────────
 # `down --volumes` is the whole point of a teardown: the named volumes (a site's database, its
 # uploads, an emdash site's SQLite and media) go with the containers. `--remove-orphans` catches a

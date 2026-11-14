@@ -116,6 +116,8 @@ import {
 import {
   REAPER_NOTHING_FOUND,
   READ_ONLY_SHELL_REFUSAL,
+  FARM_DEMO_SHELL_REFUSAL,
+  runtimeLabelArgv,
   execArgv,
   execTarget,
   attachmentsRootOf,
@@ -237,6 +239,7 @@ export class DockerSubprocessRuntime extends LocalSubprocessRuntime {
     this.platforms = new Map()
     this.registerWorkdirGuard(ctx)
     this.registerPathFence(ctx)
+    this.registerFarmGuard(ctx)
     this.registerApprovalGuard(ctx)
     this.registerApprovalAnswer(ctx)
     this.registerOutputBound(ctx)
@@ -869,6 +872,65 @@ export class DockerSubprocessRuntime extends LocalSubprocessRuntime {
     return until !== undefined && until >= Date.now()
   }
 
+  /**
+   * Is this site container a demo folded into the demo farm (`FARM_DEMO_SHELL_REFUSAL`)? Its
+   * `<label>-web-1` is then a forwarder. Asked of docker (the container's `tracy.runtime` label — set
+   * by the fleet's render-compose.sh, not by anything a site can write), through the same CLI and
+   * proxy as the commands themselves, and remembered for a minute per container. A container docker
+   * cannot inspect is not called a forwarder: the exec itself then fails as it always did.
+   * @param {string} container
+   * @returns {Promise<boolean>}
+   */
+  async isFarmForwarder(container) {
+    this.farmAnswers ??= new Map()
+    const now = Date.now()
+    const held = this.farmAnswers.get(container)
+    if (held !== undefined && held.until >= now) return held.farm
+    const farm = await new Promise((resolve) => {
+      try {
+        const [docker, ...args] = runtimeLabelArgv(container, this.cfg)
+        execFile(
+          /** @type {string} */ (docker),
+          args,
+          {
+            env: { ...process.env, ...this.cliEnv() },
+            timeout: 5000,
+            killSignal: 'SIGKILL',
+            maxBuffer: 4096
+          },
+          (error, stdout) => resolve(!error && String(stdout).trim() === 'farm')
+        )
+      } catch {
+        resolve(false)
+      }
+    })
+    this.farmAnswers.set(container, { farm, until: now + 60_000 })
+    return farm
+  }
+
+  /**
+   * Deny, before dispatch, a `bash` call in a session whose site is a demo folded into the demo farm:
+   * the command would run in a forwarder with no PHP and no site files. Template demos carry no seat
+   * (tracy-web's demo upsert grants none), so this is the answer an operator's session gets, by name.
+   * @param {import('@deepseek-ai/cordis').Context} ctx
+   */
+  registerFarmGuard(ctx) {
+    ctx.on('tools/pre-execute', async (exec, next) => {
+      if (exec.name !== 'bash') return next()
+      const sessionCwd = exec.agent?.session.header.cwd
+      let container
+      try {
+        if (sessionCwd === undefined) return next()
+        container = this.cfg.containerName.replace('{label}', siteOf(sessionCwd, this.cfg.sitesRoot).label)
+      } catch {
+        return next()
+      }
+      if (!(await this.isFarmForwarder(container))) return next()
+      this.logDenial({ guard: 'farm', tool: exec.name, sessionCwd, reason: FARM_DEMO_SHELL_REFUSAL })
+      return { kind: 'deny', reason: FARM_DEMO_SHELL_REFUSAL }
+    })
+  }
+
   /** @override */
   spawn(spec) {
     const { mode, root, argv } = unstamp(spec.argv)
@@ -887,6 +949,8 @@ export class DockerSubprocessRuntime extends LocalSubprocessRuntime {
       return super.spawn({ ...spec, argv, env: { ...spec.env, RIPGREP_CONFIG_PATH: undefined } })
     }
     if (mode === 'read-only') throw new Error(READ_ONLY_SHELL_REFUSAL)
+    // A folded demo's forwarder is refused before dispatch (registerFarmGuard): this method is
+    // synchronous, and a docker question here would hold the event loop.
     const execId = randomUUID()
     const rewritten = execArgv({
       argv,
@@ -968,6 +1032,8 @@ export class DockerSubprocessRuntime extends LocalSubprocessRuntime {
   async spawnTerminal(spec) {
     const { mode, root, argv } = unstamp(spec.argv)
     if (mode === 'read-only') throw new Error(READ_ONLY_SHELL_REFUSAL)
+    if (await this.isFarmForwarder(execTarget({ cwd: spec.cwd, mode, root, cfg: this.cfg }).container))
+      throw new Error(FARM_DEMO_SHELL_REFUSAL)
     const execId = randomUUID()
     const rewritten = execArgv({
       argv,

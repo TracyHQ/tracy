@@ -5,7 +5,8 @@
 // id, UTC date, the action-log type title, the user's display name, and a fixed subset of the message JSON (no IP, no
 // account links). The host decides which rows are people; this file only reads.
 ini_set('display_errors', '0');
-require '/var/www/html/configuration.php';
+// TRACY_DOCROOT: where the site's files are in the container it runs in (a folded demo's farm docroot).
+require (getenv('TRACY_DOCROOT') ?: '/var/www/html') . '/configuration.php';
 $c = new JConfig();
 if (!preg_match('/^[A-Za-z0-9_]+$/', $c->dbprefix)) exit(1);
 $p = $c->dbprefix;

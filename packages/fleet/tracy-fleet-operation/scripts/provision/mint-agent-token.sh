@@ -332,6 +332,98 @@ compose_proves_php() {
   ' "$1"
 }
 
+# Is the file exactly the forwarder compose render-compose.sh (`tracy_compose_forwarder`) writes for a
+# demo folded into the demo farm, isolated or shared, with the bounded alias for a long label? The twin
+# of webroot.js's `composeIsForwarder`; blank lines and whole-line comments dropped, as above.
+compose_is_forwarder() {
+  local dns_hash
+  dns_hash="$( { printf '%s' "${2:-}" | { sha256sum 2>/dev/null || shasum -a 256 2>/dev/null; } | cut -c1-32; } || true)"
+  PHP_LABEL="${2:-}" WEB_DNS_ALIAS="tracy-web-$dns_hash" awk '
+    function abspath(s) { return s ~ /^(\/[A-Za-z0-9._-]+)+$/ && s !~ /\/\.\.?(\/|$)/ }
+    function starts(s, pre) { return substr(s, 1, length(pre)) == pre }
+    function ends(s, suf) { return length(s) >= length(suf) && substr(s, length(s) - length(suf) + 1) == suf }
+    function lit(s) { if (!bad && p <= n && L[p] == s) p++; else bad = 1 }
+    function ok(cond) { if (!bad && p <= n && cond) p++; else bad = 1 }
+    function valued(s, pre, re) { return starts(s, pre) && substr(s, length(pre) + 1) ~ re }
+    function cfg(s,   tail, w) {
+      tail = "/forward.haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro"
+      if (!starts(s, "      - ") || !ends(s, tail)) return 0
+      w = substr(s, 9, length(s) - 8 - length(tail))
+      return abspath(w)
+    }
+    function named(svc) {
+      if (long) { lit("      " svc ":"); lit("        aliases: [\"" ALIAS "\"]") } else lit("      " svc ": {}")
+    }
+    function form(shared) {
+      p = 1; bad = 0
+      lit("services:")
+      lit("  web:")
+      ok(valued(L[p], "    image: ", IMG))
+      lit("    entrypoint: [\"haproxy\", \"-db\", \"-f\", \"/usr/local/etc/haproxy/haproxy.cfg\"]")
+      lit("    restart: unless-stopped")
+      lit("    read_only: true")
+      lit("    security_opt: [\"no-new-privileges:true\"]")
+      lit("    mem_limit: 32m")
+      lit("    memswap_limit: 32m")
+      lit("    cpus: 0.5")
+      lit("    pids_limit: 64")
+      lit("    labels:")
+      lit("      tracy.runtime: farm")
+      lit("    environment:")
+      lit("      TRACY_DEMO_PORT: \"${HOST_PORT:?this site\047s .env has no HOST_PORT}\"")
+      lit("    volumes:")
+      ok(cfg(L[p]))
+      lit("    networks:")
+      named("default")
+      if (shared) named("tracy")
+      lit("      farm: {}")
+      lit("    ports:")
+      lit("      - \"127.0.0.1:${HOST_PORT:?this site\047s .env has no HOST_PORT — refusing to publish it on a default port another site may hold}:80\"")
+      lit("networks:")
+      lit("  default:")
+      lit("    external: true")
+      lit("    name: " label "_default")
+      if (shared) { lit("  tracy:"); lit("    external: true"); ok(valued(L[p], "    name: ", NET)) }
+      lit("  farm:")
+      lit("    external: true")
+      ok(valued(L[p], "    name: ", NET))
+      return !bad && p == n + 1
+    }
+    /^ *$/ || /^ *#/ { next }
+    { L[++n] = $0 }
+    END {
+      label = ENVIRON["PHP_LABEL"]
+      if (label !~ /^[A-Za-z0-9][A-Za-z0-9._-]*$/) exit 1
+      ALIAS = ENVIRON["WEB_DNS_ALIAS"]
+      if (length(ALIAS) != 42 || ALIAS !~ /^tracy-web-[0-9a-f]+$/) ALIAS = ""
+      long = length(label "-web-1") > 63
+      if (long && ALIAS == "") exit 1
+      IMG = "^[A-Za-z0-9][A-Za-z0-9._/:@-]*$"; NET = "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+      if (form(0) || form(1)) exit 0
+      exit 1
+    }
+  ' "$1"
+}
+
+# The compose that speaks for a site's shape, as webroot.js `composeOfShape`: its own, except for a
+# demo folded into the demo farm — the runtime marker says `farm`, the compose is exactly the
+# forwarder for this label, and the demo's lean marker is there — whose kept per-site compose
+# (`farm/per-demo.compose.yml`) stands in, so the folded demo answers exactly as before its fold.
+# Prints the path; status 2 = a marker or kept compose that cannot be read (unknown).
+compose_of_shape() {
+  local d="$1" f="$2" label="$3" marker="$1/runtime" kept="$1/farm/per-demo.compose.yml" runtime
+  if [ ! -e "$marker" ] && [ ! -L "$marker" ]; then printf '%s\n' "$f"; return 0; fi
+  if [ -L "$marker" ] || [ ! -f "$marker" ] || [ ! -r "$marker" ]; then return 2; fi
+  runtime="$(tr -d ' \t\r\n' < "$marker")" || return 2
+  [ "$runtime" = farm ] || return 2
+  if ! compose_is_forwarder "$f" "$label" || [ -L "$d/apache/tracy-demo-limits.conf" ] \
+     || [ ! -f "$d/apache/tracy-demo-limits.conf" ]; then
+    printf '%s\n' "$f"; return 0
+  fi
+  if [ -L "$kept" ] || [ ! -f "$kept" ] || [ ! -r "$kept" ]; then return 2; fi
+  printf '%s\n' "$kept"
+}
+
 site_shape() {
   local d="$1" f mark proof rc label
   if [ ! -e "$d" ] && [ ! -L "$d" ]; then echo other; return 0; fi
@@ -342,6 +434,10 @@ site_shape() {
   for f in "$d/.env" "$d/docker-compose.yml"; do
     [ -e "$f" ] || [ -L "$f" ] || continue
     if [ -L "$f" ] || [ ! -f "$f" ] || [ ! -r "$f" ]; then echo unknown; return 0; fi
+    label="${d%/}"; label="${label##*/}"
+    case "$f" in
+      */docker-compose.yml) f="$(compose_of_shape "$d" "$f" "$label")" || { echo unknown; return 0; } ;;
+    esac
     case "$f" in
       */.env)
         mark='^(PLATFORM=emdash[[:space:]]*$|EMDASH_)'
@@ -356,7 +452,6 @@ site_shape() {
       rc=0; grep -Eq "$proof" "$f" || rc=$?
     else
       # One of the three PHP forms the fleet writes (`compose_proves_php` above), never a line pattern.
-      label="${d%/}"; label="${label##*/}"
       rc=0; compose_proves_php "$f" "$label" || rc=$?
     fi
     case "$rc" in 0) proven=1 ;; 1) ;; *) echo unknown; return 0 ;; esac
@@ -777,14 +872,31 @@ esac
 DB_PASSWORD="$(sed -n 's/^DB_PASSWORD=//p' "$SITE_DIR/.env" 2>/dev/null | head -1 || true)"
 [ -n "$DB_PASSWORD" ] || fail 3 SITE_UNKNOWN "no DB_PASSWORD in $SITE_DIR/.env"
 
+# A demo folded into the demo farm (marker `runtime` = farm, lib/site-runtime.sh): no `db` service of
+# its own; its schema (configuration.php's `$db` names it) is in the farm's server, reached as the
+# demo's own user — never the farm's root, whose grants reach every folded demo.
+FARM_DB_USER="" FARM_DB_PASSWORD=""
+if [ -f "$SITE_DIR/runtime" ] && [ "$(tr -d ' \t\r\n' < "$SITE_DIR/runtime")" = farm ]; then
+  FARM_DB_USER="$(sed -n 's/^FARM_DB_USER=//p' "$SITE_DIR/.env" 2>/dev/null | head -1 || true)"
+  FARM_DB_PASSWORD="$(sed -n 's/^FARM_DB_PASSWORD=//p' "$SITE_DIR/.env" 2>/dev/null | head -1 || true)"
+  [ -n "$FARM_DB_USER" ] && [ -n "$FARM_DB_PASSWORD" ] || fail 3 SITE_UNKNOWN "$LABEL is in the demo farm but its farm database user is not in $SITE_DIR/.env"
+  DB_CID="$(docker ps -q --filter "name=^${TRACY_DEMOS_DB_CONTAINER:-tracy-demos-db}\$" 2>/dev/null | sed -n 1p)" || DB_CID=""
+  [ -n "$DB_CID" ] || fail 5 SITE_DOWN "the demo farm's database is not running — $LABEL's data is there"
+else
 DB_CID="$( ( cd "$SITE_DIR" && docker compose ps -q db ) 2>/dev/null | sed -n 1p )" || DB_CID=""
 [ -n "$DB_CID" ] || fail 5 SITE_DOWN "the db service of $LABEL is not running — start the site first"
+fi
 
 # One statement per call, arriving on STDIN: nothing quoted here ever reaches a command line.
 # stderr is folded into stdout so the client's own "Using a password on the command line interface
 # can be insecure" warning cannot be mistaken for a result — every caller below picks its answer
 # out by the marker it asked for, and reads the last line only when reporting a failure.
 site_sql() {
+  if [ -n "$FARM_DB_USER" ]; then
+    MYSQL_PWD="$FARM_DB_PASSWORD" docker exec -i -e MYSQL_PWD "${TRACY_DEMOS_DB_CONTAINER:-tracy-demos-db}" \
+      mariadb --skip-ssl -N -B "-u$FARM_DB_USER" "$DB_NAME" 2>&1
+    return
+  fi
   ( cd "$SITE_DIR" && docker compose exec -T db \
       mariadb --skip-ssl -N -B -uroot -p"$DB_PASSWORD" "$DB_NAME" ) 2>&1
 }

@@ -56,6 +56,16 @@ DIAG_OUTPUT_MAX = 1_000_000
 # A job's whole life on disk: one JSON file per job. Not a database, because the only reader is
 # the relay asking "how far along", and the only writer is the thread doing the work — and a
 # file survives this process being restarted mid-provision, which is exactly when someone asks.
+
+# A template demo folded into the demo farm (scripts/lib/demo-farm.sh) is marked by
+# /srv/tracy/<label>/runtime. Its <label>-web-1 is a TCP forwarder and its database a farm schema:
+# every job of this legacy door that execs into a site container, or changes it, would land in the
+# forwarder. Refused by name instead. tracy-host (apps/tracy-host) is the door that knows the farm.
+def farm_refusal(label: str) -> str | None:
+    if os.path.lexists(f"/srv/tracy/{label}/runtime"):
+        return f"{label} is a demo served by the demo farm; this legacy door does not serve it — unfold it first (provision/unfold.sh {label})"
+    return None
+
 def job_path(job_id):
     return f"{JOB_DIR}/{job_id}.json"
 
@@ -122,6 +132,10 @@ def deploy(full_name: str, label: str, site_key: str) -> None:
     a question asked about ONE site, and answering it should not mean reading everyone else's
     deploys. The script asks the relay for its own token and holds nothing afterwards.
     """
+    refused = farm_refusal(label)
+    if refused:
+        log(refused)
+        return
     os.makedirs(LOG_DIR, exist_ok=True)
     log_path = f"{LOG_DIR}/{label}--deploy.log"
     with open(log_path, "a") as out:
@@ -134,6 +148,10 @@ def deploy(full_name: str, label: str, site_key: str) -> None:
 
 
 def rebuild(full_name: str, label: str, slug: str, site_key: str) -> None:
+    refused = farm_refusal(label)
+    if refused:
+        log(refused)
+        return
     os.makedirs(LOG_DIR, exist_ok=True)
     log_path = f"{LOG_DIR}/{label}--{slug}.log"
     with open(log_path, "a") as out:
@@ -394,6 +412,10 @@ def validate_webroot_payload(kind, body):
 
 def run_webroot_job(job_id: str, body: dict) -> None:
     """A webroot job, run locally — the same envelope as run_diagnostics."""
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="run_webroot_job", detail=refused)
+        return
     label = body["label"]
     kind = body["kind"]
     script, fixed = WEBROOT_JOBS[kind]
@@ -563,6 +585,10 @@ def build_diag_args(kind, body, job_id=None):
 
 def run_try_on(job_id: str, body: dict) -> None:
     """One demo-try-on step. The client is only read; every write lands in the demo copy."""
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="run_try_on", detail=refused)
+        return
     kind = body["kind"]
     client = body["label"]
     demo = body["demo"]
@@ -667,6 +693,10 @@ def run_reskin(job_id: str, body: dict) -> None:
     Credentials never travel over the wire: the caller says *what to do*, and the port/password/prefix are
     read from the stack right here. That is the whole reason this job moved to the fleet instead of staying in the app.
     """
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="run_reskin", detail=refused)
+        return
     label = body["label"]
     kind = body["kind"]
     script, allowed = RESKIN_JOBS[kind]
@@ -736,6 +766,10 @@ def run_diagnostics(job_id: str, body: dict) -> None:
 
     Credentials are read from the stack — the caller only says what to do on their own copy.
     """
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="run_diagnostics", detail=refused)
+        return
     label = body["label"]
     kind = body["kind"]
     stack = stack_env(label)
@@ -768,6 +802,10 @@ def provision(job_id: str, body: dict) -> None:
     Progress is written to a file after every line the script prints: the one asking is the relay, and what
     it asks is "how far along", so the answer must exist even while the job is still running.
     """
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="provision", detail=refused)
+        return
     label = body["label"]
     os.makedirs(LOG_DIR, exist_ok=True)
     log_path = f"{LOG_DIR}/provision-{label}.log"

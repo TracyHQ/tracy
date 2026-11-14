@@ -32,6 +32,10 @@ while [ $# -gt 0 ]; do
 done
 [ -n "$LABEL" ] || { echo "need --label" >&2; exit 2; }
 SITE_DIR="$ROOT/$LABEL"
+# A demo folded into the demo farm has no `web`/`db` services of its own (lib/site-runtime.sh).
+# shellcheck source=../lib/site-runtime.sh
+. "$(cd "$(dirname "$0")" && pwd)/../lib/site-runtime.sh"
+tracy_refuse_if_farm "$SITE_DIR" "$LABEL" "enabling the Joomla 6 legacy compat in its own containers" || exit 1
 [ -d "$SITE_DIR" ] || { echo "no working copy at $SITE_DIR" >&2; exit 1; }
 
 cd "$SITE_DIR"
