@@ -30,7 +30,8 @@ say() { printf '\n### %s\n' "$*"; }
 fail() { echo "E2E FAIL: $*" >&2; exit 1; }
 check() { # description, then a command that must succeed
   local what="$1"; shift
-  if "$@"; then echo "  ok  $what"; else fail "$what"; fi
+  # Output is dropped here so a predicate can read its whole pipe (no grep -q under pipefail).
+  if "$@" >/dev/null; then echo "  ok  $what"; else fail "$what"; fi
 }
 
 if docker inspect tracy-demos-web >/dev/null 2>&1 || docker inspect tracy-demos-db >/dev/null 2>&1; then
@@ -263,7 +264,7 @@ check "a row holding definer text came along byte for byte, the view too" sh -c 
 check "the view answers in the farm, as the demo" bash -c \
   ". '$SCRIPTS/lib/roots.sh'; . '$SCRIPTS/lib/site-runtime.sh'; tracy_site_db_exec '$J' mariadb -N -B -e 'SELECT COUNT(*) FROM tr_e2e_view' \"\$(tracy_site_db_name '$J')\" >/dev/null"
 check "the trigger still fires in the farm" bash -c \
-  ". '$SCRIPTS/lib/roots.sh'; . '$SCRIPTS/lib/site-runtime.sh'; S=\$(tracy_site_db_name '$J'); tracy_site_db_exec '$J' mariadb -N -B -e 'INSERT INTO tr_e2e_log VALUES (1); SELECT MAX(n) FROM tr_e2e_log; CALL tr_e2e_answer();' \"\$S\" | tr '\\n' ' ' | grep -q '^2 42 '"
+  ". '$SCRIPTS/lib/roots.sh'; . '$SCRIPTS/lib/site-runtime.sh'; S=\$(tracy_site_db_name '$J'); tracy_site_db_exec '$J' mariadb -N -B -e 'INSERT INTO tr_e2e_log VALUES (1); SELECT MAX(n) FROM tr_e2e_log; CALL tr_e2e_answer();' \"\$S\" | tr '\\n' ' ' | grep '^2 42 '"
 
 say "a link out of $W's webroot stops its fold"
 tracy_site_web_exec "$W" -- ln -s "/site/$J/.webroot/configuration.php" leak.txt
@@ -280,7 +281,7 @@ check "fold of $W refuses a chain of links that ends in $J's webroot" sh -c \
 tracy_site_web_exec "$W" -- rm -f base parent chain.txt
 say "fold $W"
 bash "$SCRIPTS/provision/fold.sh" "$W" --root "$T/srv"
-check "a second fold of $J changes nothing" sh -c "bash '$SCRIPTS/provision/fold.sh' '$J' --root '$T/srv' | grep -q 'already served by the demo farm'"
+check "a second fold of $J changes nothing" sh -c "bash '$SCRIPTS/provision/fold.sh' '$J' --root '$T/srv' | grep 'already served by the demo farm'"
 
 check "$J is marked farm" [ "$(tracy_site_runtime "$J")" = farm ]
 check "$W is marked farm" [ "$(tracy_site_runtime "$W")" = farm ]
@@ -303,9 +304,9 @@ php_checks() { # label port host other-label
   local out
   out="$(probe "$2" "/tracyprobe.php/some/path/info?other=/site/$4/.webroot/tracyprobe.php" "$3")"
   printf '%s\n' "$out" | sed 's/^/    /'
-  printf '%s' "$out" | grep -qx 'upload_max_filesize=33M' &&
-  printf '%s' "$out" | grep -qx 'path_info=/some/path/info' &&
-  printf '%s' "$out" | grep -qx "server_port=$2"
+  printf '%s' "$out" | grep -x 'upload_max_filesize=33M' >/dev/null &&
+  printf '%s' "$out" | grep -x 'path_info=/some/path/info' >/dev/null &&
+  printf '%s' "$out" | grep -x "server_port=$2" >/dev/null
 }
 
 for D in J W; do
@@ -315,10 +316,10 @@ for D in J W; do
   check "$L: a .sql dump is denied (403)" [ "$(get "$P" /secret.sql "$H")" = 403 ]
   check "$L: a .git directory is hidden (404)" [ "$(get "$P" /.git/config "$H")" = 404 ]
   check "$L: php_value carried over, PATH_INFO and SERVER_PORT as before" php_checks "$L" "$P" "$H" "$O"
-  check "$L: open_basedir holds the demo to its own docroot" sh -c "curl -s -H 'X-Forwarded-Host: $H' 'http://127.0.0.1:$P/tracyprobe.php' | grep -q '^open_basedir=/site/$L/.webroot/:'"
-  check "$L: it cannot read the other demo's files" sh -c "curl -s -H 'X-Forwarded-Host: $H' 'http://127.0.0.1:$P/tracyprobe.php?other=/site/$O/.webroot/tracyprobe.php' | grep -qx 'other_readable=no'"
-  check "$L: the pool's env is its own" sh -c "curl -s -H 'X-Forwarded-Host: $H' 'http://127.0.0.1:$P/tracyprobe.php' | grep -qx 'label=$L'"
-  check "$L: a request naming the other demo's host still gets $L" sh -c "curl -s -H 'X-Forwarded-Host: $O.tracy.test' -H 'Host: $O.tracy.test' 'http://127.0.0.1:$P/tracyprobe.php' | grep -qx 'label=$L'"
+  check "$L: open_basedir holds the demo to its own docroot" sh -c "curl -s -H 'X-Forwarded-Host: $H' 'http://127.0.0.1:$P/tracyprobe.php' | grep '^open_basedir=/site/$L/.webroot/:'"
+  check "$L: it cannot read the other demo's files" sh -c "curl -s -H 'X-Forwarded-Host: $H' 'http://127.0.0.1:$P/tracyprobe.php?other=/site/$O/.webroot/tracyprobe.php' | grep -x 'other_readable=no'"
+  check "$L: the pool's env is its own" sh -c "curl -s -H 'X-Forwarded-Host: $H' 'http://127.0.0.1:$P/tracyprobe.php' | grep -x 'label=$L'"
+  check "$L: a request naming the other demo's host still gets $L" sh -c "curl -s -H 'X-Forwarded-Host: $O.tracy.test' -H 'Host: $O.tracy.test' 'http://127.0.0.1:$P/tracyprobe.php' | grep -x 'label=$L'"
   check "$L: reached by name $L-web-1 from another container on ${L}_default (SERVER_PORT 80)" sh -c \
     "docker run --rm --network ${L}_default --entrypoint curl $FARM_IMAGE -s -H 'X-Forwarded-Host: $H' http://$L-web-1/tracyprobe.php > '$T/byname' && grep -qx 'label=$L' '$T/byname' && grep -qx 'server_port=80' '$T/byname'"
 done
@@ -364,12 +365,12 @@ tracy_site_web_exec "$J" -i -- sh -c 'cat > tracyupload.php' <<'PHP'
 echo file_put_contents(__DIR__ . '/images/e2e/upload.txt', "uploaded-by-php\n") ? "written\n" : "failed\n";
 PHP
 check "$J: PHP in the farm writes an upload into its webroot (www-data)" sh -c \
-  "curl -s -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/tracyupload.php' | grep -qx written"
+  "curl -s -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/tracyupload.php' | grep -x written"
 check "$J: Apache (farmhttp) serves the uploaded file" sh -c \
-  "curl -s -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/images/e2e/upload.txt' | grep -qx uploaded-by-php"
+  "curl -s -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/images/e2e/upload.txt' | grep -x uploaded-by-php"
 check "nothing ran in $W's pool" sh -c "! docker exec tracy-demos-web test -e /tmp/tracy-demos/$W/crossed"
 check "the sockets belong to Apache's own user, 0600; workers run as www-data" sh -c \
-  "docker exec tracy-demos-web sh -c 'stat -c \"%U %a\" /run/tracy-demos/$W.sock /run/tracy-demos/_farm.sock' | sort -u | grep -qx 'farmhttp 600' && [ \"\$(docker exec tracy-demos-web sh -c 'ps -o user= -C apache2 | sort -u | grep -v root')\" = farmhttp ]"
+  "docker exec tracy-demos-web sh -c 'stat -c \"%U %a\" /run/tracy-demos/$W.sock /run/tracy-demos/_farm.sock' | sort -u | grep -x 'farmhttp 600' && [ \"\$(docker exec tracy-demos-web sh -c 'ps -o user= -C apache2 | sort -u | grep -v root')\" = farmhttp ]"
 check "a port no demo owns serves no demo (farm default port refuses)" sh -c \
   "[ \"\$(docker exec tracy-demos-web curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/index.php)\" = 403 ]"
 
@@ -381,7 +382,7 @@ check "$W's database user cannot read $J's schema" sh -c \
 check "$W's database user sees only its own schema" sh -c \
   "[ \"\$(MYSQL_PWD='$WPASS' docker exec -e MYSQL_PWD tracy-demos-db mariadb -u'$WUSER' -N -e 'SHOW DATABASES' | grep -vx information_schema)\" = '$(sed -n 's/^FARM_DB_NAME=//p' "$T/srv/$W/.env")' ]"
 check "tracy_site_db_exec reaches $J's farm schema as $J" bash -c \
-  ". '$SCRIPTS/lib/roots.sh'; . '$SCRIPTS/lib/site-runtime.sh'; tracy_site_db_exec '$J' mariadb -N -e 'SELECT title FROM tr_content WHERE alias=\"farm-welcome\"' '$JSCHEMA' | grep -qx 'Farm welcome'"
+  ". '$SCRIPTS/lib/roots.sh'; . '$SCRIPTS/lib/site-runtime.sh'; tracy_site_db_exec '$J' mariadb -N -e 'SELECT title FROM tr_content WHERE alias=\"farm-welcome\"' '$JSCHEMA' | grep -x 'Farm welcome'"
 check "tracy_site_web_exec runs as $J in the farm, in its docroot" bash -c \
   ". '$SCRIPTS/lib/roots.sh'; . '$SCRIPTS/lib/site-runtime.sh'; [ \"\$(tracy_site_web_exec '$J' -- sh -c 'echo \$(id -un) \$(pwd) \$TRACY_MAIL_LABEL')\" = 'www-data /site/$J/.webroot $J' ]"
 check "tracy_site_web_exec refuses root in the farm" bash -c \
@@ -432,7 +433,7 @@ check "the row holding definer text came home byte for byte" sh -c "[ '$(note_of
 echo "  measured: $J had no server for $(sed -n 's/.*was without a server for \([0-9]*\) s.*/\1/p' "$T/unfold-j.out") s during its unfold"
 check "$J is no longer marked" [ "$(tracy_site_runtime "$J")" = site ]
 check "$J-web-1 and $J-db-1 are its own again" sh -c \
-  "docker inspect -f '{{.Config.Image}}' $J-web-1 | grep -q '^joomla:6-apache' && [ \"\$(docker inspect -f '{{.State.Running}}' $J-db-1)\" = true ]"
+  "docker inspect -f '{{.Config.Image}}' $J-web-1 | grep '^joomla:6-apache' && [ \"\$(docker inspect -f '{{.State.Running}}' $J-db-1)\" = true ]"
 check "$J: every page answers as before, from its own containers" pages_unchanged J
 check "$J: php_value back in .htaccess, PATH_INFO as before" php_checks "$J" "$JP" "$JH" "$W"
 check "$J: a .sql dump is denied (403)" [ "$(get "$JP" /secret.sql "$JH")" = 403 ]
@@ -442,14 +443,14 @@ check "$J: configuration.php names its own database again" bash -c \
 check "the farm holds nothing of $J" sh -c \
   "[ ! -e '$T/srv/_demos/fpm/$J.conf' ] && ! grep -q '$J' '$T/srv/_demos/compose.yml' && ! grep -q '^FARM_DB' '$T/srv/$J/.env' && [ ! -d '$T/srv/$J/farm' ]"
 check "$J's schema is gone from the farm" sh -c \
-  "! MYSQL_PWD=\"\$(sed -n 's/^FARM_DB_ROOT_PASSWORD=//p' '$T/srv/_demos/.env')\" docker exec -e MYSQL_PWD tracy-demos-db mariadb -uroot -N -e 'SHOW DATABASES' | grep -qx '$JSCHEMA'"
+  "! MYSQL_PWD=\"\$(sed -n 's/^FARM_DB_ROOT_PASSWORD=//p' '$T/srv/_demos/.env')\" docker exec -e MYSQL_PWD tracy-demos-db mariadb -uroot -N -e 'SHOW DATABASES' | grep -x '$JSCHEMA'"
 check "$W still answers from the farm, unchanged" pages_unchanged W
 
 say "unfold $W"
 bash "$SCRIPTS/provision/unfold.sh" "$W" --root "$T/srv"
 check "$W: every page answers as before, from its own containers" pages_unchanged W
-check "$W-web-1 runs WordPress again" sh -c "docker inspect -f '{{.Config.Image}}' $W-web-1 | grep -q '^wordpress:php8.4-apache'"
-check "a second unfold of $W changes nothing" sh -c "bash '$SCRIPTS/provision/unfold.sh' '$W' --root '$T/srv' | grep -q 'not in the demo farm'"
+check "$W-web-1 runs WordPress again" sh -c "docker inspect -f '{{.Config.Image}}' $W-web-1 | grep '^wordpress:php8.4-apache'"
+check "a second unfold of $W changes nothing" sh -c "bash '$SCRIPTS/provision/unfold.sh' '$W' --root '$T/srv' | grep 'not in the demo farm'"
 
 # ── 6. part 2a: a folded demo's life through the real doors ─────────────────────────────────────
 # Both demos folded again exactly as tracy-host's install ends (`provision.js` foldDemo: `fold.sh
@@ -490,15 +491,15 @@ say "go-live of $J, as tracy-web's demo flow asks right after the install ({op: 
 # serves it as www-data.
 docker run --rm -v "$T/sites/$J/.webroot:/w" --entrypoint chmod mariadb:11 -R a+rwX /w
 check "$J: noindex is on before go-live" sh -c \
-  "curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/' | grep -qi '^x-robots-tag: noindex'"
+  "curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/' | grep -i '^x-robots-tag: noindex'"
 GOLIVE_OUT="$(bash "$SCRIPTS/provision/go-live.sh" --label "$J" --op live --root "$T/srv" 2>&1)" || { printf '%s\n' "$GOLIVE_OUT" | tail -15; fail "go-live of $J"; }
 printf '%s\n' "$GOLIVE_OUT" | grep -E '^(==>|TRACY_RESULT)' | sed 's/^/    /'
 printf '%s\n' "$GOLIVE_OUT" > "$T/golive.out"
 check "go-live answers its receipt" grep -qx "TRACY_RESULT go_live=live label=$J platform=joomla" "$T/golive.out"
 check "$J: the noindex header is gone through 127.0.0.1:$JP" sh -c \
-  "! curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/' | grep -qi '^x-robots-tag'"
+  "! curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/' | grep -i '^x-robots-tag'"
 check "$W: still noindexed (its own vhost)" sh -c \
-  "curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $WH' 'http://127.0.0.1:$WP/' | grep -qi '^x-robots-tag: noindex'"
+  "curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $WH' 'http://127.0.0.1:$WP/' | grep -i '^x-robots-tag: noindex'"
 check "go-live --op draft of $J is refused, naming unfold" sh -c \
   "! bash '$SCRIPTS/provision/go-live.sh' --label '$J' --op draft --root '$T/srv' > '$T/draft.out' 2>&1 && grep -q 'unfold it first' '$T/draft.out'"
 check "$J: pages unchanged after go-live" pages_unchanged J
@@ -508,22 +509,22 @@ FRAME_ORIGIN="https://panel.tracy.test:39129"
 FRAME_POLICY="'self' https://*.tracy.test https://tracy.test http://127.0.0.1:* http://localhost:* $FRAME_ORIGIN"
 FRAME_SAID="$(node "$SCRIPTS/webroot/site-frame-policy.mjs" "$T/srv" "$J" "$FRAME_POLICY" "$FRAME_ORIGIN")"
 echo "  $FRAME_SAID"
-check "the policy change is applied (state updated)" sh -c "printf '%s' '$FRAME_SAID' | grep -q '\"state\":\"updated\"'"
+check "the policy change is applied (state updated)" sh -c "printf '%s' '$FRAME_SAID' | grep '\"state\":\"updated\"'"
 check "$J: the farm sends the new frame-ancestors through 127.0.0.1:$JP" sh -c \
-  "curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/' | tr -d '\r' | grep -i '^content-security-policy: frame-ancestors' | grep -qF '$FRAME_ORIGIN'"
+  "curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/' | tr -d '\r' | grep -i '^content-security-policy: frame-ancestors' | grep -F '$FRAME_ORIGIN'"
 check "$W: its own frame-ancestors are untouched" sh -c \
-  "! curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $WH' 'http://127.0.0.1:$WP/' | grep -qF '$FRAME_ORIGIN'"
+  "! curl -s -D - -o /dev/null -H 'X-Forwarded-Host: $WH' 'http://127.0.0.1:$WP/' | grep -F '$FRAME_ORIGIN'"
 check "$J: the policy change kept every page" pages_unchanged J
 
 say "backup and Restore everything of $J (webroot/webroot-backup.sh)"
 bash "$SCRIPTS/webroot/webroot-git.sh" --label "$J" --op ensure >/dev/null
 INITIAL="$(bash "$SCRIPTS/webroot/webroot-backup.sh" --label "$J" --op initial-backup | tail -1)"
-echo "  initial backup: $(printf '%s' "$INITIAL" | head -c 200)"
+echo "  initial backup: ${INITIAL:0:200}"
 check "the initial backup holds the farm schema's dump" sh -c "printf '%s' '$INITIAL' | python3 -c 'import json,sys; d=json.load(sys.stdin); sys.exit(0 if d[\"database\"][\"ok\"] else 1)'"
 tracy_site_db_exec "$J" mariadb "$JSCHEMA" -e "UPDATE tr_content SET title='Changed after the backup' WHERE alias='farm-welcome'"
-check "$J shows the change" sh -c "curl -s -H 'X-Forwarded-Host: $JH' http://127.0.0.1:$JP/ | grep -q 'Changed after the backup'"
+check "$J shows the change" sh -c "curl -s -H 'X-Forwarded-Host: $JH' http://127.0.0.1:$JP/ | grep 'Changed after the backup'"
 RESTORED="$(bash "$SCRIPTS/webroot/webroot-backup.sh" --label "$J" --op restore-everything --version 1 | tail -1)"
-echo "  restore: $(printf '%s' "$RESTORED" | head -c 300)"
+echo "  restore: ${RESTORED:0:300}"
 check "Restore everything answers ok" sh -c "printf '%s' '$RESTORED' | python3 -c 'import json,sys; sys.exit(0 if json.load(sys.stdin)[\"ok\"] else 1)'"
 check "$J: the change is gone and every page answers as before" pages_unchanged J
 FARM_ROOT_PW="$(sed -n 's/^FARM_DB_ROOT_PASSWORD=//p' "$T/srv/_demos/.env")"
@@ -541,7 +542,7 @@ CI_OUT="$(cd "$PKG/../../../apps/tracy-host" && node --input-type=module -e "
   process.stdout.write(execFileSync('bash', args, { input: readFileSync('$SCRIPTS/provision/joomla-content-identity.php') }))
 " 2>&1)" || true
 printf '%s\n' "$CI_OUT" | sed 's/^/    /'
-check "the identity script ran in the farm as $J and named its outcome" sh -c "printf '%s' '$CI_OUT' | grep -q '^TRACY_RESULT content_reader='"
+check "the identity script ran in the farm as $J and named its outcome" sh -c "printf '%s' '$CI_OUT' | grep '^TRACY_RESULT content_reader='"
 
 say "an operation that changes the runtime is refused (set-php)"
 check "set-php.sh refuses $J, naming unfold, and $J still answers" sh -c \
