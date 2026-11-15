@@ -65,7 +65,7 @@ export function blankControlOf(renders) {
   // A 404 is the blank site's design (it has no home menu item); a server error is not, and is said apart, by count.
   const errors = statuses.filter((r) => r.status >= 500 && r.status !== r.expected).length
   const said = errors
-    ? `; ${errors} addresses answer a server error (500) there, recorded below and not judged here`
+    ? `; ${errors} ${errors === 1 ? 'address answers' : 'addresses answer'} a server error (500) there, recorded below and not judged here`
     : ''
   return {
     status: 'not_applicable',

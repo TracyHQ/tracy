@@ -73,7 +73,7 @@ test('the demo scan blind on the human quickstart fails; the blank control is no
     { path: 'index.php?option=com_users&view=login', status: 500, expected: 200, observations: [] }
   ])
   assert.equal(blank.status, 'not_applicable')
-  assert.match(blank.reason, /serves no page/)
+  assert.match(blank.reason, /is not judged: its pages answer 404 by design/)
   assert.deepEqual(
     blank.statuses.map((s) => s.status),
     [404, 500]
