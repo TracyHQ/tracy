@@ -7,8 +7,9 @@
 //     (`step-chain-draft-owned-keys.js`), every key the owner added kept; a row's keys a full build writes empty are in
 //     what is sent already (`rowFillsOf`);
 //   - a column the previous build wrote on a record a build made that the operation written again whole (`:rewrite`)
-//     no longer sends is emptied (`''`, what a new record holds there), kept in `state.cleared` so a later revision does
-//     not take the owner's later value for Tracy's; a column with no empty value (an id, a state, a type) stops
+//     no longer sends is emptied (`''`, what a new record holds there) and kept in `state.cleared`, NOT in
+//     `state.wrote` (the record no longer claims a value there): a later write over it, a restore or an abandon finds
+//     it blank or stops on the owner's value; a column with no empty value (an id, a state, a type) stops
 //     `revision_needs_removal`;
 //   - taking either off over an owner's edit (the place holds no value Tracy left there) stops `site_changed_outside`.
 // `undo.prior` keeps the shape the previous build owned at each JSON place, so a restore and an abandon put every key
@@ -80,6 +81,12 @@ export function recordKeeper(io) {
     return out
   }
 
+  /** A place the record no longer claims: its hash and its keys dropped. */
+  const forget = (place) => {
+    delete record.state.wrote?.[place]
+    delete record.state.shapes?.[place]
+  }
+
   /** Every column of a record update read, checked and kept before the call; the fields to send. */
   return async function keepRecord(kind, id, fields, { whole = false } = {}) {
     const key = `${kind}:${Number(id)}`
@@ -94,7 +101,9 @@ export function recordKeeper(io) {
       const journaled = had ? kept.fields[column] : undefined
       check(place, row[column] ?? null, all[column], journaled)
       sent[column] = ownedValueOf(place, row[column] ?? null, all[column], journaled)
-      wrote(place, all[column])
+      // A column emptied is no longer Tracy's: the record claims no value there (`state.cleared` guards it instead).
+      if (Object.hasOwn(cleared, column)) forget(place)
+      else wrote(place, all[column])
       if (!had) kept.fields[column] = keep(row[column] ?? null)
     }
     const state = record.state

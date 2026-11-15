@@ -7,7 +7,8 @@
 // A revision runs this AFTER every check that can stop without a write (the write plan's guards,
 // `revision_needs_removal`, `door_not_available`, the owner checks of its acts), so a stop that wrote nothing leaves
 // no mark. A run that still stops having written nothing (`state.touched` unset: the journal sets and saves it before
-// any door write) has its mark cleared (`unmarkUnwritten`); a run that wrote keeps it, to be resumed or abandoned.
+// any door write) has its mark cleared (`unmarkUnwritten`), also one an earlier attempt of the same run left; a run
+// that wrote, or may have (its first write refused twice), keeps it, to be resumed or abandoned.
 import { draftError } from './step-chain-draft-source.js'
 
 /** The check, a function; `check.began` says whether it marked the site for this run. */
@@ -47,8 +48,15 @@ export function siteCheckOf(builds, ctx, previous) {
   return check
 }
 
-/** A run that marked the site and stopped with no door write: its mark is cleared, so the next revision runs. */
+/**
+ * A run that marked the site and stopped with no door write: its mark is cleared, so the next revision runs. So is the
+ * mark an earlier attempt of the SAME run left (it died before its first write) when this attempt stops before writing
+ * too: `touched` unset in the run record means no attempt of the run wrote. A run whose record says it touched the
+ * site (a first write refused twice may have acted) keeps its mark, to be resumed or abandoned.
+ */
 export async function unmarkUnwritten(builds, ctx, check, record) {
-  if (!check.began || record?.state?.touched || typeof builds?.end !== 'function') return
-  await builds.end(ctx.runId ?? null, ctx)
+  if (record?.state?.touched || typeof builds?.end !== 'function') return
+  const runId = ctx.runId ?? null
+  const own = check.began || (runId !== null && (await builds.unfinished?.(ctx))?.runId === runId)
+  if (own) await builds.end(runId, ctx)
 }

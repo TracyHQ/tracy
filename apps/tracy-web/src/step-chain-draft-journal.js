@@ -25,9 +25,11 @@
 // 🔒 AN OWNER'S EDIT IS NEVER WRITTEN OVER. At EVERY write over a place, first touch or a resume after a crash, the value
 // the place holds must be one Tracy left there: what the previous build wrote, what this run wrote, the value about to
 // be written, or the value before this run journaled. Any other value was written outside Tracy, and the run stops
-// (`site_changed_outside`, noRerun, naming the place, never the text). A place no build wrote is free on first touch.
+// (`site_changed_outside`, noRerun, naming the place, never the text). A place no build wrote is free on first touch;
+// a column an earlier revision emptied (`state.cleared`) only while it is still blank.
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { recordKeeper } from './step-chain-draft-journal-record.js'
+import { isBlankHolder } from './step-chain-draft-owned-keys.js'
 import { placeHolds } from './step-chain-draft-place-value.js'
 import { namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { holdsSent, holdsWrote, keepWrote, wroteDoors } from './step-chain-draft-wrote.js'
@@ -75,6 +77,11 @@ export function journaledDoors(doors, record, options = {}) {
   const keep = (value) => (held.length && value !== null && namesAnyIn(value, held) ? HELD_BEFORE : value)
   /** A place about to be written must hold a value Tracy left there (above); `journaled`: its kept value, if any. */
   const check = (place, now, next, journaled) => {
+    // A column an earlier revision emptied (`cleared`, claimed by no hash): free only while it is still blank.
+    if (!previousWrote[place] && journaled === undefined && previousCleared.includes(place)) {
+      if (isBlankHolder(now) || placeHolds(place, next, now)) return
+      throw outsideEdit(place)
+    }
     if (!previousWrote[place] && journaled === undefined) return
     const ok =
       holdsWrote(place, now, { wrote: previousWrote, shapes: previousShapes }) ||

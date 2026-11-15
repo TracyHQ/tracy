@@ -109,24 +109,30 @@ test('a revision that wrote and then stopped keeps its mark, to be resumed or ab
   assert.equal(first.builds.unfinishedRun?.runId, 'run-larkspur-2')
 })
 
-test('a file is deleted only when its dry run answer is the measured shape and names no other record', async () => {
+test('a file is deleted only when its dry run answer is the measured shape (plural types) and names no other record', async () => {
   const answers = [
-    [{ dryRun: true, usedIn: [] }, true],
-    [{ dryRun: true, usedIn: [{ kind: 'article', id: 5 }] }, true],
-    [{ dryRun: true, usedIn: [{ kind: 'article', id: 9 }] }, false],
+    [{ ok: true, usedIn: [] }, true],
+    [{ ok: true, usedIn: [{ type: 'articles', id: 5, title: 'Fern posy' }] }, true],
+    [{ ok: true, usedIn: [{ type: 'articles', id: 9, title: 'Moss posy' }] }, false],
+    [{ ok: true, usedIn: [{ type: 'modules', id: 5, title: 'Fern' }] }, false],
     [null, false],
-    [{ dryRun: true }, false],
+    [{ ok: true }, false],
     [{ used_in: [] }, false],
     [{ usedIn: null }, false],
     [{ usedIn: 2 }, false],
     [{ usedIn: { articles: [9] } }, false],
-    [{ usedIn: [{ type: 'article', id: 9 }] }, false],
+    // The shape read before the door was measured ({kind, id}) is not the site's: kept, unread.
+    [{ usedIn: [{ kind: 'article', id: 5 }] }, false],
+    [{ usedIn: [{ type: 'article', id: 5 }] }, false],
+    [{ usedIn: [{ type: 'pages', id: 5 }] }, false],
+    [{ usedIn: [{ type: 'articles' }] }, false],
     [{ result: { usedIn: [] } }, false],
     [[], false]
   ]
   for (const [dry, deletes] of answers) {
     let deleted = false
     const doors = {
+      media: async () => ({ sha256: 'f00d' }),
       deleteMedia: async ({ dryRun }) => {
         if (dryRun) return dry
         deleted = true

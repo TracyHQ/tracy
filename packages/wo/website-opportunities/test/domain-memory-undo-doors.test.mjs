@@ -49,7 +49,7 @@ test('an unassign leaves the module on no page: "[]"', async () => {
   assert.equal((await memory.doors.get({ kind: 'moduleAssignment', id })).menuids, '[]')
 })
 
-test('a media delete: refused outside images/, a dry run names the users and deletes nothing, then the file goes', async () => {
+test('a media delete as measured: refused outside images/, a dry run in the measured shape, then the file goes', async () => {
   const memory = fresh()
   await memory.doors.upload({ applyId: 'u:1', path: PATH, bytes: Buffer.from('fern bytes') })
   await assert.rejects(
@@ -60,21 +60,35 @@ test('a media delete: refused outside images/, a dry run names the users and del
     applyId: 'a:1',
     kind: 'article',
     id: 0,
-    fields: { title: 'Fern posy', images: JSON.stringify({ image_intro: PATH }) }
+    fields: { title: 'Fern posy', state: 0, images: JSON.stringify({ image_intro: PATH }) }
   })
   const dry = await memory.doors.deleteMedia({ applyId: 'd:1', path: PATH, dryRun: true })
-  assert.deepEqual(dry.usedIn, [{ kind: 'article', id }])
-  assert.equal(dry.files[0].size, 10)
+  assert.deepEqual(Object.keys(dry).sort(), [
+    'deleted',
+    'ok',
+    'totalBytes',
+    'undoCopyUnderCap',
+    'usedIn',
+    'usedInScope'
+  ])
+  // An unpublished record is counted: one row per record, a plural type.
+  assert.deepEqual(dry.usedIn, [{ type: 'articles', id, title: 'Fern posy' }])
+  assert.equal(dry.deleted.files[0].size, 10)
   assert.ok(memory.site.uploads.has(PATH))
   const calls = memory.calls
-  assert.deepEqual(await memory.doors.deleteMedia({ applyId: 'd:2', path: PATH }), {
-    storageDeleted: true,
-    filesLeft: []
-  })
+  // The real delete succeeds although a record uses the file: the door refuses nothing.
+  const done = await memory.doors.deleteMedia({ applyId: 'd:2', path: PATH })
+  assert.equal(done.ok, true)
   assert.equal(memory.calls, calls + 1)
   assert.equal(memory.site.uploads.has(PATH), false)
-  await assert.rejects(
-    memory.doors.deleteMedia({ applyId: 'd:3', path: PATH, dryRun: true }),
-    (e) => e.code === 'NOT_FOUND'
-  )
+})
+
+test('a path with no file answers write_failed, dry run or not, and again for the same apply id', async () => {
+  const memory = fresh()
+  const noFile = (e) => e.code === 'write_failed' && /nothing was deleted/.test(e.message)
+  await assert.rejects(memory.doors.deleteMedia({ applyId: 'd:1', path: PATH, dryRun: true }), noFile)
+  await assert.rejects(memory.doors.deleteMedia({ applyId: 'd:2', path: 'images/none/fern.jpg' }), noFile)
+  await memory.doors.upload({ applyId: 'u:1', path: PATH, bytes: Buffer.from('fern bytes') })
+  await memory.doors.deleteMedia({ applyId: 'd:3', path: PATH })
+  await assert.rejects(memory.doors.deleteMedia({ applyId: 'd:3', path: PATH }), noFile)
 })

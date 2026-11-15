@@ -5,7 +5,9 @@ import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.
 import { heldFormsOf, namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { placeHolds } from './step-chain-draft-place-value.js'
 import { isHeldBefore } from './step-chain-draft-journal.js'
-import { checkAct, HIDE_KINDS, madeKindOf } from './step-chain-draft-removal.js'
+import { checkAct, HIDE_KINDS, hiddenColumnOf, madeKindOf } from './step-chain-draft-removal.js'
+import { isBlankHolder } from './step-chain-draft-owned-keys.js'
+import { ownerOverTaken } from './step-chain-draft-restore-taken.js'
 import { holdsSent, holdsWrote } from './step-chain-draft-wrote.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -38,7 +40,12 @@ export function restorePlanOf(build) {
     ...(Object.keys(identity).length ? [{ key: 'identity', type: 'identity', fields: identity }] : []),
     // Then the records the run made, hidden or put on no page (never deleted), then its files, deleted when unused.
     ...acts.filter((a) => a.type === 'hide' || !Object.hasOwn(assignments, String(a.id))),
-    ...list(uploads).map((path) => ({ key: `media:${path}`, type: 'media', path, mine: acts.map(mineOf) }))
+    ...list(uploads).map((path) => ({
+      key: `media:${path}`,
+      type: 'media',
+      path,
+      mine: mineOf(acts, records, assignments)
+    }))
   ]
   // A module with no pages before gets an empty list: no door deletes its assignment row (it shows on no page again).
   const unassigned = Object.entries(assignments)
@@ -51,7 +58,22 @@ export function restorePlanOf(build) {
   }
 }
 
-const mineOf = (a) => `${a.kind}:${a.id}`
+/**
+ * The records this undo takes off the site, as a dry run names them (`kind:id`): the ones the run made (hidden or put
+ * on no page) and the ones it showed again, written back hidden or on no page (`step-chain-draft-show-again.js`). A dry
+ * run counts unpublished records too, so these naming a file do not keep it.
+ */
+function mineOf(acts, records, assignments) {
+  const shown = Object.values(records)
+    .filter(
+      (r) => Number(r.fields?.[hiddenColumnOf(r.kind)]) === 0 && r.fields[hiddenColumnOf(r.kind)] !== null
+    )
+    .map((r) => `${r.kind}:${r.id}`)
+  const none = Object.entries(assignments)
+    .filter(([, m]) => list(m).length === 0)
+    .map(([id]) => `module:${Number(id)}`)
+  return [...acts.map((a) => `${a.kind}:${a.id}`), ...shown, ...none]
+}
 
 /** The records a run made (every id its record has that the build it started from had not): how each goes. */
 function madeActsOf(state) {
@@ -109,15 +131,21 @@ async function heldNow(place, doors) {
 
 /**
  * A place that holds neither what the run wrote (`state`: `{wrote, shapes}`) nor its value before was edited outside
- * Tracy: a typed stop (`code`: `restore_site_changed` for a restore, `site_changed_outside` for an abandon).
+ * Tracy: a typed stop (`code`: `restore_site_changed` for a restore, `site_changed_outside` for an abandon). So is a
+ * place that holds what the run wrote but an owner's value at a JSON key the run took out (`ownerOverTaken`): writing
+ * the key back would write over it.
  */
 export async function checkUnchanged(place, doors, state, code = 'restore_site_changed') {
   if (place.type === 'media') return
   if (place.type === 'hide' || place.type === 'unassign')
     return checkAct({ ...place, door: place.type }, doors, [state], state.undo, code)
   for (const [name, [now, before]] of Object.entries(await heldNow(place, doors))) {
-    if (!state.wrote?.[name] || holdsWrote(name, now, state) || placeHolds(name, before, now)) continue
-    if (holdsSent(name, now, state.undo)) continue
+    if (placeHolds(name, before, now)) continue
+    // A column the run emptied (`state.cleared`, claimed by no hash) must still be blank.
+    const tracy = list(state.cleared).includes(name)
+      ? isBlankHolder(now)
+      : !state.wrote?.[name] || holdsWrote(name, now, state) || holdsSent(name, now, state.undo)
+    if (tracy && !ownerOverTaken(name, now, state, before)) continue
     throw Object.assign(
       new DraftWriteError(
         code,

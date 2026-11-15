@@ -3,7 +3,7 @@
 // catid, content, the rows cut, the elements removed), every value at its location (an HTML piece read as its node's
 // text), a module's pages, a contract apply's record columns whole, the site identity, and the bytes behind an
 // uploaded path. A difference stops the write with `read_back_mismatch`, naming the operation, the column or slot and
-// lengths, never the customer's text.
+// lengths (a status column's short values as they are: `state`, `published`), never the customer's text.
 import { createHash } from 'node:crypto'
 import { addressOf, getAt, movedAfterCut } from 'website-opportunities/domain/draft-write-codec.mjs'
 import { DraftWriteError, lengthOf } from 'website-opportunities/domain/draft-write-error.mjs'
@@ -16,13 +16,24 @@ import { resolved } from './step-chain-draft-write-ops.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
-/** A read back that differs, typed; `what` names a column, a slot or a check. */
+/** The status columns whose short values (a publish state, a flag) a mismatch shows as they are: never a text. */
+const STATUS_COLUMNS = new Set(['state', 'published', 'home', 'access', 'showtitle'])
+const statusOf = (value) =>
+  (typeof value === 'number' && Number.isInteger(value)) ||
+  (typeof value === 'string' && /^-?\d{1,3}$/.test(value)) ||
+  value === null ||
+  value === undefined
+const lengthOrStatus = (value, status) =>
+  status ? (value ?? null) : lengthOf(typeof value === 'string' ? value : JSON.stringify(value ?? null))
+
+/** A read back that differs, typed; `what` names a column, a slot or a check (lengths, or a status column's values). */
 export function mismatch(op, what, meant, got, extra = {}) {
+  const status = STATUS_COLUMNS.has(extra.column) && statusOf(meant) && statusOf(got)
   return new DraftWriteError('read_back_mismatch', `${op.key} reads another ${what} than it wrote`, {
     op: op.key,
     what,
-    expected: lengthOf(typeof meant === 'string' ? meant : JSON.stringify(meant ?? null)),
-    got: lengthOf(typeof got === 'string' ? got : JSON.stringify(got ?? null)),
+    expected: lengthOrStatus(meant, status),
+    got: lengthOrStatus(got, status),
     ...extra
   })
 }

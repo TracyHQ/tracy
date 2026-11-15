@@ -140,7 +140,8 @@ picture (`ref:<op>`) or a changed record (`record:<op>`, for `module.position`) 
 ## The run record of a revision
 
 A revision gets its own record: `{mark (of the new plan), base, seq, baseIds, ids, paths, pending, done, kept, rewrite,
-wrote, shapes, undo}`. `wrote` is kept by every draft write, a first build too (`wroteDoors`): the hash of the value
+hidden, wrote, shapes, cleared, undo}`. `hidden` maps each operation a revision's act took off (a hide, an unassign)
+to its record (`{kind, id, door}`), carried from build to build ("Showing a record again"). `wrote` is kept by every draft write, a first build too (`wroteDoors`): the hash of the value
 last written at each place, by name (`record:<kind>:<id>:<column>`, `assignment:<module id>`, `slot:<key>`,
 `identity:<field>`), carried from build to build; a revision's journal keeps it too, saved before the call.
 
@@ -186,7 +187,11 @@ write step, on the partial order.
 assignments, contract slots (one apply) and site identity the revision wrote over. Before any door it checks that
 `build` is the build the site holds (`builds.current(ctx)`). Each place is first read: a value that is neither what the
 revision wrote (`state.wrote`) nor its value before (a crashed attempt of this restore already wrote it back) was
-edited outside Tracy, and the restore stops `restore_site_changed`, naming the place. Each place has its own apply id
+edited outside Tracy, and the restore stops `restore_site_changed`, naming the place. So does a place that holds what
+the revision wrote but, at a JSON key the revision took out (`undo.prior` less the revision's own shape), a value that
+is neither a blank holder nor the value the key held before the revision: writing the key back would write over the
+owner's (`step-chain-draft-restore-taken.js`). A column the revision emptied (`state.cleared`) must still be blank.
+Every place is checked before the first write (and again right before its own), so such a stop writes nothing. Each place has its own apply id
 (`<run>:restore:w<seq>:<place>`), is read back, is tried twice, then stops `restore_failed`; the restore's record
 resumes a crash. At the end the previous build, its write count past the revision's, is kept again
 (`builds.keep(current, ctx, {expected: build.ref})`), so it is the build the site holds. It returns `{status, left:
@@ -204,10 +209,10 @@ resumes a crash. At the end the previous build, its write count past the revisio
 - a place edited outside Tracy since the revision: `restore_site_changed`.
 
 A record the revision made is hidden (a made module put on no page), after the places; its key is in `left.hidden`. A
-file the revision uploaded is deleted once its dry run names no record but those (`media.delete`); a file another
-record names, or one the site refused to delete, stays, listed in `left.uploads` and with why in `left.kept`
-(`used_elsewhere` with `usedIn`, `door_not_available`, or the refusal's code). Only a dry run answer of the measured
-shape (an object whose `usedIn` is a list of `{kind, id}`) lets a file go; any other answer keeps it (`used_in_unread`).
+file the revision uploaded is deleted once its dry run names no record but the ones this undo takes off (those it
+made, and those the revision showed again that the undo hides or puts on no page again: a dry run counts unpublished
+and trashed records too); see "Deleting an upload". A file another record names, or one the site refused to delete,
+stays, listed in `left.uploads` and with why in `left.kept`.
 A module that had no assignment before
 is written back with an empty page list (`"[]"`, the measured "no page"), listed in `left.assignments`.
 
@@ -217,7 +222,10 @@ A revision marks itself as the site's unfinished run (`builds.begin`) after ever
 (the write plan's guards, `revision_needs_removal`, `door_not_available`, the owner checks of its acts, which read the
 site) and before its first door write; the mark ends when its build is kept (`builds.end`). A run that still stops
 having written nothing (the journal sets and saves `state.touched` before every door write, and it is unset) has its
-mark cleared at once (`step-chain-draft-site-check.js`), so the next revision runs; a run that wrote keeps its mark. While it is marked, any other revision stops at the plan step, before any
+mark cleared at once (`step-chain-draft-site-check.js`), so the next revision runs; so is a mark an earlier attempt
+of the same run left (it died before its first write), when this attempt also stops before writing. A run that wrote
+keeps its mark, and so does a run whose first write was refused twice: the journal set `touched` before the call, and
+whether the refused call acted is unknown, so it is resumed or abandoned. While it is marked, any other revision stops at the plan step, before any
 model call, with `previous_run_unfinished` naming the run (no more false `site_changed_outside` blaming the owner for
 Tracy's half write). Two ways out:
 
@@ -239,15 +247,20 @@ reports what stays in `left.unrestored` (`{code, made, removed}`). A site is nev
 
 A JSON column (`attribs`, `images`, `params`) is never sent whole by a revision, a restore or an abandon: what the
 site holds now is the base, and only the keys Tracy owns (the shape it wrote) are set; every key the owner added, and
-everything inside a value Tracy wrote as an empty object, stays (`step-chain-draft-owned-keys.js`). A revision that
+everything inside a value Tracy wrote as an empty object, stays (`step-chain-draft-owned-keys.js`). An object Tracy
+owned and no longer sends goes with only Tracy's keys in it: an owner key inside it stays. A list is written whole
+(its rows have no keys to merge by): when a row Tracy wrote holds a key Tracy never owned, a revision stops
+`site_changed_outside` at that column, before its write (writes of earlier operations of the run stand, and are rolled
+back by the abandon), rather than lose the owner's key. A revision that
 would write over a key the owner set stops `site_changed_outside`; a blank holder at a key it newly owns (an empty
 text, null, an empty object or list, as an admin save stores a field nobody filled) is not the owner's value.
 
 **What a revision no longer sends** (`step-chain-draft-journal-record.js`). The end state of a revision is a full build
 of the same plan plus the owner's own keys. A JSON key the previous build owned (`state.shapes`) that the revision no
 longer sends is taken out; a column the previous build wrote on a record a build made, that the operation written again
-whole no longer sends, is emptied (`''`, what a new record holds there; kept in `state.cleared`, so a later revision
-does not take a later owner value there for Tracy's), and a column with no empty value (an id, a state, a type) stops
+whole no longer sends, is emptied (`''`, what a new record holds there), kept in `state.cleared` and NOT in
+`state.wrote` (the record no longer claims a value there; a later write over it, a restore or an abandon finds it
+blank, else stops on the owner's value), and a column with no empty value (an id, a state, a type) stops
 `revision_needs_removal`. Taking either off over an owner's edit stops `site_changed_outside`. `undo.prior` keeps the
 shape the previous build owned at each such place, so a restore and an abandon put every key and column back exactly
 (`draft-revision-dropped.test.mjs`).
@@ -271,6 +284,7 @@ the one "no page" value) and `deleteMedia` (a picture under `images/`, with a dr
 | the tab position of a module put on no page | none needed | `left_on_no_page` |
 | a picture no longer used | none | its file stays (`delta.orphaned`): the restore of the previous build shows it again, and no door brings a deleted file back |
 | a contract slot, a record patch or the identity no longer written, or an address a rewritten in place operation no longer gets | `contract.removes` (slot) or none | typed stop `revision_needs_removal` before any door, naming the door |
+| a record an earlier revision hid, a module it put on no page, that this revision needs again | `content.update` | shown again: written again in place, same id ("Showing a record again") |
 | restore or abandon: a record the revision made | `hide` (a module: `unassign`) | after the places are written back; `left.hidden` |
 | restore or abandon: a record the revision hid, a module it put on no page | `content.update` | written back from the journal like any place: published again with its earlier value, its pages back |
 | restore or abandon: a file the revision uploaded | `deleteMedia` after its dry run | deleted when the dry run names no record but those the undo hid; else kept, with why |
@@ -289,6 +303,39 @@ store module is only put back on no page, the value the blank site ships. An act
 `door_not_available` before any door. The report says what was hidden (`flags`: `hidden_not_deleted`,
 `on_no_page_not_deleted`, `left_on_no_page`). A restore or an abandon checks a made record the same way
 (`restore_site_changed`, `site_changed_outside`).
+
+### Showing a record again
+
+A hide keeps the record and its id (`state.hidden`, `step-chain-draft-show-again.js`). When a later revision adds back
+an operation whose record a revision took off (`writeDeltaOf` answers it `added`; the run record still holds its id),
+the record is shown again, never made a second time: before any door write it is checked as its act was (`checkAct`:
+every column a build wrote holds what was written, the hidden column 0; an owner edit stops `site_changed_outside`,
+nothing written), then its key is in `rewrite`, so it is written again in place through `content.update` with every
+field a new record gets (an article `state: 1`, a menu item, a category or a contact `published: 1`, as measured: the
+page answers again) and the new plan's content; a module's pages are written again by its own assign operation. These
+writes are journaled like any other, so the restore and the abandon of this revision write the values before back (the
+hidden column 0, the empty page list) and the record is off the site again. The report flags `shown_again` with the
+operation keys.
+
+### Deleting an upload
+
+`media.delete` as measured on plugin 0.24.85 (`step-chain-draft-media-delete.js`):
+
+- The dry run answers `{ok, deleted: {path, files: [{path, size, sha256}]}, totalBytes, undoCopyUnderCap, usedIn,
+  usedInScope}`. `usedIn` is one row per record naming the file, `{type, id, title}`, `type` plural (`articles`,
+  `modules`, `menuItems`, `templateStyles`), unpublished and trashed records included; nobody: `[]`. A row of another
+  type or without a type and an id keeps the file (`used_in_unread`), as does any other answer.
+- A real delete of a file other records use succeeds: the door refuses nothing. So no delete is sent without a dry run
+  of the same call, read in the measured shape, that names no record but the ones this undo takes off. The door client
+  never answers a dry run from its journal: a resumed restore reads `usedIn` again.
+- A path with no file (a missing folder too) answers `write_failed`, dry run or not, and the same apply id called again
+  answers `write_failed` too: there is no not-found code and no replay answer. So an error code never says whether the
+  file is there: it is read by `media` (the public file, null when absent) before the dry run and again after a failed
+  delete. Absent is done (deleted by an earlier attempt, or never there). Present after a failure keeps the file with
+  the code; unread (no `media` door, or it failed) keeps it with `presence_unread` or `delete_unknown`. A file is never
+  counted deleted on an error alone.
+- Not a picture, or outside `images/`: `bad_params`, kept with that code.
+- Not measured: `apply.revert` of a delete. Nothing relies on it.
 
 A plan revision with removals now spends its writer calls before the write step can stop on a case with no door; in
 the florist matrix none reaches that stop. The memory site models the three doors as measured
@@ -362,7 +409,7 @@ stores; the undo journal never keeps a held value (`HELD_BEFORE`).
   [{op: 'held:<12 hex>', file}]}]`: a held item's picture an earlier build uploaded is still a public file of the
   site: a revision deletes no file (its restore would need it, and no door brings a deleted file back). The caller must
   show it to the owner, with the file path. The write step's value also carries the removal flags (`hidden_not_deleted`,
-  `on_no_page_not_deleted`, `left_on_no_page`, with the operation keys).
+  `on_no_page_not_deleted`, `left_on_no_page`, with the operation keys) and `shown_again`.
 
 ## Typed stops
 
@@ -372,7 +419,9 @@ At the plan step, before any model call: `site_already_built`, `previous_run_unf
 `buildResultOf` writes, or the store threw), `previous_build_unfinished`, `previous_build_other_plan`,
 `previous_build_other_kit`. At the write step: `previous_build_not_current` (checked again
 before the first door write, and when `keep` finds another build), `previous_run_unfinished`, `revision_needs_removal`,
-`door_not_available`, `site_changed_outside`, `write_record_stale`, `redo_failed`. At the abandon: `abandon_not_unfinished`,
+`door_not_available`, `site_changed_outside`, `write_record_stale`, `redo_failed`, `read_back_mismatch` (it names
+lengths, never text; a status column's short values, `state`, `published`, `home`, `access`, `showtitle`, as they
+are). At the abandon: `abandon_not_unfinished`,
 `previous_build_not_current`, `restore_needs_removal`, `restore_shows_held_text`, `site_changed_outside`,
 `abandon_failed`. At the restore: `previous_build_doors_missing`,
 `previous_build_not_current`, `previous_run_unfinished` (a revision still unfinished on the site: resume or abandon
@@ -403,7 +452,8 @@ with the `plain` and the `cross` writer, equals a fresh full build. Change nothi
   place that a revision no longer writes stops typed ("Taking things off a site").
 - What a visitor sees of a hidden record and a module on no page is measured on JA Boxing only; a hidden menu item with
   child items, and a hidden category that still holds a published article, are not measured.
-- A media delete of a picture a page still uses is not measured; the restore never sends one (its dry run first).
+- `apply.revert` of a media delete is not measured; nothing relies on it. A media delete of a picture a page still uses
+  succeeds (measured): the restore never sends one without a readable dry run first.
 - An outside edit is only seen at a place a build wrote; a place no build wrote holds what the blank site had.
 - Joomla's own forms of a JSON column are modelled by the memory site (`draft-revision-site-forms.mjs`: keys added,
   slashes escaped, spacing, and `alternatingSite`: another encoding on every save, so a restore that compared the text

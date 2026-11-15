@@ -70,11 +70,15 @@ async function restorePlace(place, doors, applyId, state, record) {
 }
 
 /**
- * Every place written back once and read back, each checked first for an edit made outside Tracy (`state`: the run's
+ * Every place written back once and read back, all checked before the first write, and each again right before it is
+ * written, for an edit made outside Tracy (`state`: the run's
  * `{wrote, shapes}`; `changed`: the code of that stop), the done places kept in `record.state.done` so a crashed write
  * back resumes; a failing place is tried twice, then `failed` (noRerun).
  */
 export async function writeBack({ places, doors, record, state, applyId, failed, changed }) {
+  // Every place checked before the first write: an edit outside Tracy at any of them stops with nothing written.
+  for (const place of places)
+    if (!record.state.done.includes(place.key)) await checkUnchanged(place, doors, state, changed)
   for (const place of places) {
     if (record.state.done.includes(place.key)) continue
     await checkUnchanged(place, doors, state, changed)

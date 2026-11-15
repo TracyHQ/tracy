@@ -6,6 +6,10 @@
 // would not write it); every other key, and everything inside a value Tracy wrote as an empty object, stays as the
 // site holds it. A value that is not a JSON object on both sides is sent as it is.
 //
+// An object Tracy owned and no longer sends goes with only the keys Tracy owned in it: an owner key inside it stays. A
+// list is written whole (its rows have no keys to merge by): when a row Tracy wrote holds a key Tracy never owned (the
+// owner's), a revision stops `site_changed_outside` at that column, before its write, rather than lose the key.
+//
 // A revision also guards the keys it did not own before (`before`: the shape the previous build, or this run before a
 // crash, wrote there): such a key the site already holds with another value is a value the owner set, and writing over
 // it is an edit outside Tracy (`site_changed_outside`), as it is for any value Tracy wrote. A blank holder there (an
@@ -52,6 +56,9 @@ function overOwned(now, sent, owned, before, taken, path = []) {
     }
     const shape = owned[key]
     if (!Object.hasOwn(sent, key)) {
+      // An object taken out whole: only the keys Tracy owned in it go, the owner's beside them stay.
+      const rest = isPlain(shape) && isPlain(now[key]) ? overOwned(now[key], {}, shape, null, [], []) : {}
+      if (Object.keys(rest).length) out[key] = rest
       taken.push([...path, key])
       continue
     }
@@ -61,12 +68,22 @@ function overOwned(now, sent, owned, before, taken, path = []) {
       out[key] = deeper
       continue
     }
+    // A list whose rows hold keys Tracy never owned (an owner's): a row cannot be merged by key, so a revision stops.
+    if (before !== null && Array.isArray(now[key]) && ownerKeysIn(now[key], shape)) return null
     const ownedBefore = before === null || Object.hasOwn(before, key)
     const ownerValue = Object.hasOwn(now, key) && !same(now[key], sent[key]) && !isBlankHolder(now[key])
     if (!ownedBefore && ownerValue) return null
     out[key] = sent[key]
   }
   return out
+}
+
+/** Whether a list holds, in a row Tracy wrote, a key its shape does not own (at any depth). */
+function ownerKeysIn(value, shape) {
+  if (Array.isArray(value) && Array.isArray(shape))
+    return value.some((row, i) => shape[i] !== undefined && ownerKeysIn(row, shape[i]))
+  if (!isPlain(value) || !isPlain(shape)) return false
+  return Object.keys(value).some((k) => !Object.hasOwn(shape, k) || ownerKeysIn(value[k], shape[k]))
 }
 
 /** Every key of two shapes (a key in either), an object at both sides joined one level down. */

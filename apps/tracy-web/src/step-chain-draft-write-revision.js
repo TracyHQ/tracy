@@ -34,6 +34,7 @@ import { maskedOf, maskHeld, namesAnyIn } from 'website-opportunities/domain/rev
 import { emptyUndo, journaledDoors } from './step-chain-draft-journal.js'
 import { checkAct, removalActsOf, removalFlagsOf } from './step-chain-draft-removal.js'
 import { missingDoorOf, runRemovals } from './step-chain-draft-removal-run.js'
+import { checkShows, showsOf, shownFlagOf } from './step-chain-draft-show-again.js'
 import { planMarkOf, runDraftWrite } from './step-chain-draft-write.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -74,6 +75,8 @@ export function revisionStateOf(previous, plan, delta, held) {
     ...delta.orphaned
   ])
   const shown = (k) => !(held.length && namesAnyIn(k, held))
+  // A record an earlier revision hid that this one adds again is written again in place (`step-chain-draft-show-again.js`).
+  const { shows, hidden } = showsOf(delta, before)
   return {
     mark: planMarkOf(plan),
     base: before.mark,
@@ -86,7 +89,8 @@ export function revisionStateOf(previous, plan, delta, held) {
     pending: {},
     done: [],
     kept: [...delta.same],
-    rewrite: delta.rewrite.map((r) => r.key),
+    rewrite: [...delta.rewrite.map((r) => r.key), ...shows.flatMap((s) => s.ops)],
+    hidden: Object.fromEntries(Object.entries(hidden).filter(([k]) => shown(k))),
     wrote: { ...before.wrote },
     shapes: { ...before.shapes },
     cleared: [...list(before.cleared)],
@@ -128,6 +132,7 @@ export async function runRevisionWrite(input) {
   if (removal.stops.length) throw removalStop(removal.stops, plan, hold.texts)
   const missing = missingDoorOf(removal.acts, doors)
   if (missing) throw missing
+  const { shows } = showsOf(delta, previous.state)
   record.state ??= revisionStateOf(previous, plan, delta, hold.texts)
   const revision = plan.order?.plan?.revision ?? 'none'
   const runOf = `${runId}:r${revision}:w${record.state.seq ?? 1}`
@@ -144,6 +149,7 @@ export async function runRevisionWrite(input) {
     const done = new Set(list(record.state.removal?.done))
     for (const act of removal.acts.filter((a) => !done.has(a.key)))
       await checkAct(act, doors, [before, record.state], record.state.undo)
+    await checkShows(shows, doors, [before, record.state], record.state.undo)
     // Every stop that writes nothing came first: only now is the site marked as this run's (`builds.begin`).
     await beforeDoors?.()
     report = await runDraftWrite({ plan, doors: journaled, record, openStored, drawInitials, runId: runOf })
@@ -156,7 +162,7 @@ export async function runRevisionWrite(input) {
     }
     throw outsideEditOf(error, hold.texts)
   }
-  const flags = removalFlagsOf(removal)
+  const flags = [...removalFlagsOf(removal), ...shownFlagOf(shows)]
   const files = heldFilesOf(previous, record.state, hold)
   if (files.length) flags.push({ code: 'held_file_left_on_site', places: files })
   const counts = deltaCountsOf(delta, orphanedFilesOf(previous, record.state))
