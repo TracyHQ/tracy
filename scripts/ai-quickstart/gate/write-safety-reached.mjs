@@ -17,13 +17,6 @@ const decoded = (text) =>
     .replaceAll('&#39;', "'")
     .replaceAll('&amp;', '&')
 
-/** The part of a probed value that is the probe's own, not the place's marker. */
-function probeTextOf({ value, base }) {
-  const v = String(value ?? '')
-  if (base && v.startsWith(base)) return v.slice(base.length).replace(/^ /, '')
-  return v
-}
-
 /** The probe text as a JSON column keeps it (a settings column stores its values as JSON strings). */
 const jsonForm = (text) => JSON.stringify(String(text)).slice(1, -1)
 
@@ -46,7 +39,6 @@ export function reachedInPlan(used, plan, index, plainIndex) {
   const byOp = new Map((plan?.ops ?? []).map((op) => [op.key, op]))
   for (const [key, u] of used) {
     const code = String(u.code).toUpperCase()
-    const text = probeTextOf(u)
     if (u.probe.whole) {
       // No code in the value: the place is where the plain build stored this place's code.
       const at = plainIndex.get(code) ?? []
@@ -62,22 +54,31 @@ export function reachedInPlan(used, plan, index, plainIndex) {
       continue
     }
     // A probe with a signature is found by it: the build may change the probe's punctuation (straight quotes made
-    // curly), never its signature unless it dropped the probe.
+    // curly), never its signature unless it dropped the probe. One without is found by the place's own value, its
+    // marker together with the probe (review 5 Y1): a stored column (an article's text) holds several places, and the
+    // same probe text at another place in it is not this place's.
     const mark = u.probe.signature?.(u.code)
-    if ((index.get(code) ?? []).some((s) => holds(s.value, text) || (mark && holds(s.value, mark))))
+    const own = String(u.value ?? '')
+    if ((index.get(code) ?? []).some((s) => (mark ? holds(s.value, mark) : own && holds(s.value, own))))
       out.add(key)
   }
   return out
 }
 
-/** The places of a pass whose probe a page shows, among the ones the plan did not show reached. */
+/**
+ * The places of a pass whose probe a page shows, among the ones the plan did not show reached. A page is searched for
+ * the place's own value, never the probe text alone (review 5 Y1): a probe with no code in its text (letters of other
+ * scripts, a content plugin code, a limit pad) has the same text at every place, so one place's copy on a page would
+ * credit every other place given that probe. A signature carries the place's code and stands for it; else the whole
+ * probed value (the place's marker together with the probe) must show.
+ */
 export function reachedOnPage(html, used, already) {
   const out = new Set()
   for (const [key, u] of used) {
     if (already.has(key) || u.probe.whole) continue
-    const text = probeTextOf(u)
     const mark = u.probe.signature?.(u.code)
-    if ((text && holds(html, text)) || (mark && holds(html, mark))) out.add(key)
+    const own = String(u.value ?? '')
+    if ((mark && holds(html, mark)) || (own && holds(html, own))) out.add(key)
   }
   return out
 }
