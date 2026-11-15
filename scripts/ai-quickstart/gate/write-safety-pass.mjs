@@ -135,9 +135,10 @@ export async function onePass(n, assignment, ctx, limits) {
       for (const k of reachedOnPage(answer.html, a.opts.used, reached)) reached.add(k)
       const judged = judgePage(answer.html, written)
       for (const k of judged.shown) shown.add(k)
+      // Judged on this page, not isolated by trials: the finding says so and names the page (review 5 Z2).
       for (const { place, judged: j } of judged.injected)
         if (active.has(place)) {
-          record(place, active.get(place), j, n)
+          record(place, active.get(place), { ...j, evidence: 'page', judgedOn: page.pageType ?? null }, n)
           active.delete(place)
         }
     }

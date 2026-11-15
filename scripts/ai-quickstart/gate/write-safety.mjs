@@ -97,8 +97,9 @@ export async function writeSafety(input) {
       ...(failure.site ? { site: failure.site } : {}),
       ...(failure.element ? { element: failure.element } : {}),
       ...(failure.problems ? { problems: failure.problems.map(shortOf) } : {}),
+      ...(failure.judgedOn ? { judgedOn: failure.judgedOn } : {}),
       // How the place was found: the only probed place stored where a refusal names (`named_alone`), built alone
-      // (`built_alone`), or a trial of a bisection (`trial`).
+      // (`built_alone`), seen on a page that ran it (`page`, `judgedOn`), or a trial of a bisection (`trial`).
       evidence: failure.evidence ?? 'trial',
       pass
     })

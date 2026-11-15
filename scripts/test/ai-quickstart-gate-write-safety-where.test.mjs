@@ -119,3 +119,39 @@ test('Y2 and Z1: a stop names the operation the site refused and is searched onl
   assert.equal(result.ends.untested.filter((u) => /untraced/.test(u.why)).length, 0)
   assert.equal(result.steps, 0)
 })
+
+// Review 5 Z2: a probe a page runs is judged on that page, not isolated by trials: the finding says so and names the
+// page, and the location is the one that page prints.
+test('Z2: a finding judged on a page says it was seen there and names that page', async () => {
+  const tag = PROBE_CATALOGUE.find((p) => p.id === 'tag')
+  const site = {
+    reset: async () => {},
+    write: async (built) => ({ report: { status: 'done' }, record: { built } }),
+    pages: async (built) => [{ pageType: 'home', url: 'http://site.invalid/', built }],
+    fetch: async () => ({ status: 200, html: '' })
+  }
+  let last = null
+  site.write = async (built) => {
+    last = built
+    return { report: { status: 'done' }, record: {} }
+  }
+  // The home page prints the paragraphs as stored: a tag typed as words becomes a live element.
+  site.fetch = async () => ({
+    status: 200,
+    html:
+      '<html><body>' +
+      last.writePlan.ops
+        .flatMap((o) => o.values)
+        .map((v) => '<p>' + v.value + '</p>')
+        .join('') +
+      '</body></html>'
+  })
+  const result = await writeSafety({ build, site, probes: [tag], limits: { ...LIMITS, steps: 0 } })
+  const injected = result.findings.filter((f) => f.kind === 'markup_injected')
+  assert.ok(injected.length > 0)
+  for (const f of injected) {
+    assert.equal(f.evidence, 'page')
+    assert.equal(f.judgedOn, 'home')
+    assert.equal(f.page, 'home')
+  }
+})
