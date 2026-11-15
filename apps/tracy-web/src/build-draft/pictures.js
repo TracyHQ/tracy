@@ -158,7 +158,7 @@ export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime })
   /** The stored bytes of one draft picture, checked against its sha256; null when gone or changed. */
   async function open(id, { accountId = null, hash } = {}) {
     const { rows } = await pool.query(
-      `select id, account_id, sha256, object_key, mime, width, height, kind from build_draft_picture
+      `select id, account_id, sha256, object_key, mime, width, height, kind, labels from build_draft_picture
         where id::text = $1 and ($2::uuid is null or account_id = $2)`,
       [String(id), accountId]
     )
@@ -175,6 +175,8 @@ export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime })
       width: row.width,
       height: row.height,
       kind: row.kind,
+      // What the draft's own vision read said of it (or null), so a later build reuses it instead of paying again.
+      labels: row.labels ?? null,
       bytes
     }
   }
