@@ -66,7 +66,7 @@ test('X7: a write safety finding names its item and where it was stored; an untr
   assert.match(page, /Item Stored at/)
   assert.match(
     page,
-    /home block-160 name 2 article:service-6 article-14\.4 other-scripts The site refused it the only value stored where it stopped/
+    /home block-160 name 2 article:service-6 article-14\.4 other-scripts The site refused it the only probed value stored where the site stopped/
   )
   assert.match(
     page,

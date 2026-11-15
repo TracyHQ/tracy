@@ -30,11 +30,16 @@ const whereOf = (f) =>
   [f.location?.op ?? f.op, f.location?.slot ?? f.slot ?? f.location?.column ?? f.column]
     .filter(Boolean)
     .join(' ')
-/** How a finding was named, in plain words. */
-const EVIDENCE = {
-  named_alone: 'the only value stored where it stopped',
-  built_alone: 'refused when built alone',
-  trial: 'isolated by trials'
+/** How a finding was named, in plain words: a build refusal names its value, a site stop where it stopped. */
+const evidenceOf = (f) => {
+  if (f.evidence === 'page') return 'seen on the page ' + (f.judgedOn ?? f.page ?? '')
+  if (f.evidence === 'named_alone')
+    return f.kind === 'refused_by_build'
+      ? 'the only probed value the refusal names'
+      : 'the only probed value stored where the site stopped'
+  if (f.evidence === 'built_alone') return 'refused when built alone'
+  if (f.evidence === 'trial') return 'isolated by trials'
+  return ''
 }
 
 const table = (head, rows, empty = 'None.') =>
@@ -110,7 +115,7 @@ export function measurementsHtml(measurements = {}) {
       (f.culprit === 'not_traced' ? 'not traced (' + n(f.suspects ?? 0, 'suspect', 'suspects') + ')' : ''),
     (KIND[f.kind] ?? f.kind) +
       (f.culprit === 'not_traced' && f.class ? ' (' + (KIND[f.class] ?? f.class) + ')' : ''),
-    f.culprit === 'not_traced' ? '' : (EVIDENCE[f.evidence] ?? '')
+    f.culprit === 'not_traced' ? '' : evidenceOf(f)
   ])
   const s = m.structure ?? {}
   const q = m.quality ?? {}

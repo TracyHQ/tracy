@@ -44,10 +44,13 @@ export function resultOf({
   const failed = findings.some((f) => FAILING.has(f.kind))
   // How each place ends: tested on the site, refused with its own evidence (a finding names it), or untested with why.
   const named = new Set(findings.filter((f) => f.place).map((f) => f.place))
-  const ends = { tested: 0, refused: 0, untested: [] }
+  // `parkedTested`: places tested in an earlier pass and set aside in a later one, whose later probes were never tried.
+  const ends = { tested: 0, refused: 0, untested: [], parkedTested: 0 }
   for (const p of places) {
-    if (onSite.has(p.key)) ends.tested += 1
-    else if (parked.has(p.key)) ends.untested.push({ place: p.key, ...parked.get(p.key) })
+    if (onSite.has(p.key)) {
+      ends.tested += 1
+      if (parked.has(p.key)) ends.parkedTested += 1
+    } else if (parked.has(p.key)) ends.untested.push({ place: p.key, ...parked.get(p.key) })
     else if (named.has(p.key) && !missing.some((m) => m.place === p.key)) ends.refused += 1
     else
       ends.untested.push({

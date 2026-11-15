@@ -90,7 +90,7 @@ test('2: leaks and values not seen on a write that stopped say so in the first l
 
 test('3 and 8: the probe counts agree with the coverage table, and the table adds up', () => {
   const page = text(measurementsHtml(M))
-  assert.match(page, /values reached the site at 0 of 320 places given a probe/)
+  assert.match(page, /0 of 320 places given a probe had at least one probe reach the site/)
   assert.match(
     page,
     /641 places the universe counts written = 600 also in the plain build \+ 41 only in the universe/

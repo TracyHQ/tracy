@@ -18,7 +18,7 @@ test('passed: write safety, structure, quality and secrets say what was measured
     coverage: { notProbed: { picture: 6, email: 4 } }
   })
   assert.match(ws, /^Passed: /)
-  assert.match(ws, /reached the site at 30 of 30 places/)
+  assert.match(ws, /30 of 30 places given a probe had at least one probe reach the site/)
   assert.match(ws, /10 written places not probed/)
   assert.match(ws, /nothing a customer could type broke a page/)
   const st = lineOf('structure', {
@@ -90,7 +90,7 @@ test('incomplete: the line says what did not finish, never that everything answe
     findings: [{ kind: 'refused_by_build', probe: 'tag' }]
   })
   assert.match(ws, /^Not finished: /)
-  assert.match(ws, /reached the site at 12 of 30 places/)
+  assert.match(ws, /12 of 30 places given a probe had at least one probe reach the site/)
   assert.doesNotMatch(ws, /nothing a customer could type/)
 })
 
@@ -110,7 +110,7 @@ test('a write that stopped: write safety and structure each say the write stoppe
     findings: []
   })
   assert.match(ws, /the plain marker build did not finish writing the site/)
-  assert.match(ws, /reached the site at 0 of 30 places/)
+  assert.match(ws, /0 of 30 places given a probe had at least one probe reach the site/)
   const st = lineOf('structure', {
     status: 'incomplete',
     linkCheck: { status: 'incomplete', reason: 'write_stopped' },

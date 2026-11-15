@@ -49,14 +49,27 @@ export const whyOf = (m) => {
 }
 
 /** One structure variant in words. */
+/**
+ * The unplanned links of a variant, with the two kinds the hidden variant meets (review 5 Z6): the category list of a
+ * blog page (hiding the page's menu item does not hide its category) and a doubled `index.php` address.
+ */
+function unplannedOf(links, hidden) {
+  if (!links?.length) return ''
+  const head = n(links.length, 'link reaches', 'links reach') + ' a page the plan has not got (recorded only'
+  if (!hidden) return '; ' + head + ')'
+  const category = links.filter((l) => /[?&]view=category(?:&|$)/.test(String(l.href ?? ''))).length
+  const doubled = links.filter((l) => /\/index\.php\/index\.php\//.test(String(l.href ?? ''))).length
+  const kinds = [
+    category ? category + ' a category list, which hiding a page does not hide' : '',
+    doubled ? doubled + ' a doubled index.php address' : ''
+  ].filter(Boolean)
+  return '; ' + head + (kinds.length ? ': ' + kinds.join('; ') : '') + ')'
+}
+
 function variantLine(name, v, hidden = false) {
   if (!v || v.status === 'not_run') return name + ': not measured, ' + whyOf(v ?? { status: 'not_run' })
   const unplanned =
-    (v.unplanned?.length
-      ? '; ' +
-        n(v.unplanned.length, 'link reaches', 'links reach') +
-        ' a page the plan has not got (recorded only)'
-      : '') +
+    unplannedOf(v.unplanned, hidden) +
     (v.elsewhere?.length
       ? '; ' +
         n(v.elsewhere.length, 'link reaches', 'links reach') +
@@ -83,7 +96,7 @@ function variantLine(name, v, hidden = false) {
       ': ' +
       (broken
         ? n(broken, 'link leads', 'links lead') + ' to a hidden page (or one still served at another address)'
-        : 'no link leads to a hidden page') +
+        : "no link leads to a hidden page's own address") +
       down +
       unplanned
     )
@@ -112,7 +125,7 @@ const UNTESTED = {
   no_pass_reached_it: 'no pass reached them',
   refused_or_failed: 'every probe they got was refused or failed',
   probe_not_written: 'the build wrote another value than the probe',
-  probes_left: 'some of their probes were never tried'
+  probes_left: 'named by a finding, its other probes never tried'
 }
 
 /** What write safety reached and found, true in every state. */
@@ -122,13 +135,27 @@ function writeSafetyLine(m) {
   const site = (m.findings ?? []).filter((f) => f.kind !== 'refused_by_build').length - untraced
   const build = (m.findings ?? []).filter((f) => f.kind === 'refused_by_build').length
   const could = m.coverage?.places?.couldTakeProbe
+  // A place counts as tested from any one probe that reached it: the places tried with every probe that applies and
+  // the (place, probe) pairs never tried are said apart (review 5).
+  const known = Array.isArray(m.missing)
+  const missing = known ? m.missing : []
+  const short = new Set(missing.map((x) => x.place)).size
   const parts = [
-    'values reached the site at ' +
-      (p.tested ?? 0) +
+    (p.tested ?? 0) +
       ' of ' +
       (p.probed ?? 0) +
-      ' places given a probe' +
+      ' places given a probe had at least one probe reach the site' +
       (could == null ? '' : ' (' + could + ' places could take one)'),
+    ...(known
+      ? [n(Math.max(0, (p.probed ?? 0) - short), 'place', 'places') + ' had every probe that applies tried']
+      : []),
+    ...(missing.length
+      ? [
+          n(missing.length, '(place, probe) pair', '(place, probe) pairs') +
+            ' never tried, at ' +
+            n(short, 'place', 'places')
+        ]
+      : []),
     n((m.passes ?? []).length, 'pass', 'passes')
   ]
   const notProbed = Object.values(m.coverage?.notProbed ?? {}).reduce((a, b) => a + b, 0)
@@ -162,6 +189,12 @@ function writeSafetyLine(m) {
         ')'
     )
   }
+  const parked = m.ends?.parkedTested ?? 0
+  if (parked)
+    parts.push(
+      n(parked, 'tested place', 'tested places') +
+        ' set aside in a later pass, their later probes never tried'
+    )
   // A failed measurement that also stopped early says so: the counts are of what it reached, not of every place.
   if (m.status === 'failed' && m.incomplete) parts.push('the measurement then stopped: ' + whyOf(m))
   if (m.status === 'passed') parts.push('nothing a customer could type broke a page')
