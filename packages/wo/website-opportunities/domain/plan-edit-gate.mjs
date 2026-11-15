@@ -21,6 +21,7 @@ import { replanRows } from './plan-edit-rows.mjs'
 import { editedIdProblems } from './plan-edit-withheld.mjs'
 import { editRefusals } from './plan-edit-words.mjs'
 import { editedNameProblems } from './plan-edit-site-name.mjs'
+import { renameItems } from './plan-edit-item-names.mjs'
 import { normalisedSiteName, withheldShowing } from './plan-site-name.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -44,7 +45,10 @@ function customerMessage(code, block, description, data, id, withheld) {
   return words[code] ?? `The ${block.label} section cannot take this change.`
 }
 
-/** A copy of the profile with every fact value the edit changed, an item field's included. */
+/**
+ * A copy of the profile with every fact value the edit changed, an item field's included, and every item renamed on
+ * the card under its new name (`plan-edit-item-names.mjs`).
+ */
 function profileAfterEdit(profile, edit) {
   const next = structuredClone(profile)
   const data = addItemFieldFacts(next, planDataOf(next))
@@ -63,6 +67,7 @@ function profileAfterEdit(profile, edit) {
     if (conflict) Object.assign(conflict, { chosen: value, chosenBy: 'plan-edit' })
     changed = true
   }
+  if (renameItems(data, edit.changes)) changed = true
   if (changed && !list(next.sources).some((s) => s.id === ANSWER_SOURCE))
     next.sources = [...list(next.sources), { id: ANSWER_SOURCE, origin: 'answer' }]
   return next
