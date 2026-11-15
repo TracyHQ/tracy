@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-632-demo-farm-config-test-builds-image",
+  "kind": "fix",
+  "title": "Demo farm: a farm change on a host without the farm image builds it before the config test instead of failing to pull",
+  "pr": 632,
+  "area": "fleet/demo-farm",
+  "cms": ["jo", "wp"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/demo-farm-callers.test.mjs",
+    "S2: Record the exit code and the result of the config-test and image-ensure cases named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "farm_config_test on a host without the farm image runs web/build.sh demos before the throwaway config-test container, and the container is run without --pull.",
+    "farm_config_test on a host that has the image builds nothing."
+  ],
+  "selectors": {
+    "config-test": "farm_config_test / farm_image_ensure in packages/fleet/tracy-fleet-operation/scripts/provision/farm-common.sh"
+  },
+  "evidence": "15/11/2026 dev: after the deploy that moved DEMOS_IMAGE to -r4, farm-switch.sh stopped with 'pull access denied for tracy/web-demos' / 'the config test fails'; with the fix, farm_config_test inside tracy-host (Docker Compose v2.29.7, no run --pull) passes php-fpm -t and apache2ctl -t, rc 0.",
+  "fence": "Unit cases with a fake docker; a real build of a missing image on a host is not part of this case's run.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/demo-farm-callers.test.mjs"
+    ],
+    "tests": [
+      "farm_config_test: a missing farm image is built before the throwaway container runs; a present one is not",
+      "farm_image_ensure: a host without the farm image builds it (web/build.sh demos) before the first fold uses it"
+    ]
+  }
+}
