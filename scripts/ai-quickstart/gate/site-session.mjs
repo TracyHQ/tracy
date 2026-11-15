@@ -6,12 +6,13 @@
 // framework's own parts come from the adapters; nothing here names a template. `release-gate.mjs` takes the session
 // as its `site`, its `reset` and its `quality`.
 import { createHash } from 'node:crypto'
-import { appendFileSync, mkdirSync } from 'node:fs'
+import { appendFileSync, existsSync, mkdirSync } from 'node:fs'
 import path from 'node:path'
 import { siteDoors } from '../../../packages/wo/website-opportunities/domain/site-doors.mjs'
 import { localHost } from '../../../apps/tracy-web/scripts/demo-measures.mjs'
 import { directSend } from '../site-doors-send.mjs'
 import { shownFields, withRecord } from './adapters/joomla-pages.mjs'
+import { joomlaSheetsDoor } from './adapters/joomla-sheets.mjs'
 import { sitePages } from './adapters/joomla-t4.mjs'
 import { openMarkerPicture } from './memory-write.mjs'
 import { measureQuality } from './quality.mjs'
@@ -58,7 +59,8 @@ export function siteSession({
   contract,
   firstMarks = [],
   hostOf,
-  log
+  log,
+  writeStep = realWrite
 }) {
   const send = directSend({
     base,
@@ -70,6 +72,14 @@ export function siteSession({
   const siteKey = createHash('sha256').update(token).digest('hex')
   const offMenus = new Map()
   let writes = 0
+  // Each process writes into a run folder of its own (writes/run-<k>/<n>), so a resumed gate never takes another
+  // process's write record for its own: on a site reset since, that record would say every op is done and nothing
+  // would be written. What a resume carries over is write safety's own state (its ledger, findings and passes).
+  let run = 1
+  while (existsSync(path.join(out, 'writes', 'run-' + run))) run += 1
+  const runDir = path.join(out, 'writes', 'run-' + run)
+  mkdirSync(runDir, { recursive: true })
+  const sheets = joomlaSheetsDoor({ base })
   let applies = 0
   const applyId = (what) => 'gate-' + what + '-' + ++applies
   return {
@@ -91,10 +101,10 @@ export function siteSession({
     }),
     async write(built) {
       writes += 1
-      const dir = path.join(out, 'writes', String(writes))
+      const dir = path.join(runDir, String(writes))
       mkdirSync(dir, { recursive: true })
       const began = Date.now()
-      const real = await realWrite({
+      const real = await writeStep({
         send,
         base,
         siteKey,
@@ -102,7 +112,8 @@ export function siteSession({
         out: dir,
         pin,
         log,
-        open: openMarkerPicture(built.registry)
+        open: openMarkerPicture(built.registry),
+        sheets
       })
       log(
         'write ' + writes + ' ' + real.report.status + ' in ' + Math.round((Date.now() - began) / 1000) + ' s'

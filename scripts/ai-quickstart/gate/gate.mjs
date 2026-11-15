@@ -38,6 +38,7 @@ import {
 import { demoRoutesOf } from '../../built-site-check/inputs.mjs'
 import { corpusInputOf, demoCorpus } from '../rendered-scan.mjs'
 import { JOOMLA_PROBES } from './adapters/joomla-probes.mjs'
+import { joomlaQualityPath } from './adapters/joomla-quality-path.mjs'
 import { DECLARED_HOSTS, EXEMPTIONS, PLATFORM, SYSTEM_PAGES } from './adapters/joomla-t4.mjs'
 import { crawlPages } from './adapters/web-frame.mjs'
 import { cropGroups } from './crops.mjs'
@@ -169,9 +170,18 @@ const controlRender = async (base, name, pages) => {
   }
   return renderSite(opts)
 }
-const paths = (pages) => [...new Set(pages.filter((p) => p.from !== 'system').map((p) => '/' + p.path))]
+// The control is asked at the marker site's addresses: every page, the system pages too, as the host reads it as is.
+const paths = (pages) => [...new Set(pages.map((p) => joomlaQualityPath(p.path)))]
 const humanSha = human ? sha(human) : null
-const controlDeps = { crawl, render: controlRender, corpus, qualityOn, platform: PLATFORM, paths }
+const controlDeps = {
+  crawl,
+  render: controlRender,
+  corpus,
+  qualityOn,
+  platform: PLATFORM,
+  paths,
+  qualityPath: joomlaQualityPath
+}
 
 if (controlOnly) {
   stage = 'human control'
@@ -261,6 +271,7 @@ const { record } = await releaseGate({
   secrets,
   scanRecord: recordScanner({ cms: PLATFORM, gitleaks: !argv.includes('--no-gitleaks') }),
   pageKey: joomlaPageKey,
+  qualityPath: joomlaQualityPath,
   pin,
   writeSafetyState: fileState(path.join(out, 'write-safety-state.json')),
   baseline: baselineOf(folder, flag('--quality-baseline')),

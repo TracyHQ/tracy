@@ -19,10 +19,14 @@ const statusOf = async (url) => (await fetch(url).catch(() => null))?.status ?? 
  * Measure the untouched human quickstart at `base`.
  * @param {string} base
  * @param {{crawl: Function, render: Function, corpus: object, qualityOn: Function, platform: string, paths: Function}}
- *   deps `render(base, name, pages)` renders the pages; `paths(pages)` the page paths the site check reads
+ *   deps `render(base, name, pages)` renders the pages; `paths(pages)` the page paths the site check reads, every page and
+ *   the system pages, at the addresses `qualityPath` gives (the ones the pages are keyed by)
  * @returns {Promise<{human: object, quality: object}>}
  */
-export async function measureControls(base, { crawl, render, corpus, qualityOn, platform, paths }) {
+export async function measureControls(
+  base,
+  { crawl, render, corpus, qualityOn, platform, paths, qualityPath = undefined }
+) {
   const pages = await crawl(base)
   const renders = await render(base, 'human', pages)
   const human = await controlOf(renders, corpus)
@@ -32,7 +36,7 @@ export async function measureControls(base, { crawl, render, corpus, qualityOn, 
   const quality = {
     from: 'measured',
     ...(await qualityOn({ base, platform, pages: paths(pages) })),
-    pageKeys: pageKeysOf(renders, joomlaPageKey),
+    pageKeys: pageKeysOf(renders, joomlaPageKey, qualityPath),
     seo: seoOf(renders, { origin, favicons })
   }
   return { human, quality }

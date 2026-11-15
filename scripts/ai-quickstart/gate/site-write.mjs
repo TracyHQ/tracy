@@ -47,10 +47,25 @@ function fileJournal(file, identity) {
 
 /**
  * @param {{send: Function, base: string, siteKey: string, built: object, out: string, pin: string | null,
- *   log: Function, open: Function, runId?: string}} input `siteKey`: the sha256 of the site's token, never the token
+ *   log: Function, open: Function, runId?: string, sheets?: Function | null, run?: Function}} input `siteKey`: the
+ *   sha256 of the site's token, never the token; `sheets`: the door that reads the stylesheets the site's template
+ *   serves, which the app gives the write step beside the door client (the accent module is built from them); `run`:
+ *   the write step, given only by a test
  * @returns {Promise<{report: object, record: object, plugin: {expected: string | null, start: string, end: string}}>}
  */
-export async function realWrite({ send, base, siteKey, built, out, pin, log, open, runId = 'gate-run' }) {
+export async function realWrite({
+  send,
+  base,
+  siteKey,
+  built,
+  out,
+  pin,
+  log,
+  open,
+  runId = 'gate-run',
+  sheets = null,
+  run = runDraftWrite
+}) {
   const version = async () => (await send('info', {})).info?.component ?? null
   const start = await version()
   if (pin && start !== pin)
@@ -73,17 +88,21 @@ export async function realWrite({ send, base, siteKey, built, out, pin, log, ope
     contract: bound.contract ?? null,
     revision: bound.revision ?? null
   }
-  const doors = siteDoors({
-    send,
-    publicFile,
-    journal: fileJournal(path.join(out, 'journal.json'), identity)
-  })
+  const doors = {
+    ...siteDoors({
+      send,
+      publicFile,
+      journal: fileJournal(path.join(out, 'journal.json'), identity)
+    }),
+    // As the app gives it (`step-chain-draft-site.js`): beside the door client, never in place of one of its doors.
+    ...(typeof sheets === 'function' ? { sheets } : {})
+  }
   const recordFile = path.join(out, 'write-record.json')
   const record = readJson(recordFile, {})
   record.save = (state) => writeFileSync(recordFile, JSON.stringify(state))
   let report
   try {
-    report = await runDraftWrite({ plan: built.writePlan, doors, record, openStored: open, runId })
+    report = await run({ plan: built.writePlan, doors, record, openStored: open, runId })
   } catch (error) {
     report = {
       status: 'stopped',
