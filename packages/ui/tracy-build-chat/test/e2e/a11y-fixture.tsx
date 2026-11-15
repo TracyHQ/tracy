@@ -1,7 +1,7 @@
 // Fixture for the build cards accessibility and phone width run (#613): the plugin's own components, drawn over a
 // stub draft door, one named state at a time. `window.probe.mount(name, data)` draws a state; `window.probe.log`
 // reads back what the cards sent. No dsh host: the question card and the review chrome of dsh are not drawn here.
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   parseFieldPath,
@@ -115,6 +115,37 @@ function Planned({ view, withReview }: { view: Any; withReview: boolean }) {
   return <ReviewBar matched={matched} drafts={drafts as Any} t={english} planCard={card} />
 }
 
+/**
+ * The box dsh draws its chat column in, so the working line can be measured against the message column. The rules are
+ * copied from the vendored dsh client (vendor/tracy/deepseek-harness/packages/client), see `dsh-column.css.mjs`.
+ * The body width is published the way dsh does (`--dsh-conversation-column-width`).
+ */
+function DshColumn() {
+  const body = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const el = body.current
+    if (el) el.style.setProperty('--dsh-conversation-column-width', `${el.clientWidth}px`)
+  }, [])
+  return (
+    <div className="dsh-body" ref={body}>
+      <div className="dsh-scrollBody">
+        <div className="dsh-scroll">
+          <div className="dsh-column">
+            <p className="dsh-message">Calling tools</p>
+          </div>
+        </div>
+        <div className="dsh-composerSeat">
+          <WorkingDock
+            sessionId="session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e"
+            useChat={(select: Any) => select(working)}
+            t={english}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function State({ name, view }: { name: string; view: Any }) {
   const [, force] = useState(0)
   void force
@@ -147,6 +178,8 @@ function State({ name, view }: { name: string; view: Any }) {
           t={english}
         />
       )
+    case 'dsh-column':
+      return <DshColumn />
     case 'earlier':
       return (
         <EarlierConversation

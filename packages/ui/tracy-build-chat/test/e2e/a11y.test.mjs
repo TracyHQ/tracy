@@ -16,6 +16,7 @@ import path from 'node:path'
 import { after, test } from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { build } from 'esbuild'
+import { DSH_COLUMN_CSS } from './dsh-column.css.mjs'
 import {
   STAGES,
   stageDocuments,
@@ -147,7 +148,7 @@ async function open(browser, viewport, theme, code) {
   const dark = theme === 'dark' ? ' class="dark" data-ds-dark-theme=""' : ''
   const html = `<!doctype html><html data-theme="${theme}"${dark}><head><style>${tokens}
 body{margin:0;padding:0 16px;background:var(--background);color:var(--foreground);font-family:system-ui,sans-serif}
-</style><style>${css}</style><style>${code.css}</style></head><body><div id="root"></div></body></html>`
+</style><style>${css}</style><style>${code.css}</style><style>${DSH_COLUMN_CSS}</style></head><body><div id="root"></div></body></html>`
   await page.route('http://a11y.test/**', (r) =>
     r.fulfill({ status: 200, contentType: 'text/html', body: html })
   )
@@ -441,4 +442,30 @@ test('change request note: collapsed lines, a reason for what was not done, dism
   await mount(page, 'plan', { plan: PLAN })
   assert.equal(await page.getByRole('region', { name: 'What changed' }).count(), 0)
   await page.close()
+})
+
+test('working line sits in the message column of dsh at phone, tablet and desktop width', async () => {
+  for (const width of [390, 768, 1280]) {
+    const theme = width === 390 ? 'dark' : 'light'
+    const { page } = await open(browser, { width, height: 800 }, theme, code)
+    await mount(page, 'dsh-column', {})
+    await page.waitForSelector('[data-build-working]')
+    if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${TAG}-dock-column-${width}-${theme}.png`) })
+    const edges = await page.evaluate(() => {
+      const box = (sel) => {
+        const r = document.querySelector(sel).getBoundingClientRect()
+        return { left: r.left, right: r.right }
+      }
+      return { message: box('.dsh-column'), dock: box('.tv-bc-dock') }
+    })
+    assert.ok(
+      Math.abs(edges.dock.left - edges.message.left) <= 1,
+      `at ${width} the working line starts at ${edges.dock.left}, the message column at ${edges.message.left}`
+    )
+    assert.ok(
+      Math.abs(edges.dock.right - edges.message.right) <= 1,
+      `at ${width} the working line ends at ${edges.dock.right}, the message column at ${edges.message.right}`
+    )
+    await page.close()
+  }
 })

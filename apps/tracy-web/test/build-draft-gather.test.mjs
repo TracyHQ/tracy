@@ -241,7 +241,7 @@ test('without a Google key the Google link is set aside, and the website is stil
   const gather = gatherer(domain)
   const { brief, setAside } = await gather({ links: [MAPS, SITE], description: null })
   assert.deepEqual(setAside, [
-    { link: MAPS, reason: 'this server has no Google key to read the Google listing' }
+    { link: MAPS, reason: 'this server has no Google key to read the Google Maps listing' }
   ])
   assert.equal(brief.business.name, 'Hollowmere Bakehouse')
   // Only a Google link and no key: nothing is read, and reading again would read nothing again.

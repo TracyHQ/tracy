@@ -19,7 +19,7 @@ export const SET_ASIDE = Object.freeze({
   'one-website': 'a second website: the first one is read',
   unresolvable: 'the Google link could not be matched to one place',
   ambiguous: 'the Google link matches more than one place',
-  no_google_key: 'this server has no Google key to read the Google listing',
+  no_google_key: 'this server has no Google key to read the Google Maps listing',
   google_unanswered: 'Google did not answer for this place',
   listing_unread: 'the listing page could not be read',
   credential_missing: 'this server has no key to read this kind of page',

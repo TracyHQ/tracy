@@ -260,10 +260,16 @@ export const CSS = `
 /* The quiet row of one tracy_build call (BuildToolRow): dsh's own process row, the business name beside it */
 .tv-bc-toolrow-sum { margin-left: 6px; color: var(--muted-foreground); overflow-wrap: normal; word-break: keep-all; }
 /* The same row above the chat input while a call waits (WorkingDock) */
-/* It sits in the column of the chat: the width axis dsh gives the messages and the input, centred like them */
+/* It sits in the column of the chat: the width axis dsh gives the messages and the input, centred like them. */
+/* dsh pads the transcript by the composer clearance plus 16px on each side (ui-chat ChatView, .scroll), and the */
+/* column is the smaller of its width axis and what is left; the seat this line sits in has no such padding, so */
+/* the line takes the same two sides off itself. On a phone the axis (680px at least) is wider than the seat. */
 .tv-bc-dock {
   box-sizing: border-box; min-width: 0; margin: 0 auto; padding: 0 0 4px;
-  width: var(--dsh-chat-content-width, calc(100% - 32px)); max-width: 100%;
+  width: min(
+    var(--dsh-chat-content-width, 100%),
+    calc(100% - 2 * (var(--dsh-composer-side-clearance, 16px) + 16px))
+  );
 }
 /* The live region stays in place with nothing in it: it takes no room then */
 .tv-bc-dock:empty { padding: 0; }

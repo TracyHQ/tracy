@@ -618,7 +618,7 @@ const SITE_NAME = {
   schema: 'tracy-build-question/v1',
   id: 'site-name',
   topic: 'site-name',
-  prompt: 'Your site will not show the business name we found. What name should your site show instead?',
+  prompt: 'You asked us to keep your business name off the site. What name should the site show instead?',
   choices: [],
   freeText: { maxLength: 20, placeholder: 'Type your answer' }
 }
