@@ -75,3 +75,36 @@ test('contact record: a contact a menu item opens is read at that item only', as
     ['index.php?option=com_contact&view=contact&id=7']
   )
 })
+
+// Triage of run 5: the kit names the page a detail page type is read under (`pages.<type>.under.page`); run 5 read the
+// class article under the first list page holding it (an about page listing the classes too), where the class layout
+// does not print. The kit's page wins over the order of the list pages.
+test('detail page: a detail page type is read under the page the kit names, not the first list holding it', async () => {
+  const withAbout = {
+    pages: [
+      { id: 'home', blocks: [] },
+      { id: 'about', blocks: [{ id: 'about-b3', items: [{ id: 'session-1' }] }] },
+      { id: 'classes', blocks: [{ id: 'classes-b2', items: [{ id: 'session-1' }, { id: 'session-2' }] }] },
+      { id: 'class', blocks: [{ id: 'class-b4', items: [] }] },
+      { id: 'contact', blocks: [] }
+    ]
+  }
+  const about = { id: 6, link: 'index.php?option=com_content&view=featured' }
+  const doorsWith = {
+    get: async (q) => (q.kind === 'menuItem' && q.id === 6 ? about : doors.get(q))
+  }
+  const ids = { ...record.ids, 'menuItem:mainmenu:about': 6 }
+  const mapping = { pages: { class: { under: { page: 'classes' } } } }
+  const pages = await sitePages({
+    base,
+    record: { ids },
+    doors: doorsWith,
+    order: withAbout,
+    writePlan,
+    mapping
+  })
+  assert.match(pages.find((p) => p.pageType === 'class').path, /&Itemid=4$/)
+  // Without the kit's word the first list page holding it is taken, as before.
+  const before = await sitePages({ base, record: { ids }, doors: doorsWith, order: withAbout, writePlan })
+  assert.match(before.find((p) => p.pageType === 'class').path, /&Itemid=6$/)
+})

@@ -2,7 +2,8 @@
 // side is picked, and which pages a built site has. Takes the site as input: nothing here names a template.
 //   theme   `?theme=dark|light` picks the side for one load and is never saved (the template's own script reads it)
 //   pages   every menu item the write created, every article it created reached under the list page that holds it
-//           (a block printed only under its list page's menu item, door measurements), and the system pages
+//           (a block printed only under its list page's menu item, door measurements; a detail page type under the
+//           page the kit names, `pages.<type>.under.page`), and the system pages
 //           (product decision 2): search, a missing page, sign in, password reset, username reminder, the contact form
 //           when a contact exists; a system page the kit gives a menu item (`systemPagesOf`) is read at that item.
 
@@ -105,7 +106,13 @@ export async function sitePages({ base, record, doors, order = null, mapping = n
     const m = /^article:(.+)$/.exec(key)
     if (!m) continue
     const article = await doors.get({ kind: 'article', id })
-    const under = menus.get(listPage.get(m[1]) ?? '') ?? [...menus.values()].find((x) => !x.item?.home)
+    // A detail page type is read under the page the kit names for it (`pages.<type>.under.page`): the page whose
+    // layout prints it, whichever list page holds the article first (triage of run 5).
+    const kitUnder = mapping?.pages?.[detailOf.get(m[1]) ?? '']?.under?.page
+    const under =
+      (kitUnder ? menus.get(kitUnder) : null) ??
+      menus.get(listPage.get(m[1]) ?? '') ??
+      [...menus.values()].find((x) => !x.item?.home)
     const path = `index.php?option=com_content&view=article&id=${id}&catid=${article?.catid ?? ''}${
       under ? `&Itemid=${under.id}` : ''
     }`
