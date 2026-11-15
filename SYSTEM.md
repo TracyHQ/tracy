@@ -898,15 +898,16 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   in the Website Opportunities objects door under `build-drafts/<account>/<sha256>.<ext>`. The manifest names them by
   row id with origin `draft`; `app.openDraftPicture(id)` opens one again; a picture not stored is out of the manifest,
   in `research.picturesSetAside` with its reason. Once a research step's record is in the draft, the rows and objects of
-  older research runs are pruned; an account deletion drops the rows but not the objects (no object cleanup hook yet).
+  older research runs are pruned, except those the research, the living plan's research or an open build's snapshot
+  still names; an account deletion drops the rows but not the objects (no object cleanup hook yet).
   The business logo (`place-logo.js` rule) is measured from its stored copy (`media-info.js` `logoPaletteOf`, as the
   executor's brand stage does), so the brief's brand carries the logo's own colours (`colorsFrom: 'logo'`, `accent`),
   and written from that copy as a file in `build-draft-logos/` beside the
   brand bench run folders for the brand step, which reads the draft's brief and that file, never a revision. The business
   is then read by the place executor's own reading step ([`build-draft/gather-reading.js`](apps/tracy-web/src/build-draft/gather-reading.js)
   over `business-reading.js` `readBusiness` / `readingInputOf`, model door `woEditorial`) and laid on the profile as
-  `businessReading`, so the brief's services, prices, team and story come from it as a revision's do; no
-  `wo_cost_ledger` row: each call is held in memory to `/ops/wo` `researchJobCapCents`, and `research.reading` records
+  `businessReading`, so the brief's services, prices, team and story come from it as a revision's do; the reading
+  writes no `wo_cost_ledger` row of its own (the engine reserves the whole research step): each call is held in memory to `/ops/wo` `researchJobCapCents`, and `research.reading` records
   method, reason, calls, tokens and cents. No door, a spent cap, a failure (one rerun) or its own two minutes past: the
   rules' reading or none, with its reason, never a failed research. The owner's typed description (decision D46) is a source,
   never copy: it is not laid in as the seller's bio (the bio based paths read the sources' own bio), it guides the
@@ -958,6 +959,22 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   are injected there and none exists yet: `startRun` (the run frame starts a chain run only with a site it creates),
   `siteDoorsFor` (the draft write's site doors) and `runRecordOf` (an unfinished run's record); without them each
   door says plainly that the site cannot be updated from the chat. No door deletes the site or the chat.
+  A revision run that cannot start puts the build back as it was (`undoRevision`, with `revisionRefusal`), and the
+  build keeps its last 20 runs in `history`.
+  Limits of the build chat (#609 to #612, server review): every owner step (research, compose, revise, brand) is held to
+  an hourly count per account in `rate_bucket` (`build-draft/spend-limits.js`, one place for the numbers) and reserved in
+  the research cost ledger (`wo_cost_ledger`, provider `tracy-build-chat`, under `/ops/wo`'s daily research cap) at a
+  per step ceiling; past either it answers 429 `TRY_LATER` with a sentence and starts nothing. A plan edit or undo while
+  a step runs is refused 409 `ENGINE_BUSY` (the step is never cancelled), and an edit writes its own engine state in the
+  same transaction. New research keeps an answer only when it asks that question the same way (`answers-kept.js`).
+  `build_draft.plan_research` (migration 221) holds the research a living plan was composed from, so the build snapshot
+  and the picture prune read that research when a newer one replaced the draft's. Every body under `/api/build-draft` is
+  bounded (`build-draft/body-limits.js`: 64 KiB, 1 MiB for the hand off; 413 `BODY_TOO_LARGE`), a hand off conversation
+  to 200000 characters, and a draft to 100 questions. The hand off note tells the site agent only the plan is approved,
+  the conversation is history, and the held names and people listed in `keepOffSite` never go on the site; its claim
+  (180 seconds) outlasts its two calls (60 seconds each). A siteless build is replaced by a new approval under the same
+  id, a build still creating its site asks the create door again after 30 seconds, and the create door accepts a draft
+  only under its own build's id.
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
   row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,
