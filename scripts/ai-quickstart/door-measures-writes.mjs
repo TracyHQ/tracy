@@ -115,6 +115,7 @@ async function htmlPieces(ctx) {
     {
       from: 'entities and siblings',
       value:
+        // language-allow: an accented letter is the data, it tests which character references the door keeps
         '<p class="a" id="b">Fish &amp; Chips&nbsp;to go &#169; &#x263A; &eacute; café</p><p>Second <b>bold</b> tail &lt;x&gt;</p>',
       xpath: '/html/body/div/p[2]/text()[1]'
     },
