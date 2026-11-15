@@ -3,6 +3,7 @@
 // alt, a title, a meta) is a leak unless an exemption of `exemptions.mjs` covers it, and each leak is named by its
 // page, its place and its true source (`sources.mjs`). Leaks seen on several widths and theme sides are one finding with
 // the list of where. The other way round: each value the build wrote that no page shows is `not_seen`. Pure.
+import { createHash } from 'node:crypto'
 import { codesIn, markerShare } from './marker-codec.mjs'
 import { exemptionOf } from './exemptions.mjs'
 import { notSeenOf } from './not-seen.mjs'
@@ -49,6 +50,7 @@ export function classify({
   ids = {},
   resolve,
   kept,
+  keep = null,
   rules = [],
   siteValues = new Map(),
   builtYear,
@@ -149,10 +151,12 @@ export function classify({
           continue
         }
         if (/^data:/i.test(o.value)) {
+          // Named by its start and the sha256 of the whole address: two inline pictures that start alike stay apart.
+          const sha = createHash('sha256').update(o.value).digest('hex').slice(0, 12)
           leak(
             'unmarked_picture',
             r,
-            { ...o, value: `${o.value.slice(0, 48)}...` },
+            { ...o, value: `${o.value.slice(0, 48)}... (${o.value.length} characters, sha256 ${sha})` },
             { source: resolve.picture(o.value) }
           )
           continue
@@ -161,6 +165,13 @@ export function classify({
         continue
       }
       if (!TEXT.has(o.kind)) continue
+      // An address of the site itself that names a marker page (structured data, a share address): the build's own.
+      if (
+        /^https?:\/\//i.test(o.value.trim()) &&
+        sitePath(o.value.trim(), origin) !== null &&
+        codes(o.value).length
+      )
+        continue
       const share = markerShare(o.value, { known })
       // The marker filler alone: the gate's own words (the search words a search page echoes).
       if (share.kind === 'filler') {
@@ -212,19 +223,28 @@ export function classify({
         (whole.class === 'unknown' && rest !== o.value ? resolve.text(rest) : whole)
       const why = exemptionOf(
         { ...o, value: rest },
-        { origin, kept, source, builtYear, rules, pageStatus: r.expected ?? 200 }
+        {
+          origin,
+          kept,
+          keep,
+          source,
+          builtYear,
+          rules,
+          pageStatus: r.expected ?? 200,
+          resolveText: resolve.text
+        }
       )
       // A kept string whose reason says no page draws it, in this page: the kit's reason is false. Hidden words are
       // in the page all the same (product decision 5); only a reason that claims "not drawn as visible text" holds
       // for hidden words.
       const claimsOnlyInvisible = /visible/i.test(why ?? '')
       if (
-        why?.startsWith('kept_by_kit') &&
+        (why?.startsWith('kept_by_kit') || why?.startsWith('kept_literal')) &&
         NOT_DRAWN.test(why) &&
         (!claimsOnlyInvisible || o.visible !== false)
       ) {
         leak('kit_reason_false', r, o, {
-          why: `the kit keeps ${source.key} and says no page draws it, but this page shows it`,
+          why: `the kit keeps ${source?.key ?? source?.slot ?? 'these words'} and says no page draws it, but this page shows it`,
           source
         })
         continue

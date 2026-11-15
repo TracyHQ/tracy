@@ -38,9 +38,14 @@ export const dateSetByBuild = (o, { builtYear = new Date().getUTCFullYear() }) =
     : null
 }
 
-/** A schema.org type or a language code in structured data. */
+/**
+ * A schema.org type (the value of `@type`) or a language code (the value of `inLanguage` / `@language`) in structured
+ * data. Read by its key: a capitalised name under any other key (an author, a place) is words, never a type.
+ */
 export const structuredDataType = (o) =>
-  o.kind === 'jsonld' && (SCHEMA_TYPE.test(text(o)) || LANGUAGE_CODE.test(text(o)))
+  o.kind === 'jsonld' &&
+  ((o.key === '@type' && SCHEMA_TYPE.test(text(o))) ||
+    ((o.key === 'inLanguage' || o.key === '@language') && LANGUAGE_CODE.test(text(o))))
     ? 'structured_data_type'
     : null
 

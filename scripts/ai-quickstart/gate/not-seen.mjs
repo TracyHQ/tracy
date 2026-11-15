@@ -2,12 +2,30 @@
 // reason the pages give. A block copy is a module the page prints as `id="Mod<id>"` (T4 and Joomla's own chrome): when
 // the page's HTML has no such module, the block was not printed at all (its position is not in the page's layout, or it
 // is assigned to no page); when it has it, the block was printed without that value (a place the template does not read,
-// a value its layout leaves out). Pure.
+// a value its layout leaves out). A row of a site-wide copy keyed to a page (a masthead row per menu item) is judged
+// on the page its row names. Pure.
 import { codesIn } from './marker-codec.mjs'
 import { placeKeyOf, universeOf } from './universe.mjs'
 
 /** The page id of a plan entry (`<page>.<block>.<field>`), or null. */
 const pageOfEntry = (entry) => (typeof entry === 'string' ? entry.split('.')[0] : null)
+
+/**
+ * The page a keyed row of a copy shows on: a copy whose rows are keyed to pages (`<list>.<field>[i]` beside
+ * `<list>.item_id[i]` that the plan writes as a page reference) shows row `i` on that page only, so a value of the row
+ * is judged there, not on the page whose block created the copy. Null for a value of no keyed row.
+ */
+function rowPageOf(op, loc) {
+  const p = loc?.jsonPath
+  if (!Array.isArray(p) || p.length < 3 || typeof p[2] !== 'number') return null
+  for (const v of op.values ?? []) {
+    const q = v.loc?.jsonPath
+    const ref = String(v.value?.ref ?? '')
+    if (Array.isArray(q) && q[0] === p[0] && q[1] !== p[1] && q[2] === p[2] && ref.startsWith('page:'))
+      return ref.slice('page:'.length)
+  }
+  return null
+}
 
 /**
  * @param {{writePlan: object, registry: object[], seen: Set<string>, renders: object[], ids: Record<string, number>,
@@ -28,9 +46,9 @@ export function notSeenOf({
   const htmlOf = new Map()
   for (const r of renders ?? [])
     if (r.html) htmlOf.set(r.pageType, `${htmlOf.get(r.pageType) ?? ''}${r.html}`)
-  const reasonOf = (op, entry) => {
+  const reasonOf = (op, entry, loc = null) => {
     const id = ids[op.key]
-    const page = pageOfEntry(entry)
+    const page = rowPageOf(op, loc) ?? pageOfEntry(entry)
     if (op.kind === 'module.copy' && id) {
       const html = htmlOf.get(page)
       if (html === undefined) return { reason: 'page_not_rendered', module: id }
@@ -56,7 +74,8 @@ export function notSeenOf({
             op: op.key,
             loc: v.loc ?? null,
             stood: what.get(code)?.what ?? null,
-            ...reasonOf(op, v.entry)
+            page: rowPageOf(op, v.loc) ?? pageOfEntry(v.entry),
+            ...reasonOf(op, v.entry, v.loc)
           })
     }
   const opsByKey = new Map((writePlan?.ops ?? []).map((o) => [o.key, o]))

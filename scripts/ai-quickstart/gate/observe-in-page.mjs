@@ -128,10 +128,13 @@ export function observeInPage(doc = document) {
     )
   }
   for (const s of doc.querySelectorAll('script[type="application/ld+json"]')) {
-    const visit = (v) =>
+    // Each string with the key it is under (`@type`, `name`, `url`): a type is told by its key, never by its looks.
+    const visit = (v, key = null) =>
       typeof v === 'string'
-        ? add('jsonld', v, null, 'script[ld+json]')
-        : v && typeof v === 'object' && Object.values(v).forEach(visit)
+        ? add('jsonld', v, null, 'script[ld+json]', { key })
+        : Array.isArray(v)
+          ? v.forEach((x) => visit(x, key))
+          : v && typeof v === 'object' && Object.entries(v).forEach(([k, x]) => visit(x, k))
     let data = null
     try {
       data = JSON.parse(s.textContent ?? '')

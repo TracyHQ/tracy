@@ -23,7 +23,9 @@ export function kitOf(folder) {
     pageRecipes: json('page-recipes.json'),
     mapping,
     blankContract: json('blank-site-contract/content-map.json'),
-    lock: json('blank-site-contract/presentation-lock.json')
+    lock: json('blank-site-contract/presentation-lock.json'),
+    // The draft report names the places the drafting kept, with their reasons (`exemptions.mjs` `keptPlacesOf`).
+    draftReport: existsSync(path.join(folder, 'draft-report.json')) ? json('draft-report.json') : null
   }
 }
 

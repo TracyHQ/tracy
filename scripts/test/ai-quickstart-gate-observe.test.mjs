@@ -36,3 +36,19 @@ test('the reader reads what noscript and template hold, SVG words, frame and med
   assert.equal(problem.place.element, 'script[ld+json]')
   assert.match(problem.value, /^structured data that does not parse/)
 })
+
+test('G6: each structured data string is read with the key it is under', () => {
+  const page = `<html><head><script type="application/ld+json">{"@type": "Article", "author": {"@type": "Person",
+    "name": "Rosalind"}, "inLanguage": "en-GB", "keywords": ["Tulips"]}</script></head><body></body></html>`
+  const { observations } = observeInPage(parseHTML(page).document)
+  assert.deepEqual(
+    observations.filter((o) => o.kind === 'jsonld').map((o) => [o.key, o.value]),
+    [
+      ['@type', 'Article'],
+      ['@type', 'Person'],
+      ['name', 'Rosalind'],
+      ['inLanguage', 'en-GB'],
+      ['keywords', 'Tulips']
+    ]
+  )
+})

@@ -6,7 +6,7 @@
 import { accountFor } from './accounting.mjs'
 import { classify } from './classify.mjs'
 import { demoChecks } from './demo-checks.mjs'
-import { keptKeysOf } from './exemptions.mjs'
+import { keptKeysOf, keptPlacesOf } from './exemptions.mjs'
 import { groupsOf } from './groups.mjs'
 import { markerBuild } from './marker-plan.mjs'
 import { declareNotSeen } from './not-seen.mjs'
@@ -70,6 +70,7 @@ export async function runGate(input) {
       writes: siteValues
     }),
     kept: keptKeysOf(kit.mapping),
+    keep: keptPlacesOf(kit.mapping, kit.draftReport ?? null),
     rules: adapter.exemptions,
     siteValues,
     declaredHosts: new Set(adapter.declaredHosts ?? [])

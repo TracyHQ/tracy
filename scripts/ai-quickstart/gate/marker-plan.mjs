@@ -178,7 +178,8 @@ async function chainOf(kit, { registry, research, composition, label, icons, sto
     run: { id: 'run-marker', kind: 'build' },
     aiq,
     approval: { plan, profile },
-    look: { accent: plan.look.accent, accentFrom: 'brand', logo: { kind: 'text' } },
+    // An own logo: a text logo makes the write step skip every logo place, so none would be measured (G11).
+    look: { accent: plan.look.accent, accentFrom: 'brand', logo: { kind: 'own', source: 'marker' } },
     writers,
     pictures,
     icons: pictures

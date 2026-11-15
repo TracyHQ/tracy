@@ -1605,7 +1605,8 @@ gate's own and never a finding; beside other words, those words are read.
 **The marker build** (`gate/marker-plan.mjs`). An invented business profile with every fact and as many items as the
 kit's blocks show; a composition that places every block of every page recipe and its variants; then the build team's
 chain as it runs for a customer: `composePlan`, `writePages` with a writer that answers a new code per place,
-`picturesStep`, `buildWriteOrder`, `checkWriteOrder` and `writePlanOf`. The plan is first written by the write step
+`picturesStep`, `buildWriteOrder` (with an own logo: a text logo makes the write step skip every logo place, so none
+would be measured), `checkWriteOrder` and `writePlanOf`. The plan is first written by the write step
 (`runDraftWrite`) on a memory site (`write-order-memory-doors.mjs`) with the refusals the real plugin gives that the
 memory site lacks laid over it (`MEASURED_REFUSALS` of `gate/memory-write.mjs`). A refusal is a **write step gap**:
 the gate never changes the write step or its plan; it takes the data that met the refusal out of the composition
@@ -1666,21 +1667,26 @@ was seen on:
 |---|---|
 | `raw_markup` | a tag, an escaped entity or the code notation printed as words, or a marker address loaded as a resource |
 | `unmarked_text` | words, `alt`, `title`, `aria-label`, `placeholder`, `<title>`, meta or JSON-LD that are no marker (the rest of a value that holds one counts) |
-| `unmarked_picture` | a picture that is not a picture the write uploaded (the favicon among them, product decision 3) |
+| `unmarked_picture` | a picture that is not a picture the write uploaded (the favicon among them, product decision 3); an inline picture is named by its start, its length and the sha256 of the whole address |
 | `unmarked_link` | a link to another site, or a `mailto:` or `tel:`, that is no marker |
 | `empty_picture` | a picture whose address is the page itself |
 | `unmarked_embed` | a map, video or frame whose address is no marker, not on the site and not on a host the adapter declares (`DECLARED_HOSTS`, none for Joomla T4) |
-| `kit_reason_false` | a language string the kit keeps with a reason that says no page draws it, in a page (hidden words count, product decision 5; a reason that says only "not drawn as visible text" holds for hidden words) |
+| `kit_reason_false` | a language string, a place or a literal the kit keeps with a reason that says no page draws it, in a page (hidden words count, product decision 5; a reason that says only "not drawn as visible text" holds for hidden words) |
 | `outside_request` | a request to another host (a font, a script, an avatar); not counted as a leak |
 
 Hidden words are leaks (`visible: false`). **Exemptions** (`gate/exemptions.mjs`) come from two places only, and the
 record lists each with its reason: the kit (a language string `overrides.language` keeps, by key, with the kit's
-reason; a kept string with a placeholder only when each placeholder holds nothing, a marker or a date or year the build
-set; a kept string whose reason says no page draws it is not exempt where it is seen, it is `kit_reason_false`) and the
+reason; a kept string with a placeholder only when each placeholder holds nothing, a marker, a date or year the build
+set, a number (a page count, a position) or the words of another string the kit keeps; a place `notEmptied` names, by
+slot or whole record, or a slot the draft report keeps (`as: "kept"`); words a template file writes as code that
+`keptLiterals` names, by `values` or `pattern` (`kept_literal`); a keep of any of these whose reason says no page draws
+it is not exempt where it is seen, it is `kit_reason_false`) and the
 framework adapter (`EXEMPTIONS` of the adapter, the page frame of `gate/adapters/web-frame.mjs`: an address of the site
 itself, punctuation and symbols with no letter and no digit, `404` on the missing page that answers 404, a date or the
-year the build set, a schema.org type or language code, a share card type). Besides them: the marker filler alone, and a value the write plan wrote from the marker data
-(a network name on a marker link's label). Nothing else is hard coded.
+year the build set, a schema.org type (the value of `@type`; a capitalised name under any other key is words) or a
+language code (the value of `inLanguage`), a share card type). Besides them: the marker filler alone, a value the write
+plan wrote from the marker data (a network name on a marker link's label), and an address of the site itself that names
+a marker page (structured data, a share address), which is the build's own. Nothing else is hard coded.
 
 **Sources** (`gate/sources.mjs`). Every finding names its true source, searched in this order, from the blank site
 archive (its language files, the template, module, plugin, component and layout files, its stylesheets and its demo
@@ -1691,10 +1697,10 @@ data dump), the blank site contract, the mapping and what the write wrote:
 | `block_field` | a slot of the blank site contract (its sample), with the block field the mapping declares there |
 | `write` | a value the write wrote that holds no marker (its plan entry), or a value of the site's own records (the account the records were written as, read where the page names its author) |
 | `data` | a value of the archive's demo data (its table) |
-| `language` | a language string: key, file, whose (`core`, `template`, `extension`, `site_override`); a slot of a language string entity of the contract is that string. `%s`, `%d` and `%sitename%` read any words |
+| `language` | a language string: key, file, whose (`core`, `template`, `extension`, `site_override`); a slot of a language string entity of the contract is that string. `%s`, `%d` and `%sitename%` read any words; entities and inline markup a string is written with are read as the words a page prints; a string printed whole inside longer words counts when it covers at least half their letters (`fills` the rest), and the string that covers most comes first. A string that prints exactly the words comes before a row of the demo data that also holds them |
 | `setting` | a settings value: a template style's or an extension's params in the data (table), or a settings file of the template |
 | `literal` | a literal of a layout, script or manifest file (whose) |
-| `stylesheet` | a stylesheet that draws it (generated words, a picture, an inline picture) |
+| `stylesheet` | a stylesheet that draws it (generated words, a picture, an inline picture, found by what the inline address holds, in base64, percent encoded or plain; the archive's `media/` stylesheets are read too) |
 | `picture_file` | a picture file the archive ships |
 | `outside` | another host |
 | `ambiguous` | more than one of them holds the words: every candidate, the first in the search order as `likely` (its fix class is used; a kit keep of any language candidate exempts it) |
@@ -1716,7 +1722,8 @@ applies none:
 
 **Written, not seen** (`gate/not-seen.mjs`). Each marker the plan wrote that no render shows, with the reason the page
 gives: `block_not_printed` (the page's HTML has no `id="Mod<id>"` of the copy), `block_printed_without_value`,
-`article_not_rendered`, `value_not_printed`. Each carries `declared`: the reason the write or the kit gives (the entry
+`article_not_rendered`, `value_not_printed`, judged on the page of the entry, or for a row of a site-wide copy keyed to
+a page (a masthead row per menu item) on the page its row names (`page`). Each carries `declared`: the reason the write or the kit gives (the entry
 is a write conflict, `write_conflict`; an unproven flag of the write plan names its page and block; or the mapping
 location says `prints: false` with a `why`, `kit_declares_not_printed: <why>`), or `null`. A written value not seen
 with no declared reason fails the verdict.

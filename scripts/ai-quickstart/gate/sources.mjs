@@ -5,7 +5,8 @@
 //                 records the caller read (the account name an article prints)
 //   data          a value of the site's own data (the archive's demo data: table); `setting` when the table holds
 //                 settings (a template style's or an extension's params)
-//   language      a language string (file, key, and whose: core, template, extension, site override)
+//   language      a language string (file, key, and whose: core, template, extension, site override); a string that
+//                 prints exactly the words comes before a row of the dump that also holds them
 //   setting       a settings file of the template (its local settings, its manifest)
 //   literal       a literal of a layout, script or manifest file (whose: template, module, plugin, component, core)
 //   stylesheet    a stylesheet that draws it (generated words, a picture)
@@ -41,7 +42,9 @@ const WANTED = [
   'modules/*',
   'components/*',
   'layouts/*',
-  'installation/sql/mysql/custom.sql'
+  'installation/sql/mysql/custom.sql',
+  // The stylesheets of the media folder: the inline pictures a component's own sheet draws (a form field's icon).
+  'media/*.css'
 ]
 
 /** The text files of an installer archive the resolver reads: `{files: Map<path, text>, names}`. */
@@ -76,13 +79,34 @@ const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 /** A placeholder of a language string: `%s`, `%1$s`, `%d`, and Joomla's named ones (`%sitename%`). */
 const PLACEHOLDER = /%[a-z_]+%|%(?:\d\$)?[sdu]/gi
 const PLACEHOLDER_SPACED = /\s*(?:%[a-z_]+%|%(?:\d\$)?[sdu])\s*/gi
-/** The few entities language strings write. */
+/** The entities language strings write, by name. */
+const NAMED = {
+  copy: '\u00a9',
+  reg: '\u00ae',
+  trade: '\u2122',
+  nbsp: ' ',
+  hellip: '\u2026',
+  ndash: '\u2013',
+  mdash: '\u2014',
+  lsquo: '\u2018',
+  rsquo: '\u2019',
+  ldquo: '\u201c',
+  rdquo: '\u201d',
+  laquo: '\u00ab',
+  raquo: '\u00bb',
+  quot: '"',
+  apos: "'",
+  lt: '<',
+  gt: '>',
+  amp: '&'
+}
 const entities = (t) =>
   t
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(Number.parseInt(n, 16)))
     .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-    .replace(/&copy;/g, '\u00a9')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
+    .replace(/&([a-z]+);/gi, (all, name) => NAMED[name.toLowerCase()] ?? all)
+/** Inline markup a language string may hold: it adds no space to the words a page prints. */
+const INLINE_TAG = /<\/?(?:a|abbr|b|code|em|i|kbd|mark|q|s|small|span|strong|sub|sup|u)\b[^>]*>/gi
 
 /** Whose a file of the archive is: the template, a module, a plugin, a component, the core, the site. */
 export function ownerOf(file) {
@@ -113,7 +137,12 @@ function languageOf(files) {
     for (const line of text.split(/\r?\n/)) {
       const m = /^\s*([A-Z0-9_.-]+)\s*=\s*"((?:[^"\\]|\\.)*)"\s*(?:;.*)?$/.exec(line)
       if (!m || !m[2].trim()) continue
-      const value = entities(m[2].replace(/\\"/g, '"').replace(/<[^>]+>/g, ' '))
+      const value = entities(
+        m[2]
+          .replace(/\\"/g, '"')
+          .replace(INLINE_TAG, '')
+          .replace(/<[^>]+>/g, ' ')
+      )
       // A string with a placeholder reads any words in its place, when its own words are enough to tell it apart.
       const literal = value.replace(PLACEHOLDER, '').replace(/[^\p{L}]/gu, '')
       // Each placeholder is a capture: what fills it is reported (`fills`), so a kept string never exempts its fill.
@@ -174,6 +203,33 @@ function tableAt(dump, at) {
 }
 
 const SETTING_TABLES = /(?:template_styles|extensions)$/
+/** The start of an inline picture address as a file writes it, after the quote or bracket that opens it. */
+const DATA_URI = /(["'(])\s*data:[a-z]+\/[a-z0-9.+-]+(?:;[a-z0-9=.-]+)*,/gi
+const CLOSE = { '"': '"', "'": "'", '(': ')' }
+
+/** Every inline picture address a file writes, each up to the quote or bracket that closes it. */
+function* dataUris(body) {
+  for (const m of body.matchAll(DATA_URI)) {
+    const start = m.index + m[0].indexOf('data:')
+    const end = body.indexOf(CLOSE[m[1]], start)
+    if (end > start) yield body.slice(start, end).trim()
+  }
+}
+
+/** What an inline picture address holds, spelled one way: decoded from base64 or percent encoding, one kind of quote. */
+function inlineContent(uri) {
+  const m = /^data:([^,]*),(.*)$/is.exec(String(uri ?? ''))
+  if (!m) return null
+  let body = m[2]
+  try {
+    body = /;base64$/i.test(m[1])
+      ? Buffer.from(decodeURIComponent(body), 'base64').toString('utf8')
+      : decodeURIComponent(body)
+  } catch {}
+  return (
+    m[1].replace(/;base64$/i, '').toLowerCase() + ',' + body.replace(/'/g, '"').replace(/\s+/g, ' ').trim()
+  )
+}
 const SETTING_FILE = /^templates\/[^/]+\/(?:.*\.json|templateDetails\.xml)$/
 
 /**
@@ -213,10 +269,43 @@ export function sourceResolver(
     if (!exactAll.get(k).some((x) => x.key === l.key)) exactAll.get(k).push(l)
   }
 
+  const letters = (t) => t.replace(/[^\p{L}]/gu, '').length
+  // The strings long enough to be told apart inside other words, for the words a page composes of several.
+  const composable = [...exactAll].filter(([k]) => letters(k) >= 4)
+  /**
+   * The language strings words hold without being one exactly, the one that covers most of the words first: a string
+   * with placeholders whose own words match (`fills` what fills them), or a string printed whole inside the words
+   * (`fills` the rest), when it covers at least half of their letters.
+   */
+  const partialStrings = (v, value) => {
+    const found = []
+    for (const l of language)
+      if (l.re?.test(v))
+        found.push({
+          l,
+          fills: fillsOf(l.re, value),
+          covers: letters(squash(l.value.replace(PLACEHOLDER, '')))
+        })
+    const all = letters(v)
+    for (const [k, ls] of composable) {
+      const at = v.indexOf(k)
+      if (at < 0 || letters(k) * 2 < all) continue
+      // The words as the page printed them (one space between words, so the offsets of `v` hold).
+      const said = String(value).replace(/\s+/g, ' ').trim()
+      const before = said.slice(0, at)
+      const after = said.slice(at + k.length)
+      if (/[\p{L}\p{N}]$/u.test(before) || /^[\p{L}\p{N}]/u.test(after)) continue
+      const fills = [before, after].map((x) => x.trim()).filter(Boolean)
+      for (const l of ls) found.push({ l, fills, covers: letters(k) })
+    }
+    return found.sort((a, b) => b.covers - a.covers)
+  }
+
   /** Every source that holds the words, in the search order (`SEARCH_ORDER`; a value of the site's records alone). */
   const textCandidates = (value) => {
     const v = squash(value)
     const out = []
+    let dumpRow = null
     const slot = slots.get(v)
     if (slot?.string) {
       const { key, extension, language: lang } = slot.string
@@ -243,23 +332,23 @@ export function sourceResolver(
         .find((i) => i >= 0)
       if (at !== undefined) {
         const table = tableAt(dump, at)
-        out.push({
+        dumpRow = {
           class: SETTING_TABLES.test(table ?? '') ? 'setting' : 'data',
           file: 'installation/sql/mysql/custom.sql',
           table
-        })
+        }
+        // A row of the dump comes before a language string only when no string prints exactly these words: an
+        // interface word ("Email", "Search") a row also holds somewhere is the interface string's.
+        if (!exactAll.has(v)) out.push(dumpRow)
       }
     }
-    const strings = exactAll.get(v) ?? language.filter((x) => x.re?.test(v))
-    for (const l of strings)
+    const strings = exactAll.has(v)
+      ? exactAll.get(v).map((l) => ({ l, fills: [] }))
+      : partialStrings(v, value)
+    for (const { l, fills } of strings)
       if (!out.some((c) => c.class === 'language' && c.key === l.key))
-        out.push({
-          class: 'language',
-          file: l.file,
-          key: l.key,
-          ...ownerOf(l.file),
-          fills: exactAll.has(v) ? [] : fillsOf(l.re, value)
-        })
+        out.push({ class: 'language', file: l.file, key: l.key, ...ownerOf(l.file), fills })
+    if (dumpRow && exactAll.has(v)) out.push(dumpRow)
     const setting = settings.find(([, body]) => quoted(body.toLowerCase(), v))
     if (setting) out.push({ class: 'setting', file: setting[0], ...ownerOf(setting[0]) })
     // A literal: the words alone between tags or quotes (a short word inside a longer one is not it).
@@ -279,14 +368,26 @@ export function sourceResolver(
     return all.length === 1 ? all[0] : { class: 'ambiguous', likely: all[0], candidates: all }
   }
 
+  let inline = null
+  /** Every inline picture the sheets and literals write, by what it holds: `Map<content, file>`, made once. */
+  const inlineFiles = () => {
+    if (inline) return inline
+    inline = new Map()
+    for (const [file, body] of [...sheets, ...literals])
+      for (const uri of dataUris(body)) {
+        const content = inlineContent(uri)
+        if (content && !inline.has(content)) inline.set(content, file)
+      }
+    return inline
+  }
+
   const picture = (url) => {
     const u = String(url ?? '')
     if (/^data:/i.test(u)) {
-      // An inline picture: the file that writes it (its first characters after the type).
-      const head = u.slice(0, 80)
-      for (const [file, body] of [...sheets, ...literals])
-        if (body.includes(head))
-          return { class: file.endsWith('.css') ? 'stylesheet' : 'literal', file, ...ownerOf(file) }
+      // An inline picture: the file that writes it, found by what the address holds (a file may write it in base64,
+      // percent encoded or plain, and a browser reads it back in its own spelling).
+      const file = inlineFiles().get(inlineContent(u))
+      if (file) return { class: file.endsWith('.css') ? 'stylesheet' : 'literal', file, ...ownerOf(file) }
       return { class: 'unknown', searched: ['stylesheet', 'literal'], inline: true }
     }
     let p
