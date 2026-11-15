@@ -25561,6 +25561,9 @@
                   "properties": {
                     "request": {
                       "type": "string"
+                    },
+                    "restart": {
+                      "type": "boolean"
                     }
                   },
                   "type": "object"

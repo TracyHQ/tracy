@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-15: The build chat compose door takes `restart`
+
+Changed (internal): `POST /api/build-draft/compose` documents its body as `{request?, restart?}`. On a draft that already has a plan, a `request` revises the plan (`{step: 'revise'}`, with `revision: {changed, notDone}` in its result) and only `restart: true` starts the plan over. No behaviour change; the reference now says what the door does.
+
 ## 2026-11-14: The build chat asks the owner for a site name instead of stopping
 
 Changed (internal): `POST /api/build-draft/compose` and `GET /api/build-draft/engine` may answer `{step: 'compose', state: 'asking', say?, result: {questions, ask}}`: while research keeps the business name off the site and nothing neutral names it, compose asks for a name first (the Contract B `site-name` question, free text, `choices: []`), and asks again with `say` when the stored name is longer than the chosen template holds. It is no fault and records none. The research `result.questions` carries the same question, held to the chosen template's limit once a template is chosen, and `result.profile.business` is empty while the name is held. `PUT /api/build-draft/answers` accepts the `site-name` answer `{question, text}`. Public API v1 is unchanged.
