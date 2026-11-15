@@ -115,7 +115,6 @@ async function htmlPieces(ctx) {
     {
       from: 'entities and siblings',
       value:
-        // language-allow: sample page text with an accented letter, sent to the door as measured data
         '<p class="a" id="b">Fish &amp; Chips&nbsp;to go &#169; &#x263A; &eacute; café</p><p>Second <b>bold</b> tail &lt;x&gt;</p>',
       xpath: '/html/body/div/p[2]/text()[1]'
     },
