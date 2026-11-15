@@ -18,6 +18,7 @@
 // A fact the brief keeps off the site is not research for the site; a held name and held people are `withheld`
 // (`plan-withheld.mjs`). Everything lands in exactly one place, counted in `taken`, or in `setAside` with a reason.
 import { mediaOf } from './needs-research-media.mjs'
+import { ownerFactsOfBrief } from './owner-facts-flow.mjs'
 import { withheldOfBrief } from './plan-withheld.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -209,21 +210,35 @@ export function researchOf(brief, { manifest = [] } = {}) {
   }
   const media = mediaOf(brief, manifest, sourceOf)
   setAside.push(...media.setAside)
+  // The owner's facts the reading could not keep as a name or copy (D46, `owner-facts-flow.mjs`): on the source of
+  // the statement, read by the needs profile in code, never by its model.
+  const owned = ownerFactsOfBrief(brief)
+  setAside.push(...owned.setAside)
+  if (owned.facts.length) {
+    sourceOf('owner-statement').ownerFacts = owned.facts
+    taken.ownerFacts = owned.facts.length
+  }
   return {
-    sources: [...sources.values()].map(({ text, captions, fields, reviews, pictures, ...source }) => ({
-      ...source,
-      ...(text.length ? { text: text.join('\n') } : {}),
-      ...(captions.length ? { captions } : {}),
-      ...(Object.keys(fields).length
-        ? {
-            fields: Object.fromEntries(
-              Object.entries(fields).map(([kind, values]) => [kind, values.length === 1 ? values[0] : values])
-            )
-          }
-        : {}),
-      ...(reviews.length ? { reviews } : {}),
-      ...(pictures.length ? { pictures } : {})
-    })),
+    sources: [...sources.values()].map(
+      ({ text, captions, fields, reviews, pictures, ownerFacts, ...source }) => ({
+        ...source,
+        ...(ownerFacts?.length ? { ownerFacts } : {}),
+        ...(text.length ? { text: text.join('\n') } : {}),
+        ...(captions.length ? { captions } : {}),
+        ...(Object.keys(fields).length
+          ? {
+              fields: Object.fromEntries(
+                Object.entries(fields).map(([kind, values]) => [
+                  kind,
+                  values.length === 1 ? values[0] : values
+                ])
+              )
+            }
+          : {}),
+        ...(reviews.length ? { reviews } : {}),
+        ...(pictures.length ? { pictures } : {})
+      })
+    ),
     videos: media.videos,
     setAside,
     taken,

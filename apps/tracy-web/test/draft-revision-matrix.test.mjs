@@ -40,7 +40,9 @@ const cols = [
   'rewrite',
   'added',
   'writes',
-  'equal'
+  'equal',
+  'equalKept',
+  'blocksAsked'
 ]
 console.log(
   [
@@ -60,7 +62,9 @@ test('every edit, both writers: the site equals a full build of the revision, or
       continue
     }
     assert.equal(row.stop, undefined, `${at}: ${row.stop}`)
-    assert.equal(row.equal, true, at)
+    // A writer whose words depend on its own block: the very site of a full build. A writer that quotes another
+    // block: a block the revision kept may still quote a value that is still true; with those kept words, the same.
+    assert.equal(row.writer === 'plain' ? row.equal : row.equalKept, true, at)
     assert.equal(row.restore, RESTORE_STOPS[row.edit] ?? true, at)
   }
 })
@@ -88,4 +92,15 @@ test('a page with no changed block and no quoted old value is never sent to the 
       row.written,
       `${row.writer}: ${row.edit} ${JSON.stringify(row.pages)}`
     )
+})
+
+test('an edit inside one block asks that block only: the other blocks of its page take no model call (#599)', () => {
+  for (const edit of [
+    'change a review text',
+    'rename a reviewer',
+    'change a gallery label',
+    'reorder services'
+  ])
+    for (const row of rows.filter((r) => r.edit === edit))
+      assert.equal(row.blocksAsked, 1, `${row.writer}: ${edit} asked ${row.blocksAsked} blocks`)
 })

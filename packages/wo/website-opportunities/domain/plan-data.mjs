@@ -4,6 +4,7 @@
 // have. Pure: a profile in, the plan's facts and items out, in the Contract B shape (`build-contract-plan.mjs`).
 import { GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { rowDataOf } from './plan-row-data.mjs'
+import { ownerFactsOfProfile } from './owner-facts-flow.mjs'
 import { withheldIdsOf } from './plan-withheld.mjs'
 
 /** How the customer reads where a fact came from, per source origin of the needs profile. */
@@ -108,7 +109,18 @@ export function planDataOf(profile) {
   }
   const { rows, rowsById, rowsOf } = rowDataOf(profile, { byId }, { sourcesOf, short, origins })
   const withheld = withheldIdsOf({ byId }, profile?.withheld)
-  return { facts, items, byId, rows, rowsById, rowsOf, withheld }
+  // The owner's facts to say in other words (D46): never a plan fact or item, so the plan composer never reads them.
+  const ownerFacts = ownerFactsOfProfile(profile)
+  return {
+    facts,
+    items,
+    byId,
+    rows,
+    rowsById,
+    rowsOf,
+    withheld,
+    ...(ownerFacts.length ? { ownerFacts } : {})
+  }
 }
 
 /**

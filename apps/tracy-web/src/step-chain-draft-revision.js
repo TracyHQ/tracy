@@ -9,8 +9,9 @@
 //             writer writes again (`revisionImpactOf`). A previous build with no kept copy writes every page again,
 //             said in the record. A revision that takes a page, a block, a block's whole data list or an item off the
 //             site stops here (`revision_needs_removal`), before any model call: no measured door removes a record.
-//   copy      writes those pages only; every other page keeps its words with no model call; every page is checked
-//             together (the copy check and the whole site check)
+//   copy      writes those pages only, and of a page whose only change is in some blocks those blocks only (the
+//             others ride along as read only context, `reuseOf`); every other page and block keeps its words with no
+//             model call; every page is checked whole and together (the copy check and the whole site check)
 //   pictures, icons   ask the model only for a request the previous build did not ask (`keptModel`); a kept reply
 //             that names an old value or a held text is asked again
 //   order     the whole write order again (no model), checked whole
@@ -138,9 +139,10 @@ export const revisionRecordOf = (revision) =>
 
 /**
  * The words a revision keeps, by page id: a page the impact did not send to the writer keeps all of them (no call).
- * A page sent for any reason, a changed block included, is written whole: the writer request of a call that asks only
- * some blocks leaves the other blocks out (`pageWriterUser`), so the writer would see another page than in a full
- * build, and a writer that quotes one block in another would write other words (the edit matrix's cross writer).
+ * A page sent ONLY because some of its blocks changed (its one reason `blocks`) asks those blocks alone (`ask`, their
+ * ids): the other blocks keep their words byte for byte, and the call carries them as read only context
+ * (`pageWriterUser` `kept`), so the writer reads the whole page as in a full build. A page sent for any other reason
+ * (the site, its name, its search texts, a held text, missing words, another prompt) is written whole.
  */
 export function reuseOf(plan) {
   if (!plan?.revision) return undefined
@@ -148,6 +150,11 @@ export function reuseOf(plan) {
   const kept = new Map(list(plan.previous.copy?.pages).map((p) => [p.id, p]))
   const out = new Map()
   for (const id of impact.reuse) if (kept.has(id)) out.set(id, keptWordsOf(kept.get(id)))
+  for (const { page, reasons } of impact.write) {
+    if (!kept.has(page) || reasons.length !== 1 || reasons[0] !== 'blocks') continue
+    const ask = new Set(impact.blocks.filter((b) => b.page === page).map((b) => b.block))
+    if (ask.size) out.set(page, { ...keptWordsOf(kept.get(page)), ask })
+  }
   return out
 }
 

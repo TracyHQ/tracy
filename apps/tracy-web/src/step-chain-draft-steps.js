@@ -123,9 +123,15 @@ export function createDraftSteps(deps) {
         signal,
         // The frame's second attempt: every page was written once already, so no rewrite round this time.
         rewrite: attempt <= 1,
-        reuse: reuseOf(plan)
+        reuse: reuseOf(plan),
+        // What the owner typed in the build chat (D46): no written word may copy it (`page-writer-owner-echo.mjs`).
+        ownerStatement: plan.research?.description ?? null
       })
-      const recorded = { pages: written.pages.map((p) => ({ id: p.id, calls: p.attempts.length })) }
+      const recorded = {
+        pages: written.pages.map((p) => ({ id: p.id, calls: p.attempts.length })),
+        // Where each owner's fact is said, and the ones no block could say with why: ids, never a text.
+        ...(written.ownerFacts ? { ownerFacts: written.ownerFacts } : {})
+      }
       return { value: { ...written, recorded }, usd: null, knownUsd: 0 }
     },
 

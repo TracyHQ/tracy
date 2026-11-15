@@ -138,6 +138,16 @@ export async function matrixRow(name, { writer = {}, site: blank = blankSite } =
   const impact = partial.run.plan.revision.impact
   const delta = partial.run.write.report.delta
   const equal = sameSite(first.memory, fresh.memory, delta.orphaned)
+  const kept = keptWordsOf(partial)
+  // A revision asks only the changed blocks (#599): a kept block of a writer that quotes another block may differ in
+  // words from a full build (it quotes a value that is still true). With exactly those kept words, the sites are equal.
+  const equalKept =
+    equal ||
+    sameSite(
+      first.memory,
+      (await freshBuild(revised, { writer: { ...writer, fixed: kept }, memory: blank() })).memory,
+      delta.orphaned
+    )
   const build = first.builds.get(partial.run.write.build.ref)
   const restored = await failed(restoreOf(first, build))
   return {
@@ -149,8 +159,27 @@ export async function matrixRow(name, { writer = {}, site: blank = blankSite } =
     rewrite: delta.rewrite.length,
     added: delta.added.length,
     equal,
+    equalKept,
+    blocksAsked: partial.model.calls
+      .filter((c) => c.kind === 'writer')
+      .reduce((n, c) => n + JSON.parse(c.user).blocks.length, 0),
     restore: restored ? `stop: ${restored.code}` : restoredTo(first.memory, first.snapshot, build)
   }
+}
+
+/** The words a revision run kept without asking: every written field of its copy no writer call of the run asked. */
+function keptWordsOf(partial) {
+  const asked = new Set(
+    partial.model.calls
+      .filter((c) => c.kind === 'writer')
+      .flatMap((c) => JSON.parse(c.user).blocks.flatMap((b) => b.fields.map((f) => f.key)))
+  )
+  return new Map(
+    partial.run.copy.pages
+      .flatMap((p) => p.fields)
+      .filter((f) => f.from === 'writer' && !asked.has(f.key))
+      .map((f) => [f.key, f.value])
+  )
 }
 
 export { site }

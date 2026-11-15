@@ -22,7 +22,9 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { charCount } from './page-copy-check.mjs'
 import { writerContextOf, writerFieldsOf } from './page-writer-context.mjs'
-import { PageWriterError } from './page-writer-fields.mjs'
+import { PageWriterError, knownEntriesOf } from './page-writer-fields.mjs'
+import { ownerEchoContextOf } from './page-writer-owner-echo.mjs'
+import { ownerFactsRecordOf, placeOwnerFacts } from './page-writer-owner-facts.mjs'
 import { pageOut } from './page-writer-page.mjs'
 import { writeAll } from './page-writer-rounds.mjs'
 
@@ -115,7 +117,8 @@ export async function writePages({
   model,
   signal,
   rewrite = true,
-  reuse
+  reuse,
+  ownerStatement
 }) {
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
@@ -126,6 +129,13 @@ export async function writePages({
   }
   // A row's copy field is checked against the other rows of its own list: it never carries a sibling row's data.
   const fieldsByPage = plan.pages.map((page) => writerFieldsOf(page, context))
+  // The owner's facts, each on one block (D46); the owner echo check, when the build has the owner's statement.
+  const placement = placeOwnerFacts(plan, context, fieldsByPage)
+  context.ownerFacts = placement.byBlock
+  context.ownerEcho = ownerEchoContextOf(ownerStatement, {
+    known: knownEntriesOf(context.byId, context.data.rowsById),
+    data: context.data
+  })
   const over = dataOverLimit(fieldsByPage)
   if (over.length > 0)
     throw new PageWriterError(
@@ -175,8 +185,10 @@ export async function writePages({
       },
       { noRerun: true }
     )
+  const ownerFacts = ownerFactsRecordOf(placement)
   return {
     pages: pages.map(({ id, fields, attempts, seo }) => ({ id, fields, attempts, ...(seo ? { seo } : {}) })),
-    prompt: { file: PAGE_WRITER_PROMPT_FILE, sha256: PROMPT_SHA256 }
+    prompt: { file: PAGE_WRITER_PROMPT_FILE, sha256: PROMPT_SHA256 },
+    ...(ownerFacts ? { ownerFacts } : {})
   }
 }

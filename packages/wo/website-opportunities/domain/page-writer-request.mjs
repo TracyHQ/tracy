@@ -11,6 +11,7 @@ export {
   slotKey
 } from './page-writer-fields.mjs'
 
+import { ownerFactView } from './page-writer-owner-facts.mjs'
 import { rowContextOf } from './page-writer-rows.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -57,20 +58,67 @@ function rowsOfBlock(block, shown, byId, data, pages) {
   return rows.length ? { rows } : {}
 }
 
+/** The plain instruction the kept words of a revision call carry (no prompt file says it). */
+export const KEPT_NOTE =
+  'The words the other blocks of this page already show, kept as they are. Context only: do not repeat them, do not rewrite them, write no key of theirs.'
+
+/** A block as the writer reads it, without its fields: its data (and the owner's facts placed on it) and what it shows. */
+function blockView(block, { byId, data, blocks, shown, plan, ownerFacts }) {
+  return {
+    id: block.id,
+    type: blocks.get(block.block)?.type,
+    label: block.label,
+    data: [
+      ...list(block.data)
+        .map((id) => dataView(id, byId))
+        .filter(Boolean),
+      ...list(ownerFacts?.get(block.id)).map(ownerFactView)
+    ],
+    shows: shown
+      .filter((f) => f.block === block.id && f.from === 'data')
+      .map(({ field, item, row, value }) => ({
+        name: field.name,
+        kind: field.kind,
+        ...(item ? { item } : {}),
+        ...(row ? { row } : {}),
+        value
+      })),
+    ...rowsOfBlock(block, shown, byId, data, plan.pages)
+  }
+}
+
 /**
  * The user message of one writer call. On a rewrite, `rewrite` lists the failing slots with what was written and why
  * it failed, and only those slots (and the blocks that hold them) are sent. `shown` (the page's data fields, from
  * `pageFieldsOf`) gives each block the values its data fields show: context, never a field to write.
  * `voice` (the needs profile's, optional) is how the business sounds; `seo` (`{title, description}` limits) asks for the
  * page's search title and description, and is left out of a rewrite that does not ask for them.
+ * `ownerFacts` (block id -> the owner's facts placed there, `page-writer-owner-facts.mjs`) adds each as an entry of
+ * that block's `data` marked to be reworded. `kept` (a revision call that asks some blocks only, #599): the slots of the
+ * other blocks with their current words (`{...slot, value}`), sent as read-only context under `kept`, with a plain
+ * note; the answer for a kept key is never taken (`callPage`). With neither, the message is what it always was.
  * @param {{plan: object, page: object, slots: object[], shown?: object[], byId: Map<string, object>,
  *   blocks: Map<string, object>, rewrite?: Array<{key: string, value: unknown, problems: object[]}>, voice?: object,
- *   seo?: {title: number, description: number}}} input
+ *   seo?: {title: number, description: number}, ownerFacts?: Map<string, object[]>, kept?: object[]}} input
  */
-export function pageWriterUser({ plan, page, slots, shown = [], byId, data, blocks, rewrite, voice, seo }) {
+export function pageWriterUser({
+  plan,
+  page,
+  slots,
+  shown = [],
+  byId,
+  data,
+  blocks,
+  rewrite,
+  voice,
+  seo,
+  ownerFacts,
+  kept
+}) {
   const wanted = rewrite ? new Set(rewrite.map((f) => f.key)) : null
   const asked = wanted ? slots.filter((s) => wanted.has(s.key)) : slots
   const name = list(plan.facts).find((f) => f.kind === 'business.name')?.value
+  const view = (block) => blockView(block, { byId, data, blocks, shown, plan, ownerFacts })
   const out = {
     language: plan.language,
     business: isText(name) ? { name } : {},
@@ -79,22 +127,7 @@ export function pageWriterUser({ plan, page, slots, shown = [], byId, data, bloc
     ...(seo ? { seo: { titleLimit: seo.title, descriptionLimit: seo.description } } : {}),
     blocks: list(page.blocks)
       .map((block) => ({
-        id: block.id,
-        type: blocks.get(block.block)?.type,
-        label: block.label,
-        data: list(block.data)
-          .map((id) => dataView(id, byId))
-          .filter(Boolean),
-        shows: shown
-          .filter((f) => f.block === block.id && f.from === 'data')
-          .map(({ field, item, row, value }) => ({
-            name: field.name,
-            kind: field.kind,
-            ...(item ? { item } : {}),
-            ...(row ? { row } : {}),
-            value
-          })),
-        ...rowsOfBlock(block, shown, byId, data, plan.pages),
+        ...view(block),
         fields: asked
           .filter((s) => s.block === block.id)
           .map(({ key, item, row, field }) => ({
@@ -106,6 +139,17 @@ export function pageWriterUser({ plan, page, slots, shown = [], byId, data, bloc
       }))
       .filter((block) => block.fields.length > 0)
   }
+  const keptBlocks = list(page.blocks)
+    .map((block) => ({
+      ...view(block),
+      words: Object.fromEntries(
+        list(kept)
+          .filter((s) => s.block === block.id && typeof s.value === 'string')
+          .map((s) => [s.key, s.value])
+      )
+    }))
+    .filter((block) => Object.keys(block.words).length > 0)
+  if (keptBlocks.length) out.kept = { note: KEPT_NOTE, blocks: keptBlocks }
   if (rewrite)
     out.rewrite = rewrite.map(({ key, value, problems }) => ({
       key,

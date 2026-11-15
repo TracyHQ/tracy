@@ -3,6 +3,7 @@
 // parallel, the site check, the one rewrite) is `page-writer.mjs`. Pure apart from the model call.
 import { checkPageCopy, fieldValueProblems } from './page-copy-check.mjs'
 import { PageWriterError } from './page-writer-fields.mjs'
+import { ownerEchoFailing } from './page-writer-owner-echo.mjs'
 import { pageWriterUser } from './page-writer-request.mjs'
 
 /** The keys of the page's search title and description in a rewrite and in the failing fields. */
@@ -54,11 +55,14 @@ const unreadable = (slots) =>
     problems: [{ code: 'reply_unreadable', message: 'the reply was not the JSON object {"fields": {...}}' }]
   }))
 
-/** The page's own check: every asked field and the search details, with the voice's avoid list. */
+/**
+ * The page's own check: every asked field and the search details, with the voice's avoid list, then the owner echo
+ * check (`page-writer-owner-echo.mjs`, only when the build has the owner's statement) over every written value.
+ */
 export function pageFailing(state, context) {
   const check = { known: context.known, avoid: context.voice?.avoid }
   const lost = new Set(state.unreadable.map((f) => f.key))
-  return [
+  const failing = [
     ...state.unreadable,
     ...checkPageCopy(
       state.slots.filter((s) => !lost.has(s.key)),
@@ -67,6 +71,13 @@ export function pageFailing(state, context) {
     ).failing,
     ...seoFailing(state.seo, context.seoLimits, check)
   ]
+  for (const f of ownerEchoFailing(state, context.ownerEcho, SEO_KEYS)) {
+    if (lost.has(f.key)) continue
+    const same = failing.find((x) => x.key === f.key)
+    if (same) same.problems.push(...f.problems)
+    else failing.push(f)
+  }
+  return failing
 }
 
 /**
@@ -79,12 +90,19 @@ export async function callPage(state, { plan, context, model, signal, rewrite })
   const slots = !rewrite && state.ask ? state.ask : state.slots
   if (signal?.aborted) throw signal.reason ?? new Error('stopped')
   const askedSeo = rewrite ? rewrite.filter((f) => Object.values(SEO_KEYS).includes(f.key)) : null
+  // The other blocks' words ride along as read only context (#599); their keys are never taken from the answer.
+  const asking = new Set(slots.map((s) => s.key))
+  const kept =
+    !rewrite && state.ask
+      ? state.slots.filter((s) => !asking.has(s.key)).map((s) => ({ ...s, value: state.values[s.key] }))
+      : undefined
   const user = pageWriterUser({
     plan,
     page,
     slots,
     shown: fields,
     ...context,
+    kept,
     rewrite,
     seo: !rewrite || askedSeo.length ? context.seoLimits : undefined
   })

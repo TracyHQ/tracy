@@ -5,6 +5,7 @@
 // same context, so a page whose request is unchanged is known before any call. Pure.
 import { placeLimitsOf } from './field-place-limits.mjs'
 import { blockDescriptionsOf, knownEntriesOf, pageFieldsOf } from './page-writer-fields.mjs'
+import { knownOf, placeOwnerFacts } from './page-writer-owner-facts.mjs'
 import { pageWriterUser } from './page-writer-request.mjs'
 import { foreignValuesOf } from './page-writer-rows.mjs'
 import { planDataOf } from './plan-data.mjs'
@@ -20,7 +21,8 @@ export function writerContextOf({ profile, blockStore, library = [], mapping }) 
     byId,
     data,
     placeLimits: placeLimitsOf(blocks.values()),
-    known: knownEntriesOf(byId, data.rowsById),
+    // An owner's fact is a value the plan data holds: a writer saying it invents nothing (D46).
+    known: knownOf(knownEntriesOf(byId, data.rowsById), data),
     voice: profile?.voice,
     seoLimits: seoLimitsOf(mapping)
   }
@@ -40,11 +42,24 @@ export function writerFieldsOf(page, context) {
  */
 export function writerRequestsOf(plan, context) {
   const out = new Map()
-  for (const page of plan.pages) {
-    const fields = writerFieldsOf(page, context)
+  const fieldsByPage = plan.pages.map((page) => writerFieldsOf(page, context))
+  const { byBlock } = placeOwnerFacts(plan, context, fieldsByPage)
+  plan.pages.forEach((page, i) => {
+    const fields = fieldsByPage[i]
     const slots = fields.filter((f) => f.from === 'writer')
-    if (slots.length === 0) continue
-    out.set(page.id, pageWriterUser({ plan, page, slots, shown: fields, ...context, seo: context.seoLimits }))
-  }
+    if (slots.length === 0) return
+    out.set(
+      page.id,
+      pageWriterUser({
+        plan,
+        page,
+        slots,
+        shown: fields,
+        ...context,
+        ownerFacts: byBlock,
+        seo: context.seoLimits
+      })
+    )
+  })
   return out
 }

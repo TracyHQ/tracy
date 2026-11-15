@@ -1,13 +1,15 @@
 // The two duties of D46 measured on the invented fixtures (#609): every legitimate fact the owner typed survives (in
 // its group, or as a fact the writer says in other words), no copy field the site may say repeats the owner, and no
-// name or value field holds an owner sentence. The
+// name or value field holds an owner sentence. The facts the writer says in other words then reach the writer request
+// (through the research, the needs profile and the plan data of the invented club), and no written value repeats the
+// owner. The
 // table is printed; run alone to read it:
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-owner-echo-survival.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { checkBusinessReading, readingSourcesOf } from '../domain/business-reading.mjs'
-import { copiesOwner, ownerEchoOf } from '../domain/owner-echo.mjs'
+import { copiesOwner, echoProblemsIn, ownerEchoOf } from '../domain/owner-echo.mjs'
 import { ECHO_GROUPS, copyFieldsOf } from '../domain/owner-echo-fields.mjs'
 import { NAME_ECHO_LIMITS, NAME_SHAPE_LIMITS } from '../domain/owner-name-shape.mjs'
 import { readingWithoutOwnerQuotes } from '../domain/owner-statement.mjs'
@@ -18,6 +20,7 @@ import {
   OWNER_STATEMENT,
   RESEARCH
 } from './fixtures/owner-statement/research.mjs'
+import { factWriter, ownerPlan, writeOwnerPlan } from './fixtures/owner-statement/club-owner-facts.mjs'
 
 // The massage studio again, with owner sentences typed into every name and value field (#609, finding 1).
 const PROSE = [
@@ -124,4 +127,41 @@ test('every owner fact survives the reading and the brief view, and no copy repe
   console.table(rows)
   assert.equal(rows[0].factsIn, 10, 'the massage studio: eleven items, one USP line the ladder finds generic')
   assert.equal(rows[3].factsIn, 12, 'the sentences: two more items, one team member replaced')
+})
+
+test('every owner fact of every fixture reaches the writer request, and no written value repeats the owner', async () => {
+  const rows = []
+  for (const f of FIXTURES) {
+    const sources = readingSourcesOf({ ...f.input, ownerStatement: f.statement })
+    const view = readingWithoutOwnerQuotes({
+      method: 'model',
+      ...checkBusinessReading(f.answer, sources, { trade: 'other' })
+    })
+    const facts = (view.ownerFacts ?? []).filter((x) => x.kind === 'owner-fact')
+    // The club's plan carries each fixture's facts: the research, the profile and the plan data are the build's own.
+    const built = await ownerPlan({ facts: [], reading: { ownerFacts: view.ownerFacts ?? [] } })
+    const model = factWriter()
+    const written = await writeOwnerPlan(built, model, f.statement)
+    const sent = model.calls.flatMap((c) =>
+      JSON.parse(c.user).blocks.flatMap((b) =>
+        b.data.filter((d) => d.kind === 'owner.fact').map((d) => d.value)
+      )
+    )
+    const values = Object.fromEntries(
+      written.pages.flatMap((p) => p.fields.filter((x) => x.from === 'writer').map((x) => [x.key, x.value]))
+    )
+    const row = {
+      fixture: f.name,
+      factsIn: facts.length,
+      inRequest: facts.filter((x) => sent.includes(x.text)).length,
+      unplaced: written.ownerFacts?.unplaced.length ?? 0,
+      ownerSentencesOnSite: echoProblemsIn(values, f.statement).length
+    }
+    rows.push(row)
+    assert.equal(row.inRequest, row.factsIn, `${f.name}: facts lost before the writer`)
+    assert.equal(row.unplaced, 0, f.name)
+    assert.equal(row.ownerSentencesOnSite, 0, f.name)
+  }
+  console.table(rows)
+  assert.ok(rows.every((r) => r.factsIn > 0))
 })

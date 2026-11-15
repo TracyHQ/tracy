@@ -32,7 +32,8 @@ of [draft-write-memory-site.md](draft-write-memory-site.md).
    or a revision that takes something off the site, with a typed stop before any model call.
 4. The **impact** is a pure diff of the writer requests (`pageWriterUser`, the same message the writer sends) of the
    old and the new plan, per page and per block, plus the held texts and the old values found in the kept words.
-5. The writer is called only for affected pages, each written whole. Every other page keeps its words with no call.
+5. The writer is called only for affected pages; a page whose only change is in some blocks asks those blocks alone,
+   the others sent as read only context and kept byte for byte. Every other page keeps its words with no call.
    Every page is still checked, alone and as a whole site.
 6. Pictures and icons go through `keptModel`: a request asked before is answered from the kept reply, unless that
    reply names an old value or a held text.
@@ -43,7 +44,7 @@ of [draft-write-memory-site.md](draft-write-memory-site.md).
 9. That journal is the **restore**: it writes every place back, read back and resumable, unless a place was edited
    outside Tracy since.
 10. Invariant, tested per edit: a revision run leaves the memory site equal to a full build of the new plan on a new
-    blank site.
+    blank site (for a writer that quotes another block, equal with the words the revision kept).
 
 ## The impact rule (`revisionImpactOf`)
 
@@ -82,16 +83,27 @@ was weak.
 **Kept model replies.** A kept picture labelling or icon reply that names an old value or a held text is not replayed
 (`impact.staleReplies`): its request is asked again.
 
-**Whole pages.** A page sent to the writer is written whole, even when only one of its blocks changed. The writer
-request of a call that asks some blocks leaves the others out (`pageWriterUser` keeps only blocks with asked fields),
-so the writer would see another page than in a full build and write other words; the edit matrix's cross writer
-shows it. The call count is the same; the cost is the output words of the unchanged blocks. Asking only the affected
-blocks needs three changes outside this ticket's files: `pageWriterUser` (`page-writer-request.mjs`) keeps every block
-of the page in a call that asks some (their `data`, `shows` and `rows` as context, and their current words as a
-read-only `kept` map, no `fields`); `callPage` (`page-writer-page.mjs`) passes the kept words; and the writer prompt
-(`page-writer-prompt.md`, frozen for #600) describes that `kept` map (words of this page that stay: read them, never
-repeat or rewrite them) and stops saying `blocks` holds only blocks with fields to write. Then `reuseOf` returns
-`{values, seo, ask}` for a page whose reasons are block level only; `writePages` already asks only `ask`.
+**Only the changed blocks** (`reuseOf`, `step-chain-draft-revision.js`). A page sent to the writer only because some
+of its blocks changed (its one reason is `blocks`) asks those blocks alone: `reuseOf` returns `{values, ask}` (`ask`:
+the block ids of `impact.blocks` on that page) and the first call of the page asks only their fields, plus the page's
+search texts. The other blocks of the page ride along as read only context: `pageWriterUser` adds
+`kept: {note, blocks: [{id, type, label, data, shows, rows?, words: {key: value}}]}`, the plain note (`KEPT_NOTE`)
+saying in the message itself not to repeat, rewrite or write any of their keys, so the writer reads the whole page as
+in a full build. No prompt file changed: the frozen prompt asks one value per field `key` of `blocks`, and a kept
+block has no `fields`. The code keeps their words byte for byte: `callPage` takes only the asked keys from the answer,
+whatever the writer says for a kept key. A kept block that quotes an old value is itself a changed block (the old
+value scan above), so a kept block never carries a changed or removed value. A page sent for any other reason (the
+site, its name, its search texts quoting an old value, a held text, missing words, another prompt, a new page) is
+written whole. The page's own check, the owner echo check and the whole site check still read the full page, kept and
+new words together: a new word repeating a kept one is rewritten; a kept word that fails the check on its own (it
+passed when it was written, so only a new check could) goes back like any failing field, the only way a kept word
+changes.
+
+The edit matrix (`draft-revision-matrix.test.mjs`) counts the blocks the writer calls asked (`blocksAsked`): an edit
+inside one block asks that block only. A writer that quotes in one block what another block shows (the matrix's cross
+writer) may keep a quote of a value that is still true where a full build would quote another (`reorder services`,
+`swap the service a block shows`): with exactly the kept words, the site equals a full build of the revision
+(`equalKept`); the plain writer's site equals a full build as it is (`equal`).
 
 The result: `{schema, full, write: [{page, reasons}], reuse: [page], blocks: [{page, block, reasons}], unaffected,
 removed, removals, staleReplies}`. `removals` lists what the revision takes off the site: pages, blocks (removed, or
@@ -309,7 +321,8 @@ with the `plain` and the `cross` writer, equals a fresh full build. Change nothi
 - No measured door removes a record or puts a slot back, so removal stops typed (the question above).
 - An outside edit is only seen at a place a build wrote; a place no build wrote holds what the blank site had.
 - Joomla's own forms of a JSON column are modelled by the memory site (`draft-revision-site-forms.mjs`: keys added,
-  slashes escaped, spacing); other forms a real site may take (an HTML filter rewriting markup on save) are not
+  slashes escaped, spacing, and `alternatingSite`: another encoding on every save, so a restore that compared the text
+  it wrote exactly would fail, `draft-revision-restore-reencode.test.mjs`); other forms a real site may take (an HTML filter rewriting markup on save) are not
   measured, and the write step's read back would refuse them first.
 - A plan edit of an item's label reaches the writer only if the profile carries the new name; a chat rename that
   edits only `items[].label` was not traced through the build chat.

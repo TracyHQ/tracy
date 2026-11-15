@@ -58,8 +58,9 @@ export function wordsOf(seed, limit = 60) {
  * `cross`: a writer that, like a real model, quotes in a long paragraph the first item another block of the same page
  * shows (`Ask for our <label>.`), so a block's words depend on a value its own request does not carry. `seed(text)`:
  * how the words are drawn (the default is deterministic; a counter makes the writer give new words on every call).
+ * `fixed` (key -> words): the words this writer gives a field whatever it reads (the words a revision kept, #599).
  */
-export function revisionModel({ leak, cross = false, seed = (text) => text } = {}) {
+export function revisionModel({ leak, cross = false, seed = (text) => text, fixed } = {}) {
   const calls = []
   const pages = {}
   const rank = firstCandidate()
@@ -84,10 +85,14 @@ export function revisionModel({ leak, cross = false, seed = (text) => text } = {
             user.page,
             user.rewrite ? 'again' : ''
           ])
-          const tail = cross ? quoteOf(user.blocks, block, slot) : ''
+          const tail = cross ? quoteOf([...user.blocks, ...(user.kept?.blocks ?? [])], block, slot) : ''
           const text = `${wordsOf(seed(seedOf), (slot.limit ?? 60) - tail.length)}${tail}`
           const extra = leak?.(user.page.id, slot.key)
-          fields[slot.key] = extra ? `${extra} ${text}`.slice(0, slot.limit ?? 200) : text
+          fields[slot.key] = fixed?.has(slot.key)
+            ? fixed.get(slot.key)
+            : extra
+              ? `${extra} ${text}`.slice(0, slot.limit ?? 200)
+              : text
         }
       }
       return JSON.stringify({ fields })
@@ -98,11 +103,15 @@ export function revisionModel({ leak, cross = false, seed = (text) => text } = {
   return Object.assign(model, { calls, pages })
 }
 
-/** The quote a cross quoting writer adds to a long paragraph: the first item another block of the page shows. */
+/**
+ * The quote a cross quoting writer adds to a long paragraph: the first item another block of the page shows, the
+ * blocks it writes and the blocks a revision call keeps (`kept`, read only context) read alike, in block id order.
+ */
 function quoteOf(blocks, block, slot) {
   if ((slot.limit ?? 0) < 80 || slot.kind !== 'editorial.paragraph') return ''
   const seen = blocks
     .filter((b) => b.id !== block.id)
+    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
     .flatMap((b) => b.data ?? [])
     .find((d) => d?.fields && typeof d.label === 'string')
   return seen ? `. Ask for our ${seen.label}.` : ''

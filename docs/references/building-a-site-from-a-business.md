@@ -326,13 +326,37 @@ It never shows a field's words as site copy. `ownerEchoDropped` does not reach t
 reads the research's evidence, not the reading, and records its own drops field by field (`summary_copies_owner`).
 `domain-owner-echo-survival.test.mjs` measures both duties on the invented fixtures.
 
-Not built yet: `ownerFacts` stop at the brief (`brief.mjs ownerFactsOfReading`, read by its markdown and routed as
-never shown). The needs profile reads the statement again as the source `owner-statement` and holds no `ownerFacts`,
-the plan data (`plan-data.mjs planDataOf`) has no entry for one, and the page writer's request (`page-writer-request.mjs
-pageWriterUser`) carries none. Nothing checks the page writer's output against the owner's words yet:
-`owner-echo.mjs echoProblemsIn(values, ownerStatement, {publicTexts})` returns `{field, rule, weight}` per copying value
-(never the text), for the copy check of the write step to call, with the plan's item names and values among
-`publicTexts` (a service name the owner typed is a fact value).
+### 6.3 From the brief to the writer (`owner-facts-flow.mjs`, `page-writer-owner-facts.mjs`, `page-writer-owner-echo.mjs`)
+
+The owner's facts the reading keeps (`reading.ownerFacts` of kind `owner-fact`) travel in code, never through a model
+that would read them as prose, and reach the writer marked to be reworded:
+
+| Step | Where they ride | What is left out |
+|---|---|---|
+| Research (`researchOf`) | the source `owner-statement` gains `ownerFacts: [{id, group, text}]`, counted in `taken.ownerFacts` | a tagline (`owner-tagline`, set aside `awaits_product_decision`); a fact naming a held person (every form of `heldPersonFormsOf`) or, while the name is held, the business name: set aside `it names a text the owner keeps off the site`, by id |
+| Needs profile (`needsProfileOf`) | `profile.ownerFacts` (only when there is one); the model request is unchanged, it never reads them | |
+| Plan data (`planDataOf`) | `data.ownerFacts`; never a plan fact or item, so the plan composer's request and Contract B are unchanged | again every fact naming a text `profile.withheld` holds |
+| Writer (`placeOwnerFacts`) | one block per fact, as an entry of that block's `data`: `{id, kind: 'owner.fact', label, value, use: 'reword only: ...'}` | a fact no block can say: `writePages(...).ownerFacts.unplaced` `{id, group, reason}`, recorded by the copy step (`recorded.ownerFacts`) |
+
+The plan step does not decide where a fact shows (the composer never reads them), so the writer places each in code,
+once on the site: a service on the first block that shows a service, a package or a dish and has a copy field about the
+business; a team fact on the first block that shows a person; any other fact on the home page, on its block with the
+most room in its copy fields about the business (`editorial.*`, `business.*` but the copyright line and the name). A
+fact with no such block is never forced onto another page: it is reported with its reason. The copy check counts every
+owner's fact as a value the plan data holds (`invented_data` never refuses a writer for saying it).
+
+The echo check of the writer's output: `writePages` takes `ownerStatement` (the step chain passes the research's
+`description`, what the owner typed). Every written copy field and search text of a page is held to it with
+`echoProblemsIn`, the plan's item labels and data values as `publicTexts` (a name the owner typed is a fact value; an
+owner's fact is not, the writer says it in its own words). A copying value fails the page check with `copies_owner`
+(the message names the rule and the weight, never the owner's words), goes back to the writer once like every failing
+field, and a value still copying stops the build with `copy_check_failed` (noRerun), as every copy failure does. With no
+statement nothing is checked, and with no owner's fact the request is byte for byte what it was.
+
+Tests: `domain-owner-facts-writer.test.mjs` (the seven word service arrives on the services block in other words; a
+copying writer is asked once then stops typed; a held person named in the statement reaches no request in any form; a
+fact with no block is reported), and the survival table of `domain-owner-echo-survival.test.mjs` extended to the writer
+request (every fact of every fixture in the request, none unplaced, no owner sentence in the written values).
 
 The `owner` source of the older flow (the value typed on the Profile card, origin `website`) is unchanged and is a
 different key.

@@ -23,6 +23,7 @@ import { questionsOf, siteLanguageOf } from './needs-profile-questions.mjs'
 import { kindLimitsOf, storeBlocksOf } from './answer-field-limits.mjs'
 import { mergeRows } from './needs-profile-rows.mjs'
 import { voiceOf } from './needs-profile-voice.mjs'
+import { ownerFactsOfSources } from './owner-facts-flow.mjs'
 
 export const NEEDS_PROFILE_SCHEMA = 'tracy-needs-profile/v1'
 /** The draft prompt (product owner review: #600). Its hash is recorded on every profile it made. */
@@ -146,6 +147,8 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
     accounting.map((a) => [a.conflict, a.question ? { question: a.question } : { notAsked: a.reason }])
   )
   const voice = voiceOf(reading?.voice, sources, { facts, items })
+  // The owner's facts to say in other words (D46): carried in code from the research, never read by the model.
+  const ownerFacts = ownerFactsOfSources(sources)
   const unread = language.unread.map(({ source, said: word, from }) => ({
     from,
     source,
@@ -165,6 +168,7 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
     items,
     ...(rows.length ? { rows } : {}),
     ...(voice.voice ? { voice: voice.voice } : {}),
+    ...(ownerFacts.length ? { ownerFacts } : {}),
     conflicts: conflicts.map((c) => ({ ...c, ...asked.get(c.id) })),
     questions,
     dropped: [
