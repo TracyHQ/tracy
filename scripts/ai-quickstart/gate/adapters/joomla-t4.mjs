@@ -65,7 +65,7 @@ const absolute = (base, path) => new URL(path, `${String(base).replace(/\/?$/, '
  * @param {{base: string, record: {ids: Record<string, number>}, doors: {get: Function}, order?: object}} input
  * @returns {Promise<Array<{pageType: string, path: string, url: string, from: string}>>}
  */
-export async function sitePages({ base, record, doors, order = null, mapping = null }) {
+export async function sitePages({ base, record, doors, order = null, mapping = null, writePlan = null }) {
   const pages = []
   const ids = Object.entries(record?.ids ?? {})
   const menus = new Map()
@@ -88,6 +88,19 @@ export async function sitePages({ base, record, doors, order = null, mapping = n
         // The home page shows items of many lists: an article is reached under its own list page when it has one.
         if (!listPage.has(id) || menus.get(listPage.get(id))?.item?.home) listPage.set(id, page.id)
       }
+  // A detail page type with no menu item of its own (a class page) is the article the plan writes its blocks into:
+  // that article is read under the page's name, so the page's fields are judged where they print.
+  const detailOf = new Map()
+  for (const page of order?.pages ?? []) {
+    if (menus.has(page.id)) continue
+    const op = (writePlan?.ops ?? []).find(
+      (o) =>
+        o.kind === 'article.create' &&
+        !detailOf.has(o.key.slice('article:'.length)) &&
+        (o.values ?? []).some((v) => String(v.entry ?? '').split('.')[0] === page.id)
+    )
+    if (op) detailOf.set(op.key.slice('article:'.length), page.id)
+  }
   for (const [key, id] of ids) {
     const m = /^article:(.+)$/.exec(key)
     if (!m) continue
@@ -96,10 +109,22 @@ export async function sitePages({ base, record, doors, order = null, mapping = n
     const path = `index.php?option=com_content&view=article&id=${id}&catid=${article?.catid ?? ''}${
       under ? `&Itemid=${under.id}` : ''
     }`
-    pages.push({ pageType: `article:${m[1]}`, path, url: absolute(base, path), from: key })
+    pages.push({
+      pageType: detailOf.get(m[1]) ?? `article:${m[1]}`,
+      path,
+      url: absolute(base, path),
+      from: key
+    })
+  }
+  // A contact a menu item opens is read at that item (its page above); read again at its raw address it would take
+  // the active page's title and double the contact page.
+  const opened = new Set()
+  for (const { item } of menus.values()) {
+    const c = /[?&]option=com_contact&view=contact&id=(\d+)/.exec(String(item?.link ?? ''))
+    if (c) opened.add(Number(c[1]))
   }
   for (const [key, id] of ids)
-    if (key.startsWith('contact:')) {
+    if (key.startsWith('contact:') && !opened.has(Number(id))) {
       const path = `index.php?option=com_contact&view=contact&id=${id}`
       pages.push({ pageType: 'contact-record', path, url: absolute(base, path), from: key })
     }

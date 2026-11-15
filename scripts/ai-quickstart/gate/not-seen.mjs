@@ -116,7 +116,8 @@ export function notSeenOf({
     }
     if (op.kind === 'article.create') {
       const item = op.key.split(':').slice(1).join(':')
-      if (!htmlOf.has(`article:${item}`)) return { reason: 'article_not_rendered' }
+      // The article is read as `article:<item>`, or under the detail page it is (`sitePages`).
+      if (!htmlOf.has(`article:${item}`) && !htmlOf.has(page)) return { reason: 'article_not_rendered' }
     }
     return { reason: 'value_not_printed' }
   }
