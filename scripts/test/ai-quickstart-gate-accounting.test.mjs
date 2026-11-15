@@ -171,7 +171,8 @@ test('every kind of kit place is in the universe: SEO, slot-less overrides, empt
     ['language_kept', 'language_kept', 'language_set']
   )
   assert.equal(at('entity:mailConfig-from_name.value||').code, 'emptied_not_written')
-  assert.equal(at('build:escapes.places.0').code, 'key_not_read')
+  // No value of this plan is an article title: the entry is read by the write step, and no value takes it.
+  assert.equal(at('build:escapes.places.0').code, 'escape_entry_not_used')
   assert.equal(at('entity:siteSetting-1.value||').code, 'setting_set')
 })
 

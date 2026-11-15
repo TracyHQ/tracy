@@ -1600,8 +1600,15 @@ page type declared `unbuilt` and the blocks only it places, with its code), `ski
 which must be zero. A place the gate's own marker plan failed to cover (`block_not_placed`, `page_not_placed`, by
 `marker_plan`) is `unexplained`: the gate's coverage failure is never an explanation. Every place names `by` (`writer`, the
 build team's chain; `marker_plan`, the gate's own plan; `kit`) and `code`: the reason the chain gives (a plan skip, an
-order hide, an unproven flag such as `menu_item_link_not_declared`, a write step gap as `<code>:<cause>`), or
-`key_not_read` when the write plan does not read that mapping key and says nothing. A page taken out by a gap (named,
+order hide, an unproven flag such as `menu_item_link_not_declared`, a write step gap as `<code>:<cause>`). A place of
+the build's own declarations is accounted by what the write plan shows the write step did with it
+(`gate/accounting-build-evidence.mjs`): a menu item op of the page type, a page reached under its list page, a record
+and its category created for the page type, a created record's frame, the escape entry a written value takes (read
+with the write step's own `escapeEntryAt`), the rule a hide or a placement leaves on the copies of its block. Skipped
+places name the reason the plan shows: `page_reached_under_list`, `list_page_not_in_plan`, `no_piece_in_frame`,
+`no_record_created`, `escape_entry_not_used`, `escape_place_not_written`, `control_written`, or the order's own
+fallback reason of a menu block (`list_below_min`). A place the plan shows nothing for is `key_not_read`, so a key the
+write step stops reading is seen. A page taken out by a gap (named,
 or its main block emptied, so the rules gate drops it) takes the blocks of its recipe with it. `unbuilt` page types are
 left out of the marker composition. The record holds the split as `split.<account>.<by>.<code>`.
 

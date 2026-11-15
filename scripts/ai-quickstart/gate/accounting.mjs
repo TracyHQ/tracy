@@ -182,7 +182,7 @@ export function accountFor({ mapping, blockStore, pageRecipes }, { writePlan, or
         why
       })
     if (place.owner === 'build') {
-      const a = accountBuildPlace(place, { writePlan, order, gaps, unbuilt })
+      const a = accountBuildPlace(place, { writePlan, order, gaps, unbuilt, mapping })
       done(a.account, a.why, a.by, a.code)
       continue
     }
