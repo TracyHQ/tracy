@@ -6,11 +6,16 @@ import { memoryDoors } from '../../../packages/wo/website-opportunities/domain/w
 import { runDraftWrite } from '../../../apps/tracy-web/src/step-chain-draft-write.js'
 import { markerPictureBytes } from './marker-pictures.mjs'
 
-/** The stored bytes of a marker picture, by stored id: a small PNG that names its code (`marker-pictures.mjs`). */
-export const openMarkerPicture = (registry) => async (id) => ({
-  bytes: markerPictureBytes(registry, id),
-  mime: 'image/png'
-})
+/**
+ * The stored bytes of a marker picture, by stored id: a small PNG that names its code (`marker-pictures.mjs`), at the
+ * shape of its slot when `shapes` names one (`pictureShapesOf`).
+ */
+export const openMarkerPicture =
+  (registry, shapes = {}) =>
+  async (id) => ({
+    bytes: markerPictureBytes(registry, id, shapes[id] ?? null),
+    mime: 'image/png'
+  })
 
 /**
  * Refusals the real plugin gives that the memory site does not: each one was met on the gate's first run on a real
@@ -57,7 +62,7 @@ export const memoryTryWrite = (kit) => async (built) => {
     plan: built.writePlan,
     doors: withMeasuredRefusals(memory.doors),
     record: {},
-    openStored: openMarkerPicture(built.registry),
+    openStored: openMarkerPicture(built.registry, built.pictureShapes),
     runId: 'run-marker-memory'
   })
   return { report, memory }

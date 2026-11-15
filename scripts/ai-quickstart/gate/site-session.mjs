@@ -116,7 +116,7 @@ export function siteSession({
         out: dir,
         pin,
         log,
-        open: openMarkerPicture(built.registry),
+        open: openMarkerPicture(built.registry, built.pictureShapes),
         sheets
       })
       log(

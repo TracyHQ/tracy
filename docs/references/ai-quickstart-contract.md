@@ -1598,7 +1598,10 @@ passes, 1 when it does not, 2 on a usage error.
 **Markers** (`gate/marker-codec.mjs`). A code is `Qx` and three letters (17,576 codes), padded with ` qqqqq` to the
 place's limit. A link is `https://qx<abc>.example/`, an email `qx<abc>@qx<abc>.example`, a phone `+1 555 01NN NNN` (a
 number of that shape is a marker only when its code is in the run's registry), a social link the network's own host with the path `/qx<abc>`, a picture a flat PNG of a colour drawn from its code with
-the code in a text chunk. No marker holds `( ) < > " ' &` or a dash: the plugin's guards, the template's code notation
+the code in a text chunk, at the size of the slot it is written to when the blank site contract declares that slot's
+shape (`fit`: its measured source size, else its minimum width at its aspect) and on a clear one pixel frame when the
+slot asks for a transparent ground, since the plugin refuses any other shape there and the write stops
+(`SLOT_IMAGE_INVALID`, `SLOT_IMAGE_OPAQUE`; `gate/marker-pictures.mjs` `pictureShapesOf`). No marker holds `( ) < > " ' &` or a dash: the plugin's guards, the template's code notation
 (`((`, `))`) and HTML read none of them. The filler alone (`qqqqq`, the search words a search page echoes) is the
 gate's own and never a finding; beside other words, those words are read.
 

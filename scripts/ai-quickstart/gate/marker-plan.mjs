@@ -15,6 +15,7 @@ import { codeOf, textMarker } from './marker-codec.mjs'
 import { markerComposition } from './marker-composition.mjs'
 import { writerGapOf } from './marker-gaps.mjs'
 import { markerProfile, markerRegistry } from './marker-profile.mjs'
+import { pictureShapesOf } from './marker-pictures.mjs'
 
 /** The filler word marker texts are padded with; an icon tagged with it is a candidate for every marker heading. */
 export const FILLER_TAG = 'qqqqq'
@@ -195,6 +196,8 @@ async function chainOf(kit, { registry, research, composition, label, icons, sto
           { ...aiq, blankContract: kit.blankContract },
           { stored: storedEntries, iconKeys: icons.icons.map((i) => i.name) }
         )
+  // The shape of each marker picture a slot of the blank site contract declares one for.
+  const shapes = pictureShapesOf(writePlan, kit.blankContract)
   return {
     plan,
     profile,
@@ -204,7 +207,9 @@ async function chainOf(kit, { registry, research, composition, label, icons, sto
     order,
     orderProblems,
     stored: storedEntries,
-    writePlan
+    writePlan,
+    pictureShapes: shapes.shapes,
+    pictureShapeConflicts: shapes.conflicts
   }
 }
 

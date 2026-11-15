@@ -1,7 +1,8 @@
 // The marker pictures of the marker build (ticket #585): every stored picture the write uploads is a small PNG of its
 // own, a flat colour drawn from its code with the code in a text chunk, so the file a page shows can be traced back to
 // the one picture place that wrote it by its bytes (the write names an upload by its bytes' hash), and a picture a page
-// shows that is no marker picture is a leak. Pure.
+// shows that is no marker picture is a leak. A picture written to a slot whose blank site contract declares its shape
+// (`fit`) is drawn at that shape, since the plugin refuses any other width over height there (`pictureShapesOf`). Pure.
 import { createHash } from 'node:crypto'
 import { deflateSync } from 'node:zlib'
 
@@ -27,19 +28,22 @@ function chunk(type, data) {
   return Buffer.concat([head, data, crc])
 }
 
-/** A PNG of one flat colour with a text chunk naming its code. */
-export function markerPng(code, size = MARKER_PICTURE_SIZE) {
+/**
+ * A PNG of one flat colour with a text chunk naming its code, `width` by `height` pixels. `transparent`: an RGBA file
+ * whose one pixel frame is clear, so its corners read transparent (the plugin reads a corner's alpha).
+ */
+export function markerPng(code, width = MARKER_PICTURE_SIZE, height = width, { transparent = false } = {}) {
   const hash = createHash('sha256').update(code).digest()
   const [r, g, b] = hash
   const ihdr = Buffer.alloc(13)
-  ihdr.writeUInt32BE(size, 0)
-  ihdr.writeUInt32BE(size, 4)
-  ihdr.set([8, 2, 0, 0, 0], 8)
-  const row = Buffer.concat([
-    Buffer.from([0]),
-    Buffer.from(Array.from({ length: size }, () => [r, g, b]).flat())
-  ])
-  const raw = Buffer.concat(Array.from({ length: size }, () => row))
+  ihdr.writeUInt32BE(width, 0)
+  ihdr.writeUInt32BE(height, 4)
+  ihdr.set([8, transparent ? 6 : 2, 0, 0, 0], 8)
+  const pixel = (x, y) =>
+    !transparent ? [r, g, b] : [r, g, b, x && y && x < width - 1 && y < height - 1 ? 255 : 0]
+  const row = (y) => Buffer.from([0, ...Array.from({ length: width }, (_, x) => pixel(x, y)).flat()])
+  const [edge, inner] = [row(0), row(1)]
+  const raw = Buffer.concat(Array.from({ length: height }, (_, y) => (y && y < height - 1 ? inner : edge)))
   return Buffer.concat([
     Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
     chunk('IHDR', ihdr),
@@ -51,13 +55,63 @@ export function markerPng(code, size = MARKER_PICTURE_SIZE) {
 
 /**
  * The bytes of the stored picture `id`: its code is taken from the registry once per stored id, so the same picture
- * opened twice gives the same bytes.
+ * opened twice gives the same bytes. `shape`: the width and height of the slot it is written to, if it has one.
  */
-export function markerPictureBytes(registry, id) {
+export function markerPictureBytes(registry, id, shape = null) {
   const had = registry.entries.find((e) => e.what === 'picture' && e.stored === id)
   const code = had?.code ?? registry.take({ what: 'picture', stored: id })
-  return markerPng(code)
+  return shape ? markerPng(code, shape.width, shape.height, shape) : markerPng(code)
 }
 
 /** The sha256 of bytes, hex. */
 export const sha256Of = (bytes) => createHash('sha256').update(bytes).digest('hex')
+
+/** The width and height a PNG's header declares. */
+export const pngSize = (bytes) => {
+  const b = Buffer.from(bytes)
+  return { width: b.readUInt32BE(16), height: b.readUInt32BE(20) }
+}
+
+/**
+ * The size a slot's declared shape asks (the source's own size when the contract measured one, else its minimum width),
+ * and whether it needs a transparent ground.
+ */
+function sizeOf(fit) {
+  const transparent = fit.transparent === true
+  if (fit.source?.width && fit.source?.height)
+    return { width: fit.source.width, height: fit.source.height, transparent }
+  const width = Math.max(fit.minWidth ?? 0, MARKER_PICTURE_SIZE)
+  return { width, height: Math.max(1, Math.round(width / fit.aspect)), transparent }
+}
+
+/**
+ * The shape of every stored picture the write plan puts in a slot whose contract declares one (`fit` with `aspect`),
+ * by stored id. A picture written to two slots of different shapes keeps the first, and the pair is in `conflicts`:
+ * the plugin then refuses the second, and the write stops there.
+ * @param {{ops: object[]} | null} plan the marker build's write plan
+ * @param {{slots?: object[]} | null} contract the blank site contract's content map
+ * @returns {{shapes: Record<string, {width: number, height: number}>, conflicts: {picture: string, slots: string[]}[]}}
+ */
+export function pictureShapesOf(plan, contract) {
+  const fits = new Map((contract?.slots ?? []).filter((s) => s.fit?.aspect).map((s) => [s.key, s.fit]))
+  const storedOf = new Map(
+    (plan?.ops ?? [])
+      .filter((o) => o.kind === 'picture.upload' && o.stored?.id)
+      .map((o) => [o.key, o.stored.id])
+  )
+  const shapes = {}
+  const from = {}
+  const conflicts = []
+  for (const op of plan?.ops ?? [])
+    for (const v of op.values ?? []) {
+      const ref = String(v.value?.ref ?? '')
+      const fit = fits.get(v.loc?.slot)
+      const id = storedOf.get(ref)
+      if (!ref.startsWith('picture:') || !fit || !id) continue
+      const size = sizeOf(fit)
+      if (!shapes[id]) [shapes[id], from[id]] = [size, v.loc.slot]
+      else if (shapes[id].width / shapes[id].height !== size.width / size.height)
+        conflicts.push({ picture: ref.slice('picture:'.length), slots: [from[id], v.loc.slot] })
+    }
+  return { shapes, conflicts }
+}
