@@ -35,7 +35,7 @@ import {
 
 const ZERO_WIDTH = /[​-‍⁠﻿­]/gu
 
-// The kana voicing marks are letters of their own (ガ is not カ): every other mark goes, then the rest is composed.
+// The kana voicing marks are letters of their own (`ガ` is not `カ`): every other mark goes, then the rest is composed.
 const MARKS = /[\p{M}--[\u3099\u309a]]/gv
 
 /** One character (or a whole text) folded: compatibility forms, accents and marks, zero width and case aside. */

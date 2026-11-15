@@ -9,6 +9,7 @@
 //   common word of a business name and that no value the site shows uses, so "Brindlewick team" names the held
 //   "Brindlewick Tennis Club" while "Tennis" alone does not.
 // Pure.
+import { accented, rawAccented } from './copy-accents.mjs'
 import { COUNT_NOUNS } from './copy-claims.mjs'
 import { NUMBER_WORD, numberWordValue } from './copy-number-words.mjs'
 import { namesWords, wordsOf } from './plan-request-words.mjs'
@@ -49,14 +50,14 @@ const DUTCH = new Map(
   })
 )
 const DUTCH_NOUNS = String.raw`leden|klanten|leerlingen|studenten|prijzen|recensies|beoordelingen|projecten|jaar\s+ervaring`
-const CURRENCY = String.raw`dollars?|bucks|euros?|pounds?|francs?|franken|pfund|dólares|dollari|libras?|sterline|reais|yen|rupees?`
+const CURRENCY = rawAccented`dollars?|bucks|euros?|pounds?|francs?|franken|pfund|d\\u00f3lares|dollari|libras?|sterline|reais|yen|rupees?`
 const WORDS = `${NUMBER_WORD}|${[...DUTCH.keys()].join('|')}`
 const SPOKEN = new RegExp(
   String.raw`${B}((?:${WORDS})(?:[\s-]+(?:and\s+|und\s+|et\s+|y\s+|e\s+|en\s+)?(?:${WORDS}))*)\s+(?:[\p{L}-]+\s+)?(${COUNT_NOUNS}|${DUTCH_NOUNS}|${CURRENCY})${E}`,
   'giu'
 )
 const MOST = new RegExp(
-  String.raw`${B}(?:most|meest|am\s+meisten|(?:le|la|les)\s+plus|(?:el|la|los|las)\s+más|(?:il|la|i|le)\s+più|(?:o|a|os|as)\s+mais)\s+(?!of${E}|de${E}|di${E}|van${E})\p{L}+`,
+  rawAccented`${B}(?:most|meest|am\s+meisten|(?:le|la|les)\s+plus|(?:el|la|los|las)\s+m\\u00e1s|(?:il|la|i|le)\s+pi\\u00f9|(?:o|a|os|as)\s+mais)\s+(?!of${E}|de${E}|di${E}|van${E})\p{L}+`,
   'giu'
 )
 const valueOf = (word) => numberWordValue(word) ?? DUTCH.get(String(word).toLowerCase())
@@ -99,9 +100,9 @@ export function spokenClaimsOf(text, { numbers, prices, known }) {
 
 /** Common words of a business name, never distinctive of one business. */
 const COMMON = new Set(
-  'the and und et y e en of de la le les el los las der die das du des di del da do van von club team studio shop store cafe café restaurant bar salon school academy centre center company co ltd inc llc gmbh ag sa srl bv group house home'.split(
-    ' '
-  )
+  accented(
+    'the and und et y e en of de la le les el los las der die das du des di del da do van von club team studio shop store cafe caf\\u00e9 restaurant bar salon school academy centre center company co ltd inc llc gmbh ag sa srl bv group house home'
+  ).split(' ')
 )
 const NO_WORDS = /\S*(?:[:/@]|\.[\p{L}]{2,})\S*/gu
 

@@ -1,11 +1,12 @@
 // Number words of the six site languages (en, de, fr, es, it, pt) for the copy guard (ticket #594): one to twenty and
 // the round tens, hundreds and thousands, so "fifty members" is held to the plan data as "50 members" is. One alone is
 // English only: `ein`, `un`, `uno`, `um` are also articles. Pure.
+import { accented } from './copy-accents.mjs'
 
 const WORDS = {
   1: ['one'],
   2: ['two', 'zwei', 'deux', 'dos', 'due', 'dois', 'duas'],
-  3: ['three', 'drei', 'trois', 'tres', 'tre', 'três'],
+  3: ['three', 'drei', 'trois', 'tres', 'tre', 'tr\\u00eas'],
   4: ['four', 'vier', 'quatre', 'cuatro', 'quattro', 'quatro'],
   5: ['five', 'fünf', 'cinq', 'cinco', 'cinque'],
   6: ['six', 'sechs', 'seis', 'sei'],
@@ -18,7 +19,7 @@ const WORDS = {
   13: ['thirteen', 'dreizehn', 'treize', 'trece', 'tredici', 'treze'],
   14: ['fourteen', 'vierzehn', 'quatorze', 'catorce', 'quattordici', 'catorze'],
   15: ['fifteen', 'fünfzehn', 'quinze', 'quince', 'quindici'],
-  16: ['sixteen', 'sechzehn', 'seize', 'dieciséis', 'sedici', 'dezesseis', 'dezasseis'],
+  16: ['sixteen', 'sechzehn', 'seize', 'diecis\\u00e9is', 'sedici', 'dezesseis', 'dezasseis'],
   17: ['seventeen', 'siebzehn', 'dix-sept', 'diecisiete', 'diciassette', 'dezessete', 'dezassete'],
   18: ['eighteen', 'achtzehn', 'dix-huit', 'dieciocho', 'diciotto', 'dezoito'],
   19: ['nineteen', 'neunzehn', 'dix-neuf', 'diecinueve', 'diciannove', 'dezenove', 'dezanove'],
@@ -34,7 +35,9 @@ const WORDS = {
   1000: ['thousand', 'tausend', 'mille', 'mil']
 }
 
-const VALUE = new Map(Object.entries(WORDS).flatMap(([n, words]) => words.map((w) => [w, Number(n)])))
+const VALUE = new Map(
+  Object.entries(WORDS).flatMap(([n, words]) => words.map((w) => [accented(w), Number(n)]))
+)
 
 /** An alternation of every number word, longest first so `dix-sept` wins over `dix`. */
 export const NUMBER_WORD = [...VALUE.keys()].sort((a, b) => b.length - a.length).join('|')

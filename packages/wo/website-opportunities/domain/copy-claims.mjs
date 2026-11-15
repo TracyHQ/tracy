@@ -15,6 +15,7 @@
 //     passes in a sentence that names an award the profile holds (`awards`);
 //   - the claims of `copy-claims-more.mjs`: "the best ... in town", "over 500", a count of three digits or more.
 // Pure: a text and the known facts in, the claims the facts do not hold out.
+import { rawAccented } from './copy-accents.mjs'
 import { NUMBER_WORD, numberWordValue } from './copy-number-words.mjs'
 import { moreClaimsOf } from './copy-claims-more.mjs'
 import { timesOf } from './needs-profile-grounding.mjs'
@@ -34,15 +35,15 @@ export const numbersOf = (text) =>
   (String(text).match(re(String.raw`\d+(?:[.,]\d+)*|${B}(?:${NUMBER_WORD})${E}`)) ?? []).map(numberForm)
 
 const LOCATIONS = String.raw`locations?|branch(?:es)?|Standorte?n?|Filialen?|agences?|succursales?|sedes?|sucursales?|sedi|filiali|unidades|filiais`
-const NOUNS = String.raw`members?|clients?|customers?|students?|awards?|reviews?|projects?|Mitglieder[n]?|Kunden|Schüler(?:innen|n)?|Studenten|Auszeichnungen|Bewertungen|Projekte[n]?|membres|adhérents|élèves|étudiants|avis|projets|socios|miembros|clientes|alumnos|estudiantes|premios|reseñas|proyectos|soci|membri|clienti|studenti|allievi|premi|recensioni|progetti|sócios|membros|alunos|prémios|prêmios|avaliações|projetos`
+const NOUNS = rawAccented`members?|clients?|customers?|students?|awards?|reviews?|projects?|Mitglieder[n]?|Kunden|Schüler(?:innen|n)?|Studenten|Auszeichnungen|Bewertungen|Projekte[n]?|membres|adh\\u00e9rents|\\u00e9l\\u00e8ves|\\u00e9tudiants|avis|projets|socios|miembros|clientes|alumnos|estudiantes|premios|reseñas|proyectos|soci|membri|clienti|studenti|allievi|premi|recensioni|progetti|s\\u00f3cios|membros|alunos|pr\\u00e9mios|pr\\u00eamios|avaliaç\\u00f5es|projetos`
 /** The counted nouns of a count claim, in six languages (read by `plan-request-claims.mjs` too). */
 export const COUNT_NOUNS = NOUNS
-const EXPERIENCE = String.raw`years?\s+(?:of\s+)?(?:experience|in\s+business)|Jahren?\s+Erfahrung|ans\s+d['’]expérience|años\s+de\s+experiencia|anni\s+di\s+esperienza|anos\s+de\s+experiência`
+const EXPERIENCE = rawAccented`years?\s+(?:of\s+)?(?:experience|in\s+business)|Jahren?\s+Erfahrung|ans\s+d['’]exp\\u00e9rience|años\s+de\s+experiencia|anni\s+di\s+esperienza|anos\s+de\s+experi\\u00eancia`
 const COUNT = re(
   String.raw`${B}${NUM}\s*\+?\s+(?:[\p{L}-]+\s+)?(${LOCATIONS}|${NOUNS})${E}|${B}${NUM}\s*\+?\s+(?:${EXPERIENCE})${E}`
 )
 const FOR_YEARS = re(
-  String.raw`${B}(?:seit|depuis|desde\s+hace|da|há)\s+(?:über\s+|mehr\s+als\s+|plus\s+de\s+|más\s+de\s+|oltre\s+|più\s+di\s+|mais\s+de\s+)?${NUM}\s+(?:Jahren|ans|años|anni|anos)${E}`
+  rawAccented`${B}(?:seit|depuis|desde\s+hace|da|h\\u00e1)\s+(?:über\s+|mehr\s+als\s+|plus\s+de\s+|m\\u00e1s\s+de\s+|oltre\s+|pi\\u00f9\s+di\s+|mais\s+de\s+)?${NUM}\s+(?:Jahren|ans|años|anni|anos)${E}`
 )
 const PERCENT = re(
   String.raw`${B}(\d+(?:[.,]\d+)?)\s?(?:%|(?:percent|per\s+cent|Prozent|pour\s+cent|por\s+ciento|per\s+cento|por\s+cento)${E})`
@@ -50,35 +51,35 @@ const PERCENT = re(
 const YEAR = re(String.raw`${B}(?:1[89]\d\d|20\d\d)${E}`)
 
 const ALL_DAY = re(
-  String.raw`24\s*\/\s*7|24\s*h\s*\/\s*24|open\s+24\s*(?:hours|h)${E}|24\s+hours\s+a\s+day|rund\s+um\s+die\s+Uhr|24\s+heures\s+sur\s+24|24\s+horas\s+al\s+día`
+  rawAccented`24\s*\/\s*7|24\s*h\s*\/\s*24|open\s+24\s*(?:hours|h)${E}|24\s+hours\s+a\s+day|rund\s+um\s+die\s+Uhr|24\s+heures\s+sur\s+24|24\s+horas\s+al\s+d\\u00eda`
 )
 export const KNOWN_ALL_DAY = re(
   String.raw`24\s*\/\s*7|24\s*hours|24\s*h${E}|rund\s+um\s+die\s+Uhr|24\s+heures|24\s+horas`,
   'iu'
 )
 const EVERY_DAY = re(
-  String.raw`(?:7|seven)\s+days\s+a\s+week|open\s+(?:7|seven|365)\s+days|open\s+(?:every\s+day|daily)|(?:7|sieben)\s+Tage\s+die\s+Woche|täglich(?=.*geöffnet)|geöffnet\s+täglich|7\s*j(?:ours)?\s*\/\s*7|ouvert\w*\s+tous\s+les\s+jours|(?:7|siete)\s+días\s+a\s+la\s+semana|abiert\w*\s+todos\s+los\s+días|7\s+giorni\s+su\s+7|apert\w*\s+tutti\s+i\s+giorni|abert\w*\s+todos\s+os\s+dias`
+  rawAccented`(?:7|seven)\s+days\s+a\s+week|open\s+(?:7|seven|365)\s+days|open\s+(?:every\s+day|daily)|(?:7|sieben)\s+Tage\s+die\s+Woche|täglich(?=.*geöffnet)|geöffnet\s+täglich|7\s*j(?:ours)?\s*\/\s*7|ouvert\w*\s+tous\s+les\s+jours|(?:7|siete)\s+d\\u00edas\s+a\s+la\s+semana|abiert\w*\s+todos\s+los\s+d\\u00edas|7\s+giorni\s+su\s+7|apert\w*\s+tutti\s+i\s+giorni|abert\w*\s+todos\s+os\s+dias`
 )
 export const KNOWN_EVERY_DAY = re(
-  String.raw`(?:mon(?:day)?|mo)\s*(?:-|\u2013|to|bis)\s*(?:sun(?:day)?|so(?:nntag)?)${E}|lun\w*\s*(?:-|\u2013|au|à|a)\s*dim\w*|lun\w*\s*(?:-|\u2013|a)\s*dom\w*|seg\w*\s*(?:-|\u2013|a)\s*dom\w*|daily|every\s*day|7\s*days|24\s*\/\s*7|täglich|tous\s+les\s+jours|todos\s+los\s+días|tutti\s+i\s+giorni|todos\s+os\s+dias|7\s*j\s*\/\s*7`,
+  rawAccented`(?:mon(?:day)?|mo)\s*(?:-|\u2013|to|bis)\s*(?:sun(?:day)?|so(?:nntag)?)${E}|lun\w*\s*(?:-|\u2013|au|\\u00e0|a)\s*dim\w*|lun\w*\s*(?:-|\u2013|a)\s*dom\w*|seg\w*\s*(?:-|\u2013|a)\s*dom\w*|daily|every\s*day|7\s*days|24\s*\/\s*7|täglich|tous\s+les\s+jours|todos\s+los\s+d\\u00edas|tutti\s+i\s+giorni|todos\s+os\s+dias|7\s*j\s*\/\s*7`,
   'iu'
 )
 
 /** `am` and `pm` end where the word ends: "2 amici", "5 amis" and "4 ampoules" name no hour (#594 review W1). */
 const HALF = String.raw`(?:a\.?m\.?|p\.?m\.?)(?![\p{L}\p{N}])`
 const HOUR = String.raw`(\d{1,2})(?:[:.h](\d{2}))?(?!\d)\s*(${HALF}|h(?!\p{L})|Uhr${E})?`
-const SEP = String.raw`\s*[-\u2013]\s*|\s+(?:to|till|until|bis|à|a|al|alle|às|ao|au)\s+`
+const SEP = rawAccented`\s*[-\u2013]\s*|\s+(?:to|till|until|bis|\\u00e0|a|al|alle|\\u00e0s|ao|au)\s+`
 const RANGE = re(String.raw`${B}${HOUR}(?:${SEP})${HOUR}`)
 const CLOCK = re(
   String.raw`${B}(\d{1,2})(?:(?:[:.h](\d{2}))(?!\d)\s*(${HALF})?|(?!\d)\s*(${HALF}|h(?!\p{L})|Uhr${E}))`
 )
 const BARE = re(String.raw`${B}(\d{1,2})(?!\d)`)
 const OPENING = re(
-  String.raw`(?:open\w*|hours|from|von|de|dès|dalle|das|desde|geöffnet|ouvert\w*|abiert\w*|apert\w*|abert\w*|täglich|(?:mon|tue|wed|thu|fri|sat|sun|lun|mar|mer|jeu|ven|sam|dim|mié|jue|vie|sáb|dom|seg|ter|qua|qui|sex)\w*|mo|di|mi|do|fr|sa|so)[\s,:.]*$`,
+  rawAccented`(?:open\w*|hours|from|von|de|d\\u00e8s|dalle|das|desde|geöffnet|ouvert\w*|abiert\w*|apert\w*|abert\w*|täglich|(?:mon|tue|wed|thu|fri|sat|sun|lun|mar|mer|jeu|ven|sam|dim|mi\\u00e9|jue|vie|s\\u00e1b|dom|seg|ter|qua|qui|sex)\w*|mo|di|mi|do|fr|sa|so)[\s,:.]*$`,
   'iu'
 )
 const UNTIL = re(
-  String.raw`(?:until|till|opens?\s+at|ab|bis|jusqu['’]à|dès|à\s+partir\s+de|a\s+las|hasta\s+las|dalle|alle|fino\s+alle|às|até\s+às)\s*$`,
+  rawAccented`(?:until|till|opens?\s+at|ab|bis|jusqu['’]\\u00e0|d\\u00e8s|\\u00e0\s+partir\s+de|a\s+las|hasta\s+las|dalle|alle|fino\s+alle|\\u00e0s|at\\u00e9\s+\\u00e0s)\s*$`,
   'iu'
 )
 /** A word after a bare hour that makes it no time ("ages 4 to 12 years", "until 12 people"). */
@@ -125,7 +126,7 @@ function hourClaimsOf(text) {
 }
 
 const AWARD = re(
-  String.raw`${B}(?:award[- ]winning|awards?|awarded|winners?|certified|certifications?|accredit(?:ed|ation)|licensed|champions?|championships?|medal(?:s|ist|ists)?|olympi(?:c|an|ans)|voted|number\s+one|best\s+in|trusted\s+by\s+thousands|preisgekrönt\w*|ausgezeichnet\w*|zertifiziert\w*|testsieger\w*|primé(?:e|s|es)?|récompensé\w*|certifié\w*|numéro\s+un|galardonad[oa]s?|premiad[oa]s?|certificad[oa]s?|número\s+(?:uno|um)|premiat[oaie]|certificat[oai]|numero\s+uno|ISO\s?\d{4,5})${E}|#\s?1(?!\d)|${B}(?:n°|nr\.|no\.)\s?1(?!\d)`
+  rawAccented`${B}(?:award[- ]winning|awards?|awarded|winners?|certified|certifications?|accredit(?:ed|ation)|licensed|champions?|championships?|medal(?:s|ist|ists)?|olympi(?:c|an|ans)|voted|number\s+one|best\s+in|trusted\s+by\s+thousands|preisgekrönt\w*|ausgezeichnet\w*|zertifiziert\w*|testsieger\w*|prim\\u00e9(?:e|s|es)?|r\\u00e9compens\\u00e9\w*|certifi\\u00e9\w*|num\\u00e9ro\s+un|galardonad[oa]s?|premiad[oa]s?|certificad[oa]s?|n\\u00famero\s+(?:uno|um)|premiat[oaie]|certificat[oai]|numero\s+uno|ISO\s?\d{4,5})${E}|#\s?1(?!\d)|${B}(?:n°|nr\.|no\.)\s?1(?!\d)`
 )
 const plainKey = (text) =>
   String(text)

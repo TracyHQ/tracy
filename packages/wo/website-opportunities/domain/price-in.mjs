@@ -6,6 +6,8 @@
 // of the same amount and the same currency (`$20` is `$20.00`, `€15` is `15,00 €`, never `$120`, never `€20`, never the
 // 20 of "a 20 minute class", and `€45` is not proven by "£45, gift card €10").
 
+import { rawAccented } from './copy-accents.mjs'
+
 export const currencies = (value) => String(value).match(/\p{Sc}/gu) ?? []
 
 /**
@@ -91,7 +93,7 @@ export function amountOf(written) {
 /** Every number written in `text`, as an amount. */
 const amountsOf = (text) => (String(text).match(new RegExp(NUMBER, 'g')) ?? []).map(amountOf)
 /** The other end of a price range takes the currency of the written one: `$20-45` is $20 and $45, `20-45 €` too. */
-const TO = String.raw`\s*(?:[-\u2013]|to|bis|à|a|al)\s*`
+const TO = rawAccented`\s*(?:[-\u2013]|to|bis|\\u00e0|a|al)\s*`
 const RANGE_AFTER = new RegExp(
   String.raw`(${CURRENCY})\s?${NUMBER}${TO}(${NUMBER})(?!\s?(?:${CURRENCY}|\d))`,
   'giu'

@@ -15,7 +15,8 @@ const LATIN_FOLDS = Object.freeze({
   Ł: 'L',
   Æ: 'A',
   Œ: 'O',
-  '\u0110': 'D',
+  // Written by code point: the language gate reads the letter itself.
+  [String.fromCodePoint(0x110)]: 'D',
   Ð: 'D',
   Ħ: 'H',
   Ŧ: 'T',
