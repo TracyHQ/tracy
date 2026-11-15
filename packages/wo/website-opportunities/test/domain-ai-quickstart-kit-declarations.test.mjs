@@ -153,3 +153,24 @@ test('words a template file writes as code are kept by their file, as words or a
     'keptLiterals[3]: a kept literal names its words: values (the words) or pattern (the words the file computes)'
   ])
 })
+
+test('a kept literal naming a picture file keeps pictures of its folder; a pattern or another folder is refused (#587)', () => {
+  const set = valid()
+  const icon = 'templates/petal/images/icon/arrow.svg'
+  set.mapping.keptLiterals = [
+    {
+      file: icon,
+      values: [icon, 'templates/petal/images/icon/dot.svg'],
+      why: 'the list arrows the stylesheet draws'
+    }
+  ]
+  assert.deepEqual(near(set, 'keptLiterals'), [])
+  set.mapping.keptLiterals = [
+    { file: icon, pattern: '^arrow$', why: 'the list arrow the stylesheet draws' },
+    { file: icon, values: ['images/demo/cake.jpg'], why: 'the list arrow the stylesheet draws' }
+  ]
+  assert.deepEqual(near(set, 'keptLiterals'), [
+    'keptLiterals[0].pattern: a kept picture lists its picture files in values',
+    'keptLiterals[1].values: values lists picture files of the folder of file'
+  ])
+})

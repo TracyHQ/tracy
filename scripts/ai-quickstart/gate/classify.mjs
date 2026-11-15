@@ -5,7 +5,7 @@
 // the list of where. The other way round: each value the build wrote that no page shows is `not_seen`. Pure.
 import { createHash } from 'node:crypto'
 import { codesIn, markerShare } from './marker-codec.mjs'
-import { exemptionOf } from './exemptions.mjs'
+import { exemptionOf, keptPictureOf } from './exemptions.mjs'
 import { notSeenOf } from './not-seen.mjs'
 
 /** The finding groups of the record, in the order the record lists them. */
@@ -151,6 +151,21 @@ export function classify({
           })
           continue
         }
+        const pictureSource = resolve.picture(o.value)
+        // A design picture of the template the kit keeps (a picture file it names), matched by the file it is.
+        const keptPicture = keptPictureOf(pictureSource, keep)
+        if (keptPicture) {
+          const value = /^data:/i.test(o.value)
+            ? `${o.value.slice(0, 48)}... (${pictureSource.file})`
+            : o.value
+          add(
+            exempt,
+            `${keptPicture}|${o.kind}|${pictureSource.file}`,
+            { why: keptPicture, kind: o.kind, value, page: r.pageType, visible: o.visible !== false },
+            { ...r, visible: o.visible }
+          )
+          continue
+        }
         if (/^data:/i.test(o.value)) {
           // Named by its start and the sha256 of the whole address: two inline pictures that start alike stay apart.
           const sha = createHash('sha256').update(o.value).digest('hex').slice(0, 12)
@@ -158,11 +173,11 @@ export function classify({
             'unmarked_picture',
             r,
             { ...o, value: `${o.value.slice(0, 48)}... (${o.value.length} characters, sha256 ${sha})` },
-            { source: resolve.picture(o.value) }
+            { source: pictureSource }
           )
           continue
         }
-        leak('unmarked_picture', r, o, { source: resolve.picture(o.value) })
+        leak('unmarked_picture', r, o, { source: pictureSource })
         continue
       }
       if (!TEXT.has(o.kind)) continue

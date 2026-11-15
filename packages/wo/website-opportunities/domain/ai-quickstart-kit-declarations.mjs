@@ -5,7 +5,8 @@
 //   - `pages.<type>.record.facts: {<column>: {fact, why}}`: a column of the record a page creates that holds a business
 //     fact (the author name of a created article, `created_by_alias`), a closed set per record kind;
 //   - `keptLiterals: [{file, values | pattern, why}]`: words a template file writes into every page as code (a list of
-//     share networks, the ordinal of a step), kept on every site. `values` lists the words; `pattern` is an anchored
+//     share networks, the ordinal of a step), kept on every site. A `file` that is a picture keeps pictures instead:
+//     `values` lists picture files of its folder, and a page picture whose bytes are one of them is kept. `values` lists the words; `pattern` is an anchored
 //     regular expression for words the file computes (an ordinal). The file is a path inside the template release;
 //     `scripts/ai-quickstart/check.mjs` checks it is one of the files the source contract locks.
 // Every reason is said (`why`); a reason that says the words are on no page is refused (they are declared because a
@@ -22,6 +23,8 @@ const FAVICON_KEYS = ['from', 'fallback', 'path', 'why']
 const LITERAL_KEYS = ['file', 'values', 'pattern', 'why']
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 const isName = (value) => typeof value === 'string' && value.trim() !== ''
+/** A picture file of the release, by its name. */
+const isPictureFile = (value) => isName(value) && /\.(?:png|gif|jpe?g|webp|svg|ico)$/i.test(value)
 const isReleasePath = (value) =>
   isName(value) && !value.startsWith('/') && !value.split('/').includes('..') && !value.includes('\\')
 
@@ -111,7 +114,20 @@ function keptLiteralProblems(list, report) {
         at,
         'a kept literal names its words: values (the words) or pattern (the words the file computes)'
       )
-    else if (entry.values !== undefined) {
+    else if (isPictureFile(entry.file)) {
+      // A kept picture: `values` lists the picture files of the file's own folder the template draws (by their bytes).
+      const folder = entry.file.slice(0, entry.file.lastIndexOf('/') + 1)
+      if (entry.pattern !== undefined)
+        report(`${at}.pattern`, 'a kept picture lists its picture files in values')
+      else if (
+        !Array.isArray(entry.values) ||
+        !entry.values.length ||
+        !entry.values.every(
+          (v) => isReleasePath(v) && isPictureFile(v) && v.slice(0, v.lastIndexOf('/') + 1) === folder
+        )
+      )
+        report(`${at}.values`, 'values lists picture files of the folder of file')
+    } else if (entry.values !== undefined) {
       if (!Array.isArray(entry.values) || !entry.values.length || !entry.values.every(isName))
         report(`${at}.values`, 'values lists the words the file writes')
     } else {

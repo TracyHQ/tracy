@@ -997,6 +997,12 @@ words, and one that says no page draws them is refused.
   titles of the share links by the article and lesson layouts) and the two digit step and card numbers
   (`^\d{2}$`, the lesson layout and the features block). The release gate exempts these words only where the named
   file prints them (marker test, "Exemptions").
+  A `file` that is a picture (`.png`, `.gif`, `.jpg`, `.webp`, `.svg`, `.ico`) keeps design pictures instead: `values`
+  lists picture files of that file's folder, no `pattern`, and a page picture whose bytes are one of those files (an
+  inline icon the template stylesheet draws, `picture_file` in "Sources") is exempt as `kept_literal: <file>: <reason>`.
+  JA Boxing shape: `{"file": "templates/ja_boxing/images/time-1.png", "values":
+  ["templates/ja_boxing/images/time-1.png", "templates/ja_boxing/images/time-2.png",
+  "templates/ja_boxing/images/time-3.png"], "why": "..."}`.
 
 ### The system menu (`dataFixes`, #587)
 

@@ -91,6 +91,16 @@ function keptLiteral(o, sources, keep, scope) {
   return null
 }
 
+/** A picture file the kit keeps (`keptLiterals` naming a picture file) that a page picture sources to, or null. */
+export function keptPictureOf(source, keep) {
+  const file = source?.class === 'picture_file' ? String(source.file ?? '').toLowerCase() : null
+  if (!file) return null
+  for (const l of keep?.literals ?? [])
+    if (PICTURE_FILE.test(l.file ?? '') && l.values.has(file)) return `kept_literal: ${l.file}: ${l.why}`
+  return null
+}
+const PICTURE_FILE = /\.(?:png|gif|jpe?g|webp|svg|ico)$/i
+
 /** The language keys the kit keeps, with their reasons: `Map<key, reason>`. */
 export function keptKeysOf(mapping) {
   const out = new Map()
