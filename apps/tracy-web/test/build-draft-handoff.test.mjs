@@ -165,7 +165,7 @@ test(
     assert.deepEqual(carried.plan.pages, plan.pages)
     assert.equal(carried.site.siteKey, SITE)
     // The agent is told what the block is: context, nothing to change yet.
-    assert.match(sent.text, /built from this conversation/i)
+    assert.match(sent.text, /built from the plan in this block/i)
     assert.equal(DASHES.test(sent.text), false)
 
     // Kept on the build: the build door answers where the chat went, and a second ask sends nothing again.

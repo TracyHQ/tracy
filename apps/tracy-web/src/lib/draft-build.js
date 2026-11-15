@@ -38,6 +38,16 @@ function heldTextsOfSnapshot(snapshot, withheld) {
 }
 
 /**
+ * The names and people the owner keeps off the site, from a build's frozen snapshot (the server's own withheld set),
+ * each once: what the hand off tells the site agent never to write (#611). Empty when nothing is held.
+ * @returns {string[]}
+ */
+export function heldTextsOfBuild(snapshot) {
+  const withheld = withheldOf(snapshot)
+  return withheld ? [...new Set(heldTextsOfSnapshot(snapshot, withheld))] : []
+}
+
+/**
  * The name the site is allowed to show, from a build's frozen snapshot `{plan, profile, research}` (#610): the plan's
  * `business.name` fact unless it names something the owner keeps off the site, then the site name answer
  * (`withheld.siteName`, the owner's own choice), else null (the caller goes by its neutral fallback). Never the held

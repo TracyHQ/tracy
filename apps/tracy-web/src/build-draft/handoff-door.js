@@ -12,7 +12,7 @@
  * already prompted is answered as it is. Two asks at once: the second waits for the first's claim
  * (`HANDOFF_OPENING`).
  */
-import { shownBuildNameOf, shownBuildPlanOf } from '../lib/draft-build.js'
+import { heldTextsOfBuild, shownBuildNameOf, shownBuildPlanOf } from '../lib/draft-build.js'
 import { claimHandoff, readBuild, saveHandoff } from './build-store.js'
 import { conversationOf, handoffMessageOf, handoffNextOf } from './handoff.js'
 
@@ -61,7 +61,14 @@ export async function handOffBuild({
   }
   // What the site chat reads is the plan as the site may show it: never what the owner keeps off the site.
   const plan = shownBuildPlanOf(build.snapshot) ?? null
-  const text = handoffMessageOf({ conversation, plan, siteKey, name: shownBuildNameOf(build.snapshot) })
+  // The conversation is the owner's own, carried as history; what they keep off the site is named to the agent.
+  const text = handoffMessageOf({
+    conversation,
+    plan,
+    siteKey,
+    name: shownBuildNameOf(build.snapshot),
+    keepOffSite: heldTextsOfBuild(build.snapshot)
+  })
   const accepted = await promptSiteChat({
     siteKey,
     email,
