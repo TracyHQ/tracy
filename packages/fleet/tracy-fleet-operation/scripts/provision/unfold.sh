@@ -121,7 +121,7 @@ rollback() {
     while IFS= read -r line; do args+=(-e "FARM_SET_$line"); done < "$SITE_DIR/farm/farmside.env"
     tracy_site_web_exec "$LABEL" -i "${args[@]}" -- php -- config-set "$PLATFORM" < "$HERE/farm-site.php" >&2
   fi
-  [ "$CHANGED_NET" = 1 ] && docker network disconnect "${LABEL}_default" "$TRACY_DEMOS_WEB_CONTAINER" >/dev/null 2>&1
+  [ "$CHANGED_NET" = 1 ] && docker network disconnect "${LABEL}_default" "$(tracy_farm_web)" >/dev/null 2>&1
   [ "$VHOST_OUT" = 1 ] && farm_vhost_in
   if [ "$FWD_STOPPED" = 1 ] && [ "$CHANGED_COMPOSE" = 0 ]; then
     docker start "$LABEL-web-1" >/dev/null
@@ -191,7 +191,7 @@ STEP="pointing the CMS back at its own database"
 # stopped, so nothing from outside reaches it before the switch.
 farm_vhost_in
 VHOST_OUT=0
-docker network connect "${LABEL}_default" "$TRACY_DEMOS_WEB_CONTAINER" 2>/dev/null && CHANGED_NET=1 || true
+docker network connect "${LABEL}_default" "$(tracy_farm_web)" 2>/dev/null && CHANGED_NET=1 || true
 if [ "$FORM" != env ]; then
   ( umask 077; tracy_site_web_exec "$LABEL" -i -- php -- config-get "$PLATFORM" < "$HERE/farm-site.php" \
       | grep -v '^form=' > "$SITE_DIR/farm/farmside.env" )

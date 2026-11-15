@@ -11,8 +11,8 @@
 # environment (mail token, access key file), and the farm's compose (a key folder that exists now is
 # mounted). Then both configs are tested in a throwaway farm container BEFORE the running farm sees
 # them; a config that fails puts every file back as it was and changes nothing that serves. Then the
-# farm takes them: a graceful reload, or a re-create when the mounts changed (~1 s for every folded
-# demo — the price lib/demo-farm.sh names).
+# farm takes them: a graceful reload, or a re-create when the mounts changed — a drain, which the other
+# folded demos do not feel (lib/demo-farm.sh, web/demos/entrypoint.sh).
 #
 # Nothing else of any demo is touched, and a label that is not in the farm is said and left alone
 # (exit 0): callers run this for a demo marked `farm` (lib/site-runtime.sh) and need not ask twice.

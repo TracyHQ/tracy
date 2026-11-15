@@ -47,7 +47,13 @@ printf '${name} %s\\n' "$*" >> "$CALLS"
 case "${name} $1 $2" in
   "docker info --format") echo 4; exit 0 ;;
   "docker network inspect") echo "\${FAKE_FRONT_SUBNET:-172.31.9.0/24}"; exit 0 ;;
-  "docker inspect -f") echo "\${FAKE_FARM_IP:-172.30.0.77}"; exit 0 ;;
+  "docker inspect -f")
+    case "$3" in
+      *State.Running*) echo true ;;
+      *farm-config*) echo "\${FAKE_FARM_HASH:-}" ;;
+      *) echo "\${FAKE_FARM_IP:-172.30.0.77}" ;;
+    esac
+    exit 0 ;;
   "iptables -C "*) exit 1 ;;
 esac
 exit 0
@@ -146,7 +152,8 @@ function goLive(h, label, args) {
   writeFileSync(join(demos, 'compose.yml'), '# the farm\n')
   return h.run([P('go-live.sh'), '--label', label, '--root', h.srv, '--platform', 'joomla', ...args], {
     FLEET_ZONE: 'tracy.test',
-    TRACY_TUNNEL: 'none'
+    TRACY_TUNNEL: 'none',
+    ...farmUpToDate(h)
   })
 }
 
@@ -218,6 +225,18 @@ test('go-live.sh --op live on a per-site demo: the firewall step runs as before,
 })
 
 /** farm-common.sh's functions over this host, the way fold/unfold/farm-refresh source them. */
+/** The farm web already serves what the compose renders now (slot a, its hash): an apply only reloads. */
+const farmUpToDate = (h) => {
+  mkdirSync(join(h.srv, '_demos'), { recursive: true })
+  writeFileSync(join(h.srv, '_demos', '.active-web'), 'tracy-demos-web-a\n')
+  const r = h.run([
+    '-c',
+    `set -euo pipefail; S='${SCRIPTS}'; . "$S/lib/roots.sh"; . "$S/provision/render-compose.sh"; tracy_farm_web_hash`
+  ])
+  assert.equal(r.status, 0, r.stderr)
+  return { FAKE_FARM_HASH: r.stdout.trim() }
+}
+
 const common = (h, script, extra) =>
   h.run(
     [
@@ -270,11 +289,16 @@ test('farm-release.sh: the farm lets go of the demo — pool, vhost, schema, use
       `#!/usr/bin/env bash
 printf 'docker %s\\n' "$*" >> "$CALLS"
 case "$*" in *skip_networking*) echo "skip_networking=0" ;; esac
+case "$*" in "inspect -f {{.State.Running}} "*) echo true ;; esac
 exit 0
 `,
       { mode: 0o755 }
     )
-    const r = h.run([P('farm-release.sh'), LABEL, '--root', h.srv], { TRACY_EGRESS_FENCE: 'off' })
+    const r = h.run([P('farm-release.sh'), LABEL, '--root', h.srv], {
+      TRACY_EGRESS_FENCE: 'off',
+      TRACY_FARM_DOWN_WAIT: '0',
+      TRACY_FARM_UP_WAIT: '0'
+    })
     assert.equal(r.status, 0, r.stderr)
     for (const d of ['apache', 'fpm']) assert.equal(existsSync(join(demos, d, `${LABEL}.conf`)), false)
     assert.equal(existsSync(join(demos, 'exec', `${LABEL}.env`)), false)
@@ -290,7 +314,24 @@ exit 0
       calls.some((c) => / compose .* up -d /.test(c)),
       'the farm re-applied'
     )
-    assert.ok(!calls.some((c) => / (stop|down|restart) /.test(c)), 'the farm is never stopped')
+    // The web is REPLACED, not re-created: the next slot starts first, the old one is taken out of every
+    // forwarder (its marker), and only then stopped. The database is never stopped; compose never goes down.
+    const at = (re) => calls.findIndex((c) => re.test(c))
+    const started = at(/ compose .* up -d --no-deps .* demos-web-a$/)
+    const out = at(/^docker exec tracy-demos-web rm -f \/run\/tracy-demos-ready\/ok$/)
+    const stopped = at(/^docker stop -t 45 tracy-demos-web$/)
+    const marked = at(/^docker exec tracy-demos-web-a sh -c mkdir -p \/run\/tracy-demos-ready/)
+    assert.ok(
+      started >= 0 && marked > started && out > marked && stopped > out,
+      `order: ${[started, marked, out, stopped]}`
+    )
+    assert.ok(
+      !calls.some(
+        (c) =>
+          / compose .* (down|stop|restart)\b/.test(c) || /^docker (stop|restart) .*tracy-demos-db/.test(c)
+      )
+    )
+    assert.equal(readFileSync(join(demos, '.active-web'), 'utf8').trim(), 'tracy-demos-web-a')
     assert.doesNotMatch(readFileSync(join(h.srv, LABEL, '.env'), 'utf8'), /^FARM_DB/m)
     assert.equal(existsSync(join(h.srv, LABEL, 'farm')), false)
     assert.equal(existsSync(join(h.srv, LABEL, 'runtime')), false)
@@ -576,7 +617,7 @@ test("pool sockets are Apache's user's alone (0600), never www-data's: no demo's
     // unfold's drain asks a pool's status as root: www-data may not open the socket any more.
     assert.match(
       readFileSync(join(SCRIPTS, 'provision/farm-common.sh'), 'utf8'),
-      /docker exec -i -u 0 "\$TRACY_DEMOS_WEB_CONTAINER" php -n -- /
+      /docker exec -i -u 0 "\$\(tracy_farm_web\)" php -n -- /
     )
   } finally {
     h.dispose()
@@ -602,6 +643,334 @@ test("farm_render writes every member's pool again with the compose: no pool kee
       assert.match(pool, new RegExp(`^listen = /run/tracy-demos/${member}\\.sock$`, 'm'))
     }
     assert.ok(readFileSync(join(h.srv, '_demos', 'compose.yml'), 'utf8').includes('/site/demo-site1'))
+  } finally {
+    h.dispose()
+  }
+})
+
+test('farm-forwarders.sh: opt-in — without --apply nothing restarts; with it only a forwarder on an older config, one at a time', () => {
+  const h = host()
+  try {
+    const demos = join(h.srv, '_demos')
+    for (const d of ['apache', 'fpm', 'exec']) mkdirSync(join(demos, d), { recursive: true })
+    for (const label of [LABEL, 'cur-demo']) writeFileSync(join(demos, 'fpm', `${label}.conf`), '; pool\n')
+    assert.equal(common(h, 'farm_ensure_files').status, 0)
+    const current = readFileSync(join(demos, 'forward.haproxy.cfg'), 'utf8')
+    // What each forwarder runs, kept in files; `docker restart` makes a forwarder read the host's file again.
+    const running = (label) => join(h.dir, `running-${label}.cfg`)
+    writeFileSync(running(LABEL), `${current}# older\n`)
+    writeFileSync(running('cur-demo'), current)
+    writeFileSync(
+      join(h.dir, 'bin', 'docker'),
+      `#!/usr/bin/env bash
+printf 'docker %s\\n' "$*" >> "$CALLS"
+case "$1" in
+  inspect) echo true ;;
+  exec) cat "${h.dir}/running-\${2%-web-1}.cfg" ;;
+  restart) cp "${demos}/forward.haproxy.cfg" "${h.dir}/running-\${4%-web-1}.cfg" ;;
+esac
+exit 0
+`,
+      { mode: 0o755 }
+    )
+    const dry = h.run([P('farm-forwarders.sh'), '--root', h.srv])
+    assert.equal(dry.status, 0, dry.stderr)
+    assert.match(dry.stdout, new RegExp(`${LABEL}: its forwarder runs an older config`))
+    assert.doesNotMatch(dry.stdout, /cur-demo/)
+    assert.deepEqual(
+      h.called().filter((c) => c.startsWith('docker restart')),
+      []
+    )
+    const r = h.run([P('farm-forwarders.sh'), '--root', h.srv, '--apply'])
+    assert.equal(r.status, 0, r.stderr)
+    assert.deepEqual(
+      h.called().filter((c) => c.startsWith('docker restart')),
+      [`docker restart -t 5 ${LABEL}-web-1`]
+    )
+    assert.match(r.stdout, /1 of 1 forwarder\(s\) moved to the current config, 0 failed/)
+    assert.equal(readFileSync(running(LABEL), 'utf8'), current)
+    // A second run finds nothing to do.
+    const again = h.run([P('farm-forwarders.sh'), '--root', h.srv, '--apply'])
+    assert.match(again.stdout, /0 of 0 forwarder\(s\)/)
+  } finally {
+    h.dispose()
+  }
+})
+
+// ── the blue/green switch (farm-common.sh farm_switch), against a docker that remembers its containers ──
+
+/** A docker that keeps state in files: which farm web containers exist, which are ready, what they were given. */
+function statefulDocker(h) {
+  const st = join(h.dir, 'state')
+  mkdirSync(st, { recursive: true })
+  writeFileSync(
+    join(h.dir, 'bin', 'docker'),
+    `#!/usr/bin/env bash
+printf 'docker %s\\n' "$*" >> "$CALLS"
+S="${st}"
+name_of() { for a in "$@"; do case "$a" in tracy-demos-web*) echo "$a"; return ;; esac; done; }
+case "$1" in
+  inspect)
+    n="$(name_of "$@")"
+    [ -e "$S/$n" ] || exit 1
+    case "$3" in
+      *State.Running*) echo true ;;
+      *farm-config*) cat "$S/$n" ;;
+      *.Name*) echo "/$n" ;;
+    esac ;;
+  compose)
+    case "$*" in
+      *" up -d --no-deps "*) n="tracy-demos-web-\${*: -1}"; n="\${n/tracy-demos-web-demos-web-/tracy-demos-web-}"
+        echo "\${FAKE_NEW_HASH:-newhash}" > "$S/$n" ;;
+    esac ;;
+  exec)
+    n="$2"
+    case "$*" in
+      *"curl "*) [ "\${FAKE_UNHEALTHY:-}" = "$n" ] && exit 1; exit 0 ;;
+      *"test -d /run/tracy-demos-ready"*) [ "$n" = tracy-demos-web ] && exit 1; exit 0 ;;
+      *"test -f /run/tracy-demos-ready/ok"*) [ -e "$S/$n.ready" ]; exit $? ;;
+      *"mkdir -p /run/tracy-demos-ready"*) : > "$S/$n.ready" ;;
+      *"rm -f /run/tracy-demos-ready/ok"*) rm -f "$S/$n.ready" ;;
+      *tracy-demos-reload*) exit 0 ;;
+      *"/proc/net/tcp"*) echo 0 ;;
+    esac ;;
+  rm) n="$(name_of "$@")"; rm -f "$S/$n" "$S/$n.ready" ;;
+  stop) n="$(name_of "$@")"; : ;;
+esac
+exit 0
+`,
+    { mode: 0o755 }
+  )
+  const web = (name, { ready = true, hash = 'oldhash' } = {}) => {
+    writeFileSync(join(st, name), `${hash}\n`)
+    if (ready) writeFileSync(join(st, `${name}.ready`), '')
+  }
+  const exists = (name) => existsSync(join(st, name))
+  const isReady = (name) => existsSync(join(st, `${name}.ready`))
+  return { web, exists, isReady }
+}
+
+const apply = (h, extra = {}) =>
+  common(h, 'farm_ensure_files; farm_render; farm_apply', {
+    TRACY_EGRESS_FENCE: 'off',
+    TRACY_FARM_DOWN_WAIT: '0',
+    TRACY_FARM_UP_WAIT: '0',
+    TRACY_FARM_SWITCH_DRAIN: '5',
+    ...extra
+  })
+
+test('farm_switch: the next slot starts and is ready BEFORE the old one leaves its forwarders; then drain, stop, remove', () => {
+  const h = host()
+  try {
+    const d = statefulDocker(h)
+    d.web('tracy-demos-web-a')
+    writeFileSync(join(h.srv, '_demos.tmp'), '')
+    mkdirSync(join(h.srv, '_demos'), { recursive: true })
+    writeFileSync(join(h.srv, '_demos', '.active-web'), 'tracy-demos-web-a\n')
+    const r = apply(h)
+    assert.equal(r.status, 0, r.stderr)
+    const calls = h.called()
+    const at = (re) => calls.findIndex((c) => re.test(c))
+    const started = at(/ compose .* up -d --no-deps .*demos-web-b$/)
+    const healthy = at(/^docker exec tracy-demos-web-b curl /)
+    const ready = at(/^docker exec tracy-demos-web-b sh -c mkdir -p \/run\/tracy-demos-ready/)
+    const out = at(/^docker exec tracy-demos-web-a rm -f \/run\/tracy-demos-ready\/ok$/)
+    const quiet = at(/^docker exec tracy-demos-web-a sh -c\s*$/)
+    const stopped = at(/^docker stop -t 45 tracy-demos-web-a$/)
+    const removed = at(/^docker rm -f tracy-demos-web-a$/)
+    assert.ok(
+      started >= 0 &&
+        healthy > started &&
+        ready > healthy &&
+        out > ready &&
+        quiet > out &&
+        stopped > quiet &&
+        removed > stopped,
+      JSON.stringify({ started, healthy, ready, out, quiet, stopped, removed })
+    )
+    assert.equal(readFileSync(join(h.srv, '_demos', '.active-web'), 'utf8').trim(), 'tracy-demos-web-b')
+    assert.ok(d.exists('tracy-demos-web-b') && d.isReady('tracy-demos-web-b'))
+    assert.ok(!d.exists('tracy-demos-web-a'))
+    assert.ok(
+      !calls.some((c) => /tracy-demos-db/.test(c) && /\b(stop|rm|restart)\b/.test(c)),
+      'the database is never touched'
+    )
+    // The next switch goes back to a.
+    const again = apply(h, { FAKE_NEW_HASH: 'newer' })
+    assert.equal(again.status, 0, again.stderr)
+    assert.equal(readFileSync(join(h.srv, '_demos', '.active-web'), 'utf8').trim(), 'tracy-demos-web-a')
+    assert.ok(!d.exists('tracy-demos-web-b'))
+  } finally {
+    h.dispose()
+  }
+})
+
+test('farm_switch: a pre-slot farm (one container named tracy-demos-web) is replaced by slot a, with no marker to take away', () => {
+  const h = host()
+  try {
+    const d = statefulDocker(h)
+    d.web('tracy-demos-web', { ready: false })
+    const r = apply(h)
+    assert.equal(r.status, 0, r.stderr)
+    const calls = h.called()
+    assert.ok(calls.some((c) => / compose .* up -d --no-deps .*demos-web-a$/.test(c)))
+    // No marker to remove in a pre-slot farm: a current-config forwarder is told it is gone by a 410 on /tracy-ready.
+    assert.ok(
+      !calls.some((c) => /^docker exec tracy-demos-web rm -f /.test(c)),
+      'a pre-slot farm has no marker'
+    )
+    const gone = calls.findIndex((c) =>
+      /^docker exec tracy-demos-web sh -c printf "Redirect gone \/tracy-ready/.test(c)
+    )
+    const stoppedOld = calls.findIndex((c) => /^docker stop -t 45 tracy-demos-web$/.test(c))
+    assert.ok(gone >= 0 && stoppedOld > gone, `410 first, then the stop: ${gone} ${stoppedOld}`)
+    assert.ok(calls.some((c) => /^docker stop -t 45 tracy-demos-web$/.test(c)))
+    assert.ok(!d.exists('tracy-demos-web') && d.exists('tracy-demos-web-a') && d.isReady('tracy-demos-web-a'))
+    assert.equal(readFileSync(join(h.srv, '_demos', '.active-web'), 'utf8').trim(), 'tracy-demos-web-a')
+  } finally {
+    h.dispose()
+  }
+})
+
+test('farm_switch: a new slot that never gets healthy is removed and the serving one is left exactly as it was', () => {
+  const h = host()
+  try {
+    const d = statefulDocker(h)
+    d.web('tracy-demos-web-a')
+    mkdirSync(join(h.srv, '_demos'), { recursive: true })
+    writeFileSync(join(h.srv, '_demos', '.active-web'), 'tracy-demos-web-a\n')
+    const r = apply(h, { FAKE_UNHEALTHY: 'tracy-demos-web-b', TRACY_FARM_WAIT_TRIES: '2' })
+    assert.notEqual(r.status, 0)
+    assert.match(r.stderr, /tracy-demos-web-b did not (come up|answer)/)
+    assert.ok(d.exists('tracy-demos-web-a') && d.isReady('tracy-demos-web-a'), 'marker intact, still there')
+    assert.ok(!d.exists('tracy-demos-web-b'))
+    assert.equal(readFileSync(join(h.srv, '_demos', '.active-web'), 'utf8').trim(), 'tracy-demos-web-a')
+    const calls = h.called()
+    assert.ok(
+      !calls.some((c) => /tracy-demos-web-a/.test(c) && /(rm -f \/run|docker stop|docker rm)/.test(c)),
+      'the serving slot was never touched'
+    )
+  } finally {
+    h.dispose()
+  }
+})
+
+test('farm_apply: a slot that has what compose renders only reloads; a leftover second web is removed first', () => {
+  const h = host()
+  try {
+    const d = statefulDocker(h)
+    mkdirSync(join(h.srv, '_demos', 'fpm'), { recursive: true })
+    const hash = farmUpToDate(h).FAKE_FARM_HASH
+    d.web('tracy-demos-web-a', { hash })
+    d.web('tracy-demos-web-b', { ready: false, hash: 'half-started' })
+    const r = apply(h)
+    assert.equal(r.status, 0, r.stderr)
+    const calls = h.called()
+    assert.ok(!d.exists('tracy-demos-web-b'), 'the leftover of a switch that did not finish is gone')
+    assert.match(r.stderr, /leftover of a switch that did not finish/)
+    assert.ok(!calls.some((c) => / compose .* up -d --no-deps /.test(c)), 'no new slot')
+    assert.ok(
+      calls.some((c) => /^docker exec tracy-demos-web-a tracy-demos-reload$/.test(c)),
+      'a graceful reload inside'
+    )
+  } finally {
+    h.dispose()
+  }
+})
+
+// ── an interrupted switch: settle retires a leftover slot the way a switch does, never kills it ──
+
+/** What settle did to one container: the index of each call that matters, -1 when it never happened. */
+const retireOrder = (calls, name) => {
+  const at = (re) => calls.findIndex((c) => re.test(c))
+  return {
+    unready: at(new RegExp(`^docker exec ${name} rm -f /run/tracy-demos-ready/ok$`)),
+    quiet: at(new RegExp(`^docker exec ${name} sh -c\\s*$`)),
+    stop: at(new RegExp(`^docker stop -t 45 ${name}$`)),
+    removed: at(new RegExp(`^docker rm -f ${name}$`))
+  }
+}
+const settleCase = (name, { servingFile, serving, leftover, leftoverReady }) =>
+  test(`settle after an interrupted switch (${name}): ${leftover} is withdrawn, waited for, stopped, removed; ${serving} keeps serving`, () => {
+    const h = host()
+    try {
+      const d = statefulDocker(h)
+      const hash = farmUpToDate(h).FAKE_FARM_HASH
+      d.web(serving, { hash })
+      d.web(leftover, { ready: leftoverReady, hash: 'half' })
+      writeFileSync(join(h.srv, '_demos', '.active-web'), `${servingFile}\n`)
+      const r = apply(h)
+      assert.equal(r.status, 0, r.stderr)
+      const calls = h.called()
+      const o = retireOrder(calls, leftover)
+      assert.ok(o.removed > o.stop && o.stop > o.quiet && o.quiet >= 0, JSON.stringify(o))
+      if (leftoverReady)
+        assert.ok(
+          o.unready >= 0 && o.unready < o.quiet,
+          `a ready leftover is withdrawn first: ${JSON.stringify(o)}`
+        )
+      else assert.equal(o.unready, -1, 'an unready leftover has nothing to withdraw')
+      const s = retireOrder(calls, serving)
+      assert.deepEqual(Object.values(s), [-1, -1, -1, -1], 'the serving slot is not touched')
+      assert.ok(d.exists(serving) && !d.exists(leftover))
+    } finally {
+      h.dispose()
+    }
+  })
+
+settleCase('cut after the new slot was marked ready, .active-web not yet written', {
+  servingFile: 'tracy-demos-web-a',
+  serving: 'tracy-demos-web-a',
+  leftover: 'tracy-demos-web-b',
+  leftoverReady: true
+})
+settleCase('cut after .active-web changed, the old slot not yet unready', {
+  servingFile: 'tracy-demos-web-b',
+  serving: 'tracy-demos-web-b',
+  leftover: 'tracy-demos-web-a',
+  leftoverReady: true
+})
+settleCase('cut after the old slot was made unready, before it stopped', {
+  servingFile: 'tracy-demos-web-b',
+  serving: 'tracy-demos-web-b',
+  leftover: 'tracy-demos-web-a',
+  leftoverReady: false
+})
+settleCase('cut while the new slot started, never ready', {
+  servingFile: 'tracy-demos-web-a',
+  serving: 'tracy-demos-web-a',
+  leftover: 'tracy-demos-web-b',
+  leftoverReady: false
+})
+
+test('farm_switch: the forwarders get time to start using the new slot BEFORE the old one is withdrawn', () => {
+  const h = host()
+  try {
+    const d = statefulDocker(h)
+    d.web('tracy-demos-web-a')
+    mkdirSync(join(h.srv, '_demos'), { recursive: true })
+    writeFileSync(join(h.srv, '_demos', '.active-web'), 'tracy-demos-web-a\n')
+    // A sleep that only writes down how long it was asked to wait, so the order shows in the call log.
+    writeFileSync(
+      join(h.dir, 'bin', 'sleep'),
+      '#!/usr/bin/env bash\nprintf \'sleep %s\\n\' "$*" >> "$CALLS"\n',
+      {
+        mode: 0o755
+      }
+    )
+    const r = apply(h, { TRACY_FARM_UP_WAIT: '7', TRACY_FARM_DOWN_WAIT: '5' })
+    assert.equal(r.status, 0, r.stderr)
+    const calls = h.called()
+    const at = (re) => calls.findIndex((c) => re.test(c))
+    const ready = at(/^docker exec tracy-demos-web-b sh -c mkdir -p \/run\/tracy-demos-ready/)
+    const up = at(/^sleep 7$/)
+    const withdrawn = at(/^docker exec tracy-demos-web-a rm -f \/run\/tracy-demos-ready\/ok$/)
+    const down = at(/^sleep 5$/)
+    const stopped = at(/^docker stop -t 45 tracy-demos-web-a$/)
+    assert.ok(
+      ready >= 0 && up > ready && withdrawn > up && down > withdrawn && stopped > down,
+      JSON.stringify({ ready, up, withdrawn, down, stopped })
+    )
   } finally {
     h.dispose()
   }

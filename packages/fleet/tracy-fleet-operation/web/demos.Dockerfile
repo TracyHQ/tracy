@@ -75,5 +75,8 @@ RUN ln -sf /usr/local/bin/tracy-sendmail /usr/sbin/sendmail \
  && apache2ctl -t
 
 LABEL tracy.site-mail="v1"
+# The base image's STOPSIGNAL is SIGQUIT, which this entrypoint did not trap (a stop waited out Docker's
+# timeout and was killed); the entrypoint drains on TERM, INT and QUIT, and TERM is declared here.
+STOPSIGNAL SIGTERM
 EXPOSE 8080
 ENTRYPOINT ["tracy-demos-entrypoint"]

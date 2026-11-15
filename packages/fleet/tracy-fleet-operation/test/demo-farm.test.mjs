@@ -112,7 +112,8 @@ test('web exec: in the farm it is tracy-demos-web, as the demo (its docroot, its
     mkdirSync(join(h.srv, '_demos', 'exec'), { recursive: true })
     writeFileSync(join(h.srv, '_demos', 'exec', 'demo1.env'), 'TRACY_MAIL_LABEL=demo1\n')
     ok(h.bash('tracy_site_web_exec demo1 -w /var/www/html/administrator -e A=1 -- ls'))
-    assert.deepEqual(h.docker(), [
+    const execs = () => h.docker().filter((l) => !l.includes('[inspect]'))
+    assert.deepEqual(execs(), [
       `MYSQL_PWD= ARGV [exec] [-u] [www-data] [-w] [/site/demo1/.webroot/administrator] [--env-file] [${h.srv}/_demos/exec/demo1.env] [-e] [A=1] [tracy-demos-web] [ls]`
     ])
     for (const user of ['root', '0', '0:0']) {
@@ -123,7 +124,7 @@ test('web exec: in the farm it is tracy-demos-web, as the demo (its docroot, its
     const outside = h.bash('tracy_site_web_exec demo1 -w /site/other/.webroot -- ls')
     assert.notEqual(outside.status, 0)
     assert.match(outside.stderr, /outside the demo's own folder/)
-    assert.equal(h.docker().length, 1, 'nothing refused reached docker')
+    assert.equal(execs().length, 1, 'nothing refused reached docker')
   } finally {
     h.dispose()
   }
@@ -274,7 +275,9 @@ test('farm compose: mounts the members and nothing else; its database is interna
     writeFileSync(join(h.srv, '_demos', 'fpm', 'demo1.conf'), '[demo1]\n')
     compose = ok(h.bash('tracy_farm_render_compose', { TRACY_DEMOS_MAIL_NETWORK: '' }))
     assert.match(compose, /^name: tracy-demos$/m)
-    assert.match(compose, /container_name: tracy-demos-web/)
+    assert.match(compose, /^ {2}demos-web-a:\n(?:.*\n)*? {4}container_name: tracy-demos-web-a$/m)
+    assert.match(compose, /container_name: tracy-demos-web-b$/m)
+    assert.doesNotMatch(compose, /container_name: tracy-demos-web$/m, 'no container keeps the bare name')
     assert.match(compose, /container_name: tracy-demos-db/)
     assert.match(
       compose,
@@ -303,7 +306,10 @@ test('farm compose: mounts the members and nothing else; its database is interna
     writeFileSync(join(h.srv, '.site-access', 'demo1', 'key.json'), '{}')
     compose = ok(h.bash('tracy_farm_render_compose', { TRACY_DEMOS_MAIL_NETWORK: 'tracy_tracy' }))
     assert.ok(compose.includes(`      - ${h.srv}/.site-access/demo1:/run/tracy-access/demo1:ro\n`))
-    assert.match(compose, /networks: \[front, back, mail\]/)
+    assert.match(
+      compose,
+      /    networks:\n      front:\n        aliases: \["tracy-demos-web"\]\n      back: \{\}\n      mail: \{\}\n/
+    )
     assert.match(compose, /mail:\n {4}external: true\n {4}name: tracy_tracy/)
   } finally {
     h.dispose()
@@ -403,20 +409,166 @@ test('the farm is never a runtime for EmDash', () => {
   }
 })
 
-test('forwarder config: TCP to the demo own farm listener, re-resolving the farm', () => {
+test('forwarder config: TCP to the demo own farm listener, one server per farm web address, re-resolving', () => {
   const h = host()
   try {
     const cfg = ok(h.bash('tracy_farm_forward_cfg'))
     assert.match(cfg, /mode tcp/)
     assert.match(cfg, /bind :80/)
-    assert.match(cfg, /server farm "tracy-demos-web:\$\{TRACY_DEMO_PORT\}" resolvers docker/)
+    assert.match(
+      cfg,
+      /server-template farm \d+ "tracy-demos-web:\$\{TRACY_DEMO_PORT\}" resolvers docker init-addr none/
+    )
     assert.match(cfg, /nameserver dns 127\.0\.0\.11:53/)
   } finally {
     h.dispose()
   }
 })
 
-// ── fold / unfold refusals ─────────────────────────────────────────────────────────────────────
+test('forwarder config: a new connection goes only to a farm web that answers ready, and a slot is out before it stops', () => {
+  const h = host()
+  try {
+    const cfg = ok(h.bash('tracy_farm_forward_cfg'))
+    // The health check: the farm's readiness page on its own port, 200 only.
+    assert.match(cfg, /^ {4}option httpchk$/m, 'without it haproxy ignores the http-check rules')
+    assert.match(cfg, /http-check send meth GET uri \/tracy-ready /)
+    assert.match(
+      cfg,
+      /^ {4}http-check expect rstatus \^\(200\|403\)\$$/m,
+      'ready slot (200) or a pre-slot farm (403); 404 and 410 are out'
+    )
+    const def = cfg.match(/^ {4}default-server (.*)$/m)?.[1] ?? ''
+    assert.match(def, /\bcheck\b/)
+    assert.match(def, /\bport 8080\b/)
+    const ms = (k) => Number(def.match(new RegExp(`\\b${k} (\\d+)ms`))?.[1])
+    const n = (k) => Number(def.match(new RegExp(`\\b${k} (\\d+)\\b`))?.[1])
+    const inter = ms('inter'),
+      down = ms('downinter'),
+      fall = n('fall'),
+      rise = n('rise')
+    assert.ok(inter > 0 && inter <= 1000 && fall >= 1 && fall <= 3 && rise >= 1 && rise <= 3, def)
+    const checkTimeout = Number(cfg.match(/^ {4}timeout check (\d+)s$/m)?.[1]) * 1000
+    // What the switcher waits after taking the marker away must outlast what a forwarder needs to see it.
+    const wait = Number(ok(h.bash('tracy_farm_down_wait'))) * 1000
+    assert.ok(
+      down > 0 && wait >= (down * fall + checkTimeout) * 1.5,
+      `down wait ${wait} ms vs ${down}×${fall}+${checkTimeout}`
+    )
+    // The new slot must be USED by every forwarder before the old one is withdrawn (a window with no server at all
+    // closes every connection in it): its address from DNS (hold valid + resolve timeout), then `rise` checks.
+    const holdValid = Number(cfg.match(/^ {4}hold valid (\d+)s$/m)?.[1])
+    const resolveTimeout = Number(cfg.match(/^ {4}timeout resolve (\d+)s$/m)?.[1])
+    const up = Number(ok(h.bash('tracy_farm_up_wait'))) * 1000
+    assert.ok(up >= (holdValid + resolveTimeout) * 1000 + inter * rise + checkTimeout, `up wait ${up} ms`)
+    // A refused/unreachable connect goes to another server; the last address survives a DNS hiccup.
+    assert.match(cfg, /^ {4}option redispatch$/m)
+    for (const kind of ['nx', 'other', 'refused', 'timeout'])
+      assert.ok(Number(cfg.match(new RegExp(`^ {4}hold ${kind} (\\d+)s$`, 'm'))?.[1]) >= 10, kind)
+    assert.match(cfg, /^ {4}hold valid 2s$/m)
+    assert.match(cfg, /^ {4}hold obsolete 2s$/m, 'a gone slot frees its server for the next one')
+  } finally {
+    h.dispose()
+  }
+})
+
+test('farm compose: two web slots with the same alias, one hash; the database is rendered once', () => {
+  const h = host()
+  try {
+    const compose = ok(h.bash('tracy_farm_render_compose', { TRACY_DEMOS_MAIL_NETWORK: '' }))
+    const slot = (x) =>
+      compose.slice(
+        compose.indexOf(`  demos-web-${x}:`),
+        compose.indexOf(x === 'a' ? '  demos-web-b:' : '  demos-db:')
+      )
+    const a = slot('a'),
+      b = slot('b')
+    assert.ok(a.length > 200 && b.length > 200)
+    assert.equal(a.replaceAll('-a', '-x'), b.replaceAll('-b', '-x'), 'the slots differ by their name only')
+    for (const x of [a, b]) {
+      assert.match(x, /^ {4}stop_signal: SIGTERM$/m)
+      assert.match(
+        x,
+        /^ {6}front:\n {8}aliases: \["tracy-demos-web"\]$/m,
+        'both answer to the farm name on the front network'
+      )
+    }
+    const hash = ok(h.bash('tracy_farm_web_hash')).trim()
+    assert.match(hash, /^[0-9a-f]{16}$/)
+    assert.equal(a.match(/tracy\.farm-config: "([0-9a-f]+)"/)?.[1], hash)
+    assert.equal(b.match(/tracy\.farm-config: "([0-9a-f]+)"/)?.[1], hash)
+    // The hash follows what the slot is given: a member, the image — and nothing else.
+    assert.equal(ok(h.bash('tracy_farm_web_hash')).trim(), hash)
+    mkdirSync(join(h.srv, '_demos', 'fpm'), { recursive: true })
+    writeFileSync(join(h.srv, '_demos', 'fpm', 'demo1.conf'), '[demo1]\n')
+    const withMember = ok(h.bash('tracy_farm_web_hash')).trim()
+    assert.notEqual(withMember, hash)
+    assert.notEqual(
+      ok(h.bash('tracy_farm_web_hash', { TRACY_DEMOS_IMAGE: 'tracy/web-demos:other' })).trim(),
+      withMember
+    )
+  } finally {
+    h.dispose()
+  }
+})
+
+test('farm compose: the web drains on stop — a grace period that outlasts Apache and FPM, and Apache drain is bounded', () => {
+  const h = host()
+  try {
+    const compose = ok(h.bash('tracy_farm_render_compose', { TRACY_DEMOS_MAIL_NETWORK: '' }))
+    const web = compose.slice(compose.indexOf('  demos-web-a:'), compose.indexOf('  demos-web-b:'))
+    const grace = Number(web.match(/^ {4}stop_grace_period: (\d+)s$/m)?.[1])
+    const apache = readFileSync(new URL('../web/demos/apache-farm.conf', import.meta.url), 'utf8')
+    const shutdown = Number(apache.match(/^GracefulShutdownTimeout (\d+)$/m)?.[1])
+    assert.ok(shutdown > 0, 'Apache waits for running requests, but not forever')
+    assert.ok(
+      grace > shutdown,
+      `stop_grace_period ${grace} s must outlast GracefulShutdownTimeout ${shutdown} s`
+    )
+    assert.ok(!compose.slice(compose.indexOf('  demos-db:')).includes('stop_grace_period'))
+  } finally {
+    h.dispose()
+  }
+})
+
+test('farm compose: the database service does not depend on the members (a fold never re-creates it)', () => {
+  const h = host()
+  try {
+    const dbPart = (compose) => compose.slice(compose.indexOf('  demos-db:'), compose.indexOf('\nnetworks:'))
+    const before = dbPart(ok(h.bash('tracy_farm_render_compose', { TRACY_DEMOS_MAIL_NETWORK: '' })))
+    mkdirSync(join(h.srv, '_demos', 'fpm'), { recursive: true })
+    writeFileSync(join(h.srv, '_demos', 'fpm', 'demo1.conf'), '[demo1]\n')
+    const after = dbPart(ok(h.bash('tracy_farm_render_compose', { TRACY_DEMOS_MAIL_NETWORK: '' })))
+    assert.ok(before.length > 100)
+    assert.equal(after, before)
+  } finally {
+    h.dispose()
+  }
+})
+
+test('farm entrypoint: TERM, INT and QUIT drain Apache (WINCH) first, then php-fpm (QUIT); a crash still ends the farm', () => {
+  const sh = readFileSync(new URL('../web/demos/entrypoint.sh', import.meta.url), 'utf8')
+  // The base image's STOPSIGNAL is SIGQUIT: a trap on TERM and INT alone left a stop waiting out Docker's timeout.
+  assert.match(sh, /^trap drain TERM INT QUIT$/m)
+  const dockerfile = readFileSync(new URL('../web/demos.Dockerfile', import.meta.url), 'utf8')
+  assert.match(dockerfile, /^STOPSIGNAL SIGTERM$/m)
+  const drain = sh.slice(sh.indexOf('drain() {'), sh.indexOf('trap drain'))
+  assert.ok(
+    drain.indexOf('kill -WINCH "$web"') >= 0 &&
+      drain.indexOf('kill -QUIT "$fpm"') > drain.indexOf('kill -WINCH "$web"')
+  )
+  assert.ok(
+    drain.indexOf('wait "$web"') > drain.indexOf('kill -WINCH') &&
+      drain.indexOf('wait "$web"') < drain.indexOf('kill -QUIT'),
+    'FPM quits only after Apache is gone'
+  )
+  assert.doesNotMatch(drain, /kill -TERM/)
+  assert.match(sh, /ended \(exit \$rc\) — stopping the farm/)
+  assert.match(sh, /exit 1\n$/)
+  // A fresh container is not ready; a restarted one keeps its marker.
+  assert.doesNotMatch(sh, /rm -f \/run\/tracy-demos-ready/)
+  const apache = readFileSync(new URL('../web/demos/apache-farm.conf', import.meta.url), 'utf8')
+  assert.match(apache, /Alias \/tracy-ready \/run\/tracy-demos-ready\/ok/)
+})
 
 test('fold refuses a customer site, an EmDash site, and a label it cannot find — before touching docker', () => {
   for (const [platform, demo, want] of [

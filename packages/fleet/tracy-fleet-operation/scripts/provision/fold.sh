@@ -308,7 +308,7 @@ if [ "$FORM" != env ]; then
 fi
 CHANGED_HTACCESS=1
 farm_member_php -- htaccess-farm
-docker exec "$TRACY_DEMOS_WEB_CONTAINER" tracy-demos-reload >/dev/null
+docker exec "$(tracy_farm_web)" tracy-demos-reload >/dev/null
 
 # ── 6. the farm answers as the demo did ─────────────────────────────────────────────────────────
 STEP="checking the farm answers as $LABEL did"

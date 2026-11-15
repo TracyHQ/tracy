@@ -338,7 +338,7 @@ export const READ_ONLY_BLANKED_ENV = Object.freeze(['WORDPRESS_DB_PASSWORD'])
 /**
  * A template demo folded into the host's demo farm (fleet `scripts/lib/demo-farm.sh`): its
  * `<label>-web-1` is a TCP forwarder (docker label `tracy.runtime=farm`) with no PHP, no CMS and no
- * site files, and its PHP runs in the shared `tracy-demos-web`, which no seat may exec into (the
+ * site files, and its PHP runs in the shared farm web (`tracy-demos-web`, or its slots `tracy-demos-web-a` / `-b`), which no seat may exec into (the
  * docker proxy, `dsh/docker-proxy.haproxy.cfg`, allows exec into `*-web-1` names only). So a command
  * for such a site is refused by name instead of landing in the forwarder. Template demos carry no
  * seat (tracy-web's demo upsert grants none), so no person's agent is meant to reach one.

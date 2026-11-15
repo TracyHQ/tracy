@@ -20,6 +20,8 @@ import path from 'node:path'
 export const RUNTIME_MARKER = 'runtime'
 /** The farm's containers (`scripts/lib/site-runtime.sh`). */
 export const FARM_WEB_CONTAINER = 'tracy-demos-web'
+/** The farm web is two slots (`tracy-demos-web-a` / `-b`, scripts/provision/farm-common.sh `farm_switch`); a host that folded before slots has the one bare name. */
+const FARM_WEB_NAME = /^tracy-demos-web(-[ab])?$/
 export const FARM_DB_CONTAINER = 'tracy-demos-db'
 /** The per-site container's docroot, and the path the farm (and every per-site container) mounts it at too. */
 export const SITE_DOCROOT = '/var/www/html'
@@ -65,9 +67,21 @@ async function dotenv(privateRoot, label, key) {
 }
 
 /**
+ * The farm web container that serves now: the name the switcher wrote to `<farm>/.active-web`
+ * (`lib/site-runtime.sh` `tracy_farm_web`, the shell twin), else the bare `tracy-demos-web`. A name that
+ * is not one of the three the farm has is ignored — the file is data, never an argument it chooses.
+ * @param {string} privateRoot
+ */
+export async function farmWebContainer(privateRoot) {
+  const text = await readFile(path.join(demosDir(privateRoot), '.active-web'), 'utf8').catch(() => '')
+  const name = text.split('\n')[0].trim()
+  return FARM_WEB_NAME.test(name) ? name : FARM_WEB_CONTAINER
+}
+
+/**
  * The docker argv that runs `cmd` in a site's web context.
  *   site: `exec [-i] -u <user> -w <dir> [-e…] <label>-web-1 cmd…` (dir defaults to /var/www/html)
- *   farm: `exec [-i] -u <user> -w <dir> --env-file <farm>/exec/<label>.env [-e…] tracy-demos-web cmd…`
+ *   farm: `exec [-i] -u <user> -w <dir> --env-file <farm>/exec/<label>.env [-e…] <serving farm web slot> cmd…`
  *         — /var/www/html[/…] maps to /site/<label>/.webroot[/…]; root and a dir outside
  *         /site/<label> are refused.
  * @param {{ privateRoot: string, label: string, user?: string, workdir?: string,
@@ -99,7 +113,8 @@ export async function siteWebExecArgv(opts, cmd) {
     )
   }
   const envFile = path.join(demosDir(privateRoot), 'exec', `${label}.env`)
-  return [...head, '-u', user, '-w', dir, '--env-file', envFile, ...envArgs, FARM_WEB_CONTAINER, ...cmd]
+  const web = await farmWebContainer(privateRoot)
+  return [...head, '-u', user, '-w', dir, '--env-file', envFile, ...envArgs, web, ...cmd]
 }
 
 /**
