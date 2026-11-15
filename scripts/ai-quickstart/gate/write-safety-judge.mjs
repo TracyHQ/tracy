@@ -13,7 +13,16 @@ import { BUILD_GUARDS, RUN_STATE_CODES } from './build-guards.mjs'
 import { codesIn } from './marker-codec.mjs'
 
 /** The kinds that fail write safety. */
-export const FAILING = new Set(['server_error', 'site_unreachable', 'door_refused', 'markup_injected'])
+// A stop or a broken page the step limit left untraced fails too: the plain build wrote and answered, so a value of the
+// pass broke it, even when no step was left to name which.
+export const FAILING = new Set([
+  'server_error',
+  'site_unreachable',
+  'door_refused',
+  'markup_injected',
+  'stop_not_traced',
+  'page_not_traced'
+])
 
 /** The codes a door run gives after its retries: a site answer, never a guard of the build. */
 const SITE_STOPS = new Set(['redo_failed', 'read_back_mismatch'])
@@ -38,7 +47,10 @@ export function stopClassOf(report) {
   const code = report?.code == null ? 'no_code' : String(report.code)
   const cause = report?.details?.cause != null ? String(report.details.cause) : null
   const op = report?.details?.op ?? report?.details?.record ?? null
-  const out = (kind) => ({ kind, code, cause, op })
+  // The column or slot a read back names (`step-chain-draft-write-check.js`): where in the operation it differed.
+  const column = report?.details?.column ?? null
+  const slot = report?.details?.slot ?? null
+  const out = (kind) => ({ kind, code, cause, op, ...(column ? { column } : {}), ...(slot ? { slot } : {}) })
   if (code === 'redo_failed') {
     if (UNREACHABLE.test(cause ?? '')) return out('site_unreachable')
     if (cause == null || SERVER_CAUSES.test(cause)) return out('server_error')

@@ -20,7 +20,21 @@ const KIND = {
   unclassified: 'It stopped with a code the gate does not know',
   door_refused: 'The site refused it',
   markup_injected: 'The page ran it as code',
-  refused_by_build: 'The build refused it (recorded only)'
+  refused_by_build: 'The build refused it (recorded only)',
+  stop_not_traced: 'The write stopped here; no step was left to name the field',
+  page_not_traced: 'The page broke; no step was left to name the field'
+}
+
+/** Where a finding was stored: its operation, then its slot or column. */
+const whereOf = (f) =>
+  [f.location?.op ?? f.op, f.location?.slot ?? f.slot ?? f.location?.column ?? f.column]
+    .filter(Boolean)
+    .join(' ')
+/** How a finding was named, in plain words. */
+const EVIDENCE = {
+  named_alone: 'the only value stored where it stopped',
+  built_alone: 'refused when built alone',
+  trial: 'isolated by trials'
 }
 
 const table = (head, rows, empty = 'None.') =>
@@ -87,11 +101,16 @@ export function measurementsHtml(measurements = {}) {
     .map((l) => '<div><span>' + esc(l.name) + '</span><span>' + esc(l.line) + '</span></div>')
     .join('')
   const findings = (m.writeSafety?.findings ?? []).map((f) => [
-    f.page,
-    f.storeBlock ?? f.block,
-    f.field,
-    f.probe,
-    KIND[f.kind] ?? f.kind
+    f.page ?? '',
+    f.storeBlock ?? f.block ?? '',
+    f.field ?? '',
+    f.item ?? '',
+    whereOf(f),
+    f.probe ??
+      (f.culprit === 'not_traced' ? 'not traced (' + n(f.suspects ?? 0, 'suspect', 'suspects') + ')' : ''),
+    (KIND[f.kind] ?? f.kind) +
+      (f.culprit === 'not_traced' && f.class ? ' (' + (KIND[f.class] ?? f.class) + ')' : ''),
+    f.culprit === 'not_traced' ? '' : (EVIDENCE[f.evidence] ?? '')
   ])
   const s = m.structure ?? {}
   const q = m.quality ?? {}
@@ -108,7 +127,7 @@ export function measurementsHtml(measurements = {}) {
     '</div>' +
     '<h2>Write safety: what a customer could type</h2>' +
     table(
-      ['Page', 'Block', 'Field', 'Value tried', 'What happened'],
+      ['Page', 'Block', 'Field', 'Item', 'Stored at', 'Value tried', 'What happened', 'How it was named'],
       findings,
       emptyOf(m.writeSafety, 'no value a customer could type broke a page or was refused.')
     ) +

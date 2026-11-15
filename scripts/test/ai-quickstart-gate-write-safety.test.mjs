@@ -152,13 +152,18 @@ test('a spent budget is incomplete, never passed', async () => {
   assert.equal(short.result.status, 'incomplete')
   assert.equal(short.result.incomplete, 'passes')
   assert.ok(short.result.missing.length > 0)
-  // A page error the bisection has no step left for: the field stays unnamed and the measurement says so.
+  // A page error the bisection has no step left for: the field stays unnamed and the measurement says so. The page
+  // broke all the same, so the measurement fails (review 4 X4), with the untraced page as its finding.
   const spent = await measure(
     { pageFails: (html) => /data-m="hero-home" data-v="[^"]*\{loadposition/.test(html) },
     { limits: { ...LIMITS, steps: 0 } }
   )
-  assert.equal(spent.result.status, 'incomplete')
+  assert.equal(spent.result.status, 'failed')
   assert.equal(spent.result.incomplete, 'steps')
+  assert.deepEqual(
+    spent.result.findings.filter((f) => f.kind === 'page_not_traced').map((f) => [f.culprit, f.why]),
+    [['not_traced', 'steps']]
+  )
   let t = 0
   const late = await measure({}, { now: () => (t += 20 * 60000) })
   assert.equal(late.result.status, 'incomplete')

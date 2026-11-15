@@ -25,7 +25,8 @@ export function resultOf({
   stop,
   coverage,
   was,
-  spent
+  spent,
+  parked = new Map()
 }) {
   const missing = ledger.missing(places, probes)
   const rows = ledger.rows()
@@ -40,6 +41,19 @@ export function resultOf({
       notInFinishedPass[why] = (notInFinishedPass[why] ?? 0) + 1
     }
   const failed = findings.some((f) => FAILING.has(f.kind))
+  // How each place ends: tested on the site, refused with its own evidence (a finding names it), or untested with why.
+  const named = new Set(findings.filter((f) => f.place).map((f) => f.place))
+  const ends = { tested: 0, refused: 0, untested: [] }
+  for (const p of places) {
+    if (onSite.has(p.key)) ends.tested += 1
+    else if (parked.has(p.key)) ends.untested.push({ place: p.key, ...parked.get(p.key) })
+    else if (named.has(p.key) && !missing.some((m) => m.place === p.key)) ends.refused += 1
+    else
+      ends.untested.push({
+        place: p.key,
+        why: named.has(p.key) ? 'probes_left' : notProbedWhy(rows.filter((r) => r.place === p.key))
+      })
+  }
   const why =
     incomplete ??
     (missing.length
@@ -59,6 +73,7 @@ export function resultOf({
     placeKeys: places.map((p) => p.key),
     passes,
     findings,
+    ends,
     ledger: rows,
     missing,
     notSiteTested,

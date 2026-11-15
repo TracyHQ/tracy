@@ -91,10 +91,21 @@ function variantLine(name, v, hidden = false) {
   )
 }
 
+/** Why a place ended untested, in plain words. */
+const UNTESTED = {
+  suspect_of_untraced_stop: 'set aside as suspects of a stop no step was left to trace',
+  suspect_of_untraced_page: 'set aside as suspects of a broken page no step was left to trace',
+  no_pass_reached_it: 'no pass reached them',
+  refused_or_failed: 'every probe they got was refused or failed',
+  probe_not_written: 'the build wrote another value than the probe',
+  probes_left: 'some of their probes were never tried'
+}
+
 /** What write safety reached and found, true in every state. */
 function writeSafetyLine(m) {
   const p = m.places ?? {}
-  const site = (m.findings ?? []).filter((f) => f.kind !== 'refused_by_build').length
+  const untraced = (m.findings ?? []).filter((f) => f.culprit === 'not_traced').length
+  const site = (m.findings ?? []).filter((f) => f.kind !== 'refused_by_build').length - untraced
   const build = (m.findings ?? []).filter((f) => f.kind === 'refused_by_build').length
   const could = m.coverage?.places?.couldTakeProbe
   const parts = [
@@ -109,10 +120,36 @@ function writeSafetyLine(m) {
   const notProbed = Object.values(m.coverage?.notProbed ?? {}).reduce((a, b) => a + b, 0)
   if (notProbed)
     parts.push(n(notProbed, 'written place', 'written places') + ' not probed (listed with the reason)')
-  if (site)
+  // An untraced stop is at least one value: its field was not named, so the count is a floor.
+  if (untraced)
+    parts.push(
+      'at least ' +
+        n(site + untraced, 'value', 'values') +
+        ' a customer could type broke a page or the site refused it (' +
+        site +
+        ' traced to a field, ' +
+        n(untraced, 'stop', 'stops') +
+        ' left untraced)'
+    )
+  else if (site)
     parts.push(n(site, 'value', 'values') + ' a customer could type broke a page or the site refused it')
   if (build)
     parts.push(n(build, 'value', 'values') + ' the build refused, recorded and not tested on the site')
+  const untested = m.ends?.untested ?? []
+  if (untested.length) {
+    const by = {}
+    for (const u of untested) by[u.why] = (by[u.why] ?? 0) + 1
+    parts.push(
+      n(untested.length, 'place', 'places') +
+        ' untested (' +
+        Object.entries(by)
+          .map(([k, v]) => v + ' ' + (UNTESTED[k] ?? k.replaceAll('_', ' ')))
+          .join(', ') +
+        ')'
+    )
+  }
+  // A failed measurement that also stopped early says so: the counts are of what it reached, not of every place.
+  if (m.status === 'failed' && m.incomplete) parts.push('the measurement then stopped: ' + whyOf(m))
   if (m.status === 'passed') parts.push('nothing a customer could type broke a page')
   return parts.join('; ')
 }

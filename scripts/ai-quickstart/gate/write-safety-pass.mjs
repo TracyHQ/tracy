@@ -4,7 +4,12 @@
 // the site, and only where the probe is found in what was written for that place (`write-safety-reached.mjs`): a probe
 // the build dropped is `not_written` and its place untested, and a probe never written is never judged as run by a
 // page. A stop of the run's own state ends the pass with no culprit sought. A pass runs again after each culprit found on
-// the site is taken out, at most `reruns` times. Pure but for the injected parts.
+// the site is taken out, at most `reruns` times. A site stop is searched only among the places stored where it names (its
+// operation, and the column or slot a read back names); the one place stored there is blamed by the stop itself, more
+// are halved, one trial per halving (the rerun meets any other culprit). A stop or a broken page the step limit leaves
+// untraced is a finding of its own (`stop_not_traced`, `page_not_traced`): its suspects are set aside (`park`) as
+// untested with that reason and the pass runs again without them, so every stop it meets is recorded. Pure but for the
+// injected parts.
 import { bisect } from './bisect.mjs'
 import { buildCulprits, pageCulprits, stopOf } from './write-safety-trials.mjs'
 import { buildRefusalOf, judgePage, pageBroken, stopClassOf } from './write-safety-judge.mjs'
@@ -26,7 +31,12 @@ async function builtInMemory(n, active, ctx, take) {
     if (late()) return { incomplete: 'time' }
     const a = await attempt(active)
     for (const [key, problems] of a.opts.refused) {
-      record(key, active.get(key), { kind: 'refused_by_build', code: 'page_copy_check', problems }, n)
+      record(
+        key,
+        active.get(key),
+        { kind: 'refused_by_build', code: 'page_copy_check', problems, evidence: 'named_alone' },
+        n
+      )
       active.delete(key)
     }
     const refusal = buildRefusalOf(a, ctx.plainGaps)
@@ -45,7 +55,8 @@ async function builtInMemory(n, active, ctx, take) {
  * @returns {Promise<{runs: number, incomplete?: string}>}
  */
 export async function onePass(n, assignment, ctx, limits) {
-  const { writeOn, record, budget, site, ledger } = ctx
+  const { writeOn, record, budget, site, ledger, park, untraced } = ctx
+  let short = null
   const active = new Map(assignment)
   const take = (culprits) => {
     for (const { unit, failure } of culprits) {
@@ -67,10 +78,40 @@ export async function onePass(n, assignment, ctx, limits) {
         const at = index.get(String(a.opts.used.get(key).code).toUpperCase())
         return !stop.op || !at || at.some((s) => s.op === stop.op)
       }
-      const units = [...a.opts.used.keys()].filter(inOp)
-      const found = await bisect(units, (subset) => stopOf(subset, active, ctx), budget, stop)
+      let units = [...a.opts.used.keys()].filter(inOp)
+      // A read back names the column or the slot that differed: only the places stored there are suspects.
+      const there = units.filter((key) =>
+        (index.get(String(a.opts.used.get(key).code).toUpperCase()) ?? []).some(
+          (s) =>
+            s.op === stop.op &&
+            (stop.slot ? s.loc?.slot === stop.slot : stop.column ? s.loc?.column === stop.column : false)
+        )
+      )
+      if (there.length) units = there
+      if (units.length === 1) {
+        take([{ unit: units[0], failure: { ...stop, evidence: 'named_alone' } }])
+        continue
+      }
+      const found = await bisect(units, (subset) => stopOf(subset, active, ctx), budget, stop, {
+        firstOnly: true
+      })
       take(found.culprits)
-      if (!found.culprits.length) return { runs: run, incomplete: unnamed(found, 'steps') }
+      if (!found.culprits.length) {
+        short ??= unnamed(found, 'steps')
+        untraced({
+          ...stop,
+          kind: 'stop_not_traced',
+          class: stop.kind,
+          pass: n,
+          suspects: units,
+          why: unnamed(found, 'steps')
+        })
+        if (!units.length) return { runs: run, incomplete: short }
+        for (const key of units) {
+          park(key, { why: 'suspect_of_untraced_stop', op: stop.op ?? null, code: stop.code })
+          active.delete(key)
+        }
+      }
       continue
     }
     const pages = await site.pages(a.built, w.record)
@@ -98,7 +139,26 @@ export async function onePass(n, assignment, ctx, limits) {
     if (broken) {
       const found = await pageCulprits(broken.page, broken.failure, a, w, active, ctx)
       take(found.culprits)
-      if (!found.culprits.length) return { runs: run, incomplete: unnamed(found, 'steps') }
+      if (!found.culprits.length) {
+        // An untraced broken page: its suspects are every probe of the pass that page could show.
+        const suspects = found.suspects ?? [...a.opts.used.keys()].filter((k) => active.has(k))
+        short ??= unnamed(found, 'steps')
+        if (!suspects.length) return { runs: run, incomplete: short }
+        untraced({
+          ...broken.failure,
+          kind: 'page_not_traced',
+          class: broken.failure.kind,
+          page: broken.page.pageType ?? null,
+          cause: broken.failure.cause ?? broken.page.pageType ?? null,
+          pass: n,
+          suspects,
+          why: unnamed(found, 'steps')
+        })
+        for (const key of suspects) {
+          park(key, { why: 'suspect_of_untraced_page', page: broken.page.pageType ?? null })
+          active.delete(key)
+        }
+      }
       continue
     }
     for (const [key, probe] of active)
@@ -110,7 +170,7 @@ export async function onePass(n, assignment, ctx, limits) {
           pass: n,
           seen: shown.has(key)
         })
-    return { runs: run }
+    return short ? { runs: run, incomplete: short } : { runs: run }
   }
-  return { runs: limits.reruns + 1, incomplete: 'reruns' }
+  return { runs: limits.reruns + 1, incomplete: short ?? 'reruns' }
 }

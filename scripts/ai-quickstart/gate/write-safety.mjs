@@ -22,11 +22,15 @@ import { packPass, probeLedger } from './write-probes.mjs'
  * The limits of one run of the measurement (#586), from the times measured on a real T4 template (plugin 0.24.85, a
  * database snapshot reset): a marker build in memory about 7 s, a full site write about 40 s, a reset and the page
  * reads about 30 s, so a pass about 80 s. A pass gives a place one probe, so the passes cover the place that takes most
- * probes (21); 21 clean passes take about 28 minutes. Site steps (a fresh site and a write each, about 70 s) are
- * limited; builds in memory (about 1.5 s each) are only counted, and a refusal found in memory is no rerun. Past a
- * limit the measurement is `incomplete` and the next run into the same run folder resumes it.
+ * probes (21); 21 clean passes take about 28 minutes. Site steps (a fresh site and a write each, about 20 s when the
+ * write stops early, 70 s when it runs to the end) are limited; builds in memory (about 1.5 s each) are only counted,
+ * and a refusal found in memory is no rerun. A site stop names its operation and, for a read back, the column or slot:
+ * on JA Boxing (run 4) that is one probed place, blamed with no step, so a stop costs one rerun of the pass, not a
+ * bisection over the pass (about 9 steps each in run 4, which left 0 of 316 places tested). A pass may meet many such
+ * stops, hence `reruns` 20 per pass; the time limit bounds them all. Past a limit the measurement is `incomplete` and
+ * the next run into the same run folder resumes it (a resumed record is never released).
  */
-export const LIMITS = Object.freeze({ passes: 24, steps: 20, minutes: 60, reruns: 5 })
+export const LIMITS = Object.freeze({ passes: 24, steps: 20, minutes: 60, reruns: 20 })
 
 const incompleteOf = (reason, more = {}) => ({ status: 'incomplete', incomplete: reason, reason, ...more })
 
@@ -64,10 +68,14 @@ export async function writeSafety(input) {
   const ledger = probeLedger()
   const findings = []
   const passes = []
+  // The places set aside as suspects of a stop or a broken page no step was left to trace, with why: no later pass
+  // probes them, and they end untested with that reason.
+  const parked = new Map()
   const was = resumed(input.state, input.stateKey)
   for (const r of was?.ledger ?? []) ledger.set(r.place, r.probe, r)
   findings.push(...(was?.findings ?? []))
   passes.push(...(was?.passes ?? []))
+  for (const [k, v] of was?.parked ?? []) parked.set(k, v)
   const budget = stepBudget(Math.max(0, limits.steps - (was?.steps ?? 0)))
   // Builds in memory are counted, never limited: a refusal found there costs no site and no rerun (`write-safety-pass.mjs`).
   const buildBudget = stepBudget(Number.MAX_SAFE_INTEGER)
@@ -111,6 +119,26 @@ export async function writeSafety(input) {
     }
   }
   const plainGaps = new Set((plainBuilt.gaps ?? []).map(gapKey))
+  const park = (key, why) => {
+    if (!parked.has(key)) parked.set(key, why)
+  }
+  // A stop or a broken page met and left untraced: a finding with what the site said, never a culprit.
+  const untraced = ({ suspects, ...stop }) =>
+    findings.push({
+      kind: stop.kind,
+      // What the site did (`door_refused`, `server_error`...) and where: never a place, none was traced.
+      ...(stop.class ? { class: stop.class } : {}),
+      ...(stop.page ? { page: stop.page } : {}),
+      code: stop.code ?? null,
+      ...(stop.op ? { op: stop.op } : {}),
+      ...(stop.cause ? { cause: stop.cause } : {}),
+      ...(stop.column ? { column: stop.column } : {}),
+      ...(stop.slot ? { slot: stop.slot } : {}),
+      culprit: 'not_traced',
+      why: stop.why,
+      suspects: suspects.length,
+      pass: stop.pass
+    })
   const ctx = {
     attempt,
     writeOn,
@@ -122,12 +150,18 @@ export async function writeSafety(input) {
     late,
     site,
     ledger,
+    park,
+    untraced,
     log
   }
   let incomplete = null
   let stop = null
   for (let n = passes.length + 1; n <= limits.passes; n++) {
-    const assignment = packPass(places, probes, ledger)
+    const assignment = packPass(
+      places.filter((p) => !parked.has(p.key)),
+      probes,
+      ledger
+    )
     if (!assignment.size) break
     if (late()) {
       incomplete = 'time'
@@ -142,7 +176,14 @@ export async function writeSafety(input) {
       seconds: Math.round((now() - began) / 1000)
     })
     log('write safety pass ' + n + ': ' + assignment.size + ' probes, ' + out.runs + ' run(s)')
-    input.state?.save({ key: input.stateKey ?? null, ledger: ledger.rows(), findings, passes, ...spent() })
+    input.state?.save({
+      key: input.stateKey ?? null,
+      ledger: ledger.rows(),
+      findings,
+      passes,
+      parked: [...parked],
+      ...spent()
+    })
     if (out.incomplete) {
       incomplete = out.incomplete
       stop = out.stop ?? null
@@ -160,7 +201,8 @@ export async function writeSafety(input) {
     stop,
     coverage,
     was,
-    spent
+    spent,
+    parked
   })
 }
 

@@ -35,11 +35,14 @@ const halves = (list) => {
  *   on its own, else null
  * @param {ReturnType<typeof stepBudget>} budget
  * @param {object} [failure] what the whole set failed with
+ * @param {{firstOnly?: boolean}} [options] `firstOnly`: when a first half fails, the second is not tried (the caller
+ *   runs the whole set again once the culprit is out, so another culprit there shows itself then): one culprit costs
+ *   about one trial per halving instead of two
  * @returns {Promise<{culprits: Array<{unit: object, failure: object}>, together: object[][], exhausted: object[],
  *   steps: number}>} `culprits`: each with the failure of the trial that isolated it; `together`: sets that fail only
  *   together (each half passed alone); `exhausted`: units the budget left unnamed
  */
-export async function bisect(units, fails, budget, failure = true) {
+export async function bisect(units, fails, budget, failure = true, { firstOnly = false } = {}) {
   const out = { culprits: [], together: [], exhausted: [], steps: 0 }
   const trial = async (subset) => {
     out.steps += 1
@@ -51,6 +54,7 @@ export async function bisect(units, fails, budget, failure = true) {
     if (!budget.take()) return void out.exhausted.push(...group)
     const aFails = await trial(a)
     if (aFails) await walk(a, aFails)
+    if (aFails && firstOnly) return
     // The second half is tried too: both halves may hold a unit that fails on its own.
     if (!budget.take()) return void out.exhausted.push(...b)
     const bFails = await trial(b)

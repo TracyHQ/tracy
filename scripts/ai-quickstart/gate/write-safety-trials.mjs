@@ -124,7 +124,7 @@ export async function pageCulprits(page, failure, a, w, active, ctx) {
       units = units.filter((k) => opsOf(k).some((op) => blocks.culprits.some((c) => c.unit === op)))
   }
   const named = { ...failure, cause: failure.cause ?? page.pageType ?? null }
-  return bisect(
+  const found = await bisect(
     units,
     async (subset) => {
       const t = await attempt(only(active, subset))
@@ -135,6 +135,8 @@ export async function pageCulprits(page, failure, a, w, active, ctx) {
       return broken ? { ...broken, cause: broken.cause ?? named.cause } : null
     },
     budget,
-    named
+    named,
+    { firstOnly: true }
   )
+  return { ...found, suspects: units }
 }

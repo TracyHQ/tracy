@@ -2123,12 +2123,21 @@ reports, in the domain files and in the app's step chain files, and fails when o
 gone, so a person decides each new code. A build refusal is found in memory, never
 on the site, and all of a pass's refusals before its write (`gate/write-safety-pass.mjs`, `gate/write-safety-trials.mjs`):
 the page writer's copy check sends back every probe it refuses at once; a write order check or a guard of the write
-plan names every problem it finds, and each probed place a problem names by its entry or slot is recorded as
-`refused_by_build` and taken out at once; places only an operation names, or every probe when nothing is named, are
-traced by bisection over builds; then the build is made again, until it refuses nothing, and only then is the site
-written. A refusal found in memory spends no rerun and no site step; its builds are counted (`buildSteps`), limited only
-by the time. A site stop or a broken page is traced by bisection over site writes, counted as site steps; that probe
-is taken out and the pass runs again (a rerun).
+plan names every problem it finds; a probed place a problem names by its entry or slot is recorded as
+`refused_by_build` and taken out at once only when it is the one probed place stored there (`evidence: "named_alone"`);
+when an entry or slot holds several (13 entries and 49 slots of JA Boxing do), each is built alone in memory and blamed
+only when that build refuses there too (`built_alone`), the others stay in the pass; places only an operation names, or
+every probe when nothing is named, are traced by bisection over builds; then the build is made again, until it refuses
+nothing, and only then is the site written. A refusal found in memory spends no rerun and no site step; its builds are
+counted (`buildSteps`), limited only by the time. A site stop is searched only among the places its operation stores
+and, when a read back names the column or the slot that differed, the places stored there: the one place stored there
+is blamed by the stop itself (`named_alone`, no site step), more are halved over site writes (one trial per halving:
+the rerun meets any other culprit), counted as site steps; that probe is taken out and the pass runs again (a rerun). A
+broken page is traced the same way through its blocks, then its values. A stop or a broken page the step limit leaves
+untraced is a finding of its own (`stop_not_traced`, `page_not_traced`, with the operation or page, the code, the pass
+and `culprit: "not_traced"`) that fails the measurement (the plain build wrote and answered, so a value of the pass broke
+it); its suspects are set aside, untested with that reason, and the pass runs again without them, so every stop a pass
+meets is recorded.
 
 A place counts as `tested` only when the probe a pass gave it is found in what was written for it
 (`gate/write-safety-reached.mjs`): in the stored value the write plan sends for that place (as written, escaped once for
@@ -2137,13 +2146,18 @@ A probe that replaces the whole value (the empty value, a number) carries no cod
 stored that place, with exactly its value. A build that writes its plain marker in place of a probe, or drops it,
 leaves the place untested (`not_written` in the ledger, the measurement `incomplete`, `probe_not_written`), and a probe
 never written is never judged as run by a page. A place where every probe was refused by the build is not tested, and
-any place not tested leaves the measurement `incomplete` (`not_site_tested`).
+any place not tested leaves the measurement `incomplete` (`not_site_tested`). Every place ends one way (`ends`): tested
+on the site, refused (a finding names it with its evidence), or untested with why (`suspect_of_untraced_stop`,
+`suspect_of_untraced_page`, `no_pass_reached_it`, `probes_left`, ...).
 
 Limits (`LIMITS`), from the times measured on JA Boxing 1.0.11 with a database snapshot reset: a marker build in memory
 about 7 s, a full site write about 40 s, a reset and the page reads about 30 s, so a pass about 80 s; 21 clean passes
 (the text place with a declared limit takes 21 probes, one per pass) take about 28 minutes. 24 passes, 20 site steps
-(about 70 s each), 60 minutes, 5 reruns of one pass on the site; past one the measurement is `incomplete`, never
-`passed`. Builds in memory (about 1.5 s each) have no limit of their own. The state is saved after each pass (`<out>/write-safety-state.json`, `gate/write-safety-state.mjs`) under a
+(about 20 s when the write stops early, 70 s when it runs to the end), 60 minutes, 20 reruns of one pass on the site;
+past one the measurement is `incomplete`, never `passed`. Run 4 spent its 20 site steps tracing two stops by halving
+over 316 places (about 9 steps each) and tested 0 places; a stop now names its place from the column or slot it
+reports and costs one rerun. A kit with more stops than its limits allow gets a failed record, never a complete passing
+one: a resumed record is never released, so such a kit must be fixed first. Builds in memory (about 1.5 s each) have no limit of their own. The state is saved after each pass (`<out>/write-safety-state.json`, `gate/write-safety-state.mjs`) under a
 key of the gate version, the kit's files, the blank site archive, the plugin, the probe catalogue, the site's address
 and the sha256 of the code of the gate and of the build's write step (`gateCodeSha256`): a run stopped by
 its time limit resumes from the next pass when the gate runs again into the same folder (`resumedFrom`). A resume

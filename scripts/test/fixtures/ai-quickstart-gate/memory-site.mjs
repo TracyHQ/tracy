@@ -12,7 +12,7 @@ export const ORIGIN = 'http://florist.example'
 
 /**
  * @param {object} kit the florist kit
- * @param {{door?: (call: object) => string | null, pageFails?: (html: string) => boolean, reset?: boolean,
+ * @param {{door?: (call: object) => string | {code: string, details?: object} | null, pageFails?: (html: string) => boolean, reset?: boolean,
  *   escaped?: boolean}} [faults] `door(call)`: the code a door call fails with (a server error or a refusal), or
  *   null; `pageFails(html)`: the page answers 500; `pageStatus(html, url)`: the status the page answers instead of
  *   200 (0: no answer, 404: not found), or null; `staleLinks`: the menu keeps the links of hidden pages (a template
@@ -45,8 +45,14 @@ export function memorySiteOf(
     for (const name of ['update', 'contract']) {
       const inner = doors[name]
       out[name] = async (call) => {
-        const code = door({ door: name, ...call })
-        if (code) throw Object.assign(new Error(code + ': scripted'), { code })
+        // A fault is a code, or `{code, details}` (a door that names where it refused: a slot, a column).
+        const fault = door({ door: name, ...call })
+        const code = typeof fault === 'string' ? fault : (fault?.code ?? null)
+        if (code)
+          throw Object.assign(new Error(code + ': scripted'), {
+            code,
+            ...(fault?.details ? { details: fault.details } : {})
+          })
         return inner(call)
       }
     }
