@@ -308,15 +308,27 @@ function gatedEdit(row, edit, profile, loadKit) {
 }
 
 /**
+ * 🔒 NO EDIT UNDER A RUNNING STEP (#609). While research, compose, a change request or the brand step runs, the plan
+ * is not edited: the step would end on a plan it did not see, or lose its end to the edit. The edit is refused
+ * (`ENGINE_BUSY`) and changes nothing; the owner reads `BUSY_SAY` and edits again once the step ended.
+ */
+const engineBusy = (row) => row.engine?.state === 'running'
+
+/**
  * Apply a Contract B plan edit to the living plan through the edit gate; the plan and its needs profile change
  * together. Its undo (the edit back and the profile before) replaces the previous one.
  * @param {{loadKit: (slug: string) => object | null}} kits the AI quickstart catalogue (`ai-quickstarts.js`)
+ * @param {{ended?: object, now?: () => number}} [options] `ended`: the engine state this edit ends as (the build chat's
+ *   `edit` step), written in the same transaction as the plan
  */
-export function editPlan(pool, accountId, edit, { loadKit }) {
+export function editPlan(pool, accountId, edit, { loadKit }, { ended, now = Date.now } = {}) {
   return changeDraft(pool, accountId, (row) => {
+    if (engineBusy(row)) return { error: 'ENGINE_BUSY' }
     const gated = gatedEdit(row, edit, row.needs_profile, loadKit)
     if (gated.error) return gated
+    const at = new Date(now()).toISOString()
     return {
+      ...(ended ? { engine: { ...ended, startedAt: at, endedAt: at } } : {}),
       plan: gated.plan,
       // A renamed service reaches the writer only through the profile (`edit-item-names.js`, #612).
       needs_profile: profileWithItemNames(gated.profile, edit),
@@ -335,6 +347,7 @@ export function editPlan(pool, accountId, edit, { loadKit }) {
  */
 export function undoPlanEdit(pool, accountId, { loadKit }) {
   return changeDraft(pool, accountId, (row) => {
+    if (engineBusy(row)) return { error: 'ENGINE_BUSY' }
     if (!row.undo_edit) return { error: 'NOTHING_TO_UNDO' }
     const gated = gatedEdit(row, row.undo_edit, row.undo_profile, loadKit)
     if (gated.error) return gated

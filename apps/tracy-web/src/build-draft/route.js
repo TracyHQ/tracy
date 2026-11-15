@@ -11,6 +11,7 @@ import { Hono } from 'hono'
 import { json } from '../lib/http.js'
 import { principalOf } from '../lib/wo-principal.js'
 import { callerOf } from './caller.js'
+import { BUSY_SAY } from './engine-state.js'
 import { chooseTemplate, createDraft, editPlan, readDraft, saveAnswer, undoPlanEdit } from './store.js'
 
 const BASE = '/api/build-draft'
@@ -34,6 +35,8 @@ const REFUSALS = {
     'This plan was made for the design you chose, and it cannot be moved to another design yet.'
   ],
   NOTHING_TO_UNDO: [409, 'There is no plan edit to undo.'],
+  // A step still works on the plan (#609): the card shows this sentence, as it shows the build's.
+  ENGINE_BUSY: [409, BUSY_SAY],
   BUILD_RUNNING: [
     409,
     'Your site is being built from the plan you approved, so the plan cannot change until the build ends.'
@@ -51,6 +54,8 @@ const REFUSALS = {
  * @param {(email: string) => Promise<string>} deps.buildSessionIdOf - the person's build session id (`workspace/`)
  * @param {(accountId: string) => Promise<unknown>} [deps.templateChosen] - called after a template is chosen: the
  *   build chat's engine starts the brand step there once the draft has research (`engine.js brandIfDue`)
+ * @param {(accountId: string) => Promise<unknown>} [deps.settleEngine] - called before a plan edit or undo: the engine
+ *   stops a step whose process ended (`engine.js read`), so a step that is gone never refuses an edit
  */
 export function buildDraftRoutes({
   config,
@@ -58,14 +63,15 @@ export function buildDraftRoutes({
   ensureAccount,
   kits,
   buildSessionIdOf,
-  templateChosen = async () => {}
+  templateChosen = async () => {},
+  settleEngine = async () => {}
 }) {
   const app = new Hono()
   const answer = (c, result, okStatus = 200) => {
     if (!result.error) return json(c, { draft: result.draft }, okStatus)
     const [status, next] = REFUSALS[result.error]
     const { error: code, ...extra } = result
-    return json(c, { code, next, ...extra }, status)
+    return json(c, { code, next, ...(code === 'ENGINE_BUSY' ? { say: BUSY_SAY } : {}), ...extra }, status)
   }
   /** The account of the signed-in person (created when `create`), null when it has none, or a 401 Response. */
   async function accountOf(c, { create = false } = {}) {
@@ -119,13 +125,14 @@ export function buildDraftRoutes({
       return chosen
     })
   )
+  // A step left running by a process that ended is stopped first (`settleEngine`): only a live step refuses an edit.
   app.post(
     `${BASE}/plan-edits`,
-    write('edit', (id, body) => editPlan(pool, id, body.edit, kits))
+    write('edit', async (id, body) => (await settleEngine(id), editPlan(pool, id, body.edit, kits)))
   )
   app.post(
     `${BASE}/plan-undo`,
-    write(null, (id) => undoPlanEdit(pool, id, kits))
+    write(null, async (id) => (await settleEngine(id), undoPlanEdit(pool, id, kits)))
   )
 
   return app

@@ -43,6 +43,13 @@ export const SAY = Object.freeze({
 })
 
 /**
+ * Said when the plan is edited while a step still works on it (research, compose, a change request, the brand step):
+ * the edit is refused, nothing changes, and the owner may edit again once the step ended. Plain English, no dashes.
+ */
+export const BUSY_SAY =
+  'I am still working on your plan, so it cannot change right now. Please make your change again when I am done.'
+
+/**
  * Said when the plan is asked for again, with no request, on a draft that already holds a plan (#609): the plan is kept
  * as it is, with every value the owner changed on it. Plain English, no dashes.
  */

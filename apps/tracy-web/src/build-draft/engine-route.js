@@ -14,8 +14,8 @@ import { randomUUID } from 'node:crypto'
 import { PLAN_EDIT_SCHEMA } from 'website-opportunities/domain'
 import { json } from '../lib/http.js'
 import { principalOf } from '../lib/wo-principal.js'
-import { engineStateOf } from './engine-state.js'
-import { putEndedStep, readEngineRow } from './engine-store.js'
+import { BUSY_SAY, engineStateOf } from './engine-state.js'
+import { readEngineRow } from './engine-store.js'
 import { createDraft, editPlan } from './store.js'
 import { readEngineRequest } from './engine-request.js'
 import { callerOf } from './caller.js'
@@ -38,6 +38,10 @@ const REFUSALS = {
   REQUEST_TOO_LONG: [422, 'Send a change request of at most 1000 characters.'],
   REQUEST_EMPTY: [422, 'Send the change request the owner typed.'],
   INVALID_EDIT: [422, 'The change does not fit the plan.'],
+  ENGINE_BUSY: [
+    409,
+    'A step is still working on the plan: say the sentence in say, then edit once it ended.'
+  ],
   BUILD_RUNNING: [409, 'The approved plan is being built: read GET /api/build-draft/build until it ends.']
 }
 const refuse = (c, code, extra = {}) => {
@@ -147,9 +151,12 @@ export function buildEngineRoutes({
     door(async (c, accountId) => {
       const body = readEngineRequest('edit', await c.req.json().catch(() => null))
       if (!body) return refuse(c, 'INVALID_REQUEST')
+      // A step left running by a process that ended is stopped first, so it never holds the plan forever.
+      if (accountId) await engine.read(accountId)
       const row = accountId ? await readEngineRow(pool, accountId) : null
       if (!row) return refuse(c, 'NO_DRAFT')
       if (!row.plan) return refuse(c, 'NO_PLAN')
+      if (row.engine?.state === 'running') return refuse(c, 'ENGINE_BUSY', { say: BUSY_SAY })
       // The tool sends the changes only: the edit names the plan's current revision here.
       const edit = {
         schema: PLAN_EDIT_SCHEMA,
@@ -157,11 +164,12 @@ export function buildEngineRoutes({
         plan: { id: row.plan.id, revision: row.plan.revision },
         changes: body.changes
       }
-      const edited = await editPlan(pool, accountId, edit, kits)
+      // The plan and the edit's done state are one write, refused while another step runs.
+      const edited = await editPlan(pool, accountId, edit, kits, { ended: { step: 'edit', state: 'done' } })
       if (edited.error === 'INVALID_EDIT')
         return refuse(c, 'INVALID_EDIT', { problems: sentencesOf(edited.problems) })
+      if (edited.error === 'ENGINE_BUSY') return refuse(c, 'ENGINE_BUSY', { say: BUSY_SAY })
       if (edited.error) return refuse(c, edited.error)
-      await putEndedStep(pool, accountId, { step: 'edit', state: 'done' })
       return json(c, engineStateOf(await readEngineRow(pool, accountId)))
     })
   )

@@ -67,8 +67,15 @@ export async function stopOrphan(pool, accountId, isLive, ended, now = Date.now)
   return stopped
 }
 
-/** Write a finished step that ran inside its request (an edit): no running state in between. */
+/**
+ * Write a finished step that ran inside its request: no running state in between. Never over a running step, which
+ * would take that step from its runner (`ENGINE_BUSY`, nothing written).
+ */
 export function putEndedStep(pool, accountId, engine, now = Date.now) {
   const at = new Date(now()).toISOString()
-  return changeDraft(pool, accountId, () => ({ engine: { ...engine, startedAt: at, endedAt: at } }))
+  return changeDraft(pool, accountId, (row) =>
+    row.engine?.state === 'running'
+      ? { error: 'ENGINE_BUSY' }
+      : { engine: { ...engine, startedAt: at, endedAt: at } }
+  )
 }

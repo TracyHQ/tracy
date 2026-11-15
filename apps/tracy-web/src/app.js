@@ -1259,7 +1259,8 @@ export function buildApp(deps) {
         buildSessionIdOf,
         // Only while the build chat is on: the brand step spends the brand bench's model doors.
         templateChosen: async (accountId) =>
-          (await buildChatOn()) ? app.buildDraftEngine.brandIfDue(accountId) : null
+          (await buildChatOn()) ? app.buildDraftEngine.brandIfDue(accountId) : null,
+        settleEngine: (accountId) => app.buildDraftEngine.read(accountId)
       })
     )
     app.route(
