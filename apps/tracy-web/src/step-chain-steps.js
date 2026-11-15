@@ -4,8 +4,9 @@
 // Every model step runs exactly as its bench runs it: a run queued through the bench's own command line (`run --kit
 // <ref> --brief-revision <id>`), played by the bench worker this server already runs (server.js starts each queue), and
 // its files taken out with the bench's own `get`. So the chain reads the research revision the benches read, with the
-// same prompts, checkers and doors, and each step's USD is its run's own spend record. A bench holds one run at a time; a
-// start that finds another run going waits for it. Step 9 is `runStepNine` whole, its writes through the setup door the
+// same prompts, checkers and doors, and each step's USD is its run's own spend record. A bench holds up to
+// BENCH_RUNS_AT_ONCE runs (lib/bench-sql.js, #633), so builds started together run their steps side by side; a start
+// that finds the bench full waits for a free place. Step 9 is `runStepNine` whole, its writes through the setup door the
 // engine hands it, its site check and 9b repair agent as the write step bench wires them.
 import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -43,7 +44,7 @@ const BY = 'step-chain'
 const NO_CAPS = ['--no-caps']
 const POLL_MS = 10_000
 const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-const RUN_ACTIVE = /_RUN_ACTIVE|Only one run at a time/
+const RUN_ACTIVE = /_RUN_ACTIVE|runs? at a time/
 
 /** A step error that carries the USD its run spent before it failed. */
 const stepError = (message, usd = 0) => Object.assign(new Error(message), { usd })
@@ -86,16 +87,14 @@ export function createStepChainSteps(deps) {
   }
 
   /**
-   * A bench run of one step, from its start to its files in `dir`: started (waiting while the bench holds another run),
-   * followed on its row until it ends, its files taken out. Cancelled when the chain no longer needs it.
-   */
-  /**
    * The run of this bench that a chain already started on the same inputs and that is still going, or null. A chain
    * started again after a restart (the action's resume, #574) finds the run its lost attempt queued, which the bench
    * worker carries on: it takes that run over instead of waiting for it to end and then starting the same work again
    * (13/11/2026, local stand: a restart during the plan step waited 18 minutes for the old planner run, threw its plan
    * away and planned again for 13 minutes). The same inputs: started by the chain, the same research revision and kit,
-   * and for the copy and pictures steps the same plan. A run of another build, or of other inputs, is waited for as before.
+   * and for the copy and pictures steps the same plan; among several active runs (#633) only such a run is taken, the
+   * newest, never another build's, and never one asked to stop (it ends cancelled, whatever the step waits for). A run
+   * of another build, or of other inputs, is waited for as before.
    * @param {string} name a bench of `benches`
    * @param {{ revisionId: string, kitRef: string, plan?: unknown } | null} same
    */
@@ -107,7 +106,7 @@ export function createStepChainSteps(deps) {
     const { rows } = await pool.query(
       `select id from ${benches[name].table}
         where status = 'queued' and started_by = $1 and brief_source ->> 'revisionId' = $2 and kit ->> 'ref' = $3
-              ${withPlan ? 'and plan = $4::jsonb' : ''}
+              and cancel_requested_at is null ${withPlan ? 'and plan = $4::jsonb' : ''}
         order by created_at desc
         limit 1`,
       [`cli:${BY}`, same.revisionId, same.kitRef, ...(withPlan ? [JSON.stringify(same.plan)] : [])]
@@ -115,17 +114,17 @@ export function createStepChainSteps(deps) {
     return rows[0]?.id ?? null
   }
 
+  /**
+   * A bench run of one step, from its start to its files in `dir`: this build's own run taken over when one is still
+   * going, else started (waiting while the bench is full), followed on its row until it ends, its files taken out.
+   * Cancelled when the chain no longer needs it.
+   */
   async function benchRun(name, argv, dir, signal, same = null) {
     let runId = null
     for (;;) {
       if (signal.aborted) throw signal.reason ?? new Error('stopped')
-      const started = await command(name, ['run', ...argv, '--by', BY])
-      if (started.code === 0) {
-        runId = started.out[0]?.trim()
-        break
-      }
-      const said = started.err.join(' ')
-      if (!RUN_ACTIVE.test(said)) throw stepError(`the ${name} run could not start: ${said.slice(0, 240)}`)
+      // Looked up before every start: with room on the bench a start is no longer refused while the build's own run
+      // goes on, so asking only after a refusal would start the same work a second time beside it (#633).
       runId = await ownActiveRun(name, same)
       if (runId) {
         log.info?.(
@@ -133,6 +132,13 @@ export function createStepChainSteps(deps) {
         )
         break
       }
+      const started = await command(name, ['run', ...argv, '--by', BY])
+      if (started.code === 0) {
+        runId = started.out[0]?.trim()
+        break
+      }
+      const said = started.err.join(' ')
+      if (!RUN_ACTIVE.test(said)) throw stepError(`the ${name} run could not start: ${said.slice(0, 240)}`)
       await sleep(POLL_MS)
     }
     const cancel = () => void command(name, ['cancel', runId]).catch(() => {})

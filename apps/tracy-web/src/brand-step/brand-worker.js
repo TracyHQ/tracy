@@ -1,7 +1,7 @@
-// The brand bench worker (brand step trial bench, #320): a durable queue over brand_run, one run at a time, parallel to
-// the site planner bench (its own table, its own queue). A run claims the queued row, runs the locked prompt over the
-// brand agent door with the brand tools, saves every model call as it happens, runs the gate on the file the agent
-// saved and plays the fix rounds (brand-rounds.js). After the last fix round or at the cost cap it builds the safe
+// The brand bench worker (brand step trial bench, #320): a durable queue over brand_run, up to BENCH_RUNS_AT_ONCE runs
+// side by side (lib/bench-sql.js, #633), parallel to the site planner bench (its own table, its own queue). A run
+// claims the queued row, runs the locked prompt over the brand agent door with the brand tools, saves every model call
+// as it happens, runs the gate on the file the agent saved and plays the fix rounds (brand-rounds.js). After the last fix round or at the cost cap it builds the safe
 // version by code (brand-safe-version.js).
 //
 // A redeploy kills the process mid-run; the lease then lapses and the next tick claims the run again, which resumes
@@ -9,6 +9,7 @@
 // is one that was dispatched and never answered (the provider may have charged it): that run fails with
 // AGENT_TURN_UNANSWERED. A cancel is honoured between two model calls and between two rounds.
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
+import { BENCH_RUNS_AT_ONCE } from '../lib/bench-sql.js'
 import { platformRefusal } from '../lib/cms-line.js'
 import { ensureLogo } from './brand-logo.js'
 import { brandPrompt } from './brand-prompt.js'
@@ -23,8 +24,15 @@ import { saveRound } from './brand-round-store.js'
 import { cancelAsked, setLogoSource, setProgress } from './brand-store.js'
 import { openKit } from '../lib/template-kit-source.js'
 
-/** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
-export const BRAND_QUEUE = Object.freeze({ concurrency: 1, leaseMs: 3 * 60_000, maxAttempts: 20 })
+/**
+ * Up to BENCH_RUNS_AT_ONCE runs side by side (the limit a start is held to), each with a lease of 3 minutes renewed
+ * every minute; a redeploy costs one of the 20 claims.
+ */
+export const BRAND_QUEUE = Object.freeze({
+  concurrency: BENCH_RUNS_AT_ONCE,
+  leaseMs: 3 * 60_000,
+  maxAttempts: 20
+})
 
 class LeaseLost extends Error {}
 

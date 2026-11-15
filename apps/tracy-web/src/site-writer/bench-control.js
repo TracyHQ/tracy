@@ -5,11 +5,11 @@
 // door snapshot (never the key) and harness settings, pages per turn among them (#330). The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor, capsOf } from '../lib/bench-harness.js'
-import { briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { openContentMap } from '../lib/content-map-source.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
-import { activeRun, createRun, readRun, requestCancel, SITE_WRITER_RUN_ACTIVE } from './bench-store.js'
+import { activeRuns, createRun, readRun, requestCancel, SITE_WRITER_RUN_ACTIVE } from './bench-store.js'
 import { CHECKER_VERSION } from './copy-check/check-copy.js'
 import { siteWriterDoor } from './door.js'
 import { WRITER_VISUAL_POLICY } from './visual-review.js'
@@ -80,8 +80,8 @@ export async function startWriterRun({
       'SITE_WRITER_MODEL_LACKS',
       'This writer run requires actual image input; the selected model harness is text only.'
     )
-  const active = await activeRun(pool)
-  if (active) return activeRefusal(active)
+  const running = await activeRuns(pool)
+  if (running.length >= BENCH_RUNS_AT_ONCE) return fullRefusal(running)
   const created = await createRun(pool, {
     startedBy,
     plan,
@@ -98,16 +98,11 @@ export async function startWriterRun({
       ...(requireVisualReview ? { visualReview: WRITER_VISUAL_POLICY } : {})
     }
   })
-  if (created.error === SITE_WRITER_RUN_ACTIVE) return activeRefusal(created.active)
+  if (created.error === SITE_WRITER_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
 }
 
-function activeRefusal(active) {
-  const who = active
-    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
-    : 'another run'
-  return refuse(SITE_WRITER_RUN_ACTIVE, `Only one writer run at a time: ${who} is still active.`, { active })
-}
+const fullRefusal = (running) => benchFullRefusal(SITE_WRITER_RUN_ACTIVE, 'writer runs', running)
 
 /**
  * Cancel a run. One no worker holds ends at once; one a worker holds is asked to stop, which the worker does

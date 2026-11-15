@@ -1,5 +1,6 @@
 // The run loop of a bench step (ADR 0041, #301, #303; shared by every bench step since #327): a durable queue over the
-// step's run table that claims the queued run, runs the step's approved prompt with runAgent over the step's door,
+// step's run table that claims queued runs (up to BENCH_RUNS_AT_ONCE side by side, each under a lease, a heartbeat and a
+// cancel of its own, #633), runs the step's approved prompt with runAgent over the step's door,
 // saves every model call as it happens, reads the final answer, scores the document with the step's checker and saves
 // the round. A document with failures gets a fix round (bench-run-round.js): the failure list, then the step's
 // instruction to answer with only the changed parts, goes back as the next user turn of the same conversation. At
@@ -13,7 +14,8 @@
 // with <CODE_PREFIX>_BUDGET.
 //
 // On DeepSeek's own API the provider balance is read before the first model call of the run and again when the run
-// ends (provider-balance.js), and both are stored on the run; a failed read is recorded and never stops the run.
+// ends (provider-balance.js), and both are stored on the run; a failed read is recorded and never stops the run. It is
+// the account's balance: runs that overlapped this one (of this bench or another) spent from it too.
 //
 // A step is a plain object (the planner's: site-planner/bench-worker.js):
 //   name, codePrefix              the queue's name and the prefix of the run's error codes (SITE_PLANNER)
@@ -32,14 +34,24 @@
 //   agentRequest({ row, ready, history })  { firstUser, tools, writeStep?, resolveImage? } for runAgent
 //   nextTurn({ row, ready, answers }), mergeTurns(answers)  optional: round 0 written in turns, each a request of its
 //                                 own (bench-run-round.js); nextTurn gives the next turn's user message or null
+//   release(row)                  optional: called once a claimed run's play ends, however it ends, so a step that
+//                                 keeps something per run (the picture step's looker, looker-round.js) lets it go
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { AgentError, runAgent } from './agent-over-door.js'
 import { playRound } from './bench-run-round.js'
+import { BENCH_RUNS_AT_ONCE } from './bench-sql.js'
 import { platformRefusal, withCmsLine } from './cms-line.js'
 import { readBalance, readsBalance } from './provider-balance.js'
 
-/** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
-export const BENCH_QUEUE = Object.freeze({ concurrency: 1, leaseMs: 3 * 60_000, maxAttempts: 20 })
+/**
+ * Up to BENCH_RUNS_AT_ONCE runs side by side (the limit a start is held to, lib/bench-sql.js), each with a lease of 3
+ * minutes renewed every minute; a redeploy costs one of the 20 claims.
+ */
+export const BENCH_QUEUE = Object.freeze({
+  concurrency: BENCH_RUNS_AT_ONCE,
+  leaseMs: 3 * 60_000,
+  maxAttempts: 20
+})
 /** How often an active bench reads a Stop request while a provider call is in flight. */
 export const BENCH_STOP_POLL_MS = 2_000
 
@@ -153,6 +165,8 @@ export async function runBenchRun(step, deps, row, lease) {
   } catch (error) {
     if (error instanceof LeaseLost) return false
     throw error
+  } finally {
+    step.release?.(row)
   }
 }
 

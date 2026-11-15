@@ -260,31 +260,39 @@ test('the inputs of a run are frozen once it is stored', opts, async () => {
   )
 })
 
-test('a second run is refused while one is active; a plan made on another kit is refused', opts, async () => {
-  const { pool } = db
-  await assignWriterDoor(pool)
-  const first = await startRun(pool, kits.index)
-  const { startWriterRun } = await import('../src/site-writer/bench-control.js')
-  const { SECRET, brief } = await import('./_site-writer-bench.mjs')
-  const base = {
-    pool,
-    secret: SECRET,
-    planSource: { kind: 'file', name: 'p.json' },
-    brief: brief(),
-    briefSource: { kind: 'file', name: 'b.json' },
-    kitRef: 'demo-gym/j6/1.0.0',
-    startedBy: 'cli',
-    index: kits.index
+test(
+  'a run past the bench limit is refused while the others are active; a plan made on another kit is refused',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignWriterDoor(pool)
+    const first = await startRun(pool, kits.index)
+    const { BENCH_RUNS_AT_ONCE } = await import('../src/lib/bench-sql.js')
+    for (let n = 1; n < BENCH_RUNS_AT_ONCE; n++) await startRun(pool, kits.index)
+    const { startWriterRun } = await import('../src/site-writer/bench-control.js')
+    const { SECRET, brief } = await import('./_site-writer-bench.mjs')
+    const base = {
+      pool,
+      secret: SECRET,
+      planSource: { kind: 'file', name: 'p.json' },
+      brief: brief(),
+      briefSource: { kind: 'file', name: 'b.json' },
+      kitRef: 'demo-gym/j6/1.0.0',
+      startedBy: 'cli',
+      index: kits.index
+    }
+    const again = await startWriterRun({ ...base, plan: plan() })
+    assert.equal(again.code, 'SITE_WRITER_RUN_ACTIVE')
+    assert.equal(again.active.id, first.id)
+    assert.equal(again.activeRuns.length, BENCH_RUNS_AT_ONCE)
+    assert.match(again.reason, new RegExp(`At most ${BENCH_RUNS_AT_ONCE} writer runs at a time`))
+    const other = await startWriterRun({
+      ...base,
+      plan: { ...plan(), kit: 'tracy-template-kit/2 other/j6/1.0.0' }
+    })
+    assert.equal(other.code, 'SITE_WRITER_PLAN_SHAPE')
   }
-  const again = await startWriterRun({ ...base, plan: plan() })
-  assert.equal(again.code, 'SITE_WRITER_RUN_ACTIVE')
-  assert.equal(again.active.id, first.id)
-  const other = await startWriterRun({
-    ...base,
-    plan: { ...plan(), kit: 'tracy-template-kit/2 other/j6/1.0.0' }
-  })
-  assert.equal(other.code, 'SITE_WRITER_PLAN_SHAPE')
-})
+)
 
 test(
   'a run freezes the hash of the content map it read, writes the dropdowns, and stops when the file changed',

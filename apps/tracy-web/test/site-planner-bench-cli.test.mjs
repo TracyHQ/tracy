@@ -5,6 +5,7 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'n
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { runCli } from '../src/site-planner/bench-cli.js'
 import { createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
@@ -81,7 +82,7 @@ test('run refuses a kit whose images are not usable, with the reason, and queues
 })
 
 test(
-  'run queues a brief file and prints the run id; a second run is refused naming the first',
+  'run queues a brief file and prints the run id; a run past the bench limit is refused naming the first',
   opts,
   async () => {
     await assignPlannerDoor(db.pool)
@@ -91,9 +92,12 @@ test(
     const row = (await db.pool.query('select started_by, brief_source from site_planner_run')).rows[0]
     assert.equal(row.started_by, 'cli:bench-operator')
     assert.deepEqual(row.brief_source, { kind: 'file', name: 'hsc.json' })
-    const second = await cli('run', '--brief-file', 'hsc.json', '--kit', KIT_REF)
-    assert.equal(second.code, 1)
-    assert.match(second.err, new RegExp(first.out))
+    for (let n = 1; n < BENCH_RUNS_AT_ONCE; n++)
+      assert.equal((await cli('run', '--brief-file', 'hsc.json', '--kit', KIT_REF)).code, 0)
+    const past = await cli('run', '--brief-file', 'hsc.json', '--kit', KIT_REF)
+    assert.equal(past.code, 1)
+    assert.match(past.err, new RegExp(first.out))
+    assert.match(past.err, new RegExp(`At most ${BENCH_RUNS_AT_ONCE} planner runs at a time`))
   }
 )
 
