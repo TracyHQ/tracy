@@ -5,9 +5,9 @@
 //
 // 🔒 UNKNOWN IS UNKNOWN, NEVER "MISSING". A must-have is `missing` only when the read could have seen it and did not:
 // the read went through the whole site (`complete`), and what the read keeps shows that capability whichever common way
-// a site offers it. Where it does not (an ordering platform's link is not kept, forms are not collected at all, an
-// appointment platform's link is kept only for restaurant table bookings), a capability that was not found is
-// `unknown`, with the reason. A claim "your site has no booking" to a business that has one costs more than no claim.
+// a site offers it. Where it does not (an ordering platform's link is not kept, forms are not collected at all, only
+// the best-known appointment platforms' links are kept), a capability that was not found is `unknown`, with the reason.
+// A claim "your site has no booking" to a business that has one costs more than no claim.
 
 export const TRADE_MUST_HAVES_VERSION = 'trade-must-haves/1'
 
@@ -78,8 +78,9 @@ const TEXT_SIGNS = Object.freeze({
  * Whether a read that went through the whole site and did not find a capability shows it is absent. The menu: the
  * crawler keeps menu pages, menu PDFs and the schema.org menu of every page. A booking: the crawler keeps the links to
  * the table-booking platforms (OpenTable, SevenRooms, TheFork…) and the site's own booking pages, which is every common
- * way for a restaurant, not for a salon, clinic, gym or hotel (their platforms' links are not kept). Ordering links and
- * timetable widgets are not kept, and forms are not collected at all.
+ * way for a restaurant. For a salon, clinic, gym or hotel it keeps the best-known appointment platforms' links (Fresha,
+ * Booksy, Mindbody… `link-platforms.mjs`), not every platform nor a booking widget drawn by script, so their absence
+ * proves nothing. Ordering links and timetable widgets are not kept, and forms are not collected at all.
  */
 const ABSENCE_SEEN = Object.freeze({
   menu: () => true,
