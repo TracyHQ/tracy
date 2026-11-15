@@ -1,0 +1,1 @@
+{"id":"REG-PR-633-article-unpublish-guard","verdict":"PASS","commit":"44096fd702a83e773d80cb7565fe6c162e2825fd","ran_at":"2026-11-15T14:04:21.999Z","evidence":"tests/regression/.runs/2026-11-15-44096fd70/REG-PR-633-article-unpublish-guard.log"}
