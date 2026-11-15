@@ -1776,6 +1776,13 @@ the fields of the items a list shows and does not judge the items it left out; t
 so a record read back gives the same reason. The ordering itself is the build's (a date per item in plan order would
 make the choice fixed); the gate does not set it.
 
+**Kept language words in the demo scan** (`gate/kept-language-texts.mjs`). The words of each language string the kit
+keeps are read from the blank site archive's own language files (a site override first) and given to the demo scan
+through its existing input `interfaceTexts`, so a kept core string ("Page 1 of 2", the search tips) is interface, not
+demo. The scan compares interface words exactly, so a string with placeholders is given with each placeholder filled
+by the numbers 1 to 20, for at most two placeholders; a placeholder that holds words cannot be given this way (the scan
+would have to read a kept string as a pattern, a change of `rendered-scan/`).
+
 **The demo scan** (`gate/demo-checks.mjs`) runs `demoScan` on the browser's read and on the raw HTML of the same
 renders, and checks the scan itself: the leaks the corpus counts as interface words (never reported by the demo scan),
 the blocks the raw HTML and the browser read differently (compared in the scan's own spelling, so the capitals a

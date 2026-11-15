@@ -64,6 +64,7 @@ import { stoppedRecord } from './release-gate-record.mjs'
 import { renderSite, THEMES, WIDTHS } from './render.mjs'
 import { runGate } from './run-gate.mjs'
 import { qualityOn, siteSession } from './site-session.mjs'
+import { keptLanguageTextsOf } from './kept-language-texts.mjs'
 import { filesOf } from './sources.mjs'
 import { blankControlOf } from './verdict.mjs'
 import { PROBE_CATALOGUE } from './write-probes-edge.mjs'
@@ -153,7 +154,14 @@ if (argv.includes('--secrets-only')) {
 
 // The browser of the workspace's own Playwright (the root devDependency), resolved the normal way.
 const { chromium } = await import('@playwright/test')
-const corpus = demoCorpus(corpusInputOf({ ...kit, contentMap: kit.blankContract }))
+const archive = filesOf(installer)
+// The words of the language strings the kit keeps, read from the archive, join the scan's interface words.
+const corpusInput = corpusInputOf({ ...kit, contentMap: kit.blankContract })
+corpusInput.interfaceTexts = [
+  ...(corpusInput.interfaceTexts ?? []),
+  ...keptLanguageTextsOf(kit.mapping, archive.files)
+]
+const corpus = demoCorpus(corpusInput)
 const crawl = async (base) => [
   ...(await crawlPages({ base })),
   ...SYSTEM_PAGES.map((s) => ({ ...s, url: new URL(s.path, base + '/').toString(), from: 'system' }))
@@ -200,7 +208,7 @@ if (controlOnly) {
 
 const common = {
   kit,
-  archive: filesOf(installer),
+  archive,
   adapter: { exemptions: EXEMPTIONS, declaredHosts: DECLARED_HOSTS, literalScope: joomlaLiteralScope },
   iconLibrary: { set: PHOSPHOR_SET, icons: phosphorCatalog() },
   tryWrite: memoryTryWrite(kit),
