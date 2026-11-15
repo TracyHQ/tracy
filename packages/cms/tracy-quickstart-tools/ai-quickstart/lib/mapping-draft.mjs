@@ -151,6 +151,8 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
     ...(decisions.pages ? { pages: decisions.pages } : {}),
     ...(decisions.createdFrames ? { createdFrames: decisions.createdFrames } : {}),
     ...(decisions.escapes ? { escapes: decisions.escapes } : {}),
+    // Words a template file writes as code, kept on every site (#587).
+    ...(decisions.keptLiterals ? { keptLiterals: decisions.keptLiterals } : {}),
     inlineMarkup: report.inlineMarkup
       ? {
           class: report.inlineMarkup.class,

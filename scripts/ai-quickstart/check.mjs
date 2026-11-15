@@ -14,7 +14,8 @@
  *
  * A Joomla AI quickstart folder whose mapping file is written also carries its blank site contract
  * (`blank-site-contract/`, ticket #584), checked against the released contract it names
- * (`check-blank-site-contract.mjs`), and the records of that blank site its pages name (`check-kit-pages.mjs`).
+ * (`check-blank-site-contract.mjs`), the records of that blank site its pages name (`check-kit-pages.mjs`), and the
+ * release files its kept literals and its site icon name (`check-kept-literals.mjs`, ticket #587).
  *
  * Run without folders, it also checks the Tracy library (`domain/library/tracy-library.json` of the WO package, ticket
  * #596): blocks Tracy owns, declared in the block store format, by `checkLibraryDeclaration`; and every stylesheet of
@@ -30,14 +31,15 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
   BLOCK_STORE_FILE,
-  MAPPING_FILE,
-  PAGE_RECIPES_FILE,
   checkAiQuickstartContract,
-  formatProblem
+  formatProblem,
+  MAPPING_FILE,
+  PAGE_RECIPES_FILE
 } from '../../packages/wo/website-opportunities/domain/ai-quickstart-contract.mjs'
 import { checkLibraryDeclaration } from '../../packages/wo/website-opportunities/domain/ai-quickstart-library.mjs'
 import { colourLiterals } from '../../packages/wo/website-opportunities/domain/library-style-check.mjs'
 import { blankSiteContractProblems, needsBlankSiteContract } from './check-blank-site-contract.mjs'
+import { keptLiteralFileProblems } from './check-kept-literals.mjs'
 import { kitPageProblems } from './check-kit-pages.mjs'
 import { checkKitRelease } from './check-kit-release.mjs'
 import {
@@ -138,6 +140,7 @@ export function checkAiQuickstartFolder(dir) {
     ...libraryPositionProblems(mapping, blockStore, DEFAULT_ROOT),
     ...demoNetworkProblems(mapping, blockStore, DEFAULT_ROOT),
     ...inlineSourceProblems(blockStore, DEFAULT_ROOT),
+    ...keptLiteralFileProblems(mapping, blockStore, DEFAULT_ROOT),
     ...blankSiteContractProblems(dir, mapping, DEFAULT_ROOT),
     ...kitPageProblems(dir, mapping)
   ]

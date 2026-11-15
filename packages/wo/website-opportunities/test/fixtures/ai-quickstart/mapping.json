@@ -166,7 +166,15 @@
         "value": ""
       }
     ],
-    "language": [{ "key": "TPL_EXAMPLE_READ_MORE", "value": "Read more" }]
+    "language": [
+      {
+        "key": "TPL_EXAMPLE_READ_MORE",
+        "extension": "tpl_example",
+        "language": "en-GB",
+        "value": "Read more",
+        "why": "invented: the read more link of every card says the same words"
+      }
+    ]
   },
   "notFacts": [
     { "fact": "street address", "kind": "contact.address", "why": "invented: the template shows no address" },

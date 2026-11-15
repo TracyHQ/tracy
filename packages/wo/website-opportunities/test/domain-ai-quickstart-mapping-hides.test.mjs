@@ -130,7 +130,7 @@ test('each way is checked against the places it hides (#584)', () => {
     'hides[block-31][0]: module-31.9: rows.remove takes an element of an HTML value, and this place has no xpath',
     "hides[block-31][1].row: module-31.0: this place lies in none of the row's lists",
     "hides[block-31][1].row: module-31.1: this place lies in none of the row's lists",
-    'hides[block-31][2].by: by must be one of empty, rows.remove, setting, omit, row'
+    'hides[block-31][2].by: by must be one of empty, rows.remove, setting, omit, row, unassign'
   ])
   const n = mapping()
   n.hides['block-31'][0] = { control: ['button-label'], rows: 'items', by: 'empty' }
@@ -138,7 +138,7 @@ test('each way is checked against the places it hides (#584)', () => {
   n.hides['block-99'] = []
   assert.deepEqual(run(n), [
     'hides[block-99]: "block-99" is not a block of the store',
-    'hides[block-31][0]: a hide entry names either a control (its fields) or rows ("items" or a list name)',
+    'hides[block-31][0]: a hide entry names one of: a control (its fields), rows ("items" or a list name), or fields (a group)',
     'hides[block-31][2].location: a location needs an entity and a column',
     'hides[block-31][2].value: the value written at the setting, a string',
     'hides[block-31]: fields.button-label is part of a button: say how an empty button leaves the page (a "control" entry)',
@@ -210,4 +210,32 @@ test('a control of item fields says whether the template prints one for every it
   assert.ok(!out(m).some((l) => l.startsWith('hides[block-31][3].')))
   m.hides['block-31'][0].scope = 'block'
   assert.ok(out(m).includes('hides[block-31][0].scope: only a control of item fields has a scope'))
+})
+
+test('a group of fields leaves the page by a setting, or the module is left with no page (#587)', () => {
+  const m = mapping()
+  m.hides['block-31'].push({
+    fields: ['name'],
+    by: 'setting',
+    location: { entity: 'module-31', column: 'params', jsonPath: ['show-names'] },
+    value: '0',
+    why: 'the invented template prints the names tile only while show-names is on'
+  })
+  assert.deepEqual(run(m), [])
+  m.placements = { 'block-31': { entity: 'module-31', assign: 'every-page' } }
+  m.hides['block-31'][3] = { fields: ['name'], by: 'unassign', why: 'with no page the module prints nothing' }
+  assert.deepEqual(run(m), [])
+  delete m.placements
+  m.hides['block-31'].push({ fields: ['nothing'], by: 'omit', order: 'packed', why: 'x' })
+  m.hides['block-31'].push({ fields: ['name'], by: 'unassign' })
+  m.hides['block-31'].push({ fields: [], control: ['button-label'], by: 'empty', why: 'x' })
+  assert.deepEqual(run(m), [
+    'hides[block-31][3].by: unassign leaves the module of the block with no page: the block has a placement (entity, assign)',
+    'hides[block-31][4].fields: "nothing" is no field of block-31',
+    'hides[block-31][4].by: a group of fields leaves the page by setting, unassign or empty',
+    'hides[block-31][4]: omit hides rows: name them with "rows"',
+    'hides[block-31][5].why: say why this way takes the place off the page (measured how)',
+    'hides[block-31][5].by: unassign leaves the module of the block with no page: the block has a placement (entity, assign)',
+    'hides[block-31][6]: a hide entry names one of: a control (its fields), rows ("items" or a list name), or fields (a group)'
+  ])
 })

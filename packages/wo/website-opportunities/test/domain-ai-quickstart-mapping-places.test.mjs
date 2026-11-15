@@ -161,9 +161,14 @@ test('the library names a position, its container class, and its exceptions name
 test('a language override names its value source: a value, the fields that fill it, or keep', () => {
   const set = valid()
   set.mapping.overrides.language = [
-    { key: 'TPL_A', filledBy: [{ block: 'hero-home', field: 'heading' }] },
-    { key: 'TPL_B', keep: 'invented: interface text of a form' },
-    { key: 'TPL_C' }
+    {
+      key: 'TPL_A',
+      extension: 'tpl_example',
+      language: 'en-GB',
+      filledBy: [{ block: 'hero-home', field: 'heading' }]
+    },
+    { key: 'TPL_B', extension: 'tpl_example', language: 'en-GB', keep: 'invented: interface text of a form' },
+    { key: 'TPL_C', extension: 'tpl_example', language: 'en-GB' }
   ]
   assert.deepEqual(problemsOf(set), [
     'overrides.language[2]: a language override needs its value source: a string value, the fields it is filledBy, or keep with the reason'
@@ -250,7 +255,14 @@ test('a language string a field fills has its override, filled by exactly those 
   assert.deepEqual(problemsOf(set), [
     'overrides.language: languageString-7.0 is filled by header-main.cta_label: give its override, filledBy them'
   ])
-  const override = { key: 'TPL_EXAMPLE_CALL', slot: 'languageString-7.0', filledBy: [], limit: 19 }
+  const override = {
+    key: 'TPL_EXAMPLE_CALL',
+    extension: 'tpl_example',
+    language: 'en-GB',
+    slot: 'languageString-7.0',
+    filledBy: [],
+    limit: 19
+  }
   set.mapping.overrides.language.push(override)
   const problems = problemsOf(set).join('\n')
   assert.match(problems, /TPL_EXAMPLE_CALL is filled by header-main.cta_label, not $/m)
@@ -428,7 +440,13 @@ test('a template string the draft report says the build hides has its empty over
   assert.deepEqual(problemsOf(set), [
     'overrides.language: TPL_EXAMPLE_NOTICE is hidden by the build (the draft report\'s hiddenStrings): give its override with value ""'
   ])
-  set.mapping.overrides.language.push({ key: 'TPL_EXAMPLE_NOTICE', value: '' })
+  set.mapping.overrides.language.push({
+    key: 'TPL_EXAMPLE_NOTICE',
+    extension: 'tpl_example',
+    language: 'en-GB',
+    value: '',
+    why: 'invented: the build hides the notice'
+  })
   assert.deepEqual(problemsOf(set), [])
   set.draftReport.hiddenStrings = []
   assert.deepEqual(problemsOf(set), [

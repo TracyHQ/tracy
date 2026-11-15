@@ -6,7 +6,12 @@
 // `ai-quickstart-mapping-entry.mjs`. `entity: "page"` names the page the build creates (the SEO fields). The rules
 // on stored places across the whole file (one writer per place, every entity declared, the SEO of every page type,
 // the build-sets references) are in `ai-quickstart-mapping-places.mjs`.
+
 import { CHILD_LIST_KEYS, rowCountProblems, sameRows } from './ai-quickstart-child-lists.mjs'
+import { detailPositionProblems } from './ai-quickstart-detail-positions.mjs'
+import { escapesProblems } from './ai-quickstart-escapes.mjs'
+import { kitDeclarationProblems } from './ai-quickstart-kit-declarations.mjs'
+import { buildDeclarationProblems } from './ai-quickstart-mapping-build.mjs'
 import {
   entryProblem,
   isDerivedEntry,
@@ -14,9 +19,7 @@ import {
   locationKey,
   locationProblem
 } from './ai-quickstart-mapping-entry.mjs'
-import { buildDeclarationProblems } from './ai-quickstart-mapping-build.mjs'
-import { detailPositionProblems } from './ai-quickstart-detail-positions.mjs'
-import { escapesProblems } from './ai-quickstart-escapes.mjs'
+import { languageOverrideProblems } from './ai-quickstart-mapping-language.mjs'
 import { mappingPlaceProblems } from './ai-quickstart-mapping-places.mjs'
 import { placementProblems } from './ai-quickstart-placement.mjs'
 import { LIST_FACT_KINDS, SINGLE_FACT_KINDS } from './needs-profile-merge.mjs'
@@ -293,16 +296,7 @@ function overridesProblems(overrides, report) {
     checkLocation(entry.location, `${at}.location`, report)
     if (typeof entry.value !== 'string') report(`${at}.value`, 'a setting override needs a string value')
   })
-  list('language', (entry, at) => {
-    if (!isObject(entry) || !isName(entry.key))
-      return report(at, 'a language override is {key, value | filledBy | keep}')
-    const filled = Array.isArray(entry.filledBy) && entry.filledBy.length > 0
-    if (typeof entry.value !== 'string' && !filled && !isName(entry.keep))
-      report(
-        at,
-        'a language override needs its value source: a string value, the fields it is filledBy, or keep with the reason'
-      )
-  })
+  languageOverrideProblems(overrides.language, report)
 }
 
 /**
@@ -338,6 +332,7 @@ export function mappingProblems(mapping, blocks, ctx) {
   mappingPlaceProblems(mapping, ctx)
   placementProblems(mapping, blocks, ctx)
   buildDeclarationProblems(mapping, blocks, ctx)
+  kitDeclarationProblems(mapping, ctx)
   detailPositionProblems(mapping, blocks, ctx)
   escapesProblems(mapping, report)
 }

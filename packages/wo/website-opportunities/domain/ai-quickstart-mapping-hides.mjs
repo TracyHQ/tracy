@@ -15,6 +15,8 @@
 //     `slots` (content map keys) and has an xpath. On a block written in place the build names the slots in one
 //     `rows.remove` of the plugin; on a copy (`placement`, `ai-quickstart-placement.mjs`) it takes the element out of
 //     the value it writes on the copy (`content.update`);
+//   - `{"fields": ["<field>", ...], "by", "why"}` (ticket #587): a group of fields of the block that prints a frame of
+//     its own (a tile, a picture), taken off the page when the build has none of them to write;
 //   - `setting`: the build writes `value` at `location` (a record setting no content map slot holds) with
 //     `content.get` and `content.update`;
 //   - `omit`: the rows are pieces of one stored value; the build leaves a row it does not fill out of the value it
@@ -24,11 +26,13 @@
 //     copy: the build cuts the rows it does not fill out of the copy's lists (`content.update`), and the copy prints
 //     only the rows left (measured, `scripts/ai-quickstart/copy-proof.mjs`). The plugin refuses a row removal on the
 //     blank site contract (no reviewed row of it). Every location of the named fields lies in one of the rows.
+//   - `unassign` (ticket #587): the block's module (`placements.<id>.entity`, assigned by the placement) is left with
+//     no page (assignment "[]", the state the blank site ships every record it keeps in place), so it prints nothing;
 // Only places on a record the blank site keeps need an entry: the build writes a created record with what it has.
 import { locationProblem } from './ai-quickstart-mapping-entry.mjs'
 
 /** The ways a build takes an empty control or row off the page. */
-export const HIDE_WAYS = Object.freeze(['empty', 'rows.remove', 'setting', 'omit', 'row'])
+export const HIDE_WAYS = Object.freeze(['empty', 'rows.remove', 'setting', 'omit', 'row', 'unassign'])
 
 const LABEL_KIND = /\.(?:button|cta)_label$/
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -93,9 +97,10 @@ export function hidesNeeded(block, entry, created) {
 
 /** The locations an entry's fields or rows hold. */
 function entryLocations(entry, block, mapped) {
-  if (Array.isArray(entry.control)) {
+  const group = Array.isArray(entry.control) ? entry.control : entry.fields
+  if (Array.isArray(group)) {
     const scopes = scopesOfBlock(block, mapped)
-    return entry.control.flatMap((name) => scopes.flatMap((s) => locationsOf(s.places, name)))
+    return group.flatMap((name) => scopes.flatMap((s) => locationsOf(s.places, name)))
   }
   if (entry.rows === 'items')
     return Object.keys(mapped?.itemFields ?? {}).flatMap((n) => locationsOf(mapped.itemFields, n))
@@ -106,9 +111,16 @@ function entryLocations(entry, block, mapped) {
 const startsWith = (path, parent) => parent.every((step, i) => path[i] === step)
 
 /** What is wrong with the way one entry takes its places off the page. */
-function wayProblems(entry, locations, at, report) {
+function wayProblems(entry, locations, at, report, placement) {
   const { by } = entry
-  if (by === 'rows.remove') {
+  if (by === 'unassign') {
+    if (!isName(placement?.entity) || !isName(placement?.assign))
+      report(
+        `${at}.by`,
+        'unassign leaves the module of the block with no page: the block has a placement (entity, assign)'
+      )
+    if (!Array.isArray(entry.fields)) report(at, 'unassign hides a group of fields: name them with "fields"')
+  } else if (by === 'rows.remove') {
     const slots = each(entry.slots)
     if (!slots.length || !slots.every(isName))
       return report(`${at}.slots`, 'rows.remove names the content map slots of the element it takes out')
@@ -226,18 +238,31 @@ export function hideProblems(mapping, blockStore, report) {
     const at = (i) => `hides[${block.id}][${i}]`
     const named = { controls: new Set(), rows: new Set() }
     entries.forEach((entry, i) => {
-      if (!isObject(entry)) return report(at(i), 'a hide entry is {control | rows, by, why}')
-      if (Array.isArray(entry.control) === Boolean(entry.rows))
+      if (!isObject(entry)) return report(at(i), 'a hide entry is {control | rows | fields, by, why}')
+      const kinds = [Array.isArray(entry.control), Boolean(entry.rows), entry.fields !== undefined]
+      if (kinds.filter(Boolean).length !== 1)
         return report(
           at(i),
-          'a hide entry names either a control (its fields) or rows ("items" or a list name)'
+          'a hide entry names one of: a control (its fields), rows ("items" or a list name), or fields (a group)'
         )
+      if (entry.fields !== undefined) {
+        const names = new Set([...each(block.fields), ...each(block.itemFields)].map((f) => f?.name))
+        if (!Array.isArray(entry.fields) || !entry.fields.length || !entry.fields.every(isName))
+          return report(
+            `${at(i)}.fields`,
+            'fields lists the fields of the block the entry takes off the page'
+          )
+        for (const name of entry.fields)
+          if (!names.has(name)) report(`${at(i)}.fields`, `"${name}" is no field of ${block.id}`)
+        if (!['setting', 'unassign', 'empty'].includes(entry.by))
+          report(`${at(i)}.by`, 'a group of fields leaves the page by setting, unassign or empty')
+      }
       if (!HIDE_WAYS.includes(entry.by)) report(`${at(i)}.by`, `by must be one of ${HIDE_WAYS.join(', ')}`)
       if (!isName(entry.why))
         report(`${at(i)}.why`, 'say why this way takes the place off the page (measured how)')
       if (Array.isArray(entry.control)) for (const name of entry.control) named.controls.add(name)
       else named.rows.add(entry.rows)
-      wayProblems(entry, entryLocations(entry, block, mapped), at(i), report)
+      wayProblems(entry, entryLocations(entry, block, mapped), at(i), report, mapping?.placements?.[block.id])
       sharedControlProblems(entry, block, at(i), report)
     })
     const needed = hidesNeeded(block, mapped, created)

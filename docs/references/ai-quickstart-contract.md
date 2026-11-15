@@ -586,6 +586,17 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   value) and lists it in the draft report (`hiddenStrings: [{constant, block, file, value, why}]`). The check requires
   its override with that `value`, and fails an override `value` no hidden string accounts for. JA Boxing:
   `MOD_FOOTER_LINE2`, the Joomla licence notice of the copyright footer.
+  A language entry is a closed shape (#587, `ai-quickstart-mapping-language.mjs`): `key` (upper case), `extension`
+  (whose language file holds it: `tpl_ja_boxing`, `joomla`, `lib_joomla`, `com_content`...), `language` (`en-GB`), one
+  value source (`value` with its `why`, `filledBy`, or `keep`), and `slot`, `limit`, `notFact`; any other key, a second
+  entry for the same key and language, or a keep that says nothing beyond the key is a problem. An entry with a `slot`
+  is a template string of the content map, its keep led by the class the draft gave it (`not-drawn: ...`,
+  `kept: ...`). An entry with no `slot` is a platform or extension string the kit declares because a page prints it,
+  so its keep says what prints it (file and line); a keep that says no page draws it is refused (the release gate
+  reads such a reason as `kit_reason_false` wherever the string shows). JA Boxing keeps the paging words (`JPREV`,
+  `JNEXT`, `JLIB_HTML_*`), the breadcrumbs' first crumb, the error page words (`ERROR`, `JERROR_PAGE_NOT_FOUND`,
+  `JERROR_LAYOUT_*`), the contact page and contact form labels (`COM_CONTACT_*`), the newsletter form words
+  (`ACYM_*`), `COM_CONTENT_MORE_ARTICLES` and `JCLOSE`, each with the file that prints it.
 - **`notEmptied`**: `[{entity, slot? | column?, why}]`, what the blank site keeps as the demo has them, though it holds
   demo words: a whole record (a trashed module no block of the store is), one slot of it (a module title no page
   prints), or one column outside the content map (`{"entity": "module-180", "column": "title"}`). Every place the
@@ -602,7 +613,9 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   configuration, which the door does not write; the blank site empties the demo values (the configuration page loads
   with them empty, checked on the blank site restored on a real Joomla).
 - **`hides`**: `{"<block id>": [entry]}`, how a place the build leaves empty leaves the page, for every place on a
-  record the blank site keeps where an empty field leaves visible damage. An entry names a control or rows:
+  record the blank site keeps where an empty field leaves visible damage. An entry names a control, rows, or a group
+  of fields (`{"fields": [...], "by", ..., "why"}`, #587: fields of the block that print a frame of their own, a tile or
+  a picture, taken off the page when the build has none of them; `by` is `setting`, `unassign` or `empty`):
   `{"control": ["<label field>", "<link field>"], "by", ..., "why"}` for a button (a link field and a label field of
   kind `*.button_label` or `*.cta_label` in the same scope, the block's fields or each item's; a label kept in a
   template language string is the template's own words, not a button), or `{"rows": "items" | "<list name>", "by",
@@ -616,6 +629,7 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   | `setting` | writes `value` at `location`, a record setting no content map slot holds, with `content.get` and `content.update` | `location`, `value` (a string) |
   | `omit` | leaves a row it does not fill out of the value it writes: the rows are pieces of one stored value | none (every location of the list's fields is a piece) |
   | `row` | writes the rows it fills at their places, then cuts every row it did not write out of the copy's lists (`content.update`), keeping the written rows in their order; only a copy holds such rows | `row`: `{entity, column, nestedJson?, parent}` with `arrays` or `keys` (parallel lists read across by index, or one row per key), or a list of them; every location of the rows lies in one |
+  | `unassign` (#587) | leaves the block's module (`placements.<id>.entity`) with no page, assignment `"[]"`, the state the blank site ships every record it keeps in place, so it prints nothing | none (`fields` only; the block has a placement with `entity` and `assign`) |
 
   The check (`ai-quickstart-mapping-hides.mjs`) fails a button field or a list whose rows can be fewer, on a kept
   record, that no entry names, and an entry whose way does not fit its places. A created record needs no entry: the
@@ -957,6 +971,30 @@ write it, by decision (Joomla's mail sender name `fromname`, kept among the plac
 
 **`seo.featuredView.article: {pageType, set: {column, value}, none, why}`**: the featured article these pages need is
 every post the build creates, written featured; with no post none is made.
+
+### What the template prints of its own (#587)
+
+Three declarations name words and files the template prints on every site, so the release gate can tell them from
+demo words. The shapes are closed (`ai-quickstart-kit-declarations.mjs`, WO domain); every `why` says what prints the
+words, and one that says no page draws them is refused.
+
+- **`look.favicon: {from: "logo", fallback: "initials", path, why}`**: the site icon. The build makes it from the
+  plan's logo, or from the business initials when the plan has none, and writes it at `path`, a file under
+  `templates/<template>/` (`.ico`, `.png` or `.svg`). `scripts/ai-quickstart/check-kept-literals.mjs` checks `path` is a
+  file of the release the source contract locks (`presentation-lock.json` `files`). JA Boxing: the template sets no
+  favicon link (T4 prints one only when its setting `other_faviconFile` is set), so Joomla links `favicon.ico` from the
+  template folder, and the release ships `templates/ja_boxing/favicon.ico`, the Joomla icon. Read from the code only:
+  the write of the icon is not measured on a blank site yet.
+- **`pages.<type>.record.facts: {<column>: {fact, why}}`**: a column of the record a page creates that holds a business
+  fact (`fact`, a key of `BUSINESS_FACTS`). The columns are closed per record kind (`RECORD_FACT_COLUMNS`): an article
+  has `created_by_alias`.
+- **`keptLiterals: [{file, values | pattern, why}]`**: words a template file writes into the page as code, kept on
+  every site: `values` lists them, `pattern` is an anchored regular expression for words the file computes (one that
+  matches the empty string or plain words is refused). `file` is a path of the release, checked against the files the
+  source contract locks. JA Boxing: the share bar's network names (`facebook`, `twitter`, `reddit`, printed as the
+  titles of the share links by the article and lesson layouts) and the two digit step and card numbers
+  (`^\d{2}$`, the lesson layout and the features block). The release gate's reading of `keptLiterals` lands with the
+  gate's own change; until then the declaration is checked here and passed to the mapping file only.
 
 ## The blank site contract
 
