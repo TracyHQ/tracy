@@ -1,6 +1,6 @@
 // The release step publishes a kit only on a check record it has verified against the blank site archive it is about
-// to publish (ticket #586, review round 2, R1): the step runs the gate itself, or reads the record the gate wrote, and
-// publishes nothing on any refusal; a call with no blank site archive hash is refused before anything is read. The
+// to publish (ticket #586, review rounds 2 and 3): the step runs the gate itself and checks the record in the folder is
+// the one that run wrote, and publishes nothing on any refusal; a call with no blank site archive hash is refused before anything is read. The
 // record is one the gate really made on the invented florist kit.
 import assert from 'node:assert/strict'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
@@ -44,7 +44,12 @@ async function kit({ reset = true } = {}) {
   record.verdict = { ...record.verdict, ...verdictFromRecord(record) }
   writeFileSync(path.join(folder, RECORD_FILE), recordText(record))
   writeFileSync(path.join(folder, VERDICT_FILE), JSON.stringify(verdictFileOf(record), null, 1))
-  return { root, folder }
+  // The folder holds no kit to build: the plan is the record's own, so these cases test the other refusals.
+  const plan = async () => ({
+    places: record.places.map((p) => [p.key, p.account]),
+    probed: record.measurements.writeSafety.placeKeys ?? []
+  })
+  return { root, folder, record, runGate: async () => ({ record }), plan }
 }
 
 const publisher = () => {
@@ -59,6 +64,8 @@ test('R1: a verified passing kit is published once, for the blank site archive i
     folder: k.folder,
     pins: PINS,
     blankSiteSha: BLANK,
+    runGate: k.runGate,
+    plan: k.plan,
     publish: p.publish
   })
   assert.deepEqual(result.problems, [])
@@ -70,11 +77,12 @@ test('R1: a verified passing kit is published once, for the blank site archive i
 test('R1: publish is never called on a refusal', async () => {
   const k = await kit()
   const failing = await kit({ reset: false })
+  const run = { runGate: k.runGate, plan: k.plan }
   const cases = [
-    { folder: k.folder, pins: PINS, blankSiteSha: null },
-    { folder: k.folder, pins: PINS, blankSiteSha: 'c'.repeat(64) },
-    { folder: k.folder, pins: { ...PINS, plugin: '9.9.9' }, blankSiteSha: BLANK },
-    { folder: failing.folder, pins: PINS, blankSiteSha: BLANK }
+    { folder: k.folder, pins: PINS, blankSiteSha: null, ...run },
+    { folder: k.folder, pins: PINS, blankSiteSha: 'c'.repeat(64), ...run },
+    { folder: k.folder, pins: { ...PINS, plugin: '9.9.9' }, blankSiteSha: BLANK, ...run },
+    { folder: failing.folder, pins: PINS, blankSiteSha: BLANK, runGate: failing.runGate, plan: failing.plan }
   ]
   for (const c of cases) {
     const p = publisher()
@@ -92,7 +100,7 @@ test('R1: publish is never called on a refusal', async () => {
   rmSync(failing.root, { recursive: true, force: true })
 })
 
-test('R1: the release step may run the gate itself first, and still publishes only what it then verifies', async () => {
+test('R1: the release step runs the gate itself first, and publishes only what it then verifies', async () => {
   const k = await kit()
   const order = []
   const p = publisher()
@@ -100,7 +108,11 @@ test('R1: the release step may run the gate itself first, and still publishes on
     folder: k.folder,
     pins: PINS,
     blankSiteSha: BLANK,
-    runGate: async () => void order.push('gate'),
+    plan: k.plan,
+    runGate: async () => {
+      order.push('gate')
+      return { record: k.record }
+    },
     publish: async (f) => {
       order.push('publish')
       await p.publish(f)
@@ -113,6 +125,7 @@ test('R1: the release step may run the gate itself first, and still publishes on
     folder: k.folder,
     pins: PINS,
     blankSiteSha: BLANK,
+    plan: k.plan,
     runGate: async () => {
       throw new Error('the gate stopped')
     },

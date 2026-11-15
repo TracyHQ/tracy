@@ -18,9 +18,11 @@ export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v2'
  * (a new measurement, a stricter rule). A release refuses a record of another version. 3: the release guard recomputes
  * the verdict from the record, write safety counts only what reached the site, the hidden pages decide structure. 4: a
  * place is tested only where its probe is found in what was written, a hidden page must be seen missing, quality reads
- * the addresses the host reads as they are, and the guard works every count out again from the record's own lists.
+ * the addresses the host reads as they are, and the guard works every count out again from the record's own lists. 5:
+ * every build refusal is found in memory before the write, a link is judged by the page it reaches, a hide may not
+ * take shown pages down, a resumed write safety is never released, and the publish step checks the kit's own plan.
  */
-export const GATE_VERSION = 4
+export const GATE_VERSION = 5
 
 /** The folder of a kit that holds its check record; never part of what the record is measured on. */
 export const CHECK_RECORD_DIR = 'check-record'

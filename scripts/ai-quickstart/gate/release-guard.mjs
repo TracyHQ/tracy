@@ -2,7 +2,9 @@
 // The release refusal (ticket #586): an AI quickstart is released only with a fresh passing check record. The publish
 // step calls `assertReleasable(folder)` before it uploads anything; it throws, listing every problem
 // (`release-binding.mjs`), when the kit has no verdict, its verdict failed, a kit file changed since the record, or the
-// record ran another plugin or human quickstart than Tracy pins (`apps/tracy-web/src/quickstarts.json`).
+// record ran another plugin or human quickstart than Tracy pins (`apps/tracy-web/src/quickstarts.json`). The command
+// also makes the kit's marker plan again in memory and refuses a record that does not hold it (`release-plan.mjs`): a
+// passing record of another kit. `assertReleasable` alone does not: the publish step goes through `publishVerified`.
 //
 //   node scripts/ai-quickstart/gate/release-guard.mjs <AI quickstart folder> [--blank-site <blank site .zip>]
 //                                                     [--pins <pins.json>]
@@ -13,7 +15,8 @@ import { createHash } from 'node:crypto'
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { releaseProblems } from './release-binding.mjs'
+import { RECORD_FILE, releaseProblems } from './release-binding.mjs'
+import { planOfFolder, planProblems } from './release-plan.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 const QUICKSTARTS = 'apps/tracy-web/src/quickstarts.json'
@@ -66,7 +69,7 @@ export function assertReleasable(folder, options = {}) {
   throw error
 }
 
-function main(argv) {
+async function main(argv) {
   const flag = (name) => (argv.includes(name) ? argv[argv.indexOf(name) + 1] : null)
   const folder = argv.find((a, i) => !a.startsWith('-') && !argv[i - 1]?.startsWith('--'))
   if (!folder || !existsSync(folder)) {
@@ -78,11 +81,19 @@ function main(argv) {
     pins: flag('--pins') ? JSON.parse(readFileSync(flag('--pins'), 'utf8')) : undefined,
     blankSiteSha: blank ? createHash('sha256').update(readFileSync(blank)).digest('hex') : undefined
   }
-  try {
-    assertReleasable(folder, options)
-  } catch (error) {
-    if (!error.problems) throw error
-    console.error(error.message)
+  const problems = releaseRefusals(folder, options)
+  const recordFile = path.join(folder, RECORD_FILE)
+  if (existsSync(recordFile))
+    try {
+      problems.push(...planProblems(JSON.parse(readFileSync(recordFile, 'utf8')), await planOfFolder(folder)))
+    } catch (error) {
+      problems.push({ code: 'plan_unbuildable', message: String(error?.message ?? error).slice(0, 200) })
+    }
+  if (problems.length) {
+    console.error(
+      'the AI quickstart may not be released:\n' +
+        problems.map((p) => '  ' + p.code + ': ' + p.message).join('\n')
+    )
     return 1
   }
   console.log('release-guard: the AI quickstart may be released')
@@ -90,4 +101,4 @@ function main(argv) {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))
-  process.exit(main(process.argv.slice(2)))
+  process.exit(await main(process.argv.slice(2)))

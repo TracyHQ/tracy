@@ -59,7 +59,7 @@ const structureOf = (full, hidden, minimum) => ({
   hidden
 })
 
-/** The key a write safety state is resumed under: what the passes were measured on. */
+/** The key a write safety state is resumed under: what the passes were measured on, the site and the code that measured. */
 const stateKeyOf = (input, probes) =>
   createHash('sha256')
     .update(
@@ -69,7 +69,9 @@ const stateKeyOf = (input, probes) =>
         kitFilesSha256(input.kitHashes),
         input.inputs?.blankSite?.sha256 ?? null,
         input.pin ?? null,
-        probes.map((p) => p.id)
+        probes.map((p) => p.id),
+        input.site?.origin ?? null,
+        input.codeSha256 ?? null
       ])
     )
     .digest('hex')

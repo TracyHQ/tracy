@@ -7,10 +7,12 @@
 // own contents do not give (`record-verdict.mjs`); a verdict that did not pass; a kit or allow file changed since the
 // record; controls the gate did not make for that installer; a plugin or a human quickstart other than the pinned
 // ones; a record of another gate version or of another kit; a record whose counts its own lists do not give, or whose
-// passing measurements hold less than a real run (`record-consistency.mjs`, `record-detail.mjs`); a check record folder
+// passing measurements hold less than a real run (`record-consistency.mjs`, `record-detail.mjs`); a write safety that
+// resumed a saved state; a check record folder
 // that holds any other file, or is a link. This defends against a stale record, a changed kit, plugin, installer,
 // control or allow file, and a hand-edited verdict or status. It does not defend against a record invented field by
-// field: the release step itself must run the gate and check the blank site archive it built (`release-publish.mjs`).
+// field, or a passing record of another kit relabelled: the release step itself runs the gate, checks that the record
+// is the one that run wrote and holds the plan the kit's own build gives (`release-publish.mjs`, `release-plan.mjs`).
 // Pure but for reading the kit folder.
 import { createHash } from 'node:crypto'
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
@@ -179,6 +181,16 @@ export function releaseProblems(folder, { pins = {}, blankSiteSha } = {}) {
       problem(
         'human_quickstart_not_pinned',
         'the record ran another human quickstart installer than the pinned one'
+      )
+    )
+  // A resumed write safety took the passes of a saved state on trust (review round 3, U5): a release record runs them all.
+  if (record.measurements?.writeSafety?.resumedFrom != null)
+    out.push(
+      problem(
+        'write_safety_resumed',
+        'write safety resumed ' +
+          record.measurements.writeSafety.resumedFrom +
+          ' pass(es) from a saved state: run the gate into an empty run folder'
       )
     )
   if (blankSiteSha && v.blankSiteSha256 !== blankSiteSha)

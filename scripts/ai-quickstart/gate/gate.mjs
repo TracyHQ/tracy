@@ -66,7 +66,7 @@ import { qualityOn, siteSession } from './site-session.mjs'
 import { filesOf } from './sources.mjs'
 import { blankControlOf } from './verdict.mjs'
 import { PROBE_CATALOGUE } from './write-probes-edge.mjs'
-import { fileState } from './write-safety-state.mjs'
+import { fileState, gateCodeSha256 } from './write-safety-state.mjs'
 
 const argv = process.argv.slice(2)
 const flag = (name) => (argv.includes(name) ? argv[argv.indexOf(name) + 1] : null)
@@ -276,6 +276,7 @@ const { record } = await releaseGate({
   qualityPath: joomlaQualityPath,
   pin,
   writeSafetyState: fileState(path.join(out, 'write-safety-state.json')),
+  codeSha256: gateCodeSha256(ROOT),
   baseline: baselineOf(folder, flag('--quality-baseline')),
   probes: [...PROBE_CATALOGUE, ...JOOMLA_PROBES],
   demoRoutes: demoContent && existsSync(demoContent) ? demoRoutesOf(readJson(demoContent)) : [],

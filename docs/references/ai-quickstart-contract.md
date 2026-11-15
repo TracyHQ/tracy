@@ -1822,8 +1822,10 @@ human control and the quality control, section "The controls" below) and `allowF
 `check-record/secret-allow.json`, null when it has none). The kit carries both `check-record/record.json` (required:
 a verdict alone is no proof) and a small `check-record/verdict.json` (`tracy-ai-quickstart-check-verdict/v1`, made by
 `verdictFileOf(record)`): the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it,
-`recordText(record)`), and the verdict (`pass`, `failing`, `measurements`). `GATE_VERSION` is 4 since the second #586
-review: a record of version 3 counted a place tested whenever the build was asked for its probe (a build that wrote its
+`recordText(record)`), and the verdict (`pass`, `failing`, `measurements`). `GATE_VERSION` is 5 since the third #586
+review: a record of version 4 took a friendly menu address of a planned page for a link to a missing page, passed
+the hidden variant while the pages still shown did not answer, and could carry write safety passes resumed on trust
+from a saved state of other gate code. A record of version 3 counted a place tested whenever the build was asked for its probe (a build that wrote its
 plain marker instead still showed every place tested), passed the hidden variant when no page was hidden or a hidden
 page still answered, and measured template quality at addresses the host read under `/index.php` twice. A record of
 version 2 counted build refusals as tested places and left the hidden variant out of the status.
@@ -1853,14 +1855,21 @@ version 2 counted build refusals as tested places and left the hidden variant ou
 | `human_quickstart_not_pinned` | the record ran another human quickstart installer than the pinned one |
 | `blank_site_changed` | the blank site archive about to be published is not the one the record ran on |
 | `record_changed` | `check-record/record.json` is not the record the verdict was written from (by its bytes) |
+| `write_safety_resumed` | write safety resumed passes from a saved state (`resumedFrom`): a release record runs every pass in one run |
+
+The publish step and the guard command add the kit's own plan (`gate/release-plan.mjs`): the marker build is made
+again in memory from the kit folder, and the record must hold its universe of places, each with the same account, and
+the places write safety probes (`plan_mismatch`; `plan_unbuildable` when the folder gives no plan). A passing record of
+another kit, relabelled and bound to this folder's files, is refused there. `releaseProblems` and `assertReleasable`
+do not rebuild the plan (they read files only), and neither does CI.
 
 A passing record goes stale by a bumped `gateVersion` or a changed bound input. It does not go stale by a change of
 what is not bound: the build team's write step, the gate's code between two version bumps, the kit contract
 `contracts/<slug>/<cms>/<version>/template-kit.json`, the block library and the probe catalogue. A change there that
 makes an earlier record no proof needs a `GATE_VERSION` bump by hand; nothing checks that it was made. The pins come from
 `apps/tracy-web/src/quickstarts.json` (`quickstart/<slug>/<cms>`: `cowork.version` and `installer.sha256`; a kit whose
-version is not the pinned one is `pin_version`, a template not listed is `no_pin`). The publish step calls
-`assertReleasable(folder)` before it uploads anything; it throws with `problems` on the error. By hand:
+version is not the pinned one is `pin_version`, a template not listed is `no_pin`). `assertReleasable(folder)` throws
+with `problems` on the error; the publish step goes through `publishVerified` (below). By hand, with the plan rebuilt:
 
 ```
 node scripts/ai-quickstart/gate/release-guard.mjs <AI quickstart folder> [--blank-site <blank site .zip>]
@@ -1877,14 +1886,20 @@ the same package.
 with the pins of the quickstart list. It refuses a stale record, a changed kit, plugin, installer, control or allow
 file, a verdict file or a status edited by hand, and a record whose counts its own lists do not give
 (`scripts/test/ai-quickstart-kit-release.test.mjs`, `scripts/test/ai-quickstart-gate-forged-record.test.mjs`). It does
-not prove that a run took place: a record invented field by field, each list and count made to agree, passes it. The
-guard reads a file; only a step that measures can tell a measured record from an invented one. So the step that
-publishes a kit does it through `publishVerified({folder, pins, blankSiteSha, publish, runGate})`
-(`gate/release-publish.mjs`): it names the sha256 of the blank site archive it is about to publish (a call without one
-is refused, `blank_site_unbound`), may run the gate itself first (`runGate`), and calls `publish` only when
-`releaseProblems` finds nothing. CI cannot check `blank_site_changed`: the archive is not in the repository. A kit with
-no `site` entry is not yet a released AI quickstart and CI asks no record of it. Today no publish step calls
-`publishVerified` (it is #588's to call, running the gate on the archive it just built).
+not prove that a run took place: a record invented field by field, each list and count made to agree, passes it, and
+so does a passing record of another kit relabelled and bound to this folder (CI does not rebuild the plan). The guard
+reads a file; only a step that measures can tell a measured record from an invented one. So the step that publishes a
+kit does it through `publishVerified({folder, pins, blankSiteSha, publish, runGate})` (`gate/release-publish.mjs`): it
+names the sha256 of the blank site archive it is about to publish (a call without one is refused,
+`blank_site_unbound`); it must run the gate itself (`runGate`, into an empty run folder with `--into-kit`, answering
+the record it wrote; without it `gate_not_run`); the record in the kit folder must be the one that run wrote, by its
+sha256 (`record_not_this_run`); the record must hold the kit's own plan (`plan_mismatch`); and it calls `publish` only
+when all of that and `releaseProblems` find nothing. A record whose write safety resumed a saved state is refused
+(`write_safety_resumed`), so the release run measures every pass itself. CI cannot check `blank_site_changed`: the
+archive is not in the repository. CI asks a record only of a kit whose `kit-manifest.json` names a `site`: a kit
+marked `released: true` with no `site` (JA Boxing 1.0.11 today) is asked nothing, by decision: `site` is what makes it
+an AI quickstart Tracy builds from, and `released` alone does not. Today no publish step calls `publishVerified` (it is
+#588's to call, running the gate on the archive it just built).
 
 ### The secret scan
 
@@ -2084,10 +2099,12 @@ about 7 s, a full site write about 40 s, a reset and the page reads about 30 s, 
 (the text place with a declared limit takes 21 probes, one per pass) take about 28 minutes. 24 passes, 20 site steps
 (about 70 s each), 60 minutes, 5 reruns of one pass on the site; past one the measurement is `incomplete`, never
 `passed`. Builds in memory (about 1.5 s each) have no limit of their own. The state is saved after each pass (`<out>/write-safety-state.json`, `gate/write-safety-state.mjs`) under a
-key of the gate version, the kit's files, the blank site archive, the plugin and the probe catalogue: a run stopped by
+key of the gate version, the kit's files, the blank site archive, the plugin, the probe catalogue, the site's address
+and the sha256 of the code of the gate and of the build's write step (`gateCodeSha256`): a run stopped by
 its time limit resumes from the next pass when the gate runs again into the same folder (`resumedFrom`). A resume
-carries only that state (the ledger, the findings and the passes): each process writes into a run folder of its own
-(`<out>/writes/run-<k>/<n>`), so no write record of an earlier process is taken for its own.
+carries that state (the ledger, the findings and the passes) on trust: the earlier passes are not measured again.
+Each process writes into a run folder of its own (`<out>/writes/run-<k>/<n>`), so no write record of an earlier
+process is taken for its own. A resumed record is never released (`write_safety_resumed`).
 
 The record gives `places` (`written`, `probed`, `tested`), `notSiteTested`, `passes`, `steps`, `buildSteps`,
 `findings` (page, block, store block, field, probe, kind, the stored location; never the value), `missing` and
@@ -2169,18 +2186,20 @@ time limit. The command's output is not kept; it must print no secret.
 ### The publish step
 
 The publish step of an AI quickstart (#588) publishes through `publishVerified` (`gate/release-publish.mjs`, see "What
-the guard defends against" above), or at the least calls `assertReleasable(folder)` (`gate/release-guard.mjs`) before
-it uploads anything, with the blank site archive it is about to publish:
+the guard defends against" above): it runs the gate itself into an empty run folder with `--into-kit`, on the blank
+site archive it is about to publish, and publishes only when the record in the kit folder is the one that run wrote,
+holds the kit's own plan and the guard finds nothing:
 
 ```
-import { assertReleasable } from '../scripts/ai-quickstart/gate/release-guard.mjs'
-assertReleasable(kitFolder, { blankSiteSha: sha256OfTheBlankSiteArchive })
+import { publishVerified } from '../scripts/ai-quickstart/gate/release-publish.mjs'
+await publishVerified({ folder: kitFolder, pins, blankSiteSha: sha256OfTheBlankSiteArchive, runGate, publish })
 ```
 
-It throws, with `problems` on the error, unless the kit's `check-record/verdict.json` is the one its
-`check-record/record.json` gives, of this gate version, passed, and bound to the kit's files, the pinned plugin and
-human quickstart, the gate's own controls, the allow file, and that archive (section "The release refusal"
-above). `gate.mjs --into-kit` writes the `check-record/` the guard reads.
+`assertReleasable(folder, { blankSiteSha })` (`gate/release-guard.mjs`) throws, with `problems` on the error, unless the
+kit's `check-record/verdict.json` is the one its `check-record/record.json` gives, of this gate version, passed, and
+bound to the kit's files, the pinned plugin and human quickstart, the gate's own controls, the allow file, and that
+archive (section "The release refusal" above); it reads files only and does not rebuild the plan. `gate.mjs
+--into-kit` writes the `check-record/` the guard reads.
 
 ### Run time
 

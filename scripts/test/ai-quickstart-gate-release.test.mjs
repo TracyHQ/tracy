@@ -23,6 +23,7 @@ import {
 } from '../ai-quickstart/gate/release-binding.mjs'
 import { releaseGate } from '../ai-quickstart/gate/release-gate.mjs'
 import { assertReleasable } from '../ai-quickstart/gate/release-guard.mjs'
+import { writeFloristFolder } from './fixtures/ai-quickstart-gate/florist-folder.mjs'
 import { floristGate, HUMAN_SHA } from './fixtures/ai-quickstart-gate/florist-gate.mjs'
 
 const GUARD = fileURLToPath(new URL('../ai-quickstart/gate/release-guard.mjs', import.meta.url))
@@ -209,8 +210,15 @@ test('the guard command exits 1 and lists every problem; 0 on a fresh passing ki
     () => assertReleasable(k.folder, { pins: PINS }),
     (e) => e.problems.length === 1
   )
-  const ok = await kitWith()
+  // The command also rebuilds the kit's own marker plan from the folder, so the passing kit is the whole florist kit.
+  const ok = { root: mkdtempSync(path.join(tmpdir(), 'kit-release-')) }
+  ok.folder = writeFloristFolder(ok.root)
+  const record = await gateRecord()
+  record.kitFiles = kitHashesOf(ok.folder)
+  record.binding.kitFilesSha256 = kitFilesSha256(record.kitFiles)
+  writeCheck(ok.folder, record)
   writeFileSync(pins, JSON.stringify(PINS))
-  assert.equal(spawnSync(process.execPath, [GUARD, ok.folder, '--pins', pins]).status, 0)
+  const passed = spawnSync(process.execPath, [GUARD, ok.folder, '--pins', pins], { encoding: 'utf8' })
+  assert.equal(passed.status, 0, passed.stderr)
   done(k, ok)
 })
