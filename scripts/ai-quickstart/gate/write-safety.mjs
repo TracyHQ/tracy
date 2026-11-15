@@ -4,15 +4,19 @@
 // (`write-safety-judge.mjs`). A refusal or an error is traced to the one value that caused it by bisection
 // (`bisect.mjs`), that probe is taken out and the pass runs again (at most `reruns` times). The ledger shows which
 // probe reached which place. The site and the build are injected: a memory site in the unit test, a real one through
-// `structure-safety.mjs`. Without a way to reset the site the measurement is `not_run`.
+// `gate.mjs` (`release-gate.mjs`). Without a way to reset the site the measurement is `not_run`.
 import { bisect, stepBudget } from './bisect.mjs'
 import { only, pageCulprits, stopOf } from './write-safety-trials.mjs'
 import { buildRefusalOf, FAILING, gapKey, judgePage, stopClassOf } from './write-safety-judge.mjs'
 import { nameOf, passOptions, shortOf, storedIndex } from './write-safety-places.mjs'
 import { packPass, probeLedger } from './write-probes.mjs'
 
-/** The limits of one measurement (#586): passes, bisection steps, minutes, re-runs of one pass. */
-export const LIMITS = Object.freeze({ passes: 8, steps: 40, minutes: 30, reruns: 5 })
+/**
+ * The limits of one measurement (#586): passes, bisection steps, minutes, re-runs of one pass. A pass gives a place one
+ * probe, so the passes must cover the place that takes most probes (21 for a text place with a declared limit, with the
+ * edge probes and the Joomla ones).
+ */
+export const LIMITS = Object.freeze({ passes: 24, steps: 40, minutes: 60, reruns: 5 })
 
 /**
  * @param {{build: (options: object) => Promise<object>, site: {reset: Function | null, write: Function,
@@ -145,9 +149,12 @@ async function onePass(n, assignment, ctx, limits) {
     if (w.report?.status !== 'done') {
       const stop = stopClassOf(w.report)
       const index = storedIndex(a.built.writePlan)
-      const inOp = (key) =>
-        !stop.op ||
-        (index.get(String(a.opts.used.get(key).code).toUpperCase()) ?? []).some((s) => s.op === stop.op)
+      // A whole value probe (the empty value, a number) carries no code: the plan cannot say where it went, so it
+      // stays a suspect of every stop.
+      const inOp = (key) => {
+        const at = index.get(String(a.opts.used.get(key).code).toUpperCase())
+        return !stop.op || !at || at.some((s) => s.op === stop.op)
+      }
       const units = [...a.opts.used.keys()].filter(inOp)
       const found = await bisect(units, (subset) => stopOf(subset, active, ctx), budget, stop)
       take(found.culprits)

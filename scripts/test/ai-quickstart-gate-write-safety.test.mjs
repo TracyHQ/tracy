@@ -7,13 +7,14 @@ import test from 'node:test'
 import { JOOMLA_PROBES } from '../ai-quickstart/gate/adapters/joomla-probes.mjs'
 import { markerBuild } from '../ai-quickstart/gate/marker-plan.mjs'
 import { memoryTryWrite } from '../ai-quickstart/gate/memory-write.mjs'
-import { writeSafety } from '../ai-quickstart/gate/write-safety.mjs'
-import { applies, COMMON_PROBES } from '../ai-quickstart/gate/write-probes.mjs'
+import { LIMITS, writeSafety } from '../ai-quickstart/gate/write-safety.mjs'
+import { applies } from '../ai-quickstart/gate/write-probes.mjs'
+import { PROBE_CATALOGUE } from '../ai-quickstart/gate/write-probes-edge.mjs'
 import { floristKit } from './fixtures/ai-quickstart-gate/florist-kit.mjs'
 import { memorySiteOf } from './fixtures/ai-quickstart-gate/memory-site.mjs'
 
 const icons = { set: 'invented-icons@1', icons: [{ name: 'leaf', tags: ['plant'], categories: [] }] }
-const PROBES = [...COMMON_PROBES, ...JOOMLA_PROBES]
+const PROBES = [...PROBE_CATALOGUE, ...JOOMLA_PROBES]
 const measure = (faults = {}, extra = {}) => {
   const kit = floristKit()
   const site = memorySiteOf(kit, faults)
@@ -120,7 +121,7 @@ test('the packing ledger shows every applicable probe reached every place', asyn
   assert.deepEqual(result.missing, [])
   assert.ok(result.places.probed >= 4)
   assert.equal(result.places.tested, result.places.probed)
-  assert.ok(result.passes.length <= 8)
+  assert.ok(result.passes.length <= LIMITS.passes)
   const rows = new Set(result.ledger.map((r) => r.place + '|' + r.probe))
   const places = [...new Set(result.ledger.map((r) => r.place))]
   for (const place of places)
@@ -139,7 +140,7 @@ test('a spent budget is incomplete, never passed', async () => {
   // A page error the bisection has no step left for: the field stays unnamed and the measurement says so.
   const spent = await measure(
     { pageFails: (html) => /data-m="hero-home" data-v="[^"]*\{loadposition/.test(html) },
-    { limits: { passes: 8, steps: 0, minutes: 30, reruns: 5 } }
+    { limits: { ...LIMITS, steps: 0 } }
   )
   assert.equal(spent.result.status, 'incomplete')
   assert.equal(spent.result.incomplete, 'steps')
@@ -153,4 +154,20 @@ test('a site with no reset hook is not_run', async () => {
   const { result, site } = await measure({ reset: false })
   assert.deepEqual(result, { status: 'not_run', reason: 'no_reset_hook' })
   assert.equal(site.counts.writes, 0)
+})
+
+test('a door refusing a whole value probe (no marker left in it) is still traced to its field', async () => {
+  const footer = (call) => call.kind === 'module' && call.fields?.title === 'footer-main'
+  const { result } = await measure({
+    door: (call) =>
+      footer(call) && /(^|[^0-9a-z])NaN([^0-9a-z]|$)/.test(String(call.fields.params))
+        ? 'SLOT_VALUE_REFUSED'
+        : null
+  })
+  const refused = only(result.findings, 'door_refused')
+  assert.deepEqual(
+    refused.map((f) => [f.probe, f.storeBlock, f.cause]),
+    [['number-nan', 'footer-main', 'SLOT_VALUE_REFUSED']]
+  )
+  assert.equal(result.status, 'failed')
 })

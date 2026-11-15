@@ -35,7 +35,7 @@ export function passOptions(assignment = new Map()) {
     const probe = assignment.get(key)
     if (!probe) return markerText(f)
     used.set(key, { code: f.code, probe })
-    return probedValue(base, probe, f.code)
+    return probedValue(base, probe, f.code, f.limit ?? null)
   }
   const factOf = (v) => {
     const head = v.what === 'fact' ? 'fact:' + v.kind : v.what + ':' + v.item + '/' + v.kind

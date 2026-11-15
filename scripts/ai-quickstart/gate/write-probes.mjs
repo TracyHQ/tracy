@@ -15,7 +15,7 @@ export const signatureOf = (code, probe) => 'qx' + String(code).toLowerCase() + 
 const carries = (doc, name) => Boolean(doc?.querySelector?.('[' + name + ']'))
 
 /** A probe whose danger is a live element carrying its signature. */
-const elementProbe = (id, mark, text, why, types = ['text']) => ({
+export const elementProbe = (id, mark, text, why, types = ['text']) => ({
   id,
   types,
   text: (code) => text(signatureOf(code, mark)),
@@ -87,21 +87,33 @@ export function placeTypeOf({ kind, value }) {
   return 'text'
 }
 
-/** The value of a place with a probe: the place's own marker, then the probe (an address probe replaces it). */
-export function probedValue(base, probe, code) {
-  const text = probe.text(code)
+/**
+ * The value of a place with a probe: the place's own marker, then the probe (an address probe and a whole value probe
+ * replace it). A probe sized by the place's limit (`limit: 'at' | 'over'`) gets the base and the limit; it answers
+ * null where it cannot be made.
+ */
+export function probedValue(base, probe, code, limit = null) {
+  const text = probe.text(code, { base, limit })
+  if (text == null) return null
   if (probe.whole) return text
   return probe.types.includes('link') ? base + text : base + ' ' + text
 }
 
+/** The length of a value as a customer counts it: by character, not by UTF-16 unit. */
+export const lengthOf = (value) => [...String(value)].length
+
 /**
- * Whether a probe fits a place: its type, and its value within the place's limit (null: no limit known).
+ * Whether a probe fits a place: its type, and its value within the place's limit (null: no limit known). A probe
+ * sized by the limit applies only where a limit is declared, and the one over the limit is meant to pass it.
  * @param {{type: string | null, limit: number | null, base: string, code: string}} place
  */
-export const applies = (place, probe) =>
-  Boolean(place.type) &&
-  probe.types.includes(place.type) &&
-  (place.limit == null || [...probedValue(place.base, probe, place.code)].length <= place.limit)
+export function applies(place, probe) {
+  if (!place.type || !probe.types.includes(place.type)) return false
+  if (probe.limit && place.limit == null) return false
+  const value = probedValue(place.base, probe, place.code, place.limit)
+  if (value == null) return false
+  return probe.limit === 'over' || place.limit == null || lengthOf(value) <= place.limit
+}
 
 /**
  * The probe of each place in a pass: the first probe the ledger does not have for it yet, rotated by the place's
