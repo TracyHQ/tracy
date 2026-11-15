@@ -184,3 +184,34 @@ test('the plan review request is told by its id alone: dsh drops detail and inte
   assert.equal(isPlanReviewRequest([{ id: 'main-button', question: 'x', options: [] }]), false)
   assert.equal(isPlanReviewRequest(undefined), false)
 })
+
+test('a change request answer carries what changed and what was not done, for the plan card', () => {
+  const revised = {
+    ...planResult(4),
+    unchanged: false,
+    revision: {
+      changed: ['Changed the tagline.', 42, 'Removed a service.'],
+      notDone: [
+        { what: 'Change the language', why: 'The language is set on the plan card.' },
+        { what: 'bad entry' }
+      ]
+    }
+  }
+  assert.deepEqual(buildToolResultOf(JSON.stringify(revised)), {
+    kind: 'plan',
+    id: 'plan-1',
+    revision: 4,
+    revised: {
+      changed: ['Changed the tagline.', 'Removed a service.'],
+      notDone: [{ what: 'Change the language', why: 'The language is set on the plan card.' }]
+    }
+  })
+  const fold = [call(7, 'c1', { action: 'revise' }), result(7, 'c1', revised)].reduce(
+    buildToolFoldOf,
+    undefined
+  )
+  assert.equal(fold.plan.revision, 4)
+  assert.deepEqual(fold.plan.revised.changed, ['Changed the tagline.', 'Removed a service.'])
+  // A compose or edit answer has no change request: no note.
+  assert.equal('revised' in buildToolResultOf(JSON.stringify(planResult(2))), false)
+})

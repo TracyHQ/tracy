@@ -37,6 +37,7 @@ import { PlanCard } from './PlanCard'
 import { savePlanEdit, undoPlanEdit } from './save-plan-edit'
 import { saveTemplateChoice } from './save-template'
 import type { ReviewPresence } from './review-presence'
+import { hasNote, type RevisionNotes } from './revision-notes'
 import type { BuildRunFeed, DraftSource } from './sources'
 import type { Translate } from './strings'
 import { TemplateCard } from './TemplateCard'
@@ -45,6 +46,8 @@ export interface TailDeps {
   drafts: DraftSource
   /** The sessions whose plan review bar shows; the plan tail stands aside for it. */
   reviews: ReviewPresence
+  /** The notes change requests leave for the plan card (#609). */
+  notes?: RevisionNotes
   runs: BuildRunFeed
   t: () => Translate
   fetch?: typeof fetch
@@ -66,6 +69,8 @@ export type TailProps = TurnTailOwnerLike & {
  */
 export const newEditId = () =>
   `edit-${Array.from(globalThis.crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('')}`
+
+const noSubscribe = () => () => {}
 
 const useDraft = (drafts: DraftSource) => useSyncExternalStore(drafts.subscribe, drafts.read, drafts.read)
 
@@ -134,6 +139,13 @@ function TemplateTail({
 export function LivePlan({ deps, revision }: { deps: TailDeps; revision?: string }) {
   const draft = useDraft(deps.drafts)
   useEffect(() => void deps.drafts.load(), [deps.drafts, revision])
+  // The note belongs to the plan revision it was made for: any later change of the plan takes it away.
+  const noteKey = draft?.plan ? `${draft.plan.id}:${draft.plan.revision}` : ''
+  const note = useSyncExternalStore(
+    deps.notes?.subscribe ?? noSubscribe,
+    () => deps.notes?.read(noteKey) ?? null,
+    () => null
+  )
   if (!draft?.plan) return null
   const follow = async (request: Promise<Awaited<ReturnType<typeof savePlanEdit>>>) => {
     const next = await request
@@ -149,6 +161,8 @@ export function LivePlan({ deps, revision }: { deps: TailDeps; revision?: string
       onEdit={(edit) => follow(savePlanEdit(edit, deps.fetch))}
       onUndo={() => follow(undoPlanEdit(deps.fetch))}
       newEditId={newEditId}
+      revised={hasNote(note) ? note : null}
+      onDismissRevised={() => deps.notes?.dismiss(noteKey)}
     />
   )
 }

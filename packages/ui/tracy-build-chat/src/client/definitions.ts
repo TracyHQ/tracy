@@ -22,6 +22,8 @@ import {
   type HandoffMessage
 } from '@tracy/core/build-chat'
 
+import type { RevisionNotes } from './revision-notes'
+
 export const TEMPLATES_KEY = `${BUILD_TOOL}:templates`
 export const PLAN_KEY = `${BUILD_TOOL}:plan`
 export const WORKING_KEY = `${BUILD_TOOL}:working`
@@ -74,7 +76,23 @@ function definitionOf<V extends { turn: number }>(kind: string, pick: (fold: Bui
 }
 
 export const templatesDefinition = definitionOf<TemplatesValue>(TEMPLATES_KEY, (fold) => fold.templates)
-export const planDefinition = definitionOf<PlanValue>(PLAN_KEY, (fold) => fold.plan)
+/**
+ * The plan definition. Folding a change request answer also hands its note to `notes`, keyed by the plan revision
+ * it was made for: the plan card reads it from there, in the review bar as well as at the turn's tail.
+ */
+export function planDefinitionFor(notes: RevisionNotes) {
+  const base = definitionOf<PlanValue>(PLAN_KEY, (fold) => fold.plan)
+  const keep = (fold: BuildToolFold): BuildToolFold => {
+    const plan = fold.plan
+    if (plan?.revised) notes.put(`${plan.id}:${plan.revision}`, plan.revised)
+    return fold
+  }
+  return {
+    ...base,
+    start: (context: unknown, m: { event: EventLike }) => keep(base.start(context, m)),
+    update: (context: { state: BuildToolFold }, m: { event: EventLike }) => keep(base.update(context, m))
+  }
+}
 export const workingDefinition = definitionOf<WorkingValue>(WORKING_KEY, (fold) => fold.working)
 
 /** The owner props dsh hands a turn tail entry; only what the cards read. */

@@ -245,3 +245,46 @@ test('the definitions publish the latest templates and plan on their own turn, a
   assert.equal(run(plan, later).turn, 4, 'one living plan: the older turn loses its card')
   assert.equal(run(templates, later).turn, 1)
 })
+
+test('a change request answer reaches the plan card note store, once per plan revision, and a dismissal sticks', () => {
+  const r = recorder()
+  const notes = client.createRevisionNotes()
+  client.applyWith(r.ctx, { switches: switchBoard(true), notes })
+  const plan = r.definitions.find((d) => d.kind === 'tracy_build:plan')
+  const event = (type, data, extra = {}) => ({ type, seq: 1, surfaceOp: 'append', data, ...extra })
+  const started = event('tool/call', {
+    turn: 3,
+    name: 'tracy_build',
+    callId: 'c1',
+    arguments: '{"action":"revise"}'
+  })
+  const answered = event('tool/result', {
+    turn: 3,
+    message: {
+      source: { callId: 'c1' },
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify({
+            plan: { id: 'plan-1', revision: 5 },
+            revision: {
+              changed: ['Changed the tagline.'],
+              notDone: [{ what: 'Move the logo', why: 'Not yet.' }]
+            }
+          })
+        }
+      ]
+    }
+  })
+  let state = plan.start({}, { event: started, role: 'start' })
+  assert.equal(notes.read('plan-1:5'), null, 'nothing before the answer')
+  state = plan.update({ state }, { event: answered })
+  assert.deepEqual(notes.read('plan-1:5'), {
+    changed: ['Changed the tagline.'],
+    notDone: [{ what: 'Move the logo', why: 'Not yet.' }]
+  })
+  assert.equal(notes.read('plan-1:6'), null, 'the note belongs to its own revision only')
+  notes.dismiss('plan-1:5')
+  plan.update({ state }, { event: answered })
+  assert.equal(notes.read('plan-1:5'), null, 'folded again, still dismissed')
+})

@@ -28,11 +28,26 @@ function argsOf(raw) {
 }
 
 /**
+ * The note of a change request answer (`revision: {changed, notDone}`): the lines the plan step wrote, strings only.
+ * Null when the answer has none (a compose or an edit) or the shape is not this one.
+ * @param {unknown} value
+ * @returns {null | { changed: string[], notDone: { what: string, why: string }[] }}
+ */
+function revisedOf(value) {
+  if (!isObject(value)) return null
+  const changed = (Array.isArray(value.changed) ? value.changed : []).filter((x) => typeof x === 'string')
+  const notDone = (Array.isArray(value.notDone) ? value.notDone : [])
+    .filter((e) => typeof e?.what === 'string' && typeof e?.why === 'string')
+    .map((e) => ({ what: e.what, why: e.why }))
+  return { changed, notDone }
+}
+
+/**
  * What one `tracy_build` answer is, told apart by its shape (a `status` call can answer any of them).
  * @param {unknown} text - the result's JSON text
  * @returns {null | { kind: 'research', business: string }
  *   | { kind: 'templates', options: any[], none: boolean }
- *   | { kind: 'plan', id: string, revision: number }
+ *   | { kind: 'plan', id: string, revision: number, revised?: { changed: string[], notDone: { what: string, why: string }[] } }
  *   | { kind: 'running' | 'stopped' | 'quiet' }}
  */
 export function buildToolResultOf(text) {
@@ -57,7 +72,9 @@ export function buildToolResultOf(text) {
     return { kind: 'quiet' }
   if (isObject(value.plan)) {
     const { id, revision } = value.plan
-    return typeof id === 'string' && Number.isInteger(revision) ? { kind: 'plan', id, revision } : null
+    if (typeof id !== 'string' || !Number.isInteger(revision)) return null
+    const revised = revisedOf(value.revision)
+    return revised ? { kind: 'plan', id, revision, revised } : { kind: 'plan', id, revision }
   }
   if (Array.isArray(value.options))
     return { kind: 'templates', options: value.options, none: value.none === true }
@@ -93,7 +110,8 @@ export function buildToolRowOf(rawArgs, text) {
 
 /**
  * @typedef {{ turn: number, seq: number, options: any[], none: boolean }} TemplatesSeen
- * @typedef {{ turn: number, seq: number, id: string, revision: number }} PlanSeen
+ * @typedef {{ turn: number, seq: number, id: string, revision: number,
+ *   revised?: { changed: string[], notDone: { what: string, why: string }[] } }} PlanSeen
  * @typedef {{ turn: number, seq: number, step: string }} WorkingSeen
  * @typedef {{ calls: Readonly<Record<string, string>>, templates: TemplatesSeen | null, plan: PlanSeen | null,
  *   working: WorkingSeen | null }} BuildToolFold
@@ -141,7 +159,16 @@ export function buildToolFoldOf(state = EMPTY, event) {
   if (result?.kind === 'templates')
     return { ...state, templates: { turn, seq, options: result.options, none: result.none } }
   if (result?.kind === 'plan')
-    return { ...state, plan: { turn, seq, id: result.id, revision: result.revision } }
+    return {
+      ...state,
+      plan: {
+        turn,
+        seq,
+        id: result.id,
+        revision: result.revision,
+        ...(result.revised ? { revised: result.revised } : {})
+      }
+    }
   return state
 }
 

@@ -29,10 +29,11 @@ import {
 import {
   handoffDefinition,
   historyDefinition,
-  planDefinition,
+  planDefinitionFor,
   templatesDefinition,
   workingDefinition
 } from './definitions'
+import { createRevisionNotes, type RevisionNotes } from './revision-notes'
 import { createReviewPresence } from './review-presence'
 import { ReviewBar, type PendingReview, selectPlanReview } from './ReviewBar'
 import { createBuildRunFeed, createDraftSource, type BuildRunFeed } from './sources'
@@ -44,6 +45,7 @@ import { WorkingDock, type WorkingDockProps } from './WorkingDock'
 export { BuildProgress } from './BuildProgress'
 export { BuildStopped } from './BuildStopped'
 export { PlanCard } from './PlanCard'
+export { createRevisionNotes } from './revision-notes'
 export {
   BUILD_DRAFT_PLAN_EDITS_PATH,
   BUILD_DRAFT_PLAN_UNDO_PATH,
@@ -86,6 +88,8 @@ export interface ApplyDeps {
   switches: { isShown(id: string): boolean; subscribe(listener: () => void): () => void }
   fetch?: typeof fetch
   runs?: BuildRunFeed
+  /** Where change request notes go for the plan card; a test passes its own. */
+  notes?: RevisionNotes
 }
 
 export const inject = ['locale', 'slots', 'uiConversation', 'conversation', 'sessions']
@@ -125,9 +129,11 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
   const t = (): Translate => ctx.locale.bind?.(NS) ?? english
   const drafts = createDraftSource(deps.fetch)
   const reviews = createReviewPresence()
+  const notes = deps.notes ?? createRevisionNotes()
   const tailDeps: TailDeps = {
     drafts,
     reviews,
+    notes,
     runs: deps.runs ?? createBuildRunFeed(deps.fetch),
     t,
     fetch: deps.fetch,
@@ -138,7 +144,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
 
   for (const definition of [
     templatesDefinition,
-    planDefinition,
+    planDefinitionFor(notes),
     workingDefinition,
     historyDefinition,
     handoffDefinition

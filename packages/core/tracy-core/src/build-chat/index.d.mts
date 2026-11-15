@@ -229,10 +229,15 @@ export declare function approvalOf(
 
 export declare const BUILD_TOOL: 'tracy_build'
 export declare const PLAN_REVIEW_ID: 'plan-review'
+/** What a change request did, in the plan step's own English lines: what changed and what was not done and why. */
+export interface RevisionNote {
+  changed: string[]
+  notDone: { what: string; why: string }[]
+}
 export type BuildToolResult =
   | { kind: 'research'; business: string }
   | { kind: 'templates'; options: TemplateOption[]; none: boolean }
-  | { kind: 'plan'; id: string; revision: number }
+  | { kind: 'plan'; id: string; revision: number; revised?: RevisionNote }
   | { kind: 'running' | 'stopped' | 'quiet' }
 export declare function buildToolResultOf(text: unknown): BuildToolResult | null
 export type BuildToolRow =
@@ -243,7 +248,7 @@ export declare function buildToolRowOf(rawArgs: unknown, text: string | null): B
 export interface BuildToolFold {
   calls: Readonly<Record<string, string>>
   templates: { turn: number; seq: number; options: TemplateOption[]; none: boolean } | null
-  plan: { turn: number; seq: number; id: string; revision: number } | null
+  plan: { turn: number; seq: number; id: string; revision: number; revised?: RevisionNote } | null
   /** The latest call while it waits: not answered yet, or answered `running`. */
   working: { turn: number; seq: number; step: string } | null
 }

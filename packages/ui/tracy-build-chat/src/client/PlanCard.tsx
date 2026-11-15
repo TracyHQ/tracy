@@ -27,7 +27,8 @@ import {
   type PlanFact,
   planCardOf,
   planChangeOf,
-  planEditOf
+  planEditOf,
+  type RevisionNote
 } from '@tracy/core/build-chat'
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
 import { type EditContext, EditableValue, UndoIcon } from './EditableValue'
@@ -50,6 +51,80 @@ export interface PlanCardProps {
   locale?: string
   /** A fresh plan edit id; a test passes a fixed one. */
   newEditId?: () => string
+  /** What the last change request did (#609): drawn as a note at the top until it is dismissed. */
+  revised?: RevisionNote | null
+  /** The owner hides the note. */
+  onDismissRevised?: () => void
+}
+
+/** How many Left out lines show before "Show all". */
+const LEFT_OUT_SHOWN = 6
+
+/** The same line said again and again becomes one line with a count, in the order it first came. */
+function grouped<T>(items: T[], keyOf: (item: T) => string): { item: T; count: number }[] {
+  const lines = new Map<string, { item: T; count: number }>()
+  for (const item of items) {
+    const seen = lines.get(keyOf(item))
+    if (seen) seen.count += 1
+    else lines.set(keyOf(item), { item, count: 1 })
+  }
+  return [...lines.values()]
+}
+const counted = (text: string, count: number) => (count === 1 ? text : `${text} (${count})`)
+
+/** What the last change request did: what changed, and what was not done with its reason. */
+function RevisionNoteView({
+  note,
+  t,
+  onDismiss
+}: {
+  note: RevisionNote
+  t: Translate
+  onDismiss: () => void
+}) {
+  const changed = grouped(note.changed, (line) => line)
+  const notDone = grouped(note.notDone, (e) => `${e.what}\n${e.why}`)
+  return (
+    <section className="tv-bc-plan-sec tv-bc-plan-rev" aria-label={t('plan.revised.changed')}>
+      <div className="tv-bc-plan-rev-h">
+        <h4>{t(changed.length > 0 ? 'plan.revised.changed' : 'plan.revised.notDone')}</h4>
+        <button
+          type="button"
+          className="tv-bc-btn"
+          data-ghost=""
+          aria-label={t('plan.revised.dismiss')}
+          onClick={onDismiss}
+        >
+          <IconCloseOutlineRegular aria-hidden />
+        </button>
+      </div>
+      {changed.length > 0 && (
+        <ul className="tv-bc-plain">
+          {changed.map(({ item, count }) => (
+            <li key={item}>{counted(item, count)}</li>
+          ))}
+        </ul>
+      )}
+      {changed.length > 0 && notDone.length > 0 && (
+        <h4 className="tv-bc-plan-rev-sub">{t('plan.revised.notDone')}</h4>
+      )}
+      {notDone.length > 0 && (
+        <ul className="tv-bc-dropped">
+          {notDone.map(({ item, count }) => (
+            <li key={`${item.what}\n${item.why}`}>
+              <span className="tv-bc-x">
+                <IconCloseOutlineRegular aria-hidden />
+              </span>
+              <span>
+                <span className="tv-bc-what">{counted(item.what, count)}.</span>{' '}
+                <span className="tv-bc-muted">{item.why}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  )
 }
 
 const randomEditId = () => `edit-${globalThis.crypto.randomUUID()}`
@@ -188,7 +263,9 @@ export function PlanCard({
   onEdit,
   onUndo,
   locale = 'en',
-  newEditId = randomEditId
+  newEditId = randomEditId,
+  revised = null,
+  onDismissRevised
 }: PlanCardProps) {
   const [draft, setDraft] = useState<PlanDraft>({ plan, lastEdit, canUndo })
   const [busy, setBusy] = useState(false)
@@ -197,7 +274,11 @@ export function PlanCard({
   const [editing, setEditing] = useState<string | null>(null)
   /** The value focus goes back to once its editor closes, or its change is taken back. */
   const [refocus, setRefocus] = useState<string | null>(null)
+  /** Whether the whole Left out list shows, not only its first lines. */
+  const [allLeftOut, setAllLeftOut] = useState(false)
+  const leftOutId = useId()
   const ref = useRef<HTMLElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
   // A newer draft from outside (a plan the chat composed, the draft read again) replaces what the card holds.
   useEffect(() => setDraft({ plan, lastEdit, canUndo }), [plan, lastEdit, canUndo])
   useEffect(() => {
@@ -257,7 +338,9 @@ export function PlanCard({
   return (
     <article ref={ref} className="tv-bc-plan" aria-label={t('plan.title', { name: card.name })}>
       <div className="tv-bc-plan-h">
-        <h3 className="tv-bc-plan-t">{t('plan.title', { name: card.name })}</h3>
+        <h3 ref={titleRef} tabIndex={-1} className="tv-bc-plan-t">
+          {t('plan.title', { name: card.name })}
+        </h3>
         <span className="tv-bc-chip" data-plain="">
           {t('plan.design', { name: card.look.template })}
         </span>
@@ -284,6 +367,18 @@ export function PlanCard({
         <p className="tv-bc-plan-err tv-bc-error" role="alert">
           {typeof failed === 'string' ? failed : t('plan.saveFailed')}
         </p>
+      )}
+
+      {revised && (revised.changed.length > 0 || revised.notDone.length > 0) && (
+        <RevisionNoteView
+          note={revised}
+          t={t}
+          onDismiss={() => {
+            onDismissRevised?.()
+            // The note takes its button with it: focus goes to the card's title, not to the page.
+            titleRef.current?.focus()
+          }}
+        />
       )}
 
       <Section title={t('plan.facts')}>
@@ -430,8 +525,8 @@ export function PlanCard({
 
       {card.leftOut.length > 0 && (
         <Section title={t('plan.leftOut')}>
-          <ul className="tv-bc-dropped">
-            {card.leftOut.map((l) => (
+          <ul id={leftOutId} className="tv-bc-dropped">
+            {(allLeftOut ? card.leftOut : card.leftOut.slice(0, LEFT_OUT_SHOWN)).map((l) => (
               <li key={`${l.what}\n${l.reason}`} data-count={l.count}>
                 <span className="tv-bc-x">
                   <IconCloseOutlineRegular aria-hidden />
@@ -443,6 +538,20 @@ export function PlanCard({
               </li>
             ))}
           </ul>
+          {card.leftOut.length > LEFT_OUT_SHOWN && (
+            <button
+              type="button"
+              className="tv-bc-btn tv-bc-more"
+              data-ghost=""
+              aria-expanded={allLeftOut}
+              aria-controls={leftOutId}
+              onClick={() => setAllLeftOut(!allLeftOut)}
+            >
+              {allLeftOut
+                ? t('plan.leftOut.showFewer')
+                : t('plan.leftOut.showAll', { count: card.leftOut.length })}
+            </button>
+          )}
         </Section>
       )}
     </article>

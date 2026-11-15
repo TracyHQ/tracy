@@ -78,9 +78,12 @@ const working = {
 }
 
 function Planned({ view, withReview }: { view: Any; withReview: boolean }) {
+  const [revised, setRevised] = useState(view.revised ?? null)
   const card = (
     <PlanCard
       plan={view.plan}
+      revised={revised}
+      onDismissRevised={() => setRevised(null)}
       t={english}
       newEditId={() => `edit-${log.requests.length + 1}`}
       onEdit={(edit) => savePlanEdit(edit, door)}

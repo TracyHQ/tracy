@@ -46,6 +46,35 @@ const planStage = scenarioOf('plan')
 const PLAN = planStage.plan
 const darkAccentPlan = structuredClone(PLAN)
 darkAccentPlan.look.accentDark = '#7fd1a0'
+// Eight things left out (one asked for twice over: the same line twelve times is one line), for "Show all".
+const manyLeftOut = structuredClone(PLAN)
+manyLeftOut.leftOut = [
+  ...Array.from({ length: 12 }, () => ({
+    what: 'Photo',
+    kind: 'picture',
+    reason: 'The photo is too small.'
+  })),
+  ...['Prices page', 'Blog', 'Shop', 'Events page', 'Team page', 'Careers page', 'Press page'].map(
+    (what) => ({
+      what,
+      kind: 'page',
+      reason: 'Nothing to show for it yet.'
+    })
+  )
+]
+// A change request note: the same sentence ten times is one line with a count.
+const REVISED = {
+  changed: [
+    'Changed the tagline.',
+    ...Array.from({ length: 10 }, () => 'Removed a photo from the gallery.'),
+    'Renamed the second service.'
+  ],
+  notDone: [
+    { what: 'Change the language', why: 'The language is set on the plan card.' },
+    { what: 'Move the logo', why: 'The logo stays where the design puts it.' },
+    { what: 'Move the logo', why: 'The logo stays where the design puts it.' }
+  ]
+}
 const run = (name) => scenarioOf(name).runs.at(-1)
 const MESSAGES = [
   { role: 'user', text: 'Build a website for my tennis club. https://sunrise-tennis.example' },
@@ -60,6 +89,8 @@ const STATES = [
   ['template-none', 'template', { templates: [] }],
   ['plan', 'plan', { plan: PLAN }],
   ['plan-dark-accent', 'plan', { plan: darkAccentPlan }],
+  ['plan-revised', 'plan', { plan: PLAN, revised: REVISED }],
+  ['plan-left-out-many', 'plan', { plan: manyLeftOut }],
   ['review', 'review', { plan: PLAN }],
   ['building', 'progress', { run: run('building') }],
   ['done', 'progress', { run: run('done') }],
@@ -341,5 +372,50 @@ test('a change refused while the site is built shows the door sentence, not a re
   const alert = page.getByRole('alert')
   await alert.waitFor()
   assert.equal(await alert.innerText(), 'The door sentence while the site is built.')
+  await page.close()
+})
+
+test('left out: six lines and Show all, expanded in place, with its state exposed', async () => {
+  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
+  await mount(page, 'plan', { plan: manyLeftOut })
+  const card = page.getByRole('article', { name: 'Sunrise Tennis Club site plan' })
+  const lines = card.locator('.tv-bc-dropped li')
+  // 12 photos collapse to one line, so 8 lines in all: six show first.
+  assert.equal(await lines.count(), 6)
+  const more = card.getByRole('button', { name: 'Show all (8)' })
+  assert.equal(await more.getAttribute('aria-expanded'), 'false')
+  assert.match(await lines.first().innerText(), /12 photos/)
+  await more.focus()
+  await page.keyboard.press('Enter')
+  assert.equal(await lines.count(), 8)
+  const fewer = card.getByRole('button', { name: 'Show fewer' })
+  assert.equal(await fewer.getAttribute('aria-expanded'), 'true')
+  assert.equal(await focused(page), 'Show fewer', 'focus stays on the control')
+  await page.keyboard.press('Space')
+  assert.equal(await lines.count(), 6)
+  // Six or fewer lines: no control.
+  await mount(page, 'plan', { plan: PLAN })
+  assert.equal(await page.getByRole('button', { name: /Show all/ }).count(), 0)
+  await page.close()
+})
+
+test('change request note: collapsed lines, a reason for what was not done, dismissed by keyboard', async () => {
+  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
+  await mount(page, 'plan', { plan: PLAN, revised: REVISED })
+  const note = page.getByRole('region', { name: 'What changed' })
+  const items = await note.locator('li').allInnerTexts()
+  assert.equal(items.filter((x) => /Removed a photo/.test(x)).length, 1, 'ten identical lines are one')
+  assert.ok(items.some((x) => x === 'Removed a photo from the gallery. (10)'))
+  assert.ok(items.some((x) => /^Move the logo \(2\)\. The logo stays where the design puts it\.$/.test(x)))
+  assert.ok(items.some((x) => /^Change the language\. The language is set on the plan card\.$/.test(x)))
+  assert.equal(await note.getByRole('heading', { name: 'Not done' }).count(), 1)
+  const hide = note.getByRole('button', { name: 'Hide this note' })
+  await hide.focus()
+  await page.keyboard.press('Enter')
+  assert.equal(await page.getByRole('region', { name: 'What changed' }).count(), 0)
+  assert.equal(await focused(page), 'Sunrise Tennis Club site plan', 'focus goes to the card title')
+  // A card with no note draws none.
+  await mount(page, 'plan', { plan: PLAN })
+  assert.equal(await page.getByRole('region', { name: 'What changed' }).count(), 0)
   await page.close()
 })

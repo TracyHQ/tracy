@@ -223,6 +223,14 @@ export const CSS = `
 .tv-bc-dropped { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .tv-bc-dropped li { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
 .tv-bc-what { font-weight: 500; }
+.tv-bc-more { margin-top: 6px; }
+/* The note a change request leaves: the card's own changed tint, with a hide button on the title row */
+.tv-bc-plan-rev { background: color-mix(in oklab, var(--primary) 16%, var(--card)); }
+.tv-bc-plan-rev-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tv-bc-plan-rev .tv-bc-plan-rev-h h4 { margin: 0 0 6px; }
+.tv-bc-plan-rev-h .tv-bc-btn { padding: 2px 6px; }
+.tv-bc-plan-rev .tv-bc-plan-rev-sub { margin: 12px 0 6px; }
+.tv-bc-plan-t:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
 .tv-bc-x { color: var(--muted-foreground); margin-top: 2px; display: grid; place-items: center; }
 @container (max-width: 560px) {
   .tv-bc-kv { grid-template-columns: 1fr; gap: 0; }
