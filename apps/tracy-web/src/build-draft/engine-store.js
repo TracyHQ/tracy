@@ -36,14 +36,15 @@ export async function startStep(pool, accountId, { step, inputs, runner, now }, 
 
 /**
  * End the running step of `runner`: `ended` is `{state: 'done'}` or `{state: 'stopped', say, reason?}`, `columns` the
- * draft columns the step writes with it. A step that is no longer this runner's (a later start replaced it) changes
- * nothing.
+ * draft columns the step writes with it, or a function of the row that answers them (read in the same transaction, so
+ * what the owner answered while the step ran is seen). A step that is no longer this runner's (a later start replaced
+ * it) changes nothing.
  */
 export function endStep(pool, accountId, runner, ended, columns = {}, now = Date.now) {
   return changeDraft(pool, accountId, (row) => {
     if (row.engine?.state !== 'running' || row.engine.runner !== runner) return { error: 'NOT_RUNNING' }
     return {
-      ...columns,
+      ...(typeof columns === 'function' ? columns(row) : columns),
       engine: { ...row.engine, ...ended, endedAt: new Date(now()).toISOString() }
     }
   })

@@ -22,7 +22,8 @@ import { endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js
 import { faultOf, runWithRerun } from './engine-rerun.js'
 import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
 import { askingOf } from './engine-asking.js'
-import { brandOf, composeStep, researchStep, withheldOfResearch } from './engine-steps.js'
+import { brandOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
+import { answersStillAsked } from './answers-kept.js'
 import { discardPlan, putComposed, putRevised, recordFault } from './store.js'
 import { planRequestOf, reviseStep, revisionOf } from './engine-revise.js'
 
@@ -120,7 +121,7 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
   /** A research run whose success prunes the pictures of the research it replaced. */
   const withPrune = (accountId, run) => async () => {
     const ran = await run()
-    const pictureRun = ran?.ok ? ran.columns?.research?.pictureRun : null
+    const pictureRun = ran?.ok ? ran.value?.pictureRun : null
     return pictureRun && prunePictures ? { ...ran, after: () => prunePictures(accountId, pictureRun) } : ran
   }
 
@@ -275,11 +276,16 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
               }),
             inputs,
             // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
-            // New research makes the brand record stale: the brand step reads the research.
-            (record) => ({
+            // New research makes the brand record stale: the brand step reads the research. The answers kept are those
+            // to a question the new research asks the same way (`answers-kept.js`), read when the step ends.
+            (record) => (current) => ({
               research: record,
               brand: null,
-              ...(row?.plan ? {} : { needs_profile: record.profile })
+              ...(row?.plan ? {} : { needs_profile: record.profile }),
+              ...answersStillAsked(current, [
+                ...(record.profile?.questions ?? []),
+                ...(planProfileOf(record, kit)?.questions ?? [])
+              ])
             })
           )
         )
