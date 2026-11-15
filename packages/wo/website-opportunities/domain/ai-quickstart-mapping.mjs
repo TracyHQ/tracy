@@ -15,6 +15,8 @@ import {
   locationProblem
 } from './ai-quickstart-mapping-entry.mjs'
 import { buildDeclarationProblems } from './ai-quickstart-mapping-build.mjs'
+import { detailPositionProblems } from './ai-quickstart-detail-positions.mjs'
+import { escapesProblems } from './ai-quickstart-escapes.mjs'
 import { mappingPlaceProblems } from './ai-quickstart-mapping-places.mjs'
 import { placementProblems } from './ai-quickstart-placement.mjs'
 import { LIST_FACT_KINDS, SINGLE_FACT_KINDS } from './needs-profile-merge.mjs'
@@ -336,4 +338,6 @@ export function mappingProblems(mapping, blocks, ctx) {
   mappingPlaceProblems(mapping, ctx)
   placementProblems(mapping, blocks, ctx)
   buildDeclarationProblems(mapping, blocks, ctx)
+  detailPositionProblems(mapping, blocks, ctx)
+  escapesProblems(mapping, report)
 }

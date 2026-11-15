@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import { AI_QUICKSTART_FIELD_TYPES, checkAiQuickstartContract } from '../domain/ai-quickstart-contract.mjs'
+import { writtenPlacesOf } from '../domain/ai-quickstart-escapes-places.mjs'
 import { BLOCK_TYPES, isBlockType } from '../domain/place-content-roles.mjs'
 
 const read = (name) =>
@@ -14,6 +15,20 @@ const VALID = {
   mapping: read('mapping.json')
 }
 const valid = () => structuredClone(VALID)
+
+/**
+ * Fits the escapes declaration to the places the mapping file now writes (one invented entry per place), for a test
+ * that reshapes those places and checks another rule.
+ */
+const fitEscapes = (mapping) => {
+  const seen = new Map(writtenPlacesOf(mapping).map(({ place }) => [JSON.stringify(place), place]))
+  mapping.escapes.places = [...seen.values()].map((match) => ({
+    match,
+    escaped: 'not-text',
+    source: 'decision',
+    why: 'invented: fitted by the test'
+  }))
+}
 const blockOf = (set, id) => set.blockStore.blocks.find((b) => b.id === id)
 const fieldOf = (set, id, name) => blockOf(set, id).fields.find((f) => f.name === name)
 
@@ -201,6 +216,7 @@ test('an item field placed for fewer items than the block takes fails', () => {
 test('a mapping file without the SEO fields fails', () => {
   const set = valid()
   delete set.mapping.seo.shareImage
+  fitEscapes(set.mapping)
   assertOneProblem(set, {
     file: 'mapping.json',
     at: 'seo.shareImage',

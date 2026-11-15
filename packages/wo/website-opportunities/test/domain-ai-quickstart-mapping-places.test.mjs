@@ -5,6 +5,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import { checkAiQuickstartContract } from '../domain/ai-quickstart-contract.mjs'
+import { writtenPlacesOf } from '../domain/ai-quickstart-escapes-places.mjs'
 
 const read = (name) =>
   JSON.parse(readFileSync(new URL(`./fixtures/ai-quickstart/${name}`, import.meta.url), 'utf8'))
@@ -14,6 +15,20 @@ const VALID = {
   mapping: read('mapping.json')
 }
 const valid = () => structuredClone(VALID)
+
+/**
+ * Fits the escapes declaration to the places the mapping file now writes (one invented entry per place), for a test
+ * that reshapes those places and checks another rule.
+ */
+const fitEscapes = (mapping) => {
+  const seen = new Map(writtenPlacesOf(mapping).map(({ place }) => [JSON.stringify(place), place]))
+  mapping.escapes.places = [...seen.values()].map((match) => ({
+    match,
+    escaped: 'not-text',
+    source: 'decision',
+    why: 'invented: fitted by the test'
+  }))
+}
 const header = (set) => set.blockStore.blocks.find((b) => b.id === 'header-main')
 const PAGE_SEO = {
   title: [{ entity: 'page', column: 'params', jsonPath: ['page_title'] }],
@@ -90,6 +105,7 @@ test('seo by page type: every recipe page type has its three fields, the share i
       }
     }
   }
+  fitEscapes(set.mapping)
   assert.deepEqual(problemsOf(set), [])
   delete set.mapping.seo.pageTypes.services
   set.mapping.seo.shareImageFrame = { width: 1200, height: 600 }
@@ -271,6 +287,7 @@ test('every place a field written as a fact stands for is a place of the fact', 
 test("Joomla's global configuration site name and mail sender name are places of the name fact", () => {
   const set = valid()
   set.mapping.facts.name.pop()
+  fitEscapes(set.mapping)
   assert.deepEqual(problemsOf(set), [
     "facts.name: settings fromname holds the business name: list it among the fact's places"
   ])
@@ -338,6 +355,7 @@ test('seo.featuredView names menu item page types of the recipes, and what the b
     none: 'invented: no article, no share tags',
     why: 'invented: every article is featured'
   }
+  fitEscapes(set.mapping)
   assert.deepEqual(problemsOf(set), [])
   set.mapping.seo.featuredView = { pageTypes: ['home', 'blog'], needs: 'anything', why: '' }
   const problems = problemsOf(set).join('\n')

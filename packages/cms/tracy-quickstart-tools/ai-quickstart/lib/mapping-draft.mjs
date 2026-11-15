@@ -150,6 +150,7 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
     ...(decisions.look ? { look: decisions.look } : {}),
     ...(decisions.pages ? { pages: decisions.pages } : {}),
     ...(decisions.createdFrames ? { createdFrames: decisions.createdFrames } : {}),
+    ...(decisions.escapes ? { escapes: decisions.escapes } : {}),
     inlineMarkup: report.inlineMarkup
       ? {
           class: report.inlineMarkup.class,

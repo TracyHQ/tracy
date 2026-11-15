@@ -19,14 +19,17 @@ import path from 'node:path'
 import { coworkLib } from '../../packages/cms/tracy-joomla-quickstart/scripts/cowork-lib.mjs'
 import { measureMarkers } from './door-measures-acm.mjs'
 import { measureAssignments } from './door-measures-assign.mjs'
+import { measureEscapes } from './door-measures-escapes.mjs'
 import { measureHiding } from './door-measures-hide.mjs'
 import { fetchPage, pageFields, recordedDoor } from './door-measures-lib.mjs'
 import { measurePages } from './door-measures-pages.mjs'
 import { measureWrites } from './door-measures-writes.mjs'
 
 const argv = process.argv.slice(2)
-const folder = argv.find((a, i) => !a.startsWith('-') && argv[i - 1] !== '--report')
+const folder = argv.find((a, i) => !a.startsWith('-') && !['--report', '--only'].includes(argv[i - 1]))
 const reportFile = argv.includes('--report') ? argv[argv.indexOf('--report') + 1] : null
+// `--only <section>` runs one section (hiding, assignments, writes, markers, pages, escapes) on a fresh site.
+const only = argv.includes('--only') ? argv[argv.indexOf('--only') + 1] : null
 const base = (process.env.TRACY_DOOR_URL ?? '').replace(/\/+$/, '')
 const token = process.env.TRACY_DOOR_TOKEN ?? ''
 if (!folder || !base || !token) {
@@ -68,6 +71,7 @@ const ctx = {
   lib: cowork.lib,
   mapping: json('mapping.json'),
   store: json('block-store.json'),
+  contentMap: json('blank-site-contract/content-map.json'),
   styles: { LANDING, DEFAULT },
   pages: { home, inner },
   page,
@@ -78,7 +82,16 @@ const ctx = {
   inspect: () => door.call('content.contract', { operation: 'inspect' })
 }
 
-for (const section of [measureHiding, measureAssignments, measureWrites, measureMarkers, measurePages]) {
+const SECTIONS = {
+  hiding: measureHiding,
+  assignments: measureAssignments,
+  writes: measureWrites,
+  markers: measureMarkers,
+  pages: measurePages,
+  escapes: measureEscapes
+}
+for (const [name, section] of Object.entries(SECTIONS)) {
+  if (only && name !== only) continue
   try {
     await section(ctx)
   } catch (error) {

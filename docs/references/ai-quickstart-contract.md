@@ -15,6 +15,11 @@ sources:
   - scripts/ai-quickstart/copy-proof-held.mjs
   - scripts/ai-quickstart/copy-proof-masthead.mjs
   - scripts/ai-quickstart/door-measures.mjs
+  - scripts/ai-quickstart/door-measures-escapes.mjs
+  - scripts/ai-quickstart/door-measures-escapes-lib.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-escapes.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-escapes-places.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-detail-positions.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-placement-container.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-references.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-inline-markup.mjs
@@ -888,6 +893,10 @@ wrapped in `/html/body/div` and asks that every xpath of the file on that value 
 whole (`/html/body/div`) needs none; nor does a place only blocks of unbuilt page types use. A row element a record does
 not fill is left out of the frame, as `omit` does on a copy.
 
+**`escapes`** declares how every place the file writes prints (escaped or raw, and what a print does not show as
+written), and **`under.detailPositions`** the positions a page reached under its list page prints: both measured,
+under [Door measurements](#door-measurements-plugin-02485).
+
 **The main block of every recipe shows data**: a field of a kind that is not `editorial.*`, since the plan gate drops a
 page whose main block has none. The plans container (184) holds only tab labels and headings, so the plans page's main
 block is its first tab (167). `placements.<container>.holds.copies: {perPage: 1, keptWhen, why}`: one container copy per
@@ -1036,7 +1045,8 @@ says how it is known: **measured** (a door call, its raw answer, the read back a
 `node scripts/ai-quickstart/door-measures.mjs <AI quickstart folder> [--report <file.json>]` reruns every measurement
 below on such a site (same environment as the door proof: `TRACY_DOOR_URL`, `TRACY_DOOR_TOKEN`, php on PATH). It
 prints the facts and writes every door call with its raw answer to the report; it judges nothing, and exits 1 only
-when the plugin version moved. The site is written: run it on a throwaway site only.
+when the plugin version moved. The site is written: run it on a throwaway site only. `--only <section>` (`hiding`,
+`assignments`, `writes`, `markers`, `pages`, `escapes`) runs one section, on a freshly reset site.
 
 ### Hiding a record and publishing it again
 
@@ -1210,6 +1220,79 @@ helper returns the first key whose name contains `[title]` (`findParam`, read in
 `hero[social-intro][title]`. Measured: a value at `hero[social-intro][title]` prints on no page; the social link's
 `title` attribute and its hidden label print row `i` of `hero[title]` (the person's name on the first link, empty on
 the others).
+
+### Escaping of every place the build writes (`escapes`)
+
+`door-measures.mjs <folder> --only escapes` writes one probe at every place a build writes (records it creates,
+menu items, categories, modules, the site name, the contract slots) and reads every kit page: the class, post and
+lesson pages under their list pages, the class on a menu item of its own, every list page, the contact page and the
+home page. A probe is `zqs<id>0` + the payload + `zqe<id>0`; the payload holds `"`, `'`, `<`, `>`, `&`, `&#169;`, a
+JA ACM marker `((x))` and the legacy reference `&copy 2026` (no semicolon). Each print is named by its form against
+the stored value (`raw`, `escaped` with both quotes, `escaped-double-quote-only`, `...-references-kept`,
+`escaped-twice`, `json`, or `other` with the printed text), with the HTML context it sits in (fact `E1 <place>`).
+A place the door refuses some characters at is tried again with fewer (`E1 contract places`).
+
+The mapping file declares the result per place: `escapes: {why, legacyReferences: {rule, why}, places: [entry]}`, an
+entry `{match, escaped, unsafe?, doorRefuses?, prints?, source, why}`:
+
+- `match`: `kind` and `column`, and any of `nestedJson`, `key` (the last name of the JSON path, or the identity key of
+  a language string or a template setting), `block` (the store block of the record), `menutype`. A place takes the
+  entry that matches it with the most keys (`escapeOf(mapping, placeOf(mapping, loc))`, the reader for the build).
+- `escaped`: `false` (every print outputs the value as HTML: the build escapes the words), `true` (every print escapes
+  it: the build writes plain words, never escaped), `"mixed"` (some prints raw, some escaped: the build writes
+  neither markup nor an escape), `"not-printed"`, `"not-text"` (an id, a switch, a position, a class), `"not-written"`
+  (a fixed value of the kit, an unbuilt page type).
+- `unsafe` (for `true` and `"mixed"`): the marks some print does not show as written, of `"` `'` `<` `>` `&`
+  `reference` `((`; a `"mixed"` entry names at least `<`, `>`, `&` and `reference`. `doorRefuses`: what the door
+  refuses there.
+
+The check (`escapesProblems`, in the contract check): every place the build writes takes exactly one entry, and every
+entry is taken by some place. Measured on JA Boxing (plugin 0.24.85):
+
+| Place | `escaped` | How it prints |
+|---|---|---|
+| article `attribs` keys (class, exercise, feature, lesson) | `false` | plain echo of the template in text, `src`, `data-src`, `href`, on the article and in block 159 |
+| article `title` | `"mixed"` | escaped (both quotes) in list links and the heading; raw in block 159 (`mod-articles-category-title`) and block 191; breadcrumbs and the schema.org BreadcrumbList decode references, then escape with double quotes only |
+| article `introtext`, `fulltext`, contact `misc` | `false` | HTML; block 159 prints the intro text with tags stripped and references decoded |
+| article `images` | `"mixed"` | escaped in the image layouts, raw `src` in blocks 159 and 191 |
+| `metadesc`, `menu-meta_description`, `page_title`, `article_page_title` | `true`, unsafe `[]` | escaped once with double quotes only (the title element double encodes, so `&#169;` shows as written) |
+| `og_title` (attribs and menu item params) | `true` | tags stripped, references decoded, escaped with double quotes only; `meta name="title"` is escaped twice, so `"` and `&` show as entity text |
+| `og_desc`, `og_img` | `true`, unsafe `<` `>` `reference` | tags stripped, references decoded, escaped once |
+| menu item title, main menu | `true`, unsafe all | mega menu escapes with double quotes only and keeps references; the list page heading (`h1.visually-hidden`) escapes it twice |
+| menu item title, other menus | `true`, unsafe `reference` | mod_menu escapes and keeps references |
+| category title | `"not-printed"` | no kit page prints it |
+| contact `name` | `true` | schema.org only (`show_name` 0) |
+| contact `address`, `telephone` | `"mixed"` | raw text, schema.org JSON, the map link percent encoded |
+| site name (`globalConfiguration.sitename`) | `"mixed"` | raw in the logo `title`, `span.site-name`, the copyright line; `site.identity` strips `<` `>` and decodes references when it stores the name |
+| ACM data keys (`jatools-config`) | `false` | as stored; a declared `((x))` marker becomes a tag |
+| block 177 `features-intro[info-email-label]`, `[info-email]`, `[info-phone-label]`, `[info-phone]`, `[info-note]` | `true`, unsafe `((` | escaped with both quotes after the marker became a tag |
+| module title (chrome, footer column heading, plans tab label), module params (chrome keys, masthead defaults, newsletter intro), mod_custom content | `false` | as stored |
+| language strings | `false`, door refuses `"` `<` `>` | `Text::_` as stored; `TPL_LEARNING_LEAD_TITLE` is `true` (escaped) |
+| custom field hint (`field-1`) | `true`, door refuses `"` `<` `>` | the placeholder, escaped with double quotes only |
+| `site_logo`, `site_logo_dark` | `"not-text"` | the door takes only an image already in the media library |
+
+**Module titles: store the character, not a reference.** A copy titled `zqtitleref &#169; &copy 2026 one` and one
+titled with the literal `©` both print as stored on the front, where `&#169;` shows as `©` (measured, fact `E3`). The
+admin module list (read over HTTP with `TRACY_ADMIN_USER` and `TRACY_ADMIN_PASSWORD` set) escapes the stored title:
+the reference copy reads `&#169;` there and the literal copy reads `©`. So the build stores the literal character.
+
+**Legacy references** (`escapes.legacyReferences`, measured in a browser): printed raw, `&copy 2026` renders as
+`© 2026` and `&#169;` as `©`; printed escaped, both show as written. Rule: an `&` followed by letters is written only
+where the build escapes it (`escaped: false`); at a `"mixed"` or `true` place the build writes no text that reads as a
+reference.
+
+### Detail positions (`pages.<type>.under.detailPositions`)
+
+`{positions: [<position>], assignTo: "list-page", why}`, on every `under` entry and nowhere else. Measured (fact `E2`):
+a class reached under the classes page prints body class `layout-detail-article`, the classes detail view and
+`detail-bottom-1`, where two copies of block 159 assigned to the classes page both print, on both class articles
+under it; a post or a lesson under its list page prints `main-bottom-2` with block 191. The class on a menu item of
+its own (`ownItem`) keeps its `article_layout` (`ja_boxing:classes`, from `attribs`) and the created frame, prints
+`layout-default`, and loses the detail positions; its breadcrumbs read Home > the item title. JA Boxing declares
+`detail-bottom-1` for `class` and `main-bottom-2` for `news-post` and `learning-post`. The check
+(`detailPositionProblems`): every `under` declares it, `menuItem`, `ownItem` and `unbuilt` do not, a recipe block that
+sits only in detail positions is placed only on a page type that prints one of them, and every position is one the
+source contract records (`libraryPositionProblems`).
 
 ### Page facts
 

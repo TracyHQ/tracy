@@ -5,6 +5,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import { checkAiQuickstartContract } from '../domain/ai-quickstart-contract.mjs'
+import { writtenPlacesOf } from '../domain/ai-quickstart-escapes-places.mjs'
 
 const read = (name) =>
   JSON.parse(readFileSync(new URL(`./fixtures/ai-quickstart/${name}`, import.meta.url), 'utf8'))
@@ -14,6 +15,20 @@ const VALID = {
   mapping: read('mapping.json')
 }
 const valid = () => structuredClone(VALID)
+
+/**
+ * Fits the escapes declaration to the places the mapping file now writes (one invented entry per place), for a test
+ * that reshapes those places and checks another rule.
+ */
+const fitEscapes = (mapping) => {
+  const seen = new Map(writtenPlacesOf(mapping).map(({ place }) => [JSON.stringify(place), place]))
+  mapping.escapes.places = [...seen.values()].map((match) => ({
+    match,
+    escaped: 'not-text',
+    source: 'decision',
+    why: 'invented: fitted by the test'
+  }))
+}
 const blockOf = (set, id) => set.blockStore.blocks.find((b) => b.id === id)
 const problemsOf = (set) =>
   checkAiQuickstartContract(set).problems.map((p) => `${p.file} ${p.at}: ${p.message}`)
@@ -204,6 +219,7 @@ test('a block placed inside a container names it, the container holds it, and th
   }
   assertProblem(set, /holds\.position: the position the container draws is a setting of module-13/)
   set.mapping.placements['services-grid'].holds.position.entity = 'module-13'
+  fitEscapes(set.mapping)
   assert.deepEqual(problemsOf(set), [])
   delete set.mapping.placements['services-grid'].holds.position
   assertProblem(set, /placements\[services-grid\]\.holds: holds is \{blocks, position: <location>, why\}/)

@@ -120,6 +120,20 @@ test('the library publishes in positions the source contract records (#584)', (t
   assert.match(libraryPositionProblems(mapping, lost, root)[0].message, /names no source contract/)
 })
 
+test('the detail positions of a page under its list page are positions the source contract records', (t) => {
+  const root = tree(t)
+  const detailPositions = { positions: ['main-bottom-1'], assignTo: 'list-page', why: 'invented' }
+  const mapping = { pages: { post: { under: { page: 'posts', detailPositions } } } }
+  assert.deepEqual(libraryPositionProblems(mapping, store(), root), [])
+  detailPositions.positions.push('detail-nowhere')
+  assert.deepEqual(
+    libraryPositionProblems(mapping, store(), root).map((p) => `${p.at}: ${p.message}`),
+    [
+      'pages.post.under.detailPositions.positions[1]: "detail-nowhere" is no position of the template (the source contract records main-bottom-1, section-1)'
+    ]
+  )
+})
+
 test('every network the demo draws in a class name icon place has its class (#584)', (t) => {
   const root = tree(t)
   const classes = { facebook: 'fab fa-facebook', x: 'fab fa-twitter' }

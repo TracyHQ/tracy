@@ -1481,6 +1481,11 @@
     },
     "news-post": {
       "under": {
+        "detailPositions": {
+          "positions": ["main-bottom-2"],
+          "assignTo": "list-page",
+          "why": "door-measures --only escapes (E2): an article reached under its list page prints the T4 detail-article layout and the related posts module (block 191) at main-bottom-2; a copy assigned to the news page prints on a post under it"
+        },
         "page": "news",
         "address": "index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:news}",
         "why": "a post is reached under the news page, as the demo (an article address carrying the list page menu item): only then the detail positions print (measured, door-measures D2)"
@@ -1575,6 +1580,11 @@
     },
     "class": {
       "under": {
+        "detailPositions": {
+          "positions": ["detail-bottom-1"],
+          "assignTo": "list-page",
+          "why": "door-measures --only escapes (E2): an article reached under its list page prints the T4 detail-article layout and the classes list module (block 159) at detail-bottom-1; two copies assigned to the classes page print on both class articles under it; the class on a menu item of its own prints the default layout and no copy"
+        },
         "page": "classes",
         "address": "index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:classes}",
         "why": "a class page is reached under the classes page, as the demo footer class links are (index.php?option=com_content&view=article&id=N&catid=9&Itemid=167): only then the class detail list (159) prints"
@@ -1688,6 +1698,11 @@
     },
     "learning-post": {
       "under": {
+        "detailPositions": {
+          "positions": ["main-bottom-2"],
+          "assignTo": "list-page",
+          "why": "door-measures --only escapes (E2): an article reached under its list page prints the T4 detail-article layout and the related posts module (block 191) at main-bottom-2; a copy assigned to the learning page prints on a lesson under it"
+        },
         "page": "learning-center",
         "address": "index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:learning-center}",
         "why": "a lesson is reached under the learning center page: only then the detail positions print"
@@ -1819,5 +1834,660 @@
       "html": "<h3 class=\"mt-3 mt-lg-5 mb-0 pt-3 pb-0 pb-lg-3\"> </h3><div class=\"row\"><div class=\"col-12 col-lg-6 mt-3\"><p class=\"mb-3 pb-lg-3 pb-0\"> </p><p class=\"mb-0\"> </p></div><div class=\"col-12 col-lg-6 mt-3\"><ul class=\"has-icon\"><li> </li><li> </li><li> </li><li> </li><li> </li><li> </li><li> </li><li> </li></ul></div></div>",
       "why": "the demo lesson body (article 18): a heading, two paragraphs beside a list of benefits"
     }
-  ]
+  ],
+  "escapes": {
+    "why": "how each place the build writes prints, read on the blank site: every place written with a probe (straight quotes, angle brackets, an ampersand, a decimal character reference, a JA ACM marker and a legacy named reference without its semicolon) and every page that prints it compared against the stored value (scripts/ai-quickstart/door-measures-escapes.mjs). The build reads a place with escapeOf (ai-quickstart-escapes.mjs)",
+    "legacyReferences": {
+      "rule": "a value never holds an ampersand followed by letters unless the build escapes that ampersand (at a place escaped false); at a mixed or escaped place it writes no text that reads as a character reference",
+      "why": "measured in a browser: printed raw, a legacy named reference without its semicolon (an ampersand, copy, a space, a year) shows as the copyright sign and a decimal reference shows as its character; printed escaped, both show as written"
+    },
+    "places": [
+      {
+        "match": {
+          "kind": "article",
+          "column": "title"
+        },
+        "escaped": "mixed",
+        "unsafe": ["\"", "'", "<", ">", "&", "reference"],
+        "prints": "escaped (both quotes) in list links, the page heading and the intro image caption; raw in the classes list module (block 159, a.mod-articles-category-title) and the related posts module (block 191); breadcrumbs and the schema.org BreadcrumbList decode references, then escape with double quotes only, so the structured data reads the entity text",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: the class, post and lesson titles, under their list pages"
+      },
+      {
+        "match": {
+          "kind": "article",
+          "column": "introtext"
+        },
+        "escaped": false,
+        "prints": "as HTML in the article; block 159 prints it with the tags stripped and the character references decoded",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a whole HTML column"
+      },
+      {
+        "match": {
+          "kind": "article",
+          "column": "fulltext"
+        },
+        "escaped": false,
+        "prints": "as HTML in the article body",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a whole HTML column"
+      },
+      {
+        "match": {
+          "kind": "article",
+          "column": "metadesc"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "prints": "meta description, escaped once with double quotes only; schema.org description as JSON",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every article type"
+      },
+      {
+        "match": {
+          "kind": "article",
+          "column": "images"
+        },
+        "escaped": "mixed",
+        "unsafe": ["\"", "'", "<", ">", "&", "reference"],
+        "prints": "escaped in the article and list image layouts (src, itemprop image and thumbnail); raw src in blocks 159 and 191; schema.org image as JSON",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: image_intro and image_fulltext"
+      },
+      {
+        "match": {
+          "kind": "article",
+          "column": "attribs"
+        },
+        "escaped": false,
+        "prints": "the class, exercise, feature and lesson keys print with a plain echo of the template (text, src, data-src, href), on the article and in block 159",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every attribs key the kit writes, on the class and lesson articles"
+      },
+      {
+        "match": {
+          "kind": "article",
+          "column": "attribs",
+          "key": "og_title"
+        },
+        "escaped": true,
+        "unsafe": ["\"", "<", ">", "&", "reference"],
+        "prints": "T4 Open Graph: tags stripped, character references decoded, then escaped once with double quotes only (og:, twitter:); meta name title is escaped twice, so a double quote or an ampersand shows as its entity text",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every article type"
+      },
+      {
+        "match": {
+          "kind": "article",
+          "column": "attribs",
+          "key": "og_desc"
+        },
+        "escaped": true,
+        "unsafe": ["<", ">", "reference"],
+        "prints": "T4 Open Graph: tags stripped, character references decoded, then escaped once with double quotes only (og:, twitter:)",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every article type"
+      },
+      {
+        "match": {
+          "kind": "article",
+          "column": "attribs",
+          "key": "og_img"
+        },
+        "escaped": true,
+        "unsafe": ["<", ">", "reference"],
+        "prints": "T4 Open Graph: tags stripped, character references decoded, then escaped once with double quotes only (og:, twitter:)",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every article type"
+      },
+      {
+        "match": {
+          "kind": "article",
+          "column": "attribs",
+          "key": "article_page_title"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "prints": "the title element, escaped with double quotes only (a character reference shows as written); schema.org as JSON",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every article type"
+      },
+      {
+        "match": {
+          "kind": "menuItem",
+          "column": "title"
+        },
+        "escaped": true,
+        "unsafe": ["reference"],
+        "prints": "mod_menu escapes with double quotes only and keeps character references, so a reference shows as its character",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: an item of the site-map menu; the classes menu prints through the same mod_menu layout"
+      },
+      {
+        "match": {
+          "kind": "menuItem",
+          "column": "title",
+          "menutype": "mainmenu"
+        },
+        "escaped": true,
+        "unsafe": ["\"", "'", "<", ">", "&", "reference"],
+        "prints": "the T4 mega menu escapes with double quotes only and keeps references; the list page heading (h1.visually-hidden) escapes it twice, so a quote, an angle bracket or an ampersand shows as entity text; breadcrumbs and the schema.org BreadcrumbList decode, then escape once",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every page of the main menu"
+      },
+      {
+        "match": {
+          "kind": "menuItem",
+          "column": "params",
+          "key": "page_title"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "prints": "the title element, escaped with double quotes only; link title escaped",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every list page and the contact page"
+      },
+      {
+        "match": {
+          "kind": "menuItem",
+          "column": "params",
+          "key": "menu-meta_description"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "prints": "meta description, escaped once with double quotes only",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every list page"
+      },
+      {
+        "match": {
+          "kind": "menuItem",
+          "column": "params",
+          "key": "og_title"
+        },
+        "escaped": true,
+        "unsafe": ["\"", "<", ">", "&", "reference"],
+        "prints": "T4 Open Graph: tags stripped, character references decoded, then escaped once with double quotes only (og:, twitter:); meta name title is escaped twice",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every list page"
+      },
+      {
+        "match": {
+          "kind": "menuItem",
+          "column": "params",
+          "key": "og_desc"
+        },
+        "escaped": true,
+        "unsafe": ["<", ">", "reference"],
+        "prints": "T4 Open Graph: tags stripped, character references decoded, then escaped once with double quotes only (og:, twitter:)",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every list page"
+      },
+      {
+        "match": {
+          "kind": "menuItem",
+          "column": "params",
+          "key": "og_img"
+        },
+        "escaped": true,
+        "unsafe": ["<", ">", "reference"],
+        "prints": "T4 Open Graph: tags stripped, character references decoded, then escaped once with double quotes only (og:, twitter:)",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every list page"
+      },
+      {
+        "match": {
+          "kind": "category",
+          "column": "title"
+        },
+        "escaped": "not-printed",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: no kit page prints the title of the class, post or lesson category"
+      },
+      {
+        "match": {
+          "kind": "contact",
+          "column": "name"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "prints": "schema.org name as JSON only (show_name 0)",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: the contact page"
+      },
+      {
+        "match": {
+          "kind": "contact",
+          "column": "address"
+        },
+        "escaped": "mixed",
+        "unsafe": ["\"", "'", "<", ">", "&", "reference"],
+        "prints": "raw in span.contact-street; schema.org as JSON; percent encoded in the map link",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: the contact page"
+      },
+      {
+        "match": {
+          "kind": "contact",
+          "column": "telephone"
+        },
+        "escaped": "mixed",
+        "unsafe": ["\"", "'", "<", ">", "&", "reference"],
+        "prints": "raw in the link text; schema.org as JSON",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: the contact page"
+      },
+      {
+        "match": {
+          "kind": "contact",
+          "column": "email_to"
+        },
+        "escaped": false,
+        "prints": "not in the page source: the email cloak script writes it into the page as stored",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: the contact page"
+      },
+      {
+        "match": {
+          "kind": "contact",
+          "column": "misc"
+        },
+        "escaped": false,
+        "prints": "as HTML",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a whole HTML column"
+      },
+      {
+        "match": {
+          "kind": "globalConfiguration",
+          "column": "sitename"
+        },
+        "escaped": "mixed",
+        "unsafe": ["\"", "'", "<", ">", "&", "reference"],
+        "prints": "raw in the logo title attribute, span.site-name and the copyright line; schema.org as JSON. The door (site.identity) strips angle brackets and decodes references when it stores the name, so an escape written is stored as its character",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: every page"
+      },
+      {
+        "match": {
+          "kind": "siteSetting",
+          "column": "value"
+        },
+        "escaped": "not-written",
+        "source": "decision",
+        "why": "the T4 site name, slogan and body background are fixed values of the kit (overrides.settings), never words of the build"
+      },
+      {
+        "match": {
+          "kind": "siteSetting",
+          "column": "value",
+          "key": "site_logo"
+        },
+        "escaped": "not-text",
+        "doorRefuses": ["\"", "<", ">"],
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: the door takes only an image already in the site media library"
+      },
+      {
+        "match": {
+          "kind": "siteSetting",
+          "column": "value",
+          "key": "site_logo_dark"
+        },
+        "escaped": "not-text",
+        "doorRefuses": ["\"", "<", ">"],
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: the door takes only an image already in the site media library"
+      },
+      {
+        "match": {
+          "kind": "templateGlobal",
+          "column": "value"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "system_opengraph is a switch the kit sets (overrides.settings)"
+      },
+      {
+        "match": {
+          "kind": "field",
+          "column": "params"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "doorRefuses": ["\"", "<", ">"],
+        "prints": "the form field placeholder, escaped with double quotes only",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: the contact form; the door refuses markup and a long value"
+      },
+      {
+        "match": {
+          "kind": "languageString",
+          "column": "value"
+        },
+        "escaped": false,
+        "doorRefuses": ["\"", "<", ">"],
+        "prints": "Text::_ as stored, in text and button labels",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: TPL_CONTACT_EMAIL_FORM, TPL_LEARNING_LEAD_DESC, TPL_TRY_CLASS, TPL_CLASSES_TRIAL, TPL_SEE_SCHEDULE"
+      },
+      {
+        "match": {
+          "kind": "languageString",
+          "column": "value",
+          "key": "TPL_LEARNING_LEAD_TITLE"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "doorRefuses": ["\"", "<", ">"],
+        "prints": "the lesson heading, escaped with double quotes only",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: the lesson page"
+      },
+      {
+        "match": {
+          "kind": "languageString",
+          "column": "value",
+          "key": "MOD_FOOTER_LINE2"
+        },
+        "escaped": "not-written",
+        "source": "decision",
+        "why": "the kit hides the licence line with a fixed empty value (overrides.language)"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "title"
+        },
+        "escaped": false,
+        "prints": "module chrome title (mod_menu, the footer contact column heading) and the plans tab label, as stored",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: copies of blocks 174, 175 and 167 inside a copy of 184"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "title",
+          "block": "block-180"
+        },
+        "escaped": "not-printed",
+        "source": "decision",
+        "why": "the trainer module shows no title (showtitle 0); the build names the copy for the module list (placements resets)"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "title",
+          "block": "look.accent"
+        },
+        "escaped": "not-written",
+        "source": "decision",
+        "why": "the accent module title is a fixed name of the kit (look.accent.writtenAs)"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "content"
+        },
+        "escaped": false,
+        "prints": "mod_custom prints the stored HTML; a piece written at an xpath is part of it (text and href measured raw)",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a copy of block 176"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "content",
+          "block": "look.accent"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "the accent module content is one style element the brand step builds, never words"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "ordering"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a number (placements resets)"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "position"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a template position (placements resets)"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params"
+        },
+        "escaped": false,
+        "prints": "the chrome keys (main-section, top-desc, title-btn, link-btn), the masthead defaults and the newsletter intro text print as stored",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: copies of blocks 159, 162 and 169; the chrome keys print through one T4 chrome layout"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "key": "catid"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a category id (buildSets)"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "key": "item_id"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a menu item id (the masthead row key)"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "key": "section-link"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a switch (placements resets)"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "key": "title",
+          "block": "block-162"
+        },
+        "escaped": false,
+        "source": "template-source",
+        "why": "a masthead row title: the masthead layout echoes the row as it echoes its default title (measured raw); a row copy did not print on the blank site"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "key": "description",
+          "block": "block-162"
+        },
+        "escaped": false,
+        "source": "template-source",
+        "why": "a masthead row description: the masthead layout echoes the row as it echoes its default description (measured raw); a row copy did not print on the blank site"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config"
+        },
+        "escaped": false,
+        "prints": "JA ACM prints every data key as stored and turns a declared ((x)) marker into a tag",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a copy of block 177 (info-title, info-desc, info-link); the ACM layouts of the other blocks print the same way"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "features-intro[info-email-label]",
+          "block": "block-177"
+        },
+        "escaped": true,
+        "unsafe": ["(("],
+        "prints": "escaped with both quotes after the ((x)) marker became a tag, so a marker shows as tag text",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a copy of block 177"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "features-intro[info-email]",
+          "block": "block-177"
+        },
+        "escaped": true,
+        "unsafe": ["(("],
+        "prints": "escaped with both quotes after the ((x)) marker became a tag, so a marker shows as tag text",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a copy of block 177"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "features-intro[info-phone-label]",
+          "block": "block-177"
+        },
+        "escaped": true,
+        "unsafe": ["(("],
+        "prints": "escaped with both quotes after the ((x)) marker became a tag, so a marker shows as tag text",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a copy of block 177"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "features-intro[info-phone]",
+          "block": "block-177"
+        },
+        "escaped": true,
+        "unsafe": ["(("],
+        "prints": "escaped with both quotes after the ((x)) marker became a tag, so a marker shows as tag text",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a copy of block 177"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "features-intro[info-note]",
+          "block": "block-177"
+        },
+        "escaped": true,
+        "unsafe": ["(("],
+        "prints": "escaped with both quotes after the ((x)) marker became a tag, so a marker shows as tag text",
+        "source": "measured",
+        "why": "door-measures --only escapes (E1), on the blank site, plugin 0.24.85: a copy of block 177"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "container-tabs[position]"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a position, a spacing, a switch or an icon class, never words"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "isotope[gutter]"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a position, a spacing, a switch or an icon class, never words"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "isotope[show-on]"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a position, a spacing, a switch or an icon class, never words"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "social-intro[font-icon]"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a position, a spacing, a switch or an icon class, never words"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "key": "hero[social-intro][font-icon]"
+        },
+        "escaped": "not-text",
+        "source": "decision",
+        "why": "a position, a spacing, a switch or an icon class, never words"
+      },
+      {
+        "match": {
+          "kind": "tag",
+          "column": "title"
+        },
+        "escaped": "not-written",
+        "source": "decision",
+        "why": "the author pages are unbuilt (pages.authors, pages.author)"
+      },
+      {
+        "match": {
+          "kind": "user",
+          "column": "name"
+        },
+        "escaped": "not-written",
+        "source": "decision",
+        "why": "the author pages are unbuilt (pages.authors, pages.author)"
+      },
+      {
+        "match": {
+          "kind": "userProfile",
+          "column": "value"
+        },
+        "escaped": "not-written",
+        "source": "decision",
+        "why": "the author pages are unbuilt (pages.authors, pages.author)"
+      }
+    ]
+  }
 }

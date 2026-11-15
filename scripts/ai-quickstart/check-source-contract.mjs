@@ -7,7 +7,8 @@
  * The mapping file names the template position the Tracy library blocks are published in (`library.position`, with
  * per page type exceptions in `library.pageTypes`). A position the template does not have publishes a block nowhere,
  * with no error. The positions are those the source contract records: every `position` of its template kit (the
- * kit's blocks and their modules) and of the module identities of its content map.
+ * kit's blocks and their modules) and of the module identities of its content map. The detail positions of a page
+ * reached under its list page (`pages.<type>.under.detailPositions.positions`) are checked the same way.
  *
  * Network icons. A store field that keeps a network icon as a class of the template's icon font (`iconOf: "network"`,
  * `storage: "class-name"`) is written from `networkIconClasses`; a network the demo draws in such a place (its
@@ -48,10 +49,19 @@ export function templatePositions(contract, rootDir) {
   return found
 }
 
-/** The problems of the library positions of a mapping file, against the contract its block store was drafted from. */
+/**
+ * The problems of the library positions and the detail positions of a mapping file, against the contract its block
+ * store was drafted from.
+ */
 export function libraryPositionProblems(mapping, blockStore, rootDir) {
-  const library = mapping?.library
-  if (!library || typeof library !== 'object') return []
+  const library = mapping?.library && typeof mapping.library === 'object' ? mapping.library : null
+  const detail = Object.entries(mapping?.pages ?? {}).flatMap(([type, page]) => {
+    const list = page?.under?.detailPositions?.positions
+    return Array.isArray(list)
+      ? list.map((position, i) => [`pages.${type}.under.detailPositions.positions[${i}]`, position])
+      : []
+  })
+  if (!library && !detail.length) return []
   const contract = blockStore?.draftedBy?.kit
   const positions = templatePositions(contract, rootDir)
   if (!positions)
@@ -72,9 +82,12 @@ export function libraryPositionProblems(mapping, blockStore, rootDir) {
         message: `"${position}" is no position of the template (the source contract records ${known})`
       })
   }
-  check('library.position', library.position)
-  for (const [type, position] of Object.entries(library.pageTypes ?? {}))
-    check(`library.pageTypes[${type}]`, position)
+  if (library) {
+    check('library.position', library.position)
+    for (const [type, position] of Object.entries(library.pageTypes ?? {}))
+      check(`library.pageTypes[${type}]`, position)
+  }
+  for (const [at, position] of detail) check(at, position)
   return out
 }
 

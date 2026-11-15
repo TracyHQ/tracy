@@ -306,5 +306,148 @@
       "assign": "every-page",
       "title": { "drawn": "no", "why": "invented: the module is set not to show its title" }
     }
+  },
+  "escapes": {
+    "why": "invented: how each place the example template prints, as a probe read on its pages",
+    "legacyReferences": {
+      "rule": "a value never holds an ampersand followed by letters unless the build escapes that ampersand",
+      "why": "invented: a legacy reference without its semicolon shows as its character where the place prints raw"
+    },
+    "places": [
+      {
+        "match": {
+          "kind": "globalConfiguration",
+          "column": "sitename"
+        },
+        "escaped": "mixed",
+        "unsafe": ["\"", "<", ">", "&", "reference"],
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "globalConfiguration",
+          "column": "MetaDesc"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "globalConfiguration",
+          "column": "fromname"
+        },
+        "escaped": "not-printed",
+        "source": "measured",
+        "why": "invented: the mail sender name, on no page"
+      },
+      {
+        "match": {
+          "kind": "languageString",
+          "column": "value"
+        },
+        "escaped": false,
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "menuItem",
+          "column": "title"
+        },
+        "escaped": true,
+        "unsafe": ["reference"],
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "content"
+        },
+        "escaped": false,
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "title"
+        },
+        "escaped": "not-written",
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params"
+        },
+        "escaped": false,
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "key": "sticky"
+        },
+        "escaped": "not-text",
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "module",
+          "column": "params",
+          "key": "bg-color"
+        },
+        "escaped": "not-text",
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "page",
+          "column": "title"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "page",
+          "column": "metadesc"
+        },
+        "escaped": true,
+        "unsafe": [],
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "page",
+          "column": "params"
+        },
+        "escaped": true,
+        "unsafe": ["<", ">", "reference"],
+        "source": "measured",
+        "why": "invented: read on the example site"
+      },
+      {
+        "match": {
+          "kind": "templateStyle",
+          "column": "params"
+        },
+        "escaped": "not-text",
+        "source": "measured",
+        "why": "invented: read on the example site"
+      }
+    ]
   }
 }
