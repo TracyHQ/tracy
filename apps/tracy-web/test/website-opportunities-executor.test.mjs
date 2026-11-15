@@ -419,6 +419,28 @@ for (const reason of ['quota', 'timeout'])
     }
   )
 
+test('a kept page carries its meta description and first heading when the read had them, bounded', () => {
+  const merged = mergeCollected(
+    { pages: [{ url: 'https://phoba.example/', title: 'Pho Ba', text: 'Pho' }] },
+    {
+      pages: [
+        {
+          url: 'https://phoba.example/menu',
+          title: 'Menu',
+          text: 'Noodles',
+          description: ` ${'d'.repeat(600)} `,
+          heading: 'Our menu'
+        },
+        { url: 'https://phoba.example/x', title: 'X', text: 'y', description: '  ', heading: 7 }
+      ]
+    }
+  )
+  assert.deepEqual(merged.pages[0], { url: 'https://phoba.example/', title: 'Pho Ba', text: 'Pho' })
+  assert.equal(merged.pages[1].description, 'd'.repeat(500))
+  assert.equal(merged.pages[1].heading, 'Our menu')
+  assert.deepEqual(merged.pages[2], { url: 'https://phoba.example/x', title: 'X', text: 'y' })
+})
+
 test('cursor continuation preserves observed profile fields while adding evidence and deduplicating links', () => {
   const previous = {
     profile: {
