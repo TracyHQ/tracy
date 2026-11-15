@@ -16,10 +16,12 @@
 //                      SLOT_NOT_REMOVABLE                   a `removes` slot that is no node of an HTML value
 //                      MODULE_TITLE_REQUIRED                a module whose title the blank site emptied, written
 //                                                           without its title in the same apply
-//   content.update     MODULE_TITLE_REQUIRED                a new module with no title
-//                      TITLE_REQUIRED                       a new article or category with no title, a contact with
-//                                                           no name (Joomla's own table check; not measured in #584,
-//                                                           the plugin's answer code is not stated)
+//   content.update     write_failed                         a new article, category or module with no title or a
+//                                                           blank one, a new contact missing its name, params,
+//                                                           metadata or metadesc column (an empty or blank name is
+//                                                           written), an assignment whose menuids is no JSON list
+//                                                           (measured on plugin 0.24.85: no code of its own)
+//                      bad_params                           an assignment with no menuids (measured)
 //                      NOT_FOUND                            a record, or the module of an assignment, that does not exist
 //   every write        APPLY_ID_REQUIRED                    no apply id
 import { isTextNode } from './draft-write-codec.mjs'
@@ -73,12 +75,24 @@ export function checkContract({ expectedRevision, changes, removes }, { slots, r
   }
 }
 
-const NAMED = { article: 'title', category: 'title', contact: 'name', module: 'title' }
+const NAMED = {
+  article: ['title', 'COM_CONTENT_WARNING_PROVIDE_VALID_NAME'],
+  category: ['title', 'creating a category needs title'],
+  module: ['title', 'Module must have a title.']
+}
+/** The columns a new contact has no default for, in the order Joomla names them. */
+const CONTACT_COLUMNS = ['name', 'params', 'metadata', 'metadesc']
 
-/** Refuse a record write the site refuses. */
+/** Refuse a record write the site refuses (measured on plugin 0.24.85: every refusal is `write_failed`). */
 export function checkUpdate({ kind, id, fields }, records) {
   if (kind === 'moduleAssignment') {
     if (!records.module.has(Number(id))) refuse('NOT_FOUND', `module ${id}`)
+    if (!fields || !('menuids' in fields)) refuse('bad_params', 'fields required')
+    let menuids = null
+    try {
+      menuids = JSON.parse(fields.menuids)
+    } catch {}
+    if (!Array.isArray(menuids)) refuse('write_failed', 'menuids must be a JSON array')
     return
   }
   if (!records[kind]) refuse('KIND_UNKNOWN', kind)
@@ -86,7 +100,10 @@ export function checkUpdate({ kind, id, fields }, records) {
     if (!records[kind].has(Number(id))) refuse('NOT_FOUND', `${kind} ${id}`)
     return
   }
-  const named = NAMED[kind]
-  if (named && blank(fields?.[named]))
-    refuse(kind === 'module' ? 'MODULE_TITLE_REQUIRED' : 'TITLE_REQUIRED', `a new ${kind} has no ${named}`)
+  // A contact's name may be empty or a space: the site writes it (measured); only a missing column is refused.
+  if (kind === 'contact')
+    for (const column of CONTACT_COLUMNS)
+      if (fields?.[column] === undefined)
+        refuse('write_failed', `Field '${column}' doesn't have a default value`)
+  if (NAMED[kind] && blank(fields?.[NAMED[kind][0]])) refuse('write_failed', NAMED[kind][1])
 }

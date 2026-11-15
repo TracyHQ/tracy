@@ -18,8 +18,10 @@
 //   identity({applyId, fields})           site.identity set
 //   readIdentity()                        site.identity read           -> {sitename, MetaDesc, sitename_pagetitles}
 //   html: {get, set, remove}              the plugin's HTML piece functions (scripts/ai-quickstart/html-piece.php)
-// Every write carries its own apply id; the client answers a replayed id with its first answer. A door error marked
-// `fatal` (the process going away) is never retried: the run record says where to resume.
+// Every write carries its own apply id. Only `content.contract` answers a replayed apply id (and request id) with its
+// first answer; `content.update` writes again on every call (measured, plugin 0.24.85), so the run record is what keeps
+// a resumed run from making a record twice (`madeOnce`: pending before the call, found by its mark after). A door
+// error marked `fatal` (the process going away) is never retried: the run record says where to resume.
 import { createHash } from 'node:crypto'
 import { planCountsOf } from 'website-opportunities/domain/draft-write-coverage.mjs'
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'

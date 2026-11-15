@@ -48,7 +48,7 @@ Doors with no plugin operation on the blank site:
 |---|---|
 | `contract({removes: [...]})` with removes | `content.contract` apply has no removes; `rows.remove` is refused on the blank site (`SLOT_NOT_REMOVABLE`) |
 | `media({path})` | no Apply action reads a file's bytes; it reads the site's public file (`publicFile`) |
-| unpublish, unassign, delete a media file | not doors of the write at all: the undo of a build has no door yet |
+| unpublish, unassign, delete a media file | not used by the write. The doors now exist (measured on plugin 0.24.85, [ai-quickstart-contract.md](ai-quickstart-contract.md) "Door measurements"): `content.update` `published: 0` (an article: `state: 0`) hides a module, menu item, category or contact, reversibly, its address then answering 404; `moduleAssignment` `menuids: "[]"` is the one "no page" value; `media.delete` removes a picture under `images/`, with `dry_run` answering `usedIn`. Removal through them is a later task |
 
 None of these is used by the florist fixture's write plan.
 
@@ -85,5 +85,6 @@ No test here touches a real site. Not measured:
 
 - the plugin's answer shapes for `content.update` ids and for `content.list` with `include_body`;
 - the `media.upload` answer path on Joomla, and whether `publicFile` serves new bytes at once (cache, CDN);
-- a `content.update` sent again with the same `apply_id`;
+- (now measured, plugin 0.24.85: a `content.update` sent again with the same `apply_id` is written again; only
+  `content.contract` replays, within one apply id and request id. The memory site does the same.)
 - the seat and toolset gate for `moduleAssignment` and `module` (toolset `code`) for the owner.

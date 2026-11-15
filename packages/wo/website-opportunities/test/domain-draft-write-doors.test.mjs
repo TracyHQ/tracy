@@ -1,7 +1,8 @@
 // The memory site behind the draft write's doors (ticket #597, `write-order-memory-doors.mjs` and
 // `write-order-memory-rules.mjs`): each refusal measured on a real blank site, or stated by the plugin's reference,
-// enforced; an apply id on every write, a replayed one answering again and changing nothing; the revision moving on
-// every write; an unclosed list row read as an HTML parser reads it. Invented data.
+// enforced; an apply id on every write, replayed only by content.contract within one apply id (content.update writes
+// again on every call); the revision moving on every write; an unclosed list row read as an HTML parser reads it.
+// Invented data.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-draft-write-doors.test.mjs
 import assert from 'node:assert/strict'
@@ -20,7 +21,7 @@ const apply = async (memory, changes, removes = [], revision) =>
     removes
   })
 
-test('every write needs an apply id; a replayed one answers again and changes nothing', async () => {
+test('every write needs an apply id; content.update keeps no replay: the same apply id writes again (measured)', async () => {
   const memory = fresh()
   await assert.rejects(
     memory.doors.update({ kind: 'article', id: 0, fields: { title: 'A' } }),
@@ -29,24 +30,43 @@ test('every write needs an apply id; a replayed one answers again and changes no
   const call = { applyId: 'same', kind: 'article', id: 0, fields: { title: 'Roses' } }
   const first = await memory.doors.update(structuredClone(call))
   const again = await memory.doors.update(structuredClone(call))
-  assert.deepEqual(again, first)
-  assert.equal(memory.site.records.article.size, 1)
-  assert.equal(memory.site.records.article.get(first.id).title, 'Roses')
-  // The same apply id with another payload, or at another door, is a step bug: refused, nothing changes.
+  assert.notEqual(again.id, first.id)
+  assert.equal(memory.site.records.article.size, 2)
+  await memory.doors.update({ ...call, id: first.id, fields: { title: 'Tulips' } })
+  assert.equal(memory.site.records.article.get(first.id).title, 'Tulips')
+  assert.equal(memory.steps('same'), 3)
+})
+
+test('content.contract replays within one apply id only: the same request answers again, other content is refused', async () => {
+  const memory = fresh()
+  const { revision } = await memory.doors.inspect()
+  const call = {
+    applyId: 'c1',
+    requestId: 'q1',
+    expectedRevision: revision,
+    changes: { 'module-156.0': 'Open' }
+  }
+  const first = await memory.doors.contract(structuredClone(call))
+  // The revision read before the first apply, or the current one: the first answer again, nothing written.
+  assert.deepEqual(await memory.doors.contract(structuredClone(call)), first)
+  const now = (await memory.doors.inspect()).revision
+  assert.deepEqual(await memory.doors.contract({ ...call, expectedRevision: now }), first)
+  assert.equal((await memory.doors.inspect()).revision, now)
   await assert.rejects(
-    memory.doors.update({ ...call, fields: { title: 'Tulips' } }),
-    refused('APPLY_ID_REUSED')
+    memory.doors.contract({ ...call, expectedRevision: now, changes: { 'module-156.0': 'Shut' } }),
+    refused('contract_failed')
   )
   await assert.rejects(
-    memory.doors.identity({ applyId: 'same', fields: { sitename: 'X' } }),
-    refused('APPLY_ID_REUSED')
+    memory.doors.contract({ ...call, requestId: 'q2', expectedRevision: now }),
+    refused('contract_failed')
   )
-  await assert.rejects(
-    memory.doors.contract({ applyId: 'same', expectedRevision: 1, changes: {} }),
-    refused('APPLY_ID_REUSED')
-  )
-  assert.equal(memory.site.records.article.get(first.id).title, 'Roses')
-  assert.deepEqual(await memory.doors.readIdentity(), {})
+  await memory.doors.contract({
+    ...call,
+    applyId: 'c2',
+    expectedRevision: now,
+    changes: { 'module-156.0': 'Shut' }
+  })
+  assert.deepEqual(await memory.doors.read({ slots: ['module-156.0'] }), { 'module-156.0': 'Shut' })
 })
 
 test('content.contract: REVISION_REQUIRED, REVISION_STALE; the revision moves on every write', async () => {
@@ -86,7 +106,7 @@ test('content.contract: MARKERS_PRINTED_AS_WORDS at an HTML slot; SLOT_NOT_REMOV
   await assert.rejects(apply(memory, {}, ['category-2.0']), refused('SLOT_NOT_REMOVABLE'))
 })
 
-test('content.update: NOT_FOUND, KIND_UNKNOWN, TITLE_REQUIRED, MODULE_TITLE_REQUIRED', async () => {
+test('content.update: NOT_FOUND, KIND_UNKNOWN; write_failed as measured, and a contact with an empty name written', async () => {
   const memory = fresh()
   const update = (input) => memory.doors.update({ applyId: `u:${++n}`, ...input })
   await assert.rejects(update({ kind: 'article', id: 999999, fields: { title: 'x' } }), refused('NOT_FOUND'))
@@ -95,12 +115,31 @@ test('content.update: NOT_FOUND, KIND_UNKNOWN, TITLE_REQUIRED, MODULE_TITLE_REQU
     refused('NOT_FOUND')
   )
   await assert.rejects(update({ kind: 'userProfile', id: 0, fields: {} }), refused('KIND_UNKNOWN'))
-  await assert.rejects(update({ kind: 'article', id: 0, fields: { title: ' ' } }), refused('TITLE_REQUIRED'))
-  await assert.rejects(update({ kind: 'contact', id: 0, fields: { name: '' } }), refused('TITLE_REQUIRED'))
-  await assert.rejects(
-    update({ kind: 'module', id: 0, fields: { title: '' } }),
-    refused('MODULE_TITLE_REQUIRED')
-  )
+  const contact = { params: '{}', metadata: '{}', metadesc: '' }
+  for (const [kind, fields] of [
+    ['article', { title: ' ' }],
+    ['article', {}],
+    ['category', { title: '' }],
+    ['module', { title: '' }],
+    ['contact', { ...contact }],
+    ['contact', { name: 'Larkspur' }]
+  ])
+    await assert.rejects(
+      update({ kind, id: 0, fields }),
+      refused('write_failed'),
+      `${kind} ${JSON.stringify(fields)}`
+    )
+  for (const name of ['', ' ']) {
+    const { id } = await update({ kind: 'contact', id: 0, fields: { name, ...contact } })
+    assert.equal(memory.site.records.contact.get(id).name, name)
+  }
+  const [module] = memory.site.records.module.keys()
+  for (const menuids of ['', 'null'])
+    await assert.rejects(
+      update({ kind: 'moduleAssignment', id: module, fields: { menuids } }),
+      refused('write_failed')
+    )
+  await assert.rejects(update({ kind: 'moduleAssignment', id: module, fields: {} }), refused('bad_params'))
 })
 
 test('the reads: a module assignment, an upload by its bytes, the identity fields the door keeps', async () => {

@@ -4,9 +4,13 @@
 // file (`/html/body/div/a[1]/text()`, `.../@href`, `.../p`) must name exactly one node, else the call is refused with
 // `HTML_SLOT_MISSING` ("HTML slot is missing or ambiguous"); reading a piece returns the node's text (an attribute's
 // value, an element's text), never the raw value written. Only the xpath forms the mapping file uses are read: element
-// steps with an optional `[n]`, then `text()` (`[n]`) or `@name`. Every character reference is read
-// (`draft-write-entities.mjs`), and a node the edit did not change is written back as it was read, so an edit never
-// alters its siblings (`Caf&eacute;` stays as it is). Pure.
+// steps with an optional `[n]`, then `text()` (`[n]`) or `@name`.
+//
+// A set or a remove writes the WHOLE value back as libxml serializes it (measured on plugin 0.24.85, "The HTML piece
+// functions"): attribute order, comments and white space are kept, `&amp;`, `&lt;` and `&gt;` stay, every other
+// character reference becomes its character (`&eacute;` as `é`), every attribute value is double quoted, a void element
+// loses its slash (`<br/>` as `<br>`), an element left open is closed (a marker value gets its `((/li))`), and a space
+// in an `href` or `src` is percent encoded. A read changes nothing. Pure.
 import { decodeEntities } from './draft-write-entities.mjs'
 
 const VOID = new Set(['br', 'img', 'hr', 'input', 'meta', 'link', 'source', 'wbr', 'area', 'col', 'embed'])
@@ -21,8 +25,8 @@ const P_CLOSERS = new Set(
 const P_FENCE = ['td', 'th', 'caption', 'table', 'button', 'object', 'template', 'marquee', 'applet']
 const escText = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const escAttr = (text) => text.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
-/** A text node keeps the text it was read from: written back as it was while its words are unchanged. */
-const textNode = (raw) => ({ type: 'text', text: decodeEntities(raw), raw })
+/** A text node holds its text with every character reference read. */
+const textNode = (raw) => ({ type: 'text', text: decodeEntities(raw) })
 
 /** Close the open `name` element above the last fence, if any: what an HTML parser does before `next` opens. */
 function closeImplied(stack, name, fence) {
@@ -57,8 +61,7 @@ export function parseHtml(html) {
       const attrs = [...m[3].matchAll(/([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g)].map(
         (a) => [a[1].toLowerCase(), decodeEntities(a[2] ?? a[3] ?? a[4] ?? '')]
       )
-      const node = { type: 'element', name: m[2].toLowerCase(), attrs, children: [], open: m[0] }
-      node.read = JSON.stringify(attrs)
+      const node = { type: 'element', name: m[2].toLowerCase(), attrs, children: [] }
       // An unclosed `li` ends where the next one opens (`((li))` rows of a stored list value are written without their
       // end tags); an unclosed `p` where a block opens (`div`, `ul`, another `p`), as an HTML parser reads them.
       if (node.name === 'li') closeImplied(stack, 'li', LI_FENCE)
@@ -71,19 +74,19 @@ export function parseHtml(html) {
   return root
 }
 
-/** An HTML value of nodes. */
+/** Attributes libxml writes as an address: a space in their value is percent encoded. */
+const URI_ATTRS = new Set(['href', 'src', 'action', 'cite', 'background'])
+const attrOut = ([k, v]) => ` ${k}="${escAttr(URI_ATTRS.has(k) ? v.replace(/ /g, '%20') : v)}"`
+
+/** An HTML value of nodes, written whole as libxml writes it. */
 export function serializeHtml(nodes) {
   return nodes
     .map((n) => {
-      if (n.type === 'text')
-        return n.raw !== undefined && decodeEntities(n.raw) === n.text ? n.raw : escText(n.text)
+      if (n.type === 'text') return escText(n.text)
       if (n.type === 'raw') return n.text
-      const attrs = n.attrs.map(([k, v]) => ` ${k}="${escAttr(v)}"`).join('')
-      const open = n.open && n.read === JSON.stringify(n.attrs) ? n.open : null
-      if (VOID.has(n.name)) return open ?? `<${n.name}${attrs}/>`
-      // A non-void element read as closed by its own tag (`<span/>`) holds nothing: written back as it was read.
-      if (open?.endsWith('/>') && n.children.length === 0) return open
-      return `${open ?? `<${n.name}${attrs}>`}${serializeHtml(n.children)}</${n.name}>`
+      const attrs = n.attrs.map(attrOut).join('')
+      if (VOID.has(n.name)) return `<${n.name}${attrs}>`
+      return `<${n.name}${attrs}>${serializeHtml(n.children)}</${n.name}>`
     })
     .join('')
 }

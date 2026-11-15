@@ -67,11 +67,19 @@ test('an element the write took out is gone, the elements after it move up', () 
   assert.equal(code(() => readRest(before, wrong, write, { html }))[0], 'read_back_mismatch')
 })
 
-test('the memory piece functions keep every sibling as it was, and a block closes an open paragraph', () => {
-  const value = '<p>Caf&eacute; &copy; one</p><p>Two</p>'
+test('the memory piece functions write the whole value as libxml does, and a block closes an open paragraph', () => {
+  // Measured on plugin 0.24.85: references other than &amp;, &lt;, &gt; become characters, in the siblings too;
+  // attributes come back double quoted, a void element without its slash, an open element closed, a space in an
+  // address percent encoded. The read back compares the untouched parts as a reader reads them, so this passes it.
+  const value = '<p>Caf&eacute; &copy; &amp; one</p><p>Two</p>'
+  assert.equal(html.set(value, '/html/body/div/p[2]/text()', 'Three'), '<p>Café © &amp; one</p><p>Three</p>')
   assert.equal(
-    html.set(value, '/html/body/div/p[2]/text()', 'Three'),
-    '<p>Caf&eacute; &copy; one</p><p>Three</p>'
+    html.set("<a href='/a b' class=x>A</a><br/>", '/html/body/div/a/text()', 'B'),
+    '<a href="/a%20b" class="x">B</a><br>'
+  )
+  assert.equal(
+    html.set('((ul))((li))one((li))two((/ul))', '/html/body/div/ul/li[1]/text()', 'One'),
+    '((ul))((li))One((/li))((li))two((/li))((/ul))'
   )
   const open = '<p>Lead<div>Box</div><p>Tail<ul><li>a</li></ul>'
   assert.equal(html.get(open, '/html/body/div/p[1]'), 'Lead')

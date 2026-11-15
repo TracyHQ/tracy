@@ -63,7 +63,9 @@ export function baseFieldsOf(op, ctx) {
   }
   if (op.recordKind === 'category')
     return { ...common, title: f.title, extension: 'com_content', published: 1 }
-  if (op.recordKind === 'contact') return { ...common, name: f.title, published: 1 }
+  // A new contact has no default for these columns (measured: `write_failed` names the first one missing).
+  if (op.recordKind === 'contact')
+    return { ...common, name: f.title, published: 1, params: '{}', metadata: '{}', metadesc: '' }
   return {
     ...common,
     title: f.title,

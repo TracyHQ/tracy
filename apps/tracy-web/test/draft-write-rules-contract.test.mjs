@@ -78,7 +78,7 @@ test('rule 2: a new module has a title: the copies of 167 and 189 (titles emptie
       id: 0,
       fields: { title: ' ', module: 'mod_jacontenttype' }
     }),
-    refusal('MODULE_TITLE_REQUIRED')
+    refusal('write_failed')
   )
   await runOn(memory)
   for (const note of ['copy:plans.plans-b4', 'copy:plans.plans-b5'])

@@ -3,17 +3,18 @@
 // map), the HTML pieces (`write-order-memory-html.mjs`) and the refusals measured on a real blank site
 // (`write-order-memory-rules.mjs`), ENFORCED so a plan or a step that breaks one fails its test.
 //
-// The door interface rule the memory site also holds the step to: every write carries an apply id, one per door call,
-// and a replayed apply id answers the first answer again and changes nothing (the real client keeps it: the plugin's
-// `content.contract` takes a `request_id` retry key, its `content.update` keeps none). The answer is kept with the door
-// and a hash of the payload: an apply id replayed at another door or with another payload is refused
-// (`APPLY_ID_REUSED`), since that is a step bug, not a retry. A contract apply's `expectedRevision` is not part of the
-// payload: a retry reads the revision again.
+// Replay, as measured on plugin 0.24.85 (docs/references/ai-quickstart-contract.md, "Replaying a request"): only
+// `content.contract` keeps answers, under its apply id with its request id (the apply id when none is sent) and a hash
+// of what it asked (`changes`, `removes`; never `expectedRevision`). The same apply id and request id with the same
+// content answer the first answer again, whatever revision is sent; with other content, or a new request id under the
+// same apply id, `contract_failed`. `content.update`, `media.upload` and `site.identity` keep no replay: the same apply
+// id writes again on every call (`steps(applyId)` counts them, as `apply.list` does), so only the run record keeps a
+// resumed run from making a record twice.
 //
 // Pure apart from its own memory. Scripted failures: `fail` (the n-th mutating call throws before it acts, a door that
 // may pass when asked again) and `crash` (`n` or `{at: n, before?}`: the n-th mutating call acts, or does not when
 // `before`, then the process "dies": an error marked `fatal`, so the resume of a run is tested at every boundary).
-// Spec: docs/references/draft-write-step.md.
+// What the site prints: `renderedOf` (`write-order-memory-render.mjs`). Spec: docs/references/draft-write-step.md.
 import { createHash } from 'node:crypto'
 import { memoryHtml } from './write-order-memory-html.mjs'
 import { checkContract, checkUpdate, DoorRefusal } from './write-order-memory-rules.mjs'
@@ -50,24 +51,23 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
   const uploads = new Map()
   const identity = {}
   const next = { ...START }
-  const state = { calls: 0, log: [], revision: 1, answers: new Map() }
+  const state = { calls: 0, log: [], revision: 1, answers: new Map(), steps: new Map() }
   /**
-   * Every mutating call counts; a replayed apply id answers again (same door, same payload) or is refused; a scripted
-   * failure acts first (fail: before).
+   * Every mutating call counts; a contract apply replayed within its apply id answers again or is refused (`replay`);
+   * a scripted failure acts first (fail: before).
    */
-  const act = (name, applyId, payload, check, run) => {
+  const act = (name, applyId, payload, check, run, replay = null) => {
     if (typeof applyId !== 'string' || applyId === '')
       throw new DoorRefusal('APPLY_ID_REQUIRED', `${name} has no apply id`)
     state.calls += 1
     const n = state.calls
     const hash = payloadHash(payload)
-    if (state.answers.has(applyId)) {
-      const first = state.answers.get(applyId)
-      if (first.door !== name || first.hash !== hash)
-        throw new DoorRefusal(
-          'APPLY_ID_REUSED',
-          `${applyId} was first used ${first.door === name ? 'with another payload' : `at ${first.door}`}`
-        )
+    const first = replay ? state.answers.get(applyId) : null
+    if (first) {
+      if (first.request !== replay.request)
+        throw new DoorRefusal('contract_failed', 'Use one new apply_id per content revision')
+      if (first.hash !== hash)
+        throw new DoorRefusal('contract_failed', 'request_id reused with different content')
       return structuredClone(first.out)
     }
     const dies = (when) =>
@@ -78,7 +78,8 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
     if (crash?.at === n && crash.before) throw dies('before')
     const out = run()
     state.revision += 1
-    state.answers.set(applyId, { door: name, hash, out: structuredClone(out) })
+    if (replay) state.answers.set(applyId, { request: replay.request, hash, out: structuredClone(out) })
+    state.steps.set(applyId, (state.steps.get(applyId) ?? 0) + 1)
     state.log.push(name)
     if (crash === n || (crash?.at === n && !crash.before)) throw dies('after')
     return out
@@ -124,22 +125,29 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
         }
       )
     },
-    async contract({ applyId, expectedRevision, changes, removes = [] }) {
+    async contract({ applyId, requestId, expectedRevision, changes, removes = [] }) {
       const check = () =>
         checkContract(
           { expectedRevision, changes, removes },
           { slots, revision: state.revision, modules: records.module }
         )
-      return act('content.contract', applyId, { changes, removes }, check, () => {
-        for (const [key, value] of Object.entries(changes)) {
-          const slot = slots.get(key)
-          slot.current = String(value)
-          const row = slot.column === 'title' && records.module.get(Number(slot.entity.slice(7)))
-          if (row) row.title = slot.current
-        }
-        for (const key of removes) slots.get(key).removed = true
-        return { ok: true }
-      })
+      return act(
+        'content.contract',
+        applyId,
+        { changes, removes },
+        check,
+        () => {
+          for (const [key, value] of Object.entries(changes)) {
+            const slot = slots.get(key)
+            slot.current = String(value)
+            const row = slot.column === 'title' && records.module.get(Number(slot.entity.slice(7)))
+            if (row) row.title = slot.current
+          }
+          for (const key of removes) slots.get(key).removed = true
+          return { ok: true }
+        },
+        { request: requestId ?? applyId }
+      )
     },
     async read({ slots: keys }) {
       return Object.fromEntries(
@@ -185,6 +193,8 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
     get calls() {
       return state.calls
     },
+    /** How many writes an apply id made (`apply.list {apply_id}` lists one step per write). */
+    steps: (applyId) => state.steps.get(applyId) ?? 0,
     log: state.log
   }
 }
