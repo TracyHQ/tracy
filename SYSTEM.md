@@ -913,9 +913,13 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   trade guess only when the sources name no trade, and its sentences of five words or more are kept out of the
   brief's hero, story, story facts, headline line and brand voice evidence word for word
   ([`build-draft/description-guard.js`](apps/tracy-web/src/build-draft/description-guard.js), each removal in
-  `research.descriptionKeptOut`). Its facts are not read yet (`research.descriptionFacts`,
-  `no_owner_statement_source`): the reading has no passage kind for an owner's statement and the needs profile's trust
-  order does not read the plan's `answer` origin. Unread links are set aside with a reason; nothing read is
+  `research.descriptionKeptOut`). Its facts are read: the business reading takes it as its own passage, the source `owner-statement`
+  (`readingInputOf` with `ownerStatement` and the research's `withheld`, which is always passed so a held name or person
+  never reaches the model), so a fact only it states reaches the needs profile as "Your answer" and no sentence of it is
+  copied onto the site (the reading drops its own copies, `research.reading` and the brief's `ownerEchoDropped` record
+  them without the owner's words). How it was read is `research.descriptionFacts` (`{read: true, heldOut, cut}`, or
+  `{read: false, reason}` when everything named something held, the reading ran without a model, or it did not run); no
+  description, no record. The guard above stays for the places the sources' own bio feeds. Unread links are set aside with a reason; nothing read is
   `research_empty`; reading the links is bounded to three minutes and the business reading to two more. The brand step before the site (#616,
   [`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`) is the engine's own
   `brand` step: choosing a template on a researched draft starts it (compose starts it when the record is missing), and

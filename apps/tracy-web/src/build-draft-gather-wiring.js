@@ -21,6 +21,7 @@ import { createPinnedFetch } from 'website-opportunities/src/pinned-fetch.js'
 import { withProfileEdits } from 'website-opportunities/src/profile-edits.js'
 import {
   businessReadingDoorFor,
+  ownerStatementRecordOf,
   readBusiness,
   readingInputOf
 } from 'website-opportunities/src/business-reading.js'
@@ -77,6 +78,7 @@ export const preSiteParts = Object.freeze({
   // The business reading of the place executor's profile stage (`gather-reading.js`), and what its cost is held to.
   readBusiness,
   readingInputOf,
+  ownerStatementRecordOf,
   modelTokensOf,
   BudgetExceededError,
   defaultJobCapCents: DEFAULT_WO_OPS_SETTINGS.researchJobCapCents

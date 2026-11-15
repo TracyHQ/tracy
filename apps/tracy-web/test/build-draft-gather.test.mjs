@@ -335,8 +335,8 @@ test('the owner description is a source to rewrite, never copied into the brief;
   const story = sectionsOf(brief).find((s) => s.kind === 'story')
   assert.deepEqual(story.evidence, [{ quote: bio, source: 'profile.bio' }])
   assert.equal(brief.brand.evidence?.[0]?.quote, bio)
-  // No owner statement source can carry the description to the reading yet: it is kept, not read, and said so.
-  assert.deepEqual(gathered.descriptionFacts, { read: false, reason: 'no_owner_statement_source' })
+  // Without a model the reading rules never read the statement, and the record says so.
+  assert.deepEqual(gathered.descriptionFacts, { read: false, reason: 'rules_never_rewrite_owner_words' })
   assert.equal(gathered.descriptionKeptOut, undefined)
   // A description is not a source: with no link to read, the research has nothing.
   await assert.rejects(gatherer(domain)({ links: [], description }, {}), {

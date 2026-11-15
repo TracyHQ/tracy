@@ -45,13 +45,22 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
  * profile with its questions. `kit` (the chosen template's, when known) gives the main button's answer its real length.
  * @param {{links: string[], description?: string}} inputs
  * @param {{gather: Function, model: Function, kit?: {blockStore: object, library: object[]} | null,
- *   accountId?: string}} tools `accountId`: whose research it is (the gatherer counts paid reads per account)
+ *   accountId?: string, withheld?: object | null}} tools `accountId`: whose research it is (the gatherer counts paid
+ *   reads per account); `withheld`: what the draft's earlier research kept off the site
  * @returns {Promise<{links: string[], description: string | null, trade: string | null, brief: object,
  *   manifest: object[], profile: object, setAside?: Array<{link: string, reason: string}>}>} the research record the
  *   draft keeps
  */
-export async function researchStep({ links, description }, { gather, model, kit, accountId }) {
-  const gathered = await gather({ links, description: description ?? null }, accountId ? { accountId } : {})
+export async function researchStep(
+  { links, description },
+  { gather, model, kit, accountId, withheld: kept }
+) {
+  // What the owner already keeps off the site (a research made before) is told to the gatherer, so the business reading
+  // never sends a held name or person to the model, not even in the owner's own description.
+  const gathered = await gather(
+    { links, description: description ?? null, ...(kept ? { withheld: kept } : {}) },
+    accountId ? { accountId } : {}
+  )
   if (!gathered?.brief || typeof gathered.brief !== 'object')
     throw new EngineStepError('research_empty', 'the research gave no brief')
   const manifest = Array.isArray(gathered.manifest) ? gathered.manifest : []

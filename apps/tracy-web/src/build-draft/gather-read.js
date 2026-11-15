@@ -12,18 +12,11 @@
  * 🔒 THE OWNER'S DESCRIPTION IS A SOURCE, NEVER COPY (decision D46). What the owner typed in the build chat is not laid
  * over the profile as a bio: the bio based paths (hero, About story, story fact, brand voice) read the sources' own bio.
  * It guides the trade guess when the sources name no trade, and its sentences are kept out of the brief word for word
- * (`description-guard.js`). Its facts are not read yet: the business reading has no passage kind for an owner's own
- * statement and the plan no honest label for one (`DESCRIPTION_FACTS`).
+ * (`description-guard.js`). Its facts are read by the business reading as the source `owner-statement` (`gather-reading.js`),
+ * which drops its own copies of the statement from the reading's items; the guard still covers the places the reading
+ * does not own, those the sources' bio feeds.
  */
 import { keepDescriptionOut } from './description-guard.js'
-
-/**
- * Why the description's facts are not read into the brief (D46): the business reading (`readingSourcesOf`) reads only
- * bio, post, review and website passages, and the plan names an owner's words only as an answer, which the needs
- * profile's trust order does not read. Feeding it as one of those would credit the owner's words to a source that
- * never said them.
- */
-export const DESCRIPTION_FACTS = Object.freeze({ read: false, reason: 'no_owner_statement_source' })
 
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 

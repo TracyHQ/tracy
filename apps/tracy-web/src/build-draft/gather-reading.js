@@ -25,6 +25,8 @@ import { boundedFetch, isCollected, withinTime } from './gather-sources.js'
  */
 export const READING_BUDGET_MS = 120_000
 
+const isText = (value) => typeof value === 'string' && value.trim() !== ''
+
 /** A reading made by the rules because the model call itself went wrong: worth one more call on the same inputs. */
 const RERUN = new Set(['failed', 'empty', 'unreadable'])
 
@@ -42,9 +44,13 @@ async function doorOf(readingDoor) {
  * Read the business. Never throws.
  * @param {{parts: object, readingDoor?: () => Promise<object>, fetch?: typeof fetch, rows: object[],
  *   profile: object, google: object | null, trade: string | null, capCents: number, now: () => number,
- *   budgetMs?: number, log?: Console}} input `rows`: the research's source rows; `profile`: what the sources say
- *   (`mergeProfile`), before any decision or typed edit, as the place executor reads it
- * @returns {Promise<{reading: object | null, record: object}>} `record`: how it was read, for the research record
+ *   budgetMs?: number, log?: Console, description?: string | null, withheld?: object | null}} input `rows`: the
+ *   research's source rows; `profile`: what the sources say (`mergeProfile`), before any decision or typed edit, as
+ *   the place executor reads it; `description`: what the owner typed in the build chat, read as a source whose facts
+ *   count and whose wording never reaches the site (D46); `withheld`: what the owner keeps off the site, always given
+ *   when there is any so a held name never reaches the model
+ * @returns {Promise<{reading: object | null, record: object, ownerStatement: object | null}>} `record`: how it was
+ *   read, for the research record; `ownerStatement`: how the description was read (`{read, ...}`), null without one
  */
 export async function readingOf({
   parts,
@@ -57,6 +63,8 @@ export async function readingOf({
   capCents,
   now,
   budgetMs = READING_BUDGET_MS,
+  description = null,
+  withheld = null,
   log = console
 }) {
   const started = now()
@@ -87,8 +95,15 @@ export async function readingOf({
     return answer
   }
   const deadline = AbortSignal.timeout(Math.max(1, budgetMs))
+  const base = parts.readingInputOf({
+    profile,
+    google,
+    collected: rows.filter(isCollected),
+    ownerStatement: description,
+    withheld
+  })
   const input = {
-    ...parts.readingInputOf({ profile, google, collected: rows.filter(isCollected) }),
+    ...base,
     trade,
     door,
     held: null,
@@ -119,11 +134,33 @@ export async function readingOf({
     attempts = 2
     answer = await readOnce()
   }
-  if (answer.timedOut) return { reading: null, record: record({ method: null, reason: 'timeout', attempts }) }
-  if (answer.error) return { reading: null, record: record({ method: null, reason: 'error', attempts }) }
+  const typed = isText(description)
+  // No reading means the statement was not read: said with the reading's own reason, or `held` when it was the only
+  // text and every sentence of it named something held.
+  const unread = (reason) => ({
+    reading: null,
+    record: record({ method: null, reason, attempts }),
+    ownerStatement: typed
+      ? reason === 'no_texts'
+        ? (parts.ownerStatementRecordOf(base.ownerStatement, base.heldTexts, base.heldPeople)
+            .ownerStatement ?? {
+            read: false,
+            reason
+          })
+        : { read: false, reason }
+      : null
+  })
+  if (answer.timedOut) return unread('timeout')
+  if (answer.error) return unread('error')
   const { reading } = answer
-  if (!reading) return { reading: null, record: record({ method: null, reason: 'no_texts', attempts }) }
+  if (!reading) return unread('no_texts')
   return {
+    // The rules reading never reads the statement (it can only copy), whatever record it keeps beside that.
+    ownerStatement: !typed
+      ? null
+      : reading.ownerStatementSkipped
+        ? { read: false, reason: reading.ownerStatementSkipped }
+        : (reading.ownerStatement ?? { read: false, reason: 'not_read' }),
     reading,
     record: record({
       method: reading.method,

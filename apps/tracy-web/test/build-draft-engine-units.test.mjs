@@ -230,7 +230,7 @@ test('research keeps what the owner typed under its own key, with what became of
     {
       gather: async () => ({
         ...gatheredBrief(),
-        descriptionFacts: { read: false, reason: 'no_owner_statement_source' },
+        descriptionFacts: { read: true, heldOut: 0, cut: false },
         descriptionKeptOut: keptOut
       }),
       model,
@@ -238,7 +238,7 @@ test('research keeps what the owner typed under its own key, with what became of
     }
   )
   assert.equal(record.description, description)
-  assert.deepEqual(record.descriptionFacts, { read: false, reason: 'no_owner_statement_source' })
+  assert.deepEqual(record.descriptionFacts, { read: true, heldOut: 0, cut: false })
   assert.deepEqual(record.descriptionKeptOut, keptOut)
 })
 

@@ -92,7 +92,8 @@ function fakeModel(answerOf, { fail = 0, hang = false } = {}) {
   const retries = []
   const fetch = async (url, init) => {
     const body = JSON.parse(init.body)
-    const reading = body.messages[0].content === BUSINESS_READING_SYSTEM
+    // With an owner statement the reading's system message carries one more rule after the base text.
+    const reading = body.messages[0].content.startsWith(BUSINESS_READING_SYSTEM)
     ;(reading ? calls : retries).push({ url, model: body.model, prompt: body.messages[1].content })
     if (hang) return new Promise(() => {})
     if (reading && calls.length <= fail) return new Response('{}', { status: 500 })
@@ -273,29 +274,100 @@ test('a person the reading finds only in one guest review stays held off the sit
   assert.equal(JSON.stringify(brief.sitemap).includes('Corvin'), false)
 })
 
-// Decision D46: what the owner typed is a source to rewrite, never copy. No passage kind of the reading means "the
-// owner's own statement" and the plan has no honest label for one yet, so its facts are not read: nothing it alone
-// says reaches the brief, and the research record says why.
+// Decision D46: what the owner typed is a source whose facts are read and whose wording never reaches the site. The
+// reading takes it as its own passage (`owner-statement`), so a fact found nowhere else lands in the needs profile as
+// "Your answer", and the research record says how it was read.
 const SPARRING = 'Junior sparring club every Sunday morning for ages ten to fourteen.'
 
-test('the description is not handed to the reading as another source; its facts wait, and the record says why (D46)', async () => {
+/** The answer of the invented model to a gym whose owner typed a fact nowhere else on its pages. */
+const sparringAnswer = (prompt) => ({
+  ...gymAnswer(prompt),
+  services: [
+    ...gymAnswer(prompt).services,
+    {
+      name: 'Junior sparring club',
+      quote: SPARRING,
+      ref: refOf(prompt, 'Junior sparring'),
+      price: ''
+    }
+  ]
+})
+
+test("a fact only the description states is read as the owner's answer; its sentence is not in the brief (D46)", async () => {
+  const { domain } = await fakeDomain({ connectors: { website: connector(gymSite()) } })
+  const model = fakeModel(sparringAnswer)
+  const gathered = await gatherer(domain, {
+    readingDoor: async () => READY,
+    readingFetch: model.fetch
+  })({ links: [GYM], description: `${SPARRING} We opened in 1990.` }, {})
+  assert.equal(model.calls.length, 1)
+  assert.ok(model.calls[0].prompt.includes('Junior sparring'), 'the reading reads it as its own source')
+  assert.deepEqual(gathered.descriptionFacts, { read: true, heldOut: 0, cut: false })
+  const { brief } = gathered
+  assert.ok(brief.reading.services.some((i) => i.label === 'Beginner boxing classes'))
+  // The only place the sentence stays is the evidence of a fact, tagged with its source `owner-statement`: a record of
+  // where the fact came from, never shown. Without those, no part of the brief holds it.
+  const unseen = JSON.stringify(brief, (key, value) =>
+    value?.source === 'owner-statement' ? undefined : value
+  )
+  assert.ok(!unseen.includes(SPARRING), 'the owner sentence is not present verbatim in the brief copy')
+  // The needs profile's research reads the fact with the origin "answer", the plan's "Your answer".
+  const { sources } = researchOf(brief, { manifest: [] })
+  const own = sources.filter((s) => s.id === 'owner-statement')
+  assert.ok(
+    own.length,
+    `the research has a source of the owner statement: ${JSON.stringify(sources).slice(0, 300)}`
+  )
+  assert.ok(own.every((s) => s.origin === 'answer'))
+})
+
+test('a business name the owner keeps off the site never reaches the model, in the description or elsewhere (D46)', async () => {
   const { domain } = await fakeDomain({ connectors: { website: connector(gymSite()) } })
   const model = fakeModel(gymAnswer)
   const gathered = await gatherer(domain, {
     readingDoor: async () => READY,
     readingFetch: model.fetch
-  })({ links: [GYM], description: `We opened in 1990. ${SPARRING}` }, {})
-  assert.equal(model.calls.length, 1)
-  assert.ok(
-    !model.calls[0].prompt.includes('Junior sparring'),
-    'the reading never reads it as another source'
+  })(
+    {
+      links: [GYM],
+      description: `Larkfen Boxing Club trains juniors. ${SPARRING}`,
+      withheld: { name: true, names: ['Larkfen Boxing Club'] }
+    },
+    {}
   )
-  assert.ok(
-    !JSON.stringify(gathered.brief).includes('Junior sparring'),
-    'nothing it alone says is in the brief'
+  for (const call of [...model.calls, ...model.retries])
+    assert.ok(!call.prompt.includes('Larkfen'), 'no model input names the held business')
+  assert.deepEqual(gathered.descriptionFacts, { read: true, heldOut: 1, cut: false })
+})
+
+test('a description that only names something held is recorded as held, never read (D46)', async () => {
+  const { domain } = await fakeDomain({
+    connectors: { website: connector({ ...gymSite(), pages: [], profile: { name: 'Larkfen Boxing Club' } }) }
+  })
+  const gathered = await gatherer(domain, {
+    readingDoor: async () => READY,
+    readingFetch: fakeModel(gymAnswer).fetch
+  })(
+    {
+      links: [GYM],
+      description: 'Larkfen Boxing Club is open.',
+      withheld: { name: true, names: ['Larkfen Boxing Club'] }
+    },
+    {}
   )
-  assert.ok(gathered.brief.reading.services.some((i) => i.label === 'Beginner boxing classes'))
-  assert.deepEqual(gathered.descriptionFacts, { read: false, reason: 'no_owner_statement_source' })
+  assert.deepEqual(gathered.descriptionFacts, { read: false, reason: 'held' })
+})
+
+test('no description: the reading input and the record are what they were', async () => {
+  const { domain } = await fakeDomain({ connectors: { website: connector(gymSite()) } })
+  const model = fakeModel(gymAnswer)
+  const gathered = await gatherer(domain, {
+    readingDoor: async () => READY,
+    readingFetch: model.fetch
+  })({ links: [GYM], description: null }, {})
+  assert.equal(gathered.descriptionFacts, undefined)
+  assert.equal(gathered.reading.method, 'model')
+  assert.equal(gathered.brief.reading.ownerStatement, undefined)
 })
 
 test('without a model door the description is never used word for word instead (D46)', async () => {
@@ -303,7 +375,7 @@ test('without a model door the description is never used word for word instead (
   const gathered = await gatherer(domain)({ links: [GYM], description: SPARRING }, {})
   assert.equal(gathered.reading.method, 'rules')
   assert.ok(!JSON.stringify(gathered.brief).includes('Junior sparring'))
-  assert.deepEqual(gathered.descriptionFacts, { read: false, reason: 'no_owner_statement_source' })
+  assert.deepEqual(gathered.descriptionFacts, { read: false, reason: 'rules_never_rewrite_owner_words' })
   // The website's own bio is what the story reads.
   const story = gathered.brief.facts.find((f) => f.field === 'story')
   assert.equal(story?.value?.text, 'A boxing gym for every level.')

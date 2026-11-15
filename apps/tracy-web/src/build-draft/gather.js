@@ -18,7 +18,7 @@ import { randomUUID } from 'node:crypto'
 import { EngineStepError } from './engine-steps.js'
 import { linksOf, reasonOf } from './gather-links.js'
 import { boundedFetch, isCollected, readSources, withinTime } from './gather-sources.js'
-import { DESCRIPTION_FACTS, briefOf, profileOfRead } from './gather-read.js'
+import { briefOf, profileOfRead } from './gather-read.js'
 import { readingOf } from './gather-reading.js'
 import { NOT_STORED, picturesToStore } from './pictures.js'
 
@@ -60,14 +60,14 @@ const unreadOf = (rows, pasted) =>
  *   readingDoor?: () => Promise<object>, readingFetch?: typeof fetch, readingBudgetMs?: number,
  *   now?: () => number, budgetMs?: number, log?: Console}} deps `readingDoor`: the business reading's model door
  *   (`woEditorial`); `readingFetch`: the fetch its model call goes out through
- * @returns {(input: {links: string[], description: string | null}, context?: {accountId?: string}) =>
+ * @returns {(input: {links: string[], description: string | null, withheld?: object | null}, context?: {accountId?: string}) =>
  *   Promise<{brief: object, manifest: object[], setAside: Array<{link: string, reason: string}>,
  *   picturesSetAside: Array<{url: string, reason: string}>, pictureRun?: string, logoFile?: string,
  *   reading: object}>} `reading`: how the business was read (`gather-reading.js` record)
  */
 export function createPreSiteGatherer(deps) {
   const { parts, now = Date.now, budgetMs = GATHER_BUDGET_MS } = deps
-  return async function gather({ links, description }, context = {}) {
+  return async function gather({ links, description, withheld = null }, context = {}) {
     const started = now()
     const remaining = () => budgetMs - (now() - started)
     const deadline = AbortSignal.timeout(budgetMs)
@@ -155,6 +155,8 @@ export function createPreSiteGatherer(deps) {
       profile: subject.merged,
       google: place.facts,
       trade: subject.trade === 'other' ? null : subject.trade,
+      description,
+      withheld,
       capCents: settings?.researchJobCapCents ?? parts.defaultJobCapCents,
       now,
       ...(deps.readingBudgetMs ? { budgetMs: deps.readingBudgetMs } : {}),
@@ -187,8 +189,9 @@ export function createPreSiteGatherer(deps) {
       setAside,
       picturesSetAside: pictures.setAside,
       reading: reading.record,
-      // What became of the owner's description (D46): its facts not read yet, and its sentences kept out of the brief.
-      descriptionFacts: DESCRIPTION_FACTS,
+      // What became of the owner's description (D46): how the reading read it as a source, and its sentences kept out
+      // of the brief. No description, no record.
+      ...(reading.ownerStatement ? { descriptionFacts: reading.ownerStatement } : {}),
       ...(made.keptOut?.length ? { descriptionKeptOut: made.keptOut } : {}),
       ...(pictures.run ? { pictureRun: pictures.run } : {}),
       ...(logoFile ? { logoFile } : {})
