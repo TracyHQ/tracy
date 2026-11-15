@@ -1056,13 +1056,13 @@ window.__ModuleLoader__.load({
               "primary.title": "M\u00e0u\u0020ch\u1ee7\u0020\u0111\u1ea1o"
       },
       "tracy-build-chat": {
-              "cancelled.body": "B\u1ea1n\u0020\u0111\u00e3\u0020h\u1ee7y\u0020l\u1ea7n\u0020d\u1ef1ng\u0020n\u00e0y.\u0020K\u1ebf\u0020ho\u1ea1ch\u0020v\u00e0\u0020c\u00e1c\u0020c\u00e2u\u0020tr\u1ea3\u0020l\u1eddi\u0020c\u1ee7a\u0020b\u1ea1n\u0020v\u1eabn\u0020\u0111\u01b0\u1ee3c\u0020gi\u1eef\u0020l\u1ea1i.",
-              "cancelled.title": "Qu\u00e1\u0020tr\u00ecnh\u0020d\u1ef1ng\u0020\u0111\u00e3\u0020b\u1ecb\u0020h\u1ee7y",
+              "cancelled.body": "B\u1ea1n\u0020\u0111\u00e3\u0020hu\u1ef7\u0020l\u1ea7n\u0020d\u1ef1ng\u0020n\u00e0y.\u0020K\u1ebf\u0020ho\u1ea1ch\u0020v\u00e0\u0020c\u00e1c\u0020c\u00e2u\u0020tr\u1ea3\u0020l\u1eddi\u0020c\u1ee7a\u0020b\u1ea1n\u0020v\u1eabn\u0020\u0111\u01b0\u1ee3c\u0020gi\u1eef\u0020l\u1ea1i.",
+              "cancelled.title": "Qu\u00e1\u0020tr\u00ecnh\u0020d\u1ef1ng\u0020\u0111\u00e3\u0020b\u1ecb\u0020hu\u1ef7",
               "handoff.earlier": "Cu\u1ed9c\u0020tr\u00f2\u0020chuy\u1ec7n\u0020tr\u01b0\u1edbc\u0020\u0111\u00f3",
               "plan.allSources": "T\u1ea5t\u0020c\u1ea3\u0020ngu\u1ed3n",
               "plan.and": "{first}\u0020v\u00e0\u0020{last}",
               "plan.assumptions": "Nh\u1eefng\u0020\u0111i\u1ec1u\u0020m\u00ecnh\u0020\u0111\u00e3\u0020gi\u1ea3\u0020\u0111\u1ecbnh",
-              "plan.cancel": "H\u1ee7y",
+              "plan.cancel": "Hu\u1ef7",
               "plan.changed": "\u0110\u00e3\u0020\u0111\u1ed5i",
               "plan.count.gallery.one": "{count}\u0020\u1ea3nh",
               "plan.count.gallery.other": "{count}\u0020\u1ea3nh",
