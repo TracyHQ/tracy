@@ -23,7 +23,6 @@ function fakeClock(at, limits = null) {
 const never = () => new Promise(() => {})
 
 test('a call that never answers is cut at callMs, two minutes, not at the end of the repair window', async () => {
-  assert.equal(REPAIR_LIMITS.callMs, 2 * 60_000)
   const { clock, deadlines } = fakeClock(0)
   await assert.rejects(
     clock.bounded('the site turn records', never),

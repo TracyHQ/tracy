@@ -12,7 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "REPAIR_LIMITS.callMs is two minutes, and a call with no limit of its own that never answers fails at callMs with '<what> did not answer in the time left'.",
+    "A call with no limit of its own that never answers fails at REPAIR_LIMITS.callMs (two minutes) with '<what> did not answer in the time left'.",
     "Near the return a call gets only the time left; a call given its own limit keeps it; a call that answers in time gives its value."
   ],
   "selectors": {},

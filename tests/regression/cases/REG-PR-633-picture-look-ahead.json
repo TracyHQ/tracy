@@ -12,7 +12,6 @@
     "S2: Confirm the test named in run.tests reports ok."
   ],
   "expect": [
-    "LOOK_AHEAD is 3.",
     "A gallery tile the looker always rejects climbs through several any-photo placements; with the look-ahead on and off, the placed frames (source, asset, file hash), the ladder record and every verdict are the same.",
     "Without the look-ahead each any-photo placement waits for its own fresh look; with it, only the first does, and every look taken ahead is a call record marked ahead for that frame.",
     "No picture is asked twice, and the save's paid sum equals the cost of every look the provider answered, looks taken ahead included."

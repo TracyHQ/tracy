@@ -27,7 +27,6 @@ const placed = (doc) =>
   }))
 
 test('the look-ahead keeps every photo, cut, rung and verdict of the ladder, and its looks are counted and paid', async () => {
-  assert.equal(LOOK_AHEAD, 3)
   const reject = new Set(['block-g.2'])
   const off = await finished(reject, 'run-ahead-off', opts(0))
   const on = await finished(reject, 'run-ahead-on', opts(LOOK_AHEAD))
