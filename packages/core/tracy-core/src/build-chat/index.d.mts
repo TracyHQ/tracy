@@ -225,11 +225,16 @@ export declare function planReviewRequestOf(
     intent: { kind: 'plan-review'; approve: string }
   }[]
 }
+/** The plan review's fixed answer values: never shown, never translated. */
+export declare const PLAN_REVIEW_APPROVE: 'Approve'
+export declare const PLAN_REVIEW_CHANGE: 'Change the plan'
+/** The id of the plan review of one plan revision: `plan-review:<plan id>:<revision>`. */
+export declare function planReviewIdOf(plan: { id: string; revision: number }): string
+/** The plan revision a plan review id names, or null. */
+export declare function planOfReviewId(id: unknown): { id: string; revision: number } | null
+/** The plan revision the answered review named, when the answer is Approve; null for anything else. */
 export declare function approvalOf(
-  // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
-  plan: any,
-  reply: { answers?: { id: string; selected?: string[] }[] } | null,
-  t?: BuildChatT
+  reply: { answers?: { id: string; selected?: string[] }[] } | null
 ): { plan: { id: string; revision: number } } | null
 
 export declare const BUILD_TOOL: 'tracy_build'
@@ -260,6 +265,8 @@ export interface BuildToolFold {
   /** The latest stop while no call has been made since: whether the step may be rerun, and how many retries of it in a row stopped again. */
   stop: StopSeen | null
   streak: { step: string; count: number } | null
+  /** The latest call that asked for the build: the build run feed reads again from it. */
+  build: { turn: number; seq: number; callId: string } | null
 }
 export interface StopSeen {
   turn: number

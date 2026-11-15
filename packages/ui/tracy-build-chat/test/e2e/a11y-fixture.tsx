@@ -99,7 +99,7 @@ function Planned({ view, withReview }: { view: Any; withReview: boolean }) {
   )
   if (!withReview) return card
   const question = {
-    id: 'plan-review',
+    id: `plan-review:${view.plan.id}:${view.plan.revision}`,
     question: 'Does this plan look right?',
     options: [{ label: 'Approve' }, { label: 'Change the plan' }]
   }

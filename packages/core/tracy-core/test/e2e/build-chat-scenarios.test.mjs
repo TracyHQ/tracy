@@ -205,7 +205,7 @@ const CHECKS = {
   'site-name-question': async (chat) => {
     await researchCollapsed(chat)
     const text = await chat.text()
-    assert.match(text, /What name should your site show instead\?/)
+    assert.match(text, /What name should the site show instead\?/)
     assert.doesNotMatch(text, /Brindlewick|Sunrise Tennis Club/, 'the held name is never shown')
     assert.equal(await chat.page.getByRole('radio').count(), 0, 'no button to pick')
     assert.equal(await chat.page.locator('textarea').count(), 1, 'the text box alone')
@@ -309,8 +309,10 @@ const CHECKS = {
     assert.equal(await chat.button('Request changes').count(), 1)
     await chat.button('Approve').click()
     await chat.page.waitForFunction(() => window.probe.get().decisions.length === 1)
+    // The approval names the revision the review was handed out for, never the draft's revision of now: the plan
+    // changed under the review here, so tracy-web refuses to build it (STALE_PLAN) and the owner is asked again.
     assert.deepEqual(await chat.page.evaluate(() => window.probe.get().decisions), [
-      { plan: { id: 'plan-sunrise-tennis', revision: 2 } }
+      { plan: { id: 'plan-sunrise-tennis', revision: 1 } }
     ])
     assert.deepEqual(
       (await chat.page.evaluate(() => window.probe.get().requests)).map((r) => r.url),
@@ -457,13 +459,16 @@ const CHECKS = {
     )
     assert.doesNotMatch(await card.innerText(), /Junior squad/)
 
-    // A stale or refused save says so and changes nothing.
+    // A stale save says the plan moved, in the card's own words, and changes nothing.
     await chat.page.evaluate(() => window.probe.refuseEdits())
     await card.getByRole('button', { name: 'Edit Phone: 04 000 0000' }).click()
     await card.getByRole('textbox', { name: 'New value for Phone' }).fill('04 000 0002')
     await chat.page.keyboard.press('Enter')
     await card.getByRole('alert').waitFor()
-    assert.match(await card.getByRole('alert').innerText(), /Your change was not saved\. Try again\./)
+    assert.match(
+      await card.getByRole('alert').innerText(),
+      /The plan changed meanwhile, so your change was not saved\. The card now shows the latest plan\./
+    )
     assert.match(await section('Business facts').innerText(), /Phone\s*04 000 0000/)
     assert.equal(
       await card.locator('[data-changed][data-field="items[s2].label"]').count(),

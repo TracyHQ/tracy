@@ -145,7 +145,17 @@ async function open(browser, { viewport, theme = 'light', run = null, refuseHand
     if (url.pathname === '/api/ui') return json({ hidden: [] })
     if (url.pathname === '/api/build-draft')
       return json({ draft: { id: 'draft-1', plan: PLAN, lastEdit: null, canUndo: false } })
-    if (url.pathname === '/api/build-draft/build') return json({ build: null, run })
+    // The account's build is the build of the site whose chat this is, so its plan shows in that site chat.
+    if (url.pathname === '/api/build-draft/build')
+      return json({
+        build: {
+          id: 'build-1',
+          plan: { id: PLAN.id, revision: PLAN.revision },
+          state: 'done',
+          siteKey: SITE
+        },
+        run
+      })
     if (url.pathname === '/api/build-draft/build/handoff') {
       asked.push(request.postDataJSON())
       if (refusals > 0) {

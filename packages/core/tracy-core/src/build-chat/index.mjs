@@ -58,6 +58,10 @@ export {
   planCardOf,
   planChangeOf,
   planEditOf,
+  planOfReviewId,
+  PLAN_REVIEW_APPROVE,
+  PLAN_REVIEW_CHANGE,
+  planReviewIdOf,
   planReviewRequestOf
 } from './plan.mjs'
 export {

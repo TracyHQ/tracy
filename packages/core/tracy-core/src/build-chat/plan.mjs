@@ -150,11 +150,35 @@ function leftOutOf(leftOut) {
   })
 }
 
+const listOr = (value) => (Array.isArray(value) ? value : [])
+
+/**
+ * A plan with every part the card reads present: a draft stored under an earlier plan shape (no pictures, no logo, a
+ * page without blocks) reads its missing parts as empty, so the card and the review bar still draw.
+ * @param {any} plan
+ */
+function wholePlanOf(plan) {
+  const look = plan?.look ?? {}
+  const pictures = plan?.pictures ?? {}
+  return {
+    ...plan,
+    facts: listOr(plan?.facts),
+    items: listOr(plan?.items),
+    pages: listOr(plan?.pages).map((p) => ({ ...p, blocks: listOr(p?.blocks) })),
+    look: { ...look, template: look.template ?? {}, logo: look.logo ?? {} },
+    pictures: {
+      own: { frames: 0, ...pictures.own },
+      generated: { frames: 0, ...pictures.generated }
+    }
+  }
+}
+
 /**
  * The plan card's content.
- * @param {any} plan - a Contract B plan
+ * @param {any} contractPlan - a Contract B plan
  */
-export function planCardOf(plan) {
+export function planCardOf(contractPlan) {
+  const plan = wholePlanOf(contractPlan)
   const disputed = new Map(
     (plan.assumptions ?? [])
       .filter((a) => Array.isArray(a.alternatives) && /^facts\[[^\]]+\]\.value$/.test(a.field))
@@ -181,14 +205,14 @@ export function planCardOf(plan) {
     }),
     language: plan.language,
     look: {
-      template: plan.look.template.name,
+      template: typeof plan.look.template.name === 'string' ? plan.look.template.name : '',
       accent: plan.look.accent,
       // The dark theme's accent when it differs from the light one (#616); shown, not offered for editing yet.
       accentDark: typeof plan.look.accentDark === 'string' ? plan.look.accentDark : null,
       logo:
         plan.look.logo.kind === 'own'
           ? { kind: 'own', source: plan.look.logo.source }
-          : { kind: plan.look.logo.kind }
+          : { kind: plan.look.logo.kind ?? null }
     },
     services: services.map((s) => ({
       id: s.id,
@@ -275,8 +299,39 @@ export function changedFieldsOf({ plan, lastEdit = null, canUndo = false }) {
 }
 
 /**
+ * The two answer values of the plan review. They are values, not words to show: the review bar draws its buttons
+ * from its own translated strings and answers with one of these, so an approval never depends on a displayed word,
+ * whatever the owner's language. The tool's guard refuses a review whose options are not exactly these.
+ */
+export const PLAN_REVIEW_APPROVE = 'Approve'
+export const PLAN_REVIEW_CHANGE = 'Change the plan'
+
+/**
+ * The id of the plan review handed out for one plan revision: `plan-review:<plan id>:<revision>`. The answer carries
+ * the id back, so an approval names the revision the owner reviewed, never whatever revision is current later.
+ * @param {{ id: string, revision: number }} plan
+ */
+export const planReviewIdOf = (plan) => `${REVIEW_ID}:${plan.id}:${plan.revision}`
+
+/**
+ * The plan revision a plan review id names, or null when the id is not a plan review of one revision.
+ * @param {unknown} id
+ * @returns {{ id: string, revision: number } | null}
+ */
+export function planOfReviewId(id) {
+  if (typeof id !== 'string' || !id.startsWith(`${REVIEW_ID}:`)) return null
+  const rest = id.slice(REVIEW_ID.length + 1)
+  const cut = rest.lastIndexOf(':')
+  if (cut <= 0) return null
+  const revision = rest.slice(cut + 1)
+  if (!/^\d+$/.test(revision)) return null
+  return { id: rest.slice(0, cut), revision: Number(revision) }
+}
+
+/**
  * The `ask_user_question` request that dsh draws as its plan review bar: the plan's one line summary under review,
- * Approve and Change the plan. The plan itself is on the plan card, so the request carries only its summary.
+ * Approve and Change the plan. The plan itself is on the plan card, so the request carries only its summary. Its id
+ * names the plan revision under review (`planReviewIdOf`); its options are the fixed answer values.
  * @param {any} plan
  * @param {(key: string, vars?: Record<string, unknown>) => string} [t]
  */
@@ -296,29 +351,27 @@ export function planReviewRequestOf(plan, t = english) {
       : parts.length === 1
         ? t('review.summary.one', { name, part: parts[0] })
         : name
-  const approve = t('review.approve')
   return {
     questions: [
       {
-        id: REVIEW_ID,
+        id: planReviewIdOf(plan),
         question: t('review.question'),
         detail: `# ${summary}`,
-        options: [{ label: approve }, { label: t('review.change') }],
-        intent: { kind: 'plan-review', approve }
+        options: [{ label: PLAN_REVIEW_APPROVE }, { label: PLAN_REVIEW_CHANGE }],
+        intent: { kind: 'plan-review', approve: PLAN_REVIEW_APPROVE }
       }
     ]
   }
 }
 
 /**
- * The approval in the plan review bar's answer: the plan and revision approved, or null for anything else. Site
- * creation starts from this (#610); nothing is written to a site before it.
- * @param {any} plan
+ * The approval in the plan review bar's answer: the plan and revision the answered review named, or null for
+ * anything else (Change the plan, a review that names no revision). Site creation starts from this (#610); nothing
+ * is written to a site before it, and tracy-web builds it only while that revision is still the current one.
  * @param {{ answers?: { id: string, selected?: string[] }[] } | null} reply
- * @param {(key: string, vars?: Record<string, unknown>) => string} [t]
  */
-export function approvalOf(plan, reply, t = english) {
-  const answer = reply?.answers?.find((a) => a.id === REVIEW_ID)
-  if (answer?.selected?.[0] !== t('review.approve')) return null
-  return { plan: { id: plan.id, revision: plan.revision } }
+export function approvalOf(reply) {
+  const answer = (reply?.answers ?? []).find((a) => planOfReviewId(a?.id) !== null)
+  if (!answer || answer.selected?.[0] !== PLAN_REVIEW_APPROVE) return null
+  return { plan: planOfReviewId(answer.id) }
 }

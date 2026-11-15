@@ -94,6 +94,9 @@ export const en = {
   'plan.revised.dismiss': 'Hide this note',
   'plan.and': '{first} and {last}',
   'plan.saveFailed': 'Your change was not saved. Try again.',
+  'plan.locked': 'Your site is being built from this plan, so the plan cannot change until the build ends.',
+  'plan.stale':
+    'The plan changed meanwhile, so your change was not saved. The card now shows the latest plan.',
   'plan.edit': 'Edit {label}: {value}',
   'plan.newValue': 'New value for {label}',
   'plan.save': 'Save',
@@ -110,6 +113,13 @@ export const en = {
   'tool.edit': 'Updated your site plan',
   'tool.stopped': 'This step could not finish',
   'review.failed': 'Your answer was not sent. Try again.',
+  'review.question': 'Approve this plan?',
+  'review.approve': 'Approve',
+  'review.change': 'Change the plan',
+  'review.summary': '{name}: {pages}, {services}',
+  'review.summary.one': '{name}: {part}',
+  'review.pages.one': '{count} page',
+  'review.pages.other': '{count} pages',
   'handoff.earlier': 'Earlier conversation',
   ...rebuildEn
 } as const

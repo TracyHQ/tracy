@@ -18,13 +18,28 @@ async function post(path: string, body: unknown, fetchImpl: typeof fetch): Promi
   })
   const answer = await response.json().catch(() => null)
   if (!response.ok || !answer?.draft?.plan) {
-    const refusal = new Error(String(answer?.code ?? response.status)) as Error & { say?: string }
-    // While the site is built the door answers with the owner sentence itself: the card shows it, not a retry hint.
-    if (answer?.code === 'BUILD_RUNNING' && typeof answer.next === 'string') refusal.say = answer.next
+    const refusal = new Error(String(answer?.code ?? response.status)) as Error & { code?: string }
+    if (typeof answer?.code === 'string') refusal.code = answer.code
     throw refusal
   }
   const { plan, lastEdit = null, canUndo = false, lookSources = null } = answer.draft
   return { plan, lastEdit, canUndo, lookSources }
+}
+
+/**
+ * What the card says about a refused edit, in its own translated words (never the door's English sentence), and
+ * whether the draft is read again: while the site is built the plan is locked; a plan that moved meanwhile (another
+ * tab, a change request) is read again so the owner sees the latest one; anything else is a plain retry.
+ * @param error - what `savePlanEdit` or `undoPlanEdit` threw
+ */
+export function refusalOf(error: unknown): {
+  key: 'plan.locked' | 'plan.stale' | 'plan.saveFailed'
+  reload: boolean
+} {
+  const code = (error as { code?: unknown } | null)?.code
+  if (code === 'BUILD_RUNNING') return { key: 'plan.locked', reload: false }
+  if (code === 'STALE_EDIT') return { key: 'plan.stale', reload: true }
+  return { key: 'plan.saveFailed', reload: false }
 }
 
 /**

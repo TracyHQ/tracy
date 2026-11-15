@@ -183,6 +183,11 @@ test('the plan review request is told by its id alone: dsh drops detail and inte
   assert.equal(isPlanReviewRequest(asked), true)
   assert.equal(isPlanReviewRequest([...asked, { id: 'q-2', question: 'x', options: [] }]), false)
   assert.equal(isPlanReviewRequest([{ id: 'main-button', question: 'x', options: [] }]), false)
+  assert.equal(
+    isPlanReviewRequest([{ id: 'plan-review', question: 'x', options: [] }]),
+    false,
+    'a review that names no plan revision is not claimed'
+  )
   assert.equal(isPlanReviewRequest(undefined), false)
 })
 

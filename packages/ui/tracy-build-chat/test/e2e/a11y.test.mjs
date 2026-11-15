@@ -374,19 +374,29 @@ test('focus ring is visible in light and dark', async () => {
   }
 })
 
-test('a change refused while the site is built shows the door sentence, not a retry hint', async () => {
-  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
-  await mount(page, 'plan', { plan: PLAN })
-  await page.evaluate(() => {
-    globalThis.buildRunning = true
-  })
-  await page.getByRole('button', { name: 'Edit Tagline: Tennis for every age and level' }).click()
-  await page.keyboard.insertText(' now')
-  await page.keyboard.press('Enter')
-  const alert = page.getByRole('alert')
-  await alert.waitFor()
-  assert.equal(await alert.innerText(), 'The door sentence while the site is built.')
-  await page.close()
+test('a change refused while the site is built says so in the card words, never the door sentence', async () => {
+  for (const viewport of VIEWPORTS)
+    for (const theme of THEMES) {
+      const { page } = await open(browser, viewport, theme, code)
+      await mount(page, 'plan', { plan: PLAN })
+      await page.evaluate(() => {
+        globalThis.buildRunning = true
+      })
+      await page.getByRole('button', { name: 'Edit Tagline: Tennis for every age and level' }).click()
+      await page.keyboard.insertText(' now')
+      await page.keyboard.press('Enter')
+      const alert = page.getByRole('alert')
+      await alert.waitFor()
+      assert.equal(
+        await alert.innerText(),
+        'Your site is being built from this plan, so the plan cannot change until the build ends.'
+      )
+      if (SHOTS)
+        await page
+          .locator('#root')
+          .screenshot({ path: path.join(SHOTS, `${TAG}-plan-locked-${viewport.name}-${theme}.png`) })
+      await page.close()
+    }
 })
 
 test('left out: six lines and Show all, expanded in place, with its state exposed', async () => {

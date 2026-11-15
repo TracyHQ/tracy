@@ -32,6 +32,7 @@ import {
 } from '@tracy/core/build-chat'
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
 import { type EditContext, EditableValue, UndoIcon } from './EditableValue'
+import { refusalOf } from './save-plan-edit'
 import type { StringKey, Translate } from './strings'
 
 export interface PlanCardProps {
@@ -57,6 +58,8 @@ export interface PlanCardProps {
   revised?: RevisionNote | null
   /** The owner hides the note. */
   onDismissRevised?: () => void
+  /** A change was refused because the plan moved meanwhile: read the draft again. */
+  onStale?: () => void
 }
 
 /** How many Left out lines show before "Show all". */
@@ -268,12 +271,13 @@ export function PlanCard({
   locale = 'en',
   newEditId = randomEditId,
   revised = null,
-  onDismissRevised
+  onDismissRevised,
+  onStale
 }: PlanCardProps) {
   const [draft, setDraft] = useState<PlanDraft>({ plan, lastEdit, canUndo, lookSources })
   const [busy, setBusy] = useState(false)
-  /** A refused change: the door's own sentence while the site is built, else just true (the card says Try again). */
-  const [failed, setFailed] = useState<string | boolean>(false)
+  /** A refused change, said in the card's own words (`refusalOf`); false while nothing was refused. */
+  const [failed, setFailed] = useState<StringKey | false>(false)
   const [editing, setEditing] = useState<string | null>(null)
   /** The value focus goes back to once its editor closes, or its change is taken back. */
   const [refocus, setRefocus] = useState<string | null>(null)
@@ -300,8 +304,10 @@ export function PlanCard({
     try {
       setDraft(await request())
     } catch (error) {
-      const say = (error as { say?: unknown } | null)?.say
-      setFailed(typeof say === 'string' && say !== '' ? say : true)
+      const refused = refusalOf(error)
+      setFailed(refused.key)
+      // The plan moved meanwhile: the latest one is read, so the owner edits what is really there.
+      if (refused.reload) onStale?.()
     } finally {
       setBusy(false)
     }
@@ -371,7 +377,7 @@ export function PlanCard({
       </div>
       {failed && (
         <p className="tv-bc-plan-err tv-bc-error" role="alert">
-          {typeof failed === 'string' ? failed : t('plan.saveFailed')}
+          {t(failed)}
         </p>
       )}
 

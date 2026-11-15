@@ -127,6 +127,7 @@ test('switch on: five turn tails, the review bar ahead of dsh, the working line,
       'tracy_build:plan',
       'tracy_build:working',
       'tracy_build:retry',
+      'tracy_build:build',
       'tracy_build:history',
       'tracy_build:handoff'
     ]
@@ -136,13 +137,17 @@ test('switch on: five turn tails, the review bar ahead of dsh, the working line,
 test('switch off: no visible piece is registered, and turning it off takes them away', () => {
   const off = recorder()
   client.applyWith(off.ctx, { switches: switchBoard(false) })
-  assert.equal(off.live.size, 0)
+  // Only the quiet tracy_build row stays: an existing build session must never fall back to the raw tool JSON.
+  assert.deepEqual(
+    [...off.live].map((e) => e.options.name),
+    ['tool.call.toolview']
+  )
   const flipped = recorder()
   const board = switchBoard(true)
   client.applyWith(flipped.ctx, { switches: board })
   assert.equal(flipped.live.size, 8)
   board.flip(false)
-  assert.equal(flipped.live.size, 0)
+  assert.equal(flipped.live.size, 1)
   board.flip(true)
   assert.equal(flipped.live.size, 8)
 })
@@ -173,7 +178,7 @@ test('outside a build chat session every piece draws nothing', () => {
   const view = { phase: 'result', block: { call: { argsRaw: '{"action":"plan"}' }, content: [] } }
   assert.equal(r.of('tool.call.toolview')[0].component({ ...view, sessionId: OTHER }), null)
   assert.notEqual(r.of('tool.call.toolview')[0].component({ ...view, sessionId: BUILD }), null)
-  const pending = (sessionId, id = 'plan-review') => ({
+  const pending = (sessionId, id = 'plan-review:plan-1:1') => ({
     sessionId,
     key: 'k',
     questions: [
@@ -191,6 +196,11 @@ test('outside a build chat session every piece draws nothing', () => {
     "the engine's questions stay dsh's"
   )
   assert.equal(select({ pendingInteraction: pending(BUILD) })?.sessionId, BUILD)
+  assert.equal(
+    select({ pendingInteraction: pending(BUILD, 'plan-review') }),
+    null,
+    'a review that names no plan revision is not the plan review'
+  )
 })
 
 test('the definitions publish the latest templates and plan on their own turn, and move with a newer plan', () => {
@@ -248,6 +258,46 @@ test('the definitions publish the latest templates and plan on their own turn, a
   assert.equal(run(templates, later).turn, 1)
 })
 
+test('a call answered running spins only while it waits: in the history its row is settled', () => {
+  const r = recorder()
+  client.applyWith(r.ctx, { switches: switchBoard(true) })
+  const view = r.of('tool.call.toolview')[0].component
+  const rowOf = (props) => {
+    const element = view({ ...props, sessionId: BUILD })
+    const tree = element.type(element.props)
+    return tree.props.children.props
+  }
+  const call = { argsRaw: '{"action":"plan"}' }
+  assert.equal(rowOf({ phase: 'running', block: { call, content: [] } }).running, true)
+  const answered = {
+    phase: 'result',
+    block: {
+      call,
+      content: [{ type: 'text', text: JSON.stringify({ running: true, say: 'Still working.' }) }]
+    }
+  }
+  assert.equal(rowOf(answered).running, false, 'no spinner left in the history')
+})
+
+test('every build call wakes the build run feed once, so a build approved again after a stop shows its new run', () => {
+  const r = recorder()
+  const woken = []
+  const runs = { read: () => null, subscribe: () => () => {}, wake: (key) => woken.push(key) }
+  client.applyWith(r.ctx, { switches: switchBoard(true), runs })
+  const build = r.definitions.find((d) => d.kind === 'tracy_build:build')
+  const call = (seq, callId, action) => ({
+    type: 'tool/call',
+    seq,
+    data: { turn: seq, name: 'tracy_build', callId, arguments: JSON.stringify({ action }) }
+  })
+  let state = build.start({}, { event: call(1, 'a', 'plan'), role: 'start' })
+  assert.deepEqual(woken, [], 'a plan call is no build')
+  state = build.update({ state }, { event: call(2, 'b', 'build') })
+  state = build.update({ state }, { event: call(3, 'c', 'status') })
+  state = build.update({ state }, { event: call(4, 'd', 'build') })
+  assert.deepEqual(woken, ['b', 'd'])
+})
+
 test('a change request answer reaches the plan card note store, once per plan revision, and a dismissal sticks', () => {
   const r = recorder()
   const notes = client.createRevisionNotes()
@@ -289,6 +339,18 @@ test('a change request answer reaches the plan card note store, once per plan re
   notes.dismiss('plan-1:5')
   plan.update({ state }, { event: answered })
   assert.equal(notes.read('plan-1:5'), null, 'folded again, still dismissed')
+  // A later request that changed nothing answers the same revision with its own note: that note shows.
+  const unchangedNote = { changed: [], notDone: [{ what: 'Shop', why: 'This design has no shop page.' }] }
+  notes.put('plan-1:5', unchangedNote)
+  assert.deepEqual(
+    notes.read('plan-1:5'),
+    unchangedNote,
+    'a newer note replaces the old one, dismissal and all'
+  )
+  notes.put('plan-1:5', { ...unchangedNote })
+  notes.dismiss('plan-1:5')
+  notes.put('plan-1:5', { ...unchangedNote })
+  assert.equal(notes.read('plan-1:5'), null, 'the same note again keeps its dismissal')
 })
 
 test('Try again: published on the turn of the stop, drawn only for a step that may be rerun and fewer than two retries', () => {

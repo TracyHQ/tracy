@@ -122,3 +122,10 @@ test('the clock reads minutes and seconds', () => {
   assert.equal(clockOf(448), '7:28')
   assert.equal(clockOf(3725), '62:05')
 })
+
+test('a run of an unexpected shape draws an empty list instead of throwing', () => {
+  assert.deepEqual(progressOf({ events: [{ steps: [null, 7, { kind: 'writer' }] }] }).counts.failed, 0)
+  assert.equal(progressOf({ events: [{ steps: 'not a list' }] }).items.length, 0)
+  assert.equal(stoppedOf({ result: 'stopped', steps: [null] }).step, '')
+  assert.equal(cancelledOf({ result: 'cancelled', steps: {} }).siteUnchanged, true)
+})

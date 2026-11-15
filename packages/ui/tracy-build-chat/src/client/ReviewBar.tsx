@@ -7,8 +7,13 @@
  * request reaches the browser, and dsh would draw a generic two option question. The id survives, and the tool's
  * guard admits it only as the plan review handed out with a plan (`isPlanReviewRequest`). This bar claims exactly
  * that request, ahead of dsh's composer, and draws the panel's shape again: the plan's name as the header, its
- * summary read from the draft, the two options as the agent passed them. The answer is the one dsh's panel sends,
- * `{ answers: [{ id, selected: [label] }] }`, so `approvalOf` reads it unchanged.
+ * summary read from the draft.
+ *
+ * ITS WORDS ARE ITS OWN, ITS ANSWER IS A VALUE. The question, the summary and both buttons come from this plugin's
+ * translated strings, never from the request the agent passed on (a model may translate or reword it). The answer
+ * has the shape dsh's panel sends, `{ answers: [{ id, selected: [value] }] }`, with one of the fixed answer values
+ * `PLAN_REVIEW_APPROVE` / `PLAN_REVIEW_CHANGE` and the request's own id, which names the plan revision under review,
+ * so `approvalOf` reads it whatever the owner's language.
  *
  * THE PLAN SHOWS ABOVE THE BAR. dsh draws a turn's tail, where the plan card lives, only once the turn ends, and the
  * turn that asks the review waits for the answer. So the bar draws the living plan card itself (`planCard`), scrolled
@@ -19,6 +24,8 @@ import { Button } from '@deepseek-ai/dsh-client-ui-primitives'
 import {
   isBuildChatSession,
   isPlanReviewRequest,
+  PLAN_REVIEW_APPROVE,
+  PLAN_REVIEW_CHANGE,
   planCardOf,
   planReviewRequestOf
 } from '@tracy/core/build-chat'
@@ -52,6 +59,15 @@ export function selectPlanReview({
   return isPlanReviewRequest(pending.questions) ? (pending as PendingReview) : null
 }
 
+/** The answer to the plan review: a fixed value, for the request's own id (the plan revision under review). */
+export function reviewAnswerOf(question: { id: string }, choice: 'approve' | 'change') {
+  return {
+    answers: [
+      { id: question.id, selected: [choice === 'approve' ? PLAN_REVIEW_APPROVE : PLAN_REVIEW_CHANGE] }
+    ]
+  }
+}
+
 export function ReviewBar({
   matched,
   drafts,
@@ -73,17 +89,22 @@ export function ReviewBar({
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
   const question = matched.questions[0]
-  const [approve, decline] = question.options ?? []
+  const asked = t('review.question')
   const plan = draft?.plan
   const name = plan ? planCardOf(plan).name : null
-  const summary = plan ? planReviewRequestOf(plan).questions[0].detail.replace(/^#\s*/, '') : null
+  const summary = plan
+    ? planReviewRequestOf(
+        plan,
+        t as (key: string, vars?: Record<string, unknown>) => string
+      ).questions[0].detail.replace(/^#\s*/, '')
+    : null
 
-  const decide = (label: string) => {
+  const decide = (choice: 'approve' | 'change') => {
     setBusy(true)
     setFailed(false)
     const remote = matched.snapshot().channel === 'rpc'
     matched
-      .answer({ answers: [{ id: question.id, selected: [label] }] })
+      .answer(reviewAnswerOf(question, choice))
       .then(() => (remote ? matched.dismiss() : undefined))
       .catch(() => {
         setBusy(false)
@@ -94,12 +115,10 @@ export function ReviewBar({
   return (
     <div className="tv-bc-review-frame" data-plan-review-key={matched.key}>
       {planCard && <div className="tv-bc-review-plan">{planCard}</div>}
-      <section className="tv-bc-review" aria-label={question.question} aria-busy={busy}>
-        <div className="tv-bc-review-strip">
-          {name === null ? question.question : t('plan.title', { name })}
-        </div>
+      <section className="tv-bc-review" aria-label={asked} aria-busy={busy}>
+        <div className="tv-bc-review-strip">{name === null ? asked : t('plan.title', { name })}</div>
         <div className="tv-bc-review-body">
-          <p className="tv-bc-review-q">{question.question}</p>
+          <p className="tv-bc-review-q">{asked}</p>
           {summary !== null && <p className="tv-bc-muted tv-bc-small">{summary}</p>}
         </div>
         <div className="tv-bc-review-foot">
@@ -107,26 +126,22 @@ export function ReviewBar({
             {failed ? t('review.failed') : null}
           </div>
           <div className="tv-bc-review-actions">
-            {decline && (
-              <Button
-                variant="outline"
-                className="tv-bc-review-btn"
-                disabled={busy}
-                onClick={() => decide(decline.label)}
-              >
-                {decline.label}
-              </Button>
-            )}
-            {approve && (
-              <Button
-                variant="primary"
-                className="tv-bc-review-btn"
-                disabled={busy}
-                onClick={() => decide(approve.label)}
-              >
-                {approve.label}
-              </Button>
-            )}
+            <Button
+              variant="outline"
+              className="tv-bc-review-btn"
+              disabled={busy}
+              onClick={() => decide('change')}
+            >
+              {t('review.change')}
+            </Button>
+            <Button
+              variant="primary"
+              className="tv-bc-review-btn"
+              disabled={busy}
+              onClick={() => decide('approve')}
+            >
+              {t('review.approve')}
+            </Button>
           </div>
         </div>
       </section>

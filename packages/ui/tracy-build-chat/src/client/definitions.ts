@@ -98,6 +98,26 @@ export function planDefinitionFor(notes: RevisionNotes) {
     update: (context: { state: BuildToolFold }, m: { event: EventLike }) => keep(base.update(context, m))
   }
 }
+export const BUILD_KEY = `${BUILD_TOOL}:build`
+export type BuildAskValue = NonNullable<BuildToolFold['build']>
+/**
+ * The build definition: the latest call that asked for the build. Folding a new one wakes the build run feed, so a
+ * build approved again after a stopped one is read again and its new run replaces the old outcome (the feed stops
+ * reading on an outcome otherwise). The same call wakes it once, a reload included.
+ */
+export function buildDefinitionFor(runs: { wake?: (key: string) => void }) {
+  const base = definitionOf<BuildAskValue>(BUILD_KEY, (fold) => fold.build)
+  const keep = (fold: BuildToolFold, before: BuildToolFold['build'] = null): BuildToolFold => {
+    if (fold.build && fold.build.callId !== before?.callId) runs.wake?.(fold.build.callId)
+    return fold
+  }
+  return {
+    ...base,
+    start: (context: unknown, m: { event: EventLike }) => keep(base.start(context, m)),
+    update: (context: { state: BuildToolFold }, m: { event: EventLike }) =>
+      keep(base.update(context, m), context.state?.build ?? null)
+  }
+}
 export const workingDefinition = definitionOf<WorkingValue>(WORKING_KEY, (fold) => fold.working)
 export const retryDefinition = definitionOf<RetryValue>(RETRY_KEY, (fold) => fold.stop)
 

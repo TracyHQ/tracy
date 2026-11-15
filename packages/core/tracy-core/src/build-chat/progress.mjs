@@ -58,6 +58,10 @@ function itemOf(step, result) {
   return { ...base, state: 'pending', note: UNFINISHED.has(result) ? 'not-started' : null }
 }
 
+/** The steps of a progress event or an outcome: objects only, an empty list for any other shape. */
+const stepsOf = (value) =>
+  (Array.isArray(value?.steps) ? value.steps : []).filter((s) => s !== null && typeof s === 'object')
+
 /**
  * The task list of one run: its outcome when it has one, else its last progress event.
  * @param {{ events?: any[], outcome?: any }} run - a Contract B run
@@ -66,7 +70,9 @@ export function progressOf(run) {
   const outcome = run?.outcome ?? null
   const last = outcome ?? run?.events?.at(-1) ?? null
   const result = ENDED.has(outcome?.result) ? outcome.result : null
-  const items = (last?.steps ?? []).filter((s) => SHOWN_KINDS.has(s.kind)).map((s) => itemOf(s, result))
+  const items = stepsOf(last)
+    .filter((s) => SHOWN_KINDS.has(s.kind))
+    .map((s) => itemOf(s, result))
   const count = (state) => items.filter((i) => i.state === state).length
   return {
     kind: last?.run?.kind ?? 'build',
@@ -91,7 +97,7 @@ export function progressOf(run) {
  */
 export function stoppedOf(outcome) {
   if (outcome?.result !== 'stopped') return null
-  const steps = outcome.steps ?? []
+  const steps = stepsOf(outcome)
   const failed = steps.find((s) => s.state === 'failed') ?? steps.find((s) => s.id === outcome.stopped?.step)
   return {
     step: failed?.label ?? '',
@@ -110,7 +116,7 @@ export function stoppedOf(outcome) {
 export function cancelledOf(outcome) {
   if (outcome?.result !== 'cancelled') return null
   return {
-    siteUnchanged: !(outcome.steps ?? []).some((s) => s.kind === 'write' && s.state === 'done'),
+    siteUnchanged: !stepsOf(outcome).some((s) => s.kind === 'write' && s.state === 'done'),
     teamNotified: outcome.cancelled?.teamNotified === true
   }
 }

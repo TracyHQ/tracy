@@ -13,7 +13,9 @@
  *   ends, and the turn that asks the review waits for the answer;
  * - Try again in the turn whose call stopped on a step that may be rerun, while no build run exists and fewer than two
  *   retries of the step in a row stopped again (`RetryTail`);
- * - the task list and the stop notice in the session's last turn, once a build run exists (`BuildRunFeed`).
+ * - the task list and the stop notice in the session's last turn, once a build run exists (`BuildRunFeed`);
+ * - in a site chat, the earlier conversation carried from the build chat, with the plan and its update card only
+ *   while the viewer's own build is the build of that site (`CarriedPlan`).
  *
  * Every tail draws nothing outside a build chat session. The switch `chat-build` decides whether they are
  * registered at all (`index.tsx`).
@@ -40,6 +42,7 @@ import { EarlierConversation, MoveToSite } from './handoff'
 import { PlanCard } from './PlanCard'
 import { savePlanEdit, undoPlanEdit } from './save-plan-edit'
 import { saveTemplateChoice } from './save-template'
+import { createSiteBuildSource, type SiteBuildSource } from './site-build-source'
 import { SiteUpdate } from './SiteUpdate'
 import type { ReviewPresence } from './review-presence'
 import { hasNote, type RevisionNotes } from './revision-notes'
@@ -55,6 +58,8 @@ export interface TailDeps {
   /** The notes change requests leave for the plan card (#609). */
   notes?: RevisionNotes
   runs: BuildRunFeed
+  /** The build of the viewer's site as the site chat reads it (#612); made once when absent. */
+  sites?: SiteBuildSource
   t: () => Translate
   fetch?: typeof fetch
   /** Sends one message to the chat as the owner (dsh's session verb, the draft untouched). */
@@ -170,6 +175,7 @@ export function LivePlan({ deps, revision }: { deps: TailDeps; revision?: string
       newEditId={newEditId}
       revised={hasNote(note) ? note : null}
       onDismissRevised={() => deps.notes?.dismiss(noteKey)}
+      onStale={() => void deps.drafts.load()}
     />
   )
 }
@@ -234,9 +240,27 @@ function RunTail({
   )
 }
 
+/**
+ * The plan carried into a site chat, with its update card. Both read the signed in viewer's own build draft, so they
+ * show only while that draft's build is the build of the site this chat belongs to (`siteKey`, named by the hand
+ * off block): a teammate who built a site of their own never sees, edits or updates that plan from this site's chat.
+ */
+function CarriedPlan({ deps, sites, siteKey }: { deps: TailDeps; sites: SiteBuildSource; siteKey: unknown }) {
+  const state = useSyncExternalStore(sites.subscribe, sites.read, sites.read)
+  if (typeof siteKey !== 'string' || siteKey === '' || state?.build?.siteKey !== siteKey) return null
+  return (
+    <>
+      <LivePlan deps={deps} />
+      <SiteUpdate deps={deps} source={sites} />
+    </>
+  )
+}
+
 /** The turn tail entries, made once with what they read. Each returns null when its turn has nothing of its own. */
 export function makeTails(deps: TailDeps) {
   const inBuild = (props: TailProps) => isBuildChatSession(props.sessionId)
+  let sites = deps.sites ?? null
+  const sitesOf = () => (sites ??= createSiteBuildSource(deps.fetch))
   return {
     templates: (props: TailProps) => {
       const value = inBuild(props) ? turnValueOf<TemplatesValue>(props, TEMPLATES_KEY) : null
@@ -272,12 +296,7 @@ export function makeTails(deps: TailDeps) {
       return !Array.isArray(value?.conversation) ? null : (
         <EarlierConversation
           messages={value.conversation}
-          plan={
-            <>
-              <LivePlan deps={deps} />
-              <SiteUpdate deps={deps} />
-            </>
-          }
+          plan={<CarriedPlan deps={deps} sites={sitesOf()} siteKey={value.site?.siteKey} />}
           t={deps.t()}
         />
       )

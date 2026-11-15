@@ -17,7 +17,8 @@
  * A template pick is said in the chat as the owner through dsh's session verb (`sendToChat`, the draft untouched).
  *
  * Every visible piece is registered only while the UI switch `chat-build` is on, and draws nothing outside a build
- * chat session (`isBuildChatSession`). The definitions are state only and draw nothing themselves.
+ * chat session (`isBuildChatSession`); the one exception is the quiet tool row, which stands in for raw tool JSON
+ * in a build session whatever the switch says. The definitions are state only and draw nothing themselves.
  */
 import { BUILD_TOOL, HANDOFF_FENCE, isBuildChatSession } from '@tracy/core/build-chat'
 import { uiSwitches } from '@tracy/core/ui-switches'
@@ -28,6 +29,7 @@ import {
   type SessionFace
 } from '../../../../site/tracy-site-tabs/src/client/chat-send'
 import {
+  buildDefinitionFor,
   handoffDefinition,
   historyDefinition,
   planDefinitionFor,
@@ -132,11 +134,12 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
   const drafts = createDraftSource(deps.fetch)
   const reviews = createReviewPresence()
   const notes = deps.notes ?? createRevisionNotes()
+  const runs = deps.runs ?? createBuildRunFeed(deps.fetch)
   const tailDeps: TailDeps = {
     drafts,
     reviews,
     notes,
-    runs: deps.runs ?? createBuildRunFeed(deps.fetch),
+    runs,
     t,
     fetch: deps.fetch,
     send: (sessionId, text) =>
@@ -149,6 +152,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
     planDefinitionFor(notes),
     workingDefinition,
     retryDefinition,
+    buildDefinitionFor(runs),
     historyDefinition,
     handoffDefinition
   ])
@@ -214,13 +218,13 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
     )
   )
 
+  // Registered whatever the switch says: with the build chat switched off, an open or bookmarked build session would
+  // otherwise draw each tracy_build answer as dsh's generic JSON card, private guidance included.
   ctx.slots.inject('tool.call.toolview', () =>
-    whileShown(deps.switches, () =>
-      ctx.slots.register(
-        { name: 'tool.call.toolview', key: BUILD_TOOL, inject: (sessionId: string) => ({ sessionId }) },
-        (view: ToolViewProps & { sessionId?: string }) =>
-          isBuildChatSession(view.sessionId) ? <BuildToolRow view={view} t={t()} /> : null
-      )
+    ctx.slots.register(
+      { name: 'tool.call.toolview', key: BUILD_TOOL, inject: (sessionId: string) => ({ sessionId }) },
+      (view: ToolViewProps & { sessionId?: string }) =>
+        isBuildChatSession(view.sessionId) ? <BuildToolRow view={view} t={t()} /> : null
     )
   )
 }

@@ -84,6 +84,42 @@ test('a running build is read again until its outcome, then the reads stop', asy
   assert.equal(heard, 3)
 })
 
+test('before any build is asked for, nothing is polled: one read, then no timer', async () => {
+  const { feed, asked, timers, tick } = feedOf([{ build: null, run: null }])
+  feed.subscribe(() => {})
+  await tick()
+  assert.equal(asked.length, 1)
+  assert.equal(timers.length, 0, 'no read every few seconds while the owner is still answering questions')
+})
+
+test('a build asked for again after a stopped one is read again, and its new run replaces the stopped outcome', async () => {
+  const stoppedOutcome = { schema: 'tracy-build-outcome/v1', result: 'stopped', steps: [] }
+  const done = { schema: 'tracy-build-outcome/v1', result: 'done', steps: [] }
+  const { feed, asked, timers, tick } = feedOf([
+    { run: { outcome: stoppedOutcome } },
+    // The door has not started the new run yet on the first read after the new Approve.
+    { run: { outcome: stoppedOutcome } },
+    { run: { events: [event(1)] } },
+    { run: { outcome: done } }
+  ])
+  feed.subscribe(() => {})
+  await tick()
+  assert.deepEqual(feed.read(SESSION), { outcome: stoppedOutcome })
+  assert.equal(timers.length, 0, 'the stopped outcome ends the reads')
+  feed.wake('build-call-2')
+  await tick()
+  assert.deepEqual(feed.read(SESSION), { outcome: stoppedOutcome }, 'still the old run')
+  assert.equal(timers.length, 1, 'but the feed keeps reading for the new one')
+  await tick()
+  assert.equal(feed.read(SESSION).events[0].seq, 1, 'the new run shows')
+  await tick()
+  assert.deepEqual(feed.read(SESSION), { outcome: done })
+  assert.equal(timers.length, 0)
+  feed.wake('build-call-2')
+  await tick()
+  assert.equal(asked.length, 4, 'the same build call wakes the feed once')
+})
+
 test('the reads stop when the last card stops listening', async () => {
   const { feed, timers, tick } = feedOf([{ run: { events: [event(1)] } }])
   const stop = feed.subscribe(() => {})

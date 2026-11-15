@@ -10,6 +10,9 @@ import {
   planCardOf,
   planChangeOf,
   planEditOf,
+  planOfReviewId,
+  PLAN_REVIEW_APPROVE,
+  PLAN_REVIEW_CHANGE,
   planReviewRequestOf
 } from '../src/build-chat/index.mjs'
 import { STAGES, stageDocuments } from './fixtures/build-chat/stages.mjs'
@@ -140,11 +143,54 @@ test('the plan review bar is one dsh plan review request; only Approve is an app
     q.options.map((o) => o.label),
     ['Approve', 'Change the plan']
   )
-  assert.deepEqual(approvalOf(p, { answers: [{ id: q.id, selected: ['Approve'] }] }), {
+  assert.deepEqual(approvalOf({ answers: [{ id: q.id, selected: ['Approve'] }] }), {
     plan: { id: 'plan-sunrise-tennis', revision: 1 }
   })
-  assert.equal(approvalOf(p, { answers: [{ id: q.id, selected: ['Change the plan'] }] }), null)
-  assert.equal(approvalOf(p, null), null)
+  assert.equal(approvalOf({ answers: [{ id: q.id, selected: ['Change the plan'] }] }), null)
+  assert.equal(approvalOf(null), null)
+})
+
+test('the review names the plan revision it was handed out for, and an approval approves exactly that one', () => {
+  const p = { ...plan(), revision: 2 }
+  const [q] = planReviewRequestOf(p).questions
+  assert.equal(q.id, 'plan-review:plan-sunrise-tennis:2')
+  assert.deepEqual(planOfReviewId(q.id), { id: 'plan-sunrise-tennis', revision: 2 })
+  // A newer plan on the draft does not move an approval of an older review onto it.
+  assert.deepEqual(approvalOf({ answers: [{ id: q.id, selected: ['Approve'] }] }), {
+    plan: { id: 'plan-sunrise-tennis', revision: 2 }
+  })
+  // A review that names no plan approves nothing.
+  assert.equal(approvalOf({ answers: [{ id: 'plan-review', selected: ['Approve'] }] }), null)
+  assert.equal(planOfReviewId('plan-review:plan-sunrise-tennis:x'), null)
+  assert.equal(planOfReviewId('main-button'), null)
+})
+
+test('a plan stored under an older shape still draws: missing parts read as empty, never as a throw', () => {
+  const old = { ...plan(), pictures: undefined, look: { template: 'ja-sport', accent: '#205080' } }
+  old.pages = old.pages.map((p) => ({ ...p, blocks: undefined }))
+  const card = planCardOf(old)
+  assert.equal(card.look.template, '')
+  assert.deepEqual(card.look.logo, { kind: null })
+  assert.deepEqual(card.pictures, { own: { frames: 0, from: [] }, generated: { frames: 0 } })
+  assert.deepEqual(card.pages[0].blocks, [])
+  assert.equal(planReviewRequestOf(old).questions.length, 1)
+  assert.equal(planCardOf({ id: 'p', revision: 1 }).name, '')
+})
+
+test('the approval never depends on a displayed word: translated texts leave the answer values as they are', () => {
+  const vi = (key) => `[vi] ${key}`
+  const [q] = planReviewRequestOf(plan(), vi).questions
+  assert.deepEqual(
+    q.options.map((o) => o.label),
+    [PLAN_REVIEW_APPROVE, PLAN_REVIEW_CHANGE],
+    'the answer values are fixed, whatever the language'
+  )
+  assert.equal(q.intent.approve, PLAN_REVIEW_APPROVE)
+  assert.equal(q.question, '[vi] review.question')
+  assert.deepEqual(approvalOf({ answers: [{ id: q.id, selected: [PLAN_REVIEW_APPROVE] }] }), {
+    plan: { id: 'plan-sunrise-tennis', revision: 1 }
+  })
+  assert.equal(approvalOf({ answers: [{ id: q.id, selected: ['Approuver'] }] }), null)
 })
 
 // In place editing (#607): which values were just changed, and the change an editor's text makes.

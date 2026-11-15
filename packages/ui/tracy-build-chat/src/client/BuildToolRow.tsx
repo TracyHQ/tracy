@@ -64,7 +64,8 @@ export function BuildToolRow({ view, t }: { view: ToolViewProps; t: Translate })
         open={false}
         expandable={false}
         onToggle={noop}
-        running={row.kind === 'working'}
+        // A call answered `running` is settled in the history: a later `status` call carries the wait on.
+        running={row.kind === 'working' && view.phase !== 'result'}
         collapsedContent={
           row.kind === 'research' && row.business !== '' ? (
             <span className="tv-bc-toolrow-sum">{row.business}</span>

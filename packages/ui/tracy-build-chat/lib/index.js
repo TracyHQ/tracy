@@ -152,7 +152,24 @@ function leftOutOf(leftOut) {
     return { ...line, what, count };
   });
 }
-function planCardOf(plan) {
+var listOr = (value) => Array.isArray(value) ? value : [];
+function wholePlanOf(plan) {
+  const look = plan?.look ?? {};
+  const pictures = plan?.pictures ?? {};
+  return {
+    ...plan,
+    facts: listOr(plan?.facts),
+    items: listOr(plan?.items),
+    pages: listOr(plan?.pages).map((p) => ({ ...p, blocks: listOr(p?.blocks) })),
+    look: { ...look, template: look.template ?? {}, logo: look.logo ?? {} },
+    pictures: {
+      own: { frames: 0, ...pictures.own },
+      generated: { frames: 0, ...pictures.generated }
+    }
+  };
+}
+function planCardOf(contractPlan) {
+  const plan = wholePlanOf(contractPlan);
   const disputed = new Map(
     (plan.assumptions ?? []).filter((a) => Array.isArray(a.alternatives) && /^facts\[[^\]]+\]\.value$/.test(a.field)).map((a) => [a.field, a])
   );
@@ -177,11 +194,11 @@ function planCardOf(plan) {
     }),
     language: plan.language,
     look: {
-      template: plan.look.template.name,
+      template: typeof plan.look.template.name === "string" ? plan.look.template.name : "",
       accent: plan.look.accent,
       // The dark theme's accent when it differs from the light one (#616); shown, not offered for editing yet.
       accentDark: typeof plan.look.accentDark === "string" ? plan.look.accentDark : null,
-      logo: plan.look.logo.kind === "own" ? { kind: "own", source: plan.look.logo.source } : { kind: plan.look.logo.kind }
+      logo: plan.look.logo.kind === "own" ? { kind: "own", source: plan.look.logo.source } : { kind: plan.look.logo.kind ?? null }
     },
     services: services.map((s) => ({
       id: s.id,
@@ -216,6 +233,18 @@ function planCardOf(plan) {
     counts: { pages: plan.pages.length, services: services.length }
   };
 }
+var PLAN_REVIEW_APPROVE = "Approve";
+var PLAN_REVIEW_CHANGE = "Change the plan";
+var planReviewIdOf = (plan) => `${REVIEW_ID}:${plan.id}:${plan.revision}`;
+function planOfReviewId(id) {
+  if (typeof id !== "string" || !id.startsWith(`${REVIEW_ID}:`)) return null;
+  const rest = id.slice(REVIEW_ID.length + 1);
+  const cut = rest.lastIndexOf(":");
+  if (cut <= 0) return null;
+  const revision = rest.slice(cut + 1);
+  if (!/^\d+$/.test(revision)) return null;
+  return { id: rest.slice(0, cut), revision: Number(revision) };
+}
 function planReviewRequestOf(plan, t = english) {
   const { name: name2, counts } = planCardOf(plan);
   const pages = t(counts.pages === 1 ? "review.pages.one" : "review.pages.other", { count: counts.pages });
@@ -226,23 +255,22 @@ function planReviewRequestOf(plan, t = english) {
     (p) => p !== null
   );
   const summary = parts.length === 2 ? t("review.summary", { name: name2, pages, services }) : parts.length === 1 ? t("review.summary.one", { name: name2, part: parts[0] }) : name2;
-  const approve = t("review.approve");
   return {
     questions: [
       {
-        id: REVIEW_ID,
+        id: planReviewIdOf(plan),
         question: t("review.question"),
         detail: `# ${summary}`,
-        options: [{ label: approve }, { label: t("review.change") }],
-        intent: { kind: "plan-review", approve }
+        options: [{ label: PLAN_REVIEW_APPROVE }, { label: PLAN_REVIEW_CHANGE }],
+        intent: { kind: "plan-review", approve: PLAN_REVIEW_APPROVE }
       }
     ]
   };
 }
-function approvalOf(plan, reply, t = english) {
-  const answer = reply?.answers?.find((a) => a.id === REVIEW_ID);
-  if (answer?.selected?.[0] !== t("review.approve")) return null;
-  return { plan: { id: plan.id, revision: plan.revision } };
+function approvalOf(reply) {
+  const answer = (reply?.answers ?? []).find((a) => planOfReviewId(a?.id) !== null);
+  if (!answer || answer.selected?.[0] !== PLAN_REVIEW_APPROVE) return null;
+  return { plan: planOfReviewId(answer.id) };
 }
 
 // ../../core/tracy-core/src/build-chat/progress.mjs
@@ -259,7 +287,8 @@ var EMPTY = Object.freeze({
   plan: null,
   working: null,
   stop: null,
-  streak: null
+  streak: null,
+  build: null
 });
 var RETRY_MESSAGE = "Please try again.";
 
@@ -273,6 +302,7 @@ function isBuildChatSession(sessionId) {
 var BUILD_WAIT_MS = 9e4;
 var BUILD_POLL_MS = 2e3;
 var BUILD_DOOR_TIMEOUT_MS = 3e4;
+var BUILD_POLL_BACKOFF_MAX_MS = 16e3;
 var BUILD_STOPPED_SAY = FAULT_SAY;
 var BUILD_RUNNING_SAY = "Still working on it. This can take a minute or two.";
 var UNCHANGED_FALLBACK_SAY = UNCHANGED_SAY;
@@ -280,6 +310,8 @@ var BUILD_BUILDING_SAY = "Your site is being built from the plan you approved. T
 var BUILD_DONE_SAY2 = BUILD_DONE_SAY;
 var BUILD_FAILED_SAY = `Your site could not be built this time. ${TEAM_SEES_SAY}`;
 var BUILD_LOCKED_SAY2 = BUILD_LOCKED_SAY;
+var BUILD_UNCHECKED_SAY = "I asked for your site to be built, but I could not check on it just now. Ask me again in a minute to see how it is going.";
+var BUILD_CHAT_OFF_SAY = "Building a site in the chat is not available right now. You can still create your site from the Add site page.";
 var REQUEST_MAX_LENGTH = 1e3;
 var REQUEST_TOO_LONG_SAY = requestTooLongSay(REQUEST_MAX_LENGTH);
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? nameTooLongSay(limit) : answerTooLongSay(limit);
@@ -357,6 +389,9 @@ function ownerSay(said, fallback = BUILD_STOPPED_SAY) {
   return typeof said === "string" && said.trim() !== "" && said.length <= SAY_MAX && !/[–—]/.test(said) ? said.trim() : fallback;
 }
 var stopped = (said = void 0) => ({ stopped: true, say: ownerSay(said) });
+var switchedOff = () => ({ stopped: true, say: BUILD_CHAT_OFF_SAY });
+var isSwitchedOff = (res) => res?.status === 403 && res.body?.code === "BUILD_CHAT_OFF";
+var isPollFault = (res) => res === null || res.status >= 500;
 var RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with the same action; a result of that call says stopped again only if it failed again.`;
 var stoppedStateOf = (state) => state?.rerun === true ? {
   ...stopped(state.say),
@@ -416,12 +451,22 @@ function createBuildTool({
   const issued = /* @__PURE__ */ new Map();
   const reviews = /* @__PURE__ */ new Map();
   const stored = /* @__PURE__ */ new Map();
-  const shown = /* @__PURE__ */ new Map();
   const questionsOf = (sessionId) => {
     let known = issued.get(sessionId);
     if (!known) issued.set(sessionId, known = /* @__PURE__ */ new Map());
     return known;
   };
+  function handOutReview(sessionId, plan) {
+    const review = planReviewRequestOf(plan);
+    let handed = reviews.get(sessionId);
+    if (!handed) reviews.set(sessionId, handed = /* @__PURE__ */ new Map());
+    for (const q of review.questions)
+      handed.set(
+        q.id,
+        q.options.map((o) => o.label)
+      );
+    return review;
+  }
   const setOf = (map, sessionId) => {
     let set = map.get(sessionId);
     if (!set) map.set(sessionId, set = /* @__PURE__ */ new Set());
@@ -474,6 +519,7 @@ function createBuildTool({
 ${JSON.stringify(answer)}`;
       if (done.has(key)) continue;
       const res = await door(sessionId, assertion, "PUT", "/answers", { question, answer });
+      if (isSwitchedOff(res)) return "off";
       if (res === null || res.status >= 500 || res.status === 403 || res.status === 404) return false;
       if (res.status >= 200 && res.status < 300) done.add(key);
     }
@@ -485,6 +531,7 @@ ${JSON.stringify(answer)}`;
     next: `${say ? "Say the sentence in say, then pass" : "Pass"} ask to ask_user_question exactly as given. When the owner has answered, call tracy_build with action plan again.`
   });
   function refusal(res) {
+    if (isSwitchedOff(res)) return switchedOff();
     const missing = res.status === 409 ? MISSING_STEPS[res.body?.code] : void 0;
     if (missing) return { missing: missing.missing, next: missing.next };
     if (res.status === 409 && res.body?.code === "BUILD_RUNNING")
@@ -523,10 +570,7 @@ ${JSON.stringify(answer)}`;
     }
     if (state?.step === "revise") {
       if (result.brand !== "own" || !result.plan) return stopped(state.say);
-      const review = planReviewRequestOf(result.plan);
-      const ids = setOf(reviews, sessionId);
-      for (const q of review.questions) ids.add(q.id);
-      shown.set(sessionId, { id: result.plan.id, revision: result.plan.revision });
+      const review = handOutReview(sessionId, result.plan);
       const lines = (v) => Array.isArray(v) ? v.filter((x) => typeof x === "string") : [];
       const notDone = (Array.isArray(result.revision?.notDone) ? result.revision.notDone : []).filter((e) => typeof e?.what === "string" && typeof e?.why === "string").map((e) => ({ what: e.what, why: e.why }));
       const unchanged = result.unchanged === true;
@@ -545,11 +589,8 @@ ${JSON.stringify(answer)}`;
       };
     if (state?.step === "compose" || state?.step === "edit") {
       if (result.brand !== "own" || !result.plan) return stopped(state.say);
-      const review = planReviewRequestOf(result.plan);
-      const ids = setOf(reviews, sessionId);
-      for (const q of review.questions) ids.add(q.id);
+      const review = handOutReview(sessionId, result.plan);
       const plan = { id: result.plan.id, revision: result.plan.revision };
-      shown.set(sessionId, plan);
       if (result.unchanged === true)
         return {
           unchanged: true,
@@ -565,6 +606,7 @@ ${JSON.stringify(answer)}`;
   async function settle(sessionId, first) {
     let state = first;
     const start = now();
+    let pause = pollMs;
     while (state?.state === "running") {
       if (now() - start >= waitMs)
         return {
@@ -572,33 +614,43 @@ ${JSON.stringify(answer)}`;
           say: BUILD_RUNNING_SAY,
           next: "Say the sentence in say, then call tracy_build with action status to keep waiting."
         };
-      await sleep(pollMs);
+      await sleep(pause);
       const assertion = actorFor(sessionId);
-      if (assertion === null) return stopped();
-      const res = await door(sessionId, assertion, "GET", "/engine");
-      if (res === null) return stopped();
+      const res = assertion === null ? null : await door(sessionId, assertion, "GET", "/engine");
+      if (res === null || isPollFault(res)) {
+        pause = Math.min(pause * 2, BUILD_POLL_BACKOFF_MAX_MS);
+        continue;
+      }
       if (res.status !== 200) return refusal(res);
       state = res.body;
+      pause = pollMs;
     }
     if (state?.step === null || state?.state === "idle")
       return { idle: true, next: "Nothing is running. Call tracy_build with action research first." };
     return finished(sessionId, state);
   }
-  async function approvedPlan(sessionId, assertion) {
-    const latest = repliesOf(eventsOf(sessionId)).filter((r) => r.id === PLAN_REVIEW_ID).at(-1);
-    let plan = shown.get(sessionId) ?? null;
-    if (!plan && latest) {
-      const res = await door(sessionId, assertion, "GET", "");
-      if (res === null) return null;
-      const current = res.body?.draft?.plan;
-      if (typeof current?.id === "string" && Number.isInteger(current?.revision))
-        plan = { id: current.id, revision: current.revision };
-    }
-    const approved = plan && latest ? approvalOf(plan, { answers: [latest] }) : null;
+  function approvedPlan(sessionId) {
+    const latest = repliesOf(eventsOf(sessionId)).filter((r) => r.id === PLAN_REVIEW_ID || planOfReviewId(r.id) !== null).at(-1);
+    const approved = latest ? approvalOf({ answers: [latest] }) : null;
     if (approved) return approved;
     return {
       refused: true,
       next: "The owner has not approved the plan. Call ask_user_question with the review of the last plan result, and call build only after the owner pressed Approve."
+    };
+  }
+  async function reviewAgain(sessionId, assertion) {
+    const res = await door(sessionId, assertion, "GET", "");
+    const current = res?.status === 200 ? res.body?.draft?.plan : null;
+    if (typeof current?.id !== "string" || !Number.isInteger(current?.revision))
+      return {
+        stale: true,
+        next: "The plan changed since the owner approved it. Call tracy_build with action status, then call ask_user_question with the new review."
+      };
+    return {
+      stale: true,
+      plan: { id: current.id, revision: current.revision },
+      review: handOutReview(sessionId, current),
+      next: "The plan changed since the owner approved it, so nothing was built. Say in one short line that the plan changed and needs their approval again. Then call ask_user_question with review, unchanged, and call build only after the owner pressed Approve again."
     };
   }
   function buildResult(body) {
@@ -620,44 +672,60 @@ ${JSON.stringify(answer)}`;
     return stopped(BUILD_FAILED_SAY);
   }
   async function build(sessionId, assertion) {
-    const approved = await approvedPlan(sessionId, assertion);
-    if (approved === null) return stopped(BUILD_FAILED_SAY);
+    const approved = approvedPlan(sessionId);
     if ("refused" in approved) return approved;
     const res = await door(sessionId, assertion, "POST", "/build", { plan: approved.plan });
-    if (res === null) return stopped(BUILD_FAILED_SAY);
-    if (res.status === 409 && res.body?.code === "STALE_PLAN")
-      return {
-        stale: true,
-        next: "The plan changed since the owner approved it. Call tracy_build with action status, then call ask_user_question with the new review."
-      };
-    if (res.status === 409 && res.body?.code === "ENGINE_BUSY")
+    if (res !== null && res.status === 409 && res.body?.code === "STALE_PLAN")
+      return reviewAgain(sessionId, assertion);
+    if (res !== null && res.status === 409 && res.body?.code === "ENGINE_BUSY")
       return {
         running: true,
         say: BUILD_RUNNING_SAY,
         next: "Say the sentence in say. Call tracy_build with action status, then action build again once it ended."
       };
-    if (res.status === 409 && res.body?.code === "BUILT_FROM_OTHER_PLAN")
+    if (res !== null && res.status === 409 && res.body?.code === "BUILT_FROM_OTHER_PLAN")
       return {
         building: true,
         say: BUILD_LOCKED_SAY2,
         next: "Say the sentence in say. Call tracy_build with action build only to read the build of the plan already approved."
       };
-    if (res.status < 200 || res.status >= 300) return refusal(res);
-    let body = res.body;
+    const posted = res === null || isPollFault(res) ? null : res;
+    if (posted !== null && (posted.status < 200 || posted.status >= 300)) return refusal(posted);
+    let body = posted?.body;
+    let known = posted !== null;
+    let lastFailed = !known;
+    let pause = pollMs;
     const start = now();
-    while (BUILDING.has(body?.build?.state) && now() - start < waitMs) {
-      await sleep(pollMs);
+    while ((!known || BUILDING.has(body?.build?.state)) && now() - start < waitMs) {
+      await sleep(pause);
       const polled = actorFor(sessionId);
-      if (polled === null) return stopped(BUILD_FAILED_SAY);
-      const read = await door(sessionId, polled, "GET", "/build");
-      if (read === null) return stopped(BUILD_FAILED_SAY);
+      const read = polled === null ? null : await door(sessionId, polled, "GET", "/build");
+      if (read === null || isPollFault(read)) {
+        lastFailed = true;
+        pause = Math.min(pause * 2, BUILD_POLL_BACKOFF_MAX_MS);
+        continue;
+      }
       if (read.status !== 200) return refusal(read);
       body = read.body;
+      known = true;
+      lastFailed = false;
+      pause = pollMs;
     }
+    if (!known || lastFailed && BUILDING.has(body?.build?.state))
+      return {
+        building: true,
+        say: BUILD_UNCHECKED_SAY,
+        next: "Say the sentence in say. Never say the build failed or that the site is built. Call tracy_build with action build again only when the owner asks how it is going."
+      };
     return buildResult(body);
   }
   async function execute(rawArgs, exec) {
-    const result = await run(rawArgs, exec);
+    let result;
+    try {
+      result = await run(rawArgs, exec);
+    } catch {
+      result = stopped();
+    }
     return typeof result?.next === "string" ? { ...result, next: privately(result.next) } : result;
   }
   async function run(rawArgs, exec) {
@@ -712,6 +780,7 @@ ${JSON.stringify(answer)}`;
     const assertion = actorFor(sessionId);
     if (assertion === null) return stopped();
     const replies = await storeReplies(sessionId, assertion);
+    if (replies === "off") return switchedOff();
     if (replies === false) return stopped();
     if (replies.again) {
       const { question, limit } = replies.again;
@@ -732,11 +801,19 @@ ${JSON.stringify(answer)}`;
     const sessionId = execution.agent?.session?.id;
     if (!isBuildChatSession(sessionId)) return void 0;
     const questions = argsOf(execution.arguments).questions;
-    const ids = Array.isArray(questions) ? questions.map((q) => q?.id) : [];
+    const asked = Array.isArray(questions) ? questions : [];
     const known = issued.get(sessionId);
     const review = reviews.get(sessionId);
-    const allowed = (id) => typeof id === "string" && (known?.has(id) === true || review?.has(id) === true);
-    if (ids.length > 0 && ids.every(allowed)) return void 0;
+    const allowed = (q) => {
+      const id = q?.id;
+      if (typeof id !== "string") return false;
+      if (known?.has(id) === true) return true;
+      const labels = review?.get(id);
+      if (!labels) return false;
+      const given = Array.isArray(q.options) ? q.options.map((o) => o?.label) : [];
+      return given.length === labels.length && given.every((label, i) => label === labels[i]);
+    };
+    if (asked.length > 0 && asked.every(allowed)) return void 0;
     return "In the build chat, ask only the questions a tracy_build result gives, exactly as given. Ask nothing else; if a result said stopped, say its sentence instead.";
   }
   return { execute, guard };

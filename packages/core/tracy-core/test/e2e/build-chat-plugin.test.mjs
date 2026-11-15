@@ -257,8 +257,14 @@ test('the real plugin draws the build chat from recorded tracy_build results, ph
           await bar.getByRole('button', { name: 'Approve', exact: true }).click()
           await page.waitForFunction(() => window.probe.answered().length === 1)
           const [reply] = await page.evaluate(() => window.probe.answered())
-          assert.deepEqual(reply, { answers: [{ id: 'plan-review', selected: ['Approve'] }] })
-          assert.ok(approvalOf(doors.state.plan, reply), 'approvalOf reads the answer unchanged')
+          assert.deepEqual(reply, {
+            answers: [{ id: `plan-review:${PLAN.id}:${PLAN.revision}`, selected: ['Approve'] }]
+          })
+          assert.deepEqual(
+            approvalOf(reply),
+            { plan: { id: PLAN.id, revision: PLAN.revision } },
+            'approvalOf reads the revision the review was handed out for'
+          )
 
           // An engine question stays dsh's own card.
           await page.evaluate(() =>
@@ -507,9 +513,14 @@ test('outside a build chat session, and with the switch off, the plugin draws no
     assert.deepEqual(other.errors, [])
 
     const off = await open(browser, { viewport: { width: 1280, height: 800 }, hidden: ['chat-build'] })
-    await off.page.waitForFunction(() => window.probe.registered().length === 0)
+    // Only the quiet tool row stays registered: a build session never falls back to the raw tool JSON.
+    await off.page.waitForFunction(() => window.probe.registered().join() === 'tool.call.toolview')
     await off.page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
-    assert.equal(await off.page.locator('[class*="tv-bc"], [data-build-tool]').count(), 0)
+    assert.equal(
+      await off.page.locator('[class*="tv-bc"]:not(.tv-bc-toolrow):not(.tv-bc-toolrow *)').count(),
+      0,
+      'no card, no bar, no tail'
+    )
     assert.equal(await off.page.getByRole('article').count(), 0)
     assert.deepEqual(off.errors, [])
   } finally {

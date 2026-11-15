@@ -7,7 +7,7 @@
  * events are duck-typed as dsh's session log writes them (`tool/call` with `name`, `callId`, `arguments`;
  * `tool/result` with `message.source.callId`, `message.content`, `message.isError`).
  */
-import { PLAN_REVIEW_ID } from './plan.mjs'
+import { PLAN_REVIEW_ID, planOfReviewId } from './plan.mjs'
 
 /** The wire name of the engine tool. */
 export const BUILD_TOOL = 'tracy_build'
@@ -120,8 +120,10 @@ export function buildToolRowOf(rawArgs, text) {
  *   revised?: { changed: string[], notDone: { what: string, why: string }[] } }} PlanSeen
  * @typedef {{ turn: number, seq: number, step: string }} WorkingSeen
  * @typedef {{ turn: number, seq: number, step: string, rerun: boolean, retries: number }} StopSeen
+ * @typedef {{ turn: number, seq: number, callId: string }} BuildAskSeen
  * @typedef {{ calls: Readonly<Record<string, string>>, templates: TemplatesSeen | null, plan: PlanSeen | null,
- *   working: WorkingSeen | null, stop: StopSeen | null, streak: { step: string, count: number } | null }} BuildToolFold
+ *   working: WorkingSeen | null, stop: StopSeen | null, streak: { step: string, count: number } | null,
+ *   build: BuildAskSeen | null }} BuildToolFold
  */
 
 /** @type {BuildToolFold} */
@@ -131,7 +133,8 @@ const EMPTY = Object.freeze({
   plan: null,
   working: null,
   stop: null,
-  streak: null
+  streak: null,
+  build: null
 })
 
 /**
@@ -161,6 +164,7 @@ const textOf = (content) =>
  * and the latest plan revision, each with the turn it arrived in. An error, a replaced result (history rewritten)
  * and a stop leave both as they were. `working` is the latest call while it waits: not answered yet, or answered
  * `running` (a long step the agent keeps waiting on with `status`); any other answer, an error included, ends it.
+ * `build` is the latest call that asked for the build.
  * Used as the State of a conversation node definition.
  * @param {BuildToolFold | undefined} state
  * @param {any} event
@@ -177,7 +181,12 @@ export function buildToolFoldOf(state = EMPTY, event) {
         : (state.working ?? null)
     // The call is remembered with its action, so a stopped answer without a step names the step that was asked.
     const action = typeof step === 'string' ? step : 'status'
-    return { ...state, calls: { ...state.calls, [data.callId]: action }, working, stop: null }
+    // The latest build call: the build run feed reads again from it, also after a stopped outcome.
+    const build =
+      action === 'build'
+        ? { turn: Number.isSafeInteger(turn) ? turn : -1, seq: Number(event.seq), callId: data.callId }
+        : (state.build ?? null)
+    return { ...state, calls: { ...state.calls, [data.callId]: action }, working, stop: null, build }
   }
   if (event?.type !== 'tool/result' || event.surfaceOp !== 'append') return state
   const message = data?.message
@@ -220,11 +229,12 @@ export function buildToolFoldOf(state = EMPTY, event) {
 /**
  * Whether one pending `ask_user_question` request is the plan review. dsh's question tool passes on only id,
  * question, header, options, multi-select and recommended, so `detail` and `intent` of `planReviewRequestOf` never
- * reach the browser; the id, which the tool's guard admits only as the plan review handed out with a plan, does.
+ * reach the browser; the id, which the tool's guard admits only as the plan review handed out with a plan, does. It
+ * names the plan revision under review (`planReviewIdOf`); an id that names none is not a plan review.
  * @param {unknown} questions
  */
 export function isPlanReviewRequest(questions) {
-  return Array.isArray(questions) && questions.length === 1 && questions[0]?.id === PLAN_REVIEW_ID
+  return Array.isArray(questions) && questions.length === 1 && planOfReviewId(questions[0]?.id) !== null
 }
 
 export { PLAN_REVIEW_ID }

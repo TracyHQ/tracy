@@ -189,7 +189,7 @@ function PlanReview({ plan }: { plan: Any }) {
     const wire = createWaterfallRequest(undefined, undefined, (channel) => pending.detachWaterfall(channel))
     pending.attachWaterfall(wire.channel)
     wire.result.then(
-      (reply: Any) => decisions.push(approvalOf(draft.plan, reply) ?? { requestChanges: true }),
+      (reply: Any) => decisions.push(approvalOf(reply) ?? { requestChanges: true }),
       () => decisions.push({ requestChanges: true })
     )
     return pending

@@ -9,8 +9,10 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import {
+  BUILD_CHAT_OFF_SAY,
   BUILD_DESCRIPTION,
   BUILD_LOCKED_SAY,
+  BUILD_UNCHECKED_SAY,
   BUILD_PARAMETERS,
   BUILD_RUNNING_SAY,
   BUILD_STOPPED_SAY,
@@ -78,6 +80,8 @@ function fakeWeb(routes) {
     if (typeof answer === 'function') answer = answer(body, calls)
     if (Array.isArray(answer)) answer = answer.length > 1 ? answer.shift() : answer[0]
     if (answer === undefined) return new Response('not found', { status: 404 })
+    // A call that never answers: a timeout or a network blip.
+    if (answer === 'network') throw new TypeError('fetch failed')
     return new Response(JSON.stringify(answer.body ?? {}), {
       status: answer.status ?? 200,
       headers: { 'content-type': 'application/json' }
@@ -554,6 +558,15 @@ test('a 409 that names a missing step says which step to take; only a stale edit
   assert.equal(answer.missing, undefined)
 })
 
+/** The `ask_user_question` dispatch of a review request, passed on as the model would. */
+const reviewAsked = (review, sessionId = SESSION) => ({
+  name: 'ask_user_question',
+  agent: { session: { id: sessionId } },
+  arguments: {
+    questions: review.questions.map(({ id, question, options }) => ({ id, question, options }))
+  }
+})
+
 /** One `ask_user_question` dispatch as dsh's tool guard sees it. */
 const asking = (ids, sessionId = SESSION) => ({
   name: 'ask_user_question',
@@ -578,7 +591,7 @@ test('the guard refuses a question the engine did not issue, and allows issued o
   assert.equal(typeof tool.guard(asking([])), 'string')
   assert.equal(typeof tool.guard(asking(['plan-review'])), 'string', 'no plan, no review')
   const planned = await run(tool, { action: 'plan' })
-  assert.equal(tool.guard(asking([planned.review.questions[0].id])), undefined)
+  assert.equal(tool.guard(reviewAsked(planned.review)), undefined)
   // Other tools, and sessions that are not build chats, are not this guard's business.
   assert.equal(tool.guard({ ...asking(['anything']), name: 'web_search' }), undefined)
   assert.equal(tool.guard(asking(['anything'], 'session-0f3c2a8e-1b2d-4c5e-8f90-a1b2c3d4e5f6')), undefined)
@@ -753,18 +766,17 @@ test('a typed reply past the limit is not stored: the owner is asked again with 
   )
 })
 
-/** The log of a plan review the owner answered with the given button. */
-function reviewed(label) {
+/** The log of a plan review of one plan revision the owner answered with the given button. */
+function reviewed(label, revision = 1, callId = 'r1') {
+  const id = `plan-review:${PLAN.id}:${revision}`
   return [
-    { type: 'tool/call', data: { name: 'ask_user_question', callId: 'r1', arguments: '{}' } },
+    { type: 'tool/call', data: { name: 'ask_user_question', callId, arguments: '{}' } },
     {
       type: 'tool/result',
       data: {
         message: {
-          source: { callId: 'r1' },
-          content: [
-            { type: 'text', text: JSON.stringify({ answers: [{ id: 'plan-review', selected: [label] }] }) }
-          ]
+          source: { callId },
+          content: [{ type: 'text', text: JSON.stringify({ answers: [{ id, selected: [label] }] }) }]
         }
       }
     }
@@ -822,18 +834,139 @@ test('Change the plan is no approval, and a build still running after the wait s
   assert.ok(answer.next.startsWith(PRIVATE_GUIDANCE_MARK))
 })
 
-test('after a restart the plan comes from the draft door; a stopped build is one plain sentence, never a question', async () => {
+test('after a restart the plan is the one the answered review named; a stopped build is one plain sentence', async () => {
   const web = fakeWeb({
-    'GET /api/build-draft': { body: { draft: { plan: { id: PLAN.id, revision: 4 } } } },
+    'GET /api/build-draft': { body: { draft: { plan: { ...PLAN, revision: 5 } } } },
     'POST /api/build-draft/build': building('stopped')
   })
-  const answer = await run(toolWith(web, { events: reviewed('Approve') }), { action: 'build' })
+  const answer = await run(toolWith(web, { events: reviewed('Approve', 4) }), { action: 'build' })
   assert.deepEqual(answer, {
     stopped: true,
     say: 'Your site could not be built this time. The Tracy team can see what happened and will look into it.'
   })
-  assert.deepEqual(web.calls.find((c) => c.method === 'POST').body, { plan: { id: PLAN.id, revision: 4 } })
+  assert.deepEqual(
+    web.calls.find((c) => c.method === 'POST').body,
+    { plan: { id: PLAN.id, revision: 4 } },
+    'never the draft revision of now'
+  )
   assert.equal(/[–—]/.test(JSON.stringify(answer)), false)
+})
+
+test('a plan edited after the owner pressed Approve is never built: the owner is shown the current plan again', async () => {
+  const events = []
+  const revised = { ...PLAN, revision: 2, look: { ...PLAN.look, accent: '#FF0000' } }
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': COMPOSED,
+    'POST /api/build-draft/edit': {
+      body: { step: 'edit', state: 'done', result: { plan: revised, brand: 'own' } }
+    },
+    // The door builds only the current revision (STALE_PLAN otherwise), as `POST /build` documents.
+    'POST /api/build-draft/build': (body) =>
+      body?.plan?.revision === 2 ? building('creating') : { status: 409, body: { code: 'STALE_PLAN' } },
+    'GET /api/build-draft': { body: { draft: { plan: revised } } }
+  })
+  const tool = toolWith(web, { events })
+  await run(tool, { action: 'plan' })
+  events.push(...reviewed('Approve', 1))
+  // The model changes the plan after the owner approved revision 1, then asks to build.
+  await run(tool, { action: 'edit', changes: [{ field: 'look.accent', value: '#FF0000' }] })
+  const answer = await run(tool, { action: 'build' })
+  const post = web.calls.find((c) => c.method === 'POST' && c.path === '/api/build-draft/build')
+  assert.deepEqual(post.body, { plan: { id: PLAN.id, revision: 1 } }, 'the revision the owner reviewed')
+  assert.equal(answer.built, undefined)
+  assert.equal(answer.building, undefined)
+  assert.equal(answer.stale, true)
+  assert.deepEqual(answer.plan, { id: PLAN.id, revision: 2 })
+  const [review] = answer.review.questions
+  assert.equal(review.id, `plan-review:${PLAN.id}:2`, 'the current plan, reviewed again')
+  assert.match(answer.next, /ask_user_question with review/)
+  assert.equal(tool.guard(reviewAsked(answer.review)), undefined)
+})
+
+test('the guard lets the plan review through only exactly as handed out: never relabelled or translated', async () => {
+  const web = fakeWeb({ 'POST /api/build-draft/compose': COMPOSED })
+  const tool = toolWith(web)
+  const planned = await run(tool, { action: 'plan' })
+  assert.equal(tool.guard(reviewAsked(planned.review)), undefined)
+  const [q] = planned.review.questions
+  const relabelled = { questions: [{ ...q, options: [{ label: 'Approuver' }, { label: 'Modifier' }] }] }
+  assert.equal(typeof tool.guard(reviewAsked(relabelled)), 'string')
+  const invented = { questions: [{ ...q, options: [...q.options, { label: 'Build it now' }] }] }
+  assert.equal(typeof tool.guard(reviewAsked(invented)), 'string')
+  const older = { questions: [{ ...q, id: `plan-review:${PLAN.id}:0` }] }
+  assert.equal(typeof tool.guard(reviewAsked(older)), 'string', 'a revision never handed out')
+})
+
+test('a poll that fails while the build runs is not a failed build: the tool keeps reading, then says the truth', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': COMPOSED,
+    'POST /api/build-draft/build': building('creating'),
+    'GET /api/build-draft/build': ['network', { status: 502, body: {} }, building('done')]
+  })
+  const tool = toolWith(web, { events: reviewed('Approve') })
+  await run(tool, { action: 'plan' })
+  const answer = await run(tool, { action: 'build' })
+  assert.equal(answer.built, true, 'one timed out poll and one 502 are not the outcome')
+  // Every poll fails until the wait ends: still building as far as anyone knows, never "could not be built".
+  const blind = fakeWeb({
+    'POST /api/build-draft/compose': COMPOSED,
+    'POST /api/build-draft/build': building('creating'),
+    'GET /api/build-draft/build': 'network'
+  })
+  const waiting = toolWith(blind, { events: reviewed('Approve'), waitMs: 20_000 })
+  await run(waiting, { action: 'plan' })
+  const unknown = await run(waiting, { action: 'build' })
+  assert.equal(unknown.stopped, undefined)
+  assert.equal(unknown.building, true)
+  assert.equal(unknown.say, BUILD_UNCHECKED_SAY)
+  const polls = blind.calls.filter((c) => c.method === 'GET' && c.path === '/api/build-draft/build')
+  assert.ok(polls.length < 10, `polls back off when they keep failing (${polls.length})`)
+})
+
+test('a POST that times out after the build was created is read back, not reported as a failed build', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': COMPOSED,
+    'POST /api/build-draft/build': 'network',
+    'GET /api/build-draft/build': building('done')
+  })
+  const tool = toolWith(web, { events: reviewed('Approve') })
+  await run(tool, { action: 'plan' })
+  assert.equal((await run(tool, { action: 'build' })).built, true)
+})
+
+test('a poll that fails while an engine step runs is not a stop: the step that finishes after it is reported', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { status: 202, body: { step: 'compose', state: 'running' } },
+    'GET /api/build-draft/engine': [
+      'network',
+      { status: 503, body: {} },
+      { body: { step: 'compose', state: 'done', result: { plan: PLAN, brand: 'own' } } }
+    ]
+  })
+  const answer = await run(toolWith(web), { action: 'plan' })
+  assert.deepEqual(answer.plan, { id: PLAN.id, revision: 1 })
+})
+
+test('the build chat switched off is said plainly, never as a fault the team looks into', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { status: 403, body: { code: 'BUILD_CHAT_OFF' } }
+  })
+  const answer = await run(toolWith(web), { action: 'plan' })
+  assert.equal(answer.stopped, true)
+  assert.equal(answer.say, BUILD_CHAT_OFF_SAY)
+  assert.notEqual(answer.say, BUILD_STOPPED_SAY)
+})
+
+test('a plan of an older shape never throws out of the tool: it is one plain stopped sentence', async () => {
+  const old = { ...PLAN, pictures: undefined, look: { template: 'ja-sport' } }
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': {
+      body: { step: 'compose', state: 'done', result: { plan: old, brand: 'own' } }
+    }
+  })
+  const answer = await run(toolWith(web), { action: 'plan' })
+  assert.equal(answer.ask, undefined)
+  assert.ok(answer.stopped === true || answer.review, 'a stopped sentence or a review, never a raw error')
 })
 
 test('a plan that moved since approval, or a change asked while the build runs, is never retried blindly', async () => {

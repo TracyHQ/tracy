@@ -16,9 +16,11 @@
  * any `ask_user_question` of a build session whose question ids the engine did not issue for that session.
  *
  * APPROVING BUILDS (#610). Action `build` reads the owner's latest answer on the plan review bar (`approvalOf`): only
- * Approve, for the plan last handed out with that review, posts it to `POST /build`, which creates the site and builds
- * it. The door makes one site per draft, so a second call reads the same build. The tool never says built before the
- * build's own outcome does.
+ * Approve posts, and it posts the plan revision that review was handed out for (its id names it), never the revision
+ * current now, to `POST /build`, which creates the site and builds it only while that revision is current. A plan
+ * changed after the Approve is not built: the current plan is handed out for review again. The door makes one site
+ * per draft, so a second call reads the same build. A read that fails while waiting is not an outcome. The tool never
+ * says built before the build's own outcome does, nor failed before the build door says stopped.
  *
  * AN OPEN QUESTION IS NOT A FAULT. A plan that needs one more answer from the owner first (the site name, a free text
  * question with no choice: dsh's card shows its text box alone) comes back as `{ ask, say?, next }`, and a typed reply
@@ -38,6 +40,7 @@ import {
   askRequestOf,
   isBuildChatSession,
   PLAN_REVIEW_ID,
+  planOfReviewId,
   planReviewRequestOf,
   RETRY_MESSAGE,
   templateChoiceOf,
@@ -50,6 +53,8 @@ export const BUILD_WAIT_MS = 90_000
 export const BUILD_POLL_MS = 2_000
 /** How long one door call may take on its own (the engine work itself runs behind it, not inside it). */
 export const BUILD_DOOR_TIMEOUT_MS = 30_000
+/** The longest pause between two waiting reads while reads keep failing: each failed read doubles the pause. */
+export const BUILD_POLL_BACKOFF_MAX_MS = 16_000
 
 /** Owner facing: said when a step could not finish and the door gave no sentence of its own. */
 export const BUILD_STOPPED_SAY = FAULT_SAY
@@ -71,6 +76,15 @@ export const BUILD_DONE_SAY = DONE_SAY
 export const BUILD_FAILED_SAY = `Your site could not be built this time. ${TEAM_SEES_SAY}`
 /** Owner facing: said when the owner asks for a change while the build runs. */
 export const BUILD_LOCKED_SAY = LOCKED_SAY
+/**
+ * Owner facing: said when the build was asked for but tracy-web could not be read while waiting (a timeout, a network
+ * fault). The build itself may well be running: this never says it failed. Plain English, no dashes.
+ */
+export const BUILD_UNCHECKED_SAY =
+  'I asked for your site to be built, but I could not check on it just now. Ask me again in a minute to see how it is going.'
+/** Owner facing: said when building a site in the chat is switched off. Plain English, no dashes. */
+export const BUILD_CHAT_OFF_SAY =
+  'Building a site in the chat is not available right now. You can still create your site from the Add site page.'
 
 /** The longest change request the owner may write, in characters (Contract B `request.text`, #617). */
 export const REQUEST_MAX_LENGTH = 1_000
@@ -199,6 +213,17 @@ function ownerSay(said, fallback = BUILD_STOPPED_SAY) {
 
 const stopped = (/** @type {unknown} */ said = undefined) => ({ stopped: true, say: ownerSay(said) })
 
+/** The operator switched the build chat off (`BUILD_CHAT_OFF`): no fault, and nobody is looking into one. */
+const switchedOff = () => ({ stopped: true, say: BUILD_CHAT_OFF_SAY })
+/** @param {{ status: number, body: any } | null} res */
+const isSwitchedOff = (res) => res?.status === 403 && res.body?.code === 'BUILD_CHAT_OFF'
+/**
+ * A waiting read that did not answer (a timeout, a network fault, nobody to act as) or answered a server fault: not
+ * an outcome, the work behind it goes on. The loop reads again after a longer pause.
+ * @param {{ status: number } | null} res
+ */
+const isPollFault = (res) => res === null || res.status >= 500
+
 /**
  * Private guidance after a stop the owner may have run again: the sentence, no question, and the one fixed message
  * the Try again button sends. The persona says the same.
@@ -307,18 +332,36 @@ export function createBuildTool({
 }) {
   /** @type {Map<string, Map<string, any>>} Per build session: the Contract B questions the engine issued, by id. */
   const issued = new Map()
-  /** @type {Map<string, Set<string>>} Per build session: the plan review request ids handed out with a plan. */
+  /**
+   * @type {Map<string, Map<string, string[]>>} Per build session: the plan review requests handed out with a plan, by
+   * id (which names the plan revision), with their option labels.
+   */
   const reviews = new Map()
   /** @type {Map<string, Set<string>>} Per build session: the answers already stored, as `id + answer JSON`. */
   const stored = new Map()
-  /** @type {Map<string, {id: string, revision: number}>} Per build session: the plan last handed out with a review. */
-  const shown = new Map()
 
   /** @param {string} sessionId */
   const questionsOf = (sessionId) => {
     let known = issued.get(sessionId)
     if (!known) issued.set(sessionId, (known = new Map()))
     return known
+  }
+
+  /**
+   * The plan review of one plan, handed out: the guard admits exactly this request from now on.
+   * @param {string} sessionId
+   * @param {any} plan - a Contract B plan
+   */
+  function handOutReview(sessionId, plan) {
+    const review = planReviewRequestOf(plan)
+    let handed = reviews.get(sessionId)
+    if (!handed) reviews.set(sessionId, (handed = new Map()))
+    for (const q of review.questions)
+      handed.set(
+        q.id,
+        q.options.map((o) => o.label)
+      )
+    return review
   }
   /** @param {Map<string, Set<string>>} map @param {string} sessionId */
   const setOf = (map, sessionId) => {
@@ -373,7 +416,8 @@ export function createBuildTool({
    * again with the limit instead of going on.
    * @param {string} sessionId
    * @param {string} assertion
-   * @returns {Promise<false | { again: { question: any, limit: number } | null }>} false on a fault
+   * @returns {Promise<false | 'off' | { again: { question: any, limit: number } | null }>} false on a fault, `off`
+   *   when the build chat is switched off
    */
   async function storeReplies(sessionId, assertion) {
     const replies = repliesOf(eventsOf(sessionId))
@@ -400,6 +444,7 @@ export function createBuildTool({
       const key = `${reply.id}\n${JSON.stringify(answer)}`
       if (done.has(key)) continue
       const res = await door(sessionId, assertion, 'PUT', '/answers', { question, answer })
+      if (isSwitchedOff(res)) return 'off'
       if (res === null || res.status >= 500 || res.status === 403 || res.status === 404) return false
       if (res.status >= 200 && res.status < 300) done.add(key)
     }
@@ -422,6 +467,7 @@ export function createBuildTool({
    * @param {{ status: number, body: any }} res
    */
   function refusal(res) {
+    if (isSwitchedOff(res)) return switchedOff()
     // A 409 that names a step not taken yet is not a stale plan: the agent takes that step, it does not retry.
     const missing = res.status === 409 ? MISSING_STEPS[res.body?.code] : undefined
     if (missing) return { missing: missing.missing, next: missing.next }
@@ -472,10 +518,7 @@ export function createBuildTool({
     // A written change request (#617): what changed and what was not done, in the words the engine wrote.
     if (state?.step === 'revise') {
       if (result.brand !== 'own' || !result.plan) return stopped(state.say)
-      const review = planReviewRequestOf(result.plan)
-      const ids = setOf(reviews, sessionId)
-      for (const q of review.questions) ids.add(q.id)
-      shown.set(sessionId, { id: result.plan.id, revision: result.plan.revision })
+      const review = handOutReview(sessionId, result.plan)
       const lines = (/** @type {unknown} */ v) =>
         Array.isArray(v) ? v.filter((/** @type {unknown} */ x) => typeof x === 'string') : []
       const notDone = (Array.isArray(result.revision?.notDone) ? result.revision.notDone : [])
@@ -499,11 +542,8 @@ export function createBuildTool({
     if (state?.step === 'compose' || state?.step === 'edit') {
       // 13/11/2026: a plan is never composed with the template's colour or logo standing in for the business's own.
       if (result.brand !== 'own' || !result.plan) return stopped(state.say)
-      const review = planReviewRequestOf(result.plan)
-      const ids = setOf(reviews, sessionId)
-      for (const q of review.questions) ids.add(q.id)
+      const review = handOutReview(sessionId, result.plan)
       const plan = { id: result.plan.id, revision: result.plan.revision }
-      shown.set(sessionId, plan)
       // The draft already held a plan: it was kept as it is, with the owner's edits (#609). Nothing was composed.
       if (result.unchanged === true)
         return {
@@ -521,13 +561,15 @@ export function createBuildTool({
   /**
    * Wait on engine work that is still running, up to the bounded time, then shape what is there. Each poll calls as the
    * person who typed with an assertion minted for it: one assertion lives a minute (dsh-passwords
-   * `ASSERTION_TTL_SECONDS`), shorter than the wait, and tracy-web refuses an expired one.
+   * `ASSERTION_TTL_SECONDS`), shorter than the wait, and tracy-web refuses an expired one. A read that fails is not
+   * the step's outcome (the step runs on in tracy-web): the loop reads again after a longer pause.
    * @param {string} sessionId
    * @param {any} first
    */
   async function settle(sessionId, first) {
     let state = first
     const start = now()
+    let pause = pollMs
     while (state?.state === 'running') {
       if (now() - start >= waitMs)
         return {
@@ -535,13 +577,16 @@ export function createBuildTool({
           say: BUILD_RUNNING_SAY,
           next: 'Say the sentence in say, then call tracy_build with action status to keep waiting.'
         }
-      await sleep(pollMs)
+      await sleep(pause)
       const assertion = actorFor(sessionId)
-      if (assertion === null) return stopped()
-      const res = await door(sessionId, assertion, 'GET', '/engine')
-      if (res === null) return stopped()
+      const res = assertion === null ? null : await door(sessionId, assertion, 'GET', '/engine')
+      if (res === null || isPollFault(res)) {
+        pause = Math.min(pause * 2, BUILD_POLL_BACKOFF_MAX_MS)
+        continue
+      }
       if (res.status !== 200) return refusal(res)
       state = res.body
+      pause = pollMs
     }
     if (state?.step === null || state?.state === 'idle')
       return { idle: true, next: 'Nothing is running. Call tracy_build with action research first.' }
@@ -549,29 +594,43 @@ export function createBuildTool({
   }
 
   /**
-   * The plan revision the owner approved: their latest answer on the plan review bar must be Approve, for the plan
-   * last handed out with that review. After a restart this process knows no plan: the draft door says the current one.
+   * The plan revision the owner approved: their latest answer on the plan review bar must be Approve, and it names
+   * the revision that review was handed out for (`planReviewIdOf`). Never the revision the draft or this process holds
+   * now: a plan changed after the Approve (by the model, or inline on the card) is built only after a new Approve,
+   * because tracy-web builds a revision only while it is the current one (`STALE_PLAN`).
    * @param {string} sessionId
-   * @param {string} assertion
-   * @returns {Promise<{plan: {id: string, revision: number}} | {refused: true, next: string} | null>} null on a fault
+   * @returns {{plan: {id: string, revision: number}} | {refused: true, next: string}}
    */
-  async function approvedPlan(sessionId, assertion) {
+  function approvedPlan(sessionId) {
     const latest = repliesOf(eventsOf(sessionId))
-      .filter((r) => r.id === PLAN_REVIEW_ID)
+      .filter((r) => r.id === PLAN_REVIEW_ID || planOfReviewId(r.id) !== null)
       .at(-1)
-    let plan = shown.get(sessionId) ?? null
-    if (!plan && latest) {
-      const res = await door(sessionId, assertion, 'GET', '')
-      if (res === null) return null
-      const current = res.body?.draft?.plan
-      if (typeof current?.id === 'string' && Number.isInteger(current?.revision))
-        plan = { id: current.id, revision: current.revision }
-    }
-    const approved = plan && latest ? approvalOf(plan, { answers: [latest] }) : null
+    const approved = latest ? approvalOf({ answers: [latest] }) : null
     if (approved) return approved
     return {
       refused: true,
       next: 'The owner has not approved the plan. Call ask_user_question with the review of the last plan result, and call build only after the owner pressed Approve.'
+    }
+  }
+
+  /**
+   * The plan moved on since the owner approved: nothing is built, and the current plan is handed out for review again.
+   * @param {string} sessionId
+   * @param {string} assertion
+   */
+  async function reviewAgain(sessionId, assertion) {
+    const res = await door(sessionId, assertion, 'GET', '')
+    const current = res?.status === 200 ? res.body?.draft?.plan : null
+    if (typeof current?.id !== 'string' || !Number.isInteger(current?.revision))
+      return {
+        stale: true,
+        next: 'The plan changed since the owner approved it. Call tracy_build with action status, then call ask_user_question with the new review.'
+      }
+    return {
+      stale: true,
+      plan: { id: current.id, revision: current.revision },
+      review: handOutReview(sessionId, current),
+      next: 'The plan changed since the owner approved it, so nothing was built. Say in one short line that the plan changed and needs their approval again. Then call ask_user_question with review, unchanged, and call build only after the owner pressed Approve again.'
     }
   }
 
@@ -600,45 +659,59 @@ export function createBuildTool({
 
   /**
    * Approve and build: one POST (the door makes one site per draft, so pressing twice is safe), then reading the build
-   * for the bounded time.
+   * for the bounded time. A read that fails (a timeout, a network fault, a server fault) is not the build's outcome:
+   * the build runs on in tracy-web, so the loop reads again after a longer pause, and a wait that ends without a
+   * clean read says so plainly. Only the build door's own state says stopped.
    * @param {string} sessionId
    * @param {string} assertion
    */
   async function build(sessionId, assertion) {
-    const approved = await approvedPlan(sessionId, assertion)
-    if (approved === null) return stopped(BUILD_FAILED_SAY)
+    const approved = approvedPlan(sessionId)
     if ('refused' in approved) return approved
     const res = await door(sessionId, assertion, 'POST', '/build', { plan: approved.plan })
-    if (res === null) return stopped(BUILD_FAILED_SAY)
-    if (res.status === 409 && res.body?.code === 'STALE_PLAN')
-      return {
-        stale: true,
-        next: 'The plan changed since the owner approved it. Call tracy_build with action status, then call ask_user_question with the new review.'
-      }
-    if (res.status === 409 && res.body?.code === 'ENGINE_BUSY')
+    if (res !== null && res.status === 409 && res.body?.code === 'STALE_PLAN')
+      return reviewAgain(sessionId, assertion)
+    if (res !== null && res.status === 409 && res.body?.code === 'ENGINE_BUSY')
       return {
         running: true,
         say: BUILD_RUNNING_SAY,
         next: 'Say the sentence in say. Call tracy_build with action status, then action build again once it ended.'
       }
-    if (res.status === 409 && res.body?.code === 'BUILT_FROM_OTHER_PLAN')
+    if (res !== null && res.status === 409 && res.body?.code === 'BUILT_FROM_OTHER_PLAN')
       return {
         building: true,
         say: BUILD_LOCKED_SAY,
         next: 'Say the sentence in say. Call tracy_build with action build only to read the build of the plan already approved.'
       }
-    if (res.status < 200 || res.status >= 300) return refusal(res)
-    let body = res.body
+    // A POST that did not answer may still have created the build: it is read back, never reported as failed.
+    const posted = res === null || isPollFault(res) ? null : res
+    if (posted !== null && (posted.status < 200 || posted.status >= 300)) return refusal(posted)
+    let body = posted?.body
+    let known = posted !== null
+    let lastFailed = !known
+    let pause = pollMs
     const start = now()
-    while (BUILDING.has(body?.build?.state) && now() - start < waitMs) {
-      await sleep(pollMs)
+    while ((!known || BUILDING.has(body?.build?.state)) && now() - start < waitMs) {
+      await sleep(pause)
       const polled = actorFor(sessionId)
-      if (polled === null) return stopped(BUILD_FAILED_SAY)
-      const read = await door(sessionId, polled, 'GET', '/build')
-      if (read === null) return stopped(BUILD_FAILED_SAY)
+      const read = polled === null ? null : await door(sessionId, polled, 'GET', '/build')
+      if (read === null || isPollFault(read)) {
+        lastFailed = true
+        pause = Math.min(pause * 2, BUILD_POLL_BACKOFF_MAX_MS)
+        continue
+      }
       if (read.status !== 200) return refusal(read)
       body = read.body
+      known = true
+      lastFailed = false
+      pause = pollMs
     }
+    if (!known || (lastFailed && BUILDING.has(body?.build?.state)))
+      return {
+        building: true,
+        say: BUILD_UNCHECKED_SAY,
+        next: 'Say the sentence in say. Never say the build failed or that the site is built. Call tracy_build with action build again only when the owner asks how it is going.'
+      }
     return buildResult(body)
   }
 
@@ -648,7 +721,13 @@ export function createBuildTool({
    */
   async function execute(rawArgs, exec) {
     /** @type {any} */
-    const result = await run(rawArgs, exec)
+    let result
+    try {
+      result = await run(rawArgs, exec)
+    } catch {
+      // A fault never becomes a raw tool error (a plan of an older shape, an answer this file cannot read).
+      result = stopped()
+    }
     return typeof result?.next === 'string' ? { ...result, next: privately(result.next) } : result
   }
 
@@ -713,6 +792,7 @@ export function createBuildTool({
     const assertion = actorFor(sessionId)
     if (assertion === null) return stopped()
     const replies = await storeReplies(sessionId, assertion)
+    if (replies === 'off') return switchedOff()
     if (replies === false) return stopped()
     if (replies.again) {
       const { question, limit } = replies.again
@@ -732,7 +812,8 @@ export function createBuildTool({
 
   /**
    * The tools guard: in a build chat session, `ask_user_question` passes only with question ids the engine issued for
-   * that session, or the plan review request it handed out with a plan.
+   * that session, or the plan review request it handed out with a plan, with exactly the options handed out: the
+   * review's options are the answer values the approval is read by, so a relabelled or translated one never passes.
    * @param {{ name: string, agent?: any, arguments?: unknown }} execution
    * @returns {string | undefined}
    */
@@ -741,12 +822,20 @@ export function createBuildTool({
     const sessionId = execution.agent?.session?.id
     if (!isBuildChatSession(sessionId)) return undefined
     const questions = argsOf(execution.arguments).questions
-    const ids = Array.isArray(questions) ? questions.map((q) => q?.id) : []
+    const asked = Array.isArray(questions) ? questions : []
     const known = issued.get(sessionId)
     const review = reviews.get(sessionId)
-    const allowed = (/** @type {unknown} */ id) =>
-      typeof id === 'string' && (known?.has(id) === true || review?.has(id) === true)
-    if (ids.length > 0 && ids.every(allowed)) return undefined
+    const allowed = (/** @type {any} */ q) => {
+      const id = q?.id
+      if (typeof id !== 'string') return false
+      if (known?.has(id) === true) return true
+      const labels = review?.get(id)
+      if (!labels) return false
+      /** @type {unknown[]} */
+      const given = Array.isArray(q.options) ? q.options.map((/** @type {any} */ o) => o?.label) : []
+      return given.length === labels.length && given.every((label, i) => label === labels[i])
+    }
+    if (asked.length > 0 && asked.every(allowed)) return undefined
     return 'In the build chat, ask only the questions a tracy_build result gives, exactly as given. Ask nothing else; if a result said stopped, say its sentence instead.'
   }
 
