@@ -11,8 +11,11 @@ sources:
   - apps/tracy-web/src/step-chain-draft-revision.js
   - apps/tracy-web/src/step-chain-draft-write-revision.js
   - apps/tracy-web/src/step-chain-draft-journal.js
+  - apps/tracy-web/src/step-chain-draft-journal-record.js
   - apps/tracy-web/src/step-chain-draft-restore.js
+  - apps/tracy-web/src/step-chain-draft-write-back.js
   - apps/tracy-web/src/step-chain-draft-steps-late.js
+  - apps/tracy-web/src/step-chain-draft-site-check.js
   - apps/tracy-web/src/step-chain-draft-rerun.js
   - apps/tracy-web/src/step-chain-draft-run-records.js
 ---
@@ -154,8 +157,8 @@ every later comparison mirrors the read back of the place's kind exactly, no loo
 
 `draft-revision-place-value.test.mjs` proves the record form agrees with `readSent` on a table of cases. What no
 comparison sees: a key the owner adds by hand to a JSON column Tracy wrote (the site adds keys too, and the two cannot
-be told apart). Tracy sends that column whole when it writes it again, so such a key is lost on the next revision that
-writes the column.
+be told apart). No revision, restore or abandon sends such a column whole, so that key stays (below, the end of
+"Abandoning a crashed revision").
 
 **Edits made outside Tracy.** At every write over a place, first touch or a resume after a crash, the value the place
 holds must be one Tracy left there: what the previous build wrote (`previous.state.wrote`), what this run wrote
@@ -192,6 +195,7 @@ resumes a crash. At the end the previous build, its write count past the revisio
 **What a restore cannot undo** (a typed stop, noRerun, before any door):
 
 - a build the site no longer holds: `previous_build_not_current`;
+- a revision run still unfinished on the site (`builds.unfinished`): `previous_run_unfinished`;
 - a make whose id the revision never saved (`pending`), or a made record of a kind no hide covers:
   `restore_needs_removal`;
 - a contract slot the revision took out: same stop;
@@ -202,13 +206,18 @@ resumes a crash. At the end the previous build, its write count past the revisio
 A record the revision made is hidden (a made module put on no page), after the places; its key is in `left.hidden`. A
 file the revision uploaded is deleted once its dry run names no record but those (`media.delete`); a file another
 record names, or one the site refused to delete, stays, listed in `left.uploads` and with why in `left.kept`
-(`used_elsewhere` with `usedIn`, `door_not_available`, or the refusal's code). A module that had no assignment before
+(`used_elsewhere` with `usedIn`, `door_not_available`, or the refusal's code). Only a dry run answer of the measured
+shape (an object whose `usedIn` is a list of `{kind, id}`) lets a file go; any other answer keeps it (`used_in_unread`).
+A module that had no assignment before
 is written back with an empty page list (`"[]"`, the measured "no page"), listed in `left.assignments`.
 
 ## Abandoning a crashed revision (`abandonRun`)
 
-A revision marks itself as the site's unfinished run right before its first door call (`builds.begin`) and the mark
-ends when its build is kept (`builds.end`). While it is marked, any other revision stops at the plan step, before any
+A revision marks itself as the site's unfinished run (`builds.begin`) after every check that can stop without a write
+(the write plan's guards, `revision_needs_removal`, `door_not_available`, the owner checks of its acts, which read the
+site) and before its first door write; the mark ends when its build is kept (`builds.end`). A run that still stops
+having written nothing (the journal sets and saves `state.touched` before every door write, and it is unset) has its
+mark cleared at once (`step-chain-draft-site-check.js`), so the next revision runs; a run that wrote keeps its mark. While it is marked, any other revision stops at the plan step, before any
 model call, with `previous_run_unfinished` naming the run (no more false `site_changed_outside` blaming the owner for
 Tracy's half write). Two ways out:
 
@@ -231,7 +240,17 @@ reports what stays in `left.unrestored` (`{code, made, removed}`). A site is nev
 A JSON column (`attribs`, `images`, `params`) is never sent whole by a revision, a restore or an abandon: what the
 site holds now is the base, and only the keys Tracy owns (the shape it wrote) are set; every key the owner added, and
 everything inside a value Tracy wrote as an empty object, stays (`step-chain-draft-owned-keys.js`). A revision that
-would write over a key the owner set stops `site_changed_outside`.
+would write over a key the owner set stops `site_changed_outside`; a blank holder at a key it newly owns (an empty
+text, null, an empty object or list, as an admin save stores a field nobody filled) is not the owner's value.
+
+**What a revision no longer sends** (`step-chain-draft-journal-record.js`). The end state of a revision is a full build
+of the same plan plus the owner's own keys. A JSON key the previous build owned (`state.shapes`) that the revision no
+longer sends is taken out; a column the previous build wrote on a record a build made, that the operation written again
+whole no longer sends, is emptied (`''`, what a new record holds there; kept in `state.cleared`, so a later revision
+does not take a later owner value there for Tracy's), and a column with no empty value (an id, a state, a type) stops
+`revision_needs_removal`. Taking either off over an owner's edit stops `site_changed_outside`. `undo.prior` keeps the
+shape the previous build owned at each such place, so a restore and an abandon put every key and column back exactly
+(`draft-revision-dropped.test.mjs`).
 
 ## Taking things off a site
 
@@ -261,7 +280,8 @@ the one "no page" value) and `deleteMedia` (a picture under `images/`, with a dr
 The acts of a revision (`step-chain-draft-removal.js`, `step-chain-draft-removal-run.js`) run after its writes, each
 through the journal (`journaledDoors` `hide`, `unassign`), so `state.undo` keeps what the place held before, and
 `state.removal` keeps every act with the operations it settles (`{acts: [{key, door, kind, id, ops}], done}`). Owner
-safety is the write's: every act is checked before any door writes, and again before it runs: every place of the
+safety is the write's: every act is checked before any door writes, and again, on the same columns, right before it
+runs: every place of the
 record a build or this run wrote must hold what was written (or, after a crash, the hidden column 0), else
 `site_changed_outside` and nothing is hidden over the edit. Only a record some build on this site made is hidden; a
 store module is only put back on no page, the value the blank site ships. An act is read back, tried twice, then
@@ -287,8 +307,8 @@ The caller (the build chat, `apps/tracy-web/src/build-draft/`) owns these; this 
     a mismatch it stores nothing and answers `false`; the run stops `previous_build_not_current` and its build is not
     the site's build. Without `keep` a run reports `build.kept: false` and nothing can be revised later;
   - `current(ctx)` answers the ref of the build the site holds (null when none); a revision whose `rebuildFrom` is
-    another ref stops `previous_build_not_current` before any model call, and every run checks it again right before
-    its first door call; a store with no `read` or no `current` stops `previous_build_doors_missing`; a `read` that
+    another ref stops `previous_build_not_current` before any model call, and every run checks it again before its
+    first door write; a store with no `read` or no `current` stops `previous_build_doors_missing`; a `read` that
     throws stops `previous_build_unreadable`;
   - `begin({runId, from}, ctx)` marks the site's one unfinished revision run, compare and set on the site's build
     and the mark, atomic: it answers true only when the site's build is `from` now and no other run is marked (the
@@ -351,11 +371,12 @@ At the plan step, before any model call: `site_already_built`, `previous_run_unf
 `previous_build_missing`, `previous_build_unreadable` (any part a revision reads has another shape than
 `buildResultOf` writes, or the store threw), `previous_build_unfinished`, `previous_build_other_plan`,
 `previous_build_other_kit`. At the write step: `previous_build_not_current` (checked again
-before the first door call, and when `keep` finds another build), `previous_run_unfinished`, `revision_needs_removal`,
+before the first door write, and when `keep` finds another build), `previous_run_unfinished`, `revision_needs_removal`,
 `door_not_available`, `site_changed_outside`, `write_record_stale`, `redo_failed`. At the abandon: `abandon_not_unfinished`,
 `previous_build_not_current`, `restore_needs_removal`, `restore_shows_held_text`, `site_changed_outside`,
 `abandon_failed`. At the restore: `previous_build_doors_missing`,
-`previous_build_not_current`, `previous_build_missing`, `restore_not_a_revision`, `restore_needs_removal`,
+`previous_build_not_current`, `previous_run_unfinished` (a revision still unfinished on the site: resume or abandon
+it first), `previous_build_missing`, `restore_not_a_revision`, `restore_needs_removal`,
 `restore_shows_held_text`, `restore_site_changed`, `restore_failed`.
 
 ## The edit matrix

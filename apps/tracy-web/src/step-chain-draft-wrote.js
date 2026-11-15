@@ -48,8 +48,13 @@ export const holdsWrote = (place, now, { wrote = {}, shapes = {} } = {}) =>
 export const holdsSent = (place, now, undo) =>
   list(undo?.sent?.[place]).some(([hash, shape]) => placeHashOf(place, now, shape) === hash)
 
-/** The doors of any draft run, keeping the hash of each value written in `state.wrote`. */
+/**
+ * The doors of any draft run, keeping the hash of each value written in `state.wrote`. A revision's journal (its state
+ * has `undo`) keeps what it MEANT at each place it writes over, before the call; the value it sends a JSON column holds
+ * the owner's keys too, which are not Tracy's, so only a record it makes is kept here.
+ */
 export function wroteDoors(doors, record) {
+  const journaled = () => Boolean(record.state?.undo)
   const wrote = (place, value) => record.state && keepWrote(record.state, place, value)
   const columns = (kind, id, fields) => {
     if (kind === 'moduleAssignment') return wrote(`assignment:${Number(id)}`, fields?.menuids)
@@ -59,17 +64,19 @@ export function wroteDoors(doors, record) {
   return {
     ...doors,
     async update(call) {
-      if (Number(call.id) !== 0) columns(call.kind, call.id, call.fields)
+      if (Number(call.id) !== 0 && !journaled()) columns(call.kind, call.id, call.fields)
       const answer = await doors.update(call)
       if (Number(call.id) === 0 && answer?.id) columns(call.kind, answer.id, call.fields)
       return answer
     },
     async contract(call) {
+      if (journaled()) return doors.contract(call)
       for (const [key, value] of Object.entries(call.changes ?? {})) wrote(`slot:${key}`, value)
       for (const key of list(call.removes)) wrote(`slot:${key}`, null)
       return doors.contract(call)
     },
     async identity(call) {
+      if (journaled()) return doors.identity(call)
       for (const [field, value] of Object.entries(call.fields ?? {})) wrote(`identity:${field}`, value)
       return doors.identity(call)
     }

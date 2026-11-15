@@ -42,9 +42,10 @@ async function drawInitials(draw) {
  * @param {object} ctx the run
  * @param {{kit: object, plan: object, order: {order: object}}} inputs the outputs of the kit, plan and order steps
  * @param {{iconLibrary?: () => {icons?: Array<{name: string}>}}} [chain] the icon library the icons step chose from: an
- *   icon picture of the order must be one of its names (no library wired: none is)
+ *   icon picture of the order must be one of its names (no library wired: none is); `beforeDoors`: a revision's site
+ *   check and mark, run by the revision write after its checks that write nothing
  */
-export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds } = {}) {
+export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds, beforeDoors } = {}) {
   if (typeof wiring?.doors !== 'function')
     throw draftError(
       'write_not_ready_for_draft',
@@ -77,7 +78,7 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds 
       drawInitials: wiring.drawInitials ?? drawInitials
     }
     const { report } = previous
-      ? await runRevisionWrite({ ...run, previous: previous.write })
+      ? await runRevisionWrite({ ...run, previous: previous.write, beforeDoors })
       : { report: await runDraftWrite(run) }
     const state = record.state
     const build = buildResultOf({

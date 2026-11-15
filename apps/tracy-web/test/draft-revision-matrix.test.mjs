@@ -14,7 +14,13 @@ import { MORE_EDITS } from './draft-revision-edits-more.mjs'
 import { matrixRow } from './draft-revision-run.mjs'
 
 /** The edits that take something off the site: it is hidden or put on no page, never deleted. */
-const REMOVALS = new Set(['remove a service', 'take a block off a page', 'empty a block list'])
+const REMOVALS = new Set([
+  'remove a service',
+  'take a block off a page',
+  'empty a block list',
+  'drop a block from an article page',
+  'remove a page but keep its item listed'
+])
 /** The edits whose restore stops typed, and why: everything else is restored to the site before. */
 const RESTORE_STOPS = {
   'hold a reviewer': 'stop: restore_shows_held_text',
@@ -23,6 +29,8 @@ const RESTORE_STOPS = {
   'hold a reviewer the writer never named': 'stop: restore_shows_held_text'
 }
 const WRITERS = { plain: {}, cross: { cross: true } }
+/** Edits that leave a record the site keeps with less: its site must equal a full build exactly, both writers. */
+const TAKES_OFF = new Set(['drop a block from an article page', 'remove a page but keep its item listed'])
 
 const rows = []
 for (const [writer, options] of Object.entries(WRITERS))
@@ -60,6 +68,8 @@ test('every edit, both writers: the site equals a full build of the revision, wh
     // still true (the quoting writer), and a row of another item in a changed block keeps its words (both writers,
     // whose words are drawn from the whole block they read).
     assert.equal(row.equalKept, true, at)
+    // What the revision no longer sends is not left behind (#599): a JSON key or a column only the old plan wrote.
+    if (TAKES_OFF.has(row.edit)) assert.equal(row.equal, true, at)
     assert.equal(row.restore, RESTORE_STOPS[row.edit] ?? true, at)
   }
 })

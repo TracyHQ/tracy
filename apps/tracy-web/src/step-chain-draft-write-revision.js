@@ -32,12 +32,14 @@ import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.
 import { writeDeltaOf } from 'website-opportunities/domain/revision-write-delta.mjs'
 import { maskedOf, maskHeld, namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { emptyUndo, journaledDoors } from './step-chain-draft-journal.js'
-import { checkAct, removalActsOf } from './step-chain-draft-removal.js'
+import { checkAct, removalActsOf, removalFlagsOf } from './step-chain-draft-removal.js'
 import { missingDoorOf, runRemovals } from './step-chain-draft-removal-run.js'
 import { planMarkOf, runDraftWrite } from './step-chain-draft-write.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const KEPT_IN_REPORT = 20
+/** The causes a failed operation keeps as the run's own stop: an owner's edit, a column with no empty value. */
+const TYPED_CAUSES = new Set(['site_changed_outside', 'revision_needs_removal'])
 
 /** The typed stop of a revision that takes off the site what only an unavailable door would: nothing is called. */
 function removalStop(stops, plan, held) {
@@ -87,6 +89,7 @@ export function revisionStateOf(previous, plan, delta, held) {
     rewrite: delta.rewrite.map((r) => r.key),
     wrote: { ...before.wrote },
     shapes: { ...before.shapes },
+    cleared: [...list(before.cleared)],
     undo: emptyUndo()
   }
 }
@@ -110,12 +113,15 @@ function heldFilesOf(previous, state, hold) {
 
 /**
  * @param {{plan: object, previous: {state: object, ops: object[], hold?: {texts: string[], ids: string[]}},
- *   doors: object, record: object, runId: string, openStored: Function, drawInitials?: Function}} input `previous`:
+ *   doors: object, record: object, runId: string, openStored: Function, drawInitials?: Function,
+ *   beforeDoors?: Function}} input `beforeDoors`: the site check and mark, called after every check that writes
+ *   nothing and before the first door write; `previous`:
  *   the previous build's `write` (with `hold`, what the revision holds); `record`: THIS run's record (empty on its first
  *   attempt, resumed after)
  * @returns {Promise<{report: object, delta: object}>}
  */
-export async function runRevisionWrite({ plan, previous, doors, record, runId, openStored, drawInitials }) {
+export async function runRevisionWrite(input) {
+  const { plan, previous, doors, record, runId, openStored, drawInitials, beforeDoors } = input
   const hold = { texts: list(previous.hold?.texts), ids: list(previous.hold?.ids) }
   const delta = writeDeltaOf({ previous: previous.ops, plan })
   const removal = removalActsOf(delta, previous.state)
@@ -128,6 +134,7 @@ export async function runRevisionWrite({ plan, previous, doors, record, runId, o
   const journaled = journaledDoors(doors, record, {
     previousWrote: previous.state.wrote ?? {},
     previousShapes: previous.state.shapes ?? {},
+    previousCleared: list(previous.state.cleared),
     held: hold.texts
   })
   const before = { wrote: previous.state.wrote ?? {}, shapes: previous.state.shapes ?? {} }
@@ -137,6 +144,8 @@ export async function runRevisionWrite({ plan, previous, doors, record, runId, o
     const done = new Set(list(record.state.removal?.done))
     for (const act of removal.acts.filter((a) => !done.has(a.key)))
       await checkAct(act, doors, [before, record.state], record.state.undo)
+    // Every stop that writes nothing came first: only now is the site marked as this run's (`builds.begin`).
+    await beforeDoors?.()
     report = await runDraftWrite({ plan, doors: journaled, record, openStored, drawInitials, runId: runOf })
     await runRemovals({ acts: removal.acts, doors: journaled, record, previous: before, runId: runOf })
   } catch (error) {
@@ -154,25 +163,23 @@ export async function runRevisionWrite({ plan, previous, doors, record, runId, o
   return { report: maskHeld({ ...report, delta: counts, flags }, hold.texts), delta }
 }
 
-/** What the report says of the acts: each record hidden or module put on no page, never deleted. */
-function removalFlagsOf(removal) {
-  const of = (door) => removal.acts.filter((a) => a.door === door).flatMap((a) => a.ops)
-  const flags = []
-  if (of('hide').length) flags.push({ code: 'hidden_not_deleted', ops: of('hide') })
-  if (of('unassign').length) flags.push({ code: 'on_no_page_not_deleted', ops: of('unassign') })
-  if (removal.notes.length) flags.push({ code: 'left_on_no_page', ops: removal.notes.map((n) => n.key) })
-  return flags
-}
-
 /** A write stopped by an edit made outside Tracy keeps its own code; every report is masked. */
 function outsideEditOf(error, held) {
   if (error?.report) error.report = maskHeld(error.report, held)
-  if (error?.details?.cause !== 'site_changed_outside') return error
+  const cause = error?.details?.cause
+  if (!TYPED_CAUSES.has(cause)) return error
   return Object.assign(
     new DraftWriteError(
-      'site_changed_outside',
-      'a place the revision writes was edited outside Tracy since the previous build',
-      maskHeld({ op: error.details.op, place: error.details.place }, held),
+      cause,
+      `a place the revision writes cannot be written: ${cause}`,
+      maskHeld(
+        {
+          op: error.details.op,
+          place: error.details.place,
+          ...(error.details.why ? { why: error.details.why } : {})
+        },
+        held
+      ),
       { noRerun: true }
     ),
     { report: error.report }

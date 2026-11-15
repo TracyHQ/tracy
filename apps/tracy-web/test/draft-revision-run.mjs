@@ -96,7 +96,7 @@ export async function freshBuild(revised, { writer = {}, pictures, memory = blan
  */
 export function sameSite(partial, fresh, orphaned = []) {
   const b = canonicalOf(fresh)
-  const a = withoutHiddenMade(canonicalOf(partial), b)
+  const a = withoutEmptied(withoutHiddenMade(canonicalOf(partial), b), b)
   const shown = new Set(b.uploads.map(([path]) => path))
   const left = a.uploads.filter(([path]) => !shown.has(path)).map(([path]) => path)
   a.uploads = a.uploads.filter(([path]) => shown.has(path))
@@ -104,6 +104,20 @@ export function sameSite(partial, fresh, orphaned = []) {
     JSON.stringify(a) === JSON.stringify(b) &&
     JSON.stringify(left.sort()) === JSON.stringify([...orphaned].sort())
   )
+}
+
+/**
+ * `now` (a canonical site) less the columns a revision emptied (`''`) that the full build's record does not have: a
+ * real site has every column of a record, a new one holding `''` there; the memory site has only those written.
+ */
+function withoutEmptied(now, fresh) {
+  for (const [kind, rows] of Object.entries(now.records)) {
+    const other = new Map(fresh.records[kind] ?? [])
+    for (const [id, row] of rows)
+      for (const [column, value] of Object.entries(row))
+        if (value === '' && other.has(id) && !Object.hasOwn(other.get(id), column)) delete row[column]
+  }
+  return now
 }
 
 /** The restore of a revision's build on the site of `first`, through its build store. */

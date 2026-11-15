@@ -18,6 +18,7 @@ import { checkWriteOrder } from 'website-opportunities/domain/write-order-check.
 import { altCountsOf, altProblemsOf, withAltTexts } from './step-chain-draft-alt.js'
 import { wroteDoors } from './step-chain-draft-journal.js'
 import { restorePlanOf } from './step-chain-draft-restore-plan.js'
+import { siteCheckOf, unmarkUnwritten } from './step-chain-draft-site-check.js'
 import { draftError } from './step-chain-draft-source.js'
 import { draftWriteStep } from './step-chain-draft-write-step.js'
 
@@ -131,42 +132,6 @@ async function forgetHeld(builds, build, ctx) {
   }
 }
 
-/**
- * The check right before a run's first door call: the site still holds the build the run starts from
- * (`builds.current`, null for a first build: `previous_build_not_current`), and a revision marks itself as the site's
- * unfinished run (`builds.begin`, compare and set on the build and the mark: another run marked is
- * `previous_run_unfinished`, the build moved on in between is `previous_build_not_current`). Nothing is called
- * on the site before both pass.
- */
-const siteCheckOf = (builds, ctx, previous) => async () => {
-  const expected = previous?.ref ?? null
-  if (typeof builds?.current === 'function') {
-    const now = (await builds.current(ctx)) ?? null
-    if (now !== expected)
-      throw draftError(
-        'previous_build_not_current',
-        'the site holds another build than this run starts from',
-        {
-          expected,
-          current: now
-        }
-      )
-  }
-  if (!previous || typeof builds?.begin !== 'function') return
-  // `begin` compares the site's build with `expected` and sets the mark at once: a run that read the same build and
-  // began first wins; this one, refused, stops here before any write, by what refused it.
-  if ((await builds.begin({ runId: ctx.runId ?? null, from: expected }, ctx)) !== false) return
-  const now = typeof builds.current === 'function' ? ((await builds.current(ctx)) ?? null) : expected
-  if (now !== expected)
-    throw draftError('previous_build_not_current', 'another run changed the build of this site first', {
-      expected,
-      current: now
-    })
-  throw draftError('previous_run_unfinished', 'another run is still unfinished on this site', {
-    run: (await builds.unfinished?.(ctx))?.runId ?? null
-  })
-}
-
 /** The write step, with its wiring (above). */
 export async function writeStep(deps, ctx, inputs) {
   const wiring = deps.draftWrite
@@ -188,8 +153,21 @@ export async function writeStep(deps, ctx, inputs) {
         previous: { ...previous, write: { ...previous.write, hold: holdOf(inputs.plan.profile) } }
       }
     : inputs.plan
-  await siteCheckOf(deps.builds, ctx, previous)()
-  const answer = await draftWriteStep(wired, ctx, { ...inputs, plan }, chain)
+  // A first build checks the site before any door; a revision after every check that writes nothing (#599).
+  const check = siteCheckOf(deps.builds, ctx, previous)
+  if (!previous) await check()
+  let answer
+  try {
+    answer = await draftWriteStep(
+      wired,
+      ctx,
+      { ...inputs, plan },
+      { ...chain, beforeDoors: previous ? check : null }
+    )
+  } catch (error) {
+    await unmarkUnwritten(deps.builds, ctx, check, record)
+    throw error
+  }
   const flags = list(answer?.value?.report?.flags)
   if (flags.length) {
     answer.value.flags = flags

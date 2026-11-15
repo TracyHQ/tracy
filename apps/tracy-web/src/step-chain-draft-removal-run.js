@@ -53,6 +53,9 @@ export async function runRemovals({ acts, doors, record, previous, runId }) {
   const todo = acts.filter((a) => !state.removal.done.includes(a.key))
   for (const act of todo) await checkAct(act, doors, [previous, state], state.undo)
   for (const act of todo) {
+    // Checked again right before it runs, every column the up-front check read: an owner who edited the record while
+    // the acts before it ran is never written over (the journal's own check reads the hidden column only).
+    if (act !== todo[0]) await checkAct(act, doors, [previous, state], state.undo)
     for (let attempt = 1; ; attempt++) {
       try {
         await undoAct(act, doors, `${runId}:remove:${act.key}`)
@@ -75,6 +78,14 @@ export async function runRemovals({ acts, doors, record, previous, runId }) {
   return state.removal
 }
 
+/** The records a dry run answer names (`{usedIn: [{kind, id}]}`), else null when the answer has another shape. */
+function usedInOf(dry) {
+  if (!dry || typeof dry !== 'object' || Array.isArray(dry) || !Array.isArray(dry.usedIn)) return null
+  const named = (u) =>
+    Boolean(u) && typeof u.kind === 'string' && Number.isFinite(Number(u.id)) && u.id !== null
+  return dry.usedIn.every(named) ? dry.usedIn : null
+}
+
 /**
  * A file the revision uploaded, deleted once its dry run names no record but the ones this undo hid (`place.mine`):
  * otherwise, or when the site refuses, it stays and is kept in `left` with why. A file already gone is done.
@@ -90,9 +101,10 @@ export async function deleteUpload(place, doors, applyId, left) {
     return error?.code === 'NOT_FOUND' ? undefined : keep(error?.code ?? 'refused')
   }
   const mine = new Set(place.mine ?? [])
-  // A `usedIn` of another shape than a list of `{kind, id}` (not measured) keeps the file: never a delete on a guess.
-  const used = dry?.usedIn ?? []
-  if (!Array.isArray(used)) return keep('used_in_unread', [used])
+  // Only a dry run answer of the measured shape (an object whose `usedIn` is a list of `{kind, id}`) lets the file go:
+  // any other answer (none, no `usedIn`, another name, another shape) keeps it. Never a delete on a guess.
+  const used = usedInOf(dry)
+  if (!used) return keep('used_in_unread', dry?.usedIn === undefined ? [] : [dry.usedIn])
   const others = used.filter((u) => !mine.has(`${u?.kind}:${Number(u?.id)}`))
   if (others.length) return keep('used_elsewhere', others)
   try {

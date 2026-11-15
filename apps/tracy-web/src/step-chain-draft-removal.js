@@ -126,3 +126,13 @@ export async function checkAct(act, doors, states, undo, code = 'site_changed_ou
       throw Object.assign(outsideEdit(name), { code })
   }
 }
+
+/** What the report says of the acts: each record hidden or module put on no page, never deleted. */
+export function removalFlagsOf(removal) {
+  const of = (door) => removal.acts.filter((a) => a.door === door).flatMap((a) => a.ops)
+  const flags = []
+  if (of('hide').length) flags.push({ code: 'hidden_not_deleted', ops: of('hide') })
+  if (of('unassign').length) flags.push({ code: 'on_no_page_not_deleted', ops: of('unassign') })
+  if (removal.notes.length) flags.push({ code: 'left_on_no_page', ops: removal.notes.map((n) => n.key) })
+  return flags
+}

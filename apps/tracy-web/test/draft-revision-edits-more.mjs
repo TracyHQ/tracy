@@ -96,5 +96,15 @@ export const MORE_EDITS = {
   },
   'change the logo': (d) => {
     d.plan.look.logo = { kind: 'text', text: 'LB' }
+  },
+  // A block whose words the service's article keeps in its settings (`attribs`) and its description column: both go.
+  'drop a block from an article page': (d) => {
+    const page = d.plan.pages.find((p) => p.id === 'class')
+    page.blocks = page.blocks.filter((b) => b.id !== 'class-b3')
+  },
+  'remove a page but keep its item listed': (d) => {
+    d.plan.pages = d.plan.pages.filter((p) => p.id !== 'class')
+    for (const b of d.plan.pages.flatMap((p) => p.blocks))
+      for (const l of b.lists ?? []) if (l.rows) l.rows = l.rows.filter((r) => r.page !== 'class')
   }
 }

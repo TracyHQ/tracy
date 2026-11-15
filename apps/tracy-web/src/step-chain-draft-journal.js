@@ -18,15 +18,17 @@
 //   uploads      the paths the run uploaded that held no file before (a restore deletes them when nothing names them)
 // A value before that names a text the revision holds is never kept: `HELD_BEFORE` stands in for it, and the restore
 // stops on it (`restore_shows_held_text`). A record the run MADE needs nothing kept: it is every id of the run record
-// the previous build did not have.
+// the previous build did not have. `state.touched` is set, and saved, before the run's first door write: a run that
+// stops with it unset wrote nothing, and its mark on the site is cleared (`step-chain-draft-site-check.js`).
+// A record write, with what a revision no longer sends: `step-chain-draft-journal-record.js`.
 //
 // 🔒 AN OWNER'S EDIT IS NEVER WRITTEN OVER. At EVERY write over a place, first touch or a resume after a crash, the value
 // the place holds must be one Tracy left there: what the previous build wrote, what this run wrote, the value about to
 // be written, or the value before this run journaled. Any other value was written outside Tracy, and the run stops
 // (`site_changed_outside`, noRerun, naming the place, never the text). A place no build wrote is free on first touch.
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
-import { ownedColumnOf, shapeUnion } from './step-chain-draft-owned-keys.js'
-import { placeHolds, placeShapeOf } from './step-chain-draft-place-value.js'
+import { recordKeeper } from './step-chain-draft-journal-record.js'
+import { placeHolds } from './step-chain-draft-place-value.js'
 import { namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { holdsSent, holdsWrote, keepWrote, wroteDoors } from './step-chain-draft-wrote.js'
 
@@ -61,12 +63,12 @@ export const outsideEdit = (place) =>
  * The doors of a revision run, keeping the journal in `state.undo` and saving the record before each write.
  * @param {object} doors the site doors
  * @param {{state: object, save?: Function}} record the run record
- * @param {{previousWrote?: Record<string, string>, previousShapes?: Record<string, unknown>, held?: string[]}}
- *   [options] `previousWrote`/`previousShapes`: the previous build's `state.wrote` and `state.shapes`; `held`: the
- *   texts the revision holds
+ * @param {{previousWrote?: Record<string, string>, previousShapes?: Record<string, unknown>,
+ *   previousCleared?: string[], held?: string[]}} [options] `previousWrote`/`previousShapes`/`previousCleared`: the
+ *   previous build's `state.wrote`, `state.shapes` and `state.cleared`; `held`: the texts the revision holds
  */
 export function journaledDoors(doors, record, options = {}) {
-  const { previousWrote = {}, previousShapes = {}, held = [] } = options
+  const { previousWrote = {}, previousShapes = {}, previousCleared = [], held = [] } = options
   const undo = () => (record.state.undo ??= emptyUndo())
   const save = async () => record.save?.(record.state)
   /** The value kept for a place: the value, or the held stand in. */
@@ -85,57 +87,48 @@ export function journaledDoors(doors, record, options = {}) {
   // What the call writes is kept with the journal, saved BEFORE the call: a crash after the call acted leaves a site
   // whose new value the saved record names (the abandon and a resume take it for Tracy's, not for an owner's edit).
   const wrote = (place, value) => keepWrote(record.state, place, value, undo())
-  async function keepRecord(kind, id, fields) {
-    if (kind === 'moduleAssignment') {
-      const key = String(id)
-      let raw = null
-      try {
-        raw = (await doors.get({ kind, id })).menuids
-      } catch (error) {
-        if (error?.code !== 'NOT_FOUND') throw error
-      }
-      const kept = undo().assignments[key]
-      const was = kept === undefined || kept === null ? kept : JSON.stringify(kept)
-      check(`assignment:${Number(id)}`, raw, fields?.menuids, was)
-      wrote(`assignment:${Number(id)}`, fields?.menuids)
-      if (!Object.hasOwn(undo().assignments, key))
-        undo().assignments[key] = raw === null ? null : JSON.parse(raw)
-      return save()
-    }
-    // A record made: no value before; the journal says a make was sent, so no rollback takes the site for whole.
-    if (Number(id) === 0) {
+  const keepFields = recordKeeper({
+    doors,
+    record,
+    undo,
+    save,
+    check,
+    wrote,
+    keep,
+    previous: { wrote: previousWrote, shapes: previousShapes, cleared: list(previousCleared) },
+    isHeld: isHeldBefore,
+    outside: outsideEdit
+  })
+  async function keepRecord(kind, id, fields, options) {
+    if (kind !== 'moduleAssignment') {
+      // A record made: no value before; the journal says a make was sent, so no rollback takes the site for whole.
+      if (Number(id) !== 0) return keepFields(kind, id, fields, options)
       undo().making = [...new Set([...list(undo().making), kind])]
+      record.state.touched = true
       return save()
     }
-    const key = `${kind}:${Number(id)}`
-    const row = await doors.get({ kind, id })
-    const kept = undo().records[key] ?? { kind, id: Number(id), fields: {} }
-    const sent = { ...fields }
-    for (const column of Object.keys(fields ?? {})) {
-      const place = `record:${key}:${column}`
-      const had = Object.hasOwn(kept.fields, column)
-      check(place, row[column] ?? null, fields[column], had ? kept.fields[column] : undefined)
-      sent[column] = ownedValueOf(place, row[column] ?? null, fields[column])
-      wrote(place, fields[column])
-      if (!had) kept.fields[column] = keep(row[column] ?? null)
+    const key = String(id)
+    let raw = null
+    try {
+      raw = (await doors.get({ kind, id })).menuids
+    } catch (error) {
+      if (error?.code !== 'NOT_FOUND') throw error
     }
-    undo().records[key] = kept
-    await save()
-    return sent
-  }
-  /** A JSON column sent over only the keys Tracy owns (`step-chain-draft-owned-keys.js`), the owner's kept. */
-  function ownedValueOf(place, now, value) {
-    const state = record.state
-    const known = Boolean(previousWrote[place] || state.wrote?.[place])
-    const before = known ? shapeUnion(previousShapes[place] ?? {}, state.shapes?.[place] ?? {}) : null
-    const out = ownedColumnOf(now, value, placeShapeOf(place, value), before)
-    if (out.overOwner) throw outsideEdit(place)
-    return out.value
+    const kept = undo().assignments[key]
+    const was = kept === undefined || kept === null ? kept : JSON.stringify(kept)
+    check(`assignment:${Number(id)}`, raw, fields?.menuids, was)
+    wrote(`assignment:${Number(id)}`, fields?.menuids)
+    if (!Object.hasOwn(undo().assignments, key))
+      undo().assignments[key] = raw === null ? null : JSON.parse(raw)
+    record.state.touched = true
+    return save()
   }
   return {
     ...doors,
     async update(call) {
-      const fields = await keepRecord(call.kind, call.id, call.fields)
+      // An operation written again whole (`madeOnce`, apply id `...:rewrite`): what it no longer sends is emptied.
+      const whole = String(call.applyId ?? '').endsWith(':rewrite')
+      const fields = await keepRecord(call.kind, call.id, call.fields, { whole })
       return doors.update(fields ? { ...call, fields } : call)
     },
     async contract(call) {
@@ -148,6 +141,7 @@ export function journaledDoors(doors, record, options = {}) {
         for (const k of keys) if (!Object.hasOwn(undo().slots, k)) undo().slots[k] = keep(before[k] ?? null)
       }
       for (const k of list(call.removes)) if (!undo().removed.includes(k)) undo().removed.push(k)
+      record.state.touched = true
       await save()
       return doors.contract(call)
     },
@@ -159,6 +153,7 @@ export function journaledDoors(doors, record, options = {}) {
         for (const f of fields) wrote(`identity:${f}`, call.fields[f])
         for (const f of fields)
           if (!Object.hasOwn(undo().identity, f)) undo().identity[f] = keep(before[f] ?? null)
+        record.state.touched = true
         await save()
       }
       return doors.identity(call)
@@ -173,10 +168,10 @@ export function journaledDoors(doors, record, options = {}) {
       return doors.unassign(call)
     },
     async upload(call) {
-      if (!undo().uploads.includes(call.path) && (await doors.media({ path: call.path })) === null) {
+      if (!undo().uploads.includes(call.path) && (await doors.media({ path: call.path })) === null)
         undo().uploads.push(call.path)
-        await save()
-      }
+      record.state.touched = true
+      await save()
       return doors.upload(call)
     }
   }
