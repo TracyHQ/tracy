@@ -860,13 +860,22 @@ page of every page type, the records a page creates and their HTML frames. The c
 `ai-quickstart-mapping-build.mjs` and `ai-quickstart-frames.mjs` (WO domain), plus `scripts/ai-quickstart/check-kit-pages.mjs`
 for the records of the blank site a page names. Measured on a blank JA Boxing site, plugin 0.24.85, updater off.
 
-**`look.accent`: the accent door.** `{variables, value: "#rrggbb", sides: {opensOn, light, dark, darkHook?},
+**`look.accent`: the accent door.** `{variables, value: "#rrggbb", sides: {opensOn, light, dark, darkHook?, values},
 writtenAs: {kind: "module", module, title, position, ordering?, showtitle?, style?, assign, content}, keeps, why}`.
+`writtenAs.content` is `"accent-module"`: the module text `accentModule` builds (`apps/tracy-web/src/lib/brand-accent`)
+from the stylesheets the site serves. `sides.values` is `{light: "accent", dark: "accentDark"}`: the write order's
+`look.accent` is the tone on `:root`, its `look.accentDark` the tone on `:root` with `sides.darkHook` (the accent again
+when the order has none); a template with no dark hook takes `accent` on every side. Both are closed words
+(`ai-quickstart-build-words.mjs`).
 JA Boxing keeps no accent in its template style params: the accent is the variables its stylesheets read
 (`--color-primary`, `--body-link-color`, `--body-link-hover-color`, `--mainnav-link-active-color`,
 `--mainnav-link-hover-color`), written as one style element in a `mod_custom` at `off-canvas`, `System-none`, assigned
 `"[0]"`. Measured: it prints once, with no module wrapper, on a Landing page,
 a Default page, the plans page and an article under its list page. Only the accent family changes (brand decision C).
+Measured on both sides (`door-measures.mjs --only accent`, fact `L1`): the module built with one fill for the light
+side and another for the dark side, written as `writtenAs` declares it, reads back the same; in a browser with
+`?theme=light` (`body.light-active`) the five variables and a link compute the light fill, with `?theme=dark`
+(`body.dark-active`) the dark fill; before it both sides compute the template's own accent.
 
 **`pages.<page type>`: the page of every page type of the recipes**, exactly one of:
 
@@ -874,6 +883,9 @@ a Default page, the plans page and an article under its list page. Only the acce
   style, measured to print Default) or a template style of the blank site contract. A link names what the build makes
   with `{record}` (the record the page shows), `{category:<page type>}` (the category it creates for that type),
   `{page:<page type>}`, and a record the blank site keeps with `{entity:<key>}` (the plans page reads `category-2`).
+  Measured (fact `K0`): every menu item of the file created by `content.update` with its `template_style_id`, `params`
+  and `parent_id` (the about page as parent) reads them back as sent, and each category with its `extension` and
+  `params` reads them back at the top level (`parent_id` 1).
 - `under: {page, address, why}` with `ownItem` (a `menuItem`): an article page reached under its list page,
   `index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:<list>}`. Only then do the
   detail positions print (measured); `ownItem` is the menu item of its own the build makes when the plan has
@@ -882,7 +894,8 @@ a Default page, the plans page and an article under its list page. Only the acce
   the write creates no user: `record_kind_unsupported`).
 
 An article page and the contact page carry `record: {kind, category, base, why}`: the category the build creates
-(`{extension, parent: "root", title: {from}, params, why}`) and the columns the record starts from (`base`), the
+(`{extension, parent: "root", title: {from: "page-name", pageType, fallback: "business-name"}, params, why}`: its title is
+the name of the first plan page of `title.pageType`, else the business name; no kit page prints a category title) and the columns the record starts from (`base`), the
 mapping's places written over them. Measured: a created article without the full `images` value, or a lesson without
 `learning-features`, prints PHP warnings; a class article without `classes-info` makes the classes list print one; with
 `{}` none. The classes menu item's `article_layout` alone prints the classes detail; JA Boxing writes the attribs too.
@@ -891,7 +904,11 @@ mapping's places written over them. Measured: a created article without the full
 with its words and pictures emptied and its classes kept, a text node a single space. The check reads every frame
 wrapped in `/html/body/div` and asks that every xpath of the file on that value names exactly one node. A value written
 whole (`/html/body/div`) needs none; nor does a place only blocks of unbuilt page types use. A row element a record does
-not fill is left out of the frame, as `omit` does on a copy.
+not fill is left out of the frame, as `omit` does on a copy. Measured (`door-measures.mjs --only kit`, fact `K1`): for
+the post, the class, the lesson and the contact, a record created as `pages.<type>.record` declares, every xpath the
+file names on it set in its frame, is written by `content.update`, reads back every marker and prints every one in the
+main body of its page (47 of 47). A row of a JSON list (the class `exer-features`) written with only some of its keys
+prints PHP warnings for the others: the write step writes every key of a row it keeps.
 
 **`escapes`** declares how every place the file writes prints (escaped or raw, and what a print does not show as
 written), and **`under.detailPositions`** the positions a page reached under its list page prints: both measured,
@@ -899,15 +916,19 @@ under [Door measurements](#door-measurements-plugin-02485).
 
 **The main block of every recipe shows data**: a field of a kind that is not `editorial.*`, since the plan gate drops a
 page whose main block has none. The plans container (184) holds only tab labels and headings, so the plans page's main
-block is its first tab (167). `placements.<container>.holds.copies: {perPage: 1, keptWhen, why}`: one container copy per
-page holds every held block the page places, kept whenever one of them is kept; a recipe lists a block once
+block is its first tab (167). `placements.<container>.holds.copies: {perPage: 1, keptWhen: "any-held-block-kept", why}`: one container copy per
+page holds every held block the page places, kept while at least one of them is kept on the page and dropped with the
+last one (measured, fact `K5`: a container copy with no block at its position prints an empty module wrapper, no words
+and no tab; with one held copy, that tab and its label); a recipe lists a block once
 (`block_repeated`), so a recipe never places two containers. The position of its own per copy
 (`tracy-tabs-<copy id>`, #584) stays.
 
 **`placements.<id>.keyedRow: {pageType, row, list, fields, why}`**: a block field keyed to a page type beside a list
 keyed by page. The masthead prints the first row whose `item_id` names the page (`mod_jamasthead` helper), measured: a
 list row keyed to the classes page before row 14 prints instead of it. So the classes page takes row 14 only, and the
-pages list rows are the other pages. Its stat (picture, words, value) is one control taken out as the element
+pages list rows are the other pages. `row` and `fields` are data the contract check holds to the block's own
+locations (`keyedRowProblems`): every field named sits at `row`, every block field at `row` is named, the derived page
+key names `pageType`, and no row of `list` sits at `row`. Its stat (picture, words, value) is one control taken out as the element
 `/html/body/div/div` of the row description (`rows.remove` with `element`): kept empty it prints a broken picture
 (`src="/"`).
 
@@ -917,9 +938,19 @@ field. A control of item fields has `scope`: `"item"` (each item prints its own)
 188, 189). An `omit` entry is `order: "packed"` (the plan's rows fill the first places in order, so no gap arises) and
 sits only on a copy or a created record: a record written in place has no omit, its rows stay.
 
-**`placements.<id>.menu.items`**: `{from: "main-menu" | "pages", pageTypes?, level?, except?, plus?, order: "main-menu"
-| "plan", max, default?, why}`, which pages a menu block lists. `default: true` marks a rule chosen for the build that
-the owner may change (JA Boxing 173 and 174).
+**`placements.<id>.menu.items`**: `{from: "main-menu", why}` (the block draws the main menu: its items are the page
+items) or `{from: "pages", pageTypes?, level?: 1, except?, plus?, order: "main-menu" | "plan", max, link:
+"page-address", default?, why}`, which pages a menu block lists. `default: true` marks a rule chosen for the build that
+the owner may change (JA Boxing 173 and 174). The rule (`menuItemPagesOf`, `ai-quickstart-menu-items.mjs`), in order:
+the plan's pages in `order` (`plan`: the plan's order; `main-menu`: a parent page before its children, depth first);
+keep the page types of `pageTypes`; keep `level: 1` (a page with a main menu item of its own and no parent; a page
+reached under its list page is never one); drop `except`; add the pages of `plus` (lists of page types) not already
+listed; keep the first `max`. `link: "page-address"`: each listed page is a `url` menu item (component 0) whose link is
+the page's own address, `index.php?Itemid=<its main menu item>`, or `under.address` for a page reached under its list
+page, as the demo menus do. Measured (fact `K3`): both kinds print in the block with the page's address, and the under
+address opens the item page with its detail layout; the phone menu (187, `from: "main-menu"`) prints the main menu
+items the build made and nothing else; an `alias` menu item is refused with an empty `link` (`write_failed`, `creating
+a menuItem needs link`) and written with `index.php?Itemid=`.
 
 **`facts.<fact>[i].notWritten: {by: "decision", why}`** on a global configuration place: the write step does not
 write it, by decision (Joomla's mail sender name `fromname`, kept among the places of `name`).
@@ -1046,7 +1077,9 @@ says how it is known: **measured** (a door call, its raw answer, the read back a
 below on such a site (same environment as the door proof: `TRACY_DOOR_URL`, `TRACY_DOOR_TOKEN`, php on PATH). It
 prints the facts and writes every door call with its raw answer to the report; it judges nothing, and exits 1 only
 when the plugin version moved. The site is written: run it on a throwaway site only. `--only <section>` (`hiding`,
-`assignments`, `writes`, `markers`, `pages`, `escapes`) runs one section, on a freshly reset site.
+`assignments`, `writes`, `markers`, `pages`, `escapes`, `kit`, `accent`) runs one section, on a freshly reset site. `kit`
+makes the categories, pages and records `pages.<type>` declares and measures the build declarations (facts `K0` to
+`K6`); `accent` writes the accent module and reads both sides in headless Chromium (fact `L1`).
 
 ### Hiding a record and publishing it again
 
@@ -1283,13 +1316,21 @@ reference.
 
 ### Detail positions (`pages.<type>.under.detailPositions`)
 
-`{positions: [<position>], assignTo: "list-page", why}`, on every `under` entry and nowhere else. Measured (fact `E2`):
+`{positions: [<position>], assignTo: "list-page", why}`, on every `under` entry and nowhere else: the positions the item
+page prints that its list page does not. Measured (fact `K6`, `--only kit`): a probe module at every position the
+recipes of the item page types use, assigned to the list page item, on the item page and on the list page:
+`detail-bottom-1` and `main-bottom-2` print on the item page only, for posts, classes and lessons alike; `breadcrumbs`,
+`main-bottom-1`, `header-r`, `off-canvas` and the footer positions print on both. JA Boxing declares both detail
+positions for the three types, and the library position of these page types is `main-bottom-2` (a library block is
+assigned to the list page item, and `main-bottom-1` would print it on the list page too). The `news-post` recipe
+variant (the demo blog detail page, an article on a menu item of its own) places block 17 at `breadcrumbs` and block 158
+at `main-bottom-1`, positions the list page prints too: on a post under its list page they cannot be assigned without
+showing on the list page. Measured before (fact `E2`):
 a class reached under the classes page prints body class `layout-detail-article`, the classes detail view and
 `detail-bottom-1`, where two copies of block 159 assigned to the classes page both print, on both class articles
 under it; a post or a lesson under its list page prints `main-bottom-2` with block 191. The class on a menu item of
 its own (`ownItem`) keeps its `article_layout` (`ja_boxing:classes`, from `attribs`) and the created frame, prints
-`layout-default`, and loses the detail positions; its breadcrumbs read Home > the item title. JA Boxing declares
-`detail-bottom-1` for `class` and `main-bottom-2` for `news-post` and `learning-post`. The check
+`layout-default`, and loses the detail positions; its breadcrumbs read Home > the item title. The check
 (`detailPositionProblems`): every `under` declares it, `menuItem`, `ownItem` and `unbuilt` do not, a recipe block that
 sits only in detail positions is placed only on a page type that prints one of them, and every position is one the
 source contract records (`libraryPositionProblems`).

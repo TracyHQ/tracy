@@ -253,14 +253,19 @@
     "accent": {
       "variables": ["--example-accent"],
       "value": "#rrggbb",
-      "sides": { "opensOn": "light", "light": "body", "dark": "body.dark" },
+      "sides": {
+        "opensOn": "light",
+        "light": "body",
+        "dark": "body.dark",
+        "values": { "light": "accent", "dark": "accentDark" }
+      },
       "writtenAs": {
         "kind": "module",
         "module": "mod_custom",
         "title": "Accent",
         "position": "head-end",
         "assign": "every-page",
-        "content": "one style element"
+        "content": "accent-module"
       },
       "keeps": "invented: only the accent changes",
       "why": "invented: the template reads its accent from one variable"

@@ -263,12 +263,12 @@
   "library": {
     "position": "section-6",
     "pageTypes": {
-      "news-post": "main-bottom-1",
-      "class": "main-bottom-1",
-      "learning-post": "main-bottom-1",
+      "news-post": "main-bottom-2",
+      "class": "main-bottom-2",
+      "learning-post": "main-bottom-2",
       "author": "main-bottom-1"
     },
-    "why": "Measured on the running 1.0.11 site by publishing a probe block in section-6, main-bottom-1 and section-5 on every page: section-6 renders on the home layout (home, about, trainers, trainer, plans) and on the default layout (news, featured posts, authors, classes, contact, learning center), last before the footer, in the t4section chrome; an article page (detail-article layout: a post, a class, a learning post, an author page) has no section-6 and renders main-bottom-1 instead. section-5 renders on the home layout only and without a container. Container class: each of these positions wraps its modules in t4-section-inner container, and the template's own modules there add section-inner > container inside it; a probe block measured at 390, 768 and 1440 px starts and ends where the template module's heading does whether its content sits in a container div or not (16/358, 40/688, 16/1408 px), so the library block keeps the template's own class, container.",
+    "why": "Measured on the running 1.0.11 site by publishing a probe block in section-6, main-bottom-1 and section-5 on every page: section-6 renders on the home layout (home, about, trainers, trainer, plans) and on the default layout (news, featured posts, authors, classes, contact, learning center), last before the footer, in the t4section chrome; an article page (detail-article layout: a post, a class, a learning post, an author page) has no section-6 and renders main-bottom-1 instead. section-5 renders on the home layout only and without a container. Container class: each of these positions wraps its modules in t4-section-inner container, and the template's own modules there add section-inner > container inside it; a probe block measured at 390, 768 and 1440 px starts and ends where the template module's heading does whether its content sits in a container div or not (16/358, 40/688, 16/1408 px), so the library block keeps the template's own class, container. Page types reached under their list page (news-post, class, learning-post) take main-bottom-2: a library block on such a page is assigned to the list page item, and main-bottom-1 prints on the list page as well (door-measures --only kit, K6), while main-bottom-2 prints on the item page only. With no list page in the plan (ownItem) the article prints no detail position, so the library block does not print there (not measured for the library block itself).",
     "containerClass": "container"
   },
   "networkIconClasses": {
@@ -986,7 +986,7 @@
         "why": "the phone menu (mod_menu) shows the main menu the header shows; its items are the ones the build creates for the header",
         "items": {
           "from": "main-menu",
-          "why": "the phone menu draws the main menu itself: its items are the page items the build makes for the header, none of its own"
+          "why": "the phone menu draws the main menu itself: its items are the page items the build makes for the header, none of its own. Measured (door-measures --only kit, K3): with module 187 assigned, it prints every main menu item the build made, children under their parent, and no other menu"
         }
       }
     },
@@ -1032,7 +1032,7 @@
           "order": "plan",
           "max": 5,
           "default": true,
-          "why": "default chosen for the build, the owner may change it: one item per class page, in plan order, addressed under the classes page (pages.class.under), as the demo classes menu lists its classes; at most the 5 the demo holds"
+          "why": "default chosen for the build, the owner may change it: one item per class page, in plan order (order: plan, pageTypes: [class]), at most the 5 the demo holds. Each is a url menu item linking the class address under the classes page (link: page-address, the under address), as the demo classes menu items are (type url, index.php?option=com_content&view=article&id=N&catid=9&Itemid=167). Measured (door-measures --only kit, K3): such an item prints in this block and opens the class with its detail layout (layout-detail-article)"
         }
       }
     },
@@ -1051,11 +1051,10 @@
           "from": "pages",
           "level": 1,
           "except": ["home"],
-          "plus": "legal",
           "order": "main-menu",
           "max": 4,
           "default": true,
-          "why": "default chosen for the build, the owner may change it: the site's top level pages in main menu order, home left out (the demo site map lists About, Class, Schedule and Price, no home), then the legal pages the plan creates (none in these recipes), at most the 4 the layout was measured with"
+          "why": "default chosen for the build, the owner may change it: the site's top level pages (level 1: a main menu item of its own and no parent page) in main menu order, home left out (except: [home]), at most the 4 the layout was measured with; the demo site map lists About, Class, Schedule and Price, no home. These recipes have no legal page type, so nothing is added after them (plus). Each is a url menu item linking index.php?Itemid=<the page main menu item> (link: page-address), as the demo site map items are. Measured (door-measures --only kit, K3): such an item prints in this block with the page address; an alias item works too but only with link index.php?Itemid= (an empty link is refused: write_failed, creating a menuItem needs link)"
         }
       }
     },
@@ -1187,7 +1186,7 @@
           "stat-label",
           "stat-page"
         ],
-        "why": "row 14 of menuitem_config is the classes page row (its title, intro and the stat under it, keyed by item_id[14]); the pages list rows are the other pages, never the classes page. The template prints the first row whose item_id names the page (mod_jamasthead helper.php breaks at the first match), measured: a list row keyed to the classes page before row 14 prints instead of row 14"
+        "why": "row 14 of menuitem_config is the classes page row (its title, intro and the stat under it, keyed by item_id[14]); the pages list rows are the other pages, never the classes page. The template prints the first row whose item_id names the page (mod_jamasthead helper.php breaks at the first match), measured: a list row keyed to the classes page before row 14 prints instead of row 14. row and fields are data the contract check holds to the block locations: every field named sits at menuitem_config index 14, every block field there is named, the page key (stat-page) names classes and no row of the pages list sits at 14"
       }
     },
     "block-158": {
@@ -1216,8 +1215,8 @@
         "why": "the container draws every module of the position it names that is assigned to the page. Two copies naming one position each draw the tabs of both (measured); a position of its own per container copy, written here and as the position of the copies it holds, keeps two plans blocks on one page apart (measured)",
         "copies": {
           "perPage": 1,
-          "keptWhen": "a block it holds is kept on the page",
-          "why": "one container copy per page holds every held block the page places, each in its own tab (the demo: one container, three tabs). The container takes no data of its own the plan shows (its words are the tab labels and the section heading), so it is kept whenever a block it holds is kept and dropped with them; a recipe lists a block once (block_repeated), so a page has one container. The main block of the plans page is the first tab (block-167)"
+          "keptWhen": "any-held-block-kept",
+          "why": "one container copy per page holds every held block the page places, each in its own tab (the demo: one container, three tabs). The container takes no data of its own the plan shows (its words are the tab labels and the section heading), so it is kept whenever a block it holds is kept and dropped with them; a recipe lists a block once (block_repeated), so a page has one container. The main block of the plans page is the first tab (block-167). Measured (door-measures --only kit, K5): a container copy at a position of its own with no block in it prints its module wrapper with no words and no tab; with one held copy it prints that one tab and its label. So a copy is kept while at least one block it holds is kept on its page (any-held-block-kept), and dropped with the last one"
         }
       }
     },
@@ -1425,7 +1424,8 @@
         "opensOn": "dark",
         "dark": "body.dark-active",
         "light": "body.light-active",
-        "darkHook": ":has(> body.dark-active)"
+        "darkHook": ":has(> body.dark-active)",
+        "values": { "light": "accent", "dark": "accentDark" }
       },
       "writtenAs": {
         "kind": "module",
@@ -1436,10 +1436,10 @@
         "showtitle": 0,
         "style": "System-none",
         "assign": "every-page",
-        "content": "the accent-only stylesheet the brand step builds from the stylesheets the template serves (accentModule, apps/tracy-web/src/lib/brand-accent): one style element"
+        "content": "accent-module"
       },
       "keeps": "only the accent family changes (buttons, links, emphasis words) and its relatives; grounds, heading and body text colours and fonts stay the template's (brand decision C)",
-      "why": "the accent of JA Boxing is the template variables its stylesheets read for buttons, links and the menu states (the released kit roles of brandColours.primary, value #f44141); the template opens on its dark side (body.dark-active, ground #121111) and draws a light side under body.light-active (the modes contract, joomla-ja-boxing-modes.json). The template style params hold no accent colour, so the accent is a stylesheet in a module: the earliest position the home page prints (ds-slot contract joomla-ja-boxing.json). Measured on the blank site: a mod_custom at off-canvas, System-none, assigned \"[0]\", prints its style element once, with no module wrapper, on a Landing page, a Default page, the plans page and an article under its list page"
+      "why": "the accent of JA Boxing is the template variables its stylesheets read for buttons, links and the menu states (the released kit roles of brandColours.primary, value #f44141); the template opens on its dark side (body.dark-active, ground #121111) and draws a light side under body.light-active (the modes contract, joomla-ja-boxing-modes.json). The template style params hold no accent colour, so the accent is a stylesheet in a module: the earliest position the home page prints (ds-slot contract joomla-ja-boxing.json). Measured on the blank site: a mod_custom at off-canvas, System-none, assigned \"[0]\", prints its style element once, with no module wrapper, on a Landing page, a Default page, the plans page and an article under its list page. Measured with door-measures --only accent (L1, plugin 0.24.85): the module accentModule builds from the stylesheets the site serves, a light fill and another dark fill, written as writtenAs declares it, prints its style element once; with ?theme=light the five variables and a link compute the light fill, with ?theme=dark (body.dark-active) the dark fill, before it both sides compute #f44141. So the order's accent is the :root tone and its accentDark the :root:has(> body.dark-active) tone (sides.values)"
     }
   },
   "pages": {
@@ -1482,9 +1482,9 @@
     "news-post": {
       "under": {
         "detailPositions": {
-          "positions": ["main-bottom-2"],
+          "positions": ["detail-bottom-1", "main-bottom-2"],
           "assignTo": "list-page",
-          "why": "door-measures --only escapes (E2): an article reached under its list page prints the T4 detail-article layout and the related posts module (block 191) at main-bottom-2; a copy assigned to the news page prints on a post under it"
+          "why": "door-measures --only kit (K6): a probe module at every position the recipes of the item page types use, assigned to the list page item, read on an article under its list page and on the list page itself. detail-bottom-1 and main-bottom-2 print on the item page only, for posts, classes and lessons alike; breadcrumbs, main-bottom-1, header-r, off-canvas and the footer positions print on both pages, so a block there assigned to the list page would print on the list page too. Earlier (E2): block 159 prints at detail-bottom-1 on a class, block 191 at main-bottom-2 on a post and a lesson"
         },
         "page": "news",
         "address": "index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:news}",
@@ -1507,9 +1507,9 @@
         "category": {
           "extension": "com_content",
           "parent": "root",
-          "title": { "from": "the menu label of the news page" },
+          "title": { "from": "page-name", "pageType": "news", "fallback": "business-name" },
           "params": { "category_layout": "" },
-          "why": "the demo posts category (Blogs, id 8): a plain com_content category at the top level; the news page lists it"
+          "why": "the demo posts category (Blogs, id 8): a plain com_content category at the top level; the news page lists it. Its title is the name of the first news page of the plan, the business name when the plan has none: no kit page prints a category title (escapes: not-printed), so the words only name it in the administrator. Measured (door-measures --only kit, K0): created with this extension and params, read back the same, at the top level (parent_id 1)"
         },
         "base": {
           "featured": 1,
@@ -1581,9 +1581,9 @@
     "class": {
       "under": {
         "detailPositions": {
-          "positions": ["detail-bottom-1"],
+          "positions": ["detail-bottom-1", "main-bottom-2"],
           "assignTo": "list-page",
-          "why": "door-measures --only escapes (E2): an article reached under its list page prints the T4 detail-article layout and the classes list module (block 159) at detail-bottom-1; two copies assigned to the classes page print on both class articles under it; the class on a menu item of its own prints the default layout and no copy"
+          "why": "door-measures --only kit (K6): a probe module at every position the recipes of the item page types use, assigned to the list page item, read on an article under its list page and on the list page itself. detail-bottom-1 and main-bottom-2 print on the item page only, for posts, classes and lessons alike; breadcrumbs, main-bottom-1, header-r, off-canvas and the footer positions print on both pages, so a block there assigned to the list page would print on the list page too. Earlier (E2): block 159 prints at detail-bottom-1 on a class, block 191 at main-bottom-2 on a post and a lesson"
         },
         "page": "classes",
         "address": "index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:classes}",
@@ -1606,9 +1606,9 @@
         "category": {
           "extension": "com_content",
           "parent": "root",
-          "title": { "from": "the menu label of the classes page" },
+          "title": { "from": "page-name", "pageType": "classes", "fallback": "business-name" },
           "params": { "category_layout": "", "t4_extrafields": "classes" },
-          "why": "the demo class category (Classes, id 9): t4_extrafields classes gives its articles the class fields in the administrator (schedule, features), the attribs the classes layouts read"
+          "why": "the demo class category (Classes, id 9): t4_extrafields classes gives its articles the class fields in the administrator (schedule, features), the attribs the classes layouts read. Its title is the name of the first classes page of the plan, the business name when the plan has none: no kit page prints a category title (escapes: not-printed), so the words only name it in the administrator. Measured (door-measures --only kit, K0): created with this extension and params, read back the same, at the top level (parent_id 1)"
         },
         "base": {
           "images": {
@@ -1638,9 +1638,9 @@
         "category": {
           "extension": "com_contact",
           "parent": "root",
-          "title": { "from": "the menu label of the contact page" },
+          "title": { "from": "page-name", "pageType": "contact", "fallback": "business-name" },
           "params": {},
-          "why": "the contact is filed in a com_contact category the build creates (the demo used the core Uncategorised one, which the blank site contract does not name)"
+          "why": "the contact is filed in a com_contact category the build creates (the demo used the core Uncategorised one, which the blank site contract does not name). Its title is the name of the first contact page of the plan, the business name when the plan has none: no kit page prints a category title (escapes: not-printed), so the words only name it in the administrator. Measured (door-measures --only kit, K0): created with this extension and params, read back the same, at the top level (parent_id 1)"
         },
         "base": { "params": {}, "metadata": {}, "metadesc": "" },
         "why": "a contact is refused without params, metadata and metadesc (measured, door-measures), and its name is the business name (facts.name)"
@@ -1699,9 +1699,9 @@
     "learning-post": {
       "under": {
         "detailPositions": {
-          "positions": ["main-bottom-2"],
+          "positions": ["detail-bottom-1", "main-bottom-2"],
           "assignTo": "list-page",
-          "why": "door-measures --only escapes (E2): an article reached under its list page prints the T4 detail-article layout and the related posts module (block 191) at main-bottom-2; a copy assigned to the learning page prints on a lesson under it"
+          "why": "door-measures --only kit (K6): a probe module at every position the recipes of the item page types use, assigned to the list page item, read on an article under its list page and on the list page itself. detail-bottom-1 and main-bottom-2 print on the item page only, for posts, classes and lessons alike; breadcrumbs, main-bottom-1, header-r, off-canvas and the footer positions print on both pages, so a block there assigned to the list page would print on the list page too. Earlier (E2): block 159 prints at detail-bottom-1 on a class, block 191 at main-bottom-2 on a post and a lesson"
         },
         "page": "learning-center",
         "address": "index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:learning-center}",
@@ -1724,9 +1724,9 @@
         "category": {
           "extension": "com_content",
           "parent": "root",
-          "title": { "from": "the menu label of the learning-center page" },
+          "title": { "from": "page-name", "pageType": "learning-center", "fallback": "business-name" },
           "params": { "category_layout": "ja_boxing:learning", "t4_extrafields": "learning" },
-          "why": "the demo learning category (Learning Center, id 10): its list layout and the learning fields of its articles in the administrator"
+          "why": "the demo learning category (Learning Center, id 10): its list layout and the learning fields of its articles in the administrator. Its title is the name of the first learning-center page of the plan, the business name when the plan has none: no kit page prints a category title (escapes: not-printed), so the words only name it in the administrator. Measured (door-measures --only kit, K0): created with this extension and params, read back the same, at the top level (parent_id 1)"
         },
         "base": {
           "images": {
@@ -1780,59 +1780,59 @@
       ],
       "column": "introtext",
       "html": "<p> </p>",
-      "why": "every demo intro is one paragraph (posts, classes, lessons)"
+      "why": "every demo intro is one paragraph (posts, classes, lessons). Measured (door-measures --only kit, K1): written in a record created as pages.<type>.record declares, every xpath the file names on it set, read back and printed in the main body of its page"
     },
     {
       "entities": ["contact-1"],
       "column": "misc",
       "html": "<p> </p>",
-      "why": "the demo contact text is one paragraph"
+      "why": "the demo contact text is one paragraph. Measured (door-measures --only kit, K1): written in a record created as pages.<type>.record declares, every xpath the file names on it set, read back and printed in the main body of its page"
     },
     {
       "entities": ["article-6"],
       "column": "fulltext",
       "html": "<h3 class=\"mt-4 mt-lg-5 mb-3\"> </h3><p> </p><ul class=\"my-4 ps-3 list-info\"><li> </li><li> </li><li> </li><li> </li></ul><p> </p><div class=\"row mt-3\"><div class=\"col-12 col-lg-6 mt-3\"><img src=\"\" loading=\"lazy\" width=\"600\" height=\"370\"/></div><div class=\"col-12 col-lg-6 mt-3\"><img src=\"\" loading=\"lazy\" width=\"600\" height=\"370\"/></div></div><h3 class=\"mb-3 mt-5\"> </h3><p> </p><blockquote> </blockquote><p> </p><p> </p>",
-      "why": "the demo post body (article 6) with its words and pictures emptied and its classes kept"
+      "why": "the demo post body (article 6) with its words and pictures emptied and its classes kept. Measured (door-measures --only kit, K1): written in a record created as pages.<type>.record declares, every xpath the file names on it set, read back and printed in the main body of its page"
     },
     {
       "entities": ["article-16"],
       "column": "fulltext",
       "html": "<div class=\"row row-cols-1 row-cols-md-2\"><div class=\"col\"><h3> </h3></div><div class=\"col\"><p> </p><p> </p></div></div>",
-      "why": "the demo class body (article 16): a heading beside two paragraphs"
+      "why": "the demo class body (article 16): a heading beside two paragraphs. Measured (door-measures --only kit, K1): written in a record created as pages.<type>.record declares, every xpath the file names on it set, read back and printed in the main body of its page"
     },
     {
       "entities": ["article-16"],
       "column": "attribs",
       "jsonPath": ["exer-features", "exer-features0", "feature_desc"],
       "html": "<ul><li> </li><li> </li><li> </li><li> </li></ul>",
-      "why": "the demo exercise steps of a class: one list"
+      "why": "the demo exercise steps of a class: one list. Measured (door-measures --only kit, K1): written in a record created as pages.<type>.record declares, every xpath the file names on it set, read back and printed in the main body of its page; a row holding only feature_desc prints PHP warnings for exer_img, exer_video_id and feature_title (classes.php line 269 to 280): the write step writes every key of a row it keeps, empty when the plan has no value"
     },
     {
       "entities": ["article-16"],
       "column": "attribs",
       "jsonPath": ["exer-features", "exer-features1", "feature_desc"],
       "html": "<ul><li> </li><li> </li><li> </li></ul>",
-      "why": "the demo exercise steps of a class: one list"
+      "why": "the demo exercise steps of a class: one list. Measured (door-measures --only kit, K1): written in a record created as pages.<type>.record declares, every xpath the file names on it set, read back and printed in the main body of its page; a row holding only feature_desc prints PHP warnings for exer_img, exer_video_id and feature_title (classes.php line 269 to 280): the write step writes every key of a row it keeps, empty when the plan has no value"
     },
     {
       "entities": ["article-16"],
       "column": "attribs",
       "jsonPath": ["exer-features", "exer-features2", "feature_desc"],
       "html": "<ul><li> </li><li> </li><li> </li></ul>",
-      "why": "the demo exercise steps of a class: one list"
+      "why": "the demo exercise steps of a class: one list. Measured (door-measures --only kit, K1): written in a record created as pages.<type>.record declares, every xpath the file names on it set, read back and printed in the main body of its page; a row holding only feature_desc prints PHP warnings for exer_img, exer_video_id and feature_title (classes.php line 269 to 280): the write step writes every key of a row it keeps, empty when the plan has no value"
     },
     {
       "entities": ["article-16"],
       "column": "attribs",
       "jsonPath": ["exer-features", "exer-features3", "feature_desc"],
       "html": "<ul><li> </li><li> </li><li> </li><li> </li><li> </li></ul>",
-      "why": "the demo exercise steps of a class: one list"
+      "why": "the demo exercise steps of a class: one list. Measured (door-measures --only kit, K1): written in a record created as pages.<type>.record declares, every xpath the file names on it set, read back and printed in the main body of its page; a row holding only feature_desc prints PHP warnings for exer_img, exer_video_id and feature_title (classes.php line 269 to 280): the write step writes every key of a row it keeps, empty when the plan has no value"
     },
     {
       "entities": ["article-18"],
       "column": "fulltext",
       "html": "<h3 class=\"mt-3 mt-lg-5 mb-0 pt-3 pb-0 pb-lg-3\"> </h3><div class=\"row\"><div class=\"col-12 col-lg-6 mt-3\"><p class=\"mb-3 pb-lg-3 pb-0\"> </p><p class=\"mb-0\"> </p></div><div class=\"col-12 col-lg-6 mt-3\"><ul class=\"has-icon\"><li> </li><li> </li><li> </li><li> </li><li> </li><li> </li><li> </li><li> </li></ul></div></div>",
-      "why": "the demo lesson body (article 18): a heading, two paragraphs beside a list of benefits"
+      "why": "the demo lesson body (article 18): a heading, two paragraphs beside a list of benefits. Measured (door-measures --only kit, K1): written in a record created as pages.<type>.record declares, every xpath the file names on it set, read back and printed in the main body of its page"
     }
   ],
   "escapes": {

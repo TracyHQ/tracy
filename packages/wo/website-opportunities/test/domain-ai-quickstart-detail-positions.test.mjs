@@ -109,11 +109,11 @@ test('JA Boxing: the class, post and lesson pages declare the detail positions t
     return out
   }
   assert.deepEqual(run(mapping), [])
-  assert.deepEqual(detailPositionsOf(mapping, 'class'), ['detail-bottom-1'])
-  assert.deepEqual(detailPositionsOf(mapping, 'news-post'), ['main-bottom-2'])
-  assert.deepEqual(detailPositionsOf(mapping, 'learning-post'), ['main-bottom-2'])
+  assert.deepEqual(detailPositionsOf(mapping, 'class'), ['detail-bottom-1', 'main-bottom-2'])
+  assert.deepEqual(detailPositionsOf(mapping, 'news-post'), ['detail-bottom-1', 'main-bottom-2'])
+  assert.deepEqual(detailPositionsOf(mapping, 'learning-post'), ['detail-bottom-1', 'main-bottom-2'])
   const misplaced = structuredClone(pageRecipes)
-  misplaced.recipes.find((r) => r.pageType === 'news-post').blocks.push('block-159')
+  misplaced.recipes.find((r) => r.pageType === 'news').blocks.push('block-159')
   const out = []
   detailPositionProblems(mapping, blocks, {
     report: (at, message) => out.push(`${at}: ${message}`),
@@ -121,6 +121,6 @@ test('JA Boxing: the class, post and lesson pages declare the detail positions t
   })
   assert.match(
     out.join('\n'),
-    /pages\.news-post: the recipe .* places "block-159", which sits only in a detail position \(detail-bottom-1\)/
+    /pages\.news: the recipe .* places "block-159", which sits only in a detail position \(detail-bottom-1\)/
   )
 })

@@ -14,10 +14,16 @@
 //     page type keys (`keyedRow`), a fact place not written by decision (`notWritten`) and the featured article
 //     (`seo.featuredView.article`). The frames of created records: `ai-quickstart-frames.mjs`.
 import { ASSIGN } from './ai-quickstart-placement.mjs'
+import {
+  accentWordsProblems,
+  categoryTitleProblems,
+  keptWhenProblems,
+  keyedRowProblems
+} from './ai-quickstart-build-words.mjs'
 import { framesProblems } from './ai-quickstart-frames.mjs'
+import { menuItemsProblems } from './ai-quickstart-menu-items.mjs'
 
-export const MENU_ITEMS_FROM = Object.freeze(['main-menu', 'pages'])
-export const MENU_ITEMS_ORDER = Object.freeze(['main-menu', 'plan'])
+export { MENU_ITEMS_FROM, MENU_ITEMS_ORDER } from './ai-quickstart-menu-items.mjs'
 export const RECORD_KINDS = Object.freeze(['article', 'contact'])
 const PLACEHOLDER = /\{([^}]*)\}/g
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -45,6 +51,7 @@ function lookProblems(look, report) {
   else if (!ASSIGN.includes(w.assign))
     report('look.accent.writtenAs.assign', `assign is one of ${ASSIGN.join(', ')}`)
   if (!isName(a.keeps) || !isName(a.why)) report('look.accent', 'say what the accent keeps (keeps) and why')
+  accentWordsProblems(a, report)
 }
 
 function linkProblems(link, at, ctx) {
@@ -92,6 +99,7 @@ function recordProblems(rec, at, ctx) {
     !isName(c.why)
   )
     ctx.report(`${at}.category`, 'category is {extension, parent: "root", title: {from}, params, why}')
+  else categoryTitleProblems(c.title, `${at}.category`, ctx.types, ctx.report)
 }
 
 function pagesProblems(mapping, ctx) {
@@ -151,25 +159,12 @@ function mainBlockProblems(ctx) {
 function placementBuildProblems(mapping, ctx) {
   for (const [id, p] of Object.entries(mapping.placements ?? {})) {
     const at = `placements[${id}]`
-    if (p?.menu && !p.layout) {
-      const i = p.menu.items
-      if (!isObject(i) || !MENU_ITEMS_FROM.includes(i.from) || !isName(i.why))
-        ctx.report(
-          `${at}.menu.items`,
-          `items is {from: ${MENU_ITEMS_FROM.join(' | ')}, ..., why}: which pages it lists`
-        )
-      else if (i.from === 'pages' && (!MENU_ITEMS_ORDER.includes(i.order) || !Number.isInteger(i.max)))
-        ctx.report(
-          `${at}.menu.items`,
-          `a list of pages names its order (${MENU_ITEMS_ORDER.join(' | ')}) and max`
-        )
-      else if (each(i.pageTypes).some((t) => !ctx.types.has(t)))
-        ctx.report(`${at}.menu.items.pageTypes`, 'pageTypes names page types of the recipes')
-    }
+    if (p?.menu && !p.layout) menuItemsProblems(p.menu.items, `${at}.menu.items`, ctx)
     if (p?.holds) {
       const c = p.holds.copies
       if (!isObject(c) || c.perPage !== 1 || !isName(c.keptWhen) || !isName(c.why))
         ctx.report(`${at}.holds.copies`, 'copies is {perPage: 1, keptWhen, why}: a recipe lists a block once')
+      else keptWhenProblems(c, at, ctx.report)
     }
     if (p?.keyedRow !== undefined) {
       const k = p.keyedRow
@@ -182,6 +177,7 @@ function placementBuildProblems(mapping, ctx) {
         !isName(k.why)
       )
         ctx.report(`${at}.keyedRow`, 'keyedRow is {pageType, row, list, fields, why}')
+      else keyedRowProblems(id, k, mapping, ctx.report)
     }
   }
   // A block field keyed to a page type beside a list keyed by page: which row the page takes is declared.

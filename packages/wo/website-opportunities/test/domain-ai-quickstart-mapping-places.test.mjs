@@ -342,7 +342,7 @@ test('seo.featuredView names menu item page types of the recipes, and what the b
     category: {
       extension: 'com_content',
       parent: 'root',
-      title: { from: 'invented' },
+      title: { from: 'page-name', pageType: 'services', fallback: 'business-name' },
       params: {},
       why: 'invented'
     },

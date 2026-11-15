@@ -21,6 +21,8 @@ import { measureMarkers } from './door-measures-acm.mjs'
 import { measureAssignments } from './door-measures-assign.mjs'
 import { measureEscapes } from './door-measures-escapes.mjs'
 import { measureHiding } from './door-measures-hide.mjs'
+import { measureKit } from './door-measures-kit.mjs'
+import { measureAccent } from './door-measures-kit-accent.mjs'
 import { fetchPage, pageFields, recordedDoor } from './door-measures-lib.mjs'
 import { measurePages } from './door-measures-pages.mjs'
 import { measureWrites } from './door-measures-writes.mjs'
@@ -28,7 +30,7 @@ import { measureWrites } from './door-measures-writes.mjs'
 const argv = process.argv.slice(2)
 const folder = argv.find((a, i) => !a.startsWith('-') && !['--report', '--only'].includes(argv[i - 1]))
 const reportFile = argv.includes('--report') ? argv[argv.indexOf('--report') + 1] : null
-// `--only <section>` runs one section (hiding, assignments, writes, markers, pages, escapes) on a fresh site.
+// `--only <section>` runs one section (hiding, assignments, writes, markers, pages, escapes, kit, accent) on a fresh site.
 const only = argv.includes('--only') ? argv[argv.indexOf('--only') + 1] : null
 const base = (process.env.TRACY_DOOR_URL ?? '').replace(/\/+$/, '')
 const token = process.env.TRACY_DOOR_TOKEN ?? ''
@@ -71,6 +73,7 @@ const ctx = {
   lib: cowork.lib,
   mapping: json('mapping.json'),
   store: json('block-store.json'),
+  recipes: json('page-recipes.json'),
   contentMap: json('blank-site-contract/content-map.json'),
   styles: { LANDING, DEFAULT },
   pages: { home, inner },
@@ -88,7 +91,9 @@ const SECTIONS = {
   writes: measureWrites,
   markers: measureMarkers,
   pages: measurePages,
-  escapes: measureEscapes
+  escapes: measureEscapes,
+  kit: measureKit,
+  accent: measureAccent
 }
 for (const [name, section] of Object.entries(SECTIONS)) {
   if (only && name !== only) continue
