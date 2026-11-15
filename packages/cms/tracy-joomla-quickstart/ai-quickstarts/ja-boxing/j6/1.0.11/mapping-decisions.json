@@ -431,6 +431,12 @@
         "keep": "the accessible name of the navigation of a paged list: printed by layouts/joomla/pagination/links.php:54 and plugins/system/t4/themes/base/html/layouts/joomla/pagination/links.php:56; interface words of the platform, valid on every site"
       },
       {
+        "key": "PLG_PAGENAVIGATION_ARIA_LABEL",
+        "extension": "plg_content_pagenavigation",
+        "language": "en-GB",
+        "keep": "the accessible name (aria-label) of the previous and next article links under an article: printed by plugins/content/pagenavigation/tmpl/default.php:23, the plugin enabled in the release; its words (Page Navigation) are in administrator/language/en-GB/plg_content_pagenavigation.ini:7, the file a plugin's strings load from; interface words of the platform, valid on every site"
+      },
+      {
         "key": "COM_CONTENT_MORE_ARTICLES",
         "extension": "com_content",
         "language": "en-GB",
@@ -2842,6 +2848,11 @@
       "file": "templates/ja_boxing/acm/features-intro/tmpl/style-4.php",
       "pattern": "^\\d{2}$",
       "why": "the number of each card of the features block (01, 02 and on), computed by the layout from the card index (templates/ja_boxing/acm/features-intro/tmpl/style-4.php:52); a counter, valid on every site"
+    },
+    {
+      "file": "plugins/system/t4/themes/base/html/layouts/joomla/pagination/link.php",
+      "pattern": "^[1-9]\\d{0,2}$",
+      "why": "the page numbers of a paged list (1, 2, 3 and on): the pagination layout prints each page item's text (plugins/system/t4/themes/base/html/layouts/joomla/pagination/link.php:16, printed at :88 as a link and at :94 as the current page), and that text is the page number itself (libraries/src/Pagination/Pagination.php:789, new PaginationObject($i)); a counter, valid on every site"
     }
   ],
   "dataFixes": [
