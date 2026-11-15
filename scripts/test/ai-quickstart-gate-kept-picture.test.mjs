@@ -34,7 +34,7 @@ const resolve = sourceResolver(
 const render = (value) => ({
   pageType: 'home',
   path: 'index.php',
-  observations: [{ kind: 'image', value, place: { element: 'a::before' }, visible: true }]
+  observations: [{ kind: 'image', value, place: { element: 'a::before[background]' }, visible: true }]
 })
 const run = (value) =>
   classify({

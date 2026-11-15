@@ -3,12 +3,18 @@
 // dump tells what each module row is (its type and, for a JA ACM module, the layout its params pick); the write record
 // tells which blank site module each copy the build made comes from. From these, for a file and a place on a page:
 //   true    the file prints there (a component layout outside any module, on a page of its view, read from the
-//           address or the menu item the page is; the pagination layout in a pagination element; a module layout in a
-//           module of that type; an ACM layout in an ACM module whose params pick that layout and style)
+//           address or the menu item the page is, inside the wrapper that layout draws and no wrapper of a more
+//           specific layout of its view (review 5 Z4: the wrapper's class names, read from the layout files of the
+//           release, against the class names around the element); the pagination layout in a pagination element; a
+//           module layout in a module of that type; an ACM layout in an ACM module whose params pick that layout and
+//           style)
 //   false   the page tells that another file prints there
-//   null    the page cannot tell (a file of another kind, a module the dump does not hold)
+//   null    the page cannot tell (a file of another kind, a module the dump does not hold, a component layout whose
+//           wrapper the release does not show or the page does not name)
 // `holds(place, words)`: the dump row of the module the words are printed in holds those words, so they are that row's
-// (demo data), never a literal of a file. Pure.
+// (demo data), never a literal of a file. `rowHolds(words)`: a row of the dump the site prints (an article, a module, a
+// menu item, a category, a field value, a contact) holds those words as a whole value or between tags (review 5 Z4).
+// Pure.
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -59,6 +65,23 @@ export function fileKindOf(file) {
   return null
 }
 
+/** The tables of a Joomla dump whose rows a page prints. */
+const PRINTED_TABLES = /^#__(?:content|modules|menu|categories|fields_values|contact_details|tags)$/
+
+/** The words of one row value: quoted alone, or alone between tags. */
+const wordsRe = (v) => new RegExp(`(?:'|\\\\*"|>)\\s*${escapeRe(v.toLowerCase())}\\s*(?:'|\\\\*"|<)`)
+
+/** The class names of a layout's wrapper: the first class attribute of the file, its PHP taken out. */
+export function wrapperOf(source) {
+  const m = /class="([^"]*)"/.exec(String(source ?? ''))
+  if (!m) return null
+  const names = m[1]
+    .replace(/<\?php[\s\S]*?\?>/g, ' ')
+    .split(/\s+/)
+    .filter((t) => /^[a-z][a-z0-9_-]*$/i.test(t))
+  return names.length ? names : null
+}
+
 /** The view an address names (`view=article`), or null. */
 const viewOf = (path) => /[?&]view=([a-z0-9_]+)/i.exec(String(path ?? ''))?.[1] ?? null
 
@@ -67,8 +90,55 @@ const viewOf = (path) => /[?&]view=([a-z0-9_]+)/i.exec(String(path ?? ''))?.[1] 
  * @returns {{renders: (file: string, at: {place?: object, path?: string, view?: string}) => boolean | null,
  *   holds: (place: object, words: string) => boolean}}
  */
-export function joomlaLiteralScope({ dump, ids = {}, plan = null, mapping = null }) {
+export function joomlaLiteralScope({ dump, ids = {}, plan = null, mapping = null, files = null }) {
   const rows = moduleRowsOf(dump)
+  const text = (f) => {
+    const v = files?.get?.(f)
+    return v == null ? null : String(v)
+  }
+  // The layouts of a component view folder of the release, each with its wrapper (a partial `_item.php` is none).
+  const layoutsOf = (file) => {
+    const folder = file.slice(0, file.lastIndexOf('/') + 1)
+    const out = []
+    for (const name of files?.keys?.() ?? [])
+      if (name.startsWith(folder) && /^[^_/][^/]*\.php$/.test(name.slice(folder.length))) {
+        const wrapper = wrapperOf(text(name))
+        if (wrapper) out.push({ file: name, wrapper })
+      }
+    return out
+  }
+  // A component layout prints at an element inside its wrapper, and not inside the wrapper of a more specific layout of
+  // the same view (one that names every class of this one and more); null when the release or the page cannot tell.
+  const drawsAt = (file, within) => {
+    const own = wrapperOf(text(file))
+    if (!own || !Array.isArray(within) || !within.length) return null
+    const there = new Set(within)
+    if (!own.every((t) => there.has(t))) return false
+    return !layoutsOf(file).some(
+      (l) =>
+        l.file !== file &&
+        l.wrapper.length > own.length &&
+        own.every((t) => l.wrapper.includes(t)) &&
+        l.wrapper.every((t) => there.has(t))
+    )
+  }
+  const printed = String(dump ?? '')
+    .split('\n')
+    .reduce(
+      (acc, line) => {
+        const t = /^INSERT INTO `([^`]+)`/i.exec(line)
+        if (t) acc.on = PRINTED_TABLES.test(t[1])
+        if (acc.on) acc.lines.push(line.toLowerCase())
+        return acc
+      },
+      { on: false, lines: [] }
+    ).lines
+  const rowHolds = (words) => {
+    const v = String(words ?? '').trim()
+    if (!v) return false
+    const re = wordsRe(v)
+    return printed.some((line) => re.test(line))
+  }
   const sources = copySourcesOf({ ids, plan, mapping })
   const rowOf = (place) => {
     const id = Number(place?.module)
@@ -82,7 +152,8 @@ export function joomlaLiteralScope({ dump, ids = {}, plan = null, mapping = null
     if (k.kind === 'component') {
       if (place?.module) return false
       const at = view ?? viewOf(path)
-      return at ? at === k.view : null
+      if (!at) return null
+      return at === k.view ? drawsAt(file, place?.within) : false
     }
     if (!place?.module) return false
     const row = rowOf(place)
@@ -100,5 +171,5 @@ export function joomlaLiteralScope({ dump, ids = {}, plan = null, mapping = null
     const w = escapeRe(v.toLowerCase())
     return new RegExp(`(?:'|\\\\*"|>)\\s*${w}\\s*(?:'|\\\\*"|<)`).test(low)
   }
-  return { renders, holds }
+  return { renders, holds, rowHolds }
 }

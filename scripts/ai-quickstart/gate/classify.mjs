@@ -153,7 +153,7 @@ export function classify({
         }
         const pictureSource = resolve.picture(o.value)
         // A design picture of the template the kit keeps (a picture file it names), matched by the file it is.
-        const keptPicture = keptPictureOf(pictureSource, keep)
+        const keptPicture = keptPictureOf(pictureSource, keep, o)
         if (keptPicture) {
           const value = /^data:/i.test(o.value)
             ? `${o.value.slice(0, 48)}... (${pictureSource.file})`

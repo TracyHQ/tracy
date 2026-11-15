@@ -80,8 +80,12 @@ function keptLiteral(o, sources, keep, scope) {
   if (sources.some(knownRow)) return null
   if (scope?.holds?.(o.place, v)) return null
   for (const l of keep?.literals ?? []) {
-    if (!(l.values.has(v.toLowerCase()) || l.re?.test(v))) continue
+    const word = l.values.has(v.toLowerCase())
+    if (!(word || l.re?.test(v))) continue
     if (!l.file) continue
+    // Words a printed row of the dump holds are that row's (review 5 Z4); a number a pattern keeps is held by too many
+    // rows to tell whose, and stays with where the page prints it.
+    if (word && scope?.rowHolds?.(v)) continue
     const named = sources.some((s) => s?.file === l.file)
     const at =
       scope?.renders?.(l.file, { place: o.place ?? null, path: o.path ?? null, view: o.view ?? null }) ?? null
@@ -91,10 +95,17 @@ function keptLiteral(o, sources, keep, scope) {
   return null
 }
 
-/** A picture file the kit keeps (`keptLiterals` naming a picture file) that a page picture sources to, or null. */
-export function keptPictureOf(source, keep) {
+/** A picture a page draws as a stylesheet does: a background or a generated picture (`observe-in-page.mjs`). */
+const DRAWN = /\[(?:background|content)\]$/
+
+/**
+ * A picture file the kit keeps (`keptLiterals` naming a picture file) that a page picture sources to, or null. Only
+ * where the page draws it as the stylesheet that holds it does (review 5 Z4): a picture element is a row's (a demo
+ * module using the template's picture), never the kept design picture.
+ */
+export function keptPictureOf(source, keep, o = null) {
   const file = source?.class === 'picture_file' ? String(source.file ?? '').toLowerCase() : null
-  if (!file) return null
+  if (!file || !DRAWN.test(String(o?.place?.element ?? ''))) return null
   for (const l of keep?.literals ?? [])
     if (PICTURE_FILE.test(l.file ?? '') && l.values.has(file)) return `kept_literal: ${l.file}: ${l.why}`
   return null

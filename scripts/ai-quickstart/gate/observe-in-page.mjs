@@ -61,13 +61,24 @@ export function observeInPage(doc = document) {
       if (/(?:^|\s)pagination(?:__wrapper)?(?:\s|$)/.test(n.getAttribute('class') ?? '')) return true
     return false
   }
+  // The class names around an element, up to the body (at most 40): the wrapper a component layout draws tells which
+  // layout printed it (`adapters/joomla-literal-scope.mjs`).
+  const withinOf = (el) => {
+    const names = new Set()
+    for (let n = el; n && n.nodeType === 1 && n !== doc.body; n = n.parentElement)
+      for (const c of String(n.getAttribute('class') ?? '').split(/\s+/))
+        if (c && names.size < 40) names.add(c)
+    return [...names]
+  }
   const place = (el, element) => {
     const module = el ? moduleOf(el) : null
+    const within = el ? withinOf(el) : []
     return {
       element: String(element).slice(0, 40),
       ...(el && inMenu(el) ? { menu: true } : {}),
       ...(el && inPagination(el) ? { pagination: true } : {}),
-      ...(module ? { module } : {})
+      ...(module ? { module } : {}),
+      ...(within.length ? { within } : {})
     }
   }
   // Where the element sits on the full page (CSS pixels from the top left), for a cropped screenshot of a finding.

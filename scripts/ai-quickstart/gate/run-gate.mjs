@@ -77,7 +77,8 @@ export async function runGate(input) {
         dump: archive.files?.get?.('installation/sql/mysql/custom.sql') ?? '',
         ids: site.real.record?.ids ?? {},
         plan: built.plan,
-        mapping: kit.mapping
+        mapping: kit.mapping,
+        files: archive.files ?? null
       }) ?? null,
     rules: adapter.exemptions,
     siteValues,

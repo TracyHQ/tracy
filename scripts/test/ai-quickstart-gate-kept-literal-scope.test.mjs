@@ -23,8 +23,19 @@ const dump = [
   `,(171,'Footer','mod_menu','{}')`,
   `,(172,'Follow','mod_custom','{}');`
 ].join('\n')
+// The wrappers of the two article layouts the kit names, as the release writes them (review 5 Z4: a layout prints only
+// inside its own wrapper).
+const ARTICLE_LAYOUTS = 'templates/ja_boxing/html/com_content/article/'
+const files = new Map([
+  [ARTICLE_LAYOUTS + 'default.php', '<div class="com-content-article item-page<?php echo $sfx; ?>">'],
+  [
+    ARTICLE_LAYOUTS + 'learning.php',
+    '<div class="com-content-article detail-learn item-page<?php echo $sfx; ?>">'
+  ]
+])
 const scope = joomlaLiteralScope({
   dump,
+  files,
   // The build's copy 301 of the features block (placement `home-b2` holds block-170 of the store).
   ids: { 'copy:home.home-b2': 301 },
   plan: { pages: [{ id: 'home', blocks: [{ id: 'home-b2', block: 'block-170' }] }] },
@@ -69,10 +80,13 @@ test('W1: a demo counter, a demo footer link and a demo picture alt are leaks, n
 })
 
 test('W1: the share bar under an article and a features block counter stay exempt, naming their file', () => {
-  const share = exemptionOf(at('attr', 'facebook', { element: 'a[title]' }, ARTICLE), {
-    ...ctx,
-    source: SHARE_SOURCE
-  })
+  const share = exemptionOf(
+    at('attr', 'facebook', { element: 'a[title]', within: ['com-content-article', 'item-page'] }, ARTICLE),
+    {
+      ...ctx,
+      source: SHARE_SOURCE
+    }
+  )
   assert.match(
     share,
     /^kept_literal: templates\/ja_boxing\/html\/com_content\/article\/(default|learning)\.php: /
@@ -83,10 +97,18 @@ test('W1: the share bar under an article and a features block counter stay exemp
   })
   assert.match(card, /^kept_literal: templates\/ja_boxing\/acm\/features-intro\/tmpl\/style-4\.php: /)
   // A learning step number is printed by the article layout, outside any module.
-  const step = exemptionOf(at('text', '02', { element: 'span' }, ARTICLE), {
-    ...ctx,
-    source: { class: 'unknown' }
-  })
+  const step = exemptionOf(
+    at(
+      'text',
+      '02',
+      { element: 'span', within: ['com-content-article', 'detail-learn', 'item-page'] },
+      ARTICLE
+    ),
+    {
+      ...ctx,
+      source: { class: 'unknown' }
+    }
+  )
   assert.match(step, /^kept_literal: templates\/ja_boxing\/html\/com_content\/article\/learning\.php: /)
   // A two digit number in another ACM block (the stats block) is not the features block's counter.
   assert.equal(
