@@ -1,6 +1,7 @@
 // The link check of the release gate (tickets #585, #586): a link to a page that does not answer (`missing_page`), a
 // `#` link whose target is not on the page (`anchor_missing`), and a link to a page the plan does not have, a demo page
 // left over (`demo_page`). Pure given the pages; `probe(url)` is called only when the caller passes one.
+// Without a `probe` (saved pages) a link to a path not among the pages read is `missing_page`; with one, its answer decides.
 import { anchorsOf, observationsFromHtml } from './observations.mjs'
 
 /** At most this many addresses are read again through `probe`. */
@@ -157,7 +158,12 @@ export async function linkCheck({
     }
     const status = target && !link.query ? target.status : await answers(link)
     if (broken(status)) push('missing_page', link)
-    else if (wanted && !planned) push('demo_page', link)
+    else if (wanted && !planned) {
+      // No probe: the pages read are all there is to know. A path that is not among them is answered by nothing, as far
+      // as the saved set shows. A query link cannot be told from its path, so it keeps being a demo page.
+      if (!probe && !target && !link.query) push('missing_page', link)
+      else push('demo_page', link)
+    }
   }
   return out
 }

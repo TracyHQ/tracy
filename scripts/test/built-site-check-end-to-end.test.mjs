@@ -105,7 +105,7 @@ test('one command on a locally built site (a fake local server) writes the repor
   }
 })
 
-test('saved pages: the demo sentence is found; with nothing to probe, a link off the plan is told as a demo page', async () => {
+test('saved pages: the demo sentence is found; with nothing to probe, a link to a page not read is told as missing', async () => {
   const { at, args } = inputs(dirty())
   assert.equal(await main([...args, '--pages', at('pages'), '--out', at('r.json')], { log: quiet }), 0)
   const { demo, links } = read(at('r.json')).checks
@@ -113,12 +113,13 @@ test('saved pages: the demo sentence is found; with nothing to probe, a link off
     demo.findings.map((f) => f.kind),
     ['demo_text']
   )
-  // A folder cannot probe a dead address: Part 1 says demo_page for any link to a page the plan does not have.
+  // A folder cannot probe an address: a link to a declared demo route is demo_page, a link to a page not among the saved
+  // pages is missing_page.
   assert.deepEqual(
     links.findings.map((f) => [f.kind, f.href]),
     [
       ['demo_page', '/demo-classes'],
-      ['demo_page', '/gone-page']
+      ['missing_page', '/gone-page']
     ]
   )
 })

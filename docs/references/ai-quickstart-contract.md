@@ -1340,6 +1340,11 @@ browser and no site; nothing in it names a template.
 | `linkCheck({pages, base, expected, links?, probe?, demoRoutes?})` | `[{kind: 'missing_page' \| 'anchor_missing' \| 'demo_page', page, place, href}]` |
 | `corpusInputOf(kit)` | the corpus input for a kit: the release files of `kit.mapping.template`, replaced by any source put on the kit |
 
+**Link check without a probe.** When the caller passes no `probe` (a folder of saved pages), the pages read are all the
+evidence there is. A link to a path that is not among them and is neither a planned page nor a declared demo route is
+`missing_page`; a page that was read and answered below 400 but is not in the plan, a declared demo route, and a link
+with a query string (its path cannot tell it apart) stay `demo_page`. With a `probe`, its answer decides, as before.
+
 **Corpus sources.** The demo baseline measured on an untouched site (ADR 0044, decision 8: block hashes, map
 addresses, picture files and sha256), the demo site's released `content-map.json` (text samples, image samples, and
 the `contact.phone`, `contact.email`, `contact.address` roles as high signal strings), the template kit's fixed texts
