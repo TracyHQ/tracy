@@ -54,5 +54,7 @@ export function applyOverMemory(memory) {
   }
   const applyFor = (email, setupRun) => (call) => applyAs(email, call, { setupRun })
   const publicFile = async (_siteKey, path) => memory.site.uploads.get(path) ?? null
-  return { calls, applyAs, applyFor, publicFile }
+  // As the public read of `app.js` answers it: the memory site always reads, so present or absent.
+  const filePresence = async (_siteKey, path) => (memory.site.uploads.has(path) ? 'present' : 'absent')
+  return { calls, applyAs, applyFor, publicFile, filePresence }
 }

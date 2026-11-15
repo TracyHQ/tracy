@@ -66,7 +66,7 @@ async function answerOf(memory, action, params) {
 /**
  * @param {object} memory the memory site (`blankSite()`)
  * @param {{onCall?: (call: object, n: number) => void}} [opts] `onCall`: called with every call before it is answered
- * @returns {{calls: object[], applyAs: Function, applyFor: Function, publicFile: Function}}
+ * @returns {{calls: object[], applyAs: Function, applyFor: Function, publicFile: Function, filePresence: Function}}
  */
 export function pluginOverMemory(memory, { onCall } = {}) {
   const calls = []
@@ -84,5 +84,7 @@ export function pluginOverMemory(memory, { onCall } = {}) {
   }
   const applyFor = (email, setupRun) => (call) => applyAs(email, call, { setupRun })
   const publicFile = async (_siteKey, path) => memory.site.uploads.get(path) ?? null
-  return { calls, applyAs, applyFor, publicFile }
+  // As the public read of `app.js` answers it: the memory site always reads, so present or absent.
+  const filePresence = async (_siteKey, path) => (memory.site.uploads.has(path) ? 'present' : 'absent')
+  return { calls, applyAs, applyFor, publicFile, filePresence }
 }

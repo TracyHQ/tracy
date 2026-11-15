@@ -92,38 +92,65 @@ export function removalActsOf(delta, previous) {
 /**
  * An act must find its record as Tracy left it: every place of the record (or the module's assignment) a build or this
  * run wrote holds what was written (`states`: `{wrote, shapes}` each), an earlier value this run sent (`undo.sent`),
- * its value before this run (`undo`), or for the hidden column 0 (the act ran before a crash). Else the owner edited
- * it and nothing is hidden over the edit (`code`, `site_changed_outside` by default).
+ * its value before this run (`undo`), or for the hidden column of a hide 0 (the act ran before a crash). Else the owner
+ * edited it and nothing is hidden over the edit (`code`, `site_changed_outside` by default). A record the owner deleted
+ * outright is the same typed stop, naming the record.
+ * A SHOW of a module (`act.show`, `step-chain-draft-show-again.js`) writes the module record again as well as its
+ * pages: both are checked, and a module whose page list is gone stops too (nothing would put it back as Tracy left it).
  */
 export async function checkAct(act, doors, states, undo, code = 'site_changed_outside') {
-  const holds = (name, now, before) =>
-    states.some((s) => holdsWrote(name, now, s)) ||
-    holdsSent(name, now, undo) ||
-    (before !== undefined && placeHolds(name, before, now))
   if (act.door === 'unassign') {
-    const name = `assignment:${act.id}`
-    let now = null
-    try {
-      now = (await doors.get({ kind: 'moduleAssignment', id: act.id })).menuids
-    } catch (error) {
-      if (error?.code !== 'NOT_FOUND') throw error
-    }
-    const kept = undo?.assignments?.[String(act.id)]
-    const before = kept === undefined ? undefined : JSON.stringify(kept ?? [])
-    const written = states.some((s) => s.wrote?.[name])
-    if (now === null || placeHolds(name, '[]', now) || !written || holds(name, now, before)) return
-    throw Object.assign(outsideEdit(name), { code })
+    await checkAssignment(act, doors, states, undo, code)
+    if (act.show) await checkRecord({ ...act, kind: 'module' }, doors, states, undo, code)
+    return
   }
-  const row = await doors.get({ kind: act.kind, id: act.id })
+  await checkRecord(act, doors, states, undo, code)
+}
+
+const holdsOf = (states, undo) => (name, now, before) =>
+  states.some((s) => holdsWrote(name, now, s)) ||
+  holdsSent(name, now, undo) ||
+  (before !== undefined && placeHolds(name, before, now))
+
+const stopAt = (place, code) => Object.assign(outsideEdit(place), { code })
+
+/** A door read that answers NOT_FOUND: the record (or its page list) is gone, read as null. */
+async function readOrNull(doors, query) {
+  try {
+    return await doors.get(query)
+  } catch (error) {
+    if (error?.code === 'NOT_FOUND') return null
+    throw error
+  }
+}
+
+async function checkAssignment(act, doors, states, undo, code) {
+  const name = `assignment:${act.id}`
+  const now = (await readOrNull(doors, { kind: 'moduleAssignment', id: act.id }))?.menuids ?? null
+  if (now === null) {
+    if (act.show) throw stopAt(name, code)
+    return
+  }
+  const kept = undo?.assignments?.[String(act.id)]
+  const before = kept === undefined ? undefined : JSON.stringify(kept ?? [])
+  const written = states.some((s) => s.wrote?.[name])
+  if (placeHolds(name, '[]', now) || !written || holdsOf(states, undo)(name, now, before)) return
+  throw stopAt(name, code)
+}
+
+async function checkRecord(act, doors, states, undo, code) {
   const prefix = `record:${act.kind}:${act.id}:`
+  const row = await readOrNull(doors, { kind: act.kind, id: act.id })
+  if (row === null) throw stopAt(prefix.slice(0, -1), code)
   const names = new Set(states.flatMap((s) => Object.keys(s.wrote ?? {}).filter((k) => k.startsWith(prefix))))
   const fields = undo?.records?.[`${act.kind}:${act.id}`]?.fields ?? {}
+  const holds = holdsOf(states, undo)
   for (const name of names) {
     const column = name.slice(prefix.length)
     const now = row[column] ?? null
-    if (column === hiddenColumnOf(act.kind) && Number(now) === 0) continue
+    if (act.door === 'hide' && column === hiddenColumnOf(act.kind) && Number(now) === 0) continue
     if (!holds(name, now, Object.hasOwn(fields, column) ? fields[column] : undefined))
-      throw Object.assign(outsideEdit(name), { code })
+      throw stopAt(name, code)
   }
 }
 

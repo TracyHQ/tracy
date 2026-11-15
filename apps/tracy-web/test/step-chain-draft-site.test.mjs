@@ -48,6 +48,7 @@ function engineOf({ draft, memory, site: siteWiring }) {
 const fixturePictures = (over, draftWrite, memory) => ({
   siteDoors: memorySiteDoors(memory),
   publicFile: over.publicFile,
+  filePresence: over.filePresence,
   blankContract: () => site.kit.blankContract,
   pictures: { stored: (order) => draftWrite.stored(order), openStored: (id) => draftWrite.openStored(id) }
 })

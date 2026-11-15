@@ -28,6 +28,7 @@ export async function siteRevision(first, revised, { runId, runRecords, from = f
     site: {
       siteDoors: memorySiteDoors(first.memory),
       publicFile: over.publicFile,
+      filePresence: over.filePresence,
       blankContract: () => draftWrite.blankContract(),
       pictures: { stored: (order) => draftWrite.stored(order), openStored: (id) => draftWrite.openStored(id) }
     }

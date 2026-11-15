@@ -10,6 +10,12 @@
 //   deps.site.publicFile(siteKey, path)  optional: the bytes of a public file of the site, or null (the upload read back,
 //                                        door `media`; no plugin operation reads a file's bytes). Absent, the `media`
 //                                        door stops the write typed (`door_not_available`, door `media`)
+//   deps.site.filePresence(siteKey, path)
+//                                        optional: whether a public file is there, 'present' (200), 'absent' (404 or
+//                                        410) or 'unread' (any other answer, a redirect, a network error): door
+//                                        `presence`, read by the media delete of a restore or an abandon
+//                                        (`step-chain-draft-media-delete.js`). Absent, the door answers 'unread' (a file
+//                                        is then kept, never taken for gone): `media` answers null for any unread file
 //   deps.site.blankContract(kit)         the blank site contract's content map of the kit, or null
 //   deps.site.templateSheets(siteKey, {variables, pages})
 //                                        optional: the stylesheets the site's template serves (door `sheets`, the
@@ -48,6 +54,19 @@ const sheetsDoorOf = (site, siteKey, send) =>
       }
     : {}
 
+/** The `presence` door over `site.filePresence`: 'unread' when not wired, when it fails, or for any other answer. */
+const presenceDoorOf = (site, siteKey) => ({
+  presence: async ({ path }) => {
+    if (typeof site.filePresence !== 'function') return 'unread'
+    try {
+      const got = await site.filePresence(siteKey, path)
+      return got === 'present' || got === 'absent' ? got : 'unread'
+    } catch {
+      return 'unread'
+    }
+  }
+})
+
 /**
  * The doors of a restore or an abandon of a built site: the door client (`site.siteDoors`) over the Apply door as
  * `email` under the setup run `runId` (`applyFor(email, runId)`), or null when no door factory is wired.
@@ -68,7 +87,8 @@ export const siteDoorsFor =
           publicFile: typeof site.publicFile === 'function' ? (path) => site.publicFile(siteKey, path) : null,
           signal
         })),
-        ...sheetsDoorOf(site, siteKey, send)
+        ...sheetsDoorOf(site, siteKey, send),
+        ...presenceDoorOf(site, siteKey)
       },
       { siteKey }
     )
@@ -118,7 +138,8 @@ export function siteWriteOf(deps, ctx, how, inputs, records) {
               typeof site.publicFile === 'function' ? (path) => site.publicFile(c.siteKey, path) : null,
             signal: c.signal ?? null
           })),
-          ...sheetsDoorOf(site, c.siteKey, send)
+          ...sheetsDoorOf(site, c.siteKey, send),
+          ...presenceDoorOf(site, c.siteKey)
         },
         { siteKey: c.siteKey }
       )

@@ -7,9 +7,11 @@
 //     ever sent without a dry run of the same call, read in that shape, that names no record but the ones this undo
 //     takes off (`place.mine`);
 //   - a path with no file answers `write_failed` (no not-found code), and so does the same apply id called again: an
-//     error code never says whether the file is there. Whether it is there is read by `media` (the public file, `null`
-//     when absent) before the dry run and after any failure: absent is done; present, or unread, keeps the file in
-//     `left` with why, never counted deleted.
+//     error code never says whether the file is there. Whether it is there is read before the dry run and after any
+//     failure, three valued: `presence` ('present', 'absent', 'unread': the site wiring reads the public file, and only
+//     a 404 or 410 says absent, `step-chain-draft-site.js`), else, for doors with no such door (the memory site),
+//     `media` (null when absent). Absent is done; present, or unread, keeps the file in `left` with why
+//     (`presence_unread` before the dry run, `delete_unknown` after a failure), never counted deleted.
 // Not measured: `apply.revert` of a delete. Nothing relies on it.
 
 /** The record kinds of the plural types a dry run names. */
@@ -34,8 +36,12 @@ export function usedInOf(dry) {
 
 /** Whether the file is on the site: true, false, or null when that cannot be read. */
 async function presentOf(doors, path) {
-  if (typeof doors.media !== 'function') return null
   try {
+    if (typeof doors.presence === 'function') {
+      const got = await doors.presence({ path })
+      return got === 'present' ? true : got === 'absent' ? false : null
+    }
+    if (typeof doors.media !== 'function') return null
     return (await doors.media({ path })) !== null
   } catch (error) {
     if (error?.fatal) throw error

@@ -87,7 +87,10 @@ test('the wiring hands the door factory this transport; no factory, no Apply doo
   const ctx = { runId: RUN, siteKey: SITE, applied: (id) => applied.push(id) }
   const how = { door: { apply: r.applyFor(EMAIL, RUN) } }
   const wiring = siteWriteOf({ site }, ctx, how, {}, new Map())
-  assert.deepEqual(await wiring.doors(ctx), { marker: true })
+  const doors = await wiring.doors(ctx)
+  assert.deepEqual(Object.keys(doors).sort(), ['marker', 'presence'])
+  // With no `filePresence` wired, a file's presence reads unread, never absent.
+  assert.equal(await doors.presence({ path: 'images/a.jpg' }), 'unread')
   const [input] = seen
   assert.equal(input.siteKey, SITE)
   assert.deepEqual(await input.publicFile('images/a.jpg'), Buffer.from('images/a.jpg'))

@@ -7,7 +7,7 @@ import { placeHolds } from './step-chain-draft-place-value.js'
 import { isHeldBefore } from './step-chain-draft-journal.js'
 import { checkAct, HIDE_KINDS, hiddenColumnOf, madeKindOf } from './step-chain-draft-removal.js'
 import { isBlankHolder } from './step-chain-draft-owned-keys.js'
-import { ownerOverTaken } from './step-chain-draft-restore-taken.js'
+import { ownerInListRow, ownerOverTaken } from './step-chain-draft-restore-taken.js'
 import { holdsSent, holdsWrote } from './step-chain-draft-wrote.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -132,8 +132,8 @@ async function heldNow(place, doors) {
 /**
  * A place that holds neither what the run wrote (`state`: `{wrote, shapes}`) nor its value before was edited outside
  * Tracy: a typed stop (`code`: `restore_site_changed` for a restore, `site_changed_outside` for an abandon). So is a
- * place that holds what the run wrote but an owner's value at a JSON key the run took out (`ownerOverTaken`): writing
- * the key back would write over it.
+ * place that holds what the run wrote but an owner's value at a JSON key the run took out (`ownerOverTaken`), or an
+ * owner's key inside a row of a list the run wrote (`ownerInListRow`): writing the column back would lose it.
  */
 export async function checkUnchanged(place, doors, state, code = 'restore_site_changed') {
   if (place.type === 'media') return
@@ -145,7 +145,7 @@ export async function checkUnchanged(place, doors, state, code = 'restore_site_c
     const tracy = list(state.cleared).includes(name)
       ? isBlankHolder(now)
       : !state.wrote?.[name] || holdsWrote(name, now, state) || holdsSent(name, now, state.undo)
-    if (tracy && !ownerOverTaken(name, now, state, before)) continue
+    if (tracy && !ownerOverTaken(name, now, state, before) && !ownerInListRow(name, now, state)) continue
     throw Object.assign(
       new DraftWriteError(
         code,

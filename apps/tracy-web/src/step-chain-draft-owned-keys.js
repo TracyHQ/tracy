@@ -7,8 +7,10 @@
 // site holds it. A value that is not a JSON object on both sides is sent as it is.
 //
 // An object Tracy owned and no longer sends goes with only the keys Tracy owned in it: an owner key inside it stays. A
-// list is written whole (its rows have no keys to merge by): when a row Tracy wrote holds a key Tracy never owned (the
-// owner's), a revision stops `site_changed_outside` at that column, before its write, rather than lose the key.
+// list is written whole and taken out whole (its rows have no keys to merge by): when a row Tracy wrote holds a key
+// Tracy never owned (the owner's, `ownerRowKeyUnder`), a revision stops `site_changed_outside` at that column, before
+// its write, rather than lose the key, whether it still sends the list or no longer does. A restore and an abandon
+// make the same check before their first write (`ownerInListRow` of `step-chain-draft-restore-taken.js`).
 //
 // A revision also guards the keys it did not own before (`before`: the shape the previous build, or this run before a
 // crash, wrote there): such a key the site already holds with another value is a value the owner set, and writing over
@@ -56,6 +58,8 @@ function overOwned(now, sent, owned, before, taken, path = []) {
     }
     const shape = owned[key]
     if (!Object.hasOwn(sent, key)) {
+      // A list taken out with an owner's key in one of its rows (at any depth): taking it out would lose that key.
+      if (before !== null && ownerRowKeyUnder(now[key], shape)) return null
       // An object taken out whole: only the keys Tracy owned in it go, the owner's beside them stay.
       const rest = isPlain(shape) && isPlain(now[key]) ? overOwned(now[key], {}, shape, null, [], []) : {}
       if (Object.keys(rest).length) out[key] = rest
@@ -84,6 +88,17 @@ function ownerKeysIn(value, shape) {
     return value.some((row, i) => shape[i] !== undefined && ownerKeysIn(row, shape[i]))
   if (!isPlain(value) || !isPlain(shape)) return false
   return Object.keys(value).some((k) => !Object.hasOwn(shape, k) || ownerKeysIn(value[k], shape[k]))
+}
+
+/**
+ * Whether a value holds, inside a row of a list Tracy wrote (reached through the keys its shape owns), a key the shape
+ * does not own: the owner's, which writing or taking out the list whole would lose.
+ */
+export function ownerRowKeyUnder(value, shape) {
+  const v = parsed(value)
+  if (Array.isArray(v)) return ownerKeysIn(v, shape)
+  if (!isPlain(v) || !isPlain(shape)) return false
+  return Object.keys(shape).some((k) => Object.hasOwn(v, k) && ownerRowKeyUnder(v[k], shape[k]))
 }
 
 /** Every key of two shapes (a key in either), an object at both sides joined one level down. */

@@ -4,7 +4,10 @@
 // nobody filled), or the very value it held before the run (a site that puts its own default back on save). Any other
 // value is the owner's, set since: writing the key back would write over it, so the restore
 // stops (`restore_site_changed`, the abandon `site_changed_outside`) before any write, as for an owned key edited.
-import { isBlankHolder } from './step-chain-draft-owned-keys.js'
+//
+// A list is written back whole: a row of it that now holds a key the run never owned (the owner's, added since) would
+// lose that key, so that too stops before any write (`ownerInListRow`).
+import { isBlankHolder, ownerRowKeyUnder, shapeUnion } from './step-chain-draft-owned-keys.js'
 import { shapedOf } from './step-chain-draft-place-value.js'
 import { canonicalOf } from './step-chain-draft-write-check.js'
 
@@ -50,4 +53,20 @@ export function ownerOverTaken(place, now, state, before) {
     const at = valueAt(now, path)
     return !isBlankHolder(at) && !same(at, valueAt(before, path))
   })
+}
+
+/**
+ * Whether the site holds, in a row of a JSON list the run owned at a place, a key the run never owned there (its
+ * shape, the shapes of the earlier values it sent, the shape the build before it owned: what the write back merges
+ * over): writing the list back whole would lose the owner's key.
+ */
+export function ownerInListRow(place, now, state) {
+  const owned = [
+    state?.shapes?.[place],
+    ...(Array.isArray(state?.undo?.sent?.[place]) ? state.undo.sent[place] : []).map(([, shape]) => shape),
+    state?.undo?.prior?.[place]
+  ]
+    .filter(Boolean)
+    .reduce((a, b) => shapeUnion(a, b), null)
+  return isPlain(owned) && ownerRowKeyUnder(now, owned)
 }

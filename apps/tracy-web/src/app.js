@@ -2178,6 +2178,19 @@ export function buildApp(deps) {
         bytes: async (/** @type {string} */ url) => {
           const response = await get(url)
           return response.ok ? new Uint8Array(await response.arrayBuffer()) : null
+        },
+        // Whether a public file is there, three valued for the draft doors (`step-chain-draft-media-delete.js`): only a
+        // 404 or 410 says absent, a 200 present; any other answer (a redirect, a 403, a 5xx, a network error) is
+        // unread, never taken for absent.
+        presence: async (/** @type {string} */ url) => {
+          try {
+            const response = await get(url)
+            await response.body?.cancel?.().catch(() => {})
+            if (response.status === 404 || response.status === 410) return 'absent'
+            return response.status === 200 ? 'present' : 'unread'
+          } catch {
+            return 'unread'
+          }
         }
       }
     }
@@ -2324,6 +2337,13 @@ export function buildApp(deps) {
     const draftSite = {
       siteDoors,
       publicFile: async (siteKey, filePath) => (await siteReader(siteKey))?.bytes(filePath) ?? null,
+      // Whether a public file is there: 'present', 'absent' or 'unread' (the media delete of a restore or an abandon).
+      filePresence: async (siteKey, filePath) => {
+        const reader = await Promise.resolve()
+          .then(() => siteReader(siteKey))
+          .catch(() => null)
+        return typeof reader?.presence === 'function' ? reader.presence(filePath) : 'unread'
+      },
       // The stylesheets the template serves on the home page and every page the site lists, as a visitor reads
       // them, bounded and typed (the accent module, #597, `step-chain-draft-sheets.js`).
       templateSheets: draftTemplateSheets({ siteReader }),

@@ -9,7 +9,8 @@
 // are written again by its own assign operation, added again too. Those writes go through the journal like any other
 // (`journaledDoors`): the values before (a hidden column 0, a module's empty pages) are kept in `state.undo`, so the
 // restore and the abandon of this revision take the record off again. Before any door write, every show is checked as
-// its act is (`checkAct`): a record the owner edited since stops `site_changed_outside`, nothing written. The report
+// its act is (`checkAct`), over every column the show writes (a module's record AND its page list): a record the owner
+// edited or deleted since, or a module whose page list is gone, stops `site_changed_outside`, nothing written. The report
 // says which operations were shown again (`shown_again`).
 import { checkAct } from './step-chain-draft-removal.js'
 
@@ -42,9 +43,16 @@ export function showsOf(delta, previous) {
     const was = hidden[key]
     delete hidden[key]
     if (!was || Number(ids[key]) !== was.id) continue
-    // Checked as its act is (`checkAct`: the record, or the module's pages, as Tracy left it).
+    // Checked as its act is (`checkAct`), and every column the show writes: a module's record as well as its pages.
     const door = was.door ?? 'hide'
-    shows.push({ key: `show:${was.kind}:${was.id}`, door, kind: was.kind, id: was.id, ops: [key] })
+    shows.push({
+      key: `show:${was.kind}:${was.id}`,
+      door,
+      kind: was.kind,
+      id: was.id,
+      ops: [key],
+      show: true
+    })
   }
   return { shows, hidden }
 }

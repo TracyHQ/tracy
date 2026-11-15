@@ -249,9 +249,13 @@ A JSON column (`attribs`, `images`, `params`) is never sent whole by a revision,
 site holds now is the base, and only the keys Tracy owns (the shape it wrote) are set; every key the owner added, and
 everything inside a value Tracy wrote as an empty object, stays (`step-chain-draft-owned-keys.js`). An object Tracy
 owned and no longer sends goes with only Tracy's keys in it: an owner key inside it stays. A list is written whole
-(its rows have no keys to merge by): when a row Tracy wrote holds a key Tracy never owned, a revision stops
-`site_changed_outside` at that column, before its write (writes of earlier operations of the run stand, and are rolled
-back by the abandon), rather than lose the owner's key. A revision that
+and taken out whole (its rows have no keys to merge by): when a row Tracy wrote holds a key Tracy never owned
+(`ownerRowKeyUnder`, at any depth, reached through the keys Tracy owns), a revision stops `site_changed_outside` at
+that column, before its write (writes of earlier operations of the run stand, and are rolled back by the abandon),
+rather than lose the owner's key, whether it still sends the list or no longer does. A restore and an abandon write a
+list back whole too: the check they run on every place before their first write (`checkUnchanged`,
+`ownerInListRow` of `step-chain-draft-restore-taken.js`, over the shapes the write back merges by) stops
+`restore_site_changed` (an abandon `site_changed_outside`) on such a key, nothing written. A revision that
 would write over a key the owner set stops `site_changed_outside`; a blank holder at a key it newly owns (an empty
 text, null, an empty object or list, as an admin save stores a field nobody filled) is not the owner's value.
 
@@ -297,7 +301,8 @@ through the journal (`journaledDoors` `hide`, `unassign`), so `state.undo` keeps
 safety is the write's: every act is checked before any door writes, and again, on the same columns, right before it
 runs: every place of the
 record a build or this run wrote must hold what was written (or, after a crash, the hidden column 0), else
-`site_changed_outside` and nothing is hidden over the edit. Only a record some build on this site made is hidden; a
+`site_changed_outside` and nothing is hidden over the edit. A record the owner deleted outright (the door answers
+`NOT_FOUND`) is the same typed stop, naming the record (`record:<kind>:<id>`), noRerun. Only a record some build on this site made is hidden; a
 store module is only put back on no page, the value the blank site ships. An act is read back, tried twice, then
 `redo_failed` (noRerun); the same record resumes. A door client with no `hide` or `unassign` stops
 `door_not_available` before any door. The report says what was hidden (`flags`: `hidden_not_deleted`,
@@ -308,9 +313,11 @@ store module is only put back on no page, the value the blank site ships. An act
 
 A hide keeps the record and its id (`state.hidden`, `step-chain-draft-show-again.js`). When a later revision adds back
 an operation whose record a revision took off (`writeDeltaOf` answers it `added`; the run record still holds its id),
-the record is shown again, never made a second time: before any door write it is checked as its act was (`checkAct`:
-every column a build wrote holds what was written, the hidden column 0; an owner edit stops `site_changed_outside`,
-nothing written), then its key is in `rewrite`, so it is written again in place through `content.update` with every
+the record is shown again, never made a second time: before any door write, and before the site is marked as this
+run's, it is checked over every column the show writes (`checkAct` with `show`: every column a build wrote on the
+record holds what was written, a hidden record's hidden column 0; for a module copy its record AND its page list, the
+page list empty or as a build left it, and a module with no page list at all stops too; a record deleted outright
+stops; each a `site_changed_outside` naming the place, noRerun, nothing written), then its key is in `rewrite`, so it is written again in place through `content.update` with every
 field a new record gets (an article `state: 1`, a menu item, a category or a contact `published: 1`, as measured: the
 page answers again) and the new plan's content; a module's pages are written again by its own assign operation. These
 writes are journaled like any other, so the restore and the abandon of this revision write the values before back (the
@@ -326,14 +333,24 @@ operation keys.
   `modules`, `menuItems`, `templateStyles`), unpublished and trashed records included; nobody: `[]`. A row of another
   type or without a type and an id keeps the file (`used_in_unread`), as does any other answer.
 - A real delete of a file other records use succeeds: the door refuses nothing. So no delete is sent without a dry run
-  of the same call, read in the measured shape, that names no record but the ones this undo takes off. The door client
-  never answers a dry run from its journal: a resumed restore reads `usedIn` again.
+  of the same call, read in the measured shape, that names no record but the ones this undo takes off. On this branch
+  the door client still answers a call of an apply id it already sent from its own memory journal (`once` in
+  `site-doors.mjs`), the dry run included: the second try of a place in the same restore gets the first dry run's
+  answer back. What keeps that safe here: presence is read first on every try (a file read absent is done before any
+  dry run, one not read present is kept), that journal lives only in the memory of one set of doors (a resumed restore
+  or abandon builds new doors and reads `usedIn` again), and a delete is only sent after a dry run in the measured
+  shape. The client change that never answers a dry run from its journal is pending with the team that owns
+  `site-doors.mjs`, on a side branch.
 - A path with no file (a missing folder too) answers `write_failed`, dry run or not, and the same apply id called again
   answers `write_failed` too: there is no not-found code and no replay answer. So an error code never says whether the
-  file is there: it is read by `media` (the public file, null when absent) before the dry run and again after a failed
-  delete. Absent is done (deleted by an earlier attempt, or never there). Present after a failure keeps the file with
-  the code; unread (no `media` door, or it failed) keeps it with `presence_unread` or `delete_unknown`. A file is never
-  counted deleted on an error alone.
+  file is there: it is read before the dry run and again after a failed delete, three valued, by the `presence` door
+  the site wiring gives (`step-chain-draft-site.js` over `filePresence` of `app.js`, a public read of the file): only
+  a 404 or a 410 is absent, a 200 present, and any other answer (another status, a redirect, a network error, no site
+  or no reader) unread. The public `media` door is not used for this on a real site: it answers null for any answer
+  that is not a 2xx, so a 503 would read as absent. Doors with no `presence` door (the memory site of the tests) fall
+  back to `media`. Absent is done (deleted by an earlier attempt, or never there). Present after a failure keeps the
+  file with the code; unread keeps it with `presence_unread` (before the dry run) or `delete_unknown` (after a failed
+  delete). A file is never counted deleted on an error alone.
 - Not a picture, or outside `images/`: `bad_params`, kept with that code.
 - Not measured: `apply.revert` of a delete. Nothing relies on it.
 
