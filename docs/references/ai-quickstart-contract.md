@@ -14,6 +14,7 @@ sources:
   - scripts/ai-quickstart/copy-proof.mjs
   - scripts/ai-quickstart/copy-proof-held.mjs
   - scripts/ai-quickstart/copy-proof-masthead.mjs
+  - scripts/ai-quickstart/door-measures.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-placement-container.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-references.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-inline-markup.mjs
@@ -688,7 +689,8 @@ twice; one store record can hold neither. So every block of the store says, in `
    copy. The list replaces the copy's pages (`assign` below says which list).
 
 The copy is no record of the blank site contract, so the plugin guards none of its values: no limit, no icon or alt
-correction, no refusal of tags. The build keeps the kit's rules on a copy itself (the field limits, `inline`, `hides`,
+correction, no refusal of tags, and the template prints almost every ACM value as stored
+([escaping of field values](#escaping-of-field-values), measured). The build keeps the kit's rules on a copy itself (the field limits, `inline`, `hides`,
 the icon fields) and reads the copy back. A store record written in place keeps every guard of the contract.
 
 **Writing a copy at its mapping locations.** Every location of a copy block names the store record; on the copy the
@@ -790,9 +792,11 @@ each article of the list prints an empty button (measured).
 
 **The inventory warning.** After the first copy, `content.contract` inspect warns `Quickstart inventory changed` (the
 plugin counts the modules), and assigning an in-place record warns `Module assignment drift: module-<id>`. Both are
-expected on a built site: inspect still answers, and an apply on an in-place slot is still written (measured). On a fresh
-blank site the proof also saw `Presentation asset changed: media/t4/author/default.jpg` after the copies; inspect
-still answered and the apply was written, but what changed that file was not traced.
+expected on a built site: inspect still answers, and an apply on an in-place slot is still written (measured). A blank
+site also warns `Presentation asset changed: media/t4/author/default.jpg` from its first bind, before any write
+(measured, [door measurements](#door-measurements-plugin-02485)): the file is missing from the restored site, though
+the installer archive carries it with the sha256 the lock names. Which install step leaves it out was not traced;
+inspect still answers and applies are still written.
 
 **JA Boxing**, measured on the blank site restored on a real Joomla with plugin 0.24.85 (`copy-proof.mjs`): 24 copies,
 10 blocks written in place (9 store records and the header the layout draws), 10 created. What the proof shows:
@@ -947,6 +951,224 @@ site contract. The copies are proved by `copy-proof.mjs` (above). The site runs 
 the environment (`TRACY_DOOR_URL`, `TRACY_DOOR_TOKEN`). It binds, writes one place of every address kind and every text
 node place in one apply, reads each back, checks three refusals (a removed record, an unknown slot, emptying an
 occupied slot), empties a filled place again, and checks the home address does not turn into a server error.
+
+## Door measurements (plugin 0.24.85)
+
+What an edit after the build and the write step may rely on, measured on a throwaway JA Boxing j6 1.0.11 blank site
+(the blank site command's archive, restored on Joomla 6.1.1, bound to `ja-boxing-blank/j6/1.0.11`) with the Claude
+Cowork plugin 0.24.85, its updater plugin disabled and the version read at the start and the end of the run. Each fact
+says how it is known: **measured** (a door call, its raw answer, the read back and the page HTML), **read in source**
+(the plugin, Joomla, T4 or the template on that site), or **not measured**.
+
+`node scripts/ai-quickstart/door-measures.mjs <AI quickstart folder> [--report <file.json>]` reruns every measurement
+below on such a site (same environment as the door proof: `TRACY_DOOR_URL`, `TRACY_DOOR_TOKEN`, php on PATH). It
+prints the facts and writes every door call with its raw answer to the report; it judges nothing, and exits 1 only
+when the plugin version moved. The site is written: run it on a throwaway site only.
+
+### Hiding a record and publishing it again
+
+`content.update {kind, id, fields: {published: 0}}` (an article: `{state: 0}`) answers `{ok: true, created: false}`,
+reads back `0`, and `1` after `{published: 1}`; publishing again brings back every page below exactly as before
+(measured).
+
+| Record | While hidden (measured) |
+|---|---|
+| a module copy | prints on no page it is assigned to |
+| a menu item (a page) | leaves the main menu; its address (`index.php?Itemid=<id>`) answers 404 |
+| a category | its list page answers 404, and so does the address of an article in it (the article itself still published) |
+| an article | leaves its list page (200, the other articles still listed); its address answers 404 |
+| a contact | its address answers 404; it leaves its category's contact list (200) |
+
+The bound blank site contract warns nothing new for a hidden copy, menu item, category, article or contact (they are
+no records of it): inspect answers with the warnings it had (measured). An in-place store record is one: unpublishing
+module 176 raises a `Presentation drift` warning for `module-176` naming `published [want 1 got 0]`, until it is
+published again (measured).
+
+`content.delete` exists for these kinds and moves a record to Joomla's trash (`state` or `published` `-2`), with an
+undo entry (read in source, `Engine.php` `contentDelete`); it was not measured on the pages here.
+
+### Module assignments that mean "no page"
+
+`content.update {kind: "moduleAssignment", id, fields: {menuids}}` replaces every page row of the module
+(`#__modules_menu`) with the list sent (read in source, `JoomlaRelations.php`). Measured on a copy:
+
+| `menuids` | Answer | Read back | Pages |
+|---|---|---|---|
+| `"[0]"` | written | `[0]` | every page |
+| `"[]"` | written | `[]` | no page |
+| `"[-<id>]"` | written | `[-<id>]` | every page but that one (Joomla's "all except") |
+| `"[<id>]"` | written | `[<id>]` | that page only |
+| `""` or `"null"` | `write_failed`, `menuids must be a JSON array` | unchanged | unchanged |
+| omitted (`fields: {}`) | `bad_params`, `fields required` | unchanged | unchanged |
+
+So `"[]"` is the one value for "no page", and it reads back the same as a store record that was never assigned (`[]`,
+printed on no page). A copy is no record of the contract, so assigning it raises no drift warning; it does add
+`Quickstart inventory changed` from the first copy (measured). On the in-place store record 176, `"[0]"` warns
+`Module assignment drift: module-176`, and `"[]"` again clears that warning (measured): `"[]"` is the state the blank
+site ships.
+
+### Media files
+
+`media.delete {apply_id, path, dry_run?}` deletes one picture under `images/` (`jpg`, `jpeg`, `png`, `gif`, `webp`,
+`svg`, `avif`, `ico`), keeping its bytes in the apply log for `apply.revert` (read in source). Measured: an uploaded
+picture is served (200); `media.upload` to the same path again answers `created: false` and the site serves the new
+bytes; `dry_run: true` answers the file, its size and sha256 and `usedIn` (articles, modules, template styles, menu
+items that name it) and deletes nothing; the delete answers `storageDeleted: true`, `filesLeft: []` and its undo, and
+the address then answers 404. A path outside `images/` is refused (`bad_params`, `path must be a safe relative file
+beneath images/`). So a picture the build uploaded can be taken off the site.
+
+### Replaying a request
+
+`content.contract` apply keeps each answer under its `apply_id` with its `request_id` and a sha256 of what it asked
+(`changes`, `evidence`, and `empty_links`, `replace_kept`, `empty_slots` when sent); `expected_revision` is not part of
+it (read in source). Measured on a text slot:
+
+| Sent | Answer | Site |
+|---|---|---|
+| a first apply | written | value and revision move |
+| the same `apply_id`, `request_id` and changes, with the revision read before the first apply | the first answer again (`ok`, the same revisions) | unchanged |
+| the same again, with the current revision | the first answer again | unchanged |
+| the same `apply_id` and `request_id`, other changes | `contract_failed`, `request_id reused with different content` | unchanged |
+| the same `apply_id`, a new `request_id` | `contract_failed`, `Use one new apply_id per content revision` | unchanged |
+| a new `apply_id`, the same `request_id`, other changes | written | value and revision move |
+
+So the plugin compares the content, not only the id, but only within one `apply_id`: a request id reused under a new
+apply id is a new write. A replay answers the stored result even on a revision that has moved on; its
+`afterRevision` is dropped when the site no longer stands there (read in source).
+
+`content.update` keeps no replay: the same `apply_id` sent three times (twice the same title, then another) is written
+each time, the read back follows the last, and `apply.list {apply_id}` lists three steps (measured).
+
+### The HTML piece functions
+
+`html-piece.php` (the plugin's `ContentSlots::htmlPatch`) parses the whole value and writes the whole value back, so
+the parts the edit did not touch are serialized again (measured, on the stored values of modules 175, 176, 170, the
+item list of 167 and the social row of 163, and on invented values):
+
+- **Kept byte for byte:** attribute order, attribute values, comments, white space and line breaks between elements,
+  `&amp;`, `&lt;`, `&gt;`, and a value with nothing to normalize (the stored values of 175, 176, 170 and 163 come
+  back identical when a piece is set to its own text).
+- **Changed, in the edited node and its siblings alike:** every other character reference becomes its character
+  (`&nbsp;` the no-break space, `&#169;` ©, `&#x263A;` ☺, `&eacute;` é); a single quoted or unquoted attribute value
+  becomes double quoted; `<br/>` becomes `<br>`.
+- **Unclosed elements are closed as libxml closes them:** `<ul><li>one<li>two<li>three</ul>` comes back
+  `<ul><li>one</li><li>two</li><li>three</li></ul>`; `<p>open para<div>block</div><p>next` comes back
+  `<p>open para</p><div>block</div><p>next</p>`. A marker value is converted, edited and converted back, so the stored
+  item list of 167 (`((li))` rows with no end tag) comes back with `((/li))` after every row, even when a piece is set
+  to its own text.
+- **An address attribute is percent encoded:** setting `href` or `src` to words with spaces stores `%20` for each
+  space.
+
+So a write that sets one piece may change bytes elsewhere in the value; a check of the untouched parts must compare
+them as an HTML reader reads them, not byte for byte.
+
+### Records with no title or name
+
+`content.update` with id 0 (measured):
+
+| Kind | No key | `""` | `" "` |
+|---|---|---|---|
+| article (`title`) | `write_failed`, `COM_CONTENT_WARNING_PROVIDE_VALID_NAME` | same | same |
+| category (`title`) | `write_failed`, `creating a category needs title` | same | same |
+| contact (`name`) | `write_failed`, `Field 'name' doesn't have a default value` | **written**, name `""` | **written**, name `" "` |
+| module (`title`) | `write_failed`, `Module must have a title.` | same | same |
+
+Every refusal is `error: "write_failed"`; there is no code of its own. A contact with an empty name is not refused:
+the build must refuse it itself. A contact also needs `params`, `metadata` and `metadesc` on create (`write_failed`,
+`Field '<column>' doesn't have a default value` names the first one missing).
+
+### JA ACM markers
+
+The converter is `ModJAACMHelper::decode` (`modules/mod_ja_acm/helper.php`, read in source):
+
+```php
+return str_replace(array('((', '))'), array('<', '>'), $str);
+```
+
+It runs on the module's whole `jatools-config` string before it is decoded. So every `((` becomes `<` and every
+`))` becomes `>`, whatever follows; nothing is dropped and nothing is checked. Measured in a features-intro copy:
+
+| Stored | Printed |
+|---|---|
+| `((free))x((/free))` | `<free>x</free>` |
+| `((script))console.log("measure")((/script))` | a real `<script>` element |
+| `((span))open` (unclosed) | `<span>open` (left open on the page) |
+| `((span))a((b))b((/b))c((/span))` | `<span>a<b>b</b>c</span>` |
+| `((span class="hl" data-x="1"))x((/span))` | `<span class="hl" data-x="1">x</span>` |
+| `((br))` and `((br/))` | `<br>` and `<br/>` |
+| `((SPAN))caps((/SPAN))` | `<SPAN>caps</SPAN>` |
+| `Kids (6+)) and ((more` | `Kids (6+> and <more` |
+
+A double parenthesis in plain words is therefore never words in an ACM place. Markers are converted only inside the
+ACM data: a module title and the section chrome's settings (`main-section`) print `((b))` as written (measured).
+
+### Escaping of field values
+
+One value with `"`, `'`, `<`, `>`, `&` and a marker was written in every field of a copy of every ACM block the store
+uses (hero styles 1 to 3, features-intro styles 1 to 6, cta, teams, gallery, social, container-tabs) and in mod_custom
+and the section chrome (`t4section`), and the two pages that print them were read (measured; the attribute or text a
+field prints in is read in the layout files).
+
+**Escaped** (`htmlspecialchars`, ENT_QUOTES): only features-intro style 3 (block 177) `info-email-label`,
+`info-email` (also inside `href="mailto:"`), `info-phone-label`, `info-phone` (inside `href="tel:"`) and `info-note`;
+and the chrome's `moduleclass_sfx`. A marker in these prints as the text `<i>` (it is converted before escaping).
+
+**Not escaped: every other field.** They print as stored, a marker as a tag:
+
+| Printed inside | Fields (block store layouts) |
+|---|---|
+| text | every title, heading, description, price, info, button label, name, `team-info`, gallery `number`, `title`, `desc` |
+| `href` | hero `btn-link`, `btn-link-2`; features-intro `link`, `info-link`, `link-btn`; cta `btn-link`; teams `link`; social and hero style 2 `link`; gallery `img` (the lightbox link) |
+| `src` | every image field (hero `image-bg` in styles 2 and 3, `image-decor`, `sign`, `sign-light`; features-intro `img-icon`, `img-light-icon`, `img`, `intro-img`; teams `img`; gallery `img`) |
+| `style` (`background-image: url(...)`) | hero style 1 `image-bg`, cta `cta-bg`, mod_custom `backgroundimage` |
+| `alt` | gallery `alt` |
+| `class` | hero `btn-type`, `btn-type-2`; features-intro `align`, `align-media`, style 5 `img-icon`; cta `btn-type`; gallery `selectitem`; social and hero style 2 `font-icon`; chrome `header_class`, `type-btn` |
+| `data-src` | features-intro style 4 `link` (a video id in a YouTube address) |
+| `title` | social `title`; hero style 2 prints `hero[title]` of the row (below) |
+| chrome text and `href` | the module title (also a plans tab label, read in source `container-tabs/tmpl/style-1.php`), `main-section`, `top-desc`, `title-btn`, `link-btn` |
+| mod_custom | the module content (HTML by design) |
+
+So a `"` in any of these ends its attribute and the rest becomes markup, and `<` or a marker in any of them opens a tag:
+the build must escape or refuse these characters itself in every field above, including the module title of a copy.
+No ACM field is a safe place for a plain value with `<`, `>`, `"` or `((`.
+
+**A place that prints nothing.** In hero style 2 (block 180) the social row reads `$helper->get('title', $i)`, and the
+helper returns the first key whose name contains `[title]` (`findParam`, read in source): `hero[title]`, not
+`hero[social-intro][title]`. Measured: a value at `hero[social-intro][title]` prints on no page; the social link's
+`title` attribute and its hidden label print row `i` of `hero[title]` (the person's name on the first link, empty on
+the others).
+
+### Page facts
+
+- **Featured view with no featured article** (measured): the home page of the Landing style prints no main body at
+  all (its layout has none; sections `header`, `section-1`, `footnav`), so the featured view prints nothing there with
+  or without articles. A page of the Default style on the featured view prints an empty main body (no words).
+- **An address with no menu item** takes the home page's menu item and so its Landing layout: an article reached as
+  `index.php?option=com_content&view=article&id=<id>&catid=<cat>` answers 200 and prints no article (measured).
+- **A created article in the template frame** (measured): with no `attribs`, layout or `template_style_id` of its own,
+  on a page of the Default style, it prints in Joomla's article frame (`com-content-article item-page`). With
+  `attribs: {"article_layout": "ja_boxing:classes"}` it prints the template's class detail layout
+  (`view-classes-detail`). A menu item created with `template_style_id: 0` prints as the Default style (the site
+  default).
+- **The detail positions** (`detail-bottom-1`, `main-bottom-2`) print only under T4's `detail-article` sub-layout,
+  which the Default style names and T4 applies only when the page shown is not the active menu item's own view
+  (`Layout::isSubpage`, read in source): an article reached under its list page
+  (`...&view=article&id=<id>&catid=<cat>&Itemid=<list page>`, measured: body class `layout-detail-article`). An
+  article on a menu item of its own prints neither position (measured).
+- **Blocks 159 and 191** (measured, assigned to the list page): under the list page, a plain copy of 159 prints its
+  wrapper with no item (its category is the removed demo category); a copy whose `catid` is the build's category lists
+  its articles, and its layout (`classes-1.php`) prints a PHP warning for each article with no `classes-info` in its
+  `attribs` (`foreach() argument must be of type array|object, null given`, on this site's error reporting); the
+  build writes `classes-info` (the mapping file declares it). A plain copy of 191 lists the other articles sharing a
+  meta keyword with the article shown. Neither prints on an article's own menu item page or on an address with no menu
+  item.
+- **A middle row taken out** (measured, features-intro copy with three rows): the row's entries removed from every
+  list prints two cards, no gap; the row's words emptied prints an empty card where the row was. In place, the only list rows JA Boxing writes are menu
+  items: a middle menu item unpublished leaves the menu closed up (measured).
+
+**Not measured:** the `keys` row form; `apply.revert` of a deletion; `content.delete` on the pages; a media delete of a
+picture a page still uses; caching (the site runs with Joomla caching off, so a module's own `cache` setting played no
+part); a production `display_errors` setting; any template but JA Boxing.
 
 ## The Tracy library
 
