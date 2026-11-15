@@ -3,7 +3,8 @@
 // explained only by a reason the build itself gives: a write step gap that took items out (its code), a block the
 // write order hides or replaces by its fallback (its reason). Any other block is named, and the variant cannot pass:
 // it did not measure the shape it claims. The main block of an item page (a post, a class) shows the page's own record,
-// counted as its one item. Pure.
+// counted as its one item; the main block of a list page is counted as the order shows it. A block with no item fields
+// shows items the site draws itself (`counted: 'site_draws'`), which the build's count cannot measure. Pure.
 import { countOf, itemKindOf } from './marker-composition.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -34,8 +35,15 @@ export function itemCountsOf(built, kit, shape = 'max') {
     for (const b of list(page.blocks)) {
       const block = byId.get(b.block)
       if (!block || !itemKindOf(block) || b.state === 'hide') continue
-      const ownRecord = block.placement === 'created' && mains.get(page.pageType ?? page.id) === b.block
-      const items = ownRecord ? 1 : (b.counts?.shown ?? list(b.items).length)
+      // The main block of an item page shows the page's own record; the main block of a list page shows its list,
+      // counted as the order shows it.
+      const shown = b.counts?.shown ?? list(b.items).length
+      const ownRecord =
+        block.placement === 'created' && mains.get(page.pageType ?? page.id) === b.block && shown <= 1
+      // A block with no item fields writes no item: the items it shows are the site's own (related posts the module
+      // finds, a fixed card), so the build's count says nothing about the shape.
+      const siteDraws = !ownRecord && !list(block.itemFields).length
+      const items = ownRecord ? 1 : shown
       const expected = countOf(block, shape)
       const row = {
         page: page.id,
@@ -45,6 +53,11 @@ export function itemCountsOf(built, kit, shape = 'max') {
         max: countOf(block, 'max')
       }
       if (ownRecord) row.counted = 'page_record'
+      if (siteDraws) {
+        row.counted = 'site_draws'
+        out.push(row)
+        continue
+      }
       if (b.counts?.available != null) row.available = b.counts.available
       if (items !== expected) {
         const reason = reasonOf(page, b, built)

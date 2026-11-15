@@ -2027,7 +2027,9 @@ a usage error.
    page spelled `index.php?Itemid=<id>` is that page, no broken link; one that reaches a page the plan has not got and
    answers is recorded apart (`unplanned`, recorded only: the demo scan judges what such a page shows); one that does
    not answer is a link to a missing page; and every item block shows its declared most items (the main block of an item page shows
-   its own record, one). A block that shows otherwise is explained only by a reason the build gives (a block it hid,
+   its own record, one; the main block of a list page is counted as the order shows it; a block with no item fields
+   shows items the site draws itself, related posts or a fixed card, and is recorded `counted: "site_draws"`, not
+   judged). A block that shows otherwise is explained only by a reason the build gives (a block it hid,
    a fallback, a write step gap that took items out); one with none leaves the variant `incomplete`, the blocks named
    (`items`). A run of #585 measured 14 of 29 blocks below their most items: the gate now says so instead of passing.
 5. **Quality**: the site check's page groups on the marker site, against the control; the SEO items of the marker
