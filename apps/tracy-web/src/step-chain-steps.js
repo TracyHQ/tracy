@@ -314,6 +314,11 @@ export function createStepChainSteps(deps) {
         '--brief-revision',
         revisionOf(ctx),
         '--require-visual-review',
+        // The first draft in three parts written at once (site-writer/writer-parts.js). Local stand, run13's plan
+        // (15/11/2026): 509 s against 594 s, 27 first-draft failures against 79 (repeats 18 against 66), 3 standing
+        // against 11; the copy step's spend doubles (0.19 against 0.09 USD).
+        '--parallel-pages',
+        '3',
         ...NO_CAPS
       ]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
