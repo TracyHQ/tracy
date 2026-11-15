@@ -105,13 +105,21 @@ export async function draftBuildName(pool, draftId) {
 }
 
 /**
- * Whether the draft `draftId` is the caller's and holds an approved build of exactly `plan`: the create door's check
- * before it starts a step chain run from a draft (`sites/route.js`).
+ * Whether the draft `draftId` is the caller's and holds an approved build of exactly `plan`, asked under that build's
+ * own id: the create door's check before it starts a step chain run from a draft (`sites/route.js`). 🔒 ONE SITE PER
+ * DRAFT: the create door is idempotent on `buildId`, so only the build's own id may name the draft; a fresh id would
+ * make a second site from the same approval.
  */
-export async function draftBuildApproved(pool, { draftId, accountId, plan }) {
+export async function draftBuildApproved(pool, { draftId, accountId, plan, buildId }) {
   const { rows } = await pool.query(
-    `select build -> 'plan' as plan from build_draft where id::text = $1 and account_id = $2 and build is not null`,
+    `select build -> 'plan' as plan, build ->> 'id' as id from build_draft
+      where id::text = $1 and account_id = $2 and build is not null`,
     [String(draftId), accountId]
   )
-  return rows.length > 0 && samePlan(rows[0].plan, plan)
+  return (
+    rows.length > 0 &&
+    samePlan(rows[0].plan, plan) &&
+    typeof buildId === 'string' &&
+    rows[0].id?.toLowerCase() === buildId.toLowerCase()
+  )
 }

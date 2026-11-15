@@ -3367,7 +3367,14 @@ export function sitesRoutes({
       return { code: 'INVALID_RESEARCH_REVISION', status: 400 }
     if (!stepChainEnabled({ quickstart })) return { code: 'STEP_CHAIN_OFF', status: 409 }
     if (fromDraft) {
-      if (!(await draftBuildApproved(pool, { draftId: body.draftId, accountId, plan: body.plan })))
+      if (
+        !(await draftBuildApproved(pool, {
+          draftId: body.draftId,
+          accountId,
+          plan: body.plan,
+          buildId: body.buildId
+        }))
+      )
         return { code: 'BUILD_DRAFT_NOT_APPROVED', status: 404 }
     } else if (!(await researchRevisionOwned(pool, body.researchRevisionId, accountId)))
       return { code: 'RESEARCH_REVISION_UNKNOWN', status: 404 }

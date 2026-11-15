@@ -252,10 +252,11 @@ async function approvedDraftOf(pool, email) {
       [account, JSON.stringify(plan), JSON.stringify(build)]
     )
   ).rows[0].id
-  return { draftId: draft, plan: build.plan }
+  return { draftId: draft, plan: build.plan, buildId: build.id }
 }
 
-const pressDraft = ({ draftId, plan }, over = {}) => ({
+const pressDraft = ({ draftId, plan, buildId }, over = {}) => ({
+  buildId,
   label: 'harbourpadel',
   platform: 'joomla',
   design: 'ja-boxing',
@@ -298,6 +299,13 @@ test(
       [
         'owner@example.test',
         pressDraft({ ...draft, plan: { id: 'plan-harbour', revision: 2 } }),
+        404,
+        'BUILD_DRAFT_NOT_APPROVED'
+      ],
+      // One site per draft: only the build's own id names its draft (a fresh id would make a second site).
+      [
+        'owner@example.test',
+        pressDraft({ ...draft, buildId: '9f8e7d6c-5b4a-4392-8170-6f5e4d3c2b1a' }),
         404,
         'BUILD_DRAFT_NOT_APPROVED'
       ],

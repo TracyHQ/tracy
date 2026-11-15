@@ -351,12 +351,16 @@ test('the create door is asked as the owner, for the approved draft, with the ki
     refusal: { code: 'SITE_SOURCE_MISSING', status: 409 }
   })
   // The create door's own check, and the run frame's site name.
-  assert.equal(await draftBuildApproved(db.pool, { draftId, accountId, plan: pinOf(plan) }), true)
+  assert.equal(
+    await draftBuildApproved(db.pool, { draftId, accountId, plan: pinOf(plan), buildId: build.id }),
+    true
+  )
   assert.equal(
     await draftBuildApproved(db.pool, {
       draftId,
       accountId,
-      plan: { id: plan.id, revision: plan.revision + 1 }
+      plan: { id: plan.id, revision: plan.revision + 1 },
+      buildId: build.id
     }),
     false
   )
