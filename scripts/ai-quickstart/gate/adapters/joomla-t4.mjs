@@ -6,6 +6,11 @@
 //           (product decision 2): search, a missing page, sign in, password reset, username reminder, the contact form
 //           when a contact exists.
 
+import { WEB_FRAME_RULES } from './web-frame.mjs'
+
+/** The exemptions of the pages this framework prints (`exemptions.mjs`): the web frame's. */
+export const EXEMPTIONS = WEB_FRAME_RULES
+
 /** The address of a page on one theme side. */
 export function themed(url, theme) {
   const u = new URL(url)

@@ -78,13 +78,22 @@ export function codesIn(text) {
   return [...out]
 }
 
+/** The filler of a text marker (` qqqqq`), as a word. */
+const FILLER_RE = /\bq{5}\b/gi
+
 /**
  * What a text is, read for markers: `marker` when nothing but markers, their filler and separators is left once the
- * markers are taken out; `mixed` when markers sit beside other words; `none` when it holds no marker.
+ * markers are taken out; `mixed` when markers sit beside other words; `filler` when it holds the marker filler and
+ * nothing else (the gate's own search words a search page echoes); `none` when it holds no marker, its `rest` the
+ * text without any filler.
  */
 export function markerShare(text) {
   const s = String(text ?? '')
-  if (!codesIn(s).length) return { kind: 'none', rest: s.trim() }
+  if (!codesIn(s).length) {
+    if (!/\bq{5}\b/i.test(s)) return { kind: 'none', rest: s.trim() }
+    const rest = s.replace(FILLER_RE, ' ').replace(/\s+/g, ' ').trim()
+    return /[\p{L}\p{N}]/u.test(rest) ? { kind: 'none', rest } : { kind: 'filler', rest: '' }
+  }
   const rest = s
     .replace(PHONE_RE, ' ')
     .replace(/(?:https?:\/\/)?(?:[\w-]+\.)*qx[a-z]{3}(?:[\w./@-]*)/gi, ' ')

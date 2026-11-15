@@ -20,7 +20,8 @@ const keyOf = (f) => `${f.kind}|${f.page}|${f.excerpt}`
  * @returns {Promise<{browser: object[], html: object[], checks: object}>}
  */
 export async function demoChecks({ renders, corpus, leaks }) {
-  const ok = renders.filter((r) => r.status === 200)
+  // A page answers as it should (the not found page with 404): every such page is scanned.
+  const ok = renders.filter((r) => r.status === (r.expected ?? 200))
   const browser = dedupe(
     await demoScan({ pages: ok.map((r) => ({ path: r.pageType, observations: r.observations })), corpus })
   )
@@ -43,27 +44,10 @@ export async function demoChecks({ renders, corpus, leaks }) {
     seen.add(n)
     interfaceLetThrough.push({ value: text, page: l.page, place: l.place, source: l.source ?? null })
   }
-  // The same blocks read twice: from the raw HTML (what the demo baseline was hashed from) and by the browser.
-  let blocks = 0
-  const blockDiffers = []
-  for (const r of ok.filter((x) => x.html)) {
-    const fromHtml = new Set(
-      observationsFromHtml(r.html)
-        .filter((o) => o.kind === 'block')
-        .map((o) => o.value)
-    )
-    const fromBrowser = r.observations.filter((o) => o.kind === 'block')
-    blocks += fromBrowser.length
-    for (const o of fromBrowser)
-      if (!fromHtml.has(o.value) && blockDiffers.length < 400)
-        blockDiffers.push({
-          page: r.pageType,
-          theme: r.theme,
-          width: r.width,
-          value: o.value.slice(0, 80),
-          visible: o.visible
-        })
-  }
+  // The same blocks read twice: from the raw HTML (what the demo baseline was hashed from) and by the browser. The
+  // browser applies the page's stylesheet (`text-transform` writes capitals the HTML does not hold), so both sides are
+  // compared in the scan's own spelling (`normalise`: case folded, spacing one space), as its matcher compares them.
+  const blockCompare = compareBlocks(ok)
   const demoNames = new Set([...corpus.pictures.files].map((f) => f.split('/').pop().toLowerCase()))
   const pictureAddresses = []
   for (const r of ok)
@@ -88,16 +72,66 @@ export async function demoChecks({ renders, corpus, leaks }) {
         html: html.length,
         onlyBrowser: browser.filter((f) => !inHtml.has(keyOf(f))),
         onlyHtml: html.filter((f) => !inBrowser.has(keyOf(f))),
-        blocks,
-        blockDiffers
+        ...blockCompare
       },
       pictureAddresses
     }
   }
 }
 
+/**
+ * The blocks of words of each render as the browser read them, against the raw HTML's, in the scan's spelling:
+ * `blocks` read, `rawDiffers` (byte for byte), and `blockDiffers` the ones that still differ once normalised.
+ */
+export function compareBlocks(renders) {
+  let blocks = 0
+  let rawDiffers = 0
+  const blockDiffers = []
+  for (const r of renders.filter((x) => x.html)) {
+    const fromHtml = observationsFromHtml(r.html).filter((o) => o.kind === 'block')
+    const raw = new Set(fromHtml.map((o) => o.value))
+    const spelled = new Set(fromHtml.map((o) => normalise(o.value)))
+    for (const o of (r.observations ?? []).filter((x) => x.kind === 'block')) {
+      blocks += 1
+      if (!raw.has(o.value)) rawDiffers += 1
+      if (!spelled.has(normalise(o.value)) && blockDiffers.length < 400)
+        blockDiffers.push({
+          page: r.pageType,
+          theme: r.theme,
+          width: r.width,
+          value: o.value.slice(0, 80),
+          visible: o.visible
+        })
+    }
+  }
+  return { blocks, rawDiffers, blockDiffers }
+}
+
 function dedupe(findings) {
   const out = new Map()
   for (const f of findings) if (!out.has(keyOf(f))) out.set(keyOf(f), f)
   return [...out.values()]
+}
+
+/**
+ * The demo scan on a control site's renders: the untouched human quickstart (the negative control: the scan must find
+ * its demo) or the blank site before the write (it must find none).
+ * @returns {Promise<{status: 'run', pages: number, renders: number, findings: number, byKind: object, sample: object[]}>}
+ */
+export async function controlOf(renders, corpus) {
+  const ok = renders.filter((r) => r.status === (r.expected ?? 200))
+  const findings = dedupe(
+    await demoScan({ pages: ok.map((r) => ({ path: r.path, observations: r.observations })), corpus })
+  )
+  const byKind = {}
+  for (const f of findings) byKind[f.kind] = (byKind[f.kind] ?? 0) + 1
+  return {
+    status: 'run',
+    pages: new Set(renders.map((r) => r.path)).size,
+    renders: renders.length,
+    failed: renders.length - ok.length,
+    findings: findings.length,
+    byKind,
+    sample: findings.slice(0, 12).map((f) => ({ kind: f.kind, page: f.page, excerpt: f.excerpt }))
+  }
 }

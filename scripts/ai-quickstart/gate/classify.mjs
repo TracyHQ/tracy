@@ -26,9 +26,10 @@ const whereOf = (r) => `${r.theme} ${r.width}`
 /**
  * @param {{renders: object[], origin: string, registry: Array<{code: string}>, writePlan: object,
  *   uploaded: Record<string, string>, ids?: Record<string, number>, resolve: {text: Function, picture: Function},
- *   kept: Map<string, string>, siteValues?: Map<string, object>, builtYear?: number}} input `uploaded`: the picture
- *   paths the write uploaded and `ids` the records it made (the write record); `siteValues`: values of the site's own
- *   data the caller read (an account name an article prints), by value, with their source
+ *   kept: Map<string, string>, rules?: Function[], siteValues?: Map<string, object>, builtYear?: number}} input
+ *   `uploaded`: the picture paths the write uploaded and `ids` the records it made (the write record); `rules`: the
+ *   framework adapter's exemptions; `siteValues`: values of the site's own data the caller read (an account name an
+ *   article prints), by value, with their source
  * @returns {{findings: object[], exempt: object[], seen: Set<string>, notSeen: object[]}}
  */
 export function classify({
@@ -40,6 +41,7 @@ export function classify({
   ids = {},
   resolve,
   kept,
+  rules = [],
   siteValues = new Map(),
   builtYear
 }) {
@@ -59,7 +61,7 @@ export function classify({
         !codesIn(v.value).length &&
         !planWords.has(v.value.trim())
       )
-        planWords.set(v.value.trim(), { kind: 'write', entry: v.entry, rule: v.rule ?? null })
+        planWords.set(v.value.trim(), { class: 'write', entry: v.entry, rule: v.rule ?? null })
   const add = (map, key, item, r) => {
     const had = map.get(key)
     if (had) {
@@ -67,7 +69,11 @@ export function classify({
       if (r.visible !== false) had.visible = true
     } else map.set(key, { ...item, where: new Set([whereOf(r)]) })
   }
-  const leak = (group, r, o, extra = {}) =>
+  // A crop of the finding: its box on the full page shot of the render, when the render kept one.
+  const cropOf = (r, o) => (r.shot && o.box ? { shot: r.shot, box: o.box, where: whereOf(r) } : null)
+  const leak = (group, r, o, extra = {}) => {
+    const had = byKey.get(`${group}|${r.pageType}|${o.kind}|${o.place?.element}|${o.value}`)
+    if (had && !had.crop) had.crop = cropOf(r, o)
     add(
       byKey,
       `${group}|${r.pageType}|${o.kind}|${o.place?.element}|${o.value}`,
@@ -79,10 +85,12 @@ export function classify({
         place: o.place,
         value: o.value,
         visible: o.visible !== false,
+        crop: cropOf(r, o),
         ...extra
       },
       { ...r, visible: o.visible }
     )
+  }
   for (const r of renders) {
     for (const o of r.observations ?? []) {
       if (typeof o?.value !== 'string') continue
@@ -91,7 +99,7 @@ export function classify({
       if (o.kind === 'request') {
         if (codesIn(o.value).length)
           leak('raw_markup', r, o, { why: 'a marker address loaded as a resource' })
-        else leak('outside_request', r, o, { source: { kind: 'outside', host: hostOf(o.value) } })
+        else leak('outside_request', r, o, { source: { class: 'outside', host: hostOf(o.value) } })
         continue
       }
       if (o.kind === 'href') {
@@ -106,7 +114,10 @@ export function classify({
           continue
         }
         if (path === '' || o.value.trim() === '') {
-          leak('empty_picture', r, o, { why: 'a picture with no address (the page itself)' })
+          leak('empty_picture', r, o, {
+            why: 'a picture with no address (the page itself)',
+            source: { class: 'unknown', searched: [], why: 'the element names no picture to search for' }
+          })
           continue
         }
         if (/^data:/i.test(o.value)) {
@@ -114,7 +125,7 @@ export function classify({
             'unmarked_picture',
             r,
             { ...o, value: `${o.value.slice(0, 48)}...` },
-            { source: { kind: 'inline' } }
+            { source: resolve.picture(o.value) }
           )
           continue
         }
@@ -123,6 +134,16 @@ export function classify({
       }
       if (!TEXT.has(o.kind)) continue
       const share = markerShare(o.value)
+      // The marker filler alone: the gate's own words (the search words a search page echoes).
+      if (share.kind === 'filler') {
+        add(
+          exempt,
+          `filler|${o.kind}`,
+          { why: 'marker_filler', kind: o.kind, value: o.value, page: r.pageType },
+          r
+        )
+        continue
+      }
       if (share.kind === 'marker') {
         if (RAW.test(o.value)) leak('raw_markup', r, o, { why: 'markup or template code printed as words' })
         continue
@@ -131,7 +152,7 @@ export function classify({
         leak('raw_markup', r, o, { why: 'markup or template code printed as words' })
         continue
       }
-      const rest = share.kind === 'mixed' ? share.rest : o.value
+      const rest = share.kind === 'mixed' || share.rest !== o.value.trim() ? share.rest : o.value
       // A marker picture named by its path in words (structured data, a share image): the build's own.
       if (markerPictures.has(sitePath(rest, origin) ?? '')) continue
       const written = planWords.get(rest.trim())
@@ -144,17 +165,17 @@ export function classify({
         )
         continue
       }
+      const whole = resolve.text(o.value)
       const source =
         written ??
-        siteValues.get(rest) ??
-        resolve.text(o.value) ??
-        (share.kind === 'mixed' ? resolve.text(rest) : null)
-      const why = exemptionOf({ ...o, value: rest }, { origin, kept, source, builtYear })
+        (siteValues.has(rest) ? { class: 'write', ...siteValues.get(rest) } : null) ??
+        (whole.class === 'unknown' && rest !== o.value ? resolve.text(rest) : whole)
+      const why = exemptionOf({ ...o, value: rest }, { origin, kept, source, builtYear, rules })
       if (why) {
         add(exempt, `${why}|${o.kind}|${rest}`, { why, kind: o.kind, value: rest, page: r.pageType }, r)
         continue
       }
-      leak('unmarked_text', r, o, { rest: share.kind === 'mixed' ? rest : undefined, source })
+      leak('unmarked_text', r, o, { rest: rest !== o.value ? rest : undefined, source })
     }
   }
   const findings = [...byKey.values()].map((f) => ({ ...f, where: [...f.where].sort() }))

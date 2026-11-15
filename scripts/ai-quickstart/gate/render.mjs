@@ -91,6 +91,12 @@ export async function renderSite({
   return renders
 }
 
+const slug = (text) =>
+  String(text)
+    .replace(/[^a-z0-9-]+/gi, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 60)
+
 async function renderOne({ page, p, theme, width, out, shots, shotTaken, timeout, log }) {
   const at = { pageType: p.pageType, path: p.path, theme, width, expected: p.status ?? 200 }
   try {
@@ -102,9 +108,13 @@ async function renderOne({ page, p, theme, width, out, shots, shotTaken, timeout
     const { observations, innerText } = await page.evaluate(observeInPage)
     const r = { ...at, status: response?.status() ?? null, html, innerText, observations }
     const key = `${p.pageType}|${width}`
-    if (theme === shots.theme && shots.widths.includes(width) && !shotTaken.has(key)) {
+    // One shot per page type (product decision 7), and every page at the widest width on that side, which the record
+    // page crops each finding from (`box` of an observation).
+    const perType = shots.widths.includes(width) && !shotTaken.has(key)
+    const perPage = width === Math.max(...shots.widths)
+    if (theme === shots.theme && (perType || perPage)) {
       shotTaken.add(key)
-      const file = `shots/${p.pageType.replace(/[^a-z0-9-]+/gi, '_')}-${theme}-${width}.png`
+      const file = `shots/${slug(p.pageType)}-${slug(p.path)}-${theme}-${width}.png`
       await page.screenshot({ path: path.join(out, file), fullPage: true })
       r.shot = file
     }

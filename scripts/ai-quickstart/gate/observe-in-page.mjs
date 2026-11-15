@@ -36,13 +36,46 @@ export function observeInPage() {
     const r = el.getBoundingClientRect()
     return r.width > 0 && r.height > 0
   }
-  const place = (el, element) => ({
-    element: String(element).slice(0, 40),
-    ...(el && inMenu(el) ? { menu: true } : {})
-  })
+  // The module a block of the page prints in: its wrapper carries `id="Mod<id>"` (the copy the write made, or the
+  // blank site's own).
+  const moduleOf = (el) => {
+    for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
+      const m = /^Mod(\d+)$/.exec(n.id ?? '')
+      if (m) return Number(m[1])
+    }
+    return null
+  }
+  const place = (el, element) => {
+    const module = el ? moduleOf(el) : null
+    return {
+      element: String(element).slice(0, 40),
+      ...(el && inMenu(el) ? { menu: true } : {}),
+      ...(module ? { module } : {})
+    }
+  }
+  // Where the element sits on the full page (CSS pixels from the top left), for a cropped screenshot of a finding.
+  const boxOf = (el) => {
+    const r = el?.getBoundingClientRect?.()
+    if (!r || !(r.width > 0 && r.height > 0)) return null
+    return {
+      x: Math.round(r.left + window.scrollX),
+      y: Math.round(r.top + window.scrollY),
+      w: Math.round(r.width),
+      h: Math.round(r.height)
+    }
+  }
   const add = (kind, value, el, element, extra = {}) => {
     const v = squash(value)
-    if (v) out.push({ kind, value: v, place: place(el, element), visible: el ? seen(el) : true, ...extra })
+    if (!v) return
+    const box = el ? boxOf(el) : null
+    out.push({
+      kind,
+      value: v,
+      place: place(el, element),
+      visible: el ? seen(el) : true,
+      ...(box ? { box } : {}),
+      ...extra
+    })
   }
   // The words of each element with words of its own, nested blocks apart.
   const walk = (el) => {
