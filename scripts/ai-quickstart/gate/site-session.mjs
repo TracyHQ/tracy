@@ -125,7 +125,9 @@ export function siteSession({
       return { report: real.report, record: real.record, plugin: real.plugin }
     },
     pages: async (built, record) =>
-      (await sitePages({ base, record, doors, order: built.order })).map((p) => withRecord(p, record)),
+      (await sitePages({ base, record, doors, order: built.order, mapping: kit.mapping })).map((p) =>
+        withRecord(p, record)
+      ),
     fetch: (url) => readPage(url),
     // The account the plugin writes as, printed as the author of an article: a value of the site's own records.
     async siteValues(real) {

@@ -38,6 +38,7 @@ function readPage(r, origin) {
   const base = origin + '/' + String(r.path ?? '').replace(/^\/+/, '')
   return {
     page: r.path,
+    pageType: r.pageType ?? null,
     title: text(document.querySelector('title')?.textContent),
     description: meta('meta[name="description"]'),
     ogImage: meta('meta[property="og:image"]'),
@@ -69,7 +70,14 @@ export function seoOf(renders, { origin, favicons = new Map() } = {}) {
   const read = pagesOf(renders).map((r) => readPage(r, origin))
   if (!read.length) return { status: 'incomplete', pages: 0, missing: [], unchecked: [], reason: 'no_page' }
   const missing = []
-  const miss = (page, item, detail) => missing.push({ page, item, ...(detail ? { detail } : {}) })
+  const typeOf = new Map(read.map((p) => [p.page, p.pageType]))
+  const miss = (page, item, detail) =>
+    missing.push({
+      page,
+      item,
+      ...(typeOf.get(page) ? { pageType: typeOf.get(page) } : {}),
+      ...(detail ? { detail } : {})
+    })
   const titles = new Map()
   for (const p of read) if (p.title) titles.set(p.title, (titles.get(p.title) ?? 0) + 1)
   const unchecked = new Set()

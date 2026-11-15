@@ -4,7 +4,7 @@
 //   pages   every menu item the write created, every article it created reached under the list page that holds it
 //           (a block printed only under its list page's menu item, door measurements), and the system pages
 //           (product decision 2): search, a missing page, sign in, password reset, username reminder, the contact form
-//           when a contact exists.
+//           when a contact exists; a system page the kit gives a menu item (`systemPagesOf`) is read at that item.
 
 import { WEB_FRAME_RULES } from './web-frame.mjs'
 
@@ -36,6 +36,27 @@ export const SYSTEM_PAGES = Object.freeze([
   { pageType: 'system-remind', path: 'index.php?option=com_users&view=remind' }
 ])
 
+/**
+ * The system pages of a built site: a kit that declares a `system-menu` data fix (`mapping.dataFixes`, #587) gives a
+ * system page a menu item of its own, so the page prints under its own style and title; such a page is read at its
+ * item (`index.php/<alias>`, with the raw address's own query words kept, the search words). The rest keep the raw
+ * component address. The aliases are read from the mapping, never written here.
+ */
+export function systemPagesOf(mapping) {
+  const fix = (Array.isArray(mapping?.dataFixes) ? mapping.dataFixes : []).find(
+    (f) => f?.id === 'system-menu'
+  )
+  const items = new Map((Array.isArray(fix?.items) ? fix.items : []).map((i) => [i?.page, i]))
+  return SYSTEM_PAGES.map((s) => {
+    const alias = items.get(s.pageType)?.alias
+    if (typeof alias !== 'string' || !alias.trim()) return s
+    const query = new URLSearchParams(s.path.split('?')[1] ?? '')
+    for (const k of ['option', 'view', 'Itemid']) query.delete(k)
+    const rest = query.toString()
+    return { ...s, path: `index.php/${encodeURIComponent(alias.trim())}${rest ? '?' + rest : ''}` }
+  })
+}
+
 const absolute = (base, path) => new URL(path, `${String(base).replace(/\/?$/, '/')}`).toString()
 
 /**
@@ -44,7 +65,7 @@ const absolute = (base, path) => new URL(path, `${String(base).replace(/\/?$/, '
  * @param {{base: string, record: {ids: Record<string, number>}, doors: {get: Function}, order?: object}} input
  * @returns {Promise<Array<{pageType: string, path: string, url: string, from: string}>>}
  */
-export async function sitePages({ base, record, doors, order = null }) {
+export async function sitePages({ base, record, doors, order = null, mapping = null }) {
   const pages = []
   const ids = Object.entries(record?.ids ?? {})
   const menus = new Map()
@@ -80,6 +101,6 @@ export async function sitePages({ base, record, doors, order = null }) {
       const path = `index.php?option=com_contact&view=contact&id=${id}`
       pages.push({ pageType: 'contact-record', path, url: absolute(base, path), from: key })
     }
-  for (const s of SYSTEM_PAGES) pages.push({ ...s, url: absolute(base, s.path), from: 'system' })
+  for (const s of systemPagesOf(mapping)) pages.push({ ...s, url: absolute(base, s.path), from: 'system' })
   return pages
 }

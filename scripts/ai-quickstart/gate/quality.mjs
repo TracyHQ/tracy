@@ -153,15 +153,17 @@ function controlGroup(name, control, baseline) {
  */
 function seoSplit(seo, controlSeo, systemPages) {
   const system = new Set((systemPages ?? []).map(pathOf))
-  const known = new Set((controlSeo?.missing ?? []).map((m) => pathOf(m.page) + '|' + m.item))
+  // A system page is the same page on both sites by its page type: the marker site may read it at a menu item of its
+  // own (`systemPagesOf`) where the untouched template is read at the raw address.
+  const idOf = (m) => (String(m.pageType ?? '').startsWith('system-') ? m.pageType : pathOf(m.page))
+  const known = new Set((controlSeo?.missing ?? []).map((m) => idOf(m) + '|' + m.item))
   const blocking = []
   const same = []
   const uncompared = []
   for (const m of seo?.missing ?? []) {
     if (!system.has(pathOf(m.page))) blocking.push(m)
     else if (!controlSeo) uncompared.push(m)
-    else if (known.has(pathOf(m.page) + '|' + m.item))
-      same.push({ group: 'seo', ...m, class: 'same_as_template' })
+    else if (known.has(idOf(m) + '|' + m.item)) same.push({ group: 'seo', ...m, class: 'same_as_template' })
     else blocking.push(m)
   }
   return { blocking, same, uncompared }

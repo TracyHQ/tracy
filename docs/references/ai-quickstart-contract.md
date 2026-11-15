@@ -1652,7 +1652,9 @@ write, so a resume keeps it and does not match it.
 **Renders** (`gate/render.mjs`, `gate/observe-in-page.mjs`, `gate/adapters/joomla-t4.mjs`). Headless Chromium, one
 fresh context per theme side, at 390, 768 and 1440 in light and dark (`?theme=` picks the side for one load). Pages:
 every menu item the write made, every article it made reached under its list page, and the system pages (search, a
-missing page answering 404, sign in, password reset, username reminder). A request to another host is stopped and
+missing page answering 404, sign in, password reset, username reminder); a system page the kit gives a menu item of
+its own (a `system-menu` data fix of `mapping.dataFixes`) is read at that item (`index.php/<alias>`, the alias read
+from the mapping), the others at the raw component address (`systemPagesOf` of the adapter). A request to another host is stopped and
 kept as an observation. The browser reads words with whether they are seen and their box on the page, the module they
 sit in, `currentSrc`, computed background pictures and the words and pictures of `::before` and `::after`, and what
 the word reader skips: the words and pictures inside `noscript` and `template` (`visible: false`), SVG `text`,
@@ -2153,7 +2155,7 @@ has not got is marked `counterpart: none` and stays a regression. The SEO items,
 every page has a title no other page shares, a meta description, an `og:image`, a viewport meta, `html[lang]`, an
 `alt` attribute on every picture (empty is allowed), and a declared favicon that answers 200. A page the build writes is
 held to all of them; a system page the template titles itself (login, password reset, search, the 404) is compared with
-the same page of the untouched template, and an item it misses there too is the template's own (`seo.same`), one the
+the same page of the untouched template (by its page type: the marker site may read it at its own menu item), and an item it misses there too is the template's own (`seo.same`), one the
 control could not say is `uncompared` and leaves the measurement `incomplete`. The pages are asked for at the
 addresses the host reads as they are (`qualityPath`, `gate/adapters/joomla-quality-path.mjs`: the host puts a path
 under `/index.php` unless it starts with `/index.php/`, so `index.php?Itemid=245` goes as `index.php/?Itemid=245`), on
