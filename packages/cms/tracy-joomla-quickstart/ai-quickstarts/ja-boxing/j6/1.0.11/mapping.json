@@ -12241,6 +12241,162 @@
         "extension": "joomla",
         "language": "en-GB",
         "keep": "the close button of a system message: layouts/joomla/system/message.php:40 passes it to the page script (Text::script), a layout plugins/system/t4/themes/base/html/layouts/t4/component.php:22 loads on every page; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_SEARCH_FORM_LEGEND",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the hidden legend of the search form on the search page (a system page with a menu item of its own in the system menu, dataFixes): printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:96; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_SEARCH_TERMS",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the label of the search box on the search page: printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:100; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JSEARCH_FILTER_SUBMIT",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the search button on the search page: printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:107; the same words are the title of the search page, the title of its item in the system menu (dataFixes); interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_ADVANCED_SEARCH_TOGGLE",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the advanced search button on the search page: printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:114; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_SEARCH_ADVANCED_LEGEND",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the hidden legend of the advanced search on the search page: printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:130; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_ADVANCED_TIPS_INTRO",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the first line of the search tips on the search page: printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:136; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_ADVANCED_TIPS_AND",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the \"this and that\" search tip on the search page: printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:137; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_ADVANCED_TIPS_NOT",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the \"this not that\" search tip on the search page: printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:138; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_ADVANCED_TIPS_OR",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the \"this or that\" search tip on the search page: printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:139; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_ADVANCED_TIPS_OUTRO",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the last line of the search tips on the search page: printed by plugins/system/t4/themes/base/html/com_finder/search/default_form.php:143; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_SEARCH_FORM_LIST_LABEL",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the accessible name of the suggestion list of the search box: plugins/system/t4/themes/base/html/com_finder/search/default_form.php:29 passes it to the page script (Text::script) and media/com_finder/js/finder.js:69 sets it as the list label; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_QUERY_TOKEN_REQUIRED",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the explained query on the search page (\"<the words searched> is required\"): written by administrator/components/com_finder/src/Service/HTML/Query.php:45, printed by plugins/system/t4/themes/base/html/com_finder/search/default_results.php:29 and set as the page description by components/com_finder/src/View/Search/HtmlView.php:335; its fill is the words the visitor searched; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_SEARCH_NO_RESULTS_HEADING",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the heading of a search with no result: printed by plugins/system/t4/themes/base/html/com_finder/search/default_results.php:36; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_FINDER_SEARCH_NO_RESULTS_BODY",
+        "extension": "com_finder",
+        "language": "en-GB",
+        "keep": "the sentence of a search with no result: printed by plugins/system/t4/themes/base/html/com_finder/search/default_results.php:38; its fill is the words the visitor searched; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_USERS_LOGIN_USERNAME_LABEL",
+        "extension": "com_users",
+        "language": "en-GB",
+        "keep": "the username label of the sign in page (a system page with a menu item of its own in the system menu, dataFixes): components/com_users/forms/login.xml:7, printed by plugins/system/t4/themes/base/html/layouts/joomla/form/renderlabel.php:39; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JGLOBAL_PASSWORD",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the password label of the sign in page: components/com_users/forms/login.xml:20, printed by plugins/system/t4/themes/base/html/layouts/joomla/form/renderlabel.php:39; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JSHOWPASSWORD",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the hidden name of the show password button on the sign in page: printed by plugins/system/t4/themes/base/html/layouts/joomla/form/field/password.php:215; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_USERS_LOGIN_REMEMBER_ME",
+        "extension": "com_users",
+        "language": "en-GB",
+        "keep": "the remember me box of the sign in page: printed by plugins/system/t4/themes/base/html/com_users/login/default_login.php:69; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JLOGIN",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the sign in button: printed by plugins/system/t4/themes/base/html/com_users/login/default_login.php:115; the same words are the title of the sign in page, the title of its item in the system menu (dataFixes); interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_USERS_LOGIN_RESET",
+        "extension": "com_users",
+        "language": "en-GB",
+        "keep": "the forgotten password link of the sign in page: printed by plugins/system/t4/themes/base/html/com_users/login/default_login.php:128; the same words are the title of the password reset page, the title of its item in the system menu (dataFixes); interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_USERS_LOGIN_REMIND",
+        "extension": "com_users",
+        "language": "en-GB",
+        "keep": "the forgotten username link of the sign in page: printed by plugins/system/t4/themes/base/html/com_users/login/default_login.php:131; the same words are the title of the username reminder page, the title of its item in the system menu (dataFixes); interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_USERS_LOGIN_REGISTER",
+        "extension": "com_users",
+        "language": "en-GB",
+        "keep": "the create an account link of the sign in page, while the site lets visitors register (com_users allowUserRegistration, on in the release): printed by plugins/system/t4/themes/base/html/com_users/login/default_login.php:148; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_USERS_FIELD_PASSWORD_RESET_LABEL",
+        "extension": "com_users",
+        "language": "en-GB",
+        "keep": "the email label of the password reset page (a system page with a menu item of its own in the system menu, dataFixes): components/com_users/forms/reset_request.xml:7, printed by plugins/system/t4/themes/base/html/layouts/joomla/form/renderlabel.php:39; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JSUBMIT",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the submit button of the password reset page and of the username reminder page: printed by plugins/system/t4/themes/base/html/com_users/reset/default.php:36 and plugins/system/t4/themes/base/html/com_users/remind/default.php:36; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_USERS_REMIND_DEFAULT_LABEL",
+        "extension": "com_users",
+        "language": "en-GB",
+        "keep": "the instructions of the username reminder page (a system page with a menu item of its own in the system menu, dataFixes): components/com_users/forms/remind.xml:3, printed as the form legend by plugins/system/t4/themes/base/html/com_users/remind/default.php:28; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_USERS_FIELD_REMIND_EMAIL_LABEL",
+        "extension": "com_users",
+        "language": "en-GB",
+        "keep": "the email label of the username reminder page: components/com_users/forms/remind.xml:7, printed by plugins/system/t4/themes/base/html/layouts/joomla/form/renderlabel.php:39; interface words of the platform, valid on every site"
       }
     ]
   },
@@ -14889,6 +15045,43 @@
       "file": "templates/ja_boxing/acm/features-intro/tmpl/style-4.php",
       "pattern": "^\\d{2}$",
       "why": "the number of each card of the features block (01, 02 and on), computed by the layout from the card index (templates/ja_boxing/acm/features-intro/tmpl/style-4.php:52); a counter, valid on every site"
+    }
+  ],
+  "dataFixes": [
+    {
+      "id": "system-menu",
+      "menu": {
+        "menutype": "system-pages",
+        "title": "System pages"
+      },
+      "templateStyle": 0,
+      "items": [
+        {
+          "page": "system-search",
+          "title": "Search",
+          "alias": "search",
+          "link": "index.php?option=com_finder&view=search"
+        },
+        {
+          "page": "system-login",
+          "title": "Log in",
+          "alias": "login",
+          "link": "index.php?option=com_users&view=login"
+        },
+        {
+          "page": "system-reset",
+          "title": "Forgot your password?",
+          "alias": "password-reset",
+          "link": "index.php?option=com_users&view=reset"
+        },
+        {
+          "page": "system-remind",
+          "title": "Forgot your username?",
+          "alias": "username-reminder",
+          "link": "index.php?option=com_users&view=remind"
+        }
+      ],
+      "why": "with no menu item of their own the search, sign in, password reset and username reminder pages print under the style of the active page, on a built site the home page's Landing style (layout home, which has no main body), and take its title (measured on the blank site restored on Joomla 6.1.1 with a home item on the Landing style, #587); with these items on the site default style (0, ja_boxing - Default) each prints its main body (layout default) under its own title. The titles are the platform's own words for the pages, kept in overrides.language (JSEARCH_FILTER_SUBMIT, JLOGIN, COM_USERS_LOGIN_RESET, COM_USERS_LOGIN_REMIND). The menu is in no module position: no mod_menu block shows system-pages and the T4 navigation reads mainmenu (templates/ja_boxing/etc/navigation/default.json), so it shows in no navigation. Joomla routes its own links to these pages through the items (the sign in page links index.php/password-reset and index.php/username-reminder); an address naming the component with no Itemid (index.php?option=com_users&view=login) still takes the active page's style, so the pages are reached by their item"
     }
   ],
   "inlineMarkup": {
