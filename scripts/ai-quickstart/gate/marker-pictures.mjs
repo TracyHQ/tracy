@@ -92,6 +92,12 @@ function sizeOf(fit) {
  * @param {{slots?: object[]} | null} contract the blank site contract's content map
  * @returns {{shapes: Record<string, {width: number, height: number}>, conflicts: {picture: string, slots: string[]}[]}}
  */
+/** The width over height a slot asks for: its source picture's when it names one, else its aspect. */
+const aspectOf = (fit) =>
+  fit.source?.width && fit.source?.height ? fit.source.width / fit.source.height : Number(fit.aspect)
+/** Two aspects closer than this (0.5%) are one shape: what rounding a height to whole pixels moves. */
+const ASPECT_TOLERANCE = 0.005
+
 export function pictureShapesOf(plan, contract) {
   const fits = new Map((contract?.slots ?? []).filter((s) => s.fit?.aspect).map((s) => [s.key, s.fit]))
   const storedOf = new Map(
@@ -102,6 +108,7 @@ export function pictureShapesOf(plan, contract) {
   const shapes = {}
   const from = {}
   const conflicts = []
+  const aspects = {}
   for (const op of plan?.ops ?? [])
     for (const v of op.values ?? []) {
       const ref = String(v.value?.ref ?? '')
@@ -109,8 +116,9 @@ export function pictureShapesOf(plan, contract) {
       const id = storedOf.get(ref)
       if (!ref.startsWith('picture:') || !fit || !id) continue
       const size = sizeOf(fit)
-      if (!shapes[id]) [shapes[id], from[id]] = [size, v.loc.slot]
-      else if (shapes[id].width / shapes[id].height !== size.width / size.height)
+      if (!shapes[id]) [shapes[id], from[id], aspects[id]] = [size, v.loc.slot, aspectOf(fit)]
+      // Compared on the slots' aspects, never on rounded heights: one aspect at two minimum widths is one shape.
+      else if (Math.abs(aspects[id] / aspectOf(fit) - 1) > ASPECT_TOLERANCE)
         conflicts.push({ picture: ref.slice('picture:'.length), slots: [from[id], v.loc.slot] })
     }
   return { shapes, conflicts }

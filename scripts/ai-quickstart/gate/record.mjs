@@ -156,6 +156,8 @@ export function checkRecord(input) {
         message: g.message
       })),
       orderProblems: built.orderProblems ?? [],
+      // One stored picture drawn for slots of different aspects: the plugin refuses it at the second slot (recorded).
+      pictureShapeConflicts: built.pictureShapeConflicts ?? [],
       measuredRefusals: input.refusals.map(({ code, door, message, why }) => ({ code, door, message, why })),
       unproven: built.writePlan?.unproven ?? [],
       conflicts: built.writePlan?.conflicts ?? []
