@@ -6,6 +6,7 @@
 // and the record says where (`report.status: 'stopped'`).
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
+import { originReader, templateSheetsDoor } from '../../../apps/tracy-web/src/step-chain-draft-sheets.js'
 import { runDraftWrite } from '../../../apps/tracy-web/src/step-chain-draft-write.js'
 import { siteDoors } from '../../../packages/wo/website-opportunities/domain/site-doors.mjs'
 
@@ -46,6 +47,22 @@ function fileJournal(file, identity) {
 }
 
 /**
+ * The doors of the gate's write: the door client, plus the template's stylesheets for the accent module, read as a
+ * visitor reads them (no plugin operation serves them), as the app's write does (`step-chain-draft-sheets.js`). Without
+ * `sheets` the accent stops the write typed (`door_not_available`, door `sheets`).
+ * @param {{send: Function, base: string, publicFile: Function, journal: object, fetchImpl?: typeof fetch}} input
+ */
+export function gateDoors({ send, base, publicFile, journal, fetchImpl = fetch }) {
+  return {
+    ...siteDoors({ send, publicFile, journal }),
+    sheets: templateSheetsDoor({
+      reader: originReader({ base, fetchImpl }),
+      pages: () => send('content.contract', { operation: 'inspect' })
+    })
+  }
+}
+
+/**
  * @param {{send: Function, base: string, siteKey: string, built: object, out: string, pin: string | null,
  *   log: Function, open: Function, runId?: string}} input `siteKey`: the sha256 of the site's token, never the token
  * @returns {Promise<{report: object, record: object, plugin: {expected: string | null, start: string, end: string}}>}
@@ -73,8 +90,9 @@ export async function realWrite({ send, base, siteKey, built, out, pin, log, ope
     contract: bound.contract ?? null,
     revision: bound.revision ?? null
   }
-  const doors = siteDoors({
+  const doors = gateDoors({
     send,
+    base,
     publicFile,
     journal: fileJournal(path.join(out, 'journal.json'), identity)
   })
