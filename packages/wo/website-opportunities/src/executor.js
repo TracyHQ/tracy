@@ -27,6 +27,7 @@ import { claimPlaceJob } from './place-jobs.js'
 import { isPlaceholderName, nameClaimsOf, withNameDecision } from './business-name.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
 import { videoSize } from '../domain/video-size.mjs'
+import { isBookingUrl } from '../domain/link-platforms.mjs'
 import { withMediaAdmission } from './media-admission.js'
 import { LISTING_SOURCE, refsOfCandidate, refsOfUrls, SOCIAL_SOURCES, SOURCES } from './sources.js'
 
@@ -340,12 +341,17 @@ export function createExecutor({
             lastError: { code: 'SOURCE_PAUSED', source, reason: 'quota' },
             outcome: 'source_paused'
           }
-        const result = await collectOne(
-          connectors[source],
+        const result = await withLinkPages(
+          domain,
           source,
-          row,
-          settings.maxChargeUsdPerRun,
-          paid ? apifyRunHooks(pool, lease, held) : {}
+          row.ref,
+          await collectOne(
+            connectors[source],
+            source,
+            row,
+            settings.maxChargeUsdPerRun,
+            paid ? apifyRunHooks(pool, lease, held) : {}
+          )
         )
         const collected = mergeCollected(row.collected, result)
         await fenced(pool, lease, async (db) => {
@@ -484,6 +490,15 @@ export function createExecutor({
       log.warn(`[opportunities] ${opp.id}: Google place details skipped (${error?.code ?? 'error'})`)
       return null
     }
+  }
+
+  /**
+   * A source read with the link-in-bio pages it points at read into it (`domain/link-in-bio.mjs`): the website's links
+   * to one, a social page's bio link. Free and bounded; a read with none comes back unchanged.
+   */
+  async function withLinkPages(domain, source, ref, result) {
+    if (typeof domain.expandLinkPages !== 'function') return result
+    return domain.expandLinkPages(result, { source, ref }, domainDeps)
   }
 
   /** Preserve paid-run recovery hooks alongside per-job collection limits. */
@@ -741,6 +756,7 @@ export function createExecutor({
     chargeable,
     researchLedger,
     collectOne,
+    withLinkPages,
     apifyRun: { held: heldApifyRun, hooks: apifyRunHooks, spend: spendApifyRun },
     mediaRecord,
     storedRecord,
@@ -783,6 +799,9 @@ export function mergeCollected(previous, result) {
   const media = new Map()
   for (const m of [...(prev.media ?? []), ...(result.media ?? [])])
     if (typeof m?.url === 'string' && !media.has(m.url)) media.set(m.url, m)
+  // The link-in-bio pages read for this source (`link-in-bio.mjs`), each with every link it listed: the evidence of
+  // the bookings, menus and social pages they gave. Kept only when there are some.
+  const bioPages = uniqueByUrl([...(prev.bioPages ?? []), ...(result.bioPages ?? [])])
   return {
     profile: prev.profile != null || result.profile != null ? profile : null,
     pages: [...(prev.pages ?? []), ...(result.pages ?? [])].slice(0, 200).map(keptPage),
@@ -790,7 +809,8 @@ export function mergeCollected(previous, result) {
     media: [...media.values()].slice(0, 1000),
     menus: uniqueByUrl([...(prev.menus ?? []), ...(result.menus ?? [])]),
     logos: uniqueByUrl([...(prev.logos ?? []), ...(result.logos ?? [])]),
-    bookings: uniqueByUrl([...(prev.bookings ?? []), ...(result.bookings ?? [])])
+    bookings: uniqueByUrl([...(prev.bookings ?? []), ...(result.bookings ?? [])]),
+    ...(bioPages.length ? { bioPages } : {})
   }
 }
 
@@ -908,17 +928,32 @@ export function mergeProfile(opp, allRows, publicProfiles = []) {
     }
     return null
   }
-  // A menu or booking link found on the restaurant's own website is theirs: verified.
-  const menus = (websiteRow?.collected?.menus ?? []).map((m) => ({
-    url: m.url,
-    source: 'website',
-    seenAt: seenAt(websiteRow)
-  }))
-  const booking = (websiteRow?.collected?.bookings ?? []).map((b) => ({
-    url: b.url,
-    verified: true,
-    source: 'website'
-  }))
+  // A menu or booking link found on the business's own pages is theirs: verified. The website's first, then each
+  // social page's, read off the link-in-bio page its bio points at (`link-in-bio.mjs`; `via` is that page). A website
+  // address that is itself a booking platform's page (`link-platforms.mjs`) is the booking link before any other.
+  const ownRows = SOURCES.map((source) => rows.find((r) => r.source === source)).filter(Boolean)
+  const via = (x) => (typeof x?.via === 'string' ? { via: x.via } : {})
+  const menus = uniqueByUrl(
+    ownRows.flatMap((row) =>
+      (row.collected?.menus ?? []).map((m) => ({
+        url: m.url,
+        source: row.source,
+        seenAt: seenAt(row),
+        ...via(m)
+      }))
+    )
+  )
+  const booking = uniqueByUrl([
+    ...(website && isBookingUrl(website) ? [{ url: website, verified: true, source: 'website' }] : []),
+    ...ownRows.flatMap((row) =>
+      (row.collected?.bookings ?? []).map((b) => ({
+        url: b.url,
+        verified: true,
+        source: row.source,
+        ...via(b)
+      }))
+    )
+  ])
   const provenance = {}
   for (const field of PROFILE_FIELDS)
     if (evidence[field][0]) provenance[field] = { source: evidence[field][0].sources[0] }

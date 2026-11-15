@@ -1,0 +1,51 @@
+{
+  "id": "REG-PR-635-link-in-bio-booking-price-lists",
+  "kind": "feat",
+  "title": "WO research reads the link-in-bio page a social bio or the website points at, keeps booking platforms (tables, appointments, classes) as the verified booking link, and reads price list PDFs as menus",
+  "pr": 635,
+  "area": "website-opportunities/research-sources",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-reporter=tap packages/wo/website-opportunities/test/domain-link-platforms.test.mjs packages/wo/website-opportunities/test/domain-link-in-bio.test.mjs packages/wo/website-opportunities/test/price-list-pdf.test.mjs packages/wo/website-opportunities/test/link-sources-brief.test.mjs packages/wo/website-opportunities/test/domain-website-crawler.test.mjs",
+    "S2: Record the exit code and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "A business page on OpenTable, SevenRooms, Resy, Fresha, Booksy, Treatwell, Mindbody, Calendly, Playtomic, Zenchef and TheFork is named by its platform; a platform's home, its own pages, a look-alike host and a platform named only in the query are no booking link.",
+    "An Instagram bio link to a Linktree page (behind l.instagram.com) reads that page once and gives the Fresha booking link, the price list PDF and the other social pages, each with the Linktree page as its source; bioPages keeps the page with every link it listed.",
+    "The booking link from the Linktree page is the profile's verified booking link (source instagram, via the Linktree page) and the brief's hero booking button opens it; validateBrief is ok.",
+    "A price list PDF linked from the site, or listed on the Linktree page, is read into its services and prices with the file, page 1 and SHA-256; a PDF over the 10 MiB cap is skipped as too_large and never parsed.",
+    "A read that points at no link-in-bio page is returned unchanged with no request, and a research without one keeps exactly the menus and booking it kept before."
+  ],
+  "selectors": {
+    "domain": "packages/wo/website-opportunities/domain/link-platforms.mjs, packages/wo/website-opportunities/domain/link-in-bio.mjs",
+    "merge": "mergeCollected / mergeProfile in packages/wo/website-opportunities/src/executor.js",
+    "db-test": "apps/tracy-web/test/website-opportunities-link-sources.test.mjs (needs TEST_DATABASE_URL; not part of run.cmd)"
+  },
+  "evidence": "Before this change an Instagram bio link to a Linktree page was stored as profile.website and used for nothing; isBookingUrl matched a platform name anywhere in the URL and knew only restaurant table platforms; a PDF labelled 'Price list' or 'Preisliste' was not a menu.",
+  "fence": "Pure domain functions and the research merge with fixture pages and a fake fetch (no network); the PDF is built in the test and read by the real PDF reader. The DB-backed place research run is a separate test that needs a database.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-link-platforms.test.mjs",
+      "packages/wo/website-opportunities/test/domain-link-in-bio.test.mjs",
+      "packages/wo/website-opportunities/test/price-list-pdf.test.mjs",
+      "packages/wo/website-opportunities/test/link-sources-brief.test.mjs",
+      "packages/wo/website-opportunities/test/domain-website-crawler.test.mjs"
+    ],
+    "tests": [
+      "a business page on each booking platform the research must know is named by its platform",
+      "a platform home, its own pages and look-alike hosts are no booking link",
+      "a social page's bio link to a link-in-bio page brings its booking link, price list and social pages",
+      "the brief's booking button opens the booking link the link-in-bio page listed",
+      "a price list PDF linked from the site is read into services and prices with the file they came from",
+      "a PDF over the size cap is not read: what a cut-off part says is no price",
+      "a read that points at no link-in-bio page, or failed, is returned as it is, with no request",
+      "a research whose social pages point at no link-in-bio page keeps the menus and booking it kept before"
+    ]
+  }
+}
