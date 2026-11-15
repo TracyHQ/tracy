@@ -1,6 +1,6 @@
 // The gate's real write gets the doors the app gives the write step (ticket #586, review round 2): the door client and,
-// beside it, `sheets` (the stylesheets the template serves on the home page, read as `readSiteSheets` of the app
-// reads them), from which the accent module is built. Without it the write stopped at the accent with
+// beside it, `sheets` (the build team's own door, `templateSheetsDoor`, over the site's own origin: both themes of the
+// home page and every page the site lists), from which the accent module is built. Without it the write stopped at the accent with
 // `door_not_available`, whatever the template. And each process writes into a run folder of its own, so a resumed gate
 // never takes another process's write record for its own (T1). An invented florist page served on this machine, the
 // accent op of JA Boxing's marker build on the memory site, invented door answers.
@@ -44,24 +44,66 @@ const input = (out, extra = {}) => ({
 })
 const tmp = () => mkdtempSync(path.join(tmpdir(), 'gate-sheets-'))
 
-test('the sheets door reads the stylesheets the template serves on the home page, the site own only', async () => {
-  const css = ':root{--petal-accent:#3a7d44}'
+/** An invented florist site: each theme of the home page and one listed page link a sheet of their own. */
+function floristServer() {
+  const css = {
+    '/media/templates/site/petal/css/template.css': ':root{--petal-accent:#3a7d44}',
+    '/media/templates/site/petal/css/dark.css': ':root{--petal-dark:#1d3b22}',
+    '/media/templates/site/petal/css/shop.css': '.shop{color:#3a7d44}'
+  }
+  const page = (...sheets) =>
+    '<html><head>' +
+    sheets.map((h) => '<link rel="stylesheet" href="' + h + '">').join('') +
+    '<link rel="stylesheet" href="https://fonts.example.net/x.css"></head></html>'
+  const asked = []
   const server = createServer((req, res) => {
-    if (req.url === '/media/templates/site/petal/css/template.css') return res.end(css)
-    if (req.url === '/' || req.url === '/index.php')
+    asked.push(req.url)
+    const [p, q] = req.url.split('?')
+    if (css[p]) return res.end(css[p])
+    if (p === '/index.php' && q === 'theme=light')
+      return res.end(page('/media/templates/site/petal/css/template.css'))
+    if (p === '/index.php' && q === 'theme=dark')
       return res.end(
-        '<html><head><link rel="stylesheet" href="/media/templates/site/petal/css/template.css">' +
-          '<link rel="stylesheet" href="https://fonts.example.net/x.css"><style>a{color:#3a7d44}</style></head></html>'
+        page('/media/templates/site/petal/css/template.css', '/media/templates/site/petal/css/dark.css')
       )
+    if (p === '/index.php/shop') return res.end(page('/media/templates/site/petal/css/shop.css'))
     res.statusCode = 404
     res.end('')
   })
+  return { server, css, asked }
+}
+
+test('the sheets door is the build team door: both themes of the home page and every listed page, the site own only', async () => {
+  const { server, css, asked } = floristServer()
   await new Promise((r) => server.listen(0, '127.0.0.1', r))
   try {
     const base = 'http://127.0.0.1:' + server.address().port + '/'
-    const sheets = await joomlaSheetsDoor({ base })({ variables: ['--petal-accent'] })
-    assert.deepEqual(sheets, [css, 'a{color:#3a7d44}'])
+    const listed = []
+    const pagesSend = async (door, body) => {
+      listed.push([door, body])
+      return { pages: [{ route: 'home' }, { route: 'shop' }] }
+    }
+    const sheets = await joomlaSheetsDoor({ base, send: pagesSend })({ variables: ['--petal-accent'] })
+    assert.deepEqual(listed, [['content.contract', { operation: 'inspect' }]])
+    assert.deepEqual([...sheets].sort(), Object.values(css).sort())
     assert.equal(templateAccentOf(sheets, ['--petal-accent']), '#3a7d44')
+    assert.ok(asked.includes('/index.php?theme=dark') && asked.includes('/index.php/shop'))
+    assert.ok(!asked.some((u) => u.includes('fonts.example.net')))
+  } finally {
+    server.close()
+  }
+})
+
+test('a site whose pages link no sheet is the typed stop sheets_unreadable, never an empty list', async () => {
+  const server = createServer((req, res) => res.end('<html><head></head><body>petal</body></html>'))
+  await new Promise((r) => server.listen(0, '127.0.0.1', r))
+  try {
+    const base = 'http://127.0.0.1:' + server.address().port + '/'
+    await assert.rejects(joomlaSheetsDoor({ base })({}), (e) => {
+      assert.equal(e.code, 'sheets_unreadable')
+      assert.equal(e.details?.reason, 'no_sheet')
+      return true
+    })
   } finally {
     server.close()
   }

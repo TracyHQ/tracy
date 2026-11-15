@@ -66,7 +66,9 @@ export const GATE_GUARD_CODES = Object.freeze(['page_copy_check'])
 export const SITE_CODES = Object.freeze({
   redo_failed: 'a door call failed after its retries: the door named in its cause answered',
   read_back_mismatch: 'the site keeps another value than the one written',
-  door_not_available: 'the plugin on the site has no door the write needs'
+  door_not_available: 'the plugin on the site has no door the write needs',
+  sheets_unreadable:
+    'the stylesheets the site serves could not be read: no page or no sheet answered, too large, or past the deadline'
 })
 
 /**

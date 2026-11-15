@@ -79,7 +79,7 @@ export function siteSession({
   while (existsSync(path.join(out, 'writes', 'run-' + run))) run += 1
   const runDir = path.join(out, 'writes', 'run-' + run)
   mkdirSync(runDir, { recursive: true })
-  const sheets = joomlaSheetsDoor({ base })
+  const sheets = joomlaSheetsDoor({ base, send })
   // The contract slots as the blank site holds them before the first write, read once: each reset is held to it.
   let snapshot = null
   let applies = 0

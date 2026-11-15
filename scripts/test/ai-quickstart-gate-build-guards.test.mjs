@@ -25,6 +25,11 @@ function codesOf(text, { lists = false } = {}) {
   add(/new Error\([^;]*?\{\s*code: '([a-z_]+)'/gs)
   add(/failed: \{ op: [^,]+, code: '([a-z_]+)'/g)
   add(/_STOP = '([a-z_]+)'/g)
+  // A code thrown through a named constant of the same file (`new DraftWriteError(SHEETS_UNREADABLE, ...)`).
+  for (const m of text.matchAll(/new (?:DraftWriteError|WriteOrderError)\(\s*([A-Z][A-Z_]+)\b/g)) {
+    const named = new RegExp('const ' + m[1] + " = '([a-z_]+)'").exec(text)
+    if (named) out.add(named[1])
+  }
   if (lists) {
     add(/\breport\('([a-z_]+)'/g)
     for (const m of text.matchAll(/NO_RERUN = Object\.freeze\(\[([\s\S]*?)\]\)/g))
@@ -61,7 +66,12 @@ test('T2: every code the write step throws, in the domain and in the app, is dec
 
 test('T2: the codes of the app step chain the review named are decided', () => {
   const thrown = thrownCodes()
-  for (const code of ['door_not_available', 'accent_module_unbuilt', 'stored_picture_gone'])
+  for (const code of [
+    'door_not_available',
+    'accent_module_unbuilt',
+    'stored_picture_gone',
+    'sheets_unreadable'
+  ])
     assert.ok(thrown.has(code), code + ' is read from the app files')
 })
 
@@ -71,6 +81,7 @@ test('T2: a run state stop is never the build own, and an unknown code is a fail
   assert.equal(of('stored_picture_gone'), 'run_state')
   assert.equal(of('accent_module_unbuilt'), 'refused_by_build')
   assert.equal(of('door_not_available'), 'server_error')
+  assert.equal(of('sheets_unreadable'), 'server_error')
   assert.equal(of('a_code_nobody_named'), 'server_error')
   assert.ok(!BUILD_GUARD_CODES.includes('write_record_stale'))
 })
