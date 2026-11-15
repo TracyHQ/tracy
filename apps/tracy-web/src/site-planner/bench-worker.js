@@ -23,6 +23,7 @@ import { kitImagesFor } from './kit-images.js'
 import {
   FIRST_MESSAGE_PARTS,
   firstUserMessage,
+  wholeKitFirstMessage,
   kitTools,
   openKit,
   preloadedFirstMessage,
@@ -140,22 +141,23 @@ function agentRequest({ row, ready, history }) {
   const imageTool = Boolean(ready.images)
   const strict = row.harness?.visualReview === VISUAL_REVIEW_POLICY
   const writeAfter = strict ? null : row.harness?.writeAfterToolTurns
+  const visualReviewText = strict ? visualReviewInstruction(ready.kit.doc) : undefined
+  // With images, a run frozen with kitInFirstMessage gets the whole kit in its first message and keeps the image tool.
+  const whole =
+    !preloaded && imageTool && row.harness?.kitInFirstMessage === true
+      ? wholeKitFirstMessage({ kit: ready.kit, brief, visualReviewText })
+      : null
   return {
     firstUser: preloaded
       ? preloadedFirstMessage({ kit: ready.kit, brief })
-      : firstUserMessage({
-          kit: ready.kit,
-          brief,
-          imageTool,
-          visualReviewText: strict ? visualReviewInstruction(ready.kit.doc) : undefined
-        }),
+      : (whole?.text ?? firstUserMessage({ kit: ready.kit, brief, imageTool, visualReviewText })),
     tools: preloaded
       ? []
       : kitTools(ready.kit.doc, {
           images: ready.images,
           imageTool,
           history,
-          inFirstMessage: FIRST_MESSAGE_PARTS
+          inFirstMessage: whole?.inFirstMessage ?? FIRST_MESSAGE_PARTS
         }),
     ...(!preloaded && writeAfter
       ? { writeStep: { afterToolTurns: writeAfter, message: WRITE_STEP_MESSAGE } }
