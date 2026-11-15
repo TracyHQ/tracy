@@ -134,3 +134,27 @@ test('a blank slot the site keeps as white space only is blank; any written text
     assert.deepEqual(await fresh(sendOf({ current })), [], JSON.stringify(current))
   assert.equal((await fresh(sendOf({ current: ' QxABG ' })))[0].code, 'slot_not_blank')
 })
+
+test('T9: every mark is looked for, and a leftover of white space alone differs from the site snapshot', async () => {
+  const left = await fresh(sendOf(), async (mark) => (mark === 'qxabd' ? null : 1))
+  assert.deepEqual(left, [])
+  const many = await freshProblems({
+    send: sendOf(),
+    contentMap,
+    find: async (mark) => (mark === 'qxabf' ? 7 : null),
+    marks: ['qxabd', 'qxabe', 'qxabf']
+  })
+  assert.deepEqual(many, [{ code: 'record_left', mark: 'qxabf', marks: ['qxabf'] }])
+  const snapshot = new Map([
+    ['module-1.1', ''],
+    ['module-2.1', '']
+  ])
+  const spaced = { send: sendOf({ current: ' ' }), contentMap, snapshot }
+  assert.deepEqual(await freshProblems(spaced), [{ code: 'slot_not_blank', count: 1, first: ['module-1.1'] }])
+  assert.deepEqual(
+    await freshProblems({ ...spaced, snapshot: null }),
+    [],
+    'without the snapshot white space passes'
+  )
+  assert.deepEqual(await freshProblems({ send: sendOf(), contentMap, snapshot }), [])
+})

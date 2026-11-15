@@ -18,7 +18,9 @@ export async function runCommand(command) {
  * What is wrong with a site that should be fresh and blank: `[{code, ...}]`, empty when it is fresh.
  * @param {{send: (operation: string, payload: object) => Promise<object>, pin?: string | null, contract?: string | null,
  *   contentMap?: {slots?: object[]}, find?: (mark: string) => Promise<number | null>, marks?: string[]}} input
- *   `contract`: the blank site contract the site must bind; `marks`: the marks of the records the build makes
+ *   `contract`: the blank site contract the site must bind; `marks`: the marks of the records the build makes, each
+ *   looked for; `snapshot`: each slot's raw value read on the site before its first write (`slotSnapshot`): with it, a
+ *   slot that holds anything else, white space included, is not blank
  */
 export async function freshProblems({
   send,
@@ -26,7 +28,8 @@ export async function freshProblems({
   contract = null,
   contentMap = null,
   find = null,
-  marks = []
+  marks = [],
+  snapshot = null
 }) {
   const problems = []
   const version = (await send('info', {})).info?.component ?? null
@@ -40,9 +43,12 @@ export async function freshProblems({
   const blank = new Map((contentMap?.slots ?? []).map((s) => [s.key, text(s.sample)]))
   if (blank.size) {
     const state = await send('content.contract', { operation: 'inspect' })
-    const written = (state.slots ?? []).filter(
-      (s) => blank.has(s.key) && text(s.current) !== blank.get(s.key)
-    )
+    // Against the site's own first read when there is one: a leftover of white space alone is a leftover too.
+    const differs = (s) =>
+      snapshot?.has(s.key)
+        ? String(s.current ?? '') !== snapshot.get(s.key)
+        : text(s.current) !== blank.get(s.key)
+    const written = (state.slots ?? []).filter((s) => blank.has(s.key) && differs(s))
     if (written.length)
       problems.push({
         code: 'slot_not_blank',
@@ -50,13 +56,18 @@ export async function freshProblems({
         first: written.slice(0, 5).map((s) => s.key)
       })
   }
-  if (find)
-    for (const mark of marks)
-      if ((await find(mark)) != null) {
-        problems.push({ code: 'record_left', mark })
-        break
-      }
+  if (find) {
+    const left = []
+    for (const mark of marks) if ((await find(mark)) != null) left.push(mark)
+    if (left.length) problems.push({ code: 'record_left', mark: left[0], marks: left })
+  }
   return problems
+}
+
+/** Each contract slot's raw value as the site holds it now: the snapshot a later reset is held to. */
+export async function slotSnapshot(send) {
+  const state = await send('content.contract', { operation: 'inspect' })
+  return new Map((state.slots ?? []).map((s) => [s.key, String(s.current ?? '')]))
 }
 
 /** The answers of a site still coming back after its reset (a 502 page is not JSON): wait for these, nothing else. */

@@ -16,7 +16,7 @@ import { joomlaSheetsDoor } from './adapters/joomla-sheets.mjs'
 import { sitePages } from './adapters/joomla-t4.mjs'
 import { openMarkerPicture } from './memory-write.mjs'
 import { measureQuality } from './quality.mjs'
-import { freshProblems, siteReset } from './site-reset.mjs'
+import { freshProblems, siteReset, slotSnapshot } from './site-reset.mjs'
 import { realWrite } from './site-write.mjs'
 
 /** Read one page as a visitor gets it; a page that does not answer is status 0. */
@@ -80,6 +80,8 @@ export function siteSession({
   const runDir = path.join(out, 'writes', 'run-' + run)
   mkdirSync(runDir, { recursive: true })
   const sheets = joomlaSheetsDoor({ base })
+  // The contract slots as the blank site holds them before the first write, read once: each reset is held to it.
+  let snapshot = null
   let applies = 0
   const applyId = (what) => 'gate-' + what + '-' + ++applies
   return {
@@ -96,10 +98,12 @@ export function siteSession({
           contract,
           contentMap: kit.blankContract,
           find: (mark) => doors.find({ kind: 'menuItem', mark }),
-          marks: firstMarks.slice(0, 1)
+          marks: firstMarks,
+          snapshot
         })
     }),
     async write(built) {
+      snapshot ??= await slotSnapshot(send).catch(() => null)
       writes += 1
       const dir = path.join(runDir, String(writes))
       mkdirSync(dir, { recursive: true })
