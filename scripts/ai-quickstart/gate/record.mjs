@@ -16,9 +16,11 @@ export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v2'
 /**
  * The version of the gate's rules, bumped by hand whenever a change makes an earlier passing record no proof any more
  * (a new measurement, a stricter rule). A release refuses a record of another version. 3: the release guard recomputes
- * the verdict from the record, write safety counts only what reached the site, the hidden pages decide structure.
+ * the verdict from the record, write safety counts only what reached the site, the hidden pages decide structure. 4: a
+ * place is tested only where its probe is found in what was written, a hidden page must be seen missing, quality reads
+ * the addresses the host reads as they are, and the guard works every count out again from the record's own lists.
  */
-export const GATE_VERSION = 3
+export const GATE_VERSION = 4
 
 /** The folder of a kit that holds its check record; never part of what the record is measured on. */
 export const CHECK_RECORD_DIR = 'check-record'
