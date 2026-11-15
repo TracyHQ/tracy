@@ -615,33 +615,6 @@
           ]
         },
         {
-          "name": "heading-2",
-          "kind": "editorial.heading",
-          "type": "text",
-          "limit": 22,
-          "limitFrom": "measured on the running template on 2 pages, the smallest limit taken (22, page /classes): at 390, 768, 1440px, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 35 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /classes: 390px 36 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 34 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 22 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; no box holds the demo words on /classes/advanced-boxing",
-          "slots": [
-            "article-16.7",
-            "article-14.7",
-            "article-2.7",
-            "article-15.7"
-          ],
-          "inline": {
-            "emphasis": [
-              {
-                "tag": "br"
-              },
-              {
-                "tag": "span",
-                "attrs": "",
-                "at": "end"
-              }
-            ],
-            "from": "template-kit",
-            "write": "html"
-          }
-        },
-        {
           "name": "link",
           "kind": "editorial.navigation_url",
           "type": "link",
@@ -756,7 +729,6 @@
         "select": "all",
         "fields": {
           "name": "name",
-          "heading-2": "heading",
           "link": "link",
           "paragraph-2": "paragraph",
           "schedule": "schedule",
@@ -1401,7 +1373,7 @@
           "kind": "contact.social_label",
           "type": "text",
           "limit": 40,
-          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
+          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, and the label is printed as the link's title (a tooltip on hover) and in a hidden span (class d-none), templates/ja_boxing/acm/hero/tmpl/style-2.php:28 and 30, acm/social/tmpl/style-1.php:24 and 26; the network name, valid on every site",
           "slots": [
             "module-171.0",
             "module-171.1",
@@ -4377,7 +4349,7 @@
               "kind": "contact.social_label",
               "type": "text",
               "limit": 40,
-              "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
+              "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, and the label is printed as the link's title (a tooltip on hover) and in a hidden span (class d-none), templates/ja_boxing/acm/hero/tmpl/style-2.php:28 and 30, acm/social/tmpl/style-1.php:24 and 26; the network name, valid on every site",
               "textOf": "network",
               "slots": [
                 [
@@ -5205,31 +5177,6 @@
           ]
         },
         {
-          "name": "heading-2",
-          "kind": "editorial.heading",
-          "type": "text",
-          "limit": 22,
-          "limitFrom": "measured on the running template on 2 pages, the smallest limit taken (22, page /classes): at 390, 768, 1440px, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 35 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /classes: 390px 36 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 34 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 22 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; no box holds the demo words on /classes/advanced-boxing",
-          "slots": [
-            "article-16.7",
-            "article-14.7"
-          ],
-          "inline": {
-            "emphasis": [
-              {
-                "tag": "br"
-              },
-              {
-                "tag": "span",
-                "attrs": "",
-                "at": "end"
-              }
-            ],
-            "from": "template-kit",
-            "write": "html"
-          }
-        },
-        {
           "name": "link",
           "kind": "editorial.navigation_url",
           "type": "link",
@@ -5328,7 +5275,6 @@
         "select": "all",
         "fields": {
           "name": "name",
-          "heading-2": "heading",
           "link": "link",
           "paragraph-2": "paragraph",
           "schedule": "schedule",

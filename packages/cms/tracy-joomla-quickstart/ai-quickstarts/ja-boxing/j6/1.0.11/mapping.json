@@ -1947,44 +1947,6 @@
             "column": "title"
           }
         ],
-        "heading-2": [
-          {
-            "slot": "article-16.7",
-            "entity": "article-16",
-            "column": "attribs",
-            "jsonPath": [
-              "classes-title"
-            ],
-            "xpath": "/html/body/div"
-          },
-          {
-            "slot": "article-14.7",
-            "entity": "article-14",
-            "column": "attribs",
-            "jsonPath": [
-              "classes-title"
-            ],
-            "xpath": "/html/body/div"
-          },
-          {
-            "slot": "article-2.7",
-            "entity": "article-2",
-            "column": "attribs",
-            "jsonPath": [
-              "classes-title"
-            ],
-            "xpath": "/html/body/div"
-          },
-          {
-            "slot": "article-15.7",
-            "entity": "article-15",
-            "column": "attribs",
-            "jsonPath": [
-              "classes-title"
-            ],
-            "xpath": "/html/body/div"
-          }
-        ],
         "link": {
           "derived": "the item page address"
         },
@@ -10779,26 +10741,6 @@
             "column": "title"
           }
         ],
-        "heading-2": [
-          {
-            "slot": "article-16.7",
-            "entity": "article-16",
-            "column": "attribs",
-            "jsonPath": [
-              "classes-title"
-            ],
-            "xpath": "/html/body/div"
-          },
-          {
-            "slot": "article-14.7",
-            "entity": "article-14",
-            "column": "attribs",
-            "jsonPath": [
-              "classes-title"
-            ],
-            "xpath": "/html/body/div"
-          }
-        ],
         "link": {
           "derived": "the item page address"
         },
@@ -11932,7 +11874,7 @@
         "extension": "tpl_ja_boxing",
         "language": "en-GB",
         "slot": "languageString-231238131.0",
-        "keep": "not-drawn: T4_OFF_CANVAS_TITLE (Sidebar Menu): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
+        "keep": "kept: T4_OFF_CANVAS_TITLE (Sidebar Menu): the heading of the off-canvas menu panel when the site has no logo, printed by templates/ja_boxing/html/layouts/t4/layout/offcanvas.php:17 and 92 inside the panel, which stays closed until opened; interface words valid on every site"
       },
       {
         "key": "TPL_CLASSES_TRIAL",
@@ -11952,7 +11894,7 @@
         "extension": "tpl_ja_boxing",
         "language": "en-GB",
         "slot": "languageString-166748343.0",
-        "keep": "not-drawn: TPL_CLOSE (Close): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px); the Close words a page carries are the CMS's own JCLOSE string in its script options"
+        "keep": "kept: TPL_CLOSE (Close): the accessible name (aria-label) of the close button of the template's dialogs, printed by templates/ja_boxing/html/com_content/article/learning.php:266, html/com_content/article/classes.php:378, html/com_contact/contact/default.php:239 and acm/features-intro/tmpl/style-4.php:70; interface words valid on every site"
       },
       {
         "key": "TPL_CONTACT_EMAIL_FORM",
@@ -12131,6 +12073,174 @@
         "language": "en-GB",
         "value": "",
         "why": "the Joomla licence notice of the copyright footer, a platform sentence: hidden by an empty value (the kit's hiddenBy)"
+      },
+      {
+        "key": "ACYM_EMAIL",
+        "extension": "com_acym",
+        "language": "en-GB",
+        "keep": "the placeholder of the newsletter form's email field: AcyMailing names its core email field ACYM_EMAIL (installation/sql/mysql/custom.sql:372) and the subscribe form prints the field name as the placeholder; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "ACYM_SUBSCRIBE",
+        "extension": "com_acym",
+        "language": "en-GB",
+        "keep": "the newsletter form's subscribe button: printed by modules/mod_acym/mod_acym.php:91; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "ACYM_NO_JAVASCRIPT",
+        "extension": "com_acym",
+        "language": "en-GB",
+        "keep": "the newsletter form's notice for a browser without scripts: printed in a noscript element by templates/ja_boxing/html/mod_acym/default.php:86, so it is hidden text; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "MOD_BREADCRUMBS_HOME",
+        "extension": "mod_breadcrumbs",
+        "language": "en-GB",
+        "keep": "the first crumb of the breadcrumbs: printed by modules/mod_breadcrumbs/src/Helper/BreadcrumbsHelper.php:84; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JPREV",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the previous link of a paged list: printed by libraries/src/Pagination/Pagination.php:748 through layouts/joomla/pagination/link.php:28; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JNEXT",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the next link of a paged list: printed by libraries/src/Pagination/Pagination.php:770 through layouts/joomla/pagination/link.php:34; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JPREVIOUS_TITLE",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the hidden title of the previous article link under an article: printed by plugins/content/pagenavigation/tmpl/default.php:29, filled with the title of that article; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JNEXT_TITLE",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the hidden title of the next article link under an article: printed by plugins/content/pagenavigation/tmpl/default.php:38, filled with the title of that article; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JLIB_HTML_PAGE_CURRENT",
+        "extension": "lib_joomla",
+        "language": "en-GB",
+        "keep": "the accessible name of the current page number of a paged list: printed by layouts/joomla/pagination/link.php:81 and plugins/system/t4/themes/base/html/layouts/joomla/pagination/link.php:92; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JLIB_HTML_PAGE_CURRENT_OF_TOTAL",
+        "extension": "lib_joomla",
+        "language": "en-GB",
+        "keep": "the page counter of a paged list (Page 1 of 2): libraries/src/Pagination/Pagination.php:325, printed through getPagesCounter by templates/ja_boxing/html/com_content/category/classes.php:118 and learning.php:153; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JLIB_HTML_GOTO_PAGE",
+        "extension": "lib_joomla",
+        "language": "en-GB",
+        "keep": "the accessible name of a page number link of a paged list: printed by layouts/joomla/pagination/link.php:47 and plugins/system/t4/themes/base/html/layouts/joomla/pagination/link.php:48; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JLIB_HTML_GOTO_POSITION",
+        "extension": "lib_joomla",
+        "language": "en-GB",
+        "keep": "the accessible name of the start, previous, next and end links of a paged list: printed by plugins/system/t4/themes/base/html/layouts/joomla/pagination/link.php:24, 31, 37 and 43, filled with JLIB_HTML_END and its kin; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JLIB_HTML_GOTO_POSITION_NEXT",
+        "extension": "lib_joomla",
+        "language": "en-GB",
+        "keep": "the accessible name of the next link of a paged list: printed by layouts/joomla/pagination/link.php:36; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JLIB_HTML_END",
+        "extension": "lib_joomla",
+        "language": "en-GB",
+        "keep": "the word of the end link of a paged list, the fill of \"Go to End page\" (JLIB_HTML_GOTO_POSITION) in libraries/src/Pagination/Pagination.php; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JLIB_HTML_PAGINATION",
+        "extension": "lib_joomla",
+        "language": "en-GB",
+        "keep": "the accessible name of the navigation of a paged list: printed by layouts/joomla/pagination/links.php:54 and plugins/system/t4/themes/base/html/layouts/joomla/pagination/links.php:56; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_CONTENT_MORE_ARTICLES",
+        "extension": "com_content",
+        "language": "en-GB",
+        "keep": "the heading of the further articles of a list page: printed by templates/ja_boxing/html/com_content/category/learning_links.php:12, plugins/system/t4/themes/base/html/com_content/category/blog_links.php:13 and featured/default_links.php:12; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JERROR_LAYOUT_HOME_PAGE",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the home link of the error page: printed by templates/ja_boxing/error.php:90; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JERROR_LAYOUT_ERROR_HAS_OCCURRED_WHILE_PROCESSING_YOUR_REQUEST",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the sentence of the error page: printed by templates/ja_boxing/error.php:88; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "ERROR",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the first word of the error page title (Error: 404 Page not found): libraries/src/Error/Renderer/HtmlRenderer.php:68 joins it with the code, printed by templates/ja_boxing/error.php:47 and 79; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JERROR_PAGE_NOT_FOUND",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the message of the error page for a missing address (Page not found): set by libraries/src/Router/Router.php:166, printed by templates/ja_boxing/error.php:47 and 79; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_CONTACT_DETAILS",
+        "extension": "com_contact",
+        "language": "en-GB",
+        "keep": "the heading of the contact details on the contact page: printed by templates/ja_boxing/html/com_contact/contact/default.php:117; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_CONTACT_OTHER_INFORMATION",
+        "extension": "com_contact",
+        "language": "en-GB",
+        "keep": "the heading over the contact's further information on the contact page: printed by templates/ja_boxing/html/com_contact/contact/default.php:128; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_CONTACT_CONTACT_EMAIL_NAME_LABEL",
+        "extension": "com_contact",
+        "language": "en-GB",
+        "keep": "the name label of the contact form: components/com_contact/forms/contact.xml:14; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_CONTACT_EMAIL_LABEL",
+        "extension": "com_contact",
+        "language": "en-GB",
+        "keep": "the email label of the contact form: components/com_contact/forms/contact.xml:24; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_CONTACT_CONTACT_MESSAGE_SUBJECT_LABEL",
+        "extension": "com_contact",
+        "language": "en-GB",
+        "keep": "the subject label of the contact form: components/com_contact/forms/contact.xml:36; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_CONTACT_CONTACT_ENTER_MESSAGE_LABEL",
+        "extension": "com_contact",
+        "language": "en-GB",
+        "keep": "the message label of the contact form: components/com_contact/forms/contact.xml:47; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "COM_CONTACT_FORM_LABEL",
+        "extension": "com_contact",
+        "language": "en-GB",
+        "keep": "the legend of the contact form: printed by templates/ja_boxing/html/com_contact/contact/default_form.php:31; interface words of the platform, valid on every site"
+      },
+      {
+        "key": "JCLOSE",
+        "extension": "joomla",
+        "language": "en-GB",
+        "keep": "the close button of a system message: layouts/joomla/system/message.php:40 passes it to the page script (Text::script), a layout plugins/system/t4/themes/base/html/layouts/t4/component.php:22 loads on every page; interface words of the platform, valid on every site"
       }
     ]
   },
@@ -12185,7 +12295,7 @@
     {
       "entity": "module-17",
       "slot": "module-17.0",
-      "why": "the title of the Breadcrumbs module: set not to show it (showtitle 0), printed on no page; template words, no business word"
+      "why": "the title of the Breadcrumbs module: set not to show it as a heading (showtitle 0), it is printed as the aria-label of the breadcrumbs nav (plugins/system/t4/themes/base/html/mod_breadcrumbs/default.php:19); template words, no business word"
     },
     {
       "entity": "module-156",
@@ -13475,6 +13585,12 @@
     }
   },
   "look": {
+    "favicon": {
+      "from": "logo",
+      "fallback": "initials",
+      "path": "templates/ja_boxing/favicon.ico",
+      "why": "the site icon of every page: the template sets no favicon link (its site setting other_faviconFile is empty, and plugins/system/t4/src/t4/Document/Template.php:487-504 prints one only when it is set), so the platform's metas renderer links favicon.ico from the template folder (libraries/src/Document/Renderer/Html/MetasRenderer.php:119-140), and the release ships templates/ja_boxing/favicon.ico, the Joomla icon; the build writes the icon it makes from the logo there, or from the business initials when the plan has no logo"
+    },
     "accent": {
       "variables": [
         "--color-primary",
@@ -14745,9 +14861,39 @@
       }
     ]
   },
+  "keptLiterals": [
+    {
+      "file": "templates/ja_boxing/html/com_content/article/default.php",
+      "values": [
+        "facebook",
+        "twitter",
+        "reddit"
+      ],
+      "why": "the share bar under an article: the layout asks the JA social share plugin for the services facebook, twitter and reddit (templates/ja_boxing/html/com_content/article/default.php:122) and the plugin prints each service name as the title of its share link; network names, valid on every site"
+    },
+    {
+      "file": "templates/ja_boxing/html/com_content/article/learning.php",
+      "values": [
+        "facebook",
+        "twitter",
+        "reddit"
+      ],
+      "why": "the share bar under a learning post: the layout asks the JA social share plugin for the services facebook, twitter and reddit (templates/ja_boxing/html/com_content/article/learning.php:133) and the plugin prints each service name as the title of its share link; network names, valid on every site"
+    },
+    {
+      "file": "templates/ja_boxing/html/com_content/article/learning.php",
+      "pattern": "^\\d{2}$",
+      "why": "the number of each step of a learning post, computed by the layout as two digits (str_pad, templates/ja_boxing/html/com_content/article/learning.php:244); a counter, valid on every site"
+    },
+    {
+      "file": "templates/ja_boxing/acm/features-intro/tmpl/style-4.php",
+      "pattern": "^\\d{2}$",
+      "why": "the number of each card of the features block (01, 02 and on), computed by the layout from the card index (templates/ja_boxing/acm/features-intro/tmpl/style-4.php:52); a counter, valid on every site"
+    }
+  ],
   "inlineMarkup": {
     "class": "inline-markup-in-text",
-    "count": 35,
+    "count": 33,
     "owners": {
       "#597": "writes such a value: the words, plus the optional emphasis part the field declares, wrapped the way the demo does (the content map's ((br/)) and ((span)) markers), inside the wrapper elements the field declares; never markup the writer returns",
       "#585": "the gate that catches a broken look when such a value is written: an emphasis part left out of its span, a wrapper lost, raw markers printed"

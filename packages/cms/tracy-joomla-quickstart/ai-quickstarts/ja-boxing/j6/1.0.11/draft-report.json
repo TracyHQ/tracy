@@ -3,7 +3,7 @@
     "blocks": 44,
     "fieldsByType": {
       "image": 34,
-      "text": 178,
+      "text": 176,
       "link": 38,
       "icon": 5,
       "design": 2
@@ -16,7 +16,7 @@
     },
     "textLimits": {
       "kitFrame390": 122,
-      "measuredOnSite": 72,
+      "measuredOnSite": 70,
       "notDrawn": 3,
       "other": 0,
       "missing": 0
@@ -48,17 +48,17 @@
       "notInMap": 2,
       "sparse": 1,
       "problems": 0,
-      "omitted": 4,
+      "omitted": 6,
       "notPlaced": 0,
       "notes": 2,
       "hiddenStrings": 1,
       "outsideStore": 27,
-      "sharedPlaces": 73
+      "sharedPlaces": 69
     },
     "unlistedUnclassified": 0,
     "inlineMarkup": {
       "class": "inline-markup-in-text",
-      "fields": 35
+      "fields": 33
     },
     "references": {
       "total": 111,
@@ -341,8 +341,8 @@
       "block": "block-17",
       "slot": "module-17.0",
       "at": "title",
-      "as": "not-drawn",
-      "why": "the module's title: the module is set not to show it (showtitle 0)"
+      "as": "kept",
+      "why": "the module's title (Breadcrumbs): set not to show it as a heading (showtitle 0), it is printed as the aria-label of the breadcrumbs nav (module title, plugins/system/t4/themes/base/html/mod_breadcrumbs/default.php:19); interface words valid on every site"
     },
     {
       "block": "news-list",
@@ -462,9 +462,19 @@
       "why": "the link of the hero's second button, left out with its label"
     },
     {
+      "block": "block-160",
+      "slot": "article-16.7",
+      "why": "the class subtitle (attribs classes-title) in the class cards of the article category modules (block-160 Our Classes and block-159 More For You, both led by this slot): their only layouts templates/ja_boxing/html/mod_articles_category/classes-1.php:30-32 and classes-2.php:37-39 read classes-type and classes-info of each class and never its classes-title, which only the class page prints (templates/ja_boxing/html/com_content/article/classes.php:43 and 107-110); the created class records write it (class-list)"
+    },
+    {
       "block": "block-184",
       "slot": "module-184.0",
       "why": "the module's title: the module is set not to show it (showtitle 0), and the heading drawn in its place is module-184.1"
+    },
+    {
+      "block": "block-159",
+      "slot": "article-16.7",
+      "why": "the class subtitle (attribs classes-title) in the class cards of the article category modules (block-160 Our Classes and block-159 More For You, both led by this slot): their only layouts templates/ja_boxing/html/mod_articles_category/classes-1.php:30-32 and classes-2.php:37-39 read classes-type and classes-info of each class and never its classes-title, which only the class page prints (templates/ja_boxing/html/com_content/article/classes.php:43 and 107-110); the created class records write it (class-list)"
     },
     {
       "block": "learning-post",
@@ -604,14 +614,14 @@
     {
       "slot": "languageString-231238131.0",
       "entity": "languageString-231238131",
-      "as": "not-drawn",
-      "why": "T4_OFF_CANVAS_TITLE (Sidebar Menu): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
+      "as": "kept",
+      "why": "T4_OFF_CANVAS_TITLE (Sidebar Menu): the heading of the off-canvas menu panel when the site has no logo, printed by templates/ja_boxing/html/layouts/t4/layout/offcanvas.php:17 and 92 inside the panel, which stays closed until opened; interface words valid on every site"
     },
     {
       "slot": "languageString-166748343.0",
       "entity": "languageString-166748343",
-      "as": "not-drawn",
-      "why": "TPL_CLOSE (Close): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px); the Close words a page carries are the CMS's own JCLOSE string in its script options"
+      "as": "kept",
+      "why": "TPL_CLOSE (Close): the accessible name (aria-label) of the close button of the template's dialogs, printed by templates/ja_boxing/html/com_content/article/learning.php:266, html/com_content/article/classes.php:378, html/com_contact/contact/default.php:239 and acm/features-intro/tmpl/style-4.php:70; interface words valid on every site"
     },
     {
       "slot": "languageString-58440578.0",
@@ -1148,80 +1158,6 @@
           "block": "class-list",
           "field": "name",
           "limit": 35
-        }
-      ]
-    },
-    {
-      "place": "article-16.7",
-      "limit": 22,
-      "uses": [
-        {
-          "block": "block-160",
-          "field": "heading-2",
-          "limit": 22
-        },
-        {
-          "block": "class-list",
-          "field": "heading",
-          "limit": 22
-        },
-        {
-          "block": "block-159",
-          "field": "heading-2",
-          "limit": 22
-        }
-      ]
-    },
-    {
-      "place": "article-14.7",
-      "limit": 22,
-      "uses": [
-        {
-          "block": "block-160",
-          "field": "heading-2",
-          "limit": 22
-        },
-        {
-          "block": "class-list",
-          "field": "heading",
-          "limit": 22
-        },
-        {
-          "block": "block-159",
-          "field": "heading-2",
-          "limit": 22
-        }
-      ]
-    },
-    {
-      "place": "article-2.7",
-      "limit": 22,
-      "uses": [
-        {
-          "block": "block-160",
-          "field": "heading-2",
-          "limit": 22
-        },
-        {
-          "block": "class-list",
-          "field": "heading",
-          "limit": 22
-        }
-      ]
-    },
-    {
-      "place": "article-15.7",
-      "limit": 22,
-      "uses": [
-        {
-          "block": "block-160",
-          "field": "heading-2",
-          "limit": 22
-        },
-        {
-          "block": "class-list",
-          "field": "heading",
-          "limit": 22
         }
       ]
     },
@@ -1957,7 +1893,7 @@
       "#597": "writes such a value: the words, plus the optional emphasis part the field declares, wrapped the way the demo does (the content map's ((br/)) and ((span)) markers), inside the wrapper elements the field declares; never markup the writer returns",
       "#585": "the gate that catches a broken look when such a value is written: an emphasis part left out of its span, a wrapper lost, raw markers printed"
     },
-    "count": 35,
+    "count": 33,
     "fields": [
       {
         "block": "block-156",
@@ -1977,14 +1913,6 @@
       {
         "block": "block-160",
         "field": "heading",
-        "markup": [
-          "br",
-          "span"
-        ]
-      },
-      {
-        "block": "block-160",
-        "field": "heading-2",
         "markup": [
           "br",
           "span"
@@ -2204,14 +2132,6 @@
       {
         "block": "block-159",
         "field": "heading",
-        "markup": [
-          "br",
-          "span"
-        ]
-      },
-      {
-        "block": "block-159",
-        "field": "heading-2",
         "markup": [
           "br",
           "span"

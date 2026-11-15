@@ -4,23 +4,23 @@
   "nonVisual": {
     "module-171.0": {
       "limit": 40,
-      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+      "why": "an icon link's label: the link shows only its network icon, and the label is printed as the link's title (a tooltip on hover) and in a hidden span (class d-none), templates/ja_boxing/acm/hero/tmpl/style-2.php:28 and 30, acm/social/tmpl/style-1.php:24 and 26; the network name, valid on every site"
     },
     "module-180.3": {
       "limit": 40,
-      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+      "why": "an icon link's label: the link shows only its network icon, and the label is printed as the link's title (a tooltip on hover) and in a hidden span (class d-none), templates/ja_boxing/acm/hero/tmpl/style-2.php:28 and 30, acm/social/tmpl/style-1.php:24 and 26; the network name, valid on every site"
     },
     "module-180.4": {
       "limit": 40,
-      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+      "why": "an icon link's label: the link shows only its network icon, and the label is printed as the link's title (a tooltip on hover) and in a hidden span (class d-none), templates/ja_boxing/acm/hero/tmpl/style-2.php:28 and 30, acm/social/tmpl/style-1.php:24 and 26; the network name, valid on every site"
     },
     "module-180.5": {
       "limit": 40,
-      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+      "why": "an icon link's label: the link shows only its network icon, and the label is printed as the link's title (a tooltip on hover) and in a hidden span (class d-none), templates/ja_boxing/acm/hero/tmpl/style-2.php:28 and 30, acm/social/tmpl/style-1.php:24 and 26; the network name, valid on every site"
     },
     "module-180.6": {
       "limit": 40,
-      "why": "an icon link's label: the link shows only its network icon, the label is its accessible name"
+      "why": "an icon link's label: the link shows only its network icon, and the label is printed as the link's title (a tooltip on hover) and in a hidden span (class d-none), templates/ja_boxing/acm/hero/tmpl/style-2.php:28 and 30, acm/social/tmpl/style-1.php:24 and 26; the network name, valid on every site"
     },
     "module-166.11": {
       "limit": 125,
@@ -215,7 +215,8 @@
     "module-156.7": "the hero's second button: empty in the demo, so the template never draws it and no box can be measured; the blank site keeps it empty",
     "module-156.8": "the link of the hero's second button, left out with its label",
     "module-184.0": "the module's title: the module is set not to show it (showtitle 0), and the heading drawn in its place is module-184.1",
-    "module-179.14": "the kit matched these words to module 179, which is trashed in the demo (published -2) and drawn on no page; the learning post draws the same words from the template string TPL_LEARNING_LEAD_DESC (languageString-182937349, outside the store, an override)"
+    "module-179.14": "the kit matched these words to module 179, which is trashed in the demo (published -2) and drawn on no page; the learning post draws the same words from the template string TPL_LEARNING_LEAD_DESC (languageString-182937349, outside the store, an override)",
+    "article-16.7": "the class subtitle (attribs classes-title) in the class cards of the article category modules (block-160 Our Classes and block-159 More For You, both led by this slot): their only layouts templates/ja_boxing/html/mod_articles_category/classes-1.php:30-32 and classes-2.php:37-39 read classes-type and classes-info of each class and never its classes-title, which only the class page prints (templates/ja_boxing/html/com_content/article/classes.php:43 and 107-110); the created class records write it (class-list)"
   },
   "blocks": {
     "header": {
@@ -1437,8 +1438,8 @@
       "why": "the module's title: no page draws it at 390, 768 or 1440 px, measured on 1.0.11"
     },
     "module-17.0": {
-      "as": "not-drawn",
-      "why": "the module's title: the module is set not to show it (showtitle 0)"
+      "as": "kept",
+      "why": "the module's title (Breadcrumbs): set not to show it as a heading (showtitle 0), it is printed as the aria-label of the breadcrumbs nav (module title, plugins/system/t4/themes/base/html/mod_breadcrumbs/default.php:19); interface words valid on every site"
     },
     "category-8.0": {
       "as": "not-drawn",
@@ -1530,12 +1531,12 @@
       "why": "the Uncategorised category, which the blank site step keeps as Joomla's default category: no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
     },
     "languageString-231238131.0": {
-      "as": "not-drawn",
-      "why": "T4_OFF_CANVAS_TITLE (Sidebar Menu): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
+      "as": "kept",
+      "why": "T4_OFF_CANVAS_TITLE (Sidebar Menu): the heading of the off-canvas menu panel when the site has no logo, printed by templates/ja_boxing/html/layouts/t4/layout/offcanvas.php:17 and 92 inside the panel, which stays closed until opened; interface words valid on every site"
     },
     "languageString-166748343.0": {
-      "as": "not-drawn",
-      "why": "TPL_CLOSE (Close): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px); the Close words a page carries are the CMS's own JCLOSE string in its script options"
+      "as": "kept",
+      "why": "TPL_CLOSE (Close): the accessible name (aria-label) of the close button of the template's dialogs, printed by templates/ja_boxing/html/com_content/article/learning.php:266, html/com_content/article/classes.php:378, html/com_contact/contact/default.php:239 and acm/features-intro/tmpl/style-4.php:70; interface words valid on every site"
     },
     "languageString-10831042.0": {
       "as": "kept",
