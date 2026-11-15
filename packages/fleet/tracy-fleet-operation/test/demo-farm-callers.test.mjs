@@ -816,11 +816,11 @@ test('farm_switch: a pre-slot farm (one container named tracy-demos-web) is repl
     assert.ok(calls.some((c) => / compose .* up -d --no-deps .*demos-web-a$/.test(c)))
     // No marker to remove in a pre-slot farm: a current-config forwarder is told it is gone by a 410 on /tracy-ready.
     assert.ok(
-      !calls.some((c) => /^docker exec tracy-demos-web rm -f /.test(c)),
+      !calls.some((c) => c.startsWith('docker exec tracy-demos-web rm -f ')),
       'a pre-slot farm has no marker'
     )
     const gone = calls.findIndex((c) =>
-      /^docker exec tracy-demos-web sh -c printf "Redirect gone \/tracy-ready/.test(c)
+      c.startsWith('docker exec tracy-demos-web sh -c printf "Redirect gone /tracy-ready')
     )
     const stoppedOld = calls.findIndex((c) => /^docker stop -t 45 tracy-demos-web$/.test(c))
     assert.ok(gone >= 0 && stoppedOld > gone, `410 first, then the stop: ${gone} ${stoppedOld}`)
