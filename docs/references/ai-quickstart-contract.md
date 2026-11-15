@@ -1727,7 +1727,7 @@ plan wrote from the marker data (a network name on a marker link's label), and a
 a marker page (structured data, a share address), which is the build's own. Nothing else is hard coded.
 
 **Sources** (`gate/sources.mjs`). Every finding names its true source, searched in this order, from the blank site
-archive (its language files, the template, module, plugin, component and layout files, its stylesheets and its demo
+archive (its language files, with a plugin's own strings under `administrator/language/` read after the site's, the template, module, plugin, component and layout files, its stylesheets and its demo
 data dump), the blank site contract, the mapping and what the write wrote:
 
 | Source class | What |

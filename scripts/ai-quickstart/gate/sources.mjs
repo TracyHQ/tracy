@@ -40,6 +40,8 @@ const PICTURE = /\.(?:png|gif|jpe?g|webp|svg|ico)$/i
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 const WANTED = [
   'language/en-GB/*.ini',
+  // A plugin may keep its site strings with its administrator ones (the page navigation label).
+  'administrator/language/en-GB/*.ini',
   'language/overrides/*.ini',
   'templates/*',
   'media/templates/*',
@@ -126,7 +128,8 @@ const INLINE_TAG = /<\/?(?:a|abbr|b|code|em|i|kbd|mark|q|s|small|span|strong|sub
 export function ownerOf(file) {
   const f = String(file)
   if (f.startsWith('language/overrides/')) return { owner: 'site_override' }
-  const lang = /^language\/[^/]+\/(?:[a-z]{2}-[A-Z]{2}\.)?([a-z0-9_]+)\.(?:sys\.)?ini$/.exec(f)
+  const lang =
+    /^(?:administrator\/)?language\/[^/]+\/(?:[a-z]{2}-[A-Z]{2}\.)?([a-z0-9_]+)\.(?:sys\.)?ini$/.exec(f)
   if (lang) {
     const name = lang[1]
     if (/^(?:joomla|lib_joomla|[a-z]{2}-[A-Z]{2})$/.test(name) || !name.includes('_'))
@@ -146,8 +149,13 @@ export function ownerOf(file) {
 /** Every language string of the files: `[{file, key, value, re}]` (a `%s` / `%d` reads any words). */
 function languageOf(files) {
   const out = []
-  for (const [file, text] of files) {
-    if (!file.endsWith('.ini')) continue
+  // Of the administrator strings only a plugin's own (not .sys) file is read, after every site file, so a site string
+  // printing the same words is found first and no administrator screen text names a page's words.
+  const admin = (f) => f.startsWith('administrator/')
+  const plugin = (f) => /\/(?:[a-z]{2}-[A-Z]{2}\.)?plg_[a-z0-9_]+\.ini$/.test(f)
+  const ordered = [...files].sort(([a], [b]) => Number(admin(a)) - Number(admin(b)))
+  for (const [file, text] of ordered) {
+    if (!file.endsWith('.ini') || (admin(file) && !plugin(file))) continue
     for (const line of text.split(/\r?\n/)) {
       const m = /^\s*([A-Z0-9_.-]+)\s*=\s*"((?:[^"\\]|\\.)*)"\s*(?:;.*)?$/.exec(line)
       if (!m || !m[2].trim()) continue
