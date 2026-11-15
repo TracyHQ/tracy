@@ -82,7 +82,14 @@ export function addReadingOfBrief(brief, { sourceOf, addText, setAside, taken })
       }
       source.items = [
         ...list(source.items),
-        { id: item.id, kind, fields, evidence: item.quote ?? item.label }
+        {
+          id: item.id,
+          kind,
+          fields,
+          evidence: item.quote ?? item.label,
+          // The page it was read on: an event word on a news or events page marks an event (`needs-profile-events`).
+          ...(isText(item.source?.url) ? { page: item.source.url } : {})
+        }
       ]
       services.push(item.id)
     }

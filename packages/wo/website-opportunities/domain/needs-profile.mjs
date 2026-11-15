@@ -26,6 +26,8 @@ import { voiceOf } from './needs-profile-voice.mjs'
 import { ownerFactsOfSources } from './owner-facts-flow.mjs'
 import { profileExtrasOf, typedObservations } from './needs-profile-typed.mjs'
 import { settleOwnerItems } from './needs-profile-owner-items.mjs'
+import { mergeNearDuplicates } from './needs-profile-near-duplicates.mjs'
+import { researchTimeOf } from './needs-profile-events.mjs'
 
 export const NEEDS_PROFILE_SCHEMA = 'tracy-needs-profile/v1'
 /** The draft prompt (product owner review: #600). Its hash is recorded on every profile it made. */
@@ -117,7 +119,9 @@ export function readModelReply(reply) {
 export function needsProfileOf(research, reading, { blockStore, library } = {}) {
   const sources = sourcesOf(research)
   const structured = structuredObservations(sources)
-  const read = modelObservations(reading ?? {}, sources)
+  // When the research was made: an offer dated before it is a past event (`needs-profile-events.mjs`).
+  const at = researchTimeOf(research)
+  const read = modelObservations(reading ?? {}, sources, { at })
   // A picture the research did not label takes the label the model read for it, else its own alt text.
   const labels = new Map(
     list(reading?.pictures)
@@ -130,9 +134,13 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
   const conflicts = []
   const facts = mergeFacts([...structured.facts, ...read.facts], conflicts)
   // The reading's services, typed (`needs-profile-typed.mjs`), then the owner's own held to the offer rules (#609).
-  const typed = typedObservations(sources)
+  const typed = typedObservations(sources, { at })
   const merged = mergeItems([...typed.items, ...read.items, ...structured.items], conflicts)
-  const { items, dropped: ownerDropped } = settleOwnerItems(merged, sources)
+  const owned = settleOwnerItems(merged, sources)
+  const ownerDropped = owned.dropped
+  // One offer named twice by the same sources is one item; each merge is recorded (`needs-profile-near-duplicates`).
+  const businessName = facts['business.name']?.[0]?.value ?? null
+  const { items, merged: nearDuplicates } = mergeNearDuplicates(owned.items, { businessName })
   // Rows of the business itself, most trusted source first; the key is present only when a row was kept.
   const order = (row) => TRUST_ORDER.indexOf(row.source.origin)
   const rows = mergeRows(
@@ -176,6 +184,7 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
     ...(ownerFacts.length ? { ownerFacts } : {}),
     ...profileExtrasOf(sources),
     conflicts: conflicts.map((c) => ({ ...c, ...asked.get(c.id) })),
+    ...(nearDuplicates.length ? { merged: nearDuplicates } : {}),
     questions,
     dropped: [
       ...unusableSourcesOf(research),

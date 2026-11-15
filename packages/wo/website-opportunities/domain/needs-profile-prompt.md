@@ -32,6 +32,9 @@ Rules:
    Write `contact.hours` as days and times, for example `Mo-Fr 07:00-22:00; Sa 08:00-18:00`, using only times the
    evidence states (`7am` in the evidence may be written `07:00`).
    A price is written only when the source states it.
+   A dated event is not a `service` or a `package`: a show, a performance or a recap on a given date, or a class,
+   course or clinic that ran in a past year, is left out. A course, class or membership that says when it starts is a
+   `service`.
 5. Rows: when a source lists several like lines inside one item (the session times of a class, the steps of a project)
    or for the business itself (the lines of its opening times), give each line as a row: inside the item as `rows`, or
    for the business in the top level `rows` with the source's `id`. A row has `fields` by data kind, using the

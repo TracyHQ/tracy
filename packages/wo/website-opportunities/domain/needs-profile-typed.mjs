@@ -12,6 +12,7 @@
 import { ITEM_KINDS, primaryRoleOf } from './needs-profile-merge.mjs'
 import { provenBy } from './needs-profile-grounding.mjs'
 import { ownerTaglineOfSources } from './owner-facts-flow.mjs'
+import { datedEventDrop, datedEventOf } from './needs-profile-events.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -26,8 +27,11 @@ export const TYPED_REASONS = Object.freeze({
 })
 const drop = (code, what, scope = 'observation') => ({ ...what, code, reason: TYPED_REASONS[code], scope })
 
-/** The reading's services of every source as observations, taken as they are (rules above). */
-export function typedObservations(sources) {
+/**
+ * The reading's services of every source as observations, taken as they are (rules above); a dated event is no
+ * service (`needs-profile-events.mjs`; `at`: when the research was made, when known).
+ */
+export function typedObservations(sources, { at = null } = {}) {
   const items = []
   const dropped = []
   for (const source of sources) {
@@ -37,6 +41,11 @@ export function typedObservations(sources) {
       const name = TYPED.has(it?.kind) ? it.fields?.[primaryRoleOf(it.kind)] : null
       if (!isText(name)) {
         dropped.push(drop('typed_item_unreadable', what))
+        continue
+      }
+      const event = datedEventOf({ name, evidence: it.evidence, page: it.page }, { at })
+      if (event) {
+        dropped.push(datedEventDrop(event, { ...what, value: name }))
         continue
       }
       const prefix = ITEM_KINDS[it.kind]

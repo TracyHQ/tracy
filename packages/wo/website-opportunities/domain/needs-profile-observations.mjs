@@ -14,6 +14,7 @@ import {
 } from './needs-profile-grounding.mjs'
 import { MAX_ROW_DEPTH, groundRows } from './needs-profile-rows.mjs'
 import { audienceOnlyDrop, fromAudienceOnly } from './needs-profile-typed.mjs'
+import { datedEventDrop, datedEventOf } from './needs-profile-events.mjs'
 import { copiesOwner, ownerEchoOf } from './owner-echo.mjs'
 
 const FACT_KINDS = new Set([...SINGLE_FACT_KINDS, ...LIST_FACT_KINDS])
@@ -107,8 +108,11 @@ export function structuredObservations(sources) {
   return { facts, items, dropped }
 }
 
-/** Model observations kept only when grounded in a known source; every other one goes to `dropped` with its code. */
-export function modelObservations(reading, sources) {
+/**
+ * Model observations kept only when grounded in a known source; every other one goes to `dropped` with its code. A
+ * service or package that is a dated event is dropped too (`needs-profile-events.mjs`, `at`: when the research was made).
+ */
+export function modelObservations(reading, sources, { at: madeAt = null } = {}) {
   const byId = new Map(sources.map((s) => [s.id, s]))
   const corpus = new Map(sources.map((s) => [s.id, corpusOf(s)]))
   const dropped = []
@@ -162,6 +166,15 @@ export function modelObservations(reading, sources) {
     const at = { ...what, source: source.id }
     if (fromAudienceOnly(byId.get(source.id), it)) {
       dropped.push(audienceOnlyDrop(at))
+      continue
+    }
+    const name = fields[primaryRoleOf(it.kind)]
+    const event =
+      it.kind === 'service' || it.kind === 'package'
+        ? datedEventOf({ name, evidence: it.evidence }, { at: madeAt })
+        : null
+    if (event) {
+      dropped.push(datedEventDrop(event, { ...at, value: name }))
       continue
     }
     // 🔒 The owner's chat statement (origin `answer`, D46) gives facts, never words: no quote of it, no summary

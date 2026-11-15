@@ -4,6 +4,7 @@
 import { cappedLength } from './answer-field-limits.mjs'
 import { QUESTION_SCHEMA } from './build-contract-questions.mjs'
 import { primaryRoleOf } from './needs-profile-merge.mjs'
+import { SOURCE_NAMES } from './plan-data.mjs'
 
 /**
  * The facts worth a question when sources disagree, in the order they are asked, with the group that places them
@@ -31,11 +32,22 @@ const rankOf = (role) => (ROLES.includes(role) ? ROLES.indexOf(role) : ROLES.len
 function whereFrom(source) {
   if (source?.origin === 'website') return 'Website'
   if (source?.origin === 'google') return 'Google Maps listing'
+  // The owner's chat answer (origin `answer`, D46) is named as the plan card names it (`SOURCE_NAMES`, `plan-data.mjs`).
+  if (source?.origin === 'answer') return SOURCE_NAMES.answer
   const ref = String(source?.ref ?? '').toLowerCase()
   if (ref.includes('instagram.')) return 'Instagram profile'
   if (ref.includes('facebook.')) return 'Facebook page'
   if (ref.includes('tiktok.')) return 'TikTok profile'
   return 'Social profile'
+}
+/** The stable code of where a source came from (the `from` param of a conflict choice). */
+function fromCodeOf(source) {
+  if (source?.origin === 'website') return 'website'
+  if (source?.origin === 'google') return 'google_maps'
+  if (source?.origin === 'answer') return 'owner_answer'
+  const ref = String(source?.ref ?? '').toLowerCase()
+  for (const network of ['instagram', 'facebook', 'tiktok']) if (ref.includes(`${network}.`)) return network
+  return 'social'
 }
 const listOf = (words) =>
   words.length < 2 ? words.join('') : `${words.slice(0, -1).join(', ')} and ${words.at(-1)}`
@@ -60,10 +72,17 @@ function conflictQuestion(conflict, { items, sources, limits }) {
     topic: 'fact-conflict',
     fact: conflict.kind,
     prompt: `Your public pages give different values for ${about}. Which one is right?`,
+    code: item ? 'fact_conflict_item' : 'fact_conflict_business',
+    params: item ? { fact: conflict.kind, item } : { fact: conflict.kind },
     choices: conflict.values.map((v, n) => ({
       id: `value-${n + 1}`,
       label: v.value,
       detail: `From ${listOf([...new Set(v.sources.map((id) => whereFrom(byId.get(id))))])}`,
+      code: 'fact_conflict_value',
+      params: {
+        value: v.value,
+        from: [...new Set(v.sources.map((id) => fromCodeOf(byId.get(id))))].join(',')
+      },
       ...(v.value === conflict.default ? { recommended: true } : {})
     })),
     freeText: {

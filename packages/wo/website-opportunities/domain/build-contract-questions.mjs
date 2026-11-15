@@ -4,6 +4,7 @@
 // that may be skipped. A `site-name` question (#593 G4) asks for a name the site may show when research keeps the
 // business name off the site: it is free text only and carries no choice, since a choice could show the held name.
 
+import { codeProblems, paramsProblems } from './build-contract-plan-codes.mjs'
 import { CONTROL_CHARACTER, closedShapeProblems, textLength, textProblems } from './build-contract-shapes.mjs'
 import { isName, isObject, isWhole, label, reporterFor } from './build-contract-shared.mjs'
 import { FACT_ROLES_V3 } from './place-content-roles.mjs'
@@ -23,6 +24,16 @@ export const SITE_NAME_TOPIC = 'site-name'
 /** The most characters a site name answer may hold (the `site-name` cap of the needs profile's free text). */
 export const SITE_NAME_MAX_LENGTH = 120
 
+/**
+ * The optional text code of a question or a choice and its params (#609), held to the same rules as the plan's codes
+ * (`build-contract-plan-codes.mjs`): the chat may show the text in the customer's language from the code, filling in
+ * the params; the English `prompt` or `label` stays the fallback.
+ */
+function textCodeProblems(owner, at, report) {
+  codeProblems(owner.code, at ? `${at}.code` : 'code', report)
+  paramsProblems(owner, at, (where, message) => report(where.replace(/^\./, ''), message))
+}
+
 /** Report every problem of one question through `report(at, message)`. */
 export function questionProblems(question, report) {
   if (!isObject(question)) return report('', 'a question must be a JSON object')
@@ -31,6 +42,7 @@ export function questionProblems(question, report) {
   if (!isName(question.id)) report('id', 'a question needs a non-empty id')
   if (!QUESTION_TOPICS.includes(question.topic))
     report('topic', `topic is one of ${QUESTION_TOPICS.join(', ')}`)
+  textCodeProblems(question, '', report)
   if (question.topic === 'fact-conflict' && !FACT_ROLES_V3.includes(question.fact))
     report('fact', 'a fact conflict names the fact it settles, a fact role of place-content-roles/3')
   textProblems(
@@ -61,6 +73,7 @@ export function questionProblems(question, report) {
       if (choice.recommended !== undefined && typeof choice.recommended !== 'boolean')
         report(`${at}.recommended`, 'recommended is true or false')
       if (choice.recommended === true) recommended += 1
+      textCodeProblems(choice, at, report)
     })
     if (recommended > 1) report('choices', 'at most one choice is recommended')
   }

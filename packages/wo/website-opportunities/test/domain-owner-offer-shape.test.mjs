@@ -46,7 +46,7 @@ test('the needs profile keeps one owner service per offer and records each one i
     ]
   })
   const names = profile.items.service.map((i) => i.fields['offering.name'].value)
-  assert.deepEqual(names, ['Sculling courses', 'junior lessons for kids', 'boat storage'])
+  assert.deepEqual(names, ['Sculling courses', 'Junior Lessons for Kids', 'Boat Storage'])
   const owner = profile.dropped.filter(
     (d) => d.source === 'owner-statement' && d.code?.startsWith('owner_item')
   )

@@ -254,6 +254,8 @@ export function researchOf(brief, { manifest = [] } = {}) {
       })
     ),
     videos: media.videos,
+    // When the brief was made: an offer dated before it is a past event (`needs-profile-events.mjs`).
+    ...(isText(brief?.madeAt) ? { madeAt: brief.madeAt } : {}),
     setAside,
     taken,
     ...withheldOfBrief(brief)

@@ -1,7 +1,10 @@
 // The needs profile's services that stand on the owner's chat statement alone (source `owner-statement`, D46), held to
 // the rules of `owner-offer-shape.mjs` after the merge: a phrase about the business or its audience is no service, and
 // a near duplicate of another owner service joins it. Each drop is a `dropped` entry with its code and reason. A
-// service any other source states is never touched. Pure.
+// service any other source states is never touched. A kept owner service is named the way a name is written
+// (`logoNameSpelling`: a lower-case fragment such as "after school classes" gives "After School Classes"; a mixed-case
+// spelling is the owner's own and kept), so only its case changes, never a letter. Pure.
+import { logoNameSpelling } from './business-name.mjs'
 import { primaryRoleOf } from './needs-profile-merge.mjs'
 import { OWNER_SHAPE_REASONS, settleOwnerOffers } from './owner-offer-shape.mjs'
 
@@ -18,6 +21,16 @@ function merge(kept, gone) {
   if (rows.length) kept.rows = rows
 }
 
+/** The owner's item with its name in name casing (letters unchanged). */
+function named(item, role) {
+  const field = item.fields?.[role]
+  if (typeof field?.value !== 'string') return item
+  const value = logoNameSpelling(field.value)
+  return value && value !== field.value
+    ? { ...item, fields: { ...item.fields, [role]: { ...field, value } } }
+    : item
+}
+
 /**
  * The profile's items (by kind) with the owner's own services and packages settled, and the drop records.
  * @param {Record<string, object[]>} items merged items of the needs profile, by kind
@@ -31,7 +44,7 @@ export function settleOwnerItems(items, sources) {
     if (!list(items?.[kind]).some(isOwners)) continue
     const labelOf = (item) => String(item.fields?.[primaryRoleOf(kind)]?.value ?? '')
     const settled = settleOwnerOffers(items[kind], { isOwners, labelOf, kindOf: () => kind, text, merge })
-    out[kind] = settled.items
+    out[kind] = settled.items.map((item) => (isOwners(item) ? named(item, primaryRoleOf(kind)) : item))
     for (const { item, code, keptAs } of settled.dropped)
       dropped.push({
         from: 'research',

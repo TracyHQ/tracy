@@ -68,7 +68,8 @@ test("the statement's facts reach the needs profile with origin answer, read on 
     ]
   })
   const data = planDataOf(profile)
-  const kiln = data.items.find((i) => i.label === 'kiln space')
+  // The owner's lower-case words are shown as a name is written (`needs-profile-owner-items.mjs`).
+  const kiln = data.items.find((i) => i.label === 'Kiln Space')
   assert.deepEqual(kiln.sources, [{ kind: 'answer', name: 'Your answer' }])
 })
 

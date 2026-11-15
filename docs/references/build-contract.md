@@ -98,6 +98,24 @@ counts once), listed in [Text limits](#text-limits).
   one of the three. It is valid only against its question: the choice is one of its choices, the text is not empty,
   holds no control character (line breaks included) and at most `maxLength` characters counted by code point, and only
   a skippable question is skipped.
+- A question and a choice may carry a text `code` and its `params`, under the same rules as the plan's codes (a code is
+  lower case words joined by underscores; params are camel case names with a short text, a whole number or true or
+  false, and only beside a code). The chat may show the text in the customer's language from the code and its params;
+  `prompt` and `label` are the English fallback. The answer still names the choice by its `id`. The needs profile
+  (`needs-profile-questions.mjs`, `needs-profile-conflict-questions.mjs`) gives every question and choice it asks a code:
+
+| Question `code` | Question `params` | Choice `id` | Choice `code` | Choice `params` | English label |
+|---|---|---|---|---|---|
+| `main_button` | `{}` | `book`, `call`, `email`, `message`, `visit`, `contact` | `main_button_<id>` | `{}` | Book online, Call us, Email us, Message us, Visit us, Contact us |
+| `main_button` | `{}` | same ids, when the long labels do not fit the template's button | `main_button_<id>_short` | `{}` | Book, Call, Email, Message, Visit, Contact |
+| `contact_method` | `{}` | `phone`, `email`, `link` | `contact_method_<id>` | `{}` | A phone number, An email address, A booking or contact link |
+| `site_language` | `{}` | the language tag (`en`, `pt-BR`) | `site_language_option` | `{language}` (the tag) | the English name of the language |
+| `fact_conflict_business` | `{fact}` (a fact role, `contact.phone`) | `value-1`, `value-2`, ... | `fact_conflict_value` | `{value, from}` | the value as a source writes it |
+| `fact_conflict_item` | `{fact, item}` (the item's name) | `value-1`, `value-2`, ... | `fact_conflict_value` | `{value, from}` | the value as a source writes it |
+
+  `from` names where the value was found, comma separated: `website`, `google_maps`, `owner_answer`, `instagram`,
+  `facebook`, `tiktok` or `social` (the choice `detail` says the same in English). The `site-name` question
+  (`plan-site-name-question.mjs`) carries no code yet.
 
 ## Build plan
 
@@ -369,6 +387,11 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
 
 ### Changes for consumers
 
+- 15/11/2026 (#609), additive: a question and a choice may carry `code` and `params` (section "Question and answer");
+  the needs profile's questions carry them. Every earlier document stays valid and the schema stays
+  `tracy-build-question/v1`. A reader that does not know a code shows `prompt` and `label` as before. An answer
+  names its choice by `id`, as it always has.
+
 - 14/11/2026 (#593), additive: a question may have `topic: "site-name"` with `choices: []` (and only that topic may
   have no choice); its answer is `{schema, question, text}`. Every earlier document stays valid and the schema stays
   `tracy-build-question/v1`. A reader that switches on `topic` must handle `site-name`, and one that renders the
@@ -395,8 +418,8 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 |---|---|
 | `build scenario` | `schema`, `name`, `plan`, `summary?`, `questions?`, `answers?`, `edits?`, `runs?` |
 | `scenario run` | `events?`, `outcome?` |
-| `question` | `schema`, `id`, `topic`, `prompt`, `choices`, `freeText`, `fact?`, `skippable?` |
-| `choice` | `id`, `label`, `detail?`, `recommended?` |
+| `question` | `schema`, `id`, `topic`, `prompt`, `choices`, `freeText`, `fact?`, `skippable?`, `code?`, `params?` |
+| `choice` | `id`, `label`, `detail?`, `recommended?`, `code?`, `params?` |
 | `free text` | `maxLength`, `placeholder?` |
 | `answer` | `schema`, `question`, `choice?`, `text?`, `skipped?` |
 | `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut`, `rows?` |

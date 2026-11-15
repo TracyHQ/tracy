@@ -8,10 +8,14 @@
 // the plan with its trust order default, never asked.
 //
 // Every question is a Contract B question (`build-contract-questions.mjs`, ticket #590): the chat renders it as it is.
+// Every question and choice also carries a stable text `code` and its `params` (#609): the chat may word it in the
+// customer's language from the code; the English text stays the fallback. Codes: `docs/references/build-contract.md`.
 import { cappedLength } from './answer-field-limits.mjs'
 import { QUESTION_SCHEMA } from './build-contract-questions.mjs'
 import { conflictQuestionsOf } from './needs-profile-conflict-questions.mjs'
-import { TRUST_ORDER } from './needs-profile-merge.mjs'
+import { languageName, primary } from './needs-profile-language.mjs'
+
+export { languageTag, siteLanguageOf } from './needs-profile-language.mjs'
 
 /** The Contract B topics a needs profile asks about (contact conflicts come first, price conflicts last). */
 export const ASKED_TOPICS = Object.freeze(['fact-conflict', 'main-button', 'contact-method', 'site-language'])
@@ -24,86 +28,6 @@ export const FREE_TEXT_MAX = Object.freeze({
 })
 /** Facts that let a visitor reach the business: any one of them means no contact question. */
 export const CONTACT_KINDS = Object.freeze(['contact.phone', 'contact.email', 'contact.cta_url'])
-
-const NAMES = new Intl.DisplayNames(['en'], { type: 'language', fallback: 'none' })
-const languageName = (tag) => {
-  try {
-    return NAMES.of(tag) ?? tag
-  } catch {
-    return tag
-  }
-}
-const primary = (tag) => tag.split('-')[0]
-
-/** English language names to their two letter tag; a name two tags share maps to null (ambiguous). */
-let byName = null
-function tagOfName(name) {
-  if (!byName) {
-    byName = new Map()
-    const letters = 'abcdefghijklmnopqrstuvwxyz'
-    for (const a of letters)
-      for (const b of letters) {
-        const said = NAMES.of(a + b)?.toLowerCase()
-        if (said) byName.set(said, byName.has(said) ? null : a + b)
-      }
-  }
-  return byName.get(name.trim().toLowerCase()) ?? null
-}
-
-/**
- * A language as a BCP 47 tag, or null when it cannot be read. A tag is canonicalised and KEEPS its region (`pt_br`
- * gives `pt-BR`: Brazilian and European Portuguese are written differently, and Contract B takes such a tag); an
- * English language name the model may write instead (`English`) maps to its tag when exactly one tag has that name.
- * A tag whose language has no known name, or any other word, is null: never a silent default.
- */
-export function languageTag(value) {
-  if (typeof value !== 'string' || value.trim() === '') return null
-  const written = value.trim().replace(/_/g, '-')
-  if (/^[a-z]{2,3}(?:-[a-z0-9]+)*$/i.test(written)) {
-    try {
-      const [tag] = Intl.getCanonicalLocales(written)
-      return NAMES.of(primary(tag)) ? tag : null
-    } catch {
-      return null
-    }
-  }
-  return tagOfName(written)
-}
-
-/**
- * The site language from each source's language (`research` first, then what the model read). Languages compare by
- * their primary subtag (`en-US` beside `en-GB` is one language, not a mix); each option is the tag of its most trusted
- * source, region kept. Mixed sources default to the language of the most trusted source and offer every language seen,
- * most trusted first. A language given but not readable is listed in `unread` (`{source, said, from}`), never guessed.
- * 🔒 The owner's chat statement (source `owner-statement`, D46) never decides it: the owner types in the app's language,
- * not always the site's. With that statement alone there is none (null): the plan says its English default as an
- * assumption the owner sees (`plan-composer.mjs`), never one guessed from the chat.
- * @param {{id: string, origin: string, language?: string}[]} sources
- * @param {Record<string, string>} read the language the model read per source id
- */
-export function siteLanguageOf(all, read = {}) {
-  const sources = all.filter((s) => s?.id !== 'owner-statement')
-  const bySource = {}
-  const unread = []
-  for (const s of sources) {
-    for (const [said, from] of [
-      [s.language, 'research'],
-      [read[s.id], 'model']
-    ]) {
-      if (said === undefined || said === null) continue
-      const tag = languageTag(said)
-      if (!tag) unread.push({ source: s.id, said: String(said), from })
-      else if (!bySource[s.id]) bySource[s.id] = tag
-    }
-  }
-  const ordered = [...sources]
-    .filter((s) => bySource[s.id])
-    .sort((a, b) => TRUST_ORDER.indexOf(a.origin) - TRUST_ORDER.indexOf(b.origin))
-  const options = []
-  for (const s of ordered)
-    if (!options.some((tag) => primary(tag) === primary(bySource[s.id]))) options.push(bySource[s.id])
-  return { value: options[0] ?? null, options, mixed: options.length > 1, bySource, unread }
-}
 
 const has = (facts, kind) => (facts[kind]?.length ?? 0) > 0
 /** The kind of fact a main button answer becomes. */
@@ -118,7 +42,7 @@ function ctaChoices(facts) {
   if (has(facts, 'contact.social_url')) choices.push({ id: 'message', label: 'Message us' })
   if (has(facts, 'contact.address')) choices.push({ id: 'visit', label: 'Visit us' })
   if (choices.length === 0) choices.push({ id: 'contact', label: 'Contact us' })
-  return choices
+  return choices.map((c) => ({ ...c, code: `main_button_${c.id}`, params: {} }))
 }
 
 /**
@@ -131,7 +55,9 @@ const MAIN_BUTTON_FALLBACKS = Object.freeze({
 })
 const fallbackChoicesOf = (channels, language, fits) => {
   const labels = MAIN_BUTTON_FALLBACKS[primary(String(language?.value ?? 'en'))] ?? MAIN_BUTTON_FALLBACKS.en
-  return channels.map((c) => ({ id: c.id, label: labels[c.id] })).filter((c) => c.label && fits(c))
+  return channels
+    .map((c) => ({ id: c.id, label: labels[c.id], code: `main_button_${c.id}_short`, params: {} }))
+    .filter((c) => c.label && fits(c))
 }
 /** The needs profile's note when the main button is not asked about: its field is shorter than every fallback. */
 const MAIN_BUTTON_NOT_ASKED = (max) => ({
@@ -142,18 +68,23 @@ const MAIN_BUTTON_NOT_ASKED = (max) => ({
   scope: 'question'
 })
 
-/** A Contract B question on `topic`; the choice with id `recommended` is marked recommended. */
+/**
+ * A Contract B question on `topic`; the choice with id `recommended` is marked recommended. `text` (optional): the
+ * question's text `code` and `params`, carried only when a code is given.
+ */
 export const contractQuestionOf = (
   topic,
   prompt,
   choices,
   recommended,
-  maxLength = FREE_TEXT_MAX[topic]
+  maxLength = FREE_TEXT_MAX[topic],
+  text = {}
 ) => ({
   schema: QUESTION_SCHEMA,
   id: topic,
   topic,
   prompt,
+  ...(text.code ? { code: text.code, params: text.params ?? {} } : {}),
   choices: choices.map((c) => (c.id === recommended ? { ...c, recommended: true } : c)),
   freeText: { maxLength, placeholder: 'Type your answer' }
 })
@@ -187,7 +118,8 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
         'What should the main button on your site ask visitors to do?',
         cta,
         cta[0].id,
-        max
+        max,
+        { code: 'main_button' }
       )
     )
   else notes.push(MAIN_BUTTON_NOT_ASKED(max))
@@ -200,8 +132,10 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
           { id: 'phone', label: 'A phone number' },
           { id: 'email', label: 'An email address' },
           { id: 'link', label: 'A booking or contact link' }
-        ],
-        'phone'
+        ].map((c) => ({ ...c, code: `contact_method_${c.id}`, params: {} })),
+        'phone',
+        undefined,
+        { code: 'contact_method' }
       )
     )
   }
@@ -210,8 +144,15 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
       contractQuestionOf(
         'site-language',
         'Your public pages use more than one language. Which language should your site use?',
-        language.options.map((tag) => ({ id: tag, label: languageName(tag) })),
-        language.value
+        language.options.map((tag) => ({
+          id: tag,
+          label: languageName(tag),
+          code: 'site_language_option',
+          params: { language: tag }
+        })),
+        language.value,
+        undefined,
+        { code: 'site_language' }
       )
     )
   }

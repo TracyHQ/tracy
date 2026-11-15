@@ -11,8 +11,11 @@ const shape = (required, optional = [], { plan = false } = {}) =>
 export const CONTRACT_SHAPES = Object.freeze({
   'build scenario': shape(['schema', 'name', 'plan'], ['summary', 'questions', 'answers', 'edits', 'runs']),
   'scenario run': shape([], ['events', 'outcome']),
-  question: shape(['schema', 'id', 'topic', 'prompt', 'choices', 'freeText'], ['fact', 'skippable']),
-  choice: shape(['id', 'label'], ['detail', 'recommended']),
+  question: shape(
+    ['schema', 'id', 'topic', 'prompt', 'choices', 'freeText'],
+    ['fact', 'skippable', 'code', 'params']
+  ),
+  choice: shape(['id', 'label'], ['detail', 'recommended', 'code', 'params']),
   'free text': shape(['maxLength'], ['placeholder']),
   answer: shape(['schema', 'question'], ['choice', 'text', 'skipped']),
   plan: shape(
