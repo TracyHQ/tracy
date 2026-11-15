@@ -29,7 +29,7 @@ export function menuItemsProblems(items, at, { report, types }) {
   if (items.from === 'main-menu') return
   if (!MENU_ITEMS_ORDER.includes(items.order) || !Number.isInteger(items.max) || items.max < 1)
     report(at, `a list of pages names its order (${MENU_ITEMS_ORDER.join(' | ')}) and max`)
-  if (items.link !== undefined && !MENU_ITEMS_LINK.includes(items.link))
+  if (!MENU_ITEMS_LINK.includes(items.link))
     report(`${at}.link`, `link is ${MENU_ITEMS_LINK.join(' | ')}: the menu item each listed page takes`)
   if (items.level !== undefined && !MENU_ITEMS_LEVEL.includes(items.level))
     report(`${at}.level`, `level is ${MENU_ITEMS_LEVEL.join(' | ')}: a page at the top of the main menu`)

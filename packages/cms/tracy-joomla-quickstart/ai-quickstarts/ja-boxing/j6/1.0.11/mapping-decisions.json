@@ -1031,6 +1031,7 @@
           "pageTypes": ["class"],
           "order": "plan",
           "max": 5,
+          "link": "page-address",
           "default": true,
           "why": "default chosen for the build, the owner may change it: one item per class page, in plan order (order: plan, pageTypes: [class]), at most the 5 the demo holds. Each is a url menu item linking the class address under the classes page (link: page-address, the under address), as the demo classes menu items are (type url, index.php?option=com_content&view=article&id=N&catid=9&Itemid=167). Measured (door-measures --only kit, K3): such an item prints in this block and opens the class with its detail layout (layout-detail-article)"
         }
@@ -1053,6 +1054,7 @@
           "except": ["home"],
           "order": "main-menu",
           "max": 4,
+          "link": "page-address",
           "default": true,
           "why": "default chosen for the build, the owner may change it: the site's top level pages (level 1: a main menu item of its own and no parent page) in main menu order, home left out (except: [home]), at most the 4 the layout was measured with; the demo site map lists About, Class, Schedule and Price, no home. These recipes have no legal page type, so nothing is added after them (plus). Each is a url menu item linking index.php?Itemid=<the page main menu item> (link: page-address), as the demo site map items are. Measured (door-measures --only kit, K3): such an item prints in this block with the page address; an alias item works too but only with link index.php?Itemid= (an empty link is refused: write_failed, creating a menuItem needs link)"
         }

@@ -290,6 +290,7 @@ test('a menu block names the menu it draws', () => {
   set.mapping.placements['footer-main'].menu.items.pageTypes = ['blog']
   assertProblem(set, /menu\.items\.pageTypes: pageTypes is a list of page types of the recipes/)
   set.mapping.placements['footer-main'].menu.items.pageTypes = ['services']
+  set.mapping.placements['footer-main'].menu.items.link = 'page-address'
   assert.deepEqual(problemsOf(set), [])
 })
 
