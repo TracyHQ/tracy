@@ -82,7 +82,8 @@ export const BRIEF_SCHEMA_VERSIONS = Object.freeze([1, 2])
 // 4 (11/11/2026): assets retain known scene textPresence separately from the overlay-only label.
 // 5 (11/11/2026): owner website reading, original post facts and expanded owner names.
 // 7 (12/11/2026): known product and equipment photographs stay out of business story slots.
-export const BRIEF_RULES_VERSION = 7
+// 8 (15/11/2026): a phone written with a stray "+" is kept in its national form; a reading cut off carries its warning.
+export const BRIEF_RULES_VERSION = 8
 /** The contact copy of a business whose hours wait for a check, when it can be called or written to. */
 // The contact line of a business whose hours wait for a check; the channels to book on follow it, each once.
 export const BY_APPOINTMENT = 'By appointment.'
@@ -1437,6 +1438,8 @@ function briefReading(reading, about, assetIds = null) {
   return {
     method: reading.method,
     ...(reading.reason ? { reason: reading.reason } : {}),
+    // A reading cut off by the token limit says why (`cutWarningOf`, src/business-reading.js): never silent.
+    ...(reading.warning ? { warning: reading.warning } : {}),
     services: reading.services.map((i) => ({ ...item(i), kind: i.kind ?? 'service' })),
     audience: reading.audience.map(item),
     ...(reading.facts?.length ? { facts: reading.facts.map(item) } : {}),

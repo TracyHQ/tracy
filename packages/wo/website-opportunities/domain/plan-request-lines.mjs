@@ -3,7 +3,7 @@
 // removed, added, its data, the order of a page's sections, the data no longer or newly shown (and the data the
 // customer took off before and asked for again), and the pictures estimate. Pages and sections are matched by id: the
 // revision keeps the id of every page and section it keeps (`pagesOf`), so a line never names one thing for another.
-// The model writes no changed line: what it might say is never shown, so a line cannot say what did not happen. A page
+// Data that repeats a name is said once with its count ("12 photos"). The model writes no changed line: what it might say is never shown, so a line cannot say what did not happen. A page
 // or section the model added that the gate left out becomes a `no_data` not done line. A dropped assumption has no
 // line: it explained a part of the plan the revision removed, and that removal has its own line. Lines are English,
 // as every line the rules gate writes. Pure.
@@ -12,6 +12,19 @@ const list = (value) => (Array.isArray(value) ? value : [])
 const cap = (text, max = 200) =>
   [...text].length <= max ? text : `${[...text].slice(0, max - 3).join('')}...`
 const count = (n, one, many) => `${n} ${n === 1 ? one : many}`
+/** The plural of a generic data name ("Photo" gives "photos", "Social link" gives "social links"). */
+const pluralOf = (name) => {
+  const low = name.charAt(0).toLowerCase() + name.slice(1)
+  if (/(?:s|x|z|ch|sh)$/i.test(low)) return `${low}es`
+  if (/[^aeiou]y$/i.test(low)) return `${low.slice(0, -1)}ies`
+  return `${low}s`
+}
+/** Names in order, each once: a name that repeats is said once with its count ("12 photos"). */
+export function groupedNames(names) {
+  const counts = new Map()
+  for (const name of names) counts.set(name, (counts.get(name) ?? 0) + 1)
+  return [...counts].map(([name, n]) => (n === 1 ? name : `${n} ${pluralOf(name)}`)).join(', ')
+}
 
 /** The lines of the pictures estimate, when the revision changes it (the plan's own words, `plan-look-pictures.mjs`). */
 function picturesLines(current, revised, add) {
@@ -39,7 +52,7 @@ function sectionLines(page, now, labels, add) {
     const old = was.get(id)
     if (!old) add(`block-added:${page.id}:${id}`, `A ${b.label} section is added to the ${now.name} page.`)
     else if (old.data.join() !== b.data.join()) {
-      const line = `The ${b.label} section of the ${now.name} page now shows ${b.data.map((d) => labels.get(d) ?? d).join(', ')}.`
+      const line = `The ${b.label} section of the ${now.name} page now shows ${groupedNames(b.data.map((d) => labels.get(d) ?? d))}.`
       add(
         `block-data:${page.id}:${id}`,
         [...line].length <= 200
@@ -80,7 +93,7 @@ export function changedLinesOf(current, revised, again = new Set()) {
   const ids = (plan) => new Set(plan.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
   const shownBefore = ids(current)
   const shownAfter = ids(revised)
-  const named = (set) => [...set].map((id) => labels.get(id) ?? id).join(', ')
+  const named = (set) => groupedNames([...set].map((id) => labels.get(id) ?? id))
   const off = new Set([...shownBefore].filter((id) => !shownAfter.has(id)))
   const on = [...shownAfter].filter((id) => !shownBefore.has(id))
   const back = new Set(on.filter((id) => again.has(id)))

@@ -18,7 +18,7 @@ export const EMPTIED_BLOCK_REASON =
   'Everything this section would show is longer than it can hold, so the section is left out.'
 
 /** Where a plan block sits in the composition, `pages[i].blocks[j]`, or its plan place for a block the gate added. */
-function compositionAt(page, block, pageIndex) {
+export function compositionAt(page, block, pageIndex) {
   const j = new RegExp(`^${page.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}-b(\\d+)$`).exec(block.id)?.[1]
   const i = pageIndex.get(page.id)
   if (i === undefined || j === undefined) return `pages[${page.id}].blocks[${block.id}]`

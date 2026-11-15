@@ -18,6 +18,8 @@
 // - the rows of every child list are set by rules from the business's rows (`plan-rows.mjs`), held to what the block
 //   store declares (`plan-rows-check.mjs`), and every row not shown is reported in the left out list;
 // - the page rules (`plan-gate-page-rules.mjs`) hold for the composition and again after placement;
+// - a block's reason never counts a number of items it does not show, and its label is not the name of its one datum
+//   (`plan-gate-wording.mjs`);
 // - the plan it returns passes the Contract B check (`build-contract.mjs`).
 // Composition in, `{ok, problems, plan, placed, accounting}` out.
 import { lookProblemsOf } from './brand-look-problems.mjs'
@@ -39,6 +41,7 @@ import {
   overLimitLeftOut
 } from './plan-data-limits.mjs'
 import { dropEmptiedBlocks } from './plan-emptied-blocks.mjs'
+import { wordingProblems } from './plan-gate-wording.mjs'
 import { planRows } from './plan-rows.mjs'
 import { WITHHELD_REASON, withheldWhatOf } from './plan-withheld.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
@@ -114,6 +117,12 @@ export function gatePlan(composition, context) {
   clearOverLimitValues(limited.dropped, context.data)
   const rows = planRows(limited.pages, context.blocks, context.data)
   rowListProblems(rows.pages, context.blocks, context.data, problem)
+  // A reason that counts what its block no longer shows, a label that repeats its one datum (`plan-gate-wording.mjs`).
+  wordingProblems(
+    rows.pages,
+    { data: context.data, dropped: limited.dropped, index: dropped.index, givenIds: context.givenIds },
+    problem
+  )
   const shown = new Set(rows.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
   const rowsOut = [
     ...overLimitLeftOut(limited.dropped, rows.pages, context.data),

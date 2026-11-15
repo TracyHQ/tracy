@@ -1,7 +1,9 @@
 // The rules that follow a customer's plan edit (ticket #615, called by `plan-edit-gate.mjs`): the data a block cannot
 // hold leaves it (`plan-data-limits.mjs`), the child list rows are planned again in the CUSTOMER's item order (each
 // item's rows cut at the place it lands in, `planRows` with `keepOrder`), and the left out entries these rules wrote
-// before are written again from the new plan. A value the customer typed that its field cannot hold is a problem, never
+// before are written again from the new plan. An item the gate took off before for its length and that no section of
+// the edited plan shows keeps its entry: the rules see only the data on the pages, and dropping the entry would read
+// as the customer taking it off (`plan-request-taken-off.mjs`). A value the customer typed that its field cannot hold is a problem, never
 // dropped silently. Every row and every fact a list dropped is shown, left out, or goes with its item. Pure.
 import { dataAccountingOf } from './plan-accounting.mjs'
 import {
@@ -11,6 +13,7 @@ import {
   dropOverLimitData,
   overLimitLeftOut
 } from './plan-data-limits.mjs'
+import { namesOf } from './plan-request-taken-off.mjs'
 import { ROW_REASONS } from './plan-rows-fit.mjs'
 import { planRows } from './plan-rows.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
@@ -49,8 +52,16 @@ export function replanRows(next, blocks, data, edited, changed, problems) {
     ...overLimitLeftOut(limited.dropped, next.pages, data),
     ...rowsLeftOut(data, rows.planned, rows.dropped, new Set(), shown)
   ]
+  // An over limit entry stays while no section shows what it names and the rules did not write it again.
+  const written = new Set(out.map((e) => e.what))
+  const named = (what) => [...data.byId].filter(([id, r]) => namesOf(next, r, id).includes(what))
+  const stillOff = (e) =>
+    e.reason === DATA_OVER_LIMIT_REASON &&
+    !written.has(e.what) &&
+    named(e.what).length > 0 &&
+    named(e.what).every(([id]) => !shown.has(id))
   next.leftOut = [
-    ...list(next.leftOut).filter((e) => !isRuleEntry(e)),
+    ...list(next.leftOut).filter((e) => !isRuleEntry(e) || stillOff(e)),
     ...out.map(withoutId),
     ...listsBelowMinLeftOut(rows.dropped, next.pages)
   ]

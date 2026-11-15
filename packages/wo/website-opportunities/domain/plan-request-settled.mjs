@@ -5,7 +5,8 @@
 //   gate's placement never brings back what the customer or the first plan kept off (`carriedLeftOutOf`); what the
 //   customer took off with a plan edit (shown nowhere, in no entry) is left out as asked (`REQUESTED_OFF_REASON`);
 // - left out entries no rule writes again (pages and sections left out, what the customer keeps private, a contact
-//   method chosen without its value) are carried;
+//   method chosen without its value) are carried; a page or section entry whose reason names a page the request
+//   removed ("shown on the trainers page") is carried with `STALE_PAGE_REASON`, as its own reason no longer holds;
 // - the model's own assumption lines are carried; one whose page or section the revision removed is dropped, with no
 //   line (an assumption explains a part of the plan, and that part is gone);
 // - the ids of every page and section the revision keeps (`pagesOf`, `givenIds`);
@@ -23,6 +24,16 @@ import { REQUESTED_OFF_REASON, leftOutEntryOf, namesOf } from './plan-request-ta
 import { WITHHELD_REASON } from './plan-withheld.mjs'
 
 export const REMOVED_PAGE_REASON = 'You asked to remove this page.'
+/** The reason of a left out page or section whose reason named a page the request removed. */
+export const STALE_PAGE_REASON = 'It is not part of your plan.'
+const escaped = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+/** Whether a reason names one of the removed pages ("the Trainers page", "the trainers page"). */
+const namesRemoved = (reason, removedPages) =>
+  removedPages.some((page) =>
+    [page.name, page.pageType]
+      .filter((n) => typeof n === 'string' && n !== '')
+      .some((n) => new RegExp(`\\b${escaped(n)}\\s+page\\b`, 'i').test(String(reason)))
+  )
 const CARRIED_REASONS = new Set([WITHHELD_REASON, CONTACT_VALUE_MISSING_REASON])
 const LOOK_KEYS = ['template', 'accent', 'accentDark', 'logo']
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -53,11 +64,17 @@ export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages }) 
     composition.push({ item: id, reason: entry?.reason ?? REQUESTED_OFF_REASON })
   }
   const names = new Set(pages.map((p) => p.name))
-  const context = list(plan.leftOut).filter(
-    (e) =>
-      !used.has(e) &&
-      (CARRIED_REASONS.has(e.reason) || ((e.kind === 'page' || e.kind === 'block') && !names.has(e.what)))
-  )
+  const context = list(plan.leftOut)
+    .filter(
+      (e) =>
+        !used.has(e) &&
+        (CARRIED_REASONS.has(e.reason) || ((e.kind === 'page' || e.kind === 'block') && !names.has(e.what)))
+    )
+    .map((e) =>
+      !CARRIED_REASONS.has(e.reason) && namesRemoved(e.reason, removedPages)
+        ? { ...e, reason: STALE_PAGE_REASON }
+        : e
+    )
   for (const page of removedPages)
     context.push({ what: page.name, kind: 'page', reason: REMOVED_PAGE_REASON })
   return { composition, context }

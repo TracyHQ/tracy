@@ -1023,6 +1023,17 @@
           "type": "string",
           "description": "Why the model did not read (rules only): not_configured, unavailable, budget, failed, truncated (the answer hit the token limit), empty or unreadable (not the contract's JSON)."
         },
+        "warning": {
+          "description": "Optional: why a reading was cut off by the token limit (code reasoning_not_off or answer_cut), with the token budget, the reasoning tokens spent and a line for the operator.",
+          "type": "object",
+          "required": ["code", "message"],
+          "properties": {
+            "code": { "enum": ["reasoning_not_off", "answer_cut"] },
+            "maxTokens": { "type": "integer" },
+            "reasoningTokens": { "type": ["integer", "null"] },
+            "message": { "type": "string", "minLength": 1 }
+          }
+        },
         "services": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "audience": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "team": { "type": "array", "items": { "$ref": "#/$defs/teamItem" } },

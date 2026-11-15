@@ -82,6 +82,32 @@ export function businessReadingDoorOf(found, host) {
   }
 }
 
+/**
+ * The warning of a reading cut off by the token limit (never silent): `reasoning_not_off` when the door could not turn
+ * the model's reasoning off (the provider's model list on /ops was never refreshed, so its effort profile is unknown)
+ * and the reasoning used the budget; `answer_cut` when reasoning was off and the answer still did not fit.
+ * @returns {{code: 'reasoning_not_off' | 'answer_cut', maxTokens: number, reasoningTokens: number | null,
+ *   message: string}}
+ */
+export function cutWarningOf(door, usage) {
+  const maxTokens = businessReadingMaxTokens(door)
+  const spent = Number(usage?.completion_tokens_details?.reasoning_tokens)
+  const reasoningTokens = Number.isFinite(spent) ? spent : null
+  return door?.effort === EFFORT_OFF
+    ? {
+        code: 'answer_cut',
+        maxTokens,
+        reasoningTokens,
+        message: `The answer did not fit in ${maxTokens} tokens with reasoning off; the rules read the business instead.`
+      }
+    : {
+        code: 'reasoning_not_off',
+        maxTokens,
+        reasoningTokens,
+        message: `Reasoning could not be turned off for this model, and the reading was cut off at ${maxTokens} tokens; the rules read the business instead. Refresh the provider's model list on /ops.`
+      }
+}
+
 /** The door of the operator's assignment (`host.lookupDoor`). */
 export async function businessReadingDoorFor(pool, secret, host) {
   const { lookupDoor } = requireHost(host, ['lookupDoor', 'effortOptions'])
@@ -282,7 +308,11 @@ export async function readBusiness({
     return rules('failed')
   }
   // Why the answer could not be read, told apart: cut off by the token limit, empty, or not the contract's JSON.
-  if (answer.finishReason === 'length') return rules('truncated', { model: ready.model })
+  if (answer.finishReason === 'length') {
+    const warning = cutWarningOf(ready, answer.usage)
+    log.warn?.('wo business reading cut off', { model: ready.model, ...warning })
+    return rules('truncated', { model: ready.model, warning })
+  }
   if (!String(answer.text ?? '').trim()) return rules('empty', { model: ready.model })
   const read = checkBusinessReading(answer.text, sources, { trade, facts })
   if (!read) return rules('unreadable', { model: ready.model })

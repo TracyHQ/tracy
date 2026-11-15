@@ -98,6 +98,25 @@ const MIN_DIGITS = 8
 const MAX_DIGITS = 15
 const nonEmpty = (s) => typeof s === 'string' && s.trim() !== ''
 const digitsOf = (s) => String(s).replace(/\D/g, '')
+// The zones whose numbers are always the code and ten digits: +1 (North America) and +7 (Russia, Kazakhstan).
+const TEN_DIGIT_ZONES = new Set(['1', '7'])
+
+/**
+ * A number written with a "+" that no country code follows, as its national form without that plus; any other
+ * number as written. A website writes "+ 720-555-0160": no calling code starts its digits, or the zone it would be
+ * (+7 here) holds eleven digits and this has ten, so the plus is a stray mark, not an international number. Never a
+ * country code added: the place's own code is applied by `normalizePhone` when it is known.
+ * @param {string} raw
+ */
+export function withoutStrayPlus(raw) {
+  if (!nonEmpty(raw)) return raw
+  const s = raw.trim()
+  if (!s.startsWith('+')) return s
+  const d = digitsOf(s)
+  const code = CODES.find((c) => d.startsWith(c))
+  const stray = !code || (TEN_DIGIT_ZONES.has(code) && d.length !== 11)
+  return stray ? s.replace(/^\+\s*/, '') : s
+}
 
 /** The calling code an E.164 number starts with, among the codes known here; null when none matches. */
 export function callingCodeOf(e164) {
@@ -119,7 +138,7 @@ export const callingCodeOfCountry = (country) =>
  */
 export function normalizePhone(raw, { callingCode = null, bare = false } = {}) {
   if (!nonEmpty(raw)) return null
-  const s = raw.trim()
+  const s = withoutStrayPlus(raw)
   const ok = (d) => (d.length >= MIN_DIGITS && d.length <= MAX_DIGITS ? `+${d}` : null)
   if (/^(?:\+|00)/.test(s)) return ok(digitsOf(s.replace(/^00/, '')))
   const d = digitsOf(s)
@@ -180,7 +199,19 @@ const isDirectoryPage = (url) => {
 const isListingUrl = (url) => typeof url === 'string' && linkKind(url)?.kind === 'listing'
 
 /**
+ * The number of a phone field: its E.164 form; for a number written with a stray plus in a place of unknown country,
+ * its national digits (`national:<digits>`), so the business's own number is still shown and no code is invented.
+ */
+function fieldNumberOf(value, callingCode) {
+  const e164 = normalizePhone(value, { callingCode, bare: true })
+  if (e164 || withoutStrayPlus(value) === value.trim()) return e164
+  const d = digitsOf(value)
+  return d.length >= MIN_DIGITS - 1 && d.length <= MAX_DIGITS ? `national:${d}` : null
+}
+
+/**
  * @typedef {{ phone: string, e164: string, sources: string[], whatsapp?: boolean }} PhoneEntry
+ *   `e164` is `national:<digits>` for a number no country code can be given to (`fieldNumberOf`)
  * @typedef {{ main: PhoneEntry | null, others: PhoneEntry[] }} PhoneDecision
  */
 
@@ -207,7 +238,9 @@ export function decidePhones({ profile = {}, opportunity = null } = {}) {
     (c?.types ?? []).includes('country')
   )
   const fieldClaims = (Array.isArray(evidence.phone) ? evidence.phone : []).filter((e) => nonEmpty(e?.value))
-  const plus = [googleRaw, ...fieldClaims.map((e) => e.value)].find((v) => nonEmpty(v) && /^\s*\+/.test(v))
+  const plus = [googleRaw, ...fieldClaims.map((e) => e.value)].find(
+    (v) => nonEmpty(v) && withoutStrayPlus(v).startsWith('+')
+  )
   const callingCode =
     callingCodeOfCountry(country?.shortText ?? country?.short_name) ??
     callingCodeOf(plus ? normalizePhone(plus) : null) ??
@@ -217,7 +250,7 @@ export function decidePhones({ profile = {}, opportunity = null } = {}) {
   const claim = (raw, e164, source, whatsapp = false) => {
     if (!e164) return
     let held = entries.find((x) => x.e164 === e164)
-    if (!held) entries.push((held = { phone: raw.trim(), e164, sources: [] }))
+    if (!held) entries.push((held = { phone: withoutStrayPlus(raw), e164, sources: [] }))
     if (!held.sources.includes(source)) held.sources.push(source)
     if (whatsapp) held.whatsapp = true
   }
@@ -226,7 +259,7 @@ export function decidePhones({ profile = {}, opportunity = null } = {}) {
   for (const e of fieldClaims)
     for (const source of Array.isArray(e.sources) ? e.sources : []) {
       if (typeof source !== 'string' || foreign(source)) continue
-      claim(e.value, normalizePhone(e.value, { callingCode, bare: true }), sourceOf(source))
+      claim(e.value, fieldNumberOf(e.value, callingCode), sourceOf(source))
     }
   for (const e of Array.isArray(evidence.bio) ? evidence.bio : [])
     for (const source of Array.isArray(e?.sources) ? e.sources : []) {
