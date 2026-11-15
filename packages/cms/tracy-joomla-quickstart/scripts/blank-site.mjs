@@ -16,7 +16,7 @@
  * #587) adds the system menu the kit declares.
  */
 
-import { systemMenuProblems } from './blank-site-data-fixes.mjs'
+import { registrationProblems, systemMenuProblems } from './blank-site-data-fixes.mjs'
 import { blankSecrets, findSecrets } from './blank-site-secrets.mjs'
 import { parseDump, records, removeRows, serializeDump } from './joomla-sql-dump.mjs'
 
@@ -144,15 +144,17 @@ export function produceBlankSite(sql, { steps = BLANK_SITE_STEPS, systemMenus = 
 /**
  * Everything that keeps `sql` from being a blank site, one sentence each; empty when it is one. `systemMenus`
  * (`systemMenusOf(mapping)`) are the system menus the kit declares: their items are the only site menu items allowed,
- * exactly as declared, and no block may show them.
+ * exactly as declared, and no block may show them. `registrationOff` (`registrationOffOf(mapping)`): the kit declares
+ * visitor sign-up off, and a blank site that lets visitors sign up is refused.
  */
-export function checkBlankSite(sql, { systemMenus = [] } = {}) {
+export function checkBlankSite(sql, { systemMenus = [], registrationOff = false } = {}) {
   const dump = parseDump(sql)
   const problems = [...dump.unparsed]
   const system = new Set(systemMenus.map((m) => m.menutype))
   for (const r of records(dump, 'menu').filter(isSiteMenuItem))
     if (!system.has(r.menutype)) problems.push(`site menu item ${r.id} (${r.title})`)
   problems.push(...systemMenuProblems(dump, systemMenus))
+  if (registrationOff) problems.push(...registrationProblems(dump))
   const site = new Set(
     records(dump, 'modules')
       .filter(isSiteBlock)

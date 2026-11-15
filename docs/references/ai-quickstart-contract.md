@@ -1000,8 +1000,9 @@ words, and one that says no page draws them is refused.
 
 ### The system menu (`dataFixes`, #587)
 
-`dataFixes: [{id: "system-menu", menu: {menutype, title}, templateStyle, items: [{page, title, alias, link}], why}]`,
-the one change the blank site step makes to the demo data beyond removing it. Every demo menu item is removed, so the
+`dataFixes: [{id: "system-menu", menu: {menutype, title}, templateStyle, items: [{page, title, alias, link, robots?}],
+why}]`, a change the blank site step makes to the demo data beyond removing it (at most one data fix of each kind per
+kit; the other kind is `registration-off`, below). Every demo menu item is removed, so the
 search, sign in, password reset and username reminder pages have no menu item: Joomla prints such a page under the
 style of the active page (on a built JA Boxing site the home page's Landing style, whose layout has no main body) and
 with that page's title. The blank site step (`blank-site-data-fixes.mjs`, run after the field emptying) adds a menu
@@ -1022,6 +1023,32 @@ holds. An address that names the component with no item (`index.php?option=com_u
 the active page's style and title: Joomla matches a menu item only when it builds a link. The titles are the platform's
 own words for those pages (`JSEARCH_FILTER_SUBMIT`, `JLOGIN`, `COM_USERS_LOGIN_RESET`, `COM_USERS_LOGIN_REMIND`), kept
 in `overrides.language`. The blank site contract does not change: the items are records of no contract.
+
+`robots`, optional on an item, is one of the robots values the platform's menu item form offers (`index, follow`,
+`noindex, follow`, `index, nofollow`, `noindex, nofollow`); the step writes it into the item's params
+(`{"robots": "..."}`) and the check refuses an item whose params say otherwise. The four views print it as the page's
+robots meta (`components/com_users/src/View/{Login,Reset,Remind}/HtmlView.php`,
+`components/com_finder/src/View/Search/HtmlView.php`). JA Boxing gives all four items `noindex, follow`: a search
+form, a sign in form and two account recovery forms are no business page to list in a search engine, and their links
+are still followed. Measured on the blank site archive restored on Joomla 6.1.1 with a temporary home item: each of
+the four pages, reached by its item, prints `<meta name="robots" content="noindex, follow">`; the home page prints
+none.
+
+### Visitor sign-up off (`dataFixes`, `registration-off`, #587)
+
+`{id: "registration-off", why}`: the blank site step sets `allowUserRegistration` to `"0"` in the params of the
+`com_users` component row of the demo data and leaves the rest of the params text as the release wrote it; it stops
+when the dump has no such row, or an `UPDATE` of `#__extensions` that names the key (the step changes the row only).
+The blank site check (`checkBlankSite` with `registrationOff`, `blank-site.mjs --check <zip> --mapping <file>`)
+refuses a blank site where sign-up is on. A business site rarely wants open visitor accounts. With sign-up off the
+sign in page prints no create an account link (`plugins/system/t4/themes/base/html/com_users/login/default_login.php:134`), and the
+registration view sends the visitor to the sign in page (`components/com_users/src/Dispatcher/Dispatcher.php:62-64`).
+The words of that link (`COM_USERS_LOGIN_REGISTER`) no longer print, so JA Boxing no longer keeps them: a keep whose
+words never print is a false declaration. Measured on the blank site archive restored on Joomla 6.1.1 with a temporary
+home item: the sign in page prints neither the link nor its words, and
+`index.php?option=com_users&view=registration` answers 303 to the sign in page; the same site with the value turned
+back to `"1"` prints both and answers 200. An owner who wants visitor accounts turns sign-up on in the users options.
+Both data fixes change one row each of the blank site archive; the blank site contract does not change.
 
 ## The blank site contract
 

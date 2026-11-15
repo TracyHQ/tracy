@@ -28,6 +28,11 @@ const SYSTEM_MENU = {
   ],
   why: 'invented: the system pages print no main body without a menu item of their own'
 }
+/** The fixture with the full column list of a real dump's menu table (params among them). */
+const FULL = FIXTURE.replace(
+  "INSERT INTO `#__menu` (`id`, `menutype`, `title`, `link`, `parent_id`, `lft`, `rgt`, `home`, `client_id`) VALUES \n(1,'','Menu_Item_Root','',0,0,15,0,0)",
+  "INSERT INTO `#__menu` (`id`, `menutype`, `title`, `alias`, `note`, `path`, `link`, `type`, `published`, `parent_id`, `level`, `component_id`, `checked_out`, `checked_out_time`, `browserNav`, `access`, `img`, `template_style_id`, `params`, `lft`, `rgt`, `home`, `language`, `client_id`, `publish_up`, `publish_down`) VALUES \n(1,'','Menu_Item_Root','root','','','','',1,0,0,0,NULL,NULL,0,0,'',0,'',0,15,0,'*',0,NULL,NULL)"
+).replace(/\n,\((?:2|101|102|103|104),'[^\n]*/g, (row) => (row.endsWith(';') ? ';' : ''))
 const MAPPING = { dataFixes: [SYSTEM_MENU] }
 const make = (sql = FIXTURE, mapping = MAPPING) =>
   produceBlankSite(sql, { steps: [...BLANK_SITE_STEPS, dataFixesStep({ mapping })] })
@@ -96,10 +101,7 @@ test('the system menu and one item per declared system page are added, on the de
 })
 
 test('the full menu columns of a real dump are written; a column the step does not know stops it', () => {
-  const full = FIXTURE.replace(
-    "INSERT INTO `#__menu` (`id`, `menutype`, `title`, `link`, `parent_id`, `lft`, `rgt`, `home`, `client_id`) VALUES \n(1,'','Menu_Item_Root','',0,0,15,0,0)",
-    "INSERT INTO `#__menu` (`id`, `menutype`, `title`, `alias`, `note`, `path`, `link`, `type`, `published`, `parent_id`, `level`, `component_id`, `checked_out`, `checked_out_time`, `browserNav`, `access`, `img`, `template_style_id`, `params`, `lft`, `rgt`, `home`, `language`, `client_id`, `publish_up`, `publish_down`) VALUES \n(1,'','Menu_Item_Root','root','','','','',1,0,0,0,NULL,NULL,0,0,'',0,'',0,15,0,'*',0,NULL,NULL)"
-  ).replace(/\n,\((?:2|101|102|103|104),'[^\n]*/g, (row) => (row.endsWith(';') ? ';' : ''))
+  const full = FULL
   const { sql } = make(full)
   const item = records(parseDump(sql), 'menu').find((r) => r.alias === 'login')
   assert.deepEqual(
@@ -191,4 +193,61 @@ test('the blank site check names a system menu item that is undeclared, changed 
   assert.deepEqual(checkBlankSite(shown, { systemMenus: menus }), [
     'block 93 shows the system menu system-pages'
   ])
+})
+
+test('robots an item declares is written into its params, and the check refuses an item whose robots differ (#587)', () => {
+  const declared = structuredClone(MAPPING)
+  for (const item of declared.dataFixes[0].items) item.robots = 'noindex, follow'
+  const { sql } = make(FULL, declared)
+  const items = records(parseDump(sql), 'menu').filter((r) => r.menutype === 'system-pages')
+  assert.deepEqual(
+    items.map((r) => r.params),
+    ['{"robots":"noindex, follow"}', '{"robots":"noindex, follow"}']
+  )
+  const menus = systemMenusOf(declared)
+  assert.deepEqual(checkBlankSite(sql, { systemMenus: menus }), [])
+  assert.deepEqual(checkBlankSite(make(FULL).sql, { systemMenus: menus }), [
+    'site menu item 2 (Log in) of the system menu system-pages is not as declared: robots',
+    'site menu item 3 (Forgot your password?) of the system menu system-pages is not as declared: robots'
+  ])
+  assert.throws(
+    () => make(FIXTURE, declared),
+    /robots is declared but the dump's menu table has no params column/
+  )
+})
+
+const REGISTRATION_OFF = { id: 'registration-off', why: 'invented: the business takes no visitor accounts' }
+const usersParams = (sql) =>
+  records(parseDump(sql), 'extensions').find((r) => r.element === 'com_users' && r.type === 'component')
+    .params
+
+test('registration-off sets allowUserRegistration "0" in the com_users params and changes nothing else (#587)', () => {
+  const mapping = { dataFixes: [SYSTEM_MENU, REGISTRATION_OFF] }
+  const { sql, report } = make(FIXTURE, mapping)
+  assert.equal(usersParams(sql), '{"allowUserRegistration":"0","sendpassword":"0","new_usertype":"2"}')
+  assert.deepEqual(report.steps['data-fixes'][1], { id: 'registration-off', was: '1' })
+  const after = make(FIXTURE, { dataFixes: [REGISTRATION_OFF] }).sql.split('\n')
+  const blank = produceBlankSite(FIXTURE).sql.split('\n')
+  assert.deepEqual(
+    after.filter((line, i) => line !== blank[i]),
+    [
+      ',(12,\'com_users\',\'component\',\'com_users\',\'\',1,\'{\\"allowUserRegistration\\":\\"0\\",\\"sendpassword\\":\\"0\\",\\"new_usertype\\":\\"2\\"}\')'
+    ]
+  )
+  assert.deepEqual(checkBlankSite(sql, { systemMenus: systemMenusOf(mapping), registrationOff: true }), [])
+})
+
+test('the check refuses visitor sign-up on when registration-off is declared, and the step stops without com_users (#587)', () => {
+  const { sql } = make(FIXTURE, { dataFixes: [] })
+  assert.deepEqual(checkBlankSite(sql, { registrationOff: true }), [
+    'visitor sign-up is on (com_users allowUserRegistration "1") though the kit declares registration-off'
+  ])
+  assert.deepEqual(checkBlankSite(sql), [], 'not declared: not checked')
+  const none = FIXTURE.replace(/\n,\(12,'com_users'[^\n]*/, '')
+  assert.throws(() => make(none, { dataFixes: [REGISTRATION_OFF] }), /no com_users component row/)
+  const updated = `${FIXTURE}\nUPDATE \`#__extensions\` SET \`params\` = '{\\"allowUserRegistration\\":\\"1\\"}' WHERE \`extension_id\` = 12;\n`
+  assert.throws(
+    () => make(updated, { dataFixes: [REGISTRATION_OFF] }),
+    /an UPDATE of #__extensions names allowUserRegistration/
+  )
 })

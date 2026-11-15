@@ -63,8 +63,8 @@ test('a data fix is a closed shape: unknown keys, an unknown kind and a missing 
   assert.deepEqual(near(set, 'dataFixes'), [
     'dataFixes[0].extra: "extra" is no key here: id, menu, templateStyle, items, why',
     'dataFixes[0].why: say why (what prints it, measured or read where)',
-    'dataFixes[1].id: id is one of system-menu',
-    'dataFixes[2]: a data fix is {id: "system-menu", menu, templateStyle, items, why}',
+    'dataFixes[1].id: id is one of system-menu, registration-off',
+    'dataFixes[2]: a data fix is {id, ...} with id one of system-menu, registration-off',
     'dataFixes[3].id: system-menu is declared twice: one per kit'
   ])
   const notList = structuredClone(VALID)
@@ -104,11 +104,43 @@ test('each item is one system page with its own route, alias and title; none rep
     'dataFixes[0].items[1].page: page is one of system-search, system-login, system-reset, system-remind',
     'dataFixes[0].items[2].alias: alias "search" is used twice: one page, one address',
     'dataFixes[0].items[2].title: title "Search" is used twice: each system page has its own title',
-    'dataFixes[0].items[3].home: "home" is no key here: page, title, alias, link',
+    'dataFixes[0].items[3].home: "home" is no key here: page, title, alias, link, robots',
     'dataFixes[0].items[3].page: system-login has two items',
     'dataFixes[0].items[3].alias: alias is lower case letters, digits and dashes'
   ])
   assert.deepEqual(near(withFix({ ...SYSTEM_MENU, items: [] }), 'dataFixes'), [
-    'dataFixes[0].items: items lists the system pages the menu gives an item: {page, title, alias, link}'
+    'dataFixes[0].items: items lists the system pages the menu gives an item: {page, title, alias, link, robots?}'
+  ])
+})
+
+test('a system menu item may carry robots, one of the platform robots values (#587)', () => {
+  const items = SYSTEM_MENU.items.map((item) => ({ ...item, robots: 'noindex, follow' }))
+  assert.deepEqual(near(withFix({ ...SYSTEM_MENU, items }), 'dataFixes'), [])
+  const off = [
+    { ...SYSTEM_MENU.items[0], robots: 'noindex' },
+    { ...SYSTEM_MENU.items[1], robots: '' }
+  ]
+  assert.deepEqual(near(withFix({ ...SYSTEM_MENU, items: off }), 'dataFixes'), [
+    'dataFixes[0].items[0].robots: robots is one of index, follow; noindex, follow; index, nofollow; noindex, nofollow',
+    'dataFixes[0].items[1].robots: robots is one of index, follow; noindex, follow; index, nofollow; noindex, nofollow'
+  ])
+})
+
+const REGISTRATION_OFF = {
+  id: 'registration-off',
+  why: 'the invented business takes no visitor accounts: the sign in page offers no sign up'
+}
+
+test('registration-off turns visitor sign-up off, said with why, in a closed shape (#587)', () => {
+  assert.deepEqual(near(withFix(REGISTRATION_OFF), 'dataFixes'), [])
+  const both = withFix(SYSTEM_MENU)
+  both.mapping.dataFixes.push(structuredClone(REGISTRATION_OFF))
+  assert.deepEqual(near(both, 'dataFixes'), [], 'one of each kind')
+  const loose = withFix({ ...REGISTRATION_OFF, why: ' ', menu: SYSTEM_MENU.menu })
+  loose.mapping.dataFixes.push(structuredClone(REGISTRATION_OFF))
+  assert.deepEqual(near(loose, 'dataFixes'), [
+    'dataFixes[0].menu: "menu" is no key here: id, why',
+    'dataFixes[0].why: say why (what prints it, measured or read where)',
+    'dataFixes[1].id: registration-off is declared twice: one per kit'
   ])
 })

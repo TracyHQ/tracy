@@ -18,7 +18,8 @@
  * copied unchanged but the demo data. The data fixes the mapping declares (`dataFixes`, ticket #587) are made after
  * that (`blank-site-data-fixes.mjs`): the system menu, a menu no block shows whose items give the search, sign in,
  * password reset and username reminder pages a menu item of their own; the check then accepts those items and no
- * other site menu item. `--check` takes `--mapping` to read the same declaration.
+ * other site menu item, each item with the robots it declares; and visitor sign-up off (`registration-off`,
+ * com_users `allowUserRegistration` "0"). `--check` takes `--mapping` to read the same declarations.
  *
  * With `--contract` and `--contract-out` (ticket #584) it also writes the blank site contract into `--contract-out`
  * (`manifest.json`, `content-map.json`, `presentation-lock.json`, made by `blank-site-contract.mjs`): the released contract
@@ -43,6 +44,7 @@ import {
 } from '../../packages/cms/tracy-joomla-quickstart/scripts/blank-site-contract.mjs'
 import {
   dataFixesStep,
+  registrationOffOf,
   systemMenusOf
 } from '../../packages/cms/tracy-joomla-quickstart/scripts/blank-site-data-fixes.mjs'
 import { emptyDeclaredFieldsStep } from '../../packages/cms/tracy-joomla-quickstart/scripts/blank-site-empty-fields.mjs'
@@ -108,7 +110,8 @@ function printCounts(label, counts) {
 function check(file, mappingFile) {
   const mapping = mappingFile ? JSON.parse(readFileSync(mappingFile, 'utf8')) : null
   const problems = checkBlankSite(readEntry(readFileSync(file), DEMO_DATA).toString('utf8'), {
-    systemMenus: systemMenusOf(mapping)
+    systemMenus: systemMenusOf(mapping),
+    registrationOff: registrationOffOf(mapping)
   })
   for (const p of problems) console.log(`not blank: ${p}`)
   console.log(
@@ -190,7 +193,7 @@ function produce({ input, out, report: reportFile, mapping: mappingFile, contrac
   )
   if (changed.length)
     throw new Error(`entries changed that must not: ${changed.map((e) => e.name).join(', ')}`)
-  const problems = checkBlankSite(sql, { systemMenus })
+  const problems = checkBlankSite(sql, { systemMenus, registrationOff: registrationOffOf(mapping) })
 
   // The archive exists only when it passed its own check; a failed run leaves nothing a later step could pick up.
   if (problems.length) rmSync(out, { force: true })
@@ -240,7 +243,9 @@ function produce({ input, out, report: reportFile, mapping: mappingFile, contrac
   if (files.size) console.log(`entries added: ${[...files.keys()].join(', ')}`)
   for (const fix of report.steps['data-fixes'] ?? [])
     console.log(
-      `${fix.id} ${fix.menutype}: ${fix.items.map((i) => `${i.page} (menu item ${i.id})`).join(', ')}`
+      fix.id === 'registration-off'
+        ? `${fix.id}: com_users allowUserRegistration ${fix.was === null ? 'not set' : `"${fix.was}"`} -> "0"`
+        : `${fix.id} ${fix.menutype}: ${fix.items.map((i) => `${i.page} (menu item ${i.id})`).join(', ')}`
     )
   if (!problems.length) console.log(`${out}  sha256 ${full.blankSite.sha256}`)
   if (made && !problems.length)

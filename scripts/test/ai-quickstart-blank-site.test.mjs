@@ -214,3 +214,25 @@ test('a system menu the mapping declares is added, and --check accepts it only w
   const withMapping = run('--check', out, '--mapping', mapping)
   assert.equal(withMapping.status, 0, withMapping.stdout)
 })
+
+test('registration-off turns visitor sign-up off, and --check refuses sign-up on only with that mapping (#587)', (t) => {
+  const { dir, installer } = workdir(t)
+  const { mapping } = contractFiles(dir)
+  const declared = JSON.parse(readFileSync(mapping, 'utf8'))
+  declared.dataFixes = [{ id: 'registration-off', why: 'invented: the business takes no visitor accounts' }]
+  writeFileSync(mapping, JSON.stringify(declared))
+  const out = path.join(dir, 'blank.zip')
+  const res = run(installer, '--out', out, '--mapping', mapping)
+  assert.equal(res.status, 0, res.stderr + res.stdout)
+  assert.match(res.stdout, /registration-off: com_users allowUserRegistration "1" -> "0"/)
+  assert.equal(run('--check', out, '--mapping', mapping).status, 0)
+  const open = path.join(dir, 'open.zip')
+  delete declared.dataFixes
+  const plain = path.join(dir, 'plain-mapping.json')
+  writeFileSync(plain, JSON.stringify(declared))
+  assert.equal(run(installer, '--out', open, '--mapping', plain).status, 0)
+  assert.equal(run('--check', open).status, 0, 'not declared: not checked')
+  const refused = run('--check', open, '--mapping', mapping)
+  assert.equal(refused.status, 1)
+  assert.match(refused.stdout, /not blank: visitor sign-up is on \(com_users allowUserRegistration "1"\)/)
+})
