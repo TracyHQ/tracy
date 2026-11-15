@@ -9,7 +9,8 @@
 //     regular expression for words the file computes (an ordinal). The file is a path inside the template release;
 //     `scripts/ai-quickstart/check.mjs` checks it is one of the files the source contract locks.
 // Every reason is said (`why`); a reason that says the words are on no page is refused (they are declared because a
-// page shows them).
+// page shows them). The data fixes of the blank site (`dataFixes`) are checked in `ai-quickstart-data-fixes.mjs`.
+import { dataFixProblems } from './ai-quickstart-data-fixes.mjs'
 import { NOT_DRAWN_REASON } from './ai-quickstart-mapping-language.mjs'
 
 export const FAVICON_FROM = Object.freeze(['logo'])
@@ -127,4 +128,5 @@ export function kitDeclarationProblems(mapping, { report, factKinds }) {
   faviconProblems(mapping?.look?.favicon, report)
   recordFactProblems(mapping?.pages, factKinds ?? {}, report)
   keptLiteralProblems(mapping?.keptLiterals, report)
+  dataFixProblems(mapping?.dataFixes, report, reasonProblem)
 }

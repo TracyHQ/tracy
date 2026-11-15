@@ -12,9 +12,11 @@
  * The work is a list of steps (`BLANK_SITE_STEPS`), each `{id, run(ctx)}` over the parsed dump. A later step is
  * added to the list, not written into these ones: with a mapping file, `emptyDeclaredFieldsStep`
  * (`blank-site-empty-fields.mjs`, ticket #584) empties every content field it declares and puts the template and
- * language files it writes in `ctx.files`, returned as `files`.
+ * language files it writes in `ctx.files`, returned as `files`; `dataFixesStep` (`blank-site-data-fixes.mjs`, ticket
+ * #587) adds the system menu the kit declares.
  */
 
+import { systemMenuProblems } from './blank-site-data-fixes.mjs'
 import { blankSecrets, findSecrets } from './blank-site-secrets.mjs'
 import { parseDump, records, removeRows, serializeDump } from './joomla-sql-dump.mjs'
 
@@ -107,13 +109,14 @@ export const BLANK_SITE_STEPS = [
 
 /**
  * @param {string} sql  the human quickstart's `custom.sql`
- * @param {{ steps?: { id: string, run: (ctx: object) => object }[] }} [options]
+ * @param {{ steps?: { id: string, run: (ctx: object) => object }[], systemMenus?: object[] }} [options]
+ *   `systemMenus`: the system menus the kit declares, counted apart from the site menu items (`countSite`)
  * @returns {{ sql: string, report: object, files: Map<string, Buffer> }}
  */
-export function produceBlankSite(sql, { steps = BLANK_SITE_STEPS } = {}) {
+export function produceBlankSite(sql, { steps = BLANK_SITE_STEPS, systemMenus = [] } = {}) {
   const dump = parseDump(sql)
   const ctx = { dump, removed: new Map(), secrets: [], files: new Map() }
-  const before = countSite(dump)
+  const before = countSite(dump, { systemMenus })
   const results = {}
   for (const step of steps) results[step.id] = step.run(ctx)
   const blockStore = records(dump, 'modules')
@@ -127,17 +130,29 @@ export function produceBlankSite(sql, { steps = BLANK_SITE_STEPS } = {}) {
     }))
   return {
     sql: serializeDump(dump),
-    report: { before, after: countSite(dump), blockStore, secrets: ctx.secrets, steps: results },
+    report: {
+      before,
+      after: countSite(dump, { systemMenus }),
+      blockStore,
+      secrets: ctx.secrets,
+      steps: results
+    },
     files: ctx.files
   }
 }
 
-/** Everything that keeps `sql` from being a blank site, one sentence each; empty when it is one. */
-export function checkBlankSite(sql) {
+/**
+ * Everything that keeps `sql` from being a blank site, one sentence each; empty when it is one. `systemMenus`
+ * (`systemMenusOf(mapping)`) are the system menus the kit declares: their items are the only site menu items allowed,
+ * exactly as declared, and no block may show them.
+ */
+export function checkBlankSite(sql, { systemMenus = [] } = {}) {
   const dump = parseDump(sql)
   const problems = [...dump.unparsed]
+  const system = new Set(systemMenus.map((m) => m.menutype))
   for (const r of records(dump, 'menu').filter(isSiteMenuItem))
-    problems.push(`site menu item ${r.id} (${r.title})`)
+    if (!system.has(r.menutype)) problems.push(`site menu item ${r.id} (${r.title})`)
+  problems.push(...systemMenuProblems(dump, systemMenus))
   const site = new Set(
     records(dump, 'modules')
       .filter(isSiteBlock)
@@ -157,8 +172,10 @@ export function checkBlankSite(sql) {
   return problems
 }
 
-/** The counts the report and the acceptance evidence show. */
-export function countSite(dump) {
+/** The counts the report and the acceptance evidence show; the items of a declared system menu are counted apart. */
+export function countSite(dump, { systemMenus = [] } = {}) {
+  const system = new Set(systemMenus.map((m) => m.menutype))
+  const menuItems = records(dump, 'menu').filter(isSiteMenuItem)
   const site = new Set(
     records(dump, 'modules')
       .filter(isSiteBlock)
@@ -170,7 +187,8 @@ export function countSite(dump) {
       .map((r) => r.moduleid)
   )
   return {
-    siteMenuItems: records(dump, 'menu').filter(isSiteMenuItem).length,
+    siteMenuItems: menuItems.filter((r) => !system.has(r.menutype)).length,
+    ...(system.size ? { systemMenuItems: menuItems.filter((r) => system.has(r.menutype)).length } : {}),
     articles: records(dump, 'content').length,
     demoCategories: records(dump, 'categories').filter((c) => !isKeptCategory(c)).length,
     tags: records(dump, 'tags').filter((t) => t.id !== '1').length,

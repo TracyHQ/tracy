@@ -153,6 +153,8 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
     ...(decisions.escapes ? { escapes: decisions.escapes } : {}),
     // Words a template file writes as code, kept on every site (#587).
     ...(decisions.keptLiterals ? { keptLiterals: decisions.keptLiterals } : {}),
+    // The changes the blank site step makes to the demo data beyond removing it: the system menu (#587).
+    ...(decisions.dataFixes ? { dataFixes: decisions.dataFixes } : {}),
     inlineMarkup: report.inlineMarkup
       ? {
           class: report.inlineMarkup.class,

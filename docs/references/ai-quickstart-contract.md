@@ -596,7 +596,9 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   reads such a reason as `kit_reason_false` wherever the string shows). JA Boxing keeps the paging words (`JPREV`,
   `JNEXT`, `JLIB_HTML_*`), the breadcrumbs' first crumb, the error page words (`ERROR`, `JERROR_PAGE_NOT_FOUND`,
   `JERROR_LAYOUT_*`), the contact page and contact form labels (`COM_CONTACT_*`), the newsletter form words
-  (`ACYM_*`), `COM_CONTENT_MORE_ARTICLES` and `JCLOSE`, each with the file that prints it.
+  (`ACYM_*`), `COM_CONTENT_MORE_ARTICLES` and `JCLOSE`, and the words of the search, sign in, password reset and
+  username reminder pages the system menu gives a main body (`COM_FINDER_*`, `COM_USERS_*`, `JLOGIN`,
+  `JGLOBAL_PASSWORD`, `JSHOWPASSWORD`, `JSUBMIT`, `JSEARCH_FILTER_SUBMIT`), each with the file that prints it.
 - **`notEmptied`**: `[{entity, slot? | column?, why}]`, what the blank site keeps as the demo has them, though it holds
   demo words: a whole record (a trashed module no block of the store is), one slot of it (a module title no page
   prints), or one column outside the content map (`{"entity": "module-180", "column": "title"}`). Every place the
@@ -995,6 +997,31 @@ words, and one that says no page draws them is refused.
   titles of the share links by the article and lesson layouts) and the two digit step and card numbers
   (`^\d{2}$`, the lesson layout and the features block). The release gate's reading of `keptLiterals` lands with the
   gate's own change; until then the declaration is checked here and passed to the mapping file only.
+
+### The system menu (`dataFixes`, #587)
+
+`dataFixes: [{id: "system-menu", menu: {menutype, title}, templateStyle, items: [{page, title, alias, link}], why}]`,
+the one change the blank site step makes to the demo data beyond removing it. Every demo menu item is removed, so the
+search, sign in, password reset and username reminder pages have no menu item: Joomla prints such a page under the
+style of the active page (on a built JA Boxing site the home page's Landing style, whose layout has no main body) and
+with that page's title. The blank site step (`blank-site-data-fixes.mjs`, run after the field emptying) adds a menu
+type no block shows and one site menu item per declared page at the root, on `templateStyle` (`0`, the site default
+style), home of none, ids after the highest the dump keeps. The shape is closed (`ai-quickstart-data-fixes.mjs`, WO
+domain): `page` is one of `system-search`, `system-login`, `system-reset`, `system-remind` (the release gate's page
+types), `link` is that page's route, and no alias, title or page repeats. The blank site check (`checkBlankSite` with
+the declared menus, `blank-site.mjs --check <zip> --mapping <file>`) accepts exactly the declared items and refuses a
+block that shows the menu.
+
+Measured on JA Boxing 1.0.11 (the blank site archive restored on Joomla 6.1.1, a home item on the Landing style added
+as a build makes one): reached by their items (`index.php/search`, `index.php/login`, `index.php/password-reset`,
+`index.php/username-reminder`), the four pages print `layout-default` with their main body and the titles `Search`,
+`Log in`, `Forgot your password?` and `Forgot your username?`, in both theme sides at 390 and 1440 px; no navigation of
+any page links them (no `mod_menu` block reads `system-pages`; the T4 navigation reads `mainmenu`); the sign in page
+links the reset and reminder pages through their items; the plugin binds the blank site contract and the door proof
+holds. An address that names the component with no item (`index.php?option=com_users&view=login`) still prints under
+the active page's style and title: Joomla matches a menu item only when it builds a link. The titles are the platform's
+own words for those pages (`JSEARCH_FILTER_SUBMIT`, `JLOGIN`, `COM_USERS_LOGIN_RESET`, `COM_USERS_LOGIN_REMIND`), kept
+in `overrides.language`. The blank site contract does not change: the items are records of no contract.
 
 ## The blank site contract
 

@@ -99,19 +99,47 @@ export function removeRows(dump, table, predicate) {
   return removed
 }
 
-/** Set `column` to `value` on the rows the predicate accepts; returns how many changed. */
+/** Set `column` to `value` on the rows the predicate accepts (a number is written bare); returns how many changed. */
 export function setValue(dump, table, predicate, column, value) {
   let changed = 0
   for (const part of inserts(dump, table)) {
     const at = part.columns.indexOf(column)
     if (at === -1) continue
     for (const row of part.rows) {
-      if (!predicate(record(part, row)) || row.cells[at].value === value) continue
-      row.cells[at] = { raw: sqlQuote(value), value }
+      const cell =
+        typeof value === 'number'
+          ? { raw: String(value), value: String(value) }
+          : { raw: sqlQuote(value), value }
+      if (!predicate(record(part, row)) || row.cells[at].value === cell.value) continue
+      row.cells[at] = cell
       changed += 1
     }
   }
   return changed
+}
+
+/**
+ * Append rows to the last INSERT of `table`, each a `{column: value}` naming every column that INSERT lists (a number
+ * is written bare, a string quoted, null as NULL). The table must already have an INSERT: its columns are the ones the
+ * dump writes. Returns how many rows were added.
+ */
+export function addRows(dump, table, rows) {
+  const part = inserts(dump, table).at(-1)
+  if (!part) throw new Error(`the dump has no INSERT into ${table} to add rows to`)
+  const sep = part.rows.find((_, i) => i > 0)?.sep ?? '\n,'
+  for (const r of rows) {
+    const extra = Object.keys(r).filter((c) => !part.columns.includes(c))
+    if (extra.length) throw new Error(`${table} has no column ${extra.join(', ')}`)
+    const cells = part.columns.map((c) => {
+      if (!Object.hasOwn(r, c)) throw new Error(`a row added to ${table} names no ${c}`)
+      const v = r[c]
+      if (typeof v === 'number') return { raw: String(v), value: String(v) }
+      return { raw: sqlQuote(v), value: v ?? null }
+    })
+    if (part.rows.length === 0) part.lead = part.lead ?? '\n'
+    part.rows.push({ sep: part.rows.length ? sep : (part.lead ?? '\n'), cells })
+  }
+  return rows.length
 }
 
 /** The UPDATE statements: `{table, id, text}`, `id` being the `id` their WHERE names, or null. */

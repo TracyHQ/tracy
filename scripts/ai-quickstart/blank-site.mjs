@@ -5,7 +5,7 @@
  *   node scripts/ai-quickstart/blank-site.mjs <human quickstart .zip> --out <blank site .zip> [--report <file.json>]
  *                                             [--mapping <AI quickstart mapping.json>]
  *                                             [--contract <released contract folder> --contract-out <folder>]
- *   node scripts/ai-quickstart/blank-site.mjs --check <installer .zip>
+ *   node scripts/ai-quickstart/blank-site.mjs --check <installer .zip> [--mapping <AI quickstart mapping.json>]
  *
  * The blank site is the same installer with one file changed, its demo data (`installation/sql/mysql/custom.sql`):
  * no pages, empty menus, every demo block kept and assigned to no page, no account, session or secret of the source
@@ -15,7 +15,10 @@
  * With `--mapping` (ticket #584) the step also empties every content field the mapping file declares
  * (`blank-site-empty-fields.mjs`) and adds the files that step writes: the template's local Site settings and global
  * settings and the site language overrides, new entries after the copied ones. Every entry of the source is still
- * copied unchanged but the demo data.
+ * copied unchanged but the demo data. The data fixes the mapping declares (`dataFixes`, ticket #587) are made after
+ * that (`blank-site-data-fixes.mjs`): the system menu, a menu no block shows whose items give the search, sign in,
+ * password reset and username reminder pages a menu item of their own; the check then accepts those items and no
+ * other site menu item. `--check` takes `--mapping` to read the same declaration.
  *
  * With `--contract` and `--contract-out` (ticket #584) it also writes the blank site contract into `--contract-out`
  * (`manifest.json`, `content-map.json`, `presentation-lock.json`, made by `blank-site-contract.mjs`): the released contract
@@ -38,6 +41,10 @@ import {
   lockDump,
   removedEntities
 } from '../../packages/cms/tracy-joomla-quickstart/scripts/blank-site-contract.mjs'
+import {
+  dataFixesStep,
+  systemMenusOf
+} from '../../packages/cms/tracy-joomla-quickstart/scripts/blank-site-data-fixes.mjs'
 import { emptyDeclaredFieldsStep } from '../../packages/cms/tracy-joomla-quickstart/scripts/blank-site-empty-fields.mjs'
 import {
   BLANK_SITE_STEPS,
@@ -62,7 +69,7 @@ function usage(message) {
     'usage: blank-site.mjs <human quickstart .zip> --out <blank site .zip> [--report <file.json>] [--mapping <file>]'
   )
   console.error('                      [--contract <released contract folder> --contract-out <folder>]')
-  console.error('       blank-site.mjs --check <installer .zip>')
+  console.error('       blank-site.mjs --check <installer .zip> [--mapping <file>]')
   process.exit(2)
 }
 
@@ -98,8 +105,11 @@ function printCounts(label, counts) {
   )
 }
 
-function check(file) {
-  const problems = checkBlankSite(readEntry(readFileSync(file), DEMO_DATA).toString('utf8'))
+function check(file, mappingFile) {
+  const mapping = mappingFile ? JSON.parse(readFileSync(mappingFile, 'utf8')) : null
+  const problems = checkBlankSite(readEntry(readFileSync(file), DEMO_DATA).toString('utf8'), {
+    systemMenus: systemMenusOf(mapping)
+  })
   for (const p of problems) console.log(`not blank: ${p}`)
   console.log(
     problems.length
@@ -160,11 +170,13 @@ function produce({ input, out, report: reportFile, mapping: mappingFile, contrac
         emptyDeclaredFieldsStep({
           mapping,
           readFile: (name) => (names.has(name) ? readEntry(source, name) : null)
-        })
+        }),
+        ...(mapping.dataFixes ? [dataFixesStep({ mapping })] : [])
       ]
     : BLANK_SITE_STEPS
+  const systemMenus = systemMenusOf(mapping)
   const demo = readEntry(source, DEMO_DATA).toString('utf8')
-  const { sql, report, files } = produceBlankSite(demo, { steps })
+  const { sql, report, files } = produceBlankSite(demo, { steps, systemMenus })
   const blockStore = contract
     ? JSON.parse(readFileSync(path.join(path.dirname(mappingFile), 'block-store.json'), 'utf8'))
     : null
@@ -178,7 +190,7 @@ function produce({ input, out, report: reportFile, mapping: mappingFile, contrac
   )
   if (changed.length)
     throw new Error(`entries changed that must not: ${changed.map((e) => e.name).join(', ')}`)
-  const problems = checkBlankSite(sql)
+  const problems = checkBlankSite(sql, { systemMenus })
 
   // The archive exists only when it passed its own check; a failed run leaves nothing a later step could pick up.
   if (problems.length) rmSync(out, { force: true })
@@ -226,6 +238,10 @@ function produce({ input, out, report: reportFile, mapping: mappingFile, contrac
   )
   console.log(`entries copied unchanged: ${full.unchangedEntries} of ${entries.length}`)
   if (files.size) console.log(`entries added: ${[...files.keys()].join(', ')}`)
+  for (const fix of report.steps['data-fixes'] ?? [])
+    console.log(
+      `${fix.id} ${fix.menutype}: ${fix.items.map((i) => `${i.page} (menu item ${i.id})`).join(', ')}`
+    )
   if (!problems.length) console.log(`${out}  sha256 ${full.blankSite.sha256}`)
   if (made && !problems.length)
     console.log(
@@ -237,7 +253,7 @@ function produce({ input, out, report: reportFile, mapping: mappingFile, contrac
 
 const opts = args(process.argv.slice(2))
 try {
-  process.exit(opts.check ? check(opts.check) : produce(opts))
+  process.exit(opts.check ? check(opts.check, opts.mapping) : produce(opts))
 } catch (error) {
   console.error(`blank-site: ${error.message}`)
   process.exit(1)

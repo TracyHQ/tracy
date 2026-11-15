@@ -181,3 +181,36 @@ test('--contract writes the blank site contract, the same bytes each run, and ne
   const map = JSON.parse(runs[0].bytes[1])
   assert.deepEqual(map.slots.find((s) => s.key === 'module-90.0').opensEmpty, true)
 })
+
+test('a system menu the mapping declares is added, and --check accepts it only with that mapping (#587)', (t) => {
+  const { dir, installer } = workdir(t)
+  const { mapping } = contractFiles(dir)
+  const declared = JSON.parse(readFileSync(mapping, 'utf8'))
+  declared.dataFixes = [
+    {
+      id: 'system-menu',
+      menu: { menutype: 'system-pages', title: 'System pages' },
+      templateStyle: 0,
+      items: [
+        {
+          page: 'system-login',
+          title: 'Log in',
+          alias: 'login',
+          link: 'index.php?option=com_users&view=login'
+        }
+      ],
+      why: 'invented: a system page prints no main body without a menu item of its own'
+    }
+  ]
+  writeFileSync(mapping, JSON.stringify(declared))
+  const out = path.join(dir, 'blank.zip')
+  const res = run(installer, '--out', out, '--mapping', mapping)
+  assert.equal(res.status, 0, res.stderr + res.stdout)
+  assert.match(res.stdout, /after {3}siteMenuItems 0 · systemMenuItems 1 · /)
+  assert.match(res.stdout, /system-menu system-pages: system-login \(menu item 3\)/)
+  const without = run('--check', out)
+  assert.equal(without.status, 1)
+  assert.match(without.stdout, /not blank: site menu item 3 \(Log in\)/)
+  const withMapping = run('--check', out, '--mapping', mapping)
+  assert.equal(withMapping.status, 0, withMapping.stdout)
+})
