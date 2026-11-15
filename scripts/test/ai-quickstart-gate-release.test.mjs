@@ -244,3 +244,15 @@ test('Z8: the template kit the marker build reads is bound: one changed since th
   assert.deepEqual(codes(folder), ['template_kit_changed'])
   rmSync(root, { recursive: true, force: true })
 })
+
+// Review 5 Z5: this round changes what a record means (a probe found by its place's own value, a stop's suspects and
+// location, the list excuse from the pages read, noindex, kept literals, the template kit bound), so a record of gate 6
+// is no proof any more.
+test('Z5: a record of gate version 6 is refused as outdated', async () => {
+  assert.ok(GATE_VERSION >= 7)
+  const old = await kitWith((r) => {
+    r.binding.gateVersion = 6
+  })
+  assert.ok(codes(old.folder).includes('gate_outdated'))
+  done(old)
+})

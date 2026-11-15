@@ -21,8 +21,13 @@ export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v2'
  * the addresses the host reads as they are, and the guard works every count out again from the record's own lists. 5:
  * every build refusal is found in memory before the write, a link is judged by the page it reaches, a hide may not
  * take shown pages down, a resumed write safety is never released, and the publish step checks the kit's own plan.
+ * 6: page numbers kept in the pagination only, the marker look's dark accent, a detail page read at its article, SEO
+ * items skip noindex pages. 7 (review 5): a probe counts reached only by its place's own value, a stop names the
+ * location it refused and suspects only the places stored there, a list excuses an unseen item only when its own page
+ * was not read, noindex on a planned page is a finding, kept literals hold to their layout, a printed row and a drawn
+ * picture, a code cut by a list is no run, and the record binds the template kit.
  */
-export const GATE_VERSION = 6
+export const GATE_VERSION = 7
 
 /** The folder of a kit that holds its check record; never part of what the record is measured on. */
 export const CHECK_RECORD_DIR = 'check-record'
