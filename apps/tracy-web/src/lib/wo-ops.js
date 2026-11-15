@@ -14,7 +14,7 @@
 import { readReleases, templateCards } from './quickstart-releases.js'
 import { bornSiteAddress } from './site-address.js'
 import { rateCountsOf } from './rate.js'
-import { opensOf } from './wo-demo-links.js'
+import { opensOf, systemPicksOf } from './wo-demo-links.js'
 import { outreachStateShape } from 'website-opportunities/src/outreach-state.js'
 import { openSecret, sealSecret } from './secret-box.js'
 import { saveUiSwitches, uiSwitchOn } from './ui-setting.js'
@@ -792,9 +792,14 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
       [oppRes.rows.map((o) => o.id)]
     )
 
-    // The share link opens of each latest build (`wo-demo-links.js`) and what each seller marked of their outreach.
-    const [opensByBuild, outreachRes] = await Promise.all([
+    // The share link opens of each latest build (`wo-demo-links.js`), the looks its owner liked on the share page, and
+    // what each seller marked of their outreach.
+    const [opensByBuild, picksByBuild, outreachRes] = await Promise.all([
       opensOf(
+        pool,
+        buildRes.rows.map((b) => b.id)
+      ),
+      systemPicksOf(
         pool,
         buildRes.rows.map((b) => b.id)
       ),
@@ -1026,6 +1031,9 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         demoStatus,
         // Counted opens of the latest build's share link; null while it never had one (`wo-demo-links.js`).
         demoOpens: latestBuild ? (opensByBuild.get(latestBuild.id) ?? null) : null,
+        // The looks the business owner liked on the latest build's share page ("See another look"); null while it never
+        // had a link (`wo-demo-links.js` `systemPicksShape`).
+        demoSystemPicks: latestBuild ? (picksByBuild.get(latestBuild.id) ?? null) : null,
         // What the seller marked of their outreach (`outreach-state.js`); `state: null` when nothing.
         outreachState: outreachStateShape(outreachByOpp.get(opp.id) ?? null),
         demoAction: latestAction

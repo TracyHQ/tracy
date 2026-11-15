@@ -162,7 +162,9 @@ Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) m
    ([`public/wo-find-page.js`](apps/tracy-web/src/public/wo-find-page.js), see §8 "Website Opportunities").
    Demos for outside builders: `/v1/demos*` on the api host, Bearer **account token** with scope `demos` (not a seat key)
    ([`opportunities-build/public-demos-route.js`](apps/tracy-web/src/opportunities-build/public-demos-route.js), see §8 "Website Opportunities").
-   A demo's share link: `GET /d/<token>` and `GET /d/<token>/*`, **no session**: a 302 to the demo that counts the open
+   A demo's share link: `GET /d/<token>` and `GET /d/<token>/*`, **no session**: a 302 to the demo that counts the open,
+   or, while the switch `wo-demo-looks` is on, the share page with See another look, plus `GET /api/demo-links/<token>/systems`
+   and `POST /api/demo-links/<token>/systems/pick`
    ([`opportunities-build/demo-link-route.js`](apps/tracy-web/src/opportunities-build/demo-link-route.js), see §8 "Website Opportunities").
 3. **Everything else → the dsh of the host holding the site** (`workspace/`): HTTP and WebSocket proxy, in three scopes
    `/<siteKey>/…`, `/new/…` and `/` ([`scope.js`](apps/tracy-web/src/workspace/scope.js)).
@@ -858,7 +860,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   Website Opportunities (migration 125, §8): `wo_preference`, `wo_opportunity`, `wo_job`, `wo_job_attempt`,
   `wo_source`, `wo_media`, `wo_profile`, `wo_revision` (immutable, a trigger blocks UPDATE), `wo_build`. Migration 126: `wo_media.caption/alt/dhash/labels`, `wo_build.pictures` (immutable picture plan + receipts).
   Migration 175 (`/v1/demos`): `wo_public_demo` (one request: `Idempotency-Key`, fingerprint of the whole body, body snapshot, opportunity + demo action, `sponsored`/`reserved_cents`, cancellation), `wo_sponsor_setting` (one row: number of live demos per account, model budget), `wo_demo_usage.kind` adds `external`.
-  Migration 215 (= the package's `0016-outreach-state.sql`, open layer): `wo_outreach` (one row per opportunity: when the seller marked it sent, replied, won or lost). Migration 216: `wo_demo_link` (a build's share link: random token, one live per build, `revoked_at`, `first_opened_at`), `wo_demo_open` (one counted open: time, path, `phone`/`desktop`; nothing that names the visitor). Migration 217 (`/v1/demos` webhooks): `wo_demo_webhook` (one live https address per account, the signing secret sealed with `lib/secret-box.js`, `since`), `wo_demo_webhook_event` (the outbox: frozen body, `dedupe_key`, attempts, `next_at`, delivered or given up; settled rows deleted after 30 days).
+  Migration 215 (= the package's `0016-outreach-state.sql`, open layer): `wo_outreach` (one row per opportunity: when the seller marked it sent, replied, won or lost). Migration 216: `wo_demo_link` (a build's share link: random token, one live per build, `revoked_at`, `first_opened_at`), `wo_demo_open` (one counted open: time, path, `phone`/`desktop`; nothing that names the visitor). Migration 218: `wo_demo_system_pick` (one counted press of I like this look on a share page: the look, `current` or `refero:<uuid>`, its number and library name, time, `phone`/`desktop`; nothing that names the visitor). Migration 217 (`/v1/demos` webhooks): `wo_demo_webhook` (one live https address per account, the signing secret sealed with `lib/secret-box.js`, `since`), `wo_demo_webhook_event` (the outbox: frozen body, `dedupe_key`, attempts, `next_at`, delivered or given up; settled rows deleted after 30 days).
   Migration 134 (shared research, P1): `wo_place` (one real place, `current_snapshot_id`),
   `wo_place_identity` (google/osm/url/merge/tripadvisor → place), `wo_place_link` (the place's sources with evidence: identity, Google `websiteUri`,
   social links the place's own website points to — URLs sent by the client do NOT go here), `wo_place_job` (one research run per place, lease/fence like
@@ -1740,6 +1742,26 @@ path, so they survive Research again; rating and social counts stay `claims.stat
 **Trade must-haves (13/11/2026).** `domain/trade-must-haves.mjs` names what each trade's customers expect online and reads the old site's offer from the website source row research already wrote (`collected.pages`, `menus`, `bookings`; nothing fetched). The scoring rule `trade-must-haves` (weight 15) applies only when a caller passes the assessment: the Details answer's `mustHaves` (`src/must-haves-view.js`) carries it, its `scoreReason` and the outreach lines the latest live demo's brief backs (builder `demoOffersOf`); `GET /:id/outreach` adds them as `outreach.arguments`. Find, the list and the client score without it, unchanged.
 
 - **`/v1/demos` — an outside builder asks for a demo** (24/10/2026): a third door into the demo build flow, only on the api host, Bearer account token with scope `demos` (part A; seat key → 403 `ACCOUNT_TOKEN_REQUIRED`). Body `website-opportunities/demo-request/v1` or `/v2` ≤ 512 KiB; unknown fields (`accountId`, `ownSite`, `verified`, `objectKey`…) → 422. Each request is an immutable snapshot: a `wo_opportunity` of the account's own (provider `external:website-opportunities`, `place_id` null, writing only its own `wo_profile`/`wo_source`/`wo_media` — never the shared place tables), then it calls exactly `acceptDemoActions` (counts `wo_demo_usage` kind `external`, does not use up the daily quota of the Build demo button). Pictures: Tracy downloads them itself through `fetchLimited` + pinned fetch (every hop, IPv4/IPv6 separately, metadata), ≤ 24 pictures, 5 MiB/picture, 48 MiB/request, 40 MP, 60 s; a non-public URL → 422 before anything is downloaded or written. **One transaction** holds the account lock, checks replay by key (same body → same receipt, different body → 409), checks the `liveDemosPerAccount` cap (default 20 live demo sites through this door; deleting frees a place; expired but not deleted still counts; cancelled before the build starts does not) → 409 `DEMO_LIMIT_REACHED`, the model budget (only for demos of accounts without a connected AI account: holds `sponsoredDemoMaxCents`, monthly total `sponsoredMonthlyBudgetCents`) → 503 `SPONSOR_BUDGET_EXHAUSTED`, imports the snapshot and accepts the job. The numbers are set in `/ops/wo` › Settings › Demos for outside builders (`GET|PUT /api/ops/wo/public-demos`, table `wo_sponsor_setting`, not in the open package's settings). Status `queued|building|needs-review|ready|failed|cancelled`; `ready` only when QA `passed`; `retention` reads the WO demo clock, and reading does not extend it.
+- **See another look on a demo's share link** (15/11/2026, switch `wo-demo-looks`, off by default): the business
+  owner previews the same demo in a few other design systems and says which look they like; **nothing is written to the
+  demo**. While the switch is on, a person's own top-level visit of `/d/<token>` (no program, prefetch or frame) of a
+  demo that can wear a system is answered with a page of Tracy's own (`opportunities-build/demo-look-page.js`) instead
+  of the 302: the demo in a full-window frame (`frame-src` the demo's origin only, the page itself unframable), counted
+  as the 302 is, and one control. `eligible` decides without a read in the container: the release the demo was built
+  from can wear a system (`supportForNewSite`) and its template is open to customers (the customer lock, asked with no
+  email). The looks (`GET /api/demo-links/<token>/systems`, 120 an hour per link) come from
+  `sites/design-system-demo-systems.js`, mounted by `mountDesignSystem` and handed to the WO door by `app.js`: the
+  demo's template and contract are read in its container (`survey`, kept 2 minutes), judged like the running site's
+  preview popup (platform, not imported, served by this server's site proxy, the customer lock), and the systems are
+  the library's featured systems (`FEATURED_REFERO_SYSTEMS`) it offers, without the one the demo wears, the first four
+  whose bytes the contract emits. **Each look is the existing live preview**: a `tracy_ds_preview` ticket
+  (`lib/ds-preview-ticket.js`) on the demo's own address, which the site proxy answers wearing the bytes an apply would
+  write (`sites/design-system-live-page.js`); no new preview mechanism, so a look shows exactly what the slot changes and
+  nothing a slot does not reach. The page names a look by its number and palette, never the library's name.
+  `POST /api/demo-links/<token>/systems/pick` (`{id}`: `current` or an offered look; Tracy's own page only:
+  `Sec-Fetch-Site: same-origin`, else an `Origin` exactly Tracy's) writes one `wo_demo_system_pick` row, counted like an
+  open: not for a program, the seller's own session, or past 30 an hour per link. The seller reads it as
+  `demo.systemPicks` on the opportunity and its list row and `demoSystemPicks` on `/ops/wo`.
 - **Demo share links, outreach states and `/v1/demos` webhooks** (12/11/2026): every outreach draft of a ready demo
   (`GET …/:id/outreach`, and the list rows' `outreach`) hands out the build's share link `<origin>/d/<token>` instead of
   the demo's address, made on that first read through the builder's `shareLinksOf` (`lib/wo-demo-links.js`; the open

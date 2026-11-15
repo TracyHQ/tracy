@@ -82,6 +82,9 @@ The tool does the finding and the homework; the selling stays yours. A typical r
    for you: you read it, change it and send it yourself. When Tracy built the demo, the link is a Tracy share link
    that opens the demo and counts each time someone opens it (when, which page, phone or desktop; nothing that
    identifies them, and not your own visits while you are signed in to Tracy).
+   When the operator turns on See another look (switch `wo-demo-looks`), the owner who opens that link can also
+   preview the demo in up to four other design systems and press I like this look; you read the look they liked on
+   the opportunity (`demo.systemPicks`). A preview changes nothing on the demo.
 4. **Follow up and close.** The API keeps where each outreach stands, as you mark it: sent, replied, won or lost,
    with the time of each (`PUT /api/website-opportunities/:id/outreach/state`); buttons for it in the app are
    planned, so keep your own CRM or sheet until then. Price, domain, hosting and handover are yours to agree with the

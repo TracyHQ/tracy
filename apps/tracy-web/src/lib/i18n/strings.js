@@ -28,6 +28,19 @@ export const en = Object.freeze({
   'mcp.allow': 'Connect',
   'mcp.deny': 'Cancel',
 
+  // The share page of a Website Opportunities demo (`opportunities-build/demo-look-page.js`): the business owner
+  // previews the demo in other design systems ("looks") and says which one they like. The owner is not a Tracy
+  // customer, so a look is never called a design system here.
+  'demoLooks.open': 'See another look',
+  'demoLooks.current': 'Current look',
+  'demoLooks.numbered': 'Look {n}',
+  'demoLooks.note': 'Preview only. Nothing on the site changes.',
+  'demoLooks.like': 'I like this look',
+  'demoLooks.sent': 'Thanks. Your choice was sent.',
+  'demoLooks.own': 'Not counted: this is your own demo.',
+  'demoLooks.failed': 'Not sent. Try again later.',
+  'demoLooks.close': 'Close',
+  'demoLooks.frameTitle': 'Demo site',
   'connect.title': 'Connect {app} to Tracy',
   'connect.account': 'Signed in as',
   'connect.permissions': 'Connect to create demo sites.',

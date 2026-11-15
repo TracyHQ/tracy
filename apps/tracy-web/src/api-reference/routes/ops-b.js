@@ -165,7 +165,7 @@ export const OPS_B_ROUTES = [
     auth: 'admin',
     internal: true,
     answers:
-      '`{opportunities, members, cities, settings, settingsMeta, providers, templateStatuses, capabilities, uiEnabled, viewer, writable}`; each opportunity also carries `demoOpens: {total, phone, desktop, lastOpenedAt, firstOpenedAt} | null` (the counted opens of its latest build’s share link, `GET /d/{token}`; null while that build never had one) and `outreachState: {state: "sent" | "replied" | "won" | "lost" | null, sentAt, repliedAt, wonAt, lostAt, updatedAt}` (what the seller marked of their outreach).'
+      '`{opportunities, members, cities, settings, settingsMeta, providers, templateStatuses, capabilities, uiEnabled, viewer, writable}`; each opportunity also carries `demoOpens: {total, phone, desktop, lastOpenedAt, firstOpenedAt} | null` (the counted opens of its latest build’s share link, `GET /d/{token}`; null while that build never had one), `demoSystemPicks: {total, latest, recent: [{id, n, name, device, pickedAt}]} | null` (the looks the business owner liked on that link’s See another look, as `demo.systemPicks` of `GET /api/website-opportunities/:id`) and `outreachState: {state: "sent" | "replied" | "won" | "lost" | null, sentAt, repliedAt, wonAt, lostAt, updatedAt}` (what the seller marked of their outreach).'
   },
   {
     method: 'GET',

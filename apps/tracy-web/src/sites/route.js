@@ -4154,7 +4154,10 @@ export function sitesRoutes({
       // What signs the live frame's ticket (`live=1`), read back by the site proxy (`lib/ds-preview-ticket.js`).
       secret: config.sessionSecret
     },
-    previewRate: dsPreviewRate
+    previewRate: dsPreviewRate,
+    // A demo's share page offers other looks only where this server's site proxy answers the demo (the preview's ticket
+    // is read there): a demo on another host is served by that host's tunnel, as the Add site door's `liveServed` says.
+    servedHere: (site) => site.host === config.hostName
   })
   // The design system picked in the Add site form, put on the new site once its install and its brief are done, through
   // the write above as the person who created it (`design-system-at-create.js`, 12/10/2026).
@@ -8304,6 +8307,8 @@ export function sitesRoutes({
     designSystemSweep: () => dsAtCreate.sweep(),
     resolveKeyPrincipal: requireKeyGrant,
     closeDeletedSite,
-    teardownSiteAs
+    teardownSiteAs,
+    // A WO demo's other looks for its share page (`design-system-demo-systems.js`), handed to `/d/:token` by `app.js`.
+    demoSystems: dsDoors.demoSystems
   })
 }

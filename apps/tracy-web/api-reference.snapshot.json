@@ -25467,6 +25467,66 @@
           "x-audience": ["customer", "public"]
         }
       },
+      "/api/demo-links/{token}/systems": {
+        "get": {
+          "operationId": "get_api_demo_links_token_systems",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "token",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["public"],
+          "x-internal": true
+        }
+      },
+      "/api/demo-links/{token}/systems/pick": {
+        "post": {
+          "operationId": "post_api_demo_links_token_systems_pick",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "token",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["id"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["public"],
+          "x-internal": true
+        }
+      },
       "/api/design-system/library": {
         "get": {
           "operationId": "get_api_design_system_library",

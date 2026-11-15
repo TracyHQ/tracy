@@ -58,6 +58,7 @@ const CATALOGUE_IDS = JSON.parse(
  * 17/10: the embeddable website voice widget is off by default outside the dev trial.
  * 23/10: Build from my business (`site-from-business`) is off by default (#1640).
  * 25/10: Design system in the + menu (`launch-design-system`) is off by default (Akemi).
+ * 15/11: See another look on a WO demo's share page (`wo-demo-looks`) is off by default.
  */
 const DEFAULT_HIDDEN = [
   'access-mode',
@@ -96,7 +97,8 @@ const DEFAULT_HIDDEN = [
   'voice-plan-approval',
   'website-opportunities',
   'website-opportunities-public-find',
-  'website-voice-widget'
+  'website-voice-widget',
+  'wo-demo-looks'
 ]
 
 function harness(pool) {

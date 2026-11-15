@@ -71,7 +71,10 @@ const POLICY = [
 /**
  * The header set for one rendered page, lower-case names.
  *
- * @param {{framable?: boolean, formAction?: string}} [options] - `formAction`: one more origin a form
+ * @param {{framable?: boolean, formAction?: string, frameSrc?: string, referrerPolicy?: string}} [options] -
+ *   `frameSrc`: the one origin the page may put in a frame of its own (the share page of a Website Opportunities demo
+ *   frames the demo, `opportunities-build/demo-look-page.js`); none: `default-src 'self'` decides, as before.
+ *   `formAction`: one more origin a form
  *   submission may end up at (the whitelist page: see `hardenPage`). `framable`: leave framing undecided. ONLY for a page
  *   answered on a CUSTOMER SITE's address (`bar/pages.js`'s `messagePage`, `unknownSitePage`,
  *   `refusedHostPage`): Tracy's preview pane and Live site tab show that address inside a frame,
@@ -84,11 +87,16 @@ const POLICY = [
 export function pageSecurityHeaders({
   framable = false,
   formAction = '',
+  frameSrc = '',
   referrerPolicy = 'no-referrer'
 } = {}) {
-  const policy = formAction
+  const withForms = formAction
     ? POLICY.map((d) => (d.startsWith('form-action ') ? `${d} ${formAction}` : d))
     : POLICY
+  // One origin, never a list or a keyword: a value that is not a bare http(s) origin adds nothing.
+  const policy = /^https?:\/\/[A-Za-z0-9.-]+(?::\d{1,5})?$/.test(frameSrc)
+    ? [...withForms, `frame-src ${frameSrc}`]
+    : withForms
   return {
     'cache-control': 'no-store',
     'x-content-type-options': 'nosniff',
