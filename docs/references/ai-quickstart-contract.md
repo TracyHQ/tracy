@@ -2055,9 +2055,14 @@ answer is `site_unreachable`; a stop with no code, a code a site gives (`SITE_CO
 are `server_error`. `scripts/test/ai-quickstart-gate-build-guards.test.mjs` reads every code the write step throws or
 reports, in the domain files and in the app's step chain files, and fails when one is on no list or a listed one is
 gone, so a person decides each new code. A build refusal is found in memory, never
-on the site (`gate/write-safety-trials.mjs`): when the refusal names its place (entry, slot or operation) one build
-confirms it, else a bisection over builds, all counted as build steps; a site stop or a broken page is traced by
-bisection over site writes, counted as site steps. That probe is taken out and the pass runs again.
+on the site, and all of a pass's refusals before its write (`gate/write-safety-pass.mjs`, `gate/write-safety-trials.mjs`):
+the page writer's copy check sends back every probe it refuses at once; a write order check or a guard of the write
+plan names every problem it finds, and each probed place a problem names by its entry or slot is recorded as
+`refused_by_build` and taken out at once; places only an operation names, or every probe when nothing is named, are
+traced by bisection over builds; then the build is made again, until it refuses nothing, and only then is the site
+written. A refusal found in memory spends no rerun and no site step; its builds are counted (`buildSteps`), limited only
+by the time. A site stop or a broken page is traced by bisection over site writes, counted as site steps; that probe
+is taken out and the pass runs again (a rerun).
 
 A place counts as `tested` only when the probe a pass gave it is found in what was written for it
 (`gate/write-safety-reached.mjs`): in the stored value the write plan sends for that place (as written, escaped once for
@@ -2071,8 +2076,8 @@ any place not tested leaves the measurement `incomplete` (`not_site_tested`).
 Limits (`LIMITS`), from the times measured on JA Boxing 1.0.11 with a database snapshot reset: a marker build in memory
 about 7 s, a full site write about 40 s, a reset and the page reads about 30 s, so a pass about 80 s; 21 clean passes
 (the text place with a declared limit takes 21 probes, one per pass) take about 28 minutes. 24 passes, 20 site steps
-(about 70 s each), 60 build steps, 60 minutes, 5 runs of one pass; past one the measurement is `incomplete`, never
-`passed`. The state is saved after each pass (`<out>/write-safety-state.json`, `gate/write-safety-state.mjs`) under a
+(about 70 s each), 60 minutes, 5 reruns of one pass on the site; past one the measurement is `incomplete`, never
+`passed`. Builds in memory (about 1.5 s each) have no limit of their own. The state is saved after each pass (`<out>/write-safety-state.json`, `gate/write-safety-state.mjs`) under a
 key of the gate version, the kit's files, the blank site archive, the plugin and the probe catalogue: a run stopped by
 its time limit resumes from the next pass when the gate runs again into the same folder (`resumedFrom`). A resume
 carries only that state (the ledger, the findings and the passes): each process writes into a run folder of its own

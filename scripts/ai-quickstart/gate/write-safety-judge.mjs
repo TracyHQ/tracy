@@ -96,12 +96,24 @@ export function buildRefusalOf({ built, error }, plainGaps) {
         : 'unclassified'
     return { kind, code, cause: null, op: null, details: error.details ?? null }
   }
+  // Every problem of the write order and every new gap is named, not only the first: one build names them all.
   if (built?.orderProblems?.length) {
     const p = built.orderProblems[0]
-    return { kind: 'refused_by_build', code: String(p.code), cause: null, op: null, at: p.at ?? null }
+    const problems = built.orderProblems.map((q) => ({ code: String(q.code), entry: q.at ?? null }))
+    return {
+      kind: 'refused_by_build',
+      code: String(p.code),
+      cause: null,
+      op: null,
+      at: p.at ?? null,
+      details: { problems }
+    }
   }
-  const extra = (built?.gaps ?? []).find((g) => !plainGaps.has(gapKey(g)))
-  return extra ? gapClassOf(extra) : null
+  const extra = (built?.gaps ?? []).filter((g) => !plainGaps.has(gapKey(g)))
+  if (!extra.length) return null
+  const first = gapClassOf(extra[0])
+  const problems = extra.map((g) => ({ code: g.code, op: g.record, failure: gapClassOf(g) }))
+  return { ...first, details: { ...first.details, problems } }
 }
 
 /**

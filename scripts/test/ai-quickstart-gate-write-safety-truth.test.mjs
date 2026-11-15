@@ -156,7 +156,7 @@ test('a build refusal that names its place costs no site step', async () => {
     [['emailcloak', 'hero-home', 'heading']]
   )
   assert.equal(result.steps, 0, 'no site step')
-  assert.ok(result.buildSteps >= 1, 'the build trial is counted apart')
+  assert.equal(result.buildSteps, 0, 'a refusal that names its place needs no build trial either')
   assert.equal(result.status, 'passed')
 })
 

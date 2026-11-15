@@ -22,11 +22,11 @@ import { packPass, probeLedger } from './write-probes.mjs'
  * The limits of one run of the measurement (#586), from the times measured on a real T4 template (plugin 0.24.85, a
  * database snapshot reset): a marker build in memory about 7 s, a full site write about 40 s, a reset and the page
  * reads about 30 s, so a pass about 80 s. A pass gives a place one probe, so the passes cover the place that takes most
- * probes (21); 21 clean passes take about 28 minutes. Site steps (a fresh site and a write each, about 70 s) and build
- * steps (a build in memory each) are counted apart; past a limit the measurement is `incomplete` and the next run into
- * the same run folder resumes it.
+ * probes (21); 21 clean passes take about 28 minutes. Site steps (a fresh site and a write each, about 70 s) are
+ * limited; builds in memory (about 1.5 s each) are only counted, and a refusal found in memory is no rerun. Past a
+ * limit the measurement is `incomplete` and the next run into the same run folder resumes it.
  */
-export const LIMITS = Object.freeze({ passes: 24, steps: 20, buildSteps: 60, minutes: 60, reruns: 5 })
+export const LIMITS = Object.freeze({ passes: 24, steps: 20, minutes: 60, reruns: 5 })
 
 const incompleteOf = (reason, more = {}) => ({ status: 'incomplete', incomplete: reason, reason, ...more })
 
@@ -69,7 +69,8 @@ export async function writeSafety(input) {
   findings.push(...(was?.findings ?? []))
   passes.push(...(was?.passes ?? []))
   const budget = stepBudget(Math.max(0, limits.steps - (was?.steps ?? 0)))
-  const buildBudget = stepBudget(Math.max(0, limits.buildSteps - (was?.buildSteps ?? 0)))
+  // Builds in memory are counted, never limited: a refusal found there costs no site and no rerun (`write-safety-pass.mjs`).
+  const buildBudget = stepBudget(Number.MAX_SAFE_INTEGER)
   const spent = () => ({
     steps: (was?.steps ?? 0) + budget.spent,
     buildSteps: (was?.buildSteps ?? 0) + buildBudget.spent

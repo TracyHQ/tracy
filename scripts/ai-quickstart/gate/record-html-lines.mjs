@@ -14,7 +14,6 @@ const WHY = {
   time: 'it ran out of time (run it again into the same folder to resume)',
   passes: 'it ran out of passes before every value reached every field',
   steps: 'it ran out of site steps while looking for the field that caused a problem',
-  build_steps: 'it ran out of build steps while looking for the value the build refused',
   plain_write_stopped: 'the plain marker build did not finish writing the site',
   plain_pages_broken: 'a page of the plain marker build did not answer as planned',
   plain_build_failed: 'the plain marker build could not be made',
