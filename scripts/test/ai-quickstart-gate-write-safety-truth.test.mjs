@@ -16,6 +16,7 @@ import { LIMITS, writeSafety } from '../ai-quickstart/gate/write-safety.mjs'
 import { BUILD_GUARD_CODES, stopClassOf } from '../ai-quickstart/gate/write-safety-judge.mjs'
 import { memoryState } from '../ai-quickstart/gate/write-safety-state.mjs'
 import { PROBE_CATALOGUE } from '../ai-quickstart/gate/write-probes-edge.mjs'
+import { coverageProblems } from '../ai-quickstart/gate/write-safety-coverage.mjs'
 import { floristKit } from './fixtures/ai-quickstart-gate/florist-kit.mjs'
 import { memorySiteOf } from './fixtures/ai-quickstart-gate/memory-site.mjs'
 
@@ -174,11 +175,14 @@ test('a measurement stopped by its limits resumes where it stopped', async () =>
 })
 
 test('the places the build writes are reconciled with the places probed, each one with its reason', async () => {
-  const { result } = await measure({}, { universeWritten: 7 })
+  const universeKeys = Array.from({ length: 7 }, (_, i) => 'example:place:' + i)
+  const { result } = await measure({}, { universeKeys })
   const c = result.coverage
   assert.equal(typeof c.locations, 'number')
   const notProbed = Object.values(c.notProbed).reduce((a, b) => a + b, 0)
   assert.equal(c.probed + notProbed, c.locations)
   assert.equal(c.universeWritten, 7)
+  assert.equal(c.inBoth + c.onlyInUniverse, 7)
   assert.ok(c.probed > 0)
+  assert.deepEqual(coverageProblems(c), [])
 })

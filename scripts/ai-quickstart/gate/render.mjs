@@ -97,8 +97,17 @@ const slug = (text) =>
     .replace(/^_+|_+$/g, '')
     .slice(0, 60)
 
+/** What a render of a page keeps of the page it was asked for: its type, path, theme, width and planned status. */
+export const renderAt = (p, theme, width) => ({
+  pageType: p.pageType,
+  path: p.path,
+  theme,
+  width,
+  expected: p.status ?? 200
+})
+
 async function renderOne({ page, p, theme, width, out, shots, shotTaken, timeout, log }) {
-  const at = { pageType: p.pageType, path: p.path, theme, width, expected: p.status ?? 200 }
+  const at = renderAt(p, theme, width)
   try {
     const response = await page.goto(themed(p.url, theme), { waitUntil: 'domcontentloaded', timeout })
     await page.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {})

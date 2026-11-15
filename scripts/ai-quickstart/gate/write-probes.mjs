@@ -19,6 +19,8 @@ export const elementProbe = (id, mark, text, why, types = ['text']) => ({
   id,
   types,
   text: (code) => text(signatureOf(code, mark)),
+  // What marks this probe in a stored value whatever the build did to its punctuation (straight quotes made curly).
+  signature: (code) => signatureOf(code, mark),
   judge: ({ doc, code }) =>
     carries(doc, signatureOf(code, mark))
       ? { kind: 'markup_injected', element: signatureOf(code, mark) }
@@ -62,6 +64,7 @@ export const COMMON_PROBES = Object.freeze([
     id: 'code-address',
     types: ['link'],
     text: (code) => 'javascript:void(' + signatureOf(code, 'j') + ')',
+    signature: (code) => signatureOf(code, 'j'),
     whole: true,
     judge: ({ doc, code }) => {
       for (const el of doc?.querySelectorAll?.('[href],[src]') ?? []) {

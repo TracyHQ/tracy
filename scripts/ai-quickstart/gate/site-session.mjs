@@ -30,10 +30,11 @@ export async function readPage(url, timeout = 45000) {
 
 /**
  * The site check's page groups on some pages of a site, read by the host's own browser code run on this machine.
- * @param {{base: string, platform: string, pages: string[], names?: string[]}} input
+ * @param {{base: string, platform: string, pages: string[], names?: string[], hostOf?: Function}} input `hostOf`: the
+ *   host's reader (`localHost`), given only by a test that keeps the host's own request checks but no browser
  */
-export async function qualityOn({ base, platform, pages, names }) {
-  const reader = await localHost(base, platform)
+export async function qualityOn({ base, platform, pages, names, hostOf = localHost }) {
+  const reader = await hostOf(base, platform)
   try {
     return await measureQuality({ host: reader.host, pages, names })
   } finally {
@@ -56,6 +57,7 @@ export function siteSession({
   resetCommand,
   contract,
   firstMarks = [],
+  hostOf,
   log
 }) {
   const send = directSend({
@@ -147,6 +149,6 @@ export function siteSession({
         id: record.id,
         fields: shownFields(record.kind)
       }),
-    quality: (pages) => qualityOn({ base, platform, pages })
+    quality: (pages) => qualityOn({ base, platform, pages, hostOf })
   }
 }

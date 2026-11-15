@@ -5,28 +5,22 @@
 //   refused_by_build  one of the build's own named guards refused it before any site saw it: recorded only
 //   markup_injected   a page prints the value as a live element or runs it as a code: fails the gate
 //   unclassified      the build threw a code it has no named guard for: the measurement cannot pass (incomplete)
-// A stop is the build's own only when its code is on the list of the build team's named guards (`BUILD_GUARD_CODES`,
-// read from their own error lists); every other stop of a site write is a failure of the site. Pure.
+//   run_state         the run's own state stopped the write (a stale run record, a stored picture gone): incomplete
+// The codes are decided by hand, one list each (`build-guards.mjs`); a code a site write stops with that is on none of
+// them is a failure of the site (`server_error`). Pure.
 import { parseHTML } from 'linkedom'
-import { DRAFT_WRITE_NO_RERUN } from '../../../packages/wo/website-opportunities/domain/draft-write-error.mjs'
-import { NO_RERUN as WRITE_ORDER_CODES } from '../../../packages/wo/website-opportunities/domain/write-order-error.mjs'
+import { BUILD_GUARDS, RUN_STATE_CODES } from './build-guards.mjs'
 import { codesIn } from './marker-codec.mjs'
 
 /** The kinds that fail write safety. */
 export const FAILING = new Set(['server_error', 'site_unreachable', 'door_refused', 'markup_injected'])
 
 /** The codes a door run gives after its retries: a site answer, never a guard of the build. */
-const SITE_CODES = new Set(['redo_failed', 'read_back_mismatch'])
+const SITE_STOPS = new Set(['redo_failed', 'read_back_mismatch'])
+const RUN_STATE = new Set(Object.keys(RUN_STATE_CODES))
 
-/**
- * The build's own named guards: the draft write's and the write order's codes a second attempt cannot fix, less the
- * two a site gives, plus the page writer's copy check. A test fails when the build team adds a code this list misses.
- */
-export const BUILD_GUARD_CODES = new Set([
-  ...DRAFT_WRITE_NO_RERUN.filter((c) => !SITE_CODES.has(c)),
-  ...WRITE_ORDER_CODES,
-  'page_copy_check'
-])
+/** The build's own named guards and the gate's copy check (`build-guards.mjs`). */
+export const BUILD_GUARD_CODES = BUILD_GUARDS
 
 /** The causes of a door call that mean the site failed to answer at all (`site-doors-send.mjs`). */
 const UNREACHABLE = /^(?:no_answer|fetch_failed|timeout|timed_out|econn\w*|socket\w*)$/i
@@ -51,6 +45,7 @@ export function stopClassOf(report) {
     return out('door_refused')
   }
   if (code === 'read_back_mismatch') return out('door_refused')
+  if (RUN_STATE.has(code)) return out('run_state')
   if (BUILD_GUARD_CODES.has(code)) return out('refused_by_build')
   return out(UNREACHABLE.test(code) ? 'site_unreachable' : 'server_error')
 }
@@ -72,9 +67,13 @@ export function pageBroken(answer, page) {
 
 /** The class of a gap the memory write met that the plain build did not (`marker-gaps.mjs`). */
 export const gapClassOf = (gap) => {
-  if (SITE_CODES.has(gap.code))
+  if (SITE_STOPS.has(gap.code))
     return { kind: 'door_refused', code: gap.code, cause: gap.cause ?? null, op: gap.record, site: 'memory' }
-  const kind = BUILD_GUARD_CODES.has(gap.code) ? 'refused_by_build' : 'unclassified'
+  const kind = RUN_STATE.has(gap.code)
+    ? 'run_state'
+    : BUILD_GUARD_CODES.has(gap.code)
+      ? 'refused_by_build'
+      : 'unclassified'
   return { kind, code: gap.code, cause: gap.cause ?? null, op: gap.record, details: gap.details ?? null }
 }
 
@@ -90,7 +89,11 @@ export const gapKey = (gap) => gap.code + '|' + gap.record
 export function buildRefusalOf({ built, error }, plainGaps) {
   if (error) {
     const code = error.code == null ? 'no_code' : String(error.code)
-    const kind = BUILD_GUARD_CODES.has(code) ? 'refused_by_build' : 'unclassified'
+    const kind = RUN_STATE.has(code)
+      ? 'run_state'
+      : BUILD_GUARD_CODES.has(code)
+        ? 'refused_by_build'
+        : 'unclassified'
     return { kind, code, cause: null, op: null, details: error.details ?? null }
   }
   if (built?.orderProblems?.length) {

@@ -6,11 +6,18 @@
 // released: no verdict or no record; a verdict file that is not the one the record gives; a record whose verdict its
 // own contents do not give (`record-verdict.mjs`); a verdict that did not pass; a kit or allow file changed since the
 // record; controls the gate did not make for that installer; a plugin or a human quickstart other than the pinned
-// ones; a record of another gate version. A passing record goes stale only then. Pure but for reading the kit folder.
+// ones; a record of another gate version or of another kit; a record whose counts its own lists do not give, or whose
+// passing measurements hold less than a real run (`record-consistency.mjs`, `record-detail.mjs`); a check record folder
+// that holds any other file, or is a link. This defends against a stale record, a changed kit, plugin, installer,
+// control or allow file, and a hand-edited verdict or status. It does not defend against a record invented field by
+// field: the release step itself must run the gate and check the blank site archive it built (`release-publish.mjs`).
+// Pure but for reading the kit folder.
 import { createHash } from 'node:crypto'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { controlProblems } from './control-file.mjs'
+import { consistencyProblems } from './record-consistency.mjs'
+import { detailProblems } from './record-detail.mjs'
 import { CHECK_RECORD_DIR, GATE_VERSION, kitFilesSha256, kitHashesOf } from './record.mjs'
 import { measurementProblems, sameVerdict, verdictFromRecord } from './record-verdict.mjs'
 
@@ -47,6 +54,28 @@ export const allowShaOf = (folder) => {
   return existsSync(file) ? sha256(readFileSync(file)) : null
 }
 
+/** The files the gate writes into a kit's check record folder; nothing else may be there. */
+const CHECK_RECORD_FILES = new Set(['record.json', 'verdict.json', 'secret-allow.json'])
+
+/** Why the check record folder is not the gate's own: a link, or a file the gate never writes. */
+function checkRecordProblems(folder) {
+  const dir = path.join(folder, CHECK_RECORD_DIR)
+  if (!existsSync(dir)) return []
+  if (lstatSync(dir).isSymbolicLink())
+    return [{ code: 'check_record_link', message: CHECK_RECORD_DIR + ' is a link to another folder' }]
+  const other = readdirSync(dir, { recursive: true })
+    .map((n) => String(n).split(path.sep).join('/'))
+    .filter((n) => !CHECK_RECORD_FILES.has(n) || lstatSync(path.join(dir, n)).isSymbolicLink())
+  return other.length
+    ? [
+        {
+          code: 'check_record_unknown_file',
+          message: CHECK_RECORD_DIR + ' holds files the gate does not write: ' + other.sort().join(', ')
+        }
+      ]
+    : []
+}
+
 /** The kit files whose hash differs from the record's, added or removed. */
 function changedFiles(record, now) {
   const then = record?.kitFiles ?? {}
@@ -65,6 +94,8 @@ export function releaseProblems(folder, { pins = {}, blankSiteSha } = {}) {
   const file = path.join(folder, VERDICT_FILE)
   const recordFile = path.join(folder, RECORD_FILE)
   const problem = (code, message) => ({ code, message })
+  const links = checkRecordProblems(folder)
+  if (links.some((p) => p.code === 'check_record_link')) return links
   if (!existsSync(file)) return [problem('no_verdict', VERDICT_FILE + ' is missing: run the release gate')]
   if (!existsSync(recordFile))
     return [
@@ -87,7 +118,7 @@ export function releaseProblems(folder, { pins = {}, blankSiteSha } = {}) {
   } catch (error) {
     return [problem('record_unreadable', RECORD_FILE + ' is not JSON: ' + error.message)]
   }
-  const out = []
+  const out = [...links]
   if (sha256(recordBytes) !== v.recordSha256)
     out.push(problem('record_changed', RECORD_FILE + ' is not the record the verdict was written from'))
   if (JSON.stringify(verdictFileOf(record)) !== JSON.stringify(v))
@@ -105,6 +136,8 @@ export function releaseProblems(folder, { pins = {}, blankSiteSha } = {}) {
       )
     )
   out.push(...measurementProblems(record))
+  out.push(...detailProblems(record))
+  out.push(...consistencyProblems(record, folder))
   out.push(...controlProblems(record.binding))
   if ((record.binding?.allowFileSha256 ?? null) !== allowShaOf(folder))
     out.push(problem('allow_changed', ALLOW_FILE + ' is not the allow file the record was scanned with'))

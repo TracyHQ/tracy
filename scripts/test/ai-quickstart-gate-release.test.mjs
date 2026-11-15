@@ -28,7 +28,10 @@ import { floristGate, HUMAN_SHA } from './fixtures/ai-quickstart-gate/florist-ga
 const GUARD = fileURLToPath(new URL('../ai-quickstart/gate/release-guard.mjs', import.meta.url))
 const PINS = { plugin: '1.0.0', humanQuickstartSha256: HUMAN_SHA }
 const BLANK = 'b'.repeat(64)
-const FILES = { 'mapping.json': '{"template":{"slug":"petal"}}\n', 'block-store.json': '{"blocks":{}}\n' }
+const FILES = {
+  'mapping.json': '{"template":{"slug":"example-petal"}}\n',
+  'block-store.json': '{"blocks":{}}\n'
+}
 const sha = (t) => createHash('sha256').update(t).digest('hex')
 const HASHES = Object.fromEntries(Object.entries(FILES).map(([n, t]) => [n, sha(t)]))
 
@@ -55,10 +58,10 @@ function writeCheck(folder, record, verdictFile = verdictFileOf(record)) {
   writeFileSync(path.join(folder, VERDICT_FILE), JSON.stringify(verdictFile, null, 1))
 }
 
-/** An invented kit folder `petal/j6/1.0.0` with the gate's record of it, changed by `edit`, and its verdict file. */
+/** An invented kit folder `example-petal/j6/1.0.0` with the gate's record of it, changed by `edit`, and its verdict file. */
 async function kitWith(edit = () => {}) {
   const root = mkdtempSync(path.join(tmpdir(), 'kit-release-'))
-  const folder = path.join(root, 'petal', 'j6', '1.0.0')
+  const folder = path.join(root, 'example-petal', 'j6', '1.0.0')
   mkdirSync(path.join(folder, 'check-record'), { recursive: true })
   for (const [n, t] of Object.entries(FILES)) writeFileSync(path.join(folder, n), t)
   const record = await gateRecord()
@@ -154,9 +157,12 @@ test('S2: the secret allow file is bound: one added or changed since the record 
   done(k, bound)
 })
 
-test('a kit file changed since the record is refused and named; the check record folder is not a kit file', async () => {
+test('a kit file changed since the record is refused and named; the check record folder holds only the gate files', async () => {
   const k = await kitWith()
+  // The check record folder is not a kit file, but a file the gate never writes there is refused (review round 2, T5).
   writeFileSync(path.join(k.folder, 'check-record', 'notes.txt'), 'x\n')
+  assert.deepEqual(codes(k.folder), ['check_record_unknown_file'])
+  rmSync(path.join(k.folder, 'check-record', 'notes.txt'))
   assert.deepEqual(codes(k.folder), [])
   writeFileSync(path.join(k.folder, 'mapping.json'), '{"template":{"slug":"petal","version":"1.0.1"}}\n')
   const [p] = releaseProblems(k.folder, { pins: PINS })
@@ -187,7 +193,7 @@ test('another plugin, a plugin that moved, another human quickstart, another bla
 test('a record that is not the one the verdict was written from is refused', async () => {
   const k = await kitWith()
   writeFileSync(path.join(k.folder, RECORD_FILE), recordText({ ...k.record, kit: 'other/j6@1.0.0' }))
-  assert.deepEqual(codes(k.folder), ['record_changed', 'verdict_not_from_record'])
+  assert.deepEqual(codes(k.folder), ['record_changed', 'verdict_not_from_record', 'kit_ref_mismatch'])
   done(k)
 })
 

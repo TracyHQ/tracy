@@ -18,8 +18,7 @@
 import { createHash } from 'node:crypto'
 import { measuredInRun } from './control-file.mjs'
 import { markerBuild } from './marker-plan.mjs'
-import { pageKeysOf, qualityOf } from './quality.mjs'
-import { faviconsOf, seoOf } from './quality-seo.mjs'
+import { qualityPhase } from './release-gate-quality.mjs'
 import { GATE_VERSION, kitFilesSha256 } from './record.mjs'
 import { withMeasurements } from './record-measured.mjs'
 import { scannedRecord, writeRecordFiles } from './release-gate-files.mjs'
@@ -133,25 +132,9 @@ export async function releaseGate(input) {
     if (!state.built) return { status: 'incomplete', variant: 'full', reason: 'marker_test_not_written' }
     return readVariant('full', ctx, { built: state.built, written: state.real })
   })
-  const quality = await phase('quality', async () => {
-    if (!marker?.renders) return { status: 'incomplete', reason: 'marker_test_not_rendered' }
-    const icons = faviconsOf(marker.renders, site.origin)
-    const favicons = new Map()
-    for (const url of icons) favicons.set(url, (await site.fetch(url)).status)
-    const seo = seoOf(marker.renders, { origin: site.origin, favicons })
-    const systemPages = [...new Set(marker.renders.filter((r) => r.from === 'system').map((r) => r.path))]
-    if (!input.quality) return { ...qualityOf({ marker: { groups: [] }, seo }), reason: 'no_page_reader' }
-    const paths = [...new Set(state.pages.map((p) => '/' + String(p.path ?? '').replace(/^\/+/, '')))]
-    const measured = await input.quality(paths)
-    const pageKeys = input.pageKey ? pageKeysOf(marker.renders, input.pageKey) : undefined
-    return qualityOf({
-      marker: { ...measured, ...(pageKeys ? { pageKeys } : {}) },
-      control: control.quality,
-      baseline: input.baseline ?? null,
-      seo,
-      systemPages
-    })
-  })
+  const quality = await phase('quality', async () =>
+    qualityPhase({ input, marker, state, site, control: control.quality })
+  )
   const hidden = await phase('structure hidden', async () => hiddenVariant(full, ctx))
   const minimum = await phase('structure minimum', async () => {
     if (!reset) return { status: 'not_run', variant: 'minimum', reason: 'no_reset_hook' }
@@ -169,7 +152,9 @@ export async function releaseGate(input) {
       plain: state.real ? { report: state.real.report } : null,
       state: input.writeSafetyState ?? null,
       stateKey: stateKeyOf(input, probes),
-      universeWritten: marker?.record?.universe?.written ?? null
+      universeKeys: marker?.record?.places
+        ? marker.record.places.filter((p) => p.account === 'written').map((p) => p.key)
+        : null
     })
   )
 

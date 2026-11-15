@@ -4,7 +4,7 @@
 // reason while the later phases still run.
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -55,11 +55,13 @@ test('every phase runs in its order and the record holds the six measurements, i
     assert.match(readFileSync(path.join(s.out, 'record.html'), 'utf8'), /Write safety/)
     assert.doesNotMatch(readFileSync(path.join(s.out, 'record.json'), 'utf8'), /florist\.example/)
     // A kit that ships this check record beside its own files may be released.
-    const kitDir = mkdtempSync(path.join(tmpdir(), 'release-gate-kit-'))
+    const kitRoot = mkdtempSync(path.join(tmpdir(), 'release-gate-kit-'))
+    const kitDir = path.join(kitRoot, 'example-petal', 'j6', '1.0.0')
+    mkdirSync(kitDir, { recursive: true })
     writeFileSync(path.join(kitDir, 'mapping.json'), '{}')
     cpSync(path.join(s.out, 'check-record'), path.join(kitDir, 'check-record'), { recursive: true })
     const problems = releaseProblems(kitDir, {})
-    rmSync(kitDir, { recursive: true, force: true })
+    rmSync(kitRoot, { recursive: true, force: true })
     assert.equal(
       problems.some((p) => p.code === 'record_changed'),
       false

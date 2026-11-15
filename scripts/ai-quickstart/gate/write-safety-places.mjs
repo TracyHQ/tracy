@@ -13,7 +13,8 @@ const writerKey = (f) => 'writer:' + f.page + '/' + f.key
 /**
  * The build options of one pass and what the pass did with them.
  * @param {Map<string, object>} assignment place key to probe
- * @returns {{options: {textOf: Function, factOf: Function}, used: Map<string, {code: string, probe: object}>,
+ * @returns {{options: {textOf: Function, factOf: Function}, used: Map<string, {code: string, probe: object, value:
+ *   string, base: string}>,
  *   refused: Map<string, string[]>, seen: Map<string, object>}} `used`: the probed places and their codes; `refused`:
  *   probed writer fields the page writer's copy check sent back, with its reasons; `seen`: every place the build asked
  *   for, probed or not (`{key, type, kind, limit, base, code}`)
@@ -41,8 +42,9 @@ export function passOptions(assignment = new Map()) {
     })
     const probe = assignment.get(key)
     if (!probe) return markerText(f)
-    used.set(key, { code: f.code, probe })
-    return probedValue(base, probe, f.code, f.limit ?? null)
+    const value = probedValue(base, probe, f.code, f.limit ?? null)
+    used.set(key, { code: f.code, probe, value, base })
+    return value
   }
   const factOf = (v) => {
     const head = v.what === 'fact' ? 'fact:' + v.kind : v.what + ':' + v.item + '/' + v.kind
@@ -54,14 +56,15 @@ export function passOptions(assignment = new Map()) {
     seen.set(key, { key, type: placeTypeOf(v), kind: v.kind ?? null, limit: null, base: v.value, code })
     const probe = assignment.get(key)
     if (!probe) return v.value
-    used.set(key, { code, probe })
-    return probedValue(v.value, probe, code)
+    const value = probedValue(v.value, probe, code)
+    used.set(key, { code, probe, value, base: v.value })
+    return value
   }
   return { options: { textOf, factOf }, used, refused, seen }
 }
 
 /** Every string of a write plan operation with where it is stored: its values, then its record fields. */
-function storedOf(op) {
+export function storedOf(op) {
   const out = []
   for (const v of op.values ?? [])
     out.push({ value: String(v.value ?? ''), entry: v.entry ?? null, loc: v.loc ?? null })

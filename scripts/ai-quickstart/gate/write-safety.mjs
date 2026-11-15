@@ -4,14 +4,16 @@
 // passes, each on a fresh site, the marker build writes a probe (`write-probes.mjs`) at every place it can; the pass is
 // written, every page read, and each probe classed (`write-safety-judge.mjs`, one pass in `write-safety-pass.mjs`). A
 // refusal or an error is traced to the one value that caused it (`write-safety-trials.mjs`), that probe is taken out
-// and the pass runs again. A place counts as tested only when a probe reached the real site there. The state is kept
-// after each pass (`write-safety-state.mjs`), so a run stopped by its time limit resumes. The site and the build are
+// and the pass runs again. A place counts as tested only when its probe is found in what was written there and the
+// pages answered (`write-safety-reached.mjs`). The ledger of the finished passes is kept after each one
+// (`write-safety-state.mjs`), so a run stopped by its time limit resumes from the next pass. The site and the build are
 // injected: a memory site in the unit test, a real one through `gate.mjs` (`release-gate.mjs`). Without a way to reset
 // the site the measurement is `not_run`.
 import { stepBudget } from './bisect.mjs'
 import { coverageOf } from './write-safety-coverage.mjs'
-import { FAILING, gapKey, pageBroken } from './write-safety-judge.mjs'
+import { gapKey, pageBroken } from './write-safety-judge.mjs'
 import { onePass } from './write-safety-pass.mjs'
+import { resultOf } from './write-safety-result.mjs'
 import { nameOf, passOptions, shortOf, storedIndex } from './write-safety-places.mjs'
 import { resumed } from './write-safety-state.mjs'
 import { packPass, probeLedger } from './write-probes.mjs'
@@ -31,7 +33,8 @@ const incompleteOf = (reason, more = {}) => ({ status: 'incomplete', incomplete:
 /**
  * @param {{build: (options: object) => Promise<object>, site: object | null, probes: object[], limits?: object,
  *   now?: () => number, log?: (line: string) => void, plain?: {report: object} | null, state?: object | null,
- *   stateKey?: string | null, universeWritten?: number | null}} input `site`: `{reset, write, pages, fetch, off?,
+ *   stateKey?: string | null, universeKeys?: string[] | null}} input `universeKeys`: the place keys the marker test's
+ *   universe counts as written, for the coverage table `site`: `{reset, write, pages, fetch, off?,
  *   back?}`; `plain`: the site write of the plain marker build the run already made (the marker test), else write
  *   safety writes it once itself; `state`/`stateKey`: where the passes are kept and under what key
  */
@@ -52,7 +55,7 @@ export async function writeSafety(input) {
   const plainIndex = storedIndex(plainBuilt.writePlan)
   const written = [...plain.seen.values()].filter((p) => plainIndex.has(String(p.code).toUpperCase()))
   const places = written.filter((p) => p.type)
-  const coverage = coverageOf(plainBuilt.writePlan, plain.seen, input.universeWritten ?? null)
+  const coverage = coverageOf(plainBuilt.writePlan, plain.seen, input.universeKeys ?? null)
   const counts = { written: written.length, probed: places.length, tested: 0 }
   if (!places.length) return incompleteOf('no_places', { places: counts, coverage })
   const base = await plainOnSite(site, plainBuilt, input.plain)
@@ -118,6 +121,7 @@ export async function writeSafety(input) {
     log
   }
   let incomplete = null
+  let stop = null
   for (let n = passes.length + 1; n <= limits.passes; n++) {
     const assignment = packPass(places, probes, ledger)
     if (!assignment.size) break
@@ -137,10 +141,23 @@ export async function writeSafety(input) {
     input.state?.save({ key: input.stateKey ?? null, ledger: ledger.rows(), findings, passes, ...spent() })
     if (out.incomplete) {
       incomplete = out.incomplete
+      stop = out.stop ?? null
       break
     }
   }
-  return resultOf({ places, written, ledger, probes, findings, passes, incomplete, coverage, was, spent })
+  return resultOf({
+    places,
+    written,
+    ledger,
+    probes,
+    findings,
+    passes,
+    incomplete,
+    stop,
+    coverage,
+    was,
+    spent
+  })
 }
 
 /** The plain marker build on the site: written to the end, every page answering as planned; else why not. */
@@ -164,39 +181,4 @@ async function plainOnSite(site, built, given) {
     if (failure) return { reason: 'plain_pages_broken', page: page.pageType ?? null, failure }
   }
   return null
-}
-
-/** The measurement from what the passes found: failed, incomplete with the first reason, or passed. */
-function resultOf({ places, written, ledger, probes, findings, passes, incomplete, coverage, was, spent }) {
-  const missing = ledger.missing(places, probes)
-  const onSite = new Set(
-    ledger
-      .rows()
-      .filter((r) => r.status === 'written')
-      .map((r) => r.place)
-  )
-  const notSiteTested = places.filter((p) => !onSite.has(p.key)).map((p) => p.key)
-  const failed = findings.some((f) => FAILING.has(f.kind))
-  const why =
-    incomplete ??
-    (missing.length
-      ? 'passes'
-      : findings.some((f) => f.kind === 'unclassified')
-        ? 'unclassified_stop'
-        : notSiteTested.length
-          ? 'not_site_tested'
-          : null)
-  return {
-    status: failed ? 'failed' : why ? 'incomplete' : 'passed',
-    ...(why ? { incomplete: why } : {}),
-    places: { written: written.length, probed: places.length, tested: onSite.size },
-    passes,
-    findings,
-    ledger: ledger.rows(),
-    missing: missing.slice(0, 50),
-    notSiteTested: notSiteTested.slice(0, 50),
-    coverage,
-    ...spent(),
-    ...(was ? { resumedFrom: was.passes.length } : {})
-  }
 }

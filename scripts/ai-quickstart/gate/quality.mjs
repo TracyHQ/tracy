@@ -12,21 +12,9 @@
 // compared with the untouched template the same way. Pure but for the injected host.
 import { PAGE_CHECK_GROUPS } from '../../../apps/tracy-web/src/site-check/page-groups.js'
 import { runSiteCheck } from '../../../apps/tracy-web/src/site-check/site-check.js'
+import { QUALITY_GROUPS } from './quality-groups.mjs'
 
-/** The site check groups the gate runs, by name, in the site check's own order. */
-export const QUALITY_GROUPS = Object.freeze([
-  'empty-frames',
-  'cms-errors',
-  'text-overflow',
-  'stretched-pictures',
-  'empty-controls',
-  'main-heading',
-  'orphan-row',
-  'blank-footer-column',
-  'band-contrast',
-  'words-over-picture',
-  'logo-readable'
-])
+export { QUALITY_GROUPS } from './quality-groups.mjs'
 
 /** The site check's groups of these names; an unknown name throws, so a typo never measures nothing. */
 export function qualityGroupsOf(names = QUALITY_GROUPS, catalogue = PAGE_CHECK_GROUPS) {
@@ -96,11 +84,12 @@ export function baselineControl(doc) {
  * whose addresses differ. A page the reader names nothing for keeps its path.
  * @param {object[]} renders
  * @param {(html: string) => string | null} keyOf
+ * @param {(path: string) => string} [addressOf] the address a page is asked at (`qualityPath`), the key of the map
  */
-export function pageKeysOf(renders, keyOf) {
+export function pageKeysOf(renders, keyOf, addressOf = (p) => '/' + String(p ?? '').replace(/^\/+/, '')) {
   const out = {}
   for (const r of renders ?? []) {
-    const page = '/' + String(r.path ?? '').replace(/^\/+/, '')
+    const page = addressOf(r.path)
     if (r.status !== 200 || !r.html || out[page]) continue
     out[page] = keyOf(r.html) ?? page
   }

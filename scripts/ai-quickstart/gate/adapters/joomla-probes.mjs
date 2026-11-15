@@ -11,10 +11,11 @@ const wordsOf = (doc) =>
     .toLowerCase()
 
 /** A probe whose danger is its own words missing where the field's marker prints. */
-const codeProbe = (id, text, why) => ({
+const codeProbe = (id, text, why, signed = null) => ({
   id,
   types: ['text'],
   text,
+  ...(signed ? { signature: (code) => signatureOf(code, signed) } : {}),
   judge: ({ doc, code }) => {
     const words = wordsOf(doc)
     const marker = 'qx' + String(code).toLowerCase()
@@ -28,7 +29,8 @@ export const JOOMLA_PROBES = Object.freeze([
   codeProbe(
     'loadposition',
     (code) => '{loadposition ' + signatureOf(code, 'l') + '}',
-    'the content plugin that prints the modules of a position'
+    'the content plugin that prints the modules of a position',
+    'l'
   ),
   codeProbe('emailcloak', () => '{emailcloak=off}', 'the content plugin that turns email cloaking off')
 ])

@@ -9,6 +9,8 @@ import { EXEMPTIONS } from '../../../ai-quickstart/gate/adapters/joomla-t4.mjs'
 import { JOOMLA_PROBES } from '../../../ai-quickstart/gate/adapters/joomla-probes.mjs'
 import { codesIn } from '../../../ai-quickstart/gate/marker-codec.mjs'
 import { memoryTryWrite } from '../../../ai-quickstart/gate/memory-write.mjs'
+import { QUALITY_GROUPS } from '../../../ai-quickstart/gate/quality-groups.mjs'
+import { renderAt } from '../../../ai-quickstart/gate/render.mjs'
 import { blankControlOf } from '../../../ai-quickstart/gate/verdict.mjs'
 import { PROBE_CATALOGUE } from '../../../ai-quickstart/gate/write-probes-edge.mjs'
 import { demoCorpus, observationsFromHtml } from '../../../ai-quickstart/rendered-scan.mjs'
@@ -16,8 +18,13 @@ import { floristKit } from './florist-kit.mjs'
 import { memorySiteOf, ORIGIN } from './memory-site.mjs'
 
 export const HUMAN_SHA = createHash('sha256').update('invented human quickstart').digest('hex')
+/** Every group the gate runs, green but for `text-overflow`, which carries the failures given. */
 export const groups = (failures = []) => ({
-  groups: [{ name: 'text-overflow', status: failures.length ? 'red' : 'green', failures }]
+  groups: QUALITY_GROUPS.map((name) =>
+    name === 'text-overflow'
+      ? { name, status: failures.length ? 'red' : 'green', failures }
+      : { name, status: 'green', failures: [] }
+  )
 })
 export const overflow = (selector) => ({
   group: 'text-overflow',
@@ -80,7 +87,16 @@ export function floristGate({
     themes: ['light'],
     site: session,
     reset: site.reset,
-    secrets: stamp('secrets', async () => secrets ?? { status: 'passed', findings: [] }),
+    secrets: stamp(
+      'secrets',
+      async () =>
+        secrets ?? {
+          status: 'passed',
+          findings: [],
+          control: { status: 'right', findings: 3 },
+          gitleaks: { status: 'ran' }
+        }
+    ),
     control: stamp('control', async () => ({
       human: { status: 'run', findings: 3, pages: 1 },
       blank: blankControlOf([]),
@@ -92,10 +108,10 @@ export function floristGate({
       for (const p of pages) {
         const { status, html } = await site.fetch(p.url)
         const page = html.replace('<html>', '<html lang="en">' + headOf(p)).replace(/<nav>.*?<\/nav>/, '')
+        // The shape the real renderer gives (`renderAt`): no field of the page beyond it, so nothing the real run
+        // lacks is read here.
         out.push({
-          ...p,
-          theme: 'light',
-          width: 1440,
+          ...renderAt(p, 'light', 1440),
           status,
           html: page,
           // The memory pages print the block titles and the page names around the markers: only what carries a
