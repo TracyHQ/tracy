@@ -87,7 +87,8 @@ export async function runGate(input) {
   classified.notSeen = declareNotSeen(classified.notSeen, {
     conflicts: site.real.report?.counts?.conflicts ?? [],
     unproven: built.writePlan?.unproven ?? [],
-    mapping: kit.mapping
+    mapping: kit.mapping,
+    pages: site.pages
   })
   const written = new Set(
     Object.entries(site.real.record?.ids ?? {})

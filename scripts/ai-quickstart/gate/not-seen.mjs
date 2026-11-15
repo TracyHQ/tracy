@@ -166,15 +166,35 @@ export function notSeenOf({
 }
 
 /**
+ * Whether a list's choice explains a value of a list item no page shows (review 5 Y3): the row names an item its list
+ * block did not show while showing another (`listItem`, from the pages' HTML), the list page was read, and no page that
+ * was read is the item's own (`from: article:<item>`). An item whose own page was read and does not print the value is
+ * no list's choice. Worked out from the pages a record says were read, so a row field alone gives no reason.
+ * @param {object} row
+ * @param {Array<{pageType: string, from?: string}> | null} pages the pages read
+ */
+function leftOutByList(row, pages) {
+  if (!row.listItem || !Array.isArray(pages)) return false
+  const [page, , item] = String(row.entry ?? '').split('.')
+  if (!page || !item) return false
+  const own = `article:${item}`
+  return pages.some((p) => p.pageType === page) && !pages.some((p) => p.from === own || p.pageType === own)
+}
+
+/**
  * Each written value no page shows, with the declared reason it may not show (`declared`), or null: a conflict the
  * real write reported for its entry (`write_conflict`), a flag the write plan raised on its block or entry (its code),
  * the kit's own word that the place prints nothing (`prints: false` with `why` on the mapping location), or an item of
- * a list its block did not show while showing another (`list_item_not_shown`, from the row's `listItem`). A value with
- * no declared reason fails the verdict.
+ * a list its block did not show while showing another, whose own page no read page is (`list_item_not_shown`,
+ * `leftOutByList`). A value with no declared reason fails the verdict.
  * @param {object[]} notSeen `notSeenOf`
- * @param {{conflicts?: string[], unproven?: object[], mapping?: object}} context
+ * @param {{conflicts?: string[], unproven?: object[], mapping?: object, pages?: object[]}} context `pages`: the pages
+ *   read (`{pageType, from}`); without them no value is explained by a list
  */
-export function declareNotSeen(notSeen, { conflicts = [], unproven = [], mapping = null } = {}) {
+export function declareNotSeen(
+  notSeen,
+  { conflicts = [], unproven = [], mapping = null, pages = null } = {}
+) {
   const conflicted = new Set(conflicts)
   const silent = new Map()
   for (const p of universeOf(mapping).values())
@@ -193,7 +213,7 @@ export function declareNotSeen(notSeen, { conflicts = [], unproven = [], mapping
         ? flag.code
         : kit
           ? `kit_declares_not_printed: ${kit}`
-          : n.listItem
+          : leftOutByList(n, pages)
             ? 'list_item_not_shown'
             : null
     return { ...n, declared }

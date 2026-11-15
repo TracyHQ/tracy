@@ -165,7 +165,8 @@ export function checkRecord(input) {
     render: {
       widths,
       themes,
-      pages: pages.map((p) => ({ pageType: p.pageType, path: p.path })),
+      // The record each page was read for (`article:<item>`): the guard tells an item's own page by it (review 5 Y3).
+      pages: pages.map((p) => ({ pageType: p.pageType, path: p.path, ...(p.from ? { from: p.from } : {}) })),
       renders: renders.length,
       failed: failed.map((r) => ({
         page: r.pageType,

@@ -59,7 +59,8 @@ function notSeenProblems(record, mapping) {
     {
       conflicts: list(record?.write?.site?.counts?.conflicts),
       unproven: list(record?.write?.unproven),
-      mapping
+      mapping,
+      pages: list(record?.render?.pages)
     }
   )
   const wrong = notSeen.filter((n, i) => (n.declared ?? null) !== (again[i].declared ?? null))
