@@ -1,7 +1,8 @@
 /**
- * The builds a site holds (#612, migration 220): the store a step chain run built from a build draft is given as
- * `deps.builds` (`docs/references/draft-revision-run.md`, "What the caller passes"). One store answers every site;
- * each call names its site by `ctx.siteKey`, the run's own site.
+ * The builds a site holds (#612, migration 220): the durable store a step chain run built from a build draft is given
+ * as `deps.draft.builds`, answering the interface of `step-chain-draft-builds.js` (`BUILD_STORE_METHODS`) exactly as
+ * its memory store does; the contract test runs both (`test/build-draft-builds-contract.test.mjs`). One store answers
+ * every site; each call names its site by `ctx.siteKey`, the run's own site.
  *
  *   read(ref, ctx)                  the build result kept under `ref`, or null (unknown, or forgotten)
  *   keep(build, ctx, {expected})    COMPARE AND SET: stores `build` and makes its ref the build the site holds, only
@@ -9,8 +10,8 @@
  *                                   otherwise. Keeping a ref again (a restore keeps the earlier build) replaces it.
  *   current(ctx)                    the ref of the build the site holds, null for a blank site
  *   begin({runId, from}, ctx)       marks the site's one unfinished revision run; false when another run is marked,
- *                                   true for the same run id (a resume)
- *   unfinished(ctx)                 that mark `{runId, from, at}`, or null
+ *                                   true for the same run id (a resume, marked again)
+ *   unfinished(ctx)                 that mark, the run as given, or null
  *   end(runId, ctx)                 clears the mark of that run
  *   forget(ref, ctx, {reason})      drops the build's content; its ref and the reason stay
  *   reset(siteKey)                  the site is blank again: it holds no build and no run is unfinished; the builds
@@ -85,9 +86,8 @@ async function withHead(pool, siteKey, work) {
 /**
  * The build store over Postgres.
  * @param {import('pg').Pool} pool
- * @param {{now?: () => number}} [options]
  */
-export function siteBuildStore(pool, { now = Date.now } = {}) {
+export function siteBuildStore(pool) {
   return {
     async read(ref, ctx) {
       if (typeof ref !== 'string' || ref === '') return null
@@ -129,8 +129,9 @@ export function siteBuildStore(pool, { now = Date.now } = {}) {
       const runId = run?.runId ?? null
       return withHead(pool, siteKey, async (client, head) => {
         if (head.unfinished && head.unfinished.runId !== runId) return false
-        if (head.unfinished) return true
-        const mark = { runId, from: run?.from ?? null, at: new Date(now()).toISOString() }
+        // The mark is the run as given, as the memory store keeps it (`step-chain-draft-builds.js`); a resume of the
+        // same run marks it again with what it gives now.
+        const mark = { ...run }
         await client.query(
           'update site_draft_build_head set unfinished = $2::jsonb, updated_at = now() where site_key = $1',
           [siteKey, JSON.stringify(mark)]

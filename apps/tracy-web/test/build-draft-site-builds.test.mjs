@@ -72,16 +72,13 @@ test('two keeps at once over the same build: exactly one becomes the site build'
 })
 
 test('one unfinished run per site: begin, a resume, another run refused, end', opts, async () => {
-  const store = siteBuildStore(db.pool, { now: () => Date.parse('2026-11-15T08:00:00Z') })
+  const store = siteBuildStore(db.pool)
   assert.equal(await store.unfinished(SITE), null)
   assert.equal(await store.begin({ runId: 'run-2', from: 'run-1' }, SITE), true)
   assert.equal(await store.begin({ runId: 'run-2', from: 'run-1' }, SITE), true, 'the same run resumes')
   assert.equal(await store.begin({ runId: 'run-3', from: 'run-1' }, SITE), false)
-  assert.deepEqual(await store.unfinished(SITE), {
-    runId: 'run-2',
-    from: 'run-1',
-    at: '2026-11-15T08:00:00.000Z'
-  })
+  // The mark is the run as given, as the memory store keeps it.
+  assert.deepEqual(await store.unfinished(SITE), { runId: 'run-2', from: 'run-1' })
   const both = await Promise.all([
     store.begin({ runId: 'run-4', from: 'run-1' }, OTHER),
     store.begin({ runId: 'run-5', from: 'run-1' }, OTHER)

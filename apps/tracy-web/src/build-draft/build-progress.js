@@ -4,47 +4,33 @@
  * what the site creation and the step chain recorded. Pure: the build, the site's brief row and its provision job in,
  * `{run, final, problems}` out. The chat renders only this.
  *
- * ENGINE STEPS OF A DRAFT RUN. The run assembled from a draft (`step-chain-draft-steps.js`) names its steps `doors`,
- * `kit`, `brand`, `plan` (reading the approved plan and its look: after approval, so part of the build), `copy` (every
- * page at once), `pictures`, `icons`, `order`, `write`. Contract B wants a look step, one writer step per page, a
- * pictures step and the write step (`build-run-events.mjs ENGINE_STEPS`). `engineLineOf` maps them: the four reading
- * steps carry the look step, and `copy` carries every page's writer step. A line of any other step (the base site's
- * `site` line) is left out.
+ * ENGINE STEPS OF A DRAFT RUN. The run assembled from a draft names its steps `doors`, `kit`, `brand`, `plan`, `copy`,
+ * `pictures`, `icons`, `order`, `write`; the domain maps them to Contract B's engine names (`draftRunInputOf`,
+ * `domain/build-run-draft-steps.mjs`): the reading steps carry the look step, `copy` carries every page's writer step,
+ * and a line of any other step (the base site's `site` line) is left out. For a rebuild the pages are the ones the
+ * change touched.
  *
  * BEFORE THE CHAIN. While the host installs the site no step has started: every step is pending and the run is
  * running. A create door that refused, or a provision that failed, stops the run at its frame (`run`), so the first
  * step that did not finish carries it. The reason stays with the team (`outcome.stopped.reason`).
  */
-import { outcomeOf, progressEventOf } from 'website-opportunities/domain'
+import {
+  draftEngineLinesOf,
+  draftEngineNamesOf,
+  draftRunInputOf,
+  outcomeOf,
+  progressEventOf
+} from 'website-opportunities/domain'
 import { partialOf } from './rebuild-progress.js'
 import { runOfBuild } from './rebuild-store.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
-const READING = new Set(['doors', 'kit', 'brand', 'plan'])
-const KEPT = new Set(['pictures', 'icons', 'order', 'write'])
 /** The brief states after which the run has ended. */
 const ENDED = new Set(['applied', 'failed'])
 
-/** The Contract B engine names one draft run step stands for. */
-export function engineNamesOf(step, pages) {
-  if (READING.has(step)) return ['look']
-  if (step === 'copy') return list(pages).map((p) => `writer:${p.id}`)
-  if (KEPT.has(step)) return [step]
-  return []
-}
-
-/** The record lines of the draft run under Contract B's engine names. */
-export function engineLinesOf(lines, pages) {
-  return list(lines).flatMap((line) => engineNamesOf(line?.step, pages).map((step) => ({ ...line, step })))
-}
-
-/** A stop under Contract B's engine names: a stop of `copy` is carried by its first page. */
-function engineStopOf(stop, pages) {
-  if (!stop || typeof stop !== 'object') return null
-  if (stop.step === 'run') return stop
-  const [step] = engineNamesOf(stop.step, pages)
-  return step ? { ...stop, step } : { ...stop, step: 'run' }
-}
+/** The domain's own mapping, under the names this module answered before it (kept for its callers and tests). */
+export const engineNamesOf = draftEngineNamesOf
+export const engineLinesOf = draftEngineLinesOf
 
 const secondsBetween = (from, to) => {
   const ms = to - Date.parse(String(from ?? ''))
@@ -88,9 +74,10 @@ export function buildRunOf({ build, brief: read = null, job: provision = null, n
     chain?.ending === 'complete' ||
     chain?.ending === 'stopped'
   const written = partial ? partial.written : pages
-  const record = engineLinesOf(chain?.steps, written)
-  const running = [...new Set(list(chain?.running).flatMap((s) => engineNamesOf(s, written)))]
-  const stop = frameStop ?? engineStopOf(chain?.stop, written)
+  const input = draftRunInputOf(chain, written)
+  const record = input.record
+  const running = input.running
+  const stop = frameStop ?? input.stop
   // From the approval, as the owner's clock runs; an ended build's clock stops when it was marked ended.
   const endedMs = Date.parse(String(build.endedAt ?? ''))
   const elapsedSeconds = secondsBetween(build.approvedAt, final && Number.isFinite(endedMs) ? endedMs : now)
