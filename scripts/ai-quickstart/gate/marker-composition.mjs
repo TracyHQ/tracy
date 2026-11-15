@@ -44,9 +44,17 @@ export function itemKindOf(block) {
   return list(GROUP_KINDS_V3[own]?.allowedKinds).find(fits) ?? own
 }
 
-/** The data of one block on one page: items of its kind not shown yet on the page, up to its maximum; or its facts. */
-function dataOf(block, profile, usedOnPage, createdBy) {
+/**
+ * How many items a block shows in a composition shape: `max` its maximum (the marker test); `min` its minimum, at least
+ * one, so the block still shows (the minimum variant of the structure measurement, #586).
+ */
+export const countOf = (block, shape = 'max') =>
+  shape === 'min' ? Math.max(1, block.items?.min ?? 1) : (block.items?.max ?? 1)
+
+/** The data of one block on one page: items of its kind not shown yet on the page, up to its count; or its facts. */
+function dataOf(block, profile, usedOnPage, createdBy, shape) {
   const kind = itemKindOf(block)
+  // Social links are contact channels the rules gate wants on every page with room for them, whatever the shape.
   if (list(block.itemFields).some((f) => f.kind === SOCIAL))
     return list(profile.facts[SOCIAL])
       .slice(0, block.items?.max ?? 1)
@@ -58,7 +66,7 @@ function dataOf(block, profile, usedOnPage, createdBy) {
   const free = list(profile.items[kind]).filter(
     (i) => !usedOnPage.has(i.id) && (!created || (createdBy.get(i.id) ?? block.id) === block.id)
   )
-  const taken = free.slice(0, block.items?.max ?? 1).map((i) => i.id)
+  const taken = free.slice(0, countOf(block, shape)).map((i) => i.id)
   for (const id of taken) {
     usedOnPage.add(id)
     if (created) createdBy.set(id, block.id)
@@ -94,23 +102,41 @@ export function pageShapesOf(pageRecipes, mapping) {
  * @param {{blockStore: object, pageRecipes: object, mapping?: object}} kit
  * @param {object} profile the marker needs profile (`markerProfile`)
  * @param {{take: Function}} registry
+ * @param {{shape?: 'max' | 'min', pages?: (page: {pageType: string, blocks: string[]}) => boolean}} [options] `shape`:
+ *   each block at its most items (the default) or its least; `pages`: the pages kept (all by default)
  */
-export function markerComposition({ blockStore, pageRecipes, mapping }, profile, registry) {
+export function markerComposition(
+  { blockStore, pageRecipes, mapping },
+  profile,
+  registry,
+  { shape: count = 'max', pages: keep = () => true } = {}
+) {
   const byId = new Map(list(blockStore?.blocks).map((b) => [b.id, b]))
   const createdBy = new Map()
-  const pages = pageShapesOf(pageRecipes, mapping).map((shape) => {
-    const used = new Set()
-    const blocks = shape.blocks
-      .map((id) => byId.get(id))
-      .filter(Boolean)
-      .map((b) => ({
-        block: b.id,
-        label: `Block ${b.id}`,
-        data: dataOf(b, profile, used, createdBy),
-        reason: 'Marker test.'
-      }))
-    const name = textMarker(registry.take({ what: 'page', pageType: shape.pageType }))
-    return { pageType: shape.pageType, name, blocks }
-  })
-  return { pages, assumptions: [], leftOut: [] }
+  const pages = pageShapesOf(pageRecipes, mapping)
+    .filter(keep)
+    .map((shape) => {
+      const used = new Set()
+      const blocks = shape.blocks
+        .map((id) => byId.get(id))
+        .filter(Boolean)
+        .map((b) => ({
+          block: b.id,
+          label: `Block ${b.id}`,
+          data: dataOf(b, profile, used, createdBy, count),
+          reason: 'Marker test.'
+        }))
+      const name = textMarker(registry.take({ what: 'page', pageType: shape.pageType }))
+      return { pageType: shape.pageType, name, blocks }
+    })
+  // At its least, the items no block shows are left out, so the rules gate does not place them itself.
+  const shown = new Set(pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
+  const leftOut =
+    count === 'min'
+      ? Object.values(profile.items ?? {})
+          .flat()
+          .filter((i) => !shown.has(i.id))
+          .map((i) => ({ item: i.id, reason: 'The minimum variant shows the fewest items.' }))
+      : []
+  return { pages, assumptions: [], leftOut }
 }

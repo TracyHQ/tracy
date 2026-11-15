@@ -73,6 +73,10 @@ export function networkHostsOf(mapping) {
 }
 
 const field = (value) => ({ value, sources: SOURCES, confidence: 'single-source' })
+/** The default `factOf`: a profile value as its marker. */
+const asMarked = ({ value }) => value
+/** The code a marker value carries (its first), for `factOf`. */
+const codeIn = (value) => /qx([a-z]{3})/i.exec(String(value))?.[1]?.toUpperCase() ?? null
 
 function valueOf(f, code, hosts, n) {
   if (f.kind === PERSON_SOCIAL || f.kind === SOCIAL) return socialMarker(hosts[n % hosts.length], code)
@@ -128,8 +132,12 @@ function itemCountOf(recipes, byId, kind) {
  * The marker needs profile of a kit.
  * @param {{blockStore: object, pageRecipes: object, mapping?: object}} kit
  * @param {ReturnType<typeof markerRegistry>} registry
+ * @param {{factOf?: (v: {what: string, kind: string, item?: string, code: string | null, value: string}) => string}}
+ *   [options] `factOf` (write safety, #586): another value for a fact, an item field or a row field; the marker by default
  */
-export function markerProfile({ blockStore, pageRecipes, mapping }, registry) {
+export function markerProfile({ blockStore, pageRecipes, mapping }, registry, { factOf = asMarked } = {}) {
+  const valued = (what, value) =>
+    typeof value === 'string' ? factOf({ ...what, code: codeIn(value), value }) : value
   const blocks = list(blockStore?.blocks)
   const byId = new Map(blocks.map((b) => [b.id, b]))
   const recipes = pageShapesOf(pageRecipes, mapping)
@@ -138,7 +146,9 @@ export function markerProfile({ blockStore, pageRecipes, mapping }, registry) {
   const facts = {}
   for (const [kind, mark] of Object.entries(FACT_MARKS))
     if (mark && (kind === 'business.name' || declared.has(kind)))
-      facts[kind] = [field(mark(registry.take({ what: 'fact', kind, id: idOf(kind) })))]
+      facts[kind] = [
+        field(valued({ what: 'fact', kind }, mark(registry.take({ what: 'fact', kind, id: idOf(kind) }))))
+      ]
   const socialMost = Math.max(
     1,
     ...blocks.map((b) =>
@@ -171,7 +181,7 @@ export function markerProfile({ blockStore, pageRecipes, mapping }, registry) {
                   r === 0 ? code : registry.take({ what: 'row', item: id, kind: f.kind })
                 )
               )
-            : valueOf(f, code, hosts, n)
+            : valued({ what: 'item', kind: f.kind, item: id }, valueOf(f, code, hosts, n))
         )
       }
       const rows = rowRoles.length
@@ -180,7 +190,12 @@ export function markerProfile({ blockStore, pageRecipes, mapping }, registry) {
             fields: Object.fromEntries(
               rowRoles.map((f) => [
                 f.kind,
-                field(valueOf(f, registry.take({ what: 'row', item: id, kind: f.kind }), hosts, r))
+                field(
+                  valued(
+                    { what: 'row', kind: f.kind, item: id },
+                    valueOf(f, registry.take({ what: 'row', item: id, kind: f.kind }), hosts, r)
+                  )
+                )
               ])
             ),
             sources: SOURCES

@@ -21,8 +21,15 @@ export const FILLER_TAG = 'qqqqq'
 /** How long a writer's marker text is: long enough to show where a field is cut, short enough for most limits. */
 const WRITER_LENGTH = 17
 
-/** The text the marker writer writes into one field: a new code each time, cut to the field's limit. */
-function markerWriter(registry, page) {
+/** The marker writer's default text of one field: the code, padded and cut to its length. */
+export const markerText = ({ code, length }) => textMarker(code, { length })
+
+/**
+ * The text the marker writer writes into one field: a new code each time, cut to the field's limit. `textOf` (write
+ * safety, #586) may give another text for a field: `{code, page, key, kind, limit, length, rewrite, problems}` in (`problems`:
+ * why the copy check sent the field back), a string out.
+ */
+function markerWriter(registry, page, textOf = markerText) {
   return async (request) => {
     const user = JSON.parse(request.user)
     const fields = {}
@@ -36,7 +43,17 @@ function markerWriter(registry, page) {
           rewrite: Boolean(user.rewrite)
         })
         const limit = slot.limit ?? WRITER_LENGTH
-        fields[slot.key] = textMarker(code, { length: Math.min(limit, WRITER_LENGTH) })
+        const length = Math.min(limit, WRITER_LENGTH)
+        fields[slot.key] = textOf({
+          code,
+          page,
+          key: slot.key,
+          kind: slot.kind,
+          limit: slot.limit ?? null,
+          length,
+          rewrite: Boolean(user.rewrite),
+          problems: (user.rewrite ?? []).find((r) => r.key === slot.key)?.problems ?? []
+        })
       }
     return JSON.stringify({ fields })
   }
@@ -74,15 +91,21 @@ export const markerIconLibrary = (library) => ({
  * @param {{ref: string, blockStore: object, pageRecipes: object, mapping: object, blankContract: object,
  *   template: {slug: string, name?: string, version: string}}} kit
  * @param {{iconLibrary: {set: string, icons: object[]}, stored?: (order: object) => object,
- *   tryWrite?: (built: object) => Promise<object>}} options `stored`: the stored entry of every picture frame and icon
+ *   tryWrite?: (built: object) => Promise<object>, textOf?: Function, factOf?: Function, shape?: 'max' | 'min',
+ *   pages?: (shape: {pageType: string}) => boolean}} options `stored`: the stored entry of every picture frame and icon
  *   of the order (the gate stores a marker picture for each); `tryWrite`: runs the write plan (on a memory site), its
- *   result is kept as `written`, and a write step refusal it throws is a gap like the plan's own
+ *   result is kept as `written`, and a write step refusal it throws is a gap like the plan's own. Write safety and the
+ *   structure measurements (#586) pass `textOf` (the writer's text of a field, `markerWriter`), `factOf` (a profile
+ *   value, `markerProfile`), `shape` and `pages` (`markerComposition`); left out, the marker test is unchanged
  * @returns the step values, the write plan, `gaps` (`marker-gaps.mjs`) and the final composition
  */
-export async function markerBuild(kit, { iconLibrary, stored = defaultStored, tryWrite } = {}) {
+export async function markerBuild(
+  kit,
+  { iconLibrary, stored = defaultStored, tryWrite, textOf, factOf, shape, pages } = {}
+) {
   const registry = markerRegistry(codeOf)
-  const research = markerProfile(kit, registry)
-  const composition = markerComposition(kit, research, registry)
+  const research = markerProfile(kit, registry, { factOf })
+  const composition = markerComposition(kit, research, registry, { shape, pages })
   const label = textMarker(registry.take({ what: 'answer', question: 'main-button' }))
   const icons = markerIconLibrary(iconLibrary)
   const gaps = []
@@ -90,7 +113,7 @@ export async function markerBuild(kit, { iconLibrary, stored = defaultStored, tr
     const taken = registry.entries.length
     let built = null
     try {
-      built = await chainOf(kit, { registry, research, composition, label, icons, stored })
+      built = await chainOf(kit, { registry, research, composition, label, icons, stored, textOf })
       const written = built.writePlan && tryWrite ? await tryWrite({ ...built, registry }) : null
       return { registry, research, composition, gaps, written, ...built }
     } catch (error) {
@@ -108,7 +131,7 @@ export async function markerBuild(kit, { iconLibrary, stored = defaultStored, tr
 /** At most this many write step gaps are taken out of the composition before the marker build gives up. */
 const MAX_GAP_RETRIES = 100
 
-async function chainOf(kit, { registry, research, composition, label, icons, stored }) {
+async function chainOf(kit, { registry, research, composition, label, icons, stored, textOf }) {
   const reply = JSON.stringify(composition)
   const { plan, profile, accounting } = await composePlan({
     profile: structuredClone(research),
@@ -129,7 +152,7 @@ async function chainOf(kit, { registry, research, composition, label, icons, sto
       profile,
       blockStore: kit.blockStore,
       library: TRACY_LIBRARY,
-      model: markerWriter(registry, page.id)
+      model: markerWriter(registry, page.id, textOf)
     })
     writers.push({ page: out.pages[0], prompt: out.prompt })
   }

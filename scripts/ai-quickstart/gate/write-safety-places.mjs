@@ -1,0 +1,118 @@
+// The places of write safety (ticket #586): every value the marker build writes that a customer could type, named the
+// same way in every pass (a writer field by its page and key, a profile value by its kind and item), and where the
+// write plan stores it. A pass gives the build a `textOf` and a `factOf` that write a probe at the places it chose and
+// the plain marker everywhere else, and keeps the code each probed place got, so its value is found in the plan and on
+// the pages. Pure.
+import { codesIn } from './marker-codec.mjs'
+import { markerText } from './marker-plan.mjs'
+import { placeTypeOf, probedValue } from './write-probes.mjs'
+
+/** A place key of a writer field. */
+const writerKey = (f) => 'writer:' + f.page + '/' + f.key
+
+/**
+ * The build options of one pass and what the pass did with them.
+ * @param {Map<string, object>} assignment place key to probe
+ * @returns {{options: {textOf: Function, factOf: Function}, used: Map<string, {code: string, probe: object}>,
+ *   refused: Map<string, string[]>, seen: Map<string, object>}} `used`: the probed places and their codes; `refused`:
+ *   probed writer fields the page writer's copy check sent back, with its reasons; `seen`: every place the build asked
+ *   for, probed or not (`{key, type, limit, base, code}`)
+ */
+export function passOptions(assignment = new Map()) {
+  const used = new Map()
+  const refused = new Map()
+  const seen = new Map()
+  const counts = new Map()
+  const textOf = (f) => {
+    const key = writerKey(f)
+    if (f.rewrite) {
+      if (used.has(key)) refused.set(key, (f.problems ?? []).map(String))
+      used.delete(key)
+      return markerText(f)
+    }
+    const base = 'Qx' + f.code
+    seen.set(key, { key, type: placeTypeOf({ kind: f.kind }), limit: f.limit ?? null, base, code: f.code })
+    const probe = assignment.get(key)
+    if (!probe) return markerText(f)
+    used.set(key, { code: f.code, probe })
+    return probedValue(base, probe, f.code)
+  }
+  const factOf = (v) => {
+    const head = v.what === 'fact' ? 'fact:' + v.kind : v.what + ':' + v.item + '/' + v.kind
+    const n = counts.get(head) ?? 0
+    counts.set(head, n + 1)
+    const key = v.what === 'item' ? head : head + '#' + n
+    const code = v.code ?? codesIn(v.value)[0] ?? null
+    if (!code) return v.value
+    seen.set(key, { key, type: placeTypeOf(v), limit: null, base: v.value, code })
+    const probe = assignment.get(key)
+    if (!probe) return v.value
+    used.set(key, { code, probe })
+    return probedValue(v.value, probe, code)
+  }
+  return { options: { textOf, factOf }, used, refused, seen }
+}
+
+/** Every string of a write plan operation with where it is stored: its values, then its record fields. */
+function storedOf(op) {
+  const out = []
+  for (const v of op.values ?? [])
+    out.push({ value: String(v.value ?? ''), entry: v.entry ?? null, loc: v.loc ?? null })
+  for (const [column, value] of Object.entries(op.fields ?? {}))
+    if (typeof value === 'string')
+      out.push({ value, entry: op.page ? op.page + '.' + column : null, loc: { entity: op.record, column } })
+  return out
+}
+
+/**
+ * Where each code is stored in a write plan: code to `[{op, entry, loc, value}]`.
+ * @param {object | null} writePlan
+ */
+export function storedIndex(writePlan) {
+  const index = new Map()
+  for (const op of writePlan?.ops ?? [])
+    for (const s of storedOf(op))
+      for (const code of codesIn(s.value)) {
+        if (!index.has(code)) index.set(code, [])
+        index.get(code).push({ op: op.key, ...s })
+      }
+  return index
+}
+
+/** The path of a stored location, whichever form it has. */
+const pathOf = (loc) => loc?.jsonPath ?? loc?.nestedJson ?? loc?.xpath ?? null
+
+/**
+ * The name of a place a kit owner can act on: page, block (the plan block and the store block), field and item index,
+ * the stored location and the operation that writes it. Never the value.
+ * @param {{op: string, entry: string | null, loc: object | null} | undefined} stored
+ * @param {object} order the write order (its pages name the store block of each plan block)
+ */
+export function nameOf(stored, order) {
+  const [page = null, block = null, ...rest] = String(stored?.entry ?? '')
+    .split('.')
+    .filter(Boolean)
+  const planBlock = (order?.pages ?? []).find((p) => p.id === page)?.blocks?.find((b) => b.id === block)
+  const field = rest.length ? rest[rest.length - 1] : null
+  const index = rest.slice(0, -1).join('.') || null
+  const loc = stored?.loc ?? null
+  return {
+    page,
+    block,
+    storeBlock: planBlock?.block ?? null,
+    field,
+    ...(index ? { item: index } : {}),
+    location: loc
+      ? {
+          op: stored.op,
+          entity: loc.entity ?? null,
+          column: loc.column ?? null,
+          path: pathOf(loc),
+          slot: loc.slot ?? null
+        }
+      : { op: stored?.op ?? null }
+  }
+}
+
+/** A message cut short: a finding names a field, it never carries a payload. */
+export const shortOf = (text) => String(text ?? '').slice(0, 160)
