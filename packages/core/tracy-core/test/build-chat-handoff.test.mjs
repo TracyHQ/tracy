@@ -73,6 +73,26 @@ test('a hand off block reads back its conversation and plan; anything else is no
   assert.deepEqual(read.conversation, CONVERSATION)
 })
 
+test('a hand off block in the server order, with what the owner keeps off the site last, reads back without it', () => {
+  // The order tracy-web writes: schema, note, site, plan, conversation, keepOffSite. The held names are for the site
+  // agent only: the reader never hands them to anything that draws.
+  const text = block({
+    schema: HANDOFF_SCHEMA,
+    note: 'Only the plan is approved.',
+    site: { siteKey: 'larkfen.localhost', name: 'Larkfen Rowing' },
+    plan: PLAN,
+    conversation: CONVERSATION,
+    keepOffSite: ['Coach Morven Tull']
+  })
+  const read = handoffOfText(text)
+  assert.deepEqual(read, {
+    conversation: CONVERSATION,
+    plan: PLAN,
+    site: { siteKey: 'larkfen.localhost', name: 'Larkfen Rowing' }
+  })
+  assert.doesNotMatch(JSON.stringify(read), /Morven/)
+})
+
 test('the site session publishes the hand off on the turn its message entered, whichever event comes first', () => {
   const text = block({ schema: HANDOFF_SCHEMA, conversation: CONVERSATION, plan: PLAN })
   const opened = fold(handoffFoldOf, [

@@ -18,7 +18,7 @@ const file = path.join(out, 'plan-edit.mjs')
 await build({
   stdin: {
     contents: `
-      export { savePlanEdit, refusalOf } from './save-plan-edit'
+      export { savePlanEdit, undoPlanEdit, refusalOf } from './save-plan-edit'
       export { createDraftSource } from './sources'
       export { en } from './strings'`,
     resolveDir: path.join(root, 'src', 'client'),
@@ -66,6 +66,29 @@ test('a refused edit is said in the card words: a build in progress, a plan that
   })
   assert.deepEqual(lib.refusalOf(new TypeError('fetch failed')), { key: 'plan.saveFailed', reload: false })
   for (const key of ['plan.locked', 'plan.stale']) assert.equal(typeof lib.en[key], 'string', key)
+})
+
+test('a plan a step still works on, or a change too large to read, is said in the card words, the plan kept', async () => {
+  const busy = await refused(409, {
+    code: 'ENGINE_BUSY',
+    next: 'Wait for the step to end.',
+    say: 'I am still working on your plan, so it cannot change right now.'
+  })
+  assert.deepEqual(lib.refusalOf(busy), { key: 'plan.busy', reload: false })
+  assert.equal(busy.say, undefined, 'the server sentence is never shown')
+  // The undo door answers the same refusal the same way.
+  let undone
+  try {
+    await lib.undoPlanEdit(answering(409, { code: 'ENGINE_BUSY', say: 'x' }))
+  } catch (error) {
+    undone = error
+  }
+  assert.deepEqual(lib.refusalOf(undone), { key: 'plan.busy', reload: false })
+  assert.deepEqual(lib.refusalOf(await refused(413, { code: 'BODY_TOO_LARGE' })), {
+    key: 'plan.tooLarge',
+    reload: false
+  })
+  for (const key of ['plan.busy', 'plan.tooLarge']) assert.equal(typeof lib.en[key], 'string', key)
 })
 
 test('a draft read that was out while an edit answered never writes the older plan back', async () => {

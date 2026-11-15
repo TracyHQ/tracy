@@ -312,6 +312,10 @@ var BUILD_FAILED_SAY = `Your site could not be built this time. ${TEAM_SEES_SAY}
 var BUILD_LOCKED_SAY2 = BUILD_LOCKED_SAY;
 var BUILD_UNCHECKED_SAY = "I asked for your site to be built, but I could not check on it just now. Ask me again in a minute to see how it is going.";
 var BUILD_CHAT_OFF_SAY = "Building a site in the chat is not available right now. You can still create your site from the Add site page.";
+var BUILD_BUSY_SAY = "I am still working on your plan, so it cannot change right now. Please make your change again when I am done.";
+var TRY_LATER_FALLBACK_SAY = "I have done this many times in a short while, so I paused here. Please try again later.";
+var BODY_TOO_LARGE_SAY = "That was too long for me to send. Please say it in fewer words.";
+var ANSWERS_FULL_SAY = "I could not keep your last answer, because this plan already holds as many answers as it can. Please continue with the plan as it is.";
 var REQUEST_MAX_LENGTH = 1e3;
 var REQUEST_TOO_LONG_SAY = requestTooLongSay(REQUEST_MAX_LENGTH);
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? nameTooLongSay(limit) : answerTooLongSay(limit);
@@ -390,6 +394,11 @@ function ownerSay(said, fallback = BUILD_STOPPED_SAY) {
 }
 var stopped = (said = void 0) => ({ stopped: true, say: ownerSay(said) });
 var switchedOff = () => ({ stopped: true, say: BUILD_CHAT_OFF_SAY });
+var tooLargeOf = (say = BODY_TOO_LARGE_SAY) => ({
+  refused: true,
+  say,
+  next: "Say the sentence in say, then wait for the owner."
+});
 var isSwitchedOff = (res) => res?.status === 403 && res.body?.code === "BUILD_CHAT_OFF";
 var isPollFault = (res) => res === null || res.status >= 500;
 var RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with the same action; a result of that call says stopped again only if it failed again.`;
@@ -521,6 +530,9 @@ ${JSON.stringify(answer)}`;
       const res = await door(sessionId, assertion, "PUT", "/answers", { question, answer });
       if (isSwitchedOff(res)) return "off";
       if (res === null || res.status >= 500 || res.status === 403 || res.status === 404) return false;
+      if (res.status === 413) return { refusal: tooLargeOf() };
+      if (res.status === 422 && res.body?.code === "TOO_MANY_QUESTIONS")
+        return { refusal: tooLargeOf(ANSWERS_FULL_SAY) };
       if (res.status >= 200 && res.status < 300) done.add(key);
     }
     return { again: [...latest.values()].find(Boolean) ?? null };
@@ -540,6 +552,19 @@ ${JSON.stringify(answer)}`;
         say: BUILD_LOCKED_SAY2,
         next: "Say the sentence in say. Call tracy_build with action build to read how the build is going."
       };
+    if (res.status === 409 && res.body?.code === "ENGINE_BUSY")
+      return {
+        busy: true,
+        say: ownerSay(res.body?.say, BUILD_BUSY_SAY),
+        next: "Say the sentence in say. Do not call tracy_build again now; make the change again when the owner asks for it."
+      };
+    if (res.status === 429)
+      return {
+        paused: true,
+        say: ownerSay(res.body?.say, TRY_LATER_FALLBACK_SAY),
+        next: "Say the sentence in say and stop here. Ask no question, and do not call tracy_build again until the owner asks."
+      };
+    if (res.status === 413) return tooLargeOf();
     if (res.status === 409)
       return {
         stale: true,
@@ -782,6 +807,7 @@ ${JSON.stringify(answer)}`;
     const replies = await storeReplies(sessionId, assertion);
     if (replies === "off") return switchedOff();
     if (replies === false) return stopped();
+    if ("refusal" in replies) return replies.refusal;
     if (replies.again) {
       const { question, limit } = replies.again;
       return askAgain(askRequestOf([question], []), tooLongSay(question, limit));

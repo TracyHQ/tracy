@@ -85,6 +85,26 @@ export const BUILD_UNCHECKED_SAY =
 /** Owner facing: said when building a site in the chat is switched off. Plain English, no dashes. */
 export const BUILD_CHAT_OFF_SAY =
   'Building a site in the chat is not available right now. You can still create your site from the Add site page.'
+/**
+ * Owner facing: said when a build chat step still works on the plan (`ENGINE_BUSY`) and the door gave no plain
+ * sentence of its own. Plain English, no dashes.
+ */
+export const BUILD_BUSY_SAY =
+  'I am still working on your plan, so it cannot change right now. Please make your change again when I am done.'
+/**
+ * Owner facing: said when a step was started too often for now (`TRY_LATER`) and the door gave no plain sentence of
+ * its own. Plain English, no dashes.
+ */
+export const TRY_LATER_FALLBACK_SAY =
+  'I have done this many times in a short while, so I paused here. Please try again later.'
+/** Owner facing: said when a request is larger than the door reads (`BODY_TOO_LARGE`). Plain English, no dashes. */
+export const BODY_TOO_LARGE_SAY = 'That was too long for me to send. Please say it in fewer words.'
+/**
+ * Owner facing: said when the draft already holds as many questions as it keeps (`TOO_MANY_QUESTIONS`), so an answer
+ * could not be kept. Plain English, no dashes.
+ */
+export const ANSWERS_FULL_SAY =
+  'I could not keep your last answer, because this plan already holds as many answers as it can. Please continue with the plan as it is.'
 
 /** The longest change request the owner may write, in characters (Contract B `request.text`, #617). */
 export const REQUEST_MAX_LENGTH = 1_000
@@ -215,6 +235,16 @@ const stopped = (/** @type {unknown} */ said = undefined) => ({ stopped: true, s
 
 /** The operator switched the build chat off (`BUILD_CHAT_OFF`): no fault, and nobody is looking into one. */
 const switchedOff = () => ({ stopped: true, say: BUILD_CHAT_OFF_SAY })
+/**
+ * A request or an answer the door would not take (a body past its bound, a draft that keeps no more questions): one
+ * plain sentence, no fault, nothing retried.
+ * @param {string} [say]
+ */
+const tooLargeOf = (say = BODY_TOO_LARGE_SAY) => ({
+  refused: true,
+  say,
+  next: 'Say the sentence in say, then wait for the owner.'
+})
 /** @param {{ status: number, body: any } | null} res */
 const isSwitchedOff = (res) => res?.status === 403 && res.body?.code === 'BUILD_CHAT_OFF'
 /**
@@ -411,13 +441,14 @@ export function createBuildTool({
 
   /**
    * Store every reply of the session not stored yet. A reply the answers door refuses (422, 409) is left out; a door
-   * that is not there or a tracy-web that does not answer is a fault, and stops the call. A typed reply longer than its
-   * question holds is never sent; when it is the owner's latest reply to that question, the call answers the question
-   * again with the limit instead of going on.
+   * that is not there or a tracy-web that does not answer is a fault, and stops the call. A reply the door will never
+   * take as it is (413 `BODY_TOO_LARGE`, 422 `TOO_MANY_QUESTIONS`) stops the call with a plain sentence for the owner.
+   * A typed reply longer than its question holds is never sent; when it is the owner's latest reply to that question,
+   * the call answers the question again with the limit instead of going on.
    * @param {string} sessionId
    * @param {string} assertion
-   * @returns {Promise<false | 'off' | { again: { question: any, limit: number } | null }>} false on a fault, `off`
-   *   when the build chat is switched off
+   * @returns {Promise<false | 'off' | { refusal: { refused: boolean, say: string, next: string } }
+   *   | { again: { question: any, limit: number } | null }>} false on a fault, `off` when the build chat is switched off
    */
   async function storeReplies(sessionId, assertion) {
     const replies = repliesOf(eventsOf(sessionId))
@@ -446,6 +477,10 @@ export function createBuildTool({
       const res = await door(sessionId, assertion, 'PUT', '/answers', { question, answer })
       if (isSwitchedOff(res)) return 'off'
       if (res === null || res.status >= 500 || res.status === 403 || res.status === 404) return false
+      // The door will never take this answer as it is: the owner is told, never left with an answer dropped silently.
+      if (res.status === 413) return { refusal: tooLargeOf() }
+      if (res.status === 422 && res.body?.code === 'TOO_MANY_QUESTIONS')
+        return { refusal: tooLargeOf(ANSWERS_FULL_SAY) }
       if (res.status >= 200 && res.status < 300) done.add(key)
     }
     return { again: [...latest.values()].find(Boolean) ?? null }
@@ -478,6 +513,21 @@ export function createBuildTool({
         say: BUILD_LOCKED_SAY,
         next: 'Say the sentence in say. Call tracy_build with action build to read how the build is going.'
       }
+    // Another step still works on the plan: the plan did not move, and this step is never retried on its own.
+    if (res.status === 409 && res.body?.code === 'ENGINE_BUSY')
+      return {
+        busy: true,
+        say: ownerSay(res.body?.say, BUILD_BUSY_SAY),
+        next: 'Say the sentence in say. Do not call tracy_build again now; make the change again when the owner asks for it.'
+      }
+    // Started too often for now (`TRY_LATER`): no fault, nothing to retry, nothing to ask.
+    if (res.status === 429)
+      return {
+        paused: true,
+        say: ownerSay(res.body?.say, TRY_LATER_FALLBACK_SAY),
+        next: 'Say the sentence in say and stop here. Ask no question, and do not call tracy_build again until the owner asks.'
+      }
+    if (res.status === 413) return tooLargeOf()
     if (res.status === 409)
       return {
         stale: true,
@@ -794,6 +844,7 @@ export function createBuildTool({
     const replies = await storeReplies(sessionId, assertion)
     if (replies === 'off') return switchedOff()
     if (replies === false) return stopped()
+    if ('refusal' in replies) return replies.refusal
     if (replies.again) {
       const { question, limit } = replies.again
       return askAgain(askRequestOf([question], []), tooLongSay(question, limit))

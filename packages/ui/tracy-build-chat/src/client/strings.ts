@@ -97,6 +97,9 @@ export const en = {
   'plan.locked': 'Your site is being built from this plan, so the plan cannot change until the build ends.',
   'plan.stale':
     'The plan changed meanwhile, so your change was not saved. The card now shows the latest plan.',
+  'plan.busy':
+    'I am still working on your plan, so it cannot change right now. Make your change again when I am done.',
+  'plan.tooLarge': 'This change is too long to save. Make it shorter and try again.',
   'plan.edit': 'Edit {label}: {value}',
   'plan.newValue': 'New value for {label}',
   'plan.save': 'Save',
@@ -121,6 +124,8 @@ export const en = {
   'review.pages.one': '{count} page',
   'review.pages.other': '{count} pages',
   'handoff.earlier': 'Earlier conversation',
+  'handoff.tooLong':
+    'Your site is ready, but this conversation is too long to move to the site chat. Open your site from your list of sites.',
   ...rebuildEn
 } as const
 

@@ -37,6 +37,7 @@ const NEXT = `/${SITE}/s/${SITE_CHAT}?open=browser&page=%2F`
 const stage = (name) => stageDocuments(STAGES.find((s) => s.name === name)).scenario
 const PLAN = stage('plan').plan
 const NAME = 'Sunrise Tennis Club'
+const HELD = 'Coach Morven Tull'
 const SHOTS = process.env.HANDOFF_SHOTS ?? null
 
 const CONVERSATION = [
@@ -80,7 +81,16 @@ function buildSession() {
 function siteSession() {
   return [
     turnStart(0),
-    user(handoffMessageOf({ conversation: CONVERSATION, plan: PLAN, siteKey: SITE, name: NAME })),
+    // What the owner keeps off the site rides last in the block, for the site agent only.
+    user(
+      handoffMessageOf({
+        conversation: CONVERSATION,
+        plan: PLAN,
+        siteKey: SITE,
+        name: NAME,
+        keepOffSite: [HELD]
+      })
+    ),
     assistant(0, 'Your site is ready. The Browser tab shows it. Ask me here for any change.'),
     turnEnd(0),
     turnStart(1),
@@ -128,7 +138,7 @@ const { CSS } = await import(
 const TOKENS = readFileSync(path.join(root, 'packages/ui/tracy-ui/src/tokens.css'), 'utf8')
 
 /** One page with the plugin applied; `run` is what the build door answers, `refuseHandoff` how often it refuses. */
-async function open(browser, { viewport, theme = 'light', run = null, refuseHandoff = 0 }) {
+async function open(browser, { viewport, theme = 'light', run = null, refuseHandoff = 0, tooLong = null }) {
   const page = await browser.newPage({ viewport })
   page.setDefaultTimeout(8000)
   const errors = []
@@ -158,6 +168,7 @@ async function open(browser, { viewport, theme = 'light', run = null, refuseHand
       })
     if (url.pathname === '/api/build-draft/build/handoff') {
       asked.push(request.postDataJSON())
+      if (tooLong) return json({ code: tooLong, next: 'Send a shorter conversation.' }, 413)
       if (refusals > 0) {
         refusals -= 1
         return json({ code: 'HANDOFF_SESSION_FAILED' }, 503)
@@ -202,6 +213,57 @@ test('a done build moves the screen to the new site by itself, carrying the whol
     assert.equal(asked.length, 2)
     assert.deepEqual(asked[1], { conversation: CONVERSATION }, 'every earlier message, in order')
     assert.deepEqual(errors, [])
+  } finally {
+    await browser.close()
+  }
+})
+
+test('a conversation too long to carry is said once in plain words, never asked again nor dropped silently', async () => {
+  const browser = await launch()
+  try {
+    for (const code of ['CONVERSATION_TOO_LONG', 'BODY_TOO_LARGE']) {
+      const { page, errors, asked } = await open(browser, {
+        viewport: { width: 1280, height: 800 },
+        run: runOf('done'),
+        tooLong: code
+      })
+      await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, buildSession()])
+      const alert = page.getByRole('alert')
+      await alert.waitFor()
+      assert.equal(
+        await alert.innerText(),
+        'Your site is ready, but this conversation is too long to move to the site chat. Open your site from your list of sites.',
+        code
+      )
+      await page.waitForTimeout(800)
+      assert.equal(asked.length, 1, `${code}: asked once`)
+      assert.equal(new URL(page.url()).pathname, `/new/s/${BUILD}`, code)
+      assert.deepEqual(errors, [])
+      await page.close()
+    }
+    if (SHOTS) {
+      mkdirSync(SHOTS, { recursive: true })
+      for (const [viewport, theme] of [
+        [{ name: 'desktop', width: 1280, height: 800 }, 'light'],
+        [{ name: 'desktop', width: 1280, height: 800 }, 'dark'],
+        [{ name: 'phone', width: 390, height: 844 }, 'light'],
+        [{ name: 'phone', width: 390, height: 844 }, 'dark']
+      ]) {
+        const { page } = await open(browser, {
+          viewport,
+          theme,
+          run: runOf('done'),
+          tooLong: 'CONVERSATION_TOO_LONG'
+        })
+        await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, buildSession()])
+        await page.getByRole('alert').waitFor()
+        await page.screenshot({
+          path: path.join(SHOTS, `handoff-too-long-${viewport.name}-${theme}.png`),
+          fullPage: true
+        })
+        await page.close()
+      }
+    }
   } finally {
     await browser.close()
   }
@@ -252,6 +314,7 @@ test('the site chat shows every earlier message and the plan, the raw block as o
         assert.equal(await first.innerText(), 'Earlier conversation')
         const all = await page.locator('#root').innerText()
         assert.doesNotMatch(all, /tracy-build-handoff|"schema"|[{}]/)
+        assert.ok(!all.includes(HELD), 'what the owner keeps off the site is never drawn')
         // The owner keeps typing in the same chat, and the agent answers there.
         assert.match(
           await page.locator('[data-turn="1"]').innerText(),

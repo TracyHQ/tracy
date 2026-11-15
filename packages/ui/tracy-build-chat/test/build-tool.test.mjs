@@ -8,7 +8,10 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
+import { buildToolFoldOf, buildToolRowOf, canRetryStop } from '@tracy/core/build-chat'
 import {
+  ANSWERS_FULL_SAY,
+  BODY_TOO_LARGE_SAY,
   BUILD_CHAT_OFF_SAY,
   BUILD_DESCRIPTION,
   BUILD_LOCKED_SAY,
@@ -210,6 +213,127 @@ test('the replies in the session log are stored through the answers door before 
     }
   ])
   for (const c of web.calls) assert.equal(c.headers['x-tracy-session'], SESSION)
+})
+
+/** The log of one owner reply to the research questions: the phone picked from the map listing. */
+const phoneReplied = [
+  {
+    type: 'tool/call',
+    data: { name: 'ask_user_question', callId: 'q1', arguments: JSON.stringify(ASK) }
+  },
+  {
+    type: 'tool/result',
+    data: {
+      message: {
+        source: { callId: 'q1' },
+        content: [
+          { type: 'text', text: JSON.stringify({ answers: [{ id: 'phone', selected: ['04 000 0009'] }] }) }
+        ]
+      }
+    }
+  }
+]
+
+/** What the owner is shown of one answer: the row, and whether Try again is offered. */
+function shownOf(action, answer) {
+  const text = JSON.stringify(answer)
+  const fold = [
+    {
+      type: 'tool/call',
+      seq: 1,
+      data: { turn: 0, name: 'tracy_build', callId: 'c1', arguments: JSON.stringify({ action }) }
+    },
+    {
+      type: 'tool/result',
+      seq: 2,
+      data: { turn: 0, message: { source: { callId: 'c1' }, content: [{ type: 'text', text }] } }
+    }
+  ].reduce((state, event) => buildToolFoldOf(state, event), undefined)
+  return { row: buildToolRowOf({ action }, text), retry: canRetryStop(fold.stop) }
+}
+
+test('the answers door gets each question exactly as the engine issued it, fields it does not know included', async () => {
+  // An answer is kept only when its question matches the issued one exactly: nothing is reshaped on the way.
+  const issued = { ...PHONE, hint: 'An invented field this tool does not read.' }
+  const web = fakeWeb({
+    'POST /api/build-draft/research': {
+      body: { ...researchDone, result: { ...researchDone.result, questions: [issued, LANGUAGE] } }
+    },
+    'PUT /api/build-draft/answers': { body: { draft: {} } },
+    'GET /api/build-draft/templates': { body: { templates: [] } }
+  })
+  const tool = toolWith(web, { events: phoneReplied })
+  await run(tool, { action: 'research', description: 'A small tennis club by the harbour' })
+  await run(tool, { action: 'templates' })
+  const [put] = web.calls.filter((c) => c.method === 'PUT')
+  assert.deepEqual(put.body.question, issued)
+})
+
+test('a step that still works on the plan refuses an edit with its own sentence, never a stale plan', async () => {
+  const say = 'I am still working on your plan, so it cannot change right now.'
+  const web = fakeWeb({
+    'POST /api/build-draft/edit': { status: 409, body: { code: 'ENGINE_BUSY', next: 'Wait.', say } }
+  })
+  const answer = await run(toolWith(web), {
+    action: 'edit',
+    changes: [{ field: 'facts.tagline', value: 'x' }]
+  })
+  assert.equal(answer.busy, true)
+  assert.equal(answer.say, say)
+  assert.equal(answer.stale, undefined, 'never told the plan moved')
+  assert.equal(answer.ask, undefined)
+  assert.match(answer.next, /say/)
+  assert.deepEqual(shownOf('edit', answer), { row: null, retry: false })
+})
+
+test('a step started too often says the door sentence, asks nothing, and offers no Try again', async () => {
+  const say = 'I have done this many times in a short while, so I paused here. Please try again later.'
+  for (const [action, path, args] of [
+    ['research', '/research', { links: ['https://harbour-lane.example'] }],
+    ['plan', '/compose', {}]
+  ]) {
+    const web = fakeWeb({
+      [`POST /api/build-draft${path}`]: { status: 429, body: { code: 'TRY_LATER', next: 'Stop.', say } }
+    })
+    const answer = await run(toolWith(web), { action, ...args })
+    assert.equal(answer.paused, true, action)
+    assert.equal(answer.say, say, action)
+    assert.equal(answer.ask, undefined, action)
+    assert.equal(answer.rerun, undefined, action)
+    assert.deepEqual(shownOf(action, answer), { row: null, retry: false }, action)
+    // Only the one door call: nothing is asked again.
+    assert.equal(web.calls.length, 1, action)
+  }
+})
+
+test('a body too large for a door, or a draft that holds no more questions, fails with a plain sentence', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/edit': { status: 413, body: { code: 'BODY_TOO_LARGE', next: 'Smaller.' } }
+  })
+  const large = await run(toolWith(web), {
+    action: 'edit',
+    changes: [{ field: 'facts.tagline', value: 'x' }]
+  })
+  assert.equal(large.say, BODY_TOO_LARGE_SAY)
+  assert.equal(large.stopped, undefined, 'not a fault of the step')
+  assert.equal(large.ask, undefined)
+
+  for (const [status, code, say] of [
+    [422, 'TOO_MANY_QUESTIONS', ANSWERS_FULL_SAY],
+    [413, 'BODY_TOO_LARGE', BODY_TOO_LARGE_SAY]
+  ]) {
+    const full = fakeWeb({
+      'POST /api/build-draft/research': { body: researchDone },
+      'PUT /api/build-draft/answers': { status, body: { code, next: 'No.' } },
+      'GET /api/build-draft/templates': { body: { templates: [] } }
+    })
+    const tool = toolWith(full, { events: phoneReplied })
+    await run(tool, { action: 'research', description: 'A small tennis club by the harbour' })
+    const answer = await run(tool, { action: 'templates' })
+    assert.equal(answer.say, say, code)
+    assert.equal(answer.options, undefined, `${code}: the action waits, the answer is not dropped silently`)
+    assert.ok(!full.calls.some((c) => c.path === '/api/build-draft/templates'), code)
+  }
 })
 
 test('long work answers running, and status returns the result when it is done', async () => {

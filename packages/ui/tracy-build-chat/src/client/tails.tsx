@@ -234,6 +234,7 @@ function RunTail({
           messages={history?.messages ?? []}
           fetch={deps.fetch}
           navigate={deps.navigate ?? goTo}
+          t={t}
         />
       )}
     </>

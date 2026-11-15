@@ -28,16 +28,20 @@ async function post(path: string, body: unknown, fetchImpl: typeof fetch): Promi
 
 /**
  * What the card says about a refused edit, in its own translated words (never the door's English sentence), and
- * whether the draft is read again: while the site is built the plan is locked; a plan that moved meanwhile (another
- * tab, a change request) is read again so the owner sees the latest one; anything else is a plain retry.
+ * whether the draft is read again: while the site is built the plan is locked; while a build chat step works on the
+ * plan (`ENGINE_BUSY`, whose `say` is the same sentence in English) it cannot change yet; a body past the door's bound
+ * (`BODY_TOO_LARGE`) is too long to save; a plan that moved meanwhile (another tab, a change request) is read again so
+ * the owner sees the latest one; anything else is a plain retry. The card keeps the plan it shows in every case.
  * @param error - what `savePlanEdit` or `undoPlanEdit` threw
  */
 export function refusalOf(error: unknown): {
-  key: 'plan.locked' | 'plan.stale' | 'plan.saveFailed'
+  key: 'plan.locked' | 'plan.busy' | 'plan.tooLarge' | 'plan.stale' | 'plan.saveFailed'
   reload: boolean
 } {
   const code = (error as { code?: unknown } | null)?.code
   if (code === 'BUILD_RUNNING') return { key: 'plan.locked', reload: false }
+  if (code === 'ENGINE_BUSY') return { key: 'plan.busy', reload: false }
+  if (code === 'BODY_TOO_LARGE') return { key: 'plan.tooLarge', reload: false }
   if (code === 'STALE_EDIT') return { key: 'plan.stale', reload: true }
   return { key: 'plan.saveFailed', reload: false }
 }
