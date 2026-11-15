@@ -641,12 +641,6 @@
         "keep": "the forgotten username link of the sign in page: printed by plugins/system/t4/themes/base/html/com_users/login/default_login.php:131; the same words are the title of the username reminder page, the title of its item in the system menu (dataFixes); interface words of the platform, valid on every site"
       },
       {
-        "key": "COM_USERS_LOGIN_REGISTER",
-        "extension": "com_users",
-        "language": "en-GB",
-        "keep": "the create an account link of the sign in page, while the site lets visitors register (com_users allowUserRegistration, on in the release): printed by plugins/system/t4/themes/base/html/com_users/login/default_login.php:148; interface words of the platform, valid on every site"
-      },
-      {
         "key": "COM_USERS_FIELD_PASSWORD_RESET_LABEL",
         "extension": "com_users",
         "language": "en-GB",
@@ -2865,28 +2859,36 @@
           "page": "system-search",
           "title": "Search",
           "alias": "search",
-          "link": "index.php?option=com_finder&view=search"
+          "link": "index.php?option=com_finder&view=search",
+          "robots": "noindex, follow"
         },
         {
           "page": "system-login",
           "title": "Log in",
           "alias": "login",
-          "link": "index.php?option=com_users&view=login"
+          "link": "index.php?option=com_users&view=login",
+          "robots": "noindex, follow"
         },
         {
           "page": "system-reset",
           "title": "Forgot your password?",
           "alias": "password-reset",
-          "link": "index.php?option=com_users&view=reset"
+          "link": "index.php?option=com_users&view=reset",
+          "robots": "noindex, follow"
         },
         {
           "page": "system-remind",
           "title": "Forgot your username?",
           "alias": "username-reminder",
-          "link": "index.php?option=com_users&view=remind"
+          "link": "index.php?option=com_users&view=remind",
+          "robots": "noindex, follow"
         }
       ],
-      "why": "with no menu item of their own the search, sign in, password reset and username reminder pages print under the style of the active page, on a built site the home page's Landing style (layout home, which has no main body), and take its title (measured on the blank site restored on Joomla 6.1.1 with a home item on the Landing style, #587); with these items on the site default style (0, ja_boxing - Default) each prints its main body (layout default) under its own title. The titles are the platform's own words for the pages, kept in overrides.language (JSEARCH_FILTER_SUBMIT, JLOGIN, COM_USERS_LOGIN_RESET, COM_USERS_LOGIN_REMIND). The menu is in no module position: no mod_menu block shows system-pages and the T4 navigation reads mainmenu (templates/ja_boxing/etc/navigation/default.json), so it shows in no navigation. Joomla routes its own links to these pages through the items (the sign in page links index.php/password-reset and index.php/username-reminder); an address naming the component with no Itemid (index.php?option=com_users&view=login) still takes the active page's style, so the pages are reached by their item"
+      "why": "with no menu item of their own the search, sign in, password reset and username reminder pages print under the style of the active page, on a built site the home page's Landing style (layout home, which has no main body), and take its title (measured on the blank site restored on Joomla 6.1.1 with a home item on the Landing style, #587); with these items on the site default style (0, ja_boxing - Default) each prints its main body (layout default) under its own title. The titles are the platform's own words for the pages, kept in overrides.language (JSEARCH_FILTER_SUBMIT, JLOGIN, COM_USERS_LOGIN_RESET, COM_USERS_LOGIN_REMIND). The menu is in no module position: no mod_menu block shows system-pages and the T4 navigation reads mainmenu (templates/ja_boxing/etc/navigation/default.json), so it shows in no navigation. Joomla routes its own links to these pages through the items (the sign in page links index.php/password-reset and index.php/username-reminder); an address naming the component with no Itemid (index.php?option=com_users&view=login) still takes the active page's style, so the pages are reached by their item. Each item carries robots noindex, follow in its params: a search form, a sign in form and two account recovery forms are no business page to list in a search engine, while their links are still followed; the four views print it as the robots meta of the page (components/com_users/src/View/Login/HtmlView.php:151-152, Reset/HtmlView.php:131-132, Remind/HtmlView.php:123-124, components/com_finder/src/View/Search/HtmlView.php:340-341)"
+    },
+    {
+      "id": "registration-off",
+      "why": "a business site rarely wants open visitor accounts, and the release lets visitors register (com_users allowUserRegistration \"1\" in installation/sql/mysql/custom.sql): the blank site turns it off (\"0\"). The sign in page then prints no create an account link (plugins/system/t4/themes/base/html/com_users/login/default_login.php:134, its words COM_USERS_LOGIN_REGISTER no longer kept) and the registration view sends the visitor to the sign in page (components/com_users/src/Dispatcher/Dispatcher.php:62-64); a registration sent anyway is refused (components/com_users/src/Controller/RegistrationController.php:150-153). An owner who wants visitor accounts turns it on in the users options"
     }
   ]
 }
