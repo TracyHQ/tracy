@@ -4,7 +4,9 @@
   "title": "Step 9b stops sending a kind of fault after its turns changed nothing on two pages; untried kinds still get their turns",
   "pr": 633,
   "area": "website-opportunities/step-chain",
-  "cms": ["jo"],
+  "cms": [
+    "jo"
+  ],
   "needs": [],
   "flaky_model": false,
   "steps": [
@@ -13,7 +15,8 @@
   ],
   "expect": [
     "Four pages with only template picture faults whose turns end no-change: the first two run, the last two are skipped with code kind-unchanged and a reason naming demo-picture.",
-    "A later page with a picture fault and a template-words fault runs with the words fault only; when turns change something, every page runs and nothing is skipped."
+    "A later page with a picture fault and a template-words fault runs with the words fault only; when turns change something, every page runs and nothing is skipped.",
+    "A kind-unchanged skip is kept as { fault, code, reason }, and the pass summary lists it with its page and group (before, the summary threw and step 9 ended in that error)."
   ],
   "selectors": {},
   "run": {
@@ -27,7 +30,8 @@
     "needs": [],
     "tests": [
       "after two pages whose picture turns changed nothing, later pages get no turn for template pictures",
-      "a page keeps its turns for a kind not yet tried, and a turn that changed something does not count"
+      "a page keeps its turns for a kind not yet tried, and a turn that changed something does not count",
+      "the skipped faults keep the shape the pass summary reads, so step 9 hands over its summary"
     ]
   }
 }
