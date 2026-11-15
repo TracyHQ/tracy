@@ -39,6 +39,7 @@ import { checkLibraryDeclaration } from '../../packages/wo/website-opportunities
 import { colourLiterals } from '../../packages/wo/website-opportunities/domain/library-style-check.mjs'
 import { blankSiteContractProblems, needsBlankSiteContract } from './check-blank-site-contract.mjs'
 import { kitPageProblems } from './check-kit-pages.mjs'
+import { checkKitRelease } from './check-kit-release.mjs'
 import {
   demoNetworkProblems,
   inlineSourceProblems,
@@ -193,7 +194,7 @@ function main(argv) {
       `ai-quickstart-contract: ${rel}: ${res.blocks} block(s), ${res.problems.length} problem(s)${res.sharedPlaces ? `, ${res.sharedPlaces} stored place(s) shared by several fields (a build writes the smallest limit)` : ''}${res.mappingPending ? `, ${MAPPING_FILE} pending (${res.mappingPending})` : ''}\n`
     )
   }
-  if (argv.length === 0) problemCount += checkLibrary() + checkLibraryStyles()
+  if (argv.length === 0) problemCount += checkLibrary() + checkLibraryStyles() + checkKitRelease(DEFAULT_ROOT)
   process.stdout.write(
     `ai-quickstart-contract: ${folders.length} AI quickstart(s) checked, ${problemCount} problem(s)\n`
   )
