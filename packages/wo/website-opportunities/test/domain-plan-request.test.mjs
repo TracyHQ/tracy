@@ -182,6 +182,10 @@ test('a request for something with no recipe is reported as not done with a reas
   const result = await revisePlan(input)
   assert.equal(model.calls.length, 2)
   assert.ok(result.attempts[0].problems.some((p) => p.code === 'unknown_page_type'))
+  // The second attempt reads its own first answer with the problems, to correct it (#614); the first has neither.
+  const [one, two] = model.calls.map((c) => JSON.parse(c.user))
+  assert.equal(one.firstAnswer, undefined)
+  assert.equal(two.firstAnswer.changes[0].pageType, 'prices')
   assert.equal(result.unchanged, true)
   assert.equal(result.plan, first.plan)
   assert.deepEqual(result.notDone, [

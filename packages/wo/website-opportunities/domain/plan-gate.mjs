@@ -20,8 +20,12 @@
 // - the page rules (`plan-gate-page-rules.mjs`) hold for the composition and again after placement;
 // - a block's reason never counts a number of items it does not show, and its label is not the name of its one datum
 //   (`plan-gate-wording.mjs`);
-// - the plan it returns passes the Contract B check (`build-contract.mjs`).
-// Composition in, `{ok, problems, plan, placed, accounting}` out.
+// - the plan it returns passes the Contract B check (`build-contract.mjs`);
+// - a mechanical fault whose single right answer code knows, and whose fix changes nothing the site shows, is fixed
+//   and recorded instead of failing the plan (`plan-gate-fixes.mjs`, #614): a left out entry of a shown item, an
+//   assumption naming a block by its store id, a label repeating its one datum, a count a reason no longer holds.
+// Composition in, `{ok, problems, fixes, composition, plan, placed, accounting}` out. `composition` is the reply as the
+// gate read it after its fixes: the place of every problem is a place in it.
 import { lookProblemsOf } from './brand-look-problems.mjs'
 import { BUILD_PLAN_SCHEMA } from './build-contract-plan.mjs'
 import { checkBuildDocument } from './build-contract.mjs'
@@ -41,6 +45,7 @@ import {
   overLimitLeftOut
 } from './plan-data-limits.mjs'
 import { dropEmptiedBlocks } from './plan-emptied-blocks.mjs'
+import { withoutShownLeftOut } from './plan-gate-fixes.mjs'
 import { wordingProblems } from './plan-gate-wording.mjs'
 import { planRows } from './plan-rows.mjs'
 import { WITHHELD_REASON, withheldWhatOf } from './plan-withheld.mjs'
@@ -62,19 +67,25 @@ const namedBy = (labels) => (entry) =>
  *   the answers and the look bring; `givenIds`, `idTag`, `labels` and `askedOff` only on a revision
  *   (`plan-request.mjs`): the ids the plan keeps (`pagesOf`), the tag of new ids, the plan's own item labels that name
  *   its left out entries, and the left out reasons of what the customer asked to take off (`plan-gate-people.mjs`)
- * @returns {{ok: boolean, problems: Array<{code: string, at: string, message: string}>, plan?: object,
+ * @returns {{ok: boolean, problems: Array<{code: string, at: string, message: string}>, fixes: Array<{code: string,
+ *   at: string, rule: string, was: unknown, now: unknown}>, composition: object, plan?: object,
  *   placed?: object[], accounting?: ReturnType<typeof dataAccountingOf>, rows?: object[]}} `rows`: the rows and row
  *   fields the rules dropped, the lists below their minimum and the data too long for its field, each with its `code`
  *   and `reason` (`CHILD_LIST_REASONS`, `plan-rows-fit.mjs`; `data_over_limit`, `plan-data-limits.mjs`)
  */
-export function gatePlan(composition, context) {
+export function gatePlan(reply, context) {
   const problems = []
+  const fixes = []
   const problem = (code, at, message) => {
     problems.push({ code, at, message })
   }
-  if (!replyShapeProblems(composition, problem)) return { ok: false, problems }
+  const fix = (entry) => fixes.push(entry)
+  if (!replyShapeProblems(reply, problem)) return { ok: false, problems, fixes, composition: reply }
+  // An item a block shows and the model also leaves out keeps showing: its left out entry goes (`plan-gate-fixes.mjs`).
+  const composition = withoutShownLeftOut(reply, context.data, fix)
+  const failed = () => ({ ok: false, problems, fixes, composition })
   compositionProblems(composition, context, problem)
-  if (problems.length > 0) return { ok: false, problems }
+  if (problems.length > 0) return failed()
   const dropped = pagesOf(composition, context)
   if (dropped.pages.length === 0) {
     problem(
@@ -82,7 +93,7 @@ export function gatePlan(composition, context) {
       'pages',
       'every page lost its main block: the plan keeps at least one page with its main block'
     )
-    return { ok: false, problems }
+    return failed()
   }
   const modelLeftOut = list(composition.leftOut)
   const leftOutIds = new Set(modelLeftOut.map((e) => e.item).filter((id) => id !== undefined))
@@ -101,7 +112,7 @@ export function gatePlan(composition, context) {
   const facts = placeExtraFacts(items.pages, placement)
   // The page rules hold for the plan after placement too: a problem here is the gate's own placement.
   pageRuleProblems({ pages: facts.pages, leftOut: modelLeftOut }, context, problem)
-  if (problems.length > 0) return { ok: false, problems }
+  if (problems.length > 0) return failed()
   const pictures = picturesOf(facts.pages, context.blocks, context.data)
   // Items the pictures summary takes off a page (no own photo) are reported in its left out list.
   const after = new Set(pictures.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
@@ -120,7 +131,15 @@ export function gatePlan(composition, context) {
   // A reason that counts what its block no longer shows, a label that repeats its one datum (`plan-gate-wording.mjs`).
   wordingProblems(
     rows.pages,
-    { data: context.data, dropped: limited.dropped, index: dropped.index, givenIds: context.givenIds },
+    {
+      data: context.data,
+      dropped: limited.dropped,
+      index: dropped.index,
+      givenIds: context.givenIds,
+      blocks: context.blocks,
+      language: context.language,
+      fix
+    },
     problem
   )
   const shown = new Set(rows.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
@@ -155,7 +174,7 @@ export function gatePlan(composition, context) {
     pages: rows.pages,
     look: context.look,
     pictures: pictures.pictures,
-    assumptions: [...context.assumptions, ...keptAssumptionsOf(composition, pictures.pages, context)],
+    assumptions: [...context.assumptions, ...keptAssumptionsOf(composition, pictures.pages, context, fix)],
     leftOut: [
       ...fromModel,
       ...list(context.leftOut),
@@ -174,6 +193,7 @@ export function gatePlan(composition, context) {
   if (!context.allowTemplateLook)
     for (const p of lookProblemsOf({ plan, template: context.template, lookSources: context.lookSources }))
       problem(p.code, p.at, p.message)
-  if (problems.length > 0) return { ok: false, problems }
-  return { ok: true, problems, plan, placed, accounting, rows: [...limited.dropped, ...rows.dropped] }
+  if (problems.length > 0) return failed()
+  const rowsDropped = [...limited.dropped, ...rows.dropped]
+  return { ok: true, problems, fixes, composition, plan, placed, accounting, rows: rowsDropped }
 }

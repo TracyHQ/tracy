@@ -1,5 +1,6 @@
 // The pages of a gated plan as the composition gives them (`plan-gate.mjs`, #593), and the model's assumption lines
 // the plan keeps.
+import { assumptionFieldOf } from './plan-gate-fixes.mjs'
 import { heldTextsOf, namesHeld } from './plan-withheld.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -57,11 +58,22 @@ function onKeptPage(field, pages) {
 
 /**
  * The model's assumption lines the plan keeps: one about a dropped page goes with the page, and one naming a held person
- * or the held business name is dropped (#593 review G7), as the data naming them is.
+ * or the held business name is dropped (#593 review G7), as the data naming them is. One naming a block by its block
+ * store id names the plan's id of that block, or goes with the block when the page does not keep it
+ * (`plan-gate-fixes.mjs`), each recorded through `fix` at `assumptions[<index>].field`.
  */
-export function keptAssumptionsOf(composition, pages, context) {
+export function keptAssumptionsOf(composition, pages, context, fix = () => {}) {
   const held = heldTextsOf(context.profile?.withheld)
   return list(composition.assumptions)
-    .map((a, i) => ({ id: `model-${i + 1}`, field: a.field, said: a.said }))
+    .map((a, i) => ({ id: `model-${i + 1}`, field: a.field, said: a.said, at: `assumptions[${i}].field` }))
     .filter((a) => onKeptPage(a.field, pages) && !namesHeld([a.said], held))
+    .flatMap(({ at, ...a }) => {
+      const mapped = assumptionFieldOf(a.field, pages, context.blocks)
+      if (mapped.field === a.field) return [a]
+      const rule = mapped.drop
+        ? 'an assumption about a block the page does not keep goes with the block'
+        : 'an assumption naming a block by its block store id names the plan id of that block on its page'
+      fix({ code: 'contract_b', at, rule, was: a.field, now: mapped.drop ? null : mapped.field })
+      return mapped.drop ? [] : [{ ...a, field: mapped.field }]
+    })
 }

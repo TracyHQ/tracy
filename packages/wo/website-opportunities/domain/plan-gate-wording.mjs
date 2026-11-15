@@ -7,9 +7,13 @@
 // - `label_repeats_data`: a block's label is the name of the one thing it shows ("Business name" for a page header
 //   showing the business name), so the card reads the same words twice; a label names the section.
 // On a change request only the blocks the revision adds are checked: a kept block keeps the words the customer
-// already read, and the request model cannot rewrite them. Each problem goes back to the model once, as every gate
-// problem does (`plan-composer.mjs`, `plan-request.mjs`). Pure.
+// already read, and the request model cannot rewrite them. Where code knows the single right wording the gate fixes it
+// and records the fix (`plan-gate-fixes.mjs`, #614): a repeated label takes the block's section name on an English
+// plan, and a counted claim that is not of the whole loses its number. Any other case is a problem that goes back to
+// the model once, as every gate problem does (`plan-composer.mjs`, `plan-request.mjs`). Pure but for the fixed words,
+// written on the gated pages.
 import { compositionAt } from './plan-emptied-blocks.mjs'
+import { sectionLabelOf, uncountedReason } from './plan-gate-fixes.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const NUMBERS = Object.freeze({
@@ -67,14 +71,19 @@ export function countedClaimsOf(reason, kinds) {
   }))
 }
 
+const isEnglish = (language) => typeof language === 'string' && /^en\b/i.test(language)
+
 /**
- * Report the wording problems of the gated pages.
- * @param {object[]} pages the pages the gate made
- * @param {{data: object, dropped: object[], index: Map<string, number>, givenIds?: object[]}} context `dropped`: what
- *   the over limit rule took off (`dropOverLimitData`); `index`: page id -> its index in the composition
+ * Fix or report the wording problems of the gated pages.
+ * @param {object[]} pages the pages the gate made; a fixed label or reason is written on its block
+ * @param {{data: object, dropped: object[], index: Map<string, number>, givenIds?: object[], blocks?: Map<string,
+ *   object>, language?: string, fix?: (fix: object) => void}} context `dropped`: what the over limit rule took off
+ *   (`dropOverLimitData`); `index`: page id -> its index in the composition; `blocks` and `fix`: without them every
+ *   case is reported
  * @param {(code: string, at: string, message: string) => void} problem
  */
-export function wordingProblems(pages, { data, dropped, index, givenIds }, problem) {
+export function wordingProblems(pages, context, problem) {
+  const { data, dropped, index, givenIds, blocks, language, fix } = context
   const kept = new Set(list(givenIds).flatMap((g) => list(g?.blocks).filter(Boolean)))
   const labelOf = (id) => data.byId.get(id)?.entry?.label
   for (const page of pages)
@@ -86,6 +95,13 @@ export function wordingProblems(pages, { data, dropped, index, givenIds }, probl
       const off = list(dropped).filter((d) => d.page === page.id && d.block === block.id && !d.cleared)
       for (const claim of countedClaimsOf(block.reason, kinds)) {
         if (claim.said === items.length) continue
+        const reason = fix ? uncountedReason(block.reason, claim) : null
+        if (reason) {
+          const rule = 'a counted claim over a block that shows another number loses its number'
+          fix({ code: 'reason_count_mismatch', at: `${at}.reason`, rule, was: block.reason, now: reason })
+          block.reason = reason
+          continue
+        }
         const taken = off.length
           ? `; the gate took ${off.map((d) => JSON.stringify(d.id)).join(', ')} off it as longer than its field, so leave ${off.length === 1 ? 'it' : 'them'} out of this block`
           : ''
@@ -96,7 +112,14 @@ export function wordingProblems(pages, { data, dropped, index, givenIds }, probl
         )
       }
       const only = list(block.data).length === 1 ? labelOf(block.data[0]) : null
-      if (typeof only === 'string' && only.trim().toLowerCase() === String(block.label).trim().toLowerCase())
+      const same = (a, b) => String(a).trim().toLowerCase() === String(b).trim().toLowerCase()
+      if (typeof only !== 'string' || !same(only, block.label)) continue
+      const section = fix && isEnglish(language) ? sectionLabelOf(blocks?.get(block.block)) : null
+      if (section && !same(section, only)) {
+        const rule = "a label that is the name of the block's one datum takes the section name of the block"
+        fix({ code: 'label_repeats_data', at: `${at}.label`, rule, was: block.label, now: section })
+        block.label = section
+      } else
         problem(
           'label_repeats_data',
           `${at}.label`,

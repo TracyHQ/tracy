@@ -42,12 +42,32 @@ test('a reason counting an item the gate took off goes back once, naming it; the
   assert.equal(plan.pages[0].blocks[1].reason, 'All three classes you teach, with their times.')
 })
 
-test('a block label that is the name of its one datum goes back once; a section name passes', async () => {
+test('a block label that is the name of its one datum takes the section name of its block, recorded (#614)', async () => {
   const first = potteryComposition()
   first.pages[0].blocks[0].label = 'Business name'
-  const second = potteryComposition()
-  const model = Club.scriptedModel(JSON.stringify(first), JSON.stringify(second))
-  const { attempts } = await composePlan({ ...composeInputs(), model })
+  const model = Club.scriptedModel(JSON.stringify(first))
+  const { attempts, plan, fixes } = await composePlan({ ...composeInputs(), model })
+  assert.equal(attempts.length, 1)
+  assert.deepEqual(attempts[0].problems, [])
+  assert.equal(plan.pages[0].blocks[0].label, 'Page header')
+  assert.deepEqual(fixes, [
+    {
+      code: 'label_repeats_data',
+      at: 'pages[0].blocks[0].label',
+      rule: "a label that is the name of the block's one datum takes the section name of the block",
+      was: 'Business name',
+      now: 'Page header'
+    }
+  ])
+})
+
+test('on a plan that is not in English a repeated label goes back once; a section name passes', async () => {
+  const profile = needsProfileOf(pottery().research, pottery().reading)
+  profile.language = { ...profile.language, value: 'fr' }
+  const first = potteryComposition()
+  first.pages[0].blocks[0].label = 'Business name'
+  const model = Club.scriptedModel(JSON.stringify(first), JSON.stringify(potteryComposition()))
+  const { attempts } = await composePlan({ ...composeInputs(profile), model })
   assert.deepEqual(codesOf(attempts[0]), ['label_repeats_data'])
   assert.match(attempts[0].problems[0].message, /"Business name" is the name of the one thing/)
   assert.deepEqual(attempts[1].problems, [])

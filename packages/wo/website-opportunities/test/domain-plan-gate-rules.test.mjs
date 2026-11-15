@@ -63,10 +63,19 @@ test('a block may not appear twice on one page: Contract A declares no repetitio
   )
 })
 
-test('an item the model leaves out may not also be shown', () => {
+test('an item the model leaves out and also shows is shown: the gate takes its left out entry off, recorded (#614)', () => {
+  const c = goodComposition()
+  c.leftOut.push({ item: SERVICES[0], reason: 'Not this one.' })
+  const gated = gatePlan(c, context())
+  assert.equal(gated.ok, true, JSON.stringify(gated.problems))
+  assert.ok(gated.plan.pages.some((p) => p.blocks.some((x) => x.data.includes(SERVICES[0]))))
+  assert.equal(
+    gated.plan.leftOut.some((e) => e.reason === 'Not this one.'),
+    false
+  )
   assert.deepEqual(
-    codes((c) => c.leftOut.push({ item: SERVICES[0], reason: 'Not this one.' })),
-    ['left_out_but_shown']
+    gated.fixes.map(({ code, at, was }) => ({ code, at, was })),
+    [{ code: 'left_out_but_shown', at: `leftOut[${c.leftOut.length - 1}].item`, was: SERVICES[0] }]
   )
 })
 

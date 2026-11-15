@@ -10,7 +10,7 @@
 import { TAKE_OUT, blockItemProblems } from './plan-gate-items.mjs'
 import { pageRuleProblems } from './plan-gate-page-rules.mjs'
 import { BLOCK_TYPES } from './place-content-roles.mjs'
-import { fitsRecipe } from './plan-placement-pages.mjs'
+import { fitsRecipe, recipeBlocksOf } from './plan-placement-pages.mjs'
 
 /** En dash, em dash, figure dash, horizontal bar and minus sign: none of them in customer text. */
 export const DASHES = new RegExp(
@@ -42,6 +42,23 @@ export function factFieldProblems(block, description, at, data, problem) {
   })
 }
 
+/**
+ * The message of a template block on a page whose recipe does not list it, with the values that would pass: the blocks
+ * of the same type that recipe lists, and the page types whose recipe lists this block.
+ */
+export function notInRecipeMessage(description, pageType, { blocks, recipes }) {
+  const listed = [...recipeBlocksOf(recipes.get(pageType))]
+  const sameType = listed.filter((id) => blocks.get(id)?.type === description.type)
+  const pageTypes = [...recipes.values()]
+    .filter((r) => recipeBlocksOf(r).has(description.id))
+    .map((r) => r.pageType)
+  const instead = sameType.length
+    ? `the ${description.type} blocks it lists are ${sameType.join(', ')}`
+    : `it lists no ${description.type} block`
+  const where = pageTypes.length ? `; block ${description.id} goes on a ${pageTypes.join(' or ')} page` : ''
+  return `the ${pageType} recipe does not list block ${description.id}: ${instead}${where}; use one of those, or leave the block out`
+}
+
 function blockProblems(block, at, page, context, problem) {
   const { data, blocks, recipes } = context
   const description = blocks.get(block.block)
@@ -53,11 +70,7 @@ function blockProblems(block, at, page, context, problem) {
     )
   const recipe = recipes.get(page.pageType)
   if (recipe && !fitsRecipe(description, recipe))
-    problem(
-      'block_not_in_recipe',
-      `${at}.block`,
-      `the ${page.pageType} recipe does not list block ${description.id}`
-    )
+    problem('block_not_in_recipe', `${at}.block`, notInRecipeMessage(description, page.pageType, context))
   for (const key of ['label', 'reason'])
     if (!isText(block[key]))
       problem(key === 'reason' ? 'no_reason' : 'reply_shape', `${at}.${key}`, `a block needs its ${key}`)

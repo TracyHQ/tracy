@@ -6,53 +6,44 @@
 // The customer's answers to the profile's questions are applied first (`plan-answers.mjs`). Everything the model does
 // not produce is checked before the call (`plan-preflight.mjs`), with its own error code and no model call.
 //
-// A plan that fails the gate is composed again ONCE, with the gate's problems. A second failure throws a
+// A plan that fails the gate is composed again ONCE, with the gate's problems and the first plan as the gate read it
+// (`firstPlan`, after the gate's own fixes), so the second attempt corrects its plan instead of composing a new one
+// with new faults. A mechanical fault the gate fixes itself never costs an attempt (`plan-gate-fixes.mjs`); every fix
+// is recorded with its attempt and returned as `fixes` with the plan. A second failure throws a
 // `PlanComposerError` with code `plan_gate_failed` and every problem, for the stop and report rule (ADR 0047, #591).
 // That error carries `noRerun: true`: it already includes its own second attempt, so the step chain does not run the
 // step again. A model call that throws is left as it is, so the step chain may run the step once more. `buildPlanStep`
 // (`plan-step.mjs`) settles the brand record, builds the needs profile, then composes the plan.
-import { createHash } from 'node:crypto'
-import { readFileSync } from 'node:fs'
 import { settleAnswers } from './plan-answers.mjs'
 import { kindLimitsOf } from './answer-field-limits.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 import { addItemFieldFacts, conflictAssumptionsOf } from './plan-conflicts.mjs'
-import { modelViewOf, planDataOf } from './plan-data.mjs'
+import { planDataOf } from './plan-data.mjs'
 import { gatePlan } from './plan-gate.mjs'
 import { lookOf } from './plan-look-pictures.mjs'
 import { preflightContext, preflightDeclarations } from './plan-preflight.mjs'
 import { withoutWithheld } from './plan-withheld.mjs'
+import {
+  PLAN_COMPOSER_PROMPT_FILE,
+  PROMPT_SHA256,
+  planComposerRequest,
+  readComposerReply
+} from './plan-composer-request.mjs'
 
 export { PlanComposerError }
 export { buildPlanStep } from './plan-step.mjs'
+export {
+  PLAN_COMPOSER_PROMPT,
+  PLAN_COMPOSER_PROMPT_FILE,
+  planComposerRequest,
+  readComposerReply
+} from './plan-composer-request.mjs'
 
-/** The draft prompt (product owner review: #600). Its hash is recorded with every plan it composed. */
-export const PLAN_COMPOSER_PROMPT_FILE = 'plan-composer-prompt.md'
-export const PLAN_COMPOSER_PROMPT = readFileSync(
-  new URL(`./${PLAN_COMPOSER_PROMPT_FILE}`, import.meta.url),
-  'utf8'
-)
-const PROMPT_SHA256 = createHash('sha256').update(PLAN_COMPOSER_PROMPT).digest('hex')
 /** How many times the model composes: the first attempt and one more with the gate's problems. */
 export const PLAN_COMPOSE_ATTEMPTS = 2
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
-const pick = (field) => {
-  const { name, type, kind, limit } = field ?? {}
-  return { name, type, ...(kind ? { kind } : {}), ...(limit ? { limit } : {}) }
-}
-
-/** A block as the model reads it: its declared shape only. Nothing else of the store reaches the model. */
-const modelBlockOf = (block) => ({
-  id: block.id,
-  type: block.type,
-  source: block.source ?? 'template',
-  items: { min: block.items?.min, max: block.items?.max },
-  noData: { rule: block.noData?.rule },
-  fields: list(block.fields).map(pick),
-  itemFields: list(block.itemFields).map(pick)
-})
 
 /** Every block the plan may place, by id: the template's store first, then the Tracy library. */
 export function blockMapOf(blockStore, library = []) {
@@ -122,39 +113,11 @@ export function composerContextOf({
   }
 }
 
-/** The request of one model call: the prompt, the business, the blocks and the recipes, and the problems to fix. */
-export function planComposerRequest(context, problems = []) {
-  const user = {
-    business: modelViewOf(context.data),
-    language: context.language,
-    blocks: [...context.blocks.values()].map(modelBlockOf),
-    recipes: [...context.recipes.values()].map(({ pageType, mainBlock, blocks }) => ({
-      pageType,
-      mainBlock,
-      blocks
-    })),
-    ...(problems.length ? { problems: problems.map(({ at, message }) => ({ at, message })) } : {})
-  }
-  return { system: PLAN_COMPOSER_PROMPT, user: JSON.stringify(user), format: 'json' }
-}
-
-/** The model's reply as an object, or null when it is not the JSON object the prompt asks for. */
-export function readComposerReply(reply) {
-  let value = reply
-  if (typeof reply === 'string') {
-    try {
-      value = JSON.parse(reply.trim().replace(/^```(?:json)?\s*|\s*```$/g, ''))
-    } catch {
-      return null
-    }
-  }
-  return value && typeof value === 'object' && !Array.isArray(value) ? value : null
-}
-
 /**
  * Compose the plan: one model call, the gate, and at most one more call with the gate's problems.
  * @param {Parameters<typeof composerContextOf>[0] & {model: (request: object) => Promise<unknown>}} input
- * @returns {Promise<{plan: object, profile: object, attempts: Array<{problems: object[]}>, placed: object[],
+ * @returns {Promise<{plan: object, profile: object, attempts: Array<{problems: object[], fixes?: object[]}>,
+ *   fixes: object[], placed: object[],
  *   accounting: object, rows: object[], conflicts: object[], lookSources: object, prompt: object}>} `lookSources`:
  *   where the look's accent and logo came from (`{accent: {from, name}, logo: {from, name}}`); `rows`: the child list rows and row
  *   fields the gate's rules dropped, with their codes (`plan-rows.mjs`) `profile`: the profile after the answers, for the page
@@ -168,20 +131,24 @@ export async function composePlan(input) {
   preflightContext(context)
   const attempts = []
   let problems = []
+  let firstPlan = null
   for (let n = 0; n < PLAN_COMPOSE_ATTEMPTS; n++) {
-    const composition = readComposerReply(await input.model(planComposerRequest(context, problems)))
+    const reply = await input.model(planComposerRequest(context, problems, firstPlan))
+    const composition = readComposerReply(reply)
     const gated = composition
       ? gatePlan(composition, context)
       : {
           ok: false,
+          fixes: [],
           problems: [{ code: 'reply_unreadable', at: '', message: 'the reply is not a JSON object' }]
         }
-    attempts.push({ problems: gated.problems })
+    attempts.push({ problems: gated.problems, ...(gated.fixes.length ? { fixes: gated.fixes } : {}) })
     if (gated.ok)
       return {
         plan: gated.plan,
         profile: withoutWithheld(context.profile),
         attempts,
+        fixes: gated.fixes,
         placed: gated.placed,
         accounting: gated.accounting,
         rows: gated.rows,
@@ -190,6 +157,7 @@ export async function composePlan(input) {
         prompt: { file: PLAN_COMPOSER_PROMPT_FILE, sha256: PROMPT_SHA256 }
       }
     problems = gated.problems
+    firstPlan = gated.composition ?? null
   }
   throw new PlanComposerError(
     'plan_gate_failed',

@@ -53,8 +53,11 @@ function checkRequest(request, plan) {
   })
 }
 
-/** The request of one model call: the composer's view of the business, the current plan, the customer's words. */
-function planRequestModelRequest(context, plan, text, problems = []) {
+/**
+ * The request of one model call: the composer's view of the business, the current plan, the customer's words; on the
+ * second attempt the problems and `firstAnswer`, the first reply as the model gave it, so it corrects that answer.
+ */
+function planRequestModelRequest(context, plan, text, problems = [], firstAnswer = null) {
   const view = JSON.parse(planComposerRequest(context).user)
   const pages = plan.pages.map(({ id, name, pageType, blocks }) => ({
     id,
@@ -66,7 +69,8 @@ function planRequestModelRequest(context, plan, text, problems = []) {
     request: text,
     plan: { language: plan.language, pages },
     ...view,
-    ...(problems.length ? { problems: problems.map(({ at, message }) => ({ at, message })) } : {})
+    ...(problems.length ? { problems: problems.map(({ at, message }) => ({ at, message })) } : {}),
+    ...(problems.length && firstAnswer ? { firstAnswer } : {})
   }
   return { system: PLAN_REQUEST_PROMPT, user: JSON.stringify(user), format: 'json' }
 }
@@ -95,10 +99,12 @@ export async function revisePlan({ plan, profile, request, model, ...kit }) {
   const context = { ...base, language: plan.language }
   const attempts = []
   let problems = []
+  let firstAnswer = null
   for (let n = 0; n < 2; n++) {
     const reply = readComposerReply(
-      await model(planRequestModelRequest(context, plan, request.text, problems))
+      await model(planRequestModelRequest(context, plan, request.text, problems, firstAnswer))
     )
+    firstAnswer = reply
     const result = revisionOf(reply, { plan, request, context })
     const revision = result.ok && {
       schema: PLAN_REVISION_SCHEMA,
@@ -126,7 +132,9 @@ export async function revisePlan({ plan, profile, request, model, ...kit }) {
       revision,
       attempts,
       prompt: { file: PLAN_REQUEST_PROMPT_FILE, sha256: PROMPT_SHA256 },
-      ...(gated ? { placed: gated.placed, accounting: gated.accounting, rows: gated.rows } : {})
+      ...(gated
+        ? { placed: gated.placed, accounting: gated.accounting, rows: gated.rows, fixes: gated.fixes }
+        : {})
     }
   }
   throw fail('plan_gate_failed', 'the revised plan failed the rules gate 2 times', { problems, attempts })
