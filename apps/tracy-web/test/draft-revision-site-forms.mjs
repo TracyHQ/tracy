@@ -41,3 +41,36 @@ export function normalisingSite(memory, mode = 'all') {
 
 /** A blank memory site in the site's own JSON form (`script`: `blankSite`'s `fail` and `crash`). */
 export const blankFormSite = (mode = 'all', script = {}) => normalisingSite(blankSite(script), mode)
+
+/**
+ * A memory site whose JSON encoding alternates between saves: each save of a JSON object column stores it compact or
+ * indented, in turn, and never in the very text it was sent (but `{}`, the same in every form) (a restore writes back the text it read before, and the
+ * site then stores it another way). Comparing the stored text with the sent text exactly would call that an edit.
+ */
+export function alternatingSite(memory) {
+  const doors = memory.doors
+  let saves = 0
+  const encode = (value) => {
+    if (typeof value !== 'string' || !/^\s*\{/.test(value)) return value
+    let o
+    try {
+      o = JSON.parse(value)
+    } catch {
+      return value
+    }
+    const forms = [JSON.stringify(o), JSON.stringify(o, null, 2), JSON.stringify(o, null, 1)]
+    const turn = saves++ % 2 === 0 ? [0, 1, 2] : [1, 0, 2]
+    // An empty object reads the same in every form: it stays as it was sent.
+    return forms[turn.find((i) => forms[i] !== value) ?? 0]
+  }
+  const site = Object.create(memory)
+  site.doors = {
+    ...doors,
+    update: (call) =>
+      doors.update({
+        ...call,
+        fields: Object.fromEntries(Object.entries(call.fields ?? {}).map(([k, v]) => [k, encode(v)]))
+      })
+  }
+  return site
+}
