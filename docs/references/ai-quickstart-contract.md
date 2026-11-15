@@ -2165,6 +2165,10 @@ any place not tested leaves the measurement `incomplete` (`not_site_tested`). Ev
 on the site, refused (a finding names it with its evidence), or untested with why (`suspect_of_untraced_stop`,
 `suspect_of_untraced_page`, `no_pass_reached_it`, `probes_left`, ...).
 
+`unclassified` is a build refusal only: a build that throws a code no guard names (the build wraps a writer's throw as
+`writer_call_failed`) is recorded at its place and ends the measurement `incomplete` (`unclassified_stop`). A site stop
+whose code the gate does not know is never `unclassified`: it is classed `server_error`, which fails.
+
 Limits (`LIMITS`), from the times measured on JA Boxing 1.0.11 with a database snapshot reset: a marker build in memory
 about 7 s, a full site write about 40 s, a reset and the page reads about 30 s, so a pass about 80 s; 21 clean passes
 (the text place with a declared limit takes 21 probes, one per pass) take about 28 minutes. 24 passes, 20 site steps
