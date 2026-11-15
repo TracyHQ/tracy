@@ -13,6 +13,8 @@ sources:
   - apps/tracy-web/src/step-chain-draft-journal.js
   - apps/tracy-web/src/step-chain-draft-restore.js
   - apps/tracy-web/src/step-chain-draft-steps-late.js
+  - apps/tracy-web/src/step-chain-draft-rerun.js
+  - apps/tracy-web/src/step-chain-draft-run-records.js
 ---
 
 # The revision run of a draft
@@ -265,6 +267,24 @@ The caller (the build chat, `apps/tracy-web/src/build-draft/`) owns these; this 
   that reaches the site while one is unfinished, and `keep` refuses a build over another; if the caller does not
   serialise, a run can still be stopped after it wrote (its `keep` refused): the site then holds part of it, it stays
   the unfinished run, and it must be resumed or abandoned.
+- **A run on a built site** (`step-chain-draft-rerun.js`, `startRun` of `build-draft-rebuild-wiring.js`):
+  `startRun({accountId, email, siteKey, draftId, build, brief})` answers `{started: true}` or
+  `{refusal: {code, status}}` (`previous_run_unfinished` 409 when another run is the site's unfinished one; the same
+  `brief.buildRun` again is its resume). The run goes through the run frame (`sites/brief-build.js` `rerun`): the
+  site's brief row goes back to `queued` from `applied` or `failed` only (compare and set,
+  `step-chain-draft-rerun-row.js`), keeping its up mark, and the run's id is `brief.buildRun`. Same setup hold,
+  same progress on the row, the typed stops above kept on it unchanged. Why it could not start before: the frame
+  starts a run only from a `queued` row, a built site's row ends `applied`, and the only way back (`restartBrief`)
+  takes a `failed` row and drops its up mark, so the frame would have waited for an install that never comes.
+- **The run record outside the process** (`step-chain-draft-run-records.js`): `deps.runRecords = {append(runId,
+  state, ctx), read(runId, ctx), close(runId, ctx)}`, one store for every site, each call naming `ctx.siteKey`.
+  `read` answers `{state, closed}` (the newest state appended) or null; `append` answers false once closed; `close`
+  marks a run that ended done. The contract every store passes: `apps/tracy-web/test/step-chain-draft-run-records-contract.mjs`
+  (`runRecordContract`, a list of `[name, check(store)]`). `runRecordOf(runId, ctx)` (`runRecordReader`) answers an
+  unfinished run's `{state}` for an abandon. What the build chat must provide for Postgres: a table keyed
+  `(site_key, run_id)` with the JSON state of each append (only the newest is read), a `closed_at`, and the site's
+  creation time as `site_builds` keeps it (a site made again does not read the old site's runs); `append` refuses
+  once `closed_at` is set, in the same statement. Passed as `buildEngine.runRecords` in `app.js`.
 - `deps.draftWrite.record`: a fresh record per run (a revision must not get the earlier build's record; it would stop
   `write_record_stale`). `deps.draftWrite.stored(order)` may give `sha256` per entry; otherwise the step opens the
   bytes through `openStored` to hash them.
@@ -324,8 +344,6 @@ with the `plain` and the `cross` writer, equals a fresh full build. Change nothi
   slashes escaped, spacing, and `alternatingSite`: another encoding on every save, so a restore that compared the text
   it wrote exactly would fail, `draft-revision-restore-reencode.test.mjs`); other forms a real site may take (an HTML filter rewriting markup on save) are not
   measured, and the write step's read back would refuse them first.
-- A plan edit of an item's label reaches the writer only if the profile carries the new name; a chat rename that
-  edits only `items[].label` was not traced through the build chat.
 - Short forms of a held person beyond first name and initial, or initial and last name (a nickname), are not matched.
 - The build result keeps the profile's `withheld` part, which names what is held: a revision needs it.
 

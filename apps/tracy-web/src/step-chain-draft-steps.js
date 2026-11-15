@@ -193,11 +193,13 @@ export function createDraftSteps(deps) {
     order: (ctx, inputs) => orderStep(ctx, inputs),
 
     /** The write of a draft run: through the injected or the real site doors, or a typed stop when none are wired. */
-    write: (ctx, inputs, how) =>
-      writeStep(
-        { ...deps, draftWrite: deps.draftWrite ?? siteWriteOf(deps, ctx, how, inputs, records) ?? undefined },
-        ctx,
-        inputs
-      )
+    write: async (ctx, inputs, how) => {
+      const draftWrite = deps.draftWrite ?? siteWriteOf(deps, ctx, how, inputs, records) ?? undefined
+      const answer = await writeStep({ ...deps, draftWrite }, ctx, inputs)
+      // A run that ended done closes its saved record: it is no longer a run to resume or abandon.
+      if (!deps.draftWrite && draftWrite && answer?.value?.report?.status === 'done')
+        await deps.runRecords?.close(ctx.runId ?? 'draft', ctx)
+      return answer
+    }
   }
 }

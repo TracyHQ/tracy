@@ -60,12 +60,23 @@ function, `how.door.apply` is there and the run has a site key. Otherwise it is 
 
 | Key | Production | Note |
 |---|---|---|
-| `siteDoors` | not wired | lands with `scripts/ai-quickstart/site-doors.mjs` |
+| `siteDoors` | not wired | lands with `scripts/ai-quickstart/site-doors.mjs` (not on the branch on 15/11) |
 | `publicFile(siteKey, path)` | `siteReader(siteKey).bytes(path)` | |
 | `blankContract(kit)` | `blankContractReader(AI_QUICKSTARTS_DIR)` | `<slug>/<cms>/<version>/blank-site-contract/content-map.json` |
 | `pictures` | not wired | tests only; production uses `step-chain-draft-stored.js` |
 
-The run record of the write is kept in the process by run id, between the frame's two attempts of the step.
+The run record of the write is kept by run id, between the frame's two attempts of the step, and saved through the
+run record store `deps.runRecords` (`step-chain-draft-run-records.js`: `append`, `read`, `close`) before each door
+call, so a run whose process died resumes or is abandoned from its last save. `app.js` passes
+`buildEngine.runRecords` (the durable store the build chat provides) or, without one, `memoryRunRecords()`, which
+lives as long as the process. A run that ends done closes its record.
+
+**Restore and abandon of a built site** (`build-draft-rebuild-wiring.js`) take their doors from
+`siteDoorsFor({siteKey, email, runId})` (`step-chain-draft-site.js`): the same `siteDoors` factory over
+`draftSendOf({apply: applyFor(email, runId)})`, so every call is a write of that restore's or abandon's setup run.
+It answers null while no `siteDoors` is wired (production today), and the doors then say plainly that the site
+cannot be updated from the chat. These two run in the request, not in the run frame: no webroot hold is opened
+around them (unlike a revision run, which goes through the frame).
 
 Stored pictures (`step-chain-draft-stored.js`): an own picture is its stored draft picture (`draft:<id>`, through the
 manifest's `sourceUrl`); a library icon with no plate is drawn by `icon-render.js`. A generated picture has no stored

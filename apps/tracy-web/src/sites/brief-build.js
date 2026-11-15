@@ -223,6 +223,8 @@ function withTimeout(promise, ms, message) {
  * @param {(ctx: BriefContext, step: {applyId: string}) => Promise<{written: string[], skipped: Array<{where: string, reason: string}>}>} [deps.brand]
  *   - the "set the site's brand" step (`brief-engines/brand.js` `createSiteBrand`): run after `apply`, whatever became of it
  * @param {Partial<typeof DEFAULT_LIMITS>} [deps.limits]
+ * @param {(pool: any, siteKey: string, brief: object) => Promise<boolean>} [deps.rerunRow] - put the row of a BUILT
+ *   site back to `queued` for a run on it (`step-chain-draft-rerun-row.js`); absent, `rerun` starts nothing
  */
 export function createBriefBuilds({
   pool,
@@ -238,7 +240,8 @@ export function createBriefBuilds({
   brand = null,
   webroot = null,
   limits = {},
-  recoverOnStart = true
+  recoverOnStart = true,
+  rerunRow = null
 }) {
   const cap = { ...DEFAULT_LIMITS, ...limits }
   /** @type {Map<string, Promise<void>>} the runs this process is doing */
@@ -519,7 +522,8 @@ export function createBriefBuilds({
     const startedAt = now()
     // This run's id: every write it makes is recorded under it (`site_write.origin_ref`), so Site changes
     // shows one "Tracy setup" row for the run instead of one Unknown row per write (sweep #4).
-    const runId = randomUUID()
+    // A run on a built site (`rerun`) brings its own id, so a resume after a crash is the same run.
+    const runId = input.runId ?? randomUUID()
     const controller = new AbortController()
     const killer = setTimeout(() => controller.abort(new Error('the run took too long')), runCap.runMs)
     // The row's own clock: a worker that is alive keeps touching it, and `gate` reads silence as death.
@@ -899,6 +903,35 @@ export function createBriefBuilds({
           started: false,
           error: error instanceof Error ? error.message : String(error),
           ...(typeof error?.code === 'string' ? { code: error.code } : {})
+        }
+      }
+    },
+
+    /**
+     * A step chain run on a site that is ALREADY BUILT (#612): a plan revision or its resume
+     * (`step-chain-draft-rerun.js`). The row is put back to `queued` from an ended state, keeping the site's up mark
+     * (`step-chain-draft-rerun-row.js`), then the same work as a first build runs. Never throws.
+     * @param {BriefInput & {runId: string}} input
+     * @returns {Promise<{started: boolean, code?: string}>}
+     */
+    async rerun(input) {
+      try {
+        if (!rerunRow) return { started: false, code: 'REVISION_RUN_UNAVAILABLE' }
+        if (running.has(input.siteKey)) return { started: false, code: 'RUN_IN_PROGRESS' }
+        if (!(await rerunRow(pool, input.siteKey, input.brief)))
+          return { started: false, code: 'RUN_IN_PROGRESS' }
+        const run = work(input)
+          .catch((error) => fail(input.siteKey, error))
+          .finally(() => running.delete(input.siteKey))
+        running.set(input.siteKey, run)
+        return { started: true }
+      } catch (error) {
+        log.warn?.(
+          `[brief] could not run again on ${input.siteKey}: ${error instanceof Error ? error.message : error}`
+        )
+        return {
+          started: false,
+          code: typeof error?.code === 'string' ? error.code : 'REVISION_START_FAILED'
         }
       }
     },

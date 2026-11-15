@@ -13,15 +13,39 @@
 //                                        `step-chain-draft-stored.js` (a picture source a test or a later generator gives)
 //
 // With no Apply door, no door factory or no site key the wiring is null, and the step stops typed
-// (`write_not_ready_for_draft`), writing nothing. The run record is kept in this process by run id, between the
-// frame's two attempts of the step (a run is never resumed in another process: `sites/brief-build.js`).
+// (`write_not_ready_for_draft`), writing nothing. The run record is kept by run id, between the frame's two attempts of
+// the step, and saved through `deps.runRecords` (`step-chain-draft-run-records.js`) when one is wired: a run whose
+// process died then resumes, or is abandoned, from what its last save stored.
+//
+// `siteDoorsFor` below is the same door client over the Apply door of a restore or an abandon of a built site
+// (`build-draft-rebuild-wiring.js`), or null while no door factory is wired.
+import { durableRunRecord } from './step-chain-draft-run-records.js'
 import { recordedDoor } from './sites/brief-engines/shared.js'
 import { draftSendOf } from './step-chain-draft-send.js'
 import { storedPicturesOf } from './step-chain-draft-stored.js'
 
 /**
+ * The doors of a restore or an abandon of a built site: the door client (`site.siteDoors`) over the Apply door as
+ * `email` under the setup run `runId` (`applyFor(email, runId)`), or null when no door factory is wired.
+ * @param {{site?: {siteDoors?: Function, publicFile?: Function}, applyFor?: Function}} deps
+ * @returns {(input: {siteKey: string, email: string, runId: string, signal?: AbortSignal}) => Promise<object | null>}
+ */
+export const siteDoorsFor =
+  ({ site, applyFor }) =>
+  async ({ siteKey, email, runId, signal = null }) => {
+    if (typeof site?.siteDoors !== 'function' || typeof applyFor !== 'function') return null
+    if (typeof siteKey !== 'string' || siteKey === '' || !email || !runId) return null
+    return site.siteDoors({
+      send: draftSendOf({ apply: applyFor(email, runId), siteKey, signal }),
+      siteKey,
+      publicFile: typeof site.publicFile === 'function' ? (path) => site.publicFile(siteKey, path) : null,
+      signal
+    })
+  }
+
+/**
  * @param {{site?: {siteDoors?: Function, publicFile?: Function, blankContract?: Function, pictures?: object},
- *   openDraftPicture?: Function}} deps the draft deps
+ *   openDraftPicture?: Function, runRecords?: object}} deps the draft deps (`runRecords`: the run record store)
  * @param {{runId?: string, siteKey?: string, accountId?: string, signal?: AbortSignal, applied?: Function}} ctx the run
  * @param {{door?: {apply?: Function}} | undefined} how what the engine hands the Write step
  * @param {{kit: object, plan: object}} inputs the kit and plan steps' values
@@ -52,7 +76,8 @@ export function siteWriteOf(deps, ctx, how, inputs, records) {
         signal: c.signal ?? null
       }),
     record: async () => {
-      if (!records.has(runId)) records.set(runId, {})
+      if (!records.has(runId))
+        records.set(runId, deps.runRecords ? await durableRunRecord(deps.runRecords, runId, ctx) : {})
       return records.get(runId)
     },
     stored: async (order) => pictures.stored(order),

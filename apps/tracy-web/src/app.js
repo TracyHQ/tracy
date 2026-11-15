@@ -122,6 +122,10 @@ import { buildEngineRoutes } from './build-draft/engine-route.js'
 import { buildRunRoutes } from './build-draft/build-route.js'
 import { draftRunReader, draftSiteChat, draftSiteStarter } from './build-draft-build-wiring.js'
 import { draftRebuild } from './build-draft-rebuild-wiring.js'
+import { draftRunStarter } from './step-chain-draft-rerun.js'
+import { rerunBrief } from './step-chain-draft-rerun-row.js'
+import { memoryRunRecords, runRecordReader } from './step-chain-draft-run-records.js'
+import { siteDoorsFor } from './step-chain-draft-site.js'
 import { siteBuildStore } from './build-draft/site-builds.js'
 import { draftBrandStep, draftPictureReader, draftPictures, preSiteGatherer } from './build-draft-wiring.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
@@ -1194,6 +1198,10 @@ export function buildApp(deps) {
     // replaces its network doors in tests), the pre site brand step (#616, its own step chain steps, made on first
     // use) and the build model door.
     const buildEngine = deps.buildEngine ?? {}
+    // The run records of draft writes (`step-chain-draft-run-records.js`): `buildEngine.runRecords` is the durable
+    // store; without one they live in this process, as before.
+    app.draftRunRecords = buildEngine.runRecords ?? memoryRunRecords()
+    const rebuildBuilds = buildEngine.builds ?? siteBuildStore(deps.pool)
     const buildChatOn = buildEngine.buildChatOn ?? (() => uiSwitchOn(deps.pool, BUILD_CHAT_SWITCH))
     const brandSteps = () =>
       createStepChainSteps({
@@ -1290,7 +1298,20 @@ export function buildApp(deps) {
         ...siteChatOf(buildEngine, deps),
         // A built site's update, restore and abandon (#612): `buildEngine.builds` / `startRun` / `siteDoorsFor` /
         // `runRecordOf` replace them in tests.
-        ...draftRebuild({ ...buildEngine, builds: buildEngine.builds ?? siteBuildStore(deps.pool) }),
+        // The three seams: a run on the built site through the run frame, the site doors of a restore or an abandon
+        // (null while no door client is wired), and the saved record of an unfinished run.
+        ...draftRebuild({
+          startRun: draftRunStarter({
+            pool: deps.pool,
+            briefs: () => app.siteBriefBuilds,
+            builds: rebuildBuilds,
+            contractOf: (quickstart, version) => contractFor(defaultContracts(), quickstart, version)
+          }),
+          siteDoorsFor: async (input) => (await app.draftSiteDoorsFor?.(input)) ?? null,
+          runRecordOf: runRecordReader(app.draftRunRecords),
+          ...buildEngine,
+          builds: rebuildBuilds
+        }),
         ...(deps.now ? { now: deps.now } : {})
       })
     )
@@ -2274,11 +2295,15 @@ export function buildApp(deps) {
         generateFor: quickstartGenerateFor,
         verifySite: quickstartVerifySite
       })
+    // The door client of a restore or an abandon of a built site: none yet, the same factory seam as the write step's.
+    app.draftSiteDoorsFor = siteDoorsFor({ site: deps.buildEngine?.site, applyFor })
     // `deps.briefs`: a test's own runner, so a route test never starts a real one.
     const briefs =
       deps.briefs ??
       createBriefBuilds({
         pool: deps.pool,
+        // A run on a site that is already built (#612, `step-chain-draft-rerun.js`).
+        rerunRow: rerunBrief,
         engines: {
           wordpress: quickstartEngine(
             createWordpressEngine({
@@ -2355,7 +2380,9 @@ export function buildApp(deps) {
                   blankContract: blankContractReader(AI_QUICKSTARTS_DIR)
                 },
                 // The builds each site holds, for revisions and restores (#612, `build-draft/site-builds.js`).
-                builds: deps.buildEngine?.builds ?? siteBuildStore(deps.pool)
+                builds: deps.buildEngine?.builds ?? siteBuildStore(deps.pool),
+                // The run records of the writes, saved before each door call (`step-chain-draft-run-records.js`).
+                runRecords: app.draftRunRecords ?? null
               }
             })
           })
