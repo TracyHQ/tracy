@@ -222,3 +222,25 @@ test('the guard command exits 1 and lists every problem; 0 on a fresh passing ki
   assert.equal(passed.status, 0, passed.stderr)
   done(k, ok)
 })
+
+// Review 5 Z8: the marker build reads the template kit (`contracts/<slug>/<cms>/<version>/template-kit.json`, beside the
+// AI quickstarts folder) for its dark accent, so the record binds its sha256: one changed since the record is refused.
+test('Z8: the template kit the marker build reads is bound: one changed since the record is refused', async () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'kit-release-'))
+  const folder = path.join(root, 'ai-quickstarts', 'example-petal', 'j6', '1.0.0')
+  const kitFile = path.join(root, 'contracts', 'example-petal', 'j6', '1.0.0', 'template-kit.json')
+  mkdirSync(path.join(folder, 'check-record'), { recursive: true })
+  mkdirSync(path.dirname(kitFile), { recursive: true })
+  for (const [n, t] of Object.entries(FILES)) writeFileSync(path.join(folder, n), t)
+  const grounds = '{"themes":[{"side":"dark","ground":"#101010"}]}\n'
+  writeFileSync(kitFile, grounds)
+  const record = await gateRecord()
+  record.binding.templateKitSha256 = sha(grounds)
+  writeCheck(folder, record)
+  assert.deepEqual(codes(folder), [])
+  writeFileSync(kitFile, '{"themes":[{"side":"dark","ground":"#202020"}]}\n')
+  assert.deepEqual(codes(folder), ['template_kit_changed'])
+  rmSync(kitFile)
+  assert.deepEqual(codes(folder), ['template_kit_changed'])
+  rmSync(root, { recursive: true, force: true })
+})

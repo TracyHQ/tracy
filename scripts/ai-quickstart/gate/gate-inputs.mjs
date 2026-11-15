@@ -5,7 +5,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ALLOW_FILE, allowShaOf } from './release-binding.mjs'
+import { ALLOW_FILE, allowShaOf, templateKitFileOf, templateKitShaOf } from './release-binding.mjs'
 import { gitleaksFindings } from './secret-gitleaks.mjs'
 import { ADAPTERS, filesOfArgs, readAllow, scanTexts, secretScan } from './secret-scan.mjs'
 
@@ -26,22 +26,16 @@ export function kitOf(folder) {
     lock: json('blank-site-contract/presentation-lock.json'),
     // The draft report names the places the drafting kept, with their reasons (`exemptions.mjs` `keptPlacesOf`).
     draftReport: existsSync(path.join(folder, 'draft-report.json')) ? json('draft-report.json') : null,
-    // The template kit of the release: its themes and grounds, for the marker build's dark accent.
-    templateKit: templateKitOf(t)
+    // The template kit of the release: its themes and grounds, for the marker build's dark accent. Read from beside
+    // the kit folder, the file the record binds (`release-binding.mjs` `templateKitFileOf`).
+    templateKit: templateKitOf(folder)
   }
 }
 
-/** The template kit `contracts/<slug>/<cms>/<version>/template-kit.json` of a template, or null. */
-function templateKitOf(t, root = ROOT) {
-  const file = path.join(
-    root,
-    'packages/cms/tracy-joomla-quickstart/contracts',
-    String(t.slug),
-    String(t.cms ?? 'j6'),
-    String(t.version),
-    'template-kit.json'
-  )
-  return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null
+/** The template kit `contracts/<slug>/<cms>/<version>/template-kit.json` beside a kit folder, or null. */
+function templateKitOf(folder) {
+  const file = templateKitFileOf(folder)
+  return file && existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null
 }
 
 /** The plugin version `apps/tracy-web/src/quickstarts.json` pins for the kit's template, or null. */
@@ -101,4 +95,10 @@ export function recordScanner({ cms, gitleaks = true }) {
 export function secretAllowOf(folder) {
   const sha256 = allowShaOf(folder)
   return sha256 ? { file: ALLOW_FILE, sha256 } : null
+}
+
+/** The template kit input of a kit folder for the record's binding (`{file, sha256}`), or null when it has none. */
+export function templateKitInputOf(folder) {
+  const sha256 = templateKitShaOf(folder)
+  return sha256 ? { file: path.basename(templateKitFileOf(folder)), sha256 } : null
 }

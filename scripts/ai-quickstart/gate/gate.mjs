@@ -53,6 +53,7 @@ import {
   recordScanner,
   ROOT,
   secretAllowOf,
+  templateKitInputOf,
   secretsOf
 } from './gate-inputs.mjs'
 import { MEASURED_REFUSALS, memoryTryWrite } from './memory-write.mjs'
@@ -220,7 +221,8 @@ const common = {
   inputs: {
     blankSite: { file: path.basename(installer), sha256: sha(installer) },
     ...(human ? { humanQuickstart: { file: path.basename(human), sha256: humanSha } } : {}),
-    ...(secretAllowOf(folder) ? { secretAllow: secretAllowOf(folder) } : {})
+    ...(secretAllowOf(folder) ? { secretAllow: secretAllowOf(folder) } : {}),
+    ...(templateKitInputOf(folder) ? { templateKit: templateKitInputOf(folder) } : {})
   },
   log
 }

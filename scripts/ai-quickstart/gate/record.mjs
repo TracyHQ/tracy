@@ -74,7 +74,8 @@ export function kitFilesSha256(hashes) {
 
 /**
  * What a record was measured on: the gate version, the kit and its files, the two archives, the plugin at both ends,
- * the provenance of the two controls (`control-file.mjs`) and the sha256 of the kit's secret allow file (null: none).
+ * the provenance of the two controls (`control-file.mjs`), the sha256 of the kit's secret allow file and of the
+ * template kit the marker build read (null: none).
  */
 export function recordBinding({ kit, kitHashes, inputs, plugin }) {
   return {
@@ -85,7 +86,9 @@ export function recordBinding({ kit, kitHashes, inputs, plugin }) {
     humanQuickstartSha256: inputs?.humanQuickstart?.sha256 ?? null,
     plugin: { expected: plugin?.expected ?? null, start: plugin?.start ?? null, end: plugin?.end ?? null },
     controls: { human: inputs?.controls?.human ?? null, quality: inputs?.controls?.quality ?? null },
-    allowFileSha256: inputs?.secretAllow?.sha256 ?? null
+    allowFileSha256: inputs?.secretAllow?.sha256 ?? null,
+    // The template kit the marker build read for its dark accent (review 5 Z8), null when it read none.
+    templateKitSha256: inputs?.templateKit?.sha256 ?? null
   }
 }
 

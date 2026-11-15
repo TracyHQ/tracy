@@ -56,6 +56,31 @@ export const allowShaOf = (folder) => {
   return existsSync(file) ? sha256(readFileSync(file)) : null
 }
 
+/**
+ * The template kit of an AI quickstart kit folder (`<package>/ai-quickstarts/<slug>/<cms>/<version>`): the file
+ * `<package>/contracts/<slug>/<cms>/<version>/template-kit.json` the marker build reads for its dark accent (review 5
+ * Z8), or null for a folder outside an `ai-quickstarts` tree.
+ */
+export function templateKitFileOf(folder) {
+  const parts = path.resolve(folder).split(path.sep)
+  if (parts.length < 5 || parts[parts.length - 4] !== 'ai-quickstarts') return null
+  const [slug, cms, version] = parts.slice(-3)
+  return path.join(
+    parts.slice(0, -4).join(path.sep) || path.sep,
+    'contracts',
+    slug,
+    cms,
+    version,
+    'template-kit.json'
+  )
+}
+
+/** The sha256 of a kit folder's template kit, or null when it has none. */
+export const templateKitShaOf = (folder) => {
+  const file = templateKitFileOf(folder)
+  return file && existsSync(file) ? sha256(readFileSync(file)) : null
+}
+
 /** The files the gate writes into a kit's check record folder; nothing else may be there. */
 const CHECK_RECORD_FILES = new Set(['record.json', 'verdict.json', 'secret-allow.json'])
 
@@ -143,6 +168,10 @@ export function releaseProblems(folder, { pins = {}, blankSiteSha } = {}) {
   out.push(...controlProblems(record.binding))
   if ((record.binding?.allowFileSha256 ?? null) !== allowShaOf(folder))
     out.push(problem('allow_changed', ALLOW_FILE + ' is not the allow file the record was scanned with'))
+  if ((record.binding?.templateKitSha256 ?? null) !== templateKitShaOf(folder))
+    out.push(
+      problem('template_kit_changed', 'the template kit is not the one the marker build read for the record')
+    )
   if (v.schema !== VERDICT_SCHEMA)
     out.push(problem('verdict_unreadable', 'schema ' + v.schema + ' is not ' + VERDICT_SCHEMA))
   if (v.gateVersion !== GATE_VERSION)
