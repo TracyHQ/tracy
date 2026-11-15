@@ -5,6 +5,7 @@
 // button copies every answer as text to paste back. Pure: the record in, HTML out. The record holds no machine
 // address (`<site>`) and the pictures are paths next to the page.
 
+import { headNotes, partsOf } from './record-html-lines.mjs'
 import { measurementsHtml } from './record-html-measures.mjs'
 
 const esc = (v) =>
@@ -176,11 +177,14 @@ export function recordHtml(record) {
     order: 'problems of the write order',
     observation: 'parts of a page the reader could not read',
     writeSafety: 'write safety',
-    structure: 'structure (the link check and the minimum items)',
+    structure: 'structure (the link check, the fewest items and the hidden pages)',
     quality: 'template quality',
     secrets: 'the secret scan'
   }
-  const failing = (v.failing ?? []).map((k) => PART_NAMES[k] ?? k).join('; ')
+  const { failed: failing, unfinished } = partsOf(record, PART_NAMES)
+  const notes = headNotes(record)
+    .map((line) => '<p class="muted"><b>' + esc(line) + '</b></p>')
+    .join('')
   const notSeen = m.notSeen ?? []
   const notSeenRows = Object.entries(
     notSeen.reduce((by, n) => {
@@ -203,8 +207,9 @@ export function recordHtml(record) {
       .replace('T', ' ')
   )} UTC.</p>
 <span class="verdict ${v.pass ? 'yes' : 'no'}">${v.pass ? 'Passed' : 'Not passed'}</span>
-<p class="muted">${esc(v.leaks)} leak(s) in ${esc(leakGroups)} group(s), plus ${esc(groups.length - leakGroups)} request(s) to other sites; ${esc(v.demoFindings)} demo finding(s); ${esc(v.failedRenders ?? 0)} page view(s) that did not load as expected; ${esc(v.unexplained)} unexplained place(s)${notRun ? `. Not measured yet: ${esc(notRun)}` : ''}.</p>
+${notes}<p class="muted">${esc(v.leaks)} leak(s) in ${esc(leakGroups)} group(s), plus ${esc(groups.length - leakGroups)} request(s) to other sites; ${esc(v.demoFindings)} demo finding(s); ${esc(v.failedRenders ?? 0)} page view(s) that did not load as expected; ${esc(v.unexplained)} unexplained place(s)${notRun ? `. Not measured yet: ${esc(notRun)}` : ''}.</p>
 ${failing ? `<p class="muted">Failing parts: ${esc(failing)}.</p>` : ''}
+${unfinished ? `<p class="muted">Not finished: ${esc(unfinished)}.</p>` : ''}
 <h2>The measurements</h2>
 ${measurementsHtml(record.measurements)}
 <h2>What the build did with every place the kit declares</h2>

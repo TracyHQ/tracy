@@ -30,6 +30,11 @@ const WHY = {
   no_hide_door: 'the site has no way to hide a page',
   hide_door_failed: 'hiding or publishing a page failed',
   pages_not_back: 'some pages did not answer again once published',
+  nothing_hidden: 'the site has no page it could hide',
+  hidden_page_still_answers: 'a hidden page still answered as shown, so nothing was hidden',
+  link_probe_cap: 'its links reached the most the link check reads, so some were not read',
+  run_state: 'the run state stopped the write (a run record of another plan, a stored picture gone)',
+  probe_not_written: 'the build wrote other values than the probes at some places',
   red_without_failures: 'a check reported a problem without naming it',
   record_not_scanned: 'the record itself was not scanned',
   record_gitleaks_not_run: 'gitleaks did not run over the record itself',
@@ -37,7 +42,7 @@ const WHY = {
   record_scan_unsettled: 'the scan of the record itself did not settle',
   run_stopped: 'the run stopped before this measurement'
 }
-const whyOf = (m) => {
+export const whyOf = (m) => {
   const code = m?.reason ?? m?.incomplete
   if (WHY[code]) return WHY[code]
   if (code) return String(code).replaceAll('_', ' ')
@@ -69,8 +74,14 @@ function writeSafetyLine(m) {
   const p = m.places ?? {}
   const site = (m.findings ?? []).filter((f) => f.kind !== 'refused_by_build').length
   const build = (m.findings ?? []).filter((f) => f.kind === 'refused_by_build').length
+  const could = m.coverage?.places?.couldTakeProbe
   const parts = [
-    'values reached the site at ' + (p.tested ?? 0) + ' of ' + (p.probed ?? 0) + ' places the build writes',
+    'values reached the site at ' +
+      (p.tested ?? 0) +
+      ' of ' +
+      (p.probed ?? 0) +
+      ' places given a probe' +
+      (could == null ? '' : ' (' + could + ' places could take one)'),
     n((m.passes ?? []).length, 'pass', 'passes')
   ]
   const notProbed = Object.values(m.coverage?.notProbed ?? {}).reduce((a, b) => a + b, 0)
@@ -153,4 +164,26 @@ export function measurementLines(measurements = {}) {
     else line = whyOf(m) + '.'
     return { key, name, status, line: head + line }
   })
+}
+
+/** The parts of a verdict that failed, apart from the measurements that only did not finish: `{failed, unfinished}`. */
+export function partsOf(record, names) {
+  const failed = []
+  const unfinished = []
+  for (const k of record?.verdict?.failing ?? []) {
+    const status = record?.measurements?.[k]?.status
+    ;(status === 'incomplete' || status === 'not_run' ? unfinished : failed).push(names[k] ?? k)
+  }
+  return { failed: failed.join('; '), unfinished: unfinished.join('; ') }
+}
+
+/** What the first lines must say before any count: a write that stopped makes every count of a half-written site. */
+export function headNotes(record) {
+  const site = record?.write?.site
+  if (!site || site.status === 'done') return []
+  return [
+    'The write on the site stopped (' +
+      (site.code ?? site.status ?? 'stopped') +
+      '): the leaks and the written values not seen come from a half-written site, not from the finished build.'
+  ]
 }
