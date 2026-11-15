@@ -72,7 +72,7 @@ function, `how.door.apply` is there and the run has a site key. Otherwise it is 
 | `publicFile(siteKey, path)` | `siteReader(siteKey).bytes(path)` | |
 | `blankContract(kit)` | `blankContractReader(AI_QUICKSTARTS_DIR)` | `<slug>/<cms>/<version>/blank-site-contract/content-map.json` |
 | `pictures` | not wired | tests only; production uses `step-chain-draft-stored.js` |
-| `templateSheets(siteKey, {variables})` | `readSiteSheets` of the site's home page (`write-step/site-sheets.js`) | the door `sheets` of the accent module (`look.accent`): the stylesheets the site serves, the template's accent read from them; absent, the accent stops `door_not_available` |
+| `templateSheets(siteKey, {variables, pages})` | `draftTemplateSheets` (`step-chain-draft-sheets.js`): `readSiteSheets` (`write-step/site-sheets.js`) of the home page asked in each theme and every page the site lists (`pages()`, the inspect answer), own origin only, no redirect followed; at most 12 pages, 3 MB per answer, 12 MB in all, 90 s | the door `sheets` of the accent module (`look.accent`): the stylesheets the site serves, the template's accent read from them; absent, the accent stops `door_not_available`; a failed read stops `sheets_unreadable` with a `reason` (`page_list`, `no_page`, `no_sheet`, `answer_too_large`, `sheets_too_large`, `deadline`). The release gate's write passes the same door (`gateDoors`, `scripts/ai-quickstart/gate/site-write.mjs`) |
 
 The run record of the write is kept by run id, between the frame's two attempts of the step, and saved through the
 run record store `deps.runRecords` (`step-chain-draft-run-records.js`: `append`, `read`, `close`) before each door

@@ -11,10 +11,12 @@
 //                                        door `media`; no plugin operation reads a file's bytes). Absent, the `media`
 //                                        door stops the write typed (`door_not_available`, door `media`)
 //   deps.site.blankContract(kit)         the blank site contract's content map of the kit, or null
-//   deps.site.templateSheets(siteKey, {variables})
+//   deps.site.templateSheets(siteKey, {variables, pages})
 //                                        optional: the stylesheets the site's template serves (door `sheets`, the
 //                                        accent module is built from them; `variables`: the accent variables the kit
-//                                        declares). Absent, the accent stops the write typed (`door_not_available`)
+//                                        declares; `pages()`: the site's inspect answer, its page list). Production:
+//                                        `draftTemplateSheets` (`step-chain-draft-sheets.js`). Absent, the accent stops
+//                                        the write typed (`door_not_available`)
 //   deps.site.pictures                   optional `{stored(order), openStored(id)}` in place of the stored pictures of
 //                                        `step-chain-draft-stored.js` (a picture source a test or a later generator gives)
 //
@@ -32,6 +34,21 @@ import { draftSendOf } from './step-chain-draft-send.js'
 import { storedPicturesOf } from './step-chain-draft-stored.js'
 
 /**
+ * The `sheets` door over `site.templateSheets`, given the site's page list (`content.contract` inspect through the same
+ * transport) so the stylesheets of every listed page are read (`step-chain-draft-sheets.js`); none when not wired.
+ */
+const sheetsDoorOf = (site, siteKey, send) =>
+  typeof site.templateSheets === 'function'
+    ? {
+        sheets: (args = {}) =>
+          site.templateSheets(siteKey, {
+            ...args,
+            pages: () => send('content.contract', { operation: 'inspect' })
+          })
+      }
+    : {}
+
+/**
  * The doors of a restore or an abandon of a built site: the door client (`site.siteDoors`) over the Apply door as
  * `email` under the setup run `runId` (`applyFor(email, runId)`), or null when no door factory is wired.
  * @param {{site?: {siteDoors?: Function, publicFile?: Function}, applyFor?: Function}} deps
@@ -42,17 +59,16 @@ export const siteDoorsFor =
   async ({ siteKey, email, runId, signal = null }) => {
     if (typeof site?.siteDoors !== 'function' || typeof applyFor !== 'function') return null
     if (typeof siteKey !== 'string' || siteKey === '' || !email || !runId) return null
+    const send = draftSendOf({ apply: applyFor(email, runId), siteKey, signal })
     return typedDoors(
       {
         ...(await site.siteDoors({
-          send: draftSendOf({ apply: applyFor(email, runId), siteKey, signal }),
+          send,
           siteKey,
           publicFile: typeof site.publicFile === 'function' ? (path) => site.publicFile(siteKey, path) : null,
           signal
         })),
-        ...(typeof site.templateSheets === 'function'
-          ? { sheets: (args = {}) => site.templateSheets(siteKey, args) }
-          : {})
+        ...sheetsDoorOf(site, siteKey, send)
       },
       { siteKey }
     )
@@ -87,26 +103,26 @@ export function siteWriteOf(deps, ctx, how, inputs, records) {
     // the site does not have stops typed (`door_not_available`, naming it). No `journal` is passed: the client keeps
     // its replays in memory for this attempt, and the run record (`madeOnce`) is what keeps a resumed or re-run write
     // from making a record twice.
-    doors: async (c) =>
-      typedDoors(
+    doors: async (c) => {
+      const send = draftSendOf({
+        apply: recordedDoor(c, apply),
+        siteKey: c.siteKey,
+        signal: c.signal ?? null
+      })
+      return typedDoors(
         {
           ...(await site.siteDoors({
-            send: draftSendOf({
-              apply: recordedDoor(c, apply),
-              siteKey: c.siteKey,
-              signal: c.signal ?? null
-            }),
+            send,
             siteKey: c.siteKey,
             publicFile:
               typeof site.publicFile === 'function' ? (path) => site.publicFile(c.siteKey, path) : null,
             signal: c.signal ?? null
           })),
-          ...(typeof site.templateSheets === 'function'
-            ? { sheets: (args = {}) => site.templateSheets(c.siteKey, args) }
-            : {})
+          ...sheetsDoorOf(site, c.siteKey, send)
         },
         { siteKey: c.siteKey }
-      ),
+      )
+    },
     record: async () => {
       if (!records.has(runId))
         records.set(runId, deps.runRecords ? await durableRunRecord(deps.runRecords, runId, ctx) : {})
