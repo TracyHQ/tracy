@@ -59,6 +59,8 @@ function qualityDetail(q) {
   for (const [name, g] of Object.entries(q.byGroup ?? {}))
     if (!['green', 'red', 'not-applicable'].includes(g?.status) || !g.control || g.control === 'none')
       out.push('its group ' + name + ' was not measured against a control')
+  if (!Object.values(q.byGroup ?? {}).some((g) => g?.status === 'green' || g?.status === 'red'))
+    out.push('no group measured anything: every group is not applicable')
   if (!empty(q.regressions) || !empty(q.uncompared) || !empty(q.unmeasured))
     out.push('it holds regressions, or groups not compared or not measured')
   const seo = q.seo

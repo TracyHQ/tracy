@@ -62,7 +62,12 @@ export const BUILD_GUARD_CODES = Object.freeze([
 /** The gate's own guard: the page writer's copy check sent a probed field back. */
 export const GATE_GUARD_CODES = Object.freeze(['page_copy_check'])
 
-/** Codes a site gives: a door that failed after its retries, a read back the site answered otherwise. */
+/**
+ * Codes a site gives: a door that failed after its retries, a read back the site answered otherwise. Only the first two
+ * have a class of their own in write safety (`stopClassOf`); `door_not_available` and `sheets_unreadable` are classed
+ * as any other unnamed code, `server_error`. Both stop the plain marker build too, so the marker test stops on them
+ * before write safety gives any probe.
+ */
 export const SITE_CODES = Object.freeze({
   redo_failed: 'a door call failed after its retries: the door named in its cause answered',
   read_back_mismatch: 'the site keeps another value than the one written',

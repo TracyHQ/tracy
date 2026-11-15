@@ -8,7 +8,7 @@
 //                        build makes itself, a fixed value with no marker, an element the write takes out)
 // and in places (a writer field, a profile value; two places can share one location):
 //   could take a probe   the places a pass can give a probe
-//   probed in a pass     the places a pass gave a probe; the rest by reason
+//   in a finished pass   the places whose probe went through a pass that finished on the site; the rest by reason
 //   tested               the places whose probe reached the site
 // `coverageProblems` checks the sums, so a record whose table does not add up is refused. Pure.
 import { codesIn } from './marker-codec.mjs'
@@ -59,10 +59,12 @@ export function coverageOf(writePlan, seen, universeKeys = null) {
       const key = placeKeyOf(v.loc)
       const was = locations.get(key) ?? { codes: [] }
       const value = String(v.value ?? '')
+      // A picture the write resolves from a reference (`{ref: 'picture:<place>'}`) is a picture by its reference.
+      const byRef = String(v.value?.ref ?? '').startsWith('picture:')
       locations.set(key, {
         ...was,
         codes: [...was.codes, ...codesIn(value)],
-        picture: was.picture || PICTURE.test(value)
+        picture: was.picture || byRef || PICTURE.test(value)
       })
     }
     for (const r of op.removes ?? []) {
@@ -111,7 +113,7 @@ export function coverageProblems(c) {
   }
   const p = c.places
   if (!p) out.push('its coverage keeps no places')
-  else if (p.couldTakeProbe !== p.probedInPass + sum(p.notProbedInPass) || p.tested > p.probedInPass)
+  else if (p.couldTakeProbe !== p.inFinishedPass + sum(p.notInFinishedPass) || p.tested > p.inFinishedPass)
     out.push('its coverage: the places probed and not probed do not add up')
   return out
 }

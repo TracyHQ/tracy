@@ -23,7 +23,7 @@ const COVERAGE = {
   probed: 317,
   notProbed: { no_marker: 300, picture: 50 },
   why: { no_marker: 'a fixed value', picture: 'a picture', not_in_universe: 'not counted' },
-  places: { couldTakeProbe: 320, probedInPass: 320, tested: 0, notProbedInPass: {} }
+  places: { couldTakeProbe: 320, inFinishedPass: 0, tested: 0, notInFinishedPass: { pass_not_finished: 320 } }
 }
 const stopped = {
   status: 'incomplete',
@@ -97,7 +97,7 @@ test('3 and 8: the probe counts agree with the coverage table, and the table add
   )
   assert.match(page, /667 locations the plain build writes = 600 in both \+ 67 only in the plain build/)
   assert.match(page, /667 = 317 could take a probe \+ 350 not probed/)
-  assert.match(page, /320 places could take a probe: 320 given one in a pass, 0 reached the site/)
+  assert.match(page, /320 places could take a probe: 0 in a pass that finished, 0 reached the site/)
 })
 
 test('4 and 5: a table of what went wrong says not measured when nothing ran, nothing found when nothing was', () => {

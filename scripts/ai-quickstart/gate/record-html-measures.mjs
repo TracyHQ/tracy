@@ -62,8 +62,8 @@ const coverageHtml = (c) => {
     c.locations + ' = ' + c.probed + ' could take a probe + ' + sum(c.notProbed) + ' not probed',
     (p.couldTakeProbe ?? 'unknown') +
       ' places could take a probe: ' +
-      (p.probedInPass ?? 'unknown') +
-      ' given one in a pass, ' +
+      (p.inFinishedPass ?? 'unknown') +
+      ' in a pass that finished, ' +
       (p.tested ?? 0) +
       ' reached the site'
   ]

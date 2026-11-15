@@ -106,6 +106,37 @@ export const failureKey = (f, pageKey = f.page ?? '') =>
 
 const MEASURED = new Set(['green', 'red', 'not-applicable'])
 
+const SIDE = /\bin the (light|dark) theme\b/
+/**
+ * The failures with one read on each theme side merged: the same group, page, width, selector and measured colours,
+ * and a reason that differs only in the side, is one problem naming both sides (`themes`). A dark band the template
+ * keeps dark on both sides is read twice by the look read, and is one thing to fix.
+ */
+function onceAcrossThemes(rows) {
+  const out = []
+  const seen = new Map()
+  for (const r of rows) {
+    const side = SIDE.exec(r.reason ?? '')?.[1] ?? null
+    const key = [
+      r.group,
+      r.page,
+      r.width,
+      r.selector ?? '',
+      r.measured ?? '',
+      (r.reason ?? '').replace(SIDE, '')
+    ].join('|')
+    const had = seen.get(key)
+    if (had) {
+      if (side && !had.themes.includes(side)) had.themes.push(side)
+      continue
+    }
+    const row = { ...r, themes: side ? [side] : [] }
+    seen.set(key, row)
+    out.push(row)
+  }
+  return out
+}
+
 /** The control of one group: the measured one when it measured, else the baseline's, else none. */
 function controlGroup(name, control, baseline) {
   const measured = control?.groups?.find((g) => g.name === name)
@@ -179,6 +210,9 @@ export function qualityOf({ marker, control = null, baseline = null, seo = null,
         })
     }
   }
+  const measuredAny = (marker?.groups ?? []).some((g) => g.status === 'green' || g.status === 'red')
+  if (marker?.groups?.length && !measuredAny && !unmeasured.length)
+    unmeasured.push({ group: null, reason: 'no_group_measured' })
   const split = seoSplit(seo, control?.seo ?? null, systemPages)
   sameAsTemplate.push(...split.same)
   const seoOut = seo
@@ -196,7 +230,7 @@ export function qualityOf({ marker, control = null, baseline = null, seo = null,
     status,
     control: control?.groups ? (control.from ?? 'measured') : baseline ? 'baseline' : 'none',
     byGroup,
-    regressions,
+    regressions: onceAcrossThemes(regressions),
     sameAsTemplate,
     warnings,
     uncompared,

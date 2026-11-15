@@ -2053,7 +2053,7 @@ time is in `record.phases`.
 |---|---|---|
 | Write safety | a value a customer could type that the site answers with an error (`server_error`), that stops the site answering (`site_unreachable`), that the plugin refuses or keeps otherwise (`door_refused`), or that a page prints as a live element or runs as code (`markup_injected`); a page that holds a probe and answers 0, 404 or 500 and more | a refusal by one of the build's own named guards (`refused_by_build`): not a tested place |
 | Structure | a page error or a broken link in any of the three variants, a link to a hidden page | none |
-| Quality | a block failure of a page group the untouched template does not show on the same kind of page, at the same width, with the same selector (or reason when there is no selector): a `regression`; a missing SEO item on a page the build writes, or on a system page where the untouched template has it | a failure the untouched template shows too (`same_as_template`); a system page's SEO item the untouched template misses too; every warning |
+| Quality | a block failure of a page group the untouched template does not show on the same kind of page, at the same width, with the same selector (or reason when there is no selector): a `regression`, counted once when the look read finds it the same, in the same colours, on both theme sides (`themes` names the sides); a missing SEO item on a page the build writes, or on a system page where the untouched template has it; a measurement in which no group measured anything (every group not applicable) is no pass (`no_group_measured`, incomplete) | a failure the untouched template shows too (`same_as_template`); a system page's SEO item the untouched template misses too; every warning |
 | Secrets | a finding the allow file does not name; an allow entry that matches nothing | an allowed finding, with its reason |
 
 **Write safety** (`gate/write-safety.mjs`). The probe catalogue (`gate/write-probes.mjs`, `gate/write-probes-edge.mjs`,
@@ -2113,11 +2113,13 @@ refuses a passing record whose table does not. In stored locations: `universeWri
 universe the build wrote) = `inBoth` + `onlyInUniverse`; `locations` (what the plain marker build's write plan writes)
 = `inBoth` + the rest by reason (`onlyInPlan`); `locations` = `probed` (a location holding a text or link place a
 customer could type into: it could take a probe) + every other one by its reason (`notProbed`): `picture` (a stored
-file the build chooses, told by its value), `email` and `phone` (checked by their own field rule), each not probed in
+file the build chooses, told by its value or by the `picture:` reference the write resolves), `email` and `phone` (checked by their own field rule), each not probed in
 this round; `build_value` (a page name, a menu title, an alt text, a setting the build writes itself); `no_marker` (an
 icon class, a link the build makes, a design setting); `removed` (an element the write takes out); `not_in_universe` (a
 customer place the build writes that the universe does not count). In places (two places can share one location):
-`places.couldTakeProbe` = `probedInPass` + `notProbedInPass` by reason, and `tested` is at most `probedInPass`.
+`places.couldTakeProbe` = `inFinishedPass` (places whose probe went through a pass that finished on the site) +
+`notInFinishedPass` by reason, and `tested` is at most `inFinishedPass`. How many places were given a probe in each pass,
+finished or not, is `passes[].probed`.
 
 **Structure** (`gate/structure.mjs`, `gate/structure-items.mjs`). `measurements.structure` holds `linkCheck` (the full
 variant), `minItems` (the minimum variant) and `hidden`. All three decide its status: `failed` when one failed,
@@ -2162,8 +2164,10 @@ the kind, the gate version and the sha256 of the human quickstart installer meas
 refuses the run (exit 2). The provenance of each control (`measured_in_run`, or `file` with the file's sha256) is in
 the binding, and the release guard refuses a record whose controls the gate did not make for its installer. This
 binds a control to its installer, not to a measurement: a file written by hand with the right schema, kind, gate
-version and installer sha256 is read as the gate's own. Who can write the kit's run folder can write a control; the
-publish step that runs the gate itself (`publishVerified`) measures the control in the run.
+version and installer sha256 is read as the gate's own. Who can write the kit's run folder can write a control. A
+publish step whose `runGate` measures the controls in the run (no `--human-control`, no `--quality-control`) leaves no
+control file to forge; `publishVerified` does not check which its `runGate` does, and a machine that holds one site at
+a time reads the controls back from files, so this stays a limit, named here.
 
 ### The reset hook
 

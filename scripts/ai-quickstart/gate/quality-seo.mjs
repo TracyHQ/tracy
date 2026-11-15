@@ -1,8 +1,8 @@
 // The SEO items of template quality (ticket #586, product decision 4): read from the renders the marker test already
 // took, so no page is visited again. Every page must have a title that no other page shares, a meta description, an
 // og:image, a viewport meta, a language on its html element, an alt attribute on every picture (empty is allowed: a
-// picture that only decorates), and a declared favicon that loads. Any missing item blocks, whatever the untouched
-// template does. The favicons are fetched by the caller (`faviconsOf` lists them); one not fetched leaves the
+// picture that only decorates), and a declared favicon that loads. A missing item on a page the build writes blocks;
+// on a system page the template titles itself it is compared with the untouched template (`quality.mjs`). The favicons are fetched by the caller (`faviconsOf` lists them); one not fetched leaves the
 // measurement incomplete. Pure.
 import { parseHTML } from 'linkedom'
 

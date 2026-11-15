@@ -33,11 +33,11 @@ export function resultOf({
   const inPass = new Set(rows.filter((r) => r.site).map((r) => r.place))
   const notWritten = [...new Set(rows.filter((r) => r.status === 'not_written').map((r) => r.place))]
   const notSiteTested = places.filter((p) => !onSite.has(p.key)).map((p) => p.key)
-  const notProbedInPass = {}
+  const notInFinishedPass = {}
   for (const p of places)
     if (!inPass.has(p.key)) {
       const why = notProbedWhy(rows.filter((r) => r.place === p.key))
-      notProbedInPass[why] = (notProbedInPass[why] ?? 0) + 1
+      notInFinishedPass[why] = (notInFinishedPass[why] ?? 0) + 1
     }
   const failed = findings.some((f) => FAILING.has(f.kind))
   const why =
@@ -67,9 +67,9 @@ export function resultOf({
       ...coverage,
       places: {
         couldTakeProbe: places.length,
-        probedInPass: inPass.size,
+        inFinishedPass: inPass.size,
         tested: onSite.size,
-        notProbedInPass
+        notInFinishedPass
       }
     },
     ...spent(),
