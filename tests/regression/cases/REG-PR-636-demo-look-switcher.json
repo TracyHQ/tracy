@@ -1,0 +1,62 @@
+{
+  "id": "REG-PR-636-demo-look-switcher",
+  "kind": "feat",
+  "title": "A WO demo's share link shows the owner other looks in preview only and records which look the owner liked",
+  "pr": 636,
+  "area": "website-opportunities/outreach",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a disposable PostgreSQL server, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "demoSystemChoice offers the library's featured systems it offers, in the featured order, without the worn system; systemsOf answers the first four whose bytes the template's contract emits, numbered 1 to 4, each with a tracy_ds_preview ticket whose claims name this site, that system, the judged contract and template, and no other site.",
+    "systemsOf answers no look with reason NOT_WIRED, PLATFORM, IMPORTED, NOT_SERVED_HERE, NO_ADDRESS, SITE_UNREADABLE, NO_SLOT, TEMPLATE_LOCKED (the customer lock asked with a null email), NO_SYSTEM or NO_SITE; eligible answers without a read in the container and false on any doubt.",
+    "The minted ticket read by the site proxy's live page lays in the system's slot, takes the worn slot off and leaves the page's own content and stylesheet unchanged.",
+    "The share page frames the asked demo page, keeps its control hidden until looks load, names no library system, escapes its title and data block, and its CSP allows frame-src of the demo origin only with frame-ancestors 'none'.",
+    "Switch wo-demo-looks is in the catalogue and off by default: /d/<token> is a 302 and both looks doors answer 404 FEATURE_OFF; on, a person's top-level visit of an eligible demo gets the 200 share page (counted as an open), while a link preview, a prefetch, a frame, a HEAD or an ineligible demo get the 302.",
+    "GET /api/demo-links/<token>/systems answers ids, numbers, palettes and tickets but no names, its reason when none, 429 past 120 reads an hour.",
+    "POST /api/demo-links/<token>/systems/pick writes one wo_demo_system_pick row (columns device, id, link_id, n, name, picked_at, system_id) for a person; a program, the seller's own session and picks past 30 an hour answer counted false and write nothing; 403 CSRF_ORIGIN without same-origin Fetch Metadata or Tracy's Origin, 415, 400 INVALID_LOOK and LOOK_NOT_OFFERED, 404 for a stopped link, 410 for a deleted demo; demo.systemPicks and /ops/wo demoSystemPicks read total 3 newest first."
+  ],
+  "selectors": {
+    "share_link": "GET /d/:token",
+    "systems": "GET /api/demo-links/:token/systems",
+    "pick": "POST /api/demo-links/:token/systems/pick",
+    "switch": "wo-demo-looks",
+    "control": "[data-demo-looks]"
+  },
+  "fence": "The share link hands out only Design system preview tickets judged by the running site's gates, writes nothing to the demo, and records a pick only for a person on Tracy's own page.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-demo-looks.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the systems offered are the featured ones the library offers, in the featured order, without the worn one",
+      "a demo offers its first four featured systems its contract emits, each a preview ticket for exactly that system",
+      "a demo that cannot wear a look offers none, and says why",
+      "eligible answers without a read in the container: the release can wear a system and its template is open",
+      "a read in the container is trusted two minutes, then read again",
+      "a look changes only what an apply would write: the worn slot goes, the system’s slot comes, nothing else moves",
+      "the share page frames the asked demo page, hides its control until looks load, and carries no system name",
+      "the share page may frame the demo origin only, and refuses to be framed itself",
+      "the switch is in the catalogue, off by default, and read as off when it cannot be read",
+      "a pick is judged a program by its User-Agent alone",
+      "switch off: the share link is the plain 302 and the looks and pick doors are closed",
+      "switch on: a person’s own visit of a demo that can wear a look gets the share page, counted like the 302",
+      "switch on, but the demo cannot wear a look: the plain 302",
+      "the looks door answers numbers, palettes and tickets, never a library name, and says why when there are none",
+      "a demo the looks module refuses offers no look, with its reason",
+      "looks served on another origin than the share link’s demo are not offered",
+      "a person’s pick is counted like an open; a program, the seller and picks past the cap are answered and not written",
+      "a build whose link was never opened reads zero picks; one with no link reads none"
+    ]
+  }
+}

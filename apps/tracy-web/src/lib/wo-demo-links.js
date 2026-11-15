@@ -12,15 +12,31 @@
  * A count is therefore a floor, never a guess: an owner who opens the demo in an app this cannot tell from a preview
  * bot is not counted.
  *
- * 🔒 THE TOKEN IS A REDIRECT, NOTHING MORE: 192 random bits, kept as it is so every outreach draft shows the same link.
- * Whoever holds it learns the demo's address, which is public anyway; it opens no Tracy door. One live link per
- * build; revoking it (`revokeDemoLinks`) makes the next outreach read mint a new one, and the old token answers 404.
+ * 🔒 THE TOKEN OPENS THE DEMO AND ITS PREVIEWS, NOTHING MORE: 192 random bits, kept as it is so every outreach draft
+ * shows the same link. Whoever holds it learns the demo's address, which is public anyway, and may see the demo in
+ * another design system and say which look they like (`opportunities-build/demo-link-route.js`): previews that write
+ * nothing to the demo, and a pick row (`recordSystemPick`). It opens no other Tracy door. One live link per build;
+ * revoking it (`revokeDemoLinks`) makes the next outreach read mint a new one, and the old token answers 404.
+ *
+ * 🔒 A PICK IS COUNTED LIKE AN OPEN: the look, the number the page showed it under, the system's name, the time and
+ * the device class. Not counted: a program, the seller's own signed-in session, and picks past
+ * `DEMO_SYSTEM_PICKS_PER_HOUR` for one link.
  */
 import { randomBytes, randomUUID } from 'node:crypto'
 
 export const DEMO_LINK_TOKEN = /^[A-Za-z0-9_-]{32}$/
 /** Counted opens of one link in one hour; past it the link still sends people on, uncounted. */
 export const DEMO_OPENS_PER_HOUR = 60
+/** Counted picks of one link in one hour; past it a pick is answered, uncounted. */
+export const DEMO_SYSTEM_PICKS_PER_HOUR = 30
+/** Reads of one link's other looks in one hour (each may run one read in the demo's container); past it 429. */
+export const DEMO_SYSTEMS_READS_PER_HOUR = 120
+/** The look a pick names when the owner likes the demo as it was built, wearing no preview. */
+export const CURRENT_LOOK = 'current'
+/** What a pick may name: the demo as built, or an offered library system (`lib/ds-slot.js` `REFERO_ID`). */
+export const PICKED_LOOK = /^(?:current|refero:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/
+/** Picks a seller reads per build, newest first; `total` still counts every one. */
+export const SYSTEM_PICKS_LISTED = 20
 const PATH_MAX = 200
 
 /** 24 random bytes as 32 base64url characters. */
@@ -142,6 +158,15 @@ export function automatedOpen(method, headers) {
   if (method !== 'GET') return true
   const purpose = ['sec-purpose', 'purpose', 'x-purpose', 'x-moz'].map((h) => headers.get(h) ?? '').join(' ')
   if (/prefetch|prerender|preview/i.test(purpose)) return true
+  return programAgent(headers)
+}
+
+/**
+ * Whether a request's User-Agent is a program's, not a browser's: what `automatedOpen` reads after the method and the
+ * purpose, and all a pick (a POST, never prefetched) is judged by.
+ * @param {Headers | { get: (name: string) => string | null | undefined }} headers
+ */
+export function programAgent(headers) {
   const ua = (headers.get('user-agent') ?? '').replace(/cubot/gi, '')
   if (!ua.startsWith('Mozilla/')) return true
   return PROGRAM.test(ua)
@@ -190,4 +215,74 @@ export async function recordOpen(db, { linkId, path, device, at }) {
       where id = (select link_id from o)`,
     [randomUUID(), linkId, new Date(at), path, device]
   )
+}
+
+/**
+ * Count one pick of link `linkId`: the owner pressed "I like this look" on `systemId` (`current`, or the library id of
+ * the system previewed), shown as look `n` (null for `current`), named `name` in the library at that moment.
+ * @param {{ query: Function }} db
+ * @param {{ linkId: string, systemId: string, n: number | null, name: string | null, device: 'phone' | 'desktop',
+ *   at: number }} pick
+ */
+export async function recordSystemPick(db, { linkId, systemId, n, name, device, at }) {
+  await db.query(
+    `insert into wo_demo_system_pick (id, link_id, picked_at, system_id, n, name, device)
+     values ($1, $2, $3, $4, $5, $6, $7)`,
+    [
+      randomUUID(),
+      linkId,
+      new Date(at),
+      systemId,
+      systemId === CURRENT_LOOK ? null : n,
+      systemId === CURRENT_LOOK ? null : (name ?? null),
+      device
+    ]
+  )
+}
+
+/**
+ * The picks of one build's links as one jsonb (null when the build never had a link: nothing was asked), for a query
+ * that names the build row `alias`: every pick counted, the newest `SYSTEM_PICKS_LISTED` listed. Read by
+ * `systemPicksShape`.
+ */
+export const systemPicksJsonSql = (alias) => `(select jsonb_build_object('total', count(dsp.id),
+    'recent', coalesce((select jsonb_agg(r order by r.at desc) from (
+        select q.system_id as id, q.n, q.name, q.device, q.picked_at as at
+          from wo_demo_system_pick q join wo_demo_link ql on ql.id = q.link_id
+         where ql.build_id = ${alias}.id order by q.picked_at desc limit ${SYSTEM_PICKS_LISTED}) r), '[]'::jsonb))
+  from wo_demo_link dsl left join wo_demo_system_pick dsp on dsp.link_id = dsl.id
+  where dsl.build_id = ${alias}.id having count(dsl.id) > 0)`
+
+/**
+ * `{total, latest, recent}` of `systemPicksJsonSql`, or null when no link was ever made. Each pick is
+ * `{id, n, name, device, pickedAt}`: `id` `current` (the demo as built; `n` and `name` null) or the library id of the
+ * system the owner liked; `latest` is the newest, null before the first.
+ */
+export function systemPicksShape(raw) {
+  if (!raw || typeof raw !== 'object') return null
+  const recent = (Array.isArray(raw.recent) ? raw.recent : [])
+    .filter((p) => p && typeof p.id === 'string')
+    .map((p) => ({
+      id: p.id,
+      n: Number.isInteger(p.n) ? p.n : null,
+      name: typeof p.name === 'string' ? p.name : null,
+      device: p.device === 'phone' ? 'phone' : 'desktop',
+      pickedAt: iso(p.at)
+    }))
+  return {
+    total: Number.isFinite(Number(raw.total)) ? Number(raw.total) : 0,
+    latest: recent[0] ?? null,
+    recent
+  }
+}
+
+/** The picks of each build, by build id; a build that never had a link is absent. */
+export async function systemPicksOf(db, buildIds) {
+  const ids = [...new Set((buildIds ?? []).filter(Boolean))]
+  if (!ids.length) return new Map()
+  const { rows } = await db.query(
+    `select b.id, ${systemPicksJsonSql('b')} as picks from wo_build b where b.id = any($1::uuid[])`,
+    [ids]
+  )
+  return new Map(rows.filter((r) => r.picks).map((r) => [r.id, systemPicksShape(r.picks)]))
 }

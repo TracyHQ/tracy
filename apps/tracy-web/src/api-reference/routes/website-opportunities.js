@@ -10,10 +10,10 @@ const OUTREACH_STATE =
   '`outreachState: {state: "sent" | "replied" | "won" | "lost" | null, sentAt, repliedAt, wonAt, lostAt, updatedAt}`: the furthest step the seller marked (`won` or `lost`, else `replied`, else `sent`) and when each was marked, all null before the first mark.'
 /** The share link of a demo (`lib/wo-demo-links.js`), said once for its two doors. */
 const SHARE_LINK =
-  'No sign-in. Sends whoever opens it to the demo’s address (302, `Cache-Control: no-store`, `Referrer-Policy: no-referrer`, the query string kept) and counts the open: its time, the path asked and the device class (`phone` for a phone or tablet, else `desktop`), read from the User-Agent and not kept. Nothing that names the visitor is stored: no address, no cookie, no User-Agent, no referrer. Not counted: a HEAD, a prefetch, a link preview or any other program (a User-Agent that is not a browser’s or names a bot), the signed-in seller who made the link, and opens past 60 an hour for one link. The counts are read on the opportunity (`demo.opens`), on `/v1/demos` (`opens`) and on /ops/wo (`demoOpens`).'
+  'No sign-in. Sends whoever opens it to the demo’s address (302, `Cache-Control: no-store`, `Referrer-Policy: no-referrer`, the query string kept) and counts the open: its time, the path asked and the device class (`phone` for a phone or tablet, else `desktop`), read from the User-Agent and not kept. Nothing that names the visitor is stored: no address, no cookie, no User-Agent, no referrer. Not counted: a HEAD, a prefetch, a link preview or any other program (a User-Agent that is not a browser’s or names a bot), the signed-in seller who made the link, and opens past 60 an hour for one link. The counts are read on the opportunity (`demo.opens`), on `/v1/demos` (`opens`) and on /ops/wo (`demoOpens`). While the operator switch `wo-demo-looks` is on (off by default), a person’s own top-level visit (no program, prefetch or frame; `Sec-Fetch-Dest` `document` or absent) of a demo whose release can wear a design system and whose template is open to customers is answered 200 with the share page instead of the 302, counted the same way: the same demo page in a frame (the page’s `Content-Security-Policy` allows frames of the demo’s origin only and refuses being framed itself), with a See another look control that previews the demo in up to four other design systems (`GET /api/demo-links/{token}/systems`) and records which look the owner liked (`POST /api/demo-links/{token}/systems/pick`). Every other visit is the 302.'
 /** The share link and its opens on a demo answer (`opportunities-build/route.js` `listedDemo`). */
 const DEMO_SHARE =
-  '`demo.shareUrl` is the demo’s share link (`GET /d/{token}`), made by the first outreach read of a ready demo, null before; `demo.opens: {total, phone, desktop, lastOpenedAt, firstOpenedAt} | null` counts its opens (null while the demo never had a link).'
+  '`demo.shareUrl` is the demo’s share link (`GET /d/{token}`), made by the first outreach read of a ready demo, null before; `demo.opens: {total, phone, desktop, lastOpenedAt, firstOpenedAt} | null` counts its opens (null while the demo never had a link). `demo.systemPicks: {total, latest, recent: [{id, n, name, device, pickedAt}]} | null` is what the business owner liked on the share page’s See another look (`POST /api/demo-links/{token}/systems/pick`): `id` `current` (the demo as built; `n` and `name` null) or the library id of the design system previewed, `n` the look number the page showed and `name` the system’s library name; `recent` the newest 20, `latest` the newest or null; null while the demo never had a link.'
 /** Approved is final (#537 R23, `approval-locks.js`): a change after approval is a new card of the same place. */
 const PROFILE_LOCKED =
   '409 `{code: "PROFILE_APPROVED", next: "The business facts are approved. To change them, add this business again as a new card."}` once the Profile is approved (`approval.profile` is `approved`): no door changes approved Business facts.'
@@ -370,6 +370,36 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
       path: { token: 'The 32-character token of the link', '*': 'The path of the demo to open' }
     },
     answers: '302 to that page of the demo; 404 or 410 as `GET /d/{token}`.'
+  },
+  {
+    method: 'GET',
+    path: '/api/demo-links/:token/systems',
+    summary: 'Read the other looks a shared demo can be previewed in',
+    description:
+      'No sign-in: the share page of `GET /d/{token}` asks it. The demo previewed in up to four other design systems, NOTHING written to it: each `ticket` is the Design system preview’s ticket (`?{param}={ticket}` on the demo’s own address, read by the site proxy, valid one hour), so the frame shows the page wearing the very bytes an apply would write through the template’s slot contract. The systems are the library’s featured systems the library offers, in its order, without the one the demo wears, whose bytes the contract emits; the demo is judged as the running site’s Design system preview judges it (its template and contract read in its container, the customer lock, a platform with a slot, not an imported site, a demo this server’s proxy answers). A look carries its number and its palette, never the library’s name. None to offer: `systems: []` with `reason` (`NOT_WIRED`, `NO_SITE`, `PLATFORM`, `IMPORTED`, `NOT_SERVED_HERE`, `NO_ADDRESS`, `SITE_UNREADABLE`, `NO_SLOT`, `TEMPLATE_LOCKED`, `NO_SYSTEM`, `UNAVAILABLE`). 404 `NOT_FOUND` (unknown or stopped link), 410 `DEMO_DELETED`, 404 `FEATURE_OFF` while the switch `wo-demo-looks` is off or cannot be read, 429 `RATE_LIMITED` past 120 reads an hour for one link.',
+    audience: ['public'],
+    auth: 'none',
+    internal: true,
+    params: { path: { token: 'The 32-character token of the link' } },
+    answers:
+      '`{origin: string | null, param: "tracy_ds_preview", systems: [{id, n, colors: string[], ticket}], reason?}`; `origin` is the demo’s origin the tickets are valid on, `colors` the system’s palette (hex).'
+  },
+  {
+    method: 'POST',
+    path: '/api/demo-links/:token/systems/pick',
+    summary: 'Say which look of a shared demo the owner likes',
+    description:
+      'No sign-in: the share page’s I like this look. Body `{id}`: `current` (the demo as built) or the `id` of a look `GET /api/demo-links/{token}/systems` offers now. A person’s pick is counted like an open: the look, its number, the system’s name, the time and the device class, nothing that names the visitor; the seller reads it as `demo.systemPicks` and on /ops/wo (`demoSystemPicks`). Not counted, and nothing written: a program’s User-Agent (`reason: PROGRAM`), the signed-in seller who made the link (`OWN`), picks past 30 an hour for one link (`RATE_LIMITED`). Only Tracy’s own page may press it: `Sec-Fetch-Site: same-origin`, or without it an `Origin` exactly Tracy’s, else 403 `CSRF_ORIGIN`; a body that is not `application/json` is 415. 400 `INVALID_LOOK`, 400 `LOOK_NOT_OFFERED`, 404 `NOT_FOUND`, 410 `DEMO_DELETED`, 404 `FEATURE_OFF`, 503 `{counted: false, reason: "NOT_SAVED"}` when the pick could not be written.',
+    audience: ['public'],
+    auth: 'none',
+    internal: true,
+    params: { path: { token: 'The 32-character token of the link' } },
+    body: {
+      type: 'object',
+      required: ['id'],
+      properties: { id: { type: 'string', description: '`current` or `refero:<uuid>`' } }
+    },
+    answers: '`{counted: true}` or `{counted: false, reason: "PROGRAM" | "OWN" | "RATE_LIMITED"}`.'
   },
 
   // website-opportunities/src/route.js

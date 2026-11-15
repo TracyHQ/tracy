@@ -15,6 +15,8 @@ import {
   liveTokenSql,
   opensJsonSql,
   opensShape,
+  systemPicksJsonSql,
+  systemPicksShape,
   revokeDemoLinks
 } from '../lib/wo-demo-links.js'
 import { woRuntime } from '../lib/wo-ops.js'
@@ -261,7 +263,8 @@ export function createWebsiteBuilder(deps) {
                      case when jsonb_typeof(b.qa->'rounds'->-1->'failed') = 'array'
                        then b.qa->'rounds'->-1->'failed' else '[]'::jsonb end) f where f->>'id' is not null),
                  'previewAt', (select p.captured_at from wo_build_preview p where p.build_id = b.id),
-                 'shareToken', ${liveTokenSql('b')}, 'opens', ${opensJsonSql('b')})
+                 'shareToken', ${liveTokenSql('b')}, 'opens', ${opensJsonSql('b')},
+                 'systemPicks', ${systemPicksJsonSql('b')})
           from wo_build b join wo_revision r on r.id = b.revision_id
           left join site_creation sc on sc.account_id = b.account_id and sc.build_id = b.build_id::text
           left join site st on st.site_key = b.site_key
@@ -1303,7 +1306,10 @@ function listedDemo(b, graceDays, config, action = null, opportunityId = null, o
     // The share link the outreach hands out (`lib/wo-demo-links.js`), made by the first outreach read; null before.
     shareUrl: b.shareToken ? demoLinkUrl(origin, b.shareToken) : null,
     // Counted opens of this build's share links; null while it never had one (nothing was measured).
-    opens: opensShape(b.opens)
+    opens: opensShape(b.opens),
+    // The looks the business owner liked on the share page ("See another look", `demo-link-route.js`); null while the
+    // build never had a link.
+    systemPicks: systemPicksShape(b.systemPicks)
   }
 }
 
@@ -1317,6 +1323,7 @@ function latestBuildShape(b) {
     previewAt: _previewAt,
     shareToken: _shareToken,
     opens: _opens,
+    systemPicks: _systemPicks,
     ...rest
   } = b
   return rest

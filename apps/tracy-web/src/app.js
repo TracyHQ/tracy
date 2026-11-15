@@ -12,7 +12,7 @@ import {
   FAILED as DEMO_FAILED
 } from './opportunities-build/public-demos.js'
 import { createDemoWebhooks } from './opportunities-build/demo-webhooks.js'
-import { demoLinkRoutes } from './opportunities-build/demo-link-route.js'
+import { DEMO_LOOKS_SWITCH, demoLinkRoutes } from './opportunities-build/demo-link-route.js'
 import { apiReferenceRoutes, docsReferenceRoutes, ownsDocsReferencePath } from './api-reference/route.js'
 import { buildOpenApi } from './api-reference/spec.js'
 import { assistantRoutes } from './assistant/route.js'
@@ -1184,6 +1184,9 @@ export function buildApp(deps) {
   // through this app's own `POST /api/sites` with the caller's cookie, as the widget's do.
   let readAgentNativeInventory = null
   let clientDemoService = null
+  // A WO demo's other looks for its share page (`sites/design-system-demo-systems.js`): filled once the sites routes
+  // below exist, read by `/d/:token` per request (`opportunities-build/demo-link-route.js`).
+  let demoSystems = null
   // The site planner bench's worker (ADR 0041, #301): one run at a time, started and stopped by server.js; runs are
   // started and read from the bench CLI (scripts/site-planner-bench.mjs).
   app.sitePlannerQueue =
@@ -1681,7 +1684,15 @@ export function buildApp(deps) {
         pool: deps.pool,
         config: deps.config,
         log: deps.log ?? console,
-        ...(deps.now ? { now: deps.now } : {})
+        ...(deps.now ? { now: deps.now } : {}),
+        // "See another look" (switch `wo-demo-looks`): the demo previewed in other design systems, nothing written.
+        // Test-only override: a test's own looks.
+        systems: deps.demoSystems ?? {
+          eligible: async (siteKey) => (demoSystems ? demoSystems.eligible(siteKey) : false),
+          systemsOf: async (siteKey) =>
+            demoSystems ? demoSystems.systemsOf(siteKey) : { ok: false, reason: 'NOT_WIRED' }
+        },
+        switchOn: () => uiSwitchOn(deps.pool, DEMO_LOOKS_SWITCH)
       })
     )
     const demoRunner = createDemoRunner({
@@ -2470,6 +2481,7 @@ export function buildApp(deps) {
     }
     app.route('/', sites)
     sitesApp = sites
+    demoSystems = sites.demoSystems ?? null
     app.applyAs = sites.applyAs
     // A setup run's hold on the webroot (SC-3): what the brief runner above calls, reachable the same way as `applyAs`.
     app.setupWebroot = sites.setupWebroot
