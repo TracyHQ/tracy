@@ -14,7 +14,7 @@ import { coverageOf } from './write-safety-coverage.mjs'
 import { gapKey, pageBroken } from './write-safety-judge.mjs'
 import { onePass } from './write-safety-pass.mjs'
 import { resultOf } from './write-safety-result.mjs'
-import { nameOf, passOptions, shortOf, storedIndex } from './write-safety-places.mjs'
+import { nameOf, passOptions, shortOf, storedFor, storedIndex } from './write-safety-places.mjs'
 import { resumed } from './write-safety-state.mjs'
 import { packPass, probeLedger } from './write-probes.mjs'
 
@@ -85,7 +85,8 @@ export async function writeSafety(input) {
     buildSteps: (was?.buildSteps ?? 0) + buildBudget.spent
   })
   const record = (key, probe, failure, pass) => {
-    const stored = plainIndex.get(String(plain.seen.get(key)?.code).toUpperCase())?.[0]
+    // Named where the failure names it, never only the first place the plain build stores the value (review 5 Y2).
+    const stored = storedFor(plainIndex.get(String(plain.seen.get(key)?.code).toUpperCase()), failure)
     findings.push({
       kind: failure.kind,
       probe: probe.id,

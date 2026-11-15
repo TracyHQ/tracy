@@ -89,6 +89,31 @@ export function storedIndex(writePlan) {
   return index
 }
 
+/**
+ * The stored location of a place that a failure names (review 5 Y2): a value the plain build stores in several
+ * operations (one address in a hero button and in a call to action) is named where the site refused it, the operation
+ * a stop reports and, within it, the slot or column a read back names; a finding judged on a page is named by an entry
+ * of that page. Else the first location the plain build stores it in.
+ * @param {Array<{op: string, entry: string | null, loc: object | null}>} entries where the plain build stores the code
+ * @param {{op?: string | null, slot?: string, column?: string, judgedOn?: string | null}} failure
+ */
+export function storedFor(entries, failure = {}) {
+  const list = entries ?? []
+  const within = (s) =>
+    (!failure.slot || s.loc?.slot === failure.slot) && (!failure.column || s.loc?.column === failure.column)
+  const onOp = failure.op ? list.filter((s) => s.op === failure.op) : []
+  const onPage = failure.judgedOn
+    ? list.filter((s) => String(s.entry ?? '').split('.')[0] === failure.judgedOn)
+    : []
+  return (
+    onOp.find(within) ??
+    onOp[0] ??
+    (failure.slot ? list.find((s) => s.loc?.slot === failure.slot) : undefined) ??
+    onPage[0] ??
+    list[0]
+  )
+}
+
 /** The path of a stored location, whichever form it has. */
 const pathOf = (loc) => loc?.jsonPath ?? loc?.nestedJson ?? loc?.xpath ?? null
 

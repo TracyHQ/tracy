@@ -72,16 +72,21 @@ export async function onePass(n, assignment, ctx, limits) {
       const stop = stopClassOf(w.report)
       if (stop.kind === 'run_state') return { runs: run, incomplete: 'run_state', stop: stop.code }
       const index = storedIndex(a.built.writePlan)
-      // A whole value probe (the empty value, a number) carries no code: the plan cannot say where it went, so it
-      // stays a suspect of every stop.
+      // A whole value probe (the empty value, a number) carries no code, so the pass plan cannot say where it went:
+      // the plain plan can, as it stores the place's own marker at the same location (review 5 Z1). Only a place
+      // neither plan stores stays a suspect of every stop.
+      const whereOf = (key) => {
+        const code = String(a.opts.used.get(key).code).toUpperCase()
+        return index.get(code) ?? ctx.plainIndex?.get(code) ?? null
+      }
       const inOp = (key) => {
-        const at = index.get(String(a.opts.used.get(key).code).toUpperCase())
+        const at = whereOf(key)
         return !stop.op || !at || at.some((s) => s.op === stop.op)
       }
       let units = [...a.opts.used.keys()].filter(inOp)
       // A read back names the column or the slot that differed: only the places stored there are suspects.
       const there = units.filter((key) =>
-        (index.get(String(a.opts.used.get(key).code).toUpperCase()) ?? []).some(
+        (whereOf(key) ?? []).some(
           (s) =>
             s.op === stop.op &&
             (stop.slot ? s.loc?.slot === stop.slot : stop.column ? s.loc?.column === stop.column : false)
