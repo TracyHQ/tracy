@@ -171,6 +171,15 @@ async function prepare(deps, row) {
   const store = fileStore(deps.storeDir)
   // Preparation includes a cold surface download; it is code time even before owner-photo work starts.
   const started = Date.now()
+  // Where the preparation's time goes, part by part (`prepareMs` on the manifest): on dev it took minutes where a local
+  // stand took seconds, and one figure ("code") could not say which part.
+  const parts = {}
+  let mark = started
+  const lap = (part) => {
+    const now = Date.now()
+    parts[part] = (parts[part] ?? 0) + (now - mark)
+    mark = now
+  }
   // The frame surface (ADR 0043 section 3e): text over each picture and the template's own overlay over it, read once
   // per kit version and quickstart and joined into the kit's frames; it never changes the kit itself.
   const surface = await surfaceFor({
@@ -180,7 +189,9 @@ async function prepare(deps, row) {
     fetchAsset: deps.quickstart ?? null
   })
   kit = { ...kit, doc: joinSurface(kit.doc, surface.surface) }
+  lap('surface')
   const photoBytes = await ownerPhotoBytes({ ...deps, store }, row)
+  lap('photos')
   // The icon step (#345): library icons ranked by a text model, styled like the kit's demo icons.
   const iconStep = await iconStepFor({
     pool: deps.pool,
@@ -200,11 +211,13 @@ async function prepare(deps, row) {
     icons: iconStep.icons
   })
   const iconsDone = iconStep.report()
-  const { files: made, refused, ...parts } = filled
+  lap('frames')
+  const { files: made, refused, ...filledParts } = filled
   const idx = indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief, files: {} })
   const { usable } = usablePhotos(row.brief, photoBytes)
   let picker = null
-  if (door.door) picker = await pickerInput({ idx, manifest: parts, usable, photoBytes })
+  if (door.door) picker = await pickerInput({ idx, manifest: filledParts, usable, photoBytes })
+  lap('pickerInput')
   const files = {}
   for (const [file, cut] of [...made, ...(picker?.files ?? [])]) {
     if (files[file]) continue
@@ -225,6 +238,7 @@ async function prepare(deps, row) {
         height: meta.height
       })
   }
+  lap('store')
   const base = {
     version: PICTURES_VERSION,
     fingerprint: {
@@ -242,7 +256,10 @@ async function prepare(deps, row) {
     cost: { code: 0, iconRanking: iconsDone.cost },
     timing: { code: Date.now() - started - iconsDone.timing, iconRanking: iconsDone.timing },
     iconRanking: iconsDone.ranking,
-    frameSurface: { quickstart: surface.surface.quickstart, note: surface.note }
+    frameSurface: { quickstart: surface.surface.quickstart, note: surface.note },
+    // The preparation by part (ms): the frame surface, the owner photos read (how many), the frames code fills (icons
+    // included), the picker's input and the files stored.
+    prepareMs: { ...parts, photoCount: photoBytes.size }
   }
   const looker = createLooker({
     door: lookerDoor.door,
@@ -301,7 +318,7 @@ async function prepare(deps, row) {
     files,
     idx,
     base,
-    parts,
+    parts: filledParts,
     picker,
     looker,
     finisher,
