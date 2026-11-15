@@ -1658,14 +1658,16 @@ quickstart must give demo findings (none is `scan_blind`, and fails the verdict)
 load is not measured. The blank site before the write serves no page by design (it has no home menu item), so its
 control is recorded as `not_applicable`, with the reason and the statuses it answered, and is no part of the verdict.
 
-**The check record** (`gate/record.mjs`, `tracy-ai-quickstart-check-record/v1`): the verdict (`gate/verdict.mjs`: `pass`
+**The check record** (`gate/record.mjs`, `tracy-ai-quickstart-check-record/v2`, see
+[The check record, the release refusal and the secret scan](#the-check-record-the-release-refusal-and-the-secret-scan)):
+the verdict (`gate/verdict.mjs`: `pass`
 only when the real write is `done`, every written marker is seen or has a declared reason, there is no leak, no
 unexplained place, no demo finding in the browser's read nor in the raw HTML, no page that did not load as expected,
-the human control found demo, the write order had no problem, no observation problem, and the measurements of #586
-passed; `failing` names each part that did not), the sha256 of every file of the kit and of the two archives, the accounting, the write
-(memory and real status, gaps, measured refusals, unproven flags), the renders and screenshots (paths relative to the
-record), the findings, their groups and counts by fix class and by source class, the exemptions, the written values
-not seen, the demo scan with its checks and controls, and the slots of #586 (minimum items, link check) as `not_run`.
+the human control found demo, the write order had no problem, no observation problem, and each measurement of #586
+says `passed`; `failing` names each part that did not), the binding, the sha256 of every file of the kit and of the two
+archives, the accounting, the write (memory and real status, gaps, measured refusals, unproven flags), the renders and
+screenshots (paths relative to the record), the findings, their groups and counts by fix class and by source class, the
+exemptions, the written values not seen, the demo scan with its checks and controls, and the six measurements.
 Site addresses are written `<site>`.
 
 **The owner's page** (`gate/record-html.mjs`, `record.html`): a summary (the failing parts; written, declared, skipped by the
@@ -1712,6 +1714,130 @@ its updater off; the human quickstart restored untouched on its own site for the
   `external_request` 3, `unclassified` 6; 7 groups have source `unknown`. The demo scan: 8 findings, the same from the
   raw HTML and from the browser; 318 of 1,554 blocks differ in raw spelling and none in the scan's spelling. Human
   control: 1,154 demo findings on 28 pages.
+
+## The check record, the release refusal and the secret scan
+
+Ticket #586. The record, the binding and the refusal live in `scripts/ai-quickstart/gate/`
+(`verdict.mjs`, `record.mjs`, `release-binding.mjs`, `release-guard.mjs`); the CI rules in
+`scripts/ai-quickstart/check-kit-release.mjs`; the secret scan in `gate/secret-*.mjs` with its Joomla part in
+`gate/adapters/joomla-secrets.mjs`.
+
+### Record v2
+
+`tracy-ai-quickstart-check-record/v2` replaces the `pending` slots of v1 by `measurements`, six measurements each with
+a `status` of `passed`, `failed`, `incomplete` or `not_run`:
+
+| Measurement | Status from |
+|---|---|
+| `markerTest` | the #585 parts: write, leaks, written values not seen, unexplained places, renders, order, observation (`not_run` without a real write) |
+| `demoScan` | the #585 parts: demo in the browser or the HTML, and the human control |
+| `writeSafety` | the write safety run (#586) |
+| `structure` | its two checks, `linkCheck` and `minItems`: `passed` when both passed, `failed` when one failed, `incomplete` when only some ran |
+| `quality` | the template quality run (#586) |
+| `secrets` | the secret scan below |
+
+A measurement the run did not give is `not_run`; a status outside the four reads `incomplete`, so a typo never passes.
+The verdict's parts are the #585 parts plus `writeSafety`, `structure`, `quality` and `secrets`; each of these passes
+only on `passed`. `verdict.measurements` repeats the six statuses, `verdict.notRun` names the ones of #586 not run.
+
+### The binding
+
+`record.binding` says what the record was measured on: `gateVersion` (`GATE_VERSION` in `record.mjs`, bumped by hand
+when an earlier passing record is no proof any more), `kitRef`, `kitFilesSha256` (the sha256 over `<path> <sha256>`
+lines of every kit file sorted by path; `check-record/` is skipped, so writing the record changes nothing it is about),
+`blankSiteSha256`, `humanQuickstartSha256`, and `plugin` (`expected`, `start`, `end`). Beside the record, the kit
+carries a small `check-record/verdict.json` (`tracy-ai-quickstart-check-verdict/v1`, made by `verdictFileOf(record)`):
+the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it, `recordText(record)`), and the verdict
+(`pass`, `failing`, `measurements`).
+
+### The release refusal
+
+`releaseProblems(folder, {pins, blankSiteSha})` lists why a kit may not be released, each `{code, message}`:
+
+| Code | When |
+|---|---|
+| `no_verdict`, `verdict_unreadable` | `check-record/verdict.json` is missing or not a verdict file |
+| `not_passed` | the verdict did not pass (the failing parts are named) |
+| `gate_outdated` | the record is of another `gateVersion` |
+| `kit_changed` | a kit file changed since the record (named when `check-record/record.json` ships beside it) |
+| `plugin_moved` | the plugin version at the start and at the end differ |
+| `plugin_not_pinned` | the record ran another plugin than Tracy pins |
+| `human_quickstart_not_pinned` | the record ran another human quickstart installer than the pinned one |
+| `blank_site_changed` | the blank site archive about to be published is not the one the record ran on |
+| `record_changed` | `check-record/record.json` is not the record the verdict was written from |
+
+A passing record goes stale only by one of these: a bumped `gateVersion` or a changed bound input. The pins come from
+`apps/tracy-web/src/quickstarts.json` (`quickstart/<slug>/<cms>`: `cowork.version` and `installer.sha256`; a kit whose
+version is not the pinned one is `pin_version`, a template not listed is `no_pin`). The publish step calls
+`assertReleasable(folder)` before it uploads anything; it throws with `problems` on the error. By hand:
+
+```
+node scripts/ai-quickstart/gate/release-guard.mjs <AI quickstart folder> [--blank-site <blank site .zip>]
+```
+
+Exit 0 when the kit may be released, 1 with every problem listed.
+
+The contract check (`node scripts/ai-quickstart/check.mjs`, CI) adds two rules: a kit whose `kit-manifest.json` has a
+`site` entry must carry a fresh passing `check-record/verdict.json` (the refusal above), and every kit
+`ai-quickstarts/<slug>/<cms>/<version>` must have a readable `contracts/<slug>/<cms>/<version>/template-kit.json` in
+the same package.
+
+### The secret scan
+
+The scan reads every file that gets published, down to its text: the kit folder (named `kit/<path>`), the blank site
+archive entry by entry (`blank-site.zip!<entry>`, an archive inside it opened the same way), the check record's JSON
+and HTML, and any other file given. Pictures, fonts and media, and files whose first bytes hold a NUL byte, are counted
+as binary and not read. Three sets of rules read each text:
+
+- **Value shapes** (`secret-rules.mjs`, the same on every CMS): `bcrypt_hash`, `argon2_hash`, `phpass_hash`,
+  `md5_salt_hash`, `sha_crypt_hash`, `jwt`, `private_key` (a header followed by a key body; code that writes only the
+  header is no key), `uri_credentials` (`scheme://user:password@host`, not a placeholder password nor an example host)
+  and `php_session_data`.
+- **The CMS adapter** (`adapters/joomla-secrets.mjs`): in the demo data (`installation/sql/mysql/custom.sql`, or a
+  `.sql` file given alone) any row of `session`, `user_keys`, `user_profiles`, `user_mfa`, `user_notes`,
+  `webauthn_credentials`, `action_logs`, `action_logs_users`, `messages`, `privacy_requests`, `privacy_consents`,
+  `acym_user`, `acym_queue` (`joomla_private_row`); an account whose password is not empty or a placeholder (`*`, `!`,
+  `x`, `blocked`) (`joomla_account_password`); each setting `findSecrets` names (`joomla_setting_secret`); and the
+  value shapes on every cell. In the files: a shipped site `configuration.php` (`joomla_configuration_shipped`) and a
+  non-empty `$secret`, `$password`, `$smtppass`, `$smtpuser` or `$proxy_pass` in it or in the installer's
+  `configuration.php-dist` (`joomla_configuration_secret`). The installer's other SQL files are schema, read as text.
+- **gitleaks**, the pinned version (`node scripts/opensource/install-gitleaks.mjs`), with its default rules and
+  `--redact`, over a temporary copy of the same texts (rules named `gitleaks:<rule>`).
+
+A finding is `{file, at, rule, fingerprint}`: `at` is `line:<n>`, a JSON pointer, `<table>#<id>.<column>` (a row
+whose key is no number, such as a session whose key is its token, is named by its place: `session#@3`),
+`<table>#<row>.<key>` for a setting, or `configuration.php:$secret`; `fingerprint` is the first 12 hex characters of
+the value's sha256. The value itself is never kept: not in the result, the record, its page or the command's output.
+
+**The allow file**, `check-record/secret-allow.json` in the kit: `[{file, rule, fingerprint, why}]`, every entry with a
+reason. A finding it names exactly (same file, rule and fingerprint) is listed under `allowed` with its reason; an
+entry that matches nothing is listed under `unusedAllows`. It is for a vendor's sample or a value gitleaks misreads
+(a file hash beside a path that says `key`), never for a scrub gap: a secret the blank site step left is fixed there.
+
+**The negative control**: the same rules on the untouched human quickstart installer, which holds accounts, sessions
+and secrets, must find some (`control.status: right`); none is `scan_blind`.
+
+**The status**: `failed` on any finding not allowed; else `incomplete` when the control is blind or not run, when
+gitleaks did not run (`gitleaks.status: not_available` on a machine without the pinned binary: a scan without its second
+opinion cannot vouch for the package), or when a dump could not be parsed (`unparsed`, read line by line instead);
+`passed` only otherwise.
+
+```
+node scripts/ai-quickstart/gate/secret-scan.mjs --kit <AI quickstart folder> --blank-site <blank site .zip> \
+  [--files <record.json> <record.html> ...] --control <human quickstart .zip> [--allow <secret-allow.json>] \
+  [--no-gitleaks] [--out <result.json>]
+```
+
+The allow file defaults to the kit's own. Each finding prints as `finding <file> <at> <rule> <fingerprint>`; exit 0 when
+the status is `passed`, 1 otherwise.
+
+Measured on JA Boxing 1.0.11 (the kit, the blank site archive made from the pinned human quickstart with the mapping,
+and the record of the fifth marker run): 12,736 texts read, 1,949 binary files, 8 archives; 0 findings of the value
+shapes and the Joomla adapter, 36 of gitleaks, all allowed in the kit's allow file (32 sha256 values of the presentation
+lock beside a path that says `key`, `auth`, `access` or `api`; a Symfony validator error code; three vendor files that
+write a PEM header around a key they build). The control on the human quickstart installer: 159 findings (130 private
+rows, 9 session data, 8 account passwords, 7 bcrypt hashes, 5 secret settings). Without its record, the release guard
+refuses the kit with `no_verdict`.
 
 ## Choices made where spec #576 is silent
 
