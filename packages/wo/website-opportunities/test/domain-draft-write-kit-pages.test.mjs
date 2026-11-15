@@ -147,7 +147,7 @@ test('a block assigned to a page reached under its list page prints there only a
   const outside = stopOf(() => planWith(perPage))
   assert.equal(outside.code, 'under_page_position_not_detail')
   assert.equal(outside.noRerun, true)
-  assert.deepEqual(outside.details.positions, ['detail-bottom-1'])
+  assert.deepEqual(outside.details.positions, ['detail-bottom-1', 'main-bottom-2'])
   assert.equal(stopOf(() => planWith(perPage, at('detail-bottom-1'))).code, 'passed')
   const assignTo = (m) => {
     perPage(m)
