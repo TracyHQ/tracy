@@ -285,8 +285,9 @@ export function createStepChainSteps(deps) {
           '--brief-revision',
           revisionOf(ctx),
           '--require-visual-review',
-          // The whole kit in the planner's first message (template-kit-source.js wholeKitFirstMessage).
-          '--kit-in-first-message',
+          // Not --kit-in-first-message: with the whole kit in its first message the planner put all its reasoning into
+          // the turn that writes the plan, and on the local stand (run15, 15/11/2026) that turn hit the 128k output cap
+          // (104k of reasoning) and the build lost its plan; read part by part, the reasoning is spread over turns.
           ...NO_CAPS
         ],
         dir,
