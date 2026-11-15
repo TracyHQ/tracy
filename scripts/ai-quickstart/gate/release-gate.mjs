@@ -82,7 +82,7 @@ const provenanceOf = (c, sha) => (c && c.status !== 'not_run' ? (c.provenance ??
  *   refusals, kitHashes, inputs), plus `site` (`{origin, write, pages, fetch, hide?, show?, off?, back?,
  *   siteValues?}`), `render(pages)`, `reset` (null: no reset hook), `secrets()`, `control()` (`{human, quality}`),
  *   `quality(paths)` (the page groups on the marker site), `pageKey(html)` (the adapter's page key), `baseline`,
- *   `probes`, `demoRoutes`, `limits`, `writeSafetyState`, `pin`, `scanRecord(files)` (every secret rule set on the
+ *   `probes`, `demoRoutes`, `pageIdentity(html)` (the adapter's: which page a page is), `limits`, `writeSafetyState`, `pin`, `scanRecord(files)` (every secret rule set on the
  *   record's own files), `decorate(record)` (the crops), `out`, `log`, `now`
  * @returns {Promise<{record: object, verdictFile: object, phases: object[]}>}
  */
@@ -94,7 +94,13 @@ export async function releaseGate(input) {
   const build = (options) =>
     markerBuild(kit, { iconLibrary: input.iconLibrary, tryWrite: input.tryWrite, ...options })
   const reset = input.reset ?? null
-  const ctx = { site, kit, base: site.origin + '/', demoRoutes: input.demoRoutes ?? [] }
+  const ctx = {
+    site,
+    kit,
+    base: site.origin + '/',
+    demoRoutes: input.demoRoutes ?? [],
+    identify: input.pageIdentity ?? null
+  }
   const humanSha = input.inputs?.humanQuickstart?.sha256 ?? null
 
   const secrets = input.secrets ? await phase('secrets', input.secrets) : { status: 'not_run' }

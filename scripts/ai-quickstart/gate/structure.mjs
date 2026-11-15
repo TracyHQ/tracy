@@ -2,10 +2,11 @@
 // at its most items, at its least, and once pages are taken away after the build?
 //   full     the marker build at every block's most items (`structure-items.mjs` checks it is): every planned page
 //            answers as planned, and no link is broken (`linkCheck` of the rendered scan, with the pages the plan has,
-//            an HTTP probe and the template's demo routes)
+//            an HTTP probe and the template's demo routes; a link it finds no planned path for is judged by the page it
+//            reaches, through the adapter's page identity, `structure-read.mjs`)
 //   minimum  on a fresh site, the build at every block's least items (at least one): the same checks
 //   hidden   on the full site, the pages hidden in two halves, each half read: each hidden page must answer as missing,
-//            then a link on a page still shown that leads to a hidden page is broken; then every page is published
+//            every other page as planned, then a link on a page still shown that leads to a hidden page is broken; then every page is published
 //            again and must answer again (`structure-hidden.mjs`)
 // All three decide the status. The plugin has no door that deletes a page, so a deleted page is measured as a hidden
 // one: the site answers it as missing (404) and its menu item leaves the menus, as a deletion would; what a deletion
@@ -23,7 +24,11 @@ export { hiddenVariant } from './structure-hidden.mjs'
  * One variant once written: read every page and its links. `written` is the write of `built` on the site (`{report,
  * record}`); the release gate gives the marker test's own write as the full variant.
  */
-export async function readVariant(name, { site, base, demoRoutes = [], kit }, { built, written: w }) {
+export async function readVariant(
+  name,
+  { site, base, demoRoutes = [], kit, identify = null },
+  { built, written: w }
+) {
   const blocks = itemCountsOf(built, kit, name === 'minimum' ? 'min' : 'max')
   if (w.report?.status !== 'done')
     return {
@@ -36,7 +41,9 @@ export async function readVariant(name, { site, base, demoRoutes = [], kit }, { 
   const pages = await site.pages(built, w.record)
   const read = await readPages(site, pages)
   const errors = errorsOf(read)
-  const links = read.length ? await linksOf(site, read, { base, demoRoutes }) : { broken: [], probes: 0 }
+  const links = read.length
+    ? await linksOf(site, read, { base, demoRoutes, identify })
+    : { broken: [], unplanned: [], probes: 0 }
   const broken = links.broken
   const items = unexplainedItems(blocks)
   const why = !read.length
@@ -46,14 +53,17 @@ export async function readVariant(name, { site, base, demoRoutes = [], kit }, { 
       : items.length
         ? 'items_not_at_shape'
         : null
+  const status = errors.length || broken.length ? 'failed' : why ? 'incomplete' : 'passed'
   return {
-    status: errors.length || broken.length ? 'failed' : why ? 'incomplete' : 'passed',
+    status,
     variant: name,
-    ...(why ? { reason: why } : {}),
+    // The reason is why the variant did not finish: a failed one names its errors and links, and its items apart.
+    ...(why && status === 'incomplete' ? { reason: why } : {}),
     pages: read.length,
     probes: links.probes,
     errors,
     broken,
+    ...(links.unplanned?.length ? { unplanned: links.unplanned } : {}),
     blocks,
     ...(items.length ? { items } : {}),
     state: { built, record: w.record, pages }
@@ -81,8 +91,16 @@ export function structureStatusOf(...variants) {
  *   the site starts blank (the full variant writes on it as it is)
  * @returns {Promise<{status: string, full: object, hidden: object, minimum: object}>}
  */
-export async function structure({ build, site, kit, base, demoRoutes = [], log = () => {} }) {
-  const ctx = { build, site, kit, base, demoRoutes }
+export async function structure({
+  build,
+  site,
+  kit,
+  base,
+  demoRoutes = [],
+  identify = null,
+  log = () => {}
+}) {
+  const ctx = { build, site, kit, base, demoRoutes, identify }
   const full = await variant('full', { ...ctx, shape: 'max' })
   log('structure full: ' + full.status + ', ' + (full.broken?.length ?? 0) + ' broken link(s)')
   const hidden = await hiddenVariant(full, ctx)

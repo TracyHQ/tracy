@@ -42,6 +42,7 @@ import { joomlaQualityPath } from './adapters/joomla-quality-path.mjs'
 import { DECLARED_HOSTS, EXEMPTIONS, PLATFORM, SYSTEM_PAGES } from './adapters/joomla-t4.mjs'
 import { crawlPages } from './adapters/web-frame.mjs'
 import { cropGroups } from './crops.mjs'
+import { joomlaPageIdentity } from './adapters/joomla-page-identity.mjs'
 import { joomlaPageKey } from './adapters/joomla-page-key.mjs'
 import { measureControls, readControls, writeControls } from './gate-controls.mjs'
 import {
@@ -271,6 +272,7 @@ const { record } = await releaseGate({
   secrets,
   scanRecord: recordScanner({ cms: PLATFORM, gitleaks: !argv.includes('--no-gitleaks') }),
   pageKey: joomlaPageKey,
+  pageIdentity: joomlaPageIdentity,
   qualityPath: joomlaQualityPath,
   pin,
   writeSafetyState: fileState(path.join(out, 'write-safety-state.json')),

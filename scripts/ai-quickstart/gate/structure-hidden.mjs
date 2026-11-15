@@ -1,7 +1,8 @@
 // The hidden variant of the structure measurement (ticket #586, review round 2): on the full site, the pages are
 // hidden in two halves. Each hidden page must be seen answering as missing (404 or 410) before the links to it are
-// judged; a page the site still serves leaves the variant incomplete naming it, since nothing was hidden for it. Then
-// a link on a page still shown that leads to a hidden page is broken. Every page must answer again once published. A
+// judged; a page the site still serves leaves the variant incomplete naming it, since nothing was hidden for it. Every
+// page not hidden must answer as planned while the others are hidden (a hide that takes them down fails the variant,
+// `shownBroken`). Then a link on a page still shown that leads to a hidden page is broken. Every page must answer again once published. A
 // variant with no page it can hide measured nothing and is incomplete. Pure but for the injected site.
 import { errorsOf, linksOf, readPages } from './structure-read.mjs'
 
@@ -9,7 +10,7 @@ import { errorsOf, linksOf, readPages } from './structure-read.mjs'
 const MISSING = new Set([404, 410])
 
 /** The hidden variant: `full` is the full variant read on this site. */
-export async function hiddenVariant(full, { site, base, demoRoutes }) {
+export async function hiddenVariant(full, { site, base, demoRoutes, identify = null }) {
   const out = (status, extra) => ({ status, variant: 'hidden', ...extra })
   if (!full.state) return out('incomplete', { reason: 'full_not_written' })
   if (!site.hide || !site.show) return out('incomplete', { reason: 'no_hide_door' })
@@ -20,6 +21,9 @@ export async function hiddenVariant(full, { site, base, demoRoutes }) {
   const broken = []
   const seenMissing = []
   const stillShown = []
+  const shownBroken = []
+  const hiddenSoFar = new Set()
+  const unplanned = []
   let probes = 0
   let capped = false
   try {
@@ -33,11 +37,16 @@ export async function hiddenVariant(full, { site, base, demoRoutes }) {
       seenMissing.push(...seen.filter((s) => MISSING.has(s.status)))
       const still = seen.filter((s) => !MISSING.has(s.status))
       stillShown.push(...still)
-      if (!still.length) {
-        const links = await linksOf(site, read, { base, demoRoutes })
+      // A page of an earlier half is judged once every page is published again (`notBack`), not here.
+      for (const p of part) hiddenSoFar.add(p.url)
+      const down = errorsOf(read.filter((p) => !hiddenSoFar.has(p.url)))
+      for (const e of down) shownBroken.push({ ...e, hidden: part.map((p) => p.pageType) })
+      if (!still.length && !down.length) {
+        const links = await linksOf(site, read, { base, demoRoutes, identify })
         probes = Math.max(probes, links.probes)
         capped ||= links.capped
         for (const f of links.broken) broken.push({ ...f, hidden: part.map((p) => p.pageType) })
+        unplanned.push(...links.unplanned)
       }
       for (const p of part) await site.show(p.record)
     }
@@ -57,13 +66,15 @@ export async function hiddenVariant(full, { site, base, demoRoutes }) {
       : notBack.length
         ? 'pages_not_back'
         : null
-  return out(broken.length ? 'failed' : reason ? 'incomplete' : 'passed', {
+  return out(broken.length || shownBroken.length ? 'failed' : reason ? 'incomplete' : 'passed', {
     ...(reason ? { reason } : {}),
     hidden: hideable.length,
     seenMissing,
     ...(stillShown.length ? { stillShown } : {}),
     probes,
     broken,
+    ...(shownBroken.length ? { shownBroken } : {}),
+    ...(unplanned.length ? { unplanned } : {}),
     notBack
   })
 }

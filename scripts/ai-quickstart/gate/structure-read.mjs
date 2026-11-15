@@ -38,25 +38,60 @@ function withTarget(finding, pages, base) {
   return { ...finding, ...(target ? { target: target.pageType } : {}) }
 }
 
+/** The address a link of a page asks for, as the site is read. */
+const urlOf = (href, page, base) => {
+  try {
+    return new URL(href, new URL(page ?? '', base)).toString()
+  } catch {
+    return null
+  }
+}
+
 /**
  * The links of the pages that answered, each with the page type it lands on, and how many addresses were probed.
- * @returns {Promise<{broken: object[], probes: number, capped: boolean}>}
+ * A link the check finds no planned path for (`demo_page`) is judged by the page it reaches, when the adapter can say
+ * which page a page is (`identify(html)`, e.g. its menu item and title): one that reaches a planned page that answered
+ * is that page at another address (a friendly menu address of `index.php?Itemid=N`), no broken link; one that reaches
+ * a page the plan has not got that answers is recorded apart (`unplanned`); one that does not answer is a link to a
+ * missing page. Without `identify` every such link stays a broken `demo_page`.
+ * @returns {Promise<{broken: object[], unplanned: object[], probes: number, capped: boolean}>}
  */
-export async function linksOf(site, read, { base, demoRoutes }) {
-  const asked = new Set()
+export async function linksOf(site, read, { base, demoRoutes, identify = null }) {
+  const asked = new Map()
+  const fetchOnce = async (url) => {
+    if (!asked.has(url)) asked.set(url, await site.fetch(url))
+    return asked.get(url)
+  }
   const found = await linkCheck({
     pages: read.filter((p) => p.status > 0 && p.status < 400),
     base,
     expected: { paths: read.map((p) => p.path) },
-    probe: async (url) => {
-      asked.add(url)
-      return { status: (await site.fetch(url)).status }
-    },
+    probe: async (url) => ({ status: (await fetchOnce(url)).status }),
     demoRoutes
   })
-  return {
-    broken: found.map((f) => withTarget(f, read, base)),
-    probes: asked.size,
-    capped: asked.size >= PROBE_MAX
+  const planned = new Map()
+  if (identify)
+    for (const p of read)
+      if (p.status > 0 && p.status < 400) {
+        const id = identify(p.html)
+        if (id && !planned.has(id)) planned.set(id, p)
+      }
+  const broken = []
+  const unplanned = []
+  for (const f of found) {
+    const url = identify && f.kind === 'demo_page' ? urlOf(f.href, f.page, base) : null
+    if (!url || asked.size >= PROBE_MAX) {
+      broken.push(withTarget(f, read, base))
+      continue
+    }
+    const answer = await fetchOnce(url)
+    const status = answer?.status ?? 0
+    if (status === 0 || status >= 400) {
+      broken.push({ ...withTarget(f, read, base), kind: 'missing_page', status })
+      continue
+    }
+    const target = planned.get(identify(answer.html ?? ''))
+    if (!target) unplanned.push({ ...f, kind: 'unplanned_page', status })
   }
+  return { broken, unplanned, probes: asked.size, capped: asked.size >= PROBE_MAX }
 }

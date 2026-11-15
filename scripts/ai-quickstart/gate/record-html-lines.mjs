@@ -53,18 +53,41 @@ function variantLine(name, v, hidden = false) {
   if (!v || v.status === 'not_run') return name + ': not measured, ' + whyOf(v ?? { status: 'not_run' })
   if (v.status === 'incomplete') return name + ': not finished, ' + whyOf(v)
   const broken = v.broken?.length ?? 0
-  if (hidden)
+  const unplanned = v.unplanned?.length
+    ? '; ' +
+      n(v.unplanned.length, 'link reaches', 'links reach') +
+      ' a page the plan has not got (recorded only)'
+    : ''
+  if (hidden) {
+    const down = v.shownBroken?.length
+      ? '; ' +
+        n(v.shownBroken.length, 'page not hidden', 'pages not hidden') +
+        ' did not answer while others were'
+      : ''
     return (
       name +
       ': ' +
       (broken
         ? n(broken, 'link leads', 'links lead') + ' to a hidden page'
-        : 'no link leads to a hidden page')
+        : 'no link leads to a hidden page') +
+      down +
+      unplanned
     )
+  }
   const errors = v.errors?.length ?? 0
-  if (v.status === 'passed' && !broken && !errors) return name + ': every page answers and no link is broken'
+  const items = v.items?.length
+    ? '; ' + n(v.items.length, 'block', 'blocks') + ' not at the items the variant asks for'
+    : ''
+  if (v.status === 'passed' && !broken && !errors)
+    return name + ': every page answers and no link is broken' + unplanned
   return (
-    name + ': ' + n(broken, 'broken link', 'broken links') + ' and ' + n(errors, 'page error', 'page errors')
+    name +
+    ': ' +
+    n(broken, 'broken link', 'broken links') +
+    ' and ' +
+    n(errors, 'page error', 'page errors') +
+    items +
+    unplanned
   )
 }
 

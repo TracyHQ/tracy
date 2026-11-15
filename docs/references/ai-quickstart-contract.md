@@ -1997,14 +1997,20 @@ a usage error.
 4. **Structure, full variant**: the marker build asks every block for its declared most items, so the marker site is
    read again: every planned page answers its planned status (200, or the status a system page declares), whether a
    link leads to it or not; no link is broken (`linkCheck` with the pages the plan has, an HTTP probe and the
-   template's demo routes); and every item block shows its declared most items (the main block of an item page shows
+   template's demo routes). A link `linkCheck` finds no planned path for is judged by the page it reaches
+   (`gate/structure-read.mjs`), told by the adapter's page identity (`gate/adapters/joomla-page-identity.mjs`: the
+   menu item the body names, `item-<id>`, and the title): a friendly menu address (`/index.php/<alias>`) of a planned
+   page spelled `index.php?Itemid=<id>` is that page, no broken link; one that reaches a page the plan has not got and
+   answers is recorded apart (`unplanned`, recorded only: the demo scan judges what such a page shows); one that does
+   not answer is a link to a missing page; and every item block shows its declared most items (the main block of an item page shows
    its own record, one). A block that shows otherwise is explained only by a reason the build gives (a block it hid,
    a fallback, a write step gap that took items out); one with none leaves the variant `incomplete`, the blocks named
    (`items`). A run of #585 measured 14 of 29 blocks below their most items: the gate now says so instead of passing.
 5. **Quality**: the site check's page groups on the marker site, against the control; the SEO items of the marker
    test's renders.
 6. **Structure, hidden pages**: the marker site's pages hidden in two halves, each half read, then published again.
-   A link on a page still shown to a hidden page fails the variant. A page that does not answer again once published,
+   Every page not hidden must answer as planned while a half is hidden (`shownBroken`, fails the variant). A link on
+   a page still shown to a hidden page fails the variant. A page that does not answer again once published,
    a hide door that throws, or no hide door, leaves it `incomplete`. The plugin has no door to delete a page, so a
    deleted page is measured as a hidden page: this proves that taking a page out of the menu and the site leaves no
    link to it on the pages left; it does not prove what a real delete does to the database (an orphan record, a
@@ -2099,7 +2105,8 @@ customer place the build writes that the universe does not count). In places (tw
 **Structure** (`gate/structure.mjs`, `gate/structure-items.mjs`). `measurements.structure` holds `linkCheck` (the full
 variant), `minItems` (the minimum variant) and `hidden`. All three decide its status: `failed` when one failed,
 `passed` when all three passed, `incomplete` otherwise. A variant whose write stopped is `incomplete`
-(`write_stopped`), one that read no page `incomplete` (`no_pages`), never `passed`. The hidden variant
+(`write_stopped`), one that read no page `incomplete` (`no_pages`), never `passed`. A variant's `reason` is why it
+did not finish, kept only when it is `incomplete`; a failed one names its `errors`, `broken` and `items` apart. The hidden variant
 (`gate/structure-hidden.mjs`) hides the pages in two halves and must see each hidden page answer as missing (404 or
 410, kept as `seenMissing`) before it judges the links to it: a page the site still serves leaves it `incomplete`
 (`hidden_page_still_answers`, naming the page), and a site with no page to hide is `incomplete` (`nothing_hidden`). The
