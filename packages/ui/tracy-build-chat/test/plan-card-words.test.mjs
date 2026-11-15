@@ -78,14 +78,14 @@ const textOf = (html) => html.replace(/<[^>]+>/g, '\n').replace(/\n+/g, '\n')
 
 test('fact labels and source names follow the interface language, by the plan codes', () => {
   const html = draw({ plan: plan(), t: vi })
-  for (const english of ['Business name', 'Main button', 'Opening hours', 'Your answer', 'Social profile'])
+  for (const english of ['Business name', 'Main button', 'Opening hours', 'Your answer', 'Website'])
     assert.doesNotMatch(textOf(html), new RegExp(`^${english}$`, 'm'), english)
   for (const key of [
     'plan.fact.business.name',
     'plan.fact.contact.cta_label',
     'plan.fact.contact.hours',
     'plan.source.answer',
-    'plan.source.social'
+    'plan.source.website'
   ])
     assert.ok(html.includes(`>${viTable[key]}<`), key)
   // The editor's name uses the same words.
@@ -95,6 +95,38 @@ test('fact labels and source names follow the interface language, by the plan co
   const held = ['business.name', 'business.tagline', 'contact.cta_label'].map(
     (k) => viTable[`plan.fact.${k}`]
   )
+  assert.ok(html.includes(held.join(', ')), held.join(', '))
+})
+
+test('a source the plan names more exactly than its kind keeps the plan text, in every language', () => {
+  for (const t of [vi, lib.english]) {
+    const html = draw({ plan: plan(), t })
+    // The tagline came from the social profile's bio, the address from a Google Maps listing named "Google Maps".
+    assert.ok(html.includes('>Instagram bio<'), 'the plan says which part of the social profile')
+    assert.ok(html.includes('>Google Maps<'), 'the plan names the listing its own way')
+    assert.equal(html.includes(`>${viTable['plan.source.social']}<`), false)
+    assert.equal(html.includes(`>${lib.en['plan.source.social']}<`), false)
+  }
+  // A source the plan gives no name is said in the card's words.
+  const p = plan()
+  p.facts.find((f) => f.id === 'tagline').sources = [{ kind: 'social' }]
+  assert.ok(draw({ plan: p, t: vi }).includes(`>${viTable['plan.source.social']}<`))
+})
+
+test('a fact label the plan made specific stays as written; the generic label is translated', () => {
+  const p = plan()
+  const button = p.facts.find((f) => f.id === 'button')
+  button.label = 'Court booking button'
+  const html = draw({ plan: p, t: vi })
+  assert.ok(html.includes('>Court booking button<'), 'the specific label is kept')
+  assert.equal(html.includes(`>${viTable['plan.fact.contact.cta_label']}<`), false)
+  assert.ok(html.includes(`>${viTable['plan.fact.business.name']}<`), 'a generic label is still translated')
+  // The block that holds the fact reads it the same way.
+  const held = [
+    viTable['plan.fact.business.name'],
+    viTable['plan.fact.business.tagline'],
+    'court booking button'
+  ]
   assert.ok(html.includes(held.join(', ')), held.join(', '))
 })
 
