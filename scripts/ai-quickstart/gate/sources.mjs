@@ -10,11 +10,13 @@
 //   setting       a settings file of the template (its local settings, its manifest)
 //   literal       a literal of a layout, script or manifest file (whose: template, module, plugin, component, core)
 //   stylesheet    a stylesheet that draws it (generated words, a picture)
-//   picture_file  a picture file the archive ships
+//   picture_file  a picture file the archive ships, also when a page draws it as an inline data address (an optimiser
+//                 that joins a template's sheets at run time writes their small pictures into them)
 //   outside       another host
 // A value none of them holds is `{class: 'unknown', searched}`. Takes the archive's files, the blank site contract and
 // the mapping as input: nothing here names a template.
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -33,6 +35,9 @@ export const SEARCH_ORDER = Object.freeze([
   'outside'
 ])
 const READ = /\.(?:ini|php|css|sql|js|json|xml)$/i
+/** The picture files the resolver knows by their bytes, for an inline picture an optimiser made from one. */
+const PICTURE = /\.(?:png|gif|jpe?g|webp|svg|ico)$/i
+const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 const WANTED = [
   'language/en-GB/*.ini',
   'language/overrides/*.ini',
@@ -47,7 +52,10 @@ const WANTED = [
   'media/*.css'
 ]
 
-/** The text files of an installer archive the resolver reads: `{files: Map<path, text>, names}`. */
+/**
+ * The text files of an installer archive the resolver reads, and its picture files by the sha256 of their bytes:
+ * `{files: Map<path, text>, names, pictures: Map<sha256, path>}`.
+ */
 export function filesOf(zip) {
   const names = execFileSync('unzip', ['-Z1', zip], { maxBuffer: 256 << 20 })
     .toString('utf8')
@@ -55,19 +63,25 @@ export function filesOf(zip) {
     .filter(Boolean)
   const dir = mkdtempSync(path.join(tmpdir(), 'gate-sources-'))
   const files = new Map()
+  const pictures = new Map()
   try {
     execFileSync('unzip', ['-qq', '-o', zip, ...WANTED, '-d', dir], { maxBuffer: 64 << 20, stdio: 'ignore' })
   } catch {}
   try {
     for (const rel of readdirSync(dir, { recursive: true })) {
       const full = path.join(dir, rel)
-      if (READ.test(rel) && statSync(full).isFile() && statSync(full).size < 4 << 20)
-        files.set(rel.split(path.sep).join('/'), readFileSync(full, 'utf8'))
+      const small = () => statSync(full).isFile() && statSync(full).size < 4 << 20
+      const name = rel.split(path.sep).join('/')
+      if (READ.test(rel) && small()) files.set(name, readFileSync(full, 'utf8'))
+      else if (PICTURE.test(rel) && small()) {
+        const key = sha256(readFileSync(full))
+        if (!pictures.has(key)) pictures.set(key, name)
+      }
     }
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }
-  return { files, names }
+  return { files, names, pictures }
 }
 
 const squash = (t) =>
@@ -216,6 +230,19 @@ function* dataUris(body) {
   }
 }
 
+/** The bytes an inline picture address holds, decoded from base64 or percent encoding, or null. */
+function inlineBytes(uri) {
+  const m = /^data:([^,]*),(.*)$/is.exec(String(uri ?? ''))
+  if (!m) return null
+  try {
+    return /;base64$/i.test(m[1])
+      ? Buffer.from(decodeURIComponent(m[2]), 'base64')
+      : Buffer.from(decodeURIComponent(m[2]), 'utf8')
+  } catch {
+    return null
+  }
+}
+
 /** What an inline picture address holds, spelled one way: decoded from base64 or percent encoding, one kind of quote. */
 function inlineContent(uri) {
   const m = /^data:([^,]*),(.*)$/is.exec(String(uri ?? ''))
@@ -234,14 +261,15 @@ const SETTING_FILE = /^templates\/[^/]+\/(?:.*\.json|templateDetails\.xml)$/
 
 /**
  * A resolver over the archive's files.
- * @param {{files: Map<string, string>, names: string[]}} archive
+ * @param {{files: Map<string, string>, names: string[], pictures?: Map<string, string>}} archive `pictures`: the
+ *   archive's picture files by the sha256 of their bytes
  * @param {{site?: string, contentMap?: object, mapping?: object, writes?: Map<string, object>}} [options] `site`: the
  *   site's origin; `contentMap`: the blank site contract's content map; `writes`: values the write wrote or the site
  *   holds that are no marker, by value, with their source
  * @returns {{text: (value: string) => object, picture: (url: string) => object}}
  */
 export function sourceResolver(
-  { files, names },
+  { files, names, pictures = new Map() },
   { site = null, contentMap = null, mapping = null, writes } = {}
 ) {
   const language = languageOf(files)
@@ -388,7 +416,10 @@ export function sourceResolver(
       // percent encoded or plain, and a browser reads it back in its own spelling).
       const file = inlineFiles().get(inlineContent(u))
       if (file) return { class: file.endsWith('.css') ? 'stylesheet' : 'literal', file, ...ownerOf(file) }
-      return { class: 'unknown', searched: ['stylesheet', 'literal'], inline: true }
+      // No file writes it: a picture file of the archive with the same bytes, which an optimiser wrote inline.
+      const shipped = pictures.get(sha256(inlineBytes(u) ?? ''))
+      if (shipped) return { class: 'picture_file', file: shipped, ...ownerOf(shipped), inline: true }
+      return { class: 'unknown', searched: ['stylesheet', 'literal', 'picture_file'], inline: true }
     }
     let p
     try {

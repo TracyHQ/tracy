@@ -1706,7 +1706,7 @@ data dump), the blank site contract, the mapping and what the write wrote:
 | `setting` | a settings value: a template style's or an extension's params in the data (table), or a settings file of the template |
 | `literal` | a literal of a layout, script or manifest file (whose) |
 | `stylesheet` | a stylesheet that draws it (generated words, a picture, an inline picture, found by what the inline address holds, in base64, percent encoded or plain; the archive's `media/` stylesheets are read too) |
-| `picture_file` | a picture file the archive ships |
+| `picture_file` | a picture file the archive ships, also drawn as an inline address no file writes, found by its bytes: an optimiser that joins a template's stylesheets at run time writes their small pictures into the joined sheet (measured on JA Boxing run 4: T4's `media/t4/optimize/css/`, six template pictures) |
 | `outside` | another host |
 | `ambiguous` | more than one of them holds the words: every candidate, the first in the search order as `likely` (its fix class is used; a kit keep of any language candidate exempts it) |
 | `unknown` | none of them, with the list of what was searched (a picture with no address names nothing to search for) |
