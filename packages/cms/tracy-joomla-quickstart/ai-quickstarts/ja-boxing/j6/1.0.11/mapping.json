@@ -15050,6 +15050,36 @@
       "file": "plugins/system/t4/themes/base/html/layouts/joomla/pagination/link.php",
       "pattern": "^[1-9]\\d{0,2}$",
       "why": "the page numbers of a paged list (1, 2, 3 and on): the pagination layout prints each page item's text (plugins/system/t4/themes/base/html/layouts/joomla/pagination/link.php:16, printed at :88 as a link and at :94 as the current page), and that text is the page number itself (libraries/src/Pagination/Pagination.php:789, new PaginationObject($i)); a counter, valid on every site"
+    },
+    {
+      "file": "templates/ja_boxing/images/time-1.png",
+      "values": [
+        "templates/ja_boxing/images/time-1.png",
+        "templates/ja_boxing/images/time-2.png",
+        "templates/ja_boxing/images/time-3.png"
+      ],
+      "why": "the clock icon over each pricing card of the features block style 5: the layout prints a div.icon.icon-N for a card (templates/ja_boxing/acm/features-intro/tmpl/style-5.php:36) and the template stylesheet draws the clock as its ::before background (templates/ja_boxing/css/template.css:19236-19241, url(../images/time-3.png), time-2.png and time-1.png for icons 2, 3 and 4; scss/_acm.scss:609-621); the page receives each one inline because the T4 optimiser joins the template stylesheet; a design picture of the template, the same on every site"
+    },
+    {
+      "file": "templates/ja_boxing/images/ic-diamond.png",
+      "values": [
+        "templates/ja_boxing/images/ic-diamond.png"
+      ],
+      "why": "the diamond bullet of a list: the template stylesheet draws it as the ::before background of each item of the pricing card list (templates/ja_boxing/css/template.css:19268-19271, .acm-features.style-5 .item .list-item ul li, printed by templates/ja_boxing/acm/features-intro/tmpl/style-5.php:61) and of a has-icon list in a learning post (templates/ja_boxing/css/template.css:14485-14488, .detail-learn ul.has-icon li, the class of templates/ja_boxing/html/com_content/article/learning.php:51); inline once the T4 optimiser joins the stylesheet; a design picture of the template, the same on every site"
+    },
+    {
+      "file": "templates/ja_boxing/images/arrow-right.png",
+      "values": [
+        "templates/ja_boxing/images/arrow-right.png"
+      ],
+      "why": "the arrow after the button of each pricing card of the features block style 6: the template stylesheet draws it as the ::after background of the card link (templates/ja_boxing/css/template.css:19342-19345, .acm-features.style-6 .item-inner .btn-actions a, printed by templates/ja_boxing/acm/features-intro/tmpl/style-6.php:22; scss/_acm.scss:783); inline once the T4 optimiser joins the stylesheet; a design picture of the template, the same on every site"
+    },
+    {
+      "file": "templates/ja_boxing/images/icon/arrow-right.svg",
+      "values": [
+        "templates/ja_boxing/images/icon/arrow-right.svg"
+      ],
+      "why": "the arrow inside the subscribe button of the newsletter form: the template stylesheet sets it as the background of the button input (templates/ja_boxing/css/template.css:12659-12660, .acym_module td.acysubbuttons input, the cell templates/ja_boxing/html/mod_acym/default.php:84 prints, and :12712-12713; scss/_modules.scss:1107 and 1186); inline once the T4 optimiser joins the stylesheet; a design picture of the template, the same on every site"
     }
   ],
   "dataFixes": [
