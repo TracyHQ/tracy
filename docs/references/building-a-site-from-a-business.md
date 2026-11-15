@@ -271,8 +271,8 @@ by field, by the reading's own structure, never by guessing from the text:
 `domain-owner-echo-fields.test.mjs` fails when a reading, its brief view or the brief holds a field the table does not
 class. Hours and days, phone, email and the address are fact values: they reach the site through their own structured
 fields, so a phrase such as "open seven days a week" in a story or fact line need not survive as copy; it survives as a
-fact for the writer (below). Whether hours, a phone or an email typed in the chat should reach the needs profile
-directly is not decided and not built.
+fact for the writer (below). A phone, an email, opening hours or a booking link the owner types reaches the needs
+profile directly as a value (6.4).
 
 A name or value field is exempt only while it has the shape of one (`owner-name-shape.mjs`). Weights count as the echo
 guard counts them (a word 1, a Han character 1/2, a Thai one 1/4):
@@ -311,10 +311,11 @@ What the guard does with an echo:
 - the brief's view (`readingWithoutOwnerQuotes`) also moves there every story line and fact the reading read from the
   statement, and every key message or USP theme left with no quote but the owner's; a service, an audience and a
   service area of the statement keep their name with the name as their only quote, a team member keeps name and role;
-- a tagline the owner states (an item of the statement whose quote says tagline, slogan, motto or strapline; English
-  words only) never reaches copy: it is kept as `kind: 'owner-tagline'`, reason `awaits_product_decision`, routed as
-  never shown, and the brief only says one waits. Whether an owner's tagline is the one case where the owner's wording
-  is the fact is an open product question;
+- a tagline the owner marks as theirs (an item of the statement whose quote says the words ARE its tagline, slogan,
+  motto or strapline, `owner-tagline.mjs`; English words only) never reaches copy: it is kept as
+  `kind: 'owner-tagline'` with its words as typed in `value` (6.4), routed as never shown in the brief's own text. A
+  sentence that only holds the word ("we print slogans on mugs") is no tagline and its fact stays an `owner-fact`. An
+  older brief's tagline without `value` keeps reason `awaits_product_decision` and goes nowhere;
 - every echo is recorded in `reading.ownerEchoDropped` as `{group, field, rule, weight, why: 'copies_owner_statement',
   kept}` (`kept`: `item`, `owner-fact` or `owner-tagline`), never the text. The brief carries
   `reading.ownerEchoDropped: {count, groups}` and `reading.ownerFacts`.
@@ -360,3 +361,71 @@ request (every fact of every fixture in the request, none unplaced, no owner sen
 
 The `owner` source of the older flow (the value typed on the Profile card, origin `website`) is unchanged and is a
 different key.
+
+### 6.4 Values the owner types, the owner's own tagline, and what the reading gives the research
+
+The owner decided (D46 as amended): a contact value or a tagline the owner types is a value, not prose.
+
+**Contact values** (`owner-values.mjs`, `owner-hours.mjs`). `ownerStatementRecordOf` reads, in code, from the passage the
+held sentences already left, every phone, email, opening hours and booking link, and the reading carries them as
+`reading.ownerValues: {values: [{kind, value}], dropped: [{kind, code, reason}]}` (the brief keeps the key; the record
+never holds a dropped text). Each value is taken exactly as typed, normalised only by the existing rules: a phone by
+`withoutStrayPlus` (8 to 15 digits, read only after a phone word or a leading plus, so a year or a count is never a
+phone); an email by its shape; a link only `http`, `https` or `www.`, with no credentials and no IP host, and kept
+only when its sentence names booking (`book`, `reserve`, `appointment`, `schedule`); hours only in a sentence that says
+`open`, `hours` or `closed`, every range with a stated day and two stated times, read by `weekOf` (`Mo-Fr 09:00-17:00;
+Sa 10:00-14:00`), never a guess ("9 to 5" with no am or pm is unreadable). A value that is not one, a second value of a
+kind, or hours longer than a fact value holds, is dropped with its reason (`OWNER_VALUE_REASONS`). The research files
+the values as fields of the source `owner-statement` (origin `answer`), so the needs profile takes them as structured
+fields, the plan shows them as "Your answer", the writer copies them as data and the echo guard never reads them.
+
+What the trust order does with them (`domain-owner-values.test.mjs`):
+
+| Case | Shown | Plan sources | Conflict |
+|---|---|---|---|
+| owner only | the owner's value | Your answer | none |
+| owner equals the website (same number written another way) | the website's wording | Website, Your answer | none |
+| owner differs from the website | the website's | Website | yes, default the website's, asked as a plan question |
+| owner differs from Google | the owner's | Your answer | yes, default the owner's, asked as a plan question |
+
+A held person's own phone or email typed in a sentence that names them never reaches anything: that sentence is
+taken out before the values are read. A number typed in a later sentence that does not name them is not known to be
+theirs and is read like any other.
+
+**The owner's own tagline** (`owner-tagline.mjs taglineOf`). Found only in a marked form: `our motto is "X"`, `"X" is
+our slogan`, `our tagline is X`, `our motto is simple: X`, `motto: X`, `we live by the motto "X"` (quoted, or to the
+sentence end, at most 12 words); never in a question, never after `our motto is` when the words say something about
+it (`not`, `still`, `on`, ...). Twenty invented statements, both sides, in `domain-owner-tagline.test.mjs`: all twenty
+right; the word test before this change took eight sentences that only hold the word as a tagline. The tagline rides
+the research as `ownerTagline` of the source `owner-statement`, the profile as `profile.ownerTagline`, and the plan data
+as the fact `business-tagline` (kind `business.tagline`, label "Tagline", "Your answer"). It is placed as a website
+tagline is routed (`slot-fill.mjs` fills `business.tagline` from `brand.tagline`): on a block with a field of kind
+`business.tagline` (the hero heading of the invented template), only one whose limit holds it whole; the writer shows
+it there word for word (`page-writer-fields.mjs OWNER_VERBATIM_ROLES`, `from: 'data'`, never asked of the model), so the
+echo guard never reads that field, and the plan's data values excuse that string only wherever else it appears. Every
+other owner sentence stays guarded (`copies_owner`). Too long for every such field, it is left out with "Your tagline
+is longer than every place the template has for it, and it is never shortened."; placed by the composer on a field
+too short, the limits rule takes it off that block (`data_over_limit`). A tagline naming a held text is set aside.
+The brief's own Markdown still says a tagline waits: that older writer path does not use it.
+
+**What the reading gives the research** (`needs-research-reading.mjs`, `needs-profile-typed.mjs`). Before, `researchOf`
+read only `brief.facts`, so a fact held only in `reading.facts` (a founding year) and the About line never reached the
+needs profile. Now, only when the brief has a `reading`:
+
+- each `reading.facts` and `reading.story` line gives its quote to the text of the source it names (website, a post's
+  platform, a review's; a bio line names no platform and is set aside with its reason), so the profile grounds it
+  (`business.founded_year`, a kind its prompt already reads);
+- the About line rides on the sources of the items it is made of as `about`; the profile carries it as
+  `profile.about: {value, sources}` and the plan data as the fact `business-summary` (kind `business.summary`, label
+  "About"), placed like any fact on a block with such a field. Over 200 characters, or made of no item with a known
+  source, it is set aside with its reason;
+- each `reading.services` item becomes a typed item of its source (`source.items`): the profile takes it as it is, so
+  it keeps the reading's list (a class or service as `service`, a membership or package as `package`; its price only
+  when its quote proves it, else `typed_price_not_in_quote`). The profile has no event kind: an event like item the
+  reading listed as a service stays a service, never dropped silently;
+- each audience quote is kept on its source as `audience`: a service or package the profile's model reads only from
+  inside one is dropped as `service_from_audience_quote`.
+
+With no owner statement and a brief without a reading, the research, the needs profile request, the profile, the plan
+composer request and the writer requests are byte for byte what they were (measured on the invented club, the bike
+shop brief and the fictional Harbour Sport Club brief less its reading). None of this changes the needs profile prompt.
