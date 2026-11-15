@@ -39,13 +39,10 @@ test('record_kind_unsupported: a created record of a kind the write has no shape
   )
 })
 
-test('the accent with no declared variables is skipped, not counted written, and flagged', () => {
+test('the accent whose variables are declared but that no door writes is skipped, not counted written', () => {
   const look = plan.ops.find((op) => op.kind === 'look.accent')
   assert.deepEqual(look.entries, [])
-  assert.ok(
-    plan.skipped.some((s) => s.entry === 'look.accent' && s.reason === 'accent_variables_not_declared')
-  )
-  assert.ok(plan.unproven.some((u) => u.code === 'accent_variables_not_declared'))
+  assert.ok(plan.skipped.some((s) => s.entry === 'look.accent' && s.reason === 'accent_door_missing'))
 })
 
 test('an identity field with no door is not sent, and flagged identity_field_no_door', () => {
@@ -96,7 +93,7 @@ test('words with an angle bracket are refused by the order check, where the writ
 test('the florist plan raises exactly these skip reasons, flags and operation kinds', () => {
   const set = (values) => [...new Set(values)].sort()
   assert.deepEqual(set(plan.skipped.map((s) => s.reason)), [
-    'accent_variables_not_declared',
+    'accent_door_missing',
     'address_shared',
     'derived_drawn_by_template',
     'fact_fanned_out',
@@ -112,7 +109,7 @@ test('the florist plan raises exactly these skip reasons, flags and operation ki
     'text_logo_prints_site_name'
   ])
   assert.deepEqual(set(plan.unproven.map((u) => u.code)), [
-    'accent_variables_not_declared',
+    'accent_door_missing',
     'created_record_frame',
     'featured_article_needed',
     'identity_field_no_door',
