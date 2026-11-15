@@ -2,7 +2,7 @@
 // element taken out, a setting that hides an empty button), the `resets` of its placement (the category it lists, the
 // position of its container, the ordering of its recipe), its module title and the mark a resumed run finds it by.
 // Pure; part of `writePlanOf`. Spec: `docs/references/ai-quickstart-contract.md`, "Copies and blocks written in place".
-import { rowIndexOf } from './draft-write-codec.mjs'
+import { movedAfterCut, rowIndexOf } from './draft-write-codec.mjs'
 import { emptyControl, holdsField, omitRows } from './draft-write-plan-hides.mjs'
 import { put, recordOf, unproven } from './draft-write-sink.mjs'
 
@@ -30,15 +30,18 @@ function applyHides(state, record) {
     if (written.some(Boolean)) continue
     if (hide.by === 'rows.remove') {
       const link = state.kit.mapping.blocks[record.block].fields[hide.control.at(-1)]
-      // The whole stored value the button sits in: the link's location without its xpath.
+      if (record.kind !== 'copy') {
+        record.contractRemoves.push(...list(hide.slots))
+        continue
+      }
+      // The whole stored value the control sits in: the link's location without its xpath, named where it stands
+      // once the rows are cut (a cut renumbers the kept rows; a control in a row that was cut is gone with it).
       const { xpath: _piece, ...whole } = link
-      if (record.kind === 'copy')
-        record.removes.push({
-          loc: whole,
-          xpath: elementOf(link.xpath),
-          rule: 'hides.rows.remove'
-        })
-      else record.contractRemoves.push(...list(hide.slots))
+      let loc = whole
+      for (const cut of record.cuts) loc = loc && movedAfterCut(loc, cut.row, cut.kept)
+      if (!loc) continue
+      // The element the hide declares (`element`), else the one holding the last field of the control.
+      record.removes.push({ loc, xpath: hide.element ?? elementOf(link.xpath), rule: 'hides.rows.remove' })
     } else if (hide.by === 'setting') {
       if (record.kind === 'copy')
         put(state.sink, record.key, hide.location, hide.value, { rule: 'hides.setting' })
