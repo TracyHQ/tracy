@@ -65,17 +65,28 @@ const TEXT_RE = /\bq[xy]([a-z]{3})\b/gi
 const LINK_RE = /qx([a-z]{3})(?:[.@/-]|$)/gi
 const PHONE_RE = /\+?1[\s.-]*555[\s.-]*01(\d)(\d)[\s.-]*(\d)(\d)(\d)/g
 
-/** Every marker code a text holds, upper case, each once (text, link, email and phone markers). */
-export function codesIn(text) {
+/** The code of a phone marker match, or null (a number past the code space). */
+const phoneCode = (m) => {
+  const n = Number(m.slice(1, 6).join(''))
+  return n < CODE_SPACE ? codeOf(n) : null
+}
+
+/**
+ * Every marker code a text holds, upper case, each once (text, link, email and phone markers). With `known` (the codes
+ * the build registered), only those: a number or a word that merely looks like a marker is no marker.
+ * @param {string} text
+ * @param {Set<string>} [known]
+ */
+export function codesIn(text, known) {
   const s = String(text ?? '')
   const out = new Set()
   for (const m of s.matchAll(TEXT_RE)) out.add(m[1].toUpperCase())
   for (const m of s.matchAll(LINK_RE)) out.add(m[1].toUpperCase())
   for (const m of s.matchAll(PHONE_RE)) {
-    const n = Number(m.slice(1).join(''))
-    if (n < CODE_SPACE) out.add(codeOf(n))
+    const code = phoneCode(m)
+    if (code) out.add(code)
   }
-  return [...out]
+  return [...out].filter((c) => !known || known.has(c))
 }
 
 /** The filler of a text marker (` qqqqq`), as a word. */
@@ -87,17 +98,21 @@ const FILLER_RE = /\bq{5}\b/gi
  * nothing else (the gate's own search words a search page echoes); `none` when it holds no marker, its `rest` the
  * text without any filler.
  */
-export function markerShare(text) {
+export function markerShare(text, { known } = {}) {
   const s = String(text ?? '')
-  if (!codesIn(s).length) {
+  if (!codesIn(s, known).length) {
     if (!/\bq{5}\b/i.test(s)) return { kind: 'none', rest: s.trim() }
     const rest = s.replace(FILLER_RE, ' ').replace(/\s+/g, ' ').trim()
     return /[\p{L}\p{N}]/u.test(rest) ? { kind: 'none', rest } : { kind: 'filler', rest: '' }
   }
+  // Only the registered markers are taken out: a look-alike beside them stays in the rest.
+  const own = (code) => !known || known.has(String(code).toUpperCase())
   const rest = s
-    .replace(PHONE_RE, ' ')
-    .replace(/(?:https?:\/\/)?(?:[\w-]+\.)*qx[a-z]{3}(?:[\w./@-]*)/gi, ' ')
-    .replace(TEXT_RE, ' ')
+    .replace(PHONE_RE, (...m) => (own(phoneCode(m) ?? '') ? ' ' : m[0]))
+    .replace(/(?:https?:\/\/)?(?:[\w-]+\.)*qx([a-z]{3})(?:[\w./@-]*)/gi, (all, code) =>
+      own(code) ? ' ' : all
+    )
+    .replace(TEXT_RE, (all, code) => (own(code) ? ' ' : all))
     .replace(/\bq{1,5}\b/gi, ' ')
     .replace(/[\s\p{P}\p{S}]+/gu, ' ')
     .trim()

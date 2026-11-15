@@ -1490,8 +1490,8 @@ stops) and passes that file with `--human-control`. `--out` is kept outside the 
 passes, 1 when it does not, 2 on a usage error.
 
 **Markers** (`gate/marker-codec.mjs`). A code is `Qx` and three letters (17,576 codes), padded with ` qqqqq` to the
-place's limit. A link is `https://qx<abc>.example/`, an email `qx<abc>@qx<abc>.example`, a phone `+1 555 01NN NNN`, a
-social link the network's own host with the path `/qx<abc>`, a picture a flat PNG of a colour drawn from its code with
+place's limit. A link is `https://qx<abc>.example/`, an email `qx<abc>@qx<abc>.example`, a phone `+1 555 01NN NNN` (a
+number of that shape is a marker only when its code is in the run's registry), a social link the network's own host with the path `/qx<abc>`, a picture a flat PNG of a colour drawn from its code with
 the code in a text chunk. No marker holds `( ) < > " ' &` or a dash: the plugin's guards, the template's code notation
 (`((`, `))`) and HTML read none of them. The filler alone (`qqqqq`, the search words a search page echoes) is the
 gate's own and never a finding; beside other words, those words are read.
@@ -1510,9 +1510,16 @@ reported with its code and cause. The plan guard `record_name_empty` is a gap to
 list field and design line, every fact place and every language string the mapping classes, plus one place per
 declaration of what the build writes besides the blocks (`look.accent`, each part of `pages.<type>`, each entity of
 `createdFrames`, `keyedRow`, `holds.copies`, `menu.items`, `seo.featuredView.article`, each hide carrying `scope`,
-`from`, `element` or `order`). Each is exactly one of `written`, `declared_not_written` (a design line, a language
-string the kit keeps or sets, a fact place marked `notWritten`, a page type declared `unbuilt` and the blocks only it
-places, with its code), `skipped_by_writer` or `unexplained`, which must be zero. Every place names `by` (`writer`, the
+`from`, `element` or `order`), every `seo.<kind>.<part>` location, every `overrides.settings` location, every
+`buildSets` location, every `overrides.language` key with no slot, every `emptiedNotWritten` entry, every
+`pages.<type>.under.detailPositions` entry and every `escapes.places` entry, nested child lists at any depth. A
+**completeness guard** walks the whole mapping: any object with a `slot` or `entity` key that is not a place of the
+universe and not under a named ignore (`IGNORED_MAPPING_KEYS` of `gate/universe.mjs`: `entities`, `notEmptied`,
+`hides`, `placements`, each with its reason) is an `unexplained` place with code `location_not_in_universe`. Each is exactly one of `written`, `declared_not_written` (a design line, a language
+string the kit keeps or sets, a setting the kit sets, an `emptiedNotWritten` entry, a fact place marked `notWritten`, a
+page type declared `unbuilt` and the blocks only it places, with its code), `skipped_by_writer` or `unexplained`,
+which must be zero. A place the gate's own marker plan failed to cover (`block_not_placed`, `page_not_placed`, by
+`marker_plan`) is `unexplained`: the gate's coverage failure is never an explanation. Every place names `by` (`writer`, the
 build team's chain; `marker_plan`, the gate's own plan; `kit`) and `code`: the reason the chain gives (a plan skip, an
 order hide, an unproven flag such as `menu_item_link_not_declared`, a write step gap as `<code>:<cause>`), or
 `key_not_read` when the write plan does not read that mapping key and says nothing. A page taken out by a gap (named,
@@ -1520,15 +1527,23 @@ or its main block emptied, so the rules gate drops it) takes the blocks of its r
 left out of the marker composition. The record holds the split as `split.<account>.<by>.<code>`.
 
 **The real write** (`gate/site-write.mjs`). The plan the memory site carried to the end, written through the door
-client (`site-doors.mjs`) after a bind to the blank site contract; the plugin version is read at both ends and must be
-the pinned one. A refusal stops the run (`stopped`, with the code), it is not worked around.
+client (`packages/wo/website-opportunities/domain/site-doors.mjs`, also exported by `website-opportunities/domain`;
+`scripts/ai-quickstart/site-doors.mjs` re-exports it) after a bind to the blank site contract; the plugin version is
+read at both ends and must be the pinned one. A refusal stops the run (`stopped`, with the code), it is not worked
+around. The journal in the run folder names the site it was written on (address, the sha256 of its key, the contract
+and the bind revision it started on); a journal of another site or contract, one that names no site, or a write
+record with no journal is refused before any write (`journal_from_another_site`). The bind revision moves with every
+write, so a resume keeps it and does not match it.
 
 **Renders** (`gate/render.mjs`, `gate/observe-in-page.mjs`, `gate/adapters/joomla-t4.mjs`). Headless Chromium, one
 fresh context per theme side, at 390, 768 and 1440 in light and dark (`?theme=` picks the side for one load). Pages:
 every menu item the write made, every article it made reached under its list page, and the system pages (search, a
 missing page answering 404, sign in, password reset, username reminder). A request to another host is stopped and
 kept as an observation. The browser reads words with whether they are seen and their box on the page, the module they
-sit in, `currentSrc`, computed background pictures and the words and pictures of `::before` and `::after`.
+sit in, `currentSrc`, computed background pictures and the words and pictures of `::before` and `::after`, and what
+the word reader skips: the words and pictures inside `noscript` and `template` (`visible: false`), SVG `text`,
+`title` and `desc`, and the address of every `iframe`, `embed`, `object`, `video`, `audio` and `source`. A JSON-LD
+block that does not parse is an observation problem: the record lists it and the verdict fails on it.
 Screenshots: one dark page per page type at 390, and every page dark at 1440 (full page), which the crops come from.
 
 **Findings** (`gate/classify.mjs`). One finding per page, kind, place and value, with every theme side and width it
@@ -1541,13 +1556,17 @@ was seen on:
 | `unmarked_picture` | a picture that is not a picture the write uploaded (the favicon among them, product decision 3) |
 | `unmarked_link` | a link to another site, or a `mailto:` or `tel:`, that is no marker |
 | `empty_picture` | a picture whose address is the page itself |
+| `unmarked_embed` | a map, video or frame whose address is no marker, not on the site and not on a host the adapter declares (`DECLARED_HOSTS`, none for Joomla T4) |
+| `kit_reason_false` | a language string the kit keeps with a reason that says no page draws it, in a page (hidden words count, product decision 5; a reason that says only "not drawn as visible text" holds for hidden words) |
 | `outside_request` | a request to another host (a font, a script, an avatar); not counted as a leak |
 
 Hidden words are leaks (`visible: false`). **Exemptions** (`gate/exemptions.mjs`) come from two places only, and the
 record lists each with its reason: the kit (a language string `overrides.language` keeps, by key, with the kit's
-reason) and the framework adapter (`EXEMPTIONS` of the adapter, the page frame of `gate/adapters/web-frame.mjs`: an
-address of the site itself, a mark with no letter, a date or the year the build set, a schema.org type or language
-code, a share card type). Besides them: the marker filler alone, and a value the write plan wrote from the marker data
+reason; a kept string with a placeholder only when each placeholder holds nothing, a marker or a date or year the build
+set; a kept string whose reason says no page draws it is not exempt where it is seen, it is `kit_reason_false`) and the
+framework adapter (`EXEMPTIONS` of the adapter, the page frame of `gate/adapters/web-frame.mjs`: an address of the site
+itself, punctuation and symbols with no letter and no digit, `404` on the missing page that answers 404, a date or the
+year the build set, a schema.org type or language code, a share card type). Besides them: the marker filler alone, and a value the write plan wrote from the marker data
 (a network name on a marker link's label). Nothing else is hard coded.
 
 **Sources** (`gate/sources.mjs`). Every finding names its true source, searched in this order, from the blank site
@@ -1565,6 +1584,7 @@ data dump), the blank site contract, the mapping and what the write wrote:
 | `stylesheet` | a stylesheet that draws it (generated words, a picture, an inline picture) |
 | `picture_file` | a picture file the archive ships |
 | `outside` | another host |
+| `ambiguous` | more than one of them holds the words: every candidate, the first in the search order as `likely` (its fix class is used; a kit keep of any language candidate exempts it) |
 | `unknown` | none of them, with the list of what was searched (a picture with no address names nothing to search for) |
 
 **Groups and fix classes** (`gate/groups.mjs`). Findings are grouped once per group, source and text (a language
@@ -1574,35 +1594,42 @@ applies none:
 
 | Fix class | When |
 |---|---|
-| `kit_declare_keep` | a core, template or extension interface string the kit should keep in `overrides.language`, with a reason |
+| `kit_declare_keep` | a core, template or extension interface string the kit should keep in `overrides.language`, with a reason; or a keep whose reason is false (`kit_reason_false`) |
 | `kit_write` | a value the kit should write from a fact: the favicon from the logo, the account name, a setting in the site's records |
-| `build_gap` | a place the build writes that still shows demo content, demo data, or an empty picture of a module it wrote |
-| `template_patch` | words or pictures of a template file, a stylesheet, a picture file or a settings file of the template |
+| `build_gap` | a place the build writes that still shows demo content, demo data, or an empty picture or unmarked embed of a module it wrote |
+| `template_patch` | words, pictures or embeds of a template file, a stylesheet, a picture file or a settings file of the template |
 | `external_request` | a request to another host |
 | `unclassified` | the source is `unknown`: the owner says what it is |
 
 **Written, not seen** (`gate/not-seen.mjs`). Each marker the plan wrote that no render shows, with the reason the page
 gives: `block_not_printed` (the page's HTML has no `id="Mod<id>"` of the copy), `block_printed_without_value`,
-`article_not_rendered`, `value_not_printed`.
+`article_not_rendered`, `value_not_printed`. Each carries `declared`: the reason the write or the kit gives (the entry
+is a write conflict, `write_conflict`; an unproven flag of the write plan names its page and block; or the mapping
+location says `prints: false` with a `why`, `kit_declares_not_printed: <why>`), or `null`. A written value not seen
+with no declared reason fails the verdict.
 
 **The demo scan** (`gate/demo-checks.mjs`) runs `demoScan` on the browser's read and on the raw HTML of the same
 renders, and checks the scan itself: the leaks the corpus counts as interface words (never reported by the demo scan),
 the blocks the raw HTML and the browser read differently (compared in the scan's own spelling, so the capitals a
 stylesheet draws with `text-transform` are no difference; `rawDiffers` keeps the count before that), and pictures under
-cache or resized paths. Its **controls** run first, on pages that answer as they should: the untouched human
-quickstart must give many demo findings, and the blank site before the write none. A control with pages that did not
-load is not measured.
+cache or resized paths. Its **control** runs first, on pages that answer as they should: the untouched human
+quickstart must give demo findings (none is `scan_blind`, and fails the verdict). A control with pages that did not
+load is not measured. The blank site before the write serves no page by design (it has no home menu item), so its
+control is recorded as `not_applicable`, with the reason and the statuses it answered, and is no part of the verdict.
 
-**The check record** (`gate/record.mjs`, `tracy-ai-quickstart-check-record/v1`): the verdict (`pass` only when there
-is no leak, no demo finding, no unexplained place, no page that did not load as expected, both controls measured and
-right, and nothing not run), the sha256 of every file of the kit and of the two archives, the accounting, the write
+**The check record** (`gate/record.mjs`, `tracy-ai-quickstart-check-record/v1`): the verdict (`gate/verdict.mjs`: `pass`
+only when the real write is `done`, every written marker is seen or has a declared reason, there is no leak, no
+unexplained place, no demo finding in the browser's read nor in the raw HTML, no page that did not load as expected,
+the human control found demo, the write order had no problem, no observation problem, and the measurements of #586
+passed; `failing` names each part that did not), the sha256 of every file of the kit and of the two archives, the accounting, the write
 (memory and real status, gaps, measured refusals, unproven flags), the renders and screenshots (paths relative to the
 record), the findings, their groups and counts by fix class and by source class, the exemptions, the written values
 not seen, the demo scan with its checks and controls, and the slots of #586 (minimum items, link check) as `not_run`.
 Site addresses are written `<site>`.
 
-**The owner's page** (`gate/record-html.mjs`, `record.html`): a summary (written, declared, skipped by the build with
-the reasons, unexplained; the groups by fix class; the controls), then one card per group with its crop, what it is
+**The owner's page** (`gate/record-html.mjs`, `record.html`): a summary (the failing parts; written, declared, skipped by the
+build with the reasons, unexplained; the written values not seen by reason and declared reason; the groups by fix
+class; the controls, with the blank one as not applicable; demo in the browser and in the raw HTML), then one card per group with its crop, what it is
 and where it comes from in plain words, the pages it shows on, Correct and Wrong buttons and a note, and a button that
 copies every answer as text.
 
@@ -1618,9 +1645,23 @@ its updater off; the human quickstart restored untouched on its own site for the
   have permission to access this`), 12 page views.
 - **The blank site serves no page before the write**: it has no home menu item, so the home page answers 404 and every
   other page 500 (`MenuHelper::getDefaultItem(): Return value must be of type object, null returned`). The blank
-  control is therefore not measured (0 demo findings, 6 of 7 pages not loaded).
-- **Three kept language strings print although the kit says no page draws them**: `T4_OFF_CANVAS_TITLE` (Sidebar
-  Menu, on 17 pages), `TPL_CLOSE` and `TPL_DETAILS`. They are exempt by the kit's declaration; its reason is not true.
+  control is recorded as not applicable, with the statuses it answered.
+- **Kept language strings print although the kit says no page draws them**: `T4_OFF_CANVAS_TITLE` (Sidebar Menu,
+  hidden in the off canvas menu on 17 pages), `TPL_CLOSE` and `TPL_DETAILS`. Each is a `kit_reason_false` finding
+  where it shows (the third run named `TPL_CLOSE`, 12 times; it holds the same words as the CMS's `JCLOSE`, so its
+  source is `ambiguous`).
+- Numbers (third run, after the review fixes): universe 1,007 places, 237 written, 51 declared and not written (16
+  kept language strings, 4 settings the kit sets, 3 `emptiedNotWritten`, 24 record kinds the write does not support,
+  2 design lines, one set language string, one by decision), 719 skipped by the write step (`read_back_mismatch` 367,
+  `redo_failed:write_failed` 101, `key_not_read` 82), 0 unexplained. The write `done`; 108 renders, 12 not as
+  expected (the contact page, 403). 50 marker codes seen; 117 written values not seen, 5 with a declared reason (3
+  write conflicts, 2 `detail_position_not_printed`) and 112 without (76 `block_not_printed`, 30 `value_not_printed`,
+  6 `block_printed_without_value`). 280 leaks in 58 groups plus 3 groups of requests to other hosts; groups by fix
+  class: `kit_declare_keep` 43, `kit_write` 4, `build_gap` 2, `template_patch` 3, `external_request` 3,
+  `unclassified` 6; by source: `ambiguous` 29, `language` 19, `unknown` 7, `outside` 4, `write` 1, `picture_file` 1.
+  Demo after the build: 8 in the browser's read and 8 in the raw HTML. Human control: 1,154 demo findings on 28
+  pages. The verdict fails on leaks, written values not seen, demo, pages not as expected, and the measurements of
+  #586 not run.
 - Numbers (second run): universe 909 places, 225 written, 42 declared and not written, 642 skipped by the write step
   (`read_back_mismatch` 367, `redo_failed:write_failed` 99), 0 unexplained. 18 pages, 108 renders, 12 not as expected
   (the contact page). 50 marker codes seen; 117 written values not seen (81 `block_not_printed`, 30

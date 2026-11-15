@@ -7,6 +7,9 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { GROUPS } from './classify.mjs'
 import { groupCounts } from './groups.mjs'
+import { PENDING, verdictOf } from './verdict.mjs'
+
+export { PENDING } from './verdict.mjs'
 
 export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v1'
 
@@ -42,12 +45,6 @@ export function kitHashesOf(folder) {
   return out
 }
 
-/** The measurements of #586 the record holds a slot for: `not_run` until that ticket fills them. */
-export const PENDING = Object.freeze({
-  minItems: { ticket: 586, status: 'not_run' },
-  linkCheck: { ticket: 586, status: 'not_run' }
-})
-
 /**
  * @param {{kit: object, origin: string, built: object, accounting: object, real: object | null,
  *   renders: object[], pages: object[], classified: object, groups?: object[], demo: object, controls?: object,
@@ -60,19 +57,24 @@ export function checkRecord(input) {
   const { kit, origin, built, accounting, real, renders, pages, classified, demo, widths, themes, plugin } =
     input
   const groups = input.groups ?? []
-  const leaks = classified.findings.filter((f) => f.group !== 'outside_request')
-  const pending = Object.entries(PENDING)
-    .filter(([, p]) => p.status !== 'passed')
-    .map(([k]) => k)
   const failed = renders.filter((r) => r.status !== (r.expected ?? 200))
   const controls = input.controls ?? {}
-  // A control is measured only on pages that answered as they should: no demo found on error pages proves nothing.
-  const measured = (c) => c?.status === 'run' && !c.failed
-  const controlsOk =
-    measured(controls.human) &&
-    controls.human.findings > 0 &&
-    measured(controls.blank) &&
-    controls.blank.findings === 0
+  const measurements = { ...structuredClone(PENDING), ...input.measurements }
+  const verdict = {
+    ...verdictOf({
+      real,
+      accounting,
+      findings: classified.findings,
+      notSeen: classified.notSeen,
+      demo,
+      renders,
+      controls,
+      orderProblems: built.orderProblems ?? [],
+      observationProblems: classified.problems ?? [],
+      measurements
+    }),
+    groups: groups.filter((g) => g.group !== 'outside_request').length
+  }
   const record = {
     schema: RECORD_SCHEMA,
     template: kit.mapping?.template ?? null,
@@ -82,24 +84,8 @@ export function checkRecord(input) {
     plugin,
     kitFiles: input.kitHashes ?? null,
     inputs: input.inputs ?? null,
-    // Passed only when nothing is failing AND nothing is left unmeasured: the #586 slots, a page that did not render,
-    // a demo scan control not run or not right.
-    verdict: {
-      leaks: leaks.length,
-      groups: groups.filter((g) => g.group !== 'outside_request').length,
-      unexplained: accounting.counts.unexplained,
-      demoFindings: demo.browser.length,
-      failedRenders: failed.length,
-      controls: controlsOk ? 'right' : 'not_right_or_not_run',
-      notRun: pending,
-      pass:
-        leaks.length === 0 &&
-        accounting.counts.unexplained === 0 &&
-        demo.browser.length === 0 &&
-        failed.length === 0 &&
-        controlsOk &&
-        pending.length === 0
-    },
+    // Passed only when nothing is failing AND nothing is left unmeasured (`verdict.mjs`).
+    verdict,
     universe: accounting.counts,
     split: splitOf(accounting.places),
     places: accounting.places,
@@ -123,6 +109,7 @@ export function checkRecord(input) {
         blocks: g.blocks,
         message: g.message
       })),
+      orderProblems: built.orderProblems ?? [],
       measuredRefusals: input.refusals.map(({ code, door, message, why }) => ({ code, door, message, why })),
       unproven: built.writePlan?.unproven ?? [],
       conflicts: built.writePlan?.conflicts ?? []
@@ -153,10 +140,12 @@ export function checkRecord(input) {
       exempt: classified.exempt,
       codesSeen: classified.seen.size,
       notSeen: classified.notSeen,
+      notSeenUnexplained: classified.notSeen.filter((n) => !n.declared).length,
+      observationProblems: classified.problems ?? [],
       notSeenByReason: countBy(classified.notSeen, 'reason')
     },
     demoScan: { findings: demo.browser, html: demo.html, checks: demo.checks, controls },
-    pending: structuredClone(PENDING)
+    pending: measurements
   }
   return siteless(record, origin)
 }

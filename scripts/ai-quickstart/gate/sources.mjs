@@ -116,7 +116,8 @@ function languageOf(files) {
       const value = entities(m[2].replace(/\\"/g, '"').replace(/<[^>]+>/g, ' '))
       // A string with a placeholder reads any words in its place, when its own words are enough to tell it apart.
       const literal = value.replace(PLACEHOLDER, '').replace(/[^\p{L}]/gu, '')
-      const pattern = escapeRe(squash(value)).replace(PLACEHOLDER_SPACED, '\\s*.*?\\s*')
+      // Each placeholder is a capture: what fills it is reported (`fills`), so a kept string never exempts its fill.
+      const pattern = escapeRe(squash(value)).replace(PLACEHOLDER_SPACED, '\\s*(.*?)\\s*')
       out.push({ file, key: m[1], value, re: literal.length >= 4 ? new RegExp(`^${pattern}$`) : null })
     }
   }
@@ -151,6 +152,12 @@ function slotsOf(contentMap, mapping) {
       })
   return out
 }
+
+/** What fills each placeholder of a language string, in the words the page printed. */
+const fillsOf = (re, value) =>
+  (new RegExp(re.source, 'i').exec(String(value).replace(/\s+/g, ' ').trim()) ?? [])
+    .slice(1)
+    .map((f) => f.trim())
 
 /** Whose a language string is, by its extension name (`tpl_`, `com_`, `mod_`, `plg_`, or the core's own files). */
 const ownerOfExtension = (extension) =>
@@ -198,49 +205,78 @@ export function sourceResolver(
     body.includes(`\\"${v}\\"`) ||
     body.includes(`>${v}<`)
 
-  const text = (value) => {
+  // Every language string by its exact words (several keys may print the same words).
+  const exactAll = new Map()
+  for (const l of language) {
+    const k = squash(l.value)
+    if (!exactAll.has(k)) exactAll.set(k, [])
+    if (!exactAll.get(k).some((x) => x.key === l.key)) exactAll.get(k).push(l)
+  }
+
+  /** Every source that holds the words, in the search order (`SEARCH_ORDER`; a value of the site's records alone). */
+  const textCandidates = (value) => {
     const v = squash(value)
-    if (!v) return { class: 'unknown', searched: [] }
+    const out = []
     const slot = slots.get(v)
     if (slot?.string) {
       const { key, extension, language: lang } = slot.string
-      const file = language.find((x) => x.key === key)?.file ?? null
-      return {
+      out.push({
         class: 'language',
         key,
         extension,
         language: lang,
-        file,
+        file: language.find((x) => x.key === key)?.file ?? null,
         slot: slot.slot,
-        owner: ownerOfExtension(extension)
+        owner: ownerOfExtension(extension),
+        fills: []
+      })
+    } else if (slot) {
+      const { string: _none, ...place } = slot
+      out.push({ class: 'block_field', ...place })
+    } else {
+      // A value of the site's own records (the account the write made the records as) is that value, alone.
+      const w = writes?.get(String(value).trim())
+      if (w) return [{ class: 'write', ...w }]
+      // A contract slot is a row of the dump: the dump is another source only when no slot holds the words.
+      const at = [`'${v.replace(/'/g, "\\'")}'`, `\\"${v}\\"`, `"${v}"`]
+        .map((q) => dumpLow.indexOf(q))
+        .find((i) => i >= 0)
+      if (at !== undefined) {
+        const table = tableAt(dump, at)
+        out.push({
+          class: SETTING_TABLES.test(table ?? '') ? 'setting' : 'data',
+          file: 'installation/sql/mysql/custom.sql',
+          table
+        })
       }
     }
-    if (slot) {
-      const { string: _none, ...place } = slot
-      return { class: 'block_field', ...place }
-    }
-    const w = writes?.get(String(value).trim())
-    if (w) return { class: 'write', ...w }
-    const at = [`'${v.replace(/'/g, "\\'")}'`, `\\"${v}\\"`, `"${v}"`]
-      .map((q) => dumpLow.indexOf(q))
-      .find((i) => i >= 0)
-    if (at !== undefined) {
-      const table = tableAt(dump, at)
-      return SETTING_TABLES.test(table ?? '')
-        ? { class: 'setting', file: 'installation/sql/mysql/custom.sql', table }
-        : { class: 'data', file: 'installation/sql/mysql/custom.sql', table }
-    }
-    const l = exact.get(v) ?? language.find((x) => x.re?.test(v))
-    if (l) return { class: 'language', file: l.file, key: l.key, ...ownerOf(l.file) }
-    for (const [file, body] of settings)
-      if (quoted(body.toLowerCase(), v)) return { class: 'setting', file, ...ownerOf(file) }
+    const strings = exactAll.get(v) ?? language.filter((x) => x.re?.test(v))
+    for (const l of strings)
+      if (!out.some((c) => c.class === 'language' && c.key === l.key))
+        out.push({
+          class: 'language',
+          file: l.file,
+          key: l.key,
+          ...ownerOf(l.file),
+          fills: exactAll.has(v) ? [] : fillsOf(l.re, value)
+        })
+    const setting = settings.find(([, body]) => quoted(body.toLowerCase(), v))
+    if (setting) out.push({ class: 'setting', file: setting[0], ...ownerOf(setting[0]) })
     // A literal: the words alone between tags or quotes (a short word inside a longer one is not it).
     const literal = new RegExp(`(^|[>'"])\\s*${escapeRe(v)}\\s*([<'"]|$)`, 'im')
-    for (const [file, body] of literals)
-      if (literal.test(body)) return { class: 'literal', file, ...ownerOf(file) }
-    for (const [file, body] of sheets)
-      if (quoted(body.toLowerCase(), v)) return { class: 'stylesheet', file, ...ownerOf(file) }
-    return { class: 'unknown', searched: SEARCH_ORDER.slice(0, 8) }
+    const lit = literals.find(([, body]) => literal.test(body))
+    if (lit) out.push({ class: 'literal', file: lit[0], ...ownerOf(lit[0]) })
+    const sheet = sheets.find(([, body]) => quoted(body.toLowerCase(), v))
+    if (sheet) out.push({ class: 'stylesheet', file: sheet[0], ...ownerOf(sheet[0]) })
+    return out
+  }
+
+  // One source, or `ambiguous` with every candidate (the first in the search order is the `likely` one), or unknown.
+  const text = (value) => {
+    if (!squash(value)) return { class: 'unknown', searched: [] }
+    const all = textCandidates(value)
+    if (!all.length) return { class: 'unknown', searched: SEARCH_ORDER.slice(0, 8) }
+    return all.length === 1 ? all[0] : { class: 'ambiguous', likely: all[0], candidates: all }
   }
 
   const picture = (url) => {

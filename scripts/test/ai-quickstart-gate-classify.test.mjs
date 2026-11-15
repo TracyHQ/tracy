@@ -10,8 +10,16 @@ import { classify } from '../ai-quickstart/gate/classify.mjs'
 import { compareBlocks } from '../ai-quickstart/gate/demo-checks.mjs'
 import { exemptionOf, keptKeysOf } from '../ai-quickstart/gate/exemptions.mjs'
 import { fixClassOf, groupCounts, groupsOf } from '../ai-quickstart/gate/groups.mjs'
-import { codeOf, linkMarker, markerShare, textMarker } from '../ai-quickstart/gate/marker-codec.mjs'
+import {
+  codeOf,
+  codesIn,
+  linkMarker,
+  markerShare,
+  phoneMarker,
+  textMarker
+} from '../ai-quickstart/gate/marker-codec.mjs'
 import { checkRecord } from '../ai-quickstart/gate/record.mjs'
+import { blankControlOf } from '../ai-quickstart/gate/verdict.mjs'
 import { recordHtml } from '../ai-quickstart/gate/record-html.mjs'
 import { ownerOf, sourceResolver } from '../ai-quickstart/gate/sources.mjs'
 import { demoCorpus, demoScan } from '../ai-quickstart/rendered-scan.mjs'
@@ -136,6 +144,58 @@ test('every source class: the true source of a word or a picture, or unknown wit
   assert.equal(ownerOf('components/com_petal/tmpl/x.php').owner, 'component')
 })
 
+test('a value more than one source holds is ambiguous, with every candidate, and a kit keep of any of them exempts it', () => {
+  const r = sourceResolver(
+    {
+      names: [],
+      files: new Map([
+        ['language/en-GB/joomla.ini', 'JCLOSE="Close"\n'],
+        ['language/en-GB/tpl_petal.ini', 'TPL_CLOSE="Close"\n'],
+        ['templates/petal/html/modal.php', '<button>Close</button>'],
+        ['language/en-GB/com_petal.ini', 'PETAL_ONLY="Only here"\n']
+      ])
+    },
+    {
+      site: ORIGIN,
+      contentMap: {
+        entities: [
+          {
+            key: 'languageString-9',
+            kind: 'languageString',
+            identity: { extension: 'tpl_petal', key: 'TPL_CLOSE' }
+          }
+        ],
+        slots: [{ key: 'languageString-9.0', entity: 'languageString-9', sample: 'Close' }]
+      }
+    }
+  )
+  const close = r.text('Close')
+  assert.equal(close.class, 'ambiguous')
+  assert.deepEqual(
+    close.candidates.map((c) => [c.class, c.key ?? c.file]),
+    [
+      ['language', 'TPL_CLOSE'],
+      ['language', 'JCLOSE'],
+      ['literal', 'templates/petal/html/modal.php']
+    ]
+  )
+  assert.equal(close.likely.key, 'TPL_CLOSE')
+  assert.equal(r.text('Only here').class, 'language')
+  // The kit keeps JCLOSE: one of the candidates, so the words are exempt.
+  const kept = keptKeysOf({
+    overrides: { language: [{ key: 'JCLOSE', keep: 'kept: the close button of a dialog' }] }
+  })
+  assert.match(
+    exemptionOf(obs('text', 'Close', 'button'), { origin: ORIGIN, kept, source: close, rules: EXEMPTIONS }),
+    /^kept_by_kit/
+  )
+  assert.equal(fixClassOf({ group: 'unmarked_text', source: close }), 'kit_declare_keep')
+  const [g] = groupsOf([
+    { group: 'unmarked_text', page: 'a', value: 'Close', where: ['dark 390'], source: close }
+  ])
+  assert.match(g.label, /one of 3 sources/)
+})
+
 test('exemptions come from the kit (a kept key) and the adapter (the page frame) only', () => {
   const kept = keptKeysOf({
     overrides: { language: [{ key: 'TPL_FOLLOW', keep: 'kept: a label of the social row' }] }
@@ -154,6 +214,175 @@ test('exemptions come from the kit (a kept key) and the adapter (the page frame)
   // With no adapter rules, nothing of the frame is exempt: no rule lives in the classifier.
   assert.equal(exemptionOf(obs('text', '14 March 2026', 'time'), { ...ctx, rules: [] }), null)
   assert.equal(exemptionOf(obs('jsonld', `${ORIGIN}/#site`, 'script'), { ...ctx, rules: [] }), null)
+})
+
+test('a kept string with a placeholder is exempt only when the placeholder holds nothing, a marker or the build date', () => {
+  const kept = keptKeysOf({
+    overrides: { language: [{ key: 'FOOTER_LINE', keep: 'kept: the copyright line' }] }
+  })
+  const ctx = { origin: ORIGIN, kept, builtYear: 2026, rules: EXEMPTIONS }
+  const line = (name) => `Copyright \u00a9 2026 ${name}. All Rights Reserved.`
+  const ask = (v) => exemptionOf(obs('text', v, 'p'), { ...ctx, source: resolve.text(v) })
+  assert.equal(resolve.text(line('Petal Demo Shop')).fills.join(' ').trim(), '2026 Petal Demo Shop')
+  // A demo site name in the placeholder is a leak, though the string around it is kept.
+  assert.equal(ask(line('Petal Demo Shop')), null)
+  assert.match(ask(line(textMarker(A))), /^kept_by_kit/)
+  assert.match(ask('Copyright \u00a9 2026 . All Rights Reserved.'), /^kept_by_kit/)
+  // A year the build did not set is no date of the build.
+  assert.equal(ask(`Copyright \u00a9 1999 ${textMarker(A)}. All Rights Reserved.`), null)
+})
+
+test('a value with no letter is exempt only as punctuation, the not found status on its page, or the build year', () => {
+  const ctx = { origin: ORIGIN, kept: new Map(), builtYear: 2026, rules: EXEMPTIONS }
+  const ask = (v, extra = {}) => exemptionOf(obs('text', v, 'span'), { ...ctx, ...extra })
+  for (const v of ['|', '\u00b7', '/', '\u2192', '...']) assert.equal(ask(v), 'no_words', v)
+  // Counters, prices, hours and numbers are content: a demo value of them leaks.
+  for (const v of ['4', '32', '$45', '10:00', '+1 555 0100 001', '1999']) assert.equal(ask(v), null, v)
+  assert.equal(ask('404', { pageStatus: 404 }), 'not_found_status')
+  assert.equal(ask('404', { pageStatus: 200 }), null)
+  assert.equal(ask('2026'), 'date_set_by_build')
+})
+
+test('a marker counts only when its code is one the build registered: a look-alike phone number is a leak', () => {
+  const known = new Set([A])
+  assert.deepEqual(codesIn('+1 555 0100 999', known), [])
+  assert.deepEqual(codesIn(phoneMarker(A), known), [A])
+  assert.equal(markerShare('+1 555 0100 999', { known }).kind, 'none')
+  assert.equal(markerShare(`${textMarker(A)} +1 555 0100 999`, { known }).kind, 'mixed')
+  const out = classify({
+    renders: [
+      {
+        pageType: 'home',
+        path: 'index.php',
+        theme: 'light',
+        width: 1440,
+        status: 200,
+        observations: [
+          obs('text', '+1 555 0100 999', 'span'),
+          obs('href', 'tel:+15550100999', 'a[href]'),
+          obs('href', `tel:${phoneMarker(A).replace(/\s/g, '')}`, 'a[href]')
+        ]
+      }
+    ],
+    origin: ORIGIN,
+    registry: [{ code: A, what: 'writer' }],
+    writePlan: { ops: [] },
+    uploaded: {},
+    resolve,
+    kept: new Map(),
+    rules: EXEMPTIONS
+  })
+  assert.deepEqual(
+    out.findings.map((f) => [f.group, f.value]),
+    [
+      ['unmarked_text', '+1 555 0100 999'],
+      ['unmarked_link', 'tel:+15550100999']
+    ]
+  )
+})
+
+test('an embed whose address is no marker is a leak; fonts and declared hosts stay notes; a reader problem is kept', () => {
+  const out = classify({
+    renders: [
+      {
+        pageType: 'contact',
+        path: 'index.php/contact',
+        theme: 'light',
+        width: 1440,
+        status: 200,
+        observations: [
+          obs('embed', 'https://maps.example/embed?q=demo+shop', 'iframe[src]'),
+          obs('embed', linkMarker(A), 'iframe[src]'),
+          obs('media', `${ORIGIN}/media/demo.mp4`, 'video[src]'),
+          obs('request', 'https://maps.example/embed?q=demo+shop', 'request[document]'),
+          obs('request', 'https://video.example/clip.mp4', 'request[media]'),
+          obs('request', 'https://fonts.example/font.woff2', 'request[font]'),
+          obs('request', 'https://widgets.example/frame', 'request[document]'),
+          obs('problem', 'structured data that does not parse: Unexpected end', 'script[ld+json]')
+        ]
+      }
+    ],
+    origin: ORIGIN,
+    registry: [{ code: A, what: 'writer' }],
+    writePlan: { ops: [] },
+    uploaded: {},
+    resolve,
+    kept: new Map(),
+    rules: EXEMPTIONS,
+    declaredHosts: new Set(['widgets.example'])
+  })
+  assert.deepEqual(
+    out.findings.map((f) => [f.group, f.value]).sort(),
+    [
+      ['outside_request', 'https://fonts.example/font.woff2'],
+      ['outside_request', 'https://widgets.example/frame'],
+      ['unmarked_embed', `${ORIGIN}/media/demo.mp4`],
+      ['unmarked_embed', 'https://maps.example/embed?q=demo+shop'],
+      ['unmarked_embed', 'https://maps.example/embed?q=demo+shop'],
+      ['unmarked_embed', 'https://video.example/clip.mp4']
+    ].sort()
+  )
+  assert.deepEqual(out.problems, [
+    {
+      page: 'contact',
+      element: 'script[ld+json]',
+      value: 'structured data that does not parse: Unexpected end'
+    }
+  ])
+  assert.equal(
+    fixClassOf({ group: 'unmarked_embed', source: { class: 'outside', host: 'maps.example' } }),
+    'template_patch'
+  )
+})
+
+test('a kept string whose reason says no page draws it, seen on a page, is a finding: the reason is false', () => {
+  const kept = keptKeysOf({
+    overrides: {
+      language: [
+        { key: 'TPL_FOLLOW', keep: 'not-drawn: no kit page draws it' },
+        { key: 'TPL_MORE', keep: 'kept: interface text, not drawn as visible text on any kit page' }
+      ]
+    }
+  })
+  const out = classify({
+    renders: [
+      {
+        pageType: 'home',
+        path: 'index.php',
+        theme: 'dark',
+        width: 390,
+        status: 200,
+        observations: [
+          obs('text', 'Follow us', 'span'),
+          obs('text', 'Follow us', 'span', false, { place: { element: 'label' } }),
+          obs('text', 'Read the story', 'a', false)
+        ]
+      }
+    ],
+    origin: ORIGIN,
+    registry: [],
+    writePlan: { ops: [] },
+    uploaded: {},
+    resolve,
+    kept,
+    rules: EXEMPTIONS
+  })
+  const groups = groupsOf(out.findings)
+  // Hidden words are in the page all the same (product decision 5): shown or hidden, the reason is false.
+  assert.deepEqual(
+    out.findings.map((f) => [f.group, f.value, f.visible]),
+    [
+      ['kit_reason_false', 'Follow us', true],
+      ['kit_reason_false', 'Follow us', false]
+    ]
+  )
+  assert.equal(groups[0].fixClass, 'kit_declare_keep')
+  assert.match(out.findings[0].why, /says no page draws it/)
+  // A reason that says only "not drawn as visible text" holds for hidden words: exempt, and recorded as hidden.
+  assert.deepEqual(
+    out.exempt.map((e) => [e.value, e.visible]),
+    [['Read the story', false]]
+  )
 })
 
 test('the marker filler alone is the gate own words, never a finding; beside other words those words are read', () => {
@@ -207,6 +436,7 @@ const classified = () =>
     origin: ORIGIN,
     registry: [
       { code: A, what: 'writer' },
+      { code: B, what: 'writer' },
       { code: C, what: 'writer' }
     ],
     writePlan,
@@ -364,7 +594,7 @@ test('the record: groups and counts, kit hashes, controls; not passed while anyt
     },
     controls: {
       human: { status: 'run', findings: 40, pages: 3 },
-      blank: { status: 'run', findings: 0, pages: 3 }
+      blank: blankControlOf([])
     },
     widths: [390, 768, 1440],
     themes: ['light', 'dark'],
@@ -390,22 +620,21 @@ test('the record: groups and counts, kit hashes, controls; not passed while anyt
   })
   assert.equal(clean.verdict.leaks, 0)
   assert.equal(clean.verdict.pass, false)
-  const blankFound = checkRecord({
+  // The human control with pages that did not load measures nothing.
+  const humanBroken = checkRecord({
     ...input,
-    controls: { ...input.controls, blank: { status: 'run', findings: 2 } }
+    controls: { ...input.controls, human: { status: 'run', findings: 40, failed: 5 } }
   })
-  assert.equal(blankFound.verdict.controls, 'not_right_or_not_run')
-  // No demo found on pages that failed to answer measures nothing.
-  const blankBroken = checkRecord({
-    ...input,
-    controls: { ...input.controls, blank: { status: 'run', findings: 0, failed: 5 } }
-  })
-  assert.equal(blankBroken.verdict.controls, 'not_right_or_not_run')
+  assert.equal(humanBroken.verdict.controls, 'not_run')
   const html = recordHtml(record)
   assert.match(html, /Not passed/)
   assert.match(html, /Copy answers/)
   assert.match(html, /data-a="correct"/)
   assert.doesNotMatch(html, /<b>bold<\/b>/)
   assert.doesNotMatch(html, /florist\.example/)
-  assert.doesNotMatch(html, /[–—]/)
+  assert.doesNotMatch(html, /[\u2013\u2014]/)
+  // The page says which parts failed, that the blank control is not applicable and why, and the written not seen.
+  assert.match(html, /Failing parts: /)
+  assert.match(html, /not applicable: the blank site before the write serves no page by design/)
+  assert.match(html, /Written but not seen/)
 })

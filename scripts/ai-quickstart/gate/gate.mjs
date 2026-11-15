@@ -16,9 +16,10 @@
  * blank site archive is made from the human quickstart (`blank-site.mjs`) unless `--installer` gives it. Without
  * `--site` the command stops after the write on a memory site (the accounting of the universe). With it, `--site` is
  * a throwaway blank site of that archive, the Claude Cowork plugin installed and its updater off, and `--human-site`
- * the untouched human quickstart restored on another throwaway site. The command renders both controls first (the
- * demo scan must find demo on the human quickstart and none on the blank site), then binds the blank site, writes
- * the marker plan through the plugin (`site-doors.mjs`), reads the plugin version at both ends (it must not move and
+ * the untouched human quickstart restored on another throwaway site. The command renders the control first (the
+ * demo scan must find demo on the human quickstart; the blank site serves no page before the write, so its statuses
+ * are recorded, not judged), then binds the blank site, writes the marker plan through the plugin (the door client of
+ * `website-opportunities/domain/site-doors.mjs`), reads the plugin version at both ends (it must not move and
  * must be `--plugin`, by default the version `apps/tracy-web/src/quickstarts.json` pins) and renders headless
  * (Playwright of the workspace). `--out` gets `record.json`, `record.html`, `shots/`, `crops/` and the raw calls; keep
  * it outside the repository. Exits 0 when the record passes, 1 when it does not, 2 on a usage error. A machine that
@@ -36,9 +37,9 @@ import {
   phosphorCatalog
 } from '../../../apps/tracy-web/src/lib/picture-paint/icons/phosphor-set.js'
 import { corpusInputOf, demoCorpus } from '../rendered-scan.mjs'
-import { siteDoors } from '../site-doors.mjs'
+import { siteDoors } from '../../../packages/wo/website-opportunities/domain/site-doors.mjs'
 import { directSend } from '../site-doors-send.mjs'
-import { EXEMPTIONS, SYSTEM_PAGES, sitePages } from './adapters/joomla-t4.mjs'
+import { DECLARED_HOSTS, EXEMPTIONS, SYSTEM_PAGES, sitePages } from './adapters/joomla-t4.mjs'
 import { crawlPages } from './adapters/web-frame.mjs'
 import { cropGroups } from './crops.mjs'
 import { controlOf } from './demo-checks.mjs'
@@ -47,6 +48,7 @@ import { kitHashesOf, splitOf } from './record.mjs'
 import { recordHtml } from './record-html.mjs'
 import { renderSite, THEMES, WIDTHS } from './render.mjs'
 import { runGate } from './run-gate.mjs'
+import { blankControlOf } from './verdict.mjs'
 import { realWrite } from './site-write.mjs'
 import { filesOf } from './sources.mjs'
 
@@ -104,10 +106,9 @@ if (!flag('--installer')) {
 }
 log(`blank site archive ${path.basename(installer)} sha256 ${sha(installer)}`)
 
-const browser = () =>
-  createRequire(path.join(ROOT, 'node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/package.json'))(
-    'playwright'
-  ).chromium
+// The browser of the workspace's own Playwright (the root devDependency), resolved the normal way.
+const { chromium } = await import('@playwright/test')
+const browser = () => chromium
 const corpus = demoCorpus(corpusInputOf({ ...kit, contentMap: kit.blankContract }))
 const controlRender = async (base, name) => {
   const pages = [
@@ -140,7 +141,7 @@ let send = null
 const result = await runGate({
   kit,
   archive: filesOf(installer),
-  adapter: { exemptions: EXEMPTIONS },
+  adapter: { exemptions: EXEMPTIONS, declaredHosts: DECLARED_HOSTS },
   iconLibrary: { set: PHOSPHOR_SET, icons: phosphorCatalog() },
   tryWrite: memoryTryWrite(kit),
   corpus,
@@ -160,7 +161,8 @@ const result = await runGate({
         : humanControl
           ? JSON.parse(readFileSync(humanControl, 'utf8'))
           : { status: 'not_run', findings: null },
-      blank: await controlOf(await controlRender(site, 'blank'), corpus)
+      // The blank site before the write serves no page by design: its statuses are recorded, never judged.
+      blank: blankControlOf(await controlRender(site, 'blank'))
     }),
     site: async ({ built }) => {
       token = readFileSync(process.env.GATE_TOKEN_FILE ?? '', 'utf8').trim()
@@ -172,6 +174,8 @@ const result = await runGate({
       const real = await realWrite({
         send,
         base: site,
+        // The site's key by its hash only: the journal names the site it was written on, never the token.
+        siteKey: createHash('sha256').update(token).digest('hex'),
         built,
         out,
         pin: flag('--plugin') ?? pinnedPlugin(),

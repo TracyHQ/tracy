@@ -9,17 +9,21 @@ import { demoChecks } from './demo-checks.mjs'
 import { keptKeysOf } from './exemptions.mjs'
 import { groupsOf } from './groups.mjs'
 import { markerBuild } from './marker-plan.mjs'
+import { declareNotSeen } from './not-seen.mjs'
 import { checkRecord, splitOf } from './record.mjs'
 import { sourceResolver } from './sources.mjs'
 
 /**
- * @param {{kit: object, archive: {files: Map<string, string>, names: string[]}, adapter: {exemptions: Function[]},
+ * @param {{kit: object, archive: {files: Map<string, string>, names: string[]}, adapter: {exemptions: Function[],
+ *   declaredHosts?: string[]},
  *   iconLibrary: object, tryWrite?: Function, site?: (input: {built: object, log: Function}) => Promise<object>,
  *   render?: (pages: object[]) => Promise<object[]>, controls?: () => Promise<object>, corpus: object,
  *   widths: number[], themes: string[], refusals?: object[], kitHashes?: object, inputs?: object,
+ *   measurements?: Record<string, {status: string}>,
  *   log?: (line: string) => void}} input `site` writes the marker plan and answers `{origin, real: {report, record,
  *   plugin}, pages, siteValues}`; `render` renders those pages; `controls` measures the demo scan on the untouched
- *   human quickstart and on the blank site before the write (`{human, blank}`), and runs before the write
+ *   human quickstart (`human`) and records the blank site before the write (`blank`, not applicable:
+ *   `blankControlOf`), and runs before the write
  * @returns {Promise<{built: object, accounting: object, record?: object, renders?: object[], groups?: object[]}>}
  */
 export async function runGate(input) {
@@ -37,7 +41,7 @@ export async function runGate(input) {
   // 2. The demo scan's controls, before anything is written on the site; then the write.
   const controls = input.controls ? await input.controls() : {}
   for (const [name, c] of Object.entries(controls))
-    log(`control ${name}: ${c.status}, ${c.findings} finding(s)`)
+    log(`control ${name}: ${c.status}${c.findings == null ? '' : `, ${c.findings} finding(s)`}`)
   const site = await input.site({ built, log })
   // 3. Every page rendered, every render read.
   const renders = await input.render(site.pages)
@@ -67,7 +71,14 @@ export async function runGate(input) {
     }),
     kept: keptKeysOf(kit.mapping),
     rules: adapter.exemptions,
-    siteValues
+    siteValues,
+    declaredHosts: new Set(adapter.declaredHosts ?? [])
+  })
+  // A written value no page shows is explained only by a reason the write or the kit declares.
+  classified.notSeen = declareNotSeen(classified.notSeen, {
+    conflicts: site.real.report?.counts?.conflicts ?? [],
+    unproven: built.writePlan?.unproven ?? [],
+    mapping: kit.mapping
   })
   const written = new Set(
     Object.entries(site.real.record?.ids ?? {})
@@ -97,6 +108,7 @@ export async function runGate(input) {
     plugin: site.real.plugin ?? null,
     refusals: input.refusals ?? [],
     kitHashes: input.kitHashes,
+    measurements: input.measurements,
     inputs: input.inputs,
     startedAt
   })

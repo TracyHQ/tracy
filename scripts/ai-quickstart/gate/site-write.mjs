@@ -7,28 +7,50 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { runDraftWrite } from '../../../apps/tracy-web/src/step-chain-draft-write.js'
-import { siteDoors } from '../site-doors.mjs'
+import { siteDoors } from '../../../packages/wo/website-opportunities/domain/site-doors.mjs'
 
 const readJson = (file, fallback) => (existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : fallback)
 
-/** A journal of door answers kept in one file. */
-function fileJournal(file) {
-  const answers = readJson(file, {})
+/** The key under which a journal names the site it was written on. */
+const SITE_KEY = '__site'
+
+/** The parts of a site identity a resume must match: the bind revision moves with every write, so it is kept, not matched. */
+const sameSite = (was, now) =>
+  Boolean(was) && was.site === now.site && was.siteKey === now.siteKey && was.contract === now.contract
+
+/**
+ * A journal of door answers kept in one file, for one site only: it names the site (address, the hash of its key, the
+ * contract, and the bind revision the run started on) and a journal that names another one, or none, is refused before
+ * any write.
+ */
+function fileJournal(file, identity) {
+  const answers = readJson(file, null)
+  if (answers && Object.keys(answers).length) {
+    const was = answers[SITE_KEY]
+    if (!sameSite(was, identity))
+      throw Object.assign(
+        new Error(
+          `the journal in the run folder was written on another site (${JSON.stringify(was ?? 'unnamed')}): use a new run folder`
+        ),
+        { code: 'journal_from_another_site' }
+      )
+  } else writeFileSync(file, JSON.stringify({ [SITE_KEY]: identity }))
+  const kept = answers && Object.keys(answers).length ? answers : { [SITE_KEY]: identity }
   return {
-    get: async (id) => answers[id] ?? null,
+    get: async (id) => (id === SITE_KEY ? null : (kept[id] ?? null)),
     set: async (id, entry) => {
-      answers[id] = entry
-      writeFileSync(file, JSON.stringify(answers))
+      kept[id] = entry
+      writeFileSync(file, JSON.stringify(kept))
     }
   }
 }
 
 /**
- * @param {{send: Function, base: string, built: object, out: string, pin: string | null, log: Function, open: Function,
- *   runId?: string}} input
+ * @param {{send: Function, base: string, siteKey: string, built: object, out: string, pin: string | null,
+ *   log: Function, open: Function, runId?: string}} input `siteKey`: the sha256 of the site's token, never the token
  * @returns {Promise<{report: object, record: object, plugin: {expected: string | null, start: string, end: string}}>}
  */
-export async function realWrite({ send, base, built, out, pin, log, open, runId = 'gate-run' }) {
+export async function realWrite({ send, base, siteKey, built, out, pin, log, open, runId = 'gate-run' }) {
   const version = async () => (await send('info', {})).info?.component ?? null
   const start = await version()
   if (pin && start !== pin)
@@ -40,7 +62,22 @@ export async function realWrite({ send, base, built, out, pin, log, open, runId 
     const answer = await fetch(new URL(String(file).replace(/^\/+/, ''), `${base}/`))
     return answer.ok ? new Uint8Array(await answer.arrayBuffer()) : null
   }
-  const doors = siteDoors({ send, publicFile, journal: fileJournal(path.join(out, 'journal.json')) })
+  // A write record is only resumed with the journal that names its site.
+  if (existsSync(path.join(out, 'write-record.json')) && !existsSync(path.join(out, 'journal.json')))
+    throw Object.assign(new Error('the run folder holds a write record with no journal naming its site'), {
+      code: 'journal_from_another_site'
+    })
+  const identity = {
+    site: base,
+    siteKey: siteKey ?? null,
+    contract: bound.contract ?? null,
+    revision: bound.revision ?? null
+  }
+  const doors = siteDoors({
+    send,
+    publicFile,
+    journal: fileJournal(path.join(out, 'journal.json'), identity)
+  })
   const recordFile = path.join(out, 'write-record.json')
   const record = readJson(recordFile, {})
   record.save = (state) => writeFileSync(recordFile, JSON.stringify(state))

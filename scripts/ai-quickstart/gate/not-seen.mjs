@@ -4,6 +4,7 @@
 // is assigned to no page); when it has it, the block was printed without that value (a place the template does not read,
 // a value its layout leaves out). Pure.
 import { codesIn } from './marker-codec.mjs'
+import { placeKeyOf, universeOf } from './universe.mjs'
 
 /** The page id of a plan entry (`<page>.<block>.<field>`), or null. */
 const pageOfEntry = (entry) => (typeof entry === 'string' ? entry.split('.')[0] : null)
@@ -69,4 +70,36 @@ export function notSeenOf({
     out.set(file, { picture: file, entry, op: key, loc: null, stood: 'picture', ...reasonOf(copy, entry) })
   }
   return [...out.values()]
+}
+
+/**
+ * Each written value no page shows, with the declared reason it may not show (`declared`), or null: a conflict the
+ * real write reported for its entry (`write_conflict`), a flag the write plan raised on its block or entry (its code),
+ * or the kit's own word that the place prints nothing (`prints: false` with `why` on the mapping location). A value with
+ * no declared reason fails the verdict.
+ * @param {object[]} notSeen `notSeenOf`
+ * @param {{conflicts?: string[], unproven?: object[], mapping?: object}} context
+ */
+export function declareNotSeen(notSeen, { conflicts = [], unproven = [], mapping = null } = {}) {
+  const conflicted = new Set(conflicts)
+  const silent = new Map()
+  for (const p of universeOf(mapping).values())
+    if (p.loc?.prints === false) silent.set(p.key, p.loc.why ?? 'declared')
+  return notSeen.map((n) => {
+    const entry = String(n.entry ?? '')
+    const flag = unproven.find(
+      (u) =>
+        (u.entry && (entry === u.entry || entry.startsWith(`${u.entry}.`))) ||
+        (u.block && u.page && entry.startsWith(`${u.page}.${u.block}.`))
+    )
+    const kit = n.loc ? silent.get(placeKeyOf(n.loc)) : undefined
+    const declared = conflicted.has(entry)
+      ? 'write_conflict'
+      : flag
+        ? flag.code
+        : kit
+          ? `kit_declares_not_printed: ${kit}`
+          : null
+    return { ...n, declared }
+  })
 }

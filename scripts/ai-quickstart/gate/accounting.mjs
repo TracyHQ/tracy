@@ -4,7 +4,7 @@
 // when none of them says anything about it. Pure.
 import { accountBuildPlace } from './accounting-build.mjs'
 import { pageShapesOf, unbuiltOf } from './marker-composition.mjs'
-import { ACCOUNT, placeKeyOf, universeOf } from './universe.mjs'
+import { ACCOUNT, placeKeyOf, uncoveredLocations, universeOf } from './universe.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const lastOf = (entry) =>
@@ -175,14 +175,28 @@ export function accountFor({ mapping, blockStore, pageRecipes }, { writePlan, or
         owner: place.owner,
         block: place.block ?? null,
         field: place.field,
-        account,
-        by: account === ACCOUNT.written ? 'writer' : account === ACCOUNT.unexplained ? null : by,
+        // A place the gate's own plan left is a failure of the gate's coverage: unexplained, never a skip.
+        account: by === 'marker_plan' ? ACCOUNT.unexplained : account,
+        by: account === ACCOUNT.written ? 'writer' : by,
         code: account === ACCOUNT.written ? 'written' : code,
         why
       })
     if (place.owner === 'build') {
       const a = accountBuildPlace(place, { writePlan, order, gaps, unbuilt })
       done(a.account, a.why, a.by, a.code)
+      continue
+    }
+    if (place.owner === 'setting') {
+      done(ACCOUNT.declared, `setting set by the kit: ${place.setting.why ?? ''}`, 'kit', 'setting_set')
+      continue
+    }
+    if (place.owner === 'emptied') {
+      done(
+        ACCOUNT.declared,
+        `emptied and never written: ${place.emptied.why ?? ''}`,
+        'kit',
+        'emptied_not_written'
+      )
       continue
     }
     const hit = written.get(place.key)
@@ -215,6 +229,10 @@ export function accountFor({ mapping, blockStore, pageRecipes }, { writePlan, or
           'writer',
           'language_string_not_written'
         )
+      continue
+    }
+    if (place.owner === 'seo' || place.owner === 'build_set') {
+      done(ACCOUNT.unexplained, 'no operation writes it and no skip reason', null, 'not_written')
       continue
     }
     if (place.owner === 'fact' && place.loc.notWritten) {
@@ -281,6 +299,18 @@ export function accountFor({ mapping, blockStore, pageRecipes }, { writePlan, or
       reasons[0]
     )
   }
+  // The completeness guard: a location of the mapping the universe does not hold and no ignored key covers.
+  for (const f of uncoveredLocations(mapping, universe))
+    places.push({
+      key: `uncovered:${f.path.join('.')}`,
+      owner: 'mapping',
+      block: null,
+      field: f.path.join('.'),
+      account: ACCOUNT.unexplained,
+      by: 'marker_plan',
+      code: 'location_not_in_universe',
+      why: `a location at ${f.path.join('.')} is no place of the universe and no ignored mapping key covers it`
+    })
   const counts = { universe: places.length }
   for (const a of Object.values(ACCOUNT)) counts[a] = places.filter((p) => p.account === a).length
   return { counts, places }

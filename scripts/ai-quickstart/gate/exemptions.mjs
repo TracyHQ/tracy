@@ -5,6 +5,17 @@
 //                 site itself, a date or year the build set (decision 4), a structured data or share type
 // Hidden words are not exempt (decision 5): `visible: false` is a leak like any other. Pure.
 
+import { dateSetByBuild } from './adapters/web-frame.mjs'
+import { markerShare } from './marker-codec.mjs'
+
+/** A placeholder fill a kept string may carry: nothing, a marker (with its filler), or a date or year the build set. */
+function ownFill(fill, { builtYear = new Date().getUTCFullYear() } = {}) {
+  // Two placeholders side by side share one fill ("%date% %sitename%"): the markers are taken out, the rest is a date.
+  const share = markerShare(String(fill ?? '').trim())
+  const rest = share.kind === 'marker' || share.kind === 'filler' ? '' : share.rest
+  return !rest || dateSetByBuild({ value: rest }, { builtYear }) !== null
+}
+
 /** The language keys the kit keeps, with their reasons: `Map<key, reason>`. */
 export function keptKeysOf(mapping) {
   const out = new Map()
@@ -21,7 +32,12 @@ export function keptKeysOf(mapping) {
  *   origin: string, builtYear?: number}} ctx `rules`: the framework adapter's (`adapter.exemptions`)
  */
 export function exemptionOf(o, { kept, source = null, rules = [], ...ctx }) {
-  if (source?.class === 'language' && kept?.has(source.key)) return `kept_by_kit: ${kept.get(source.key)}`
+  // A kept string exempts its own words only: each placeholder must hold nothing, a marker or a date the build set.
+  // Words several sources hold are exempt when the kit keeps any language string among them.
+  const strings = source?.class === 'ambiguous' ? source.candidates : [source]
+  for (const s of strings)
+    if (s?.class === 'language' && kept?.has(s.key) && (s.fills ?? []).every((f) => ownFill(f, ctx)))
+      return `kept_by_kit: ${kept.get(s.key)}`
   for (const rule of rules) {
     const why = rule(o, { source, ...ctx })
     if (why) return why

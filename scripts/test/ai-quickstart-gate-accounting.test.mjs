@@ -12,7 +12,7 @@ import {
 import { accountFor } from '../ai-quickstart/gate/accounting.mjs'
 import { markerBuild } from '../ai-quickstart/gate/marker-plan.mjs'
 import { memoryTryWrite } from '../ai-quickstart/gate/memory-write.mjs'
-import { universeOf } from '../ai-quickstart/gate/universe.mjs'
+import { IGNORED_MAPPING_KEYS, uncoveredLocations, universeOf } from '../ai-quickstart/gate/universe.mjs'
 
 const loc = (slot, extra = {}) => ({ slot, entity: slot.split('.')[0], column: 'params', ...extra })
 const MAPPING = {
@@ -30,7 +30,7 @@ const MAPPING = {
 }
 const STORE = { blocks: [{ id: 'hero-a', fields: [{ name: 'design', type: 'design' }] }] }
 
-test('an invented mapping: written, cut, design, kept language, skipped, and nothing unexplained', () => {
+test('an invented mapping: written, cut, design, kept language, skipped, and the gate own coverage gap unexplained', () => {
   assert.equal(universeOf(MAPPING).size, 8)
   const writePlan = {
     ops: [
@@ -69,12 +69,128 @@ test('an invented mapping: written, cut, design, kept language, skipped, and not
     universe: 8,
     written: 4,
     declared_not_written: 2,
-    skipped_by_writer: 2,
-    unexplained: 0
+    skipped_by_writer: 1,
+    unexplained: 1
   })
+  // A block the gate's own plan did not place is a failure of the gate's coverage, not a skip of the build.
   const unused = places.find((p) => p.block === 'unused-a')
   assert.equal(unused.why, 'block not placed by the marker plan')
-  assert.deepEqual([unused.by, unused.code], ['marker_plan', 'block_not_placed'])
+  assert.deepEqual(
+    [unused.account, unused.by, unused.code],
+    ['unexplained', 'marker_plan', 'block_not_placed']
+  )
+})
+
+test('every kind of kit place is in the universe: SEO, slot-less overrides, emptied, build sets, detail positions, escapes', () => {
+  const mapping = {
+    ...MAPPING,
+    seo: {
+      titleLimit: 60,
+      menuItem: {
+        title: [{ entity: 'page', column: 'params', jsonPath: ['page_title'] }],
+        ogTitle: {
+          sameAs: 'title',
+          locations: [{ entity: 'page', column: 'params', jsonPath: ['og_title'] }]
+        }
+      }
+    },
+    overrides: {
+      language: [
+        ...MAPPING.overrides.language,
+        { key: 'KIT_FOOTER_LINE', extension: 'mod_footer', keep: 'the line prints the site name fact' },
+        { key: 'KIT_FOOTER_NOTE', extension: 'mod_footer', value: '', why: 'hidden by an empty value' }
+      ]
+    },
+    emptiedNotWritten: [{ entity: 'mailConfig-from_name', column: 'value', why: 'the owner sets it' }],
+    buildSets: {
+      'module-2:params:catid.0': {
+        entity: 'module-2',
+        column: 'params',
+        jsonPath: ['catid', 0],
+        sets: 'category'
+      }
+    },
+    pages: {
+      post: {
+        under: {
+          page: 'news',
+          detailPositions: { positions: ['detail-1'], assignTo: 'list-page', why: 'measured' }
+        }
+      }
+    },
+    escapes: { why: 'measured', places: [{ match: { kind: 'article', column: 'title' }, escaped: 'mixed' }] },
+    notEmptied: [{ entity: 'module-9', why: 'trashed in the demo' }],
+    blocks: {
+      ...MAPPING.blocks,
+      'steps-a': {
+        lists: {
+          rounds: {
+            fields: { name: [loc('module-5.0')] },
+            lists: { steps: { fields: { step: [[loc('module-5.1'), loc('module-5.2')]] } } }
+          }
+        }
+      }
+    }
+  }
+  mapping.overrides.settings = [
+    { location: { entity: 'siteSetting-1', column: 'value' }, value: '', why: 'the site name stays empty' }
+  ]
+  const u = universeOf(mapping)
+  const by = (owner) => [...u.values()].filter((p) => p.owner === owner)
+  assert.equal(by('seo').length, 2)
+  assert.deepEqual(
+    by('language').map((p) => p.field),
+    ['KIT_WORD', 'KIT_FOOTER_LINE', 'KIT_FOOTER_NOTE']
+  )
+  assert.equal(by('emptied').length, 1)
+  assert.equal(by('setting').length, 1)
+  // A child list of a child list is walked too.
+  assert.equal(by('block').filter((p) => p.block === 'steps-a').length, 3)
+  assert.deepEqual(uncoveredLocations(mapping), [])
+  assert.equal(by('build_set').length, 1)
+  assert.ok(u.has('build:pages.post.under.detailPositions'))
+  assert.ok(u.has('build:escapes.places.0'))
+  const writePlan = {
+    ops: [
+      {
+        key: 'menuItem:home',
+        values: [
+          { loc: { entity: 'page', column: 'params', jsonPath: ['page_title'] }, entry: 'seo:home.title' },
+          { loc: { entity: 'module-2', column: 'params', jsonPath: ['catid', 0] }, entry: null }
+        ]
+      }
+    ]
+  }
+  const { places } = accountFor({ mapping, blockStore: STORE }, { writePlan, order: { pages: [] } })
+  const at = (key) => places.find((p) => p.key === key)
+  assert.equal(at('entity:page.params|page_title|').account, 'written')
+  assert.equal(at('entity:page.params|og_title|').account, 'unexplained')
+  assert.equal(at('entity:module-2.params|catid/0|').account, 'written')
+  assert.deepEqual(
+    places.filter((p) => p.owner === 'language').map((p) => p.code),
+    ['language_kept', 'language_kept', 'language_set']
+  )
+  assert.equal(at('entity:mailConfig-from_name.value||').code, 'emptied_not_written')
+  assert.equal(at('build:escapes.places.0').code, 'key_not_read')
+  assert.equal(at('entity:siteSetting-1.value||').code, 'setting_set')
+})
+
+test('the completeness guard: a location the universe does not hold and no ignore names is unexplained', () => {
+  const mapping = {
+    ...MAPPING,
+    newKey: { somewhere: { entity: 'module-7', column: 'params', jsonPath: ['x'] } }
+  }
+  const { places, counts } = accountFor(
+    { mapping, blockStore: STORE },
+    { writePlan: { ops: [] }, order: { pages: [] } }
+  )
+  const lost = places.filter((p) => p.code === 'location_not_in_universe')
+  assert.equal(lost.length, 1)
+  assert.equal(lost[0].account, 'unexplained')
+  assert.match(lost[0].why, /newKey\.somewhere/)
+  assert.ok(counts.unexplained >= 1)
+  // The mapping keys the guard ignores each carry a reason.
+  for (const [key, why] of Object.entries(IGNORED_MAPPING_KEYS)) assert.ok(why.length > 20, key)
 })
 
 test('JA Boxing on a memory site: every place accounted, none unexplained', async () => {

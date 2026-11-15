@@ -58,6 +58,15 @@ export function accountBuildPlace(place, { writePlan, order, gaps, unbuilt }) {
         place.kind === 'pages.record.category'
         ? writer('article_category_not_declared', 'the created articles carry no category')
         : notRead('the write plan does not read the record declaration')
+    case 'pages.under.detailPositions':
+      return has('detail_position_not_printed', (u) => String(u.page).startsWith(place.pageType))
+        ? writer(
+            'detail_position_not_printed',
+            'a copy at a detail position is not assigned to the list page'
+          )
+        : notRead('the write plan does not read the detail positions')
+    case 'escapes.places':
+      return notRead('the write plan does not read how this place prints (escapeOf)')
     case 'pages.ownItem':
       return notRead('used only by a plan with no list page; the write plan does not read it')
     case 'look.accent':

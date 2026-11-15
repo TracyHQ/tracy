@@ -11,6 +11,12 @@ import { WEB_FRAME_RULES } from './web-frame.mjs'
 /** The exemptions of the pages this framework prints (`exemptions.mjs`): the web frame's. */
 export const EXEMPTIONS = WEB_FRAME_RULES
 
+/**
+ * The hosts this framework's own pages embed or load by design (an embed from one of them is a note, not a leak): none.
+ * A map, a video or a frame from any other host whose address is no marker is a leak (`unmarked_embed`).
+ */
+export const DECLARED_HOSTS = Object.freeze([])
+
 /** The address of a page on one theme side. */
 export function themed(url, theme) {
   const u = new URL(url)

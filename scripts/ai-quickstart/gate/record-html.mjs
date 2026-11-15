@@ -143,12 +143,39 @@ export function recordHtml(record) {
   const c = record.demoScan?.controls ?? {}
   const control = (name, x, want) =>
     `<div><span>${esc(name)}</span><code>${
-      x?.status !== 'run'
-        ? 'not run'
-        : x.failed
-          ? `not measured: ${x.failed} of ${x.renders} page(s) did not load (${x.findings} demo finding(s) on the rest)`
-          : `${x.findings} demo finding(s) on ${x.pages} page(s), ${want}`
+      x?.status === 'not_applicable'
+        ? `not applicable: ${x.reason} (answered ${(x.statuses ?? []).map((r) => r.status).join(', ') || 'nothing'})`
+        : x?.status !== 'run'
+          ? 'not run'
+          : x.failed
+            ? `not measured: ${x.failed} of ${x.renders} page(s) did not load (${x.findings} demo finding(s) on the rest)`
+            : `${x.findings} demo finding(s) on ${x.pages} page(s), ${want}${x.findings ? '' : ': the scan is blind on this template'}`
     }</code></div>`
+  // The parts of the verdict, in plain words, for the line that says which ones failed.
+  const PART_NAMES = {
+    write: `the write on the site (${v.write})`,
+    leaks: 'leaks',
+    notSeen: 'written values no page shows, with no declared reason',
+    accounting: 'unexplained places',
+    demo: 'demo in the browser or in the raw HTML',
+    renders: 'pages that did not load as expected',
+    controls: `the demo scan's control (${v.controls})`,
+    order: 'problems of the write order',
+    observation: 'parts of a page the reader could not read',
+    pending: 'measurements not run yet'
+  }
+  const failing = (v.failing ?? []).map((k) => PART_NAMES[k] ?? k).join('; ')
+  const notSeen = m.notSeen ?? []
+  const notSeenRows = Object.entries(
+    notSeen.reduce((by, n) => {
+      const k = `${n.reason}|${n.declared ?? 'no declared reason'}`
+      by[k] = (by[k] ?? 0) + 1
+      return by
+    }, {})
+  ).map(([k, n]) => {
+    const [reason, declared] = k.split('|')
+    return `<div><code>${esc(reason)}</code><span>${esc(n)} (${esc(declared)})</span></div>`
+  })
   const PENDING_NAMES = { minItems: 'the minimum number of items', linkCheck: 'the link check' }
   const notRun = (v.notRun ?? []).map((k) => `${PENDING_NAMES[k] ?? k} (ticket 586)`).join(', ')
   const leakGroups = groups.filter((g) => g.group !== 'outside_request').length
@@ -162,6 +189,7 @@ export function recordHtml(record) {
   )} UTC.</p>
 <span class="verdict ${v.pass ? 'yes' : 'no'}">${v.pass ? 'Passed' : 'Not passed'}</span>
 <p class="muted">${esc(v.leaks)} leak(s) in ${esc(leakGroups)} group(s), plus ${esc(groups.length - leakGroups)} request(s) to other sites; ${esc(v.demoFindings)} demo finding(s); ${esc(v.failedRenders ?? 0)} page view(s) that did not load as expected; ${esc(v.unexplained)} unexplained place(s)${notRun ? `. Not measured yet: ${esc(notRun)}` : ''}.</p>
+${failing ? `<p class="muted">Failing parts: ${esc(failing)}.</p>` : ''}
 <h2>What the build did with every place the kit declares</h2>
 <div class="tiles">${Object.entries(ACCOUNT)
     .map(([k, label]) => tile(label, u?.[k] ?? 0))
@@ -172,12 +200,15 @@ export function recordHtml(record) {
         `<div><code>${esc(s.code)}</code><span>${esc(s.n)} (${esc(s.by === 'writer' ? 'the build' : s.by)})</span></div>`
     )
     .join('')}</div></details>
+<h2>Written but not seen (${esc(notSeen.length)}, ${esc(m.notSeenUnexplained ?? 0)} with no declared reason)</h2>
+<div class="reasons">${notSeenRows.join('') || '<div><span>Every written value is seen on a page.</span></div>'}</div>
 <h2>Findings by the fix they need</h2>
 <div class="tiles">${Object.entries(FIX)
     .map(([k, f]) => tile(f.title, counts[k] ?? 0))
     .join('')}</div>
 <h2>The demo scan's controls</h2>
-<div class="reasons">${control('The untouched human quickstart', c.human, 'should be many')}${control('The blank site before the build', c.blank, 'should be none')}</div>
+<div class="reasons">${control('The untouched human quickstart', c.human, 'should be many')}${control('The blank site before the build', c.blank, 'not judged')}</div>
+<p class="muted">Demo left after the build: ${esc(v.demoInBrowser ?? 0)} in what the browser shows, ${esc(v.demoInHtml ?? 0)} in the raw HTML.</p>
 <h2>Every finding group (${groups.length})</h2>
 <p class="muted">Each card is one piece of text, picture, link or request, counted once however many pages show it. Press Correct when the gate is right that it should not be there, Wrong when it should, and add a note. Then copy your answers and paste them back.</p>
 <div class="filter"><button data-f="all" aria-pressed="true">All</button>${Object.entries(FIX)

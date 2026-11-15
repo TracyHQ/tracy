@@ -3,7 +3,7 @@
 // error, and nothing but `send` touches the plugin.
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { DOOR_NOT_AVAILABLE, siteDoors } from '../ai-quickstart/site-doors.mjs'
+import { DOOR_NOT_AVAILABLE, siteDoors } from '../domain/site-doors.mjs'
 
 /** An invented plugin: answers by operation, keeps every call. */
 function fakeSend(answers = {}) {

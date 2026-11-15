@@ -15,13 +15,18 @@ export const siteAddress = (o, { origin }) => {
   return (origin && v.startsWith(origin)) || /^https?:\/\/schema\.org\/?$/.test(v) ? 'site_address' : null
 }
 
-/** A mark with no letter in it (a separator, a count), but not a year the build did not set. */
-export const noWords = (o, { builtYear = new Date().getUTCFullYear() }) => {
+/**
+ * A mark with no letter and no digit in it (a separator, an arrow, an ellipsis). Digits are content (a counter, a price,
+ * an hour, a phone number): only the not found page's own status and the build year (`dateSetByBuild`) pass.
+ */
+export const noWords = (o) => {
   const v = text(o)
-  if (/\p{L}/u.test(v.replace(/^https?:\/\/\S+$/, ''))) return null
-  if (/^\d{4}$/.test(v) && Number(v) !== builtYear) return null
-  return /^https?:/.test(v) ? null : 'no_words'
+  return v && !/[\p{L}\p{N}]/u.test(v) ? 'no_words' : null
 }
+
+/** The status code the not found page prints, on that page only. */
+export const notFoundStatus = (o, { pageStatus }) =>
+  pageStatus === 404 && text(o) === '404' ? 'not_found_status' : null
 
 /** A date or a copyright year the build set: the day it wrote a record, the year the footer prints (decision 4). */
 export const dateSetByBuild = (o, { builtYear = new Date().getUTCFullYear() }) => {
@@ -45,6 +50,7 @@ export const shareType = (o) => (o.kind === 'meta' && SHARE_TYPES.has(text(o)) ?
 export const WEB_FRAME_RULES = Object.freeze([
   siteAddress,
   noWords,
+  notFoundStatus,
   dateSetByBuild,
   structuredDataType,
   shareType

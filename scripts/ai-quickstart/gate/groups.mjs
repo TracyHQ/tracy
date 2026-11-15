@@ -24,16 +24,20 @@ export const FIX_CLASSES = Object.freeze([
 const sourceKey = (s) =>
   !s
     ? 'none'
-    : [s.class, s.key ?? s.slot ?? s.entry ?? s.table ?? s.file ?? s.host ?? '', s.column ?? ''].join(':')
+    : s.class === 'ambiguous'
+      ? `ambiguous:${s.candidates.map(sourceKey).join('+')}`
+      : [s.class, s.key ?? s.slot ?? s.entry ?? s.table ?? s.file ?? s.host ?? '', s.column ?? ''].join(':')
 
 const isIcon = (f) => f.place?.element === 'link[icon]' || /(?:^|\/)favicon\.[a-z]+$/i.test(f.value)
 
 /** The fix class a finding most likely needs, from its group and its source. */
 export function fixClassOf(f, { written = new Set() } = {}) {
-  const s = f.source ?? null
+  // Words more than one source holds: the fix of the likely one (the first in the search order).
+  const s = f.source?.class === 'ambiguous' ? f.source.likely : (f.source ?? null)
   if (f.group === 'outside_request') return 'external_request'
   if (f.group === 'raw_markup') return 'build_gap'
-  if (f.group === 'empty_picture')
+  if (f.group === 'kit_reason_false') return 'kit_declare_keep'
+  if (f.group === 'empty_picture' || f.group === 'unmarked_embed')
     return f.place?.module && written.has(f.place.module) ? 'build_gap' : 'template_patch'
   if (f.group === 'unmarked_picture' && isIcon(f)) return 'kit_write'
   switch (s?.class) {
@@ -60,28 +64,31 @@ export function fixClassOf(f, { written = new Set() } = {}) {
 
 /** What a group is, in plain words for the owner. */
 function labelOf(g) {
-  const s = g.source
   const what = {
     unmarked_text: g.visible ? 'Words on the page' : 'Hidden words in the page',
     unmarked_picture: 'A picture',
     unmarked_link: 'A link to another site',
     empty_picture: 'A picture with no address',
+    unmarked_embed: 'An embedded map, video or frame',
+    kit_reason_false: 'Words the kit keeps saying no page shows them, shown here',
     raw_markup: 'Code printed as words',
     outside_request: 'A request to another site'
   }[g.group]
-  const from = {
-    language: `a language string of ${s?.owner === 'core' ? 'Joomla' : `the ${s?.owner ?? 'site'}`} (${s?.key})`,
-    literal: `a file of the ${s?.owner ?? 'site'} (${s?.file})`,
-    stylesheet: `a stylesheet of the ${s?.owner ?? 'site'} (${s?.file})`,
-    picture_file: `a picture file of the ${s?.owner ?? 'site'} (${s?.file})`,
-    block_field:
-      `the demo content of a block (${s?.block ?? 'undeclared'} ${s?.field ?? s?.slot ?? ''})`.trim(),
-    data: `the site's demo data (${s?.table ?? 'unknown table'})`,
-    setting: `a template setting (${s?.table ?? s?.file})`,
-    write: s?.table ? `the site's ${s.table} (${s.column})` : `a value the build wrote (${s?.entry ?? ''})`,
-    outside: `another site (${s?.host})`
-  }[s?.class]
-  return `${what}, from ${from ?? 'a source the gate could not find'}`
+  const from = (s) =>
+    ({
+      language: `a language string of ${s?.owner === 'core' ? 'Joomla' : `the ${s?.owner ?? 'site'}`} (${s?.key})`,
+      literal: `a file of the ${s?.owner ?? 'site'} (${s?.file})`,
+      stylesheet: `a stylesheet of the ${s?.owner ?? 'site'} (${s?.file})`,
+      picture_file: `a picture file of the ${s?.owner ?? 'site'} (${s?.file})`,
+      block_field:
+        `the demo content of a block (${s?.block ?? 'undeclared'} ${s?.field ?? s?.slot ?? ''})`.trim(),
+      data: `the site's demo data (${s?.table ?? 'unknown table'})`,
+      setting: `a template setting (${s?.table ?? s?.file})`,
+      write: s?.table ? `the site's ${s.table} (${s.column})` : `a value the build wrote (${s?.entry ?? ''})`,
+      outside: `another site (${s?.host})`,
+      ambiguous: `one of ${s?.candidates?.length} sources (${s?.candidates?.map((c) => from(c)).join('; ')})`
+    })[s?.class]
+  return `${what}, from ${from(g.source) ?? 'a source the gate could not find'}`
 }
 
 /**

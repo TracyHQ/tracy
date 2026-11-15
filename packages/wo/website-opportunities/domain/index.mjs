@@ -599,6 +599,14 @@ export {
 } from './write-order.mjs'
 export { checkWriteOrder } from './write-order-check.mjs'
 export { MemorySiteError, memorySite } from './write-order-memory-site.mjs'
+export {
+  contractApplyId,
+  DOOR_NOT_AVAILABLE,
+  DoorError,
+  memoryJournal,
+  siteDoors,
+  UNAVAILABLE_DOORS
+} from './site-doors.mjs'
 
 // Hosts check these before running a job; bump `version` on any breaking change to the API above.
 export const CONTRACT = Object.freeze({
