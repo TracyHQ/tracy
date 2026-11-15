@@ -54,11 +54,19 @@ export function observeInPage(doc = document) {
     }
     return null
   }
+  // The pagination of a list (Joomla's pagination layout prints in a `pagination` element): kept page numbers are
+  // its own and no other number's (`adapters/joomla-literal-scope.mjs`).
+  const inPagination = (el) => {
+    for (let n = el; n && n.nodeType === 1; n = n.parentElement)
+      if (/(?:^|\s)pagination(?:__wrapper)?(?:\s|$)/.test(n.getAttribute('class') ?? '')) return true
+    return false
+  }
   const place = (el, element) => {
     const module = el ? moduleOf(el) : null
     return {
       element: String(element).slice(0, 40),
       ...(el && inMenu(el) ? { menu: true } : {}),
+      ...(el && inPagination(el) ? { pagination: true } : {}),
       ...(module ? { module } : {})
     }
   }

@@ -3,7 +3,7 @@
 // dump tells what each module row is (its type and, for a JA ACM module, the layout its params pick); the write record
 // tells which blank site module each copy the build made comes from. From these, for a file and a place on a page:
 //   true    the file prints there (a component layout outside any module, on a page of its view, read from the
-//           address or the menu item the page is; a module layout in a
+//           address or the menu item the page is; the pagination layout in a pagination element; a module layout in a
 //           module of that type; an ACM layout in an ACM module whose params pick that layout and style)
 //   false   the page tells that another file prints there
 //   null    the page cannot tell (a file of another kind, a module the dump does not hold)
@@ -54,9 +54,8 @@ export function fileKindOf(file) {
     /(?:^|\/)html\/(com_[a-z0-9_]+)\/([^/]+)\//i.exec(f) ??
     /^components\/(com_[a-z0-9_]+)\/tmpl\/([^/]+)\//i.exec(f)
   if (m) return { kind: 'component', component: m[1], view: m[2] }
-  // The pagination of a list: printed by the component's list views, outside any module.
-  if (/(?:^|\/)layouts\/joomla\/pagination\//.test(f))
-    return { kind: 'component', component: null, view: null }
+  // The pagination of a list: printed by the component's list views in a pagination element, outside any module.
+  if (/(?:^|\/)layouts\/joomla\/pagination\//.test(f)) return { kind: 'pagination' }
   return null
 }
 
@@ -79,10 +78,10 @@ export function joomlaLiteralScope({ dump, ids = {}, plan = null, mapping = null
   const renders = (file, { place = null, path = null, view = null } = {}) => {
     const k = fileKindOf(file)
     if (!k) return null
+    if (k.kind === 'pagination') return place?.pagination === true
     if (k.kind === 'component') {
       if (place?.module) return false
       const at = view ?? viewOf(path)
-      if (!k.view) return true
       return at ? at === k.view : null
     }
     if (!place?.module) return false

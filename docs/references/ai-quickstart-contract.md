@@ -1721,7 +1721,8 @@ set, a number (a page count, a position) or the words of another string the kit 
 slot or whole record, or a slot the draft report keeps (`as: "kept"`); words a template file writes as code that
 `keptLiterals` names, by `values` or `pattern`, only where that file prints (`kept_literal: <file>: <reason>`): a source
 names the file, or the adapter's scope (`gate/adapters/joomla-literal-scope.mjs`) reads from the page that it prints
-there (a component layout outside any module on a page of its view, a module layout in a module of its type, a JA ACM
+there (a component layout outside any module on a page of its view, the pagination layout inside an element of class
+`pagination` the page reader marks, `place.pagination`, a module layout in a module of its type, a JA ACM
 layout in a module whose params pick it); words the write, a contract place or the blank site's row of the module that
 prints them holds are never a literal, and where the page cannot tell the file the words are a leak; a keep of any of these whose reason says no page draws
 it is not exempt where it is seen, it is `kit_reason_false`) and the
