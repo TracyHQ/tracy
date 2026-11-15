@@ -4,7 +4,7 @@
 // accepted one says exactly what it ran: brief as used, kit, prompt hash, both door snapshots (never a key), tool
 // names and harness settings. The worker (brand-worker.js) does the rest.
 import { randomUUID } from 'node:crypto'
-import { briefOfRevision } from '../lib/bench-sql.js'
+import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision } from '../lib/bench-sql.js'
 import { defaultContracts } from '../lib/contracts.js'
 import { headerSiteLogoBlockOf } from '../lib/template-kit/flow-reads.js'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
@@ -14,7 +14,7 @@ import { brandDoors } from './brand-doors.js'
 import { brandHarnessFor } from './brand-harness.js'
 import { logoIdOf, stageLogo } from './brand-logo.js'
 import { brandPrompt } from './brand-prompt.js'
-import { activeRun, BRAND_RUN_ACTIVE, createRun, readRun, requestCancel, UUID } from './brand-store.js'
+import { activeRuns, BRAND_RUN_ACTIVE, createRun, readRun, requestCancel, UUID } from './brand-store.js'
 import { brandKitProblem } from './kit-grounds.js'
 
 export { brandKitProblem, briefOfRevision }
@@ -92,8 +92,8 @@ export async function startBrandRun({
       'BRAND_FONT_UNRESOLVED',
       `The template heading font of ${kitRef} cannot be read: ${font?.refusal ?? 'the template has no slot contract'}.`
     )
-  const active = await activeRun(pool)
-  if (active) return activeRefusal(active)
+  const running = await activeRuns(pool)
+  if (running.length >= BENCH_RUNS_AT_ONCE) return fullRefusal(running)
   // Last, since the first use of a kit version downloads its image zip: a kit whose images are unusable never queues.
   const images = await kitImages.ensure(opened)
   if (!images.ok) return refuse(images.code, images.reason)
@@ -123,16 +123,11 @@ export async function startBrandRun({
     tools: toolInfo(wired.tools),
     harness: brandHarnessFor(doors.agent.snapshot.model, doors.agent.snapshot.providerId, { noCaps })
   })
-  if (created.error === BRAND_RUN_ACTIVE) return activeRefusal(created.active)
+  if (created.error === BRAND_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
 }
 
-function activeRefusal(active) {
-  const who = active
-    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
-    : 'another run'
-  return refuse(BRAND_RUN_ACTIVE, `Only one brand run at a time: ${who} is still active.`, { active })
-}
+const fullRefusal = (running) => benchFullRefusal(BRAND_RUN_ACTIVE, 'brand runs', running)
 
 /**
  * Cancel a run. One no worker holds ends at once; one a worker holds is asked to stop, which the worker does

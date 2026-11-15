@@ -1,0 +1,1 @@
+{"id":"REG-PR-633-repair-kind-unchanged","verdict":"PASS","commit":"d034a608e0fe44017efe17cf676fcc034d0aee2a","ran_at":"2026-11-15T14:51:12.400Z","evidence":"tests/regression/.runs/2026-11-15-d034a608e/REG-PR-633-repair-kind-unchanged.log"}

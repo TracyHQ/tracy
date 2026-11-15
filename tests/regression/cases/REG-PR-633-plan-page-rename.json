@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-633-plan-page-rename",
+  "kind": "fix",
+  "title": "A fix round's change list can give a page another id: the page is renamed and every place the plan names it follows",
+  "pr": 633,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "{page: X, field: 'id', with: Y} renames page X to Y everywhere the plan names it; a later change naming Y applies; a whole page given under Y with its decision renames then replaces it; a list of renames only applies.",
+    "Renaming to an id another page has, or a 'whole page' that is no page (no decision), is still refused.",
+    "With valid changes applied one by one, the rename counts as applied and a rejected change keeps its index in the list the planner sent."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-planner-plan-change-edits.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a page given a new id is renamed, and every place the plan names it follows",
+      "with valid changes applied one by one, a rename counts as applied and a rejected change keeps its own index",
+      "an edit at a path that is not there, or at an id, is refused and nothing is applied"
+    ]
+  }
+}

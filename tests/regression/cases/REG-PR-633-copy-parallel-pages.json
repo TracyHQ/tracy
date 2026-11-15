@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-633-copy-parallel-pages",
+  "kind": "feat",
+  "title": "The site writer can write its first draft in parallel parts (off by default): every page written once, merged and checked once, resumed, cancelled and costed per part, and a run that does not ask sends today's bytes",
+  "pr": 633,
+  "area": "website-opportunities/site-writer",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed and TEST_DATABASE_URL pointing at a scratch Postgres, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The split puts every page of the writing order in exactly one part, in order, with the heaviest part as light as any cut allows; the merged parts hold every slot of every page once and pass the copy check.",
+    "Each part's message starts with the same fixed part as a whole-site run, names its pages and the other parts' pages, the site voice, and shares out the business's own phrases and the phrases two parts' notes share.",
+    "A run started with parallel pages 2 sends both parts at the same time, saves them in separate turn ranges, checks one merged copy and costs the sum of its calls; the fix round continues the last part's conversation.",
+    "A run killed with one part recorded, or answered but not recorded, resumes the other part alone and never resends the first; a cancel stops both parts with no further call; a failed part stops the other and fails the run.",
+    "A run without parallel pages (or with 1) sends one request whose body is byte for byte the one sent before this change, and freezes no parallel setting; the CLI freezes --parallel-pages and refuses bad values and a mix with --pages-per-turn."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-writer-bench-parallel.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the split puts every page in exactly one part",
+      "the merged parts are one copy with every slot of every page",
+      "each part gets the fixed part of a whole-site run",
+      "a phrase the notes of two parts share",
+      "off by default: the first message is the same bytes",
+      "a run without parallel pages sends one request",
+      "parallel pages: the parts are in flight at the same time",
+      "a fix round after parallel parts continues the last part",
+      "a part whose answer is not one JSON object is asked once more",
+      "a parallel draft killed after one part was recorded",
+      "a part answered but not yet recorded when the process died",
+      "a cancel stops every part in flight",
+      "a part that fails stops the other part",
+      "run --parallel-pages freezes the number of parts"
+    ]
+  }
+}

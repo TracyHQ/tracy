@@ -17,6 +17,7 @@ export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
       [--by <label>]                      who started it (stored as cli:<label>)
       [--no-caps]                         run without the USD budget (a step of a chain build)
       [--require-visual-review]           verify delivered kit images before accepting a WO plan
+      [--kit-in-first-message]            send the whole kit in the first message; the image tool stays (frozen with the run)
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, duration, checker summary
   get <runId> --out <dir>                 write every plan version, the check and failure list of each round,
@@ -50,6 +51,7 @@ export async function runCli(argv, deps) {
         by: { type: 'string' },
         'no-caps': { type: 'boolean' },
         'require-visual-review': { type: 'boolean' },
+        'kit-in-first-message': { type: 'boolean' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -164,6 +166,7 @@ async function startRun(d, values) {
     kitImages: d.kitImages,
     noCaps: values['no-caps'] === true,
     requireVisualReview: values['require-visual-review'] === true,
+    kitInFirstMessage: values['kit-in-first-message'] === true,
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)

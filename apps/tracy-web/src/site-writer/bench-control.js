@@ -2,19 +2,22 @@
 // (the plan's and the brief's shape, the kit, the door) and stores what the run will use, so a refused start leaves
 // nothing behind and an accepted one says exactly what it ran: plan, brief as used, kit (with the sha256 of the content
 // map beside it, null when there is none), prompt hash, checker version,
-// door snapshot (never the key) and harness settings, pages per turn among them (#330). The worker (bench-worker.js) does the rest.
+// door snapshot (never the key) and harness settings, pages per turn among them (#330), and parallel pages when a run
+// asks for its first draft in parts (2026-11-15; left out of the harness otherwise, so a run that does not ask is
+// started exactly as before). The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor, capsOf } from '../lib/bench-harness.js'
-import { briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { openContentMap } from '../lib/content-map-source.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
-import { activeRun, createRun, readRun, requestCancel, SITE_WRITER_RUN_ACTIVE } from './bench-store.js'
+import { activeRuns, createRun, readRun, requestCancel, SITE_WRITER_RUN_ACTIVE } from './bench-store.js'
 import { CHECKER_VERSION } from './copy-check/check-copy.js'
 import { siteWriterDoor } from './door.js'
 import { WRITER_VISUAL_POLICY } from './visual-review.js'
 import { writerPrompt } from './writer-prompt.js'
 import { DEFAULT_PAGES_PER_TURN, pagesPerTurnProblem } from './writer-turns.js'
+import { parallelPagesProblem } from './writer-parts.js'
 
 export { briefOfRevision }
 
@@ -23,10 +26,11 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
 /**
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, plan: unknown, planSource: object, brief: unknown,
- *   briefSource: object, kitRef: string, startedBy: string, pagesPerTurn?: number | 'all',
+ *   briefSource: object, kitRef: string, startedBy: string, pagesPerTurn?: number | 'all', parallelPages?: number,
  *   index?: Map<string, object>, effort?: 'low' | 'high' | 'max' }} input `effort`: an explicit native DeepSeek Flash
  *   run setting; omission keeps the measured model default. `pagesPerTurn`: pages per writing turn, the whole site in one turn unless
- *   given; `index`: the contracts to find kits in (tests).
+ *   given; `index`: the contracts to find kits in (tests). `parallelPages`: the number of parts the first draft
+ *   is written in at the same time (writer-parts.js); absent or 1, round 0 is written as before.
  */
 export async function startWriterRun({
   pool,
@@ -38,6 +42,7 @@ export async function startWriterRun({
   kitRef,
   startedBy,
   pagesPerTurn = DEFAULT_PAGES_PER_TURN,
+  parallelPages,
   effort,
   index,
   noCaps = false,
@@ -45,6 +50,15 @@ export async function startWriterRun({
 }) {
   const turnProblem = pagesPerTurnProblem(pagesPerTurn)
   if (turnProblem) return refuse('SITE_WRITER_HARNESS', `The run cannot start: ${turnProblem}.`)
+  if (parallelPages !== undefined) {
+    const partsProblem = parallelPagesProblem(parallelPages)
+    if (partsProblem) return refuse('SITE_WRITER_HARNESS', `The run cannot start: ${partsProblem}.`)
+    if (parallelPages > 1 && pagesPerTurn !== 'all')
+      return refuse(
+        'SITE_WRITER_HARNESS',
+        'The run cannot start: parallel pages writes every part in one turn, so pages per turn must be "all".'
+      )
+  }
   const where = index ? { index } : {}
   const kits = readableKits(where)
   const kit = kits.find((k) => k.ref === kitRef)
@@ -80,8 +94,8 @@ export async function startWriterRun({
       'SITE_WRITER_MODEL_LACKS',
       'This writer run requires actual image input; the selected model harness is text only.'
     )
-  const active = await activeRun(pool)
-  if (active) return activeRefusal(active)
+  const running = await activeRuns(pool)
+  if (running.length >= BENCH_RUNS_AT_ONCE) return fullRefusal(running)
   const created = await createRun(pool, {
     startedBy,
     plan,
@@ -95,19 +109,15 @@ export async function startWriterRun({
     harness: {
       ...harness,
       pagesPerTurn,
+      ...(parallelPages > 1 ? { parallelPages } : {}),
       ...(requireVisualReview ? { visualReview: WRITER_VISUAL_POLICY } : {})
     }
   })
-  if (created.error === SITE_WRITER_RUN_ACTIVE) return activeRefusal(created.active)
+  if (created.error === SITE_WRITER_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
 }
 
-function activeRefusal(active) {
-  const who = active
-    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
-    : 'another run'
-  return refuse(SITE_WRITER_RUN_ACTIVE, `Only one writer run at a time: ${who} is still active.`, { active })
-}
+const fullRefusal = (running) => benchFullRefusal(SITE_WRITER_RUN_ACTIVE, 'writer runs', running)
 
 /**
  * Cancel a run. One no worker holds ends at once; one a worker holds is asked to stop, which the worker does

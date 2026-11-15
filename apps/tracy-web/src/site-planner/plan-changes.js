@@ -98,13 +98,109 @@ function* partArrays(plan) {
   for (const b of blocks) if (isObject(b)) yield* blockParts(b)
 }
 
-/** The planner's change rules, for the shared run loop (bench-worker.js). */
-export const PLAN_CHANGE_RULES = changeRules({
+/** Every string of `value` that is exactly a key of `renames`, replaced by its new id. Pure. */
+function renamed(value, renames) {
+  if (typeof value === 'string') return renames.get(value) ?? value
+  if (Array.isArray(value)) return value.map((v) => renamed(v, renames))
+  if (isObject(value))
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, renamed(v, renames)]))
+  return value
+}
+
+/**
+ * A page given another id by a fix round: the shared edits never change a part's id (the id names the part), so neither
+ * `{"page": X, "field": "id", "with": Y}` nor a whole page replaced under a new id could be applied, and the round fell
+ * back to the whole plan (15/11/2026, local stand: a planner renaming four invented pages back to the kit's ids was
+ * refused both ways and rewrote its whole plan, 3.5 minutes). Here such a change renames the page first, and every place
+ * the plan names the page (menus, groups, links, end actions) follows; a whole page given under the new id then replaces
+ * it. Only to an id no page of the plan has; the plan check judges the new id like any other.
+ * @returns {{ previous: object, changeList: object, renames: object[] }} `renames`: the changes it applied as renames
+ */
+function withPageRenames(previous, changeList) {
+  const changes = list(changeList?.changes)
+  const taken = new Set(list(previous?.pages).map((p) => p?.id))
+  const renames = new Map()
+  const rest = []
+  const done = []
+  for (const change of changes) {
+    const from = isObject(change) && typeof change.page === 'string' ? change.page : null
+    const whole = isObject(change) && !('field' in change) && !('add' in change) && !('remove' in change)
+    const to =
+      change?.field === 'id' && typeof change.with === 'string'
+        ? change.with
+        : // A whole page under a new id is a rename only when it is a page, with its decision; anything else is refused.
+          whole &&
+            isObject(change.with) &&
+            typeof change.with.id === 'string' &&
+            change.with.id !== from &&
+            typeof change.with.decision === 'string'
+          ? change.with.id
+          : null
+    if (from && to && taken.has(from) && !taken.has(to) && !renames.has(from)) {
+      renames.set(from, to)
+      taken.delete(from)
+      taken.add(to)
+      if (change.field !== 'id') rest.push({ ...change, page: to })
+      else done.push(change)
+      continue
+    }
+    rest.push(change)
+  }
+  if (!renames.size) return { previous, changeList, renames: [] }
+  return {
+    previous: renamed(previous, renames),
+    changeList: { ...changeList, changes: rest },
+    renames: done
+  }
+}
+
+const sharedRules = changeRules({
   partKinds: PART_KINDS,
   removable: REMOVABLE,
   sections: PLAN_SECTIONS,
   partArrays,
   noun: 'plan'
+})
+
+/** The planner's change rules, for the shared run loop (bench-worker.js): the shared rules, with page renames first. */
+export const PLAN_CHANGE_RULES = Object.freeze({
+  ...sharedRules,
+  applyChanges(previous, changeList) {
+    const at = withPageRenames(previous, changeList)
+    // A list of renames only leaves nothing for the shared rules, which refuse an empty list.
+    if (at.renames.length && !at.changeList.changes.length)
+      return { ok: true, doc: structuredClone(at.previous), replacements: [] }
+    return sharedRules.applyChanges(at.previous, at.changeList)
+  },
+  applyValidChanges(previous, changeList) {
+    const at = withPageRenames(previous, changeList)
+    if (!at.renames.length && at.changeList === changeList)
+      return sharedRules.applyValidChanges(previous, changeList)
+    const out = at.changeList.changes.length
+      ? sharedRules.applyValidChanges(at.previous, at.changeList)
+      : {
+          ok: true,
+          doc: structuredClone(at.previous),
+          replacements: [],
+          applied: 0,
+          rejected: [],
+          validChanges: []
+        }
+    if (!out.ok) return out
+    // A rejected change keeps its index in the list the planner sent: the renames taken out shift the rest.
+    const sent = list(changeList?.changes)
+    const index = (i) => {
+      const c = at.changeList.changes[i]
+      const at0 = sent.indexOf(c)
+      return at0 >= 0 ? at0 : sent.findIndex((x) => isObject(x) && isObject(c) && x.with === c.with)
+    }
+    return {
+      ...out,
+      applied: out.applied + at.renames.length,
+      validChanges: [...at.renames, ...out.validChanges],
+      rejected: out.rejected.map((r) => ({ ...r, index: index(r.index) }))
+    }
+  }
 })
 
 /** The planner's answer read as one JSON object (lib/bench-answer.js), with SITE_PLANNER error codes. */

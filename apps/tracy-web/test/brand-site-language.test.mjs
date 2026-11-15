@@ -69,7 +69,8 @@ test('the production chain passes its selected normalized language to the shared
   const calls = []
   const steps = createStepChainSteps({
     config: {},
-    pool: {},
+    // The build's own active brand run, looked up before the start: none.
+    pool: { query: async () => ({ rows: [] }) },
     benchCli: {
       brand: async (argv, io) => {
         calls.push(argv)

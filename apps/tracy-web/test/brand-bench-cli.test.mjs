@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { runCli } from '../src/brand-step/brand-cli.js'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { fileDb } from './_db.mjs'
 import {
   API_KEY,
@@ -71,9 +72,14 @@ test('run queues a run from a brief file and prints its id; refusals say why and
   const id = k.out.at(-1)
   const row = (await pool.query('select started_by, brief_source from brand_run where id = $1', [id])).rows[0]
   assert.deepEqual([row.started_by, row.brief_source], ['cli:tester', { kind: 'file', name: 'brief.json' }])
-  // A second run is refused while this one is active; the brief file's path is never stored.
+  // A run past the bench limit is refused while the others are active; the brief file's path is never stored.
+  for (let n = 1; n < BENCH_RUNS_AT_ONCE; n++)
+    assert.equal(await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json']), 0)
   assert.equal(await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json']), 1)
-  assert.match(k.err.at(-1), /BRAND_RUN_ACTIVE.*Only one brand run at a time/)
+  assert.match(
+    k.err.at(-1),
+    new RegExp(`BRAND_RUN_ACTIVE.*At most ${BENCH_RUNS_AT_ONCE} brand runs at a time.*${id}`)
+  )
   writeFileSync(path.join(k.dir, 'bad.json'), '{not json')
   assert.equal(await k.run(['run', '--kit', KIT_REF, '--brief-file', 'bad.json']), 1)
   assert.equal(await k.run(['run', '--brief-file', 'brief.json']), 2)

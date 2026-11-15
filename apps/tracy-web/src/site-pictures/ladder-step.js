@@ -28,6 +28,8 @@ import { darkenPicture, wantsDark } from './darken.js'
 import { WAITS_FOR } from './fill-frames.js'
 import { fileFields } from './frame-entries.js'
 import { climbAll, DRAW_CONCURRENCY, NEXT_PHOTO_TRIES, REDRAW_ALT_TRIES } from './ladder-climb.js'
+import { anyPhotoAhead } from './ladder-reuse.js'
+import { rungsFor } from './ladder-rungs.js'
 import { ladderState } from './ladder-state.js'
 import { LOOK_UNREADABLE, TEXT_OVER_FAULT } from './looker-call.js'
 import { LOOKED_SOURCES } from './looker-step.js'
@@ -39,6 +41,14 @@ export { DRAW_CONCURRENCY, NEXT_PHOTO_TRIES, REDRAW_ALT_TRIES }
 
 // A gallery tile's any-photo rung may try every owner photo of the brief, one look per pass.
 const MAX_PASSES = 40
+/**
+ * How many of its next photos a frame on the any-photo rung has looked at together, when the look of its next one is
+ * not taken yet (finish looksAhead). Each pass places one photo per frame and waits for its look (about 10 s, up to 50 s
+ * on the local stand, 12/11/2026), and a Central Padel build spent all 40 passes of its first round there: 19 minutes.
+ * Looked at three at a time, two passes in three find their look taken. The photos, their order and their verdicts do
+ * not change; a photo looked at ahead and never placed costs its look (about $0.0003).
+ */
+export const LOOK_AHEAD = 3
 const NOT_DRAWN_KINDS = new Set(['icon', 'logo'])
 const DRAWN_SOURCES = new Set(['drawn', 'owner-photo-extended'])
 
@@ -48,11 +58,23 @@ const counted = (list) => list.filter((e) => DRAWN_SOURCES.has(e.source)).length
 /**
  * The finisher of one run.
  * @param {{ idx: object, plan: object, kit: object, usable: object[], photoBytes: Map<string, Buffer>,
- *   store: ReturnType<import('./file-store.js').fileStore>, looker: { look: Function },
+ *   store: ReturnType<import('./file-store.js').fileStore>, looker: { look: Function, known?: Function, ahead?: Function },
  *   drawing: { draw: Function } | null, drawer: { model: string | null, snapshot: object | null, promptSha256: string } }} input
- *   `drawing` ladder-draw.js createDrawing, or null when the run has no drawer door
+ *   `drawing` ladder-draw.js createDrawing, or null when the run has no drawer door; `lookAhead` LOOK_AHEAD (0 turns
+ *   the look-ahead off)
  */
-export function createFinisher({ idx, plan, kit, usable, photoBytes, store, looker, drawing, drawer }) {
+export function createFinisher({
+  idx,
+  plan,
+  kit,
+  usable,
+  photoBytes,
+  store,
+  looker,
+  drawing,
+  drawer,
+  lookAhead = LOOK_AHEAD
+}) {
   const ctx = { idx, plan, kit, usable, photoBytes, store, drawing, luminance: new Map() }
   const climbable = (frameId) => {
     const frame = idx.frames.get(frameId)
@@ -98,6 +120,26 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
     const retried = new Set(
       readabilityRetries.flatMap((r) => [`${r.frame} ${r.sourceSha256}`, `${r.frame} ${r.sha256}`])
     )
+    // A frame on the any-photo rung whose next photo has no look yet gets its next LOOK_AHEAD photos looked at
+    // together. A frame whose pictures are darkened when placed is left out: its placed bytes are not the ones looked at.
+    async function looksAhead(climbing) {
+      if (lookAhead < 1 || !looker.ahead || !looker.known) return
+      const pairs = []
+      for (const f of climbing) {
+        const p = s.progress.get(f)
+        if (!p || p.done || rungsFor(idx, f)[p.at] !== 'any-photo' || wantsDark(idx.frames.get(f))) continue
+        const [next] = await anyPhotoAhead(ctx, s, f, p, 1)
+        if (!next || looker.known(next.entry, memo)) continue
+        for (const { list, entry } of await anyPhotoAhead(ctx, s, f, p, lookAhead)) pairs.push([list, entry])
+      }
+      if (!pairs.length) return
+      const calls = await looker.ahead(pairs, memo)
+      for (const c of calls) if (!looks.has(`${c.frame} ${c.sha256}`)) looks.set(`${c.frame} ${c.sha256}`, c)
+      paidLooks += sum(
+        calls.filter((c) => !c.cached),
+        'costUsd'
+      )
+    }
     async function retryReadability() {
       let changed = false
       for (const [frameId, held] of s.entries) {
@@ -213,6 +255,7 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
         climbing.push(frameId)
       }
       if (!climbing.length || pass >= MAX_PASSES) break
+      await looksAhead(climbing)
     }
 
     const lookCalls = [...looks.values()]

@@ -55,6 +55,8 @@ const CREATED_FIELDS = {
 }
 // `alias` is the address a kept page answers at: the route stage gives it the plan's slug (page-route-stage.js). An address
 // restyles nothing, so it is open, and only as a slug, which can hold no markup and no other setting.
+/** The article state the write step may set on a template article: unpublished (Joomla `state` 0). */
+const UNPUBLISHED = 0
 const TEMPLATE_FIELDS = {
   article: new Set(['metadesc', 'attribs', 'alias']),
   menuItem: new Set(['published', 'link', 'params', 'alias', 'parent_id', 'title'])
@@ -137,6 +139,15 @@ function rowFaults(kind, id, fields, { state, created, kitNamed }) {
     if (kitNamed?.has(`${kind}-${id} ${name}`)) {
       if (hasMarkup(String(value)))
         faults.push(fault(WRITE, `${what} ${name}`, 'a setting slot holds words, with no markup'))
+      continue
+    }
+    // A page the plan drops has its native article unpublished (hide-writes.js, #569), as a dropped page's menu item
+    // is: on a template article only that value is open, never publishing or trashing it.
+    if (kind === 'article' && name === 'state' && !created) {
+      if (String(value) !== String(UNPUBLISHED))
+        faults.push(
+          fault(WRITE, `${what} ${name}`, `only unpublishing (state ${UNPUBLISHED}) is open on ${what}`)
+        )
       continue
     }
     if (!listed?.has(name)) {

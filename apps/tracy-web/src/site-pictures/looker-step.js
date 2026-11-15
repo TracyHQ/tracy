@@ -104,7 +104,8 @@ export function createLooker({
   const kept = (key) => path.join(runDir, 'looks', `${key}.json`)
   const negative = negativeLookCache({ dir: runDir, model: door.model })
 
-  async function lookAt(list, entry, memo) {
+  // What a look at a picture asks, and the key it is kept under: the picture, its display size and the frame's words.
+  function questionOf(entry) {
     const frame = idx.frames.get(entry.frame)
     const wish = idx.wishes.get(entry.frame)
     const words = lookWords(wish)
@@ -132,9 +133,15 @@ export function createLooker({
         ...(alt ? [alt] : [])
       ])
     )
+    return { key, words, box, realPart, cutout, anyReal, surface, alt }
+  }
+
+  async function lookAt(list, entry, memo) {
+    const question = questionOf(entry)
+    const { key, alt } = question
     // A look already taken in this save (the fallback ladder looks again after each rung), readable or not.
     if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true, limit: alt?.limit ?? null }
-    const looked = await lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface, alt })
+    const looked = await lookFresh(list, entry, question)
     memo?.set(key, looked.said)
     return { ...looked, limit: alt?.limit ?? null }
   }
@@ -322,5 +329,30 @@ export function createLooker({
     }
   }
 
-  return { look }
+  /** Whether this save already took the look a picture would get (`memo` as `look` keeps it). */
+  const known = (entry, memo) => Boolean(memo?.has(questionOf(entry).key))
+
+  /**
+   * Looks at pictures not placed yet, all at once (LOOK_CONCURRENCY at a time): each look is the one `look` would take
+   * of the picture once placed, kept in `memo` and in the run's store, so the pass that places it reads it at once
+   * (ladder-step.js looksAhead). Returns one call record per look, marked `ahead`, with its time and cost; a picture
+   * never placed after all keeps its record, since its look was paid.
+   * @param {Array<[string, object]>} pairs [list, entry] as `look` holds them
+   */
+  async function ahead(pairs, memo) {
+    const looks = await inParallel(pairs, concurrency ?? LOOK_CONCURRENCY, ([list, e]) =>
+      lookAt(list, e, memo)
+    )
+    return looks.map(({ entry, said, cached }) => ({
+      frame: entry.frame,
+      sha256: entry.sha256,
+      model: said.model ?? door.model,
+      ms: said.ms ?? 0,
+      costUsd: said.costUsd ?? null,
+      cached: Boolean(cached),
+      ahead: true
+    }))
+  }
+
+  return { look, known, ahead }
 }

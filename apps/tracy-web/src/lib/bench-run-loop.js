@@ -1,5 +1,6 @@
 // The run loop of a bench step (ADR 0041, #301, #303; shared by every bench step since #327): a durable queue over the
-// step's run table that claims the queued run, runs the step's approved prompt with runAgent over the step's door,
+// step's run table that claims queued runs (up to BENCH_RUNS_AT_ONCE side by side, each under a lease, a heartbeat and a
+// cancel of its own, #633), runs the step's approved prompt with runAgent over the step's door,
 // saves every model call as it happens, reads the final answer, scores the document with the step's checker and saves
 // the round. A document with failures gets a fix round (bench-run-round.js): the failure list, then the step's
 // instruction to answer with only the changed parts, goes back as the next user turn of the same conversation. At
@@ -13,7 +14,8 @@
 // with <CODE_PREFIX>_BUDGET.
 //
 // On DeepSeek's own API the provider balance is read before the first model call of the run and again when the run
-// ends (provider-balance.js), and both are stored on the run; a failed read is recorded and never stops the run.
+// ends (provider-balance.js), and both are stored on the run; a failed read is recorded and never stops the run. It is
+// the account's balance: runs that overlapped this one (of this bench or another) spent from it too.
 //
 // A step is a plain object (the planner's: site-planner/bench-worker.js):
 //   name, codePrefix              the queue's name and the prefix of the run's error codes (SITE_PLANNER)
@@ -32,14 +34,27 @@
 //   agentRequest({ row, ready, history })  { firstUser, tools, writeStep?, resolveImage? } for runAgent
 //   nextTurn({ row, ready, answers }), mergeTurns(answers)  optional: round 0 written in turns, each a request of its
 //                                 own (bench-run-round.js); nextTurn gives the next turn's user message or null
+//   parts({ row, ready }), mergeParts(values)  optional: round 0 written in parts at the same time, each a conversation
+//                                 of its own (bench-run-parts.js); parts gives [{ about, firstUser }], or null when the
+//                                 run writes round 0 as one conversation or in turns
+//   release(row)                  optional: called once a claimed run's play ends, however it ends, so a step that
+//                                 keeps something per run (the picture step's looker, looker-round.js) lets it go
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { AgentError, runAgent } from './agent-over-door.js'
 import { playRound } from './bench-run-round.js'
+import { BENCH_RUNS_AT_ONCE } from './bench-sql.js'
 import { platformRefusal, withCmsLine } from './cms-line.js'
 import { readBalance, readsBalance } from './provider-balance.js'
 
-/** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
-export const BENCH_QUEUE = Object.freeze({ concurrency: 1, leaseMs: 3 * 60_000, maxAttempts: 20 })
+/**
+ * Up to BENCH_RUNS_AT_ONCE runs side by side (the limit a start is held to, lib/bench-sql.js), each with a lease of 3
+ * minutes renewed every minute; a redeploy costs one of the 20 claims.
+ */
+export const BENCH_QUEUE = Object.freeze({
+  concurrency: BENCH_RUNS_AT_ONCE,
+  leaseMs: 3 * 60_000,
+  maxAttempts: 20
+})
 /** How often an active bench reads a Stop request while a provider call is in flight. */
 export const BENCH_STOP_POLL_MS = 2_000
 
@@ -153,6 +168,8 @@ export async function runBenchRun(step, deps, row, lease) {
   } catch (error) {
     if (error instanceof LeaseLost) return false
     throw error
+  } finally {
+    step.release?.(row)
   }
 }
 
@@ -186,34 +203,44 @@ async function nextRound(step, pool, runId) {
 }
 
 // One runAgent call over the saved conversation: `{ answer, turns }`, or `{ ended }` with the run's verdict. The
-// conversation is the run's turns from `from` on (a writing turn opens a new one), numbered from 0 for runAgent and
-// saved under the run's own numbers; `firstUser` replaces the step's first message (a writing turn's).
+// conversation is the run's turns numbered from `from` up to `to` (not included): a writing turn opens a new one at the
+// next free number, a parallel part owns a range of numbers of its own (bench-run-parts.js). It is numbered from 0 for
+// runAgent and saved under the run's own numbers; a bounded conversation makes at most `to - from` calls, so it never
+// writes into the range after it. `firstUser` replaces the step's first message (a writing turn's or a part's).
+// `signal` stops the conversation from outside, as a cancel does (a parallel part whose sibling ended the round).
 async function ask(
   step,
   deps,
-  { row, ready, round, history, followUp, leaseToken, must, firstUser, from = 0 }
+  { row, ready, round, history, followUp, leaseToken, must, firstUser, from = 0, to = Infinity, signal }
 ) {
   const { pool } = deps
   const { store } = step
   const runId = row.id
   const stop = new AbortController()
   const stopWatching = watchBenchStop(store, pool, runId, stop)
+  const outside = () => stop.abort()
+  signal?.addEventListener('abort', outside, { once: true })
+  if (signal?.aborted) stop.abort()
   const shift = (turn, by) => ({
     ...turn,
     n: turn.n + by,
     ...(turn.resendOf !== undefined && turn.resendOf !== null ? { resendOf: turn.resendOf + by } : {})
   })
+  const inside = (turn) => turn.n >= from && turn.n < to
+  const harness = harnessOf(row.harness)
+  const bounded = Number.isFinite(to) ? { maxTurns: Math.min(harness.maxTurns ?? to - from, to - from) } : {}
   try {
     const result = await runAgent({
       door: ready.door,
       system: withCmsLine(ready.prompt.text, ready.kit?.platform),
       ...step.agentRequest({ row, ready, history }),
       ...(firstUser !== undefined ? { firstUser } : {}),
-      history: history.slice(from).map((t) => shift(t, -from)),
+      history: history.filter(inside).map((t) => shift(t, -from)),
       followUp,
       fetchImpl: deps.fetchImpl,
       signal: stop.signal,
-      ...harnessOf(row.harness),
+      ...harness,
+      ...bounded,
       ...(deps.retry ? { retry: deps.retry } : {}),
       // A streamed call's progress, for `status`: a hint, so a lost write is not an error (runAgent ignores it).
       onProgress: ({ n, ...progress }) =>
@@ -223,7 +250,8 @@ async function ask(
         if (turn.state === 'answered' && (await store.cancelAsked(pool, runId))) stop.abort()
       }
     })
-    return { ...result, turns: [...history.slice(0, from), ...result.turns.map((t) => shift(t, from))] }
+    const turns = [...history.filter((t) => !inside(t)), ...result.turns.map((t) => shift(t, from))]
+    return { ...result, turns: turns.sort((a, b) => a.n - b.n) }
   } catch (error) {
     if (!(error instanceof AgentError)) throw error
     if (error.code === 'AGENT_ABORTED') return { ended: ['cancelled'] }
@@ -232,6 +260,7 @@ async function ask(
     return { ended: ['failed', error.message] }
   } finally {
     stopWatching()
+    signal?.removeEventListener('abort', outside)
   }
 }
 
