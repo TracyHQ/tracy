@@ -57,6 +57,8 @@ import { demoBuildRunning, prepareOpportunityDelete } from './demo-removal.js'
 import { withHandoffLock } from './handoff.js'
 import { handOffToAgent } from './handoff-service.js'
 import { handOverDemo, withHandoverLock } from './handover.js'
+import { applyOverRequest, readDemoPages, saveDemoPages } from './demo-pages.js'
+import { urlMapView } from 'website-opportunities/src/url-map-view.js'
 import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
@@ -101,6 +103,7 @@ const LATEST_BRIEF_AT_SQL = `select greatest(
  *   shareLinksOf: (accountId: string, rows: object[]) => Promise<Map<string, string>>,
  *   detailOf: (opp: object, accountId: string) => Promise<object>,
  *   demoOffersOf: (opportunityId: string) => Promise<Record<string, boolean> | null>,
+ *   urlMapOf: (opportunityId: string) => Promise<object | null>,
  *   demoFactsOf: (accountId: string, ids: string[]) => Promise<Map<string, {built: boolean,
  *     liveSiteKey: string | null, queuedActionId: string | null}>>,
  *   demoJourneySql: typeof demoJourneySql,
@@ -459,6 +462,42 @@ export function createWebsiteBuilder(deps) {
   }
 
   /**
+   * The old URL → new page map of one build (`website-opportunities/src/url-map-view.js`): the business's current
+   * website as research read it against the demo's pages (`demo-pages.js`). With `live` (the caller's cookie), the
+   * demo's pages are read again first, as the caller, and kept; a read that fails leaves the list kept before, and the
+   * map says when that list was read (`demo.readAt`). Null when the build's opportunity is gone.
+   * @param {any} build a `wo_build` row
+   * @param {{cookie: string} | null} [live]
+   */
+  async function urlMapOfBuild(build, live = null) {
+    let demo = build.built?.pages ?? null
+    if (live && build.site_key && !build.demo_deleted_at) {
+      const read = await readDemoPages(
+        applyOverRequest(request, { siteKey: build.site_key, cookie: live.cookie, origin }),
+        { now }
+      )
+      await saveDemoPages(pool, build.id, read).catch(() => false)
+      if (Array.isArray(read.pages) || !Array.isArray(demo?.pages)) demo = read
+    }
+    const { rows } = await pool.query(
+      'select o.* from wo_opportunity o join wo_revision r on r.opportunity_id = o.id where r.id = $1',
+      [build.revision_id]
+    )
+    return rows[0] ? urlMapView(pool, rows[0], demo) : null
+  }
+
+  /**
+   * The map of the opportunity's latest live demo, from the pages kept on its build (no read of the demo): what the
+   * outreach line `urlMapProof` rests on. Null without a live demo.
+   */
+  async function urlMapOf(opportunityId) {
+    const live = (await buildsOfOpportunity(pool, opportunityId)).find(
+      (b) => b.site_key && !b.demo_deleted_at
+    )
+    return live ? urlMapOfBuild(live) : null
+  }
+
+  /**
    * Mount the build doors on the open router's app. `ctx` carries that router's own helpers, so a
    * refusal, a session and a switch read exactly as on its other doors.
    */
@@ -701,9 +740,35 @@ export function createWebsiteBuilder(deps) {
           'This demo is being handed over; wait, then press again.'
         )
       const { steps, complete } = held.value
-      const handover = { buildId: found.id, siteKey: found.site_key, email, complete, steps }
+      // The old URL → new page map the owner's redirects need, read again now (`demo-pages.js`): never a reason to fail
+      // the handover, so a map that cannot be made is null.
+      const urlMap = await urlMapOfBuild(found, { cookie: c.req.header('cookie') ?? '' }).catch((error) => {
+        console.warn(
+          `[wo-handover] ${found.id}: no old URL map (${error?.code ?? error?.message ?? 'error'})`
+        )
+        return null
+      })
+      const handover = { buildId: found.id, siteKey: found.site_key, email, complete, steps, urlMap }
       // A step that failed makes the answer a 207: the steps before and after it are still reported.
       return json(c, { handover }, steps.some((s) => s.state === 'failed') ? 207 : 200)
+    })
+
+    // The old URL → new page map of a build (`urlMapOfBuild`): where each page of the business's current website should
+    // lead on the demo, read with the demo's pages as they are now. Only the build's own account; a frozen demo still
+    // runs, so it is mapped.
+    app.get(`${BASE}/builds/:buildId/url-map`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('buildId')
+      const found = who.accountId && UUID.test(id) ? await buildOf(pool, who.accountId, id) : null
+      if (!found) return notFound(c, 'build')
+      if (!found.site_key || found.state === 'deleted')
+        return refuse(c, 409, 'NO_DEMO', 'This build has no live site to map.')
+      if (found.demo_deleted_at)
+        return refuse(c, 409, 'DEMO_DELETED', 'This demo was deleted: press Rebuild to make it again.')
+      const urlMap = await urlMapOfBuild(found, { cookie: c.req.header('cookie') ?? '' })
+      if (!urlMap) return notFound(c, 'build')
+      return json(c, { urlMap })
     })
 
     // One press is persisted before any brief, site or agent session is created.
@@ -1174,6 +1239,8 @@ export function createWebsiteBuilder(deps) {
     detailOf,
     // What the latest live demo offers (`demoOffersOfBrief`): the open layer's trade must-have outreach lines.
     demoOffersOf: (opportunityId) => demoOffersOf(opportunityId),
+    // The latest live demo's old URL → new page map, from its kept pages: the open layer's outreach line `urlMapProof`.
+    urlMapOf,
     latestBriefAt,
     demoFactsOf,
     demoJourneySql,

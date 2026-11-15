@@ -225,6 +225,35 @@ test('crawlWebsite reads the sitemap index, then pages, staying on the same host
   assert.deepEqual(r.coverage, { fetched: 5, total: 5 })
 })
 
+test('a crawl keeps each page’s meta description and first own heading, for the old URL map', async () => {
+  const { fetch } = site({
+    'https://phin.test/': html(HOME),
+    'https://phin.test/about': html(
+      '<html><head><title>About | Brewlet</title><meta property="og:description" content=" Our story. "></head>' +
+        '<body><header><h1>Brewlet</h1></header><main><h1>About <b>us</b></h1><p>Since 2015</p></main></body></html>'
+    ),
+    'https://phin.test/gallery': html(
+      '<html><title>Gallery</title><body><p>No heading here</p></body></html>'
+    )
+  })
+  const r = await crawlWebsite('https://phin.test/', {}, { fetch, resolve })
+  const byUrl = Object.fromEntries(r.pages.map((p) => [p.url, p]))
+  assert.equal(byUrl['https://phin.test/'].description, 'Slow coffee in the old town.')
+  assert.equal(byUrl['https://phin.test/'].heading, 'Welcome')
+  assert.equal(
+    byUrl['https://phin.test/about'].description,
+    'Our story.',
+    'og:description when no description'
+  )
+  assert.equal(
+    byUrl['https://phin.test/about'].heading,
+    'About us',
+    'the header’s site title is not the heading'
+  )
+  assert.equal('description' in byUrl['https://phin.test/gallery'], false, 'none read, none kept')
+  assert.equal('heading' in byUrl['https://phin.test/gallery'], false)
+})
+
 test('maxPages stops early with a cursor; resuming from it finishes without refetching', async () => {
   const pages = {
     'https://phin.test/': html(

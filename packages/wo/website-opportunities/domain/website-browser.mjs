@@ -1,6 +1,6 @@
 import { fetchLimited } from './fetch-limited.mjs'
 import { apifyRunUrl, redactToken } from './apify.mjs'
-import { crawlWebsite, extractPage, keepFallbackCopy } from './website-crawler.mjs'
+import { crawlWebsite, extractPage, keepFallbackCopy, pageRead } from './website-crawler.mjs'
 
 export const BROWSER_ACTOR = 'apify~website-content-crawler'
 const RUN_SECS = 240
@@ -102,11 +102,13 @@ export function renderedPagesResult(items, base, status = 'complete') {
   for (const it of items) {
     if (typeof it?.url !== 'string' || typeof it.html !== 'string') continue
     const page = extractPage(it.html, it.url)
-    out.pages.push({
-      url: page.url,
-      title: page.title || it.metadata?.title || '',
-      text: page.text || it.text || ''
-    })
+    out.pages.push(
+      pageRead(page, {
+        title: it.metadata?.title,
+        text: it.text,
+        description: it.metadata?.description
+      })
+    )
     if (out.pages.length === 1)
       out.logos = page.logos.slice(0, 12).map((l) => ({ ...l, sourceUrl: page.url }))
     if (out.pages.length === 1)

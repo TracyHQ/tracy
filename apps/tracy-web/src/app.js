@@ -127,6 +127,7 @@ import { capsFromRuntime, createChargeable, createCostLedger } from 'website-opp
 import { createDemoLook } from './opportunities-build/demo-look.js'
 import { createDemoBuilt } from './opportunities-build/demo-preview.js'
 import { createDemoPageSpeed } from './opportunities-build/demo-pagespeed.js'
+import { readDemoPages } from './opportunities-build/demo-pages.js'
 import { createDemoPhotoLabels } from './opportunities-build/demo-photo-labels.js'
 import { createDemoCopy } from './opportunities-build/demo-copy.js'
 import { ownSiteOn } from './opportunities-build/own-site.js'
@@ -1539,7 +1540,20 @@ export function buildApp(deps) {
             fetchImpl: deps.fetchImpl ?? fetch,
             resolve,
             ...(deps.now ? { now: deps.now } : {})
-          })
+          }),
+          // The demo's own page list, where its old URL → new page map may lead (`demo-pages.js`): read through the
+          // Apply door as the account that built it, like the wordmark below.
+          pages: async (build) => {
+            const { rows } = await deps.pool.query('select email from account where id = $1', [
+              build.account_id
+            ])
+            if (!rows[0] || typeof app.applyAs !== 'function')
+              return { readAt: new Date((deps.now ?? Date.now)()).toISOString(), reason: 'NO_SEAT' }
+            return readDemoPages(
+              (call) => app.applyAs(rows[0].email, { siteKey: build.site_key, ...call }),
+              deps.now ? { now: deps.now } : {}
+            )
+          }
         }),
       // The sweep's wordmark on a CMS dsh sets no logo on (Joomla, EmDash): its brand writer, as the account that
       // built the demo (`client-demo.js` `wornLogo`).
