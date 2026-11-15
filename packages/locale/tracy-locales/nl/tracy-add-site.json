@@ -39,6 +39,8 @@
   "build_gone": "De site die werd gebouwd is er niet meer: hij is verwijderd, of je hebt er geen toegang meer toe.",
   "card_count": "Beantwoord {total} vragen",
   "change_design": "Ontwerp wijzigen",
+  "chat_build_desc": "Beschrijf uw bedrijf in de chat. Tracy doet onderzoek, stelt u een paar vragen en bouwt de site samen met u.",
+  "chat_build_title": "Bouw het in de chat",
   "create_back_details": "Site-gegevens controleren",
   "create_change_name": "Site-naam wijzigen",
   "create_change_platform": "Ander platform",

@@ -39,6 +39,8 @@
   "build_gone": "Die Site, die gerade erstellt wurde, ist nicht mehr da: Sie wurde gelöscht, oder Sie haben keinen Zugriff mehr darauf.",
   "card_count": "Beantworten Sie {total} Fragen",
   "change_design": "Design ändern",
+  "chat_build_desc": "Beschreiben Sie Ihr Unternehmen im Chat. Tracy recherchiert, stellt Ihnen ein paar Fragen und erstellt die Site gemeinsam mit Ihnen.",
+  "chat_build_title": "Im Chat erstellen",
   "create_back_details": "Site-Angaben prüfen",
   "create_change_name": "Site-Namen ändern",
   "create_change_platform": "Andere Plattform",

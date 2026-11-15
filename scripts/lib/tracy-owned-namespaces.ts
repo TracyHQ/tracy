@@ -23,6 +23,7 @@ import { en as siteTabsEn } from '../../packages/site/tracy-site-tabs/src/client
 import { en as websiteOpportunitiesEn } from '../../packages/site/tracy-website-opportunities/src/client/strings.ts'
 import { en as askFormEn } from '../../packages/ui/tracy-ask-form/src/client/strings.ts'
 import { en as assistantEn } from '../../packages/ui/tracy-assistant/src/client/strings.ts'
+import { en as buildChatEn } from '../../packages/ui/tracy-build-chat/src/client/strings.ts'
 import { en as chatInputEn } from '../../packages/ui/tracy-chat-input/src/client/strings.ts'
 import { en as modePickerEn } from '../../packages/ui/tracy-mode-picker/src/client/strings.ts'
 import { en as modelPlanEn } from '../../packages/ui/tracy-model-plan/src/client/strings.ts'
@@ -51,6 +52,7 @@ export const OWNED: Record<string, Record<string, string>> = {
   'tracy-ask-form': askFormEn,
   'tracy-assistant': assistantEn,
   'tracy-model-plan': modelPlanEn,
+  'tracy-build-chat': buildChatEn,
   'tracy-onboard': onboardEn,
   'tracy-website-opportunities': websiteOpportunitiesEn
 }

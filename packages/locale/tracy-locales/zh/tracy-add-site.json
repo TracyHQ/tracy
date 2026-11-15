@@ -39,6 +39,8 @@
   "build_gone": "正在构建的 site 已不存在：它已被删除，或你已没有访问权限。",
   "card_count": "回答 {total} 个问题",
   "change_design": "更换设计",
+  "chat_build_desc": "在 chat 中描述你的业务。Tracy 会进行调研，向你提几个问题，并与你一起创建 site。",
+  "chat_build_title": "在 chat 中创建",
   "create_back_details": "检查 site 信息",
   "create_change_name": "更改 site 名称",
   "create_change_platform": "选择其他平台",

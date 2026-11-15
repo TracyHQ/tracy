@@ -39,6 +39,8 @@
   "build_gone": "Site đang dựng không còn nữa: nó đã bị xoá, hoặc bạn không còn quyền vào nó.",
   "card_count": "Trả lời {total} câu hỏi",
   "change_design": "Đổi mẫu thiết kế",
+  "chat_build_desc": "Hãy mô tả doanh nghiệp của bạn trong chat. Tracy sẽ tìm hiểu, hỏi bạn vài câu và cùng bạn dựng site.",
+  "chat_build_title": "Dựng trong chat",
   "create_back_details": "Xem thông tin site",
   "create_change_name": "Đổi tên site",
   "create_change_platform": "Chọn nền tảng khác",

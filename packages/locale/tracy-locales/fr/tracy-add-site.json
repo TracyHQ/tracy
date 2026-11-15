@@ -39,6 +39,8 @@
   "build_gone": "Le site en cours de création n’existe plus : il a été supprimé, ou vous n’y avez plus accès.",
   "card_count": "Répondez à {total} questions",
   "change_design": "Changer de design",
+  "chat_build_desc": "Décrivez votre activité dans le chat. Tracy fait des recherches, vous pose quelques questions et crée le site avec vous.",
+  "chat_build_title": "Créez-le dans le chat",
   "create_back_details": "Vérifier le site",
   "create_change_name": "Renommer le site",
   "create_change_platform": "Autre plateforme",
