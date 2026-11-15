@@ -1721,10 +1721,15 @@ set, a number (a page count, a position) or the words of another string the kit 
 slot or whole record, or a slot the draft report keeps (`as: "kept"`); words a template file writes as code that
 `keptLiterals` names, by `values` or `pattern`, only where that file prints (`kept_literal: <file>: <reason>`): a source
 names the file, or the adapter's scope (`gate/adapters/joomla-literal-scope.mjs`) reads from the page that it prints
-there (a component layout outside any module on a page of its view, the pagination layout inside an element of class
+there (a component layout outside any module on a page of its view, inside the wrapper that layout draws and no wrapper
+of a more specific layout of its view: the class names of the layout file's first element, read from the release,
+against the class names around the element, `place.within`; the pagination layout inside an element of class
 `pagination` the page reader marks, `place.pagination`, a module layout in a module of its type, a JA ACM
 layout in a module whose params pick it); words the write, a contract place or the blank site's row of the module that
-prints them holds are never a literal, and where the page cannot tell the file the words are a leak; a keep of any of these whose reason says no page draws
+prints them holds are never a literal, nor are words (not a number a pattern keeps) a row of the dump a page prints
+holds (an article, a module, a menu item, a category, a field value, a contact); where the page cannot tell the file
+the words are a leak; a kept design picture (an entry naming a picture file) is exempt only where the page draws it as
+a stylesheet does (a background or a generated picture), never as a picture element; a keep of any of these whose reason says no page draws
 it is not exempt where it is seen, it is `kit_reason_false`) and the
 framework adapter (`EXEMPTIONS` of the adapter, the page frame of `gate/adapters/web-frame.mjs`: an address of the site
 itself, punctuation and symbols with no letter and no digit, `404` on the missing page that answers 404, a date or the
@@ -1778,9 +1783,15 @@ A list item is an article the plan creates whose entries sit under one block (`<
 of them a list shows is the site's choice: on JA Boxing the blog lists sort by publish date (`orderby_sec: rdate`,
 `order_date: published` in the blank site's content settings) and the build writes every item within seconds, so equal
 dates fall in no fixed order, and a list shows one page of its items ("Page 1 of 2"). Run 4 and the attempt before it
-showed different items of the same lists from the same kit (47 and 33 unexplained not seen). The gate therefore judges
-the fields of the items a list shows and does not judge the items it left out; the row keeps `listItem: {shown, items}`
-so a record read back gives the same reason. The ordering itself is the build's (a date per item in plan order would
+showed different items of the same lists from the same kit (47 and 33 unexplained not seen). The gate therefore does not
+judge on the list page the items it left out, but only while no page it read is the item's own (review 5): an item
+whose own page was read (`article:<item>`, or the detail page type it is) and does not print a value is no list's
+choice, and the value stays unexplained. The row keeps `listItem: {shown, items}`; the reason is worked out from the
+pages the record says were read (`render.pages[].from`), so the guard derives it again and a `listItem` field alone gives
+none. The guard cannot tell from a record which item of a list was shown (a record holds no page HTML): a row of a
+shown item whose own page was not read is taken on the run's word. A paged blog list is read on each further page its
+items fill (`<page>:page-<n>`), at the size its menu item gives, so a list card value (an intro picture) of a later
+item is seen where it prints. The ordering itself is the build's (a date per item in plan order would
 make the choice fixed); the gate does not set it.
 
 **The marker look** (`gate/marker-look.mjs`). When the kit's accent writes a dark side value
@@ -1895,12 +1906,20 @@ only on `passed`. `verdict.measurements` repeats the six statuses, `verdict.notR
 when an earlier passing record is no proof any more), `kitRef`, `kitFilesSha256` (the sha256 over `<path> <sha256>`
 lines of every kit file sorted by path; `check-record/` is skipped, so writing the record changes nothing it is about),
 `blankSiteSha256`, `humanQuickstartSha256`, `plugin` (`expected`, `start`, `end`), `controls` (the provenance of the
-human control and the quality control, section "The controls" below) and `allowFileSha256` (the sha256 of the kit's
-`check-record/secret-allow.json`, null when it has none). The kit carries both `check-record/record.json` (required:
+human control and the quality control, section "The controls" below), `allowFileSha256` (the sha256 of the kit's
+`check-record/secret-allow.json`, null when it has none) and `templateKitSha256` (the sha256 of the template kit the
+marker build reads for its dark accent, `<package>/contracts/<slug>/<cms>/<version>/template-kit.json` beside the
+`ai-quickstarts` folder; null when there is none; the guard refuses a record whose template kit changed,
+`template_kit_changed`). The kit carries both `check-record/record.json` (required:
 a verdict alone is no proof) and a small `check-record/verdict.json` (`tracy-ai-quickstart-check-verdict/v1`, made by
 `verdictFileOf(record)`): the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it,
-`recordText(record)`), and the verdict (`pass`, `failing`, `measurements`). `GATE_VERSION` is 6 since the fourth #586
-review: a record of version 5 let a kept literal exempt words of any file (a demo counter or a demo network name), blamed
+`recordText(record)`), and the verdict (`pass`, `failing`, `measurements`). `GATE_VERSION` is 7 since the fifth #586
+review: a record of version 6 credited a place with another place's copy of a code-less probe, named a site refusal at
+the plain build's first location of the value, made every whole value probe a suspect of every stop, excused an item
+of a list whose own page was read printing nothing (and took that reason from a row field), let a planned page with
+noindex skip its search engine items, exempted a kept literal of an article layout on articles of another layout and a
+kept design picture wherever it showed, took a code cut by a list for a code the page ran, and did not bind the template
+kit. A record of version 5 (6 since the fourth #586 review) a record of version 5 let a kept literal exempt words of any file (a demo counter or a demo network name), blamed
 every place sharing a refused entry, stopped write safety at its first untraced stop without saying so, marked a resumed
 measurement by one field, and judged the list items a site happened to leave out. A record of version 4 took a friendly menu address of a planned page for a link to a missing page, passed
 the hidden variant while the pages still shown did not answer, and could carry write safety passes resumed on trust
@@ -1926,6 +1945,7 @@ version 2 counted build refusals as tested places and left the hidden variant ou
 | `check_record_unknown_file` | `check-record/` holds a file the gate never writes (anything but `record.json`, `verdict.json` and `secret-allow.json`) |
 | `control_unbound` | a control was not made by the gate, is of another gate version, measured another human quickstart installer than the record, or was read from a file whose sha256 the binding does not keep |
 | `allow_changed` | the kit's secret allow file is not the one the record was scanned with |
+| `template_kit_changed` | the template kit beside the kit folder is not the one the record's marker build read (`binding.templateKitSha256`) |
 | `not_passed` | the verdict did not pass (the failing parts are named) |
 | `gate_outdated` | the record is of another `gateVersion` |
 | `kit_changed` | a kit file changed since the record (named when `check-record/record.json` ships beside it) |
@@ -2179,7 +2199,9 @@ only when that build refuses there too (`built_alone`), the others stay in the p
 every probe when nothing is named, are traced by bisection over builds; then the build is made again, until it refuses
 nothing, and only then is the site written. A refusal found in memory spends no rerun and no site step; its builds are
 counted (`buildSteps`), limited only by the time. A site stop is searched only among the places its operation stores
-and, when a read back names the column or the slot that differed, the places stored there: the one place stored there
+(a probe that replaces the whole value carries no code, so it is placed where the plain build stores its place; only a
+place neither plan stores stays a suspect of every stop) and, when a read back names the column or the slot that
+differed, the places stored there: the one place stored there
 is blamed by the stop itself (`named_alone`, no site step), more are halved over site writes (one trial per halving:
 the rerun meets any other culprit), counted as site steps; that probe is taken out and the pass runs again (a rerun). A
 broken page is traced the same way through its blocks, then its values. A stop or a broken page the step limit leaves
@@ -2190,7 +2212,12 @@ meets is recorded.
 
 A place counts as `tested` only when the probe a pass gave it is found in what was written for it
 (`gate/write-safety-reached.mjs`): in the stored value the write plan sends for that place (as written, escaped once for
-HTML, as a JSON string keeps it, or by the probe's signature when the build changed its punctuation), else on a page.
+HTML, as a JSON string keeps it, or by the probe's signature when the build changed its punctuation), else on a page;
+in both, by the place's own value (its marker together with the probe) or the probe's signature, never by the probe
+text alone, which a code-less probe (letters of other scripts, a content plugin code, a limit pad) shares with every
+place given it. `tested` means at least one probe reached the place, not every probe: the record keeps the (place,
+probe) pairs never tried (`missing`) and the tested places set aside in a later pass (`ends.parkedTested`), and the
+review page says both.
 A probe that replaces the whole value (the empty value, a number) carries no code: it is found where the plain build
 stored that place, with exactly its value. A build that writes its plain marker in place of a probe, or drops it,
 leaves the place untested (`not_written` in the ledger, the measurement `incomplete`, `probe_not_written`), and a probe
@@ -2208,8 +2235,10 @@ about 7 s, a full site write about 40 s, a reset and the page reads about 30 s, 
 (the text place with a declared limit takes 21 probes, one per pass) take about 28 minutes. 24 passes, 20 site steps
 (about 20 s when the write stops early, 70 s when it runs to the end), 60 minutes, 20 reruns of one pass on the site;
 past one the measurement is `incomplete`, never `passed`. Run 4 spent its 20 site steps tracing two stops by halving
-over 316 places (about 9 steps each) and tested 0 places; a stop now names its place from the column or slot it
-reports and costs one rerun. A kit with more stops than its limits allow gets a failed record, never a complete passing
+over 316 places (about 9 steps each) and tested 0 places; a stop now names its place from its operation, and from the
+column or slot when a read back reports one (a door call that failed after its retries, `redo_failed`, names neither),
+and costs one rerun when one probed place is stored there. Run 5 met one stop whose operation stored 1 probed place
+and 105 whole value probes stored elsewhere, which were all suspects then; they are not now. A kit with more stops than its limits allow gets a failed record, never a complete passing
 one: a resumed record is never released, so such a kit must be fixed first. Builds in memory (about 1.5 s each) have no limit of their own. The state is saved after each pass (`<out>/write-safety-state.json`, `gate/write-safety-state.mjs`) under a
 key of the gate version, the kit's files, the blank site archive, the plugin, the probe catalogue, the site's address
 and the sha256 of the code of the gate and of the build's write step (`gateCodeSha256`): a run stopped by
@@ -2223,7 +2252,9 @@ measured for (`ranFor`). A forger who edits all three, and the verdict, is stopp
 release step runs the gate itself, #588); the resumed passes themselves are not measured again.
 
 The record gives `places` (`written`, `probed`, `tested`), `notSiteTested`, `passes`, `steps`, `buildSteps`,
-`findings` (page, block, store block, field, probe, kind, the stored location; never the value), `missing` and
+`findings` (page, block, store block, field, probe, kind, the stored location the failure names: the operation a stop
+reports and its slot or column, or an entry of the page that judged it, else the plain build's first location; how it
+was named, `evidence`: `named_alone`, `built_alone`, `trial` or `page` with `judgedOn`; never the value), `missing` and
 `coverage`. **Coverage** (`gate/write-safety-coverage.mjs`) is one table whose numbers add up, and the release guard
 refuses a passing record whose table does not. In stored locations: `universeWritten` (the places of the marker test's
 universe the build wrote) = `inBoth` + `onlyInUniverse`; `locations` (what the plain marker build's write plan writes)
@@ -2260,10 +2291,13 @@ reason): the page key is the kind of page (`gate/adapters/joomla-page-key.mjs`: 
 classes name), so the same failure on another kind of page is a regression; a regression on a kind of page the control
 has not got is marked `counterpart: none` and stays a regression. The SEO items, read from the marker test's renders:
 every page has a title no other page shares, a meta description, an `og:image`, a viewport meta, `html[lang]`, an
-`alt` attribute on every picture (empty is allowed), and a declared favicon that answers 200. A page whose robots meta
-says `noindex` (the kit marks the four system pages so) is no search result and is skipped by the unique title, the
-description, the `og:image` and the `alt` items (its title is not counted among the others either); it still needs a
-title, a viewport, `html[lang]` and a favicon, and the record lists such pages (`seo.noindex`). A page the build writes is
+`alt` attribute on every picture (empty is allowed), and a declared favicon that answers 200. A system page (page type
+`system-*`) whose robots meta says `noindex` (the kit marks the four system pages so) is no search result and is skipped
+by the unique title, the description and the `og:image` items (its title is not counted among the others either); it
+still needs a title, a viewport, `html[lang]`, a favicon and an `alt` on every picture, and the record lists such pages
+(`seo.noindex`). Any other page is planned: `noindex` on it is itself a missing item (`noindex`) and it is held to every
+item, so a kit cannot hide a business page from search engines unseen. A further page of a paged list shares its list's
+title by design. A page the build writes is
 held to all of them; a system page the template titles itself (login, password reset, search, the 404) is compared with
 the same page of the untouched template (by its page type: the marker site may read it at its own menu item), and an item it misses there too is the template's own (`seo.same`), one the
 control could not say is `uncompared` and leaves the measurement `incomplete`. The pages are asked for at the
