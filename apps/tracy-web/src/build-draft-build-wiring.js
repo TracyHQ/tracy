@@ -90,7 +90,8 @@ export function draftSiteStarter({ pool, config, kits, request, now = Date.now }
 export function draftRunReader({ pool }) {
   return async (siteKey) => {
     const { rows } = await pool.query(
-      `select b.state, b.created_at, b.timings from site_brief b left join site s on s.site_key = b.site_key
+      `select b.state, b.created_at, b.timings, b.brief ->> 'buildRun' as run
+         from site_brief b left join site s on s.site_key = b.site_key
         where b.site_key = $1 and ${CURRENT_BRIEF} order by b.created_at desc limit 1`,
       [siteKey]
     )
@@ -100,8 +101,14 @@ export function draftRunReader({ pool }) {
     )
     const b = rows[0]
     return {
+      // `run`: the rebuild this row is the run of (#612, `brief.buildRun`), none for a first build.
       brief: b
-        ? { state: b.state, createdAt: b.created_at?.toISOString?.() ?? null, timings: b.timings }
+        ? {
+            state: b.state,
+            createdAt: b.created_at?.toISOString?.() ?? null,
+            timings: b.timings,
+            ...(b.run ? { run: b.run } : {})
+          }
         : null,
       job: jobs.rows[0] ? { state: jobs.rows[0].state } : null
     }

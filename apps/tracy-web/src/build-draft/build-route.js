@@ -18,12 +18,15 @@
  */
 import { Hono } from 'hono'
 import { json } from '../lib/http.js'
+import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
 import { principalOf } from '../lib/wo-principal.js'
 import { buildRunOf } from './build-progress.js'
 import { approveBuild, buildOpen, endBuild, planRefOf, readBuild, saveBuildSite } from './build-store.js'
 import { callerOf } from './caller.js'
 import { readEngineRow } from './engine-store.js'
 import { handOffBuild, handoffNextOfBuild } from './handoff-door.js'
+import { addRebuildDoors, REBUILD_REFUSALS } from './rebuild-route.js'
+import { rebuildFactsOf } from './rebuild-summary.js'
 
 const BASE = '/api/build-draft/build'
 
@@ -50,15 +53,18 @@ const REFUSALS = {
   HANDOFF_OPENING: [409, 'The site chat is being opened by another request: ask again in a few seconds.'],
   HANDOFF_UNAVAILABLE: [503, 'This server cannot open a chat on the site.'],
   HANDOFF_SESSION_FAILED: [503, 'The site chat could not be opened: ask again.'],
-  HANDOFF_PROMPT_FAILED: [503, 'The site chat did not take the conversation: ask again.']
+  HANDOFF_PROMPT_FAILED: [503, 'The site chat did not take the conversation: ask again.'],
+  BUILD_RUNNING: [409, 'The site is being built or updated: wait for GET /api/build-draft/build to end it.'],
+  // The rebuild doors (#612, `rebuild-route.js`).
+  ...REBUILD_REFUSALS
 }
 const refuse = (c, code) => {
   const [status, next] = REFUSALS[code]
   return json(c, { code, next }, status)
 }
 
-/** The build in small, as the chat reads it. */
-export function buildSummaryOf(build, run) {
+/** The build in small, as the chat reads it; `facts`: what a rebuild adds (#612, `rebuild-summary.js`). */
+export function buildSummaryOf(build, run, facts = {}) {
   if (!build) return null
   const outcome = run?.outcome?.result ?? null
   const state = outcome ?? (build.site ? 'building' : build.refusal ? 'stopped' : 'creating')
@@ -69,7 +75,8 @@ export function buildSummaryOf(build, run) {
     ...(build.site?.siteKey ? { siteKey: build.site.siteKey } : {}),
     ...(build.site?.workspacePath ? { workspacePath: build.site.workspacePath } : {}),
     // Where the screen moved once the done build's chat moved to the site (#611).
-    ...(handoffNextOfBuild(build) ? { next: handoffNextOfBuild(build) } : {})
+    ...(handoffNextOfBuild(build) ? { next: handoffNextOfBuild(build) } : {}),
+    ...facts
   }
 }
 
@@ -89,6 +96,11 @@ export function buildSummaryOf(build, run) {
  *   site ahead of time (#611, `lib/site-session-ahead.js`)
  * @param {(input: {siteKey: string, email: string, sessionId: string, requestId: string, text: string}) =>
  *   Promise<boolean>} [deps.promptSiteChat] queues the first message in it
+ * @param {object} [deps.builds] the build store of the site (#612, `site-builds.js`)
+ * @param {Function} [deps.startRevision] starts the revision run of a rebuild on the built site (#612)
+ * @param {Function} [deps.restoreSite] restores the build before the last update (#612)
+ * @param {Function} [deps.abandonSite] undoes an update that stopped half way (#612)
+ * @param {string} [deps.workflow] the step chain workflow a revision run names
  * @param {() => number} [deps.now]
  * @param {{error: Function}} [deps.log]
  */
@@ -102,6 +114,11 @@ export function buildRunRoutes({
   prunePictures,
   openSiteChat,
   promptSiteChat,
+  builds,
+  startRevision,
+  restoreSite,
+  abandonSite,
+  workflow = STEP_CHAIN_WORKFLOW,
   now = Date.now,
   log = console
 }) {
@@ -132,7 +149,11 @@ export function buildRunRoutes({
       const keep = row?.research?.pictureRun
       if (keep && prunePictures) await prunePictures(accountId, keep).catch(() => null)
     }
-    return { build: buildSummaryOf(build, made.run), run: made.run }
+    const unfinished =
+      Boolean(builds && build.endedAt && build.site?.siteKey) &&
+      Boolean(await builds.unfinished({ siteKey: build.site.siteKey }).catch(() => null))
+    const facts = rebuildFactsOf({ build, brief: read.brief, unfinished })
+    return { build: buildSummaryOf(build, made.run, facts), run: made.run }
   }
 
   app.post(
@@ -171,6 +192,21 @@ export function buildRunRoutes({
       return made.refusal ? refuse(c, made.refusal) : json(c, { next: made.next })
     })
   )
+
+  // A built site's update, restore and abandon (#612).
+  addRebuildDoors(app, {
+    door,
+    answerOf,
+    refuse,
+    pool,
+    builds,
+    startRevision,
+    restoreSite,
+    abandonSite,
+    workflow,
+    now,
+    log
+  })
 
   app.get(
     BASE,

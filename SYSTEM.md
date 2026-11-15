@@ -947,6 +947,17 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   the door client `siteDoors({send})` that `deps.draft.site.siteDoors` injects (`step-chain-draft-site.js`). With no
   door client the step stops `write_not_ready_for_draft` and writes nothing
   ([`draft-write-doors.md`](docs/references/draft-write-doors.md)).
+  Updating a built site (#612, [`build-draft/rebuild-route.js`](apps/tracy-web/src/build-draft/rebuild-route.js)): the
+  builds a site holds live in `site_draft_build` (one row per kept build, `build` is `json` so the key order the
+  revision run compares is kept) and `site_draft_build_head` (the site's current build and its unfinished mark),
+  migration 220, through `deps.builds` ([`build-draft/site-builds.js`](apps/tracy-web/src/build-draft/site-builds.js):
+  `keep` compares then writes, one run at a time per site). `POST /api/build-draft/build/revise {plan}` makes the
+  build the next run (`run: {kind: 'partial', id, edit, rebuildFrom}`, the earlier run in `build.history`) and asks for a
+  revision run with `brief: {workflow, draftId, plan, rebuildFrom, buildRun}`; `/restore` and `/abandon` hold the site
+  (`build.busy`) and call the step chain's `restoreBuild` / `abandonRun` (`build-draft-rebuild-wiring.js`). Three seams
+  are injected there and none exists yet: `startRun` (the run frame starts a chain run only with a site it creates),
+  `siteDoorsFor` (the draft write's site doors) and `runRecordOf` (an unfinished run's record); without them each
+  door says plainly that the site cannot be updated from the chat. No door deletes the site or the chat.
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
   row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,

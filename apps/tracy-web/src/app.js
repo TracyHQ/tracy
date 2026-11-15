@@ -121,6 +121,8 @@ import { createEngine } from './build-draft/engine.js'
 import { buildEngineRoutes } from './build-draft/engine-route.js'
 import { buildRunRoutes } from './build-draft/build-route.js'
 import { draftRunReader, draftSiteChat, draftSiteStarter } from './build-draft-build-wiring.js'
+import { draftRebuild } from './build-draft-rebuild-wiring.js'
+import { siteBuildStore } from './build-draft/site-builds.js'
 import { draftBrandStep, draftPictureReader, draftPictures, preSiteGatherer } from './build-draft-wiring.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
 import { agentDemoCapabilities, agentDemoCreateContext } from './opportunities-build/agent-demo.js'
@@ -1286,6 +1288,9 @@ export function buildApp(deps) {
         // A done build's chat moves to its site (#611): a chat opened ahead on the site, prompted as the owner.
         // `buildEngine.openSiteChat` / `promptSiteChat` replace them in tests.
         ...siteChatOf(buildEngine, deps),
+        // A built site's update, restore and abandon (#612): `buildEngine.builds` / `startRun` / `siteDoorsFor` /
+        // `runRecordOf` replace them in tests.
+        ...draftRebuild({ ...buildEngine, builds: buildEngine.builds ?? siteBuildStore(deps.pool) }),
         ...(deps.now ? { now: deps.now } : {})
       })
     )
@@ -2348,7 +2353,9 @@ export function buildApp(deps) {
                   publicFile: async (siteKey, filePath) =>
                     (await siteReader(siteKey))?.bytes(filePath) ?? null,
                   blankContract: blankContractReader(AI_QUICKSTARTS_DIR)
-                }
+                },
+                // The builds each site holds, for revisions and restores (#612, `build-draft/site-builds.js`).
+                builds: deps.buildEngine?.builds ?? siteBuildStore(deps.pool)
               }
             })
           })

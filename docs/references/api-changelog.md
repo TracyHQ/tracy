@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-15: A built site is updated from the changed plan, and the previous version can be restored
+
+Added (internal): `POST /api/build-draft/build/revise {plan}` starts a revision run of the living plan revision from the build the site holds, writing only what the change touched; `POST /api/build-draft/build/restore` puts the site back to the build before the last update; `POST /api/build-draft/build/abandon` undoes an update that stopped half way. Each answers what `GET /api/build-draft/build` answers plus `say`, a sentence for the owner. New refusals: 409 `NOT_BUILT`, `SITE_BUSY`, `PREVIOUS_RUN_UNFINISHED`, `NOTHING_TO_RESTORE`, `NOTHING_UNFINISHED`, and `BUILD_RUNNING` while a run or update is open. Changed (internal): `GET /api/build-draft/build` answers `build.kind: 'partial'` for an update, `build.say?`, `build.restorable`, `build.unfinished`, `build.busy?` and `build.heldFile?: {code, say, files}`, and a partial run's Contract B progress names its edit and lists only the touched pages. None of these doors deletes the site or the chat. Public API v1 is unchanged.
+
 ## 2026-11-15: The build chat compose door takes `restart`
 
 Changed (internal): `POST /api/build-draft/compose` documents its body as `{request?, restart?}`. On a draft that already has a plan, a `request` revises the plan (`{step: 'revise'}`, with `revision: {changed, notDone}` in its result) and only `restart: true` starts the plan over. No behaviour change; the reference now says what the door does.

@@ -25503,6 +25503,25 @@
           "x-internal": true
         }
       },
+      "/api/build-draft/build/abandon": {
+        "post": {
+          "operationId": "post_api_build_draft_build_abandon",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer"],
+          "x-internal": true
+        }
+      },
       "/api/build-draft/build/handoff": {
         "post": {
           "operationId": "post_api_build_draft_build_handoff",
@@ -25529,6 +25548,69 @@
                     }
                   },
                   "required": ["conversation"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/build/restore": {
+        "post": {
+          "operationId": "post_api_build_draft_build_restore",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/build/revise": {
+        "post": {
+          "operationId": "post_api_build_draft_build_revise",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "plan": {
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "revision": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": ["id", "revision"],
+                      "type": "object"
+                    }
+                  },
+                  "required": ["plan"],
                   "type": "object"
                 }
               }

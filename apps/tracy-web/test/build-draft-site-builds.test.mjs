@@ -7,11 +7,11 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { restoreBuild } from '../src/step-chain-draft-restore.js'
-import { createDraftSteps } from '../src/step-chain-draft-steps.js'
 import { siteBuildStore } from '../src/build-draft/site-builds.js'
 import { fileDb } from './_db.mjs'
+import { runOn } from './build-draft-rebuild-fixtures.mjs'
 import { NEW_NAME, revisedBy } from './draft-revision-edits.mjs'
-import { ACCOUNT, DRAFT, blankSite, depsOf, draftOf, revisionModel } from './draft-revision-fixtures.mjs'
+import { blankSite } from './draft-revision-fixtures.mjs'
 import { snapshotOf } from './draft-write-fixtures.mjs'
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
@@ -124,52 +124,29 @@ test(
   }
 )
 
-/** The draft steps of Part 3 on a memory site, with this store as `deps.builds`. */
-async function runOn({ memory, store, revised, runId, rebuildFrom, record = {} }) {
-  const steps = createDraftSteps({
-    ...depsOf({ draft: draftOf(revised), model: revisionModel(), memory, record }),
-    builds: store
-  })
-  const plan = revised?.plan ?? draftOf().approved.plan
-  const ctx = {
-    runId,
-    accountId: ACCOUNT,
-    siteKey: SITE.siteKey,
-    brief: {
-      draftId: DRAFT,
-      plan: { id: plan.id, revision: plan.revision },
-      ...(rebuildFrom ? { rebuildFrom } : {})
-    },
-    signal: new AbortController().signal
-  }
-  const value = async (name, inputs) => (await steps[name](ctx, inputs, { signal: ctx.signal })).value
-  const kit = await value('kit', {})
-  const planned = await value('plan', { kit })
-  const made = {
-    kit,
-    plan: planned,
-    copy: await value('copy', { kit, plan: planned }),
-    pictures: await value('pictures', { kit, plan: planned })
-  }
-  const icons = await value('icons', made)
-  const order = await value('order', { ...made, icons })
-  return { planned, write: await value('write', { ...made, icons, order }) }
-}
-
 test(
   'the real draft steps keep, revise and restore through this store: the previous version comes back',
   opts,
   async () => {
     const store = siteBuildStore(db.pool)
     const memory = blankSite()
-    const first = await runOn({ memory, store, runId: 'run-larkspur-1' })
+    const first = await runOn({ memory, store, site: SITE, runId: 'run-larkspur-1' })
     const ref = first.write.build.ref
     assert.equal(await store.current(SITE), ref)
     const before = snapshotOf(memory)
     // A full build again on the built site is refused before any model call: it would make every record twice.
-    await assert.rejects(runOn({ memory, store, runId: 'run-larkspur-x' }), { code: 'site_already_built' })
+    await assert.rejects(runOn({ memory, store, site: SITE, runId: 'run-larkspur-x' }), {
+      code: 'site_already_built'
+    })
     const revised = revisedBy('rename a service')
-    const second = await runOn({ memory, store, revised, runId: 'run-larkspur-2', rebuildFrom: ref })
+    const second = await runOn({
+      memory,
+      store,
+      site: SITE,
+      revised,
+      runId: 'run-larkspur-2',
+      rebuildFrom: ref
+    })
     const impact = second.planned.revision.impact
     assert.ok(impact.write.length > 0 && impact.reuse.length > 0, 'some pages written again, others kept')
     assert.equal(await store.current(SITE), second.write.build.ref)

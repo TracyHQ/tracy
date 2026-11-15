@@ -16,6 +16,8 @@
  * step that did not finish carries it. The reason stays with the team (`outcome.stopped.reason`).
  */
 import { outcomeOf, progressEventOf } from 'website-opportunities/domain'
+import { partialOf } from './rebuild-progress.js'
+import { runOfBuild } from './rebuild-store.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const READING = new Set(['doors', 'kit', 'brand', 'plan'])
@@ -56,10 +58,14 @@ const secondsBetween = (from, to) => {
  *   (`CURRENT_BRIEF`), `job`: the site's provision job
  * @returns {{run: {events?: object[], outcome?: object} | null, final: boolean, problems: object[]}}
  */
-export function buildRunOf({ build, brief = null, job = null, now }) {
+export function buildRunOf({ build, brief: read = null, job: provision = null, now }) {
   const plan = build?.snapshot?.plan
   const pages = list(plan?.pages)
   if (!plan || pages.length === 0) return { run: null, final: false, problems: [] }
+  // A rebuild (#612): only the brief row of this run counts, and its steps are the pages the change touched.
+  const partial = partialOf(build, read)
+  const brief = partial ? partial.brief : read
+  const job = partial ? null : provision
   const chain = brief?.timings?.chain ?? null
   const frameStop = build.refusal
     ? {
@@ -81,21 +87,23 @@ export function buildRunOf({ build, brief = null, job = null, now }) {
     ENDED.has(brief?.state) ||
     chain?.ending === 'complete' ||
     chain?.ending === 'stopped'
-  const record = engineLinesOf(chain?.steps, pages)
-  const running = [...new Set(list(chain?.running).flatMap((s) => engineNamesOf(s, pages)))]
-  const stop = frameStop ?? engineStopOf(chain?.stop, pages)
+  const written = partial ? partial.written : pages
+  const record = engineLinesOf(chain?.steps, written)
+  const running = [...new Set(list(chain?.running).flatMap((s) => engineNamesOf(s, written)))]
+  const stop = frameStop ?? engineStopOf(chain?.stop, written)
   // From the approval, as the owner's clock runs; an ended build's clock stops when it was marked ended.
   const endedMs = Date.parse(String(build.endedAt ?? ''))
   const elapsedSeconds = secondsBetween(build.approvedAt, final && Number.isFinite(endedMs) ? endedMs : now)
   const common = {
     planId: plan.id,
     planRevision: plan.revision,
-    run: { id: build.id, kind: 'build' },
+    run: runOfBuild(build),
     elapsedSeconds,
     pages,
     record,
     running: final ? [] : running,
-    stop
+    stop,
+    ...(partial ? { engineSteps: partial.engineSteps } : {})
   }
   // A brief that failed with nothing recorded as stopping it ended before its write step: `outcomeOf` says so.
   const made = final

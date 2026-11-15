@@ -1518,6 +1518,56 @@ export const PEOPLE_ROUTES = [
     answers:
       "`{build: {id, plan: {id, revision}, state: 'creating' | 'building' | 'done' | 'stopped' | 'cancelled', siteKey?, workspacePath?, next?} | null, run: {events: [tracy-build-progress/v1]} | {outcome: tracy-build-outcome/v1} | null}`"
   },
+  // src/build-draft/rebuild-route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/build/revise',
+    summary: 'Update my built site from the plan I changed',
+    description:
+      "Body `{plan: {id, revision}}`: the living plan revision after the owner changed it in the site chat (#612). Starts a revision run from the build the site holds (`rebuildFrom`), which writes only the pages and blocks the change touched; the build keeps its id, its site and its chat, and the run before it moves to the build's history. One run at a time per site. 202 when the run started, or when it could not start (then `say` tells the owner, and nothing is written); 200 with `say` when the site already shows this plan revision. 409 `NOT_BUILT` (no site, or the site holds no build yet), `BUILD_RUNNING`, `SITE_BUSY`, `PREVIOUS_RUN_UNFINISHED` (with `say`; `POST /api/build-draft/build/abandon` undoes it), `STALE_PLAN`, `ENGINE_BUSY`, `NO_DRAFT`; 503 with `say` when the server holds no build store; 400 `INVALID_REQUEST`. Never deletes the site or the chat. Called by a signed-in browser (the site chat), or by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['customer'],
+    auth: 'session-or-actor',
+    internal: true,
+    body: {
+      type: 'object',
+      required: ['plan'],
+      properties: {
+        plan: {
+          type: 'object',
+          required: ['id', 'revision'],
+          properties: { id: { type: 'string' }, revision: { type: 'integer' } }
+        }
+      }
+    },
+    answers:
+      "What `GET /api/build-draft/build` answers, with `build.kind: 'partial'`, `build.restorable`, `build.unfinished`, `build.heldFile?`, plus `say?`: a sentence for the owner"
+  },
+  // src/build-draft/rebuild-route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/build/restore',
+    summary: 'Put my site back to the version before the last update',
+    description:
+      "Writes the site back to the build before the last update (#612) and makes that build the site's build again; the later build stays in the store. A part of the site edited outside Tracy, something the update added, or a text the owner asked to keep private stops the restore before anything changes, and `say` tells the owner why. 200 with `say` and `restore: {result, code?}`. 409 `NOTHING_TO_RESTORE`, `NOT_BUILT`, `BUILD_RUNNING`, `SITE_BUSY` (another restore or undo holds the site), `NO_DRAFT`. Never deletes the site or the chat. Called by a signed-in browser (the site chat), or by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session. 403 `BUILD_CHAT_OFF`; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['customer'],
+    auth: 'session-or-actor',
+    internal: true,
+    answers:
+      "What `GET /api/build-draft/build` answers, plus `say` and `restore: {result: 'done' | 'stopped', code?}`"
+  },
+  // src/build-draft/rebuild-route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/build/abandon',
+    summary: 'Undo the update of my site that did not finish',
+    description:
+      "Writes back what an update that stopped half way had written (#612), from that run's own undo record, and ends its mark, so a new update can start. The site's build does not change. 200 with `say` and `abandon: {result, code?}`. 409 `NOTHING_UNFINISHED`, `NOT_BUILT`, `BUILD_RUNNING`, `SITE_BUSY`, `NO_DRAFT`. Never deletes the site or the chat. Called by a signed-in browser (the site chat), or by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session. 403 `BUILD_CHAT_OFF`; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['customer'],
+    auth: 'session-or-actor',
+    internal: true,
+    answers:
+      "What `GET /api/build-draft/build` answers, plus `say` and `abandon: {result: 'done' | 'stopped', code?}`"
+  },
   // src/onboarding/route.js
   {
     method: 'GET',
