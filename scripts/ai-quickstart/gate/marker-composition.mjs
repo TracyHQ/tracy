@@ -66,24 +66,39 @@ function dataOf(block, profile, usedOnPage, createdBy) {
   return taken
 }
 
-/** Every page the composition lists: a recipe's blocks, then each variant's. */
-export function pageShapesOf(pageRecipes) {
-  return list(pageRecipes?.recipes).flatMap((r) => [
-    { pageType: r.pageType, blocks: list(r.blocks), mainBlock: r.mainBlock },
-    ...list(r.variants).map((v) => ({ pageType: r.pageType, blocks: list(v.blocks), mainBlock: r.mainBlock }))
-  ])
+/** The page types the kit declares the write step cannot make (`pages.<type>.unbuilt`), with their code. */
+export const unbuiltOf = (mapping) =>
+  new Map(
+    Object.entries(mapping?.pages ?? {})
+      .filter(([, p]) => p?.unbuilt)
+      .map(([type, p]) => [type, p.unbuilt])
+  )
+
+/** Every page the composition lists: a recipe's blocks, then each variant's; a page type the kit declares unbuilt none. */
+export function pageShapesOf(pageRecipes, mapping) {
+  const unbuilt = unbuiltOf(mapping)
+  return list(pageRecipes?.recipes)
+    .filter((r) => !unbuilt.has(r.pageType))
+    .flatMap((r) => [
+      { pageType: r.pageType, blocks: list(r.blocks), mainBlock: r.mainBlock },
+      ...list(r.variants).map((v) => ({
+        pageType: r.pageType,
+        blocks: list(v.blocks),
+        mainBlock: r.mainBlock
+      }))
+    ])
 }
 
 /**
  * The composition of the marker build.
- * @param {{blockStore: object, pageRecipes: object}} kit
+ * @param {{blockStore: object, pageRecipes: object, mapping?: object}} kit
  * @param {object} profile the marker needs profile (`markerProfile`)
  * @param {{take: Function}} registry
  */
-export function markerComposition({ blockStore, pageRecipes }, profile, registry) {
+export function markerComposition({ blockStore, pageRecipes, mapping }, profile, registry) {
   const byId = new Map(list(blockStore?.blocks).map((b) => [b.id, b]))
   const createdBy = new Map()
-  const pages = pageShapesOf(pageRecipes).map((shape) => {
+  const pages = pageShapesOf(pageRecipes, mapping).map((shape) => {
     const used = new Set()
     const blocks = shape.blocks
       .map((id) => byId.get(id))

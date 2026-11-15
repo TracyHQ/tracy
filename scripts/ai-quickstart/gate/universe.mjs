@@ -73,7 +73,50 @@ export function universeOf(mapping) {
         language: o
       })
   })
+  for (const b of buildPlacesOf(mapping)) places.set(b.key, { ...b, also: [] })
   return places
+}
+
+const PAGE_PARTS = ['menuItem', 'under', 'ownItem', 'record', 'unbuilt']
+const HIDE_KEYS = ['scope', 'from', 'element', 'order']
+
+/**
+ * The places of what the build writes besides the blocks (#597, "What the build writes besides the blocks"), one per
+ * declaration, `owner: 'build'`, `kind` naming the mapping key: the accent door, each part of each page type's page,
+ * each entity of each created frame, a keyed row, a container's copies, a menu block's items, the featured article,
+ * and each hide carrying `scope`, `from`, `element` or `order`.
+ */
+export function buildPlacesOf(mapping) {
+  const out = []
+  const add = (kind, path, extra = {}) =>
+    out.push({ key: `build:${path.join('.')}`, owner: 'build', kind, field: kind, path, loc: {}, ...extra })
+  if (mapping?.look?.accent) add('look.accent', ['look', 'accent'])
+  for (const [pageType, page] of Object.entries(mapping?.pages ?? {}))
+    for (const part of PAGE_PARTS)
+      if (page?.[part]) {
+        add(`pages.${part}`, ['pages', pageType, part], { pageType, declared: page[part] })
+        if (part === 'record' && page.record.category)
+          add('pages.record.category', ['pages', pageType, 'record', 'category'], { pageType })
+      }
+  list(mapping?.createdFrames).forEach((f, i) => {
+    for (const entity of list(f?.entities))
+      add('createdFrames', ['createdFrames', i, entity], {
+        entity,
+        recordKind: mapping.entities?.[entity]?.kind ?? null
+      })
+  })
+  for (const [id, p] of Object.entries(mapping?.placements ?? {})) {
+    if (p?.keyedRow) add('placements.keyedRow', ['placements', id, 'keyedRow'], { block: id })
+    if (p?.holds?.copies) add('placements.holds.copies', ['placements', id, 'holds', 'copies'], { block: id })
+    if (p?.menu?.items) add('placements.menu.items', ['placements', id, 'menu', 'items'], { block: id })
+  }
+  if (mapping?.seo?.featuredView?.article) add('seo.featuredView.article', ['seo', 'featuredView', 'article'])
+  for (const [block, hides] of Object.entries(mapping?.hides ?? {}))
+    list(hides).forEach((h, i) => {
+      const keys = HIDE_KEYS.filter((k) => typeof h?.[k] === 'string')
+      if (keys.length) add('hides', ['hides', block, i], { block, keys, control: h.control ?? null })
+    })
+  return out
 }
 
 export const ACCOUNT = Object.freeze({

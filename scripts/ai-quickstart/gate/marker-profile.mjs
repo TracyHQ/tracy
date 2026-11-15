@@ -132,7 +132,7 @@ function itemCountOf(recipes, byId, kind) {
 export function markerProfile({ blockStore, pageRecipes, mapping }, registry) {
   const blocks = list(blockStore?.blocks)
   const byId = new Map(blocks.map((b) => [b.id, b]))
-  const recipes = pageShapesOf(pageRecipes)
+  const recipes = pageShapesOf(pageRecipes, mapping)
   const hosts = networkHostsOf(mapping)
   const declared = new Set(blocks.flatMap(fieldsOf).map((f) => f.kind))
   const facts = {}

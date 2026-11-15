@@ -6,6 +6,11 @@
 
 /** The write plan's own refusals: a record kind the write cannot create. */
 const PLAN_REFUSALS = new Set(['record_kind_unsupported'])
+/**
+ * The write plan's guards that name the operation they refuse (`draft-write-guards.mjs`): a contact created with no name
+ * (the kit's only place of the name the contact takes is a block a gap took out).
+ */
+const GUARD_REFUSALS = new Set(['record_name_empty'])
 /** The write run's refusals after its retries: a door refusal of an operation, or a read back that did not match. */
 const RUN_REFUSALS = new Set(['redo_failed', 'read_back_mismatch'])
 
@@ -129,7 +134,9 @@ export function writerGapOf(error, composition, kit, writePlan) {
     ? error.details?.record
     : RUN_REFUSALS.has(code)
       ? error.details?.op
-      : null
+      : GUARD_REFUSALS.has(code)
+        ? error.details?.problems?.find((p) => p.code === code)?.op
+        : null
   if (typeof record !== 'string') return null
   const subject = record.split(':').slice(1).join(':')
   const blocks = takeOutSubject(composition, kit, subject, record, writePlan)

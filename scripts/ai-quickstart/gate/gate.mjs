@@ -33,7 +33,7 @@ import { demoChecks } from './demo-checks.mjs'
 import { keptKeysOf } from './exemptions.mjs'
 import { markerBuild } from './marker-plan.mjs'
 import { MEASURED_REFUSALS, memoryTryWrite, openMarkerPicture } from './memory-write.mjs'
-import { checkRecord } from './record.mjs'
+import { checkRecord, splitOf } from './record.mjs'
 import { recordHtml } from './record-html.mjs'
 import { renderSite, THEMES, WIDTHS } from './render.mjs'
 import { filesOf, sourceResolver } from './sources.mjs'
@@ -80,10 +80,20 @@ log(
   `memory write ${built.written.report.status}: ${built.writePlan.ops.length} operations, ${built.gaps.length} gaps`
 )
 log(`universe ${JSON.stringify(accounting.counts)}`)
+log(`split ${JSON.stringify(splitOf(accounting.places))}`)
 if (!site) {
   writeFileSync(
     path.join(out, 'accounting.json'),
-    JSON.stringify({ counts: accounting.counts, places: accounting.places, gaps: built.gaps }, null, 1)
+    JSON.stringify(
+      {
+        counts: accounting.counts,
+        split: splitOf(accounting.places),
+        places: accounting.places,
+        gaps: built.gaps
+      },
+      null,
+      1
+    )
   )
   process.exit(accounting.counts.unexplained ? 1 : 0)
 }

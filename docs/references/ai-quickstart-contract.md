@@ -1407,13 +1407,20 @@ chain as it runs for a customer: `composePlan`, `writePages` with a writer that 
 memory site lacks laid over it (`MEASURED_REFUSALS` of `gate/memory-write.mjs`). A refusal is a **write step gap**:
 the gate never changes the write step or its plan; it takes the data that met the refusal out of the composition
 (a page, a block, an item; a block left under its minimum is emptied) and runs the chain again, and the gap is
-reported with its code and cause.
+reported with its code and cause. The plan guard `record_name_empty` is a gap too: it takes out the contact page.
 
 **The universe** (`gate/universe.mjs`, `gate/accounting.mjs`). Every location of every block field, item field, child
-list field and design line, every fact place and every language string the mapping classes. Each is exactly one of
-`written`, `declared_not_written` (a design line, a language string the kit keeps or sets), `skipped_by_writer` (with
-the chain's reason: not placed, skipped by the plan, hidden by the order, `identity_field_no_door`, a write step gap)
-or `unexplained`, which must be zero.
+list field and design line, every fact place and every language string the mapping classes, plus one place per
+declaration of what the build writes besides the blocks (`look.accent`, each part of `pages.<type>`, each entity of
+`createdFrames`, `keyedRow`, `holds.copies`, `menu.items`, `seo.featuredView.article`, each hide carrying `scope`,
+`from`, `element` or `order`). Each is exactly one of `written`, `declared_not_written` (a design line, a language
+string the kit keeps or sets, a fact place marked `notWritten`, a page type declared `unbuilt` and the blocks only it
+places, with its code), `skipped_by_writer` or `unexplained`, which must be zero. Every place names `by` (`writer`, the
+build team's chain; `marker_plan`, the gate's own plan; `kit`) and `code`: the reason the chain gives (a plan skip, an
+order hide, an unproven flag such as `menu_item_link_not_declared`, a write step gap as `<code>:<cause>`), or
+`key_not_read` when the write plan does not read that mapping key and says nothing. A page taken out by a gap (named,
+or its main block emptied, so the rules gate drops it) takes the blocks of its recipe with it. `unbuilt` page types are
+left out of the marker composition. The record holds the split as `split.<account>.<by>.<code>`.
 
 **The real write** (`gate/site-write.mjs`). The plan the memory site carried to the end, written through the door
 client (`site-doors.mjs`) after a bind to the blank site contract; the plugin version is read at both ends and must be
@@ -1474,13 +1481,19 @@ The blank site command's archive, restored on Joomla 6.1.1, the plugin installed
 - Block 180's `lists.social.fields.label` (at `hero[social-intro][title]`) prints on no page (see "A place that prints
   nothing"); it shows as written and not seen. On this run its copy (the trainer page's block) is `block_not_printed`
   as a whole, for the style reason above, so the false declaration itself is not yet measured.
-- Numbers: universe 846 places, 232 written, 17 declared and not written, 597 skipped by the write step, 0
-  unexplained. 17 pages, 102 renders, all with the expected status. 48 marker codes seen; 128 written values not
-  seen (95 `block_not_printed`, 27 `value_not_printed`, 6 `block_printed_without_value`). 262 leaks: 206 unmarked
-  texts (template and Joomla interface strings: article details, pager, search and account pages, newsletter form,
-  the account name as author), 40 unmarked pictures (the favicon, demo pictures from stylesheets, avatars), 16 empty
-  pictures, 27 requests to outside hosts (fonts, a video player). The demo scan finds 8 demo strings, the same from
-  the raw HTML and from the browser.
+- Numbers (kit with the #597 keys): universe 909 places, 170 written, 42 declared and not written (24 of them on the
+  `unbuilt` page types), 697 skipped by the write step, 0 by the marker plan, 0 unexplained. The skips by code: write
+  step gaps `read_back_mismatch` 366 (the write step's check of a value it left untouched), `redo_failed:write_failed`
+  99 (articles created with no category), `redo_failed:HTML_SLOT_MISSING` 56 (the masthead copies), `record_name_empty`
+  4; plan skips and order hides 127; flags of keys the plan does not read yet 45 (`key_not_read` 20,
+  `created_record_frame` 18, `menu_item_link_not_declared` 3, and one each of `accent_door_missing`,
+  `detail_position_not_printed`, `featured_article_needed`, `no_record_created`). On the real site: 16 pages, 96
+  renders, all with the expected status; 45 marker codes seen; 103 written values not seen (70 `block_not_printed`,
+  27 `value_not_printed`, 6 `block_printed_without_value`). 256 leaks: 203 unmarked texts (template and Joomla
+  interface strings: article details, pager, search and account pages, newsletter form, the account name as author), 38
+  unmarked pictures (the favicon, an inline picture of a form field, avatars), 15 empty pictures, and 26 requests to
+  outside hosts (fonts, a video player), which are not counted. The demo scan finds 8 demo strings, the same from the
+  raw HTML and from the browser; 282 of 1446 blocks read differently, because the browser applies `text-transform`.
 
 ## Choices made where spec #576 is silent
 

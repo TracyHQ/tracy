@@ -15,6 +15,18 @@ const countBy = (items, key) => {
   return out
 }
 
+/** The places skipped or declared, by who left them (`writer`, `marker_plan`, `kit`) and the code given. */
+export function splitOf(places) {
+  const out = {}
+  for (const p of places) {
+    if (p.account === 'written' || p.account === 'unexplained') continue
+    const at = (out[p.account] ??= {})
+    const by = (at[p.by ?? 'none'] ??= {})
+    by[p.code ?? 'none'] = (by[p.code ?? 'none'] ?? 0) + 1
+  }
+  return out
+}
+
 /**
  * @param {{kit: object, origin: string, built: object, accounting: object, real: object | null,
  *   renders: object[], pages: object[], classified: object, demo: object, widths: number[], themes: string[],
@@ -38,6 +50,7 @@ export function checkRecord(input) {
       pass: leaks.length === 0 && accounting.counts.unexplained === 0 && demo.browser.length === 0
     },
     universe: accounting.counts,
+    split: splitOf(accounting.places),
     places: accounting.places,
     write: {
       memory: {

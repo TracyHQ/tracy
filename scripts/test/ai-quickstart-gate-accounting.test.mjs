@@ -72,7 +72,9 @@ test('an invented mapping: written, cut, design, kept language, skipped, and not
     skipped_by_writer: 2,
     unexplained: 0
   })
-  assert.equal(places.find((p) => p.block === 'unused-a').why, 'block not placed by the chain')
+  const unused = places.find((p) => p.block === 'unused-a')
+  assert.equal(unused.why, 'block not placed by the marker plan')
+  assert.deepEqual([unused.by, unused.code], ['marker_plan', 'block_not_placed'])
 })
 
 test('JA Boxing on a memory site: every place accounted, none unexplained', async () => {
@@ -101,5 +103,11 @@ test('JA Boxing on a memory site: every place accounted, none unexplained', asyn
   assert.ok(counts.written > 0)
   // The write step gaps are reported, each with the refusal code of the write step.
   for (const gap of built.gaps)
-    assert.match(gap.code, /^(record_kind_unsupported|redo_failed|read_back_mismatch)$/)
+    assert.match(gap.code, /^(record_kind_unsupported|redo_failed|read_back_mismatch|record_name_empty)$/)
+  // Every skip names who left it and the code given; the marker plan itself leaves nothing.
+  const { places } = accountFor(kit, built)
+  for (const p of places.filter((x) => x.account === 'skipped_by_writer')) assert.ok(p.by && p.code, p.key)
+  assert.equal(places.filter((p) => p.by === 'marker_plan').length, 0)
+  // A page type the kit declares unbuilt is declared, not skipped.
+  assert.ok(places.some((p) => p.account === 'declared_not_written' && p.code === 'record_kind_unsupported'))
 })

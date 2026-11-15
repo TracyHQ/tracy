@@ -2,6 +2,8 @@
 // the evidence the build team's own step values give. Nothing here decides what a build should write: it reads what
 // the write plan writes and what it, the write order and the rules gate say they left, and calls a place unexplained
 // when none of them says anything about it. Pure.
+import { accountBuildPlace } from './accounting-build.mjs'
+import { pageShapesOf, unbuiltOf } from './marker-composition.mjs'
 import { ACCOUNT, placeKeyOf, universeOf } from './universe.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -85,6 +87,33 @@ function factFieldsOf(mapping) {
   return out
 }
 
+/** The blocks whose fields read each fact (`{fact: name}`). */
+function factBlocksOf(mapping) {
+  const out = new Map()
+  for (const [block, d] of Object.entries(mapping?.blocks ?? {}))
+    for (const v of Object.values(d?.fields ?? {}))
+      if (typeof v?.fact === 'string') out.set(v.fact, [...(out.get(v.fact) ?? []), block])
+  return out
+}
+
+/** The code of a write step gap: its code and cause (`redo_failed:write_failed`). */
+const gapCode = (gap) => (gap.cause && gap.cause !== gap.code ? `${gap.code}:${gap.cause}` : gap.code)
+
+/**
+ * The gaps that took a whole page out, by page type: a gap naming the page (`<type>/*`) or emptying its main block (the
+ * rules gate then drops the page), so every block of that page's recipe is left unplaced by that gap.
+ */
+function pageGapsOf(gaps, pageRecipes) {
+  const main = new Map(list(pageRecipes?.recipes).map((r) => [r.pageType, r.mainBlock]))
+  const out = new Map()
+  for (const g of gaps)
+    for (const b of list(g.blocks)) {
+      const [type, block] = b.split('/')
+      if ((block === '*' || block === main.get(type)) && !out.has(type)) out.set(type, g)
+    }
+  return out
+}
+
 /** The design typed fields of each block of the store, by block id. */
 function designFieldsOf(blockStore) {
   const out = new Map()
@@ -98,13 +127,26 @@ function designFieldsOf(blockStore) {
   return out
 }
 
+/** The blocks every page recipe that places them is of a page type the kit declares unbuilt, with that page's code. */
+function unbuiltBlocksOf(pageRecipes, mapping) {
+  const unbuilt = unbuiltOf(mapping)
+  const built = new Set(pageShapesOf(pageRecipes, mapping).flatMap((p) => p.blocks))
+  const out = new Map()
+  for (const r of list(pageRecipes?.recipes))
+    if (unbuilt.has(r.pageType))
+      for (const b of [...list(r.blocks), ...list(r.variants).flatMap((v) => list(v.blocks))])
+        if (!built.has(b)) out.set(b, { pageType: r.pageType, ...unbuilt.get(r.pageType) })
+  return out
+}
+
 /**
- * Class every place of the kit's mapping.
- * @param {{mapping: object}} kit
+ * Class every place of the kit's mapping. Every place carries `by` (`writer`: the build team's chain; `marker_plan`:
+ * the gate's own plan; `kit`: the kit declares it) and `code` (the reason code that chain gives, the first when several).
+ * @param {{mapping: object, blockStore?: object, pageRecipes?: object}} kit
  * @param {{writePlan: object, order: object, gaps?: object[]}} built the marker build (`marker-plan.mjs`)
  * @returns {{counts: Record<string, number>, places: object[]}}
  */
-export function accountFor({ mapping, blockStore }, { writePlan, order, gaps = [] }) {
+export function accountFor({ mapping, blockStore, pageRecipes }, { writePlan, order, gaps = [] }) {
   const universe = universeOf(mapping)
   const written = writtenPlaces(writePlan)
   const cuts = cutsOf(writePlan)
@@ -115,19 +157,34 @@ export function accountFor({ mapping, blockStore }, { writePlan, order, gaps = [
   const unproven = list(writePlan?.unproven)
   const factFields = factFieldsOf(mapping)
   const design = designFieldsOf(blockStore)
+  const unbuilt = unbuiltOf(mapping)
+  const unbuiltBlocks = unbuiltBlocksOf(pageRecipes, mapping)
   const gapBlocks = new Map()
   for (const g of gaps) for (const b of g.blocks) gapBlocks.set(b.split('/')[1], g)
+  const pageGaps = pageGapsOf(gaps, pageRecipes)
+  for (const shape of pageShapesOf(pageRecipes, mapping)) {
+    const g = pageGaps.get(shape.pageType)
+    if (g) for (const b of shape.blocks) if (!gapBlocks.has(b)) gapBlocks.set(b, g)
+  }
+  const factBlocks = factBlocksOf(mapping)
   const places = []
   for (const place of universe.values()) {
-    const done = (account, why) =>
+    const done = (account, why, by = null, code = null) =>
       places.push({
         key: place.key,
         owner: place.owner,
         block: place.block ?? null,
         field: place.field,
         account,
+        by: account === ACCOUNT.written ? 'writer' : account === ACCOUNT.unexplained ? null : by,
+        code: account === ACCOUNT.written ? 'written' : code,
         why
       })
+    if (place.owner === 'build') {
+      const a = accountBuildPlace(place, { writePlan, order, gaps, unbuilt })
+      done(a.account, a.why, a.by, a.code)
+      continue
+    }
     const hit = written.get(place.key)
     if (hit) {
       done(ACCOUNT.written, hit.how)
@@ -139,13 +196,14 @@ export function accountFor({ mapping, blockStore }, { writePlan, order, gaps = [
       continue
     }
     if (place.owner === 'design' || design.get(place.block)?.has(place.field)) {
-      done(ACCOUNT.declared, 'design line: the build never writes it')
+      done(ACCOUNT.declared, 'design line: the build never writes it', 'kit', 'design_line')
       continue
     }
     if (place.owner === 'language') {
       const o = place.language
-      if (o.keep) done(ACCOUNT.declared, `language string kept: ${o.keep}`)
-      else if (o.value !== undefined) done(ACCOUNT.declared, 'language string set by the kit')
+      if (o.keep) done(ACCOUNT.declared, `language string kept: ${o.keep}`, 'kit', 'language_kept')
+      else if (o.value !== undefined)
+        done(ACCOUNT.declared, 'language string set by the kit', 'kit', 'language_set')
       else
         done(
           ACCOUNT.skipped,
@@ -153,8 +211,19 @@ export function accountFor({ mapping, blockStore }, { writePlan, order, gaps = [
             list(o.filledBy)
               .map((f) => `${f.block}.${f.field}`)
               .join(', ') || 'a block'
-          }, not written`
+          }, not written`,
+          'writer',
+          'language_string_not_written'
         )
+      continue
+    }
+    if (place.owner === 'fact' && place.loc.notWritten) {
+      done(
+        ACCOUNT.declared,
+        `not written by ${place.loc.notWritten.by}: ${place.loc.notWritten.why}`,
+        'kit',
+        'not_written_by_decision'
+      )
       continue
     }
     if (place.owner === 'fact') {
@@ -168,21 +237,36 @@ export function accountFor({ mapping, blockStore }, { writePlan, order, gaps = [
       // A record a write step gap took out (the page that creates it): `contact-1` of `contact:page.contact`.
       const kind = /^([a-z]+)-\d+$/.exec(place.loc.entity ?? '')?.[1]
       const gap = kind && gaps.find((g) => String(g.record).startsWith(`${kind}:`))
-      if (gap) reasons.add(`write step gap: ${gap.code} (${gap.cause ?? gap.record})`)
+      // Every block that reads the fact taken out by write step gaps: no entry of the fact is left to write.
+      const readers = factBlocks.get(place.field) ?? []
+      const taken = !reasons.size && readers.length && readers.every((b) => gapBlocks.has(b))
+      const byGap = gap ?? (taken ? gapBlocks.get(readers[0]) : null)
+      if (byGap) reasons.add(`write step gap: ${byGap.code} (${byGap.cause ?? byGap.record})`)
       done(
         reasons.size ? ACCOUNT.skipped : ACCOUNT.unexplained,
-        reasons.size ? [...reasons].join(', ') : 'no operation and no skip reason'
+        reasons.size ? [...reasons].join(', ') : 'no operation and no skip reason',
+        'writer',
+        byGap && reasons.size === 1 ? gapCode(byGap) : [...reasons][0]
       )
       continue
     }
     const owners = [place.block, ...place.also].filter(Boolean)
     const prefixes = owners.flatMap((b) => (blocks.get(b) ?? []).map((x) => x.prefix))
     if (!prefixes.length) {
+      const off = owners.map((b) => unbuiltBlocks.get(b)).find(Boolean)
+      if (off && owners.every((b) => unbuiltBlocks.has(b))) {
+        done(ACCOUNT.declared, `block only on page type ${off.pageType}, declared unbuilt`, 'kit', off.code)
+        continue
+      }
       const gap = owners.map((b) => gapBlocks.get(b)).find(Boolean)
-      done(
-        ACCOUNT.skipped,
-        gap ? `write step gap: ${gap.code} (${gap.cause ?? gap.record})` : 'block not placed by the chain'
-      )
+      if (gap)
+        done(
+          ACCOUNT.skipped,
+          `write step gap: ${gap.code} (${gap.cause ?? gap.record})`,
+          'writer',
+          gapCode(gap)
+        )
+      else done(ACCOUNT.skipped, 'block not placed by the marker plan', 'marker_plan', 'block_not_placed')
       continue
     }
     const reasons = reasonsOf(prefixes, place, skipped, hidden)
@@ -192,7 +276,9 @@ export function accountFor({ mapping, blockStore }, { writePlan, order, gaps = [
     if (conflicted) reasons.push('conflict')
     done(
       reasons.length ? ACCOUNT.skipped : ACCOUNT.unexplained,
-      reasons.length ? reasons.join(', ') : 'no operation and no skip reason'
+      reasons.length ? reasons.join(', ') : 'no operation and no skip reason',
+      'writer',
+      reasons[0]
     )
   }
   const counts = { universe: places.length }
