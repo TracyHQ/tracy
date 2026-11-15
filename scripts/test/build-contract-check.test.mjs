@@ -2,7 +2,7 @@
 // WO domain fixtures and on broken copies of them in a throwaway folder.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -39,7 +39,13 @@ test('discovery finds the stopped without a re-run and the cancelled samples (#5
 test('the command passes on the sample scenarios', () => {
   const res = run(FIXTURES)
   assert.equal(res.status, 0, res.stderr)
-  assert.match(res.stdout, /4 file\(s\) checked, 0 problem\(s\)/)
+  // Every scenario discovery finds is checked and clean; no fixed count, so a new legitimate sample cannot break this.
+  const found = readdirSync(FIXTURES)
+    .filter((name) => name.endsWith('.build-scenario.json'))
+    .map((name) => path.join(FIXTURES, name))
+  assert.ok(found.length > 0)
+  assert.match(res.stdout, new RegExp(`${found.length} file\\(s\\) checked, 0 problem\\(s\\)`))
+  for (const file of found) assert.ok(res.stdout.includes(`${path.relative(ROOT, file)}: 0 problem(s)`), file)
 })
 
 test('the command fails and prints every problem with its file and place', (t) => {
