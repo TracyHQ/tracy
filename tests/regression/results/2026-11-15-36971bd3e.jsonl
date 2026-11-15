@@ -1,0 +1,1 @@
+{"id":"REG-PR-633-bench-concurrency","verdict":"PASS","commit":"36971bd3e1078ca3cc21ef60894ecb126d6fb5dc","ran_at":"2026-11-15T17:27:10.408Z","evidence":"tests/regression/.runs/2026-11-15-36971bd3e/REG-PR-633-bench-concurrency.log"}
