@@ -11,6 +11,7 @@ import { withCmsLine } from '../src/lib/cms-line.js'
 import { assignDoor, clearDoor } from '../src/lib/llm-store.js'
 import { startPictureRun } from '../src/site-pictures/bench-control.js'
 import { readRun } from '../src/site-pictures/bench-store.js'
+import { LOOK_CONCURRENCY } from '../src/site-pictures/looker-step.js'
 import { picturePrompts } from '../src/site-pictures/picture-prompts.js'
 import { fileDb } from './_db.mjs'
 import {
@@ -153,7 +154,12 @@ test(
       if (shownFrame(body) === 'block-2.0')
         assert.ok(meta.width <= 600 && meta.height <= 300, `${meta.width}`)
     }
-    assert.ok(looker.most() > 1 && looker.most() <= 4, `at most four at a time, found ${looker.most()}`)
+    // Bounded by the looker's own limit (eight since 13/11/2026): a fixed four held only while the pictures were ready
+    // slowly enough, and failed under a loaded test run.
+    assert.ok(
+      looker.most() > 1 && looker.most() <= LOOK_CONCURRENCY,
+      `at most ${LOOK_CONCURRENCY} at a time, found ${looker.most()}`
+    )
     // Seen and verdict stored per frame; twins take their source's look.
     const m0 = byFrame(r0.pictures)
     assert.deepEqual(m0.get('block-2.0').looker, {
