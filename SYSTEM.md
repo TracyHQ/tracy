@@ -2445,6 +2445,14 @@ bytes and historical outputs are unchanged.
   Image references remain in the existing `site_writer_turn` trail; no new store or site write door is introduced.
   The approved writer prompt stays unchanged; the explicit visual instruction is added to each writing user message.
   Code adds version, fingerprint and label slots; the same writer, notebook and corrected-entry fix rounds remain.
+- **Parallel parts** (15/11/2026, off by default; `--parallel-pages <n>`, frozen as `harness.parallelPages` only
+  when above 1): the first draft is written in n parts at the same time instead of one call. The writing order is
+  cut into n runs of consecutive pages of about the same estimated size
+  ([`writer-parts.js`](apps/tracy-web/src/site-writer/writer-parts.js)); each part is a model conversation of its own
+  with the same fixed part, its own pages, the other parts' pages, the site voice and the phrases shared out among
+  the parts, and saves its calls in a turn number range of its own (`lib/bench-run-parts.js`, 1000 numbers each), so
+  a restart resumes every part from its saved turns and a cancel stops them all. The answers are merged in part order
+  and checked once; the fix rounds continue the last part's conversation. The chain build does not pass it yet.
 
 ### Picture bench (03/11/2026, [ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md))
 
