@@ -20,6 +20,7 @@ sources:
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-items-of.mjs
   - packages/wo/website-opportunities/domain/place-content-roles.mjs
   - scripts/ai-quickstart/check.mjs
+  - scripts/ai-quickstart/rendered-scan.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-library.mjs
   - packages/wo/website-opportunities/domain/library/tracy-library.json
   - docs/adr/0045-sites-are-built-from-an-ai-quickstart-not-from-the-demo.md
@@ -1028,6 +1029,52 @@ with a class, a reference to a record the blank site keeps (`target kept`), or a
 under `references` by `<entity>:<column>:<path>`: `build-sets` (the build writes the new record's id; `owner` names the
 ticket, `#<n>`), `kept` or `not-drawn`, each with a reason. It writes nothing while one reference to a deleted record
 or a demo picture is none of these; `draft-report.json` carries `references` (totals by class and the classed list).
+
+## The demo scan of rendered pages
+
+`scripts/ai-quickstart/rendered-scan.mjs` (ticket #585) finds demo words and demo pictures wherever a rendered page
+prints them, inside or outside the mapping, so a leak the kit does not declare is still caught. The release gate and the
+built site check (`scripts/built-site-check/part-one.mjs`) both call it. It reads HTML with `linkedom` and needs no
+browser and no site; nothing in it names a template.
+
+| Export | Does |
+|---|---|
+| `demoCorpus({kit, demoBaseline, contentMap, fixedTexts, companyNames, sqlLiterals, mediaFiles, interfaceTexts})` | one corpus of a template version's demo words and pictures; every input optional, `sources` says which it had |
+| `observationsFromHtml(html)` | every `{kind, value, place}` of a page: block words, `alt`, `title`, `aria-label`, `placeholder`, button values, `<title>`, description, author, keywords, `og:*`, `twitter:*`, JSON-LD values, picture addresses (`src`, `srcset`, `picture source`, video, inline `url()`), links |
+| `demoScan({pages, kit, corpus?, shaOf?})` | `[{kind: 'demo_text' \| 'demo_image', page, place, excerpt}]`; a page with its own `observations` (a browser's read) is not parsed |
+| `linkCheck({pages, base, expected, links?, probe?, demoRoutes?})` | `[{kind: 'missing_page' \| 'anchor_missing' \| 'demo_page', page, place, href}]` |
+| `corpusInputOf(kit)` | the corpus input for a kit: the release files of `kit.mapping.template`, replaced by any source put on the kit |
+
+**Corpus sources.** The demo baseline measured on an untouched site (ADR 0044, decision 8: block hashes, map
+addresses, picture files and sha256), the demo site's released `content-map.json` (text samples, image samples, and
+the `contact.phone`, `contact.email`, `contact.address` roles as high signal strings), the template kit's fixed texts
+and frame pictures, the copy file's `demoCompanyNames`, and any SQL literals or media files the caller has. With only a
+kit, `corpusInputOf` finds them under `packages/cms/<package>/contracts/<slug>/<cms>/<version>/` from the mapping's
+`template`; a source on the kit (`kit.demoBaseline`, `kit.demoContentMap`, ...) wins. A picture at a slot the kit
+declares as design (a `designLines` slot, a `type: "design"` field, an `editorial.design_element` role) is left out.
+Interface words are set apart and are never a hit: the language strings the mapping keeps (`overrides.language` with
+`keep`), the words the blank site keeps, and `interfaceTexts`. A corpus with no demo source makes `demoScan` throw
+`demo_corpus_empty`, so the built site check says `not_run` instead of a silent pass.
+
+**Matching.** Words are compared normalised: markup and `((span))` markers dropped, character references decoded,
+NFKC, case folded, white space one space. Hidden words count (ADR 0044, decision 2).
+
+- `baseline_block`: a block of words whose host hash (`textKey`, `apps/tracy-web/src/site-check/demo-baseline.js`) is
+  in the baseline. Blocks are cut the host's way: innermost text elements and divs with words of their own.
+- `sentence`: a sentence of at least 4 words or 20 letters and digits equal to a demo sentence.
+- `overlap`: a demo sentence kept inside longer words: two shared 5-word shingles, or the one shingle of a 5-word
+  sentence.
+- `signal`: a short string only when it is high signal: a demo company name or address as a whole word, a demo email
+  address, a demo phone number by its digits (also in `mailto:` and `tel:` links).
+- A picture by its file path under any base path, query or anchor, or by sha256 when the caller gives one (an
+  observation's `sha256`, or `shaOf(url)`).
+
+An excerpt is always the template's side of the match, at most 60 characters, never the page's own words.
+
+**Links.** A link to a page that answers 400 or more (from the pages read, else `probe` when given) is `missing_page`;
+a `#` target not among the ids and anchor names of the page it lands on is `anchor_missing`; a link to a demo route, or
+to a page that answers but is not among `expected.paths`, is `demo_page`. Without `probe`, a page not read is never
+fetched.
 
 ## Choices made where spec #576 is silent
 
