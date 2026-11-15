@@ -273,7 +273,16 @@ export function createStepChainSteps(deps) {
       const dir = path.join(await folderOf(ctx), 'plan')
       const ran = await benchRun(
         'plan',
-        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), '--require-visual-review', ...NO_CAPS],
+        [
+          '--kit',
+          kit.ref,
+          '--brief-revision',
+          revisionOf(ctx),
+          '--require-visual-review',
+          // The whole kit in the planner's first message (template-kit-source.js wholeKitFirstMessage).
+          '--kit-in-first-message',
+          ...NO_CAPS
+        ],
         dir,
         signal,
         { revisionId: revisionOf(ctx), kitRef: kit.ref }
