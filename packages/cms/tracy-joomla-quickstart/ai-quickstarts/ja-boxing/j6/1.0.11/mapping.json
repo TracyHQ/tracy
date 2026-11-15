@@ -12792,6 +12792,35 @@
           ]
         },
         "why": "the template prints one card for every row its lists hold (gallery), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
+      },
+      {
+        "fields": [
+          "stat-value",
+          "stat-label",
+          "stat-context"
+        ],
+        "by": "setting",
+        "location": {
+          "entity": "module-166",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "jsonPath": [
+            "gallery",
+            "isotope[show-on]",
+            0
+          ]
+        },
+        "value": "0",
+        "why": "the gallery prints the dark statistics tile in place of the card whose number its show-on setting names (templates/ja_boxing/acm/gallery/tmpl/style-1.php:40-61, class gallery-statics), filled or not: with no statistic in the plan the build writes show-on 0, which no card number matches, so no tile prints (the design field design-show-on keeps the template's value when the plan has a statistic)"
+      }
+    ],
+    "block-170": [
+      {
+        "fields": [
+          "logo"
+        ],
+        "by": "unassign",
+        "why": "the footer logo is a picture in a custom module (module-170, an a element holding an img); with no logo in the plan its image address is empty and the img prints an empty picture linking the page itself. The build then leaves the module with no page (assignment \"[]\"), the state the blank site ships every module it keeps in place, so the footer prints no logo"
       }
     ],
     "block-167": [
@@ -13423,6 +13452,20 @@
           },
           "from": "hides",
           "why": "a copy keeps the store setting section-link on: with the button left empty the section prints a box with an arrow linking to the home page, so the hides entry of the block applies to every copy whose button is empty"
+        },
+        {
+          "location": {
+            "entity": "module-166",
+            "column": "params",
+            "nestedJson": "jatools-config",
+            "jsonPath": [
+              "gallery",
+              "isotope[show-on]",
+              0
+            ]
+          },
+          "from": "hides",
+          "why": "a copy keeps the store's show-on setting, so with no statistic in the plan its statistics tile prints empty: the hides entry of the block's statistic fields applies to every copy that has none"
         }
       ]
     },
@@ -13846,6 +13889,12 @@
       },
       "record": {
         "kind": "article",
+        "facts": {
+          "created_by_alias": {
+            "fact": "name",
+            "why": "the author name of the created article: the article view prints created_by_alias, else the author's user name, as the page's meta author while the global MetaAuthor setting is on (components/com_content/src/View/Article/HtmlView.php:341-343), and the installer turns it on (installation/src/Model/ConfigurationModel.php:434); the blank site's author is the administrator account, so the build writes the business name"
+          }
+        },
         "category": {
           "extension": "com_content",
           "parent": "root",
@@ -13954,6 +14003,12 @@
       },
       "record": {
         "kind": "article",
+        "facts": {
+          "created_by_alias": {
+            "fact": "name",
+            "why": "the author name of the created article: the article view prints created_by_alias, else the author's user name, as the page's meta author while the global MetaAuthor setting is on (components/com_content/src/View/Article/HtmlView.php:341-343), and the installer turns it on (installation/src/Model/ConfigurationModel.php:434); the blank site's author is the administrator account, so the build writes the business name"
+          }
+        },
         "category": {
           "extension": "com_content",
           "parent": "root",
@@ -14100,6 +14155,12 @@
       },
       "record": {
         "kind": "article",
+        "facts": {
+          "created_by_alias": {
+            "fact": "name",
+            "why": "the author name of the created article: the article view prints created_by_alias, else the author's user name, as the page's meta author while the global MetaAuthor setting is on (components/com_content/src/View/Article/HtmlView.php:341-343), and the installer turns it on (installation/src/Model/ConfigurationModel.php:434); the blank site's author is the administrator account, so the build writes the business name"
+          }
+        },
         "category": {
           "extension": "com_content",
           "parent": "root",

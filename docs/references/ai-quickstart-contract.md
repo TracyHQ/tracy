@@ -644,6 +644,12 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   buttons of blocks 157, 176 and 190 are elements of a stored HTML value (`rows.remove`); the pricing cards print every
   card button from the first card's label and address (`empty`, all cards at once); trainer social links and plan
   features are pieces of one value (`omit`); every other list is a row of the template's parallel lists (`row`).
+  Two groups of fields (#587): the statistics tile of the gallery (166) prints in place of the card its `show-on`
+  setting names, filled or not, so with no statistic the build writes `show-on` `"0"` (`setting`); the footer logo
+  (170) is a picture in a custom module that prints an empty picture with no logo, so the build leaves the module with
+  no page (`unassign`). Measured on the human quickstart restored on a real Joomla (the fields emptied as a build with
+  no such data leaves them, then the hide applied by hand): the empty tile (64 px high at 390, 128 at 1440) and the
+  footer picture with `src="/"` both leave the home page, in light and dark at 390 and 1440 px.
   Every block holding such rows is a copy, so the build cuts the rows out of the copy and never out of the store
   record: plugin 0.24.85 reads reviewed rows only for the released contract (`lib/hideable-slots.json`, keyed by
   contract id and content map hash), so it refuses a row removal on the blank site (`SLOT_NOT_REMOVABLE`), and the
@@ -989,7 +995,9 @@ words, and one that says no page draws them is refused.
   the write of the icon is not measured on a blank site yet.
 - **`pages.<type>.record.facts: {<column>: {fact, why}}`**: a column of the record a page creates that holds a business
   fact (`fact`, a key of `BUSINESS_FACTS`). The columns are closed per record kind (`RECORD_FACT_COLUMNS`): an article
-  has `created_by_alias`.
+  has `created_by_alias`. JA Boxing: the post, the class and the lesson write the business name there, the meta author
+  of the article page (Joomla prints `created_by_alias`, else the author account's name, while `MetaAuthor` is on, and
+  the installer turns it on).
 - **`keptLiterals: [{file, values | pattern, why}]`**: words a template file writes into the page as code, kept on
   every site: `values` lists them, `pattern` is an anchored regular expression for words the file computes (one that
   matches the empty string or plain words is refused). `file` is a path of the release, checked against the files the
