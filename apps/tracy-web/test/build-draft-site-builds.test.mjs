@@ -73,6 +73,9 @@ test('two keeps at once over the same build: exactly one becomes the site build'
 
 test('one unfinished run per site: begin, a resume, another run refused, end', opts, async () => {
   const store = siteBuildStore(db.pool)
+  // `begin` is a compare and set on the site's build: each site holds the build its runs start from.
+  await store.keep(buildOf('run-1'), SITE, { expected: null })
+  await store.keep(buildOf('run-1'), OTHER, { expected: null })
   assert.equal(await store.unfinished(SITE), null)
   assert.equal(await store.begin({ runId: 'run-2', from: 'run-1' }, SITE), true)
   assert.equal(await store.begin({ runId: 'run-2', from: 'run-1' }, SITE), true, 'the same run resumes')

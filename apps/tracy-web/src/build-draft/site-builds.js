@@ -9,8 +9,9 @@
  *                                   while the site holds `expected` (null for a first build); false, nothing stored,
  *                                   otherwise. Keeping a ref again (a restore keeps the earlier build) replaces it.
  *   current(ctx)                    the ref of the build the site holds, null for a blank site
- *   begin({runId, from}, ctx)       marks the site's one unfinished revision run; false when another run is marked,
- *                                   true for the same run id (a resume, marked again)
+ *   begin({runId, from}, ctx)       COMPARE AND SET: marks the site's one unfinished revision run, only while the site
+ *                                   holds `from` (null for a blank site) and no other run is marked; true for the same
+ *                                   run id (a resume, marked again); false, nothing marked, otherwise
  *   unfinished(ctx)                 that mark, the run as given, or null
  *   end(runId, ctx)                 clears the mark of that run
  *   forget(ref, ctx, {reason})      drops the build's content; its ref and the reason stay
@@ -19,7 +20,7 @@
  *   history(siteKey)                every build of the site, newest first: `{ref, previous, keptAt, forgotten}`
  *
  * 🔒 ONE ROW PER SITE IS THE LOCK. `keep` and `begin` read the site's head row `for update` in one transaction, so two
- * runs that keep at once are told apart: the second sees the first's ref and answers false.
+ * runs that keep, or begin, at once are told apart: the second sees the first's ref or mark and answers false.
  *
  * 🔒 A SITE MADE AGAIN STARTS BLANK. The head remembers when the site row it belongs to was created; a site deleted and
  * made again under the same key reads as holding no build, and the builds of the earlier site are not read.
@@ -128,6 +129,9 @@ export function siteBuildStore(pool) {
       const siteKey = siteOf(ctx)
       const runId = run?.runId ?? null
       return withHead(pool, siteKey, async (client, head) => {
+        // Compare and set on the site's build, under the head row lock: a run that started from a build the site no
+        // longer holds (another run kept its build first) is refused and marks nothing.
+        if (head.current !== (run?.from ?? null)) return false
         if (head.unfinished && head.unfinished.runId !== runId) return false
         // The mark is the run as given, as the memory store keeps it (`step-chain-draft-builds.js`); a resume of the
         // same run marks it again with what it gives now.
