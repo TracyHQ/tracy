@@ -46,7 +46,14 @@ const NOTHING_CODE = 'nothing_to_change'
 const withCodes = (changed, notDone) => ({
   changed: changed.map((e) => e.text),
   notDone: notDone.map(({ what, reason, why }) => ({ what, reason, why })),
-  codes: { changed: changed.map((e) => e.code), notDone: notDone.map((e) => e.code ?? null) }
+  codes: {
+    changed: changed.map((e) => e.code),
+    changedParams: changed.map((e) => e.params ?? {}),
+    notDone: notDone.map((e) => e.code ?? null),
+    notDoneParams: notDone.map((e) => e.params ?? {}),
+    // The kind of refusal of every not done line (the closed set of its `reason`), also for a line the model wrote.
+    notDoneReasons: notDone.map((e) => e.reason)
+  }
 })
 
 /**
@@ -117,7 +124,7 @@ export function revisionOf(reply, { plan, request, context, owner = null }) {
     problem(p.code, p.at, p.message)
   for (const p of checkBuildDocument(revised).problems) problem('contract_b', p.at, p.message)
   if (problems.length > 0) return failed()
-  const changed = [...(owner?.lines ?? []), ...changedEntriesOf(plan, revised, again)]
+  const changed = [...(owner?.lines ?? []), ...changedEntriesOf(plan, revised, again, context.blocks)]
   const notDone = notDoneLinesOf({
     current: plan,
     revised,

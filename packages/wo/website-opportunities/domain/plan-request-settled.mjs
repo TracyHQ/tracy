@@ -19,7 +19,7 @@
 import { lookProblemsOf } from './brand-look-problems.mjs'
 import { rowDataIdsOf } from './plan-accounting.mjs'
 import { CONTACT_VALUE_MISSING_REASON } from './plan-answers.mjs'
-import { picturesOf } from './plan-look-pictures.mjs'
+import { generatedOf, picturesOf } from './plan-look-pictures.mjs'
 import { REQUESTED_OFF_REASON, leftOutEntryOf, namesOf } from './plan-request-taken-off.mjs'
 import { WITHHELD_REASON } from './plan-withheld.mjs'
 
@@ -138,7 +138,7 @@ export function settleRevisedPlan(revised, current, blocks, data) {
   if (Number.isInteger(was) && was < counted && was < now)
     next.pictures = {
       ...next.pictures,
-      generated: was > 0 ? { ...next.pictures.generated, frames: was } : { frames: 0 }
+      generated: generatedOf(was)
     }
   next.leftOut = uniqueEntries(next.leftOut)
   return next

@@ -4,6 +4,7 @@
 // writes the found logo file as a logo, so no file the step hands over is the business's own file under a mechanical
 // change: it is a logo Tracy drew, based on the business's logo. Whether it is that or a temporary logo is read from
 // the brand file in `brand-before-site.mjs`; this module holds the reason and the words the customer reads.
+import { LOGO_ASSUMPTION_CODES } from './plan-wording-codes.mjs'
 
 /** Where a drawn logo came from: Tracy drew it, based on the business's logo the research found. */
 export const LOGO_DRAWN = 'drawn-from-logo'
@@ -37,3 +38,9 @@ export function drawnLogoSaid(reason) {
   const shows = SHOWS[reason] ?? SHOWS[NAME_SET_BY_CODE]
   return `Tracy drew a logo based on your logo: ${shows} beside your business name, set in the template's font. It is not your logo file. Approve it, or send us your logo to replace it.`
 }
+
+/** The stable code and parameters of the drawn logo assumption (`assumptions[].code`, beside `drawnLogoSaid`). */
+export const drawnLogoCodeOf = (reason, sourceKind) => ({
+  code: LOGO_ASSUMPTION_CODES.drawn,
+  params: { reason, ...(sourceKind ? { sourceKind } : {}) }
+})

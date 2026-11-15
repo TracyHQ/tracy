@@ -18,11 +18,13 @@ import { unreadableSaid } from './brand-look-adjust.mjs'
 import {
   DRAWN_LOGO_NAME,
   LOGO_DRAWN,
+  drawnLogoCodeOf,
   drawnLogoSaid,
   drawnReasonOf,
   drawnSourceOf
 } from './brand-logo-drawn.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
+import { LOGO_ASSUMPTION_CODES, LOGO_CODES, keyOf } from './plan-wording-codes.mjs'
 
 export {
   ACCENT_FROM_LOGO,
@@ -53,6 +55,8 @@ export const LOGO_SOURCE_NAMES = Object.freeze({
 })
 export const logoSourceName = (source) =>
   LOGO_SOURCE_NAMES[source] ?? (isText(source) ? source : 'Your pages')
+/** The research source kind of a logo source name ("Instagram profile" is `instagram`), or null when it is no known name. */
+export const logoSourceKindOfName = (name) => keyOf(LOGO_SOURCE_NAMES, name)
 
 /** A brand step failure, with a code the step chain reports; `noRerun` when a second run cannot change it. */
 export class BrandStepError extends Error {
@@ -193,13 +197,33 @@ export function lookOfBrandRecord(template, record) {
   if (['drawn', 'own'].includes(record.logo?.kind) && isText(record.logo.source)) {
     const reason = record.logo.reason ?? drawnReasonOf(record.logo.mark)
     const known = Object.values(LOGO_SOURCE_NAMES).includes(record.logo.source)
-    logo = { kind: 'own', source: drawnSourceOf(known ? record.logo.source : null) }
+    const sourceKind = known ? logoSourceKindOfName(record.logo.source) : null
+    logo = {
+      kind: 'own',
+      source: drawnSourceOf(known ? record.logo.source : null),
+      code: LOGO_CODES.drawn,
+      ...(sourceKind ? { sourceKind } : {})
+    }
     sources.logo = { from: LOGO_DRAWN, name: DRAWN_LOGO_NAME, reason }
-    assumptions.push({ id: 'logo', field: 'look.logo', said: drawnLogoSaid(reason) })
+    assumptions.push({
+      id: 'logo',
+      field: 'look.logo',
+      said: drawnLogoSaid(reason),
+      ...drawnLogoCodeOf(reason, sourceKind)
+    })
   } else if (record.logo?.kind === 'made') {
     logo = { kind: 'text' }
     sources.logo = { from: LOGO_MADE, name: 'A temporary logo made for you' }
-    assumptions.push({ id: 'logo', field: 'look.logo', said: madeLogoSaid(record.logo) })
+    assumptions.push({
+      id: 'logo',
+      field: 'look.logo',
+      said: madeLogoSaid(record.logo),
+      code: LOGO_ASSUMPTION_CODES.made,
+      params: {
+        found: Boolean(record.logo.mediaId),
+        mark: record.logo.mark in MADE_MARKS ? record.logo.mark : 'mark'
+      }
+    })
   } else throw brandMissing('the brand step result has no logo')
   // The template's accent goes only with a business that has no logo at all: anything else is a broken record.
   const noLogo = record.logo.kind === 'made' && !record.logo.mediaId

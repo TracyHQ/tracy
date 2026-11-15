@@ -59,7 +59,12 @@ test('a website logo with a dark colour: the lifted accent and the logo Tracy dr
   })
   const { plan, lookSources } = await compose(record).run
   assert.equal(plan.look.accent, '#8a2c6c')
-  assert.deepEqual(plan.look.logo, { kind: 'own', source: 'Tracy, based on the logo on your website' })
+  assert.deepEqual(plan.look.logo, {
+    kind: 'own',
+    source: 'Tracy, based on the logo on your website',
+    code: 'logo_source_drawn',
+    sourceKind: 'website'
+  })
   assert.deepEqual(lookSources, {
     accent: { from: 'logo', name: 'Your logo' },
     logo: {
@@ -95,7 +100,9 @@ test('a words only logo found on Instagram: the logo colour as it is, and a logo
   assert.equal(plan.look.accent, '#2f7d5b')
   assert.deepEqual(plan.look.logo, {
     kind: 'own',
-    source: 'Tracy, based on the logo on your Instagram profile'
+    source: 'Tracy, based on the logo on your Instagram profile',
+    code: 'logo_source_drawn',
+    sourceKind: 'instagram'
   })
   assert.deepEqual(
     plan.assumptions.filter((a) => a.field.startsWith('look.')).map((a) => a.field),

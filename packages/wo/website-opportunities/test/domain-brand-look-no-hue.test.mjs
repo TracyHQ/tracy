@@ -51,7 +51,12 @@ test('a black and grey logo on a light and dark template: black on light, white 
   })
   assert.equal(plan.look.accent, '#000000')
   assert.equal(plan.look.accentDark, '#ffffff')
-  assert.deepEqual(plan.look.logo, { kind: 'own', source: 'Tracy, based on the logo on your Facebook page' })
+  assert.deepEqual(plan.look.logo, {
+    kind: 'own',
+    source: 'Tracy, based on the logo on your Facebook page',
+    code: 'logo_source_drawn',
+    sourceKind: 'facebook'
+  })
   assert.deepEqual(
     plan.assumptions.filter((a) => a.field.startsWith('look.')).map((a) => a.said),
     [

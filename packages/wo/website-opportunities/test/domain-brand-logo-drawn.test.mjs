@@ -46,7 +46,9 @@ test('a words only logo with an icon the step drew is a drawn logo, never own', 
   const { look: planLook, sources } = look(record)
   assert.deepEqual(planLook.logo, {
     kind: 'own',
-    source: 'Tracy, based on the logo on your Instagram profile'
+    source: 'Tracy, based on the logo on your Instagram profile',
+    code: 'logo_source_drawn',
+    sourceKind: 'instagram'
   })
   assert.deepEqual(sources.logo, { from: LOGO_DRAWN, name: DRAWN_NAME, reason: 'new-symbol-drawn' })
   assert.deepEqual(logoSaid(record), [

@@ -53,7 +53,11 @@ function withValues(profile, values, lines) {
       next.facts[kind] = [{ value, sources: [OWNER_SOURCE_ID], confidence: 'single-source' }]
       fresh.add(idOf(kind))
     }
-    lines.push({ code: OWNER_EDIT_CODES.valueSaved, text: `Your answer is saved: ${label}, ${value}.` })
+    lines.push({
+      code: OWNER_EDIT_CODES.valueSaved,
+      text: `Your answer is saved: ${label}, ${value}.`,
+      params: { kind, label, value }
+    })
     saved += 1
   }
   if (saved > 0 && !list(next.sources).some((s) => s.id === OWNER_SOURCE_ID))
@@ -83,10 +87,15 @@ export function applyOwnerEdits({ plan, profile, edits, kit }) {
     const gated = gateEditedPlan({ ...kit, plan: current.plan, profile: current.profile, edit })
     if (gated.ok) {
       current = { plan: { ...gated.plan, revision: plan.revision }, profile: gated.profile }
-      lines.push({ code: OWNER_EDIT_CODES.itemRenamed, text: `${rename.from} is now called ${rename.to}.` })
+      lines.push({
+        code: OWNER_EDIT_CODES.itemRenamed,
+        text: `${rename.from} is now called ${rename.to}.`,
+        params: { item: rename.id, from: rename.from, name: rename.to }
+      })
     } else
       notDone.push({
         code: OWNER_EDIT_CODES.renameRefused,
+        params: { item: rename.id, from: rename.from, name: rename.to },
         what: `Rename ${rename.from}`,
         reason: 'outside_plan',
         why: gated.problems[0]?.message ?? 'The plan cannot take this name.'
@@ -98,7 +107,8 @@ export function applyOwnerEdits({ plan, profile, edits, kit }) {
     takenOff.set(removal.id, REQUESTED_OFF_REASON)
     lines.push({
       code: OWNER_EDIT_CODES.itemTakenOff,
-      text: `${removal.label} stays off your site, as you asked.`
+      text: `${removal.label} stays off your site, as you asked.`,
+      params: { item: removal.id, name: removal.label }
     })
   }
   return { plan: current.plan, profile: valued.profile, fresh: valued.fresh, takenOff, lines, notDone }

@@ -127,6 +127,7 @@ export function applyRequestChanges(plan, changes, problem, { recipes, data }) {
         refused.add(i)
         notDone.push({
           code: 'page_already_on_plan',
+          params: { name: change.name },
           what: change.name,
           reason: 'outside_plan',
           why: 'The plan already has this page.'

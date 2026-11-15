@@ -15,7 +15,7 @@ import { addItemFieldFacts } from './plan-conflicts.mjs'
 import { ITEM_NOUNS, planDataOf } from './plan-data.mjs'
 import { blockItemProblems } from './plan-gate-items.mjs'
 import { factFieldProblems } from './plan-gate-rules.mjs'
-import { picturesOf } from './plan-look-pictures.mjs'
+import { generatedOf, picturesOf } from './plan-look-pictures.mjs'
 import { withheldWhatOf } from './plan-withheld.mjs'
 import { replanRows } from './plan-edit-rows.mjs'
 import { editedIdProblems } from './plan-edit-withheld.mjs'
@@ -143,7 +143,7 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
   const counted = picturesOf(next.pages, blocks, data).pictures
   const asked = edit.changes.find((c) => c.field === 'pictures.generated.frames')?.value
   if (Number.isInteger(asked) && asked < counted.generated.frames) {
-    counted.generated = asked > 0 ? { ...counted.generated, frames: asked } : { frames: 0 }
+    counted.generated = generatedOf(asked)
   }
   next.pictures = counted
   const contract = checkBuildDocument(next).problems

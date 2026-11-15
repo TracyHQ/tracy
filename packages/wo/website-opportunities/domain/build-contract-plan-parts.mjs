@@ -2,6 +2,7 @@
 // assumptions (with the alternatives sources disagree on) and the left out list, plus the fields a customer may change.
 // `build-contract-plan.mjs` runs them; every object here is a closed shape (`build-contract-shapes.mjs`).
 
+import { codeProblems, kindsProblems, paramsProblems } from './build-contract-plan-codes.mjs'
 import { closedShapeProblems, textProblems } from './build-contract-shapes.mjs'
 import {
   isName,
@@ -87,6 +88,8 @@ export function lookProblems(look, report) {
       'an own logo names where it came from'
     )
   else if (logo.source !== undefined) report('look.logo.source', 'a text logo has no source')
+  codeProblems(logo.code, 'look.logo.code', report)
+  kindsProblems(logo.sourceKind === undefined ? undefined : [logo.sourceKind], 'look.logo.sourceKind', report)
 }
 
 export function picturesProblems(pictures, report) {
@@ -99,6 +102,7 @@ export function picturesProblems(pictures, report) {
     report('pictures.own', 'own must be {frames, from}: frames filled by the business own photos')
   else {
     closedShapeProblems(own, 'own pictures', 'pictures.own', report)
+    kindsProblems(own.fromKinds, 'pictures.own.fromKinds', report)
     if (own.frames > 0 && (!Array.isArray(own.from) || own.from.length === 0))
       report('pictures.own.from', 'own photos name the sources they came from')
     else if (own.from !== undefined && !Array.isArray(own.from))
@@ -117,6 +121,8 @@ export function picturesProblems(pictures, report) {
   if (!isObject(generated) || !isWhole(generated.frames))
     return report('pictures.generated', 'generated must be {frames, reason}: frames to be generated')
   closedShapeProblems(generated, 'generated pictures', 'pictures.generated', report)
+  codeProblems(generated.code, 'pictures.generated.code', report)
+  paramsProblems(generated, 'pictures.generated', report)
   if (generated.frames > 0 || generated.reason !== undefined)
     textProblems(
       generated.reason,
@@ -189,6 +195,8 @@ export function assumptionsProblems(plan, report) {
       'said',
       'an assumption says what was assumed, for the customer'
     )
+    codeProblems(assumption.code, `${at}.code`, report)
+    paramsProblems(assumption, at, report)
     const problem = editableFieldProblem(plan, assumption.field)
     if (problem) return report(`${at}.field`, `an assumption must be correctable: ${problem}`)
     if (assumption.alternatives !== undefined) alternativesProblems(plan, assumption, at, report)

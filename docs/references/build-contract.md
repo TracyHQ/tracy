@@ -410,11 +410,11 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `planned row` | `data?`, `page?`, `lists?` |
 | `look` | `template`, `accent`, `logo`, `accentDark?` |
 | `template` | `slug`, `name`, `version` |
-| `logo` | `kind`, `source?` |
+| `logo` | `kind`, `source?`, `code?`, `sourceKind?` |
 | `pictures` | `own`, `generated` |
-| `own pictures` | `frames`, `from?` |
-| `generated pictures` | `frames`, `reason?` |
-| `assumption` | `id`, `field`, `said`, `alternatives?` |
+| `own pictures` | `frames`, `from?`, `fromKinds?` |
+| `generated pictures` | `frames`, `reason?`, `code?`, `params?` |
+| `assumption` | `id`, `field`, `said`, `alternatives?`, `code?`, `params?` |
 | `alternative` | `value`, `sources` |
 | `left out entry` | `what`, `kind`, `reason`, `code?`, `item?` |
 | `plan edit` | `schema`, `id`, `plan`, `changes` |

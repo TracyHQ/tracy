@@ -1,9 +1,10 @@
 // The look section and the pictures summary of a build plan (ticket #593, Contract B `build-contract-plan.mjs`).
 // Pure: the template, the brand step's record and the placed blocks in, the two plan sections and the assumptions they
 // bring out. The brand step itself is unchanged; this only reads its record (`brand-before-site.mjs`, #616).
-import { isBrandLook, lookOfBrandRecord, logoSourceName } from './brand-before-site.mjs'
+import { isBrandLook, lookOfBrandRecord, logoSourceKindOfName, logoSourceName } from './brand-before-site.mjs'
 import { ownPicturesOf } from './picture-frames.mjs'
 import { assignPictures } from './picture-policy.mjs'
+import { LOGO_CODES, PICTURES_ESTIMATE_CODE, sourceKindsOf } from './plan-wording-codes.mjs'
 
 const HEX_COLOUR = /^#[0-9a-fA-F]{6}$/
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -42,8 +43,15 @@ function templateFallbackLookOf(template, brand) {
   }
   const chosen = brand?.logoResearch?.chosen
   let logo
-  if (chosen || isText(brand?.logo)) logo = { kind: 'own', source: logoSourceName(chosen?.source) }
-  else {
+  if (chosen || isText(brand?.logo)) {
+    const sourceKind = logoSourceKindOfName(logoSourceName(chosen?.source))
+    logo = {
+      kind: 'own',
+      source: logoSourceName(chosen?.source),
+      code: LOGO_CODES.own,
+      ...(sourceKind ? { sourceKind } : {})
+    }
+  } else {
     logo = { kind: 'text' }
     assumptions.push({
       id: 'logo',
@@ -112,6 +120,14 @@ const count = (n, one, many) => `${n} ${n === 1 ? one : many}`
  */
 const estimateOf = (n) =>
   `About ${count(n, 'picture', 'pictures')} will be created where you have no suitable photo. The final number depends on your photos.`
+/**
+ * The generated part of the pictures summary for a count: the estimate sentence with its stable code and the count
+ * (`code`, `params.count`), none of them for a count of zero. Also used where a count the customer lowered is kept.
+ */
+export const generatedOf = (n) =>
+  n > 0
+    ? { frames: n, reason: estimateOf(n), code: PICTURES_ESTIMATE_CODE, params: { count: n } }
+    : { frames: 0 }
 
 /**
  * The pictures summary, counted by the picture policy (`picture-policy.mjs`, #595): frames filled by the business's own
@@ -132,11 +148,13 @@ export function picturesOf(pages, blocks, data) {
   const { frames, reduced, counts } = assignPictures({ pages, blocks, data, pictures })
   const from = [...new Set(frames.filter((f) => f.source === 'own').flatMap((f) => f.from))]
   const summary = {
-    own: { frames: counts.own, from: counts.own > 0 ? from : [] },
-    generated: {
-      frames: counts.generated,
-      ...(counts.generated > 0 ? { reason: estimateOf(counts.generated) } : {})
-    }
+    own: {
+      frames: counts.own,
+      from: counts.own > 0 ? from : [],
+      // The kinds of those sources as data (`website`, `google`, `social`, `answer`), beside their names.
+      ...(counts.own > 0 && sourceKindsOf(from).length > 0 ? { fromKinds: sourceKindsOf(from) } : {})
+    },
+    generated: generatedOf(counts.generated)
   }
   const leftOut = reduced.map(({ item, reason }) => {
     const code = Object.hasOwn(ITEM_REASONS, reason) ? reason : 'no_own_photo'

@@ -84,12 +84,14 @@ function planRequestModelRequest(context, plan, text, problems = [], firstAnswer
  *   the draft keeps them (the living plan and its settled needs profile); `request` a `tracy-build-plan-request/v1`
  *   for that plan's revision; the kit, the template and the brand record as the first composition had them
  * @returns {Promise<{plan: object, profile: object, unchanged: boolean, changed: string[], codes: {changed: string[],
- *   notDone: Array<string | null>},
+ *   changedParams: object[], notDone: Array<string | null>, notDoneParams: object[], notDoneReasons: string[]},
  *   notDone: Array<{what: string, reason: string, why: string}>, revision: object, attempts: Array<{problems: object[]}>,
  *   prompt: {file: string, sha256: string}, placed?: object[], accounting?: object, rows?: object[]}>} `revision`: the
  *   Contract B `tracy-build-plan-revision/v1` the chat shows; `plan` is the current plan itself when `unchanged`;
  *   `draftProfile`: the whole settled profile for the draft to keep (held data included);
- *   `codes`: a stable code beside each line of `changed` and `notDone` (null for a not done line the model wrote)
+ *   `codes`: a stable code beside each line of `changed` and `notDone` (null for a not done line the model wrote),
+ *   `changedParams` and `notDoneParams` the parameters of each code (`{}` when none), `notDoneReasons` the kind of
+ *   refusal of each not done line (its `reason`, the closed set `no_recipe`, `no_data`, ...), for model lines too
  * @throws {PlanComposerError} `request_empty`, `request_too_long`, `request_stale`, `request_invalid`, `model_missing`
  *   and the composer's preflight codes before any model call; `plan_gate_failed` (`noRerun`) after two failed attempts
  */
