@@ -11,15 +11,14 @@
 // id writes again on every call (`steps(applyId)` counts them, as `apply.list` does), so only the run record keeps a
 // resumed run from making a record twice.
 //
-// Pure apart from its own memory. Scripted failures: `fail` (the n-th mutating call throws before it acts, a door that
-// may pass when asked again) and `crash` (`n` or `{at: n, before?}`: the n-th mutating call acts, or not when `before`,
-// then "dies" with a `fatal` error). What the site prints: `renderedOf`. Spec: docs/references/draft-write-step.md.
+// Pure apart from its own memory. Scripted failures: `fail` (the n-th mutating call throws before it acts) and `crash`
+// (`n` or `{at: n, before?}`: the n-th call acts, or not when `before`, then dies `fatal`). Spec: draft-write-step.md.
 import { createHash } from 'node:crypto'
 import { memoryHtml } from './write-order-memory-html.mjs'
+import { memorySheetsOf } from './write-order-memory-sheets.mjs'
 import { checkContract, checkUpdate, DoorRefusal, storedIdentity } from './write-order-memory-rules.mjs'
 
 export { memoryHtml }
-
 const list = (value) => (Array.isArray(value) ? value : [])
 const START = { module: 1000, menuItem: 2000, article: 3000, category: 4000, contact: 5000 }
 const IDENTITY = ['sitename', 'MetaDesc', 'sitename_pagetitles']
@@ -46,8 +45,7 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
     if (entity.startsWith('module-'))
       records.module.set(Number(entity.slice(7)), { ...row, id: Number(entity.slice(7)) })
   const slots = new Map(list(contentMap.slots).map((s) => [s.key, { ...s, current: s.sample ?? '' }]))
-  const assignments = new Map()
-  const uploads = new Map()
+  const [assignments, uploads] = [new Map(), new Map()]
   const identity = {}
   const next = { ...START }
   const state = { calls: 0, log: [], revision: 1, answers: new Map(), steps: new Map() }
@@ -165,7 +163,7 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
         }
       )
     },
-    /** The sha256 of the file at a path, or null (the real client reads the site's public file). */
+    // The sha256 of the file at a path, or null (the real client reads the site's public file).
     async media({ path }) {
       return uploads.has(path) ? { sha256: sha256(uploads.get(path)) } : null
     },
@@ -185,7 +183,9 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
     /** `site.identity` read: the site name, description and page title setting only. */
     async readIdentity() {
       return structuredClone(identity)
-    }
+    },
+    // The template's stylesheets (`write-order-memory-sheets.mjs`).
+    sheets: async ({ variables } = {}) => memorySheetsOf(variables)
   }
   return {
     doors,

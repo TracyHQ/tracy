@@ -4,7 +4,8 @@
 // Pure; part of `writePlanOf`. Spec: `docs/references/ai-quickstart-contract.md`, "Copies and blocks written in place".
 import { movedAfterCut, rowIndexOf } from './draft-write-codec.mjs'
 import { emptyControl, holdsField, omitRows } from './draft-write-plan-hides.mjs'
-import { put, recordOf, unproven } from './draft-write-sink.mjs'
+import { categoryRecordOf } from './draft-write-kit-pages.mjs'
+import { put, unproven } from './draft-write-sink.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
@@ -60,12 +61,7 @@ function applyResets(state, record, placement) {
       const key = `${loc.entity}:${loc.column}:${(loc.jsonPath ?? []).join('.')}`
       const pageType = state.kit.mapping.buildSets?.[key]?.pageType
       if (!pageType) continue
-      recordOf(state.sink, `category:${pageType}`, {
-        kind: 'created',
-        recordKind: 'category',
-        pageType,
-        title: state.site.listTitleOf(pageType)
-      })
+      categoryRecordOf(state, pageType)
       put(
         state.sink,
         record.key,

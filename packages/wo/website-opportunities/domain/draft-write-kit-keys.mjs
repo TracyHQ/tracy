@@ -17,18 +17,31 @@ const ITEM = {
 export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
   'look.accent': {
     variables: READ,
-    writtenAs:
-      'read; the accent is skipped (accent_modes_not_measured): its sheet and its two sides are not measured',
-    value: 'not read: the accent is not written',
-    sides: 'not read: the accent is not written',
+    writtenAs: 'read: the accent module (draft-write-plan-accent.mjs)',
+    value: 'not read: says the accent is a #rrggbb colour',
+    sides: READ,
     keeps: 'not read: prose',
     why: 'not read: prose'
   },
-  'look.accent.writtenAs': Object.fromEntries(
-    ['kind', 'module', 'title', 'position', 'ordering', 'showtitle', 'style', 'assign', 'content'].map(
-      (k) => [k, 'not read: the accent is not written']
-    )
-  ),
+  'look.accent.writtenAs': {
+    kind: 'read: only "module" is known, any other value stops (accent_written_as_unknown)',
+    module: READ,
+    title: READ,
+    position: READ,
+    ordering: READ,
+    showtitle: READ,
+    style: READ,
+    assign: 'read: only "every-page" is known, any other value stops (accent_written_as_unknown)',
+    content: 'read: only "accent-module" is known, any other value stops (accent_written_as_unknown)'
+  },
+  'look.accent.sides': {
+    opensOn: 'read: the side the module opens on',
+    light: 'not read: the body class of the light side; the light tone is written on the root',
+    dark: 'not read: the body class of the dark side; the dark tone is written under darkHook',
+    darkHook: 'read: the root condition of the dark tone',
+    values: 'read: the order value each side takes; an unknown word stops (accent_written_as_unknown)'
+  },
+  'look.accent.sides.values': { light: READ, dark: READ },
   'pages.<type>': {
     menuItem: READ,
     under: READ,
@@ -49,9 +62,14 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
   'pages.<type>.record.category': {
     extension: READ,
     parent: 'read: "root", the category is made at the top level',
-    title: 'not read: its from is prose; the title is the name of the list page (listTitleOf)',
+    title: 'read: the category title (record.category.title)',
     params: READ,
     why: 'not read: prose'
+  },
+  'pages.<type>.record.category.title': {
+    from: 'read: only "page-name" is known, any other value stops (category_title_unknown)',
+    pageType: 'read: the first plan page of this type names the category',
+    fallback: 'read: only "business-name" is known, any other value stops (category_title_unknown)'
   },
   'pages.<type>.unbuilt': { code: 'read: the code of the stop', why: 'not read: prose' },
   'createdFrames[]': {
@@ -77,18 +95,19 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
   },
   'placements.<id>.holds.copies': {
     perPage: READ,
-    keptWhen: 'read: kept while a held block is kept (the only meaning the contract gives)',
+    keptWhen: 'read: only "any-held-block-kept" is known, any other value stops (kept_when_unknown)',
     why: 'not read: prose'
   },
   'placements.<id>.menu': { menutype: READ, items: READ, why: 'not read: prose' },
   'placements.<id>.menu.items': {
     from: READ,
     max: READ,
-    pageTypes: 'stops: a default rule not measured (menu_items_not_measured when the order gives no items)',
-    level: 'stops: a default rule not measured (menu_items_not_measured when the order gives no items)',
-    except: 'stops: a default rule not measured (menu_items_not_measured when the order gives no items)',
-    plus: 'stops: a default rule not measured (menu_items_not_measured when the order gives no items)',
-    order: 'stops: a default rule not measured; items the order gives keep the order it gives',
+    pageTypes: 'read: by menuItemPagesOf when the order gives the block no items',
+    level: 'read: by menuItemPagesOf when the order gives the block no items',
+    except: 'read: by menuItemPagesOf when the order gives the block no items',
+    plus: 'read: by menuItemPagesOf when the order gives the block no items',
+    order: 'read: by menuItemPagesOf; items the order gives keep the order it gives',
+    link: 'read: only "page-address" is known (a url item), any other value stops (menu_items_link_unknown)',
     default: 'not read: says the rule is a default the owner may change',
     why: 'not read: prose'
   },

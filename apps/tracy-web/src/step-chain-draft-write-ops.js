@@ -74,6 +74,8 @@ export function baseFieldsOf(op, ctx) {
   const common = { alias: f.alias, language: '*', access: 1 }
   if (op.recordKind === 'menuItem') {
     const alias = op.link?.form === 'alias'
+    // `menu.items.link: "page-address"`: a url menu item (component 0) whose link is the page's own address.
+    const url = op.link?.form === 'address'
     const target = op.link ? resolved(op.link, ctx) : 'index.php?option=com_content&view=featured'
     return {
       ...common,
@@ -81,8 +83,10 @@ export function baseFieldsOf(op, ctx) {
       menutype: f.menutype,
       home: f.home,
       published: 1,
-      type: alias ? 'alias' : 'component',
-      link: alias ? '' : target,
+      type: alias ? 'alias' : url ? 'url' : 'component',
+      // An empty alias link is refused; `index.php?Itemid=` is what Joomla stores (measured, fact K3).
+      link: alias ? 'index.php?Itemid=' : target,
+      ...(alias || url ? { component_id: 0 } : {}),
       params: JSON.stringify(alias ? { aliasoptions: target } : {}),
       ...itemColumnsOf(op.item, ctx)
     }
@@ -141,6 +145,9 @@ export function framed(fields, op, ctx) {
 /** The fields with every value of the op set, its rows cut and its button elements taken out. */
 export function writtenFields(fields, op, ctx) {
   let out = framed(fields, op, ctx)
+  // Every key of a row the op writes, empty where the record holds none (`rowFillsOf`, measured K1).
+  for (const f of list(op.fills))
+    if (getAt(out, f.loc, ctx.html) === undefined) out = setAt(out, f.loc, f.value, ctx.html)
   for (const v of list(op.values)) out = setAt(out, v.loc, resolved(v.value, ctx), ctx.html)
   for (const cut of list(op.cuts)) out = cutRows(out, cut.row, cut.kept)
   for (const r of list(op.removes)) out = removeAt(out, r.loc, r.xpath, ctx.html)

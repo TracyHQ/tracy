@@ -40,10 +40,19 @@ export function siteOf(order, kit, sink) {
   const pageOfSubject = (subject) => order.pages.find((p) => subjects.get(p.id) === subject) ?? null
   const setsOf = (entity) =>
     Object.values(kit.mapping.buildSets ?? {}).find((s) => s.entity === entity && s.sets === 'category')
+  // The page type of the records a list block shows as the main block of its page: the type whose pages are reached
+  // under that list page (`pages.<type>.under.page`). A block listing another block's records (`itemsOf.block`) shows
+  // that block's type.
+  const underTypeOf = (blockId) => {
+    const owner = kit.store.get(blockId)?.itemsOf?.block ?? blockId
+    const lists = [...(kit.mainBlocks ?? new Map())].filter(([, b]) => b === owner).map(([t]) => t)
+    const found = Object.entries(kit.mapping.pages ?? {}).find(([, p]) => lists.includes(p?.under?.page))
+    return found?.[0] ?? null
+  }
   const listedTypeOf = (subject) => {
     for (const at of listedBy.get(subject) ?? []) {
       const entity = kit.mapping.placements?.[at.block.block]?.entity
-      const type = entity && setsOf(entity)?.pageType
+      const type = (entity && setsOf(entity)?.pageType) || underTypeOf(at.block.block)
       if (type) return type
     }
     return null

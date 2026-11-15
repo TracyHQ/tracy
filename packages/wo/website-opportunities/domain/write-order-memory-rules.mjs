@@ -19,7 +19,9 @@
 //   content.update     write_failed                         a new article, category or module with no title or a
 //                                                           blank one, a new contact missing its name, params,
 //                                                           metadata or metadesc column (an empty or blank name is
-//                                                           written), an assignment whose menuids is no JSON list
+//                                                           written), a new menu item with no link or an empty one
+//                                                           (`creating a menuItem needs link`), an assignment whose
+//                                                           menuids is no JSON list
 //                                                           (measured on plugin 0.24.85: no code of its own)
 //                      bad_params                           an assignment with no menuids (measured)
 //                      NOT_FOUND                            a record, or the module of an assignment, that does not exist
@@ -83,7 +85,9 @@ export function checkContract({ expectedRevision, changes, removes }, { slots, r
 const NAMED = {
   article: ['title', 'COM_CONTENT_WARNING_PROVIDE_VALID_NAME'],
   category: ['title', 'creating a category needs title'],
-  module: ['title', 'Module must have a title.']
+  module: ['title', 'Module must have a title.'],
+  // An alias item with an empty link is refused too; `index.php?Itemid=` is written (measured, fact K3).
+  menuItem: ['link', 'creating a menuItem needs link']
 }
 /** The columns a new contact has no default for, in the order Joomla names them. */
 const CONTACT_COLUMNS = ['name', 'params', 'metadata', 'metadesc']

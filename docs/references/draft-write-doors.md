@@ -72,6 +72,7 @@ function, `how.door.apply` is there and the run has a site key. Otherwise it is 
 | `publicFile(siteKey, path)` | `siteReader(siteKey).bytes(path)` | |
 | `blankContract(kit)` | `blankContractReader(AI_QUICKSTARTS_DIR)` | `<slug>/<cms>/<version>/blank-site-contract/content-map.json` |
 | `pictures` | not wired | tests only; production uses `step-chain-draft-stored.js` |
+| `templateSheets(siteKey, {variables})` | `readSiteSheets` of the site's home page (`write-step/site-sheets.js`) | the door `sheets` of the accent module (`look.accent`): the stylesheets the site serves, the template's accent read from them; absent, the accent stops `door_not_available` |
 
 The run record of the write is kept by run id, between the frame's two attempts of the step, and saved through the
 run record store `deps.runRecords` (`step-chain-draft-run-records.js`: `append`, `read`, `close`) before each door
@@ -112,8 +113,12 @@ kit's build declarations"), so `baseFieldsOf` (`step-chain-draft-write-ops.js`) 
 
 A page reached under its list page (`plan.under`) has no menu item: `page:<id>` resolves to its declared address for
 a link (`form: "address"`), and to the list page's item for an assignment or a key; two such pages assigned through
-one item are sent once. An alias to such a page has no item to point at and refuses (`ref_unresolved`); the planner
-stops before that (`menu_item_to_under_page`). A module assigned through the list page's item prints on the page
+one item are sent once. A menu item of a menu that declares `menu.items.link: "page-address"` is a `url` item
+(`component_id` 0) whose link is the page's address, so it reaches such a page. An alias item (a menu with no declared
+`menu.items`) is sent with link `index.php?Itemid=`, the link Joomla stores for an alias, and its target in
+`params.aliasoptions`; an empty link is refused on the blank site (measured K3), and the memory site refuses it too. An
+alias to a page reached under its list page has no item to point at and refuses (`ref_unresolved`); the planner stops
+before that (`menu_item_to_under_page`). A module assigned through the list page's item prints on the page
 under it and on the list page alike, except at a detail position the kit declares (`under.detailPositions`, measured);
 the planner writes such a block only when the list page shows the same record anyway, skips any other recipe block with
 its reason, and stops only on a block no recipe of the page type places (`draft-write-guards.md`).

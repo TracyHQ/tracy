@@ -15,7 +15,8 @@ const DOORS = [
   'upload',
   'media',
   'identity',
-  'readIdentity'
+  'readIdentity',
+  'sheets'
 ]
 
 /** The factory: the doors of `runDraftWrite`, each one call through `send`; `html` stays in this process. */

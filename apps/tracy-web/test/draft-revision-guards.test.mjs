@@ -88,7 +88,7 @@ test('a build that cannot be revised stops typed, noRerun, before any model call
 })
 
 test('a failing door is redone once; twice stops typed with the report, and the same record resumes to the same site', async () => {
-  const first = await firstBuild({ memory: blankSite({ fail: [63, 64] }) })
+  const first = await firstBuild({ memory: blankSite({ fail: [65, 66] }) })
   const revised = revisedBy('rename a service')
   const record = {}
   const failed = await revisionRun(first, revised, { record })
@@ -100,7 +100,7 @@ test('a failing door is redone once; twice stops typed with the report, and the 
   // A row of another service keeps its words (#599): the full build is given the words the revision kept.
   const fresh = await freshBuild(revised, { writer: { fixed: keptWordsOf(resumed) } })
   assert.ok(sameSite(first.memory, fresh.memory))
-  const once = await firstBuild({ memory: blankSite({ fail: [63] }) })
+  const once = await firstBuild({ memory: blankSite({ fail: [65] }) })
   assert.equal((await revisionRun(once, revised)).run.write.report.status, 'done')
 })
 

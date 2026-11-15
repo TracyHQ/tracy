@@ -10,16 +10,14 @@ import { inNfc } from './draft-write-length.mjs'
 import { libraryExpectsOf } from './draft-write-library-check.mjs'
 import { planBlocks } from './draft-write-plan-blocks.mjs'
 import { planCopies } from './draft-write-plan-copies.mjs'
-import {
-  checkMenuItems,
-  droppedContainersOf,
-  framesOf,
-  planFeaturedArticle
-} from './draft-write-kit-build.mjs'
+import { droppedContainersOf, planFeaturedArticle } from './draft-write-kit-build.mjs'
 import { underPagesOf } from './draft-write-kit-pages.mjs'
 import { recipeBlocksOf } from './draft-write-under-blocks.mjs'
 import { planCategories } from './draft-write-plan-categories.mjs'
-import { planFacts, planLook } from './draft-write-plan-facts.mjs'
+import { planCreatedValues } from './draft-write-row-keys.mjs'
+import { checkMenuItems, planRuleMenuItems } from './draft-write-menu-items.mjs'
+import { planLook } from './draft-write-plan-accent.mjs'
+import { planFacts } from './draft-write-plan-facts.mjs'
 import { nameRecords } from './draft-write-plan-names.mjs'
 import { opsOf } from './draft-write-plan-ops.mjs'
 import { pairsOf } from './draft-write-plan-pairs.mjs'
@@ -146,14 +144,14 @@ export function writePlanOf(order, aiq, options = {}) {
   planBlocks(state)
   planFacts(state)
   planMenuItems(state)
+  planRuleMenuItems(state)
   planPages(state)
   planLibrary(state)
   planLook(state)
   planCopies(state)
   planCategories(state)
   planFeaturedArticle(state)
-  for (const record of sink.records.values())
-    if (record.kind === 'created') record.frames = framesOf(state, record)
+  planCreatedValues(state)
   nameRecords(state)
   for (const record of sink.records.values())
     if (record.kind === 'created' && !CREATED_KINDS.includes(record.recordKind))
@@ -163,9 +161,7 @@ export function writePlanOf(order, aiq, options = {}) {
       })
   const ops = safeOps(inNfc(opsOf(state)), { order, kit })
   for (const op of ops)
-    if (
-      ['created_record_frame', 'created_frame_not_measured', 'initials_drawn_as_figure'].includes(op.unproven)
-    )
+    if (['created_record_frame', 'initials_drawn_as_figure'].includes(op.unproven))
       sink.unproven.push({ code: op.unproven, op: op.key })
   const plan = {
     schema: DRAFT_WRITE_PLAN_SCHEMA,

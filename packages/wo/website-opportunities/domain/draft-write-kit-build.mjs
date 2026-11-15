@@ -1,8 +1,9 @@
 // What the kit declares about the build besides the pages (ticket #597), as the write plan reads it: the container
-// copies (`placements.<id>.holds.copies`), the items of a menu block (`placements.<id>.menu.items`), the row a page
-// type keys (`placements.<id>.keyedRow`), the HTML frames of created records (`createdFrames`) and the featured article
-// (`seo.featuredView.article`). Pure; part of `writePlanOf`. A key the kit has not measured, or whose meaning the
+// copies (`placements.<id>.holds.copies`), the row a page type keys (`placements.<id>.keyedRow`), the HTML frames of
+// created records (`createdFrames`) and the featured article (`seo.featuredView.article`). Menu items:
+// `draft-write-menu-items.mjs`. Pure; part of `writePlanOf`. A key the kit has not measured, or whose meaning the
 // contract leaves open, is never acted on: when the plan needs it the plan stops typed, otherwise it is not read.
+import { HOLDS_KEPT_WHEN } from './ai-quickstart-build-words.mjs'
 import { DraftWriteError } from './draft-write-error.mjs'
 import { unproven } from './draft-write-sink.mjs'
 
@@ -11,7 +12,8 @@ const shown = (block) => block.state !== 'hidden'
 
 /**
  * The container copies of every page (`holds.copies: {perPage: 1, keptWhen}`): one container per page holds every
- * held block the page places, and is kept only while one of them is. Returns the container blocks to drop (none held
+ * held block the page places, and is kept only while one of them is (`keptWhen: "any-held-block-kept"`; any other
+ * value stops the plan, `kept_when_unknown`). Returns the container blocks to drop (none held
  * on their page); stops when a page places more containers than `perPage` or a held block with no container.
  */
 export function droppedContainersOf(state) {
@@ -21,6 +23,11 @@ export function droppedContainersOf(state) {
     for (const [id, p] of Object.entries(placements)) {
       const copies = p.holds?.copies
       if (!copies) continue
+      if (!HOLDS_KEPT_WHEN.includes(copies.keptWhen))
+        throw new DraftWriteError('kept_when_unknown', `${id} keeps its copies when "${copies.keptWhen}"`, {
+          block: id,
+          keptWhen: copies.keptWhen ?? null
+        })
       const containers = page.blocks.filter((b) => b.block === id && shown(b))
       const held = page.blocks.filter((b) => list(p.holds.blocks).includes(b.block) && shown(b))
       if (containers.length > copies.perPage)
@@ -41,40 +48,6 @@ export function droppedContainersOf(state) {
       if (containers.length && !held.length) for (const c of containers) dropped.add(c.id)
     }
   return dropped
-}
-
-/**
- * The items of a menu block (`menu.items`). `from: "main-menu"` draws the page items. `from: "pages"` is a rule the kit
- * chose by default and has not measured: a block the order shows with no items of its own would need the write to
- * choose them by that rule, so the plan stops; items the order gives are written, at most `max` of them. A block the
- * order leaves to its fallback (`list_below_min`) does not need it: the order's own reason says why it is empty.
- */
-export function checkMenuItems(state) {
-  for (const page of state.order.pages)
-    for (const block of page.blocks) {
-      const items = state.kit.mapping.placements?.[block.block]?.menu?.items
-      if (items?.from !== 'pages' || block.state !== 'show') continue
-      const own = list(block.items).filter((i) => i.state !== 'hidden')
-      const at = { page: page.id, block: block.block }
-      if (!own.length)
-        throw new DraftWriteError(
-          'menu_items_not_measured',
-          `${block.block} lists pages by a rule the kit has not measured, and the order gives no items`,
-          at
-        )
-      if (Number.isInteger(items.max) && own.length > items.max)
-        throw new DraftWriteError('menu_items_over_max', `${block.block} holds at most ${items.max} items`, {
-          ...at,
-          max: items.max,
-          items: own.length
-        })
-    }
-}
-
-/** Whether a menu block draws the main menu: its items are the page items. */
-export const drawsMainMenu = (kit, blockId) => {
-  const menu = kit.mapping.placements?.[blockId]?.menu
-  return menu?.items ? menu.items.from === 'main-menu' : menu?.menutype === kit.mainMenu
 }
 
 /**

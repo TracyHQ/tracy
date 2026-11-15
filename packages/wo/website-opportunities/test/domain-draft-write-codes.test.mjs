@@ -39,10 +39,13 @@ test('record_kind_unsupported: a created record of a kind the write has no shape
   )
 })
 
-test('the accent whose module is declared but whose two sides are not measured is skipped, not counted written', () => {
+test('the accent whose module is declared is written by it on both sides, counted written', () => {
   const look = plan.ops.find((op) => op.kind === 'look.accent')
-  assert.deepEqual(look.entries, [])
-  assert.ok(plan.skipped.some((s) => s.entry === 'look.accent' && s.reason === 'accent_modes_not_measured'))
+  const order = site.order.look
+  assert.ok(look.entries.includes('look.accent'))
+  assert.deepEqual(look.tones, { light: order.accent, dark: order.accentDark ?? order.accent })
+  assert.deepEqual(look.menuids, [0])
+  assert.ok(!plan.skipped.some((s) => s.entry.startsWith('look.')))
 })
 
 test('the mail sender name the kit leaves unwritten by decision is not sent, and the plan says so', () => {
@@ -97,7 +100,6 @@ test('words with an angle bracket are refused by the order check, where the writ
 test('the florist plan raises exactly these skip reasons, flags and operation kinds', () => {
   const set = (values) => [...new Set(values)].sort()
   assert.deepEqual(set(plan.skipped.map((s) => s.reason)), [
-    'accent_modes_not_measured',
     'address_shared',
     'derived_drawn_by_template',
     'fact_fanned_out',
@@ -115,11 +117,7 @@ test('the florist plan raises exactly these skip reasons, flags and operation ki
     'template_fallback',
     'text_logo_prints_site_name'
   ])
-  assert.deepEqual(set(plan.unproven.map((u) => u.code)), [
-    'accent_modes_not_measured',
-    'created_frame_not_measured',
-    'featured_article_none'
-  ])
+  assert.deepEqual(set(plan.unproven.map((u) => u.code)), ['featured_article_none'])
   assert.deepEqual(set(plan.ops.map((op) => op.kind)), [
     'article.create',
     'category.create',

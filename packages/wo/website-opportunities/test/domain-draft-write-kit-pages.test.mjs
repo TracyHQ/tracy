@@ -122,16 +122,22 @@ test('a created record starts from the declared base columns, filed in the decla
   assert.equal(plan.ops.find((op) => op.key === 'category:contact').extension, 'com_contact')
 })
 
-test('a menu item of another menu linking to a page reached under its list page stops the plan', () => {
+test('a menu item of another menu linking to a page reached under its list page: its address, else a stop', () => {
+  const toClass = (o) => {
+    const foot = o.pages.find((p) => p.id === 'home').blocks.find((b) => b.block === 'block-174')
+    const link = foot.items.find((i) => i.data === 'plans').fields.find((f) => f.field === 'link')
+    link.target = { page: 'class' }
+  }
+  // link: "page-address": a url item to the address the class page is reached at.
+  const p = planWith(() => {}, toClass)
+  const op = p.ops.find((o) => o.key === 'menuItem:site-map:class')
+  assert.deepEqual(op.link, { ref: 'page:class', form: 'address' })
+  assert.ok(p.under.class, 'the class page is reached under its list page')
+  // A kit with no menu.items declaration makes an alias item, which has nothing to name.
   const stop = stopOf(() =>
-    planWith(
-      () => {},
-      (o) => {
-        const foot = o.pages.find((p) => p.id === 'home').blocks.find((b) => b.block === 'block-174')
-        const link = foot.items.find((i) => i.data === 'plans').fields.find((f) => f.field === 'link')
-        link.target = { page: 'class' }
-      }
-    )
+    planWith((m) => {
+      delete m.placements['block-174'].menu.items
+    }, toClass)
   )
   assert.deepEqual([stop.code, stop.details.page], ['menu_item_to_under_page', 'class'])
 })

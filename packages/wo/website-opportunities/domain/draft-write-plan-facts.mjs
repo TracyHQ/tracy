@@ -3,7 +3,7 @@
 // places that sits on a record of the site (a copy or store record placed on some page, the contact the build creates,
 // the site identity); a place on a record the site does not have is not written. The first order entry of a fact is
 // the one written; every other entry of that fact is listed as fanned out, never written twice.
-import { put, recordOf, skip, unproven } from './draft-write-sink.mjs'
+import { put, recordOf, skip } from './draft-write-sink.mjs'
 import { textAt } from './draft-write-values.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -85,39 +85,4 @@ export function planFacts(state) {
       skip(state.sink, entry.place, reason, { fact: name })
     }
   }
-}
-
-/**
- * The look: the accent and its dark theme value, never written by the draft write (their entries are skipped with the
- * reason, never counted written, and flagged). With `look.accent.writtenAs` the kit declares the module the accent is
- * written in, but the sheet in it is built from the template's own stylesheets and the accent on the template's two
- * sides is not measured: `accent_modes_not_measured`. Without it no door writes the variables (`accent_door_missing`),
- * and without variables there is nothing to write into (`accent_variables_not_declared`). The logo is a fact (above).
- */
-export function planLook(state) {
-  const look = state.order.look ?? {}
-  const entries = ['look.accent', ...(look.accentDark ? ['look.accentDark'] : [])]
-  const accent = state.kit.mapping.look?.accent
-  const variables = accent?.variables ?? null
-  const record = recordOf(state.sink, 'look', {
-    kind: 'look',
-    recordKind: 'look',
-    accent: look.accent ?? null,
-    accentDark: look.accentDark ?? null,
-    variables
-  })
-  const reason = !variables
-    ? 'accent_variables_not_declared'
-    : accent.writtenAs
-      ? 'accent_modes_not_measured'
-      : 'accent_door_missing'
-  const why = {
-    accent_variables_not_declared: 'the mapping file names no colour variable the accent is written into',
-    accent_door_missing: 'no door of the write step writes the template colour variables',
-    accent_modes_not_measured:
-      'the accent module is declared, but its sheet is built from the template stylesheets and its two sides are not measured'
-  }[reason]
-  for (const id of entries) skip(state.sink, id, reason, { record: record.key })
-  unproven(state.sink, reason, { op: 'look', why })
-  return entries
 }

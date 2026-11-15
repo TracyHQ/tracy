@@ -34,7 +34,10 @@ const HOSTILE = [
   'See you soon ((:'
 ]
 
-/** The tag names the kit declares: the blank site's own pages, every field's inline parts, the library's HTML. */
+/**
+ * The tag names the kit declares: the blank site's own pages, every field's inline parts, the library's HTML and the
+ * accent module's style element.
+ */
 function allowedOf(plan) {
   const allowed = tagNamesIn(renderedOf(blankSite(), { mapping }))
   for (const b of florist.aiq.blockStore.blocks)
@@ -43,6 +46,8 @@ function allowedOf(plan) {
         allowed.add(t)
   for (const op of plan.ops) {
     if (op.kind === 'library.create') for (const t of tagNamesIn(op.html)) allowed.add(t)
+    // The accent module the kit declares (`look.accent.writtenAs`): one style element.
+    if (op.kind === 'look.accent' && op.module) allowed.add('style')
     // The elements the mapping's pieces name: a created record's frame is made of them (`draft-write-frame.mjs`).
     for (const v of op.values ?? [])
       for (const step of String(v.loc.xpath ?? '').split('/')) {

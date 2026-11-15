@@ -156,15 +156,16 @@ measured, or whose meaning the contract leaves open, is never acted on. When the
 | `pages.<type>.under` | an item page whose list page is in the plan has no item of its own: its address is the declared one, its modules are assigned to the list page's item, its main menu entry is skipped (`page_reached_under`), and a cut row keyed to it is cut (`row_page_reached_under`). The plan carries the addresses in `plan.under` |
 | `pages.<type>.under.detailPositions` | a module on a page reached under its list page is assigned to the list page's item, so it prints there too except at a declared position (`assignTo: "list-page"`). Outside them (`draft-write-under-blocks.mjs`): every-page blocks are not checked; one record the list page shows anyway (in place or `recipe-pages`) is written as placed; any other block a recipe of the page type places (a variant included) is not written on that page, its entries skipped `under_page_block_on_list_page` and listed in `plan.underNotWritten` (unproven `under_page_block_not_written`); a block no recipe of the page type places, or a library block, stops the plan (`under_page_position_not_detail`). The positions are also the ones `detail_position_not_printed` reads |
 | `pages.<type>.ownItem` | the item page's own item when the plan has no list page; a block only in a detail position is flagged `detail_position_not_printed` |
-| `pages.<type>.record` | the created article or contact starts from `base` and is filed in the declared category (`extension`, `params`, at the top level); the category's `title.from` is prose, so the title is the list page's name |
+| `pages.<type>.record` | the created article or contact starts from `base` and is filed in the declared category (`extension`, `params`, at the top level). A created article no page shows, listed by a list block, is of the page type reached under that list block's page (`pages.<type>.under.page` and the recipe's main block; a block that lists another block's records, `itemsOf.block`, is that block) |
+| `pages.<type>.record.category.title` | `{from: "page-name", pageType, fallback: "business-name"}`: the name of the first plan page of `pageType`, else the business name; another word stops `category_title_unknown`. A kit with no `title` keeps the list page's name |
 | `pages.<type>.unbuilt` | stops `page_unbuilt` (with the kit's code): the page is never planned, so never reported written |
 | `placements.<id>.keyedRow` | a list row keyed to a page of `pageType` is cut (`row_keyed_to_page_type`): that page takes the keyed row only |
-| `placements.<id>.holds.copies` | one container per page; a container holding none of the page's blocks is dropped (`container_without_held`) |
-| `placements.<id>.menu.items` | `from: "main-menu"`: the block shows the page items. `from: "pages"`: the default rule is not measured; a block the order shows with no items stops (`menu_items_not_measured`), items the order gives are written, at most `max` |
-| `createdFrames` | a created record's HTML value is written into its declared frame, flagged `created_frame_not_measured`; a value with no declared frame stops (`created_frame_not_declared`). A kit with no `createdFrames` keeps the smallest frame (`created_record_frame`) |
+| `placements.<id>.holds.copies` | one container per page; `keptWhen: "any-held-block-kept"`: a container holding none of the page's blocks is dropped (`container_without_held`); another `keptWhen` stops `kept_when_unknown` |
+| `placements.<id>.menu.items` | `from: "main-menu"`: the block shows the page items. `from: "pages"`: items the order gives are written, at most `max` (else `menu_items_over_max`); a block the order shows with none of its own lists the pages of the kit's rule (`menuItemPagesOf` of `ai-quickstart-menu-items.mjs`, imported, never copied), each labelled with its page's menu label. `link: "page-address"`: each item is a `url` menu item (component 0) to the page's address, `index.php?Itemid=<its page item>` or its `under.address` (so an item may link a page reached under its list page); another `link` stops `menu_items_link_unknown`. A menu block with no `items` keeps an alias item, written with link `index.php?Itemid=` (an empty link is refused, measured K3) |
+| `createdFrames` | a created record's HTML value is written into its declared frame (measured, K1); a value with no declared frame stops (`created_frame_not_declared`). A kit with no `createdFrames` keeps the smallest frame (`created_record_frame`). Every row a created record writes (an object of a JSON list: `exer-features0`) carries every key the mapping declares on that row (block fields and frames), the keys the plan does not fill set to the base's value there or empty (`rowFillsOf`, `draft-write-row-keys.mjs`): a row with only some keys prints PHP warnings for the others (measured, K1) |
 | `seo.featuredView.article` | every created article of its page type is written with `set`; none in the plan: flagged `featured_article_none` |
 | `facts.<f>[i].notWritten` | the place is never sent; `plan.notWritten` and the run's report and recorded value list it (fact, entity, column, `by`), and a fact all of whose places are so is skipped `fact_not_written_by_decision` |
-| `look.accent.writtenAs` | the accent is still not written: its sheet is built from the template's stylesheets the write step does not read, and the accent on the template's two sides is not measured (`accent_modes_not_measured`) |
+| `look.accent.writtenAs`, `look.accent.sides` | one op `look.accent` writes the accent as declared (measured, L1): a `mod_custom` with the declared title, position, ordering, showtitle and style, assigned `[0]` (`assign: "every-page"`), its text built at write time by `accentModule` from the stylesheets the site serves (door `sheets`), the template's own accent read as the one colour the stylesheets give the declared variables on `:root`. `sides.values`: the light tone is the order's `accent`, the dark one its `accentDark` (the accent when it has none), under `sides.darkHook`. `look.accent` and `look.accentDark` are written by it. Another `kind`, `content`, `assign` or `sides.values` word stops `accent_written_as_unknown` |
 | hides `scope`, `from` | `scope: "item"`: each item prints its own control. `scope: "block"`, `from: "first-item"`: the first item's words are written into every item (`hides.from_first_item`); another item's own words never print, so they are not written and their entry is skipped (`control_printed_from_first_item`); an empty first item stops |
 | hides `order: "packed"` | a row left empty before a filled one stops (`omit_row_gap`) |
 
@@ -177,8 +178,9 @@ Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
 | `page_link_unresolved` | a link placeholder names no record of the page, no declared category, no page of the plan or no kept record |
 | `page_style_unresolved` | a template style that is no kept record of the blank site |
 | `page_parent_not_in_plan` | a parent page type the plan has no page of |
-| `menu_item_to_under_page` | an item of another menu links to a page reached under its list page: an address item is not measured |
-| `menu_items_not_measured`, `menu_items_over_max` | see `menu.items` above |
+| `menu_item_to_under_page` | an alias item of another menu (a kit with no `menu.items`) links to a page reached under its list page: an alias has nothing to name |
+| `menu_items_link_unknown`, `menu_items_over_max` | see `menu.items` above |
+| `kept_when_unknown`, `category_title_unknown`, `accent_written_as_unknown` | a word of `holds.copies.keptWhen`, `record.category.title` or `look.accent` the write does not know |
 | `container_copies_per_page`, `held_block_without_container` | a page places more containers than `perPage`, or a held block without its container |
 | `created_frame_not_declared` | see `createdFrames` above |
 | `under_page_position_not_detail` | a block on a page reached under its list page sits outside the declared detail positions and no recipe of the page type places it (or it is a library block), or `assignTo` is not `list-page` |
@@ -200,7 +202,7 @@ Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
 | `no_mapping_entry`, `location_unresolved`, `entity_not_declared`, `kept_record_without_slot` | the mapping gives no place the write can reach (`kept_record_without_slot`: a location of a record written in place, its own block's or another's, with no contract slot). A skipped half of a button stops the plan as `pair_incomplete` |
 | `held_block_not_placed`, `foreign_copy_not_placed` | the block holding the place is not placed |
 | `seo_derived_by_template`, `seo_record_not_declared` | the page's search title and description |
-| `accent_variables_not_declared`, `accent_door_missing`, `accent_modes_not_measured` | the accent is not written |
+| `accent_variables_not_declared`, `accent_door_missing` | the accent is not written |
 | `page_reached_under`, `row_page_reached_under`, `row_keyed_to_page_type` | a page reached under its list page has no item of its own; a cut row keyed to such a page, or to the page type a `keyedRow` keys, is cut |
 | `container_without_held` | a container copy that holds none of the page's blocks is not kept |
 | `under_page_block_on_list_page` | a recipe block on a page reached under its list page, outside the detail positions, whose record the list page does not show: written, it would print on the list page too (`plan.underNotWritten`) |
@@ -213,13 +215,11 @@ Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
 |---|---|
 | `accent_variables_not_declared` | the mapping declares no accent colour variables, so the accent is not written |
 | `accent_door_missing` | the variables exist but no door writes them (a kit with no `look.accent.writtenAs`) |
-| `accent_modes_not_measured` | the accent module is declared, but its sheet and the accent on the template's two sides are not measured |
 | `identity_field_no_door` | an identity field that `site.identity` neither reads nor writes and the kit does not leave unwritten: not sent |
 | `menu_item_link_not_declared` | a kit with no `pages`: a list or plans page gets the featured view |
 | `featured_article_needed` | a kit with no `seo.featuredView.article`: the home page's featured view needs a featured article |
 | `featured_article_none` | the plan has a featured view page and no article of the declared page type: these pages print no share tags |
 | `created_record_frame` | a kit with no `createdFrames`: a created article's HTML pieces go into the smallest frame that holds them (`draft-write-frame.mjs`) |
-| `created_frame_not_measured` | a created record's HTML value is written into the frame the kit declares, which no site has rendered on a created record yet |
 | `article_category_not_declared`, `seo_record_not_declared` | the contract does not say which category an article goes in, or which record holds a page's search texts |
 | `control_shared_by_items`, `omit_row_gap`, `omit_on_record_in_place` | see Hides in [draft-write-step.md](draft-write-step.md) |
 | `row_form_keys`, `recipe_ordering` | not measured on a real site (contract point 7) |

@@ -11,6 +11,10 @@
 //                                        door `media`; no plugin operation reads a file's bytes). Absent, the `media`
 //                                        door stops the write typed (`door_not_available`, door `media`)
 //   deps.site.blankContract(kit)         the blank site contract's content map of the kit, or null
+//   deps.site.templateSheets(siteKey, {variables})
+//                                        optional: the stylesheets the site's template serves (door `sheets`, the
+//                                        accent module is built from them; `variables`: the accent variables the kit
+//                                        declares). Absent, the accent stops the write typed (`door_not_available`)
 //   deps.site.pictures                   optional `{stored(order), openStored(id)}` in place of the stored pictures of
 //                                        `step-chain-draft-stored.js` (a picture source a test or a later generator gives)
 //
@@ -39,12 +43,17 @@ export const siteDoorsFor =
     if (typeof site?.siteDoors !== 'function' || typeof applyFor !== 'function') return null
     if (typeof siteKey !== 'string' || siteKey === '' || !email || !runId) return null
     return typedDoors(
-      await site.siteDoors({
-        send: draftSendOf({ apply: applyFor(email, runId), siteKey, signal }),
-        siteKey,
-        publicFile: typeof site.publicFile === 'function' ? (path) => site.publicFile(siteKey, path) : null,
-        signal
-      }),
+      {
+        ...(await site.siteDoors({
+          send: draftSendOf({ apply: applyFor(email, runId), siteKey, signal }),
+          siteKey,
+          publicFile: typeof site.publicFile === 'function' ? (path) => site.publicFile(siteKey, path) : null,
+          signal
+        })),
+        ...(typeof site.templateSheets === 'function'
+          ? { sheets: (args = {}) => site.templateSheets(siteKey, args) }
+          : {})
+      },
       { siteKey }
     )
   }
@@ -80,13 +89,22 @@ export function siteWriteOf(deps, ctx, how, inputs, records) {
     // from making a record twice.
     doors: async (c) =>
       typedDoors(
-        await site.siteDoors({
-          send: draftSendOf({ apply: recordedDoor(c, apply), siteKey: c.siteKey, signal: c.signal ?? null }),
-          siteKey: c.siteKey,
-          publicFile:
-            typeof site.publicFile === 'function' ? (path) => site.publicFile(c.siteKey, path) : null,
-          signal: c.signal ?? null
-        }),
+        {
+          ...(await site.siteDoors({
+            send: draftSendOf({
+              apply: recordedDoor(c, apply),
+              siteKey: c.siteKey,
+              signal: c.signal ?? null
+            }),
+            siteKey: c.siteKey,
+            publicFile:
+              typeof site.publicFile === 'function' ? (path) => site.publicFile(c.siteKey, path) : null,
+            signal: c.signal ?? null
+          })),
+          ...(typeof site.templateSheets === 'function'
+            ? { sheets: (args = {}) => site.templateSheets(c.siteKey, args) }
+            : {})
+        },
         { siteKey: c.siteKey }
       ),
     record: async () => {

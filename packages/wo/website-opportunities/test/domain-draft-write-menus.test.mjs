@@ -33,7 +33,7 @@ test('every main menu item is created before any item of another menu', () => {
   assert.ok(firstOther > lastMain, 'site-map items come after the page items')
   assert.deepEqual(
     ops.filter((op) => op.fields.menutype === 'site-map').map((op) => op.link),
-    ['classes', 'plans', 'contact'].map((page) => ({ ref: `page:${page}`, form: 'alias' }))
+    ['classes', 'plans', 'contact'].map((page) => ({ ref: `page:${page}`, form: 'address' }))
   )
 })
 

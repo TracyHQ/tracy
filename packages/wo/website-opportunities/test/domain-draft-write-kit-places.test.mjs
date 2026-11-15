@@ -123,11 +123,14 @@ function unknownKitKeys(mapping) {
   }
   check('look.accent', mapping.look?.accent)
   check('look.accent.writtenAs', mapping.look?.accent?.writtenAs)
+  check('look.accent.sides', mapping.look?.accent?.sides)
+  check('look.accent.sides.values', mapping.look?.accent?.sides?.values)
   for (const page of Object.values(mapping.pages ?? {})) {
     check('pages.<type>', page)
     for (const key of ['menuItem', 'ownItem', 'under', 'record', 'unbuilt'])
       check(`pages.<type>.${key}`, page[key])
     check('pages.<type>.record.category', page.record?.category)
+    check('pages.<type>.record.category.title', page.record?.category?.title)
     check('pages.<type>.under.detailPositions', page.under?.detailPositions)
   }
   for (const frame of list(mapping.createdFrames)) check('createdFrames[]', frame)
@@ -163,8 +166,12 @@ test('a key the kit declares that the write step does not know is caught, as is 
   kit.mapping.pages.home.menuItem.invented = 1
   kit.mapping.placements['block-174'].menu.items.sortBy = 'invented'
   kit.mapping.hides['block-167'][0].from = 'last-item'
+  kit.mapping.look.accent.sides.values.contrast = 'accent'
+  kit.mapping.pages.class.record.category.title.case = 'upper'
   assert.deepEqual(unknownKitKeys(kit.mapping), [
+    'look.accent.sides.values.contrast',
     'pages.<type>.menuItem.invented',
+    'pages.<type>.record.category.title.case',
     'placements.<id>.menu.items.sortBy',
     'hides.<id>[i].from=last-item'
   ])

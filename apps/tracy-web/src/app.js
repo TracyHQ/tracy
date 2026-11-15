@@ -127,6 +127,7 @@ import { draftRunStarter } from './step-chain-draft-rerun.js'
 import { rerunBrief } from './step-chain-draft-rerun-row.js'
 import { memoryRunRecords, runRecordReader } from './step-chain-draft-run-records.js'
 import { siteDoorsFor } from './step-chain-draft-site.js'
+import { readSiteSheets } from './write-step/site-sheets.js'
 import { siteDoors } from 'website-opportunities/domain/site-doors.mjs'
 import { siteBuildStore } from './build-draft/site-builds.js'
 import {
@@ -2323,6 +2324,17 @@ export function buildApp(deps) {
     const draftSite = {
       siteDoors,
       publicFile: async (siteKey, filePath) => (await siteReader(siteKey))?.bytes(filePath) ?? null,
+      // The stylesheets the template serves on the home page, as a visitor reads them (the accent module, #597).
+      templateSheets: async (siteKey) => {
+        const reader = await siteReader(siteKey)
+        if (!reader) throw new Error(`no site ${siteKey}`)
+        return readSiteSheets({
+          origin: reader.base,
+          platform: 'joomla',
+          paths: ['/'],
+          text: (url) => reader.text(String(url)).catch(() => null)
+        })
+      },
       blankContract: blankContractReader(AI_QUICKSTARTS_DIR)
     }
     // `deps.buildEngine.site`: a test's own site wiring in place of the real one.

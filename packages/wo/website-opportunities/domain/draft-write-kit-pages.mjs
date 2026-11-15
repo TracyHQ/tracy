@@ -3,6 +3,7 @@
 // (`ownItem`), the record and category a page creates (`record`), and a page type the write cannot make (`unbuilt`).
 // Pure; part of `writePlanOf`. Spec: docs/references/ai-quickstart-contract.md, "What the build writes besides the
 // blocks". A kit with no `pages` key keeps the older planner (the featured view, flagged `menu_item_link_not_declared`).
+import { CATEGORY_TITLE_FALLBACK, CATEGORY_TITLE_FROM } from './ai-quickstart-build-words.mjs'
 import { DraftWriteError } from './draft-write-error.mjs'
 import { recordOf } from './draft-write-sink.mjs'
 import { checkUnderBlocks } from './draft-write-under-blocks.mjs'
@@ -54,6 +55,27 @@ function pageRecordRef(state, page) {
   return { ref: `${kind}:${state.site.subjectOf(page)}`, form: 'id' }
 }
 
+/**
+ * The title of a category (`record.category.title`): `{from: "page-name", pageType, fallback: "business-name"}` is the
+ * name of the first plan page of `pageType`, else the business name; any other word stops (`category_title_unknown`).
+ * A kit that declares no title keeps the name of the list page (`listTitleOf`).
+ */
+function categoryTitleOf(state, pageType, title) {
+  if (title === undefined) return state.site.listTitleOf(pageType)
+  if (!CATEGORY_TITLE_FROM.includes(title?.from) || !CATEGORY_TITLE_FALLBACK.includes(title?.fallback))
+    throw new DraftWriteError(
+      'category_title_unknown',
+      `the ${pageType} category title is not one the write knows`,
+      {
+        pageType,
+        from: title?.from ?? null,
+        fallback: title?.fallback ?? null
+      }
+    )
+  const page = state.order.pages.find((p) => p.pageType === title.pageType)
+  return page?.name ?? (state.order.facts ?? []).find((f) => f.kind === 'business.name')?.value ?? null
+}
+
 /** The category the build files the records of a page type in (`pages.<type>.record.category`). */
 export function categoryRecordOf(state, pageType) {
   const c = state.kit.mapping.pages?.[pageType]?.record?.category
@@ -61,7 +83,7 @@ export function categoryRecordOf(state, pageType) {
     kind: 'created',
     recordKind: 'category',
     pageType,
-    title: state.site.listTitleOf(pageType),
+    title: categoryTitleOf(state, pageType, c?.title),
     ...(c ? { extension: c.extension, params: c.params ?? {} } : {})
   })
 }

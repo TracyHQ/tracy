@@ -6,6 +6,7 @@
 // the look. Pure; part of `writePlanOf`. One record's operation:
 // `draft-write-plan-records.mjs`.
 
+import { lookOp } from './draft-write-plan-accent.mjs'
 import { aliasesOf, assignOf, copyOp, createOp, drawOf, valuesOf } from './draft-write-plan-records.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -147,20 +148,7 @@ export function opsOf(state) {
         rules: ['hides.setting']
       })),
     ...records.filter((r) => r.kind === 'identity' && r.values.size).map((r) => identityOp(state, r)),
-    ...records
-      .filter((r) => r.kind === 'look')
-      .map((r) => ({
-        key: 'look',
-        kind: 'look.accent',
-        record: r.key,
-        accent: r.accent,
-        accentDark: r.accentDark,
-        variables: r.variables,
-        // Nothing writes the accent yet: its entries are skipped (`planLook`), never counted written.
-        entries: [],
-        rules: ['look'],
-        ...(r.variables ? {} : { unproven: 'accent_variables_not_declared' })
-      }))
+    ...records.filter((r) => r.kind === 'look').map(lookOp)
   ]
   return ops
 }

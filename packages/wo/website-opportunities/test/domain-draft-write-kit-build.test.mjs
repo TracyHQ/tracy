@@ -85,16 +85,17 @@ test('holds.copies: a held block with no container on its page, or two container
   assert.equal(codeOf(twice), 'container_copies_per_page')
 })
 
-test('menu.items from pages: a placed block with no items of its own needs the unmeasured rule, so the plan stops', () => {
-  const none = () =>
-    planWith(
-      () => {},
-      (o) => {
-        const foot = blockOf(o, 'contact', 'block-174')
-        foot.items = []
-      }
-    )
-  assert.equal(codeOf(none), 'menu_items_not_measured')
+test('menu.items from pages: a placed block with no items of its own lists the pages of the kit rule', () => {
+  const p = planWith(
+    () => {},
+    (o) => {
+      for (const page of o.pages) for (const b of page.blocks) if (b.block === 'block-174') b.items = []
+    }
+  )
+  const items = p.ops.filter((op) => op.kind === 'menuItem.create' && op.fields.menutype === 'site-map')
+  assert.ok(items.length > 0 && items.length <= 4, `${items.length} items`)
+  assert.ok(items.every((op) => op.link.form === 'address'))
+  assert.ok(!items.some((op) => op.link.ref === 'page:home'), 'except: [home]')
   const over = () =>
     planWith((m) => {
       m.placements['block-174'].menu.items.max = 2
@@ -110,14 +111,14 @@ test('menu.items from the main menu: the phone menu shows the page items, whatev
   assert.ok(p.skipped.some((s) => s.reason === 'menu_item_is_page_item'))
 })
 
-test('createdFrames: a created article is written into the frame the kit declares, flagged not measured', () => {
+test('createdFrames: a created article is written into the frame the kit declares, measured, so not flagged', () => {
   const article = plan.ops.find((op) => op.key === 'article:service-wild-meadow-bouquet')
   const fulltext = article.frames.find((f) => f.loc.column === 'fulltext')
   const declared = site.aiq.mapping.createdFrames.find(
     (f) => f.entities.includes('article-16') && f.column === 'fulltext'
   )
   assert.equal(fulltext.html, declared.html)
-  assert.equal(article.unproven, 'created_frame_not_measured')
+  assert.equal(article.unproven, undefined)
   const missing = () =>
     planWith((m) => {
       m.createdFrames = m.createdFrames.filter(
@@ -150,8 +151,8 @@ test('notWritten: a fact whose every place is left unwritten by decision is skip
     for (const v of op.values ?? []) assert.notEqual(v.rule?.startsWith('fact:phone'), true, op.key)
 })
 
-test('look.accent.writtenAs: declared, the accent is still skipped (not measured); without it the door is missing', () => {
-  assert.ok(plan.skipped.some((s) => s.entry === 'look.accent' && s.reason === 'accent_modes_not_measured'))
+test('look.accent.writtenAs: declared, the accent is written by its module; without it the door is missing', () => {
+  assert.ok(plan.ops.find((op) => op.kind === 'look.accent').entries.includes('look.accent'))
   const p = planWith((m) => {
     delete m.look.accent.writtenAs
   })

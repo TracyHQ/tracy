@@ -68,11 +68,13 @@ export function createOp(record) {
     values: valuesOf(record),
     entries: record.entries,
     rules: [`created:${record.recordKind}`, ...record.rules],
+    // Every key of a row the record writes that the plan leaves unset, set empty first (`rowFillsOf`, fact K1).
+    ...(record.fills ? { fills: record.fills } : {}),
     // A created record has no frame from the blank site (#584): an HTML piece it holds is written into the frame the
-    // kit declares (`createdFrames`, not measured on a created record: `created_frame_not_measured`), or, for a kit
-    // with no frames, into the smallest frame that holds it (`created_record_frame`).
-    ...([...record.values.values()].some((v) => v.loc.xpath)
-      ? { unproven: record.frames ? 'created_frame_not_measured' : 'created_record_frame' }
+    // kit declares (`createdFrames`, measured on a created record, fact K1), or, for a kit with no frames, into the
+    // smallest frame that holds it (`created_record_frame`).
+    ...(!record.frames && [...record.values.values()].some((v) => v.loc.xpath)
+      ? { unproven: 'created_record_frame' }
       : {})
   }
 }

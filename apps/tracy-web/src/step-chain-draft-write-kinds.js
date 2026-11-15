@@ -5,6 +5,7 @@
 import { getAt, setAt } from 'website-opportunities/domain/draft-write-codec.mjs'
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { CREATED_KINDS } from 'website-opportunities/domain/draft-write-plan.mjs'
+import { accentFieldsOf, accentHtmlOf } from './step-chain-draft-write-accent.js'
 import {
   readAssignment,
   readContract,
@@ -151,6 +152,14 @@ export const RUN = {
   },
   async 'look.accent'(op, ctx) {
     if (op.unproven) ctx.report.unproven.push({ code: op.unproven, op: op.key })
+    // A kit with no `writtenAs`: nothing writes the accent (its entries are skipped by the plan).
+    if (!op.module) return
+    // Made once; a revision run that writes the accent again rebuilds its text and updates the same module.
+    const kept = ctx.state.ids[op.key] !== undefined && !ctx.rewrite?.has(op.key)
+    const id = kept
+      ? ctx.state.ids[op.key]
+      : await made(op, 'module', accentFieldsOf(op, await accentHtmlOf(op, ctx)), ctx)
+    await assign(op, id, op.menuids, ctx)
   }
 }
 export const runOf = (op) => RUN[op.kind] ?? (op.kind.endsWith('.create') ? RUN.create : null)

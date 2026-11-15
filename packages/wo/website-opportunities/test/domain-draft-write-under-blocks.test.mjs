@@ -9,7 +9,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { writePlanOf } from '../domain/draft-write-plan.mjs'
-import { UNDER_SKIP } from '../domain/draft-write-under-blocks.mjs'
+import { checkUnderBlocks, recipeBlocksOf, UNDER_SKIP } from '../domain/draft-write-under-blocks.mjs'
+import { sinkOf } from '../domain/draft-write-sink.mjs'
 import { site } from './fixtures/draft-write/guarded.mjs'
 
 // The masthead (one record, assigned to the pages whose recipe places it), at its own position, not a detail one.
@@ -79,4 +80,46 @@ test('a block no recipe of the page type places still stops the plan typed', () 
   const { code, details } = outcome(() => writePlanOf(order, kitWithVariant(false), { stored: site.stored }))
   assert.equal(code, 'under_page_position_not_detail')
   assert.equal(details.storeBlock, MASTHEAD)
+})
+
+test('a news post under the news page: the breadcrumbs it shares are written, its main-bottom-1 copy is skipped', () => {
+  // The kit's detail positions are detail-bottom-1 and main-bottom-2; the news post variant also places the
+  // breadcrumbs (block-17, one record the news page places too) and block-158 at main-bottom-1, both printing on the
+  // list page as well (measured, K6).
+  const mapping = site.aiq.mapping
+  const stateOf = () => ({
+    kit: { mapping, recipeBlocks: recipeBlocksOf(site.aiq.pageRecipes) },
+    sink: sinkOf(),
+    dropped: new Set(),
+    dropReasons: new Map(),
+    underNotWritten: []
+  })
+  const block = (id, storeBlock, position) => ({
+    id,
+    block: storeBlock,
+    state: 'show',
+    source: 'template',
+    position: { resolved: position }
+  })
+  const page = {
+    id: 'news-post',
+    pageType: 'news-post',
+    blocks: [block('np-b1', 'block-17', 'breadcrumbs'), block('np-b2', 'block-158', 'main-bottom-1')]
+  }
+  const detail = mapping.pages['news-post'].under.detailPositions
+  assert.deepEqual(detail.positions, ['detail-bottom-1', 'main-bottom-2'])
+  const shown = stateOf()
+  checkUnderBlocks(shown, page, { id: 'news', blocks: [{ block: 'block-17', state: 'show' }] }, detail)
+  assert.deepEqual(
+    shown.underNotWritten.map((r) => [r.storeBlock, r.position]),
+    [['block-158', 'main-bottom-1']]
+  )
+  assert.equal(shown.dropReasons.get('np-b2'), UNDER_SKIP)
+  // A list page that does not show the breadcrumbs: they would print there, so they are skipped too.
+  const bare = stateOf()
+  checkUnderBlocks(bare, page, { id: 'news', blocks: [] }, detail)
+  assert.deepEqual(
+    bare.underNotWritten.map((r) => r.storeBlock),
+    ['block-17', 'block-158']
+  )
 })

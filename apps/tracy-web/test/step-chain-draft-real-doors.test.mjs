@@ -10,6 +10,7 @@ import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 import { test } from 'node:test'
 import { siteDoors } from 'website-opportunities/domain/site-doors.mjs'
+import { memorySheetsOf } from 'website-opportunities/domain/write-order-memory-sheets.mjs'
 import { createStepChainEngine } from '../src/sites/brief-engines/step-chain.js'
 import { createStepChainSteps } from '../src/step-chain-steps.js'
 import {
@@ -43,6 +44,8 @@ const realWiring =
   (over, draftWrite) => ({
     siteDoors,
     ...(noFile ? {} : { publicFile: over.publicFile }),
+    // The template's stylesheets, read as a visitor reads them (not a plugin operation): the memory site's own.
+    templateSheets: async (_siteKey, { variables } = {}) => memorySheetsOf(variables),
     blankContract: () => site.kit.blankContract,
     ...(realPictures
       ? {}

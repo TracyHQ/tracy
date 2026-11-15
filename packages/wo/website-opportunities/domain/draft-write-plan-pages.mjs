@@ -3,7 +3,7 @@
 // article of an article page) and the items of the footer menus (the categories: `draft-write-plan-categories.mjs`).
 // Pure; part of `writePlanOf`. The page of each page type as the kit declares it: `draft-write-kit-pages.mjs`.
 import { DraftWriteError } from './draft-write-error.mjs'
-import { drawsMainMenu } from './draft-write-kit-build.mjs'
+import { drawsMainMenu, menuLinkFormOf } from './draft-write-menu-items.mjs'
 import { pageDeclOf, pageItemOf } from './draft-write-kit-pages.mjs'
 import { conflict, consume, put, recordOf, skip, unproven } from './draft-write-sink.mjs'
 
@@ -138,6 +138,7 @@ export function planMenuItems(state) {
     const { at } = group[0]
     const menutype = state.kit.mapping.placements[at.block.block].menu.menutype
     const main = drawsMainMenu(state.kit, at.block.block)
+    const form = menuLinkFormOf(state.kit, at.block.block)
     const label = group.find((g) => g.entry.type === 'text' && g.entry.value)?.entry
     const link = group.find((g) => g.entry.from === 'derived')?.entry
     const target = link?.target?.page
@@ -146,9 +147,9 @@ export function planMenuItems(state) {
       for (const g of group) skip(state.sink, g.entry.place, reason)
       continue
     }
-    // A page reached under its list page has no item: the main menu does not show it, and another menu's item
-    // would have to link to an address, which no door has been measured to write.
-    if (state.under?.[target]) {
+    // A page reached under its list page has no item: the main menu does not show it, and another menu's item links
+    // its address only when the kit declares `link: "page-address"` (measured, fact K3); an alias has nothing to name.
+    if (state.under?.[target] && (main || form !== 'address')) {
       if (!main)
         throw new DraftWriteError(
           'menu_item_to_under_page',
@@ -185,7 +186,7 @@ export function planMenuItems(state) {
       menutype,
       page: target,
       linkTo: target,
-      link: { ref: `page:${target}`, form: 'alias' },
+      link: { ref: `page:${target}`, form },
       title: label.value,
       labelEntry: label.place
     })
