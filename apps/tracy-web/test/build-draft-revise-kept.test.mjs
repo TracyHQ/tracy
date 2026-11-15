@@ -1,19 +1,16 @@
 // A change asked for in the build chat is kept and can be taken back (#609 over #617): the revise step keeps the
 // profile the plan step settled (`draftProfile`, with the owner's typed values), carries the stable codes of its lines
-// to the chat, and leaves one step of undo like a card edit. The needs profile, the plan composer, its rules gate and
-// the draft are the real ones; the build model is a script, and the plan step that saves an owner's typed value is a
-// stand in for the one Part 3 is adding (it wraps the real `revisePlan`). Every business and value here is invented.
+// to the chat, and leaves one step of undo like a card edit. Driven through the app's doors with the real plan step
+// (`revisePlan`), needs profile, plan composer, rules gate and draft; only the build model is a script. Every business
+// and value here is invented.
 //
 //   TEST_DATABASE_URL=... node --test --test-concurrency=1 apps/tracy-web/test/build-draft-revise-kept.test.mjs
 import assert from 'node:assert/strict'
 import { rmSync } from 'node:fs'
 import { after, before, beforeEach, test } from 'node:test'
-import { revisePlan } from 'website-opportunities/domain'
 import * as club from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 import { buildApp } from '../src/app.js'
-import { createEngine } from '../src/build-draft/engine.js'
 import { reviseStep, revisionOf } from '../src/build-draft/engine-revise.js'
-import { readEngineRow } from '../src/build-draft/engine-store.js'
 import { changeDraft, createDraft, undoPlanEdit } from '../src/build-draft/store.js'
 import { ensureAccount } from '../src/seats/store.js'
 import { buildSessionIdFor } from '../src/workspace/build-chat-session.js'
@@ -58,7 +55,9 @@ function server(buildEngine) {
     await app.buildDraftEngine.settled(await accountId())
     return { started, ended: await call('GET', '/engine') }
   }
-  return { call, run, accountId }
+  /** A written change request, waited on to its end: the engine state it ended with. */
+  const request = async (text) => (await run('POST', '/compose', { request: text })).ended.body
+  return { call, run, request, accountId }
 }
 
 const row = async (accountId) =>
@@ -72,9 +71,11 @@ const RENAME_TEAM = {
   request: 'call the coaches page Our team',
   said: 'x'
 }
+const RENAME_AGAIN = { ...RENAME_TEAM, name: 'The coaches', request: 'call the coaches page The coaches' }
 
 /** The invented club researched, its template chosen and its first plan composed through the doors. */
-async function composedClub(s) {
+async function composedClub(model) {
+  const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
   const { id } = await ensureAccount(db.pool, OWNER)
   await createDraft(db.pool, id)
   const { accent: _accent, ...template } = club.template()
@@ -89,61 +90,22 @@ async function composedClub(s) {
   let composed = await s.run('POST', '/compose', {})
   if (composed.ended.body.step === 'brand') composed = await s.run('POST', '/compose', {})
   assert.equal(composed.ended.body.state, 'done', JSON.stringify(composed.ended.body))
-  return { accountId: id, plan: composed.ended.body.result.plan }
+  return { s, accountId: id, plan: composed.ended.body.result.plan }
 }
 
-/** The owner's typed opening hours, as an invented business would write them. */
+/** The owner's typed opening hours, and how the plan step keeps them (its own opening hours notation). */
 const TYPED_HOURS = 'Mon to Sat 06:30 to 21:30'
+const SAVED_HOURS = 'Mo-Sa 06:30-21:30'
 const OWNER_SOURCE = 'owner-statement'
+const WITH_HOURS = `We open ${TYPED_HOURS}. Please call the coaches page Our team.`
 
-/** The profile with the owner's typed hours saved as the owner's answer, as Part 3's plan step does it. */
-function withTypedHours(profile) {
+/** The profile with other opening hours saved as the owner's answer: a plan step answer for the unit test. */
+function withOtherHours(profile) {
   const next = structuredClone(profile)
-  const held = next.facts['contact.hours'] ?? []
   next.facts['contact.hours'] = [
-    { ...(held[0] ?? { confidence: 'single-source' }), value: TYPED_HOURS, sources: [OWNER_SOURCE] }
+    { value: 'Tu-Su 09:00-17:00', sources: [OWNER_SOURCE], confidence: 'single-source' }
   ]
-  if (!next.sources.some((s) => s.id === OWNER_SOURCE))
-    next.sources.push({ id: OWNER_SOURCE, origin: 'answer' })
   return next
-}
-
-/**
- * The plan step as Part 3 is changing it: the real `revisePlan`, plus the owner's typed hours in `draftProfile` and a
- * code beside each line (`codes`), the way its result will carry them.
- */
-async function revisePlanSavingHours(input) {
-  const revised = await revisePlan(input)
-  return {
-    ...revised,
-    draftProfile: withTypedHours(input.profile),
-    changed: [`Your answer is saved: Opening hours, ${TYPED_HOURS}.`, ...revised.changed],
-    codes: {
-      changed: ['owner_value_saved', ...revised.changed.map(() => 'page-renamed')],
-      notDone: revised.notDone.map(() => null)
-    }
-  }
-}
-
-/** An engine of its own on the same draft, whose plan step is `revise`. */
-const engineWith = (model, revise) =>
-  createEngine({
-    pool: db.pool,
-    kits,
-    buildModel: async () => model,
-    gather: async () => {
-      throw new Error('research is not run here')
-    },
-    brandStep: ownBrand,
-    revisePlan: revise
-  })
-
-/** Send a written change request through `engine` and wait for its end. */
-async function requestThrough(engine, accountId, request) {
-  const now = await readEngineRow(db.pool, accountId)
-  await engine.compose(accountId, { request }, now, kits.loadKit(now.plan.look.template.slug))
-  await engine.settled(accountId)
-  return engine.read(accountId)
 }
 
 test('the revise step keeps the plan step profile when it has one, else composes it as before', async () => {
@@ -154,12 +116,13 @@ test('the revise step keeps the plan step profile when it has one, else composes
     profile: club.clubProfile(),
     request: {}
   }
+  // A stand in for the plan step only here, to reach the answers it no longer gives (no `draftProfile`).
   const tools = (answer) => ({
     model: async () => '',
     kit: { blockStore: club.blockStore(), pageRecipes: club.pageRecipes(), library: club.library() },
     revisePlan: async () => answer
   })
-  const kept = withTypedHours(club.clubProfile())
+  const kept = withOtherHours(club.clubProfile())
   const withIt = await reviseStep(shared, tools({ unchanged: false, plan: {}, draftProfile: kept }))
   assert.deepEqual(withIt.profile, kept, 'the profile the plan step settled is the one the draft keeps')
   const without = await reviseStep(shared, tools({ unchanged: false, plan: {} }))
@@ -190,6 +153,19 @@ test('the done state keeps the codes beside the lines; a result without codes ke
   assert.deepEqual(crooked.codes, { changed: [null], notDone: [] })
   const odd = revisionOf({ changed: ['A line.'], notDone: [], codes: { changed: [7], notDone: 'x' } })
   assert.deepEqual(odd.codes, { changed: [null], notDone: [] })
+  // More codes than lines, or fewer: which code names which line is unknown, so none is kept.
+  const longer = revisionOf({
+    changed: ['A line.', 'The Coaches page is now called Our team.'],
+    notDone: [],
+    codes: { changed: ['owner_value_saved', 'page-renamed', 'page-renamed'], notDone: [] }
+  })
+  assert.deepEqual(longer.codes, { changed: [null, null], notDone: [] })
+  const shorter = revisionOf({
+    changed: ['A line.', 'The Coaches page is now called Our team.'],
+    notDone: [],
+    codes: { changed: ['page-renamed'], notDone: [] }
+  })
+  assert.deepEqual(shorter.codes, { changed: [null, null], notDone: [] })
 })
 
 test(
@@ -199,25 +175,23 @@ test(
     const model = club.scriptedModel(
       JSON.stringify(club.goodComposition()),
       revisionReply([RENAME_TEAM]),
-      revisionReply([{ ...RENAME_TEAM, name: 'The coaches', request: 'call the coaches page The coaches' }])
+      revisionReply([RENAME_AGAIN])
     )
-    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
-    const { accountId } = await composedClub(s)
-    const engine = engineWith(model, revisePlanSavingHours)
+    const { s, accountId } = await composedClub(model)
 
-    const ended = await requestThrough(
-      engine,
-      accountId,
-      `We open ${TYPED_HOURS}. Please call the coaches page Our team.`
-    )
+    const ended = await s.request(WITH_HOURS)
     assert.equal(ended.state, 'done', JSON.stringify((await row(accountId)).fault))
     const stored = await row(accountId)
     assert.deepEqual(stored.needs_profile.facts['contact.hours'][0], {
       ...club.clubProfile().facts['contact.hours'][0],
-      value: TYPED_HOURS,
+      value: SAVED_HOURS,
       sources: [OWNER_SOURCE]
     })
-    // The codes reach the chat beside the lines they name.
+    // The plan step's own lines and codes reach the chat side by side.
+    assert.deepEqual(ended.result.revision.changed, [
+      `Your answer is saved: Opening hours, ${SAVED_HOURS}.`,
+      'The Coaches page is now called Our team.'
+    ])
     assert.deepEqual(ended.result.revision.codes, {
       changed: ['owner_value_saved', 'page-renamed'],
       notDone: []
@@ -225,26 +199,19 @@ test(
 
     // Asked for again with no request, the plan and its profile stay.
     assert.equal((await s.call('POST', '/compose', {})).body.result.unchanged, true)
-    assert.equal((await row(accountId)).needs_profile.facts['contact.hours'][0].value, TYPED_HOURS)
+    assert.equal((await row(accountId)).needs_profile.facts['contact.hours'][0].value, SAVED_HOURS)
 
-    // The next request goes through today's plan step (no `draftProfile`): the typed hours are sent and kept.
-    const seen = []
-    const today = engineWith(model, async (input) => {
-      seen.push(input.profile)
-      return revisePlan(input)
-    })
-    const next = await requestThrough(today, accountId, 'Please call the coaches page The coaches.')
+    // The next request names no hours: the owner's hours are sent with it and kept.
+    const next = await s.request('Please call the coaches page The coaches.')
     assert.equal(next.state, 'done', JSON.stringify((await row(accountId)).fault))
-    assert.equal(
-      seen[0].facts['contact.hours'][0].value,
-      TYPED_HOURS,
-      'the next request is sent the typed hours'
-    )
+    assert.equal(JSON.parse(model.calls[2].user).request, 'Please call the coaches page The coaches.')
     const kept = await row(accountId)
     assert.equal(kept.plan.pages.find((p) => p.id === 'team').name, 'The coaches')
-    assert.equal(kept.needs_profile.facts['contact.hours'][0].value, TYPED_HOURS)
-    assert.deepEqual(kept.needs_profile.facts['contact.hours'][0].sources, [OWNER_SOURCE])
-    assert.equal(next.result.revision.codes, undefined, 'a plan step without codes answers none')
+    assert.deepEqual(
+      kept.needs_profile.facts['contact.hours'][0],
+      stored.needs_profile.facts['contact.hours'][0]
+    )
+    assert.deepEqual(next.result.revision.codes, { changed: ['page-renamed'], notDone: [] })
   }
 )
 
@@ -253,14 +220,13 @@ test(
   opts,
   async () => {
     const model = club.scriptedModel(JSON.stringify(club.goodComposition()), revisionReply([RENAME_TEAM]))
-    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
-    const { accountId, plan: composed } = await composedClub(s)
+    const { s, accountId, plan: composed } = await composedClub(model)
     const before = await row(accountId)
-    const engine = engineWith(model, revisePlanSavingHours)
-    const ended = await requestThrough(engine, accountId, 'Please call the coaches page Our team.')
+    const ended = await s.request(WITH_HOURS)
     assert.equal(ended.state, 'done', JSON.stringify((await row(accountId)).fault))
     const revised = ended.result.plan
     assert.equal(revised.revision, composed.revision + 1)
+    assert.equal((await row(accountId)).needs_profile.facts['contact.hours'][0].value, SAVED_HOURS)
 
     const draft = (await s.call('GET', '')).body.draft
     assert.equal(draft.canUndo, true, 'the change asked for in the chat can be taken back')
@@ -278,9 +244,10 @@ test(
     assert.equal(undone.body.draft.canUndo, false, 'one step only')
     const stored = await row(accountId)
     assert.deepEqual(stored.needs_profile, before.needs_profile, 'the profile before the change, exactly')
-    assert.equal(
+    assert.notEqual(
       stored.needs_profile.facts['contact.hours'][0].value,
-      before.needs_profile.facts['contact.hours'][0].value
+      SAVED_HOURS,
+      'the typed hours went too'
     )
     // The chat's note of the change is gone with it: the engine answers the plan, not the change request.
     const engineNow = (await s.call('GET', '/engine')).body
@@ -302,12 +269,10 @@ test(
     const model = club.scriptedModel(
       JSON.stringify(club.goodComposition()),
       revisionReply([RENAME_TEAM]),
-      revisionReply([{ ...RENAME_TEAM, name: 'The coaches', request: 'call the coaches page The coaches' }])
+      revisionReply([RENAME_AGAIN])
     )
-    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
-    const { accountId, plan } = await composedClub(s)
-    const engine = engineWith(model, revisePlan)
-    await requestThrough(engine, accountId, 'Please call the coaches page Our team.')
+    const { s, accountId, plan } = await composedClub(model)
+    await s.request('Please call the coaches page Our team.')
 
     // A card edit after the chat change: its undo takes back the card edit only.
     const field = `items[${plan.items[0].id}].label`
@@ -322,7 +287,8 @@ test(
 
     // A card edit, then a chat change: undo takes back the chat change, and the card edit stays.
     await s.call('POST', '/edit', { changes: [{ field, value: 'Courts and coaching' }] })
-    await requestThrough(engine, accountId, 'Please call the coaches page The coaches.')
+    const again = await s.request('Please call the coaches page The coaches.')
+    assert.equal(again.state, 'done', JSON.stringify((await row(accountId)).fault))
     const afterChat = await row(accountId)
     assert.equal(afterChat.undo_edit, null)
     const back = await s.call('POST', '/plan-undo')
@@ -337,12 +303,12 @@ test(
   opts,
   async () => {
     const model = club.scriptedModel(JSON.stringify(club.goodComposition()), revisionReply([RENAME_TEAM]))
-    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
-    const { accountId } = await composedClub(s)
-    await requestThrough(engineWith(model, revisePlan), accountId, 'Please call the coaches page Our team.')
+    const { s, accountId } = await composedClub(model)
+    await s.request('Please call the coaches page Our team.')
     const held = await row(accountId)
+    assert.notEqual(held.undo_plan, null)
 
-    // A step that runs in this process (another runner's step would be stopped first as one whose process ended).
+    // A running step refuses the undo (the door would first stop a step of another process, so the store is called).
     const busy = await changeDraft(db.pool, accountId, (r) => ({ engine: { ...r.engine, state: 'running' } }))
     assert.equal(busy.error, undefined)
     assert.equal((await undoPlanEdit(db.pool, accountId, kits)).error, 'ENGINE_BUSY')

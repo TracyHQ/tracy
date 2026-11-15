@@ -77,10 +77,14 @@ export async function reviseStep(
 }
 
 const list = (value) => (Array.isArray(value) ? value : [])
-/** The codes beside `lines`, one per line: a code that is not a text, or a list that runs short, reads as null. */
+/**
+ * The codes beside `lines`, one per line; a code that is not a text reads as null. A code list longer or shorter than
+ * the lines does not say which code names which line, so none of its codes is kept: never a shifted translation.
+ */
 const codesBeside = (codes, lines) => {
   const given = list(codes)
-  return lines.map((_, i) => (typeof given[i] === 'string' && given[i] !== '' ? given[i] : null))
+  if (given.length !== lines.length) return lines.map(() => null)
+  return given.map((code) => (typeof code === 'string' && code !== '' ? code : null))
 }
 
 /**

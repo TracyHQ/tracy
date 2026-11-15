@@ -685,7 +685,12 @@ test(
     assert.equal(plan.revision, edited.revision + 1)
     assert.equal(plan.pages.find((p) => p.id === 'team').name, 'Our team')
     assert.equal(plan.items[0].label, 'Courts and coaching', 'the owner card edit is kept')
-    assert.deepEqual(revision, { changed: ['The Coaches page is now called Our team.'], notDone: [] })
+    assert.deepEqual(revision, {
+      changed: ['The Coaches page is now called Our team.'],
+      notDone: [],
+      // The plan step's stable code beside each line, for the card to say it in the owner's language.
+      codes: { changed: ['page-renamed'], notDone: [] }
+    })
     const stored = await row(s)
     assert.deepEqual(stored.plan, plan)
     assert.deepEqual([stored.last_edit, stored.undo_edit], [null, null])

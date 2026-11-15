@@ -29,9 +29,13 @@ function argsOf(raw) {
 
 /** @param {unknown} value */
 const listOf = (value) => (Array.isArray(value) ? value : [])
-/** The code at `i` of a code list, or null when it is not a text. */
-const codeAt = (codes, i) => {
-  const code = listOf(codes)[i]
+/**
+ * The code at `i` of a code list that runs beside `lines`, or null when it is not a text. A list longer or shorter
+ * than its lines does not say which code names which line: every code of it reads as null, never a shifted one.
+ */
+const codeAt = (codes, lines, i) => {
+  const given = listOf(codes)
+  const code = given.length === lines.length ? given[i] : null
   return typeof code === 'string' && code !== '' ? code : null
 }
 
@@ -52,13 +56,13 @@ export function revisedOf(value) {
   listOf(value.changed).forEach((line, i) => {
     if (typeof line !== 'string') return
     changed.push(line)
-    codes.changed.push(coded ? codeAt(value.codes.changed, i) : null)
+    codes.changed.push(coded ? codeAt(value.codes.changed, listOf(value.changed), i) : null)
   })
   const notDone = []
   listOf(value.notDone).forEach((e, i) => {
     if (typeof e?.what !== 'string' || typeof e?.why !== 'string') return
     notDone.push({ what: e.what, why: e.why })
-    codes.notDone.push(coded ? codeAt(value.codes.notDone, i) : null)
+    codes.notDone.push(coded ? codeAt(value.codes.notDone, listOf(value.notDone), i) : null)
   })
   return coded ? { changed, notDone, codes } : { changed, notDone }
 }

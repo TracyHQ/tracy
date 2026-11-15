@@ -272,6 +272,28 @@ test('a coded line of a change request reads in the interface language, with its
   assert.doesNotMatch(text, /owner_value_saved|page_already_on_plan|some_new_code/, 'no code is ever shown')
 })
 
+test('codes that do not run one to one beside their lines are not read: every line keeps the server text', () => {
+  const changed = [
+    'Your answer is saved: Opening hours, Mo-Sa 06:30-21:30.',
+    'The Coaches page is now called Our team.'
+  ]
+  const notDone = [{ what: 'Services', why: 'The plan already has this page.' }]
+  for (const codes of [
+    // One code more than lines: a shifted reading would say the rename as a saved answer.
+    {
+      changed: ['owner_value_saved', 'page-renamed', 'page-renamed'],
+      notDone: ['page_already_on_plan', 'x']
+    },
+    // One code fewer than lines.
+    { changed: ['page-renamed'], notDone: [] }
+  ]) {
+    const text = textOf(draw({ plan: plan(), t: vi, canUndo: true, revised: { changed, notDone, codes } }))
+    for (const line of changed) assert.ok(text.includes(line), line)
+    assert.ok(text.includes('The plan already has this page.'))
+    assert.equal(text.includes(viTable['plan.revised.notDone.page_already_on_plan.why']), false)
+  }
+})
+
 test('in English a coded line reads exactly as the server wrote it', () => {
   const note = codedNote()
   const text = textOf(draw({ plan: plan(), canUndo: true, revised: note }))

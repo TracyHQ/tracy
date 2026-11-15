@@ -120,14 +120,18 @@ function RevisionNoteView({
   onDismiss: () => void
 }) {
   // A line with a stable code is said in the card's words (`revision-lines.ts`); any other keeps the server's text.
-  const codes = note.codes
+  // Codes that do not run one to one beside their lines are not read at all: never a shifted translation.
+  const beside = (codes: (string | null)[] | undefined, lines: unknown[]) =>
+    Array.isArray(codes) && codes.length === lines.length ? codes : null
+  const changedCodes = beside(note.codes?.changed, note.changed)
+  const notDoneCodes = beside(note.codes?.notDone, note.notDone)
   const changed = grouped(
-    [...note.changed.map((line, i) => changedLineOf(t, codes?.changed[i], plainTextOf(line))), ...edited],
+    [...note.changed.map((line, i) => changedLineOf(t, changedCodes?.[i], plainTextOf(line))), ...edited],
     (line) => line
   )
   const notDone = grouped(
     note.notDone.map((e, i) =>
-      notDoneLineOf(t, codes?.notDone[i], { what: plainTextOf(e.what), why: plainTextOf(e.why) })
+      notDoneLineOf(t, notDoneCodes?.[i], { what: plainTextOf(e.what), why: plainTextOf(e.why) })
     ),
     (e) => `${e.what}\n${e.why}`
   )

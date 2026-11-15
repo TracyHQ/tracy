@@ -259,6 +259,25 @@ test('the codes of a change request answer stay beside the lines they name; an a
     changed: [null, null],
     notDone: [null, null]
   })
+  // A code list longer or shorter than its lines: which code names which line is unknown, so none is kept.
+  const longer = {
+    ...revised,
+    revision: {
+      changed: [
+        'Your answer is saved: Opening hours, Mo-Sa 06:30-21:30.',
+        'The Coaches page is now called Our team.'
+      ],
+      notDone: [{ what: 'Services', why: 'The plan already has this page.' }],
+      codes: {
+        changed: ['owner_value_saved', 'page-renamed', 'page-renamed'],
+        notDone: []
+      }
+    }
+  }
+  assert.deepEqual(buildToolResultOf(JSON.stringify(longer)).revised.codes, {
+    changed: [null, null],
+    notDone: [null]
+  })
   const none = { ...revised, revision: { changed: ['A line.'], notDone: [] } }
   assert.equal('codes' in buildToolResultOf(JSON.stringify(none)).revised, false)
 })
