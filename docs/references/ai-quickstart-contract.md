@@ -1128,10 +1128,16 @@ site ships.
 `media.delete {apply_id, path, dry_run?}` deletes one picture under `images/` (`jpg`, `jpeg`, `png`, `gif`, `webp`,
 `svg`, `avif`, `ico`), keeping its bytes in the apply log for `apply.revert` (read in source). Measured: an uploaded
 picture is served (200); `media.upload` to the same path again answers `created: false` and the site serves the new
-bytes; `dry_run: true` answers the file, its size and sha256 and `usedIn` (articles, modules, template styles, menu
-items that name it) and deletes nothing; the delete answers `storageDeleted: true`, `filesLeft: []` and its undo, and
-the address then answers 404. A path outside `images/` is refused (`bad_params`, `path must be a safe relative file
-beneath images/`). So a picture the build uploaded can be taken off the site.
+bytes; `dry_run: true` answers `{ok, deleted: {path, files: [{path, size, sha256}]}, totalBytes, undoCopyUnderCap,
+usedIn, usedInScope}` and deletes nothing, `usedIn` one row per record that names the file, `{type, id, title}` with a
+plural `type` (`articles`, `modules`, `menuItems`, `templateStyles`), unpublished (article `state: 0`, module
+`published: 0`) and trashed (`state: -2`) records counted, `[]` for nobody; the delete answers `storageDeleted: true`,
+`filesLeft: []` and its undo, and the address then answers 404. A real delete of a picture two records use succeeds:
+the door does not refuse, it only reports `usedIn`. A path with no file (dry run or not, a missing folder too) answers
+`{ok: false, error: "write_failed"}` (`could not make and verify the undo copy; nothing was deleted: path must be an
+existing file whose realpath stays under images/`): there is no not-found code, and the plugin keeps no replay answer
+for `media.delete`, so the same apply id called again also answers `write_failed`. A path outside `images/`, or not a
+picture, is refused (`bad_params`). So a picture the build uploaded can be taken off the site.
 
 ### Replaying a request
 
@@ -1363,8 +1369,7 @@ source contract records (`libraryPositionProblems`).
   list prints two cards, no gap; the row's words emptied prints an empty card where the row was. In place, the only list rows JA Boxing writes are menu
   items: a middle menu item unpublished leaves the menu closed up (measured).
 
-**Not measured:** the `keys` row form; `apply.revert` of a deletion; `content.delete` on the pages; a media delete of a
-picture a page still uses; caching (the site runs with Joomla caching off, so a module's own `cache` setting played no
+**Not measured:** the `keys` row form; `apply.revert` of a deletion; `content.delete` on the pages; caching (the site runs with Joomla caching off, so a module's own `cache` setting played no
 part); a production `display_errors` setting; any template but JA Boxing.
 
 ## The Tracy library

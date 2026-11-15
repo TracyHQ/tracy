@@ -189,9 +189,11 @@ export function siteDoors({
     unassign({ applyId, id }) {
       return doors.update({ applyId, kind: 'moduleAssignment', id, fields: { menuids: '[]' } })
     },
+    // A dry run reads the site as it is now: never answered from the journal (a resume must not read a stale usedIn).
     deleteMedia({ applyId, path, dryRun = false }) {
+      if (dryRun) return send('media.delete', { apply_id: applyId, path, dry_run: true })
       return once('deleteMedia', applyId, { path, dryRun }, () =>
-        send('media.delete', { apply_id: applyId, path, ...(dryRun ? { dry_run: true } : {}) })
+        send('media.delete', { apply_id: applyId, path })
       )
     },
     async deleteRecord() {

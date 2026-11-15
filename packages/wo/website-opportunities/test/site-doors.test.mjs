@@ -102,6 +102,14 @@ test('the undo doors are the measured operations: a hide, no page, a media delet
   )
 })
 
+test('a media delete dry run is sent every time, never answered from the journal', async () => {
+  const { send, calls } = fakeSend({ 'media.delete': () => ({ ok: true, usedIn: [] }) })
+  const doors = siteDoors({ send })
+  await doors.deleteMedia({ applyId: 'm1:dry', path: 'images/tracy/a.png', dryRun: true })
+  await doors.deleteMedia({ applyId: 'm1:dry', path: 'images/tracy/a.png', dryRun: true })
+  assert.equal(calls.filter((c) => c.operation === 'media.delete').length, 2)
+})
+
 test('a stopped run sends nothing more', async () => {
   const { send, calls } = fakeSend()
   const stop = new AbortController()
