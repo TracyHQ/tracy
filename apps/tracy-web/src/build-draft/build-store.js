@@ -6,7 +6,8 @@
  * draft (`draftBuildId`). The create door (`POST /api/sites`) is idempotent on it: approving twice, a retry after a lost
  * answer or a reload all reach the same site. An approval of the plan already approved answers the build it started;
  * an approval of another plan revision is refused (`BUILT_FROM_OTHER_PLAN`): building that plan on the same site is a
- * rebuild (#612), never a second site.
+ * rebuild (#612), never a second site. A build the create door made no site for (it refused, or failed) is replaced by
+ * the approval of another revision, under the same id, so the owner is never stuck on a plan they changed.
  *
  * 🔒 THE SNAPSHOT IS TAKEN HERE AND NEVER CHANGES. The approved plan, its last edit, the needs profile it was gated
  * with and the research record (brief, asset manifest, picture run) are copied into the build at approval. The run
@@ -51,7 +52,9 @@ export async function approveBuild(pool, accountId, { plan, now = Date.now }) {
   let found = null
   let made = null
   const result = await changeDraft(pool, accountId, (row) => {
-    if (row.build) {
+    // A build the create door made no site for (refused, or failed) holds nothing: a newer plan may replace it.
+    const siteless = row.build && !row.build.site && (row.build.endedAt || row.build.refusal)
+    if (row.build && !(siteless && !samePlan(row.build.plan, plan))) {
       if (samePlan(row.build.plan, plan)) {
         found = row.build
         return { error: 'APPROVED' }
@@ -74,7 +77,9 @@ export async function approveBuild(pool, accountId, { plan, now = Date.now }) {
       },
       site: null,
       refusal: null,
-      endedAt: null
+      endedAt: null,
+      // The label a replaced build already asked the create door for: a retry under the same id sends the same one.
+      ...(siteless && row.build.label ? { label: row.build.label } : {})
     }
     return { build: made }
   })
@@ -95,6 +100,29 @@ export function saveBuildSite(pool, accountId, buildId, { site = null, refusal =
     const reopened = site && !row.build.site ? { endedAt: null, result: null } : {}
     return { build: { ...row.build, site: site ?? row.build.site ?? null, refusal, ...reopened } }
   })
+}
+
+/** How long a build may sit with no site and no refusal before a read asks the create door again (#610). */
+export const SITE_ASK_AGAIN_MS = 30_000
+
+/**
+ * Claim the next ask of the create door for a build still `creating` (no site, no refusal, not ended): its approval or
+ * its last ask is older than `SITE_ASK_AGAIN_MS`, after a process ended between approval and the create door's answer,
+ * or the door answered that another ask was still talking to the host. Answers the build when this read holds the ask,
+ * else null. The create door is idempotent on the build's id, so asking again never makes a second site.
+ */
+export async function claimSiteAsk(pool, accountId, buildId, now = Date.now) {
+  let claimed = null
+  await changeDraft(pool, accountId, (row) => {
+    const build = row.build
+    if (build?.id !== buildId || build.site || build.refusal || build.endedAt)
+      return { error: 'NOT_CREATING' }
+    const last = Date.parse(String(build.siteAskedAt ?? build.approvedAt ?? ''))
+    if (Number.isFinite(last) && now() - last < SITE_ASK_AGAIN_MS) return { error: 'ASKED' }
+    claimed = { ...build, siteAskedAt: new Date(now()).toISOString() }
+    return { build: claimed }
+  })
+  return claimed
 }
 
 /** Mark the build ended with its Contract B result, once; its snapshot's pictures may then go. */

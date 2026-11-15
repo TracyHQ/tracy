@@ -21,7 +21,15 @@ import { json } from '../lib/http.js'
 import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
 import { principalOf } from '../lib/wo-principal.js'
 import { buildRunOf } from './build-progress.js'
-import { approveBuild, buildOpen, endBuild, planRefOf, readBuild, saveBuildSite } from './build-store.js'
+import {
+  approveBuild,
+  buildOpen,
+  claimSiteAsk,
+  endBuild,
+  planRefOf,
+  readBuild,
+  saveBuildSite
+} from './build-store.js'
 import { callerOf } from './caller.js'
 import { readEngineRow } from './engine-store.js'
 import { handOffBuild, handoffNextOfBuild } from './handoff-door.js'
@@ -132,10 +140,35 @@ export function buildRunRoutes({
     return run(c, accountId, caller.email)
   }
 
-  /** The build and its run as they stand; an ended run marks the build ended once. */
-  async function answerOf(accountId) {
+  /** Ask the create door for the build's site (idempotent on the build's id) and keep what it answered. */
+  async function askSite(accountId, email, build) {
+    const draftId = (await readEngineRow(pool, accountId)).id
+    const started = await startSite({ accountId, email, draftId, build }).catch((error) => {
+      log.error?.('[build-draft] the site could not be asked for:', error)
+      return { refusal: { code: 'SITE_CREATE_FAILED', status: 502 } }
+    })
+    if (started.site || started.refusal)
+      await saveBuildSite(pool, accountId, build.id, {
+        site: started.site ?? null,
+        refusal: started.refusal ?? null
+      })
+  }
+
+  /**
+   * The build and its run as they stand; an ended run marks the build ended once. With `email` (a read of the build
+   * door), a build still creating long after its approval asks the create door again, so it never reads creating for
+   * ever after a lost answer or a process that ended before the answer was kept.
+   */
+  async function answerOf(accountId, email) {
     let build = await readBuild(pool, accountId)
     if (!build) return { build: null, run: null }
+    if (email && !build.site && !build.refusal && !build.endedAt) {
+      const claimed = await claimSiteAsk(pool, accountId, build.id, now)
+      if (claimed) {
+        await askSite(accountId, email, claimed)
+        build = await readBuild(pool, accountId)
+      }
+    }
     const read = build.site?.siteKey ? await readRun(build.site.siteKey) : { brief: null, job: null }
     let made = buildRunOf({ build, ...read, now: now() })
     if (made.problems.length)
@@ -167,18 +200,7 @@ export function buildRunRoutes({
       if (approved.error) return refuse(c, approved.error)
       const { build } = approved
       // A build with its site is answered as it is; any other is asked of the create door again, by the same id.
-      if (!build.site) {
-        const draftId = (await readEngineRow(pool, accountId)).id
-        const started = await startSite({ accountId, email, draftId, build }).catch((error) => {
-          log.error?.('[build-draft] the site could not be asked for:', error)
-          return { refusal: { code: 'SITE_CREATE_FAILED', status: 502 } }
-        })
-        if (started.site || started.refusal)
-          await saveBuildSite(pool, accountId, build.id, {
-            site: started.site ?? null,
-            refusal: started.refusal ?? null
-          })
-      }
+      if (!build.site) await askSite(accountId, email, build)
       return json(c, await answerOf(accountId), approved.created ? 201 : 200)
     })
   )
@@ -210,7 +232,9 @@ export function buildRunRoutes({
 
   app.get(
     BASE,
-    door(async (c, accountId) => json(c, accountId ? await answerOf(accountId) : { build: null, run: null }))
+    door(async (c, accountId, email) =>
+      json(c, accountId ? await answerOf(accountId, email) : { build: null, run: null })
+    )
   )
 
   return app
