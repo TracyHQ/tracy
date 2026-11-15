@@ -1,5 +1,6 @@
 // The trials of write safety's bisection (ticket #586). Two counts, never mixed: a build refusal is found in memory
-// (the build runs without a site), every place its problems name at once and the rest by bisection, each trial a build
+// (the build runs without a site), a place its problems name blamed at once when it is the only probed place stored
+// there, each place of a shared entry or slot built alone first, and the rest by bisection, each trial a build
 // counted but not limited; a stopped write or an erroring page is found on the site, each trial a site step (a fresh site and a write, or the
 // blocks of an erroring page taken off it on the same site). Pure but for the injected build and site.
 import { bisect, bisectBlocks } from './bisect.mjs'
@@ -44,23 +45,55 @@ export function namedPlaces(refusal, used, plainIndex) {
 const failureOf = (refusal, p) =>
   p?.failure ?? { ...refusal, code: p?.code ? String(p.code) : refusal.code, details: undefined }
 
+/** Where a problem names a stored location: its entry or slot. */
+const whereOf = (p) => (p.entry ? 'entry:' + p.entry : p.slot ? 'slot:' + p.slot : null)
+
 /**
- * The probes a build refuses, in memory only, all of them from one refusal: every place a problem names by its entry
- * or slot is a culprit at once (the plain build has no such problem, and only that place's probe is stored there);
- * places only an operation names, or every probe when nothing is named, are traced by bisection over builds. A build
- * in memory is no site step and no rerun: its trials are counted (`buildBudget`), never limited but by time.
+ * The probes a build refuses, in memory only, from one refusal. A place a problem names by its entry or slot is
+ * blamed at once only when it is the one probed place stored there (`evidence: 'named_alone'`); when an entry or slot
+ * holds several, each is built alone (the others plain) and blamed only when that build refuses there too (`evidence:
+ * 'built_alone'`), the others are `cleared` (W2, review 4: one refusal never closes a probe it did not cause). Places
+ * only an operation names, or every probe when nothing is named, are traced by bisection over builds. A build in
+ * memory is no site step and no rerun: its trials are counted (`buildBudget`), never limited but by time.
  */
 export async function buildCulprits(refusal, a, active, ctx) {
   const { attempt, buildBudget, plainGaps, plainIndex } = ctx
   const refuses = async (subset) => buildRefusalOf(await attempt(only(active, subset)), plainGaps)
   const named = namedPlaces(refusal, a.opts.used, plainIndex)
-  const culprits = [...named.exact].map(([unit, p]) => ({ unit, failure: failureOf(refusal, p) }))
-  if (culprits.length) return { culprits, together: [], exhausted: [], steps: 0 }
+  const at = new Map()
+  for (const [unit, p] of named.exact) {
+    const w = whereOf(p)
+    if (!at.has(w)) at.set(w, [])
+    at.get(w).push([unit, p])
+  }
+  const culprits = []
+  const cleared = []
+  const exhausted = []
+  let steps = 0
+  for (const [w, held] of at) {
+    if (held.length === 1) {
+      const [unit, p] = held[0]
+      culprits.push({ unit, failure: { ...failureOf(refusal, p), evidence: 'named_alone' } })
+      continue
+    }
+    for (const [unit] of held) {
+      if (!buildBudget.take()) {
+        exhausted.push(unit)
+        continue
+      }
+      steps += 1
+      const alone = await refuses([unit])
+      const here = alone && namedProblems(alone).find((q) => whereOf(q) === w)
+      if (here) culprits.push({ unit, failure: { ...failureOf(alone, here), evidence: 'built_alone' } })
+      else cleared.push(unit)
+    }
+  }
+  if (culprits.length) return { culprits, together: [], exhausted, cleared, steps }
   if (named.op.length) {
     const found = await bisect(named.op, refuses, buildBudget, refusal)
-    if (found.culprits.length) return found
+    if (found.culprits.length) return { ...found, cleared }
   }
-  return bisect([...a.opts.used.keys()], refuses, buildBudget, refusal)
+  return { ...(await bisect([...a.opts.used.keys()], refuses, buildBudget, refusal)), cleared }
 }
 
 /** A trial of a subset of probes on a fresh site: the class of its stopped write, or null when it is written. */
