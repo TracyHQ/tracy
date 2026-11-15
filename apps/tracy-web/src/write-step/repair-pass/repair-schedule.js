@@ -49,7 +49,7 @@ export async function schedulePages(pass, { firstCheck, brief = null, result, ru
     const spent = ready.faults.filter(spentKind)
     for (const fault of spent)
       result.skipped.push({
-        ...fault,
+        fault,
         code: 'kind-unchanged',
         reason: `turns on ${NO_CHANGE_PAGES} pages changed nothing for this kind of fault (${kindOf(fault)})`
       })

@@ -4,7 +4,9 @@
 // agent.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { repairClock } from '../src/write-step/repair-pass/repair-limits.js'
 import { schedulePages } from '../src/write-step/repair-pass/repair-schedule.js'
+import { repairSummary } from '../src/write-step/repair-pass/repair-summary.js'
 
 const picture = (page, file) => ({
   group: 'demo-pictures',
@@ -68,7 +70,7 @@ test('after two pages whose picture turns changed nothing, later pages get no tu
   assert.equal(started, 2)
   const skipped = result.skipped.filter((s) => s.code === 'kind-unchanged')
   assert.deepEqual(
-    skipped.map((s) => s.page),
+    skipped.map((s) => s.fault.page),
     ['/programmes/junior', '/programmes/adult']
   )
   assert.match(skipped[0].reason, /turns on 2 pages changed nothing for this kind of fault \(demo-picture\)/)
@@ -84,7 +86,7 @@ test('a page keeps its turns for a kind not yet tried, and a turn that changed s
   // /about loses its picture fault but keeps the template words, which no page tried yet.
   assert.deepEqual(mixed.ran.at(-1), ['/about', ['demo-words']])
   assert.deepEqual(
-    mixed.result.skipped.filter((s) => s.code === 'kind-unchanged').map((s) => [s.page, s.group]),
+    mixed.result.skipped.filter((s) => s.code === 'kind-unchanged').map((s) => [s.fault.page, s.fault.group]),
     [['/about', 'demo-pictures']]
   )
   // When the picture turns change something, every page still gets its turns.
@@ -101,4 +103,21 @@ test('a page keeps its turns for a kind not yet tried, and a turn that changed s
     ['/', '/programmes', '/programmes/junior']
   )
   assert.equal(changing.result.skipped.length, 0)
+})
+
+test('the skipped faults keep the shape the pass summary reads, so step 9 hands over its summary', async () => {
+  const { result } = await schedule([
+    picture('/', 'others/bg-cta.jpg'),
+    picture('/programmes', 'classes/intro-3.jpg'),
+    picture('/programmes/junior', 'classes/detail-video-3.jpg')
+  ])
+  const clock = repairClock({ now: () => 0, sleep: async () => {} })
+  const summary = repairSummary({
+    outcome: { status: 'incomplete', skipped: result.skipped },
+    clock,
+    site: 's'
+  })
+  const line = summary.skipped.find((s) => s.code === 'kind-unchanged')
+  assert.equal(line.page, '/programmes/junior')
+  assert.equal(line.group, 'demo-pictures')
 })
