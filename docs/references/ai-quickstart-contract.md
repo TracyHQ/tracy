@@ -1763,8 +1763,18 @@ gives: `block_not_printed` (the page's HTML has no `id="Mod<id>"` of the copy), 
 `article_not_rendered`, `value_not_printed`, judged on the page of the entry, or for a row of a site-wide copy keyed to
 a page (a masthead row per menu item) on the page its row names (`page`). Each carries `declared`: the reason the write or the kit gives (the entry
 is a write conflict, `write_conflict`; an unproven flag of the write plan names its page and block; or the mapping
-location says `prints: false` with a `why`, `kit_declares_not_printed: <why>`), or `null`. A written value not seen
-with no declared reason fails the verdict.
+location says `prints: false` with a `why`, `kit_declares_not_printed: <why>`; or the value belongs to an item of a list
+its block's page did not show while it shows another item of that block, `list_item_not_shown`), or `null`. A written
+value not seen with no declared reason fails the verdict.
+
+A list item is an article the plan creates whose entries sit under one block (`<page>.<block>.<item>.<field>`). Which
+of them a list shows is the site's choice: on JA Boxing the blog lists sort by publish date (`orderby_sec: rdate`,
+`order_date: published` in the blank site's content settings) and the build writes every item within seconds, so equal
+dates fall in no fixed order, and a list shows one page of its items ("Page 1 of 2"). Run 4 and the attempt before it
+showed different items of the same lists from the same kit (47 and 33 unexplained not seen). The gate therefore judges
+the fields of the items a list shows and does not judge the items it left out; the row keeps `listItem: {shown, items}`
+so a record read back gives the same reason. The ordering itself is the build's (a date per item in plan order would
+make the choice fixed); the gate does not set it.
 
 **The demo scan** (`gate/demo-checks.mjs`) runs `demoScan` on the browser's read and on the raw HTML of the same
 renders, and checks the scan itself: the leaks the corpus counts as interface words (never reported by the demo scan),

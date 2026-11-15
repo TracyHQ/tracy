@@ -28,6 +28,64 @@ function rowPageOf(op, loc) {
 }
 
 /**
+ * The list items of a write plan a page's block does not show while it shows another of them (review 4): an item is an
+ * article the plan creates whose entries sit under one block (`<page>.<block>.<item>.<field>`). Which items a list
+ * shows is the site's choice (a blog sorts by date and the build writes every item within seconds, so ties fall in no
+ * fixed order; a list shows one page of its items), so an item the page does not show, while it shows a sibling, is
+ * not judged. Returns `Map<"<page>.<block>.<item>", {shown: number, items: number}>` for each item not shown.
+ */
+function listItemsNotShownOf(writePlan, htmlOf, uploaded) {
+  const articles = new Set(
+    (writePlan?.ops ?? [])
+      .filter((o) => o.kind === 'article.create')
+      .map((o) => o.key.slice('article:'.length))
+  )
+  const itemOf = (entry) => {
+    const p = String(entry ?? '').split('.')
+    return p.length >= 4 && articles.has(p[2]) ? { page: p[0], block: p[1], item: p[2] } : null
+  }
+  const blocks = new Map()
+  const add = (at, shows) => {
+    const key = `${at.page}.${at.block}`
+    const items = blocks.get(key) ?? new Map()
+    items.set(at.item, (items.get(at.item) ?? false) || shows)
+    blocks.set(key, items)
+  }
+  const pageCodes = new Map()
+  const codesOn = (page) => {
+    if (!pageCodes.has(page)) pageCodes.set(page, new Set(codesIn(htmlOf.get(page) ?? '')))
+    return pageCodes.get(page)
+  }
+  for (const op of writePlan?.ops ?? [])
+    for (const v of op.values ?? []) {
+      const at = typeof v.value === 'string' ? itemOf(v.entry) : null
+      if (at)
+        add(
+          at,
+          codesIn(v.value).some((c) => codesOn(at.page).has(c))
+        )
+    }
+  for (const [key, path] of Object.entries(uploaded ?? {})) {
+    const at = itemOf(key.replace(/^picture:/, ''))
+    if (at) add(at, (htmlOf.get(at.page) ?? '').includes(String(path).replace(/^\/+/, '')))
+  }
+  const out = new Map()
+  for (const [key, items] of blocks) {
+    const shown = [...items.values()].filter(Boolean).length
+    if (!shown || shown === items.size) continue
+    for (const [item, shows] of items) if (!shows) out.set(`${key}.${item}`, { shown, items: items.size })
+  }
+  return out
+}
+
+/** The list item key of an entry (`<page>.<block>.<item>`). */
+const listKeyOf = (entry) =>
+  String(entry ?? '')
+    .split('.')
+    .slice(0, 3)
+    .join('.')
+
+/**
  * @param {{writePlan: object, registry: object[], seen: Set<string>, renders: object[], ids: Record<string, number>,
  *   uploaded: Record<string, string>, pictures: Set<string>}} input
  * @returns {Array<{code?: string, picture?: string, entry: string | null, op: string, loc: object | null,
@@ -62,6 +120,12 @@ export function notSeenOf({
     }
     return { reason: 'value_not_printed' }
   }
+  const notChosen = listItemsNotShownOf(writePlan, htmlOf, uploaded)
+  // A row of an item its list did not show carries that fact, so a record read back declares it the same way.
+  const listOf = (entry) => {
+    const hit = notChosen.get(listKeyOf(entry))
+    return hit ? { listItem: { shown: hit.shown, items: hit.items } } : {}
+  }
   const out = new Map()
   for (const op of writePlan?.ops ?? [])
     for (const v of op.values ?? []) {
@@ -75,7 +139,8 @@ export function notSeenOf({
             loc: v.loc ?? null,
             stood: what.get(code)?.what ?? null,
             page: rowPageOf(op, v.loc) ?? pageOfEntry(v.entry),
-            ...reasonOf(op, v.entry, v.loc)
+            ...reasonOf(op, v.entry, v.loc),
+            ...listOf(v.entry)
           })
     }
   const opsByKey = new Map((writePlan?.ops ?? []).map((o) => [o.key, o]))
@@ -86,7 +151,15 @@ export function notSeenOf({
     // The copy that shows the picture: the operation of its page block.
     const [page, block] = entry.split('.')
     const copy = opsByKey.get(`copy:${page}.${block}`) ?? opsByKey.get(key) ?? { key, kind: 'picture.upload' }
-    out.set(file, { picture: file, entry, op: key, loc: null, stood: 'picture', ...reasonOf(copy, entry) })
+    out.set(file, {
+      picture: file,
+      entry,
+      op: key,
+      loc: null,
+      stood: 'picture',
+      ...reasonOf(copy, entry),
+      ...listOf(entry)
+    })
   }
   return [...out.values()]
 }
@@ -94,7 +167,8 @@ export function notSeenOf({
 /**
  * Each written value no page shows, with the declared reason it may not show (`declared`), or null: a conflict the
  * real write reported for its entry (`write_conflict`), a flag the write plan raised on its block or entry (its code),
- * or the kit's own word that the place prints nothing (`prints: false` with `why` on the mapping location). A value with
+ * the kit's own word that the place prints nothing (`prints: false` with `why` on the mapping location), or an item of
+ * a list its block did not show while showing another (`list_item_not_shown`, from the row's `listItem`). A value with
  * no declared reason fails the verdict.
  * @param {object[]} notSeen `notSeenOf`
  * @param {{conflicts?: string[], unproven?: object[], mapping?: object}} context
@@ -118,7 +192,9 @@ export function declareNotSeen(notSeen, { conflicts = [], unproven = [], mapping
         ? flag.code
         : kit
           ? `kit_declares_not_printed: ${kit}`
-          : null
+          : n.listItem
+            ? 'list_item_not_shown'
+            : null
     return { ...n, declared }
   })
 }
