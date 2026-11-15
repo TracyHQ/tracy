@@ -58,7 +58,8 @@ export async function startPictureRun({
   copy = null,
   storeDir,
   index,
-  noCaps = false
+  noCaps = false,
+  effort
 }) {
   const where = index ? { index } : {}
   const kits = readableKits(where)
@@ -110,6 +111,16 @@ export async function startPictureRun({
   }
   const running = await activeRuns(pool)
   if (running.length >= BENCH_RUNS_AT_ONCE) return fullRefusal(running)
+  // An explicit picker effort (native DeepSeek Flash only), frozen with the run as the writer's is (#541).
+  let harness = {}
+  if (door) {
+    try {
+      harness = capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId, { effort }), noCaps)
+    } catch (error) {
+      if (error.code !== 'BENCH_EFFORT_UNSUPPORTED') throw error
+      return refuse('SITE_PICTURES_HARNESS', error.message)
+    }
+  }
   const created = await createRun(pool, {
     startedBy,
     plan,
@@ -126,7 +137,7 @@ export async function startPictureRun({
       looker: looker.snapshot,
       ...(drawer ? { drawer: drawer.snapshot } : {})
     },
-    harness: door ? capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps) : {}
+    harness
   })
   if (created.error === SITE_PICTURES_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
