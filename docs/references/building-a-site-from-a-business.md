@@ -175,6 +175,20 @@ What comes back:
   from the quote (`owner-echo.mjs ownerLabelGrounded`): at least half its words are words of the quote, and every
   number and capitalised word of it is in the quote. The rules reading (no model) never reads the statement at all
   (`reading.ownerStatementSkipped`), since rules can only copy.
+- An item of the statement is grounded against the passage the model was given (held sentences already out), with the
+  tolerance of every quote (`comparable`: compatibility forms, quote marks, spacing and case; punctuation is not
+  folded), never against web text; a model citing the passage by its kind (`owner-statement`) means the same passage
+  (`owner-quote-drops.mjs textsByRef`). An item of it the check drops is never dropped in silence: the reading records
+  `ownerItemsDropped: [{group, label, why}]` (`quote_not_found`, `unknown_source`, `label_not_grounded`, `no_label`,
+  `too_few_sources`; a USP theme quoting the passage with the ladder's reason). A quote that rewords the statement is
+  a model fault, so one short retry on the statement alone asks for those items again (`owner-quote-prompt.mjs`, a
+  draft awaiting approval in #600); its answer is checked with the passage as the only text, its items are added, and
+  each earlier drop is marked `retry: 'kept'` or `'rejected'`, the retry's own drops after them as `retry_rejected`
+  (`reading.ownerQuoteRetry`: `done`, `failed`, `unreadable`). The brief records the drops as
+  `reading.ownerItemsDropped` without their labels. Measured on the invented climbing hall
+  (`domain-owner-quote-chain.test.mjs`): a service only the owner typed, first quoted in other words, reaches the
+  reading, the brief, the research, the needs profile and the plan data as "Your answer". With no statement nothing is
+  recorded and no retry is sent: the requests are byte for byte as before.
 - The echo guard (`owner-echo.mjs`): a copy text copies the owner when it shares a run of four words in a row with the
   statement (a script written without spaces counts characters: 8 Han or Hiragana characters, 16 Katakana, Thai, Lao,
   Khmer or Myanmar characters; a character is classed by its script extensions, so the long vowel mark `ー` weighs as

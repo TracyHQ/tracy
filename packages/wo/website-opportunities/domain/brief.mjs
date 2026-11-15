@@ -1461,8 +1461,24 @@ function briefReading(reading, about, assetIds = null) {
       ? { uspThemesDropped: reading.uspThemesDropped.map((d) => ({ label: d.label, why: d.why })) }
       : {}),
     ...ownerFactsOfReading(reading),
+    // What the reading could not keep of the owner's statement, and why (`owner-quote-drops.mjs`): never its words.
+    ...ownerDropsOfReading(reading),
     // The contact values the owner typed (`owner-values.mjs`): values the site uses as typed, never copy.
     ...(reading.ownerValues ? { ownerValues: reading.ownerValues } : {})
+  }
+}
+
+/** The owner drops of a reading as the brief records them (group, why, detail, retry; never a label). */
+function ownerDropsOfReading(reading) {
+  const drops = (reading.ownerItemsDropped ?? []).map((d) => ({
+    group: d.group,
+    why: d.why,
+    ...(d.detail ? { detail: d.detail } : {}),
+    ...(d.retry ? { retry: d.retry } : {})
+  }))
+  return {
+    ...(drops.length ? { ownerItemsDropped: drops } : {}),
+    ...(reading.ownerQuoteRetry ? { ownerQuoteRetry: reading.ownerQuoteRetry } : {})
   }
 }
 

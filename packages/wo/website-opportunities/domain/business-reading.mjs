@@ -35,6 +35,7 @@ import { OFFERING_KIND_NOUNS, alternationOf, formsOf } from './trade-word-classe
 import { OWNER_STATEMENT_KIND, ownerPassageOf, withoutOwnerEcho } from './owner-statement.mjs'
 import { ownerLabelGrounded } from './owner-echo.mjs'
 import { heldPassagesOf } from './reading-held-passages.mjs'
+import { ownerDropOf, ownerPassageIn, ownerThemeDropsOf, textsByRef } from './owner-quote-drops.mjs'
 
 // 3: services and audience may stand on repeated mentions, items carry their mentions, facts are read, and the reading
 // also picks the business's sub-trade (`sub-trades.mjs`), reads its Google types and social category, and proposes up
@@ -296,7 +297,14 @@ export function checkBusinessReading(answer, sources, { trade = null, facts = []
     }
   }
   if (!parsed || typeof parsed !== 'object') return null
-  const byRef = new Map(sources.map((s) => [s.ref, s]))
+  // The owner's passage is also found under its kind; every owner item dropped is recorded (`owner-quote-drops.mjs`).
+  const byRef = textsByRef(sources)
+  const passage = ownerPassageIn(sources)
+  const ownerDrops = []
+  const ownerDrop = (at) => {
+    const d = ownerDropOf({ ...at, passage, quoted: quotedIn })
+    if (d) ownerDrops.push(d)
+  }
   const postOffers = postOfferCandidates(sources)
   const out = { services: [], audience: [], team: [], story: [], serviceAreas: [], facts: [], dropped: 0 }
   const labelOf = {
@@ -327,6 +335,7 @@ export function checkBusinessReading(answer, sources, { trade = null, facts = []
         (group !== 'facts' || source.kind !== 'review')
       if (!quoted) {
         out.dropped += 1
+        ownerDrop({ group, label, quote, source })
         continue
       }
       const mentions = MENTIONED_GROUPS.has(group) ? mentionsOf(raw?.mentions, label, source, byRef) : []
@@ -342,6 +351,7 @@ export function checkBusinessReading(answer, sources, { trade = null, facts = []
             REPEATED_MIN_SOURCES)
       ) {
         out.dropped += 1
+        ownerDrop({ group, label, quote, source, why: 'too_few_sources' })
         continue
       }
       const key = comparable(label)
@@ -396,6 +406,8 @@ export function checkBusinessReading(answer, sources, { trade = null, facts = []
   if (!usp.kept.length) out.uspThemesReason = usp.dropped ? 'rejected' : 'not_proposed'
   if (usp.droppedThemes.length) out.uspThemesDropped = usp.droppedThemes
   out.dropped += usp.dropped
+  ownerDrops.push(...ownerThemeDropsOf(parsed.uspThemes, usp.droppedThemes, byRef, passage))
+  if (ownerDrops.length) out.ownerItemsDropped = ownerDrops
   const sub = checkSubTrade(parsed.subTrade, trade, [...facts, ...sources])
   if (sub?.id) out.subTrade = sub
   else if (sub?.dropped) out.subTradeDropped = sub.dropped

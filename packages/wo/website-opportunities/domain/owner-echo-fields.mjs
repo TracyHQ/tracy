@@ -70,6 +70,13 @@ export const READING_FIELD_CLASSES = Object.freeze({
   subTrade: Object.freeze({ id: NAME, quotes: EVIDENCE }),
   // The reading's records of what it set aside: names of groups and fields, reasons, weights.
   uspThemesDropped: Object.freeze({ label: RECORD, why: RECORD }),
+  ownerItemsDropped: Object.freeze({
+    group: RECORD,
+    label: RECORD,
+    why: RECORD,
+    detail: RECORD,
+    retry: RECORD
+  }),
   ownerEchoDropped: Object.freeze({
     group: RECORD,
     field: RECORD,

@@ -24,6 +24,9 @@ import {
   withPostOfferings
 } from '../domain/business-reading.mjs'
 import { OWNER_STATEMENT_RULE, businessReadingSystemOf } from '../domain/owner-statement-prompt.mjs'
+import { OWNER_QUOTE_RETRY_SYSTEM, ownerQuoteRetryPrompt } from '../domain/owner-quote-prompt.mjs'
+import { needsOwnerQuoteRetry, ownerPassageIn } from '../domain/owner-quote-drops.mjs'
+import { withOwnerQuoteRetry } from '../domain/owner-quote-retry.mjs'
 import { OWNER_STATEMENT_KIND, ownerPassageOf } from '../domain/owner-statement.mjs'
 import { ownerValuesOf } from '../domain/owner-values.mjs'
 import { heldTextsOf } from '../domain/plan-withheld.mjs'
@@ -317,12 +320,9 @@ export async function readBusiness({
   if (!String(answer.text ?? '').trim()) return rules('empty', { model: ready.model })
   const read = checkBusinessReading(answer.text, sources, { trade, facts })
   if (!read) return rules('unreadable', { model: ready.model })
-  return done(
-    await retryUsp(
-      { version, method: 'model', model: ready.model, inputHash, at, ...read, ...owner },
-      { ready, sources, name: header, trade, charge, fetchImpl, log }
-    )
-  )
+  const first = { version, method: 'model', model: ready.model, inputHash, at, ...read, ...owner }
+  const call = { ready, sources, name: header, trade, charge, fetchImpl, log }
+  return done(await retryUsp(await retryOwnerQuotes(first, call), call))
 }
 
 /**
@@ -372,6 +372,39 @@ async function retryUsp(read, { ready, sources, name, trade, charge, fetchImpl, 
     if (!(error instanceof BudgetExceededError))
       log.warn?.('wo business reading USP retry failed', { error: error?.message })
     return { ...read, uspRetry: 'failed' }
+  }
+}
+
+/**
+ * The reading's one owner quote retry (D46, `domain/owner-quote-drops.mjs`): when an item of the owner's statement was
+ * dropped because its quote was not word for word in it, one short call on the statement alone, reserved on the ledger
+ * like the reading. A failed call (budget, network, an answer cut off) keeps the reading and its recorded drops, marked
+ * `ownerQuoteRetry: 'failed'`; never a second retry. No owner statement, never called.
+ */
+async function retryOwnerQuotes(read, { ready, sources, trade, charge, fetchImpl, log }) {
+  if (!needsOwnerQuoteRetry(read, sources)) return read
+  const prompt = ownerQuoteRetryPrompt(ownerPassageIn(sources), read.ownerItemsDropped)
+  try {
+    const answer = await charge(
+      {
+        operation: ready.model,
+        maxCents: businessReadingCeilingCents(ready.model, prompt, businessReadingMaxTokens(ready)),
+        actualCents: (r) =>
+          visionCostCents(ready.model, {
+            promptTokens: r.promptTokens,
+            completionTokens: r.completionTokens
+          }),
+        tokens: (r) => modelTokensOf([r.usage])
+      },
+      () => askText({ door: ready, system: OWNER_QUOTE_RETRY_SYSTEM, text: prompt, fetchImpl })
+    )
+    if (answer.finishReason === 'length') return { ...read, ownerQuoteRetry: 'failed' }
+    return withOwnerQuoteRetry(read, answer.text, sources, { trade })
+  } catch (error) {
+    if (controlError(error)) throw error
+    if (!(error instanceof BudgetExceededError))
+      log.warn?.('wo business reading owner quote retry failed', { error: error?.message })
+    return { ...read, ownerQuoteRetry: 'failed' }
   }
 }
 

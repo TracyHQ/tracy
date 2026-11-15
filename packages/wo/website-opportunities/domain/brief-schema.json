@@ -1128,6 +1128,24 @@
             }
           }
         },
+        "ownerItemsDropped": {
+          "description": "Optional (D46), for the record: each item the reading read from the owner's chat statement and could not keep, with its group, a short machine reason and what its one retry made of it. Never the text.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["group", "why"],
+            "properties": {
+              "group": { "type": "string" },
+              "why": { "type": "string" },
+              "detail": { "type": "string" },
+              "retry": { "enum": ["kept", "rejected"] }
+            }
+          }
+        },
+        "ownerQuoteRetry": {
+          "description": "Optional (D46), for the record: how the one owner quote retry ended.",
+          "enum": ["done", "failed", "unreadable"]
+        },
         "ownerEchoDropped": {
           "description": "Optional (D46), for the record: how many copy fields repeated the owner's chat statement and were dropped or kept as facts, and in which groups. Never the text.",
           "type": "object",
