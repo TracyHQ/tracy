@@ -202,17 +202,18 @@ test('the plan carries the look, the pictures summary, the assumptions and the l
   assert.deepEqual(plan.look, {
     template: { slug: 'example-court', name: 'Example Court', version: '1.0.0' },
     accent: '#1f7a4d',
-    logo: { kind: 'own', source: 'Instagram profile' }
+    logo: { kind: 'own', source: 'Tracy, based on the logo on your Instagram profile' }
   })
   // Frames: the hero photo, three gallery photos and one coach photo. Three own photos, the hero generated, and the
   // coach's spot shows the coach's initials: a picture of a person is never generated, and is not left out (#595).
   assert.deepEqual(plan.pictures.own, { frames: 3, from: ['Website', 'Google listing', 'Social profile'] })
   assert.equal(plan.pictures.generated.frames, 1)
   assert.ok(plan.pictures.generated.reason)
-  // The phone differs between sources: the default taken is an assumption the customer can correct.
+  // The phone differs between sources: the default taken is an assumption the customer can correct. The logo is one
+  // Tracy drew from the club's logo, said as such (never the club's own file).
   assert.deepEqual(
     plan.assumptions.map((a) => a.field),
-    ['facts[contact-phone].value', 'pages[team].name']
+    ['facts[contact-phone].value', 'look.logo', 'pages[team].name']
   )
   assert.deepEqual(
     plan.leftOut.map((e) => e.what),

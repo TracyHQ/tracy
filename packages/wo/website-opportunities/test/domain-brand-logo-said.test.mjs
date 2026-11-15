@@ -72,10 +72,12 @@ test('no logo in the research: "No logo was found" and the template accent, safe
   }
 })
 
-test('a used logo keeps its own look: an own logo and no logo sentence', () => {
+test('a used logo is a logo Tracy drew from it: never own, and one sentence that says so', () => {
   const record = brandLookOf({ ...harrowLaneBakery(), kit })
-  assert.equal(record.logo.kind, 'own')
-  assert.deepEqual(said(harrowLaneBakery(), 'look.logo'), [])
+  assert.equal(record.logo.kind, 'drawn')
+  const lines = said(harrowLaneBakery(), 'look.logo')
+  assert.equal(lines.length, 1)
+  assert.match(lines[0], /^Tracy drew a logo based on your logo/)
 })
 
 test('a safe version of a black and white logo says its buttons follow the logo, never the template', () => {

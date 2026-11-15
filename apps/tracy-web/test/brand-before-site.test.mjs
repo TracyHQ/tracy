@@ -75,7 +75,8 @@ test('the brand step runs on the research revision and the kit, and its brand fi
   )
   assert.equal(out.record.accent.hex, '#8a2c6c')
   assert.deepEqual(out.record.logo, {
-    kind: 'own',
+    kind: 'drawn',
+    reason: 'symbol-cut-from-logo',
     from: 'website',
     source: 'Website',
     mediaId: 'logo-hlb',

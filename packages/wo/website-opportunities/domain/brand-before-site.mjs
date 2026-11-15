@@ -15,6 +15,13 @@ import {
   researchLogoIdOf
 } from './brand-look-accent.mjs'
 import { unreadableSaid } from './brand-look-adjust.mjs'
+import {
+  DRAWN_LOGO_NAME,
+  LOGO_DRAWN,
+  drawnLogoSaid,
+  drawnReasonOf,
+  drawnSourceOf
+} from './brand-logo-drawn.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 
 export {
@@ -23,7 +30,8 @@ export {
   ACCENT_LOGO_UNMEASURED,
   ACCENT_LOGO_UNREADABLE,
   ACCENT_LOGO_WITHOUT_HUE,
-  ACCENT_NO_LOGO
+  ACCENT_NO_LOGO,
+  LOGO_DRAWN
 }
 
 /** The schema of the record `brandLookOf` returns, and the brand file version it reads (prompt v10). */
@@ -63,7 +71,8 @@ export const LOGO_MADE = 'made-temporary'
 
 /**
  * Whether the brand step set a temporary logo it made itself: a lettermark, or any mark with the owner task that asks
- * for the real logo (an icon in the accent with no logo). A logo rebuilt from the business's own logo is not.
+ * for the real logo (an icon in the accent with no logo). A logo rebuilt from the business's own logo is not: it is
+ * drawn (`brand-logo-drawn.mjs`), never own, whatever the file says, since the step never hands over the found file.
  */
 const madeLogo = (brandFile) =>
   brandFile.logo?.mark?.decision === 'lettermark' ||
@@ -76,9 +85,10 @@ const madeLogo = (brandFile) =>
  *   it ran on (`accentOfBrandFile`; required when the logo has no hue or its colour is adjusted); `minRatio` only to
  *   test the fallback of an adjusted colour
  * @returns {{schema: string, kit: string, name: string | null, accent: ReturnType<typeof accentOfBrandFile>,
- *   logo: {kind: 'own', from: string, source: string, mediaId: string, mark: string} |
- *     {kind: 'made', from: string, mark: string, mediaId: string | null}}} a `made` logo is the temporary one the step
- *   made; `mediaId` is the business's logo it could not use, or null when it has none
+ *   logo: {kind: 'drawn', reason: string, from: string, source: string, mediaId: string, mark: string} |
+ *     {kind: 'made', from: string, mark: string, mediaId: string | null}}} a `drawn` logo is one Tracy drew based on
+ *   the business's logo (`reason` per mark); a `made` logo is the temporary one the step made, `mediaId` the
+ *   business's logo it could not use, or null when it has none. Never `own`: no brand step output is the found file
  * @throws {BrandStepError} `brand_file_unreadable` (`noRerun`) when the file is not a brand file of the version read
  *   here, or its colours cannot be read with the kit
  */
@@ -100,7 +110,8 @@ export function brandLookOf({ brandFile, brief, kit, minRatio }) {
   const logo =
     usedId && !madeLogo(brandFile)
       ? {
-          kind: 'own',
+          kind: 'drawn',
+          reason: drawnReasonOf(mark),
           from: isText(chosen?.source) ? chosen.source : 'unknown',
           source: logoSourceName(chosen?.source),
           mediaId,
@@ -177,9 +188,14 @@ export function lookOfBrandRecord(template, record) {
   if (from === ACCENT_LOGO_UNREADABLE)
     assumptions.push({ id: 'accent', field: 'look.accent', said: unreadableSaid(accent, accentDark) })
   let logo
-  if (record.logo?.kind === 'own' && isText(record.logo.source)) {
-    logo = { kind: 'own', source: record.logo.source }
-    sources.logo = { from: record.logo.from, name: record.logo.source }
+  // A drawn logo stays an image logo on the plan (Contract B `own`: the write step places its file), said as drawn. A
+  // stored record of an earlier version that said `own` is the same brand step output and is read the same way.
+  if (['drawn', 'own'].includes(record.logo?.kind) && isText(record.logo.source)) {
+    const reason = record.logo.reason ?? drawnReasonOf(record.logo.mark)
+    const known = Object.values(LOGO_SOURCE_NAMES).includes(record.logo.source)
+    logo = { kind: 'own', source: drawnSourceOf(known ? record.logo.source : null) }
+    sources.logo = { from: LOGO_DRAWN, name: DRAWN_LOGO_NAME, reason }
+    assumptions.push({ id: 'logo', field: 'look.logo', said: drawnLogoSaid(reason) })
   } else if (record.logo?.kind === 'made') {
     logo = { kind: 'text' }
     sources.logo = { from: LOGO_MADE, name: 'A temporary logo made for you' }

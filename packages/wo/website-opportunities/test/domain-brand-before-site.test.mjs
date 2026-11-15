@@ -40,7 +40,7 @@ const compose = (record, extra = {}) => {
   return { model, run }
 }
 
-test('a website logo with a dark colour: the lifted accent and the own logo, each with where it came from', async () => {
+test('a website logo with a dark colour: the lifted accent and the logo Tracy drew from it, each with where it came from', async () => {
   const record = brandLookOf(harrowLaneBakery())
   assert.deepEqual(record.accent, {
     hex: '#8a2c6c',
@@ -50,7 +50,8 @@ test('a website logo with a dark colour: the lifted accent and the own logo, eac
     why: 'The plum of the logo has a visible hue.'
   })
   assert.deepEqual(record.logo, {
-    kind: 'own',
+    kind: 'drawn',
+    reason: 'symbol-cut-from-logo',
     from: 'website',
     source: 'Website',
     mediaId: 'logo-hlb',
@@ -58,25 +59,33 @@ test('a website logo with a dark colour: the lifted accent and the own logo, eac
   })
   const { plan, lookSources } = await compose(record).run
   assert.equal(plan.look.accent, '#8a2c6c')
-  assert.deepEqual(plan.look.logo, { kind: 'own', source: 'Website' })
+  assert.deepEqual(plan.look.logo, { kind: 'own', source: 'Tracy, based on the logo on your website' })
   assert.deepEqual(lookSources, {
     accent: { from: 'logo', name: 'Your logo' },
-    logo: { from: 'website', name: 'Website' }
+    logo: {
+      from: 'drawn-from-logo',
+      name: 'A logo Tracy drew, based on your logo',
+      reason: 'symbol-cut-from-logo'
+    }
   })
   assert.deepEqual(
     plan.assumptions.filter((a) => a.field.startsWith('look.')).map((a) => a.said),
-    ['Your plum was made lighter, same hue, so buttons stand out.']
+    [
+      'Your plum was made lighter, same hue, so buttons stand out.',
+      "Tracy drew a logo based on your logo: the symbol cut from your logo beside your business name, set in the template's font. It is not your logo file. Approve it, or send us your logo to replace it."
+    ]
   )
   assert.equal(checkBuildDocument(plan).ok, true)
   assert.deepEqual(lookProblemsOf({ plan, template: template(), lookSources }), [])
 })
 
-test('a words only logo found on Instagram: the logo colour as it is, the logo named by its source', async () => {
+test('a words only logo found on Instagram: the logo colour as it is, and a logo Tracy drew, never own', async () => {
   const record = brandLookOf(fernAndFoxglove())
   assert.equal(record.accent.hex, '#2f7d5b')
   assert.equal(record.accent.say, null)
   assert.deepEqual(record.logo, {
-    kind: 'own',
+    kind: 'drawn',
+    reason: 'new-symbol-drawn',
     from: 'instagram',
     source: 'Instagram profile',
     mediaId: 'logo-ff',
@@ -84,8 +93,14 @@ test('a words only logo found on Instagram: the logo colour as it is, the logo n
   })
   const { plan } = await compose(record).run
   assert.equal(plan.look.accent, '#2f7d5b')
-  assert.deepEqual(plan.look.logo, { kind: 'own', source: 'Instagram profile' })
-  assert.equal(plan.assumptions.filter((a) => a.field.startsWith('look.')).length, 0)
+  assert.deepEqual(plan.look.logo, {
+    kind: 'own',
+    source: 'Tracy, based on the logo on your Instagram profile'
+  })
+  assert.deepEqual(
+    plan.assumptions.filter((a) => a.field.startsWith('look.')).map((a) => a.field),
+    ['look.logo']
+  )
 })
 
 test('no logo at all: the made logo and the template accent, each said and recorded as the no logo case', async () => {

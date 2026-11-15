@@ -187,6 +187,7 @@ export {
   BRAND_FILE_VERSION,
   BRAND_LOOK_SCHEMA,
   BrandStepError,
+  LOGO_DRAWN,
   LOGO_MADE,
   brandLookOf,
   isBrandLook,
