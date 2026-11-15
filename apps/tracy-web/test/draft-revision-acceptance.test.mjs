@@ -119,7 +119,7 @@ test('3. the previous build can be restored: the whole memory site equals its sn
   const restored = await restoreOf(first, build, { runId: 'restore-larkspur' })
   assert.equal(restored.status, 'done')
   assert.deepEqual(snapshotOf(first.memory), before)
-  assert.deepEqual(restored.left, { uploads: [], assignments: [] })
+  assert.deepEqual(restored.left, { uploads: [], assignments: [], hidden: [], kept: [] })
   assert.equal(restored.current.ref, first.ref)
   assert.equal(restored.current.write.state.seq, build.write.state.seq + 1)
   assert.equal(first.builds.currentRef, first.ref)

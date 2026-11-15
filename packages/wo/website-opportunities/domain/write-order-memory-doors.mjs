@@ -1,22 +1,21 @@
 // A blank site in memory behind the draft write's doors (ticket #597), the sibling of `write-order-memory-site.mjs`:
 // the store records as the blank site keeps them (the blank site contract's lock rows), the contract slots (its content
 // map), the HTML pieces (`write-order-memory-html.mjs`) and the refusals measured on a real blank site
-// (`write-order-memory-rules.mjs`), ENFORCED so a plan or a step that breaks one fails its test.
-//
-// Replay, as measured on plugin 0.24.85 (docs/references/ai-quickstart-contract.md, "Replaying a request"): only
-// `content.contract` keeps answers, under its apply id with its request id (the apply id when none is sent) and a hash
-// of what it asked (`changes`, `removes`; never `expectedRevision`). The same apply id and request id with the same
-// content answer the first answer again, whatever revision is sent; with other content, or a new request id under the
-// same apply id, `contract_failed`. `content.update`, `media.upload` and `site.identity` keep no replay: the same apply
-// id writes again on every call (`steps(applyId)` counts them, as `apply.list` does), so only the run record keeps a
-// resumed run from making a record twice.
-//
-// Pure apart from its own memory. Scripted failures: `fail` (the n-th mutating call throws before it acts) and `crash`
-// (`n` or `{at: n, before?}`: the n-th call acts, or not when `before`, then dies `fatal`). Spec: draft-write-step.md.
+// (`write-order-memory-rules.mjs`), ENFORCED so a plan or a step that breaks one fails its test. Replay, as measured on
+// plugin 0.24.85 (docs/references/ai-quickstart-contract.md, "Replaying a request"): only `content.contract` keeps
+// answers, under its apply id with its request id (the apply id when none is sent) and a hash of what it asked
+// (`changes`, `removes`; never `expectedRevision`). The same apply id and request id with the same content answer the
+// first answer again, whatever revision is sent; with other content, or a new request id under the same apply id,
+// `contract_failed`. `content.update`, `media.upload` and `site.identity` keep no replay: the same apply id writes
+// again on every call (`steps(applyId)` counts them, as `apply.list` does), so only the run record keeps a resumed run
+// from making a record twice. Pure apart from its own memory. Scripted failures: `fail` (the n-th mutating call throws
+// before it acts) and `crash` (`n`, `{at: n, before?}`: the n-th call acts, or not when `before`, then dies `fatal`).
+// Undo doors (hide, unassign, deleteMedia): `write-order-memory-undo.mjs`. Spec: draft-write-step.md.
 import { createHash } from 'node:crypto'
 import { memoryHtml } from './write-order-memory-html.mjs'
 import { memorySheetsOf } from './write-order-memory-sheets.mjs'
 import { checkContract, checkUpdate, DoorRefusal, storedIdentity } from './write-order-memory-rules.mjs'
+import { memoryUndoDoors } from './write-order-memory-undo.mjs'
 
 export { memoryHtml }
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -187,6 +186,7 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
     // The template's stylesheets (`write-order-memory-sheets.mjs`).
     sheets: async ({ variables } = {}) => memorySheetsOf(variables)
   }
+  Object.assign(doors, memoryUndoDoors({ doors, site: { records, slots, uploads }, act }))
   return {
     doors,
     site: { records, slots, assignments, uploads, identity },

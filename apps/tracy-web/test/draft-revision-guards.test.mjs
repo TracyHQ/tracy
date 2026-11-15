@@ -47,12 +47,12 @@ test('the previous build record never runs another plan; a revision record never
   assert.equal(first.memory.calls, calls)
 })
 
-test('a write plan that drops an operation of the previous build stops typed before any door', async () => {
+test('a write plan that drops a place written in place stops typed before any door, naming the door', async () => {
   const first = await firstBuild()
   const partial = await revisionRun(first, revisedBy('rename a service'))
   const order = partial.run.order.order
   const plan = writePlanOf(order, partial.run.kit.aiq, { stored: storedOf(order) })
-  const gone = plan.ops.find((op) => op.kind === 'article.create')
+  const gone = plan.ops.find((op) => op.kind === 'contract.apply')
   const cut = { ...plan, ops: plan.ops.filter((op) => op !== gone) }
   const calls = first.memory.calls
   const out = await runRevisionWrite({
@@ -64,6 +64,7 @@ test('a write plan that drops an operation of the previous build stops typed bef
     openStored: async () => ({})
   }).catch((e) => e)
   assert.equal(out.code, 'revision_needs_removal')
+  assert.deepEqual(out.details.doors, ['contract.removes'])
   assert.equal(out.noRerun, true)
   assert.equal(first.memory.calls, calls)
 })

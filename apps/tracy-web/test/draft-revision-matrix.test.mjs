@@ -2,8 +2,8 @@
 // on its own block only, and one that quotes in a long paragraph what another block of the page shows), the site a
 // revision run leaves is the site a full build of the new revision writes on a new blank site (records, slots, pages,
 // identity, and files but exactly those the revision reports as shown by nothing), the restore brings the site before
-// back or stops typed for what no door undoes, and an edit that would take something off the site stops typed at the
-// plan step, before any model call or door. The table is printed (`draft-revision-matrix-print.mjs` prints it alone,
+// back or stops typed for what no door undoes, and an edit that takes something off the site hides or unassigns it
+// (#599): its site equals the full build once what it hid is set aside, and its restore shows it again. The table is printed (`draft-revision-matrix-print.mjs` prints it alone,
 // with a writer that gives new words on every call too).
 //
 //   node --test --test-concurrency=1 apps/tracy-web/test/draft-revision-matrix.test.mjs
@@ -13,11 +13,10 @@ import { EDITS } from './draft-revision-edits.mjs'
 import { MORE_EDITS } from './draft-revision-edits-more.mjs'
 import { matrixRow } from './draft-revision-run.mjs'
 
-/** The edits that take something off the site: a typed stop at the plan step. */
+/** The edits that take something off the site: it is hidden or put on no page, never deleted. */
 const REMOVALS = new Set(['remove a service', 'take a block off a page', 'empty a block list'])
 /** The edits whose restore stops typed, and why: everything else is restored to the site before. */
 const RESTORE_STOPS = {
-  'add a service': 'stop: restore_needs_removal',
   'hold a reviewer': 'stop: restore_shows_held_text',
   'hold the business name': 'stop: restore_shows_held_text',
   // The reviews block the revision wrote over signed her as `Wenna C.`: writing it back would show her again.
@@ -52,15 +51,10 @@ console.log(
   ].join('\n')
 )
 
-test('every edit, both writers: the site equals a full build of the revision, or the revision stops typed at the plan step', () => {
+test('every edit, both writers: the site equals a full build of the revision, what it hid set aside', () => {
   assert.equal(rows.length, 2 * (Object.keys(EDITS).length + Object.keys(MORE_EDITS).length))
   for (const row of rows) {
     const at = `${row.writer}: ${row.edit}`
-    if (REMOVALS.has(row.edit)) {
-      assert.equal(row.stop, 'revision_needs_removal', at)
-      assert.deepEqual([row.writes, row.model], [0, 0], at)
-      continue
-    }
     assert.equal(row.stop, undefined, `${at}: ${row.stop}`)
     // The site of a full build given the words the revision kept: a block it kept may still quote a value that is
     // still true (the quoting writer), and a row of another item in a changed block keeps its words (both writers,
@@ -87,12 +81,12 @@ test('changing nothing calls no model and no door; one edit writes less than a b
 })
 
 test('a page with no changed block and no quoted old value is never sent to the writer', () => {
-  for (const row of rows.filter((r) => !r.stop))
-    assert.equal(
-      Object.keys(row.pages).length,
-      row.written,
-      `${row.writer}: ${row.edit} ${JSON.stringify(row.pages)}`
-    )
+  for (const row of rows.filter((r) => !r.stop)) {
+    const at = `${row.writer}: ${row.edit} ${JSON.stringify(row.pages)}`
+    // A page whose only change is a block taken off asks no block: nothing of it is written again.
+    if (REMOVALS.has(row.edit)) assert.ok(Object.keys(row.pages).length <= row.written, at)
+    else assert.equal(Object.keys(row.pages).length, row.written, at)
+  }
 })
 
 test('an edit inside one block asks that block only: the other blocks of its page take no model call (#599)', () => {

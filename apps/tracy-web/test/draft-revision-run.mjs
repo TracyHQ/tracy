@@ -14,6 +14,7 @@ import {
   stepsOf
 } from './draft-revision-fixtures.mjs'
 import { snapshotOf } from './draft-write-fixtures.mjs'
+import { withoutHiddenMade } from './draft-revision-sweep.mjs'
 
 const failed = (promise) =>
   promise.then(
@@ -90,11 +91,12 @@ export async function freshBuild(revised, { writer = {}, pictures, memory = blan
 /**
  * Whether the site of a revision run shows what a full build of the revision shows: equal records, slots, pages and
  * identity, and equal files once the files the revision reports as shown by nothing (`report.delta.orphaned`) are set
- * aside: exactly those, no more and no fewer (no door deletes a file; nothing shows them).
+ * aside: exactly those, no more and no fewer (a revision deletes no file; nothing shows them), and once the records
+ * the revision hid or put on no page (#599: a full build never made them) are set aside.
  */
 export function sameSite(partial, fresh, orphaned = []) {
-  const a = canonicalOf(partial)
   const b = canonicalOf(fresh)
+  const a = withoutHiddenMade(canonicalOf(partial), b)
   const shown = new Set(b.uploads.map(([path]) => path))
   const left = a.uploads.filter(([path]) => !shown.has(path)).map(([path]) => path)
   a.uploads = a.uploads.filter(([path]) => shown.has(path))
@@ -113,9 +115,7 @@ export const restoreOf = (
 
 /** Whether a restored site is the snapshot taken before the revision, but for the files the revision uploaded. */
 export function restoredTo(memory, snapshot, build) {
-  const now = snapshotOf(memory)
-  const left = new Set(build.write.state.undo.uploads)
-  now.uploads = now.uploads.filter(([path]) => !left.has(path))
+  const now = withoutHiddenMade(snapshotOf(memory), snapshot, build.write.state.undo.uploads)
   return JSON.stringify(now) === JSON.stringify(snapshot)
 }
 

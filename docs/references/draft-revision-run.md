@@ -110,8 +110,9 @@ writer) may keep a quote of a value that is still true where a full build would 
 The result: `{schema, full, write: [{page, reasons}], reuse: [page], blocks: [{page, block, reasons}], unaffected,
 removed, removals, staleReplies}`. `removals` lists what the revision takes off the site: pages, blocks (removed, or
 whose data list is emptied: such a block is no longer placed) and items the previous build made a record for (an
-operation of a kind that makes a record keyed `<kind>:<item id>`; a review quote makes none). Any removal stops the
-plan step (`revision_needs_removal`) before any model call.
+operation of a kind that makes a record keyed `<kind>:<item id>`; a review quote makes none). The plan step no longer
+stops on them: the write step hides or unassigns what the revision takes off ("Taking things off a site" below), and
+the run record counts them (`revision.removals`).
 
 ## The write delta (`writeDeltaOf`)
 
@@ -122,8 +123,9 @@ Each operation of the new write plan is compared by key with the ops record of t
 | `same` | same effect hash | skipped (`report.kept`) |
 | `rewrite` | effect changed | written again in place (`record.patch`, `contract.apply`, `site.identity`, or the record it made) |
 | `added` | new key | made as in a build |
-| `removed`, `dropped` | gone from the plan | stop `revision_needs_removal` (unproven `record_removal_no_door`) |
-| `orphaned` | a picture upload nothing shows any more | its file stays; no door needed |
+| `removed` | gone from the plan | hidden or put on no page after the writes ("Taking things off a site"); a place written in place stops `revision_needs_removal` before any door |
+| `dropped` | an address a record written in place no longer gets | stop `revision_needs_removal` (door `contract.removes` for a slot), before any door |
+| `orphaned` | a picture upload nothing shows any more | its file stays, for the restore that shows it again |
 
 An upload is compared without its alt text, and with the sha256 of its stored bytes (the write step of the draft
 steps adds it to every stored entry, opening the bytes when `stored(order)` does not give it): new bytes under the same
@@ -190,15 +192,18 @@ resumes a crash. At the end the previous build, its write count past the revisio
 **What a restore cannot undo** (a typed stop, noRerun, before any door):
 
 - a build the site no longer holds: `previous_build_not_current`;
-- a record the revision made (a new item, page or copy): `restore_needs_removal`, no door removes a record;
+- a make whose id the revision never saved (`pending`), or a made record of a kind no hide covers:
+  `restore_needs_removal`;
 - a contract slot the revision took out: same stop;
 - a place whose value before names a text the revision's profile holds, on any leaf and in any form, or kept as
   `HELD_BEFORE`: `restore_shows_held_text`; the hold wins;
 - a place edited outside Tracy since the revision: `restore_site_changed`.
 
-A file the revision uploaded stays on the site, shown by nothing; it is listed in `left.uploads`. A module that had no
-assignment before is written back with an empty page list (`"[]"`), listed in `left.assignments`: that value is not
-measured on a real site (below).
+A record the revision made is hidden (a made module put on no page), after the places; its key is in `left.hidden`. A
+file the revision uploaded is deleted once its dry run names no record but those (`media.delete`); a file another
+record names, or one the site refused to delete, stays, listed in `left.uploads` and with why in `left.kept`
+(`used_elsewhere` with `usedIn`, `door_not_available`, or the refusal's code). A module that had no assignment before
+is written back with an empty page list (`"[]"`, the measured "no page"), listed in `left.assignments`.
 
 ## Abandoning a crashed revision (`abandonRun`)
 
@@ -214,10 +219,9 @@ Tracy's half write). Two ways out:
   `restore_shows_held_text`), crash safe (its own record `{abandon, done}`, apply ids `<runId>:abandon:<place>`), then
   ends the mark. The site holds the current build again; the current build does not change.
 
-What an abandon cannot roll back, a typed stop before any door: a run that sent a make (a new item or page; the
-journal keeps `undo.making` before the call, so a make whose id was never saved still counts) or took a slot out:
-`restore_needs_removal`, as for a restore; such a run can only be resumed. Files the run uploaded stay
-(`left.uploads`).
+An abandon hides the records the run made and deletes the files it uploaded, as a restore does. What it cannot roll
+back, a typed stop before any door: a make whose id the run never saved (`pending`: the record may exist and no id
+names it) or a slot it took out: `restore_needs_removal`, as for a restore; such a run can only be resumed.
 
 A run marked from a build the site no longer holds (a restore moved the site on, or a store answered `begin` without
 comparing the build) can never be kept, so it can never be resumed to its end. Its abandon answers `stale: true`: it
@@ -229,24 +233,46 @@ site holds now is the base, and only the keys Tracy owns (the shape it wrote) ar
 everything inside a value Tracy wrote as an empty object, stays (`step-chain-draft-owned-keys.js`). A revision that
 would write over a key the owner set stops `site_changed_outside`.
 
-## Removal: the door Part 1 has not measured
+## Taking things off a site
 
-A revision that takes a page, a block, a block's whole list or an item off the site, and a restore of a revision that
-made a record, stop typed. The contract measures writes only: `docs/references/ai-quickstart-contract.md` and
-`scripts/ai-quickstart/copy-proof.mjs` set `published: 1` (modules, menu items, categories) and `state: 1` (articles)
-when a record is made, and set `menuids` to a page list or `"[0]"`; no proof writes `published` or `state` to `0` on a
-record that exists, nor `menuids` to an empty list, and none reads what a visitor then sees. So removal stays a typed
-stop, and the memory site does not model a published state. The question for Part 1:
+The doors (`siteDoors`, measured on plugin 0.24.85, [ai-quickstart-contract.md](ai-quickstart-contract.md) "Door
+measurements"): `hide` (`content.update` `published: 0`, an article `state: 0`: the record stays, shown on no page,
+its address 404, and publishing it again brings it back as it was), `unassign` (`moduleAssignment` `menuids: "[]"`,
+the one "no page" value) and `deleteMedia` (a picture under `images/`, with a dry run naming the records that use it).
+`deleteRecord`, `revertDelete` and `contract.removes` answer `DOOR_NOT_AVAILABLE`: nothing is ever deleted.
 
-> On the blank site restored on a real Joomla with the Claude Cowork plugin, does `content.update {kind, id, fields:
-> {published: 0}}` (modules, menu items, categories) and `{state: 0}` (articles; contacts: `published: 0`) on a record
-> the build made take it off every page a visitor sees, with `content.get` reading the value back? And does
-> `content.update {kind: "moduleAssignment", id, fields: {menuids: "[]"}}` leave the module on no page (no assignment
-> row, or one that lists none)? Which value does the plugin accept for "no page", and does it warn
-> `Module assignment drift` for a store record written in place?
+| Case | Door | What happens |
+|---|---|---|
+| an item taken off the plan: its article, or a page's article | `hide` | the article reads `state: 0` |
+| its row in a list block | none needed | the block's copy is written again whole, without the row |
+| a page taken off: its menu item | `hide` | the menu item reads `published: 0` |
+| a category or a contact no longer made | `hide` | `published: 0` |
+| a block or a section taken off, a block's list emptied (a copy, a library block) | `unassign` | `menuids: "[]"` |
+| a store module no page shows any more | `unassign` | `"[]"`, the blank site's own value; its slots keep their words, shown on no page (`left_on_no_page`) |
+| the tab position of a module put on no page | none needed | `left_on_no_page` |
+| a picture no longer used | none | its file stays (`delta.orphaned`): the restore of the previous build shows it again, and no door brings a deleted file back |
+| a contract slot, a record patch or the identity no longer written, or an address a rewritten in place operation no longer gets | `contract.removes` (slot) or none | typed stop `revision_needs_removal` before any door, naming the door |
+| restore or abandon: a record the revision made | `hide` (a module: `unassign`) | after the places are written back; `left.hidden` |
+| restore or abandon: a record the revision hid, a module it put on no page | `content.update` | written back from the journal like any place: published again with its earlier value, its pages back |
+| restore or abandon: a file the revision uploaded | `deleteMedia` after its dry run | deleted when the dry run names no record but those the undo hid; else kept, with why |
+| restore or abandon: a make whose id was never saved | none | typed stop `restore_needs_removal` |
+| restore or abandon: a slot the revision took out | `contract.removes` | typed stop `restore_needs_removal` |
 
-With those measured, the forward case (`revision_needs_removal`) and the restore of a revision that made records
-(`restore_needs_removal`) can unpublish and unassign, journaled and read back like every other place.
+The acts of a revision (`step-chain-draft-removal.js`, `step-chain-draft-removal-run.js`) run after its writes, each
+through the journal (`journaledDoors` `hide`, `unassign`), so `state.undo` keeps what the place held before, and
+`state.removal` keeps every act with the operations it settles (`{acts: [{key, door, kind, id, ops}], done}`). Owner
+safety is the write's: every act is checked before any door writes, and again before it runs: every place of the
+record a build or this run wrote must hold what was written (or, after a crash, the hidden column 0), else
+`site_changed_outside` and nothing is hidden over the edit. Only a record some build on this site made is hidden; a
+store module is only put back on no page, the value the blank site ships. An act is read back, tried twice, then
+`redo_failed` (noRerun); the same record resumes. A door client with no `hide` or `unassign` stops
+`door_not_available` before any door. The report says what was hidden (`flags`: `hidden_not_deleted`,
+`on_no_page_not_deleted`, `left_on_no_page`). A restore or an abandon checks a made record the same way
+(`restore_site_changed`, `site_changed_outside`).
+
+A plan revision with removals now spends its writer calls before the write step can stop on a case with no door; in
+the florist matrix none reaches that stop. The memory site models the three doors as measured
+(`write-order-memory-undo.mjs`).
 
 ## What the caller passes
 
@@ -314,7 +340,9 @@ the run records of the earlier runs (`deps.draftWrite.record`) and the step chai
 stores; the undo journal never keeps a held value (`HELD_BEFORE`).
 - The write step's value may carry `flags` (also in `recorded.flags`): `[{code: 'held_file_left_on_site', places:
   [{op: 'held:<12 hex>', file}]}]`: a held item's picture an earlier build uploaded is still a public file of the
-  site, and no measured door deletes it. The caller must show it to the owner, with the file path.
+  site: a revision deletes no file (its restore would need it, and no door brings a deleted file back). The caller must
+  show it to the owner, with the file path. The write step's value also carries the removal flags (`hidden_not_deleted`,
+  `on_no_page_not_deleted`, `left_on_no_page`, with the operation keys).
 
 ## Typed stops
 
@@ -322,9 +350,9 @@ At the plan step, before any model call: `site_already_built`, `previous_run_unf
 `previous_build_doors_missing`, `previous_build_not_current`,
 `previous_build_missing`, `previous_build_unreadable` (any part a revision reads has another shape than
 `buildResultOf` writes, or the store threw), `previous_build_unfinished`, `previous_build_other_plan`,
-`previous_build_other_kit`, `revision_needs_removal`. At the write step: `previous_build_not_current` (checked again
+`previous_build_other_kit`. At the write step: `previous_build_not_current` (checked again
 before the first door call, and when `keep` finds another build), `previous_run_unfinished`, `revision_needs_removal`,
-`site_changed_outside`, `write_record_stale`, `redo_failed`. At the abandon: `abandon_not_unfinished`,
+`door_not_available`, `site_changed_outside`, `write_record_stale`, `redo_failed`. At the abandon: `abandon_not_unfinished`,
 `previous_build_not_current`, `restore_needs_removal`, `restore_shows_held_text`, `site_changed_outside`,
 `abandon_failed`. At the restore: `previous_build_doors_missing`,
 `previous_build_not_current`, `previous_build_missing`, `restore_not_a_revision`, `restore_needs_removal`,
@@ -350,7 +378,11 @@ with the `plain` and the `cross` writer, equals a fresh full build. Change nothi
 ## Unproven without a real site
 
 - Every result above is on the memory site; no real Joomla site has run a revision or a restore.
-- No measured door removes a record or puts a slot back, so removal stops typed (the question above).
+- No door deletes a record or puts a slot back: a record is hidden, a module put on no page, and a place written in
+  place that a revision no longer writes stops typed ("Taking things off a site").
+- What a visitor sees of a hidden record and a module on no page is measured on JA Boxing only; a hidden menu item with
+  child items, and a hidden category that still holds a published article, are not measured.
+- A media delete of a picture a page still uses is not measured; the restore never sends one (its dry run first).
 - An outside edit is only seen at a place a build wrote; a place no build wrote holds what the blank site had.
 - Joomla's own forms of a JSON column are modelled by the memory site (`draft-revision-site-forms.mjs`: keys added,
   slashes escaped, spacing, and `alternatingSite`: another encoding on every save, so a restore that compared the text

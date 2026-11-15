@@ -16,7 +16,10 @@ const DOORS = [
   'media',
   'identity',
   'readIdentity',
-  'sheets'
+  'sheets',
+  'hide',
+  'unassign',
+  'deleteMedia'
 ]
 
 /** The factory: the doors of `runDraftWrite`, each one call through `send`; `html` stays in this process. */

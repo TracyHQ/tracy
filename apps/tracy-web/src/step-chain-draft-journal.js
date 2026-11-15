@@ -15,7 +15,7 @@
 //   assignments  `<module id>` -> the module's pages before, or null when it had none
 //   slots        `<slot key>` -> the slot's value before; `removed`: the slots the run took out (no door puts one back)
 //   identity     `<field>` -> the site identity value before
-//   uploads      the paths the run uploaded that held no file before (no door deletes a file)
+//   uploads      the paths the run uploaded that held no file before (a restore deletes them when nothing names them)
 // A value before that names a text the revision holds is never kept: `HELD_BEFORE` stands in for it, and the restore
 // stops on it (`restore_shows_held_text`). A record the run MADE needs nothing kept: it is every id of the run record
 // the previous build did not have.
@@ -162,6 +162,15 @@ export function journaledDoors(doors, record, options = {}) {
         await save()
       }
       return doors.identity(call)
+    },
+    // A hide or an unassign (#599, `step-chain-draft-removal.js`) is a write over a place like any other: journaled.
+    async hide(call) {
+      await keepRecord(call.kind, call.id, { [call.kind === 'article' ? 'state' : 'published']: 0 })
+      return doors.hide(call)
+    },
+    async unassign(call) {
+      await keepRecord('moduleAssignment', call.id, { menuids: '[]' })
+      return doors.unassign(call)
     },
     async upload(call) {
       if (!undo().uploads.includes(call.path) && (await doors.media({ path: call.path })) === null) {

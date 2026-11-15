@@ -8,7 +8,7 @@
 //             nothing written: the site then needs a full build on a new blank site), and works out which pages the
 //             writer writes again (`revisionImpactOf`). A previous build with no kept copy writes every page again,
 //             said in the record. A revision that takes a page, a block, a block's whole data list or an item off the
-//             site stops here (`revision_needs_removal`), before any model call: no measured door removes a record.
+//             site goes on: the write step hides or unassigns what it no longer has (`impact.removals` in the record).
 //   copy      writes those pages only, and of a page whose only change is in some blocks those blocks only (the
 //             others ride along as read only context, `reuseOf`); every other page and block keeps its words with no
 //             model call; every page is checked whole and together (the copy check and the whole site check)
@@ -19,7 +19,7 @@
 import { createHash } from 'node:crypto'
 import { revisionBaseProblem } from 'website-opportunities/domain/build-result.mjs'
 import { PAGE_WRITER_PROMPT } from 'website-opportunities/domain/page-writer.mjs'
-import { hasRemovals, keptWordsOf, revisionImpactOf } from 'website-opportunities/domain/revision-impact.mjs'
+import { keptWordsOf, revisionImpactOf } from 'website-opportunities/domain/revision-impact.mjs'
 import { keptModel } from 'website-opportunities/domain/revision-model-replay.mjs'
 import { draftError } from './step-chain-draft-source.js'
 
@@ -91,19 +91,6 @@ export async function revisionOf(deps, ctx, { kit, plan, profile }) {
     mapping: kit.aiq.mapping ?? undefined,
     promptSha256: PROMPT_SHA256
   })
-  // Taking a page, a block or an item off the site takes records off it: no measured door does that, so no model work
-  // is spent (`docs/references/draft-revision-run.md`, the door Part 1 has not measured).
-  if (hasRemovals(impact.removals))
-    throw draftError(
-      'revision_needs_removal',
-      'the revision takes pages, blocks or items off the site; no measured door removes a record',
-      {
-        pages: impact.removals.pages,
-        blocks: impact.removals.blocks.map((b) => `${b.page}/${b.block}:${b.why}`),
-        items: impact.removals.items.length,
-        unproven: 'record_removal_no_door'
-      }
-    )
   const stale = new Set(impact.staleReplies)
   const replies = list(build.replies).filter((r) => !stale.has(r.key))
   return { previous: build, impact, replies }
@@ -134,7 +121,12 @@ export const revisionRecordOf = (revision) =>
     reuse: revision.impact.reuse,
     blocks: revision.impact.blocks.length,
     unaffected: revision.impact.unaffected.length,
-    staleReplies: revision.impact.staleReplies.length
+    staleReplies: revision.impact.staleReplies.length,
+    removals: {
+      pages: revision.impact.removals.pages.length,
+      blocks: revision.impact.removals.blocks.length,
+      items: revision.impact.removals.items.length
+    }
   }
 
 /**

@@ -17,7 +17,7 @@ export function durable() {
   }
 }
 
-const WRITES = ['update', 'contract', 'identity', 'upload']
+const WRITES = ['update', 'contract', 'identity', 'upload', 'hide', 'unassign', 'deleteMedia']
 /** Doors that die (`fatal`, code `crash`) at their `at`-th writing call, after it acted or `before` it did. */
 export function crashingDoors(doors, at, before = false) {
   let n = 0
@@ -34,10 +34,27 @@ export function crashingDoors(doors, at, before = false) {
   return out
 }
 
-/** A site's snapshot without the files a run left (`left`: their paths), to compare with the snapshot before it. */
-export function uploadsLeft(memory, _snapshot, left = []) {
-  const now = snapshotOf(memory)
+/**
+ * A site's snapshot without the files a run left (`left`: their paths) and without the records the run made that the
+ * undo hid or put on no page (absent from `snapshot`, hidden), to compare with the snapshot before it.
+ */
+export function uploadsLeft(memory, snapshot, left = []) {
+  return withoutHiddenMade(snapshotOf(memory), snapshot, left)
+}
+
+/** `now` (a snapshot) less the files `left` and the records absent from `before` that read hidden or on no page. */
+export function withoutHiddenMade(now, before, left = []) {
   const gone = new Set(left)
   now.uploads = now.uploads.filter(([path]) => !gone.has(path))
+  const had = (kind, id) => (before?.records?.[kind] ?? []).some(([i]) => i === id)
+  const hidden = (r) => r.published === 0 || r.state === 0
+  const offPage = new Set(
+    now.assignments.filter(([id, m]) => m.length === 0 && !had('module', id)).map(([id]) => id)
+  )
+  for (const kind of Object.keys(now.records))
+    now.records[kind] = now.records[kind].filter(
+      ([id, r]) => had(kind, id) || !(hidden(r) || (kind === 'module' && offPage.has(id)))
+    )
+  now.assignments = now.assignments.filter(([id]) => !offPage.has(id))
   return now
 }

@@ -5,8 +5,8 @@
 //
 // What a restore cannot undo, said before any door (a typed stop, noRerun, nothing written):
 //   - the revision is not the build the site holds now (`builds.current(ctx)`): `previous_build_not_current`;
-//   - a record the revision MADE (a new page, item or copy): no measured door removes it (`restore_needs_removal`,
-//     unproven `record_removal_no_door`);
+//   - a make whose id the run never saved (`pending`), or a made record of a kind no hide covers: no id or no door to
+//     take it off (`restore_needs_removal`, unproven `record_removal_no_door`);
 //   - a slot the revision took out (`removes`): no door puts an element back (same stop).
 //   - a place whose value before names a text the revision's profile holds (a held person, the held business name),
 //     on any leaf and in any form (`revision-text-forms.mjs`), or kept as `HELD_BEFORE`: the restore would show it
@@ -14,7 +14,9 @@
 //   - a place that holds another value than the revision wrote: someone edited it outside Tracy since
 //     (`restore_site_changed`, naming the place, never the text). A place that already holds its value before was
 //     restored by a crashed attempt of this restore and is written again, unchanged.
-// A file the revision uploaded stays on the site, shown by nothing once the restore is done: listed in `left.uploads`.
+// A record the revision MADE is hidden (a module put on no page), never deleted, after the places (`left.hidden`); a
+// file it uploaded is deleted (`media.delete`) once its dry run names no record but those, else it stays, listed in
+// `left.uploads` with why (`left.kept`). A site whose door client lacks hide or unassign stops `door_not_available`.
 //
 // Each place is restored once: its own apply id `<run>:restore:w<seq>:<place>`, done places kept in the restore's own
 // record `{restore, done}` so a crashed restore resumes; each is read back; a failing place is tried twice, then the
@@ -22,6 +24,7 @@
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { ownedColumnOf, shapeUnion } from './step-chain-draft-owned-keys.js'
 import { placeHolds } from './step-chain-draft-place-value.js'
+import { deleteUpload, missingDoorOf, undoAct } from './step-chain-draft-removal-run.js'
 import { checkUnchanged, restorePlanOf } from './step-chain-draft-restore-plan.js'
 
 export { restorePlanOf }
@@ -51,8 +54,10 @@ async function ownedFieldsOf(place, doors, state) {
   return out
 }
 
-/** One place written back and read back. */
-async function restorePlace(place, doors, applyId, state) {
+/** One place written back and read back; a record the run made hidden; a file it uploaded deleted when unused. */
+async function restorePlace(place, doors, applyId, state, record) {
+  if (place.type === 'hide' || place.type === 'unassign') return undoAct(place, doors, applyId)
+  if (place.type === 'media') return deleteUpload(place, doors, applyId, (record.state.left ??= []))
   if (place.type === 'record') {
     const fields = await ownedFieldsOf(place, doors, state)
     await doors.update({ applyId, kind: place.kind, id: place.id, fields })
@@ -90,7 +95,7 @@ export async function writeBack({ places, doors, record, state, applyId, failed,
     await checkUnchanged(place, doors, state, changed)
     for (let attempt = 1; ; attempt++) {
       try {
-        await restorePlace(place, doors, applyId(place), state)
+        await restorePlace(place, doors, applyId(place), state, record)
         break
       } catch (error) {
         if (error?.fatal) throw error
@@ -142,6 +147,11 @@ export async function restoreBuild({ build, previous = null, doors, record, runI
       { made: list(plan.made), removed: list(plan.removed) },
       { unproven: plan.stop === 'restore_needs_removal' ? [{ code: 'record_removal_no_door' }] : [] }
     )
+  const missing = missingDoorOf(
+    plan.places.filter((p) => p.type !== 'media'),
+    doors
+  )
+  if (missing) throw Object.assign(missing, { report: { status: 'failed', restored: 0, unproven: [] } })
   const before = previous ?? (await builds.read?.(build.previous, ctx))
   if (!before?.write?.state)
     throw stop('previous_build_missing', 'the build before this revision is not in the store', {
@@ -174,5 +184,11 @@ export async function restoreBuild({ build, previous = null, doors, record, runI
         expected: build.ref
       }
     )
-  return { status: 'done', restored: plan.places.length, current, left: plan.left }
+  return { status: 'done', restored: plan.places.length, current, left: leftOf(plan, record) }
+}
+
+/** What stays on the site after a restore or an abandon: the files kept (with why) and the records hidden. */
+export const leftOf = (plan, record) => {
+  const kept = new Map(list(record.state?.left).map((f) => [f.path, f]))
+  return { ...plan.left, uploads: [...kept.keys()], kept: [...kept.values()] }
 }

@@ -56,7 +56,7 @@ Doors with no plugin operation on the blank site:
 |---|---|
 | `contract({removes: [...]})` with removes | `content.contract` apply has no removes; `rows.remove` is refused on the blank site (`SLOT_NOT_REMOVABLE`) |
 | `media({path})` | no Apply action reads a file's bytes; it reads the site's public file (`publicFile`) |
-| unpublish, unassign, delete a media file | not used by the write. The doors now exist (measured on plugin 0.24.85, [ai-quickstart-contract.md](ai-quickstart-contract.md) "Door measurements"): `content.update` `published: 0` (an article: `state: 0`) hides a module, menu item, category or contact, reversibly, its address then answering 404; `moduleAssignment` `menuids: "[]"` is the one "no page" value; `media.delete` removes a picture under `images/`, with `dry_run` answering `usedIn`. Removal through them is a later task |
+| `hide`, `unassign`, `deleteMedia` | not used by a first build. A revision, a restore and an abandon use them (#599, [draft-revision-run.md](draft-revision-run.md) "Taking things off a site"), measured on plugin 0.24.85 ([ai-quickstart-contract.md](ai-quickstart-contract.md) "Door measurements"): `content.update` `published: 0` (an article: `state: 0`) hides a module, menu item, category or contact, reversibly, its address then answering 404; `moduleAssignment` `menuids: "[]"` is the one "no page" value; `media.delete` removes a picture under `images/`, with `dry_run` answering `usedIn`. `deleteRecord` and `revertDelete` answer `DOOR_NOT_AVAILABLE`: nothing is ever deleted |
 
 None of these is used by the florist fixture's write plan.
 

@@ -1,6 +1,6 @@
 // Test-only (#597): an invented Claude Cowork plugin over the blank site in memory (`write-order-memory-doors.mjs`),
 // answering the plugin operations the REAL door client sends (`siteDoors`, website-opportunities/domain/site-doors.mjs):
-// `content.get`, `content.update`, `content.list`, `content.contract` (inspect, apply), `media.upload`,
+// `content.get`, `content.update`, `content.list`, `content.contract` (inspect, apply), `media.upload`, `media.delete`,
 // `site.identity` (set, read). Any other operation is refused `NOT_FAKED`. It sits behind a recording `applyAs(email,
 // call, {setupRun})` and `applyFor` as `app.js` builds them, so the write step runs on the real wiring, the real
 // transport and the real door client, and every call is recorded with its person and setup run. The answer shapes are
@@ -48,6 +48,12 @@ async function answerOf(memory, action, params) {
         applyId: params.apply_id,
         path: params.path,
         bytes: Buffer.from(params.content_b64, 'base64')
+      })
+    case 'media.delete':
+      return doors.deleteMedia({
+        applyId: params.apply_id,
+        path: params.path,
+        dryRun: params.dry_run === true
       })
     case 'site.identity':
       if (params.operation === 'read') return { fields: await doors.readIdentity() }

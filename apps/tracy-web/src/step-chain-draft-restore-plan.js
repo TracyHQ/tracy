@@ -5,6 +5,7 @@ import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.
 import { heldFormsOf, namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { placeHolds } from './step-chain-draft-place-value.js'
 import { isHeldBefore } from './step-chain-draft-journal.js'
+import { checkAct, HIDE_KINDS, madeKindOf } from './step-chain-draft-removal.js'
 import { holdsSent, holdsWrote } from './step-chain-draft-wrote.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -13,12 +14,13 @@ const list = (value) => (Array.isArray(value) ? value : [])
 export function restorePlanOf(build) {
   const state = build?.write?.state
   if (!state?.undo || !Array.isArray(state.baseIds)) return { stop: 'restore_not_a_revision', places: [] }
-  const base = new Set(state.baseIds)
-  const made = Object.keys(state.ids ?? {}).filter((k) => !base.has(k))
   const { records, assignments, slots, removed, identity, uploads } = state.undo
-  // `making`: a make sent by a run that crashed before it saved the made id (the abandon of an unfinished run).
-  if (made.length || removed.length || list(state.undo.making).length)
-    return { stop: 'restore_needs_removal', made: [...made, ...list(state.undo.making)], removed, places: [] }
+  // A make sent by a run that crashed before it saved the made id (`pending`): no id to hide. A slot taken out: no door
+  // puts it back (`contract.removes` is not available either way).
+  const pending = Object.keys(state.pending ?? {})
+  const { acts, unknown } = madeActsOf(state)
+  if (pending.length || unknown.length || removed.length)
+    return { stop: 'restore_needs_removal', made: [...unknown, ...pending], removed, places: [] }
   // A place the revision wrote over held a text the owner now keeps off the site: writing it back would show it again.
   const held = heldFormsOf(build.profile?.withheld)
   const before = [records, assignments, slots, identity]
@@ -33,13 +35,39 @@ export function restorePlanOf(build) {
       menuids
     })),
     ...(Object.keys(slots).length ? [{ key: 'slots', type: 'slots', slots }] : []),
-    ...(Object.keys(identity).length ? [{ key: 'identity', type: 'identity', fields: identity }] : [])
+    ...(Object.keys(identity).length ? [{ key: 'identity', type: 'identity', fields: identity }] : []),
+    // Then the records the run made, hidden or put on no page (never deleted), then its files, deleted when unused.
+    ...acts.filter((a) => a.type === 'hide' || !Object.hasOwn(assignments, String(a.id))),
+    ...list(uploads).map((path) => ({ key: `media:${path}`, type: 'media', path, mine: acts.map(mineOf) }))
   ]
   // A module with no pages before gets an empty list: no door deletes its assignment row (it shows on no page again).
   const unassigned = Object.entries(assignments)
     .filter(([, m]) => m === null)
     .map(([id]) => id)
-  return { stop: null, places, left: { uploads: [...uploads], assignments: unassigned } }
+  return {
+    stop: null,
+    places,
+    left: { uploads: [], assignments: unassigned, hidden: acts.map((a) => a.key) }
+  }
+}
+
+const mineOf = (a) => `${a.kind}:${a.id}`
+
+/** The records a run made (every id its record has that the build it started from had not): how each goes. */
+function madeActsOf(state) {
+  const base = new Set(state.baseIds)
+  const acts = []
+  const unknown = []
+  for (const [key, id] of Object.entries(state.ids ?? {})) {
+    if (base.has(key)) continue
+    const kind = madeKindOf(key)
+    if (kind === 'module')
+      acts.push({ key: `unassign:${id}`, type: 'unassign', kind, id: Number(id), op: key })
+    else if (HIDE_KINDS.has(kind))
+      acts.push({ key: `hide:${kind}:${id}`, type: 'hide', kind, id: Number(id), op: key })
+    else unknown.push(key)
+  }
+  return { acts, unknown }
 }
 
 /** Whether a journal holds the stand in of a held value anywhere. */
@@ -84,6 +112,9 @@ async function heldNow(place, doors) {
  * Tracy: a typed stop (`code`: `restore_site_changed` for a restore, `site_changed_outside` for an abandon).
  */
 export async function checkUnchanged(place, doors, state, code = 'restore_site_changed') {
+  if (place.type === 'media') return
+  if (place.type === 'hide' || place.type === 'unassign')
+    return checkAct({ ...place, door: place.type }, doors, [state], state.undo, code)
   for (const [name, [now, before]] of Object.entries(await heldNow(place, doors))) {
     if (!state.wrote?.[name] || holdsWrote(name, now, state) || placeHolds(name, before, now)) continue
     if (holdsSent(name, now, state.undo)) continue

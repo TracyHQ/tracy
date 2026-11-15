@@ -10,10 +10,11 @@
 // `<run>:r<revision>:w<seq>:<op>:<call>`: a replay of the old build, or of this revision before a restore, is never
 // taken for this run's call. Every write over a place is journaled first (`journaledDoors`) for the restore.
 //
-// 🔒 NOTHING IS TAKEN OFF A SITE. A revision that removes an operation (a page, a record, a place written in place) stops
-// before any door (`revision_needs_removal`, noRerun): no measured door removes a record or puts a place back
-// (unproven `record_removal_no_door`). The previous build stays on the site, whole. The plan step stops most of these
-// before any model call (`revisionOf`); this stop holds whatever reaches the write.
+// 🔒 NOTHING IS DELETED. An operation the revision no longer has is settled by the doors that exist
+// (`step-chain-draft-removal.js`), after the writes: a record a build made is hidden, a module is put on no page, each
+// act journaled (`state.undo`, `state.removal`) so a restore or an abandon brings back exactly what was there, and the
+// report says so (`hidden_not_deleted`, `on_no_page_not_deleted`). What only an unavailable door settles (a place written
+// in place no longer written) stops before any door (`revision_needs_removal`, noRerun, naming the door).
 //
 // 🔒 AN OWNER'S EDIT IS NEVER WRITTEN OVER: a place first touched must still hold what the previous build wrote
 // (`journaledDoors`), else `site_changed_outside` (noRerun, the place named, never its text).
@@ -21,32 +22,32 @@
 // 🔒 NOTHING HELD IS NAMED. What the revision holds (`previous.hold`: `{texts, ids}`, given by the write step of the
 // draft steps) is masked in every key, ref and path the record and the report keep (`maskHeld`); an id of the
 // previous record that names a held text is dropped. A held item's picture uploaded by an earlier build stays on the
-// site (no measured door deletes a file): the report carries the flag `held_file_left_on_site` with the masked
+// site (a revision deletes no file: the restore of the previous build shows it again, and no door brings a deleted file
+// back, `revertDelete`): the report carries the flag `held_file_left_on_site` with the masked
 // operation and the file, which the caller must show.
 //
 // `report.delta.orphaned` lists every file the site keeps that nothing shows any more: the previous record's paths
-// that the new record no longer names (a picture taken off, or uploaded again with other bytes).
+// that the new record no longer names (a picture taken off, or uploaded again with other bytes): kept for the restore.
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { writeDeltaOf } from 'website-opportunities/domain/revision-write-delta.mjs'
 import { maskedOf, maskHeld, namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { emptyUndo, journaledDoors } from './step-chain-draft-journal.js'
+import { checkAct, removalActsOf } from './step-chain-draft-removal.js'
+import { missingDoorOf, runRemovals } from './step-chain-draft-removal-run.js'
 import { planMarkOf, runDraftWrite } from './step-chain-draft-write.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const KEPT_IN_REPORT = 20
 
-/** The typed stop of a revision that would take something off the site: nothing is called. */
-function removalStop(delta, plan, held) {
-  const removed = delta.removed.map((r) => r.key)
-  const dropped = delta.dropped.map((d) => d.key)
+/** The typed stop of a revision that takes off the site what only an unavailable door would: nothing is called. */
+function removalStop(stops, plan, held) {
+  const doors = [...new Set(stops.map((s) => s.door ?? 'none'))]
+  const shown = stops.slice(0, KEPT_IN_REPORT)
   return Object.assign(
     new DraftWriteError(
       'revision_needs_removal',
-      `the revision takes ${removed.length} operation(s) and ${dropped.length} place set(s) off the site; no measured door removes them`,
-      maskHeld(
-        { removed: removed.slice(0, KEPT_IN_REPORT), dropped: dropped.slice(0, KEPT_IN_REPORT) },
-        held
-      ),
+      `the revision takes ${stops.length} operation(s) or place set(s) off the site that no available door settles (${doors.join(', ')})`,
+      maskHeld({ stops: shown, doors }, held),
       { noRerun: true }
     ),
     {
@@ -55,7 +56,7 @@ function removalStop(delta, plan, held) {
           status: 'failed',
           ran: [],
           failed: { op: null, code: 'revision_needs_removal' },
-          unproven: [...list(plan.unproven), { code: 'record_removal_no_door', removed, dropped }]
+          unproven: [...list(plan.unproven), { code: 'record_removal_no_door', stops: shown, doors }]
         },
         held
       )
@@ -117,31 +118,50 @@ function heldFilesOf(previous, state, hold) {
 export async function runRevisionWrite({ plan, previous, doors, record, runId, openStored, drawInitials }) {
   const hold = { texts: list(previous.hold?.texts), ids: list(previous.hold?.ids) }
   const delta = writeDeltaOf({ previous: previous.ops, plan })
-  if (delta.removed.length || delta.dropped.length) throw removalStop(delta, plan, hold.texts)
+  const removal = removalActsOf(delta, previous.state)
+  if (removal.stops.length) throw removalStop(removal.stops, plan, hold.texts)
+  const missing = missingDoorOf(removal.acts, doors)
+  if (missing) throw missing
   record.state ??= revisionStateOf(previous, plan, delta, hold.texts)
   const revision = plan.order?.plan?.revision ?? 'none'
+  const runOf = `${runId}:r${revision}:w${record.state.seq ?? 1}`
+  const journaled = journaledDoors(doors, record, {
+    previousWrote: previous.state.wrote ?? {},
+    previousShapes: previous.state.shapes ?? {},
+    held: hold.texts
+  })
+  const before = { wrote: previous.state.wrote ?? {}, shapes: previous.state.shapes ?? {} }
   let report
   try {
-    report = await runDraftWrite({
-      plan,
-      doors: journaledDoors(doors, record, {
-        previousWrote: previous.state.wrote ?? {},
-        previousShapes: previous.state.shapes ?? {},
-        held: hold.texts
-      }),
-      record,
-      openStored,
-      drawInitials,
-      runId: `${runId}:r${revision}:w${record.state.seq ?? 1}`
-    })
+    // An owner edit on a record the revision takes off stops before any door writes (checked again before each act).
+    const done = new Set(list(record.state.removal?.done))
+    for (const act of removal.acts.filter((a) => !done.has(a.key)))
+      await checkAct(act, doors, [before, record.state], record.state.undo)
+    report = await runDraftWrite({ plan, doors: journaled, record, openStored, drawInitials, runId: runOf })
+    await runRemovals({ acts: removal.acts, doors: journaled, record, previous: before, runId: runOf })
   } catch (error) {
+    error.report ??= {
+      status: 'failed',
+      ran: [...list(record.state.done)],
+      unproven: [...list(plan.unproven)]
+    }
     throw outsideEditOf(error, hold.texts)
   }
-  const flags = []
+  const flags = removalFlagsOf(removal)
   const files = heldFilesOf(previous, record.state, hold)
   if (files.length) flags.push({ code: 'held_file_left_on_site', places: files })
   const counts = deltaCountsOf(delta, orphanedFilesOf(previous, record.state))
   return { report: maskHeld({ ...report, delta: counts, flags }, hold.texts), delta }
+}
+
+/** What the report says of the acts: each record hidden or module put on no page, never deleted. */
+function removalFlagsOf(removal) {
+  const of = (door) => removal.acts.filter((a) => a.door === door).flatMap((a) => a.ops)
+  const flags = []
+  if (of('hide').length) flags.push({ code: 'hidden_not_deleted', ops: of('hide') })
+  if (of('unassign').length) flags.push({ code: 'on_no_page_not_deleted', ops: of('unassign') })
+  if (removal.notes.length) flags.push({ code: 'left_on_no_page', ops: removal.notes.map((n) => n.key) })
+  return flags
 }
 
 /** A write stopped by an edit made outside Tracy keeps its own code; every report is masked. */
