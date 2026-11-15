@@ -219,6 +219,8 @@
   "toolbar.toastDone": "Deshecho: «{request}»",
   "start.site.titleViewer": "¿Qué le gustaría saber hoy?",
   "start.site.placeholderViewer": "Pregunte sobre este site",
+  "start.build.title": "Cuénteme sobre su negocio",
+  "start.build.placeholder": "Describa su negocio o pegue un link a él",
   "viewer.bar": "Puede ver este site y hacer preguntas sobre él. Para hacer cambios necesita acceso de edición.",
   "viewer.ask": "Solicitar acceso de edición",
   "viewer.ask.sent": "Solicitud enviada a los Propietarios",

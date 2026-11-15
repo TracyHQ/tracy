@@ -34,6 +34,8 @@ const HERO_CARD =
 const VIEWER_HERO_CARD = `:is([class*="composerHero"]:has([data-tracy-start="site"][data-tracy-viewer]), :root[data-tracy-seat-viewer] [class*="composerHero"]:has([data-tracy-start="site"])) [data-slot="conversation.composer.bar"] [class*="_root"][class*="_hero"] > [data-composer-card]`
 
 /** The in-session chat box while this page's seat is a Viewer (ADR 0028; index.tsx sets the mark). */
+const BUILD_HERO_CARD =
+  '[class*="composerHero"]:has([data-tracy-copy="build"]) [data-slot="conversation.composer.bar"] [class*="_root"][class*="_hero"] > [data-composer-card]'
 const VIEWER_CARD = `:root[data-tracy-seat-viewer] ${CARD}`
 
 export const COMPOSER_CSS = `
@@ -101,6 +103,15 @@ ${VIEWER_HERO_CARD} [data-input-scroll] [data-composer-placeholder] { font-size:
 ${VIEWER_HERO_CARD} [data-input-scroll] [data-composer-placeholder]::before,
 ${VIEWER_HERO_CARD} [data-input-scroll] [data-composer-placeholder]::after { font-size: var(--tc-hero-font); line-height: calc(var(--tc-composer-font) + 6px); }
 ${VIEWER_HERO_CARD} [data-input-scroll] [data-composer-placeholder]::after { content: var(--tc-viewer-hint, none); }
+/* A kind of empty chat that declares its own hint (start-copy.ts; the build chat): its words replace
+   dsh's, and tracy-assistant's sentence too. The start block carries data-tracy-copy; index.tsx sets
+   --tc-start-hint-<kind> on <html>. Same sizing as the Viewer's hint above. The two custom properties
+   the assistant draws its hint from are emptied inside this hero only, so its ::before adds nothing here. */
+[class*="composerHero"]:has([data-tracy-copy="build"]) { --tv-help-hero-hint: ""; --tv-help-hint: none; }
+${BUILD_HERO_CARD} [data-input-scroll] [data-composer-placeholder] { font-size: 0; line-height: 0; }
+${BUILD_HERO_CARD} [data-input-scroll] [data-composer-placeholder]::before,
+${BUILD_HERO_CARD} [data-input-scroll] [data-composer-placeholder]::after { font-size: var(--tc-hero-font); line-height: calc(var(--tc-composer-font) + 6px); }
+${BUILD_HERO_CARD} [data-input-scroll] [data-composer-placeholder]::after { content: var(--tc-start-hint-build, none); }
 /* The same hint in the in-session chat box, through the whole session (after the first message dsh
    puts its generic words back). One ellipsized line at the card's own draft size: dsh's .card sets
    --dsh-content-font-size and a 24px line plus --dsh-content-font-delta, which the pseudo-elements

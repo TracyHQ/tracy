@@ -219,6 +219,8 @@
   "toolbar.toastDone": "Rückgängig gemacht: „{request}“",
   "start.site.titleViewer": "Was möchten Sie heute wissen?",
   "start.site.placeholderViewer": "Fragen Sie etwas zu dieser Site",
+  "start.build.title": "Erzählen Sie mir von Ihrem Unternehmen",
+  "start.build.placeholder": "Beschreiben Sie Ihr Unternehmen oder fügen Sie einen Link dazu ein",
   "viewer.bar": "Sie können diese Site ansehen und Fragen dazu stellen. Für Änderungen brauchen Sie Bearbeitungszugriff.",
   "viewer.ask": "Bearbeitungszugriff anfragen",
   "viewer.ask.sent": "Anfrage an die Eigentümer gesendet",

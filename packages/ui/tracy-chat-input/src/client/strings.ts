@@ -70,6 +70,12 @@ export const en = {
    */
   'start.site.titleViewer': 'What would you like to know today?',
   'start.site.placeholderViewer': 'Ask about this site',
+  /**
+   * The build chat's empty chat (`start-copy.ts`, TracyHQ/tracy#613): what to do here, in place of the
+   * chat core's generic title and hint. Declared per kind of start, so no other workspace changes.
+   */
+  'start.build.title': 'Tell me about your business',
+  'start.build.placeholder': 'Describe your business or paste a link to it',
   'viewer.bar': 'You can view this site and ask about it. Changes need edit access.',
   'viewer.ask': 'Ask for edit access',
   'viewer.ask.sent': 'Request sent to the owners',

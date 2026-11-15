@@ -219,6 +219,8 @@
   "toolbar.toastDone": "Ongedaan gemaakt: “{request}”",
   "start.site.titleViewer": "Wat wilt u vandaag weten?",
   "start.site.placeholderViewer": "Stel een vraag over deze site",
+  "start.build.title": "Vertel me over uw bedrijf",
+  "start.build.placeholder": "Beschrijf uw bedrijf of plak er een link naar",
   "viewer.bar": "U kunt deze site bekijken en er vragen over stellen. Voor wijzigingen hebt u bewerkrechten nodig.",
   "viewer.ask": "Bewerkrechten aanvragen",
   "viewer.ask.sent": "Verzoek verstuurd naar de Eigenaren",

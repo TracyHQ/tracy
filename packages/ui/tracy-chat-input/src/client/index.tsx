@@ -60,6 +60,8 @@ import { tellUnreadCount } from './comment-unread.mjs'
 import { badgeText, createChangesCount, readUnseenChanges } from './changes-count.mjs'
 import { tellChangesCount } from './changes-unseen.mjs'
 import { sentFromChatBox } from './start-sent.mjs'
+import { KindStart } from './build-start'
+import { START_COPY, type StartKind, startKindOf } from './start-copy'
 import { ONBOARDING_START_EVENT, openOnboardingStart, startPlatformOf } from './onboarding-start'
 import { registerCommentFold } from './comment-turn.mjs'
 import {
@@ -824,12 +826,16 @@ function Dock({
   const ui = uiSwitches()
   const showStart = useSyncExternalStore(ui.subscribe, () => ui.isShown('start-cards'))
 
+  const startKind = startKindOf(globalThis.location?.pathname)
+
   if (!showStart) return null
   if (nativeWidgetSession(session?.sessionId)) return null
   if (!blank) return null
   if (typeof inputActions?.setDraft !== 'function') return null
   if (!onboarding) {
-    if (siteKey === null) return null
+    // A chat that declares its own words (the build chat) draws its title in the site's start block.
+    if (siteKey === null) return startKind === null ? null : <KindStart kind={startKind} t={t} sent={sent} />
+
     // A site's workspace (Case 2): the composer stays under the block, so typing, or clearing what
     // was typed, keeps the cards in place. Send needs no memory here: dsh flips the session to
     // "engaging" on the click's own frame (session-controller `promptAttempted`), the hero docks,
@@ -1161,6 +1167,26 @@ export function apply(ctx: ClientContext): void {
       root.style.removeProperty('--tc-viewer-hint')
     }
   }, 'tracy-view: viewer composer hint')
+  // The input hint of each kind of empty chat that declares one (`start-copy.ts`), in the person's
+  // language. Set for every kind on every page: only a start block carrying the kind's mark reads it
+  // (composer-styles.ts), and the page's address can change without a reload.
+  ctx.effect(() => {
+    const root = document.documentElement
+    const tHint = ctx.locale.bind(NS)
+    const sync = () => {
+      for (const kind of Object.keys(START_COPY) as StartKind[])
+        root.style.setProperty(
+          `--tc-start-hint-${kind}`,
+          JSON.stringify(fallback(tHint, START_COPY[kind].placeholder))
+        )
+    }
+    sync()
+    const off = ctx.locale.subscribe?.(sync)
+    return () => {
+      off?.()
+      for (const kind of Object.keys(START_COPY)) root.style.removeProperty(`--tc-start-hint-${kind}`)
+    }
+  }, 'tracy-view: start hints of declared kinds')
   // The site's unseen-changes count, one store for the page: the start card draws it, and the right
   // column's Site changes tab is told it (`tracy:changes-unseen`) — one number, one meaning.
   ctx.effect(() => {

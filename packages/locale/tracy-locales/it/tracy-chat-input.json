@@ -219,6 +219,8 @@
   "toolbar.toastDone": "Annullata: «{request}»",
   "start.site.titleViewer": "Che cosa desidera sapere oggi?",
   "start.site.placeholderViewer": "Chieda qualcosa su questo site",
+  "start.build.title": "Mi parli della sua attività",
+  "start.build.placeholder": "Descriva la sua attività o incolli un link ad essa",
   "viewer.bar": "Può visualizzare questo site e fare domande al riguardo. Per apportare modifiche serve l’accesso in modifica.",
   "viewer.ask": "Richiedi accesso in modifica",
   "viewer.ask.sent": "Richiesta inviata ai Proprietari",

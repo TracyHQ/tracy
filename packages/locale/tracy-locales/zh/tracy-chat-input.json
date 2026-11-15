@@ -219,6 +219,8 @@
   "toolbar.toastDone": "已撤销：“{request}”",
   "start.site.titleViewer": "今天你想了解什么？",
   "start.site.placeholderViewer": "询问有关此 site 的问题",
+  "start.build.title": "告诉我你的业务情况",
+  "start.build.placeholder": "描述你的业务，或粘贴它的 link",
   "viewer.bar": "你可以查看此 site 并就其提问。如需更改，需要编辑权限。",
   "viewer.ask": "申请编辑权限",
   "viewer.ask.sent": "已向所有者发送申请",

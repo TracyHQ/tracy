@@ -219,6 +219,8 @@
   "toolbar.toastDone": "Đã hoàn tác: “{request}”",
   "start.site.titleViewer": "Hôm nay bạn muốn tìm hiểu điều gì?",
   "start.site.placeholderViewer": "Hỏi về site này",
+  "start.build.title": "Hãy kể cho mình nghe về doanh nghiệp của bạn",
+  "start.build.placeholder": "Mô tả doanh nghiệp của bạn hoặc dán link đến doanh nghiệp đó",
   "viewer.bar": "Bạn có thể xem site này và đặt câu hỏi về nó. Muốn thay đổi thì cần quyền chỉnh sửa.",
   "viewer.ask": "Xin quyền chỉnh sửa",
   "viewer.ask.sent": "Đã gửi yêu cầu tới các Chủ sở hữu",

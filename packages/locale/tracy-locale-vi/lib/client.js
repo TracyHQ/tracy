@@ -1386,6 +1386,8 @@ window.__ModuleLoader__.load({
               "toolbar.toastDone": "\u0110\u00e3\u0020ho\u00e0n\u0020t\u00e1c:\u0020\u201c{request}\u201d",
               "start.site.titleViewer": "H\u00f4m\u0020nay\u0020b\u1ea1n\u0020mu\u1ed1n\u0020t\u00ecm\u0020hi\u1ec3u\u0020\u0111i\u1ec1u\u0020g\u00ec?",
               "start.site.placeholderViewer": "H\u1ecfi\u0020v\u1ec1\u0020site\u0020n\u00e0y",
+              "start.build.title": "H\u00e3y\u0020k\u1ec3\u0020cho\u0020m\u00ecnh\u0020nghe\u0020v\u1ec1\u0020doanh\u0020nghi\u1ec7p\u0020c\u1ee7a\u0020b\u1ea1n",
+              "start.build.placeholder": "M\u00f4\u0020t\u1ea3\u0020doanh\u0020nghi\u1ec7p\u0020c\u1ee7a\u0020b\u1ea1n\u0020ho\u1eb7c\u0020d\u00e1n\u0020link\u0020\u0111\u1ebfn\u0020doanh\u0020nghi\u1ec7p\u0020\u0111\u00f3",
               "viewer.bar": "B\u1ea1n\u0020c\u00f3\u0020th\u1ec3\u0020xem\u0020site\u0020n\u00e0y\u0020v\u00e0\u0020\u0111\u1eb7t\u0020c\u00e2u\u0020h\u1ecfi\u0020v\u1ec1\u0020n\u00f3.\u0020Mu\u1ed1n\u0020thay\u0020\u0111\u1ed5i\u0020th\u00ec\u0020c\u1ea7n\u0020quy\u1ec1n\u0020ch\u1ec9nh\u0020s\u1eeda.",
               "viewer.ask": "Xin\u0020quy\u1ec1n\u0020ch\u1ec9nh\u0020s\u1eeda",
               "viewer.ask.sent": "\u0110\u00e3\u0020g\u1eedi\u0020y\u00eau\u0020c\u1ea7u\u0020t\u1edbi\u0020c\u00e1c\u0020Ch\u1ee7\u0020s\u1edf\u0020h\u1eefu",
