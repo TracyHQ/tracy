@@ -91,7 +91,7 @@ test('the record the gate made passes, and the binding names everything it was m
   assert.equal(b.humanQuickstartSha256, HUMAN_SHA)
   assert.equal(b.controls.human.from, 'measured_in_run')
   assert.equal(b.controls.quality.humanQuickstartSha256, HUMAN_SHA)
-  assert.equal(b.secretAllowSha256, null)
+  assert.equal(b.allowFileSha256, null)
   assert.match(b.recordSha256, /^[0-9a-f]{64}$/)
   assert.doesNotThrow(() => assertReleasable(k.folder, { pins: { ...PINS, version: '1.0.0' } }))
   done(k)
@@ -145,7 +145,7 @@ test('S2: the secret allow file is bound: one added or changed since the record 
   writeFileSync(path.join(k.folder, ALLOW_FILE), '[]\n')
   assert.deepEqual(codes(k.folder), ['allow_changed'])
   const bound = await kitWith((r) => {
-    r.binding.secretAllowSha256 = sha('[]\n')
+    r.binding.allowFileSha256 = sha('[]\n')
   })
   writeFileSync(path.join(bound.folder, ALLOW_FILE), '[]\n')
   assert.deepEqual(codes(bound.folder), [])

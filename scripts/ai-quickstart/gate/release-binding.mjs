@@ -106,7 +106,7 @@ export function releaseProblems(folder, { pins = {}, blankSiteSha } = {}) {
     )
   out.push(...measurementProblems(record))
   out.push(...controlProblems(record.binding))
-  if ((record.binding?.secretAllowSha256 ?? null) !== allowShaOf(folder))
+  if ((record.binding?.allowFileSha256 ?? null) !== allowShaOf(folder))
     out.push(problem('allow_changed', ALLOW_FILE + ' is not the allow file the record was scanned with'))
   if (v.schema !== VERDICT_SCHEMA)
     out.push(problem('verdict_unreadable', 'schema ' + v.schema + ' is not ' + VERDICT_SCHEMA))

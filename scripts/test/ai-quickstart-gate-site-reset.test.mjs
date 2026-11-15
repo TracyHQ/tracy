@@ -127,3 +127,10 @@ test('K1: after the command the reset waits while the site does not answer yet, 
   })
   await assert.rejects(refused(), (e) => e.code === 'unauthorized')
 })
+
+test('a blank slot the site keeps as white space only is blank; any written text is not', async () => {
+  // A real blank site keeps some emptied module texts as a line break or a space where the contract samples nothing.
+  for (const current of ['\r\n\r\n', ' ', '\n'])
+    assert.deepEqual(await fresh(sendOf({ current })), [], JSON.stringify(current))
+  assert.equal((await fresh(sendOf({ current: ' QxABG ' })))[0].code, 'slot_not_blank')
+})

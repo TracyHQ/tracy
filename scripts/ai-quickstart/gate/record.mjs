@@ -81,7 +81,7 @@ export function recordBinding({ kit, kitHashes, inputs, plugin }) {
     humanQuickstartSha256: inputs?.humanQuickstart?.sha256 ?? null,
     plugin: { expected: plugin?.expected ?? null, start: plugin?.start ?? null, end: plugin?.end ?? null },
     controls: { human: inputs?.controls?.human ?? null, quality: inputs?.controls?.quality ?? null },
-    secretAllowSha256: inputs?.secretAllow?.sha256 ?? null
+    allowFileSha256: inputs?.secretAllow?.sha256 ?? null
   }
 }
 

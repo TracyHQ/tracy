@@ -34,11 +34,14 @@ export async function freshProblems({
   const bound = await send('content.contract', { operation: 'bind' })
   if (contract && bound.contract !== contract)
     problems.push({ code: 'contract_not_bound', expected: contract, found: bound.contract ?? null })
-  const blank = new Map((contentMap?.slots ?? []).map((s) => [s.key, String(s.sample ?? '')]))
+  // Compared without the white space around it: a blank site keeps some emptied texts as a line break or a space where
+  // the contract samples nothing, while any value the build writes holds text.
+  const text = (v) => String(v ?? '').trim()
+  const blank = new Map((contentMap?.slots ?? []).map((s) => [s.key, text(s.sample)]))
   if (blank.size) {
     const state = await send('content.contract', { operation: 'inspect' })
     const written = (state.slots ?? []).filter(
-      (s) => blank.has(s.key) && String(s.current ?? '') !== blank.get(s.key)
+      (s) => blank.has(s.key) && text(s.current) !== blank.get(s.key)
     )
     if (written.length)
       problems.push({

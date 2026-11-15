@@ -1746,7 +1746,7 @@ only on `passed`. `verdict.measurements` repeats the six statuses, `verdict.notR
 when an earlier passing record is no proof any more), `kitRef`, `kitFilesSha256` (the sha256 over `<path> <sha256>`
 lines of every kit file sorted by path; `check-record/` is skipped, so writing the record changes nothing it is about),
 `blankSiteSha256`, `humanQuickstartSha256`, `plugin` (`expected`, `start`, `end`), `controls` (the provenance of the
-human control and the quality control, section "The controls" below) and `secretAllowSha256` (the sha256 of the kit's
+human control and the quality control, section "The controls" below) and `allowFileSha256` (the sha256 of the kit's
 `check-record/secret-allow.json`, null when it has none). The kit carries both `check-record/record.json` (required:
 a verdict alone is no proof) and a small `check-record/verdict.json` (`tracy-ai-quickstart-check-verdict/v1`, made by
 `verdictFileOf(record)`): the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it,
@@ -2028,7 +2028,10 @@ plugin installed at the pinned version and bound to its blank site contract, eve
 none of the build's records left. After the command the gate waits while the site does not answer yet (a database
 snapshot put back answers 502 for a moment: `not_json` or `no_answer`, retried every 2 seconds for at most 90), then
 checks exactly that (`freshProblems`) and stops the phase with `reset_not_fresh` and the problems when the site is not
-fresh, or `reset_site_unreachable` when it never answered. A database snapshot taken after the restore and the
+fresh, or `reset_site_unreachable` when it never answered. A slot is blank when its text, without the white space
+around it, is the contract's blank sample: a blank site keeps some emptied texts as a line break or a space. A database
+snapshot does not hold the files the build writes (the language override files, the pictures under `images/tracy`):
+the command puts those back too, or the check refuses the site (`slot_not_blank` on the language strings). A database snapshot taken after the restore and the
 plugin install, put back by the command, is the fast way; a full restore per pass makes write safety too slow for its
 time limit. The command's output is not kept; it must print no secret.
 

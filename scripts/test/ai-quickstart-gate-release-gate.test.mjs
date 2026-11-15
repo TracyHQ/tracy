@@ -3,12 +3,15 @@
 // measurements that need a fresh site `not_run` and the verdict failed; a phase that throws is `incomplete` with its
 // reason while the later phases still run.
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { floristGate, groups, overflow } from './fixtures/ai-quickstart-gate/florist-gate.mjs'
+import { recordScanner } from '../ai-quickstart/gate/gate-inputs.mjs'
 import { releaseGate } from '../ai-quickstart/gate/release-gate.mjs'
+import { pinnedGitleaks } from '../ai-quickstart/gate/secret-gitleaks.mjs'
 import { stoppedRecord } from '../ai-quickstart/gate/release-gate-record.mjs'
 import { verdictFromRecord } from '../ai-quickstart/gate/record-verdict.mjs'
 import { RECORD_FILE, releaseProblems, VERDICT_FILE } from '../ai-quickstart/gate/release-binding.mjs'
@@ -245,4 +248,25 @@ test('S6: a run that stops before its phases still leaves a failing record, ever
     assert.equal(record.measurements[name].code, 'blank_site_failed', name)
   }
   assert.equal(verdictFromRecord(record).pass, false)
+})
+
+const shaOf = (t) => createHash('sha256').update(t).digest('hex')
+
+test('the record the gate writes holds nothing the pinned gitleaks reads as a secret', async (t) => {
+  if (!pinnedGitleaks().bin) return t.skip('the pinned gitleaks is not on this machine')
+  const s = floristGate({
+    inputs: {
+      // Real hashes: gitleaks judges a value by its entropy, and a repeated letter has none.
+      humanQuickstart: { sha256: shaOf('invented human installer') },
+      blankSite: { sha256: shaOf('invented blank site') },
+      secretAllow: { file: 'check-record/secret-allow.json', sha256: shaOf('[]\n') }
+    }
+  })
+  s.input.scanRecord = recordScanner({ cms: 'joomla' })
+  try {
+    const { record } = await releaseGate(s.input)
+    assert.deepEqual(record.measurements.secrets.recordScan, { files: 2, findings: 0, gitleaks: 'ran' })
+  } finally {
+    s.done()
+  }
 })
