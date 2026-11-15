@@ -14,7 +14,9 @@ test('a bench run created after chain cancellation is cancelled before polling o
   const steps = createStepChainSteps({
     config: {},
     pool: {
-      async query() {
+      async query(sql) {
+        // The build's own active run, looked up before the start: none.
+        if (/where status = 'queued' and started_by = \$1/.test(sql)) return { rows: [] }
         polls++
         throw new Error('a cancelled start must never poll')
       }

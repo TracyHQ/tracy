@@ -3,8 +3,8 @@
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
 import { benchHarnessFor, capsOf, sendsImages } from '../lib/bench-harness.js'
-import { briefOfRevision, UUID } from '../lib/bench-sql.js'
-import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
+import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { activeRuns, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
 import { briefShapeProblems } from './brief-shape.js'
 import { PLANNER_BRIEF_VIEW } from './brief-view.js'
 import { sitePlannerDoor } from './door.js'
@@ -65,8 +65,8 @@ export async function startBenchRun({
       'SITE_PLANNER_VISUAL_REVIEW_UNAVAILABLE',
       'This WO run requires a model that receives kit images.'
     )
-  const active = await activeRun(pool)
-  if (active) return activeRefusal(active)
+  const running = await activeRuns(pool)
+  if (running.length >= BENCH_RUNS_AT_ONCE) return fullRefusal(running)
   // Last, since the first use of a kit version downloads its image zip: a kit whose images are unusable never queues.
   // A model given no images plans from the looks alone, so its run needs no image zip.
   if (door.snapshot.images) {
@@ -90,16 +90,11 @@ export async function startBenchRun({
       ...(requireVisualReview ? { visualReview: VISUAL_REVIEW_POLICY } : {})
     }
   })
-  if (created.error === SITE_PLANNER_RUN_ACTIVE) return activeRefusal(created.active)
+  if (created.error === SITE_PLANNER_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
 }
 
-function activeRefusal(active) {
-  const who = active
-    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
-    : 'another run'
-  return refuse(SITE_PLANNER_RUN_ACTIVE, `Only one run at a time: ${who} is still active.`, { active })
-}
+const fullRefusal = (running) => benchFullRefusal(SITE_PLANNER_RUN_ACTIVE, 'planner runs', running)
 
 /**
  * Cancel a run. One no worker holds ends at once; one a worker holds is asked to stop, which the worker does

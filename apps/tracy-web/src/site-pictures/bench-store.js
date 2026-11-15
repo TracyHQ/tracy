@@ -2,12 +2,10 @@
 // writer bench's shape, read and written by the shared bench store (lib/bench-run-store.js); a round's document is its
 // `pictures` column. Beside them, one row per picture file a run wrote (site_picture_file).
 import { createHash } from 'node:crypto'
-import { json } from '../lib/bench-sql.js'
+import { insertRunWithinLimit, json } from '../lib/bench-sql.js'
 import { benchStore } from '../lib/bench-run-store.js'
 
 export const SITE_PICTURES_RUN_ACTIVE = 'SITE_PICTURES_RUN_ACTIVE'
-
-const ONE_ACTIVE = 'site_picture_run_one_active'
 
 /** The picture bench's store: its tables, and every read and write of a run after it started. */
 export const SITE_PICTURES_STORE = benchStore({
@@ -17,47 +15,47 @@ export const SITE_PICTURES_STORE = benchStore({
   docColumn: 'pictures'
 })
 
-export const { activeRun, listRuns, readRun, requestCancel } = SITE_PICTURES_STORE
+export const { activeRun, activeRuns, listRuns, readRun, requestCancel } = SITE_PICTURES_STORE
 
 /** The sha256 of a JSON value as stored on a run (the bytes of JSON.stringify). */
 export const sha256Of = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex')
 
 /**
- * Queue a new run. Refused while another picture run is active (the database's one-active index decides), naming it.
- * @returns {Promise<{ run: object } | { error: string, active: object | null }>}
+ * Queue a new run. Refused while the bench already holds BENCH_RUNS_AT_ONCE active picture runs (counted under a lock,
+ * lib/bench-sql.js), naming them.
+ * @returns {Promise<{ run: object } | { error: string, active: object | null, activeRuns: object[] }>}
  */
 export async function createRun(pool, input) {
   const { startedBy, plan, planSource, brief, briefSource, photoSource, kit, prompts, checkerVersion } = input
-  try {
-    const { rows } = await pool.query(
-      `insert into site_picture_run
-         (started_by, plan, plan_source, plan_sha256, brief, brief_source, brief_sha256, photo_source, kit,
-          prompt_sha256, prompts, checker_version, door, harness, copy)
-       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
-       returning *`,
-      [
-        startedBy,
-        JSON.stringify(plan),
-        json(planSource),
-        sha256Of(plan),
-        JSON.stringify(brief),
-        json(briefSource),
-        sha256Of(brief),
-        json(photoSource),
-        json(kit),
-        prompts.sha256,
-        json(prompts.roles),
-        checkerVersion,
-        json(input.door ?? {}),
-        json(input.harness ?? {}),
-        input.copy ? json(input.copy) : null
-      ]
-    )
-    return { run: SITE_PICTURES_STORE.summaryOf(rows[0]) }
-  } catch (error) {
-    if (error?.code !== '23505' || error?.constraint !== ONE_ACTIVE) throw error
-    return { error: SITE_PICTURES_RUN_ACTIVE, active: await activeRun(pool) }
-  }
+  const created = await insertRunWithinLimit(
+    pool,
+    'site_picture_run',
+    `insert into site_picture_run
+       (started_by, plan, plan_source, plan_sha256, brief, brief_source, brief_sha256, photo_source, kit,
+        prompt_sha256, prompts, checker_version, door, harness, copy)
+     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+     returning *`,
+    [
+      startedBy,
+      JSON.stringify(plan),
+      json(planSource),
+      sha256Of(plan),
+      JSON.stringify(brief),
+      json(briefSource),
+      sha256Of(brief),
+      json(photoSource),
+      json(kit),
+      prompts.sha256,
+      json(prompts.roles),
+      checkerVersion,
+      json(input.door ?? {}),
+      json(input.harness ?? {}),
+      input.copy ? json(input.copy) : null
+    ]
+  )
+  if (created.row) return { run: SITE_PICTURES_STORE.summaryOf(created.row) }
+  const running = await activeRuns(pool)
+  return { error: SITE_PICTURES_RUN_ACTIVE, active: running[0] ?? null, activeRuns: running }
 }
 
 /** A run's own inputs that the shared reads leave out. Null when there is no such run. */

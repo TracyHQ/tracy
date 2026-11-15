@@ -7,7 +7,7 @@
 // runs read the cache. A picture whose sha256 the kit records (`pictureSha256`) is used only when its bytes match.
 // Nothing here stops a run: no webroot, a failed download or a missing icon reads as null, and the icon step then
 // renders without a measured style (its note says so).
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { Readable } from 'node:stream'
@@ -167,8 +167,9 @@ async function readIndex(folder) {
   }
 }
 
+// The temporary name is unique per write: picture runs side by side (#633) may fill the same kit's cache at once.
 async function writeOnce(file, bytes) {
-  const temp = `${file}.${process.pid}.${Date.now()}.part`
+  const temp = `${file}.${process.pid}.${randomUUID()}.part`
   await writeFile(temp, bytes)
   await rename(temp, file)
 }

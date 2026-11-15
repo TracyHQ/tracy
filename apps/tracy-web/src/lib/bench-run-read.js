@@ -44,10 +44,17 @@ export function benchRunReads({ runTable, roundTable, turnTable, docColumn }) {
     }
   }
 
-  /** The run waiting or running now, or null. */
+  /** The runs waiting or running now, oldest first (a bench holds up to BENCH_RUNS_AT_ONCE, lib/bench-sql.js). */
+  async function activeRuns(pool) {
+    const { rows } = await pool.query(
+      `select * from ${runTable} where status = 'queued' order by queued_at, created_at, id`
+    )
+    return rows.map(summaryOf)
+  }
+
+  /** The oldest run waiting or running now, or null. */
   async function activeRun(pool) {
-    const { rows } = await pool.query(`select * from ${runTable} where status = 'queued' limit 1`)
-    return rows[0] ? summaryOf(rows[0]) : null
+    return (await activeRuns(pool))[0] ?? null
   }
 
   /** The rounds of a run in order. */
@@ -128,5 +135,5 @@ export function benchRunReads({ runTable, roundTable, turnTable, docColumn }) {
     }
   }
 
-  return { summaryOf, activeRun, roundsOf, listRuns, readRun }
+  return { summaryOf, activeRun, activeRuns, roundsOf, listRuns, readRun }
 }

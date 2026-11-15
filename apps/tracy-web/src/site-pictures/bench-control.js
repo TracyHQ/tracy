@@ -8,12 +8,12 @@
 // snapshot (#343, `door.looker`): a run does not start without the looker. The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor, capsOf } from '../lib/bench-harness.js'
-import { briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { readableKits } from '../lib/template-kit-source.js'
 import { altsOfCopy } from './alt-notes.js'
 import {
-  activeRun,
+  activeRuns,
   createRun,
   readRun,
   requestCancel,
@@ -108,8 +108,8 @@ export async function startPictureRun({
     if (!read.ok) return read
     photoSource = read.source
   }
-  const active = await activeRun(pool)
-  if (active) return activeRefusal(active)
+  const running = await activeRuns(pool)
+  if (running.length >= BENCH_RUNS_AT_ONCE) return fullRefusal(running)
   const created = await createRun(pool, {
     startedBy,
     plan,
@@ -128,7 +128,7 @@ export async function startPictureRun({
     },
     harness: door ? capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps) : {}
   })
-  if (created.error === SITE_PICTURES_RUN_ACTIVE) return activeRefusal(created.active)
+  if (created.error === SITE_PICTURES_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
 }
 
@@ -155,14 +155,7 @@ async function storePhotos(brief, photos, storeDir) {
   return { ok: true, source: { kind: 'folder', name: photos.name, files: photos.files.size, used } }
 }
 
-function activeRefusal(active) {
-  const who = active
-    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
-    : 'another run'
-  return refuse(SITE_PICTURES_RUN_ACTIVE, `Only one picture run at a time: ${who} is still active.`, {
-    active
-  })
-}
+const fullRefusal = (running) => benchFullRefusal(SITE_PICTURES_RUN_ACTIVE, 'picture runs', running)
 
 /** Cancel a run: one no worker holds ends at once; one a worker holds is asked to stop between two steps. */
 export async function cancelPictureRun(pool, runId) {

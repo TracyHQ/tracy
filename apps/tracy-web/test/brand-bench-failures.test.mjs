@@ -4,6 +4,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { cancelBrandRun, startBrandRun } from '../src/brand-step/brand-control.js'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { createRun as createPlannerRun } from '../src/site-planner/bench-store.js'
 import { readRun } from '../src/brand-step/brand-store.js'
 import { createBrandQueue } from '../src/brand-step/brand-worker.js'
@@ -129,7 +130,7 @@ test('a cancel asked while brand preparation is pending prevents the first paid 
   }
 })
 
-test('one brand run at a time; a planner run in flight does not block it', opts, async () => {
+test('brand runs up to the bench limit at a time; a planner run in flight does not count', opts, async () => {
   const { pool } = db
   await assignBrandDoors(pool)
   const c = await brandCase()
@@ -146,7 +147,8 @@ test('one brand run at a time; a planner run in flight does not block it', opts,
   })
   assert.ok(planner.run, 'the planner run is queued')
   const first = await startRun(pool, c)
-  const second = await startBrandRun({
+  for (let n = 1; n < BENCH_RUNS_AT_ONCE; n++) await startRun(pool, c)
+  const past = await startBrandRun({
     pool,
     secret: SECRET,
     brief: c.brief,
@@ -156,9 +158,11 @@ test('one brand run at a time; a planner run in flight does not block it', opts,
     kitImages: readyKitImages(),
     wiring: fakeWiring({ files: c.files })
   })
-  assert.equal(second.ok, false)
-  assert.equal(second.code, 'BRAND_RUN_ACTIVE')
-  assert.equal(second.active.id, first.id)
+  assert.equal(past.ok, false)
+  assert.equal(past.code, 'BRAND_RUN_ACTIVE')
+  assert.equal(past.active.id, first.id)
+  assert.equal(past.activeRuns.length, BENCH_RUNS_AT_ONCE)
+  assert.match(past.reason, new RegExp(`At most ${BENCH_RUNS_AT_ONCE} brand runs at a time`))
 })
 
 test('a brief with no usable brand part is refused before it is queued', opts, async () => {

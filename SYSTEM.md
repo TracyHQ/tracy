@@ -847,11 +847,12 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   key `(account_id, hint)`, first time `seen_at`, deleted automatically when the account is deleted; the closed list of names
   is checked at the write door and by an SQL constraint. The existing `assistant_tip_seen` still keeps the separate `/help` hint.
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
-  row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
+  row; inputs frozen by a trigger; at most `BENCH_RUNS_AT_ONCE` (3) queued rows, counted by the start under an advisory lock,
+  migration 218), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,
   never as bytes). Apart from the WO quality tables.
   Site writer bench (migration 197, §8 *Site writer bench*): `site_writer_run` (plan, brief, kit and the rest of its inputs
-  frozen by a trigger; at most one queued row), `site_writer_round` (rounds 0 to 2: the `copy` file, check, failure list
+  frozen by a trigger; at most `BENCH_RUNS_AT_ONCE` queued rows), `site_writer_round` (rounds 0 to 2: the `copy` file, check, failure list
   sent, corrected entries applied), `site_writer_turn` (one row per model call, append-only), with the planner bench's shape.
   Write step bench (migration 198, §8 *Write step bench*): `write_bench_site` (every trial site the bench made),
   `write_bench_run` (one run with its write report; at most one running row per site).
@@ -2379,8 +2380,9 @@ approval or chain eligibility. Explicit custom indexes remain isolated from depl
   `cancel`; [`bench-cli.js`](apps/tracy-web/src/site-planner/bench-cli.js)). It calls the bench service directly with the
   container's `DATABASE_URL` and `SESSION_SECRET`. A plan is read off the server with the approved plan reader script.
 - **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-planner/bench-worker.js)) is a durable queue over
-  `site_planner_run` inside the tracy-web process (`app.sitePlannerQueue`, started by `server.js`): one run at a time, a
-  lease renewed every minute, 20 claims, so a redeploy mid-run resumes from the last saved turn. A call dispatched with no
+  `site_planner_run` inside the tracy-web process (`app.sitePlannerQueue`, started by `server.js`): up to
+  `BENCH_RUNS_AT_ONCE` (3, `lib/bench-sql.js`) runs side by side across every process, the same limit a start is held to,
+  each with its own lease renewed every minute, 20 claims, so a redeploy mid-run resumes from the last saved turn. A call dispatched with no
   answer is marked abandoned and sent once more; a second loss fails the run. A failing plan gets at most two fix rounds in
   the same conversation.
 - **The model** is called through the `sitePlanner` door (`/ops` › Model & AI; by default `deepseek-flash` on the
@@ -2433,7 +2435,7 @@ bytes and historical outputs are unchanged.
   `get` also writes the final `site-copy.json` and its Joomla contract mapping export (`mapping.json`).
 - **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-writer/bench-worker.js)) is the writer as a step of the shared
   bench run loop (`lib/bench-run-loop.js`), its own durable queue over `site_writer_run` (`app.siteWriterQueue`, started
-  by `server.js`), one writer run at a time, parallel to the planner bench. Same guards: retries, resume from the last
+  by `server.js`), up to `BENCH_RUNS_AT_ONCE` writer runs side by side, parallel to the planner bench. Same guards: retries, resume from the last
   saved turn, a 2 USD fuse, the DeepSeek balance before and after.
 - **The model** is called through the `siteWriter` door (`/ops` › Model & AI; by default `deepseek-flash` on the
   `deepseek` provider, effort max). The first message carries the plan, cited facts, quoted reviews, a slim kit view
@@ -2478,7 +2480,7 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   round's check and the turns to an output folder.
 - **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-pictures/bench-worker.js)) is the picture step as a step
   of the shared bench run loop, its own durable queue over `site_picture_run` (`app.sitePicturesQueue`, started by
-  `server.js`, migration 198), one picture run at a time.
+  `server.js`, migration 198), up to `BENCH_RUNS_AT_ONCE` picture runs side by side (the brand bench too).
 - **Owner photo bytes** of a WO revision are read through the brief asset reader (`briefPictureBytes`,
   `opportunities-build/brief-picture-labels.js`) from the media store, hash checked; a run on a brief file reads a folder
   of files named by their sha256, which the CLI copies into the bench's file store when the run starts.
@@ -2667,7 +2669,10 @@ steps: a step still going then is stopped, its best version used, no new 9b work
 detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
 and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
 queued through the bench's own command line on the revision and played by the bench worker this server runs
-(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Parallel steps persist
+(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Each bench holds up to
+`BENCH_RUNS_AT_ONCE` (3) runs, so builds started together run their steps side by side (each run's model calls go out at
+once: three builds are three times the calls in flight at a provider); a step whose bench is full waits for a place, and a
+step looks for its own build's active run on the same inputs before every start and takes it over (#633). Parallel steps persist
 their chain progress snapshots in order through one promise queue per run, so a late earlier update cannot erase
 another step's start, completion or measured spend. Progress storage failures remain non-fatal and do not poison later updates.
 The write step retains a structural diagnostic summary in `site_brief.timings.chain.steps[write].diagnostics`,

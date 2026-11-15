@@ -4,7 +4,7 @@
 // lease token and lands only while the run still holds that token, so a worker that lost its lease (a redeploy) never
 // writes over the one that took it over. The model calls are in brand-call-store.js.
 import { createHash } from 'node:crypto'
-import { iso, json, num, UUID } from '../lib/bench-sql.js'
+import { insertRunWithinLimit, iso, json, num, UUID } from '../lib/bench-sql.js'
 import { fenced } from './brand-sql.js'
 import { roundsOf } from './brand-round-store.js'
 
@@ -12,12 +12,11 @@ export { UUID }
 
 export const BRAND_RUN_ACTIVE = 'BRAND_RUN_ACTIVE'
 
-const ONE_ACTIVE = 'brand_run_one_active'
-
 /**
- * Queue a new run. Refused while another brand run is active (the database's one-active index decides, so two
- * processes starting at once cannot both win), naming that run. Planner runs are another table and never block it.
- * @returns {Promise<{ run: object } | { error: string, active: object | null }>}
+ * Queue a new run. Refused while the bench already holds BENCH_RUNS_AT_ONCE active brand runs (counted under a lock, so
+ * two processes starting at once cannot both pass the limit; lib/bench-sql.js), naming them. Planner runs are another
+ * table and never count.
+ * @returns {Promise<{ run: object } | { error: string, active: object | null, activeRuns: object[] }>}
  */
 export async function createRun(pool, input) {
   const {
@@ -33,35 +32,41 @@ export async function createRun(pool, input) {
     harness
   } = input
   const briefText = JSON.stringify(brief)
-  try {
-    const { rows } = await pool.query(
-      `insert into brand_run (id, started_by, brief, brief_source, brief_sha256, kit, prompt_sha256, door, tools, harness, logo_source)
-       values (coalesce($10::uuid, gen_random_uuid()), $1, $2, $3, $4, $5, $6, $7, $8, $9, $11) returning *`,
-      [
-        startedBy,
-        briefText,
-        json(briefSource),
-        createHash('sha256').update(briefText).digest('hex'),
-        json(kit),
-        promptSha256,
-        json(door),
-        json(tools),
-        json(harness),
-        id,
-        json(logoSource)
-      ]
-    )
-    return { run: summaryOf(rows[0]) }
-  } catch (error) {
-    if (error?.code !== '23505' || error?.constraint !== ONE_ACTIVE) throw error
-    return { error: BRAND_RUN_ACTIVE, active: await activeRun(pool) }
-  }
+  const created = await insertRunWithinLimit(
+    pool,
+    'brand_run',
+    `insert into brand_run (id, started_by, brief, brief_source, brief_sha256, kit, prompt_sha256, door, tools, harness, logo_source)
+     values (coalesce($10::uuid, gen_random_uuid()), $1, $2, $3, $4, $5, $6, $7, $8, $9, $11) returning *`,
+    [
+      startedBy,
+      briefText,
+      json(briefSource),
+      createHash('sha256').update(briefText).digest('hex'),
+      json(kit),
+      promptSha256,
+      json(door),
+      json(tools),
+      json(harness),
+      id,
+      json(logoSource)
+    ]
+  )
+  if (created.row) return { run: summaryOf(created.row) }
+  const running = await activeRuns(pool)
+  return { error: BRAND_RUN_ACTIVE, active: running[0] ?? null, activeRuns: running }
 }
 
-/** The run waiting or running now, or null. */
+/** The runs waiting or running now, oldest first (up to BENCH_RUNS_AT_ONCE, lib/bench-sql.js). */
+export async function activeRuns(pool) {
+  const { rows } = await pool.query(
+    `select * from brand_run where status = 'queued' order by queued_at, created_at, id`
+  )
+  return rows.map(summaryOf)
+}
+
+/** The oldest run waiting or running now, or null. */
 export async function activeRun(pool) {
-  const { rows } = await pool.query(`select * from brand_run where status = 'queued' limit 1`)
-  return rows[0] ? summaryOf(rows[0]) : null
+  return (await activeRuns(pool))[0] ?? null
 }
 
 /** What the run is doing, for the bench CLI's status. Written only under the run's lease. */
