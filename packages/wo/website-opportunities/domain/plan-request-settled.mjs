@@ -47,13 +47,14 @@ const shownOn = (pages) => new Set(list(pages).flatMap((p) => p.blocks.flatMap((
  * @returns {{composition: object[], context: object[]}} `composition`: model style entries naming an item; `context`:
  *   entries the gate adds as they are
  */
-export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages }) {
+export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fresh = new Set() }) {
   const before = new Set([...shownOn(plan.pages), ...rowDataIdsOf(plan.pages)])
   const after = shownOn(pages)
   const used = new Set()
   const composition = []
   for (const [id, record] of data.byId) {
-    if (record.itemField || data.withheld?.has(id) || after.has(id)) continue
+    // A value the owner typed in this request (`fresh`) is new data, placed by the gate as a first plan's.
+    if (record.itemField || data.withheld?.has(id) || after.has(id) || fresh.has(id)) continue
     if (takenOff.has(id)) {
       composition.push({ item: id, reason: takenOff.get(id) })
       continue

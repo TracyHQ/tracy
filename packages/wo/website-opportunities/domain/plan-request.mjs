@@ -25,6 +25,8 @@ import { PlanComposerError } from './plan-composer-error.mjs'
 import { composerContextOf, planComposerRequest, readComposerReply } from './plan-composer.mjs'
 import { preflightContext, preflightDeclarations } from './plan-preflight.mjs'
 import { revisionOf } from './plan-request-attempt.mjs'
+import { applyOwnerEdits } from './plan-request-owner-apply.mjs'
+import { noOwnerEdits, ownerEditsOf } from './plan-request-owner-words.mjs'
 import { withoutWithheld } from './plan-withheld.mjs'
 
 export { NOTHING_TO_CHANGE } from './plan-request-attempt.mjs'
@@ -81,10 +83,13 @@ function planRequestModelRequest(context, plan, text, problems = [], firstAnswer
  *   library?: object[], template: object, brand: object, allowTemplateLook?: boolean}} input `plan` and `profile` as
  *   the draft keeps them (the living plan and its settled needs profile); `request` a `tracy-build-plan-request/v1`
  *   for that plan's revision; the kit, the template and the brand record as the first composition had them
- * @returns {Promise<{plan: object, profile: object, unchanged: boolean, changed: string[],
+ * @returns {Promise<{plan: object, profile: object, unchanged: boolean, changed: string[], codes: {changed: string[],
+ *   notDone: Array<string | null>},
  *   notDone: Array<{what: string, reason: string, why: string}>, revision: object, attempts: Array<{problems: object[]}>,
  *   prompt: {file: string, sha256: string}, placed?: object[], accounting?: object, rows?: object[]}>} `revision`: the
- *   Contract B `tracy-build-plan-revision/v1` the chat shows; `plan` is the current plan itself when `unchanged`
+ *   Contract B `tracy-build-plan-revision/v1` the chat shows; `plan` is the current plan itself when `unchanged`;
+ *   `draftProfile`: the whole settled profile for the draft to keep (held data included);
+ *   `codes`: a stable code beside each line of `changed` and `notDone` (null for a not done line the model wrote)
  * @throws {PlanComposerError} `request_empty`, `request_too_long`, `request_stale`, `request_invalid`, `model_missing`
  *   and the composer's preflight codes before any model call; `plan_gate_failed` (`noRerun`) after two failed attempts
  */
@@ -92,7 +97,15 @@ export async function revisePlan({ plan, profile, request, model, ...kit }) {
   if (typeof model !== 'function') throw fail('model_missing', 'no build model was given')
   checkRequest(request, plan)
   preflightDeclarations(kit)
-  const base = composerContextOf({ ...kit, profile, answers: [], planId: plan.id })
+  // What the request asks that no op of the model can do, code does itself (`plan-request-owner-words.mjs`): the
+  // owner's values enter the profile, a rename takes the plan card's path, an item no page shows is left out.
+  const edits = ownerEditsOf(request.text, plan)
+  const { blockStore, pageRecipes, library } = kit
+  const owner = noOwnerEdits(edits)
+    ? null
+    : { edits, ...applyOwnerEdits({ plan, profile, edits, kit: { blockStore, pageRecipes, library } }) }
+  const working = owner?.plan ?? plan
+  const base = composerContextOf({ ...kit, profile: owner?.profile ?? profile, answers: [], planId: plan.id })
   preflightContext(base)
   // The language the customer chose on the plan card stays; the look is composed as a first plan's (and checked as
   // one), then the look fields the customer changed are put back (`settleRevisedPlan`).
@@ -102,10 +115,10 @@ export async function revisePlan({ plan, profile, request, model, ...kit }) {
   let firstAnswer = null
   for (let n = 0; n < 2; n++) {
     const reply = readComposerReply(
-      await model(planRequestModelRequest(context, plan, request.text, problems, firstAnswer))
+      await model(planRequestModelRequest(context, working, request.text, problems, firstAnswer))
     )
     firstAnswer = reply
-    const result = revisionOf(reply, { plan, request, context })
+    const result = revisionOf(reply, { plan: working, request, context, owner })
     const revision = result.ok && {
       schema: PLAN_REVISION_SCHEMA,
       request: request.id,
@@ -126,9 +139,13 @@ export async function revisePlan({ plan, profile, request, model, ...kit }) {
     return {
       plan: result.plan,
       profile: result.unchanged ? profile : withoutWithheld(context.profile),
+      // The profile the draft keeps (held data and the `withheld` marker included), with what code did for the
+      // request (the owner's values, a rename): a draft that composes its profile again from the one it sent loses them.
+      draftProfile: result.unchanged ? profile : context.profile,
       unchanged: result.unchanged,
       changed: result.changed,
       notDone: result.notDone,
+      codes: result.codes,
       revision,
       attempts,
       prompt: { file: PLAN_REQUEST_PROMPT_FILE, sha256: PROMPT_SHA256 },

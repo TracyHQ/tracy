@@ -125,7 +125,12 @@ export function applyRequestChanges(plan, changes, problem, { recipes, data }) {
       )
       if (twin) {
         refused.add(i)
-        notDone.push({ what: change.name, reason: 'outside_plan', why: 'The plan already has this page.' })
+        notDone.push({
+          code: 'page_already_on_plan',
+          what: change.name,
+          reason: 'outside_plan',
+          why: 'The plan already has this page.'
+        })
       } else {
         const page = { ...added, blocks }
         insertAfter(pages, change.after, page, `${at}.after`)

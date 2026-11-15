@@ -10,7 +10,8 @@ import {
   REMOVED_PAGE_DATA_REASON
 } from './plan-request-apply.mjs'
 import { requestTextProblems } from './plan-request-guard.mjs'
-import { changedLinesOf, notDoneLinesOf } from './plan-request-lines.mjs'
+import { changedEntriesOf, notDoneLinesOf } from './plan-request-lines.mjs'
+import { withoutContradicted } from './plan-request-owner-apply.mjs'
 import { requestReplyProblems } from './plan-request-reply.mjs'
 import {
   carriedAssumptionsOf,
@@ -27,6 +28,12 @@ export const NOTHING_TO_CHANGE = Object.freeze({
   why: 'Nothing on the plan could follow it, so the plan is unchanged.'
 })
 const list = (value) => (Array.isArray(value) ? value : [])
+/** What the customer took off before, but a value the owner typed in this request: that is new data. */
+const takenOffBefore = (plan, data, owner) => {
+  const out = customerTakenOffOf(plan, data)
+  for (const id of owner?.fresh ?? []) out.delete(id)
+  return out
+}
 
 /** The gate's message for a channel a change took off its page, with what the re-compose may do. */
 const CHANNEL_HINT =
@@ -34,8 +41,20 @@ const CHANNEL_HINT =
 const MAIN_LOST =
   'this page lost its main section: a page cannot lose its main section; remove the page only when the request asks for that, or report the wish under notDone with reason outside_plan'
 
-/** One attempt: the answer's shape and texts, the changes applied, the gate, what was settled put back, the lines. */
-export function revisionOf(reply, { plan, request, context }) {
+/** The code of a not done line: code's own, or none for a line the model wrote. */
+const NOTHING_CODE = 'nothing_to_change'
+const withCodes = (changed, notDone) => ({
+  changed: changed.map((e) => e.text),
+  notDone: notDone.map(({ what, reason, why }) => ({ what, reason, why })),
+  codes: { changed: changed.map((e) => e.code), notDone: notDone.map((e) => e.code ?? null) }
+})
+
+/**
+ * One attempt: the answer's shape and texts, the changes applied, the gate, what was settled put back, the lines.
+ * `owner`: what code did itself for the request (`applyOwnerEdits`, with its `edits`), or null; `plan` is then the
+ * plan with code's renames, and the context is composed from the profile with code's values.
+ */
+export function revisionOf(reply, { plan, request, context, owner = null }) {
   const problems = []
   const problem = (code, at, message) => problems.push({ code, at, message })
   const failed = () => ({ ok: false, problems })
@@ -49,7 +68,7 @@ export function revisionOf(reply, { plan, request, context }) {
       data: context.data,
       changes,
       request: request.text,
-      takenOff: customerTakenOffOf(plan, context.data)
+      takenOff: takenOffBefore(plan, context.data, owner)
     },
     problem
   )
@@ -58,12 +77,14 @@ export function revisionOf(reply, { plan, request, context }) {
     ok: true,
     unchanged: true,
     plan,
-    changed: [],
-    notDone: notDone.length ? notDone : [{ ...NOTHING_TO_CHANGE }]
+    ...withCodes([], notDone.length ? notDone : [{ ...NOTHING_TO_CHANGE, code: NOTHING_CODE }])
   })
-  const modelNotDone = list(reply.notDone).map(({ what, reason, why }) => ({ what, reason, why }))
-  if (changes.length === 0) return unchanged(modelNotDone)
-  const carried = carriedLeftOutOf({ plan, data: context.data, ...applied })
+  const asked = list(reply.notDone).map(({ what, reason, why }) => ({ what, reason, why }))
+  const modelNotDone = owner ? withoutContradicted(asked, owner.edits, plan) : asked
+  if (changes.length === 0 && !owner) return unchanged(modelNotDone)
+  for (const [id, reason] of owner?.takenOff ?? [])
+    if (!applied.takenOff.has(id)) applied.takenOff.set(id, reason)
+  const carried = carriedLeftOutOf({ plan, data: context.data, ...applied, fresh: owner?.fresh })
   const composition = {
     pages: compositionPagesOf(applied.pages),
     assumptions: carriedAssumptionsOf(plan, applied.pages),
@@ -96,15 +117,15 @@ export function revisionOf(reply, { plan, request, context }) {
     problem(p.code, p.at, p.message)
   for (const p of checkBuildDocument(revised).problems) problem('contract_b', p.at, p.message)
   if (problems.length > 0) return failed()
-  const changed = changedLinesOf(plan, revised, again)
+  const changed = [...(owner?.lines ?? []), ...changedEntriesOf(plan, revised, again)]
   const notDone = notDoneLinesOf({
     current: plan,
     revised,
     changes,
     refused: applied.refused,
     notDone: modelNotDone,
-    codeNotDone: applied.notDone
+    codeNotDone: [...applied.notDone, ...(owner?.notDone ?? [])]
   })
   if (changed.length === 0) return unchanged(notDone)
-  return { ok: true, unchanged: false, plan: revised, changed, notDone, gated }
+  return { ok: true, unchanged: false, plan: revised, ...withCodes(changed, notDone), gated }
 }

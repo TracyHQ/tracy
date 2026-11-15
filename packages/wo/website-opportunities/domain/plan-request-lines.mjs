@@ -71,9 +71,17 @@ function sectionLines(page, now, labels, add) {
  * @param {Set<string>} [again] the ids the customer took off before and the request asked for again
  * @returns {string[]}
  */
-export function changedLinesOf(current, revised, again = new Set()) {
+export const changedLinesOf = (current, revised, again = new Set()) =>
+  changedEntriesOf(current, revised, again).map((e) => e.text)
+
+/**
+ * The lines of the revision with a stable `code` each (the kind of unit it says: `page-removed`, `block-data`,
+ * `data-on`, `pictures-own` and so on), for a reader that translates by code.
+ * @returns {Array<{code: string, text: string}>}
+ */
+export function changedEntriesOf(current, revised, again = new Set()) {
   const out = []
-  const add = (_unit, line) => out.push(cap(line))
+  const add = (unit, line) => out.push({ code: unit.split(':')[0], text: cap(line) })
   const labels = new Map([...list(revised.facts), ...list(revised.items)].map((d) => [d.id, d.label]))
   const byId = new Map(revised.pages.map((p) => [p.id, p]))
   const was = new Set(current.pages.map((p) => p.id))
@@ -131,6 +139,7 @@ export function notDoneLinesOf({ current, revised, changes, refused, notDone, co
           : true
     if (!kept)
       lost.push({
+        code: 'section_not_filled',
         what: cap(change.name ?? change.add?.label ?? 'A new section', 80),
         reason: 'no_data',
         why: 'There is nothing of your business to fill it, so it is not added.'
