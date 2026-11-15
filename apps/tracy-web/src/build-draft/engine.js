@@ -128,8 +128,9 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
     const ran = await run().catch((error) => ({ ok: false, error, attempts: 1 }))
     if (ran.ok) {
       const ended = await endStep(pool, accountId, runner, ran.ended ?? { state: 'done' }, ran.columns, now)
-      // Once the draft names the new research, what it replaced goes (the pictures of older research runs).
-      await ran.after?.().catch(() => null)
+      // Once the draft names the new research, what it replaced goes (the pictures of older research runs). A step
+      // whose end was refused (no longer this runner's, or a build holds the draft) wrote nothing: nothing goes.
+      if (!ended.error) await ran.after?.().catch(() => null)
       return ended
     }
     const fault = faultOf(step, ran)

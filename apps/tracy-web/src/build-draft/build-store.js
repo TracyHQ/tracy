@@ -69,7 +69,8 @@ export async function approveBuild(pool, accountId, { plan, now = Date.now }) {
         plan: row.plan,
         lastEdit: row.last_edit ?? null,
         profile: row.needs_profile,
-        research: row.research
+        // The research the plan was composed from, not a newer one made since (`store.js` `plan_research`).
+        research: row.plan_research ?? row.research
       },
       site: null,
       refusal: null,

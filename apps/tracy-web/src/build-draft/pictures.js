@@ -8,9 +8,10 @@
  * research's time ran out) stays out of the manifest, its address and reason set aside.
  *
  * 🔒 A NEWER RESEARCH REPLACES THE PICTURES. One row per picture bytes of an account: research again on the same
- * bytes keeps the row and its id, moved to the new run. Once a research step has succeeded, `prune` deletes the rows
- * of every older run and their objects, so the draft holds exactly the pictures its current research names, and the
- * pictures of an approved build's research until that build ends (#610).
+ * bytes keeps the row and its id, moved to the new run. Once a research step's record is in the draft, `prune` deletes
+ * the rows of every older run and their objects, so the draft holds exactly the pictures its current research names,
+ * the pictures of the research its living plan was composed from, and those of an approved build's research until
+ * that build ends (#610).
  */
 
 /** The executor's media budget (`executor.js` `MEDIA_BUDGET`), and its admission's parallel downloads. */
@@ -138,16 +139,27 @@ export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime })
   }
 
   /**
-   * Delete the account's pictures of every run but `run`, rows and objects. Answers how many went. 🔒 The research run
-   * of an approved build that has not ended is kept too (#610): its plan names those pictures, and the build opens them.
+   * Delete the account's pictures of every run but `run`, rows and objects. Answers how many went. 🔒 A picture a
+   * research the draft still reads is kept, by its run or by its id in that research's manifest: the draft's research,
+   * the research its living plan was composed from (`plan_research`, #609), and the research of an approved build that
+   * has not ended (#610). By id too, because a later research that stored the same bytes moved the row to its own run,
+   * and that research may never have been recorded.
    */
   async function prune(accountId, run) {
     const { rows } = await pool.query(
       `delete from build_draft_picture p where p.account_id = $1 and p.research_run <> $2
          and not exists (
            select 1 from build_draft d
-            where d.account_id = p.account_id and d.build is not null and d.build ->> 'endedAt' is null
-              and d.build -> 'snapshot' -> 'research' ->> 'pictureRun' = p.research_run::text)
+             cross join lateral (values (d.research), (d.plan_research),
+               (case when d.build is not null and d.build ->> 'endedAt' is null
+                     then d.build -> 'snapshot' -> 'research' end)) as kept(research)
+            where d.account_id = p.account_id and kept.research is not null
+              and (kept.research ->> 'pictureRun' = p.research_run::text
+                or exists (
+                  select 1 from jsonb_array_elements(
+                      case when jsonb_typeof(kept.research -> 'manifest') = 'array'
+                           then kept.research -> 'manifest' else '[]'::jsonb end) m
+                   where m ->> 'id' = p.id::text)))
        returning p.object_key`,
       [accountId, run]
     )

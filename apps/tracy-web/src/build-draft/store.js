@@ -30,7 +30,8 @@ const COLUMNS = [
   'undo_profile',
   'engine',
   'brand',
-  'build'
+  'build',
+  'plan_research'
 ]
 
 /** The account's draft as the doors answer it, or null when it has none. */
@@ -97,7 +98,7 @@ export async function createDraft(pool, accountId) {
 }
 
 /** What the owner shapes: none of it changes while an approved build has not ended (#610). */
-const SHAPED = ['questions', 'answers', 'template', 'plan', 'needs_profile', 'research']
+const SHAPED = ['questions', 'answers', 'template', 'plan', 'needs_profile', 'research', 'plan_research']
 
 /**
  * Whether a write would change what the owner shaped while the draft's approved build has not ended. The build reads
@@ -212,6 +213,8 @@ export function putComposed(pool, accountId, { plan, profile } = {}, { research,
       last_edit: null,
       undo_edit: null,
       undo_profile: null,
+      // The research the plan is composed from: a later research keeps this plan, and approval builds it from this.
+      plan_research: research === undefined ? (row.research ?? null) : research,
       ...(research === undefined ? {} : { research }),
       ...(lookSources === undefined ? {} : { brand: { ...row.brand, lookSources } })
     }
@@ -260,6 +263,7 @@ export function discardPlan(pool, accountId) {
       plan: null,
       template: row.plan.look?.template ?? row.template,
       needs_profile: row.research?.profile ?? null,
+      plan_research: null,
       last_edit: null,
       undo_edit: null,
       undo_profile: null

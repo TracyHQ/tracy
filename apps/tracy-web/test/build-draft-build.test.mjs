@@ -281,6 +281,13 @@ test("the approved research run's pictures are kept until the build ends", opts,
   assert.equal(await pictures.prune(accountId, RUN_B), 0, 'the approved run is kept while the build is open')
   const build = await readBuild(db.pool, accountId)
   await endBuild(db.pool, accountId, build.id, 'done')
+  // Still the draft's own research, and the research its plan was composed from: kept after the build too.
+  assert.equal(await pictures.prune(accountId, RUN_B), 0)
+  // Once the owner started over on a newer research, nothing reads run A any more.
+  await changeDraft(db.pool, accountId, (row) => ({
+    research: { ...row.research, pictureRun: RUN_B, manifest: [] },
+    plan_research: null
+  }))
   assert.equal(await pictures.prune(accountId, RUN_B), 1)
   assert.equal(deleted.length, 1)
 })

@@ -69,7 +69,7 @@ export async function reviseBuild(
         plan: row.plan,
         lastEdit: row.last_edit ?? null,
         profile: row.needs_profile,
-        research: row.research
+        research: row.plan_research ?? row.research
       },
       refusal: null,
       endedAt: null,
