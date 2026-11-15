@@ -36,6 +36,7 @@ import { EarlierConversation, MoveToSite } from './handoff'
 import { PlanCard } from './PlanCard'
 import { savePlanEdit, undoPlanEdit } from './save-plan-edit'
 import { saveTemplateChoice } from './save-template'
+import { SiteUpdate } from './SiteUpdate'
 import type { ReviewPresence } from './review-presence'
 import { hasNote, type RevisionNotes } from './revision-notes'
 import type { BuildRunFeed, DraftSource } from './sources'
@@ -245,7 +246,16 @@ export function makeTails(deps: TailDeps) {
     handoff: (props: TailProps) => {
       const value = inBuild(props) ? null : turnValueOf<HandoffValue>(props, HANDOFF_KEY)
       return !Array.isArray(value?.conversation) ? null : (
-        <EarlierConversation messages={value.conversation} plan={<LivePlan deps={deps} />} t={deps.t()} />
+        <EarlierConversation
+          messages={value.conversation}
+          plan={
+            <>
+              <LivePlan deps={deps} />
+              <SiteUpdate deps={deps} />
+            </>
+          }
+          t={deps.t()}
+        />
       )
     }
   }

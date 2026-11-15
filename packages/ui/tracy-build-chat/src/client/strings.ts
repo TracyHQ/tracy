@@ -2,6 +2,8 @@
  * English baseline for the `tracy-build-chat` namespace. This package OWNS the namespace; `NS` lives beside `en` so
  * `check-dsh-locale` can find the owner. Wording follows the build chat mock the product owner approved.
  */
+import { rebuildEn } from './rebuild-strings'
+
 export const NS = 'tracy-build-chat'
 
 export const en = {
@@ -107,7 +109,8 @@ export const en = {
   'tool.edit': 'Updated your site plan',
   'tool.stopped': 'This step could not finish',
   'review.failed': 'Your answer was not sent. Try again.',
-  'handoff.earlier': 'Earlier conversation'
+  'handoff.earlier': 'Earlier conversation',
+  ...rebuildEn
 } as const
 
 export type StringKey = keyof typeof en
