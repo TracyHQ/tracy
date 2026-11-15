@@ -15,6 +15,7 @@
 import { nextSiteLabel, siteLabelFor } from 'website-opportunities/domain'
 import { freeLabelFor } from './opportunities-build/builds.js'
 import { saveBuildLabel } from './build-draft/build-store.js'
+import { shownBuildNameOf } from './lib/draft-build.js'
 import { CURRENT_BRIEF } from './lib/site-brief-row.js'
 import { mintSession } from './lib/session.js'
 import { promptSiteSession, siteSessionAhead } from './lib/site-session-ahead.js'
@@ -22,10 +23,8 @@ import { siteRowOf } from './opportunities-build/build-store.js'
 import { accountByEmail, grantFor } from './seats/store.js'
 import { STEP_CHAIN_WORKFLOW } from './lib/step-chain-switch.js'
 
-const nameOf = (plan) => {
-  const name = (plan?.facts ?? []).find((f) => f?.kind === 'business.name')?.value
-  return typeof name === 'string' && name.trim() !== '' ? name.trim() : 'my-site'
-}
+// The name the label is made from: what the site may show, else a neutral name (never a name the owner keeps off).
+const NEUTRAL_NAME = 'my-site'
 
 /**
  * The route's `startSite`: asks the create door for the build's site.
@@ -44,7 +43,12 @@ export function draftSiteStarter({ pool, config, kits, request, now = Date.now }
         pool,
         accountId,
         build.id,
-        await freeLabelFor({ pool, config, domain: { siteLabelFor, nextSiteLabel }, name: nameOf(plan) })
+        await freeLabelFor({
+          pool,
+          config,
+          domain: { siteLabelFor, nextSiteLabel },
+          name: shownBuildNameOf(build.snapshot) ?? NEUTRAL_NAME
+        })
       ))
     // A fresh identity for this server-owned ask, as the demo runner mints one: never a saved browser cookie.
     const cookie = `tracy_sess=${await mintSession(email, config.sessionSecret, now())}`

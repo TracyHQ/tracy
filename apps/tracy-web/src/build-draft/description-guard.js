@@ -7,6 +7,8 @@
  * Sentences under `MIN_WORDS` words ("Come early.") are too common to say anything was copied.
  */
 
+import { siteNameOf } from 'website-opportunities/domain/held-name.mjs'
+
 /** The shortest description sentence the guard compares: shorter ones are everyday phrases, not the owner's copy. */
 export const MIN_WORDS = 5
 
@@ -79,7 +81,9 @@ export function keepDescriptionOut(brief, description) {
     note(found, 'fact.story')
   }
 
-  const name = isText(brief.business?.name) ? brief.business.name.trim() : null
+  // The name the site may show: while the brief holds its business name off the site, its neutral identity or none.
+  const shownName = siteNameOf(brief)
+  const name = isText(shownName) ? shownName.trim() : null
   for (const page of Array.isArray(brief.sitemap) ? brief.sitemap : []) {
     for (const section of Array.isArray(page?.sections) ? page.sections : []) {
       const kind = section?.kind
