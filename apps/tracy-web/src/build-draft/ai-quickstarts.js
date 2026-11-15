@@ -127,15 +127,40 @@ function readKit(dir, slug, library) {
   return { slug, kit, manifest: m, problems: offerProblems }
 }
 
+/** Why a template version is held back when the step chain has no kit for it (`kitFor` found none). */
+const NO_CHAIN_KIT =
+  'no step chain kit for this version: the brand step could not read it, so the template is not offered'
+
 /**
  * The catalogue over one folder of kits. Read once; a new image brings new kits.
- * @param {{root?: string, library?: object[]}} [options] `library`: the Tracy library blocks (default: `TRACY_LIBRARY`)
+ *
+ * 🔒 ONLY A TEMPLATE THE STEP CHAIN CAN BUILD IS OFFERED. This folder and the step chain's kit list are two catalogues;
+ * a version found only here would be picked by the owner, then stop the brand step with `brand_input_missing` and no
+ * rerun. `kitFor` is the very lookup the brand step resolves its kit with (`build-draft-wiring.js` `kitRefOf`),
+ * injected so this folder does not repeat it: a version it finds nothing for is left out of `templatesFor` (an
+ * empty list when none is left, the "no template fits" answer), named in `skipped()`, and logged once for the team.
+ * The owner never sees it. Without `kitFor` nothing is filtered (a test's own folder of kits).
+ * @param {{root?: string, library?: object[], kitFor?: (template: {slug: string, name: string, version: string})
+ *   => unknown, log?: {warn?: Function}}} [options] `library`: the Tracy library blocks (default: `TRACY_LIBRARY`);
+ *   `kitFor`: truthy when the step chain has a kit for the template version
  * @returns {{templatesFor: (trade: string) => Array<{slug: string, name: string, version: string, picture: string,
  *   reason: string, quickstart: 'released', fits: true}>, loadKit: (slug: string) => ({template: object,
  *   blockStore: object, pageRecipes: object, mapping: object | null, library: object[]} | null),
  *   skipped: () => Array<{slug: string, reason: string}>}}
  */
-export function aiQuickstartCatalogue({ root = AI_QUICKSTARTS_DIR, library } = {}) {
+export function aiQuickstartCatalogue({ root = AI_QUICKSTARTS_DIR, library, kitFor, log = console } = {}) {
+  /** Slugs held back for want of a step chain kit, each logged once. */
+  const noChainKit = new Set()
+  const hasChainKit = (k) => {
+    if (!kitFor || kitFor(k.kit.template)) return true
+    if (!noChainKit.has(k.slug)) {
+      noChainKit.add(k.slug)
+      log?.warn?.(
+        `[build-draft] AI quickstart ${k.slug} ${k.kit.template.version} is not offered: ${NO_CHAIN_KIT}`
+      )
+    }
+    return false
+  }
   let kits = null
   const all = () => {
     if (kits) return kits
@@ -157,6 +182,7 @@ export function aiQuickstartCatalogue({ root = AI_QUICKSTARTS_DIR, library } = {
     templatesFor(trade) {
       return [...all().values()]
         .filter((k) => k.kit && k.problems.length === 0 && k.manifest.trades.includes(trade))
+        .filter(hasChainKit)
         .map(({ kit, manifest }) => ({
           ...kit.template,
           picture: manifest.picture,
@@ -171,6 +197,13 @@ export function aiQuickstartCatalogue({ root = AI_QUICKSTARTS_DIR, library } = {
     },
     skipped() {
       return [...all().values()]
+        .map((k) => ({
+          slug: k.slug,
+          problems:
+            k.kit && k.problems.length === 0 && kitFor && !kitFor(k.kit.template)
+              ? [NO_CHAIN_KIT]
+              : k.problems
+        }))
         .filter((k) => k.problems.length > 0)
         .map((k) => ({ slug: k.slug, reason: k.problems.join('; ') }))
     }

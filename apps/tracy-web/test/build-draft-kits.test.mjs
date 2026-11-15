@@ -12,6 +12,8 @@ import {
   KIT_MANIFEST_FILE,
   aiQuickstartCatalogue
 } from '../src/build-draft/ai-quickstarts.js'
+import { draftQuickstartCatalogue, kitRefOf } from '../src/build-draft-wiring.js'
+import { TRADES } from 'website-opportunities/domain'
 
 const WO_FIXTURES = fileURLToPath(
   new URL('../../../packages/wo/website-opportunities/test/fixtures/', import.meta.url)
@@ -109,6 +111,59 @@ test('loadKit reads a kit whose mapping is still pending (the plan needs no mapp
 test('the default library is the Tracy library of the WO package', () => {
   const real = aiQuickstartCatalogue({ root })
   assert.ok(real.loadKit('kit-released').library.some((b) => b.source === 'library' || b.id))
+})
+
+test('a template version whose step chain kit the brand step cannot find is not offered, and is logged once', () => {
+  const asked = []
+  const logged = []
+  const log = { warn: (...args) => logged.push(args.join(' ')) }
+  // A fake step chain kit list without kit-released 1.0.0: the lookup the brand step uses finds nothing for it.
+  const missing = aiQuickstartCatalogue({
+    root,
+    library: [],
+    log,
+    kitFor: (template) => (asked.push(template), kitRefOf(template, [{ ref: 'kit-food/j6/1.0.0' }]))
+  })
+  assert.deepEqual(missing.templatesFor('fitness'), [], 'exactly the "no template for this kind" answer')
+  assert.deepEqual(
+    missing.templatesFor('food').map((t) => t.slug),
+    ['kit-food']
+  )
+  missing.templatesFor('fitness')
+  assert.equal(logged.length, 1, 'logged once, however often the trade is asked')
+  assert.match(logged[0], /kit-released 1\.0\.0/)
+  assert.match(logged[0], /no step chain kit/)
+  assert.deepEqual(asked[0], { slug: 'kit-released', name: 'Example kit-released', version: '1.0.0' })
+  const why = Object.fromEntries(missing.skipped().map((s) => [s.slug, s.reason]))
+  assert.match(why['kit-released'], /no step chain kit/)
+  // The same version in the kit list: offered.
+  const present = aiQuickstartCatalogue({
+    root,
+    library: [],
+    log,
+    kitFor: (template) => kitRefOf(template, [{ ref: 'kit-released/j6/1.0.0' }])
+  })
+  assert.deepEqual(
+    present.templatesFor('fitness').map((t) => [t.slug, t.version]),
+    [['kit-released', '1.0.0']]
+  )
+  assert.equal(logged.length, 1)
+})
+
+test('the shipped tree: every template version offered for any trade resolves the step chain kit the brand step reads', () => {
+  const shipped = aiQuickstartCatalogue({ root: AI_QUICKSTARTS_DIR })
+  const offered = TRADES.flatMap((trade) => shipped.templatesFor(trade))
+  for (const t of offered) assert.ok(kitRefOf(t), `${t.slug} ${t.version} has a step chain kit`)
+  // The one shipped kit, JA Boxing 1.0.11, resolves its step chain kit whether or not its manifest lets it be offered.
+  const boxing = shipped.loadKit('ja-boxing').template
+  assert.deepEqual([boxing.slug, boxing.version], ['ja-boxing', '1.0.11'])
+  assert.equal(kitRefOf(boxing), 'ja-boxing/j6/1.0.11')
+  // The catalogue the server runs filters by that same lookup and offers the same templates.
+  const served = draftQuickstartCatalogue({ log: { warn: () => {} } })
+  assert.deepEqual(
+    TRADES.flatMap((trade) => served.templatesFor(trade)),
+    offered
+  )
 })
 
 test('the shipped tree: JA Boxing fits fitness, and is offered only once its kit is complete', () => {

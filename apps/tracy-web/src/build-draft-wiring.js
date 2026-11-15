@@ -9,6 +9,7 @@
 // holds no such revision: the step takes the draft's research brief instead (`--brief-file`, #616) with the logo file
 // the gatherer saved, and a draft without a brief or a known kit answers `brand_input_missing`.
 import { createBrandBeforeSite } from './brand-before-site.js'
+import { aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
 import { briefOfRevision } from './lib/bench-sql.js'
 import { readableKits } from './lib/template-kit-source.js'
 import { existsSync } from 'node:fs'
@@ -32,6 +33,20 @@ export function kitRefOf(template, kits = readableKits()) {
     (k) => k.ref.startsWith(`${template?.slug}/`) && k.ref.endsWith(`/${template?.version}`)
   )
   return found?.ref ?? null
+}
+
+/**
+ * The AI quickstart catalogue the server offers (`build-draft/ai-quickstarts.js`): only the template versions the brand
+ * step can resolve a kit for, by the brand step's own lookup (`kitRefOf`), so the owner never picks a template whose
+ * build would stop with `brand_input_missing`.
+ * @param {{kitRefOf?: Function, log?: {warn?: Function}, root?: string}} [deps]
+ */
+export function draftQuickstartCatalogue({ kitRefOf: refOf = kitRefOf, log = console, root } = {}) {
+  return aiQuickstartCatalogue({
+    ...(root ? { root } : {}),
+    log,
+    kitFor: (template) => refOf(template) !== null
+  })
 }
 
 /**

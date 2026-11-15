@@ -111,7 +111,7 @@ import { notificationsRoutes } from './notifications/route.js'
 import { unsubscribeHeadersFor } from './notifications/unsubscribe.js'
 import { onboardingRoutes } from './onboarding/route.js'
 import { seenHintRoutes } from './seen-hints/route.js'
-import { AI_QUICKSTARTS_DIR, aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
+import { AI_QUICKSTARTS_DIR } from './build-draft/ai-quickstarts.js'
 import { blankContractReader } from './step-chain-draft-blank-contract.js'
 import { buildDraftRoutes } from './build-draft/route.js'
 import { buildDraftBodyLimit } from './build-draft/body-limits.js'
@@ -128,7 +128,13 @@ import { rerunBrief } from './step-chain-draft-rerun-row.js'
 import { memoryRunRecords, runRecordReader } from './step-chain-draft-run-records.js'
 import { siteDoorsFor } from './step-chain-draft-site.js'
 import { siteBuildStore } from './build-draft/site-builds.js'
-import { draftBrandStep, draftPictureReader, draftPictures, preSiteGatherer } from './build-draft-wiring.js'
+import {
+  draftBrandStep,
+  draftPictureReader,
+  draftPictures,
+  draftQuickstartCatalogue,
+  preSiteGatherer
+} from './build-draft-wiring.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
 import { agentDemoCapabilities, agentDemoCreateContext } from './opportunities-build/agent-demo.js'
 import { researchOfRevision } from './opportunities-build/revision-research.js'
@@ -1189,7 +1195,8 @@ export function buildApp(deps) {
     // The Getting started screen's account flag (`onboarding/route.js`), before the dsh catch-all.
     app.route('/', onboardingRoutes({ config: deps.config, pool: deps.pool, now: deps.now }))
     app.route('/', seenHintRoutes({ config: deps.config, pool: deps.pool }))
-    const kits = deps.aiQuickstarts ?? aiQuickstartCatalogue()
+    // Only the templates the brand step can resolve a step chain kit for are offered (`draftQuickstartCatalogue`).
+    const kits = deps.aiQuickstarts ?? draftQuickstartCatalogue({ log: deps.log ?? console })
     const buildSessionIdOf = (email) => buildSessionIdFor(email, deps.config.sessionSecret)
     // The pre site build draft (`build-draft/route.js`, #603): answers, template and plan before a site exists; choosing a
     // template starts the brand step of the engine below.
