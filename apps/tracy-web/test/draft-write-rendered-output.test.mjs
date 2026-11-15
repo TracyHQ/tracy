@@ -1,7 +1,8 @@
 // What a whole draft build prints holds no markup the kit does not declare, whatever the writer wrote (#597). Each
 // hostile value is set in every writer text field of the florist's order; a value the order check or the guard refuses
 // stops the build before any door, and every value that gets through is written on the memory site and printed the way
-// the measured template prints it (`renderedOf`: raw, the JA ACM markers replaced blindly). The scan then finds no tag,
+// the measured template prints it (`renderedOf` with the kit's mapping: a place declared escaped printed escaped, every
+// other raw, the JA ACM markers replaced blindly). The scan then finds no tag,
 // handler, broken attribute or code address the blank site, the fields' inline parts or the library did not declare.
 // A control run with the escaping taken out shows the scan finds what it must. Invented data.
 //
@@ -35,7 +36,7 @@ const HOSTILE = [
 
 /** The tag names the kit declares: the blank site's own pages, every field's inline parts, the library's HTML. */
 function allowedOf(plan) {
-  const allowed = tagNamesIn(renderedOf(blankSite()))
+  const allowed = tagNamesIn(renderedOf(blankSite(), { mapping }))
   for (const b of florist.aiq.blockStore.blocks)
     for (const f of [...(b.fields ?? []), ...(b.itemFields ?? [])])
       for (const t of [...(f.inline?.wrapper ?? []), ...(f.inline?.emphasis ?? []).map((p) => p.tag)])
@@ -73,15 +74,16 @@ function orderWith(words) {
   return { order, set }
 }
 
+const mapping = florist.aiq.mapping
 const allowed = allowedOf(planOf())
 // The blank site's own values are the kit's: the scan reads only what the build wrote.
-const known = valuesOf(blankSite())
-const scan = (memory) => undeclaredIn(renderedOf(memory, { known }), allowed)
+const known = valuesOf(blankSite(), { mapping })
+const scan = (memory) => undeclaredIn(renderedOf(memory, { known, mapping }), allowed)
 
 test('an ordinary build prints nothing undeclared, and the scan reads what it wrote', async () => {
   const memory = blankSite()
   await runOn(memory)
-  assert.ok(renderedOf(memory, { known }).includes('Larkspur Blooms'))
+  assert.ok(renderedOf(memory, { known, mapping }).includes('Larkspur Blooms'))
   assert.deepEqual(scan(memory), [])
 })
 

@@ -94,6 +94,12 @@ export function consume(sink, entry, key) {
   }
 }
 
+/** An entry no longer written by record `key` (its value replaced by the plan's own): released and skipped, typed. */
+export function dropEntry(sink, entry, key, { reason, ...details }) {
+  release(sink, entry, key)
+  if (!sink.consumed.has(entry)) skip(sink, entry, reason, { record: key, ...details })
+}
+
 /** An entry left unwritten, with its reason. */
 export function skip(sink, entry, reason, details = {}) {
   sink.skipped.push({ entry, reason, ...details })

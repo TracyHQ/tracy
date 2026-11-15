@@ -12,12 +12,11 @@
 // resumed run from making a record twice.
 //
 // Pure apart from its own memory. Scripted failures: `fail` (the n-th mutating call throws before it acts, a door that
-// may pass when asked again) and `crash` (`n` or `{at: n, before?}`: the n-th mutating call acts, or does not when
-// `before`, then the process "dies": an error marked `fatal`, so the resume of a run is tested at every boundary).
-// What the site prints: `renderedOf` (`write-order-memory-render.mjs`). Spec: docs/references/draft-write-step.md.
+// may pass when asked again) and `crash` (`n` or `{at: n, before?}`: the n-th mutating call acts, or not when `before`,
+// then "dies" with a `fatal` error). What the site prints: `renderedOf`. Spec: docs/references/draft-write-step.md.
 import { createHash } from 'node:crypto'
 import { memoryHtml } from './write-order-memory-html.mjs'
-import { checkContract, checkUpdate, DoorRefusal } from './write-order-memory-rules.mjs'
+import { checkContract, checkUpdate, DoorRefusal, storedIdentity } from './write-order-memory-rules.mjs'
 
 export { memoryHtml }
 
@@ -177,7 +176,8 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
         { fields },
         () => {},
         () => {
-          for (const [key, value] of Object.entries(fields)) if (IDENTITY.includes(key)) identity[key] = value
+          for (const [k, v] of Object.entries(fields))
+            if (IDENTITY.includes(k)) identity[k] = storedIdentity(k, v)
           return { ok: true }
         }
       )

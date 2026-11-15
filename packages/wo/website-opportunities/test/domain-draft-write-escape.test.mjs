@@ -1,7 +1,8 @@
-// Every value of a draft write is safe as raw HTML where it prints (ticket #597): the template escapes almost nothing
-// (door measurements of plugin 0.24.85), so the plan escapes the words at a place printed raw, writes them escape
-// neutral at a place not measured, leaves a piece to the DOM, and the guard refuses whatever is not safe. A double
-// parenthesis is refused everywhere but in the declared markers of a codes field. Invented data (the JA Boxing florist).
+// Every value of a draft write is safe where it prints (ticket #597): the kit declares how each place prints
+// (`mapping.escapes`), so the plan escapes the words at a place printed raw, writes plain words where the template
+// escapes, writes escape neutral where it is mixed or not declared, leaves a piece to the DOM, and the guard refuses
+// whatever is not safe. A double parenthesis is refused everywhere but in the declared markers of a codes field.
+// Invented data (the JA Boxing florist).
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-draft-write-escape.test.mjs
 import assert from 'node:assert/strict'
@@ -9,7 +10,6 @@ import { test } from 'node:test'
 import {
   doubleParenthesisProblem,
   escapeRaw,
-  safetyAt,
   safeValue,
   typographic,
   unsafeAt
@@ -39,53 +39,16 @@ const planWith = (place, words) => {
   return writePlanOf(order, site.aiq, { stored: site.stored })
 }
 
-test('each place has its kind: a JA ACM data key and a module title raw, a piece to the DOM, the rest neutral', () => {
-  const kindOf = (match) => {
-    for (const op of plan.ops) for (const v of op.values ?? []) if (match(op, v)) return safetyAt(op, v.loc)
-    throw new Error('no value matches')
-  }
-  assert.equal(
-    kindOf((_, v) => v.loc.nestedJson === 'jatools-config' && !v.loc.xpath),
-    'raw'
-  )
-  assert.equal(
-    kindOf((op, v) => op.kind === 'module.copy' && v.loc.column === 'title'),
-    'raw'
-  )
-  assert.equal(
-    kindOf((op, v) => op.kind === 'contract.apply' && v.loc.column === 'value'),
-    'raw'
-  )
-  assert.equal(
-    kindOf((_, v) => Boolean(v.loc.xpath)),
-    'piece'
-  )
-  assert.equal(
-    kindOf((op, v) => op.kind === 'article.create' && v.loc.column === 'title'),
-    'neutral'
-  )
-  assert.equal(
-    kindOf((op) => op.kind === 'site.identity'),
-    'neutral'
-  )
-  assert.equal(
-    safetyAt(
-      { kind: 'module.copy' },
-      { entity: 'module-177', column: 'params', nestedJson: 'jatools-config', jsonPath: ['info-note'] }
-    ),
-    'neutral'
-  )
-  assert.equal(safetyAt({ kind: 'article.create' }, { entity: 'article-16', column: 'introtext' }), 'html')
-})
-
-test('a hostile writer value is escaped where it prints raw, neutral where not measured, quotes typographic in a piece', () => {
+test('a hostile writer value is escaped where it prints raw, neutral where mixed, quotes typographic in a piece', () => {
   const raw = 'home.home-b3.paragraph'
   assert.equal(valueOf(planWith(raw, HOSTILE), raw), 'Tom&#039;s &quot;best&quot; &amp; co')
-  const neutral = 'class.class-b3.paragraph-3'
-  assert.equal(valueOf(planWith(neutral, HOSTILE), neutral), 'Tom’s “best” & co')
+  const attribs = 'class.class-b3.paragraph-3'
+  assert.equal(valueOf(planWith(attribs, HOSTILE), attribs), 'Tom&#039;s &quot;best&quot; &amp; co')
   // A piece: the DOM escapes `&`, `<`, `>`, but leaves a quote in a text node, so the words get typographic quotes.
   const piece = 'class.class-b3.paragraph'
   assert.equal(valueOf(planWith(piece, HOSTILE), piece), 'Tom\u2019s \u201cbest\u201d & co')
+  // A legacy reference with no semicolon is escaped where it prints raw: it shows as written, not as the sign.
+  assert.equal(valueOf(planWith(raw, '&copy 2026'), raw), '&amp;copy 2026')
 })
 
 test('a module title through the contract is written neutral: the door counts it raw, so it counts what was written', () => {
@@ -103,7 +66,7 @@ test('escaping keeps every count the writer and the door make', () => {
   assert.equal(doorLength(slot, escapeRaw('A & B')), 'A &amp; B'.length)
 })
 
-test('the guard refuses a value not escaped at a raw place, or not escape neutral at a place not measured', () => {
+test('the guard refuses a value not safe at its kind of place', () => {
   for (const words of ['a "b"', "it's", 'a < b', 'a & b', '&copy; 2026'])
     assert.equal(
       guarded((p) => {
@@ -118,14 +81,21 @@ test('the guard refuses a value not escaped at a raw place, or not escape neutra
     }),
     'passed'
   )
-  for (const words of ['a "b"', "it's", '&amp; co', '&#39;'])
-    assert.equal(
-      guarded((p) => {
-        valueWhere(p, (op, v) => op.kind === 'article.create' && v.loc.column === 'metadesc').value = words
-      }),
-      'value_not_escaped',
-      words
-    )
+  // metadesc is escaped once by the template (unsafe []): plain words pass, a text that reads as a reference does not.
+  const metadesc = (words) =>
+    guarded((p) => {
+      valueWhere(p, (op, v) => op.kind === 'article.create' && v.loc.column === 'metadesc').value = words
+    })
+  for (const words of ['a "b"', "it's", 'a < b', 'Q & A']) assert.equal(metadesc(words), 'passed', words)
+  for (const words of ['&amp; co', '&#39;', '&copy 2026'])
+    assert.equal(metadesc(words), 'value_not_escaped', words)
+  // A place the kit says the build never writes refuses any value.
+  assert.equal(
+    guarded((p) => {
+      p.ops.find((op) => op.kind === 'category.create').recordKind = 'tag'
+    }),
+    'place_not_written'
+  )
 })
 
 test('a double parenthesis is refused at every place, with or without a letter after it', () => {

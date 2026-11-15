@@ -26,6 +26,11 @@
 //   every write        APPLY_ID_REQUIRED                    no apply id
 import { isTextNode } from './draft-write-codec.mjs'
 import { doorLength } from './draft-write-length.mjs'
+import { decodeEntities } from './draft-write-entities.mjs'
+
+/** `site.identity` stores the site name with `<` and `>` taken out and every character reference read (measured). */
+export const storedIdentity = (key, value) =>
+  key === 'sitename' ? decodeEntities(String(value).replace(/[<>]/g, '')) : value
 
 export class DoorRefusal extends Error {
   constructor(code, message) {

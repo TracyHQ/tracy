@@ -20,8 +20,9 @@
 //   pair_incomplete              one half of a button (label, address) or of an icon pair written without the other
 //   library_html_stale           a library block's HTML that does not show a shown field of the order
 //   library_html_unsafe          a library block's HTML with anything `runsCodeIn` refuses
-//   value_not_escaped            words not escaped at a place printed raw, or not escape neutral at a place not
-//                                measured (`draft-write-escape.mjs`)
+//   value_not_escaped            words not safe at their kind of place, the kind read from the kit's escapes
+//                                declaration (`draft-write-escape-place.mjs`, `draft-write-escape.mjs`)
+//   place_not_written            a value at a place the kit declares the build never writes (`not-written`)
 //   record_name_empty            a contact created with an empty name, which the site would take (measured)
 //   markup_runs_code             any other value written as HTML (an HTML piece, a value with a tag or a marker start,
 //                                a created record's HTML) with anything `runsCodeIn` refuses, or a value written where
@@ -78,7 +79,7 @@ function valueProblems(op, value, ctx, report) {
   if (op.kind === 'contract.apply' && /[<>]/.test(text))
     report('markup_forbidden', { ...at, via: 'contract' })
   const markers = loc.nestedJson && !loc.xpath ? declaredMarkersOf(e) : new Set()
-  placeProblems(op, at, text, { markers, loc, slot }, report)
+  placeProblems(op, at, text, { markers, loc, slot, mapping: ctx.kit.mapping }, report)
   if (loc.nestedJson && !loc.xpath && /<\/?[a-z]/i.test(text))
     report('markup_forbidden', { ...at, via: 'tag_at_codes_place' })
   if (value.rule?.startsWith('icon_class') && !ctx.classes.has(text)) report('icon_not_in_list', at)
@@ -90,7 +91,7 @@ function valueProblems(op, value, ctx, report) {
  * The columns and HTML an operation sends besides its values: a created record's title and alias hold no tag at all
  * (they are plain text), its link no code address, its HTML no markup that runs code.
  */
-function columnProblems(op, report) {
+function columnProblems(op, report, mapping) {
   for (const [column, text] of Object.entries(op.fields ?? {})) {
     if (typeof text !== 'string') continue
     if (PLAIN_COLUMNS.has(column) && TAG_START.test(text))
@@ -100,7 +101,7 @@ function columnProblems(op, report) {
         op,
         { op: op.key, column },
         text,
-        { markers: new Set(), loc: { column, entity: op.recordKind } },
+        { markers: new Set(), loc: { column, entity: op.recordKind }, mapping },
         report
       )
     codeProblems(
@@ -176,7 +177,7 @@ export function guardPlan(plan, ctx) {
   for (const op of plan.ops) {
     if (op.kind === 'picture.upload') pictureProblems(op, report)
     if (op.kind === 'library.create') libraryHtmlProblems(op, report)
-    columnProblems(op, report)
+    columnProblems(op, report, ctx.kit.mapping)
     for (const v of list(op.values)) valueProblems(op, v, guard, report)
   }
   for (const c of list(plan.controls))

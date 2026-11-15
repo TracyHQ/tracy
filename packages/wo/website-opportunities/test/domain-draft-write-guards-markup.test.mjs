@@ -72,7 +72,8 @@ test('a plain text column holds no tag, comment or bogus form: a record title or
       }
     )
   }
-  // A menu item title is a place not measured: a value there reads the same escaped or not, or it is refused.
+  // A main menu item title is escaped where it prints, twice in a list page's hidden heading (the kit's escapes, measured):
+  // every mark is unsafe there, so a quote becomes typographic and `<`, `>`, `&` or a reference is refused.
   for (const [title, code] of [
     ['Roses < 5 days', 'value_not_escaped'],
     ['We <3 roses', 'value_not_escaped'],
@@ -80,7 +81,8 @@ test('a plain text column holds no tag, comment or bogus form: a record title or
     ["Bob's roses", 'value_not_escaped'],
     ['Tom &amp; Jerry', 'value_not_escaped'],
     ['Open (weekdays (9 to 5))', 'markup_forbidden'],
-    ['Q&A', 'passed'],
+    ['Q&A', 'value_not_escaped'],
+    ['Questions and answers', 'passed'],
     ['Bob\u2019s roses', 'passed'],
     ['Open (weekdays, 9 to 5)', 'passed']
   ])

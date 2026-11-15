@@ -1,11 +1,11 @@
 // The hide keys the draft write reads besides `by` and `element` (ticket #597): a control's `scope` and `from` (a
 // button the template prints on every card from the first card's words) and an omit list's `order: "packed"`. An
-// invented block of three cards, each with a label and an address, and an invented list of rows in one HTML value.
+// invented block of three cards (a card's own words that never print are skipped, `CONTROL_FROM_FIRST`), each with a label and an address, and an invented list of rows in one HTML value.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-draft-write-kit-hides.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { emptyControl, omitRows } from '../domain/draft-write-plan-hides.mjs'
+import { CONTROL_FROM_FIRST, emptyControl, omitRows } from '../domain/draft-write-plan-hides.mjs'
 import { put, recordOf, sinkOf } from '../domain/draft-write-sink.mjs'
 
 const at = (field, i) => ({ entity: 'module-9', column: 'params', jsonPath: ['cards', field, i] })
@@ -48,7 +48,7 @@ test('from the first item: its words are written into every card, as the templat
   assert.ok(!state.sink.unproven.some((u) => u.code === 'control_shared_by_items'))
 })
 
-test('from the first item: an empty first card, or another card with other words, stops the plan', () => {
+test('from the first item: an empty first card stops the plan', () => {
   assert.equal(
     codeOf(() => {
       const { state, record } = cardsWith([null, 'Book now', null])
@@ -56,13 +56,19 @@ test('from the first item: an empty first card, or another card with other words
     }),
     'control_first_item_empty'
   )
-  assert.equal(
-    codeOf(() => {
-      const { state, record } = cardsWith(['Book now', 'Call us', null])
-      emptyControl(state, record, control(SHARED))
-    }),
-    'control_words_differ'
+})
+
+test('from the first item: a card with other words takes the first words, its own skipped typed; the plan goes on', () => {
+  const { state, record } = cardsWith(['Book now', 'Call us', null])
+  emptyControl(state, record, control(SHARED))
+  for (const i of [1, 2]) assert.equal(valueAt(record, 'label', i).value, 'Book now')
+  assert.deepEqual(
+    state.sink.skipped.map((s) => [s.entry, s.reason, s.by]),
+    [['card-1.label', CONTROL_FROM_FIRST, 'card-0.label']]
   )
+  // The card's address agreed with the first: written, not skipped.
+  assert.equal(state.sink.consumed.get('card-1.link'), record.key)
+  assert.ok(!state.sink.consumed.has('card-1.label'))
 })
 
 test('scope item: each card prints its own, so other words are fine; no scope keeps the older flag', () => {

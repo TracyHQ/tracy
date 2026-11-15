@@ -57,8 +57,8 @@ Still counted in UTF-16 units elsewhere in the domain (other owners, not changed
 | `text_over_limit` | a value is longer than its field limit (`unit: 'visible'`), or than its contract slot's `maxCharacters` as the door counts it (`unit: 'door'`); see "Text limits: one unit, and the door's own count" |
 | `straight_quote_in_open_slot` | a straight double quote goes to a contract slot that opens empty |
 | `empty_text_node` | an empty value is sent to a text node (the write sends one space instead) |
-| `value_not_escaped` | words not escaped at a place printed raw (`via: not_escaped`), or not escape neutral at a place not measured (`via: not_escape_neutral`); see "Every value safe as raw HTML" |
-| `record_name_empty` | a contact created with an empty or blank name: the site writes it (measured), so the build refuses it |
+| `value_not_escaped` | words not safe at their kind of place as the kit declares it (`via`: `not_escaped`, `not_escape_neutral`, `unsafe_mark`, `not_a_token`); see "Every value safe where it prints" |
+| `record_name_empty` | a contact created with an empty or blank name: the site writes it (measured), so the build refuses it. A contact with no name value (no block brought the business name in) is named after its own page (`draft-write-plan-names.mjs`); only with neither is it refused |
 | `markup_forbidden` | a tag is sent through the contract, a `((` or `))` anywhere outside the declared markers of a codes field (`double_parenthesis`), declared markers left open (`markers_unbalanced`) or whose converted form runs code (`markers_run_code`), a tag is sent to a codes place, a plain text column (a record title or alias, a `title`, `name`, `alias`, `label`, `metadesc` column, a page title or search description key) holds a tag, a comment or any `<!`, `<?`, `</` form (`tag_in_plain_column`), or a field holds markup it does not declare (`field_inline`, `markupNotDeclared`). The order check catches the field cases first and stops the build there; for a value the writer wrote, the copy check catches them before that and the writer rewrites it (see "Where markup is caught") |
 | `markup_runs_code` | a value written as HTML (an HTML piece, a value with a tag or a double parenthesis, a created record's HTML) holds a code element (`script`, `iframe`, `style`, `svg` and the like) or a raw text element (`title`, `textarea`, `xmp`, ...), an `on*` handler, a code address in an address attribute (`href`, `src`, `action`, ...) or a style that runs code, in a tag or a marker, in any case, whatever entities, slashes, quotes or white space hide it; markup inside an attribute value; a comment or any other `<!`, `<?`, `</` form (`markup_unread`); a `((` or `))` no marker reads (`marker_unread`); a tag, a marker or a quote left open, a closing tag that closes nothing or the wrong element (`markup_unbalanced`); or a value written where an address is written (a link field, a link or picture slot, an address attribute piece, a record's link) is an address that runs code (`javascript:`, `vbscript:`, `data:` other than a picture). Words are never read as an address: `Data: we keep only what you send` passes (`draft-write-markup.mjs`) |
 | `slot_missing` | a contract value with no slot, or a slot the blank site contract does not have |
@@ -96,30 +96,42 @@ refusal taken for safety, which the writer redoes with other punctuation. The on
 adds): there only those marker names pass, well formed and balanced, and the value with every `((` and `))` converted
 must pass `runsCodeIn` (`doubleParenthesisProblem`, `draft-write-escape.mjs`).
 
-## Every value safe as raw HTML (`draft-write-escape.mjs`)
+## Every value safe where it prints (`draft-write-escape-place.mjs`, `draft-write-escape.mjs`)
 
-The template escapes almost nothing (measured: only block 177's `info-email-label`, `info-email`, `info-phone-label`,
-`info-phone`, `info-note` and the chrome's `moduleclass_sfx`), so the write step is the only barrier. After the plan
-is built, `safeOps` makes every value and every created record column safe at its kind of place (`safetyAt`), and the
-guard refuses any value that is not (`value_not_escaped`, `draft-write-place-guard.mjs`):
+The kit declares how every place it writes prints (`mapping.escapes.places`, measured on JA Boxing 1.0.11 with
+plugin 0.24.85, [ai-quickstart-contract.md](ai-quickstart-contract.md), "Escaping of every place the build writes").
+The write reads it for each value with `escapeOf(mapping, placeOf(mapping, loc))` (`ai-quickstart-escapes.mjs`;
+a column of a record the write creates is the place `{kind, column, menutype}`, a contact's `title` its `name`).
+After the plan is built, `safeOps` makes every value and created record column safe at its kind of place
+(`safetyAt`), and the guard refuses any value that is not (`value_not_escaped`, `place_not_written`,
+`draft-write-place-guard.mjs`):
 
-| Place | Kind | Written as | Why |
+| `escaped` | Kind | Written as | Guard refuses |
 |---|---|---|---|
-| a JA ACM block's data key (`jatools-config`, no xpath): titles, texts, links, picture paths, classes | raw | escaped as `htmlspecialchars` with ENT_QUOTES (`&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#039;`); declared markers kept | measured printed raw in text, `href`, `src`, `style`, `alt`, `class`, `title` |
-| a module title written on a copy | raw | escaped | measured printed raw (chrome text, a plans tab label) |
-| a module setting (`params` key: `top-desc`, `title-btn`, `link-btn`) | raw | escaped | measured printed raw (chrome) |
-| a site language string (`value`) | raw | escaped | printed by `Text::_` as stored |
-| a module title or other slot through the contract that the door counts raw (`countsRaw`: a fixed width column) | neutral | escape neutral | escaping would make the door count more than the writer wrote and refuse it |
-| block 177's `info-*` keys, `moduleclass_sfx` | neutral | escape neutral | measured escaped by the template: escaping again would show `&amp;` |
-| an xpath piece of a stored HTML value | piece | the DOM escapes `&`, `<`, `>`; plain words get typographic quotes | the DOM leaves a quote in a text node as it is, and where an `attribs` piece prints is not measured |
-| a whole HTML column (`introtext`, `fulltext`, `content`, `misc`) | html | words escaped (`textAt`, `inline_html`), declared tags kept | printed as HTML |
-| every other place: a created record's title, alias, name, `metadesc`, attribs key, contact column, a menu item title, a page title key, the site name | neutral | escape neutral | not measured: whether Joomla or the template escapes them is not known |
+| `false` | raw | escaped as `htmlspecialchars` with ENT_QUOTES (`&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#039;`); declared markers kept | an unescaped `<`, `>`, quote or `&` |
+| `false`, a whole HTML column (`introtext`, `fulltext`, `content`, `misc`) | html | words escaped (`textAt`, `inline_html`), declared tags kept | markup that runs code |
+| `false`, an xpath piece | piece | the DOM escapes `&`, `<`, `>`; plain words get typographic quotes | markup that runs code |
+| `false`, a module title | neutral | the character, never a reference: the administrator escapes the stored title (measured, "Module titles") | as neutral |
+| `false`, a contract slot the door counts raw (`countsRaw`) | neutral | escaping would make the door count more than the writer wrote | as neutral |
+| `true` (`metadesc`, `page_title`, `og_*`, a menu item title, a contact's name, block 177's `info-*` keys) | plain | the words as they are; quotes typographic when a quote is in `unsafe` | every mark of `unsafe` and `doorRefuses`, and any text that reads as a reference |
+| `"mixed"` (an article title, `images`, a contact's address and phone, the site name) | neutral | escape neutral | `<`, `>`, a straight quote, any text that reads as a reference |
+| `"not-printed"` (a created category title) | free | as it is | nothing of its own |
+| `"not-text"` (an id, a class, a position) | token | as it is | `<`, `>`, a quote |
+| `"not-written"` | unwritten | never | any value (`place_not_written`) |
+| no entry, two alike, or no `escapes` | neutral | escape neutral | as neutral: never a guess |
 
 **Escape neutral** means the value reads the same escaped or not, so it is never escaped twice and never left open:
 straight quotes become typographic ones (`"` as `“` and `”`, `'` as `’`, or `‘` at a word start), and a `<`, a `>`
-or a character reference (`&#39;`, `&amp;`) is refused. An address at a neutral place keeps its quotes, so a quote
-there is refused. A plain `&` stays (`Q&A`, `R&D`); a legacy name without its semicolon (`&copy 2026`) could still
-show as a sign where the place does not escape: a look, never markup.
+or a text that reads as a character reference is refused. An address at a neutral place keeps its quotes, so a quote
+there is refused.
+
+**A text that reads as a reference** is `&` followed by `#` or a letter (`&#39;`, `&amp;`, and a legacy name with no
+semicolon: `&copy 2026` shows as `© 2026` where it prints raw, measured). The kit's rule
+(`escapes.legacyReferences`): it is written only where the build escapes the `&` (raw, html); at a plain or neutral
+place it is refused. So is `Q&A` there; at a raw place it is written `Q&amp;A`.
+
+**The JA ACM markers.** Every `((` and `))` is refused at every place outside the declared markers of a codes field
+(measured: the converter replaces them blindly in the whole `jatools-config` string).
 
 **Lengths.** The visible count (`visibleLength`) reads entities, so an escaped value counts what the writer wrote;
 typographic quotes are one code point each. Where the door counts the raw string, the value is written neutral, so
@@ -142,7 +154,7 @@ measured, or whose meaning the contract leaves open, is never acted on. When the
 |---|---|
 | `pages.<type>.menuItem` | the page item takes the declared link (`{record}`, `{category:<type>}`, `{page:<type>}` as references the run fills; `{entity:<key>}` as the kept record's id), template style (0 or a kept style's id), params and parent page item, created after its parent |
 | `pages.<type>.under` | an item page whose list page is in the plan has no item of its own: its address is the declared one, its modules are assigned to the list page's item, its main menu entry is skipped (`page_reached_under`), and a cut row keyed to it is cut (`row_page_reached_under`). The plan carries the addresses in `plan.under` |
-| `pages.<type>.under.detailPositions` | a block assigned per page (or a library block) on a page reached under its list page must sit at one of the declared positions, with `assignTo: "list-page"`; elsewhere it would print on the list page, so the plan stops (`under_page_position_not_detail`). Every-page blocks are not checked |
+| `pages.<type>.under.detailPositions` | a module on a page reached under its list page is assigned to the list page's item, so it prints there too except at a declared position (`assignTo: "list-page"`). Outside them (`draft-write-under-blocks.mjs`): every-page blocks are not checked; one record the list page shows anyway (in place or `recipe-pages`) is written as placed; any other block a recipe of the page type places (a variant included) is not written on that page, its entries skipped `under_page_block_on_list_page` and listed in `plan.underNotWritten` (unproven `under_page_block_not_written`); a block no recipe of the page type places, or a library block, stops the plan (`under_page_position_not_detail`). The positions are also the ones `detail_position_not_printed` reads |
 | `pages.<type>.ownItem` | the item page's own item when the plan has no list page; a block only in a detail position is flagged `detail_position_not_printed` |
 | `pages.<type>.record` | the created article or contact starts from `base` and is filed in the declared category (`extension`, `params`, at the top level); the category's `title.from` is prose, so the title is the list page's name |
 | `pages.<type>.unbuilt` | stops `page_unbuilt` (with the kit's code): the page is never planned, so never reported written |
@@ -153,7 +165,7 @@ measured, or whose meaning the contract leaves open, is never acted on. When the
 | `seo.featuredView.article` | every created article of its page type is written with `set`; none in the plan: flagged `featured_article_none` |
 | `facts.<f>[i].notWritten` | the place is never sent; `plan.notWritten` and the run's report and recorded value list it (fact, entity, column, `by`), and a fact all of whose places are so is skipped `fact_not_written_by_decision` |
 | `look.accent.writtenAs` | the accent is still not written: its sheet is built from the template's stylesheets the write step does not read, and the accent on the template's two sides is not measured (`accent_modes_not_measured`) |
-| hides `scope`, `from` | `scope: "item"`: each item prints its own control. `scope: "block"`, `from: "first-item"`: the first item's words are written into every item (`hides.from_first_item`); an empty first item or other words stop |
+| hides `scope`, `from` | `scope: "item"`: each item prints its own control. `scope: "block"`, `from: "first-item"`: the first item's words are written into every item (`hides.from_first_item`); another item's own words never print, so they are not written and their entry is skipped (`control_printed_from_first_item`); an empty first item stops |
 | hides `order: "packed"` | a row left empty before a filled one stops (`omit_row_gap`) |
 
 Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
@@ -169,8 +181,9 @@ Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
 | `menu_items_not_measured`, `menu_items_over_max` | see `menu.items` above |
 | `container_copies_per_page`, `held_block_without_container` | a page places more containers than `perPage`, or a held block without its container |
 | `created_frame_not_declared` | see `createdFrames` above |
-| `under_page_position_not_detail` | a block assigned to a page reached under its list page sits outside the declared detail positions, or `assignTo` is not `list-page` |
-| `control_first_item_empty`, `control_words_differ` | a control printed from the first item: the first has no words, or another item has other words |
+| `under_page_position_not_detail` | a block on a page reached under its list page sits outside the declared detail positions and no recipe of the page type places it (or it is a library block), or `assignTo` is not `list-page` |
+| `place_not_written` | a value at a place the kit's `escapes` declares `not-written` |
+| `control_first_item_empty` | a control printed from the first item: the first has no words while another item has some |
 | `omit_row_gap` | an `omit` list declared `packed` with a gap |
 
 ## Skip reasons (in `plan.skipped`)
@@ -190,7 +203,9 @@ Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
 | `accent_variables_not_declared`, `accent_door_missing`, `accent_modes_not_measured` | the accent is not written |
 | `page_reached_under`, `row_page_reached_under`, `row_keyed_to_page_type` | a page reached under its list page has no item of its own; a cut row keyed to such a page, or to the page type a `keyedRow` keys, is cut |
 | `container_without_held` | a container copy that holds none of the page's blocks is not kept |
+| `under_page_block_on_list_page` | a recipe block on a page reached under its list page, outside the detail positions, whose record the list page does not show: written, it would print on the list page too (`plan.underNotWritten`) |
 | `fact_not_written_by_decision` | every place of the fact is left unwritten by the kit's decision (`notWritten`) |
+| `control_printed_from_first_item` | an item's own words for a control the template prints from the first item's words (`hides` `scope: "block"`, `from: "first-item"`): they never print; the first item's words are written there instead (`by`: the entry whose words print) |
 
 ## Unproven (flags in `plan.unproven`; the run copies them to its report)
 
@@ -208,7 +223,7 @@ Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
 | `article_category_not_declared`, `seo_record_not_declared` | the contract does not say which category an article goes in, or which record holds a page's search texts |
 | `control_shared_by_items`, `omit_row_gap`, `omit_on_record_in_place` | see Hides in [draft-write-step.md](draft-write-step.md) |
 | `row_form_keys`, `recipe_ordering` | not measured on a real site (contract point 7) |
-| `detail_position_not_printed` | a block that sits only in a detail position (`detail-bottom-1`, `main-bottom-2`, `DETAIL_POSITIONS`) on a page whose menu item opens its own article: T4 prints those positions only under the list page's menu item (measured), so the block prints nothing |
+| `detail_position_not_printed` | a block that sits only in a detail position (every position the kit declares in a `pages.<type>.under.detailPositions`, `detailPositionsOf`) on a page whose menu item opens its own article: T4 prints those positions only under the list page's menu item (measured), so the block prints nothing |
 | `article_without_page` | a created article with no menu item of its own: it takes the home page's layout and prints nothing (measured) |
 | `initials_drawn_as_figure` | the drawer has strokes for A to Z only: a name in another script is drawn as a neutral figure, and the JA Boxing frames have no text slot for the letters |
 

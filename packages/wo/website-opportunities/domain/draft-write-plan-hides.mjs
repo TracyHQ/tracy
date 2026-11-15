@@ -9,11 +9,15 @@
 //   empty  a control (label and address) left empty in every location of its fields is written `""` there, label and
 //          address together. When the fields are item fields one control is printed for every item from the first
 //          item's words (JA Boxing's pricing cards): written, it must be the same words in every item, first included
-//          (`control_shared_by_items`, unproven: the plan does not choose which item's words win).
+//          (`control_shared_by_items`, unproven: the plan does not choose which item's words win). Declared
+//          `scope: "block", from: "first-item"`, the first item's words are written into every item.
 // Pure; part of `planCopies`.
 import { addressOf, movedAfterCut } from './draft-write-codec.mjs'
 import { DraftWriteError } from './draft-write-error.mjs'
-import { put, unproven } from './draft-write-sink.mjs'
+import { dropEntry, put, unproven } from './draft-write-sink.mjs'
+
+/** The skip reason of an item's own words for a control printed from the first item's words. */
+export const CONTROL_FROM_FIRST = 'control_printed_from_first_item'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const elementOf = (xpath) => String(xpath ?? '').replace(/\/(@[\w-]+|text\(\)(\[\d+\])?)$/, '')
@@ -123,8 +127,10 @@ const stop = (code, record, hide, why) =>
 
 /**
  * A control the template prints on every item from the first item's words (`scope: "block"`, `from: "first-item"`):
- * those words are written into every item, so the stored items agree with what prints. A first item with no words
- * while another has some, or items with other words, would print words the plan did not mean: the plan stops.
+ * those words are written into every item, so the stored items agree with what prints. Another item's own words
+ * never print, so they are not written: the first item's words take their place and their entry is skipped
+ * (`CONTROL_FROM_FIRST`, with the entry whose words print). A first item with no words while another has some would
+ * print no button where the plan meant one: the plan stops.
  */
 function fromFirstItem(state, record, hide, fields, kept) {
   for (const f of fields) {
@@ -135,14 +141,15 @@ function fromFirstItem(state, record, hide, fields, kept) {
     for (const locs of items.slice(1))
       locs.forEach((loc, i) => {
         const held = writtenAt(record, loc)
-        if (!held) put(state.sink, record.key, loc, first[i].value, { rule: 'hides.from_first_item' })
-        else if (JSON.stringify(held.value) !== JSON.stringify(first[i].value))
-          throw stop(
-            'control_words_differ',
-            record,
-            hide,
-            'an item has other words than the first, which print'
-          )
+        if (held && JSON.stringify(held.value) === JSON.stringify(first[i].value)) return
+        if (held) record.values.delete(addressOf(loc))
+        put(state.sink, record.key, loc, first[i].value, { rule: 'hides.from_first_item' })
+        if (held?.entry && ![...record.values.values()].some((v) => v.entry === held.entry))
+          dropEntry(state.sink, held.entry, record.key, {
+            reason: CONTROL_FROM_FIRST,
+            by: first[i].entry,
+            fields: hide.control
+          })
       })
   }
 }

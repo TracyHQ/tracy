@@ -9,7 +9,7 @@
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-draft-write-article-pages.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { DETAIL_POSITIONS, unprintedBlocksOf } from '../domain/draft-write-plan-pages.mjs'
+import { detailPositionsOf, unprintedBlocksOf } from '../domain/draft-write-plan-pages.mjs'
 import { kit, plan } from './fixtures/draft-write/guarded.mjs'
 
 test('every created article is reached under its list page, as the kit declares (pages.class.under)', () => {
@@ -31,7 +31,17 @@ test('every created article is reached under its list page, as the kit declares 
 })
 
 test('a block only in a detail position prints nothing on an article page of its own: reported, by block', () => {
-  assert.deepEqual(DETAIL_POSITIONS, ['detail-bottom-1', 'main-bottom-2'])
+  // The detail positions are the kit's own declaration, not a list of the write step.
+  assert.deepEqual(detailPositionsOf(kit).sort(), ['detail-bottom-1', 'main-bottom-2'])
+  const none = { ...kit, mapping: { ...kit.mapping, pages: {} } }
+  assert.deepEqual(
+    unprintedBlocksOf(
+      none,
+      { id: 'class', blocks: [{ id: 'x', block: 'block-159' }] },
+      { form: 'articleLink' }
+    ),
+    []
+  )
   const page = {
     id: 'class',
     blocks: [

@@ -17,6 +17,7 @@ export const DRAFT_WRITE_NO_RERUN = Object.freeze([
   'markup_forbidden',
   'markup_runs_code',
   'value_not_escaped',
+  'place_not_written',
   'record_name_empty',
   'slot_missing',
   'icon_not_in_list',
@@ -48,7 +49,6 @@ export const DRAFT_WRITE_NO_RERUN = Object.freeze([
   'created_frame_not_declared',
   'omit_row_gap',
   'control_first_item_empty',
-  'control_words_differ',
   'under_page_position_not_detail'
 ])
 

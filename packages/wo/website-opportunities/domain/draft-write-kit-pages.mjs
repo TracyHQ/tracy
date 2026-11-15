@@ -5,6 +5,7 @@
 // blocks". A kit with no `pages` key keeps the older planner (the featured view, flagged `menu_item_link_not_declared`).
 import { DraftWriteError } from './draft-write-error.mjs'
 import { recordOf } from './draft-write-sink.mjs'
+import { checkUnderBlocks } from './draft-write-under-blocks.mjs'
 
 const PLACEHOLDER = /\{([^}]*)\}/g
 
@@ -41,30 +42,9 @@ export function underPagesOf(state) {
     const list = decl?.under ? firstOfType(state.order, decl.under.page) : null
     if (!list) continue
     out[page.id] = { list: list.id, link: linkOf(state, page, decl.under.address) }
-    checkDetailPositions(state, page, decl.under.detailPositions)
+    checkUnderBlocks(state, page, list, decl.under.detailPositions)
   }
   return out
-}
-
-/**
- * A block assigned to a page reached under its list page is assigned to the list page's item
- * (`under.detailPositions.assignTo`), so it prints on the item page only at a declared detail position; anywhere
- * else it would print on the list page instead. Every-page blocks are not assigned per page.
- */
-function checkDetailPositions(state, page, detail) {
-  const positions = Array.isArray(detail?.positions) ? detail.positions : null
-  for (const block of page.blocks) {
-    if (block.state === 'hidden' || state.dropped?.has(block.id)) continue
-    const assign = state.kit.mapping.placements?.[block.block]?.assign
-    if (block.source !== 'library' && (!assign || assign === 'every-page')) continue
-    const position = block.position?.resolved ?? block.position?.request ?? null
-    if (positions?.includes(position) && detail.assignTo === 'list-page') continue
-    throw new DraftWriteError(
-      'under_page_position_not_detail',
-      `block ${block.id} of ${page.id} sits at ${position}, not a detail position its list page item prints`,
-      { page: page.id, block: block.id, position, positions }
-    )
-  }
 }
 
 /** The record a page shows (`{record}` of a link): its article or its contact. */

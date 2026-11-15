@@ -1,8 +1,7 @@
 // The write plan of a draft build (ticket #597): a checked write order and the AI quickstart declarations in, the
 // ordered door operations that build the site into a blank site out. Deterministic, no I/O. Every operation carries
 // the order entries it writes and the contract rules it follows; every order entry is written by exactly one operation
-// or listed in `skipped` with its reason (`draftWriteCoverage`). Every value is made safe where it prints
-// (`draft-write-escape.mjs`), then the guards run before any door is called. Spec: docs/references/draft-write-step.md.
+// or listed in `skipped` with its reason (`draftWriteCoverage`). Values made safe, then guarded: draft-write-step.md.
 import { entryCountsOf } from './draft-write-coverage.mjs'
 import { DraftWriteError } from './draft-write-error.mjs'
 import { safeOps } from './draft-write-escape.mjs'
@@ -18,8 +17,10 @@ import {
   planFeaturedArticle
 } from './draft-write-kit-build.mjs'
 import { underPagesOf } from './draft-write-kit-pages.mjs'
+import { recipeBlocksOf } from './draft-write-under-blocks.mjs'
 import { planCategories } from './draft-write-plan-categories.mjs'
 import { planFacts, planLook } from './draft-write-plan-facts.mjs'
+import { nameRecords } from './draft-write-plan-names.mjs'
 import { opsOf } from './draft-write-plan-ops.mjs'
 import { pairsOf } from './draft-write-plan-pairs.mjs'
 import { mainMenuOf, planMenuItems, planPages } from './draft-write-plan-pages.mjs'
@@ -61,7 +62,9 @@ export function draftWriteKitOf(aiq) {
     rowHides,
     mainMenu: mainMenuOf(mapping),
     // The main block of each page type's recipe: the block a list page lists its records with.
-    mainBlocks: new Map(list(aiq.pageRecipes?.recipes).map((r) => [r.pageType, r.mainBlock]))
+    mainBlocks: new Map(list(aiq.pageRecipes?.recipes).map((r) => [r.pageType, r.mainBlock])),
+    // Every block a recipe of each page type places, its variants included.
+    recipeBlocks: recipeBlocksOf(aiq.pageRecipes)
   }
 }
 
@@ -132,7 +135,9 @@ export function writePlanOf(order, aiq, options = {}) {
     pictures: new Map(),
     rows: new Map(),
     stored: options.stored ?? {},
-    notWritten: []
+    notWritten: [],
+    dropReasons: new Map(),
+    underNotWritten: []
   }
   state.dropped = droppedContainersOf(state)
   checkMenuItems(state)
@@ -147,15 +152,9 @@ export function writePlanOf(order, aiq, options = {}) {
   planCopies(state)
   planCategories(state)
   planFeaturedArticle(state)
-  for (const record of sink.records.values()) {
+  for (const record of sink.records.values())
     if (record.kind === 'created') record.frames = framesOf(state, record)
-    if (record.recordKind === 'article' && !record.title) {
-      const title = [...record.values.values()].find(
-        (v) => !v.loc.jsonPath && !v.loc.xpath && v.loc.column === 'title'
-      )
-      record.title = title?.value ?? state.site.pageOfSubject(record.subject)?.name ?? record.subject
-    }
-  }
+  nameRecords(state)
   for (const record of sink.records.values())
     if (record.kind === 'created' && !CREATED_KINDS.includes(record.recordKind))
       throw new DraftWriteError('record_kind_unsupported', `the write cannot create a ${record.recordKind}`, {
@@ -188,6 +187,8 @@ export function writePlanOf(order, aiq, options = {}) {
     notWritten: state.notWritten,
     // The pages reached under their list page: the list page's id and the address of the page under it.
     under: state.under,
+    // Blocks of a page under its list page not written there: they would print on the list page too.
+    underNotWritten: state.underNotWritten,
     controls: [...sink.records.values()].flatMap((r) =>
       list(r.controls).map((c) => ({ record: r.key, ...c }))
     )

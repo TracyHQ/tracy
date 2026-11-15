@@ -17,8 +17,18 @@ const TOKEN =
   /<!--[\s\S]*?-->|<\/([a-zA-Z][\w-]*)\s*>|<([a-zA-Z][\w-]*)((?:\s+[^\s=/>]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*\/?>/g
 const ATTR = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g
 
+// A value in the JA ACM marker notation (`((a href=""))`, no real tag): the piece functions read and write its markers
+// as elements (measured, "The HTML piece functions"), so this reader reads them as elements too. Read as words, a
+// marker value is one run of text, and any piece written inside it would make the whole value differ.
+const MARKED = /\(\(\/?[a-z][a-z0-9]*[^)]*\)\)/i
+const isMarked = (value) => MARKED.test(value) && !/<\/?[a-z]/i.test(value)
+const fromMarkers = (value) => value.replace(/\(\((\/?[a-z][a-z0-9]*(?:\s[^)]*?)?\/?)\)\)/gi, '<$1>')
+/** A stored value as an HTML reader reads it: a marker value with its markers as tags. */
+export const asTags = (value) => (isMarked(value) ? fromMarkers(value) : value)
+
 /** The element tree of a value, wrapped as the piece functions wrap it (`/html/body/div`). */
-function treeOf(html) {
+function treeOf(stored) {
+  const html = asTags(stored)
   const root = { name: 'div', attrs: [], children: [] }
   const stack = [root]
   const close = (name, fence) => {

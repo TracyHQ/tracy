@@ -38,6 +38,10 @@ test. Each rule below says where it comes from: the door measurements of plugin 
 A new contact whose name is `""` or `" "` is **written**, as the site writes it (measured): the build refuses it
 itself (`record_name_empty`, [draft-write-guards.md](draft-write-guards.md)).
 
+`site.identity` stores the site name with every `<` and `>` taken out and every character reference read
+(measured), so a name sent with either reads back as another value (`read_back_mismatch`); the guard refuses both at
+the site name (a `"mixed"` place) before any door.
+
 ## Replay
 
 As measured: only `content.contract` keeps answers. It keeps the first answer under its apply id with its request id
@@ -76,14 +80,21 @@ The piece functions (`write-order-memory-html.mjs`) wrap a stored value in a `di
 
 The real step does not trust the piece functions for the untouched parts: its read back compares them with its own
 reader as an HTML reader reads them (`draft-write-html-rest.mjs`, see the write step's read back), so a plugin fault
-that changes what a sibling says stops the write, and the measured rewriting of forms passes it.
+that changes what a sibling says stops the write, and the measured rewriting of forms passes it. A value in the marker
+notation is read with its markers as elements, as the piece functions read it: read as words it was one run of text,
+and every piece written in it (a social row's link, a pricing card's feature rows) made its untouched parts differ
+(the `read_back_mismatch` of modules 163, 167, 178 and 182 in the marker test).
 
 ## What the site prints
 
-`renderedOf(memory, {known})` (`write-order-memory-render.mjs`) prints every stored value the way the measured template
-does: a JA ACM module's `jatools-config` with every `((` and `))` replaced blindly before it is decoded (`decodeMarkers`),
-every other value raw as stored, an HTML column as HTML, a contract slot from its current value (a piece as the DOM
-escaped it). A raw value is printed at once in a text node and in a double and a single quoted attribute of a probe
-element, so a value that breaks out of any of them shows. `known` (`valuesOf` of a blank site) leaves out the kit's own
+`renderedOf(memory, {known, mapping})` (`write-order-memory-render.mjs`) prints every stored value the way the measured
+template does: a JA ACM module's `jatools-config` with every `((` and `))` replaced blindly before it is decoded
+(`decodeMarkers`); a record column the kit's `escapes` declares escaped (`metadesc`, a page title, the `og_*` keys, a
+menu item title, a contact's name) escaped, and a main menu item title escaped once and again twice (the hidden heading
+of a list page); every other value raw as stored (an article's `attribs` keys, a module title, a module setting, the
+site name in the logo and the copyright line), so a legacy reference such as `&copy 2026` reaches the page as written
+and shows as the sign; an HTML column as HTML; a contract slot from its current value (a piece as the DOM escaped it).
+Without a mapping every record column prints raw. A raw value is printed at once in a text node and in a double and a
+single quoted attribute of a probe element, so a value that breaks out of any of them shows. `known` (`valuesOf` of a blank site, with the same mapping) leaves out the kit's own
 values. `undeclaredIn(html, allowed)` lists every tag not `allowed`, every probe attribute the probe did not write,
 every `on*` handler and every code address in an address attribute.

@@ -135,9 +135,10 @@ export function planBlocks(state) {
         skip(state.sink, id, block.state === 'hidden' ? 'block_hidden' : `place_${place.state}`)
       continue
     }
-    // A container that holds none of the page's blocks is not kept (`holds.copies.keptWhen`).
+    // A container that holds none of the page's blocks is not kept (`holds.copies.keptWhen`), nor a block of a page
+    // under its list page that would print on the list page too (`draft-write-under-blocks.mjs`).
     if (state.dropped?.has(block.id)) {
-      for (const id of ids) skip(state.sink, id, 'container_without_held')
+      for (const id of ids) skip(state.sink, id, state.dropReasons?.get(block.id) ?? 'container_without_held')
       continue
     }
     if (block.source === 'library') {

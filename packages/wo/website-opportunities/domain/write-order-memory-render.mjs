@@ -4,8 +4,12 @@
 //
 //   - a JA ACM module's `jatools-config` string has every `((` replaced with `<` and every `))` with `>`, blindly,
 //     before it is decoded; each of its values is then printed raw
-//   - every other value (a module title, a module setting, a record column, a site language string, a menu title, the
-//     site name) is printed raw, as stored
+//   - a record column the kit declares escaped where it prints (`mapping.escapes`, `escaped: true`: `metadesc`, a
+//     page title, the `og_*` keys, a menu item title, a contact's name) is printed escaped; a main menu item title is
+//     printed escaped once (the mega menu) and twice (the hidden heading of a list page); without a mapping, raw
+//   - every other value (a module title, as stored, never a reference; a module setting, an article `attribs` key, a
+//     site language string, the site name in the logo and the copyright line) is printed raw, as stored, so a legacy
+//     reference such as `&copy 2026` reaches the page as written and shows as the sign
 //   - an HTML column (a mod_custom content, an article body, a contact's misc) is printed as the HTML it is
 //   - a contract slot is printed from its current value: a piece of an HTML value as the DOM wrote it (escaped), any
 //     other slot raw
@@ -15,6 +19,7 @@
 // a value that breaks out of any of them shows up as an attribute or a tag the probe did not write. A value that
 // holds a tag once printed (the kit's own markup in a JA ACM field) is printed as the HTML it is. Pure.
 import { addressRunsCode, URL_ATTRS } from './draft-write-markup.mjs'
+import { escapeOf } from './ai-quickstart-escapes.mjs'
 import { readTags } from './draft-write-tags.mjs'
 
 const HTML_COLUMNS = new Set(['content', 'introtext', 'fulltext', 'misc', 'description'])
@@ -56,25 +61,46 @@ function moduleOf(row, raw) {
   return out.join('')
 }
 
-/** A record as the template prints it: HTML columns as HTML, every other string raw. */
-function recordOf(row, raw) {
+/** How a record column prints: `raw`, `escaped` or `twice` (the kit's `escapes`; raw without a mapping). */
+function printOf(mapping, kind, column, key, row) {
+  if (!mapping?.escapes) return 'raw'
+  const place = { kind, column, ...(key ? { key } : {}), ...(row.menutype ? { menutype: row.menutype } : {}) }
+  if (escapeOf(mapping, place)?.escaped !== true) return 'raw'
+  return kind === 'menuItem' && column === 'title' && place.menutype === mainMenuOf(mapping)
+    ? 'twice'
+    : 'escaped'
+}
+const mainMenuOf = (mapping) =>
+  Object.values(mapping.placements ?? {}).find((p) => p?.layout && p?.menu?.menutype)?.menu?.menutype ?? null
+
+/** A record as the template prints it: HTML columns as HTML, an escaped place escaped, every other string raw. */
+function recordOf(row, raw, kind, mapping) {
   const out = []
+  const printed = (value, how) =>
+    how === 'raw'
+      ? raw(value)
+      : raw(how === 'twice' ? `${escAttr(value)} ${escAttr(escAttr(value))}` : escAttr(value), true)
   for (const [column, value] of Object.entries(row)) {
     if (typeof value !== 'string') continue
     if (HTML_COLUMNS.has(column)) out.push(raw(value, true))
-    else if (/^\s*[[{]/.test(value)) out.push(...leavesOf(parsed(value) ?? value).map((v) => raw(v)))
-    else out.push(raw(value))
+    else if (/^\s*[[{]/.test(value)) {
+      const json = parsed(value)
+      if (!json || typeof json !== 'object') out.push(raw(value))
+      else
+        for (const [key, inner] of Object.entries(json))
+          out.push(...leavesOf(inner).map((v) => printed(v, printOf(mapping, kind, column, key, row))))
+    } else out.push(printed(value, printOf(mapping, kind, column, null, row)))
   }
   return out.join('')
 }
 
 /** Every printed value of the memory site, each given to `print(value, html)` (`html`: printed as HTML). */
-function printedOf(memory, print) {
+function printedOf(memory, print, mapping = null) {
   const { records, slots, identity } = memory.site
   const out = []
   for (const row of records.module.values()) out.push(moduleOf(row, print))
   for (const kind of ['article', 'category', 'contact', 'menuItem'])
-    for (const row of records[kind].values()) out.push(recordOf(row, print))
+    for (const row of records[kind].values()) out.push(recordOf(row, print, kind, mapping))
   for (const slot of slots.values()) {
     if (slot.removed) continue
     const value = String(slot.current ?? '')
@@ -86,23 +112,28 @@ function printedOf(memory, print) {
 }
 
 /** Every value a memory site prints: after a build, a value the blank site printed is the kit's own. */
-export function valuesOf(memory) {
+export function valuesOf(memory, { mapping = null } = {}) {
   const values = new Set()
-  printedOf(memory, (value) => {
-    values.add(value)
-    return ''
-  })
+  printedOf(
+    memory,
+    (value) => {
+      values.add(value)
+      return ''
+    },
+    mapping
+  )
   return values
 }
 
 /**
  * Every page of the memory site in one HTML string.
  * @param {{site: {records: object, slots: Map, identity: object}}} memory a `memoryDoors` site
- * @param {{known?: Set<string>}} [options] `known`: the blank site's own values (`valuesOf`), printed as nothing, so a
- *   scan reads only what the build wrote
+ * @param {{known?: Set<string>, mapping?: object}} [options] `known`: the blank site's own values (`valuesOf`),
+ *   printed as nothing, so a scan reads only what the build wrote; `mapping`: the kit's mapping file, whose `escapes`
+ *   say which record columns print escaped
  */
-export const renderedOf = (memory, { known = new Set() } = {}) =>
-  printedOf(memory, (value, html) => (known.has(value) ? '' : html ? value : probe(value)))
+export const renderedOf = (memory, { known = new Set(), mapping = null } = {}) =>
+  printedOf(memory, (value, html) => (known.has(value) ? '' : html ? value : probe(value)), mapping)
 
 /**
  * What a rendered page holds that nobody declared: a tag whose name is not `allowed`, a probe element with an

@@ -59,23 +59,31 @@ function linkOf(state, page) {
 }
 
 /**
- * Positions T4 prints only under its `detail-article` sub layout, which it applies only to an article reached under its
- * list page's menu item, never on the article's own menu item (measured on JA Boxing 1.0.11, "Page facts"). The kit
- * does not declare them: these are the measured ones.
+ * The positions that print only under a list page (T4's `detail-article` sub layout, never on an article's own menu
+ * item, measured on JA Boxing 1.0.11, "Page facts"): every position the kit declares in a
+ * `pages.<type>.under.detailPositions`. A kit that declares none has none.
  */
-export const DETAIL_POSITIONS = Object.freeze(['detail-bottom-1', 'main-bottom-2'])
+export const detailPositionsOf = (kit) => [
+  ...new Set(
+    Object.values(kit.mapping.pages ?? {}).flatMap((p) => {
+      const positions = p?.under?.detailPositions?.positions
+      return Array.isArray(positions) ? positions : []
+    })
+  )
+]
 
 /** The blocks of a page whose menu item opens its own article that sit only in a detail position: they print nothing. */
-export const unprintedBlocksOf = (kit, page, link) =>
-  link?.form !== 'articleLink' && !link?.own
-    ? []
-    : page.blocks
-        .filter((b) => b.state !== 'hidden')
-        .filter((b) => {
-          const positions = kit.store.get(b.block)?.positions ?? []
-          return positions.length > 0 && positions.every((p) => DETAIL_POSITIONS.includes(p))
-        })
-        .map((b) => b.id)
+export function unprintedBlocksOf(kit, page, link) {
+  if (link?.form !== 'articleLink' && !link?.own) return []
+  const detail = detailPositionsOf(kit)
+  return page.blocks
+    .filter((b) => b.state !== 'hidden')
+    .filter((b) => {
+      const positions = kit.store.get(b.block)?.positions ?? []
+      return positions.length > 0 && positions.every((p) => detail.includes(p))
+    })
+    .map((b) => b.id)
+}
 
 /**
  * The page menu items, then each page's SEO. A page reached under its list page (`state.under`) has no menu item of

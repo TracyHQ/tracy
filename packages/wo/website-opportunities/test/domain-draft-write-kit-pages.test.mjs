@@ -144,10 +144,17 @@ test('a block assigned to a page reached under its list page prints there only a
     for (const page of o.pages.filter((p) => p.pageType === 'class'))
       page.blocks.find((b) => b.block === 'block-176').position.request = position
   }
-  const outside = stopOf(() => planWith(perPage))
-  assert.equal(outside.code, 'under_page_position_not_detail')
-  assert.equal(outside.noRerun, true)
-  assert.deepEqual(outside.details.positions, ['detail-bottom-1', 'main-bottom-2'])
+  // The class recipe places block-176: outside a detail position its copy would print on the list page too, so it is
+  // not written on the class pages, with its reason, and the plan goes on (`draft-write-under-blocks.mjs`).
+  const outside = planWith(perPage)
+  assert.deepEqual(
+    outside.underNotWritten.map((r) => [r.page, r.storeBlock]),
+    [
+      ['class', 'block-176'],
+      ['class-2', 'block-176']
+    ]
+  )
+  // A block no class recipe places still stops the plan: domain-draft-write-under-blocks.test.mjs.
   assert.equal(stopOf(() => planWith(perPage, at('detail-bottom-1'))).code, 'passed')
   const assignTo = (m) => {
     perPage(m)

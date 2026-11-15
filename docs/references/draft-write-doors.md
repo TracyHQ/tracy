@@ -114,8 +114,9 @@ A page reached under its list page (`plan.under`) has no menu item: `page:<id>` 
 a link (`form: "address"`), and to the list page's item for an assignment or a key; two such pages assigned through
 one item are sent once. An alias to such a page has no item to point at and refuses (`ref_unresolved`); the planner
 stops before that (`menu_item_to_under_page`). A module assigned through the list page's item prints on the page
-under it only at a detail position the kit declares (`under.detailPositions`, measured); the planner stops on any other
-(`under_page_position_not_detail`).
+under it and on the list page alike, except at a detail position the kit declares (`under.detailPositions`, measured);
+the planner writes such a block only when the list page shows the same record anyway, skips any other recipe block with
+its reason, and stops only on a block no recipe of the page type places (`draft-write-guards.md`).
 
 ## Not verified on a real site
 

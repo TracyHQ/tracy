@@ -8,15 +8,17 @@ const list = (value) => (Array.isArray(value) ? value : [])
 
 /**
  * A value not safe as raw HTML where it prints (`draft-write-escape.mjs`): a `((` or `))` the template's converter
- * would turn into a bracket, outside the declared markers of a codes field (`markup_forbidden`), or words not escaped
- * at a place printed raw, or not escape neutral at a place not measured (`value_not_escaped`).
+ * would turn into a bracket, outside the declared markers of a codes field (`markup_forbidden`), words not safe at
+ * their kind of place as the kit declares it (`value_not_escaped`), or a value at a place the kit says the build never
+ * writes (`place_not_written`).
  */
-export function placeProblems(op, at, text, { markers, loc, slot = null }, report) {
+export function placeProblems(op, at, text, { markers, loc, slot = null, mapping = null }, report) {
   const parens = doubleParenthesisProblem(text, markers, runsCodeIn)
   if (parens) report('markup_forbidden', { ...at, via: parens })
-  const kind = safetyAt(op, loc, slot)
-  const unsafe = unsafeAt(text, { kind, markers })
-  if (unsafe) report('value_not_escaped', { ...at, via: unsafe, kind })
+  const { kind, marks } = safetyAt(op, loc, { slot, mapping })
+  const unsafe = unsafeAt(text, { kind, marks, markers })
+  if (unsafe === 'place_not_written') report('place_not_written', { ...at, kind })
+  else if (unsafe) report('value_not_escaped', { ...at, via: unsafe, kind })
 }
 
 /** A contact created with an empty name: the site writes it (measured), so the build refuses it itself. */

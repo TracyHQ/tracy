@@ -1,69 +1,36 @@
-// How each value of a draft write is made safe as raw HTML at its place (ticket #597, door measurements of plugin
-// 0.24.85 in docs/references/ai-quickstart-contract.md, "Escaping of field values" and "JA ACM markers"). The template
-// escapes almost nothing, so the write step is the only barrier: every value it sends must already be safe where it
-// prints. Each place is one of four kinds:
+// How each value of a draft write is made safe at its place (ticket #597, door measurements of plugin 0.24.85 in
+// docs/references/ai-quickstart-contract.md, "Escaping of every place the build writes" and "JA ACM markers"). The kind
+// of each place is read from the kit's `escapes` declaration (`draft-write-escape-place.mjs`); here each kind is
+// written and guarded:
 //
-//   piece    an xpath piece of a stored HTML value: the piece functions set it through the DOM, which escapes `&`,
-//            `<` and `>` but leaves a quote in a text node as it is, so plain words get typographic quotes (where the
-//            template prints a piece of a JSON key, an article's `attribs`, is not measured: text or attribute)
-//   raw      measured printed as stored, in text and in attributes (a JA ACM block's data, a module title, a module's
-//            chrome settings, a site language string): the words are escaped as `htmlspecialchars` with ENT_QUOTES
-//            does (`&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#039;`); the declared markers of a codes field are kept
-//   neutral  not measured, or measured escaped by the template (block 177's `info-*` keys, `moduleclass_sfx`): a value
-//            is written so that it reads the same escaped or not (straight quotes as typographic ones; a `<`, a `>` or
-//            a character reference is refused by the guard), so it is never escaped twice and never left open
-//   html     a whole HTML column (an article body, a mod_custom content): the words are escaped, the tags its field
-//            declares kept (`inline_html` of `textAt` already does it)
+//   raw       printed as stored: the words escaped as `htmlspecialchars` with ENT_QUOTES does (`&amp;`, `&lt;`,
+//             `&gt;`, `&quot;`, `&#039;`); the declared markers of a codes field are kept
+//   html      a whole HTML column: the words escaped, the tags its field declares kept (`inline_html` of `textAt`)
+//   piece     an xpath piece of a stored HTML value: the DOM escapes `&`, `<` and `>` but leaves a quote in a text
+//             node, so plain words get typographic quotes
+//   plain     every print escapes it: the words as they are (typographic quotes where a quote is unsafe); the guard
+//             refuses each other mark the place does not show as written
+//   neutral   printed raw somewhere, escaped elsewhere, or not declared: the value reads the same either way
+//             (typographic quotes; a `<`, a `>` or a text that reads as a character reference is refused)
+//   free      no page prints it: written as it is
+//   token     no words (an id, a class): written as it is, refused with `<`, `>` or a quote
+//   unwritten the kit says the build never writes it: refused
 //
-// The JA ACM converter replaces every `((` and `))` of the whole `jatools-config` string blindly, so a double
-// parenthesis is refused at every place (`doubleParenthesisProblems`); only the declared markers of a codes field are
-// kept there. Pure.
-import { countsRaw } from './draft-write-door-length.mjs'
+// A text that reads as a character reference (`&` then a letter or `#`, legacy names without their semicolon
+// included, `escapes.legacyReferences`) is written only where the build escapes the `&` (raw, html). The JA ACM
+// converter replaces every `((` and `))` of the whole `jatools-config` string blindly, so a double parenthesis is
+// refused at every place (`doubleParenthesisProblems`); only the declared markers of a codes field are kept there.
+// Pure.
+import { safetyAt } from './draft-write-escape-place.mjs'
 import { addressAt } from './draft-write-place-kinds.mjs'
 import { readTags } from './draft-write-tags.mjs'
 import { placesOfOrder } from './write-order-check.mjs'
 
-/** Keys measured escaped by the template: a value there is written escape neutral, never escaped twice. */
-export const TEMPLATE_ESCAPED_KEYS = new Set([
-  'info-email-label',
-  'info-email',
-  'info-phone-label',
-  'info-phone',
-  'info-note',
-  'moduleclass_sfx'
-])
-const HTML_COLUMNS = new Set(['introtext', 'fulltext', 'content', 'misc', 'description'])
 const RAW_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }
 /** `htmlspecialchars($text, ENT_QUOTES)`. */
 export const escapeRaw = (text) => String(text).replace(/[&<>"']/g, (c) => RAW_ESCAPES[c])
 
-const leafOf = (loc) => String(loc?.jsonPath?.at(-1) ?? '')
-const isModule = (op, loc) =>
-  String(loc?.entity ?? '').startsWith('module-') ||
-  op?.kind === 'library.create' ||
-  op?.recordKind === 'module'
-
-/**
- * The kind of a place: `piece`, `raw`, `neutral` or `html`. A place printed raw whose contract slot the door counts
- * raw (a module title through the contract) is written neutral: escaping would make the door count more characters
- * than the writer wrote, and refuse it.
- */
-export function safetyAt(op, loc, slot = null) {
-  const kind = kindAt(op, loc)
-  return kind === 'raw' && op?.kind === 'contract.apply' && slot && countsRaw(slot) ? 'neutral' : kind
-}
-function kindAt(op, loc) {
-  if (loc?.xpath) return 'piece'
-  if (TEMPLATE_ESCAPED_KEYS.has(leafOf(loc))) return 'neutral'
-  if (loc?.nestedJson) return 'raw'
-  if (isModule(op, loc)) {
-    if (loc?.column === 'content' && !loc.jsonPath?.length) return 'html'
-    return loc?.column === 'title' || loc?.column === 'params' ? 'raw' : 'neutral'
-  }
-  if (String(loc?.entity ?? '').startsWith('languageString-')) return 'raw'
-  if (HTML_COLUMNS.has(loc?.column) && !loc?.jsonPath?.length) return 'html'
-  return 'neutral'
-}
+export { safetyAt }
 
 /** The marker names a codes field declares (its wrapper and emphasis parts), or none. */
 export function declaredMarkersOf(entry) {
@@ -98,29 +65,40 @@ export function typographic(text) {
     .replace(/'/g, '’')
 }
 
+const QUOTES = ['"', "'"]
 /**
  * The value written at a place, made safe there.
  * @param {string} value the value as the planner made it (`textAt`)
- * @param {{kind: string, markers?: Set<string>, address?: boolean, escaped?: boolean}} how `escaped`: `textAt` already
- *   escaped the words (`inline_html`)
+ * @param {{kind: string, marks?: Set<string>, markers?: Set<string>, address?: boolean, escaped?: boolean}} how
+ *   `marks`: what a `plain` place does not show as written; `escaped`: `textAt` already escaped the words
  */
-export function safeValue(value, { kind, markers = new Set(), address = false, escaped = false }) {
+export function safeValue(
+  value,
+  { kind, marks = new Set(), markers = new Set(), address = false, escaped = false }
+) {
   const text = String(value)
   if (kind === 'raw')
     return partsOf(text, markers)
       .map((p) => p.marker ?? escapeRaw(p.words))
       .join('')
   if (kind === 'neutral') return address ? text : typographic(text)
+  if (kind === 'plain') return !address && QUOTES.some((q) => marks.has(q)) ? typographic(text) : text
   if (kind === 'piece') return address || /</.test(text) ? text : typographic(text)
   if (kind === 'html' && !escaped && !/</.test(text)) return escapeRaw(text)
   return text
 }
 
-const REFERENCE = /&(#|[A-Za-z][A-Za-z0-9]*;)/
+/** Text that reads as a character reference: `&` then `#` or a letter (a legacy name needs no semicolon). */
+const REFERENCE = /&[#A-Za-z]/
 const ESCAPED_ONLY = /&(?!(amp|lt|gt|quot|#0*39|#x0*27);)/
+const MARK_TESTS = { '<': /</, '>': />/, '&': /&/, '"': /"/, "'": /'/, reference: REFERENCE }
 
-/** Why a value is not safe as raw HTML at its kind of place (`not_escaped`, `not_escape_neutral`), or null. */
-export function unsafeAt(value, { kind, markers = new Set() }) {
+/**
+ * Why a value is not safe at its kind of place, or null: `not_escaped` (raw), `not_escape_neutral` (neutral),
+ * `unsafe_mark` (plain: a mark the place does not show as written, or a reference), `not_a_token` (token),
+ * `place_not_written` (unwritten).
+ */
+export function unsafeAt(value, { kind, marks = new Set(), markers = new Set() }) {
   const text = String(value)
   if (kind === 'raw') {
     const words = partsOf(text, markers)
@@ -129,6 +107,10 @@ export function unsafeAt(value, { kind, markers = new Set() }) {
     return /[<>"']/.test(words) || ESCAPED_ONLY.test(words) ? 'not_escaped' : null
   }
   if (kind === 'neutral') return /[<>"']/.test(text) || REFERENCE.test(text) ? 'not_escape_neutral' : null
+  if (kind === 'plain')
+    return REFERENCE.test(text) || [...marks].some((m) => MARK_TESTS[m]?.test(text)) ? 'unsafe_mark' : null
+  if (kind === 'token') return /[<>"']/.test(text) ? 'not_a_token' : null
+  if (kind === 'unwritten') return 'place_not_written'
   return null
 }
 
@@ -162,6 +144,7 @@ export const entriesByPlace = (order) =>
  * neutral place is written as it is (no typographic quotes in an address: the guard refuses a quote there).
  */
 export function safeOps(ops, { order, kit }) {
+  const mapping = kit.mapping
   const entries = entriesByPlace(order)
   for (const op of ops) {
     for (const v of op.values ?? []) {
@@ -169,7 +152,7 @@ export function safeOps(ops, { order, kit }) {
       const entry = v.entry ? entries.get(v.entry) : null
       const slot = v.loc?.slot ? kit.slots.get(v.loc.slot) : null
       v.value = safeValue(v.value, {
-        kind: safetyAt(op, v.loc, slot),
+        ...safetyAt(op, v.loc, { slot, mapping }),
         markers: v.loc?.nestedJson ? declaredMarkersOf(entry) : new Set(),
         address: addressAt(v.loc, entry, slot),
         escaped: String(v.rule ?? '').includes('inline_html')
@@ -178,7 +161,7 @@ export function safeOps(ops, { order, kit }) {
     if (op.kind.endsWith('.create') && op.fields)
       for (const [column, text] of Object.entries(op.fields))
         if (typeof text === 'string' && column !== 'link')
-          op.fields[column] = safeValue(text, { kind: safetyAt(op, { column, entity: op.recordKind }) })
+          op.fields[column] = safeValue(text, safetyAt(op, { column, entity: op.recordKind }, { mapping }))
   }
   return ops
 }

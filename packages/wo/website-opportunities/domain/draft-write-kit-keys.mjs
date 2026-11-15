@@ -40,7 +40,8 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
   'pages.<type>.ownItem': ITEM,
   'pages.<type>.under': { page: READ, address: READ, detailPositions: READ, why: 'not read: prose' },
   'pages.<type>.under.detailPositions': {
-    positions: 'read: a block assigned to the page outside them stops (under_page_position_not_detail)',
+    positions:
+      'read: a recipe block outside them is written when the list page shows its record, else skipped typed',
     assignTo: 'read: only "list-page" is known, any other value stops',
     why: 'not read: prose'
   },
