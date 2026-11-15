@@ -15,8 +15,23 @@ import { memorySiteOf } from './fixtures/ai-quickstart-gate/memory-site.mjs'
 
 const icons = { set: 'invented-icons@1', icons: [{ name: 'leaf', tags: ['plant'], categories: [] }] }
 const PROBES = [...PROBE_CATALOGUE, ...JOOMLA_PROBES]
+// The kit declares how its module settings print, as a real kit's mapping does (`escapes`, #597): printed as stored,
+// so the build escapes the quotes itself (`&quot;`) and a template that decodes them prints a live attribute. A kit
+// with no declaration gets the strict guard and typographic quotes, which no quote probe gets past.
+const ESCAPES = {
+  why: 'module settings print as stored',
+  places: [
+    {
+      match: { kind: 'module', column: 'params' },
+      escaped: false,
+      source: 'decision',
+      why: 'the invented template prints its module settings as stored'
+    }
+  ]
+}
 const measure = (faults = {}, extra = {}) => {
   const kit = floristKit()
+  kit.mapping.escapes = ESCAPES
   const site = memorySiteOf(kit, faults)
   const build = (options) =>
     markerBuild(kit, { iconLibrary: icons, tryWrite: memoryTryWrite(kit), ...options })
