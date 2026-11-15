@@ -20,6 +20,8 @@ export const USAGE = `usage: node scripts/site-writer-bench.mjs <command>
       [--no-caps]                         run without the USD budget (a step of a chain build)
       [--effort <low|high|max>]           native DeepSeek Flash only, frozen with the run (default unchanged)
       [--pages-per-turn <n|all>]          pages per writing turn, frozen with the run (default all: one turn)
+      [--parallel-pages <n>]              write the first draft in n parts at the same time (1 to 8), frozen with
+                                          the run (default: off, one conversation as before)
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, balance, duration, checker summary
   get <runId> --out <dir>                 write every copy version, the corrections, check and failure list of each
@@ -54,6 +56,7 @@ export async function runCli(argv, deps) {
         'no-caps': { type: 'boolean' },
         effort: { type: 'string' },
         'pages-per-turn': { type: 'string' },
+        'parallel-pages': { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -141,6 +144,9 @@ async function startRun(d, values) {
   const perTurn = values['pages-per-turn']
   if (perTurn !== undefined && perTurn !== 'all' && !/^[1-9][0-9]{0,3}$/.test(perTurn))
     throw new Usage('--pages-per-turn takes a positive whole number or "all"')
+  const parts = values['parallel-pages']
+  if (parts !== undefined && !/^[1-8]$/.test(parts))
+    throw new Usage('--parallel-pages takes a whole number from 1 to 8')
   const plan = await readJsonFile(d, values['plan-file'], 'plan')
   if (plan.error) return refused(d, plan.error)
   let brief
@@ -165,6 +171,7 @@ async function startRun(d, values) {
     requireVisualReview: values['require-visual-review'] === true,
     ...(values.effort !== undefined ? { effort: values.effort } : {}),
     ...(perTurn !== undefined ? { pagesPerTurn: perTurn === 'all' ? 'all' : Number(perTurn) } : {}),
+    ...(parts !== undefined ? { parallelPages: Number(parts) } : {}),
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)
