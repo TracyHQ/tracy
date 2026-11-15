@@ -197,6 +197,107 @@ test('Undo says why it cannot take back a change asked for in the chat', () => {
   assert.doesNotMatch(edited, /Undo takes back/)
 })
 
+test('Undo takes back a change asked for in the chat when the draft offers it, and then says nothing about it', () => {
+  const revised = { changed: ['The Gallery section is removed from the Coaches page.'], notDone: [] }
+  const html = draw({ plan: plan(), revised, canUndo: true, lastEdit: null })
+  const undo = html.match(/<button[^>]*aria-label="Undo last change"[^>]*>/)[0]
+  assert.doesNotMatch(undo, /disabled/, 'Undo is offered without a card edit')
+  assert.doesNotMatch(undo, /aria-describedby/)
+  assert.doesNotMatch(html, /Undo takes back/)
+  // Nothing to take back: still disabled.
+  const none = draw({ plan: plan(), canUndo: false, lastEdit: null })
+  assert.match(none.match(/<button[^>]*aria-label="Undo last change"[^>]*>/)[0], /disabled/)
+})
+
+/** A change request note whose lines carry the plan step's stable codes (#609 over #617). */
+const codedNote = () => ({
+  changed: [
+    'Your answer is saved: Opening hours, Mon to Sat 06:30 to 21:30.',
+    'The Coaches page is now called Our team.',
+    'Racquet stringing stays off your site, as you asked.',
+    'A line the model wrote.',
+    'A line with a code this card does not know.',
+    'The Gallery section of the Home page now shows Adult coaching, Junior sq...',
+    'Something else happened to the plan.'
+  ],
+  notDone: [
+    { what: 'Services', why: 'The plan already has this page.' },
+    { what: 'Your request', why: 'Nothing on the plan could follow it, so the plan is unchanged.' },
+    { what: 'A gallery', why: 'The model said so.' }
+  ],
+  codes: {
+    changed: [
+      'owner_value_saved',
+      'page-renamed',
+      'item_taken_off',
+      null,
+      'some_new_code',
+      'block-data',
+      'page-removed'
+    ],
+    notDone: ['page_already_on_plan', 'nothing_to_change', null]
+  }
+})
+
+test('a coded line of a change request reads in the interface language, with its names as the plan has them', () => {
+  const html = draw({ plan: plan(), t: vi, canUndo: true, revised: codedNote() })
+  const text = textOf(html)
+  const said = [
+    vi('plan.revised.line.owner_value_saved', {
+      label: viTable['plan.fact.contact.hours'],
+      value: 'Mon to Sat 06:30 to 21:30'
+    }),
+    vi('plan.revised.line.page-renamed', { from: 'Coaches', to: 'Our team' }),
+    vi('plan.revised.line.item_taken_off', { label: 'Racquet stringing' }),
+    vi('plan.revised.notDone.page_already_on_plan.why'),
+    vi('plan.revised.notDone.nothing_to_change.what'),
+    vi('plan.revised.notDone.nothing_to_change.why')
+  ]
+  for (const line of said) {
+    assert.notEqual(line, '')
+    assert.ok(text.includes(line), line)
+  }
+  assert.ok(viTable['plan.revised.line.page-renamed'], 'the Vietnamese table has the line')
+  assert.notEqual(viTable['plan.revised.line.page-renamed'], lib.en['plan.revised.line.page-renamed'])
+  // No code, an unknown code, or a line its code's sentence does not fit: the server's English, as it came.
+  for (const line of [
+    'A line the model wrote.',
+    'A line with a code this card does not know.',
+    'The Gallery section of the Home page now shows Adult coaching, Junior sq...',
+    'Something else happened to the plan.',
+    'The model said so.'
+  ])
+    assert.ok(text.includes(line), line)
+  assert.ok(text.includes('Services'), 'a name stays as the plan has it')
+  assert.doesNotMatch(text, /owner_value_saved|page_already_on_plan|some_new_code/, 'no code is ever shown')
+})
+
+test('in English a coded line reads exactly as the server wrote it', () => {
+  const note = codedNote()
+  const text = textOf(draw({ plan: plan(), canUndo: true, revised: note }))
+  for (const line of note.changed) assert.ok(text.includes(line), line)
+  for (const { what, why } of note.notDone) {
+    assert.ok(text.includes(lib.sentenceOf(what)), what)
+    assert.ok(text.includes(why), why)
+  }
+})
+
+test('every coded sentence has its English in the table and is said in every language without dashes', () => {
+  const keys = Object.keys(lib.en).filter(
+    (k) => k.startsWith('plan.revised.line.') || k.startsWith('plan.revised.notDone.')
+  )
+  assert.ok(keys.length >= 20, `${keys.length} coded sentences`)
+  const dashes = new RegExp(`[${String.fromCodePoint(0x2013, 0x2014)}]`)
+  for (const key of keys) {
+    assert.doesNotMatch(lib.en[key], dashes, key)
+    assert.ok(viTable[key], `vi ${key}`)
+    assert.doesNotMatch(viTable[key], dashes, `vi ${key}`)
+    // The translation names the same parameters as the English.
+    const names = (s) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort()
+    assert.deepEqual(names(viTable[key]), names(lib.en[key]), key)
+  }
+})
+
 test('character references read as characters, and a decoded tag stays text', () => {
   const p = plan()
   p.rows[0].label = 'Coach&rsquo;s session &lt;b&gt;'

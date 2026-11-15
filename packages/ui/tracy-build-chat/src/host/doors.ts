@@ -104,7 +104,15 @@ export interface RevisionResult {
   plan: any
   brand: 'own'
   unchanged: boolean
-  revision: { changed: string[]; notDone: NotDone[] }
+  /**
+   * `codes`: the stable code of each line, parallel to `changed` and `notDone` (null for a line the model wrote),
+   * present only when the plan step sent codes; the plan card says a coded line in the owner's language.
+   */
+  revision: {
+    changed: string[]
+    notDone: NotDone[]
+    codes?: { changed: (string | null)[]; notDone: (string | null)[] }
+  }
 }
 
 /** A compose that needs one more answer from the owner first (the site name, #593 G4): the question to ask. */

@@ -31,7 +31,8 @@ const COLUMNS = [
   'engine',
   'brand',
   'build',
-  'plan_research'
+  'plan_research',
+  'undo_plan'
 ]
 
 /** The account's draft as the doors answer it, or null when it has none. */
@@ -223,6 +224,7 @@ export function putComposed(pool, accountId, { plan, profile } = {}, { research,
       last_edit: null,
       undo_edit: null,
       undo_profile: null,
+      undo_plan: null,
       // The research the plan is composed from: a later research keeps this plan, and approval builds it from this.
       plan_research: research === undefined ? (row.research ?? null) : research,
       ...(research === undefined ? {} : { research }),
@@ -235,7 +237,9 @@ export function putComposed(pool, accountId, { plan, profile } = {}, { research,
  * End the running revise step of `runner` (#609 over #617) with what `revisePlan` answered: a changed plan and its
  * profile are written with the step's done state in one write, an unchanged one writes the done state only. Written
  * only while the living plan is still `base` (the plan the request was made for): an edit made meanwhile answers
- * `STALE_PLAN` and nothing is written. The undo and the last edit belonged to the plan before and are cleared.
+ * `STALE_PLAN` and nothing is written. A changed plan can be taken back one step, like a card edit: the plan and the
+ * profile before it are kept as the undo (`undo_plan`, `undo_profile`), and replace any earlier undo. The last edit
+ * belonged to the plan before and is cleared. An unchanged plan keeps the undo it had.
  * @param {{plan: object, profile: object, unchanged: boolean}} revised
  * @param {{runner: string, base: {id: string, revision: number}, ended: object}} how `ended`: the done state's fields
  */
@@ -256,7 +260,8 @@ export function putRevised(pool, accountId, { plan, profile, unchanged }, { runn
       template: plan.look.template,
       last_edit: null,
       undo_edit: null,
-      undo_profile: null
+      undo_profile: row.needs_profile,
+      undo_plan: row.plan
     }
   })
 }
@@ -276,7 +281,8 @@ export function discardPlan(pool, accountId) {
       plan_research: null,
       last_edit: null,
       undo_edit: null,
-      undo_profile: null
+      undo_profile: null,
+      undo_plan: null
     }
   })
 }
@@ -345,19 +351,44 @@ export function editPlan(pool, accountId, edit, { loadKit }, { ended, now = Date
       template: gated.plan.look.template,
       last_edit: edit,
       undo_edit: undoEditOf(row.plan, edit),
-      undo_profile: row.needs_profile
+      undo_profile: row.needs_profile,
+      // One step of undo: the card edit's replaces a chat change's.
+      undo_plan: null
     }
   })
 }
 
 /**
- * Take the last plan edit back, once: the undo is held to the edit gate like any edit, and the needs profile is put back
- * exactly as it was before the edit. Nothing is left to undo.
- * @param {{loadKit: (slug: string) => object | null}} kits
+ * Take back the change the last change request made (`putRevised`): the plan before it, as a new revision so no
+ * revision ever names two plans, and its profile exactly. That plan passed the rules gate with that profile, and the
+ * template cannot move, so it is put back as it was. The engine state becomes the plan's (an `edit` done), so the
+ * chat no longer answers the lines of the change that was taken back.
  */
-export function undoPlanEdit(pool, accountId, { loadKit }) {
+function undoRevised(row, now) {
+  const at = new Date(now()).toISOString()
+  return {
+    engine: { step: 'edit', state: 'done', startedAt: at, endedAt: at },
+    plan: { ...row.undo_plan, revision: row.plan.revision + 1 },
+    needs_profile: row.undo_profile,
+    template: row.undo_plan.look.template,
+    last_edit: null,
+    undo_edit: null,
+    undo_profile: null,
+    undo_plan: null
+  }
+}
+
+/**
+ * Take the last plan change back, once. A card edit's undo is held to the edit gate like any edit; a chat change's
+ * puts the plan before it back (`undoRevised`). Either way the needs profile is put back exactly as it was before, and
+ * nothing is left to undo.
+ * @param {{loadKit: (slug: string) => object | null}} kits
+ * @param {{now?: () => number}} [options]
+ */
+export function undoPlanEdit(pool, accountId, { loadKit }, { now = Date.now } = {}) {
   return changeDraft(pool, accountId, (row) => {
     if (engineBusy(row)) return { error: 'ENGINE_BUSY' }
+    if (row.undo_plan && row.plan && row.undo_profile) return undoRevised(row, now)
     if (!row.undo_edit) return { error: 'NOTHING_TO_UNDO' }
     const gated = gatedEdit(row, row.undo_edit, row.undo_profile, loadKit)
     if (gated.error) return gated
@@ -367,7 +398,8 @@ export function undoPlanEdit(pool, accountId, { loadKit }) {
       template: gated.plan.look.template,
       last_edit: row.undo_edit,
       undo_edit: null,
-      undo_profile: null
+      undo_profile: null,
+      undo_plan: null
     }
   })
 }

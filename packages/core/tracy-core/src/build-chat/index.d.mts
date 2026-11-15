@@ -254,6 +254,11 @@ export interface RevisionNote {
   notDone: { what: string; why: string }[]
   /** The values an `edit` call of the agent changed; the card says each in its own words. */
   edits?: { field: string; value: string | number }[]
+  /**
+   * The stable code of each line, parallel to `changed` and `notDone` (null for a line the model wrote), so the card
+   * can say a coded line in its own words. Absent when the plan step sent no codes.
+   */
+  codes?: { changed: (string | null)[]; notDone: (string | null)[] }
 }
 /** Plan text with its HTML character references decoded, as text only (never HTML). */
 export declare function plainTextOf<T>(text: T): T
@@ -264,6 +269,8 @@ export type BuildToolResult =
   | { kind: 'stopped'; step?: string; rerun: boolean }
   | { kind: 'running' | 'quiet' }
 export declare function buildToolResultOf(text: unknown): BuildToolResult | null
+/** The note of a change request answer's `revision`, its lines and their codes side by side; null for no object. */
+export declare function revisedOf(value: unknown): Omit<RevisionNote, 'edits'> | null
 export type BuildToolRow =
   | { kind: 'research'; sources: number; business: string }
   | { kind: 'working'; step: string }

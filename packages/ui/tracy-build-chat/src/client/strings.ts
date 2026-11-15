@@ -93,6 +93,38 @@ export const en = {
   'plan.revised.notDone': 'Not done',
   'plan.revised.dismiss': 'Hide this note',
   'plan.revised.edited': '{label} is now {value}.',
+  // A change request's lines, by the stable code the plan step gives each (#609 over #617). Each English text is the
+  // server's own sentence with its names as parameters: a line that reads otherwise keeps the server's text.
+  'plan.revised.line.owner_value_saved': 'Your answer is saved: {label}, {value}.',
+  'plan.revised.line.item_renamed': '{from} is now called {to}.',
+  'plan.revised.line.item_taken_off': '{label} stays off your site, as you asked.',
+  'plan.revised.line.page-removed': 'The {name} page is removed.',
+  'plan.revised.line.page-added': 'A {name} page is added.',
+  'plan.revised.line.page-renamed': 'The {from} page is now called {to}.',
+  'plan.revised.line.page-order': 'The pages are now in this order: {names}.',
+  'plan.revised.line.block-removed': 'The {section} section is removed from the {page} page.',
+  'plan.revised.line.block-added': 'A {section} section is added to the {page} page.',
+  'plan.revised.line.block-data.count': 'The {section} section of the {page} page now shows {count} items.',
+  'plan.revised.line.block-data': 'The {section} section of the {page} page now shows {names}.',
+  'plan.revised.line.block-order': 'The sections of the {page} page are in a new order.',
+  'plan.revised.line.data-off': 'No longer shown: {names}.',
+  'plan.revised.line.data-on': 'Now shown: {names}.',
+  'plan.revised.line.data-again': 'Now shown again: {names}, which you had taken off earlier.',
+  'plan.revised.line.pictures-own.one': 'The plan now uses {count} photo of yours.',
+  'plan.revised.line.pictures-own.other': 'The plan now uses {count} photos of yours.',
+  'plan.revised.line.pictures-drawn.none': 'Tracy will not create any pictures now.',
+  'plan.revised.line.pictures-drawn.one':
+    'About {count} picture will be created where you have no suitable photo.',
+  'plan.revised.line.pictures-drawn.other':
+    'About {count} pictures will be created where you have no suitable photo.',
+  'plan.revised.notDone.nothing_to_change.what': 'Your request',
+  'plan.revised.notDone.nothing_to_change.why':
+    'Nothing on the plan could follow it, so the plan is unchanged.',
+  'plan.revised.notDone.page_already_on_plan.why': 'The plan already has this page.',
+  'plan.revised.notDone.section_not_filled.what': 'A new section',
+  'plan.revised.notDone.section_not_filled.why':
+    'There is nothing of your business to fill it, so it is not added.',
+  'plan.revised.notDone.item_rename_refused.what': 'Rename {name}',
   'plan.undo.chatChange':
     'Undo takes back changes made on this card. To take back a change you asked for in the chat, ask in the chat.',
   'plan.fact.business.name': 'Business name',

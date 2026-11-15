@@ -43,6 +43,7 @@ import {
   planOfReviewId,
   planReviewRequestOf,
   RETRY_MESSAGE,
+  revisedOf,
   templateChoiceOf,
   textTooLongOf
 } from '@tracy/core/build-chat'
@@ -577,18 +578,16 @@ export function createBuildTool({
     if (state?.step === 'revise') {
       if (result.brand !== 'own' || !result.plan) return stopped(state.say)
       const review = handOutReview(sessionId, result.plan)
-      const lines = (/** @type {unknown} */ v) =>
-        Array.isArray(v) ? v.filter((/** @type {unknown} */ x) => typeof x === 'string') : []
-      const notDone = (Array.isArray(result.revision?.notDone) ? result.revision.notDone : [])
-        .filter((/** @type {any} */ e) => typeof e?.what === 'string' && typeof e?.why === 'string')
-        .map((/** @type {any} */ e) => ({ what: e.what, why: e.why }))
+      // The lines with their stable codes side by side (`revision.codes`, only when the step sent codes): the plan card
+      // reads the codes back from this answer to say a coded line in the owner's language. Never a reason code.
+      const revision = revisedOf(result.revision) ?? { changed: [], notDone: [] }
       const unchanged = result.unchanged === true
       return {
         plan: { id: result.plan.id, revision: result.plan.revision },
         unchanged,
-        revision: { changed: lines(result.revision?.changed), notDone },
+        revision,
         review,
-        next: `${unchanged ? 'Nothing on the plan changed: say so plainly.' : 'Say what changed using the sentences in revision.changed, word for word.'} Then say each entry of revision.notDone with its why. Do not say anything else changed. ${PLAN_CARD_CONTROLS_GUIDANCE} Then call ask_user_question with review, unchanged.`
+        next: `${unchanged ? 'Nothing on the plan changed: say so plainly.' : 'Say what changed using the sentences in revision.changed, word for word.'} Then say each entry of revision.notDone with its why. Do not say anything else changed. ${revision.codes ? 'revision.codes is for the plan card only: never say a code. ' : ''}${PLAN_CARD_CONTROLS_GUIDANCE} Then call ask_user_question with review, unchanged.`
       }
     }
     // The brand step (#616) prepares the business's own look the plan is composed from; the plan is asked for again.

@@ -27,19 +27,40 @@ function argsOf(raw) {
   }
 }
 
+/** @param {unknown} value */
+const listOf = (value) => (Array.isArray(value) ? value : [])
+/** The code at `i` of a code list, or null when it is not a text. */
+const codeAt = (codes, i) => {
+  const code = listOf(codes)[i]
+  return typeof code === 'string' && code !== '' ? code : null
+}
+
 /**
- * The note of a change request answer (`revision: {changed, notDone}`): the lines the plan step wrote, strings only.
- * Null when the answer has none (a compose or an edit) or the shape is not this one.
+ * The note of a change request answer (`revision: {changed, notDone, codes?}`): the lines the plan step wrote, strings
+ * only. `codes` (parallel to `changed` and `notDone`) keeps the stable code of each line kept, null for a line without
+ * one, so the card can say a coded line in its own words; an answer without codes has no `codes`. Null when the answer
+ * has none (a compose or an edit) or the shape is not this one.
  * @param {unknown} value
- * @returns {null | { changed: string[], notDone: { what: string, why: string }[] }}
+ * @returns {null | { changed: string[], notDone: { what: string, why: string }[],
+ *   codes?: { changed: (string | null)[], notDone: (string | null)[] } }}
  */
-function revisedOf(value) {
+export function revisedOf(value) {
   if (!isObject(value)) return null
-  const changed = (Array.isArray(value.changed) ? value.changed : []).filter((x) => typeof x === 'string')
-  const notDone = (Array.isArray(value.notDone) ? value.notDone : [])
-    .filter((e) => typeof e?.what === 'string' && typeof e?.why === 'string')
-    .map((e) => ({ what: e.what, why: e.why }))
-  return { changed, notDone }
+  const coded = isObject(value.codes)
+  const codes = { changed: [], notDone: [] }
+  const changed = []
+  listOf(value.changed).forEach((line, i) => {
+    if (typeof line !== 'string') return
+    changed.push(line)
+    codes.changed.push(coded ? codeAt(value.codes.changed, i) : null)
+  })
+  const notDone = []
+  listOf(value.notDone).forEach((e, i) => {
+    if (typeof e?.what !== 'string' || typeof e?.why !== 'string') return
+    notDone.push({ what: e.what, why: e.why })
+    codes.notDone.push(coded ? codeAt(value.codes.notDone, i) : null)
+  })
+  return coded ? { changed, notDone, codes } : { changed, notDone }
 }
 
 /**

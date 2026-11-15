@@ -271,6 +271,39 @@ test('a renamed service is one change, and every block that shows the services r
     ])
 })
 
+test('a service on no page is not a numbered service: it is said under Left out, and no count names it', () => {
+  const p = structuredClone(plan())
+  p.items.push({
+    id: 's5',
+    kind: 'service',
+    label: 'Racquet stringing',
+    sources: [{ kind: 'social', name: 'Instagram bio' }]
+  })
+  p.leftOut = [
+    ...(p.leftOut ?? []),
+    { what: 'Racquet stringing', kind: 'item', reason: 'You asked to take this off the plan.' }
+  ]
+  const card = planCardOf(p)
+  assert.deepEqual(
+    card.services.map((s) => s.id),
+    ['s1', 's2', 's3', 's4'],
+    'only the services a page shows are numbered'
+  )
+  assert.equal(card.counts.services, 4)
+  assert.ok(card.leftOut.some((l) => l.what === 'Racquet stringing'))
+  // A block that shows every service on a page still reads as the services list.
+  const home = card.pages.find((x) => x.id === 'home').blocks.find((b) => 'services' in b.holds)
+  assert.deepEqual(home.holds.services, ['Adult coaching', 'Junior squad', 'Court hire', 'Cardio tennis'])
+  assert.equal(planReviewRequestOf(p).questions[0].detail, '# Sunrise Tennis Club: 5 pages, 4 services')
+  // A service a child list row shows is on a page too.
+  const listed = structuredClone(p)
+  listed.pages.find((x) => x.id === 'services').blocks[0].lists = [{ name: 'extras', rows: [{ data: 's5' }] }]
+  assert.deepEqual(
+    planCardOf(listed).services.map((s) => s.id),
+    ['s1', 's2', 's3', 's4', 's5']
+  )
+})
+
 // Child list rows (#606, #615): a block with `lists` shows each list with its rows in plain words.
 const withLists = (lists, extra = {}) => {
   const p = structuredClone(plan())

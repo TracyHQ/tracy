@@ -553,6 +553,44 @@ test('plan with a request on a living plan waits on the revise step and hands on
   assert.match(nothing.next, /Nothing on the plan changed/)
 })
 
+test('the stable line codes of a revise step reach the plan card beside their lines; none when it sent none', async () => {
+  const revised = { ...PLAN, revision: 3 }
+  const result = (revision) =>
+    fakeWeb({
+      'POST /api/build-draft/compose': {
+        body: {
+          step: 'revise',
+          state: 'done',
+          result: { plan: revised, brand: 'own', unchanged: false, revision }
+        }
+      }
+    })
+  const coded = await run(
+    toolWith(
+      result({
+        changed: ['Your answer is saved: Opening hours, Mon to Sat 06:30 to 21:30.', 5, 'A model line.'],
+        notDone: [
+          { what: 'Services', reason: 'outside_plan', why: 'The plan already has this page.' },
+          { what: 'bad' }
+        ],
+        codes: { changed: ['owner_value_saved', 'x', null], notDone: ['page_already_on_plan', 'y'] }
+      })
+    ),
+    { action: 'plan', request: 'We open Mon to Sat 06:30 to 21:30.' }
+  )
+  assert.deepEqual(coded.revision, {
+    changed: ['Your answer is saved: Opening hours, Mon to Sat 06:30 to 21:30.', 'A model line.'],
+    notDone: [{ what: 'Services', why: 'The plan already has this page.' }],
+    codes: { changed: ['owner_value_saved', null], notDone: ['page_already_on_plan'] }
+  })
+  assert.match(coded.next, /never say a code/)
+  const plain = await run(toolWith(result({ changed: ['A line.'], notDone: [] })), {
+    action: 'plan',
+    request: 'Please change it.'
+  })
+  assert.equal('codes' in plain.revision, false)
+})
+
 test('a request longer than a change request holds is never sent: the owner is asked again in plain words', async () => {
   const web = fakeWeb({})
   const answered = await run(toolWith(web), { action: 'plan', request: 'a'.repeat(1001) })

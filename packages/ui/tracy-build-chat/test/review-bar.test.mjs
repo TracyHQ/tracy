@@ -68,7 +68,8 @@ const PLAN = {
   revision: 3,
   facts: [{ id: 'f1', kind: 'business.name', label: 'Business name', value: 'Larkfen Rowing Club' }],
   items: [{ id: 's1', kind: 'service', label: 'Lessons' }],
-  pages: [{ id: 'home', name: 'Home', blocks: [] }],
+  // The service is on the home page: the card numbers, and the summary counts, only the services a page shows.
+  pages: [{ id: 'home', name: 'Home', blocks: [{ id: 'b1', label: 'Services', data: ['s1'] }] }],
   look: { template: { name: 'JA Rowing' }, logo: { kind: 'text' } },
   pictures: { own: { frames: 0, from: [] }, generated: { frames: 0 } }
 }

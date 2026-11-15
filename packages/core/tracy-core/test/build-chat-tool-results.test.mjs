@@ -222,6 +222,47 @@ test('a change request answer carries what changed and what was not done, for th
   assert.equal('revised' in buildToolResultOf(JSON.stringify(planResult(2))), false)
 })
 
+test('the codes of a change request answer stay beside the lines they name; an answer without codes has none', () => {
+  const revised = {
+    ...planResult(4),
+    unchanged: false,
+    revision: {
+      changed: ['Your answer is saved: Opening hours, Mon to Sat 06:30 to 21:30.', 42, 'A model line.'],
+      notDone: [
+        { what: 'bad entry' },
+        { what: 'Services', why: 'The plan already has this page.' },
+        { what: 'A gallery', why: 'The model said so.' }
+      ],
+      codes: {
+        changed: ['owner_value_saved', 'page-added', null],
+        notDone: ['nothing_to_change', 'page_already_on_plan', null]
+      }
+    }
+  }
+  const read = buildToolResultOf(JSON.stringify(revised))
+  assert.deepEqual(read.revised, {
+    changed: ['Your answer is saved: Opening hours, Mon to Sat 06:30 to 21:30.', 'A model line.'],
+    notDone: [
+      { what: 'Services', why: 'The plan already has this page.' },
+      { what: 'A gallery', why: 'The model said so.' }
+    ],
+    codes: { changed: ['owner_value_saved', null], notDone: ['page_already_on_plan', null] }
+  })
+  const fold = [call(7, 'c1', { action: 'revise' }), result(7, 'c1', revised)].reduce(
+    buildToolFoldOf,
+    undefined
+  )
+  assert.deepEqual(fold.plan.revised.codes, read.revised.codes)
+  // Codes that are not texts, or lists that run short, read as null; no codes at all, no `codes`.
+  const odd = { ...revised, revision: { ...revised.revision, codes: { changed: [7], notDone: 'x' } } }
+  assert.deepEqual(buildToolResultOf(JSON.stringify(odd)).revised.codes, {
+    changed: [null, null],
+    notDone: [null, null]
+  })
+  const none = { ...revised, revision: { changed: ['A line.'], notDone: [] } }
+  assert.equal('codes' in buildToolResultOf(JSON.stringify(none)).revised, false)
+})
+
 test('an edit the agent made leaves a note of the values it changed; a compose leaves none', () => {
   const changes = [
     { field: 'look.accent', value: '#123456' },

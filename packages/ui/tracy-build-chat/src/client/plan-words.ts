@@ -14,7 +14,7 @@ import { en, type StringKey, type Translate } from './strings'
 const known = (key: string): key is StringKey => Object.hasOwn(en, key)
 
 /** The table's word for `key` when the plan's text is missing or only the generic English; else the plan's text. */
-function wordOf(t: Translate, key: string, text: string | null | undefined): string {
+export function wordOf(t: Translate, key: string, text: string | null | undefined): string {
   if (!known(key)) return text ?? ''
   return text == null || text === '' || text === en[key] ? t(key) : text
 }

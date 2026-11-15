@@ -223,12 +223,30 @@ function wholePlanOf(plan) {
     }
   };
 }
+function rowDataOf(lists, out = /* @__PURE__ */ new Set()) {
+  for (const list of listOr(lists))
+    for (const row of listOr(list?.rows)) {
+      if (typeof row?.data === "string") out.add(row.data);
+      rowDataOf(row?.lists, out);
+    }
+  return out;
+}
+function shownOnPagesOf(plan) {
+  const shown = /* @__PURE__ */ new Set();
+  for (const page of plan.pages)
+    for (const block of page.blocks) {
+      for (const id of listOr(block.data)) shown.add(id);
+      rowDataOf(block.lists, shown);
+    }
+  return shown;
+}
 function planCardOf(contractPlan) {
   const plan = wholePlanOf(contractPlan);
   const disputed = new Map(
     (plan.assumptions ?? []).filter((a) => Array.isArray(a.alternatives) && /^facts\[[^\]]+\]\.value$/.test(a.field)).map((a) => [a.field, a])
   );
-  const services = plan.items.filter((i) => i.kind === "service");
+  const shown = shownOnPagesOf(plan);
+  const services = plan.items.filter((i) => i.kind === "service" && shown.has(i.id));
   const serviceIds = services.map((s) => s.id);
   const name2 = plainTextOf(plan.facts.find((f) => f.kind === "business.name")?.value ?? "");
   return {
@@ -346,6 +364,30 @@ var OPEN_FENCE = `\`\`\`${HANDOFF_FENCE}
 `;
 
 // ../../core/tracy-core/src/build-chat/tool-results.mjs
+var isObject = (value) => value !== null && typeof value === "object";
+var listOf = (value) => Array.isArray(value) ? value : [];
+var codeAt = (codes, i) => {
+  const code = listOf(codes)[i];
+  return typeof code === "string" && code !== "" ? code : null;
+};
+function revisedOf(value) {
+  if (!isObject(value)) return null;
+  const coded = isObject(value.codes);
+  const codes = { changed: [], notDone: [] };
+  const changed = [];
+  listOf(value.changed).forEach((line, i) => {
+    if (typeof line !== "string") return;
+    changed.push(line);
+    codes.changed.push(coded ? codeAt(value.codes.changed, i) : null);
+  });
+  const notDone = [];
+  listOf(value.notDone).forEach((e, i) => {
+    if (typeof e?.what !== "string" || typeof e?.why !== "string") return;
+    notDone.push({ what: e.what, why: e.why });
+    codes.notDone.push(coded ? codeAt(value.codes.notDone, i) : null);
+  });
+  return coded ? { changed, notDone, codes } : { changed, notDone };
+}
 var EMPTY = Object.freeze({
   calls: Object.freeze({}),
   templates: null,
@@ -662,15 +704,14 @@ ${JSON.stringify(answer)}`;
     if (state?.step === "revise") {
       if (result.brand !== "own" || !result.plan) return stopped(state.say);
       const review = handOutReview(sessionId, result.plan);
-      const lines = (v) => Array.isArray(v) ? v.filter((x) => typeof x === "string") : [];
-      const notDone = (Array.isArray(result.revision?.notDone) ? result.revision.notDone : []).filter((e) => typeof e?.what === "string" && typeof e?.why === "string").map((e) => ({ what: e.what, why: e.why }));
+      const revision = revisedOf(result.revision) ?? { changed: [], notDone: [] };
       const unchanged = result.unchanged === true;
       return {
         plan: { id: result.plan.id, revision: result.plan.revision },
         unchanged,
-        revision: { changed: lines(result.revision?.changed), notDone },
+        revision,
         review,
-        next: `${unchanged ? "Nothing on the plan changed: say so plainly." : "Say what changed using the sentences in revision.changed, word for word."} Then say each entry of revision.notDone with its why. Do not say anything else changed. ${PLAN_CARD_CONTROLS_GUIDANCE} Then call ask_user_question with review, unchanged.`
+        next: `${unchanged ? "Nothing on the plan changed: say so plainly." : "Say what changed using the sentences in revision.changed, word for word."} Then say each entry of revision.notDone with its why. Do not say anything else changed. ${revision.codes ? "revision.codes is for the plan card only: never say a code. " : ""}${PLAN_CARD_CONTROLS_GUIDANCE} Then call ask_user_question with review, unchanged.`
       };
     }
     if (state?.step === "brand")

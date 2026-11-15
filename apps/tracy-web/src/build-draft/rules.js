@@ -61,7 +61,8 @@ export function draftShape(row) {
     template: row.template,
     plan: row.plan,
     lastEdit: row.last_edit,
-    canUndo: row.undo_edit !== null,
+    // One undo: of the last card edit, or of the last change asked for in the chat (`undo_plan`, `store.js`).
+    canUndo: row.undo_edit !== null || (row.undo_plan ?? null) !== null,
     // Where the plan's accent and logo came from (the brand step's own record), when the draft holds one.
     ...(row.brand?.lookSources ? { lookSources: row.brand.lookSources } : {}),
     createdAt: row.created_at.toISOString(),

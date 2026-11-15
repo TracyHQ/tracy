@@ -8,7 +8,10 @@
  * 🔒 THE DRAFT KEEPS THE WHOLE PROFILE. `revisePlan` (like `composePlan`) hands on the profile without what the owner
  * keeps off the site, for the page writer. The draft's `needs_profile` is what the edit gate and the next request read,
  * and they need the held facts and items with the `withheld` marker (a card edit that shows the held name again must
- * find it), so the profile kept is the settled one `revisePlan` worked from (`composerContextOf`, no model call).
+ * find it). When the plan step answers that profile itself (`draftProfile`: the settled profile with what it did for
+ * the request, such as an opening time the owner typed or a rename), that is the profile kept; composing it again from
+ * the profile that was sent would lose those. A plan step that does not answer it yet keeps today's rule: the settled
+ * one `revisePlan` worked from (`composerContextOf`, no model call).
  */
 import { randomUUID } from 'node:crypto'
 import {
@@ -16,7 +19,7 @@ import {
   PLAN_REQUEST_SCHEMA,
   checkPlanRequest,
   composerContextOf,
-  revisePlan
+  revisePlan as planStepRevise
 } from 'website-opportunities/domain'
 
 /** Said when a written request is longer than a change request holds. Plain English, no dashes. */
@@ -48,10 +51,14 @@ export function requestRefusalOf(plan, text) {
 /**
  * Revise the plan with the owner's request. Inputs are plain data (the rerun rule copies them).
  * @param {{plan: object, profile: object, request: object, template: object, brand: object}} inputs
- * @param {{model: Function, kit: {blockStore: object, pageRecipes: object, library?: object[]}}} tools
+ * @param {{model: Function, kit: {blockStore: object, pageRecipes: object, library?: object[]},
+ *   revisePlan?: Function}} tools `revisePlan`: Part 3's plan step (a test passes a stand in)
  * @returns {Promise<{plan: object, profile: object, unchanged: boolean, changed: string[], notDone: object[]}>}
  */
-export async function reviseStep({ plan, profile, request, template, brand }, { model, kit }) {
+export async function reviseStep(
+  { plan, profile, request, template, brand },
+  { model, kit, revisePlan = planStepRevise }
+) {
   const shared = {
     blockStore: kit.blockStore,
     pageRecipes: kit.pageRecipes,
@@ -61,18 +68,34 @@ export async function reviseStep({ plan, profile, request, template, brand }, { 
   }
   const revised = await revisePlan({ ...shared, plan, profile, request, model })
   if (revised.unchanged) return { ...revised, profile }
+  const kept = revised.draftProfile
+  if (kept && typeof kept === 'object' && !Array.isArray(kept)) return { ...revised, profile: kept }
   return {
     ...revised,
     profile: composerContextOf({ ...shared, profile, answers: [], planId: plan.id }).profile
   }
 }
 
-/** What the revise step's done state keeps for the answer: the lines the owner reads, as Part 3 wrote them. */
-export const revisionOf = (revised) => ({
-  changed: Array.isArray(revised.changed) ? revised.changed : [],
-  notDone: (Array.isArray(revised.notDone) ? revised.notDone : []).map(({ what, reason, why }) => ({
-    what,
-    reason,
-    why
-  }))
-})
+const list = (value) => (Array.isArray(value) ? value : [])
+/** The codes beside `lines`, one per line: a code that is not a text, or a list that runs short, reads as null. */
+const codesBeside = (codes, lines) => {
+  const given = list(codes)
+  return lines.map((_, i) => (typeof given[i] === 'string' && given[i] !== '' ? given[i] : null))
+}
+
+/**
+ * What the revise step's done state keeps for the answer: the lines the owner reads, as Part 3 wrote them, and the
+ * stable code beside each (`codes`, parallel to `changed` and `notDone`; null for a line the model wrote), so the card
+ * can say a coded line in the owner's language. A result without codes keeps none.
+ */
+export function revisionOf(revised) {
+  const changed = list(revised.changed)
+  const notDone = list(revised.notDone).map(({ what, reason, why }) => ({ what, reason, why }))
+  const codes = revised.codes
+  if (!codes || typeof codes !== 'object') return { changed, notDone }
+  return {
+    changed,
+    notDone,
+    codes: { changed: codesBeside(codes.changed, changed), notDone: codesBeside(codes.notDone, notDone) }
+  }
+}

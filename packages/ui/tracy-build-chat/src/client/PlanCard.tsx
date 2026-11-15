@@ -34,6 +34,7 @@ import {
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
 import { type EditContext, EditableValue, UndoIcon } from './EditableValue'
 import { factLabelOf, sentenceOf, sourceNameOf } from './plan-words'
+import { changedLineOf, notDoneLineOf } from './revision-lines'
 import { refusalOf } from './save-plan-edit'
 import type { StringKey, Translate } from './strings'
 
@@ -118,9 +119,16 @@ function RevisionNoteView({
   undoHintId?: string
   onDismiss: () => void
 }) {
-  const changed = grouped([...note.changed.map(plainTextOf), ...edited], (line) => line)
+  // A line with a stable code is said in the card's words (`revision-lines.ts`); any other keeps the server's text.
+  const codes = note.codes
+  const changed = grouped(
+    [...note.changed.map((line, i) => changedLineOf(t, codes?.changed[i], plainTextOf(line))), ...edited],
+    (line) => line
+  )
   const notDone = grouped(
-    note.notDone.map((e) => ({ what: plainTextOf(e.what), why: plainTextOf(e.why) })),
+    note.notDone.map((e, i) =>
+      notDoneLineOf(t, codes?.notDone[i], { what: plainTextOf(e.what), why: plainTextOf(e.why) })
+    ),
     (e) => `${e.what}\n${e.why}`
   )
   return (
@@ -398,8 +406,9 @@ export function PlanCard({
   const edited = editLinesOf(t, card, revised?.edits)
   const showNote =
     revised !== null && (revised.changed.length > 0 || revised.notDone.length > 0 || edited.length > 0)
-  // A change made in the chat by a written request (the revise step) cannot be taken back with Undo: tracy-web keeps
-  // no undo for it. Undo stays disabled, and the note says why instead of leaving the owner to guess.
+  // A change made in the chat by a written request (the revise step) is taken back with Undo like a card edit, while
+  // the draft offers it (`canUndo`). Only when it does not (a card edit replaced that undo, or a draft kept before
+  // chat changes could be undone) does Undo stay disabled, and the note says why instead of leaving the owner to guess.
   const undoUnavailable =
     showNote && !draft.canUndo && (revised?.changed.length ?? 0) > 0 && (revised?.edits?.length ?? 0) === 0
 
@@ -418,13 +427,16 @@ export function PlanCard({
           data-ghost=""
           aria-label={t('plan.undoLabel')}
           aria-describedby={undoUnavailable ? undoHintId : undefined}
-          // Nothing to take back without a last edit: disabled, so it is neither pressed nor reached by Tab.
-          disabled={!draft.canUndo || !draft.lastEdit || busy}
+          // Nothing to take back: disabled, so it is neither pressed nor reached by Tab. A change asked for in the chat
+          // is offered with no card edit (`lastEdit` null).
+          disabled={!draft.canUndo || busy}
           onClick={() => {
             setEditing(null)
-            // Undo goes disabled once it is done, which would drop focus to the page: it goes to the value taken back.
+            // Undo goes disabled once it is done, which would drop focus to the page: it goes to the value taken back,
+            // or to the card's title when a chat change (no one value) is taken back.
             const taken = draft.lastEdit?.changes?.[0]?.field
             if (taken) setRefocus(taken)
+            else titleRef.current?.focus()
             void follow(onUndo)
           }}
         >

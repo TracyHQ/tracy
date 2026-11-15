@@ -430,11 +430,12 @@ test('Undo with no last edit is disabled and out of the Tab order; left out line
         block.data = (block.data ?? []).filter(
           (id) => plan.items.some((i) => i.id === id) || plan.facts.some((f) => f.id === id)
         )
-    // A draft that claims an undo but holds no last edit: nothing to take back.
+    // A draft that offers no undo and holds no last edit: nothing to take back. (A draft that offers an undo with no
+    // last edit is a change asked for in the chat, which Undo takes back: `plan-card-words.test.mjs`.)
     const { page, errors } = await open(browser, {
       viewport: { width: 390, height: 844 },
       plan,
-      canUndo: true
+      canUndo: false
     })
     await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
     const card = page.getByRole('article')

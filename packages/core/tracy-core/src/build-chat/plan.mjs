@@ -183,8 +183,30 @@ function wholePlanOf(plan) {
   }
 }
 
+/** The ids of the rows of child lists, at every level. */
+function rowDataOf(lists, out = new Set()) {
+  for (const list of listOr(lists))
+    for (const row of listOr(list?.rows)) {
+      if (typeof row?.data === 'string') out.add(row.data)
+      rowDataOf(row?.lists, out)
+    }
+  return out
+}
+
+/** The ids of the data some page shows: in a block's data or in a row of its child lists. */
+function shownOnPagesOf(plan) {
+  const shown = new Set()
+  for (const page of plan.pages)
+    for (const block of page.blocks) {
+      for (const id of listOr(block.data)) shown.add(id)
+      rowDataOf(block.lists, shown)
+    }
+  return shown
+}
+
 /**
- * The plan card's content.
+ * The plan card's content. Services are the service items some page shows: an item the plan keeps on no page (taken
+ * off, or nothing to show it in) is said under Left out, never as a numbered service, and the counts follow the card.
  * @param {any} contractPlan - a Contract B plan
  */
 export function planCardOf(contractPlan) {
@@ -194,7 +216,8 @@ export function planCardOf(contractPlan) {
       .filter((a) => Array.isArray(a.alternatives) && /^facts\[[^\]]+\]\.value$/.test(a.field))
       .map((a) => [a.field, a])
   )
-  const services = plan.items.filter((i) => i.kind === 'service')
+  const shown = shownOnPagesOf(plan)
+  const services = plan.items.filter((i) => i.kind === 'service' && shown.has(i.id))
   const serviceIds = services.map((s) => s.id)
   const name = text(plan.facts.find((f) => f.kind === 'business.name')?.value ?? '')
   return {

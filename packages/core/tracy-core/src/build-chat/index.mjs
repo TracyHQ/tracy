@@ -91,5 +91,6 @@ export {
   isPlanReviewRequest,
   MAX_STEP_RETRIES,
   PLAN_REVIEW_ID,
-  RETRY_MESSAGE
+  RETRY_MESSAGE,
+  revisedOf
 } from './tool-results.mjs'

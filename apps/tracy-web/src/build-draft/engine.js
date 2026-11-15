@@ -116,6 +116,7 @@ export const brandFor = (row, template) =>
  *   (`createChargeable`): each step is reserved there at its ceiling (`spend-limits.js`); without it nothing is counted
  *   in the ledger, the hourly limits still hold
  * @param {() => number} [deps.now]
+ * @param {Function} [deps.revisePlan] Part 3's plan step for a change request (`revisePlan`); a test passes a stand in
  */
 export function createEngine({
   pool,
@@ -125,7 +126,8 @@ export function createEngine({
   brandStep,
   prunePictures,
   charge,
-  now = Date.now
+  now = Date.now,
+  revisePlan
 }) {
   const runner = randomUUID()
   const admit = spendGate({ pool, charge, now })
@@ -244,7 +246,10 @@ export function createEngine({
     }
     return start(accountId, 'revise', { request: text, plan: base, template }, async () => {
       const model = await buildModel()
-      const ran = await runWithRerun((copy) => reviseStep(copy, { model, kit }), inputs)
+      const ran = await runWithRerun(
+        (copy) => reviseStep(copy, { model, kit, ...(revisePlan ? { revisePlan } : {}) }),
+        inputs
+      )
       if (!ran.ok) {
         if (ran.error && typeof ran.error === 'object') ran.error.requestText = text
         return ran
