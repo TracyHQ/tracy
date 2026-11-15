@@ -78,6 +78,8 @@ test('startRun hands the frame the run on the built site, under the update run i
 test('startRun refuses while another run is unfinished on the site, and lets the same run resume', async () => {
   const builds = memoryBuildStore()
   const ctx = { siteKey: SITE_KEY }
+  // `begin` marks a run only from the build the site holds (compare and set).
+  await builds.keep({ ref: 'run-1' }, ctx, { expected: null })
   assert.equal(await builds.begin({ runId: 'run-other', from: 'run-1' }, ctx), true)
   const { run, asked } = starter({ builds })
   assert.deepEqual(await run(), { refusal: { code: 'previous_run_unfinished', status: 409 } })

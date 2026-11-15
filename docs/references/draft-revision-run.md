@@ -219,6 +219,16 @@ journal keeps `undo.making` before the call, so a make whose id was never saved 
 `restore_needs_removal`, as for a restore; such a run can only be resumed. Files the run uploaded stay
 (`left.uploads`).
 
+A run marked from a build the site no longer holds (a restore moved the site on, or a store answered `begin` without
+comparing the build) can never be kept, so it can never be resumed to its end. Its abandon answers `stale: true`: it
+writes back what it can, as above, and when no door can undo the run it still clears the mark, writing nothing, and
+reports what stays in `left.unrestored` (`{code, made, removed}`). A site is never locked by a run nobody can finish.
+
+A JSON column (`attribs`, `images`, `params`) is never sent whole by a revision, a restore or an abandon: what the
+site holds now is the base, and only the keys Tracy owns (the shape it wrote) are set; every key the owner added, and
+everything inside a value Tracy wrote as an empty object, stays (`step-chain-draft-owned-keys.js`). A revision that
+would write over a key the owner set stops `site_changed_outside`.
+
 ## Removal: the door Part 1 has not measured
 
 A revision that takes a page, a block, a block's whole list or an item off the site, and a restore of a revision that
@@ -254,9 +264,11 @@ The caller (the build chat, `apps/tracy-web/src/build-draft/`) owns these; this 
     another ref stops `previous_build_not_current` before any model call, and every run checks it again right before
     its first door call; a store with no `read` or no `current` stops `previous_build_doors_missing`; a `read` that
     throws stops `previous_build_unreadable`;
-  - `begin({runId, from}, ctx)` marks the site's one unfinished revision run, compare and set: another run marked
-    answers `false` (the run stops `previous_run_unfinished` before any door), the same run id answers true (a
-    resume); `unfinished(ctx)` answers the mark or null; `end(runId, ctx)` clears it (the write step after `keep`,
+  - `begin({runId, from}, ctx)` marks the site's one unfinished revision run, compare and set on the site's build
+    and the mark, atomic: it answers true only when the site's build is `from` now and no other run is marked (the
+    same run id again is a resume); otherwise `false` and nothing marked, and the run stops before any door
+    (`previous_build_not_current` when the build moved on, else `previous_run_unfinished`). Two runs that both read
+    the same build: the first to begin wins. On Postgres the head row read `for update` holds both checks; `unfinished(ctx)` answers the mark or null; `end(runId, ctx)` clears it (the write step after `keep`,
     `abandonRun` after its write back);
   - `forget(ref, ctx, {reason})`: the store keeps the ref and the reason only (below, stored data after a hold).
   A FULL build (no `rebuildFrom`) on a site whose `current` is not null stops at the plan step, before any model call

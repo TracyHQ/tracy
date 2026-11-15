@@ -89,7 +89,12 @@ export async function callPage(state, { plan, context, model, signal, rewrite })
   // A revision's first call asks only the fields of the blocks it changed (`state.ask`, #599); the rest keep their words.
   const slots = !rewrite && state.ask ? state.ask : state.slots
   if (signal?.aborted) throw signal.reason ?? new Error('stopped')
-  const askedSeo = rewrite ? rewrite.filter((f) => Object.values(SEO_KEYS).includes(f.key)) : null
+  // A revision's first call that asks some blocks only keeps the page's search texts: none asked, none taken.
+  const askedSeo = rewrite
+    ? rewrite.filter((f) => Object.values(SEO_KEYS).includes(f.key))
+    : state.ask
+      ? []
+      : null
   // The other blocks' words ride along as read only context (#599); their keys are never taken from the answer.
   const asking = new Set(slots.map((s) => s.key))
   const kept =
@@ -104,7 +109,7 @@ export async function callPage(state, { plan, context, model, signal, rewrite })
     ...context,
     kept,
     rewrite,
-    seo: !rewrite || askedSeo.length ? context.seoLimits : undefined
+    seo: !askedSeo || askedSeo.length ? context.seoLimits : undefined
   })
   let reply
   try {

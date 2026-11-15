@@ -80,11 +80,12 @@ test('two keeps at once: exactly one wins on both stores', opts, async () => {
 
 test('begin marks one run per site, a resume marks again, end clears only its run', opts, async () => {
   await bothAnswer(async (s, say) => {
+    await s.keep(build('run-1'), A, { expected: null })
     say('none', await s.unfinished(A))
     say('begin', await s.begin({ runId: 'run-2', from: 'run-1' }, A))
     say('mark', await s.unfinished(A))
     say('other run refused', await s.begin({ runId: 'run-3', from: 'run-1' }, A))
-    say('resume', await s.begin({ runId: 'run-2', from: 'run-1b' }, A))
+    say('resume', await s.begin({ runId: 'run-2', from: 'run-1' }, A))
     say('mark after resume', await s.unfinished(A))
     say('other site free', await s.begin({ runId: 'run-9', from: null }, B))
     await s.end('run-3', A)
@@ -94,6 +95,37 @@ test('begin marks one run per site, a resume marks again, end clears only its ru
     say('next run', await s.begin({ runId: 'run-3', from: 'run-1' }, A))
   })
 })
+
+// A run that read the site's build, then lost it to another run, must not mark itself and write over the
+// winner: `begin` compares the site's build with `from` and sets the mark in one step (on Postgres: in the
+// transaction that holds the head row `for update`, the head's build compared with `from`, false and no
+// mark on a difference).
+test(
+  'begin is a compare and set on the site build: a run from another build is refused, nothing marked',
+  opts,
+  async () => {
+    const said = await bothAnswer(async (s, say) => {
+      say('blank site, from a build', await s.begin({ runId: 'run-2', from: 'run-1' }, A))
+      say('no mark', await s.unfinished(A))
+      await s.keep(build('run-1'), A, { expected: null })
+      await s.keep(build('run-2', 'run-1'), A, { expected: 'run-1' })
+      say('from the build before', await s.begin({ runId: 'run-3', from: 'run-1' }, A))
+      say('still no mark', await s.unfinished(A))
+      say('from the site build', await s.begin({ runId: 'run-3', from: 'run-2' }, A))
+      await s.keep(build('run-1'), A, { expected: 'run-2' })
+      say('resume after the build moved on', await s.begin({ runId: 'run-3', from: 'run-2' }, A))
+      const both = await Promise.all([
+        s.begin({ runId: 'run-4', from: 'run-1' }, B),
+        s.begin({ runId: 'run-5', from: null }, B)
+      ])
+      say('one of two on a blank site', both)
+    })
+    assert.deepEqual(
+      said.filter(([l]) => l !== 'still no mark' && l !== 'no mark').map(([, v]) => v),
+      [false, false, true, false, [false, true]]
+    )
+  }
+)
 
 test('forget drops the build; keeping the ref again brings it back', opts, async () => {
   await bothAnswer(async (s, say) => {

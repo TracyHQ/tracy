@@ -14,7 +14,8 @@
 //   site identity (`identity:<field>`)   as text (`String(value ?? '')`), as `readIdentity` reads it
 //
 // So a site's own re-encoding is never taken for an owner's edit, and an owner's edit of a value Tracy wrote (a value
-// inside the JSON, a word of a text) is. What no comparison sees: a key the owner adds to a JSON column by hand.
+// inside the JSON, a word of a text) is. What no comparison sees: a key the owner adds to a JSON column by hand; a
+// revision, a restore and an abandon keep it, as they set only the keys Tracy owns (`step-chain-draft-owned-keys.js`).
 import { createHash } from 'node:crypto'
 import { canonicalOf as parsed, columnHolds } from './step-chain-draft-write-check.js'
 

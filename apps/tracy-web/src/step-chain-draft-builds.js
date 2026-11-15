@@ -8,8 +8,10 @@
 //   keep(build, ctx, {expected})      store `build` AND make its ref the site's build, only when the site's build is
 //                                     `expected` now (null for a first build): compare and set, atomic; false otherwise
 //   current(ctx)                      the ref of the site's build, or null
-//   begin({runId, from}, ctx)         mark the site's one unfinished revision run (compare and set; the same run id
-//                                     again is true, a resume); false when another run is marked
+//   begin({runId, from}, ctx)         mark the site's one unfinished revision run, compare and set, atomic: true only
+//                                     when the site's build is `from` now and no other run is marked (the same run id
+//                                     again is a resume); false otherwise, nothing marked. Two runs that both read the
+//                                     same build: the first to begin wins, and the other stops before any write
 //   unfinished(ctx)                   the mark, or null
 //   end(runId, ctx)                   clear the mark of that run
 //   forget(ref, ctx, {reason})        drop the build, keeping only its ref and the reason
@@ -55,6 +57,7 @@ export function memoryBuildStore() {
     current: async (ctx) => siteOf(ctx).current,
     async begin(run, ctx) {
       const site = siteOf(ctx)
+      if (site.current !== (run.from ?? null)) return false
       if (site.unfinished && site.unfinished.runId !== run.runId) return false
       site.unfinished = { ...run }
       return true

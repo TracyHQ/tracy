@@ -64,3 +64,14 @@ test('a plan label changed while the blocks still show the old name is not an ol
     ['Meadow posy']
   )
 })
+
+test('an old name is found with a trademark or service mark sign right after it, as with a registered sign', () => {
+  const old = ['Sunfield tote']
+  for (const text of [
+    'Try our Sunfield Tote™.',
+    'Try our Sunfield tote℠ now',
+    'Try our Sunfield tote® today'
+  ])
+    assert.deepEqual(oldValuesNamedIn({ a: text }, old), old, text)
+  assert.deepEqual(oldValuesNamedIn({ a: 'Try our Sunfield totes™.' }, old), [])
+})

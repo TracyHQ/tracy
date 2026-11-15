@@ -134,7 +134,8 @@ async function forgetHeld(builds, build, ctx) {
 /**
  * The check right before a run's first door call: the site still holds the build the run starts from
  * (`builds.current`, null for a first build: `previous_build_not_current`), and a revision marks itself as the site's
- * unfinished run (`builds.begin`, compare and set: another run marked is `previous_run_unfinished`). Nothing is called
+ * unfinished run (`builds.begin`, compare and set on the build and the mark: another run marked is
+ * `previous_run_unfinished`, the build moved on in between is `previous_build_not_current`). Nothing is called
  * on the site before both pass.
  */
 const siteCheckOf = (builds, ctx, previous) => async () => {
@@ -152,10 +153,18 @@ const siteCheckOf = (builds, ctx, previous) => async () => {
       )
   }
   if (!previous || typeof builds?.begin !== 'function') return
-  if ((await builds.begin({ runId: ctx.runId ?? null, from: expected }, ctx)) === false)
-    throw draftError('previous_run_unfinished', 'another run is still unfinished on this site', {
-      run: (await builds.unfinished?.(ctx))?.runId ?? null
+  // `begin` compares the site's build with `expected` and sets the mark at once: a run that read the same build and
+  // began first wins; this one, refused, stops here before any write, by what refused it.
+  if ((await builds.begin({ runId: ctx.runId ?? null, from: expected }, ctx)) !== false) return
+  const now = typeof builds.current === 'function' ? ((await builds.current(ctx)) ?? null) : expected
+  if (now !== expected)
+    throw draftError('previous_build_not_current', 'another run changed the build of this site first', {
+      expected,
+      current: now
     })
+  throw draftError('previous_run_unfinished', 'another run is still unfinished on this site', {
+    run: (await builds.unfinished?.(ctx))?.runId ?? null
+  })
 }
 
 /** The write step, with its wiring (above). */

@@ -20,6 +20,7 @@
 // record `{restore, done}` so a crashed restore resumes; each is read back; a failing place is tried twice, then the
 // restore stops (`restore_failed`, noRerun). Doors as `step-chain-draft-write.js` lists them.
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
+import { ownedColumnOf, shapeUnion } from './step-chain-draft-owned-keys.js'
 import { placeHolds } from './step-chain-draft-place-value.js'
 import { checkUnchanged, restorePlanOf } from './step-chain-draft-restore-plan.js'
 
@@ -33,12 +34,30 @@ const mismatch = (place) =>
     place: place.key
   })
 
+/**
+ * The columns of a record written back: a JSON column only at the keys the run wrote (its shapes, and those of the
+ * earlier values it sent there), over what the site holds now, so a key the owner added since stays.
+ */
+async function ownedFieldsOf(place, doors, state) {
+  const row = await doors.get({ kind: place.kind, id: place.id })
+  const out = {}
+  for (const [column, value] of Object.entries(place.fields)) {
+    const name = `record:${place.kind}:${place.id}:${column}`
+    const owned = [state?.shapes?.[name], ...list(state?.undo?.sent?.[name]).map(([, shape]) => shape)]
+      .filter(Boolean)
+      .reduce((a, b) => shapeUnion(a, b), null)
+    out[column] = ownedColumnOf(row[column] ?? null, value, owned).value
+  }
+  return out
+}
+
 /** One place written back and read back. */
-async function restorePlace(place, doors, applyId) {
+async function restorePlace(place, doors, applyId, state) {
   if (place.type === 'record') {
-    await doors.update({ applyId, kind: place.kind, id: place.id, fields: place.fields })
+    const fields = await ownedFieldsOf(place, doors, state)
+    await doors.update({ applyId, kind: place.kind, id: place.id, fields })
     const row = await doors.get({ kind: place.kind, id: place.id })
-    for (const [column, value] of Object.entries(place.fields))
+    for (const [column, value] of Object.entries(fields))
       if (!placeHolds(`record:${place.kind}:${place.id}:${column}`, value, row[column] ?? null))
         throw mismatch(place)
   } else if (place.type === 'assignment') {
@@ -71,7 +90,7 @@ export async function writeBack({ places, doors, record, state, applyId, failed,
     await checkUnchanged(place, doors, state, changed)
     for (let attempt = 1; ; attempt++) {
       try {
-        await restorePlace(place, doors, applyId(place))
+        await restorePlace(place, doors, applyId(place), state)
         break
       } catch (error) {
         if (error?.fatal) throw error

@@ -168,7 +168,7 @@ export async function matrixRow(name, { writer = {}, site: blank = blankSite } =
 }
 
 /** The words a revision run kept without asking: every written field of its copy no writer call of the run asked. */
-function keptWordsOf(partial) {
+export function keptWordsOf(partial) {
   const asked = new Set(
     partial.model.calls
       .filter((c) => c.kind === 'writer')

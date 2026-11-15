@@ -9,7 +9,8 @@
 //   - a phone (no letter, seven digits or more): by its digits, a leading trunk zero dropped, inside any run of phone
 //     characters (`+44 20 7946 0525` names `020 7946 0525`), and as the held matcher reads it;
 //   - an address (`https://`, `www.`): without its scheme, `www.` and a closing slash;
-//   - any text: with apostrophes and hyphens dropped and `ß` read as `ss` on both sides (`OHara` names `O'Hara`).
+//   - any text: with apostrophes and hyphens dropped, `ß` read as `ss` and a trademark or service mark sign read as a
+//     space on both sides (`OHara` names `O'Hara`; `Bouquet™` names `Bouquet`, as the sign folds to letters `TM`).
 // Not searched (a writer would only reach them past the copy check): plurals, one word of a longer name, a phone or a
 // time spelled out in words.
 import { leavesOf, textsNamedIn } from './revision-text-forms.mjs'
@@ -64,9 +65,10 @@ function namesAddress(leaves, old) {
   })
 }
 
-/** A text with apostrophes and hyphens dropped and `ß` read as `ss`. */
+/** A text with apostrophes and hyphens dropped, `ß` read as `ss` and a mark sign (`™` `℠`) read as a space. */
 const dropped = (text) =>
   String(text)
+    .replace(/[\u2122\u2120]/g, ' ')
     .replace(/['‘’ʼ`-]/g, '')
     .replace(/ß/g, 'ss')
     .replace(/ẞ/g, 'SS')

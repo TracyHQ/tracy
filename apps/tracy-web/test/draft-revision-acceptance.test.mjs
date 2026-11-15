@@ -2,19 +2,29 @@
 //   1. renaming one service re-writes only the pages and blocks that show it;
 //   2. unaffected pages and blocks are untouched and cause no model call;
 //   3. the previous build can be restored (the whole memory site equal to its snapshot before the revision).
+// The fake writer answers search texts too: a page sent for its blocks only keeps them, and one whose search texts
+// quote the old name is asked them again.
 //
 //   node --test --test-concurrency=1 apps/tracy-web/test/draft-revision-acceptance.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { writePlanOf } from 'website-opportunities/domain/draft-write-plan.mjs'
 import { revisedBy, SERVICE } from './draft-revision-edits.mjs'
-import { firstBuild, freshBuild, restoreOf, revisionRun, sameSite } from './draft-revision-run.mjs'
+import {
+  firstBuild,
+  freshBuild,
+  keptWordsOf,
+  restoreOf,
+  revisionRun,
+  sameSite
+} from './draft-revision-run.mjs'
 import { snapshotOf } from './draft-write-fixtures.mjs'
 
-const first = await firstBuild()
+const WRITER = { seo: true }
+const first = await firstBuild({ writer: WRITER })
 const before = snapshotOf(first.memory)
 const revised = revisedBy('rename a service')
-const partial = await revisionRun(first, revised)
+const partial = await revisionRun(first, revised, { writer: WRITER })
 const after = snapshotOf(first.memory)
 const { run } = partial
 const plan = first.run.plan.plan
@@ -53,8 +63,18 @@ test('1. renaming one service re-writes only the pages and blocks that show it',
   for (const key of rewrite)
     assert.ok(opOf(key).entries.some(inShowing), `${key} shows no block of the service`)
   assert.deepEqual(run.write.report.delta.added, [])
-  // And the site is exactly what a full build of the renamed plan writes.
-  return freshBuild(revised).then((fresh) => assert.ok(sameSite(first.memory, fresh.memory)))
+  // A row of another service in a shared list keeps its words: not asked, read only context.
+  const asked = partial.model.calls
+    .filter((c) => c.kind === 'writer')
+    .flatMap((c) => JSON.parse(c.user).blocks.flatMap((b) => b.fields.map((f) => f.key)))
+  const rows = run.copy.pages.flatMap((p) => p.fields).filter((f) => f.from === 'writer' && f.item)
+  for (const f of rows.filter((r) => showing.some((at) => at.endsWith(`.${r.block}`))))
+    assert.equal(asked.includes(f.key), f.item === SERVICE, f.key)
+  // And the site is exactly what a full build of the renamed plan writes, given the words the revision kept.
+  const fixed = keptWordsOf(partial)
+  return freshBuild(revised, { writer: { ...WRITER, fixed } }).then((fresh) =>
+    assert.ok(sameSite(first.memory, fresh.memory))
+  )
 })
 
 test('2. unaffected pages and blocks are untouched and cause no model call', () => {
@@ -103,4 +123,32 @@ test('3. the previous build can be restored: the whole memory site equals its sn
   assert.equal(restored.current.ref, first.ref)
   assert.equal(restored.current.write.state.seq, build.write.state.seq + 1)
   assert.equal(first.builds.currentRef, first.ref)
+})
+
+const seoOf = (r, id) => r.copy.pages.find((p) => p.id === id)?.seo
+const writerCalls = (model) => model.calls.filter((c) => c.kind === 'writer').map((c) => JSON.parse(c.user))
+
+test('4. a page sent for its blocks only keeps its search texts: not asked, not rewritten', () => {
+  const asked = writerCalls(partial.model)
+  assert.ok(asked.length > 0)
+  for (const user of asked) {
+    assert.equal(user.seo, undefined, user.page.id)
+    assert.ok(seoOf(first.run, user.page.id)?.title, user.page.id)
+    assert.deepEqual(seoOf(run, user.page.id), seoOf(first.run, user.page.id))
+  }
+  assert.deepEqual(
+    run.write.report.delta.rewrite.filter((key) => key.startsWith('menuItem:')),
+    []
+  )
+})
+
+test('5. a page whose search title quotes the old name is asked its search texts again', async () => {
+  const name = plan.items.find((i) => i.id === SERVICE).label
+  const quoted = await firstBuild({ writer: { seo: (page) => (page === 'home' ? `${name}:` : null) } })
+  assert.ok(seoOf(quoted.run, 'home').title.startsWith(name))
+  const again = await revisionRun(quoted, revised, { writer: WRITER })
+  assert.equal(again.run?.write.report.status, 'done', again.error?.code)
+  const home = writerCalls(again.model).find((u) => u.page.id === 'home')
+  assert.ok(home?.seo, 'the home page call asks its search texts')
+  assert.ok(!seoOf(again.run, 'home').title.includes(name))
 })

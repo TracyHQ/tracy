@@ -25,7 +25,8 @@
 // be written, or the value before this run journaled. Any other value was written outside Tracy, and the run stops
 // (`site_changed_outside`, noRerun, naming the place, never the text). A place no build wrote is free on first touch.
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
-import { placeHolds } from './step-chain-draft-place-value.js'
+import { ownedColumnOf, shapeUnion } from './step-chain-draft-owned-keys.js'
+import { placeHolds, placeShapeOf } from './step-chain-draft-place-value.js'
 import { namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { holdsSent, holdsWrote, keepWrote, wroteDoors } from './step-chain-draft-wrote.js'
 
@@ -109,21 +110,33 @@ export function journaledDoors(doors, record, options = {}) {
     const key = `${kind}:${Number(id)}`
     const row = await doors.get({ kind, id })
     const kept = undo().records[key] ?? { kind, id: Number(id), fields: {} }
+    const sent = { ...fields }
     for (const column of Object.keys(fields ?? {})) {
       const place = `record:${key}:${column}`
       const had = Object.hasOwn(kept.fields, column)
       check(place, row[column] ?? null, fields[column], had ? kept.fields[column] : undefined)
+      sent[column] = ownedValueOf(place, row[column] ?? null, fields[column])
       wrote(place, fields[column])
       if (!had) kept.fields[column] = keep(row[column] ?? null)
     }
     undo().records[key] = kept
-    return save()
+    await save()
+    return sent
+  }
+  /** A JSON column sent over only the keys Tracy owns (`step-chain-draft-owned-keys.js`), the owner's kept. */
+  function ownedValueOf(place, now, value) {
+    const state = record.state
+    const known = Boolean(previousWrote[place] || state.wrote?.[place])
+    const before = known ? shapeUnion(previousShapes[place] ?? {}, state.shapes?.[place] ?? {}) : null
+    const out = ownedColumnOf(now, value, placeShapeOf(place, value), before)
+    if (out.overOwner) throw outsideEdit(place)
+    return out.value
   }
   return {
     ...doors,
     async update(call) {
-      await keepRecord(call.kind, call.id, call.fields)
-      return doors.update(call)
+      const fields = await keepRecord(call.kind, call.id, call.fields)
+      return doors.update(fields ? { ...call, fields } : call)
     },
     async contract(call) {
       const keys = [...Object.keys(call.changes ?? {}), ...list(call.removes)]

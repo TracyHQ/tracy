@@ -75,15 +75,20 @@ function dataOverLimit(fieldsByPage) {
 }
 
 /**
- * What a revision keeps of a page (#599): its words, and either no first call (`reused`) or a first call asking only
- * the fields of the blocks it changed (`ask`). The checks run on every page either way.
+ * What a revision keeps of a page (#599): its words and search texts, and either no first call (`reused`) or a first
+ * call asking only the fields of the blocks it changed (`ask`; a page whose search texts quote an old value, or whose
+ * name or site changed, is written whole instead). The checks run on every page either way.
  */
 function keptOf(kept, fields) {
   if (!kept) return { values: {}, seo: undefined }
-  const ask = kept.ask ? fields.filter((f) => f.from === 'writer' && kept.ask.has(f.block)) : []
+  // `askItems` (block -> item ids): in such a block only the rows of those items, and its fields of no item, are asked.
+  const items = kept.askItems instanceof Map ? kept.askItems : new Map()
+  const asked = (f) =>
+    kept.ask.has(f.block) && (!f.item || !items.has(f.block) || items.get(f.block).has(f.item))
+  const ask = kept.ask ? fields.filter((f) => f.from === 'writer' && asked(f)) : []
   return {
     values: { ...kept.values },
-    seo: kept.ask ? undefined : kept.seo,
+    seo: kept.seo,
     ...(ask.length ? { ask } : { reused: true })
   }
 }
@@ -98,7 +103,7 @@ function keptOf(kept, fields) {
  *   writer step (`{id, fields, seo?}`), which this call's pages must not repeat; `rewrite: false` writes once with no
  *   rewrite round (the step chain's second attempt, so a page is written at most twice in one build); `reuse`: page id ->
  *   `{values, seo, ask?}`, the words a revision keeps (#599): a page with no `ask` takes no first call; with `ask` (block
- *   ids) its first call asks those blocks' fields and its search texts only. Every page is checked with the others (its
+ *   ids) its first call asks those blocks' fields only, its search texts kept. Every page is checked with the others (its
  *   own check and the whole site check) like a page just written
  * @returns {Promise<{pages: Array<{id: string, fields: object[], attempts: object[], seo?: object}>, prompt: object}>}
  *   `seo`: the page's search `title` and `description` when the writer wrote them; `attempts`:

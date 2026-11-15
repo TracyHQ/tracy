@@ -2,7 +2,8 @@
 /**
  * The build store of one site over a Map of builds by ref (`deps.builds`): `keep` stores a build and makes it the build
  * the site holds (`builds.currentRef`) only over the `expected` one (compare and set, else false and nothing kept),
- * `current` answers that ref; `begin`/`unfinished`/`end` mark the site's one unfinished run (`builds.unfinishedRun`);
+ * `current` answers that ref; `begin`/`unfinished`/`end` mark the site's one unfinished run (`builds.unfinishedRun`),
+ * `begin` only over the build the run starts from (compare and set, as the interface demands);
  * `forget` keeps only a ref and a reason (`builds.forgotten`).
  */
 export const buildStoreOf = (builds) => ({
@@ -15,6 +16,7 @@ export const buildStoreOf = (builds) => ({
   },
   current: async () => builds.currentRef ?? null,
   begin: async (run) => {
+    if ((builds.currentRef ?? null) !== (run.from ?? null)) return false
     if (builds.unfinishedRun && builds.unfinishedRun.runId !== run.runId) return false
     builds.unfinishedRun = { ...run }
     return true

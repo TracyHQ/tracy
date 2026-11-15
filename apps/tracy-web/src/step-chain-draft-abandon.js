@@ -21,8 +21,8 @@ const list = (value) => (Array.isArray(value) ? value : [])
  *   runId: string, builds: {current: Function, unfinished: Function, end: Function}, ctx?: object}} input `run`: the
  *   unfinished run's id; `runRecord`: its run record as its store kept it; `record`: the abandon's own record; `runId`:
  *   the abandon's own id
- * @returns {Promise<{status: 'done', restored: number, left: object}>} `left`: the files the run uploaded, shown by
- *   nothing, which no door deletes
+ * @returns {Promise<{status: 'done', restored: number, stale: boolean, left: object}>} `left`: the files the run
+ *   uploaded, shown by nothing, which no door deletes; `stale`: the run started from a build the site no longer holds
  */
 export async function abandonRun({ run, runRecord, doors, record, runId, builds, ctx = {} }) {
   if (typeof builds?.unfinished !== 'function' || typeof builds?.end !== 'function')
@@ -32,18 +32,20 @@ export async function abandonRun({ run, runRecord, doors, record, runId, builds,
     throw stop('abandon_not_unfinished', 'this run is not the unfinished run of the site', {
       unfinished: unfinished?.runId ?? null
     })
+  // A run marked from a build the site no longer holds (a restore or a store without a compare and set on `begin`
+  // moved the site on) can never be kept: its keep is refused. It is rolled back like any other, and when no door can
+  // undo it (a record made, a slot taken out, a held text), its mark is still cleared and what stays is reported
+  // (`left.unrestored`), so the site is never locked by a run nobody can finish.
   const current = (await builds.current?.(ctx)) ?? null
-  if (current !== (unfinished.from ?? null))
-    throw stop(
-      'previous_build_not_current',
-      'the site holds another build than the unfinished run started from',
-      {
-        current
-      }
-    )
+  const stale = current !== (unfinished.from ?? null)
   const state = runRecord?.state
   // A run that saved nothing wrote nothing: every write is journaled and saved before its door call.
   const plan = state ? restorePlanOf({ write: { state } }) : { stop: null, places: [], left: {} }
+  if (stale && plan.stop && plan.stop !== 'restore_not_a_revision') {
+    await builds.end(run, ctx)
+    const unrestored = { code: plan.stop, made: list(plan.made), removed: list(plan.removed) }
+    return { status: 'done', restored: 0, stale, left: { ...plan.left, unrestored } }
+  }
   if (plan.stop && plan.stop !== 'restore_not_a_revision')
     throw stop(
       plan.stop,
@@ -67,5 +69,5 @@ export async function abandonRun({ run, runRecord, doors, record, runId, builds,
     changed: 'site_changed_outside'
   })
   await builds.end(run, ctx)
-  return { status: 'done', restored: places.length, left: plan.left ?? {} }
+  return { status: 'done', restored: places.length, stale, left: plan.left ?? {} }
 }

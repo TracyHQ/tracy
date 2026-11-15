@@ -12,7 +12,7 @@ import { runDraftWrite } from '../src/step-chain-draft-write.js'
 import { runRevisionWrite } from '../src/step-chain-draft-write-revision.js'
 import { HELD_PERSON, revisedBy, SITE_NAME } from './draft-revision-edits.mjs'
 import { blankSite } from './draft-revision-fixtures.mjs'
-import { firstBuild, freshBuild, leakOf, revisionRun, sameSite } from './draft-revision-run.mjs'
+import { firstBuild, freshBuild, keptWordsOf, leakOf, revisionRun, sameSite } from './draft-revision-run.mjs'
 import { snapshotOf } from './draft-write-fixtures.mjs'
 
 const storedOf = (order) =>
@@ -97,7 +97,8 @@ test('a failing door is redone once; twice stops typed with the report, and the 
   assert.equal(failed.error.report.failed.code, 'door_failed')
   const resumed = await revisionRun(first, revised, { record })
   assert.equal(resumed.run.write.report.status, 'done')
-  const fresh = await freshBuild(revised)
+  // A row of another service keeps its words (#599): the full build is given the words the revision kept.
+  const fresh = await freshBuild(revised, { writer: { fixed: keptWordsOf(resumed) } })
   assert.ok(sameSite(first.memory, fresh.memory))
   const once = await firstBuild({ memory: blankSite({ fail: [63] }) })
   assert.equal((await revisionRun(once, revised)).run.write.report.status, 'done')

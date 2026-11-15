@@ -152,8 +152,24 @@ export function reuseOf(plan) {
   for (const id of impact.reuse) if (kept.has(id)) out.set(id, keptWordsOf(kept.get(id)))
   for (const { page, reasons } of impact.write) {
     if (!kept.has(page) || reasons.length !== 1 || reasons[0] !== 'blocks') continue
-    const ask = new Set(impact.blocks.filter((b) => b.page === page).map((b) => b.block))
-    if (ask.size) out.set(page, { ...keptWordsOf(kept.get(page)), ask })
+    const blocks = impact.blocks.filter((b) => b.page === page)
+    const ask = new Set(blocks.map((b) => b.block))
+    if (ask.size) out.set(page, { ...keptWordsOf(kept.get(page)), ask, askItems: askItemsOf(blocks) })
+  }
+  return out
+}
+
+/**
+ * The items asked in each block that changed only in the data of some items (reasons `data:<id>` and `shows` alone):
+ * a row of another item keeps its words (a row never carries another row's data, `other_row_data`). A block with any
+ * other reason is asked whole (absent from the map).
+ */
+function askItemsOf(blocks) {
+  const out = new Map()
+  for (const { block, reasons } of blocks) {
+    const ids = reasons.filter((r) => r.startsWith('data:') && r !== 'data:held' && r !== 'data:order')
+    if (ids.length && reasons.every((r) => ids.includes(r) || r === 'shows'))
+      out.set(block, new Set(ids.map((r) => r.slice(5))))
   }
   return out
 }

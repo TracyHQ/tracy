@@ -62,9 +62,10 @@ test('every edit, both writers: the site equals a full build of the revision, or
       continue
     }
     assert.equal(row.stop, undefined, `${at}: ${row.stop}`)
-    // A writer whose words depend on its own block: the very site of a full build. A writer that quotes another
-    // block: a block the revision kept may still quote a value that is still true; with those kept words, the same.
-    assert.equal(row.writer === 'plain' ? row.equal : row.equalKept, true, at)
+    // The site of a full build given the words the revision kept: a block it kept may still quote a value that is
+    // still true (the quoting writer), and a row of another item in a changed block keeps its words (both writers,
+    // whose words are drawn from the whole block they read).
+    assert.equal(row.equalKept, true, at)
     assert.equal(row.restore, RESTORE_STOPS[row.edit] ?? true, at)
   }
 })

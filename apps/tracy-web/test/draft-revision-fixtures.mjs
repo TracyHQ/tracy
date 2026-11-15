@@ -59,8 +59,9 @@ export function wordsOf(seed, limit = 60) {
  * shows (`Ask for our <label>.`), so a block's words depend on a value its own request does not carry. `seed(text)`:
  * how the words are drawn (the default is deterministic; a counter makes the writer give new words on every call).
  * `fixed` (key -> words): the words this writer gives a field whatever it reads (the words a revision kept, #599).
+ * `seo`: it also answers the search texts asked, from the page and business (`seo(page)`: a text before the title).
  */
-export function revisionModel({ leak, cross = false, seed = (text) => text, fixed } = {}) {
+export function revisionModel({ leak, cross = false, seed = (text) => text, fixed, seo } = {}) {
   const calls = []
   const pages = {}
   const rank = firstCandidate()
@@ -78,13 +79,8 @@ export function revisionModel({ leak, cross = false, seed = (text) => text, fixe
       for (const block of user.blocks) {
         const { fields: asked, ...shown } = block
         for (const slot of asked) {
-          const seedOf = JSON.stringify([
-            slot.key,
-            shown,
-            user.business,
-            user.page,
-            user.rewrite ? 'again' : ''
-          ])
+          const again = user.rewrite ? 'again' : ''
+          const seedOf = JSON.stringify([slot.key, shown, user.business, user.page, again])
           const tail = cross ? quoteOf([...user.blocks, ...(user.kept?.blocks ?? [])], block, slot) : ''
           const text = `${wordsOf(seed(seedOf), (slot.limit ?? 60) - tail.length)}${tail}`
           const extra = leak?.(user.page.id, slot.key)
@@ -95,7 +91,10 @@ export function revisionModel({ leak, cross = false, seed = (text) => text, fixe
               : text
         }
       }
-      return JSON.stringify({ fields })
+      if (!seo || !user.seo) return JSON.stringify({ fields })
+      const from = (name) => wordsOf(seed(JSON.stringify(['seo', name, user.page, user.business])), 30)
+      const title = [typeof seo === 'function' && seo(user.page.id), from('title')].filter(Boolean).join(' ')
+      return JSON.stringify({ fields, seo: { title, description: from('description') } })
     }
     calls.at(-1).kind = 'icons'
     return JSON.stringify(rank(request))
