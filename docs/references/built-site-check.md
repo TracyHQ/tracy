@@ -55,14 +55,23 @@ saves three files:
 With `write.json` holding the order, `--write-order` is not needed.
 
 The crawl starts at the home page and the plan's page addresses, follows links on the base, reads at most 200 pages
-and at most 4 at a time (`capped: true` in the report when it stopped early). Exit code 0 when the tool ran, whatever
-it found; 1 when it could not run (a site that is not local or answers nothing, an unreadable input); 2 on a usage
-error.
+and at most 4 at a time (`capped: true` in the report when it stopped early).
+
+Exit code:
+
+| Code | Meaning |
+|---|---|
+| 0 | every one of the five checks ran, whatever it found (a finding is not a failure; the tool decides nothing) |
+| 3 | the report is written but at least one check is `not_run`; no finding from that check is a pass |
+| 1 | the tool could not run (a site that is not local or answers nothing, an unreadable input) |
+| 2 | a usage error |
 
 ## The report
 
 `tracy-built-site-check/v1`: `source` (kind, pages read, every page that answered another status than 200),
-`counts` (per check, `null` when it did not run) and `checks`. Each check is `{status: 'ran', notes, findings}` or
+`complete` (true only when all five checks ran), `notRun` (the names of the checks that did not), `counts` (per
+check, `null` when it did not run) and `checks`. The readable summary ends with `Every check ran.` or
+`INCOMPLETE: n check(s) did not run (...)`. Each check is `{status: 'ran', notes, findings}` or
 `{status: 'not_run', reason}`. A check that cannot run says so; it never passes silently. A check that examined
 nothing while there was something to examine is `not_run` too: limits with written text fields none of which was found
 on a page (`nothing_measured`) or whose values name no entry of the order (`write_order_unmatched`); design and limits
@@ -141,29 +150,52 @@ domain's `maskHeld` (case, accents, slug), then two forms it does not find: a di
 - Pages no link and no plan address reaches, and anything drawn by script after load (no browser runs).
 - Pages a site answers only to a signed in visitor.
 
+## What each check needs
+
+| Check | Needs | `not_run` when |
+|---|---|---|
+| `demo` | a kit with a demo source: the template's released content map (`--demo-content`, or found beside the kit, or the release files the module finds by `kit.mapping.template`) | no page read (`no_rendered_page`); no kit (`kit_missing`); the kit gives no demo source (`demo_corpus_empty`) |
+| `links` | the pages; the plan (for `expected` pages) and the kit (for the demo routes) make it sharper | no page read (`no_rendered_page`) |
+| `design` | the kit and the write result (the stored slots add a second source) | `no_design_place`, `nothing_ran` |
+| `limits` | the write result with its order | `write_order_missing`, `write_order_unmatched`, `nothing_measured`, `nothing_ran` |
+| `pages` | the plan | `plan_has_no_pages` |
+
+`not_run` means the check examined nothing, so it says nothing about the site. It is never a pass: the report has
+`counts` null, `complete` false and `notRun` naming it, the summary says `NOT RUN` and `INCOMPLETE`, and the exit code
+is 3.
+
 ## The seam with Part 1
 
 The demo scan and the link check are the Part 1 release gate's (#585, #586); this tool never has its own. It imports
 `demoScan` and `linkCheck` from `scripts/ai-quickstart/rendered-scan.mjs` (`PART_ONE_MODULE` of
-`scripts/built-site-check/part-one.mjs`); until that module exports them, both checks are `not_run`
+`scripts/built-site-check/part-one.mjs`); a function the module does not export makes its check `not_run`
 (`part_one_export_missing`). The signatures:
 
 ```js
 demoScan({ pages, kit }) -> Promise<Array<{ kind: 'demo_text' | 'demo_image', page, place, excerpt }>>
-linkCheck({ pages, base, expected: { paths }, links, probe }) -> Promise<Array<{
+linkCheck({ pages, base, expected: { paths }, links, probe, demoRoutes }) -> Promise<Array<{
   kind: 'missing_page' | 'anchor_missing' | 'demo_page', page, place, href }>>
 ```
 
-`pages` are `[{path, url, status, html}]`; `kit` is `{blockStore, mapping, contentMap, demoRoutes}`; `base` is the
-site's base address; `expected.paths` are the plan's page addresses (a link to a demo page the plan does not have is
-`demo_page`). `links` is every link of every page read, resolved by `part-one-links.mjs`:
-`{page, href, url, path, query, hash, kind, menu}`, `kind` one of `page`, `asset` (a file under the base, which the
-crawl does not read), `anchor`, `scheme` (mail, phone), `other_site`; a link with a query string keeps it, so
-`index.php?option=com_content&view=article&id=3` is not taken for the home page. The link's words are never handed on.
-`probe(url)` reads one address of the local site again with the tool's guards and answers `{status, note?}`, so a
-query or asset link can be judged; it is `null` for a folder of saved pages. Menu links and in page anchors that point
-nowhere are the link check's. What comes back is shaped: `place` keeps only `element`, `block`, `field`, `slot`, `menu`
-and `anchor`, each a plain value of at most 40 characters.
+`pages` are `[{path, url, status, html}]`; `kit` is `{blockStore, mapping, contentMap, demoRoutes, demoContentMap}`
+(`demoContentMap`: the released content map, the scan's demo source); `base` is the site's base address;
+`expected.paths` are the plan's page addresses (a link to a page the plan does not have is `demo_page`);
+`demoRoutes` are the template's demo page routes. `links` is every link of every page read, resolved by
+`part-one-links.mjs`: `{page, href, url, path, query, hash, kind, menu}`, `kind` one of `page`, `asset` (a file under
+the base, which the crawl does not read), `anchor`, `scheme` (mail, phone), `other_site`; a link with a query string
+keeps it, so `index.php?option=com_content&view=article&id=3` is not taken for the home page. The link's words are
+never handed on. `probe(url)` reads one address of the local site again with the tool's guards and answers
+`{status, note?}`, so a query or asset link can be judged; it is `null` for a folder of saved pages. A scan with no
+demo source throws `demo_corpus_empty`, which the tool reports as `not_run` with that reason. What comes back is
+shaped: `place` keeps only `element`, `menu` and `anchor`, each a plain value of at most 40 characters; a demo excerpt
+is cut to 80 characters; every string then goes through the held name mask.
 
-Tests: `scripts/test/built-site-check-*.test.mjs`, on an invented florist (`scripts/test/fixtures/built-site-check/`).
-The tool has not been run on a real built site yet.
+Tests: `scripts/test/built-site-check-*.test.mjs`, on an invented florist (`scripts/test/fixtures/built-site-check/`);
+`built-site-check-end-to-end.test.mjs` runs the real module through one command on a fake local server.
+
+## Not measured yet
+
+The tool has not been run on a real built site. Unmeasured there: how many demo words a real template's released
+files miss (the corpus is only as good as its sources); whether a real site's pretty addresses make `probe` read the
+same pages as the crawl; how long a crawl of 200 pages takes against a real local site. On a folder of saved pages
+nothing can be probed, so a dead link to a page the plan does not have is told as `demo_page`, not `missing_page`.

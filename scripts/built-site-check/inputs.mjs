@@ -45,11 +45,13 @@ export const demoRoutesOf = (contentMap) =>
 export function loadKit(dir, { demoContent = null } = {}) {
   const contentMap = path.join(dir, CONTENT_MAP_FILE)
   const released = demoContent ?? releasedMapOf(dir)
+  const demoContentMap = released ? json(released) : null
   return {
     blockStore: json(path.join(dir, BLOCK_STORE_FILE)),
     mapping: json(path.join(dir, MAPPING_FILE)),
     contentMap: existsSync(contentMap) ? json(contentMap) : null,
-    demoRoutes: released ? demoRoutesOf(json(released)) : []
+    demoRoutes: demoRoutesOf(demoContentMap),
+    ...(demoContentMap ? { demoContentMap } : {})
   }
 }
 

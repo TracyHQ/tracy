@@ -33,16 +33,16 @@ function inputs() {
   }
 }
 
-test('one command on saved pages writes a JSON report and a readable summary, exit 0', async () => {
+test('one command on saved pages writes a JSON report and a readable summary; a not_run check makes the exit 3', async () => {
   const { at, args } = inputs()
   const code = await main([...args, '--pages', at('pages'), '--out', at('report.json')], { log: quiet })
-  assert.equal(code, 0)
+  assert.equal(code, 3)
   const report = JSON.parse(readFileSync(at('report.json'), 'utf8'))
   assert.equal(report.schema, 'tracy-built-site-check/v1')
   assert.match(report.decides, /^nothing/)
   assert.deepEqual(report.counts, { demo: null, links: 1, design: 0, limits: 1, pages: 2 })
   const text = readFileSync(at('report.txt'), 'utf8')
-  assert.match(text, /demo: NOT RUN \(part_one_failed: demo_corpus_empty/)
+  assert.match(text, /demo: NOT RUN \(demo_corpus_empty/)
   assert.match(text, /text_over_limit page=\/bouquets .*length 68 over 60/)
   for (const out of [JSON.stringify(report), text]) assert.ok(!foldHeld(out).includes('brenwick'))
 })
@@ -54,11 +54,11 @@ test('the write order given apart from the write result is read with --write-ord
   writeFileSync(at('order.json'), JSON.stringify(order))
   const base = args.slice(0, 4)
   const without = [...base, '--write-result', at('plan-only.json'), '--pages', at('pages')]
-  assert.equal(await main([...without, '--out', at('a.json')], { log: quiet }), 0)
+  assert.equal(await main([...without, '--out', at('a.json')], { log: quiet }), 3)
   const a = JSON.parse(readFileSync(at('a.json'), 'utf8'))
   assert.match(a.checks.limits.reason, /^write_order_missing/)
   const given = [...without, '--write-order', at('order.json'), '--out', at('b.json')]
-  assert.equal(await main(given, { log: quiet }), 0)
+  assert.equal(await main(given, { log: quiet }), 3)
   assert.equal(JSON.parse(readFileSync(at('b.json'), 'utf8')).counts.limits, 1)
 })
 
@@ -79,7 +79,7 @@ test('one command on a local base address crawls it with GET only', async () => 
     log: quiet,
     fetchImpl
   })
-  assert.equal(code, 0)
+  assert.equal(code, 3, 'the demo check cannot run on this kit')
   const report = JSON.parse(readFileSync(at('site.json'), 'utf8'))
   assert.equal(report.source.kind, 'site')
   assert.equal(report.counts.limits, 1)

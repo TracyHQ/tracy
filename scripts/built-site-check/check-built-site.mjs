@@ -50,7 +50,18 @@ export async function checkBuiltSite(input) {
   const links = seamLinksOf(pages, base)
   const checks = {
     demo: await safely(() => checkDemo({ demoScan, pages: plain, kit, read })),
-    links: await safely(() => checkLinks({ linkCheck, pages: plain, base, expected, links, probe, read })),
+    links: await safely(() =>
+      checkLinks({
+        linkCheck,
+        pages: plain,
+        base,
+        expected,
+        links,
+        probe,
+        demoRoutes: kit?.demoRoutes ?? [],
+        read
+      })
+    ),
     design: await safely(() => checkDesign({ kit, write, stored, entries })),
     limits: await safely(() => checkLimits({ write, entries, kit, pages, pathOf, stored })),
     pages: await safely(() =>
@@ -72,6 +83,8 @@ export async function checkBuiltSite(input) {
       errorPages: pages.filter((p) => p.status !== 200).map((p) => ({ path: p.path, status: p.status })),
       capped: Boolean(input.capped)
     },
+    complete: CHECKS.every((c) => checks[c].status === 'ran'),
+    notRun: CHECKS.filter((c) => checks[c].status !== 'ran'),
     counts: Object.fromEntries(
       CHECKS.map((c) => [c, checks[c].status === 'ran' ? checks[c].findings.length : null])
     ),
@@ -100,5 +113,10 @@ export function summaryOf(report) {
       lines.push(`  ${f.kind} page=${f.page ?? '?'} ${at}${extra}${text}`)
     }
   }
+  lines.push(
+    report.complete
+      ? 'Every check ran.'
+      : `INCOMPLETE: ${report.notRun.length} check(s) did not run (${report.notRun.join(', ')}). No finding from them is not a pass.`
+  )
   return `${lines.join('\n')}\n`
 }

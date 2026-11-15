@@ -53,6 +53,14 @@ test('a place from Part 1 keeps only its known keys, each short', () => {
     menu: true
   })
   assert.equal([...placeOf({ element: 'e'.repeat(90) }).element].length, 40)
+  assert.deepEqual(
+    placeOf({ element: 'a', block: 'hero', field: 'x', slot: 's', menu: true, anchor: 'top' }),
+    {
+      element: 'a',
+      menu: true,
+      anchor: 'top'
+    }
+  )
 })
 
 test('Part 1 link findings with mail links, a host and an escaped held name reach the report masked', async () => {

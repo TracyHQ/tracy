@@ -62,6 +62,7 @@ test('links to a missing page, a dead anchor and a demo page are reported, as a 
     ]
   )
   assert.deepEqual(given.expected.paths, ['/', '/bouquets', '/visit-us'])
+  assert.deepEqual(given.demoRoutes, ['demo-classes'], 'the kit routes of the demo pages are handed on')
   assert.equal(given.base, 'http://pages.invalid/')
   assert.ok(given.pages.every((p) => typeof p.html === 'string' && !('tree' in p)))
   const home = given.links.filter((l) => l.page === '/')
@@ -133,4 +134,19 @@ test('an excerpt is cut to 80 characters, so a long passage is never copied whol
   const { excerpt } = report.checks.demo.findings[0]
   assert.equal([...excerpt].length, 80)
   assert.ok(excerpt.endsWith('...'))
+})
+
+test('a scan with no demo source is not_run with demo_corpus_empty, and the kit hands on its released content map', async () => {
+  let given
+  const empty = await reportOf({
+    linkCheck: async () => [],
+    demoScan: async ({ kit }) => {
+      given = kit
+      throw Object.assign(new Error('x'), { code: 'demo_corpus_empty' })
+    }
+  })
+  assert.equal(empty.checks.demo.status, 'not_run')
+  assert.match(empty.checks.demo.reason, /^demo_corpus_empty:/)
+  assert.deepEqual([empty.counts.demo, empty.complete, empty.notRun], [null, false, ['demo']])
+  assert.deepEqual(given.demoRoutes, ['demo-classes'])
 })

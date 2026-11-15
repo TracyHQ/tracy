@@ -2,10 +2,12 @@
 // tool never has its own. It calls them through two functions and only shapes what they find:
 //
 //   demoScan({pages, kit}) -> Promise<Array<{kind: 'demo_text' | 'demo_image', page, place, excerpt}>>
-//   linkCheck({pages, base, expected, links, probe}) -> Promise<Array<{kind: 'missing_page' | 'anchor_missing' |
-//                                                                       'demo_page', page, place, href}>>
+//   linkCheck({pages, base, expected, links, probe, demoRoutes}) -> Promise<Array<{kind: 'missing_page' |
+//                                                                       'anchor_missing' | 'demo_page', page, place, href}>>
 //
-// `pages`: `[{path, url, status, html}]`, the rendered pages; `kit`: `{blockStore, mapping, contentMap, demoRoutes}`;
+// `pages`: `[{path, url, status, html}]`, the rendered pages; `kit`: `{blockStore, mapping, contentMap, demoRoutes,
+// demoContentMap}` (`demoContentMap`: the template's released content map, a demo source of the scan; the scan also
+// finds the released files of `kit.mapping.template` itself); `demoRoutes`: the template's demo page routes;
 // `base`: the site's base address; `expected`: `{paths}`, the addresses of the plan's pages (a link to a demo page the
 // plan does not have is `demo_page`); `links`: every link of every page read, resolved (`part-one-links.mjs`: its
 // `query` and `hash` kept, a file link named `asset`); `probe(url)`: reads one address of the local site again with
@@ -14,7 +16,8 @@
 // What comes back is shaped before the report: an unknown kind is left out and counted; `place` keeps only the keys
 // below, each a short plain value; `href` keeps only its path and anchor (a scheme other than http is reduced to its
 // name, a host is dropped, a query string is dropped). Every string is then read for held names (`held-mask.mjs`).
-// Until Part 1 exports them from PART_ONE_MODULE, both checks report `not_run`, never a silent pass.
+// A scan with no demo source throws `demo_corpus_empty`: the demo check is then `not_run` with that reason, never a
+// pass. If PART_ONE_MODULE does not export a function, its check reports `not_run` too, never a silent pass.
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -45,7 +48,8 @@ const cut = (text) => {
   const chars = [...String(text ?? '')]
   return chars.length > EXCERPT ? `${chars.slice(0, EXCERPT - 3).join('')}...` : chars.join('')
 }
-export const PLACE_KEYS = ['element', 'block', 'field', 'slot', 'menu', 'anchor']
+/** The keys of a place Part 1 gives (`rendered-scan`): the element, whether it sits in a menu, the anchor. */
+export const PLACE_KEYS = ['element', 'menu', 'anchor']
 
 /** An href kept to its path and anchor: `mailto:` for a mail link, no host, no query string. */
 export function pathOnly(href) {
@@ -85,13 +89,19 @@ function shaped(found, kinds, extra) {
   }
 }
 
+const EMPTY_CORPUS = 'demo_corpus_empty'
+
 async function guarded(run) {
   try {
     return await run()
   } catch (error) {
+    const code = error?.code ?? error?.name ?? 'error'
     return {
       status: 'not_run',
-      reason: `part_one_failed: ${error?.code ?? error?.name ?? 'error'}`,
+      reason:
+        code === EMPTY_CORPUS
+          ? `${EMPTY_CORPUS}: the kit has no demo source (a released content map or a demo baseline)`
+          : `part_one_failed: ${code}`,
       findings: []
     }
   }
@@ -115,13 +125,22 @@ export function checkDemo({ demoScan, pages, kit, read }) {
 }
 
 /** The link check through Part 1's check. */
-export function checkLinks({ linkCheck, pages, base, expected, links = [], probe = null, read }) {
+export function checkLinks({
+  linkCheck,
+  pages,
+  base,
+  expected,
+  links = [],
+  probe = null,
+  demoRoutes = [],
+  read
+}) {
   if (!linkCheck) return missing('linkCheck', 586)
   if (!read) return nothingRead
   const paths = (expected ?? []).map((e) => e.path)
   return guarded(async () =>
     shaped(
-      await linkCheck({ pages, base: base.href, expected: { paths }, links, probe }),
+      await linkCheck({ pages, base: base.href, expected: { paths }, links, probe, demoRoutes }),
       LINK_KINDS,
       (f) => ({ href: cut(pathOnly(f.href)) })
     )

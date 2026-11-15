@@ -32,8 +32,9 @@ Checks a site just built from an AI quickstart during a LOCAL TRIAL RUN and writ
                   beside the kit by default)
   --out           where to write the JSON report
 
-Exit code 0 when the tool ran, whatever it found; 1 when it could not run; 2 on a usage error.
-A check that cannot run says not_run with its reason.`
+Exit code 0 when every check ran, whatever it found; 3 when the report is written but at least one
+check did not run (not_run: no finding from it is a pass); 1 when the tool could not run; 2 on a
+usage error. A check that cannot run says not_run with its reason.`
 
 const FLAGS = ['site', 'pages', 'plan', 'kit', 'write-result', 'write-order', 'stored', 'demo-content', 'out']
 
@@ -130,7 +131,7 @@ export async function main(argv, { fetchImpl, partOne, log = console.log } = {})
     const text = summaryOf(report)
     writeFileSync(args.out.replace(/\.json$/i, '') + '.txt', text)
     log(text)
-    return 0
+    return report.complete ? 0 : 3
   } catch (error) {
     log(`The built site check could not run: ${error?.code ?? error?.name ?? 'error'}`)
     return 1
