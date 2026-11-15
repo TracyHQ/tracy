@@ -27,7 +27,7 @@ const TEXT_MAX = 200
 const ASSET = /\.(?:jpe?g|png|gif|webp|avif|svg|ico|css|js|mjs|json|woff2?|ttf|otf|map)$/i
 
 const clean = (s) =>
-  decodeEntities(String(s ?? '').replace(/<[^>]+>/g, ' '))
+  decodeEntities(String(s ?? '').replace(/<[^<>]*>/g, ' '))
     .replace(/\s+/g, ' ')
     .trim()
     .slice(0, TEXT_MAX)
