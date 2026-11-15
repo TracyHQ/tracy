@@ -1,7 +1,7 @@
 // Markup is caught where the writer can still redo it (ticket #597): every value the order check refuses for its
 // markup (`markupNotDeclared`, a stop of the build) is refused first by the page writer's copy check
 // (`fieldValueProblems`, which sends the field back to be rewritten), whatever the field declares. And ordinary prose
-// with parentheses, colons and ampersands passes both. Invented values.
+// with single parentheses, colons and ampersands passes both; a double parenthesis is refused by both. Invented values.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-copy-markup-first.test.mjs
 import assert from 'node:assert/strict'
@@ -80,11 +80,28 @@ test('the same holds on generated strings', () => {
   assert.ok(refused > 1000, `${refused} refusals`)
 })
 
-test('ordinary prose passes both checks', () => {
+test('prose with a double parenthesis is refused by both, first by the copy check as a rewrite', () => {
+  // The template's converter turns every (( into < and every )) into > (plugin 0.24.85): a false refusal of some plain
+  // words, taken for safety, and redone by the writer with other punctuation.
   for (const value of [
     'Open (weekdays (9 to 5))',
     'See you soon ((:',
     'Thanks for visiting :))',
+    'Kids (6+)) only'
+  ]) {
+    assert.deepEqual(
+      fieldValueProblems(field, value).map((p) => p.code),
+      ['template_code'],
+      value
+    )
+    for (const declared of DECLARED) assert.notEqual(markupNotDeclared({ value, declared }), null, value)
+  }
+})
+
+test('ordinary prose passes both checks', () => {
+  for (const value of [
+    'Open (weekdays, 9 to 5)',
+    'See you soon :)',
     'Data: we keep only what you send',
     'JavaScript: not needed to order',
     'Smith & Sons supply our stems',

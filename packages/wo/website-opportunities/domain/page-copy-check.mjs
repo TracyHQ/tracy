@@ -15,20 +15,24 @@
 // (a heading `#`, a list `-`, `*`, `+` or `1.` or a quote `>` at the start, `**strong**`, `__strong__`, `*soft*`,
 // a `code` span, a `[link](target)`), no line break (LF, CR, U+2028, U+2029) and no other control character. A value
 // made only of spaces and invisible characters (zero width, format characters, fillers) is empty. No `<` or `>` either,
-// even outside a tag (`we <3 roses`), and no `((` before a letter (`f((x))`, `((free))`), which the template's
-// converter turns into a tag: the order check refuses both (`markup_forbidden`, #597, a stop), since a blank site
-// contract slot refuses `<` and `>` and an HTML or codes place reads them as markup, so they go back to the writer here,
-// where a rewrite still fixes them. Every value the order check refuses for its markup is refused here first
-// (`domain-copy-markup-first.test.mjs`). A `((` or `))` before anything else (`Open (weekdays (9 to 5))`) is words.
+// even outside a tag (`we <3 roses`), and no `((` or `))` anywhere (`f((x))`, `((:`, `Open (weekdays (9 to 5))`):
+// the template's converter replaces every one blindly with `<` or `>` (measured, plugin 0.24.85). The order check
+// refuses both (`markup_forbidden`, #597, a stop), since a blank site contract slot refuses `<` and `>` and an HTML or
+// codes place reads them as markup, so they go back to the writer here, where a rewrite still fixes them: a nested
+// parenthesis is written with other punctuation. That refuses some plain words, a false refusal taken for safety.
+// Every value the order check refuses for its markup is refused here first (`domain-copy-markup-first.test.mjs`).
+// No character reference either (`&amp;`): words carry the character, and the write escapes it where it prints.
 import { aboutThePageOf } from './copy-about-the-page.mjs'
 import { visibleLength } from './draft-write-length.mjs'
-import { MARKER_START } from './draft-write-tags.mjs'
+import { DOUBLE_PARENTHESIS } from './draft-write-tags.mjs'
 import { tokensIn } from './needs-profile-grounding.mjs'
 import { inventedDataOf } from './page-writer-data-guard.mjs'
 
 // Figure dash, en dash, em dash, horizontal bar, minus sign, two and three em dashes, small em dash.
 const DASHES = /[\u2012\u2013\u2014\u2015\u2212\u2E3A\u2E3B\uFE58]/u
 const MARKUP = /<\/?[a-z!][^>]*>/i
+/** A character reference a browser reads (`&amp;`, `&#39;`): words carry the character itself. */
+const CHARACTER_REFERENCE = /&(#[0-9xX]|[A-Za-z][A-Za-z0-9]*;)/
 const LINE_BREAK = /[\n\r\u2028\u2029\u0085]/u
 const CONTROL = /\p{Cc}/u
 const INVISIBLE = /[\p{Cf}\u115F\u1160\u3164\uFFA0\u2800]/gu
@@ -79,11 +83,16 @@ export function fieldValueProblems(field, value, { known, foreign, avoid } = {})
   if (MARKUP.test(value)) problems.push({ code: 'markup', message: 'plain text only, no HTML tags' })
   else if (/[<>]/.test(value))
     problems.push({ code: 'angle_bracket', message: 'plain text only: no < or > character' })
-  if (MARKER_START.test(value))
+  if (DOUBLE_PARENTHESIS.test(value))
     problems.push({
       code: 'template_code',
       message:
-        'plain text only: no double parenthesis before a letter, the template reads it as a code; use single parentheses'
+        'plain text only: no (( or )) anywhere, the template turns them into code; use single parentheses, never two together'
+    })
+  if (CHARACTER_REFERENCE.test(value))
+    problems.push({
+      code: 'character_reference',
+      message: 'plain text only: write the character itself, never a code such as &amp; or &#39;'
     })
   if (LINE_BREAK.test(value)) problems.push({ code: 'line_break', message: 'one line only: no line break' })
   else if (CONTROL.test(value))

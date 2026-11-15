@@ -6,16 +6,19 @@
 // and of the memory site), its attributes by the same attribute reader.
 //
 // What the reader does not try to read, it reports, and every caller refuses it: a comment and every other `<!`, `<?`
-// or `</`-not-a-letter form (`bogus`); a `((` and a letter no marker closes (`strays`); a tag or a marker the value
-// leaves open, a quote left open (`unclosed`). A bare `((` or `))` that is no marker (`Open (weekdays (9 to 5))`,
-// `((:`) is words: the converter leaves it as it is. The order check (`write-order-check-entries.mjs`) and the write
-// guard (`draft-write-markup.mjs`) both read tags here, so they never disagree on what a value holds. Pure.
+// or `</`-not-a-letter form (`bogus`); every `((` and every `))` that is no part of a marker (`strays`): the template's
+// converter replaces each one blindly (`((` as `<`, `))` as `>`, measured on plugin 0.24.85), so `Open (weekdays (9 to
+// 5))` and `((:` are markup, never words; a tag or a marker the value leaves open, a quote left open (`unclosed`). The
+// order check (`write-order-check-entries.mjs`) and the write guard (`draft-write-markup.mjs`) both read tags here, so
+// they never disagree on what a value holds. Pure.
 import { decodeEntities } from './draft-write-entities.mjs'
 
 const isSpace = (c) => c === ' ' || c === '\t' || c === '\n' || c === '\f' || c === '\r'
 const isLetter = (c) => /^[a-zA-Z]$/.test(c ?? '')
 /** The start of a marker the converter reads: `((`, an optional `/`, a letter. */
 export const MARKER_START = /\(\(\/?[a-zA-Z]/
+/** Any double parenthesis: the converter turns every one into an angle bracket. */
+export const DOUBLE_PARENTHESIS = /\(\(|\)\)/
 /** A whole marker as the converter reads it. */
 const MARKER = /\(\((\/?)([a-zA-Z][^\s/()]*)([^()]*?)\)\)/y
 
@@ -91,8 +94,8 @@ function markerAt(text, i) {
 
 /**
  * Every tag and marker of a value, in order: `{name, close, attrs, form: 'tag' | 'marker', closed, quoteOpen, start,
- * end}`; `bogus`: the `<!`, `<?` and `</`-not-a-letter forms (a comment, a doctype); `strays`: the
- * `((` and a letter no marker reads; `unclosed`: the tags and markers left open or with a quote left open.
+ * end}`; `bogus`: the `<!`, `<?` and `</`-not-a-letter forms (a comment, a doctype); `strays`: every
+ * `((` and `))` no marker reads; `unclosed`: the tags and markers left open or with a quote left open.
  * @returns {{tags: object[], bogus: number, strays: number, unclosed: number}}
  */
 export function readTags(value) {
@@ -120,8 +123,13 @@ export function readTags(value) {
         i = marker.end
         continue
       }
-      if (MARKER_START.test(text.slice(i, i + 4))) strays += 1
-      i += 1
+      strays += 1
+      i += 2
+      continue
+    }
+    if (text.startsWith('))', i)) {
+      strays += 1
+      i += 2
       continue
     }
     i += 1

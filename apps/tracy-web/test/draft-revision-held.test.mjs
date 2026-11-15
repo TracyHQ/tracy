@@ -54,7 +54,8 @@ test('a restore never writes back a held name, in any form a stored value can wr
 })
 
 test('kept words naming a held person in another form are written again, and the journal keeps no held value', async () => {
-  const first = await firstBuild({ leak: leakOf('Wenna&nbsp;Clout,') })
+  // A no-break space, written as the character: the copy check refuses a character reference in writer copy (#597).
+  const first = await firstBuild({ leak: leakOf('Wenna\u00a0Clout,') })
   const out = await revisionRun(first, revisedBy('hold a reviewer'))
   assert.equal(out.run?.write.report.status, 'done', out.error?.code)
   const contact = out.run.plan.revision.impact.write.find((w) => w.page === 'contact')

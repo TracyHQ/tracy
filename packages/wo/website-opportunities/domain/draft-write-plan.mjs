@@ -1,10 +1,11 @@
 // The write plan of a draft build (ticket #597): a checked write order and the AI quickstart declarations in, the
 // ordered door operations that build the site into a blank site out. Deterministic, no I/O. Every operation carries
 // the order entries it writes and the contract rules it follows; every order entry is written by exactly one operation
-// or listed in `skipped` with its reason (`draftWriteCoverage`). The guards of `draft-write-guards.mjs` run on the plan
-// before any door is called. Spec: docs/references/draft-write-step.md.
+// or listed in `skipped` with its reason (`draftWriteCoverage`). Every value is made safe where it prints
+// (`draft-write-escape.mjs`), then the guards run before any door is called. Spec: docs/references/draft-write-step.md.
 import { entryCountsOf } from './draft-write-coverage.mjs'
 import { DraftWriteError } from './draft-write-error.mjs'
+import { safeOps } from './draft-write-escape.mjs'
 import { guardPlan } from './draft-write-guards.mjs'
 import { inNfc } from './draft-write-length.mjs'
 import { libraryExpectsOf } from './draft-write-library-check.mjs'
@@ -143,7 +144,7 @@ export function writePlanOf(order, aiq, options = {}) {
         record: record.key,
         recordKind: record.recordKind
       })
-  const ops = inNfc(opsOf(state))
+  const ops = safeOps(inNfc(opsOf(state)), { order, kit })
   for (const op of ops)
     if (op.unproven === 'created_record_frame' || op.unproven === 'initials_drawn_as_figure')
       sink.unproven.push({ code: op.unproven, op: op.key })

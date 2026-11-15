@@ -75,9 +75,12 @@ const CASES = [
   ],
   ['a marker the reader cannot read', 'Fresh ((span onclick=f(1) stems', 'marker_unread'],
   ['a marker start that never closes', 'Call us ((free today', 'marker_unread'],
-  ['a stray closing parenthesis pair', 'Fresh stems))', null],
-  ['nested parentheses', 'Open (weekdays (9 to 5))', null],
-  ['an emoticon', 'See you soon ((:', null],
+  // The converter replaces every (( and )) blindly (plugin 0.24.85): prose with a double parenthesis is markup.
+  ['a stray closing parenthesis pair', 'Fresh stems))', 'marker_unread'],
+  ['nested parentheses', 'Open (weekdays (9 to 5))', 'marker_unread'],
+  ['an emoticon', 'See you soon ((:', 'marker_unread'],
+  ['a smile', 'Thanks for visiting :))', 'marker_unread'],
+  ['a measured case', 'Kids (6+)) and ((more', 'marker_unread'],
   ['words that name a scheme', 'Data: we keep only what you send', null],
   ['a scheme in a title attribute', '<span title="Learn JavaScript: fast">a</span>', null],
   ['a scheme first in a title attribute', '<span title="JavaScript: fast">a</span>', null],
@@ -132,8 +135,10 @@ test('a quoted > is part of a tag; a marker is read as the converter reads it, u
   )
   assert.equal(read.tags[0].attrs[0].value, 'a')
   assert.equal(read.strays, 0)
-  assert.equal(readTags('((span title="f(1)"))x').strays, 1)
-  assert.equal(readTags('a (( b )) c ((: f(x))').strays, 0)
+  // Every (( and )) no marker reads is a stray, with or without a letter after it.
+  assert.equal(readTags('((span title="f(1)"))x').strays, 2)
+  assert.equal(readTags('a (( b )) c ((: f(x))').strays, 4)
+  assert.equal(readTags('(((b))').strays, 2)
   assert.equal(readTags('f((x)) y').tags[0].name, 'x')
 })
 

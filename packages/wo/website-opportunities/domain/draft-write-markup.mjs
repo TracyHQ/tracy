@@ -105,7 +105,7 @@ const MARKUP_IN_VALUE = /<[a-zA-Z/!?]|\(\(\/?[a-zA-Z]/
  * `raw_text_element`), an `on*` handler, a code address in an address attribute (`href`, `src`, ...), a style that
  * runs code, in tags and in markers alike, in any case and whatever entities, quotes or white space hide them; markup
  * inside an attribute value (`markup_in_attribute`); a comment or any other `<!`, `<?` or `</` form
- * (`markup_unread`); a marker start no marker reads (`marker_unread`); a tag, a marker or a quote left open, a closing
+ * (`markup_unread`); a `((` or `))` no marker reads (`marker_unread`: the converter turns each into a bracket); a tag, a marker or a quote left open, a closing
  * tag that closes nothing or the wrong element (`markup_unbalanced`). Words are never read as an address: `Data: we
  * keep only what you send` is prose (an address is held only where one is written, `addressRunsCode`). `[]` when none.
  */

@@ -1,11 +1,14 @@
 // A quote in a plain value is words wherever the write step puts it (#597): a value that tries to leave its quotes
 // (`" onmouseover="f()`) is written at every kind of place the florist's order reaches (an HTML text node of a created
 // article or a copy, a codes place, a params column) on the memory site, and no stored value then holds a handler
-// attribute. An HTML attribute piece escapes the quote itself (the piece functions serialize it as `&quot;`), and an
-// `inline: html` value written whole is escaped by the plan (`escapeHtml`).
+// attribute. An HTML attribute piece escapes the quote itself (the piece functions serialize it as `&quot;`), an
+// `inline: html` value written whole is escaped by the plan (`escapeHtml`), a place printed raw gets the words escaped
+// and a place not measured gets them escape neutral (`draft-write-escape.mjs`). What the site then prints:
+// `draft-write-rendered-scan.test.mjs`.
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readTags } from 'website-opportunities/domain/draft-write-tags.mjs'
+import { escapeRaw, typographic } from 'website-opportunities/domain/draft-write-escape.mjs'
 import { textAt } from 'website-opportunities/domain/draft-write-values.mjs'
 import { memoryHtml } from 'website-opportunities/domain/write-order-memory-html.mjs'
 import { placesOfOrder } from 'website-opportunities/domain/write-order-check.mjs'
@@ -49,7 +52,7 @@ test('a quote that tries to open an attribute stays words at every place the wri
   const kinds = new Set()
   for (const op of plan.ops)
     for (const v of op.values ?? [])
-      if (v.value === PROBE)
+      if ([PROBE, escapeRaw(PROBE), typographic(PROBE)].includes(v.value))
         kinds.add(v.loc.xpath ? 'html text node' : v.loc.nestedJson ? 'codes' : v.loc.column)
   assert.ok(set > 20, `${set} entries carry the probe`)
   assert.ok(kinds.has('html text node') && kinds.has('codes'), [...kinds].join(', '))

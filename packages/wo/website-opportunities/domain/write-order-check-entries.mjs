@@ -1,7 +1,7 @@
 // The field entry rules of `checkWriteOrder` (ticket #597): values, data, buttons and limits, read from the order
 // alone. Pure; nothing throws on a malformed order.
 import { attrsOf, runsCodeIn, tagsOf } from './draft-write-markup.mjs'
-import { MARKER_START } from './draft-write-tags.mjs'
+import { DOUBLE_PARENTHESIS } from './draft-write-tags.mjs'
 import { visibleLength as charCount } from './draft-write-length.mjs'
 import { DATA_ROLES } from './page-writer-roles.mjs'
 import { SOCIAL_URL_KINDS } from './picture-block-places.mjs'
@@ -17,19 +17,19 @@ const hasValue = (e) => e.value !== undefined && e.value !== null && e.value !==
 const asText = (value) => (typeof value === 'number' ? String(value) : value)
 
 /**
- * Why a text entry holds markup its field does not declare, or null: a `<`, `>` or marker start (`((` and a letter) in
- * a field with no `inline` part (`no_inline`), a tag its `inline` does not list (`tag`), an attribute its emphasis
+ * Why a text entry holds markup its field does not declare, or null: a `<`, `>`, `((` or `))` in a field with no
+ * `inline` part (`no_inline`), a tag its `inline` does not list (`tag`), an attribute its emphasis
  * part does not declare, none declared meaning none allowed, an attribute on a closing tag included (`attribute`), a
  * tag in the other form than the field's `write` (`form`: a tag in a `codes` field, a marker in an `html` field), and
  * anything the write guard's `runsCodeIn` refuses (`runs_code`: a comment or other `<!`, `<?`, `</` form, a raw text
- * element, a marker start no marker reads, a tag or quote left open or closed out of order, a handler). A `((` or `))`
- * that starts no marker (`Open (weekdays (9 to 5))`, `((:`) is words. Tags are read by the guard's own tokenizer
+ * element, a `((` or `))` no marker reads, a tag or quote left open or closed out of order, a handler). The template's
+ * converter replaces every `((` and `))` blindly, so `Open (weekdays (9 to 5))` and `((:` are markup. Tags are read by the guard's own tokenizer
  * (`draft-write-tags.mjs`), so a value this check lets through is never refused for its markup at the last guard.
  * A value the writer wrote never gets here with markup: the copy check (`fieldValueProblems`) refuses every `<`, `>`
- * and marker start first, where the writer still rewrites it. A data value with markup stops the build here.
+ * and double parenthesis first, where the writer still rewrites it. A data value with markup stops the build here.
  */
 export function markupNotDeclared(e) {
-  if (typeof e.value !== 'string' || !(/[<>]/.test(e.value) || MARKER_START.test(e.value))) return null
+  if (typeof e.value !== 'string' || !(/[<>]/.test(e.value) || DOUBLE_PARENTHESIS.test(e.value))) return null
   const inline = e.declared?.inline
   if (!inline) return 'no_inline'
   const declared = new Map()

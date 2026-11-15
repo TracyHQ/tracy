@@ -75,10 +75,13 @@ export const FIXED_WIDTH_COLUMNS = Object.freeze([
   'email_to'
 ])
 
+/** Whether the door counts a slot's raw string (a fixed width column, a link, a picture path), not what it shows. */
+export const countsRaw = (slot) =>
+  slot?.type !== 'text' || typeof slot.column !== 'string' || FIXED_WIDTH_COLUMNS.includes(slot.column)
+
 /** The length the plugin compares a blank site contract slot's `maxCharacters` with (`SlotFit::slotLength`). */
 export function doorLength(slot, value) {
   const raw = String(value ?? '')
-  if (slot?.type !== 'text' || typeof slot.column !== 'string' || FIXED_WIDTH_COLUMNS.includes(slot.column))
-    return [...raw].length
+  if (countsRaw(slot)) return [...raw].length
   return seenLength(raw)
 }

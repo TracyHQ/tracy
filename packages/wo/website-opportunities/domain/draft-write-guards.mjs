@@ -8,8 +8,9 @@
 //   slot_missing                 a contract value with no slot, or a slot the blank site contract does not have
 //   empty_text_node              an empty value at a text node (the node would be gone: one space keeps it)
 //   markup_forbidden             markup in a value whose field declares no such inline part, a tag sent through the
-//                                contract, content map markers at an HTML place, a tag at an ACM data place, or a tag,
-//                                comment or other `<!`, `<?`, `</` form in a plain text column (a title, an alias)
+//                                contract, a `((` or `))` anywhere but in the declared markers of a codes field, a tag
+//                                at an ACM data place, or a tag, comment or other `<!`, `<?`, `</` form in a plain
+//                                text column (a title, an alias)
 //   icon_not_in_list             a network class the template's icon font lacks, an icon not in the icon library
 //   picture_without_alt          a shown picture with no alt text
 //   picture_web_address_only     a picture known only by its web address: pictures come from stored bytes
@@ -19,17 +20,22 @@
 //   pair_incomplete              one half of a button (label, address) or of an icon pair written without the other
 //   library_html_stale           a library block's HTML that does not show a shown field of the order
 //   library_html_unsafe          a library block's HTML with anything `runsCodeIn` refuses
+//   value_not_escaped            words not escaped at a place printed raw, or not escape neutral at a place not
+//                                measured (`draft-write-escape.mjs`)
+//   record_name_empty            a contact created with an empty name, which the site would take (measured)
 //   markup_runs_code             any other value written as HTML (an HTML piece, a value with a tag or a marker start,
 //                                a created record's HTML) with anything `runsCodeIn` refuses, or a value written where
 //                                an address is written (a link field, a link or picture slot, an address attribute
 //                                piece, a record's link) that is an address running code. Words are never an address.
 import { DraftWriteError, lengthOf } from './draft-write-error.mjs'
+import { declaredMarkersOf } from './draft-write-escape.mjs'
 import { heldInLeaf } from './draft-write-held.mjs'
 import { doorLength, visibleLength, visibleTextOf } from './draft-write-length.mjs'
 import { libraryHtmlProblems } from './draft-write-library-check.mjs'
 import { addressRunsCode, runsCodeIn } from './draft-write-markup.mjs'
+import { nameProblems, placeProblems } from './draft-write-place-guard.mjs'
 import { addressAt, linkOf, PLAIN_COLUMNS, plainAt, TAG_START } from './draft-write-place-kinds.mjs'
-import { MARKER_START } from './draft-write-tags.mjs'
+import { DOUBLE_PARENTHESIS } from './draft-write-tags.mjs'
 import { heldTextsOf } from './plan-withheld.mjs'
 import { placesOfOrder } from './write-order-check.mjs'
 import { markupNotDeclared } from './write-order-check-entries.mjs'
@@ -38,7 +44,7 @@ const list = (value) => (Array.isArray(value) ? value : [])
 /** The words a value shows (`visibleTextOf`): kept for the built site check, which reads it. */
 export const visibleOf = visibleTextOf
 /** Whether a value is written as HTML: an HTML piece, or a value carrying a tag or a marker. */
-const asHtml = (loc, text) => Boolean(loc?.xpath) || /[<>]/.test(text) || MARKER_START.test(text)
+const asHtml = (loc, text) => Boolean(loc?.xpath) || /[<>]/.test(text) || DOUBLE_PARENTHESIS.test(text)
 
 /**
  * Markup that runs code in a value written as HTML; an address that runs code where an address is written (`address`:
@@ -71,8 +77,8 @@ function valueProblems(op, value, ctx, report) {
   if (text === '' && /text\(\)(\[\d+\])?$/.test(loc.xpath ?? '')) report('empty_text_node', at)
   if (op.kind === 'contract.apply' && /[<>]/.test(text))
     report('markup_forbidden', { ...at, via: 'contract' })
-  if (loc.xpath && /\(\(\/?[a-z]/i.test(text))
-    report('markup_forbidden', { ...at, via: 'markers_at_html_place' })
+  const markers = loc.nestedJson && !loc.xpath ? declaredMarkersOf(e) : new Set()
+  placeProblems(op, at, text, { markers, loc, slot }, report)
   if (loc.nestedJson && !loc.xpath && /<\/?[a-z]/i.test(text))
     report('markup_forbidden', { ...at, via: 'tag_at_codes_place' })
   if (value.rule?.startsWith('icon_class') && !ctx.classes.has(text)) report('icon_not_in_list', at)
@@ -89,6 +95,14 @@ function columnProblems(op, report) {
     if (typeof text !== 'string') continue
     if (PLAIN_COLUMNS.has(column) && TAG_START.test(text))
       report('markup_forbidden', { op: op.key, column, via: 'tag_in_plain_column' })
+    if (column !== 'link')
+      placeProblems(
+        op,
+        { op: op.key, column },
+        text,
+        { markers: new Set(), loc: { column, entity: op.recordKind } },
+        report
+      )
     codeProblems(
       { op: op.key, column },
       text,
@@ -96,6 +110,7 @@ function columnProblems(op, report) {
       report
     )
   }
+  nameProblems(op, report)
   const link = linkOf(op)
   if (link !== null) codeProblems({ op: op.key, column: 'link' }, link, { address: true }, report)
   if (typeof op.html === 'string' && op.kind !== 'library.create')

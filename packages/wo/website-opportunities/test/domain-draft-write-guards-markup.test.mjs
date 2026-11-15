@@ -72,12 +72,23 @@ test('a plain text column holds no tag, comment or bogus form: a record title or
       }
     )
   }
-  for (const title of ['Roses < 5 days', 'We <3 roses', 'Q&A', 'Open (weekdays (9 to 5))'])
+  // A menu item title is a place not measured: a value there reads the same escaped or not, or it is refused.
+  for (const [title, code] of [
+    ['Roses < 5 days', 'value_not_escaped'],
+    ['We <3 roses', 'value_not_escaped'],
+    ['Bob"s roses', 'value_not_escaped'],
+    ["Bob's roses", 'value_not_escaped'],
+    ['Tom &amp; Jerry', 'value_not_escaped'],
+    ['Open (weekdays (9 to 5))', 'markup_forbidden'],
+    ['Q&A', 'passed'],
+    ['Bob\u2019s roses', 'passed'],
+    ['Open (weekdays, 9 to 5)', 'passed']
+  ])
     assert.equal(
       guarded((p) => {
         p.ops.find((op) => op.kind === 'menuItem.create').fields.title = title
       }),
-      'passed',
+      code,
       title
     )
 })

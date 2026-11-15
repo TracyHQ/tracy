@@ -1,7 +1,9 @@
 ---
-description: What the draft write step holds a plan to before any door is called. Covers the one unit of every text limit and the door's own count, every guard, where markup is caught and by whom, who escapes a plain value at each kind of place, and the skip reasons and unproven flags of a plan.
+description: What the draft write step holds a plan to before any door is called. Covers the one unit of every text limit and the door's own count, every guard, where markup and double parentheses are caught and by whom, how each value is made safe as raw HTML at its kind of place, and the skip reasons and unproven flags of a plan.
 sources:
   - packages/wo/website-opportunities/domain/draft-write-guards.mjs
+  - packages/wo/website-opportunities/domain/draft-write-escape.mjs
+  - packages/wo/website-opportunities/domain/draft-write-place-guard.mjs
   - packages/wo/website-opportunities/domain/draft-write-library-check.mjs
   - packages/wo/website-opportunities/domain/draft-write-markup.mjs
   - packages/wo/website-opportunities/domain/draft-write-tags.mjs
@@ -52,8 +54,10 @@ Still counted in UTF-16 units elsewhere in the domain (other owners, not changed
 | `text_over_limit` | a value is longer than its field limit (`unit: 'visible'`), or than its contract slot's `maxCharacters` as the door counts it (`unit: 'door'`); see "Text limits: one unit, and the door's own count" |
 | `straight_quote_in_open_slot` | a straight double quote goes to a contract slot that opens empty |
 | `empty_text_node` | an empty value is sent to a text node (the write sends one space instead) |
-| `markup_forbidden` | a tag is sent through the contract, the map's codes are sent to an HTML place, a tag is sent to a codes place, a plain text column (a record title or alias, a `title`, `name`, `alias`, `label`, `metadesc` column, a page title or search description key) holds a tag, a comment or any `<!`, `<?`, `</` form (`tag_in_plain_column`), or a field holds markup it does not declare (`field_inline`, `markupNotDeclared`). The order check catches the field cases first and stops the build there; for a value the writer wrote, the copy check catches them before that and the writer rewrites it (see "Where markup is caught") |
-| `markup_runs_code` | a value written as HTML (an HTML piece, a value with a tag or a marker start, a created record's HTML) holds a code element (`script`, `iframe`, `style`, `svg` and the like) or a raw text element (`title`, `textarea`, `xmp`, ...), an `on*` handler, a code address in an address attribute (`href`, `src`, `action`, ...) or a style that runs code, in a tag or a marker, in any case, whatever entities, slashes, quotes or white space hide it; markup inside an attribute value; a comment or any other `<!`, `<?`, `</` form (`markup_unread`); a marker start no marker reads (`marker_unread`); a tag, a marker or a quote left open, a closing tag that closes nothing or the wrong element (`markup_unbalanced`); or a value written where an address is written (a link field, a link or picture slot, an address attribute piece, a record's link) is an address that runs code (`javascript:`, `vbscript:`, `data:` other than a picture). Words are never read as an address: `Data: we keep only what you send` passes (`draft-write-markup.mjs`) |
+| `value_not_escaped` | words not escaped at a place printed raw (`via: not_escaped`), or not escape neutral at a place not measured (`via: not_escape_neutral`); see "Every value safe as raw HTML" |
+| `record_name_empty` | a contact created with an empty or blank name: the site writes it (measured), so the build refuses it |
+| `markup_forbidden` | a tag is sent through the contract, a `((` or `))` anywhere outside the declared markers of a codes field (`double_parenthesis`), declared markers left open (`markers_unbalanced`) or whose converted form runs code (`markers_run_code`), a tag is sent to a codes place, a plain text column (a record title or alias, a `title`, `name`, `alias`, `label`, `metadesc` column, a page title or search description key) holds a tag, a comment or any `<!`, `<?`, `</` form (`tag_in_plain_column`), or a field holds markup it does not declare (`field_inline`, `markupNotDeclared`). The order check catches the field cases first and stops the build there; for a value the writer wrote, the copy check catches them before that and the writer rewrites it (see "Where markup is caught") |
+| `markup_runs_code` | a value written as HTML (an HTML piece, a value with a tag or a double parenthesis, a created record's HTML) holds a code element (`script`, `iframe`, `style`, `svg` and the like) or a raw text element (`title`, `textarea`, `xmp`, ...), an `on*` handler, a code address in an address attribute (`href`, `src`, `action`, ...) or a style that runs code, in a tag or a marker, in any case, whatever entities, slashes, quotes or white space hide it; markup inside an attribute value; a comment or any other `<!`, `<?`, `</` form (`markup_unread`); a `((` or `))` no marker reads (`marker_unread`); a tag, a marker or a quote left open, a closing tag that closes nothing or the wrong element (`markup_unbalanced`); or a value written where an address is written (a link field, a link or picture slot, an address attribute piece, a record's link) is an address that runs code (`javascript:`, `vbscript:`, `data:` other than a picture). Words are never read as an address: `Data: we keep only what you send` passes (`draft-write-markup.mjs`) |
 | `slot_missing` | a contract value with no slot, or a slot the blank site contract does not have |
 | `icon_not_in_list` | a network class is missing from `networkIconClasses`, or an image icon is missing from the icon library (`iconKeys`; with no library wired, none is in it) |
 | `picture_without_alt` | a shown picture has no alt text |
@@ -68,26 +72,59 @@ Still counted in UTF-16 units elsewhere in the domain (other owners, not changed
 
 | Value | Caught by | Outcome |
 |---|---|---|
-| written by the writer, with a `<`, a `>` or a marker start (`((` and a letter: `f((x))`, `((free))`) | the copy check (`fieldValueProblems`: `markup`, `angle_bracket`, `template_code`) | the writer rewrites the field |
-| from the plan data (a business name, an answer) with markup its field does not declare | the order check (`markupNotDeclared`) | the build stops (`order_invalid`) |
+| written by the writer, with a `<`, a `>`, any `((` or `))`, or a character reference (`&amp;`) | the copy check (`fieldValueProblems`: `markup`, `angle_bracket`, `template_code`, `character_reference`) | the writer rewrites the field |
+| from the plan data (a business name, an answer) with markup or a double parenthesis its field does not declare | the order check (`markupNotDeclared`) | the build stops (`order_invalid`) |
 | a record column, a library block's HTML, a value the plan built | the write guard | the build stops |
 
 Every value the order check refuses for its markup the copy check refuses first, whatever the field declares
-(`domain-copy-markup-first.test.mjs`, a table and 5000 generated strings). A `((` or `))` that starts no marker is words
-everywhere (`Open (weekdays (9 to 5))`, `See you soon ((:`): the template's converter reads a marker only as `((`, an
-optional `/`, a letter, then no parenthesis up to `))` (`fromMarkers` of the quickstart scripts and of the memory site).
-What the template's own converter does with an unknown marker (`((free))`) is not measured, so a marker start in words
-stays refused, as a rewrite.
+(`domain-copy-markup-first.test.mjs`, a table and 5000 generated strings).
 
-## Who escapes a plain value
+**A double parenthesis is markup everywhere.** The JA ACM converter is a blind `str_replace` of `((` with `<` and
+`))` with `>` over a module's whole `jatools-config` string (measured on plugin 0.24.85: `((script))` prints a real
+script element, `Kids (6+)) and ((more` prints `Kids (6+> and <more`). A value the write sends to a JA ACM block's data
+is converted wherever it sits (a text, a link, a picture path), and a piece of an HTML value inside that data keeps its
+`((` as text, which the converter then turns into a tag. So every `((` and `))` is refused, in any position, with or
+without a letter after it (`readTags` counts each one no marker reads as a stray): at the copy check as a rewrite,
+at the order check for data, and at the guard. The guard applies it at every place, not only the JA ACM data: outside
+it a double parenthesis prints as words (a module title, the section chrome, measured), but nothing is lost by
+refusing it there too. This refuses some plain words (`Open (weekdays (9 to 5))`, `See you soon ((:`, `:))`): a false
+refusal taken for safety, which the writer redoes with other punctuation. The only exception is a codes field whose
+`inline` declares markers (`write: "codes"`, its `wrapper` and `emphasis` tags, such as the `((p))` wrapper `textAt`
+adds): there only those marker names pass, well formed and balanced, and the value with every `((` and `))` converted
+must pass `runsCodeIn` (`doubleParenthesisProblem`, `draft-write-escape.mjs`).
 
-| Place | Who | Evidence |
-|---|---|---|
-| a text node or an attribute piece of a stored HTML value (an xpath) | the piece functions: the plugin's `ContentSlots::htmlPatch` sets the node through the DOM; the memory site's `memoryHtml.set` writes `&quot;` in an attribute | `apps/tracy-web/test/draft-write-quote-inert.test.mjs` |
-| a whole HTML column written on a copy or a created record (`inline.write: "html"`) | the plan (`escapeHtml` of `draft-write-values.mjs`) | same test |
-| a column through the contract (an HTML column in place: `<` and `>` are refused by the door) | nobody: a quote stays a quote in text, where it opens nothing | not in that test: the florist's writer fields reach no contract text slot |
-| a codes place (an ACM block's data) | nobody in the write: the template prints it | not measured: whether the template escapes a value it prints inside an attribute |
-| a plain column (`title`, `alias`) | nobody in the write: Joomla escapes it where it prints it | not measured here |
+## Every value safe as raw HTML (`draft-write-escape.mjs`)
+
+The template escapes almost nothing (measured: only block 177's `info-email-label`, `info-email`, `info-phone-label`,
+`info-phone`, `info-note` and the chrome's `moduleclass_sfx`), so the write step is the only barrier. After the plan
+is built, `safeOps` makes every value and every created record column safe at its kind of place (`safetyAt`), and the
+guard refuses any value that is not (`value_not_escaped`, `draft-write-place-guard.mjs`):
+
+| Place | Kind | Written as | Why |
+|---|---|---|---|
+| a JA ACM block's data key (`jatools-config`, no xpath): titles, texts, links, picture paths, classes | raw | escaped as `htmlspecialchars` with ENT_QUOTES (`&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#039;`); declared markers kept | measured printed raw in text, `href`, `src`, `style`, `alt`, `class`, `title` |
+| a module title written on a copy | raw | escaped | measured printed raw (chrome text, a plans tab label) |
+| a module setting (`params` key: `top-desc`, `title-btn`, `link-btn`) | raw | escaped | measured printed raw (chrome) |
+| a site language string (`value`) | raw | escaped | printed by `Text::_` as stored |
+| a module title or other slot through the contract that the door counts raw (`countsRaw`: a fixed width column) | neutral | escape neutral | escaping would make the door count more than the writer wrote and refuse it |
+| block 177's `info-*` keys, `moduleclass_sfx` | neutral | escape neutral | measured escaped by the template: escaping again would show `&amp;` |
+| an xpath piece of a stored HTML value | piece | the DOM escapes `&`, `<`, `>`; plain words get typographic quotes | the DOM leaves a quote in a text node as it is, and where an `attribs` piece prints is not measured |
+| a whole HTML column (`introtext`, `fulltext`, `content`, `misc`) | html | words escaped (`textAt`, `inline_html`), declared tags kept | printed as HTML |
+| every other place: a created record's title, alias, name, `metadesc`, attribs key, contact column, a menu item title, a page title key, the site name | neutral | escape neutral | not measured: whether Joomla or the template escapes them is not known |
+
+**Escape neutral** means the value reads the same escaped or not, so it is never escaped twice and never left open:
+straight quotes become typographic ones (`"` as `“` and `”`, `'` as `’`, or `‘` at a word start), and a `<`, a `>`
+or a character reference (`&#39;`, `&amp;`) is refused. An address at a neutral place keeps its quotes, so a quote
+there is refused. A plain `&` stays (`Q&A`, `R&D`); a legacy name without its semicolon (`&copy 2026`) could still
+show as a sign where the place does not escape: a look, never markup.
+
+**Lengths.** The visible count (`visibleLength`) reads entities, so an escaped value counts what the writer wrote;
+typographic quotes are one code point each. Where the door counts the raw string, the value is written neutral, so
+`doorLength` of what is sent equals the writer's count (`domain-draft-write-escape.test.mjs`).
+
+**What the site then prints** is scanned on the memory site (`draft-write-rendered-output.test.mjs`): every hostile
+writer value in every writer field is either refused before any door or printed with no tag, handler, broken attribute
+or code address the kit does not declare.
 
 ## Skip reasons (in `plan.skipped`)
 
@@ -118,5 +155,7 @@ stays refused, as a rewrite.
 | `article_category_not_declared`, `seo_record_not_declared` | the contract does not say which category an article goes in, or which record holds a page's search texts |
 | `control_shared_by_items`, `omit_row_gap`, `omit_on_record_in_place` | see Hides in [draft-write-step.md](draft-write-step.md) |
 | `row_form_keys`, `recipe_ordering` | not measured on a real site (contract point 7) |
+| `detail_position_not_printed` | a block that sits only in a detail position (`detail-bottom-1`, `main-bottom-2`, `DETAIL_POSITIONS`) on a page whose menu item opens its own article: T4 prints those positions only under the list page's menu item (measured), so the block prints nothing |
+| `article_without_page` | a created article with no menu item of its own: it takes the home page's layout and prints nothing (measured) |
 | `initials_drawn_as_figure` | the drawer has strokes for A to Z only: a name in another script is drawn as a neutral figure, and the JA Boxing frames have no text slot for the letters |
 
