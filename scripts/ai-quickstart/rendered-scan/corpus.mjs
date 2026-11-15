@@ -1,8 +1,10 @@
 // The demo corpus of one template version (ticket #585): every demo sentence, high signal string and demo picture a
-// release of the template ships, from whichever sources the caller has, independent of the mapping. The demo baseline
-// measured on an untouched site (ADR 0044, decision 8) is one source among them: what the kit misses is still caught.
-// Interface words (language strings the template keeps, what the blank site keeps) are set apart so they are never a
-// hit. Pure.
+// release of the template ships, from whichever sources the caller has. The demo sentences are independent of the
+// mapping; the interface words are not: the words of the language strings the kit keeps join them (the gate passes
+// them as `interfaceTexts`, `gate/kept-language-texts.mjs`), so a kept key takes its words out of this net too. The demo
+// baseline measured on an untouched site (ADR 0044, decision 8) is one source among them: what the kit misses is still
+// caught. Interface words (language strings the template keeps, what the blank site keeps) are set apart so they are
+// never a hit. Pure.
 import { fileKey, isPictureFile, normalise, phoneKey, segmentsOf, shinglesOf } from './normalise.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])

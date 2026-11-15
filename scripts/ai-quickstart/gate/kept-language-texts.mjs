@@ -3,7 +3,8 @@
 // demo scan compares interface words exactly, so a string with placeholders is given filled: each placeholder by the
 // page numbers 1 to 20 (a list's "Page 1 of 2"), for a string of at most two placeholders. Words a placeholder holds
 // otherwise cannot be given this way: the scan would need to read a kept string as a pattern (its owner's change). A
-// site override wins over the file it overrides, since that is what the page prints. Pure.
+// site override wins over the file it overrides, since that is what the page prints; a site file wins over an
+// administrator one, which is read only for a plugin's strings. Pure.
 
 const PLACEHOLDER = /%(?:\d+\$)?[sd]/g
 const NUMBERS = Array.from({ length: 20 }, (_, i) => String(i + 1))
@@ -49,7 +50,13 @@ export function keptLanguageTextsOf(mapping, files) {
   if (!kept.size) return []
   const values = new Map()
   const overrides = new Map()
-  for (const [file, text] of files ?? []) {
+  // A page prints the site's strings: an administrator file is read only for a plugin's own strings (not its .sys
+  // file), after every site file, as the source resolver reads them (`sources.mjs`, review 5 Z7).
+  const admin = (f) => f.startsWith('administrator/')
+  const plugin = (f) => /\/(?:[a-z]{2}-[A-Z]{2}\.)?plg_[a-z0-9_]+\.ini$/.test(f)
+  const ordered = [...(files ?? [])].sort(([a], [b]) => Number(admin(a)) - Number(admin(b)))
+  for (const [file, text] of ordered) {
+    if (admin(file) && !plugin(file)) continue
     const target = OVERRIDE.test(file) ? overrides : LANGUAGE.test(file) ? values : null
     if (!target) continue
     for (const [key, value] of stringsOf(text)) if (kept.has(key) && !target.has(key)) target.set(key, value)

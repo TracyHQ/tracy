@@ -43,3 +43,25 @@ test('kept language texts: through interfaceTexts the demo scan reads them as in
   // The baseline is what makes them demo without the kit's keys (the control of this test).
   assert.ok(demoWordsIn('Page 1 of 2', before).length + demoWordsIn(demo.sentences[1], before).length > 0)
 })
+
+// Review 5 Z7: a page prints the site's language files; an administrator file is read only for a plugin's own strings
+// (as the source resolver reads them), and after every site file, so an administrator screen's words never stand for a
+// page's.
+test('Z7: a site file wins over an administrator one, and only a plugin file of the administrator is read', () => {
+  const both = new Map([
+    ['administrator/language/en-GB/com_contact.ini', 'COM_CONTACT_DETAILS="Contact Information"\n'],
+    ['language/en-GB/com_contact.ini', 'COM_CONTACT_DETAILS="Contact"\n'],
+    ['administrator/language/en-GB/com_users.ini', 'COM_USERS_ADMIN_ONLY="Manage the accounts"\n'],
+    ['administrator/language/en-GB/plg_content_bakery.ini', 'PLG_CONTENT_BAKERY_NOTE="Fresh today"\n']
+  ])
+  const keep = (key) => ({ key, keep: 'kept for the test' })
+  const texts = keptLanguageTextsOf(
+    {
+      overrides: {
+        language: [keep('COM_CONTACT_DETAILS'), keep('COM_USERS_ADMIN_ONLY'), keep('PLG_CONTENT_BAKERY_NOTE')]
+      }
+    },
+    both
+  )
+  assert.deepEqual(texts.sort(), ['Contact', 'Fresh today'])
+})
