@@ -15,6 +15,7 @@ import { addItemFieldFacts } from './plan-conflicts.mjs'
 import { ITEM_NOUNS, planDataOf } from './plan-data.mjs'
 import { blockItemProblems } from './plan-gate-items.mjs'
 import { factFieldProblems } from './plan-gate-rules.mjs'
+import { withHoursDisplay } from './plan-hours-display.mjs'
 import { generatedOf, picturesOf } from './plan-look-pictures.mjs'
 import { withheldWhatOf } from './plan-withheld.mjs'
 import { replanRows } from './plan-edit-rows.mjs'
@@ -146,6 +147,8 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
     counted.generated = generatedOf(asked)
   }
   next.pictures = counted
+  // An hours value changed on the card is shown again from its new value (`plan-hours-display.mjs`).
+  next.facts = list(next.facts).map(withHoursDisplay)
   const contract = checkBuildDocument(next).problems
   if (contract.length > 0) return failed(editRefusals(contract, next))
   return { ok: true, plan: next, profile: after, problems: [] }

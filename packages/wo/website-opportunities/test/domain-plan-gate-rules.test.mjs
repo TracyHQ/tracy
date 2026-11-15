@@ -101,8 +101,12 @@ test('no data of the kept plan can address a design typed field', () => {
     ['reply_shape']
   )
   const { plan } = gatePlan(goodComposition(), context())
+  // `labelCode` (the section key, `plan-wording-codes.mjs`) is code's own, beside the model's label.
   for (const block of plan.pages.flatMap((p) => p.blocks))
-    assert.deepEqual(Object.keys(block), ['id', 'type', 'block', 'source', 'label', 'data', 'reason'])
+    assert.deepEqual(
+      Object.keys(block).filter((k) => k !== 'labelCode'),
+      ['id', 'type', 'block', 'source', 'label', 'data', 'reason']
+    )
 })
 
 test('every dash is refused in customer text: en, em, figure, horizontal bar and minus', () => {

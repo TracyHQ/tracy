@@ -17,13 +17,16 @@ import { gateEditedPlan } from './plan-edit-gate.mjs'
 import { REQUESTED_OFF_REASON } from './plan-request-taken-off.mjs'
 import { namesWords } from './plan-request-words.mjs'
 import { idOf } from './plan-data.mjs'
+import { HOURS_KIND, hoursDisplayOf } from './plan-hours-display.mjs'
+import { rowDataIdsOf } from './plan-accounting.mjs'
 
 /** The stable codes of the lines code writes for these parts of a request. */
 export const OWNER_EDIT_CODES = Object.freeze({
   valueSaved: 'owner_value_saved',
   itemRenamed: 'item_renamed',
   itemTakenOff: 'item_taken_off',
-  renameRefused: 'item_rename_refused'
+  renameRefused: 'item_rename_refused',
+  valueNotShown: 'owner_value_not_shown'
 })
 const list = (value) => (Array.isArray(value) ? value : [])
 const VALUE_CUES = Object.freeze({
@@ -53,10 +56,12 @@ function withValues(profile, values, lines) {
       next.facts[kind] = [{ value, sources: [OWNER_SOURCE_ID], confidence: 'single-source' }]
       fresh.add(idOf(kind))
     }
+    // Opening hours are said in their display form, never the structured value (`plan-hours-display.mjs`).
+    const shown = kind === HOURS_KIND ? hoursDisplayOf(value) : null
     lines.push({
       code: OWNER_EDIT_CODES.valueSaved,
-      text: `Your answer is saved: ${label}, ${value}.`,
-      params: { kind, label, value }
+      text: `Your answer is saved: ${label}, ${shown?.display ?? value}.`,
+      params: { kind, label, value, ...(shown ? { display: shown.display } : {}) }
     })
     saved += 1
   }
@@ -133,4 +138,33 @@ export function withoutContradicted(notDone, edits, plan) {
         !labels.some((l) => !names.includes(l) && typeof l === 'string' && namesWords(text, l))
     )
   })
+}
+
+/**
+ * A not done line for each value the owner gave in this request that the revised plan shows nowhere (their design has
+ * no place for it, or every place is taken): the owner asked to show it, so a left out entry alone is not enough.
+ * `params.because` is the code of the plan's left out entry of that fact.
+ */
+export function ownerValuesNotShown(edits, revised) {
+  const shown = new Set([
+    ...list(revised.pages).flatMap((p) => p.blocks.flatMap((b) => b.data)),
+    ...rowDataIdsOf(revised.pages)
+  ])
+  return list(edits?.values)
+    .filter(({ kind }) => !shown.has(idOf(kind)))
+    .map(({ kind }) => {
+      const label = FACT_LABELS[kind] ?? kind
+      const entry = list(revised.leftOut).find((e) => e.item === idOf(kind))
+      const because = entry?.code ?? 'not_shown'
+      return {
+        code: OWNER_EDIT_CODES.valueNotShown,
+        params: { kind, label, because },
+        what: `Show your ${label.toLowerCase()} on the site`,
+        reason: 'no_recipe',
+        why:
+          because === 'no_place_in_design'
+            ? 'Your answer is saved, but your design has no place that shows it.'
+            : `Your answer is saved. ${entry?.reason ?? 'The plan has no place that shows it.'}`
+      }
+    })
 }

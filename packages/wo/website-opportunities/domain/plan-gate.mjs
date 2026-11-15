@@ -13,6 +13,8 @@
 // - a fact or item too long for the field of its block it would fill leaves that block, reported
 //   (`plan-data-limits.mjs`, code `data_over_limit`), so the page writer never stops on it; a block left with nothing
 //   leaves the plan, and a main block left with nothing is a `data_over_limit` problem (`plan-emptied-blocks.mjs`);
+//   a block these removals leave under its minimum leaves too, or is a `too_few_items` problem when it is the main
+//   block (`plan-below-min-blocks.mjs`), so a plan the gate passes passes it again on a change request;
 // - a block the model sends with no data is left out, as the messages that take an id out of a block ask
 //   (`plan-gate-pages.mjs`); a model assumption naming what the owner keeps off the site is dropped;
 // - the rows of every child list are set by rules from the business's rows (`plan-rows.mjs`), held to what the block
@@ -24,7 +26,8 @@
 // - a mechanical fault whose single right answer code knows, and whose fix changes nothing the site shows, is fixed
 //   and recorded instead of failing the plan (`plan-gate-fixes.mjs`, #614): a left out entry of a shown item, an
 //   assumption naming a block by its store id, a label repeating its one datum, a count a reason no longer holds;
-// - every left out entry reads in the customer's words with a reason code (`plan-left-out-wording.mjs`).
+// - every left out entry reads in the customer's words with a reason code (`plan-left-out-wording.mjs`), and every
+//   block of a known section carries its `labelCode` (`plan-wording-codes.mjs`).
 // Composition in, `{ok, problems, fixes, composition, plan, placed, accounting}` out. `composition` is the reply as the
 // gate read it after its fixes: the place of every problem is a place in it.
 import { lookProblemsOf } from './brand-look-problems.mjs'
@@ -45,8 +48,11 @@ import {
   dropOverLimitData,
   overLimitLeftOut
 } from './plan-data-limits.mjs'
+import { dropBelowMinBlocks } from './plan-below-min-blocks.mjs'
 import { dropEmptiedBlocks } from './plan-emptied-blocks.mjs'
 import { withoutShownLeftOut } from './plan-gate-fixes.mjs'
+import { withCountedReasons } from './plan-left-out-plain.mjs'
+import { withLabelCodes } from './plan-wording-codes.mjs'
 import { wordingProblems } from './plan-gate-wording.mjs'
 import { planRows } from './plan-rows.mjs'
 import { modelLeftOutOf, withReasonCodes } from './plan-left-out-wording.mjs'
@@ -129,7 +135,15 @@ export function gatePlan(reply, context) {
   for (const p of answerOverLimitProblems(overLimit.dropped)) problem(p.code, p.at, p.message)
   // A block it empties leaves the plan, or is reported when it is the page's main block (`plan-emptied-blocks.mjs`).
   const emptied = dropEmptiedBlocks(pictures.pages, overLimit, context, dropped.index, problem)
-  const limited = { pages: emptied.pages, dropped: overLimit.dropped }
+  // A block these removals leave under its minimum leaves too, or is reported (`plan-below-min-blocks.mjs`).
+  const below = dropBelowMinBlocks(
+    emptied.pages,
+    { ...context, dropped: overLimit.dropped },
+    dropped.index,
+    problem
+  )
+  for (const entry of below.leftOut) if (entry.id !== undefined) leftOutIds.add(entry.id)
+  const limited = { pages: below.pages, dropped: overLimit.dropped }
   // A value left off a shown item is taken off the item the page writer reads (the composer's settled profile).
   clearOverLimitValues(limited.dropped, context.data)
   const rows = planRows(limited.pages, context.blocks, context.data)
@@ -170,9 +184,10 @@ export function gatePlan(reply, context) {
     facts: context.data.facts.filter(kept),
     items: context.data.items.filter(kept),
     ...(list(context.data.rows).filter(kept).length ? { rows: context.data.rows.filter(kept) } : {}),
-    pages: rows.pages,
+    pages: withLabelCodes(rows.pages, context.blocks),
     look: context.look,
-    pictures: pictures.pictures,
+    // Counted on the final pages: a frame of an item the gate took off later is no picture to create.
+    pictures: picturesOf(rows.pages, context.blocks, context.data).pictures,
     assumptions: [...context.assumptions, ...keptAssumptionsOf(composition, pictures.pages, context, fix)],
     leftOut: [
       ...fromModel,
@@ -182,11 +197,12 @@ export function gatePlan(reply, context) {
       ...facts.leftOut.map(namedBy(context.labels)),
       ...pictures.leftOut,
       ...emptied.leftOut,
+      ...below.leftOut.map(namedBy(context.labels)),
       ...rowsOut.map(namedBy(context.labels)),
       ...listsBelowMinLeftOut(rows.dropped, rows.pages)
     ]
   }
-  plan.leftOut = withReasonCodes(plan.leftOut, plan)
+  plan.leftOut = withCountedReasons(withReasonCodes(plan.leftOut, plan))
   for (const p of checkBuildDocument(plan).problems) problem('contract_b', p.at, p.message)
   // The plan never shows the template's look for approval (#616): its accent, its logo, or a line naming them, written
   // by the model or not. Off only for the template fallback of the tests (`allowTemplateLook`).

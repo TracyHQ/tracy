@@ -11,6 +11,7 @@ import {
   sourcesProblems
 } from './build-contract-plan-parts.mjs'
 import { blockListsProblems, rowDataProblems } from './build-contract-plan-rows.mjs'
+import { codeProblems, paramsProblems } from './build-contract-plan-codes.mjs'
 import { closedShapeProblems, textProblems } from './build-contract-shapes.mjs'
 import { idListProblems, isName, isObject, isWhole, label } from './build-contract-shared.mjs'
 import {
@@ -52,6 +53,11 @@ function dataProblems(plan, report) {
         report(`${at}.kind`, `${JSON.stringify(fact.kind)} is not a data kind of place-content-roles/3`)
       textProblems(fact.label, `${at}.label`, report, 'label', 'a fact needs a label the customer can read')
       textProblems(fact.value, `${at}.value`, report, 'facts[].value', 'a fact needs a value')
+      // The display form code writes from a structured value (opening hours), with its code and parameters.
+      if (fact.display !== undefined)
+        textProblems(fact.display, `${at}.display`, report, 'facts[].value', 'a display form is a text')
+      codeProblems(fact.code, `${at}.code`, report)
+      paramsProblems(fact, at, report)
       sourcesProblems(fact.sources, `${at}.sources`, report)
     })
   if (!Array.isArray(plan.items)) report('items', 'items must list the data items blocks show (may be empty)')
@@ -106,6 +112,8 @@ function blockProblems(block, at, known, pageIds, report) {
   if (block.source !== 'template' && block.source !== 'library')
     report(`${at}.source`, 'source must be "template" or "library"')
   textProblems(block.label, `${at}.label`, report, 'label', 'a block needs a label the customer can read')
+  // The stable code of the section the label names (the block type, or `page_header`), beside the English label.
+  codeProblems(block.labelCode, `${at}.labelCode`, report)
   textProblems(
     block.reason,
     `${at}.reason`,

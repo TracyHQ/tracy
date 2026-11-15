@@ -44,14 +44,15 @@ const shownOn = (pages) => new Set(list(pages).flatMap((p) => p.blocks.flatMap((
  * The left out entries the revised composition carries: `{item, reason}` for every fact and item the current plan
  * leaves out that the changed pages do not show (`takenOff`: with the reason the change gives), and the entries no
  * rule writes again, as `{what, kind, reason}`.
- * @returns {{composition: object[], context: object[]}} `composition`: model style entries naming an item; `context`:
- *   entries the gate adds as they are
+ * @returns {{composition: object[], context: object[], codes: Map<string, string>}} `composition`: model style entries
+ *   naming an item; `context`: entries the gate adds as they are; `codes`: the code of each carried item's entry
  */
 export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fresh = new Set() }) {
   const before = new Set([...shownOn(plan.pages), ...rowDataIdsOf(plan.pages)])
   const after = shownOn(pages)
   const used = new Set()
   const composition = []
+  const codes = new Map()
   for (const [id, record] of data.byId) {
     // A value the owner typed in this request (`fresh`) is new data, placed by the gate as a first plan's.
     if (record.itemField || data.withheld?.has(id) || after.has(id) || fresh.has(id)) continue
@@ -63,6 +64,9 @@ export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fr
     const entry = leftOutEntryOf(plan, namesOf(plan, record, id), used)
     if (entry) used.add(entry)
     composition.push({ item: id, reason: entry?.reason ?? REQUESTED_OFF_REASON })
+    // The entry's code goes beside the composition (whose entries have the model's shape), so a carried sentence code
+    // wrote keeps its code instead of reading as `model_reason`.
+    if (entry?.code) codes.set(id, entry.code)
   }
   const names = new Set(pages.map((p) => p.name))
   const context = list(plan.leftOut)
@@ -78,7 +82,7 @@ export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fr
     )
   for (const page of removedPages)
     context.push({ what: page.name, kind: 'page', reason: REMOVED_PAGE_REASON })
-  return { composition, context }
+  return { composition, context, codes }
 }
 
 /**

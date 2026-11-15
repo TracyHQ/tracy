@@ -28,3 +28,16 @@ export function sectionCodeOf(description) {
   if (type === 'hero' && (description.positions ?? []).includes('masthead')) return 'page_header'
   return Object.hasOwn(SECTION_LABELS, type) ? type : null
 }
+
+/**
+ * The pages with `labelCode` on every block whose type has a known section name (`sectionCodeOf`, the key a change
+ * line names as `section`): the plan card translates the section by it, `label` (the model's words) is the fallback.
+ */
+export const withLabelCodes = (pages, blocks) =>
+  pages.map((page) => ({
+    ...page,
+    blocks: page.blocks.map(({ labelCode: _old, ...block }) => {
+      const code = sectionCodeOf(blocks.get(block.block))
+      return code ? { ...block, labelCode: code } : block
+    })
+  }))

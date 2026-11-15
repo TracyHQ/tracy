@@ -11,7 +11,7 @@ import {
 } from './plan-request-apply.mjs'
 import { requestTextProblems } from './plan-request-guard.mjs'
 import { changedEntriesOf, notDoneLinesOf } from './plan-request-lines.mjs'
-import { withoutContradicted } from './plan-request-owner-apply.mjs'
+import { ownerValuesNotShown, withoutContradicted } from './plan-request-owner-apply.mjs'
 import { requestReplyProblems } from './plan-request-reply.mjs'
 import {
   carriedAssumptionsOf,
@@ -100,6 +100,7 @@ export function revisionOf(reply, { plan, request, context, owner = null }) {
   const gated = gatePlan(composition, {
     ...context,
     leftOut: [...context.leftOut, ...carried.context],
+    carriedCodes: carried.codes,
     givenIds: givenIdsOf(applied.pages),
     idTag: `r${plan.revision + 1}`,
     labels: new Map(list(plan.items).map((i) => [i.id, i.label])),
@@ -131,7 +132,11 @@ export function revisionOf(reply, { plan, request, context, owner = null }) {
     changes,
     refused: applied.refused,
     notDone: modelNotDone,
-    codeNotDone: [...applied.notDone, ...(owner?.notDone ?? [])]
+    codeNotDone: [
+      ...applied.notDone,
+      ...(owner?.notDone ?? []),
+      ...(owner ? ownerValuesNotShown(owner.edits, revised) : [])
+    ]
   })
   if (changed.length === 0) return unchanged(notDone)
   return { ok: true, unchanged: false, plan: revised, ...withCodes(changed, notDone), gated }

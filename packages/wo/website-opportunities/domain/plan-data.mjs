@@ -4,6 +4,7 @@
 // have. Pure: a profile in, the plan's facts and items out, in the Contract B shape (`build-contract-plan.mjs`).
 import { GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { rowDataOf } from './plan-row-data.mjs'
+import { withHoursDisplay } from './plan-hours-display.mjs'
 import { ownerFactsOfProfile, ownerTaglineOfProfile } from './owner-facts-flow.mjs'
 import { withheldIdsOf } from './plan-withheld.mjs'
 
@@ -98,7 +99,14 @@ export function planDataOf(profile) {
       const id = i === 0 ? idOf(kind) : `${idOf(kind)}-${i + 1}`
       const sources = sourcesOf(fact.sources, origins)
       if (sources.length === 0) return
-      const entry = { id, kind, label: FACT_LABELS[kind] ?? kind, value: fact.value, sources }
+      // Opening hours carry a display form code writes from their structure (`plan-hours-display.mjs`).
+      const entry = withHoursDisplay({
+        id,
+        kind,
+        label: FACT_LABELS[kind] ?? kind,
+        value: fact.value,
+        sources
+      })
       facts.push(entry)
       byId.set(id, { what: 'fact', kind, entry, source: fact })
     })

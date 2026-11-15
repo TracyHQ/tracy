@@ -217,6 +217,7 @@ export function leftOutProblems(leftOut, report, known = null) {
     // The stable code of the reason, beside its sentence, by which the plan card translates it.
     if (entry.code !== undefined && !(typeof entry.code === 'string' && /^[a-z][a-z0-9_]*$/.test(entry.code)))
       report(`${at}.code`, 'a reason code is lower case words joined by underscores')
+    paramsProblems(entry, at, report)
     // The fact, item or row the entry reports, so a reader knows a fact the plan lists is not on the site.
     if (entry.item !== undefined && !(known?.has(entry.item) ?? isName(entry.item)))
       report(`${at}.item`, `${JSON.stringify(entry.item)} is no fact, item or row of the plan`)

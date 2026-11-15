@@ -211,7 +211,19 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   model wrote and code could not derive, to translate as written; `stated`: a code made sentence without a code of
   its own). `what` names a section, a page or the data in the customer's words, never a block id. `item`
   (optional): the id of the fact, item or row the entry reports, when the plan lists it; a fact listed in `facts`
-  and named by a left out entry is known to the plan but not shown on the site.
+  and named by a left out entry is known to the plan but not shown on the site. `params` (optional, only beside a
+  `code`): the values the code's sentence is worded with (`no_gallery_room` `{count}`, the photos left out that way,
+  so one sentence agrees for one photo and for many; `section_below_minimum` `{min, shown}` for a section, `{min}`
+  for an item it showed).
+- **`display`** (optional, on a fact): the value as the customer reads it, written by code from a structured value,
+  with its `code` and `params`. Opening hours (`contact.hours`, value `Mo-Fr 06:00-21:00; Sa 08:00-16:00`) read
+  `Monday to Friday, 6:00 to 21:00; Saturday, 8:00 to 16:00`, code `opening_hours`, params `{groups, fromN, toN,
+  hoursN}` (N from 1; days as two letter codes `mo` to `su`; `hoursN` is `HH:MM-HH:MM`, ranges joined by a comma, or
+  `closed`), so the card says the day names in the customer's language. `value` stays the structured value; a value
+  that does not read as a week has no `display`.
+- **`labelCode`** (optional, on a block): the stable key of the section the block is (its block type, or
+  `page_header` for a page title hero; the key a change line names as `section`), by which the card translates the
+  section name. `label` is the composer's own words and stays the English fallback.
 
 ### Child list rows (optional)
 
@@ -423,11 +435,11 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `free text` | `maxLength`, `placeholder?` |
 | `answer` | `schema`, `question`, `choice?`, `text?`, `skipped?` |
 | `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut`, `rows?` |
-| `fact` | `id`, `kind`, `label`, `value`, `sources` |
+| `fact` | `id`, `kind`, `label`, `value`, `sources`, `display?`, `code?`, `params?` |
 | `item` | `id`, `kind`, `label`, `sources`, `count?` |
 | `source` | `kind`, `name` |
 | `page` | `id`, `name`, `pageType`, `blocks` |
-| `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason`, `lists?` |
+| `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason`, `lists?`, `labelCode?` |
 | `row` | `id`, `label`, `sources` |
 | `child list` | `name`, `rows`, `item?` |
 | `planned row` | `data?`, `page?`, `lists?` |
@@ -439,7 +451,7 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `generated pictures` | `frames`, `reason?`, `code?`, `params?` |
 | `assumption` | `id`, `field`, `said`, `alternatives?`, `code?`, `params?` |
 | `alternative` | `value`, `sources` |
-| `left out entry` | `what`, `kind`, `reason`, `code?`, `item?` |
+| `left out entry` | `what`, `kind`, `reason`, `code?`, `item?`, `params?` |
 | `plan edit` | `schema`, `id`, `plan`, `changes` |
 | `plan reference` | `id`, `revision` |
 | `change` | `field`, `value` |

@@ -89,12 +89,15 @@ test('a block the model names by its store id is named by its section, with the 
   assert.equal(checkBuildDocument(result.plan).ok, true)
 })
 
-test('a reason with a build word the gate cannot replace goes back to the model', () => {
-  const result = gated([{ what: 'Booking strip', kind: 'block', reason: 'No contact CTA URL was provided.' }])
+test('a reason with a build word is replaced by code; a section name with one goes back to the model', () => {
+  const fixed = gated([{ what: 'Booking strip', kind: 'block', reason: 'No contact CTA URL was provided.' }])
+  assert.equal(fixed.ok, true, JSON.stringify(fixed.problems))
+  assert.equal(fixed.plan.leftOut[0].code, 'left_out_neutral')
+  const result = gated([{ what: 'CTA strip', kind: 'block', reason: 'Nothing to say here.' }])
   assert.equal(result.ok, false)
   assert.deepEqual(
     result.problems.map((p) => `${p.code}@${p.at}`),
-    ['left_out_internal_wording@leftOut[0].reason']
+    ['left_out_internal_wording@leftOut[0].what']
   )
 })
 

@@ -35,11 +35,13 @@ export const CONTRACT_SHAPES = Object.freeze({
     ['rows'],
     { plan: true }
   ),
-  fact: shape(['id', 'kind', 'label', 'value', 'sources'], [], { plan: true }),
+  fact: shape(['id', 'kind', 'label', 'value', 'sources'], ['display', 'code', 'params'], { plan: true }),
   item: shape(['id', 'kind', 'label', 'sources'], ['count'], { plan: true }),
   source: shape(['kind', 'name'], [], { plan: true }),
   page: shape(['id', 'name', 'pageType', 'blocks'], [], { plan: true }),
-  block: shape(['id', 'type', 'block', 'source', 'label', 'data', 'reason'], ['lists'], { plan: true }),
+  block: shape(['id', 'type', 'block', 'source', 'label', 'data', 'reason'], ['lists', 'labelCode'], {
+    plan: true
+  }),
   row: shape(['id', 'label', 'sources'], [], { plan: true }),
   'child list': shape(['name', 'rows'], ['item'], { plan: true }),
   'planned row': shape([], ['data', 'page', 'lists'], { plan: true }),
@@ -51,7 +53,7 @@ export const CONTRACT_SHAPES = Object.freeze({
   'generated pictures': shape(['frames'], ['reason', 'code', 'params'], { plan: true }),
   assumption: shape(['id', 'field', 'said'], ['alternatives', 'code', 'params'], { plan: true }),
   alternative: shape(['value', 'sources'], [], { plan: true }),
-  'left out entry': shape(['what', 'kind', 'reason'], ['code', 'item'], { plan: true }),
+  'left out entry': shape(['what', 'kind', 'reason'], ['code', 'item', 'params'], { plan: true }),
   'plan edit': shape(['schema', 'id', 'plan', 'changes']),
   'plan reference': shape(['id', 'revision']),
   change: shape(['field', 'value']),
