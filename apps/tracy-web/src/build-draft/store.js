@@ -14,6 +14,7 @@
  * and that profile are written in one transaction, so an edit the rules refuse changes nothing.
  */
 import { gateEditedPlan } from 'website-opportunities/domain'
+import { profileWithItemNames } from './edit-item-names.js'
 import { answerProblem, draftShape, planProblem, readTemplate, undoEditOf } from './rules.js'
 
 const COLUMNS = [
@@ -313,7 +314,8 @@ export function editPlan(pool, accountId, edit, { loadKit }) {
     if (gated.error) return gated
     return {
       plan: gated.plan,
-      needs_profile: gated.profile,
+      // A renamed service reaches the writer only through the profile (`edit-item-names.js`, #612).
+      needs_profile: profileWithItemNames(gated.profile, edit),
       template: gated.plan.look.template,
       last_edit: edit,
       undo_edit: undoEditOf(row.plan, edit),
