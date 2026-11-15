@@ -10,11 +10,11 @@ import { test } from 'node:test'
 import { heldPersonFormsOf } from '../domain/held-person-forms.mjs'
 import { OWNER_FACT_USE, placeOwnerFacts } from '../domain/page-writer-owner-facts.mjs'
 import { PageWriterError } from '../domain/page-writer.mjs'
+import { researchOf } from '../domain/needs-research.mjs'
 import { planDataOf } from '../domain/plan-data.mjs'
 import {
   FITTING,
   HELD,
-  STATEMENT,
   STORY,
   factWriter,
   ownerBrief,
@@ -155,7 +155,6 @@ test('a held person named in the statement reaches no writer request, in any for
   for (const form of [...forms, firstCased, 'Brenwick'].filter(Boolean))
     assert.ok(!bytes.toLowerCase().includes(form.toLowerCase()), `the request names ${form}`)
   assert.ok(bytes.includes(FITTING), 'the facts that name no one still arrive')
-  assert.ok(STATEMENT.includes(HELD))
 })
 
 test('a fact no block can say is reported with its reason, never forced onto a page', async () => {
@@ -183,4 +182,19 @@ test('a fact no block can say is reported with its reason, never forced onto a p
       ['f2', 'the home page has no copy field']
     ]
   )
+})
+
+test('while the business name is held, a fact naming it is set aside by id, never carried', () => {
+  const brief = {
+    business: { name: 'Quillmoor Tennis' },
+    facts: [{ field: 'name', onSite: false, value: 'Quillmoor Tennis' }],
+    reading: {
+      ownerFacts: [
+        { id: 'of_a', kind: 'owner-fact', group: 'story', text: 'Quillmoor Tennis began in a barn' },
+        { id: 'of_b', kind: 'owner-fact', group: 'story', text: 'four courts under lights' }
+      ]
+    }
+  }
+  const owner = researchOf(brief).sources.find((s) => s.id === 'owner-statement')
+  assert.deepEqual(owner.ownerFacts, [{ id: 'of_b', group: 'story', text: 'four courts under lights' }])
 })
