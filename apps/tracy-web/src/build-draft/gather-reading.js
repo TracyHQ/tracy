@@ -166,6 +166,8 @@ export async function readingOf({
       method: reading.method,
       ...(reading.reason ? { reason: reading.reason } : {}),
       ...(reading.model ? { model: reading.model } : {}),
+      // For operators and logs (`reasoning_not_off`, `answer_cut`): never shown to the owner.
+      ...(isText(reading.warning) ? { warning: reading.warning } : {}),
       ...(door.reason ? { door: door.reason } : {}),
       attempts
     })
