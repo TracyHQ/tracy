@@ -2065,9 +2065,12 @@ a usage error.
    template's demo routes). A link `linkCheck` finds no planned path for is judged by the page it reaches
    (`gate/structure-read.mjs`), told by the adapter's page identity (`gate/adapters/joomla-page-identity.mjs`: the
    menu item the body names, `item-<id>`, and the title): a friendly menu address (`/index.php/<alias>`) of a planned
-   page spelled `index.php?Itemid=<id>` is that page, no broken link; one that reaches a page the plan has not got and
-   answers is recorded apart (`unplanned`, recorded only: the demo scan judges what such a page shows); one that does
-   not answer is a link to a missing page; and every item block shows its declared most items (the main block of an item page shows
+   page spelled `index.php?Itemid=<id>` is that page, no broken link; a page with the title of one planned page under
+   another menu item (a planned article read under another menu path, whose body names that menu's item) is that page
+   too, recorded apart (`elsewhere`, recorded only); one that reaches a page the plan has not got (neither its identity
+   nor its title) and answers is recorded apart (`unplanned`, recorded only: the demo scan judges what such a page
+   shows); one that does not answer is a link to a missing page. A link to one of the template's demo routes stays
+   broken (`demo_page`) even when the route still answers: it is never read again by identity. And every item block shows its declared most items (the main block of an item page shows
    its own record, one; the main block of a list page is counted as the order shows it; a block with no item fields
    shows items the site draws itself, related posts or a fixed card, and is recorded `counted: "site_draws"`, not
    judged). A block that shows otherwise is explained only by a reason the build gives (a block it hid,
@@ -2077,10 +2080,13 @@ a usage error.
    test's renders.
 6. **Structure, hidden pages**: the marker site's pages hidden in two halves, each half read, then published again.
    Every page not hidden must answer as planned while a half is hidden (`shownBroken`, fails the variant). A link on
-   a page still shown to a hidden page fails the variant. A page that does not answer again once published,
+   a page still shown to a hidden page fails the variant, also when the hidden page still answers at another address
+   (`hidden_page_still_answers`: the half's pages are identified before they are hidden, and a link answering with
+   one of their identities or titles fails). A broken link whose address names no planned page is read again once its
+   half is published, so the row names the page it leads to (`target`); every row keeps the half that was hidden. A page that does not answer again once published,
    a hide door that throws, or no hide door, leaves it `incomplete`. The plugin has no door to delete a page, so a
    deleted page is measured as a hidden page: this proves that taking a page out of the menu and the site leaves no
-   link to it on the pages left; it does not prove what a real delete does to the database (an orphan record, a
+   link to it on the pages left, at any address the gate can tell it by (its menu item and title); it does not prove what a real delete does to the database (an orphan record, a
    cleaned up menu item).
 7. **Structure, minimum variant**: the reset, then the build at every block's least items (at least one), written and
    read like the full one, with every item block checked at its least items the same way.

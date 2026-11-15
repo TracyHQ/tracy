@@ -73,3 +73,46 @@ test('X7: a write safety finding names its item and where it was stored; an untr
     /article:post-8 not traced \(12 suspects\) The write stopped here; no step was left to name the field \(The site refused it\)/
   )
 })
+
+test('X1 and line 3: structure says planned articles at another address apart, and a variant that did not finish says what it read', () => {
+  const st = lineOf('structure', {
+    status: 'failed',
+    linkCheck: {
+      status: 'incomplete',
+      reason: 'items_not_at_shape',
+      broken: [],
+      unplanned: [{ href: '/index.php/x' }],
+      elsewhere: Array.from({ length: 22 }, () => ({ href: '/index.php/a/b' }))
+    },
+    minItems: { status: 'passed', broken: [], errors: [], elsewhere: [{ href: '/index.php/c/d' }] },
+    hidden: { status: 'failed', broken: [{ href: '/index.php/qxatg', target: 'news' }] }
+  })
+  assert.match(
+    st,
+    /all items: not finished, .*; 1 link reaches a page the plan has not got \(recorded only\); 22 links reach a planned page at another menu address \(recorded only\)/
+  )
+  assert.match(
+    st,
+    /fewest items: every page answers and no link is broken; 1 link reaches a planned page at another menu address/
+  )
+  const page = text(
+    measurementsHtml({
+      structure: {
+        status: 'failed',
+        hidden: {
+          status: 'failed',
+          broken: [
+            {
+              page: 'home',
+              href: '/index.php/qxatg',
+              kind: 'missing_page',
+              target: 'news',
+              hidden: ['news', 'about']
+            }
+          ]
+        }
+      }
+    })
+  )
+  assert.match(page, /home \/index\.php\/qxatg news news, about/)
+})

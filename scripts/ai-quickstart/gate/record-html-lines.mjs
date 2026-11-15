@@ -51,13 +51,27 @@ export const whyOf = (m) => {
 /** One structure variant in words. */
 function variantLine(name, v, hidden = false) {
   if (!v || v.status === 'not_run') return name + ': not measured, ' + whyOf(v ?? { status: 'not_run' })
-  if (v.status === 'incomplete') return name + ': not finished, ' + whyOf(v)
+  const unplanned =
+    (v.unplanned?.length
+      ? '; ' +
+        n(v.unplanned.length, 'link reaches', 'links reach') +
+        ' a page the plan has not got (recorded only)'
+      : '') +
+    (v.elsewhere?.length
+      ? '; ' +
+        n(v.elsewhere.length, 'link reaches', 'links reach') +
+        ' a planned page at another menu address (recorded only)'
+      : '')
+  // A variant that did not finish still says what it read before it stopped.
+  if (v.status === 'incomplete')
+    return (
+      name +
+      ': not finished, ' +
+      whyOf(v) +
+      (v.broken?.length ? '; ' + n(v.broken.length, 'broken link', 'broken links') + ' so far' : '') +
+      unplanned
+    )
   const broken = v.broken?.length ?? 0
-  const unplanned = v.unplanned?.length
-    ? '; ' +
-      n(v.unplanned.length, 'link reaches', 'links reach') +
-      ' a page the plan has not got (recorded only)'
-    : ''
   if (hidden) {
     const down = v.shownBroken?.length
       ? '; ' +
@@ -68,7 +82,7 @@ function variantLine(name, v, hidden = false) {
       name +
       ': ' +
       (broken
-        ? n(broken, 'link leads', 'links lead') + ' to a hidden page'
+        ? n(broken, 'link leads', 'links lead') + ' to a hidden page (or one still served at another address)'
         : 'no link leads to a hidden page') +
       down +
       unplanned

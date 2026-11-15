@@ -43,7 +43,7 @@ export async function readVariant(
   const errors = errorsOf(read)
   const links = read.length
     ? await linksOf(site, read, { base, demoRoutes, identify })
-    : { broken: [], unplanned: [], probes: 0 }
+    : { broken: [], unplanned: [], elsewhere: [], probes: 0 }
   const broken = links.broken
   const items = unexplainedItems(blocks)
   const why = !read.length
@@ -64,6 +64,7 @@ export async function readVariant(
     errors,
     broken,
     ...(links.unplanned?.length ? { unplanned: links.unplanned } : {}),
+    ...(links.elsewhere?.length ? { elsewhere: links.elsewhere } : {}),
     blocks,
     ...(items.length ? { items } : {}),
     state: { built, record: w.record, pages }

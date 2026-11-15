@@ -50,13 +50,19 @@ const urlOf = (href, page, base) => {
 /**
  * The links of the pages that answered, each with the page type it lands on, and how many addresses were probed.
  * A link the check finds no planned path for (`demo_page`) is judged by the page it reaches, when the adapter can say
- * which page a page is (`identify(html)`, e.g. its menu item and title): one that reaches a planned page that answered
- * is that page at another address (a friendly menu address of `index.php?Itemid=N`), no broken link; one that reaches
- * a page the plan has not got that answers is recorded apart (`unplanned`); one that does not answer is a link to a
- * missing page. Without `identify` every such link stays a broken `demo_page`.
- * @returns {Promise<{broken: object[], unplanned: object[], probes: number, capped: boolean}>}
+ * which page a page is (`identify(html)`: its menu item and title), except a link to one of the template's demo routes,
+ * which stays broken (review 4 X2). One that reaches a planned page that answered is that page at another address (a
+ * friendly menu address of `index.php?Itemid=N`), no broken link; one that reaches a page with the title of a planned
+ * page under another menu item (an article read under another menu path) is that planned page too, recorded apart
+ * (`elsewhere`, X1); one that reaches a page the `hidden` pages were (by identity or title, read before they were
+ * hidden) is broken, `hidden_page_still_answers` (X3); one that reaches a page the plan has not got that answers is
+ * recorded apart (`unplanned`); one that does not answer is a link to a missing page. Without `identify` every such
+ * link stays a broken `demo_page`.
+ * @param {{base: string, demoRoutes?: string[], identify?: Function | null, hidden?: Array<{pageType: string,
+ *   identity: string | null}>}} options
+ * @returns {Promise<{broken: object[], unplanned: object[], elsewhere: object[], probes: number, capped: boolean}>}
  */
-export async function linksOf(site, read, { base, demoRoutes, identify = null }) {
+export async function linksOf(site, read, { base, demoRoutes, identify = null, hidden = [] }) {
   const asked = new Map()
   const fetchOnce = async (url) => {
     if (!asked.has(url)) asked.set(url, await site.fetch(url))
@@ -69,18 +75,33 @@ export async function linksOf(site, read, { base, demoRoutes, identify = null })
     probe: async (url) => ({ status: (await fetchOnce(url)).status }),
     demoRoutes
   })
+  const demo = new Set((demoRoutes ?? []).map(foldPath))
+  const titleOf = (id) => (id ? id.slice(id.indexOf('|') + 1) : null)
   const planned = new Map()
+  // A title one planned page has: a page with that title under another menu item is that page.
+  const byTitle = new Map()
   if (identify)
     for (const p of read)
       if (p.status > 0 && p.status < 400) {
         const id = identify(p.html)
         if (id && !planned.has(id)) planned.set(id, p)
+        const t = titleOf(id)
+        if (t) byTitle.set(t, byTitle.has(t) && byTitle.get(t) !== p ? null : p)
       }
+  const hiddenById = new Map()
+  const hiddenByTitle = new Map()
+  for (const h of hidden)
+    if (h.identity) {
+      hiddenById.set(h.identity, h)
+      if (titleOf(h.identity)) hiddenByTitle.set(titleOf(h.identity), h)
+    }
   const broken = []
   const unplanned = []
+  const elsewhere = []
   for (const f of found) {
     const url = identify && f.kind === 'demo_page' ? urlOf(f.href, f.page, base) : null
-    if (!url || asked.size >= PROBE_MAX) {
+    const demoRoute = url ? demo.has(foldPath(new URL(url).pathname)) : false
+    if (!url || demoRoute || asked.size >= PROBE_MAX) {
       broken.push(withTarget(f, read, base))
       continue
     }
@@ -90,8 +111,16 @@ export async function linksOf(site, read, { base, demoRoutes, identify = null })
       broken.push({ ...withTarget(f, read, base), kind: 'missing_page', status })
       continue
     }
-    const target = planned.get(identify(answer.html ?? ''))
-    if (!target) unplanned.push({ ...f, kind: 'unplanned_page', status })
+    const id = identify(answer.html ?? '')
+    if (planned.has(id)) continue
+    const gone = hiddenById.get(id) ?? hiddenByTitle.get(titleOf(id))
+    if (gone) {
+      broken.push({ ...f, kind: 'hidden_page_still_answers', status, target: gone.pageType })
+      continue
+    }
+    const same = byTitle.get(titleOf(id))
+    if (same) elsewhere.push({ ...f, kind: 'planned_elsewhere', status, target: same.pageType })
+    else unplanned.push({ ...f, kind: 'unplanned_page', status })
   }
-  return { broken, unplanned, probes: asked.size, capped: asked.size >= PROBE_MAX }
+  return { broken, unplanned, elsewhere, probes: asked.size, capped: asked.size >= PROBE_MAX }
 }
