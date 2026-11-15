@@ -67,6 +67,15 @@ test('a picked button and a typed answer each become a Contract B answer that pa
   assert.equal(answerOf(phone, { id: 'phone', selected: [] }), null)
 })
 
+test('a pick by choice id answers too, and the label still does, so stored answers and the current card keep working', () => {
+  const [button] = QUESTIONS
+  const want = { schema: 'tracy-build-answer/v1', question: 'main-button', choice: 'book' }
+  assert.deepEqual(answerOf(button, { id: 'main-button', selected: [], choice: 'book' }), want)
+  assert.deepEqual(answerOf(button, { id: 'main-button', selected: ['book'] }), want)
+  assert.deepEqual(answerOf(button, { id: 'main-button', selected: ['Book a court'] }), want)
+  assert.equal(answerOf(button, { id: 'main-button', selected: [], choice: 'no-such-choice' }), null)
+})
+
 test('the given answers stay in the conversation as one reply, in the words the owner saw', () => {
   const reply = replyOf(QUESTIONS, SCENARIOS.done.answers)
   assert.equal(reply.outcome, 'answered')

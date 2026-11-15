@@ -103,15 +103,21 @@ export function askRequestOf(questions, answers) {
 
 /**
  * The Contract B answer for what the card sent back for one question: a picked button names its choice, a
- * typed answer carries its text; null when the card sent neither.
+ * typed answer carries its text; null when the card sent neither. A button is named by its choice id (`choice`, or a
+ * `selected` entry equal to an id) or, as before, by the label it showed, so a card that sends ids and one that sends
+ * labels both work.
  * @param {any} question - Contract B question
- * @param {{ id: string, selected: string[], custom?: string }} item - one entry of the card's answer
+ * @param {{ id: string, selected: string[], custom?: string, choice?: string }} item - one entry of the card's answer
  */
 export function answerOf(question, item) {
   const text = item?.custom?.trim() ?? ''
   if (text !== '') return { schema: ANSWER_SCHEMA, question: question.id, text }
-  const label = item?.selected?.[0]
-  const choice = choicesOf(question).find((c) => c.label === label)
+  const choices = choicesOf(question)
+  const picked = item?.selected?.[0]
+  const choice =
+    item?.choice !== undefined
+      ? choices.find((c) => c.id === item.choice)
+      : (choices.find((c) => c.label === picked) ?? choices.find((c) => c.id === picked))
   return choice ? { schema: ANSWER_SCHEMA, question: question.id, choice: choice.id } : null
 }
 
