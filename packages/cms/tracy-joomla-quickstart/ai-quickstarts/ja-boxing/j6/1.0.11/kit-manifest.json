@@ -1,7 +1,8 @@
 {
-  "$comment": "What the build chat offers this AI quickstart for (#609, apps/tracy-web/src/build-draft/ai-quickstarts.js). Released for the sports and fitness trades by product decision. It is not offered until its kit is complete: mapping.json is written (#584), and no picture of the template is published yet; add \"picture\" (an image URL) when one is.",
+  "$comment": "What the build chat offers this AI quickstart for (#609, apps/tracy-web/src/build-draft/ai-quickstarts.js). Released for the sports and fitness trades by product decision. It is not offered until its kit is complete: mapping.json is written (#584). The picture is the template card shot Tracy already serves from its own origin, so the chat page may load it. \"site\" is still missing on purpose and comes with the release (#588).",
   "schema": "tracy-ai-quickstart-kit/v1",
   "released": true,
+  "picture": "/api/templates/ja-boxing/shots/ja-boxing-j6-home-1440.png?w=720",
   "template": { "slug": "ja-boxing", "name": "JA Boxing", "version": "1.0.11" },
   "trades": ["fitness"],
   "reason": "Built for sports clubs: classes, coaches and a booking button up front."
