@@ -41,11 +41,32 @@
 # `<label>-web-1` / `-db-1` directly are listed in the part-1 report (~/.ops-ram/part1-report.md).
 
 TRACY_RUNTIME_MARKER_NAME=runtime
+# The farm's web is two SLOTS that can run side by side, so a switch (a demo joins or leaves, a new
+# image) starts the new one and drains the old one without a request failing (lib/demo-farm.sh):
+# `<base>-a` and `<base>-b`, both with the DNS alias `<base>` on the farm's network. A host that
+# folded demos before slots has ONE container named exactly `<base>`; the first switch moves it.
 TRACY_DEMOS_WEB_CONTAINER="${TRACY_DEMOS_WEB_CONTAINER:-tracy-demos-web}"
 TRACY_DEMOS_DB_CONTAINER="${TRACY_DEMOS_DB_CONTAINER:-tracy-demos-db}"
 
 # The farm's own directory on this host: compose file, vhosts, pools, the farm's .env.
 tracy_demos_dir() { printf '%s' "${TRACY_DEMOS_DIR:-$TRACY_PRIVATE_ROOT/_demos}"; }
+
+# The farm web container that serves now: the name the switcher wrote to `.active-web` when it made a
+# slot ready, while that container runs; else the one container a pre-slot farm has; else a running
+# slot. Printed bare. Every exec into the farm asks this, never a literal name.
+tracy_farm_web() {
+  local f name base="$TRACY_DEMOS_WEB_CONTAINER"
+  f="$(tracy_demos_dir)/.active-web"
+  name="$(sed -n 1p "$f" 2>/dev/null || true)"
+  case "$name" in
+    "$base"|"$base-a"|"$base-b")
+      if [ "$(docker inspect -f '{{.State.Running}}' "$name" 2>/dev/null)" = true ]; then printf '%s' "$name"; return 0; fi ;;
+  esac
+  for name in "$base" "$base-a" "$base-b"; do
+    if [ "$(docker inspect -f '{{.State.Running}}' "$name" 2>/dev/null)" = true ]; then printf '%s' "$name"; return 0; fi
+  done
+  printf '%s' "$base"
+}
 
 tracy_site_runtime_file() { printf '%s/%s' "$(tracy_private_dir "$1")" "$TRACY_RUNTIME_MARKER_NAME"; }
 
@@ -125,7 +146,7 @@ tracy_site_web_exec() {
   env_file="$(tracy_farm_exec_env_file "$label")"
   [ -f "$env_file" ] || { echo "!! $label is marked farm but $env_file is missing — fold.sh did not finish" >&2; return 1; }
   docker exec ${interactive[@]+"${interactive[@]}"} -u "$user" -w "$workdir" --env-file "$env_file" \
-    ${envs[@]+"${envs[@]}"} "$TRACY_DEMOS_WEB_CONTAINER" "$@"
+    ${envs[@]+"${envs[@]}"} "$(tracy_farm_web)" "$@"
 }
 
 # The (container, user, password, database) of a label's data in the active runtime, into

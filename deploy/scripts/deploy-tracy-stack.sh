@@ -668,24 +668,30 @@ fi
 # `tracy` network (its site-mail road to tracy-web), if that network was re-created: put back by a
 # `network connect`, never by recreating the farm. A farm that is not running is said, not "fixed":
 # every folded demo is down with it, and check-server.sh / server-status-alert.sh report it.
-if [ "$(docker inspect -f '{{.Name}}' tracy-demos-web 2>/dev/null)" = /tracy-demos-web ]; then
+# The farm web is two slots (tracy-demos-web-a / -b; one container named tracy-demos-web on a host that
+# folded before slots): every running one is checked, and re-joined if it lost the network.
+farm_webs="$(docker ps -a --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' || true)"
+if [ -n "$farm_webs" ]; then
   say
   say "==> the demo farm"
   TRACY_PRIVATE_ROOT_V="$(read_env TRACY_PRIVATE_ROOT)"
-  if [ "$(docker inspect -f '{{.State.Running}}' tracy-demos-web 2>/dev/null)" != true ] \
+  farm_running="$(docker ps --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' || true)"
+  if [ -z "$farm_running" ] \
      || [ "$(docker inspect -f '{{.State.Running}}' tracy-demos-db 2>/dev/null)" != true ]; then
     say "    !! tracy-demos-web or tracy-demos-db is not running — every folded demo on this host is down (left as found; see check-server.sh)"
   else
     farm_mail_net="${TRACY_SITE_NETWORK:-tracy_tracy}"
-    farm_nets="$(docker inspect tracy-demos-web --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}')"
-    if docker network inspect "$farm_mail_net" >/dev/null 2>&1 && grep -q "name: $farm_mail_net\$" "${TRACY_PRIVATE_ROOT_V:-/nonexistent}/_demos/compose.yml" 2>/dev/null; then
-      case " $farm_nets " in
-        *" $farm_mail_net "*) say "    running, on $farm_mail_net" ;;
-        *) docker network connect "$farm_mail_net" tracy-demos-web && say "    re-joined $farm_mail_net (site mail of the folded demos)" ;;
-      esac
-    else
-      say "    running"
-    fi
+    for farm_web in $farm_running; do
+      farm_nets="$(docker inspect "$farm_web" --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}')"
+      if docker network inspect "$farm_mail_net" >/dev/null 2>&1 && grep -q "name: $farm_mail_net\$" "${TRACY_PRIVATE_ROOT_V:-/nonexistent}/_demos/compose.yml" 2>/dev/null; then
+        case " $farm_nets " in
+          *" $farm_mail_net "*) say "    $farm_web running, on $farm_mail_net" ;;
+          *) docker network connect "$farm_mail_net" "$farm_web" && say "    $farm_web re-joined $farm_mail_net (site mail of the folded demos)" ;;
+        esac
+      else
+        say "    $farm_web running"
+      fi
+    done
   fi
 fi
 

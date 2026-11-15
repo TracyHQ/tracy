@@ -76,7 +76,7 @@ for dir in /srv/tracy/*/; do
     # forwarder and its <label>-db-1 is gone on purpose. Served while the farm runs, DOWN when it does
     # not — the forwarder alone answers nothing.
     if [ "$(docker inspect -f '{{index .Config.Labels "tracy.runtime"}}' "$container" 2>/dev/null)" = farm ]; then
-      if [ "$(docker inspect -f '{{.State.Running}}' tracy-demos-web 2>/dev/null)" = true ] \
+      if docker ps --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' >/dev/null \
          && [ "$(docker inspect -f '{{.State.Running}}' tracy-demos-db 2>/dev/null)" = true ]; then
         port="$port(farm)"
       else

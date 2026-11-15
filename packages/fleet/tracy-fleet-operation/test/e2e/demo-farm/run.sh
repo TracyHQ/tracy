@@ -28,13 +28,15 @@ KEEP_IMAGE=0
 
 say() { printf '\n### %s\n' "$*"; }
 fail() { echo "E2E FAIL: $*" >&2; exit 1; }
+# The farm web that serves now (the switcher's `.active-web`; the bare name before the first switch).
+farm_web() { sed -n 1p "$T/srv/_demos/.active-web" 2>/dev/null || echo tracy-demos-web; }
 check() { # description, then a command that must succeed
   local what="$1"; shift
   # Output is dropped here so a predicate can read its whole pipe (no grep -q under pipefail).
   if "$@" >/dev/null; then echo "  ok  $what"; else fail "$what"; fi
 }
 
-if docker inspect tracy-demos-web >/dev/null 2>&1 || docker inspect tracy-demos-db >/dev/null 2>&1; then
+if docker ps -a --format '{{.Names}}' | grep -E '^tracy-demos-(web(-[ab])?|db)$' >/dev/null; then
   fail "a demo farm already runs on this machine — this test would take its names"
 fi
 
@@ -59,14 +61,14 @@ cleanup() {
   say "cleanup"
   for label in "$J" "$W"; do
     [ -f "$T/srv/$label/docker-compose.yml" ] && ( cd "$T/srv/$label" && docker compose down -v --remove-orphans >/dev/null 2>&1 )
-    docker rm -f "$label-web-1" "$label-db-1" >/dev/null 2>&1
+    docker rm -fv "$label-web-1" "$label-db-1" "$label-oldfw" >/dev/null 2>&1
     docker volume rm "${label}_db" >/dev/null 2>&1
     docker network rm "${label}_default" >/dev/null 2>&1
   done
   if [ -f "$T/srv/_demos/compose.yml" ]; then
     docker compose --project-directory "$T/srv/_demos" -f "$T/srv/_demos/compose.yml" down -v --remove-orphans >/dev/null 2>&1
   fi
-  docker rm -f tracy-demos-web tracy-demos-db >/dev/null 2>&1
+  docker rm -fv tracy-demos-web tracy-demos-web-a tracy-demos-web-b tracy-demos-db >/dev/null 2>&1
   docker volume rm tracy-demos_db tracy-demos_opcache >/dev/null 2>&1
   docker network rm tracy-demos-front tracy-demos-back >/dev/null 2>&1
   # Files the containers wrote belong to their users (sub-uids on a rootless docker): removed from inside.
@@ -74,10 +76,23 @@ cleanup() {
   rm -rf "$T"
   rm -f "/var/lock/tracy-provision-$J.lock" "/var/lock/tracy-provision-$W.lock" "$TRACY_HEAVY_LOCK"
   if [ "$BUILT_IMAGE" = 1 ] && [ "$KEEP_IMAGE" = 0 ]; then docker image rm "$FARM_IMAGE" >/dev/null 2>&1; fi
+  # Anonymous volumes this run's containers left (images that declare a VOLUME): the ones created since the
+  # run began that no container uses. Never a volume that existed before, never one in use.
+  local v
+  for v in $(comm -13 <(printf '%s\n' "$VOLUMES_BEFORE") <(docker volume ls -q -f dangling=true | sort)); do
+    case "$v" in *[!0-9a-f]*|"") ;; *) [ "${#v}" = 64 ] && docker volume rm "$v" >/dev/null 2>&1 ;; esac
+  done
   local left
   left="$(docker ps -a --format '{{.Names}}' | grep -E "^($J|$W)-|^tracy-demos-" || true)$(docker volume ls -q | grep -E "^($J|$W)_|^tracy-demos_" || true)$(docker network ls --format '{{.Name}}' | grep -E "^($J|$W)_|^tracy-demos-" || true)"
   left="$left$(comm -13 <(printf '%s\n' "$VOLUMES_BEFORE") <(docker volume ls -q | sort) | sed 's/^/ volume:/')"
-  [ -z "$left" ] && echo "  cleanup complete: no container, volume (named or anonymous) or network of this run is left" || echo "  !! left behind: $left"
+  [ ! -e "$T" ] || left="$left dir:$T"
+  [ ! -e "$TRACY_HEAVY_LOCK" ] || left="$left tmp:$TRACY_HEAVY_LOCK"
+  if [ -z "$left" ]; then
+    echo "  cleanup complete: no container, volume (named or anonymous), network or temp dir of this run is left"
+  else
+    echo "  !! left behind: $left"
+    [ "$rc" != 0 ] || rc=1
+  fi
   exit "$rc"
 }
 trap cleanup EXIT
@@ -91,9 +106,11 @@ fi
 docker image inspect "$FARM_IMAGE" >/dev/null
 
 # ── 2. two demos, the per-site way ──────────────────────────────────────────────────────────────
+# Below the ephemeral range (32768-60999): the load probes open thousands of client sockets, and one of them
+# holding a demo's port is an "address already in use" for the forwarder that must bind it.
 free_port() {
   python3 -c 'import socket
-for p in range(52500, 52999):
+for p in range(30500, 30999):
     s = socket.socket()
     try:
         s.bind(("127.0.0.1", p)); s.close(); print(p); break
@@ -382,11 +399,11 @@ check "$J: PHP in the farm writes an upload into its webroot (www-data)" sh -c \
   "curl -s -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/tracyupload.php' | grep -x written"
 check "$J: Apache (farmhttp) serves the uploaded file" sh -c \
   "curl -s -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/images/e2e/upload.txt' | grep -x uploaded-by-php"
-check "nothing ran in $W's pool" sh -c "! docker exec tracy-demos-web test -e /tmp/tracy-demos/$W/crossed"
+check "nothing ran in $W's pool" sh -c "! docker exec $(farm_web) test -e /tmp/tracy-demos/$W/crossed"
 check "the sockets belong to Apache's own user, 0600; workers run as www-data" sh -c \
-  "docker exec tracy-demos-web sh -c 'stat -c \"%U %a\" /run/tracy-demos/$W.sock /run/tracy-demos/_farm.sock' | sort -u | grep -x 'farmhttp 600' && [ \"\$(docker exec tracy-demos-web sh -c 'ps -o user= -C apache2 | sort -u | grep -v root')\" = farmhttp ]"
+  "docker exec $(farm_web) sh -c 'stat -c \"%U %a\" /run/tracy-demos/$W.sock /run/tracy-demos/_farm.sock' | sort -u | grep -x 'farmhttp 600' && [ \"\$(docker exec $(farm_web) sh -c 'ps -o user= -C apache2 | sort -u | grep -v root')\" = farmhttp ]"
 check "a port no demo owns serves no demo (farm default port refuses)" sh -c \
-  "[ \"\$(docker exec tracy-demos-web curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/index.php)\" = 403 ]"
+  "[ \"\$(docker exec $(farm_web) curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/index.php)\" = 403 ]"
 
 say "database isolation"
 WUSER="$(sed -n 's/^FARM_DB_USER=//p' "$T/srv/$W/.env")"; WPASS="$(sed -n 's/^FARM_DB_PASSWORD=//p' "$T/srv/$W/.env")"
@@ -406,10 +423,10 @@ check "tracy_site_web_exec refuses root in the farm" bash -c \
 say "RAM"
 warm "$JP" "$JH" "${J_PAGES[@]}"; warm "$WP" "$WH" "${W_PAGES[@]}"
 sleep 3
-RAM_AFTER_BUSY="$(stats tracy-demos-web tracy-demos-db "$J-web-1" "$W-web-1")"
+RAM_AFTER_BUSY="$(stats $(farm_web) tracy-demos-db "$J-web-1" "$W-web-1")"
 echo "  waiting 25 s for the pools' idle timeout (20 s)"
 sleep 25
-RAM_AFTER_IDLE="$(stats tracy-demos-web tracy-demos-db "$J-web-1" "$W-web-1")"
+RAM_AFTER_IDLE="$(stats $(farm_web) tracy-demos-db "$J-web-1" "$W-web-1")"
 sum() { awk '{ p += $2; a += $3; s += $4 } END { printf "PSS %.1f MiB (anon %.1f, shmem %.1f)", p, a, s }'; }
 {
   echo "  name PSS anon shmem (MiB, summed over the container's processes)"
@@ -471,21 +488,322 @@ check "a second unfold of $W changes nothing" sh -c "bash '$SCRIPTS/provision/un
 # <label> --root <root>`, nothing else), then — on the Joomla one, through the real scripts — a frame
 # policy change, a backup and a Restore everything, the content identity pass, a refused set-php,
 # and the teardown, while the WordPress demo keeps answering from the farm.
-say "install-shaped fold of $W, then of $J while $W is asked every 0.2 s (provision.js foldDemo's argv)"
+# The no-blip probe: clients ask folded demo $W through its forwarder's published port the whole time
+# another demo's fold, unfold or farm-refresh changes the farm. Per set: PHP pages and static pages asked back to back (new connections by the hundred a second — the
+# listener-close/backlog window of a stop), two 2 s PHP pages, one
+# 25 s PHP page (a long request in flight across every switch). Every answer is recorded; the demo is
+# fine only when each one is a 200: no 5xx, no reset (000), no timeout.
+# Two sets run at once: through $W's forwarder as fold.sh made it (the CURRENT config: health-gated,
+# one server per farm web) and through a forwarder left on the OLD config (one server, DNS-following,
+# as every forwarder created before slots still is) — which is allowed to fail, in the documented old way.
+tracy_site_web_exec "$W" -i -- sh -c 'cat > slow.php' <<'PHP'
+<?php
+sleep(2);
+header("Content-Type: text/plain");
+echo "slow-ok\n";
+PHP
+tracy_site_web_exec "$W" -i -- sh -c 'cat > slow25.php' <<'PHP'
+<?php
+sleep(25);
+header("Content-Type: text/plain");
+echo "slow25-ok\n";
+PHP
+# Static pages: Apache answers them alone, so six clients ask for hundreds of NEW connections a second —
+# the ones that arrive in the instant a listener closes (a pause only keeps the client's own ephemeral
+# ports from running out).
+tracy_site_web_exec "$W" -i -- sh -c 'echo ok > ping.txt'
+declare -A PROBE_PIDS
+# Run a command with every output line stamped with the time, into $T/phase.log (shown when a probe failed):
+# what the failures of a phase line up with.
+timed() {
+  local rc=0
+  : > "$T/phase.log"
+  { "$@" 2>&1 || rc=$?; } | while IFS= read -r l; do printf '%s %s\n' "$(date +%T.%N | cut -c1-12)" "$l"; done >> "$T/phase.log"
+  return "$rc"
+}
+probe_start() { # set-name port host paths...
+  local set="$1" port="$2" host="$3" path; shift 3
+  rm -f "$T/probe-$set.stop" "$T/probe-$set.out" "$T/probe-$set.fail" "$T/probe-$set.died"
+  : > "$T/probe-$set.out"
+  PROBE_PIDS[$set]=""
+  for path in "$@"; do
+    ( set +e   # a curl that fails (reset, empty reply, timeout) is a RESULT to record, never an exit of this worker
+      while [ ! -e "$T/probe-$set.stop" ]; do
+        code="$(curl -s -o /dev/null -w '%{http_code} %{time_total} (connect %{time_connect}, first byte %{time_starttransfer})' --max-time 120 -H "X-Forwarded-Host: $host" "http://127.0.0.1:$port$path")"; rc=$?
+        [ -n "$code" ] || code="000 - (no output)"
+        if [ "$rc" != 0 ] && [ "${code%% *}" = 200 ]; then code="000 ${code#* }"; fi   # curl failed after a status: still a failure
+        printf '%s\n' "${code%% *}" >> "$T/probe-$set.out"
+        [ "$path" != /ping.txt ] || sleep 0.04
+        [ "${code%% *}" = 200 ] || printf '%s %s rc=%s %s web=%s\n' "$(date +%T.%N)" "$path" "$rc" "$code" "$(farm_web)" >> "$T/probe-$set.fail"
+      done
+      exit 0 ) &
+    PROBE_PIDS[$set]="${PROBE_PIDS[$set]} $!"
+  done
+  # The independent probe: raw TCP, eight clients, a static page, empty replies counted (tcp-probe.py).
+  rm -f "$T/tcp-$set.out" "$T/tcp-$set.out.fail"
+  python3 "$HERE/tcp-probe.py" "$port" "$host" /ping.txt "${TCP_CLIENTS:-8}" "$T/probe-$set.stop" "$T/tcp-$set.out" &
+  PROBE_PIDS[$set]="${PROBE_PIDS[$set]} $!"
+}
+probe_stop() { # set-name -> PS_ASKED / PS_FAILED (curl workers and the raw TCP probe together); a worker that died is a failure.
+  # NOT run in $(…): `wait` only sees the children of the shell that started them.
+  local pid died=0
+  : > "$T/probe-$1.stop"
+  for pid in ${PROBE_PIDS[$1]}; do wait "$pid" || died=$((died + 1)); done
+  [ ! -s "$T/probe-$1.fail" ] || sed "s/^/    failed request ($1): /" "$T/probe-$1.fail" >&2
+  [ ! -s "$T/tcp-$1.out.fail" ] || sed "s/^/    failed raw TCP connection ($1): /" "$T/tcp-$1.out.fail" >&2
+  local tcp_asked=0 tcp_failed=0
+  [ ! -s "$T/tcp-$1.out" ] || read -r tcp_asked tcp_failed _ < "$T/tcp-$1.out"
+  [ "$died" = 0 ] || echo "    $died probe worker(s) of $1 died — counted as failures" >&2
+  PS_ASKED=$(( $(grep -c . "$T/probe-$1.out" || true) + tcp_asked ))
+  PS_FAILED=$(( $(grep -vc '^200$' "$T/probe-$1.out" || true) + tcp_failed + died ))
+}
+NEW_PATHS=(/ / /ping.txt /ping.txt /ping.txt /ping.txt /ping.txt /ping.txt /slow.php /slow.php /slow25.php)
+OLD_PATHS=(/ /ping.txt /ping.txt /ping.txt /ping.txt /slow.php /slow.php)
+OLD_ASKED=0; OLD_FAILED=0
+# What docker did while a phase ran (container and network events), and what the forwarder and the retired
+# web logged: shown with any phase in which a probe failed.
+export TRACY_FARM_KEEP_LOGS="$T/slotlogs"; mkdir -p "$TRACY_FARM_KEEP_LOGS"
+EVENTS_PID=""
+evidence_start() {
+  [ -z "$EVENTS_PID" ] || { kill "$EVENTS_PID" 2>/dev/null; wait "$EVENTS_PID" 2>/dev/null || true; }
+  rm -f "$T/events.log" "$TRACY_FARM_KEEP_LOGS"/*.log
+  docker events --format '{{.TimeNano}} {{.Type}} {{.Action}} {{.Actor.Attributes.name}} {{.Actor.Attributes.container}}' > "$T/events.log" 2>/dev/null &
+  EVENTS_PID=$!
+}
+evidence_show() { # since-epoch
+  [ -z "$EVENTS_PID" ] || { kill "$EVENTS_PID" 2>/dev/null; wait "$EVENTS_PID" 2>/dev/null || true; EVENTS_PID=""; }
+  echo "    evidence: docker events (container/network) during the phase:"
+  awk '$2 == "container" && $3 ~ /^(create|start|die|kill|stop|destroy|restart)/ || $2 == "network" && $3 ~ /connect/ { t = $1 / 1e9; printf "      %s.%03d %s %s %s %s\n", strftime("%H:%M:%S", int(t)), (t - int(t)) * 1000, $2, $3, $4, $5 }' "$T/events.log" | grep -v "run-" | tail -60
+  echo "    evidence: $W-web-1 (the current-config forwarder) log, state changes:"
+  docker logs --timestamps --since "$1" "$W-web-1" 2>&1 | grep -E "DOWN|UP|IP changed|maintenance|no server" | sed 's/^/      /' | cut -c1-210 | tail -40
+  local f
+  for f in "$TRACY_FARM_KEEP_LOGS"/*.log; do
+    [ -e "$f" ] || continue
+    echo "    evidence: $(basename "$f") (tail):"; grep -vE '"(GET|POST) ' "$f" | tail -12 | sed 's/^/      /' | cut -c1-200
+  done
+}
+probes_start() { # sets PROBE_T0
+  PHASE_T0="$(date +%s)"; evidence_start
+  echo "  probes start $(date +%T.%N)"
+  probe_start new "$WP" "$WH" "${NEW_PATHS[@]}"
+  probe_start old "$OLDP" "$WH" "${OLD_PATHS[@]}"
+}
+# E2E_PROBE_REPORT_ONLY=1 counts and reports without failing (to show what the old code does).
+no_blip() {
+  if [ "$PROBE_FAILED" = 0 ]; then echo "  ok  $1"
+  elif [ "${E2E_PROBE_REPORT_ONLY:-0}" = 1 ]; then echo "  RED $1 ($PROBE_FAILED of $PROBE_ASKED)"; sed 's/^/    phase| /' "$T/phase.log" | tail -60; evidence_show "$PHASE_T0"
+  else evidence_show "$PHASE_T0"; [ ! -s "$T/phase.log" ] || sed 's/^/    phase| /' "$T/phase.log" | grep -v "^ *phase| [0-9:.]* *$" | tail -80 >&2; fail "$1 ($PROBE_FAILED of $PROBE_ASKED)"; fi
+}
+probes_stop() { # name -> PROBE_ASKED/PROBE_FAILED (current-config forwarder), OLD_* totals (old-config forwarder)
+  local old_asked old_failed
+  probe_stop new; PROBE_ASKED=$PS_ASKED; PROBE_FAILED=$PS_FAILED
+  probe_stop old; old_asked=$PS_ASKED; old_failed=$PS_FAILED
+  echo "  probes end $(date +%T.%N)"
+  OLD_ASKED=$((OLD_ASKED + old_asked)); OLD_FAILED=$((OLD_FAILED + old_failed))
+  echo "  measured ($1): current-config forwarder $PROBE_ASKED asked, $PROBE_FAILED failed (curl + raw TCP; $(sort "$T/probe-new.out" | uniq -c | tr '\n' ' ')); old-config forwarder $old_asked asked, $old_failed failed"
+}
+
+say "install-shaped fold of $W, then of $J while $W is asked through a current-config and an old-config forwarder (provision.js foldDemo's argv)"
 bash "$SCRIPTS/provision/fold.sh" "$W" --root "$T/srv"
-( while [ ! -e "$T/stop-probe" ]; do
-    printf '%s\n' "$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 -H "X-Forwarded-Host: $WH" "http://127.0.0.1:$WP/")" >> "$T/w-during-j"
-    sleep 0.2
-  done ) &
-PROBE_PID=$!
-bash "$SCRIPTS/provision/fold.sh" "$J" --root "$T/srv"
-: > "$T/stop-probe"; wait "$PROBE_PID"
-W_ASKED="$(grep -c . "$T/w-during-j")"; W_MISSED="$(grep -vc '^200$' "$T/w-during-j" || true)"
-echo "  measured: $W was asked $W_ASKED times during $J's fold, $W_MISSED not answered 200 (the farm re-created to mount $J)"
-check "$W was not interrupted beyond the farm's re-create to mount $J (at most ~3 s of probes)" [ "$W_MISSED" -le 15 ]
+# The old-config forwarder: what `tracy_farm_forward_cfg` rendered before web slots, started beside the farm.
+OLDFW_IMAGE="$(bash -c ". '$SCRIPTS/lib/roots.sh'; . '$SCRIPTS/provision/render-compose.sh'; printf %s \"\$TRACY_DEMOS_FORWARD_IMAGE\"")"
+cat > "$T/old-forward.cfg" <<'CFG'
+global
+    maxconn 256
+    nbthread 1
+defaults
+    mode tcp
+    timeout connect 5s
+    timeout client 330s
+    timeout server 330s
+resolvers docker
+    nameserver dns 127.0.0.11:53
+    hold valid 2s
+    hold other 2s
+    hold refused 2s
+    hold nx 2s
+    hold timeout 2s
+frontend demo
+    bind :80
+    default_backend farm
+backend farm
+    server farm "tracy-demos-web:${TRACY_DEMO_PORT}" resolvers docker init-addr last,libc,none
+CFG
+OLDP="$(free_port)"
+docker run -d --name "$W-oldfw" --network tracy-demos-front -p "127.0.0.1:$OLDP:80" -e "TRACY_DEMO_PORT=$WP" \
+  -v "$T/old-forward.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro" --entrypoint haproxy "$OLDFW_IMAGE" \
+  -db -f /usr/local/etc/haproxy/haproxy.cfg >/dev/null
+check "the old-config forwarder answers $W" wait_for "$OLDP" / "$WH" 200 30
+check "$W's forwarder runs the current config (health-gated)" sh -c "docker exec '$W-web-1' grep -q 'http-check expect rstatus' /usr/local/etc/haproxy/haproxy.cfg"
+check "the current-config forwarder answers $W (its server is ready)" wait_for "$WP" / "$WH" 200 30
+DB_ID_BEFORE="$(docker inspect -f '{{.Id}} {{.State.StartedAt}}' tracy-demos-db)"
+WEB_BEFORE="$(farm_web)"
+probes_start
+timed bash "$SCRIPTS/provision/fold.sh" "$J" --root "$T/srv"
+probes_stop fold
+check "the farm web was replaced by the other slot to mount $J ($WEB_BEFORE -> $(farm_web))" [ "$(farm_web)" != "$WEB_BEFORE" ]
+check "only the serving slot is left, and it is ready" sh -c \
+  "[ \"\$(docker ps -a --format '{{.Names}}' | grep -Ec '^tracy-demos-web(-[ab])?\$')\" = 1 ] && docker exec $(farm_web) test -f /run/tracy-demos-ready/ok"
+check "the farm database was not re-created by it" [ "$(docker inspect -f '{{.Id}} {{.State.StartedAt}}' tracy-demos-db)" = "$DB_ID_BEFORE" ]
+no_blip "$W: not one request failed while $J was folded in (no 5xx, no reset, no timeout; 25 s request in flight)"
 check "$J and $W are marked farm again" sh -c "[ \"\$(cat '$T/srv/$J/runtime' '$T/srv/$W/runtime' | tr -d '\n')\" = farmfarm ]"
+# A stop of the serving web is a DRAIN, whoever asks for it (the review's case: the image's inherited SIGQUIT
+# was not trapped, a stop waited out 45 s and killed the container — exit 137 — and a request running in it
+# got HTTP 000). A 25 s request is in flight when `docker stop` is asked directly, bypassing the switcher.
+drain_check() { # when
+SERVING="$(farm_web)"
+# Let the pool's idle workers (pm.process_idle_timeout 20 s) and every straggler of the probes go first, so the
+# request below meets an idle farm and what it measures is the stop.
+sleep 25
+echo "  idle before the request: $(docker exec "$SERVING" sh -c 'ps -eo args | grep -c "^php-fpm: pool"') php-fpm workers"
+( curl -sS -o /dev/null -w '%{http_code} %{time_total} (connect %{time_connect}, first byte %{time_starttransfer})' --max-time 120 -H "X-Forwarded-Host: $WH" "http://127.0.0.1:$WP/slow25.php" > "$T/drain.code" 2> "$T/drain.err" ) &
+DRAIN_PID=$!
+sleep 4
+echo "  before the stop: $(docker exec "$SERVING" sh -c 'ps -eo args | grep -c "^php-fpm: pool"') php-fpm workers, $(docker exec "$SERVING" sh -c 'awk "NR>1 && \$4==\"01\"" /proc/net/tcp | wc -l') established tcp connections in $SERVING"
+STOP_T0=$(date +%s)
+docker stop -t 45 "$SERVING" >/dev/null
+STOP_SECS=$(( $(date +%s) - STOP_T0 ))
+wait "$DRAIN_PID" || true
+docker logs --tail 12 "$SERVING" 2>&1 | sed 's/^/    | /' | cut -c1-200
+  docker logs --since 150s "$W-web-1" 2>&1 | grep -v "IP changed\|resolves again\|administratively" | tail -12 | sed 's/^/    fw| /' | cut -c1-220
+echo "  measured: docker stop of $SERVING took ${STOP_SECS} s with a 25 s request running, exit code $(docker inspect -f '{{.State.ExitCode}}' "$SERVING"); the request answered $(cat "$T/drain.code") $(cat "$T/drain.err")"
+check "$1: the request running in the stopped web finished with 200" [ "$(cut -d" " -f1 "$T/drain.code")" = 200 ]
+check "$1: the stop drained: exit 0 (not 137), well under the 45 s grace period" sh -c "[ \"\$(docker inspect -f '{{.State.ExitCode}}' '$SERVING')\" = 0 ] && [ $STOP_SECS -lt 40 ]"
+# The farm is down now; the next apply brings it back and leaves exactly one serving slot.
+bash "$SCRIPTS/provision/farm-switch.sh" --root "$T/srv" >/dev/null 2>&1
+check "$1: after a stopped web the next switch leaves one slot, serving and ready" sh -c \
+  "[ \"\$(docker ps -a --format '{{.Names}}' | grep -Ec '^tracy-demos-web(-[ab])?\$')\" = 1 ] && docker exec $(farm_web) test -f /run/tracy-demos-ready/ok"
+check "$1: $W answers again through its current-config forwarder" wait_for "$WP" / "$WH" 200 30
+}
+# The forwarders really follow the ready marker (an `http-check` haproxy ignores without `option httpchk`):
+# a slot whose marker is gone gets no new connection — the forwarder answers at once that it has no server —
+# and gets them again when the marker is back.
+check "$W's forwarder logs no ignored http-check rule" sh -c "! docker logs '$W-web-1' 2>&1 | grep 'rules are ignored' >/dev/null"
+docker exec "$(farm_web)" rm -f /run/tracy-demos-ready/ok
+sleep "$(( $(bash -c ". '$SCRIPTS/lib/roots.sh'; . '$SCRIPTS/provision/render-compose.sh'; tracy_farm_down_wait") + 1 ))"
+check "a farm web without its ready marker gets no new connection from a current-config forwarder" \
+  sh -c "[ \"\$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 -H 'X-Forwarded-Host: $WH' 'http://127.0.0.1:$WP/ping.txt')\" != 200 ]"
+docker exec "$(farm_web)" sh -c ": > /run/tracy-demos-ready/ok && chmod 644 /run/tracy-demos-ready/ok"
+check "and gets them again when the marker is back" wait_for "$WP" /ping.txt "$WH" 200 20
+drain_check "after the first switch"
+[ "${E2E_DRAIN_ONLY:-0}" != 1 ] || { say "E2E DRAIN ONLY: PASS"; exit 0; }
+say "unfold $J, fold it again, and move the farm to a new image tag, while $W is asked"
+for ROUND in $(seq 1 "${E2E_PROBE_ROUNDS:-1}"); do
+  probes_start
+  timed bash "$SCRIPTS/provision/unfold.sh" "$J" --root "$T/srv" --probe-host "$JH"
+  probes_stop unfold
+  no_blip "$W: not one request failed while $J was unfolded (round $ROUND)"
+  [ "${E2E_STOP_AFTER_UNFOLD:-0}" != 1 ] || { say "E2E STOP AFTER UNFOLD"; exit 0; }
+  probes_start
+  timed bash "$SCRIPTS/provision/fold.sh" "$J" --root "$T/srv"
+  probes_stop refold
+  no_blip "$W: not one request failed while $J was folded in again (round $ROUND)"
+done
+# A new farm image tag (the same image under a second name: the web is replaced for it).
+NEW_TAG="$FARM_IMAGE-e2e2"
+docker tag "$FARM_IMAGE" "$NEW_TAG"
+probes_start
+TRACY_DEMOS_IMAGE="$NEW_TAG" timed bash "$SCRIPTS/provision/farm-refresh.sh" "$J" --root "$T/srv"
+probes_stop refresh
+check "the farm web runs the new image tag" [ "$(docker inspect -f '{{.Config.Image}}' "$(farm_web)")" = "$NEW_TAG" ]
+no_blip "$W: not one request failed while the farm moved to a new image tag"
+# And back to the pinned tag through the explicit switch (what an operator runs after a deploy).
+probes_start
+timed bash "$SCRIPTS/provision/farm-switch.sh" --root "$T/srv"
+probes_stop switch
+check "the farm web is back on the pinned image" [ "$(docker inspect -f '{{.Config.Image}}' "$(farm_web)")" = "$FARM_IMAGE" ]
+no_blip "$W: not one request failed while farm-switch.sh moved the farm back"
+docker image rm "$NEW_TAG" >/dev/null 2>&1 || true
+echo "  measured (all switches): the old-config forwarder was asked $OLD_ASKED times, $OLD_FAILED not 200 (allowed: it follows DNS as before slots)"
+# The probe must be able to go RED: a farm web killed under load resets the connections it holds and refuses the
+# ones that follow. If this phase does not count failures, every green above means nothing.
+say "probe self-test: a farm web killed under load must turn the probe red"
+probes_start
+sleep 5
+SELFTEST_WEB="$(farm_web)"
+docker kill "$SELFTEST_WEB" >/dev/null
+sleep 8
+docker start "$SELFTEST_WEB" >/dev/null   # a rootless docker does not restart a killed container by policy
+sleep 6
+probes_stop selftest
+check "the probe counted the reset ($PROBE_FAILED of $PROBE_ASKED not 200 after a docker kill)" [ "$PROBE_FAILED" -gt 0 ]
+check "the farm web came back after the kill (restart policy)" wait_for "$WP" /ping.txt "$WH" 200 60
+drain_check "after fold, unfold, re-fold, image tag and farm-switch"
+# A rebuild-less crash: the serving slot is stopped by hand and a second, never-ready slot is left over —
+# the next apply ends with exactly one serving slot.
+SERVING="$(farm_web)"; OTHER="tracy-demos-web-b"; [ "$SERVING" != "$OTHER" ] || OTHER="tracy-demos-web-a"
+docker run -d --name "$OTHER" --network tracy-demos-front --entrypoint sleep "$FARM_IMAGE" 600 >/dev/null
+bash "$SCRIPTS/provision/farm-refresh.sh" "$J" --root "$T/srv" >/dev/null 2>&1
+check "a leftover second web is gone after the next apply; one slot serves and is ready" sh -c \
+  "[ \"\$(docker ps -a --format '{{.Names}}' | grep -Ec '^tracy-demos-web(-[ab])?\$')\" = 1 ] && docker exec $(farm_web) test -f /run/tracy-demos-ready/ok"
+# ── a host whose forwarders are all on the OLD config (a pre-slot host): the migration order ────────────────
+# docs/references/demo-farm.md: forwarders FIRST (each demo gets one short gap, at its own restart), then the
+# farm (invisible). The other order gives every old-config forwarder a reset window at the switch AND the
+# restart gap afterwards. Both are measured below with $W's own forwarder put back on the old config, as
+# every forwarder of such a host is, and the raw TCP probe (8 clients, static page) on it.
+FW_CFG="$T/srv/_demos/forward.haproxy.cfg"
+tcp_only_start() { # name
+  rm -f "$T/tcp-$1.stop" "$T/tcp-$1.out" "$T/tcp-$1.out.fail"
+  python3 "$HERE/tcp-probe.py" "$WP" "$WH" /ping.txt 8 "$T/tcp-$1.stop" "$T/tcp-$1.out" &
+  TCP_ONLY_PID=$!
+}
+tcp_only_stop() { # name -> TCP_ASKED / TCP_FAILED / TCP_WINDOW (seconds from the first to the last failure)
+  : > "$T/tcp-$1.stop"; wait "$TCP_ONLY_PID" || true
+  read -r TCP_ASKED TCP_FAILED TCP_WINDOW < "$T/tcp-$1.out"
+  [ ! -s "$T/tcp-$1.out.fail" ] || { echo "    first failure $(head -1 "$T/tcp-$1.out.fail"), last $(tail -1 "$T/tcp-$1.out.fail")" ; }
+}
+put_forwarder_on_old_config() {
+  cp "$T/old-forward.cfg" "$FW_CFG.tmp" && mv "$FW_CFG.tmp" "$FW_CFG"   # a new inode, as farm_ensure_files writes it
+  docker restart -t 5 "$W-web-1" >/dev/null
+  sleep 3
+}
+NEW_TAG2="$FARM_IMAGE-e2e3"; docker tag "$FARM_IMAGE" "$NEW_TAG2"
+J_FW_STARTED="$(docker inspect -f '{{.State.StartedAt}}' "$J-web-1")"
+
+say "migration, the documented order: $W's forwarder on the old config → forwarders first → then the farm"
+put_forwarder_on_old_config
+check "$W's forwarder runs the OLD config" sh -c "docker exec '$W-web-1' grep -q 'init-addr last' /usr/local/etc/haproxy/haproxy.cfg"
+W_FW_STARTED="$(docker inspect -f '{{.State.StartedAt}}' "$W-web-1")"
+check "farm-forwarders.sh without --apply names the old-config forwarder and changes nothing" sh -c \
+  "bash '$SCRIPTS/provision/farm-forwarders.sh' --root '$T/srv' | grep '$W: its forwarder runs an older config' >/dev/null && [ \"\$(docker inspect -f '{{.State.StartedAt}}' '$W-web-1')\" = '$W_FW_STARTED' ]"
+tcp_only_start step1
+timed bash "$SCRIPTS/provision/farm-forwarders.sh" --root "$T/srv" --apply
+sleep 2
+tcp_only_stop step1
+echo "  measured (migration step 1, farm-forwarders.sh --apply): the demo's own forwarder restart: $TCP_FAILED of $TCP_ASKED connections failed (8 clients retrying every ~10 ms) inside ONE window of $TCP_WINDOW s"
+MIG_GAP_FAILED="$TCP_FAILED in $TCP_WINDOW s"
+check "step 1: the gap is that one restart — every failure inside one window of at most 2 s ($TCP_FAILED failed over $TCP_WINDOW s)" python3 -c "import sys; sys.exit(0 if $TCP_WINDOW <= 2.0 else 1)"
+check "farm-forwarders.sh --apply moved $W's forwarder to the current config" sh -c "docker exec '$W-web-1' grep -q 'http-check expect rstatus' /usr/local/etc/haproxy/haproxy.cfg"
+check "the forwarder already on the current config was not restarted" [ "$(docker inspect -f '{{.State.StartedAt}}' "$J-web-1")" = "$J_FW_STARTED" ]
+check "$W answers again through its forwarder" wait_for "$WP" / "$WH" 200 30
+probes_start
+TRACY_DEMOS_IMAGE="$NEW_TAG2" timed bash "$SCRIPTS/provision/farm-switch.sh" --root "$T/srv"
+probes_stop migration-step2
+no_blip "$W: step 2, the farm moves with every forwarder on the current config: not one request failed"
+
+say "migration, the other order (NOT recommended): the farm first, $W's forwarder still on the old config"
+put_forwarder_on_old_config
+check "$W's forwarder runs the OLD config again" sh -c "docker exec '$W-web-1' grep -q 'init-addr last' /usr/local/etc/haproxy/haproxy.cfg"
+tcp_only_start farmfirst
+timed bash "$SCRIPTS/provision/farm-switch.sh" --root "$T/srv"
+sleep 2
+tcp_only_stop farmfirst
+echo "  measured (farm first, old-config forwarder across the switch): $TCP_FAILED of $TCP_ASKED connections failed over $TCP_WINDOW s (documented: why this order is not recommended)"
+FARMFIRST_FAILED="$TCP_FAILED over $TCP_WINDOW s"
+tcp_only_start farmfirst2
+timed bash "$SCRIPTS/provision/farm-forwarders.sh" --root "$T/srv" --apply
+sleep 2
+tcp_only_stop farmfirst2
+echo "  measured (farm first, then the forwarder restart): $TCP_FAILED of $TCP_ASKED connections failed over $TCP_WINDOW s — a second gap"
+echo "  MIGRATION SUMMARY: forwarders first = $MIG_GAP_FAILED failed connections in one restart gap and 0 at the switch; farm first = $FARMFIRST_FAILED at the switch plus $TCP_FAILED over $TCP_WINDOW s at the restart"
+docker image rm "$NEW_TAG2" >/dev/null 2>&1 || true
+check "the farm is back on the pinned image" sh -c "[ \"\$(docker inspect -f '{{.Config.Image}}' $(farm_web))\" = '$FARM_IMAGE' ]"
+check "$J and $W answer from the farm after all of it" sh -c "[ \"\$(cat '$T/srv/$J/runtime' '$T/srv/$W/runtime' | tr -d '\n')\" = farmfarm ]"
+check "$J: every page still answers as before (code + title)" pages_unchanged J
+check "$W: every page still answers as before (code + title)" pages_unchanged W
+
 check "the pools start no program (disable_functions, decision 5)" sh -c \
-  "curl -s -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/tracyprobe.php' >/dev/null && docker exec tracy-demos-web grep -q '^php_admin_value\[disable_functions\] = exec,shell_exec,system,passthru,proc_open,popen,pcntl_exec,symlink,link' /etc/tracy-demos/fpm/$J.conf"
+  "curl -s -H 'X-Forwarded-Host: $JH' 'http://127.0.0.1:$JP/tracyprobe.php' >/dev/null && docker exec $(farm_web) grep -q '^php_admin_value\[disable_functions\] = exec,shell_exec,system,passthru,proc_open,popen,pcntl_exec,symlink,link' /etc/tracy-demos/fpm/$J.conf"
 tracy_site_web_exec "$J" -i -- sh -c 'cat > tracyexec.php' <<'PHP'
 <?php
 header("Content-Type: text/plain");
@@ -576,7 +894,7 @@ check "the farm holds no vhost, pool or mount of $J" sh -c \
 check "$J's schema and database user are gone from the farm" sh -c \
   "[ -z \"\$(MYSQL_PWD='$FARM_ROOT_PW' docker exec -e MYSQL_PWD tracy-demos-db mariadb -uroot -N -e \"SELECT 1 FROM mysql.user WHERE user='$JSCHEMA' UNION ALL SELECT 1 FROM information_schema.schemata WHERE schema_name='$JSCHEMA'\")\" ]"
 check "port $JP is no longer a farm listener" sh -c \
-  "[ \"\$(docker exec tracy-demos-web curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:$JP/)\" = 000 ]"
+  "[ \"\$(docker exec $(farm_web) curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:$JP/)\" = 000 ]"
 check "$W kept answering from the farm through the teardown" pages_unchanged W
 
 say "E2E PASS"

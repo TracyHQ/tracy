@@ -641,7 +641,7 @@ jobs:
           done < packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS
           # The demo farm image, on a host that runs a farm: a new DEMOS_IMAGE tag is built there
           # before the farm is re-rendered onto it (the first fold builds it on its own otherwise).
-          if docker inspect tracy-demos-web >/dev/null 2>&1; then
+          if docker ps -a --format '{{.Names}}' | grep -E '^tracy-demos-web(-[ab])?$' >/dev/null; then
             image="$(grep -v '^#' packages/fleet/tracy-fleet-operation/web/DEMOS_IMAGE | grep '=' | sed -n 1p | cut -d= -f2-)"
             docker image inspect "$image" >/dev/null 2>&1 || missing="$missing $image"
           fi

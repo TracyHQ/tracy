@@ -96,6 +96,23 @@ test('web exec argv is the bash helper argv, per site and in the farm', async ()
   }
 })
 
+test('web exec in the farm goes to the slot `.active-web` names, and ignores any other name', async () => {
+  const r = root()
+  try {
+    writeFileSync(path.join(r.srv, 'demo1', 'runtime'), 'farm\n')
+    const web = async () => (await siteWebExecArgv({ privateRoot: r.srv, label: 'demo1' }, ['true'])).at(-2)
+    assert.equal(await web(), 'tracy-demos-web')
+    writeFileSync(path.join(r.srv, '_demos', '.active-web'), 'tracy-demos-web-b\n')
+    assert.equal(await web(), 'tracy-demos-web-b')
+    writeFileSync(path.join(r.srv, '_demos', '.active-web'), 'tracy-demos-db\n')
+    assert.equal(await web(), 'tracy-demos-web', 'a name that is not a farm web is never used')
+    writeFileSync(path.join(r.srv, '_demos', '.active-web'), 'demo1-web-1\n')
+    assert.equal(await web(), 'tracy-demos-web')
+  } finally {
+    r.dispose()
+  }
+})
+
 test('db exec: the same argv as the bash helper; the password only in the environment', async () => {
   const r = root()
   try {

@@ -323,16 +323,38 @@ fi
 # is every folded demo down at once: failed here, by name. Asked of the containers themselves — the
 # web's own health check (FPM answering its ping), the database answering a ping as its root.
 FOLDED="$(docker ps -a --filter label=tracy.runtime=farm --format '{{.Names}}' 2>/dev/null | sed -n 's/-web-1$//p' | sort)"
-if [ -z "$FOLDED" ] && ! [ "$(docker inspect -f '{{.Name}}' tracy-demos-web 2>/dev/null)" = /tracy-demos-web ]; then
+# The farm web is two slots (tracy-demos-web-a / -b, one container named tracy-demos-web on a host that
+# folded before slots). Only a READY slot counts: a slot without its marker is invisible to every
+# current-config forwarder (they send it nothing), so a farm whose running slots are all unready is down
+# even though its FPM answers. The bare-named pre-slot container has no marker and is judged by its ping.
+farm_web_slots_running() { docker ps --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' || true; }
+farm_web_pick() {
+  local c list
+  list="$(farm_web_slots_running)"
+  for c in $list; do
+    case "$c" in
+      tracy-demos-web) printf '%s' "$c"; return 0 ;;
+      *) if docker exec "$c" test -f /run/tracy-demos-ready/ok >/dev/null 2>&1; then printf '%s' "$c"; return 0; fi ;;
+    esac
+  done
+}
+farm_web_exists() { docker ps -a --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' >/dev/null; }
+if [ -z "$FOLDED" ] && ! farm_web_exists; then
   ok "no demo farm on this host (no folded demo)"
 else
   n_folded=$(printf '%s\n' "$FOLDED" | grep -c . || true)
   farm_bad=""
-  for c in tracy-demos-web tracy-demos-db; do
-    [ "$(docker inspect -f '{{.State.Running}}' "$c" 2>/dev/null)" = true ] || farm_bad="$farm_bad $c(not running)"
-  done
+  FARM_WEB="$(farm_web_pick)"
+  if [ -z "$FARM_WEB" ]; then
+    if [ -n "$(farm_web_slots_running)" ]; then
+      farm_bad="$farm_bad tracy-demos-web(no slot is ready: every forwarder has no backend)"
+    else
+      farm_bad="$farm_bad tracy-demos-web(not running)"
+    fi
+  fi
+  [ "$(docker inspect -f '{{.State.Running}}' tracy-demos-db 2>/dev/null)" = true ] || farm_bad="$farm_bad tracy-demos-db(not running)"
   if [ -z "$farm_bad" ]; then
-    docker exec tracy-demos-web curl -fsS -o /dev/null --max-time 5 http://127.0.0.1:8080/fpm-ping 2>/dev/null \
+    docker exec "$FARM_WEB" curl -fsS -o /dev/null --max-time 5 http://127.0.0.1:8080/fpm-ping 2>/dev/null \
       || farm_bad="$farm_bad tracy-demos-web(PHP-FPM does not answer its ping)"
     docker exec tracy-demos-db sh -c 'MYSQL_PWD="$MARIADB_ROOT_PASSWORD" mariadb-admin -uroot --connect-timeout=5 ping' >/dev/null 2>&1 \
       || farm_bad="$farm_bad tracy-demos-db(does not answer a ping)"

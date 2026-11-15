@@ -1,0 +1,55 @@
+{
+  "id": "REG-PR-631-demo-farm-no-blip",
+  "kind": "fix",
+  "title": "Demo farm: folding or unfolding a demo does not interrupt the other folded demos (two web slots, health-gated forwarders)",
+  "pr": 631,
+  "area": "fleet/demo-farm",
+  "cms": ["jo", "wp"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/demo-farm.test.mjs packages/fleet/tracy-fleet-operation/test/demo-farm-callers.test.mjs packages/fleet/tracy-fleet-operation/test/farm-monitoring.test.mjs",
+    "S2: Record the exit code and the result of the switch, forwarder-config, compose-slot, entrypoint and monitoring cases named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "farm_switch starts the next slot and marks it ready before the old one is withdrawn, waits tracy_farm_up_wait before withdrawing it, and a slot that never gets healthy is removed with the serving one left untouched.",
+    "An interrupted switch leaves a second web that the next settle withdraws (when ready), waits for, stops and only then removes; the serving slot keeps serving.",
+    "The forwarder config sends a new connection only to a farm web that answers ready on /tracy-ready.",
+    "server-status-alert.sh alerts when every running slot is unready, and not when one is ready."
+  ],
+  "selectors": {
+    "switch": "farm_switch / farm_retire / farm_web_settle in packages/fleet/tracy-fleet-operation/scripts/provision/farm-common.sh",
+    "forwarder": "tracy_farm_forward_cfg in packages/fleet/tracy-fleet-operation/scripts/lib/demo-farm.sh",
+    "monitoring": "deploy/scripts/check-server.sh 7c and deploy/scripts/server-status-alert.sh"
+  },
+  "evidence": "14/11/2026 e2e (test/e2e/demo-farm/run.sh, 3 rounds): through a current-config forwarder 0 failed in every fold, unfold, re-fold, image-tag refresh and farm-switch phase (~51-57k requests each); before the up-wait fix an unfold failed 93/49,896 and 57/51,674; the probe self-test counts a docker kill (5,793/14,363).",
+  "fence": "Unit cases with a stateful fake docker; the e2e (rootless Docker) is the end-to-end proof and is not part of this case's run.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/demo-farm.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/demo-farm-callers.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/farm-monitoring.test.mjs"
+    ],
+    "tests": [
+      "forwarder config: a new connection goes only to a farm web that answers ready, and a slot is out before it stops",
+      "farm compose: two web slots with the same alias, one hash; the database is rendered once",
+      "farm compose: the web drains on stop — a grace period that outlasts Apache and FPM, and Apache drain is bounded",
+      "farm entrypoint: TERM, INT and QUIT drain Apache (WINCH) first, then php-fpm (QUIT); a crash still ends the farm",
+      "farm_switch: the next slot starts and is ready BEFORE the old one leaves its forwarders; then drain, stop, remove",
+      "farm_switch: a pre-slot farm (one container named tracy-demos-web) is replaced by slot a, with no marker to take away",
+      "farm_switch: a new slot that never gets healthy is removed and the serving one is left exactly as it was",
+      "farm_switch: the forwarders get time to start using the new slot BEFORE the old one is withdrawn",
+      "settle after an interrupted switch (cut after the new slot was marked ready, .active-web not yet written): tracy-demos-web-b is withdrawn, waited for, stopped, removed; tracy-demos-web-a keeps serving",
+      "settle after an interrupted switch (cut after .active-web changed, the old slot not yet unready): tracy-demos-web-a is withdrawn, waited for, stopped, removed; tracy-demos-web-b keeps serving",
+      "settle after an interrupted switch (cut after the old slot was made unready, before it stopped): tracy-demos-web-a is withdrawn, waited for, stopped, removed; tracy-demos-web-b keeps serving",
+      "settle after an interrupted switch (cut while the new slot started, never ready): tracy-demos-web-b is withdrawn, waited for, stopped, removed; tracy-demos-web-a keeps serving",
+      "check-server.sh 7c: a ready slot is the one whose FPM is pinged, and the ping is not asked of an unready one",
+      "server-status-alert.sh: running slots that are all unready are an alert — no folded demo has a backend",
+      "server-status-alert.sh: a ready slot is no alert"
+    ]
+  }
+}

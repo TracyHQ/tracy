@@ -33,18 +33,21 @@ function lift(file, from, to) {
 function stand({ farm = 'up', folded = ['demo-a', 'demo-b'] } = {}) {
   const dir = mkdtempSync(path.join(tmpdir(), 'farm-monitoring-'))
   mkdirSync(path.join(dir, 'bin'))
-  const web = farm === 'gone' ? '' : '/tracy-demos-web'
+  // The farm web is a slot (tracy-demos-web-b serves; a host before slots has the bare name).
+  const web = farm === 'gone' ? '' : 'tracy-demos-web-b'
   writeFileSync(
     path.join(dir, 'bin', 'docker'),
     `#!/usr/bin/env bash
 printf '%s\\n' "$*" >> "${dir}/calls"
 case "$*" in
   "ps -a --filter label=tracy.runtime=farm --format {{.Names}}") ${folded.map((l) => `echo ${l}-web-1`).join('; ') || ':'} ;;
-  "inspect -f {{.Name}} tracy-demos-web") [ -n "${web}" ] && echo "${web}" || exit 1 ;;
-  "inspect -f {{.State.Running}} tracy-demos-web") [ "${farm}" = gone ] && exit 1 || echo true ;;
-  "inspect -f {{.State.Running}} tracy-demos-db") case "${farm}" in up) echo true ;; db-down) echo false ;; *) exit 1 ;; esac ;;
-  "exec tracy-demos-web curl "*) exit 0 ;;
-  "exec tracy-demos-db sh -c "*) [ "${farm}" = up ] ;;
+  "ps -a --format {{.Names}}"|"ps --format {{.Names}}") [ -n "${web}" ] && echo "${web}"; echo tracy-demos-db ;;
+  "inspect -f {{.Name}} ${web}") [ -n "${web}" ] && echo "/${web}" || exit 1 ;;
+  "inspect -f {{.State.Running}} ${web}") [ "${farm}" = gone ] && exit 1 || echo true ;;
+  "exec ${web} test -f /run/tracy-demos-ready/ok") [ "${farm}" != unready ]; exit $? ;;
+  "inspect -f {{.State.Running}} tracy-demos-db") case "${farm}" in up|unready) echo true ;; db-down) echo false ;; *) exit 1 ;; esac ;;
+  "exec ${web} curl "*) exit 0 ;;
+  "exec tracy-demos-db sh -c "*) [ "${farm}" = up ] || [ "${farm}" = unready ] ;;
   "image inspect "*) exit 1 ;;
   *) exit 0 ;;
 esac
@@ -85,7 +88,9 @@ test('check-server.sh 7c: a farm serving its folded demos is ok, and says how ma
 
 for (const [farm, why] of [
   ['db-down', /tracy-demos-db\(not running\)/],
-  ['gone', /tracy-demos-web\(not running\).*tracy-demos-db\(not running\)/]
+  ['gone', /tracy-demos-web\(not running\).*tracy-demos-db\(not running\)/],
+  // Running, FPM answering, but no slot carries the ready marker: every current-config forwarder has no backend.
+  ['unready', /tracy-demos-web\(no slot is ready: every forwarder has no backend\)/]
 ])
   test(`check-server.sh 7c: a farm ${farm} fails, naming the demos it takes down`, () => {
     const s = stand({ farm })
@@ -99,6 +104,19 @@ for (const [farm, why] of [
       s.dispose()
     }
   })
+
+test('check-server.sh 7c: a ready slot is the one whose FPM is pinged, and the ping is not asked of an unready one', () => {
+  const s = stand({ farm: 'unready' })
+  try {
+    checkServer(s)
+    assert.ok(
+      !s.calls().some((c) => c.startsWith('exec tracy-demos-web-b curl')),
+      'no health claim from a slot nobody routes to'
+    )
+  } finally {
+    s.dispose()
+  }
+})
 
 test('check-server.sh 7c: a host with no farm and no folded demo is ok and asks nothing more', () => {
   const s = stand({ farm: 'gone', folded: [] })
@@ -122,6 +140,30 @@ const alertRun = (s) =>
   s.run(
     `problems=(); details=(); containers_line="Containers: 9 running"\n${ALERT()}\nprintf 'P:%s\\n' "\${problems[@]}"; printf 'D:%s\\n' "\${details[@]}"; echo "L:$containers_line"`
   )
+
+test('server-status-alert.sh: running slots that are all unready are an alert — no folded demo has a backend', () => {
+  const s = stand({ farm: 'unready' })
+  try {
+    const r = alertRun(s)
+    assert.equal(r.status, 0, r.stderr)
+    assert.match(r.stdout, /^P:farm:no-ready-slot$/m)
+    assert.match(r.stdout, /^D:demo farm: no web slot is ready — 2 folded demo\(s\) have no backend$/m)
+    assert.match(r.stdout, /^L:Containers: 9 running; demo farm down \(2 folded demos\)$/m)
+  } finally {
+    s.dispose()
+  }
+})
+
+test('server-status-alert.sh: a ready slot is no alert', () => {
+  const s = stand({ farm: 'up' })
+  try {
+    const r = alertRun(s)
+    assert.doesNotMatch(r.stdout, /^P:.+/m)
+    assert.match(r.stdout, /demo farm up/)
+  } finally {
+    s.dispose()
+  }
+})
 
 test('server-status-alert.sh: a farm that is gone while forwarders point at it is an alert, by name', () => {
   const s = stand({ farm: 'gone' })

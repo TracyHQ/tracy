@@ -1647,7 +1647,7 @@ export function looksLikeMissingBinary(result) {
 /**
  * A template demo folded into the host's demo farm (fleet `scripts/lib/demo-farm.sh`): its
  * `<label>-web-1` is a TCP forwarder (docker label `tracy.runtime=farm`) with no PHP, no CMS and no
- * site files, and its PHP runs in the shared `tracy-demos-web`, which the docker proxy never lets a
+ * site files, and its PHP runs in the shared farm web (`tracy-demos-web`, or its slots `-a` / `-b`), which the docker proxy never lets a
  * seat exec into (`dsh/docker-proxy.haproxy.cfg` allows `*-web-1` names only). An exec for such a
  * site is answered with this instead of landing in the forwarder. Template demos carry no seat
  * (tracy-web's demo upsert grants none), so no person's agent is meant to reach one.

@@ -39,6 +39,7 @@
 #   apache/<label>.conf       a demo's vhost   (mounted read-only at /etc/tracy-demos/apache)
 #   fpm/<label>.conf          a demo's pool    (mounted read-only at /etc/tracy-demos/fpm, 600)
 #   exec/<label>.env          the pool's environment as `docker exec --env-file` reads it (600)
+#   .active-web               the name of the farm web container that serves now (tracy_farm_web)
 #   forward.haproxy.cfg       the forwarder's config, the same file for every demo
 #   .farm.lock                held by fold/unfold: one farm change at a time on the host
 #
@@ -46,8 +47,15 @@
 # `fpm/<label>.conf`, and nothing else. A folder the farm does not mount is a folder no PHP and no
 # exec in the farm can open — that is the isolation between this farm and the customer sites on the
 # same host (a shared mount of the whole sites root would hand every folded demo's PHP every
-# customer's webroot). The price: adding or removing a member re-creates tracy-demos-web (a ~1 s
-# blip for the folded demos); a change to a member's vhost or pool alone is a graceful reload.
+# customer's webroot). The price: adding or removing a member changes the web's mounts, so the farm web
+# is REPLACED — and it is replaced blue/green (farm-common.sh `farm_switch`), not re-created: the web is
+# two slots (`tracy-demos-web-a` / `-b`, both with the DNS alias `tracy-demos-web`); the new slot starts
+# beside the serving one, is marked ready when healthy, forwarders (tracy_farm_forward_cfg) send new
+# connections only to ready slots, the old slot's marker is removed, and once every forwarder has marked
+# it down it drains (Apache graceful-stop, then php-fpm graceful quit) and is removed. A forwarder on
+# the OLD config (one server, DNS-following, before slots) is not covered: for it a switch is what it
+# always was, until its demo's own forwarder is re-created (fold/unfold) or farm-forwarders.sh --apply.
+# A change to a member's vhost or pool alone is a graceful reload.
 
 : "${TRACY_DEMOS_PROJECT:=tracy-demos}"
 : "${TRACY_DEMOS_FRONT_NETWORK:=tracy-demos-front}"
@@ -262,26 +270,62 @@ tracy_farm_forward_cfg() {
 global
     maxconn 256
     nbthread 1
+# 🔒 A forwarder sends a NEW connection only to a farm web that says it is ready. The farm web is
+# two slots that run side by side during a switch (web slots, _tracy_farm_web_service); Docker's DNS
+# answers every running slot's address for `tracy-demos-web`, `server-template` makes one server per
+# address, and an HTTP check of the farm's readiness page (port 8080, answered 200 only while the
+# slot's ready marker exists) keeps the servers that are not ready out. The switcher takes the old slot
+# out by removing its marker, waits until every forwarder has seen it (tracy_farm_down_wait, derived
+# from inter × fall), and only then stops it — so no connection is ever opened to a listener that is
+# about to close (a TCP forwarder cannot replay one that was reset). A request already running is
+# not cut: a server that goes DOWN keeps the connections it has.
 defaults
     mode tcp
+    retries 3
+    option redispatch
     timeout connect 5s
+    timeout check 1s
     timeout client 330s
     timeout server 330s
-# Docker's resolver, re-asked: a re-created tracy-demos-web comes back on another address.
+# Docker's resolver, re-asked: a slot that starts or goes comes and goes from the answer within seconds.
 resolvers docker
     nameserver dns 127.0.0.11:53
+    resolve_retries 3
+    timeout resolve 1s
+    timeout retry 1s
     hold valid 2s
-    hold other 2s
-    hold refused 2s
-    hold nx 2s
-    hold timeout 2s
+    hold other 30s
+    hold refused 30s
+    hold nx 30s
+    hold timeout 30s
+    hold obsolete 2s
 frontend demo
     bind :80
     default_backend farm
 backend farm
-    server farm "tracy-demos-web:${TRACY_DEMO_PORT}" resolvers docker init-addr last,libc,none
+    # `option httpchk` is what turns the L7 rules below on in a TCP-mode backend; without it haproxy
+    # ignores them ("uses http-check rules without 'option httpchk'") and only tests that the port opens.
+    option httpchk
+    http-check send meth GET uri /tracy-ready ver HTTP/1.1 hdr Host tracy-demos
+    # 200 = a slot that marked itself ready. 403 = a farm of the kind that came before slots, whose health
+    # vhost denies every path: it serves, it just cannot say so (the switcher gives it a 410 when it must go).
+    # A slot that is not ready answers 404, a gone one nothing — both out.
+    http-check expect rstatus ^(200|403)$
+    default-server check port 8080 inter 500ms fastinter 250ms downinter 500ms fall 2 rise 2
+    server-template farm 3 "tracy-demos-web:${TRACY_DEMO_PORT}" resolvers docker init-addr none resolve-prefer ipv4
 CFG
 }
+
+# Seconds a forwarder needs to take a slot out after its ready marker is gone: `inter` × `fall` of the
+# check above (500 ms × 2), the check's own timeout (1 s), and a margin for a busy host. The switcher
+# sleeps this long; a forwarder is never asked (it has no stats socket: its filesystem is read-only).
+tracy_farm_down_wait() { printf '%s' "${TRACY_FARM_DOWN_WAIT:-5}"; }
+
+# Seconds a forwarder needs to START using a slot that has just been marked ready, before the old one may be
+# withdrawn: it learns the address from Docker's DNS (`hold valid 2s` + `timeout resolve 1s`), then needs `rise`
+# passing checks `inter` apart; plus a margin. Withdrawing the old slot sooner leaves a window in which every
+# forwarder has NO server (measured in the e2e: 71 ms, enough to close every connection in it).
+tracy_farm_up_wait() { printf '%s' "${TRACY_FARM_UP_WAIT:-6}"; }
 
 # The four cap lines for one farm service (render-compose.sh `tracy_limits_run` form).
 _tracy_farm_limits() {
@@ -301,29 +345,27 @@ tracy_farm_mail_network() {
   return 0
 }
 
-# The farm's compose file: every member's folders mounted, nothing else.
-tracy_farm_render_compose() {
-  local image cpus pids web_mem db_mem mail_net label key_dir
-  image="$(tracy_demos_image)" || return 1
-  cpus="$(tracy_host_cpus)"; [ "$cpus" -ge 4 ] && cpus=2 || cpus=1
-  cpus="${TRACY_DEMOS_CPUS:-$cpus}"
-  pids="${TRACY_DEMOS_PIDS:-1024}"
-  web_mem="${TRACY_DEMOS_WEB_MEMORY:-2g}"
-  db_mem="${TRACY_DEMOS_DB_MEMORY:-1g}"
-  mail_net="$(tracy_farm_mail_network)"
+# One slot of the farm's web service (`a` or `b`; `x` renders the slot-neutral text that is hashed).
+# Both slots are the same service under two names, and both carry the network alias `tracy-demos-web`,
+# so Docker's DNS answers every running slot's address and a forwarder's health check picks the ready
+# one. Label tracy.farm-config = hash of everything the slot was given (image, limits, mounts, networks):
+# a slot whose label differs from the one rendered now must be replaced (tracy_farm_web_stale).
+_tracy_farm_web_service() {
+  local slot="$1" hash="$2" image="$3" cpus="$4" pids="$5" web_mem="$6" mail_net="$7" label key_dir
   cat <<COMPOSE
-# Tracy demo farm (scripts/lib/demo-farm.sh) — rendered by provision/fold.sh and unfold.sh. Do not edit:
-# the next fold re-renders it from the members (fpm/<label>.conf) on disk.
-name: $TRACY_DEMOS_PROJECT
-services:
-  demos-web:
+  demos-web-$slot:
     image: $image
-    container_name: $TRACY_DEMOS_WEB_CONTAINER
+    container_name: $TRACY_DEMOS_WEB_CONTAINER-$slot
     restart: unless-stopped
     init: true
+    # A stop drains (entrypoint.sh): the longest request a demo may still be running, plus Apache's
+    # own GracefulShutdownTimeout. Docker's default 10 s would kill the drain.
+    stop_grace_period: 45s
+    stop_signal: SIGTERM
     security_opt: ["no-new-privileges:true"]
 COMPOSE
   _tracy_farm_limits "$web_mem" "$cpus" "$pids"
+  [ -z "$hash" ] || printf '    labels:\n      tracy.farm-config: "%s"\n' "$hash"
   cat <<COMPOSE
     healthcheck:
       test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:$TRACY_DEMOS_OWN_PORT/fpm-ping"]
@@ -351,7 +393,44 @@ COMPOSE
       printf '      - %s:/run/tracy-access/%s:ro\n' "$key_dir" "$label"
     fi
   done <<<"$(tracy_farm_members)"
-  printf '    networks: [front, back%s]\n' "${mail_net:+, mail}"
+  printf '    networks:\n      front:\n        aliases: ["%s"]\n      back: {}\n' "$TRACY_DEMOS_WEB_CONTAINER"
+  [ -z "$mail_net" ] || printf '      mail: {}\n'
+}
+
+# The hash of what a farm web slot is given now. Same members, image and limits = same hash, whichever slot.
+tracy_farm_web_hash() {
+  local image cpus pids web_mem mail_net
+  image="$(tracy_demos_image)" || return 1
+  cpus="$(tracy_host_cpus)"; [ "$cpus" -ge 4 ] && cpus=2 || cpus=1
+  cpus="${TRACY_DEMOS_CPUS:-$cpus}"
+  pids="${TRACY_DEMOS_PIDS:-1024}"
+  web_mem="${TRACY_DEMOS_WEB_MEMORY:-2g}"
+  mail_net="$(tracy_farm_mail_network)"
+  _tracy_farm_web_service x "" "$image" "$cpus" "$pids" "$web_mem" "$mail_net" \
+    | { sha256sum 2>/dev/null || shasum -a 256; } | cut -c1-16
+}
+
+# The farm's compose file: every member's folders mounted, nothing else. Two web slots (see
+# _tracy_farm_web_service) and one database, which no switch ever re-creates.
+tracy_farm_render_compose() {
+  local image cpus pids web_mem db_mem mail_net hash slot
+  image="$(tracy_demos_image)" || return 1
+  cpus="$(tracy_host_cpus)"; [ "$cpus" -ge 4 ] && cpus=2 || cpus=1
+  cpus="${TRACY_DEMOS_CPUS:-$cpus}"
+  pids="${TRACY_DEMOS_PIDS:-1024}"
+  web_mem="${TRACY_DEMOS_WEB_MEMORY:-2g}"
+  db_mem="${TRACY_DEMOS_DB_MEMORY:-1g}"
+  mail_net="$(tracy_farm_mail_network)"
+  hash="$(tracy_farm_web_hash)" || return 1
+  cat <<COMPOSE
+# Tracy demo farm (scripts/lib/demo-farm.sh) — rendered by provision/fold.sh and unfold.sh. Do not edit:
+# the next fold re-renders it from the members (fpm/<label>.conf) on disk.
+name: $TRACY_DEMOS_PROJECT
+services:
+COMPOSE
+  for slot in a b; do
+    _tracy_farm_web_service "$slot" "$hash" "$image" "$cpus" "$pids" "$web_mem" "$mail_net"
+  done
   cat <<COMPOSE
   demos-db:
     image: mariadb:11

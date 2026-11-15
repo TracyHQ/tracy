@@ -323,7 +323,7 @@ missing_web_images() {
     docker image inspect "$image" >/dev/null 2>&1 || printf '%s\n' "$image"
   done < "$FLEET_DIR/web/IMAGE_TAGS"
   # The farm image, where a farm runs (build_demos_image_if_needed).
-  if [ "$(docker inspect -f '{{.Name}}' tracy-demos-web 2>/dev/null)" = /tracy-demos-web ] || [ "${TRACY_DEMO_FARM:-0}" = 1 ]; then
+  if docker ps -a --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' >/dev/null || [ "${TRACY_DEMO_FARM:-0}" = 1 ]; then
     image="$(demos_image)" || return 0
     [ -z "$image" ] || docker image inspect "$image" >/dev/null 2>&1 || printf '%s\n' "$image"
   fi
@@ -357,7 +357,7 @@ build_demos_image_if_needed() {
   local image
   image="$(demos_image)" || return 0
   [ -n "$image" ] || return 0
-  if ! [ "$(docker inspect -f '{{.Name}}' tracy-demos-web 2>/dev/null)" = /tracy-demos-web ] && [ "${TRACY_DEMO_FARM:-0}" != 1 ]; then
+  if ! docker ps -a --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' >/dev/null && [ "${TRACY_DEMO_FARM:-0}" != 1 ]; then
     return 0
   fi
   docker image inspect "$image" >/dev/null 2>&1 && return 0

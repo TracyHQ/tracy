@@ -69,20 +69,166 @@ farm_render() {
 # (same image, same mounts) — so a broken vhost or pool never reaches the running farm, and a
 # re-create of tracy-demos-web never starts from a config that has not passed.
 farm_config_test() {
-  farm_compose run --rm --no-deps -T --entrypoint sh demos-web -c \
+  farm_compose run --rm --no-deps -T --entrypoint sh demos-web-a -c \
     'mkdir -p /run/tracy-demos && php-fpm -t 2>&1 | tail -n 3 && apache2ctl -t 2>&1 | tail -n 3' >&2
 }
 
-# Bring the farm up to what compose.yml says (re-creating the web only when its mounts changed),
-# wait for it, then reload what changed inside.
+# Bring the farm up to what compose.yml says. A web slot that was given the same image, limits and
+# mounts as compose.yml renders now is only asked to reload what changed inside (vhosts, pools:
+# graceful, nothing dropped). Any other web — a member added or removed, a new image, a farm of the
+# one-container kind that came before slots — is REPLACED by `farm_switch`, side by side, with no
+# request of another demo failing through a forwarder on the current config.
 farm_apply() {
-  local image
+  local image web want have
   image="$(tracy_demos_image)" || return 1
   farm_image_ensure "$image" || return 1
-  farm_compose up -d --no-build --pull never >&2 || return 1
-  farm_wait_web || return 1
-  docker exec "$TRACY_DEMOS_WEB_CONTAINER" tracy-demos-reload >&2 || return 1
-  farm_wait_web
+  farm_web_settle
+  farm_compose up -d --no-build --pull never demos-db >&2 || return 1
+  web="$(tracy_farm_web)"
+  want="$(tracy_farm_web_hash)" || return 1
+  have="$(docker inspect -f '{{index .Config.Labels "tracy.farm-config"}}' "$web" 2>/dev/null || true)"
+  if [ "$web" != "$TRACY_DEMOS_WEB_CONTAINER" ] && [ "$have" = "$want" ] \
+      && [ "$(docker inspect -f '{{.State.Running}}' "$web" 2>/dev/null)" = true ]; then
+    farm_wait_web "$web" || return 1
+    docker exec "$web" tracy-demos-reload >&2 || return 1
+    farm_wait_web "$web"
+    return
+  fi
+  farm_switch
+}
+
+# Containers of the farm web that exist: the legacy one (exact base name) and the two slots.
+farm_web_names() {
+  local c
+  for c in "$TRACY_DEMOS_WEB_CONTAINER" "$TRACY_DEMOS_WEB_CONTAINER-a" "$TRACY_DEMOS_WEB_CONTAINER-b"; do
+    docker inspect -f '{{.Name}}' "$c" >/dev/null 2>&1 && printf '%s\n' "$c"
+  done
+  return 0
+}
+
+# After a crash or a half-finished switch: exactly one web is the serving one (tracy_farm_web), and
+# every other web container of the farm is a leftover — a new slot that never became ready, or an old
+# one that was not removed. A leftover may still be READY and serving requests (a switch cut short after
+# the new slot was marked ready, or after `.active-web` changed), so it is never just removed: it goes
+# through the switch's own retire path — readiness withdrawn, every forwarder given time to take it out,
+# its requests waited for, a graceful stop, then removed. Nothing is touched when there is at most one.
+farm_web_settle() {
+  local serving c
+  [ "$(farm_web_names | grep -c .)" -gt 1 ] || return 0
+  serving="$(tracy_farm_web)"
+  while IFS= read -r c; do
+    [ "$c" = "$serving" ] && continue
+    echo "   the farm web $c is a leftover of a switch that did not finish — retired ($serving serves)" >&2
+    farm_retire "$c"
+  done <<<"$(farm_web_names)"
+}
+
+# The slot to start next: the one that is not serving. A pre-slot farm (one container, exact base name)
+# or none at all → `a`.
+farm_next_slot() {
+  case "$(tracy_farm_web)" in
+    "$TRACY_DEMOS_WEB_CONTAINER-a") printf '%s' "$TRACY_DEMOS_WEB_CONTAINER-b" ;;
+    *) printf '%s' "$TRACY_DEMOS_WEB_CONTAINER-a" ;;
+  esac
+}
+
+# The ready marker: a file Apache's health vhost (port 8080, /tracy-ready) serves. A forwarder on the
+# current config sends new connections only to a farm web that answers 200 there.
+FARM_READY_FILE=/run/tracy-demos-ready/ok
+farm_mark_ready() { docker exec "$1" sh -c "mkdir -p /run/tracy-demos-ready && chmod 755 /run/tracy-demos-ready && : > $FARM_READY_FILE && chmod 644 $FARM_READY_FILE"; }
+farm_is_ready() { docker exec "$1" test -f "$FARM_READY_FILE" >/dev/null 2>&1; }
+
+# Take web $1 out of every forwarder's list. Returns 0 when something was withdrawn (the forwarders then
+# need tracy_farm_down_wait seconds), 1 when there was nothing to withdraw (not running, or already unready).
+#   a slot of this image: its marker goes, /tracy-ready answers 404;
+#   a farm of the one-container kind that came before slots (no /run/tracy-demos-ready): its health vhost
+#     answers /tracy-ready 403 (`Require all denied`), which a current-config forwarder accepts as "serves,
+#     cannot say" (tracy_farm_forward_cfg); a `Redirect gone` makes it 410 — not accepted — and a graceful
+#     reload (listeners kept) applies it.
+farm_withdraw() {
+  local w="$1"
+  [ "$(docker inspect -f '{{.State.Running}}' "$w" 2>/dev/null)" = true ] || return 1
+  if docker exec "$w" test -d /run/tracy-demos-ready >/dev/null 2>&1; then
+    farm_is_ready "$w" || return 1
+    docker exec "$w" rm -f "$FARM_READY_FILE" >/dev/null 2>&1
+  else
+    docker exec "$w" sh -c 'printf "Redirect gone /tracy-ready\n" > /etc/apache2/conf-enabled/zz-tracy-unready.conf && apache2ctl -t >/dev/null 2>&1 && apache2ctl graceful' >&2 || return 1
+  fi
+}
+
+# Retire a farm web without failing anything it still serves: withdrawn from the forwarders, given
+# tracy_farm_down_wait to be seen, waited for until idle, stopped (its entrypoint drains), removed.
+farm_retire() {
+  local w="$1"
+  if farm_withdraw "$w"; then sleep "$(tracy_farm_down_wait)"; fi
+  farm_web_quiet "$w"
+  docker stop -t 45 "$w" >/dev/null 2>&1 || true
+  # TRACY_FARM_KEEP_LOGS=<dir>: keep the retired web's own log (the e2e reads it when a probe saw a failure).
+  [ -z "${TRACY_FARM_KEEP_LOGS:-}" ] || docker logs --timestamps "$w" > "$TRACY_FARM_KEEP_LOGS/$w.$(date +%s).log" 2>&1 || true
+  docker rm -f "$w" >/dev/null 2>&1 || true
+}
+
+# Established connections of demos to the farm web $1 (its demo listeners, from /proc/net/tcp*; the
+# health port 8080 not counted): a request running, or a keep-alive connection not yet closed (2 s).
+farm_web_connections() {
+  docker exec "$1" sh -c '
+    ports="$(sed -n "s/^Listen //p" /etc/tracy-demos/apache/*.conf 2>/dev/null | while read -r p; do printf "%04X\n" "$p"; done)"
+    cat /proc/net/tcp /proc/net/tcp6 2>/dev/null | awk -v ports="$ports" '"'"'
+      BEGIN { n = split(ports, a, "\n"); for (i = 1; i <= n; i++) if (a[i] != "") want[a[i]] = 1 }
+      NR > 1 && $4 == "01" { split($2, l, ":"); if (l[2] in want) c++ }
+      END { print c + 0 }'"'"'' 2>/dev/null
+}
+
+# Wait until no demo connection is left in web $1 (any image: a pre-slot farm has no drain of its own),
+# for at most TRACY_FARM_SWITCH_DRAIN seconds (default 40: it covers a 25 s request; forwarders on the old config keep opening connections to the slot until it is gone, so a busy host waits all of it).
+farm_web_quiet() {
+  local c="$1" waited=0 limit="${TRACY_FARM_SWITCH_DRAIN:-40}" n quiet=0
+  while [ "$waited" -lt "$limit" ]; do
+    n="$(farm_web_connections "$c" || echo 0)"
+    if [ "${n:-0}" = 0 ]; then
+      quiet=$((quiet + 1)); [ "$quiet" -ge 2 ] && return 0
+    else
+      quiet=0
+    fi
+    sleep 1; waited=$((waited + 1))
+  done
+  echo "   $c still has ${n:-?} connection(s) after ${limit} s — stopping it anyway (a request that long, or a forwarder on the old config still sending it new ones: farm-forwarders.sh)" >&2
+}
+
+# Replace the serving farm web by a new slot built from compose.yml, with nothing failing at the
+# forwarders:
+#   1. the next slot starts beside the serving one (its mounts are the new members');
+#   2. it is waited for until healthy, then marked READY — a slot that never gets there is removed and
+#      the serving one is left exactly as it was (marker intact), the switch fails loudly;
+#   3. `.active-web` names it (every exec goes there from now);
+#   3b. every forwarder gets tracy_farm_up_wait seconds to start using it;
+#   4. the old one's marker goes; every forwarder has taken it out after tracy_farm_down_wait seconds;
+#   5. the old one is waited for until no request runs in it, then stopped (its entrypoint drains) and removed.
+farm_switch() {
+  local old new image
+  image="$(tracy_demos_image)" || return 1
+  old="$(tracy_farm_web)"
+  new="$(farm_next_slot)"
+  docker rm -f "$new" >/dev/null 2>&1 || true
+  docker inspect -f '{{.Name}}' "$old" >/dev/null 2>&1 || old=""
+  echo "   the farm web: starting $new${old:+ beside $old}" >&2
+  if ! farm_compose up -d --no-deps --no-build --pull never "demos-web-${new##*-}" >&2 || ! farm_wait_web "$new"; then
+    echo "!! $new did not come up — $old${old:+ is left serving}" >&2
+    docker rm -f "$new" >/dev/null 2>&1 || true
+    return 1
+  fi
+  if ! farm_mark_ready "$new"; then
+    echo "!! $new could not be marked ready — $old${old:+ is left serving}" >&2
+    farm_retire "$new"
+    return 1
+  fi
+  printf '%s\n' "$new" > "$(tracy_demos_dir)/.active-web.new" && mv "$(tracy_demos_dir)/.active-web.new" "$(tracy_demos_dir)/.active-web"
+  if [ -z "$old" ]; then farm_web_settle; return 0; fi
+  # The forwarders must be USING the new slot before the old one is withdrawn: otherwise there is a moment
+  # with no server at all (e2e: the old slot went down 71 ms before the new one came up).
+  sleep "$(tracy_farm_up_wait)"
+  farm_retire "$old"
+  echo "   the farm web: $new serves, $old is gone" >&2
 }
 
 # 🔒 THE FARM IS NOT IN TRACY-FLEET-EGRESS (bootstrap.sh's safety net #1). Every template demo is
@@ -121,15 +267,15 @@ farm_image_ensure() {
 }
 
 farm_wait_web() {
-  local i
-  for ((i = 1; i <= 60; i++)); do
-    if docker exec "$TRACY_DEMOS_WEB_CONTAINER" curl -fsS -o /dev/null "http://127.0.0.1:$TRACY_DEMOS_OWN_PORT/fpm-ping" 2>/dev/null; then
+  local i tries="${TRACY_FARM_WAIT_TRIES:-60}" web="${1:-$(tracy_farm_web)}"
+  for ((i = 1; i <= tries; i++)); do
+    if docker exec "$web" curl -fsS -o /dev/null "http://127.0.0.1:$TRACY_DEMOS_OWN_PORT/fpm-ping" 2>/dev/null; then
       return 0
     fi
     sleep 1
   done
-  echo "!! $TRACY_DEMOS_WEB_CONTAINER did not answer its health check in 60 s" >&2
-  docker logs --tail 20 "$TRACY_DEMOS_WEB_CONTAINER" 2>&1 | sed 's/^/   | /' >&2 || true
+  echo "!! $web did not answer its health check in ${tries} s" >&2
+  docker logs --tail 20 "$web" 2>&1 | sed 's/^/   | /' >&2 || true
   return 1
 }
 
@@ -171,7 +317,7 @@ farm_member_php() {
   while [ "$#" -gt 0 ] && [ "$1" != -- ]; do envs+=("$1"); shift; done
   shift
   docker exec -i -u www-data -w "$(tracy_farm_docroot "$LABEL")" --env-file "$(tracy_farm_exec_env_file "$LABEL")" \
-    ${envs[@]+"${envs[@]}"} "$TRACY_DEMOS_WEB_CONTAINER" php -- "$@" < "$HERE/farm-site.php"
+    ${envs[@]+"${envs[@]}"} "$(tracy_farm_web)" php -- "$@" < "$HERE/farm-site.php"
 }
 
 # The definer clauses a dump writes as statement syntax — routines, triggers, views, events — dropped,
@@ -189,7 +335,7 @@ farm_strip_definers() {
 # reload, whose 10 s process_control_timeout would cut other demos' long requests), and the copy waits
 # until none is left: every write that started has committed or failed before the dump.
 farm_pool_workers() { # → the number of PHP workers of LABEL's pool now
-  docker exec "$TRACY_DEMOS_WEB_CONTAINER" sh -c '
+  docker exec "$(tracy_farm_web)" sh -c '
     n=0
     for f in /proc/[0-9]*/cmdline; do
       t="$(tr "\0" " " < "$f" 2>/dev/null)" || continue
@@ -202,14 +348,14 @@ farm_vhost_out() {
   dir="$(tracy_demos_dir)"
   [ -f "$dir/apache/$LABEL.conf" ] || return 0
   mv "$dir/apache/$LABEL.conf" "$dir/apache/.$LABEL.conf.held"
-  docker exec "$TRACY_DEMOS_WEB_CONTAINER" sh -c 'apache2ctl -t >/dev/null 2>&1 && apache2ctl graceful' >&2
+  docker exec "$(tracy_farm_web)" sh -c 'apache2ctl -t >/dev/null 2>&1 && apache2ctl graceful' >&2
 }
 farm_vhost_in() {
   local dir
   dir="$(tracy_demos_dir)"
   [ -f "$dir/apache/.$LABEL.conf.held" ] || return 0
   mv "$dir/apache/.$LABEL.conf.held" "$dir/apache/$LABEL.conf"
-  docker exec "$TRACY_DEMOS_WEB_CONTAINER" sh -c 'apache2ctl -t >/dev/null 2>&1 && apache2ctl graceful' >&2
+  docker exec "$(tracy_farm_web)" sh -c 'apache2ctl -t >/dev/null 2>&1 && apache2ctl graceful' >&2
 }
 # Wait until no worker of LABEL's pool runs a request; 1 when one still runs after TRACY_FARM_DRAIN_WAIT
 # seconds (default 120: a request may legitimately take minutes to write). Busy or idle is the pool's
@@ -221,7 +367,7 @@ farm_vhost_in() {
 farm_pool_drain() {
   local waited=0 left answer limit="${TRACY_FARM_DRAIN_WAIT:-120}" asked=0
   while :; do
-    if answer="$(docker exec -i -u 0 "$TRACY_DEMOS_WEB_CONTAINER" php -n -- "/run/tracy-demos/$LABEL.sock" \
+    if answer="$(docker exec -i -u 0 "$(tracy_farm_web)" php -n -- "/run/tracy-demos/$LABEL.sock" \
         < "$(dirname "${BASH_SOURCE[0]}")/farm-pool-status.php" 2>/dev/null)" && [[ "$answer" =~ ^busy=([0-9]+)\  ]]; then
       if [ "${BASH_REMATCH[1]}" = 0 ]; then
         echo "==> no request of $LABEL runs in the farm any more (${waited} s)"
@@ -239,7 +385,7 @@ farm_pool_drain() {
 
 # Send SIG to every worker of LABEL's pool, and to no other process.
 farm_pool_signal() {
-  docker exec "$TRACY_DEMOS_WEB_CONTAINER" sh -c '
+  docker exec "$(tracy_farm_web)" sh -c '
     for f in /proc/[0-9]*/cmdline; do
       t="$(tr "\0" " " < "$f" 2>/dev/null)" || continue
       case "$t" in "php-fpm: pool $2"|"php-fpm: pool $2 "*) p="${f#/proc/}"; kill -"$1" "${p%/cmdline}" 2>/dev/null ;; esac
@@ -257,7 +403,7 @@ farm_member_remove() {
 # lines of its .env and its `farm/` folder. Nothing of another demo is touched beyond the farm's
 # re-apply. Shared by unfold.sh (after the demo is home) and farm-release.sh (teardown).
 farm_release() {
-  docker network disconnect "${LABEL}_default" "$TRACY_DEMOS_WEB_CONTAINER" >/dev/null 2>&1 || true
+  docker network disconnect "${LABEL}_default" "$(tracy_farm_web)" >/dev/null 2>&1 || true
   if [ -f "$(tracy_demos_dir)/fpm/$LABEL.conf" ]; then
     farm_member_remove
     farm_render
@@ -304,7 +450,7 @@ farm_probe() {
     -H "X-Forwarded-Host: $PROBE_HOST" -H "X-Forwarded-Proto: https")
   case "$where" in
     site) raw="$(curl "${args[@]}" "http://127.0.0.1:$HOST_PORT$path" || true)" ;;
-    farm) raw="$(docker exec "$TRACY_DEMOS_WEB_CONTAINER" curl "${args[@]}" "http://127.0.0.1:$HOST_PORT$path" || true)" ;;
+    farm) raw="$(docker exec "$(tracy_farm_web)" curl "${args[@]}" "http://127.0.0.1:$HOST_PORT$path" || true)" ;;
   esac
   printf '%s' "$raw" | python3 -c '
 import html, re, sys

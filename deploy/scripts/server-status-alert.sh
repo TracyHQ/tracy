@@ -115,15 +115,32 @@ if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
   # stopped or unhealthy farm container is already named above; a farm that is GONE while forwarders
   # still point at it is not — and is every folded demo down. Said once, with how many it takes down.
   folded="$(docker ps -a --filter label=tracy.runtime=farm --format '{{.Names}}' | grep -c . || true)"
-  if [ "$folded" -gt 0 ] || [ "$(docker inspect -f '{{.Name}}' tracy-demos-web 2>/dev/null)" = /tracy-demos-web ]; then
+  farm_web_up="$(docker ps --format '{{.Names}}' 2>/dev/null | grep -Ec '^tracy-demos-web(-[ab])?$' || true)"
+  if [ "$folded" -gt 0 ] || docker ps -a --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' >/dev/null; then
     farm_state=up
+    # The farm web is two slots that run side by side during a switch: up when either runs.
     for c in tracy-demos-web tracy-demos-db; do
+      if { [ "$c" = tracy-demos-web ] && [ "${farm_web_up:-0}" -gt 0 ]; } ; then continue; fi
       if [ "$(docker inspect -f '{{.State.Running}}' "$c" 2>/dev/null)" != true ]; then
         farm_state=down
         problems+=("farm:$c")
         details+=("demo farm ${c} is not running — ${folded} folded demo(s) down")
       fi
     done
+    # A running slot that is not READY gets nothing from a current-config forwarder: the farm is down
+    # for every folded demo although its processes run. (The bare-named pre-slot container has no marker.)
+    if [ "${farm_web_up:-0}" -gt 0 ]; then
+      farm_ready=0; farm_slots=0
+      for c in $(docker ps --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web-[ab]$' || true); do
+        farm_slots=$((farm_slots + 1))
+        docker exec "$c" test -f /run/tracy-demos-ready/ok >/dev/null 2>&1 && farm_ready=$((farm_ready + 1))
+      done
+      if [ "$farm_slots" -gt 0 ] && [ "$farm_ready" = 0 ]; then
+        farm_state=down
+        problems+=("farm:no-ready-slot")
+        details+=("demo farm: no web slot is ready — ${folded} folded demo(s) have no backend")
+      fi
+    fi
     containers_line="${containers_line}; demo farm ${farm_state} (${folded} folded demos)"
   fi
   # Top 5 containers by memory: "name 1.2GiB".
