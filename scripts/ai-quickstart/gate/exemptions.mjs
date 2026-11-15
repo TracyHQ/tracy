@@ -2,7 +2,9 @@
 // exemption comes from one of two places only, never from this file:
 //   the kit       an interface string the mapping declares `keep`, with its reason (by language key, decision 1); a
 //                 place it keeps (`notEmptied`, or kept by the draft report); a literal a template file writes as
-//                 code (`keptLiterals`)
+//                 code (`keptLiterals`), only where that file prints: the source names the file, or the framework
+//                 adapter's scope (`scope.renders`) says the file prints at that place; never words the write, a
+//                 contract place, a named data row or the dump row of the module that prints them holds
 //   the adapter   the frame of the pages the framework prints (`rules` of the framework adapter): an address of the
 //                 site itself, a date or year the build set (decision 4), a structured data or share type
 // Hidden words are not exempt (decision 5): `visible: false` is a leak like any other. Pure.
@@ -46,6 +48,7 @@ export function keptPlacesOf(mapping, draftReport = null) {
       re = typeof l.pattern === 'string' ? new RegExp(l.pattern) : null
     } catch {}
     literals.push({
+      file: typeof l.file === 'string' ? l.file : null,
       values: new Set(list(l.values).map((v) => String(v).trim().toLowerCase())),
       re,
       why: l.why
@@ -63,10 +66,28 @@ function keptPlace(sources, keep) {
   return null
 }
 
-/** The kit's reason for a kept literal the words are, or null. */
-function keptLiteral(value, keep) {
-  const v = String(value ?? '').trim()
-  for (const l of keep?.literals ?? []) if (l.values.has(v.toLowerCase()) || l.re?.test(v)) return l.why
+/** A source that is a known row: the write, a place of the blank site contract, or a data row the resolver named. */
+const knownRow = (s) =>
+  s?.class === 'write' || s?.class === 'block_field' || (s?.class === 'data' && !!s.entity)
+
+/**
+ * The kept literal the words are, where its file prints (`{file, why}`), or null. The file prints there when a source
+ * names it, or when the adapter's scope says so for the place (`scope.renders(file, {place, path})`: true, false or
+ * null when the page cannot tell). Words a known row holds, or the dump row of the module printing them, are that row.
+ */
+function keptLiteral(o, sources, keep, scope) {
+  const v = String(o.value ?? '').trim()
+  if (sources.some(knownRow)) return null
+  if (scope?.holds?.(o.place, v)) return null
+  for (const l of keep?.literals ?? []) {
+    if (!(l.values.has(v.toLowerCase()) || l.re?.test(v))) continue
+    if (!l.file) continue
+    const named = sources.some((s) => s?.file === l.file)
+    const at =
+      scope?.renders?.(l.file, { place: o.place ?? null, path: o.path ?? null, view: o.view ?? null }) ?? null
+    if (at === false) continue
+    if (named || at === true) return { file: l.file, why: l.why }
+  }
   return null
 }
 
@@ -83,9 +104,14 @@ export function keptKeysOf(mapping) {
  * @param {{kind: string, value: string, place: {element: string}}} o one observation (the words left when a value
  *   holds a marker: `value` is that rest)
  * @param {{kept: Map<string, string>, source?: object | null, rules?: Array<(o: object, ctx: object) => string | null>,
- *   origin: string, builtYear?: number}} ctx `rules`: the framework adapter's (`adapter.exemptions`)
+ *   origin: string, builtYear?: number, scope?: object}} ctx `rules`: the framework adapter's (`adapter.exemptions`);
+ *   `scope`: where the files of kept literals print (`adapters/joomla-literal-scope.mjs`), null when unknown; `o.path`
+ *   the address the page was read at, `o.view` the view its menu item names
  */
-export function exemptionOf(o, { kept, keep = null, source = null, rules = [], resolveText = null, ...ctx }) {
+export function exemptionOf(
+  o,
+  { kept, keep = null, source = null, rules = [], resolveText = null, scope = null, ...ctx }
+) {
   // A kept string exempts its own words only: each placeholder must hold nothing, a marker, a date the build set, a
   // number (a page count, a position) or the words of another string the kit keeps ("Go to the %s page" with "Next").
   // Words several sources hold are exempt when the kit keeps any language string among them.
@@ -103,8 +129,8 @@ export function exemptionOf(o, { kept, keep = null, source = null, rules = [], r
       return `kept_by_kit: ${kept.get(s.key)}`
   const place = keptPlace(strings, keep)
   if (place) return `kept_by_kit: ${place}`
-  const literal = keptLiteral(o.value, keep)
-  if (literal) return `kept_literal: ${literal}`
+  const literal = keptLiteral(o, strings, keep, scope)
+  if (literal) return `kept_literal: ${literal.file}: ${literal.why}`
   for (const rule of rules) {
     const why = rule(o, { source, ...ctx })
     if (why) return why

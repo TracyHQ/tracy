@@ -15,7 +15,7 @@ import { sourceResolver } from './sources.mjs'
 
 /**
  * @param {{kit: object, archive: {files: Map<string, string>, names: string[]}, adapter: {exemptions: Function[],
- *   declaredHosts?: string[]},
+ *   declaredHosts?: string[], literalScope?: Function},
  *   iconLibrary: object, tryWrite?: Function, site?: (input: {built: object, log: Function}) => Promise<object>,
  *   render?: (pages: object[]) => Promise<object[]>, controls?: () => Promise<object>, corpus: object,
  *   widths: number[], themes: string[], refusals?: object[], kitHashes?: object, inputs?: object,
@@ -71,6 +71,14 @@ export async function runGate(input) {
     }),
     kept: keptKeysOf(kit.mapping),
     keep: keptPlacesOf(kit.mapping, kit.draftReport ?? null),
+    // Where the files of the kit's kept literals print: a literal exempts only the words of its own file (W1).
+    scope:
+      adapter.literalScope?.({
+        dump: archive.files?.get?.('installation/sql/mysql/custom.sql') ?? '',
+        ids: site.real.record?.ids ?? {},
+        plan: built.plan,
+        mapping: kit.mapping
+      }) ?? null,
     rules: adapter.exemptions,
     siteValues,
     declaredHosts: new Set(adapter.declaredHosts ?? [])

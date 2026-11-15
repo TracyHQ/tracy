@@ -146,12 +146,19 @@ test('G8: kept places and kept literals exempt; a false reason on any of them is
   }
   const out = read(
     ['Phone', 'Uncategorised', 'facebook', '07', 'reddit', 'Twitter'].map((v) => obs('text', v, 'span')),
-    { keep, resolve: resolveWith }
+    // The adapter's scope says the literal files print on this page (W1: a literal exempts only where its file prints).
+    { keep, resolve: resolveWith, scope: { renders: () => true, holds: () => false } }
   )
   assert.deepEqual(out.findings.map((f) => [f.group, f.value]).sort(), [
     ['kit_reason_false', 'reddit'],
     ['unmarked_text', 'Twitter']
   ])
+  // With no scope and no source naming the file, the page cannot tell the file: the literals are leaks.
+  const blind = read(
+    ['facebook', '07'].map((v) => obs('text', v, 'span')),
+    { keep, resolve: resolveWith }
+  )
+  assert.deepEqual(blind.findings.map((f) => f.value).sort(), ['07', 'facebook'])
   assert.deepEqual(out.exempt.map((e) => e.why.split(':')[0]).sort(), [
     'kept_by_kit',
     'kept_by_kit',

@@ -101,6 +101,7 @@ const slug = (text) =>
 export const renderAt = (p, theme, width) => ({
   pageType: p.pageType,
   path: p.path,
+  ...(p.view ? { view: p.view } : {}),
   theme,
   width,
   expected: p.status ?? 200

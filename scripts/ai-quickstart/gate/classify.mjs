@@ -51,6 +51,7 @@ export function classify({
   resolve,
   kept,
   keep = null,
+  scope = null,
   rules = [],
   siteValues = new Map(),
   builtYear,
@@ -222,8 +223,9 @@ export function classify({
         (siteValues.has(rest) ? { class: 'write', ...siteValues.get(rest) } : null) ??
         (whole.class === 'unknown' && rest !== o.value ? resolve.text(rest) : whole)
       const why = exemptionOf(
-        { ...o, value: rest },
+        { ...o, value: rest, path: r.path, view: r.view ?? null },
         {
+          scope,
           origin,
           kept,
           keep,

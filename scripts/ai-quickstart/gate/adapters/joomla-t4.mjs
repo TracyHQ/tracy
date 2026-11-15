@@ -75,7 +75,9 @@ export async function sitePages({ base, record, doors, order = null, mapping = n
     const item = await doors.get({ kind: 'menuItem', id })
     const path = item?.home ? 'index.php' : `index.php?Itemid=${id}`
     menus.set(m[1], { id, item })
-    pages.push({ pageType: m[1], path, url: absolute(base, path), from: key })
+    // The view the menu item opens (`view=article`): what a page at `Itemid` shows, for the kit's kept literals.
+    const view = /[?&]view=([a-z0-9_]+)/i.exec(String(item?.link ?? ''))?.[1] ?? null
+    pages.push({ pageType: m[1], path, url: absolute(base, path), from: key, ...(view ? { view } : {}) })
   }
   // An article reached under the menu item of the page whose list shows it (its category list).
   const listPage = new Map()

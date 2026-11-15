@@ -995,8 +995,8 @@ words, and one that says no page draws them is refused.
   matches the empty string or plain words is refused). `file` is a path of the release, checked against the files the
   source contract locks. JA Boxing: the share bar's network names (`facebook`, `twitter`, `reddit`, printed as the
   titles of the share links by the article and lesson layouts) and the two digit step and card numbers
-  (`^\d{2}$`, the lesson layout and the features block). The release gate's reading of `keptLiterals` lands with the
-  gate's own change; until then the declaration is checked here and passed to the mapping file only.
+  (`^\d{2}$`, the lesson layout and the features block). The release gate exempts these words only where the named
+  file prints them (marker test, "Exemptions").
 
 ### The system menu (`dataFixes`, #587)
 
@@ -1711,7 +1711,11 @@ record lists each with its reason: the kit (a language string `overrides.languag
 reason; a kept string with a placeholder only when each placeholder holds nothing, a marker, a date or year the build
 set, a number (a page count, a position) or the words of another string the kit keeps; a place `notEmptied` names, by
 slot or whole record, or a slot the draft report keeps (`as: "kept"`); words a template file writes as code that
-`keptLiterals` names, by `values` or `pattern` (`kept_literal`); a keep of any of these whose reason says no page draws
+`keptLiterals` names, by `values` or `pattern`, only where that file prints (`kept_literal: <file>: <reason>`): a source
+names the file, or the adapter's scope (`gate/adapters/joomla-literal-scope.mjs`) reads from the page that it prints
+there (a component layout outside any module on a page of its view, a module layout in a module of its type, a JA ACM
+layout in a module whose params pick it); words the write, a contract place or the blank site's row of the module that
+prints them holds are never a literal, and where the page cannot tell the file the words are a leak; a keep of any of these whose reason says no page draws
 it is not exempt where it is seen, it is `kit_reason_false`) and the
 framework adapter (`EXEMPTIONS` of the adapter, the page frame of `gate/adapters/web-frame.mjs`: an address of the site
 itself, punctuation and symbols with no letter and no digit, `404` on the missing page that answers 404, a date or the

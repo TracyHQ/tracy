@@ -44,6 +44,7 @@ import { crawlPages } from './adapters/web-frame.mjs'
 import { cropGroups } from './crops.mjs'
 import { joomlaPageIdentity } from './adapters/joomla-page-identity.mjs'
 import { joomlaPageKey } from './adapters/joomla-page-key.mjs'
+import { joomlaLiteralScope } from './adapters/joomla-literal-scope.mjs'
 import { measureControls, readControls, writeControls } from './gate-controls.mjs'
 import {
   baselineOf,
@@ -200,7 +201,7 @@ if (controlOnly) {
 const common = {
   kit,
   archive: filesOf(installer),
-  adapter: { exemptions: EXEMPTIONS, declaredHosts: DECLARED_HOSTS },
+  adapter: { exemptions: EXEMPTIONS, declaredHosts: DECLARED_HOSTS, literalScope: joomlaLiteralScope },
   iconLibrary: { set: PHOSPHOR_SET, icons: phosphorCatalog() },
   tryWrite: memoryTryWrite(kit),
   corpus,
