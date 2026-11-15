@@ -24,6 +24,7 @@ import { kindLimitsOf, storeBlocksOf } from './answer-field-limits.mjs'
 import { mergeRows } from './needs-profile-rows.mjs'
 import { voiceOf } from './needs-profile-voice.mjs'
 import { ownerFactsOfSources } from './owner-facts-flow.mjs'
+import { profileExtrasOf, typedObservations } from './needs-profile-typed.mjs'
 
 export const NEEDS_PROFILE_SCHEMA = 'tracy-needs-profile/v1'
 /** The draft prompt (product owner review: #600). Its hash is recorded on every profile it made. */
@@ -127,7 +128,9 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
       item.label = labels.get(`${item.source.id}/${item.pictureId}`) ?? item.alt
   const conflicts = []
   const facts = mergeFacts([...structured.facts, ...read.facts], conflicts)
-  const items = mergeItems([...read.items, ...structured.items], conflicts)
+  // The reading's services, typed (`needs-profile-typed.mjs`): the profile keeps the reading's list.
+  const typed = typedObservations(sources)
+  const items = mergeItems([...typed.items, ...read.items, ...structured.items], conflicts)
   // Rows of the business itself, most trusted source first; the key is present only when a row was kept.
   const order = (row) => TRUST_ORDER.indexOf(row.source.origin)
   const rows = mergeRows(
@@ -169,11 +172,13 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
     ...(rows.length ? { rows } : {}),
     ...(voice.voice ? { voice: voice.voice } : {}),
     ...(ownerFacts.length ? { ownerFacts } : {}),
+    ...profileExtrasOf(sources),
     conflicts: conflicts.map((c) => ({ ...c, ...asked.get(c.id) })),
     questions,
     dropped: [
       ...unusableSourcesOf(research),
       ...structured.dropped,
+      ...typed.dropped,
       ...read.dropped,
       ...voice.dropped,
       ...unread,

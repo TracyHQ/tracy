@@ -4,7 +4,7 @@
 // have. Pure: a profile in, the plan's facts and items out, in the Contract B shape (`build-contract-plan.mjs`).
 import { GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { rowDataOf } from './plan-row-data.mjs'
-import { ownerFactsOfProfile } from './owner-facts-flow.mjs'
+import { ownerFactsOfProfile, ownerTaglineOfProfile } from './owner-facts-flow.mjs'
 import { withheldIdsOf } from './plan-withheld.mjs'
 
 /** How the customer reads where a fact came from, per source origin of the needs profile. */
@@ -24,8 +24,13 @@ export const FACT_LABELS = Object.freeze({
   'contact.hours': 'Opening hours',
   'contact.cta_url': 'Booking link',
   'contact.cta_label': 'Main button',
-  'contact.social_url': 'Social link'
+  'contact.social_url': 'Social link',
+  'business.tagline': 'Tagline',
+  'business.summary': 'About'
 })
+/** The plan id of the owner's own tagline and of the reading's About line (each a fact, kind of the same name). */
+export const OWNER_TAGLINE_ID = 'business-tagline'
+export const ABOUT_ID = 'business-summary'
 /** How the customer reads a group of items of one kind, plural (`plan-placement.mjs` reasons, left out entries). */
 export const ITEM_NOUNS = Object.freeze({
   service: 'services',
@@ -98,6 +103,18 @@ export function planDataOf(profile) {
       byId.set(id, { what: 'fact', kind, entry, source: fact })
     })
   }
+  // The reading's About line and the owner's own tagline (`needs-profile-typed.mjs`): facts in code, shown as the
+  // profile holds them; the tagline is shown word for word (`page-writer-fields.mjs`).
+  const extra = (id, kind, value, ids) => {
+    const sources = sourcesOf(ids, origins)
+    if (!isText(value) || sources.length === 0 || byId.has(id)) return
+    const entry = { id, kind, label: FACT_LABELS[kind], value, sources }
+    facts.push(entry)
+    byId.set(id, { what: 'fact', kind, entry, source: { value, sources: ids } })
+  }
+  extra(ABOUT_ID, 'business.summary', profile?.about?.value, list(profile?.about?.sources))
+  const tagline = ownerTaglineOfProfile(profile)
+  if (tagline) extra(OWNER_TAGLINE_ID, 'business.tagline', tagline.value, [tagline.source])
   for (const [kind, values] of Object.entries(profile?.items ?? {})) {
     for (const item of list(values)) {
       const sources = sourcesOf(item?.sources, origins)

@@ -8,13 +8,15 @@
 //
 // One copy role is kept verbatim (#597): a `contact.cta_label` block field whose block data holds the main button label
 // the customer answered (`settleAnswers`, source `customer-answer`) is `from: 'data'` with that exact value; the model
-// never rewrites it. A label the customer did not answer stays copy.
+// never rewrites it. A label the customer did not answer stays copy. So is a `business.tagline` field whose block data
+// holds the tagline the owner marks as theirs (source `owner-statement`, D46 as amended): shown as typed, never copy.
 //
 // Data comes only from the plan data the block shows (`block.data`, plan ids of `planDataOf`): a fact of the field's
 // kind for a block field, the item's own field value for an item field. The block store and the library are read for
 // their declared shape only; a stray demo or example value on a block or a field is never read.
 import { limitOf } from './field-place-limits.mjs'
 import { WRITER_FIELD_TYPES } from './page-copy-check.mjs'
+import { OWNER_SOURCE_ID } from './owner-facts-flow.mjs'
 import { ANSWER_SOURCE } from './plan-answers.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
 import { rowFieldsOf } from './page-writer-rows.mjs'
@@ -99,16 +101,19 @@ function dataValueOf({ field, block, item, byId }) {
 
 /** The copy roles the customer's own answer fixes word for word, when the block's plan data holds that answer. */
 export const ANSWERED_COPY_ROLES = Object.freeze(['contact.cta_label'])
+/** The copy roles the owner's own words fix word for word (the tagline the owner marks as theirs, `plan-data.mjs`). */
+export const OWNER_VERBATIM_ROLES = Object.freeze(['business.tagline'])
 
-/** The customer's answered value of a copy field (`ANSWERED_COPY_ROLES`) from the block's plan data, else undefined. */
+/** The customer's answered value, or the owner's own tagline, of a copy field from the block's plan data. */
 function answeredValueOf({ field, block, item, byId }) {
-  if (item !== undefined || !ANSWERED_COPY_ROLES.includes(field.kind)) return undefined
+  const owner = OWNER_VERBATIM_ROLES.includes(field.kind)
+  if (item !== undefined || !(owner || ANSWERED_COPY_ROLES.includes(field.kind))) return undefined
   for (const id of list(block.data)) {
     const entry = byId.get(id)
     if (
       entry?.what === 'fact' &&
       entry.kind === field.kind &&
-      list(entry.source?.sources).includes(ANSWER_SOURCE) &&
+      list(entry.source?.sources).includes(owner ? OWNER_SOURCE_ID : ANSWER_SOURCE) &&
       typeof entry.entry.value === 'string' &&
       entry.entry.value.trim() !== ''
     )

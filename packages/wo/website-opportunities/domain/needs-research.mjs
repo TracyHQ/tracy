@@ -14,11 +14,14 @@
 //   - a fact of a kind the needs profile has no place for (`NO_KIND`) is set aside with that reason;
 //   - the opening hours Google lists (`googlePlace.openingHours`) when the brief holds no hours fact at all;
 //   - the posts the brief keeps (`content.items`) are `captions` of their source, never one credited to someone else;
-//   - Google's reviews the brief keeps; the own photos and videos it keeps for the site (`needs-research-media.mjs`).
+//   - Google's reviews the brief keeps; the own photos and videos it keeps for the site (`needs-research-media.mjs`);
+//   - the owner's contact values and own tagline (`owner-facts-flow.mjs`), and the business reading's lines, typed
+//     services, audience quotes and About line (`needs-research-reading.mjs`), only when the brief holds them.
 // A fact the brief keeps off the site is not research for the site; a held name and held people are `withheld`
 // (`plan-withheld.mjs`). Everything lands in exactly one place, counted in `taken`, or in `setAside` with a reason.
 import { mediaOf } from './needs-research-media.mjs'
-import { ownerFactsOfBrief } from './owner-facts-flow.mjs'
+import { addReadingOfBrief } from './needs-research-reading.mjs'
+import { ownerFactsOfBrief, ownerValuesOfBrief } from './owner-facts-flow.mjs'
 import { withheldOfBrief } from './plan-withheld.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -218,6 +221,17 @@ export function researchOf(brief, { manifest = [] } = {}) {
     sourceOf('owner-statement').ownerFacts = owned.facts
     taken.ownerFacts = owned.facts.length
   }
+  // The tagline the owner marks as theirs, and the contact values the owner typed: values used as typed (D46 amended).
+  if (owned.tagline) {
+    sourceOf('owner-statement').ownerTagline = owned.tagline
+    taken.ownerTagline = owned.tagline.id
+  }
+  const values = ownerValuesOfBrief(brief)
+  setAside.push(...values.setAside)
+  for (const v of values.values) addField(sourceOf('owner-statement'), v.kind, v.value)
+  if (values.values.length) taken.ownerValues = values.values.map((v) => v.kind)
+  // The reading's lines, typed services, audience quotes and About line (`needs-research-reading.mjs`).
+  addReadingOfBrief(brief, { sourceOf, addText, setAside, taken })
   return {
     sources: [...sources.values()].map(
       ({ text, captions, fields, reviews, pictures, ownerFacts, ...source }) => ({

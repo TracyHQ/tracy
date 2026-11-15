@@ -1,6 +1,6 @@
 // Which field is a fact value and which is copy (`owner-echo-fields.mjs`, decision D46, #609): every field a reading
 // and the brief's view of it hold has a class (a new field without one fails here), a copy field that echoes the owner
-// goes alone and the item's facts stay, a tagline the owner states waits for a product decision, and the record of
+// goes alone and the item's facts stay, a tagline the owner marks keeps its words as typed, and the record of
 // what the guard did reaches the brief. Invented massage studio, the fictional Harbour Sport Club; no model call.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-owner-echo-fields.test.mjs
@@ -97,11 +97,11 @@ test('names and values the owner typed stay, a team member with her role among t
   )
 })
 
-test('copy echoing the owner leaves as facts; the tagline waits for a product decision and never reaches copy', () => {
+test('copy echoing the owner leaves as facts; the tagline the owner marks keeps its words as typed, never as copy', () => {
   assert.deepEqual(
-    read.ownerFacts.map((f) => [f.kind, f.group, f.text, f.reason ?? null]),
+    read.ownerFacts.map((f) => [f.kind, f.group, f.text, f.value ?? null]),
     [
-      ['owner-tagline', 'story', 'Strong Hands Calm Minds', 'awaits_product_decision'],
+      ['owner-tagline', 'story', 'Strong Hands Calm Minds', 'Strong Hands Calm Minds'],
       ['owner-fact', 'facts', 'open seven days a week', null],
       ['owner-fact', 'facts', '12 Harbour Road, Velmora', null],
       ['owner-fact', 'keyMessages', 'open seven days a week', null]

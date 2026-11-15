@@ -25,6 +25,7 @@ import {
 } from '../domain/business-reading.mjs'
 import { OWNER_STATEMENT_RULE, businessReadingSystemOf } from '../domain/owner-statement-prompt.mjs'
 import { OWNER_STATEMENT_KIND, ownerPassageOf } from '../domain/owner-statement.mjs'
+import { ownerValuesOf } from '../domain/owner-values.mjs'
 import { heldTextsOf } from '../domain/plan-withheld.mjs'
 import { HELD_NAME_STAND_IN, heldPassagesOf, withoutStandIn } from '../domain/reading-held-passages.mjs'
 import { BudgetExceededError } from './cost-ledger.js'
@@ -325,14 +326,21 @@ export async function readBusiness({
 }
 
 /**
- * How the owner's statement was read, for the reading's record (pure): `{ownerStatement: {read, heldOut, cut}}`, or
+ * How the owner's statement was read, for the reading's record (pure): `{ownerStatement: {read, heldOut, cut}}`, plus
+ * `ownerValues` (`owner-values.mjs`: its phone, email, hours and booking link, and the values dropped with why) when it
+ * types one, or
  * `{ownerStatement: {read: false, reason: 'held'}}` when every sentence named something held; nothing (`{}`) when the
  * owner typed none (or only spaces). `heldTexts`: the held people and, while it is held, the business name.
  */
 export function ownerStatementRecordOf(statement, heldTexts = [], heldPeople = []) {
   if (typeof statement !== 'string' || !statement.trim()) return {}
   const { passage, heldOut, cut } = ownerPassageOf(statement, heldTexts, { people: heldPeople })
-  return { ownerStatement: passage ? { read: true, heldOut, cut } : { read: false, reason: 'held' } }
+  // The contact values it types, read in code from the passage a held sentence already left (`owner-values.mjs`).
+  const values = passage ? ownerValuesOf(passage.text) : null
+  return {
+    ownerStatement: passage ? { read: true, heldOut, cut } : { read: false, reason: 'held' },
+    ...(values ? { ownerValues: values } : {})
+  }
 }
 
 /**

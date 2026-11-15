@@ -85,6 +85,8 @@ export const READING_FIELD_CLASSES = Object.freeze({
     group: RECORD,
     field: RECORD,
     text: EVIDENCE,
+    // The tagline the owner marks as theirs, as typed (`owner-tagline.mjs`): a value shown word for word.
+    value: NAME,
     source: RECORD,
     reason: RECORD
   })
@@ -141,8 +143,8 @@ const nameHitsOf = (group, i, echo) =>
 /**
  * A reading less every copy field that copies the owner (pure, `owner-echo.mjs copiesOwner` against `echo`), the rule
  * above: the field goes and the item stays, unless it was a field the item needs, when the item moves to `ownerFacts`.
- * An item of the statement that states a tagline moves there too, as `owner-tagline` (D46 keeps the owner's wording off
- * the site; whether a tagline is the exception waits for a product decision). Every echo is recorded in
+ * An item of the statement that marks a tagline as the owner's moves there too, as `owner-tagline` with its words as
+ * typed in `value` (D46 as amended: the owner's own tagline is the one wording the site shows as typed). Every echo is recorded in
  * `ownerEchoDropped` as `{group, field, rule, weight, why, kept}` (never the text; `kept`: `item`, `owner-fact` or
  * `owner-tagline`); a reading left with no USP theme holds none (`uspThemes: null`, reason `rejected`). Nothing to
  * compare and no tagline, the same object.

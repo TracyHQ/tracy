@@ -1460,7 +1460,9 @@ function briefReading(reading, about, assetIds = null) {
     ...(reading.uspThemesDropped?.length
       ? { uspThemesDropped: reading.uspThemesDropped.map((d) => ({ label: d.label, why: d.why })) }
       : {}),
-    ...ownerFactsOfReading(reading)
+    ...ownerFactsOfReading(reading),
+    // The contact values the owner typed (`owner-values.mjs`): values the site uses as typed, never copy.
+    ...(reading.ownerValues ? { ownerValues: reading.ownerValues } : {})
   }
 }
 
@@ -1481,6 +1483,8 @@ function ownerFactsOfReading(reading) {
             group: f.group,
             text: f.text,
             source: f.source,
+            // The owner's own tagline, word for word (`owner-tagline.mjs`): the one owner wording the site may show.
+            ...(nonEmpty(f.value) ? { value: f.value } : {}),
             ...(f.reason ? { reason: f.reason } : {})
           }))
         }

@@ -2,8 +2,12 @@
 // words, never quoted, and the owner's and the public quotes an item stands on. Pure; imports the name shape's whole
 // word helper only. `owner-echo-fields.mjs` re-exports what others read.
 import { wholeWordsOf } from './owner-name-shape.mjs'
+import { taglineOf } from './owner-tagline.mjs'
 
-/** The kind of a fact kept for the writer, and of a tagline the owner states (it waits for a product decision). */
+/**
+ * The kind of a fact kept for the writer, and of a tagline the owner marks as theirs (its words as typed in `value`). An
+ * older brief's tagline has no value and the reason it waits for a product decision.
+ */
 export const OWNER_FACT_KIND = 'owner-fact'
 export const OWNER_TAGLINE_KIND = 'owner-tagline'
 export const OWNER_TAGLINE_REASON = 'awaits_product_decision'
@@ -20,9 +24,10 @@ export const ownerQuotes = (i) =>
       .filter(fromOwner)
       .map((q) => q.quote)
   ].filter(isText)
-const TAGLINE = /\b(?:tag ?line|slogan|motto|strap ?line)\b/iu
+/** The tagline the owner's words an item stands on mark as theirs, word for word, or null (`owner-tagline.mjs`). */
+export const ownerTaglineOf = (i) => ownerQuotes(i).map(taglineOf).find(Boolean) ?? null
 /** Whether the owner's words an item stands on state a tagline (English words only; the doc says so). */
-export const statesTagline = (i) => ownerQuotes(i).some((q) => TAGLINE.test(q))
+export const statesTagline = (i) => ownerTaglineOf(i) !== null
 
 /** The public quotes an item stands on (its quote, mentions and quotes of a text other than the owner's statement). */
 export const publicQuotesOf = (i) =>
@@ -41,7 +46,7 @@ export const publicQuotesOf = (i) =>
  * field of the item kept as a fact of its own (a role or a price typed as a sentence), the item staying.
  */
 export function ownerFactOf(group, i, n = 0, field = null) {
-  const tagline = !field && statesTagline(i)
+  const tagline = field ? null : ownerTaglineOf(i)
   const text = field ? i?.[field] : group === 'uspThemes' ? i?.line || i?.label : i?.label
   const source = i?.source ?? list(i?.quotes).find(fromOwner)?.source ?? { kind: OWNER_KIND, ref: 'owner' }
   return {
@@ -51,7 +56,7 @@ export function ownerFactOf(group, i, n = 0, field = null) {
     ...(field ? { field } : {}),
     text: wholeWordsOf(String(text ?? ''), ownerQuotes(i)),
     source,
-    ...(tagline ? { reason: OWNER_TAGLINE_REASON } : {})
+    ...(tagline ? { value: tagline } : {})
   }
 }
 

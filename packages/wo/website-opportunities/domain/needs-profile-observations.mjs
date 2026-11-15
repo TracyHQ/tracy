@@ -13,6 +13,7 @@ import {
   provenBy
 } from './needs-profile-grounding.mjs'
 import { MAX_ROW_DEPTH, groundRows } from './needs-profile-rows.mjs'
+import { audienceOnlyDrop, fromAudienceOnly } from './needs-profile-typed.mjs'
 import { copiesOwner, ownerEchoOf } from './owner-echo.mjs'
 
 const FACT_KINDS = new Set([...SINGLE_FACT_KINDS, ...LIST_FACT_KINDS])
@@ -159,6 +160,10 @@ export function modelObservations(reading, sources) {
     const source = quoted(it, what)
     if (!source) continue
     const at = { ...what, source: source.id }
+    if (fromAudienceOnly(byId.get(source.id), it)) {
+      dropped.push(audienceOnlyDrop(at))
+      continue
+    }
     // 🔒 The owner's chat statement (origin `answer`, D46) gives facts, never words: no quote of it, no summary
     // copying it (`owner-echo.mjs`: a run of four of its words, or most of one of its sentences).
     if (source.origin === 'answer' && it.kind === 'quote') {

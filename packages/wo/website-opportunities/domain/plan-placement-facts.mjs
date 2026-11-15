@@ -9,6 +9,8 @@
 // A design typed field never counts: it carries no data kind (Contract A). A fact that stands for an item field
 // (`plan-conflicts.mjs`) is shown with its item and never placed here. Pure: pages in, new pages, left out entries
 // (with the ids they name) and what was placed out.
+import { limitOf, placeLimitsOf } from './field-place-limits.mjs'
+import { isOwnerVerbatim } from './plan-data-limits.mjs'
 import { BLOCK_TYPES } from './place-content-roles.mjs'
 import { extraBlockId, insertBlock, pageFor } from './plan-placement-pages.mjs'
 
@@ -65,13 +67,21 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
   const leftOut = []
   const shown = new Set(out.flatMap((p) => p.blocks.flatMap((b) => b.data)))
   const kindOf = (id) => data.byId.get(id)?.kind
+  const limits = placeLimitsOf(blocks.values())
   for (const fact of data.facts) {
     const record = data.byId.get(fact.id)
     if (record.itemField || shown.has(fact.id) || leftOutIds.has(fact.id)) continue
+    // The owner's own tagline is shown as typed, never cut: only a field it fits is a place for it.
+    const tooShort = isOwnerVerbatim(record)
+      ? (d) =>
+          d &&
+          !list(d.fields).some((f) => f?.kind === fact.kind && limitOf(f, limits) >= [...fact.value].length)
+      : () => false
     let home = null
     for (const page of out)
       for (const block of page.blocks) {
         if (home) break
+        if (tooShort(blocks.get(block.block))) continue
         const room = placesFor(blocks.get(block.block), fact.kind)
         const used = block.data.filter((id) => kindOf(id) === fact.kind).length
         if (room > used) home = { page, block, how: 'block on the plan with a field for it' }
@@ -79,7 +89,7 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
     if (!home)
       for (const description of blocks.values()) {
         if (description.source === 'library' || !factsOnly(description)) continue
-        if (factSlotsFor(description, fact.kind) === 0) continue
+        if (factSlotsFor(description, fact.kind) === 0 || tooShort(description)) continue
         if (out.some((p) => p.blocks.some((b) => b.block === description.id))) continue
         const page = pageFor(out, description, recipes)
         if (!page) continue
@@ -105,13 +115,21 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
       // True of the template: its places for the kind may all be taken (three addresses, one address place).
       const label = fact.label.toLowerCase()
       const full = [...blocks.values()].some((d) => d.source !== 'library' && placesFor(d, fact.kind) > 0)
+      const long =
+        isOwnerVerbatim(record) &&
+        full &&
+        [...blocks.values()].every(
+          (d) => d.source === 'library' || placesFor(d, fact.kind) === 0 || tooShort(d)
+        )
       leftOut.push({
         id: fact.id,
         what: fact.label,
         kind: 'feature',
-        reason: full
-          ? `There is no room left on your pages for your ${label}.`
-          : `Your design has no space for your ${label}.`
+        reason: long
+          ? `Your ${label} is longer than every space your design has for it, and we never shorten it.`
+          : full
+            ? `There is no room left on your pages for your ${label}.`
+            : `Your design has no space for your ${label}.`
       })
     }
   }

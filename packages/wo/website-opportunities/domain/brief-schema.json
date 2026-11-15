@@ -1082,7 +1082,7 @@
           }
         },
         "ownerFacts": {
-          "description": "Optional (D46): facts the owner stated in the build chat whose words the site must not copy. kind owner-fact: the writer says it in words of its own, never as a quote. kind owner-tagline: a tagline the owner stated, with reason awaits_product_decision; it goes nowhere on the site.",
+          "description": "Optional (D46): facts the owner stated in the build chat whose words the site must not copy. kind owner-fact: the writer says it in words of its own, never as a quote. kind owner-tagline: a tagline the owner marked as theirs; with value (its words as typed) the AI quickstart build may show those words as the tagline, without value (an older brief) it has reason awaits_product_decision and goes nowhere on the site.",
           "type": "array",
           "items": {
             "type": "object",
@@ -1093,7 +1093,38 @@
               "group": { "type": "string" },
               "text": { "type": "string", "minLength": 1 },
               "source": { "type": "object" },
+              "value": { "type": "string", "minLength": 1 },
               "reason": { "enum": ["awaits_product_decision"] }
+            }
+          }
+        },
+        "ownerValues": {
+          "description": "Optional (D46 as amended): the contact values the owner typed in the build chat, read in code (phone, email, opening hours, booking link), used on the site as typed; and the ones dropped, each with why, never the text.",
+          "type": "object",
+          "required": ["values", "dropped"],
+          "properties": {
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["kind", "value"],
+                "properties": {
+                  "kind": { "enum": ["contact.phone", "contact.email", "contact.hours", "contact.cta_url"] },
+                  "value": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "dropped": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["kind", "reason"],
+                "properties": {
+                  "kind": { "type": "string" },
+                  "code": { "type": "string" },
+                  "reason": { "type": "string" }
+                }
+              }
             }
           }
         },

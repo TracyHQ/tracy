@@ -10,6 +10,9 @@
 // role of its kind in the role vocabulary (`GROUP_KINDS_V3[kind].requiredRoles`, the store declares no required field;
 // its `noData` rule is per block), or, for a kind with none, the block's first data text item field (a post's title).
 //
+// The owner's own tagline (D46 as amended) is shown as typed in a copy field, so it is held to that field's limit like a
+// data value and leaves a block it does not fit (`isOwnerVerbatim`); the fact placement already prefers a field it fits.
+//
 // A customer's answer is never dropped this way: the answer settling already holds it to the template's limits
 // (`answer-field-limits.mjs`), so an answer too long here is marked (`answer: true`) and the gate reports it as a
 // problem (`answer_over_limit`) as the last guard, never a silent drop.
@@ -27,6 +30,11 @@ const charCount = (value) => [...String(value)].length
 const isText = (value) =>
   (typeof value === 'string' && value.trim() !== '') || (typeof value === 'number' && Number.isFinite(value))
 const dataText = (field) => field?.type === 'text' && roleOrigin(field.kind) === 'data'
+/** The owner's own tagline (`plan-data.mjs`): shown as typed in a copy field, so held to that field's limit, never cut. */
+export const isOwnerVerbatim = (entry) =>
+  entry?.what === 'fact' &&
+  entry.kind === 'business.tagline' &&
+  list(entry.source?.sources).includes('owner-statement')
 
 export const DATA_OVER_LIMIT_REASON = 'This is longer than the section can show, so it is not shown there.'
 const short = (text, max) => ([...text].length > max ? `${[...text].slice(0, max - 1).join('')}\u2026` : text)
@@ -76,7 +84,7 @@ function blockData(page, block, d, data, limits, dropped) {
     for (const id of ids) {
       const entry = data.byId.get(id)
       if (entry?.what !== 'fact' || entry.kind !== field.kind || !isText(entry.entry.value)) continue
-      if (!own && !isAnswer(id)) continue
+      if (!own && !isAnswer(id) && !isOwnerVerbatim(entry)) continue
       const over = overOf([field], () => entry.entry.value, limits)
       if (!over) break
       drop(id, over)
