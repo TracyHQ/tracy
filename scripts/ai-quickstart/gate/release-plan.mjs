@@ -3,7 +3,12 @@
 // passes them. Here the marker build is made again in memory from the kit folder (no site; a few seconds) and the
 // record must hold what that build gives: the same universe of places, each with the same account, and the same
 // places write safety probes. A record made on another kit, or by a build that no longer gives the same plan, is
-// refused. The pages of the structure variants and what the site printed are not rebuilt here: they need a site.
+// refused. Besides the two lists, what the record counts and holds of them is checked against the same build (the
+// universe's counts, the places write safety says it probed, the places its ledger and findings name), so a record of
+// another kit whose two lists alone were redone is refused too (review 4 X6). What the plan check cannot do: a record
+// whose every list and count was redone with the gate's own public code (a few seconds) passes it, as an honest one does;
+// only a release step that runs the gate itself (`publishVerified` with an honest `runGate`, #588) stops that. The
+// pages of the structure variants and what the site printed are not rebuilt here: they need a site.
 import {
   PHOSPHOR_SET,
   phosphorCatalog
@@ -24,14 +29,15 @@ export async function planOfFolder(
 ) {
   const kit = kitOf(folder)
   const built = await markerBuild(kit, { iconLibrary, tryWrite: memoryTryWrite(kit) })
-  const places = accountFor(kit, built).places.map((p) => [p.key, p.account])
+  const accounting = accountFor(kit, built)
+  const places = accounting.places.map((p) => [p.key, p.account])
   const plain = passOptions()
   const plainBuilt = await markerBuild(kit, { iconLibrary, tryWrite: memoryTryWrite(kit), ...plain.options })
   const index = storedIndex(plainBuilt.writePlan)
   const probed = [...plain.seen.values()]
     .filter((p) => p.type && index.has(String(p.code).toUpperCase()))
     .map((p) => p.key)
-  return { places, probed }
+  return { places, probed, counts: accounting.counts }
 }
 
 /**
@@ -66,7 +72,46 @@ export function planProblems(record, plan) {
         places.first +
         ')'
     })
+  // The universe the record counts is the one the kit's build gives.
+  if (plan.counts) {
+    const said = record?.universe ?? {}
+    const off = Object.keys({ ...plan.counts, ...said }).filter(
+      (k) => (said[k] ?? 0) !== (plan.counts[k] ?? 0)
+    )
+    if (off.length)
+      out.push({
+        code: 'plan_mismatch',
+        message:
+          "the record's universe counts are not the ones the kit's own marker build gives (" +
+          off.map((k) => k + ' ' + (said[k] ?? 0) + ' for ' + (plan.counts[k] ?? 0)).join(', ') +
+          ')'
+      })
+  }
   const ws = record?.measurements?.writeSafety
+  if (ws) {
+    // What write safety says it probed, and every place its ledger and findings name, are places of the kit's plan.
+    const probedSet = new Set(plan.probed)
+    const strange = [
+      ...list(ws.ledger).map((r) => r?.place),
+      ...list(ws.findings).map((f) => f?.place)
+    ].filter((k) => k != null && !probedSet.has(k))
+    if (strange.length)
+      out.push({
+        code: 'plan_mismatch',
+        message:
+          'write safety names ' +
+          new Set(strange).size +
+          " place(s) the kit's own plain build does not probe (first " +
+          strange[0] +
+          ')'
+      })
+    if (ws.places?.probed != null && ws.places.probed !== plan.probed.length)
+      out.push({
+        code: 'plan_mismatch',
+        message:
+          'write safety says it probed ' + ws.places.probed + ' places, the kit gives ' + plan.probed.length
+      })
+  }
   if (ws && Array.isArray(ws.placeKeys)) {
     const probed = differ(
       ws.placeKeys.map((k) => [k]),

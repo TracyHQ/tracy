@@ -165,3 +165,20 @@ test('U5: a saved write safety state is resumed only by the same gate and build 
   const sameCode = await run(two, 'a'.repeat(64))
   assert.equal(sameCode.resumedFrom, 2, 'the same code resumes')
 })
+
+test('X6: a record of another kit whose two place lists were redone is still refused by what it counts and holds', async () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'release-plan-'))
+  const folder = writeFloristFolder(root, another)
+  const record = await honestRecord()
+  const kitPlan = await plan(folder)
+  // The two lists the plan check read, redone from this kit's own plan; the rest of the record is the other kit's.
+  record.places = kitPlan.places.map(([key, account]) => ({ key, account }))
+  record.measurements.writeSafety.placeKeys = [...kitPlan.probed]
+  bindAndWrite(folder, record)
+  const problems = planProblems(record, kitPlan)
+  assert.ok(
+    problems.some((p) => p.code === 'plan_mismatch' && /universe/.test(p.message)),
+    JSON.stringify(problems)
+  )
+  rmSync(root, { recursive: true, force: true })
+})

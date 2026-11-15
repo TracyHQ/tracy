@@ -1901,9 +1901,13 @@ version 2 counted build refusals as tested places and left the hidden variant ou
 | `write_safety_resumed` | write safety resumed passes from a saved state: `resumedFrom`, a pass marked `resumed`, or passes that took longer than the run measured for (`ranFor`); a release record runs every pass in one run |
 
 The publish step and the guard command add the kit's own plan (`gate/release-plan.mjs`): the marker build is made
-again in memory from the kit folder, and the record must hold its universe of places, each with the same account, and
-the places write safety probes (`plan_mismatch`; `plan_unbuildable` when the folder gives no plan). A passing record of
-another kit, relabelled and bound to this folder's files, is refused there. `releaseProblems` and `assertReleasable`
+again in memory from the kit folder, and the record must hold its universe of places, each with the same account, the
+universe's counts, and the places write safety probes, says it probed, and names in its ledger and findings
+(`plan_mismatch`; `plan_unbuildable` when the folder gives no plan). A passing record of another kit, relabelled and
+bound to this folder's files, is refused there, and so is one whose two place lists alone were redone. The plan check
+stops a record relabelled as it is, not one whose every list and count was redone with the gate's own public code (a
+few seconds, no site): that record passes it, so `publishVerified` is only as strong as the `runGate` the publish step
+(#588) gives it. `releaseProblems` and `assertReleasable`
 do not rebuild the plan (they read files only), and neither does CI.
 
 A passing record goes stale by a bumped `gateVersion` or a changed bound input. It does not go stale by a change of
@@ -1936,13 +1940,16 @@ kit does it through `publishVerified({folder, pins, blankSiteSha, publish, runGa
 names the sha256 of the blank site archive it is about to publish (a call without one is refused,
 `blank_site_unbound`); it must run the gate itself (`runGate`, into an empty run folder with `--into-kit`, answering
 the record it wrote; without it `gate_not_run`); the record in the kit folder must be the one that run wrote, by its
-sha256 (`record_not_this_run`); the record must hold the kit's own plan (`plan_mismatch`); and it calls `publish` only
+sha256 (`record_not_this_run`); the record must hold the kit's own plan (`plan_mismatch`, which a record of redone
+lists passes: the run is the defence); and it calls `publish` only
 when all of that and `releaseProblems` find nothing. A record whose write safety resumed a saved state is refused
 (`write_safety_resumed`), so the release run measures every pass itself. CI cannot check `blank_site_changed`: the
 archive is not in the repository. CI asks a record only of a kit whose `kit-manifest.json` names a `site`: a kit
 marked `released: true` with no `site` (JA Boxing 1.0.11 today) is asked nothing, by decision: `site` is what makes it
-an AI quickstart Tracy builds from, and `released` alone does not. Today no publish step calls `publishVerified` (it is
-#588's to call, running the gate on the archive it just built).
+an AI quickstart Tracy builds from, and `released` alone does not. **Where #586 stops:** the library (`publishVerified`,
+the plan check, `releaseProblems`) and the guard command (`release-guard.mjs`) are done and tested; no publish step calls
+`publishVerified` yet: the publish step that calls it, running the gate on the archive it just built, is #588. CI
+(`check-kit-release.mjs`) reads files only and rebuilds no plan.
 
 ### The secret scan
 
