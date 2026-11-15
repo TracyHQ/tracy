@@ -16,7 +16,7 @@ const writerKey = (f) => 'writer:' + f.page + '/' + f.key
  * @returns {{options: {textOf: Function, factOf: Function}, used: Map<string, {code: string, probe: object}>,
  *   refused: Map<string, string[]>, seen: Map<string, object>}} `used`: the probed places and their codes; `refused`:
  *   probed writer fields the page writer's copy check sent back, with its reasons; `seen`: every place the build asked
- *   for, probed or not (`{key, type, limit, base, code}`)
+ *   for, probed or not (`{key, type, kind, limit, base, code}`)
  */
 export function passOptions(assignment = new Map()) {
   const used = new Map()
@@ -31,7 +31,14 @@ export function passOptions(assignment = new Map()) {
       return markerText(f)
     }
     const base = 'Qx' + f.code
-    seen.set(key, { key, type: placeTypeOf({ kind: f.kind }), limit: f.limit ?? null, base, code: f.code })
+    seen.set(key, {
+      key,
+      type: placeTypeOf({ kind: f.kind }),
+      kind: f.kind ?? null,
+      limit: f.limit ?? null,
+      base,
+      code: f.code
+    })
     const probe = assignment.get(key)
     if (!probe) return markerText(f)
     used.set(key, { code: f.code, probe })
@@ -44,7 +51,7 @@ export function passOptions(assignment = new Map()) {
     const key = v.what === 'item' ? head : head + '#' + n
     const code = v.code ?? codesIn(v.value)[0] ?? null
     if (!code) return v.value
-    seen.set(key, { key, type: placeTypeOf(v), limit: null, base: v.value, code })
+    seen.set(key, { key, type: placeTypeOf(v), kind: v.kind ?? null, limit: null, base: v.value, code })
     const probe = assignment.get(key)
     if (!probe) return v.value
     used.set(key, { code, probe })

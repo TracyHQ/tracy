@@ -1,6 +1,6 @@
 // The structure measurement of the release gate (ticket #586) on the invented florist kit and a site in memory: the
 // full marker build, the minimum variant on a fresh site, and the pages hidden after the build in two halves, with the
-// links each hidden page breaks named by its page type (product decision 3: recorded only).
+// links each hidden page breaks named by its page type (ADR 0045 section 3: a broken link fails).
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { markerBuild } from '../ai-quickstart/gate/marker-plan.mjs'
@@ -32,20 +32,24 @@ test('the minimum variant composes each block at its minimum items, the full one
   assert.equal(result.status, 'passed')
 })
 
-test('a link to a hidden page is missing_page with its page type, recorded only', async () => {
-  const { result } = await measure()
+test('a link to a hidden page is missing_page with its page type, and fails the measurement', async () => {
+  const { result } = await measure({ staleLinks: true })
   const hidden = result.hidden
-  assert.equal(hidden.status, 'passed')
+  assert.equal(hidden.status, 'failed')
   assert.ok(hidden.hidden >= 2)
-  const missing = hidden.recorded.filter((f) => f.kind === 'missing_page')
+  const missing = hidden.broken.filter((f) => f.kind === 'missing_page')
   assert.ok(missing.length > 0)
   for (const f of missing) {
     assert.ok(f.target, f.href)
     assert.ok(f.hidden.includes(f.target), f.target + ' was hidden when its link broke')
   }
-  // Every hidden page answers again once published, and the recorded links do not fail the measurement.
+  // Every hidden page answers again once published.
   assert.deepEqual(hidden.notBack, [])
-  assert.equal(result.status, 'passed')
+  assert.equal(result.status, 'failed')
+  // A template whose menu follows the hidden pages keeps every link whole.
+  const clean = await measure()
+  assert.equal(clean.result.hidden.status, 'passed')
+  assert.deepEqual(clean.result.hidden.broken, [])
 })
 
 test('a page that answers an error fails the full variant', async () => {

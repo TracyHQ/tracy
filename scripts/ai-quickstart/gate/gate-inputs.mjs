@@ -1,11 +1,13 @@
 // What the release gate command reads before it runs (ticket #586): the kit folder as the build reads it, the plugin
 // version Tracy pins, the demo baseline the template readiness step keeps beside the template's contract (template
 // quality's fallback control), and the secret scan of the files to publish with its negative control, plus the same
-// value rules over the record's own files at the end. Reads files; never prints a secret's value.
+// rule sets over the record's own files at the end. Reads files; never prints a secret's value.
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ADAPTERS, applyAllow, filesOfArgs, readAllow, scanTexts, secretScan } from './secret-scan.mjs'
+import { ALLOW_FILE, allowShaOf } from './release-binding.mjs'
+import { gitleaksFindings } from './secret-gitleaks.mjs'
+import { ADAPTERS, filesOfArgs, readAllow, scanTexts, secretScan } from './secret-scan.mjs'
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 
@@ -59,15 +61,27 @@ export function secretsOf({ folder, installer, human = null, cms, gitleaks = tru
   })
 }
 
-/** The value rules and the CMS adapter over the record's own files (`[{name, text}]`), less what the allow file names. */
-export function recordScanner({ folder, cms }) {
-  const allow = readAllow(path.join(folder, 'check-record', 'secret-allow.json'))
-  return (files) =>
-    applyAllow(
-      scanTexts(
-        files.map((f) => ({ file: f.name, text: f.text })),
-        ADAPTERS[cms]
-      ),
-      allow
-    ).findings
+/**
+ * Every rule set over the record's own files (`[{name, text}]`): the value rules, the CMS adapter and the pinned
+ * gitleaks, with no allow entry (the record holds no vendor sample, so nothing in it may be allowed). Returns
+ * `{findings, gitleaks}`; gitleaks not run leaves the secret scan `incomplete` (`release-gate-files.mjs`).
+ */
+export function recordScanner({ cms, gitleaks = true }) {
+  return (files) => {
+    const texts = files.map((f) => ({ file: f.name, text: f.text }))
+    const found = scanTexts(texts, ADAPTERS[cms])
+    const leaks = gitleaks
+      ? gitleaksFindings(texts, gitleaks === true ? {} : gitleaks)
+      : { status: 'not_available', reason: 'not asked for' }
+    return {
+      findings: [...found, ...(leaks.findings ?? [])],
+      gitleaks: { status: leaks.status, ...(leaks.reason ? { reason: leaks.reason } : {}) }
+    }
+  }
+}
+
+/** The sha256 of the kit's secret allow file and its name, or null when the kit has none (`record.mjs` binding). */
+export function secretAllowOf(folder) {
+  const sha256 = allowShaOf(folder)
+  return sha256 ? { file: ALLOW_FILE, sha256 } : null
 }

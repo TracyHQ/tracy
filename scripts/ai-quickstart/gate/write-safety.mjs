@@ -1,45 +1,76 @@
 // Write safety of the release gate (ticket #586, product decisions 1 and 2): does the site keep and print as words what
-// a customer could type into any place the build writes? In passes, each on a fresh site, the marker build writes a
-// probe (`write-probes.mjs`) at every place it can; the pass is written, every page read, and each probe classed
-// (`write-safety-judge.mjs`). A refusal or an error is traced to the one value that caused it by bisection
-// (`bisect.mjs`), that probe is taken out and the pass runs again (at most `reruns` times). The ledger shows which
-// probe reached which place. The site and the build are injected: a memory site in the unit test, a real one through
-// `gate.mjs` (`release-gate.mjs`). Without a way to reset the site the measurement is `not_run`.
-import { bisect, stepBudget } from './bisect.mjs'
-import { only, pageCulprits, stopOf } from './write-safety-trials.mjs'
-import { buildRefusalOf, FAILING, gapKey, judgePage, stopClassOf } from './write-safety-judge.mjs'
+// a customer could type into any place the build writes? First the plain marker build must be written on the site
+// and its pages answer as planned: otherwise no value can be blamed and the measurement is `incomplete`. Then, in
+// passes, each on a fresh site, the marker build writes a probe (`write-probes.mjs`) at every place it can; the pass is
+// written, every page read, and each probe classed (`write-safety-judge.mjs`, one pass in `write-safety-pass.mjs`). A
+// refusal or an error is traced to the one value that caused it (`write-safety-trials.mjs`), that probe is taken out
+// and the pass runs again. A place counts as tested only when a probe reached the real site there. The state is kept
+// after each pass (`write-safety-state.mjs`), so a run stopped by its time limit resumes. The site and the build are
+// injected: a memory site in the unit test, a real one through `gate.mjs` (`release-gate.mjs`). Without a way to reset
+// the site the measurement is `not_run`.
+import { stepBudget } from './bisect.mjs'
+import { coverageOf } from './write-safety-coverage.mjs'
+import { FAILING, gapKey, pageBroken } from './write-safety-judge.mjs'
+import { onePass } from './write-safety-pass.mjs'
 import { nameOf, passOptions, shortOf, storedIndex } from './write-safety-places.mjs'
+import { resumed } from './write-safety-state.mjs'
 import { packPass, probeLedger } from './write-probes.mjs'
 
 /**
- * The limits of one measurement (#586): passes, bisection steps, minutes, re-runs of one pass. A pass gives a place one
- * probe, so the passes must cover the place that takes most probes (21 for a text place with a declared limit, with the
- * edge probes and the Joomla ones).
+ * The limits of one run of the measurement (#586), from the times measured on a real T4 template (plugin 0.24.85, a
+ * database snapshot reset): a marker build in memory about 7 s, a full site write about 40 s, a reset and the page
+ * reads about 30 s, so a pass about 80 s. A pass gives a place one probe, so the passes cover the place that takes most
+ * probes (21); 21 clean passes take about 28 minutes. Site steps (a fresh site and a write each, about 70 s) and build
+ * steps (a build in memory each) are counted apart; past a limit the measurement is `incomplete` and the next run into
+ * the same run folder resumes it.
  */
-export const LIMITS = Object.freeze({ passes: 24, steps: 40, minutes: 60, reruns: 5 })
+export const LIMITS = Object.freeze({ passes: 24, steps: 20, buildSteps: 60, minutes: 60, reruns: 5 })
+
+const incompleteOf = (reason, more = {}) => ({ status: 'incomplete', incomplete: reason, reason, ...more })
 
 /**
- * @param {{build: (options: object) => Promise<object>, site: {reset: Function | null, write: Function,
- *   pages: Function, fetch: Function, off?: Function, back?: Function} | null, probes: object[], limits?: object,
- *   now?: () => number, log?: (line: string) => void}} input `build`: the marker build with the given options;
- *   `site.write(built)` answers `{report, record}`; `site.pages(built, record)` the pages; `site.fetch(url)`
- *   `{status, html}`; `site.off(ops)` / `site.back(ops)` take copies off their pages and back (block bisection)
- * @returns {Promise<{status: string, reason?: string, places?: object, passes?: object[], findings?: object[],
- *   ledger?: object[], missing?: object[], steps?: number}>}
+ * @param {{build: (options: object) => Promise<object>, site: object | null, probes: object[], limits?: object,
+ *   now?: () => number, log?: (line: string) => void, plain?: {report: object} | null, state?: object | null,
+ *   stateKey?: string | null, universeWritten?: number | null}} input `site`: `{reset, write, pages, fetch, off?,
+ *   back?}`; `plain`: the site write of the plain marker build the run already made (the marker test), else write
+ *   safety writes it once itself; `state`/`stateKey`: where the passes are kept and under what key
  */
-export async function writeSafety({ build, site, probes, limits = LIMITS, now = Date.now, log = () => {} }) {
+export async function writeSafety(input) {
+  const { build, site, probes, now = Date.now, log = () => {} } = input
   if (typeof site?.reset !== 'function') return { status: 'not_run', reason: 'no_reset_hook' }
+  const limits = { ...LIMITS, ...input.limits }
+  if (!probes?.length) return incompleteOf('no_probes')
   const start = now()
   const late = () => now() - start > limits.minutes * 60000
-  const budget = stepBudget(limits.steps)
   const plain = passOptions()
-  const plainBuilt = await build(plain.options)
-  const plainGaps = new Set((plainBuilt.gaps ?? []).map(gapKey))
+  let plainBuilt
+  try {
+    plainBuilt = await build(plain.options)
+  } catch (error) {
+    return incompleteOf('plain_build_failed', { code: String(error?.code ?? 'build_failed') })
+  }
   const plainIndex = storedIndex(plainBuilt.writePlan)
   const written = [...plain.seen.values()].filter((p) => plainIndex.has(String(p.code).toUpperCase()))
   const places = written.filter((p) => p.type)
+  const coverage = coverageOf(plainBuilt.writePlan, plain.seen, input.universeWritten ?? null)
+  const counts = { written: written.length, probed: places.length, tested: 0 }
+  if (!places.length) return incompleteOf('no_places', { places: counts, coverage })
+  const base = await plainOnSite(site, plainBuilt, input.plain)
+  if (base) return incompleteOf(base.reason, { ...base, places: counts, coverage, findings: [], steps: 0 })
+
   const ledger = probeLedger()
   const findings = []
+  const passes = []
+  const was = resumed(input.state, input.stateKey)
+  for (const r of was?.ledger ?? []) ledger.set(r.place, r.probe, r)
+  findings.push(...(was?.findings ?? []))
+  passes.push(...(was?.passes ?? []))
+  const budget = stepBudget(Math.max(0, limits.steps - (was?.steps ?? 0)))
+  const buildBudget = stepBudget(Math.max(0, limits.buildSteps - (was?.buildSteps ?? 0)))
+  const spent = () => ({
+    steps: (was?.steps ?? 0) + budget.spent,
+    buildSteps: (was?.buildSteps ?? 0) + buildBudget.spent
+  })
   const record = (key, probe, failure, pass) => {
     const stored = plainIndex.get(String(plain.seen.get(key)?.code).toUpperCase())?.[0]
     findings.push({
@@ -69,15 +100,25 @@ export async function writeSafety({ build, site, probes, limits = LIMITS, now = 
     try {
       return await site.write(a.built)
     } catch (error) {
-      return {
-        report: { status: 'stopped', code: error.code ?? 'write_failed', details: error.details ?? null }
-      }
+      return { report: { status: 'stopped', code: error.code ?? null, details: error.details ?? null } }
     }
   }
-  const ctx = { attempt, writeOn, record, budget, plainGaps, late, site, ledger, log }
-  const passes = []
+  const plainGaps = new Set((plainBuilt.gaps ?? []).map(gapKey))
+  const ctx = {
+    attempt,
+    writeOn,
+    record,
+    budget,
+    buildBudget,
+    plainGaps,
+    plainIndex,
+    late,
+    site,
+    ledger,
+    log
+  }
   let incomplete = null
-  for (let n = 1; n <= limits.passes; n++) {
+  for (let n = passes.length + 1; n <= limits.passes; n++) {
     const assignment = packPass(places, probes, ledger)
     if (!assignment.size) break
     if (late()) {
@@ -93,103 +134,69 @@ export async function writeSafety({ build, site, probes, limits = LIMITS, now = 
       seconds: Math.round((now() - began) / 1000)
     })
     log('write safety pass ' + n + ': ' + assignment.size + ' probes, ' + out.runs + ' run(s)')
+    input.state?.save({ key: input.stateKey ?? null, ledger: ledger.rows(), findings, passes, ...spent() })
     if (out.incomplete) {
       incomplete = out.incomplete
       break
     }
   }
+  return resultOf({ places, written, ledger, probes, findings, passes, incomplete, coverage, was, spent })
+}
+
+/** The plain marker build on the site: written to the end, every page answering as planned; else why not. */
+async function plainOnSite(site, built, given) {
+  if (given) {
+    return given.report?.status === 'done'
+      ? null
+      : { reason: 'plain_write_stopped', stop: { code: given.report?.code ?? null } }
+  }
+  await site.reset()
+  let w
+  try {
+    w = await site.write(built)
+  } catch (error) {
+    w = { report: { status: 'stopped', code: error.code ?? null } }
+  }
+  if (w.report?.status !== 'done')
+    return { reason: 'plain_write_stopped', stop: { code: w.report?.code ?? null } }
+  for (const page of await site.pages(built, w.record)) {
+    const failure = pageBroken(await site.fetch(page.url), page)
+    if (failure) return { reason: 'plain_pages_broken', page: page.pageType ?? null, failure }
+  }
+  return null
+}
+
+/** The measurement from what the passes found: failed, incomplete with the first reason, or passed. */
+function resultOf({ places, written, ledger, probes, findings, passes, incomplete, coverage, was, spent }) {
   const missing = ledger.missing(places, probes)
-  if (!incomplete && missing.length) incomplete = 'passes'
-  const reached = new Set(ledger.rows().map((r) => r.place))
+  const onSite = new Set(
+    ledger
+      .rows()
+      .filter((r) => r.status === 'written')
+      .map((r) => r.place)
+  )
+  const notSiteTested = places.filter((p) => !onSite.has(p.key)).map((p) => p.key)
   const failed = findings.some((f) => FAILING.has(f.kind))
+  const why =
+    incomplete ??
+    (missing.length
+      ? 'passes'
+      : findings.some((f) => f.kind === 'unclassified')
+        ? 'unclassified_stop'
+        : notSiteTested.length
+          ? 'not_site_tested'
+          : null)
   return {
-    status: failed ? 'failed' : incomplete ? 'incomplete' : 'passed',
-    ...(incomplete ? { incomplete } : {}),
-    places: { written: written.length, probed: places.length, tested: reached.size },
+    status: failed ? 'failed' : why ? 'incomplete' : 'passed',
+    ...(why ? { incomplete: why } : {}),
+    places: { written: written.length, probed: places.length, tested: onSite.size },
     passes,
     findings,
     ledger: ledger.rows(),
     missing: missing.slice(0, 50),
-    steps: budget.spent
+    notSiteTested: notSiteTested.slice(0, 50),
+    coverage,
+    ...spent(),
+    ...(was ? { resumedFrom: was.passes.length } : {})
   }
-}
-
-/** One pass: build, refusals traced and taken out, write, every page read; at most `reruns` runs again. */
-async function onePass(n, assignment, ctx, limits) {
-  const { attempt, writeOn, record, budget, plainGaps, late, site, ledger } = ctx
-  const active = new Map(assignment)
-  const take = (culprits) => {
-    for (const { unit, failure } of culprits) {
-      record(unit, active.get(unit), failure, n)
-      active.delete(unit)
-    }
-  }
-  for (let run = 1; run <= limits.reruns + 1; run++) {
-    if (late()) return { runs: run - 1, incomplete: 'time' }
-    const a = await attempt(active)
-    for (const [key, problems] of a.opts.refused) {
-      record(key, active.get(key), { kind: 'refused_by_build', code: 'page_copy_check', problems }, n)
-      active.delete(key)
-    }
-    const refusal = buildRefusalOf(a, plainGaps)
-    if (refusal) {
-      const units = [...a.opts.used.keys()]
-      const found = await bisect(
-        units,
-        async (subset) => buildRefusalOf(await attempt(only(active, subset)), plainGaps),
-        budget,
-        refusal
-      )
-      take(found.culprits)
-      if (!found.culprits.length)
-        return { runs: run, incomplete: found.exhausted.length ? 'steps' : 'unattributed' }
-      continue
-    }
-    const w = await writeOn(a)
-    if (w.report?.status !== 'done') {
-      const stop = stopClassOf(w.report)
-      const index = storedIndex(a.built.writePlan)
-      // A whole value probe (the empty value, a number) carries no code: the plan cannot say where it went, so it
-      // stays a suspect of every stop.
-      const inOp = (key) => {
-        const at = index.get(String(a.opts.used.get(key).code).toUpperCase())
-        return !stop.op || !at || at.some((s) => s.op === stop.op)
-      }
-      const units = [...a.opts.used.keys()].filter(inOp)
-      const found = await bisect(units, (subset) => stopOf(subset, active, ctx), budget, stop)
-      take(found.culprits)
-      if (!found.culprits.length)
-        return { runs: run, incomplete: found.exhausted.length ? 'steps' : 'unattributed' }
-      continue
-    }
-    const pages = await site.pages(a.built, w.record)
-    const shown = new Set()
-    let broken = null
-    for (const page of pages) {
-      const answer = await site.fetch(page.url)
-      if (answer.status >= 500) {
-        broken = page
-        break
-      }
-      const judged = judgePage(answer.html, a.opts.used)
-      for (const k of judged.shown) shown.add(k)
-      for (const { place, judged: j } of judged.injected)
-        if (active.has(place)) {
-          record(place, active.get(place), j, n)
-          active.delete(place)
-        }
-    }
-    if (broken) {
-      const found = await pageCulprits(broken, a, w, active, ctx)
-      take(found.culprits)
-      if (!found.culprits.length)
-        return { runs: run, incomplete: found.exhausted.length ? 'steps' : 'unattributed' }
-      continue
-    }
-    for (const [key, probe] of active)
-      if (a.opts.used.has(key))
-        ledger.set(key, probe.id, { status: 'written', pass: n, seen: shown.has(key) })
-    return { runs: run }
-  }
-  return { runs: limits.reruns + 1, incomplete: 'reruns' }
 }

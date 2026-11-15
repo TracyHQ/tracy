@@ -21,7 +21,11 @@ const ORIGIN = 'http://florist.example'
 // The four measurements of #586, each passed.
 const PASSED = {
   writeSafety: { status: 'passed' },
-  structure: { linkCheck: { status: 'passed' }, minItems: { status: 'passed' } },
+  structure: {
+    linkCheck: { status: 'passed' },
+    minItems: { status: 'passed' },
+    hidden: { status: 'passed' }
+  },
   quality: { status: 'passed' },
   secrets: { status: 'passed', findings: [] }
 }

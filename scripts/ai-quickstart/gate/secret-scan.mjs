@@ -7,7 +7,8 @@
 // A finding the allow file (`check-record/secret-allow.json`, `[{file, rule, fingerprint, why}]`) names exactly is
 // allowed, with its reason: a vendor's documentation sample, never a scrub gap. The scan has a negative control: the
 // untouched human quickstart installer holds accounts and secrets, so the same rules must find some there; none means
-// the scan is blind (`control: 'scan_blind'`). The measurement is `failed` on any finding not allowed, `incomplete`
+// the scan is blind (`control: 'scan_blind'`). The measurement is `failed` on any finding not allowed or any allow
+// entry that matches nothing (named, so the allow file never keeps a stale exemption), `incomplete`
 // when the control is blind or not run, or gitleaks did not run, and `passed` only otherwise.
 //
 //   node scripts/ai-quickstart/gate/secret-scan.mjs [--kit <AI quickstart folder>] [--blank-site <blank site .zip>]
@@ -125,13 +126,19 @@ export function secretScan({ files, allow = [], control = null, cms = 'joomla', 
   const all = [...found, ...(leaks.findings ?? [])]
   const split = applyAllow([...new Map(all.map((f) => [keyOf(f), f])).values()], allow)
   const ctrl = control ? controlOf(control.name, control.bytes, adapter) : { status: 'not_run' }
-  const status = split.findings.length
-    ? 'failed'
-    : ctrl.status !== 'right' || leaks.status !== 'ran' || unparsed.length
-      ? 'incomplete'
-      : 'passed'
+  // An allow entry that matches nothing is a stale exemption: the scan fails and names it, so the file stays exact.
+  const unused = split.unusedAllows.map((a) => a.file + ' ' + a.rule + ' ' + a.fingerprint)
+  const status =
+    split.findings.length || unused.length
+      ? 'failed'
+      : ctrl.status !== 'right' || leaks.status !== 'ran' || unparsed.length
+        ? 'incomplete'
+        : 'passed'
   return {
     status,
+    ...(unused.length && !split.findings.length
+      ? { reason: 'unused_allow', message: 'allow entries that match nothing: ' + unused.join('; ') }
+      : {}),
     cms,
     scanned,
     unparsed,

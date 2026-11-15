@@ -77,3 +77,53 @@ test('a site that is not fresh after its reset is refused, each problem named', 
     (e) => e.code === 'reset_not_fresh' && e.problems[0].code === 'slot_not_blank'
   )
 })
+
+test('K1: after the command the reset waits while the site does not answer yet, bounded, then checks it', async () => {
+  const down = (code) => Object.assign(new Error('info: ' + code), { code })
+  let calls = 0
+  let clock = 0
+  const slept = []
+  const reset = siteReset({
+    command: 'restore',
+    exec: async () => {},
+    sleep: async (ms) => {
+      slept.push(ms)
+      clock += ms
+    },
+    now: () => clock,
+    check: async () => {
+      calls += 1
+      if (calls === 1) throw down('not_json')
+      if (calls === 2) throw down('no_answer')
+      return []
+    }
+  })
+  await reset()
+  assert.equal(calls, 3)
+  assert.equal(slept.length, 2)
+  // A site that never comes back stops the reset with its own code once the wait is over.
+  clock = 0
+  const never = siteReset({
+    command: 'restore',
+    exec: async () => {},
+    waitSeconds: 10,
+    sleep: async (ms) => {
+      clock += ms
+    },
+    now: () => clock,
+    check: async () => {
+      throw down('not_json')
+    }
+  })
+  await assert.rejects(never(), (e) => e.code === 'reset_site_unreachable' && e.cause === 'not_json')
+  // A refusal of another kind is no wait: it is the check's own answer.
+  const refused = siteReset({
+    command: 'restore',
+    exec: async () => {},
+    sleep: async () => assert.fail('no wait on a refusal'),
+    check: async () => {
+      throw down('unauthorized')
+    }
+  })
+  await assert.rejects(refused(), (e) => e.code === 'unauthorized')
+})

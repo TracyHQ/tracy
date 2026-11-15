@@ -19,9 +19,12 @@
  * blank site of the blank site archive with the plugin installed; `--reset-site` a shell command that makes it fresh
  * again (without it the minimum variant and write safety are `not_run`, and the verdict fails). `--control-only`
  * measures the untouched human quickstart alone (`controls/human.json`, `controls/quality.json`) for a machine that
- * holds one throwaway site at a time; the full run reads them with `--human-control` (the quality file beside it is
- * found on its own). `--secrets-only` runs the secret scan alone (`secrets.json`). `--into-kit` also writes
- * `check-record/` into the kit folder. Exit 0 when what ran passed, 1 when not, 2 on a usage error.
+ * holds one throwaway site at a time, as the gate's own files (`gate-controls.mjs`); the full run reads them with
+ * `--human-control` (the quality file beside it is found on its own) and refuses any other file. `--secrets-only` runs
+ * the secret scan alone (`secrets.json`). `--into-kit` also writes `check-record/` into the kit folder. The write
+ * safety passes are kept in `<out>/write-safety-state.json`, so a run stopped by its time limit resumes when run again
+ * into the same folder. A run that stops before its phases still writes a failing record (`stoppedRecord`). Exit 0
+ * when what ran passed, 1 when not, 2 on a usage error.
  */
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
@@ -38,18 +41,30 @@ import { JOOMLA_PROBES } from './adapters/joomla-probes.mjs'
 import { DECLARED_HOSTS, EXEMPTIONS, PLATFORM, SYSTEM_PAGES } from './adapters/joomla-t4.mjs'
 import { crawlPages } from './adapters/web-frame.mjs'
 import { cropGroups } from './crops.mjs'
-import { controlOf } from './demo-checks.mjs'
-import { baselineOf, kitOf, pinnedPlugin, recordScanner, ROOT, secretsOf } from './gate-inputs.mjs'
+import { joomlaPageKey } from './adapters/joomla-page-key.mjs'
+import { measureControls, readControls, writeControls } from './gate-controls.mjs'
+import {
+  baselineOf,
+  kitOf,
+  pinnedPlugin,
+  recordScanner,
+  ROOT,
+  secretAllowOf,
+  secretsOf
+} from './gate-inputs.mjs'
 import { MEASURED_REFUSALS, memoryTryWrite } from './memory-write.mjs'
 import { markerBuild } from './marker-plan.mjs'
 import { kitHashesOf, splitOf } from './record.mjs'
 import { releaseGate } from './release-gate.mjs'
+import { writeRecordFiles } from './release-gate-files.mjs'
+import { stoppedRecord } from './release-gate-record.mjs'
 import { renderSite, THEMES, WIDTHS } from './render.mjs'
 import { runGate } from './run-gate.mjs'
 import { qualityOn, siteSession } from './site-session.mjs'
 import { filesOf } from './sources.mjs'
 import { blankControlOf } from './verdict.mjs'
 import { PROBE_CATALOGUE } from './write-probes-edge.mjs'
+import { fileState } from './write-safety-state.mjs'
 
 const argv = process.argv.slice(2)
 const flag = (name) => (argv.includes(name) ? argv[argv.indexOf(name) + 1] : null)
@@ -65,16 +80,37 @@ if (!folder || !out || (!human && !flag('--installer'))) {
   process.exit(2)
 }
 mkdirSync(path.join(out, 'controls'), { recursive: true })
-const kit = kitOf(folder)
-const t = kit.template
 const log = (line) => {
   console.log(line)
   appendFileSync(path.join(out, 'gate.log'), new Date().toISOString() + ' ' + line + '\n')
 }
 const sha = (file) => createHash('sha256').update(readFileSync(file)).digest('hex')
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
+const startedAt = new Date().toISOString()
+let stage = 'kit'
+let kit = null
+// A step before the phases that throws still leaves a record, failing with the stage and the reason.
+const stop = (error) => {
+  log(
+    'stopped at ' +
+      stage +
+      ': ' +
+      (error?.code ?? 'error') +
+      ' ' +
+      String(error?.message ?? error).slice(0, 300)
+  )
+  const inputs =
+    human && existsSync(human) ? { humanQuickstart: { file: path.basename(human), sha256: sha(human) } } : {}
+  writeRecordFiles(out, stoppedRecord({ kit, inputs, startedAt, stage, error }))
+  process.exit(1)
+}
+process.on('uncaughtException', stop)
+process.on('unhandledRejection', stop)
+kit = kitOf(folder)
+const t = kit.template
 
 // The blank site archive: made from the human quickstart by the blank site step, or given.
+stage = 'blank site'
 const installer = flag('--installer') ?? path.join(out, 'blank', t.slug + '-blank-' + t.version + '.zip')
 if (!flag('--installer')) {
   mkdirSync(path.dirname(installer), { recursive: true })
@@ -134,20 +170,14 @@ const controlRender = async (base, name, pages) => {
   return renderSite(opts)
 }
 const paths = (pages) => [...new Set(pages.filter((p) => p.from !== 'system').map((p) => '/' + p.path))]
-const humanControl = async (base) => {
-  const pages = await crawl(base)
-  const demo = await controlOf(await controlRender(base, 'human', pages), corpus)
-  const quality = {
-    from: 'measured',
-    ...(await qualityOn({ base, platform: PLATFORM, pages: paths(pages) }))
-  }
-  writeFileSync(path.join(out, 'controls', 'human.json'), JSON.stringify(demo, null, 1))
-  writeFileSync(path.join(out, 'controls', 'quality.json'), JSON.stringify(quality, null, 1))
-  return { human: demo, quality }
-}
+const humanSha = human ? sha(human) : null
+const controlDeps = { crawl, render: controlRender, corpus, qualityOn, platform: PLATFORM, paths }
 
 if (controlOnly) {
-  const { human: demo, quality } = await humanControl(controlOnly)
+  stage = 'human control'
+  const controls = await measureControls(controlOnly, controlDeps)
+  writeControls(out, controls, humanSha)
+  const { human: demo, quality } = controls
   log('control human: ' + demo.status + ', ' + demo.findings + ' finding(s) on ' + demo.pages + ' page(s)')
   log(
     'control quality: ' +
@@ -169,7 +199,8 @@ const common = {
   kitHashes: kitHashesOf(folder),
   inputs: {
     blankSite: { file: path.basename(installer), sha256: sha(installer) },
-    ...(human ? { humanQuickstart: { file: path.basename(human), sha256: sha(human) } } : {})
+    ...(human ? { humanQuickstart: { file: path.basename(human), sha256: humanSha } } : {}),
+    ...(secretAllowOf(folder) ? { secretAllow: secretAllowOf(folder) } : {})
   },
   log
 }
@@ -186,6 +217,7 @@ if (!site) {
   process.exit(accounting.counts.unexplained ? 1 : 0)
 }
 
+stage = 'site session'
 const pin = flag('--plugin') ?? pinnedPlugin(t)
 const plain = await markerBuild(kit, { iconLibrary: common.iconLibrary, tryWrite: common.tryWrite }).catch(
   () => null
@@ -206,23 +238,38 @@ const given = flag('--human-control')
 const qualityFile =
   flag('--quality-control') ?? (given ? path.join(path.dirname(given), 'quality.json') : null)
 const demoContent = flag('--demo-content')
+// A control file that is not the gate's own for this installer refuses the run before anything is written.
+let read = null
+if (!humanSite && given) {
+  try {
+    read = readControls({
+      humanFile: given,
+      qualityFile: qualityFile && existsSync(qualityFile) ? qualityFile : null,
+      humanQuickstartSha256: humanSha
+    })
+  } catch (error) {
+    console.error(error.message)
+    process.exit(2)
+  }
+}
+stage = 'phases'
 const { record } = await releaseGate({
   ...common,
   site: session,
   reset: session.reset,
   quality: session.quality,
   secrets,
-  scanRecord: recordScanner({ folder, cms: PLATFORM }),
+  scanRecord: recordScanner({ cms: PLATFORM, gitleaks: !argv.includes('--no-gitleaks') }),
+  pageKey: joomlaPageKey,
+  pin,
+  writeSafetyState: fileState(path.join(out, 'write-safety-state.json')),
   baseline: baselineOf(folder, flag('--quality-baseline')),
   probes: [...PROBE_CATALOGUE, ...JOOMLA_PROBES],
   demoRoutes: demoContent && existsSync(demoContent) ? demoRoutesOf(readJson(demoContent)) : [],
   control: async () => ({
     ...(humanSite
-      ? await humanControl(humanSite)
-      : {
-          human: given ? readJson(given) : { status: 'not_run', findings: null },
-          quality: qualityFile && existsSync(qualityFile) ? readJson(qualityFile) : null
-        }),
+      ? await measureControls(humanSite, controlDeps)
+      : (read ?? { human: { status: 'not_run', findings: null }, quality: null })),
     // The blank site before the write serves no page by design: its statuses are recorded, never judged.
     blank: blankControlOf(await controlRender(site, 'blank', await crawl(site)))
   }),

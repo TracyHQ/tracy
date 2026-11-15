@@ -49,8 +49,8 @@ const MEASURED = {
     },
     minItems: { status: 'passed', broken: [] },
     hidden: {
-      status: 'passed',
-      recorded: [{ kind: 'missing_page', page: '/', href: '/b', hidden: ['team'] }]
+      status: 'failed',
+      broken: [{ kind: 'missing_page', page: '/', href: '/b', hidden: ['team'] }]
     }
   },
   quality: {

@@ -10,7 +10,11 @@ import { blankControlOf, measurementsOf, verdictOf } from '../ai-quickstart/gate
 
 const passedMeasurements = () => ({
   writeSafety: { status: 'passed' },
-  structure: { linkCheck: { status: 'passed' }, minItems: { status: 'passed' } },
+  structure: {
+    linkCheck: { status: 'passed' },
+    minItems: { status: 'passed' },
+    hidden: { status: 'passed' }
+  },
   quality: { status: 'passed' },
   secrets: { status: 'passed' }
 })

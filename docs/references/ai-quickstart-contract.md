@@ -1732,7 +1732,7 @@ a `status` of `passed`, `failed`, `incomplete` or `not_run`:
 | `markerTest` | the #585 parts: write, leaks, written values not seen, unexplained places, renders, order, observation (`not_run` without a real write) |
 | `demoScan` | the #585 parts: demo in the browser or the HTML, and the human control |
 | `writeSafety` | the write safety run (#586) |
-| `structure` | its two checks, `linkCheck` and `minItems`: `passed` when both passed, `failed` when one failed, `incomplete` when only some ran |
+| `structure` | its three variants, `linkCheck` (all items), `minItems` (fewest items) and `hidden` (pages hidden after the build): `passed` when all three passed, `failed` when one failed, `incomplete` otherwise |
 | `quality` | the template quality run (#586) |
 | `secrets` | the secret scan below |
 
@@ -1745,10 +1745,13 @@ only on `passed`. `verdict.measurements` repeats the six statuses, `verdict.notR
 `record.binding` says what the record was measured on: `gateVersion` (`GATE_VERSION` in `record.mjs`, bumped by hand
 when an earlier passing record is no proof any more), `kitRef`, `kitFilesSha256` (the sha256 over `<path> <sha256>`
 lines of every kit file sorted by path; `check-record/` is skipped, so writing the record changes nothing it is about),
-`blankSiteSha256`, `humanQuickstartSha256`, and `plugin` (`expected`, `start`, `end`). Beside the record, the kit
-carries a small `check-record/verdict.json` (`tracy-ai-quickstart-check-verdict/v1`, made by `verdictFileOf(record)`):
-the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it, `recordText(record)`), and the verdict
-(`pass`, `failing`, `measurements`).
+`blankSiteSha256`, `humanQuickstartSha256`, `plugin` (`expected`, `start`, `end`), `controls` (the provenance of the
+human control and the quality control, section "The controls" below) and `secretAllowSha256` (the sha256 of the kit's
+`check-record/secret-allow.json`, null when it has none). The kit carries both `check-record/record.json` (required:
+a verdict alone is no proof) and a small `check-record/verdict.json` (`tracy-ai-quickstart-check-verdict/v1`, made by
+`verdictFileOf(record)`): the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it,
+`recordText(record)`), and the verdict (`pass`, `failing`, `measurements`). `GATE_VERSION` is 3 since the second #586
+round: a record of version 2 counted build refusals as tested places and left the hidden variant out of the status.
 
 ### The release refusal
 
@@ -1757,6 +1760,12 @@ the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it, 
 | Code | When |
 |---|---|
 | `no_verdict`, `verdict_unreadable` | `check-record/verdict.json` is missing or not a verdict file |
+| `no_record`, `record_unreadable` | `check-record/record.json` is missing or not JSON |
+| `verdict_not_from_record` | the verdict file is not the one `verdictFileOf(record)` gives |
+| `record_verdict_wrong` | the record's own verdict is not the one its contents give: the guard works the verdict out again from the record (`gate/record-verdict.mjs`), the #585 parts from what the record keeps and the four #586 parts from their statuses |
+| `measurement_inconsistent` | a measurement says `passed` but holds what fails it (a failing write safety finding or a place not reached on the site, a structure status its variants do not give, a quality regression or blocking SEO item, a secret or an unused allow entry) |
+| `control_unbound` | a control was not made by the gate, is of another gate version, measured another human quickstart installer than the record, or was read from a file whose sha256 the binding does not keep |
+| `allow_changed` | the kit's secret allow file is not the one the record was scanned with |
 | `not_passed` | the verdict did not pass (the failing parts are named) |
 | `gate_outdated` | the record is of another `gateVersion` |
 | `kit_changed` | a kit file changed since the record (named when `check-record/record.json` ships beside it) |
@@ -1764,7 +1773,7 @@ the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it, 
 | `plugin_not_pinned` | the record ran another plugin than Tracy pins |
 | `human_quickstart_not_pinned` | the record ran another human quickstart installer than the pinned one |
 | `blank_site_changed` | the blank site archive about to be published is not the one the record ran on |
-| `record_changed` | `check-record/record.json` is not the record the verdict was written from |
+| `record_changed` | `check-record/record.json` is not the record the verdict was written from (by its bytes) |
 
 A passing record goes stale only by one of these: a bumped `gateVersion` or a changed bound input. The pins come from
 `apps/tracy-web/src/quickstarts.json` (`quickstart/<slug>/<cms>`: `cowork.version` and `installer.sha256`; a kit whose
@@ -1778,9 +1787,16 @@ node scripts/ai-quickstart/gate/release-guard.mjs <AI quickstart folder> [--blan
 Exit 0 when the kit may be released, 1 with every problem listed.
 
 The contract check (`node scripts/ai-quickstart/check.mjs`, CI) adds two rules: a kit whose `kit-manifest.json` has a
-`site` entry must carry a fresh passing `check-record/verdict.json` (the refusal above), and every kit
+`site` entry must carry a fresh passing check record (the refusal above), and every kit
 `ai-quickstarts/<slug>/<cms>/<version>` must have a readable `contracts/<slug>/<cms>/<version>/template-kit.json` in
 the same package.
+
+**What CI enforces and what only the publish step does.** CI runs every refusal above on a kit that names a `site`,
+with the pins of the quickstart list: a hand-made or forged verdict is red there (`no_record`, `verdict_not_from_record`,
+`record_verdict_wrong`, `control_unbound`; `scripts/test/ai-quickstart-kit-release.test.mjs`). CI cannot check
+`blank_site_changed`: the blank site archive is not in the repository, so only `assertReleasable(folder, {blankSiteSha})`
+at publish time compares it. A kit with no `site` entry is not yet a released AI quickstart and CI asks no record of it;
+the publish step is what refuses it. Today no publish step calls `assertReleasable` (it is #588's to call).
 
 ### The secret scan
 
@@ -1811,13 +1827,14 @@ the value's sha256. The value itself is never kept: not in the result, the recor
 
 **The allow file**, `check-record/secret-allow.json` in the kit: `[{file, rule, fingerprint, why}]`, every entry with a
 reason. A finding it names exactly (same file, rule and fingerprint) is listed under `allowed` with its reason; an
-entry that matches nothing is listed under `unusedAllows`. It is for a vendor's sample or a value gitleaks misreads
+entry that matches nothing is listed under `unusedAllows` and fails the scan (`reason: unused_allow`, each entry named),
+so the file never keeps a stale exemption. Its sha256 is in the binding. It is for a vendor's sample or a value gitleaks misreads
 (a file hash beside a path that says `key`), never for a scrub gap: a secret the blank site step left is fixed there.
 
 **The negative control**: the same rules on the untouched human quickstart installer, which holds accounts, sessions
 and secrets, must find some (`control.status: right`); none is `scan_blind`.
 
-**The status**: `failed` on any finding not allowed; else `incomplete` when the control is blind or not run, when
+**The status**: `failed` on any finding not allowed or any unused allow entry; else `incomplete` when the control is blind or not run, when
 gitleaks did not run (`gitleaks.status: not_available` on a machine without the pinned binary: a scan without its second
 opinion cannot vouch for the package), or when a dump could not be parsed (`unparsed`, read line by line instead);
 `passed` only otherwise.
@@ -1889,20 +1906,35 @@ a usage error.
    and the quality groups read on it (the quality control). The blank site before the write is rendered too (its
    statuses recorded, never judged).
 3. **Marker test**: section "The marker test" above.
-4. **Structure, full variant**: the marker build is the build at every block's most items, so the marker site is read
-   again: every page answers, no link is broken (`linkCheck` with the pages the plan has, an HTTP probe and the
-   template's demo routes).
+4. **Structure, full variant**: the marker build asks every block for its declared most items, so the marker site is
+   read again: every planned page answers its planned status (200, or the status a system page declares), whether a
+   link leads to it or not; no link is broken (`linkCheck` with the pages the plan has, an HTTP probe and the
+   template's demo routes); and every item block shows its declared most items (the main block of an item page shows
+   its own record, one). A block that shows otherwise is explained only by a reason the build gives (a block it hid,
+   a fallback, a write step gap that took items out); one with none leaves the variant `incomplete`, the blocks named
+   (`items`). A run of #585 measured 14 of 29 blocks below their most items: the gate now says so instead of passing.
 5. **Quality**: the site check's page groups on the marker site, against the control; the SEO items of the marker
    test's renders.
 6. **Structure, hidden pages**: the marker site's pages hidden in two halves, each half read, then published again.
+   A link on a page still shown to a hidden page fails the variant. A page that does not answer again once published,
+   a hide door that throws, or no hide door, leaves it `incomplete`. The plugin has no door to delete a page, so a
+   deleted page is measured as a hidden page: this proves that taking a page out of the menu and the site leaves no
+   link to it on the pages left; it does not prove what a real delete does to the database (an orphan record, a
+   cleaned up menu item).
 7. **Structure, minimum variant**: the reset, then the build at every block's least items (at least one), written and
-   read like the full one.
-8. **Write safety**: the probe passes, each on a reset site.
-9. **The record**: `record.json`, `record.html`, and `check-record/record.json` and `check-record/verdict.json`
-   (`verdictFileOf`). The secret rules read the record's own JSON and HTML before they are written.
+   read like the full one, with every item block checked at its least items the same way.
+8. **Write safety**: the plain write checked, then the probe passes, each on a reset site.
+9. **Crops**: the crop of each finding group the page shows; a crop that throws is `incomplete` and the record is
+   still written.
+10. **The record**: `record.json`, `record.html`, and `check-record/record.json` and `check-record/verdict.json`
+   (`verdictFileOf`). Every rule set (the value shapes, the CMS adapter and gitleaks, with no allow entry) reads the
+   record's own JSON and HTML, and a finding changes the record, so the record is made and scanned again until a scan
+   reads exactly what is written (`gate/release-gate-files.mjs`; `measurements.secrets.recordScan`). A scan that throws,
+   never settles, or ran without gitleaks leaves the secret scan `incomplete`.
 
 A phase that throws is `incomplete` with its reason (`reason`, `message`) and the later phases still run where they
-can. A marker test that throws (a build guard that refuses the kit) leaves a record made from an empty build: it fails
+can. A step before the phases that throws (the blank site step, the kit, the site session) still writes a record, every
+measurement `incomplete` with `reason: run_stopped` and the stage (`stoppedRecord`). A marker test that throws (a build guard that refuses the kit) leaves a record made from an empty build: it fails
 on every part the marker test owns, and `measurements.markerTest` is `incomplete` with the guard's code. Each phase's
 time is in `record.phases`.
 
@@ -1910,10 +1942,10 @@ time is in `record.phases`.
 
 | Measurement | Blocks | Recorded only |
 |---|---|---|
-| Write safety | a value a customer could type that the site answers with an error (`server_error`), that the plugin refuses or keeps otherwise (`door_refused`), or that a page prints as a live element or runs as code (`markup_injected`) | a refusal by one of the build's own named guards (`refused_by_build`) |
-| Structure | a page error or a broken link with all items or with the fewest items | the links a page hidden after the build breaks (`hidden.recorded`, with the hidden page types) |
-| Quality | a block failure of a page group the untouched template does not show at the same width with the same selector (or reason when there is no selector): a `regression`; any missing SEO item | a failure the untouched template shows too (`same_as_template`); every warning |
-| Secrets | a finding the allow file does not name | an allowed finding, with its reason |
+| Write safety | a value a customer could type that the site answers with an error (`server_error`), that stops the site answering (`site_unreachable`), that the plugin refuses or keeps otherwise (`door_refused`), or that a page prints as a live element or runs as code (`markup_injected`); a page that holds a probe and answers 0, 404 or 500 and more | a refusal by one of the build's own named guards (`refused_by_build`): not a tested place |
+| Structure | a page error or a broken link in any of the three variants, a link to a hidden page | none |
+| Quality | a block failure of a page group the untouched template does not show on the same kind of page, at the same width, with the same selector (or reason when there is no selector): a `regression`; a missing SEO item on a page the build writes, or on a system page where the untouched template has it | a failure the untouched template shows too (`same_as_template`); a system page's SEO item the untouched template misses too; every warning |
+| Secrets | a finding the allow file does not name; an allow entry that matches nothing | an allowed finding, with its reason |
 
 **Write safety** (`gate/write-safety.mjs`). The probe catalogue (`gate/write-probes.mjs`, `gate/write-probes-edge.mjs`,
 `gate/adapters/joomla-probes.mjs`): markup (a tag, quotes that end an attribute, a JA ACM marker, an escaped tag), letters
@@ -1921,16 +1953,45 @@ of other scripts, a code address and a quote in a link, then the edge probes of 
 field's declared limit and one exactly at it, control characters and a Windows line end, the empty value and a single
 space, format tokens (`%s`, `%d`), numbers written as text (`0`, `-1`, `1e309`, `NaN`), an emoji sequence with a joiner,
 right to left text with a direction override, and a JA ACM marker that never closes, plus the Joomla content plugin
-codes. A pass writes one probe in every place, a different one per place; the ledger keeps which probe reached which
-place. A refusal or an error is traced to the one value that caused it by bisection, that probe is taken out and the
-pass runs again. Limits (`LIMITS`): 24 passes (a text place with a declared limit takes 21 probes, one per pass), 40
-bisection steps, 60 minutes, 5 runs of one pass; past one the measurement is `incomplete`, never `passed`. The record
-gives `places` (`written`, `probed`, `tested`), `passes`, `findings` (page, block, store block, field, probe, kind,
-the stored location; never the value) and `missing`.
+codes.
 
-**Structure** (`gate/structure.mjs`). `measurements.structure` holds `linkCheck` (the full variant), `minItems` (the
-minimum variant) and `hidden`. Its status: `failed` when one of the full and minimum variants failed, `passed` when both
-passed, `incomplete` otherwise.
+First the plain marker build must be on the site, written to the end with every page answering as planned (the marker
+test's own write, or one write of its own): otherwise no value can be blamed and the measurement is `incomplete`
+(`plain_write_stopped`, `plain_pages_broken`). Then a pass writes one probe in every place, a different one per place;
+the ledger keeps which probe reached which place. A stop is classed by its code (`gate/write-safety-judge.mjs`): a code
+on the build team's own list of guard codes (`BUILD_GUARD_CODES`, made from the lists the draft write and the write
+order export, with a test that fails on a code the list does not know) is `refused_by_build`; a door that answered
+with a code is `door_refused`; no answer, or a stop with no code, is `site_unreachable` or `server_error`; a code the
+gate does not know is `unclassified` and leaves the measurement `incomplete`. A build refusal is found in memory, never
+on the site (`gate/write-safety-trials.mjs`): when the refusal names its place (entry, slot or operation) one build
+confirms it, else a bisection over builds, all counted as build steps; a site stop or a broken page is traced by
+bisection over site writes, counted as site steps. That probe is taken out and the pass runs again.
+
+A place counts as `tested` only when a probe was written there on the real site; a place where every probe was refused
+by the build is not tested, and any place not tested leaves the measurement `incomplete` (`not_site_tested`).
+
+Limits (`LIMITS`), from the times measured on JA Boxing 1.0.11 with a database snapshot reset: a marker build in memory
+about 7 s, a full site write about 40 s, a reset and the page reads about 30 s, so a pass about 80 s; 21 clean passes
+(the text place with a declared limit takes 21 probes, one per pass) take about 28 minutes. 24 passes, 20 site steps
+(about 70 s each), 60 build steps, 60 minutes, 5 runs of one pass; past one the measurement is `incomplete`, never
+`passed`. The state is saved after each pass (`<out>/write-safety-state.json`, `gate/write-safety-state.mjs`) under a
+key of the gate version, the kit's files, the blank site archive, the plugin and the probe catalogue: a run stopped by
+its time limit resumes from the next pass when the gate runs again into the same folder (`resumedFrom`).
+
+The record gives `places` (`written`, `probed`, `tested`), `notSiteTested`, `passes`, `steps`, `buildSteps`,
+`findings` (page, block, store block, field, probe, kind, the stored location; never the value), `missing` and
+`coverage`. **Coverage** (`gate/write-safety-coverage.mjs`) reconciles the places write safety probes with the written
+places of the universe: the universe counts every location the build writes (a run of #585: 618, of which 589 slots,
+28 entities and 1 build value), write safety probes field by field (344 written fields there). `coverage` gives the
+universe's count, the locations the plain build writes, the ones probed, and every other one by its reason:
+`picture` (a stored file the build chooses), `email` and `phone` (checked by their own field rule), each
+`not_probed` in this round; `build_value` (a page name, a menu title, an alt text, a setting the build writes itself);
+`no_marker` (an icon class, a link the build makes, a design setting); `removed` (an element the write takes out).
+
+**Structure** (`gate/structure.mjs`, `gate/structure-items.mjs`). `measurements.structure` holds `linkCheck` (the full
+variant), `minItems` (the minimum variant) and `hidden`. All three decide its status: `failed` when one failed,
+`passed` when all three passed, `incomplete` otherwise. A variant whose write stopped is `incomplete`
+(`write_stopped`), one that read no page `incomplete` (`no_pages`), never `passed`.
 
 **Quality** (`gate/quality.mjs`, `gate/quality-seo.mjs`). The groups, by name (`QUALITY_GROUPS`; an unknown name
 throws): `empty-frames`, `cms-errors`, `text-overflow`, `stretched-pictures`, `empty-controls`, `main-heading`,
@@ -1938,17 +1999,36 @@ throws): `empty-frames`, `cms-errors`, `text-overflow`, `stretched-pictures`, `e
 own (`runSiteCheck`, read through the host's browser code run locally: `localHost` of
 `apps/tracy-web/scripts/demo-measures.mjs`), at 1440 and 390, the theme reads in light and dark. The control of a group is the human quickstart's
 measure when it measured, else the demo baseline file's; a group with neither cannot be compared (`uncompared`), and a
-group the marker site could not measure (`unmeasured`) leaves the measurement `incomplete`. The SEO items, read from the
-marker test's renders: every page has a title no other page shares, a meta description, an `og:image`, a viewport meta,
-`html[lang]`, an `alt` attribute on every picture (empty is allowed), and a declared favicon that answers 200.
+group the marker site could not measure (`unmeasured`), or one red that lists no failure (`red_without_failures`),
+leaves the measurement `incomplete`. A failure is matched on its group, its page's key, its width and its selector (or
+reason): the page key is the kind of page (`gate/adapters/joomla-page-key.mjs`: the component, view and layout the body
+classes name), so the same failure on another kind of page is a regression; a regression on a kind of page the control
+has not got is marked `counterpart: none` and stays a regression. The SEO items, read from the marker test's renders:
+every page has a title no other page shares, a meta description, an `og:image`, a viewport meta, `html[lang]`, an
+`alt` attribute on every picture (empty is allowed), and a declared favicon that answers 200. A page the build writes is
+held to all of them; a system page the template titles itself (login, password reset, search, the 404) is compared with
+the same page of the untouched template, and an item it misses there too is the template's own (`seo.same`), one the
+control could not say is `uncompared` and leaves the measurement `incomplete`.
+
+### The controls
+
+The human control (the demo scan's) and the quality control (the page groups, the page keys and the SEO items) are the
+untouched human quickstart measured by the gate itself: in the same run by default (`--human-site`), or first on its
+own (`--control-only`), written as the gate's own files (`gate/control-file.mjs`, `tracy-ai-quickstart-gate-control/v1`:
+the kind, the gate version and the sha256 of the human quickstart installer measured) and read back with
+`--human-control` / `--quality-control`. A file of another schema, kind, gate version or installer, or any other JSON,
+refuses the run (exit 2). The provenance of each control (`measured_in_run`, or `file` with the file's sha256) is in
+the binding, and the release guard refuses a record whose controls the gate did not make for its installer.
 
 ### The reset hook
 
 `--reset-site "<command>"` is run by `/bin/sh -c` before the minimum variant and before every write safety pass and
 trial (`gate/site-reset.mjs`). It must leave the site as it was when the run started: the blank site restored, the
 plugin installed at the pinned version and bound to its blank site contract, every contract slot at its blank value and
-none of the build's records left. After the command the gate checks exactly that (`freshProblems`) and stops the phase
-with `reset_not_fresh` and the problems when the site is not fresh. A database snapshot taken after the restore and the
+none of the build's records left. After the command the gate waits while the site does not answer yet (a database
+snapshot put back answers 502 for a moment: `not_json` or `no_answer`, retried every 2 seconds for at most 90), then
+checks exactly that (`freshProblems`) and stops the phase with `reset_not_fresh` and the problems when the site is not
+fresh, or `reset_site_unreachable` when it never answered. A database snapshot taken after the restore and the
 plugin install, put back by the command, is the fast way; a full restore per pass makes write safety too slow for its
 time limit. The command's output is not kept; it must print no secret.
 
@@ -1962,8 +2042,9 @@ import { assertReleasable } from '../scripts/ai-quickstart/gate/release-guard.mj
 assertReleasable(kitFolder, { blankSiteSha: sha256OfTheBlankSiteArchive })
 ```
 
-It throws, with `problems` on the error, unless the kit's `check-record/verdict.json` is of this gate version, passed,
-and bound to the kit's files, the pinned plugin and human quickstart, and that archive (section "The release refusal"
+It throws, with `problems` on the error, unless the kit's `check-record/verdict.json` is the one its
+`check-record/record.json` gives, of this gate version, passed, and bound to the kit's files, the pinned plugin and
+human quickstart, the gate's own controls, the allow file, and that archive (section "The release refusal"
 above). `gate.mjs --into-kit` writes the `check-record/` the guard reads.
 
 ### Run time
@@ -1971,8 +2052,9 @@ above). `gate.mjs --into-kit` writes the `check-record/` the guard reads.
 On the invented florist kit with the memory site the whole run takes about a second. On a real site the time is the
 marker test (renders of every page at three widths and two themes), two more reads of every page, one more full write
 (the minimum variant), and one reset, one full write and one read of every page per write safety pass (at least 21
-passes with the whole catalogue, plus bisection trials). Write safety stops at 60 minutes as `incomplete`; plan on the
-order of one and a half to two hours for a template the size of JA Boxing with a database snapshot reset.
+passes with the whole catalogue, plus site steps for what breaks on the site; build refusals cost builds in memory
+only). Write safety stops at its 60 minute limit as `incomplete` and resumes from its saved state when run again into
+the same folder; the limits above are set so a clean template the size of JA Boxing finishes its passes inside them.
 
 ## Choices made where spec #576 is silent
 

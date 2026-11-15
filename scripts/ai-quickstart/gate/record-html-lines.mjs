@@ -1,0 +1,156 @@
+// The one line per measurement of the review page (ticket #586), for an owner who does not read code. Every sentence
+// is true for the state it describes: a line says a thing was fine only when it was measured and passed; a measurement
+// that did not finish says what did not finish and why; build refusals are named apart, never as values tested on the
+// site. The structure line names each of its three variants. Pure.
+
+const n = (count, one, many) => count + ' ' + (count === 1 ? one : many)
+
+/** Why a measurement or a variant did not run or did not finish, in plain words. */
+const WHY = {
+  no_reset_hook: 'the run had no reset command to make the site fresh again',
+  marker_test_not_written: 'the marker test did not write the site',
+  marker_test_not_rendered: 'the marker test did not read the pages',
+  no_page_reader: 'no browser was given to read the pages',
+  time: 'it ran out of time (run it again into the same folder to resume)',
+  passes: 'it ran out of passes before every value reached every field',
+  steps: 'it ran out of site steps while looking for the field that caused a problem',
+  build_steps: 'it ran out of build steps while looking for the value the build refused',
+  plain_write_stopped: 'the plain marker build did not finish writing the site',
+  plain_pages_broken: 'a page of the plain marker build did not answer as planned',
+  plain_build_failed: 'the plain marker build could not be made',
+  not_site_tested: 'some places never received a value on the real site',
+  unclassified_stop: 'a stop came with a code the gate does not know',
+  no_probes: 'it had no values to try',
+  no_places: 'the build writes no place it can try values in',
+  write_stopped: 'the build did not finish writing the site',
+  full_not_written: 'the build did not finish writing the site',
+  no_pages: 'no page was read',
+  items_not_at_shape:
+    'some blocks were not shown at the number of items the variant asks for, with no reason given',
+  no_hide_door: 'the site has no way to hide a page',
+  hide_door_failed: 'hiding or publishing a page failed',
+  pages_not_back: 'some pages did not answer again once published',
+  red_without_failures: 'a check reported a problem without naming it',
+  record_not_scanned: 'the record itself was not scanned',
+  record_gitleaks_not_run: 'gitleaks did not run over the record itself',
+  record_scan_failed: 'the scan of the record itself failed',
+  record_scan_unsettled: 'the scan of the record itself did not settle',
+  run_stopped: 'the run stopped before this measurement'
+}
+const whyOf = (m) => {
+  const code = m?.reason ?? m?.incomplete
+  if (WHY[code]) return WHY[code]
+  if (code) return String(code).replaceAll('_', ' ')
+  return m?.status === 'not_run' ? 'this run did not include it' : 'it did not finish'
+}
+
+/** One structure variant in words. */
+function variantLine(name, v, hidden = false) {
+  if (!v || v.status === 'not_run') return name + ': not measured, ' + whyOf(v ?? { status: 'not_run' })
+  if (v.status === 'incomplete') return name + ': not finished, ' + whyOf(v)
+  const broken = v.broken?.length ?? 0
+  if (hidden)
+    return (
+      name +
+      ': ' +
+      (broken
+        ? n(broken, 'link leads', 'links lead') + ' to a hidden page'
+        : 'no link leads to a hidden page')
+    )
+  const errors = v.errors?.length ?? 0
+  if (v.status === 'passed' && !broken && !errors) return name + ': every page answers and no link is broken'
+  return (
+    name + ': ' + n(broken, 'broken link', 'broken links') + ' and ' + n(errors, 'page error', 'page errors')
+  )
+}
+
+/** What write safety reached and found, true in every state. */
+function writeSafetyLine(m) {
+  const p = m.places ?? {}
+  const site = (m.findings ?? []).filter((f) => f.kind !== 'refused_by_build').length
+  const build = (m.findings ?? []).filter((f) => f.kind === 'refused_by_build').length
+  const parts = [
+    'values reached the site at ' + (p.tested ?? 0) + ' of ' + (p.probed ?? 0) + ' places the build writes',
+    n((m.passes ?? []).length, 'pass', 'passes')
+  ]
+  const notProbed = Object.values(m.coverage?.notProbed ?? {}).reduce((a, b) => a + b, 0)
+  if (notProbed)
+    parts.push(n(notProbed, 'written place', 'written places') + ' not probed (listed with the reason)')
+  if (site)
+    parts.push(n(site, 'value', 'values') + ' a customer could type broke a page or the site refused it')
+  if (build)
+    parts.push(n(build, 'value', 'values') + ' the build refused, recorded and not tested on the site')
+  if (m.status === 'passed') parts.push('nothing a customer could type broke a page')
+  return parts.join('; ')
+}
+
+const FOUND = {
+  markerTest: (m) =>
+    m.status === 'passed'
+      ? 'every place the build writes shows the value written, and nothing else leaks.'
+      : 'see the findings below.',
+  demoScan: (m) =>
+    m.status === 'passed'
+      ? 'no demo text or picture is left after the build.'
+      : 'demo text or pictures are left, or the scan is blind.',
+  writeSafety: (m) => writeSafetyLine(m) + '.',
+  structure: (m) =>
+    [
+      variantLine('all items', m.linkCheck),
+      variantLine('fewest items', m.minItems),
+      variantLine('pages hidden', m.hidden, true)
+    ].join('; ') + '.',
+  quality: (m) =>
+    n(m.regressions?.length ?? 0, 'problem', 'problems') +
+    ' the untouched template does not have, ' +
+    n(
+      m.seo?.blocking?.length ?? m.seo?.missing?.length ?? 0,
+      'missing search engine item',
+      'missing search engine items'
+    ) +
+    '; ' +
+    n(m.sameAsTemplate?.length ?? 0, 'problem', 'problems') +
+    ' the template has already.',
+  secrets: (m) => {
+    if (m.findings?.length)
+      return n(m.findings.length, 'secret', 'secrets') + ' found in the files to publish or the record.'
+    if (m.reason === 'unused_allow')
+      return (
+        'the allow file has allow entries that match nothing: ' +
+        String(m.message ?? '').replace(/^[^:]*: /, '') +
+        '.'
+      )
+    return (
+      'No secret in the files to publish or in this record' +
+      (m.control?.status === 'right' ? ', and the scan found the ones the original quickstart holds.' : '.')
+    )
+  }
+}
+
+const STATUS = { passed: 'Passed', failed: 'Failed', incomplete: 'Not finished', not_run: 'Not measured' }
+const NAMES = {
+  markerTest: 'The marker test',
+  demoScan: 'The demo scan',
+  writeSafety: 'Write safety',
+  structure: 'Structure',
+  quality: 'Template quality',
+  secrets: 'Secret scan'
+}
+// A measurement that did not finish still says what it reached, after why: write safety its places, structure its
+// variants; the others only why.
+const PARTIAL = { writeSafety: true, structure: true }
+
+/** One line per measurement: `{key, name, status, line}`. */
+export function measurementLines(measurements = {}) {
+  return Object.entries(NAMES).map(([key, name]) => {
+    const m = measurements[key] ?? { status: 'not_run' }
+    const status = STATUS[m.status] ? m.status : 'incomplete'
+    const head = STATUS[status] + ': '
+    let line
+    if (status === 'passed' || status === 'failed') line = FOUND[key](m)
+    else if (status === 'incomplete' && key === 'structure') line = FOUND.structure(m)
+    else if (status === 'incomplete' && PARTIAL[key]) line = whyOf(m) + '; ' + FOUND[key](m)
+    else line = whyOf(m) + '.'
+    return { key, name, status, line: head + line }
+  })
+}

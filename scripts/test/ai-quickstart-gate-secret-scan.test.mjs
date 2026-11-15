@@ -169,7 +169,7 @@ test('a blind control, no control, gitleaks not available or an unreadable dump 
   rmSync(s.root, { recursive: true, force: true })
 })
 
-test('the allow file needs a reason for every entry, and an entry that matches nothing is listed', () => {
+test('the allow file needs a reason for every entry, and an entry that matches nothing fails the scan, named', () => {
   const s = setup()
   const file = path.join(s.kit, 'check-record', 'secret-allow.json')
   writeFileSync(file, JSON.stringify([{ ...vendorAllow()[0], why: ' ' }]))
@@ -182,6 +182,9 @@ test('the allow file needs a reason for every entry, and an entry that matches n
     gitleaks: { bin: s.bin }
   })
   assert.deepEqual(r.unusedAllows, [stale])
+  assert.equal(r.status, 'failed')
+  assert.equal(r.reason, 'unused_allow')
+  assert.match(r.message, /kit\/mapping\.json jwt abcdef012345/)
   rmSync(s.root, { recursive: true, force: true })
 })
 

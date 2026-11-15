@@ -14,11 +14,15 @@ const siteless = (value, origin) =>
  * @param {object} record a `tracy-ai-quickstart-check-record/v2` document
  * @param {Record<string, object>} given the measurements of #586 the run gave (`writeSafety`, `structure`, `quality`,
  *   `secrets`); a missing one is `not_run`
- * @param {{origin?: string | null, markerTest?: object, demoScan?: object, phases?: object[]}} [more] `markerTest` and
+ * @param {{origin?: string | null, markerTest?: object, demoScan?: object, phases?: object[], finishedAt?: string}} [more] `markerTest` and
  *   `demoScan` replace those measurements (a marker test that threw is `incomplete` with its reason); `phases`: the
  *   run's phases with their time
  */
-export function withMeasurements(record, given, { origin = null, markerTest, demoScan, phases } = {}) {
+export function withMeasurements(
+  record,
+  given,
+  { origin = null, markerTest, demoScan, phases, finishedAt } = {}
+) {
   const measured = siteless(measurementsOf(given), origin)
   const own = {
     markerTest: markerTest ?? record.measurements?.markerTest ?? { status: 'not_run' },
@@ -42,7 +46,7 @@ export function withMeasurements(record, given, { origin = null, markerTest, dem
   if (!verdict.pass && failing.length === 0) verdict.failing = ['markerTest']
   return {
     ...record,
-    finishedAt: new Date().toISOString(),
+    finishedAt: finishedAt ?? new Date().toISOString(),
     verdict,
     measurements: { ...own, ...measured },
     ...(phases ? { phases } : {})

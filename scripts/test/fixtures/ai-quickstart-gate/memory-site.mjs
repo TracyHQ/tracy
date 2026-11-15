@@ -1,7 +1,7 @@
 // A site in memory for write safety and the structure measurements (ticket #586): the build team's memory doors of the
 // invented florist kit, written by their write step, every page printed by the memory renderer (every value raw, as
 // the measured template prints it), and scripted faults: a door that answers an error or refuses a call, a page that
-// answers an error. Its pages link to one another, a hidden record answers 404, and a copy taken off its pages is not
+// answers an error. Its pages link to one another (a hidden page leaves the menu), a hidden record answers 404, and a copy taken off its pages is not
 // printed. Nothing here is a real template.
 import { runDraftWrite } from '../../../../apps/tracy-web/src/step-chain-draft-write.js'
 import { memoryDoors } from '../../../../packages/wo/website-opportunities/domain/write-order-memory-doors.mjs'
@@ -14,12 +14,21 @@ export const ORIGIN = 'http://florist.example'
  * @param {object} kit the florist kit
  * @param {{door?: (call: object) => string | null, pageFails?: (html: string) => boolean, reset?: boolean,
  *   escaped?: boolean}} [faults] `door(call)`: the code a door call fails with (a server error or a refusal), or
- *   null; `pageFails(html)`: the page answers 500; `reset: false`: the site has no reset hook; `decode`: the template
+ *   null; `pageFails(html)`: the page answers 500; `pageStatus(html, url)`: the status the page answers instead of
+ *   200 (0: no answer, 404: not found), or null; `staleLinks`: the menu keeps the links of hidden pages (a template
+ *   whose menu does not follow a hidden page); `reset: false`: the site has no reset hook; `decode`: the template
  *   decodes stored quote references before it prints a value (a value then prints as markup)
  */
 export function memorySiteOf(
   kit,
-  { door = () => null, pageFails = () => false, reset = true, decode = false } = {}
+  {
+    door = () => null,
+    pageFails = () => false,
+    pageStatus = () => null,
+    staleLinks = false,
+    reset = true,
+    decode = false
+  } = {}
 ) {
   let memory = null
   const hidden = new Set()
@@ -91,7 +100,8 @@ export function memorySiteOf(
         return { status: 404, html: '<html></html>' }
       const shown = new Map([...memory.site.records.module].filter(([id]) => !off.has(Number(id))))
       const view = { site: { ...memory.site, records: { ...memory.site.records, module: shown } } }
-      const nav = pagesOfBuild.map((p) => '<a href="' + p.path + '">' + p.pageType + '</a>').join('')
+      const listed = pagesOfBuild.filter((p) => staleLinks || !hidden.has(p.record.kind + ':' + p.record.id))
+      const nav = listed.map((p) => '<a href="' + p.path + '">' + p.pageType + '</a>').join('')
       // The florist copies keep their value as the whole params column: printed raw, as words and in an attribute.
       const params = [...shown.values()]
         .filter((m) => typeof m.params === 'string' && m.params !== '{}')
@@ -100,7 +110,9 @@ export function memorySiteOf(
       const printed = renderedOf(view) + params
       const body = decode ? printed.replaceAll('&quot;', '"').replaceAll('&#039;', "'") : printed
       const html = '<html><body><nav>' + nav + '</nav>' + body + '</body></html>'
-      return { status: pageFails(html) ? 500 : 200, html }
+      const status = pageStatus(html, url)
+      if (status === 0) return { status: 0, html: '' }
+      return { status: pageFails(html) ? 500 : (status ?? 200), html }
     },
     // A hidden record answers 404 until it is published again.
     hide: async ({ kind, id }) => void hidden.add(kind + ':' + id),

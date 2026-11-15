@@ -15,9 +15,10 @@ export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v2'
 
 /**
  * The version of the gate's rules, bumped by hand whenever a change makes an earlier passing record no proof any more
- * (a new measurement, a stricter rule). A release refuses a record of another version.
+ * (a new measurement, a stricter rule). A release refuses a record of another version. 3: the release guard recomputes
+ * the verdict from the record, write safety counts only what reached the site, the hidden pages decide structure.
  */
-export const GATE_VERSION = 2
+export const GATE_VERSION = 3
 
 /** The folder of a kit that holds its check record; never part of what the record is measured on. */
 export const CHECK_RECORD_DIR = 'check-record'
@@ -67,7 +68,10 @@ export function kitFilesSha256(hashes) {
   return createHash('sha256').update(lines.join('')).digest('hex')
 }
 
-/** What a record was measured on: the gate version, the kit and its files, the two archives, the plugin at both ends. */
+/**
+ * What a record was measured on: the gate version, the kit and its files, the two archives, the plugin at both ends,
+ * the provenance of the two controls (`control-file.mjs`) and the sha256 of the kit's secret allow file (null: none).
+ */
 export function recordBinding({ kit, kitHashes, inputs, plugin }) {
   return {
     gateVersion: GATE_VERSION,
@@ -75,7 +79,9 @@ export function recordBinding({ kit, kitHashes, inputs, plugin }) {
     kitFilesSha256: kitFilesSha256(kitHashes),
     blankSiteSha256: inputs?.blankSite?.sha256 ?? null,
     humanQuickstartSha256: inputs?.humanQuickstart?.sha256 ?? null,
-    plugin: { expected: plugin?.expected ?? null, start: plugin?.start ?? null, end: plugin?.end ?? null }
+    plugin: { expected: plugin?.expected ?? null, start: plugin?.start ?? null, end: plugin?.end ?? null },
+    controls: { human: inputs?.controls?.human ?? null, quality: inputs?.controls?.quality ?? null },
+    secretAllowSha256: inputs?.secretAllow?.sha256 ?? null
   }
 }
 

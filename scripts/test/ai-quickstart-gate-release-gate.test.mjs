@@ -3,22 +3,15 @@
 // measurements that need a fresh site `not_run` and the verdict failed; a phase that throws is `incomplete` with its
 // reason while the later phases still run.
 import assert from 'node:assert/strict'
-import { createHash } from 'node:crypto'
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
-import { EXEMPTIONS } from '../ai-quickstart/gate/adapters/joomla-t4.mjs'
-import { JOOMLA_PROBES } from '../ai-quickstart/gate/adapters/joomla-probes.mjs'
-import { codesIn } from '../ai-quickstart/gate/marker-codec.mjs'
-import { memoryTryWrite } from '../ai-quickstart/gate/memory-write.mjs'
+import { floristGate, groups, overflow } from './fixtures/ai-quickstart-gate/florist-gate.mjs'
 import { releaseGate } from '../ai-quickstart/gate/release-gate.mjs'
+import { stoppedRecord } from '../ai-quickstart/gate/release-gate-record.mjs'
+import { verdictFromRecord } from '../ai-quickstart/gate/record-verdict.mjs'
 import { RECORD_FILE, releaseProblems, VERDICT_FILE } from '../ai-quickstart/gate/release-binding.mjs'
-import { blankControlOf } from '../ai-quickstart/gate/verdict.mjs'
-import { PROBE_CATALOGUE } from '../ai-quickstart/gate/write-probes-edge.mjs'
-import { demoCorpus, observationsFromHtml } from '../ai-quickstart/rendered-scan.mjs'
-import { floristKit } from './fixtures/ai-quickstart-gate/florist-kit.mjs'
-import { memorySiteOf, ORIGIN } from './fixtures/ai-quickstart-gate/memory-site.mjs'
 
 const PHASES = [
   'secrets',
@@ -30,98 +23,8 @@ const PHASES = [
   'structure minimum',
   'write safety'
 ]
-const groups = (failures = []) => ({
-  groups: [{ name: 'text-overflow', status: failures.length ? 'red' : 'green', failures }]
-})
-const overflow = (selector) => ({
-  group: 'text-overflow',
-  width: 390,
-  level: 'block',
-  reason: 'cut',
-  selector
-})
-
-/** The SEO items every page needs, so the marker pages carry no finding of their own. */
-const headOf = (p) =>
-  '<head><title>Petal ' +
-  p.pageType +
-  '</title><meta name="description" content="x"><meta property="og:image" content="' +
-  ORIGIN +
-  '/og.png"><meta name="viewport" content="width=device-width"><link rel="icon" href="/icon.png"></head>'
-
-function setup({ reset = true, faults = {}, quality = groups(), secrets, write } = {}) {
-  const kit = floristKit()
-  const site = memorySiteOf(kit, { ...faults, reset })
-  const lines = []
-  const order = []
-  const stamp =
-    (name, fn) =>
-    async (...a) => {
-      order.push(name)
-      return fn(...a)
-    }
-  const fetchPage = site.fetch
-  const session = {
-    origin: ORIGIN,
-    write:
-      write ??
-      (async (built) => ({ ...(await site.write(built)), plugin: { start: '1.0.0', end: '1.0.0' } })),
-    pages: site.pages,
-    fetch: async (url) => (url.endsWith('/icon.png') ? { status: 200, html: '' } : fetchPage(url)),
-    hide: site.hide,
-    show: site.show,
-    off: site.off,
-    back: site.back
-  }
-  const out = mkdtempSync(path.join(tmpdir(), 'release-gate-'))
-  const input = {
-    kit,
-    archive: { names: [], files: new Map() },
-    kitHashes: { 'mapping.json': createHash('sha256').update('{}').digest('hex') },
-    adapter: { exemptions: EXEMPTIONS },
-    iconLibrary: { set: 'invented-icons@1', icons: [{ name: 'leaf', tags: ['plant'], categories: [] }] },
-    tryWrite: memoryTryWrite(kit),
-    corpus: demoCorpus({ fixedTexts: ['Our spring tulip sale'] }),
-    widths: [1440],
-    themes: ['light'],
-    site: session,
-    reset: site.reset,
-    secrets: stamp('secrets', async () => secrets ?? { status: 'passed', findings: [] }),
-    control: stamp('control', async () => ({
-      human: { status: 'run', findings: 3, pages: 1 },
-      blank: blankControlOf([]),
-      quality: { from: 'measured', ...groups([overflow('.hero h1')]) }
-    })),
-    quality: stamp('quality', async () => quality),
-    render: stamp('render', async (pages) => {
-      const out = []
-      for (const p of pages) {
-        const { status, html } = await site.fetch(p.url)
-        const page = html.replace('<html>', '<html lang="en">' + headOf(p)).replace(/<nav>.*?<\/nav>/, '')
-        out.push({
-          ...p,
-          theme: 'light',
-          width: 1440,
-          status,
-          html: page,
-          // The memory pages print the block titles and the page names around the markers: only what carries a
-          // marker is read (and not the menu items' internal links), so the marker test is clean and the verdict can pass.
-          observations: observationsFromHtml(page)
-            .filter((o) => codesIn(String(o.value)).length && !String(o.value).includes('option='))
-            .map((o) => ({ ...o, visible: true }))
-        })
-      }
-      return out
-    }),
-    probes: [...PROBE_CATALOGUE, ...JOOMLA_PROBES],
-    out,
-    log: (l) => lines.push(l)
-  }
-  return { input, site, out, lines, order, done: () => rmSync(out, { recursive: true, force: true }) }
-}
-
 test('every phase runs in its order and the record holds the six measurements, its page and the verdict file', async () => {
-  const s = setup()
+  const s = floristGate()
   try {
     const { record, verdictFile, phases } = await releaseGate(s.input)
     assert.deepEqual(
@@ -168,7 +71,7 @@ test('every phase runs in its order and the record holds the six measurements, i
 })
 
 test('a quality regression and a missing SEO item fail the quality measurement and the verdict', async () => {
-  const s = setup({ quality: groups([overflow('.hero h1'), overflow('.card p')]) })
+  const s = floristGate({ quality: groups([overflow('.hero h1'), overflow('.card p')]) })
   try {
     const { record } = await releaseGate(s.input)
     const q = record.measurements.quality
@@ -189,7 +92,7 @@ test('a quality regression and a missing SEO item fail the quality measurement a
 })
 
 test('with no reset hook the minimum variant and write safety are not_run and the verdict fails', async () => {
-  const s = setup({ reset: false })
+  const s = floristGate({ reset: false })
   try {
     const { record } = await releaseGate(s.input)
     assert.equal(record.measurements.writeSafety.status, 'not_run')
@@ -207,7 +110,7 @@ test('with no reset hook the minimum variant and write safety are not_run and th
 })
 
 test('a phase that throws is incomplete with its reason, and the later phases still run', async () => {
-  const s = setup()
+  const s = floristGate()
   s.input.secrets = async () => {
     throw Object.assign(new Error('gitleaks went away'), { code: 'scan_crashed' })
   }
@@ -232,7 +135,7 @@ test('a phase that throws is incomplete with its reason, and the later phases st
 })
 
 test('a marker write that throws leaves a record that fails on the marker test, with the other phases run', async () => {
-  const s = setup({
+  const s = floristGate({
     write: async () => {
       throw Object.assign(new Error('the build stopped'), { code: 'under_page_position_not_detail' })
     }
@@ -253,7 +156,7 @@ test('a marker write that throws leaves a record that fails on the marker test, 
 })
 
 test('a secret in the record files fails the secret scan before they are written', async () => {
-  const s = setup()
+  const s = floristGate()
   s.input.scanRecord = (files) =>
     files.some((f) => f.name.endsWith('record.json'))
       ? [{ file: 'check-record/record.json', at: '/x', rule: 'jwt', fingerprint: 'abcdefabcdef' }]
@@ -268,4 +171,78 @@ test('a secret in the record files fails the secret scan before they are written
   } finally {
     s.done()
   }
+})
+
+test('S1: the record written is byte for byte the one last scanned, and a scan without gitleaks never passes', async () => {
+  const s = floristGate()
+  const seen = []
+  s.input.scanRecord = async (files) => {
+    seen.push(files)
+    return { findings: [], gitleaks: { status: 'ran' } }
+  }
+  try {
+    const { record } = await releaseGate(s.input)
+    const last = seen.at(-1)
+    assert.equal(record.measurements.secrets.status, 'passed')
+    assert.equal(
+      last.find((f) => f.name === 'check-record/record.json').text,
+      readFileSync(path.join(s.out, RECORD_FILE), 'utf8')
+    )
+    assert.equal(
+      last.find((f) => f.name === 'check-record/record.html').text,
+      readFileSync(path.join(s.out, 'record.html'), 'utf8')
+    )
+    assert.deepEqual(record.measurements.secrets.recordScan, { files: 2, findings: 0, gitleaks: 'ran' })
+  } finally {
+    s.done()
+  }
+  const blind = floristGate()
+  blind.input.scanRecord = async () => ({
+    findings: [],
+    gitleaks: { status: 'not_available', reason: 'no binary' }
+  })
+  try {
+    const { record } = await releaseGate(blind.input)
+    assert.equal(record.measurements.secrets.status, 'incomplete')
+    assert.equal(record.measurements.secrets.reason, 'record_gitleaks_not_run')
+    assert.equal(record.verdict.pass, false)
+  } finally {
+    blind.done()
+  }
+  const none = floristGate()
+  delete none.input.scanRecord
+  try {
+    const { record } = await releaseGate(none.input)
+    assert.equal(record.measurements.secrets.reason, 'record_not_scanned')
+  } finally {
+    none.done()
+  }
+})
+
+test('S6: crops that throw still leave the record and the verdict file written, the crops phase incomplete', async () => {
+  const s = floristGate()
+  s.input.decorate = async () => {
+    throw Object.assign(new Error('no browser for the crops'), { code: 'crops_failed' })
+  }
+  try {
+    const { record, phases } = await releaseGate(s.input)
+    assert.deepEqual(phases.at(-1), { phase: 'crops', status: 'incomplete', seconds: phases.at(-1).seconds })
+    assert.ok(existsSync(path.join(s.out, RECORD_FILE)))
+    assert.ok(existsSync(path.join(s.out, VERDICT_FILE)))
+    assert.ok(existsSync(path.join(s.out, 'record.html')))
+    assert.equal(record.verdict.pass, true)
+  } finally {
+    s.done()
+  }
+})
+
+test('S6: a run that stops before its phases still leaves a failing record, every measurement incomplete', () => {
+  const error = Object.assign(new Error('the blank site step stopped'), { code: 'blank_site_failed' })
+  const record = stoppedRecord({ startedAt: '2026-01-01T00:00:00.000Z', stage: 'blank site', error })
+  assert.equal(record.verdict.pass, false)
+  for (const name of ['markerTest', 'demoScan', 'writeSafety', 'structure', 'quality', 'secrets']) {
+    assert.equal(record.measurements[name].status, 'incomplete', name)
+    assert.equal(record.measurements[name].code, 'blank_site_failed', name)
+  }
+  assert.equal(verdictFromRecord(record).pass, false)
 })

@@ -13,7 +13,7 @@ export const STATUSES = Object.freeze(['passed', 'failed', 'incomplete', 'not_ru
 /** The measurements of #586 the gate runs beside the marker test and the demo scan, in record order. */
 export const MEASURED_PARTS = Object.freeze(['writeSafety', 'structure', 'quality', 'secrets'])
 
-/** Each measurement of #586 before it ran: `structure` holds its two checks, the link check and the minimum items. */
+/** Each measurement of #586 before it ran: `structure` holds its three variants (all items, fewest, pages hidden). */
 export function notRunMeasurements() {
   return {
     writeSafety: { ticket: 586, status: 'not_run' },
@@ -21,16 +21,17 @@ export function notRunMeasurements() {
       ticket: 586,
       status: 'not_run',
       linkCheck: { status: 'not_run' },
-      minItems: { status: 'not_run' }
+      minItems: { status: 'not_run' },
+      hidden: { status: 'not_run' }
     },
     quality: { ticket: 586, status: 'not_run' },
     secrets: { ticket: 586, status: 'not_run' }
   }
 }
 
-/** The status of the structure measurement from its two checks when it gives none: failed beats incomplete. */
+/** The status of the structure measurement from its three variants when it gives none: failed beats incomplete. */
 export function structureStatus(structure) {
-  const parts = [structure?.linkCheck?.status, structure?.minItems?.status]
+  const parts = [structure?.linkCheck?.status, structure?.minItems?.status, structure?.hidden?.status]
   if (parts.every((s) => s === 'passed')) return 'passed'
   if (parts.includes('failed')) return 'failed'
   if (parts.includes('passed') || parts.includes('incomplete')) return 'incomplete'
@@ -75,13 +76,17 @@ const DEMO_PARTS = ['demo', 'controls']
 /**
  * @param {{real: object | null, accounting: {counts: object}, findings: object[], notSeen: object[],
  *   demo: {browser: object[], html: object[]}, renders: object[], controls?: object, orderProblems?: object[],
- *   observationProblems?: object[], measurements?: Record<string, {status: string}>}} input
+ *   observationProblems?: object[], measurements?: Record<string, {status: string}>, failedRenders?: number,
+ *   renderCount?: number}} input `failedRenders`, `renderCount`: the counts a record keeps, in place of `renders`
  */
 export function verdictOf(input) {
   const leaks = (input.findings ?? []).filter((f) => f.group !== 'outside_request')
   const notSeenUnexplained = (input.notSeen ?? []).filter((n) => !n.declared).length
   const demoFindings = (input.demo?.browser?.length ?? 0) + (input.demo?.html?.length ?? 0)
-  const failedRenders = (input.renders ?? []).filter((r) => r.status !== (r.expected ?? 200)).length
+  // A record read back gives the counts it keeps (`record-verdict.mjs`); a run gives its renders.
+  const failedRenders =
+    input.failedRenders ?? (input.renders ?? []).filter((r) => r.status !== (r.expected ?? 200)).length
+  const renderCount = input.renderCount ?? (input.renders ?? []).length
   const measured = measurementsOf(input.measurements)
   const controls = humanControl(input.controls?.human)
   const write = input.real?.status ?? 'not_run'
@@ -104,7 +109,7 @@ export function verdictOf(input) {
   const statusOf = (names, ran) => (!ran ? 'not_run' : names.every((n) => parts[n]) ? 'passed' : 'failed')
   const statuses = {
     markerTest: statusOf(MARKER_PARTS, write !== 'not_run'),
-    demoScan: statusOf(DEMO_PARTS, (input.renders ?? []).length > 0 || controls !== 'not_run'),
+    demoScan: statusOf(DEMO_PARTS, renderCount > 0 || controls !== 'not_run'),
     ...Object.fromEntries(MEASURED_PARTS.map((n) => [n, measured[n].status]))
   }
   return {

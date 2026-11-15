@@ -2,11 +2,14 @@
 // run on the marker site and on the untouched human quickstart (the control), at the site check's widths (1440 and
 // 390) and, for the theme reads, in light and dark. No second implementation: the groups, the host's browser reads and
 // the failure levels are the site check's (`apps/tracy-web/src/site-check/`, imported only). A block failure whose
-// group, width and selector (or reason, when it names no selector) the control does not show is a regression and
-// blocks; one the control shows is the template's own (`same_as_template`) and is recorded. A group the control could
+// group, page, width and selector (or reason, when it names no selector) the control does not show is a regression and
+// blocks; one the control shows on the same template page is the template's own (`same_as_template`), recorded. A group the control could
 // not measure falls back to the demo baseline file the template readiness step keeps (`demo-measures.json`); a group
-// with no control at all cannot be compared and leaves the measurement incomplete. Missing SEO items
-// (`quality-seo.mjs`) block whatever the control says. Pure but for the injected host.
+// with no control at all cannot be compared and leaves the measurement incomplete, and so does a red group that lists
+// no failure. A failure is matched by its page key too (the template page it is on), so the same failure on another
+// page is a regression; a marker page with no counterpart on the control is judged on its own. Missing SEO items
+// (`quality-seo.mjs`) block on every page the build writes; on a system page the template titles itself they are
+// compared with the untouched template the same way. Pure but for the injected host.
 import { PAGE_CHECK_GROUPS } from '../../../apps/tracy-web/src/site-check/page-groups.js'
 import { runSiteCheck } from '../../../apps/tracy-web/src/site-check/site-check.js'
 
@@ -87,27 +90,71 @@ export function baselineControl(doc) {
   }
 }
 
-/** The identity of a failure across two sites: its group, width and selector, or its reason with no selector. */
-export const failureKey = (f) =>
-  [f.group, f.width ?? '', f.selector ?? 'reason:' + (f.reason ?? '')].join('|')
+/**
+ * The page key of every page of a set of renders (`{path, status, html}`): what template page each path is (an adapter
+ * reads it from the page, `adapters/joomla-page-key.mjs`), so the same template page compares with itself on two sites
+ * whose addresses differ. A page the reader names nothing for keeps its path.
+ * @param {object[]} renders
+ * @param {(html: string) => string | null} keyOf
+ */
+export function pageKeysOf(renders, keyOf) {
+  const out = {}
+  for (const r of renders ?? []) {
+    const page = '/' + String(r.path ?? '').replace(/^\/+/, '')
+    if (r.status !== 200 || !r.html || out[page]) continue
+    out[page] = keyOf(r.html) ?? page
+  }
+  return out
+}
+
+const pathOf = (page) => '/' + String(page ?? '').replace(/^\/+/, '')
+/** The key of a failure's page on its site: its page key, else its path. */
+const pageKeyOf = (side, page) => side?.pageKeys?.[pathOf(page)] ?? pathOf(page)
+
+/** The identity of a failure across two sites: its group, page key, width and selector, or its reason with no selector. */
+export const failureKey = (f, pageKey = f.page ?? '') =>
+  [f.group, pageKey, f.width ?? '', f.selector ?? 'reason:' + (f.reason ?? '')].join('|')
 
 const MEASURED = new Set(['green', 'red', 'not-applicable'])
 
 /** The control of one group: the measured one when it measured, else the baseline's, else none. */
 function controlGroup(name, control, baseline) {
   const measured = control?.groups?.find((g) => g.name === name)
-  if (measured && MEASURED.has(measured.status)) return { from: control.from ?? 'measured', group: measured }
+  if (measured && MEASURED.has(measured.status))
+    return { from: control.from ?? 'measured', side: control, group: measured }
   const base = baseline?.groups?.find((g) => g.name === name)
-  if (base && MEASURED.has(base.status)) return { from: 'baseline', group: base }
-  return { from: 'none', group: null }
+  if (base && MEASURED.has(base.status)) return { from: 'baseline', side: baseline, group: base }
+  return { from: 'none', side: null, group: null }
+}
+
+/**
+ * The SEO items split: a page the build writes blocks on any missing item; a system page the template itself titles
+ * (sign in, password reset, search) is compared with the same page of the untouched template, by page and item.
+ */
+function seoSplit(seo, controlSeo, systemPages) {
+  const system = new Set((systemPages ?? []).map(pathOf))
+  const known = new Set((controlSeo?.missing ?? []).map((m) => pathOf(m.page) + '|' + m.item))
+  const blocking = []
+  const same = []
+  const uncompared = []
+  for (const m of seo?.missing ?? []) {
+    if (!system.has(pathOf(m.page))) blocking.push(m)
+    else if (!controlSeo) uncompared.push(m)
+    else if (known.has(pathOf(m.page) + '|' + m.item))
+      same.push({ group: 'seo', ...m, class: 'same_as_template' })
+    else blocking.push(m)
+  }
+  return { blocking, same, uncompared }
 }
 
 /**
  * The quality measurement.
- * @param {{marker: {groups: object[]}, control?: {from?: string, groups: object[]} | null, baseline?: object | null,
- *   seo?: {status: string, missing: object[]} | null}} input
+ * @param {{marker: {groups: object[], pageKeys?: object}, control?: {from?: string, groups: object[], pageKeys?:
+ *   object, seo?: object} | null, baseline?: object | null, seo?: {status: string, missing: object[]} | null,
+ *   systemPages?: string[]}} input `pageKeys`: path to page key on each site (`pageKeysOf`); `control.seo`: the SEO
+ *   items of the untouched template; `systemPages`: the paths of the pages the template titles itself
  */
-export function qualityOf({ marker, control = null, baseline = null, seo = null }) {
+export function qualityOf({ marker, control = null, baseline = null, seo = null, systemPages = [] }) {
   const regressions = []
   const sameAsTemplate = []
   const warnings = []
@@ -121,20 +168,39 @@ export function qualityOf({ marker, control = null, baseline = null, seo = null 
       unmeasured.push({ group: g.name, reason: g.reason ?? g.status })
       continue
     }
-    const known = new Set((c.group?.failures ?? []).map((f) => failureKey({ group: g.name, ...f })))
+    if (g.status === 'red' && !(g.failures ?? []).length) {
+      unmeasured.push({ group: g.name, reason: 'red_without_failures' })
+      continue
+    }
+    const known = new Set(
+      (c.group?.failures ?? []).map((f) => failureKey({ group: g.name, ...f }, pageKeyOf(c.side, f.page)))
+    )
+    const controlPages = new Set(Object.values(c.side?.pageKeys ?? {}))
     for (const f of g.failures ?? []) {
       const at = { ...f, group: g.name }
+      const key = pageKeyOf(marker, f.page)
       if (at.level !== 'block') warnings.push(at)
       else if (!c.group) uncompared.push(at)
-      else if (known.has(failureKey(at))) sameAsTemplate.push({ ...at, class: 'same_as_template' })
-      else regressions.push({ ...at, class: 'regression' })
+      else if (known.has(failureKey(at, key))) sameAsTemplate.push({ ...at, class: 'same_as_template' })
+      else
+        regressions.push({
+          ...at,
+          class: 'regression',
+          ...(c.side?.pageKeys && !controlPages.has(key) ? { counterpart: 'none' } : {})
+        })
     }
   }
-  const seoFailed = seo?.status === 'failed'
+  const split = seoSplit(seo, control?.seo ?? null, systemPages)
+  sameAsTemplate.push(...split.same)
+  const seoOut = seo
+    ? { ...seo, blocking: split.blocking, same: split.same, uncompared: split.uncompared }
+    : null
+  const seoFailed = split.blocking.length > 0
+  const seoOpen = seo && (split.uncompared.length > 0 || (seo.status !== 'passed' && seo.status !== 'failed'))
   const status =
     regressions.length || seoFailed
       ? 'failed'
-      : unmeasured.length || uncompared.length || !marker?.groups?.length || (seo && seo.status !== 'passed')
+      : unmeasured.length || uncompared.length || !marker?.groups?.length || seoOpen
         ? 'incomplete'
         : 'passed'
   return {
@@ -146,6 +212,6 @@ export function qualityOf({ marker, control = null, baseline = null, seo = null 
     warnings,
     uncompared,
     unmeasured,
-    ...(seo ? { seo } : {})
+    ...(seoOut ? { seo: seoOut } : {})
   }
 }

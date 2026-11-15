@@ -8,6 +8,7 @@ import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { kitFolders, kitReleaseProblems } from '../ai-quickstart/check-kit-release.mjs'
+import { GATE_VERSION } from '../ai-quickstart/gate/record.mjs'
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const PINS = () => ({ plugin: '9.9.1', humanQuickstartSha256: 'a'.repeat(64), version: '1.0.0' })
@@ -66,4 +67,28 @@ test('a kit that names a site and carries no check record is refused', () => {
 test('the repository tree passes the release rules today', () => {
   assert.ok(kitFolders(REPO).length > 0)
   assert.deepEqual(kitReleaseProblems(REPO), [])
+})
+
+test('a kit that names a site and carries a hand-made passing verdict is red in the contract check', () => {
+  const root = tree({ site: true })
+  const kit = path.join(root, 'packages/cms/florist-quickstart/ai-quickstarts/petal/j6/1.0.0')
+  mkdirSync(path.join(kit, 'check-record'), { recursive: true })
+  const pins = PINS()
+  const verdict = {
+    schema: 'tracy-ai-quickstart-check-verdict/v1',
+    gateVersion: GATE_VERSION,
+    plugin: { start: pins.plugin, end: pins.plugin },
+    humanQuickstartSha256: pins.humanQuickstartSha256,
+    verdict: { pass: true, failing: [], measurements: {} }
+  }
+  writeFileSync(path.join(kit, 'check-record/verdict.json'), JSON.stringify(verdict))
+  const alone = kitReleaseProblems(root, { pinsOf: PINS }).map((p) => p.message.split(':')[0])
+  assert.deepEqual(alone, ['no_record'])
+  // A record beside it, hand-made to say the same: its contents give no pass and no control binds it.
+  const record = { schema: 'tracy-ai-quickstart-check-record/v2', verdict: verdict.verdict, binding: {} }
+  writeFileSync(path.join(kit, 'check-record/record.json'), JSON.stringify(record, null, 1))
+  const forged = kitReleaseProblems(root, { pinsOf: PINS }).map((p) => p.message.split(':')[0])
+  for (const code of ['record_changed', 'verdict_not_from_record', 'record_verdict_wrong', 'control_unbound'])
+    assert.ok(forged.includes(code), code + ' in ' + forged.join(', '))
+  rmSync(root, { recursive: true, force: true })
 })
