@@ -55,6 +55,25 @@ function linkOf(state, page) {
   return { fixed: 'index.php?option=com_content&view=featured' }
 }
 
+/**
+ * Positions T4 prints only under its `detail-article` sub layout, which it applies only to an article reached under its
+ * list page's menu item, never on the article's own menu item (measured on JA Boxing 1.0.11, "Page facts"). The kit
+ * does not declare them: these are the measured ones.
+ */
+export const DETAIL_POSITIONS = Object.freeze(['detail-bottom-1', 'main-bottom-2'])
+
+/** The blocks of a page whose menu item opens its own article that sit only in a detail position: they print nothing. */
+export const unprintedBlocksOf = (kit, page, link) =>
+  link?.form !== 'articleLink'
+    ? []
+    : page.blocks
+        .filter((b) => b.state !== 'hidden')
+        .filter((b) => {
+          const positions = kit.store.get(b.block)?.positions ?? []
+          return positions.length > 0 && positions.every((p) => DETAIL_POSITIONS.includes(p))
+        })
+        .map((b) => b.id)
+
 /** The page menu items, then each page's SEO. */
 export function planPages(state) {
   const menutype = mainMenuOf(state.kit.mapping)
@@ -72,6 +91,8 @@ export function planPages(state) {
     })
     consume(state.sink, `menu:${page.id}`, record.key)
     record.link = linkOf(state, page)
+    for (const block of unprintedBlocksOf(state.kit, page, record.link))
+      unproven(state.sink, 'detail_position_not_printed', { page: page.id, block })
     seoOfPage(state, page)
     if (list(featured?.pageTypes).includes(page.pageType) && page.home)
       unproven(state.sink, 'featured_article_needed', { page: page.id, why: featured.needs })
@@ -144,6 +165,8 @@ export function planCategories(state) {
   const articles = [...state.sink.records.values()].filter((record) => record.recordKind === 'article')
   for (const record of articles) {
     const page = state.site.pageOfSubject(record.subject)
+    // An article with no menu item of its own takes the home page's layout and prints nothing (measured).
+    if (!page) unproven(state.sink, 'article_without_page', { record: record.key })
     const pageType = page?.pageType ?? state.site.listedTypeOf(record.subject)
     if (!types.has(pageType)) {
       unproven(state.sink, 'article_category_not_declared', { record: record.key })
