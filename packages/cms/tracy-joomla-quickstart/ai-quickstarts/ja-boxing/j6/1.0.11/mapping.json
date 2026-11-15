@@ -11442,6 +11442,10 @@
       {
         "entity": "settings",
         "column": "fromname",
+        "notWritten": {
+          "by": "decision",
+          "why": "the write step does not write Joomla's mail sender name: it is the sender identity of the site's mail, which the site owner sets with the sending mailbox, as the newsletter's sender (notFacts newsletter mail settings, emptiedNotWritten acymConfiguration-from_name). The site keeps the name its installation was given; no page shows it"
+        },
         "why": "the sender name of the mail the site sends (contact form copies, account mail)"
       },
       {
@@ -11788,7 +11792,16 @@
         "trainer"
       ],
       "needs": "a published featured article",
-      "why": "Checked on the running 1.0.11 site with Open Graph on: these page types are the featured view of the articles (their demo menu items open view=featured; the home layout draws no component output on home, about, trainers and trainer). T4 prints Open Graph for an article view only from its content events, and the featured view fires them once per featured article it lists: with none published, the page prints its title and meta description but no og:title, og:description or og:image (measured on the home page with every featured article unpublished). With one published, the page prints og:title, og:description and og:image from its own menu item's og_title, og_desc and og_img, which win over the article's own (measured with both set). So the build keeps at least one published featured article on a site that has a page of these types: a post it creates, marked featured. Without any post, these pages print no share title, description or image; no template or plugin change is made for it."
+      "why": "Checked on the running 1.0.11 site with Open Graph on: these page types are the featured view of the articles (their demo menu items open view=featured; the home layout draws no component output on home, about, trainers and trainer). T4 prints Open Graph for an article view only from its content events, and the featured view fires them once per featured article it lists: with none published, the page prints its title and meta description but no og:title, og:description or og:image (measured on the home page with every featured article unpublished). With one published, the page prints og:title, og:description and og:image from its own menu item's og_title, og_desc and og_img, which win over the article's own (measured with both set). So the build keeps at least one published featured article on a site that has a page of these types: a post it creates, marked featured. Without any post, these pages print no share title, description or image; no template or plugin change is made for it.",
+      "article": {
+        "pageType": "news-post",
+        "set": {
+          "column": "featured",
+          "value": 1
+        },
+        "none": "no post in the plan: no featured article is made, and these pages print no share title, description or image",
+        "why": "the featured view lists the featured articles (the demo marks every post featured, so the featured posts page lists the posts): every news post the build creates is written featured (pages.news-post.record.base), which is the published featured article these pages need. The build never makes an article for this alone"
+      }
     },
     "pageTypes": {
       "home": "menuItem",
@@ -12396,6 +12409,23 @@
           ]
         },
         "why": "the one masthead copy keeps one row of settings (menuitem_config) for each page the build makes that places it, each printed only on the page its item_id names; the build writes the rows it fills at their demo row indexes, then cuts every row it did not write out of the copy, keeping the written rows in their order, so no row keys a demo page id the site may reuse for another page"
+      },
+      {
+        "control": [
+          "stat-proof-image",
+          "stat-context",
+          "stat-value",
+          "stat-label"
+        ],
+        "by": "rows.remove",
+        "slots": [
+          "module-162.32",
+          "module-162.33",
+          "module-162.34",
+          "module-162.35"
+        ],
+        "element": "/html/body/div/div",
+        "why": "the stat (a picture, its words and the emphasised value) is one element of row 14 description, written together or taken out together: kept with its words and picture empty it prints a broken picture (src=\"/\"), taken out the row prints its title and intro alone (measured on a masthead copy)"
       }
     ],
     "block-163": [
@@ -12438,7 +12468,8 @@
       {
         "rows": "social",
         "by": "omit",
-        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those",
+        "order": "packed"
       }
     ],
     "block-165": [
@@ -12504,7 +12535,9 @@
           "cta-url"
         ],
         "by": "empty",
-        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all"
+        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all",
+        "scope": "block",
+        "from": "first-item"
       },
       {
         "rows": "items",
@@ -12531,7 +12564,8 @@
       {
         "rows": "features",
         "by": "omit",
-        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those",
+        "order": "packed"
       }
     ],
     "block-171": [
@@ -12561,7 +12595,9 @@
           "cta-url"
         ],
         "by": "empty",
-        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all"
+        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all",
+        "scope": "block",
+        "from": "first-item"
       },
       {
         "rows": "items",
@@ -12665,7 +12701,8 @@
       {
         "rows": "social",
         "by": "omit",
-        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those",
+        "order": "packed"
       }
     ],
     "block-180": [
@@ -12764,7 +12801,8 @@
       {
         "rows": "social",
         "by": "omit",
-        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those",
+        "order": "packed"
       }
     ],
     "block-188": [
@@ -12774,7 +12812,9 @@
           "cta-url"
         ],
         "by": "empty",
-        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all"
+        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all",
+        "scope": "block",
+        "from": "first-item"
       },
       {
         "rows": "items",
@@ -12801,7 +12841,8 @@
       {
         "rows": "features",
         "by": "omit",
-        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those",
+        "order": "packed"
       }
     ],
     "block-189": [
@@ -12811,7 +12852,9 @@
           "cta-url"
         ],
         "by": "empty",
-        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all"
+        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all",
+        "scope": "block",
+        "from": "first-item"
       },
       {
         "rows": "items",
@@ -12838,7 +12881,8 @@
       {
         "rows": "features",
         "by": "omit",
-        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those",
+        "order": "packed"
       }
     ],
     "block-190": [
@@ -12903,7 +12947,11 @@
       },
       "menu": {
         "menutype": "mainmenu",
-        "why": "the phone menu (mod_menu) shows the main menu the header shows; its items are the ones the build creates for the header"
+        "why": "the phone menu (mod_menu) shows the main menu the header shows; its items are the ones the build creates for the header",
+        "items": {
+          "from": "main-menu",
+          "why": "the phone menu draws the main menu itself: its items are the page items the build makes for the header, none of its own"
+        }
       }
     },
     "block-170": {
@@ -12947,7 +12995,17 @@
       },
       "menu": {
         "menutype": "classes",
-        "why": "the module shows the classes menu, which the blank site keeps empty: it draws nothing until the build creates the class menu items in it (measured)"
+        "why": "the module shows the classes menu, which the blank site keeps empty: it draws nothing until the build creates the class menu items in it (measured)",
+        "items": {
+          "from": "pages",
+          "pageTypes": [
+            "class"
+          ],
+          "order": "plan",
+          "max": 5,
+          "default": true,
+          "why": "default chosen for the build, the owner may change it: one item per class page, in plan order, addressed under the classes page (pages.class.under), as the demo classes menu lists its classes; at most the 5 the demo holds"
+        }
       }
     },
     "block-174": {
@@ -12963,7 +13021,19 @@
       },
       "menu": {
         "menutype": "site-map",
-        "why": "the module shows the site-map menu, which the blank site keeps empty: it draws nothing until the build creates its menu items in it"
+        "why": "the module shows the site-map menu, which the blank site keeps empty: it draws nothing until the build creates its menu items in it",
+        "items": {
+          "from": "pages",
+          "level": 1,
+          "except": [
+            "home"
+          ],
+          "plus": "legal",
+          "order": "main-menu",
+          "max": 4,
+          "default": true,
+          "why": "default chosen for the build, the owner may change it: the site's top level pages in main menu order, home left out (the demo site map lists About, Class, Schedule and Price, no home), then the legal pages the plan creates (none in these recipes), at most the 4 the layout was measured with"
+        }
       }
     },
     "block-168": {
@@ -13105,7 +13175,22 @@
         "drawn": "no",
         "why": "the module is set not to show its title (showtitle 0) and no page prints it"
       },
-      "why": "one copy for the site, as the demo has one masthead module: it holds one row of menuitem_config for every page the build makes that places the masthead, each row keyed to its page (item_id), and is assigned to exactly those pages (the home layout prints the masthead position too, measured, so \"[0]\" would draw it on the home page). The build writes each row at its mapping locations (the demo row index), then cuts every row it did not write"
+      "why": "one copy for the site, as the demo has one masthead module: it holds one row of menuitem_config for every page the build makes that places the masthead, each row keyed to its page (item_id), and is assigned to exactly those pages (the home layout prints the masthead position too, measured, so \"[0]\" would draw it on the home page). The build writes each row at its mapping locations (the demo row index), then cuts every row it did not write",
+      "keyedRow": {
+        "pageType": "classes",
+        "row": 14,
+        "list": "pages",
+        "fields": [
+          "stat-title",
+          "stat-paragraph",
+          "stat-proof-image",
+          "stat-context",
+          "stat-value",
+          "stat-label",
+          "stat-page"
+        ],
+        "why": "row 14 of menuitem_config is the classes page row (its title, intro and the stat under it, keyed by item_id[14]); the pages list rows are the other pages, never the classes page. The template prints the first row whose item_id names the page (mod_jamasthead helper.php breaks at the first match), measured: a list row keyed to the classes page before row 14 prints instead of row 14"
+      }
     },
     "block-158": {
       "entity": "module-158",
@@ -13138,7 +13223,12 @@
             0
           ]
         },
-        "why": "the container draws every module of the position it names that is assigned to the page. Two copies naming one position each draw the tabs of both (measured); a position of its own per container copy, written here and as the position of the copies it holds, keeps two plans blocks on one page apart (measured)"
+        "why": "the container draws every module of the position it names that is assigned to the page. Two copies naming one position each draw the tabs of both (measured); a position of its own per container copy, written here and as the position of the copies it holds, keeps two plans blocks on one page apart (measured)",
+        "copies": {
+          "perPage": 1,
+          "keptWhen": "a block it holds is kept on the page",
+          "why": "one container copy per page holds every held block the page places, each in its own tab (the demo: one container, three tabs). The container takes no data of its own the plan shows (its words are the tab labels and the section heading), so it is kept whenever a block it holds is kept and dropped with them; a recipe lists a block once (block_repeated), so a page has one container. The main block of the plans page is the first tab (block-167)"
+        }
       }
     },
     "block-167": {
@@ -13383,6 +13473,484 @@
       }
     }
   },
+  "look": {
+    "accent": {
+      "variables": [
+        "--color-primary",
+        "--body-link-color",
+        "--body-link-hover-color",
+        "--mainnav-link-active-color",
+        "--mainnav-link-hover-color"
+      ],
+      "value": "#rrggbb",
+      "sides": {
+        "opensOn": "dark",
+        "dark": "body.dark-active",
+        "light": "body.light-active",
+        "darkHook": ":has(> body.dark-active)"
+      },
+      "writtenAs": {
+        "kind": "module",
+        "module": "mod_custom",
+        "title": "Tracy design system",
+        "position": "off-canvas",
+        "ordering": 0,
+        "showtitle": 0,
+        "style": "System-none",
+        "assign": "every-page",
+        "content": "the accent-only stylesheet the brand step builds from the stylesheets the template serves (accentModule, apps/tracy-web/src/lib/brand-accent): one style element"
+      },
+      "keeps": "only the accent family changes (buttons, links, emphasis words) and its relatives; grounds, heading and body text colours and fonts stay the template's (brand decision C)",
+      "why": "the accent of JA Boxing is the template variables its stylesheets read for buttons, links and the menu states (the released kit roles of brandColours.primary, value #f44141); the template opens on its dark side (body.dark-active, ground #121111) and draws a light side under body.light-active (the modes contract, joomla-ja-boxing-modes.json). The template style params hold no accent colour, so the accent is a stylesheet in a module: the earliest position the home page prints (ds-slot contract joomla-ja-boxing.json). Measured on the blank site: a mod_custom at off-canvas, System-none, assigned \"[0]\", prints its style element once, with no module wrapper, on a Landing page, a Default page, the plans page and an article under its list page"
+    }
+  },
+  "pages": {
+    "home": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=featured",
+        "templateStyle": "templateStyle-13",
+        "params": {
+          "layout_type": "blog",
+          "num_leading_articles": 1,
+          "num_intro_articles": 3,
+          "num_links": 0,
+          "orderby_sec": "front",
+          "show_page_heading": "1"
+        },
+        "home": 1,
+        "why": "the demo home (menu item 101): the featured view on the Landing style, the home menu item (home 1). The Landing layout prints no main body (measured), so the page is its blocks"
+      }
+    },
+    "news": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=category&layout=blog&id={category:news-post}",
+        "templateStyle": 0,
+        "params": {
+          "layout_type": "blog",
+          "num_leading_articles": 0,
+          "num_intro_articles": 6,
+          "num_columns": 2,
+          "article_layout": "_:default",
+          "show_readmore": "0",
+          "show_category": "0",
+          "show_author": "0",
+          "show_publish_date": "0",
+          "show_hits": "0",
+          "show_tags": "0"
+        },
+        "why": "the demo blog list (menu item 163): the category blog of the posts, on the Default style (0 prints Default, measured); measured on the blank site: it lists the posts of its category and an article reached under it prints the detail article layout"
+      }
+    },
+    "news-post": {
+      "under": {
+        "page": "news",
+        "address": "index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:news}",
+        "why": "a post is reached under the news page, as the demo (an article address carrying the list page menu item): only then the detail positions print (measured, door-measures D2)"
+      },
+      "ownItem": {
+        "link": "index.php?option=com_content&view=article&id={record}",
+        "templateStyle": 0,
+        "params": {
+          "show_category": "0",
+          "show_author": "0",
+          "show_publish_date": "0",
+          "show_hits": "0",
+          "show_tags": "0"
+        },
+        "why": "only when the plan has no news page: the article on a menu item of its own prints, without the detail positions (detail-bottom-1, main-bottom-2), measured"
+      },
+      "record": {
+        "kind": "article",
+        "category": {
+          "extension": "com_content",
+          "parent": "root",
+          "title": {
+            "from": "the menu label of the news page"
+          },
+          "params": {
+            "category_layout": ""
+          },
+          "why": "the demo posts category (Blogs, id 8): a plain com_content category at the top level; the news page lists it"
+        },
+        "base": {
+          "featured": 1,
+          "images": {
+            "image_intro": "",
+            "image_intro_alt": "",
+            "float_intro": "",
+            "image_intro_caption": "",
+            "image_fulltext": "",
+            "image_fulltext_alt": "",
+            "float_fulltext": "",
+            "image_fulltext_caption": ""
+          },
+          "attribs": {}
+        },
+        "why": "a post is a featured article (seo.featuredView.article, the demo marks every post featured), in the default article layout. every created article carries the full images value even with no picture: without image_intro and image_fulltext the article page prints PHP warnings (T4 Metadata.php, the article layouts), measured on the blank site"
+      }
+    },
+    "featured-posts": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=featured",
+        "templateStyle": 0,
+        "params": {
+          "layout_type": "blog",
+          "num_leading_articles": 0,
+          "num_intro_articles": 6,
+          "num_columns": 2,
+          "show_readmore": "0",
+          "show_category": "0",
+          "show_author": "0",
+          "show_publish_date": "0",
+          "show_hits": "0",
+          "show_tags": "0"
+        },
+        "why": "the demo featured list (menu item 164): the featured view on the Default style; measured on the blank site: it lists the featured posts"
+      }
+    },
+    "authors": {
+      "unbuilt": {
+        "code": "record_kind_unsupported",
+        "why": "the authors page lists accounts (users of two groups, demo link index.php?option=com_content&view=author&layout=list&gid[0]=2&gid[1]=8, menu item 165): the write step creates no user, so the build cannot make this page"
+      }
+    },
+    "author": {
+      "unbuilt": {
+        "code": "record_kind_unsupported",
+        "why": "an author page is the template author view of an account (a user, its profile and tag): the write step creates none of them"
+      }
+    },
+    "classes": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=category&layout=ja_boxing:classes&id={category:class}",
+        "templateStyle": 0,
+        "params": {
+          "layout_type": "blog",
+          "num_leading_articles": "0",
+          "num_intro_articles": "4",
+          "num_columns": "2",
+          "article_layout": "ja_boxing:classes",
+          "show_category": "0",
+          "show_author": "0",
+          "show_publish_date": "0",
+          "show_hits": "0",
+          "show_tags": "0"
+        },
+        "why": "the demo classes page (menu item 167): the classes layout of the class category, on the Default style; its article_layout makes an article reached under it print the classes detail (measured on the blank site, with and without the article attribs)"
+      }
+    },
+    "class": {
+      "under": {
+        "page": "classes",
+        "address": "index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:classes}",
+        "why": "a class page is reached under the classes page, as the demo footer class links are (index.php?option=com_content&view=article&id=N&catid=9&Itemid=167): only then the class detail list (159) prints"
+      },
+      "ownItem": {
+        "link": "index.php?option=com_content&view=article&id={record}",
+        "templateStyle": 0,
+        "params": {
+          "show_category": "0",
+          "show_author": "0",
+          "show_publish_date": "0",
+          "show_hits": "0",
+          "show_tags": "0"
+        },
+        "why": "only when the plan has no classes page: the article on a menu item of its own prints, without the detail positions (detail-bottom-1, main-bottom-2), measured"
+      },
+      "record": {
+        "kind": "article",
+        "category": {
+          "extension": "com_content",
+          "parent": "root",
+          "title": {
+            "from": "the menu label of the classes page"
+          },
+          "params": {
+            "category_layout": "",
+            "t4_extrafields": "classes"
+          },
+          "why": "the demo class category (Classes, id 9): t4_extrafields classes gives its articles the class fields in the administrator (schedule, features), the attribs the classes layouts read"
+        },
+        "base": {
+          "images": {
+            "image_intro": "",
+            "image_intro_alt": "",
+            "float_intro": "",
+            "image_intro_caption": "",
+            "image_fulltext": "",
+            "image_fulltext_alt": "",
+            "float_fulltext": "",
+            "image_fulltext_caption": ""
+          },
+          "attribs": {
+            "article_layout": "ja_boxing:classes",
+            "classes-info": {}
+          }
+        },
+        "why": "the classes article layout (measured: the attribs alone print view-classes-detail, door-measures D2). classes-info is always written, empty when the plan has no schedule: the class list layout reads it with foreach, and a class article without it prints a PHP warning on the classes page and in a copy of 159 (measured; with {} none). every created article carries the full images value even with no picture: without image_intro and image_fulltext the article page prints PHP warnings (T4 Metadata.php, the article layouts), measured on the blank site"
+      }
+    },
+    "contact": {
+      "menuItem": {
+        "link": "index.php?option=com_contact&view=contact&id={record}",
+        "templateStyle": 0,
+        "params": {
+          "show_name": "0",
+          "show_user_custom_fields": [
+            "-1"
+          ]
+        },
+        "why": "the demo contact page (menu item 168): the contact view of the contact the build creates, on the Default style, the name hidden (show_name 0)"
+      },
+      "record": {
+        "kind": "contact",
+        "category": {
+          "extension": "com_contact",
+          "parent": "root",
+          "title": {
+            "from": "the menu label of the contact page"
+          },
+          "params": {},
+          "why": "the contact is filed in a com_contact category the build creates (the demo used the core Uncategorised one, which the blank site contract does not name)"
+        },
+        "base": {
+          "params": {},
+          "metadata": {},
+          "metadesc": ""
+        },
+        "why": "a contact is refused without params, metadata and metadesc (measured, door-measures), and its name is the business name (facts.name)"
+      }
+    },
+    "plans": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=category&layout=blog&id={entity:category-2}",
+        "templateStyle": "templateStyle-13",
+        "params": {
+          "layout_type": "blog",
+          "article_layout": "_:default",
+          "show_title": "0",
+          "show_intro": "0",
+          "info_block_show_title": "0",
+          "show_item_navigation": "0",
+          "show_category": "0",
+          "show_author": "0",
+          "show_publish_date": "0",
+          "show_hits": "0",
+          "show_tags": "0",
+          "pageclass_sfx": "page-normal hide-body"
+        },
+        "why": "the demo plans page (menu item 169): the blog of the kept Uncategorised category on the Landing style with hide-body; measured on the blank site: it prints no main body, only its blocks"
+      }
+    },
+    "about": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=featured",
+        "templateStyle": "templateStyle-13",
+        "params": {
+          "layout_type": "blog"
+        },
+        "why": "the demo about page (menu item 193): the featured view on the Landing style, which prints no main body (measured)"
+      }
+    },
+    "learning-center": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=category&layout=ja_boxing:learning&id={category:learning-post}",
+        "templateStyle": 0,
+        "params": {
+          "layout_type": "blog",
+          "num_leading_articles": 0,
+          "num_intro_articles": 6,
+          "num_columns": 2,
+          "article_layout": "_:default",
+          "show_readmore": "0",
+          "show_category": "0",
+          "show_author": "0",
+          "show_publish_date": "0",
+          "show_hits": "0",
+          "show_tags": "0"
+        },
+        "parent": "about",
+        "why": "the demo learning center (menu item 194, under about): the learning layout of the learning category, on the Default style; measured on the blank site: it lists the lessons"
+      }
+    },
+    "learning-post": {
+      "under": {
+        "page": "learning-center",
+        "address": "index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:learning-center}",
+        "why": "a lesson is reached under the learning center page: only then the detail positions print"
+      },
+      "ownItem": {
+        "link": "index.php?option=com_content&view=article&id={record}",
+        "templateStyle": 0,
+        "params": {
+          "show_category": "0",
+          "show_author": "0",
+          "show_publish_date": "0",
+          "show_hits": "0",
+          "show_tags": "0"
+        },
+        "why": "only when the plan has no learning-center page: the article on a menu item of its own prints, without the detail positions (detail-bottom-1, main-bottom-2), measured"
+      },
+      "record": {
+        "kind": "article",
+        "category": {
+          "extension": "com_content",
+          "parent": "root",
+          "title": {
+            "from": "the menu label of the learning-center page"
+          },
+          "params": {
+            "category_layout": "ja_boxing:learning",
+            "t4_extrafields": "learning"
+          },
+          "why": "the demo learning category (Learning Center, id 10): its list layout and the learning fields of its articles in the administrator"
+        },
+        "base": {
+          "images": {
+            "image_intro": "",
+            "image_intro_alt": "",
+            "float_intro": "",
+            "image_intro_caption": "",
+            "image_fulltext": "",
+            "image_fulltext_alt": "",
+            "float_fulltext": "",
+            "image_fulltext_caption": ""
+          },
+          "attribs": {
+            "article_layout": "ja_boxing:learning",
+            "learning-features": {}
+          }
+        },
+        "why": "the learning article layout, as every demo lesson. learning-features is always written, empty when the plan has no technique: the learning layout reads it with foreach and prints a PHP warning without it (measured; with {} none, its heading still prints). every created article carries the full images value even with no picture: without image_intro and image_fulltext the article page prints PHP warnings (T4 Metadata.php, the article layouts), measured on the blank site"
+      }
+    },
+    "trainers": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=featured",
+        "templateStyle": "templateStyle-13",
+        "params": {
+          "layout_type": "blog"
+        },
+        "parent": "about",
+        "why": "the demo trainers page (menu item 195, under about): the featured view on the Landing style"
+      }
+    },
+    "trainer": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=featured",
+        "templateStyle": "templateStyle-13",
+        "params": {
+          "layout_type": "blog"
+        },
+        "parent": "trainers",
+        "why": "the demo trainer page (menu item 197, under the trainers page): the featured view on the Landing style; the trainer is its blocks"
+      }
+    }
+  },
+  "createdFrames": [
+    {
+      "entities": [
+        "article-1",
+        "article-2",
+        "article-3",
+        "article-4",
+        "article-5",
+        "article-6",
+        "article-7",
+        "article-14",
+        "article-15",
+        "article-16",
+        "article-18"
+      ],
+      "column": "introtext",
+      "html": "<p> </p>",
+      "why": "every demo intro is one paragraph (posts, classes, lessons)"
+    },
+    {
+      "entities": [
+        "contact-1"
+      ],
+      "column": "misc",
+      "html": "<p> </p>",
+      "why": "the demo contact text is one paragraph"
+    },
+    {
+      "entities": [
+        "article-6"
+      ],
+      "column": "fulltext",
+      "html": "<h3 class=\"mt-4 mt-lg-5 mb-3\"> </h3><p> </p><ul class=\"my-4 ps-3 list-info\"><li> </li><li> </li><li> </li><li> </li></ul><p> </p><div class=\"row mt-3\"><div class=\"col-12 col-lg-6 mt-3\"><img src=\"\" loading=\"lazy\" width=\"600\" height=\"370\"/></div><div class=\"col-12 col-lg-6 mt-3\"><img src=\"\" loading=\"lazy\" width=\"600\" height=\"370\"/></div></div><h3 class=\"mb-3 mt-5\"> </h3><p> </p><blockquote> </blockquote><p> </p><p> </p>",
+      "why": "the demo post body (article 6) with its words and pictures emptied and its classes kept"
+    },
+    {
+      "entities": [
+        "article-16"
+      ],
+      "column": "fulltext",
+      "html": "<div class=\"row row-cols-1 row-cols-md-2\"><div class=\"col\"><h3> </h3></div><div class=\"col\"><p> </p><p> </p></div></div>",
+      "why": "the demo class body (article 16): a heading beside two paragraphs"
+    },
+    {
+      "entities": [
+        "article-16"
+      ],
+      "column": "attribs",
+      "jsonPath": [
+        "exer-features",
+        "exer-features0",
+        "feature_desc"
+      ],
+      "html": "<ul><li> </li><li> </li><li> </li><li> </li></ul>",
+      "why": "the demo exercise steps of a class: one list"
+    },
+    {
+      "entities": [
+        "article-16"
+      ],
+      "column": "attribs",
+      "jsonPath": [
+        "exer-features",
+        "exer-features1",
+        "feature_desc"
+      ],
+      "html": "<ul><li> </li><li> </li><li> </li></ul>",
+      "why": "the demo exercise steps of a class: one list"
+    },
+    {
+      "entities": [
+        "article-16"
+      ],
+      "column": "attribs",
+      "jsonPath": [
+        "exer-features",
+        "exer-features2",
+        "feature_desc"
+      ],
+      "html": "<ul><li> </li><li> </li><li> </li></ul>",
+      "why": "the demo exercise steps of a class: one list"
+    },
+    {
+      "entities": [
+        "article-16"
+      ],
+      "column": "attribs",
+      "jsonPath": [
+        "exer-features",
+        "exer-features3",
+        "feature_desc"
+      ],
+      "html": "<ul><li> </li><li> </li><li> </li><li> </li><li> </li></ul>",
+      "why": "the demo exercise steps of a class: one list"
+    },
+    {
+      "entities": [
+        "article-18"
+      ],
+      "column": "fulltext",
+      "html": "<h3 class=\"mt-3 mt-lg-5 mb-0 pt-3 pb-0 pb-lg-3\"> </h3><div class=\"row\"><div class=\"col-12 col-lg-6 mt-3\"><p class=\"mb-3 pb-lg-3 pb-0\"> </p><p class=\"mb-0\"> </p></div><div class=\"col-12 col-lg-6 mt-3\"><ul class=\"has-icon\"><li> </li><li> </li><li> </li><li> </li><li> </li><li> </li><li> </li><li> </li></ul></div></div>",
+      "why": "the demo lesson body (article 18): a heading, two paragraphs beside a list of benefits"
+    }
+  ],
   "inlineMarkup": {
     "class": "inline-markup-in-text",
     "count": 35,

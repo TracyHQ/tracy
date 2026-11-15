@@ -14,6 +14,7 @@ import {
   locationKey,
   locationProblem
 } from './ai-quickstart-mapping-entry.mjs'
+import { buildDeclarationProblems } from './ai-quickstart-mapping-build.mjs'
 import { mappingPlaceProblems } from './ai-quickstart-mapping-places.mjs'
 import { placementProblems } from './ai-quickstart-placement.mjs'
 import { LIST_FACT_KINDS, SINGLE_FACT_KINDS } from './needs-profile-merge.mjs'
@@ -334,4 +335,5 @@ export function mappingProblems(mapping, blocks, ctx) {
   overridesProblems(mapping.overrides, report)
   mappingPlaceProblems(mapping, ctx)
   placementProblems(mapping, blocks, ctx)
+  buildDeclarationProblems(mapping, blocks, ctx)
 }

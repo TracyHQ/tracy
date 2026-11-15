@@ -848,6 +848,76 @@ inspect still answers and applies are still written.
 door proof (`TRACY_DOOR_URL`, `TRACY_DOOR_TOKEN`, php on PATH), and checks the plugin version did not change during
 the run.
 
+## What the build writes besides the blocks (#597)
+
+The mapping file also declares what the write step makes around the blocks, so it never guesses: the accent, the
+page of every page type, the records a page creates and their HTML frames. The check is
+`ai-quickstart-mapping-build.mjs` and `ai-quickstart-frames.mjs` (WO domain), plus `scripts/ai-quickstart/check-kit-pages.mjs`
+for the records of the blank site a page names. Measured on a blank JA Boxing site, plugin 0.24.85, updater off.
+
+**`look.accent`: the accent door.** `{variables, value: "#rrggbb", sides: {opensOn, light, dark, darkHook?},
+writtenAs: {kind: "module", module, title, position, ordering?, showtitle?, style?, assign, content}, keeps, why}`.
+JA Boxing keeps no accent in its template style params: the accent is the variables its stylesheets read
+(`--color-primary`, `--body-link-color`, `--body-link-hover-color`, `--mainnav-link-active-color`,
+`--mainnav-link-hover-color`), written as one style element in a `mod_custom` at `off-canvas`, `System-none`, assigned
+`"[0]"`. Measured: it prints once, with no module wrapper, on a Landing page,
+a Default page, the plans page and an article under its list page. Only the accent family changes (brand decision C).
+
+**`pages.<page type>`: the page of every page type of the recipes**, exactly one of:
+
+- `menuItem: {link, templateStyle, params, parent?, home?, why}`: the menu item. `templateStyle` is `0` (the default
+  style, measured to print Default) or a template style of the blank site contract. A link names what the build makes
+  with `{record}` (the record the page shows), `{category:<page type>}` (the category it creates for that type),
+  `{page:<page type>}`, and a record the blank site keeps with `{entity:<key>}` (the plans page reads `category-2`).
+- `under: {page, address, why}` with `ownItem` (a `menuItem`): an article page reached under its list page,
+  `index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:<list>}`. Only then do the
+  detail positions print (measured); `ownItem` is the menu item of its own the build makes when the plan has
+  no list page.
+- `unbuilt: {code, why}`: a page type the write step cannot make (JA Boxing `authors` and `author` list accounts, and
+  the write creates no user: `record_kind_unsupported`).
+
+An article page and the contact page carry `record: {kind, category, base, why}`: the category the build creates
+(`{extension, parent: "root", title: {from}, params, why}`) and the columns the record starts from (`base`), the
+mapping's places written over them. Measured: a created article without the full `images` value, or a lesson without
+`learning-features`, prints PHP warnings; a class article without `classes-info` makes the classes list print one; with
+`{}` none. The classes menu item's `article_layout` alone prints the classes detail; JA Boxing writes the attribs too.
+
+**`createdFrames`: `[{entities, column, nestedJson?, jsonPath?, html, why}]`**, the demo value of a created record
+with its words and pictures emptied and its classes kept, a text node a single space. The check reads every frame
+wrapped in `/html/body/div` and asks that every xpath of the file on that value names exactly one node. A value written
+whole (`/html/body/div`) needs none; nor does a place only blocks of unbuilt page types use. A row element a record does
+not fill is left out of the frame, as `omit` does on a copy.
+
+**The main block of every recipe shows data**: a field of a kind that is not `editorial.*`, since the plan gate drops a
+page whose main block has none. The plans container (184) holds only tab labels and headings, so the plans page's main
+block is its first tab (167). `placements.<container>.holds.copies: {perPage: 1, keptWhen, why}`: one container copy per
+page holds every held block the page places, kept whenever one of them is kept; a recipe lists a block once
+(`block_repeated`), so a recipe never places two containers. The position of its own per copy
+(`tracy-tabs-<copy id>`, #584) stays.
+
+**`placements.<id>.keyedRow: {pageType, row, list, fields, why}`**: a block field keyed to a page type beside a list
+keyed by page. The masthead prints the first row whose `item_id` names the page (`mod_jamasthead` helper), measured: a
+list row keyed to the classes page before row 14 prints instead of it. So the classes page takes row 14 only, and the
+pages list rows are the other pages. Its stat (picture, words, value) is one control taken out as the element
+`/html/body/div/div` of the row description (`rows.remove` with `element`): kept empty it prints a broken picture
+(`src="/"`).
+
+**Hides.** A `rows.remove` entry may name `element`, the element taken out when it is not the one holding the last
+field. A control of item fields has `scope`: `"item"` (each item prints its own) or `"block"` with `from:
+"first-item"` (the template prints the first item's button on every card, JA ACM `get(name)` reads index 0: 167, 172,
+188, 189). An `omit` entry is `order: "packed"` (the plan's rows fill the first places in order, so no gap arises) and
+sits only on a copy or a created record: a record written in place has no omit, its rows stay.
+
+**`placements.<id>.menu.items`**: `{from: "main-menu" | "pages", pageTypes?, level?, except?, plus?, order: "main-menu"
+| "plan", max, default?, why}`, which pages a menu block lists. `default: true` marks a rule chosen for the build that
+the owner may change (JA Boxing 173 and 174).
+
+**`facts.<fact>[i].notWritten: {by: "decision", why}`** on a global configuration place: the write step does not
+write it, by decision (Joomla's mail sender name `fromname`, kept among the places of `name`).
+
+**`seo.featuredView.article: {pageType, set: {column, value}, none, why}`**: the featured article these pages need is
+every post the build creates, written featured; with no post none is made.
+
 ## The blank site contract
 
 **The blank site contract serves what the build writes in place**: the store records of the blocks placed
@@ -865,6 +935,9 @@ is sealed and never edited; the blank site contract is a new artifact in the AI 
 <AI quickstart folder>/blank-site-contract/content-map.json
 <AI quickstart folder>/blank-site-contract/presentation-lock.json
 ```
+
+The build loads it beside the three declarations: `blankContractReader` (`apps/tracy-web/src/step-chain-draft-blank-contract.js`)
+reads `<kits dir>/<slug>/<cms>/<version>/blank-site-contract/content-map.json` and answers `kit_missing` without it.
 
 It is made by the blank site command, in the same run as the blank site:
 

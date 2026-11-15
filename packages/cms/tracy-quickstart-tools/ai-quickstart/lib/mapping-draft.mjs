@@ -11,7 +11,13 @@ function factLocation(p, slots) {
   const loc = p.place
     ? locationOf(p.place, slots)
     : { entity: p.entity, column: p.column, ...(p.jsonPath ? { jsonPath: p.jsonPath } : {}) }
-  return { ...loc, ...(p.as ? { as: p.as } : {}), ...(p.notFact ? { notFact: p.notFact } : {}), why: p.why }
+  return {
+    ...loc,
+    ...(p.as ? { as: p.as } : {}),
+    ...(p.notFact ? { notFact: p.notFact } : {}),
+    ...(p.notWritten ? { notWritten: p.notWritten } : {}),
+    why: p.why
+  }
 }
 
 function factsOf(decisions, slots) {
@@ -139,6 +145,11 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
     notEmptied,
     hides: decisions.hides ?? {},
     ...(decisions.placements ? { placements: decisions.placements } : {}),
+    // What the build writes besides the blocks (#597): the accent door, the page of every page type (its menu item
+    // link or the list page it is reached under, the record it creates) and the HTML frames of created records.
+    ...(decisions.look ? { look: decisions.look } : {}),
+    ...(decisions.pages ? { pages: decisions.pages } : {}),
+    ...(decisions.createdFrames ? { createdFrames: decisions.createdFrames } : {}),
     inlineMarkup: report.inlineMarkup
       ? {
           class: report.inlineMarkup.class,

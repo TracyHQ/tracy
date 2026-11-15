@@ -249,6 +249,42 @@
       "why": "invented: an admin label, the module is set not to show it"
     }
   ],
+  "look": {
+    "accent": {
+      "variables": ["--example-accent"],
+      "value": "#rrggbb",
+      "sides": { "opensOn": "light", "light": "body", "dark": "body.dark" },
+      "writtenAs": {
+        "kind": "module",
+        "module": "mod_custom",
+        "title": "Accent",
+        "position": "head-end",
+        "assign": "every-page",
+        "content": "one style element"
+      },
+      "keeps": "invented: only the accent changes",
+      "why": "invented: the template reads its accent from one variable"
+    }
+  },
+  "pages": {
+    "home": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=featured",
+        "templateStyle": 0,
+        "params": {},
+        "home": 1,
+        "why": "invented: the home page is the featured view"
+      }
+    },
+    "services": {
+      "menuItem": {
+        "link": "index.php?option=com_content&view=featured",
+        "templateStyle": "template-style-9",
+        "params": {},
+        "why": "invented: the services page is a landing page"
+      }
+    }
+  },
   "placements": {
     "header-main": {
       "entity": "module-11",

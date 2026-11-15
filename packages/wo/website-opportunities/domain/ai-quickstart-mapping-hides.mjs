@@ -112,7 +112,15 @@ function wayProblems(entry, locations, at, report) {
     const slots = each(entry.slots)
     if (!slots.length || !slots.every(isName))
       return report(`${at}.slots`, 'rows.remove names the content map slots of the element it takes out')
+    // `element`: the element taken out when it is not the one holding the last field (a group of fields in it).
+    if (
+      entry.element !== undefined &&
+      !/^\/html\/body\/div(\/[a-z][\w-]*(\[\d+\])?)+$/.test(String(entry.element))
+    )
+      report(`${at}.element`, 'element is the xpath of an element under /html/body/div')
     for (const l of locations) {
+      if (entry.element !== undefined && !String(l.xpath).startsWith(`${entry.element}/`))
+        report(`${at}.element`, `${l.slot ?? l.entity}: ${l.xpath} lies outside the element taken out`)
       if (!isName(l.xpath))
         report(
           at,
@@ -127,6 +135,12 @@ function wayProblems(entry, locations, at, report) {
     if (typeof entry.value !== 'string') report(`${at}.value`, 'the value written at the setting, a string')
   } else if (by === 'omit') {
     if (!entry.rows) report(at, 'omit hides rows: name them with "rows"')
+    // The value is written whole, so the rows are packed: the plan's rows fill the first places in order.
+    if (entry.order !== 'packed')
+      report(
+        `${at}.order`,
+        'omit rows are "packed": the build writes the rows it has into the first places, in order'
+      )
     for (const l of locations)
       if (l.piece !== true)
         report(
@@ -145,6 +159,29 @@ function wayProblems(entry, locations, at, report) {
       if (!rows.some((row) => inRow(l, row)))
         report(`${at}.row`, `${l.slot ?? l.entity}: this place lies in none of the row's lists`)
   }
+}
+
+/**
+ * A control of item fields says whether each item prints its own (`scope: "item"`) or the template prints one for
+ * every item (`scope: "block"`, from the first item: `from: "first-item"`). An omit entry is on a value written whole:
+ * a copy or a created record, never a record written in place.
+ */
+function sharedControlProblems(entry, block, at, report) {
+  if (entry.by === 'omit' && !['copy', 'created'].includes(block.placement))
+    report(`${at}.by`, 'omit writes the value whole: only on a copy or a created record, not in place')
+  if (!Array.isArray(entry.control)) return
+  const items = new Set(each(block.itemFields).map((f) => f.name))
+  if (!entry.control.some((n) => items.has(n))) {
+    if (entry.scope !== undefined) report(`${at}.scope`, 'only a control of item fields has a scope')
+    return
+  }
+  if (!['item', 'block'].includes(entry.scope))
+    report(
+      `${at}.scope`,
+      'a control of item fields has a scope: "item" (each prints its own) or "block" (one for all)'
+    )
+  else if (entry.scope === 'block' && entry.from !== 'first-item')
+    report(`${at}.from`, 'a block control is printed from the first item: from "first-item"')
 }
 
 /** A reviewed row's shape: parallel lists read across by index (`arrays`), or one row per key (`keys`). */
@@ -201,6 +238,7 @@ export function hideProblems(mapping, blockStore, report) {
       if (Array.isArray(entry.control)) for (const name of entry.control) named.controls.add(name)
       else named.rows.add(entry.rows)
       wayProblems(entry, entryLocations(entry, block, mapped), at(i), report)
+      sharedControlProblems(entry, block, at(i), report)
     })
     const needed = hidesNeeded(block, mapped, created)
     for (const { scope, name } of needed.controls)

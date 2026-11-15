@@ -1408,7 +1408,8 @@
       "listing": "contact"
     },
     "group-plans": {
-      "listing": "plans"
+      "listing": "plans",
+      "mainBlock": "block-167"
     },
     "group-about-us": {
       "listing": "about"

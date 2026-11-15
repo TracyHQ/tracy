@@ -316,6 +316,28 @@ test('seo.featuredView names menu item page types of the recipes, and what the b
       why: 'invented: the featured view prints share tags only from its articles'
     }
   }
+  assert.match(
+    problemsOf(set).join('\n'),
+    /seo\.featuredView\.article: article is \{pageType: an article page type/
+  )
+  set.mapping.pages.services.record = {
+    kind: 'article',
+    category: {
+      extension: 'com_content',
+      parent: 'root',
+      title: { from: 'invented' },
+      params: {},
+      why: 'invented'
+    },
+    base: { featured: 1 },
+    why: 'invented'
+  }
+  set.mapping.seo.featuredView.article = {
+    pageType: 'services',
+    set: { column: 'featured', value: 1 },
+    none: 'invented: no article, no share tags',
+    why: 'invented: every article is featured'
+  }
   assert.deepEqual(problemsOf(set), [])
   set.mapping.seo.featuredView = { pageTypes: ['home', 'blog'], needs: 'anything', why: '' }
   const problems = problemsOf(set).join('\n')

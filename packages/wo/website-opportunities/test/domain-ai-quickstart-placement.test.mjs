@@ -199,6 +199,7 @@ test('a block placed inside a container names it, the container holds it, and th
   set.mapping.placements['services-grid'].holds = {
     blocks: ['footer-main'],
     position: { entity: 'module-11', column: 'params', jsonPath: ['position'] },
+    copies: { perPage: 1, keptWhen: 'invented: a held block is kept', why: 'invented' },
     why: 'invented'
   }
   assertProblem(set, /holds\.position: the position the container draws is a setting of module-13/)
@@ -266,6 +267,13 @@ test('a menu block names the menu it draws', () => {
     sourceId: 1
   }
   set.mapping.notEmptied.push({ entity: 'menuItem-1', why: 'invented: the footer menu item the demo keeps' })
+  assertProblem(set, /placements\[footer-main\]\.menu\.items: items is \{from: main-menu \| pages/)
+  set.mapping.placements['footer-main'].menu.items = { from: 'pages', order: 'plan', why: 'invented' }
+  assertProblem(set, /placements\[footer-main\]\.menu\.items: a list of pages names its order/)
+  set.mapping.placements['footer-main'].menu.items.max = 4
+  set.mapping.placements['footer-main'].menu.items.pageTypes = ['blog']
+  assertProblem(set, /menu\.items\.pageTypes: pageTypes names page types of the recipes/)
+  set.mapping.placements['footer-main'].menu.items.pageTypes = ['services']
   assert.deepEqual(problemsOf(set), [])
 })
 

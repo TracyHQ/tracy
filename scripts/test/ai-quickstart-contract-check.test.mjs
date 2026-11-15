@@ -123,3 +123,26 @@ test('a library stylesheet carrying a colour literal is a problem of the gate', 
     ['colour literal "color: white": a library block takes its colours from template design variables only']
   )
 })
+
+test('a page names only records of its blank site contract: a kept entity and a template style (#597)', async (t) => {
+  const { kitPageProblems } = await import('../ai-quickstart/check-kit-pages.mjs')
+  const { dir } = treeWith(t)
+  mkdirSync(path.join(dir, 'blank-site-contract'))
+  writeFileSync(
+    path.join(dir, 'blank-site-contract/content-map.json'),
+    JSON.stringify({ entities: [{ key: 'category-2' }, { key: 'templateStyle-13' }] })
+  )
+  const mapping = {
+    pages: {
+      plans: { menuItem: { link: 'index.php?id={entity:category-2}', templateStyle: 'templateStyle-13' } },
+      news: { menuItem: { link: 'index.php?id={entity:category-8}', templateStyle: 'templateStyle-99' } }
+    }
+  }
+  assert.deepEqual(
+    kitPageProblems(dir, mapping).map((p) => `${p.at}: ${p.message}`),
+    [
+      'pages.news.menuItem.link: category-8 is no entity of the blank site contract',
+      'pages.news.menuItem.templateStyle: templateStyle-99 is no template style of the blank site contract'
+    ]
+  )
+})

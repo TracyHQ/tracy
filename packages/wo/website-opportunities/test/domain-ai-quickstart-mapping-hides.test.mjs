@@ -21,6 +21,7 @@ const store = () => ({
   blocks: [
     {
       id: 'block-31',
+      placement: 'copy',
       items: { min: 1, max: 2 },
       fields: [
         { name: 'button-label', kind: 'editorial.button_label', type: 'text' },
@@ -89,7 +90,7 @@ const mapping = () => ({
         },
         why: 'one card per row of the lists'
       },
-      { rows: 'social', by: 'omit', why: 'links are elements of one stored value' }
+      { rows: 'social', by: 'omit', order: 'packed', why: 'links are elements of one stored value' }
     ]
   }
 })
@@ -153,4 +154,60 @@ test('omit takes only pieces of one value, and an entry says why (#584)', () => 
     'hides[block-31][2].why: say why this way takes the place off the page (measured how)',
     'hides[block-31][2]: module-31.6: omit leaves a row out of one stored value; this place is no piece of one'
   ])
+})
+
+test('omit rows are packed and only on a value written whole; an element names a group of fields (#597)', () => {
+  const m = mapping()
+  delete m.hides['block-31'][2].order
+  const inPlace = store()
+  inPlace.blocks[0].placement = 'in-place'
+  assert.deepEqual(run(m), [
+    'hides[block-31][2].order: omit rows are "packed": the build writes the rows it has into the first places, in order'
+  ])
+  const out = []
+  hideProblems(mapping(), inPlace, (at, message) => out.push(`${at}: ${message}`))
+  assert.deepEqual(out, [
+    'hides[block-31][2].by: omit writes the value whole: only on a copy or a created record, not in place'
+  ])
+  const e = mapping()
+  e.hides['block-31'][0] = {
+    control: ['button-label', 'button-link'],
+    by: 'rows.remove',
+    slots: ['module-31.8', 'module-31.9'],
+    element: 'div/a',
+    why: 'x'
+  }
+  assert.ok(
+    run(e).includes('hides[block-31][0].element: element is the xpath of an element under /html/body/div')
+  )
+})
+
+test('a control of item fields says whether the template prints one for every item (#597)', () => {
+  const s = store()
+  s.blocks[0].itemFields.push(
+    { name: 'card-label', kind: 'editorial.cta_label', type: 'text' },
+    { name: 'card-link', kind: 'editorial.navigation_url', type: 'link' }
+  )
+  const m = mapping()
+  m.hides['block-31'].push({ control: ['card-label', 'card-link'], by: 'empty', why: 'x' })
+  const out = (mm) => {
+    const o = []
+    hideProblems(mm, s, (at, message) => o.push(`${at}: ${message}`))
+    return o
+  }
+  assert.ok(
+    out(m).includes(
+      'hides[block-31][3].scope: a control of item fields has a scope: "item" (each prints its own) or "block" (one for all)'
+    )
+  )
+  m.hides['block-31'][3].scope = 'block'
+  assert.ok(
+    out(m).includes(
+      'hides[block-31][3].from: a block control is printed from the first item: from "first-item"'
+    )
+  )
+  m.hides['block-31'][3].from = 'first-item'
+  assert.ok(!out(m).some((l) => l.startsWith('hides[block-31][3].')))
+  m.hides['block-31'][0].scope = 'block'
+  assert.ok(out(m).includes('hides[block-31][0].scope: only a control of item fields has a scope'))
 })
