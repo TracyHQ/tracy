@@ -22701,6 +22701,11 @@
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.12/presentation-lock.json",
       "oid": "3bf70a52863cb86e2372e41bb33695d7cde5342d",
       "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/ui/tracy-chat-input/lib/client.js",
+      "oid": "9c83adf15533eb0d20b51e581ef5639cefa70196",
+      "reason": "Exact generated chat input bundle for PR #636 (See another look on a shared Website Opportunities demo). Rebuilt only because the UI switch catalogue it embeds gained `wo-demo-looks`; the changed minified line keeps the existing language-detection character ranges (Vietnamese and Cyrillic letters in regular expressions). Authored source is English and the bundles gate verifies these exact bytes."
     }
   ]
 }
