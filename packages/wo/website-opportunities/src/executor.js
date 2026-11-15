@@ -804,9 +804,7 @@ export function mergeCollected(previous, result) {
   const bioPages = uniqueByUrl([...(prev.bioPages ?? []), ...(result.bioPages ?? [])])
   return {
     profile: prev.profile != null || result.profile != null ? profile : null,
-    pages: [...(prev.pages ?? []), ...(result.pages ?? [])]
-      .slice(0, 200)
-      .map((p) => ({ url: p?.url, title: p?.title ?? null, text: String(p?.text ?? '').slice(0, 20_000) })),
+    pages: [...(prev.pages ?? []), ...(result.pages ?? [])].slice(0, 200).map(keptPage),
     posts: [...(prev.posts ?? []), ...(result.posts ?? [])].slice(0, 500),
     media: [...media.values()].slice(0, 1000),
     menus: uniqueByUrl([...(prev.menus ?? []), ...(result.menus ?? [])]),
@@ -817,6 +815,22 @@ export function mergeCollected(previous, result) {
 }
 
 const PROFILE_FIELDS = ['name', 'bio', 'phone', 'address', 'email']
+
+/**
+ * One page a source keeps: its address, title and text, with the meta description and first heading when the read had
+ * them (`website-crawler.mjs pageRead`; the old-URL map carries the description over, `url-map.mjs`). Bounded.
+ */
+function keptPage(p) {
+  const description = typeof p?.description === 'string' ? p.description.trim().slice(0, 500) : ''
+  const heading = typeof p?.heading === 'string' ? p.heading.trim().slice(0, 200) : ''
+  return {
+    url: p?.url,
+    title: p?.title ?? null,
+    text: String(p?.text ?? '').slice(0, 20_000),
+    ...(description ? { description } : {}),
+    ...(heading ? { heading } : {})
+  }
+}
 
 function uniqueByUrl(list) {
   const seen = new Map()

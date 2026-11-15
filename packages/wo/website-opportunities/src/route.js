@@ -37,6 +37,7 @@ import { withOutreach } from './outreach.js'
 import { pagespeedPair } from './pagespeed.js'
 import { markOutreach, OUTREACH_MARKS, outreachStatesOf } from './outreach-state.js'
 import { mustHavesView } from './must-haves-view.js'
+import { urlMapProof } from '../domain/url-map.mjs'
 import { creditOf, fetchPlacePhotoName, isPhotoName, isPlaceId, placeIdOfPhotoName } from './place-photo.js'
 import {
   AgainLimitError,
@@ -1427,7 +1428,11 @@ export function websiteOpportunitiesRoutes(deps) {
     if (!row.outreach)
       return refuse(c, 409, 'DEMO_NOT_READY', 'Finish the site check, or reopen the demo before sharing it.')
     return json(c, {
-      outreach: { ...row.outreach, arguments: await outreachArgumentsOf(rows[0], who.accountId) }
+      outreach: {
+        ...row.outreach,
+        arguments: await outreachArgumentsOf(rows[0], who.accountId),
+        urlMapProof: await urlMapProofOf(rows[0], who.accountId)
+      }
     })
   })
 
@@ -1463,6 +1468,24 @@ export function websiteOpportunitiesRoutes(deps) {
     } catch (error) {
       console.warn(`[website-opportunities] outreach without must-have lines: ${error?.message ?? error}`)
       return []
+    }
+  }
+
+  /**
+   * The outreach line of the old URL → new page map (`domain/url-map.mjs urlMapProof`) of the latest live demo, from the
+   * pages its build kept (builder `urlMapOf`): "12 of your 15 current pages have a matching page on the demo…". Null
+   * without a builder that maps, a match, or anything it rests on that can be read (the draft never fails for it).
+   */
+  async function urlMapProofOf(listed, accountId) {
+    try {
+      if (!builder?.urlMapOf) return null
+      const opp = await opportunityOf(pool, accountId, listed.id)
+      return opp ? urlMapProof(await builder.urlMapOf(opp.id)) : null
+    } catch (error) {
+      console.warn(
+        `[website-opportunities] outreach without the old URL map line: ${error?.message ?? error}`
+      )
+      return null
     }
   }
 

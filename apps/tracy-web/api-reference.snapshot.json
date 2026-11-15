@@ -49847,6 +49847,32 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/builds/{buildId}/url-map": {
+        "get": {
+          "operationId": "get_api_website_opportunities_builds_buildId_url_map",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "buildId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/capabilities": {
         "get": {
           "operationId": "get_api_website_opportunities_capabilities",

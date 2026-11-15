@@ -9,6 +9,7 @@
  *   the browser lives in tracy-host, not in this container) shoots the home page at 1440 by 900; the first screen is
  *   cut out of the full page shot and scaled to a 640 by 400 WebP under 80 KB.
  * - the demo's own mobile PageSpeed (`built.pagespeed`, `demo-pagespeed.js`), measured while the picture is shot.
+ * - the demo's own page list (`built.pages`, `demo-pages.js`), the pages its old URL → new page map may lead to.
  *
  * 🔒 NEVER FAILS A BUILD. All are written after the action has completed and outside its lease: a capture that times
  * out, a host without a browser or an image that cannot be read is logged and leaves the build without a picture,
@@ -16,6 +17,7 @@
  */
 import sharp from 'sharp'
 import { saveDemoPageSpeed } from './demo-pagespeed.js'
+import { saveDemoPages } from './demo-pages.js'
 
 /** The picture's size: twice the 160 by 100 box of the card, for sharp edges on a 2x screen. */
 export const PREVIEW_WIDTH = 640
@@ -111,11 +113,14 @@ export async function latestPreviewOf(pool, accountId, opportunityId) {
 /**
  * The hook the demo runner calls once a build's action completed (`demo-runner.js`). `capture(site)` asks the site's
  * host for its home page (`app.js`); null leaves the build without a picture. `pageSpeed(site)` measures the demo's
- * address (`demo-pagespeed.js` `createDemoPageSpeed`); null measures nothing. The two run side by side. Never throws.
+ * address (`demo-pagespeed.js` `createDemoPageSpeed`); null measures nothing. `pages(build)` reads the demo's page list
+ * (`demo-pages.js` `readDemoPages`, as the account that built it); null reads none. The three run side by side. Never
+ * throws.
  * @param {{ pool: any, capture?: ((site: any) => Promise<{ ok: boolean, body?: any }>) | null,
- *   pageSpeed?: ((site: any) => Promise<object>) | null, log?: any }} deps
+ *   pageSpeed?: ((site: any) => Promise<object>) | null, pages?: ((build: any) => Promise<object>) | null,
+ *   log?: any }} deps
  */
-export function createDemoBuilt({ pool, capture = null, pageSpeed = null, log = console }) {
+export function createDemoBuilt({ pool, capture = null, pageSpeed = null, pages = null, log = console }) {
   const keepPreview = async (build, site, at) => {
     try {
       const answer = await capture(site)
@@ -150,6 +155,20 @@ export function createDemoBuilt({ pool, capture = null, pageSpeed = null, log = 
       )
     }
   }
+  const keepPages = async (build) => {
+    try {
+      const read = await pages(build)
+      if (read && typeof read === 'object') await saveDemoPages(pool, build.id, read)
+      if (read?.reason) log.info?.(`[wo-demo] no page list of ${build.site_key ?? build.id}: ${read.reason}`)
+    } catch (error) {
+      log.warn?.(
+        `[wo-demo] page list not kept for ${build.id}: ${error?.code ?? error?.message ?? 'error'}`.slice(
+          0,
+          300
+        )
+      )
+    }
+  }
   return async function demoBuilt({ build, chain = null, acceptedAt = null, at }) {
     try {
       await saveBuiltFacts(pool, build.id, builtFacts({ chain, acceptedAt, at }))
@@ -158,7 +177,7 @@ export function createDemoBuilt({ pool, capture = null, pageSpeed = null, log = 
         `[wo-demo] build facts not kept for ${build.id}: ${error?.code ?? error?.message ?? 'error'}`
       )
     }
-    if (!capture && !pageSpeed) return
+    if (!capture && !pageSpeed && !pages) return
     let site = null
     try {
       if (build.site_key)
@@ -173,7 +192,8 @@ export function createDemoBuilt({ pool, capture = null, pageSpeed = null, log = 
     // completed build with neither keeps `no_address` rather than nothing.
     await Promise.all([
       capture && site ? keepPreview(build, site, at) : null,
-      pageSpeed ? keepPageSpeed(build, site ?? (build.label ? { label: build.label } : null)) : null
+      pageSpeed ? keepPageSpeed(build, site ?? (build.label ? { label: build.label } : null)) : null,
+      pages && site ? keepPages(build) : null
     ])
   }
 }
