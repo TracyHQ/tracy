@@ -130,11 +130,11 @@ async function planRead(chat) {
     ['Site language', 'English', 'All sources']
   ])
     assert.match(facts, new RegExp(`${label}\\s*${value}\\s*${source}`))
-  const look = await section('Look').innerText()
-  assert.match(look, /Template\s*JA Boxing/)
-  assert.match(look, /Accent colour\s*#1f7a4d/)
-  assert.match(look, /Logo on light\s*Your logo, from Instagram profile picture/)
-  assert.match(look, /Logo on dark\s*Your logo, from Instagram profile picture/)
+  const look = await section('Appearance').innerText()
+  assert.match(look, /Design\s*JA Boxing/)
+  assert.match(look, /Main colour\s*#1f7a4d/)
+  assert.match(look, /Logo on light pages\s*Your logo, from Instagram profile picture/)
+  assert.match(look, /Logo on dark pages\s*Your logo, from Instagram profile picture/)
   assert.match(await section('Services (4)').innerText(), /Service 4\s*Cardio tennis\s*Instagram post/)
   const pages = await section('Pages (5)').innerText()
   for (const name of ['Home', 'About', 'Services', 'Coaches', 'Contact'])
@@ -144,7 +144,7 @@ async function planRead(chat) {
     pages,
     /Top banner\s*Business name, tagline, main button\s*Your name and booking button come first\./
   )
-  assert.match(pages, /Reviews\s*6 quotes\s*The template has no reviews block/)
+  assert.match(pages, /Reviews\s*6 reviews\s*The template has no reviews block/)
   assert.match(pages, /Services\s*Adult coaching, Junior squad, Court hire, Cardio tennis\s*From Services/)
   // The Services block's child list: its heading and rows under the block line; the list planned empty shows nothing.
   assert.match(pages, /Adult coaching\s*Tuesday and Thursday, 18:00 to 19:00\s*Saturday, 9:00 to 10:00/)
@@ -153,9 +153,9 @@ async function planRead(chat) {
   assert.match(pages, /Photo gallery\s*12 photos/)
   const pictures = await section('Pictures').innerText()
   assert.match(pictures, /Your photos\s*31 photos from Instagram and Website/)
-  assert.match(pictures, /Drawn pictures\s*About 2 pictures\s*Two spots have no fitting photo/)
+  assert.match(pictures, /Pictures Tracy creates\s*About 2 pictures\s*Two spots have no fitting photo/)
   assert.match(
-    await section('Assumptions').innerText(),
+    await section('What I assumed').innerText(),
     /Every source is in English, so the site is in English\./
   )
   const left = await section('Left out').innerText()
@@ -304,7 +304,7 @@ const CHECKS = {
       /the hours on your website are used/,
       'the stale assumption goes'
     )
-    // The plan review bar: Approve and Request changes. Approve only emits the approval; no site write.
+    // The plan review bar: Approve and dsh's own Request changes button (this fixture draws dsh's composer, not our review bar). Approve only emits the approval; no site write.
     assert.match(await chat.text(), /Sunrise Tennis Club: 5 pages, 4 services/)
     assert.equal(await chat.button('Request changes').count(), 1)
     await chat.button('Approve').click()
@@ -533,11 +533,11 @@ const CHECKS = {
     assert.match(text, /Your site is not finished yet/)
     assert.match(
       text,
-      /The step "Draw 2 pictures for empty spots" failed twice, so I stopped instead of showing you a half built site\./
+      /I could not finish "Draw 2 pictures for empty spots" after two tries, so I stopped instead of showing you an unfinished site\./
     )
     assert.match(text, /Kept: your plan, your answers and the 5 written pages\./)
     assert.match(text, /Your current site is unchanged\./)
-    assert.match(text, /The Tracy team has been notified and will reply in this chat\./)
+    assert.match(text, /The Tracy team has been told and will follow up\./)
     assert.doesNotMatch(
       text,
       /Picture generation failed on both attempts|generated-pictures|Your site is ready/
@@ -557,7 +557,7 @@ const CHECKS = {
     assert.match(text, /Your site is not finished yet/)
     assert.match(
       text,
-      /The step "Generate 2 pictures for empty spots" failed, so I stopped instead of showing you a half built site\./
+      /I could not finish "Generate 2 pictures for empty spots", so I stopped instead of showing you an unfinished site\./
     )
     assert.doesNotMatch(text, /failed twice|The picture plan asked/i)
     const { rows } = await taskList(chat)

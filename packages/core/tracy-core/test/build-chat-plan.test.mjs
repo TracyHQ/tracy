@@ -138,12 +138,12 @@ test('the plan review bar is one dsh plan review request; only Approve is an app
   assert.equal(q.detail, '# Sunrise Tennis Club: 5 pages, 4 services')
   assert.deepEqual(
     q.options.map((o) => o.label),
-    ['Approve', 'Request changes']
+    ['Approve', 'Change the plan']
   )
   assert.deepEqual(approvalOf(p, { answers: [{ id: q.id, selected: ['Approve'] }] }), {
     plan: { id: 'plan-sunrise-tennis', revision: 1 }
   })
-  assert.equal(approvalOf(p, { answers: [{ id: q.id, selected: ['Request changes'] }] }), null)
+  assert.equal(approvalOf(p, { answers: [{ id: q.id, selected: ['Change the plan'] }] }), null)
   assert.equal(approvalOf(p, null), null)
 })
 

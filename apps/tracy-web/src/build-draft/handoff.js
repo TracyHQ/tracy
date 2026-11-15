@@ -40,7 +40,7 @@ export function conversationOf(value) {
 export const HANDOFF_NOTE =
   'This site was just built from this conversation and this plan, in the build chat before the site existed. ' +
   'The owner continues here. Use them as what the owner already said and approved. Do not change the site now. ' +
-  "Answer in the owner's language in one or two short sentences: the site is ready, the Browser tab shows it, " +
+  "Answer in the owner's language in one or two short sentences: the site is ready, they can see it in the Browser tab, " +
   'and they can ask you here for any change.'
 
 /**

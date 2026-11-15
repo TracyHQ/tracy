@@ -31,12 +31,12 @@ const REFUSALS = {
   ],
   PLAN_EXISTS: [
     409,
-    'This plan is made for the design you chose, and I cannot move it to another design yet.'
+    'This plan was made for the design you chose, and it cannot be moved to another design yet.'
   ],
   NOTHING_TO_UNDO: [409, 'There is no plan edit to undo.'],
   BUILD_RUNNING: [
     409,
-    'Your site is being built from the plan you approved, so it cannot change until the build ends.'
+    'Your site is being built from the plan you approved, so the plan cannot change until the build ends.'
   ]
 }
 

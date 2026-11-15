@@ -1,5 +1,5 @@
 /**
- * The plan review bar of the build chat (#609): Approve and Request changes for the plan the agent handed out.
+ * The plan review bar of the build chat (#609): Approve and Change the plan for the plan the agent handed out.
  *
  * WHY THIS AND NOT dsh's PLAN REVIEW PANEL. `planReviewRequestOf` gives the request `detail` (the plan summary) and
  * `intent` (`plan-review`), which dsh's composer reads to draw its plan review panel. dsh's `ask_user_question` tool

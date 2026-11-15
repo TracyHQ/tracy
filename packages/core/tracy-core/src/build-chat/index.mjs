@@ -42,6 +42,17 @@ export {
   textTooLongOf
 } from './conversation.mjs'
 export {
+  answerTooLongSay,
+  BUILD_DONE_SAY,
+  BUILD_LOCKED_SAY,
+  DESIGN_CHANGE_SAY,
+  FAULT_SAY,
+  nameTooLongSay,
+  requestTooLongSay,
+  TEAM_SEES_SAY,
+  UNCHANGED_SAY
+} from './owner-sentences.mjs'
+export {
   approvalOf,
   changedFieldsOf,
   planCardOf,

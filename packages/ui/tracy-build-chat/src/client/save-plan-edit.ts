@@ -17,7 +17,12 @@ async function post(path: string, body: unknown, fetchImpl: typeof fetch): Promi
     body: JSON.stringify(body)
   })
   const answer = await response.json().catch(() => null)
-  if (!response.ok || !answer?.draft?.plan) throw new Error(String(answer?.code ?? response.status))
+  if (!response.ok || !answer?.draft?.plan) {
+    const refusal = new Error(String(answer?.code ?? response.status)) as Error & { say?: string }
+    // While the site is built the door answers with the owner sentence itself: the card shows it, not a retry hint.
+    if (answer?.code === 'BUILD_RUNNING' && typeof answer.next === 'string') refusal.say = answer.next
+    throw refusal
+  }
   const { plan, lastEdit = null, canUndo = false } = answer.draft
   return { plan, lastEdit, canUndo }
 }

@@ -155,7 +155,7 @@ test('a name longer than the template holds asks again with the limit in plain w
   assert.equal(error.code, 'site_name_too_long')
   const asking = askingOf(error)
   assert.equal(asking.state, 'asking')
-  assert.equal(asking.say, 'That name is too long for this design. Please keep it to 20 characters or fewer.')
+  assert.equal(asking.say, 'That name is too long for this design. Please use 20 characters or fewer.')
   assert.equal(asking.say, siteNameTooLongSay(LIMIT))
   assert.equal(DASHES.test(asking.say), false)
   assert.equal(asking.question.freeText.maxLength, LIMIT)

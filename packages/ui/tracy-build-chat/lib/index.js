@@ -1,17 +1,17 @@
 // ../../core/tracy-core/src/build-chat/conversation.mjs
 var ANSWER_SCHEMA = "tracy-build-answer/v1";
 var BUILD_CHAT_STRINGS = {
-  "research.title.one": "Read {count} source",
-  "research.title.other": "Read {count} sources",
+  "tool.research.one": "Read {count} source",
+  "tool.research.other": "Read {count} sources",
   "review.question": "Approve this plan?",
   "review.summary": "{name}: {pages}, {services}",
   "review.summary.one": "{name}: {part}",
   "review.pages.one": "{count} page",
   "review.pages.other": "{count} pages",
-  "review.services.one": "{count} service",
-  "review.services.other": "{count} services",
+  "plan.count.service.one": "{count} service",
+  "plan.count.service.other": "{count} services",
   "review.approve": "Approve",
-  "review.change": "Request changes"
+  "review.change": "Change the plan"
 };
 var MAX_QUESTIONS_AT_ONCE = 3;
 var choicesOf = (question) => Array.isArray(question?.choices) ? question.choices : [];
@@ -48,6 +48,16 @@ function textTooLongOf(question, item) {
   const length = [...item?.custom?.trim() ?? ""].length;
   return length > limit ? { limit, length } : null;
 }
+
+// ../../core/tracy-core/src/build-chat/owner-sentences.mjs
+var TEAM_SEES_SAY = "The Tracy team can see what happened and will look into it.";
+var FAULT_SAY = `Something went wrong on our side, so I stopped here. ${TEAM_SEES_SAY}`;
+var UNCHANGED_SAY = "Your plan is unchanged. You can change any value on the card, tell me what to change, or ask me to start the plan over.";
+var BUILD_LOCKED_SAY = "Your site is being built from the plan you approved, so the plan cannot change until the build ends.";
+var BUILD_DONE_SAY = "Your site is ready. You can see it in the Browser tab, and you can ask me here for any change.";
+var nameTooLongSay = (limit) => `That name is too long for this design. Please use ${limit} characters or fewer.`;
+var answerTooLongSay = (limit) => `That answer is too long. Please use ${limit} characters or fewer.`;
+var requestTooLongSay = (limit) => `That request is too long. Please use ${limit} characters or fewer.`;
 
 // ../../core/tracy-core/src/build-chat/plan.mjs
 var PLAN_REVIEW_ID = "plan-review";
@@ -209,7 +219,7 @@ function planCardOf(plan) {
 function planReviewRequestOf(plan, t = english) {
   const { name: name2, counts } = planCardOf(plan);
   const pages = t(counts.pages === 1 ? "review.pages.one" : "review.pages.other", { count: counts.pages });
-  const services = t(counts.services === 1 ? "review.services.one" : "review.services.other", {
+  const services = t(counts.services === 1 ? "plan.count.service.one" : "plan.count.service.other", {
     count: counts.services
   });
   const parts = [counts.pages > 0 ? pages : null, counts.services > 0 ? services : null].filter(
@@ -255,16 +265,16 @@ function isBuildChatSession(sessionId) {
 var BUILD_WAIT_MS = 9e4;
 var BUILD_POLL_MS = 2e3;
 var BUILD_DOOR_TIMEOUT_MS = 3e4;
-var BUILD_STOPPED_SAY = "Your site plan could not be prepared. The Tracy team has the details and will look into it.";
+var BUILD_STOPPED_SAY = FAULT_SAY;
 var BUILD_RUNNING_SAY = "Still working on it. This can take a minute or two.";
-var UNCHANGED_FALLBACK_SAY = "Your plan has not changed. You can change any value on the plan card, or tell me to start the plan over.";
+var UNCHANGED_FALLBACK_SAY = UNCHANGED_SAY;
 var BUILD_BUILDING_SAY = "Your site is being built from the plan you approved. This takes a few minutes.";
-var BUILD_DONE_SAY = "Your site is built from the plan you approved.";
-var BUILD_FAILED_SAY = "Your site could not be built this time. The Tracy team has the details and will look into it.";
-var BUILD_LOCKED_SAY = "Your site is being built from the plan you approved, so the plan cannot change until the build ends.";
+var BUILD_DONE_SAY2 = BUILD_DONE_SAY;
+var BUILD_FAILED_SAY = `Your site could not be built this time. ${TEAM_SEES_SAY}`;
+var BUILD_LOCKED_SAY2 = BUILD_LOCKED_SAY;
 var REQUEST_MAX_LENGTH = 1e3;
-var REQUEST_TOO_LONG_SAY = `That request is too long. Please keep it to ${REQUEST_MAX_LENGTH} characters or fewer.`;
-var tooLongSay = (question, limit) => question?.topic === "site-name" ? `That name is too long for this design. Please keep it to ${limit} characters or fewer.` : `That answer is too long. Please keep it to ${limit} characters or fewer.`;
+var REQUEST_TOO_LONG_SAY = requestTooLongSay(REQUEST_MAX_LENGTH);
+var tooLongSay = (question, limit) => question?.topic === "site-name" ? nameTooLongSay(limit) : answerTooLongSay(limit);
 var SAY_MAX = 300;
 var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change. Never say the site is built until a build result says built.';
 var BUILD_PARAMETERS = Object.freeze({
@@ -465,7 +475,7 @@ ${JSON.stringify(answer)}`;
     if (res.status === 409 && res.body?.code === "BUILD_RUNNING")
       return {
         building: true,
-        say: BUILD_LOCKED_SAY,
+        say: BUILD_LOCKED_SAY2,
         next: "Say the sentence in say. Call tracy_build with action build to read how the build is going."
       };
     if (res.status === 409)
@@ -588,7 +598,7 @@ ${JSON.stringify(answer)}`;
     if (build2.state === "done")
       return {
         built: true,
-        say: BUILD_DONE_SAY,
+        say: BUILD_DONE_SAY2,
         ...typeof build2.workspacePath === "string" ? { workspacePath: build2.workspacePath } : {},
         next: "Say the sentence in say. Do not add anything about how it was built."
       };
@@ -614,7 +624,7 @@ ${JSON.stringify(answer)}`;
     if (res.status === 409 && res.body?.code === "BUILT_FROM_OTHER_PLAN")
       return {
         building: true,
-        say: BUILD_LOCKED_SAY,
+        say: BUILD_LOCKED_SAY2,
         next: "Say the sentence in say. Call tracy_build with action build only to read the build of the plan already approved."
       };
     if (res.status < 200 || res.status >= 300) return refusal(res);

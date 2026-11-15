@@ -19,20 +19,26 @@ import { planProfileOf } from './engine-steps.js'
 /** The chat card shows at most three questions at a time (`MAX_QUESTIONS_AT_ONCE` of `@tracy/core/build-chat`). */
 export const MAX_QUESTIONS_AT_ONCE = 3
 
-/** What a stopped step says to the owner, by why it stopped. Plain English, no dashes. */
+/**
+ * What a stopped step says to the owner, by why it stopped. Plain English, no dashes. The sentences the build chat tool
+ * says too (`@tracy/core/build-chat` owner-sentences) are kept word for word the same: the image of this app does not
+ * carry `@tracy/core`, so a test in `@tracy/dsh-build-chat` holds the two copies equal.
+ */
 export const SAY = Object.freeze({
-  fault: 'Something went wrong on our side, so I stopped here. The team can see what happened.',
+  fault:
+    'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.',
   research:
-    'I could not read enough about your business from what you gave me, so I stopped here. The team can see what happened.',
+    'I could not read enough about your business from what you gave me, so I stopped here. The Tracy team can see what happened and will look into it.',
   brand:
-    'I could not read your own brand colour and logo yet, so I stopped before showing you a plan. The team can see what happened.',
+    'I could not read your own brand colour and logo yet, so I stopped before showing you a plan. The Tracy team can see what happened and will look into it.',
   siteName:
-    'I need a name to show on your site before I can plan it, and I could not find one I am allowed to use. The team can see what happened.',
+    'I need a name to show on your site before I can plan it, and I could not find one I am allowed to use. The Tracy team can see what happened and will look into it.',
   links:
-    'Please give me at least one link to your website, your Google Maps listing or one of your social pages, so I can read about your business.',
-  interrupted: 'My work on this was interrupted, so I stopped here. The team can see what happened.',
+    'Please give me at least one link: your website, your Google Maps listing or a social page, so I can read about your business.',
+  interrupted:
+    'My work on this was interrupted, so I stopped here. The Tracy team can see what happened and will look into it.',
   revise:
-    'I could not make that change, so your plan stays as it was. You can change any value on the plan card, or ask me in other words. The team can see what happened.',
+    'I could not make that change, so your plan stays as it was. You can change any value on the card, or ask me in other words. The Tracy team can see what happened and will look into it.',
   stale: 'Your plan changed while I was working on your request, so I left it as it is. Please ask me again.'
 })
 
@@ -41,7 +47,7 @@ export const SAY = Object.freeze({
  * as it is, with every value the owner changed on it. Plain English, no dashes.
  */
 export const UNCHANGED_SAY =
-  'Your plan is ready on the card. You can change any value on it, tell me what to change, or tell me to start the plan over.'
+  'Your plan is unchanged. You can change any value on the card, tell me what to change, or ask me to start the plan over.'
 
 /**
  * The answer of a compose asked for, with no request, on a draft that holds a plan: the living plan, untouched, marked `unchanged`, with
@@ -64,7 +70,7 @@ export const SITE_NAME_INVALID_SAY =
 
 /** Said when the owner's site name is longer than the chosen design's name fields hold. Plain English, no dashes. */
 export const siteNameTooLongSay = (limit) =>
-  `That name is too long for this design. Please keep it to ${limit} characters or fewer.`
+  `That name is too long for this design. Please use ${limit} characters or fewer.`
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''

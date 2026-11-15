@@ -14,7 +14,7 @@
  * card drawn again from the draft shows the same highlight. A larger change asked for in the chat arrives as a newer
  * plan in `plan`: the card draws it in place; there is one living plan and no list of versions. A renamed service is
  * one change to its item: every block that shows the services reads the item, so the Services page and the Services
- * block on Home follow without the card touching them. Approve and Request changes are dsh's plan review bar, fed by
+ * block on Home follow without the card touching them. Approve and Change the plan are dsh's plan review bar, fed by
  * `planReviewRequestOf`; this card writes nothing else.
  */
 import { IconCloseOutlineRegular } from '@deepseek-ai/dsh-client-ui-primitives'
@@ -192,7 +192,8 @@ export function PlanCard({
 }: PlanCardProps) {
   const [draft, setDraft] = useState<PlanDraft>({ plan, lastEdit, canUndo })
   const [busy, setBusy] = useState(false)
-  const [failed, setFailed] = useState(false)
+  /** A refused change: the door's own sentence while the site is built, else just true (the card says Try again). */
+  const [failed, setFailed] = useState<string | boolean>(false)
   const [editing, setEditing] = useState<string | null>(null)
   /** The value focus goes back to once its editor closes, or its change is taken back. */
   const [refocus, setRefocus] = useState<string | null>(null)
@@ -214,8 +215,9 @@ export function PlanCard({
     setFailed(false)
     try {
       setDraft(await request())
-    } catch {
-      setFailed(true)
+    } catch (error) {
+      const say = (error as { say?: unknown } | null)?.say
+      setFailed(typeof say === 'string' && say !== '' ? say : true)
     } finally {
       setBusy(false)
     }
@@ -280,7 +282,7 @@ export function PlanCard({
       </div>
       {failed && (
         <p className="tv-bc-plan-err tv-bc-error" role="alert">
-          {t('plan.saveFailed')}
+          {typeof failed === 'string' ? failed : t('plan.saveFailed')}
         </p>
       )}
 
@@ -398,8 +400,7 @@ export function PlanCard({
         <div className="tv-bc-kv">
           <Row label={t('plan.pictures.own')}>
             <Value>
-              {t('plan.pictures.ownValue', {
-                count: card.pictures.own.frames,
+              {plural(t, 'plan.pictures.ownValue', card.pictures.own.frames, {
                 from: listOf(t, card.pictures.own.from)
               })}
             </Value>

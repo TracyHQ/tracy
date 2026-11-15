@@ -155,7 +155,7 @@ export function saveAnswer(pool, accountId, { question, answer }) {
 
 /** Said when a plan edit would move the living plan to another template. Plain English, no dashes. */
 export const TEMPLATE_CHANGE_SAY =
-  'This plan is made for the design you chose, and I cannot move it to another design yet.'
+  'This plan was made for the design you chose, and it cannot be moved to another design yet.'
 
 /**
  * Choose the template before a plan exists; afterwards the template stays the plan's (a plan edit that moves it is

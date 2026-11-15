@@ -374,10 +374,7 @@ test('a description with no link stops and asks the owner for a link, in plain w
   })
   const { ended } = await s.run('POST', '/research', { description: 'A family bakery that opens early.' })
   assert.equal(ended.body.state, 'stopped')
-  assert.match(
-    ended.body.say,
-    /at least one link to your website, your Google Maps listing or one of your social pages/
-  )
+  assert.match(ended.body.say, /at least one link: your website, your Google Maps listing or a social page/)
   assert.doesNotMatch(ended.body.say, DASHES)
   const { fault } = await row(s)
   assert.deepEqual(
@@ -960,10 +957,7 @@ test(
     assert.equal((await answerWith(s, older, 'Riverside Courts and Racquets')).status, 200)
     const { ended } = await askPlan(s)
     assert.equal(ended.body.state, 'asking')
-    assert.equal(
-      ended.body.say,
-      'That name is too long for this design. Please keep it to 20 characters or fewer.'
-    )
+    assert.equal(ended.body.say, 'That name is too long for this design. Please use 20 characters or fewer.')
     assert.equal(DASHES.test(ended.body.say), false)
     assert.equal(ended.body.result.questions[0].freeText.maxLength, 20)
     assert.equal(model.calls.length, 0)

@@ -21,17 +21,17 @@ const ANSWER_SCHEMA = 'tracy-build-answer/v1'
  * dsh's components bring their own words for everything else (Next, Submit, Type your answer, the reply label).
  */
 export const BUILD_CHAT_STRINGS = {
-  'research.title.one': 'Read {count} source',
-  'research.title.other': 'Read {count} sources',
+  'tool.research.one': 'Read {count} source',
+  'tool.research.other': 'Read {count} sources',
   'review.question': 'Approve this plan?',
   'review.summary': '{name}: {pages}, {services}',
   'review.summary.one': '{name}: {part}',
   'review.pages.one': '{count} page',
   'review.pages.other': '{count} pages',
-  'review.services.one': '{count} service',
-  'review.services.other': '{count} services',
+  'plan.count.service.one': '{count} service',
+  'plan.count.service.other': '{count} services',
   'review.approve': 'Approve',
-  'review.change': 'Request changes'
+  'review.change': 'Change the plan'
 }
 
 /** Translate with the English source; a plugin passes its bound locale instead. */
@@ -56,7 +56,7 @@ export function researchRowOf(research, t = english) {
   const sources = research?.sources ?? []
   const n = sources.length
   return {
-    title: t(n === 1 ? 'research.title.one' : 'research.title.other', { count: n }),
+    title: t(n === 1 ? 'tool.research.one' : 'tool.research.other', { count: n }),
     summary: research?.summary ?? '',
     // The open row: one entry per source, what it gave as lines (the tool row's read-only details card).
     details: {

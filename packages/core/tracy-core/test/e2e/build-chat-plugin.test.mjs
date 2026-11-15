@@ -467,14 +467,14 @@ test('a dark theme accent and a temporary logo: both swatches labelled, the temp
     plan.assumptions = [...(plan.assumptions ?? []), { id: 'logo', field: 'look.logo', said }]
     const { page, errors } = await open(browser, { viewport: { width: 390, height: 844 }, plan })
     await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
-    const look = page.getByRole('article').getByRole('region', { name: 'Look', exact: true })
+    const look = page.getByRole('article').getByRole('region', { name: 'Appearance', exact: true })
     await look.waitFor()
     const text = await look.innerText()
-    assert.match(text, /Accent colour, light theme\s*#111111/)
-    assert.match(text, /Accent colour, dark theme\s*#f5f5f5/)
+    assert.match(text, /Main colour on light pages\s*#111111/)
+    assert.match(text, /Main colour on dark pages\s*#f5f5f5/)
     assert.match(text, /Your business name as text/)
     assert.equal(
-      await look.getByRole('button', { name: /Edit Accent colour, dark theme/ }).count(),
+      await look.getByRole('button', { name: /Edit Main colour on dark pages/ }).count(),
       0,
       'not editable yet'
     )

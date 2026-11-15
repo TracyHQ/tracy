@@ -175,7 +175,7 @@ test('outside a build chat session every piece draws nothing', () => {
     sessionId,
     key: 'k',
     questions: [
-      { id, question: 'Approve this plan?', options: [{ label: 'Approve' }, { label: 'Request changes' }] }
+      { id, question: 'Approve this plan?', options: [{ label: 'Approve' }, { label: 'Change the plan' }] }
     ],
     answer: async () => {},
     dismiss: async () => {},

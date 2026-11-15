@@ -21,7 +21,7 @@ import {
 
 /** Said when a written request is longer than a change request holds. Plain English, no dashes. */
 export const requestTooLongSay = (limit = PLAN_REQUEST_MAX_LENGTH) =>
-  `That request is too long. Please keep it to ${limit} characters or fewer.`
+  `That request is too long. Please use ${limit} characters or fewer.`
 /** Said when a written request has nothing to read. Plain English, no dashes. */
 export const REQUEST_EMPTY_SAY = 'Please tell me in a few words what you would like changed on the plan.'
 

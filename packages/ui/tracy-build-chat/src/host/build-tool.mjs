@@ -25,6 +25,14 @@
  * longer than its question holds is never stored: the owner is asked again with the limit in plain words.
  */
 import {
+  answerTooLongSay,
+  BUILD_DONE_SAY as DONE_SAY,
+  BUILD_LOCKED_SAY as LOCKED_SAY,
+  FAULT_SAY,
+  nameTooLongSay,
+  requestTooLongSay,
+  TEAM_SEES_SAY,
+  UNCHANGED_SAY,
   answerOf,
   approvalOf,
   askRequestOf,
@@ -43,8 +51,7 @@ export const BUILD_POLL_MS = 2_000
 export const BUILD_DOOR_TIMEOUT_MS = 30_000
 
 /** Owner facing: said when a step could not finish and the door gave no sentence of its own. */
-export const BUILD_STOPPED_SAY =
-  'Your site plan could not be prepared. The Tracy team has the details and will look into it.'
+export const BUILD_STOPPED_SAY = FAULT_SAY
 /** Owner facing: said while long work is still running. */
 export const BUILD_RUNNING_SAY = 'Still working on it. This can take a minute or two.'
 
@@ -52,25 +59,22 @@ export const BUILD_RUNNING_SAY = 'Still working on it. This can take a minute or
  * Owner facing: said when the plan was kept as it is (compose on a draft that holds a plan) and the door gave no plain
  * sentence of its own. Plain English, no dashes.
  */
-export const UNCHANGED_FALLBACK_SAY =
-  'Your plan has not changed. You can change any value on the plan card, or tell me to start the plan over.'
+export const UNCHANGED_FALLBACK_SAY = UNCHANGED_SAY
 
 /** Owner facing: said while the site is created and built from the approved plan (#610). Plain English, no dashes. */
 export const BUILD_BUILDING_SAY =
   'Your site is being built from the plan you approved. This takes a few minutes.'
 /** Owner facing: said when the build ended with the site ready. */
-export const BUILD_DONE_SAY = 'Your site is built from the plan you approved.'
+export const BUILD_DONE_SAY = DONE_SAY
 /** Owner facing: said when the build stopped. The task list card shows which step; the team has the reason. */
-export const BUILD_FAILED_SAY =
-  'Your site could not be built this time. The Tracy team has the details and will look into it.'
+export const BUILD_FAILED_SAY = `Your site could not be built this time. ${TEAM_SEES_SAY}`
 /** Owner facing: said when the owner asks for a change while the build runs. */
-export const BUILD_LOCKED_SAY =
-  'Your site is being built from the plan you approved, so the plan cannot change until the build ends.'
+export const BUILD_LOCKED_SAY = LOCKED_SAY
 
 /** The longest change request the owner may write, in characters (Contract B `request.text`, #617). */
 export const REQUEST_MAX_LENGTH = 1_000
 /** Owner facing: said when a written change request is longer than that. Plain English, no dashes. */
-export const REQUEST_TOO_LONG_SAY = `That request is too long. Please keep it to ${REQUEST_MAX_LENGTH} characters or fewer.`
+export const REQUEST_TOO_LONG_SAY = requestTooLongSay(REQUEST_MAX_LENGTH)
 
 /**
  * Owner facing: said when a typed reply is longer than its question holds. Plain English, no dashes.
@@ -78,9 +82,7 @@ export const REQUEST_TOO_LONG_SAY = `That request is too long. Please keep it to
  * @param {number} limit
  */
 export const tooLongSay = (question, limit) =>
-  question?.topic === 'site-name'
-    ? `That name is too long for this design. Please keep it to ${limit} characters or fewer.`
-    : `That answer is too long. Please keep it to ${limit} characters or fewer.`
+  question?.topic === 'site-name' ? nameTooLongSay(limit) : answerTooLongSay(limit)
 
 /** The longest owner sentence passed through from a door; a longer one is replaced by ours. */
 const SAY_MAX = 300

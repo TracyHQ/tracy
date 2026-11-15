@@ -269,7 +269,7 @@ test('a stopped door answer yields stopped with the owner sentence and no ask', 
       body: {
         step: 'research',
         state: 'stopped',
-        say: 'Your site plan could not be prepared. The Tracy team has the details and will look into it.',
+        say: 'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.',
         result: { ask: ASK }
       }
     }
@@ -277,7 +277,7 @@ test('a stopped door answer yields stopped with the owner sentence and no ask', 
   const answer = await run(toolWith(web), { action: 'research', description: 'A small tennis club' })
   assert.deepEqual(answer, {
     stopped: true,
-    say: 'Your site plan could not be prepared. The Tracy team has the details and will look into it.'
+    say: 'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.'
   })
 })
 
@@ -322,7 +322,7 @@ test('brand unavailable yields stopped: the plan is never composed with the temp
 
 test('plan with no request on a draft that holds a plan: the plan did not change, and the model is told so', async () => {
   const say =
-    'Your plan is ready on the card. You can change any value on it, tell me what to change, or tell me to start the plan over.'
+    'Your plan is unchanged. You can change any value on the card, tell me what to change, or ask me to start the plan over.'
   const kept = { ...PLAN, revision: 2 }
   const web = fakeWeb({
     'POST /api/build-draft/compose': {
@@ -404,7 +404,7 @@ test('a request longer than a change request holds is never sent: the owner is a
   const web = fakeWeb({})
   const answered = await run(toolWith(web), { action: 'plan', request: 'a'.repeat(1001) })
   assert.equal(web.calls.length, 0)
-  assert.equal(answered.say, 'That request is too long. Please keep it to 1000 characters or fewer.')
+  assert.equal(answered.say, 'That request is too long. Please use 1000 characters or fewer.')
   assert.match(answered.next, /shorter/)
 })
 
@@ -625,7 +625,7 @@ const SITE_NAME = {
 const SITE_NAME_ASK = {
   questions: [{ id: 'site-name', question: SITE_NAME.prompt, options: [], multiSelect: false }]
 }
-const TOO_LONG_SAY = 'That name is too long for this design. Please keep it to 20 characters or fewer.'
+const TOO_LONG_SAY = 'That name is too long for this design. Please use 20 characters or fewer.'
 /** The compose step ended asking the owner for the site name, as `GET /engine` answers it. */
 const composeAsking = (say) => ({
   step: 'compose',
@@ -772,15 +772,18 @@ test('build approves the plan last shown, only after the owner pressed Approve, 
   events.push(...reviewed('Approve'))
   const answer = await run(tool, { action: 'build' })
   assert.equal(answer.built, true)
-  assert.equal(answer.say, 'Your site is built from the plan you approved.')
+  assert.equal(
+    answer.say,
+    'Your site is ready. You can see it in the Browser tab, and you can ask me here for any change.'
+  )
   assert.equal(answer.workspacePath, '/site/harbour-lane')
   const post = web.calls.find((c) => c.method === 'POST' && c.path === '/api/build-draft/build')
   assert.deepEqual(post.body, { plan: { id: PLAN.id, revision: 1 } })
   assert.equal(post.headers['x-tracy-session'], SESSION)
 })
 
-test('Request changes is no approval, and a build still running after the wait says so without claiming it is built', async () => {
-  const changes = await run(toolWith(fakeWeb({}), { events: reviewed('Request changes') }), {
+test('Change the plan is no approval, and a build still running after the wait says so without claiming it is built', async () => {
+  const changes = await run(toolWith(fakeWeb({}), { events: reviewed('Change the plan') }), {
     action: 'build'
   })
   assert.equal(changes.refused, true)
@@ -805,7 +808,7 @@ test('after a restart the plan comes from the draft door; a stopped build is one
   const answer = await run(toolWith(web, { events: reviewed('Approve') }), { action: 'build' })
   assert.deepEqual(answer, {
     stopped: true,
-    say: 'Your site could not be built this time. The Tracy team has the details and will look into it.'
+    say: 'Your site could not be built this time. The Tracy team can see what happened and will look into it.'
   })
   assert.deepEqual(web.calls.find((c) => c.method === 'POST').body, { plan: { id: PLAN.id, revision: 4 } })
   assert.equal(/[–—]/.test(JSON.stringify(answer)), false)
@@ -824,4 +827,17 @@ test('a plan that moved since approval, or a change asked while the build runs, 
   assert.equal(edit.building, true)
   assert.equal(edit.say, BUILD_LOCKED_SAY)
   assert.equal(edit.ask, undefined)
+})
+
+test('the door and the tool say the shared owner sentences with the same words', async () => {
+  // apps/tracy-web cannot import @tracy/core (its image does not carry it), so it keeps copies; they must not drift.
+  const core = await import('@tracy/core/build-chat')
+  const door = await import('../../../../apps/tracy-web/src/build-draft/engine-state.js')
+  const revise = await import('../../../../apps/tracy-web/src/build-draft/engine-revise.js')
+  const store = await import('../../../../apps/tracy-web/src/build-draft/store.js').catch(() => null)
+  assert.equal(door.SAY.fault, core.FAULT_SAY)
+  assert.equal(door.UNCHANGED_SAY, core.UNCHANGED_SAY)
+  assert.equal(door.siteNameTooLongSay(20), core.nameTooLongSay(20))
+  assert.equal(revise.requestTooLongSay(1000), core.requestTooLongSay(1000))
+  if (store) assert.equal(store.TEMPLATE_CHANGE_SAY, core.DESIGN_CHANGE_SAY)
 })

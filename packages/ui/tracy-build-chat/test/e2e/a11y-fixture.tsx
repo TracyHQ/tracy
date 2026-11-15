@@ -41,6 +41,11 @@ function apply(edit: Any) {
 const door = (async (url: string, init: RequestInit) => {
   const body = JSON.parse(String(init.body))
   log.requests.push({ url, body })
+  if (url.endsWith('/plan-edits') && (globalThis as Any).buildRunning) {
+    // The door while the site is built: its own owner sentence, 409.
+    const next = 'The door sentence while the site is built.'
+    return new Response(JSON.stringify({ code: 'BUILD_RUNNING', next }), { status: 409 })
+  }
   if (url.endsWith('/plan-edits')) {
     const before = draft.plan
     apply(body.edit)
@@ -86,7 +91,7 @@ function Planned({ view, withReview }: { view: Any; withReview: boolean }) {
   const question = {
     id: 'plan-review',
     question: 'Does this plan look right?',
-    options: [{ label: 'Approve' }, { label: 'Request changes' }]
+    options: [{ label: 'Approve' }, { label: 'Change the plan' }]
   }
   const matched = {
     sessionId: 'session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e',

@@ -258,7 +258,7 @@ test('plan card names: pencil buttons, radio group, editors', async () => {
   assert.deepEqual(unnamed, [])
   assert.equal(await card.getByRole('radiogroup', { name: 'Opening hours' }).count(), 1)
   assert.equal(await card.getByRole('button', { name: 'Edit Phone: 04 000 0000' }).count(), 1)
-  assert.equal(await card.getByRole('button', { name: /^Edit Accent colour: #1f7a4d$/ }).count(), 1)
+  assert.equal(await card.getByRole('button', { name: /^Edit Main colour: #1f7a4d$/ }).count(), 1)
   assert.equal(await card.getByRole('button', { name: 'Edit Service 2: Junior squad' }).count(), 1)
   // The radio group picks with the arrow key, and its focus stays on the checked radio.
   const hours = card.getByRole('radiogroup', { name: 'Opening hours' })
@@ -327,4 +327,19 @@ test('focus ring is visible in light and dark', async () => {
     assert.ok(input.style !== 'none' && input.outline >= 1, `${theme}: the editor has a ring too`)
     await page.close()
   }
+})
+
+test('a change refused while the site is built shows the door sentence, not a retry hint', async () => {
+  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
+  await mount(page, 'plan', { plan: PLAN })
+  await page.evaluate(() => {
+    globalThis.buildRunning = true
+  })
+  await page.getByRole('button', { name: 'Edit Tagline: Tennis for every age and level' }).click()
+  await page.keyboard.insertText(' now')
+  await page.keyboard.press('Enter')
+  const alert = page.getByRole('alert')
+  await alert.waitFor()
+  assert.equal(await alert.innerText(), 'The door sentence while the site is built.')
+  await page.close()
 })

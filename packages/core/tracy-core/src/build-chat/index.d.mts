@@ -36,18 +36,27 @@ export interface ReplyData {
   time?: number
 }
 export type BuildChatStringKey =
-  | 'research.title.one'
-  | 'research.title.other'
+  | 'tool.research.one'
+  | 'tool.research.other'
   | 'review.question'
   | 'review.summary'
   | 'review.pages.one'
   | 'review.pages.other'
-  | 'review.services.one'
-  | 'review.services.other'
+  | 'plan.count.service.one'
+  | 'plan.count.service.other'
   | 'review.approve'
   | 'review.change'
 export declare const BUILD_CHAT_STRINGS: Readonly<Record<BuildChatStringKey, string>>
 export declare const MAX_QUESTIONS_AT_ONCE: 3
+export declare const TEAM_SEES_SAY: string
+export declare const FAULT_SAY: string
+export declare const UNCHANGED_SAY: string
+export declare const DESIGN_CHANGE_SAY: string
+export declare const BUILD_LOCKED_SAY: string
+export declare const BUILD_DONE_SAY: string
+export declare function nameTooLongSay(limit: number): string
+export declare function answerTooLongSay(limit: number): string
+export declare function requestTooLongSay(limit: number): string
 export declare function researchRowOf(
   research: { summary: string; sources: ResearchSource[] },
   t?: (key: string, vars?: Record<string, unknown>) => string

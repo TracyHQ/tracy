@@ -276,14 +276,14 @@ export function changedFieldsOf({ plan, lastEdit = null, canUndo = false }) {
 
 /**
  * The `ask_user_question` request that dsh draws as its plan review bar: the plan's one line summary under review,
- * Approve and Request changes. The plan itself is on the plan card, so the request carries only its summary.
+ * Approve and Change the plan. The plan itself is on the plan card, so the request carries only its summary.
  * @param {any} plan
  * @param {(key: string, vars?: Record<string, unknown>) => string} [t]
  */
 export function planReviewRequestOf(plan, t = english) {
   const { name, counts } = planCardOf(plan)
   const pages = t(counts.pages === 1 ? 'review.pages.one' : 'review.pages.other', { count: counts.pages })
-  const services = t(counts.services === 1 ? 'review.services.one' : 'review.services.other', {
+  const services = t(counts.services === 1 ? 'plan.count.service.one' : 'plan.count.service.other', {
     count: counts.services
   })
   // A count of zero is left out: "2 pages", never "2 pages, 0 services".
