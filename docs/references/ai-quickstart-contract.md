@@ -2260,7 +2260,10 @@ reason): the page key is the kind of page (`gate/adapters/joomla-page-key.mjs`: 
 classes name), so the same failure on another kind of page is a regression; a regression on a kind of page the control
 has not got is marked `counterpart: none` and stays a regression. The SEO items, read from the marker test's renders:
 every page has a title no other page shares, a meta description, an `og:image`, a viewport meta, `html[lang]`, an
-`alt` attribute on every picture (empty is allowed), and a declared favicon that answers 200. A page the build writes is
+`alt` attribute on every picture (empty is allowed), and a declared favicon that answers 200. A page whose robots meta
+says `noindex` (the kit marks the four system pages so) is no search result and is skipped by the unique title, the
+description, the `og:image` and the `alt` items (its title is not counted among the others either); it still needs a
+title, a viewport, `html[lang]` and a favicon, and the record lists such pages (`seo.noindex`). A page the build writes is
 held to all of them; a system page the template titles itself (login, password reset, search, the 404) is compared with
 the same page of the untouched template (by its page type: the marker site may read it at its own menu item), and an item it misses there too is the template's own (`seo.same`), one the
 control could not say is `uncompared` and leaves the measurement `incomplete`. The pages are asked for at the
