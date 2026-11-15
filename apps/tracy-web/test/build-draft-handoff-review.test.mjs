@@ -125,7 +125,9 @@ test(
     assert.match(block.note, /only the plan is approved/i)
     assert.match(block.note, /history/i)
     assert.match(block.note, /keepOffSite/)
-    assert.deepEqual([...block.keepOffSite].sort(), [...HELD_PEOPLE, HELD_NAME].sort())
+    // Only what the conversation already names: a held person never said is not added to the message.
+    assert.deepEqual([...block.keepOffSite].sort(), [HELD_PEOPLE[0], HELD_NAME].sort())
+    assert.equal(sent.text.includes(HELD_PEOPLE[1]), false)
     // (c) the opening of the message, which a chat title may be made from, names nothing held.
     const opening = sent.text.slice(0, sent.text.indexOf('"conversation"'))
     for (const held of [HELD_NAME, ...HELD_PEOPLE])

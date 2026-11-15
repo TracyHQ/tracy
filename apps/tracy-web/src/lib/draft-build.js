@@ -48,6 +48,15 @@ export function heldTextsOfBuild(snapshot) {
 }
 
 /**
+ * The held texts of a build that `texts` already name, in any form (#611): what the hand off must tell the site agent
+ * to keep off the site. A held text the texts never name is left out, so the hand off never carries a held name it
+ * did not already hold, and the agent cannot write what it was never told.
+ */
+export function heldTextsSaidIn(snapshot, texts) {
+  return heldTextsOfBuild(snapshot).filter((held) => namesHeldInAnyForm(texts, [held]))
+}
+
+/**
  * The name the site is allowed to show, from a build's frozen snapshot `{plan, profile, research}` (#610): the plan's
  * `business.name` fact unless it names something the owner keeps off the site, then the site name answer
  * (`withheld.siteName`, the owner's own choice), else null (the caller goes by its neutral fallback). Never the held

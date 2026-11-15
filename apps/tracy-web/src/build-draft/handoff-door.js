@@ -12,7 +12,7 @@
  * already prompted is answered as it is. Two asks at once: the second waits for the first's claim
  * (`HANDOFF_OPENING`).
  */
-import { heldTextsOfBuild, shownBuildNameOf, shownBuildPlanOf } from '../lib/draft-build.js'
+import { heldTextsSaidIn, shownBuildNameOf, shownBuildPlanOf } from '../lib/draft-build.js'
 import { claimHandoff, readBuild, saveHandoff } from './build-store.js'
 import { conversationOf, conversationTooLong, handoffMessageOf, handoffNextOf } from './handoff.js'
 
@@ -93,7 +93,11 @@ export async function handOffBuild({
     plan,
     siteKey,
     name: shownBuildNameOf(build.snapshot),
-    keepOffSite: heldTextsOfBuild(build.snapshot)
+    // Only the held texts the conversation already names: the block never adds a held name it did not hold.
+    keepOffSite: heldTextsSaidIn(
+      build.snapshot,
+      conversation.map((m) => m.text)
+    )
   })
   const accepted = await withinTime(HANDOFF_CALL_MS, false, (signal) =>
     promptSiteChat({ siteKey, email, sessionId, requestId: `build-handoff:${build.id}`, text, signal })
