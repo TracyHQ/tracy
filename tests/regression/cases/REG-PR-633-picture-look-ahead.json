@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-633-picture-look-ahead",
+  "kind": "fix",
+  "title": "The any-photo rung looks at a frame's next three photos together, and the ladder still places the same photos with the same verdicts",
+  "pr": 633,
+  "area": "website-opportunities/site-pictures",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm the test named in run.tests reports ok."
+  ],
+  "expect": [
+    "LOOK_AHEAD is 3.",
+    "A gallery tile the looker always rejects climbs through several any-photo placements; with the look-ahead on and off, the placed frames (source, asset, file hash), the ladder record and every verdict are the same.",
+    "Without the look-ahead each any-photo placement waits for its own fresh look; with it, only the first does, and every look taken ahead is a call record marked ahead for that frame.",
+    "No picture is asked twice, and the save's paid sum equals the cost of every look the provider answered, looks taken ahead included."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-pictures-look-ahead.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the look-ahead keeps every photo, cut, rung and verdict of the ladder, and its looks are counted and paid"
+    ]
+  }
+}
