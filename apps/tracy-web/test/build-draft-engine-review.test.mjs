@@ -31,12 +31,12 @@ const SITE = 'https://larkfen-racquets.example/'
 const PICTURE_URL = 'https://larkfen-racquets.example/courts.jpg'
 const anyReading = async () => JSON.stringify(needsReading())
 
-function server(buildEngine) {
+function server(buildEngine, aiQuickstarts = kits) {
   const app = buildApp({
     config,
     pool: db.pool,
     mail: { send: async () => {} },
-    aiQuickstarts: kits,
+    aiQuickstarts,
     buildEngine
   })
   async function call(method, path, body) {
@@ -367,3 +367,39 @@ test('M5: each research is recorded in the research cost ledger, for the build c
     }
   ])
 })
+
+test(
+  'suspicion 4: a newer kit after the brand step ran makes the look again for it, never composes on the old one',
+  opts,
+  async () => {
+    const { accountId } = await researchedR1()
+    const NEWER = '9.9.9'
+    const newer = {
+      ...kits,
+      loadKit: (slug) => {
+        const kit = kits.loadKit(slug)
+        return kit && { ...kit, template: { ...kit.template, version: NEWER } }
+      }
+    }
+    const branded = []
+    let composed = 0
+    const s = server(
+      {
+        gather: async () => gatheredBrief(),
+        buildModel: async () => {
+          composed++
+          return JSON.stringify(club.goodComposition())
+        },
+        buildChatOn: async () => true,
+        brandStep: async ({ template }) => (branded.push(template.version), club.brand())
+      },
+      newer
+    )
+    const started = await s.call('POST', '/compose', {})
+    assert.equal(started.status, 200, JSON.stringify(started.body))
+    await s.settled()
+    assert.deepEqual(branded, [NEWER], 'the look is made again for the kit compose reads')
+    assert.equal(composed, 0, 'nothing composed on the look of the older kit')
+    assert.equal((await row(accountId)).brand.template.version, NEWER)
+  }
+)
