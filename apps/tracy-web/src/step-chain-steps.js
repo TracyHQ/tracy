@@ -89,7 +89,33 @@ export function createStepChainSteps(deps) {
    * A bench run of one step, from its start to its files in `dir`: started (waiting while the bench holds another run),
    * followed on its row until it ends, its files taken out. Cancelled when the chain no longer needs it.
    */
-  async function benchRun(name, argv, dir, signal) {
+  /**
+   * The run of this bench that a chain already started on the same inputs and that is still going, or null. A chain
+   * started again after a restart (the action's resume, #574) finds the run its lost attempt queued, which the bench
+   * worker carries on: it takes that run over instead of waiting for it to end and then starting the same work again
+   * (13/11/2026, local stand: a restart during the plan step waited 18 minutes for the old planner run, threw its plan
+   * away and planned again for 13 minutes). The same inputs: started by the chain, the same research revision and kit,
+   * and for the copy and pictures steps the same plan. A run of another build, or of other inputs, is waited for as before.
+   * @param {string} name a bench of `benches`
+   * @param {{ revisionId: string, kitRef: string, plan?: unknown } | null} same
+   */
+  async function ownActiveRun(name, same) {
+    if (!same?.revisionId || !same.kitRef) return null
+    // A step that runs on a plan adopts only a run on the same plan; with its plan unreadable it adopts nothing.
+    const withPlan = 'plan' in same
+    if (withPlan && same.plan == null) return null
+    const { rows } = await pool.query(
+      `select id from ${benches[name].table}
+        where status = 'queued' and started_by = $1 and brief_source ->> 'revisionId' = $2 and kit ->> 'ref' = $3
+              ${withPlan ? 'and plan = $4::jsonb' : ''}
+        order by created_at desc
+        limit 1`,
+      [`cli:${BY}`, same.revisionId, same.kitRef, ...(withPlan ? [JSON.stringify(same.plan)] : [])]
+    )
+    return rows[0]?.id ?? null
+  }
+
+  async function benchRun(name, argv, dir, signal, same = null) {
     let runId = null
     for (;;) {
       if (signal.aborted) throw signal.reason ?? new Error('stopped')
@@ -100,6 +126,13 @@ export function createStepChainSteps(deps) {
       }
       const said = started.err.join(' ')
       if (!RUN_ACTIVE.test(said)) throw stepError(`the ${name} run could not start: ${said.slice(0, 240)}`)
+      runId = await ownActiveRun(name, same)
+      if (runId) {
+        log.info?.(
+          `[step-chain] ${name}: took over the run ${runId} this build already started on the same inputs`
+        )
+        break
+      }
       await sleep(POLL_MS)
     }
     const cancel = () => void command(name, ['cancel', runId]).catch(() => {})
@@ -152,6 +185,12 @@ export function createStepChainSteps(deps) {
     return folders.get(ctx.runId)
   }
   const revisionOf = (ctx) => String(ctx.brief?.researchRevisionId ?? '')
+  // The plan a copy or pictures run is given, as its row keeps it (`plan`): an unreadable file is null and matches no run.
+  const planOf = (file) =>
+    readFile(file, 'utf8').then(
+      (text) => JSON.parse(text),
+      () => null
+    )
   const exists = (file) =>
     stat(file).then(
       (f) => f.isFile() && f.size > 0,
@@ -223,7 +262,8 @@ export function createStepChainSteps(deps) {
           ...NO_CAPS
         ],
         dir,
-        signal
+        signal,
+        { revisionId: revisionOf(ctx), kitRef: kit.ref }
       )
       const file = path.join(dir, 'brand-file.json')
       return answerOf(ran, { file }, exists(file))
@@ -235,7 +275,8 @@ export function createStepChainSteps(deps) {
         'plan',
         ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), '--require-visual-review', ...NO_CAPS],
         dir,
-        signal
+        signal,
+        { revisionId: revisionOf(ctx), kitRef: kit.ref }
       )
       // The plan the run ended with: the last round that has one, as `get` writes it (plan-vN.json).
       const { rows } = await pool.query(
@@ -260,7 +301,8 @@ export function createStepChainSteps(deps) {
         '--require-visual-review',
         ...NO_CAPS
       ]
-      const ran = await benchRun('copy', argv, dir, signal)
+      const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
+      const ran = await benchRun('copy', argv, dir, signal, same)
       const file = path.join(dir, 'site-copy.json')
       return answerOf(ran, { file }, exists(file))
     },
@@ -276,7 +318,8 @@ export function createStepChainSteps(deps) {
         revisionOf(ctx),
         ...NO_CAPS
       ]
-      const ran = await benchRun('pictures', argv, dir, signal)
+      const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
+      const ran = await benchRun('pictures', argv, dir, signal, same)
       const value = { file: path.join(dir, 'mapping.json'), manifest: path.join(dir, 'site-pictures.json') }
       return answerOf(ran, value, exists(value.file))
     },
