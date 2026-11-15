@@ -6,7 +6,7 @@
  */
 import { IconCheckOutlineRegular } from '@deepseek-ai/dsh-client-ui-primitives'
 import { type TemplateOption, templateChoiceOf, templateOfChoice } from '@tracy/core/build-chat'
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
 import type { Translate } from './strings'
 
 /** Add site, as tab-link opens it from the address of the page the chat is on. */
@@ -37,6 +37,14 @@ export function TemplateCard({
   const [saved, setSaved] = useState<string | null>(chosen)
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
+  const chip = useRef<HTMLSpanElement>(null)
+  /** Set while the owner's own choice is saving, so focus follows it to the chosen note and not on first draw. */
+  const choosing = useRef(false)
+  // The choose button goes once the choice is saved; focus moves to the note that replaces it, not to the page.
+  useEffect(() => {
+    if (saved !== null && choosing.current) chip.current?.focus()
+    choosing.current = false
+  }, [saved])
 
   if (choice.none) {
     return (
@@ -58,10 +66,12 @@ export function TemplateCard({
   const use = async () => {
     setBusy(true)
     setFailed(false)
+    choosing.current = true
     try {
       await onChoose(templateOfChoice(current))
       setSaved(current.slug)
     } catch {
+      choosing.current = false
       setFailed(true)
     } finally {
       setBusy(false)
@@ -94,7 +104,7 @@ export function TemplateCard({
       <div className="tv-bc-tfoot">
         {locked ? (
           <>
-            <span className="tv-bc-chip">
+            <span ref={chip} className="tv-bc-chip" tabIndex={-1}>
               <IconCheckOutlineRegular aria-hidden />
               {t('template.chosen', { name: current.name })}
             </span>

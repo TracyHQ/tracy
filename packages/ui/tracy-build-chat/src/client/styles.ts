@@ -26,8 +26,10 @@ export const CSS = `
 .tv-bc-btn:disabled { opacity: .45; cursor: default; }
 /* A quiet action with nothing to do (Undo with no last edit) reads as unavailable, not as plain text */
 .tv-bc-btn[data-ghost]:disabled { color: var(--muted-foreground); }
-.tv-bc-btn:focus-visible, .tv-bc-tpl:focus-visible, .tv-bc-todo-head:focus-visible {
-  outline: 1px solid var(--ring); outline-offset: 0;
+/* One visible focus ring for every control of the cards, 1px stroke per DESIGN.md, offset so it reads in light and dark */
+.tv-bc-btn:focus-visible, .tv-bc-tpl:focus-visible, .tv-bc-todo-head:focus-visible,
+.tv-bc-chip[tabindex]:focus-visible {
+  outline: 1px solid var(--ring); outline-offset: 2px;
 }
 
 .tv-bc-badge {
@@ -175,8 +177,9 @@ export const CSS = `
 .tv-bc-edit { display: flex; gap: 6px; align-items: center; }
 .tv-bc-edit input {
   flex: 1; min-width: 0; height: 30px; padding: 0 8px; border: 1px solid var(--ring); border-radius: 8px;
-  background: var(--card); color: inherit; font: inherit; outline: none;
+  background: var(--card); color: inherit; font: inherit;
 }
+.tv-bc-edit input:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; }
 .tv-bc-src { font-size: 11.5px; color: var(--muted-foreground); white-space: nowrap; overflow-wrap: normal; word-break: keep-all; }
 .tv-bc-note { font-size: 12.5px; line-height: 1.45; color: var(--muted-foreground); margin-top: 2px; }
 .tv-bc-swatch {
@@ -237,6 +240,15 @@ export const CSS = `
   .tv-bc-edit input { flex: 1 0 100%; }
 }
 
+/* Phone width: every control is a comfortable tap target, at least 40px high */
+@container (max-width: 560px) {
+  .tv-bc-btn { min-height: 40px; }
+  .tv-bc-val-edit, .tv-bc-opt, .tv-bc-todo-head { min-height: 40px; }
+  .tv-bc-edit input { height: 40px; }
+  .tv-bc-opt input { width: 18px; height: 18px; }
+  .tv-bc-review-btn { min-height: 40px; }
+}
+
 /* The quiet row of one tracy_build call (BuildToolRow): dsh's own process row, the business name beside it */
 .tv-bc-toolrow-sum { margin-left: 6px; color: var(--muted-foreground); overflow-wrap: normal; word-break: keep-all; }
 /* The same row above the chat input while a call waits (WorkingDock) */
@@ -245,6 +257,8 @@ export const CSS = `
   box-sizing: border-box; min-width: 0; margin: 0 auto; padding: 0 0 4px;
   width: var(--dsh-chat-content-width, calc(100% - 32px)); max-width: 100%;
 }
+/* The live region stays in place with nothing in it: it takes no room then */
+.tv-bc-dock:empty { padding: 0; }
 
 /* The plan review bar (ReviewBar): the shape of dsh's plan review panel, in Tracy tokens */
 .tv-bc-review-frame {

@@ -45,10 +45,18 @@ export function WorkingDock({ sessionId, useChat = noChat, t }: WorkingDockProps
   const source = turn?.data?.source?.(WORKING_KEY) ?? NONE
   const read = () => source.getSnapshot() ?? turn?.data?.get?.(WORKING_KEY)
   const working = useSyncExternalStore(source.subscribe, read, read) as WorkingValue | undefined
-  if (!isBuildChatSession(sessionId) || closed || !working) return null
+  if (!isBuildChatSession(sessionId)) return null
+  // The polite live region is always there for a build session and only its content comes and goes: a region that
+  // appears together with its text is often not read out. It never takes focus.
+  const on = !closed && working
   return (
-    <div className="tv-bc-dock" data-build-working={working.step}>
-      <BuildToolRow view={{ phase: 'start', block: {} }} t={t} />
+    <div
+      className="tv-bc-dock"
+      role="status"
+      aria-live="polite"
+      data-build-working={on ? working.step : undefined}
+    >
+      {on && <BuildToolRow view={{ phase: 'start', block: {} }} t={t} />}
     </div>
   )
 }

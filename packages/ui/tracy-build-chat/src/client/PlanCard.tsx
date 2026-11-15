@@ -154,8 +154,11 @@ function Conflict({
               name={name}
               value={o.value}
               checked={o.selected}
-              disabled={busy}
-              onChange={() => onPick(o.value)}
+              // Not disabled while a pick is saved: a disabled radio drops the focus the arrow key just put on it.
+              aria-disabled={busy || undefined}
+              onChange={() => {
+                if (!busy) onPick(o.value)
+              }}
             />
             <span className="tv-bc-v">{o.value}</span>
             <span className="tv-bc-src">{o.source}</span>
@@ -191,14 +194,15 @@ export function PlanCard({
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
   const [editing, setEditing] = useState<string | null>(null)
-  /** The value focus goes back to once its editor closes. */
+  /** The value focus goes back to once its editor closes, or its change is taken back. */
   const [refocus, setRefocus] = useState<string | null>(null)
   const ref = useRef<HTMLElement>(null)
   // A newer draft from outside (a plan the chat composed, the draft read again) replaces what the card holds.
   useEffect(() => setDraft({ plan, lastEdit, canUndo }), [plan, lastEdit, canUndo])
   useEffect(() => {
     if (refocus === null || editing !== null) return
-    ref.current?.querySelector<HTMLElement>(`[data-field="${CSS.escape(refocus)}"] .tv-bc-val-edit`)?.focus()
+    const field = `[data-field="${CSS.escape(refocus)}"]`
+    ref.current?.querySelector<HTMLElement>(`${field} .tv-bc-val-edit, ${field} input:checked`)?.focus()
     setRefocus(null)
   })
   const current = draft.plan
@@ -264,6 +268,9 @@ export function PlanCard({
           disabled={!draft.canUndo || !draft.lastEdit || busy}
           onClick={() => {
             setEditing(null)
+            // Undo goes disabled once it is done, which would drop focus to the page: it goes to the value taken back.
+            const taken = draft.lastEdit?.changes?.[0]?.field
+            if (taken) setRefocus(taken)
             void follow(onUndo)
           }}
         >

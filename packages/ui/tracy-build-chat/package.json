@@ -16,7 +16,8 @@
   "scripts": {
     "build": "node scripts/build-client.mjs && node scripts/build-host.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "node --test --test-concurrency=1 test/*.test.mjs"
+    "test": "node --test --test-concurrency=1 test/*.test.mjs",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e/*.test.mjs"
   },
   "dsh": {
     "bundle": {

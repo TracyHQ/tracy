@@ -108,12 +108,22 @@ export function ReviewBar({
           </div>
           <div className="tv-bc-review-actions">
             {decline && (
-              <Button variant="outline" disabled={busy} onClick={() => decide(decline.label)}>
+              <Button
+                variant="outline"
+                className="tv-bc-review-btn"
+                disabled={busy}
+                onClick={() => decide(decline.label)}
+              >
                 {decline.label}
               </Button>
             )}
             {approve && (
-              <Button variant="primary" disabled={busy} onClick={() => decide(approve.label)}>
+              <Button
+                variant="primary"
+                className="tv-bc-review-btn"
+                disabled={busy}
+                onClick={() => decide(approve.label)}
+              >
                 {approve.label}
               </Button>
             )}
