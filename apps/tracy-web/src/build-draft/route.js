@@ -25,6 +25,7 @@ const REFUSALS = {
   INVALID_TEMPLATE: [400, 'Send "template" as {slug, name, version}.'],
   TEMPLATE_NOT_OFFERED: [422, 'This design is not offered for your business. Pick one of the designs shown.'],
   INVALID_ANSWER: [422, 'The answer does not fit its question.'],
+  TOO_MANY_QUESTIONS: [422, 'This draft keeps 100 questions at most: answer the questions it already holds.'],
   INVALID_EDIT: [422, 'The edit does not fit the plan.'],
   STALE_EDIT: [
     409,

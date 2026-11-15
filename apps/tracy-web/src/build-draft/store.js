@@ -145,14 +145,24 @@ export async function changeDraft(pool, accountId, decide) {
   }
 }
 
-/** Keep an answer with the question it answers; a later answer to the same question replaces the earlier one. */
+/** At most this many questions are kept on a draft (#609): a build chat asks a handful. */
+export const MAX_QUESTIONS_KEPT = 100
+
+/**
+ * Keep an answer with the question it answers; a later answer to the same question replaces the earlier one. A new
+ * question past `MAX_QUESTIONS_KEPT` is refused (`TOO_MANY_QUESTIONS`), so the row never grows without bound.
+ */
 export function saveAnswer(pool, accountId, { question, answer }) {
   const problems = answerProblem(question, answer)
   if (problems) return { error: 'INVALID_ANSWER', problems }
-  return changeDraft(pool, accountId, (row) => ({
-    questions: [...row.questions.filter((q) => q.id !== question.id), question],
-    answers: [...row.answers.filter((a) => a.question !== question.id), answer]
-  }))
+  return changeDraft(pool, accountId, (row) => {
+    const others = row.questions.filter((q) => q.id !== question.id)
+    if (others.length >= MAX_QUESTIONS_KEPT) return { error: 'TOO_MANY_QUESTIONS' }
+    return {
+      questions: [...others, question],
+      answers: [...row.answers.filter((a) => a.question !== question.id), answer]
+    }
+  })
 }
 
 /** Said when a plan edit would move the living plan to another template. Plain English, no dashes. */

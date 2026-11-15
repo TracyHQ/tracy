@@ -58,6 +58,10 @@ const REFUSALS = {
     409,
     'Only a done build moves to its site: the build chat keeps a build that did not finish.'
   ],
+  CONVERSATION_TOO_LONG: [
+    413,
+    'The conversation is longer than one hand off carries: send at most 200000 characters.'
+  ],
   HANDOFF_OPENING: [409, 'The site chat is being opened by another request: ask again in a few seconds.'],
   HANDOFF_UNAVAILABLE: [503, 'This server cannot open a chat on the site.'],
   HANDOFF_SESSION_FAILED: [503, 'The site chat could not be opened: ask again.'],

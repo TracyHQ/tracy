@@ -114,6 +114,7 @@ import { seenHintRoutes } from './seen-hints/route.js'
 import { AI_QUICKSTARTS_DIR, aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
 import { blankContractReader } from './step-chain-draft-blank-contract.js'
 import { buildDraftRoutes } from './build-draft/route.js'
+import { buildDraftBodyLimit } from './build-draft/body-limits.js'
 import { buildModelDoor } from './build-draft/build-model.js'
 import { draftPlanForBuild, readEngineDraft } from './build-draft/store.js'
 import { PHOSPHOR_SET, phosphorCatalog } from './lib/picture-paint/icons/phosphor-set.js'
@@ -1258,6 +1259,8 @@ export function buildApp(deps) {
         ),
       now: deps.now
     })
+    // Every build draft body is bounded before a door reads it (`build-draft/body-limits.js`).
+    app.use('/api/build-draft/*', buildDraftBodyLimit)
     app.route(
       '/',
       buildDraftRoutes({

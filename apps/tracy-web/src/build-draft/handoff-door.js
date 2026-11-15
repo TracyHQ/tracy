@@ -14,7 +14,30 @@
  */
 import { heldTextsOfBuild, shownBuildNameOf, shownBuildPlanOf } from '../lib/draft-build.js'
 import { claimHandoff, readBuild, saveHandoff } from './build-store.js'
-import { conversationOf, handoffMessageOf, handoffNextOf } from './handoff.js'
+import { conversationOf, conversationTooLong, handoffMessageOf, handoffNextOf } from './handoff.js'
+
+/**
+ * How long opening the site chat, and then prompting it, may each take (#611). Both together stay well inside the
+ * claim (`HANDOFF_CLAIM_MS`), so a second ask is refused `HANDOFF_OPENING` for as long as the first one works.
+ */
+export const HANDOFF_CALL_MS = 60_000
+
+/** `call(signal)`, or `late` once `ms` passed (and the signal aborted). */
+async function withinTime(ms, late, call) {
+  const ctl = new AbortController()
+  let timer
+  const out = new Promise((resolve) => {
+    timer = setTimeout(() => {
+      ctl.abort()
+      resolve(late)
+    }, ms)
+  })
+  try {
+    return await Promise.race([call(ctl.signal), out])
+  } finally {
+    clearTimeout(timer)
+  }
+}
 
 /** The address a build's hand off moved the screen to, or null before it was prompted. */
 export const handoffNextOfBuild = (build) =>
@@ -40,6 +63,7 @@ export async function handOffBuild({
 }) {
   const conversation = conversationOf(/** @type {any} */ (body)?.conversation)
   if (conversation === null) return { refusal: 'INVALID_REQUEST' }
+  if (conversationTooLong(conversation)) return { refusal: 'CONVERSATION_TOO_LONG' }
   const build = accountId ? await readBuild(pool, accountId) : null
   const siteKey = build?.site?.siteKey
   if (!build?.endedAt || build.result !== 'done' || !siteKey) return { refusal: 'BUILD_NOT_DONE' }
@@ -51,7 +75,9 @@ export async function handOffBuild({
 
   let sessionId = claimed.handoff.sessionId ?? null
   if (!sessionId) {
-    sessionId = await openSiteChat({ siteKey, email }).catch(() => null)
+    sessionId = await withinTime(HANDOFF_CALL_MS, null, (signal) =>
+      openSiteChat({ siteKey, email, signal })
+    ).catch(() => null)
     if (typeof sessionId !== 'string' || sessionId === '') {
       await saveHandoff(pool, accountId, build.id, {}, { release: true })
       return { refusal: 'HANDOFF_SESSION_FAILED' }
@@ -69,13 +95,9 @@ export async function handOffBuild({
     name: shownBuildNameOf(build.snapshot),
     keepOffSite: heldTextsOfBuild(build.snapshot)
   })
-  const accepted = await promptSiteChat({
-    siteKey,
-    email,
-    sessionId,
-    requestId: `build-handoff:${build.id}`,
-    text
-  }).catch(() => false)
+  const accepted = await withinTime(HANDOFF_CALL_MS, false, (signal) =>
+    promptSiteChat({ siteKey, email, sessionId, requestId: `build-handoff:${build.id}`, text, signal })
+  ).catch(() => false)
   if (accepted !== true) {
     await saveHandoff(pool, accountId, build.id, {}, { release: true })
     return { refusal: 'HANDOFF_PROMPT_FAILED' }

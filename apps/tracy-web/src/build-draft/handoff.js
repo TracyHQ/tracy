@@ -18,6 +18,12 @@ export const HANDOFF_SCHEMA = 'tracy-build-handoff/v1'
 /** At most this many messages, each at most this long: a build chat is a few dozen. */
 export const MAX_MESSAGES = 400
 export const MAX_TEXT = 40_000
+/** At most this many characters in the whole conversation (#611): a longer one is refused, never cut. */
+export const MAX_CONVERSATION_CHARS = 200_000
+
+/** True when the conversation `conversationOf` read is longer than one hand off carries. */
+export const conversationTooLong = (conversation) =>
+  conversation.reduce((sum, m) => sum + m.text.length, 0) > MAX_CONVERSATION_CHARS
 
 const ROLES = new Set(['user', 'assistant'])
 

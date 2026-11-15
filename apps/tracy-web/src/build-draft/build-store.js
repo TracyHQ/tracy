@@ -151,8 +151,12 @@ export async function saveBuildLabel(pool, accountId, buildId, label) {
   return kept
 }
 
-/** How long one hand off may hold its claim before another ask may take it (#611). */
-export const HANDOFF_CLAIM_MS = 30_000
+/**
+ * How long one hand off may hold its claim before another ask may take it (#611). Longer than the two calls the hand
+ * off makes together (`HANDOFF_CALL_MS` each, `handoff-door.js`), so a claim is never taken from an ask still opening
+ * the chat.
+ */
+export const HANDOFF_CLAIM_MS = 180_000
 
 /**
  * Claim the hand off of the done build `buildId` to its site's chat (#611), so two asks at once never open two chats.
