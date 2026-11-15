@@ -205,12 +205,18 @@ test(
             sample: 'Another long demo review sentence from the template sits right here.',
             demoChars: { total: 68, lead: null, bullets: [] },
             shape: { lead: false, points: 0, leadChars: null, pointChars: null },
+            // W03's window: 80% of the 68 character demo to the demo plus 3, under the limit of 120.
+            characters: { min: 55, max: 71 },
             paragraphs: 1,
             bullets: 0
           }
         ]
       }
     ])
+    assert.match(
+      part('The kit: how long each text slot is written'),
+      /at least min and at most max characters/
+    )
     assert.deepEqual(part('The kit: footer column headings'), [
       { group: 'group-footer-a', titleSlot: 'block-6.1', heading: 'Useful links' },
       { group: 'group-footer-b', titleSlot: 'block-6.2', heading: 'Find out more' }

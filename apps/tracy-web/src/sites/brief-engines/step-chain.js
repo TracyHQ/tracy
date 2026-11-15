@@ -33,6 +33,7 @@
  * Steps are injected (`app.js` wires the real ones, `step-chain-steps.js`); each answers `{ value, usd }` or throws (an
  * error may carry the `value` it still made, and the `usd` it spent), and is given the run's `AbortSignal`.
  */
+import { REPAIR_WINDOWS } from '../../lib/repair-windows.js'
 
 /**
  * The outer deadline of a chain run (#478): the model steps get this long, counted from the start of `prepare`. A step
@@ -45,14 +46,24 @@ export const STEP_CHAIN_DEADLINE_MS = 2 * 60 * 60_000
 export const STEP_CHAIN_HANDOVER_MS = 15 * 60_000
 
 /**
- * Step 9b's windows for a chain build (#478), from how far into the run the Write step starts: 9b may start new work until
- * the deadline (none at all once it has passed) and returns by the handover window after it. So the former 10 and 12 minute
- * windows do not apply, and the whole run still ends about `STEP_CHAIN_HANDOVER_MS` after the deadline.
+ * Step 9b's windows for a chain build, from how far into the run the Write step starts. 9b keeps its own 10 and 12 minute
+ * windows (`lib/repair-windows.js`, the repair pass's own `REPAIR_LIMITS`), cut shorter when the deadline is nearer; once the deadline has passed it starts no new work
+ * and returns within the handover window.
+ *
+ * 🔒 THE DEADLINE BOUNDS THE MODEL STEPS, NOT 9b'S WINDOW. #478 let 9b run until the 2 hour deadline. Measured on the local
+ * stand (12/11/2026, Central Padel): the write began 22 minutes in, so 9b could start new work for 98 minutes, and it went
+ * on one page at a time (about 1 minute of repair, then 1.5 minutes of re-check) past 30 minutes. A build that leaves template pictures
+ * behind is fixed at the picture step, not by a longer repair window.
  * @param {number} elapsedMs
  */
 export function chainRepairLimits(elapsedMs) {
-  const stopNewWorkMs = Math.max(0, STEP_CHAIN_DEADLINE_MS - elapsedMs)
-  return { stopNewWorkMs, returnByMs: stopNewWorkMs + STEP_CHAIN_HANDOVER_MS }
+  const left = Math.max(0, STEP_CHAIN_DEADLINE_MS - elapsedMs)
+  if (left === 0) return { stopNewWorkMs: 0, returnByMs: STEP_CHAIN_HANDOVER_MS }
+  const stopNewWorkMs = Math.min(left, REPAIR_WINDOWS.stopNewWorkMs)
+  return {
+    stopNewWorkMs,
+    returnByMs: stopNewWorkMs + (REPAIR_WINDOWS.returnByMs - REPAIR_WINDOWS.stopNewWorkMs)
+  }
 }
 
 /**

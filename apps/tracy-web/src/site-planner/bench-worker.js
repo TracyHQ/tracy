@@ -39,6 +39,7 @@ import {
 import { CHECKER_VERSION, checkPlan, failureListText } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
 import { withHiddenListLinks } from './plan-hidden-links.js'
+import { withKitCharacterLimits } from './plan-kit-limits.js'
 import { VISUAL_REVIEW_POLICY, visualReviewInstruction, withVisualReview } from './visual-review.js'
 
 export { BENCH_QUEUE }
@@ -75,21 +76,15 @@ export const SITE_PLANNER_STEP = Object.freeze({
     },
     failureListText
   }),
-  // After the model, before the checker: every stock screen of the kit (site.stockScreens) is dropped, on a whole plan and on the
-  // plan a fix round's change list leaves, so no answer keeps one (lib/stock-screens.js). A kit without the field changes nothing.
+  // After the model, before the checker, on a whole plan and on the plan a fix round's change list leaves (normalizedPlan).
   readAnswer: (value, { ready }) =>
     value && typeof value === 'object' && !isChangeList(value)
-      ? withHiddenListLinks(withStockScreensDropped(value, ready?.kit?.doc), ready?.kit?.doc)
+      ? normalizedPlan(value, ready?.kit?.doc)
       : value,
   changes: Object.freeze({
     applyValidChanges: (previous, list, { ready } = {}) => {
       const applied = PLAN_CHANGE_RULES.applyValidChanges(previous, list)
-      return applied.ok
-        ? {
-            ...applied,
-            doc: withHiddenListLinks(withStockScreensDropped(applied.doc, ready?.kit?.doc), ready?.kit?.doc)
-          }
-        : applied
+      return applied.ok ? { ...applied, doc: normalizedPlan(applied.doc, ready?.kit?.doc) } : applied
     },
     oversized: oversizedReplacements,
     smallEditsMessage,
@@ -203,3 +198,12 @@ async function prepare({ pool, secret, index, kitImages }, row) {
 }
 
 const briefRefOf = (source) => String(source?.revisionId ?? source?.name ?? '')
+
+// What code settles in a plan without the model, after each answer and before the checker:
+// - every stock screen of the kit (site.stockScreens) is dropped, so no answer keeps one (lib/stock-screens.js); a kit
+//   without the field changes nothing;
+// - a link left undecided under a list or row the plan hides is hidden with it (plan-hidden-links.js);
+// - a copy entry without maxCharacters gets the kit's limit for its slot, as the spec says (plan-kit-limits.js).
+function normalizedPlan(plan, kit) {
+  return withKitCharacterLimits(withHiddenListLinks(withStockScreensDropped(plan, kit), kit), kit)
+}

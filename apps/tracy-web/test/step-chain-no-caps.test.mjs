@@ -1,6 +1,6 @@
 /**
- * A chain build runs without the per-step caps (#478): no USD budget on the planner, no cost cap on the brand run, no
- * 10 and 12 minute windows on step 9b. Every other engine and every bench run keeps its limits. No database needed.
+ * A chain build runs without the per-step cost caps (#478): no USD budget on the planner, no cost cap on the brand run.
+ * Step 9b keeps its 10 and 12 minute windows. Every other engine and every bench run keeps its limits. No database needed.
  *
  *   node --test --test-concurrency=1 apps/tracy-web/test/step-chain-no-caps.test.mjs
  */
@@ -62,17 +62,16 @@ test('the brand spend check stops at a cap and never stops without one', async (
   assert.equal(await spent(undefined), 'ran')
 })
 
-test('step 9b keeps its windows by default; in a chain build it runs to the deadline and returns by 15 minutes after it', () => {
-  for (const [limits, stoppedAt11, stoppedAt90] of [
-    [null, true, true],
-    [chainRepairLimits(0), false, false]
-  ]) {
+test('step 9b keeps its 10 and 12 minute windows in a chain build too, cut shorter only by the deadline', () => {
+  // 22 minutes in is where the measured Central Padel build (12/11/2026) started its write.
+  for (const limits of [null, chainRepairLimits(0), chainRepairLimits(22 * MIN)]) {
     let at = 0
     const clock = repairClock({ now: () => at, sleep: async () => {}, limits })
+    at = 9 * MIN
+    assert.equal(clock.stopped(), false)
     at = 11 * MIN
-    assert.equal(clock.stopped(), stoppedAt11)
-    at = 90 * MIN
-    assert.equal(clock.stopped(), stoppedAt90)
+    assert.equal(clock.stopped(), true)
+    assert.ok(clock.returnLeft() > 0 && clock.returnLeft() <= 1 * MIN)
   }
   // test-quality: contract the default repair window stops new work at 10 minutes and returns by 12
   assert.equal(REPAIR_LIMITS.stopNewWorkMs, 10 * MIN)
@@ -80,8 +79,10 @@ test('step 9b keeps its windows by default; in a chain build it runs to the dead
   assert.equal(REPAIR_LIMITS.returnByMs, 12 * MIN)
   // test-quality: contract the chain hands over 15 minutes after the deadline
   assert.equal(STEP_CHAIN_HANDOVER_MS, 15 * MIN)
-  // Starting at 30 minutes: new work until the 2 hour mark, back by 15 minutes after it.
-  assert.deepEqual(chainRepairLimits(30 * MIN), { stopNewWorkMs: 90 * MIN, returnByMs: 105 * MIN })
+  // Starting at 30 minutes: the repair pass's own windows, not the 90 minutes left to the deadline.
+  assert.deepEqual(chainRepairLimits(30 * MIN), { stopNewWorkMs: 10 * MIN, returnByMs: 12 * MIN })
+  // Starting 5 minutes before the deadline: new work only until the deadline, the same 2 minutes to return after it.
+  assert.deepEqual(chainRepairLimits(115 * MIN), { stopNewWorkMs: 5 * MIN, returnByMs: 7 * MIN })
   // Starting after the deadline: no new 9b work at all, only the short bounded window.
   assert.deepEqual(chainRepairLimits(130 * MIN), { stopNewWorkMs: 0, returnByMs: 15 * MIN })
   // test-quality: contract the chain run cut is the deadline plus the hand-over

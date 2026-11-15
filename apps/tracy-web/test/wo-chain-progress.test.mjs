@@ -299,6 +299,49 @@ for (const [label, state, measurement] of [
   })
 }
 
+test('a failed chain names the step and the check that stopped it, in bounded codes only', opts, async () => {
+  // The measured Central Padel build (local stand, 12/11/2026): the copy kept its best version, the write's final check failed.
+  const measurement = {
+    ending: 'soft-failure',
+    failedStep: 'copy',
+    steps: [
+      done('kit', 0.05, 0),
+      {
+        step: 'copy',
+        outcome: 'failed, best version used',
+        code: 'CHAIN_BENCH_CHECK_FAILED',
+        error: 'W03 | block-171.10'
+      },
+      {
+        step: 'write',
+        outcome: 'failed',
+        error: 'The write completed, but the final site check or repair verification did not pass.',
+        diagnostics: {
+          write: { status: 'stopped', causeCode: 'STEP_NINE_CHECK_FAILED', writeStatus: 'done' }
+        }
+      }
+    ]
+  }
+  const w = await world()
+  await w.press()
+  await w.tick(0)
+  w.host.job = 'done'
+  await w.chain('applied', measurement)
+  await w.tick()
+  assert.equal(
+    (await w.action()).error,
+    'QA_NEEDS_REVIEW',
+    'the action keeps the code the screens already read'
+  )
+  const { qa } = (await w.pool.query('select qa from wo_build')).rows[0]
+  assert.equal(qa.reason, 'QA_NEEDS_REVIEW')
+  assert.deepEqual(
+    [qa.chain.failedStep, qa.chain.failedCode, qa.chain.writeCode],
+    ['copy', 'CHAIN_BENCH_CHECK_FAILED', 'STEP_NINE_CHECK_FAILED']
+  )
+  assert.ok(!JSON.stringify(qa).includes('block-171'), 'free text stays on the chain measurement')
+})
+
 /** A chain build of another place that already ended, as the run frame leaves its brief row. */
 async function past(
   pool,

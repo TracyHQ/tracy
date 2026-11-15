@@ -493,15 +493,30 @@ test('P05 keeps a low quality owner photo to small frames, even with a passed sh
   assert.match(r.failures[0].detail, /frame of 640 x 160; it fits only frames up to 600 px/)
 })
 
-test('P09 rejects visible scene lettering despite the overlay-only direct answer being false', () => {
+test('P09 passes text that belongs to the scene and fails words written on the photo itself', () => {
+  const scene = (i) => {
+    const e = entryOf(i, 'block-2.0')
+    const a = i.brief.assets.find((a) => a.id === e.asset)
+    a.hasTextOrWatermark = false
+    a.hasTextOverlay = false
+    a.textPresence = 'present'
+    return a
+  }
+  // The business's name on a shirt or a banner at its own place (Central Padel, 12/11/2026).
+  const i = inputs()
+  scene(i)
+  assert.equal(ruleOf(i, 'P09').status, 'pass')
   breaks(
     'P09',
     (i) => {
-      const e = entryOf(i, 'block-2.0')
-      const a = i.brief.assets.find((a) => a.id === e.asset)
-      a.hasTextOrWatermark = false
-      a.hasTextOverlay = false
-      a.textPresence = 'present'
+      scene(i).hasTextOverlay = true
+    },
+    /carries lettering or a watermark/
+  )
+  breaks(
+    'P09',
+    (i) => {
+      scene(i).hasTextOrWatermark = true
     },
     /carries lettering or a watermark/
   )

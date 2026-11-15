@@ -1,0 +1,2 @@
+{"id":"REG-PR-574-demo-opens","verdict":"PASS","commit":"1a0bb1f681d988a002d58c85d43251a9f7e5a42d","ran_at":"2026-11-12T16:39:20.210Z","evidence":"tests/regression/.runs/2026-11-12-1a0bb1f68/REG-PR-574-demo-opens.log"}
+{"id":"REG-PR-574-demos-webhooks","verdict":"PASS","commit":"1a0bb1f681d988a002d58c85d43251a9f7e5a42d","ran_at":"2026-11-12T16:39:24.162Z","evidence":"tests/regression/.runs/2026-11-12-1a0bb1f68/REG-PR-574-demos-webhooks.log"}
