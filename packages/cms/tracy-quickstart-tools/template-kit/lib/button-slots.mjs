@@ -7,7 +7,8 @@ import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { neutralKey } from './ids.mjs'
 
 const LABEL = /(?:button|cta)_label$/
-const holdsAddress = (s) => s?.type === 'url' || String(s?.role ?? '').endsWith('_url')
+const holdsAddress = (s) =>
+  s?.role !== 'business.audio' && (s?.type === 'url' || String(s?.role ?? '').endsWith('_url'))
 const anchorOf = (xpath) => /^(.*)\/(?:text\(\)(?:\[\d+\])?|@href)$/.exec(String(xpath ?? ''))?.[1] ?? null
 
 /** The one address going with a label: in its row, in its anchor, or the one loose address of its stored level. */

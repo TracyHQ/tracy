@@ -152,3 +152,18 @@ test('a failing brand rule never changes the Design system grade, its counts or 
   assert.deepEqual(s.unmeasured, [])
   assert.equal(s.grade, null)
 })
+
+test('BRAND-1 passes a kept band that reads the accent through a template variable aliasing the slot', async () => {
+  // JA Nova 1.0.12: `:root{--vds-accent:var(--ds-c-accent)}` and the expertise dot reads
+  // `var(--vds-accent, #5E48DB)`, so the brand accent reaches it like a direct slot read
+  const css =
+    ':root{--vds-accent:var(--ds-c-accent);--vds-fill:color-mix(in srgb, var(--ds-c-accent) 22%, transparent)}' +
+    '.t4-hero .dot span:not(#keep){background-color:var(--vds-accent, #F44141) !important}' +
+    '.acm-cta .x{border-color:var( --vds-fill , #f44141)}'
+  assert.equal(of(await run(css), 'BRAND-1').status, 'pass')
+})
+
+test('BRAND-1 still fails when the template variable holds the literal accent', async () => {
+  const r = await run(':root{--own:#f44141}.t4-hero .dot{background-color:var(--own, #f44141)}')
+  assert.equal(of(r, 'BRAND-1').status, 'fail')
+})

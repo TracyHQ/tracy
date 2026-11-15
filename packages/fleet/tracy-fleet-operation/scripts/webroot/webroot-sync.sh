@@ -1758,6 +1758,14 @@ answer_state() {
   printf '%s' "$1" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("state", ""))'
 }
 
+# "Sync from live" is an imported site's road (`origin='migrated'`); a template demo folded into the
+# demo farm (lib/site-runtime.sh) never takes it, and could not: the four scratch schemas below are
+# outside the one schema its farm user owns. Refused before anything is read, locked or written.
+case "$(tracy_backup_runtime 2>/dev/null || echo unreadable)" in
+  site) ;;
+  farm) answer_refusal FARM_DEMO_UNSUPPORTED "$LABEL is a demo in the demo farm: Sync from live is not served there — unfold it first"; exit 0 ;;
+  *) answer_refusal RUNTIME_UNKNOWN "the runtime marker of $LABEL cannot be read"; exit 0 ;;
+esac
 case "$OP" in merge|apply|sync) recover_first || exit 0 ;; esac
 sweep_runs
 case "$OP" in

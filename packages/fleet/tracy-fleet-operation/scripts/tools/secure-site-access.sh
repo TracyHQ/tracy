@@ -42,7 +42,15 @@ bash "$HERE/../provision/render-compose.sh" "$LABEL" --root "$TRACY_PRIVATE_ROOT
 ( cd "$SITE_DIR" && docker compose up -d --force-recreate web )
 
 web="${LABEL}-web-1"
+# A demo folded into the demo farm (lib/site-runtime.sh): `<label>-web-1` is its forwarder; the PHP
+# that reads the key is its pool in the farm, at the path its pool environment names
+# (TRACY_ACCESS_KEY_FILE, lib/demo-farm.sh) — asked there, as the demo itself.
+. "$HERE/../lib/site-runtime.sh"
+if [ "$(tracy_site_runtime "$LABEL")" = farm ]; then
+  tracy_site_web_exec "$LABEL" -- test -r "/run/tracy-access/$LABEL/key.json" || { say "NOT READY: the demo farm cannot read its key"; exit 1; }
+else
 docker exec "$web" test -r /run/tracy-access/key.json || { say "NOT READY: the container cannot read its key"; exit 1; }
+fi
 if tracy_site_on_shared_network "$LABEL"; then say "NOT READY: still on ${TRACY_SITE_NETWORK:-tracy_tracy}"; exit 1; fi
 port=80
 grep -q '4321' "$SITE_DIR/docker-compose.yml" && port=4321

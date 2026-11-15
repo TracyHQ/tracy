@@ -71,6 +71,38 @@ COMPOSE="$SITE_DIR/docker-compose.yml"
 
 echo "==> $LABEL: enabling site mail"
 
+# ── a demo folded into the demo farm (lib/site-runtime.sh) ──────────────────────────────────────
+# Its PHP runs in the farm, whose image always carries the shim and sendmail_path (web/demos.Dockerfile),
+# and its mail settings are its OWN pool's environment (lib/demo-farm.sh `tracy_farm_pool_env`: this
+# label, this .env's TRACY_MAIL_TOKEN) — the same label and token its own container had, so tracy-web's
+# `/_site-mail` allows and refuses exactly as it did. So: the token into .env as below, then the
+# farm re-renders that one pool (provision/farm-refresh.sh), and the result is measured in the farm,
+# as the demo. Nothing another demo uses is changed; no image or compose step applies.
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+if [ "$(tracy_runtime_of_dir "$SITE_DIR" "$LABEL")" = farm ]; then
+  TOKEN="$(TRACY_PRIVATE_ROOT="$ROOT" tracy_site_mail_token "$LABEL")" || exit 1
+  have="$(sed -n 's/^TRACY_MAIL_TOKEN=//p' "$ENV_FILE" | sed -n 1p)"
+  if [ "$have" != "$TOKEN" ]; then
+    tmp="$ENV_FILE.site-mail.new"
+    { grep -v '^TRACY_MAIL_TOKEN=' "$ENV_FILE" || true; } > "$tmp"
+    chmod 600 "$tmp"
+    printf 'TRACY_MAIL_TOKEN=%s\n' "$TOKEN" >> "$tmp"
+    mv "$tmp" "$ENV_FILE"
+    echo "    token: written to .env"
+  else
+    echo "    token: already in .env"
+  fi
+  if [ -n "$NO_START" ]; then echo "==> $LABEL: written, the farm not refreshed (--no-start)"; exit 0; fi
+  bash "$HERE/farm-refresh.sh" "$LABEL" --root "$ROOT" || exit 1
+  TRACY_PRIVATE_ROOT="$ROOT"
+  seen="$(tracy_site_web_exec "$LABEL" -- sh -c \
+    'test -x /usr/local/bin/tracy-sendmail && [ -n "$TRACY_MAIL_TOKEN" ] && printf "%s" "$TRACY_MAIL_LABEL"' 2>/dev/null || true)"
+  [ "$seen" = "$LABEL" ] || { echo "!! $LABEL: the demo farm does not show the shim, token and label for this demo" >&2; exit 1; }
+  echo "==> $LABEL: site mail enabled in the demo farm (its own pool: shim, token and label)"
+  exit 0
+fi
+
 # ── 1. which image, decided and checked before anything is written ─────────────────────────────
 #
 # A tracy/web-<php platform> tag names its base inside it: `tracy/web-joomla:5-apache-20260913-r1`

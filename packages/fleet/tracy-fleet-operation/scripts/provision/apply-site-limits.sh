@@ -82,6 +82,12 @@ if [ -n "$ONLY" ] && ! label_ok "$ONLY"; then echo "not a site label: $ONLY" >&2
 [ -d "$ROOT" ] || { echo "no private root at $ROOT — pass --root" >&2; exit 2; }
 ROOT="$(cd "$ROOT" && pwd)"
 
+# One site asked for by name, and it is a demo folded into the demo farm: refused before docker is
+# asked anything (lib/site-runtime.sh). A sweep passes such a demo over below instead.
+if [ -n "$ONLY" ] && label_ok "$ONLY"; then
+  tracy_refuse_if_farm "$ROOT/$ONLY" "$ONLY" "capping its own containers" || exit 1
+fi
+
 # The cores DOCKER has — what `docker update --cpus` is checked against, and on Docker Desktop not
 # the same number as the machine this script runs on.
 host_cpus="$("$DOCKER" info --format '{{.NCPU}}' 2>/dev/null || true)"
@@ -217,6 +223,21 @@ for dir in "$ROOT"/*/; do
   site="$ROOT/$LABEL_NOW"
   [ -f "$site/docker-compose.yml" ] || continue
   found=$((found + 1))
+  # A demo folded into the demo farm (lib/site-runtime.sh): `<label>-web-1` is its forwarder, capped by
+  # the compose that renders it, and its PHP and data live in the farm, capped as one (lib/demo-farm.sh).
+  # Passed over in a sweep; refused when it is the one site asked for.
+  if ! runtime="$(tracy_runtime_of_dir "$site" "$LABEL_NOW")"; then
+    echo "$LABEL_NOW: SKIPPED — its runtime marker cannot be read"
+    skipped=$((skipped + 1))
+    continue
+  fi
+  if [ "$runtime" = farm ]; then
+    if [ -n "$ONLY" ]; then
+      tracy_refuse_if_farm "$site" "$LABEL_NOW" "capping its own containers" || exit 1
+    fi
+    echo "$LABEL_NOW: in the demo farm — passed over (the farm's caps are the farm compose's)"
+    continue
+  fi
   # Asked in a subshell, so one site's platform or image cannot leak into the next site's answer:
   # `tracy_detect_platform` returns whatever PLATFORM already holds.
   if ! platform="$(

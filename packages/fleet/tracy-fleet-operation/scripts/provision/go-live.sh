@@ -114,6 +114,21 @@ elif [ "$lock_rc" -ne 0 ]; then
   exit 1
 fi
 
+# A template demo folded into the demo farm (lib/site-runtime.sh) shares one PHP, one database and
+# one network with every other folded demo — all of them published, i.e. live. tracy-web's demo flow
+# asks `live` with no domains right after the install (lib/demo-sites.js), and the install now ends
+# with the fold, so that one ask is served: the farm is never in TRACY-FLEET-EGRESS (step 1 has no
+# subnet of the demo's own to flip), the mail switch is the demo's own file, and noindex comes off
+# through the farm (step 3, farm-refresh.sh). A demo never takes domains, and a farm demo cannot be
+# made a draft alone (its egress is the farm's): `draft`, `drop-domain` and `live` with domains are
+# refused here, before anything is changed — unfold it first.
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+RUNTIME="$(tracy_runtime_of_dir "$SITE_DIR" "$LABEL")" || exit 1
+if [ "$RUNTIME" = farm ] && { [ "$OP" != live ] || [ "${#DOMAINS[@]}" -gt 0 ]; }; then
+  echo "!! $LABEL is a demo served by the demo farm — only \`--op live\` without domains is served there; unfold it first (provision/unfold.sh $LABEL)" >&2
+  exit 1
+fi
 # The site's own record of the domains a go-live added for it (step 4), one name per line.
 GOLIVE_DOMAINS_FILE="$SITE_DIR/.golive-domains"
 # Read once, and checked before anything is flipped, so a refusal here leaves the site exactly as it
@@ -148,6 +163,11 @@ DB_NAME="${DB_NAME:-tracy}"
 export SITE_DIR DB_PASSWORD DB_NAME
 
 # ── 1. net #1, network layer ────────────────────────────────────────────────────────────
+# A demo in the demo farm has no subnet of its own to flip: the farm is outside the chain, as every
+# published demo's subnet is (see the farm refusal above).
+if [ "$RUNTIME" = farm ]; then
+  echo "==> mail egress: open (served by the demo farm, which is never fenced: every folded demo is live)"
+else
 # live  = take the site out of the chain (may send mail).  draft = put it back.
 # Read the subnet from docker rather than guess: compose names the network after the project, but
 # it allocates the IP range itself and that changes between rebuilds.
@@ -222,6 +242,7 @@ if command -v netfilter-persistent >/dev/null 2>&1; then
     exit 1
   }
 fi
+fi
 
 # ── 2. net #1, application layer ────────────────────────────────────────────────────────
 # For a platform that declares no hook, the network layer above is the whole switch.
@@ -263,11 +284,20 @@ if [ -f "$SITE_DIR/apache/tracy-noindex.conf" ]; then
   # Apache reads its conf at startup, so changing the bind mount's content alone is not enough.
   # Neither a reload nor a restart: Apache still serves the OLD conf, so the line below would be a
   # lie about what search engines are told. The script ends here instead.
+  # A folded demo has no Apache of its own: its vhost in the farm includes this file, and the farm
+  # re-renders it and reloads gracefully (a failed config test changes nothing that serves).
+  if [ "$RUNTIME" = farm ]; then
+    bash "$HERE/farm-refresh.sh" "$LABEL" --root "$ROOT" >&2 || {
+      echo "!! the demo farm did not take $LABEL's new noindex conf — run provision/farm-refresh.sh $LABEL" >&2
+      exit 1
+    }
+  else
   ( cd "$SITE_DIR" && docker compose exec -T web apache2ctl -k graceful ) 2>/dev/null ||
     ( cd "$SITE_DIR" && docker compose restart web >/dev/null 2>&1 ) || {
       echo "!! could not reload Apache — run \`docker compose restart web\` in $SITE_DIR" >&2
       exit 1
     }
+  fi
   if [ "$OP" = live ]; then echo "==> noindex: off (search engines may index the site)"; else echo "==> noindex: on"; fi
 else
   echo "==> this site mounts no tracy-noindex.conf (fleet-born) — publish_state decides what search engines see"

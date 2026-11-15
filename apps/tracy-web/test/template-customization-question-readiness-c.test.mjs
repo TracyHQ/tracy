@@ -41,6 +41,7 @@ import {
 } from '../src/lib/template-customization-question-readiness/readers/quickstart-contract.js'
 import {
   acmStrings,
+  htmlTextPieces,
   isProse,
   isSettingField
 } from '../src/lib/template-customization-question-readiness/readers/joomla-row-text.js'
@@ -585,6 +586,44 @@ test('ABOUT-2: an ACM field holding button classes is a setting, not demo prose 
   assert.ok(fields.has('event[event-description]'))
   // A sentence of ordinary words is never taken for classes.
   assert.equal(isSettingField(['x', 'event[event-btn-1]'], 'Book your seat today'), false)
+})
+
+test('ABOUT-2: an ACM field holding an SVG in the inline markup notation is markup, not demo prose (JA Vega j6 1.0.9 module 115)', () => {
+  const lock = JSON.parse(
+    readFileSync(
+      path.join(
+        HERE,
+        '..',
+        '..',
+        '..',
+        'packages/cms/tracy-joomla-quickstart/contracts/ja-vega/j6/1.0.9/presentation-lock.json'
+      ),
+      'utf8'
+    )
+  )
+  const icons = acmStrings(lock.entities['module-115'].params).filter(({ path: p }) =>
+    String(p[2]).endsWith('[intro]')
+  )
+  // `features-intro[data][intro]` holds the card's icon, written `((svg xmlns=…))((path d=…/))((/svg))`.
+  assert.ok(icons.length >= 2 && icons.every(({ text }) => text.startsWith('((svg')))
+  for (const { text } of icons)
+    assert.equal(isProse(htmlTextPieces(text).join(' ')), false, text.slice(0, 60))
+})
+
+test('the inline markup notation splits text as tags do; double parentheses holding no tag stay words', () => {
+  assert.deepEqual(htmlTextPieces('((strong))Fast delivery((/strong)) across the city((br/))today'), [
+    'Fast delivery',
+    'across the city',
+    'today'
+  ])
+  assert.deepEqual(htmlTextPieces('<p>Fast ((strong class="x"))delivery((/strong))</p>'), [
+    'Fast',
+    'delivery'
+  ])
+  assert.deepEqual(htmlTextPieces('((g clip-path="url(#clip0_1)"))((path d="M3 2"/))((/g))Shipping'), [
+    'Shipping'
+  ])
+  assert.deepEqual(htmlTextPieces('Open ((24/7)) for the team'), ['Open ((24/7)) for the team'])
 })
 
 test('ABOUT-2: Tracy Business EmDash 1.7.2 fails on Investors and the legal pages, not on the kit pages', async () => {

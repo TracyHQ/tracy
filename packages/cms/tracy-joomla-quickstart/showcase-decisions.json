@@ -767,6 +767,29 @@
       ],
       "keep": []
     },
+    "ja-kinetic/j6/1.0.12": {
+      "hide": [
+        {
+          "key": "menuItem-230",
+          "path": "pages/kineticql",
+          "menutype": "mainmenu",
+          "reason": "KineticQL is a sample article entry inside the template Pages showcase branch. The existing product decision of 2026-10-25 removes sample Pages entries from customer menus; this exact menu entry leaves navigation only, while article 75, its direct URL and featured exposure remain published."
+        },
+        {
+          "key": "menuItem-253",
+          "path": "pages/engineering",
+          "menutype": "mainmenu",
+          "reason": "Engineering is a sample category-layout entry inside the template Pages showcase branch. The existing product decision of 2026-10-25 removes sample Pages entries from customer menus; category 29, its 31 published articles, direct URLs and the Product all-categories route remain available."
+        },
+        {
+          "key": "menuItem-254",
+          "path": "pages/author",
+          "menutype": "mainmenu",
+          "reason": "This menu opens one fixed demo author as a sample detail screen inside the template Pages showcase branch. The existing product decision of 2026-10-25 removes sample Pages entries from customer menus; the Product authors index and author-card destinations remain published and working."
+        }
+      ],
+      "keep": []
+    },
     "ja-mood/j6/1.0.4": {
       "hide": [
         {

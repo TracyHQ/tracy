@@ -269,7 +269,8 @@ function settingSlotGap(doc) {
   for (const b of arr(doc.blocks)) {
     for (const l of arr(b?.links))
       if (l?.opens?.shows === 'map' && !l.opens.slotId) buttons.push(String(b.id))
-    for (const f of arr(b?.frames)) if (f?.paintedBehind === true && !f.slotId) frames.push(String(f.id))
+    for (const f of arr(b?.frames))
+      if (f?.paintedBehind === true && !f.slotId && !arr(f.writesTo).length) frames.push(String(f.id))
   }
   if (buttons.length + frames.length === 0) return null
   const parts = [

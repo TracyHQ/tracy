@@ -102,7 +102,7 @@ from the skill folder, and read identity (site name, locales, forms, audit polic
 Every tool, its flags and its phase: [`references/tools.md`](references/tools.md).
 
 `npm test` (kit; `scripts/test-kit.mjs` runs the suite inside a throwaway template) or `node --test tests/*.test.mjs`
-in the template runs the kit's 364 regression tests (`test(`/`it(` calls in `scripts/tests/*.test.mjs`; the runner
+in the template runs the kit's 378 regression tests (`test(`/`it(` calls in `scripts/tests/*.test.mjs`; the runner
 reports more, because a few are declared once in a loop) without a real EmDash site. Duration: ~8–9 min measured
 14/09/2026 on a smaller suite — dated, not re-measured since. Needs Playwright's browser installed (`npx playwright install chromium`); do not run it
 alongside another `visual-qa` run. `npm run test:docs` checks the counts these docs quote.

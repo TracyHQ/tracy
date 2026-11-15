@@ -209,6 +209,8 @@ html:not([data-theme="dark"]) .brand-when-dark {
 	.dn-footer-cols p { margin: 0; font-size: 15px; line-height: 24px; }
 	.dn-footer-cols a { display: inline-block; font-size: 15px; border-bottom: 1px solid var(--color-accent-line); color: var(--color-fg); }
 	.dn-footer-cols a:hover { color: var(--color-accent-text); }
+	/* A phone line is a tel: link (the kit's phoneNotCallable check) drawn as the plain line the source prints. */
+	.dn-footer-cols p a[href^="tel:"], .dn-footer-cols p a[href^="tel:"]:hover { display: inline; font-size: inherit; border-bottom: 0; color: inherit; }
 	.dn-copyright { border-top: 2px solid var(--color-rule); font-size: 13px; }
 	.dn-copyright-inner { border-top: 1px solid var(--color-rule); margin-top: 1px; padding: 36px 0 108px; }
 	.dn-copyright p { margin: 0 0 5px; font-size: 13px; line-height: 20px; }

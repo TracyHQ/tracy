@@ -1,0 +1,3 @@
+- **The language policy lists the exact non-English lines of the JA Diner EmDash 0.1.1 template kit** — template kit tooling (agent) · #623 · `chore/language-policy-diner-kit-011` · 2026-11-13
+  **Affects:** nobody else; the `language-policy` gate of the kit PR reads the policy from the base branch, so these exact lines must be on `develop` first (as for JA Restaurant 1.0.2).
+  **Why / Measured:** 11 distinct lines (65 in all) of `packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json` carry the source design's demo text with an accented "cafe" and the chef name "Nunez" with a Polish letter; each is listed by path, sha256 and its count in the file. The file is not edited: the release asset carries it byte for byte.

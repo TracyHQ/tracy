@@ -5,9 +5,9 @@
     "tracy-diner/emdash-0.x": "0.1.0"
   },
   "maxVersion": {
-    "tracy-diner/emdash-0.x": "0.1.0"
+    "tracy-diner/emdash-0.x": "0.1.1"
   },
-  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-size-*, --ds-leading-display, --ds-tracking-display, --ds-btn-radius, --ds-card-radius, --ds-input-radius) in the rules of the roles this contract declares, and every colour role systems define (styles/tokens.css and global.css; the roles the site has no place for are declared ds-not-used); src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base.",
+  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-size-*, --ds-leading-display, --ds-tracking-display, --ds-btn-radius, --ds-card-radius, --ds-input-radius) in the rules of the roles this contract declares, and every colour role systems define (styles/tokens.css and global.css; the roles the site has no place for are declared ds-not-used); src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base. 0.1.1 changes no rule that reads a --ds-* value (one footer rule for its tel: links, colour inherit) and reads the same tokens.",
   "release": "tracy-diner/emdash-0.x@0.1.0",
   "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
   "readsComponents": true,

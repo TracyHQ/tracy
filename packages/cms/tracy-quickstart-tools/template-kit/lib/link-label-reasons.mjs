@@ -81,11 +81,16 @@ function resultPage(path) {
   }
 }
 
-/** The link opens the listing its block is shown on at another result page (`?start=`). */
-function paginationLink(l, pagePaths) {
+/**
+ * The link opens the listing its block is shown on at another result page (`?start=`), or a result page of a list the
+ * kit paged through under another address (a menu page showing an author's list, whose router writes the author's own
+ * address in the pager).
+ */
+function paginationLink(l, pagePaths, pagedBases) {
   if (!l.target) return false
   const to = resultPage(l.target)
   if (!to) return false
+  if (to.start && pagedBases.has(to.base)) return true
   return pagePaths.some((p) => {
     const at = resultPage(p)
     return at && at.base === to.base && (at.start || to.start) && String(p) !== String(l.target)
@@ -146,13 +151,19 @@ export function fixedLinkLabels(kit) {
     const ids = Array.isArray(p.blocks) ? p.blocks : Object.values(p.blocks ?? {}).flat()
     for (const id of new Set(ids)) pathsOf.get(id)?.push(p.path)
   }
+  const pagedBases = new Set(
+    (kit.pages ?? [])
+      .map((p) => resultPage(p.path))
+      .filter((r) => r?.start)
+      .map((r) => r.base)
+  )
   let fixed = 0
   for (const b of kit.blocks) {
     const texts = (b.fixedText ?? []).map((t) => normText(t.text ?? '')).filter(Boolean)
     for (const l of b.links ?? []) {
       delete l.fixedLabel
       if (l.labelId || !hasWords(normText(l.label ?? ''))) continue
-      const rule = paginationLink(l, pathsOf.get(b.id) ?? [])
+      const rule = paginationLink(l, pathsOf.get(b.id) ?? [], pagedBases)
         ? 'pagination'
         : controlValue(l)
           ? 'control-value'

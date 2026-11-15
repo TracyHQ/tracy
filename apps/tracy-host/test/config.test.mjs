@@ -29,8 +29,15 @@ test('readConfig: reads hostName, hostSecret, sitesRoot, privateRoot and scripts
     demoInstallMinFreeMb: 600,
     browserRuns: browserRunsOf(fullEnv),
     demoQaTabs: demoQaTabsOf(fullEnv),
-    demoReadCacheBytes: demoReadCacheBytesOf(fullEnv)
+    demoReadCacheBytes: demoReadCacheBytesOf(fullEnv),
+    demoFarm: false
   })
+})
+
+test('readConfig: TRACY_DEMO_FARM=1, and only that, ends a demo install with a fold into the demo farm', () => {
+  assert.equal(readConfig({ ...fullEnv, TRACY_DEMO_FARM: '1' }).demoFarm, true)
+  for (const off of [undefined, '0', 'true', 'yes', ''])
+    assert.equal(readConfig({ ...fullEnv, TRACY_DEMO_FARM: off }).demoFarm, false, String(off))
 })
 
 test('readConfig: DEMO_INSTALL_SLOTS sets how many demo installs run at once; anything but a positive whole number is 2', () => {

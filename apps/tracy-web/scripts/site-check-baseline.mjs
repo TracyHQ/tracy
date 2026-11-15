@@ -44,17 +44,8 @@ import {
   ensureBaseline,
   fileBaselineStore
 } from '../src/site-check/demo-baseline.js'
-import { hostMeasure, underIndex } from '../src/site-check/host-measure.js'
+import { hostMeasure, underIndexHost } from '../src/site-check/host-measure.js'
 import { siteByKey } from '../src/sites/store.js'
-
-/** Joomla answers its pages under `/index.php` (WordPress does not: `underIndex` leaves its pages be): the demo read on this machine is asked them as the site's host asks them. */
-const underIndexHost =
-  (host, platform = 'joomla') =>
-  ({ pages, ...payload }) =>
-    host({
-      ...payload,
-      ...(Array.isArray(pages) ? { pages: pages.map((p) => underIndex(platform, p)) } : {})
-    })
 
 /** The platform of the contract whose id is `version`: wordpress or joomla. */
 function platformOfVersion(index, version) {

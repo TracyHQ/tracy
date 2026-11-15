@@ -9136,6 +9136,35 @@ function hasContentContract(cwd, sitesRoot) {
 }
 var QUICKSTART_DESIGN_RULE = "Keep the quickstart's design: reuse its own sections and styles, and keep new text close to the length of the text it replaces (0.75\xD7 to 1.25\xD7).";
 
+// ../../wo/website-opportunities/domain/audio-source.mjs
+var isAudioSlot = (slot) => slot?.type === "url" && slot?.role === "business.audio";
+function audioSourceProblem(value) {
+  if (typeof value !== "string" || !value || /[\s\\<>"`{}|^#]/u.test(value)) return "unsupported audio source";
+  if (/%(?![0-9a-f]{2})/i.test(value)) return "invalid audio source encoding";
+  if (value.startsWith("//")) return "unsafe audio source path";
+  const remote = /^https:\/\//i.test(value);
+  const rawPath = (remote ? value.replace(/^https:\/\/[^/?#]+/i, "") : value).split("?")[0];
+  let path22;
+  try {
+    path22 = decodeURIComponent(rawPath);
+  } catch {
+    return "invalid audio source encoding";
+  }
+  if (!/\.mp3$/i.test(rawPath) || /%(?:2f|5c|25)/i.test(rawPath) || /[\\?#]/.test(path22) || [...path22].some((c) => c.charCodeAt(0) <= 32 || c.charCodeAt(0) === 127) || path22.replace(/^\/+/, "").split("/").some((p) => !p || p === "." || p === ".."))
+    return "unsafe audio source path";
+  if (remote) {
+    try {
+      const u = new URL(value);
+      return u.hostname && !u.username && !u.password ? null : "expected an HTTPS MP3 source";
+    } catch {
+      return "invalid HTTPS audio source";
+    }
+  }
+  return /^(?:\/(?:[a-zA-Z0-9_-]+\/)*)?(?:images|media)\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_.-]+\.mp3$/i.test(
+    path22
+  ) ? null : "expected an existing MP3 in the site media library";
+}
+
 // src/host/contract-check.mjs
 var IDENTITY_TOKENS = Object.freeze([
   "site.name",
@@ -9230,7 +9259,10 @@ function checkSlotValue(slot, value, { evidence = null } = {}) {
       limit: Number(slot.maxCharacters),
       length
     };
-  if (slot.type === "url") {
+  if (isAudioSlot(slot)) {
+    const problem = audioSourceProblem(value);
+    if (problem) return { rule: "audio", key, message: `Unsupported audio source: ${key}` };
+  } else if (slot.type === "url") {
     if (value.startsWith("//") || value.includes("\\"))
       return { rule: "url", key, message: `Unsupported CTA URL: ${key}` };
     if (value !== "" && !CTA_URL.test(value))
@@ -12910,6 +12942,44 @@ function looksLikeMissingBinary(result) {
     return true;
   const text6 = `${result.stderr ?? ""} ${result.spawnError ?? ""}`.toLowerCase();
   return text6.includes("executable file not found") || text6.includes("no such file or directory") || /\bnot found\b/.test(text6);
+}
+var FARM_DEMO_REFUSAL = "FARM_DEMO: this site is a template demo served by the demo farm, where the site tools do not run. Unfold it on the host (provision/unfold.sh <label>) to work on it.";
+function execContainerOf(argv) {
+  if (!Array.isArray(argv) || argv[0] !== "exec") return null;
+  return argv.find((arg) => /^[a-z0-9][a-z0-9-]*-web-1$/.test(String(arg))) ?? null;
+}
+async function isFarmForwarder(container, inspect = inspectRuntimeLabel) {
+  const now = Date.now();
+  const held = farmAnswers.get(container);
+  if (held !== void 0 && held.until >= now) return held.farm;
+  const farm = await inspect(container).catch(() => "") === "farm";
+  farmAnswers.set(container, { farm, until: now + 6e4 });
+  return farm;
+}
+var farmAnswers = /* @__PURE__ */ new Map();
+function inspectRuntimeLabel(container) {
+  const dockerHost = resolveDockerHost(void 0, process.env);
+  const argv = ["inspect", "--type", "container", "-f", '{{index .Config.Labels "tracy.runtime"}}', container];
+  const [cmd, args] = dockerHost ? ["env", [`DOCKER_HOST=${dockerHost}`, "docker", ...argv]] : ["docker", argv];
+  return new Promise((resolve) => {
+    execFile(
+      cmd,
+      args,
+      { timeout: 15e3, maxBuffer: 4096 },
+      (error, stdout) => resolve(error ? "" : String(stdout).trim())
+    );
+  });
+}
+function farmRefusedResult() {
+  return {
+    code: 126,
+    stdout: "",
+    stderr: `${FARM_DEMO_REFUSAL}
+`,
+    timedOut: false,
+    spawnError: void 0,
+    farmDemo: true
+  };
 }
 function dockerExec({ argv, stdin, timeoutMs, maxBuffer }) {
   const dockerHost = resolveDockerHost(void 0, process.env);
@@ -47463,6 +47533,16 @@ function withNotes2(answer, notes) {
   return { ...a, normalized: all };
 }
 function runExec(config, input) {
+  return farmGuardedExec(config, input);
+}
+async function farmGuardedExec(config, input) {
+  const container = execContainerOf(input.argv);
+  const inspect = config.farmLabel ?? (config.exec ? null : void 0);
+  if (container !== null && inspect !== null && await isFarmForwarder(container, inspect))
+    return farmRefusedResult();
+  return runExecUnguarded(config, input);
+}
+function runExecUnguarded(config, input) {
   return (config.exec ?? dockerExec)(input);
 }
 function firstLine(text6) {

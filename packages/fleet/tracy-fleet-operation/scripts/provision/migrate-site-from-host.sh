@@ -76,6 +76,10 @@ done
 TAG="${TAG:-pre-move-$(hostname -s)}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 SITE_DIR="$ROOT/$LABEL"
+# A demo folded into the demo farm has no runtime of its own to change (lib/site-runtime.sh).
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+tracy_refuse_if_farm "$SITE_DIR" "$LABEL" "moving it from another host" || exit 1
 
 say() { printf '==> %s\n' "$*"; }
 run() { if [ "$DRY_RUN" = 1 ]; then printf '    [dry-run] %s\n' "$*"; else "$@"; fi; }

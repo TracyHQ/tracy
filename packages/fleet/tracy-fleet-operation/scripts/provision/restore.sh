@@ -103,6 +103,15 @@ DB_PASSWORD="$(sed -n 's/^DB_PASSWORD=//p' "$SITE_DIR/.env" 2>/dev/null | head -
 # was. The server that stays up, not one that merely answers: migrate-site-from-host.sh brings this
 # database up on a NEW volume, whose first boot answers from a temporary server and then stops it
 # (lib/db-ready.sh, measured 05/10/2026). Step 5 asks again before the DROP.
+# A demo folded into the demo farm (lib/site-runtime.sh): its data is ONE schema of the shared farm
+# server, reached as its own user; its `web` service is only the forwarder. So stopping `web` below
+# takes only this demo off the air, the image step is the farm's business and is skipped, and the
+# database is emptied table by table and re-imported INSIDE that schema — never a DROP DATABASE,
+# never anything the farm's other demos share, and the farm itself is never stopped.
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+TRACY_PRIVATE_ROOT="$ROOT"
+RUNTIME="$(tracy_site_runtime "$LABEL")"
 echo "==> checking the database"
 ( cd "$SITE_DIR" && docker compose start db ) >/dev/null 2>&1 || true
 # shellcheck source=../lib/db-ready.sh
@@ -154,7 +163,9 @@ move_contents "$STAGING" "$WEBROOT_DIR"
 rm -rf "$STAGING" "$PREVIOUS"
 
 # ── 4. the runtime the snapshot was taken under ─────────────────────────────────────────
-if [ -n "$WEB_IMAGE_SAVED" ]; then
+if [ "$RUNTIME" = farm ]; then
+  echo "==> $LABEL runs in the demo farm: its PHP is the farm's, the snapshot's image ($WEB_IMAGE_SAVED) is not put back"
+elif [ -n "$WEB_IMAGE_SAVED" ]; then
   "$HERE/set-web-image.sh" --label "$LABEL" --root "$ROOT" --image "$WEB_IMAGE_SAVED"
 fi
 
@@ -167,11 +178,22 @@ echo "==> replacing database"
 # meantime, and the DROP below must not meet a database that is not there. Stopping here, with the
 # reason, beats a DROP that fails — the old loop gave up silently and went on to it.
 tracy_db_wait_ready "$SITE_DIR" "$DB_PASSWORD" || exit 1
+if [ "$RUNTIME" = farm ]; then
+  FARM_DB="$(tracy_site_db_name "$LABEL")"
+  DROPS="$(tracy_site_db_exec "$LABEL" mariadb -N -B -e "SELECT CONCAT('DROP ', IF(table_type='VIEW','VIEW','TABLE'), ' IF EXISTS \`', table_name, '\`;') FROM information_schema.tables WHERE table_schema=DATABASE()" "$FARM_DB")"
+  [ -z "$DROPS" ] || printf 'SET FOREIGN_KEY_CHECKS=0;\n%s\n' "$DROPS" | tracy_site_db_exec "$LABEL" -i mariadb "$FARM_DB"
+  # As the demo's own user: a snapshot taken before the fold names its server's root as definer,
+  # which this user may not be — definers dropped where the dump writes them, as fold.sh does.
+  gunzip -c "$WORK/db.sql.gz" | sed -E -f "$HERE/../lib/strip-definers.sed" \
+    | tracy_site_db_exec "$LABEL" -i mariadb \
+    --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$FARM_DB"
+else
 ( cd "$SITE_DIR" && docker compose exec -T db mariadb -uroot -p"$DB_PASSWORD" \
     -e "DROP DATABASE IF EXISTS \`$DB_NAME\`; CREATE DATABASE \`$DB_NAME\`;" )
 gunzip -c "$WORK/db.sql.gz" \
   | ( cd "$SITE_DIR" && docker compose exec -T db mariadb -uroot -p"$DB_PASSWORD" \
       --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$DB_NAME" )
+fi
 
 # ── 6. serve again ──────────────────────────────────────────────────────────────────────
 ( cd "$SITE_DIR" && docker compose up -d )

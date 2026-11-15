@@ -13,6 +13,10 @@ while [[ $# -gt 0 ]]; do
 done
 [[ "$LABEL" =~ ^[a-z0-9][a-z0-9-]{0,62}$ ]] || exit 2
 WEBROOT="$(tracy_webroot_dir "$LABEL")"
+# The preview is for a chosen Website Opportunities site, never a template demo (install.php); a demo
+# folded into the demo farm is refused before the backup and before anything is written.
+. "$HERE/../lib/site-runtime.sh"
+tracy_refuse_if_farm "$(tracy_private_dir "$LABEL")" "$LABEL" "installing the demo contact preview" || exit 1
 mkdir -p "$(tracy_private_dir "$LABEL")"
 exec 9>"$(tracy_private_dir "$LABEL")/demo-contact.lock"
 flock 9

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "tracy-demo-measures/v1",
+  "quickstart": {
+    "slug": "ja-symphony",
+    "version": "1.0.6"
+  },
+  "widths": [
+    1440,
+    390
+  ],
+  "pages": [
+    "/",
+    "/index.php/pages/user-pages/login",
+    "/index.php/pages/user-pages/registration",
+    "/index.php/our-blog",
+    "/index.php/pages/joomla-content/featured-articles",
+    "/index.php/pages/joomla-content/category-blog",
+    "/index.php/pages/joomla-content/tagged-items",
+    "/index.php/contact-us",
+    "/index.php/releases",
+    "/index.php/tours",
+    "/index.php/pages/other-pages/error-page",
+    "/index.php/pages/other-pages/offline-page",
+    "/index.php/homepage/home-red",
+    "/index.php/homepage/home-yellow",
+    "/index.php/pages/password-reset",
+    "/index.php/pages/user-reminder",
+    "/index.php/releases/11-indie/11-bring-home-to-glory",
+    "/index.php/releases/11-indie",
+    "/index.php/releases/11-indie/18-collaborations-project",
+    "/index.php/releases/13-metal/21-country-squire",
+    "/index.php/releases/13-metal",
+    "/index.php/releases/13-metal/19-cuz-i-love-you",
+    "/index.php/releases/13-metal/13-demacia-rising",
+    "/index.php/releases/12-electronic-dance/12-rise",
+    "/index.php/releases/12-electronic-dance",
+    "/index.php/releases/14-hip-hop/14-rise-of-the-ascended",
+    "/index.php/releases/14-hip-hop",
+    "/index.php/releases/13-metal/22-shawn-mendes",
+    "/index.php/releases/13-metal/20-the-big-day",
+    "/index.php/our-blog/5-artist-portraits-from-pitchfork-music-festival-2019",
+    "/index.php/our-blog/7-how-long-does-it-take-to-make-a-classic-album",
+    "/index.php/our-blog/6-live-photos-from-pitchfork-music-festival-2019",
+    "/index.php/our-blog/2-rare-jeff-buckley-recordings-are-coming-to-streaming",
+    "/index.php/our-blog/4-taylor-swift-to-perform-at-mtv-vmas-2019",
+    "/index.php/our-blog/8-the-relentless-determination-of-vagabon",
+    "/index.php/our-blog/3-watch-caroline-polachek-s-new-ocean-of-tears-video",
+    "/index.php/our-blog?start=5",
+    "/index.php/component/tags/tag/joomla",
+    "/index.php/component/tags/tag/t4-framework",
+    "/index.php/component/tags/tag/music",
+    "/index.php/component/tags/tag/events",
+    "/index.php/pages/joomla-content/featured-articles?start=4",
+    "/index.php/pages/joomla-content/category-blog?start=5",
+    "/index.php/tours/15-the-new-modern-lights",
+    "/index.php/tours/16-the-chainsmokers",
+    "/index.php/tours/17-futuristic-polar-bears",
+    "/index.php/tours/23-wild-and-wonderful-country-fest",
+    "/index.php/tours/24-red-rocks-amphitheatre",
+    "/index.php/tours/25-northern-quest-resort-casino",
+    "/index.php/tours/26-new-year-in-carcassonne",
+    "/index.php/tours/27-lake-garda-italy",
+    "/index.php/tours/28-malta-mediterranean"
+  ],
+  "status": "green",
+  "groups": [
+    {
+      "name": "main-heading",
+      "status": "green",
+      "checked": 52,
+      "failures": []
+    },
+    {
+      "name": "empty-frames",
+      "status": "green",
+      "checked": 52,
+      "failures": []
+    },
+    {
+      "name": "text-overflow",
+      "status": "green",
+      "checked": 52,
+      "failures": []
+    },
+    {
+      "name": "orphan-row",
+      "status": "green",
+      "checked": 52,
+      "failures": []
+    },
+    {
+      "name": "blank-footer-column",
+      "status": "green",
+      "checked": 52,
+      "failures": []
+    }
+  ]
+}

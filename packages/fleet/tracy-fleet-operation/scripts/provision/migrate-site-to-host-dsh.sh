@@ -663,6 +663,10 @@ tracy_migrate_main() {
   CHOWN="${TRACY_CHOWN:-chown}"
   HOST_DSH="${TRACY_HOST_DSH:-tracy-dsh}"
   SITE_DIR="$ROOT/$LABEL"
+  # A demo folded into the demo farm has no runtime of its own to change (lib/site-runtime.sh).
+  # shellcheck source=../lib/site-runtime.sh
+  . "$HERE/../lib/site-runtime.sh"
+  tracy_refuse_if_farm "$SITE_DIR" "$LABEL" "moving it to the host dsh" || exit 1
   STAMP="$(date +%Y%m%d-%H%M%S)"
   # attach-site.sh and render-compose.sh read these; a test run must not reach /srv.
   export TRACY_ROOT="$ROOT" TRACY_SITES_ROOT="$SITES"

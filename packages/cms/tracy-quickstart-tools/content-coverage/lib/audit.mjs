@@ -150,7 +150,8 @@ export async function runAudit({
       const items = annotate(
         mergeViewports(Object.fromEntries(Object.entries(results).map(([vp, r]) => [vp, r.data])), siteUrl),
         match,
-        classify
+        classify,
+        { url: first.finalUrl }
       )
       const rec = plan.byFinal.get(plan.byFinal.size ? [...plan.byFinal.keys()].pop() : '')
       const page = {

@@ -178,6 +178,9 @@ import {
   mediaCopyArgv,
   parseMediaCopy,
   dockerExec,
+  execContainerOf,
+  farmRefusedResult,
+  isFarmForwarder,
   hostBrowserExec,
   hostBrowserTarget,
   hostChromeOf,
@@ -617,6 +620,30 @@ function withNotes(answer: unknown, notes: readonly string[] | undefined): unkno
 
 /** The docker-exec transport (#154), or the test's replacement. */
 function runExec(
+  config: Config,
+  input: { argv: readonly string[]; stdin?: string; timeoutMs: number; maxBuffer: number }
+): ReturnType<typeof dockerExec> {
+  return farmGuardedExec(config, input)
+}
+
+/**
+ * Every exec into a site container goes here first: a template demo folded into the demo farm
+ * (`FARM_DEMO_REFUSAL`, `exec.mjs`) is answered with a refusal, by name, and nothing runs. Asked of
+ * docker only on the real road — a test that injects `config.exec` injects `config.farmLabel` too
+ * when it wants the question asked.
+ */
+async function farmGuardedExec(
+  config: Config,
+  input: { argv: readonly string[]; stdin?: string; timeoutMs: number; maxBuffer: number }
+): Promise<Awaited<ReturnType<typeof dockerExec>>> {
+  const container = execContainerOf(input.argv)
+  const inspect = config.farmLabel ?? (config.exec ? null : undefined)
+  if (container !== null && inspect !== null && (await isFarmForwarder(container, inspect)))
+    return farmRefusedResult() as Awaited<ReturnType<typeof dockerExec>>
+  return runExecUnguarded(config, input)
+}
+
+function runExecUnguarded(
   config: Config,
   input: { argv: readonly string[]; stdin?: string; timeoutMs: number; maxBuffer: number }
 ): ReturnType<typeof dockerExec> {

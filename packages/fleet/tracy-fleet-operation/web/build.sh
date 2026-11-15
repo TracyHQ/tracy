@@ -7,6 +7,7 @@
 #   bash web/build.sh joomla       # one platform
 #   DEFAULTS_ONLY=1 bash web/build.sh   # only the images a NEW site gets (the `<platform>=` lines)
 #   bash web/build.sh --line joomla:5-apache   # exactly ONE `<platform>:<tag>` line, nothing else
+#   bash web/build.sh demos        # ONLY the demo farm image (DEMOS_IMAGE, demos.Dockerfile)
 #
 # `--line` is what a provision runs when the image its new site needs is missing on this host
 # (scripts/lib/web-image.sh `tracy_web_image_build`), and what move-off-upstream-image.sh runs before
@@ -55,6 +56,8 @@ FAILED=""
 # (`COPY --from=tracy-web-files …` in the Dockerfiles). With the Dockerfile itself they are the
 # image's inputs, and their hash is stamped on the image as a label.
 WEB_FILES="tracy-sendmail tracy-sendmail.ini"
+# The demo farm's own files (web/demos/), copied by demos.Dockerfile only.
+DEMOS_FILES="demos/php-fpm-farm.conf demos/php-farm.ini demos/apache-farm.conf demos/ports.conf demos/entrypoint.sh demos/reload.sh"
 
 # The main build context. Joomla's Dockerfile copies the T4 skill from `vendor/`, so it needs the
 # repo root — the reason `bash web/build.sh joomla` died on `"/vendor/joomla/joomlart-t4-skill":
@@ -88,6 +91,7 @@ inputs_hash() { # dockerfile
   local f input_files="$WEB_FILES"
   case "$1" in
     */emdash.Dockerfile) input_files="$input_files emdash-conditional-core.tar.gz emdash-conditional-core.json emdash-conditional-core.LICENSE install-emdash-receiver.mjs" ;;
+    */demos.Dockerfile) input_files="$input_files $DEMOS_FILES" ;;
   esac
   { cat "$1"; for f in $input_files; do printf '\n--- %s\n' "$f"; cat "$HERE/$f"; done; } \
     | { sha256sum 2>/dev/null || shasum -a 256; } | cut -c1-64
@@ -191,6 +195,19 @@ while IFS= read -r line; do
   [ -f "$HERE/$platform.Dockerfile" ] || { echo "!! no $platform.Dockerfile for $key" >&2; exit 1; }
   build_one "$HERE/$platform.Dockerfile" "$key" "$image"
 done < "$TAGS"
+
+# The demo farm (scripts/provision/fold.sh) is built only when asked for by name: it is one image
+# per host, not a line a site's provision resolves, and the hosts that fold no demo never need it.
+if [ -z "$LINE" ] && [ "$ONLY" = demos ]; then
+  FOUND=1
+  demos_line="$(grep -v '^#' "$HERE/DEMOS_IMAGE" 2>/dev/null | grep '=' | sed -n 1p || true)"
+  if [ -z "$demos_line" ]; then
+    echo "!! web/DEMOS_IMAGE names no <base>=<image> line" >&2
+    FAILED="$FAILED demos"
+  else
+    build_one "$HERE/demos.Dockerfile" "${demos_line%%=*}" "${demos_line#*=}"
+  fi
+fi
 
 if [ -n "$LINE" ] && [ -z "$FOUND" ]; then
   echo "!! IMAGE_TAGS has no line for $LINE — nothing to build (a base with no line stays on its upstream image)" >&2

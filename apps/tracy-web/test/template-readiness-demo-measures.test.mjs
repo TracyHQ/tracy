@@ -343,7 +343,14 @@ test("the command writes demo-measures.json beside the contract from the kit's p
     })
     assert.equal(code, 1)
     assert.match(out, /wrote demo-measures\.json/)
-    assert.deepEqual([...asked[0].pages, ...asked[0].plan], PAGES)
+    // A Joomla demo read here asks its pages under `/index.php`, as the site's host does: without URL rewriting the
+    // bare routes are 404 pages, measured as if they were the demo. The host adds it to the plan itself.
+    assert.ok(asked[0].pages.some((p) => p.startsWith('/index.php/')))
+    assert.deepEqual(
+      asked[0].pages.filter((p) => p !== '/' && !p.startsWith('/index.php/')),
+      []
+    )
+    assert.deepEqual([...asked[0].pages.map((p) => p.replace(/^\/index\.php/, '')), ...asked[0].plan], PAGES)
     const written = readFileSync(path.join(c.dir, DEMO_MEASURES_FILE), 'utf8')
     // The file keeps what was found and where, never the address it was read at.
     assert.doesNotMatch(written, /example\.test/)

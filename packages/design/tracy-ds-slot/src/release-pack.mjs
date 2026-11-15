@@ -27,7 +27,7 @@ export function packZip(dir, file) {
 /** `dir` as a .tar.gz at `file` (absolute): entries under ./ like the published archive, no macOS metadata. */
 export function packTar(dir, file) {
   normaliseModes(dir)
-  execFileSync('tar', ['--no-mac-metadata', '-czf', file, '-C', dir, '.'], {
+  execFileSync('tar', ['--no-mac-metadata', '--no-xattrs', '-czf', file, '-C', dir, '.'], {
     env: { ...process.env, COPYFILE_DISABLE: '1' }
   })
 }

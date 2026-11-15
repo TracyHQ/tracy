@@ -1,7 +1,7 @@
 /**
  * EmDash content map and content coverage on the Road to live (PR-A). A release's artifacts (content map, content
  * coverage, template kit, demo baseline) are looked up beside the theme's contract data, with no `manifest.json` and
- * with `contractFor` untouched; the two released themes (JA Diner 0.1.0, JA Restaurant 1.0.1 and 1.0.2) are read from the tree as
+ * with `contractFor` untouched; the two released themes (JA Diner 0.1.0 and 0.1.1, JA Restaurant 1.0.1 and 1.0.2) are read from the tree as
  * the image ships them.
  */
 import assert from 'node:assert/strict'
@@ -26,6 +26,7 @@ import { fixOf } from '../src/lib/template-readiness/fixes.js'
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 const RELEASES = [
   ['tracy-diner', '0.1.0', 'tracy-emdash-theme-diner'],
+  ['tracy-diner', '0.1.1', 'tracy-emdash-theme-diner'],
   ['tracy-restaurant', '1.0.1', 'tracy-emdash-theme-restaurant'],
   ['tracy-restaurant', '1.0.2', 'tracy-emdash-theme-restaurant']
 ]
@@ -142,7 +143,7 @@ test('the content map gate: current for both themes, red when the map is missing
       filter: (src) => !/node_modules|\.astro|dist$/.test(src)
     })
     assert.deepEqual(problemsOfTheme(theme), [])
-    const map = path.join(theme, 'contracts/0.1.0/content-map.json')
+    const map = path.join(theme, 'contracts/0.1.1/content-map.json')
     // a fit measured again is not drift from the theme's files, but the coverage file measured the other bytes ...
     const refit = JSON.parse(cpRead(map))
     refit.slots.find((s) => s.fit?.measured).fit.maxChars = { desktop: 1 }

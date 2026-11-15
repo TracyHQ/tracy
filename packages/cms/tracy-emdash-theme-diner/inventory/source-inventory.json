@@ -1,11 +1,11 @@
 {
   "source": "source/snapshot",
-  "generatedAt": "2026-11-08T02:28:13.260Z",
+  "generatedAt": "2026-11-13T12:02:39.691Z",
   "files": [
     {
       "path": "crawl.json",
       "bytes": 41241,
-      "sha256": "577c0681ff78fa333b2a8162d1f947d4cdd1bf1972e7f0d9422b82e01d5b13cc",
+      "sha256": "bf002e4c374a4791c9e5b10c53f3f99334f05e24d6e0f93c31f8297d25c3a202",
       "ext": ".json"
     },
     {
@@ -479,313 +479,319 @@
     {
       "path": "index.html",
       "bytes": 44283,
-      "sha256": "e1c0b578ae636ab94e824944080dbf8acba5a9a4c8015f16f577d1845150fae1",
+      "sha256": "5d7ba2994be80ea551a029142ff2eaa3183bf4afe595f5217deb4becaf215d1e",
       "ext": ".html"
     },
     {
       "path": "index.php/about-us/index.html",
       "bytes": 29757,
-      "sha256": "301b90fe27027c6f4c90c86a9c950888742c9d377f3afbbbdb32635d498727aa",
+      "sha256": "c97348c9f1f88dbdb04dd8743d6c169dbe9b6794ee2fa36b1b86d5b578be26dc",
       "ext": ".html"
     },
     {
       "path": "index.php/component/tags/tag/food/index.html",
       "bytes": 26861,
-      "sha256": "a5a90e7fcf3fa1d88557bc200a4b537b11766285d9e43ee1bdf08a38bd775a68",
+      "sha256": "437638d91a52acb0bd015ec835fd6eccf256bb5471b0428ac86e8ec75f04d54b",
       "ext": ".html"
     },
     {
       "path": "index.php/component/tags/tag/meet/index.html",
       "bytes": 26222,
-      "sha256": "cc7397b3d130a5267576bbf7b31be27bb226418b87c80cd9dd34c27cccfc5db0",
+      "sha256": "e36147ae823b3036a9466f357e80ce0e6fbf263364514e23356885d26234070e",
       "ext": ".html"
     },
     {
       "path": "index.php/component/tags/tag/menu/index.html",
       "bytes": 25516,
-      "sha256": "ef055f80199d5c8a0bce4d64a4aec1e0db5f3185a4397868ebbc8cc87352c751",
+      "sha256": "dd3fbb36e5b0770859d5e3c838944c37b8d7ba9f3eed6f354162f1680dbd1330",
       "ext": ".html"
     },
     {
       "path": "index.php/contact-us/index.html",
       "bytes": 24294,
-      "sha256": "419971c74d823510a379e2b3559d83f53a6a6b2e612505c9b8be790a7ab20dbf",
+      "sha256": "414f0928bbee244ff7c4b1cf57697447443227615d34498c3c5fdf9248067d2e",
       "ext": ".html"
     },
     {
       "path": "index.php/home/home-blue/index.html",
       "bytes": 44224,
-      "sha256": "ba702c3979db05d4d57f18265669d45ed958a46b6143d57fafe2de91da7b0095",
+      "sha256": "6e2f40dc8fbea12cd484f56ba69c535b065aff62763e3ae516a25763a67227be",
       "ext": ".html"
     },
     {
       "path": "index.php/home/home-green/index.html",
       "bytes": 44229,
-      "sha256": "960d24640aab5ff42167a367feb76e68709a059f600552ef3611c88d461a6a43",
+      "sha256": "3e35953420b1dcb257f9408939ec4fb3769778b18d3695c446c6a749ed99f26b",
       "ext": ".html"
     },
     {
       "path": "index.php/home/home-pink/index.html",
       "bytes": 44224,
-      "sha256": "ed0ef02b53bb4662166132052cce7e2e40c4b3034a787c6c6f6c5d7bf6425234",
+      "sha256": "7af7d9e2965e71e4c5c12fdf5250b72cf40e6320cda87c073f582e07a5763806",
       "ext": ".html"
     },
     {
       "path": "index.php/home/home-red/index.html",
       "bytes": 44219,
-      "sha256": "031b194200cc01b9285ba00a5d98059f5e0b79bed4cd00f0ddb62e5c46b83445",
+      "sha256": "731f27ea3f9410e8d27ca957ac3d777d497e3e744ec0e3ed3fe113f9480f5cab",
       "ext": ".html"
     },
     {
       "path": "index.php/j-pages/login/index.html",
       "bytes": 19678,
-      "sha256": "f33e3adc46b375b096f50b5743481e8e7d8175dae26377cedbb68b5e30a348c6",
+      "sha256": "7f86fc2b419a65ae52de8928355de9a2fe103654a46abe8a3aa266ee280b51de",
       "ext": ".html"
     },
     {
       "path": "index.php/j-pages/registration/index.html",
       "bytes": 21656,
-      "sha256": "2a3564770c5ccff41a25878b51394016c596a45f1e6f56dc2f6f3ccde887176a",
+      "sha256": "a11fa9427e72f7a62f491be261d8a87ab0caabe3be18e9fb072842492a2f6dff",
       "ext": ".html"
     },
     {
       "path": "index.php/joomla-content/all-categories/index.html",
       "bytes": 23334,
-      "sha256": "1b2f0201ed14d3ba489c5c3d67b73c8163c8e9744ce5472118c41d49208c7416",
+      "sha256": "d4049596a90db98070604eb04ad5c112fd9242e546682a8bc73e378da4fb1d5b",
       "ext": ".html"
     },
     {
       "path": "index.php/joomla-content/fetured-articles/index.html",
       "bytes": 31756,
-      "sha256": "f103383cee103f6ca47fad973cca51f6fd259f79c1bfdf9aff58b4a58100e9df",
+      "sha256": "407571d43d7ae03912c6d35cd94f9fb8e18e6d9f4fb0c359e55a6796ad48de56",
       "ext": ".html"
     },
     {
       "path": "index.php/joomla-content/fetured-articles/index~start=4.html",
       "bytes": 23794,
-      "sha256": "b04eca2064171eaa9dfa3c8d137855fcf90a91e364a6097bba69fd04495c2714",
+      "sha256": "ef619b99556b3a674d7b42c7c2ebc2130cb48a818d35e05176c2c8413ce4e372",
       "ext": ".html"
     },
     {
       "path": "index.php/joomla-content/tagged-items/index.html",
       "bytes": 34923,
-      "sha256": "61cc7e557d4428e557b02f6dbfa40d251083d9676d4ab19caed74f90bbfffa13",
+      "sha256": "5c200d8f5ad3e19d357814a9d42c210e738ca2f1e2a2dd13e06fb4fd2ce8efdc",
       "ext": ".html"
     },
     {
       "path": "index.php/joomla-content/typography/index.html",
       "bytes": 37922,
-      "sha256": "acdab0bc524addda29bb8c60d638bc9c8b077c6c6f23aeaf6144e68931f6f990",
+      "sha256": "5ab1a250ca507f5cda4118d553f94530e94deb709817c637924e8cf640239ad7",
       "ext": ".html"
     },
     {
       "path": "index.php/joomla-content/typography/index~view=article&amp%3Bid=2%3Alorem-ipsum&amp%3Bcatid=12.html",
       "bytes": 18272,
-      "sha256": "c6a14196fd8d483e4d6c392c1edaf37b39c58d09e5beec2441a7d26211bb44af",
+      "sha256": "e3aa9d5b6776609d6057468a4e6893f3b2525bcc87248fffbc3f25e1d6d39e8f",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/nope-404/index.html",
+      "bytes": 1207,
+      "sha256": "3eb53e2d005a2316ae05326c5d4e7b67ea36f4c72f5412738f826f0b9e02f260",
       "ext": ".html"
     },
     {
       "path": "index.php/offers/index.html",
       "bytes": 20234,
-      "sha256": "14ffb6615209090cdbb143beab0084bb3eb4cf3dc074c683d3da1fee69154912",
+      "sha256": "6725961d2fcdc2cb916f0e8f5b03ed914c92306299e7d72ce4b499ff9725a018",
       "ext": ".html"
     },
     {
       "path": "index.php/other-pages/error-page/index.html",
       "bytes": 17433,
-      "sha256": "055f1378e2728dd9a7b84a32d92d5471a46f45333942be687b73730065d5709d",
+      "sha256": "a4bad3d0239867a43196e511c56e3821b395b0d65a9a15954621463c0b894b3e",
       "ext": ".html"
     },
     {
       "path": "index.php/other-pages/offline-page/index.html",
       "bytes": 17470,
-      "sha256": "02ff7dba3fc0a2130f7570b00e3b3a16dd6e09383028ca904ed53977336a1cc9",
+      "sha256": "9c68a3bfbdab6379a5ea98abfa42c28ccbb060e77474e54db7aa7f813ce6ce25",
       "ext": ".html"
     },
     {
       "path": "index.php/other-pages/smart-search/index.html",
       "bytes": 24141,
-      "sha256": "bc22bbc3e6ef07de0271c814bef9079c8856b4ab89aacdb8f4fd0d61aeb5ad72",
+      "sha256": "ada6e9cf70de2a3b42c49d34110b898b31974d85b0450de790cc53b572dee907",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/10-restaurant-news/19-10-most-alluring-ltos-on-menus-in-july/index.html",
       "bytes": 28947,
-      "sha256": "2dbc841d8408b356fbbdc9f0d38da6d73f4d141d5fe7f0d6bbb70af9076f4c92",
+      "sha256": "dcd02e0fed33c39ddad4f014caa2f9686d2de9ac21775438a727a4c51b8b77c6",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/10-restaurant-news/20-newk-s-eatery-steals-a-dinner-booster-from-supermarkets/index.html",
       "bytes": 29130,
-      "sha256": "5d2fddc0460a03605efc7cdad680e4f3a4f9b3c9c8b7bf353d670adadeb2f099",
+      "sha256": "55ebb23df5b68cf2993e7459991ef9ea0455fbf8aa6140c372f32d18f801c6b2",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/10-restaurant-news/21-this-week-s-5-head-spinning-restaurant-moments-1-more-inch/index.html",
       "bytes": 29193,
-      "sha256": "097abd5b206117dab998447323cd52851ed47ee6d91104327fced78da7c5adcb",
+      "sha256": "cf379e73963ebdbcd520d3a6e535ec849e9668dad8217e345d5b80ca58ffc226",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/10-restaurant-news/22-5-of-the-summer-s-craziest-restaurant-marketing-stunts/index.html",
       "bytes": 29132,
-      "sha256": "457878f9b9ea5ccb90e05b47294bc57e262dcd02f80f8eb34d01a62524d44733",
+      "sha256": "9f7ede7f35ac328a3ac1ba02815fc6458075af6d180a3c8ccc4a6785d0656565",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/10-restaurant-news/23-burger-king-takes-a-stand-on-the-pink-tax/index.html",
       "bytes": 28585,
-      "sha256": "1c30ced228cdc2b9f2b8343f7a9b87b2b5cc66627393910fc9b3c889bb04c814",
+      "sha256": "e8ead8021316dd274a4c6847ce8923fafbdf80aa42ed1c0e7905d976920032b6",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/10-restaurant-news/3-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/index.html",
       "bytes": 26184,
-      "sha256": "e02b3623c451efe9f3afdbcda6b7b1774e53e02712d083b1553068f1f5bf1c3c",
+      "sha256": "c6f3bc9d6cfa36e5681cfcb4796b22e33c8d60612391329b3fbe4c0dff0996a1",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/10-restaurant-news/6-three-broomsticks-s-autumn-menu-unveiled/index.html",
       "bytes": 28589,
-      "sha256": "de64988715d42b0e6ed187289ea3d0caf44fb5dd524f661b3d0ebab7240556b9",
+      "sha256": "0c41a723332cdc8f0817ec75e586fe35a3e895218b0ac3f4008e0f0468de68e4",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/10-restaurant-news/index.html",
       "bytes": 37412,
-      "sha256": "bd0a69862b041c985a68c9a2596791a664962e6120bcbfa24cca2835b75161d1",
+      "sha256": "f0e5502649e0dc1bcf0792e085191769c6b898145496360eac249713d473ef4b",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/11-restaurant-guide/24-efforts-to-curb-soda-consumption-bring-results-on-both-coasts/index.html",
       "bytes": 29192,
-      "sha256": "447d28ae2869b444c8787d2e9094957f589c3cf75a3f874639afbf03549d9915",
+      "sha256": "f125e800145b7da7767ed1f802c83c1f034497bc9c0f931296aa49384ed4980b",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/11-restaurant-guide/25-how-restaurants-can-promote-a-james-beard-recognition/index.html",
       "bytes": 29154,
-      "sha256": "48aa68f5291eaa2dcb2ac91cb564a21739fc84acc46499f5310cf5ff5a297d53",
+      "sha256": "00dd810c818e406e72a6c3c8a8c3c6af8d923c459efa8c4a1a29d40e7cac8a8d",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/11-restaurant-guide/26-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal/index.html",
       "bytes": 28932,
-      "sha256": "e9497d7dcf6028a4d2da9d890e072f908dd7a1f9683a563a2be6c2df5f454f8b",
+      "sha256": "9d4452394cd59193b2126c4f2492c509201ea1d3b47f510344caf99ee19ae492",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/11-restaurant-guide/5-three-broomsticks-welcomes-new-chef-caleb-nunez/index.html",
       "bytes": 28244,
-      "sha256": "6fd629ea998c486c986a41cfd77401edd0e54c809f9c0f613e62b73ac7dddbf9",
+      "sha256": "8a5b207a5aed0e9d208cf4a7ecc422fa63695e27b05d111fe850c9199995d3d2",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/11-restaurant-guide/index.html",
       "bytes": 30697,
-      "sha256": "87c1cfbd329f1c7cde5f6fe77cc1f630dd23e0ebd48247a7db77f5f028a66b09",
+      "sha256": "94e3fbc8f67b284748570eb7ef2138a6fb44dc0d29751474f0a32a6a1ae82bd9",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/2-restaurant-business/10-4-habits-that-can-improve-your-customer-service/index.html",
       "bytes": 29246,
-      "sha256": "f610fa848fc4a662398632182b34a0cd9bbec4656c1af93091e35a08e1888e68",
+      "sha256": "74f52e825c30f526bfc282a0b77f518ed2f34d8312d5f778f264dab4c373fc3e",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/2-restaurant-business/11-8-trends-trickling-down-to-mainstream-menus/index.html",
       "bytes": 29009,
-      "sha256": "dc65da6275fe0291e30d25d3d85dd5f79c6914f5ba102d59c4a6674a37c8b16e",
+      "sha256": "ac381b754e328ff632ebb87d5959e914e7c84dc1c326abc86afabea587d09fa7",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/2-restaurant-business/12-starbucks-brings-under-armour-exec-on-board/index.html",
       "bytes": 29010,
-      "sha256": "3fb12d54b604d7ebb36dde9d3ba0cf89957e9571993eea67324cc9c10188e040",
+      "sha256": "ee84021c6f3a729b2c2bd0b30a00abbbfa869197d92ab44b671fb25de147991c",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/2-restaurant-business/13-inside-olive-garden-s-never-ending-pasta-pass/index.html",
       "bytes": 29061,
-      "sha256": "99be92a853f2bbe0fb997435618a5cac391b9c556f784442df488735c41af44a",
+      "sha256": "45984ad16180151c8ff21b540378089edd288c4596b0d51aa814198376932bad",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/2-restaurant-business/14-century-old-nathan-s-famous-aims-for-youth-with-new-look/index.html",
       "bytes": 28729,
-      "sha256": "a242c666c1427dfa77ec733dab0feeb190f4faca35508f7cd3177f6f457bd805",
+      "sha256": "1a80ee94ea7dec12621d18f9837e9380e8d7df048755900d5b2b9e80169655c3",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/2-restaurant-business/4-we-ve-been-nominated-for-the-britain-restaurant-awards/index.html",
       "bytes": 28303,
-      "sha256": "8ebe0745cf4433c1c0d610e291a72b35086a318af35ba854a3390843ab5424b7",
+      "sha256": "b573276299bc7900c554d119085fabcff8e5046ac6e12143002bc2dc98e289ca",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/2-restaurant-business/index.html",
       "bytes": 35166,
-      "sha256": "77e10d688a3ca08cf55521ad7d42e319d3c6aba81c7829acbd4fca7e97ac0b13",
+      "sha256": "3a8ea050bd8e41ea3f9dd095887aca2bdf85f1898874c4eef40d043e89c9c09b",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/9-restaurant-marketing/15-did-ihop-s-publicity-stunt-hurt-applebee-s/index.html",
       "bytes": 28607,
-      "sha256": "a4c3ec770270d5b27a4687c0cd6f8b56d314cfcda9eb704e36c1ae4519d6ac6b",
+      "sha256": "785076bd720a51c7514bd00949f04c60e50acc2d2987e0449d2f90945ab85d7e",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/9-restaurant-marketing/16-buffalo-wild-wings-considers-adding-sports-betting/index.html",
       "bytes": 29115,
-      "sha256": "5ec408b36290a9ee77963d01f047504ad5625b0b9ec897df9c2a98b7810c755a",
+      "sha256": "865115848bc27fd47102eb6079119c0fb929f2b8a9211664bc332f33c435efd5",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/9-restaurant-marketing/17-this-week-s-restaurant-nightmares-language-people/index.html",
       "bytes": 29098,
-      "sha256": "d493eb938835dac14a8576c59388131146fbf0a6f54f4dabf820ecf093352772",
+      "sha256": "142c9b962cee527a4a9760c9b7b784dbfeca1806ee4855b068c7808f22f8a5e7",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/9-restaurant-marketing/18-jason-alexander-is-kfc-s-new-colonel/index.html",
       "bytes": 28539,
-      "sha256": "b8829bd7b7971d6f4ad26d381a595da64ddb378d6e7bc22bb5412b5695ccbe78",
+      "sha256": "44b08411a139a6c9dc4747a1f7e589a1850458ab1a6a8076e4162290db0e8e4e",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/9-restaurant-marketing/index.html",
       "bytes": 30594,
-      "sha256": "03bacf5a40587b299fc9c8da138adde30cd363de0834a7783728318cd7195dc5",
+      "sha256": "b8c7e0a122d5bb4e1664c248fd664b7d0f6dd8d37c17ad5e21048af63e9a52d8",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/index.html",
       "bytes": 49977,
-      "sha256": "98e2be184ab7e950a4907bbcd443e00180254c36525ae1b59cc73770eb63e8ff",
+      "sha256": "6300601e4b8482687b7451946a07a0c583d552fe4bbca4cace4e65de75030786",
       "ext": ".html"
     },
     {
       "path": "index.php/our-blog/index~start=12.html",
       "bytes": 42336,
-      "sha256": "14f82de478d2e30f2757f81c781adea9ce847ed380dec6cad2006f2e95d0a782",
+      "sha256": "780a52130da8f443f93bf9990dc468c76055a0d6ca894f8b9c000ecdfb235381",
       "ext": ".html"
     },
     {
       "path": "index.php/password-reset/index.html",
       "bytes": 17214,
-      "sha256": "b33c301877cdecfdd8c5be88f10ba78a35b2270757f1cdd2b9112297ed39f122",
+      "sha256": "d7abfb44f947c888ec1cdf772b5c1f1d8fb1205936034934382e7eeb90e51071",
       "ext": ".html"
     },
     {
       "path": "index.php/reservation/index.html",
       "bytes": 21171,
-      "sha256": "e20d9a4a223fd855f0b95e2ba3a9fed1bd3963c02e43a15daa740db49f2f7e4c",
+      "sha256": "347a9302d8cc6ca05f4cd9b5c18872fd65b0bb1a7e36e5be9ea66042d6fd48d6",
       "ext": ".html"
     },
     {
       "path": "index.php/username-reminder-request/index.html",
       "bytes": 17182,
-      "sha256": "c65ef0644a50dc339c1133928917e9d1a4250f73ee52dfd57c849616e251e28b",
+      "sha256": "30f106e9ea80e0373baab7dc74efa96c34173e2494c8370624f3d0da277408ea",
       "ext": ".html"
     },
     {
@@ -1119,6 +1125,12 @@
       "ext": ".js"
     },
     {
+      "path": "templates/ja_diner/css/error.css",
+      "bytes": 3289,
+      "sha256": "0e7675778fa11a82e8f5270cb2595fa59dd8fc24f83da140c8d94323773de5ca",
+      "ext": ".css"
+    },
+    {
       "path": "templates/ja_diner/favicon.ico",
       "bytes": 1150,
       "sha256": "0e626ccb9a1ad74985a5813c6741d8702ff7a1a864e3f7d9fe99969d2468d1ce",
@@ -1165,6 +1177,12 @@
       "bytes": 67904,
       "sha256": "709f2789daaff440820ebb975d3ae409af45121bdec47e39e83523490b1bc0fc",
       "ext": ".woff"
+    },
+    {
+      "path": "templates/ja_diner/images/bg-404.jpg",
+      "bytes": 400339,
+      "sha256": "4550df99e22d888caab73c94c1116a0cf45228dd52f9a724e5f972240a8a7cc6",
+      "ext": ".jpg"
     },
     {
       "path": "templates/ja_diner/images/bg-masthead.jpg",
@@ -1242,7 +1260,7 @@
   "pages": [
     {
       "file": "index.html",
-      "sha256": "e1c0b578ae636ab94e824944080dbf8acba5a9a4c8015f16f577d1845150fae1",
+      "sha256": "5d7ba2994be80ea551a029142ff2eaa3183bf4afe595f5217deb4becaf215d1e",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1250,7 +1268,7 @@
     },
     {
       "file": "index.php/about-us/index.html",
-      "sha256": "301b90fe27027c6f4c90c86a9c950888742c9d377f3afbbbdb32635d498727aa",
+      "sha256": "c97348c9f1f88dbdb04dd8743d6c169dbe9b6794ee2fa36b1b86d5b578be26dc",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1258,7 +1276,7 @@
     },
     {
       "file": "index.php/component/tags/tag/food/index.html",
-      "sha256": "a5a90e7fcf3fa1d88557bc200a4b537b11766285d9e43ee1bdf08a38bd775a68",
+      "sha256": "437638d91a52acb0bd015ec835fd6eccf256bb5471b0428ac86e8ec75f04d54b",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1266,7 +1284,7 @@
     },
     {
       "file": "index.php/component/tags/tag/meet/index.html",
-      "sha256": "cc7397b3d130a5267576bbf7b31be27bb226418b87c80cd9dd34c27cccfc5db0",
+      "sha256": "e36147ae823b3036a9466f357e80ce0e6fbf263364514e23356885d26234070e",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1274,7 +1292,7 @@
     },
     {
       "file": "index.php/component/tags/tag/menu/index.html",
-      "sha256": "ef055f80199d5c8a0bce4d64a4aec1e0db5f3185a4397868ebbc8cc87352c751",
+      "sha256": "dd3fbb36e5b0770859d5e3c838944c37b8d7ba9f3eed6f354162f1680dbd1330",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1282,7 +1300,7 @@
     },
     {
       "file": "index.php/contact-us/index.html",
-      "sha256": "419971c74d823510a379e2b3559d83f53a6a6b2e612505c9b8be790a7ab20dbf",
+      "sha256": "414f0928bbee244ff7c4b1cf57697447443227615d34498c3c5fdf9248067d2e",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1290,7 +1308,7 @@
     },
     {
       "file": "index.php/home/home-blue/index.html",
-      "sha256": "ba702c3979db05d4d57f18265669d45ed958a46b6143d57fafe2de91da7b0095",
+      "sha256": "6e2f40dc8fbea12cd484f56ba69c535b065aff62763e3ae516a25763a67227be",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1298,7 +1316,7 @@
     },
     {
       "file": "index.php/home/home-green/index.html",
-      "sha256": "960d24640aab5ff42167a367feb76e68709a059f600552ef3611c88d461a6a43",
+      "sha256": "3e35953420b1dcb257f9408939ec4fb3769778b18d3695c446c6a749ed99f26b",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1306,7 +1324,7 @@
     },
     {
       "file": "index.php/home/home-pink/index.html",
-      "sha256": "ed0ef02b53bb4662166132052cce7e2e40c4b3034a787c6c6f6c5d7bf6425234",
+      "sha256": "7af7d9e2965e71e4c5c12fdf5250b72cf40e6320cda87c073f582e07a5763806",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1314,7 +1332,7 @@
     },
     {
       "file": "index.php/home/home-red/index.html",
-      "sha256": "031b194200cc01b9285ba00a5d98059f5e0b79bed4cd00f0ddb62e5c46b83445",
+      "sha256": "731f27ea3f9410e8d27ca957ac3d777d497e3e744ec0e3ed3fe113f9480f5cab",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1322,7 +1340,7 @@
     },
     {
       "file": "index.php/j-pages/login/index.html",
-      "sha256": "f33e3adc46b375b096f50b5743481e8e7d8175dae26377cedbb68b5e30a348c6",
+      "sha256": "7f86fc2b419a65ae52de8928355de9a2fe103654a46abe8a3aa266ee280b51de",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1330,7 +1348,7 @@
     },
     {
       "file": "index.php/j-pages/registration/index.html",
-      "sha256": "2a3564770c5ccff41a25878b51394016c596a45f1e6f56dc2f6f3ccde887176a",
+      "sha256": "a11fa9427e72f7a62f491be261d8a87ab0caabe3be18e9fb072842492a2f6dff",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1338,7 +1356,7 @@
     },
     {
       "file": "index.php/joomla-content/all-categories/index.html",
-      "sha256": "1b2f0201ed14d3ba489c5c3d67b73c8163c8e9744ce5472118c41d49208c7416",
+      "sha256": "d4049596a90db98070604eb04ad5c112fd9242e546682a8bc73e378da4fb1d5b",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1346,7 +1364,7 @@
     },
     {
       "file": "index.php/joomla-content/fetured-articles/index.html",
-      "sha256": "f103383cee103f6ca47fad973cca51f6fd259f79c1bfdf9aff58b4a58100e9df",
+      "sha256": "407571d43d7ae03912c6d35cd94f9fb8e18e6d9f4fb0c359e55a6796ad48de56",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1354,7 +1372,7 @@
     },
     {
       "file": "index.php/joomla-content/fetured-articles/index~start=4.html",
-      "sha256": "b04eca2064171eaa9dfa3c8d137855fcf90a91e364a6097bba69fd04495c2714",
+      "sha256": "ef619b99556b3a674d7b42c7c2ebc2130cb48a818d35e05176c2c8413ce4e372",
       "kind": "html",
       "locale": "en-gb",
       "page": "index~start=4",
@@ -1362,7 +1380,7 @@
     },
     {
       "file": "index.php/joomla-content/tagged-items/index.html",
-      "sha256": "61cc7e557d4428e557b02f6dbfa40d251083d9676d4ab19caed74f90bbfffa13",
+      "sha256": "5c200d8f5ad3e19d357814a9d42c210e738ca2f1e2a2dd13e06fb4fd2ce8efdc",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1370,7 +1388,7 @@
     },
     {
       "file": "index.php/joomla-content/typography/index.html",
-      "sha256": "acdab0bc524addda29bb8c60d638bc9c8b077c6c6f23aeaf6144e68931f6f990",
+      "sha256": "5ab1a250ca507f5cda4118d553f94530e94deb709817c637924e8cf640239ad7",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1378,15 +1396,23 @@
     },
     {
       "file": "index.php/joomla-content/typography/index~view=article&amp%3Bid=2%3Alorem-ipsum&amp%3Bcatid=12.html",
-      "sha256": "c6a14196fd8d483e4d6c392c1edaf37b39c58d09e5beec2441a7d26211bb44af",
+      "sha256": "e3aa9d5b6776609d6057468a4e6893f3b2525bcc87248fffbc3f25e1d6d39e8f",
       "kind": "html",
       "locale": "en-gb",
       "page": "index~view=article&amp%3Bid=2%3Alorem-ipsum&amp%3Bcatid=12",
       "title": "Lorem ipsum"
     },
     {
+      "file": "index.php/nope-404/index.html",
+      "sha256": "3eb53e2d005a2316ae05326c5d4e7b67ea36f4c72f5412738f826f0b9e02f260",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "404 - Error: 404"
+    },
+    {
       "file": "index.php/offers/index.html",
-      "sha256": "14ffb6615209090cdbb143beab0084bb3eb4cf3dc074c683d3da1fee69154912",
+      "sha256": "6725961d2fcdc2cb916f0e8f5b03ed914c92306299e7d72ce4b499ff9725a018",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1394,7 +1420,7 @@
     },
     {
       "file": "index.php/other-pages/error-page/index.html",
-      "sha256": "055f1378e2728dd9a7b84a32d92d5471a46f45333942be687b73730065d5709d",
+      "sha256": "a4bad3d0239867a43196e511c56e3821b395b0d65a9a15954621463c0b894b3e",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1402,7 +1428,7 @@
     },
     {
       "file": "index.php/other-pages/offline-page/index.html",
-      "sha256": "02ff7dba3fc0a2130f7570b00e3b3a16dd6e09383028ca904ed53977336a1cc9",
+      "sha256": "9c68a3bfbdab6379a5ea98abfa42c28ccbb060e77474e54db7aa7f813ce6ce25",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1410,7 +1436,7 @@
     },
     {
       "file": "index.php/other-pages/smart-search/index.html",
-      "sha256": "bc22bbc3e6ef07de0271c814bef9079c8856b4ab89aacdb8f4fd0d61aeb5ad72",
+      "sha256": "ada6e9cf70de2a3b42c49d34110b898b31974d85b0450de790cc53b572dee907",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1418,7 +1444,7 @@
     },
     {
       "file": "index.php/our-blog/10-restaurant-news/19-10-most-alluring-ltos-on-menus-in-july/index.html",
-      "sha256": "2dbc841d8408b356fbbdc9f0d38da6d73f4d141d5fe7f0d6bbb70af9076f4c92",
+      "sha256": "dcd02e0fed33c39ddad4f014caa2f9686d2de9ac21775438a727a4c51b8b77c6",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1426,7 +1452,7 @@
     },
     {
       "file": "index.php/our-blog/10-restaurant-news/20-newk-s-eatery-steals-a-dinner-booster-from-supermarkets/index.html",
-      "sha256": "5d2fddc0460a03605efc7cdad680e4f3a4f9b3c9c8b7bf353d670adadeb2f099",
+      "sha256": "55ebb23df5b68cf2993e7459991ef9ea0455fbf8aa6140c372f32d18f801c6b2",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1434,7 +1460,7 @@
     },
     {
       "file": "index.php/our-blog/10-restaurant-news/21-this-week-s-5-head-spinning-restaurant-moments-1-more-inch/index.html",
-      "sha256": "097abd5b206117dab998447323cd52851ed47ee6d91104327fced78da7c5adcb",
+      "sha256": "cf379e73963ebdbcd520d3a6e535ec849e9668dad8217e345d5b80ca58ffc226",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1442,7 +1468,7 @@
     },
     {
       "file": "index.php/our-blog/10-restaurant-news/22-5-of-the-summer-s-craziest-restaurant-marketing-stunts/index.html",
-      "sha256": "457878f9b9ea5ccb90e05b47294bc57e262dcd02f80f8eb34d01a62524d44733",
+      "sha256": "9f7ede7f35ac328a3ac1ba02815fc6458075af6d180a3c8ccc4a6785d0656565",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1450,7 +1476,7 @@
     },
     {
       "file": "index.php/our-blog/10-restaurant-news/23-burger-king-takes-a-stand-on-the-pink-tax/index.html",
-      "sha256": "1c30ced228cdc2b9f2b8343f7a9b87b2b5cc66627393910fc9b3c889bb04c814",
+      "sha256": "e8ead8021316dd274a4c6847ce8923fafbdf80aa42ed1c0e7905d976920032b6",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1458,7 +1484,7 @@
     },
     {
       "file": "index.php/our-blog/10-restaurant-news/3-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/index.html",
-      "sha256": "e02b3623c451efe9f3afdbcda6b7b1774e53e02712d083b1553068f1f5bf1c3c",
+      "sha256": "c6f3bc9d6cfa36e5681cfcb4796b22e33c8d60612391329b3fbe4c0dff0996a1",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1466,7 +1492,7 @@
     },
     {
       "file": "index.php/our-blog/10-restaurant-news/6-three-broomsticks-s-autumn-menu-unveiled/index.html",
-      "sha256": "de64988715d42b0e6ed187289ea3d0caf44fb5dd524f661b3d0ebab7240556b9",
+      "sha256": "0c41a723332cdc8f0817ec75e586fe35a3e895218b0ac3f4008e0f0468de68e4",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1474,7 +1500,7 @@
     },
     {
       "file": "index.php/our-blog/10-restaurant-news/index.html",
-      "sha256": "bd0a69862b041c985a68c9a2596791a664962e6120bcbfa24cca2835b75161d1",
+      "sha256": "f0e5502649e0dc1bcf0792e085191769c6b898145496360eac249713d473ef4b",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1482,7 +1508,7 @@
     },
     {
       "file": "index.php/our-blog/11-restaurant-guide/24-efforts-to-curb-soda-consumption-bring-results-on-both-coasts/index.html",
-      "sha256": "447d28ae2869b444c8787d2e9094957f589c3cf75a3f874639afbf03549d9915",
+      "sha256": "f125e800145b7da7767ed1f802c83c1f034497bc9c0f931296aa49384ed4980b",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1490,7 +1516,7 @@
     },
     {
       "file": "index.php/our-blog/11-restaurant-guide/25-how-restaurants-can-promote-a-james-beard-recognition/index.html",
-      "sha256": "48aa68f5291eaa2dcb2ac91cb564a21739fc84acc46499f5310cf5ff5a297d53",
+      "sha256": "00dd810c818e406e72a6c3c8a8c3c6af8d923c459efa8c4a1a29d40e7cac8a8d",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1498,7 +1524,7 @@
     },
     {
       "file": "index.php/our-blog/11-restaurant-guide/26-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal/index.html",
-      "sha256": "e9497d7dcf6028a4d2da9d890e072f908dd7a1f9683a563a2be6c2df5f454f8b",
+      "sha256": "9d4452394cd59193b2126c4f2492c509201ea1d3b47f510344caf99ee19ae492",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1506,7 +1532,7 @@
     },
     {
       "file": "index.php/our-blog/11-restaurant-guide/5-three-broomsticks-welcomes-new-chef-caleb-nunez/index.html",
-      "sha256": "6fd629ea998c486c986a41cfd77401edd0e54c809f9c0f613e62b73ac7dddbf9",
+      "sha256": "8a5b207a5aed0e9d208cf4a7ecc422fa63695e27b05d111fe850c9199995d3d2",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1514,7 +1540,7 @@
     },
     {
       "file": "index.php/our-blog/11-restaurant-guide/index.html",
-      "sha256": "87c1cfbd329f1c7cde5f6fe77cc1f630dd23e0ebd48247a7db77f5f028a66b09",
+      "sha256": "94e3fbc8f67b284748570eb7ef2138a6fb44dc0d29751474f0a32a6a1ae82bd9",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1522,7 +1548,7 @@
     },
     {
       "file": "index.php/our-blog/2-restaurant-business/10-4-habits-that-can-improve-your-customer-service/index.html",
-      "sha256": "f610fa848fc4a662398632182b34a0cd9bbec4656c1af93091e35a08e1888e68",
+      "sha256": "74f52e825c30f526bfc282a0b77f518ed2f34d8312d5f778f264dab4c373fc3e",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1530,7 +1556,7 @@
     },
     {
       "file": "index.php/our-blog/2-restaurant-business/11-8-trends-trickling-down-to-mainstream-menus/index.html",
-      "sha256": "dc65da6275fe0291e30d25d3d85dd5f79c6914f5ba102d59c4a6674a37c8b16e",
+      "sha256": "ac381b754e328ff632ebb87d5959e914e7c84dc1c326abc86afabea587d09fa7",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1538,7 +1564,7 @@
     },
     {
       "file": "index.php/our-blog/2-restaurant-business/12-starbucks-brings-under-armour-exec-on-board/index.html",
-      "sha256": "3fb12d54b604d7ebb36dde9d3ba0cf89957e9571993eea67324cc9c10188e040",
+      "sha256": "ee84021c6f3a729b2c2bd0b30a00abbbfa869197d92ab44b671fb25de147991c",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1546,7 +1572,7 @@
     },
     {
       "file": "index.php/our-blog/2-restaurant-business/13-inside-olive-garden-s-never-ending-pasta-pass/index.html",
-      "sha256": "99be92a853f2bbe0fb997435618a5cac391b9c556f784442df488735c41af44a",
+      "sha256": "45984ad16180151c8ff21b540378089edd288c4596b0d51aa814198376932bad",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1554,7 +1580,7 @@
     },
     {
       "file": "index.php/our-blog/2-restaurant-business/14-century-old-nathan-s-famous-aims-for-youth-with-new-look/index.html",
-      "sha256": "a242c666c1427dfa77ec733dab0feeb190f4faca35508f7cd3177f6f457bd805",
+      "sha256": "1a80ee94ea7dec12621d18f9837e9380e8d7df048755900d5b2b9e80169655c3",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1562,7 +1588,7 @@
     },
     {
       "file": "index.php/our-blog/2-restaurant-business/4-we-ve-been-nominated-for-the-britain-restaurant-awards/index.html",
-      "sha256": "8ebe0745cf4433c1c0d610e291a72b35086a318af35ba854a3390843ab5424b7",
+      "sha256": "b573276299bc7900c554d119085fabcff8e5046ac6e12143002bc2dc98e289ca",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1570,7 +1596,7 @@
     },
     {
       "file": "index.php/our-blog/2-restaurant-business/index.html",
-      "sha256": "77e10d688a3ca08cf55521ad7d42e319d3c6aba81c7829acbd4fca7e97ac0b13",
+      "sha256": "3a8ea050bd8e41ea3f9dd095887aca2bdf85f1898874c4eef40d043e89c9c09b",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1578,7 +1604,7 @@
     },
     {
       "file": "index.php/our-blog/9-restaurant-marketing/15-did-ihop-s-publicity-stunt-hurt-applebee-s/index.html",
-      "sha256": "a4c3ec770270d5b27a4687c0cd6f8b56d314cfcda9eb704e36c1ae4519d6ac6b",
+      "sha256": "785076bd720a51c7514bd00949f04c60e50acc2d2987e0449d2f90945ab85d7e",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1586,7 +1612,7 @@
     },
     {
       "file": "index.php/our-blog/9-restaurant-marketing/16-buffalo-wild-wings-considers-adding-sports-betting/index.html",
-      "sha256": "5ec408b36290a9ee77963d01f047504ad5625b0b9ec897df9c2a98b7810c755a",
+      "sha256": "865115848bc27fd47102eb6079119c0fb929f2b8a9211664bc332f33c435efd5",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1594,7 +1620,7 @@
     },
     {
       "file": "index.php/our-blog/9-restaurant-marketing/17-this-week-s-restaurant-nightmares-language-people/index.html",
-      "sha256": "d493eb938835dac14a8576c59388131146fbf0a6f54f4dabf820ecf093352772",
+      "sha256": "142c9b962cee527a4a9760c9b7b784dbfeca1806ee4855b068c7808f22f8a5e7",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1602,7 +1628,7 @@
     },
     {
       "file": "index.php/our-blog/9-restaurant-marketing/18-jason-alexander-is-kfc-s-new-colonel/index.html",
-      "sha256": "b8829bd7b7971d6f4ad26d381a595da64ddb378d6e7bc22bb5412b5695ccbe78",
+      "sha256": "44b08411a139a6c9dc4747a1f7e589a1850458ab1a6a8076e4162290db0e8e4e",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1610,7 +1636,7 @@
     },
     {
       "file": "index.php/our-blog/9-restaurant-marketing/index.html",
-      "sha256": "03bacf5a40587b299fc9c8da138adde30cd363de0834a7783728318cd7195dc5",
+      "sha256": "b8c7e0a122d5bb4e1664c248fd664b7d0f6dd8d37c17ad5e21048af63e9a52d8",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1618,7 +1644,7 @@
     },
     {
       "file": "index.php/our-blog/index.html",
-      "sha256": "98e2be184ab7e950a4907bbcd443e00180254c36525ae1b59cc73770eb63e8ff",
+      "sha256": "6300601e4b8482687b7451946a07a0c583d552fe4bbca4cace4e65de75030786",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1626,7 +1652,7 @@
     },
     {
       "file": "index.php/our-blog/index~start=12.html",
-      "sha256": "14f82de478d2e30f2757f81c781adea9ce847ed380dec6cad2006f2e95d0a782",
+      "sha256": "780a52130da8f443f93bf9990dc468c76055a0d6ca894f8b9c000ecdfb235381",
       "kind": "html",
       "locale": "en-gb",
       "page": "index~start=12",
@@ -1634,7 +1660,7 @@
     },
     {
       "file": "index.php/password-reset/index.html",
-      "sha256": "b33c301877cdecfdd8c5be88f10ba78a35b2270757f1cdd2b9112297ed39f122",
+      "sha256": "d7abfb44f947c888ec1cdf772b5c1f1d8fb1205936034934382e7eeb90e51071",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1642,7 +1668,7 @@
     },
     {
       "file": "index.php/reservation/index.html",
-      "sha256": "e20d9a4a223fd855f0b95e2ba3a9fed1bd3963c02e43a15daa740db49f2f7e4c",
+      "sha256": "347a9302d8cc6ca05f4cd9b5c18872fd65b0bb1a7e36e5be9ea66042d6fd48d6",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1650,7 +1676,7 @@
     },
     {
       "file": "index.php/username-reminder-request/index.html",
-      "sha256": "c65ef0644a50dc339c1133928917e9d1a4250f73ee52dfd57c849616e251e28b",
+      "sha256": "30f106e9ea80e0373baab7dc74efa96c34173e2494c8370624f3d0da277408ea",
       "kind": "html",
       "locale": "en-gb",
       "page": "index",
@@ -1658,19 +1684,19 @@
     }
   ],
   "totals": {
-    "files": 206,
-    "bytes": 21095078,
-    "html": 52,
+    "files": 209,
+    "bytes": 21499913,
+    "html": 53,
     "byExt": {
       ".json": 1,
-      ".jpg": 76,
+      ".jpg": 77,
       ".png": 14,
-      ".html": 52,
+      ".html": 53,
       ".svg": 3,
       ".ttf": 8,
       ".woff": 5,
       ".js": 17,
-      ".css": 24,
+      ".css": 25,
       ".woff2": 5,
       ".ico": 1
     },

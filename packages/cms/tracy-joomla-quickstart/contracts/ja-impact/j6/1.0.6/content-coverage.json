@@ -4424,5 +4424,19 @@
         "verdict": "right"
       }
     ]
+  },
+  "inlineMarkup": {
+    "measuredAt": "2026-11-07T14:53:47.969Z",
+    "dump": {
+      "file": "ja-impact-j6-database-1.0.6.sql.gz",
+      "sha256": "a8e0ae5f7bd6c76c554426afcb7f94822685ac5c1a02dcfcb0f50eb4cee382a4"
+    },
+    "checked": 379,
+    "unread": 57,
+    "lost": 0,
+    "lostSlots": [],
+    "mismatched": 0,
+    "mismatchedSlots": [],
+    "samples": {}
   }
 }

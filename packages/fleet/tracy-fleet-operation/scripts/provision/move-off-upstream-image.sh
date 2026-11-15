@@ -119,6 +119,10 @@ fi
 
 # ── one site ───────────────────────────────────────────────────────────────────────────────────────
 SITE_DIR="$ROOT/$LABEL"
+# A demo folded into the demo farm has no runtime of its own to change (lib/site-runtime.sh).
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+tracy_refuse_if_farm "$SITE_DIR" "$LABEL" "moving it off an upstream image" || exit 1
 COMPOSE="$SITE_DIR/docker-compose.yml"
 [ -f "$SITE_DIR/.env" ] || { echo "no .env at $SITE_DIR/.env — not a provisioned site" >&2; exit 1; }
 [ -f "$COMPOSE" ] || { echo "no compose file at $COMPOSE — not a provisioned site" >&2; exit 1; }
