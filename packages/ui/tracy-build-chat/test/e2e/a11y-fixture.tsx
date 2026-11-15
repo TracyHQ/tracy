@@ -82,6 +82,7 @@ function Planned({ view, withReview }: { view: Any; withReview: boolean }) {
   const card = (
     <PlanCard
       plan={view.plan}
+      lookSources={view.lookSources ?? null}
       revised={revised}
       onDismissRevised={() => setRevised(null)}
       t={english}

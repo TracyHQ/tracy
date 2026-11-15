@@ -33,6 +33,7 @@
   "plan.look.accentDark": "Color principal en páginas oscuras",
   "plan.look.accentLight": "Color principal en páginas claras",
   "plan.look.logoDark": "Logo en páginas oscuras",
+  "plan.look.logoDrawn": "Un logo que Tracy dibujó a partir de su logo",
   "plan.look.logoLight": "Logo en páginas claras",
   "plan.look.logoOwn": "Su logo, de {source}",
   "plan.look.logoText": "El nombre de su negocio como texto",

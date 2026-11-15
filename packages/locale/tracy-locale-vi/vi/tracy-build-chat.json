@@ -33,6 +33,7 @@
   "plan.look.accentDark": "Màu chính trên trang nền tối",
   "plan.look.accentLight": "Màu chính trên trang nền sáng",
   "plan.look.logoDark": "Logo trên trang nền tối",
+  "plan.look.logoDrawn": "Một logo Tracy đã vẽ, dựa trên logo của bạn",
   "plan.look.logoLight": "Logo trên trang nền sáng",
   "plan.look.logoOwn": "Logo của bạn, từ {source}",
   "plan.look.logoText": "Tên doanh nghiệp của bạn dạng chữ",

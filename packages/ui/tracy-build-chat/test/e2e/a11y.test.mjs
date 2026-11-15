@@ -46,6 +46,10 @@ const planStage = scenarioOf('plan')
 const PLAN = planStage.plan
 const darkAccentPlan = structuredClone(PLAN)
 darkAccentPlan.look.accentDark = '#7fd1a0'
+// A logo the machine drew from the owner's logo (the brand step's `lookSources.logo`): the row says so.
+const drawnLogoPlan = structuredClone(PLAN)
+drawnLogoPlan.look.logo = { kind: 'own', source: 'Tracy, based on the logo on your website' }
+const DRAWN = { logo: { from: 'drawn-from-logo', name: 'A logo Tracy drew, based on your logo' } }
 // Eight things left out (one asked for twice over: the same line twelve times is one line), for "Show all".
 const manyLeftOut = structuredClone(PLAN)
 manyLeftOut.leftOut = [
@@ -89,6 +93,7 @@ const STATES = [
   ['template-none', 'template', { templates: [] }],
   ['plan', 'plan', { plan: PLAN }],
   ['plan-dark-accent', 'plan', { plan: darkAccentPlan }],
+  ['plan-drawn-logo', 'plan', { plan: drawnLogoPlan, lookSources: DRAWN }],
   ['plan-revised', 'plan', { plan: PLAN, revised: REVISED }],
   ['plan-left-out-many', 'plan', { plan: manyLeftOut }],
   ['review', 'review', { plan: PLAN }],
@@ -396,6 +401,24 @@ test('left out: six lines and Show all, expanded in place, with its state expose
   // Six or fewer lines: no control.
   await mount(page, 'plan', { plan: PLAN })
   assert.equal(await page.getByRole('button', { name: /Show all/ }).count(), 0)
+  await page.close()
+})
+
+test("logo rows tell the truth: a drawn logo is not called the owner's own", async () => {
+  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
+  const rows = async () => page.locator('[data-field="look.logo"]').allInnerTexts()
+  await mount(page, 'plan', { plan: drawnLogoPlan, lookSources: DRAWN })
+  assert.deepEqual(await rows(), [
+    'A logo Tracy drew, based on your logo',
+    'A logo Tracy drew, based on your logo'
+  ])
+  // Without the brand step's record a logo the card calls own keeps its source, and a text logo is unchanged.
+  await mount(page, 'plan', { plan: drawnLogoPlan })
+  assert.match((await rows())[0], /^Your logo, from Tracy, based on the logo on your website/)
+  const text = structuredClone(PLAN)
+  text.look.logo = { kind: 'text' }
+  await mount(page, 'plan', { plan: text, lookSources: { logo: { from: 'made-for-you' } } })
+  assert.match((await rows())[0], /^Your business name as text/)
   await page.close()
 })
 

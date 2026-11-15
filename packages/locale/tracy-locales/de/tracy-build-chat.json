@@ -33,6 +33,7 @@
   "plan.look.accentDark": "Hauptfarbe auf dunklen Seiten",
   "plan.look.accentLight": "Hauptfarbe auf hellen Seiten",
   "plan.look.logoDark": "Logo auf dunklen Seiten",
+  "plan.look.logoDrawn": "Ein Logo, das Tracy gezeichnet hat, nach Ihrem Logo",
   "plan.look.logoLight": "Logo auf hellen Seiten",
   "plan.look.logoOwn": "Ihr Logo, von {source}",
   "plan.look.logoText": "Ihr Firmenname als Text",

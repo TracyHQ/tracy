@@ -1090,6 +1090,7 @@ window.__ModuleLoader__.load({
               "plan.look.accentDark": "M\u00e0u\u0020ch\u00ednh\u0020tr\u00ean\u0020trang\u0020n\u1ec1n\u0020t\u1ed1i",
               "plan.look.accentLight": "M\u00e0u\u0020ch\u00ednh\u0020tr\u00ean\u0020trang\u0020n\u1ec1n\u0020s\u00e1ng",
               "plan.look.logoDark": "Logo\u0020tr\u00ean\u0020trang\u0020n\u1ec1n\u0020t\u1ed1i",
+              "plan.look.logoDrawn": "M\u1ed9t\u0020logo\u0020Tracy\u0020\u0111\u00e3\u0020v\u1ebd,\u0020d\u1ef1a\u0020tr\u00ean\u0020logo\u0020c\u1ee7a\u0020b\u1ea1n",
               "plan.look.logoLight": "Logo\u0020tr\u00ean\u0020trang\u0020n\u1ec1n\u0020s\u00e1ng",
               "plan.look.logoOwn": "Logo\u0020c\u1ee7a\u0020b\u1ea1n,\u0020t\u1eeb\u0020{source}",
               "plan.look.logoText": "T\u00ean\u0020doanh\u0020nghi\u1ec7p\u0020c\u1ee7a\u0020b\u1ea1n\u0020d\u1ea1ng\u0020ch\u1eef",

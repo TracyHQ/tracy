@@ -42,6 +42,8 @@ export interface PlanCardProps {
   lastEdit?: PlanDraft['lastEdit']
   /** Whether the draft offers one undo (`canUndo`). */
   canUndo?: boolean
+  /** Where the plan's accent and logo came from (`lookSources` of the draft): a drawn logo is said as drawn. */
+  lookSources?: PlanDraft['lookSources']
   t: Translate
   /** Sends a structured plan edit and resolves to the draft tracy-web answered with. */
   onEdit: (edit: ReturnType<typeof planEditOf>) => Promise<PlanDraft>
@@ -259,6 +261,7 @@ export function PlanCard({
   plan,
   lastEdit = null,
   canUndo = false,
+  lookSources = null,
   t,
   onEdit,
   onUndo,
@@ -267,7 +270,7 @@ export function PlanCard({
   revised = null,
   onDismissRevised
 }: PlanCardProps) {
-  const [draft, setDraft] = useState<PlanDraft>({ plan, lastEdit, canUndo })
+  const [draft, setDraft] = useState<PlanDraft>({ plan, lastEdit, canUndo, lookSources })
   const [busy, setBusy] = useState(false)
   /** A refused change: the door's own sentence while the site is built, else just true (the card says Try again). */
   const [failed, setFailed] = useState<string | boolean>(false)
@@ -280,7 +283,7 @@ export function PlanCard({
   const ref = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   // A newer draft from outside (a plan the chat composed, the draft read again) replaces what the card holds.
-  useEffect(() => setDraft({ plan, lastEdit, canUndo }), [plan, lastEdit, canUndo])
+  useEffect(() => setDraft({ plan, lastEdit, canUndo, lookSources }), [plan, lastEdit, canUndo, lookSources])
   useEffect(() => {
     if (refocus === null || editing !== null) return
     const field = `[data-field="${CSS.escape(refocus)}"]`
@@ -327,9 +330,12 @@ export function PlanCard({
   // A dark theme accent (#616) is shown beside the light one, each labelled; the owner cannot edit it yet.
   const accentDark = card.look.accentDark
   const logo =
-    card.look.logo.kind === 'own'
-      ? t('plan.look.logoOwn', { source: card.look.logo.source ?? '' })
-      : t('plan.look.logoText')
+    card.look.logo.kind !== 'own'
+      ? t('plan.look.logoText')
+      : // A logo the machine drew from the owner's logo is not the owner's own file, and the row says so.
+        draft.lookSources?.logo?.from === 'drawn-from-logo'
+        ? t('plan.look.logoDrawn')
+        : t('plan.look.logoOwn', { source: card.look.logo.source ?? '' })
   const drawn =
     card.pictures.generated.frames === 0
       ? t('plan.pictures.drawnNone')

@@ -33,6 +33,7 @@
   "plan.look.accentDark": "深色页面上的主色",
   "plan.look.accentLight": "浅色页面上的主色",
   "plan.look.logoDark": "深色页面上的 logo",
+  "plan.look.logoDrawn": "Tracy 根据你的 logo 绘制的 logo",
   "plan.look.logoLight": "浅色页面上的 logo",
   "plan.look.logoOwn": "你的 logo，来自 {source}",
   "plan.look.logoText": "以文字显示你的业务名称",

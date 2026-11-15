@@ -56,6 +56,7 @@ export const en = {
   'plan.look.logoLight': 'Logo on light pages',
   'plan.look.logoDark': 'Logo on dark pages',
   'plan.look.logoOwn': 'Your logo, from {source}',
+  'plan.look.logoDrawn': 'A logo Tracy drew, based on your logo',
   'plan.look.logoText': 'Your business name as text',
   'plan.services': 'Services ({count})',
   'plan.service': 'Service {n}',

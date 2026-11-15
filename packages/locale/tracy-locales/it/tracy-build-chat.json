@@ -33,6 +33,7 @@
   "plan.look.accentDark": "Colore principale sulle pagine scure",
   "plan.look.accentLight": "Colore principale sulle pagine chiare",
   "plan.look.logoDark": "Logo sulle pagine scure",
+  "plan.look.logoDrawn": "Un logo disegnato da Tracy, a partire dal suo logo",
   "plan.look.logoLight": "Logo sulle pagine chiare",
   "plan.look.logoOwn": "Il suo logo, da {source}",
   "plan.look.logoText": "Il nome della sua attività come testo",

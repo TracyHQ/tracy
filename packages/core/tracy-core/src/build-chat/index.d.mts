@@ -205,6 +205,11 @@ export interface PlanDraft {
   plan: any
   lastEdit?: PlanEdit | null
   canUndo?: boolean
+  /** Where the plan's accent and logo came from; a logo the machine drew from the owner's logo says `drawn-from-logo`. */
+  lookSources?: {
+    accent?: { from: string; name?: string }
+    logo?: { from: string; name?: string; reason?: string }
+  } | null
 }
 export declare function changedFieldsOf(draft: PlanDraft): string[]
 export declare function planReviewRequestOf(

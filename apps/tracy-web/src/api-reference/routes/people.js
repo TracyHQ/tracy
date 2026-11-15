@@ -1289,12 +1289,12 @@ export const PEOPLE_ROUTES = [
     path: '/api/build-draft',
     summary: 'Read my pre site build draft',
     description:
-      "The signed-in account's build draft (#603): the Contract B questions asked and their answers, the chosen template `{slug, name, version}`, the one living build plan (`tracy-build-plan/v1`), the last plan edit applied (`lastEdit`) and whether one undo is offered (`canUndo`). It is the one source of the plan card and of the plan the build engine runs. An account with no draft answers `{draft: null}`; a read never creates an account. 401 `NOT_SIGNED_IN`.",
+      "The signed-in account's build draft (#603): the Contract B questions asked and their answers, the chosen template `{slug, name, version}`, the one living build plan (`tracy-build-plan/v1`), the last plan edit applied (`lastEdit`) and whether one undo is offered (`canUndo`) and, when the brand step ran, where the plan's accent and logo came from (`lookSources`: `{accent?, logo?: {from, name, reason?}}`; a logo the machine drew from the owner's logo says `drawn-from-logo`). It is the one source of the plan card and of the plan the build engine runs. An account with no draft answers `{draft: null}`; a read never creates an account. 401 `NOT_SIGNED_IN`.",
     audience: ['customer', 'agent'],
     auth: 'session',
     internal: true,
     answers:
-      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt} | null}`'
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt} | null}`'
   },
   // src/build-draft/route.js
   {
@@ -1306,7 +1306,8 @@ export const PEOPLE_ROUTES = [
     audience: ['customer', 'agent'],
     auth: 'session',
     internal: true,
-    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+    answers:
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
   },
   // src/build-draft/route.js
   {
@@ -1323,7 +1324,8 @@ export const PEOPLE_ROUTES = [
       required: ['question', 'answer'],
       properties: { question: { type: 'object' }, answer: { type: 'object' } }
     },
-    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+    answers:
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
   },
   // src/build-draft/route.js
   {
@@ -1346,7 +1348,8 @@ export const PEOPLE_ROUTES = [
         }
       }
     },
-    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+    answers:
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
   },
   // src/build-draft/route.js
   {
@@ -1359,7 +1362,8 @@ export const PEOPLE_ROUTES = [
     auth: 'session',
     internal: true,
     body: { type: 'object', required: ['edit'], properties: { edit: { type: 'object' } } },
-    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+    answers:
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
   },
   // src/build-draft/route.js
   {
@@ -1371,7 +1375,8 @@ export const PEOPLE_ROUTES = [
     audience: ['customer', 'agent'],
     auth: 'session',
     internal: true,
-    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+    answers:
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
   },
   // src/build-draft/engine-route.js
   {

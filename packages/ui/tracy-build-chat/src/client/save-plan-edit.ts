@@ -23,8 +23,8 @@ async function post(path: string, body: unknown, fetchImpl: typeof fetch): Promi
     if (answer?.code === 'BUILD_RUNNING' && typeof answer.next === 'string') refusal.say = answer.next
     throw refusal
   }
-  const { plan, lastEdit = null, canUndo = false } = answer.draft
-  return { plan, lastEdit, canUndo }
+  const { plan, lastEdit = null, canUndo = false, lookSources = null } = answer.draft
+  return { plan, lastEdit, canUndo, lookSources }
 }
 
 /**

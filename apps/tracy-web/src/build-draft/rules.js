@@ -62,6 +62,8 @@ export function draftShape(row) {
     plan: row.plan,
     lastEdit: row.last_edit,
     canUndo: row.undo_edit !== null,
+    // Where the plan's accent and logo came from (the brand step's own record), when the draft holds one.
+    ...(row.brand?.lookSources ? { lookSources: row.brand.lookSources } : {}),
     createdAt: row.created_at.toISOString(),
     updatedAt: row.updated_at.toISOString()
   }

@@ -33,6 +33,7 @@
   "plan.look.accentDark": "Hoofdkleur op donkere pagina’s",
   "plan.look.accentLight": "Hoofdkleur op lichte pagina’s",
   "plan.look.logoDark": "Logo op donkere pagina’s",
+  "plan.look.logoDrawn": "Een logo dat Tracy tekende, gebaseerd op uw logo",
   "plan.look.logoLight": "Logo op lichte pagina’s",
   "plan.look.logoOwn": "Uw logo, van {source}",
   "plan.look.logoText": "Uw bedrijfsnaam als tekst",
