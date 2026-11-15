@@ -2,7 +2,8 @@
 // found by address: the alias the write gave each page's menu item (`menuItem.create` of the write result), else the
 // alias the write makes from the page name (`slugOf`). A menu item is a link inside a menu (`nav`, a navigation role,
 // a class or id naming a menu) on any rendered page; it is matched by the page it opens, never by its words, which
-// are the customer's. The reverse, pages and menu items the plan does not have (demo leftovers), is reported apart;
+// are the customer's. A page the write plan reaches under its list page (`plan.under`) has no menu item and is looked
+// for at its address only. The reverse, pages and menu items the plan does not have (demo leftovers), is reported apart;
 // a leftover menu item's words are printed only when its address is one the template's demo content declares
 // (`kit.demoRoutes`), else only their length. Addresses are compared folded (accents, case and full width forms
 // aside): Joomla writes `cafe-posies` for a page the write named `Café posies` while `slugOf` keeps the accent.
@@ -69,7 +70,8 @@ export function checkPages({ expected, others = [], pages, base, demoRoutes = []
         ...(got?.note ? { note: got.note } : {})
       })
     }
-    if (!menu.has(foldPath(e.path)))
+    // A page reached under its list page has no main menu item; it is checked at its address only.
+    if (!e.under && !menu.has(foldPath(e.path)))
       findings.push({ kind: 'plan_menu_item_missing', page: e.page, place: { menu: 'main', path: e.path } })
   }
   for (const item of others)

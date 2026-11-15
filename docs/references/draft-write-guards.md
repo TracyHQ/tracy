@@ -1,5 +1,5 @@
 ---
-description: What the draft write step holds a plan to before any door is called. Covers the one unit of every text limit and the door's own count, every guard, where markup and double parentheses are caught and by whom, how each value is made safe as raw HTML at its kind of place, and the skip reasons and unproven flags of a plan.
+description: What the draft write step holds a plan to before any door is called. Covers the one unit of every text limit and the door's own count, every guard, where markup and double parentheses are caught and by whom, how each value is made safe as raw HTML at its kind of place, the kit build declarations the plan reads and the typed stops for the ones it cannot follow, and the skip reasons and unproven flags of a plan.
 sources:
   - packages/wo/website-opportunities/domain/draft-write-guards.mjs
   - packages/wo/website-opportunities/domain/draft-write-escape.mjs
@@ -14,6 +14,9 @@ sources:
   - packages/wo/website-opportunities/domain/draft-write-held.mjs
   - packages/wo/website-opportunities/domain/page-copy-check.mjs
   - packages/wo/website-opportunities/domain/write-order-check-entries.mjs
+  - packages/wo/website-opportunities/domain/draft-write-kit-pages.mjs
+  - packages/wo/website-opportunities/domain/draft-write-kit-build.mjs
+  - packages/wo/website-opportunities/domain/draft-write-kit-keys.mjs
 ---
 
 # The guards of the draft write
@@ -126,6 +129,50 @@ typographic quotes are one code point each. Where the door counts the raw string
 writer value in every writer field is either refused before any door or printed with no tag, handler, broken attribute
 or code address the kit does not declare.
 
+## The kit's build declarations (`draft-write-kit-pages.mjs`, `draft-write-kit-build.mjs`)
+
+The plan reads what the kit declares about the build besides the blocks ([ai-quickstart-contract.md](ai-quickstart-contract.md),
+"What the build writes besides the blocks"). Every key of those families is listed with what the write does with it in
+`DRAFT_WRITE_KIT_KEYS` (`draft-write-kit-keys.mjs`); a kit key missing there fails
+`domain-draft-write-kit-places.test.mjs`. The rule: a declared, measured key is followed; a key the kit has not
+measured, or whose meaning the contract leaves open, is never acted on. When the plan needs it, the plan stops typed
+(noRerun, before any door); when it does not, the key is not read.
+
+| Key | What the plan does |
+|---|---|
+| `pages.<type>.menuItem` | the page item takes the declared link (`{record}`, `{category:<type>}`, `{page:<type>}` as references the run fills; `{entity:<key>}` as the kept record's id), template style (0 or a kept style's id), params and parent page item, created after its parent |
+| `pages.<type>.under` | an item page whose list page is in the plan has no item of its own: its address is the declared one, its modules are assigned to the list page's item, its main menu entry is skipped (`page_reached_under`), and a cut row keyed to it is cut (`row_page_reached_under`). The plan carries the addresses in `plan.under` |
+| `pages.<type>.under.detailPositions` | a block assigned per page (or a library block) on a page reached under its list page must sit at one of the declared positions, with `assignTo: "list-page"`; elsewhere it would print on the list page, so the plan stops (`under_page_position_not_detail`). Every-page blocks are not checked |
+| `pages.<type>.ownItem` | the item page's own item when the plan has no list page; a block only in a detail position is flagged `detail_position_not_printed` |
+| `pages.<type>.record` | the created article or contact starts from `base` and is filed in the declared category (`extension`, `params`, at the top level); the category's `title.from` is prose, so the title is the list page's name |
+| `pages.<type>.unbuilt` | stops `page_unbuilt` (with the kit's code): the page is never planned, so never reported written |
+| `placements.<id>.keyedRow` | a list row keyed to a page of `pageType` is cut (`row_keyed_to_page_type`): that page takes the keyed row only |
+| `placements.<id>.holds.copies` | one container per page; a container holding none of the page's blocks is dropped (`container_without_held`) |
+| `placements.<id>.menu.items` | `from: "main-menu"`: the block shows the page items. `from: "pages"`: the default rule is not measured; a block the order shows with no items stops (`menu_items_not_measured`), items the order gives are written, at most `max` |
+| `createdFrames` | a created record's HTML value is written into its declared frame, flagged `created_frame_not_measured`; a value with no declared frame stops (`created_frame_not_declared`). A kit with no `createdFrames` keeps the smallest frame (`created_record_frame`) |
+| `seo.featuredView.article` | every created article of its page type is written with `set`; none in the plan: flagged `featured_article_none` |
+| `facts.<f>[i].notWritten` | the place is never sent; `plan.notWritten` and the run's report and recorded value list it (fact, entity, column, `by`), and a fact all of whose places are so is skipped `fact_not_written_by_decision` |
+| `look.accent.writtenAs` | the accent is still not written: its sheet is built from the template's stylesheets the write step does not read, and the accent on the template's two sides is not measured (`accent_modes_not_measured`) |
+| hides `scope`, `from` | `scope: "item"`: each item prints its own control. `scope: "block"`, `from: "first-item"`: the first item's words are written into every item (`hides.from_first_item`); an empty first item or other words stop |
+| hides `order: "packed"` | a row left empty before a filled one stops (`omit_row_gap`) |
+
+Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
+
+| Code | Caught when |
+|---|---|
+| `page_type_not_declared` | a page of a type the kit's `pages` does not name |
+| `page_unbuilt` | a page of a type the kit says the write cannot make; `details.code` is the kit's code |
+| `page_link_unresolved` | a link placeholder names no record of the page, no declared category, no page of the plan or no kept record |
+| `page_style_unresolved` | a template style that is no kept record of the blank site |
+| `page_parent_not_in_plan` | a parent page type the plan has no page of |
+| `menu_item_to_under_page` | an item of another menu links to a page reached under its list page: an address item is not measured |
+| `menu_items_not_measured`, `menu_items_over_max` | see `menu.items` above |
+| `container_copies_per_page`, `held_block_without_container` | a page places more containers than `perPage`, or a held block without its container |
+| `created_frame_not_declared` | see `createdFrames` above |
+| `under_page_position_not_detail` | a block assigned to a page reached under its list page sits outside the declared detail positions, or `assignTo` is not `list-page` |
+| `control_first_item_empty`, `control_words_differ` | a control printed from the first item: the first has no words, or another item has other words |
+| `omit_row_gap` | an `omit` list declared `packed` with a gap |
+
 ## Skip reasons (in `plan.skipped`)
 
 | Reason | Why |
@@ -140,18 +187,24 @@ or code address the kit does not declare.
 | `no_mapping_entry`, `location_unresolved`, `entity_not_declared`, `kept_record_without_slot` | the mapping gives no place the write can reach (`kept_record_without_slot`: a location of a record written in place, its own block's or another's, with no contract slot). A skipped half of a button stops the plan as `pair_incomplete` |
 | `held_block_not_placed`, `foreign_copy_not_placed` | the block holding the place is not placed |
 | `seo_derived_by_template`, `seo_record_not_declared` | the page's search title and description |
-| `accent_variables_not_declared`, `accent_door_missing` | the accent is not written |
+| `accent_variables_not_declared`, `accent_door_missing`, `accent_modes_not_measured` | the accent is not written |
+| `page_reached_under`, `row_page_reached_under`, `row_keyed_to_page_type` | a page reached under its list page has no item of its own; a cut row keyed to such a page, or to the page type a `keyedRow` keys, is cut |
+| `container_without_held` | a container copy that holds none of the page's blocks is not kept |
+| `fact_not_written_by_decision` | every place of the fact is left unwritten by the kit's decision (`notWritten`) |
 
 ## Unproven (flags in `plan.unproven`; the run copies them to its report)
 
 | Code | Why |
 |---|---|
 | `accent_variables_not_declared` | the mapping declares no accent colour variables, so the accent is not written |
-| `accent_door_missing` | the variables exist but no door writes them |
-| `identity_field_no_door` | an identity field (`fromname`) that `site.identity` neither reads nor writes: not sent |
-| `menu_item_link_not_declared` | the contract gives no menu link per page type: a list or plans page gets the featured view |
-| `featured_article_needed` | the home page's featured view needs a featured article, which the build does not make |
-| `created_record_frame` | a created article has no frame from the blank site: its HTML pieces go into the smallest frame that holds them (`draft-write-frame.mjs`); the template's own skeleton, `attribs` layout and `template_style_id` are not known |
+| `accent_door_missing` | the variables exist but no door writes them (a kit with no `look.accent.writtenAs`) |
+| `accent_modes_not_measured` | the accent module is declared, but its sheet and the accent on the template's two sides are not measured |
+| `identity_field_no_door` | an identity field that `site.identity` neither reads nor writes and the kit does not leave unwritten: not sent |
+| `menu_item_link_not_declared` | a kit with no `pages`: a list or plans page gets the featured view |
+| `featured_article_needed` | a kit with no `seo.featuredView.article`: the home page's featured view needs a featured article |
+| `featured_article_none` | the plan has a featured view page and no article of the declared page type: these pages print no share tags |
+| `created_record_frame` | a kit with no `createdFrames`: a created article's HTML pieces go into the smallest frame that holds them (`draft-write-frame.mjs`) |
+| `created_frame_not_measured` | a created record's HTML value is written into the frame the kit declares, which no site has rendered on a created record yet |
 | `article_category_not_declared`, `seo_record_not_declared` | the contract does not say which category an article goes in, or which record holds a page's search texts |
 | `control_shared_by_items`, `omit_row_gap`, `omit_on_record_in_place` | see Hides in [draft-write-step.md](draft-write-step.md) |
 | `row_form_keys`, `recipe_ordering` | not measured on a real site (contract point 7) |

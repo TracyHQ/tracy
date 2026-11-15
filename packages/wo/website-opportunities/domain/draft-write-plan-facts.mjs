@@ -19,6 +19,13 @@ function recordsAt(state, loc) {
 }
 
 function writeFact(state, loc, value, entry, rule, records = recordsAt(state, loc)) {
+  // A place the kit leaves unwritten by decision (`notWritten`): never sent, and said so in the plan.
+  if (loc.notWritten) {
+    const fact = rule.replace(/^fact:/, '')
+    if (!state.notWritten.some((n) => n.fact === fact && n.entity === loc.entity && n.column === loc.column))
+      state.notWritten.push({ fact, entity: loc.entity, column: loc.column, by: loc.notWritten.by, entry })
+    return
+  }
   for (const record of records) {
     const via = record.kind === 'store' ? 'contract' : 'open'
     const slot = loc.slot ? state.kit.slots.get(loc.slot) : undefined
@@ -69,19 +76,29 @@ export function planFacts(state) {
     } else
       for (const loc of list(state.kit.mapping.facts?.[name]))
         writeFact(state, loc, entry.value, entry.place, `fact:${name}`)
-    if (!state.sink.consumed.has(entry.place))
-      skip(state.sink, entry.place, 'fact_place_not_on_site', { fact: name })
+    if (!state.sink.consumed.has(entry.place)) {
+      const places = list(state.kit.mapping.facts?.[name])
+      const reason =
+        places.length && places.every((l) => l.notWritten)
+          ? 'fact_not_written_by_decision'
+          : 'fact_place_not_on_site'
+      skip(state.sink, entry.place, reason, { fact: name })
+    }
   }
 }
 
 /**
- * The look: the accent and its dark theme value. The mapping file declares no colour variable for the accent (no
- * `look` key, #584), so the operation carries the accent and is reported `unproven`; the logo is a fact (above).
+ * The look: the accent and its dark theme value, never written by the draft write (their entries are skipped with the
+ * reason, never counted written, and flagged). With `look.accent.writtenAs` the kit declares the module the accent is
+ * written in, but the sheet in it is built from the template's own stylesheets and the accent on the template's two
+ * sides is not measured: `accent_modes_not_measured`. Without it no door writes the variables (`accent_door_missing`),
+ * and without variables there is nothing to write into (`accent_variables_not_declared`). The logo is a fact (above).
  */
 export function planLook(state) {
   const look = state.order.look ?? {}
   const entries = ['look.accent', ...(look.accentDark ? ['look.accentDark'] : [])]
-  const variables = state.kit.mapping.look?.accent?.variables ?? null
+  const accent = state.kit.mapping.look?.accent
+  const variables = accent?.variables ?? null
   const record = recordOf(state.sink, 'look', {
     kind: 'look',
     recordKind: 'look',
@@ -89,15 +106,18 @@ export function planLook(state) {
     accentDark: look.accentDark ?? null,
     variables
   })
-  // No door writes the accent yet (the mapping declares no colour variable, #584): its entries are skipped with the
-  // unproven reason, never counted written.
-  const reason = variables ? 'accent_door_missing' : 'accent_variables_not_declared'
+  const reason = !variables
+    ? 'accent_variables_not_declared'
+    : accent.writtenAs
+      ? 'accent_modes_not_measured'
+      : 'accent_door_missing'
+  const why = {
+    accent_variables_not_declared: 'the mapping file names no colour variable the accent is written into',
+    accent_door_missing: 'no door of the write step writes the template colour variables',
+    accent_modes_not_measured:
+      'the accent module is declared, but its sheet is built from the template stylesheets and its two sides are not measured'
+  }[reason]
   for (const id of entries) skip(state.sink, id, reason, { record: record.key })
-  unproven(state.sink, reason, {
-    op: 'look',
-    why: variables
-      ? 'no door of the write step writes the template colour variables'
-      : 'the mapping file names no colour variable the accent is written into'
-  })
+  unproven(state.sink, reason, { op: 'look', why })
   return entries
 }

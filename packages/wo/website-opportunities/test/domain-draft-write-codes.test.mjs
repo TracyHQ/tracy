@@ -39,16 +39,20 @@ test('record_kind_unsupported: a created record of a kind the write has no shape
   )
 })
 
-test('the accent whose variables are declared but that no door writes is skipped, not counted written', () => {
+test('the accent whose module is declared but whose two sides are not measured is skipped, not counted written', () => {
   const look = plan.ops.find((op) => op.kind === 'look.accent')
   assert.deepEqual(look.entries, [])
-  assert.ok(plan.skipped.some((s) => s.entry === 'look.accent' && s.reason === 'accent_door_missing'))
+  assert.ok(plan.skipped.some((s) => s.entry === 'look.accent' && s.reason === 'accent_modes_not_measured'))
 })
 
-test('an identity field with no door is not sent, and flagged identity_field_no_door', () => {
+test('the mail sender name the kit leaves unwritten by decision is not sent, and the plan says so', () => {
   const identity = plan.ops.find((op) => op.kind === 'site.identity')
   assert.ok(identity.values.every((v) => v.loc.column !== 'fromname'))
-  assert.ok(plan.unproven.some((u) => u.code === 'identity_field_no_door' && u.column === 'fromname'))
+  assert.deepEqual(
+    plan.notWritten.map(({ fact, entity, column, by }) => ({ fact, entity, column, by })),
+    [{ fact: 'name', entity: 'settings', column: 'fromname', by: 'decision' }]
+  )
+  assert.ok(!plan.unproven.some((u) => u.code === 'identity_field_no_door'))
 })
 
 test('two entries with other words for one place: the record own page wins, the loser is a listed conflict', () => {
@@ -93,7 +97,7 @@ test('words with an angle bracket are refused by the order check, where the writ
 test('the florist plan raises exactly these skip reasons, flags and operation kinds', () => {
   const set = (values) => [...new Set(values)].sort()
   assert.deepEqual(set(plan.skipped.map((s) => s.reason)), [
-    'accent_door_missing',
+    'accent_modes_not_measured',
     'address_shared',
     'derived_drawn_by_template',
     'fact_fanned_out',
@@ -104,16 +108,17 @@ test('the florist plan raises exactly these skip reasons, flags and operation ki
     'no_candidate_icon',
     'no_fitting_video',
     'no_generated_people',
+    'page_reached_under',
     'place_fallback',
+    'row_keyed_to_page_type',
+    'row_page_reached_under',
     'template_fallback',
     'text_logo_prints_site_name'
   ])
   assert.deepEqual(set(plan.unproven.map((u) => u.code)), [
-    'accent_door_missing',
-    'created_record_frame',
-    'featured_article_needed',
-    'identity_field_no_door',
-    'menu_item_link_not_declared'
+    'accent_modes_not_measured',
+    'created_frame_not_measured',
+    'featured_article_none'
   ])
   assert.deepEqual(set(plan.ops.map((op) => op.kind)), [
     'article.create',

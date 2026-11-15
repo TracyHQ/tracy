@@ -1,7 +1,8 @@
 // The copy rules measured on a real blank site (#584) that bind the draft write (#597), points 5 and 6, each a named
 // test on the memory site after a run:
 //
-//   5  two plans containers on one page: each holding copy has its own position `tracy-tabs-<container id>`; the page
+//   5  two plans containers on one page: the JA Boxing kit declares one per page (`holds.copies.perPage`), so the plan
+//      stops; a kit declaring two gives each holding copy its own position `tracy-tabs-<container id>`; the page
 //      title block 162 is ONE copy for the site, its demo rows cut to the rows written; the social footer 171 is one
 //      copy on every page; block 160 lists the category the build made, not the demo's catid 9
 //   6  an empty button is hidden the way the contract declares (a setting, an element removed), an unused social row
@@ -10,6 +11,7 @@
 //   node --test --test-concurrency=1 apps/tracy-web/test/draft-write-rules-copies.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { writePlanOf } from 'website-opportunities/domain/draft-write-plan.mjs'
 import { blankSite, florist, floristPlan, pageItemsOf, planOf, runOn } from './draft-write-fixtures.mjs'
 
 const memory = blankSite()
@@ -45,9 +47,15 @@ function twoContainers() {
   return order
 }
 
-test('rule 5: two plans containers on one page, each holding copy on its own position tracy-tabs-<container id>', async () => {
+test('rule 5: two plans containers on one page stop the plan, as the kit declares one per page', () => {
+  assert.throws(() => planOf(twoContainers()), refusal('container_copies_per_page'))
+})
+
+test('rule 5: a kit declaring two containers per page gives each holding copy its own position', async () => {
   const site = blankSite()
-  await runOn(site, { plan: planOf(twoContainers()) })
+  const aiq = structuredClone(florist.aiq)
+  aiq.mapping.placements['block-184'].holds.copies.perPage = 2
+  await runOn(site, { plan: writePlanOf(twoContainers(), aiq, { stored: florist.stored }) })
   const positions = new Set()
   for (const [container, held] of [
     ['plans-b3', ['plans-b4', 'plans-b5']],
@@ -84,7 +92,8 @@ test('rule 5: the social footer 171 is one copy shown on every page', () => {
 
 test('rule 5: block 160 lists the category the build made, not the demo catid 9', () => {
   assert.deepEqual(paramsOf(florist.kit.lock.entities['module-160']).catid, [9])
-  const category = [...memory.site.records.category.values()]
+  // The class category (com_content); the contact page files its contact in a com_contact one of its own.
+  const category = [...memory.site.records.category.values()].filter((c) => c.extension === 'com_content')
   assert.equal(category.length, 1)
   assert.deepEqual(paramsOf(moduleOf(memory, 'copy:home.home-b5')).catid.map(Number), [category[0].id])
 })

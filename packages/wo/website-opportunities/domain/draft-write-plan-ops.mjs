@@ -70,6 +70,13 @@ export function opsOf(state) {
   const home = menus.filter((r) => r.home)
   // Every page item of the main menu before the items of other menus, which link to them (`page:` alias).
   const main = menus.filter((r) => !r.home && r.menutype === state.kit.mainMenu)
+  // A page item under another page's item (`pages.<type>.menuItem.parent`) after its parent, which it names.
+  const depth = (r, n = 0) => {
+    const page = r?.item?.parent?.ref?.slice('page:'.length)
+    const parent = page && state.sink.records.get(`menuItem:${state.kit.mainMenu}:${page}`)
+    return parent && n < 9 ? depth(parent, n + 1) : n
+  }
+  main.sort((a, b) => depth(a) - depth(b))
   const rest = menus.filter((r) => !r.home && r.menutype !== state.kit.mainMenu)
   const others = created
     .filter((r) => r.recordKind !== 'menuItem')

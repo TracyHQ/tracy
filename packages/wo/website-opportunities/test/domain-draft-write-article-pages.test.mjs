@@ -1,8 +1,9 @@
 // Where a created article prints (ticket #597, "Page facts" of the door measurements): an article with no menu item of
 // its own takes the home page's layout and prints nothing, and the detail positions (`detail-bottom-1`,
-// `main-bottom-2`) print only under the list page's menu item, never on the article's own. The plan gives every
-// article page a menu item that opens its article, and reports what would print nothing: a block that sits only in a
-// detail position on such a page (`detail_position_not_printed`), an article with no page (`article_without_page`).
+// `main-bottom-2`) print only under the list page's menu item, never on the article's own. The plan reaches every
+// article page under its list page when the plan has one (`pages.<type>.under`), else on an item of its own
+// (`ownItem`), and reports what would print nothing: a block that sits only in a detail position on a page with an item
+// of its own (`detail_position_not_printed`), an article with no page (`article_without_page`).
 // Invented data (the JA Boxing florist).
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-draft-write-article-pages.test.mjs
@@ -11,17 +12,19 @@ import { test } from 'node:test'
 import { DETAIL_POSITIONS, unprintedBlocksOf } from '../domain/draft-write-plan-pages.mjs'
 import { kit, plan } from './fixtures/draft-write/guarded.mjs'
 
-test('every created article is opened by a menu item of its own page', () => {
+test('every created article is reached under its list page, as the kit declares (pages.class.under)', () => {
   const articles = plan.ops.filter((op) => op.kind === 'article.create')
   assert.ok(articles.length >= 2)
-  for (const article of articles)
-    assert.ok(
-      plan.ops.some(
-        (op) =>
-          op.kind === 'menuItem.create' && op.link?.ref === article.key && op.link.form === 'articleLink'
-      ),
-      article.key
+  for (const article of articles) {
+    const [page] = Object.entries(plan.under).find(([, u]) => u.link.refs.record?.ref === article.key) ?? []
+    assert.ok(page, article.key)
+    assert.equal(plan.under[page].list, 'classes')
+    assert.equal(
+      plan.under[page].link.template,
+      'index.php?option=com_content&view=article&id={record}&catid={category}&Itemid={page:classes}'
     )
+    assert.ok(!plan.ops.some((op) => op.key === `menuItem:${plan.mainMenu}:${page}`), 'no item of its own')
+  }
   const codes = plan.unproven.map((u) => u.code)
   assert.ok(!codes.includes('article_without_page'))
   assert.ok(!codes.includes('detail_position_not_printed'))

@@ -1,7 +1,10 @@
 // The pages of the draft write (ticket #597): the menu item of every order page in the menu the header draws, the SEO
 // title, description and share image of each page on the record `mapping.seo.pageTypes` names (a menu item, or the
-// article of an article page), the items of the footer menus, and the category each created article is filed in.
-// Pure; part of `writePlanOf`.
+// article of an article page) and the items of the footer menus (the categories: `draft-write-plan-categories.mjs`).
+// Pure; part of `writePlanOf`. The page of each page type as the kit declares it: `draft-write-kit-pages.mjs`.
+import { DraftWriteError } from './draft-write-error.mjs'
+import { drawsMainMenu } from './draft-write-kit-build.mjs'
+import { pageDeclOf, pageItemOf } from './draft-write-kit-pages.mjs'
 import { conflict, consume, put, recordOf, skip, unproven } from './draft-write-sink.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -64,7 +67,7 @@ export const DETAIL_POSITIONS = Object.freeze(['detail-bottom-1', 'main-bottom-2
 
 /** The blocks of a page whose menu item opens its own article that sit only in a detail position: they print nothing. */
 export const unprintedBlocksOf = (kit, page, link) =>
-  link?.form !== 'articleLink'
+  link?.form !== 'articleLink' && !link?.own
     ? []
     : page.blocks
         .filter((b) => b.state !== 'hidden')
@@ -74,11 +77,19 @@ export const unprintedBlocksOf = (kit, page, link) =>
         })
         .map((b) => b.id)
 
-/** The page menu items, then each page's SEO. */
+/**
+ * The page menu items, then each page's SEO. A page reached under its list page (`state.under`) has no menu item of
+ * its own: its address is the list page's item, and its menu entry is skipped (`page_reached_under`).
+ */
 export function planPages(state) {
   const menutype = mainMenuOf(state.kit.mapping)
-  const featured = state.kit.mapping.seo?.featuredView
   for (const page of state.order.pages) {
+    const decl = pageDeclOf(state.kit, page)
+    if (state.under?.[page.id]) {
+      skip(state.sink, `menu:${page.id}`, 'page_reached_under', { list: state.under[page.id].list })
+      seoOfPage(state, page)
+      continue
+    }
     const record = recordOf(state.sink, `menuItem:${menutype}:${page.id}`, {
       kind: 'created',
       recordKind: 'menuItem',
@@ -90,12 +101,14 @@ export function planPages(state) {
       order: page.menu.order
     })
     consume(state.sink, `menu:${page.id}`, record.key)
-    record.link = linkOf(state, page)
+    if (decl) {
+      const declared = pageItemOf(state, page, decl)
+      record.link = { ...declared.link, own: declared.own }
+      record.item = declared.item
+    } else record.link = linkOf(state, page)
     for (const block of unprintedBlocksOf(state.kit, page, record.link))
       unproven(state.sink, 'detail_position_not_printed', { page: page.id, block })
     seoOfPage(state, page)
-    if (list(featured?.pageTypes).includes(page.pageType) && page.home)
-      unproven(state.sink, 'featured_article_needed', { page: page.id, why: featured.needs })
   }
 }
 
@@ -116,6 +129,7 @@ export function planMenuItems(state) {
   for (const group of byItem.values()) {
     const { at } = group[0]
     const menutype = state.kit.mapping.placements[at.block.block].menu.menutype
+    const main = drawsMainMenu(state.kit, at.block.block)
     const label = group.find((g) => g.entry.type === 'text' && g.entry.value)?.entry
     const link = group.find((g) => g.entry.from === 'derived')?.entry
     const target = link?.target?.page
@@ -124,10 +138,24 @@ export function planMenuItems(state) {
       for (const g of group) skip(state.sink, g.entry.place, reason)
       continue
     }
+    // A page reached under its list page has no item: the main menu does not show it, and another menu's item
+    // would have to link to an address, which no door has been measured to write.
+    if (state.under?.[target]) {
+      if (!main)
+        throw new DraftWriteError(
+          'menu_item_to_under_page',
+          `${at.block.block} links to a page with no menu item`,
+          {
+            block: at.block.block,
+            page: target
+          }
+        )
+      for (const g of group) skip(state.sink, g.entry.place, 'page_reached_under')
+      continue
+    }
     const key = `menuItem:${menutype}:${target}`
     // The main menu's item of a page is the page item (`planPages`, its label the page's menu label); another menu's
     // item of a page already listed there is that item. The same words are shared; other words are a conflict.
-    const main = menutype === state.kit.mainMenu
     const held = main ? null : state.sink.records.get(key)
     if (main || held) {
       const words = main ? state.order.pages.find((p) => p.id === target)?.menu?.label : held.title
@@ -154,30 +182,5 @@ export function planMenuItems(state) {
       labelEntry: label.place
     })
     for (const g of group) consume(state.sink, g.entry.place, record.key)
-  }
-}
-
-/** The category every created article is filed in, from the `buildSets` place that reads it, and those categories. */
-export function planCategories(state) {
-  const sets = Object.values(state.kit.mapping.buildSets ?? {}).filter((s) => s.sets === 'category')
-  const types = new Set(sets.map((s) => s.pageType))
-  // The articles first: a category record is added while they are walked.
-  const articles = [...state.sink.records.values()].filter((record) => record.recordKind === 'article')
-  for (const record of articles) {
-    const page = state.site.pageOfSubject(record.subject)
-    // An article with no menu item of its own takes the home page's layout and prints nothing (measured).
-    if (!page) unproven(state.sink, 'article_without_page', { record: record.key })
-    const pageType = page?.pageType ?? state.site.listedTypeOf(record.subject)
-    if (!types.has(pageType)) {
-      unproven(state.sink, 'article_category_not_declared', { record: record.key })
-      continue
-    }
-    record.category = `category:${pageType}`
-    recordOf(state.sink, record.category, {
-      kind: 'created',
-      recordKind: 'category',
-      pageType,
-      title: state.site.listTitleOf(pageType)
-    })
   }
 }

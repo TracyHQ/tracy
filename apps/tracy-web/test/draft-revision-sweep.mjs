@@ -2,7 +2,7 @@
 import { snapshotOf } from './draft-write-fixtures.mjs'
 
 /** The door calls of the first build of the florist on a blank site. */
-export const FIRST = 62
+export const FIRST = 61
 
 /** A record whose state is only what `save` stored: `revive()` is the record a new process reads. */
 export function durable() {

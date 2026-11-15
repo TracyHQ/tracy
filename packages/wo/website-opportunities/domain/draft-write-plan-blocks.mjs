@@ -2,6 +2,7 @@
 // Pure; part of `writePlanOf` (`draft-write-plan.mjs`). A fact field is collected for the fan out
 // (`draft-write-plan-facts.mjs`); a derived link is written where the mapping stores it (a page address, the key of a
 // row keyed to a page) or left to the template that draws it; every entry not written is skipped with its reason.
+import { keyedRowTaken } from './draft-write-kit-build.mjs'
 import { put, skip } from './draft-write-sink.mjs'
 import { mappingEntryOf, placesWithScope, targetOf } from './draft-write-targets.mjs'
 import { textAt } from './draft-write-values.mjs'
@@ -42,16 +43,23 @@ function writeAt(state, at, loc, value, { entry, rule, inline }) {
   record.pages.add(at.page.id)
 }
 
-/** A row of a site copy whose rows are cut: the k-th row written on the copy takes the k-th stored row. */
+/**
+ * The rank a row is written at. A row of a site copy whose rows are cut: the k-th row written on the copy takes the k-th
+ * stored row. A row keyed to a page that another field keys (`keyedRow`), or to a page reached under its list page
+ * (whose item is the list page's, which a row keys already), is cut (`{skip}`).
+ */
 function rankOf(state, at, scope) {
   if (scope.level !== 'row') return scope
   const placement = state.kit.mapping.placements?.[at.block.block]
   if (placement?.assign === 'page' || !state.kit.rowHides.get(at.block.block)) return scope
+  // The rows are cut to the ones written: a row left out here is cut, never left with the template's words.
+  const keyed = list(at.place.fields).find((e) => e.from === 'derived' && e.target?.page)?.target.page
+  if (keyed && keyedRowTaken(state, at.block.block, scope, keyed)) return { skip: 'row_keyed_to_page_type' }
+  if (keyed && state.under?.[keyed]) return { skip: 'row_page_reached_under' }
   const key = `${at.block.block}.${scope.list}`
   const seen = state.rows.get(key) ?? new Map()
   state.rows.set(key, seen)
   // A row keyed to a page is the same row on every page that places the block: one stored row per keyed page.
-  const keyed = list(at.place.fields).find((e) => e.from === 'derived' && e.target?.page)?.target.page
   const id = keyed ? `page:${keyed}` : `${at.page.id}.${at.place.at}`
   if (!seen.has(id)) seen.set(id, seen.size + 1)
   return { ...scope, rank: seen.get(id) }
@@ -127,11 +135,20 @@ export function planBlocks(state) {
         skip(state.sink, id, block.state === 'hidden' ? 'block_hidden' : `place_${place.state}`)
       continue
     }
+    // A container that holds none of the page's blocks is not kept (`holds.copies.keptWhen`).
+    if (state.dropped?.has(block.id)) {
+      for (const id of ids) skip(state.sink, id, 'container_without_held')
+      continue
+    }
     if (block.source === 'library') {
       state.library.push(at)
       continue
     }
     const scope = rankOf(state, at, at.scope)
+    if (scope.skip) {
+      for (const id of ids) skip(state.sink, id, scope.skip)
+      continue
+    }
     for (const e of list(place.fields)) writeEntry(state, at, scope, e)
     for (const p of list(place.pictures)) writePicture(state, at, scope, p, 'picture')
     for (const i of list(place.icons)) writePicture(state, at, scope, i, 'icon')

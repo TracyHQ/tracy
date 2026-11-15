@@ -89,7 +89,7 @@ Every finding has `kind`, `page` (a site address, or a plan page id for a plan p
 | `design` | `icon_class_not_allowed` | an icon class value sent outside the mapping's `networkIconClasses`; `allowed`: how many are |
 | `limits` | `text_over_limit` | `{entry, place, block, field, element}` or `slot`; `limit`, `limitFrom`, `length`; `source: 'rendered'` or `'stored'` |
 | `pages` | `plan_page_missing` | `{pageType, path}`; `status` when the address answered something else, `null` when nothing was there |
-| `pages` | `plan_menu_item_missing` | `{menu, path}`: `main`, or the menu type of another menu the write made |
+| `pages` | `plan_menu_item_missing` | `{menu, path}`: `main`, or the menu type of another menu the write made; never for a page the write plan reaches under its list page (`plan.under`), which has no item of its own and is looked for at its record's alias below the list page |
 | `pages` | `site_page_not_in_plan` | a page read on the site whose address is not under a plan page (a demo leftover) |
 | `pages` | `site_menu_item_not_in_plan` | a menu link to such a page; `excerpt`: its label, at most 40 characters, only when the template's demo content declares that address; else `labelLength` only |
 
@@ -147,6 +147,8 @@ domain's `maskHeld` (case, accents, slug), then two forms it does not find: a di
 - A text kept short by CSS (`text-overflow`, a line clamp): no browser runs.
 - A page reached only by a query address (a site without search engine friendly addresses): the crawl follows paths
   and reads a query link as its path. Part 1 gets the query in `links` and can `probe` it.
+- Whether Joomla opens a page reached under its list page at `/<list page>/<record alias>`: the address is the
+  search engine friendly form of the declared link with ids left out of addresses, not measured on a built site.
 - Pages no link and no plan address reaches, and anything drawn by script after load (no browser runs).
 - Pages a site answers only to a signed in visitor.
 

@@ -119,8 +119,9 @@ export function approvalOf(value) {
  */
 export function expectedPagesOf(plan, write) {
   const items = list(write?.plan?.ops).filter((op) => op.kind === 'menuItem.create')
+  const under = write?.plan?.under ?? {}
   const used = new Set()
-  return pagesInOrder(plan).map((page, i) => {
+  const pages = pagesInOrder(plan).map((page, i) => {
     const op = items.find((o) => o.page === page.id)
     let alias = op?.fields?.alias ?? slugOf(page.name)
     if (!op) {
@@ -131,6 +132,17 @@ export function expectedPagesOf(plan, write) {
     const home = i === 0
     return { page: page.id ?? null, pageType: page.pageType ?? null, alias, path: home ? '/' : `/${alias}` }
   })
+  // A page the write plan reaches under its list page (`plan.under`) has no menu item of its own: it opens at its
+  // record's alias below the list page's item, the address Joomla gives the declared `Itemid` link of the list page.
+  for (const e of pages) {
+    const at = under[e.page]
+    const listPage = at && pages.find((p) => p.page === at.list)
+    if (!listPage) continue
+    const record = at.link?.refs?.record?.ref
+    const alias = list(write.plan.ops).find((op) => op.key === record)?.fields?.alias ?? e.alias
+    Object.assign(e, { alias, path: `${listPage.path.replace(/\/$/, '')}/${alias}`, under: at.list })
+  }
+  return pages
 }
 
 /** The menu items of other menus than the main one the write made: `{key, menutype, path}` of the page they open. */

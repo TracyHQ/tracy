@@ -39,7 +39,8 @@ test('every main menu item is created before any item of another menu', () => {
 
 test('the phone menu reuses the page items: one main menu item per page, the home one is home with its label', () => {
   const main = menuOps(plan.ops).filter((op) => op.fields.menutype === plan.mainMenu)
-  assert.equal(main.length, site.order.pages.length)
+  // A page reached under its list page (`pages.class.under`) has no item of its own.
+  assert.equal(main.length, site.order.pages.filter((p) => !plan.under[p.id]).length)
   const home = main.find((op) => op.key === `menuItem:${plan.mainMenu}:home`)
   assert.deepEqual([home.fields.home, home.fields.title], [1, 'Home'])
   const phone = plan.skipped.filter((s) => s.reason === 'menu_item_is_page_item')

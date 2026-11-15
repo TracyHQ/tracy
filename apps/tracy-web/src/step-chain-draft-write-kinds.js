@@ -61,7 +61,8 @@ export const RUN = {
   async 'module.assign'(op, ctx) {
     const id = ctx.state.ids[op.record] ?? op.sourceId
     const menuids = op.menuids.map((m) => (typeof m === 'object' ? Number(resolved(m, ctx)) : m))
-    await assign(op, id, menuids, ctx)
+    // Two pages reached under one list page are assigned through that page's one item.
+    await assign(op, id, [...new Set(menuids)], ctx)
   },
   async 'module.position'(op, ctx) {
     const id = ctx.state.ids[op.record]

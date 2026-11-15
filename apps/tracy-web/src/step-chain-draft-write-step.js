@@ -104,6 +104,13 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds 
           ops: plan.ops.length,
           ran: report.ran.length,
           unproven: report.unproven,
+          // Fact places left unwritten by the kit's decision (place ids, never the words): not written, said so.
+          notWritten: (report.notWritten ?? []).map(({ fact, entity, column, by }) => ({
+            fact,
+            entity,
+            column,
+            by
+          })),
           // Two entries with other words for one place: how many lost a place, and which (entry ids, never the words).
           conflicts: { count: report.counts.conflicts.length, entries: report.counts.conflicts },
           ...(report.delta ? { delta: report.delta } : {})

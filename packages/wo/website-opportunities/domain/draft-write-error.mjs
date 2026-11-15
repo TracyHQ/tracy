@@ -32,7 +32,24 @@ export const DRAFT_WRITE_NO_RERUN = Object.freeze([
   'ref_unresolved',
   'op_unknown',
   'redo_failed',
-  'read_back_mismatch'
+  'read_back_mismatch',
+  // A kit key the plan needs that the kit has not measured or the write cannot follow (`mapping.pages`,
+  // `menu.items`, `holds.copies`, `createdFrames`, the hides' `order` and `from`): the same order fails the same way.
+  'page_type_not_declared',
+  'page_unbuilt',
+  'page_link_unresolved',
+  'page_style_unresolved',
+  'page_parent_not_in_plan',
+  'menu_item_to_under_page',
+  'menu_items_not_measured',
+  'menu_items_over_max',
+  'container_copies_per_page',
+  'held_block_without_container',
+  'created_frame_not_declared',
+  'omit_row_gap',
+  'control_first_item_empty',
+  'control_words_differ',
+  'under_page_position_not_detail'
 ])
 
 /** A failure of the draft write, with a code the step chain reports (ADR 0047). */

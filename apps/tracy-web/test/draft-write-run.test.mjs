@@ -48,10 +48,12 @@ test('the run is done and ran every operation once', () => {
   assert.equal(report.counts.ops, floristPlan.ops.length)
 })
 
-test('the main menu lists every page of the order, once, the home page as home', () => {
+test('the main menu lists every page of the order once, the home page as home, but a page reached under its list', () => {
   const menu = [...memory.site.records.menuItem.values()].filter((r) => r.menutype === floristPlan.mainMenu)
-  assert.equal(menu.length, florist.order.pages.length)
-  for (const page of florist.order.pages) {
+  const own = florist.order.pages.filter((p) => !floristPlan.under[p.id])
+  assert.ok(own.length < florist.order.pages.length, 'the class pages are reached under the classes page')
+  assert.equal(menu.length, own.length)
+  for (const page of own) {
     assert.ok(items[page.id], page.id)
     assert.equal(items[page.id].title, page.name ?? items[page.id].title)
     assert.equal(items[page.id].home, page.id === 'home' ? 1 : 0, page.id)
@@ -66,7 +68,8 @@ test('every page shows a module for each of its blocks, in the page order where 
   }
   let checked = 0
   for (const page of florist.order.pages) {
-    const shown = modulesOfPage(memory, items[page.id].id)
+    // A page reached under its list page shows the modules of that page's item (Itemid of its address).
+    const shown = modulesOfPage(memory, items[floristPlan.under[page.id]?.list ?? page.id].id)
     const marks = [`copy:site.`, `copy:${page.id}.`, `library:${page.id}.`]
     const placed = []
     for (const block of page.blocks.filter((b) => b.state === 'show')) {

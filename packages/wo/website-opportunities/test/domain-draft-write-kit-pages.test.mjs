@@ -1,0 +1,157 @@
+// The page of every page type as the kit declares it, read by the draft write plan (ticket #597, `mapping.pages`): the
+// menu item's link, template style, params and parent, an item page reached under its list page or on an item of its
+// own, the record and category a page creates, and the typed stops for a page the kit cannot make or a link it cannot
+// fill. The invented florist on the real JA Boxing kit; each test changes one declaration of a copy of the kit.
+//
+//   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-draft-write-kit-pages.test.mjs
+import assert from 'node:assert/strict'
+import { test } from 'node:test'
+import { writePlanOf } from '../domain/draft-write-plan.mjs'
+import { plan, site } from './fixtures/draft-write/guarded.mjs'
+
+const planWith = (kit = () => {}, order = () => {}) => {
+  const aiq = structuredClone(site.aiq)
+  const o = structuredClone(site.order)
+  kit(aiq.mapping)
+  order(o)
+  return writePlanOf(o, aiq, { stored: site.stored })
+}
+const stopOf = (run) => {
+  try {
+    run()
+  } catch (error) {
+    return { code: error.code, noRerun: error.noRerun, details: error.details }
+  }
+  return { code: 'passed' }
+}
+const item = (p, page) => p.ops.find((op) => op.key === `menuItem:${p.mainMenu}:${page}`)
+
+test('a page item takes the link, template style and params the kit declares', () => {
+  const home = item(plan, 'home')
+  assert.equal(home.link.template, 'index.php?option=com_content&view=featured')
+  assert.equal(home.item.templateStyle, 13, 'templateStyle-13 is the kept Landing style')
+  assert.equal(home.item.params.num_leading_articles, 1)
+  const classes = item(plan, 'classes')
+  assert.equal(classes.item.templateStyle, 0)
+  assert.deepEqual(classes.link.refs, { 'category:class': { ref: 'category:class', form: 'id' } })
+  const contact = item(plan, 'contact')
+  assert.deepEqual(contact.link.refs.record, { ref: 'contact:page.contact', form: 'id' })
+})
+
+test('a kept record of the blank site is written as its id in the link', () => {
+  assert.equal(
+    item(plan, 'plans').link.template,
+    'index.php?option=com_content&view=category&layout=blog&id=2'
+  )
+})
+
+test('a parent page type makes the item a child of that page item, created after it', () => {
+  const p = planWith((m) => {
+    m.pages.contact.menuItem.parent = 'plans'
+  })
+  assert.deepEqual(item(p, 'contact').item.parent, { ref: 'page:plans', form: 'id' })
+  const keys = p.ops.map((op) => op.key)
+  assert.ok(keys.indexOf(`menuItem:${p.mainMenu}:plans`) < keys.indexOf(`menuItem:${p.mainMenu}:contact`))
+})
+
+test('a parent page type the plan has not stops the plan typed', () => {
+  const stop = stopOf(() =>
+    planWith((m) => {
+      m.pages.contact.menuItem.parent = 'news'
+    })
+  )
+  assert.deepEqual([stop.code, stop.noRerun, stop.details.parent], ['page_parent_not_in_plan', true, 'news'])
+})
+
+test('an item page whose list page is not in the plan takes its own item (ownItem)', () => {
+  const p = planWith((m) => {
+    m.pages.class.under.page = 'news'
+  })
+  assert.equal(p.under.class, undefined)
+  const own = item(p, 'class')
+  assert.equal(own.link.template, 'index.php?option=com_content&view=article&id={record}')
+  assert.equal(own.link.own, true)
+  assert.deepEqual(own.link.refs.record, { ref: 'article:service-wild-meadow-bouquet', form: 'id' })
+})
+
+test('a page type the kit cannot make stops the plan, so it is never reported written', () => {
+  const stop = stopOf(() =>
+    planWith((m) => {
+      m.pages.plans = { unbuilt: { code: 'record_kind_unsupported', why: 'invented: no such record' } }
+    })
+  )
+  assert.deepEqual(
+    [stop.code, stop.details.pageType, stop.details.code],
+    ['page_unbuilt', 'plans', 'record_kind_unsupported']
+  )
+})
+
+test('a page type the kit does not declare stops the plan; a kit with no pages keeps the featured view', () => {
+  const stop = stopOf(() =>
+    planWith((m) => {
+      delete m.pages.plans
+    })
+  )
+  assert.equal(stop.code, 'page_type_not_declared')
+  const older = planWith((m) => {
+    delete m.pages
+  })
+  assert.deepEqual(item(older, 'plans').link, { fixed: 'index.php?option=com_content&view=featured' })
+  assert.ok(older.unproven.some((u) => u.code === 'menu_item_link_not_declared'))
+})
+
+test('a link naming a kept record the blank site has not stops the plan', () => {
+  const stop = stopOf(() =>
+    planWith((m) => {
+      m.pages.plans.menuItem.link = 'index.php?option=com_content&view=category&id={entity:category-404}'
+    })
+  )
+  assert.deepEqual([stop.code, stop.details.placeholder], ['page_link_unresolved', 'entity:category-404'])
+})
+
+test('a created record starts from the declared base columns, filed in the declared category', () => {
+  const article = plan.ops.find((op) => op.key === 'article:service-wild-meadow-bouquet')
+  assert.equal(article.base.attribs.article_layout, 'ja_boxing:classes')
+  assert.deepEqual(article.base.attribs['classes-info'], {})
+  assert.equal(article.base.images.image_intro, '')
+  assert.deepEqual(article.fields.catid, { ref: 'category:class', form: 'id' })
+  const category = plan.ops.find((op) => op.key === 'category:class')
+  assert.deepEqual([category.extension, category.params.t4_extrafields], ['com_content', 'classes'])
+  const contact = plan.ops.find((op) => op.key === 'contact:page.contact')
+  assert.deepEqual(contact.fields.catid, { ref: 'category:contact', form: 'id' })
+  assert.equal(plan.ops.find((op) => op.key === 'category:contact').extension, 'com_contact')
+})
+
+test('a menu item of another menu linking to a page reached under its list page stops the plan', () => {
+  const stop = stopOf(() =>
+    planWith(
+      () => {},
+      (o) => {
+        const foot = o.pages.find((p) => p.id === 'home').blocks.find((b) => b.block === 'block-174')
+        const link = foot.items.find((i) => i.data === 'plans').fields.find((f) => f.field === 'link')
+        link.target = { page: 'class' }
+      }
+    )
+  )
+  assert.deepEqual([stop.code, stop.details.page], ['menu_item_to_under_page', 'class'])
+})
+
+test('a block assigned to a page reached under its list page prints there only at a declared detail position', () => {
+  const perPage = (m) => {
+    m.placements['block-176'].assign = 'page'
+  }
+  const at = (position) => (o) => {
+    for (const page of o.pages.filter((p) => p.pageType === 'class'))
+      page.blocks.find((b) => b.block === 'block-176').position.request = position
+  }
+  const outside = stopOf(() => planWith(perPage))
+  assert.equal(outside.code, 'under_page_position_not_detail')
+  assert.equal(outside.noRerun, true)
+  assert.deepEqual(outside.details.positions, ['detail-bottom-1'])
+  assert.equal(stopOf(() => planWith(perPage, at('detail-bottom-1'))).code, 'passed')
+  const assignTo = (m) => {
+    perPage(m)
+    m.pages.class.under.detailPositions.assignTo = 'item-page'
+  }
+  assert.equal(stopOf(() => planWith(assignTo, at('detail-bottom-1'))).code, 'under_page_position_not_detail')
+})

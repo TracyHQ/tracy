@@ -90,14 +90,15 @@ test('the memory piece functions write the whole value as libxml does, and a blo
 test('a piece function that changes a sibling stops the run, typed, after one redo', async () => {
   const memory = blankSite()
   let sets = 0
-  // A fault of the plugin's piece functions: a write also gives a plain sibling element an attribute. Every written
-  // node still reads its own words, so the node by node read back sees nothing.
+  // A fault of the plugin's piece functions: a write also changes the attribute of a column element around the
+  // written nodes (a frame the kit declares for a created record, `createdFrames`). Every written node still reads
+  // its own words, so the node by node read back sees nothing.
   memory.doors.html = {
     ...memoryHtml,
     set: (value, xpath, words) => {
       const out = memoryHtml.set(value, xpath, words)
-      if (out.includes('<div>')) sets += 1
-      return out.replace('<div>', '<div class="stray">')
+      if (out.includes('<div class="col">')) sets += 1
+      return out.replace('<div class="col">', '<div class="col stray">')
     }
   }
   const error = await runOn(memory).then(

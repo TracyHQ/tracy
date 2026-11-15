@@ -58,12 +58,22 @@ export function createOp(record) {
     },
     ...(record.page ? { page: record.page } : {}),
     ...(record.link ? { link: record.link } : {}),
+    // The menu item as the kit declares it (`pages.<type>.menuItem`): template style, params, parent page.
+    ...(record.item ? { item: record.item } : {}),
+    // The columns a created record starts from (`pages.<type>.record.base`) and a category's own (`record.category`).
+    ...(record.base ? { base: record.base } : {}),
+    ...(record.extension ? { extension: record.extension, params: record.params ?? {} } : {}),
+    ...(record.frames ? { frames: record.frames } : {}),
     ...(record.pageType ? { pageType: record.pageType } : {}),
     values: valuesOf(record),
     entries: record.entries,
     rules: [`created:${record.recordKind}`, ...record.rules],
-    // A created record has no frame from the blank site (#584): an HTML piece it holds is written into an empty value.
-    ...([...record.values.values()].some((v) => v.loc.xpath) ? { unproven: 'created_record_frame' } : {})
+    // A created record has no frame from the blank site (#584): an HTML piece it holds is written into the frame the
+    // kit declares (`createdFrames`, not measured on a created record: `created_frame_not_measured`), or, for a kit
+    // with no frames, into the smallest frame that holds it (`created_record_frame`).
+    ...([...record.values.values()].some((v) => v.loc.xpath)
+      ? { unproven: record.frames ? 'created_frame_not_measured' : 'created_record_frame' }
+      : {})
   }
 }
 

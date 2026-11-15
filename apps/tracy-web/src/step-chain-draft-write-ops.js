@@ -21,6 +21,9 @@ const EXT = { 'image/png': 'png', 'image/webp': 'webp', 'image/svg+xml': 'svg' }
 export function resolved(value, ctx) {
   if (!value || typeof value !== 'object') return value
   if (value.fixed) return value.fixed
+  // A link of the kit (`pages.<type>`): its placeholders filled with the ids the site gave.
+  if (typeof value.template === 'string')
+    return value.template.replace(/\{([^}]*)\}/g, (_, name) => String(resolved(value.refs?.[name], ctx)))
   const ref = String(value.ref ?? '')
   const id = (key) => {
     const got = ctx.state.ids[key]
@@ -28,6 +31,12 @@ export function resolved(value, ctx) {
       throw new DraftWriteError('ref_unresolved', `${key} has no site id yet`, { ref: key })
     return got
   }
+  // A page reached under its list page: its address, else (an assignment, a key) the list page's item.
+  const under = ref.startsWith('page:') ? ctx.plan.under?.[ref.slice(5)] : null
+  if (under && value.form === 'address') return resolved(under.link, ctx)
+  if (under && value.form === 'alias')
+    throw new DraftWriteError('ref_unresolved', `${ref} has no menu item to alias`, { ref })
+  if (under) return resolved({ ref: `page:${under.list}`, form: value.form }, ctx)
   if (ref.startsWith('page:')) {
     const page = id(`menuItem:${ctx.plan.mainMenu}:${ref.slice(5)}`)
     return value.form === 'address' ? `index.php?Itemid=${page}` : String(page)
@@ -42,6 +51,22 @@ export function resolved(value, ctx) {
   if (value.form === 'contactLink') return `index.php?option=com_contact&view=contact&id=${id(ref)}`
   return String(id(ref))
 }
+
+/** Columns a kit declares as objects (`pages.<type>.record.base`), written as the JSON the record stores. */
+const columnsOf = (base) =>
+  Object.fromEntries(
+    Object.entries(base ?? {}).map(([k, v]) => [k, v && typeof v === 'object' ? JSON.stringify(v) : v])
+  )
+
+/** The menu item columns the kit declares for a page (`pages.<type>.menuItem`): style, params, parent. */
+const itemColumnsOf = (item, ctx) =>
+  item
+    ? {
+        template_style_id: item.templateStyle,
+        params: JSON.stringify(item.params ?? {}),
+        ...(item.parent ? { parent_id: Number(resolved(item.parent, ctx)) } : {})
+      }
+    : {}
 
 /** The fields a record the build creates starts with: no frame from the blank site (#584). */
 export function baseFieldsOf(op, ctx) {
@@ -58,14 +83,30 @@ export function baseFieldsOf(op, ctx) {
       published: 1,
       type: alias ? 'alias' : 'component',
       link: alias ? '' : target,
-      params: JSON.stringify(alias ? { aliasoptions: target } : {})
+      params: JSON.stringify(alias ? { aliasoptions: target } : {}),
+      ...itemColumnsOf(op.item, ctx)
     }
   }
   if (op.recordKind === 'category')
-    return { ...common, title: f.title, extension: 'com_content', published: 1 }
+    return {
+      ...common,
+      title: f.title,
+      extension: op.extension ?? 'com_content',
+      published: 1,
+      ...(op.params ? { params: JSON.stringify(op.params) } : {})
+    }
   // A new contact has no default for these columns (measured: `write_failed` names the first one missing).
   if (op.recordKind === 'contact')
-    return { ...common, name: f.title, published: 1, params: '{}', metadata: '{}', metadesc: '' }
+    return {
+      ...common,
+      name: f.title,
+      published: 1,
+      params: '{}',
+      metadata: '{}',
+      metadesc: '',
+      ...(f.catid ? { catid: resolved(f.catid, ctx) } : {}),
+      ...columnsOf(op.base)
+    }
   return {
     ...common,
     title: f.title,
@@ -74,7 +115,8 @@ export function baseFieldsOf(op, ctx) {
     introtext: '',
     fulltext: '',
     attribs: '{}',
-    images: '{}'
+    images: '{}',
+    ...columnsOf(op.base)
   }
 }
 
@@ -88,8 +130,11 @@ export function framed(fields, op, ctx) {
       groups.set(addressOf(at), { at, xpaths: [...(groups.get(addressOf(at))?.xpaths ?? []), v.loc.xpath] })
     }
   let out = fields
+  // The frame the kit declares for the value (`createdFrames`), else the smallest one that holds its pieces.
+  const declared = (at) => list(op.frames).find((f) => addressOf(f.loc) === addressOf(at))?.html
   for (const { at, xpaths } of groups.values())
-    if (String(getAt(out, at, ctx.html) ?? '').trim() === '') out = setAt(out, at, frameOf(xpaths), ctx.html)
+    if (String(getAt(out, at, ctx.html) ?? '').trim() === '')
+      out = setAt(out, at, declared(at) ?? frameOf(xpaths), ctx.html)
   return out
 }
 

@@ -91,6 +91,8 @@ export async function runDraftWrite({ plan, doors, record, openStored, drawIniti
     status: 'running',
     ran: [...state.done],
     unproven: [...list(plan.unproven)],
+    // Fact places the kit leaves unwritten by decision: the report says so, never counts them written.
+    notWritten: [...list(plan.notWritten)],
     conflicts: [...list(plan.conflicts)],
     // A revision run (#599): the operations the site already holds from the previous build run nothing.
     ...(state.kept ? { kept: state.kept.length } : {})

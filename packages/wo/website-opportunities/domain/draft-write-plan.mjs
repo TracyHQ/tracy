@@ -11,12 +11,21 @@ import { inNfc } from './draft-write-length.mjs'
 import { libraryExpectsOf } from './draft-write-library-check.mjs'
 import { planBlocks } from './draft-write-plan-blocks.mjs'
 import { planCopies } from './draft-write-plan-copies.mjs'
+import {
+  checkMenuItems,
+  droppedContainersOf,
+  framesOf,
+  planFeaturedArticle
+} from './draft-write-kit-build.mjs'
+import { underPagesOf } from './draft-write-kit-pages.mjs'
+import { planCategories } from './draft-write-plan-categories.mjs'
 import { planFacts, planLook } from './draft-write-plan-facts.mjs'
 import { opsOf } from './draft-write-plan-ops.mjs'
-import { mainMenuOf, planCategories, planMenuItems, planPages } from './draft-write-plan-pages.mjs'
+import { pairsOf } from './draft-write-plan-pairs.mjs'
+import { mainMenuOf, planMenuItems, planPages } from './draft-write-plan-pages.mjs'
 import { consume, recordOf, sinkOf } from './draft-write-sink.mjs'
 import { siteOf } from './draft-write-site.mjs'
-import { blockRecordOf, placesWithScope } from './draft-write-targets.mjs'
+import { blockRecordOf } from './draft-write-targets.mjs'
 import { checkWriteOrder } from './write-order-check.mjs'
 
 export { draftWriteCoverage, entriesOfOrder, planCountsOf } from './draft-write-coverage.mjs'
@@ -46,6 +55,8 @@ export function draftWriteKitOf(aiq) {
     mapping,
     store: new Map(aiq.blockStore.blocks.map((b) => [b.id, b])),
     slots: new Map(list(aiq.blankContract?.slots).map((s) => [s.key, s])),
+    // The records the blank site keeps, by entity key: a page link's `{entity:<key>}` and a template style.
+    kept: new Map(list(aiq.blankContract?.entities).map((e) => [e.key, e])),
     ownerOf,
     rowHides,
     mainMenu: mainMenuOf(mapping),
@@ -58,7 +69,7 @@ export function draftWriteKitOf(aiq) {
 function placeRecords(state) {
   for (const page of state.order.pages)
     for (const block of page.blocks) {
-      if (block.state === 'hidden') continue
+      if (block.state === 'hidden' || state.dropped.has(block.id)) continue
       const own = blockRecordOf(state.kit, page, block)
       if (!own) continue
       const record = recordOf(state.sink, own.key, own.init)
@@ -120,8 +131,12 @@ export function writePlanOf(order, aiq, options = {}) {
     library: [],
     pictures: new Map(),
     rows: new Map(),
-    stored: options.stored ?? {}
+    stored: options.stored ?? {},
+    notWritten: []
   }
+  state.dropped = droppedContainersOf(state)
+  checkMenuItems(state)
+  state.under = underPagesOf(state)
   placeRecords(state)
   planBlocks(state)
   planFacts(state)
@@ -131,13 +146,16 @@ export function writePlanOf(order, aiq, options = {}) {
   planLook(state)
   planCopies(state)
   planCategories(state)
-  for (const record of sink.records.values())
+  planFeaturedArticle(state)
+  for (const record of sink.records.values()) {
+    if (record.kind === 'created') record.frames = framesOf(state, record)
     if (record.recordKind === 'article' && !record.title) {
       const title = [...record.values.values()].find(
         (v) => !v.loc.jsonPath && !v.loc.xpath && v.loc.column === 'title'
       )
       record.title = title?.value ?? state.site.pageOfSubject(record.subject)?.name ?? record.subject
     }
+  }
   for (const record of sink.records.values())
     if (record.kind === 'created' && !CREATED_KINDS.includes(record.recordKind))
       throw new DraftWriteError('record_kind_unsupported', `the write cannot create a ${record.recordKind}`, {
@@ -146,7 +164,9 @@ export function writePlanOf(order, aiq, options = {}) {
       })
   const ops = safeOps(inNfc(opsOf(state)), { order, kit })
   for (const op of ops)
-    if (op.unproven === 'created_record_frame' || op.unproven === 'initials_drawn_as_figure')
+    if (
+      ['created_record_frame', 'created_frame_not_measured', 'initials_drawn_as_figure'].includes(op.unproven)
+    )
       sink.unproven.push({ code: op.unproven, op: op.key })
   const plan = {
     schema: DRAFT_WRITE_PLAN_SCHEMA,
@@ -164,6 +184,10 @@ export function writePlanOf(order, aiq, options = {}) {
     // `written`: the entry is written at another place all the same (it fans out to several places).
     conflicts: [...sink.conflicts.values()].map((c) => ({ ...c, written: sink.consumed.has(c.entry) })),
     unproven: sink.unproven,
+    // Fact places the kit leaves unwritten by decision (`facts.<f>[i].notWritten`): never sent, never counted written.
+    notWritten: state.notWritten,
+    // The pages reached under their list page: the list page's id and the address of the page under it.
+    under: state.under,
     controls: [...sink.records.values()].flatMap((r) =>
       list(r.controls).map((c) => ({ record: r.key, ...c }))
     )
@@ -172,30 +196,4 @@ export function writePlanOf(order, aiq, options = {}) {
   guardPlan(plan, { order, kit, ...options })
   delete plan.pairs
   return plan
-}
-
-/** Light and dark versions of one icon or picture (`variantOf`) where one is written and the other is not. */
-function pairsOf(state) {
-  const out = []
-  for (const at of placesWithScope(state.order)) {
-    const decls = [
-      ...list(state.kit.store.get(at.block.block)?.fields),
-      ...list(state.kit.store.get(at.block.block)?.itemFields),
-      ...list(state.kit.store.get(at.block.block)?.lists).flatMap((l) => list(l.fields)),
-      ...list(state.kit.store.get(at.block.block)?.itemLists).flatMap((l) => list(l.fields))
-    ]
-    const ids = new Map(
-      [...list(at.place.pictures), ...list(at.place.icons)].map((p) => [
-        p.field,
-        p.frame && !p.id ? p.frame : (p.id ?? p.frame)
-      ])
-    )
-    for (const d of decls) {
-      if (!d.variantOf || !ids.has(d.name) || !ids.has(d.variantOf)) continue
-      const a = state.sink.consumed.has(ids.get(d.name))
-      const b = state.sink.consumed.has(ids.get(d.variantOf))
-      if (a !== b) out.push({ entry: ids.get(a ? d.variantOf : d.name), fields: [d.variantOf, d.name] })
-    }
-  }
-  return out
 }

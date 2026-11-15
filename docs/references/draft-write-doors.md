@@ -1,3 +1,11 @@
+---
+description: The wiring between the write step of a draft run and a real site. Covers the transport, the door client, which identity every call carries, the columns created records take from the kit, and what is not verified on a real site.
+sources:
+  - apps/tracy-web/src/step-chain-draft-send.js
+  - apps/tracy-web/src/step-chain-draft-site.js
+  - apps/tracy-web/src/step-chain-draft-write-ops.js
+---
+
 # The write step of a draft run on a real site
 
 The write step of a run built from an approved build draft (#597) writes the write order on the site the run created.
@@ -90,6 +98,25 @@ bytes yet, so a real run stops at `picture_not_stored` before any door call. Tha
 (migration 219) is the approval record, not a store of finished builds per site. The build chat must provide one and
 pass it as `draft.builds` in `app.js`; until then a run reports `build.kept: false`.
 
+## What the created records carry from the kit
+
+The plan reads the kit's page declarations (`mapping.pages`, [draft-write-guards.md](draft-write-guards.md), "The
+kit's build declarations"), so `baseFieldsOf` (`step-chain-draft-write-ops.js`) sends more columns than a bare record:
+
+| Record | Columns from the kit |
+|---|---|
+| a page item | `link` from the declared link with its references filled (`resolved` fills `{template, refs}`), `template_style_id`, `params` as JSON, `parent_id` (the parent page's item) |
+| a category | `extension`, `params` as JSON (`pages.<type>.record.category`) |
+| an article, a contact | the `base` columns (`featured`, `images`, `attribs`, `params`, `metadata`, an object written as JSON), a contact's `catid` |
+| an HTML value of a created record | the frame the kit declares (`op.frames`, `createdFrames`) before its pieces are set |
+
+A page reached under its list page (`plan.under`) has no menu item: `page:<id>` resolves to its declared address for
+a link (`form: "address"`), and to the list page's item for an assignment or a key; two such pages assigned through
+one item are sent once. An alias to such a page has no item to point at and refuses (`ref_unresolved`); the planner
+stops before that (`menu_item_to_under_page`). A module assigned through the list page's item prints on the page
+under it only at a detail position the kit declares (`under.detailPositions`, measured); the planner stops on any other
+(`under_page_position_not_detail`).
+
 ## Not verified on a real site
 
 No test here touches a real site. Not measured:
@@ -99,3 +126,5 @@ No test here touches a real site. Not measured:
 - (now measured, plugin 0.24.85: a `content.update` sent again with the same `apply_id` is written again; only
   `content.contract` replays, within one apply id and request id. The memory site does the same.)
 - the seat and toolset gate for `moduleAssignment` and `module` (toolset `code`) for the owner.
+- whether `content.update` of a menu item takes `template_style_id` and `parent_id` as the memory site does, and a
+  created category its `extension` and `params`; the kit measured the pages on a blank site, not through these doors.

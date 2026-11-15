@@ -12,6 +12,7 @@
 //          (`control_shared_by_items`, unproven: the plan does not choose which item's words win).
 // Pure; part of `planCopies`.
 import { addressOf, movedAfterCut } from './draft-write-codec.mjs'
+import { DraftWriteError } from './draft-write-error.mjs'
 import { put, unproven } from './draft-write-sink.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -66,8 +67,19 @@ export function omitRows(state, record, hide) {
     const out = [...group]
       .filter(([e, g]) => !g.filled && indexOf(e) > last)
       .sort(([a], [b]) => indexOf(b) - indexOf(a))
-    if ([...group].some(([e, g]) => !g.filled && indexOf(e) < last))
+    if ([...group].some(([e, g]) => !g.filled && indexOf(e) < last)) {
+      // `order: "packed"`: the plan's rows fill the first places in order, so a gap breaks the declaration.
+      if (hide.order === 'packed')
+        throw new DraftWriteError(
+          'omit_row_gap',
+          `${record.key} leaves a ${hide.rows} row empty before a filled one`,
+          {
+            record: record.key,
+            rows: hide.rows
+          }
+        )
       unproven(state.sink, 'omit_row_gap', { record: record.key, rows: hide.rows })
+    }
     for (const [, { piece }] of out) {
       let loc = piece
       for (const cut of list(record.cuts)) loc = loc && movedAfterCut(loc, cut.row, cut.kept)
@@ -93,13 +105,45 @@ export function emptyControl(state, record, hide) {
     return
   }
   const items = Math.max(...fields.map((f) => f.items.length))
-  if (items < 2) return
+  // `scope: "item"`: each item prints its own control.
+  if (items < 2 || hide.scope === 'item') return
+  if (hide.scope === 'block' && hide.from === 'first-item')
+    return fromFirstItem(state, record, hide, fields, kept)
   for (const f of fields) {
     const words = f.items.map((locs) =>
       JSON.stringify(locs.map((loc) => writtenAt(record, loc)?.value ?? null))
     )
     if (words.some((w) => w !== words[0]) || f.items[0].every((loc) => !writtenAt(record, loc)))
       return unproven(state.sink, 'control_shared_by_items', { record: record.key, fields: hide.control })
+  }
+}
+
+const stop = (code, record, hide, why) =>
+  new DraftWriteError(code, `${record.key}: ${why}`, { record: record.key, fields: hide.control })
+
+/**
+ * A control the template prints on every item from the first item's words (`scope: "block"`, `from: "first-item"`):
+ * those words are written into every item, so the stored items agree with what prints. A first item with no words
+ * while another has some, or items with other words, would print words the plan did not mean: the plan stops.
+ */
+function fromFirstItem(state, record, hide, fields, kept) {
+  for (const f of fields) {
+    const items = f.items.map((locs) => locs.filter(kept)).filter((locs) => locs.length)
+    const first = items[0]?.map((loc) => writtenAt(record, loc)) ?? []
+    if (first.some((v) => !v))
+      throw stop('control_first_item_empty', record, hide, 'the first item, whose control prints, has none')
+    for (const locs of items.slice(1))
+      locs.forEach((loc, i) => {
+        const held = writtenAt(record, loc)
+        if (!held) put(state.sink, record.key, loc, first[i].value, { rule: 'hides.from_first_item' })
+        else if (JSON.stringify(held.value) !== JSON.stringify(first[i].value))
+          throw stop(
+            'control_words_differ',
+            record,
+            hide,
+            'an item has other words than the first, which print'
+          )
+      })
   }
 }
 
