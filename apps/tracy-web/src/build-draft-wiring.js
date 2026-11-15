@@ -79,12 +79,14 @@ export function draftBrandStep({ pool, stepsOf, brandBeforeSite, kitRefOf: refOf
     const logoFile =
       typeof research.logoFile === 'string' && existsSync(research.logoFile) ? research.logoFile : null
     const language = research.profile?.language?.value
-    const { record } = await run({
+    const { record, usd } = await run({
       brief,
       ...(logoFile ? { logoFile } : {}),
       kitRef,
       ...(language ? { siteLanguage: language } : {})
     })
-    return record
+    // The run's cost is known only when every one of its calls reported one (`spendOfRecord`: `usd` is null else). Then
+    // the step answers it beside the record, so the ledger settles at it (`engine-steps.js` `brandRunOf`).
+    return Number.isFinite(usd) && usd >= 0 && record ? { record, costCents: usd * 100 } : record
   }
 }

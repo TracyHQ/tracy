@@ -417,11 +417,16 @@ var UNCHANGED_FALLBACK_SAY = UNCHANGED_SAY;
 var BUILD_BUILDING_SAY = "Your site is being built from the plan you approved. This takes a few minutes.";
 var BUILD_DONE_SAY2 = BUILD_DONE_SAY;
 var BUILD_FAILED_SAY = `Your site could not be built this time. ${TEAM_SEES_SAY}`;
+var DESIGN_NOT_BUILDABLE = "design-not-buildable";
+var SITE_NOT_STARTED_SAY = "Your site could not be started, but your plan is kept and you can approve it again later.";
+var DESIGN_NOT_BUILDABLE_SAY = "This design cannot be built yet, so your site was not started, but your plan is kept and you can approve it again later.";
 var BUILD_LOCKED_SAY2 = BUILD_LOCKED_SAY;
 var BUILD_UNCHECKED_SAY = "I asked for your site to be built, but I could not check on it just now. Ask me again in a minute to see how it is going.";
 var BUILD_CHAT_OFF_SAY = "Building a site in the chat is not available right now. You can still create your site from the Add site page.";
 var BUILD_BUSY_SAY = "I am still working on your plan, so it cannot change right now. Make your change again when I am done.";
 var PLAN_CARD_CONTROLS_GUIDANCE = "When an entry asks to change a business fact, a service name or the main colour, tell the owner they can change that value on the plan card. Never say that the language, the design, the logo, the pictures or anything else can be changed on the plan card.";
+var IN_OWNER_LANGUAGE = "in the owner's language, keeping every name and value word for word";
+var NOT_DONE_GUIDANCE = "Promise nothing beyond what the plan card and the plan offer: never offer to add it later, and never ask the owner to send you anything for it.";
 var TRY_LATER_FALLBACK_SAY = "I have done this many times in a short while, so I paused here. Please try again later.";
 var BODY_TOO_LARGE_SAY = "That was too long for me to send. Please say it in fewer words.";
 var ANSWERS_FULL_SAY = "I could not keep your last answer, because this plan already holds as many answers as it can. Please continue with the plan as it is.";
@@ -429,7 +434,7 @@ var REQUEST_MAX_LENGTH = 1e3;
 var REQUEST_TOO_LONG_SAY = requestTooLongSay(REQUEST_MAX_LENGTH);
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? nameTooLongSay(limit) : answerTooLongSay(limit);
 var SAY_MAX = 300;
-var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with the same action only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Never say the site is built until a build result says built.';
+var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Say every sentence a result gives in the language the owner writes in. Never say the site is built until a build result says built.';
 var BUILD_PARAMETERS = Object.freeze({
   type: "object",
   properties: {
@@ -466,10 +471,8 @@ var privately = (next) => `${PRIVATE_GUIDANCE_MARK} ${next}`;
 function templatesNext(options) {
   if (options.length === 0)
     return "No ready design fits. Tell the owner plainly that no ready design fits their business yet, and that they can add a site with Add site.";
-  if (options.length === 1) {
-    const name2 = typeof options[0]?.name === "string" ? options[0].name : "it";
-    return `One design fits. The card shows it with the button "Use ${name2}". In one short line, ask the owner to confirm it with that button. Do not ask which one, there is only one.`;
-  }
+  if (options.length === 1)
+    return "One design fits. In one short line, ask the owner to confirm it with the button on the card. Never quote the words on the button. Do not ask which one, there is only one.";
   return "Several designs fit. In one short line, ask the owner which one they like, using the buttons on the card.";
 }
 var COLOUR_EDIT_GUIDANCE = 'For a colour change call tracy_build with action edit and changes:[{field:"look.accent", value:"#RRGGBB"}], where the value is a six digit hex colour you choose for the colour the owner named (for example blue is #1F4E9C). The field name look.accent is exact.';
@@ -510,13 +513,70 @@ var tooLargeOf = (say = BODY_TOO_LARGE_SAY) => ({
 });
 var isSwitchedOff = (res) => res?.status === 403 && res.body?.code === "BUILD_CHAT_OFF";
 var isPollFault = (res) => res === null || res.status >= 500;
-var RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with the same action; a result of that call says stopped again only if it failed again.`;
-var stoppedStateOf = (state) => state?.rerun === true ? {
-  ...stopped(state.say),
-  ...typeof state.step === "string" ? { step: state.step } : {},
-  rerun: true,
-  next: RERUN_GUIDANCE
-} : stopped(state?.say);
+var RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with exactly the arguments in again, never with action status; a result of that call says stopped again only if it failed again.`;
+var ACTION_OF_STEP = Object.freeze({ research: "research", brand: "plan", compose: "plan", revise: "plan" });
+function startArgsOf(args) {
+  if (args?.action === "research") {
+    const links = (Array.isArray(args.links) ? args.links : []).map(text).filter((l) => l !== "");
+    const description = text(args.description);
+    return {
+      action: "research",
+      ...links.length ? { links: links.slice(0, LINKS_MAX) } : {},
+      ...description !== "" ? { description } : {}
+    };
+  }
+  if (args?.action === "plan") {
+    const request = text(args.request);
+    return { action: "plan", ...request !== "" ? { request } : {} };
+  }
+  return null;
+}
+function rerunArgsOf(events, step) {
+  const action = typeof step === "string" ? ACTION_OF_STEP[step] : void 0;
+  if (!action) return null;
+  let found = null;
+  for (const event of Array.isArray(events) ? events : [])
+    if (event?.type === "tool/call" && event.data?.name === "tracy_build") {
+      const started = startArgsOf(argsOf(event.data.arguments));
+      if (started?.action === action) found = started;
+    }
+  return found ?? { action };
+}
+function pendingRetryOf(events) {
+  const calls = /* @__PURE__ */ new Set();
+  let lastResult = null;
+  let lastResultSeq = -1;
+  let retrySeq = -1;
+  for (const [i, event] of (Array.isArray(events) ? events : []).entries()) {
+    const seq = Number.isFinite(Number(event?.seq)) ? Number(event.seq) : i;
+    if (event?.type === "tool/call" && event.data?.name === "tracy_build") calls.add(event.data.callId);
+    else if (event?.type === "tool/result" && calls.has(event.data?.message?.source?.callId)) {
+      lastResult = resultTexts(event.data.message.content)[0] ?? null;
+      lastResultSeq = seq;
+    } else if (event?.type === "user/message" && event.data?.source?.kind === "user") {
+      const said = resultTexts(event.data.content).join("").trim();
+      if (said === RETRY_MESSAGE) retrySeq = seq;
+    }
+  }
+  if (lastResult === null || retrySeq < lastResultSeq) return null;
+  try {
+    const answer = JSON.parse(lastResult);
+    return answer?.stopped === true && answer.rerun === true && startArgsOf(answer.again) ? answer.again : null;
+  } catch {
+    return null;
+  }
+}
+var stoppedStateOf = (state, events = []) => {
+  if (state?.rerun !== true) return stopped(state?.say);
+  const again = rerunArgsOf(events, state.step);
+  return {
+    ...stopped(state.say),
+    ...typeof state.step === "string" ? { step: state.step } : {},
+    rerun: true,
+    ...again ? { again } : {},
+    next: RERUN_GUIDANCE
+  };
+};
 function argsOf(value) {
   if (typeof value !== "string") return value && typeof value === "object" ? value : {};
   try {
@@ -556,6 +616,18 @@ function repliesOf(events) {
   }
   return out;
 }
+function openReviewsOf(events) {
+  const asked = /* @__PURE__ */ new Map();
+  for (const event of Array.isArray(events) ? events : []) {
+    if (event?.type === "tool/call" && event.data?.name === "ask_user_question") {
+      const questions = argsOf(event.data.arguments).questions;
+      const ids = (Array.isArray(questions) ? questions : []).map((q) => q?.id).filter((id) => typeof id === "string" && planOfReviewId(id) !== null);
+      if (ids.length) asked.set(event.data.callId, ids);
+    } else if (event?.type === "tool/result") asked.delete(event.data?.message?.source?.callId);
+  }
+  return new Set([...asked.values()].flat());
+}
+var reviewNextOf = (lead, open) => open ? `${lead} The owner already has the review of this plan open with its Approve button: do not ask it again.` : `${lead} Then call ask_user_question with review, unchanged. Call build only after the owner pressed Approve.`;
 function createBuildTool({
   http,
   origin,
@@ -690,7 +762,8 @@ ${JSON.stringify(answer)}`;
     return stopped(res.body?.say);
   }
   function finished(sessionId, state) {
-    if (state?.state === "stopped") return stoppedStateOf(state);
+    if (state?.state === "stopped") return stoppedStateOf(state, eventsOf(sessionId));
+    const isOpen = (review) => openReviewsOf(eventsOf(sessionId)).has(review.questions[0]?.id);
     const result = state?.result ?? {};
     if (state?.state === "asking") {
       learn(sessionId, result);
@@ -712,7 +785,10 @@ ${JSON.stringify(answer)}`;
         unchanged,
         revision,
         review,
-        next: `${unchanged ? "Nothing on the plan changed: say so plainly." : "Say what changed using the sentences in revision.changed, word for word."} Then say each entry of revision.notDone with its why. Do not say anything else changed. ${revision.codes ? "revision.codes is for the plan card only: never say a code. " : ""}${PLAN_CARD_CONTROLS_GUIDANCE} Then call ask_user_question with review, unchanged.`
+        next: reviewNextOf(
+          `${unchanged ? "Nothing on the plan changed: say so plainly." : `Say what changed using the sentences in revision.changed, ${IN_OWNER_LANGUAGE}.`} Then say each entry of revision.notDone with its why. ${NOT_DONE_GUIDANCE} Do not say anything else changed. ${revision.codes ? "revision.codes is for the plan card only: never say a code. " : ""}${PLAN_CARD_CONTROLS_GUIDANCE}`,
+          isOpen(review)
+        )
       };
     }
     if (state?.step === "brand")
@@ -730,9 +806,16 @@ ${JSON.stringify(answer)}`;
           say: ownerSay(state.say, UNCHANGED_FALLBACK_SAY),
           plan,
           review,
-          next: "The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied. Then call ask_user_question with review, unchanged. Call plan with restart true only if the owner clearly asks to start the plan over."
+          next: `${reviewNextOf("The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied.", isOpen(review))} Call plan with restart true only if the owner clearly asks to start the plan over.`
         };
-      return { plan, review };
+      return {
+        plan,
+        review,
+        next: reviewNextOf(
+          state.step === "edit" ? "The plan card shows the change. In one short line, say what you changed." : "The plan card shows the plan. In one short line, tell the owner their plan is ready for them to review.",
+          isOpen(review)
+        )
+      };
     }
     return stopped();
   }
@@ -772,23 +855,48 @@ ${JSON.stringify(answer)}`;
     };
   }
   async function reviewAgain(sessionId, assertion) {
-    const res = await door(sessionId, assertion, "GET", "");
-    const current = res?.status === 200 ? res.body?.draft?.plan : null;
-    if (typeof current?.id !== "string" || !Number.isInteger(current?.revision))
+    const current = await currentPlanReview(sessionId, assertion);
+    if (!current)
       return {
         stale: true,
         next: "The plan changed since the owner approved it. Call tracy_build with action status, then call ask_user_question with the new review."
       };
     return {
       stale: true,
-      plan: { id: current.id, revision: current.revision },
-      review: handOutReview(sessionId, current),
-      next: "The plan changed since the owner approved it, so nothing was built. Say in one short line that the plan changed and needs their approval again. Then call ask_user_question with review, unchanged, and call build only after the owner pressed Approve again."
+      plan: current.plan,
+      review: current.review,
+      next: reviewNextOf(
+        "The plan changed since the owner approved it, so nothing was built. Say in one short line that the plan changed and needs their approval again.",
+        current.open
+      )
     };
   }
-  function buildResult(body) {
+  async function currentPlanReview(sessionId, assertion) {
+    const res = await door(sessionId, assertion, "GET", "");
+    const current = res?.status === 200 ? res.body?.draft?.plan : null;
+    if (typeof current?.id !== "string" || !Number.isInteger(current?.revision)) return null;
+    const review = handOutReview(sessionId, current);
+    return {
+      plan: { id: current.id, revision: current.revision },
+      review,
+      open: openReviewsOf(eventsOf(sessionId)).has(review.questions[0]?.id)
+    };
+  }
+  async function buildResult(sessionId, assertion, body) {
     const build2 = body?.build;
     if (!build2) return stopped(BUILD_FAILED_SAY);
+    if (typeof build2.notStarted === "string") {
+      const say = build2.notStarted === DESIGN_NOT_BUILDABLE ? DESIGN_NOT_BUILDABLE_SAY : SITE_NOT_STARTED_SAY;
+      const current = await currentPlanReview(sessionId, actorFor(sessionId) ?? assertion);
+      if (!current) return { stopped: true, say };
+      return {
+        stopped: true,
+        say,
+        plan: current.plan,
+        review: current.review,
+        next: reviewNextOf("Say the sentence in say. Never say a step of the build failed.", current.open)
+      };
+    }
     if (BUILDING.has(build2.state))
       return {
         building: true,
@@ -850,7 +958,7 @@ ${JSON.stringify(answer)}`;
         say: BUILD_UNCHECKED_SAY,
         next: "Say the sentence in say. Never say the build failed or that the site is built. Call tracy_build with action build again only when the owner asks how it is going."
       };
-    return buildResult(body);
+    return buildResult(sessionId, assertion, body);
   }
   async function execute(rawArgs, exec) {
     let result;
@@ -862,10 +970,11 @@ ${JSON.stringify(answer)}`;
     return typeof result?.next === "string" ? { ...result, next: privately(result.next) } : result;
   }
   async function run(rawArgs, exec) {
-    const args = argsOf(rawArgs);
+    let args = argsOf(rawArgs);
     const sessionId = exec?.agent?.session?.id;
     if (!isBuildChatSession(sessionId))
       return { refused: true, next: "tracy_build works only in the build chat. Do not call it here." };
+    if (args.action === "status") args = pendingRetryOf(eventsOf(sessionId)) ?? args;
     const action = args.action;
     if (!["research", "templates", "plan", "edit", "build", "status"].includes(action))
       return {
@@ -928,7 +1037,19 @@ ${JSON.stringify(answer)}`;
       const { options, none } = templateChoiceOf(res.body?.templates);
       return { options, none, next: templatesNext(options) };
     }
-    return settle(sessionId, res.body);
+    const settled = await settle(sessionId, res.body);
+    if (action === "status" && settled && "review" in settled && settled.review && await buildRunning(sessionId))
+      return {
+        building: true,
+        say: BUILD_LOCKED_SAY2,
+        next: "Say the sentence in say. Call tracy_build with action build only when the owner asks how it is going."
+      };
+    return settled;
+  }
+  async function buildRunning(sessionId) {
+    const assertion = actorFor(sessionId);
+    const res = assertion === null ? null : await door(sessionId, assertion, "GET", "/build");
+    return res?.status === 200 && BUILDING.has(res.body?.build?.state);
   }
   function guard(execution) {
     if (execution?.name !== "ask_user_question") return void 0;

@@ -107,7 +107,23 @@ export async function researchStep(
  * @returns {Promise<object | null>} the look record, or null when the step has none
  */
 export async function brandOf({ research, template }, { brandStep, kit }) {
-  return (await brandStep({ research, template, kit })) ?? null
+  return (await brandRunOf({ research, template }, { brandStep, kit })).record
+}
+
+/**
+ * The brand step's look record and, when the step knew it, what the whole step cost (`costCents`). The step answers
+ * its look record, or `{record, costCents}` when it also knows its cost (`draftBrandStep`); a look record is never
+ * that shape (it carries its `schema`).
+ * @returns {Promise<{record: object | null, costCents?: number}>}
+ */
+export async function brandRunOf({ research, template }, { brandStep, kit }) {
+  const answer = (await brandStep({ research, template, kit })) ?? null
+  if (answer && typeof answer === 'object' && !('schema' in answer) && 'record' in answer)
+    return {
+      record: answer.record ?? null,
+      ...(Number.isFinite(answer.costCents) && answer.costCents >= 0 ? { costCents: answer.costCents } : {})
+    }
+  return { record: answer }
 }
 
 /**

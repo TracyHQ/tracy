@@ -12,7 +12,7 @@ import * as club from '../../../packages/wo/website-opportunities/test/fixtures/
 import { buildApp } from '../src/app.js'
 import { answersStillAsked } from '../src/build-draft/answers-kept.js'
 import { BUSY_SAY } from '../src/build-draft/engine-state.js'
-import { SPEND_LIMITS, TRY_LATER_SAY } from '../src/build-draft/spend-limits.js'
+import { SPEND_LIMITS, STEP_CEILING_CENTS, TRY_LATER_SAY } from '../src/build-draft/spend-limits.js'
 import { changeDraft, createDraft, putComposed } from '../src/build-draft/store.js'
 import { ensureAccount } from '../src/seats/store.js'
 import { buildSessionIdFor } from '../src/workspace/build-chat-session.js'
@@ -367,6 +367,46 @@ test('M5: each research is recorded in the research cost ledger, for the build c
     }
   ])
 })
+
+test(
+  'run 6: a brand step that knows its cost settles its ledger row at it, reported; one that does not keeps the ceiling',
+  opts,
+  async () => {
+    await researchedR1()
+    const answers = [{ record: club.brand(), costCents: 7.2 }, club.brand()]
+    const s = server({
+      gather: async () => gatheredBrief(),
+      buildModel: async () => {
+        throw Object.assign(new Error('no model'), { code: 'model_missing', noRerun: true })
+      },
+      buildChatOn: async () => true,
+      brandStep: async () => answers.shift()
+    })
+    const id = await s.accountId()
+    for (let n = 0; n < 2; n++) {
+      await changeDraft(db.pool, id, () => ({ brand: null, engine: null }))
+      await s.app.buildDraftEngine.brandIfDue(id)
+      await s.settled()
+    }
+    assert.ok((await row(id)).brand?.record, 'the look record of the step is kept')
+    const { rows } = await db.pool.query(
+      `select state, actual_cents, reserved_cents, cost_reported from wo_cost_ledger
+     where operation = 'brand' order by created_at, id`
+    )
+    assert.deepEqual(
+      rows.map((r) => ({ ...r })),
+      [
+        { state: 'settled', actual_cents: 8, reserved_cents: STEP_CEILING_CENTS.brand, cost_reported: true },
+        {
+          state: 'settled',
+          actual_cents: STEP_CEILING_CENTS.brand,
+          reserved_cents: STEP_CEILING_CENTS.brand,
+          cost_reported: false
+        }
+      ]
+    )
+  }
+)
 
 test(
   'suspicion 4: a newer kit after the brand step ran makes the look again for it, never composes on the old one',

@@ -112,7 +112,12 @@ test('m1: a build the create door refused is replaced by the approval of a newer
   })
   const { accountId, plan } = await plannedDraft()
   await s.call('POST', '/build', { plan: pin(plan) })
-  assert.equal((await s.call('GET', '/build')).body.build.state, 'stopped')
+  const refused = (await s.call('GET', '/build')).body
+  assert.equal(refused.build.state, 'stopped')
+  // A design with no site to build from: said as its own code, with no run and so no failed step.
+  assert.equal(refused.build.notStarted, 'design-not-buildable')
+  assert.equal(refused.run, null)
+  assert.equal((await readBuild(db.pool, accountId)).refusal.code, 'SITE_SOURCE_MISSING', 'kept for the team')
   const before = await readBuild(db.pool, accountId)
   const next = await edited(s)
   const again = await s.call('POST', '/build', { plan: pin(next) })

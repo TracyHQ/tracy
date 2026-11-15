@@ -210,6 +210,11 @@ export interface BuildAnswerBody {
     id: string
     plan: { id: string; revision: number }
     state: 'creating' | 'building' | 'done' | 'stopped' | 'cancelled'
+    /**
+     * A build refused before any step ran (the site could not be created): it has no run, so no step failed, and the
+     * plan gives way to a new approval. `design-not-buildable`: the chosen design has no site to build from yet.
+     */
+    notStarted?: 'design-not-buildable' | 'site-not-started'
     siteKey?: string
     workspacePath?: string
   } | null

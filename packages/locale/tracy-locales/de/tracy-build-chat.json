@@ -157,6 +157,8 @@
   "stopped.kept.one": "Gespeichert: Ihr Plan, Ihre Antworten und die geschriebene Seite.",
   "stopped.kept.other": "Gespeichert: Ihr Plan, Ihre Antworten und die {count} geschriebenen Seiten.",
   "stopped.notified": "Das Tracy-Team wurde informiert und kümmert sich darum. Sie müssen nichts tun.",
+  "stopped.notStarted": "Ihre Site konnte nicht gestartet werden, aber Ihr Plan bleibt erhalten und Sie können ihn später erneut freigeben.",
+  "stopped.notStarted.design": "Dieses Design kann noch nicht gebaut werden, daher wurde Ihre Site nicht gestartet, aber Ihr Plan bleibt erhalten und Sie können ihn später erneut freigeben.",
   "stopped.once": "Ich konnte „{step}“ nicht abschließen und habe angehalten, statt Ihnen eine unfertige Site zu zeigen.",
   "stopped.title": "Ihre Site ist noch nicht fertig",
   "stopped.twice": "Ich konnte „{step}“ nach zwei Versuchen nicht abschließen und habe angehalten, statt Ihnen eine unfertige Site zu zeigen.",

@@ -13,6 +13,10 @@ import {
   BUILD_BUSY_SAY,
   BUILD_DESCRIPTION,
   COLOUR_EDIT_GUIDANCE,
+  DESIGN_NOT_BUILDABLE_SAY,
+  NOT_DONE_GUIDANCE,
+  SITE_NOT_STARTED_SAY,
+  OWNER_LANGUAGE_GUIDANCE,
   PLAN_CARD_CONTROLS_GUIDANCE,
   PRIVATE_GUIDANCE_MARK,
   createBuildTool,
@@ -92,7 +96,10 @@ test('a colour change has one exact shape, in the description, the refusal and t
 
 test('the template step confirms a single design and asks to pick among several', () => {
   const one = templatesNext([option('ja-sport', 'Sport')])
-  assert.match(one, /"Use Sport"/)
+  // Run 6: the agent named the English label "Use JA Boxing" on a Vietnamese card. It points at the button instead.
+  assert.doesNotMatch(one, /Use Sport/)
+  assert.match(one, /the button on the card/)
+  assert.match(one, /never quote the words on the button/i)
   assert.match(one, /confirm it/i)
   assert.match(one, /do not ask which one/i)
   const several = templatesNext([option('a', 'Sport'), option('b', 'Studio')])
@@ -102,8 +109,44 @@ test('the template step confirms a single design and asks to pick among several'
   assert.match(persona, /one design fits, ask the owner to confirm it with the card button/i)
 })
 
+test('the owner language is the one the owner writes in, never a fixed language, and every handed sentence follows it', async () => {
+  // Run 6: English answers on a Vietnamese interface after a fixed message, Vietnamese ones on an English interface.
+  assert.ok(persona.includes(OWNER_LANGUAGE_GUIDANCE), 'the persona says the rule word for word')
+  assert.doesNotMatch(persona, /language of the owner's interface/)
+  assert.doesNotMatch(OWNER_LANGUAGE_GUIDANCE, /\b(English|Vietnamese)\b/)
+  assert.match(BUILD_DESCRIPTION, /in the language the owner writes in/)
+  const revised = await call(
+    toolAnswering(200, {
+      step: 'revise',
+      state: 'done',
+      result: {
+        plan: {
+          schema: 'tracy-build-plan/v1',
+          id: 'p',
+          revision: 2,
+          name: 'Club',
+          facts: [],
+          items: [],
+          pages: []
+        },
+        brand: 'own',
+        unchanged: true,
+        revision: { changed: [], notDone: [{ what: 'A video of the club', why: 'You have no video.' }] }
+      }
+    }),
+    { action: 'plan', request: 'Add a video.' }
+  )
+  // After a Not done: nothing promised beyond the card and the plan (run 6: "send me the video link and I will add it").
+  assert.ok(revised.next.includes(NOT_DONE_GUIDANCE), revised.next)
+  assert.match(persona, /Promise nothing beyond what the plan card and the plan offer/)
+  assert.match(persona, /Never quote the words on a button/)
+})
+
 test('the tool guidance has no em dash or en dash', () => {
   for (const text of [
+    OWNER_LANGUAGE_GUIDANCE,
+    NOT_DONE_GUIDANCE,
+    templatesNext([option('a', 'Sport')]),
     PRIVATE_GUIDANCE_MARK,
     COLOUR_EDIT_GUIDANCE,
     BUILD_DESCRIPTION,
@@ -132,6 +175,19 @@ test('the busy sentence of the tool is the plan card sentence, word for word', (
   const card = strings.match(/'plan\.busy':\s*'([^']+)'/)?.[1]
   assert.equal(typeof card, 'string')
   assert.equal(BUILD_BUSY_SAY, card)
+})
+
+test('a build that did not start: the tool and the card say the same sentence, a plain one for a design', () => {
+  const strings = readFileSync(new URL('../src/client/strings.ts', import.meta.url), 'utf8')
+  const card = (key) =>
+    strings.match(new RegExp(`'${key.replace(/\./g, '\\.')}':\\s*'([^']+)'`))?.[1] ??
+    strings.match(new RegExp(`'${key.replace(/\./g, '\\.')}':\\s*\\n\\s*'([^']+)'`))?.[1]
+  assert.equal(card('stopped.notStarted'), SITE_NOT_STARTED_SAY)
+  assert.equal(card('stopped.notStarted.design'), DESIGN_NOT_BUILDABLE_SAY)
+  for (const say of [SITE_NOT_STARTED_SAY, DESIGN_NOT_BUILDABLE_SAY]) {
+    assert.match(say, /plan is kept/)
+    assert.doesNotMatch(say, /[–—]|fail/i)
+  }
 })
 
 test('a stop that may be rerun: the persona says the sentence, asks nothing, and reruns once on the owner message', () => {

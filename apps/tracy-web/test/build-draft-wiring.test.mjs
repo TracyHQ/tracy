@@ -45,6 +45,21 @@ test('the brand step gets the draft brief, the logo file, the kit ref and the si
   rmSync(dir, { recursive: true, force: true })
 })
 
+test('the brand step answers its whole cost beside the record only when every call of its run reported one', async () => {
+  const runWith = (usd) =>
+    draftBrandStep({
+      pool: null,
+      stepsOf: () => assert.fail('the fake run needs no steps'),
+      brandBeforeSite: async () => ({ record, records: [], usd }),
+      kitRefOf: (t) => kitRefOf(t, kits)
+    })({ research: { brief }, template })
+  assert.deepEqual(await runWith(0.12), { record, costCents: 12 })
+  assert.deepEqual(await runWith(0), { record, costCents: 0 })
+  // `usd` is null when a call of the run reported no cost: no cost is made up, the record goes alone.
+  assert.deepEqual(await runWith(null), record)
+  assert.deepEqual(await runWith(undefined), record)
+})
+
 test('through the real step: the step chain context holds the brief and the logo file, no revision id', async () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'draft-logo-'))
   const logoFile = path.join(dir, 'logo.png')

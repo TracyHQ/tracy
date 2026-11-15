@@ -327,3 +327,30 @@ test('character references read as characters, and a decoded tag stays text', ()
   assert.match(html, /Coach’s session &lt;b&gt;/, 'React escapes the decoded text: it is never markup')
   assert.doesNotMatch(html, /&amp;rsquo;|&amp;lt;/)
 })
+
+test('a section that holds the same kind twice lists it once, with its count (run 6: "Social link, Social link")', () => {
+  const p = plan()
+  p.facts.push(
+    {
+      ...p.facts.find((f) => f.id === 'phone'),
+      id: 'social-a',
+      kind: 'contact.social_url',
+      label: 'Social link'
+    },
+    {
+      ...p.facts.find((f) => f.id === 'phone'),
+      id: 'social-b',
+      kind: 'contact.social_url',
+      label: 'Social link'
+    }
+  )
+  p.pages[0].blocks.find((b) => b.id === 'h4').data = ['phone', 'social-a', 'social-b']
+  for (const [t, link] of [
+    [lib.english, lib.en['plan.fact.contact.social_url'].toLowerCase()],
+    [vi, viTable['plan.fact.contact.social_url']]
+  ]) {
+    const html = draw({ plan: p, t })
+    assert.ok(html.includes(`, ${link} (2)<`), `${link} (2)`)
+    assert.equal(html.includes(`${link}, ${link}`), false)
+  }
+})

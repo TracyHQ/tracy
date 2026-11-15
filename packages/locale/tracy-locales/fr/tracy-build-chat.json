@@ -157,6 +157,8 @@
   "stopped.kept.one": "Conservé : votre plan, vos réponses et la page rédigée.",
   "stopped.kept.other": "Conservé : votre plan, vos réponses et les {count} pages rédigées.",
   "stopped.notified": "L’équipe Tracy a été prévenue et s’en occupe. Vous n’avez rien à faire.",
+  "stopped.notStarted": "Votre site n’a pas pu être lancé, mais votre plan est conservé et vous pourrez l’approuver à nouveau plus tard.",
+  "stopped.notStarted.design": "Ce design ne peut pas encore être construit, votre site n’a donc pas été lancé, mais votre plan est conservé et vous pourrez l’approuver à nouveau plus tard.",
   "stopped.once": "Je n’ai pas pu terminer « {step} », j’ai préféré m’arrêter plutôt que de vous montrer un site inachevé.",
   "stopped.title": "Votre site n’est pas encore terminé",
   "stopped.twice": "Je n’ai pas pu terminer « {step} » après deux essais, j’ai préféré m’arrêter plutôt que de vous montrer un site inachevé.",

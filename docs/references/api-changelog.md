@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-15: A build refused before any step says the site was not started
+
+Changed (internal): `GET` and `POST /api/build-draft/build` answer a build whose site could not be created, so no step ran, with `build.notStarted: 'design-not-buildable' | 'site-not-started'` (`design-not-buildable` when the chosen design has no source to build from) and `run: null`, instead of a run whose first step failed. The plan is kept, and approving it again starts a new build. Public API v1 is unchanged.
+
 ## 2026-11-15: The build chat doors refuse busy plans, spend past its limits and oversized bodies
 
 Changed (internal): `POST /api/build-draft/edit`, `/plan-edits` and `/plan-undo` answer 409 `ENGINE_BUSY` with `say` while a step works on the plan, instead of cancelling it. `POST /api/build-draft/research` and `/compose` answer 429 `TRY_LATER` with `say` past the hourly limit per account or the research daily cap. Every body under `/api/build-draft` past 64 KiB (1 MiB for `/build/handoff`) answers 413 `BODY_TOO_LARGE`; `/build/handoff` answers 413 `CONVERSATION_TOO_LONG` past 200000 characters; `PUT /api/build-draft/answers` answers 422 `TOO_MANY_QUESTIONS` past 100 questions. The hand off block carries `keepOffSite` (held texts) after the plan. `POST /api/build-draft/build` replaces a build that ended without a site; `GET /api/build-draft/build` asks the create door again for a build still creating its site. A revision that cannot start leaves the build as it was. `POST /api/sites` with a `draftId` accepts only the draft's own `buildId`. Public API v1 is unchanged.

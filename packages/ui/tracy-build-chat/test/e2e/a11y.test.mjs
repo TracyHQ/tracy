@@ -17,6 +17,7 @@ import { after, test } from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { build } from 'esbuild'
 import { DSH_COLUMN_CSS } from './dsh-column.css.mjs'
+import { DESIGN_NOT_BUILDABLE_SAY, SITE_NOT_STARTED_SAY } from '../../src/host/build-tool.mjs'
 import {
   STAGES,
   stageDocuments,
@@ -98,11 +99,20 @@ const MESSAGES = [
   { role: 'user', text: 'Make the tagline shorter.' }
 ]
 
+// Template pictures that never show: one whose address does not answer an image (the fixture page answers every
+// address of its host with the page itself), and one with no picture at all.
+const FITS = TEMPLATES.find((t) => t.quickstart === 'released' && t.fits === true)
+const NO_PICTURES = [
+  { ...FITS, picture: 'http://a11y.test/missing-picture.png' },
+  { ...FITS, slug: 'example-court', name: 'Example Court', recommended: false, picture: undefined }
+]
+
 /** Every state drawn: name, fixture state, data. */
 const STATES = [
   ['template', 'template', { templates: TEMPLATES }],
   ['template-chosen', 'template', { templates: TEMPLATES, chosen: 'ja-boxing' }],
   ['template-none', 'template', { templates: [] }],
+  ['template-no-picture', 'template', { templates: NO_PICTURES }],
   ['plan', 'plan', { plan: PLAN }],
   ['plan-dark-accent', 'plan', { plan: darkAccentPlan }],
   ['plan-drawn-logo', 'plan', { plan: drawnLogoPlan, lookSources: DRAWN }],
@@ -115,6 +125,8 @@ const STATES = [
   ['done', 'progress', { run: run('done') }],
   ['could-not-finish', 'progress', { run: run('could-not-finish') }],
   ['cancelled', 'progress', { run: run('cancelled') }],
+  ['not-started', 'progress', { run: { notStarted: 'site-not-started' } }],
+  ['not-started-design', 'progress', { run: { notStarted: 'design-not-buildable' } }],
   ['working', 'working', {}],
   ['try-again', 'retry', { results: [STOPPED] }],
   ['try-again-second', 'retry', { results: [STOPPED, STOPPED] }],
@@ -257,6 +269,41 @@ test('layout: every state at phone and desktop width, light and dark', async (t)
         })
       await page.close()
     }
+})
+
+test('run 6: a template picture that does not load falls back to the no-picture look, its name still read', async () => {
+  const { page, errors } = await open(browser, VIEWPORTS[1], 'light', code)
+  await mount(page, 'template', { templates: NO_PICTURES })
+  await page.waitForFunction(() => document.querySelectorAll('#root img').length === 0)
+  const thumbs = page.locator('#root .tv-bc-thumb[data-no-picture]')
+  assert.equal(await thumbs.count(), NO_PICTURES.length)
+  for (const box of await thumbs.all()) {
+    const { width, height } = await box.boundingBox()
+    assert.ok(width > 0 && height > 0, 'the picture keeps its box')
+  }
+  for (const t of NO_PICTURES)
+    assert.ok(await page.locator('#root .tv-bc-nm', { hasText: t.name }).first().isVisible(), t.name)
+  assert.deepEqual(errors, [])
+  await page.close()
+})
+
+test('run 6: a build refused before any step says the site was not started, with no task list', async () => {
+  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
+  // The card's sentences equal the tool's (`guidance-contract.test.mjs`).
+  for (const [notStarted, say] of [
+    ['site-not-started', SITE_NOT_STARTED_SAY],
+    ['design-not-buildable', DESIGN_NOT_BUILDABLE_SAY]
+  ]) {
+    await mount(page, 'progress', { run: { notStarted } })
+    const notice = page.locator(`#root [data-not-started="${notStarted}"]`)
+    assert.equal((await notice.innerText()).trim(), say)
+    assert.equal(
+      await page.locator('#root .tv-bc-todo').count(),
+      0,
+      'no task list, so no step reads as failed'
+    )
+  }
+  await page.close()
 })
 
 test('plan card keyboard: reach, edit, Escape, Save, undo and where focus goes', async () => {
@@ -498,7 +545,7 @@ test('working line sits in the message column of dsh at phone, tablet and deskto
   }
 })
 
-test('Try again: reached by Tab, pressed with Space, one fixed message, disabled while it goes', async () => {
+test('Try again: reached by Tab, pressed with Space, one fixed message, gone while it goes', async () => {
   const { page } = await open(browser, VIEWPORTS[0], 'light', code)
   await mount(page, 'retry', { results: [STOPPED] })
   await page.keyboard.press('Tab')
@@ -507,12 +554,8 @@ test('Try again: reached by Tab, pressed with Space, one fixed message, disabled
   await page.keyboard.press('Space')
   await page.waitForFunction(() => window.probe.log().sent.length === 1)
   assert.deepEqual((await page.evaluate(() => window.probe.log())).sent, ['Please try again.'])
-  assert.equal(await page.getByRole('button', { name: 'Try again' }).isDisabled(), true)
-  // A second press cannot send a second message.
-  await page
-    .getByRole('button', { name: 'Try again' })
-    .click({ force: true })
-    .catch(() => {})
+  // Run 6: the button is gone while the retry runs, not drawn disabled; nothing is left to press a second time.
+  assert.equal(await page.getByRole('button', { name: 'Try again' }).count(), 0)
   assert.equal((await page.evaluate(() => window.probe.log())).sent.length, 1)
   await page.close()
 })

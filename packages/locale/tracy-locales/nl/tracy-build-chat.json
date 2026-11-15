@@ -157,6 +157,8 @@
   "stopped.kept.one": "Bewaard: uw plan, uw antwoorden en de geschreven pagina.",
   "stopped.kept.other": "Bewaard: uw plan, uw antwoorden en de {count} geschreven pagina’s.",
   "stopped.notified": "Het Tracy-team is op de hoogte gebracht en gaat ermee aan de slag. U hoeft niets te doen.",
+  "stopped.notStarted": "Uw site kon niet worden gestart, maar uw plan blijft bewaard en u kunt het later opnieuw goedkeuren.",
+  "stopped.notStarted.design": "Dit ontwerp kan nog niet worden gebouwd, dus uw site is niet gestart, maar uw plan blijft bewaard en u kunt het later opnieuw goedkeuren.",
   "stopped.once": "Ik kon „{step}” niet afronden, dus ik ben gestopt in plaats van u een onaf site te tonen.",
   "stopped.title": "Uw site is nog niet klaar",
   "stopped.twice": "Ik kon „{step}” na twee pogingen niet afronden, dus ik ben gestopt in plaats van u een onaf site te tonen.",

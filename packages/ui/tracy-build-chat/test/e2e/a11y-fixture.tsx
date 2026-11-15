@@ -9,7 +9,7 @@ import {
   resolveFieldPath
 } from '../../../../wo/website-opportunities/domain/build-contract-shared.mjs'
 import { BuildProgress } from '../../src/client/BuildProgress'
-import { BuildStopped } from '../../src/client/BuildStopped'
+import { BuildNotStarted, BuildStopped } from '../../src/client/BuildStopped'
 import { PLAN_KEY } from '../../src/client/definitions'
 import { EarlierConversation } from '../../src/client/handoff'
 import { PlanCard } from '../../src/client/PlanCard'
@@ -320,6 +320,9 @@ function State({ name, view }: { name: string; view: Any }) {
     case 'review':
       return <Planned view={view} withReview />
     case 'progress':
+      // As the run tail draws it: a build refused before any step is its sentence alone, with no task list.
+      if (typeof view.run?.notStarted === 'string')
+        return <BuildNotStarted code={view.run.notStarted} t={english} />
       return (
         <>
           {view.run?.outcome && <BuildStopped outcome={view.run.outcome} t={english} />}

@@ -202,10 +202,20 @@ function holdsText(t: Translate, holds: BlockHolds): string {
   if ('services' in holds) return holds.services.join(', ')
   // "Business name, tagline, main button": the English labels go lower case after the first. A translated label keeps
   // its own case, since a language like German writes its nouns with a capital.
-  const facts = holds.facts.map((label, i) => {
-    const said = factLabelOf(t, holds.factKinds?.[i], label)
-    return i === 0 || said !== label ? said : said.toLowerCase()
+  const said = holds.facts.map((label, i) => {
+    const word = factLabelOf(t, holds.factKinds?.[i], label)
+    return i === 0 || word !== label ? word : word.toLowerCase()
   })
+  // Each kind once, in the order it first comes, with a count when it comes more than once: "Social link (2)", never
+  // "Social link, Social link" (run 6). The count is said the way a repeated line is (`sentenceOf`).
+  const seen = new Map<string, number>()
+  for (const word of said) seen.set(word.toLowerCase(), (seen.get(word.toLowerCase()) ?? 0) + 1)
+  const facts = said
+    .filter((word, i) => said.findIndex((w) => w.toLowerCase() === word.toLowerCase()) === i)
+    .map((word) => {
+      const n = seen.get(word.toLowerCase()) ?? 1
+      return n === 1 ? word : `${word} (${n})`
+    })
   const counts = holds.counts.map((c) =>
     plural(t, `plan.count.${COUNT_KINDS.has(c.kind) ? c.kind : 'item'}`, c.count)
   )

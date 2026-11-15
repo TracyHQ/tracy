@@ -75,6 +75,20 @@ export const BUILD_BUILDING_SAY =
 export const BUILD_DONE_SAY = DONE_SAY
 /** Owner facing: said when the build stopped. The task list card shows which step; the team has the reason. */
 export const BUILD_FAILED_SAY = `Your site could not be built this time. ${TEAM_SEES_SAY}`
+/**
+ * The code the build door gives a build refused before any step ran, when the chosen design has no site to build from
+ * (`SITE_SOURCE_MISSING`); any other refusal before a step is `site-not-started` (`build-route.js` `notStartedOf`).
+ */
+export const DESIGN_NOT_BUILDABLE = 'design-not-buildable'
+/**
+ * Owner facing: the site could not be created, so no step ran; the plan is kept. The task list card says the same in
+ * the interface language (`stopped.notStarted`). Plain English, no dashes.
+ */
+export const SITE_NOT_STARTED_SAY =
+  'Your site could not be started, but your plan is kept and you can approve it again later.'
+/** Owner facing: as above, when the chosen design cannot be built yet (`stopped.notStarted.design`). */
+export const DESIGN_NOT_BUILDABLE_SAY =
+  'This design cannot be built yet, so your site was not started, but your plan is kept and you can approve it again later.'
 /** Owner facing: said when the owner asks for a change while the build runs. */
 export const BUILD_LOCKED_SAY = LOCKED_SAY
 /**
@@ -100,6 +114,24 @@ export const BUILD_BUSY_SAY =
  */
 export const PLAN_CARD_CONTROLS_GUIDANCE =
   'When an entry asks to change a business fact, a service name or the main colour, tell the owner they can change that value on the plan card. Never say that the language, the design, the logo, the pictures or anything else can be changed on the plan card.'
+
+/**
+ * Private guidance: the owner's language is the one they write in, and a sentence a result hands over is said in it.
+ * The interface language never reaches the agent, and a fixed message the chat sends for the owner ("Please try
+ * again.") is not the owner writing (run 6: the agent followed such a message into English).
+ */
+export const OWNER_LANGUAGE_GUIDANCE =
+  'Speak the owner\'s language: the language the owner writes their own messages in. A fixed message the chat sends for them, such as "Please try again.", does not count. Say every sentence a result gives you in that language, keeping names and values as they are.'
+
+/** How a line the engine wrote is said: in the owner's language, its names and values unchanged. */
+const IN_OWNER_LANGUAGE = "in the owner's language, keeping every name and value word for word"
+
+/**
+ * Private guidance after a change request with entries not done: nothing is promised that the card and the plan do
+ * not offer (run 6: "send me the video link and I will add it", which the plan cannot do).
+ */
+export const NOT_DONE_GUIDANCE =
+  'Promise nothing beyond what the plan card and the plan offer: never offer to add it later, and never ask the owner to send you anything for it.'
 /**
  * Owner facing: said when a step was started too often for now (`TRY_LATER`) and the door gave no plain sentence of
  * its own. Plain English, no dashes.
@@ -132,7 +164,7 @@ export const tooLongSay = (question, limit) =>
 const SAY_MAX = 300
 
 export const BUILD_DESCRIPTION =
-  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with the same action only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Never say the site is built until a build result says built.'
+  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Say every sentence a result gives in the language the owner writes in. Never say the site is built until a build result says built.'
 
 export const BUILD_PARAMETERS = Object.freeze({
   type: 'object',
@@ -185,10 +217,10 @@ const privately = (/** @type {string} */ next) => `${PRIVATE_GUIDANCE_MARK} ${ne
 export function templatesNext(options) {
   if (options.length === 0)
     return 'No ready design fits. Tell the owner plainly that no ready design fits their business yet, and that they can add a site with Add site.'
-  if (options.length === 1) {
-    const name = typeof options[0]?.name === 'string' ? options[0].name : 'it'
-    return `One design fits. The card shows it with the button "Use ${name}". In one short line, ask the owner to confirm it with that button. Do not ask which one, there is only one.`
-  }
+  // The button's words are the card's, in the owner's interface language: the agent never quotes them (run 6: it named
+  // an English label on a Vietnamese card).
+  if (options.length === 1)
+    return 'One design fits. In one short line, ask the owner to confirm it with the button on the card. Never quote the words on the button. Do not ask which one, there is only one.'
   return 'Several designs fit. In one short line, ask the owner which one they like, using the buttons on the card.'
 }
 
@@ -265,24 +297,112 @@ const isPollFault = (res) => res === null || res.status >= 500
 
 /**
  * Private guidance after a stop the owner may have run again: the sentence, no question, and the one fixed message
- * the Try again button sends. The persona says the same.
+ * the Try again button sends. The call to make names the step that stopped (`again`), never `status`: reading the
+ * stop again shows the owner the same failure (run 6, turn 3.1). The persona says the same.
  */
-export const RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with the same action; a result of that call says stopped again only if it failed again.`
+export const RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with exactly the arguments in again, never with action status; a result of that call says stopped again only if it failed again.`
 
 /**
- * A stopped engine step as the door answers it. One the owner may have run again (`rerun`) also names its step and
- * carries the guidance, so the card can offer Try again and count the retries from the session's own results.
- * @param {any} state
+ * The action that runs each engine step again: the plan steps are all started by action plan.
+ * @type {Readonly<Record<string, string>>}
  */
-const stoppedStateOf = (state) =>
-  state?.rerun === true
-    ? {
-        ...stopped(state.say),
-        ...(typeof state.step === 'string' ? { step: state.step } : {}),
-        rerun: true,
-        next: RERUN_GUIDANCE
-      }
-    : stopped(state?.say)
+const ACTION_OF_STEP = Object.freeze({ research: 'research', brand: 'plan', compose: 'plan', revise: 'plan' })
+
+/**
+ * The arguments of a `tracy_build` call that starts engine work, kept as they would be sent again: research with its
+ * links and words, plan with its request. `restart` is never kept: a stopped start over already discarded the plan, so
+ * plan alone composes the first plan again.
+ * @param {any} args
+ * @returns {{ action: string, links?: string[], description?: string, request?: string } | null}
+ */
+function startArgsOf(args) {
+  if (args?.action === 'research') {
+    const links = (Array.isArray(args.links) ? args.links : [])
+      .map(text)
+      .filter((/** @type {string} */ l) => l !== '')
+    const description = text(args.description)
+    return {
+      action: 'research',
+      ...(links.length ? { links: links.slice(0, LINKS_MAX) } : {}),
+      ...(description !== '' ? { description } : {})
+    }
+  }
+  if (args?.action === 'plan') {
+    const request = text(args.request)
+    return { action: 'plan', ...(request !== '' ? { request } : {}) }
+  }
+  return null
+}
+
+/**
+ * The call that runs the stopped step again: the session's latest `tracy_build` call that started that step's action,
+ * with its own arguments. A step with no such call in the log is run by its action alone.
+ * @param {readonly any[]} events
+ * @param {string | undefined} step
+ */
+export function rerunArgsOf(events, step) {
+  const action = typeof step === 'string' ? ACTION_OF_STEP[step] : undefined
+  if (!action) return null
+  let found = null
+  for (const event of Array.isArray(events) ? events : [])
+    if (event?.type === 'tool/call' && event.data?.name === 'tracy_build') {
+      const started = startArgsOf(argsOf(event.data.arguments))
+      if (started?.action === action) found = started
+    }
+  return found ?? { action }
+}
+
+/**
+ * The owner pressed Try again after the session's last `tracy_build` answer, and that answer was a stop that may be
+ * rerun: the arguments it named to run the step again (`again`), else null. Read from the log only, so a restart of
+ * this process changes nothing.
+ * @param {readonly any[]} events
+ */
+export function pendingRetryOf(events) {
+  const calls = new Set()
+  let lastResult = null
+  let lastResultSeq = -1
+  let retrySeq = -1
+  for (const [i, event] of (Array.isArray(events) ? events : []).entries()) {
+    const seq = Number.isFinite(Number(event?.seq)) ? Number(event.seq) : i
+    if (event?.type === 'tool/call' && event.data?.name === 'tracy_build') calls.add(event.data.callId)
+    else if (event?.type === 'tool/result' && calls.has(event.data?.message?.source?.callId)) {
+      lastResult = resultTexts(event.data.message.content)[0] ?? null
+      lastResultSeq = seq
+    } else if (event?.type === 'user/message' && event.data?.source?.kind === 'user') {
+      const said = resultTexts(event.data.content).join('').trim()
+      if (said === RETRY_MESSAGE) retrySeq = seq
+    }
+  }
+  if (lastResult === null || retrySeq < lastResultSeq) return null
+  try {
+    const answer = JSON.parse(lastResult)
+    return answer?.stopped === true && answer.rerun === true && startArgsOf(answer.again)
+      ? answer.again
+      : null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * A stopped engine step as the door answers it. One the owner may have run again (`rerun`) also names its step, the
+ * exact call that runs it again (`again`) and the guidance, so the card can offer Try again and count the retries from
+ * the session's own results.
+ * @param {any} state
+ * @param {readonly any[]} [events] - the session's log, which names the call that started the step
+ */
+const stoppedStateOf = (state, events = []) => {
+  if (state?.rerun !== true) return stopped(state?.say)
+  const again = rerunArgsOf(events, state.step)
+  return {
+    ...stopped(state.say),
+    ...(typeof state.step === 'string' ? { step: state.step } : {}),
+    rerun: true,
+    ...(again ? { again } : {}),
+    next: RERUN_GUIDANCE
+  }
+}
 
 /**
  * Arguments arrive parsed, or as a JSON string from an older dispatcher.
@@ -346,6 +466,38 @@ export function repliesOf(events) {
   }
   return out
 }
+
+/**
+ * The plan review requests the agent asked in this session that have no answer yet: their bar is open now.
+ * @param {readonly any[]} events
+ * @returns {Set<string>}
+ */
+export function openReviewsOf(events) {
+  /** @type {Map<string, string[]>} */
+  const asked = new Map()
+  for (const event of Array.isArray(events) ? events : []) {
+    if (event?.type === 'tool/call' && event.data?.name === 'ask_user_question') {
+      const questions = argsOf(event.data.arguments).questions
+      const ids = (Array.isArray(questions) ? questions : [])
+        .map((/** @type {any} */ q) => q?.id)
+        .filter((/** @type {unknown} */ id) => typeof id === 'string' && planOfReviewId(id) !== null)
+      if (ids.length) asked.set(event.data.callId, ids)
+    } else if (event?.type === 'tool/result') asked.delete(event.data?.message?.source?.callId)
+  }
+  return new Set([...asked.values()].flat())
+}
+
+/**
+ * Private guidance: hand the living plan's review to the owner. Every answer that hands out a plan nobody approved yet
+ * carries it, so the owner always has the Approve button (run 6: a plan read through `status` came without it and the
+ * agent asked for an Approve the owner could not see). When that review is already open, the agent asks nothing more.
+ * @param {string} lead - what to say about the plan first
+ * @param {boolean} open - the review of this revision is open now
+ */
+export const reviewNextOf = (lead, open) =>
+  open
+    ? `${lead} The owner already has the review of this plan open with its Approve button: do not ask it again.`
+    : `${lead} Then call ask_user_question with review, unchanged. Call build only after the owner pressed Approve.`
 
 /**
  * @param {{
@@ -561,7 +713,10 @@ export function createBuildTool({
    * @param {any} state
    */
   function finished(sessionId, state) {
-    if (state?.state === 'stopped') return stoppedStateOf(state)
+    if (state?.state === 'stopped') return stoppedStateOf(state, eventsOf(sessionId))
+    /** Whether the review this plan answer hands out is open on the owner's screen already. */
+    const isOpen = (/** @type {any} */ review) =>
+      openReviewsOf(eventsOf(sessionId)).has(review.questions[0]?.id)
     const result = state?.result ?? {}
     // The plan needs one more answer from the owner first (the site name): the question goes on the card.
     if (state?.state === 'asking') {
@@ -587,7 +742,10 @@ export function createBuildTool({
         unchanged,
         revision,
         review,
-        next: `${unchanged ? 'Nothing on the plan changed: say so plainly.' : 'Say what changed using the sentences in revision.changed, word for word.'} Then say each entry of revision.notDone with its why. Do not say anything else changed. ${revision.codes ? 'revision.codes is for the plan card only: never say a code. ' : ''}${PLAN_CARD_CONTROLS_GUIDANCE} Then call ask_user_question with review, unchanged.`
+        next: reviewNextOf(
+          `${unchanged ? 'Nothing on the plan changed: say so plainly.' : `Say what changed using the sentences in revision.changed, ${IN_OWNER_LANGUAGE}.`} Then say each entry of revision.notDone with its why. ${NOT_DONE_GUIDANCE} Do not say anything else changed. ${revision.codes ? 'revision.codes is for the plan card only: never say a code. ' : ''}${PLAN_CARD_CONTROLS_GUIDANCE}`,
+          isOpen(review)
+        )
       }
     }
     // The brand step (#616) prepares the business's own look the plan is composed from; the plan is asked for again.
@@ -608,9 +766,18 @@ export function createBuildTool({
           say: ownerSay(state.say, UNCHANGED_FALLBACK_SAY),
           plan,
           review,
-          next: 'The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied. Then call ask_user_question with review, unchanged. Call plan with restart true only if the owner clearly asks to start the plan over.'
+          next: `${reviewNextOf('The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied.', isOpen(review))} Call plan with restart true only if the owner clearly asks to start the plan over.`
         }
-      return { plan, review }
+      return {
+        plan,
+        review,
+        next: reviewNextOf(
+          state.step === 'edit'
+            ? 'The plan card shows the change. In one short line, say what you changed.'
+            : 'The plan card shows the plan. In one short line, tell the owner their plan is ready for them to review.',
+          isOpen(review)
+        )
+      }
     }
     return stopped()
   }
@@ -676,28 +843,65 @@ export function createBuildTool({
    * @param {string} assertion
    */
   async function reviewAgain(sessionId, assertion) {
-    const res = await door(sessionId, assertion, 'GET', '')
-    const current = res?.status === 200 ? res.body?.draft?.plan : null
-    if (typeof current?.id !== 'string' || !Number.isInteger(current?.revision))
+    const current = await currentPlanReview(sessionId, assertion)
+    if (!current)
       return {
         stale: true,
         next: 'The plan changed since the owner approved it. Call tracy_build with action status, then call ask_user_question with the new review.'
       }
     return {
       stale: true,
+      plan: current.plan,
+      review: current.review,
+      next: reviewNextOf(
+        'The plan changed since the owner approved it, so nothing was built. Say in one short line that the plan changed and needs their approval again.',
+        current.open
+      )
+    }
+  }
+
+  /**
+   * The living plan of the draft, read now, with its review handed out: what an answer that leaves the owner a plan to
+   * approve carries. Null when the draft holds no plan or could not be read.
+   * @param {string} sessionId
+   * @param {string} assertion
+   */
+  async function currentPlanReview(sessionId, assertion) {
+    const res = await door(sessionId, assertion, 'GET', '')
+    const current = res?.status === 200 ? res.body?.draft?.plan : null
+    if (typeof current?.id !== 'string' || !Number.isInteger(current?.revision)) return null
+    const review = handOutReview(sessionId, current)
+    return {
       plan: { id: current.id, revision: current.revision },
-      review: handOutReview(sessionId, current),
-      next: 'The plan changed since the owner approved it, so nothing was built. Say in one short line that the plan changed and needs their approval again. Then call ask_user_question with review, unchanged, and call build only after the owner pressed Approve again.'
+      review,
+      open: openReviewsOf(eventsOf(sessionId)).has(review.questions[0]?.id)
     }
   }
 
   /**
    * A build answer of the build door, shaped for the model: still building, built, or stopped with one plain sentence.
+   * @param {string} sessionId
+   * @param {any} assertion
    * @param {any} body
    */
-  function buildResult(body) {
+  async function buildResult(sessionId, assertion, body) {
     const build = body?.build
     if (!build) return stopped(BUILD_FAILED_SAY)
+    // Refused before any step ran (the site could not be created): no step failed, the plan is kept, and its review is
+    // handed out again, since a build that ended without a site gives way to a new approval.
+    if (typeof build.notStarted === 'string') {
+      const say = build.notStarted === DESIGN_NOT_BUILDABLE ? DESIGN_NOT_BUILDABLE_SAY : SITE_NOT_STARTED_SAY
+      // A fresh assertion: the build may have been read for longer than one assertion lives.
+      const current = await currentPlanReview(sessionId, actorFor(sessionId) ?? assertion)
+      if (!current) return { stopped: true, say }
+      return {
+        stopped: true,
+        say,
+        plan: current.plan,
+        review: current.review,
+        next: reviewNextOf('Say the sentence in say. Never say a step of the build failed.', current.open)
+      }
+    }
     if (BUILDING.has(build.state))
       return {
         building: true,
@@ -769,7 +973,7 @@ export function createBuildTool({
         say: BUILD_UNCHECKED_SAY,
         next: 'Say the sentence in say. Never say the build failed or that the site is built. Call tracy_build with action build again only when the owner asks how it is going.'
       }
-    return buildResult(body)
+    return buildResult(sessionId, assertion, body)
   }
 
   /**
@@ -790,10 +994,13 @@ export function createBuildTool({
 
   /** @param {unknown} rawArgs @param {any} exec */
   async function run(rawArgs, exec) {
-    const args = argsOf(rawArgs)
+    let args = argsOf(rawArgs)
     const sessionId = exec?.agent?.session?.id
     if (!isBuildChatSession(sessionId))
       return { refused: true, next: 'tracy_build works only in the build chat. Do not call it here.' }
+    // "Please try again." reruns the step that stopped, never reads the stop again: a status call made for it runs the
+    // call the stop named (`again`) instead.
+    if (args.action === 'status') args = pendingRetryOf(eventsOf(sessionId)) ?? args
     const action = args.action
     if (!['research', 'templates', 'plan', 'edit', 'build', 'status'].includes(action))
       return {
@@ -865,7 +1072,28 @@ export function createBuildTool({
       const { options, none } = templateChoiceOf(res.body?.templates)
       return { options, none, next: templatesNext(options) }
     }
-    return settle(sessionId, res.body)
+    const settled = await settle(sessionId, res.body)
+    // A plan read back while its approved build runs is not up for review: the build is.
+    if (
+      action === 'status' &&
+      settled &&
+      'review' in settled &&
+      settled.review &&
+      (await buildRunning(sessionId))
+    )
+      return {
+        building: true,
+        say: BUILD_LOCKED_SAY,
+        next: 'Say the sentence in say. Call tracy_build with action build only when the owner asks how it is going.'
+      }
+    return settled
+  }
+
+  /** Whether the draft's approved build is being created or built now; a read that fails says no. */
+  async function buildRunning(/** @type {string} */ sessionId) {
+    const assertion = actorFor(sessionId)
+    const res = assertion === null ? null : await door(sessionId, assertion, 'GET', '/build')
+    return res?.status === 200 && BUILDING.has(res.body?.build?.state)
   }
 
   /**

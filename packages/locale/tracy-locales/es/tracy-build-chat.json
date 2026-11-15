@@ -157,6 +157,8 @@
   "stopped.kept.one": "Se conserva: su plan, sus respuestas y la página escrita.",
   "stopped.kept.other": "Se conserva: su plan, sus respuestas y las {count} páginas escritas.",
   "stopped.notified": "El equipo de Tracy ha sido avisado y se ocupará del asunto. No tiene que hacer nada.",
+  "stopped.notStarted": "No se pudo iniciar su site, pero su plan se conserva y puede volver a aprobarlo más adelante.",
+  "stopped.notStarted.design": "Este diseño todavía no se puede construir, así que su site no se inició, pero su plan se conserva y puede volver a aprobarlo más adelante.",
   "stopped.once": "No pude terminar «{step}», así que me detuve en lugar de mostrarle un site sin terminar.",
   "stopped.title": "Su site aún no está terminado",
   "stopped.twice": "No pude terminar «{step}» tras dos intentos, así que me detuve en lugar de mostrarle un site sin terminar.",

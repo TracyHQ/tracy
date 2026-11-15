@@ -64,6 +64,17 @@ test('before any build the feed reads nothing, and draws no made up run', async 
   assert.equal(timers.length, 0)
 })
 
+test('a build refused before any step reads as not started, with no run and no reads after it', async () => {
+  const { feed, timers } = feedOf([
+    { build: { id: 'b1', state: 'stopped', notStarted: 'design-not-buildable' }, run: null }
+  ])
+  const stop = feed.subscribe(() => {})
+  await feed.load()
+  assert.deepEqual(feed.read(SESSION), { notStarted: 'design-not-buildable' })
+  assert.equal(timers.length, 0, 'nothing runs, so nothing is read again')
+  stop()
+})
+
 test('a running build is read again until its outcome, then the reads stop', async () => {
   const outcome = { schema: 'tracy-build-outcome/v1', result: 'done', steps: [] }
   const { feed, asked, timers, tick } = feedOf([

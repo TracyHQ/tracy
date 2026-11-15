@@ -37,6 +37,18 @@ export async function spendLeft(pool, accountId, step, now) {
 }
 
 /**
+ * What a finished step really cost, in cents, from what its run answered (`engine.js`): `costCents` when the step knew
+ * the cost of all it spent, else null (the ledger then keeps the ceiling). A cost is never made up: a part of the
+ * step's spend is not its cost.
+ * @param {unknown} ran
+ * @returns {number | null}
+ */
+export function stepCostCents(ran) {
+  const cost = /** @type {any} */ (ran)?.costCents
+  return typeof cost === 'number' && Number.isFinite(cost) && cost >= 0 ? cost : null
+}
+
+/**
  * @param {{pool: import('pg').Pool, charge?: (spec: object, fn: Function) => Promise<any>, now: () => number}} deps
  * @returns {(accountId: string, step: string) => Promise<null | {run: (fn: () => Promise<any>) => Promise<any>,
  *   cancel: () => void}>}
@@ -66,7 +78,10 @@ export function spendGate({ pool, charge, now }) {
       operation: step,
       maxCents,
       purpose: LEDGER_PURPOSE,
-      payer: { kind: 'account', accountId }
+      payer: { kind: 'account', accountId },
+      // The step's whole real cost when its result knows it (`costCents`, `stepCostCents`): the row then settles at
+      // that cost, marked reported. A step that does not know it settles at its ceiling, as before.
+      actualCents: stepCostCents
     }
     const charged = charge(spec, async ({ notSent }) => {
       admitted(true)

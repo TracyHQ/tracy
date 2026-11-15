@@ -19,7 +19,10 @@ import {
   BUILD_PARAMETERS,
   BUILD_RUNNING_SAY,
   BUILD_STOPPED_SAY,
+  DESIGN_NOT_BUILDABLE,
+  DESIGN_NOT_BUILDABLE_SAY,
   PRIVATE_GUIDANCE_MARK,
+  SITE_NOT_STARTED_SAY,
   UNCHANGED_FALLBACK_SAY,
   createBuildTool
 } from '../src/host/build-tool.mjs'
@@ -1147,6 +1150,246 @@ test('a plan that moved since approval, or a change asked while the build runs, 
   assert.equal(edit.building, true)
   assert.equal(edit.say, BUILD_LOCKED_SAY)
   assert.equal(edit.ask, undefined)
+})
+
+/**
+ * A session log the test writes as dsh does: each `tracy_build` call and its answer, each owner message. `call` runs
+ * the tool with its call already in the log, as dsh logs a call before it runs it.
+ */
+function sessionLog() {
+  const events = []
+  let seq = 0
+  let calls = 0
+  const log = {
+    events,
+    say(text) {
+      events.push({
+        type: 'user/message',
+        seq: seq++,
+        data: { content: [{ type: 'text', text }], source: { kind: 'user' } }
+      })
+    },
+    async call(tool, args) {
+      const callId = `c${++calls}`
+      events.push({ type: 'tool/call', seq: seq++, data: { name: 'tracy_build', callId, arguments: args } })
+      const answer = await run(tool, args)
+      events.push({
+        type: 'tool/result',
+        seq: seq++,
+        data: { message: { source: { callId }, content: [{ type: 'text', text: JSON.stringify(answer) }] } }
+      })
+      return answer
+    },
+    /** The agent asks a plan review; `answered` false leaves its bar open. */
+    asked(id, answered = false, label = 'Change the plan') {
+      const callId = `c${++calls}`
+      events.push({
+        type: 'tool/call',
+        seq: seq++,
+        data: { name: 'ask_user_question', callId, arguments: { questions: [{ id, options: [] }] } }
+      })
+      if (answered)
+        events.push({
+          type: 'tool/result',
+          seq: seq++,
+          data: {
+            message: {
+              source: { callId },
+              content: [{ type: 'text', text: JSON.stringify({ answers: [{ id, selected: [label] }] }) }]
+            }
+          }
+        })
+    }
+  }
+  return log
+}
+const ASK_REVIEW = /Then call ask_user_question with review, unchanged\./
+const reviewIdOf = (revision) => `plan-review:${PLAN.id}:${revision}`
+
+test('run 6: a plan composed on Try again and read through status hands out its review, with the instruction', async () => {
+  const say =
+    'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.'
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { status: 202, body: { step: 'compose', state: 'running' } },
+    'GET /api/build-draft/engine': [
+      { body: { step: 'compose', state: 'stopped', say, rerun: true } },
+      COMPOSED
+    ]
+  })
+  const log = sessionLog()
+  const tool = toolWith(web, { events: log.events, waitMs: 0 })
+  assert.equal((await log.call(tool, { action: 'plan' })).running, true)
+  const stop = await log.call(tool, { action: 'status' })
+  assert.equal(stop.stopped, true)
+  log.say('Please try again.')
+  // The agent reads the stop again, as in turn 3.1: the tool reruns the step instead.
+  const rerun = await log.call(tool, { action: 'status' })
+  assert.equal(rerun.running, true)
+  assert.equal(web.calls.filter((c) => c.method === 'POST' && c.path.endsWith('/compose')).length, 2)
+  const plan = await log.call(tool, { action: 'status' })
+  assert.deepEqual(plan.plan, { id: PLAN.id, revision: 1 })
+  assert.equal(plan.review.questions[0].id, reviewIdOf(1))
+  assert.match(plan.next, ASK_REVIEW)
+  assert.ok(plan.next.startsWith(PRIVATE_GUIDANCE_MARK))
+})
+
+test('every answer that hands out a living plan carries the review instruction: compose, edit, revise, unchanged, stale', async () => {
+  const revised = { ...PLAN, revision: 3 }
+  const answers = [
+    await run(toolWith(fakeWeb({ 'POST /api/build-draft/compose': COMPOSED })), { action: 'plan' }),
+    await run(
+      toolWith(
+        fakeWeb({
+          'POST /api/build-draft/edit': {
+            body: { step: 'edit', state: 'done', result: { plan: { ...PLAN, revision: 2 }, brand: 'own' } }
+          }
+        })
+      ),
+      { action: 'edit', changes: [{ field: 'look.accent', value: '#1F4E9C' }] }
+    ),
+    await run(
+      toolWith(
+        fakeWeb({
+          'POST /api/build-draft/compose': {
+            body: {
+              step: 'revise',
+              state: 'done',
+              result: {
+                plan: revised,
+                brand: 'own',
+                unchanged: false,
+                revision: { changed: ['A line.'], notDone: [] }
+              }
+            }
+          }
+        })
+      ),
+      { action: 'plan', request: 'Call the coaches page Our team.' }
+    ),
+    await run(
+      toolWith(
+        fakeWeb({
+          'POST /api/build-draft/compose': {
+            body: { step: 'compose', state: 'done', result: { plan: PLAN, brand: 'own', unchanged: true } }
+          }
+        })
+      ),
+      { action: 'plan' }
+    ),
+    await run(
+      toolWith(
+        fakeWeb({
+          'GET /api/build-draft': { body: { draft: { plan: revised } } },
+          'POST /api/build-draft/build': { status: 409, body: { code: 'STALE_PLAN' } }
+        }),
+        { events: reviewed('Approve') }
+      ),
+      { action: 'build' }
+    )
+  ]
+  for (const answer of answers) {
+    assert.equal(answer.review.questions[0].id, reviewIdOf(answer.plan.revision))
+    assert.match(answer.next, ASK_REVIEW, JSON.stringify(answer))
+  }
+})
+
+test('a review already open on the screen is never asked again; an answered one is asked for the new revision', async () => {
+  const web = fakeWeb({ 'POST /api/build-draft/compose': COMPOSED })
+  const log = sessionLog()
+  log.asked(reviewIdOf(1))
+  const open = await run(toolWith(web, { events: log.events }), { action: 'plan' })
+  assert.doesNotMatch(open.next, ASK_REVIEW)
+  assert.match(open.next, /do not ask it again/)
+  const answered = sessionLog()
+  answered.asked(reviewIdOf(1), true)
+  const again = await run(toolWith(web, { events: answered.events }), { action: 'plan' })
+  assert.match(again.next, ASK_REVIEW)
+})
+
+test('a plan read through status while its approved build runs is not handed out for review', async () => {
+  const web = fakeWeb({
+    'GET /api/build-draft/engine': COMPOSED,
+    'GET /api/build-draft/build': building('building')
+  })
+  const answer = await run(toolWith(web), { action: 'status' })
+  assert.equal(answer.building, true)
+  assert.equal(answer.review, undefined)
+  assert.equal(answer.say, BUILD_LOCKED_SAY)
+})
+
+test('a stop names the exact call that runs its step again; Please try again reruns it, never a read of the stop', async () => {
+  const say =
+    'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.'
+  const request = 'Show our opening hours on the site.'
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { body: { step: 'revise', state: 'running' } },
+    'GET /api/build-draft/engine': { body: { step: 'revise', state: 'stopped', say, rerun: true } }
+  })
+  const log = sessionLog()
+  const tool = toolWith(web, { events: log.events, waitMs: 2_000 })
+  const stop = await log.call(tool, { action: 'plan', request })
+  assert.deepEqual(stop.again, { action: 'plan', request })
+  assert.match(stop.next, /exactly the arguments in again, never with action status/)
+  // Without the owner's message a status call only reads: nothing is started again.
+  await log.call(tool, { action: 'status' })
+  assert.equal(web.calls.filter((c) => c.method === 'POST').length, 1)
+  log.say('Please try again.')
+  await log.call(tool, { action: 'status' })
+  const posts = web.calls.filter((c) => c.method === 'POST')
+  assert.equal(posts.length, 2)
+  assert.deepEqual(posts[1].body, { request })
+  // A research stop names its links and words; a step with no call in the log is run by its action alone.
+  const research = fakeWeb({
+    'POST /api/build-draft/research': { body: { step: 'research', state: 'stopped', say, rerun: true } }
+  })
+  const links = ['https://harbour-lane.example']
+  const researchLog = sessionLog()
+  const stopped = await researchLog.call(toolWith(research, { events: researchLog.events }), {
+    action: 'research',
+    links,
+    description: 'A small tennis club'
+  })
+  assert.deepEqual(stopped.again, { action: 'research', links, description: 'A small tennis club' })
+  const bare = fakeWeb({
+    'GET /api/build-draft/engine': { body: { step: 'compose', state: 'stopped', say, rerun: true } }
+  })
+  assert.deepEqual((await run(toolWith(bare), { action: 'status' })).again, { action: 'plan' })
+})
+
+test('a build refused before any step says the site was not started, keeps the plan and hands its review out again', async () => {
+  const notStarted = (code) => ({
+    body: {
+      build: { id: 'b1', plan: { id: PLAN.id, revision: 1 }, state: 'stopped', notStarted: code },
+      run: null
+    }
+  })
+  for (const [code, say] of [
+    [DESIGN_NOT_BUILDABLE, DESIGN_NOT_BUILDABLE_SAY],
+    ['site-not-started', SITE_NOT_STARTED_SAY]
+  ]) {
+    const web = fakeWeb({
+      'GET /api/build-draft': { body: { draft: { plan: PLAN } } },
+      'POST /api/build-draft/build': notStarted(code)
+    })
+    const tool = toolWith(web, { events: reviewed('Approve') })
+    const answer = await run(tool, { action: 'build' })
+    assert.equal(answer.stopped, true)
+    assert.equal(answer.say, say)
+    assert.equal(answer.rerun, undefined, 'no Try again: approving again is the way')
+    assert.equal(answer.review.questions[0].id, reviewIdOf(1))
+    assert.match(answer.next, ASK_REVIEW)
+    assert.match(answer.next, /Never say a step of the build failed/)
+    // The same review passes the guard again, so the bar can be drawn for the same plan.
+    assert.equal(
+      tool.guard({
+        name: 'ask_user_question',
+        agent: { session: { id: SESSION } },
+        arguments: { questions: answer.review.questions }
+      }),
+      undefined
+    )
+    assert.doesNotMatch(say, /[–—]/)
+  }
 })
 
 test('the door and the tool say the shared owner sentences with the same words', async () => {

@@ -1,9 +1,9 @@
 /**
  * Try again (#609): offered under a turn whose `tracy_build` call stopped on a step the engine says may be run again.
  * Pressing it says one fixed message in the chat as the owner (`RETRY_MESSAGE`), so the agent calls the tool again and
- * the engine reruns the step. The button stays disabled once the message went out; the card goes when the engine runs
- * again or a newer result exists (the fold clears the stop at the next call, `definitions.ts`). A message the chat did
- * not take leaves the button to press again, with the same sentence the plan card uses for a request not sent.
+ * the engine reruns the step. The button is gone from the moment it is pressed, while the retry goes and runs; a newer
+ * stop offers its own (the fold clears the stop at the next call, `definitions.ts`). A message the chat did not take
+ * brings the button back to press again, with the same sentence the plan card uses for a request not sent.
  */
 import { useState } from 'react'
 import type { Translate } from './strings'
@@ -21,6 +21,8 @@ export function TryAgain({ send, t }: TryAgainProps) {
     const sent = await send().catch(() => 'failed' as const)
     setState(sent === 'sent' ? 'sent' : 'failed')
   }
+  // While the retry goes and runs, the button is gone rather than drawn disabled (run 6): nothing to press again.
+  if (state === 'sending' || state === 'sent') return null
   return (
     <div className="tv-bc-retry" data-build-retry="">
       <div className="tv-bc-tfoot">
@@ -29,13 +31,7 @@ export function TryAgain({ send, t }: TryAgainProps) {
             {t('rebuild.failed')}
           </span>
         )}
-        <button
-          type="button"
-          className="tv-bc-btn"
-          data-primary=""
-          disabled={state === 'sending' || state === 'sent'}
-          onClick={() => void press()}
-        >
+        <button type="button" className="tv-bc-btn" data-primary="" onClick={() => void press()}>
           {t('retry.button')}
         </button>
       </div>

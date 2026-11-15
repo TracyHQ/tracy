@@ -23,7 +23,7 @@
 import { canRetryStop, isBuildChatSession, RETRY_MESSAGE } from '@tracy/core/build-chat'
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { BuildProgress } from './BuildProgress'
-import { BuildStopped } from './BuildStopped'
+import { BuildNotStarted, BuildStopped } from './BuildStopped'
 import {
   HANDOFF_KEY,
   type HandoffValue,
@@ -250,6 +250,8 @@ function RunTail({
   const last = useChat((snapshot) => snapshot.timeline.turnOrder.at(-1))
   if (run === null || last !== turn) return null
   const t = deps.t()
+  // Refused before any step ran: the sentence alone, never a task list with a failed step.
+  if (typeof run.notStarted === 'string') return <BuildNotStarted code={run.notStarted} t={t} />
   return (
     <>
       {run.outcome && <BuildStopped outcome={run.outcome} t={t} />}

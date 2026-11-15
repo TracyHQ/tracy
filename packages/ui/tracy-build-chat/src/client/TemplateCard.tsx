@@ -24,6 +24,18 @@ export interface TemplateCardProps {
   addSiteHref?: string
 }
 
+/**
+ * A template's picture. One that is missing or does not load (a server without stored shots answers 404 `NO_PICTURE`)
+ * keeps the picture's own box, filled with its muted background and no image, so no broken image icon is drawn and the
+ * name below it reads as before.
+ */
+function Thumb({ picture }: { picture: string | undefined }) {
+  const [failed, setFailed] = useState(false)
+  if (failed || typeof picture !== 'string' || picture.trim() === '')
+    return <span className="tv-bc-thumb" data-no-picture="" aria-hidden />
+  return <img className="tv-bc-thumb" src={picture} alt="" loading="lazy" onError={() => setFailed(true)} />
+}
+
 export function TemplateCard({
   templates,
   t,
@@ -92,7 +104,7 @@ export function TemplateCard({
               if (!locked) setPicked(o.slug)
             }}
           >
-            <img className="tv-bc-thumb" src={o.picture} alt="" loading="lazy" />
+            <Thumb picture={o.picture} />
             <span className="tv-bc-nm">
               {o.name}
               {o.recommended === true && <span className="tv-bc-badge">{t('template.recommended')}</span>}

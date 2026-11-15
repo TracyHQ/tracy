@@ -44,6 +44,10 @@ export const en = {
   'stopped.kept.other': 'Kept: your plan, your answers and the {count} written pages.',
   'stopped.unchanged': 'Your current site is unchanged.',
   'stopped.notified': 'The Tracy team has been told and will follow up. You do not need to do anything.',
+  'stopped.notStarted':
+    'Your site could not be started, but your plan is kept and you can approve it again later.',
+  'stopped.notStarted.design':
+    'This design cannot be built yet, so your site was not started, but your plan is kept and you can approve it again later.',
   'cancelled.title': 'The build was cancelled',
   'cancelled.body': 'You cancelled this build. Your plan and your answers are kept.',
   'plan.title': '{name} site plan',

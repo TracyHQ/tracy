@@ -64,9 +64,12 @@ export function createDraftSource(fetchImpl: typeof fetch = (...args) => fetch(.
   }
 }
 
-/** One build run as `BuildProgress` and `BuildStopped` read it: Contract B progress events and the outcome. */
+/**
+ * One build run as `BuildProgress` and `BuildStopped` read it: Contract B progress events and the outcome. A build
+ * refused before any step ran has no run: it is `{ notStarted }`, the build door's code of why (`BuildNotStarted`).
+ */
 // biome-ignore lint/suspicious/noExplicitAny: Contract B progress events and outcome, checked by the contract
-export type BuildRun = { events?: any[]; outcome?: any }
+export type BuildRun = { events?: any[]; outcome?: any; notStarted?: string }
 
 export interface BuildRunFeed {
   read(sessionId: string): BuildRun | null
@@ -113,7 +116,7 @@ export function createBuildRunFeed(
   let before = 'null'
   let waiting = 0
   const listeners = new Set<() => void>()
-  const polling = () => (run !== null && !run.outcome) || waiting > 0
+  const polling = () => (run !== null && !run.outcome && !run.notStarted) || waiting > 0
   const schedule = () => {
     if (timer !== null || listeners.size === 0 || !polling()) return
     timer = setTimer(() => {
@@ -154,7 +157,13 @@ export function createBuildRunFeed(
         .then(async (response) => {
           if (!response.ok) return
           const body = await response.json().catch(() => null)
-          const next = body?.run && (body.run.outcome || Array.isArray(body.run.events)) ? body.run : null
+          const notStarted = body?.build?.notStarted
+          const next =
+            body?.run && (body.run.outcome || Array.isArray(body.run.events))
+              ? body.run
+              : typeof notStarted === 'string'
+                ? { notStarted }
+                : null
           const seen = JSON.stringify(next)
           // A wake waits for the run to move on from what it was; a read that shows the same counts down.
           if (waiting > 0) waiting = seen !== before ? 0 : waiting - 1

@@ -157,6 +157,8 @@
   "stopped.kept.one": "已保留：你的计划、你的回答和已写好的页面。",
   "stopped.kept.other": "已保留：你的计划、你的回答和已写好的 {count} 个页面。",
   "stopped.notified": "Tracy 团队已收到通知并会跟进。你无需做任何事。",
+  "stopped.notStarted": "你的 site 未能开始创建，但你的计划已保留，你之后可以再次批准。",
+  "stopped.notStarted.design": "这个设计暂时还无法构建，所以你的 site 没有开始创建，但你的计划已保留，你之后可以再次批准。",
   "stopped.once": "我无法完成“{step}”，所以我停了下来，而不是给你看一个未完成的 site。",
   "stopped.title": "你的 site 还没有完成",
   "stopped.twice": "我尝试两次后仍无法完成“{step}”，所以我停了下来，而不是给你看一个未完成的 site。",

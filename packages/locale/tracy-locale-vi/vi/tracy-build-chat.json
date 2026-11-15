@@ -157,6 +157,8 @@
   "stopped.kept.one": "Đã giữ lại: kế hoạch, các câu trả lời và trang đã viết của bạn.",
   "stopped.kept.other": "Đã giữ lại: kế hoạch, các câu trả lời và {count} trang đã viết của bạn.",
   "stopped.notified": "Đội ngũ Tracy đã được báo và sẽ theo dõi. Bạn không cần làm gì cả.",
+  "stopped.notStarted": "Chưa bắt đầu tạo được site của bạn, nhưng kế hoạch vẫn được giữ lại và bạn có thể duyệt lại sau.",
+  "stopped.notStarted.design": "Mẫu thiết kế này chưa thể dựng được, nên site của bạn chưa được bắt đầu, nhưng kế hoạch vẫn được giữ lại và bạn có thể duyệt lại sau.",
   "stopped.once": "Mình không hoàn thành được \"{step}\", nên mình dừng lại thay vì đưa bạn một site chưa hoàn chỉnh.",
   "stopped.title": "Site của bạn chưa hoàn tất",
   "stopped.twice": "Mình không hoàn thành được \"{step}\" sau hai lần thử, nên mình dừng lại thay vì đưa bạn một site chưa hoàn chỉnh.",

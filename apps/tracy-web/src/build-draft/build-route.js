@@ -75,15 +75,33 @@ const refuse = (c, code) => {
   return json(c, { code, next }, status)
 }
 
-/** The build in small, as the chat reads it; `facts`: what a rebuild adds (#612, `rebuild-summary.js`). */
+/** The create door's refusal that says the chosen design has no site to build from (`build-draft-build-wiring.js`). */
+const DESIGN_REFUSALS = new Set(['SITE_SOURCE_MISSING'])
+
+/**
+ * Why a build stopped before any of its steps ran, as a stable code the chat says in the owner's language, or null.
+ * Only a build the create door refused (no site was made) is one: `design-not-buildable` when the chosen design has no
+ * site to build from, `site-not-started` for any other refusal. The refusal itself stays with the team on the build.
+ */
+export function notStartedOf(build) {
+  if (!build?.refusal || build.site) return null
+  return DESIGN_REFUSALS.has(build.refusal.code) ? 'design-not-buildable' : 'site-not-started'
+}
+
+/**
+ * The build in small, as the chat reads it; `facts`: what a rebuild adds (#612, `rebuild-summary.js`). A build that
+ * stopped before any step carries `notStarted` (`notStartedOf`).
+ */
 export function buildSummaryOf(build, run, facts = {}) {
   if (!build) return null
   const outcome = run?.outcome?.result ?? null
   const state = outcome ?? (build.site ? 'building' : build.refusal ? 'stopped' : 'creating')
+  const notStarted = notStartedOf(build)
   return {
     id: build.id,
     plan: build.plan,
     state,
+    ...(notStarted ? { notStarted } : {}),
     ...(build.site?.siteKey ? { siteKey: build.site.siteKey } : {}),
     ...(build.site?.workspacePath ? { workspacePath: build.site.workspacePath } : {}),
     // Where the screen moved once the done build's chat moved to the site (#611).
@@ -190,6 +208,9 @@ export function buildRunRoutes({
       Boolean(builds && build.endedAt && build.site?.siteKey) &&
       Boolean(await builds.unfinished({ siteKey: build.site.siteKey }).catch(() => null))
     const facts = rebuildFactsOf({ build, brief: read.brief, unfinished })
+    // A build refused before any step ran has no run to show: no step failed, the plan is kept (`notStarted`). The
+    // run is still made above, so the build is marked ended and gives way to a new approval.
+    if (notStartedOf(build)) return { build: buildSummaryOf(build, null, facts), run: null }
     return { build: buildSummaryOf(build, made.run, facts), run: made.run }
   }
 

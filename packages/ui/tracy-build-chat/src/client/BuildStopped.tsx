@@ -44,6 +44,19 @@ export function BuildStopped({ outcome, t }: BuildStoppedProps) {
   )
 }
 
+/**
+ * The notice of a build refused before any step ran (the site could not be created; the build door's `notStarted`):
+ * one sentence that the site did not start and the plan is kept, a plain one when the design cannot be built yet. No
+ * task list is drawn with it, so no step reads as failed (run 6 showed the first step failed at 0:00).
+ */
+export function BuildNotStarted({ code, t }: { code: string; t: Translate }) {
+  return (
+    <div className="tv-bc-notice" role="status" data-not-started={code}>
+      <p>{t(code === 'design-not-buildable' ? 'stopped.notStarted.design' : 'stopped.notStarted')}</p>
+    </div>
+  )
+}
+
 /** The notice of a build the owner cancelled: neutral, nothing failed, no word about the team. */
 function BuildCancelled({ siteUnchanged, t }: { siteUnchanged: boolean; t: Translate }) {
   return (

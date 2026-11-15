@@ -22,7 +22,7 @@ import { endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js
 import { faultOf, runWithRerun } from './engine-rerun.js'
 import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
 import { askingOf } from './engine-asking.js'
-import { brandOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
+import { brandRunOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
 import { answersStillAsked } from './answers-kept.js'
 import { spendGate, spendLeft } from './engine-spend.js'
 import { discardPlan, putComposed, putRevised, recordFault } from './store.js'
@@ -201,13 +201,22 @@ export function createEngine({
   function brand(accountId, row, kit) {
     const { slug, version } = kit.template
     return start(accountId, 'brand', { template: { slug, version } }, async () => {
-      const record = await brandOf({ research: row.research, template: kit.template }, { brandStep, kit })
+      const { record, costCents } = await brandRunOf(
+        { research: row.research, template: kit.template },
+        { brandStep, kit }
+      )
       if (!record)
         throw Object.assign(new Error('the brand step answered no look record'), {
           code: 'brand_missing',
           noRerun: true
         })
-      return { ok: true, attempts: 1, columns: { brand: { record, template: { slug, version } } } }
+      // What the brand step really cost, when it knew it: the ledger settles at that (`engine-spend.js`).
+      return {
+        ok: true,
+        attempts: 1,
+        columns: { brand: { record, template: { slug, version } } },
+        ...(costCents !== undefined ? { costCents } : {})
+      }
     })
   }
 

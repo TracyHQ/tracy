@@ -179,9 +179,16 @@ test(
     const { plan } = await plannedDraft()
     const first = await s.call('POST', '/build', { plan: pinOf(plan) })
     assert.equal(first.body.build.state, 'stopped')
-    const outcome = first.body.run.outcome
-    assert.equal(outcome.result, 'stopped')
-    assert.equal(outcome.stopped.teamNotified, true)
+    // Run 6: no step ran, so the chat shows no run and no failed first step, only that the site did not start. The
+    // refusal stays on the build for the team.
+    assert.equal(first.body.run, null)
+    assert.equal(first.body.build.notStarted, 'site-not-started')
+    assert.equal(
+      JSON.stringify(first.body).includes('QUICKSTART_UNREACHABLE'),
+      false,
+      'the reason stays with the team'
+    )
+    assert.equal((await s.call('GET', '/build')).body.build.notStarted, 'site-not-started')
     assert.equal(JSON.stringify(first.body).includes('"ask"'), false, 'a fault is never a question')
     const retry = await s.call('POST', '/build', { plan: pinOf(plan) })
     assert.equal(retry.body.build.state, 'building')
