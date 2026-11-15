@@ -222,6 +222,31 @@ test('a change request answer carries what changed and what was not done, for th
   assert.equal('revised' in buildToolResultOf(JSON.stringify(planResult(2))), false)
 })
 
+test('an edit the agent made leaves a note of the values it changed; a compose leaves none', () => {
+  const changes = [
+    { field: 'look.accent', value: '#123456' },
+    { field: 'facts[name].value', value: { not: 'text' } },
+    { field: 'pictures.generated.frames', value: 3 }
+  ]
+  const fold = [call(8, 'e1', { action: 'edit', changes }), result(8, 'e1', planResult(5))].reduce(
+    buildToolFoldOf,
+    undefined
+  )
+  assert.deepEqual(fold.plan.revised, {
+    changed: [],
+    notDone: [],
+    edits: [
+      { field: 'look.accent', value: '#123456' },
+      { field: 'pictures.generated.frames', value: 3 }
+    ]
+  })
+  const composed = [call(9, 'p1', { action: 'plan' }), result(9, 'p1', planResult(6))].reduce(
+    buildToolFoldOf,
+    fold
+  )
+  assert.equal('revised' in composed.plan, false, 'a newer compose has no note')
+})
+
 /** The events of one stopped answer and what the owner may do about it (#609). */
 const stoppedRun = (turn, id, action, answer) => [call(turn, id, { action }), result(turn, id, answer)]
 const RERUN = { stopped: true, say: 'It stopped.', step: 'compose', rerun: true }

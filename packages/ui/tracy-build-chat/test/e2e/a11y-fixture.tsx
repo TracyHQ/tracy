@@ -10,6 +10,7 @@ import {
 } from '../../../../wo/website-opportunities/domain/build-contract-shared.mjs'
 import { BuildProgress } from '../../src/client/BuildProgress'
 import { BuildStopped } from '../../src/client/BuildStopped'
+import { PLAN_KEY } from '../../src/client/definitions'
 import { EarlierConversation } from '../../src/client/handoff'
 import { PlanCard } from '../../src/client/PlanCard'
 import { ReviewBar } from '../../src/client/ReviewBar'
@@ -118,8 +119,100 @@ function Planned({ view, withReview }: { view: Any; withReview: boolean }) {
     load: async () => {},
     put: () => {}
   }
-  return <ReviewBar matched={matched} drafts={drafts as Any} t={english} planCard={card} />
+  // With `view.say` the bar is given the chat's send verb, as the plugin gives it, and offers its typing line.
+  const send = view.say
+    ? async (text: string) => {
+        log.sent.push(text)
+        return view.sendResult ?? 'sent'
+      }
+    : undefined
+  return <ReviewBar matched={matched} drafts={drafts as Any} t={english} planCard={card} send={send} />
 }
+
+/**
+ * The review bar in the composer seat of dsh's chat column, the place dsh draws the composer chain in, so the bar and
+ * its plan card can be measured against the message column.
+ */
+function ReviewColumn({ view }: { view: Any }) {
+  const body = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const el = body.current
+    if (el) el.style.setProperty('--dsh-conversation-column-width', `${el.clientWidth}px`)
+  }, [])
+  return (
+    <div className="dsh-body" ref={body}>
+      <div className="dsh-scrollBody">
+        <div className="dsh-scroll">
+          <div className="dsh-column">
+            <p className="dsh-message">Here is your site plan.</p>
+          </div>
+        </div>
+        <div className="dsh-composerSeat">
+          <Planned view={{ ...view, say: true }} withReview />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** One turn's location data as dsh keeps it: `get` and a live `source` per key, the value moved by `set`. */
+function turnData(initial: unknown) {
+  let value = initial
+  const listeners = new Set<() => void>()
+  const read = (key: string) => (key === PLAN_KEY ? value : undefined)
+  return {
+    get: read,
+    source: (key: string) => ({
+      getSnapshot: () => read(key),
+      subscribe: (l: () => void) => {
+        listeners.add(l)
+        return () => void listeners.delete(l)
+      }
+    }),
+    set(next: unknown) {
+      value = next
+      for (const l of listeners) l()
+    }
+  }
+}
+
+/**
+ * The plan tails of a chat's turns, drawn ONCE, the way dsh keeps a finished turn's tail (its turn tail view is
+ * memoised), over turn data that moves the plan to the newest turn on `probe.nextPlan()`, as dsh does after a change
+ * request. `view.reviewing` stands for the review bar showing.
+ */
+const turns: ReturnType<typeof turnData>[] = []
+function Turns({ view }: { view: Any }) {
+  const [tails] = useState(() => {
+    const held = { plan: view.plan, lastEdit: null, canUndo: false }
+    return makeTails({
+      drafts: { read: () => held, subscribe: () => () => {}, load: async () => {}, put: () => {} } as Any,
+      reviews: { has: () => view.reviewing === true, subscribe: () => () => {} } as Any,
+      runs: { read: () => null, subscribe: () => () => {}, load: async () => {} } as Any,
+      t: () => english
+    })
+  })
+  const tailOf = (i: number) => (
+    <div key={i} data-turn={i + 1}>
+      {tails.plan({ sessionId: BUILD_SESSION, seq: i + 1, turn: { turn: i + 1, data: turns[i] } } as Any)}
+    </div>
+  )
+  // The first turn's tail is drawn once and kept; the second turn's tail is drawn when that turn ends.
+  const [first] = useState(() => {
+    turns.length = 0
+    turns.push(turnData({ id: view.plan.id, revision: view.plan.revision }), turnData(undefined))
+    return tailOf(0)
+  })
+  const [second, setSecond] = useState<ReturnType<typeof tailOf> | null>(null)
+  endSecondTurn = () => setSecond(tailOf(1))
+  return (
+    <>
+      {first}
+      {second}
+    </>
+  )
+}
+let endSecondTurn = () => {}
 
 /**
  * The box dsh draws its chat column in, so the working line can be measured against the message column. The rules are
@@ -243,6 +336,10 @@ function State({ name, view }: { name: string; view: Any }) {
       )
     case 'retry':
       return <Retry view={view} />
+    case 'review-column':
+      return <ReviewColumn view={view} />
+    case 'turns':
+      return <Turns view={view} />
     case 'dsh-column':
       return <DshColumn />
     case 'earlier':
@@ -282,5 +379,12 @@ let root: ReturnType<typeof createRoot> | null = null
       </div>
     )
   },
-  log: () => ({ requests: [...log.requests], decisions: [...log.decisions], sent: [...log.sent] })
+  log: () => ({ requests: [...log.requests], decisions: [...log.decisions], sent: [...log.sent] }),
+  /** A change request answered: the plan moves from the first turn to the second. */
+  nextPlan() {
+    const value = turns[0]?.get(PLAN_KEY) as Any
+    turns[0]?.set(undefined)
+    turns[1]?.set({ ...value, revision: value.revision + 1 })
+    endSecondTurn()
+  }
 }

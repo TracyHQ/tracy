@@ -199,6 +199,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
             t={t()}
             reviews={reviews}
             planCard={<LivePlan deps={tailDeps} />}
+            send={(text) => tailDeps.send?.(matched.sessionId, text) ?? Promise.resolve('no-chat' as const)}
           />
         )
       )

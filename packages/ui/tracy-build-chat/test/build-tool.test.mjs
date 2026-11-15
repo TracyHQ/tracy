@@ -534,6 +534,9 @@ test('plan with a request on a living plan waits on the revise step and hands on
   assert.ok(answered.review)
   assert.match(answered.next, /word for word/)
   assert.match(answered.next, /plan card/)
+  // The card offers only business facts, service names and the main colour: the guidance names no other control.
+  assert.match(answered.next, /a business fact, a service name or the main colour/)
+  assert.doesNotMatch(answered.next, /change the language|number of pictures|the look or/i)
   assert.match(answered.next, /Do not say anything else changed/)
   // Nothing changed: the model says so, and what was not done.
   const same = fakeWeb({

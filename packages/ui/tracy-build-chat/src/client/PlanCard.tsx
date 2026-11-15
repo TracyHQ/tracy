@@ -25,6 +25,7 @@ import {
   changedFieldsOf,
   type PlanDraft,
   type PlanFact,
+  plainTextOf,
   planCardOf,
   planChangeOf,
   planEditOf,
@@ -32,6 +33,7 @@ import {
 } from '@tracy/core/build-chat'
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
 import { type EditContext, EditableValue, UndoIcon } from './EditableValue'
+import { factLabelOf, sentenceOf, sourceNameOf } from './plan-words'
 import { refusalOf } from './save-plan-edit'
 import type { StringKey, Translate } from './strings'
 
@@ -77,18 +79,50 @@ function grouped<T>(items: T[], keyOf: (item: T) => string): { item: T; count: n
 }
 const counted = (text: string, count: number) => (count === 1 ? text : `${text} (${count})`)
 
+/**
+ * The lines of an edit the agent made, in the card's words: "Main colour is now #0B1F3A.". A field the card does not
+ * show by that name has no line.
+ */
+function editLinesOf(t: Translate, card: Card, edits: RevisionNote['edits']): string[] {
+  const lines: string[] = []
+  for (const { field, value } of edits ?? []) {
+    const fact = card.facts.find((f) => f.field === field)
+    const service = card.services.findIndex((s) => s.field === field)
+    const label = fact
+      ? factLabelOf(t, fact.kind, fact.label)
+      : field === 'look.accent'
+        ? t(card.look.accentDark === null ? 'plan.look.accent' : 'plan.look.accentLight')
+        : service >= 0
+          ? t('plan.service', { n: service + 1 })
+          : field === 'pictures.generated.frames'
+            ? t('plan.pictures.drawn')
+            : null
+    if (label !== null) lines.push(t('plan.revised.edited', { label, value: plainTextOf(String(value)) }))
+  }
+  return lines
+}
+
 /** What the last change request did: what changed, and what was not done with its reason. */
 function RevisionNoteView({
   note,
+  edited,
   t,
+  undoHintId,
   onDismiss
 }: {
   note: RevisionNote
+  /** The lines of an edit the agent made (`editLinesOf`), shown with what changed. */
+  edited: string[]
   t: Translate
+  /** Set while Undo cannot take this change back: the note says why, and Undo points at it. */
+  undoHintId?: string
   onDismiss: () => void
 }) {
-  const changed = grouped(note.changed, (line) => line)
-  const notDone = grouped(note.notDone, (e) => `${e.what}\n${e.why}`)
+  const changed = grouped([...note.changed.map(plainTextOf), ...edited], (line) => line)
+  const notDone = grouped(
+    note.notDone.map((e) => ({ what: plainTextOf(e.what), why: plainTextOf(e.why) })),
+    (e) => `${e.what}\n${e.why}`
+  )
   return (
     <section className="tv-bc-plan-sec tv-bc-plan-rev" aria-label={t('plan.revised.changed')}>
       <div className="tv-bc-plan-rev-h">
@@ -121,12 +155,17 @@ function RevisionNoteView({
                 <IconCloseOutlineRegular aria-hidden />
               </span>
               <span>
-                <span className="tv-bc-what">{counted(item.what, count)}.</span>{' '}
+                <span className="tv-bc-what">{sentenceOf(item.what, count)}</span>{' '}
                 <span className="tv-bc-muted">{item.why}</span>
               </span>
             </li>
           ))}
         </ul>
+      )}
+      {undoHintId && (
+        <p id={undoHintId} className="tv-bc-note">
+          {t('plan.undo.chatChange')}
+        </p>
       )}
     </section>
   )
@@ -149,7 +188,12 @@ const COUNT_KINDS = new Set(['service', 'person', 'quote', 'gallery'])
 /** A block's line, built from the data it will hold: "Business name, tagline, main button", "6 quotes". */
 function holdsText(t: Translate, holds: BlockHolds): string {
   if ('services' in holds) return holds.services.join(', ')
-  const facts = holds.facts.map((label, i) => (i === 0 ? label : label.toLowerCase()))
+  // "Business name, tagline, main button": the English labels go lower case after the first. A translated label keeps
+  // its own case, since a language like German writes its nouns with a capital.
+  const facts = holds.facts.map((label, i) => {
+    const said = factLabelOf(t, holds.factKinds?.[i], label)
+    return i === 0 || said !== label ? said : said.toLowerCase()
+  })
   const counts = holds.counts.map((c) =>
     plural(t, `plan.count.${COUNT_KINDS.has(c.kind) ? c.kind : 'item'}`, c.count)
   )
@@ -214,11 +258,15 @@ function Value({
 /** A fact the sources disagree on: its values as a radio group, the plan's current value checked. */
 function Conflict({
   fact,
+  label,
+  t,
   busy,
   changed,
   onPick
 }: {
   fact: PlanFact & { choice: NonNullable<PlanFact['choice']> }
+  label: string
+  t: Translate
   busy: boolean
   changed: boolean
   onPick: (value: string) => void
@@ -226,7 +274,7 @@ function Conflict({
   const name = useId()
   return (
     <div className="tv-bc-val" data-field={fact.field} data-changed={changed || undefined}>
-      <div className="tv-bc-choice" role="radiogroup" aria-label={fact.label} aria-busy={busy}>
+      <div className="tv-bc-choice" role="radiogroup" aria-label={label} aria-busy={busy}>
         {fact.choice.options.map((o) => (
           <label key={o.value} className="tv-bc-opt" data-checked={o.selected || undefined}>
             <input
@@ -240,8 +288,8 @@ function Conflict({
                 if (!busy) onPick(o.value)
               }}
             />
-            <span className="tv-bc-v">{o.value}</span>
-            <span className="tv-bc-src">{o.source}</span>
+            <span className="tv-bc-v">{o.text ?? o.value}</span>
+            <span className="tv-bc-src">{sourceNameOf(t, o.sourceKind, o.source)}</span>
           </label>
         ))}
       </div>
@@ -284,6 +332,7 @@ export function PlanCard({
   /** Whether the whole Left out list shows, not only its first lines. */
   const [allLeftOut, setAllLeftOut] = useState(false)
   const leftOutId = useId()
+  const undoHintId = useId()
   const ref = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   // A newer draft from outside (a plan the chat composed, the draft read again) replaces what the card holds.
@@ -346,6 +395,13 @@ export function PlanCard({
     card.pictures.generated.frames === 0
       ? t('plan.pictures.drawnNone')
       : plural(t, 'plan.pictures.drawnValue', card.pictures.generated.frames)
+  const edited = editLinesOf(t, card, revised?.edits)
+  const showNote =
+    revised !== null && (revised.changed.length > 0 || revised.notDone.length > 0 || edited.length > 0)
+  // A change made in the chat by a written request (the revise step) cannot be taken back with Undo: tracy-web keeps
+  // no undo for it. Undo stays disabled, and the note says why instead of leaving the owner to guess.
+  const undoUnavailable =
+    showNote && !draft.canUndo && (revised?.changed.length ?? 0) > 0 && (revised?.edits?.length ?? 0) === 0
 
   return (
     <article ref={ref} className="tv-bc-plan" aria-label={t('plan.title', { name: card.name })}>
@@ -361,6 +417,7 @@ export function PlanCard({
           className="tv-bc-btn"
           data-ghost=""
           aria-label={t('plan.undoLabel')}
+          aria-describedby={undoUnavailable ? undoHintId : undefined}
           // Nothing to take back without a last edit: disabled, so it is neither pressed nor reached by Tab.
           disabled={!draft.canUndo || !draft.lastEdit || busy}
           onClick={() => {
@@ -381,10 +438,12 @@ export function PlanCard({
         </p>
       )}
 
-      {revised && (revised.changed.length > 0 || revised.notDone.length > 0) && (
+      {showNote && revised && (
         <RevisionNoteView
           note={revised}
+          edited={edited}
           t={t}
+          {...(undoUnavailable ? { undoHintId } : {})}
           onDismiss={() => {
             onDismissRevised?.()
             // The note takes its button with it: focus goes to the card's title, not to the page.
@@ -396,10 +455,12 @@ export function PlanCard({
       <Section title={t('plan.facts')}>
         <div className="tv-bc-kv">
           {card.facts.map((f) => (
-            <Row key={f.id} label={f.label}>
+            <Row key={f.id} label={factLabelOf(t, f.kind, f.label)}>
               {f.choice ? (
                 <Conflict
                   fact={f as PlanFact & { choice: NonNullable<PlanFact['choice']> }}
+                  label={factLabelOf(t, f.kind, f.label)}
+                  t={t}
                   busy={busy}
                   changed={ctx.changed.has(f.field)}
                   onPick={(value) => {
@@ -410,10 +471,10 @@ export function PlanCard({
                 <EditableValue
                   ctx={ctx}
                   field={f.field}
-                  label={f.label}
+                  label={factLabelOf(t, f.kind, f.label)}
                   current={f.value}
                   text={f.value}
-                  source={f.source}
+                  source={sourceNameOf(t, f.sourceKind, f.source)}
                 />
               )}
             </Row>
@@ -470,7 +531,7 @@ export function PlanCard({
                 label={t('plan.service', { n: i + 1 })}
                 current={s.label}
                 text={s.label}
-                source={s.source}
+                source={sourceNameOf(t, s.sourceKind, s.source)}
               />
             </Row>
           ))}
@@ -544,7 +605,7 @@ export function PlanCard({
                   <IconCloseOutlineRegular aria-hidden />
                 </span>
                 <span>
-                  <span className="tv-bc-what">{l.what}.</span>{' '}
+                  <span className="tv-bc-what">{sentenceOf(l.what)}</span>{' '}
                   <span className="tv-bc-muted">{l.reason}</span>
                 </span>
               </li>

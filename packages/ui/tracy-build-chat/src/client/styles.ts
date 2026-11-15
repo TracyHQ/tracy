@@ -233,6 +233,7 @@ export const CSS = `
 .tv-bc-plan-rev .tv-bc-plan-rev-h h4 { margin: 0 0 6px; }
 .tv-bc-plan-rev-h .tv-bc-btn { padding: 2px 6px; }
 .tv-bc-plan-rev .tv-bc-plan-rev-sub { margin: 12px 0 6px; }
+.tv-bc-plan-rev p.tv-bc-note { margin: 8px 0 0; }
 .tv-bc-plan-t:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
 .tv-bc-x { color: var(--muted-foreground); margin-top: 2px; display: grid; place-items: center; }
 @container (max-width: 560px) {
@@ -278,9 +279,24 @@ export const CSS = `
 .tv-bc-dock:empty { padding: 0; }
 
 /* The plan review bar (ReviewBar): the shape of dsh's plan review panel, in Tracy tokens */
+/* It sits in the chat column like the working line above (.tv-bc-dock): the seat dsh gives the composer chain is the */
+/* whole body width, so the frame takes the column's width axis and centres itself, the plan card inside it too. */
 .tv-bc-review-frame {
-  display: flex; flex-direction: column; gap: 8px; padding: 6px 16px 10px; container-type: inline-size;
+  box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 6px 0 10px;
+  container-type: inline-size; min-width: 0; margin: 0 auto;
+  width: min(
+    var(--dsh-chat-content-width, 100%),
+    calc(100% - 2 * (var(--dsh-composer-side-clearance, 16px) + 16px))
+  );
 }
+/* What the owner types instead of pressing Change the plan: the plan card editor's input, the width of the bar */
+.tv-bc-review-say { padding: 0 16px 4px; }
+.tv-bc-review-say input {
+  box-sizing: border-box; width: 100%; height: 32px; padding: 0 10px; border: 1px solid var(--input); border-radius: 8px;
+  background: var(--card); color: inherit; font: inherit; font-size: 13px;
+}
+.tv-bc-review-say input:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; border-color: var(--ring); }
+@container (max-width: 560px) { .tv-bc-review-say input { height: 40px; } }
 /* The living plan card above the bar while the review waits: it scrolls in its own box, the chat keeps its room */
 .tv-bc-review-plan { max-height: 50vh; overflow-y: auto; overscroll-behavior: contain; border-radius: 16px; }
 .tv-bc-review {

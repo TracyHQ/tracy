@@ -133,22 +133,31 @@ export declare function stoppedOf(outcome: any): Stopped | null
 export declare function clockOf(seconds: number): string
 
 export interface PlanChoiceOption {
+  /** What a pick sends, as the plan holds it. */
   value: string
+  /** How the value reads on the card (character references decoded). */
+  text: string
   source: string
+  /** The source's origin code (`website`, `google`, `social`, `answer`), or null. */
+  sourceKind: string | null
   selected: boolean
 }
 export interface PlanFact {
   id: string
   field: string
+  /** The data kind (`business.name`, `contact.phone`), or null. */
+  kind: string | null
   label: string
   value: string
   source: string
+  /** The source's origin code (`website`, `google`, `social`, `answer`), or null. */
+  sourceKind: string | null
   /** Set when the sources disagree on this fact: its values, the website's first. */
   choice: null | { field: string; said: string; options: PlanChoiceOption[] }
 }
 export type BlockHolds =
   | { services: string[] }
-  | { facts: string[]; counts: { kind: string; count: number }[] }
+  | { facts: string[]; factKinds: (string | null)[]; counts: { kind: string; count: number }[] }
 /** One child list of a block as the card shows it; a list planned empty is not on the card. */
 export interface BlockList {
   /** The item's label for a list inside an item; absent for a list of the block itself. */
@@ -167,7 +176,7 @@ export interface PlanCard {
     accentDark: string | null
     logo: { kind: string; source?: string }
   }
-  services: { id: string; field: string; label: string; source: string }[]
+  services: { id: string; field: string; label: string; source: string; sourceKind: string | null }[]
   pages: {
     id: string
     name: string
@@ -243,7 +252,11 @@ export declare const PLAN_REVIEW_ID: 'plan-review'
 export interface RevisionNote {
   changed: string[]
   notDone: { what: string; why: string }[]
+  /** The values an `edit` call of the agent changed; the card says each in its own words. */
+  edits?: { field: string; value: string | number }[]
 }
+/** Plan text with its HTML character references decoded, as text only (never HTML). */
+export declare function plainTextOf<T>(text: T): T
 export type BuildToolResult =
   | { kind: 'research'; business: string }
   | { kind: 'templates'; options: TemplateOption[]; none: boolean }
@@ -267,6 +280,8 @@ export interface BuildToolFold {
   streak: { step: string; count: number } | null
   /** The latest call that asked for the build: the build run feed reads again from it. */
   build: { turn: number; seq: number; callId: string } | null
+  /** What each `edit` call asked to change, by call id. */
+  edits?: Readonly<Record<string, { field: string; value: string | number }[]>>
 }
 export interface StopSeen {
   turn: number

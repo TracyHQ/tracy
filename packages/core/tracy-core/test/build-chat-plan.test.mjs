@@ -11,6 +11,7 @@ import {
   planChangeOf,
   planEditOf,
   planOfReviewId,
+  plainTextOf,
   PLAN_REVIEW_APPROVE,
   PLAN_REVIEW_CHANGE,
   planReviewRequestOf
@@ -43,8 +44,20 @@ test('a fact the sources disagree on offers both values, the website first and s
   assert.equal(hours.choice.field, 'facts[hours].value')
   assert.match(hours.choice.said, /different opening hours/)
   assert.deepEqual(hours.choice.options, [
-    { value: 'Weekdays 6:00 to 22:00, weekends 8:00 to 18:00', source: 'Website', selected: true },
-    { value: 'Every day, 6:00 to 22:00', source: 'Google Maps', selected: false }
+    {
+      value: 'Weekdays 6:00 to 22:00, weekends 8:00 to 18:00',
+      text: 'Weekdays 6:00 to 22:00, weekends 8:00 to 18:00',
+      source: 'Website',
+      sourceKind: 'website',
+      selected: true
+    },
+    {
+      value: 'Every day, 6:00 to 22:00',
+      text: 'Every day, 6:00 to 22:00',
+      source: 'Google Maps',
+      sourceKind: 'google',
+      selected: false
+    }
   ])
   assert.equal(planCardOf(plan()).facts.find((f) => f.id === 'phone').choice, null)
 })
@@ -82,11 +95,15 @@ test('pages list their blocks with the data each will hold and the reason', () =
     ]
   )
   const [hero, services, reviews, contact] = card.pages[0].blocks
-  assert.deepEqual(hero.holds, { facts: ['Business name', 'Tagline', 'Main button'], counts: [] })
+  assert.deepEqual(hero.holds, {
+    facts: ['Business name', 'Tagline', 'Main button'],
+    factKinds: ['business.name', 'business.tagline', 'contact.cta_label'],
+    counts: []
+  })
   assert.deepEqual(services.holds, {
     services: ['Adult coaching', 'Junior squad', 'Court hire', 'Cardio tennis']
   })
-  assert.deepEqual(reviews.holds, { facts: [], counts: [{ kind: 'quote', count: 6 }] })
+  assert.deepEqual(reviews.holds, { facts: [], factKinds: [], counts: [{ kind: 'quote', count: 6 }] })
   assert.match(reviews.reason, /Tracy reviews block/)
   assert.deepEqual(contact.holds.facts, ['Phone', 'Address', 'Opening hours'])
   assert.deepEqual(card.pages[1].blocks[1].holds.counts, [{ kind: 'gallery', count: 12 }])
@@ -404,4 +421,41 @@ test('the review summary leaves a count of zero out', () => {
       )
   assert.equal(planReviewRequestOf(p).questions[0].detail, '# Sunrise Tennis Club: 5 pages')
   assert.equal(planReviewRequestOf(plan()).questions[0].detail, '# Sunrise Tennis Club: 5 pages, 4 services')
+})
+
+test('facts and services carry their data kind and source code, so the card can say them in its own words', () => {
+  const card = planCardOf(plan())
+  assert.deepEqual(
+    card.facts.slice(0, 3).map((f) => [f.kind, f.sourceKind]),
+    [
+      ['business.name', 'website'],
+      ['business.tagline', 'social'],
+      ['contact.cta_label', 'answer']
+    ]
+  )
+  assert.ok(card.services.every((s) => typeof s.sourceKind === 'string' || s.sourceKind === null))
+  const holds = card.pages
+    .flatMap((p) => p.blocks)
+    .find((b) => 'facts' in b.holds && b.holds.facts.length > 0).holds
+  assert.equal(holds.factKinds.length, holds.facts.length, 'one kind per fact label, in the same order')
+})
+
+test('character references in plan text read as the characters, as text only', () => {
+  const p = plan()
+  p.facts[0].value = 'Larkfen&rsquo;s Courts &amp; Caf&eacute;'
+  p.items.find((i) => i.kind === 'service').label = 'Junior &#8220;squad&#x201D;'
+  p.leftOut = [{ what: 'Coach&rsquo;s page', kind: 'page', reason: 'Not&nbsp;yet &lt;b&gt;' }]
+  p.assumptions = [{ id: 'a1', said: 'Kept the club&apos;s order.', field: 'look.logo' }]
+  const card = planCardOf(p)
+  assert.equal(card.name, `Larkfen’s Courts & Caf${String.fromCodePoint(0xe9)}`)
+  assert.equal(card.services[0].label, 'Junior “squad”')
+  assert.equal(card.leftOut[0].what, 'Coach’s page')
+  assert.equal(card.leftOut[0].reason, 'Not yet <b>', 'a decoded tag is two characters of text')
+  assert.equal(card.assumptions[0].said, "Kept the club's order.")
+})
+
+test('an unknown or unsafe reference is left as written', () => {
+  assert.equal(plainTextOf('Tom &unknownname; &#0; &#xD800; &#7;'), 'Tom &unknownname; &#0; &#xD800; &#7;')
+  assert.equal(plainTextOf(42), 42)
+  assert.equal(plainTextOf('&amp;lt;'), '&lt;', 'decoded once, never twice')
 })

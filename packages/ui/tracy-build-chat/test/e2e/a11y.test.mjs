@@ -80,6 +80,14 @@ const REVISED = {
     { what: 'Move the logo', why: 'The logo stays where the design puts it.' }
   ]
 }
+// The same note as the server writes it in a live run: its lines already end with a full stop.
+const REVISED_FULL_STOPS = {
+  changed: ['The Gallery section is removed from the Coaches page.'],
+  notDone: [
+    { what: 'You want the opening hours on every page.', why: 'The plan has no place for them.' },
+    { what: 'You want the opening hours on every page.', why: 'The plan has no place for them.' }
+  ]
+}
 const run = (name) => scenarioOf(name).runs.at(-1)
 // What the engine said, as `tracy_build` answers it (#609): a stop the owner may have run again, and one that may not.
 const STOPPED = { stopped: true, say: 'Stopped.', step: 'compose', rerun: true }
@@ -101,6 +109,8 @@ const STATES = [
   ['plan-revised', 'plan', { plan: PLAN, revised: REVISED }],
   ['plan-left-out-many', 'plan', { plan: manyLeftOut }],
   ['review', 'review', { plan: PLAN }],
+  ['review-say', 'review', { plan: PLAN, say: true }],
+  ['plan-revised-full-stops', 'plan', { plan: PLAN, revised: REVISED_FULL_STOPS }],
   ['building', 'progress', { run: run('building') }],
   ['done', 'progress', { run: run('done') }],
   ['could-not-finish', 'progress', { run: run('could-not-finish') }],
@@ -531,4 +541,99 @@ test('Try again: none for a stop that may not be rerun, after two retries, or wh
   // The stop sentence stays when the button goes.
   assert.match(await page.locator('#root').innerText(), /Something went wrong on our side/)
   await page.close()
+})
+
+test('a server line that ends with a full stop is shown with one full stop, never two', async () => {
+  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
+  await mount(page, 'plan', { plan: PLAN, revised: REVISED_FULL_STOPS })
+  const items = await page.getByRole('region', { name: 'What changed' }).locator('li').allInnerTexts()
+  assert.ok(
+    items.includes('You want the opening hours on every page (2). The plan has no place for them.'),
+    items.join(' | ')
+  )
+  assert.doesNotMatch(await page.locator('#root').innerText(), /\.\./)
+  await page.close()
+})
+
+test('after a change request only the newest turn draws the plan card, and none while the review bar shows', async () => {
+  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
+  const cards = (turn) =>
+    page.locator(turn ? `[data-turn="${turn}"] article.tv-bc-plan` : 'article.tv-bc-plan').count()
+  await mount(page, 'turns', { plan: PLAN })
+  assert.equal(await cards(1), 1, 'the turn that made the plan draws it')
+  assert.equal(await cards(), 1)
+  await page.evaluate(() => window.probe.nextPlan())
+  await page.waitForFunction(
+    () => document.querySelectorAll('[data-turn="2"] article.tv-bc-plan').length === 1
+  )
+  assert.equal(await cards(1), 0, 'the earlier turn, drawn once and kept, gives its card up')
+  assert.equal(await cards(), 1, 'exactly one plan card in the chat')
+  await mount(page, 'turns', { plan: PLAN, reviewing: true })
+  assert.equal(await cards(), 0, 'while the review bar shows, the bar draws the one card')
+  await mount(page, 'review', { plan: PLAN })
+  assert.equal(await cards(), 1)
+  await page.close()
+})
+
+test('review bar: typing a change and pressing Enter sends it, then answers Change the plan', async () => {
+  const { page } = await open(browser, VIEWPORTS[0], 'light', code)
+  await mount(page, 'review', { plan: PLAN, say: true })
+  const line = page.getByRole('textbox', { name: 'Or describe the change you want' })
+  await line.fill('Make the tagline shorter')
+  await line.press('Enter')
+  await page.waitForFunction(() => window.probe.log().decisions.length === 1)
+  const log = await page.evaluate(() => window.probe.log())
+  assert.deepEqual(log.sent, ['Make the tagline shorter'])
+  assert.deepEqual(log.decisions, [
+    { answers: [{ id: `plan-review:${PLAN.id}:${PLAN.revision}`, selected: ['Change the plan'] }] }
+  ])
+  assert.equal(await line.inputValue(), '', 'the line is emptied once the words went out')
+  // Change the plan with an empty line answers at once and sends no message.
+  await mount(page, 'review', { plan: PLAN, say: true })
+  await page.getByRole('button', { name: 'Change the plan' }).click()
+  await page.waitForFunction(() => window.probe.log().decisions.length === 1)
+  assert.deepEqual((await page.evaluate(() => window.probe.log())).sent, [])
+  await page.close()
+})
+
+test('review bar: words the chat did not take stay typed, and the review is not answered', async () => {
+  const { page } = await open(browser, VIEWPORTS[0], 'light', code)
+  await mount(page, 'review', { plan: PLAN, say: true, sendResult: 'failed' })
+  const line = page.getByRole('textbox', { name: 'Or describe the change you want' })
+  await line.fill('Add a prices page')
+  await page.getByRole('button', { name: 'Change the plan' }).click()
+  await page.getByText('Your answer was not sent. Try again.').waitFor()
+  assert.equal(await line.inputValue(), 'Add a prices page')
+  assert.deepEqual((await page.evaluate(() => window.probe.log())).decisions, [])
+  await page.close()
+})
+
+test('review bar and its plan card stay inside the chat column at phone, tablet and desktop width', async () => {
+  for (const width of [390, 768, 1280]) {
+    const theme = width === 390 ? 'dark' : 'light'
+    const { page } = await open(browser, { width, height: 900 }, theme, code)
+    await mount(page, 'review-column', { plan: PLAN })
+    await page.waitForSelector('.tv-bc-review')
+    if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${TAG}-review-column-${width}-${theme}.png`) })
+    const edges = await page.evaluate(() => {
+      const box = (sel) => {
+        const r = document.querySelector(sel).getBoundingClientRect()
+        return { left: r.left, right: r.right }
+      }
+      return {
+        column: box('.dsh-column'),
+        frame: box('.tv-bc-review-frame'),
+        card: box('article.tv-bc-plan'),
+        scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth
+      }
+    })
+    for (const part of ['frame', 'card']) {
+      assert.ok(
+        edges[part].left >= edges.column.left - 1 && edges[part].right <= edges.column.right + 1,
+        `at ${width} the ${part} spans ${edges[part].left} to ${edges[part].right}, the column ${edges.column.left} to ${edges.column.right}`
+      )
+    }
+    assert.ok(edges.scroll <= 0, `horizontal page scroll of ${edges.scroll}px at ${width}`)
+    await page.close()
+  }
 })

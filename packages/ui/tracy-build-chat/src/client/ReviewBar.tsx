@@ -19,6 +19,12 @@
  * turn that asks the review waits for the answer. So the bar draws the living plan card itself (`planCard`), scrolled
  * in its own box, and marks the session in `reviews` so the plan tail stands aside: one plan card, before and while
  * the owner decides, with its inline edits and undo.
+ *
+ * THE OWNER CAN STILL SAY WHAT TO CHANGE. dsh hides its chat input while any entry of its composer chain is chosen
+ * (ui-conversation ConversationContent, `renderSlotChain(..., { overlay: true })`), and it would do the same for its
+ * own question card, so the bar carries one line to type in: Enter, or Change the plan with text in it, sends the
+ * words as the owner's next message (queued after this turn) and then answers Change the plan. What the owner typed
+ * in dsh's input before the bar showed stays there, since dsh keeps that input mounted.
  */
 import { Button } from '@deepseek-ai/dsh-client-ui-primitives'
 import {
@@ -73,7 +79,8 @@ export function ReviewBar({
   drafts,
   t,
   reviews,
-  planCard
+  planCard,
+  send
 }: {
   matched: PendingReview
   drafts: DraftSource
@@ -82,12 +89,19 @@ export function ReviewBar({
   reviews?: ReviewPresence
   /** The living plan card, drawn above the bar. */
   planCard?: ReactNode
+  /**
+   * Sends one message to this chat as the owner, queued after the running turn (dsh's session verb). With it the bar
+   * offers a line to type the change in, since dsh hides its own chat input while the bar shows.
+   */
+  send?: (text: string) => Promise<'sent' | 'no-chat' | 'failed'>
 }) {
   const draft = useSyncExternalStore(drafts.subscribe, drafts.read, drafts.read)
   useEffect(() => void drafts.load(), [drafts])
   useEffect(() => reviews?.show(matched.sessionId), [reviews, matched.sessionId])
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
+  /** What the owner typed as the change they want; kept until it was sent. */
+  const [said, setSaid] = useState('')
   const question = matched.questions[0]
   const asked = t('review.question')
   const plan = draft?.plan
@@ -111,6 +125,27 @@ export function ReviewBar({
         setFailed(true)
       })
   }
+  /**
+   * Change the plan with the owner's own words: the message goes first, queued after this turn, and only once it is
+   * sent is the review answered, so a message the chat refused stays typed in the line and nothing is lost.
+   */
+  const change = () => {
+    const text = said.trim()
+    if (text === '' || !send) return decide('change')
+    setBusy(true)
+    setFailed(false)
+    void send(text)
+      .catch(() => 'failed' as const)
+      .then((sent) => {
+        if (sent !== 'sent') {
+          setBusy(false)
+          setFailed(true)
+          return
+        }
+        setSaid('')
+        decide('change')
+      })
+  }
 
   return (
     <div className="tv-bc-review-frame" data-plan-review-key={matched.key}>
@@ -121,17 +156,28 @@ export function ReviewBar({
           <p className="tv-bc-review-q">{asked}</p>
           {summary !== null && <p className="tv-bc-muted tv-bc-small">{summary}</p>}
         </div>
+        {send && (
+          <div className="tv-bc-review-say">
+            <input
+              value={said}
+              aria-label={t('review.say')}
+              placeholder={t('review.say')}
+              aria-disabled={busy || undefined}
+              onChange={(e) => setSaid(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key !== 'Enter' || e.nativeEvent.isComposing) return
+                e.preventDefault()
+                if (!busy && said.trim() !== '') change()
+              }}
+            />
+          </div>
+        )}
         <div className="tv-bc-review-foot">
           <div className="tv-bc-review-err" role="status">
             {failed ? t('review.failed') : null}
           </div>
           <div className="tv-bc-review-actions">
-            <Button
-              variant="outline"
-              className="tv-bc-review-btn"
-              disabled={busy}
-              onClick={() => decide('change')}
-            >
+            <Button variant="outline" className="tv-bc-review-btn" disabled={busy} onClick={change}>
               {t('review.change')}
             </Button>
             <Button

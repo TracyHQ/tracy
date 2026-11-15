@@ -123,7 +123,8 @@ export function buildToolRowOf(rawArgs, text) {
  * @typedef {{ turn: number, seq: number, callId: string }} BuildAskSeen
  * @typedef {{ calls: Readonly<Record<string, string>>, templates: TemplatesSeen | null, plan: PlanSeen | null,
  *   working: WorkingSeen | null, stop: StopSeen | null, streak: { step: string, count: number } | null,
- *   build: BuildAskSeen | null }} BuildToolFold
+ *   build: BuildAskSeen | null,
+ *   edits?: Readonly<Record<string, { field: string, value: string | number }[]>> }} BuildToolFold
  */
 
 /** @type {BuildToolFold} */
@@ -186,7 +187,17 @@ export function buildToolFoldOf(state = EMPTY, event) {
       action === 'build'
         ? { turn: Number.isSafeInteger(turn) ? turn : -1, seq: Number(event.seq), callId: data.callId }
         : (state.build ?? null)
-    return { ...state, calls: { ...state.calls, [data.callId]: action }, working, stop: null, build }
+    // What an `edit` call asked to change: its answer names only the plan revision, so the note comes from here.
+    const asked = action === 'edit' ? editsOf(argsOf(data.arguments).changes) : []
+    const edits = asked.length > 0 ? { ...state.edits, [data.callId]: asked } : state.edits
+    return {
+      ...state,
+      calls: { ...state.calls, [data.callId]: action },
+      ...(edits ? { edits } : {}),
+      working,
+      stop: null,
+      build
+    }
   }
   if (event?.type !== 'tool/result' || event.surfaceOp !== 'append') return state
   const message = data?.message
@@ -212,7 +223,10 @@ export function buildToolFoldOf(state = EMPTY, event) {
     state = { ...state, streak: null, stop: null }
   if (result?.kind === 'templates')
     return { ...state, templates: { turn, seq, options: result.options, none: result.none } }
-  if (result?.kind === 'plan')
+  if (result?.kind === 'plan') {
+    // An edit the agent made answers with a new revision only: its note says which values it changed.
+    const edits = state.calls[callId] === 'edit' ? (state.edits?.[callId] ?? []) : []
+    const revised = result.revised ?? (edits.length > 0 ? { changed: [], notDone: [], edits } : undefined)
     return {
       ...state,
       plan: {
@@ -220,10 +234,27 @@ export function buildToolFoldOf(state = EMPTY, event) {
         seq,
         id: result.id,
         revision: result.revision,
-        ...(result.revised ? { revised: result.revised } : {})
+        ...(revised ? { revised } : {})
       }
     }
+  }
   return state
+}
+
+/**
+ * The changes of an `edit` call as the note keeps them: a field path and a text or number value each, at most ten.
+ * @param {unknown} changes
+ * @returns {{ field: string, value: string | number }[]}
+ */
+function editsOf(changes) {
+  return (Array.isArray(changes) ? changes : [])
+    .filter(
+      (c) =>
+        typeof c?.field === 'string' &&
+        (typeof c.value === 'string' || (typeof c.value === 'number' && Number.isFinite(c.value)))
+    )
+    .slice(0, 10)
+    .map((c) => ({ field: c.field, value: c.value }))
 }
 
 /**

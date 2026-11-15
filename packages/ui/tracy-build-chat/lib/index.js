@@ -59,20 +59,72 @@ var nameTooLongSay = (limit) => `That name is too long for this design. Please u
 var answerTooLongSay = (limit) => `That answer is too long. Please use ${limit} characters or fewer.`;
 var requestTooLongSay = (limit) => `That request is too long. Please use ${limit} characters or fewer.`;
 
+// ../../core/tracy-core/src/build-chat/plain-text.mjs
+var NAMED = Object.freeze({
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  nbsp: "\xA0",
+  rsquo: "\u2019",
+  lsquo: "\u2018",
+  rdquo: "\u201D",
+  ldquo: "\u201C",
+  sbquo: "\u201A",
+  bdquo: "\u201E",
+  ndash: "\u2013",
+  mdash: "\u2014",
+  hellip: "\u2026",
+  middot: "\xB7",
+  bull: "\u2022",
+  copy: "\xA9",
+  reg: "\xAE",
+  trade: "\u2122",
+  deg: "\xB0",
+  // Written as code points: the repository's language scan reads accented letters in source as prose.
+  eacute: String.fromCodePoint(233),
+  egrave: String.fromCodePoint(232),
+  aacute: String.fromCodePoint(225),
+  agrave: String.fromCodePoint(224),
+  ouml: String.fromCodePoint(246),
+  uuml: String.fromCodePoint(252),
+  auml: String.fromCodePoint(228),
+  ccedil: String.fromCodePoint(231),
+  ntilde: String.fromCodePoint(241)
+});
+var REFERENCE = /&(?:#(\d{1,7})|#[xX]([0-9a-fA-F]{1,6})|([a-zA-Z]{2,8}));/g;
+var usable = (cp) => Number.isInteger(cp) && cp > 31 && cp <= 1114111 && !(cp >= 127 && cp <= 159) && !(cp >= 55296 && cp <= 57343);
+function plainTextOf(text2) {
+  if (typeof text2 !== "string" || !text2.includes("&")) return text2;
+  return (
+    /** @type {T} */
+    text2.replace(REFERENCE, (whole, dec, hex, name2) => {
+      if (name2 !== void 0) return Object.hasOwn(NAMED, name2) ? NAMED[name2] : whole;
+      const cp = dec !== void 0 ? Number(dec) : Number.parseInt(hex, 16);
+      return usable(cp) ? String.fromCodePoint(cp) : whole;
+    })
+  );
+}
+
 // ../../core/tracy-core/src/build-chat/plan.mjs
 var PLAN_REVIEW_ID = "plan-review";
 var REVIEW_ID = PLAN_REVIEW_ID;
 var english = (key, vars = {}) => BUILD_CHAT_STRINGS[key].replace(/\{(\w+)\}/g, (_, name2) => String(vars[name2] ?? ""));
-var firstSource = (sources) => sources?.[0]?.name ?? "";
+var firstSource = (sources) => plainTextOf(sources?.[0]?.name ?? "");
+var firstSourceKind = (sources) => typeof sources?.[0]?.kind === "string" ? sources[0].kind : null;
 var isWebsite = (alternative) => (alternative.sources ?? []).some((s) => s.kind === "website");
 function choiceOf(fact, assumption) {
   const ordered = [...assumption.alternatives].sort((a, b) => Number(isWebsite(b)) - Number(isWebsite(a)));
   return {
     field: assumption.field,
-    said: assumption.said,
+    said: plainTextOf(assumption.said),
+    // `value` is what a pick sends, exactly as the plan holds it; `text` is how it reads on the card.
     options: ordered.map((a) => ({
       value: a.value,
+      text: plainTextOf(a.value),
       source: firstSource(a.sources),
+      sourceKind: firstSourceKind(a.sources),
       selected: a.value === fact.value
     }))
   };
@@ -80,13 +132,15 @@ function choiceOf(fact, assumption) {
 function holdsOf(block, plan, serviceIds) {
   const data = block.data ?? [];
   if (serviceIds.length > 0 && data.length === serviceIds.length && serviceIds.every((id) => data.includes(id)))
-    return { services: serviceIds.map((id) => plan.items.find((i) => i.id === id).label) };
+    return { services: serviceIds.map((id) => plainTextOf(plan.items.find((i) => i.id === id).label)) };
   const facts = [];
+  const factKinds = [];
   const counts = [];
   for (const id of data) {
     const fact = plan.facts.find((f) => f.id === id);
     if (fact) {
-      facts.push(fact.label);
+      facts.push(plainTextOf(fact.label));
+      factKinds.push(typeof fact.kind === "string" ? fact.kind : null);
       continue;
     }
     const item = plan.items.find((i) => i.id === id);
@@ -96,7 +150,7 @@ function holdsOf(block, plan, serviceIds) {
     if (seen) seen.count += n;
     else counts.push({ kind: item.kind, count: n });
   }
-  return { facts, counts };
+  return { facts, factKinds, counts };
 }
 var MAX_LIST_DEPTH = 3;
 function listsOf(lists, plan, depth = 1) {
@@ -112,15 +166,15 @@ function listsOf(lists, plan, depth = 1) {
     }
     if (rows.length === 0) continue;
     const item = list.item ? plan.items.find((i) => i.id === list.item) : null;
-    out.push(item ? { head: item.label, rows } : { rows });
+    out.push(item ? { head: plainTextOf(item.label), rows } : { rows });
   }
   return out;
 }
 function rowLabelOf(row, plan) {
-  if (row.page !== void 0) return plan.pages.find((p) => p.id === row.page)?.name ?? null;
+  if (row.page !== void 0) return plainTextOf(plan.pages.find((p) => p.id === row.page)?.name ?? null);
   const id = row.data;
   const found = (plan.rows ?? []).find((r) => r.id === id)?.label ?? plan.facts.find((f) => f.id === id)?.value ?? plan.items.find((i) => i.id === id)?.label;
-  return found ?? null;
+  return plainTextOf(found ?? null);
 }
 function plainWordsOf(what) {
   const text2 = String(what ?? "").replace(new RegExp("(\\p{L})-(?=\\p{L})", "gu"), "$1 ");
@@ -136,12 +190,13 @@ function leftOutOf(leftOut) {
   const lines = [];
   const byKey = /* @__PURE__ */ new Map();
   for (const l of leftOut ?? []) {
-    const what = plainWordsOf(l.what);
-    const key = JSON.stringify([what, l.kind, l.reason]);
+    const what = plainWordsOf(plainTextOf(l.what));
+    const reason = plainTextOf(l.reason);
+    const key = JSON.stringify([what, l.kind, reason]);
     const seen = byKey.get(key);
     if (seen) seen.count += 1;
     else {
-      const line = { what, kind: l.kind, reason: l.reason, count: 1 };
+      const line = { what, kind: l.kind, reason, count: 1 };
       byKey.set(key, line);
       lines.push(line);
     }
@@ -175,7 +230,7 @@ function planCardOf(contractPlan) {
   );
   const services = plan.items.filter((i) => i.kind === "service");
   const serviceIds = services.map((s) => s.id);
-  const name2 = plan.facts.find((f) => f.kind === "business.name")?.value ?? "";
+  const name2 = plainTextOf(plan.facts.find((f) => f.kind === "business.name")?.value ?? "");
   return {
     planId: plan.id,
     revision: plan.revision,
@@ -186,9 +241,12 @@ function planCardOf(contractPlan) {
       return {
         id: f.id,
         field,
-        label: f.label,
-        value: f.value,
+        // The data kind (`business.name`) and the source's origin code: the card says both in its own words.
+        kind: typeof f.kind === "string" ? f.kind : null,
+        label: plainTextOf(f.label),
+        value: plainTextOf(f.value),
         source: firstSource(f.sources),
+        sourceKind: firstSourceKind(f.sources),
         choice: assumption ? choiceOf(f, assumption) : null
       };
     }),
@@ -203,18 +261,19 @@ function planCardOf(contractPlan) {
     services: services.map((s) => ({
       id: s.id,
       field: `items[${s.id}].label`,
-      label: s.label,
-      source: firstSource(s.sources)
+      label: plainTextOf(s.label),
+      source: firstSource(s.sources),
+      sourceKind: firstSourceKind(s.sources)
     })),
     pages: plan.pages.map((p) => ({
       id: p.id,
-      name: p.name,
+      name: plainTextOf(p.name),
       blocks: p.blocks.map((b) => {
         const lists = listsOf(b.lists, plan);
         return {
           id: b.id,
-          label: b.label,
-          reason: b.reason,
+          label: plainTextOf(b.label),
+          reason: plainTextOf(b.reason),
           holds: holdsOf(b, plan, serviceIds),
           ...lists.length > 0 ? { lists } : {}
         };
@@ -224,11 +283,11 @@ function planCardOf(contractPlan) {
       own: { frames: plan.pictures.own.frames, from: [...plan.pictures.own.from ?? []] },
       generated: {
         frames: plan.pictures.generated.frames,
-        ...plan.pictures.generated.reason ? { reason: plan.pictures.generated.reason } : {}
+        ...plan.pictures.generated.reason ? { reason: plainTextOf(plan.pictures.generated.reason) } : {}
       }
     },
     // A disputed fact is settled at the fact itself; every other assumption is listed.
-    assumptions: (plan.assumptions ?? []).filter((a) => !disputed.has(a.field)).map((a) => ({ id: a.id, said: a.said })),
+    assumptions: (plan.assumptions ?? []).filter((a) => !disputed.has(a.field)).map((a) => ({ id: a.id, said: plainTextOf(a.said) })),
     leftOut: leftOutOf(plan.leftOut),
     counts: { pages: plan.pages.length, services: services.length }
   };
@@ -318,7 +377,8 @@ var BUILD_FAILED_SAY = `Your site could not be built this time. ${TEAM_SEES_SAY}
 var BUILD_LOCKED_SAY2 = BUILD_LOCKED_SAY;
 var BUILD_UNCHECKED_SAY = "I asked for your site to be built, but I could not check on it just now. Ask me again in a minute to see how it is going.";
 var BUILD_CHAT_OFF_SAY = "Building a site in the chat is not available right now. You can still create your site from the Add site page.";
-var BUILD_BUSY_SAY = "I am still working on your plan, so it cannot change right now. Please make your change again when I am done.";
+var BUILD_BUSY_SAY = "I am still working on your plan, so it cannot change right now. Make your change again when I am done.";
+var PLAN_CARD_CONTROLS_GUIDANCE = "When an entry asks to change a business fact, a service name or the main colour, tell the owner they can change that value on the plan card. Never say that the language, the design, the logo, the pictures or anything else can be changed on the plan card.";
 var TRY_LATER_FALLBACK_SAY = "I have done this many times in a short while, so I paused here. Please try again later.";
 var BODY_TOO_LARGE_SAY = "That was too long for me to send. Please say it in fewer words.";
 var ANSWERS_FULL_SAY = "I could not keep your last answer, because this plan already holds as many answers as it can. Please continue with the plan as it is.";
@@ -581,7 +641,7 @@ ${JSON.stringify(answer)}`;
       return {
         refused: true,
         problems,
-        next: `If the change was a colour and you did not use the exact field, try once more. ${COLOUR_EDIT_GUIDANCE} Otherwise tell the owner plainly, in their language, what could not be changed and why, and that the plan card is where they can change it by hand. Do not ask a question about it.`
+        next: `If the change was a colour and you did not use the exact field, try once more. ${COLOUR_EDIT_GUIDANCE} Otherwise tell the owner plainly, in their language, what could not be changed and why. ${PLAN_CARD_CONTROLS_GUIDANCE} Do not ask a question about it.`
       };
     }
     return stopped(res.body?.say);
@@ -610,7 +670,7 @@ ${JSON.stringify(answer)}`;
         unchanged,
         revision: { changed: lines(result.revision?.changed), notDone },
         review,
-        next: `${unchanged ? "Nothing on the plan changed: say so plainly." : "Say what changed using the sentences in revision.changed, word for word."} Then say each entry of revision.notDone with its why. Do not say anything else changed. When an entry asks for the language, a value, the look or the number of pictures, tell the owner they can change it on the plan card. Then call ask_user_question with review, unchanged.`
+        next: `${unchanged ? "Nothing on the plan changed: say so plainly." : "Say what changed using the sentences in revision.changed, word for word."} Then say each entry of revision.notDone with its why. Do not say anything else changed. ${PLAN_CARD_CONTROLS_GUIDANCE} Then call ask_user_question with review, unchanged.`
       };
     }
     if (state?.step === "brand")

@@ -90,7 +90,15 @@ export const BUILD_CHAT_OFF_SAY =
  * sentence of its own. Plain English, no dashes.
  */
 export const BUILD_BUSY_SAY =
-  'I am still working on your plan, so it cannot change right now. Please make your change again when I am done.'
+  'I am still working on your plan, so it cannot change right now. Make your change again when I am done.'
+
+/**
+ * Private guidance: what the plan card really lets the owner change by hand (`PlanCard.tsx`: the business facts, the
+ * service names and the main colour). The site language, the design, the logo, the pictures and what a section holds
+ * are shown there, not offered, so the agent never points the owner at a control the card does not have.
+ */
+export const PLAN_CARD_CONTROLS_GUIDANCE =
+  'When an entry asks to change a business fact, a service name or the main colour, tell the owner they can change that value on the plan card. Never say that the language, the design, the logo, the pictures or anything else can be changed on the plan card.'
 /**
  * Owner facing: said when a step was started too often for now (`TRY_LATER`) and the door gave no plain sentence of
  * its own. Plain English, no dashes.
@@ -540,7 +548,7 @@ export function createBuildTool({
       return {
         refused: true,
         problems,
-        next: `If the change was a colour and you did not use the exact field, try once more. ${COLOUR_EDIT_GUIDANCE} Otherwise tell the owner plainly, in their language, what could not be changed and why, and that the plan card is where they can change it by hand. Do not ask a question about it.`
+        next: `If the change was a colour and you did not use the exact field, try once more. ${COLOUR_EDIT_GUIDANCE} Otherwise tell the owner plainly, in their language, what could not be changed and why. ${PLAN_CARD_CONTROLS_GUIDANCE} Do not ask a question about it.`
       }
     }
     return stopped(res.body?.say)
@@ -580,7 +588,7 @@ export function createBuildTool({
         unchanged,
         revision: { changed: lines(result.revision?.changed), notDone },
         review,
-        next: `${unchanged ? 'Nothing on the plan changed: say so plainly.' : 'Say what changed using the sentences in revision.changed, word for word.'} Then say each entry of revision.notDone with its why. Do not say anything else changed. When an entry asks for the language, a value, the look or the number of pictures, tell the owner they can change it on the plan card. Then call ask_user_question with review, unchanged.`
+        next: `${unchanged ? 'Nothing on the plan changed: say so plainly.' : 'Say what changed using the sentences in revision.changed, word for word.'} Then say each entry of revision.notDone with its why. Do not say anything else changed. ${PLAN_CARD_CONTROLS_GUIDANCE} Then call ask_user_question with review, unchanged.`
       }
     }
     // The brand step (#616) prepares the business's own look the plan is composed from; the plan is asked for again.

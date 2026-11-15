@@ -10,8 +10,10 @@ import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 
 import {
+  BUILD_BUSY_SAY,
   BUILD_DESCRIPTION,
   COLOUR_EDIT_GUIDANCE,
+  PLAN_CARD_CONTROLS_GUIDANCE,
   PRIVATE_GUIDANCE_MARK,
   createBuildTool,
   templatesNext
@@ -101,8 +103,35 @@ test('the template step confirms a single design and asks to pick among several'
 })
 
 test('the tool guidance has no em dash or en dash', () => {
-  for (const text of [PRIVATE_GUIDANCE_MARK, COLOUR_EDIT_GUIDANCE, BUILD_DESCRIPTION, templatesNext([])])
+  for (const text of [
+    PRIVATE_GUIDANCE_MARK,
+    COLOUR_EDIT_GUIDANCE,
+    BUILD_DESCRIPTION,
+    templatesNext([]),
+    PLAN_CARD_CONTROLS_GUIDANCE
+  ])
     assert.doesNotMatch(text, /[–—]/)
+})
+
+test('the guidance names only the controls the plan card has: facts, service names and the main colour', async () => {
+  assert.match(PLAN_CARD_CONTROLS_GUIDANCE, /a business fact, a service name or the main colour/)
+  assert.match(PLAN_CARD_CONTROLS_GUIDANCE, /Never say that the language/)
+  const refused = await call(toolAnswering(422, { code: 'INVALID_EDIT', problems: ['Nope.'] }), {
+    action: 'edit',
+    changes: [{ field: 'language', value: 'fr' }]
+  })
+  assert.ok(refused.next.includes(PLAN_CARD_CONTROLS_GUIDANCE))
+  // The card itself: the language and the pictures are shown, never offered as an editor.
+  const card = readFileSync(new URL('../src/client/PlanCard.tsx', import.meta.url), 'utf8')
+  assert.match(card, /<Value field="language"/)
+  assert.match(card, /<Value\s+field="pictures\.generated\.frames"/)
+})
+
+test('the busy sentence of the tool is the plan card sentence, word for word', () => {
+  const strings = readFileSync(new URL('../src/client/strings.ts', import.meta.url), 'utf8')
+  const card = strings.match(/'plan\.busy':\s*'([^']+)'/)?.[1]
+  assert.equal(typeof card, 'string')
+  assert.equal(BUILD_BUSY_SAY, card)
 })
 
 test('a stop that may be rerun: the persona says the sentence, asks nothing, and reruns once on the owner message', () => {

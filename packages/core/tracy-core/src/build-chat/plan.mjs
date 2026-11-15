@@ -12,6 +12,7 @@
  * (ui-user-questions PlanReviewPanel) draws, and `approvalOf` reads its answer. Pure: no React, no DOM, no dsh import.
  */
 import { BUILD_CHAT_STRINGS } from './conversation.mjs'
+import { plainTextOf as text } from './plain-text.mjs'
 
 const PLAN_EDIT_SCHEMA = 'tracy-build-plan-edit/v1'
 /** The id of the plan review request: the one question the tool's guard admits beside the engine's own. */
@@ -22,7 +23,9 @@ const REVIEW_ID = PLAN_REVIEW_ID
 const english = (key, vars = {}) =>
   BUILD_CHAT_STRINGS[key].replace(/\{(\w+)\}/g, (_, name) => String(vars[name] ?? ''))
 
-const firstSource = (sources) => sources?.[0]?.name ?? ''
+const firstSource = (sources) => text(sources?.[0]?.name ?? '')
+/** The origin code of the first source (`website`, `google`, `social`, `answer`), for the card's own words; null if none. */
+const firstSourceKind = (sources) => (typeof sources?.[0]?.kind === 'string' ? sources[0].kind : null)
 const isWebsite = (alternative) => (alternative.sources ?? []).some((s) => s.kind === 'website')
 
 /** The values of a disputed fact, the website's first, the current value selected. */
@@ -30,10 +33,13 @@ function choiceOf(fact, assumption) {
   const ordered = [...assumption.alternatives].sort((a, b) => Number(isWebsite(b)) - Number(isWebsite(a)))
   return {
     field: assumption.field,
-    said: assumption.said,
+    said: text(assumption.said),
+    // `value` is what a pick sends, exactly as the plan holds it; `text` is how it reads on the card.
     options: ordered.map((a) => ({
       value: a.value,
+      text: text(a.value),
       source: firstSource(a.sources),
+      sourceKind: firstSourceKind(a.sources),
       selected: a.value === fact.value
     }))
   }
@@ -47,13 +53,16 @@ function holdsOf(block, plan, serviceIds) {
     data.length === serviceIds.length &&
     serviceIds.every((id) => data.includes(id))
   )
-    return { services: serviceIds.map((id) => plan.items.find((i) => i.id === id).label) }
+    return { services: serviceIds.map((id) => text(plan.items.find((i) => i.id === id).label)) }
   const facts = []
+  /** The data kind of each fact in `facts`, in the same order, so the card can say its label in its own words. */
+  const factKinds = []
   const counts = []
   for (const id of data) {
     const fact = plan.facts.find((f) => f.id === id)
     if (fact) {
-      facts.push(fact.label)
+      facts.push(text(fact.label))
+      factKinds.push(typeof fact.kind === 'string' ? fact.kind : null)
       continue
     }
     const item = plan.items.find((i) => i.id === id)
@@ -63,7 +72,7 @@ function holdsOf(block, plan, serviceIds) {
     if (seen) seen.count += n
     else counts.push({ kind: item.kind, count: n })
   }
-  return { facts, counts }
+  return { facts, factKinds, counts }
 }
 
 const MAX_LIST_DEPTH = 3
@@ -88,20 +97,20 @@ function listsOf(lists, plan, depth = 1) {
     }
     if (rows.length === 0) continue
     const item = list.item ? plan.items.find((i) => i.id === list.item) : null
-    out.push(item ? { head: item.label, rows } : { rows })
+    out.push(item ? { head: text(item.label), rows } : { rows })
   }
   return out
 }
 
 /** What a planned row reads as: a row's label, a fact's value, an item's label or a page's name; null if unknown. */
 function rowLabelOf(row, plan) {
-  if (row.page !== undefined) return plan.pages.find((p) => p.id === row.page)?.name ?? null
+  if (row.page !== undefined) return text(plan.pages.find((p) => p.id === row.page)?.name ?? null)
   const id = row.data
   const found =
     (plan.rows ?? []).find((r) => r.id === id)?.label ??
     plan.facts.find((f) => f.id === id)?.value ??
     plan.items.find((i) => i.id === id)?.label
-  return found ?? null
+  return text(found ?? null)
 }
 
 /**
@@ -133,12 +142,13 @@ function leftOutOf(leftOut) {
   const lines = []
   const byKey = new Map()
   for (const l of leftOut ?? []) {
-    const what = plainWordsOf(l.what)
-    const key = JSON.stringify([what, l.kind, l.reason])
+    const what = plainWordsOf(text(l.what))
+    const reason = text(l.reason)
+    const key = JSON.stringify([what, l.kind, reason])
     const seen = byKey.get(key)
     if (seen) seen.count += 1
     else {
-      const line = { what, kind: l.kind, reason: l.reason, count: 1 }
+      const line = { what, kind: l.kind, reason, count: 1 }
       byKey.set(key, line)
       lines.push(line)
     }
@@ -186,7 +196,7 @@ export function planCardOf(contractPlan) {
   )
   const services = plan.items.filter((i) => i.kind === 'service')
   const serviceIds = services.map((s) => s.id)
-  const name = plan.facts.find((f) => f.kind === 'business.name')?.value ?? ''
+  const name = text(plan.facts.find((f) => f.kind === 'business.name')?.value ?? '')
   return {
     planId: plan.id,
     revision: plan.revision,
@@ -197,9 +207,12 @@ export function planCardOf(contractPlan) {
       return {
         id: f.id,
         field,
-        label: f.label,
-        value: f.value,
+        // The data kind (`business.name`) and the source's origin code: the card says both in its own words.
+        kind: typeof f.kind === 'string' ? f.kind : null,
+        label: text(f.label),
+        value: text(f.value),
         source: firstSource(f.sources),
+        sourceKind: firstSourceKind(f.sources),
         choice: assumption ? choiceOf(f, assumption) : null
       }
     }),
@@ -217,18 +230,19 @@ export function planCardOf(contractPlan) {
     services: services.map((s) => ({
       id: s.id,
       field: `items[${s.id}].label`,
-      label: s.label,
-      source: firstSource(s.sources)
+      label: text(s.label),
+      source: firstSource(s.sources),
+      sourceKind: firstSourceKind(s.sources)
     })),
     pages: plan.pages.map((p) => ({
       id: p.id,
-      name: p.name,
+      name: text(p.name),
       blocks: p.blocks.map((b) => {
         const lists = listsOf(b.lists, plan)
         return {
           id: b.id,
-          label: b.label,
-          reason: b.reason,
+          label: text(b.label),
+          reason: text(b.reason),
           holds: holdsOf(b, plan, serviceIds),
           ...(lists.length > 0 ? { lists } : {})
         }
@@ -238,13 +252,13 @@ export function planCardOf(contractPlan) {
       own: { frames: plan.pictures.own.frames, from: [...(plan.pictures.own.from ?? [])] },
       generated: {
         frames: plan.pictures.generated.frames,
-        ...(plan.pictures.generated.reason ? { reason: plan.pictures.generated.reason } : {})
+        ...(plan.pictures.generated.reason ? { reason: text(plan.pictures.generated.reason) } : {})
       }
     },
     // A disputed fact is settled at the fact itself; every other assumption is listed.
     assumptions: (plan.assumptions ?? [])
       .filter((a) => !disputed.has(a.field))
-      .map((a) => ({ id: a.id, said: a.said })),
+      .map((a) => ({ id: a.id, said: text(a.said) })),
     leftOut: leftOutOf(plan.leftOut),
     counts: { pages: plan.pages.length, services: services.length }
   }

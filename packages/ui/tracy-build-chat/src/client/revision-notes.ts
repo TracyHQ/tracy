@@ -1,6 +1,7 @@
 /**
  * The note a change request leaves on the plan card (#609): what the plan step changed and what it did not do, with
- * its reason. The lines come from the `tracy_build` answer of the revise step (`revised` of the plan fold), which the
+ * its reason, or for an `edit` the agent made, the values it changed (`edits`). The lines come from the `tracy_build`
+ * answer of the revise step, or the edit call's own changes (`revised` of the plan fold), which the
  * draft does not keep, so this small store holds them per plan revision for the card to read. A note belongs to the
  * revision it was made for: once the plan moves on (an edit, a newer request) the card asks for another key and the
  * note is gone. A dismissed note stays dismissed when the session log is folded again.
@@ -22,7 +23,7 @@ export interface RevisionNotes {
 
 /** Whether a note has anything to say. */
 export const hasNote = (note: RevisionNote | null): note is RevisionNote =>
-  note !== null && (note.changed.length > 0 || note.notDone.length > 0)
+  note !== null && (note.changed.length > 0 || note.notDone.length > 0 || (note.edits?.length ?? 0) > 0)
 
 export function createRevisionNotes(): RevisionNotes {
   const notes = new Map<string, RevisionNote>()

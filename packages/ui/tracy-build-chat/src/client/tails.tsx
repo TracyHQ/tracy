@@ -180,12 +180,39 @@ export function LivePlan({ deps, revision }: { deps: TailDeps; revision?: string
   )
 }
 
-function PlanTail({ deps, value, sessionId }: { deps: TailDeps; value: PlanValue; sessionId: string }) {
+/** The slice of dsh's turn location data a tail reads live (ui-conversation `ConversationLocationDataStore`). */
+interface TurnDataLike {
+  get?: (key: string) => unknown
+  source?: (key: string) => { getSnapshot(): unknown; subscribe(listener: () => void): () => void }
+}
+const NO_SOURCE = { getSnapshot: () => undefined, subscribe: noSubscribe }
+
+/**
+ * The plan tail of one turn. dsh draws a finished turn's tail once and keeps it (its turn tail view is memoised on the
+ * turn's node), so a tail that only read the turn's value when it was drawn would keep a full plan card in every
+ * earlier turn after each change request. This tail follows the turn's own `tracy_build:plan` source instead: once a
+ * newer turn carries the plan, this turn's value is gone and the tail draws nothing. The tool's own quiet row
+ * ("Prepared your site plan") stays in that turn, so the history still says a plan was made there.
+ */
+function PlanTail({
+  deps,
+  value,
+  sessionId,
+  data
+}: {
+  deps: TailDeps
+  value: PlanValue
+  sessionId: string
+  data?: TurnDataLike
+}) {
   const read = () => deps.reviews.has(sessionId)
   const reviewing = useSyncExternalStore(deps.reviews.subscribe, read, read)
+  const source = data?.source?.(PLAN_KEY) ?? NO_SOURCE
+  const readLive = () => (data?.source ? source.getSnapshot() : value)
+  const live = useSyncExternalStore(source.subscribe, readLive, readLive) as PlanValue | undefined
   // The review bar shows the card while the owner reviews it: one living plan card, never two.
-  if (reviewing) return null
-  return <LivePlan deps={deps} revision={`${value.id}:${value.revision}`} />
+  if (reviewing || !live) return null
+  return <LivePlan deps={deps} revision={`${live.id}:${live.revision}`} />
 }
 
 /** Try again. A build run (locked, stopped or cancelled) takes it away: the build has its own notice. */
@@ -272,7 +299,12 @@ export function makeTails(deps: TailDeps) {
     plan: (props: TailProps) => {
       const value = inBuild(props) ? turnValueOf<PlanValue>(props, PLAN_KEY) : null
       return value === null ? null : (
-        <PlanTail deps={deps} value={value} sessionId={props.sessionId as string} />
+        <PlanTail
+          deps={deps}
+          value={value}
+          sessionId={props.sessionId as string}
+          data={props.turn?.data as TurnDataLike | undefined}
+        />
       )
     },
     retry: (props: TailProps) => {

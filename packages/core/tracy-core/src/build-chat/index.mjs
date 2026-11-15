@@ -64,6 +64,7 @@ export {
   planReviewIdOf,
   planReviewRequestOf
 } from './plan.mjs'
+export { plainTextOf } from './plain-text.mjs'
 export {
   cancelledOf,
   clockOf,
