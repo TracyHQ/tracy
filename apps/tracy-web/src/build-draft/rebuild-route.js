@@ -10,15 +10,15 @@
  *   POST /api/build-draft/build/abandon                       undo an update that stopped half way (`abandonRun`),
  *        the way out of `previous_run_unfinished`
  *
- * Each answers what `GET /api/build-draft/build` answers, plus `say` when there is a sentence for the owner
- * (`rebuild-say.js`). 🔒 NONE OF THEM DELETES THE SITE OR THE CHAT: a revision writes the changed parts, a restore and
+ * Each answers what `GET /api/build-draft/build` answers, plus `say` and its stable code `sayCode` when there is a
+ * sentence for the owner (`rebuild-say.js`). 🔒 NONE OF THEM DELETES THE SITE OR THE CHAT: a revision writes the changed parts, a restore and
  * an abandon write earlier values back, and every earlier build stays in the store.
  */
 import { json } from '../lib/http.js'
 import { planRefOf } from './build-store.js'
 import { readEngineRow } from './engine-store.js'
 import { revisionBriefOf } from './rebuild-progress.js'
-import { DONE_SAY, UNAVAILABLE_SAY, rebuildSayOf } from './rebuild-say.js'
+import { DONE_CODE, UNAVAILABLE_CODE, rebuildCodeOf, sayFieldsOf } from './rebuild-say.js'
 import { claimSite, releaseSite, reviseBuild, undoRevision } from './rebuild-store.js'
 import { readBuild } from './build-store.js'
 
@@ -69,7 +69,7 @@ export function addRebuildDoors(app, deps) {
       if (!accountId) return refuse(c, 'NO_DRAFT')
       const built = await readBuild(pool, accountId)
       if (!built?.site?.siteKey) return refuse(c, 'NOT_BUILT')
-      if (!builds) return answer(c, accountId, { say: UNAVAILABLE_SAY }, 503)
+      if (!builds) return answer(c, accountId, sayFieldsOf(UNAVAILABLE_CODE), 503)
       const ctx = ctxOf(built)
       const rebuildFrom = await builds.current(ctx)
       if (!rebuildFrom) return refuse(c, 'NOT_BUILT')
@@ -79,13 +79,13 @@ export function addRebuildDoors(app, deps) {
           {
             code: 'PREVIOUS_RUN_UNFINISHED',
             next: REBUILD_REFUSALS.PREVIOUS_RUN_UNFINISHED[1],
-            say: rebuildSayOf('previous_run_unfinished')
+            ...sayFieldsOf('previous_run_unfinished')
           },
           409
         )
       const held = await builds.read(rebuildFrom, ctx).catch(() => null)
       if (held?.plan?.id === plan.id && held?.plan?.revision === plan.revision)
-        return answer(c, accountId, { say: DONE_SAY.unchanged })
+        return answer(c, accountId, sayFieldsOf(DONE_CODE.unchanged))
       const revised = await reviseBuild(pool, accountId, { plan, rebuildFrom, now })
       if (revised.error) return refuse(c, revised.error)
       const { build } = revised
@@ -102,7 +102,7 @@ export function addRebuildDoors(app, deps) {
       // A run that could not start changes nothing: the build reads as it did, the owner keeps the plan change.
       if (started?.refusal) {
         await undoRevision(pool, accountId, build.run.id, revised.previous, started.refusal, now)
-        return answer(c, accountId, { say: UNAVAILABLE_SAY }, 202)
+        return answer(c, accountId, sayFieldsOf(UNAVAILABLE_CODE), 202)
       }
       return answer(c, accountId, {}, 202)
     })
@@ -127,8 +127,9 @@ export function addRebuildDoors(app, deps) {
       }
       await releaseSite(pool, accountId, id, outcome.result === 'refused' ? null : outcome, now)
       if (outcome.result === 'refused') return refuse(c, outcome.code)
-      const say = outcome.result === 'done' ? DONE_SAY[kind] : (rebuildSayOf(outcome.code) ?? UNAVAILABLE_SAY)
-      return answer(c, accountId, { say, [kind]: outcome })
+      const code =
+        outcome.result === 'done' ? DONE_CODE[kind] : (rebuildCodeOf(outcome.code) ?? UNAVAILABLE_CODE)
+      return answer(c, accountId, { ...sayFieldsOf(code), [kind]: outcome })
     })
 
   app.post(

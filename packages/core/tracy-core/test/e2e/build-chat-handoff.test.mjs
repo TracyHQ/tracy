@@ -18,7 +18,11 @@ import path from 'node:path'
 import { after, test } from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { build } from 'esbuild'
-import { handoffMessageOf } from '../../../../../apps/tracy-web/src/build-draft/handoff.js'
+import {
+  conversationOf,
+  handoffMessageOf,
+  handoffRequestIdOf
+} from '../../../../../apps/tracy-web/src/build-draft/handoff.js'
 import { STAGES, stageDocuments } from '../fixtures/build-chat/stages.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -39,6 +43,7 @@ const PLAN = stage('plan').plan
 const NAME = 'Sunrise Tennis Club'
 const HELD = 'Coach Morven Tull'
 const SHOTS = process.env.HANDOFF_SHOTS ?? null
+const REQUEST_ID = handoffRequestIdOf('2a3b4c5d-6e7f-4a8b-9c0d-1e2f3a4b5c6d')
 
 const CONVERSATION = [
   { role: 'user', text: 'Build a website for my tennis club. https://sunrise-tennis.example' },
@@ -50,11 +55,16 @@ const CONVERSATION = [
 let seq = 0
 const turnStart = (turn) => ({ type: 'turn/start', seq: ++seq, data: { turn } })
 const turnEnd = (turn) => ({ type: 'turn/end', seq: ++seq, data: { turn, reason: 'completed' } })
-const user = (text) => ({
+/** An owner message; `rpcId` is the request id dsh records for a queued prompt (`source.rpcId`). */
+const user = (text, rpcId = undefined) => ({
   type: 'user/message',
   seq: ++seq,
   surfaceOp: 'append',
-  data: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text }] }
+  data: {
+    role: 'user',
+    source: { kind: 'user', ...(rpcId ? { rpcId } : {}) },
+    content: [{ type: 'text', text }]
+  }
 })
 const assistant = (turn, text) => ({
   type: 'assistant/message',
@@ -77,19 +87,24 @@ function buildSession() {
   ]
 }
 
-/** The site session tracy-web opened ahead: its first message carries the hand off; the owner then asks a change. */
-function siteSession() {
+/**
+ * The site session tracy-web opened ahead: its first message carries the hand off, queued under the build's request
+ * id; the owner then asks a change. `rpcId`: the id dsh recorded on that first message (another id is a pasted block).
+ */
+function siteSession({ rpcId = REQUEST_ID } = {}) {
   return [
     turnStart(0),
-    // What the owner keeps off the site rides last in the block, for the site agent only.
+    // The conversation as the door reads it (each line under its speaker); what the owner keeps off rides last.
     user(
       handoffMessageOf({
-        conversation: CONVERSATION,
+        conversation: conversationOf(CONVERSATION),
         plan: PLAN,
         siteKey: SITE,
         name: NAME,
-        keepOffSite: [HELD]
-      })
+        keepOffSite: [HELD],
+        requestId: REQUEST_ID
+      }),
+      rpcId
     ),
     assistant(0, 'Your site is ready. The Browser tab shows it. Ask me here for any change.'),
     turnEnd(0),
@@ -331,6 +346,24 @@ test('the site chat shows every earlier message and the plan, the raw block as o
         }
         await page.close()
       })
+  } finally {
+    await browser.close()
+  }
+})
+
+test('m12: the same block pasted into a chat by hand is not drawn as the earlier conversation', async () => {
+  const browser = await launch()
+  try {
+    const { page, errors } = await open(browser, { viewport: { width: 1280, height: 900 } })
+    await page.evaluate(
+      ([id, events]) => window.probe.load(id, events),
+      [SITE_CHAT, siteSession({ rpcId: 'rpc-pasted-by-hand' })]
+    )
+    await page.locator('[data-turn="1"]').waitFor()
+    assert.equal(await page.getByRole('region', { name: 'Earlier conversation' }).count(), 0)
+    assert.ok(!(await page.locator('#root').innerText()).includes(HELD))
+    assert.deepEqual(errors, [])
+    await page.close()
   } finally {
     await browser.close()
   }

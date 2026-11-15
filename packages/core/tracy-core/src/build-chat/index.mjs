@@ -76,8 +76,10 @@ export {
   buildHistoryFoldOf,
   HANDOFF_FENCE,
   HANDOFF_SCHEMA,
+  HANDOFF_SOURCE,
   handoffFoldOf,
-  handoffOfText
+  handoffOfText,
+  withoutHandoff
 } from './handoff.mjs'
 export {
   BUILD_TOOL,

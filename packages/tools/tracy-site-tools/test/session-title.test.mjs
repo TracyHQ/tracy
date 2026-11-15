@@ -13,7 +13,13 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { installSessionTitle, sessionTitleProvider, TITLE_PROVIDER_ID } from '../src/host/session-title.mjs'
+import { conversationOf, handoffMessageOf } from '../../../../apps/tracy-web/src/build-draft/handoff.js'
+import {
+  HANDOFF_TITLE,
+  installSessionTitle,
+  sessionTitleProvider,
+  TITLE_PROVIDER_ID
+} from '../src/host/session-title.mjs'
 
 const ROUTE = { provider: 'deepseek-official', model: 'deepseek-flash' }
 
@@ -110,6 +116,76 @@ test('a model failure is a rejection, never an empty title', async () => {
       })()
   }
   await assert.rejects(sessionTitleProvider(llm).generate(request([{ seq: 1, text: 'Hello' }])), /QUOTA/)
+})
+
+// A build chat's hand off (#611): the site chat's first message is ONE fenced `tracy-build-handoff` block, one JSON line
+// (`apps/tracy-web/src/build-draft/handoff.js`), whose conversation and `keepOffSite` may name what the owner keeps
+// off the site. The block format is pinned here by hand as well as written by the real writer.
+const HELD = 'Odalys Pemberton-Quill'
+const SITE_NAME = 'Quillmere Pottery'
+const handoffBlock = (value) => `\`\`\`tracy-build-handoff\n${JSON.stringify(value)}\n\`\`\``
+const handoffBody = (site) => ({
+  schema: 'tracy-build-handoff/v1',
+  source: 'build-handoff',
+  requestId: 'build-handoff:5e6f7a8b-9c0d-4e1f-8a2b-3c4d5e6f7a8b',
+  note: 'Only the plan is approved.',
+  site,
+  plan: { id: 'plan-1', revision: 2 },
+  conversation: [
+    { speaker: 'owner', text: `My studio is ${SITE_NAME}. My partner ${HELD} wants to stay off the site.` },
+    { speaker: 'build-agent', text: `Understood, ${HELD} stays off the site.` }
+  ],
+  keepOffSite: [HELD]
+})
+
+test('a hand off message is titled with the site name it shows, never from the block, and no model is asked', async () => {
+  for (const text of [
+    handoffBlock(handoffBody({ siteKey: 'quillmere.localhost', name: SITE_NAME })),
+    handoffMessageOf({
+      conversation: conversationOf([
+        { role: 'user', text: `My partner ${HELD} wants to stay off the site.` },
+        { role: 'assistant', text: 'Understood.' }
+      ]),
+      plan: { id: 'plan-1', revision: 2 },
+      siteKey: 'quillmere.localhost',
+      name: SITE_NAME,
+      keepOffSite: [HELD],
+      requestId: 'build-handoff:5e6f7a8b-9c0d-4e1f-8a2b-3c4d5e6f7a8b'
+    })
+  ]) {
+    assert.ok(
+      Buffer.byteLength(text.slice(0, text.indexOf(HELD)), 'utf8') < 4096,
+      'the held name is in the first bytes'
+    )
+    const llm = fakeLlm(`Site for ${HELD}`)
+    const result = await sessionTitleProvider(llm).generate(request([{ seq: 4, text }]))
+    assert.equal(result.title, SITE_NAME)
+    assert.deepEqual(result.messageSeqs, [4])
+    assert.equal(llm.calls.length, 0, 'the block never reaches the title model')
+  }
+})
+
+test('a hand off that shows no site name gets a plain fixed title', async () => {
+  const llm = fakeLlm(`Site for ${HELD}`)
+  const text = handoffBlock(handoffBody({ siteKey: 'my-site.localhost' }))
+  const result = await sessionTitleProvider(llm).generate(request([{ seq: 1, text }]))
+  assert.equal(result.title, HANDOFF_TITLE)
+  assert.ok(!result.title.includes(HELD))
+  assert.equal(llm.calls.length, 0)
+})
+
+test("a block pasted after the person's words is cut whole: the model reads only the words", async () => {
+  const llm = fakeLlm('Pottery opening hours')
+  const body = handoffBody({ siteKey: 'quillmere.localhost' })
+  body.schema = 'other/v1'
+  const text = `Change the opening hours\n${handoffBlock(body)}\nplease`
+  const result = await sessionTitleProvider(llm).generate(request([{ seq: 2, text }]))
+  assert.equal(result.title, 'Pottery opening hours')
+  const sent = JSON.stringify(llm.calls[0].messages)
+  assert.match(sent, /Change the opening hours/)
+  assert.match(sent, /please/)
+  assert.ok(!sent.includes(HELD), 'nothing of the block reaches the title model')
+  assert.doesNotMatch(sent, /tracy-build-handoff/)
 })
 
 test('installSessionTitle registers the provider once both services are there, first prompt only', () => {

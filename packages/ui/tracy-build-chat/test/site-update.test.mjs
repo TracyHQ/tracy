@@ -143,7 +143,7 @@ test('an ended update says the server sentence and offers restore; an unfinished
   const done = render({
     build: built({ kind: 'partial', restorable: true }),
     run: null,
-    say: 'Your site is updated.'
+    say: { say: 'Your site is updated.', code: null }
   })
   assert.match(done, /role="status">Your site is updated\./)
   assert.match(done, new RegExp(lib.en['rebuild.restore']))
@@ -151,22 +151,60 @@ test('an ended update says the server sentence and offers restore; an unfinished
   const left = render({
     build: built({ unfinished: true }),
     run: null,
-    say: 'An earlier update did not finish.'
+    say: { say: 'An earlier update did not finish.', code: null }
   })
   assert.match(left, new RegExp(lib.en['rebuild.undo']))
   assert.doesNotMatch(left, new RegExp(lib.en['rebuild.restore']))
 })
 
-test('a held file left on the site is always shown, with its files', () => {
-  const say = 'A photo of a person you asked to keep private is still stored on your site as a file.'
-  const html = render({
-    build: built({ heldFile: { code: 'held_file_left_on_site', say, files: ['images/tracy/coach-1.jpg'] } }),
+/** A translator that marks every key, so a test sees which words came from the table. */
+const marked = (key, vars = {}) => `[${key}${vars.n === undefined ? '' : `#${vars.n}`}]`
+const renderIn = (t, state, plan = PLAN) =>
+  lib.card({ deps: { drafts: draftsOf(plan), t: () => t }, source: sourceOf(state) })
+
+test("m5: a sentence with a known code is shown from the owner's table; an unknown code keeps the server words", () => {
+  const known = renderIn(marked, {
+    build: built({ kind: 'partial', restorable: true }),
     run: null,
-    say: null
+    say: { say: 'Your site is updated (server words).', code: 'update_done' }
   })
+  assert.match(known, /role="status">\[rebuild\.say\.update_done\]/)
+  assert.doesNotMatch(known, /server words/)
+  const unknown = renderIn(marked, {
+    build: built({ kind: 'partial', restorable: true }),
+    run: null,
+    say: { say: 'A sentence from a newer server.', code: 'invented_newer_code' }
+  })
+  assert.match(unknown, /role="status">A sentence from a newer server\./)
+})
+
+test('m5: the English table holds every sentence the server says, word for word, under its code', async () => {
+  const { SAY_BY_CODE } = await import('../../../../apps/tracy-web/src/build-draft/rebuild-say.js')
+  for (const [code, say] of Object.entries(SAY_BY_CODE))
+    assert.equal(lib.en[`rebuild.say.${code}`], say, code)
+  const tableCodes = Object.keys(lib.en)
+    .filter((key) => key.startsWith('rebuild.say.'))
+    .map((key) => key.slice('rebuild.say.'.length))
+  assert.deepEqual(tableCodes.sort(), Object.keys(SAY_BY_CODE).sort())
+})
+
+test('a held file left on the site is always shown, each file in words, never its path', () => {
+  const say = 'A photo of a person you asked to keep private is still stored on your site as a file.'
+  const heldFile = {
+    code: 'held_file_left_on_site',
+    sayCode: 'held_file_left_on_site',
+    say,
+    files: [{ what: 'person-photo' }, { what: 'person-photo' }]
+  }
+  const html = render({ build: built({ heldFile }), run: null, say: null })
   assert.match(html, /role="alert"/)
-  assert.ok(html.includes(escaped(say)))
-  assert.match(html, /<code>images\/tracy\/coach-1\.jpg<\/code>/)
+  assert.ok(html.includes(escaped(lib.en['rebuild.say.held_file_left_on_site'])))
+  assert.ok(html.includes(lib.english('rebuild.heldFile.person-photo', { n: 1 })))
+  assert.ok(html.includes(lib.english('rebuild.heldFile.person-photo', { n: 2 })))
+  assert.doesNotMatch(html, /<code>|\.jpg|images\//)
+  const words = renderIn(marked, { build: built({ heldFile }), run: null, say: null })
+  assert.match(words, /\[rebuild\.say\.held_file_left_on_site\]/)
+  assert.match(words, /\[rebuild\.heldFile\.person-photo#1\][\s\S]*\[rebuild\.heldFile\.person-photo#2\]/)
 })
 
 test('the source sends each ask to its door and keeps the answer sentence', async () => {
@@ -180,7 +218,8 @@ test('the source sends each ask to its door and keeps the answer sentence', asyn
     '/api/build-draft/build/restore': {
       build: built({ kind: 'partial' }),
       run: null,
-      say: 'Your site is back to the previous version.'
+      say: 'Your site is back to the previous version.',
+      sayCode: 'restore_done'
     }
   }
   const fetchImpl = async (url, init) => {
@@ -202,7 +241,10 @@ test('the source sends each ask to its door and keeps the answer sentence', asyn
   })
   assert.equal(source.read().build.state, 'building')
   assert.equal(await source.ask('restore'), true)
-  assert.equal(source.read().say, 'Your site is back to the previous version.')
+  assert.deepEqual(source.read().say, {
+    say: 'Your site is back to the previous version.',
+    code: 'restore_done'
+  })
   // A door that did not take the ask is a failed ask; what was there stays.
   const broken = lib.createSiteBuildSource(async () => new Response('{"code":"SITE_BUSY"}', { status: 409 }))
   assert.equal(await broken.ask('restore'), false)
@@ -219,5 +261,5 @@ test('the source sends each ask to its door and keeps the answer sentence', asyn
   )
   await said.load()
   assert.equal(await said.ask('revise', { plan: PLAN }), true)
-  assert.equal(said.read().say, 'An earlier update did not finish.')
+  assert.deepEqual(said.read().say, { say: 'An earlier update did not finish.', code: null })
 })

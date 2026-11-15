@@ -48,9 +48,46 @@ export const HELD_FILE_FLAG = 'held_file_left_on_site'
 export const HELD_FILE_SAY =
   'A photo of a person you asked to keep private is still stored on your site as a file, although no page shows it. I cannot delete files yet. The team can remove it for you.'
 
+/** The stable code of each done sentence (`DONE_SAY` by its kind). */
+export const DONE_CODE = Object.freeze({
+  partial: 'update_done',
+  restore: 'restore_done',
+  abandon: 'abandon_done',
+  unchanged: 'nothing_to_update'
+})
+/** The stable code of `UNAVAILABLE_SAY`. */
+export const UNAVAILABLE_CODE = 'previous_build_doors_missing'
+
+/**
+ * Every sentence the site update card may show, by its stable code (review m5). The door answers the code beside the
+ * sentence (`sayCode`); the card shows the code's words from its own string table (`tracy-build-chat`,
+ * `rebuild.say.<code>`), in the owner's language, and this English sentence only for a code it does not know.
+ */
+export const SAY_BY_CODE = Object.freeze({
+  ...REBUILD_SAY,
+  ...Object.fromEntries(Object.entries(DONE_CODE).map(([kind, code]) => [code, DONE_SAY[kind]])),
+  [HELD_FILE_FLAG]: HELD_FILE_SAY
+})
+
+/** `{say, sayCode}` for a known code, else nothing: spread into an answer. */
+export const sayFieldsOf = (code) =>
+  typeof code === 'string' && Object.hasOwn(SAY_BY_CODE, code)
+    ? { say: SAY_BY_CODE[code], sayCode: code }
+    : {}
+
 /** The sentence for a stop code, or null when the code is not one of an update (the stopped card says the rest). */
 export const rebuildSayOf = (code) =>
   typeof code === 'string' && Object.hasOwn(REBUILD_SAY, code) ? REBUILD_SAY[code] : null
+
+/** The stop code itself when it is one of an update, else null. */
+export const rebuildCodeOf = (code) => (rebuildSayOf(code) === null ? null : code)
+
+/**
+ * What each held file is, in words the card says (review m5): every file the write step flags is the upload of a photo
+ * of a person the owner keeps off the site (`step-chain-draft-write-revision.js` `heldFilesOf`). The file's path is
+ * the team's (the run record keeps it), never the owner's.
+ */
+export const HELD_FILE_WHAT = 'person-photo'
 
 /** The held file flags of a write step value or its record line output, as the owner is told them. */
 export function heldFilesOf(flags) {
@@ -59,5 +96,12 @@ export function heldFilesOf(flags) {
     .flatMap((f) => (Array.isArray(f.places) ? f.places : []))
     .map((p) => p?.file)
     .filter((file) => typeof file === 'string' && file !== '')
-  return files.length ? { code: HELD_FILE_FLAG, say: HELD_FILE_SAY, files: [...new Set(files)] } : null
+  const count = new Set(files).size
+  return count
+    ? {
+        code: HELD_FILE_FLAG,
+        ...sayFieldsOf(HELD_FILE_FLAG),
+        files: Array.from({ length: count }, () => ({ what: HELD_FILE_WHAT }))
+      }
+    : null
 }

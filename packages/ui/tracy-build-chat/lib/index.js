@@ -280,6 +280,12 @@ function templateChoiceOf(templates) {
   return { options, chosen, none: options.length === 0 };
 }
 
+// ../../core/tracy-core/src/build-chat/handoff.mjs
+var HANDOFF_FENCE = "tracy-build-handoff";
+var ROLE_OF_SPEAKER = Object.freeze({ owner: "user", "build-agent": "assistant" });
+var OPEN_FENCE = `\`\`\`${HANDOFF_FENCE}
+`;
+
 // ../../core/tracy-core/src/build-chat/tool-results.mjs
 var EMPTY = Object.freeze({
   calls: Object.freeze({}),

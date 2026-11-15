@@ -4,13 +4,15 @@
  *
  *   kind        'partial' for a rebuild (absent for the first build)
  *   say         the sentence for the owner: how the last update, restore or abandon ended (`rebuild-say.js`)
+ *   sayCode     the stable code of `say` (`SAY_BY_CODE`): the card shows its words from the string table
  *   restorable  the last update is done and was not gone back from: "Restore the previous version" is offered
  *   unfinished  an earlier update did not finish: "Undo the unfinished update" is offered
  *   busy        a restore or an abandon holds the site right now
- *   heldFile    `{code, say, files}` when a held person's photo is still a file of the site
+ *   heldFile    `{code, say, sayCode, files: [{what}]}` when a held person's photo is still a file of the site: each
+ *               file said by what it is, never by its path
  */
 import { partialOf } from './rebuild-progress.js'
-import { DONE_SAY, UNAVAILABLE_SAY, heldFilesOf, rebuildSayOf } from './rebuild-say.js'
+import { DONE_CODE, UNAVAILABLE_CODE, heldFilesOf, rebuildCodeOf, sayFieldsOf } from './rebuild-say.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const UNAVAILABLE = new Set(['REVISION_RUN_UNAVAILABLE', 'REVISION_START_FAILED'])
@@ -38,13 +40,17 @@ export function rebuildFactsOf({ build, brief = null, unfinished = false }) {
   const change = lastChangeOf(build)
   const out = {}
   if (partial) out.kind = 'partial'
+  // Each sentence goes with its stable code (`sayCode`), which the card shows in the owner's language.
   if (change) {
-    out.say =
-      change.result === 'done' ? DONE_SAY[change.kind] : (rebuildSayOf(change.code) ?? UNAVAILABLE_SAY)
+    Object.assign(
+      out,
+      sayFieldsOf(
+        change.result === 'done' ? DONE_CODE[change.kind] : (rebuildCodeOf(change.code) ?? UNAVAILABLE_CODE)
+      )
+    )
   } else if (ended && build.result === 'stopped') {
-    const said = UNAVAILABLE.has(code) ? UNAVAILABLE_SAY : rebuildSayOf(code)
-    if (said) out.say = said
-  } else if (ended && partial && build.result === 'done') out.say = DONE_SAY.partial
+    Object.assign(out, sayFieldsOf(UNAVAILABLE.has(code) ? UNAVAILABLE_CODE : rebuildCodeOf(code)))
+  } else if (ended && partial && build.result === 'done') Object.assign(out, sayFieldsOf(DONE_CODE.partial))
   out.restorable =
     ended &&
     partial !== null &&
@@ -52,7 +58,7 @@ export function rebuildFactsOf({ build, brief = null, unfinished = false }) {
     !(change?.kind === 'restore' && change.result === 'done')
   // The store's own mark says whether an update is unfinished (`deps.builds.unfinished`), whatever the chat last saw.
   out.unfinished = ended && unfinished
-  if (out.unfinished && !out.say) out.say = rebuildSayOf('previous_run_unfinished')
+  if (out.unfinished && !out.say) Object.assign(out, sayFieldsOf('previous_run_unfinished'))
   if (build.busy?.kind) out.busy = build.busy.kind
   const write = list(chain?.steps).findLast((line) => line?.step === 'write')
   const held = heldFilesOf(write?.output?.flags)

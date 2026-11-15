@@ -9,7 +9,7 @@
  * the local stand, 194 model titles: 5 came back in Chinese, all 5 from such turns with English
  * requests (acceptance F13: "更新主页服务文本与标题" for "Change this heading to: Core services…").
  *
- * Two changes, nothing else:
+ * Three changes, nothing else (the third: a build chat's hand off message, `firstWords` below):
  *   1. The model reads the PERSON'S WORDS (`personWords`, the same cut every comment rule here reads),
  *      so the page's text and Tracy's hint never count as what the customer wrote.
  *   2. A title in a CJK script the person's words do not use is refused. The provider then throws,
@@ -26,6 +26,9 @@
 
 import { randomUUID } from 'node:crypto'
 
+// A relative path, not `@tracy/core/build-chat`: this plugin's host bundle keeps packages external, and the plugin
+// folder the image copies has no node_modules to resolve a bare import from (as `prompter.mjs`).
+import { handoffOfText, withoutHandoff } from '../../../../core/tracy-core/src/build-chat/handoff.mjs'
 import { personWords } from './prompter.mjs'
 
 /** The id dsh records on every title this provider writes (`session/title` `source.provider`). */
@@ -78,16 +81,40 @@ function capBytes(text, max) {
 }
 
 /**
- * The first message the person put words in (a comment of only a picked element has none).
+ * The title of a site chat a build chat handed off to (#611), when the site shows no name of its own.
+ * Plain and fixed: the block holds nothing a title may be made from.
+ */
+export const HANDOFF_TITLE = 'New site'
+/** A site name past this many UTF-8 bytes is cut; dsh caps titles further. */
+const MAX_NAME_BYTES = 120
+
+/**
+ * The first message the person put words in (a comment of only a picked element has none), or the build chat's hand
+ * off message.
+ *
+ * 🔒 A HAND OFF BLOCK IS NEVER THE PERSON'S WORDS (#611 review). The site chat's first message is ONE fenced
+ * `tracy-build-handoff` block, and its conversation and `keepOffSite` may name what the owner keeps off the site,
+ * well inside the first bytes a title reads. Such a message is titled from the site's shown name (`site.name`, which
+ * the server writes only when the site may show it) or `HANDOFF_TITLE`, with no model. Any other message is read with
+ * every hand off block cut whole (`withoutHandoff`), so a pasted block never reaches the title model either.
  * @param {readonly { seq: number, text: string }[]} messages
- * @returns {{ seq: number, text: string } | undefined}
+ * @returns {{ seq: number, text: string } | { seq: number, handoff: { site: any } } | undefined}
  */
 function firstWords(messages) {
   for (const message of messages) {
-    const text = personWords(message?.text ?? '').trim()
+    const raw = message?.text ?? ''
+    const handoff = handoffOfText(raw)
+    if (handoff !== null) return { seq: message.seq, handoff }
+    const text = personWords(withoutHandoff(raw)).trim()
     if (text !== '') return { seq: message.seq, text }
   }
   return undefined
+}
+
+/** A hand off's title: the site's shown name, else the fixed one. */
+function handoffTitleOf(handoff) {
+  const name = typeof handoff.site?.name === 'string' ? handoff.site.name.replace(/\s+/g, ' ').trim() : ''
+  return name === '' ? HANDOFF_TITLE : capBytes(name, MAX_NAME_BYTES).trim()
 }
 
 /**
@@ -105,6 +132,7 @@ export function sessionTitleProvider(llm) {
       request.signal.throwIfAborted()
       const source = firstWords(request.messages)
       if (source === undefined) throw new Error('session-title: no words of the person to title')
+      if ('handoff' in source) return { title: handoffTitleOf(source.handoff), messageSeqs: [source.seq] }
       const route = request.route
       if (route === undefined) throw new Error('session-title: no logged request route is available')
       const words = capBytes(source.text, MAX_INPUT_BYTES)

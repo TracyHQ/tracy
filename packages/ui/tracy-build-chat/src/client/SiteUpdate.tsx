@@ -2,13 +2,15 @@
  * The site update card in the site chat (#612), under the living plan carried there: once the plan changed after the
  * build, the owner updates the site from it, and only what the change touched is rebuilt. While the update runs its
  * task list shows ("Updating your site", Contract B partial run); once it ended the card says how it ended in the
- * server's own sentence and offers what can be done next: restore the previous version, or undo an update that did
- * not finish. A photo the owner asked to keep private that is still a file of the site is always shown, with the
- * files. Nothing here deletes the site or the chat.
+ * server's sentence (by its stable code, in the owner's language) and offers what can be done next: restore the
+ * previous version, or undo an update that did not finish. A photo the owner asked to keep private that is still a
+ * file of the site is always shown, each file said in words, never by its path. Nothing here deletes the site or the
+ * chat.
  */
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { BuildProgress } from './BuildProgress'
 import { buildEnded, createSiteBuildSource, type SiteAsk, type SiteBuildSource } from './site-build-source'
+import { heldFileKeyOf, rebuildSayKeyOf } from './rebuild-strings'
 import type { DraftSource } from './sources'
 import type { Translate } from './strings'
 
@@ -49,22 +51,32 @@ export function SiteUpdate({ deps, source }: { deps: SiteUpdateDeps; source?: Si
   const said = ended && Boolean(state?.say)
   const notice = changed || said || restorable || undo || failed || Boolean(build.heldFile)
   if (!(updating && state?.run) && !notice) return null
+  // A sentence by its stable code, in the owner's language; the server's own words only for a code the table lacks.
+  const shownSay = (code: string | null | undefined, say: string) => {
+    const key = rebuildSayKeyOf(code)
+    return key ? t(key) : say
+  }
+  // Each held file said by what it is, numbered; never its path. A kind the table lacks is said as a photo.
+  const heldFilesShown = (build.heldFile?.files ?? []).map((file, i) =>
+    t(heldFileKeyOf(file?.what) ?? 'rebuild.heldFile.person-photo', { n: i + 1 })
+  )
   return (
     <>
       {updating && state?.run && <BuildProgress run={state.run} t={t} />}
       {notice && (
         <section className="tv-bc-notice" aria-label={t('rebuild.title')} data-site-update="">
-          {said && <p role="status">{state?.say}</p>}
+          {said && state?.say && <p role="status">{shownSay(state.say.code, state.say.say)}</p>}
           {changed && <p>{t('rebuild.changed')}</p>}
           {build.heldFile && (
             <>
-              <p role="alert">{build.heldFile.say}</p>
+              <p role="alert">
+                {shownSay(build.heldFile.sayCode ?? build.heldFile.code, build.heldFile.say)}
+              </p>
               <p className="tv-bc-muted tv-bc-small">{t('rebuild.heldFiles')}</p>
               <ul className="tv-bc-small">
-                {build.heldFile.files.map((file) => (
-                  <li key={file}>
-                    <code>{file}</code>
-                  </li>
+                {heldFilesShown.map((words, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: the files have no identity the owner sees
+                  <li key={i}>{words}</li>
                 ))}
               </ul>
             </>

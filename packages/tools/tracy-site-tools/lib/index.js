@@ -46201,6 +46201,52 @@ function createToolDeferral({ warn }) {
 
 // src/host/session-title.mjs
 import { randomUUID as randomUUID5 } from "node:crypto";
+
+// ../../core/tracy-core/src/build-chat/handoff.mjs
+var HANDOFF_FENCE = "tracy-build-handoff";
+var HANDOFF_SCHEMA = "tracy-build-handoff/v1";
+var HANDOFF_SOURCE = "build-handoff";
+var ROLES = /* @__PURE__ */ new Set(["user", "assistant"]);
+var ROLE_OF_SPEAKER = Object.freeze({ owner: "user", "build-agent": "assistant" });
+function lineOf(m) {
+  if (typeof m?.text !== "string" || m.text.trim() === "") return null;
+  const role = Object.hasOwn(ROLE_OF_SPEAKER, m.speaker) ? ROLE_OF_SPEAKER[m.speaker] : m.speaker === void 0 && ROLES.has(m.role) ? m.role : null;
+  return role ? { role, text: m.text } : null;
+}
+var OPEN_FENCE = `\`\`\`${HANDOFF_FENCE}
+`;
+function withoutHandoff(text6) {
+  if (typeof text6 !== "string") return "";
+  let out = "";
+  let from = 0;
+  for (; ; ) {
+    const start = text6.indexOf(OPEN_FENCE, from);
+    if (start < 0) return out + text6.slice(from);
+    out += text6.slice(from, start);
+    const end = text6.indexOf("\n```", start + OPEN_FENCE.length);
+    if (end < 0) return out;
+    from = end + "\n```".length;
+  }
+}
+function handoffOfText(text6) {
+  if (typeof text6 !== "string") return null;
+  const start = text6.indexOf(OPEN_FENCE);
+  if (start < 0) return null;
+  const end = text6.indexOf("\n```", start + OPEN_FENCE.length);
+  if (end < 0) return null;
+  let value;
+  try {
+    value = JSON.parse(text6.slice(start + OPEN_FENCE.length, end));
+  } catch {
+    return null;
+  }
+  if (value?.schema !== HANDOFF_SCHEMA || !Array.isArray(value.conversation)) return null;
+  const conversation = value.conversation.map(lineOf).filter((m) => m !== null);
+  const requestId = value.source === HANDOFF_SOURCE && typeof value.requestId === "string" && value.requestId.startsWith(`${HANDOFF_SOURCE}:`) ? value.requestId : null;
+  return { conversation, plan: value.plan ?? null, site: value.site ?? null, requestId };
+}
+
+// src/host/session-title.mjs
 var TITLE_PROVIDER_ID = "tracy-site-tools:session-title";
 var TARGET_WORDS = 5;
 var TARGET_CJK_CHARACTERS = 10;
@@ -46233,12 +46279,21 @@ function capBytes(text6, max) {
   }
   return out;
 }
+var HANDOFF_TITLE = "New site";
+var MAX_NAME_BYTES = 120;
 function firstWords(messages) {
   for (const message2 of messages) {
-    const text6 = personWords(message2?.text ?? "").trim();
+    const raw = message2?.text ?? "";
+    const handoff = handoffOfText(raw);
+    if (handoff !== null) return { seq: message2.seq, handoff };
+    const text6 = personWords(withoutHandoff(raw)).trim();
     if (text6 !== "") return { seq: message2.seq, text: text6 };
   }
   return void 0;
+}
+function handoffTitleOf(handoff) {
+  const name2 = typeof handoff.site?.name === "string" ? handoff.site.name.replace(/\s+/g, " ").trim() : "";
+  return name2 === "" ? HANDOFF_TITLE : capBytes(name2, MAX_NAME_BYTES).trim();
 }
 function sessionTitleProvider(llm) {
   return {
@@ -46251,6 +46306,7 @@ function sessionTitleProvider(llm) {
       request.signal.throwIfAborted();
       const source = firstWords(request.messages);
       if (source === void 0) throw new Error("session-title: no words of the person to title");
+      if ("handoff" in source) return { title: handoffTitleOf(source.handoff), messageSeqs: [source.seq] };
       const route = request.route;
       if (route === void 0) throw new Error("session-title: no logged request route is available");
       const words = capBytes(source.text, MAX_INPUT_BYTES);

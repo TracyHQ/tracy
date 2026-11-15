@@ -14,7 +14,13 @@
  */
 import { heldTextsSaidIn, shownBuildNameOf, shownBuildPlanOf } from '../lib/draft-build.js'
 import { claimHandoff, readBuild, saveHandoff } from './build-store.js'
-import { conversationOf, conversationTooLong, handoffMessageOf, handoffNextOf } from './handoff.js'
+import {
+  conversationOf,
+  conversationTooLong,
+  handoffMessageOf,
+  handoffNextOf,
+  handoffRequestIdOf
+} from './handoff.js'
 
 /**
  * How long opening the site chat, and then prompting it, may each take (#611). Both together stay well inside the
@@ -87,8 +93,10 @@ export async function handOffBuild({
   }
   // What the site chat reads is the plan as the site may show it: never what the owner keeps off the site.
   const plan = shownBuildPlanOf(build.snapshot) ?? null
-  // The conversation is the owner's own, carried as history; what they keep off the site is named to the agent.
+  // The conversation is carried as history, each line under its speaker; what the owner keeps off is named to the agent.
+  const requestId = handoffRequestIdOf(build.id)
   const text = handoffMessageOf({
+    requestId,
     conversation,
     plan,
     siteKey,
@@ -100,7 +108,7 @@ export async function handOffBuild({
     )
   })
   const accepted = await withinTime(HANDOFF_CALL_MS, false, (signal) =>
-    promptSiteChat({ siteKey, email, sessionId, requestId: `build-handoff:${build.id}`, text, signal })
+    promptSiteChat({ siteKey, email, sessionId, requestId, text, signal })
   ).catch(() => false)
   if (accepted !== true) {
     await saveHandoff(pool, accountId, build.id, {}, { release: true })

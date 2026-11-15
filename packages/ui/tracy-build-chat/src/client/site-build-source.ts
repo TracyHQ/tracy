@@ -14,17 +14,26 @@ export interface SiteBuild {
   siteKey?: string
   kind?: 'partial'
   say?: string
+  /** The stable code of `say` (`rebuild-say.js` `SAY_BY_CODE`): the card shows its words from the string table. */
+  sayCode?: string
   restorable?: boolean
   unfinished?: boolean
   busy?: 'restore' | 'abandon'
-  heldFile?: { code: string; say: string; files: string[] }
+  /** A held person's photo still a file of the site: each file said by what it is, never by its path. */
+  heldFile?: { code: string; say: string; sayCode?: string; files: { what: string }[] }
+}
+
+/** A sentence for the owner: the server's English words and their stable code. */
+export interface Said {
+  say: string
+  code: string | null
 }
 
 export interface SiteBuildState {
   build: SiteBuild | null
   run: BuildRun | null
   /** The sentence the last answer carried: an ask's own answer first, else the build's. */
-  say: string | null
+  say: Said | null
 }
 
 export type SiteAsk = 'revise' | 'restore' | 'abandon'
@@ -36,6 +45,13 @@ export interface SiteBuildSource {
   /** Send one ask; answers false when the door did not take it (the card says so). */
   ask(kind: SiteAsk, body?: unknown): Promise<boolean>
 }
+
+/** The sentence an answer or a build carries, with its code, or null. */
+// biome-ignore lint/suspicious/noExplicitAny: a door answer, read field by field
+const saidOf = (value: any): Said | null =>
+  typeof value?.say === 'string'
+    ? { say: value.say, code: typeof value.sayCode === 'string' ? value.sayCode : null }
+    : null
 
 const ENDED = new Set(['done', 'stopped', 'cancelled'])
 export const buildEnded = (build: SiteBuild | null | undefined) => Boolean(build && ENDED.has(build.state))
@@ -57,7 +73,7 @@ export function createSiteBuildSource(
   let reading: Promise<void> | null = null
   let timer: unknown = null
   /** The sentence an ask answered with, kept until the build moves on. */
-  let asked: { say: string; build: string } | null = null
+  let asked: { say: Said; build: string } | null = null
   const listeners = new Set<() => void>()
   // biome-ignore lint/suspicious/noExplicitAny: the build door's answer, read field by field
   const take = (body: any) => {
@@ -66,7 +82,7 @@ export function createSiteBuildSource(
       body?.run && (body.run.outcome || Array.isArray(body.run.events)) ? body.run : null
     const key = JSON.stringify([build?.state, build?.plan, build?.say])
     if (asked && asked.build !== key) asked = null
-    const next = { build, run, say: asked?.say ?? build?.say ?? null }
+    const next = { build, run, say: asked?.say ?? saidOf(build) }
     if (JSON.stringify(next) === JSON.stringify(state)) return
     state = next
     for (const listener of listeners) listener()
@@ -115,9 +131,10 @@ export function createSiteBuildSource(
       const answer = response ? await response.json().catch(() => null) : null
       if (!answer?.build) {
         // A refusal with a sentence (an unfinished update) is still said; any other refusal is a failed ask.
-        if (typeof answer?.say === 'string') {
+        const said = saidOf(answer)
+        if (said) {
           asked = {
-            say: answer.say,
+            say: said,
             build: JSON.stringify([state?.build?.state, state?.build?.plan, state?.build?.say])
           }
           if (state) take({ build: state.build, run: state.run })
@@ -127,10 +144,8 @@ export function createSiteBuildSource(
         return false
       }
       const b = answer.build
-      asked =
-        typeof answer.say === 'string'
-          ? { say: answer.say, build: JSON.stringify([b.state, b.plan, b.say]) }
-          : null
+      const said = saidOf(answer)
+      asked = said ? { say: said, build: JSON.stringify([b.state, b.plan, b.say]) } : null
       take(answer)
       schedule()
       return true

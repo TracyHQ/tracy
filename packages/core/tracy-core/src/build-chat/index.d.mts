@@ -286,6 +286,7 @@ export declare function isPlanReviewRequest(questions: unknown): boolean
 
 export declare const HANDOFF_FENCE: 'tracy-build-handoff'
 export declare const HANDOFF_SCHEMA: 'tracy-build-handoff/v1'
+export declare const HANDOFF_SOURCE: 'build-handoff'
 export interface HandoffMessage {
   role: 'user' | 'assistant'
   text: string
@@ -295,8 +296,10 @@ export interface Handoff {
   // biome-ignore lint/suspicious/noExplicitAny: the approved Contract B plan
   plan: any
   site: { siteKey?: string; name?: string } | null
+  requestId: string | null
 }
 export declare function handoffOfText(text: unknown): Handoff | null
+export declare function withoutHandoff(text: unknown): string
 // biome-ignore lint/suspicious/noExplicitAny: a dsh session event, duck-typed
 export declare function buildHistoryFoldOf(state: HandoffMessage[] | undefined, event: any): HandoffMessage[]
 export interface HandoffFold {

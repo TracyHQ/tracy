@@ -250,6 +250,7 @@ test(
     assertPartial(done.body.run.outcome)
     assert.equal(done.body.build.state, 'done')
     assert.equal(done.body.build.say, DONE_SAY.partial)
+    assert.equal(done.body.build.sayCode, 'update_done')
     assert.equal(done.body.build.restorable, true)
     // The plan the site shows now is the one asked for again: nothing to update.
     await s.store.keep(
@@ -259,6 +260,7 @@ test(
     )
     const same = await s.call('POST', '/build/revise', { plan: pin(next) })
     assert.equal(same.body.say, DONE_SAY.unchanged)
+    assert.equal(same.body.sayCode, 'nothing_to_update')
     assert.equal(s.started.length, 1)
   }
 )
@@ -299,7 +301,10 @@ test(
       assert.equal(stopped.body.build.restorable, false)
       assert.equal(stopped.body.build.say.includes('?'), false, `${code} is a statement`)
       assert.equal(DASHES.test(stopped.body.build.say), false)
-      assert.equal(JSON.stringify(stopped.body.build).includes(code), false, 'the owner never sees the code')
+      // The code rides only as the sentence's stable key (`sayCode`, the card's table key); nothing else names it.
+      assert.equal(stopped.body.build.sayCode, code)
+      const { sayCode: _sayCode, ...shown } = stopped.body.build
+      assert.equal(JSON.stringify(shown).includes(code), false, 'the owner never sees the code')
     }
     // The flag of a held person's photo left on the site, with the file.
     const living = await renamed(
@@ -329,8 +334,15 @@ test(
       job: null
     })
     const flagged = await s.call('GET', '/build')
-    assert.deepEqual(flagged.body.build.heldFile.files, ['images/tracy/coach-1.jpg'])
+    // Each held file is said by what it is; its path stays with the team (the run record).
+    assert.deepEqual(flagged.body.build.heldFile.files, [{ what: 'person-photo' }])
+    assert.equal(flagged.body.build.heldFile.sayCode, 'held_file_left_on_site')
     assert.match(flagged.body.build.heldFile.say, /keep private/)
+    assert.equal(
+      JSON.stringify(flagged.body).includes('coach-1.jpg'),
+      false,
+      'no file path reaches the owner'
+    )
     assert.equal(plan.id, living.id)
   }
 )
@@ -365,6 +377,7 @@ test('an update is only for a built site; an unfinished update must be undone fi
   const refused = await s.call('POST', '/build/revise', { plan: pin(next) })
   assert.equal(refused.status, 409)
   assert.equal(refused.body.say, REBUILD_SAY.previous_run_unfinished)
+  assert.equal(refused.body.sayCode, 'previous_run_unfinished')
   const read = await s.call('GET', '/build')
   assert.equal(read.body.build.unfinished, true)
   assert.equal(read.body.build.say, REBUILD_SAY.previous_run_unfinished)
@@ -383,6 +396,7 @@ test('undo the unfinished update: the mark ends and a new update can start', opt
   const undone = await s.call('POST', '/build/abandon')
   assert.equal(undone.status, 200, JSON.stringify(undone.body))
   assert.equal(undone.body.say, DONE_SAY.abandon)
+  assert.equal(undone.body.sayCode, 'abandon_done')
   assert.equal(await s.store.unfinished({ siteKey: SITE_KEY }), null)
   assert.equal(await s.store.current({ siteKey: SITE_KEY }), 'run-first', 'the site build does not change')
   const next = await renamed(s, plan)
@@ -412,6 +426,7 @@ test('restore the previous version: the site is the build before the update agai
   const restored = await s.call('POST', '/build/restore')
   assert.equal(restored.status, 200, JSON.stringify(restored.body))
   assert.equal(restored.body.say, DONE_SAY.restore)
+  assert.equal(restored.body.sayCode, 'restore_done')
   assert.equal(await store.current(site), first.write.build.ref)
   const now = snapshotOf(memory)
   const left = new Set(kept.write.state.undo.uploads)
