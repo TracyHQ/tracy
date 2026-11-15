@@ -65,10 +65,11 @@ export function itemCountsOf(order, blockStore) {
   return out
 }
 
-/** One variant: build, write, read every page and its links. */
-async function variant(name, { build, site, base, demoRoutes, kit, shape }) {
-  const built = await build({ shape })
-  const w = await site.write(built)
+/**
+ * One variant once written: read every page and its links. `written` is the write of `built` on the site (`{report,
+ * record}`); the release gate gives the marker test's own write as the full variant.
+ */
+export async function readVariant(name, { site, base, demoRoutes = [], kit }, { built, written: w }) {
   const blocks = itemCountsOf(built.order, kit.blockStore)
   if (w.report?.status !== 'done')
     return {
@@ -94,8 +95,14 @@ async function variant(name, { build, site, base, demoRoutes, kit, shape }) {
   }
 }
 
+/** One variant: build, write, read every page and its links. */
+export async function variant(name, ctx) {
+  const built = await ctx.build({ shape: ctx.shape })
+  return readVariant(name, ctx, { built, written: await ctx.site.write(built) })
+}
+
 /** The hidden variant on the full site: hide each half, read, publish again; every page must answer again. */
-async function hiddenVariant(full, { site, base, demoRoutes }) {
+export async function hiddenVariant(full, { site, base, demoRoutes }) {
   const pages = full.state.pages
   const hideable = pages.filter((p) => !p.home && p.record?.id)
   const halves = [
@@ -120,7 +127,15 @@ async function hiddenVariant(full, { site, base, demoRoutes }) {
   }
 }
 
-const without = ({ state: _state, ...rest }) => rest
+/** A variant as the record keeps it: without the build and the site state it carried for the next variant. */
+export const without = ({ state: _state, ...rest }) => rest
+
+/** The status of the measurement: the full and minimum variants decide, the hidden one is recorded (decision 3). */
+export function structureStatusOf(full, minimum) {
+  const parts = [full, minimum]
+  if (parts.some((p) => p.status === 'failed')) return 'failed'
+  return parts.some((p) => p.status !== 'passed') ? 'incomplete' : 'passed'
+}
 
 /**
  * @param {{build: (options: object) => Promise<object>, site: object, kit: {blockStore: object}, base: string,
@@ -143,12 +158,5 @@ export async function structure({ build, site, kit, base, demoRoutes = [], log =
     minimum = await variant('minimum', { ...ctx, shape: 'min' })
   }
   log('structure minimum: ' + minimum.status + ', ' + (minimum.broken?.length ?? 0) + ' broken link(s)')
-  // The hidden variant is recorded only (decision 3): the full and minimum variants decide.
-  const parts = [full, minimum]
-  const status = parts.some((p) => p.status === 'failed')
-    ? 'failed'
-    : parts.some((p) => p.status !== 'passed')
-      ? 'incomplete'
-      : 'passed'
-  return { status, full: without(full), hidden, minimum: without(minimum) }
+  return { status: structureStatusOf(full, minimum), full: without(full), hidden, minimum: without(minimum) }
 }

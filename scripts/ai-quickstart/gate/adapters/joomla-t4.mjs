@@ -8,6 +8,9 @@
 
 import { WEB_FRAME_RULES } from './web-frame.mjs'
 
+/** The platform the site check and the secret scan know this framework by. */
+export const PLATFORM = 'joomla'
+
 /** The exemptions of the pages this framework prints (`exemptions.mjs`): the web frame's. */
 export const EXEMPTIONS = WEB_FRAME_RULES
 

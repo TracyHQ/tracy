@@ -243,3 +243,13 @@ test('a written block no page prints is a written marker not seen, unexplained u
   assert.ok(classified.notSeen.every((n) => n.reason === 'value_not_printed' && n.declared === null))
   assert.ok(record.verdict.failing.includes('notSeen'))
 })
+
+test('the measurements laid into a record afterwards settle the same verdict as given to the marker test', async () => {
+  const { withMeasurements } = await import('../ai-quickstart/gate/record-measured.mjs')
+  for (const measurements of [PASSED, { ...PASSED, quality: { status: 'failed' } }, {}]) {
+    const given = (await gateOn(kit(), { clean: true, measurements })).record
+    const later = withMeasurements((await gateOn(kit(), { clean: true })).record, measurements)
+    assert.deepEqual(later.verdict, given.verdict)
+    assert.deepEqual(later.measurements, given.measurements)
+  }
+})

@@ -1,144 +1,162 @@
 #!/usr/bin/env node
 /**
- * The marker test of the release gate (ticket #585): write a marker into every place an AI quickstart declares, render
- * every page at 390, 768 and 1440 in light and dark, and report every word, picture, link, alt, title and meta that is
- * no marker, with its page, place and true source, grouped with the fix each group most likely needs; scan the same
- * pages for demo words and pictures, with the scan's two controls; write a check record and its review page.
+ * The release gate in one command (tickets #585 and #586). Every measurement in its order on one throwaway site
+ * (`release-gate.mjs`): the secret scan, the untouched human quickstart (the demo scan's control and the quality
+ * baseline), the marker test, the full structure variant, template quality, the hidden variant, the minimum variant on
+ * a reset site, the write safety passes; then `record.json`, `record.html` and `check-record/` (the record and its
+ * verdict file) in `--out`.
  *
  *   GATE_TOKEN_FILE=<file holding the site's Claude Cowork token> \
- *     node scripts/ai-quickstart/gate/gate.mjs <AI quickstart folder> --human-quickstart <human quickstart .zip> \
- *       --out <folder> [--site <base URL>] [--human-site <base URL> | --human-control <control.json>]
- *       [--installer <blank site .zip>] [--plugin <v>]
- *   node scripts/ai-quickstart/gate/gate.mjs <AI quickstart folder> --human-quickstart <zip> --out <folder> \
- *     --control-only <base URL of the untouched human quickstart>
+ *     node scripts/ai-quickstart/gate/gate.mjs <AI quickstart folder> --human-quickstart <zip> --out <folder> \
+ *       [--site <base URL>] [--reset-site "<command>"] [--human-site <URL> | --human-control <control.json>]
+ *       [--quality-control <quality.json>] [--quality-baseline <demo-measures.json>] [--installer <blank site .zip>]
+ *       [--plugin <v>] [--contract <blank site contract ref>] [--demo-content <released content-map.json>]
+ *       [--into-kit] [--no-gitleaks]
+ *   node scripts/ai-quickstart/gate/gate.mjs <folder> --human-quickstart <zip> --out <folder> --control-only <URL>
+ *   node scripts/ai-quickstart/gate/gate.mjs <folder> --human-quickstart <zip> --out <folder> --secrets-only
  *
- * The AI quickstart folder and its human quickstart are the only inputs; nothing in the gate names a template. The
- * blank site archive is made from the human quickstart (`blank-site.mjs`) unless `--installer` gives it. Without
- * `--site` the command stops after the write on a memory site (the accounting of the universe). With it, `--site` is
- * a throwaway blank site of that archive, the Claude Cowork plugin installed and its updater off, and `--human-site`
- * the untouched human quickstart restored on another throwaway site. The command renders the control first (the
- * demo scan must find demo on the human quickstart; the blank site serves no page before the write, so its statuses
- * are recorded, not judged), then binds the blank site, writes the marker plan through the plugin (the door client of
- * `website-opportunities/domain/site-doors.mjs`), reads the plugin version at both ends (it must not move and
- * must be `--plugin`, by default the version `apps/tracy-web/src/quickstarts.json` pins) and renders headless
- * (Playwright of the workspace). `--out` gets `record.json`, `record.html`, `shots/`, `crops/` and the raw calls; keep
- * it outside the repository. Exits 0 when the record passes, 1 when it does not, 2 on a usage error. A machine that
- * can hold one throwaway site at a time measures the human control first with `--control-only` (it writes
- * `controls/human.json` and stops) and gives that file to the full run with `--human-control`.
+ * Without `--site` the command stops after the marker build on a memory site (`accounting.json`). `--site` is a fresh
+ * blank site of the blank site archive with the plugin installed; `--reset-site` a shell command that makes it fresh
+ * again (without it the minimum variant and write safety are `not_run`, and the verdict fails). `--control-only`
+ * measures the untouched human quickstart alone (`controls/human.json`, `controls/quality.json`) for a machine that
+ * holds one throwaway site at a time; the full run reads them with `--human-control` (the quality file beside it is
+ * found on its own). `--secrets-only` runs the secret scan alone (`secrets.json`). `--into-kit` also writes
+ * `check-record/` into the kit folder. Exit 0 when what ran passed, 1 when not, 2 on a usage error.
  */
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { appendFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import {
   PHOSPHOR_SET,
   phosphorCatalog
 } from '../../../apps/tracy-web/src/lib/picture-paint/icons/phosphor-set.js'
+import { demoRoutesOf } from '../../built-site-check/inputs.mjs'
 import { corpusInputOf, demoCorpus } from '../rendered-scan.mjs'
-import { siteDoors } from '../../../packages/wo/website-opportunities/domain/site-doors.mjs'
-import { directSend } from '../site-doors-send.mjs'
-import { DECLARED_HOSTS, EXEMPTIONS, SYSTEM_PAGES, sitePages } from './adapters/joomla-t4.mjs'
+import { JOOMLA_PROBES } from './adapters/joomla-probes.mjs'
+import { DECLARED_HOSTS, EXEMPTIONS, PLATFORM, SYSTEM_PAGES } from './adapters/joomla-t4.mjs'
 import { crawlPages } from './adapters/web-frame.mjs'
 import { cropGroups } from './crops.mjs'
 import { controlOf } from './demo-checks.mjs'
-import { MEASURED_REFUSALS, memoryTryWrite, openMarkerPicture } from './memory-write.mjs'
+import { baselineOf, kitOf, pinnedPlugin, recordScanner, ROOT, secretsOf } from './gate-inputs.mjs'
+import { MEASURED_REFUSALS, memoryTryWrite } from './memory-write.mjs'
+import { markerBuild } from './marker-plan.mjs'
 import { kitHashesOf, splitOf } from './record.mjs'
-import { recordHtml } from './record-html.mjs'
+import { releaseGate } from './release-gate.mjs'
 import { renderSite, THEMES, WIDTHS } from './render.mjs'
 import { runGate } from './run-gate.mjs'
-import { blankControlOf } from './verdict.mjs'
-import { realWrite } from './site-write.mjs'
+import { qualityOn, siteSession } from './site-session.mjs'
 import { filesOf } from './sources.mjs'
+import { blankControlOf } from './verdict.mjs'
+import { PROBE_CATALOGUE } from './write-probes-edge.mjs'
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 const argv = process.argv.slice(2)
 const flag = (name) => (argv.includes(name) ? argv[argv.indexOf(name) + 1] : null)
+const url = (name) => flag(name)?.replace(/\/+$/, '') ?? null
 const folder = argv.find((a, i) => !a.startsWith('-') && !argv[i - 1]?.startsWith('--'))
 const human = flag('--human-quickstart')
 const out = flag('--out') ? path.resolve(flag('--out')) : null
-const site = flag('--site')?.replace(/\/+$/, '') ?? null
-const humanSite = flag('--human-site')?.replace(/\/+$/, '') ?? null
-const controlOnly = flag('--control-only')?.replace(/\/+$/, '') ?? null
-const humanControl = flag('--human-control')
+const [site, humanSite, controlOnly] = [url('--site'), url('--human-site'), url('--control-only')]
 if (!folder || !out || (!human && !flag('--installer'))) {
   console.error(
-    'usage: gate.mjs <AI quickstart folder> --human-quickstart <zip> --out <folder> [--site <URL>] [--human-site <URL>]'
+    'usage: gate.mjs <AI quickstart folder> --human-quickstart <zip> --out <folder> [--site <URL>] ...'
   )
   process.exit(2)
 }
-mkdirSync(out, { recursive: true })
-const json = (file) => JSON.parse(readFileSync(path.join(folder, file), 'utf8'))
-const mapping = json('mapping.json')
-const t = mapping.template ?? {}
-const kit = {
-  ref: `${t.slug}/${t.cms ?? 'j6'}@${t.version}`,
-  template: t,
-  blockStore: json('block-store.json'),
-  pageRecipes: json('page-recipes.json'),
-  mapping,
-  blankContract: json('blank-site-contract/content-map.json'),
-  lock: json('blank-site-contract/presentation-lock.json')
-}
+mkdirSync(path.join(out, 'controls'), { recursive: true })
+const kit = kitOf(folder)
+const t = kit.template
 const log = (line) => {
   console.log(line)
-  appendFileSync(path.join(out, 'gate.log'), `${line}\n`)
+  appendFileSync(path.join(out, 'gate.log'), new Date().toISOString() + ' ' + line + '\n')
 }
 const sha = (file) => createHash('sha256').update(readFileSync(file)).digest('hex')
+const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 
 // The blank site archive: made from the human quickstart by the blank site step, or given.
-const installer = flag('--installer') ?? path.join(out, 'blank', `${t.slug}-blank-${t.version}.zip`)
+const installer = flag('--installer') ?? path.join(out, 'blank', t.slug + '-blank-' + t.version + '.zip')
 if (!flag('--installer')) {
   mkdirSync(path.dirname(installer), { recursive: true })
+  const step = path.join(ROOT, 'scripts/ai-quickstart/blank-site.mjs')
   execFileSync(
     process.execPath,
-    [
-      path.join(ROOT, 'scripts/ai-quickstart/blank-site.mjs'),
-      human,
-      '--out',
-      installer,
-      '--mapping',
-      path.join(folder, 'mapping.json')
-    ],
-    { stdio: 'inherit' }
+    [step, human, '--out', installer, '--mapping', path.join(folder, 'mapping.json')],
+    {
+      stdio: 'inherit'
+    }
   )
 }
-log(`blank site archive ${path.basename(installer)} sha256 ${sha(installer)}`)
+log('blank site archive ' + path.basename(installer) + ' sha256 ' + sha(installer))
+const secrets = () =>
+  secretsOf({ folder, installer, human, cms: PLATFORM, gitleaks: !argv.includes('--no-gitleaks') })
+
+if (argv.includes('--secrets-only')) {
+  const began = Date.now()
+  const result = secrets()
+  writeFileSync(path.join(out, 'secrets.json'), JSON.stringify(result, null, 1) + '\n')
+  for (const f of result.findings) log('finding ' + f.file + ' ' + f.at + ' ' + f.rule + ' ' + f.fingerprint)
+  log(
+    'secrets ' +
+      result.status +
+      ': ' +
+      result.findings.length +
+      ' finding(s), ' +
+      result.allowed.length +
+      ' allowed, control ' +
+      result.control.status +
+      ' in ' +
+      Math.round((Date.now() - began) / 1000) +
+      ' s'
+  )
+  process.exit(result.status === 'passed' ? 0 : 1)
+}
 
 // The browser of the workspace's own Playwright (the root devDependency), resolved the normal way.
 const { chromium } = await import('@playwright/test')
-const browser = () => chromium
 const corpus = demoCorpus(corpusInputOf({ ...kit, contentMap: kit.blankContract }))
-const controlRender = async (base, name) => {
-  const pages = [
-    ...(await crawlPages({ base })),
-    ...SYSTEM_PAGES.map((s) => ({ ...s, url: new URL(s.path, `${base}/`).toString(), from: 'system' }))
-  ]
+const crawl = async (base) => [
+  ...(await crawlPages({ base })),
+  ...SYSTEM_PAGES.map((s) => ({ ...s, url: new URL(s.path, base + '/').toString(), from: 'system' }))
+]
+const controlRender = async (base, name, pages) => {
   await fetch(pages[0].url).catch(() => null)
-  const controlOut = path.join(out, 'controls', name)
-  return renderSite({
+  const shots = { theme: 'light', widths: [] }
+  const opts = {
     pages,
-    chromium: browser(),
-    out: controlOut,
+    chromium,
+    out: path.join(out, 'controls', name),
     themes: ['light'],
     widths: [1440],
-    shots: { theme: 'light', widths: [] },
+    shots,
     log
-  })
+  }
+  return renderSite(opts)
+}
+const paths = (pages) => [...new Set(pages.filter((p) => p.from !== 'system').map((p) => '/' + p.path))]
+const humanControl = async (base) => {
+  const pages = await crawl(base)
+  const demo = await controlOf(await controlRender(base, 'human', pages), corpus)
+  const quality = {
+    from: 'measured',
+    ...(await qualityOn({ base, platform: PLATFORM, pages: paths(pages) }))
+  }
+  writeFileSync(path.join(out, 'controls', 'human.json'), JSON.stringify(demo, null, 1))
+  writeFileSync(path.join(out, 'controls', 'quality.json'), JSON.stringify(quality, null, 1))
+  return { human: demo, quality }
 }
 
 if (controlOnly) {
-  const control = await controlOf(await controlRender(controlOnly, 'human'), corpus)
-  mkdirSync(path.join(out, 'controls'), { recursive: true })
-  writeFileSync(path.join(out, 'controls', 'human.json'), JSON.stringify(control, null, 1))
-  log(`control human: ${control.status}, ${control.findings} finding(s) on ${control.pages} page(s)`)
-  process.exit(control.findings > 0 ? 0 : 1)
+  const { human: demo, quality } = await humanControl(controlOnly)
+  log('control human: ' + demo.status + ', ' + demo.findings + ' finding(s) on ' + demo.pages + ' page(s)')
+  log(
+    'control quality: ' +
+      quality.groups.map((g) => g.name + ' ' + g.status + ' ' + g.failures.length).join(', ')
+  )
+  process.exit(demo.findings > 0 ? 0 : 1)
 }
 
-let token = null
-let send = null
-const result = await runGate({
+const common = {
   kit,
   archive: filesOf(installer),
   adapter: { exemptions: EXEMPTIONS, declaredHosts: DECLARED_HOSTS },
@@ -153,85 +171,75 @@ const result = await runGate({
     blankSite: { file: path.basename(installer), sha256: sha(installer) },
     ...(human ? { humanQuickstart: { file: path.basename(human), sha256: sha(human) } } : {})
   },
-  log,
-  ...(site && {
-    controls: async () => ({
-      human: humanSite
-        ? await controlOf(await controlRender(humanSite, 'human'), corpus)
-        : humanControl
-          ? JSON.parse(readFileSync(humanControl, 'utf8'))
-          : { status: 'not_run', findings: null },
-      // The blank site before the write serves no page by design: its statuses are recorded, never judged.
-      blank: blankControlOf(await controlRender(site, 'blank'))
-    }),
-    site: async ({ built }) => {
-      token = readFileSync(process.env.GATE_TOKEN_FILE ?? '', 'utf8').trim()
-      send = directSend({
-        base: site,
-        token,
-        log: (e) => appendFileSync(path.join(out, 'calls.jsonl'), `${JSON.stringify(e).slice(0, 4000)}\n`)
-      })
-      const real = await realWrite({
-        send,
-        base: site,
-        // The site's key by its hash only: the journal names the site it was written on, never the token.
-        siteKey: createHash('sha256').update(token).digest('hex'),
-        built,
-        out,
-        pin: flag('--plugin') ?? pinnedPlugin(),
-        log,
-        open: openMarkerPicture(built.registry)
-      })
-      const doors = siteDoors({ send })
-      const pages = await sitePages({ base: site, record: real.record, doors, order: built.order })
-      // The account the plugin writes as, printed as the author of an article: a value of the site's own records.
-      const siteValues = new Map()
-      for (const [key, id] of Object.entries(real.record.ids ?? {}))
-        if (key.startsWith('article:')) {
-          const name = (await doors.get({ kind: 'article', id }))?.author?.name
-          if (name)
-            siteValues.set(name, { table: 'users', column: 'name', why: 'the account the plugin writes as' })
-        }
-      return { origin: new URL(site).origin, real, pages, siteValues }
-    },
-    render: async (pages) => {
-      // One request first: the template builds its cache on the first page it serves (two browsers at once met a
-      // server error there, measured on the first real run).
-      await fetch(pages[0].url).catch(() => null)
-      return renderSite({ pages, chromium: browser(), out, log })
-    }
-  })
-})
+  log
+}
 
-if (!result.record) {
-  const { accounting, built } = result
-  writeFileSync(
-    path.join(out, 'accounting.json'),
-    JSON.stringify(
-      {
-        counts: accounting.counts,
-        split: splitOf(accounting.places),
-        places: accounting.places,
-        gaps: built.gaps
-      },
-      null,
-      1
-    )
-  )
+if (!site) {
+  const { accounting, built } = await runGate(common)
+  const doc = {
+    counts: accounting.counts,
+    split: splitOf(accounting.places),
+    places: accounting.places,
+    gaps: built.gaps
+  }
+  writeFileSync(path.join(out, 'accounting.json'), JSON.stringify(doc, null, 1))
   process.exit(accounting.counts.unexplained ? 1 : 0)
 }
-const { record } = result
-const sharp = createRequire(path.join(ROOT, 'apps/tracy-web/package.json'))('sharp')
-log(`crops ${await cropGroups({ groups: record.markerTest.groups, out, sharp })}`)
-writeFileSync(path.join(out, 'record.json'), JSON.stringify(record, null, 1))
-writeFileSync(path.join(out, 'record.html'), recordHtml(record))
-log(`record: ${JSON.stringify(record.verdict)}`)
-log(`groups ${JSON.stringify(record.markerTest.groupCounts)}`)
-process.exit(record.verdict.pass ? 0 : 1)
 
-function pinnedPlugin() {
-  const file = path.join(ROOT, 'apps/tracy-web/src/quickstarts.json')
-  if (!existsSync(file)) return null
-  const pins = JSON.parse(readFileSync(file, 'utf8'))
-  return pins[`quickstart/${t.slug}/${t.cms ?? 'j6'}`]?.cowork?.version ?? null
-}
+const pin = flag('--plugin') ?? pinnedPlugin(t)
+const plain = await markerBuild(kit, { iconLibrary: common.iconLibrary, tryWrite: common.tryWrite }).catch(
+  () => null
+)
+const session = siteSession({
+  base: site,
+  token: readFileSync(process.env.GATE_TOKEN_FILE ?? '', 'utf8').trim(),
+  out,
+  pin,
+  kit,
+  platform: PLATFORM,
+  resetCommand: flag('--reset-site'),
+  contract: flag('--contract'),
+  firstMarks: plain?.writePlan?.ops.filter((o) => o.kind === 'menuItem.create').map((o) => o.mark) ?? [],
+  log
+})
+const given = flag('--human-control')
+const qualityFile =
+  flag('--quality-control') ?? (given ? path.join(path.dirname(given), 'quality.json') : null)
+const demoContent = flag('--demo-content')
+const { record } = await releaseGate({
+  ...common,
+  site: session,
+  reset: session.reset,
+  quality: session.quality,
+  secrets,
+  scanRecord: recordScanner({ folder, cms: PLATFORM }),
+  baseline: baselineOf(folder, flag('--quality-baseline')),
+  probes: [...PROBE_CATALOGUE, ...JOOMLA_PROBES],
+  demoRoutes: demoContent && existsSync(demoContent) ? demoRoutesOf(readJson(demoContent)) : [],
+  control: async () => ({
+    ...(humanSite
+      ? await humanControl(humanSite)
+      : {
+          human: given ? readJson(given) : { status: 'not_run', findings: null },
+          quality: qualityFile && existsSync(qualityFile) ? readJson(qualityFile) : null
+        }),
+    // The blank site before the write serves no page by design: its statuses are recorded, never judged.
+    blank: blankControlOf(await controlRender(site, 'blank', await crawl(site)))
+  }),
+  // One request first: the template builds its cache on the first page it serves.
+  render: async (pages) => {
+    await fetch(pages[0].url).catch(() => null)
+    return renderSite({ pages, chromium, out, log })
+  },
+  // The crop of each finding group, named in the record before it is written.
+  decorate: async (r) => {
+    if (!r.markerTest?.groups?.length) return
+    const sharp = createRequire(path.join(ROOT, 'apps/tracy-web/package.json'))('sharp')
+    log('crops ' + (await cropGroups({ groups: r.markerTest.groups, out, sharp })))
+  },
+  out
+})
+if (argv.includes('--into-kit'))
+  cpSync(path.join(out, 'check-record'), path.join(folder, 'check-record'), { recursive: true })
+log('verdict ' + JSON.stringify({ pass: record.verdict.pass, failing: record.verdict.failing }))
+process.exit(record.verdict.pass ? 0 : 1)

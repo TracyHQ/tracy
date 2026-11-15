@@ -639,6 +639,6 @@ test('the record: groups and counts, kit hashes, controls; not passed while anyt
   assert.match(html, /not applicable: the blank site before the write serves no page by design/)
   assert.match(html, /Written but not seen/)
   // The six measurements are named on the page, each with its status.
-  assert.match(html, /Secret scan<\/span><code>not_run/)
-  assert.match(html, /link check not_run, minimum items not_run/)
+  assert.match(html, /Secret scan<\/span><span>Not measured: /)
+  assert.match(html, /Structure<\/span><span>Not measured: /)
 })

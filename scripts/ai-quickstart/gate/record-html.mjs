@@ -5,6 +5,8 @@
 // button copies every answer as text to paste back. Pure: the record in, HTML out. The record holds no machine
 // address (`<site>`) and the pictures are paths next to the page.
 
+import { measurementsHtml } from './record-html-measures.mjs'
+
 const esc = (v) =>
   String(v ?? '').replace(
     /[&<>"']/g,
@@ -87,6 +89,8 @@ textarea:focus,button:focus-visible{outline:1px solid var(--accent);outline-offs
 .bar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 0;display:flex;gap:12px;align-items:center}
 .bar button{font:inherit;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
 details{margin:8px 0}summary{cursor:pointer;color:var(--muted)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;font-size:14px;margin:6px 0 14px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{color:var(--muted);font-weight:600}
 `
 
 const SCRIPT = `
@@ -189,24 +193,6 @@ export function recordHtml(record) {
     return `<div><code>${esc(reason)}</code><span>${esc(n)} (${esc(declared)})</span></div>`
   })
   const notRun = (v.notRun ?? []).map((k) => MEASUREMENT_NAMES[k] ?? k).join(', ')
-  const measurementRows = Object.entries(MEASUREMENT_NAMES)
-    .map(([k, name]) => {
-      const m = record.measurements?.[k] ?? {}
-      const subs =
-        k === 'structure'
-          ? ` (link check ${m.linkCheck?.status ?? 'not_run'}, minimum items ${m.minItems?.status ?? 'not_run'})`
-          : ''
-      const more = k === 'secrets' && m.findings ? `, ${m.findings.length} finding(s)` : ''
-      return `<div><span>${esc(name)}</span><code>${esc((m.status ?? 'not_run') + subs + more)}</code></div>`
-    })
-    .join('')
-  // A secret finding names its file, place, rule and fingerprint; the record never holds the value itself.
-  const secretRows = (record.measurements?.secrets?.findings ?? [])
-    .map(
-      (f) =>
-        `<div><code>${esc(f.file)} ${esc(f.at)}</code><span>${esc(f.rule)} ${esc(f.fingerprint)}</span></div>`
-    )
-    .join('')
   const leakGroups = groups.filter((g) => g.group !== 'outside_request').length
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Quickstart check</title><style>${STYLE}</style></head><body><main>
@@ -220,8 +206,7 @@ export function recordHtml(record) {
 <p class="muted">${esc(v.leaks)} leak(s) in ${esc(leakGroups)} group(s), plus ${esc(groups.length - leakGroups)} request(s) to other sites; ${esc(v.demoFindings)} demo finding(s); ${esc(v.failedRenders ?? 0)} page view(s) that did not load as expected; ${esc(v.unexplained)} unexplained place(s)${notRun ? `. Not measured yet: ${esc(notRun)}` : ''}.</p>
 ${failing ? `<p class="muted">Failing parts: ${esc(failing)}.</p>` : ''}
 <h2>The measurements</h2>
-<div class="reasons">${measurementRows}</div>
-${secretRows ? `<details><summary>Secret findings (named, never shown)</summary><div class="reasons">${secretRows}</div></details>` : ''}
+${measurementsHtml(record.measurements)}
 <h2>What the build did with every place the kit declares</h2>
 <div class="tiles">${Object.entries(ACCOUNT)
     .map(([k, label]) => tile(label, u?.[k] ?? 0))
