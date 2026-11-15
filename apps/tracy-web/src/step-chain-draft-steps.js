@@ -13,7 +13,8 @@
 //             a picture whose own texts name a held text is refused (`refusedPicture`)
 //   icons     `selectBuildIcons` over the written copy and the placed frames
 //   order, write   `step-chain-draft-steps-late.js`: the write order, and the write on the site through the doors
-//             `deps.draftWrite` injects; with none, `write_not_ready_for_draft` at once (noRerun), nothing written
+//             `deps.draftWrite` injects, else the real doors over the run's Apply door (`step-chain-draft-site.js`,
+//             with `deps.site`); with neither, `write_not_ready_for_draft` at once (noRerun), nothing written
 //
 // 🔒 ONE MODEL DOOR. Every model call (the writer, the labelling, the icon keywords and ranking) is made through the
 // build model door (`buildModel`, `lib/llm-catalog.js`), resolved once per step by the injected resolver; no step names
@@ -25,6 +26,7 @@ import { withoutWithheld } from 'website-opportunities/domain/plan-withheld.mjs'
 import { refusedPicture, visionThrough, withDraftPictures } from './step-chain-draft-pictures.js'
 import { draftError, draftSource } from './step-chain-draft-source.js'
 import { keptModelOf, reuseOf, revisionOf, revisionRecordOf } from './step-chain-draft-revision.js'
+import { siteWriteOf } from './step-chain-draft-site.js'
 import { orderStep, writeStep } from './step-chain-draft-steps-late.js'
 
 /** The build model door's id in `LLM_DOORS`, the only door an assembled run spends. */
@@ -34,8 +36,9 @@ const list = (value) => (Array.isArray(value) ? value : [])
 /**
  * @param {{readEngineDraft?: Function, draftPlanForBuild?: Function, loadAiqKit?: (slug: string) => object | null,
  *   buildModel?: () => Promise<Function>, openDraftPicture?: Function, iconLibrary?: () => object,
- *   draftWrite?: object, builds?: object}} deps `draftWrite`: the site doors of the write step
- *   (`step-chain-draft-write-step.js`); `builds`: the build store of revisions
+ *   draftWrite?: object, site?: object, builds?: object}} deps `draftWrite`: the site doors of the write step
+ *   (`step-chain-draft-write-step.js`); `site`: the real site wiring (`step-chain-draft-site.js`), used when no
+ *   `draftWrite` is given; `builds`: the build store of revisions
  *   (`{read, keep, current, begin, unfinished, end, forget}`,
  *   `docs/references/draft-revision-run.md`)
  *   `buildModel`: the build model door's resolver (`build-draft/build-model.js` `buildModelDoor`), which throws
@@ -43,6 +46,8 @@ const list = (value) => (Array.isArray(value) ? value : [])
  */
 export function createDraftSteps(deps) {
   const source = draftSource(deps)
+  /** The run records of the real site wiring, by run id, kept between the frame's attempts of the write step. */
+  const records = new Map()
   async function modelOf() {
     if (typeof deps.buildModel !== 'function')
       throw draftError('model_missing', 'this server has no build model door for a step chain run')
@@ -54,7 +59,10 @@ export function createDraftSteps(deps) {
   const declared = (kit) => ({ blockStore: kit.aiq.blockStore, library: list(kit.aiq.library) })
 
   return {
-    forget: (runId) => source.forget(runId),
+    forget: (runId) => {
+      records.delete(runId)
+      return source.forget(runId)
+    },
 
     /** The build model door, when it cannot be answered, as the frame's door check reads it. */
     async doors() {
@@ -184,7 +192,12 @@ export function createDraftSteps(deps) {
 
     order: (ctx, inputs) => orderStep(ctx, inputs),
 
-    /** The write of a draft run: through the injected site doors, or a typed stop when none are wired. */
-    write: (ctx, inputs) => writeStep(deps, ctx, inputs)
+    /** The write of a draft run: through the injected or the real site doors, or a typed stop when none are wired. */
+    write: (ctx, inputs, how) =>
+      writeStep(
+        { ...deps, draftWrite: deps.draftWrite ?? siteWriteOf(deps, ctx, how, inputs, records) ?? undefined },
+        ctx,
+        inputs
+      )
   }
 }

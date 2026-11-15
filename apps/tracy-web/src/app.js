@@ -111,7 +111,8 @@ import { notificationsRoutes } from './notifications/route.js'
 import { unsubscribeHeadersFor } from './notifications/unsubscribe.js'
 import { onboardingRoutes } from './onboarding/route.js'
 import { seenHintRoutes } from './seen-hints/route.js'
-import { aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
+import { AI_QUICKSTARTS_DIR, aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
+import { blankContractReader } from './step-chain-draft-blank-contract.js'
 import { buildDraftRoutes } from './build-draft/route.js'
 import { buildModelDoor } from './build-draft/build-model.js'
 import { draftPlanForBuild, readEngineDraft } from './build-draft/store.js'
@@ -2339,7 +2340,15 @@ export function buildApp(deps) {
                         })
                       ),
                 openDraftPicture: (id, opts) => app.openDraftPicture?.(id, opts) ?? null,
-                iconLibrary: () => ({ set: PHOSPHOR_SET, icons: phosphorCatalog() })
+                iconLibrary: () => ({ set: PHOSPHOR_SET, icons: phosphorCatalog() }),
+                // The write step's site wiring (`step-chain-draft-site.js`): the upload read back reads the site's
+                // public file; the blank site contract beside the kit. No `siteDoors` yet: the door client
+                // (scripts/ai-quickstart/site-doors.mjs) is not on this branch, so the step still stops typed.
+                site: {
+                  publicFile: async (siteKey, filePath) =>
+                    (await siteReader(siteKey))?.bytes(filePath) ?? null,
+                  blankContract: blankContractReader(AI_QUICKSTARTS_DIR)
+                }
               }
             })
           })

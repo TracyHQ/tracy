@@ -1,9 +1,10 @@
 // The Write step of a draft run (#597): the checked write order of the `order` step, planned (`writePlanOf`, every
 // guard before any door) and run on the blank site through the doors the server injects (`runDraftWrite`). With no
-// doors injected the step stops at once, typed (`write_not_ready_for_draft`), writing nothing: the real door client is
-// not built yet. Spec: docs/references/draft-write-step.md.
+// doors injected the step stops at once, typed (`write_not_ready_for_draft`), writing nothing. The real doors go
+// are the door client `siteDoors({send})` over the run's Apply door (`step-chain-draft-site.js`); a test injects its own.
+// Spec: docs/references/draft-write-step.md, docs/references/draft-write-doors.md.
 //
-// `deps.draftWrite` (injected by `app.js` once the real client exists, by the tests until then):
+// `deps.draftWrite` (the real site wiring of `step-chain-draft-site.js`, or a test's):
 //   doors(ctx)               the site doors of this run (`step-chain-draft-write.js` lists them)
 //   record(ctx)              the run record the write resumes from: `{state, save(state)}`, kept between attempts
 //   openStored(id, ctx)      the stored bytes of a picture: `{bytes, mime}`
@@ -47,7 +48,7 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds 
   if (typeof wiring?.doors !== 'function')
     throw draftError(
       'write_not_ready_for_draft',
-      'a run built from a draft ends with its write order: no site doors are wired for its write step'
+      'no site doors are wired for the write step of this draft run (no Apply door, no door client or no site key)'
     )
   const order = inputs?.order?.order
   if (!order) throw draftError('write_order_missing', 'the write step of a draft run has no write order')

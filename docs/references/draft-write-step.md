@@ -102,8 +102,10 @@ which a resumed run uses to find it again.
 
 ## The doors
 
-Injected by `deps.draftWrite.doors(ctx)`. A real client is not built yet. These shapes are the ones
-`scripts/ai-quickstart/copy-proof*.mjs` and `door-proof.mjs` use on a real blank site:
+Injected by `deps.draftWrite.doors(ctx)`. On a real site they come from the door client `siteDoors({send})`
+through the run's Apply door: the wiring, the transport and what is still missing are in
+[`draft-write-doors.md`](draft-write-doors.md). These shapes are the ones `scripts/ai-quickstart/copy-proof*.mjs`
+and `door-proof.mjs` use on a real blank site:
 
 | Door | Plugin call | Answer |
 |---|---|---|

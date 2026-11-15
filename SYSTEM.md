@@ -942,6 +942,11 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   and outcome ([`build-draft/build-progress.js`](apps/tracy-web/src/build-draft/build-progress.js), over
   `progressEventOf` / `outcomeOf`), which the task list card polls; the first read that finds it ended closes the build.
   Draft pictures keep their vision labels on `build_draft_picture.labels` (`brief-picture-labels.js`).
+  The chain's write step of a draft run writes through the run's Apply door as a setup run (`applyAs(..., {setupRun})`):
+  every plugin call goes out through one transport `send(operation, payload)` (`step-chain-draft-send.js`), handed to
+  the door client `siteDoors({send})` that `deps.draft.site.siteDoors` injects (`step-chain-draft-site.js`). With no
+  door client the step stops `write_not_ready_for_draft` and writes nothing
+  ([`draft-write-doors.md`](docs/references/draft-write-doors.md)).
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
   row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,
