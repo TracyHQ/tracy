@@ -154,7 +154,7 @@
       "picture": "gallery-https-images-example-brindlewick-clubhouse-jpg",
       "ref": "https://images.example/brindlewick/clubhouse.jpg",
       "label": "Clubhouse terrace",
-      "from": ["Google listing"],
+      "from": ["Google Maps listing"],
       "size": {
         "width": 800,
         "height": 800

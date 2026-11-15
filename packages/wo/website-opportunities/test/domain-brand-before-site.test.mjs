@@ -114,27 +114,28 @@ test('no logo at all: the made logo and the template accent, each said and recor
   assert.deepEqual(plan.look.logo, { kind: 'text' })
   assert.deepEqual(lookSources.accent, {
     from: 'template-accent-no-logo',
-    name: 'The template, as you have no logo'
+    name: 'The design colour, because there is no logo'
   })
   assert.deepEqual(
     plan.assumptions.filter((a) => a.field.startsWith('look.')).map((a) => [a.field, a.said]),
     [
       [
         'look.logo',
-        "No logo was found, so a temporary one was made for you: a simple icon of your trade beside your business name, in the template's accent colour. Send us your logo to replace it."
+        "No logo was found, so I made a temporary one: a simple icon of your trade beside your business name, in the design's main colour. Send your logo here in the chat to replace it."
       ]
     ]
   )
   assert.equal(checkBuildDocument(plan).ok, true)
   assert.deepEqual(lookProblemsOf({ plan, template: template(), lookSources }), [])
-  // The same plan with a source that is not the no logo case (here the tests' fallback) shows the template's look.
+  // The same plan with a source that is not the no logo case (here the tests' fallback) shows the template's accent.
+  // (The no logo sentence now says "the design's main colour": the template words guard reads the model's lines.)
   assert.deepEqual(
     lookProblemsOf({
       plan,
       template: template(),
       lookSources: { accent: { from: 'template-fallback' } }
     }).map((p) => p.code),
-    ['template_accent', 'template_look_said']
+    ['template_accent']
   )
 })
 

@@ -72,7 +72,7 @@ test('no lightness of the hue reads (a stubbed requirement): black on light and 
   const { look, assumptions, sources } = lookOfBrandRecord(template(), record)
   assert.match(
     assumptions.find((a) => a.id === 'accent').said,
-    /black on the light theme and white on the dark theme/
+    /black on light pages and white on dark pages/
   )
   assert.deepEqual(
     lookProblemsOf({ plan: { look, assumptions }, template: template(), lookSources: sources }),

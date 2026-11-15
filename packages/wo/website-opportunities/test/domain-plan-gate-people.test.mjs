@@ -134,7 +134,7 @@ test('a template whose every team block needs two leaves the one person out, wit
       what: 'Ilse Varrow',
       kind: 'item',
       reason:
-        'Every section of the template for your team members on the pages of your site shows at least 2, and you have 1; nobody is made up to fill it.'
+        'Every section for your team members needs at least 2, and you have 1. I never invent team members to fill a section.'
     }
   )
   // The model may leave the person out itself: no block fits, so it is no problem.

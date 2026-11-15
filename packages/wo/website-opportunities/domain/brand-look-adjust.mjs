@@ -97,16 +97,16 @@ export function adjustedSaid({ themes, moved }) {
   const how =
     same && changed.length === themes.length
       ? moved[changed[0]]
-      : changed.map((t) => `${moved[t]} on the ${t} theme`).join(' and ')
+      : changed.map((t) => `${moved[t]} on ${t} pages`).join(' and ')
   return `Buttons and links use the colour of your logo, made ${how} so they stay readable.`
 }
 
 /** What the customer reads when no lightness of the logo's hue reads: the black and white of the no hue rule. */
 export function unreadableSaid(accent, accentDark) {
   const what = accentDark
-    ? 'black on the light theme and white on the dark theme'
+    ? 'black on light pages and white on dark pages'
     : accent === '#ffffff'
       ? 'white'
       : 'black'
-  return `The colour of your logo does not stay readable on buttons at any lightness, so buttons and links are ${what}.`
+  return `The colour of your logo is hard to read on buttons, so buttons and links are ${what}.`
 }

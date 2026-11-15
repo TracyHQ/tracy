@@ -27,15 +27,15 @@ export const NOT_IMPORTANT =
 const ROLES = Object.keys(IMPORTANT_CONFLICTS)
 const rankOf = (role) => (ROLES.includes(role) ? ROLES.indexOf(role) : ROLES.length)
 
-/** Where a source came from, in the customer's words. */
+/** Where a source came from, in the customer's words (the names of the plan card, `plan-data.mjs`). */
 function whereFrom(source) {
-  if (source?.origin === 'website') return 'your website'
-  if (source?.origin === 'google') return 'your Google listing'
+  if (source?.origin === 'website') return 'Website'
+  if (source?.origin === 'google') return 'Google Maps listing'
   const ref = String(source?.ref ?? '').toLowerCase()
-  if (ref.includes('instagram.')) return 'your Instagram'
-  if (ref.includes('facebook.')) return 'your Facebook page'
-  if (ref.includes('tiktok.')) return 'your TikTok'
-  return 'your social profile'
+  if (ref.includes('instagram.')) return 'Instagram profile'
+  if (ref.includes('facebook.')) return 'Facebook page'
+  if (ref.includes('tiktok.')) return 'TikTok profile'
+  return 'Social profile'
 }
 const listOf = (words) =>
   words.length < 2 ? words.join('') : `${words.slice(0, -1).join(', ')} and ${words.at(-1)}`

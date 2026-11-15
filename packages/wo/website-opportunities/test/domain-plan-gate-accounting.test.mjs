@@ -55,7 +55,7 @@ test('facts no block shows are placed in a block with a field for them, or left 
   )
   // No block of the template declares an email field: the email is reported, not dropped.
   const email = plan.leftOut.find((e) => e.what === 'Email')
-  assert.match(email.reason, /No section of the template has a place for your email/)
+  assert.match(email.reason, /Your design has no space for your email/)
   assert.equal(checkBuildDocument(plan).ok, true)
 })
 

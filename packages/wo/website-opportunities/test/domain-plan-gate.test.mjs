@@ -206,7 +206,10 @@ test('the plan carries the look, the pictures summary, the assumptions and the l
   })
   // Frames: the hero photo, three gallery photos and one coach photo. Three own photos, the hero generated, and the
   // coach's spot shows the coach's initials: a picture of a person is never generated, and is not left out (#595).
-  assert.deepEqual(plan.pictures.own, { frames: 3, from: ['Website', 'Google listing', 'Social profile'] })
+  assert.deepEqual(plan.pictures.own, {
+    frames: 3,
+    from: ['Website', 'Google Maps listing', 'Social profile']
+  })
   assert.equal(plan.pictures.generated.frames, 1)
   assert.ok(plan.pictures.generated.reason)
   // The phone differs between sources: the default taken is an assumption the customer can correct. The logo is one

@@ -17,6 +17,9 @@ const ROLE_WORDS = Object.freeze({
   'offering.description': 'Description',
   'person.role': 'Role'
 })
+/** A source as a sentence names it: "your website", "your Google Maps listing". */
+const sourceWords = ({ kind, name }) =>
+  kind === 'answer' ? 'your answer' : `your ${name.toLowerCase().replace('google maps', 'Google Maps')}`
 const roleWord = (role) => {
   if (ROLE_WORDS[role]) return ROLE_WORDS[role]
   const word = role.split('.').at(-1).replace(/_/g, ' ')
@@ -98,9 +101,13 @@ export function conflictAssumptionsOf(profile, data) {
     }
     const name = FACT_LABELS[fact.kind] ?? fact.label
     const what = name.charAt(0).toLowerCase() + name.slice(1)
+    const used = alternatives
+      .find((a) => a.value === fact.value)
+      .sources.map(sourceWords)
+      .join(' and ')
     const said = conflict.question
-      ? `You did not confirm the ${what}, so the value from your most trusted source is used. You can pick another one.`
-      : `Your sources disagree on the ${what}. The value from your most trusted source is used; you can pick another one.`
+      ? `You did not choose the ${what}, so I used the one from ${used}. You can pick another.`
+      : `Your sources show different values for the ${what}. I used the one from ${used}; you can pick another.`
     assumptions.push({
       id: conflict.id,
       field: `facts[${fact.id}].value`,

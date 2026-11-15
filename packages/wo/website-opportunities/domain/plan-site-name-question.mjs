@@ -13,7 +13,7 @@ export const SITE_NAME_QUESTION_ID = 'site-name'
 /** The data kind a site name answer becomes. */
 export const SITE_NAME_KIND = 'business.name'
 export const SITE_NAME_PROMPT =
-  'Your site will not show the business name we found. What name should your site show instead?'
+  'You asked us to keep your business name off the site. What name should the site show instead?'
 
 /** Whether nothing names the site: the business name is held and no neutral identity stands in for it. */
 export const siteNameMissing = (withheld) => withheld?.name === true && !withheld.siteName

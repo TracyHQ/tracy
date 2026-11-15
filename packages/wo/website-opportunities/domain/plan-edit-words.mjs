@@ -63,8 +63,8 @@ function wordsOf({ at, message }, plan) {
   else if (/^look\.accent(Dark)?$/.test(path) && /#rrggbb/.test(message))
     words = 'the accent colour must be a colour code such as #1f6feb'
   else if (/^(plan|schema|id)\b/.test(path))
-    words = 'it was made on another version of your plan, so reload the plan and try again'
-  else words = `it leaves ${the} in a state your site cannot be built from`
+    words = 'your plan changed in the meantime, so reload the plan and try again'
+  else words = `it would leave ${the} incomplete, so your site could not be built`
   return `${PREFIX}${words}.`
 }
 

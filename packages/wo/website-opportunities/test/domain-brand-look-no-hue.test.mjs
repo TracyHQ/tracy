@@ -55,7 +55,7 @@ test('a black and grey logo on a light and dark template: black on light, white 
   assert.deepEqual(
     plan.assumptions.filter((a) => a.field.startsWith('look.')).map((a) => a.said),
     [
-      'Your logo has no colour, so buttons and links are black on the light theme and white on the dark theme.',
+      'Your logo has no colour, so buttons and links are black on light pages and white on dark pages.',
       "Tracy drew a logo based on your logo: the symbol cut from your logo beside your business name, set in the template's font. It is not your logo file. Approve it, or send us your logo to replace it."
     ]
   )

@@ -110,8 +110,8 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
         what: fact.label,
         kind: 'feature',
         reason: full
-          ? `Every place the template has for your ${label} on the pages of your site is taken already.`
-          : `No section of the template has a place for your ${label}.`
+          ? `There is no room left on your pages for your ${label}.`
+          : `Your design has no space for your ${label}.`
       })
     }
   }

@@ -38,7 +38,7 @@ test('a photo counted at plan time that its label shows unfit is replaced by a d
   const plan = picturePlan()
   const summary = picturesOf(plan.pages, pictureBlocks(), planDataOf(pictureProfile()))
   plan.pictures = summary.pictures
-  assert.match(summary.pictures.generated.reason, /^About \d+ pictures will be drawn/)
+  assert.match(summary.pictures.generated.reason, /^About \d+ pictures will be created/)
   const hirePhoto = `${HIRE}:offering.image`
   const result = await step(plan, { [hirePhoto]: { content: 'text-graphic' } })
   const hire = at(result, `home.home-b2.${HIRE}.photo`)

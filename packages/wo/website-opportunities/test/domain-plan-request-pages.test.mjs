@@ -172,6 +172,6 @@ test('lines name the final state, and the pictures estimate a revision changes h
   const result = await revisePlan(photos.input)
   assert.deepEqual(result.changed.slice(-2), [
     'The plan now uses 1 photo of yours.',
-    'No picture will be drawn now.'
+    'Tracy will not create any pictures now.'
   ])
 })

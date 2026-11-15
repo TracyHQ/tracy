@@ -16,8 +16,8 @@ import {
 } from './fixtures/plan-composer/invented-brands.mjs'
 import { template } from './fixtures/plan-composer/invented-club.mjs'
 
-const NOT_FOUND = /^No logo was found, so a temporary one was made/
-const NOT_USED = /^Your logo could not be used as it is, so a temporary one was made/
+const NOT_FOUND = /^No logo was found, so I made a temporary one/
+const NOT_USED = /^Your logo could not be used as it is, so I made a temporary one/
 
 /** The safe version of the brand step: no logo material, a lettermark, the owner task for a temporary logo. */
 const safe = (input) => {
@@ -121,9 +121,9 @@ const TABLE = [
     quaysidePianoCare()
   ],
   [
-    'The colour of your logo does not stay readable',
+    'The colour of your logo is hard to read on buttons',
     'look.accent',
-    /^The colour of your logo does not stay readable/,
+    /^The colour of your logo is hard to read on buttons/,
     lemonGroveCider(),
     inkwellBindery(),
     STRICT
@@ -158,7 +158,7 @@ test('sentence table: the accent source name says "as you have no logo" only for
     const { sources } = lookOfBrandRecord(template(), brandLookOf({ ...input, kit }))
     return sources.accent.name
   }
-  assert.equal(name(quaysidePianoCare()), 'The template, as you have no logo')
+  assert.equal(name(quaysidePianoCare()), 'The design colour, because there is no logo')
   for (const input of [safe(inkwellBindery()), safe(saltmarshKayaks()), safe(lemonGroveCider())])
     assert.doesNotMatch(name(input), /no logo/)
 })

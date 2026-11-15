@@ -10,7 +10,7 @@ import { withheldIdsOf } from './plan-withheld.mjs'
 /** How the customer reads where a fact came from, per source origin of the needs profile. */
 export const SOURCE_NAMES = Object.freeze({
   website: 'Website',
-  google: 'Google listing',
+  google: 'Google Maps listing',
   social: 'Social profile',
   answer: 'Your answer'
 })
@@ -34,9 +34,9 @@ export const ITEM_NOUNS = Object.freeze({
   person: 'team members',
   quote: 'reviews',
   gallery: 'photos',
-  stat_item: 'figures',
-  step: 'steps',
-  claim: 'awards',
+  stat_item: 'statistics',
+  step: 'process steps',
+  claim: 'awards and certificates',
   faq: 'questions and answers',
   event: 'events',
   post: 'posts'

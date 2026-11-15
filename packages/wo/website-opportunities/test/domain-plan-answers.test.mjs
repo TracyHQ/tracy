@@ -41,7 +41,7 @@ const assumptionOn = (plan, field) => plan.assumptions.find((a) => a.field === f
 test('a chosen value settles its conflict: the fact takes it, with its own sources, and no assumption is left', async () => {
   const { plan, profile } = await compose({ answers: [answer(PHONE_QUESTION, { choice: 'value-2' })] })
   assert.equal(fact(plan, 'contact-phone').value, '+1 555 0142 779')
-  assert.deepEqual(fact(plan, 'contact-phone').sources, [{ kind: 'google', name: 'Google listing' }])
+  assert.deepEqual(fact(plan, 'contact-phone').sources, [{ kind: 'google', name: 'Google Maps listing' }])
   assert.equal(assumptionOn(plan, 'facts[contact-phone].value'), undefined)
   assert.equal(profile.facts['contact.phone'][0].value, '+1 555 0142 779')
   assert.deepEqual(checkBuildDocument(plan), { ok: true, problems: [] })
@@ -135,8 +135,8 @@ test('every conflict left open is an assumption carrying its alternatives, item 
     )
     assert.ok(a.alternatives.some((v) => v.value === fact(plan, /\[(.+)\]/.exec(field)[1]).value))
   }
-  assert.match(assumptionOn(plan, 'facts[contact-phone].value').said, /did not confirm/)
-  assert.match(assumptionOn(plan, 'facts[business-founded-year].value').said, /disagree/)
+  assert.match(assumptionOn(plan, 'facts[contact-phone].value').said, /did not choose/)
+  assert.match(assumptionOn(plan, 'facts[business-founded-year].value').said, /show different values/)
   assert.equal(checkBuildDocument(plan).ok, true)
 })
 

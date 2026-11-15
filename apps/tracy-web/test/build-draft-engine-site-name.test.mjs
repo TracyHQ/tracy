@@ -63,7 +63,7 @@ test('research offers the site name question first, as a free text card, with th
   assert.equal(without.result.questions[0].freeText.maxLength, 120)
   assert.deepEqual(without.result.ask.questions[0], {
     id: 'site-name',
-    question: 'Your site will not show the business name we found. What name should your site show instead?',
+    question: 'You asked us to keep your business name off the site. What name should the site show instead?',
     options: [],
     multiSelect: false
   })

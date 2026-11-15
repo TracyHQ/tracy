@@ -15,7 +15,7 @@ const list = (value) => (Array.isArray(value) ? value : [])
 
 /** The customer's reason for a section left out because all it would show is too long for it. */
 export const EMPTIED_BLOCK_REASON =
-  'Everything this section would show is longer than it can hold, so the section is left out.'
+  'The text for this section is too long for the design, so I left the section out.'
 
 /** Where a plan block sits in the composition, `pages[i].blocks[j]`, or its plan place for a block the gate added. */
 export function compositionAt(page, block, pageIndex) {

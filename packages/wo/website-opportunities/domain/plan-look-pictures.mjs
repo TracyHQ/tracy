@@ -76,29 +76,26 @@ export function lookOf(template, brand, { allowTemplateLook = false } = {}) {
 
 /** Why the plan drops an item of an image block, as the customer reads it (`picture-fit.mjs` reasons). */
 const ITEM_REASONS = Object.freeze({
-  no_own_photo:
-    'It has no photo of yours, and its section is complete without it, so no picture is generated for it.',
-  stock_only:
-    'Its only photo is a stock photo, and Tracy never adds a stock photo; its section is complete without it.',
-  own_photo_unfit:
-    'Its photo does not fit the picture spot of its section, and the section is complete without it.'
+  no_own_photo: 'You have no photo of it, and the section works without it, so I left it out.',
+  stock_only: 'The only photo is a stock photo, and Tracy never uses stock photos, so I left it out.',
+  own_photo_unfit: 'Its photo does not fit the space, and the section works without it, so I left it out.'
 })
 /** Picture spots that stay empty, by reason: how one and several are named, and why, as the customer reads it. */
 const EMPTY_FRAME_REASONS = Object.freeze({
   no_generated_people: [
     'picture spot of a person',
     'picture spots of people',
-    'Pictures of people are never generated, so these spots show no picture until you add your own photo.'
+    'Tracy never creates pictures of people, so these places stay empty until you add your own photo.'
   ],
   no_fitting_video: [
     'video spot',
     'video spots',
-    'No video of yours is landscape or near square without words printed over it, so these spots show no video.'
+    'None of your videos fit this space (wide pictures without text on top), so it shows no video.'
   ],
   no_own_logo: [
     'logo spot',
     'logo spots',
-    'A logo of another organisation is never drawn, so these spots stay empty until you add the logo.'
+    'Tracy never makes up logos of other organisations, so these places stay empty until you add the logo.'
   ],
   gallery_own_photos_only: [
     'gallery photo spot',
@@ -114,7 +111,7 @@ const count = (n, one, many) => `${n} ${n === 1 ? one : many}`
  * and every spot left without a fitting photo of theirs then gets a drawn picture (D45).
  */
 const estimateOf = (n) =>
-  `About ${count(n, 'picture', 'pictures')} will be drawn for spots with no fitting photo of yours; the final count follows your photos.`
+  `About ${count(n, 'picture', 'pictures')} will be created where you have no suitable photo. The final number depends on your photos.`
 
 /**
  * The pictures summary, counted by the picture policy (`picture-policy.mjs`, #595): frames filled by the business's own

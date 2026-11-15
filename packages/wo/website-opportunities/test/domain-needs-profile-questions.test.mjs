@@ -50,8 +50,8 @@ test('a conflict on an important fact is one fact-conflict question, labelled by
   assert.deepEqual(
     q.choices.map((c) => [c.label, c.detail, c.recommended ?? false]),
     [
-      ['+1 555 0142 778', 'From your website', true],
-      ['+1 555 0142 779', 'From your Google listing', false]
+      ['+1 555 0142 778', 'From Website', true],
+      ['+1 555 0142 779', 'From Google Maps listing', false]
     ]
   )
   assert.equal(q.freeText.maxLength, IMPORTANT_CONFLICTS['contact.phone'].maxLength)
@@ -72,8 +72,8 @@ test('order: contact conflicts, main button, contact method, language, then pric
   assert.deepEqual(
     price.choices.map((c) => [c.label, c.detail]),
     [
-      ['from $18 an hour', 'From your website'],
-      ['$20 an hour', 'From your Instagram']
+      ['from $18 an hour', 'From Website'],
+      ['$20 an hour', 'From Instagram profile']
     ]
   )
   for (const q of profile.questions) assert.deepEqual(problemsOf(q), [], q.id)

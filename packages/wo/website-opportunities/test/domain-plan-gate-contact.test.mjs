@@ -59,7 +59,7 @@ test('three addresses and one address place per block: the extra ones are no fai
   assert.deepEqual(left[0], {
     what: 'Address',
     kind: 'feature',
-    reason: 'Every place the template has for your address on the pages of your site is taken already.'
+    reason: 'There is no room left on your pages for your address.'
   })
 })
 

@@ -47,7 +47,7 @@ test('G5: six social links: the four places of block-171 are counted, and no rev
     )
   const social = gated.plan.leftOut.filter((e) => e.what === 'Social link')
   assert.equal(social.length, 2)
-  for (const e of social) assert.match(e.reason, /^Every place the template has for your social link/)
+  for (const e of social) assert.match(e.reason, /^There is no room left on your pages for your social link/)
 })
 
 test('G7: a model assumption naming a held person is dropped from the plan', () => {

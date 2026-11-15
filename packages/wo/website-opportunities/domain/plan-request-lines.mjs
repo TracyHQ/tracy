@@ -36,8 +36,8 @@ function picturesLines(current, revised, add) {
     add(
       'pictures-drawn',
       drawn[1] === 0
-        ? 'No picture will be drawn now.'
-        : `About ${count(drawn[1], 'picture', 'pictures')} will be drawn for spots with no fitting photo of yours.`
+        ? 'Tracy will not create any pictures now.'
+        : `About ${count(drawn[1], 'picture', 'pictures')} will be created where you have no suitable photo.`
     )
 }
 
@@ -57,7 +57,7 @@ function sectionLines(page, now, labels, add) {
         `block-data:${page.id}:${id}`,
         [...line].length <= 200
           ? line
-          : `The ${b.label} section of the ${now.name} page now shows ${b.data.length} things.`
+          : `The ${b.label} section of the ${now.name} page now shows ${b.data.length} items.`
       )
     }
   }

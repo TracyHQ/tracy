@@ -81,7 +81,7 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
         data: taken.map((i) => i.id),
         reason:
           description.source === 'library'
-            ? `The template has no section for your ${noun}, so they use a Tracy section drawn in the style of your template.`
+            ? `Your design has no section for your ${noun}, so I added one that matches its style.`
             : `More of your ${noun}, shown in a section of the template made for them.`
       }
       insertBlock(page, block, recipes?.get(page.pageType))
@@ -122,12 +122,12 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
         kind: 'item',
         reason:
           kind === 'gallery'
-            ? 'No photo section has room for it; it stays with your photos and may fill a picture spot of a page.'
+            ? 'No gallery has room for it. It stays with your photos and may be used elsewhere on the site.'
             : refusedBy.has(item.id)
               ? `Not shown in the Tracy section: ${refusedBy.get(item.id)}.`
               : fewer
-                ? `Every section of the template for your ${ITEM_NOUNS[kind] ?? 'items'} on the pages of your site shows at least ${fewer}, and you have ${remaining.length}; nobody is made up to fill it.`
-                : `No section of the template or of the Tracy library can show more of your ${ITEM_NOUNS[kind] ?? 'items'}.`
+                ? `Every section for your ${ITEM_NOUNS[kind] ?? 'items'} needs at least ${fewer}, and you have ${remaining.length}. I never invent ${ITEM_NOUNS[kind] ?? 'items'} to fill a section.`
+                : `There is no room left for more of your ${ITEM_NOUNS[kind] ?? 'items'}.`
       })
   }
   return { pages: out, leftOut, placed }

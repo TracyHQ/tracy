@@ -46,7 +46,7 @@ const list = (value) => (Array.isArray(value) ? value : [])
 /** How the customer reads where a logo came from, per `logoResearch.chosen.source` of the research. */
 export const LOGO_SOURCE_NAMES = Object.freeze({
   website: 'Website',
-  google: 'Google listing',
+  google: 'Google Maps listing',
   instagram: 'Instagram profile',
   facebook: 'Facebook page',
   tiktok: 'TikTok profile'
@@ -131,13 +131,13 @@ const MADE_MARKS = Object.freeze({ icon: 'a simple icon of your trade', letterma
 function madeLogoSaid(logo) {
   const shows = MADE_MARKS[logo.mark] ?? 'a simple mark'
   return logo.mediaId
-    ? `Your logo could not be used as it is, so a temporary one was made for you: ${shows} beside your business name. Send us your logo file to replace it.`
-    : `No logo was found, so a temporary one was made for you: ${shows} beside your business name, in the template's accent colour. Send us your logo to replace it.`
+    ? `Your logo could not be used as it is, so I made a temporary one: ${shows} beside your business name. Send your logo file here in the chat to replace it.`
+    : `No logo was found, so I made a temporary one: ${shows} beside your business name, in the design's main colour. Send your logo here in the chat to replace it.`
 }
 /** What the customer reads about a black and white accent, per the themes it is worn on. */
 function noHueSaid(accent, accentDark) {
   if (accentDark)
-    return 'Your logo has no colour, so buttons and links are black on the light theme and white on the dark theme.'
+    return 'Your logo has no colour, so buttons and links are black on light pages and white on dark pages.'
   return `Your logo has no colour, so buttons and links are ${accent === '#ffffff' ? 'white' : 'black'}.`
 }
 
@@ -146,10 +146,10 @@ const brandMissing = (why) => new PlanComposerError('brand_missing', why, {}, { 
 /** How the customer reads where the accent came from, per its source. */
 const ACCENT_NAMES = Object.freeze({
   [ACCENT_FROM_LOGO]: 'Your logo',
-  [ACCENT_LOGO_WITHOUT_HUE]: 'Your logo, which has no colour',
-  [ACCENT_LOGO_ADJUSTED]: 'Your logo, made darker or lighter to read',
-  [ACCENT_LOGO_UNREADABLE]: 'Your logo, whose colour cannot read on buttons',
-  [ACCENT_NO_LOGO]: 'The template, as you have no logo'
+  [ACCENT_LOGO_WITHOUT_HUE]: 'Your logo (it has no colour)',
+  [ACCENT_LOGO_ADJUSTED]: 'Your logo, adjusted so it stays readable',
+  [ACCENT_LOGO_UNREADABLE]: 'Your logo (its colour is hard to read on buttons)',
+  [ACCENT_NO_LOGO]: 'The design colour, because there is no logo'
 })
 
 /**
