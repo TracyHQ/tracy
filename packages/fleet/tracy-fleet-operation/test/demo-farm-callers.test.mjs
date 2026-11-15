@@ -433,6 +433,38 @@ test('farm_image_ensure: a host without the farm image builds it (web/build.sh d
   }
 })
 
+test('farm_config_test: a missing farm image is built before the throwaway container runs; a present one is not', () => {
+  const h = host()
+  try {
+    const web = join(h.dir, 'web')
+    mkdirSync(web)
+    for (const f of ['emdash.Dockerfile', 'demos.Dockerfile']) writeFileSync(join(web, f), 'FROM scratch\n')
+    writeFileSync(
+      join(web, 'build.sh'),
+      `echo "build $*" >> "${join(h.dir, 'calls')}"; : > "${join(h.dir, 'built')}"\n`
+    )
+    writeFileSync(
+      join(h.dir, 'bin', 'docker'),
+      `#!/usr/bin/env bash\nprintf 'docker %s\\n' "$*" >> "$CALLS"\ncase "$1 $2" in "image inspect") [ -e "${join(h.dir, 'built')}" ] ;; *) exit 0 ;; esac\n`,
+      { mode: 0o755 }
+    )
+    const env = { TRACY_WEB_DIR: web, TRACY_WEB_IMAGE_BUILD_LOCK: join(h.dir, 'build.lock') }
+    const r = common(h, 'farm_ensure_files; farm_render; farm_config_test', env)
+    assert.equal(r.status, 0, r.stderr)
+    const calls = h.called()
+    const build = calls.indexOf('build demos')
+    const run = calls.findIndex((c) => c.startsWith('docker compose') && / run --rm /.test(c))
+    assert.ok(build >= 0 && run > build, `build before run: ${calls.join(' | ')}`)
+    // tracy-host carries Compose v2.29, whose `run` has no --pull; the ensured image keeps it from pulling
+    assert.doesNotMatch(calls[run], /--pull/)
+    const again = common(h, 'farm_ensure_files; farm_render; farm_config_test', env)
+    assert.equal(again.status, 0, again.stderr)
+    assert.equal(h.called().filter((c) => c === 'build demos').length, 1, 'present image: no second build')
+  } finally {
+    h.dispose()
+  }
+})
+
 test('fold.sh: a link out of the webroot is refused by path before anything changes; links inside are fine', () => {
   const h = host()
   try {

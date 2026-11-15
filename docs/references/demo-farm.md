@@ -133,7 +133,7 @@ Use it only when a sub-second gap per demo, one at a time, is worth having every
 **Moving a host that still runs the pre-slot farm (`…-r2`, every forwarder on the old config).** Order matters:
 each demo gets exactly ONE short gap if the forwarders move first, and several if the farm moves first.
 
-1. Deploy. The updater builds the new farm image; it does **not** move the farm.
+1. Deploy. The deploy does **not** build the new farm image (it warns "not built on this host") and does **not** move the farm. `farm-switch.sh` — and any fold, unfold or refresh — builds a missing farm image itself before it needs it (minutes), or dispatch `build-app-images` with `build_web_images=<host>` beforehand.
 2. `docker exec tracy-tracy-host-1 bash /opt/tracy-fleet/provision/farm-forwarders.sh` lists the forwarders
    on an older config; add `--apply` to restart them, one at a time, each waited for. A current-config
    forwarder works in front of the pre-slot farm too (its health check accepts that farm's `403` on

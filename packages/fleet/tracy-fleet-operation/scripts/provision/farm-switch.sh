@@ -14,10 +14,12 @@
 # container's 410 on /tracy-ready to stop, and sees no gap at all. Forwarders first = ONE ~0.3 s gap per
 # demo (the restart); this script then changes nothing a visitor can see. (docs/references/demo-farm.md)
 #
-# The updater builds the new farm image but does NOT call this: until the new tracy-host serves, its
-# scripts are the old ones. Run it after the deploy, inside tracy-host
-# (`docker exec tracy-tracy-host-1 bash /opt/tracy-fleet/provision/farm-switch.sh`), or let the next
-# fold/unfold/farm-refresh do it (they end in the same switch).
+# The deploy does NOT build the new farm image (it only warns when it is missing) and does not call
+# this: until the new tracy-host serves, its scripts are the old ones. Run it after the deploy, inside
+# tracy-host (`docker exec tracy-tracy-host-1 bash /opt/tracy-fleet/provision/farm-switch.sh`), or let
+# the next fold/unfold/farm-refresh do it (they end in the same switch). Whichever runs first builds a
+# missing farm image itself (minutes) — or dispatch `build-app-images` with `build_web_images=<host>`
+# beforehand.
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck source=../lib/roots.sh

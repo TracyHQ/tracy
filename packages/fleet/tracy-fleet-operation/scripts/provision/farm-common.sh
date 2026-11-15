@@ -69,6 +69,9 @@ farm_render() {
 # (same image, same mounts) — so a broken vhost or pool never reaches the running farm, and a
 # re-create of tracy-demos-web never starts from a config that has not passed.
 farm_config_test() {
+  local image
+  image="$(tracy_demos_image)" || return 1
+  farm_image_ensure "$image" || return 1
   farm_compose run --rm --no-deps -T --entrypoint sh demos-web-a -c \
     'mkdir -p /run/tracy-demos && php-fpm -t 2>&1 | tail -n 3 && apache2ctl -t 2>&1 | tail -n 3' >&2
 }
