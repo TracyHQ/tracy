@@ -128,3 +128,25 @@ No test here touches a real site. Not measured:
 - the seat and toolset gate for `moduleAssignment` and `module` (toolset `code`) for the owner.
 - whether `content.update` of a menu item takes `template_style_id` and `parent_id` as the memory site does, and a
   created category its `extension` and `params`; the kit measured the pages on a blank site, not through these doors.
+
+## The door client on the branch (2026-11-15)
+
+`siteDoors` now lives in `packages/wo/website-opportunities/domain/site-doors.mjs` (`scripts/ai-quickstart/site-doors.mjs`
+re-exports it), and `app.js` wires it as `siteDoors` of the draft deps' `site` and of `app.draftSiteDoorsFor`. The rows
+above that say "not wired" or "not on this branch" are out of date. Every door it answers goes through `typedDoors`
+(`apps/tracy-web/src/step-chain-draft-doors.js`), which settles the differences on the app's side:
+
+| Point | The write step relies on | `siteDoors` answers | Settled |
+|---|---|---|---|
+| a door the plugin has no operation for | a typed stop | `DoorError` `DOOR_NOT_AVAILABLE` with `details.door` | app: stop `door_not_available` naming the door, `noRerun`, passed on with what ran |
+| a call after the run's signal | never retried in place (`fatal`) | `DoorError` `ABORTED`, not fatal | app: marked `fatal` |
+| `get` of a record the site does not hold | a row, or a refusal | `null` | app: `NOT_FOUND` with the kind and id |
+| `publicFile` | the site's public file (`siteReader(siteKey).bytes`) | `media` needs it | app: wired; absent, `media` stops typed |
+| `journal` | none needed: the run record (`madeOnce`) keeps a resume from making a record twice | memory, one per doors instance | app: the default |
+| `html` | the plugin's piece functions | `memoryHtml`, the port | app: the default |
+| `upload({mime})` | the picture's type | ignored | door client: open question |
+| `update` of a create whose answer has no id | the new id | `{id: 0}` | door client: open question |
+
+The test `step-chain-draft-real-doors.test.mjs` runs a stored draft through the real door client over an invented
+plugin on the memory site (`draft-plugin-over-memory.mjs`): the build ends complete. With the real stored pictures it
+stops at `picture_not_stored`, before any door: that is the next blocker.

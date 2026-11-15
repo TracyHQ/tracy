@@ -127,6 +127,7 @@ import { draftRunStarter } from './step-chain-draft-rerun.js'
 import { rerunBrief } from './step-chain-draft-rerun-row.js'
 import { memoryRunRecords, runRecordReader } from './step-chain-draft-run-records.js'
 import { siteDoorsFor } from './step-chain-draft-site.js'
+import { siteDoors } from 'website-opportunities/domain/site-doors.mjs'
 import { siteBuildStore } from './build-draft/site-builds.js'
 import {
   draftBrandStep,
@@ -2315,8 +2316,17 @@ export function buildApp(deps) {
         generateFor: quickstartGenerateFor,
         verifySite: quickstartVerifySite
       })
-    // The door client of a restore or an abandon of a built site: none yet, the same factory seam as the write step's.
-    app.draftSiteDoorsFor = siteDoorsFor({ site: deps.buildEngine?.site, applyFor })
+    // The site wiring of a draft write (`step-chain-draft-site.js`), shared by the write step and by a restore or an
+    // abandon of a built site: the door client `siteDoors` (website-opportunities/domain/site-doors.mjs) over the run's
+    // Apply door; the upload read back reads the site's public file; the blank site contract beside the kit. Its
+    // memory journal and its own `html` (the port of the plugin's piece functions) are the client's defaults.
+    const draftSite = {
+      siteDoors,
+      publicFile: async (siteKey, filePath) => (await siteReader(siteKey))?.bytes(filePath) ?? null,
+      blankContract: blankContractReader(AI_QUICKSTARTS_DIR)
+    }
+    // `deps.buildEngine.site`: a test's own site wiring in place of the real one.
+    app.draftSiteDoorsFor = siteDoorsFor({ site: deps.buildEngine?.site ?? draftSite, applyFor })
     // `deps.briefs`: a test's own runner, so a route test never starts a real one.
     const briefs =
       deps.briefs ??
@@ -2391,14 +2401,8 @@ export function buildApp(deps) {
                       ),
                 openDraftPicture: (id, opts) => app.openDraftPicture?.(id, opts) ?? null,
                 iconLibrary: () => ({ set: PHOSPHOR_SET, icons: phosphorCatalog() }),
-                // The write step's site wiring (`step-chain-draft-site.js`): the upload read back reads the site's
-                // public file; the blank site contract beside the kit. No `siteDoors` yet: the door client
-                // (scripts/ai-quickstart/site-doors.mjs) is not on this branch, so the step still stops typed.
-                site: {
-                  publicFile: async (siteKey, filePath) =>
-                    (await siteReader(siteKey))?.bytes(filePath) ?? null,
-                  blankContract: blankContractReader(AI_QUICKSTARTS_DIR)
-                },
+                // The write step's site wiring (`step-chain-draft-site.js`): the real door client, see `draftSite`.
+                site: draftSite,
                 // The builds each site holds, for revisions and restores (#612, `build-draft/site-builds.js`).
                 builds: deps.buildEngine?.builds ?? siteBuildStore(deps.pool),
                 // The run records of the writes, saved before each door call (`step-chain-draft-run-records.js`).
