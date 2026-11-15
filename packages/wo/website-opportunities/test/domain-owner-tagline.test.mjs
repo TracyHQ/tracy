@@ -157,7 +157,8 @@ test('a tagline longer than every tagline field is reported with its reason, nev
   const shown = built.plan.pages.flatMap((p) => p.blocks.flatMap((b) => b.data))
   assert.ok(!shown.includes('business-tagline'))
   const out = built.plan.leftOut.find((e) => e.what === 'Tagline')
-  assert.match(out.reason, /longer than every space your design has for it, and we never shorten it/)
+  assert.match(out.reason, /longer than every place your design has for it, and Tracy never shortens it/)
+  assert.equal(out.code, 'fact_longer_than_every_place')
   assert.ok(!JSON.stringify(built.plan.pages).includes('Serve it, rally'))
 })
 

@@ -138,14 +138,13 @@ export function picturesOf(pages, blocks, data) {
       ...(counts.generated > 0 ? { reason: estimateOf(counts.generated) } : {})
     }
   }
-  const leftOut = reduced.map(({ item, reason }) => ({
-    what: data.byId.get(item)?.entry?.label ?? item,
-    kind: 'item',
-    reason: ITEM_REASONS[reason] ?? ITEM_REASONS.no_own_photo
-  }))
+  const leftOut = reduced.map(({ item, reason }) => {
+    const code = Object.hasOwn(ITEM_REASONS, reason) ? reason : 'no_own_photo'
+    return { what: data.byId.get(item)?.entry?.label ?? item, kind: 'item', reason: ITEM_REASONS[code], code }
+  })
   for (const [reason, [one, many, said]] of Object.entries(EMPTY_FRAME_REASONS)) {
     const n = frames.filter((f) => f.source === 'none' && f.reason === reason).length
-    if (n > 0) leftOut.push({ what: count(n, one, many), kind: 'feature', reason: said })
+    if (n > 0) leftOut.push({ what: count(n, one, many), kind: 'feature', reason: said, code: reason })
   }
   const dropped = new Set(reduced.map((r) => `${r.page}.${r.block}.${r.item}`))
   const kept = list(pages).map((page) => ({

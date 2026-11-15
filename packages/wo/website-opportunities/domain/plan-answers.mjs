@@ -189,7 +189,8 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
         leftOut.push({
           what: CONTACT_CHOICES[answer.choice] ?? 'Your contact detail',
           kind: 'feature',
-          reason: CONTACT_VALUE_MISSING_REASON
+          reason: CONTACT_VALUE_MISSING_REASON,
+          code: 'contact_value_missing'
         })
       else settled.facts[contactKindOf(answer.text.trim())] = [answered(answer.text.trim())]
     } else if (question.topic === 'site-name') {

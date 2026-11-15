@@ -188,6 +188,12 @@ rejected; and labels, reasons and other short texts are held to their [text limi
 
 - **`leftOut`**: what was dropped, each with `kind` (`page`, `block`, `item`, `feature`) and its `reason`. Required,
   even empty. A row the plan does not show is reported with kind `item`.
+  `code` (optional): the stable code of the reason beside its sentence, lower case words joined by underscores, by
+  which the plan card translates the entry; the composer's gate gives every entry one (`model_reason`: a sentence the
+  model wrote and code could not derive, to translate as written; `stated`: a code made sentence without a code of
+  its own). `what` names a section, a page or the data in the customer's words, never a block id. `item`
+  (optional): the id of the fact, item or row the entry reports, when the plan lists it; a fact listed in `facts`
+  and named by a left out entry is known to the plan but not shown on the site.
 
 ### Child list rows (optional)
 
@@ -410,7 +416,7 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `generated pictures` | `frames`, `reason?` |
 | `assumption` | `id`, `field`, `said`, `alternatives?` |
 | `alternative` | `value`, `sources` |
-| `left out entry` | `what`, `kind`, `reason` |
+| `left out entry` | `what`, `kind`, `reason`, `code?`, `item?` |
 | `plan edit` | `schema`, `id`, `plan`, `changes` |
 | `plan reference` | `id`, `revision` |
 | `change` | `field`, `value` |

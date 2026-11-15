@@ -160,5 +160,5 @@ export function buildPlanProblems(plan, report) {
   lookProblems(plan.look, report)
   picturesProblems(plan.pictures, report)
   assumptionsProblems(plan, report)
-  leftOutProblems(plan.leftOut, report)
+  leftOutProblems(plan.leftOut, report, known)
 }

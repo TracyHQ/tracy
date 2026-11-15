@@ -23,7 +23,8 @@
 // - the plan it returns passes the Contract B check (`build-contract.mjs`);
 // - a mechanical fault whose single right answer code knows, and whose fix changes nothing the site shows, is fixed
 //   and recorded instead of failing the plan (`plan-gate-fixes.mjs`, #614): a left out entry of a shown item, an
-//   assumption naming a block by its store id, a label repeating its one datum, a count a reason no longer holds.
+//   assumption naming a block by its store id, a label repeating its one datum, a count a reason no longer holds;
+// - every left out entry reads in the customer's words with a reason code (`plan-left-out-wording.mjs`).
 // Composition in, `{ok, problems, fixes, composition, plan, placed, accounting}` out. `composition` is the reply as the
 // gate read it after its fixes: the place of every problem is a place in it.
 import { lookProblemsOf } from './brand-look-problems.mjs'
@@ -48,15 +49,20 @@ import { dropEmptiedBlocks } from './plan-emptied-blocks.mjs'
 import { withoutShownLeftOut } from './plan-gate-fixes.mjs'
 import { wordingProblems } from './plan-gate-wording.mjs'
 import { planRows } from './plan-rows.mjs'
-import { WITHHELD_REASON, withheldWhatOf } from './plan-withheld.mjs'
+import { modelLeftOutOf, withReasonCodes } from './plan-left-out-wording.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
-const withoutId = ({ id: _id, ...entry }) => entry
-/** A left out entry named by the plan's own label of its id, when a revision gives one (`context.labels`). */
-const namedBy = (labels) => (entry) =>
-  labels?.has(entry.id) ? withoutId({ ...entry, what: labels.get(entry.id) }) : withoutId(entry)
+/** A left out entry named by the plan's own label of its id, when a revision gives one (`context.labels`); the id it
+ * reports rides as `item` (`withReasonCodes` keeps it when the plan lists that id). */
+const namedBy =
+  (labels) =>
+  ({ id, ...entry }) => ({
+    ...entry,
+    ...(labels?.has(id) ? { what: labels.get(id) } : {}),
+    ...(id !== undefined ? { item: id } : {})
+  })
 
 /**
  * Gate a composed plan.
@@ -152,15 +158,8 @@ export function gatePlan(reply, context) {
   const accounting = dataAccountingOf({ data: context.data, pages: rows.pages, placed, leftOutIds })
   for (const id of accounting.unexplained)
     problem('data_unaccounted', `data[${id}]`, `${JSON.stringify(id)} is shown nowhere and not left out`)
-  const withheldOut = withheld.map((item) => ({ item, reason: WITHHELD_REASON }))
-  const fromModel = [...modelLeftOut, ...withheldOut].map(({ item, what, kind, reason }) => {
-    if (item === undefined) return { what, kind, reason }
-    const record = context.data.byId.get(item)
-    const label = context.data.withheld?.has(item)
-      ? withheldWhatOf(record, context.profile?.withheld)
-      : (context.labels?.get(item) ?? record.entry.label)
-    return { what: label, kind: record.what === 'fact' ? 'feature' : 'item', reason }
-  })
+  // The model's entries and the withheld ones, in the customer's words with a reason code (`plan-left-out-wording.mjs`).
+  const fromModel = modelLeftOutOf(modelLeftOut, withheld, { ...context, pages: rows.pages, fix, problem })
   const kept = ({ id }) =>
     !context.data.withheld?.has(id) && !context.data.withheld?.has(context.data.rowsById?.get(id)?.owner)
   const plan = {
@@ -187,6 +186,7 @@ export function gatePlan(reply, context) {
       ...listsBelowMinLeftOut(rows.dropped, rows.pages)
     ]
   }
+  plan.leftOut = withReasonCodes(plan.leftOut, plan)
   for (const p of checkBuildDocument(plan).problems) problem('contract_b', p.at, p.message)
   // The plan never shows the template's look for approval (#616): its accent, its logo, or a line naming them, written
   // by the model or not. Off only for the template fallback of the tests (`allowTemplateLook`).

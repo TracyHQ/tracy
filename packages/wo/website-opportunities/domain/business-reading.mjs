@@ -36,6 +36,7 @@ import { OWNER_STATEMENT_KIND, ownerPassageOf, withoutOwnerEcho } from './owner-
 import { ownerLabelGrounded } from './owner-echo.mjs'
 import { heldPassagesOf } from './reading-held-passages.mjs'
 import { ownerDropOf, ownerPassageIn, ownerThemeDropsOf, textsByRef } from './owner-quote-drops.mjs'
+import { settleOwnerOffers } from './owner-offer-shape.mjs'
 
 // 3: services and audience may stand on repeated mentions, items carry their mentions, facts are read, and the reading
 // also picks the business's sub-trade (`sub-trades.mjs`), reads its Google types and social category, and proposes up
@@ -387,6 +388,15 @@ export function checkBusinessReading(answer, sources, { trade = null, facts = []
     }
   }
   out.services = withPostOfferings(withListedServiceParts(out.services, sources), sources)
+  // An owner phrase about the business or its audience is no service; a near duplicate joins the owner's other one.
+  const offers = settleOwnerOffers(out.services, {
+    isOwners: (s) => s.source?.kind === OWNER_STATEMENT_KIND,
+    labelOf: (s) => s.label,
+    kindOf: () => 'service',
+    text: passage?.text ?? ''
+  })
+  out.services = offers.items
+  for (const d of offers.dropped) ownerDrops.push({ group: 'services', label: d.item.label, why: d.code })
   // No key message names a reviewer or a person only reviews name. The business's own points lead; the themes customers
   // praise fill what is left of the three.
   const names = reviewOnlyNamesOf(out.team, sources)

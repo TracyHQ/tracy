@@ -131,7 +131,8 @@ export function rowsLeftOut(data, planned, dropped, leftOutIds, shown = null) {
       id: record.id,
       what: record.entry.label,
       kind: 'item',
-      reason: why.get(record.id)?.reason ?? NO_LIST_REASON
+      reason: why.get(record.id)?.reason ?? NO_LIST_REASON,
+      code: why.get(record.id)?.code ?? 'row_no_list'
     })
   }
   for (const [id, d] of why) {
@@ -140,7 +141,7 @@ export function rowsLeftOut(data, planned, dropped, leftOutIds, shown = null) {
     // The fact's own value (the link itself) tells the customer which one; held to the 80 character `what` limit.
     const value = String(fact.entry.value)
     const what = [...value].length > 80 ? `${[...value].slice(0, 79).join('')}\u2026` : value
-    out.push({ id, what, kind: 'feature', reason: d.reason })
+    out.push({ id, what, kind: 'feature', reason: d.reason, code: d.code })
   }
   return out
 }
@@ -154,7 +155,12 @@ export function listsBelowMinLeftOut(dropped, pages) {
     const key = `${d.page}|${d.block}|${d.list}`
     if (d.code !== 'list_below_min' || seen.has(key)) continue
     seen.add(key)
-    out.push({ what: labels.get(`${d.page}|${d.block}`) ?? d.block, kind: 'block', reason: d.reason })
+    out.push({
+      what: labels.get(`${d.page}|${d.block}`) ?? d.block,
+      kind: 'block',
+      reason: d.reason,
+      code: d.code
+    })
   }
   return out
 }

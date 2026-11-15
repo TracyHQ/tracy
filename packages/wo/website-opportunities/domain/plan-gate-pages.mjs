@@ -28,7 +28,8 @@ export function pagesOf(composition, { recipes, blocks, givenIds, idTag }) {
       leftOut.push({
         what: page.name,
         kind: 'page',
-        reason: 'There was nothing to show in the main section of this page.'
+        reason: 'There was nothing to show in the main section of this page.',
+        code: 'page_main_section_empty'
       })
       continue
     }

@@ -133,8 +133,10 @@ test('a template whose every team block needs two leaves the one person out, wit
     {
       what: 'Ilse Varrow',
       kind: 'item',
+      code: 'fewer_than_section_needs',
       reason:
-        'Every section for your team members needs at least 2, and you have 1. I never invent team members to fill a section.'
+        'Every section for your team members needs at least 2, and you have 1. I never invent team members to fill a section.',
+      item: 'person-ilse-varrow'
     }
   )
   // The model may leave the person out itself: no block fits, so it is no problem.

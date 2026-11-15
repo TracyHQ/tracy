@@ -120,6 +120,14 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
         id: item.id,
         what: item.label,
         kind: 'item',
+        code:
+          kind === 'gallery'
+            ? 'no_gallery_room'
+            : refusedBy.has(item.id)
+              ? 'library_section_refused'
+              : fewer
+                ? 'fewer_than_section_needs'
+                : 'no_room_left',
         reason:
           kind === 'gallery'
             ? 'No gallery has room for it. It stays with your photos and may be used elsewhere on the site.'

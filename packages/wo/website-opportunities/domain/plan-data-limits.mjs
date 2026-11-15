@@ -186,7 +186,8 @@ export function overLimitLeftOut(dropped, pages, data) {
       out.push({
         what: short(`${word.charAt(0).toUpperCase()}${word.slice(1)} of ${label}`, 80),
         kind: 'feature',
-        reason: d.reason
+        reason: d.reason,
+        code: 'value_over_limit'
       })
       continue
     }
@@ -197,7 +198,8 @@ export function overLimitLeftOut(dropped, pages, data) {
       id: d.id,
       what: record.entry.label,
       kind: record.what === 'fact' ? 'feature' : 'item',
-      reason: d.reason
+      reason: d.reason,
+      code: d.code
     })
   }
   return out

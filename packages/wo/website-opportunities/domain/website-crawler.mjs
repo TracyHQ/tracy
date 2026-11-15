@@ -2,6 +2,7 @@ import { fetchLimited } from './fetch-limited.mjs'
 import { assertPublicUrl } from './url-guard.mjs'
 import { socialNetworkOf } from './discovery-osm.mjs'
 import { SCHEMA_BUSINESS_TYPES } from './trades.mjs'
+import { NAMED_REFERENCES } from './draft-write-entity-table.mjs'
 
 const DEFAULT_MAX_PAGES = 40
 const TEXT_CAP = 5000
@@ -68,13 +69,19 @@ const NOT_A_PROFILE = {
 
 const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', '#39': "'" }
 
+/**
+ * Website text with its character references read, once, where the text enters (#609: a price row read
+ * "Invented&rsquo;s Shirt" on the plan card): the few names above first (a no break space reads as a space), then
+ * every HTML5 name (`NAMED_REFERENCES`), then numbers. One pass, so `&amp;rsquo;` reads `&rsquo;` and never `’`;
+ * the result is text, never markup: a writer escapes it again where it writes HTML.
+ */
 export function decodeEntities(s) {
-  return String(s ?? '').replace(/&(#x[0-9a-f]+|#\d+|[a-z]+\d*);/gi, (m, e) => {
+  return String(s ?? '').replace(/&(#x[0-9a-f]+|#\d+|[a-z][a-z0-9]*);/gi, (m, e) => {
     if (e[0] === '#') {
       const code = e[1] === 'x' || e[1] === 'X' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10)
       return Number.isFinite(code) && code > 0 && code < 0x110000 ? String.fromCodePoint(code) : m
     }
-    return ENTITIES[e.toLowerCase()] ?? m
+    return ENTITIES[e.toLowerCase()] ?? NAMED_REFERENCES.get(e) ?? m
   })
 }
 

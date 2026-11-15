@@ -48,7 +48,7 @@ export const CONTRACT_SHAPES = Object.freeze({
   'generated pictures': shape(['frames'], ['reason'], { plan: true }),
   assumption: shape(['id', 'field', 'said'], ['alternatives'], { plan: true }),
   alternative: shape(['value', 'sources'], [], { plan: true }),
-  'left out entry': shape(['what', 'kind', 'reason'], [], { plan: true }),
+  'left out entry': shape(['what', 'kind', 'reason'], ['code', 'item'], { plan: true }),
   'plan edit': shape(['schema', 'id', 'plan', 'changes']),
   'plan reference': shape(['id', 'revision']),
   change: shape(['field', 'value']),

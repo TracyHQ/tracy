@@ -195,7 +195,7 @@ export function assumptionsProblems(plan, report) {
   })
 }
 
-export function leftOutProblems(leftOut, report) {
+export function leftOutProblems(leftOut, report, known = null) {
   if (!Array.isArray(leftOut))
     return report('leftOut', 'missing left out list: what was dropped, with the reason')
   leftOut.forEach((entry, i) => {
@@ -206,5 +206,11 @@ export function leftOutProblems(leftOut, report) {
     if (!LEFT_OUT_KINDS.includes(entry.kind))
       report(`${at}.kind`, `kind is one of ${LEFT_OUT_KINDS.join(', ')}`)
     textProblems(entry.reason, `${at}.reason`, report, 'reason', 'a left out entry needs its reason')
+    // The stable code of the reason, beside its sentence, by which the plan card translates it.
+    if (entry.code !== undefined && !(typeof entry.code === 'string' && /^[a-z][a-z0-9_]*$/.test(entry.code)))
+      report(`${at}.code`, 'a reason code is lower case words joined by underscores')
+    // The fact, item or row the entry reports, so a reader knows a fact the plan lists is not on the site.
+    if (entry.item !== undefined && !(known?.has(entry.item) ?? isName(entry.item)))
+      report(`${at}.item`, `${JSON.stringify(entry.item)} is no fact, item or row of the plan`)
   })
 }

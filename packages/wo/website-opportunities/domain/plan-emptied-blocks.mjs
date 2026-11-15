@@ -45,7 +45,12 @@ export function dropEmptiedBlocks(before, limited, context, pageIndex, problem) 
       if (list(block.data).length > 0 || !had.has(`${page.id}|${block.id}`)) return true
       const dropped = limited.dropped.filter((d) => d.page === page.id && d.block === block.id && !d.cleared)
       if (block.block !== main) {
-        leftOut.push({ what: block.label ?? block.block, kind: 'block', reason: EMPTIED_BLOCK_REASON })
+        leftOut.push({
+          what: block.label ?? block.block,
+          kind: 'block',
+          reason: EMPTIED_BLOCK_REASON,
+          code: 'section_text_too_long'
+        })
         return false
       }
       const at = compositionAt(page, block, pageIndex)

@@ -59,8 +59,11 @@ test('three addresses and one address place per block: the extra ones are no fai
   assert.deepEqual(left[0], {
     what: 'Address',
     kind: 'feature',
-    reason: 'There is no room left on your pages for your address.'
+    code: 'no_room_left',
+    reason: 'Every place your design has for this is taken already.',
+    item: left[0].item
   })
+  assert.equal(ADDRESSES.includes(left[0].item) && !shown.has(left[0].item), true)
 })
 
 test('social links with no fact block for them on the template: no contact_channel_missing; with one, it is named', () => {

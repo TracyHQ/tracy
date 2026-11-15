@@ -15,6 +15,20 @@ import { BLOCK_TYPES } from './place-content-roles.mjs'
 import { extraBlockId, insertBlock, pageFor } from './plan-placement-pages.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
+/**
+ * The left out reasons of a fact no block shows, by code. The sentence never repeats the fact's name: the entry's
+ * `what` names it, and "no space for your founded" was no sentence.
+ */
+export const FACT_LEFT_OUT = Object.freeze(
+  Object.fromEntries(
+    Object.entries({
+      fact_longer_than_every_place:
+        'This is longer than every place your design has for it, and Tracy never shortens it.',
+      no_room_left: 'Every place your design has for this is taken already.',
+      no_place_in_design: 'Your design has no place that shows this.'
+    }).map(([code, reason]) => [code, Object.freeze({ code, reason })])
+  )
+)
 /** How many values of data kind `kind` a block's own fields hold. */
 export const slotsFor = (description, kind) =>
   list(description?.fields).filter((f) => f?.type !== 'design' && f?.kind === kind).length
@@ -113,7 +127,6 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
       placed.push({ item: fact.id, page: home.page.id, block: home.block.id, how: home.how })
     } else {
       // True of the template: its places for the kind may all be taken (three addresses, one address place).
-      const label = fact.label.toLowerCase()
       const full = [...blocks.values()].some((d) => d.source !== 'library' && placesFor(d, fact.kind) > 0)
       const long =
         isOwnerVerbatim(record) &&
@@ -125,11 +138,7 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
         id: fact.id,
         what: fact.label,
         kind: 'feature',
-        reason: long
-          ? `Your ${label} is longer than every space your design has for it, and we never shorten it.`
-          : full
-            ? `There is no room left on your pages for your ${label}.`
-            : `Your design has no space for your ${label}.`
+        ...FACT_LEFT_OUT[long ? 'fact_longer_than_every_place' : full ? 'no_room_left' : 'no_place_in_design']
       })
     }
   }
