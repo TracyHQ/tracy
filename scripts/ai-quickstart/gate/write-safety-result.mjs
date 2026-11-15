@@ -26,7 +26,8 @@ export function resultOf({
   coverage,
   was,
   spent,
-  parked = new Map()
+  parked = new Map(),
+  ranFor = null
 }) {
   const missing = ledger.missing(places, probes)
   const rows = ledger.rows()
@@ -54,8 +55,10 @@ export function resultOf({
         why: named.has(p.key) ? 'probes_left' : notProbedWhy(rows.filter((r) => r.place === p.key))
       })
   }
+  // A resumed measurement took its earlier passes on trust: it never says it passed (review 4 X5).
   const why =
     incomplete ??
+    (was ? 'resumed' : null) ??
     (missing.length
       ? 'passes'
       : findings.some((f) => f.kind === 'unclassified')
@@ -88,6 +91,8 @@ export function resultOf({
       }
     },
     ...spent(),
+    // The seconds this run measured for: the passes it ran fit in it, passes carried from a state do not.
+    ...(ranFor == null ? {} : { ranFor }),
     ...(was ? { resumedFrom: was.passes.length } : {})
   }
 }

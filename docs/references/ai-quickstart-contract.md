@@ -1898,7 +1898,7 @@ version 2 counted build refusals as tested places and left the hidden variant ou
 | `human_quickstart_not_pinned` | the record ran another human quickstart installer than the pinned one |
 | `blank_site_changed` | the blank site archive about to be published is not the one the record ran on |
 | `record_changed` | `check-record/record.json` is not the record the verdict was written from (by its bytes) |
-| `write_safety_resumed` | write safety resumed passes from a saved state (`resumedFrom`): a release record runs every pass in one run |
+| `write_safety_resumed` | write safety resumed passes from a saved state: `resumedFrom`, a pass marked `resumed`, or passes that took longer than the run measured for (`ranFor`); a release record runs every pass in one run |
 
 The publish step and the guard command add the kit's own plan (`gate/release-plan.mjs`): the marker build is made
 again in memory from the kit folder, and the record must hold its universe of places, each with the same account, and
@@ -2163,7 +2163,11 @@ and the sha256 of the code of the gate and of the build's write step (`gateCodeS
 its time limit resumes from the next pass when the gate runs again into the same folder (`resumedFrom`). A resume
 carries that state (the ledger, the findings and the passes) on trust: the earlier passes are not measured again.
 Each process writes into a run folder of its own (`<out>/writes/run-<k>/<n>`), so no write record of an earlier
-process is taken for its own. A resumed record is never released (`write_safety_resumed`).
+process is taken for its own. A resumed measurement never says `passed`: it is `incomplete` (`resumed`) when nothing
+else fails, each pass it carried from the state is marked `resumed: true`, and the guard refuses the record
+(`write_safety_resumed`) on any of `resumedFrom`, a resumed pass, or passes whose seconds add up to more than the run
+measured for (`ranFor`). A forger who edits all three, and the verdict, is stopped only by an honest `runGate` (the
+release step runs the gate itself, #588); the resumed passes themselves are not measured again.
 
 The record gives `places` (`written`, `probed`, `tested`), `notSiteTested`, `passes`, `steps`, `buildSteps`,
 `findings` (page, block, store block, field, probe, kind, the stored location; never the value), `missing` and

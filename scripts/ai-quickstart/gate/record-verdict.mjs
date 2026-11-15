@@ -36,6 +36,8 @@ export function measurementProblems(record) {
     out.push({ code: 'measurement_inconsistent', message: name + ' is ' + m[name]?.status + ' but ' + why })
   const ws = m.writeSafety
   if (ws?.status === 'passed') {
+    if ((ws.passes ?? []).some((p) => p?.resumed) || ws.resumedFrom != null)
+      say('writeSafety', 'it holds passes carried from a saved state')
     if ((ws.findings ?? []).some((f) => FAILING.has(f.kind))) say('writeSafety', 'it holds a failing finding')
     if (!ws.places?.tested || ws.places.tested < ws.places.probed)
       say('writeSafety', 'not every probed place reached the site')

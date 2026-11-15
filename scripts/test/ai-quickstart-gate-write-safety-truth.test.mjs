@@ -166,8 +166,12 @@ test('a measurement stopped by its limits resumes where it stopped', async () =>
   assert.equal(first.result.status, 'incomplete')
   assert.equal(first.result.incomplete, 'passes')
   const second = await measure({}, { state, stateKey: 'k1' })
-  assert.equal(second.result.status, 'passed')
+  // Resumed passes are taken on trust: the measurement finishes but never says passed (review 4 X5).
+  assert.equal(second.result.status, 'incomplete')
+  assert.equal(second.result.incomplete, 'resumed')
+  assert.deepEqual(second.result.missing, [])
   assert.equal(second.result.passes[0].pass, 1, 'the earlier passes are kept')
+  assert.equal(second.result.passes[0].resumed, true)
   assert.ok(second.result.resumedFrom === 2)
   // A state of another key (another kit, plugin or gate version) is never resumed.
   const other = await measure({}, { limits: { ...LIMITS, passes: 2 }, state, stateKey: 'k2' })

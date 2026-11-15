@@ -184,16 +184,31 @@ export function releaseProblems(folder, { pins = {}, blankSiteSha } = {}) {
       )
     )
   // A resumed write safety took the passes of a saved state on trust (review round 3, U5): a release record runs them all.
-  if (record.measurements?.writeSafety?.resumedFrom != null)
+  // Told by three things, not one field (review 4 X5): `resumedFrom`, a pass marked as carried from a state, and passes
+  // that took longer than this run measured for.
+  const resumedWhy = resumedOf(record.measurements?.writeSafety)
+  if (resumedWhy)
     out.push(
       problem(
         'write_safety_resumed',
-        'write safety resumed ' +
-          record.measurements.writeSafety.resumedFrom +
-          ' pass(es) from a saved state: run the gate into an empty run folder'
+        'write safety ' + resumedWhy + ': run the gate into an empty run folder'
       )
     )
   if (blankSiteSha && v.blankSiteSha256 !== blankSiteSha)
     out.push(problem('blank_site_changed', 'the blank site archive is not the one the record ran on'))
   return out
+}
+
+/** Why a write safety measurement was resumed from a saved state, or null. */
+export function resumedOf(ws) {
+  if (!ws) return null
+  if (ws.resumedFrom != null) return 'resumed ' + ws.resumedFrom + ' pass(es) from a saved state'
+  const passes = Array.isArray(ws.passes) ? ws.passes : []
+  if (passes.some((p) => p?.resumed)) return 'holds passes carried from a saved state'
+  const seconds = passes.reduce((a, p) => a + (Number(p?.seconds) || 0), 0)
+  // Each pass rounds its seconds: one second of slack per pass.
+  if (ws.ranFor != null && seconds > Number(ws.ranFor) + passes.length)
+    return 'holds ' + seconds + ' s of passes in a run of ' + ws.ranFor + ' s'
+  if (passes.length && ws.ranFor == null) return 'does not say how long it ran'
+  return null
 }

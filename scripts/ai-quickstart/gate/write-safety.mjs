@@ -74,7 +74,8 @@ export async function writeSafety(input) {
   const was = resumed(input.state, input.stateKey)
   for (const r of was?.ledger ?? []) ledger.set(r.place, r.probe, r)
   findings.push(...(was?.findings ?? []))
-  passes.push(...(was?.passes ?? []))
+  // A pass carried from a saved state says so itself (review 4 X5): the record shows it was not measured in this run.
+  passes.push(...(was?.passes ?? []).map((p) => ({ ...p, resumed: true })))
   for (const [k, v] of was?.parked ?? []) parked.set(k, v)
   const budget = stepBudget(Math.max(0, limits.steps - (was?.steps ?? 0)))
   // Builds in memory are counted, never limited: a refusal found there costs no site and no rerun (`write-safety-pass.mjs`).
@@ -202,7 +203,8 @@ export async function writeSafety(input) {
     coverage,
     was,
     spent,
-    parked
+    parked,
+    ranFor: Math.round((now() - start) / 1000)
   })
 }
 
