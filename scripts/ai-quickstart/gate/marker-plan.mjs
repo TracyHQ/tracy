@@ -15,6 +15,7 @@ import { codeOf, textMarker } from './marker-codec.mjs'
 import { markerComposition } from './marker-composition.mjs'
 import { writerGapOf } from './marker-gaps.mjs'
 import { markerProfile, markerRegistry } from './marker-profile.mjs'
+import { markerLookOf } from './marker-look.mjs'
 import { pictureShapesOf } from './marker-pictures.mjs'
 
 /** The filler word marker texts are padded with; an icon tagged with it is a candidate for every marker heading. */
@@ -180,7 +181,12 @@ async function chainOf(kit, { registry, research, composition, label, icons, sto
     aiq,
     approval: { plan, profile },
     // An own logo: a text logo makes the write step skip every logo place, so none would be measured (G11).
-    look: { accent: plan.look.accent, accentFrom: 'brand', logo: { kind: 'own', source: 'marker' } },
+    // Both sides when the kit writes a dark side value: the marker colour made readable on each (`marker-look.mjs`).
+    look: {
+      ...markerLookOf(kit.mapping?.look, kit.templateKit ?? null, plan.look.accent),
+      accentFrom: 'brand',
+      logo: { kind: 'own', source: 'marker' }
+    },
     writers,
     pictures,
     icons: pictures

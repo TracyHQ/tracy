@@ -1783,6 +1783,12 @@ the fields of the items a list shows and does not judge the items it left out; t
 so a record read back gives the same reason. The ordering itself is the build's (a date per item in plan order would
 make the choice fixed); the gate does not set it.
 
+**The marker look** (`gate/marker-look.mjs`). When the kit's accent writes a dark side value
+(`look.accent.sides.values.dark: "accentDark"`), the marker build gives the order an `accentDark` as the brand step
+does (`adjustedAccentOf` over the template kit's themes and grounds, `contracts/<slug>/<cms>/<version>/template-kit.json`):
+the marker colour at the lightness that reads 3:1 on each theme's grounds. It reads only the grounds the template kit
+names: a band of the page drawn on another ground is measured by template quality, not foreseen here.
+
 **Kept language words in the demo scan** (`gate/kept-language-texts.mjs`). The words of each language string the kit
 keeps are read from the blank site archive's own language files (a site override first) and given to the demo scan
 through its existing input `interfaceTexts`, so a kept core string ("Page 1 of 2", the search tips) is interface, not

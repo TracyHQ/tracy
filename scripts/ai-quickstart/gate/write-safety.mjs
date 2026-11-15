@@ -25,7 +25,7 @@ import { packPass, probeLedger } from './write-probes.mjs'
  * probes (21); 21 clean passes take about 28 minutes. Site steps (a fresh site and a write each, about 20 s when the
  * write stops early, 70 s when it runs to the end) are limited; builds in memory (about 1.5 s each) are only counted,
  * and a refusal found in memory is no rerun. A site stop names its operation and, for a read back, the column or slot:
- * on JA Boxing (run 4) that is one probed place, blamed with no step, so a stop costs one rerun of the pass, not a
+ * on the T4 template of run 4 that is one probed place, blamed with no step, so a stop costs one rerun of the pass, not a
  * bisection over the pass (about 9 steps each in run 4, which left 0 of 316 places tested). A pass may meet many such
  * stops, hence `reruns` 20 per pass; the time limit bounds them all. Past a limit the measurement is `incomplete` and
  * the next run into the same run folder resumes it (a resumed record is never released).

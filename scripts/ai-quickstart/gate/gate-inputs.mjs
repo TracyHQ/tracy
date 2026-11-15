@@ -25,8 +25,23 @@ export function kitOf(folder) {
     blankContract: json('blank-site-contract/content-map.json'),
     lock: json('blank-site-contract/presentation-lock.json'),
     // The draft report names the places the drafting kept, with their reasons (`exemptions.mjs` `keptPlacesOf`).
-    draftReport: existsSync(path.join(folder, 'draft-report.json')) ? json('draft-report.json') : null
+    draftReport: existsSync(path.join(folder, 'draft-report.json')) ? json('draft-report.json') : null,
+    // The template kit of the release: its themes and grounds, for the marker build's dark accent.
+    templateKit: templateKitOf(t)
   }
+}
+
+/** The template kit `contracts/<slug>/<cms>/<version>/template-kit.json` of a template, or null. */
+function templateKitOf(t, root = ROOT) {
+  const file = path.join(
+    root,
+    'packages/cms/tracy-joomla-quickstart/contracts',
+    String(t.slug),
+    String(t.cms ?? 'j6'),
+    String(t.version),
+    'template-kit.json'
+  )
+  return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null
 }
 
 /** The plugin version `apps/tracy-web/src/quickstarts.json` pins for the kit's template, or null. */
