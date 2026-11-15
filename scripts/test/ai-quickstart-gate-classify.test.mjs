@@ -607,11 +607,12 @@ test('the record: groups and counts, kit hashes, controls; not passed while anyt
   assert.equal(record.verdict.pass, false)
   assert.equal(record.verdict.leaks, 7)
   assert.equal(record.verdict.controls, 'right')
-  assert.deepEqual(record.verdict.notRun, ['minItems', 'linkCheck'])
+  assert.deepEqual(record.verdict.notRun, ['writeSafety', 'structure', 'quality', 'secrets'])
   assert.equal(record.kitFiles['mapping.json'].length, 64)
   assert.equal(record.markerTest.groups.length, groups.length)
   assert.equal(JSON.stringify(record).includes(ORIGIN), false)
-  assert.equal(record.pending.minItems.status, 'not_run')
+  assert.equal(record.measurements.structure.minItems.status, 'not_run')
+  assert.equal(record.binding.kitFilesSha256.length, 64)
   // A clean run is still not passed while #586 is not run: nothing is called passed that was not measured.
   const clean = checkRecord({
     ...input,
@@ -637,4 +638,7 @@ test('the record: groups and counts, kit hashes, controls; not passed while anyt
   assert.match(html, /Failing parts: /)
   assert.match(html, /not applicable: the blank site before the write serves no page by design/)
   assert.match(html, /Written but not seen/)
+  // The six measurements are named on the page, each with its status.
+  assert.match(html, /Secret scan<\/span><code>not_run/)
+  assert.match(html, /link check not_run, minimum items not_run/)
 })

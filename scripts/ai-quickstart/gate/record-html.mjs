@@ -37,6 +37,15 @@ const FIX = {
     what: 'The gate could not tell where this comes from. Please say what it is.'
   }
 }
+// The six measurements of the record, in plain words, in record order.
+const MEASUREMENT_NAMES = {
+  markerTest: 'The marker test',
+  demoScan: 'The demo scan',
+  writeSafety: 'Write safety',
+  structure: 'Structure',
+  quality: 'Template quality',
+  secrets: 'Secret scan'
+}
 const ACCOUNT = {
   written: 'Written by the build',
   declared_not_written: 'Declared not written by the kit',
@@ -129,7 +138,7 @@ function card(g) {
 <div>${crop}</div></article>`
 }
 
-/** @param {object} record a `tracy-ai-quickstart-check-record/v1` document */
+/** @param {object} record a `tracy-ai-quickstart-check-record/v2` document */
 export function recordHtml(record) {
   const v = record.verdict
   const u = record.universe
@@ -162,7 +171,10 @@ export function recordHtml(record) {
     controls: `the demo scan's control (${v.controls})`,
     order: 'problems of the write order',
     observation: 'parts of a page the reader could not read',
-    pending: 'measurements not run yet'
+    writeSafety: 'write safety',
+    structure: 'structure (the link check and the minimum items)',
+    quality: 'template quality',
+    secrets: 'the secret scan'
   }
   const failing = (v.failing ?? []).map((k) => PART_NAMES[k] ?? k).join('; ')
   const notSeen = m.notSeen ?? []
@@ -176,8 +188,25 @@ export function recordHtml(record) {
     const [reason, declared] = k.split('|')
     return `<div><code>${esc(reason)}</code><span>${esc(n)} (${esc(declared)})</span></div>`
   })
-  const PENDING_NAMES = { minItems: 'the minimum number of items', linkCheck: 'the link check' }
-  const notRun = (v.notRun ?? []).map((k) => `${PENDING_NAMES[k] ?? k} (ticket 586)`).join(', ')
+  const notRun = (v.notRun ?? []).map((k) => MEASUREMENT_NAMES[k] ?? k).join(', ')
+  const measurementRows = Object.entries(MEASUREMENT_NAMES)
+    .map(([k, name]) => {
+      const m = record.measurements?.[k] ?? {}
+      const subs =
+        k === 'structure'
+          ? ` (link check ${m.linkCheck?.status ?? 'not_run'}, minimum items ${m.minItems?.status ?? 'not_run'})`
+          : ''
+      const more = k === 'secrets' && m.findings ? `, ${m.findings.length} finding(s)` : ''
+      return `<div><span>${esc(name)}</span><code>${esc((m.status ?? 'not_run') + subs + more)}</code></div>`
+    })
+    .join('')
+  // A secret finding names its file, place, rule and fingerprint; the record never holds the value itself.
+  const secretRows = (record.measurements?.secrets?.findings ?? [])
+    .map(
+      (f) =>
+        `<div><code>${esc(f.file)} ${esc(f.at)}</code><span>${esc(f.rule)} ${esc(f.fingerprint)}</span></div>`
+    )
+    .join('')
   const leakGroups = groups.filter((g) => g.group !== 'outside_request').length
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Quickstart check</title><style>${STYLE}</style></head><body><main>
@@ -190,6 +219,9 @@ export function recordHtml(record) {
 <span class="verdict ${v.pass ? 'yes' : 'no'}">${v.pass ? 'Passed' : 'Not passed'}</span>
 <p class="muted">${esc(v.leaks)} leak(s) in ${esc(leakGroups)} group(s), plus ${esc(groups.length - leakGroups)} request(s) to other sites; ${esc(v.demoFindings)} demo finding(s); ${esc(v.failedRenders ?? 0)} page view(s) that did not load as expected; ${esc(v.unexplained)} unexplained place(s)${notRun ? `. Not measured yet: ${esc(notRun)}` : ''}.</p>
 ${failing ? `<p class="muted">Failing parts: ${esc(failing)}.</p>` : ''}
+<h2>The measurements</h2>
+<div class="reasons">${measurementRows}</div>
+${secretRows ? `<details><summary>Secret findings (named, never shown)</summary><div class="reasons">${secretRows}</div></details>` : ''}
 <h2>What the build did with every place the kit declares</h2>
 <div class="tiles">${Object.entries(ACCOUNT)
     .map(([k, label]) => tile(label, u?.[k] ?? 0))

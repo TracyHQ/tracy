@@ -6,8 +6,14 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { declareNotSeen } from '../ai-quickstart/gate/not-seen.mjs'
 import { checkRecord } from '../ai-quickstart/gate/record.mjs'
-import { blankControlOf, verdictOf } from '../ai-quickstart/gate/verdict.mjs'
+import { blankControlOf, measurementsOf, verdictOf } from '../ai-quickstart/gate/verdict.mjs'
 
+const passedMeasurements = () => ({
+  writeSafety: { status: 'passed' },
+  structure: { linkCheck: { status: 'passed' }, minItems: { status: 'passed' } },
+  quality: { status: 'passed' },
+  secrets: { status: 'passed' }
+})
 const clean = () => ({
   real: { status: 'done' },
   accounting: {
@@ -19,7 +25,7 @@ const clean = () => ({
   renders: [{ status: 200, expected: 200 }],
   controls: { human: { status: 'run', findings: 40, failed: 0 } },
   orderProblems: [],
-  measurements: { minItems: { status: 'passed' }, linkCheck: { status: 'passed' } }
+  measurements: passedMeasurements()
 })
 
 test('a clean run passes: the verdict can be true', () => {
@@ -79,7 +85,7 @@ test('an unexplained place, a leak, a failed page, an order problem or a measure
     renders: { renders: [{ status: 500, expected: 200 }] },
     order: { orderProblems: [{ code: 'x' }] },
     observation: { observationProblems: [{ value: 'structured data that does not parse' }] },
-    pending: { measurements: {} }
+    writeSafety: { measurements: {} }
   }
   for (const [name, change] of Object.entries(cases))
     assert.equal(verdictOf({ ...c, ...change }).pass, false, name)
@@ -157,4 +163,47 @@ test('a written value no page shows is declared by a write conflict, a write fla
       null
     ]
   )
+})
+
+test('v2: each measurement of #586 is its own part; only passed passes, an unknown status is incomplete', () => {
+  const all = verdictOf(clean())
+  assert.deepEqual(all.measurements, {
+    markerTest: 'passed',
+    demoScan: 'passed',
+    writeSafety: 'passed',
+    structure: 'passed',
+    quality: 'passed',
+    secrets: 'passed'
+  })
+  for (const [name, status] of [
+    ['writeSafety', 'failed'],
+    ['quality', 'incomplete'],
+    ['secrets', 'not_run'],
+    ['secrets', 'scan_ok']
+  ]) {
+    const v = verdictOf({ ...clean(), measurements: { ...passedMeasurements(), [name]: { status } } })
+    assert.equal(v.pass, false, name + ' ' + status)
+    assert.deepEqual(v.failing, [name])
+  }
+  assert.equal(measurementsOf({ secrets: { status: 'scan_ok' } }).secrets.status, 'incomplete')
+  const none = verdictOf({ ...clean(), measurements: undefined })
+  assert.deepEqual(none.notRun, ['writeSafety', 'structure', 'quality', 'secrets'])
+  assert.deepEqual(none.failing, ['writeSafety', 'structure', 'quality', 'secrets'])
+})
+
+test('v2: structure holds the link check and the minimum items; its status follows them when none is given', () => {
+  const half = measurementsOf({ structure: { linkCheck: { status: 'passed' } } })
+  assert.equal(half.structure.status, 'incomplete')
+  assert.equal(half.structure.minItems.status, 'not_run')
+  assert.equal(measurementsOf({ structure: { linkCheck: { status: 'failed' } } }).structure.status, 'failed')
+  assert.equal(measurementsOf({}).structure.status, 'not_run')
+})
+
+test('v2: the marker test and the demo scan carry a status of their own from the #585 parts', () => {
+  const stopped = verdictOf({ ...clean(), real: { status: 'stopped' } })
+  assert.equal(stopped.measurements.markerTest, 'failed')
+  assert.equal(stopped.measurements.demoScan, 'passed')
+  assert.equal(verdictOf({ ...clean(), real: null }).measurements.markerTest, 'not_run')
+  const blind = verdictOf({ ...clean(), controls: { human: { status: 'run', findings: 0, failed: 0 } } })
+  assert.equal(blind.measurements.demoScan, 'failed')
 })

@@ -1,17 +1,26 @@
-// The check record of the release gate (ticket #585): what one run of the gate wrote, rendered and found, as one JSON
-// document (`tracy-ai-quickstart-check-record/v1`). It holds paths only (screenshots relative to the record's folder),
-// never a token or a site address of the machine that ran it. The slots of #586 (minimum items, the link check) are
-// present and say `not_run` until that ticket fills them. Pure.
+// The check record of the release gate (tickets #585 and #586): what one run of the gate wrote, rendered and found, as
+// one JSON document (`tracy-ai-quickstart-check-record/v2`). It holds paths only (screenshots relative to the record's
+// folder), never a token, a secret's value or a site address of the machine that ran it. `measurements` holds the six
+// measurements, each with a status (`passed`, `failed`, `incomplete`, `not_run`); a measurement the run did not give
+// says `not_run`. `binding` names what the record was measured on, so a release can tell a record is still about the
+// kit it ships (`release-binding.mjs`). Pure.
 import { createHash } from 'node:crypto'
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { GROUPS } from './classify.mjs'
 import { groupCounts } from './groups.mjs'
-import { PENDING, verdictOf } from './verdict.mjs'
+import { measurementsOf, verdictOf } from './verdict.mjs'
 
-export { PENDING } from './verdict.mjs'
+export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v2'
 
-export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v1'
+/**
+ * The version of the gate's rules, bumped by hand whenever a change makes an earlier passing record no proof any more
+ * (a new measurement, a stricter rule). A release refuses a record of another version.
+ */
+export const GATE_VERSION = 2
+
+/** The folder of a kit that holds its check record; never part of what the record is measured on. */
+export const CHECK_RECORD_DIR = 'check-record'
 
 /** A site address in a value replaced by `<site>`, so the record names no machine. */
 const siteless = (value, origin) => JSON.parse(JSON.stringify(value ?? null).replaceAll(origin, '<site>'))
@@ -34,24 +43,50 @@ export function splitOf(places) {
   return out
 }
 
-/** The sha256 of every file of a kit folder, by path relative to it: what the record was measured on. */
+/**
+ * The sha256 of every file of a kit folder, by path relative to it: what the record was measured on. The check record
+ * folder is skipped, since writing the record must not change what it is about.
+ */
 export function kitHashesOf(folder) {
   const out = {}
   for (const rel of readdirSync(folder, { recursive: true }).sort()) {
+    const name = rel.split(path.sep).join('/')
+    if (name === CHECK_RECORD_DIR || name.startsWith(CHECK_RECORD_DIR + '/')) continue
     const file = path.join(folder, rel)
-    if (statSync(file).isFile())
-      out[rel.split(path.sep).join('/')] = createHash('sha256').update(readFileSync(file)).digest('hex')
+    if (statSync(file).isFile()) out[name] = createHash('sha256').update(readFileSync(file)).digest('hex')
   }
   return out
+}
+
+/** One sha256 over the per-file hashes of a kit, sorted by path (`path sha256` lines), or null without hashes. */
+export function kitFilesSha256(hashes) {
+  if (!hashes) return null
+  const lines = Object.keys(hashes)
+    .sort()
+    .map((name) => name + ' ' + hashes[name] + '\n')
+  return createHash('sha256').update(lines.join('')).digest('hex')
+}
+
+/** What a record was measured on: the gate version, the kit and its files, the two archives, the plugin at both ends. */
+export function recordBinding({ kit, kitHashes, inputs, plugin }) {
+  return {
+    gateVersion: GATE_VERSION,
+    kitRef: kit?.ref ?? null,
+    kitFilesSha256: kitFilesSha256(kitHashes),
+    blankSiteSha256: inputs?.blankSite?.sha256 ?? null,
+    humanQuickstartSha256: inputs?.humanQuickstart?.sha256 ?? null,
+    plugin: { expected: plugin?.expected ?? null, start: plugin?.start ?? null, end: plugin?.end ?? null }
+  }
 }
 
 /**
  * @param {{kit: object, origin: string, built: object, accounting: object, real: object | null,
  *   renders: object[], pages: object[], classified: object, groups?: object[], demo: object, controls?: object,
  *   widths: number[], themes: string[], plugin: object, refusals: object[], startedAt: string,
- *   kitHashes?: Record<string, string>, inputs?: object}} input `controls`: the demo scan's negative control (the
- *   untouched human quickstart) and its blank control (the blank site before the write); `inputs`: the hashes of the
- *   archives the run read
+ *   kitHashes?: Record<string, string>, inputs?: object, measurements?: object}} input `controls`: the demo scan's
+ *   negative control (the untouched human quickstart) and its blank control (the blank site before the write);
+ *   `inputs`: the hashes of the archives the run read; `measurements`: the four measurements of #586 the run gave
+ *   (`writeSafety`, `structure` with `linkCheck` and `minItems`, `quality`, `secrets`)
  */
 export function checkRecord(input) {
   const { kit, origin, built, accounting, real, renders, pages, classified, demo, widths, themes, plugin } =
@@ -59,7 +94,7 @@ export function checkRecord(input) {
   const groups = input.groups ?? []
   const failed = renders.filter((r) => r.status !== (r.expected ?? 200))
   const controls = input.controls ?? {}
-  const measurements = { ...structuredClone(PENDING), ...input.measurements }
+  const measured = measurementsOf(input.measurements)
   const verdict = {
     ...verdictOf({
       real,
@@ -71,7 +106,7 @@ export function checkRecord(input) {
       controls,
       orderProblems: built.orderProblems ?? [],
       observationProblems: classified.problems ?? [],
-      measurements
+      measurements: measured
     }),
     groups: groups.filter((g) => g.group !== 'outside_request').length
   }
@@ -82,6 +117,7 @@ export function checkRecord(input) {
     startedAt: input.startedAt,
     finishedAt: new Date().toISOString(),
     plugin,
+    binding: recordBinding({ kit, kitHashes: input.kitHashes, inputs: input.inputs, plugin }),
     kitFiles: input.kitHashes ?? null,
     inputs: input.inputs ?? null,
     // Passed only when nothing is failing AND nothing is left unmeasured (`verdict.mjs`).
@@ -145,7 +181,11 @@ export function checkRecord(input) {
       notSeenByReason: countBy(classified.notSeen, 'reason')
     },
     demoScan: { findings: demo.browser, html: demo.html, checks: demo.checks, controls },
-    pending: measurements
+    measurements: {
+      markerTest: { status: verdict.measurements.markerTest },
+      demoScan: { status: verdict.measurements.demoScan },
+      ...measured
+    }
   }
   return siteless(record, origin)
 }

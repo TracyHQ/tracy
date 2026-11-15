@@ -18,6 +18,13 @@ import { demoCorpus, observationsFromHtml } from '../ai-quickstart/rendered-scan
 import { floristKit as kit } from './fixtures/ai-quickstart-gate/florist-kit.mjs'
 
 const ORIGIN = 'http://florist.example'
+// The four measurements of #586, each passed.
+const PASSED = {
+  writeSafety: { status: 'passed' },
+  structure: { linkCheck: { status: 'passed' }, minItems: { status: 'passed' } },
+  quality: { status: 'passed' },
+  secrets: { status: 'passed', findings: [] }
+}
 // The invented blank site archive: what the template and the CMS bring with them.
 const archive = {
   names: ['templates/petal/favicon.ico'],
@@ -195,7 +202,9 @@ test('runGate on an invented kit with a memory site and no browser: every leak n
   assert.ok(record.demoScan.findings.length > 0)
   assert.equal(record.verdict.controls, 'right')
   assert.equal(record.verdict.pass, false)
-  assert.deepEqual(record.verdict.notRun, ['minItems', 'linkCheck'])
+  assert.deepEqual(record.verdict.notRun, ['writeSafety', 'structure', 'quality', 'secrets'])
+  assert.equal(record.schema, 'tracy-ai-quickstart-check-record/v2')
+  assert.equal(record.measurements.structure.linkCheck.status, 'not_run')
   assert.equal(record.markerTest.groupCounts.unknown, 1)
 })
 
@@ -214,15 +223,15 @@ test('a clean run on the invented kit passes: written, accounted, every written 
   assert.ok(record.markerTest.codesSeen > 0, 'the written markers are read on the pages')
   assert.equal(record.verdict.leaks, 0)
   // Only the measurements of the next ticket are left: once they pass, the verdict is true.
-  assert.deepEqual(record.verdict.failing, ['pending'])
-  const passed = { minItems: { status: 'passed' }, linkCheck: { status: 'passed' } }
+  assert.deepEqual(record.verdict.failing, ['writeSafety', 'structure', 'quality', 'secrets'])
+  assert.equal(record.measurements.markerTest.status, 'passed')
+  const passed = PASSED
   const done = await gateOn(kit(), { clean: true, measurements: passed })
   assert.equal(done.record.verdict.pass, true)
 })
 
 test('the same clean run with a write that stopped on the site fails the verdict', async () => {
-  const passed = { minItems: { status: 'passed' }, linkCheck: { status: 'passed' } }
-  const { record } = await gateOn(kit(), { clean: true, stop: true, measurements: passed })
+  const { record } = await gateOn(kit(), { clean: true, stop: true, measurements: PASSED })
   assert.notEqual(record.verdict.write, 'done')
   assert.deepEqual(record.verdict.failing, ['write'])
   assert.equal(record.verdict.pass, false)
