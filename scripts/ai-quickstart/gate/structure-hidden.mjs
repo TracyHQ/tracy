@@ -17,7 +17,8 @@ export async function hiddenVariant(full, { site, base, demoRoutes, identify = n
   const out = (status, extra) => ({ status, variant: 'hidden', ...extra })
   if (!full.state) return out('incomplete', { reason: 'full_not_written' })
   if (!site.hide || !site.show) return out('incomplete', { reason: 'no_hide_door' })
-  const pages = full.state.pages
+  // A further page of a paged list (`pageOf`) is its list page: hidden with it, never a page of its own here.
+  const pages = full.state.pages.filter((p) => !p.pageOf)
   const hideable = pages.filter((p) => !p.home && p.record?.id)
   if (!hideable.length) return out('incomplete', { reason: 'nothing_hidden', hidden: 0 })
   const half = Math.ceil(hideable.length / 2)

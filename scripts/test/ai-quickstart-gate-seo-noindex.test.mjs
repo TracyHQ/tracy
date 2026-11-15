@@ -92,3 +92,15 @@ test('Z3: a noindex system page still needs an alt on every picture', () => {
     ['alt']
   )
 })
+
+test('a further page of a paged list shares its list title by design', () => {
+  const r = seoOf(
+    [
+      page('index.php?Itemid=8', { title: 'News', extra: FULL }, '', 'news'),
+      page('index.php?Itemid=8&start=3', { title: 'News', extra: FULL }, '', 'news:page-2'),
+      page('index.php', { title: 'Bakery', extra: FULL }, '', 'home')
+    ],
+    { origin: 'http://bakery.example', favicons }
+  )
+  assert.deepEqual(r.missing, [])
+})

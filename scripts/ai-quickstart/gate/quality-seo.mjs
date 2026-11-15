@@ -87,13 +87,16 @@ export function seoOf(renders, { origin, favicons = new Map() } = {}) {
   // shared and it needs no description or og:image. It still needs a title, a viewport, a language, a favicon and an
   // alt on every picture (an accessibility item too). Any other page is planned: noindex on it is a missing item.
   const skipped = (p) => p.noindex && String(p.pageType ?? '').startsWith('system-')
-  for (const p of read) if (p.title && !skipped(p)) titles.set(p.title, (titles.get(p.title) ?? 0) + 1)
+  // A further page of a paged list (`<page>:page-<n>`) is that list: it shares its title by design.
+  const further = (p) => /:page-\d+$/.test(String(p.pageType ?? ''))
+  for (const p of read)
+    if (p.title && !skipped(p) && !further(p)) titles.set(p.title, (titles.get(p.title) ?? 0) + 1)
   const unchecked = new Set()
   for (const p of read) {
     if (p.noindex && !skipped(p))
       miss(p.page, 'noindex', 'a planned page asks search engines not to index it')
     if (!p.title) miss(p.page, 'title')
-    else if (!skipped(p) && titles.get(p.title) > 1)
+    else if (!skipped(p) && !further(p) && titles.get(p.title) > 1)
       miss(p.page, 'unique title', 'shared by ' + titles.get(p.title) + ' pages')
     if (!skipped(p) && !p.description) miss(p.page, 'description')
     if (!skipped(p) && !p.ogImage) miss(p.page, 'og:image')

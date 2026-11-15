@@ -58,6 +58,23 @@ export function systemPagesOf(mapping) {
   })
 }
 
+/** The articles a blog list menu item prints a page (leading and intro), or null when its params do not say. */
+function pageSizeOf(item) {
+  let params = item?.params ?? null
+  if (typeof params === 'string')
+    try {
+      params = JSON.parse(params)
+    } catch {
+      params = null
+    }
+  const count = (k) => (params?.[k] === undefined || params?.[k] === '' ? null : Number(params[k]))
+  const lead = count('num_leading_articles')
+  const intro = count('num_intro_articles')
+  if (lead == null && intro == null) return null
+  const size = (lead ?? 0) + (intro ?? 0)
+  return Number.isFinite(size) && size > 0 ? size : null
+}
+
 const absolute = (base, path) => new URL(path, `${String(base).replace(/\/?$/, '/')}`).toString()
 
 /**
@@ -79,6 +96,20 @@ export async function sitePages({ base, record, doors, order = null, mapping = n
     // The view the menu item opens (`view=article`): what a page at `Itemid` shows, for the kit's kept literals.
     const view = /[?&]view=([a-z0-9_]+)/i.exec(String(item?.link ?? ''))?.[1] ?? null
     pages.push({ pageType: m[1], path, url: absolute(base, path), from: key, ...(view ? { view } : {}) })
+  }
+  // A paged blog list prints its items a page at a time, and a list card picture (an intro picture) prints on the list
+  // only: each further page its items fill is read too (`<page>:page-<n>`, `pageOf` the list page), at the page size
+  // its menu item gives (leading and intro articles); a size the item does not give is not guessed (triage of run 5).
+  for (const page of order?.pages ?? []) {
+    const menu = menus.get(page.id)
+    if (!menu || !/[?&]view=category(?:&|$)/.test(String(menu.item?.link ?? ''))) continue
+    const size = pageSizeOf(menu.item)
+    const count = Math.max(0, ...(page.blocks ?? []).map((b) => (b.items ?? []).length))
+    if (!size) continue
+    for (let n = 2, start = size; start < count; n++, start += size) {
+      const path = `index.php?Itemid=${menu.id}&start=${start}`
+      pages.push({ pageType: `${page.id}:page-${n}`, path, url: absolute(base, path), pageOf: page.id })
+    }
   }
   // An article reached under the menu item of the page whose list shows it (its category list).
   const listPage = new Map()

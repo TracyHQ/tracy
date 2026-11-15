@@ -108,3 +108,33 @@ test('detail page: a detail page type is read under the page the kit names, not 
   const before = await sitePages({ base, record: { ids }, doors: doorsWith, order: withAbout, writePlan })
   assert.match(before.find((p) => p.pageType === 'class').path, /&Itemid=6$/)
 })
+
+// Triage of run 5: a list card picture (an article's intro picture) prints on the list page only, and the seventh post
+// of a list showing six a page is on its second page. A paged blog list is read on each of its further pages, as many
+// as its items fill at the size its menu item gives (leading and intro articles); a list whose size is unknown is not.
+test('list pages: a paged blog list is read on each further page its items fill', async () => {
+  const items = Array.from({ length: 8 }, (_, i) => ({ id: 'post-' + i }))
+  const news = {
+    id: 8,
+    link: 'index.php?option=com_content&view=category&layout=blog&id=9',
+    params: { num_leading_articles: '0', num_intro_articles: '3' }
+  }
+  const doorsWith = { get: async (q) => (q.kind === 'menuItem' && q.id === 8 ? news : doors.get(q)) }
+  const paged = {
+    pages: [...order.pages, { id: 'news', blocks: [{ id: 'news-b2', items }] }]
+  }
+  const ids = { ...record.ids, 'menuItem:mainmenu:news': 8 }
+  const pages = await sitePages({ base, record: { ids }, doors: doorsWith, order: paged, writePlan })
+  assert.deepEqual(
+    pages.filter((p) => p.pageOf === 'news').map((p) => [p.pageType, p.path]),
+    [
+      ['news:page-2', 'index.php?Itemid=8&start=3'],
+      ['news:page-3', 'index.php?Itemid=8&start=6']
+    ]
+  )
+  // A page size the menu item does not give: no further page is guessed.
+  const unsized = { ...news, params: {} }
+  const doorsUnsized = { get: async (q) => (q.kind === 'menuItem' && q.id === 8 ? unsized : doors.get(q)) }
+  const none = await sitePages({ base, record: { ids }, doors: doorsUnsized, order: paged, writePlan })
+  assert.equal(none.filter((p) => p.pageOf).length, 0)
+})
