@@ -101,7 +101,7 @@ function recorder() {
   return { ctx, live, definitions, of }
 }
 
-test('switch on: four turn tails, the review bar ahead of dsh, the working line, the tracy_build row', () => {
+test('switch on: five turn tails, the review bar ahead of dsh, the working line, the tracy_build row', () => {
   const r = recorder()
   client.applyWith(r.ctx, { switches: switchBoard(true) })
   assert.deepEqual(
@@ -109,6 +109,7 @@ test('switch on: four turn tails, the review bar ahead of dsh, the working line,
     [
       'tracy-build-chat-templates',
       'tracy-build-chat-plan',
+      'tracy-build-chat-retry',
       'tracy-build-chat-run',
       'tracy-build-chat-handoff'
     ]
@@ -125,6 +126,7 @@ test('switch on: four turn tails, the review bar ahead of dsh, the working line,
       'tracy_build:templates',
       'tracy_build:plan',
       'tracy_build:working',
+      'tracy_build:retry',
       'tracy_build:history',
       'tracy_build:handoff'
     ]
@@ -138,11 +140,11 @@ test('switch off: no visible piece is registered, and turning it off takes them 
   const flipped = recorder()
   const board = switchBoard(true)
   client.applyWith(flipped.ctx, { switches: board })
-  assert.equal(flipped.live.size, 7)
+  assert.equal(flipped.live.size, 8)
   board.flip(false)
   assert.equal(flipped.live.size, 0)
   board.flip(true)
-  assert.equal(flipped.live.size, 7)
+  assert.equal(flipped.live.size, 8)
 })
 
 test('outside a build chat session every piece draws nothing', () => {
@@ -287,4 +289,51 @@ test('a change request answer reaches the plan card note store, once per plan re
   notes.dismiss('plan-1:5')
   plan.update({ state }, { event: answered })
   assert.equal(notes.read('plan-1:5'), null, 'folded again, still dismissed')
+})
+
+test('Try again: published on the turn of the stop, drawn only for a step that may be rerun and fewer than two retries', () => {
+  const r = recorder()
+  client.applyWith(r.ctx, { switches: switchBoard(true) })
+  const retry = r.definitions.find((d) => d.kind === 'tracy_build:retry')
+  const tail = r.of('conversation.chat.turnTail').find((e) => e.options.id === 'tracy-build-chat-retry')
+  let seq = 0
+  const call = (turn, callId, action) => ({
+    type: 'tool/call',
+    seq: ++seq,
+    data: { turn, name: 'tracy_build', callId, arguments: JSON.stringify({ action }) }
+  })
+  const result = (turn, callId, value) => ({
+    type: 'tool/result',
+    seq: ++seq,
+    surfaceOp: 'append',
+    data: { turn, message: { source: { callId }, content: [{ type: 'text', text: JSON.stringify(value) }] } }
+  })
+  const stop = { stopped: true, say: 'Stopped.', step: 'compose', rerun: true }
+  let state
+  let published = null
+  const feed = (event) => {
+    const m = retry.match(event)
+    state =
+      state === undefined ? retry.start({}, { event, role: m.role }) : retry.update({ state }, { event })
+    published = retry.buildLocationData({ state }, 'turn', published)
+    return published
+  }
+  assert.equal(feed(call(1, 'a', 'plan')), null)
+  assert.equal(feed(result(1, 'a', stop)).turn, 1)
+  const owner = (value) => ({ sessionId: BUILD, seq: 9, turn: { turn: 1, data: { get: () => value } } })
+  const drawn = tail.component(owner(published.value))
+  assert.notEqual(drawn, null)
+  assert.equal(tail.component(owner(null)), null)
+  assert.equal(tail.component({ ...owner(published.value), sessionId: OTHER }), null)
+  // The next call takes the button away at once; a second and third stop in a row bring it back, then take it for good.
+  assert.equal(feed(call(2, 'b', 'plan')), null)
+  assert.equal(feed(result(2, 'b', stop)).value.retries, 1)
+  assert.equal(feed(call(3, 'c', 'plan')), null)
+  assert.equal(feed(result(3, 'c', stop)).value.retries, 2)
+  assert.equal(tail.component(owner(published.value)), null, 'only the sentence stays after two retries')
+  assert.equal(
+    tail.component(owner({ turn: 1, seq: 1, step: 'compose', rerun: false, retries: 0 })),
+    null,
+    'a stop that may not be rerun offers nothing'
+  )
 })

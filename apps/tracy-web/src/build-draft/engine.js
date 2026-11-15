@@ -70,8 +70,22 @@ export function stoppedOf(fault) {
   // Nothing to read at all (a description alone): the owner is asked for a link.
   if (fault.code === 'research_empty' && fault.reason === 'no_links')
     return { state: 'stopped', say: SAY.links }
-  return { state: 'stopped', say: RESEARCH_CODES.has(fault.code) ? SAY.research : SAY.fault }
+  const stopped = { state: 'stopped', say: RESEARCH_CODES.has(fault.code) ? SAY.research : SAY.fault }
+  return mayRerun(fault) ? { ...stopped, rerun: true } : stopped
 }
+
+/**
+ * Faults the OWNER may have run again although the engine never reruns them on its own: the same inputs would fail
+ * the same way for a deterministic step, but the plan composer is a model, and its next plan may pass the rules gate.
+ */
+const OWNER_RERUN_CODES = new Set(['plan_gate_failed'])
+
+/**
+ * Whether a stop that is neither a cancel, a look, a missing answer nor a change request may be run again when the
+ * owner asks: its fault does not say a rerun cannot help (`noRerun`), or is one the model may do differently.
+ */
+const mayRerun = (fault) =>
+  fault.code !== 'research_empty' && (fault.noRerun !== true || OWNER_RERUN_CODES.has(fault.code))
 
 /** Whether the step's inputs name this template. */
 const sameTemplate = (engine, template) =>
@@ -323,7 +337,13 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
     async read(accountId) {
       const row = await readEngineRow(pool, accountId)
       if (row?.engine?.state === 'running' && !(row.engine.runner === runner && jobs.has(accountId))) {
-        await stopOrphan(pool, accountId, () => false, { state: 'stopped', say: SAY.interrupted }, now)
+        await stopOrphan(
+          pool,
+          accountId,
+          () => false,
+          { state: 'stopped', say: SAY.interrupted, rerun: true },
+          now
+        )
         return engineStateOf(await readEngineRow(pool, accountId))
       }
       const chosen = row?.plan?.look?.template ?? row?.template

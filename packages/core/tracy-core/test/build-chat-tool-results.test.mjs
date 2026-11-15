@@ -8,6 +8,7 @@ import {
   buildToolFoldOf,
   buildToolResultOf,
   buildToolRowOf,
+  canRetryStop,
   isPlanReviewRequest,
   PLAN_REVIEW_ID,
   planReviewRequestOf
@@ -214,4 +215,68 @@ test('a change request answer carries what changed and what was not done, for th
   assert.deepEqual(fold.plan.revised.changed, ['Changed the tagline.', 'Removed a service.'])
   // A compose or edit answer has no change request: no note.
   assert.equal('revised' in buildToolResultOf(JSON.stringify(planResult(2))), false)
+})
+
+/** The events of one stopped answer and what the owner may do about it (#609). */
+const stoppedRun = (turn, id, action, answer) => [call(turn, id, { action }), result(turn, id, answer)]
+const RERUN = { stopped: true, say: 'It stopped.', step: 'compose', rerun: true }
+
+test('a stopped answer says whether the step may be rerun, and which step it was', () => {
+  assert.deepEqual(buildToolResultOf(JSON.stringify(RERUN)), {
+    kind: 'stopped',
+    step: 'compose',
+    rerun: true
+  })
+  assert.deepEqual(buildToolResultOf(JSON.stringify({ stopped: true, say: 'It stopped.' })), {
+    kind: 'stopped',
+    rerun: false
+  })
+  assert.equal(buildToolResultOf(JSON.stringify({ ...RERUN, rerun: 'yes' })).rerun, false)
+})
+
+test('the fold keeps the latest stop, counts the retries in a row and clears it when the engine runs again', () => {
+  let fold = stoppedRun(1, 's1', 'plan', RERUN).reduce(buildToolFoldOf, undefined)
+  assert.deepEqual(fold.stop, { turn: 1, seq: fold.stop.seq, step: 'compose', rerun: true, retries: 0 })
+  assert.equal(canRetryStop(fold.stop), true)
+  // The owner presses Try again: the agent calls the tool again, so the stop goes while it runs.
+  fold = buildToolFoldOf(fold, call(2, 's2', { action: 'plan' }))
+  assert.equal(fold.stop, null)
+  // A guidance answer in the middle of the retry (look ready) neither counts nor resets.
+  fold = [result(2, 's2', { look: 'ready' }), ...stoppedRun(2, 's3', 'plan', RERUN)].reduce(
+    buildToolFoldOf,
+    fold
+  )
+  assert.equal(fold.stop.retries, 1)
+  assert.equal(canRetryStop(fold.stop), true)
+  fold = stoppedRun(3, 's4', 'plan', RERUN).reduce(buildToolFoldOf, fold)
+  assert.equal(fold.stop.retries, 2)
+  assert.equal(canRetryStop(fold.stop), false, 'after two retries that stop again only the sentence stays')
+})
+
+test('a stop that may not be rerun never offers a retry, and a step that moved on resets the count', () => {
+  const noRerun = stoppedRun(1, 'n1', 'plan', { stopped: true, say: 'x', step: 'compose' }).reduce(
+    buildToolFoldOf,
+    undefined
+  )
+  assert.equal(noRerun.stop.rerun, false)
+  assert.equal(canRetryStop(noRerun.stop), false)
+  assert.equal(canRetryStop(null), false)
+  let fold = stoppedRun(1, 'r1', 'plan', RERUN).reduce(buildToolFoldOf, undefined)
+  fold = stoppedRun(2, 'r2', 'plan', RERUN).reduce(buildToolFoldOf, fold)
+  assert.equal(fold.stop.retries, 1)
+  // Another step stopping starts its own count; a plan answer ends the run of stops.
+  fold = stoppedRun(3, 'r3', 'research', { ...RERUN, step: 'research' }).reduce(buildToolFoldOf, fold)
+  assert.equal(fold.stop.retries, 0)
+  fold = stoppedRun(4, 'r4', 'plan', { plan: { id: 'plan-1', revision: 1 } }).reduce(buildToolFoldOf, fold)
+  assert.equal(fold.stop, null)
+  fold = stoppedRun(5, 'r5', 'plan', RERUN).reduce(buildToolFoldOf, fold)
+  assert.equal(fold.stop.retries, 0)
+})
+
+test('a stop read from a status call counts under the step the engine named', () => {
+  const fold = [...stoppedRun(1, 't1', 'plan', RERUN), ...stoppedRun(2, 't2', 'status', RERUN)].reduce(
+    buildToolFoldOf,
+    undefined
+  )
+  assert.equal(fold.stop.retries, 1)
 })

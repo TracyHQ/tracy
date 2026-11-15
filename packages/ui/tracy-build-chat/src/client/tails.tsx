@@ -11,12 +11,14 @@
  *   `savePlanEdit` / `undoPlanEdit`, and the card follows the draft the door answers with. While the plan review bar
  *   shows, the bar draws this card instead (`LivePlan`, `review-presence.ts`): dsh draws a tail only once its turn
  *   ends, and the turn that asks the review waits for the answer;
+ * - Try again in the turn whose call stopped on a step that may be rerun, while no build run exists and fewer than two
+ *   retries of the step in a row stopped again (`RetryTail`);
  * - the task list and the stop notice in the session's last turn, once a build run exists (`BuildRunFeed`).
  *
  * Every tail draws nothing outside a build chat session. The switch `chat-build` decides whether they are
  * registered at all (`index.tsx`).
  */
-import { isBuildChatSession } from '@tracy/core/build-chat'
+import { canRetryStop, isBuildChatSession, RETRY_MESSAGE } from '@tracy/core/build-chat'
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { BuildProgress } from './BuildProgress'
 import { BuildStopped } from './BuildStopped'
@@ -27,6 +29,8 @@ import {
   type HistoryValue,
   PLAN_KEY,
   type PlanValue,
+  RETRY_KEY,
+  type RetryValue,
   TEMPLATES_KEY,
   type TemplatesValue,
   type TurnTailOwnerLike,
@@ -42,6 +46,7 @@ import { hasNote, type RevisionNotes } from './revision-notes'
 import type { BuildRunFeed, DraftSource } from './sources'
 import type { Translate } from './strings'
 import { TemplateCard } from './TemplateCard'
+import { TryAgain } from './TryAgain'
 
 export interface TailDeps {
   drafts: DraftSource
@@ -177,6 +182,19 @@ function PlanTail({ deps, value, sessionId }: { deps: TailDeps; value: PlanValue
   return <LivePlan deps={deps} revision={`${value.id}:${value.revision}`} />
 }
 
+/** Try again. A build run (locked, stopped or cancelled) takes it away: the build has its own notice. */
+function RetryTail({ deps, sessionId }: { deps: TailDeps; sessionId: string }) {
+  const read = () => deps.runs.read(sessionId)
+  const run = useSyncExternalStore(deps.runs.subscribe, read, read)
+  if (run !== null) return null
+  return (
+    <TryAgain
+      t={deps.t()}
+      send={() => deps.send?.(sessionId, RETRY_MESSAGE) ?? Promise.resolve('no-chat' as const)}
+    />
+  )
+}
+
 const noChat: NonNullable<TailProps['useChat']> = (select) => select({ timeline: { turnOrder: [] } })
 
 const goTo = (href: string) => window.location.assign(href)
@@ -230,6 +248,12 @@ export function makeTails(deps: TailDeps) {
       const value = inBuild(props) ? turnValueOf<PlanValue>(props, PLAN_KEY) : null
       return value === null ? null : (
         <PlanTail deps={deps} value={value} sessionId={props.sessionId as string} />
+      )
+    },
+    retry: (props: TailProps) => {
+      const value = inBuild(props) ? turnValueOf<RetryValue>(props, RETRY_KEY) : null
+      return value === null || !canRetryStop(value) ? null : (
+        <RetryTail deps={deps} sessionId={props.sessionId as string} />
       )
     },
     run: (props: TailProps) =>

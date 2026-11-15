@@ -1135,6 +1135,7 @@ window.__ModuleLoader__.load({
               "rebuild.title": "Site\u0020c\u1ee7a\u0020b\u1ea1n",
               "rebuild.undo": "Hu\u1ef7\u0020l\u01b0\u1ee3t\u0020c\u1eadp\u0020nh\u1eadt\u0020ch\u01b0a\u0020xong",
               "rebuild.update": "C\u1eadp\u0020nh\u1eadt\u0020site",
+              "retry.button": "Th\u1eed\u0020l\u1ea1i",
               "review.failed": "C\u00e2u\u0020tr\u1ea3\u0020l\u1eddi\u0020c\u1ee7a\u0020b\u1ea1n\u0020ch\u01b0a\u0020\u0111\u01b0\u1ee3c\u0020g\u1eedi.\u0020H\u00e3y\u0020th\u1eed\u0020l\u1ea1i.",
               "stopped.kept.none": "\u0110\u00e3\u0020gi\u1eef\u0020l\u1ea1i:\u0020k\u1ebf\u0020ho\u1ea1ch\u0020v\u00e0\u0020c\u00e1c\u0020c\u00e2u\u0020tr\u1ea3\u0020l\u1eddi\u0020c\u1ee7a\u0020b\u1ea1n.",
               "stopped.kept.one": "\u0110\u00e3\u0020gi\u1eef\u0020l\u1ea1i:\u0020k\u1ebf\u0020ho\u1ea1ch,\u0020c\u00e1c\u0020c\u00e2u\u0020tr\u1ea3\u0020l\u1eddi\u0020v\u00e0\u0020trang\u0020\u0111\u00e3\u0020vi\u1ebft\u0020c\u1ee7a\u0020b\u1ea1n.",

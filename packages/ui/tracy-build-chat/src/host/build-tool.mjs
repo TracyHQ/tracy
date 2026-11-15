@@ -39,6 +39,7 @@ import {
   isBuildChatSession,
   PLAN_REVIEW_ID,
   planReviewRequestOf,
+  RETRY_MESSAGE,
   templateChoiceOf,
   textTooLongOf
 } from '@tracy/core/build-chat'
@@ -88,7 +89,7 @@ export const tooLongSay = (question, limit) =>
 const SAY_MAX = 300
 
 export const BUILD_DESCRIPTION =
-  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change. Never say the site is built until a build result says built.'
+  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with the same action only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Never say the site is built until a build result says built.'
 
 export const BUILD_PARAMETERS = Object.freeze({
   type: 'object',
@@ -197,6 +198,27 @@ function ownerSay(said, fallback = BUILD_STOPPED_SAY) {
 }
 
 const stopped = (/** @type {unknown} */ said = undefined) => ({ stopped: true, say: ownerSay(said) })
+
+/**
+ * Private guidance after a stop the owner may have run again: the sentence, no question, and the one fixed message
+ * the Try again button sends. The persona says the same.
+ */
+export const RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with the same action; a result of that call says stopped again only if it failed again.`
+
+/**
+ * A stopped engine step as the door answers it. One the owner may have run again (`rerun`) also names its step and
+ * carries the guidance, so the card can offer Try again and count the retries from the session's own results.
+ * @param {any} state
+ */
+const stoppedStateOf = (state) =>
+  state?.rerun === true
+    ? {
+        ...stopped(state.say),
+        ...(typeof state.step === 'string' ? { step: state.step } : {}),
+        rerun: true,
+        next: RERUN_GUIDANCE
+      }
+    : stopped(state?.say)
 
 /**
  * Arguments arrive parsed, or as a JSON string from an older dispatcher.
@@ -434,7 +456,7 @@ export function createBuildTool({
    * @param {any} state
    */
   function finished(sessionId, state) {
-    if (state?.state === 'stopped') return stopped(state.say)
+    if (state?.state === 'stopped') return stoppedStateOf(state)
     const result = state?.result ?? {}
     // The plan needs one more answer from the owner first (the site name): the question goes on the card.
     if (state?.state === 'asking') {

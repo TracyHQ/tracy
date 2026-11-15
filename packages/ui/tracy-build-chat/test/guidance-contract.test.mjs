@@ -104,3 +104,11 @@ test('the tool guidance has no em dash or en dash', () => {
   for (const text of [PRIVATE_GUIDANCE_MARK, COLOUR_EDIT_GUIDANCE, BUILD_DESCRIPTION, templatesNext([])])
     assert.doesNotMatch(text, /[–—]/)
 })
+
+test('a stop that may be rerun: the persona says the sentence, asks nothing, and reruns once on the owner message', () => {
+  assert.match(persona, /rerun is true/i)
+  assert.match(persona, /do not ask the owner a question about the stop/i)
+  assert.match(persona, /Please try again\./)
+  assert.match(persona, /call tracy_build once more/i)
+  assert.match(BUILD_DESCRIPTION, /rerun/i)
+})

@@ -17,6 +17,7 @@ export const en = {
   'template.sendFailed':
     'Your choice is saved, but it did not reach the chat. Press Continue to send it again.',
   'template.continue': 'Continue',
+  'retry.button': 'Try again',
   'template.none': 'No ready design fits your business yet.',
   'template.noneNext': 'You can still create your site from the Add site page.',
   'template.openAddSite': 'Open Add site',

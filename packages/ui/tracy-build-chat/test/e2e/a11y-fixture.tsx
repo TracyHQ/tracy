@@ -3,6 +3,7 @@
 // reads back what the cards sent. No dsh host: the question card and the review chrome of dsh are not drawn here.
 import { useLayoutEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BUILD_TOOL, buildToolFoldOf } from '@tracy/core/build-chat'
 import {
   parseFieldPath,
   resolveFieldPath
@@ -16,13 +17,18 @@ import { savePlanEdit } from '../../src/client/save-plan-edit'
 import { saveTemplateChoice } from '../../src/client/save-template'
 import { english } from '../../src/client/strings'
 import { TemplateCard } from '../../src/client/TemplateCard'
+import { makeTails } from '../../src/client/tails'
 import { WorkingDock } from '../../src/client/WorkingDock'
 import { undoPlanEdit } from '../../src/client/save-plan-edit'
 
 // biome-ignore lint/suspicious/noExplicitAny: test stub
 type Any = any
 
-const log: { requests: unknown[]; decisions: unknown[] } = { requests: [], decisions: [] }
+const log: { requests: unknown[]; decisions: unknown[]; sent: string[] } = {
+  requests: [],
+  decisions: [],
+  sent: []
+}
 const draft: { plan: Any; lastEdit: Any; undo: Any } = { plan: null, lastEdit: null, undo: null }
 const ok = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status })
 const draftBody = () => ({
@@ -146,6 +152,63 @@ function DshColumn() {
   )
 }
 
+const BUILD_SESSION = 'session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e'
+const STOP_SAY =
+  'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.'
+
+/**
+ * The turn tail Try again, drawn by the real tails over the real fold of the session's recorded `tracy_build`
+ * results (`view.results`: the answers in order), with a stub chat that records what was sent as the owner.
+ */
+function Retry({ view }: { view: Any }) {
+  let seq = 0
+  const events = (view.results as Any[]).flatMap((answer: Any, i: number) => {
+    const callId = `call-${i}`
+    const turn = i + 1
+    return [
+      {
+        type: 'tool/call',
+        seq: ++seq,
+        data: { turn, name: BUILD_TOOL, callId, arguments: '{"action":"plan"}' }
+      },
+      {
+        type: 'tool/result',
+        seq: ++seq,
+        surfaceOp: 'append',
+        data: {
+          turn,
+          message: {
+            source: { callId },
+            isError: false,
+            content: [{ type: 'text', text: JSON.stringify(answer) }]
+          }
+        }
+      }
+    ]
+  })
+  const fold = events.reduce(buildToolFoldOf, undefined as Any) as Any
+  const tails = makeTails({
+    drafts: { read: () => null, subscribe: () => () => {}, load: async () => {}, put: () => {} } as Any,
+    reviews: { has: () => false, subscribe: () => () => {} } as Any,
+    runs: { read: () => view.run ?? null, subscribe: () => () => {}, load: async () => {} } as Any,
+    t: () => english,
+    send: async (_session, text) => {
+      log.sent.push(text)
+      return view.sendResult ?? 'sent'
+    }
+  })
+  return (
+    <div>
+      <p>{STOP_SAY}</p>
+      {tails.retry({
+        sessionId: BUILD_SESSION,
+        seq: 1,
+        turn: { turn: fold.stop?.turn ?? 0, data: { get: () => fold.stop } }
+      } as Any)}
+    </div>
+  )
+}
+
 function State({ name, view }: { name: string; view: Any }) {
   const [, force] = useState(0)
   void force
@@ -178,6 +241,8 @@ function State({ name, view }: { name: string; view: Any }) {
           t={english}
         />
       )
+    case 'retry':
+      return <Retry view={view} />
     case 'dsh-column':
       return <DshColumn />
     case 'earlier':
@@ -208,6 +273,7 @@ let root: ReturnType<typeof createRoot> | null = null
     draft.undo = null
     log.requests.length = 0
     log.decisions.length = 0
+    log.sent.length = 0
     root?.unmount()
     root = createRoot(document.getElementById('root') as HTMLElement)
     root.render(
@@ -216,5 +282,5 @@ let root: ReturnType<typeof createRoot> | null = null
       </div>
     )
   },
-  log: () => ({ requests: [...log.requests], decisions: [...log.decisions] })
+  log: () => ({ requests: [...log.requests], decisions: [...log.decisions], sent: [...log.sent] })
 }

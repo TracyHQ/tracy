@@ -243,7 +243,8 @@ export type BuildToolResult =
   | { kind: 'research'; business: string }
   | { kind: 'templates'; options: TemplateOption[]; none: boolean }
   | { kind: 'plan'; id: string; revision: number; revised?: RevisionNote }
-  | { kind: 'running' | 'stopped' | 'quiet' }
+  | { kind: 'stopped'; step?: string; rerun: boolean }
+  | { kind: 'running' | 'quiet' }
 export declare function buildToolResultOf(text: unknown): BuildToolResult | null
 export type BuildToolRow =
   | { kind: 'research'; sources: number; business: string }
@@ -256,7 +257,22 @@ export interface BuildToolFold {
   plan: { turn: number; seq: number; id: string; revision: number; revised?: RevisionNote } | null
   /** The latest call while it waits: not answered yet, or answered `running`. */
   working: { turn: number; seq: number; step: string } | null
+  /** The latest stop while no call has been made since: whether the step may be rerun, and how many retries of it in a row stopped again. */
+  stop: StopSeen | null
+  streak: { step: string; count: number } | null
 }
+export interface StopSeen {
+  turn: number
+  seq: number
+  step: string
+  rerun: boolean
+  retries: number
+}
+/** The one fixed message the Try again button sends as the owner. */
+export declare const RETRY_MESSAGE: 'Please try again.'
+/** How many times the owner may press Try again for the same step in a row. */
+export declare const MAX_STEP_RETRIES: 2
+export declare function canRetryStop(stop: StopSeen | null | undefined): boolean
 // biome-ignore lint/suspicious/noExplicitAny: a dsh session event, duck-typed
 export declare function buildToolFoldOf(state: BuildToolFold | undefined, event: any): BuildToolFold
 export declare function isPlanReviewRequest(questions: unknown): boolean

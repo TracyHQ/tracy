@@ -138,7 +138,8 @@ test('a failure of the business look stops with the brand sentence; the gate loo
     )
   assert.deepEqual(stoppedOf({ code: 'plan_gate_failed', problems: [{ code: 'items_order' }] }), {
     state: 'stopped',
-    say: SAY.fault
+    say: SAY.fault,
+    rerun: true
   })
   assert.equal(stoppedOf({ code: 'research_empty' }).say, SAY.research)
   // The stored record serves only the template it ran on.
@@ -393,4 +394,36 @@ test('an answer to a question the withheld profile drops is left out; any other 
   const ok = await run([answer('q-held')], club.scriptedModel(JSON.stringify(withoutTeam())))
   assert.equal(ok.plan.schema, 'tracy-build-plan/v1')
   await assert.rejects(run([answer('q-never-asked')], club.scriptedModel()), { code: 'answer_invalid' })
+})
+
+test('a stop says whether the owner may have the step run again (#609)', () => {
+  // The live case: the composer failed its rules gate. The engine never reruns the same inputs on its own
+  // (`noRerun`), but the model writes a different plan the next time the owner asks, so the owner may retry.
+  const gate = { code: 'plan_gate_failed', noRerun: true, problems: [{ code: 'label_repeats_data' }] }
+  assert.deepEqual(stoppedOf(gate), { state: 'stopped', say: SAY.fault, rerun: true })
+  // A failure that the second attempt did not lift (no noRerun) may be asked for again too.
+  assert.equal(stoppedOf({ code: 'step_failed', step: 'compose', attempts: 2 }).rerun, true)
+  // Nothing the owner pressing again could lift: a no rerun fault, a cancel, a change request, an input only the
+  // owner can give, a look that is not there, a missing link.
+  for (const fault of [
+    { code: 'answer_invalid', noRerun: true },
+    { code: 'model_missing', noRerun: true },
+    { code: 'research_empty', noRerun: true },
+    { code: 'research_empty', reason: 'no_links' },
+    { code: 'brand_step_stopped' },
+    { code: 'brand_missing' },
+    { code: 'site_name_missing' },
+    { step: 'revise', code: 'step_failed' }
+  ])
+    assert.equal(Object.hasOwn(stoppedOf(fault), 'rerun'), false, fault.code)
+  // The state a door answers carries it, and a stop written without it does not.
+  assert.deepEqual(
+    engineStateOf({ engine: { step: 'compose', state: 'stopped', say: SAY.fault, rerun: true } }),
+    { step: 'compose', state: 'stopped', say: SAY.fault, rerun: true }
+  )
+  assert.deepEqual(engineStateOf({ engine: { step: 'compose', state: 'stopped', say: SAY.fault } }), {
+    step: 'compose',
+    state: 'stopped',
+    say: SAY.fault
+  })
 })

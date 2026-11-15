@@ -253,7 +253,15 @@ function templateChoiceOf(templates) {
 }
 
 // ../../core/tracy-core/src/build-chat/tool-results.mjs
-var EMPTY = Object.freeze({ calls: Object.freeze({}), templates: null, plan: null, working: null });
+var EMPTY = Object.freeze({
+  calls: Object.freeze({}),
+  templates: null,
+  plan: null,
+  working: null,
+  stop: null,
+  streak: null
+});
+var RETRY_MESSAGE = "Please try again.";
 
 // ../../core/tracy-core/src/build-chat/index.mjs
 var BUILD_SESSION = /^session-build-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -276,7 +284,7 @@ var REQUEST_MAX_LENGTH = 1e3;
 var REQUEST_TOO_LONG_SAY = requestTooLongSay(REQUEST_MAX_LENGTH);
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? nameTooLongSay(limit) : answerTooLongSay(limit);
 var SAY_MAX = 300;
-var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change. Never say the site is built until a build result says built.';
+var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with the same action only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Never say the site is built until a build result says built.';
 var BUILD_PARAMETERS = Object.freeze({
   type: "object",
   properties: {
@@ -349,6 +357,13 @@ function ownerSay(said, fallback = BUILD_STOPPED_SAY) {
   return typeof said === "string" && said.trim() !== "" && said.length <= SAY_MAX && !/[–—]/.test(said) ? said.trim() : fallback;
 }
 var stopped = (said = void 0) => ({ stopped: true, say: ownerSay(said) });
+var RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with the same action; a result of that call says stopped again only if it failed again.`;
+var stoppedStateOf = (state) => state?.rerun === true ? {
+  ...stopped(state.say),
+  ...typeof state.step === "string" ? { step: state.step } : {},
+  rerun: true,
+  next: RERUN_GUIDANCE
+} : stopped(state?.say);
 function argsOf(value) {
   if (typeof value !== "string") return value && typeof value === "object" ? value : {};
   try {
@@ -494,7 +509,7 @@ ${JSON.stringify(answer)}`;
     return stopped(res.body?.say);
   }
   function finished(sessionId, state) {
-    if (state?.state === "stopped") return stopped(state.say);
+    if (state?.state === "stopped") return stoppedStateOf(state);
     const result = state?.result ?? {};
     if (state?.state === "asking") {
       learn(sessionId, result);

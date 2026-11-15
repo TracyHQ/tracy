@@ -78,6 +78,7 @@
   "rebuild.title": "你的 site",
   "rebuild.undo": "撤销未完成的更新",
   "rebuild.update": "更新我的 site",
+  "retry.button": "重试",
   "review.failed": "你的回答没有发送。请重试。",
   "stopped.kept.none": "已保留：你的计划和你的回答。",
   "stopped.kept.one": "已保留：你的计划、你的回答和已写好的页面。",

@@ -8,7 +8,10 @@
  * - `tracy_build:plan`: the latest plan id and revision, for the one living plan card. An older turn that carried a
  *   plan loses its value when a newer one arrives, so the history keeps one plan card, never a list of versions;
  * - `tracy_build:working`: the latest call while it waits (unanswered, or answered `running`), for the line that
- *   says work is going on above the chat input (`WorkingDock.tsx`).
+ *   says work is going on above the chat input (`WorkingDock.tsx`);
+ * - `tracy_build:retry`: the latest stop, until the next call, with whether the step may be run again and how many
+ *   retries of it in a row stopped again, for the Try again button (`TryAgain.tsx`). Counted from the results the
+ *   session logged, so a reload shows the same.
  *
  * Duck-typed: nothing is imported from dsh at run time.
  */
@@ -27,10 +30,12 @@ import type { RevisionNotes } from './revision-notes'
 export const TEMPLATES_KEY = `${BUILD_TOOL}:templates`
 export const PLAN_KEY = `${BUILD_TOOL}:plan`
 export const WORKING_KEY = `${BUILD_TOOL}:working`
+export const RETRY_KEY = `${BUILD_TOOL}:retry`
 
 export type TemplatesValue = NonNullable<BuildToolFold['templates']>
 export type PlanValue = NonNullable<BuildToolFold['plan']>
 export type WorkingValue = NonNullable<BuildToolFold['working']>
+export type RetryValue = NonNullable<BuildToolFold['stop']>
 
 interface EventLike {
   type: string
@@ -94,6 +99,7 @@ export function planDefinitionFor(notes: RevisionNotes) {
   }
 }
 export const workingDefinition = definitionOf<WorkingValue>(WORKING_KEY, (fold) => fold.working)
+export const retryDefinition = definitionOf<RetryValue>(RETRY_KEY, (fold) => fold.stop)
 
 /** The owner props dsh hands a turn tail entry; only what the cards read. */
 export interface TurnTailOwnerLike {

@@ -3,13 +3,14 @@
  * plan card (#606), the build task list with its timer and the notice of a build that could not finish (#608), drawn
  * in the REAL conversation of a build session from the session's own `tracy_build` calls (#609):
  *
- * - `conversation.chat.turnTail`: the template card, the one living plan card and the build run (`tails.tsx`);
+ * - `conversation.chat.turnTail`: the template card, the one living plan card, Try again after a step that stopped
+ *   and may be rerun, and the build run (`tails.tsx`);
  * - `conversation.composer` (chain, ahead of dsh's): the plan review bar (`ReviewBar.tsx`), with the living plan card
  *   above it while the review waits (a turn tail shows only once its turn ends);
  * - `tool.call.toolview` keyed `tracy_build`: a quiet row in place of the call's JSON (`BuildToolRow.tsx`);
  * - `conversation.input.dock`: the same row above the chat input while a call waits (`WorkingDock.tsx`), since dsh
  *   folds the call's own row into the turn's collapsed process;
- * - five conversation node definitions that fold the calls into per turn values (`definitions.ts`);
+ * - six conversation node definitions that fold the calls into per turn values (`definitions.ts`);
  * - once the build is done, the move to the new site's chat with the whole conversation, and in that chat the earlier
  *   conversation and the plan, its first message folded into a chip (#611, `handoff.tsx`).
  *
@@ -30,6 +31,7 @@ import {
   handoffDefinition,
   historyDefinition,
   planDefinitionFor,
+  retryDefinition,
   templatesDefinition,
   workingDefinition
 } from './definitions'
@@ -146,6 +148,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
     templatesDefinition,
     planDefinitionFor(notes),
     workingDefinition,
+    retryDefinition,
     historyDefinition,
     handoffDefinition
   ])
@@ -166,6 +169,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
     )
   tail('tracy-build-chat-templates', tails.templates)
   tail('tracy-build-chat-plan', tails.plan)
+  tail('tracy-build-chat-retry', tails.retry)
   tail('tracy-build-chat-run', tails.run)
   tail('tracy-build-chat-handoff', tails.handoff)
 

@@ -78,6 +78,7 @@
   "rebuild.title": "Votre site",
   "rebuild.undo": "Annuler la mise à jour inachevée",
   "rebuild.update": "Mettre à jour mon site",
+  "retry.button": "Réessayer",
   "review.failed": "Votre réponse n’a pas été envoyée. Réessayez.",
   "stopped.kept.none": "Conservé : votre plan et vos réponses.",
   "stopped.kept.one": "Conservé : votre plan, vos réponses et la page rédigée.",

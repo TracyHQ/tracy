@@ -81,6 +81,9 @@ const REVISED = {
   ]
 }
 const run = (name) => scenarioOf(name).runs.at(-1)
+// What the engine said, as `tracy_build` answers it (#609): a stop the owner may have run again, and one that may not.
+const STOPPED = { stopped: true, say: 'Stopped.', step: 'compose', rerun: true }
+const STOPPED_FOR_GOOD = { stopped: true, say: 'Stopped.' }
 const MESSAGES = [
   { role: 'user', text: 'Build a website for my tennis club. https://sunrise-tennis.example' },
   { role: 'assistant', text: 'I found 4 services, 38 photos and 6 reviews. Two quick questions.' },
@@ -103,6 +106,11 @@ const STATES = [
   ['could-not-finish', 'progress', { run: run('could-not-finish') }],
   ['cancelled', 'progress', { run: run('cancelled') }],
   ['working', 'working', {}],
+  ['try-again', 'retry', { results: [STOPPED] }],
+  ['try-again-second', 'retry', { results: [STOPPED, STOPPED] }],
+  ['try-again-no-rerun', 'retry', { results: [STOPPED_FOR_GOOD] }],
+  ['try-again-after-two-retries', 'retry', { results: [STOPPED, STOPPED, STOPPED] }],
+  ['try-again-build-locked', 'retry', { results: [STOPPED], run: run('building') }],
   ['earlier', 'earlier', { plan: PLAN, messages: MESSAGES }]
 ]
 
@@ -468,4 +476,49 @@ test('working line sits in the message column of dsh at phone, tablet and deskto
     )
     await page.close()
   }
+})
+
+test('Try again: reached by Tab, pressed with Space, one fixed message, disabled while it goes', async () => {
+  const { page } = await open(browser, VIEWPORTS[0], 'light', code)
+  await mount(page, 'retry', { results: [STOPPED] })
+  await page.keyboard.press('Tab')
+  assert.equal(await focused(page), 'Try again')
+  assert.equal(await page.getByRole('button', { name: 'Try again' }).count(), 1)
+  await page.keyboard.press('Space')
+  await page.waitForFunction(() => window.probe.log().sent.length === 1)
+  assert.deepEqual((await page.evaluate(() => window.probe.log())).sent, ['Please try again.'])
+  assert.equal(await page.getByRole('button', { name: 'Try again' }).isDisabled(), true)
+  // A second press cannot send a second message.
+  await page
+    .getByRole('button', { name: 'Try again' })
+    .click({ force: true })
+    .catch(() => {})
+  assert.equal((await page.evaluate(() => window.probe.log())).sent.length, 1)
+  await page.close()
+})
+
+test('Try again: a message the chat did not take says so and leaves the button to press again', async () => {
+  const { page } = await open(browser, VIEWPORTS[0], 'light', code)
+  await mount(page, 'retry', { results: [STOPPED], sendResult: 'failed' })
+  await page.getByRole('button', { name: 'Try again' }).click()
+  await page.getByText('Your request was not sent. Try again.').waitFor()
+  assert.equal(await page.getByRole('button', { name: 'Try again' }).isDisabled(), false)
+  await page.close()
+})
+
+test('Try again: none for a stop that may not be rerun, after two retries, or while a build is locked', async () => {
+  const { page } = await open(browser, VIEWPORTS[0], 'light', code)
+  const offered = async (view) => {
+    await mount(page, 'retry', view)
+    return page.getByRole('button', { name: 'Try again' }).count()
+  }
+  assert.equal(await offered({ results: [STOPPED] }), 1)
+  assert.equal(await offered({ results: [STOPPED, STOPPED] }), 1, 'one retry stopped again: still offered')
+  assert.equal(await offered({ results: [STOPPED_FOR_GOOD] }), 0)
+  assert.equal(await offered({ results: [STOPPED, STOPPED, STOPPED] }), 0)
+  assert.equal(await offered({ results: [STOPPED], run: run('building') }), 0)
+  assert.equal(await offered({ results: [STOPPED], run: run('cancelled') }), 0)
+  // The stop sentence stays when the button goes.
+  assert.match(await page.locator('#root').innerText(), /Something went wrong on our side/)
+  await page.close()
 })

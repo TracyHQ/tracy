@@ -48,7 +48,8 @@ function revisedOf(value) {
  * @returns {null | { kind: 'research', business: string }
  *   | { kind: 'templates', options: any[], none: boolean }
  *   | { kind: 'plan', id: string, revision: number, revised?: { changed: string[], notDone: { what: string, why: string }[] } }
- *   | { kind: 'running' | 'stopped' | 'quiet' }}
+ *   | { kind: 'stopped', step?: string, rerun: boolean }
+ *   | { kind: 'running' | 'quiet' }}
  */
 export function buildToolResultOf(text) {
   let value
@@ -58,7 +59,12 @@ export function buildToolResultOf(text) {
     return null
   }
   if (!isObject(value)) return null
-  if (value.stopped === true) return { kind: 'stopped' }
+  if (value.stopped === true)
+    return {
+      kind: 'stopped',
+      ...(typeof value.step === 'string' ? { step: value.step } : {}),
+      rerun: value.rerun === true
+    }
   if (value.running === true) return { kind: 'running' }
   // Answers meant only for the model: a refusal, a stale plan, nothing started, a step not taken yet, the brand step
   // done and the plan to be asked for again.
@@ -113,12 +119,37 @@ export function buildToolRowOf(rawArgs, text) {
  * @typedef {{ turn: number, seq: number, id: string, revision: number,
  *   revised?: { changed: string[], notDone: { what: string, why: string }[] } }} PlanSeen
  * @typedef {{ turn: number, seq: number, step: string }} WorkingSeen
+ * @typedef {{ turn: number, seq: number, step: string, rerun: boolean, retries: number }} StopSeen
  * @typedef {{ calls: Readonly<Record<string, string>>, templates: TemplatesSeen | null, plan: PlanSeen | null,
- *   working: WorkingSeen | null }} BuildToolFold
+ *   working: WorkingSeen | null, stop: StopSeen | null, streak: { step: string, count: number } | null }} BuildToolFold
  */
 
 /** @type {BuildToolFold} */
-const EMPTY = Object.freeze({ calls: Object.freeze({}), templates: null, plan: null, working: null })
+const EMPTY = Object.freeze({
+  calls: Object.freeze({}),
+  templates: null,
+  plan: null,
+  working: null,
+  stop: null,
+  streak: null
+})
+
+/**
+ * The one fixed message the Try again button sends as the owner. The persona and the tool's private guidance name it,
+ * so the agent calls the tool again once when it arrives. Plain English whatever the owner's language: it is read by
+ * the agent, never shown as a UI string.
+ */
+export const RETRY_MESSAGE = 'Please try again.'
+
+/** How many times the owner may press Try again for the same step in a row before only the sentence stays. */
+export const MAX_STEP_RETRIES = 2
+
+/**
+ * Whether the owner is offered Try again for this stop: the engine said the step may be rerun, and fewer than
+ * `MAX_STEP_RETRIES` retries of the same step in a row have stopped again.
+ * @param {StopSeen | null | undefined} stop
+ */
+export const canRetryStop = (stop) => stop?.rerun === true && stop.retries < MAX_STEP_RETRIES
 
 /** @param {any} content */
 const textOf = (content) =>
@@ -144,7 +175,9 @@ export function buildToolFoldOf(state = EMPTY, event) {
       Number.isSafeInteger(turn) && turn >= 0
         ? { turn, seq: Number(event.seq), step: typeof step === 'string' ? step : 'status' }
         : (state.working ?? null)
-    return { ...state, calls: { ...state.calls, [data.callId]: data.callId }, working }
+    // The call is remembered with its action, so a stopped answer without a step names the step that was asked.
+    const action = typeof step === 'string' ? step : 'status'
+    return { ...state, calls: { ...state.calls, [data.callId]: action }, working, stop: null }
   }
   if (event?.type !== 'tool/result' || event.surfaceOp !== 'append') return state
   const message = data?.message
@@ -156,6 +189,18 @@ export function buildToolFoldOf(state = EMPTY, event) {
   const turn = Number(data.turn)
   const seq = Number(event.seq)
   if (!Number.isSafeInteger(turn) || turn < 0) return state
+  if (result?.kind === 'stopped') {
+    const step = result.step ?? state.calls[callId]
+    const count = state.streak?.step === step ? state.streak.count + 1 : 1
+    return {
+      ...state,
+      streak: { step, count },
+      stop: { turn, seq, step, rerun: result.rerun, retries: count - 1 }
+    }
+  }
+  // Any answer that moves the build on ends the run of stops; guidance for the model and unreadable answers do not.
+  if (result !== null && result.kind !== 'running' && result.kind !== 'quiet' && state.streak !== null)
+    state = { ...state, streak: null, stop: null }
   if (result?.kind === 'templates')
     return { ...state, templates: { turn, seq, options: result.options, none: result.none } }
   if (result?.kind === 'plan')

@@ -132,7 +132,14 @@ export function engineStateOf(row, { kit = null } = {}) {
   const { step, state } = engine
   if (state === 'running') return { step, state }
   if (state === 'stopped')
-    return { step, state, say: engine.say ?? SAY.fault, ...(engine.reason ? { reason: engine.reason } : {}) }
+    return {
+      step,
+      state,
+      say: engine.say ?? SAY.fault,
+      ...(engine.reason ? { reason: engine.reason } : {}),
+      // The owner may have the step run again (`engine.js stoppedOf`); a stop written without it may not.
+      ...(engine.rerun === true ? { rerun: true } : {})
+    }
   if (state === 'asking') {
     const questions = engine.question ? [engine.question] : []
     const ask = askOf(questions, [])

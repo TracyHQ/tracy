@@ -281,6 +281,28 @@ test('a stopped door answer yields stopped with the owner sentence and no ask', 
   })
 })
 
+test('a stopped step the owner may have run again says so, with private guidance and no question', async () => {
+  const say =
+    'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.'
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { body: { step: 'compose', state: 'stopped', say, rerun: true } }
+  })
+  const answer = await run(toolWith(web), { action: 'plan' })
+  assert.deepEqual(
+    { stopped: answer.stopped, say: answer.say, step: answer.step, rerun: answer.rerun },
+    { stopped: true, say, step: 'compose', rerun: true }
+  )
+  assert.ok(answer.next.startsWith(`${PRIVATE_GUIDANCE_MARK} `))
+  assert.match(answer.next, /say the sentence in say and stop/i)
+  assert.match(answer.next, /do not ask a question/i)
+  assert.match(answer.next, /Please try again\./)
+  // A stop without `rerun` stays exactly the sentence.
+  const plain = fakeWeb({
+    'POST /api/build-draft/compose': { body: { step: 'compose', state: 'stopped', say } }
+  })
+  assert.deepEqual(await run(toolWith(plain), { action: 'plan' }), { stopped: true, say })
+})
+
 test('faults never leak: a refused door, an unreachable tracy-web and nobody to act as all say the stopped sentence', async () => {
   const forbidden = fakeWeb({
     'POST /api/build-draft/compose': { status: 403, body: { code: 'NOT_BUILD_SESSION' } }

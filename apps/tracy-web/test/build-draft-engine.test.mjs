@@ -834,6 +834,7 @@ test('a step left running by a process that ended reads as stopped, with a fault
   const restarted = server({ buildChatOn: async () => true })
   const read = await restarted.call('GET', '/engine')
   assert.equal(read.body.state, 'stopped')
+  assert.equal(read.body.rerun, true, 'an interrupted step may be asked for again')
   assert.equal((await row(s)).fault.code, 'step_interrupted')
   release()
   await s.engine.settled(await s.accountId())
