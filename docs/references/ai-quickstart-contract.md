@@ -1879,8 +1879,10 @@ human control and the quality control, section "The controls" below) and `allowF
 `check-record/secret-allow.json`, null when it has none). The kit carries both `check-record/record.json` (required:
 a verdict alone is no proof) and a small `check-record/verdict.json` (`tracy-ai-quickstart-check-verdict/v1`, made by
 `verdictFileOf(record)`): the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it,
-`recordText(record)`), and the verdict (`pass`, `failing`, `measurements`). `GATE_VERSION` is 5 since the third #586
-review: a record of version 4 took a friendly menu address of a planned page for a link to a missing page, passed
+`recordText(record)`), and the verdict (`pass`, `failing`, `measurements`). `GATE_VERSION` is 6 since the fourth #586
+review: a record of version 5 let a kept literal exempt words of any file (a demo counter or a demo network name), blamed
+every place sharing a refused entry, stopped write safety at its first untraced stop without saying so, marked a resumed
+measurement by one field, and judged the list items a site happened to leave out. A record of version 4 took a friendly menu address of a planned page for a link to a missing page, passed
 the hidden variant while the pages still shown did not answer, and could carry write safety passes resumed on trust
 from a saved state of other gate code. A record of version 3 counted a place tested whenever the build was asked for its probe (a build that wrote its
 plain marker instead still showed every place tested), passed the hidden variant when no page was hidden or a hidden

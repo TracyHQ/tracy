@@ -22,7 +22,7 @@ export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v2'
  * every build refusal is found in memory before the write, a link is judged by the page it reaches, a hide may not
  * take shown pages down, a resumed write safety is never released, and the publish step checks the kit's own plan.
  */
-export const GATE_VERSION = 5
+export const GATE_VERSION = 6
 
 /** The folder of a kit that holds its check record; never part of what the record is measured on. */
 export const CHECK_RECORD_DIR = 'check-record'
