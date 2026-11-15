@@ -1772,6 +1772,8 @@ cache or resized paths. Its **control** runs first, on pages that answer as they
 quickstart must give demo findings (none is `scan_blind`, and fails the verdict). A control with pages that did not
 load is not measured. The blank site before the write serves no page by design (it has no home menu item), so its
 control is recorded as `not_applicable`, with the reason and the statuses it answered, and is no part of the verdict.
+The reason says the blank site is not judged, and counts the addresses that answer a server error there (run 4: search,
+login, reset and remind answered 500), so a 500 is never hidden behind the 404s of the design.
 
 **The check record** (`gate/record.mjs`, `tracy-ai-quickstart-check-record/v2`, see
 [The check record, the release refusal and the secret scan](#the-check-record-the-release-refusal-and-the-secret-scan)):

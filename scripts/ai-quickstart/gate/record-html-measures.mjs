@@ -115,6 +115,7 @@ export function measurementsHtml(measurements = {}) {
   const s = m.structure ?? {}
   const q = m.quality ?? {}
   const secrets = (m.secrets?.findings ?? []).map((f) => [f.file, f.at, f.rule, f.fingerprint])
+  const allowed = (m.secrets?.allowed ?? []).map((f) => [f.file, f.at, f.rule, f.fingerprint, f.why])
   const links = (v) =>
     table(['Page', 'Link', 'Leads to', 'Hidden'], linkRows(v?.broken), emptyOf(v, 'no broken link.'))
   const shape =
@@ -181,6 +182,10 @@ export function measurementsHtml(measurements = {}) {
         ' the untouched template is missing too (its own system pages): recorded, not blocking.</p>') +
     coverageHtml(m.writeSafety?.coverage) +
     '<h2>Secrets (named, never shown)</h2>' +
-    table(['File', 'Place', 'Rule', 'Fingerprint'], secrets, emptyOf(m.secrets, 'no secret found.'))
+    table(['File', 'Place', 'Rule', 'Fingerprint'], secrets, emptyOf(m.secrets, 'no secret found.')) +
+    (allowed.length
+      ? "<h2>Allowed by the kit's allow file</h2>" +
+        table(['File', 'Place', 'Rule', 'Fingerprint', 'Why'], allowed, '')
+      : '')
   )
 }

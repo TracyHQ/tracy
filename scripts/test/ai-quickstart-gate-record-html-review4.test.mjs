@@ -116,3 +116,60 @@ test('X1 and line 3: structure says planned articles at another address apart, a
   )
   assert.match(page, /home \/index\.php\/qxatg news news, about/)
 })
+
+test('lines 5 to 7: leaks and requests in their own units, the allowed secrets listed, and the blank site 500s said', async () => {
+  const { recordHtml } = await import('../ai-quickstart/gate/record-html.mjs')
+  const { blankControlOf } = await import('../ai-quickstart/gate/verdict.mjs')
+  const request = (host) => ({ group: 'outside_request', value: 'https://' + host + '/x', page: 'home' })
+  const blank = blankControlOf([
+    { path: 'index.php', status: 404 },
+    { path: 'index.php?option=com_users&view=login', status: 500 },
+    { path: 'index.php?option=com_finder&view=search', status: 500 },
+    { path: 'index.php/qx-no-such-page', status: 404, expected: 404 }
+  ])
+  assert.match(blank.reason, /not judged/)
+  assert.match(blank.reason, /2 addresses answer a server error \(500\)/)
+  assert.doesNotMatch(blank.reason, /serves no page by design/)
+  const page = text(
+    recordHtml({
+      verdict: { pass: false, failing: ['leaks'], notRun: [], leaks: 3, demoFindings: 0, unexplained: 0 },
+      universe: {},
+      markerTest: {
+        groups: [{ group: 'unmarked_text' }, { group: 'outside_request' }, { group: 'outside_request' }],
+        findings: [
+          { group: 'unmarked_text' },
+          request('fonts.example'),
+          request('fonts.example'),
+          request('cdn.example')
+        ],
+        notSeen: []
+      },
+      demoScan: { controls: { blank } },
+      measurements: {
+        secrets: {
+          status: 'passed',
+          findings: [],
+          allowed: [
+            {
+              file: 'kit/blank-site-contract/presentation-lock.json',
+              at: 'line:12',
+              rule: 'gitleaks:generic-api-key',
+              fingerprint: 'abcdefabcdef',
+              why: 'a file hash, no secret'
+            }
+          ],
+          control: { status: 'right' }
+        }
+      }
+    })
+  )
+  assert.match(
+    page,
+    /3 leak\(s\) in 1 group\(s\), plus 2 group\(s\) of requests to other sites \(3 request\(s\)\)/
+  )
+  assert.match(page, /1 finding the kit(?:'|&#39;)s allow file allows, listed below with its reason/)
+  assert.match(
+    page,
+    /kit\/blank-site-contract\/presentation-lock\.json line:12 gitleaks:generic-api-key abcdefabcdef a file hash, no secret/
+  )
+})

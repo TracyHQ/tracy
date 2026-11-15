@@ -57,11 +57,20 @@ export function measurementsOf(given = {}) {
  * @param {object[]} renders the blank site's renders before the write
  */
 export function blankControlOf(renders) {
+  const statuses = (renders ?? []).map((r) => ({
+    path: r.path,
+    status: r.status,
+    expected: r.expected ?? 200
+  }))
+  // A 404 is the blank site's design (it has no home menu item); a server error is not, and is said apart, by count.
+  const errors = statuses.filter((r) => r.status >= 500 && r.status !== r.expected).length
+  const said = errors
+    ? `; ${errors} addresses answer a server error (500) there, recorded below and not judged here`
+    : ''
   return {
     status: 'not_applicable',
-    reason:
-      'the blank site before the write serves no page by design (it has no home menu item), so a demo scan of it measures nothing',
-    statuses: (renders ?? []).map((r) => ({ path: r.path, status: r.status, expected: r.expected ?? 200 }))
+    reason: `the blank site before the write is not judged: its pages answer 404 by design (it has no home menu item), so a demo scan of it measures nothing${said}`,
+    statuses
   }
 }
 

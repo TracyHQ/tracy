@@ -207,7 +207,7 @@ export function recordHtml(record) {
       .replace('T', ' ')
   )} UTC.</p>
 <span class="verdict ${v.pass ? 'yes' : 'no'}">${v.pass ? 'Passed' : 'Not passed'}</span>
-${notes}<p class="muted">${esc(v.leaks)} leak(s) in ${esc(leakGroups)} group(s), plus ${esc(groups.length - leakGroups)} request(s) to other sites; ${esc(v.demoFindings)} demo finding(s); ${esc(v.failedRenders ?? 0)} page view(s) that did not load as expected; ${esc(v.unexplained)} unexplained place(s)${notRun ? `. Not measured yet: ${esc(notRun)}` : ''}.</p>
+${notes}<p class="muted">${esc(v.leaks)} leak(s) in ${esc(leakGroups)} group(s), plus ${esc(groups.length - leakGroups)} group(s) of requests to other sites (${esc((record.markerTest?.findings ?? []).filter((f) => f.group === 'outside_request').length)} request(s)); ${esc(v.demoFindings)} demo finding(s); ${esc(v.failedRenders ?? 0)} page view(s) that did not load as expected; ${esc(v.unexplained)} unexplained place(s)${notRun ? `. Not measured yet: ${esc(notRun)}` : ''}.</p>
 ${failing ? `<p class="muted">Failing parts: ${esc(failing)}.</p>` : ''}
 ${unfinished ? `<p class="muted">Not finished: ${esc(unfinished)}.</p>` : ''}
 <h2>The measurements</h2>

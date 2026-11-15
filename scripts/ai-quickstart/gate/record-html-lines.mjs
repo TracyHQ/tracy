@@ -204,9 +204,13 @@ const FOUND = {
         String(m.message ?? '').replace(/^[^:]*: /, '') +
         '.'
       )
+    const allowed = m.allowed?.length ?? 0
     return (
       'No secret in the files to publish or in this record' +
-      (m.control?.status === 'right' ? ', and the scan found the ones the original quickstart holds.' : '.')
+      (m.control?.status === 'right' ? ', and the scan found the ones the original quickstart holds' : '') +
+      (allowed
+        ? `; ${n(allowed, "finding the kit's allow file allows", "findings the kit's allow file allows")}, listed below with its reason.`
+        : '.')
     )
   }
 }

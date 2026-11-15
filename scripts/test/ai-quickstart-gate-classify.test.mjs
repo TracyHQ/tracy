@@ -636,7 +636,10 @@ test('the record: groups and counts, kit hashes, controls; not passed while anyt
   assert.doesNotMatch(html, /[\u2013\u2014]/)
   // The page says which parts failed, that the blank control is not applicable and why, and the written not seen.
   assert.match(html, /Failing parts: /)
-  assert.match(html, /not applicable: the blank site before the write serves no page by design/)
+  assert.match(
+    html,
+    /not applicable: the blank site before the write is not judged: its pages answer 404 by design/
+  )
   assert.match(html, /Written but not seen/)
   // The six measurements are named on the page, each with its status.
   assert.match(html, /Secret scan<\/span><span>Not measured: /)
