@@ -1376,6 +1376,112 @@ a `#` target not among the ids and anchor names of the page it lands on is `anch
 to a page that answers but is not among `expected.paths`, is `demo_page`. Without `probe`, a page not read is never
 fetched.
 
+## The marker test
+
+`scripts/ai-quickstart/gate/gate.mjs` (ticket #585) is the first half of the release gate. It writes a marker into every
+place an AI quickstart declares, through the build team's own chain, renders every page, and reports everything a page
+shows that is no marker. Nothing under `scripts/ai-quickstart/gate/` names a template: the kit folder and the blank site
+archive are its input.
+
+```
+GATE_TOKEN_FILE=<file with the site's Claude Cowork token> \
+  node scripts/ai-quickstart/gate/gate.mjs <AI quickstart folder> --installer <blank site .zip> --out <folder> \
+  [--site <base URL>] [--plugin <version>]
+```
+
+Without `--site` it stops after the write on a memory site and prints the accounting. With it, the site is a throwaway
+blank site of that AI quickstart, the Claude Cowork plugin installed and its updater off. `--out` is kept outside the
+repository: `record.json`, `record.html`, `shots/`, the door calls and the write journal.
+
+**Markers** (`gate/marker-codec.mjs`). A code is `Qx` and three letters (17,576 codes), padded with ` qqqqq` to the
+place's limit. A link is `https://qx<abc>.example/`, an email `qx<abc>@qx<abc>.example`, a phone `+1 555 01NN NNN`, a
+social link the network's own host with the path `/qx<abc>`, a picture a flat PNG of a colour drawn from its code with
+the code in a text chunk. No marker holds `( ) < > " ' &` or a dash: the plugin's guards, the template's code notation
+(`((`, `))`) and HTML read none of them.
+
+**The marker build** (`gate/marker-plan.mjs`). An invented business profile with every fact and as many items as the
+kit's blocks show; a composition that places every block of every page recipe and its variants; then the build team's
+chain as it runs for a customer: `composePlan`, `writePages` with a writer that answers a new code per place,
+`picturesStep`, `buildWriteOrder`, `checkWriteOrder` and `writePlanOf`. The plan is first written by the write step
+(`runDraftWrite`) on a memory site (`write-order-memory-doors.mjs`) with the refusals the real plugin gives that the
+memory site lacks laid over it (`MEASURED_REFUSALS` of `gate/memory-write.mjs`). A refusal is a **write step gap**:
+the gate never changes the write step or its plan; it takes the data that met the refusal out of the composition
+(a page, a block, an item; a block left under its minimum is emptied) and runs the chain again, and the gap is
+reported with its code and cause.
+
+**The universe** (`gate/universe.mjs`, `gate/accounting.mjs`). Every location of every block field, item field, child
+list field and design line, every fact place and every language string the mapping classes. Each is exactly one of
+`written`, `declared_not_written` (a design line, a language string the kit keeps or sets), `skipped_by_writer` (with
+the chain's reason: not placed, skipped by the plan, hidden by the order, `identity_field_no_door`, a write step gap)
+or `unexplained`, which must be zero.
+
+**The real write** (`gate/site-write.mjs`). The plan the memory site carried to the end, written through the door
+client (`site-doors.mjs`) after a bind to the blank site contract; the plugin version is read at both ends and must be
+the pinned one. A refusal stops the run (`stopped`, with the code), it is not worked around.
+
+**Renders** (`gate/render.mjs`, `gate/observe-in-page.mjs`, `gate/adapters/joomla-t4.mjs`). Headless Chromium, one
+fresh context per theme side, at 390, 768 and 1440 in light and dark (`?theme=` picks the side for one load). Pages:
+every menu item the write made, every article it made reached under its list page, and the system pages (search, a
+missing page, sign in, password reset, username reminder). A request to another host is stopped and kept as an
+observation. The browser reads words with whether they are seen, `currentSrc`, computed background pictures and the
+words and pictures of `::before` and `::after`. Screenshots: one dark page per page type at 390 and 1440.
+
+**Findings** (`gate/classify.mjs`). One finding per page, kind, place and value, with every theme side and width it
+was seen on:
+
+| Group | What |
+|---|---|
+| `raw_markup` | a tag, an escaped entity or the code notation printed as words, or a marker address loaded as a resource |
+| `unmarked_text` | words, `alt`, `title`, `aria-label`, `placeholder`, `<title>`, meta or JSON-LD that are no marker (the rest of a value that holds one counts) |
+| `unmarked_picture` | a picture that is not a picture the write uploaded (the favicon among them, product decision 3) |
+| `unmarked_link` | a link to another site, or a `mailto:` or `tel:`, that is no marker |
+| `empty_picture` | a picture whose address is the page itself |
+| `outside_request` | a request to another host (a font, a script, an avatar); not counted as a leak |
+
+Hidden words are leaks (`visible: false`). **Exempt** (`gate/exemptions.mjs`), listed in the record with the reason: a
+language string the kit keeps (by key, with the kit's reason), a date or the year the build set, an address of the site
+itself, a schema.org type or language code, a share card type, a mark with no letter, the marker filler alone, and a
+value the write plan wrote from the marker data (a network name on a marker link's label).
+
+**Sources** (`gate/sources.mjs`). Read from the installer archive: a language string (file and key, placeholders
+`%s` and `%sitename%` read any words), a stylesheet, a literal of a template or extension layout file, a value of the
+archive's data (table), a picture file of the archive, another host; or `not found`.
+
+**Written, not seen** (`gate/not-seen.mjs`). Each marker the plan wrote that no render shows, with the reason the page
+gives: `block_not_printed` (the page's HTML has no `id="Mod<id>"` of the copy), `block_printed_without_value`,
+`article_not_rendered`, `value_not_printed`.
+
+**The demo scan** (`gate/demo-checks.mjs`) runs `demoScan` on the browser's read and on the raw HTML of the same
+renders, and checks the scan itself: the leaks the corpus counts as interface words (never reported by the demo scan),
+the blocks the raw HTML and the browser read differently, and pictures under cache or resized paths.
+
+**The check record** (`gate/record.mjs`, `tracy-ai-quickstart-check-record/v1`; `gate/record-html.mjs` for the owner):
+the verdict (`pass` when no leak, no demo finding and no unexplained place), the accounting, the write (memory and real
+status, gaps, measured refusals, unproven flags), the renders and screenshots (paths relative to the record), the
+findings, the exemptions, the written values not seen, the demo scan and its checks, and the slots of #586 (minimum
+items, link check) as `not_run`. Site addresses are written `<site>`.
+
+### The first real run (JA Boxing 1.0.11, plugin 0.24.85)
+
+The blank site command's archive, restored on Joomla 6.1.1, the plugin installed and its updater off.
+
+- **Refusals of the real plugin the memory site lacks** (now in `MEASURED_REFUSALS`): an article created with no
+  `catid` (`write_failed`, `Category is required.`; the plan gives news posts no category), and a contact created with
+  no `params` (`write_failed`, `Field 'params' doesn't have a default value`; the contact page is lost).
+- **Menu items are created with `template_style_id: 0`**, so every page prints as the Default style: the blocks a page
+  recipe places in `section-*` positions (of the Landing style) are not printed. Most markers the plan wrote are
+  `block_not_printed`.
+- Block 180's `lists.social.fields.label` (at `hero[social-intro][title]`) prints on no page (see "A place that prints
+  nothing"); it shows as written and not seen. On this run its copy (the trainer page's block) is `block_not_printed`
+  as a whole, for the style reason above, so the false declaration itself is not yet measured.
+- Numbers: universe 846 places, 232 written, 17 declared and not written, 597 skipped by the write step, 0
+  unexplained. 17 pages, 102 renders, all with the expected status. 48 marker codes seen; 128 written values not
+  seen (95 `block_not_printed`, 27 `value_not_printed`, 6 `block_printed_without_value`). 262 leaks: 206 unmarked
+  texts (template and Joomla interface strings: article details, pager, search and account pages, newsletter form,
+  the account name as author), 40 unmarked pictures (the favicon, demo pictures from stylesheets, avatars), 16 empty
+  pictures, 27 requests to outside hosts (fonts, a video player). The demo scan finds 8 demo strings, the same from
+  the raw HTML and from the browser.
+
 ## Choices made where spec #576 is silent
 
 - Item counts are required on every block, not only repeating ones, so a missing count is never read as "one".

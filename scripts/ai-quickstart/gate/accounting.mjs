@@ -112,6 +112,7 @@ export function accountFor({ mapping, blockStore }, { writePlan, order, gaps = [
   const skipped = list(writePlan?.skipped)
   const conflicts = list(writePlan?.conflicts)
   const hidden = list(order?.hidden)
+  const unproven = list(writePlan?.unproven)
   const factFields = factFieldsOf(mapping)
   const design = designFieldsOf(blockStore)
   const gapBlocks = new Map()
@@ -161,6 +162,13 @@ export function accountFor({ mapping, blockStore }, { writePlan, order, gaps = [
       const reasons = new Set(
         skipped.filter((s) => s.fact === place.field || fields.has(lastOf(s.entry))).map((s) => s.reason)
       )
+      // The write plan's own word that it has no door for a site setting (`identity_field_no_door`).
+      for (const u of unproven)
+        if (u?.column && place.loc.entity === 'settings' && u.column === place.loc.column) reasons.add(u.code)
+      // A record a write step gap took out (the page that creates it): `contact-1` of `contact:page.contact`.
+      const kind = /^([a-z]+)-\d+$/.exec(place.loc.entity ?? '')?.[1]
+      const gap = kind && gaps.find((g) => String(g.record).startsWith(`${kind}:`))
+      if (gap) reasons.add(`write step gap: ${gap.code} (${gap.cause ?? gap.record})`)
       done(
         reasons.size ? ACCOUNT.skipped : ACCOUNT.unexplained,
         reasons.size ? [...reasons].join(', ') : 'no operation and no skip reason'

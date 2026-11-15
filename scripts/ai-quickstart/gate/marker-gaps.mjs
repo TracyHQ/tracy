@@ -39,14 +39,21 @@ function takeOutPage(composition, pageType) {
   return true
 }
 
-/** Take a data id out of every created block that shows it. */
+/**
+ * Take a data id out of every created block that shows it. A block left with fewer items than it shows at least is
+ * emptied: the rules gate refuses it otherwise (`too_few_items`), as it would refuse it for a customer.
+ */
 function takeOutItem(composition, kit, item) {
-  const created = new Set(kit.blockStore.blocks.filter((b) => b.placement === 'created').map((b) => b.id))
+  const created = new Map(
+    kit.blockStore.blocks.filter((b) => b.placement === 'created').map((b) => [b.id, b])
+  )
   const blocks = []
   for (const page of composition.pages)
     for (const block of page.blocks)
       if (created.has(block.block) && block.data.includes(item)) {
         block.data = block.data.filter((id) => id !== item)
+        const min = created.get(block.block).items?.min ?? 0
+        if (block.data.length && block.data.length < min) emptied(block)
         blocks.push(`${page.pageType}/${block.block}`)
       }
   return blocks

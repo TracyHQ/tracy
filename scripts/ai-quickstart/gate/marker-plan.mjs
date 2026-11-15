@@ -106,7 +106,7 @@ export async function markerBuild(kit, { iconLibrary, stored = defaultStored, tr
 }
 
 /** At most this many write step gaps are taken out of the composition before the marker build gives up. */
-const MAX_GAP_RETRIES = 40
+const MAX_GAP_RETRIES = 100
 
 async function chainOf(kit, { registry, research, composition, label, icons, stored }) {
   const reply = JSON.stringify(composition)
