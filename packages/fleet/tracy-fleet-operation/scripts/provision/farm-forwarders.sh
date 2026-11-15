@@ -58,7 +58,7 @@ stale=0; moved=0; failed=0
 while IFS= read -r label; do
   [ -n "$label" ] || continue
   name="${label}-web-1"
-  docker inspect -f '{{.State.Running}}' "$name" 2>/dev/null | grep -qx true || { echo "   $label: no running forwarder $name — left alone"; continue; }
+  docker inspect -f '{{.State.Running}}' "$name" 2>/dev/null | grep -x true >/dev/null || { echo "   $label: no running forwarder $name — left alone"; continue; }
   if [ "$(docker exec "$name" cat "$CFG_IN_FORWARDER" 2>/dev/null)" = "$WANT" ]; then continue; fi
   stale=$((stale + 1))
   if [ "$DRY" = 1 ]; then echo "   $label: its forwarder runs an older config (--apply would restart $name, a gap of ~0.3 s)"; continue; fi
@@ -66,7 +66,7 @@ while IFS= read -r label; do
   ok=0
   for _ in $(seq 1 20); do
     if [ "$(docker exec "$name" cat "$CFG_IN_FORWARDER" 2>/dev/null)" = "$WANT" ] \
-       && docker inspect -f '{{.State.Running}}' "$name" | grep -qx true; then ok=1; break; fi
+       && docker inspect -f '{{.State.Running}}' "$name" | grep -x true >/dev/null; then ok=1; break; fi
     sleep 0.5
   done
   if [ "$ok" = 1 ]; then moved=$((moved + 1)); echo "   $label: forwarder restarted on the current config"

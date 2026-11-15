@@ -338,7 +338,7 @@ farm_web_pick() {
     esac
   done
 }
-farm_web_exists() { docker ps -a --format '{{.Names}}' 2>/dev/null | grep -Eq '^tracy-demos-web(-[ab])?$'; }
+farm_web_exists() { docker ps -a --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' >/dev/null; }
 if [ -z "$FOLDED" ] && ! farm_web_exists; then
   ok "no demo farm on this host (no folded demo)"
 else

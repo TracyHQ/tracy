@@ -116,7 +116,7 @@ if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
   # still point at it is not — and is every folded demo down. Said once, with how many it takes down.
   folded="$(docker ps -a --filter label=tracy.runtime=farm --format '{{.Names}}' | grep -c . || true)"
   farm_web_up="$(docker ps --format '{{.Names}}' 2>/dev/null | grep -Ec '^tracy-demos-web(-[ab])?$' || true)"
-  if [ "$folded" -gt 0 ] || docker ps -a --format '{{.Names}}' 2>/dev/null | grep -Eq '^tracy-demos-web(-[ab])?$'; then
+  if [ "$folded" -gt 0 ] || docker ps -a --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' >/dev/null; then
     farm_state=up
     # The farm web is two slots that run side by side during a switch: up when either runs.
     for c in tracy-demos-web tracy-demos-db; do

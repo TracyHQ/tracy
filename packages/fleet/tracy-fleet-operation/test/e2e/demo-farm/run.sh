@@ -36,7 +36,7 @@ check() { # description, then a command that must succeed
   if "$@" >/dev/null; then echo "  ok  $what"; else fail "$what"; fi
 }
 
-if docker ps -a --format '{{.Names}}' | grep -Eq '^tracy-demos-(web(-[ab])?|db)$'; then
+if docker ps -a --format '{{.Names}}' | grep -E '^tracy-demos-(web(-[ab])?|db)$' >/dev/null; then
   fail "a demo farm already runs on this machine — this test would take its names"
 fi
 
@@ -678,7 +678,7 @@ check "$1: $W answers again through its current-config forwarder" wait_for "$WP"
 # The forwarders really follow the ready marker (an `http-check` haproxy ignores without `option httpchk`):
 # a slot whose marker is gone gets no new connection — the forwarder answers at once that it has no server —
 # and gets them again when the marker is back.
-check "$W's forwarder logs no ignored http-check rule" sh -c "! docker logs '$W-web-1' 2>&1 | grep -q 'rules are ignored'"
+check "$W's forwarder logs no ignored http-check rule" sh -c "! docker logs '$W-web-1' 2>&1 | grep 'rules are ignored' >/dev/null"
 docker exec "$(farm_web)" rm -f /run/tracy-demos-ready/ok
 sleep "$(( $(bash -c ". '$SCRIPTS/lib/roots.sh'; . '$SCRIPTS/provision/render-compose.sh'; tracy_farm_down_wait") + 1 ))"
 check "a farm web without its ready marker gets no new connection from a current-config forwarder" \
@@ -765,7 +765,7 @@ put_forwarder_on_old_config
 check "$W's forwarder runs the OLD config" sh -c "docker exec '$W-web-1' grep -q 'init-addr last' /usr/local/etc/haproxy/haproxy.cfg"
 W_FW_STARTED="$(docker inspect -f '{{.State.StartedAt}}' "$W-web-1")"
 check "farm-forwarders.sh without --apply names the old-config forwarder and changes nothing" sh -c \
-  "bash '$SCRIPTS/provision/farm-forwarders.sh' --root '$T/srv' | grep -q '$W: its forwarder runs an older config' && [ \"\$(docker inspect -f '{{.State.StartedAt}}' '$W-web-1')\" = '$W_FW_STARTED' ]"
+  "bash '$SCRIPTS/provision/farm-forwarders.sh' --root '$T/srv' | grep '$W: its forwarder runs an older config' >/dev/null && [ \"\$(docker inspect -f '{{.State.StartedAt}}' '$W-web-1')\" = '$W_FW_STARTED' ]"
 tcp_only_start step1
 timed bash "$SCRIPTS/provision/farm-forwarders.sh" --root "$T/srv" --apply
 sleep 2
