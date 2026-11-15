@@ -19,7 +19,7 @@ import { planRefOf } from './build-store.js'
 import { readEngineRow } from './engine-store.js'
 import { revisionBriefOf } from './rebuild-progress.js'
 import { DONE_SAY, UNAVAILABLE_SAY, rebuildSayOf } from './rebuild-say.js'
-import { claimSite, refuseRevision, releaseSite, reviseBuild } from './rebuild-store.js'
+import { claimSite, releaseSite, reviseBuild, undoRevision } from './rebuild-store.js'
 import { readBuild } from './build-store.js'
 
 const BASE = '/api/build-draft/build'
@@ -99,8 +99,9 @@ export function addRebuildDoors(app, deps) {
             }
           )
         : { refusal: { code: 'REVISION_RUN_UNAVAILABLE', status: 503 } }
+      // A run that could not start changes nothing: the build reads as it did, the owner keeps the plan change.
       if (started?.refusal) {
-        await refuseRevision(pool, accountId, build.run.id, started.refusal, now)
+        await undoRevision(pool, accountId, build.run.id, revised.previous, started.refusal, now)
         return answer(c, accountId, { say: UNAVAILABLE_SAY }, 202)
       }
       return answer(c, accountId, {}, 202)

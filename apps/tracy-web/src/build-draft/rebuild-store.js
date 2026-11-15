@@ -53,8 +53,10 @@ export async function reviseBuild(
   { plan, rebuildFrom, runId = randomUUID(), now = Date.now }
 ) {
   let made = null
+  let previous = null
   const result = await changeDraft(pool, accountId, (row) => {
     const build = row.build
+    previous = build
     if (!build?.site?.siteKey || !rebuildFrom) return { error: 'NOT_BUILT' }
     if (!build.endedAt) return { error: 'BUILD_RUNNING' }
     if (busyHeld(build, now())) return { error: 'SITE_BUSY' }
@@ -85,20 +87,27 @@ export async function reviseBuild(
           result: build.result ?? null,
           ...(build.refusal ? { refusal: build.refusal } : {})
         }
-      ]
+      ].slice(-HISTORY_KEPT)
     }
     return { build: made }
   })
   if (result.error) return result
-  return { build: made }
+  return { build: made, previous }
 }
 
-/** Keep why the revision run could not start (`{code, status}`): the run ends stopped at once, nothing written. */
-export function refuseRevision(pool, accountId, runId, refusal, now = Date.now) {
+/** The earlier runs a build keeps in `history`, newest last. */
+export const HISTORY_KEPT = 20
+
+/**
+ * A revision run that could not start (`{code, status}`) changes nothing (#612): the build goes back to what it was
+ * before `reviseBuild` (`previous`), so the site's build still reads as it is and the history does not grow. Why it
+ * could not start is kept on it for the team (`revisionRefusal`). A build that is no longer this run's is left alone.
+ */
+export function undoRevision(pool, accountId, runId, previous, refusal, now = Date.now) {
   return changeDraft(pool, accountId, (row) => {
     if (row.build?.run?.id !== runId) return { error: 'NOT_THIS_RUN' }
     return {
-      build: { ...row.build, refusal, endedAt: new Date(now()).toISOString(), result: 'stopped' }
+      build: { ...previous, revisionRefusal: { ...refusal, at: new Date(now()).toISOString() } }
     }
   })
 }

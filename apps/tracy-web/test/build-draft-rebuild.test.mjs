@@ -341,10 +341,17 @@ test('a server that cannot start the run says so; the site build does not move',
   const next = await renamed(s, plan)
   const revised = await s.call('POST', '/build/revise', { plan: pin(next) })
   assert.equal(revised.body.say, UNAVAILABLE_SAY)
-  assert.equal(revised.body.build.state, 'stopped')
+  // Nothing was written: the build still reads as the site shows it, and its history did not grow.
+  assert.equal(revised.body.build.state, 'done')
   assert.equal(await s.store.current({ siteKey: SITE_KEY }), 'run-first')
+  const build = await readBuild(db.pool, accountId)
+  assert.equal(build.plan.revision, plan.revision)
+  assert.equal((build.history ?? []).length, 0)
+  assert.equal(build.revisionRefusal.code, 'REVISION_RUN_UNAVAILABLE')
   // The draft keeps the change: the owner can try again later.
-  assert.equal((await readBuild(db.pool, accountId)).plan.revision, next.revision)
+  const living = (await db.pool.query('select plan from build_draft where account_id = $1', [accountId]))
+    .rows[0]
+  assert.equal(living.plan.revision, next.revision)
 })
 
 test('an update is only for a built site; an unfinished update must be undone first', opts, async () => {
