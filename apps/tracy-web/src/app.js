@@ -1247,6 +1247,15 @@ export function buildApp(deps) {
         }),
       brandStep: buildEngine.brandStep ?? draftBrandStep({ pool: deps.pool, stepsOf: brandSteps }),
       prunePictures: buildEngine.prunePictures ?? draftPictureStore.prune,
+      // Each step is reserved in the research cost ledger, under `/ops/wo`'s daily research cap (`spend-limits.js`).
+      charge:
+        buildEngine.charge ??
+        createChargeable(
+          createCostLedger({
+            pool: deps.pool,
+            caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config, deps.log ? { log: deps.log } : {}))
+          })
+        ),
       now: deps.now
     })
     app.route(

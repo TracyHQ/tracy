@@ -231,11 +231,15 @@ async function readingModel(_url, init) {
   })
 }
 
-/** The rows of every `wo_*` table of the test schema, by table. */
+/**
+ * The rows of every `wo_*` table of the test schema, by table. Not the research cost ledger: each build chat step is
+ * reserved there on purpose (`spend-limits.js`), under the deployment's research cap.
+ */
 async function woRows() {
   const { rows } = await db.pool.query(
     `select table_name from information_schema.tables
-      where table_schema = current_schema() and table_name like 'wo\\_%' and table_type = 'BASE TABLE'`
+      where table_schema = current_schema() and table_name like 'wo\\_%' and table_type = 'BASE TABLE'
+        and table_name <> 'wo_cost_ledger'`
   )
   const counts = {}
   for (const { table_name: t } of rows)

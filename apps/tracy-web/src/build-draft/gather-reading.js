@@ -5,10 +5,10 @@
  * `readingInputOf`, as the place executor's profile stage reads it). Its answer is laid on the profile as
  * `businessReading`, where a place's research keeps it, so the brief reads it exactly as a website opportunity's does.
  *
- * The model is the one /ops › Models & AI assigns to "WO editorial" (door `woEditorial`), injected (`readingDoor`). No
- * research cost ledger is written (that ledger belongs to a place job, `wo_cost_ledger`): each call is reserved in
- * memory against the operator's cap for one research job (`/ops/wo` `researchJobCapCents`), and what it cost is kept
- * in the research record (`reading`).
+ * The model is the one /ops › Models & AI assigns to "WO editorial" (door `woEditorial`), injected (`readingDoor`).
+ * Each call is reserved in memory against the operator's cap for one research job (`/ops/wo` `researchJobCapCents`),
+ * and what it cost is kept in the research record (`reading`). The research step as a whole is reserved once in the
+ * research cost ledger (`wo_cost_ledger`) by the engine, at its ceiling (`spend-limits.js`).
  *
  * 🔒 THE READING NEVER STOPS THE RESEARCH. Without a model (none assigned, an unusable one, the cap too small) the
  * reading's own rules read what they can, as in Website Opportunities, and the record says why the model did not run.

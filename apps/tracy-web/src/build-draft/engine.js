@@ -24,6 +24,7 @@ import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
 import { askingOf } from './engine-asking.js'
 import { brandOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
 import { answersStillAsked } from './answers-kept.js'
+import { spendGate, spendLeft } from './engine-spend.js'
 import { discardPlan, putComposed, putRevised, recordFault } from './store.js'
 import { planRequestOf, reviseStep, revisionOf } from './engine-revise.js'
 
@@ -111,10 +112,23 @@ export const brandFor = (row, template) =>
  *   pre site brand step (#616): answers the look record (`tracy-brand-look/v1`)
  * @param {(accountId: string, run: string) => Promise<unknown>} [deps.prunePictures] deletes the pictures an older
  *   research stored (`pictures.js` `prune`), called once a research step's record is in the draft
+ * @param {(spec: object, fn: Function) => Promise<any>} [deps.charge] the research cost ledger's seam
+ *   (`createChargeable`): each step is reserved there at its ceiling (`spend-limits.js`); without it nothing is counted
+ *   in the ledger, the hourly limits still hold
  * @param {() => number} [deps.now]
  */
-export function createEngine({ pool, kits, buildModel, gather, brandStep, prunePictures, now = Date.now }) {
+export function createEngine({
+  pool,
+  kits,
+  buildModel,
+  gather,
+  brandStep,
+  prunePictures,
+  charge,
+  now = Date.now
+}) {
   const runner = randomUUID()
+  const admit = spendGate({ pool, charge, now })
   /** @type {Map<string, Promise<void>>} the steps this process runs, by account */
   const jobs = new Map()
 
@@ -149,16 +163,24 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
     // Held before the state is written, so a read in between never takes this step for an orphan.
     let release
     jobs.set(accountId, new Promise((resolve) => (release = resolve)))
+    // The owner's hourly limit for this step, and its reservation in the research cost ledger (`engine-spend.js`).
+    const spend = await admit(accountId, step).catch(() => null)
+    if (!spend) {
+      jobs.delete(accountId)
+      release()
+      return { error: 'TRY_LATER' }
+    }
     const started = await startStep(pool, accountId, { step, inputs, runner, now }, () => false).catch(
       (error) => ({ thrown: error })
     )
     if (started.thrown || started.error) {
+      spend.cancel()
       jobs.delete(accountId)
       release()
       if (started.thrown) throw started.thrown
       return started
     }
-    const job = finish(accountId, step, run)
+    const job = finish(accountId, step, () => spend.run(run))
       .catch((error) => console.error(`[build-draft] ${step} could not record its end:`, error))
       .finally(() => {
         jobs.delete(accountId)
@@ -253,7 +275,9 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
       const chosen = row?.plan?.look?.template ?? row?.template
       if (!row?.research?.profile || !chosen || brandFor(row, chosen)) return null
       const kit = kits.loadKit(chosen.slug)
-      return kit ? brand(accountId, row, kit) : null
+      const started = kit ? await brand(accountId, row, kit) : null
+      // Past its limit the brand step does not start: compose starts it again later, and says so.
+      return started?.error ? null : started
     },
     /** Research from the owner's links; the research and its needs profile go into the draft. */
     async research(accountId, { links, description }, row) {
@@ -308,6 +332,8 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
       if (row.plan) {
         // Never under a step this process still runs: that step answers.
         if (jobs.has(accountId)) return { state: { step: row.engine?.step ?? 'compose', state: 'running' } }
+        // Past the compose limit the plan is kept: discarding it is only for a compose that starts.
+        if (!(await spendLeft(pool, accountId, 'compose', now))) return { error: 'TRY_LATER' }
         await discardPlan(pool, accountId)
         row = await readEngineRow(pool, accountId)
       }

@@ -21,6 +21,7 @@ import { readEngineRequest } from './engine-request.js'
 import { callerOf } from './caller.js'
 import { requestRefusalOf } from './engine-revise.js'
 import { buildOpen } from './build-store.js'
+import { TRY_LATER_SAY } from './spend-limits.js'
 
 const BASE = '/api/build-draft'
 
@@ -42,6 +43,7 @@ const REFUSALS = {
     409,
     'A step is still working on the plan: say the sentence in say, then edit once it ended.'
   ],
+  TRY_LATER: [429, 'This step was started too often for now: say the sentence in say, and stop here.'],
   BUILD_RUNNING: [409, 'The approved plan is being built: read GET /api/build-draft/build until it ends.']
 }
 const refuse = (c, code, extra = {}) => {
@@ -92,7 +94,10 @@ export function buildEngineRoutes({
         : await principalOf(pool, caller.email)
       return run(c, accountId)
     }
-  const answer = (c, result) => (result.error ? refuse(c, result.error) : json(c, result.state))
+  const answer = (c, result) =>
+    result.error
+      ? refuse(c, result.error, result.error === 'TRY_LATER' ? { say: TRY_LATER_SAY } : {})
+      : json(c, result.state)
 
   app.use(`${BASE}/*`, async (c, next) => {
     c.header('cache-control', 'no-store')
