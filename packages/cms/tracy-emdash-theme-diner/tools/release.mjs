@@ -8,30 +8,34 @@
 //        --out <new-dir> [--version 1.0.0] [--tag tracy-business/emdash-0.x] [--repo owner/name]
 //
 // The artifact is the output of `distribution.mjs pack` (already an allowlist, already verified by
-// qa.mjs against the same contract). The site is the clean install the gate ran against: its
-// data/data.db and uploads/ become the snapshot, minus everything that belongs to that one
+// qa.mjs against the same contract). The site is the clean install the gate ran against; its build
+// is seeded once more in a new folder (the gates write into the site they measure), and that fresh
+// seed's data/data.db and uploads/ become the snapshot, minus everything that belongs to that one
 // machine — the agent user and its token, sign-in state, 404 and audit logs, the local site URL.
 // A restored site mints its own agent token (tools/mint-admin.cjs), like the Joomla quickstart
 // generates its Cowork token after restore. Nothing here publishes: the last line prints the
 // `gh release create --draft` command for a person to run.
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawn } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import {
   copyFileSync,
   existsSync,
   mkdirSync,
+  mkdtempSync,
   readFileSync,
   readdirSync,
   rmSync,
   statSync,
   writeFileSync
 } from 'node:fs'
+import net from 'node:net'
 import os from 'node:os'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { isRouteField, localPathProblems, shownOrigin, verifyDistribution } from './distribution.mjs'
 import { personalizeProblems, questionProblems } from './personalize-gate.mjs'
 import { contentApiProblems } from './content-api-gate.mjs'
+import { stateResidue } from './state-residue.mjs'
 
 // The rule that decides which pages a customer may keep or hide is the one Tracy's readiness check
 // holds the file to (REL-2): it is read from the tracy checkout TRACY_CHECKOUT names (the folder
@@ -189,7 +193,7 @@ const guardArchiveText = () => {
     if (existsSync(p) && statSync(p).isFile())
       bad.push(...pathProblemsOf(`zip:${rel}`, readFileSync(p, 'utf8')))
   }
-  const receipts = path.join(site, 'data', 'seed-receipts.json')
+  const receipts = path.join(seeded, 'data', 'seed-receipts.json')
   if (existsSync(receipts))
     bad.push(...pathProblemsOf('state:data/seed-receipts.json', readFileSync(receipts, 'utf8')))
   if (bad.length > 0) refuseLocalPaths(bad)
@@ -273,11 +277,68 @@ for (const f of walk(artifact)) {
   }
 }
 
-// ── state snapshot: copy, scrub, vacuum, then check the scrub held ───────────────────────────
+// ── state snapshot: a fresh seed, copied, scrubbed, vacuumed, then checked ───────────────────
+// 🔒 THE STATE IS A FRESH SEED, NEVER THE SITE THE GATES RAN ON. The gates write into the clean install they measure:
+// the forms check posts submissions, the mail check sets SMTP to a local catcher and logs deliveries, the recovery and
+// editability checks edit posts and restore them. JA Diner 0.1.2 shipped all of it (independent review, 16/11/2026): 2
+// form submissions, 4 mail log rows, the builder's SMTP host 127.0.0.1:1025 (the admin's magic-link sign-in then failed
+// on a restored site), and 3 QA revisions that left two posts at a version their seed receipt did not know, so
+// bootstrap-site.sh kept them as editor-changed. A scrub can delete rows but cannot give a post its seeded history back.
+// So the release seeds the same built site again: its server runs in a new temp folder (data/ and uploads/ are relative
+// to the working directory), the site's own tools/bootstrap-site.sh seeds it, the server stops, and that folder is the
+// state. The site the gates measured is only read for its build.
+async function freshSeed(built) {
+  const dir = mkdtempSync(path.join(os.tmpdir(), 'emdash-release-seed-'))
+  process.on('exit', () => rmSync(dir, { recursive: true, force: true }))
+  mkdirSync(path.join(dir, 'data'))
+  mkdirSync(path.join(dir, 'uploads'))
+  const port = await new Promise((resolve, reject) => {
+    const probe = net.createServer()
+    probe.once('error', reject)
+    probe.listen(0, '127.0.0.1', () => {
+      const { port: free } = probe.address()
+      probe.close(() => resolve(free))
+    })
+  })
+  const origin = `http://127.0.0.1:${port}`
+  const server = spawn(process.execPath, [path.join(built, 'dist', 'server', 'entry.mjs')], {
+    cwd: dir,
+    env: { ...process.env, HOST: '127.0.0.1', PORT: String(port), EMDASH_SITE_URL: origin },
+    stdio: 'ignore'
+  })
+  const stopped = new Promise((resolve) => server.once('exit', resolve))
+  process.on('exit', () => server.kill())
+  try {
+    for (let tries = 0; ; tries++) {
+      try {
+        await fetch(`${origin}/`)
+        break
+      } catch {
+        if (tries > 60) fail(`the seed server on ${origin} did not answer`)
+        await new Promise((resolve) => setTimeout(resolve, 500))
+      }
+    }
+    try {
+      execFileSync('bash', ['tools/bootstrap-site.sh', origin, path.join(dir, 'data')], {
+        cwd: built,
+        stdio: ['ignore', 'ignore', 'inherit']
+      })
+    } catch {
+      fail('the fresh seed of the state failed (tools/bootstrap-site.sh, output above)')
+    }
+  } finally {
+    server.kill()
+    await stopped
+  }
+  return dir
+}
+if (!existsSync(path.join(site, 'dist', 'server', 'entry.mjs')))
+  fail(`${site} has no build; --site must be a built clean install`)
+const seeded = await freshSeed(site)
 const stage = path.join(out, '_stage')
 mkdirSync(path.join(stage, 'data'), { recursive: true })
-const dbSrc = path.join(site, 'data', 'data.db')
-if (!existsSync(dbSrc)) fail(`no ${dbSrc}; --site must be a site that has run`)
+const dbSrc = path.join(seeded, 'data', 'data.db')
+if (!existsSync(dbSrc)) fail(`no ${dbSrc}; the fresh seed wrote no database`)
 const db = path.join(stage, 'data', 'data.db')
 // `.backup` gives a consistent copy even if the site is still serving; a plain cp would not.
 execFileSync('sqlite3', [dbSrc, `.backup '${db}'`])
@@ -331,6 +392,23 @@ for (const [table, why] of SCRUB) {
 const audit = Number(sql(`select count(*) from _plugin_storage where plugin_id='audit-log'`))
 sql(`delete from _plugin_storage where plugin_id='audit-log'`)
 scrubbed['_plugin_storage:audit-log'] = { removed: audit, why: 'seeding history of this machine' }
+// A fresh seed writes none of these; they are scrubbed and listed so the manifest says so.
+for (const [plugin, collection, why] of [
+  ['emdash-forms', 'submissions', 'form submissions of this machine'],
+  ['emdash-smtp', 'deliveryLogs', 'mail log of this machine']
+]) {
+  const where = `plugin_id='${plugin}' and collection='${collection}'`
+  scrubbed[`_plugin_storage:${plugin}/${collection}`] = {
+    removed: Number(sql(`select count(*) from _plugin_storage where ${where}`)),
+    why
+  }
+  sql(`delete from _plugin_storage where ${where}`)
+}
+scrubbed['options:plugin:emdash-smtp:*'] = {
+  removed: Number(sql(`select count(*) from options where name like 'plugin:emdash-smtp:%'`)),
+  why: 'mail settings are made in the admin of each site (docs/install.md), never shipped'
+}
+sql(`delete from options where name like 'plugin:emdash-smtp:%'`)
 // The site URL is the one thing a restore must set itself; leaving the local one behind makes
 // absolute links point at a laptop.
 sql(`delete from options where name in ('emdash:site_url','system:scheduler:last_completed_at')`)
@@ -344,6 +422,11 @@ for (const [table] of SCRUB) {
   } else if (sql(`select count(*) from ${table}`) !== '0') fail(`scrub failed: ${table}`)
 }
 if (sql(`select count(*) from options where name='emdash:site_url'`) !== '0') fail('scrub failed: site_url')
+const residue = stateResidue(
+  sql,
+  JSON.parse(readFileSync(path.join(seeded, 'data', 'seed-receipts.json'), 'utf8'))
+)
+if (residue.length > 0) fail(`the state is not a fresh seed:\n  - ${residue.join('\n  - ')}`)
 // Content stays untouched — say how much, so a restore can be checked against the snapshot.
 const collections = Object.fromEntries(
   sql(`select name from sqlite_master where type='table' and name like 'ec\\_%' escape '\\' order by name`)
@@ -352,11 +435,11 @@ const collections = Object.fromEntries(
     .map((t) => [t.slice(3), Number(sql(`select count(*) from ${t}`))])
 )
 const media = Number(sql('select count(*) from media'))
-copyFileSync(path.join(site, 'data', 'seed-receipts.json'), path.join(stage, 'data', 'seed-receipts.json'))
-const uploads = walk(path.join(site, 'uploads'))
+copyFileSync(path.join(seeded, 'data', 'seed-receipts.json'), path.join(stage, 'data', 'seed-receipts.json'))
+const uploads = walk(path.join(seeded, 'uploads'))
 if (uploads.length !== media) console.warn(`?? ${uploads.length} files in uploads/ vs ${media} media rows`)
 mkdirSync(path.join(stage, 'uploads'))
-for (const f of uploads) copyFileSync(path.join(site, 'uploads', f), path.join(stage, 'uploads', f))
+for (const f of uploads) copyFileSync(path.join(seeded, 'uploads', f), path.join(stage, 'uploads', f))
 
 // ── assets ───────────────────────────────────────────────────────────────────────────────────
 const zipName = `${slug}-quickstart-${version}.zip`
@@ -404,7 +487,7 @@ const manifest = {
   state: {
     ...asset(stateName),
     contents:
-      'data/data.db (SQLite, scrubbed; keeps the agent user row without credentials), data/seed-receipts.json, uploads/',
+      'data/data.db (SQLite, a fresh seed, scrubbed; keeps the agent user row without credentials), data/seed-receipts.json, uploads/',
     scrubbed,
     collections,
     media
@@ -451,9 +534,11 @@ Tracy quickstart: ${pkg.description}
 \`\`\`
 unzip ${zipName} -d ${slug} && cd ${slug}
 tar -xzf ../${stateName}            # optional: skip the seed, start with the demo content in place
-docker build -t ${slug}:${version} . && docker run -d -p 4321:4321 -v "$PWD/data:/app/data" -v "$PWD/uploads:/app/uploads" -e EMDASH_SITE_URL=https://your.host ${slug}:${version}
-tools/bootstrap-site.sh http://127.0.0.1:4321 ./data   # seeds when the state was not restored; mints the agent token either way
+docker build -t ${slug}:${version} . && docker run -d --name ${slug} -p 4321:4321 -v "$PWD/data:/app/data" -v "$PWD/uploads:/app/uploads" -e EMDASH_SITE_URL=https://your.host ${slug}:${version}
+docker exec -u www-data -w /app ${slug} tools/bootstrap-site.sh http://127.0.0.1:4321 ./data   # seeds when the state was not restored; mints the agent token either way
 \`\`\`
+
+Run the bootstrap inside the container, as above: the unzipped folder on the host has no \`node_modules\`, so \`tools/mint-admin.cjs\` cannot load \`better-sqlite3\` there. The container owns the mounted \`data/\` (user \`www-data\`): read \`data/tracy-agent.token\` with \`docker exec ${slug} cat /app/data/tracy-agent.token\`.
 
 Without Docker: \`pnpm install --frozen-lockfile && pnpm build && node dist/server/entry.mjs\` (Node ≥ 22.16).
 

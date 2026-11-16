@@ -5,7 +5,8 @@
 In the package as shipped only `pnpm test` (`node --test tests/*.test.mjs`) and the tools that need a running site
 (`audit.mjs`, `admin-session.mjs`, `admin-roundtrip.mjs`, `forms-check.mjs`, `recovery-check.mjs`) can run. The
 `qa-contract`, `visual-qa`, `fast-gate` and `qa` commands need `qa.contract.json` and `source/snapshot`, which are in the
-repository checkout only.
+repository checkout only. The release-tool tests that read `contracts/` or a Tracy repository checkout (`tests/release-site-pages.test.mjs`, the
+content map case of `tests/release-0-*.test.mjs`) run only in the repository: in the package they are skipped and say why.
 
 ```bash
 node tools/qa.mjs --help                           # the acceptance run and its options
@@ -25,7 +26,7 @@ evidence of the port (contracts, browser matrix of 34 pages x 6 variants + the m
 the Fast Gate, and the supporting evidence of the review receipts) lives in the repository checkout, not in a packed
 artifact. A packed artifact is verified with `node tools/distribution.mjs verify <package dir>` (exit 0, `status pass`).
 
-Commands a recipient can run on a built site (`<origin>` is where your site listens, e.g. `http://127.0.0.1:4361`):
+Commands a recipient can run on a built site (`<origin>` is where your site listens, e.g. `http://127.0.0.1:4361`). `audit.mjs`, `admin-session.mjs`, `admin-roundtrip.mjs`, `forms-check.mjs` and `qa-browser.mjs` drive a browser: install Playwright's Chromium once in the site folder with `pnpm exec playwright install chromium` (or point `RENDER_CHROME_PATH` at a Chrome of your own):
 
 ```bash
 node tools/audit.mjs <origin> <new out dir> --config template.config.json     # routes, SEO, 404s, assets

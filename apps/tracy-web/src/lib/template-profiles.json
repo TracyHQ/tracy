@@ -3787,6 +3787,12 @@
         "brandReady": true,
         "faviconReady": true,
         "note": "Read off the 0.1.0 pack source: the header is the only logo spot (BrandLogo with logoSpots('themed')); settings.logo in the light header and the chrome entry's logo_dark in the dark one, switched by the appearance toggle and the visitor system; the template icon only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
+      },
+      "0.1.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 0.1.0, read off the 0.1.2 release zip: Header.astro, BrandLogo.astro, lib/brand.ts, lib/demo-logo.ts, layouts/Base.astro and public/favicon.svg are byte-identical to 0.1.0 and 0.1.1; 0.1.1 changed only the footer phone lines (tel: links) and the menu tab stamps, 0.1.2 only the blog list's masonry script and the home news slider fit, so the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
       }
     },
     "tracy-restaurant/emdash-0.x": {
