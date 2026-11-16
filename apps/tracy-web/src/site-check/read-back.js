@@ -100,6 +100,10 @@ function judge(line, held) {
           result: 'differs',
           failure: { ...base, reason: 'The plan hides this and what holds it is still published' }
         }
+  // A hide no kept page prints keeps its words on purpose (hide-lines.js `unshown`): a visitor never reads them. Before
+  // (dev, JA Diner 16/11/2026) four category titles printed only on dropped blog pages, and a masthead background the kit
+  // read on no page, were five read-back blocks for words nobody sees.
+  if (line.status === 'hidden' && line.printed === false) return { result: 'match' }
   if (line.status === 'hidden')
     return held.value.trim() === ''
       ? { result: 'match' }
