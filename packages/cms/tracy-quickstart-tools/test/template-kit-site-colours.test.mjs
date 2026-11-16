@@ -165,3 +165,17 @@ test('without a variable that names the brand, the reused colour is still a stat
       undefined
     )
 })
+
+test('a light mode lists the dark bands it keeps from the page as it opens among its panels', () => {
+  const css = `
+:root{--body-bg-color:#101418;--card-bg:#1a1c20;--footer-bg:#1e1e1e}
+body{background-color:var(--body-bg-color)}
+body.light-active{--body-bg-color:#ffffff;--card-bg:#f4f4f4}
+.card{background-color:var(--card-bg)}
+.site-footer{background-color:var(--footer-bg)}
+`
+  const sides = measureBrandColours([{ from: '/css/theme.css', css }]).sides
+  assert.deepEqual(sides.get('base').panels.sort(), ['#1a1c20', '#1e1e1e'])
+  // The card is repainted pale on the light side; the footer keeps its dark ground there.
+  assert.deepEqual(sides.get('.light-active').panels.sort(), ['#1e1e1e', '#f4f4f4'])
+})

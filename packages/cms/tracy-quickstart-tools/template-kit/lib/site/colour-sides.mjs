@@ -95,15 +95,23 @@ export function sidesOf(rules) {
     }
     const list = [...new Set(at.values())]
     const ground = list.length ? list : ['#ffffff']
-    // Neutral surfaces of the same kind as the page (a dark card on a dark page, a pale band on a light one).
+    // Neutral surfaces of the same kind as the page (a dark card on a dark page, a pale band on a light one), and on a
+    // mode side the neutral bands it keeps from the page as it opens (a dark footer the light mode does not repaint):
+    // a base rule whose colour reads the same on both sides, of the other kind than this side's ground.
     const dark = luminanceOf(/** @type {any} */ (rgbOf(ground[0]))) < 0.18
+    const baseVars = valuesOf(declared.get('base'))
+    const opaque = (value, v) => coloursIn(resolveVars(value, v)).find((x) => (x.a ?? 1) >= 0.9)
     const near = new Set()
     for (const g of panels) {
       if (g.side !== 'base' && g.side !== side) continue
-      const c = coloursIn(resolveVars(g.value, vars)).find((x) => (x.a ?? 1) >= 0.9)
+      const c = opaque(g.value, vars)
       if (!c || chromaOf(c) >= 0.04) continue
       const l = luminanceOf(c)
       if (dark ? l < 0.06 : l > 0.6) near.add(hexOf(c))
+      else if (side !== 'base' && g.side === 'base' && (dark ? l > 0.6 : l < 0.06)) {
+        const opening = opaque(g.value, baseVars)
+        if (opening && hexOf(opening) === hexOf(c)) near.add(hexOf(c))
+      }
     }
     out.set(side, {
       vars,

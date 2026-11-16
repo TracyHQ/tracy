@@ -1,7 +1,9 @@
 // Declarations of an AI quickstart mapping file that name what the template prints of its own (ticket #587). Pure.
-//   - `look.favicon: {from: "logo", fallback: "initials", path, why}`: the build makes the site icon from the logo
-//     the plan gives, or from the business initials when it has none, and writes it at `path` (a file under
-//     `templates/`, the place the template or the platform serves as the site icon);
+//   - `look.favicon: {from: "logo", fallback: "initials", path, setting?, why}`: the build makes the site icon from the
+//     logo the plan gives, or from the business initials when it has none, and writes it at `path`: a file under
+//     `templates/` the template or the platform serves as the site icon, or a file under `images/` (where the media
+//     door writes) that a template setting points at: `setting` names that setting's place (`{entity, column}`, an
+//     entity of kind `siteSetting`), and an `overrides.settings` entry writes `path` there on the blank site;
 //   - `pages.<type>.record.facts: {<column>: {fact, why}}`: a column of the record a page creates that holds a business
 //     fact (the author name of a created article, `created_by_alias`), a closed set per record kind;
 //   - `keptLiterals: [{file, values | pattern, why}]`: words a template file writes into every page as code (a list of
@@ -19,7 +21,7 @@ export const FAVICON_FALLBACK = Object.freeze(['initials'])
 /** The columns of a created record that hold a business fact, per record kind. */
 export const RECORD_FACT_COLUMNS = Object.freeze({ article: Object.freeze(['created_by_alias']) })
 
-const FAVICON_KEYS = ['from', 'fallback', 'path', 'why']
+const FAVICON_KEYS = ['from', 'fallback', 'path', 'setting', 'why']
 const LITERAL_KEYS = ['file', 'values', 'pattern', 'why']
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 const isName = (value) => typeof value === 'string' && value.trim() !== ''
@@ -41,7 +43,28 @@ const unknownKeys = (entry, keys, at, report) => {
     if (!keys.includes(k)) report(`${at}.${k}`, `"${k}" is no key here: ${keys.join(', ')}`)
 }
 
-function faviconProblems(favicon, report) {
+/** What is wrong with an icon under `images/`: the template setting that points at it, declared and set to `path`. */
+function faviconSettingProblems(favicon, mapping, at, report) {
+  const setting = favicon.setting
+  if (!isObject(setting) || !isName(setting.entity) || !isName(setting.column))
+    return report(
+      `${at}.setting`,
+      'an icon under images/ names the template setting that points at it: {entity, column}'
+    )
+  if (mapping?.entities?.[setting.entity]?.kind !== 'siteSetting')
+    report(`${at}.setting.entity`, `${setting.entity} is no siteSetting entity of the mapping file`)
+  const set = (Array.isArray(mapping?.overrides?.settings) ? mapping.overrides.settings : []).find(
+    (o) =>
+      o?.location?.entity === setting.entity && o.location.column === setting.column && !o.location.jsonPath
+  )
+  if (!set || set.value !== favicon.path)
+    report(
+      `${at}.setting`,
+      `an overrides.settings entry writes the icon path ${favicon.path} at ${setting.entity}`
+    )
+}
+
+function faviconProblems(favicon, report, mapping) {
   if (favicon === undefined) return
   const at = 'look.favicon'
   if (!isObject(favicon)) return report(at, 'favicon is {from: "logo", fallback: "initials", path, why}')
@@ -49,8 +72,15 @@ function faviconProblems(favicon, report) {
   if (!FAVICON_FROM.includes(favicon.from)) report(`${at}.from`, `from is one of ${FAVICON_FROM.join(', ')}`)
   if (!FAVICON_FALLBACK.includes(favicon.fallback))
     report(`${at}.fallback`, `fallback is one of ${FAVICON_FALLBACK.join(', ')}`)
-  if (!isReleasePath(favicon.path) || !/^templates\/[\w-]+\/.+\.(?:ico|png|svg)$/.test(favicon.path))
-    report(`${at}.path`, 'path is the icon file under templates/<template>/, an .ico, .png or .svg')
+  const inImages = isReleasePath(favicon.path) && /^images\/.+\.(?:ico|png)$/.test(favicon.path)
+  if (inImages) faviconSettingProblems(favicon, mapping, at, report)
+  else if (!isReleasePath(favicon.path) || !/^templates\/[\w-]+\/.+\.(?:ico|png|svg)$/.test(favicon.path))
+    report(
+      `${at}.path`,
+      'path is the icon file under templates/<template>/ (.ico, .png or .svg), or under images/ (.ico or .png) with its setting'
+    )
+  else if (favicon.setting !== undefined)
+    report(`${at}.setting`, 'only an icon under images/ names a setting: the template serves its own file')
   const problem = reasonProblem(favicon.why)
   if (problem) report(`${at}.why`, problem)
 }
@@ -141,7 +171,7 @@ function keptLiteralProblems(list, report) {
 
 /** Every problem of the declarations above. */
 export function kitDeclarationProblems(mapping, { report, factKinds }) {
-  faviconProblems(mapping?.look?.favicon, report)
+  faviconProblems(mapping?.look?.favicon, report, mapping)
   recordFactProblems(mapping?.pages, factKinds ?? {}, report)
   keptLiteralProblems(mapping?.keptLiterals, report)
   dataFixProblems(mapping?.dataFixes, report, reasonProblem)

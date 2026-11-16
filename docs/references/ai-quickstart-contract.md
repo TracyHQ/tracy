@@ -413,6 +413,7 @@ says the order it lists them in with `itemsOrder`:
 | `itemsOrder.by` | `title`, `published`, `created`, `ordering` (the manual order), `hits`, `menu` (the menu's own order) or `path` (the menu path of the page shown) |
 | `itemsOrder.direction` | `asc` or `desc` |
 | `itemsOrder.from` | the setting the order is read from: the module's own ordering, or the global component setting when the menu item sets none |
+| `itemsOrder.demo` | optional, `{by, direction}`: the store's own order when a `kit` reset of the copy's placement changes it; the demo records are compared by it |
 | `itemsOf.block` | the owner: another block of the store with item fields, which names no owner itself |
 | `itemsOf.select` | `all`, or a sentence naming which of the owner's records it shows (`the featured posts`) |
 | `itemsOf.fields` | for every item field that is not `design`, the owner item field of the same type it draws; the draft matches them by stored place (a derived field by its derivation) |
@@ -778,7 +779,10 @@ entry}`, how it is assigned and what the build must change (`ai-quickstart-place
   says where the new value comes from: `buildSets` (a place the build sets, such as the category an article list
   reads), `hides` (a `setting` hide of the block, such as `section-link` `"0"`), `container` (the position of the
   container copy that holds it), `recipe` (an `ordering` that follows the recipe, for two blocks sharing a position)
-  or `demo` (a demo value with no other place, such as a trainer name kept as a module title).
+  or `demo` (a demo value with no other place, such as a trainer name kept as a module title), or `kit` with a string
+  `value` every copy takes as the kit fixes it (`{location, from: "kit", value, why}`; JA Boxing: the class cards of
+  modules 160 and 159 list by `publish_up` `DESC`, the order of the class list page, in place of the store's title
+  order). Only a `kit` reset carries a `value`.
 - `inside` and `holds`: a block placed `inside:<id>` names its container, `{block, why}`; the container names the
   blocks it holds and the location of the position it draws, `{blocks, position, why}`.
 - `menu`: `{menutype, why}`, the menu a menu block draws, a menutype of the kit (the `menutype` of a menu item entity
@@ -986,13 +990,17 @@ Three declarations name words and files the template prints on every site, so th
 demo words. The shapes are closed (`ai-quickstart-kit-declarations.mjs`, WO domain); every `why` says what prints the
 words, and one that says no page draws them is refused.
 
-- **`look.favicon: {from: "logo", fallback: "initials", path, why}`**: the site icon. The build makes it from the
-  plan's logo, or from the business initials when the plan has none, and writes it at `path`, a file under
-  `templates/<template>/` (`.ico`, `.png` or `.svg`). `scripts/ai-quickstart/check-kept-literals.mjs` checks `path` is a
-  file of the release the source contract locks (`presentation-lock.json` `files`). JA Boxing: the template sets no
-  favicon link (T4 prints one only when its setting `other_faviconFile` is set), so Joomla links `favicon.ico` from the
-  template folder, and the release ships `templates/ja_boxing/favicon.ico`, the Joomla icon. Read from the code only:
-  the write of the icon is not measured on a blank site yet.
+- **`look.favicon: {from: "logo", fallback: "initials", path, setting?, why}`**: the site icon. The build makes it
+  from the plan's logo, or from the business initials when the plan has none, and writes it at `path`: a file under
+  `templates/<template>/` (`.ico`, `.png` or `.svg`) the template serves, or a file under `images/` (`.ico` or `.png`,
+  where the media door writes) that a template setting points at. `setting` (`{entity, column}`, an entity of kind
+  `siteSetting`) names that setting, and an `overrides.settings` entry writes `path` there on the blank site; only an
+  `images/` icon names one. `scripts/ai-quickstart/check-kept-literals.mjs` checks a `templates/` path is a file of the
+  release the source contract locks (`presentation-lock.json` `files`). JA Boxing: `images/tracy-brand/favicon.ico`,
+  pointed at by the T4 site setting `other_faviconFile` (`siteSetting-98382096`); T4 then links it in place of the
+  platform's `favicon.ico` (`plugins/system/t4/src/t4/Document/Template.php:487-504`). Read from the code only: the
+  write of the icon is not measured on a blank site yet, and until the build writes it the blank site links a missing
+  file.
 - **`pages.<type>.record.facts: {<column>: {fact, why}}`**: a column of the record a page creates that holds a business
   fact (`fact`, a key of `BUSINESS_FACTS`). The columns are closed per record kind (`RECORD_FACT_COLUMNS`): an article
   has `created_by_alias`. JA Boxing: the post, the class and the lesson write the business name there, the meta author

@@ -85,15 +85,50 @@ test('the site icon is made from the logo or the initials and written under the 
     size: 32
   })
   assert.deepEqual(near(set, 'look.favicon'), [
-    'look.favicon.size: "size" is no key here: from, fallback, path, why',
+    'look.favicon.size: "size" is no key here: from, fallback, path, setting, why',
     'look.favicon.from: from is one of logo',
     'look.favicon.fallback: fallback is one of initials',
-    'look.favicon.path: path is the icon file under templates/<template>/, an .ico, .png or .svg',
+    'look.favicon.path: path is the icon file under templates/<template>/ (.ico, .png or .svg), or under images/ (.ico or .png) with its setting',
     'look.favicon.why: say why (what prints it, measured or read where)'
   ])
   set.mapping.look.favicon = 'logo'
   assert.deepEqual(near(set, 'look.favicon'), [
     'look.favicon: favicon is {from: "logo", fallback: "initials", path, why}'
+  ])
+})
+
+test('an icon under images/ names the template setting that points at it, set to its path on the blank site', () => {
+  const set = valid()
+  const setting = { entity: 'siteSetting-1', column: 'value' }
+  set.mapping.entities['siteSetting-1'] = {
+    kind: 'siteSetting',
+    identity: { template: 'example', profile: 'default', key: 'icon_file' }
+  }
+  set.mapping.overrides = {
+    ...set.mapping.overrides,
+    settings: [
+      { location: setting, value: 'images/brand/favicon.ico', why: 'the invented template links its icon' }
+    ]
+  }
+  set.mapping.look.favicon = {
+    from: 'logo',
+    fallback: 'initials',
+    path: 'images/brand/favicon.ico',
+    setting,
+    why: 'the invented template links the file its icon setting names on every page'
+  }
+  assert.deepEqual(near(set, 'look.favicon'), [])
+  set.mapping.overrides.settings[0].value = 'images/brand/other.ico'
+  assert.deepEqual(near(set, 'look.favicon'), [
+    'look.favicon.setting: an overrides.settings entry writes the icon path images/brand/favicon.ico at siteSetting-1'
+  ])
+  delete set.mapping.look.favicon.setting
+  assert.deepEqual(near(set, 'look.favicon'), [
+    'look.favicon.setting: an icon under images/ names the template setting that points at it: {entity, column}'
+  ])
+  Object.assign(set.mapping.look.favicon, { path: 'templates/example/favicon.ico', setting })
+  assert.deepEqual(near(set, 'look.favicon'), [
+    'look.favicon.setting: only an icon under images/ names a setting: the template serves its own file'
   ])
 })
 

@@ -11,7 +11,9 @@
 //   - two blocks whose item fields store places on the same records are linked: one names the other, or both name the
 //     same owner; an owner names none;
 //   - every block of such a group declares its order; two of them listing their common records in a different order
-//     declare different orders.
+//     declare different orders. A copy whose order the build resets (a `kit` reset of its placement, so one list of
+//     records reads the same wherever it shows) declares the built order and keeps the store's in `demo`
+//     (`{by, direction}`): the demo records are compared by the order they were listed in.
 import { recordOf } from './ai-quickstart-field-keys.mjs'
 
 export const ITEMS_ORDER_BY = Object.freeze([
@@ -42,6 +44,12 @@ function orderProblem(order) {
   if (!isObject(order) || !ITEMS_ORDER_BY.includes(order.by) || !ITEMS_DIRECTIONS.includes(order.direction))
     return `itemsOrder is {by: ${ITEMS_ORDER_BY.join(' | ')}, direction: asc | desc, from}`
   if (!isName(order.from)) return 'itemsOrder.from names the ordering setting the order is read from'
+  const demo = order.demo
+  if (
+    demo !== undefined &&
+    (!isObject(demo) || !ITEMS_ORDER_BY.includes(demo.by) || !ITEMS_DIRECTIONS.includes(demo.direction))
+  )
+    return `itemsOrder.demo is the store's own order before the build resets it: {by: ${ITEMS_ORDER_BY.join(' | ')}, direction: asc | desc}`
   return null
 }
 
@@ -108,7 +116,11 @@ export function itemsOfStoreProblems(store, report) {
         }
       const inOrder = (r) => r.filter((rec) => common.includes(rec)).join()
       const same = (a, b) => a?.by === b?.by && a?.direction === b?.direction
-      if (inOrder(x.records) !== inOrder(y.records) && same(x.b.itemsOrder, y.b.itemsOrder))
+      const listedBy = (o) => o?.demo ?? o
+      if (
+        inOrder(x.records) !== inOrder(y.records) &&
+        same(listedBy(x.b.itemsOrder), listedBy(y.b.itemsOrder))
+      )
         report(
           `${atOf(y.b)}.itemsOrder`,
           `it lists the records it shares with ${x.b.id} in another order, yet declares the same order`

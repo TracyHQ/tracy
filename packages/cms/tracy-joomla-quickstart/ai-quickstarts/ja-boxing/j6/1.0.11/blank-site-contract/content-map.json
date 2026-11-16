@@ -2608,7 +2608,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 123,
+      "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
         "default-description"

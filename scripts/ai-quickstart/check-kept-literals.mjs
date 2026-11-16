@@ -3,7 +3,8 @@
  * (`presentation-lock.json` `files`, under `packages/cms/tracy-joomla-quickstart/contracts/<kit>/`):
  *   - every `keptLiterals[].file` of the mapping file is a file of the template release the contract locks, so the
  *     words it keeps are words a file of that release writes;
- *   - `look.favicon.path` is a file the release ships, the one the build replaces with the site icon it makes.
+ *   - `look.favicon.path` under `templates/` is a file the release ships, the one the build replaces with the site icon
+ *     it makes (an icon under `images/` is a new file the build writes, pointed at by a template setting).
  * The shape of both is checked by the domain (`ai-quickstart-kit-declarations.mjs`).
  */
 
@@ -35,7 +36,7 @@ export function keptLiteralFileProblems(mapping, blockStore, rootDir) {
       })
   })
   const icon = mapping?.look?.favicon?.path
-  if (typeof icon === 'string' && !files.has(icon))
+  if (typeof icon === 'string' && icon.startsWith('templates/') && !files.has(icon))
     out.push({
       file: 'mapping.json',
       at: 'look.favicon.path',

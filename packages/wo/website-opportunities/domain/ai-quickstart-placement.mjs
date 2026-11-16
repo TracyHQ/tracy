@@ -21,7 +21,9 @@
 //     drawn as `content` or `tab-label` names the store field written there;
 //   - `resets`: `[{location, from, why}]` the inherited settings each copy must change (`RESET_SOURCES`): a
 //     `buildSets` place or a `hides` setting of the block on the copy's record, the `position` the copy takes from
-//     its container, an `ordering` from the recipe, a `demo` value;
+//     its container, an `ordering` from the recipe, a `demo` value, or a `kit` value: `{location, from: "kit", value,
+//     why}`, a setting every copy takes as the kit fixes it (a list's order, so one list of records reads the same
+//     wherever it shows), `value` a string;
 //   - `inside` and `holds`: the container rules (`ai-quickstart-placement-container.mjs`);
 //   - `menu`: `{menutype, why}` the menu a menu block draws, a menutype of a menu item entity of the mapping file;
 //     the build creates its items there.
@@ -30,7 +32,7 @@ import { containerProblems } from './ai-quickstart-placement-container.mjs'
 
 export const PLACEMENTS = Object.freeze(['copy', 'in-place', 'created'])
 export const TITLE_DRAWN = Object.freeze(['content', 'tab-label', 'aria-label', 'no'])
-export const RESET_SOURCES = Object.freeze(['buildSets', 'hides', 'container', 'recipe', 'demo'])
+export const RESET_SOURCES = Object.freeze(['buildSets', 'hides', 'container', 'recipe', 'demo', 'kit'])
 export const ASSIGN = Object.freeze(['page', 'every-page', 'recipe-pages'])
 const IN_PLACE_ASSIGN = ['every-page', 'recipe-pages']
 /** The columns of a module record a copy carries (the plugin's open write accepts them on a new module). */
@@ -97,6 +99,10 @@ function resetProblems(entry, at, { id, mapping, report }) {
       )
     if (!RESET_SOURCES.includes(r.from))
       report(`${rAt}.from`, `from must be one of ${RESET_SOURCES.join(', ')}`)
+    if (r.from === 'kit' && typeof r.value !== 'string')
+      report(`${rAt}.value`, 'a reset from kit names the value every copy takes, a string')
+    if (r.from !== 'kit' && r.value !== undefined)
+      report(`${rAt}.value`, 'only a reset from kit carries its value: the others take it from their source')
     if (!isName(r.why)) report(`${rAt}.why`, 'a reset says why the copy changes it')
   })
   const declared = (from) =>

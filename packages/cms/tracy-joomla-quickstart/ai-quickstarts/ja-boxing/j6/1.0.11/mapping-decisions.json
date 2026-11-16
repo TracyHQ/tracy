@@ -26,6 +26,11 @@
       "identity": { "template": "ja_boxing", "profile": "default", "key": "body_bg_img" },
       "sourceId": 79416186
     },
+    "siteSetting-98382096": {
+      "kind": "siteSetting",
+      "identity": { "template": "ja_boxing", "profile": "default", "key": "other_faviconFile" },
+      "sourceId": 98382096
+    },
     "module-185": {
       "kind": "module",
       "identity": {
@@ -167,6 +172,10 @@
       "why": "MOD_FOOTER_LINE1 prints the year and the site name, a place of the name fact; it carries no other business word"
     },
     {
+      "fact": "masthead default intro",
+      "why": "the masthead's default intro (module 162, default-description) is printed only on a page that has no masthead row of its own (modules/mod_jamasthead/helper.php:148-162 and :235-240), and every page that places the masthead gets its own row, so no page prints it: no fact is written there"
+    },
+    {
       "fact": "footer logo media hint",
       "why": "the footer logo image (module 170) also carries data-path, the media manager's hint to the demo file local-images:/joomlart/logo/item-1.png; no page draws it and the content map has no place for it. The blank site empties the drawn src (a place of logoDark), so no demo logo shows; the hint stays as the demo has it. Checked on the blank site restored on a real Joomla"
     },
@@ -176,6 +185,14 @@
     }
   ],
   "emptiedNotWritten": [
+    {
+      "slot": "module-162.1",
+      "entity": "module-162",
+      "column": "params",
+      "jsonPath": ["default-description"],
+      "notFact": "masthead default intro",
+      "why": "the masthead's default intro: no page prints it (notFacts, masthead default intro) and the store leaves it out (draft omit module-162.1); the blank site empties the demo words"
+    },
     {
       "entity": "acymConfiguration-from_name",
       "column": "value",
@@ -314,6 +331,11 @@
         "location": { "entity": "siteSetting-79416186", "column": "value" },
         "value": "",
         "why": "the body background: the demo photograph bg-cta.jpg is painted behind the top of every page (.bg-mask); a demo picture, so the blank site paints none"
+      },
+      {
+        "location": { "entity": "siteSetting-98382096", "column": "value" },
+        "value": "images/tracy-brand/favicon.ico",
+        "why": "the T4 favicon setting (other_faviconFile, empty in the release, templates/ja_boxing/etc/site/default.json) points at the site icon the build writes under images/ (look.favicon): T4 then links that file as the shortcut icon of every page in place of the platform's (plugins/system/t4/src/t4/Document/Template.php:487-504)"
       },
       {
         "location": {
@@ -707,6 +729,13 @@
         "location": { "entity": "module-160", "column": "params", "jsonPath": ["section-link"] },
         "value": "0",
         "why": "the section chrome of the template (html/layouts/chromes/t4section.php) prints the section button whenever the module setting section-link is on, empty or not (an empty one is a box with an arrow linking to the home page); with section-link 0 it prints no button. Measured on the blank site: the button left the page"
+      },
+      {
+        "control": ["stat-proof-image", "stat-context", "stat-value", "stat-label"],
+        "by": "rows.remove",
+        "slots": ["module-160.2", "module-160.3", "module-160.4", "module-160.5"],
+        "element": "/html/body/div/div",
+        "why": "the stat under the section intro (a picture, its words and the emphasised value) is one element of the top-desc value, written together or taken out together: the section chrome prints top-desc as stored, so kept with its words and picture empty it prints an empty picture (src=\"\", a request for the page itself), taken out the intro prints alone. The same element and the same way as the masthead's stat (block-162 row 14)"
       }
     ],
     "block-161": [
@@ -964,6 +993,11 @@
       }
     ],
     "block-180": [
+      {
+        "fields": ["person-image"],
+        "by": "unassign",
+        "why": "the trainer profile prints its picture in an img element the layout writes unconditionally (templates/ja_boxing/acm/hero/tmpl/style-2.php:40-42), and no setting of the module turns it off: a copy with no picture prints an empty picture (src=\"\", a request for the page itself). A named person's frame takes their initials when the plan has no photo, so this applies only when the plan gives the copy no picture at all: the build then leaves the copy with no page, the block's own rule for no data (noData: hide)"
+      },
       {
         "rows": "social",
         "by": "row",
@@ -1452,6 +1486,22 @@
           "location": { "entity": "module-160", "column": "params", "jsonPath": ["section-link"] },
           "from": "hides",
           "why": "a copy keeps the store setting section-link on: with the button left empty the section prints a box with an arrow linking to the home page, so the hides entry of the block applies to every copy whose button is empty"
+        },
+        {
+          "location": { "entity": "module-160", "column": "params", "jsonPath": ["article_ordering"] },
+          "from": "kit",
+          "value": "publish_up",
+          "why": "the store lists the classes by title (article_ordering a.title), the class list page by publish date, newest first (com_content's global order): one list of records in two orders. Every copy lists them as the class list page does, which shows the plan's order (the build dates the records newest first in plan order); publish_up is an option of the module's ordering setting (modules/mod_articles_category/mod_articles_category.xml)"
+        },
+        {
+          "location": {
+            "entity": "module-160",
+            "column": "params",
+            "jsonPath": ["article_ordering_direction"]
+          },
+          "from": "kit",
+          "value": "DESC",
+          "why": "newest first, as the class list page orders the same records"
         }
       ]
     },
@@ -1753,6 +1803,22 @@
           "location": { "entity": "module-159", "column": "params", "jsonPath": ["catid", 0] },
           "from": "buildSets",
           "why": "a copy keeps the demo category 9, which the blank site removed: it lists nothing. The build writes the category it files the class pages in on every copy"
+        },
+        {
+          "location": { "entity": "module-159", "column": "params", "jsonPath": ["article_ordering"] },
+          "from": "kit",
+          "value": "publish_up",
+          "why": "the store lists the classes by title (article_ordering a.title), the class list page by publish date, newest first (com_content's global order): one list of records in two orders. Every copy lists them as the class list page does, which shows the plan's order (the build dates the records newest first in plan order); publish_up is an option of the module's ordering setting (modules/mod_articles_category/mod_articles_category.xml)"
+        },
+        {
+          "location": {
+            "entity": "module-159",
+            "column": "params",
+            "jsonPath": ["article_ordering_direction"]
+          },
+          "from": "kit",
+          "value": "DESC",
+          "why": "newest first, as the class list page orders the same records"
         }
       ]
     },
@@ -1769,8 +1835,9 @@
     "favicon": {
       "from": "logo",
       "fallback": "initials",
-      "path": "templates/ja_boxing/favicon.ico",
-      "why": "the site icon of every page: the template sets no favicon link (its site setting other_faviconFile is empty, and plugins/system/t4/src/t4/Document/Template.php:487-504 prints one only when it is set), so the platform's metas renderer links favicon.ico from the template folder (libraries/src/Document/Renderer/Html/MetasRenderer.php:119-140), and the release ships templates/ja_boxing/favicon.ico, the Joomla icon; the build writes the icon it makes from the logo there, or from the business initials when the plan has no logo"
+      "path": "images/tracy-brand/favicon.ico",
+      "setting": { "entity": "siteSetting-98382096", "column": "value" },
+      "why": "the site icon of every page: with the T4 site setting other_faviconFile set, plugins/system/t4/src/t4/Document/Template.php:487-504 removes the platform's shortcut icon link (favicon.ico of the template folder, libraries/src/Document/Renderer/Html/MetasRenderer.php:119-140, the Joomla icon the release ships) and links the file the setting names. The media door writes under images/ only, so the build writes the icon it makes from the logo, or from the business initials when the plan has no logo, at images/tracy-brand/favicon.ico, and the blank site sets other_faviconFile to that path (overrides.settings)"
     },
     "accent": {
       "variables": [
@@ -1814,10 +1881,11 @@
           "num_intro_articles": 3,
           "num_links": 0,
           "orderby_sec": "front",
-          "show_page_heading": "1"
+          "show_page_heading": "1",
+          "show_author": "0"
         },
         "home": 1,
-        "why": "the demo home (menu item 101): the featured view on the Landing style, the home menu item (home 1). The Landing layout prints no main body (measured), so the page is its blocks"
+        "why": "the demo home (menu item 101): the featured view on the Landing style, the home menu item (home 1). The Landing layout prints no main body (measured), so the page is its blocks. show_author \"0\": the build makes no author page (pages.author.unbuilt); this featured view prints no main body on the Landing style, so no author line shows today, and the setting keeps it so if the item's style ever prints the list"
       }
     },
     "news": {
@@ -1890,9 +1958,9 @@
             "float_fulltext": "",
             "image_fulltext_caption": ""
           },
-          "attribs": {}
+          "attribs": { "show_author": "0" }
         },
-        "why": "a post is a featured article (seo.featuredView.article, the demo marks every post featured), in the default article layout. every created article carries the full images value even with no picture: without image_intro and image_fulltext the article page prints PHP warnings (T4 Metadata.php, the article layouts), measured on the blank site"
+        "why": "a post is a featured article (seo.featuredView.article, the demo marks every post featured), in the default article layout. every created article carries the full images value even with no picture: without image_intro and image_fulltext the article page prints PHP warnings (T4 Metadata.php, the article layouts), measured on the blank site. show_author \"0\": the build makes no author page (pages.author.unbuilt), and the post page prints the info block's author line, a link to the author view, whenever show_author is on, and com_content's global setting turns it on for an article that does not turn it off (templates/ja_boxing/html/com_content/article/default.php:55-65)"
       }
     },
     "featured-posts": {
@@ -1994,9 +2062,9 @@
             "float_fulltext": "",
             "image_fulltext_caption": ""
           },
-          "attribs": { "article_layout": "ja_boxing:classes", "classes-info": {} }
+          "attribs": { "article_layout": "ja_boxing:classes", "classes-info": {}, "show_author": "0" }
         },
-        "why": "the classes article layout (measured: the attribs alone print view-classes-detail, door-measures D2). classes-info is always written, empty when the plan has no schedule: the class list layout reads it with foreach, and a class article without it prints a PHP warning on the classes page and in a copy of 159 (measured; with {} none). every created article carries the full images value even with no picture: without image_intro and image_fulltext the article page prints PHP warnings (T4 Metadata.php, the article layouts), measured on the blank site"
+        "why": "the classes article layout (measured: the attribs alone print view-classes-detail, door-measures D2). classes-info is always written, empty when the plan has no schedule: the class list layout reads it with foreach, and a class article without it prints a PHP warning on the classes page and in a copy of 159 (measured; with {} none). every created article carries the full images value even with no picture: without image_intro and image_fulltext the article page prints PHP warnings (T4 Metadata.php, the article layouts), measured on the blank site. show_author \"0\": the build makes no author page (pages.author.unbuilt), and the class page prints the info block's author line, a link to the author view, whenever show_author is on, and com_content's global setting turns it on for an article that does not turn it off (templates/ja_boxing/html/com_content/article/classes.php:78-88)"
       }
     },
     "contact": {
@@ -2044,8 +2112,8 @@
       "menuItem": {
         "link": "index.php?option=com_content&view=featured",
         "templateStyle": "templateStyle-13",
-        "params": { "layout_type": "blog" },
-        "why": "the demo about page (menu item 193): the featured view on the Landing style, which prints no main body (measured)"
+        "params": { "layout_type": "blog", "show_author": "0" },
+        "why": "the demo about page (menu item 193): the featured view on the Landing style, which prints no main body (measured). show_author \"0\": the build makes no author page (pages.author.unbuilt); this featured view prints no main body on the Landing style, so no author line shows today, and the setting keeps it so if the item's style ever prints the list"
       }
     },
     "learning-center": {
@@ -2118,27 +2186,27 @@
             "float_fulltext": "",
             "image_fulltext_caption": ""
           },
-          "attribs": { "article_layout": "ja_boxing:learning", "learning-features": {} }
+          "attribs": { "article_layout": "ja_boxing:learning", "learning-features": {}, "show_author": "0" }
         },
-        "why": "the learning article layout, as every demo lesson. learning-features is always written, empty when the plan has no technique: the learning layout reads it with foreach and prints a PHP warning without it (measured; with {} none, its heading still prints). every created article carries the full images value even with no picture: without image_intro and image_fulltext the article page prints PHP warnings (T4 Metadata.php, the article layouts), measured on the blank site"
+        "why": "the learning article layout, as every demo lesson. learning-features is always written, empty when the plan has no technique: the learning layout reads it with foreach and prints a PHP warning without it (measured; with {} none, its heading still prints). every created article carries the full images value even with no picture: without image_intro and image_fulltext the article page prints PHP warnings (T4 Metadata.php, the article layouts), measured on the blank site. show_author \"0\": the build makes no author page (pages.author.unbuilt), and the lesson page prints the info block's author line, a link to the author view, whenever show_author is on, and com_content's global setting turns it on for an article that does not turn it off (templates/ja_boxing/html/com_content/article/learning.php:66-76)"
       }
     },
     "trainers": {
       "menuItem": {
         "link": "index.php?option=com_content&view=featured",
         "templateStyle": "templateStyle-13",
-        "params": { "layout_type": "blog" },
+        "params": { "layout_type": "blog", "show_author": "0" },
         "parent": "about",
-        "why": "the demo trainers page (menu item 195, under about): the featured view on the Landing style"
+        "why": "the demo trainers page (menu item 195, under about): the featured view on the Landing style. show_author \"0\": the build makes no author page (pages.author.unbuilt); this featured view prints no main body on the Landing style, so no author line shows today, and the setting keeps it so if the item's style ever prints the list"
       }
     },
     "trainer": {
       "menuItem": {
         "link": "index.php?option=com_content&view=featured",
         "templateStyle": "templateStyle-13",
-        "params": { "layout_type": "blog" },
+        "params": { "layout_type": "blog", "show_author": "0" },
         "parent": "trainers",
-        "why": "the demo trainer page (menu item 197, under the trainers page): the featured view on the Landing style; the trainer is its blocks"
+        "why": "the demo trainer page (menu item 197, under the trainers page): the featured view on the Landing style; the trainer is its blocks. show_author \"0\": the build makes no author page (pages.author.unbuilt); this featured view prints no main body on the Landing style, so no author line shows today, and the setting keeps it so if the item's style ever prints the list"
       }
     }
   },

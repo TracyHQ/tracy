@@ -3,7 +3,7 @@
     "blocks": 44,
     "fieldsByType": {
       "image": 34,
-      "text": 176,
+      "text": 175,
       "link": 38,
       "icon": 5,
       "design": 2
@@ -15,7 +15,7 @@
       "image": 2
     },
     "textLimits": {
-      "kitFrame390": 122,
+      "kitFrame390": 121,
       "measuredOnSite": 70,
       "notDrawn": 3,
       "other": 0,
@@ -48,7 +48,7 @@
       "notInMap": 2,
       "sparse": 1,
       "problems": 0,
-      "omitted": 6,
+      "omitted": 7,
       "notPlaced": 0,
       "notes": 2,
       "hiddenStrings": 1,
@@ -70,11 +70,11 @@
     },
     "coverage": {
       "total": 1612,
-      "fields": 623,
+      "fields": 622,
       "report": {
         "derived": 10,
         "unlisted": 17,
-        "omitted": 4,
+        "omitted": 5,
         "sparse": 1
       },
       "outsideStore": 27,
@@ -465,6 +465,11 @@
       "block": "block-160",
       "slot": "article-16.7",
       "why": "the class subtitle (attribs classes-title) in the class cards of the article category modules (block-160 Our Classes and block-159 More For You, both led by this slot): their only layouts templates/ja_boxing/html/mod_articles_category/classes-1.php:30-32 and classes-2.php:37-39 read classes-type and classes-info of each class and never its classes-title, which only the class page prints (templates/ja_boxing/html/com_content/article/classes.php:43 and 107-110); the created class records write it (class-list)"
+    },
+    {
+      "block": "block-162",
+      "slot": "module-162.1",
+      "why": "the masthead's default intro (default-description): modules/mod_jamasthead/helper.php:150-160 takes the row whose item_id names the page and :235-240 prints default-description only when no row title was found; every page that places the masthead gets a row of its own (itemsFrom: one row per page), so no page prints it. The blank site empties the demo words (mapping emptiedNotWritten) and no build writes them"
     },
     {
       "block": "block-184",

@@ -172,7 +172,25 @@ test('a copy resets every build-sets place and hides setting of its record, and 
     { location: { entity: 'module-13', column: 'ordering' }, from: 'guess', why: 'invented' }
   ]
   assertProblem(other, /resets\[0\]\.location: a reset is a setting of the copied record module-13/)
-  assertProblem(other, /resets\[1\]\.from: from must be one of buildSets, hides, container, recipe, demo/)
+  assertProblem(
+    other,
+    /resets\[1\]\.from: from must be one of buildSets, hides, container, recipe, demo, kit/
+  )
+})
+
+test('a reset from kit carries the value every copy takes; no other reset carries one', () => {
+  const set = valid()
+  const order = { entity: 'module-13', column: 'params', jsonPath: ['article_ordering'] }
+  set.mapping.placements['services-grid'].resets = [
+    { location: order, from: 'kit', value: 'publish_up', why: 'invented: one order for one list' }
+  ]
+  assert.deepEqual(problemsOf(set), [])
+  delete set.mapping.placements['services-grid'].resets[0].value
+  assertProblem(set, /resets\[0\]\.value: a reset from kit names the value every copy takes/)
+  set.mapping.placements['services-grid'].resets = [
+    { location: { entity: 'module-13', column: 'ordering' }, from: 'recipe', value: '2', why: 'invented' }
+  ]
+  assertProblem(set, /resets\[0\]\.value: only a reset from kit carries its value/)
 })
 
 test('a hides setting of a copy block is a reset of every copy', () => {

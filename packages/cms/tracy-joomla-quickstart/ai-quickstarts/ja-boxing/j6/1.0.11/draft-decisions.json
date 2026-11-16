@@ -208,12 +208,12 @@
     }
   },
   "sameBoxAs": {
-    "module-162.0": "module-162.2",
-    "module-162.1": "module-162.17"
+    "module-162.0": "module-162.2"
   },
   "omit": {
     "module-156.7": "the hero's second button: empty in the demo, so the template never draws it and no box can be measured; the blank site keeps it empty",
     "module-156.8": "the link of the hero's second button, left out with its label",
+    "module-162.1": "the masthead's default intro (default-description): modules/mod_jamasthead/helper.php:150-160 takes the row whose item_id names the page and :235-240 prints default-description only when no row title was found; every page that places the masthead gets a row of its own (itemsFrom: one row per page), so no page prints it. The blank site empties the demo words (mapping emptiedNotWritten) and no build writes them",
     "module-184.0": "the module's title: the module is set not to show it (showtitle 0), and the heading drawn in its place is module-184.1",
     "module-179.14": "the kit matched these words to module 179, which is trashed in the demo (published -2) and drawn on no page; the learning post draws the same words from the template string TPL_LEARNING_LEAD_DESC (languageString-182937349, outside the store, an override)",
     "article-16.7": "the class subtitle (attribs classes-title) in the class cards of the article category modules (block-160 Our Classes and block-159 More For You, both led by this slot): their only layouts templates/ja_boxing/html/mod_articles_category/classes-1.php:30-32 and classes-2.php:37-39 read classes-type and classes-info of each class and never its classes-title, which only the class page prints (templates/ja_boxing/html/com_content/article/classes.php:43 and 107-110); the created class records write it (class-list)"
@@ -304,9 +304,10 @@
       "placement": "copy",
       "itemsLabel": "Classes",
       "itemsOrder": {
-        "by": "title",
-        "direction": "asc",
-        "from": "module 160's own setting: article_ordering a.title, article_ordering_direction ASC (mod_articles_category)"
+        "by": "published",
+        "direction": "desc",
+        "from": "the order of the class list page (class-list: newest first), which the build gives every copy of module 160 (placements.block-160.resets, article_ordering publish_up, article_ordering_direction DESC, in place of the store's a.title ASC), so the class records read in one order wherever they show: the plan's, since the build dates them newest first in plan order",
+        "demo": { "by": "title", "direction": "asc" }
       },
       "itemsOf": {
         "block": "class-list",
@@ -530,7 +531,6 @@
         "fallback": "the page title, and no intro line"
       },
       "names": {
-        "module-162.1": "default-intro",
         "module-162.0": "default-title",
         "module-162.16": "stat-title"
       },
@@ -553,7 +553,7 @@
             "min": 0
           },
           "itemsFrom": {
-            "min": "a page with no row of its own shows the masthead's default title and intro (fields default-title and default-intro)",
+            "min": "a page with no row of its own shows the masthead's default title (field default-title); the default intro is left out of the store (omit module-162.1), since every page that places the masthead gets its own row",
             "max": "the rows the masthead stores, one per page; each row is drawn only on the page its key (menuitem_config.item_id) names, so a build writes the key of the page it creates for the row"
           },
           "exceptRows": {
@@ -961,9 +961,10 @@
       "placement": "copy",
       "itemsLabel": "Related classes",
       "itemsOrder": {
-        "by": "title",
-        "direction": "asc",
-        "from": "module 159's own setting: article_ordering a.title, article_ordering_direction ASC (mod_articles_category)"
+        "by": "published",
+        "direction": "desc",
+        "from": "the order of the class list page (class-list: newest first), which the build gives every copy of module 159 (placements.block-159.resets, article_ordering publish_up, article_ordering_direction DESC, in place of the store's a.title ASC), so the class records read in one order wherever they show: the plan's, since the build dates them newest first in plan order",
+        "demo": { "by": "title", "direction": "asc" }
       },
       "itemsOf": {
         "block": "class-list",
@@ -1068,8 +1069,8 @@
       },
       "itemsOf": {
         "block": "news-list",
-        "select": "the featured posts",
-        "why": "the featured page lists the posts marked featured; every post the build creates is an item of news-list"
+        "select": "all",
+        "why": "the featured page lists the posts marked featured, and the template's demo marks every post featured, so its featured page shows the posts of the news page (the same records, the same order). The build keeps that: every post it creates is an item of news-list written featured (pages.news-post.record.base, seo.featuredView.article), and the featured view lists them newest first, at most its page size (6), so this block shows the news list's first six records in the plan's order. A plan picks no posts of its own for it"
       },
       "type": "posts"
     },

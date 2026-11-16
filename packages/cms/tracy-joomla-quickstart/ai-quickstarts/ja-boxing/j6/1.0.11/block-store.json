@@ -720,9 +720,13 @@
       ],
       "itemsLabel": "Classes",
       "itemsOrder": {
-        "by": "title",
-        "direction": "asc",
-        "from": "module 160's own setting: article_ordering a.title, article_ordering_direction ASC (mod_articles_category)"
+        "by": "published",
+        "direction": "desc",
+        "from": "the order of the class list page (class-list: newest first), which the build gives every copy of module 160 (placements.block-160.resets, article_ordering publish_up, article_ordering_direction DESC, in place of the store's a.title ASC), so the class records read in one order wherever they show: the plan's, since the build dates them newest first in plan order",
+        "demo": {
+          "by": "title",
+          "direction": "asc"
+        }
       },
       "itemsOf": {
         "block": "class-list",
@@ -1665,14 +1669,6 @@
           "limit": 20
         },
         {
-          "name": "default-intro",
-          "kind": "business.tagline",
-          "type": "text",
-          "limitFrom": "the same box as module-162.17: kit frame (390px 123, 1440px 197)",
-          "slot": "module-162.1",
-          "limit": 123
-        },
-        {
           "name": "stat-title",
           "kind": "editorial.heading",
           "type": "text",
@@ -1761,7 +1757,7 @@
             "max": 14
           },
           "itemsFrom": {
-            "min": "a page with no row of its own shows the masthead's default title and intro (fields default-title and default-intro)",
+            "min": "a page with no row of its own shows the masthead's default title (field default-title); the default intro is left out of the store (omit module-162.1), since every page that places the masthead gets its own row",
             "max": "the rows the masthead stores, one per page; each row is drawn only on the page its key (menuitem_config.item_id) names, so a build writes the key of the page it creates for the row"
           },
           "fields": [
@@ -2229,14 +2225,14 @@
       },
       "itemsOf": {
         "block": "news-list",
-        "select": "the featured posts",
+        "select": "all",
         "fields": {
           "title": "title",
           "link": "link",
           "lead": "lead",
           "image": "image"
         },
-        "why": "the featured page lists the posts marked featured; every post the build creates is an item of news-list"
+        "why": "the featured page lists the posts marked featured, and the template's demo marks every post featured, so its featured page shows the posts of the news page (the same records, the same order). The build keeps that: every post it creates is an item of news-list written featured (pages.news-post.record.base, seo.featuredView.article), and the featured view lists them newest first, at most its page size (6), so this block shows the news list's first six records in the plan's order. A plan picks no posts of its own for it"
       },
       "from": {
         "kit": [
@@ -5266,9 +5262,13 @@
       ],
       "itemsLabel": "Related classes",
       "itemsOrder": {
-        "by": "title",
-        "direction": "asc",
-        "from": "module 159's own setting: article_ordering a.title, article_ordering_direction ASC (mod_articles_category)"
+        "by": "published",
+        "direction": "desc",
+        "from": "the order of the class list page (class-list: newest first), which the build gives every copy of module 159 (placements.block-159.resets, article_ordering publish_up, article_ordering_direction DESC, in place of the store's a.title ASC), so the class records read in one order wherever they show: the plan's, since the build dates them newest first in plan order",
+        "demo": {
+          "by": "title",
+          "direction": "asc"
+        }
       },
       "itemsOf": {
         "block": "class-list",

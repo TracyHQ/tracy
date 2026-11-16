@@ -82,6 +82,19 @@ test('two linked blocks listing their common records in another order declare di
   ])
 })
 
+test('a copy the build reorders declares the built order and keeps the store order it was listed in as demo', () => {
+  const { set, grid, strip } = withStrip()
+  strip.itemsOrder = { ...grid.itemsOrder, demo: { by: 'title', direction: 'asc' } }
+  assert.deepEqual(storeProblems(set), [])
+  strip.itemsOrder.demo = { ...grid.itemsOrder, from: undefined }
+  delete strip.itemsOrder.demo.from
+  assert.deepEqual(storeProblems(set), [
+    'blocks[services-strip].itemsOrder: it lists the records it shares with services-grid in another order, yet declares the same order'
+  ])
+  strip.itemsOrder.demo = { by: 'colour' }
+  assert.match(storeProblems(set)[0], /itemsOrder\.demo is the store's own order before the build resets it/)
+})
+
 test('itemsOf names another block with items, and an owner field of the same type for every item field', () => {
   const { set, strip } = withStrip()
   strip.itemsOf.fields = { title: 'link' }
