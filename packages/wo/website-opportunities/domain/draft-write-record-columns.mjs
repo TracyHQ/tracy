@@ -6,16 +6,20 @@
 //           in an article's `created_by_alias`, the page's meta author, where the site printed the administrator
 //           account's name). A column outside `RECORD_FACT_COLUMNS` for the record's kind stops the plan
 //           (`record_fact_column_unknown`); a plan with no entry of the fact leaves the column to the site
-//           (`record_fact_missing`).
+//           (`record_fact_missing`). A column the record door does not write (`draft-write-door-columns.mjs`: an
+//           article's `created_by_alias` on plugin 0.24.85) is not sent: the door would drop it and the read back stop
+//           the write. It is flagged (`record_fact_no_door`) and the site keeps its own value (the author account).
 //   dates   every created article is dated apart, in the order the plan lists it: the write makes them within
 //           seconds, so a list ordered by date would have no rule between two of them. A block of the store that
 //           lists records by date (`itemsOrder: {by: "published", direction}`) gives the order: `desc` (newest first,
 //           Joomla's own default) dates its first item newest, `asc` its first item oldest. The articles no such block
 //           lists come after, in plan order. The plan holds only each article's rank (`dated: {rank}`, 0 newest);
-//           the write turns ranks into dates from one time kept in its run record, so a resume and a read back agree
+//           the write turns ranks into `publish_up` dates from one time kept in its run record, so a resume and a
+//           read back agree
 //           (`step-chain-draft-write-dates.js`). A second list that orders the same articles otherwise is reported
 //           (`items_order_dates_disagree`).
 import { RECORD_FACT_COLUMNS } from './ai-quickstart-kit-declarations.mjs'
+import { doorWrites } from './draft-write-door-columns.mjs'
 import { DraftWriteError } from './draft-write-error.mjs'
 import { put, unproven } from './draft-write-sink.mjs'
 
@@ -43,6 +47,10 @@ function planRecordFacts(state) {
             column
           }
         )
+      if (!doorWrites(record.recordKind, column)) {
+        unproven(state.sink, 'record_fact_no_door', { record: record.key, column, fact })
+        continue
+      }
       const entry = factEntryOf(state, fact)
       if (!entry) {
         unproven(state.sink, 'record_fact_missing', { record: record.key, column, fact })

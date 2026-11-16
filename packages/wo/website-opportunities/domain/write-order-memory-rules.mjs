@@ -26,13 +26,16 @@
 //                                                           written), a new menu item with no link or an empty one
 //                                                           (`creating a menuItem needs link`), an assignment whose
 //                                                           menuids is no JSON list
-//                                                           (measured on plugin 0.24.85: no code of its own)
+//                                                           (measured on plugin 0.24.85: no code of its own); an
+//                                                           article write naming no column the door writes
+//                                                           (`draft-write-door-columns.mjs`)
 //                      bad_params                           an assignment with no menuids (measured)
 //                      NOT_FOUND                            a record, or the module of an assignment, that does not exist
 //   every write        APPLY_ID_REQUIRED                    no apply id
 import { isTextNode } from './draft-write-codec.mjs'
 import { doorLength } from './draft-write-length.mjs'
 import { decodeEntities } from './draft-write-entities.mjs'
+import { doorKept, DOOR_COLUMNS } from './draft-write-door-columns.mjs'
 import { imageSlotRefusal } from './write-order-memory-image.mjs'
 
 // oxlint-disable-next-line no-control-regex -- the bytes the plugin refuses in a slot
@@ -50,11 +53,13 @@ export const storedIdentity = (key, value) =>
   key === 'sitename' ? decodeEntities(String(value).replace(/[<>]/g, '').replace(CONTROL, '')) : value
 
 /**
- * The alias a record is stored with: Joomla with unicode slugs off (`OutputFilter::stringURLSafe`) folds what it is
- * sent, accents off, lower case, every other character (a letter of another script too, with no transliterator) a
- * hyphen. An alias already in that form is kept as it is.
+ * The fields a record is stored with. Only the columns the door writes for its kind (`doorKept`: an article's
+ * `created` and `created_by_alias` are dropped, measured). The alias: Joomla with unicode slugs off
+ * (`OutputFilter::stringURLSafe`) folds what it is sent, accents off, lower case, every other character (a letter of
+ * another script too, with no transliterator) a hyphen. An alias already in that form is kept as it is.
  */
-export function storedFields(fields) {
+export function storedFields(sent, kind = null) {
+  const fields = kind ? doorKept(kind, sent) : sent
   if (typeof fields?.alias !== 'string' || fields.alias === '') return fields
   const alias = fields.alias
     .replace(/-/g, ' ')
@@ -141,6 +146,8 @@ export function checkUpdate({ kind, id, fields }, records) {
     return
   }
   if (!records[kind]) refuse('KIND_UNKNOWN', kind)
+  if (DOOR_COLUMNS[kind] && !Object.keys(fields ?? {}).some((c) => DOOR_COLUMNS[kind].includes(c)))
+    refuse('write_failed', `no writable column for kind ${kind}`)
   if (Number(id) !== 0) {
     if (!records[kind].has(Number(id))) refuse('NOT_FOUND', `${kind} ${id}`)
     return

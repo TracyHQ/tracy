@@ -162,13 +162,38 @@ Faults of the real run on plugin 0.24.85, each now a rule of the plan:
   joiner, byte order mark and the bidirectional controls (the joiners that shape emoji and scripts stay); outside a
   whole HTML column a run of tabs and line ends is one space. Reported `control_characters_stripped`.
 - **Author name.** `pages.<type>.record.facts` (#587): every record a page of that type creates holds the fact in that
-  column (JA Boxing: the business name in an article's `created_by_alias`). A column outside `RECORD_FACT_COLUMNS`
-  stops the plan (`record_fact_column_unknown`); a plan with no entry of the fact leaves it (`record_fact_missing`).
+  column (JA Boxing declares the business name in an article's `created_by_alias`). A column outside
+  `RECORD_FACT_COLUMNS` stops the plan (`record_fact_column_unknown`); a plan with no entry of the fact leaves it
+  (`record_fact_missing`); a column the record door does not write (below) is not sent and is flagged
+  (`record_fact_no_door`, with `record`, `column`, `fact`): on plugin 0.24.85 that is `created_by_alias`, so the
+  article keeps the site's author account as its author name (the page's meta author while MetaAuthor is on).
 - **Dates.** Every created article gets a rank (`op.dated.rank`, 0 newest) in the order a store block that lists by
   date shows it (`itemsOrder: {by: "published", direction}`: `desc` dates the first item newest, `asc` oldest), the
-  articles no such list shows after, in plan order. The run turns ranks into `created` and `publish_up` from one time
-  kept in its run record (`state.dateBase`, kept by a revision too): the newest an hour before it, each next rank one
-  minute older (`step-chain-draft-write-dates.js`), so a resume and the read back agree.
+  articles no such list shows after, in plan order. The run turns ranks into `publish_up` from one time kept in its run
+  record (`state.dateBase`, kept by a revision too): the newest an hour before it, each next rank one minute older
+  (`step-chain-draft-write-dates.js`), so a resume and the read back agree. `created` is not sent (the door does not
+  write it): a list ordered by `created` (`itemsOrder.by: "created"`) cannot be given an order by this write.
+
+### Columns the record door writes (`draft-write-door-columns.mjs`)
+
+Measured on plugin 0.24.85 by the release gate's real write of the JA Boxing marker plan, every column sent compared
+with the row `content.get` read back:
+
+- `content.update` keeps a whitelist of columns per record kind and drops every other column of the call without a
+  word (the answer is `ok`). For an article it writes `title`, `alias`, `introtext`, `fulltext`, `state`, `catid`,
+  `images`, `urls`, `attribs`, `metadata`, `metakey`, `metadesc`, `language`, `featured`, `ordering`, `access`,
+  `publish_up`, `publish_down`, `note`. Not `created` (a new article is stamped with the site's own UTC time of the
+  write, `YYYY-MM-DD HH:MM:SS`; an update keeps it) and not `created_by_alias` (stored empty).
+- An article update naming only columns outside the list is refused: `write_failed`, "no writable column for kind
+  article".
+- `publish_up` is stored exactly as sent (UTC, `YYYY-MM-DD HH:MM:SS`, no time zone shift); `ordering` as sent; the
+  `images` alt texts, `attribs` and the HTML columns as sent.
+- Every column the write sends for a category, a menu item, a contact or a module, and every contract slot, upload and
+  site identity value of that plan, read back as sent: those kinds are not restricted by the list.
+
+The plan sends no article column outside the list, and the memory site keeps only these columns, stamps `created`
+itself and refuses an update with none, so a step that sends a dropped column fails its test with the same
+`read_back_mismatch` the real site gives.
 
 The language override door (`template.languageOverrides`) is not used by the write step: a template language string
 is a contract slot (`languageString-<n>`) written through `content.contract`.

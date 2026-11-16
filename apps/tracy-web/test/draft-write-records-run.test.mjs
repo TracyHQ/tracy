@@ -1,8 +1,8 @@
 // The faults of the real run of the draft write on plugin 0.24.85 (#597), reproduced on the memory site, which refuses
 // what the plugin refuses: an alias with accents read back folded (`read_back_mismatch`), Joomla plugin codes refused
 // in contract slots (modules, language strings, a custom field: `redo_failed`), control characters in the site name
-// and a contract slot; and the #587 keys the write reads: the business name as the articles' author name, the footer
-// logo module on no page with no logo, articles dated apart in the list's order. Invented florist, invented words.
+// and a contract slot; and the #587 keys the write reads: the articles' author name (a column the door drops, flagged),
+// the footer logo module on no page with no logo, articles published apart in the list's order. Invented florist, invented words.
 //
 //   node --test --test-concurrency=1 apps/tracy-web/test/draft-write-records-run.test.mjs
 import assert from 'node:assert/strict'
@@ -73,27 +73,26 @@ test('without the rule the memory site refuses the same values as the plugin did
   )
 })
 
-test('the articles hold the business name as their author, and the footer logo module is on no page', async () => {
+test('the articles keep the site author (the door drops created_by_alias), the footer logo module is on no page', async () => {
   const memory = blankSite()
-  await runOn(memory)
-  const name = florist.order.facts.find((f) => f.kind === 'business.name').value
+  const report = await runOn(memory)
   const articles = [...memory.site.records.article.values()]
   assert.ok(articles.length > 0)
-  for (const a of articles) assert.equal(a.created_by_alias, name)
+  for (const a of articles) assert.equal(a.created_by_alias, undefined)
+  assert.ok(report.unproven.some((u) => u.code === 'record_fact_no_door' && u.column === 'created_by_alias'))
   assert.deepEqual(memory.site.assignments.get(170), [])
 })
 
-test('created articles are dated apart in the list order, the same on a resume after a crash', async () => {
+test('created articles are published apart in the list order, the same on a resume after a crash', async () => {
   const memory = blankSite()
   await runOn(memory)
   const plan = planOf()
   const dated = plan.ops.filter((op) => op.dated).sort((a, b) => a.dated.rank - b.dated.rank)
   const rows = [...memory.site.records.article.values()]
   const byAlias = (op) => rows.find((r) => r.alias === op.fields.alias)
-  const dates = dated.map((op) => byAlias(op).created)
+  const dates = dated.map((op) => byAlias(op).publish_up)
   assert.equal(new Set(dates).size, dates.length, 'distinct')
   assert.deepEqual([...dates].sort().reverse(), dates, 'rank 0 newest')
-  for (const op of dated) assert.equal(byAlias(op).publish_up, byAlias(op).created)
   assert.ok(Date.parse(`${dates[0]}Z`) < FIXED_NOW(), 'the newest is before the run time')
   // A run that dies, resumed later by another clock, writes the dates the first attempt kept.
   const record = {}
@@ -102,7 +101,7 @@ test('created articles are dated apart in the list order, the same on a resume a
   await runOn(crashed, { record, now: () => FIXED_NOW() + 3_600_000 })
   const again = [...crashed.site.records.article.values()]
   assert.deepEqual(
-    dated.map((op) => again.find((r) => r.alias === op.fields.alias).created),
+    dated.map((op) => again.find((r) => r.alias === op.fields.alias).publish_up),
     dates
   )
 })

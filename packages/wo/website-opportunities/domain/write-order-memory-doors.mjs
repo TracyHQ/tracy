@@ -27,6 +27,8 @@ export { memoryHtml }
 const list = (value) => (Array.isArray(value) ? value : [])
 const START = { module: 1000, menuItem: 2000, article: 3000, category: 4000, contact: 5000 }
 const IDENTITY = ['sitename', 'MetaDesc', 'sitename_pagetitles']
+/** The memory site's own clock when none is given. */
+const MEMORY_NOW = Date.UTC(2026, 0, 1, 0, 0, 0)
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 /** A payload's hash: its JSON with keys sorted, bytes by their own hash. */
 const payloadHash = (payload) =>
@@ -41,10 +43,14 @@ const payloadHash = (payload) =>
   )
 
 /**
- * @param {{lock: object, contentMap: object, fail?: number[], crash?: number | {at: number, before?: boolean}}} input the
+ * @param {{lock: object, contentMap: object, fail?: number[], crash?: number | {at: number, before?: boolean}, now?: () => number}} input the
  *   blank site contract's `presentation-lock.json` and `content-map.json`
  */
-export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
+export function memoryDoors({ lock, contentMap, fail = [], crash = null, now = () => MEMORY_NOW }) {
+  // A new article is stamped `created` with the site's own UTC time, whatever the call sent (measured, 0.24.85). The
+  // clock is fixed unless given, so two memory sites written the same way hold the same rows.
+  const stamps = (kind) =>
+    kind === 'article' ? { created: new Date(now()).toISOString().slice(0, 19).replace('T', ' ') } : {}
   const records = Object.fromEntries(Object.keys(START).map((kind) => [kind, new Map()]))
   for (const [entity, row] of Object.entries(lock.entities ?? {}))
     if (entity.startsWith('module-'))
@@ -119,10 +125,10 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
           const table = records[kind]
           if (Number(id) === 0) {
             const made = next[kind]++
-            table.set(made, { ...storedFields(structuredClone(fields)), id: made })
+            table.set(made, { ...storedFields(structuredClone(fields), kind), ...stamps(kind), id: made })
             return { id: made }
           }
-          table.set(Number(id), { ...table.get(Number(id)), ...storedFields(structuredClone(fields)) })
+          table.set(Number(id), { ...table.get(Number(id)), ...storedFields(structuredClone(fields), kind) })
           return { id: Number(id) }
         }
       )

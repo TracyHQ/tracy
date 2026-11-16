@@ -1,5 +1,5 @@
 // The kit keys of #587 the draft write reads (ticket #597) and the dates of the articles it creates: a page type's
-// `record.facts` (the business name in an article's `created_by_alias`, where the site printed "Admin"), the field
+// `record.facts` (the business name in an article's `created_by_alias`, a column the record door drops: flagged), the field
 // group hides of block-166 (`setting`: no statistic, no tile) and block-170 (`unassign`: no logo, the footer logo
 // module on no page), a hide whose way the write does not know (a typed stop), and dates apart in the list's order.
 // Real JA Boxing kit, invented florist.
@@ -15,9 +15,8 @@ const planOf = ({ order = site.order, mapping = site.aiq.mapping, blockStore = s
   writePlanOf(order, { ...site.aiq, mapping, blockStore }, { stored: site.stored })
 const plan = planOf()
 const articles = (p) => p.ops.filter((op) => op.kind === 'article.create')
-const business = site.order.facts.find((f) => f.kind === 'business.name').value
 
-test('every created record of a page type whose record declares facts holds them, read from the kit', () => {
+test('a record fact in a column the record door does not write is flagged per record, never sent', () => {
   const pages = site.aiq.mapping.pages
   const declared = Object.entries(pages).filter(([, p]) => p.record?.facts)
   assert.ok(declared.length > 0, 'the kit declares record facts')
@@ -27,12 +26,20 @@ test('every created record of a page type whose record declares facts holds them
       declared.some(([t, p]) => t === op.pageType && p.record.kind === op.recordKind)
   )
   assert.ok(written.length > 0, 'the florist creates records of those page types')
+  // JA Boxing's fact column is an article's created_by_alias: plugin 0.24.85 drops it (measured on the real site).
   for (const op of written)
     for (const column of Object.keys(pages[op.pageType].record.facts)) {
-      const v = op.values.find((x) => x.loc.column === column)
-      assert.equal(v?.value, business, `${op.key} ${column}`)
-      assert.equal(v.rule, 'record.fact:name')
-      assert.ok(v.entry, 'the fact entry it comes from')
+      assert.equal(
+        op.values.some((x) => x.loc.column === column),
+        false,
+        `${op.key} ${column}`
+      )
+      assert.ok(
+        plan.unproven.some(
+          (u) => u.code === 'record_fact_no_door' && u.record === op.key && u.column === column
+        ),
+        `${op.key} flagged`
+      )
     }
 })
 
