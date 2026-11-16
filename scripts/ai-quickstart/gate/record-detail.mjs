@@ -7,6 +7,7 @@
 // hand or a record cut down by accident never releases a kit. Pure.
 import { QUALITY_GROUPS } from './quality-groups.mjs'
 import { coverageProblems } from './write-safety-coverage.mjs'
+import { TESTED } from './write-safety-result.mjs'
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const empty = (v) => Array.isArray(v) && v.length === 0
@@ -23,7 +24,7 @@ function writeSafetyDetail(ws) {
   if (!rows.length || !passes.size) out.push('it keeps no ledger or no pass')
   if (count(p.probed) !== keys.length) out.push('its probed count is not its list of places')
   const reached = new Set(
-    rows.filter((r) => r.status === 'written' && r.site === true && r.reached === true).map((r) => r.place)
+    rows.filter((r) => TESTED.has(r.status) && r.site === true && r.reached === true).map((r) => r.place)
   )
   const tested = keys.filter((k) => reached.has(k)).length
   if (count(p.tested) !== tested || tested !== keys.length)

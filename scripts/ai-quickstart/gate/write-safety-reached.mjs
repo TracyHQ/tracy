@@ -5,6 +5,7 @@
 // replaces the whole value (the empty value, a number) carries no code: its place is found where the plain build
 // stored that place (by the place key's own plain code, never the code it got in the pass: review 6 U1), and the value
 // stored there must be the probe exactly. Pure.
+import { cleanedForms } from '../../../packages/wo/website-opportunities/domain/draft-write-text-clean.mjs'
 import { placeKeyOf } from './universe.mjs'
 import { storedOf } from './write-safety-places.mjs'
 
@@ -62,6 +63,38 @@ export function reachedInPlan(used, plan, index, plainAt) {
     const own = String(u.value ?? '')
     if ((index.get(code) ?? []).some((s) => (mark ? holds(s.value, mark) : own && holds(s.value, own))))
       out.add(key)
+  }
+  for (const key of cleanedInPlan(used, plan, index)) out.add(key)
+  return out
+}
+
+/** Whether the build reports it cleaned the value it stored at `s` (`plan.cleaned`, `draft-write-text-clean.mjs`). */
+const reportedAt = (plan) => {
+  const cleaned = Array.isArray(plan?.cleaned) ? plan.cleaned : []
+  return (s) =>
+    cleaned.some(
+      (c) => c.op === s.op && (c.entry ? c.entry === s.entry : c.column != null && c.column === s.loc?.column)
+    )
+}
+
+/**
+ * The places of a pass whose probe the build cleaned before any door (#597): a content plugin code neutralised,
+ * control characters stripped. Read from what the build reports it cleaned, at the place's own stored value: the value
+ * there no longer holds the probe as typed and holds one cleaned form of it, folded by the write step's own rule
+ * (`cleanedForms`). Such a place reached the site, and its probe is judged on the cleaned form (`cleaned_by_build`):
+ * it passes when the page shows the words as typed and nothing ran, never as a probe written unchanged.
+ * @returns {Set<string>}
+ */
+export function cleanedInPlan(used, plan, index) {
+  const out = new Set()
+  const reported = reportedAt(plan)
+  for (const [key, u] of used) {
+    if (u.probe.whole) continue
+    const own = String(u.value ?? '')
+    const forms = cleanedForms(own).filter((f) => f !== own)
+    if (!own || !forms.length) continue
+    const at = (index.get(String(u.code).toUpperCase()) ?? []).filter(reported)
+    if (at.some((s) => !holds(s.value, own) && forms.some((f) => holds(s.value, f)))) out.add(key)
   }
   return out
 }

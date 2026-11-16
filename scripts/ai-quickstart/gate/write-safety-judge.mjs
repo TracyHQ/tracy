@@ -146,7 +146,7 @@ export function judgePage(html, used) {
   const injected = []
   const cut = new Set()
   let doc = null
-  for (const [place, { code, probe }] of used) {
+  for (const [place, { code, probe, cleaned }] of used) {
     if (
       !codes.has(String(code).toUpperCase()) &&
       !text.toLowerCase().includes('qx' + String(code).toLowerCase())
@@ -154,7 +154,8 @@ export function judgePage(html, used) {
       continue
     shown.add(place)
     doc ??= parseHTML(text).document
-    const judged = probe.judge?.({ doc, code, html: text }) ?? null
+    // `cleaned`: the build cleaned this probe before any door (#597), so the page is judged on the cleaned form.
+    const judged = probe.judge?.({ doc, code, html: text, cleaned: cleaned === true }) ?? null
     if (judged?.cut) cut.add(place)
     else if (judged) injected.push({ place, judged })
   }

@@ -43,6 +43,39 @@ test('a value the write sent to a design field, a design line or a disallowed ic
   assert.ok(!JSON.stringify(found).includes('light-20'), 'the value is never printed')
 })
 
+test('a place a hide of the kit declares is the kit own write, never a design value the build wrote', async () => {
+  // The kit takes a field group off by a setting it declares (#597): the build writes that setting, on a design line.
+  const hidden = kit()
+  hidden.mapping.hides = {
+    hero: [
+      {
+        fields: ['overlay-label'],
+        by: 'setting',
+        location: { entity: 'module-10', column: 'params', jsonPath: ['gutter'] },
+        value: '0',
+        why: 'invented: the gutter setting 0 prints no label'
+      }
+    ]
+  }
+  assert.deepEqual([...designPlacesOf(hidden).bySlot.keys()].sort(), ['module-10.3', 'module-12.9'])
+  const values = [
+    heading,
+    {
+      loc: { entity: 'module-10', column: 'params', jsonPath: ['gutter'] },
+      entry: null,
+      value: '0',
+      rule: 'hides.setting'
+    },
+    { loc: { slot: 'module-10.3', entity: 'module-10', column: 'params' }, entry: null, value: 'light-20' }
+  ]
+  const report = await reportOf({ kit: hidden, write: writeResult({ values }) })
+  // The other design field is still reported: only the declared place is the kit's.
+  assert.deepEqual(
+    report.checks.design.findings.map((f) => [f.kind, f.place.slot]),
+    [['design_field_written', 'module-10.3']]
+  )
+})
+
 test('near miss: content fields and allowed icon classes are not design writes', async () => {
   const values = [
     heading,

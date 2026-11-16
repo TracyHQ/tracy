@@ -67,6 +67,17 @@ test('the statistics tile with no statistic writes show-on 0; the footer logo wi
     plan.controls.some((c) => c.fields.includes('logo')),
     false
   )
+  // It is listed in `fieldGroups`, which the release gate accounts it by: both groups taken off.
+  assert.deepEqual(
+    plan.fieldGroups
+      .filter((g) => g.block === 'block-170' || g.block === 'block-166')
+      .map((g) => [g.block, g.by, g.taken])
+      .sort(),
+    [
+      ['block-166', 'setting', true],
+      ['block-170', 'unassign', true]
+    ]
+  )
 })
 
 test('a field group with one field written keeps its module on its pages: a logo picture is the footer logo', () => {
@@ -85,6 +96,10 @@ test('a field group with one field written keeps its module on its pages: a logo
     false
   )
   assert.ok(p.ops.some((op) => op.key === 'assign:store:module-170'))
+  assert.deepEqual(
+    p.fieldGroups.filter((g) => g.block === 'block-170').map((g) => g.taken),
+    [false]
+  )
 })
 
 test('a hide whose way the write does not know stops the plan, typed', () => {

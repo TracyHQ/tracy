@@ -2,6 +2,7 @@
 // A customer may type `{loadposition news}` or `{emailcloak=off}` in a sentence; a page that runs it prints the
 // modules of a position or turns email cloaking off instead of the words. The danger is the code gone from the page
 // while the field's own marker is there: the site ran what the customer typed. Pure.
+import { cleanText } from '../../../../packages/wo/website-opportunities/domain/draft-write-text-clean.mjs'
 import { signatureOf } from '../write-probes.mjs'
 
 /** The words of a page: its text with spaces folded. */
@@ -40,10 +41,12 @@ const codeProbe = (id, text, why, signed = null) => ({
   ...(signed ? { signature: (code) => signatureOf(code, signed) } : {}),
   // The code's own opening: a build that drops the place's marker but keeps it still writes a code a page runs.
   danger: (code) => text(code).replace(/[\s=}].*$/, ''),
-  judge: ({ doc, code }) => {
+  // A probe the build cleaned (#597) is judged on the words as the build wrote them: the code with a word joiner after
+  // its brace, which the page must show as typed.
+  judge: ({ doc, code, cleaned = false }) => {
     const words = wordsOf(doc)
     const marker = 'qx' + String(code).toLowerCase()
-    const probe = text(code).toLowerCase()
+    const probe = (cleaned ? cleanText(text(code)).value : text(code)).toLowerCase()
     if (!words.includes(marker) || words.includes(probe)) return null
     for (let i = words.indexOf(marker); i >= 0; i = words.indexOf(marker, i + 1))
       if (!cutAfter(words.slice(i + marker.length), probe)) return { kind: 'markup_injected', element: id }

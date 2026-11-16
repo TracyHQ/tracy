@@ -19,6 +19,8 @@ import { PROBE_CATALOGUE } from '../ai-quickstart/gate/write-probes-edge.mjs'
 import { coverageProblems } from '../ai-quickstart/gate/write-safety-coverage.mjs'
 import { floristKit } from './fixtures/ai-quickstart-gate/florist-kit.mjs'
 import { memorySiteOf } from './fixtures/ai-quickstart-gate/memory-site.mjs'
+// The build writes a content plugin code with a word joiner after its brace (#597): the faults below match the code
+// in either form, so they still meet the one probe that carries it.
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const icons = { set: 'invented-icons@1', icons: [{ name: 'leaf', tags: ['plant'], categories: [] }] }
@@ -96,7 +98,7 @@ test('a place where every probe was refused by the build is not tested on the si
 })
 
 test('a page answering 404 or no answer while it holds a probe fails and names the field', async () => {
-  const holds = (html) => /data-m="hero-home" data-v="[^"]*\{loadposition/.test(html)
+  const holds = (html) => /data-m="hero-home" data-v="[^"]*\{\u2060?loadposition/.test(html)
   for (const [status, kind] of [
     [404, 'server_error'],
     [0, 'site_unreachable']
@@ -111,7 +113,8 @@ test('a page answering 404 or no answer while it holds a probe fails and names t
 
 test('a door that drops the connection on one value fails and names the field', async () => {
   const { result } = await measure({
-    door: (call) => (hero(call) && String(call.fields.params).includes('{loadposition') ? 'no_answer' : null)
+    door: (call) =>
+      hero(call) && /\{\u2060?loadposition/.test(String(call.fields.params)) ? 'no_answer' : null
   })
   assert.equal(result.status, 'failed')
   const found = only(result.findings, 'site_unreachable')
@@ -135,7 +138,7 @@ test('a build refusal that names its place costs no site step', async () => {
     const built = await build(options)
     for (const op of built.writePlan?.ops ?? [])
       for (const v of op.values ?? [])
-        if (String(v.value).includes('{emailcloak') && String(v.entry).includes('home-b3'))
+        if (/\{\u2060?emailcloak/.test(String(v.value)) && String(v.entry).includes('home-b3'))
           throw new DraftWriteError('markup_forbidden', '1 problem(s) before any door call', {
             problems: [
               {

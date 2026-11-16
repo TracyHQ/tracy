@@ -5,6 +5,9 @@
 // probed in a pass, tested, and the rest by reason (`write-safety-coverage.mjs`). Pure.
 import { FAILING } from './write-safety-judge.mjs'
 
+/** The ledger results that test a place on the site: written as typed, or cleaned by the build and judged so (#597). */
+export const TESTED = new Set(['written', 'cleaned_by_build'])
+
 /** Why a place a pass could probe was not probed in any pass. */
 const notProbedWhy = (rows) =>
   rows.some((r) => r.status === 'not_written')
@@ -36,7 +39,7 @@ export function resultOf({
 }) {
   const missing = ledger.missing(places, probes)
   const rows = ledger.rows()
-  const onSite = new Set(rows.filter((r) => r.status === 'written' && r.reached).map((r) => r.place))
+  const onSite = new Set(rows.filter((r) => TESTED.has(r.status) && r.reached).map((r) => r.place))
   const inPass = new Set(rows.filter((r) => r.site).map((r) => r.place))
   const notWritten = [...new Set(rows.filter((r) => r.status === 'not_written').map((r) => r.place))]
   // Pairs no page judged, every print of the place cut short (review 6 S2).

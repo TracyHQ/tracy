@@ -105,7 +105,9 @@ which a resumed run uses to find it again.
 A hide names a control (a button), rows, or a group of `fields` (#587: fields that print a frame of their own, a tile or
 a picture). A group is taken off the page when the record holds none of its fields (a fact field, such as the footer
 logo's `logoDark`, counts as held when the fact is written on the record); it is no pair, so it is not listed in
-`plan.controls` and the pair guard does not read it. JA Boxing: block-166 writes `show-on` `"0"` with no statistic
+`plan.controls` and the pair guard does not read it. Each group is listed per record in `plan.fieldGroups`
+(`{record, block, fields, by, taken}`), which the release gate accounts it by (build place `hides.fields`: taken off is
+written, held is `group_held`). JA Boxing: block-166 writes `show-on` `"0"` with no statistic
 (`setting`), block-170 leaves the footer logo module on no page with no logo (`unassign`). A `by` outside
 `DRAFT_WRITE_HIDE_VALUES.by` stops the plan before any door (`hide_by_unknown`, with the block and the `by`).
 
@@ -143,6 +145,11 @@ Faults of the real run on plugin 0.24.85, each now a rule of the plan:
 
 The language override door (`template.languageOverrides`) is not used by the write step: a template language string
 is a contract slot (`languageString-<n>`) written through `content.contract`.
+
+The release gate's write safety reads `plan.cleaned` too: a probe the build reports it cleaned, found at its place in a
+cleaned form (`cleanedForms` of `draft-write-text-clean.mjs`, the same rule), is `cleaned_by_build` in the ledger and
+tested on the site as cleaned (a content plugin code passes when the page shows it as typed, with its word joiner,
+and nothing ran). It is never `probe_not_written`, and never counted as a probe written unchanged.
 
 ## The doors
 

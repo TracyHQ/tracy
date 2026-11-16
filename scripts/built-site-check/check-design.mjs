@@ -61,8 +61,24 @@ export function designPlacesOf(kit) {
   for (const slot of list(kit.contentMap?.slots))
     if (slot.role === 'editorial.design_element')
       add({ ...slot, slot: slot.key }, { block: null, field: null })
+  // A place a hide of the kit declares (`hides.<id>[i].location`, with the fields it takes off and its way) is the
+  // kit's own write, approved with the kit: a show-on setting the build writes so a tile prints nothing is not a
+  // design value the build chose (#597).
+  for (const loc of hidePlacesOf(kit)) {
+    const at = byLoc.get(locKey(loc))
+    if (!at) continue
+    byLoc.delete(locKey(loc))
+    if (at.slot) bySlot.delete(at.slot)
+  }
   return { bySlot, byLoc }
 }
+
+/** Every location a hide of the kit declares it writes. */
+export const hidePlacesOf = (kit) =>
+  Object.values(kit.mapping?.hides ?? {})
+    .flatMap((entries) => list(entries))
+    .map((h) => h?.location)
+    .filter((loc) => loc && typeof loc === 'object' && loc.entity)
 
 const iconClassesOf = (kit) => new Set(Object.values(kit.mapping?.networkIconClasses?.classes ?? {}))
 

@@ -71,3 +71,14 @@ export function cleanedAt(text, { op, entry = null, column, multiline, address }
   if (out.neutralised) cleaned.push({ code: 'plugin_code_neutralised', ...where, count: out.neutralised })
   return out.value
 }
+
+/**
+ * Every form `cleanText` can give one text, in the order a place takes them: one line, a whole HTML column, an
+ * address. A reader that compares what the write sent with what was typed (the release gate's write safety) folds
+ * the typed text here, never by a copy of the rule.
+ * @param {string} text
+ * @returns {string[]} the distinct cleaned forms
+ */
+export const cleanedForms = (text) => [
+  ...new Set([{}, { multiline: true }, { address: true }].map((how) => cleanText(text, how).value))
+]

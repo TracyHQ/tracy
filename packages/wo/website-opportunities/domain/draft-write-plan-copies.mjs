@@ -27,7 +27,10 @@ function checkHideBy(record, hide) {
  * when the record holds none of them. Not a pair: some written and some not is no problem, so it is no control.
  */
 function fieldsHide(state, record, hide) {
-  if (hide.fields.some((f) => groupHolds(state, record, f))) return
+  const held = hide.fields.some((f) => groupHolds(state, record, f))
+  // What became of the group, for the plan's `fieldGroups`: the release gate accounts every field group hide by it.
+  record.fieldGroups.push({ fields: hide.fields, by: hide.by, taken: !held })
+  if (held) return
   if (hide.by === 'empty') emptyControl(state, record, { ...hide, control: hide.fields })
   else if (hide.by === 'setting') settingHide(state, record, hide)
   // `unassign`: the record's module on no page (`assignOf` makes it a `module.unassign`).
@@ -124,6 +127,7 @@ export function planCopies(state) {
   for (const record of state.sink.records.values()) {
     if (record.kind !== 'copy' && record.kind !== 'store') continue
     record.controls ??= []
+    record.fieldGroups ??= []
     record.contractRemoves ??= []
     record.settings ??= []
     const placement = state.kit.mapping.placements?.[record.block]

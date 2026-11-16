@@ -151,6 +151,7 @@ const FAILED_AS = {
 /** The class each (place, probe) pair ended in, in the order the line says them. */
 const PAIR_AS = {
   written: 'tested on the site',
+  cleaned_by_build: 'cleaned by the build and tested on the site as cleaned',
   refused_by_build: 'refused by the build',
   normalized_by_build: 'normalized by the build',
   not_written: 'the build wrote otherwise or dropped (not tested)',

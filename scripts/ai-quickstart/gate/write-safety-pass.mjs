@@ -14,7 +14,7 @@ import { bisect } from './bisect.mjs'
 import { buildCulprits, pageCulprits, stopOf } from './write-safety-trials.mjs'
 import { buildRefusalOf, judgePage, pageBroken, stopClassOf } from './write-safety-judge.mjs'
 import { placeAt, storedIndex } from './write-safety-places.mjs'
-import { reachedInPlan, reachedOnPage } from './write-safety-reached.mjs'
+import { cleanedInPlan, reachedInPlan, reachedOnPage } from './write-safety-reached.mjs'
 import { settleUnreached } from './write-safety-unreached.mjs'
 
 /** Why a search found no culprit: its budget ran out, or the failure needs several values together. */
@@ -132,7 +132,13 @@ export async function onePass(n, assignment, ctx, limits) {
     const pages = await site.pages(a.built, w.record)
     const index = storedIndex(a.built.writePlan)
     const reached = reachedInPlan(a.opts.used, a.built.writePlan, index, ctx.plainAt)
-    const written = new Map([...a.opts.used].filter(([k]) => reached.has(k)))
+    // A probe the build cleaned is judged on its cleaned form (#597): the page must show the words as typed.
+    const cleaned = cleanedInPlan(a.opts.used, a.built.writePlan, index)
+    const written = new Map(
+      [...a.opts.used]
+        .filter(([k]) => reached.has(k))
+        .map(([k, u]) => [k, cleaned.has(k) ? { ...u, cleaned: true } : u])
+    )
     const shown = new Set()
     // Places a page printed only cut short, and places a page printed so that their probe was judged (review 6 S2).
     const cutOn = new Set()
@@ -193,7 +199,13 @@ export async function onePass(n, assignment, ctx, limits) {
     for (const [key, probe] of active)
       if (a.opts.used.has(key))
         ledger.set(key, probe.id, {
-          status: !reached.has(key) ? 'not_written' : cutOnly(key) ? 'not_judged' : 'written',
+          status: !reached.has(key)
+            ? 'not_written'
+            : cutOnly(key)
+              ? 'not_judged'
+              : cleaned.has(key)
+                ? 'cleaned_by_build'
+                : 'written',
           ...(reached.has(key) && cutOnly(key) ? { why: 'every_print_cut' } : {}),
           site: true,
           reached: reached.has(key),

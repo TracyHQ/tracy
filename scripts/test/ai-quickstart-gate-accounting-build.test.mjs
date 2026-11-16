@@ -24,6 +24,7 @@ const NAMED = [
   'escapes.places',
   'pages.ownItem',
   'hides',
+  'hides.fields',
   'createdFrames'
 ]
 
@@ -90,6 +91,12 @@ test('JA Boxing: each build place is written or skipped with a reason, as its pl
   assert.equal(at('build:hides.block-167.2').account, 'written')
   for (const p of places.filter((x) => kindOf(x) === 'hides'))
     assert.ok(p.account === 'written' || p.code.startsWith('control_'), p.key + ' ' + p.code)
+  // The field group hides (#587): the marker build gives the footer logo, so its group is held, and the statistics
+  // tile is taken off or held; each is accounted from the plan, never key_not_read.
+  assert.equal(at('build:hides.block-170.0.fields').code, 'group_held')
+  assert.ok(places.some((p) => p.key.startsWith('build:hides.block-166.') && kindOf(p) === 'hides.fields'))
+  for (const p of places.filter((x) => kindOf(x) === 'hides.fields'))
+    assert.ok(p.account === 'written' || p.code === 'group_held', p.key + ' ' + p.code)
   // Every escape entry is used by a value the build writes, or says why none is.
   const escapes = places.filter((p) => kindOf(p) === 'escapes.places')
   assert.ok(escapes.some((p) => p.account === 'written'))
@@ -139,4 +146,22 @@ test('an escape entry no written value takes is skipped with its reason', () => 
     values: [{ loc: { column: 'title' } }]
   }
   assert.equal(accountBuildPlace(place, ctx({ ops: [op] }, { pages: [] }, mapping)).account, 'written')
+})
+
+test('a field group hide is accounted by the plan fieldGroups: taken off, held, or not read', () => {
+  const place = { kind: 'hides.fields', block: 'hero', fields: ['stat-value', 'stat-label'], by: 'setting' }
+  const row = (taken) => ({
+    record: 'copy:home.hero',
+    block: 'hero',
+    fields: place.fields,
+    by: 'setting',
+    taken
+  })
+  assert.equal(accountBuildPlace(place, ctx({ ops: [], fieldGroups: [row(true)] })).account, 'written')
+  const held = accountBuildPlace(place, ctx({ ops: [], fieldGroups: [row(false)] }))
+  assert.deepEqual([held.account, held.code], ['skipped_by_writer', 'group_held'])
+  assert.equal(accountBuildPlace(place, ctx({ ops: [] })).code, KEY_NOT_READ)
+  // A group of another block, or other fields, is not this place's.
+  const other = { ...row(true), fields: ['stat-value'] }
+  assert.equal(accountBuildPlace(place, ctx({ ops: [], fieldGroups: [other] })).code, KEY_NOT_READ)
 })

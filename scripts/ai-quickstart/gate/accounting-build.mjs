@@ -193,6 +193,15 @@ export function accountBuildPlace(place, { writePlan, order, gaps, unbuilt, mapp
       )
         return writer('control_shared_by_items', 'the write plan does not choose the item whose words win')
       return hidePlace(place, ev, notRead)
+    case 'hides.fields': {
+      // The write plan's `fieldGroups`: what each record of the block did with the group.
+      const rows = list(writePlan?.fieldGroups).filter(
+        (g) => g.block === place.block && sameFields(g.fields, place.fields)
+      )
+      if (!rows.length) return notRead('the write plan holds no field group of ' + place.block)
+      if (rows.some((g) => g.taken)) return written(`the group is taken off (hides.${place.by})`)
+      return writer('group_held', 'every record holds a field of the group: nothing is taken off')
+    }
     default:
       return notRead(`the write plan does not read ${place.kind}`)
   }

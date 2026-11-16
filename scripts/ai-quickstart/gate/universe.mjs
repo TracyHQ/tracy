@@ -124,7 +124,7 @@ export const IGNORED_MAPPING_KEYS = Object.freeze({
   notEmptied:
     'rows the blank site keeps as they are, with the kit reason (trashed or never placed); the demo scan reads what prints',
   hides:
-    'where the write takes a row or an element out; the places it takes out are block places, and each hide with scope, from, element or order is a build place',
+    'where the write takes a row or an element out; the places it takes out are block places, and each hide with scope, from, element or order is a build place, and so is each field group hide (fields)',
   placements:
     'how each block is placed (its entity, its resets, the position a container holds); keyedRow, holds.copies and menu.items are build places, and the values a reset names are block places or build sets'
 })
@@ -150,7 +150,7 @@ const HIDE_KEYS = ['scope', 'from', 'element', 'order']
  * The places of what the build writes besides the blocks (#597, "What the build writes besides the blocks"), one per
  * declaration, `owner: 'build'`, `kind` naming the mapping key: the accent door, each part of each page type's page,
  * each entity of each created frame, a keyed row, a container's copies, a menu block's items, the featured article,
- * and each hide carrying `scope`, `from`, `element` or `order`.
+ * each hide carrying `scope`, `from`, `element` or `order`, and each field group hide (`fields`).
  */
 export function buildPlacesOf(mapping) {
   const out = []
@@ -190,6 +190,9 @@ export function buildPlacesOf(mapping) {
     list(hides).forEach((h, i) => {
       const keys = HIDE_KEYS.filter((k) => typeof h?.[k] === 'string')
       if (keys.length) add('hides', ['hides', block, i], { block, keys, control: h.control ?? null })
+      // A field group hide (#587): the group is taken off, or held because a field of it is written.
+      if (Array.isArray(h?.fields))
+        add('hides.fields', ['hides', block, i, 'fields'], { block, fields: h.fields, by: h.by ?? null })
     })
   return out
 }

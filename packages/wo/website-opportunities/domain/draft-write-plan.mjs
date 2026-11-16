@@ -192,6 +192,10 @@ export function writePlanOf(order, aiq, options = {}) {
     underNotWritten: state.underNotWritten,
     controls: [...sink.records.values()].flatMap((r) =>
       list(r.controls).map((c) => ({ record: r.key, ...c }))
+    ),
+    // Each field group hide (`hides.<id>[i].fields`) per record: taken off, or held because a field of it is written.
+    fieldGroups: [...sink.records.values()].flatMap((r) =>
+      list(r.fieldGroups).map((g) => ({ record: r.key, block: r.block, ...g }))
     )
   }
   plan.pairs = pairsOf(state)

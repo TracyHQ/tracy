@@ -129,3 +129,32 @@ test("Y1: in the plan a code-less probe counts only where the place's own value 
   const index = storedIndex(plan)
   assert.deepEqual([...reachedInPlan(used, plan, index, () => null)], ['A'])
 })
+
+// #597: the build neutralises a content plugin code and strips direction and control characters before any door, and
+// says so in its plan (`plan.cleaned`). Such a probe reached the site in its cleaned form: it is its own result,
+// `cleaned_by_build`, tested on the site, never `probe_not_written` and never a probe written unchanged.
+test('a probe the build reports it cleaned is tested on the site as cleaned, in a class of its own', async () => {
+  const result = await measure(PROBES)
+  assert.equal(result.status, 'passed')
+  const cleaned = result.ledger.filter((r) => r.status === 'cleaned_by_build')
+  for (const probe of ['loadposition', 'emailcloak', 'direction-override'])
+    assert.ok(
+      cleaned.some((r) => r.probe === probe && r.reached === true && r.site === true),
+      probe
+    )
+  assert.ok(!result.ledger.some((r) => r.probe === 'loadposition' && r.status === 'written'))
+  assert.ok(!result.ledger.some((r) => r.status === 'not_written'))
+})
+
+test('near miss: the same cleaning the build does not report is not credited as cleaned', async () => {
+  const kit = floristKit()
+  const site = memorySiteOf(kit, {})
+  const unreported = async (options) => {
+    const built = await markerBuild(kit, { iconLibrary: icons, tryWrite: memoryTryWrite(kit), ...options })
+    if (built.writePlan) built.writePlan = { ...built.writePlan, cleaned: [] }
+    return built
+  }
+  const result = await writeSafety({ build: unreported, site, probes: JOOMLA_PROBES })
+  assert.ok(!result.ledger.some((r) => r.status === 'cleaned_by_build'))
+  assert.notEqual(result.status, 'passed')
+})

@@ -12,6 +12,8 @@ import { applies } from '../ai-quickstart/gate/write-probes.mjs'
 import { PROBE_CATALOGUE } from '../ai-quickstart/gate/write-probes-edge.mjs'
 import { floristKit } from './fixtures/ai-quickstart-gate/florist-kit.mjs'
 import { memorySiteOf } from './fixtures/ai-quickstart-gate/memory-site.mjs'
+// The build writes a content plugin code with a word joiner after its brace (#597): the faults below match the code
+// in either form, so they still meet the one probe that carries it.
 
 const icons = { set: 'invented-icons@1', icons: [{ name: 'leaf', tags: ['plant'], categories: [] }] }
 const PROBES = [...PROBE_CATALOGUE, ...JOOMLA_PROBES]
@@ -43,7 +45,7 @@ const hero = (call) => call.kind === 'module' && call.fields?.title === 'hero-ho
 test('a door answering a server error on one marker-like value in one field is named exactly', async () => {
   const { result } = await measure({
     door: (call) =>
-      hero(call) && String(call.fields.params).includes('{loadposition') ? 'server_error' : null
+      hero(call) && /\{\u2060?loadposition/.test(String(call.fields.params)) ? 'server_error' : null
   })
   assert.equal(result.status, 'failed')
   const [error, ...more] = only(result.findings, 'server_error')
@@ -77,14 +79,14 @@ test('a door answering a server error on one marker-like value in one field is n
     }
   )
   // The finding names the field, never the value written.
-  assert.doesNotMatch(JSON.stringify(error), /\{loadposition/)
+  assert.doesNotMatch(JSON.stringify(error), /\{\u2060?loadposition/)
   // Every other probe at that place and every probe elsewhere was written.
   assert.deepEqual(result.missing, [])
 })
 
 test('a page answering a server error is traced through its blocks to the one field', async () => {
   const { result, site } = await measure({
-    pageFails: (html) => /data-m="hero-home" data-v="[^"]*\{loadposition/.test(html)
+    pageFails: (html) => /data-m="hero-home" data-v="[^"]*\{\u2060?loadposition/.test(html)
   })
   assert.deepEqual(
     only(result.findings, 'server_error').map((f) => [
@@ -155,7 +157,7 @@ test('a spent budget is incomplete, never passed', async () => {
   // A page error the bisection has no step left for: the field stays unnamed and the measurement says so. The page
   // broke all the same, so the measurement fails (review 4 X4), with the untraced page as its finding.
   const spent = await measure(
-    { pageFails: (html) => /data-m="hero-home" data-v="[^"]*\{loadposition/.test(html) },
+    { pageFails: (html) => /data-m="hero-home" data-v="[^"]*\{\u2060?loadposition/.test(html) },
     { limits: { ...LIMITS, steps: 0 } }
   )
   assert.equal(spent.result.status, 'failed')

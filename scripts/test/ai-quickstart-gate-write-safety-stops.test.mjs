@@ -11,6 +11,8 @@ import { LIMITS, writeSafety } from '../ai-quickstart/gate/write-safety.mjs'
 import { PROBE_CATALOGUE } from '../ai-quickstart/gate/write-probes-edge.mjs'
 import { floristKit } from './fixtures/ai-quickstart-gate/florist-kit.mjs'
 import { memorySiteOf } from './fixtures/ai-quickstart-gate/memory-site.mjs'
+// The build writes a content plugin code with a word joiner after its brace (#597): the faults below match the code
+// in either form, so they still meet the one probe that carries it.
 
 const icons = { set: 'invented-icons@1', icons: [{ name: 'leaf', tags: ['plant'], categories: [] }] }
 const PROBES = [...PROBE_CATALOGUE, ...JOOMLA_PROBES]
@@ -41,7 +43,7 @@ test('X4: two stops in one pass are both findings, each named by the one place i
   const { result } = await measure(
     {
       door: (call) =>
-        hero(call) && String(call.fields.params).includes('{loadposition')
+        hero(call) && /\{\u2060?loadposition/.test(String(call.fields.params))
           ? 'server_error'
           : footer(call) && String(call.fields.params).includes('&quot;')
             ? 'SLOT_VALUE_REFUSED'
@@ -72,7 +74,7 @@ test('X4: a stop that names the slot it refused blames the one place stored ther
   const { result } = await measure(
     {
       door: (call) =>
-        hero(call) && String(call.fields.params).includes('{loadposition')
+        hero(call) && /\{\u2060?loadposition/.test(String(call.fields.params))
           ? { code: 'server_error', details: { slot: 'module-3.1' } }
           : null
     },

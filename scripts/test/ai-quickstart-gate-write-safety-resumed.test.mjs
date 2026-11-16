@@ -14,6 +14,8 @@ import { releaseGate } from '../ai-quickstart/gate/release-gate.mjs'
 import { memoryState } from '../ai-quickstart/gate/write-safety-state.mjs'
 import { writeFloristFolder } from './fixtures/ai-quickstart-gate/florist-folder.mjs'
 import { floristGate, HUMAN_SHA } from './fixtures/ai-quickstart-gate/florist-gate.mjs'
+// The build writes a content plugin code with a word joiner after its brace (#597): the faults below match the code
+// in either form, so they still meet the one probe that carries it.
 
 const inputs = { blankSite: { sha256: 'b'.repeat(64) }, humanQuickstart: { sha256: HUMAN_SHA } }
 const run = async (faults, state) => {
@@ -30,7 +32,7 @@ const BAD = {
   door: (call) =>
     call.kind === 'module' &&
     call.fields?.title === 'hero-home' &&
-    String(call.fields.params).includes('{loadposition')
+    /\{\u2060?loadposition/.test(String(call.fields.params))
       ? 'server_error'
       : null
 }

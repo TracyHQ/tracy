@@ -48,3 +48,21 @@ test('Z2: the marker with the code gone and no cut is a run', () => {
   assert.equal(judge('loadposition', '<p>QxABC </p><p>Next words</p>')?.kind, 'markup_injected')
   assert.equal(judge('emailcloak', '<h3>QxABC</h3>')?.kind, 'markup_injected')
 })
+
+// #597: the build writes the code with a word joiner after its brace, so the page prints the words and no plugin
+// pattern matches. A probe the build cleaned is judged on that form: shown as typed passes, gone is still a run.
+test('a code the build cleaned passes when the page shows it as typed, and is a run when it is gone', () => {
+  const cleaned = (id, body) => {
+    const probe = JOOMLA_PROBES.find((p) => p.id === id)
+    const html = '<html><body>' + body + '</body></html>'
+    return probe.judge({ doc: parseHTML(html).document, code: 'ABC', html, cleaned: true })
+  }
+  assert.equal(cleaned('loadposition', '<p>QxABC {⁠loadposition qxabcl}</p>'), null)
+  assert.equal(cleaned('emailcloak', '<p>QxABC {⁠emailcloak=off}</p>'), null)
+  assert.equal(cleaned('loadposition', '<p>QxABC Next words</p>')?.kind, 'markup_injected')
+  // The code as typed, with no joiner, is not what the build wrote: judged as cleaned, it did not show as written.
+  assert.equal(
+    cleaned('loadposition', '<p>QxABC Next words {loadposition qxabcl}</p>')?.kind,
+    'markup_injected'
+  )
+})
