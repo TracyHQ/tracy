@@ -121,3 +121,75 @@ function sharedLabels(kit, linkLabelSlot) {
   }
   return new Set([...printedBy].filter(([, blocks]) => blocks.size > 1).map(([label]) => label))
 }
+
+/**
+ * A link the decision hides while it writes the link's label slot, as R10b reads it ("link is hidden but its label slot
+ * is still written"), settled the way the decision means it. Dev, BXR London on JA Boxing, 16/11/2026: the contact
+ * page's SUBMIT button was hidden "Form submit control; the contact form itself is kept in site.forms" while its label
+ * was written "Send enquiry", the plan step's only standing failure ("failed, best version used").
+ * - A page control (the kit's `action: page-control`: a form's submit, a slider arrow) whose words the decision writes is
+ *   kept: it acts inside the page and needs no target (R10b), so it moves from the hidden slots to the decision's links
+ *   with its label slot. Hiding its label instead would leave a form's submit button with no words.
+ * - Any other link the decision hides takes its label with it (the spec: "hide its label slot, and the link with it"):
+ *   the label moves from the copy to the hidden slots.
+ * A label owned by another block (`ownedBy`, shown there too and written for its own link, R24) and a label the
+ * decision does not write itself stay as the planner left them. Returns the same plan when nothing changed.
+ */
+export function withHiddenLinkLabels(plan, kit) {
+  if (!plan || typeof plan !== 'object') return plan
+  const { linkIx, linkLabelSlot, slotOwnedBy } = indexKit(kit && typeof kit === 'object' ? kit : {})
+  let changed = false
+  const fix = (decision) => {
+    if (!decision || typeof decision !== 'object' || decision.decision !== 'keep') return decision
+    const hidden = each(decision.hiddenSlots)
+    const hiddenIds = new Set(hidden.map((h) => h?.slot))
+    const written = new Set(each(decision.copy).map((c) => c?.slot))
+    const keepControls = new Map()
+    const hideLabels = new Map()
+    for (const h of hidden) {
+      const label = linkLabelSlot.get(h?.slot)
+      const link = linkIx.get(h?.slot)
+      if (!label || !link || hiddenIds.has(label) || !written.has(label)) continue
+      const owner = slotOwnedBy.get(label)
+      if (owner && owner !== decision.block) continue
+      if (link.action === 'page-control') keepControls.set(h.slot, label)
+      else hideLabels.set(label, h.slot)
+    }
+    if (!keepControls.size && !hideLabels.size) return decision
+    changed = true
+    return {
+      ...decision,
+      copy: each(decision.copy).filter((c) => !hideLabels.has(c?.slot)),
+      hiddenSlots: [
+        ...hidden.filter((h) => !keepControls.has(h?.slot)),
+        ...[...hideLabels].map(([slot, link]) => ({
+          slot,
+          why: `the label of ${link}, a link this block hides`
+        }))
+      ],
+      ...(keepControls.size
+        ? {
+            links: [
+              ...each(decision.links),
+              ...[...keepControls].map(([link, labelSlot]) => ({ link, labelSlot }))
+            ]
+          }
+        : {})
+    }
+  }
+  const sharedBlocks = Array.isArray(plan.sharedBlocks) ? plan.sharedBlocks.map(fix) : plan.sharedBlocks
+  const pages = Array.isArray(plan.pages)
+    ? plan.pages.map((page) => {
+        if (!page || typeof page !== 'object' || page.decision === 'drop' || !Array.isArray(page.blocks))
+          return page
+        const blocks = page.blocks.map(fix)
+        return blocks.some((b, i) => b !== page.blocks[i]) ? { ...page, blocks } : page
+      })
+    : plan.pages
+  if (!changed) return plan
+  return {
+    ...plan,
+    ...(Array.isArray(sharedBlocks) ? { sharedBlocks } : {}),
+    ...(Array.isArray(pages) ? { pages } : {})
+  }
+}
