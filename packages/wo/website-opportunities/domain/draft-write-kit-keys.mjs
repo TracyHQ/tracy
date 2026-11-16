@@ -46,6 +46,8 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
     from: 'read: "logo" makes the icon from the logo the plan uploads (draft-write-plan-favicon.mjs)',
     fallback: 'read: "initials" draws the business initials when the plan has no logo picture',
     path: 'read: where the icon is uploaded; its extension is the format (.ico, .png; another is flagged)',
+    setting:
+      'not read: the template setting pointing at an images/ icon is set by the blank site (overrides.settings)',
     why: 'not read: prose'
   },
   'pages.<type>': {
@@ -110,6 +112,12 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
     keptWhen: 'read: only "any-held-block-kept" is known, any other value stops (kept_when_unknown)',
     why: 'not read: prose'
   },
+  'placements.<id>.resets[i]': {
+    location: READ,
+    from: 'read: one of DRAFT_WRITE_RESET_FROM, any other value stops (reset_from_unknown)',
+    value: 'read: the value a reset from "kit" writes on every copy',
+    why: 'not read: prose'
+  },
   'placements.<id>.menu': { menutype: READ, items: READ, why: 'not read: prose' },
   'placements.<id>.menu.items': {
     from: READ,
@@ -152,6 +160,16 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
     why: 'not read: prose'
   }
 })
+
+/** The sources of a placement reset the write knows (draft-write-plan-copies.mjs); any other stops the plan. */
+export const DRAFT_WRITE_RESET_FROM = Object.freeze([
+  'buildSets',
+  'hides',
+  'container',
+  'recipe',
+  'demo',
+  'kit'
+])
 
 /** The values of the hide keys the write knows; any other value is unknown to it. */
 export const DRAFT_WRITE_HIDE_VALUES = Object.freeze({

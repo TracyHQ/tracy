@@ -59,8 +59,16 @@ test('the written records take the rank as their order and a publish date newest
 test('the plan names the order each placed list block shows: the plan order, or the kit declared one', () => {
   const orders = Object.fromEntries(floristPlan.itemOrders.map((o) => [o.block, o]))
   assert.equal(orders['class-list']?.follows, 'plan')
+  // The class cards list the class records as the class list page does (#587): the kit resets their module order to
+  // publish_up DESC on every copy, so they follow the plan order too.
+  assert.ok(orders['block-160'], 'the home class cards are placed')
   for (const id of ['block-159', 'block-160'].filter((b) => orders[b])) {
-    assert.equal(orders[id].follows, 'kit')
-    assert.deepEqual([orders[id].by, orders[id].direction, orders[id].lists], ['title', 'asc', 'class-list'])
+    assert.equal(orders[id].follows, 'plan')
+    assert.deepEqual(
+      [orders[id].by, orders[id].direction, orders[id].lists],
+      ['published', 'desc', 'class-list']
+    )
   }
+  // A block whose kit declares a module order of its own keeps it.
+  assert.equal(orders.header?.follows, 'kit')
 })

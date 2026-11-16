@@ -11,21 +11,20 @@ import { plan, site } from './fixtures/draft-write/guarded.mjs'
 
 const flagged = (p) => p.unproven.filter((u) => u.code === 'author_link_to_unbuilt_page').map((u) => u.kitKey)
 
-test('the florist plan names the kit keys that would keep an author link off: the class article and the home list', () => {
-  assert.deepEqual(flagged(plan), [
+test('the JA Boxing kit declares show_author "0" on the class article and the home list: nothing is flagged', () => {
+  assert.deepEqual(flagged(plan), [])
+  const article = plan.ops.find((op) => op.kind === 'article.create')
+  assert.equal(article.base.attribs.show_author, '0')
+})
+
+test('a kit without those declarations names the kit keys that would keep an author link off', () => {
+  const aiq = structuredClone(site.aiq)
+  delete aiq.mapping.pages.class.record.base.attribs.show_author
+  delete aiq.mapping.pages.home.menuItem.params.show_author
+  assert.deepEqual(flagged(writePlanOf(site.order, aiq, { stored: site.stored })), [
     'pages.class.record.base.attribs.show_author',
     'pages.home.menuItem.params.show_author'
   ])
-})
-
-test('an invented kit shape that declares show_author "0" there prints no author link: nothing is flagged', () => {
-  const aiq = structuredClone(site.aiq)
-  aiq.mapping.pages.class.record.base.attribs.show_author = '0'
-  aiq.mapping.pages.home.menuItem.params.show_author = '0'
-  const p = writePlanOf(site.order, aiq, { stored: site.stored })
-  assert.deepEqual(flagged(p), [])
-  const article = p.ops.find((op) => op.kind === 'article.create')
-  assert.equal(article.base.attribs.show_author, '0')
 })
 
 test('a kit with the author pages built has a page to link to: nothing is flagged', () => {

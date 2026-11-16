@@ -1,12 +1,13 @@
 // What a copy or an in-place record needs besides its words (ticket #597): the `hides` of its block (rows cut, a button
 // element taken out, a setting that hides an empty button), the `resets` of its placement (the category it lists, the
-// position of its container, the ordering of its recipe), its module title and the mark a resumed run finds it by.
+// position of its container, the ordering of its recipe, a value the kit fixes), its module title and the mark a resumed
+// run finds it by. A reset whose source the write does not know stops the plan (`reset_from_unknown`).
 // Pure; part of `writePlanOf`. Spec: `docs/references/ai-quickstart-contract.md`, "Copies and blocks written in place".
 import { movedAfterCut, rowIndexOf } from './draft-write-codec.mjs'
 import { emptyControl, holdsField, omitRows } from './draft-write-plan-hides.mjs'
 import { categoryRecordOf } from './draft-write-kit-pages.mjs'
 import { DraftWriteError } from './draft-write-error.mjs'
-import { DRAFT_WRITE_HIDE_VALUES } from './draft-write-kit-keys.mjs'
+import { DRAFT_WRITE_HIDE_VALUES, DRAFT_WRITE_RESET_FROM } from './draft-write-kit-keys.mjs'
 import { put, unproven } from './draft-write-sink.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -95,6 +96,15 @@ function applyHides(state, record) {
 function applyResets(state, record, placement) {
   for (const reset of list(placement.resets)) {
     const loc = reset.location
+    if (!DRAFT_WRITE_RESET_FROM.includes(reset.from))
+      throw new DraftWriteError(
+        'reset_from_unknown',
+        `${record.block} declares a reset the write does not know`,
+        {
+          block: record.block,
+          from: reset.from ?? null
+        }
+      )
     if (reset.from === 'buildSets') {
       const key = `${loc.entity}:${loc.column}:${(loc.jsonPath ?? []).join('.')}`
       const pageType = state.kit.mapping.buildSets?.[key]?.pageType
@@ -114,7 +124,8 @@ function applyResets(state, record, placement) {
     } else if (reset.from === 'recipe') {
       put(state.sink, record.key, loc, record.order ?? 0, { rule: 'resets.recipe' })
       unproven(state.sink, 'recipe_ordering', { record: record.key })
-    } else if (reset.from === 'demo') record.rules.add('resets.demo_kept')
+    } else if (reset.from === 'kit') put(state.sink, record.key, loc, reset.value, { rule: 'resets.kit' })
+    else if (reset.from === 'demo') record.rules.add('resets.demo_kept')
     // `hides`: the setting is written by the block's `setting` hide, only while its button is empty (above).
   }
 }

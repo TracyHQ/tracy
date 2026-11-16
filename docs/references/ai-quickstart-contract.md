@@ -782,7 +782,8 @@ entry}`, how it is assigned and what the build must change (`ai-quickstart-place
   or `demo` (a demo value with no other place, such as a trainer name kept as a module title), or `kit` with a string
   `value` every copy takes as the kit fixes it (`{location, from: "kit", value, why}`; JA Boxing: the class cards of
   modules 160 and 159 list by `publish_up` `DESC`, the order of the class list page, in place of the store's title
-  order). Only a `kit` reset carries a `value`.
+  order). Only a `kit` reset carries a `value`. The draft write writes it on every copy (rule `resets.kit`), and a
+  reset whose `from` it does not know stops the plan (`reset_from_unknown`).
 - `inside` and `holds`: a block placed `inside:<id>` names its container, `{block, why}`; the container names the
   blocks it holds and the location of the position it draws, `{blocks, position, why}`.
 - `menu`: `{menutype, why}`, the menu a menu block draws, a menutype of the kit (the `menutype` of a menu item entity

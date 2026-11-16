@@ -17,7 +17,8 @@ const faviconOf = (plan) => plan.ops.find((op) => op.kind === 'look.favicon')
 const icoSizes = (bytes) => Array.from({ length: bytes.readUInt16LE(4) }, (_, i) => bytes[6 + 16 * i] || 256)
 
 test('the kit declares the icon path; a text logo makes it from the business initials on the accent', () => {
-  assert.equal(PATH, 'templates/ja_boxing/favicon.ico')
+  // Under images/, where the media door writes; the T4 setting other_faviconFile points at it (look.favicon.setting).
+  assert.equal(PATH, 'images/tracy-brand/favicon.ico')
   const op = faviconOf(floristPlan)
   assert.equal(op.path, PATH)
   assert.equal(op.from, 'initials')
@@ -59,7 +60,7 @@ test('with a logo picture the icon is made from the logo, contained in a clear s
 
 test('a path whose format the write cannot make is flagged and written nowhere', () => {
   const aiq = structuredClone(florist.aiq)
-  aiq.mapping.look.favicon.path = 'templates/ja_boxing/favicon.svg'
+  aiq.mapping.look.favicon.path = 'images/tracy-brand/favicon.svg'
   const plan = writePlanOf(florist.order, aiq, { stored: florist.stored })
   assert.equal(faviconOf(plan), undefined)
   assert.ok(plan.unproven.some((u) => u.code === 'favicon_format_unknown'))

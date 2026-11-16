@@ -56,6 +56,7 @@ export const BUILD_GUARD_CODES = Object.freeze([
   'record_kind_unsupported',
   'record_name_empty',
   'ref_unresolved',
+  'reset_from_unknown',
   'slot_missing',
   'slot_picture_unfit',
   'straight_quote_in_open_slot',

@@ -12,7 +12,11 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { cutRows, getAt, removeAt, setAt } from '../domain/draft-write-codec.mjs'
-import { DRAFT_WRITE_HIDE_VALUES, DRAFT_WRITE_KIT_KEYS } from '../domain/draft-write-kit-keys.mjs'
+import {
+  DRAFT_WRITE_HIDE_VALUES,
+  DRAFT_WRITE_KIT_KEYS,
+  DRAFT_WRITE_RESET_FROM
+} from '../domain/draft-write-kit-keys.mjs'
 import { writePlanOf } from '../domain/draft-write-plan.mjs'
 import { memoryHtml } from '../domain/write-order-memory-html.mjs'
 import { boxingKit, boxingSite } from './fixtures/draft-write/boxing-site.mjs'
@@ -141,6 +145,11 @@ function unknownKitKeys(mapping) {
     check('placements.<id>.holds.copies', p.holds?.copies)
     check('placements.<id>.menu', p.menu)
     check('placements.<id>.menu.items', p.menu?.items)
+    for (const reset of list(p.resets)) {
+      check('placements.<id>.resets[i]', reset)
+      if (!DRAFT_WRITE_RESET_FROM.includes(reset.from))
+        out.push(`placements.<id>.resets[i].from=${reset.from}`)
+    }
   }
   check('seo.featuredView', mapping.seo?.featuredView)
   check('seo.featuredView.article', mapping.seo?.featuredView?.article)
@@ -169,11 +178,15 @@ test('a key the kit declares that the write step does not know is caught, as is 
   kit.mapping.hides['block-167'][0].from = 'last-item'
   kit.mapping.look.accent.sides.values.contrast = 'accent'
   kit.mapping.pages.class.record.category.title.case = 'upper'
+  kit.mapping.placements['block-160'].resets[2].from = 'guess'
+  kit.mapping.placements['block-160'].resets[3].invented = 1
   assert.deepEqual(unknownKitKeys(kit.mapping), [
     'look.accent.sides.values.contrast',
     'pages.<type>.menuItem.invented',
     'pages.<type>.record.category.title.case',
     'placements.<id>.menu.items.sortBy',
+    'placements.<id>.resets[i].from=guess',
+    'placements.<id>.resets[i].invented',
     'hides.<id>[i].from=last-item'
   ])
 })

@@ -118,8 +118,8 @@ test('the florist plan raises exactly these skip reasons, flags and operation ki
     'template_fallback',
     'text_logo_prints_site_name'
   ])
+  // No author link: the JA Boxing kit declares show_author "0" on the created articles and the list pages (#587).
   assert.deepEqual(set(plan.unproven.map((u) => u.code)), [
-    'author_link_to_unbuilt_page',
     'featured_article_none',
     'picture_place_empty_hidden'
   ])

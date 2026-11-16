@@ -116,9 +116,17 @@ test('created articles are dated apart: the first item of a newest first list is
   assert.equal(site.aiq.blockStore.blocks.find((b) => b.id === 'class-list').itemsOrder.direction, 'desc')
   const ranks = list.items.map((i) => articles(plan).find((op) => op.key === `article:${i.data}`).dated.rank)
   assert.deepEqual(ranks, [0, 1])
-  // Read from the kit's own declaration: a list ordered oldest first dates its first item oldest.
+  // Read from the kit's own declaration: a list ordered oldest first dates its first item oldest. The home class
+  // cards (block-160) list the same records by date too (#587); here they keep a title order, so the class list
+  // alone gives the dates.
   const blockStore = structuredClone(site.aiq.blockStore)
   blockStore.blocks.find((b) => b.id === 'class-list').itemsOrder.direction = 'asc'
+  for (const id of ['block-160', 'block-159'])
+    blockStore.blocks.find((b) => b.id === id).itemsOrder = {
+      by: 'title',
+      direction: 'asc',
+      from: 'invented'
+    }
   const asc = articles(planOf({ blockStore }))
   assert.deepEqual(
     list.items.map((i) => asc.find((op) => op.key === `article:${i.data}`).dated.rank),

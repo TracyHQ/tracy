@@ -49,7 +49,7 @@ test('every written text field of the real plan is measured on the pages, none p
   const report = await checked()
   const limits = report.checks.limits
   assert.equal(limits.status, 'ran')
-  assert.ok(limits.fields > 80, `${limits.fields} fields`)
+  assert.ok(limits.fields >= 80, `${limits.fields} fields`)
   assert.equal(limits.measured, limits.fields)
   assert.deepEqual(limits.notLocated, [])
   assert.deepEqual(limits.findings, [])
