@@ -42,6 +42,7 @@ import { plannerPrompt } from './planner-prompt.js'
 import { withHiddenListLinks } from './plan-hidden-links.js'
 import { withDemoVideosHidden } from './plan-demo-videos.js'
 import { withKitCharacterLimits } from './plan-kit-limits.js'
+import { mergePlanParts, partFirstMessages, planningParts, plansInParts } from './plan-parts.js'
 import { VISUAL_REVIEW_POLICY, visualReviewInstruction, withVisualReview } from './visual-review.js'
 
 export { BENCH_QUEUE }
@@ -97,6 +98,23 @@ export const SITE_PLANNER_STEP = Object.freeze({
     wholeDoc: WHOLE_PLAN_MESSAGE,
     notADoc: NOT_A_PLAN_MESSAGE
   }),
+  // Parallel parts (plan-parts.js): each part's first message, or null when the run plans round 0 as before; then the
+  // merge of the parts' plans into one, normalized like any answer.
+  parts: ({ row, ready }) => {
+    if (!plansInParts(row.harness)) return null
+    const groups = planningParts(ready.kit.doc, row.harness.parallelPages)
+    if (groups.length < 2) return null
+    const { firstUser } = agentRequest({ row, ready, history: [] })
+    return partFirstMessages(firstUser, groups, ready.kit.doc).map((message, part) => ({
+      about: groups[part],
+      firstUser: message
+    }))
+  },
+  mergeParts: (values, { row, ready }) =>
+    normalizedPlan(
+      mergePlanParts(values, planningParts(ready.kit.doc, row.harness.parallelPages), ready.kit.doc),
+      ready.kit.doc
+    ),
   prepare,
   agentRequest
 })

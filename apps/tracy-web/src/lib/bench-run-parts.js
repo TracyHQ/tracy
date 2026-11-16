@@ -116,7 +116,9 @@ export async function writeInParts(ctx, { parts, history, reading, save }) {
   const values = outs.map((o) => (o.error ? null : objectOf(o.answer, step).value))
   if (values.every((v) => v === null))
     return { notADoc: { answer: outs.at(-1).answer, error: outs.find((o) => o.error).error } }
-  const value = step.mergeParts(values)
+  // The run and what it was prepared with go along: a step whose merge depends on its input (the planner's parts are
+  // page groups of the run's kit) reads them there.
+  const value = step.mergeParts(values, { row, ready: ctx.ready })
   const droppedText = outs
     .map((o) => o.droppedText)
     .filter(Boolean)
