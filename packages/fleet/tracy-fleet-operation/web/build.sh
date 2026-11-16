@@ -56,6 +56,8 @@ FAILED=""
 # (`COPY --from=tracy-web-files …` in the Dockerfiles). With the Dockerfile itself they are the
 # image's inputs, and their hash is stamped on the image as a label.
 WEB_FILES="tracy-sendmail tracy-sendmail.ini"
+# Only the Joomla and WordPress Dockerfiles copy this one (customer Apache; the demo farm and EmDash do not).
+APACHE_FILES="tracy-prefork.conf"
 # The demo farm's own files (web/demos/), copied by demos.Dockerfile only.
 DEMOS_FILES="demos/php-fpm-farm.conf demos/php-farm.ini demos/apache-farm.conf demos/ports.conf demos/entrypoint.sh demos/reload.sh"
 
@@ -91,6 +93,7 @@ inputs_hash() { # dockerfile
   local f input_files="$WEB_FILES"
   case "$1" in
     */emdash.Dockerfile) input_files="$input_files emdash-conditional-core.tar.gz emdash-conditional-core.json emdash-conditional-core.LICENSE install-emdash-receiver.mjs" ;;
+    */joomla.Dockerfile|*/wordpress.Dockerfile) input_files="$input_files $APACHE_FILES" ;;
     */demos.Dockerfile) input_files="$input_files $DEMOS_FILES" ;;
   esac
   { cat "$1"; for f in $input_files; do printf '\n--- %s\n' "$f"; cat "$HERE/$f"; done; } \
