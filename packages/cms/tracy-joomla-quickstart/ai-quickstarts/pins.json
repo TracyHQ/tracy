@@ -1,0 +1,5 @@
+{
+  "$comment": "The AI quickstart Tracy builds from, per template (ticket #588): one version and its checksums, read by resolvePinnedAiQuickstart (WO domain ai-quickstart-pin.mjs). Written by the publish step only (scripts/ai-quickstart/publish.mjs --upload). Empty until a kit has a passing check record and is published.",
+  "schema": "tracy-ai-quickstart-pins/v1",
+  "pins": {}
+}

@@ -2435,6 +2435,62 @@ bound to the kit's files, the pinned plugin and human quickstart, the gate's own
 archive (section "The release refusal" above); it reads files only and does not rebuild the plan. `gate.mjs
 --into-kit` writes the `check-record/` the guard reads.
 
+### Publishing, the pin and the re-run (#588)
+
+**The command.** `scripts/ai-quickstart/publish.mjs` is the publish step (`publish/publish-step.mjs`):
+
+```
+GATE_TOKEN_FILE=<file> node scripts/ai-quickstart/publish.mjs <AI quickstart folder> \
+  --human-quickstart <pinned human quickstart .zip> --out <new folder> [--upload] [--offline] [gate flags]
+```
+
+It refuses, before any gate run, a kit whose manifest names no `site` (`no_site`), a template the quickstart list does
+not pin at the kit's version (`no_pin`, `pin_version`), a human quickstart that is not the pinned installer
+(`human_quickstart_not_pinned`), a release that does not carry that installer or already carries an asset of this kit
+version (`human_quickstart_not_in_release`, `already_published`), and an output folder that is not new. Then it makes
+the blank site archive (`blank-site.mjs`), and calls `publishVerified`, whose `runGate` runs `gate/gate.mjs` on that
+archive into `<out>/gate-run` with `--into-kit` and the gate flags given. Only on a verified passing record does it
+write the asset set into `<out>/assets` and the pin into `<out>/pin.json`. That is the dry run, the default: it prints
+the release and each asset, and nothing leaves the machine. `--upload` reads the release again, uploads with
+`gh release upload` (never `--clobber`) and writes the pin into the pins file.
+
+**The assets** go to the release of the human quickstart of the same template version: the repository and tag are read
+from the pinned installer URL in `apps/tracy-web/src/quickstarts.json` (for JA Boxing, tag `quickstart/ja-boxing/j6`
+of `JoomlArt-Products/joomlart-products`). Every name starts with `ai-quickstart-<slug>-<cms>-<version>.`, a prefix no
+human quickstart asset has: `.blank-site.zip`; every file of the checked kit folder, its path with each `/` a `.`
+(`.block-store.json`, `.page-recipes.json`, `.mapping.json`, `.kit-manifest.json`, `.check-record.record.json`, ...);
+`.template-kit.json`; and the checksum manifest `.manifest.json` (`tracy-ai-quickstart-published/v1`: the kit, the
+release, the record's binding, and each asset's role, kit path, bytes and sha256). The human quickstart's own assets
+are never touched.
+
+**The pin.** Tracy pins one version per template in `packages/cms/<package>/ai-quickstarts/pins.json`
+(`tracy-ai-quickstart-pins/v1`, key `ai-quickstart/<slug>/<cms>`), copied into the image with the kits:
+`{version, gateVersion, kitFilesSha256, recordSha256, templateKitSha256, blankSite {file, bytes, sha256}, manifest
+{file, bytes, sha256}, release {repo, tag}}`. Only the publish step writes it. A build reads a kit through
+`resolvePinnedAiQuickstart({root, slug, cms})` (WO domain `ai-quickstart-pin.mjs`): exactly the pinned version, refused
+when its files (`kit_files_differ`), its check record (`record_differs`) or its template kit (`template_kit_differs`)
+are not the published ones, or its manifest names no site (`no_site`). The pins file is empty today; the build
+catalogue reads the resolver from #598.
+
+**`site` and CI.** The record binds `kit-manifest.json`, so `site` is written into the manifest before the final gate
+run, and the change that adds it also adds the passing check record and the pin. The CI rule stays as it is: a kit
+whose manifest names `site` must carry a fresh passing record. A kit with no `site` is asked nothing, and the publish
+step refuses it. JA Boxing 1.0.11 names no `site` today, so `check.mjs` reports no problem for it.
+
+**The re-run on a new template version.** A fix that needs a template file to change is a patch the kit records in
+`template-patches.json` (`tracy-ai-quickstart-template-patches/v1`, `patches: [{id, file, find, replace, why}]`, `file`
+a path inside the template release; no file means no patch).
+
+```
+node scripts/ai-quickstart/rerun.mjs <AI quickstart folder> --template <new human quickstart .zip | folder> --out <folder>
+```
+
+With an archive it runs the production step on it (`blank-site.mjs` with the kit's mapping file). It then reports each
+patch (`template-patches.mjs`) in `<out>/rerun-report.json`: `applies` (the text to replace is there once),
+`already_applied` (the template holds the patched text itself) or `no_longer_applies` (`file_missing`, `text_changed`,
+`text_ambiguous`). JA Boxing records no patch, so the report says there is nothing to re-apply. The production step
+does not apply patches yet: no kit records one.
+
 ### Run time
 
 On the invented florist kit with the memory site the whole run takes about a second. On a real site the time is the
