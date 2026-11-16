@@ -266,7 +266,12 @@ export function buildToolFoldOf(state = EMPTY, event) {
   const callId = message?.source?.callId
   if (typeof callId !== 'string' || !Object.hasOwn(state.calls, callId)) return state
   if (message?.isError === true) return state.working ? { ...state, working: null } : state
-  const result = buildToolResultOf(textOf(message.content))
+  const text = textOf(message.content)
+  const result = buildToolResultOf(text)
+  // The language the cards of this build chat use, as the tool names it on every answer (`chatLanguage`).
+  const language = chatLanguageOfText(text)
+  if (language !== null && language !== state.language) state = { ...state, language }
+  const said = state.language ? { language: state.language } : {}
   if (result?.kind !== 'running' && (state.working ?? null) !== null) state = { ...state, working: null }
   const turn = Number(data.turn)
   const seq = Number(event.seq)
@@ -277,14 +282,14 @@ export function buildToolFoldOf(state = EMPTY, event) {
     return {
       ...state,
       streak: { step, count },
-      stop: { turn, seq, step, rerun: result.rerun, retries: count - 1 }
+      stop: { turn, seq, step, rerun: result.rerun, retries: count - 1, ...said }
     }
   }
   // Any answer that moves the build on ends the run of stops; guidance for the model and unreadable answers do not.
   if (result !== null && result.kind !== 'running' && result.kind !== 'quiet' && state.streak !== null)
     state = { ...state, streak: null, stop: null }
   if (result?.kind === 'templates')
-    return { ...state, templates: { turn, seq, options: result.options, none: result.none } }
+    return { ...state, templates: { turn, seq, options: result.options, none: result.none, ...said } }
   if (result?.kind === 'plan') {
     // An edit the agent made answers with a new revision only: its note says which values it changed.
     const edits = state.calls[callId] === 'edit' ? (state.edits?.[callId] ?? []) : []
@@ -296,11 +301,25 @@ export function buildToolFoldOf(state = EMPTY, event) {
         seq,
         id: result.id,
         revision: result.revision,
-        ...(revised ? { revised } : {})
+        ...(revised ? { revised } : {}),
+        ...said
       }
     }
   }
   return state
+}
+
+/**
+ * The `chatLanguage` an answer names (two lower case letters), or null.
+ * @param {unknown} text
+ */
+function chatLanguageOfText(text) {
+  try {
+    const language = typeof text === 'string' ? JSON.parse(text)?.chatLanguage : null
+    return typeof language === 'string' && /^[a-z]{2}$/.test(language) ? language : null
+  } catch {
+    return null
+  }
 }
 
 /**

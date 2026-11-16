@@ -19,7 +19,7 @@
 export interface BuildQuestion {
   schema: 'tracy-build-question/v1'
   id: string
-  topic: 'main-button' | 'contact-method' | 'site-language' | 'fact-conflict' | 'site-name'
+  topic: 'main-button' | 'contact-method' | 'site-language' | 'fact-conflict' | 'site-name' | 'place-choice'
   fact?: string
   prompt: string
   /** The buttons; an empty list on a `site-name` question, which is free text only. */

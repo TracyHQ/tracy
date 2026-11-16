@@ -235,6 +235,7 @@ export const en = {
   'plan.source.website': 'Website',
   'plan.source.google': 'Google Maps listing',
   'plan.source.social': 'Social profile',
+  'plan.source.listing': 'Directory listing',
   'plan.source.answer': 'Your answer',
   'plan.and': '{first} and {last}',
   'plan.saveFailed': 'Your change was not saved. Try again.',

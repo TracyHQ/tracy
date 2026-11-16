@@ -277,5 +277,22 @@
   "ask.source.instagram": "Instagram 主页",
   "ask.source.facebook": "Facebook 主页",
   "ask.source.tiktok": "TikTok 主页",
-  "ask.source.social": "社交媒体主页"
+  "ask.source.social": "社交媒体主页",
+  "ask.question.place_choice": "我们在 Google 地图上找到了多个同名地点。哪一个是你的？",
+  "ask.choice.place_choice_none": "以上都不是",
+  "ask.choice.main_button_book": "在线预订",
+  "ask.choice.main_button_call": "给我们打电话",
+  "ask.choice.main_button_email": "给我们发邮件",
+  "ask.choice.main_button_message": "给我们发消息",
+  "ask.choice.main_button_visit": "欢迎到店",
+  "ask.choice.main_button_contact": "联系我们",
+  "ask.choice.main_button_book_short": "预订",
+  "ask.choice.main_button_call_short": "致电",
+  "ask.choice.main_button_email_short": "邮件",
+  "ask.choice.main_button_message_short": "消息",
+  "ask.choice.main_button_visit_short": "到店",
+  "ask.choice.main_button_contact_short": "联系",
+  "ask.choice.main_button_text": "按钮上的文字：{text}",
+  "ask.source.listing": "商家目录页面",
+  "plan.source.listing": "商家目录页面"
 }

@@ -140,6 +140,22 @@ export const ASK_STRINGS = {
     'Your public pages give different values for the business name of {item}. Which one is right?',
   'ask.question.fact_conflict_item.price':
     'Your public pages give different values for the price of {item}. Which one is right?',
+  'ask.question.place_choice':
+    'We found more than one place on Google Maps under this name. Which one is yours?',
+  'ask.choice.place_choice_none': 'None of these',
+  'ask.choice.main_button_book': 'Book online',
+  'ask.choice.main_button_call': 'Call us',
+  'ask.choice.main_button_email': 'Email us',
+  'ask.choice.main_button_message': 'Message us',
+  'ask.choice.main_button_visit': 'Visit us',
+  'ask.choice.main_button_contact': 'Contact us',
+  'ask.choice.main_button_book_short': 'Book',
+  'ask.choice.main_button_call_short': 'Call',
+  'ask.choice.main_button_email_short': 'Email',
+  'ask.choice.main_button_message_short': 'Message',
+  'ask.choice.main_button_visit_short': 'Visit',
+  'ask.choice.main_button_contact_short': 'Contact',
+  'ask.choice.main_button_text': 'The button reads: {text}',
   'ask.choice.contact_method_phone': 'A phone number',
   'ask.choice.contact_method_email': 'An email address',
   'ask.choice.contact_method_link': 'A booking or contact link',
@@ -151,7 +167,8 @@ export const ASK_STRINGS = {
   'ask.source.instagram': 'Instagram profile',
   'ask.source.facebook': 'Facebook page',
   'ask.source.tiktok': 'TikTok profile',
-  'ask.source.social': 'Social profile'
+  'ask.source.social': 'Social profile',
+  'ask.source.listing': 'Directory listing'
 }
 
 /** The noun of a fact conflict question's sentence, by the fact role it asks about (`IMPORTANT_CONFLICTS`). */
@@ -175,7 +192,12 @@ const CONFLICT_NOUNS = {
 /** The question's sentence by its code, or null when its code is unknown or its params do not fit. */
 function promptByCode(question, words) {
   const { code, params = {} } = question ?? {}
-  if (code === 'main_button' || code === 'contact_method' || code === 'site_language')
+  if (
+    code === 'main_button' ||
+    code === 'contact_method' ||
+    code === 'site_language' ||
+    code === 'place_choice'
+  )
     return words(`ask.question.${code}`)
   const noun = CONFLICT_NOUNS[params?.fact]
   if (!noun) return null
@@ -198,17 +220,22 @@ function languageNameIn(tag, language) {
 /**
  * A choice's label by its code, or null to keep its label. The values of a fact conflict are the business's own
  * values, said as the sources write them, never translated. A main button choice (`main_button_<channel>`, and its
- * `_short` form) is the very text the site's button will carry, in the site's language and fitted to the button's
- * length: site content, so it is never translated either.
+ * `_short` form) carries the very text the site's button will show, in the site's language: the card says what the
+ * button does in the chat's language and keeps that text word for word in the option's description
+ * (`localizedAskOf`). The answer is the choice id, so the button's text never changes.
  */
 function choiceLabelByCode(choice, words, language) {
   const { code, params = {} } = choice ?? {}
   if (typeof code !== 'string') return null
-  if (/^contact_method_[a-z]+$/.test(code)) return words(`ask.choice.${code}`)
+  if (/^contact_method_[a-z]+$/.test(code) || code === 'place_choice_none') return words(`ask.choice.${code}`)
+  if (MAIN_BUTTON_CHOICE.test(code)) return words(`ask.choice.${code}`)
   if (code === 'site_language_option' && typeof params?.language === 'string')
     return languageNameIn(params.language, language)
   return null
 }
+
+/** The code of a main button choice, full or short (`needs-profile-questions.mjs`). */
+const MAIN_BUTTON_CHOICE = /^main_button_(book|call|email|message|visit|contact)(_short)?$/
 
 /** Where a fact conflict value was found, by its source codes ("From Website and Google Maps listing"), or null. */
 function choiceDetailByCode(choice, words) {
@@ -248,8 +275,14 @@ export function localizedAskOf(ask, questions, words, language) {
         const choice = choices[i]
         if (!choice || choice.label !== o?.label) return o
         const label = choiceLabelByCode(choice, words, language) ?? o.label
+        // A main button said in another language keeps the button's own text beside it, word for word.
+        const buttonText =
+          label !== o.label && MAIN_BUTTON_CHOICE.test(choice.code)
+            ? words('ask.choice.main_button_text', { text: o.label })
+            : null
         const description =
-          o.description === undefined ? undefined : (choiceDetailByCode(choice, words) ?? o.description)
+          buttonText ??
+          (o.description === undefined ? undefined : (choiceDetailByCode(choice, words) ?? o.description))
         return description === undefined ? { ...o, label } : { ...o, label, description }
       })
       const recommendedAt = options.findIndex((o) => o?.label === item.recommended)

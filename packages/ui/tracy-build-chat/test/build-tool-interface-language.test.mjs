@@ -1,7 +1,8 @@
 /**
  * The build chat's engine tool in the owner's interface language (TracyHQ/tracy#609): tracy-web names the language on
- * every build draft answer (`x-tracy-interface-language`), the tool hands it to the agent in `interfaceLanguage`, words
- * the question card in it, and reads a reply's translated label back to its choice id. Every business here is invented.
+ * every build draft answer (`x-tracy-interface-language`). With no conversation language named on the call, the tool
+ * names it as the language its cards use (`chatLanguage`), words the question card in it, and reads a reply's
+ * translated label back to its choice id. Every business here is invented.
  *
  *   node --test --test-concurrency=1 packages/ui/tracy-build-chat/test/build-tool-interface-language.test.mjs
  */
@@ -80,7 +81,7 @@ test('the interface language tracy-web names reaches every answer of the tool, a
   )
   const tool = toolWith(web)
   const researched = await run(tool, { action: 'research', description: 'A pottery studio by the creek' })
-  assert.equal(researched.interfaceLanguage, 'vi')
+  assert.equal(researched.chatLanguage, 'vi')
   const [question] = researched.ask.questions
   // The Vietnamese words come from the table the browser loads, and are not the English ones.
   const said = ['phone', 'email', 'link'].map((id) => vi[`ask.choice.contact_method_${id}`])
@@ -93,7 +94,7 @@ test('the interface language tracy-web names reaches every answer of the tool, a
   for (const [i, choice] of CONTACT.choices.entries()) assert.notEqual(said[i], choice.label)
   assert.equal(question.recommended, said[0])
   // A later answer of another step names it too.
-  assert.equal((await run(tool, { action: 'templates' })).interfaceLanguage, 'vi')
+  assert.equal((await run(tool, { action: 'templates' })).chatLanguage, 'vi')
 })
 
 test('an answer that names no interface language, or not a language tag, leaves the request in English', async () => {
@@ -103,7 +104,7 @@ test('an answer that names no interface language, or not a language tag, leaves 
       action: 'research',
       description: 'A pottery studio by the creek'
     })
-    assert.equal(answer.interfaceLanguage, undefined, String(language))
+    assert.equal(answer.chatLanguage, undefined, String(language))
     assert.deepEqual(answer.ask, ASK, String(language))
   }
 })

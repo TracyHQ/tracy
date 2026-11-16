@@ -277,5 +277,22 @@
   "ask.source.instagram": "Instagram-Profil",
   "ask.source.facebook": "Facebook-Seite",
   "ask.source.tiktok": "TikTok-Profil",
-  "ask.source.social": "Social-Media-Profil"
+  "ask.source.social": "Social-Media-Profil",
+  "ask.question.place_choice": "Wir haben unter diesem Namen mehr als einen Ort in Google Maps gefunden. Welcher ist Ihrer?",
+  "ask.choice.place_choice_none": "Keiner davon",
+  "ask.choice.main_button_book": "Online buchen",
+  "ask.choice.main_button_call": "Rufen Sie uns an",
+  "ask.choice.main_button_email": "Schreiben Sie uns eine E-Mail",
+  "ask.choice.main_button_message": "Schreiben Sie uns eine Nachricht",
+  "ask.choice.main_button_visit": "Besuchen Sie uns",
+  "ask.choice.main_button_contact": "Kontaktieren Sie uns",
+  "ask.choice.main_button_book_short": "Buchen",
+  "ask.choice.main_button_call_short": "Anrufen",
+  "ask.choice.main_button_email_short": "E-Mail",
+  "ask.choice.main_button_message_short": "Nachricht",
+  "ask.choice.main_button_visit_short": "Besuchen",
+  "ask.choice.main_button_contact_short": "Kontakt",
+  "ask.choice.main_button_text": "Text auf der Schaltfläche: {text}",
+  "ask.source.listing": "Eintrag in einem Branchenverzeichnis",
+  "plan.source.listing": "Eintrag in einem Branchenverzeichnis"
 }

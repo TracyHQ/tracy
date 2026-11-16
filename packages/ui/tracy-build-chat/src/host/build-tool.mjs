@@ -49,6 +49,7 @@ import {
   templateChoiceOf,
   textTooLongOf
 } from '@tracy/core/build-chat'
+import { chatLanguageOf, chatLanguageTagOf } from '../chat-words.mjs'
 import { askWordsFor } from './ask-words.mjs'
 
 /**
@@ -125,19 +126,18 @@ export const PLAN_CARD_CONTROLS_GUIDANCE =
   'When an entry asks to change a business fact, a service name or the main colour, tell the owner they can change that value on the plan card. Never say that the language, the design, the logo, the pictures or anything else can be changed on the plan card.'
 
 /**
- * Private guidance: the agent speaks the language of the owner's interface, the language the cards and the question
- * card speak (decided rule, `scripts/test/build-agent-preset.test.mjs`). Every answer names it (`interfaceLanguage`,
- * read from tracy-web's `x-tracy-interface-language`), and a sentence a result hands over is said in it. A message
- * the owner writes in another language does not move it unless the owner asks, nor does a fixed message the chat sends
- * for the owner ("Please try again.", run 6: the agent followed such a message into English). Only an answer that
- * names no interface language falls back to the language the owner writes in.
+ * Private guidance: the build chat speaks the language the owner writes in (decided rule, owner, over the earlier
+ * interface language rule: `scripts/test/build-agent-preset.test.mjs`). The agent names it on every call
+ * (`language`), and the code draws the question card and the cards in it when the build chat has words for it, else
+ * in the account's interface language (`chatLanguageOf`); every answer names what the cards use (`chatLanguage`).
+ * A fixed message the chat sends for the owner ("Please try again.", run 6: the agent followed such a message into
+ * English) never moves it.
  */
 export const OWNER_LANGUAGE_GUIDANCE =
-  'Write in the language of the owner\'s interface: every tracy_build result names it in interfaceLanguage. Keep to that language when the owner writes in another one, and change only when the owner asks you to. A fixed message the chat sends for them, such as "Please try again.", never changes it. Say every sentence a result gives you in that language, keeping names and values as they are. When you cannot tell, because a result names no interfaceLanguage, use the language the owner writes in.'
+  'Write in the language the owner writes in, and name it in language on every tracy_build call, as a two letter code such as en or fr. Keep to it until the owner writes in another language or asks you to change. A fixed message the chat sends for them, such as "Please try again.", never changes it. Say every sentence a result gives you in that language, keeping names and values as they are.'
 
-/** How a line the engine wrote is said: in the owner's interface language, its names and values unchanged. */
-const IN_OWNER_LANGUAGE =
-  "in the owner's interface language (interfaceLanguage), keeping every name and value word for word"
+/** How a line the engine wrote is said: in the language the owner writes in, its names and values unchanged. */
+const IN_OWNER_LANGUAGE = 'in the language the owner writes in, keeping every name and value word for word'
 
 /**
  * Private guidance after a change request with entries not done: nothing is promised that the card and the plan do
@@ -177,12 +177,17 @@ export const tooLongSay = (question, limit) =>
 const SAY_MAX = 300
 
 export const BUILD_DESCRIPTION =
-  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Say every sentence a result gives in the language of the owner\'s interface, which each result names in interfaceLanguage; only when a result names none, in the language the owner writes in. Never say the site is built until a build result says built.'
+  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Every call names in language the language the owner writes in, as a two letter code; say every sentence a result gives in that language. Never say the site is built until a build result says built.'
 
 export const BUILD_PARAMETERS = Object.freeze({
   type: 'object',
   properties: {
     action: { type: 'string', enum: ['research', 'templates', 'plan', 'edit', 'build', 'status'] },
+    language: {
+      type: 'string',
+      description:
+        'The language the owner writes in, as a two letter code such as en, vi or fr. The cards and questions of the build chat use it.'
+    },
     links: {
       type: 'array',
       items: { type: 'string' },
@@ -208,7 +213,7 @@ export const BUILD_PARAMETERS = Object.freeze({
       description: 'For edit: the plan fields to change and their new values.'
     }
   },
-  required: ['action']
+  required: ['action', 'language']
 })
 
 const DOOR = '/api/build-draft'
@@ -540,6 +545,18 @@ export function createBuildTool({
   const issued = new Map()
   /** @type {Map<string, string>} Per build session: the owner's interface language, as tracy-web last named it. */
   const languages = new Map()
+  /** @type {Map<string, string>} Per build session: the language the owner writes in, as the agent last named it. */
+  const spoken = new Map()
+  /**
+   * The language the code says the build chat in: the owner's own when the build chat has words for it, else the
+   * interface language (`chatLanguageOf`); null when neither is known.
+   * @param {unknown} sessionId
+   */
+  const chatLanguageFor = (sessionId) =>
+    chatLanguageOf(
+      spoken.get(/** @type {string} */ (sessionId)),
+      languages.get(/** @type {string} */ (sessionId))
+    )
   /**
    * @type {Map<string, Map<string, string[]>>} Per build session: the option labels handed out for each engine question,
    * in order, so a reply's label is read back as the choice at its place (`sentChoiceIdOf`).
@@ -547,14 +564,14 @@ export function createBuildTool({
   const sentLabels = new Map()
 
   /**
-   * An engine request in the owner's interface language (`localizedAskOf`), its labels kept per question for the
-   * reply. With no known language, or none this host has words for, the request stays as the engine gave it.
+   * An engine request in the build chat's language (`chatLanguageFor`, `localizedAskOf`), its labels kept per question
+   * for the reply. With no known language, or none this host has words for, the request stays as the engine gave it.
    * @param {string} sessionId
    * @param {any} ask
    * @param {any[]} questions - the Contract B questions it was made from
    */
   function localAsk(sessionId, ask, questions) {
-    const language = languages.get(sessionId)
+    const language = chatLanguageFor(sessionId)
     const words = wordsFor(language)
     const said = words && language ? localizedAskOf(ask, questions, words, language) : ask
     let sent = sentLabels.get(sessionId)
@@ -1062,11 +1079,9 @@ export function createBuildTool({
       result = stopped()
     }
     const marked = typeof result?.next === 'string' ? { ...result, next: privately(result.next) } : result
-    // The owner's interface language, once tracy-web named it: the agent speaks it (`INTERFACE_LANGUAGE_GUIDANCE`).
-    const language = languages.get(/** @type {any} */ (exec)?.agent?.session?.id)
-    return language && marked && typeof marked === 'object'
-      ? { ...marked, interfaceLanguage: language }
-      : marked
+    // The language the cards of this build chat use (`chatLanguageFor`), once known: the cards read it from here.
+    const language = chatLanguageFor(/** @type {any} */ (exec)?.agent?.session?.id)
+    return language && marked && typeof marked === 'object' ? { ...marked, chatLanguage: language } : marked
   }
 
   /** @param {unknown} rawArgs @param {any} exec */
@@ -1075,6 +1090,9 @@ export function createBuildTool({
     const sessionId = exec?.agent?.session?.id
     if (!isBuildChatSession(sessionId))
       return { refused: true, next: 'tracy_build works only in the build chat. Do not call it here.' }
+    // The language the owner writes in, as the agent names it on the call; a call that names none keeps the last one.
+    const said = chatLanguageTagOf(args.language)
+    if (said !== null) spoken.set(sessionId, said)
     // "Please try again." reruns the step that stopped, never reads the stop again: a status call made for it runs the
     // call the stop named (`again`) instead.
     if (args.action === 'status') args = pendingRetryOf(eventsOf(sessionId)) ?? args

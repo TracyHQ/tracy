@@ -59,7 +59,7 @@ test('the instructions say what the build chat must do, in plain words with no d
     /never turn a system fault into a question for the owner/i,
     /never ask the owner to try again or to fix anything technical/i,
     /never show error text or codes/i,
-    /language of the owner's interface/i
+    /write in the language the owner writes in, and name it in language on every tracy_build call/i
   ]) {
     assert.match(p, must)
   }

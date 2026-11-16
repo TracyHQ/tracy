@@ -60,7 +60,11 @@ export interface TailDeps {
   runs: BuildRunFeed
   /** The build of the viewer's site as the site chat reads it (#612); made once when absent. */
   sites?: SiteBuildSource
-  t: () => Translate
+  /**
+   * The translator of a build session's cards (`chat-language.ts`): in `language` when the card's value names it,
+   * else in the session's last known language, else in the interface language.
+   */
+  t: (sessionId?: string | null, language?: unknown) => Translate
   fetch?: typeof fetch
   /** Sends one message to the chat as the owner (dsh's session verb, the draft untouched). */
   send?: (sessionId: string, text: string) => Promise<'sent' | 'no-chat' | 'failed'>
@@ -101,7 +105,7 @@ function TemplateTail({
   const [sending, setSending] = useState(false)
   // The card takes its chosen design once; drawn again (keyed) when the draft answers with one.
   const chosen = draft?.template?.slug ?? null
-  const t = deps.t()
+  const t = deps.t(sessionId, value.language)
   /** Says the pick in the chat. Only a press reaches here, so a reload or a new render never sends it again. */
   const tell = async (text: string) => {
     setSending(true)
@@ -147,7 +151,17 @@ function TemplateTail({
  * The one living plan card, read from the draft. `revision` names the plan revision the chat answered last: a newer
  * one makes the card read the draft again. Its edits answer the draft. Drawn by the plan tail and by the review bar.
  */
-export function LivePlan({ deps, revision }: { deps: TailDeps; revision?: string }) {
+export function LivePlan({
+  deps,
+  revision,
+  sessionId,
+  language
+}: {
+  deps: TailDeps
+  revision?: string
+  sessionId?: string
+  language?: string
+}) {
   const draft = useDraft(deps.drafts)
   useEffect(() => void deps.drafts.load(), [deps.drafts, revision])
   // The note belongs to the plan revision it was made for: any later change of the plan takes it away.
@@ -169,7 +183,7 @@ export function LivePlan({ deps, revision }: { deps: TailDeps; revision?: string
       lastEdit={draft.lastEdit ?? null}
       canUndo={draft.canUndo === true}
       lookSources={draft.lookSources ?? null}
-      t={deps.t()}
+      t={deps.t(sessionId, language)}
       onEdit={(edit) => follow(savePlanEdit(edit, deps.fetch))}
       onUndo={() => follow(undoPlanEdit(deps.fetch))}
       newEditId={newEditId}
@@ -212,7 +226,14 @@ function PlanTail({
   const live = useSyncExternalStore(source.subscribe, readLive, readLive) as PlanValue | undefined
   // The review bar shows the card while the owner reviews it: one living plan card, never two.
   if (reviewing || !live) return null
-  return <LivePlan deps={deps} revision={`${live.id}:${live.revision}`} />
+  return (
+    <LivePlan
+      deps={deps}
+      revision={`${live.id}:${live.revision}`}
+      sessionId={sessionId}
+      language={live.language}
+    />
+  )
 }
 
 /** Try again. A build run (locked, stopped or cancelled) takes it away: the build has its own notice. */
@@ -222,7 +243,7 @@ function RetryTail({ deps, sessionId }: { deps: TailDeps; sessionId: string }) {
   if (run !== null) return null
   return (
     <TryAgain
-      t={deps.t()}
+      t={deps.t(sessionId)}
       send={() => deps.send?.(sessionId, RETRY_MESSAGE) ?? Promise.resolve('no-chat' as const)}
     />
   )
@@ -249,7 +270,7 @@ function RunTail({
   const run = useSyncExternalStore(deps.runs.subscribe, read, read)
   const last = useChat((snapshot) => snapshot.timeline.turnOrder.at(-1))
   if (run === null || last !== turn) return null
-  const t = deps.t()
+  const t = deps.t(sessionId)
   // Refused before any step ran: the sentence alone, never a task list with a failed step.
   if (typeof run.notStarted === 'string') return <BuildNotStarted code={run.notStarted} t={t} />
   return (

@@ -277,5 +277,22 @@
   "ask.source.instagram": "Trang Instagram",
   "ask.source.facebook": "Trang Facebook",
   "ask.source.tiktok": "Trang TikTok",
-  "ask.source.social": "Trang mạng xã hội"
+  "ask.source.social": "Trang mạng xã hội",
+  "ask.question.place_choice": "Chúng tôi tìm thấy nhiều địa điểm trên Google Maps có cùng tên này. Đâu là địa điểm của bạn?",
+  "ask.choice.place_choice_none": "Không phải địa điểm nào ở trên",
+  "ask.choice.main_button_book": "Đặt lịch trực tuyến",
+  "ask.choice.main_button_call": "Gọi cho chúng tôi",
+  "ask.choice.main_button_email": "Gửi email cho chúng tôi",
+  "ask.choice.main_button_message": "Nhắn tin cho chúng tôi",
+  "ask.choice.main_button_visit": "Ghé thăm chúng tôi",
+  "ask.choice.main_button_contact": "Liên hệ với chúng tôi",
+  "ask.choice.main_button_book_short": "Đặt lịch",
+  "ask.choice.main_button_call_short": "Gọi",
+  "ask.choice.main_button_email_short": "Email",
+  "ask.choice.main_button_message_short": "Nhắn tin",
+  "ask.choice.main_button_visit_short": "Ghé thăm",
+  "ask.choice.main_button_contact_short": "Liên hệ",
+  "ask.choice.main_button_text": "Chữ trên nút: {text}",
+  "ask.source.listing": "Trang danh bạ",
+  "plan.source.listing": "Trang danh bạ"
 }

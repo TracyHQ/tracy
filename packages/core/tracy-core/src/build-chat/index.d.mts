@@ -332,8 +332,17 @@ export type BuildToolRow =
 export declare function buildToolRowOf(rawArgs: unknown, text: string | null): BuildToolRow | null
 export interface BuildToolFold {
   calls: Readonly<Record<string, string>>
-  templates: { turn: number; seq: number; options: TemplateOption[]; none: boolean } | null
-  plan: { turn: number; seq: number; id: string; revision: number; revised?: RevisionNote } | null
+  /** The language the cards use, as the latest answer named it (`chatLanguage`); absent until one does. */
+  language?: string
+  templates: { turn: number; seq: number; options: TemplateOption[]; none: boolean; language?: string } | null
+  plan: {
+    turn: number
+    seq: number
+    id: string
+    revision: number
+    revised?: RevisionNote
+    language?: string
+  } | null
   /** The latest call while it waits: not answered yet, or answered `running`. */
   working: { turn: number; seq: number; step: string } | null
   /** The latest stop while no call has been made since: whether the step may be rerun, and how many retries of it in a row stopped again. */
@@ -350,6 +359,8 @@ export interface StopSeen {
   step: string
   rerun: boolean
   retries: number
+  /** The language the cards use, when the answer named one. */
+  language?: string
 }
 /** The one fixed message the Try again button sends as the owner. */
 export declare const RETRY_MESSAGE: 'Please try again.'

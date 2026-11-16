@@ -109,20 +109,20 @@ test('the template step confirms a single design and asks to pick among several'
   assert.match(persona, /one design fits, ask the owner to confirm it with the card button/i)
 })
 
-test('the owner language is the interface language every answer names, never a fixed language, and every handed sentence follows it', async () => {
-  // Run 6: English answers on a Vietnamese interface after a fixed message. The decided rule is the interface
-  // language (`scripts/test/build-agent-preset.test.mjs`): every answer names it, and only an answer that names none
-  // falls back to the language the owner writes in.
+test('the owner language is the language the owner writes in, never a fixed language, and every handed sentence follows it', async () => {
+  // Decided rule (owner, over run 6's interface language rule): the build chat speaks the language the person is
+  // chatting in. The agent names it on every call (`language`), which the tool requires; a fixed message never moves it.
   assert.ok(persona.includes(OWNER_LANGUAGE_GUIDANCE), 'the persona says the rule word for word')
-  assert.match(persona, /language of the owner's interface/)
-  assert.match(OWNER_LANGUAGE_GUIDANCE, /every tracy_build result names it in interfaceLanguage/)
-  assert.match(OWNER_LANGUAGE_GUIDANCE, /change only when the owner asks you to/)
-  assert.match(OWNER_LANGUAGE_GUIDANCE, /when you cannot tell.*use the language the owner writes in/i)
-  assert.doesNotMatch(OWNER_LANGUAGE_GUIDANCE, /\b(English|Vietnamese)\b/)
+  assert.match(OWNER_LANGUAGE_GUIDANCE, /Write in the language the owner writes in/)
+  assert.match(OWNER_LANGUAGE_GUIDANCE, /name it in language on every tracy_build call/)
   assert.match(
-    BUILD_DESCRIPTION,
-    /in the language of the owner's interface, which each result names in interfaceLanguage/
+    OWNER_LANGUAGE_GUIDANCE,
+    /A fixed message the chat sends for them, such as "Please try again\.", never changes it/
   )
+  assert.doesNotMatch(OWNER_LANGUAGE_GUIDANCE, /interfaceLanguage/)
+  assert.doesNotMatch(persona, /interfaceLanguage|language of the owner's interface/)
+  assert.doesNotMatch(OWNER_LANGUAGE_GUIDANCE, /\b(English|Vietnamese)\b/)
+  assert.match(BUILD_DESCRIPTION, /Every call names in language the language the owner writes in/)
   const revised = await call(
     toolAnswering(200, {
       step: 'revise',

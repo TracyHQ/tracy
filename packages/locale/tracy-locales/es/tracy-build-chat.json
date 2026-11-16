@@ -277,5 +277,22 @@
   "ask.source.instagram": "Perfil de Instagram",
   "ask.source.facebook": "Página de Facebook",
   "ask.source.tiktok": "Perfil de TikTok",
-  "ask.source.social": "Perfil en redes sociales"
+  "ask.source.social": "Perfil en redes sociales",
+  "ask.question.place_choice": "Hemos encontrado más de un lugar en Google Maps con este nombre. ¿Cuál es el suyo?",
+  "ask.choice.place_choice_none": "Ninguno de estos",
+  "ask.choice.main_button_book": "Reservar en línea",
+  "ask.choice.main_button_call": "Llámenos",
+  "ask.choice.main_button_email": "Envíenos un correo electrónico",
+  "ask.choice.main_button_message": "Envíenos un mensaje",
+  "ask.choice.main_button_visit": "Visítenos",
+  "ask.choice.main_button_contact": "Contáctenos",
+  "ask.choice.main_button_book_short": "Reservar",
+  "ask.choice.main_button_call_short": "Llamar",
+  "ask.choice.main_button_email_short": "Correo electrónico",
+  "ask.choice.main_button_message_short": "Mensaje",
+  "ask.choice.main_button_visit_short": "Visitar",
+  "ask.choice.main_button_contact_short": "Contacto",
+  "ask.choice.main_button_text": "Texto del botón: {text}",
+  "ask.source.listing": "Ficha de directorio",
+  "plan.source.listing": "Ficha de directorio"
 }

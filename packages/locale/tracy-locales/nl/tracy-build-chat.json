@@ -277,5 +277,22 @@
   "ask.source.instagram": "Instagram-profiel",
   "ask.source.facebook": "Facebook-pagina",
   "ask.source.tiktok": "TikTok-profiel",
-  "ask.source.social": "Profiel op sociale media"
+  "ask.source.social": "Profiel op sociale media",
+  "ask.question.place_choice": "We hebben op Google Maps meer dan één plaats met deze naam gevonden. Welke is van u?",
+  "ask.choice.place_choice_none": "Geen van deze",
+  "ask.choice.main_button_book": "Online boeken",
+  "ask.choice.main_button_call": "Bel ons",
+  "ask.choice.main_button_email": "Mail ons",
+  "ask.choice.main_button_message": "Stuur ons een bericht",
+  "ask.choice.main_button_visit": "Bezoek ons",
+  "ask.choice.main_button_contact": "Neem contact op",
+  "ask.choice.main_button_book_short": "Boeken",
+  "ask.choice.main_button_call_short": "Bellen",
+  "ask.choice.main_button_email_short": "E-mail",
+  "ask.choice.main_button_message_short": "Bericht",
+  "ask.choice.main_button_visit_short": "Bezoeken",
+  "ask.choice.main_button_contact_short": "Contact",
+  "ask.choice.main_button_text": "Tekst op de knop: {text}",
+  "ask.source.listing": "Vermelding in een bedrijvengids",
+  "plan.source.listing": "Vermelding in een bedrijvengids"
 }

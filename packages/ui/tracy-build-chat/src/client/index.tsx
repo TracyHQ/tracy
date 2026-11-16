@@ -22,7 +22,8 @@
  */
 import { BUILD_TOOL, HANDOFF_FENCE, isBuildChatSession } from '@tracy/core/build-chat'
 import { uiSwitches } from '@tracy/core/ui-switches'
-import { BuildToolRow, type ToolViewProps } from './BuildToolRow'
+import { BuildToolRow, languageOfView, type ToolViewProps } from './BuildToolRow'
+import { createChatLanguages } from './chat-language'
 import {
   sendToChat,
   type ConversationFace,
@@ -131,6 +132,8 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
   ctx.effect(() => ctx.locale.register(NS, { en }) as (() => void) | void, 'tracy-build-chat: dictionaries')
 
   const t = (): Translate => ctx.locale.bind?.(NS) ?? english
+  // A build session's cards speak the language of its conversation (`chat-language.ts`), else the interface language.
+  const languages = createChatLanguages(t)
   const drafts = createDraftSource(deps.fetch)
   const reviews = createReviewPresence()
   const notes = deps.notes ?? createRevisionNotes()
@@ -140,7 +143,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
     reviews,
     notes,
     runs,
-    t,
+    t: languages.t,
     fetch: deps.fetch,
     send: (sessionId, text) =>
       sendToChat(sessionId, (id) => ctx.sessions?.binding(id)?.session, ctx.conversation, text)
@@ -196,9 +199,9 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
           <ReviewBar
             matched={matched}
             drafts={drafts}
-            t={t()}
+            t={languages.t(matched.sessionId)}
             reviews={reviews}
-            planCard={<LivePlan deps={tailDeps} />}
+            planCard={<LivePlan deps={tailDeps} sessionId={matched.sessionId} />}
             send={(text) => tailDeps.send?.(matched.sessionId, text) ?? Promise.resolve('no-chat' as const)}
           />
         )
@@ -214,7 +217,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
           id: 'tracy-build-chat-working',
           inject: (sessionId: string) => ({ sessionId })
         },
-        (props: WorkingDockProps) => <WorkingDock {...props} t={t()} />
+        (props: WorkingDockProps) => <WorkingDock {...props} t={languages.t(props.sessionId)} />
       )
     )
   )
@@ -225,7 +228,9 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
     ctx.slots.register(
       { name: 'tool.call.toolview', key: BUILD_TOOL, inject: (sessionId: string) => ({ sessionId }) },
       (view: ToolViewProps & { sessionId?: string }) =>
-        isBuildChatSession(view.sessionId) ? <BuildToolRow view={view} t={t()} /> : null
+        isBuildChatSession(view.sessionId) ? (
+          <BuildToolRow view={view} t={languages.t(view.sessionId, languageOfView(view))} />
+        ) : null
     )
   )
 }

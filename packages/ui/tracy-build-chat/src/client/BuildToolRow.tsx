@@ -52,6 +52,18 @@ export function toolRowOfView({ phase, block }: ToolViewProps): BuildToolRow | n
   return buildToolRowOf(block.call?.argsRaw ?? '{}', text)
 }
 
+/** The language an answered call names for its cards (`chatLanguage`), or null. */
+export function languageOfView({ phase, block }: ToolViewProps): string | null {
+  if (phase !== 'result') return null
+  const text = (block.content ?? []).find((b) => b?.type === 'text' && typeof b.text === 'string')?.text ?? ''
+  try {
+    const language = JSON.parse(text)?.chatLanguage
+    return typeof language === 'string' && /^[a-z]{2}$/.test(language) ? language : null
+  } catch {
+    return null
+  }
+}
+
 export function BuildToolRow({ view, t }: { view: ToolViewProps; t: Translate }) {
   const row = toolRowOfView(view)
   if (row === null) return null
