@@ -37,7 +37,12 @@ export async function planOfFolder(
   const probed = [...plain.seen.values()]
     .filter((p) => p.type && index.has(String(p.code).toUpperCase()))
     .map((p) => p.key)
-  return { places, probed, counts: accounting.counts }
+  // The article each `article.create` operation makes is read at a page of its own (`sitePages`, `from: article:<item>`),
+  // so the pages a record must have read are partly the kit's to give (review 6 S3).
+  const ownPages = list(built.writePlan?.ops)
+    .filter((o) => o.kind === 'article.create')
+    .map((o) => o.key)
+  return { places, probed, counts: accounting.counts, ownPages }
 }
 
 /**
@@ -84,6 +89,23 @@ export function planProblems(record, plan) {
         message:
           "the record's universe counts are not the ones the kit's own marker build gives (" +
           off.map((k) => k + ' ' + (said[k] ?? 0) + ' for ' + (plan.counts[k] ?? 0)).join(', ') +
+          ')'
+      })
+  }
+  // The read pages a list's choice is worked out from (`list_item_not_shown`, review 6 S3): a record of a finished write
+  // whose read pages lack the own page of an article the kit's build creates is refused. A record edited consistently
+  // past this (an article page renamed and kept, the rows and the pages forged together) is the limit release-binding.mjs
+  // names: a record invented field by field.
+  if (Array.isArray(plan.ownPages) && record?.write?.site?.status === 'done') {
+    const read = new Set(list(record?.render?.pages).map((p) => p?.from))
+    const unread = plan.ownPages.filter((k) => !read.has(k))
+    if (unread.length)
+      out.push({
+        code: 'plan_mismatch',
+        message:
+          unread.length +
+          " page(s) of an article the kit's own build creates are not among the pages the record read (first " +
+          unread[0] +
           ')'
       })
   }

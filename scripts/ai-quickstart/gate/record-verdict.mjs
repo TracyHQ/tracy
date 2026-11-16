@@ -42,6 +42,12 @@ export function measurementProblems(record) {
     if (!ws.places?.tested || ws.places.tested < ws.places.probed)
       say('writeSafety', 'not every probed place reached the site')
     if ((ws.missing ?? []).length || (ws.notSiteTested ?? []).length) say('writeSafety', 'probes are missing')
+    // The lists a hand set `passed` leaves behind (review 6, attempt C): a stop reason, a place ended untested, a
+    // probe the build did not write or no page judged.
+    if (ws.incomplete) say('writeSafety', 'it keeps the reason it stopped (' + ws.incomplete + ')')
+    if ((ws.ends?.untested ?? []).length) say('writeSafety', 'it ended places untested')
+    if ((ws.ledger ?? []).some((r) => r?.status === 'not_written' || r?.status === 'not_judged'))
+      say('writeSafety', 'its ledger holds probes not written or judged by no page')
   }
   const st = m.structure
   if (st?.status && st.status !== structureStatusOf(st.linkCheck, st.minItems, st.hidden))

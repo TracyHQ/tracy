@@ -182,3 +182,30 @@ test('X6: a record of another kit whose two place lists were redone is still ref
   )
   rmSync(root, { recursive: true, force: true })
 })
+
+// Review 6 S3: a list's choice (`list_item_not_shown`) is worked out from the pages the record says were read, and an
+// item whose own page was read is no list's choice. The page each article the kit's build creates is read at is the
+// kit's to give (`ownPages`), so a record whose read pages drop such a page (its `from` removed) is refused. The florist
+// build creates no article: its plan names none, and an invented article page stands for one here.
+test("S3: a record that drops from its read pages an article page the kit's build creates is refused", async () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'release-plan-'))
+  const folder = writeFloristFolder(root)
+  const record = bindAndWrite(folder, await honestRecord())
+  const kitPlan = await plan(folder)
+  assert.deepEqual(kitPlan.ownPages, [])
+  assert.deepEqual(planProblems(record, kitPlan), [])
+  const withArticle = { ...kitPlan, ownPages: ['article:rose-care'] }
+  const read = structuredClone(record)
+  read.render.pages.push({ pageType: 'article:rose-care', path: '/rose-care', from: 'article:rose-care' })
+  assert.deepEqual(planProblems(read, withArticle), [])
+  const forged = structuredClone(read)
+  const page = forged.render.pages.find((p) => p.from === 'article:rose-care')
+  delete page.from
+  page.pageType = 'detail-rose-care'
+  const problems = planProblems(forged, withArticle)
+  assert.ok(
+    problems.some((p) => p.code === 'plan_mismatch' && /pages the record read/.test(p.message)),
+    JSON.stringify(problems)
+  )
+  rmSync(root, { recursive: true, force: true })
+})
