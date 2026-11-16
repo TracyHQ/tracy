@@ -155,3 +155,23 @@ test('Z2: a finding judged on a page says it was seen there and names that page'
     assert.equal(f.page, 'home')
   }
 })
+
+// Run 6: an article operation writes the item's name into its title and, derived from it, its alias. The alias is a
+// stored location with no plan entry; a read back that names the alias column must still name the page, block and
+// field of the name, so a location with an entry wins over one without among those the failure names.
+test('Y2 (run 6): a read back at a derived column still names the entry the operation writes', async () => {
+  const { storedFor, nameOf } = await import('../ai-quickstart/gate/write-safety-places.mjs')
+  const entries = [
+    {
+      op: 'article:class-3',
+      entry: 'home.home-b6.class-3.name',
+      loc: { entity: 'article-9', column: 'title', slot: 'article-9.4' }
+    },
+    { op: 'article:class-3', entry: null, loc: { entity: 'article:class-3', column: 'alias' } }
+  ]
+  const stored = storedFor(entries, { op: 'article:class-3', column: 'alias' })
+  const named = nameOf(stored, order)
+  assert.equal(named.page, 'home')
+  assert.equal(named.field, 'name')
+  assert.equal(named.location.op, 'article:class-3')
+})

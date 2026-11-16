@@ -105,7 +105,11 @@ export function storedFor(entries, failure = {}) {
   const onPage = failure.judgedOn
     ? list.filter((s) => String(s.entry ?? '').split('.')[0] === failure.judgedOn)
     : []
+  // A location the plan names by an entry wins over one it does not (an alias derived from a title, run 6).
+  const named = (s) => Boolean(s.entry)
   return (
+    onOp.find((s) => within(s) && named(s)) ??
+    onOp.find(named) ??
     onOp.find(within) ??
     onOp[0] ??
     (failure.slot ? list.find((s) => s.loc?.slot === failure.slot) : undefined) ??
