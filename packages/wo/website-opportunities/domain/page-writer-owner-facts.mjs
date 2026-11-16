@@ -4,6 +4,8 @@
 //   - a service the owner stated (`services`): the first block, in plan order, that shows a service, a package or a
 //     dish and has a copy field;
 //   - a team member's fact (`team`): the first such block that shows a person;
+//   - the owner's free text answer to the main button question (`main-button`): the first block, home page first, with
+//     a main button label the writer words, so the statement sits next to that button; else as any other fact;
 //   - any other fact (a story line, a fact, a key message, a USP theme, an audience, a service area): the home page
 //     (the page of type `home`, else the first page), on its block with the most room to write (the largest sum of
 //     the limits of its copy fields about the business, `editorial.*` and `business.*` but the copyright line and the
@@ -11,6 +13,8 @@
 // A fact with no such block is never forced onto another page: it is reported in `unplaced` with its reason, by id and
 // group, never its text. A placed fact reaches the writer in its block's `data` as an entry marked to be reworded
 // (`ownerFactView`), and the copy check counts its text as a value the plan data holds (`knownOf`). Pure.
+
+import { MAIN_BUTTON_GROUP } from './plan-free-answers.mjs'
 
 /** The data kind of an owner's fact in a writer request. */
 export const OWNER_FACT_DATA_KIND = 'owner.fact'
@@ -28,12 +32,15 @@ const list = (value) => (Array.isArray(value) ? value : [])
 const KINDS = { services: new Set(['service', 'package', 'menu_item']), team: new Set(['person']) }
 
 /** An owner's fact as the writer reads it, among a block's data. */
-export const ownerFactView = ({ id, text }) => ({
+export const ownerFactView = ({ id, text, asked, candidates }) => ({
   id,
   kind: OWNER_FACT_DATA_KIND,
   label: 'What the owner states',
   value: text,
-  use: OWNER_FACT_USE
+  use: OWNER_FACT_USE,
+  // A free text answer: the question it answers, and the values found when it answers a conflict.
+  ...(asked ? { question: asked } : {}),
+  ...(Array.isArray(candidates) ? { candidates } : {})
 })
 
 /** A copy field a fact can be said in: words about the business, never a button label, a copyright line or a name. */
@@ -47,6 +54,16 @@ const roomOf = (block, slots) =>
   slots
     .filter((s) => s.block === block.id && SAYS(s.field?.kind))
     .reduce((sum, s) => sum + (s.field?.limit ?? 0), 0)
+
+/** The first block, home page first, with a main button label the writer words, as `{page, block}`, or null. */
+function buttonBlockOf(pages, homeIndex, slotsOf) {
+  const order = [homeIndex, ...pages.keys()].filter((i, n, all) => pages[i] && all.indexOf(i) === n)
+  for (const i of order)
+    for (const block of list(pages[i].blocks))
+      if (slotsOf(i).some((s) => s.block === block.id && s.field?.kind === 'contact.cta_label'))
+        return { page: pages[i], block }
+  return null
+}
 
 /**
  * The block of each owner's fact.
@@ -80,12 +97,15 @@ export function placeOwnerFacts(plan, context, fieldsByPage) {
         return room > (best?.room ?? 0) ? { block: b, room } : best
       }, null)
     : null
+  const button = buttonBlockOf(pages, homeIndex, slotsOf)
   for (const fact of facts) {
     const where = KINDS[fact.group]
       ? firstShowing(KINDS[fact.group])
-      : homeBlock
-        ? { page: home, block: homeBlock.block }
-        : null
+      : fact.group === MAIN_BUTTON_GROUP && button
+        ? button
+        : homeBlock
+          ? { page: home, block: homeBlock.block }
+          : null
     if (!where) {
       out.unplaced.push({
         id: fact.id,
@@ -103,7 +123,9 @@ export function placeOwnerFacts(plan, context, fieldsByPage) {
 /** The known values of the copy check with every owner's fact added: a writer using one invents nothing. */
 export const knownOf = (known, data) => [
   ...known,
-  ...list(data?.ownerFacts).map((f) => ({ kind: OWNER_FACT_DATA_KIND, value: f.text }))
+  ...list(data?.ownerFacts).flatMap((f) =>
+    [f.text, ...list(f.candidates)].map((value) => ({ kind: OWNER_FACT_DATA_KIND, value }))
+  )
 ]
 
 /** The record of the placement: counts and ids, never a text. */

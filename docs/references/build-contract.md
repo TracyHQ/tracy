@@ -100,6 +100,11 @@ counts once), listed in [Text limits](#text-limits).
   one of the three. It is valid only against its question: the choice is one of its choices, the text is not empty,
   holds no control character (line breaks included) and at most `maxLength` characters counted by code point, and only
   a skippable question is skipped.
+- A free text answer to a `main-button` or `fact-conflict` question is an owner statement, never a field value: the
+  plan step never holds it to a template field's limit and never writes it into a field, it reaches the page writer as
+  an owner fact tied to its question (with the conflict's candidate values), and a conflict answered that way stays
+  open. A text that is exactly an offered choice (label, id or code, ignoring case and outer spaces) is that choice.
+  Their `freeText.maxLength` is not capped by the template; only the offered choices fit its fields.
 - A question and a choice may carry a text `code` and its `params`, under the same rules as the plan's codes (a code is
   lower case words joined by underscores; params are camel case names with a short text, a whole number or true or
   false, and only beside a code). The chat may show the text in the customer's language from the code and its params;

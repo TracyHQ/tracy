@@ -9,7 +9,8 @@ import { revisePlan } from '../domain/plan-request.mjs'
 import { PHONE_QUESTION, SERVICES, answer as reply } from './fixtures/plan-composer/invented-club.mjs'
 import { answer, firstPlan, kit, revision } from './fixtures/plan-composer/plan-request.mjs'
 
-const PHONE = '+1 555 0142 700'
+// The value the customer chose for the phone conflict (a typed one is an owner statement since 16/11).
+const PHONE = '+1 555 0142 779'
 const edit = (plan, changes) => ({
   schema: 'tracy-build-plan-edit/v1',
   id: `edit-${plan.revision}`,
@@ -18,7 +19,7 @@ const edit = (plan, changes) => ({
 })
 /** The first plan with the phone answered, then edited on the plan card in one edit. */
 async function editedPlan() {
-  const first = await firstPlan(undefined, undefined, [reply(PHONE_QUESTION, { text: PHONE })])
+  const first = await firstPlan(undefined, undefined, [reply(PHONE_QUESTION, { choice: 'value-2' })])
   const k = kit()
   const gated = gateEditedPlan({
     ...k,

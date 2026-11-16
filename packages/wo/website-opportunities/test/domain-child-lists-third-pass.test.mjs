@@ -145,7 +145,7 @@ test('the main button question always offers a choice that fits, falling back to
     assert.deepEqual(problems, [], String(limit))
     assert.equal(button(limit).choices.filter((c) => c.recommended).length, 1)
   }
-  // A typed label within the limit settles too, and the offered choice settles to its label.
+  // A typed label is an owner statement (16/11), never the label; the offered choice settles to its label.
   const limits = new Map([['contact.cta_label', 4]])
   const q = button(4)
   const settle = (fields) =>
@@ -154,7 +154,8 @@ test('the main button question always offers a choice that fits, falling back to
       [{ schema: 'tracy-build-answer/v1', question: q.id, ...fields }],
       limits
     )
-  assert.equal(settle({ text: 'Hi' }).profile.facts['contact.cta_label'][0].value, 'Hi')
+  assert.equal(settle({ text: 'Hi' }).profile.facts['contact.cta_label'], undefined)
+  assert.equal(settle({ text: 'Hi' }).profile.ownerFacts[0].text, 'Hi')
   assert.equal(settle({ choice: q.choices[0].id }).profile.facts['contact.cta_label'][0].value, 'Call')
   // A button shorter than the short label of every channel the business has is not asked about; the profile says why.
   const none = ask(3)

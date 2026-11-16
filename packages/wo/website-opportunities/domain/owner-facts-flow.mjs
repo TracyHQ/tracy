@@ -12,6 +12,8 @@
 //   profile   `profile.ownerFacts` (`needsProfileOf`), present only when there is one
 //   plan data `data.ownerFacts` (`planDataOf`), present only when there is one; never a plan fact or item, so the plan
 //             composer's request and the plan's Contract B shape are unchanged
+//   answers   a free text answer to a main button or fact conflict question joins `profile.ownerFacts` too, with its
+//             `question`, the question's text (`asked`) and a conflict's `candidates` (`plan-free-answers.mjs`)
 // At every step a fact that names a held text is dropped, in every plain form of a held person's name
 // (`heldPersonFormsOf`: the full name, the first name alone, `First L`, `F Last`) and of the held business name: the
 // research and the profile record that it was set aside, never its text. Pure.
@@ -143,5 +145,12 @@ export function ownerFactsOfProfile(profile) {
   return list(profile?.ownerFacts)
     .filter((f) => isText(f?.id) && isText(f?.text))
     .filter((f) => !namesHeld(f, forms) && !(withheld && namesHeldInAnyForm([f.text], heldTextsOf(withheld))))
-    .map(({ id, group, text }) => ({ id, group, text }))
+    .map(({ id, group, text, question, asked, candidates }) => ({
+      id,
+      group,
+      text,
+      // A free text answer (`plan-free-answers.mjs`) keeps the question it answers and a conflict's candidate values.
+      ...(isText(question) ? { question, asked } : {}),
+      ...(Array.isArray(candidates) ? { candidates: [...candidates] } : {})
+    }))
 }

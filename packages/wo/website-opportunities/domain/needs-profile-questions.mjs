@@ -97,10 +97,10 @@ export const contractQuestionOf = (
  * @param {{facts: Record<string, unknown[]>, items?: Record<string, object[]>, conflicts?: object[],
  *   sources?: {id: string, origin: string, ref?: string}[], language: ReturnType<typeof siteLanguageOf>,
  *   limits?: Map<string, number>}} profile `limits`: the template's smallest text limit per data kind
- *   (`kindLimitsOf`), when the template is known: a typed answer and every offered choice fit it
+ *   (`kindLimitsOf`), when the template is known: every offered choice fits it (a typed answer is an owner statement, `plan-free-answers.mjs`)
  */
 export function questionsOf({ facts, items, conflicts, sources, language, limits }) {
-  const asked = conflictQuestionsOf({ conflicts, items, sources, limits })
+  const asked = conflictQuestionsOf({ conflicts, items, sources })
   const questions = [...asked.contact]
   const max = cappedLength(FREE_TEXT_MAX['main-button'], MAIN_BUTTON_KIND, limits)
   // Never offer a choice the answer settling would reject, and never a question without one (Contract B): when no
@@ -119,7 +119,9 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
         'What should the main button on your site ask visitors to do?',
         cta,
         cta[0].id,
-        max,
+        // A typed answer is an owner statement the page writer rewords, never the label as typed
+        // (`plan-free-answers.mjs`): only the offered choices are held to the template's button.
+        FREE_TEXT_MAX['main-button'],
         { code: 'main_button' }
       )
     )

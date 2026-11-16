@@ -1,5 +1,6 @@
-// The page writer and the step chain (#597): the main button label the customer answered is kept word for word (a
-// `data` field, never asked of the model), a label nobody answered stays copy, and a page that fails its own rewrite
+// The page writer and the step chain (#597): the main button label the customer chose is kept word for word (a
+// `data` field, never asked of the model), a label nobody chose stays copy (a typed answer too: since 16/11 it is an
+// owner statement the writer rewords, never the label as typed), and a page that fails its own rewrite
 // stops the build at once (`noRerun`) with the attempts it made. Invented club, scripted fake models only.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-page-writer-answered.test.mjs
@@ -18,16 +19,20 @@ import {
   template
 } from './fixtures/plan-composer/invented-club.mjs'
 
-// Two spaces and a mark the model would tidy away: the answer must reach the site exactly as typed.
-const ANSWERED = 'Reserve  a court!'
+// The label of the club's `call` choice: a chosen label reaches the site exactly as offered.
+const ANSWERED = 'Call us'
+const CHOSEN = { choice: 'call' }
 const WRITTEN = 'Book now'
 
-/** The club's plan with the main button label on the top bar; `answer` is the customer's typed label, if any. */
+/**
+ * The club's plan with the main button label on the top bar when the customer chose one; `answer` is the answer's
+ * form (`{choice}` or `{text}`), if any.
+ */
 async function planWithButton(answer) {
   const composition = goodComposition()
   const header = composition.pages[0].blocks.find((b) => b.block === 'header-main')
-  if (answer) header.data = [...header.data, 'contact-cta-label']
-  const answers = answer ? [{ schema: 'tracy-build-answer/v1', question: 'main-button', text: answer }] : []
+  if (answer?.choice) header.data = [...header.data, 'contact-cta-label']
+  const answers = answer ? [{ schema: 'tracy-build-answer/v1', question: 'main-button', ...answer }] : []
   const { plan, profile } = await composePlan({
     profile: clubProfile(),
     answers,
@@ -62,7 +67,7 @@ function writer(override = () => undefined) {
 const asked = (model) => model.calls.flatMap((c) => c.blocks.flatMap((b) => b.fields.map((f) => f.key)))
 
 test('the main button label the customer answered is a data field with that exact value', async () => {
-  const { plan, profile } = await planWithButton(ANSWERED)
+  const { plan, profile } = await planWithButton(CHOSEN)
   const model = writer()
   const { pages } = await writePages({ plan, profile, blockStore: blockStore(), library: library(), model })
   const header = plan.pages[0].blocks.find((b) => b.block === 'header-main')
@@ -85,7 +90,7 @@ test('a main button label nobody answered stays copy, written by the model', asy
 })
 
 test('a label the customer answered but the block does not show stays copy', async () => {
-  const { plan, profile } = await planWithButton(ANSWERED)
+  const { plan, profile } = await planWithButton(CHOSEN)
   const header = plan.pages[0].blocks.find((b) => b.block === 'header-main')
   header.data = header.data.filter((id) => id !== 'contact-cta-label')
   const { pages } = await writePages({
@@ -130,22 +135,24 @@ test('a deterministic writer failure before any call is not marked noRerun', asy
   assert.equal(error.noRerun, undefined)
 })
 
-test('an answer within the template limit is copied verbatim; a longer one is refused before the plan', async () => {
-  // 18 characters: exactly what the top bar's button holds.
-  const fits = 'Reserve a court!!!'
-  const { plan, profile } = await planWithButton(fits)
+test('a typed main button answer longer than the button is an owner statement next to the button (16/11)', async () => {
+  // 40 characters, the top bar's button holds 18: no answer_invalid, and the writer words the button itself.
+  const typed = 'Reserve a court online, first hour free'
+  const { plan, profile } = await planWithButton({ text: typed })
   const model = writer()
   const { pages } = await writePages({ plan, profile, blockStore: blockStore(), library: library(), model })
   const label = pages[0].fields.find((f) => f.key === 'home-b1/cta_label')
-  assert.deepEqual([label.from, label.value], ['data', fits])
-  // One character more is refused by the answer settling (answer_invalid), so it never reaches the writer.
-  const refused = await planWithButton(`${fits}!`).catch((e) => e)
-  assert.deepEqual([refused.code, refused.noRerun], ['answer_invalid', true])
-  assert.match(refused.details.problems[0].message, /19 characters, longer than the 18/)
+  assert.deepEqual([label.from, label.value], ['writer', WRITTEN])
+  const top = model.calls[0].blocks.find((b) => b.id === 'home-b1')
+  const said = top.data.find((d) => d.kind === 'owner.fact')
+  assert.deepEqual(
+    [said.value, said.question],
+    [typed, 'What should the main button on your site ask visitors to do?']
+  )
 })
 
 test('a data value longer than its field that still reaches the writer is data_over_limit, marked noRerun', async () => {
-  const { plan, profile } = await planWithButton('Reserve a court!!!')
+  const { plan, profile } = await planWithButton(CHOSEN)
   // Past the answer gate (a stored profile edited by hand): the writer still refuses it, at once.
   profile.facts['contact.cta_label'][0].value = 'Reserve a court today'
   const error = await writePages({

@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict'
 import { after, test } from 'node:test'
 import { rmSync } from 'node:fs'
-import { needsProfileOf, researchOf } from 'website-opportunities/domain'
+import { kindLimitsOf, needsProfileOf, researchOf, storeBlocksOf } from 'website-opportunities/domain'
 import * as club from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 import { buildModelDoor, modelCallOf } from '../src/build-draft/build-model.js'
 import { STEP_ATTEMPTS, faultOf, runWithRerun } from '../src/build-draft/engine-rerun.js'
@@ -232,7 +232,11 @@ test('research with a chosen kit gives the needs profile the kit, so answers get
   })
   assert.deepEqual(record.profile.questions, expected.questions)
   const main = record.profile.questions.find((q) => q.topic === 'main-button')
-  assert.ok(main.freeText.maxLength < 80, 'the kit button field limit, not the default 80')
+  // The offered labels fit the kit's button; the typed box is not capped (an owner statement since 16/11).
+  const limit = kindLimitsOf(storeBlocksOf(kit.blockStore, kit.library)).get('contact.cta_label')
+  assert.ok(limit < 80, 'the kit has a button field limit')
+  for (const c of main.choices) assert.ok([...c.label].length <= limit, c.label)
+  assert.equal(main.freeText.maxLength, 80)
   assert.equal(record.trade, 'fitness')
   await assert.rejects(researchStep({ links: [] }, { gather: async () => ({}), model, kit: null }), {
     code: 'research_empty'

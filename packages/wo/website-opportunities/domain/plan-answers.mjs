@@ -1,8 +1,10 @@
 // The customer's answers to the needs profile's questions, applied before the plan is composed (ticket #593). Pure: a
 // profile and Contract B answers in, a settled copy of the profile out; the profile given is never changed.
-// - `fact-conflict`: the fact (or item field) takes the chosen value with that value's sources, or the typed value with
-//   the source `answer`, and the conflict is settled (`chosen`), so the plan shows no assumption for it;
-// - `main-button`: the plan's main call to action, the fact `contact.cta_label`;
+// - `fact-conflict`: the fact (or item field) takes the chosen value with that value's sources, and the conflict is
+//   settled (`chosen`), so the plan shows no assumption for it;
+// - `main-button`: the chosen label is the plan's main call to action, the fact `contact.cta_label`;
+// - free text on either of those two is an owner statement for the page writer, never a field value and never held to
+//   a template field's limit (`plan-free-answers.mjs`); text typed exactly as an offered choice is that choice;
 // - `contact-method`: a typed phone, email or link becomes that contact fact; a choice without a value is reported in
 //   the plan's left out list, never invented;
 // - `site-language`: the site language (`plan.language`);
@@ -18,6 +20,7 @@ import { checkAnswer } from './build-contract-questions.mjs'
 import { languageTag, MAIN_BUTTON_KIND } from './needs-profile-questions.mjs'
 import { conflictPlace } from './plan-conflicts.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
+import { asChosen, isStatement, statementOf } from './plan-free-answers.mjs'
 import {
   normalisedSiteName,
   settleSiteName,
@@ -44,9 +47,8 @@ export const CONTACT_VALUE_MISSING_REASON =
 
 const answered = (value) => ({ value, sources: [ANSWER_SOURCE], confidence: 'single-source' })
 
-/** The value and sources an answer gives to a conflict: the chosen value's own, or the typed text's. */
+/** The value and sources a chosen answer gives to a conflict: the chosen value's own. */
 function conflictValue(answer, question, conflict) {
-  if (answer.text !== undefined) return answered(answer.text.trim())
   const choice = question.choices.find((c) => c.id === answer.choice)
   const index = question.choices.indexOf(choice)
   const value = list(conflict.values).find((v) => v.value === choice.label) ?? list(conflict.values)[index]
@@ -74,6 +76,7 @@ function contactKindOf(text) {
 
 /** The fact an answer gives, as `{kind, value, at}`, or null when it gives none. */
 function factOfAnswer(answer, question) {
+  if (isStatement(answer, question)) return null
   const text = typeof answer?.text === 'string' ? answer.text.trim() : undefined
   if (question.topic === 'main-button') {
     const value = text ?? question.choices.find((c) => c.id === answer?.choice)?.label
@@ -100,6 +103,7 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
   if (!Array.isArray(answers))
     throw new PlanComposerError('answer_invalid', 'answers must be a list', {}, { noRerun: true })
   const questions = new Map(list(profile?.questions).map((q) => [q.id, q]))
+  answers = answers.map((a) => asChosen(a, questions.get(a?.question)))
   const seen = new Set()
   let tooLong
   const nameProblems = []
@@ -178,11 +182,17 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
   for (const answer of answers) {
     if (answer.skipped) continue
     const question = questions.get(answer.question)
-    if (question.topic === 'fact-conflict') {
+    if (isStatement(answer, question)) {
+      const conflict = settled.conflicts?.find((c) => c.question === question.id)
+      settled.ownerFacts = [
+        ...list(settled.ownerFacts),
+        statementOf(answer, question, conflict, ANSWER_SOURCE)
+      ]
+    } else if (question.topic === 'fact-conflict') {
       const conflict = settled.conflicts.find((c) => c.question === question.id)
       if (conflict) settleConflict(settled, conflict, conflictValue(answer, question, conflict))
     } else if (question.topic === 'main-button') {
-      const label = answer.text?.trim() ?? question.choices.find((c) => c.id === answer.choice).label
+      const label = question.choices.find((c) => c.id === answer.choice).label
       settled.facts['contact.cta_label'] = [answered(label)]
     } else if (question.topic === 'contact-method') {
       if (answer.text === undefined)

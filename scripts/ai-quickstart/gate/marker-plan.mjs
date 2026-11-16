@@ -135,9 +135,15 @@ const MAX_GAP_RETRIES = 100
 
 async function chainOf(kit, { registry, research, composition, label, icons, stored, textOf }) {
   const reply = JSON.stringify(composition)
+  // The marker label is offered and chosen: a typed main button answer is an owner statement the writer rewords, never
+  // the label (`plan-free-answers.mjs`), so only a chosen label reaches the button word for word.
+  const profile0 = structuredClone(research)
+  profile0.questions
+    ?.find((q) => q.topic === 'main-button')
+    ?.choices.push({ id: 'marker', label, code: 'main_button_marker', params: {} })
   const { plan, profile, accounting } = await composePlan({
-    profile: structuredClone(research),
-    answers: [{ schema: 'tracy-build-answer/v1', question: 'main-button', text: label }],
+    profile: profile0,
+    answers: [{ schema: 'tracy-build-answer/v1', question: 'main-button', choice: 'marker' }],
     blockStore: kit.blockStore,
     pageRecipes: kit.pageRecipes,
     library: TRACY_LIBRARY,

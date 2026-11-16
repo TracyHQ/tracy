@@ -25,9 +25,16 @@ export const SOCIAL = Object.freeze({
   tiktok: 'https://www.tiktok.com/@larkspur.florist.example'
 })
 
+/** Main button labels the tests choose; a typed label is an owner statement since 16/11, a chosen one is the label. */
+const CHOSEN_LABELS = [ANSWERED_LABEL, 'Order flowers', 'Order a hand tied bouquet today']
 export const floristProfile = () => {
   const { research, reading } = floristResearch()
-  return needsProfileOf(research, reading)
+  const profile = needsProfileOf(research, reading)
+  const button = profile.questions.find((q) => q.topic === 'main-button')
+  CHOSEN_LABELS.forEach((label, n) =>
+    button?.choices.push({ id: `order-${n + 1}`, label, code: 'main_button_order', params: {} })
+  )
+  return profile
 }
 
 const block = (id, label, data, reason) => ({ block: id, label, data, reason })

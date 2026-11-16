@@ -1,8 +1,10 @@
 // How long a customer's typed answer may be in a given template (ticket #615): an answer becomes a fact (the main button
 // label, a contact detail, a corrected value), and a fact is never shortened, so a fact longer than a text field of its
 // kind would stop the page writer (`data_over_limit`) after the customer approved the plan. The questions offer, and
-// the answer settling accepts, no more than the smallest limit of the text fields of that kind in the template, each
-// field's limit being the smallest of the stored places it shares (`field-place-limits.mjs`). Pure.
+// the answer settling accepts, no choice or value longer than the smallest limit of the text fields of that kind in the
+// template, each field's limit being the smallest of the stored places it shares (`field-place-limits.mjs`). Free text
+// on a main button or fact conflict question is an owner statement, never a value, and is not held to it
+// (`plan-free-answers.mjs`). Pure.
 import { limitOf, placeLimitsOf } from './field-place-limits.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])

@@ -1,6 +1,7 @@
-// A customer's typed answer fits the template's fields (ticket #615): the main button question offers and accepts no
-// more than the template's button field holds, the answer settling rejects a longer answer, and the gate reports an
-// answer too long as a problem, never a silent drop. The invented pottery template (button label of 18 characters);
+// A customer's answer fits the template's fields (ticket #615): the main button question offers no choice longer than
+// the template's button field holds, a typed contact detail longer than its field is rejected, and the gate reports an
+// answer too long as a problem, never a silent drop. A typed main button answer is an owner statement since 16/11
+// (`plan-free-answers.mjs`): its box is not capped by the template and it is never rejected for its length. The invented pottery template (button label of 18 characters);
 // no real model.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-answer-field-limits.test.mjs
@@ -9,38 +10,29 @@ import { test } from 'node:test'
 import { kindLimitsOf, storeBlocksOf } from '../domain/answer-field-limits.mjs'
 import { needsProfileOf } from '../domain/needs-profile.mjs'
 import { ANSWER_SOURCE, settleAnswers } from '../domain/plan-answers.mjs'
-import { composePlan } from '../domain/plan-composer.mjs'
 import { answerOverLimitProblems, dropOverLimitData } from '../domain/plan-data-limits.mjs'
 import { planDataOf } from '../domain/plan-data.mjs'
 import { blocksOf } from '../domain/picture-step.mjs'
-import {
-  composeInputs,
-  pottery,
-  potteryProfile,
-  potteryStore
-} from './fixtures/child-lists/invented-pottery.mjs'
+import { pottery, potteryProfile, potteryStore } from './fixtures/child-lists/invented-pottery.mjs'
 
 const answer = (question, fields) => ({ schema: 'tracy-build-answer/v1', question, ...fields })
 const mainButton = (profile) => profile.questions.find((q) => q.topic === 'main-button')
 
-test('with the template known, the main button question offers and accepts what its button field holds', () => {
+test('with the template known, the main button question offers what its button field holds', () => {
   const { research, reading } = pottery()
   assert.equal(mainButton(needsProfileOf(research, reading)).freeText.maxLength, 80)
   const question = mainButton(needsProfileOf(research, reading, { blockStore: potteryStore() }))
-  assert.equal(question.freeText.maxLength, 18)
+  assert.equal(question.freeText.maxLength, 80)
   assert.ok(question.choices.length > 0)
   for (const choice of question.choices) assert.ok([...choice.label].length <= 18, choice.label)
 })
 
-test('the answer settling rejects an answer longer than the template field of its kind, naming the limit', async () => {
+test('the answer settling rejects a value longer than the template field of its kind, naming the limit', async () => {
+  // A typed main button answer is an owner statement, not the label: no limit applies to it.
   const typed = answer('main-button', { text: 'Book your first pottery class' })
-  await assert.rejects(composePlan({ ...composeInputs(), answers: [typed] }), (error) => {
-    assert.equal(error.code, 'answer_invalid')
-    assert.equal(error.noRerun, true)
-    assert.match(error.details.problems[0].message, /29 characters, longer than the 18/)
-    assert.equal(error.details.problems[0].at, 'answers[0].text')
-    return true
-  })
+  const settled = settleAnswers(potteryProfile(), [typed], kindLimitsOf(storeBlocksOf(potteryStore())))
+  assert.equal(settled.profile.facts['contact.cta_label'], undefined)
+  assert.equal(settled.profile.ownerFacts.at(-1).text, 'Book your first pottery class')
   // A typed contact detail is held to the fields of its own kind: an invented store with a short email field.
   const store = potteryStore()
   store.blocks[0].fields.push({

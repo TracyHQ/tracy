@@ -47,12 +47,16 @@ test('a chosen value settles its conflict: the fact takes it, with its own sourc
   assert.deepEqual(checkBuildDocument(plan), { ok: true, problems: [] })
 })
 
-test('a typed value settles an item field conflict; the page writer reads it from the returned profile', async () => {
+test('a typed value on an item field conflict is an owner statement, never the field value (16/11)', async () => {
   const { plan, profile } = await compose({ answers: [answer(PRICE_QUESTION, { text: '$26 per session' })] })
   const lessons = profile.items.service.find((i) => i.id === 'service-adult-group-lessons')
-  assert.equal(lessons.fields['offering.price'].value, '$26 per session')
-  assert.equal(fact(plan, 'service-adult-group-lessons-offering-price'), undefined)
-  assert.ok(!plan.assumptions.some((a) => a.field.includes('offering-price')))
+  assert.equal(lessons.fields['offering.price'].value, '$25 per session')
+  assert.ok(plan.assumptions.some((a) => a.field.includes('offering-price')))
+  const said = profile.ownerFacts.find((f) => f.question === PRICE_QUESTION)
+  assert.deepEqual(
+    [said.group, said.text, said.candidates],
+    ['services', '$26 per session', ['$25 per session', '$28 per session']]
+  )
   assert.equal(checkBuildDocument(plan).ok, true)
 })
 
@@ -155,7 +159,8 @@ test('accounting: profile conflicts = settled by an answer + shown as an assumpt
     )
     console.log(`conflicts ${total} = answered ${settled} + assumptions ${assumed.length}`)
     assert.equal(total, 4)
-    assert.equal(settled, answers.length)
+    // A typed value is an owner statement (16/11): only a chosen value settles its conflict.
+    assert.equal(settled, answers.filter((x) => x.choice).length)
     assert.equal(settled + assumed.length, total)
     assert.equal(conflicts.filter((c) => c.unexplained).length, 0)
   }
