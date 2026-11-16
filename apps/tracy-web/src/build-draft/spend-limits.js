@@ -11,9 +11,10 @@
  * Website Opportunities research pays through, capped by `/ops/wo` researchDailyCapCents), at the ceiling below,
  * counted against the account as payer. The ceilings are conservative estimates, not measured bills. A step settles at
  * its real cost, marked reported, when its result knows the cost of all it spent (`engine-spend.js` `stepCostCents`):
- * the brand step, when every call of its run reported a cost. The others settle at their ceiling: the build model
- * answers text only and has no price in `cost-prices.js` (compose, revise, the needs profile of research), and research
- * knows the cost of its business reading only, not of its place details and crawl.
+ * the brand step, when every call of its run reported a cost, and compose and revise, when every call they made through
+ * the build model door reported its usage and the price table lists the model (`model-usage.js`). The others settle at
+ * their ceiling: research knows the cost of its business reading and its needs profile only, not of its place details
+ * and crawl.
  */
 
 /** One hour, the window every limit counts in. */

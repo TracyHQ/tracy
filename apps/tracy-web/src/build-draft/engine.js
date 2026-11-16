@@ -25,6 +25,7 @@ import { askingOf } from './engine-asking.js'
 import { brandRunOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
 import { answersStillAsked } from './answers-kept.js'
 import { spendGate, spendLeft } from './engine-spend.js'
+import { usageCollector } from './model-usage.js'
 import { discardPlan, putComposed, putRevised, recordFault } from './store.js'
 import { planRequestOf, reviseStep, revisionOf } from './engine-revise.js'
 
@@ -252,7 +253,8 @@ export function createEngine({
       brand: brandFor(row, template)
     }
     return start(accountId, 'revise', { request: text, plan: base, template }, async () => {
-      const model = await buildModel()
+      const usage = usageCollector()
+      const model = await buildModel({ onUsage: usage.onUsage })
       const ran = await runWithRerun((copy) => reviseStep(copy, { model, kit }), inputs)
       if (!ran.ok) {
         if (ran.error && typeof ran.error === 'object') ran.error.requestText = text
@@ -268,7 +270,8 @@ export function createEngine({
           columns: {}
         }
       if (put.error) throw Object.assign(new Error(`putRevised: ${put.error}`), { code: put.error })
-      return { ...ran, columns: {} }
+      // What the step's calls really cost, when every one reported it: the ledger settles at that.
+      return { ...ran, columns: {}, ...usage.cost() }
     })
   }
 
@@ -356,7 +359,8 @@ export function createEngine({
         brand: brandFor(row, template)
       }
       return start(accountId, 'compose', { ...(request ? { request } : {}), template }, async () => {
-        const model = await buildModel()
+        const usage = usageCollector()
+        const model = await buildModel({ onUsage: usage.onUsage })
         const ran = await runWithRerun((copy) => composeStep(copy, { model, kit }), inputs)
         if (!ran.ok) {
           // The owner has one more thing to answer (the site name): a question on the card, not a fault.
@@ -369,7 +373,7 @@ export function createEngine({
           ...(lookSources ? { lookSources } : {})
         })
         if (put.error) throw Object.assign(new Error(`putComposed: ${put.error}`), { code: put.error })
-        return { ...ran, columns: {} }
+        return { ...ran, columns: {}, ...usage.cost() }
       })
     },
     /**

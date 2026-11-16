@@ -429,6 +429,31 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
   `sunrise-tennis-club-stopped-without-rerun` and `sunrise-tennis-club-cancelled` in
   `packages/wo/website-opportunities/test/fixtures/build-contract/`.
 
+## Model usage from the build model door
+
+The build chat's steps call the model through one function, `model({system, user, format, images?}) -> reply text`
+(`apps/tracy-web/src/build-draft/build-model.js`). That shape is unchanged: every existing caller still gets a string.
+What a call used and cost is told on the side, so the engine can settle each step's ledger row at its real cost instead
+of its ceiling (`cost_reported` true).
+
+- **The callback.** `modelCallOf(door, {onUsage})` and `buildModelDoor(...)({onUsage})` take an optional
+  `onUsage(usage)`; a call may also pass its own, `model({system, user, onUsage})`. It is called once for every call
+  that was sent (also one that failed or got no usable text), before the reply is returned or the error thrown. A
+  callback that throws never fails the call.
+- **The object.** `{provider, model, inputTokens, outputTokens, cachedInputTokens, costCents}`. `provider` is the
+  endpoint host, `model` the model asked for. A token count is `null` when the provider did not report it, and
+  `cachedInputTokens` is `null` when the provider does not say. `costCents` (a number, not rounded) is present only when
+  the answer reported its tokens and `opportunities-build/quality-prices.json` lists that host and model and is still
+  valid; otherwise it is `null`, never an estimate. A call that failed carries `failed: true` and a `null` cost.
+- **The step rule.** The engine gives each compose and each change request its own door with its own collector
+  (`model-usage.js` `usageCollector`). Every model call of the step, including the second run of the rerun rule, goes
+  through that door, so the engine sees all of them. The ledger row settles at the sum when the step made at least one
+  call and every call has a cost; else it keeps the ceiling.
+- **What the WO package has to do.** Nothing for compose, revise and the needs profile: they call only the `model` they
+  are given. Their results need no usage field. A step that spends money OUTSIDE this door (research's place details,
+  crawl and business reading) must return `costCents` for the whole step in its result, and only when it knows the cost
+  of everything it spent; until then research keeps its ceiling.
+
 ## Closed shapes
 
 Each object accepts exactly these fields (`CONTRACT_SHAPES`, `build-contract-shapes.mjs`); `?` marks an optional field.
