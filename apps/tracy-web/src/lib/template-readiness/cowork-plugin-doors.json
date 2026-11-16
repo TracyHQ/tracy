@@ -266,6 +266,21 @@
         "ja-boxing/j6/1.0.11": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8",
         "ja-diner/j6/1.0.8": "6df56fb093a69d27c69e841e1fa3275e0a088e9b5fd925198ca5690907c28635"
       }
+    },
+    "0.24.97": {
+      "sha256": "e18597b07ebe00774662bfcfc9d21cf678b56637184b433b47e35c2e3d4087a7",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      },
+      "reviews": {
+        "ja-boxing/j6/1.0.10": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d",
+        "ja-boxing/j6/1.0.11": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8",
+        "ja-diner/j6/1.0.8": "6df56fb093a69d27c69e841e1fa3275e0a088e9b5fd925198ca5690907c28635"
+      }
     }
   }
 }

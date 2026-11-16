@@ -211,13 +211,17 @@ test('the T3 case: JA Diner j6 on 0.24.80 lacked every write door; 0.24.95-rc.2 
   const pin = latestPin('ja-diner')
   const contracts = defaultContracts()
   const now = judge(releaseOfPin(pin, contracts), {})
-  assert.deepEqual([now.state, now.code, now.params.plugin], ['done', 'cowork-pin-doors-ready', '0.24.96'])
+  assert.deepEqual([now.state, now.code, now.params.plugin], ['done', 'cowork-pin-doors-ready', pin.cowork])
+  // test-quality: contract JA Diner stays pinned on a stable release at or past 0.24.96, the first with its review
+  assert.ok(/^0\.24\.(9[6-9]|\d{3,})$/.test(pin.cowork), pin.cowork)
   // Before 0.24.96: the release candidate held the review, the stable release a site updates itself to did not.
   const manifest = JSON.parse(
     readFileSync(new URL('../src/lib/template-readiness/cowork-plugin-doors.json', import.meta.url), 'utf8')
   )
-  manifest.releases['0.24.95-rc.2'] = structuredClone(manifest.releases['0.24.96'])
-  delete manifest.releases['0.24.96']
+  manifest.releases['0.24.95-rc.2'] = structuredClone(manifest.releases[pin.cowork])
+  // Every release from 0.24.96 on carries the review: before them, none did.
+  for (const version of Object.keys(manifest.releases))
+    if (/^0\.24\.(9[6-9]|\d{3,})$/.test(version)) delete manifest.releases[version]
   const pins = structuredClone(readPins())
   pins['quickstart/ja-diner/j6'].cowork.version = '0.24.95-rc.2'
   const then = judge(releaseOfPin(pin, contracts), { pluginDoors: manifest, pins })
@@ -233,7 +237,7 @@ test('the T3 case: JA Diner j6 on 0.24.80 lacked every write door; 0.24.95-rc.2 
   const before = judge(releaseOfPin(pin, contracts), { pins })
   assert.deepEqual(
     [before.code, before.params.missing, before.params.fixVersion],
-    ['cowork-pin-missing-doors', [...WRITE_STEP_DOORS.map((d) => d.id), 'hide-review'], '0.24.96']
+    ['cowork-pin-missing-doors', [...WRITE_STEP_DOORS.map((d) => d.id), 'hide-review'], newestReadRelease()]
   )
   assert.ok(newestReadRelease())
 })
