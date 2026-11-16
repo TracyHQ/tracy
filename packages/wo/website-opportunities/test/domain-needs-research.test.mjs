@@ -305,13 +305,13 @@ test('a directory listing page is a source of its own: its phone, name and addre
   const LISTING = 'https://directory.example/biz/fenwick-boxing-club'
   const brief = {
     schemaVersion: 2,
-    business: { name: 'Fenwick Boxing Club', phone: '+44 7700 900123' },
+    business: { name: 'Fenwick Boxing Club', phone: '+1 555 0142 318' },
     facts: [
       fact('f-name', 'name', 'Fenwick Boxing Club', [
         { source: 'listing', ref: LISTING, quote: 'Fenwick Boxing Club' }
       ]),
-      fact('f-phone', 'phone', '+44 7700 900123', [
-        { source: 'listing', ref: LISTING, quote: '+44 7700 900123' }
+      fact('f-phone', 'phone', '+1 555 0142 318', [
+        { source: 'listing', ref: LISTING, quote: '+1 555 0142 318' }
       ]),
       fact('f-address', 'address', '3 Corve Street, Hartleigh', [
         { source: 'listing', ref: LISTING, quote: '3 Corve Street, Hartleigh' }
@@ -321,11 +321,11 @@ test('a directory listing page is a source of its own: its phone, name and addre
   const research = researchOf(brief, { manifest: [] })
   const listing = research.sources.find((s) => s.id === 'listing')
   assert.equal(listing?.origin, 'listing')
-  assert.equal(listing.fields['contact.phone'], '+44 7700 900123')
+  assert.equal(listing.fields['contact.phone'], '+1 555 0142 318')
   assert.deepEqual(research.setAside, [], 'nothing is set aside as a source nobody knows')
   const model = async () => JSON.stringify({ languages: [], facts: [], items: [] })
   const profile = await buildNeedsProfile({ research, model })
-  assert.equal(profile.facts['contact.phone'][0].value, '+44 7700 900123')
+  assert.equal(profile.facts['contact.phone'][0].value, '+1 555 0142 318')
   assert.ok(
     !profile.questions.some((q) => q.code === 'contact_method'),
     'a phone was found: the owner is not asked how visitors contact them'
