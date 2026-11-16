@@ -199,3 +199,14 @@ test('W02 fails a writer text on a label slot that does not name the plan label 
     /block-2\.1: replacedPlanLabel on a slot/
   )
 })
+
+test('a slot the plan neither writes nor hides is left out of the copy, not sent back for a fix round', () => {
+  // Dev, BXR London 16/11/2026: one trainer's name the plan had not decided kept the copy step failing W02 for two fix rounds.
+  const answer = answerWithout(SLOT)
+  answer.slots.push({ slot: 'block-999.4', text: 'Greg Williams', factIds: [] })
+  const c = assembleCopy(answer, { fingerprint, index: index() })
+  assert.equal(entryOf(c, 'block-999.4'), undefined)
+  assert.equal(w02(c).status, 'pass', JSON.stringify(w02(c).failures))
+  // A decided slot is kept as before.
+  assert.equal(entryOf(c, 'block-1.1').owner, 'plan-label')
+})

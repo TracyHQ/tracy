@@ -67,13 +67,16 @@ test(
 )
 
 test(
-  'a fix round return withdraws an unknown slot the writer wrote, and turns a kept slot into a return',
+  'an unknown slot the writer wrote is left out before the check, and a fix round return turns a kept slot into a return',
   opts,
   async () => {
     const { pool } = db
     await assignWriterDoor(pool)
     const started = await startRun(pool, kits.index)
     const first = writerAnswer()
+    // A slot the plan has no decision for is left out when the copy is assembled (copy-changes.js assembleCopy); the
+    // missing kept slot is what sends the run to a fix round.
+    first.slots = first.slots.filter((s) => s.slot !== 'block-3.1')
     first.slots.push({ slot: 'block-9.9', owner: 'writer', text: 'Quay Fitness Studio', factIds: [] })
     const model = scriptedModel([
       reply(first),
@@ -89,8 +92,10 @@ test(
     const run = await readRun(pool, started.id)
     assert.equal(run.status, 'succeeded', run.error)
     const [r0, r1] = run.rounds
-    assert.match(r0.failureList, /block-9\.9: unknown slot/)
-    assert.match(lastUserText(model.requests[1]), /block-9\.9/)
+    assert.doesNotMatch(r0.failureList, /block-9\.9/)
+    assert.equal(slotText(r0.copy, 'block-9.9'), undefined)
+    assert.match(r0.failureList, /block-3\.1/)
+    assert.match(lastUserText(model.requests[1]), /block-3\.1/)
     assert.equal(r1.reading.form, 'changes')
     assert.equal(r1.failureList, '')
     assert.equal(slotText(r1.copy, 'block-9.9'), undefined)
