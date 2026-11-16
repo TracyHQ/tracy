@@ -40,7 +40,7 @@ test('a first call only asks the owner, in the same words as tracy-web', async (
   assert.equal(asked.say, START_OVER_CONFIRM_SAY)
   assert.equal(calls.length, 0, 'nothing is discarded before the owner agreed')
   const web = readFileSync(
-    new URL('../../../../apps/tracy-web/src/build-draft/fresh-start.js', import.meta.url),
+    new URL('../../../../apps/tracy-web/src/lib/i18n/strings.js', import.meta.url),
     'utf8'
   )
   assert.ok(web.includes(`'${START_OVER_CONFIRM_SAY}'`), 'the two copies of the question are equal')

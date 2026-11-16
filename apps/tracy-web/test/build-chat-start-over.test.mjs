@@ -42,6 +42,7 @@ test('stopped for good: a refused build with no site, or a team fault whose re-r
     ['an owner cancel', { engine: { state: 'stopped', reason: 'cancelled' } }],
     ['a refused change', { engine: { state: 'stopped', say: SAY.revise, reason: 'revise-failed' } }],
     ['a link asked for', { engine: { state: 'stopped', say: SAY.links } }],
+    ['a name asked for', { engine: { state: 'stopped', say: SAY.name } }],
     ['a build running', { build: { site: null, endedAt: null } }],
     ['a site built', { build: { site, endedAt: ended, result: 'done' } }],
     ['a site whose build stopped', { build: { site, endedAt: ended, result: 'stopped' } }]

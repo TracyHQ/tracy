@@ -18,6 +18,7 @@
  */
 import { en } from '../lib/i18n/strings.js'
 import { principalOf } from '../lib/wo-principal.js'
+import { SAY } from './engine-state.js'
 
 /**
  * What the owner reads about a start over, in English: the `startOver.*` words of tracy-web's pages
@@ -47,8 +48,9 @@ export function stoppedForGood(row) {
   const engine = row.engine
   if (engine?.state !== 'stopped' || engine.rerun) return false
   if (engine.reason) return false
-  // The request for a link has no reason but waits for the owner's link (`engine.js`, `research_empty`).
-  return !String(engine.say ?? '').startsWith('Please give me at least one link')
+  // A research that asks the owner about the business (`SAY.links`) or for its name (`SAY.name`) has no reason but
+  // waits for the owner's answer (`engine.js`, `research_empty`).
+  return engine.say !== SAY.links && engine.say !== SAY.name
 }
 
 /** Why the owner may not start this draft over, or null when they may. */
