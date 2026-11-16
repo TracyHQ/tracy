@@ -2,6 +2,7 @@
  * English baseline for the `tracy-build-chat` namespace. This package OWNS the namespace; `NS` lives beside `en` so
  * `check-dsh-locale` can find the owner. Wording follows the build chat mock the product owner approved.
  */
+import { ASK_STRINGS } from '@tracy/core/build-chat'
 import { rebuildEn } from './rebuild-strings'
 
 export const NS = 'tracy-build-chat'
@@ -129,6 +130,95 @@ export const en = {
   'plan.revised.notDone.section_not_filled.why':
     'There is nothing of your business to fill it, so it is not added.',
   'plan.revised.notDone.item_rename_refused.what': 'Rename {name}',
+  'plan.revised.notDone.owner_value_not_shown.what': 'Show your {label} on the site',
+  'plan.revised.notDone.owner_value_not_shown.why':
+    'Your answer is saved, but your design has no place that shows it.',
+  // A repeated data name in a change line, said once with its count: "12 photos" (the plan step's plural).
+  'plan.revised.names.counted': '{count} {plural}',
+  // The lead in of a not done line the model wrote, by its refusal kind; shown only in another interface language.
+  'plan.revised.notDone.reason.no_recipe': 'Your design has no page of this kind.',
+  'plan.revised.notDone.reason.no_data': 'Nothing of your business fills this section.',
+  'plan.revised.notDone.reason.fact_missing': 'Your business does not have this information.',
+  'plan.revised.notDone.reason.kept_private': 'You keep this off your site.',
+  'plan.revised.notDone.reason.outside_plan':
+    'A change request cannot change this. Change it on the plan card.',
+  // Left out reasons by their code: each the plan step's sentence word for word.
+  'plan.leftOut.reason.no_email_for_form':
+    'Your business has no email address for its sign up form to send answers to.',
+  'plan.leftOut.reason.no_booking_link': 'You have no booking or contact link for its button to open.',
+  'plan.leftOut.reason.no_items_to_show': 'You have nothing yet for this section to show.',
+  'plan.leftOut.reason.shown_in_other_sections':
+    'What this section would show is already shown in other sections of your plan.',
+  'plan.leftOut.reason.owner_withheld': 'You asked to keep this off the site.',
+  'plan.leftOut.reason.left_out_neutral.page': 'This page is not part of your plan.',
+  'plan.leftOut.reason.left_out_neutral.block': 'This section is not part of your plan.',
+  'plan.leftOut.reason.left_out_neutral.item': 'This is not shown on your plan.',
+  'plan.leftOut.reason.no_gallery_room.one':
+    'No gallery has room for this photo. It stays with your photos and may be used elsewhere on the site.',
+  'plan.leftOut.reason.no_gallery_room.other':
+    'No gallery has room for these {count} photos. They stay with your photos and may be used elsewhere on the site.',
+  // The pictures estimate, by its code.
+  'plan.pictures.estimate.one':
+    'About {count} picture will be created where you have no suitable photo. The final number depends on your photos.',
+  'plan.pictures.estimate.other':
+    'About {count} pictures will be created where you have no suitable photo. The final number depends on your photos.',
+  // Where an own logo was found, by its source kind.
+  'plan.logoSource.website': 'Website',
+  'plan.logoSource.google': 'Google Maps listing',
+  'plan.logoSource.instagram': 'Instagram profile',
+  'plan.logoSource.facebook': 'Facebook page',
+  'plan.logoSource.tiktok': 'TikTok profile',
+  // The logo assumptions, by their code and parameters.
+  'plan.assumption.logo_drawn.new-symbol-drawn':
+    "Tracy drew a logo based on your logo: a new symbol of your trade beside your business name, set in the template's font. It is not your logo file. Approve it, or send us your logo to replace it.",
+  'plan.assumption.logo_drawn.symbol-cut-from-logo':
+    "Tracy drew a logo based on your logo: the symbol cut from your logo beside your business name, set in the template's font. It is not your logo file. Approve it, or send us your logo to replace it.",
+  'plan.assumption.logo_drawn.name-set-in-template-font':
+    "Tracy drew a logo based on your logo: a mark beside your business name, set in the template's font. It is not your logo file. Approve it, or send us your logo to replace it.",
+  'plan.assumption.logo_made.found.icon':
+    'Your logo could not be used as it is, so I made a temporary one: a simple icon of your trade beside your business name. Send your logo file here in the chat to replace it.',
+  'plan.assumption.logo_made.found.lettermark':
+    'Your logo could not be used as it is, so I made a temporary one: your initials beside your business name. Send your logo file here in the chat to replace it.',
+  'plan.assumption.logo_made.found.mark':
+    'Your logo could not be used as it is, so I made a temporary one: a simple mark beside your business name. Send your logo file here in the chat to replace it.',
+  'plan.assumption.logo_made.none.icon':
+    "No logo was found, so I made a temporary one: a simple icon of your trade beside your business name, in the design's main colour. Send your logo here in the chat to replace it.",
+  'plan.assumption.logo_made.none.lettermark':
+    "No logo was found, so I made a temporary one: your initials beside your business name, in the design's main colour. Send your logo here in the chat to replace it.",
+  'plan.assumption.logo_made.none.mark':
+    "No logo was found, so I made a temporary one: a simple mark beside your business name, in the design's main colour. Send your logo here in the chat to replace it.",
+  // Opening hours, from their parameters: "Monday to Friday, 6:00 to 21:00; Saturday, 8:00 to 16:00".
+  'plan.hours.days': '{from} to {to}',
+  'plan.hours.time': '{from} to {to}',
+  'plan.hours.closed': 'closed',
+  'plan.hours.ranges': '{first} and {next}',
+  'plan.hours.group': '{days}, {hours}',
+  'plan.hours.groups': '{first}; {next}',
+  // Section names by their code (`blocks[].labelCode`, the `section` of a change line).
+  'plan.section.header': 'Menu',
+  'plan.section.footer': 'Footer',
+  'plan.section.hero': 'Hero',
+  'plan.section.page_header': 'Page header',
+  'plan.section.about': 'About',
+  'plan.section.text': 'Text',
+  'plan.section.call_to_action': 'Call to action',
+  'plan.section.contact': 'Contact details',
+  'plan.section.map': 'Map',
+  'plan.section.video': 'Video',
+  'plan.section.newsletter': 'Newsletter',
+  'plan.section.services': 'Services',
+  'plan.section.menu': 'Menu',
+  'plan.section.pricing': 'Prices',
+  'plan.section.schedule': 'Schedule',
+  'plan.section.team': 'Team',
+  'plan.section.stats': 'Figures',
+  'plan.section.steps': 'Steps',
+  'plan.section.reviews': 'Reviews',
+  'plan.section.claims': 'Awards',
+  'plan.section.faq': 'Questions',
+  'plan.section.events': 'Events',
+  'plan.section.posts': 'Articles',
+  'plan.section.gallery': 'Photos',
   'plan.undo.chatChange':
     'Undo takes back changes made on this card. To take back a change you asked for in the chat, ask in the chat.',
   'plan.fact.business.name': 'Business name',
@@ -181,7 +271,10 @@ export const en = {
   'handoff.earlier': 'Earlier conversation',
   'handoff.tooLong':
     'Your site is ready, but this conversation is too long to move to the site chat. Open your site from your list of sites.',
-  ...rebuildEn
+  ...rebuildEn,
+  // The question card's words (#609): the host says a question in the interface language by these keys
+  // (`src/host/ask-words.mjs`); English is the engine's own wording, kept with the code in `@tracy/core/build-chat`.
+  ...ASK_STRINGS
 } as const
 
 export type StringKey = keyof typeof en

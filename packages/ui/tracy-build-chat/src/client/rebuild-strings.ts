@@ -7,7 +7,7 @@
  */
 export const rebuildSayEn = {
   'rebuild.say.revision_needs_removal':
-    'Your change takes a page, a section or an item off your site, and I cannot remove things from a live site yet. Your site is unchanged. You can put that item back on the plan, and the team can see what you asked for.',
+    'Your change takes off a part of your site that I cannot take off from this chat, so I stopped before changing anything. Your site is unchanged. The team can see what you asked for.',
   'rebuild.say.previous_build_doors_missing':
     'I cannot update your site from this chat yet, so your site is unchanged. The team can see what happened.',
   'rebuild.say.previous_build_not_current':
@@ -23,7 +23,11 @@ export const rebuildSayEn = {
   'rebuild.say.restore_site_changed':
     'Part of your site was edited outside Tracy since the last update, so I did not go back to the previous version. Your edit is kept and your site stays as it is now.',
   'rebuild.say.restore_needs_removal':
-    'The last update added something to your site, and I cannot remove things from a live site yet, so I did not go back to the previous version. Your site stays as it is now.',
+    'Part of the last update cannot be taken back from this chat, so I did not go back to the previous version. Your site stays as it is now. The team can see what happened.',
+  'rebuild.say.door_not_available':
+    'Your site does not let me make this change from this chat, so I stopped the update. The team can see which part it was.',
+  'rebuild.say.sheets_unreadable':
+    'I could not read the style sheets of your site, so I stopped before changing its colours. The team can see what happened.',
   'rebuild.say.restore_shows_held_text':
     'The previous version shows something you asked to keep private, so I did not go back to it. Your site stays as it is now.',
   'rebuild.say.write_record_stale':

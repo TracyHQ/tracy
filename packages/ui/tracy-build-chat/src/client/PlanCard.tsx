@@ -34,7 +34,15 @@ import {
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
 import { type EditContext, EditableValue, UndoIcon } from './EditableValue'
 import { factLabelOf, sentenceOf, sourceNameOf } from './plan-words'
-import { changedLineOf, notDoneLineOf } from './revision-lines'
+import {
+  assumptionOf,
+  factShownOf,
+  leftOutReasonOf,
+  logoSourceOf,
+  picturesEstimateOf,
+  sectionLabelOf
+} from './plan-codes'
+import { changedLineOf, type LineContext, notDoneLineOf } from './revision-lines'
 import { refusalOf } from './save-plan-edit'
 import type { StringKey, Translate } from './strings'
 
@@ -109,29 +117,47 @@ function RevisionNoteView({
   edited,
   t,
   undoHintId,
-  onDismiss
+  onDismiss,
+  lineContext
 }: {
   note: RevisionNote
   /** The lines of an edit the agent made (`editLinesOf`), shown with what changed. */
   edited: string[]
   t: Translate
+  /** The interface language and the plan's facts, for a line said from its params (opening hours). */
+  lineContext: LineContext
   /** Set while Undo cannot take this change back: the note says why, and Undo points at it. */
   undoHintId?: string
   onDismiss: () => void
 }) {
   // A line with a stable code is said in the card's words (`revision-lines.ts`); any other keeps the server's text.
   // Codes that do not run one to one beside their lines are not read at all: never a shifted translation.
-  const beside = (codes: (string | null)[] | undefined, lines: unknown[]) =>
+  const beside = <T,>(codes: T[] | undefined, lines: unknown[]): T[] | null =>
     Array.isArray(codes) && codes.length === lines.length ? codes : null
   const changedCodes = beside(note.codes?.changed, note.changed)
   const notDoneCodes = beside(note.codes?.notDone, note.notDone)
+  // The params and refusal kinds of each line (#609): read only beside a code list that runs one to one too.
+  const changedParams = changedCodes ? beside(note.codes?.changedParams, note.changed) : null
+  const notDoneParams = notDoneCodes ? beside(note.codes?.notDoneParams, note.notDone) : null
+  const notDoneReasons = notDoneCodes ? beside(note.codes?.notDoneReasons, note.notDone) : null
   const changed = grouped(
-    [...note.changed.map((line, i) => changedLineOf(t, changedCodes?.[i], plainTextOf(line))), ...edited],
+    [
+      ...note.changed.map((line, i) =>
+        changedLineOf(t, changedCodes?.[i], plainTextOf(line), changedParams?.[i], lineContext)
+      ),
+      ...edited
+    ],
     (line) => line
   )
   const notDone = grouped(
     note.notDone.map((e, i) =>
-      notDoneLineOf(t, notDoneCodes?.[i], { what: plainTextOf(e.what), why: plainTextOf(e.why) })
+      notDoneLineOf(
+        t,
+        notDoneCodes?.[i],
+        { what: plainTextOf(e.what), why: plainTextOf(e.why) },
+        notDoneParams?.[i],
+        notDoneReasons?.[i]
+      )
     ),
     (e) => `${e.what}\n${e.why}`
   )
@@ -190,6 +216,16 @@ const plural = (t: Translate, base: string, count: number, vars: Record<string, 
   t(`${base}.${count === 1 ? 'one' : 'other'}` as StringKey, { count, ...vars })
 
 /** "A, B and C" with the dictionary's "and". */
+/**
+ * The names of the sources of the owner's photos in the card's words: by their kinds (`fromKinds`) when the plan gives
+ * one kind per name, each name as the plan has it otherwise.
+ */
+function ownPhotoSourcesOf(t: Translate, own: { from: string[]; fromKinds?: string[] }): string[] {
+  const kinds =
+    Array.isArray(own.fromKinds) && own.fromKinds.length === own.from.length ? own.fromKinds : null
+  return own.from.map((name, i) => sourceNameOf(t, kinds?.[i], name))
+}
+
 function listOf(t: Translate, parts: string[]): string {
   if (parts.length <= 1) return parts[0] ?? ''
   return t('plan.and', { first: parts.slice(0, -1).join(', '), last: parts[parts.length - 1] as string })
@@ -410,9 +446,11 @@ export function PlanCard({
     card.look.logo.kind !== 'own'
       ? t('plan.look.logoText')
       : // A logo the machine drew from the owner's logo is not the owner's own file, and the row says so.
-        draft.lookSources?.logo?.from === 'drawn-from-logo'
+        draft.lookSources?.logo?.from === 'drawn-from-logo' || card.look.logo.code === 'logo_source_drawn'
         ? t('plan.look.logoDrawn')
-        : t('plan.look.logoOwn', { source: card.look.logo.source ?? '' })
+        : t('plan.look.logoOwn', {
+            source: logoSourceOf(t, card.look.logo, card.look.logo.source ?? '')
+          })
   const drawn =
     card.pictures.generated.frames === 0
       ? t('plan.pictures.drawnNone')
@@ -469,6 +507,7 @@ export function PlanCard({
           note={revised}
           edited={edited}
           t={t}
+          lineContext={{ locale, facts: card.facts }}
           {...(undoUnavailable ? { undoHintId } : {})}
           onDismiss={() => {
             onDismissRevised?.()
@@ -499,7 +538,7 @@ export function PlanCard({
                   field={f.field}
                   label={factLabelOf(t, f.kind, f.label)}
                   current={f.value}
-                  text={f.value}
+                  text={factShownOf(t, f, locale)}
                   source={sourceNameOf(t, f.sourceKind, f.source)}
                 />
               )}
@@ -574,7 +613,7 @@ export function PlanCard({
             <ol>
               {p.blocks.map((b) => (
                 <li key={b.id}>
-                  <span className="tv-bc-bn">{b.label}</span>
+                  <span className="tv-bc-bn">{sectionLabelOf(t, b.labelCode, b.label)}</span>
                   <Value
                     field={`pages[${p.id}].blocks[${b.id}].data`}
                     {...('services' in b.holds ? { source: t('plan.fromServices') } : {})}
@@ -595,7 +634,7 @@ export function PlanCard({
           <Row label={t('plan.pictures.own')}>
             <Value>
               {plural(t, 'plan.pictures.ownValue', card.pictures.own.frames, {
-                from: listOf(t, card.pictures.own.from)
+                from: listOf(t, ownPhotoSourcesOf(t, card.pictures.own))
               })}
             </Value>
           </Row>
@@ -604,7 +643,9 @@ export function PlanCard({
                 shown, not offered, although the contract still lists the field as editable. */}
             <Value
               field="pictures.generated.frames"
-              {...(card.pictures.generated.reason ? { note: card.pictures.generated.reason } : {})}
+              {...(card.pictures.generated.reason
+                ? { note: picturesEstimateOf(t, card.pictures.generated, card.pictures.generated.reason) }
+                : {})}
             >
               {drawn}
             </Value>
@@ -616,7 +657,7 @@ export function PlanCard({
         <Section title={t('plan.assumptions')}>
           <ul className="tv-bc-plain">
             {card.assumptions.map((a) => (
-              <li key={a.id}>{a.said}</li>
+              <li key={a.id}>{assumptionOf(t, a, a.said)}</li>
             ))}
           </ul>
         </Section>
@@ -632,7 +673,7 @@ export function PlanCard({
                 </span>
                 <span>
                   <span className="tv-bc-what">{sentenceOf(l.what)}</span>{' '}
-                  <span className="tv-bc-muted">{l.reason}</span>
+                  <span className="tv-bc-muted">{leftOutReasonOf(t, l, l.reason)}</span>
                 </span>
               </li>
             ))}

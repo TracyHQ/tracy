@@ -79,7 +79,7 @@ export function buildEngineRoutes({
 
   /** The caller's address, or the refusal to answer. */
   async function engineCallerOf(c) {
-    const caller = await callerOf(c, { config, buildSessionIdOf })
+    const caller = await callerOf(c, { config, buildSessionIdOf, pool })
     if (caller.refusal) return caller
     return (await buildChatOn()) ? caller : { refusal: 'BUILD_CHAT_OFF' }
   }

@@ -7,8 +7,10 @@
 
 /** By stop code. */
 export const REBUILD_SAY = Object.freeze({
+  // Taking things off a built site works (#599: hidden or put on no page); this stop is left only for a part of a
+  // record that has no empty value to go back to (`step-chain-draft-journal-record.js`, `column_without_empty_value`).
   revision_needs_removal:
-    'Your change takes a page, a section or an item off your site, and I cannot remove things from a live site yet. Your site is unchanged. You can put that item back on the plan, and the team can see what you asked for.',
+    'Your change takes off a part of your site that I cannot take off from this chat, so I stopped before changing anything. Your site is unchanged. The team can see what you asked for.',
   previous_build_doors_missing:
     'I cannot update your site from this chat yet, so your site is unchanged. The team can see what happened.',
   previous_build_not_current:
@@ -23,8 +25,14 @@ export const REBUILD_SAY = Object.freeze({
     'Part of your site was edited outside Tracy since it was built, so I stopped before writing over that edit. Your edit is kept. The team can see which part it was.',
   restore_site_changed:
     'Part of your site was edited outside Tracy since the last update, so I did not go back to the previous version. Your edit is kept and your site stays as it is now.',
+  // A restore takes off what the update made (#599); it stops only when the update did not finish saving what it made,
+  // or took out a place no door puts back (`step-chain-draft-restore-plan.js`).
   restore_needs_removal:
-    'The last update added something to your site, and I cannot remove things from a live site yet, so I did not go back to the previous version. Your site stays as it is now.',
+    'Part of the last update cannot be taken back from this chat, so I did not go back to the previous version. Your site stays as it is now. The team can see what happened.',
+  door_not_available:
+    'Your site does not let me make this change from this chat, so I stopped the update. The team can see which part it was.',
+  sheets_unreadable:
+    'I could not read the style sheets of your site, so I stopped before changing its colours. The team can see what happened.',
   restore_shows_held_text:
     'The previous version shows something you asked to keep private, so I did not go back to it. Your site stays as it is now.',
   write_record_stale:

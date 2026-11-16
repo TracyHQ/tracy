@@ -96,6 +96,11 @@ async function composedClub(model) {
 /** The owner's typed opening hours, and how the plan step keeps them (its own opening hours notation). */
 const TYPED_HOURS = 'Mon to Sat 06:30 to 21:30'
 const SAVED_HOURS = 'Mo-Sa 06:30-21:30'
+/**
+ * How the owner reads those hours (`plan-hours-display.mjs`, #609): the line the plan step writes says the display
+ * form, while the stored value stays the machine form above.
+ */
+const SHOWN_HOURS = 'Monday to Saturday, 6:30 to 21:30'
 const OWNER_SOURCE = 'owner-statement'
 const WITH_HOURS = `We open ${TYPED_HOURS}. Please call the coaches page Our team.`
 
@@ -189,13 +194,26 @@ test(
     })
     // The plan step's own lines and codes reach the chat side by side.
     assert.deepEqual(ended.result.revision.changed, [
-      `Your answer is saved: Opening hours, ${SAVED_HOURS}.`,
+      `Your answer is saved: Opening hours, ${SHOWN_HOURS}.`,
       'The Coaches page is now called Our team.'
     ])
+    // Beside the codes, their params (#609): the card fills its own sentence from them, never from the English line.
     assert.deepEqual(ended.result.revision.codes, {
       changed: ['owner_value_saved', 'page-renamed'],
-      notDone: []
+      notDone: [],
+      changedParams: [
+        {
+          kind: 'contact.hours',
+          label: 'Opening hours',
+          value: SAVED_HOURS,
+          display: SHOWN_HOURS
+        },
+        ended.result.revision.codes.changedParams[1]
+      ],
+      notDoneParams: [],
+      notDoneReasons: []
     })
+    assert.equal(ended.result.revision.codes.changedParams[1].name, 'Our team')
 
     // Asked for again with no request, the plan and its profile stay.
     assert.equal((await s.call('POST', '/compose', {})).body.result.unchanged, true)
@@ -211,7 +229,14 @@ test(
       kept.needs_profile.facts['contact.hours'][0],
       stored.needs_profile.facts['contact.hours'][0]
     )
-    assert.deepEqual(next.result.revision.codes, { changed: ['page-renamed'], notDone: [] })
+    assert.deepEqual(next.result.revision.codes, {
+      changed: ['page-renamed'],
+      notDone: [],
+      changedParams: [next.result.revision.codes.changedParams[0]],
+      notDoneParams: [],
+      notDoneReasons: []
+    })
+    assert.equal(next.result.revision.codes.changedParams[0].name, 'The coaches')
   }
 )
 

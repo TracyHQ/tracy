@@ -47,6 +47,24 @@ export type BuildChatStringKey =
   | 'review.approve'
   | 'review.change'
 export declare const BUILD_CHAT_STRINGS: Readonly<Record<BuildChatStringKey, string>>
+/** The English question words said by code (`ask.*` of the `tracy-build-chat` namespace). */
+export type AskStringKey = `ask.${string}`
+export declare const ASK_STRINGS: Readonly<Record<AskStringKey, string>>
+/** A translator of the question words: the text in the interface language, or null for a key it does not hold. */
+export type AskWords = (key: string, vars?: Record<string, unknown>) => string | null
+export declare function localizedAskOf(
+  ask: { questions: AskItem[] },
+  // biome-ignore lint/suspicious/noExplicitAny: Contract B questions
+  questions: any[],
+  words: AskWords,
+  language: string
+): { questions: AskItem[] }
+export declare function sentChoiceIdOf(
+  // biome-ignore lint/suspicious/noExplicitAny: a Contract B question
+  question: any,
+  sent: string[],
+  label: unknown
+): string | null
 export declare const MAX_QUESTIONS_AT_ONCE: 3
 export declare const TEAM_SEES_SAY: string
 export declare const FAULT_SAY: string
@@ -66,7 +84,7 @@ export declare function askRequestOf(questions: any[], answers: any[]): { questi
 export declare function answerOf(
   // biome-ignore lint/suspicious/noExplicitAny: a Contract B question
   question: any,
-  item: { id: string; selected: string[]; custom?: string }
+  item: { id: string; selected: string[]; custom?: string; choice?: string }
 ): BuildAnswer | null
 export declare function textTooLongOf(
   // biome-ignore lint/suspicious/noExplicitAny: a Contract B question
@@ -154,6 +172,16 @@ export interface PlanFact {
   sourceKind: string | null
   /** Set when the sources disagree on this fact: its values, the website's first. */
   choice: null | { field: string; said: string; options: PlanChoiceOption[] }
+  /** The value as the owner reads it, written by code (opening hours); `value` stays what an edit changes. */
+  display?: string
+  /** The display's stable code (`opening_hours`) and its parameters. */
+  code?: string
+  params?: Record<string, unknown>
+}
+/** A stable text code and its parameters, beside the English text it stands for. */
+export interface PlanTextCode {
+  code?: string
+  params?: Record<string, unknown>
 }
 export type BlockHolds =
   | { services: string[] }
@@ -174,18 +202,28 @@ export interface PlanCard {
     template: string
     accent: string
     accentDark: string | null
-    logo: { kind: string; source?: string }
+    logo: { kind: string; source?: string; code?: string; sourceKind?: string }
   }
   services: { id: string; field: string; label: string; source: string; sourceKind: string | null }[]
   pages: {
     id: string
     name: string
-    blocks: { id: string; label: string; reason: string; holds: BlockHolds; lists?: BlockList[] }[]
+    blocks: {
+      id: string
+      label: string
+      labelCode?: string
+      reason: string
+      holds: BlockHolds
+      lists?: BlockList[]
+    }[]
   }[]
-  pictures: { own: { frames: number; from: string[] }; generated: { frames: number; reason?: string } }
-  assumptions: { id: string; said: string }[]
+  pictures: {
+    own: { frames: number; from: string[]; fromKinds?: string[] }
+    generated: { frames: number; reason?: string } & PlanTextCode
+  }
+  assumptions: ({ id: string; said: string } & PlanTextCode)[]
   /** One line per distinct thing and reason; `count` when several were left out for the same reason. */
-  leftOut: { what: string; kind: string; reason: string; count?: number }[]
+  leftOut: { what: string; kind: string; reason: string; count?: number; code?: string; params?: Record<string, unknown> }[]
   counts: { pages: number; services: number }
 }
 export interface PlanChange {
@@ -258,7 +296,16 @@ export interface RevisionNote {
    * The stable code of each line, parallel to `changed` and `notDone` (null for a line the model wrote), so the card
    * can say a coded line in its own words. Absent when the plan step sent no codes.
    */
-  codes?: { changed: (string | null)[]; notDone: (string | null)[] }
+  codes?: {
+    changed: (string | null)[]
+    notDone: (string | null)[]
+    /** The parameters of each changed line's code, one to one with `changed`; absent when the step sent none. */
+    changedParams?: (Record<string, unknown> | null)[]
+    /** The parameters of each not done line's code, one to one with `notDone`. */
+    notDoneParams?: (Record<string, unknown> | null)[]
+    /** The refusal kind of every not done line (`no_recipe`, `no_data`, ...), also one the model wrote. */
+    notDoneReasons?: (string | null)[]
+  }
 }
 /** Plan text with its HTML character references decoded, as text only (never HTML). */
 export declare function plainTextOf<T>(text: T): T

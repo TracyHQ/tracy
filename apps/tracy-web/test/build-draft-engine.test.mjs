@@ -689,7 +689,14 @@ test(
       changed: ['The Coaches page is now called Our team.'],
       notDone: [],
       // The plan step's stable code beside each line, for the card to say it in the owner's language.
-      codes: { changed: ['page-renamed'], notDone: [] }
+      // Beside the codes, their params and the not done reasons (#609), one per line.
+      codes: {
+        changed: ['page-renamed'],
+        notDone: [],
+        changedParams: [{ page: 'team', from: 'Coaches', name: 'Our team' }],
+        notDoneParams: [],
+        notDoneReasons: []
+      }
     })
     const stored = await row(s)
     assert.deepEqual(stored.plan, plan)

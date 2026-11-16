@@ -109,12 +109,20 @@ test('the template step confirms a single design and asks to pick among several'
   assert.match(persona, /one design fits, ask the owner to confirm it with the card button/i)
 })
 
-test('the owner language is the one the owner writes in, never a fixed language, and every handed sentence follows it', async () => {
-  // Run 6: English answers on a Vietnamese interface after a fixed message, Vietnamese ones on an English interface.
+test('the owner language is the interface language every answer names, never a fixed language, and every handed sentence follows it', async () => {
+  // Run 6: English answers on a Vietnamese interface after a fixed message. The decided rule is the interface
+  // language (`scripts/test/build-agent-preset.test.mjs`): every answer names it, and only an answer that names none
+  // falls back to the language the owner writes in.
   assert.ok(persona.includes(OWNER_LANGUAGE_GUIDANCE), 'the persona says the rule word for word')
-  assert.doesNotMatch(persona, /language of the owner's interface/)
+  assert.match(persona, /language of the owner's interface/)
+  assert.match(OWNER_LANGUAGE_GUIDANCE, /every tracy_build result names it in interfaceLanguage/)
+  assert.match(OWNER_LANGUAGE_GUIDANCE, /change only when the owner asks you to/)
+  assert.match(OWNER_LANGUAGE_GUIDANCE, /when you cannot tell.*use the language the owner writes in/i)
   assert.doesNotMatch(OWNER_LANGUAGE_GUIDANCE, /\b(English|Vietnamese)\b/)
-  assert.match(BUILD_DESCRIPTION, /in the language the owner writes in/)
+  assert.match(
+    BUILD_DESCRIPTION,
+    /in the language of the owner's interface, which each result names in interfaceLanguage/
+  )
   const revised = await call(
     toolAnswering(200, {
       step: 'revise',

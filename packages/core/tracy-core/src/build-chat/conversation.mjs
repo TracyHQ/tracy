@@ -102,6 +102,184 @@ export function askRequestOf(questions, answers) {
 }
 
 /**
+ * The English source of the question words said by code (#609, the codes of `docs/references/build-contract.md`
+ * "Question and answer"), part of the `tracy-build-chat` namespace (`strings.ts` spreads them into `en`). Each
+ * English text is the needs profile's own sentence for that code word for word (`needs-profile-questions.mjs`,
+ * `needs-profile-conflict-questions.mjs`), so an English card reads exactly as before. A plain object, not frozen.
+ */
+export const ASK_STRINGS = {
+  'ask.question.main_button': 'What should the main button on your site ask visitors to do?',
+  'ask.question.contact_method': 'We found no phone, email or booking link. How should visitors contact you?',
+  'ask.question.site_language':
+    'Your public pages use more than one language. Which language should your site use?',
+  'ask.question.fact_conflict_business.phone':
+    'Your public pages give different values for your phone number. Which one is right?',
+  'ask.question.fact_conflict_business.email':
+    'Your public pages give different values for your email address. Which one is right?',
+  'ask.question.fact_conflict_business.address':
+    'Your public pages give different values for your address. Which one is right?',
+  'ask.question.fact_conflict_business.hours':
+    'Your public pages give different values for your opening hours. Which one is right?',
+  'ask.question.fact_conflict_business.link':
+    'Your public pages give different values for your booking or contact link. Which one is right?',
+  'ask.question.fact_conflict_business.name':
+    'Your public pages give different values for your business name. Which one is right?',
+  'ask.question.fact_conflict_business.price':
+    'Your public pages give different values for your price. Which one is right?',
+  'ask.question.fact_conflict_item.phone':
+    'Your public pages give different values for the phone number of {item}. Which one is right?',
+  'ask.question.fact_conflict_item.email':
+    'Your public pages give different values for the email address of {item}. Which one is right?',
+  'ask.question.fact_conflict_item.address':
+    'Your public pages give different values for the address of {item}. Which one is right?',
+  'ask.question.fact_conflict_item.hours':
+    'Your public pages give different values for the opening hours of {item}. Which one is right?',
+  'ask.question.fact_conflict_item.link':
+    'Your public pages give different values for the booking or contact link of {item}. Which one is right?',
+  'ask.question.fact_conflict_item.name':
+    'Your public pages give different values for the business name of {item}. Which one is right?',
+  'ask.question.fact_conflict_item.price':
+    'Your public pages give different values for the price of {item}. Which one is right?',
+  'ask.choice.contact_method_phone': 'A phone number',
+  'ask.choice.contact_method_email': 'An email address',
+  'ask.choice.contact_method_link': 'A booking or contact link',
+  'ask.from': 'From {sources}',
+  'ask.and': '{first} and {last}',
+  'ask.source.website': 'Website',
+  'ask.source.google_maps': 'Google Maps listing',
+  'ask.source.owner_answer': 'Your answer',
+  'ask.source.instagram': 'Instagram profile',
+  'ask.source.facebook': 'Facebook page',
+  'ask.source.tiktok': 'TikTok profile',
+  'ask.source.social': 'Social profile'
+}
+
+/** The noun of a fact conflict question's sentence, by the fact role it asks about (`IMPORTANT_CONFLICTS`). */
+const CONFLICT_NOUNS = {
+  'contact.phone': 'phone',
+  'contact.email': 'email',
+  'contact.address': 'address',
+  'contact.hours': 'hours',
+  'contact.cta_url': 'link',
+  'business.name': 'name',
+  'offering.price': 'price',
+  'package.price': 'price'
+}
+
+/**
+ * A translator of the question words: the text of `key` in the interface language with `vars` filled in, or null for
+ * a key it does not hold (the question then keeps its own English text).
+ * @typedef {(key: string, vars?: Record<string, unknown>) => string | null} AskWords
+ */
+
+/** The question's sentence by its code, or null when its code is unknown or its params do not fit. */
+function promptByCode(question, words) {
+  const { code, params = {} } = question ?? {}
+  if (code === 'main_button' || code === 'contact_method' || code === 'site_language')
+    return words(`ask.question.${code}`)
+  const noun = CONFLICT_NOUNS[params?.fact]
+  if (!noun) return null
+  if (code === 'fact_conflict_business') return words(`ask.question.fact_conflict_business.${noun}`)
+  if (code === 'fact_conflict_item' && typeof params.item === 'string' && params.item !== '')
+    return words(`ask.question.fact_conflict_item.${noun}`, { item: params.item })
+  return null
+}
+
+/** A language's own name in the interface language, first letter upper case as a button reads; null when unknown. */
+function languageNameIn(tag, language) {
+  try {
+    const name = new Intl.DisplayNames([language], { type: 'language' }).of(tag)
+    return name ? name.charAt(0).toLocaleUpperCase(language) + name.slice(1) : null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * A choice's label by its code, or null to keep its label. The values of a fact conflict are the business's own
+ * values, said as the sources write them, never translated. A main button choice (`main_button_<channel>`, and its
+ * `_short` form) is the very text the site's button will carry, in the site's language and fitted to the button's
+ * length: site content, so it is never translated either.
+ */
+function choiceLabelByCode(choice, words, language) {
+  const { code, params = {} } = choice ?? {}
+  if (typeof code !== 'string') return null
+  if (/^contact_method_[a-z]+$/.test(code)) return words(`ask.choice.${code}`)
+  if (code === 'site_language_option' && typeof params?.language === 'string')
+    return languageNameIn(params.language, language)
+  return null
+}
+
+/** Where a fact conflict value was found, by its source codes ("From Website and Google Maps listing"), or null. */
+function choiceDetailByCode(choice, words) {
+  if (choice?.code !== 'fact_conflict_value' || typeof choice.params?.from !== 'string') return null
+  const names = choice.params.from.split(',').map((from) => words(`ask.source.${from.trim()}`))
+  if (names.length === 0 || names.some((n) => n === null)) return null
+  const sources =
+    names.length === 1
+      ? names[0]
+      : words('ask.and', { first: names.slice(0, -1).join(', '), last: names[names.length - 1] })
+  return sources === null ? null : words('ask.from', { sources })
+}
+
+/**
+ * An `ask_user_question` request in the interface language (#609): the request the engine gave (`askOf`, English),
+ * each question and choice said from its code (`code`, `params` of Contract B) where `words` holds it, every other
+ * text kept as given. Ids, the order of the options and the number of options never change, so the answer is read
+ * back by the choice's place in what was sent (`sentChoiceIdOf`), never by comparing a word. dsh's question card draws
+ * exactly these labels, and the model passes the request on unchanged.
+ * @param {{ questions: any[] }} ask - the request as the engine gave it
+ * @param {any[]} questions - the Contract B questions it was made from
+ * @param {AskWords} words
+ * @param {string} language - the interface language, for a language's name
+ */
+export function localizedAskOf(ask, questions, words, language) {
+  if (!ask || !Array.isArray(ask.questions)) return ask
+  const byId = new Map((questions ?? []).map((q) => [q?.id, q]))
+  return {
+    ...ask,
+    questions: ask.questions.map((item) => {
+      const source = byId.get(item?.id)
+      if (!source) return item
+      const choices = choicesOf(source)
+      const options = Array.isArray(item.options) ? item.options : []
+      // The options are the choices in order; one that is not its choice's label is kept as it is.
+      const said = options.map((o, i) => {
+        const choice = choices[i]
+        if (!choice || choice.label !== o?.label) return o
+        const label = choiceLabelByCode(choice, words, language) ?? o.label
+        const description =
+          o.description === undefined ? undefined : (choiceDetailByCode(choice, words) ?? o.description)
+        return description === undefined ? { ...o, label } : { ...o, label, description }
+      })
+      const recommendedAt = options.findIndex((o) => o?.label === item.recommended)
+      return {
+        ...item,
+        question: promptByCode(source, words) ?? item.question,
+        options: said,
+        ...(recommendedAt >= 0 ? { recommended: said[recommendedAt].label } : {})
+      }
+    })
+  }
+}
+
+/**
+ * The choice id a reply picked, read by the place of its label among the labels sent for that question (`sent`, the
+ * options of the request handed out, in order): the label is only located in what was sent, never compared with a
+ * translation of its own. Null when the label is not exactly one of them.
+ * @param {any} question - Contract B question
+ * @param {string[]} sent - the option labels handed out for it, in order
+ * @param {unknown} label - the label the card sent back
+ */
+export function sentChoiceIdOf(question, sent, label) {
+  const choices = choicesOf(question)
+  if (!Array.isArray(sent) || sent.length !== choices.length || typeof label !== 'string') return null
+  const at = sent.indexOf(label)
+  if (at < 0 || sent.lastIndexOf(label) !== at) return null
+  return choices[at]?.id ?? null
+}
+
+/**
  * The Contract B answer for what the card sent back for one question: a picked button names its choice, a
  * typed answer carries its text; null when the card sent neither. A button is named by its choice id (`choice`, or a
  * `selected` entry equal to an id) or, as before, by the label it showed, so a card that sends ids and one that sends

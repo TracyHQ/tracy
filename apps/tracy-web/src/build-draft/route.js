@@ -76,7 +76,7 @@ export function buildDraftRoutes({
   }
   /** The account of the signed-in person (created when `create`), null when it has none, or a 401 Response. */
   async function accountOf(c, { create = false } = {}) {
-    const caller = await callerOf(c, { config, buildSessionIdOf })
+    const caller = await callerOf(c, { config, buildSessionIdOf, pool })
     if (caller.refusal)
       return json(c, { code: caller.refusal }, caller.refusal === 'NOT_SIGNED_IN' ? 401 : 403)
     return create ? (await ensureAccount(pool, caller.email)).id : principalOf(pool, caller.email)

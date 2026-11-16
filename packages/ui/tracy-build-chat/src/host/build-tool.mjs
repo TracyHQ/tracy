@@ -39,14 +39,23 @@ import {
   approvalOf,
   askRequestOf,
   isBuildChatSession,
+  localizedAskOf,
   PLAN_REVIEW_ID,
   planOfReviewId,
   planReviewRequestOf,
   RETRY_MESSAGE,
   revisedOf,
+  sentChoiceIdOf,
   templateChoiceOf,
   textTooLongOf
 } from '@tracy/core/build-chat'
+import { askWordsFor } from './ask-words.mjs'
+
+/**
+ * The header in which tracy-web names the interface language of the person the tool acts for, on every build draft
+ * door answer (`apps/tracy-web/src/build-draft/caller.js`).
+ */
+export const INTERFACE_LANGUAGE_HEADER = 'x-tracy-interface-language'
 
 /** How long one call waits for long engine work before it hands back `running`. */
 export const BUILD_WAIT_MS = 90_000
@@ -116,15 +125,19 @@ export const PLAN_CARD_CONTROLS_GUIDANCE =
   'When an entry asks to change a business fact, a service name or the main colour, tell the owner they can change that value on the plan card. Never say that the language, the design, the logo, the pictures or anything else can be changed on the plan card.'
 
 /**
- * Private guidance: the owner's language is the one they write in, and a sentence a result hands over is said in it.
- * The interface language never reaches the agent, and a fixed message the chat sends for the owner ("Please try
- * again.") is not the owner writing (run 6: the agent followed such a message into English).
+ * Private guidance: the agent speaks the language of the owner's interface, the language the cards and the question
+ * card speak (decided rule, `scripts/test/build-agent-preset.test.mjs`). Every answer names it (`interfaceLanguage`,
+ * read from tracy-web's `x-tracy-interface-language`), and a sentence a result hands over is said in it. A message
+ * the owner writes in another language does not move it unless the owner asks, nor does a fixed message the chat sends
+ * for the owner ("Please try again.", run 6: the agent followed such a message into English). Only an answer that
+ * names no interface language falls back to the language the owner writes in.
  */
 export const OWNER_LANGUAGE_GUIDANCE =
-  'Speak the owner\'s language: the language the owner writes their own messages in. A fixed message the chat sends for them, such as "Please try again.", does not count. Say every sentence a result gives you in that language, keeping names and values as they are.'
+  'Write in the language of the owner\'s interface: every tracy_build result names it in interfaceLanguage. Keep to that language when the owner writes in another one, and change only when the owner asks you to. A fixed message the chat sends for them, such as "Please try again.", never changes it. Say every sentence a result gives you in that language, keeping names and values as they are. When you cannot tell, because a result names no interfaceLanguage, use the language the owner writes in.'
 
-/** How a line the engine wrote is said: in the owner's language, its names and values unchanged. */
-const IN_OWNER_LANGUAGE = "in the owner's language, keeping every name and value word for word"
+/** How a line the engine wrote is said: in the owner's interface language, its names and values unchanged. */
+const IN_OWNER_LANGUAGE =
+  "in the owner's interface language (interfaceLanguage), keeping every name and value word for word"
 
 /**
  * Private guidance after a change request with entries not done: nothing is promised that the card and the plan do
@@ -164,7 +177,7 @@ export const tooLongSay = (question, limit) =>
 const SAY_MAX = 300
 
 export const BUILD_DESCRIPTION =
-  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Say every sentence a result gives in the language the owner writes in. Never say the site is built until a build result says built.'
+  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Say every sentence a result gives in the language of the owner\'s interface, which each result names in interfaceLanguage; only when a result names none, in the language the owner writes in. Never say the site is built until a build result says built.'
 
 export const BUILD_PARAMETERS = Object.freeze({
   type: 'object',
@@ -508,8 +521,9 @@ export const reviewNextOf = (lead, open) =>
  *   now?: () => number,
  *   sleep?: (ms: number) => Promise<void>,
  *   waitMs?: number,
- *   pollMs?: number
- * }} deps
+ *   pollMs?: number,
+ *   wordsFor?: (language: unknown) => import('@tracy/core/build-chat').AskWords | null
+ * }} deps `wordsFor`: the question words of an interface language (`ask-words.mjs`), null when there are none
  */
 export function createBuildTool({
   http,
@@ -519,10 +533,59 @@ export function createBuildTool({
   now = Date.now,
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
   waitMs = BUILD_WAIT_MS,
-  pollMs = BUILD_POLL_MS
+  pollMs = BUILD_POLL_MS,
+  wordsFor = askWordsFor
 }) {
   /** @type {Map<string, Map<string, any>>} Per build session: the Contract B questions the engine issued, by id. */
   const issued = new Map()
+  /** @type {Map<string, string>} Per build session: the owner's interface language, as tracy-web last named it. */
+  const languages = new Map()
+  /**
+   * @type {Map<string, Map<string, string[]>>} Per build session: the option labels handed out for each engine question,
+   * in order, so a reply's label is read back as the choice at its place (`sentChoiceIdOf`).
+   */
+  const sentLabels = new Map()
+
+  /**
+   * An engine request in the owner's interface language (`localizedAskOf`), its labels kept per question for the
+   * reply. With no known language, or none this host has words for, the request stays as the engine gave it.
+   * @param {string} sessionId
+   * @param {any} ask
+   * @param {any[]} questions - the Contract B questions it was made from
+   */
+  function localAsk(sessionId, ask, questions) {
+    const language = languages.get(sessionId)
+    const words = wordsFor(language)
+    const said = words && language ? localizedAskOf(ask, questions, words, language) : ask
+    let sent = sentLabels.get(sessionId)
+    if (!sent) sentLabels.set(sessionId, (sent = new Map()))
+    for (const q of Array.isArray(said?.questions) ? said.questions : [])
+      if (typeof q?.id === 'string')
+        sent.set(
+          q.id,
+          (Array.isArray(q.options) ? q.options : []).map((/** @type {any} */ o) => o?.label)
+        )
+    return said
+  }
+
+  /**
+   * A reply with the choice it picked named by id, read from the labels handed out for its question; after a restart
+   * of this process, from the same request worded again in the same language. A reply that typed its answer, or whose
+   * label is not one handed out, is left as it is (`answerOf` then reads it as before).
+   * @param {string} sessionId
+   * @param {any} question - the Contract B question
+   * @param {any} reply
+   */
+  function withChoiceId(sessionId, question, reply) {
+    if ((reply?.custom?.trim() ?? '') !== '' || reply?.choice !== undefined) return reply
+    let sent = sentLabels.get(sessionId)?.get(question.id)
+    if (!sent) {
+      const again = localAsk(sessionId, askRequestOf([question], []), [question])
+      sent = again?.questions?.[0]?.options?.map((/** @type {any} */ o) => o.label) ?? []
+    }
+    const choice = sentChoiceIdOf(question, /** @type {string[]} */ (sent), reply?.selected?.[0])
+    return choice === null ? reply : { ...reply, choice }
+  }
   /**
    * @type {Map<string, Map<string, string[]>>} Per build session: the plan review requests handed out with a plan, by
    * id (which names the plan revision), with their option labels.
@@ -594,6 +657,9 @@ export function createBuildTool({
         signal: AbortSignal.timeout(BUILD_DOOR_TIMEOUT_MS)
       })
       const parsed = await res.json().catch(() => null)
+      // The owner's interface language, which tracy-web names on every answer to the tool (`caller.js`).
+      const language = res.headers?.get?.(INTERFACE_LANGUAGE_HEADER)
+      if (typeof language === 'string' && /^[a-z]{2}$/.test(language)) languages.set(sessionId, language)
       return { status: res.status, body: parsed }
     } catch {
       return null
@@ -629,7 +695,7 @@ export function createBuildTool({
       const tooLong = textTooLongOf(question, reply)
       latest.set(reply.id, tooLong ? { question, limit: tooLong.limit } : null)
       if (tooLong) continue
-      let answer = answerOf(question, reply)
+      let answer = answerOf(question, withChoiceId(sessionId, question, reply))
       if (answer === null && question.skippable === true)
         answer = { schema: 'tracy-build-answer/v1', question: question.id, skipped: true }
       if (answer === null) continue
@@ -722,12 +788,18 @@ export function createBuildTool({
     if (state?.state === 'asking') {
       learn(sessionId, result)
       if (!result.ask) return stopped()
-      return askAgain(result.ask, typeof state.say === 'string' ? ownerSay(state.say) : undefined)
+      return askAgain(
+        localAsk(sessionId, result.ask, result.questions),
+        typeof state.say === 'string' ? ownerSay(state.say) : undefined
+      )
     }
     if (state?.step === 'research') {
       learn(sessionId, result)
       if (!result.profile) return stopped()
-      return { profile: result.profile, ...(result.ask ? { ask: result.ask } : {}) }
+      return {
+        profile: result.profile,
+        ...(result.ask ? { ask: localAsk(sessionId, result.ask, result.questions) } : {})
+      }
     }
     // A written change request (#617): what changed and what was not done, in the words the engine wrote.
     if (state?.step === 'revise') {
@@ -989,7 +1061,12 @@ export function createBuildTool({
       // A fault never becomes a raw tool error (a plan of an older shape, an answer this file cannot read).
       result = stopped()
     }
-    return typeof result?.next === 'string' ? { ...result, next: privately(result.next) } : result
+    const marked = typeof result?.next === 'string' ? { ...result, next: privately(result.next) } : result
+    // The owner's interface language, once tracy-web named it: the agent speaks it (`INTERFACE_LANGUAGE_GUIDANCE`).
+    const language = languages.get(/** @type {any} */ (exec)?.agent?.session?.id)
+    return language && marked && typeof marked === 'object'
+      ? { ...marked, interfaceLanguage: language }
+      : marked
   }
 
   /** @param {unknown} rawArgs @param {any} exec */
@@ -1061,7 +1138,10 @@ export function createBuildTool({
     if ('refusal' in replies) return replies.refusal
     if (replies.again) {
       const { question, limit } = replies.again
-      return askAgain(askRequestOf([question], []), tooLongSay(question, limit))
+      return askAgain(
+        localAsk(sessionId, askRequestOf([question], []), [question]),
+        tooLongSay(question, limit)
+      )
     }
     if (action === 'build') return build(sessionId, assertion)
 

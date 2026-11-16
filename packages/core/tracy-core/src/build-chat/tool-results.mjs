@@ -40,29 +40,66 @@ const codeAt = (codes, lines, i) => {
 }
 
 /**
+ * The parameters at `i` of a parameter list that runs beside `lines`: a plain object, or null when there is none or
+ * the list is not one to one with its lines (never a shifted parameter).
+ */
+const paramsAt = (params, lines, i) => {
+  const given = listOf(params)
+  const value = given.length === lines.length ? given[i] : null
+  return isObject(value) && !Array.isArray(value) ? value : null
+}
+
+/** The refusal kinds of a not done line (`notDone[].reason`, Contract B's closed set). */
+const NOT_DONE_REASONS = new Set(['no_recipe', 'no_data', 'fact_missing', 'kept_private', 'outside_plan'])
+const reasonAt = (reasons, lines, i) => {
+  const given = listOf(reasons)
+  const value = given.length === lines.length ? given[i] : null
+  return typeof value === 'string' && NOT_DONE_REASONS.has(value) ? value : null
+}
+
+/**
  * The note of a change request answer (`revision: {changed, notDone, codes?}`): the lines the plan step wrote, strings
  * only. `codes` (parallel to `changed` and `notDone`) keeps the stable code of each line kept, null for a line without
- * one, so the card can say a coded line in its own words; an answer without codes has no `codes`. Null when the answer
- * has none (a compose or an edit) or the shape is not this one.
+ * one, so the card can say a coded line in its own words; an answer without codes has no `codes`. Beside the codes,
+ * when the step sent them (#609): `changedParams` and `notDoneParams`, the parameters of each code (null for none),
+ * and `notDoneReasons`, the refusal kind of every not done line, also one the model wrote. Each list runs one to one
+ * beside its lines; a list whose length does not match its lines is ignored as a whole. Null when the answer has none
+ * (a compose or an edit) or the shape is not this one.
  * @param {unknown} value
  * @returns {null | { changed: string[], notDone: { what: string, why: string }[],
- *   codes?: { changed: (string | null)[], notDone: (string | null)[] } }}
+ *   codes?: { changed: (string | null)[], notDone: (string | null)[], changedParams?: (object | null)[],
+ *     notDoneParams?: (object | null)[], notDoneReasons?: (string | null)[] } }}
  */
 export function revisedOf(value) {
   if (!isObject(value)) return null
   const coded = isObject(value.codes)
+  const given = coded ? value.codes : {}
+  const allChanged = listOf(value.changed)
+  const allNotDone = listOf(value.notDone)
+  // A list is read only when it runs one to one beside the lines it names.
+  const beside = (list, lines) => Array.isArray(list) && list.length === lines.length
+  const withChangedParams = beside(given.changedParams, allChanged)
+  const withNotDoneParams = beside(given.notDoneParams, allNotDone)
+  const withReasons = beside(given.notDoneReasons, allNotDone)
+  /** @type {{ changed: (string | null)[], notDone: (string | null)[], changedParams?: (object | null)[], notDoneParams?: (object | null)[], notDoneReasons?: (string | null)[] }} */
   const codes = { changed: [], notDone: [] }
+  if (withChangedParams) codes.changedParams = []
+  if (withNotDoneParams) codes.notDoneParams = []
+  if (withReasons) codes.notDoneReasons = []
   const changed = []
-  listOf(value.changed).forEach((line, i) => {
+  allChanged.forEach((line, i) => {
     if (typeof line !== 'string') return
     changed.push(line)
-    codes.changed.push(coded ? codeAt(value.codes.changed, listOf(value.changed), i) : null)
+    codes.changed.push(coded ? codeAt(given.changed, allChanged, i) : null)
+    codes.changedParams?.push(paramsAt(given.changedParams, allChanged, i))
   })
   const notDone = []
-  listOf(value.notDone).forEach((e, i) => {
+  allNotDone.forEach((e, i) => {
     if (typeof e?.what !== 'string' || typeof e?.why !== 'string') return
     notDone.push({ what: e.what, why: e.why })
-    codes.notDone.push(coded ? codeAt(value.codes.notDone, listOf(value.notDone), i) : null)
+    codes.notDone.push(coded ? codeAt(given.notDone, allNotDone, i) : null)
+    codes.notDoneParams?.push(paramsAt(given.notDoneParams, allNotDone, i))
+    codes.notDoneReasons?.push(reasonAt(given.notDoneReasons, allNotDone, i))
   })
   return coded ? { changed, notDone, codes } : { changed, notDone }
 }

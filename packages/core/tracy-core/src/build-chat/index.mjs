@@ -34,11 +34,14 @@ export function isBuildChatPage(pathname) {
 
 export {
   answerOf,
+  ASK_STRINGS,
   askRequestOf,
   BUILD_CHAT_STRINGS,
+  localizedAskOf,
   MAX_QUESTIONS_AT_ONCE,
   replyOf,
   researchRowOf,
+  sentChoiceIdOf,
   textTooLongOf
 } from './conversation.mjs'
 export {

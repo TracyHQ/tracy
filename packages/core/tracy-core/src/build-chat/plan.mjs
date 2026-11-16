@@ -144,11 +144,21 @@ function leftOutOf(leftOut) {
   for (const l of leftOut ?? []) {
     const what = plainWordsOf(text(l.what))
     const reason = text(l.reason)
-    const key = JSON.stringify([what, l.kind, reason])
+    // The reason's stable code and its parameters (#609): the card says a coded reason in its own words.
+    const code = typeof l.code === 'string' && l.code !== '' ? l.code : null
+    const params = code && isPlainObject(l.params) ? l.params : null
+    const key = JSON.stringify([what, l.kind, reason, code, params])
     const seen = byKey.get(key)
     if (seen) seen.count += 1
     else {
-      const line = { what, kind: l.kind, reason, count: 1 }
+      const line = {
+        what,
+        kind: l.kind,
+        reason,
+        ...(code ? { code } : {}),
+        ...(params ? { params } : {}),
+        count: 1
+      }
       byKey.set(key, line)
       lines.push(line)
     }
@@ -161,6 +171,12 @@ function leftOutOf(leftOut) {
 }
 
 const listOr = (value) => (Array.isArray(value) ? value : [])
+const isPlainObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
+/** A stable text code and its parameters as the card reads them: `{code, params}`, or nothing when there is no code. */
+const codeOf = (part) =>
+  typeof part?.code === 'string' && part.code !== ''
+    ? { code: part.code, params: isPlainObject(part.params) ? part.params : {} }
+    : {}
 
 /**
  * A plan with every part the card reads present: a draft stored under an earlier plan shape (no pictures, no logo, a
@@ -220,34 +236,55 @@ export function planCardOf(contractPlan) {
   const services = plan.items.filter((i) => i.kind === 'service' && shown.has(i.id))
   const serviceIds = services.map((s) => s.id)
   const name = text(plan.facts.find((f) => f.kind === 'business.name')?.value ?? '')
+  // A fact a left out entry reports (`leftOut[].item`) is known to the plan but not shown on the site (Contract B): it
+  // is said under Left out only, never also listed as a business fact the site shows. A fact some page shows stays.
+  const leftOutFacts = new Set(
+    listOr(plan.leftOut)
+      .map((l) => l?.item)
+      .filter((id) => typeof id === 'string' && !shown.has(id))
+  )
   return {
     planId: plan.id,
     revision: plan.revision,
     name,
-    facts: plan.facts.map((f) => {
-      const field = `facts[${f.id}].value`
-      const assumption = disputed.get(field)
-      return {
-        id: f.id,
-        field,
-        // The data kind (`business.name`) and the source's origin code: the card says both in its own words.
-        kind: typeof f.kind === 'string' ? f.kind : null,
-        label: text(f.label),
-        value: text(f.value),
-        source: firstSource(f.sources),
-        sourceKind: firstSourceKind(f.sources),
-        choice: assumption ? choiceOf(f, assumption) : null
-      }
-    }),
+    facts: plan.facts
+      .filter((f) => !leftOutFacts.has(f.id))
+      .map((f) => {
+        const field = `facts[${f.id}].value`
+        const assumption = disputed.get(field)
+        return {
+          id: f.id,
+          field,
+          // The data kind (`business.name`) and the source's origin code: the card says both in its own words.
+          kind: typeof f.kind === 'string' ? f.kind : null,
+          label: text(f.label),
+          value: text(f.value),
+          // The value as the owner reads it, written by code (opening hours), with its code: shown in place of
+          // `value`, which stays what an edit changes.
+          ...(typeof f.display === 'string' && f.display !== '' ? { display: text(f.display) } : {}),
+          ...codeOf(f),
+          source: firstSource(f.sources),
+          sourceKind: firstSourceKind(f.sources),
+          choice: assumption ? choiceOf(f, assumption) : null
+        }
+      }),
     language: plan.language,
     look: {
       template: typeof plan.look.template.name === 'string' ? plan.look.template.name : '',
       accent: plan.look.accent,
       // The dark theme's accent when it differs from the light one (#616); shown, not offered for editing yet.
       accentDark: typeof plan.look.accentDark === 'string' ? plan.look.accentDark : null,
+      // The logo's source line code (`logo_source_own`, `logo_source_drawn`) and where it came from (`sourceKind`).
       logo:
         plan.look.logo.kind === 'own'
-          ? { kind: 'own', source: plan.look.logo.source }
+          ? {
+              kind: 'own',
+              source: plan.look.logo.source,
+              ...(typeof plan.look.logo.code === 'string' ? { code: plan.look.logo.code } : {}),
+              ...(typeof plan.look.logo.sourceKind === 'string'
+                ? { sourceKind: plan.look.logo.sourceKind }
+                : {})
+            }
           : { kind: plan.look.logo.kind ?? null }
     },
     services: services.map((s) => ({
@@ -265,6 +302,8 @@ export function planCardOf(contractPlan) {
         return {
           id: b.id,
           label: text(b.label),
+          // The section's stable key (`labelCode`): the card names the section by it, `label` is the fallback.
+          ...(typeof b.labelCode === 'string' && b.labelCode !== '' ? { labelCode: b.labelCode } : {}),
           reason: text(b.reason),
           holds: holdsOf(b, plan, serviceIds),
           ...(lists.length > 0 ? { lists } : {})
@@ -272,16 +311,22 @@ export function planCardOf(contractPlan) {
       })
     })),
     pictures: {
-      own: { frames: plan.pictures.own.frames, from: [...(plan.pictures.own.from ?? [])] },
+      own: {
+        frames: plan.pictures.own.frames,
+        from: [...(plan.pictures.own.from ?? [])],
+        // The source kind of each name in `from`, same order (`website`, `google`, `social`, `answer`).
+        ...(Array.isArray(plan.pictures.own.fromKinds) ? { fromKinds: [...plan.pictures.own.fromKinds] } : {})
+      },
       generated: {
         frames: plan.pictures.generated.frames,
-        ...(plan.pictures.generated.reason ? { reason: text(plan.pictures.generated.reason) } : {})
+        ...(plan.pictures.generated.reason ? { reason: text(plan.pictures.generated.reason) } : {}),
+        ...codeOf(plan.pictures.generated)
       }
     },
-    // A disputed fact is settled at the fact itself; every other assumption is listed.
+    // A disputed fact is settled at the fact itself; every other assumption is listed, with its code when it has one.
     assumptions: (plan.assumptions ?? [])
       .filter((a) => !disputed.has(a.field))
-      .map((a) => ({ id: a.id, said: text(a.said) })),
+      .map((a) => ({ id: a.id, said: text(a.said), ...codeOf(a) })),
     leftOut: leftOutOf(plan.leftOut),
     counts: { pages: plan.pages.length, services: services.length }
   }

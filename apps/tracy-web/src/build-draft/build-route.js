@@ -154,7 +154,7 @@ export function buildRunRoutes({
 }) {
   const app = new Hono()
   const door = (run) => async (c) => {
-    const caller = await callerOf(c, { config, buildSessionIdOf })
+    const caller = await callerOf(c, { config, buildSessionIdOf, pool })
     if (caller.refusal) return refuse(c, caller.refusal)
     if (!(await buildChatOn())) return refuse(c, 'BUILD_CHAT_OFF')
     const accountId = await principalOf(pool, caller.email)

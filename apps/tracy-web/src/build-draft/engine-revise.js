@@ -87,19 +87,40 @@ const codesBeside = (codes, lines) => {
   return given.map((code) => (typeof code === 'string' && code !== '' ? code : null))
 }
 
+const isPlain = (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
+/**
+ * A list of values beside `lines`, one per line (`read` keeps a value or turns it into null), or undefined when the
+ * step sent none or one that does not run one to one with the lines: a list of the wrong length is ignored as a whole.
+ */
+const besideOrNone = (values, lines, read) =>
+  Array.isArray(values) && values.length === lines.length ? values.map(read) : undefined
+
 /**
  * What the revise step's done state keeps for the answer: the lines the owner reads, as Part 3 wrote them, and the
  * stable code beside each (`codes`, parallel to `changed` and `notDone`; null for a line the model wrote), so the card
- * can say a coded line in the owner's language. A result without codes keeps none.
+ * can say a coded line in the owner's language. Beside the codes, when Part 3 sent them (#609): the parameters of each
+ * code (`changedParams`, `notDoneParams`) and the refusal kind of every not done line (`notDoneReasons`), the card's
+ * words for a line are filled from these, never read out of the English sentence. A result without codes keeps none.
  */
 export function revisionOf(revised) {
   const changed = list(revised.changed)
   const notDone = list(revised.notDone).map(({ what, reason, why }) => ({ what, reason, why }))
   const codes = revised.codes
   if (!codes || typeof codes !== 'object') return { changed, notDone }
+  const params = (value) => (isPlain(value) ? value : null)
+  const reason = (value) => (typeof value === 'string' && value !== '' ? value : null)
+  const changedParams = besideOrNone(codes.changedParams, changed, params)
+  const notDoneParams = besideOrNone(codes.notDoneParams, notDone, params)
+  const notDoneReasons = besideOrNone(codes.notDoneReasons, notDone, reason)
   return {
     changed,
     notDone,
-    codes: { changed: codesBeside(codes.changed, changed), notDone: codesBeside(codes.notDone, notDone) }
+    codes: {
+      changed: codesBeside(codes.changed, changed),
+      notDone: codesBeside(codes.notDone, notDone),
+      ...(changedParams ? { changedParams } : {}),
+      ...(notDoneParams ? { notDoneParams } : {}),
+      ...(notDoneReasons ? { notDoneReasons } : {})
+    }
   }
 }
