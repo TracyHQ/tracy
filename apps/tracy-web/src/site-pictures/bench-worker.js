@@ -33,6 +33,7 @@ import { kitIdOf } from '../lib/kit-id.js'
 import { altAskFor } from './alt-ask.js'
 import { altCheckFor } from './alt-notes.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
+import { cutMemo } from './cut-photo.js'
 import { demoPictureReader } from './demo-pictures.js'
 import { picturePickerDoor } from './door.js'
 import { runDrawerDoor } from './drawer-door.js'
@@ -203,12 +204,16 @@ async function prepare(deps, row) {
     kit,
     business: typeof row.plan?.site?.name === 'string' ? row.plan.site.name : null
   })
+  // The photos a frame waiting for the picker could take are cut once: the code half marks them by cutting them, and
+  // the picker's input below takes the same cuts for its shortlists.
+  const pickerCut = cutMemo()
   const filled = await fillFrames({
     plan: row.plan,
     brief: row.brief,
     kit: kit.doc,
     photoBytes,
-    icons: iconStep.icons
+    icons: iconStep.icons,
+    pickerCut
   })
   const iconsDone = iconStep.report()
   lap('frames')
@@ -216,7 +221,8 @@ async function prepare(deps, row) {
   const idx = indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief, files: {} })
   const { usable } = usablePhotos(row.brief, photoBytes)
   let picker = null
-  if (door.door) picker = await pickerInput({ idx, manifest: filledParts, usable, photoBytes })
+  if (door.door)
+    picker = await pickerInput({ idx, manifest: filledParts, usable, photoBytes, cut: pickerCut })
   lap('pickerInput')
   const files = {}
   for (const [file, cut] of [...made, ...(picker?.files ?? [])]) {

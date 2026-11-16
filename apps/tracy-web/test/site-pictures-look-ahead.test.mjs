@@ -3,7 +3,8 @@
 // decides changes. On the invented Harrow Lane Climbing Wall (_site-pictures-gallery.mjs), with a fake looker door.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { LOOK_AHEAD } from '../src/site-pictures/ladder-step.js'
+import { aheadDepth, LOOK_AHEAD } from '../src/site-pictures/ladder-step.js'
+import { LOOK_CONCURRENCY } from '../src/site-pictures/looker-step.js'
 import { scene } from './_generated-photos.mjs'
 import { byFrame, finished, rungs } from './_site-pictures-gallery.mjs'
 
@@ -71,4 +72,38 @@ test('the look-ahead keeps every photo, cut, rung and verdict of the ladder, and
   const paid = on.m.looker.calls.filter((c) => !c.cached).reduce((n, c) => n + c.costUsd, 0)
   assert.ok(Math.abs(on.out.paid - paid) < 1e-9, `${on.out.paid} vs ${paid}`)
   assert.ok(Math.abs(on.m.cost.looker - on.m.looker.calls.reduce((n, c) => n + (c.costUsd ?? 0), 0)) < 1e-9)
+})
+
+test('few frames on the rung look further ahead, so their looks fill the looker, and the ladder decides the same', async () => {
+  // Many frames: LOOK_AHEAD each. Few: enough that one wave fills LOOK_CONCURRENCY looks.
+  assert.equal(aheadDepth(11, LOOK_AHEAD, LOOK_CONCURRENCY), LOOK_AHEAD)
+  assert.equal(aheadDepth(2, LOOK_AHEAD, 8), 4)
+  assert.equal(aheadDepth(1, LOOK_AHEAD, 8), 8)
+  assert.equal(aheadDepth(0, LOOK_AHEAD, 8), 8)
+
+  // One rejected tile left on the any-photo rung, its photos looked at three at a time or as one wave.
+  const reject = new Set(['block-g.2'])
+  const narrow = await finished(reject, 'run-ahead-narrow', { ...opts(LOOK_AHEAD), lookBudget: 0 })
+  const wide = await finished(reject, 'run-ahead-wide', opts(LOOK_AHEAD))
+  assert.deepEqual(placed(wide.m), placed(narrow.m))
+  assert.deepEqual(wide.m.ladder, narrow.m.ladder)
+  assert.deepEqual(
+    [...byFrame(wide.m).values()].map((e) => e.looker?.verdict ?? null),
+    [...byFrame(narrow.m).values()].map((e) => e.looker?.verdict ?? null)
+  )
+  // Three at a time: several waves of at most LOOK_AHEAD. One wave: every photo the tile still had, more than three.
+  assert.ok(narrow.aheadWaves.length >= 2, JSON.stringify(narrow.aheadWaves))
+  assert.ok(
+    narrow.aheadWaves.every((n) => n <= LOOK_AHEAD),
+    JSON.stringify(narrow.aheadWaves)
+  )
+  assert.ok(wide.aheadWaves[0] > LOOK_AHEAD, JSON.stringify(wide.aheadWaves))
+  assert.ok(
+    wide.aheadWaves.length < narrow.aheadWaves.length,
+    JSON.stringify([wide.aheadWaves, narrow.aheadWaves])
+  )
+  // Every photo the tile tried was looked at once, ahead or not, in both runs; the wide one asked no look twice.
+  const asked = (run) =>
+    new Set(run.m.looker.calls.filter((c) => !c.cached).map((c) => `${c.frame} ${c.sha256}`))
+  assert.equal(wide.looker.looks.length, asked(wide).size)
 })

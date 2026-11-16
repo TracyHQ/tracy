@@ -32,7 +32,7 @@ import { anyPhotoAhead } from './ladder-reuse.js'
 import { rungsFor } from './ladder-rungs.js'
 import { ladderState } from './ladder-state.js'
 import { LOOK_UNREADABLE, TEXT_OVER_FAULT } from './looker-call.js'
-import { LOOKED_SOURCES } from './looker-step.js'
+import { LOOK_CONCURRENCY, LOOKED_SOURCES } from './looker-step.js'
 import { OWNER_SOURCES } from './manifest-shape.js'
 import { WAITS_FOR_DRAWER } from './picker-picks.js'
 import { PICTURE_PROCESSING_POLICY } from './picture-prompts.js'
@@ -49,6 +49,22 @@ const MAX_PASSES = 40
  * not change; a photo looked at ahead and never placed costs its look (about $0.0003).
  */
 export const LOOK_AHEAD = 3
+
+/**
+ * How many next photos each of `frames` frames on the any-photo rung has looked at together: LOOK_AHEAD, or more when
+ * so few frames wait that their looks would leave the looker's `budget` (LOOK_CONCURRENCY looks in flight) idle. On
+ * dev (BXR London, 16/11/2026) frames on this rung tried 14 to 17 photos each, three looks at a time; once only a few
+ * of them were left, the looker answered about one look every four seconds with eight allowed in flight, and the
+ * ladder of the first fix round took 77 looks and 5 minutes. With one frame left its next eight photos are looked at in
+ * one wave. As with LOOK_AHEAD, the photos, their order and their verdicts do not change; a photo looked at ahead and
+ * never placed costs its look.
+ * @param {number} frames how many frames need their next photos looked at
+ * @param {number} least the depth with many frames (LOOK_AHEAD)
+ * @param {number} budget the looks the looker has in flight at once (LOOK_CONCURRENCY)
+ */
+export function aheadDepth(frames, least, budget) {
+  return Math.max(least, Math.ceil(budget / Math.max(1, frames)))
+}
 const NOT_DRAWN_KINDS = new Set(['icon', 'logo'])
 const DRAWN_SOURCES = new Set(['drawn', 'owner-photo-extended'])
 
@@ -61,7 +77,7 @@ const counted = (list) => list.filter((e) => DRAWN_SOURCES.has(e.source)).length
  *   store: ReturnType<import('./file-store.js').fileStore>, looker: { look: Function, known?: Function, ahead?: Function },
  *   drawing: { draw: Function } | null, drawer: { model: string | null, snapshot: object | null, promptSha256: string } }} input
  *   `drawing` ladder-draw.js createDrawing, or null when the run has no drawer door; `lookAhead` LOOK_AHEAD (0 turns
- *   the look-ahead off)
+ *   the look-ahead off); `lookBudget` the looks one wave of look-ahead fills (aheadDepth), LOOK_CONCURRENCY
  */
 export function createFinisher({
   idx,
@@ -73,7 +89,8 @@ export function createFinisher({
   looker,
   drawing,
   drawer,
-  lookAhead = LOOK_AHEAD
+  lookAhead = LOOK_AHEAD,
+  lookBudget = LOOK_CONCURRENCY
 }) {
   const ctx = { idx, plan, kit, usable, photoBytes, store, drawing, luminance: new Map() }
   const climbable = (frameId) => {
@@ -120,19 +137,24 @@ export function createFinisher({
     const retried = new Set(
       readabilityRetries.flatMap((r) => [`${r.frame} ${r.sourceSha256}`, `${r.frame} ${r.sha256}`])
     )
-    // A frame on the any-photo rung whose next photo has no look yet gets its next LOOK_AHEAD photos looked at
-    // together. A frame whose pictures are darkened when placed is left out: its placed bytes are not the ones looked at.
+    // A frame on the any-photo rung whose next photo has no look yet gets its next photos looked at together: LOOK_AHEAD
+    // of them, more when few frames wait (aheadDepth). A frame whose pictures are darkened when placed is left out: its
+    // placed bytes are not the ones looked at.
     async function looksAhead(climbing) {
       if (lookAhead < 1 || !looker.ahead || !looker.known) return
-      const pairs = []
+      const due = []
       for (const f of climbing) {
         const p = s.progress.get(f)
         if (!p || p.done || rungsFor(idx, f)[p.at] !== 'any-photo' || wantsDark(idx.frames.get(f))) continue
         const [next] = await anyPhotoAhead(ctx, s, f, p, 1)
         if (!next || looker.known(next.entry, memo)) continue
-        for (const { list, entry } of await anyPhotoAhead(ctx, s, f, p, lookAhead)) pairs.push([list, entry])
+        due.push([f, p])
       }
-      if (!pairs.length) return
+      if (!due.length) return
+      const depth = aheadDepth(due.length, lookAhead, lookBudget)
+      const pairs = []
+      for (const [f, p] of due)
+        for (const { list, entry } of await anyPhotoAhead(ctx, s, f, p, depth)) pairs.push([list, entry])
       const calls = await looker.ahead(pairs, memo)
       for (const c of calls) if (!looks.has(`${c.frame} ${c.sha256}`)) looks.set(`${c.frame} ${c.sha256}`, c)
       paidLooks += sum(

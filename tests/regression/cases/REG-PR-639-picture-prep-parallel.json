@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-639-picture-prep-parallel",
+  "kind": "fix",
+  "title": "The picker's photos are cut several at a time and once each, and few frames on the any-photo rung look further ahead, with the same results",
+  "pr": 639,
+  "area": "website-opportunities/site-pictures",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Cuts finishing in any order give the code half and the picker the same marks, shortlists, codes, thumbnails and files, with more than one and at most CUTS_AT_ONCE cuts in flight.",
+    "With one cut memo for the code half and the picker, each photo is cut once for each picker frame; a cut that throws is made again.",
+    "One frame left on the any-photo rung has more than LOOK_AHEAD looks in flight, with the same placements, ladder and verdicts as three at a time."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-pictures-picker-cuts.test.mjs",
+      "apps/tracy-web/test/site-pictures-look-ahead.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "cuts that finish in any order give the code half and the picker the same photos, in the same order",
+      "one memo for the code half and the picker cuts each photo for each picker frame once",
+      "a cut that throws is not kept: the next ask makes it again",
+      "few frames on the rung look further ahead, so their looks fill the looker, and the ladder decides the same"
+    ]
+  }
+}

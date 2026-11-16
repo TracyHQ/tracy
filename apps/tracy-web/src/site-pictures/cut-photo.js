@@ -32,6 +32,44 @@ const BACKGROUND_MIN_WIDTH = 1200
 const open = (bytes) => sharp(Buffer.from(bytes), { limitInputPixels: MAX_PIXELS, failOn: 'none' })
 
 /**
+ * How many owner photo cuts are made at once (fill-frames.js, picker-input.js). On the Linux image sharp runs each
+ * pipeline on one thread (its default under glibc), so cuts made one after another used one core: on dev (16/11/2026)
+ * the picker's input took 49 s and 83 s. Cuts run on Node's thread pool, four threads unless UV_THREADPOOL_SIZE says
+ * otherwise, so a fifth cut in flight would only queue there, ahead of the server's file and DNS work.
+ */
+export const CUTS_AT_ONCE = 4
+
+/**
+ * The cuts of one preparation, each made once: the returned function answers what cutPhoto answers, and a photo cut
+ * again for the same frame, demo size and options gets the first answer, even while it is still being made. The code
+ * half marks the photos the picker may need by cutting them (fill-frames.js) and the picker's input cuts the same
+ * pairs for its shortlists (picker-input.js); one memo passed to both makes each cut once. Photos are told apart by
+ * their brief asset id, so a memo serves one brief and its photo bytes, and is dropped with the preparation.
+ * @param {typeof cutPhoto} [make] what makes a cut not made yet (a test counts the cuts through it)
+ * @returns {typeof cutPhoto}
+ */
+export function cutMemo(make = cutPhoto) {
+  const made = new Map()
+  const frameKeys = new WeakMap()
+  const frameKey = (frame) => {
+    let key = frameKeys.get(frame)
+    if (key === undefined) frameKeys.set(frame, (key = JSON.stringify(frame)))
+    return key
+  }
+  return (bytes, asset, frame, demo, { matches = false, anyReal = false } = {}) => {
+    const key = `${JSON.stringify([asset.id, demo ?? null, matches, anyReal])}\n${frameKey(frame)}`
+    let cut = made.get(key)
+    if (!cut) {
+      cut = Promise.resolve(make(bytes, asset, frame, demo, { matches, anyReal }))
+      made.set(key, cut)
+      // A cut that threw is not kept: the next caller makes it again and sees the error itself.
+      cut.catch(() => made.delete(key))
+    }
+    return cut
+  }
+}
+
+/**
  * The size a picture for a frame is written at: the demo file's aspect (or the display box's when the site holds no
  * demo file for it), at least the display box on both sides, and from `natural` (the crop's own width, never past the
  * demo file's width, or twice the display width when there is no demo file) when that is already enough. Whole
