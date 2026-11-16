@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-654-emdash-restaurant-brief-no-demo-facts",
+  "kind": "fix",
+  "title": "A JA Restaurant EmDash site made from a brief with no address: the home welcome, contact card and reservation intro are rewritten without the demo's address or phone, and a brief that gives them links the customer's",
+  "pr": 654,
+  "area": "emdash-theme-restaurant/personalize",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-copy.test.mjs packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-translate.test.mjs packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-text.test.mjs apps/tracy-web/test/emdash-tool.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines, and the 'ok' line of every test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests'.",
+    "On the real Restaurant seed, an answer that follows the brief and leaves out the demo's map link (hero_intro) or tel: link (reservation intro, contact card) is taken, and no 'Brooklyn', '5th Avenue' or demo phone stays on a link.",
+    "A brief with a phone and an address: the pairs stay, and their links lead to the customer's tel: and Google Maps search.",
+    "An answer that is still refused: the field keeps the template's words minus the sentence on the demo's outside link (only the linked run when the sentence also has a menu link or emphasis); it is never emptied; a full stop inside the linked run, '!' or '?', and an abbreviation such as 'St.' are handled.",
+    "Links into the site and emphasis stay required; translation keeps every pair."
+  ],
+  "selectors": {
+    "tool": "packages/cms/tracy-emdash-theme-*/tools/personalize.mjs (factOfLink, factHref, looseMarksOf, blockFromMarked, withoutDemoFacts, sentenceEnds, richCopyOf)",
+    "seed": "packages/cms/tracy-emdash-theme-restaurant/seed/{seed.json,personalize.json}"
+  },
+  "evidence": "QA on dev 16/11/2026 after #647: a JA Restaurant EmDash site made through POST /api/sites for 'Trattoria Lume', Italian, Da Nang, no address, still read 'Since 1982, Trattoria Lume has welcomed Brooklyn … 4 5th Avenue' with the demo map link; the build reported 4 skipped copy lines. The brief says 'no year, address or number' while blockFromMarked required every marked pair, so every answer that obeyed the brief was refused. The named tests fail on the tool of #647.",
+  "fence": "The personalize tool's rich-text writes (writeCopy → richFromAnswer → blockFromMarked; the withoutDemoFacts fallback), checked on their output with a stand-in model.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-copy.test.mjs",
+      "packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-translate.test.mjs",
+      "packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-text.test.mjs",
+      "apps/tracy-web/test/emdash-tool.test.mjs"
+    ],
+    "tests": [
+      "the home welcome that leaves out the demo address is taken",
+      "the reservation and contact lines may leave out the demo phone",
+      "a brief with a phone and an address: the links of the welcome, contact card and reservation lead to them",
+      "the fallback on the welcome, contact card and reservation intro: never empty, no demo address or phone",
+      "a mixed paragraph of the welcome keeps its menu link when the demo address goes",
+      "a full stop inside the linked run ends its sentence, never the next one",
+      "an abbreviation before the link does not start or end a sentence",
+      "a field whose every sentence is the demo address is not emptied"
+    ]
+  }
+}
