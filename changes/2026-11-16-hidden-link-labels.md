@@ -1,0 +1,3 @@
+- **The planner's hidden link with written words is settled the way the plan means it** — David (WO pipeline) · #651 · `fix/wo-chain-complete-2` · 2026-11-16
+  **Affects:** Rebuild and deploy tracy-web. Planner answers (`normalizedPlan`): a page control the decision hides while writing its label moves to `links` with its `labelSlot`; any other hidden link's written label moves to `hiddenSlots`.
+  **Why / Measured:** Dev, 16/11/2026: BXR London's plan ended "failed, best version used" on one R10b failure (the contact form's SUBMIT button hidden, its label written). On that plan every rule now passes. Case REG-PR-651-hidden-link-labels; planner and writer test files 335 pass.
