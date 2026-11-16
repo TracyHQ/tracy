@@ -16,9 +16,22 @@ import { STEP_CHAIN_WORKFLOW } from '../src/lib/step-chain-switch.js'
 import { dbSitesResolver } from '../src/sites/resolver.js'
 import { fileDb } from './_db.mjs'
 import { answerTeardown } from './_host-teardown.mjs'
+import { fakePinnedKits } from './_fake-ai-quickstart-pin.mjs'
+import { AI_QUICKSTARTS_DIR } from '../src/build-draft/ai-quickstarts.js'
+import { overrideShippedAiQuickstartPins } from '../src/lib/ai-quickstart-pins.js'
+import path from 'node:path'
 
 const db = fileDb()
 before(db.open)
+// JA Boxing's kit is pinned here with a fake pin (#598): the shipped pins file is empty until the release gate passes.
+const boxingPin = fakePinnedKits([
+  { slug: 'ja-boxing', version: '1.0.11', from: path.join(AI_QUICKSTARTS_DIR, 'ja-boxing', 'j6', '1.0.11') }
+])
+const restorePins = overrideShippedAiQuickstartPins(boxingPin.read)
+after(() => {
+  restorePins()
+  boxingPin.cleanup()
+})
 beforeEach(db.reset)
 after(db.close)
 const was = process.env.STEP_CHAIN_ENABLED

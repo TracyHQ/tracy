@@ -14,6 +14,7 @@ import {
 } from '../src/build-draft/ai-quickstarts.js'
 import { draftQuickstartCatalogue, kitRefOf } from '../src/build-draft-wiring.js'
 import { TRADES } from 'website-opportunities/domain'
+import { fakePinnedKits } from './_fake-ai-quickstart-pin.mjs'
 
 const WO_FIXTURES = fileURLToPath(
   new URL('../../../packages/wo/website-opportunities/test/fixtures/', import.meta.url)
@@ -158,12 +159,20 @@ test('the shipped tree: every template version offered for any trade resolves th
   const boxing = shipped.loadKit('ja-boxing').template
   assert.deepEqual([boxing.slug, boxing.version], ['ja-boxing', '1.0.11'])
   assert.equal(kitRefOf(boxing), 'ja-boxing/j6/1.0.11')
-  // The catalogue the server runs filters by that same lookup and offers the same templates.
-  const served = draftQuickstartCatalogue({ log: { warn: () => {} } })
-  assert.deepEqual(
-    TRADES.flatMap((trade) => served.templatesFor(trade)),
-    offered
-  )
+  // The catalogue the server runs filters by that same lookup and offers the same templates, once the kit is pinned
+  // (#598). The shipped pins file is empty until the release gate passes, so the pin here is a fake one.
+  const pinned = fakePinnedKits([
+    { slug: 'ja-boxing', version: '1.0.11', from: path.join(AI_QUICKSTARTS_DIR, 'ja-boxing', 'j6', '1.0.11') }
+  ])
+  try {
+    const served = draftQuickstartCatalogue({ log: { warn: () => {} }, aiQuickstartPins: pinned.read })
+    assert.deepEqual(
+      TRADES.flatMap((trade) => served.templatesFor(trade)),
+      offered
+    )
+  } finally {
+    pinned.cleanup()
+  }
 })
 
 test('the shipped tree: JA Boxing fits fitness, and is offered only once its kit is complete', () => {

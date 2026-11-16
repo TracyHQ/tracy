@@ -871,7 +871,14 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `PLAN_EXISTS` and a plan edit of `look.template` is refused. The kits come from the AI quickstart catalogue ([`build-draft/ai-quickstarts.js`](apps/tracy-web/src/build-draft/ai-quickstarts.js)),
   read from `packages/cms/tracy-joomla-quickstart/ai-quickstarts/` (COPYed to `src/ai-quickstarts/` in the image): a kit
   is offered for a trade only when its `kit-manifest.json` says released and lists the trade, its mapping is written and
-  the AI quickstart contract check passes.
+  the AI quickstart contract check passes. On top of that, the server offers only a PINNED AI quickstart (#598,
+  `build-draft-wiring.js` `draftQuickstartCatalogue`): pinned as the pin reader of #588 answers
+  (`resolvePinnedAiQuickstart`, `ai-quickstarts/pins.json`), read per template by `lib/ai-quickstart-pins.js` and
+  judged by the build path chooser (`aiQuickstartPinsOf` / `fittingAiQuickstarts` of `website-opportunities/domain`
+  `build-path.mjs`). Two that fit are offered in code point order of `<slug>/<cms>`; a trade nothing fits is offered
+  nothing and keeps the current build path; a template left out for its pin is logged once with the pin reader's
+  codes. With the pins file empty (no kit has passed the release gate yet) nothing is offered. No template name is in
+  code: a template joins by being pinned.
   The build chat's agent reaches the engine only through the tool `tracy_build` (`@tracy/dsh-build-chat` host half,
   registered in the `site-builder` agent's scope), which forwards to the engine doors under `/api/build-draft/`
   (`research`, `templates`, `compose`, `edit`, `engine`, contract in `packages/ui/tracy-build-chat/README.md`) as the
@@ -2747,8 +2754,10 @@ HTML reads of the exact same path are shared across groups, including failures; 
 the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
 `workflow: 'step-chain/1'` and `researchRevisionId` (a `wo_revision` of the caller's own; no `brief`). The door refuses before
 anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`), the revision is not the caller's (404), or a model
-door the chain spends is empty (409 `STEP_CHAIN_DOORS_EMPTY`, `step-chain-doors.js`: no base site is created); otherwise
-the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
+door the chain spends is empty (409 `STEP_CHAIN_DOORS_EMPTY`, `step-chain-doors.js`: no base site is created). A build
+approved in the build chat (`draftId` and `plan` instead of `researchRevisionId`) does not read the template list: it is
+enabled when its quickstart's template has a pinned AI quickstart (`aiQuickstartPathEnabled`, #598), under the same master
+switch. Otherwise the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
 as the row's brief. The frame picks the step chain engine (`sites/brief-engines/step-chain.js`) for it, with no per-step caps (#478): the
 frame's 25 minute run and apply cuts, the USD budgets of the planner, writer and picture steps and the brand cost cap do not
 apply to it (its bench runs start with `--no-caps`). A 2 hour outer deadline bounds the steps; the Write step has a further

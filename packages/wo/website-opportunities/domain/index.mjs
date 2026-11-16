@@ -138,6 +138,15 @@ export { TRUST_ORDER } from './needs-profile-merge.mjs'
 export { ASKED_TOPICS } from './needs-profile-questions.mjs'
 export { IMPORTANT_CONFLICTS } from './needs-profile-conflict-questions.mjs'
 export {
+  BUILD_PATHS,
+  aiQuickstartPinsOf,
+  aiQuickstartOfTemplate,
+  buildPathFor,
+  fittingAiQuickstarts,
+  pinnedAiQuickstarts,
+  quickstartTemplateKey
+} from './build-path.mjs'
+export {
   BUILD_SCENARIO_SCHEMA,
   checkBuildDocument,
   checkBuildScenario,

@@ -12,6 +12,8 @@ import { createBrandBeforeSite } from './brand-before-site.js'
 import { aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
 import { briefOfRevision } from './lib/bench-sql.js'
 import { readableKits } from './lib/template-kit-source.js'
+import { shippedAiQuickstartPins } from './lib/ai-quickstart-pins.js'
+import { fittingAiQuickstarts } from 'website-opportunities/domain'
 import { existsSync } from 'node:fs'
 
 export {
@@ -39,14 +41,49 @@ export function kitRefOf(template, kits = readableKits()) {
  * The AI quickstart catalogue the server offers (`build-draft/ai-quickstarts.js`): only the template versions the brand
  * step can resolve a kit for, by the brand step's own lookup (`kitRefOf`), so the owner never picks a template whose
  * build would stop with `brand_input_missing`.
- * @param {{kitRefOf?: Function, log?: {warn?: Function}, root?: string}} [deps]
+ *
+ * 🔒 ONLY A PINNED AI QUICKSTART THAT FITS THE TRADE IS OFFERED (#598): pinned as the pin reader of #588 says
+ * (`lib/ai-quickstart-pins.js`), in the build path chooser's order (`website-opportunities/domain`
+ * `fittingAiQuickstarts`: code point order of `<slug>/<cms>`). A trade nothing fits is offered nothing: the "no
+ * template fits" answer, which leaves the owner on the current build path. With no pin written, nothing is offered.
+ * Each template left out for its pin is logged once with the pin reader's codes, and `refused()` lists them.
+ * @param {{kitRefOf?: Function, log?: {warn?: Function}, root?: string,
+ *   aiQuickstartPins?: ReturnType<typeof shippedAiQuickstartPins>}} [deps] `aiQuickstartPins`: the pinned AI
+ *   quickstarts and the refused ones (default: the ones this server ships)
  */
-export function draftQuickstartCatalogue({ kitRefOf: refOf = kitRefOf, log = console, root } = {}) {
-  return aiQuickstartCatalogue({
+export function draftQuickstartCatalogue({
+  kitRefOf: refOf = kitRefOf,
+  log = console,
+  root,
+  aiQuickstartPins
+} = {}) {
+  const catalogue = aiQuickstartCatalogue({
     ...(root ? { root } : {}),
     log,
     kitFor: (template) => refOf(template) !== null
   })
+  let logged = false
+  const pins = () => {
+    const read = aiQuickstartPins ?? shippedAiQuickstartPins()
+    if (!logged) {
+      logged = true
+      for (const r of read.refused)
+        log?.warn?.(
+          `[build-draft] AI quickstart ${r.key} is not offered: ${r.problems.map((p) => p.code).join(', ')}`
+        )
+    }
+    return read
+  }
+  return {
+    ...catalogue,
+    templatesFor(trade) {
+      const offered = catalogue.templatesFor(trade)
+      const fitting = fittingAiQuickstarts({ trade, quickstarts: pins().pinned })
+      return fitting.flatMap((q) => offered.filter((t) => t.slug === q.slug && t.version === q.version))
+    },
+    /** The templates left out for their pin, with the pin reader's codes. */
+    refused: () => pins().refused
+  }
 }
 
 /**

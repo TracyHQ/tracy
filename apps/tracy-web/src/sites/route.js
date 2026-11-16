@@ -338,7 +338,7 @@ import {
 import { teardownSaid } from './teardown-said.js'
 import { researchRevisionOwned } from '../lib/research-revision.js'
 import { draftBuildApproved } from '../lib/draft-build.js'
-import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
+import { aiQuickstartPathEnabled, STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
 
 /** How long a call to a site's component may take. Why this number: the signal it feeds. */
 const COMPONENT_TIMEOUT_MS = 170_000
@@ -3365,7 +3365,9 @@ export function sitesRoutes({
         return { code: 'INVALID_BUILD_DRAFT', status: 400 }
     } else if (typeof body.researchRevisionId !== 'string' || !UUID.test(body.researchRevisionId))
       return { code: 'INVALID_RESEARCH_REVISION', status: 400 }
-    if (!stepChainEnabled({ quickstart })) return { code: 'STEP_CHAIN_OFF', status: 409 }
+    // A draft run is the AI quickstart build: on when its template has a pinned AI quickstart, read from data (#598).
+    const enabled = fromDraft ? aiQuickstartPathEnabled({ quickstart }) : stepChainEnabled({ quickstart })
+    if (!enabled) return { code: 'STEP_CHAIN_OFF', status: 409 }
     if (fromDraft) {
       if (
         !(await draftBuildApproved(pool, {
