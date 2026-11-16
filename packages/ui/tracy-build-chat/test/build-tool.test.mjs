@@ -159,6 +159,21 @@ test('research with neither a link nor a description asks the agent for one and 
   assert.equal(web.calls.length, 0)
 })
 
+test('research with no link sends the owner words and the business name the owner gave', async () => {
+  const web = fakeWeb({ 'POST /api/build-draft/research': { body: { step: 'research', state: 'running' } } })
+  await run(toolWith(web), {
+    action: 'research',
+    description: 'A small tennis club by the harbour',
+    name: ' Harbour Lane Tennis '
+  })
+  const call = web.calls.find((c) => c.method === 'POST')
+  assert.deepEqual(call.body, {
+    links: [],
+    description: 'A small tennis club by the harbour',
+    name: 'Harbour Lane Tennis'
+  })
+})
+
 test('the replies in the session log are stored through the answers door before the next call, once each', async () => {
   const events = [
     {

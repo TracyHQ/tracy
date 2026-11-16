@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-16: The build chat research door takes the business name of an owner with no link
+
+Changed (internal): `POST /api/build-draft/research` takes `name` (at most 120 characters), the business name the owner typed. A research with no link no longer stops asking for a link: the owner's description is its only source and nothing is fetched, and with no `name` it stops with `say` asking the owner for the business name. Public API v1 is unchanged.
+
 ## 2026-11-16: The build chat doors name the caller's interface language
 
 Changed (internal): every door under `/api/build-draft` answers a call of the build chat tool `tracy_build` (an `x-tracy-actor` call) with the person's interface language in the new response header `x-tracy-interface-language`, one of the eight interface languages, absent when the account has none stored. A done revise step of `GET /api/build-draft/engine` answers `result.revision.codes` with, beside the stable code of each line, the parameters of each code (`changedParams`, `notDoneParams`) and the refusal kind of every not done line (`notDoneReasons`), when the plan step sent them. Public API v1 is unchanged.

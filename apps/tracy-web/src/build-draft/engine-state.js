@@ -34,7 +34,8 @@ export const SAY = Object.freeze({
   siteName:
     'I need a name to show on your site before I can plan it, and I could not find one I am allowed to use. The Tracy team can see what happened and will look into it.',
   links:
-    'Please give me at least one link: your website, your Google Maps listing or a social page, so I can read about your business.',
+    'Please tell me about your business: its name, what it offers, where it is or whom it serves, and how customers reach you. A link to your website, Google Maps listing or a social page helps too, if you have one.',
+  name: 'Please tell me the name of your business, so I can put it on your site.',
   interrupted:
     'My work on this was interrupted, so I stopped here. The Tracy team can see what happened and will look into it.',
   revise:

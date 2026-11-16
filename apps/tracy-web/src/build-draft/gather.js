@@ -13,7 +13,9 @@
  * A Google link that matches more than one place stops the step before anything is read, with the question that asks
  * the owner which place is theirs (`place_ambiguous`, `gather-place.js`); the owner's answer comes back as `place`.
  * A link that cannot be read is set aside with a plain reason (`setAside`); research with nothing read stops with
- * `research_empty` (`noRerun`: the same links read again give the same nothing). One deadline (`budgetMs`) bounds the
+ * `research_empty` (`noRerun`: the same links read again give the same nothing). With no link at all, the owner's
+ * description is the one source (the business reading reads it as the owner's answer) and nothing is fetched; with
+ * neither, the step stops with `research_empty` and reason `no_links`. One deadline (`budgetMs`) bounds the
  * whole step; what was read by then is kept.
  */
 import { randomUUID } from 'node:crypto'
@@ -26,6 +28,24 @@ import { readingOf } from './gather-reading.js'
 import { NOT_STORED, picturesToStore, placePhotoItems } from './pictures.js'
 
 const NO_STORE = NOT_STORED.store_unavailable
+
+const isText = (value) => typeof value === 'string' && value.trim() !== ''
+
+/**
+ * The links judged when there is none: a business known by the name the owner typed (`name`, the research door's own
+ * field, never taken from the description) and by no place, with nothing set aside.
+ */
+const wordsOnlyOf = (name) => ({
+  fields: {
+    name: isText(name) ? name.trim() : null,
+    branch: null,
+    provider: null,
+    providerId: null,
+    candidate: {}
+  },
+  setAside: [],
+  listings: []
+})
 
 /**
  * Three minutes: a plain crawl of the executor's 40 website pages (15 s a page at worst, most answer in under one)
@@ -71,7 +91,7 @@ const unreadOf = (rows, pasted) =>
  *   readingDoor?: () => Promise<object>, readingFetch?: typeof fetch, readingBudgetMs?: number,
  *   now?: () => number, budgetMs?: number, log?: Console}} deps `readingDoor`: the business reading's model door
  *   (`woEditorial`); `readingFetch`: the fetch its model call goes out through
- * @returns {(input: {links: string[], description: string | null, withheld?: object | null,
+ * @returns {(input: {links: string[], description: string | null, name?: string | null, withheld?: object | null,
  *   place?: object | 'none' | null}, context?: {accountId?: string}) =>
  *   Promise<{brief: object, manifest: object[], setAside: Array<{link: string, reason: string}>,
  *   picturesSetAside: Array<{url: string, reason: string}>, pictureRun?: string, logoFile?: string,
@@ -79,14 +99,23 @@ const unreadOf = (rows, pasted) =>
  */
 export function createPreSiteGatherer(deps) {
   const { parts, now = Date.now, budgetMs = GATHER_BUDGET_MS } = deps
-  return async function gather({ links, description, withheld = null, place = null }, context = {}) {
+  return async function gather(
+    { links, description, name = null, withheld = null, place = null },
+    context = {}
+  ) {
     const started = now()
     const remaining = () => budgetMs - (now() - started)
     const deadline = AbortSignal.timeout(budgetMs)
-    // A description alone is not a source: the owner is asked for a link (`stoppedOf`, reason `no_links`).
-    if (!links?.length)
-      throw Object.assign(new EngineStepError('research_empty', 'no link was given', { noRerun: true }), {
+    // Neither a link nor the owner's words: nothing to read (`stoppedOf`, reason `no_links`).
+    const wordsOnly = !links?.length
+    if (wordsOnly && !isText(description))
+      throw Object.assign(new EngineStepError('research_empty', 'nothing was given', { noRerun: true }), {
         reason: 'no_links'
+      })
+    // No link names the business, so the owner does: a brief needs its name (`stoppedOf`, reason `no_name`).
+    if (wordsOnly && !isText(name))
+      throw Object.assign(new EngineStepError('research_empty', 'no name was given', { noRerun: true }), {
+        reason: 'no_name'
       })
     const [domain, { keys, settings }] = await Promise.all([deps.loadDomain(), deps.runtime()])
     const domainDeps = {
@@ -94,13 +123,17 @@ export function createPreSiteGatherer(deps) {
       ...(deps.resolve ? { resolve: deps.resolve } : {}),
       now
     }
-    const judged = await linksOf({
-      linkFields: deps.linkFields,
-      domain,
-      links: links ?? [],
-      googleKey: Boolean(keys?.google),
-      place
-    })
+    // No link at all (the owner has no website, listing or social page): the owner's words are the only source, read
+    // by the business reading as the owner's answer (D46); nothing is fetched.
+    const judged = wordsOnly
+      ? wordsOnlyOf(name)
+      : await linksOf({
+          linkFields: deps.linkFields,
+          domain,
+          links,
+          googleKey: Boolean(keys?.google),
+          place
+        })
     // The Google link matches more than one place: the owner says which one first (`gather-place.js`).
     if (judged.ambiguous) throw placeAmbiguousError(judged.ambiguous)
     const setAside = [...judged.setAside]
@@ -119,27 +152,29 @@ export function createPreSiteGatherer(deps) {
     const placeRead = await placeFactsOf({ domain, fields, keys, deps: domainDeps, now, remaining })
     if (placeRead.reason && judged.googleLink)
       setAside.push({ link: judged.googleLink, reason: reasonOf(placeRead.reason) })
-    const rows = await readSources({
-      refs: parts.refsOfCandidate(fields.candidate),
-      // The place executor's own chain: every social key and the operator's provider order (/ops/wo).
-      connectors: parts.orderedConnectorsFor(domain, keys, settings),
-      settings,
-      keys,
-      sources: parts.sources,
-      socialSources: parts.socialSources,
-      refsOfUrls: parts.refsOfUrls,
-      mergeCollected: parts.mergeCollected,
-      paidRunAllowed: () => deps.paidRunAllowed(context.accountId ?? null),
-      deps: { ...domainDeps, charge: withinResearchReservation },
-      remaining
-    })
+    const rows = wordsOnly
+      ? []
+      : await readSources({
+          refs: parts.refsOfCandidate(fields.candidate),
+          // The place executor's own chain: every social key and the operator's provider order (/ops/wo).
+          connectors: parts.orderedConnectorsFor(domain, keys, settings),
+          settings,
+          keys,
+          sources: parts.sources,
+          socialSources: parts.socialSources,
+          refsOfUrls: parts.refsOfUrls,
+          mergeCollected: parts.mergeCollected,
+          paidRunAllowed: () => deps.paidRunAllowed(context.accountId ?? null),
+          deps: { ...domainDeps, charge: withinResearchReservation },
+          remaining
+        })
     const pasted = new Map(
       (fields.candidate?.pastedLinks ?? []).map((p) => [p.source, links.find((l) => l === p.url) ?? p.url])
     )
     setAside.push(...unreadOf(rows, pasted))
     const listingRow = judged.listings.some((l) => l.ok) ? await deps.listingRowOf(judged.listings) : null
     const read = [...rows, ...(listingRow ? [listingRow] : [])]
-    if (!placeRead.facts && !read.some(isCollected))
+    if (!wordsOnly && !placeRead.facts && !read.some(isCollected))
       throw new EngineStepError('research_empty', 'nothing could be read from the links', { noRerun: true })
     const pictures = await storedPicturesOf({
       deps,

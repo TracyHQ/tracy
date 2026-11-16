@@ -44,7 +44,20 @@ test('the request bodies are read into plain inputs, and anything else is refuse
     links: [],
     description: 'A racquet club.'
   })
-  for (const bad of [{ links: [] }, { links: ['javascript:alert(1)'] }, { links: 'x' }, null, []])
+  // With no link, the business name the owner typed names the business.
+  assert.deepEqual(
+    readEngineRequest('research', { links: [], description: 'A racquet club.', name: ' Larkfen Racquets ' }),
+    { links: [], description: 'A racquet club.', name: 'Larkfen Racquets' }
+  )
+  for (const bad of [
+    { links: [] },
+    { links: ['javascript:alert(1)'] },
+    { links: 'x' },
+    { links: [], description: 'A racquet club.', name: 'x'.repeat(121) },
+    { links: [], description: 'A racquet club.', name: 7 },
+    null,
+    []
+  ])
     assert.equal(readEngineRequest('research', bad), null, JSON.stringify(bad))
   assert.deepEqual(readEngineRequest('compose', {}), {})
   assert.deepEqual(readEngineRequest('compose', { request: 'Add a page for events' }), {
@@ -142,6 +155,10 @@ test('a failure of the business look stops with the brand sentence; the gate loo
     rerun: true
   })
   assert.equal(stoppedOf({ code: 'research_empty' }).say, SAY.research)
+  // No link, and no words or no name: the owner is asked for what is missing, never for a link alone.
+  assert.equal(stoppedOf({ code: 'research_empty', reason: 'no_links' }).say, SAY.links)
+  assert.equal(stoppedOf({ code: 'research_empty', reason: 'no_name' }).say, SAY.name)
+  assert.doesNotMatch(SAY.links, /at least one link/)
   // The stored record serves only the template it ran on.
   const row = {
     brand: { record: { schema: 'tracy-brand-look/v1' }, template: { slug: 'ja-a', version: '1.0.0' } }
@@ -410,6 +427,7 @@ test('a stop says whether the owner may have the step run again (#609)', () => {
     { code: 'model_missing', noRerun: true },
     { code: 'research_empty', noRerun: true },
     { code: 'research_empty', reason: 'no_links' },
+    { code: 'research_empty', reason: 'no_name' },
     { code: 'brand_step_stopped' },
     { code: 'brand_missing' },
     { code: 'site_name_missing' },

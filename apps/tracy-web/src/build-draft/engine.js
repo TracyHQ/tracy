@@ -71,9 +71,11 @@ export function stoppedOf(fault) {
   if (look) return { state: 'stopped', say: SAY.brand, reason: 'brand-unavailable' }
   const owner = Object.hasOwn(OWNER_INPUT_CODES, fault.code) ? OWNER_INPUT_CODES[fault.code] : null
   if (owner) return { state: 'stopped', say: SAY[owner.say], reason: owner.reason }
-  // Nothing to read at all (a description alone): the owner is asked for a link.
+  // Nothing to read at all (no link and no words), or no link and no name: the owner is asked for them.
   if (fault.code === 'research_empty' && fault.reason === 'no_links')
     return { state: 'stopped', say: SAY.links }
+  if (fault.code === 'research_empty' && fault.reason === 'no_name')
+    return { state: 'stopped', say: SAY.name }
   const stopped = { state: 'stopped', say: RESEARCH_CODES.has(fault.code) ? SAY.research : SAY.fault }
   return mayRerun(fault) ? { ...stopped, rerun: true } : stopped
 }
@@ -300,9 +302,9 @@ export function createEngine({
       return started?.error ? null : started
     },
     /** Research from the owner's links; the research and its needs profile go into the draft. */
-    async research(accountId, { links, description }, row) {
+    async research(accountId, { links, description, name }, row) {
       const kit = row?.template ? kits.loadKit(row.template.slug) : null
-      const inputs = { links, ...(description ? { description } : {}) }
+      const inputs = { links, ...(description ? { description } : {}), ...(name ? { name } : {}) }
       // The owner's answer to which place the Google link means, when this research asked it (`gather-place.js`).
       const place = placeAnswerOf(row, links)
       return start(

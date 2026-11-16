@@ -41,6 +41,9 @@ test('the instructions say what the build chat must do, in plain words with no d
   const p = agent.persona
   for (const must of [
     /a description with no link is a valid start/i,
+    /when the owner has no link, never ask for one, now or later/i,
+    /ask once, in one short message, for the basics/i,
+    /no links, their words as description and the business name as name/i,
     /web_search only to find the business's own links/i,
     /tracy_build with action research first/i,
     /never state a fact about the business that a tool did not return/i,

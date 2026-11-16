@@ -7,6 +7,7 @@
 export const MAX_LINKS = 10
 export const MAX_LINK_LENGTH = 2048
 export const MAX_DESCRIPTION = 2000
+export const MAX_NAME = 120
 export const MAX_REQUEST = 2000
 export const MAX_CHANGES = 20
 
@@ -31,15 +32,23 @@ function linkOf(value) {
 }
 
 const READERS = {
-  /** `{links: string[], description?}`: at least one link or a description. */
+  /**
+   * `{links: string[], description?, name?}`: at least one link or a description; `name`, the business name the owner
+   * typed, is what a research with no link names the business by.
+   */
   research(body) {
     const links = body.links ?? []
     if (!Array.isArray(links) || links.length > MAX_LINKS) return null
     const read = links.map(linkOf)
     if (read.some((l) => l === null)) return null
     const description = optionalText(body.description, MAX_DESCRIPTION)
-    if (!description || (read.length === 0 && !description.value)) return null
-    return { links: [...new Set(read)], ...(description.value ? { description: description.value } : {}) }
+    const name = optionalText(body.name, MAX_NAME)
+    if (!description || !name || (read.length === 0 && !description.value)) return null
+    return {
+      links: [...new Set(read)],
+      ...(description.value ? { description: description.value } : {}),
+      ...(name.value ? { name: name.value } : {})
+    }
   },
   /**
    * `{request?, restart?}`: the owner's words for a larger change; `restart: true` only when the owner asked to start the

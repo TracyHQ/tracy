@@ -44,7 +44,8 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
 /**
  * Research the business from the owner's links: the brief, the needs profile research made from it, and the needs
  * profile with its questions. `kit` (the chosen template's, when known) gives the main button's answer its real length.
- * @param {{links: string[], description?: string}} inputs
+ * @param {{links: string[], description?: string, name?: string}} inputs `name`: the business name the owner typed,
+ *   which names a business researched from its owner's words alone
  * @param {{gather: Function, model: Function, kit?: {blockStore: object, library: object[]} | null,
  *   accountId?: string, withheld?: object | null, place?: object | 'none'}} tools `accountId`: whose research it is (the gatherer counts paid
  *   reads per account); `withheld`: what the draft's earlier research kept off the site
@@ -53,7 +54,7 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
  *   draft keeps
  */
 export async function researchStep(
-  { links, description },
+  { links, description, name },
   { gather, model, kit, accountId, withheld: kept, place }
 ) {
   // What the owner already keeps off the site (a research made before) is told to the gatherer, so the business reading
@@ -63,6 +64,7 @@ export async function researchStep(
     {
       links,
       description: description ?? null,
+      ...(name ? { name } : {}),
       ...(kept ? { withheld: kept } : {}),
       ...(place ? { place } : {})
     },

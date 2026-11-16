@@ -53,21 +53,6 @@ var ASK_STRINGS = {
   "ask.question.fact_conflict_item.link": "Your public pages give different values for the booking or contact link of {item}. Which one is right?",
   "ask.question.fact_conflict_item.name": "Your public pages give different values for the business name of {item}. Which one is right?",
   "ask.question.fact_conflict_item.price": "Your public pages give different values for the price of {item}. Which one is right?",
-  "ask.question.place_choice": "We found more than one place on Google Maps under this name. Which one is yours?",
-  "ask.choice.place_choice_none": "None of these",
-  "ask.choice.main_button_book": "Book online",
-  "ask.choice.main_button_call": "Call us",
-  "ask.choice.main_button_email": "Email us",
-  "ask.choice.main_button_message": "Message us",
-  "ask.choice.main_button_visit": "Visit us",
-  "ask.choice.main_button_contact": "Contact us",
-  "ask.choice.main_button_book_short": "Book",
-  "ask.choice.main_button_call_short": "Call",
-  "ask.choice.main_button_email_short": "Email",
-  "ask.choice.main_button_message_short": "Message",
-  "ask.choice.main_button_visit_short": "Visit",
-  "ask.choice.main_button_contact_short": "Contact",
-  "ask.choice.main_button_text": "The button reads: {text}",
   "ask.choice.contact_method_phone": "A phone number",
   "ask.choice.contact_method_email": "An email address",
   "ask.choice.contact_method_link": "A booking or contact link",
@@ -79,8 +64,7 @@ var ASK_STRINGS = {
   "ask.source.instagram": "Instagram profile",
   "ask.source.facebook": "Facebook page",
   "ask.source.tiktok": "TikTok profile",
-  "ask.source.social": "Social profile",
-  "ask.source.listing": "Directory listing"
+  "ask.source.social": "Social profile"
 };
 var CONFLICT_NOUNS = {
   "contact.phone": "phone",
@@ -94,7 +78,7 @@ var CONFLICT_NOUNS = {
 };
 function promptByCode(question, words) {
   const { code, params = {} } = question ?? {};
-  if (code === "main_button" || code === "contact_method" || code === "site_language" || code === "place_choice")
+  if (code === "main_button" || code === "contact_method" || code === "site_language")
     return words(`ask.question.${code}`);
   const noun = CONFLICT_NOUNS[params?.fact];
   if (!noun) return null;
@@ -114,13 +98,11 @@ function languageNameIn(tag, language) {
 function choiceLabelByCode(choice, words, language) {
   const { code, params = {} } = choice ?? {};
   if (typeof code !== "string") return null;
-  if (/^contact_method_[a-z]+$/.test(code) || code === "place_choice_none") return words(`ask.choice.${code}`);
-  if (MAIN_BUTTON_CHOICE.test(code)) return words(`ask.choice.${code}`);
+  if (/^contact_method_[a-z]+$/.test(code)) return words(`ask.choice.${code}`);
   if (code === "site_language_option" && typeof params?.language === "string")
     return languageNameIn(params.language, language);
   return null;
 }
-var MAIN_BUTTON_CHOICE = /^main_button_(book|call|email|message|visit|contact)(_short)?$/;
 function choiceDetailByCode(choice, words) {
   if (choice?.code !== "fact_conflict_value" || typeof choice.params?.from !== "string") return null;
   const names = choice.params.from.split(",").map((from) => words(`ask.source.${from.trim()}`));
@@ -142,8 +124,7 @@ function localizedAskOf(ask, questions, words, language) {
         const choice = choices[i];
         if (!choice || choice.label !== o?.label) return o;
         const label = choiceLabelByCode(choice, words, language) ?? o.label;
-        const buttonText = label !== o.label && MAIN_BUTTON_CHOICE.test(choice.code) ? words("ask.choice.main_button_text", { text: o.label }) : null;
-        const description = buttonText ?? (o.description === void 0 ? void 0 : choiceDetailByCode(choice, words) ?? o.description);
+        const description = o.description === void 0 ? void 0 : choiceDetailByCode(choice, words) ?? o.description;
         return description === void 0 ? { ...o, label } : { ...o, label, description };
       });
       const recommendedAt = options.findIndex((o) => o?.label === item.recommended);
@@ -871,24 +852,7 @@ var tracy_build_chat_default = {
   "ask.source.instagram": "Instagram-Profil",
   "ask.source.facebook": "Facebook-Seite",
   "ask.source.tiktok": "TikTok-Profil",
-  "ask.source.social": "Social-Media-Profil",
-  "ask.question.place_choice": "Wir haben unter diesem Namen mehr als einen Ort in Google Maps gefunden. Welcher ist Ihrer?",
-  "ask.choice.place_choice_none": "Keiner davon",
-  "ask.choice.main_button_book": "Online buchen",
-  "ask.choice.main_button_call": "Rufen Sie uns an",
-  "ask.choice.main_button_email": "Schreiben Sie uns eine E-Mail",
-  "ask.choice.main_button_message": "Schreiben Sie uns eine Nachricht",
-  "ask.choice.main_button_visit": "Besuchen Sie uns",
-  "ask.choice.main_button_contact": "Kontaktieren Sie uns",
-  "ask.choice.main_button_book_short": "Buchen",
-  "ask.choice.main_button_call_short": "Anrufen",
-  "ask.choice.main_button_email_short": "E-Mail",
-  "ask.choice.main_button_message_short": "Nachricht",
-  "ask.choice.main_button_visit_short": "Besuchen",
-  "ask.choice.main_button_contact_short": "Kontakt",
-  "ask.choice.main_button_text": "Text auf der Schaltfl\xE4che: {text}",
-  "ask.source.listing": "Eintrag in einem Branchenverzeichnis",
-  "plan.source.listing": "Eintrag in einem Branchenverzeichnis"
+  "ask.source.social": "Social-Media-Profil"
 };
 
 // ../../locale/tracy-locales/es/tracy-build-chat.json
@@ -1171,24 +1135,7 @@ var tracy_build_chat_default2 = {
   "ask.source.instagram": "Perfil de Instagram",
   "ask.source.facebook": "P\xE1gina de Facebook",
   "ask.source.tiktok": "Perfil de TikTok",
-  "ask.source.social": "Perfil en redes sociales",
-  "ask.question.place_choice": "Hemos encontrado m\xE1s de un lugar en Google Maps con este nombre. \xBFCu\xE1l es el suyo?",
-  "ask.choice.place_choice_none": "Ninguno de estos",
-  "ask.choice.main_button_book": "Reservar en l\xEDnea",
-  "ask.choice.main_button_call": "Ll\xE1menos",
-  "ask.choice.main_button_email": "Env\xEDenos un correo electr\xF3nico",
-  "ask.choice.main_button_message": "Env\xEDenos un mensaje",
-  "ask.choice.main_button_visit": "Vis\xEDtenos",
-  "ask.choice.main_button_contact": "Cont\xE1ctenos",
-  "ask.choice.main_button_book_short": "Reservar",
-  "ask.choice.main_button_call_short": "Llamar",
-  "ask.choice.main_button_email_short": "Correo electr\xF3nico",
-  "ask.choice.main_button_message_short": "Mensaje",
-  "ask.choice.main_button_visit_short": "Visitar",
-  "ask.choice.main_button_contact_short": "Contacto",
-  "ask.choice.main_button_text": "Texto del bot\xF3n: {text}",
-  "ask.source.listing": "Ficha de directorio",
-  "plan.source.listing": "Ficha de directorio"
+  "ask.source.social": "Perfil en redes sociales"
 };
 
 // ../../locale/tracy-locales/fr/tracy-build-chat.json
@@ -1471,24 +1418,7 @@ var tracy_build_chat_default3 = {
   "ask.source.instagram": "Profil Instagram",
   "ask.source.facebook": "Page Facebook",
   "ask.source.tiktok": "Profil TikTok",
-  "ask.source.social": "Profil sur un r\xE9seau social",
-  "ask.question.place_choice": "Nous avons trouv\xE9 plusieurs lieux sur Google Maps sous ce nom. Lequel est le v\xF4tre ?",
-  "ask.choice.place_choice_none": "Aucun de ces lieux",
-  "ask.choice.main_button_book": "R\xE9server en ligne",
-  "ask.choice.main_button_call": "Appelez-nous",
-  "ask.choice.main_button_email": "\xC9crivez-nous un e-mail",
-  "ask.choice.main_button_message": "Envoyez-nous un message",
-  "ask.choice.main_button_visit": "Rendez-nous visite",
-  "ask.choice.main_button_contact": "Contactez-nous",
-  "ask.choice.main_button_book_short": "R\xE9server",
-  "ask.choice.main_button_call_short": "Appeler",
-  "ask.choice.main_button_email_short": "E-mail",
-  "ask.choice.main_button_message_short": "Message",
-  "ask.choice.main_button_visit_short": "Visiter",
-  "ask.choice.main_button_contact_short": "Contact",
-  "ask.choice.main_button_text": "Texte du bouton : {text}",
-  "ask.source.listing": "Fiche d\u2019annuaire",
-  "plan.source.listing": "Fiche d\u2019annuaire"
+  "ask.source.social": "Profil sur un r\xE9seau social"
 };
 
 // ../../locale/tracy-locales/it/tracy-build-chat.json
@@ -1771,24 +1701,7 @@ var tracy_build_chat_default4 = {
   "ask.source.instagram": "Profilo Instagram",
   "ask.source.facebook": "Pagina Facebook",
   "ask.source.tiktok": "Profilo TikTok",
-  "ask.source.social": "Profilo social",
-  "ask.question.place_choice": "Abbiamo trovato pi\xF9 di un luogo su Google Maps con questo nome. Qual \xE8 il suo?",
-  "ask.choice.place_choice_none": "Nessuno di questi",
-  "ask.choice.main_button_book": "Prenota online",
-  "ask.choice.main_button_call": "Ci chiami",
-  "ask.choice.main_button_email": "Ci scriva un\u2019email",
-  "ask.choice.main_button_message": "Ci invii un messaggio",
-  "ask.choice.main_button_visit": "Venga a trovarci",
-  "ask.choice.main_button_contact": "Ci contatti",
-  "ask.choice.main_button_book_short": "Prenota",
-  "ask.choice.main_button_call_short": "Chiama",
-  "ask.choice.main_button_email_short": "Email",
-  "ask.choice.main_button_message_short": "Messaggio",
-  "ask.choice.main_button_visit_short": "Visita",
-  "ask.choice.main_button_contact_short": "Contatto",
-  "ask.choice.main_button_text": "Testo del pulsante: {text}",
-  "ask.source.listing": "Scheda di una directory",
-  "plan.source.listing": "Scheda di una directory"
+  "ask.source.social": "Profilo social"
 };
 
 // ../../locale/tracy-locales/nl/tracy-build-chat.json
@@ -2071,24 +1984,7 @@ var tracy_build_chat_default5 = {
   "ask.source.instagram": "Instagram-profiel",
   "ask.source.facebook": "Facebook-pagina",
   "ask.source.tiktok": "TikTok-profiel",
-  "ask.source.social": "Profiel op sociale media",
-  "ask.question.place_choice": "We hebben op Google Maps meer dan \xE9\xE9n plaats met deze naam gevonden. Welke is van u?",
-  "ask.choice.place_choice_none": "Geen van deze",
-  "ask.choice.main_button_book": "Online boeken",
-  "ask.choice.main_button_call": "Bel ons",
-  "ask.choice.main_button_email": "Mail ons",
-  "ask.choice.main_button_message": "Stuur ons een bericht",
-  "ask.choice.main_button_visit": "Bezoek ons",
-  "ask.choice.main_button_contact": "Neem contact op",
-  "ask.choice.main_button_book_short": "Boeken",
-  "ask.choice.main_button_call_short": "Bellen",
-  "ask.choice.main_button_email_short": "E-mail",
-  "ask.choice.main_button_message_short": "Bericht",
-  "ask.choice.main_button_visit_short": "Bezoeken",
-  "ask.choice.main_button_contact_short": "Contact",
-  "ask.choice.main_button_text": "Tekst op de knop: {text}",
-  "ask.source.listing": "Vermelding in een bedrijvengids",
-  "plan.source.listing": "Vermelding in een bedrijvengids"
+  "ask.source.social": "Profiel op sociale media"
 };
 
 // ../../locale/tracy-locales/zh/tracy-build-chat.json
@@ -2371,24 +2267,7 @@ var tracy_build_chat_default6 = {
   "ask.source.instagram": "Instagram \u4E3B\u9875",
   "ask.source.facebook": "Facebook \u4E3B\u9875",
   "ask.source.tiktok": "TikTok \u4E3B\u9875",
-  "ask.source.social": "\u793E\u4EA4\u5A92\u4F53\u4E3B\u9875",
-  "ask.question.place_choice": "\u6211\u4EEC\u5728 Google \u5730\u56FE\u4E0A\u627E\u5230\u4E86\u591A\u4E2A\u540C\u540D\u5730\u70B9\u3002\u54EA\u4E00\u4E2A\u662F\u4F60\u7684\uFF1F",
-  "ask.choice.place_choice_none": "\u4EE5\u4E0A\u90FD\u4E0D\u662F",
-  "ask.choice.main_button_book": "\u5728\u7EBF\u9884\u8BA2",
-  "ask.choice.main_button_call": "\u7ED9\u6211\u4EEC\u6253\u7535\u8BDD",
-  "ask.choice.main_button_email": "\u7ED9\u6211\u4EEC\u53D1\u90AE\u4EF6",
-  "ask.choice.main_button_message": "\u7ED9\u6211\u4EEC\u53D1\u6D88\u606F",
-  "ask.choice.main_button_visit": "\u6B22\u8FCE\u5230\u5E97",
-  "ask.choice.main_button_contact": "\u8054\u7CFB\u6211\u4EEC",
-  "ask.choice.main_button_book_short": "\u9884\u8BA2",
-  "ask.choice.main_button_call_short": "\u81F4\u7535",
-  "ask.choice.main_button_email_short": "\u90AE\u4EF6",
-  "ask.choice.main_button_message_short": "\u6D88\u606F",
-  "ask.choice.main_button_visit_short": "\u5230\u5E97",
-  "ask.choice.main_button_contact_short": "\u8054\u7CFB",
-  "ask.choice.main_button_text": "\u6309\u94AE\u4E0A\u7684\u6587\u5B57\uFF1A{text}",
-  "ask.source.listing": "\u5546\u5BB6\u76EE\u5F55\u9875\u9762",
-  "plan.source.listing": "\u5546\u5BB6\u76EE\u5F55\u9875\u9762"
+  "ask.source.social": "\u793E\u4EA4\u5A92\u4F53\u4E3B\u9875"
 };
 
 // ../../locale/tracy-locale-vi/vi/tracy-build-chat.json
@@ -2671,42 +2550,16 @@ var tracy_build_chat_default7 = {
   "ask.source.instagram": "Trang Instagram",
   "ask.source.facebook": "Trang Facebook",
   "ask.source.tiktok": "Trang TikTok",
-  "ask.source.social": "Trang m\u1EA1ng x\xE3 h\u1ED9i",
-  "ask.question.place_choice": "Ch\xFAng t\xF4i t\xECm th\u1EA5y nhi\u1EC1u \u0111\u1ECBa \u0111i\u1EC3m tr\xEAn Google Maps c\xF3 c\xF9ng t\xEAn n\xE0y. \u0110\xE2u l\xE0 \u0111\u1ECBa \u0111i\u1EC3m c\u1EE7a b\u1EA1n?",
-  "ask.choice.place_choice_none": "Kh\xF4ng ph\u1EA3i \u0111\u1ECBa \u0111i\u1EC3m n\xE0o \u1EDF tr\xEAn",
-  "ask.choice.main_button_book": "\u0110\u1EB7t l\u1ECBch tr\u1EF1c tuy\u1EBFn",
-  "ask.choice.main_button_call": "G\u1ECDi cho ch\xFAng t\xF4i",
-  "ask.choice.main_button_email": "G\u1EEDi email cho ch\xFAng t\xF4i",
-  "ask.choice.main_button_message": "Nh\u1EAFn tin cho ch\xFAng t\xF4i",
-  "ask.choice.main_button_visit": "Gh\xE9 th\u0103m ch\xFAng t\xF4i",
-  "ask.choice.main_button_contact": "Li\xEAn h\u1EC7 v\u1EDBi ch\xFAng t\xF4i",
-  "ask.choice.main_button_book_short": "\u0110\u1EB7t l\u1ECBch",
-  "ask.choice.main_button_call_short": "G\u1ECDi",
-  "ask.choice.main_button_email_short": "Email",
-  "ask.choice.main_button_message_short": "Nh\u1EAFn tin",
-  "ask.choice.main_button_visit_short": "Gh\xE9 th\u0103m",
-  "ask.choice.main_button_contact_short": "Li\xEAn h\u1EC7",
-  "ask.choice.main_button_text": "Ch\u1EEF tr\xEAn n\xFAt: {text}",
-  "ask.source.listing": "Trang danh b\u1EA1",
-  "plan.source.listing": "Trang danh b\u1EA1"
+  "ask.source.social": "Trang m\u1EA1ng x\xE3 h\u1ED9i"
 };
 
-// src/chat-words.mjs
+// src/host/ask-words.mjs
 var TABLES = { de: tracy_build_chat_default, es: tracy_build_chat_default2, fr: tracy_build_chat_default3, it: tracy_build_chat_default4, nl: tracy_build_chat_default5, zh: tracy_build_chat_default6, vi: tracy_build_chat_default7 };
-var CHAT_LANGUAGES = Object.freeze(["en", ...Object.keys(TABLES)]);
-function chatLanguageTagOf(tag) {
-  if (typeof tag !== "string") return null;
-  const primary = tag.trim().toLowerCase().split(/[-_]/)[0];
-  return /^[a-z]{2}$/.test(primary) ? primary : null;
-}
-function chatLanguageOf(spoken, interfaceLanguage) {
-  const said = chatLanguageTagOf(spoken);
-  if (said !== null && CHAT_LANGUAGES.includes(said)) return said;
-  return chatLanguageTagOf(interfaceLanguage);
-}
-function chatWordsIn(language, english2) {
-  if (typeof language !== "string" || !CHAT_LANGUAGES.includes(language)) return null;
+var ASK_LANGUAGES = Object.freeze(["en", ...Object.keys(TABLES)]);
+function askWordsFor(language) {
+  if (typeof language !== "string" || !ASK_LANGUAGES.includes(language)) return null;
   const table = TABLES[language] ?? {};
+  const english2 = ASK_STRINGS;
   return (key, vars = {}) => {
     const text2 = Object.hasOwn(table, key) ? table[key] : Object.hasOwn(english2, key) ? english2[key] : null;
     return text2 === null ? null : text2.replace(/\{(\w+)\}/g, (_, name2) => String(
@@ -2714,11 +2567,6 @@ function chatWordsIn(language, english2) {
       vars[name2] ?? ""
     ));
   };
-}
-
-// src/host/ask-words.mjs
-function askWordsFor(language) {
-  return chatWordsIn(language, ASK_STRINGS);
 }
 
 // src/host/build-tool.mjs
@@ -2741,7 +2589,7 @@ var BUILD_UNCHECKED_SAY = "I asked for your site to be built, but I could not ch
 var BUILD_CHAT_OFF_SAY = "Building a site in the chat is not available right now. You can still create your site from the Add site page.";
 var BUILD_BUSY_SAY = "I am still working on your plan, so it cannot change right now. Make your change again when I am done.";
 var PLAN_CARD_CONTROLS_GUIDANCE = "When an entry asks to change a business fact, a service name or the main colour, tell the owner they can change that value on the plan card. Never say that the language, the design, the logo, the pictures or anything else can be changed on the plan card.";
-var IN_OWNER_LANGUAGE = "in the language the owner writes in, keeping every name and value word for word";
+var IN_OWNER_LANGUAGE = "in the owner's interface language (interfaceLanguage), keeping every name and value word for word";
 var NOT_DONE_GUIDANCE = "Promise nothing beyond what the plan card and the plan offer: never offer to add it later, and never ask the owner to send you anything for it.";
 var TRY_LATER_FALLBACK_SAY = "I have done this many times in a short while, so I paused here. Please try again later.";
 var BODY_TOO_LARGE_SAY = "That was too long for me to send. Please say it in fewer words.";
@@ -2750,21 +2598,21 @@ var REQUEST_MAX_LENGTH = 1e3;
 var REQUEST_TOO_LONG_SAY = requestTooLongSay(REQUEST_MAX_LENGTH);
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? nameTooLongSay(limit) : answerTooLongSay(limit);
 var SAY_MAX = 300;
-var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Every call names in language the language the owner writes in, as a two letter code; say every sentence a result gives in that language. Never say the site is built until a build result says built.';
+var BUILD_DESCRIPTION = `tracy_build: the build chat engine. action research {links?, description?, name?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Say every sentence a result gives in the language of the owner's interface, which each result names in interfaceLanguage; only when a result names none, in the language the owner writes in. Never say the site is built until a build result says built.`;
 var BUILD_PARAMETERS = Object.freeze({
   type: "object",
   properties: {
     action: { type: "string", enum: ["research", "templates", "plan", "edit", "build", "status"] },
-    language: {
-      type: "string",
-      description: "The language the owner writes in, as a two letter code such as en, vi or fr. The cards and questions of the build chat use it."
-    },
     links: {
       type: "array",
       items: { type: "string" },
       description: "The business's own links: website, social profiles, map listing."
     },
     description: { type: "string", description: "The owner's own words about the business." },
+    name: {
+      type: "string",
+      description: "For research with no link: the business name exactly as the owner gave it."
+    },
     request: {
       type: "string",
       description: "For plan, once a plan exists: the owner's request to change it, in their own words, at most 1000 characters. Only what it names changes."
@@ -2782,7 +2630,7 @@ var BUILD_PARAMETERS = Object.freeze({
       description: "For edit: the plan fields to change and their new values."
     }
   },
-  required: ["action", "language"]
+  required: ["action"]
 });
 var DOOR = "/api/build-draft";
 var BUILDING = /* @__PURE__ */ new Set(["creating", "building"]);
@@ -2839,10 +2687,12 @@ function startArgsOf(args) {
   if (args?.action === "research") {
     const links = (Array.isArray(args.links) ? args.links : []).map(text).filter((l) => l !== "");
     const description = text(args.description);
+    const name2 = text(args.name);
     return {
       action: "research",
       ...links.length ? { links: links.slice(0, LINKS_MAX) } : {},
-      ...description !== "" ? { description } : {}
+      ...description !== "" ? { description } : {},
+      ...name2 !== "" ? { name: name2 } : {}
     };
   }
   if (args?.action === "plan") {
@@ -2961,20 +2811,9 @@ function createBuildTool({
 }) {
   const issued = /* @__PURE__ */ new Map();
   const languages = /* @__PURE__ */ new Map();
-  const spoken = /* @__PURE__ */ new Map();
-  const chatLanguageFor = (sessionId) => chatLanguageOf(
-    spoken.get(
-      /** @type {string} */
-      sessionId
-    ),
-    languages.get(
-      /** @type {string} */
-      sessionId
-    )
-  );
   const sentLabels = /* @__PURE__ */ new Map();
   function localAsk(sessionId, ask, questions) {
-    const language = chatLanguageFor(sessionId);
+    const language = languages.get(sessionId);
     const words = wordsFor(language);
     const said = words && language ? localizedAskOf(ask, questions, words, language) : ask;
     let sent = sentLabels.get(sessionId);
@@ -3339,19 +3178,17 @@ ${JSON.stringify(answer)}`;
       result = stopped();
     }
     const marked = typeof result?.next === "string" ? { ...result, next: privately(result.next) } : result;
-    const language = chatLanguageFor(
+    const language = languages.get(
       /** @type {any} */
       exec?.agent?.session?.id
     );
-    return language && marked && typeof marked === "object" ? { ...marked, chatLanguage: language } : marked;
+    return language && marked && typeof marked === "object" ? { ...marked, interfaceLanguage: language } : marked;
   }
   async function run(rawArgs, exec) {
     let args = argsOf(rawArgs);
     const sessionId = exec?.agent?.session?.id;
     if (!isBuildChatSession(sessionId))
       return { refused: true, next: "tracy_build works only in the build chat. Do not call it here." };
-    const said = chatLanguageTagOf(args.language);
-    if (said !== null) spoken.set(sessionId, said);
     if (args.action === "status") args = pendingRetryOf(eventsOf(sessionId)) ?? args;
     const action = args.action;
     if (!["research", "templates", "plan", "edit", "build", "status"].includes(action))
@@ -3368,7 +3205,12 @@ ${JSON.stringify(answer)}`;
           refused: true,
           next: "Call tracy_build with action research and the owner's links or their own words about the business."
         };
-      request = ["POST", "/research", { links, ...description !== "" ? { description } : {} }];
+      const name2 = text(args.name);
+      request = [
+        "POST",
+        "/research",
+        { links, ...description !== "" ? { description } : {}, ...name2 !== "" ? { name: name2 } : {} }
+      ];
     } else if (action === "plan") {
       if (typeof args.request === "string" && [...args.request.trim()].length > REQUEST_MAX_LENGTH)
         return {

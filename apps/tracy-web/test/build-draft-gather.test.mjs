@@ -395,7 +395,7 @@ test('the owner description is a source to rewrite, never copied into the brief;
   // Without a model the reading rules never read the statement, and the record says so.
   assert.deepEqual(gathered.descriptionFacts, { read: false, reason: 'rules_never_rewrite_owner_words' })
   assert.equal(gathered.descriptionKeptOut, undefined)
-  // A description is not a source: with no link to read, the research has nothing.
+  // With no link, the description alone is read only when the owner named the business (`no_name` otherwise).
   await assert.rejects(gatherer(domain)({ links: [], description }, {}), {
     code: 'research_empty',
     noRerun: true

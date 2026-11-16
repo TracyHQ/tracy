@@ -25792,6 +25792,9 @@
                         "type": "string"
                       },
                       "type": "array"
+                    },
+                    "name": {
+                      "type": "string"
                     }
                   },
                   "type": "object"
