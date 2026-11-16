@@ -51,6 +51,11 @@ function apifyReason(r) {
 }
 
 // ── ScrapeCreators ────────────────────────────────────────────────────────────────────────────────
+// 🔒 A profile is always read fresh: no `cache_max_age` is sent. The provider's documented options for it are 1d, 3d,
+// 7d, 14d and 30d, each an opt-in to serve a stored answer that old; without it the call is read live. A stored answer
+// carries the CDN picture addresses of the day it was read, and those addresses are signed with an expiry (Instagram
+// and Facebook `oe=`, TikTok `x-expires`), so pictures of an answer a few days old fail with 403 "URL signature
+// expired". Social stats (`social-stats/providers.mjs`) read counts only and keep their cached reads.
 
 function picture(media, url, extra) {
   const u = str(url)
@@ -58,7 +63,7 @@ function picture(media, url, extra) {
 }
 
 async function scFacebook(ctx, t, { limit }) {
-  const page = await scrapeCreators(ctx, '/v1/facebook/profile', { url: t.url, cache_max_age: '7d' })
+  const page = await scrapeCreators(ctx, '/v1/facebook/profile', { url: t.url })
   const media = []
   // `profilePhoto.url` is the photo's PAGE (facebook.com/photo/?fbid=…), not an image: the files are profilePic*.
   const profilePic =
@@ -78,8 +83,7 @@ async function scFacebook(ctx, t, { limit }) {
   // The page is the profile; its posts are a second call whose failure leaves the page standing.
   try {
     const answer = await scrapeCreators(ctx, '/v1/facebook/profile/posts', {
-      url: t.url,
-      cache_max_age: '7d'
+      url: t.url
     })
     for (const it of list(answer.posts ?? answer.data ?? answer.results).slice(0, limit)) {
       const post = compact({
@@ -139,8 +143,7 @@ async function scFacebook(ctx, t, { limit }) {
 async function scInstagram(ctx, t, { limit }) {
   const answer = await scrapeCreators(ctx, '/v1/instagram/profile', {
     handle: t.handle,
-    trim: 'true',
-    cache_max_age: '7d'
+    trim: 'true'
   })
   const user = answer.data?.user
   if (!user || user.id == null)
@@ -198,7 +201,7 @@ async function scInstagram(ctx, t, { limit }) {
 }
 
 async function scTiktok(ctx, t, { limit }) {
-  const answer = await scrapeCreators(ctx, '/v1/tiktok/profile', { handle: t.handle, cache_max_age: '7d' })
+  const answer = await scrapeCreators(ctx, '/v1/tiktok/profile', { handle: t.handle })
   const user = answer.user ?? answer.data?.user ?? {}
   const stats = answer.stats ?? user.stats ?? {}
   if (!user.id && !user.secUid && !user.uniqueId)
@@ -211,8 +214,7 @@ async function scTiktok(ctx, t, { limit }) {
     const videos = await scrapeCreators(ctx, '/v3/tiktok/profile/videos', {
       handle: t.handle,
       sort_by: 'latest',
-      trim: 'true',
-      cache_max_age: '7d'
+      trim: 'true'
     })
     for (const v of list(videos.aweme_list ?? videos.videos ?? videos.items).slice(0, limit)) {
       const id = str(String(v.aweme_id ?? v.id ?? ''))

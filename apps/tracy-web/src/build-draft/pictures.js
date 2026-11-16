@@ -21,6 +21,7 @@ const AT_ONCE = 5
 /** Plain reasons a picture was not stored, by the media record's `reason`. */
 export const NOT_STORED = Object.freeze({
   download_failed: 'the picture could not be downloaded',
+  url_expired: 'the picture address had expired before it was downloaded',
   too_large: 'the picture is larger than a picture may be',
   not_media: 'the address is not a picture or a video',
   image_unreadable: 'the picture could not be read',

@@ -14,6 +14,17 @@ export const IMAGE_MAX_BYTES = 25 * 1024 * 1024
 export const VIDEO_MAX_BYTES = 200 * 1024 * 1024
 /** The most of a caption or alt text kept with a picture: the picture planner reads its opening. */
 const TEXT_MAX = 2000
+/**
+ * A refused download whose address had expired: a signed CDN address (Instagram, Facebook, TikTok) answers 403 with
+ * "URL signature expired" once its expiry passes. Named apart from `download_failed` so the set-aside reason says the
+ * address was stale, not that the host was down.
+ */
+export function expiredAddress(got) {
+  if (got?.status !== 403 || !got.bytes?.length) return false
+  const text = new TextDecoder().decode(got.bytes.subarray(0, 2048))
+  return /signature (has )?expired|url (has )?expired/i.test(text)
+}
+
 export const EXT = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
@@ -82,7 +93,7 @@ export function createMediaStore({ objects, imageInfo, domainDeps }) {
         continue
       }
       if (!got || got.status >= 400 || got.truncated) {
-        failure = got?.truncated ? 'too_large' : 'download_failed'
+        failure = got?.truncated ? 'too_large' : expiredAddress(got) ? 'url_expired' : 'download_failed'
         continue
       }
       const record = await storedRecord(domain, owner, base, got.bytes, reference)
