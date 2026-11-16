@@ -1417,6 +1417,71 @@ test('a label that repeats another of its menu is asked again, then dropped if i
   assert.doesNotMatch(again, /Industrial park infrastructure/)
 })
 
+// 🔒 ONE MENU NEVER NAMES TWO ITEMS THE SAME, PLANNED OR NOT. Measured 16/11/2026 on dev (JA Restaurant EmDash 1.0.2, an
+// Italian trattoria in Da Nang): only "Home", "Explore" and "Reservation" of the primary menu were planned, the planner made
+// the dropdown "Explore" the restaurant's "Menu", and the main nav read MENU twice: the item leading to /menu is never
+// planned, so the repeat check did not know it. The labels a menu shows unplanned are told to the model, and a new label
+// that repeats one is asked again, then dropped.
+test('a new label never repeats a label its menu shows that was not planned', async () => {
+  const seedDir = path.resolve(HERE, '../../../packages/cms/tracy-emdash-theme-restaurant/seed')
+  const menus = seedMenus(seedDir, ['en'])
+  const primary = menus.find((m) => m.name === 'primary')
+  assert.ok(primary?.labels.includes('Explore'), 'the dropdown is planned')
+  const row = (from, to) => ({ menu: 'primary', locale: 'en', from, to })
+  const answers = [
+    JSON.stringify({ relabel: [row('Explore', 'Menu'), row('Reservation', 'Book a table')] }),
+    JSON.stringify({ relabel: [row('Explore', 'MENU')] })
+  ]
+  const asked = []
+  const model = { chat: async (call) => (asked.push(call), answers.shift()) }
+  const business = {
+    name: 'Trattoria Lume',
+    about: 'Trattoria Lume, an Italian restaurant in Da Nang.',
+    sector: 'restaurant'
+  }
+  const out = await planMenuLabels({ model, business, menus, given: business.about })
+  assert.deepEqual(out, [row('Reservation', 'Book a table')], 'Explore keeps its own label')
+  assert.equal(asked.length, 2, 'the repeat is asked once more')
+  assert.match(asked[1].messages.at(-1).content, /"Menu"/)
+  assert.ok(
+    JSON.parse(asked[0].messages[1].content)
+      .menus.find((m) => m.name === 'primary')
+      .kept?.includes('Menu'),
+    'the model is told the labels that stay'
+  )
+  assert.ok(primary.kept?.includes('Menu'), 'the item leading to /menu is shown, not planned')
+  assert.equal(
+    primary.kept.some((l) => primary.labels.includes(l)),
+    false,
+    'a planned label is not a kept one'
+  )
+})
+
+// 🔒 A DROPPED RENAME GIVES ITS ITEM ITS OWN LABEL BACK (review of the fix above). "Explore → Menu" repeats /menu and is
+// dropped after its retry, so the item shows "Explore" again; "Reservation → Explore", taken the first time, would then
+// show Explore twice.
+test('a rename that repeats the label of an item whose own rename was dropped is dropped too', async () => {
+  const seedDir = path.resolve(HERE, '../../../packages/cms/tracy-emdash-theme-restaurant/seed')
+  const menus = seedMenus(seedDir, ['en'])
+  const row = (from, to) => ({ menu: 'primary', locale: 'en', from, to })
+  const answers = [
+    JSON.stringify({ relabel: [row('Explore', 'Menu'), row('Reservation', 'Explore')] }),
+    JSON.stringify({ relabel: [row('Explore', 'MENU')] })
+  ]
+  const model = { chat: async () => answers.shift() }
+  const business = {
+    name: 'Trattoria Lume',
+    about: 'Trattoria Lume, an Italian restaurant in Da Nang.',
+    sector: 'restaurant'
+  }
+  const out = await planMenuLabels({ model, business, menus, given: business.about })
+  assert.deepEqual(out, [], 'Explore keeps its label, so Reservation cannot take it')
+  const shown = menus
+    .find((m) => m.name === 'primary')
+    .labels.map((l) => out.find((r) => r.from === l)?.to ?? l)
+  assert.equal(new Set(shown).size, shown.length, `no label twice: ${shown.join(', ')}`)
+})
+
 test('a site in English keeps the English the owner wrote: nothing is asked again', async () => {
   const menus = [{ name: 'footer_services', locale: 'en', labels: ['Pre-engineered buildings'] }]
   const asked = []

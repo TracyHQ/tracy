@@ -463,7 +463,11 @@
       "itemFields": [
         "slide_title"
       ],
-      "brief": "the line over one picture of the home page slideshow: a short welcome to this restaurant, in two short lines"
+      "brief": "the line over one picture of the home page slideshow: a short welcome to this restaurant, in two short lines",
+      "maxCharacters": {
+        "slide_title": 39
+      },
+      "maxCharactersFrom": "contracts/1.0.2/template-kit.json, slideshow.slideshow.items[*].slide_title: kit frame (390px 47, 1440px 39); the title is 100 px capitals in a 720 px box that cuts what overflows"
     },
     {
       "collection": "features_intro",
