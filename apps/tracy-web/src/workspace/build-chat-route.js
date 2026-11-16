@@ -23,6 +23,7 @@
 import { Hono } from 'hono'
 
 import { viewer } from '../lib/http.js'
+import { requestLanguage, translator } from '../lib/i18n/index.js'
 import { onboardingGrant, ONBOARDING_MOUNT } from './scope.js'
 import { startOverConfirmPage, startOverRefusedPage } from './start-over-page.js'
 import {
@@ -65,7 +66,7 @@ export function buildChatRoutes({
       const email = await viewer(c, config)
       if (!email) return c.redirect(`/login?next=${encodeURIComponent(START_OVER)}`, 302)
       return c.html(
-        startOverConfirmPage({ confirm: fresh.confirmSay, action: START_OVER, back: BUILD_CHAT_PATH })
+        startOverConfirmPage({ action: START_OVER, back: BUILD_CHAT_PATH, t: translator(requestLanguage(c)) })
       )
     })
     app.post(START_OVER, async (c) => {
@@ -74,7 +75,15 @@ export function buildChatRoutes({
       if (!email) return c.redirect(`/login?next=${encodeURIComponent(START_OVER)}`, 303)
       const moved = await fresh.startOver(email)
       if (moved.error)
-        return c.html(startOverRefusedPage({ say: moved.say ?? '', back: BUILD_CHAT_PATH }), 409)
+        return c.html(
+          startOverRefusedPage({
+            error: moved.error,
+            say: moved.say ?? '',
+            back: BUILD_CHAT_PATH,
+            t: translator(requestLanguage(c))
+          }),
+          409
+        )
       return c.redirect(BUILD_CHAT_PATH, 303)
     })
   }

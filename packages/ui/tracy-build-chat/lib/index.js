@@ -53,6 +53,21 @@ var ASK_STRINGS = {
   "ask.question.fact_conflict_item.link": "Your public pages give different values for the booking or contact link of {item}. Which one is right?",
   "ask.question.fact_conflict_item.name": "Your public pages give different values for the business name of {item}. Which one is right?",
   "ask.question.fact_conflict_item.price": "Your public pages give different values for the price of {item}. Which one is right?",
+  "ask.question.place_choice": "We found more than one place on Google Maps under this name. Which one is yours?",
+  "ask.choice.place_choice_none": "None of these",
+  "ask.choice.main_button_book": "Book online",
+  "ask.choice.main_button_call": "Call us",
+  "ask.choice.main_button_email": "Email us",
+  "ask.choice.main_button_message": "Message us",
+  "ask.choice.main_button_visit": "Visit us",
+  "ask.choice.main_button_contact": "Contact us",
+  "ask.choice.main_button_book_short": "Book",
+  "ask.choice.main_button_call_short": "Call",
+  "ask.choice.main_button_email_short": "Email",
+  "ask.choice.main_button_message_short": "Message",
+  "ask.choice.main_button_visit_short": "Visit",
+  "ask.choice.main_button_contact_short": "Contact",
+  "ask.choice.main_button_text": "The button reads: {text}",
   "ask.choice.contact_method_phone": "A phone number",
   "ask.choice.contact_method_email": "An email address",
   "ask.choice.contact_method_link": "A booking or contact link",
@@ -64,7 +79,8 @@ var ASK_STRINGS = {
   "ask.source.instagram": "Instagram profile",
   "ask.source.facebook": "Facebook page",
   "ask.source.tiktok": "TikTok profile",
-  "ask.source.social": "Social profile"
+  "ask.source.social": "Social profile",
+  "ask.source.listing": "Directory listing"
 };
 var CONFLICT_NOUNS = {
   "contact.phone": "phone",
@@ -78,7 +94,7 @@ var CONFLICT_NOUNS = {
 };
 function promptByCode(question, words) {
   const { code, params = {} } = question ?? {};
-  if (code === "main_button" || code === "contact_method" || code === "site_language")
+  if (code === "main_button" || code === "contact_method" || code === "site_language" || code === "place_choice")
     return words(`ask.question.${code}`);
   const noun = CONFLICT_NOUNS[params?.fact];
   if (!noun) return null;
@@ -98,11 +114,13 @@ function languageNameIn(tag, language) {
 function choiceLabelByCode(choice, words, language) {
   const { code, params = {} } = choice ?? {};
   if (typeof code !== "string") return null;
-  if (/^contact_method_[a-z]+$/.test(code)) return words(`ask.choice.${code}`);
+  if (/^contact_method_[a-z]+$/.test(code) || code === "place_choice_none") return words(`ask.choice.${code}`);
+  if (MAIN_BUTTON_CHOICE.test(code)) return words(`ask.choice.${code}`);
   if (code === "site_language_option" && typeof params?.language === "string")
     return languageNameIn(params.language, language);
   return null;
 }
+var MAIN_BUTTON_CHOICE = /^main_button_(book|call|email|message|visit|contact)(_short)?$/;
 function choiceDetailByCode(choice, words) {
   if (choice?.code !== "fact_conflict_value" || typeof choice.params?.from !== "string") return null;
   const names = choice.params.from.split(",").map((from) => words(`ask.source.${from.trim()}`));
@@ -124,7 +142,8 @@ function localizedAskOf(ask, questions, words, language) {
         const choice = choices[i];
         if (!choice || choice.label !== o?.label) return o;
         const label = choiceLabelByCode(choice, words, language) ?? o.label;
-        const description = o.description === void 0 ? void 0 : choiceDetailByCode(choice, words) ?? o.description;
+        const buttonText = label !== o.label && MAIN_BUTTON_CHOICE.test(choice.code) ? words("ask.choice.main_button_text", { text: o.label }) : null;
+        const description = buttonText ?? (o.description === void 0 ? void 0 : choiceDetailByCode(choice, words) ?? o.description);
         return description === void 0 ? { ...o, label } : { ...o, label, description };
       });
       const recommendedAt = options.findIndex((o) => o?.label === item.recommended);
@@ -492,6 +511,32 @@ function approvalOf(reply) {
   return { plan: planOfReviewId(answer.id) };
 }
 
+// ../../core/tracy-core/src/build-chat/link-reads.mjs
+var LINK_READ_STRINGS = Object.freeze({
+  "links.reading": "{name}: reading",
+  "links.choice": "{name}: needs your choice",
+  "links.failed": "{name}: could not be read",
+  "links.failedWhy": "{name}: could not be read ({reason})",
+  "links.read": "{name}: read",
+  "links.readNothing": "{name}: read, but nothing about the business was found",
+  "links.readPicturesLost": "{name}: read, but its pictures could not be downloaded",
+  "links.readPicturesNotKept": "{name}: read, but its pictures could not be kept",
+  "links.facts.one": "{count} fact",
+  "links.facts.other": "{count} facts",
+  "links.pictures.one": "{count} picture",
+  "links.pictures.other": "{count} pictures",
+  "links.pictures.none": "No pictures",
+  "links.pictures.someLost": "{count} more could not be downloaded"
+});
+var PLATFORMS = Object.freeze({
+  "instagram.com": "Instagram",
+  "facebook.com": "Facebook",
+  "fb.com": "Facebook",
+  "tiktok.com": "TikTok",
+  "youtube.com": "YouTube",
+  "youtu.be": "YouTube"
+});
+
 // ../../core/tracy-core/src/build-chat/progress.mjs
 function templateChoiceOf(templates) {
   const options = (templates ?? []).filter((t) => t?.quickstart === "released" && t.fits === true);
@@ -852,7 +897,38 @@ var tracy_build_chat_default = {
   "ask.source.instagram": "Instagram-Profil",
   "ask.source.facebook": "Facebook-Seite",
   "ask.source.tiktok": "TikTok-Profil",
-  "ask.source.social": "Social-Media-Profil"
+  "ask.source.social": "Social-Media-Profil",
+  "ask.question.place_choice": "Wir haben unter diesem Namen mehr als einen Ort in Google Maps gefunden. Welcher ist Ihrer?",
+  "ask.choice.place_choice_none": "Keiner davon",
+  "ask.choice.main_button_book": "Online buchen",
+  "ask.choice.main_button_call": "Rufen Sie uns an",
+  "ask.choice.main_button_email": "Schreiben Sie uns eine E-Mail",
+  "ask.choice.main_button_message": "Schreiben Sie uns eine Nachricht",
+  "ask.choice.main_button_visit": "Besuchen Sie uns",
+  "ask.choice.main_button_contact": "Kontaktieren Sie uns",
+  "ask.choice.main_button_book_short": "Buchen",
+  "ask.choice.main_button_call_short": "Anrufen",
+  "ask.choice.main_button_email_short": "E-Mail",
+  "ask.choice.main_button_message_short": "Nachricht",
+  "ask.choice.main_button_visit_short": "Besuchen",
+  "ask.choice.main_button_contact_short": "Kontakt",
+  "ask.choice.main_button_text": "Text auf der Schaltfl\xE4che: {text}",
+  "ask.source.listing": "Eintrag in einem Branchenverzeichnis",
+  "plan.source.listing": "Eintrag in einem Branchenverzeichnis",
+  "links.reading": "{name}: wird gelesen",
+  "links.choice": "{name}: Ihre Auswahl ist n\xF6tig",
+  "links.failed": "{name}: konnte nicht gelesen werden",
+  "links.failedWhy": "{name}: konnte nicht gelesen werden ({reason})",
+  "links.read": "{name}: gelesen",
+  "links.readNothing": "{name}: gelesen, aber keine Angaben zum Unternehmen gefunden",
+  "links.readPicturesLost": "{name}: gelesen, aber die Bilder konnten nicht heruntergeladen werden",
+  "links.readPicturesNotKept": "{name}: gelesen, aber die Bilder konnten nicht gespeichert werden",
+  "links.facts.one": "{count} Angabe",
+  "links.facts.other": "{count} Angaben",
+  "links.pictures.one": "{count} Bild",
+  "links.pictures.other": "{count} Bilder",
+  "links.pictures.none": "Keine Bilder",
+  "links.pictures.someLost": "{count} weitere konnten nicht heruntergeladen werden"
 };
 
 // ../../locale/tracy-locales/es/tracy-build-chat.json
@@ -1135,7 +1211,38 @@ var tracy_build_chat_default2 = {
   "ask.source.instagram": "Perfil de Instagram",
   "ask.source.facebook": "P\xE1gina de Facebook",
   "ask.source.tiktok": "Perfil de TikTok",
-  "ask.source.social": "Perfil en redes sociales"
+  "ask.source.social": "Perfil en redes sociales",
+  "ask.question.place_choice": "Hemos encontrado m\xE1s de un lugar en Google Maps con este nombre. \xBFCu\xE1l es el suyo?",
+  "ask.choice.place_choice_none": "Ninguno de estos",
+  "ask.choice.main_button_book": "Reservar en l\xEDnea",
+  "ask.choice.main_button_call": "Ll\xE1menos",
+  "ask.choice.main_button_email": "Env\xEDenos un correo electr\xF3nico",
+  "ask.choice.main_button_message": "Env\xEDenos un mensaje",
+  "ask.choice.main_button_visit": "Vis\xEDtenos",
+  "ask.choice.main_button_contact": "Cont\xE1ctenos",
+  "ask.choice.main_button_book_short": "Reservar",
+  "ask.choice.main_button_call_short": "Llamar",
+  "ask.choice.main_button_email_short": "Correo electr\xF3nico",
+  "ask.choice.main_button_message_short": "Mensaje",
+  "ask.choice.main_button_visit_short": "Visitar",
+  "ask.choice.main_button_contact_short": "Contacto",
+  "ask.choice.main_button_text": "Texto del bot\xF3n: {text}",
+  "ask.source.listing": "Ficha de directorio",
+  "plan.source.listing": "Ficha de directorio",
+  "links.reading": "{name}: leyendo",
+  "links.choice": "{name}: necesita su elecci\xF3n",
+  "links.failed": "{name}: no se pudo leer",
+  "links.failedWhy": "{name}: no se pudo leer ({reason})",
+  "links.read": "{name}: le\xEDdo",
+  "links.readNothing": "{name}: le\xEDdo, pero no se encontr\xF3 informaci\xF3n sobre el negocio",
+  "links.readPicturesLost": "{name}: le\xEDdo, pero no se pudieron descargar sus im\xE1genes",
+  "links.readPicturesNotKept": "{name}: le\xEDdo, pero no se pudieron guardar sus im\xE1genes",
+  "links.facts.one": "{count} dato",
+  "links.facts.other": "{count} datos",
+  "links.pictures.one": "{count} imagen",
+  "links.pictures.other": "{count} im\xE1genes",
+  "links.pictures.none": "Sin im\xE1genes",
+  "links.pictures.someLost": "{count} m\xE1s no se pudieron descargar"
 };
 
 // ../../locale/tracy-locales/fr/tracy-build-chat.json
@@ -1418,7 +1525,38 @@ var tracy_build_chat_default3 = {
   "ask.source.instagram": "Profil Instagram",
   "ask.source.facebook": "Page Facebook",
   "ask.source.tiktok": "Profil TikTok",
-  "ask.source.social": "Profil sur un r\xE9seau social"
+  "ask.source.social": "Profil sur un r\xE9seau social",
+  "ask.question.place_choice": "Nous avons trouv\xE9 plusieurs lieux sur Google Maps sous ce nom. Lequel est le v\xF4tre ?",
+  "ask.choice.place_choice_none": "Aucun de ces lieux",
+  "ask.choice.main_button_book": "R\xE9server en ligne",
+  "ask.choice.main_button_call": "Appelez-nous",
+  "ask.choice.main_button_email": "\xC9crivez-nous un e-mail",
+  "ask.choice.main_button_message": "Envoyez-nous un message",
+  "ask.choice.main_button_visit": "Rendez-nous visite",
+  "ask.choice.main_button_contact": "Contactez-nous",
+  "ask.choice.main_button_book_short": "R\xE9server",
+  "ask.choice.main_button_call_short": "Appeler",
+  "ask.choice.main_button_email_short": "E-mail",
+  "ask.choice.main_button_message_short": "Message",
+  "ask.choice.main_button_visit_short": "Visiter",
+  "ask.choice.main_button_contact_short": "Contact",
+  "ask.choice.main_button_text": "Texte du bouton : {text}",
+  "ask.source.listing": "Fiche d\u2019annuaire",
+  "plan.source.listing": "Fiche d\u2019annuaire",
+  "links.reading": "{name} : lecture en cours",
+  "links.choice": "{name} : votre choix est n\xE9cessaire",
+  "links.failed": "{name} : lecture impossible",
+  "links.failedWhy": "{name} : lecture impossible ({reason})",
+  "links.read": "{name} : lu",
+  "links.readNothing": "{name} : lu, mais aucune information sur l\u2019entreprise n\u2019a \xE9t\xE9 trouv\xE9e",
+  "links.readPicturesLost": "{name} : lu, mais ses images n\u2019ont pas pu \xEAtre t\xE9l\xE9charg\xE9es",
+  "links.readPicturesNotKept": "{name} : lu, mais ses images n\u2019ont pas pu \xEAtre conserv\xE9es",
+  "links.facts.one": "{count} information",
+  "links.facts.other": "{count} informations",
+  "links.pictures.one": "{count} image",
+  "links.pictures.other": "{count} images",
+  "links.pictures.none": "Aucune image",
+  "links.pictures.someLost": "{count} autres n\u2019ont pas pu \xEAtre t\xE9l\xE9charg\xE9es"
 };
 
 // ../../locale/tracy-locales/it/tracy-build-chat.json
@@ -1701,7 +1839,38 @@ var tracy_build_chat_default4 = {
   "ask.source.instagram": "Profilo Instagram",
   "ask.source.facebook": "Pagina Facebook",
   "ask.source.tiktok": "Profilo TikTok",
-  "ask.source.social": "Profilo social"
+  "ask.source.social": "Profilo social",
+  "ask.question.place_choice": "Abbiamo trovato pi\xF9 di un luogo su Google Maps con questo nome. Qual \xE8 il suo?",
+  "ask.choice.place_choice_none": "Nessuno di questi",
+  "ask.choice.main_button_book": "Prenota online",
+  "ask.choice.main_button_call": "Ci chiami",
+  "ask.choice.main_button_email": "Ci scriva un\u2019email",
+  "ask.choice.main_button_message": "Ci invii un messaggio",
+  "ask.choice.main_button_visit": "Venga a trovarci",
+  "ask.choice.main_button_contact": "Ci contatti",
+  "ask.choice.main_button_book_short": "Prenota",
+  "ask.choice.main_button_call_short": "Chiama",
+  "ask.choice.main_button_email_short": "Email",
+  "ask.choice.main_button_message_short": "Messaggio",
+  "ask.choice.main_button_visit_short": "Visita",
+  "ask.choice.main_button_contact_short": "Contatto",
+  "ask.choice.main_button_text": "Testo del pulsante: {text}",
+  "ask.source.listing": "Scheda di una directory",
+  "plan.source.listing": "Scheda di una directory",
+  "links.reading": "{name}: lettura in corso",
+  "links.choice": "{name}: serve la sua scelta",
+  "links.failed": "{name}: non \xE8 stato possibile leggerlo",
+  "links.failedWhy": "{name}: non \xE8 stato possibile leggerlo ({reason})",
+  "links.read": "{name}: letto",
+  "links.readNothing": "{name}: letto, ma non sono state trovate informazioni sull\u2019attivit\xE0",
+  "links.readPicturesLost": "{name}: letto, ma non \xE8 stato possibile scaricare le immagini",
+  "links.readPicturesNotKept": "{name}: letto, ma non \xE8 stato possibile conservare le immagini",
+  "links.facts.one": "{count} informazione",
+  "links.facts.other": "{count} informazioni",
+  "links.pictures.one": "{count} immagine",
+  "links.pictures.other": "{count} immagini",
+  "links.pictures.none": "Nessuna immagine",
+  "links.pictures.someLost": "Non \xE8 stato possibile scaricarne altre {count}"
 };
 
 // ../../locale/tracy-locales/nl/tracy-build-chat.json
@@ -1984,7 +2153,38 @@ var tracy_build_chat_default5 = {
   "ask.source.instagram": "Instagram-profiel",
   "ask.source.facebook": "Facebook-pagina",
   "ask.source.tiktok": "TikTok-profiel",
-  "ask.source.social": "Profiel op sociale media"
+  "ask.source.social": "Profiel op sociale media",
+  "ask.question.place_choice": "We hebben op Google Maps meer dan \xE9\xE9n plaats met deze naam gevonden. Welke is van u?",
+  "ask.choice.place_choice_none": "Geen van deze",
+  "ask.choice.main_button_book": "Online boeken",
+  "ask.choice.main_button_call": "Bel ons",
+  "ask.choice.main_button_email": "Mail ons",
+  "ask.choice.main_button_message": "Stuur ons een bericht",
+  "ask.choice.main_button_visit": "Bezoek ons",
+  "ask.choice.main_button_contact": "Neem contact op",
+  "ask.choice.main_button_book_short": "Boeken",
+  "ask.choice.main_button_call_short": "Bellen",
+  "ask.choice.main_button_email_short": "E-mail",
+  "ask.choice.main_button_message_short": "Bericht",
+  "ask.choice.main_button_visit_short": "Bezoeken",
+  "ask.choice.main_button_contact_short": "Contact",
+  "ask.choice.main_button_text": "Tekst op de knop: {text}",
+  "ask.source.listing": "Vermelding in een bedrijvengids",
+  "plan.source.listing": "Vermelding in een bedrijvengids",
+  "links.reading": "{name}: wordt gelezen",
+  "links.choice": "{name}: uw keuze is nodig",
+  "links.failed": "{name}: kon niet worden gelezen",
+  "links.failedWhy": "{name}: kon niet worden gelezen ({reason})",
+  "links.read": "{name}: gelezen",
+  "links.readNothing": "{name}: gelezen, maar er is niets over het bedrijf gevonden",
+  "links.readPicturesLost": "{name}: gelezen, maar de afbeeldingen konden niet worden gedownload",
+  "links.readPicturesNotKept": "{name}: gelezen, maar de afbeeldingen konden niet worden bewaard",
+  "links.facts.one": "{count} gegeven",
+  "links.facts.other": "{count} gegevens",
+  "links.pictures.one": "{count} afbeelding",
+  "links.pictures.other": "{count} afbeeldingen",
+  "links.pictures.none": "Geen afbeeldingen",
+  "links.pictures.someLost": "{count} andere konden niet worden gedownload"
 };
 
 // ../../locale/tracy-locales/zh/tracy-build-chat.json
@@ -2267,7 +2467,38 @@ var tracy_build_chat_default6 = {
   "ask.source.instagram": "Instagram \u4E3B\u9875",
   "ask.source.facebook": "Facebook \u4E3B\u9875",
   "ask.source.tiktok": "TikTok \u4E3B\u9875",
-  "ask.source.social": "\u793E\u4EA4\u5A92\u4F53\u4E3B\u9875"
+  "ask.source.social": "\u793E\u4EA4\u5A92\u4F53\u4E3B\u9875",
+  "ask.question.place_choice": "\u6211\u4EEC\u5728 Google \u5730\u56FE\u4E0A\u627E\u5230\u4E86\u591A\u4E2A\u540C\u540D\u5730\u70B9\u3002\u54EA\u4E00\u4E2A\u662F\u4F60\u7684\uFF1F",
+  "ask.choice.place_choice_none": "\u4EE5\u4E0A\u90FD\u4E0D\u662F",
+  "ask.choice.main_button_book": "\u5728\u7EBF\u9884\u8BA2",
+  "ask.choice.main_button_call": "\u7ED9\u6211\u4EEC\u6253\u7535\u8BDD",
+  "ask.choice.main_button_email": "\u7ED9\u6211\u4EEC\u53D1\u90AE\u4EF6",
+  "ask.choice.main_button_message": "\u7ED9\u6211\u4EEC\u53D1\u6D88\u606F",
+  "ask.choice.main_button_visit": "\u6B22\u8FCE\u5230\u5E97",
+  "ask.choice.main_button_contact": "\u8054\u7CFB\u6211\u4EEC",
+  "ask.choice.main_button_book_short": "\u9884\u8BA2",
+  "ask.choice.main_button_call_short": "\u81F4\u7535",
+  "ask.choice.main_button_email_short": "\u90AE\u4EF6",
+  "ask.choice.main_button_message_short": "\u6D88\u606F",
+  "ask.choice.main_button_visit_short": "\u5230\u5E97",
+  "ask.choice.main_button_contact_short": "\u8054\u7CFB",
+  "ask.choice.main_button_text": "\u6309\u94AE\u4E0A\u7684\u6587\u5B57\uFF1A{text}",
+  "ask.source.listing": "\u5546\u5BB6\u76EE\u5F55\u9875\u9762",
+  "plan.source.listing": "\u5546\u5BB6\u76EE\u5F55\u9875\u9762",
+  "links.reading": "{name}\uFF1A\u6B63\u5728\u8BFB\u53D6",
+  "links.choice": "{name}\uFF1A\u9700\u8981\u60A8\u9009\u62E9",
+  "links.failed": "{name}\uFF1A\u65E0\u6CD5\u8BFB\u53D6",
+  "links.failedWhy": "{name}\uFF1A\u65E0\u6CD5\u8BFB\u53D6\uFF08{reason}\uFF09",
+  "links.read": "{name}\uFF1A\u5DF2\u8BFB\u53D6",
+  "links.readNothing": "{name}\uFF1A\u5DF2\u8BFB\u53D6\uFF0C\u4F46\u672A\u627E\u5230\u5173\u4E8E\u8BE5\u5546\u5BB6\u7684\u4FE1\u606F",
+  "links.readPicturesLost": "{name}\uFF1A\u5DF2\u8BFB\u53D6\uFF0C\u4F46\u5176\u56FE\u7247\u65E0\u6CD5\u4E0B\u8F7D",
+  "links.readPicturesNotKept": "{name}\uFF1A\u5DF2\u8BFB\u53D6\uFF0C\u4F46\u5176\u56FE\u7247\u65E0\u6CD5\u4FDD\u5B58",
+  "links.facts.one": "{count} \u6761\u4FE1\u606F",
+  "links.facts.other": "{count} \u6761\u4FE1\u606F",
+  "links.pictures.one": "{count} \u5F20\u56FE\u7247",
+  "links.pictures.other": "{count} \u5F20\u56FE\u7247",
+  "links.pictures.none": "\u6CA1\u6709\u56FE\u7247",
+  "links.pictures.someLost": "\u53E6\u6709 {count} \u5F20\u65E0\u6CD5\u4E0B\u8F7D"
 };
 
 // ../../locale/tracy-locale-vi/vi/tracy-build-chat.json
@@ -2453,6 +2684,20 @@ var tracy_build_chat_default7 = {
   "tool.research.none": "\u0110\xE3 t\xECm hi\u1EC3u v\u1EC1 doanh nghi\u1EC7p c\u1EE7a b\u1EA1n",
   "tool.research.one": "\u0110\xE3 \u0111\u1ECDc {count} ngu\u1ED3n",
   "tool.research.other": "\u0110\xE3 \u0111\u1ECDc {count} ngu\u1ED3n",
+  "links.reading": "{name}: \u0111ang \u0111\u1ECDc",
+  "links.choice": "{name}: c\u1EA7n b\u1EA1n ch\u1ECDn",
+  "links.failed": "{name}: kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c",
+  "links.failedWhy": "{name}: kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c ({reason})",
+  "links.read": "{name}: \u0111\xE3 \u0111\u1ECDc",
+  "links.readNothing": "{name}: \u0111\xE3 \u0111\u1ECDc, nh\u01B0ng kh\xF4ng t\xECm th\u1EA5y th\xF4ng tin n\xE0o v\u1EC1 doanh nghi\u1EC7p",
+  "links.readPicturesLost": "{name}: \u0111\xE3 \u0111\u1ECDc, nh\u01B0ng kh\xF4ng t\u1EA3i \u0111\u01B0\u1EE3c \u1EA3nh",
+  "links.readPicturesNotKept": "{name}: \u0111\xE3 \u0111\u1ECDc, nh\u01B0ng kh\xF4ng l\u01B0u \u0111\u01B0\u1EE3c \u1EA3nh",
+  "links.facts.one": "{count} th\xF4ng tin",
+  "links.facts.other": "{count} th\xF4ng tin",
+  "links.pictures.one": "{count} \u1EA3nh",
+  "links.pictures.other": "{count} \u1EA3nh",
+  "links.pictures.none": "Kh\xF4ng c\xF3 \u1EA3nh",
+  "links.pictures.someLost": "{count} \u1EA3nh kh\xE1c kh\xF4ng t\u1EA3i \u0111\u01B0\u1EE3c",
   "tool.stopped": "B\u01B0\u1EDBc n\xE0y kh\xF4ng ho\xE0n th\xE0nh \u0111\u01B0\u1EE3c",
   "tool.templates": "\u0110\xE3 t\xECm th\u1EA5y c\xE1c m\u1EABu thi\u1EBFt k\u1EBF cho site c\u1EE7a b\u1EA1n",
   "tool.working": "\u0110ang l\u1EADp k\u1EBF ho\u1EA1ch site c\u1EE7a b\u1EA1n",
@@ -2550,22 +2795,79 @@ var tracy_build_chat_default7 = {
   "ask.source.instagram": "Trang Instagram",
   "ask.source.facebook": "Trang Facebook",
   "ask.source.tiktok": "Trang TikTok",
-  "ask.source.social": "Trang m\u1EA1ng x\xE3 h\u1ED9i"
+  "ask.source.social": "Trang m\u1EA1ng x\xE3 h\u1ED9i",
+  "ask.question.place_choice": "Ch\xFAng t\xF4i t\xECm th\u1EA5y nhi\u1EC1u \u0111\u1ECBa \u0111i\u1EC3m tr\xEAn Google Maps c\xF3 c\xF9ng t\xEAn n\xE0y. \u0110\xE2u l\xE0 \u0111\u1ECBa \u0111i\u1EC3m c\u1EE7a b\u1EA1n?",
+  "ask.choice.place_choice_none": "Kh\xF4ng ph\u1EA3i \u0111\u1ECBa \u0111i\u1EC3m n\xE0o \u1EDF tr\xEAn",
+  "ask.choice.main_button_book": "\u0110\u1EB7t l\u1ECBch tr\u1EF1c tuy\u1EBFn",
+  "ask.choice.main_button_call": "G\u1ECDi cho ch\xFAng t\xF4i",
+  "ask.choice.main_button_email": "G\u1EEDi email cho ch\xFAng t\xF4i",
+  "ask.choice.main_button_message": "Nh\u1EAFn tin cho ch\xFAng t\xF4i",
+  "ask.choice.main_button_visit": "Gh\xE9 th\u0103m ch\xFAng t\xF4i",
+  "ask.choice.main_button_contact": "Li\xEAn h\u1EC7 v\u1EDBi ch\xFAng t\xF4i",
+  "ask.choice.main_button_book_short": "\u0110\u1EB7t l\u1ECBch",
+  "ask.choice.main_button_call_short": "G\u1ECDi",
+  "ask.choice.main_button_email_short": "Email",
+  "ask.choice.main_button_message_short": "Nh\u1EAFn tin",
+  "ask.choice.main_button_visit_short": "Gh\xE9 th\u0103m",
+  "ask.choice.main_button_contact_short": "Li\xEAn h\u1EC7",
+  "ask.choice.main_button_text": "Ch\u1EEF tr\xEAn n\xFAt: {text}",
+  "ask.source.listing": "Trang danh b\u1EA1",
+  "plan.source.listing": "Trang danh b\u1EA1"
 };
 
-// src/host/ask-words.mjs
+// src/chat-words.mjs
 var TABLES = { de: tracy_build_chat_default, es: tracy_build_chat_default2, fr: tracy_build_chat_default3, it: tracy_build_chat_default4, nl: tracy_build_chat_default5, zh: tracy_build_chat_default6, vi: tracy_build_chat_default7 };
-var ASK_LANGUAGES = Object.freeze(["en", ...Object.keys(TABLES)]);
-function askWordsFor(language) {
-  if (typeof language !== "string" || !ASK_LANGUAGES.includes(language)) return null;
+var CHAT_LANGUAGES = Object.freeze(["en", ...Object.keys(TABLES)]);
+function chatLanguageTagOf(tag) {
+  if (typeof tag !== "string") return null;
+  const primary = tag.trim().toLowerCase().split(/[-_]/)[0];
+  return /^[a-z]{2}$/.test(primary) ? primary : null;
+}
+function chatLanguageOf(spoken, interfaceLanguage) {
+  const said = chatLanguageTagOf(spoken);
+  if (said !== null && CHAT_LANGUAGES.includes(said)) return said;
+  return chatLanguageTagOf(interfaceLanguage);
+}
+function chatWordsIn(language, english2) {
+  if (typeof language !== "string" || !CHAT_LANGUAGES.includes(language)) return null;
   const table = TABLES[language] ?? {};
-  const english2 = ASK_STRINGS;
   return (key, vars = {}) => {
     const text2 = Object.hasOwn(table, key) ? table[key] : Object.hasOwn(english2, key) ? english2[key] : null;
     return text2 === null ? null : text2.replace(/\{(\w+)\}/g, (_, name2) => String(
       /** @type {any} */
       vars[name2] ?? ""
     ));
+  };
+}
+
+// src/host/ask-words.mjs
+function askWordsFor(language) {
+  return chatWordsIn(language, ASK_STRINGS);
+}
+
+// src/host/start-over.mjs
+var START_OVER_CONFIRM_SAY = "This discards what Tracy has gathered so far. A site already built is not affected.";
+var START_OVER_DONE_FALLBACK_SAY = "What I gathered so far is discarded. Open the build chat again to start a new conversation.";
+var START_OVER_REFUSED_FALLBACK_SAY = "I cannot start over right now. You can continue in this conversation.";
+function startOverQuestion() {
+  return {
+    confirm: true,
+    say: START_OVER_CONFIRM_SAY,
+    next: "Say the sentence in say and ask the owner whether to start over. Only when the owner clearly says yes, call tracy_build with action start-over and confirm true. Otherwise continue as before."
+  };
+}
+function startOverAnswerOf(res, ownerSay2) {
+  if (res.status >= 200 && res.status < 300)
+    return {
+      startedOver: true,
+      open: typeof res.body?.open === "string" ? res.body.open : "/new/build",
+      say: ownerSay2(res.body?.say, START_OVER_DONE_FALLBACK_SAY),
+      next: "Say the sentence in say, then stop. This conversation is closed: do not call tracy_build again here."
+    };
+  return {
+    refused: true,
+    say: ownerSay2(res.body?.say, START_OVER_REFUSED_FALLBACK_SAY),
+    next: "Say the sentence in say. Nothing was discarded; continue as before."
   };
 }
 
@@ -2589,7 +2891,7 @@ var BUILD_UNCHECKED_SAY = "I asked for your site to be built, but I could not ch
 var BUILD_CHAT_OFF_SAY = "Building a site in the chat is not available right now. You can still create your site from the Add site page.";
 var BUILD_BUSY_SAY = "I am still working on your plan, so it cannot change right now. Make your change again when I am done.";
 var PLAN_CARD_CONTROLS_GUIDANCE = "When an entry asks to change a business fact, a service name or the main colour, tell the owner they can change that value on the plan card. Never say that the language, the design, the logo, the pictures or anything else can be changed on the plan card.";
-var IN_OWNER_LANGUAGE = "in the owner's interface language (interfaceLanguage), keeping every name and value word for word";
+var IN_OWNER_LANGUAGE = "in the language the owner writes in, keeping every name and value word for word";
 var NOT_DONE_GUIDANCE = "Promise nothing beyond what the plan card and the plan offer: never offer to add it later, and never ask the owner to send you anything for it.";
 var TRY_LATER_FALLBACK_SAY = "I have done this many times in a short while, so I paused here. Please try again later.";
 var BODY_TOO_LARGE_SAY = "That was too long for me to send. Please say it in fewer words.";
@@ -2598,11 +2900,16 @@ var REQUEST_MAX_LENGTH = 1e3;
 var REQUEST_TOO_LONG_SAY = requestTooLongSay(REQUEST_MAX_LENGTH);
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? nameTooLongSay(limit) : answerTooLongSay(limit);
 var SAY_MAX = 300;
-var BUILD_DESCRIPTION = `tracy_build: the build chat engine. action research {links?, description?, name?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Say every sentence a result gives in the language of the owner's interface, which each result names in interfaceLanguage; only when a result names none, in the language the owner writes in. Never say the site is built until a build result says built.`;
+var ACTIONS = ["research", "templates", "plan", "edit", "build", "status", "start-over"];
+var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?, name?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Every call names in language the language the owner writes in, as a two letter code; say every sentence a result gives in that language. Never say the site is built until a build result says built. start-over ONLY when the owner clearly asks to start the whole build over with a new conversation (not only the plan): first without confirm, then with confirm true once the owner agreed.';
 var BUILD_PARAMETERS = Object.freeze({
   type: "object",
   properties: {
-    action: { type: "string", enum: ["research", "templates", "plan", "edit", "build", "status"] },
+    action: { type: "string", enum: ACTIONS },
+    language: {
+      type: "string",
+      description: "The language the owner writes in, as a two letter code such as en, vi or fr. The cards and questions of the build chat use it."
+    },
     links: {
       type: "array",
       items: { type: "string" },
@@ -2621,6 +2928,10 @@ var BUILD_PARAMETERS = Object.freeze({
       type: "boolean",
       description: "For plan: true ONLY when the owner clearly asks to start the plan over. It throws away the current plan and every change made to it. Never set it for a change request."
     },
+    confirm: {
+      type: "boolean",
+      description: "For start-over: true ONLY after the owner clearly agreed to discard everything gathered so far."
+    },
     changes: {
       type: "array",
       items: {
@@ -2630,7 +2941,7 @@ var BUILD_PARAMETERS = Object.freeze({
       description: "For edit: the plan fields to change and their new values."
     }
   },
-  required: ["action"]
+  required: ["action", "language"]
 });
 var DOOR = "/api/build-draft";
 var BUILDING = /* @__PURE__ */ new Set(["creating", "building"]);
@@ -2682,6 +2993,10 @@ var tooLargeOf = (say = BODY_TOO_LARGE_SAY) => ({
 var isSwitchedOff = (res) => res?.status === 403 && res.body?.code === "BUILD_CHAT_OFF";
 var isPollFault = (res) => res === null || res.status >= 500;
 var RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with exactly the arguments in again, never with action status; a result of that call says stopped again only if it failed again.`;
+var LINK_GAP_NEXT = "links says what was read from each link the owner gave. In one short sentence, in the language of the owner's interface, tell the owner which link could not be read or gave nothing, by its name, before anything else. Never say a code.";
+var linkGapOf = (links) => Array.isArray(links) && links.some(
+  (l) => l?.state === "failed" || l?.state === "read" && (!l.facts && !l.pictures || !l.pictures && l.picturesLost > 0)
+);
 var ACTION_OF_STEP = Object.freeze({ research: "research", brand: "plan", compose: "plan", revise: "plan" });
 function startArgsOf(args) {
   if (args?.action === "research") {
@@ -2811,9 +3126,20 @@ function createBuildTool({
 }) {
   const issued = /* @__PURE__ */ new Map();
   const languages = /* @__PURE__ */ new Map();
+  const spoken = /* @__PURE__ */ new Map();
+  const chatLanguageFor = (sessionId) => chatLanguageOf(
+    spoken.get(
+      /** @type {string} */
+      sessionId
+    ),
+    languages.get(
+      /** @type {string} */
+      sessionId
+    )
+  );
   const sentLabels = /* @__PURE__ */ new Map();
   function localAsk(sessionId, ask, questions) {
-    const language = languages.get(sessionId);
+    const language = chatLanguageFor(sessionId);
     const words = wordsFor(language);
     const said = words && language ? localizedAskOf(ask, questions, words, language) : ask;
     let sent = sentLabels.get(sessionId);
@@ -2922,6 +3248,7 @@ ${JSON.stringify(answer)}`;
     }
     return { again: [...latest.values()].find(Boolean) ?? null };
   }
+  const linksOf = (links) => Array.isArray(links) && links.length ? { links } : {};
   const askAgain = (ask, say) => ({
     ask,
     ...say ? { say } : {},
@@ -2972,17 +3299,22 @@ ${JSON.stringify(answer)}`;
     if (state?.state === "asking") {
       learn(sessionId, result);
       if (!result.ask) return stopped();
-      return askAgain(
-        localAsk(sessionId, result.ask, result.questions),
-        typeof state.say === "string" ? ownerSay(state.say) : void 0
-      );
+      return {
+        ...askAgain(
+          localAsk(sessionId, result.ask, result.questions),
+          typeof state.say === "string" ? ownerSay(state.say) : void 0
+        ),
+        ...linksOf(result.links)
+      };
     }
     if (state?.step === "research") {
       learn(sessionId, result);
       if (!result.profile) return stopped();
       return {
         profile: result.profile,
-        ...result.ask ? { ask: localAsk(sessionId, result.ask, result.questions) } : {}
+        ...result.ask ? { ask: localAsk(sessionId, result.ask, result.questions) } : {},
+        ...linksOf(result.links),
+        ...linkGapOf(result.links) ? { next: LINK_GAP_NEXT } : {}
       };
     }
     if (state?.step === "revise") {
@@ -3037,6 +3369,7 @@ ${JSON.stringify(answer)}`;
       if (now() - start >= waitMs)
         return {
           running: true,
+          ...linksOf(state.links),
           say: BUILD_RUNNING_SAY,
           next: "Say the sentence in say, then call tracy_build with action status to keep waiting."
         };
@@ -3178,24 +3511,27 @@ ${JSON.stringify(answer)}`;
       result = stopped();
     }
     const marked = typeof result?.next === "string" ? { ...result, next: privately(result.next) } : result;
-    const language = languages.get(
+    const language = chatLanguageFor(
       /** @type {any} */
       exec?.agent?.session?.id
     );
-    return language && marked && typeof marked === "object" ? { ...marked, interfaceLanguage: language } : marked;
+    return language && marked && typeof marked === "object" ? { ...marked, chatLanguage: language } : marked;
   }
   async function run(rawArgs, exec) {
     let args = argsOf(rawArgs);
     const sessionId = exec?.agent?.session?.id;
     if (!isBuildChatSession(sessionId))
       return { refused: true, next: "tracy_build works only in the build chat. Do not call it here." };
+    const said = chatLanguageTagOf(args.language);
+    if (said !== null) spoken.set(sessionId, said);
     if (args.action === "status") args = pendingRetryOf(eventsOf(sessionId)) ?? args;
     const action = args.action;
-    if (!["research", "templates", "plan", "edit", "build", "status"].includes(action))
+    if (!ACTIONS.includes(action))
       return {
         refused: true,
-        next: "Call tracy_build with action research, templates, plan, edit, build or status."
+        next: "Call tracy_build with action research, templates, plan, edit, build, status or start-over."
       };
+    if (action === "start-over" && args.confirm !== true) return startOverQuestion();
     let request;
     if (action === "research") {
       const links = (Array.isArray(args.links) ? args.links : []).map(text).filter((l) => l !== "").slice(0, LINKS_MAX);
@@ -3237,6 +3573,7 @@ ${JSON.stringify(answer)}`;
       ];
     } else if (action === "templates") request = ["GET", "/templates"];
     else if (action === "build") request = ["POST", "/build"];
+    else if (action === "start-over") request = ["POST", "/start-over", { confirm: true }];
     else request = ["GET", "/engine"];
     if (origin() === null) return stopped();
     const assertion = actorFor(sessionId);
@@ -3255,6 +3592,7 @@ ${JSON.stringify(answer)}`;
     if (action === "build") return build(sessionId, assertion);
     const res = await door(sessionId, assertion, request[0], request[1], request[2]);
     if (res === null) return stopped();
+    if (action === "start-over") return startOverAnswerOf(res, ownerSay);
     if (res.status < 200 || res.status >= 300) return refusal(res);
     if (action === "templates") {
       const { options, none } = templateChoiceOf(res.body?.templates);

@@ -641,5 +641,18 @@ export const en = Object.freeze({
   'tpl.footer.privacy': 'Privacy',
   'tpl.footer.terms': 'Terms of Use',
   'tpl.footer.copyright': '© {year} Tracy',
-  'tpl.footer.language': 'Language'
+  'tpl.footer.language': 'Language',
+  'startOver.title': 'Start over',
+  'startOver.confirm': 'This discards what Tracy has gathered so far. A site already built is not affected.',
+  'startOver.keep': 'Keep my conversation',
+  'startOver.back': 'Back to the conversation',
+  'startOver.done':
+    'What I gathered so far is discarded. Open the build chat again to start a new conversation.',
+  'startOver.SITE_BUILT':
+    'A site was already built from this conversation, so it cannot start over. Building a second site is not available yet.',
+  'startOver.BUILD_RUNNING':
+    'Your site is being built now, so this conversation cannot start over until the build ends.',
+  'startOver.ENGINE_BUSY':
+    'I am still working on your request, so I cannot start over right now. Please ask again when I am done.',
+  'startOver.NO_DRAFT': 'There is nothing to discard yet. You can continue in this conversation.'
 })

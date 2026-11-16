@@ -294,5 +294,19 @@
   "ask.choice.main_button_contact_short": "Contact",
   "ask.choice.main_button_text": "Texte du bouton : {text}",
   "ask.source.listing": "Fiche d’annuaire",
-  "plan.source.listing": "Fiche d’annuaire"
+  "plan.source.listing": "Fiche d’annuaire",
+  "links.reading": "{name} : lecture en cours",
+  "links.choice": "{name} : votre choix est nécessaire",
+  "links.failed": "{name} : lecture impossible",
+  "links.failedWhy": "{name} : lecture impossible ({reason})",
+  "links.read": "{name} : lu",
+  "links.readNothing": "{name} : lu, mais aucune information sur l’entreprise n’a été trouvée",
+  "links.readPicturesLost": "{name} : lu, mais ses images n’ont pas pu être téléchargées",
+  "links.readPicturesNotKept": "{name} : lu, mais ses images n’ont pas pu être conservées",
+  "links.facts.one": "{count} information",
+  "links.facts.other": "{count} informations",
+  "links.pictures.one": "{count} image",
+  "links.pictures.other": "{count} images",
+  "links.pictures.none": "Aucune image",
+  "links.pictures.someLost": "{count} autres n’ont pas pu être téléchargées"
 }

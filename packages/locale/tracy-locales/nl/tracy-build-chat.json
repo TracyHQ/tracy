@@ -294,5 +294,19 @@
   "ask.choice.main_button_contact_short": "Contact",
   "ask.choice.main_button_text": "Tekst op de knop: {text}",
   "ask.source.listing": "Vermelding in een bedrijvengids",
-  "plan.source.listing": "Vermelding in een bedrijvengids"
+  "plan.source.listing": "Vermelding in een bedrijvengids",
+  "links.reading": "{name}: wordt gelezen",
+  "links.choice": "{name}: uw keuze is nodig",
+  "links.failed": "{name}: kon niet worden gelezen",
+  "links.failedWhy": "{name}: kon niet worden gelezen ({reason})",
+  "links.read": "{name}: gelezen",
+  "links.readNothing": "{name}: gelezen, maar er is niets over het bedrijf gevonden",
+  "links.readPicturesLost": "{name}: gelezen, maar de afbeeldingen konden niet worden gedownload",
+  "links.readPicturesNotKept": "{name}: gelezen, maar de afbeeldingen konden niet worden bewaard",
+  "links.facts.one": "{count} gegeven",
+  "links.facts.other": "{count} gegevens",
+  "links.pictures.one": "{count} afbeelding",
+  "links.pictures.other": "{count} afbeeldingen",
+  "links.pictures.none": "Geen afbeeldingen",
+  "links.pictures.someLost": "{count} andere konden niet worden gedownload"
 }

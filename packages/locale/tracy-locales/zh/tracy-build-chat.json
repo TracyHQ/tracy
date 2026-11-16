@@ -294,5 +294,19 @@
   "ask.choice.main_button_contact_short": "联系",
   "ask.choice.main_button_text": "按钮上的文字：{text}",
   "ask.source.listing": "商家目录页面",
-  "plan.source.listing": "商家目录页面"
+  "plan.source.listing": "商家目录页面",
+  "links.reading": "{name}：正在读取",
+  "links.choice": "{name}：需要您选择",
+  "links.failed": "{name}：无法读取",
+  "links.failedWhy": "{name}：无法读取（{reason}）",
+  "links.read": "{name}：已读取",
+  "links.readNothing": "{name}：已读取，但未找到关于该商家的信息",
+  "links.readPicturesLost": "{name}：已读取，但其图片无法下载",
+  "links.readPicturesNotKept": "{name}：已读取，但其图片无法保存",
+  "links.facts.one": "{count} 条信息",
+  "links.facts.other": "{count} 条信息",
+  "links.pictures.one": "{count} 张图片",
+  "links.pictures.other": "{count} 张图片",
+  "links.pictures.none": "没有图片",
+  "links.pictures.someLost": "另有 {count} 张无法下载"
 }

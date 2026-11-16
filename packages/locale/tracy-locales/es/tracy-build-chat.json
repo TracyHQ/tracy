@@ -294,5 +294,19 @@
   "ask.choice.main_button_contact_short": "Contacto",
   "ask.choice.main_button_text": "Texto del botón: {text}",
   "ask.source.listing": "Ficha de directorio",
-  "plan.source.listing": "Ficha de directorio"
+  "plan.source.listing": "Ficha de directorio",
+  "links.reading": "{name}: leyendo",
+  "links.choice": "{name}: necesita su elección",
+  "links.failed": "{name}: no se pudo leer",
+  "links.failedWhy": "{name}: no se pudo leer ({reason})",
+  "links.read": "{name}: leído",
+  "links.readNothing": "{name}: leído, pero no se encontró información sobre el negocio",
+  "links.readPicturesLost": "{name}: leído, pero no se pudieron descargar sus imágenes",
+  "links.readPicturesNotKept": "{name}: leído, pero no se pudieron guardar sus imágenes",
+  "links.facts.one": "{count} dato",
+  "links.facts.other": "{count} datos",
+  "links.pictures.one": "{count} imagen",
+  "links.pictures.other": "{count} imágenes",
+  "links.pictures.none": "Sin imágenes",
+  "links.pictures.someLost": "{count} más no se pudieron descargar"
 }

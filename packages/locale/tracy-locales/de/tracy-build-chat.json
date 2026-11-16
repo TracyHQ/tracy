@@ -294,5 +294,19 @@
   "ask.choice.main_button_contact_short": "Kontakt",
   "ask.choice.main_button_text": "Text auf der Schaltfläche: {text}",
   "ask.source.listing": "Eintrag in einem Branchenverzeichnis",
-  "plan.source.listing": "Eintrag in einem Branchenverzeichnis"
+  "plan.source.listing": "Eintrag in einem Branchenverzeichnis",
+  "links.reading": "{name}: wird gelesen",
+  "links.choice": "{name}: Ihre Auswahl ist nötig",
+  "links.failed": "{name}: konnte nicht gelesen werden",
+  "links.failedWhy": "{name}: konnte nicht gelesen werden ({reason})",
+  "links.read": "{name}: gelesen",
+  "links.readNothing": "{name}: gelesen, aber keine Angaben zum Unternehmen gefunden",
+  "links.readPicturesLost": "{name}: gelesen, aber die Bilder konnten nicht heruntergeladen werden",
+  "links.readPicturesNotKept": "{name}: gelesen, aber die Bilder konnten nicht gespeichert werden",
+  "links.facts.one": "{count} Angabe",
+  "links.facts.other": "{count} Angaben",
+  "links.pictures.one": "{count} Bild",
+  "links.pictures.other": "{count} Bilder",
+  "links.pictures.none": "Keine Bilder",
+  "links.pictures.someLost": "{count} weitere konnten nicht heruntergeladen werden"
 }

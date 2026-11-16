@@ -16,18 +16,20 @@
  * rows go with it by cascade, and their stored objects are deleted before the answer. The old conversation stays in
  * dsh; its tool calls are refused from then on (`caller.js`: its session is no longer the account's build session).
  */
+import { en } from '../lib/i18n/strings.js'
 import { principalOf } from '../lib/wo-principal.js'
 
-/** What the owner reads about a start over. Plain English, no dashes. */
+/**
+ * What the owner reads about a start over, in English: the `startOver.*` words of tracy-web's pages
+ * (`lib/i18n/strings.js`), translated there for the confirm page. Plain English, no dashes.
+ */
 export const START_OVER_SAY = Object.freeze({
-  confirm: 'This discards what Tracy has gathered so far. A site already built is not affected.',
-  done: 'What I gathered so far is discarded. Open the build chat again to start a new conversation.',
-  SITE_BUILT:
-    'A site was already built from this conversation, so it cannot start over. Building a second site is not available yet.',
-  BUILD_RUNNING: 'Your site is being built now, so this conversation cannot start over until the build ends.',
-  ENGINE_BUSY:
-    'I am still working on your request, so I cannot start over right now. Please ask again when I am done.',
-  NO_DRAFT: 'There is nothing to discard yet. You can continue in this conversation.'
+  confirm: en['startOver.confirm'],
+  done: en['startOver.done'],
+  SITE_BUILT: en['startOver.SITE_BUILT'],
+  BUILD_RUNNING: en['startOver.BUILD_RUNNING'],
+  ENGINE_BUSY: en['startOver.ENGINE_BUSY'],
+  NO_DRAFT: en['startOver.NO_DRAFT']
 })
 
 /**

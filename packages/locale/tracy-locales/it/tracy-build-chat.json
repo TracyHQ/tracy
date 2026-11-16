@@ -294,5 +294,19 @@
   "ask.choice.main_button_contact_short": "Contatto",
   "ask.choice.main_button_text": "Testo del pulsante: {text}",
   "ask.source.listing": "Scheda di una directory",
-  "plan.source.listing": "Scheda di una directory"
+  "plan.source.listing": "Scheda di una directory",
+  "links.reading": "{name}: lettura in corso",
+  "links.choice": "{name}: serve la sua scelta",
+  "links.failed": "{name}: non è stato possibile leggerlo",
+  "links.failedWhy": "{name}: non è stato possibile leggerlo ({reason})",
+  "links.read": "{name}: letto",
+  "links.readNothing": "{name}: letto, ma non sono state trovate informazioni sull’attività",
+  "links.readPicturesLost": "{name}: letto, ma non è stato possibile scaricare le immagini",
+  "links.readPicturesNotKept": "{name}: letto, ma non è stato possibile conservare le immagini",
+  "links.facts.one": "{count} informazione",
+  "links.facts.other": "{count} informazioni",
+  "links.pictures.one": "{count} immagine",
+  "links.pictures.other": "{count} immagini",
+  "links.pictures.none": "Nessuna immagine",
+  "links.pictures.someLost": "Non è stato possibile scaricarne altre {count}"
 }
