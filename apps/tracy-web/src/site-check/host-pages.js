@@ -7,7 +7,7 @@ import { forHost } from './demo-baseline.js'
 import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf } from '../lib/page-chunks.js'
 import { pagePath } from '../lib/hidden-page-links.js'
 import { keptPaths } from '../lib/site-kept-paths.js'
-import { siteSocialLinksOf, siteWhatsAppOf } from '../opportunities-build/brand-on-site.js'
+import { siteSocialLinksOf, siteWhatsAppOf } from '../lib/brief-links.js'
 
 export const WIDTHS = [1440, 390]
 const IMAGE = /\.(?:jpe?g|png|webp|gif|svg|avif)(?:#|\?|$)/i
