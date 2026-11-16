@@ -157,16 +157,19 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
       reason:
         "a tab that opens a panel of this page has no slot and no address: it stays, doing what it does, and its words are its label slot's"
     }
+  // Not emptied, on purpose: no kept page prints it. `printed: false` tells the read-back not to ask for an empty slot.
   if (via === 'unshown' && order.unseen)
     return {
       status: 'hidden',
       key,
+      printed: false,
       reason: `${PLAN_HIDES}: the kit read it on no page at any width, so no kept page shows it`
     }
   if (via === 'unshown')
     return {
       status: 'hidden',
       key,
+      printed: false,
       reason: `${PLAN_HIDES}: it prints only on ${[
         ...(order.list ? [`the dropped block ${order.list}`] : []),
         `pages the plan drops (${order.pages.join(', ')})`

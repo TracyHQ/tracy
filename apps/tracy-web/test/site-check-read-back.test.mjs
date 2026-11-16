@@ -292,6 +292,25 @@ test('a hidden line is green when the slot is empty and red while it still holds
   assert.equal(failuresOf(red)[0].measured, 'Demo words')
 })
 
+test('a hidden line no kept page prints keeps its words and is green (unshown, not emptied on purpose)', async () => {
+  // Dev, JA Diner 16/11/2026: category titles printed only on dropped blog pages, hidden as "unshown" (hide-lines.js), were
+  // four read-back blocks for words no visitor reads.
+  const unshown = {
+    ...written('category-2.0', 'category-2.0'),
+    status: 'hidden',
+    printed: false,
+    ordered: undefined,
+    reason:
+      'the plan hides this slot: it prints only on pages the plan drops (/our-blog/2-restaurant-business)'
+  }
+  const result = await check(checkSite({ 'category-2.0': 'Restaurant Business' }), report([unshown]))
+  assert.equal(result.status, 'green', JSON.stringify(failuresOf(result)))
+  // The same words on a hide the page prints still fail.
+  const shown = { ...unshown, printed: undefined }
+  const red = await check(checkSite({ 'category-2.0': 'Restaurant Business' }), report([shown]))
+  assert.match(failuresOf(red)[0].reason, /still holds words/)
+})
+
 test('a hidden line gone with its block is read on the block: green unpublished, red while still published', async () => {
   const hidden = {
     ...written('block-4.1', 'module-4.1'),
