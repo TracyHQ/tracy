@@ -8,8 +8,13 @@ import { readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { BUILD_GUARD_CODES, RUN_STATE_CODES, SITE_CODES } from '../ai-quickstart/gate/build-guards.mjs'
-import { stopClassOf } from '../ai-quickstart/gate/write-safety-judge.mjs'
+import {
+  BUILD_GUARD_CODES,
+  PLANNER_GUARD_CODES,
+  RUN_STATE_CODES,
+  SITE_CODES
+} from '../ai-quickstart/gate/build-guards.mjs'
+import { buildRefusalOf, stopClassOf } from '../ai-quickstart/gate/write-safety-judge.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const DOMAIN = 'packages/wo/website-opportunities/domain'
@@ -38,6 +43,43 @@ function codesOf(text, { lists = false } = {}) {
   return out
 }
 
+/**
+ * The files of the build's planner (review 7 D1): the plan composer the marker build calls and every domain file it
+ * imports, read by the import graph so a new planner file is read too.
+ */
+function plannerFiles() {
+  const seen = new Set()
+  const queue = ['plan-composer.mjs']
+  while (queue.length) {
+    const name = queue.pop()
+    if (seen.has(name)) continue
+    seen.add(name)
+    const text = readFileSync(path.join(ROOT, DOMAIN, name), 'utf8')
+    for (const m of text.matchAll(/from '\.\/([a-z0-9-]+\.mjs)'/g)) queue.push(m[1])
+  }
+  return [...seen].sort()
+}
+
+/**
+ * The codes the planner throws: the first argument of every `new PlanComposerError(` (a literal, or each literal of a
+ * conditional), and of a file's own `fail(` that wraps it.
+ */
+function plannerCodesOf(text) {
+  const out = new Set()
+  const heads = [...text.matchAll(/new PlanComposerError\(([^,]*),/g)].map((m) => m[1])
+  if (/const fail = \(code[^\n]*\n\s*throw new PlanComposerError\(code/.test(text))
+    heads.push(...[...text.matchAll(/\bfail\(\s*('[a-z_]+')/g)].map((m) => m[1]))
+  for (const head of heads) for (const c of head.matchAll(/'([a-z_]+)'/g)) out.add(c[1])
+  return out
+}
+
+function plannerCodes() {
+  const codes = new Set()
+  for (const name of plannerFiles())
+    for (const c of plannerCodesOf(readFileSync(path.join(ROOT, DOMAIN, name), 'utf8'))) codes.add(c)
+  return codes
+}
+
 /** Every code the write step can stop with, from both places it is thrown. */
 function thrownCodes() {
   const codes = new Set()
@@ -50,13 +92,19 @@ function thrownCodes() {
       codes.add(c)
   for (const name of readdirSync(path.join(ROOT, APP)).filter((n) => /^step-chain-draft-.*\.js$/.test(n)))
     for (const c of codesOf(readFileSync(path.join(ROOT, APP, name), 'utf8'))) codes.add(c)
+  for (const c of plannerCodes()) codes.add(c)
   return codes
 }
 
 test('T2: every code the write step throws, in the domain and in the app, is decided on exactly one list', () => {
   const thrown = thrownCodes()
   assert.ok(thrown.size > 40, 'the scan found the codes: ' + thrown.size)
-  const decided = [...BUILD_GUARD_CODES, ...Object.keys(SITE_CODES), ...Object.keys(RUN_STATE_CODES)]
+  const decided = [
+    ...BUILD_GUARD_CODES,
+    ...PLANNER_GUARD_CODES,
+    ...Object.keys(SITE_CODES),
+    ...Object.keys(RUN_STATE_CODES)
+  ]
   assert.equal(new Set(decided).size, decided.length, 'a code is on two lists')
   const undecided = [...thrown].filter((c) => !decided.includes(c)).sort()
   assert.deepEqual(undecided, [], 'decide each new code: a build guard, a site code or a run state code')
@@ -84,4 +132,33 @@ test('T2: a run state stop is never the build own, and an unknown code is a fail
   assert.equal(of('sheets_unreadable'), 'server_error')
   assert.equal(of('a_code_nobody_named'), 'server_error')
   assert.ok(!BUILD_GUARD_CODES.includes('write_record_stale'))
+})
+
+test('D1: the planner codes are read from the planner files and decided, plan_gate_failed among them', () => {
+  const planner = plannerCodes()
+  assert.ok(planner.has('plan_gate_failed'), 'read where the plan composer throws it')
+  assert.ok(planner.has('site_name_missing') && planner.has('language_invalid'))
+  assert.deepEqual([...planner].filter((c) => !PLANNER_GUARD_CODES.includes(c)).sort(), [])
+})
+
+test('D1: plan_gate_failed is a build refusal only when the planner refused facts the probe left blank', () => {
+  const thrown = (problems) =>
+    buildRefusalOf(
+      {
+        error: Object.assign(new Error('the plan failed the gate'), {
+          code: 'plan_gate_failed',
+          details: { problems }
+        })
+      },
+      new Set()
+    ).kind
+  const blank = {
+    code: 'invented_item',
+    at: 'pages[0].blocks[2].data[1]',
+    message: '"studio-name" is not a fact'
+  }
+  assert.equal(thrown([blank, blank]), 'refused_by_build')
+  // Another rule of the plan gate, or a reply the planner could not read, is not decided as a value refusal.
+  assert.equal(thrown([blank, { code: 'reply_unreadable', at: '' }]), 'unclassified')
+  assert.equal(thrown([]), 'unclassified')
 })

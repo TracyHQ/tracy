@@ -9,7 +9,7 @@
 // The codes are decided by hand, one list each (`build-guards.mjs`); a code a site write stops with that is on none of
 // them is a failure of the site (`server_error`). Pure.
 import { parseHTML } from 'linkedom'
-import { BUILD_GUARDS, RUN_STATE_CODES } from './build-guards.mjs'
+import { BUILD_GUARDS, guardRefused, RUN_STATE_CODES } from './build-guards.mjs'
 import { codesIn } from './marker-codec.mjs'
 
 /** The kinds that fail write safety. */
@@ -101,9 +101,10 @@ export const gapKey = (gap) => gap.code + '|' + gap.record
 export function buildRefusalOf({ built, error }, plainGaps) {
   if (error) {
     const code = error.code == null ? 'no_code' : String(error.code)
+    // `plan_gate_failed` is a build refusal only when the planner refused blank facts (`guardRefused`, review 7 D1).
     const kind = RUN_STATE.has(code)
       ? 'run_state'
-      : BUILD_GUARD_CODES.has(code)
+      : guardRefused(code, error.details)
         ? 'refused_by_build'
         : 'unclassified'
     return { kind, code, cause: null, op: null, details: error.details ?? null }
