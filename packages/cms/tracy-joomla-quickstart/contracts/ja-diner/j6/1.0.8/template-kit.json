@@ -57192,7 +57192,21 @@
       "emptyVideoButtons": "No play button is printed. html/mod_jamasthead/default.php prints a background video element only when the masthead background param ends in .mp4, .ogg or .webm, with no button; no acm layout (container-tabs, features-intro, happyhours, menu, slideshow, teams) prints a video player, a play link or a data-src address",
       "createdPageHide": "html/com_content/article/default.php prints the title, the info block, the icons, the images, the tags, the links and the pagination, each behind its article or menu item setting (show_*); it prints no share bar, related list or other block hard coded, and the system plugins of the release add none to an article"
     },
-    "settingSlots": []
+    "settingSlots": [],
+    "stockScreens": [
+      {
+        "path": "/home/*",
+        "why": "colour variants of the home page (red, pink, green, blue): a showcase of the template, the same layout in another colour; the customer site has one home page"
+      },
+      {
+        "path": "/password-reset",
+        "why": "the account system screen to reset a password: no customer content fills it"
+      },
+      {
+        "path": "/username-reminder-request",
+        "why": "the account system screen to remind a username: no customer content fills it"
+      }
+    ]
   },
   "storedFields": [
     {

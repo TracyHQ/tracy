@@ -20,7 +20,10 @@ const images = { open: (id) => (opened.push(id), `IMAGE ${id}`) }
 const openImage = (doc) => kitTools(doc, { images }).find((t) => t.name === KIT_TOOL_NAMES.openImage)
 
 test('a kit that declares no stock screens opens every picture as before', () => {
+  // The committed JA Diner kit declares its own (REG-PR-656); this case is about a kit with none.
   const doc = kit()
+  doc.site = { ...doc.site }
+  delete doc.site.stockScreens
   assert.equal(stockScreenImages(doc).size, 0)
   assert.equal(openImage(doc).run({ id: 'page-j-pages_login-1440' }), 'IMAGE page-j-pages_login-1440')
 })
