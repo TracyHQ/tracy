@@ -4,13 +4,24 @@
 // is the one that makes the record: it runs the gate itself (`runGate`, required: it answers the record it wrote), it
 // must name the archive it is about to publish (`blankSiteSha`), the record in the kit folder must be the very record
 // that run wrote (its sha256), the record must hold the plan the kit's own marker build gives (`release-plan.mjs`),
-// and the guard must find nothing (`releaseProblems`). On any refusal `publish` is never called. Pure but for the
-// injected parts.
+// and the guard must find nothing (`releaseProblems`). The folder is hashed, every file and the check record, once the
+// gate has written into it and again right before publishing: a file changed while the checks ran is never published
+// (review 7 S8). On any refusal `publish` is never called. Pure but for the injected parts.
 import { bindingOf, RECORD_FILE, releaseProblems } from './release-binding.mjs'
 import { planOfFolder, planProblems } from './release-plan.mjs'
 import { createHash } from 'node:crypto'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
+
+/** One sha256 over every file of a folder, by its path relative to it: what is about to be published. */
+export function folderSha256(folder) {
+  const hash = createHash('sha256')
+  for (const rel of readdirSync(folder, { recursive: true }).map(String).sort()) {
+    const file = path.join(folder, rel)
+    if (statSync(file).isFile()) hash.update(rel.split(path.sep).join('/') + '\0').update(readFileSync(file))
+  }
+  return hash.digest('hex')
+}
 
 /**
  * @param {{folder: string, pins: object, blankSiteSha?: string | null, publish: (folder: string) => Promise<void>,
@@ -50,6 +61,7 @@ export async function publishVerified({
   const inFolder = existsSync(file) ? createHash('sha256').update(readFileSync(file)).digest('hex') : null
   if (inFolder !== bindingOf(ran.record).recordSha256)
     return one('record_not_this_run', 'the record in the kit folder is not the one this gate run wrote')
+  const checked = folderSha256(folder)
   const problems = releaseProblems(folder, { pins, blankSiteSha })
   try {
     problems.push(...planProblems(ran.record, await plan(folder)))
@@ -60,6 +72,11 @@ export async function publishVerified({
     })
   }
   if (problems.length) return refused(problems)
+  if (folderSha256(folder) !== checked)
+    return one(
+      'kit_changed_during_publish',
+      'a file of the kit folder changed while it was checked: nothing published'
+    )
   await publish(folder)
   return { published: true, problems: [] }
 }

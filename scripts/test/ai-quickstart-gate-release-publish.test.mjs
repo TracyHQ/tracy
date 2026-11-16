@@ -139,3 +139,31 @@ test('R1: the release step runs the gate itself first, and publishes only what i
   assert.deepEqual(broken.calls, [])
   rmSync(k.root, { recursive: true, force: true })
 })
+
+// Review 7 S8: the folder is hashed before the checks and again right before publishing; a file changed while the
+// plan was rebuilt (after the guard read the folder) is never published.
+test('S8: a kit file changed during the checks is not published', async () => {
+  const k = await kit()
+  const p = publisher()
+  const result = await publishVerified({
+    folder: k.folder,
+    pins: PINS,
+    blankSiteSha: BLANK,
+    runGate: k.runGate,
+    plan: async (folder) => {
+      writeFileSync(
+        path.join(folder, 'mapping.json'),
+        '{"template":{"slug":"example-petal"},"swapped":true}\n'
+      )
+      return k.plan()
+    },
+    publish: p.publish
+  })
+  assert.equal(result.published, false)
+  assert.deepEqual(
+    result.problems.map((x) => x.code),
+    ['kit_changed_during_publish']
+  )
+  assert.deepEqual(p.calls, [])
+  rmSync(k.root, { recursive: true, force: true })
+})
