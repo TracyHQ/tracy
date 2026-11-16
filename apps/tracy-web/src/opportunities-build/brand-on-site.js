@@ -131,6 +131,27 @@ export function siteWhatsAppOf(brief) {
   return { number, href: whatsappLinkOf(number), verified }
 }
 
+/** The networks `brief.business.socials` keeps a profile of (`public-demo-profile.js`). */
+const SOCIAL_NETWORKS = ['facebook', 'instagram', 'tiktok', 'youtube', 'x']
+
+/**
+ * The business's own social profile addresses the brief gives (`brief.business.socials`, network -> URL), https or http
+ * only, each once. The site's demo may send a visitor there from a button (tracy-host `cta-real`, ADR 0037 amended
+ * 16/11/2026), as it may to the brief's WhatsApp.
+ * @param {any} brief
+ * @returns {string[]}
+ */
+export function siteSocialLinksOf(brief) {
+  const socials = brief?.business?.socials
+  if (!socials || typeof socials !== 'object') return []
+  const out = []
+  for (const network of SOCIAL_NETWORKS) {
+    const href = typeof socials[network] === 'string' ? socials[network].trim() : ''
+    if (/^https?:\/\/[^\s]+$/i.test(href) && href.length <= 300 && !out.includes(href)) out.push(href)
+  }
+  return out
+}
+
 /**
  * The areas the business serves, in its own words, each once (`brief.business.serviceAreas`: `[{text, quote, source}]`).
  * @param {any} brief

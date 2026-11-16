@@ -7,12 +7,29 @@ import { forHost } from './demo-baseline.js'
 import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf } from '../lib/page-chunks.js'
 import { pagePath } from '../lib/hidden-page-links.js'
 import { keptPaths } from '../lib/site-kept-paths.js'
+import { siteSocialLinksOf, siteWhatsAppOf } from '../opportunities-build/brand-on-site.js'
 
 export const WIDTHS = [1440, 390]
 const IMAGE = /\.(?:jpe?g|png|webp|gif|svg|avif)(?:#|\?|$)/i
 
 /** An address or a piece of markup a run wrote: the slug of a kept demo route in one must not read as the customer's word. */
 const NOT_WORDS = /^(?:\/|#|<|index\.php|[a-z][a-z0-9+.-]*:)/i
+
+/**
+ * The off-site addresses a button of the site may lead to, from the brief it was built from: its WhatsApp and the
+ * business's own social profiles (tracy-host `cta-real`, ADR 0037 amended 26/10 and 16/11/2026). The demo QA of a
+ * finished build sends the same (`opportunities-build/demo-qa.js`); without them the brief's WhatsApp button failed this
+ * check on every build that placed one (dev, 16/11/2026: "ORDER ON WHATSAPP" and the contact page's network buttons of
+ * a JA Diner site). No brief, none.
+ * @param {any} brief
+ */
+export function briefLinks(brief) {
+  if (!brief) return {}
+  return {
+    whatsappLinks: [siteWhatsAppOf(brief)?.href].filter(Boolean),
+    socialLinks: siteSocialLinksOf(brief)
+  }
+}
 
 /** What the write step wrote, as the host judges it: its words are the brief's, its picture files are Tracy's own. */
 export function writtenWords(report) {
@@ -67,6 +84,7 @@ async function readPages(context) {
       briefProse: words.briefProse,
       briefText: words.briefProse,
       placed: words.placed,
+      ...briefLinks(context.brief),
       ...(context.baseline ? { baseline: forHost(context.baseline) } : {})
     })
     if (!Array.isArray(body?.checks))
