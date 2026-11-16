@@ -34,7 +34,7 @@
 //   agentRequest({ row, ready, history })  { firstUser, tools, writeStep?, resolveImage? } for runAgent
 //   nextTurn({ row, ready, answers }), mergeTurns(answers)  optional: round 0 written in turns, each a request of its
 //                                 own (bench-run-round.js); nextTurn gives the next turn's user message or null
-//   parts({ row, ready }), mergeParts(values)  optional: round 0 written in parts at the same time, each a conversation
+//   parts({ row, ready }), mergeParts(values, { row, ready })  optional: round 0 written in parts at the same time, each a conversation
 //                                 of its own (bench-run-parts.js); parts gives [{ about, firstUser }], or null when the
 //                                 run writes round 0 as one conversation or in turns
 //   release(row)                  optional: called once a claimed run's play ends, however it ends, so a step that

@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-645-plan-parallel-parts",
+  "kind": "feat",
+  "title": "A planner run may plan round 0 in parts at the same time, split by page groups and merged into one plan",
+  "pr": 645,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Page groups are cut in kit order into balanced parts, the same way every time.",
+    "Each part starts from the run's first message and names its groups; part 1 alone plans site, mainMenu and sharedBlocks.",
+    "The merge keeps part 1's whole-site fields, each part's own groups and pages in kit order, and drops menu entries for pages no part kept."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-planner-plan-parts.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "page groups are cut in kit order into parts of about the same size, the same way every time",
+      "each part starts from the run first message and is told its groups; only the first part plans the whole site",
+      "the merged plan takes the whole site from part 1, each part its own groups and pages in kit order"
+    ]
+  }
+}
