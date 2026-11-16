@@ -138,7 +138,12 @@ export function checkR10b(ctx) {
       // A shared label (R24: written, never hidden) a kept, visible link elsewhere still prints: a hidden link leaves it
       // written, as for an owned one. Before (dev corpus, 16/11/2026) this said "hide its label" while R24 said "never
       // hide it", and a JA Boxing plan could not pass both. Every link printing it hidden still fails, as above.
-      if (labelWritten.has(want) && !labelHidden.has(want) && sharedLabel(want) && labelStillUsed(want, h.slot))
+      if (
+        labelWritten.has(want) &&
+        !labelHidden.has(want) &&
+        sharedLabel(want) &&
+        labelStillUsed(want, h.slot)
+      )
         return r.ok()
       if (labelWritten.has(want) && !labelHidden.has(want))
         r.fail(W(x, `link ${h.slot}`), `link is hidden but its label slot ${want} is still written`, 'plan')

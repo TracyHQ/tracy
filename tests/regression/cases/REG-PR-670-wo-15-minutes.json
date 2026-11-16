@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-670-wo-15-minutes",
+  "kind": "feat",
+  "title": "A chain build gives 9b 2 and 4 minutes, and a slot the plan never decided costs no fix round",
+  "pr": 670,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed and a test Postgres in TEST_DATABASE_URL, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The bench's repair clock keeps 10 and 12 minutes; a chain build's stops new work at 2 minutes and returns by 4.",
+    "A slot the plan neither writes nor hides is left out of the copy and W02 passes; a missing kept slot still sends the run to a fix round."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-no-caps.test.mjs",
+      "apps/tracy-web/test/site-writer-plan-labels.test.mjs",
+      "apps/tracy-web/test/site-writer-bench-fix-answer-shape.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "step 9b keeps its 10 and 12 minute windows on the bench; a chain build gives it 2 and 4, cut shorter only by the deadline",
+      "a slot the plan neither writes nor hides is left out of the copy, not sent back for a fix round",
+      "an unknown slot the writer wrote is left out before the check, and a fix round return turns a kept slot into a return"
+    ]
+  }
+}
