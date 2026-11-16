@@ -28,6 +28,20 @@ function tagOfName(name) {
 }
 
 /**
+ * A language tag a model returned, canonicalised, or null when it is not a tag of a known language. Validation only:
+ * no language name is read (`answer-reading.mjs` checks the tag the model read from the owner's words with it).
+ */
+export function supportedLanguageTag(value) {
+  if (typeof value !== 'string' || !/^[a-z]{2,3}(?:[-_][a-z0-9]+)*$/i.test(value.trim())) return null
+  try {
+    const [tag] = Intl.getCanonicalLocales(value.trim().replace(/_/g, '-'))
+    return NAMES.of(primary(tag)) ? tag : null
+  } catch {
+    return null
+  }
+}
+
+/**
  * A language as a BCP 47 tag, or null when it cannot be read. A tag is canonicalised and KEEPS its region (`pt_br`
  * gives `pt-BR`: Brazilian and European Portuguese are written differently, and Contract B takes such a tag); an
  * English language name the model may write instead (`English`) maps to its tag when exactly one tag has that name.

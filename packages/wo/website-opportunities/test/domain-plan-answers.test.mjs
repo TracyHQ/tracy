@@ -84,13 +84,19 @@ test('the main button, contact method and site language answers reach the plan',
     }
   )
   delete profile.facts['contact.email']
+  // A typed contact detail is what the answer reading (a model) read in it (`answer-reading.mjs`).
+  const email = 'desk@brindlewick-tennis.example'
+  const answerReadings = new Map([
+    ['contact-method', { facts: [{ kind: 'contact.email', value: email, primary: false }] }]
+  ])
   const { plan } = await compose({
     profile,
     answers: [
       answer('main-button', { choice: 'call' }),
-      answer('contact-method', { text: 'desk@brindlewick-tennis.example' }),
+      answer('contact-method', { text: email }),
       answer('site-language', { choice: 'pt-BR' })
-    ]
+    ],
+    answerReadings
   })
   assert.equal(fact(plan, 'contact-cta-label').value, 'Call us')
   assert.deepEqual(fact(plan, 'contact-cta-label').sources, [{ kind: 'answer', name: 'Your answer' }])

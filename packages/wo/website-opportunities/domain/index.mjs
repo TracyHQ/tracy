@@ -672,3 +672,4 @@ export {
   needsAnswerReading,
   readOwnerAnswers
 } from './answer-reading.mjs'
+export { READ_TOPICS, STATEMENT_TOPICS, asChosen, isStatement, isTyped } from './plan-free-answers.mjs'

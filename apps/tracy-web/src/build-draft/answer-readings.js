@@ -11,6 +11,7 @@
  */
 import { needsAnswerReading, readOwnerAnswers } from 'website-opportunities/domain'
 import { planProfileOf } from './engine-steps.js'
+import { placeTypedOf } from './gather-place.js'
 
 /**
  * @param {{research: object, answers: object[]}} inputs the compose inputs
@@ -20,7 +21,11 @@ import { planProfileOf } from './engine-steps.js'
  * @returns {Promise<Map<string, object> | null>} the readings by question id, null when none was made
  */
 export async function answerReadingsOf({ research, answers }, { kit, reserve, modelOf }) {
-  const profile = planProfileOf(research, kit)
+  return readingsOf(planProfileOf(research, kit), answers, { reserve, modelOf })
+}
+
+/** The readings of `answers` to the questions of `profile`, or null when none was made (no typed answer, a refusal). */
+async function readingsOf(profile, answers, { reserve, modelOf }) {
   if (!needsAnswerReading(profile, answers)) return null
   const spend = await reserve().catch(() => null)
   if (!spend) return null
@@ -32,4 +37,31 @@ export async function answerReadingsOf({ research, answers }, { kit, reserve, mo
     })
     .catch(() => null)
   return ran?.readings ?? null
+}
+
+/**
+ * The place a typed answer to research's place question means (`gather-place.js`), read by the same call under the
+ * same ledger step: the offered choice id the model read (a place, or `none`), or null when there is no typed answer,
+ * the reading made none, or it was refused or failed. Research then treats null as None of these, and the caller keeps
+ * the owner's text with the owner's description (`placeStatementOf`).
+ * @param {object | null} row the draft row
+ * @param {string[]} links the links of the research about to run
+ * @param {{reserve: Function, modelOf: Function}} tools as `answerReadingsOf`
+ * @returns {Promise<string | null>}
+ */
+export async function placeReadingOf(row, links, tools) {
+  const typed = placeTypedOf(row, links)
+  if (!typed) return null
+  const readings = await readingsOf({ questions: [typed.question] }, [typed.answer], tools)
+  return readings?.get(typed.question.id)?.choice ?? null
+}
+
+/**
+ * The owner's description for a research whose typed place answer named no offered place: the typed text joins it, so
+ * the business reading reads it as the owner's words (decision D46) instead of dropping it. As given otherwise.
+ */
+export function placeStatementOf(row, links, readChoice, description) {
+  const typed = placeTypedOf(row, links)
+  if (!typed || (readChoice && readChoice !== 'none')) return description
+  return [description, typed.answer.text.trim()].filter((t) => typeof t === 'string' && t.trim()).join('\n\n')
 }

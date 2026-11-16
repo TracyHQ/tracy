@@ -9,6 +9,8 @@ import { askingOf } from '../src/build-draft/engine-asking.js'
 import { engineStateOf } from '../src/build-draft/engine-state.js'
 import { researchStep } from '../src/build-draft/engine-steps.js'
 import { placeAmbiguousError, placeAnswerOf, placeAsked } from '../src/build-draft/gather-place.js'
+import { placeReadingOf, placeStatementOf } from '../src/build-draft/answer-readings.js'
+import { scriptedModel } from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 
 const LINKS = ['https://www.google.com/maps/search/?api=1&query=Hollowmere+Bakehouse']
 const BRANCHES = [
@@ -87,4 +89,48 @@ test('research hands the answer to the gatherer, and asks nothing of it otherwis
   await run(undefined)
   assert.deepEqual(seen[0].place, BRANCHES[1])
   assert.equal('place' in seen[1], false)
+})
+
+const typedRow = (text) => askingRow([{ schema: 'tracy-build-answer/v1', question: 'place-choice', text }])
+const tools = (model, reserved = []) => ({
+  reserve: async () => (reserved.push('answers'), { run: (fn) => fn() }),
+  modelOf: async () => ({ model, cost: () => ({}) })
+})
+const pick = (choice) =>
+  JSON.stringify({ answers: [{ question: 'place-choice', ...(choice ? { choice } : {}) }] })
+
+test('a typed place answer is read by the model under the answers step; the place it names is the pick', async () => {
+  const row = typedRow('the one on Fernwick Road')
+  const reserved = []
+  const model = scriptedModel(pick('ChIJinventedSouth02'))
+  const read = await placeReadingOf(row, LINKS, tools(model, reserved))
+  assert.deepEqual([read, reserved, model.calls.length], ['ChIJinventedSouth02', ['answers'], 1])
+  assert.equal(placeAnswerOf(row, LINKS, read).providerId, 'ChIJinventedSouth02')
+  // Code reads nothing in the text: unread, the answer is None of these.
+  assert.equal(placeAnswerOf(row, LINKS), 'none')
+  // The owner's text joins the description only when no place was read.
+  assert.equal(placeStatementOf(row, LINKS, read, 'We bake bread.'), 'We bake bread.')
+})
+
+test('a typed place answer the model cannot place is None of these, its text kept with the description', async () => {
+  const row = typedRow('Neither, we opened a new shop last month')
+  for (const model of [scriptedModel(pick('none')), scriptedModel(pick(null)), scriptedModel('not json')]) {
+    const read = await placeReadingOf(row, LINKS, tools(model))
+    assert.equal(placeAnswerOf(row, LINKS, read), 'none')
+    assert.equal(
+      placeStatementOf(row, LINKS, read, 'We bake bread.'),
+      'We bake bread.\n\nNeither, we opened a new shop last month'
+    )
+  }
+  assert.equal(placeStatementOf(row, LINKS, null, undefined), 'Neither, we opened a new shop last month')
+})
+
+test('a pressed place, or one typed as its exact label, makes no call', async () => {
+  const model = scriptedModel()
+  assert.equal(await placeReadingOf(askingRow([answer('none')]), LINKS, tools(model)), null)
+  const label = askingOf(placeAmbiguousError(BRANCHES)).question.choices[1].label
+  const exact = typedRow(` ${label.toUpperCase()} `)
+  assert.equal(await placeReadingOf(exact, LINKS, tools(model)), null)
+  assert.equal(placeAnswerOf(exact, LINKS).providerId, 'ChIJinventedSouth02')
+  assert.equal(model.calls.length, 0)
 })

@@ -1,5 +1,6 @@
-// What the owner types into the "Type your answer" box of a main button or a fact conflict question (owner decision of
-// 16/11): information for a model, never a field value. Code never holds such a text to a template field's limit and
+// What the owner types into the "Type your answer" box of any question card (owner decision of 16/11): information a
+// model reads (`answer-reading.mjs`), never a value code reads. On a main button, fact conflict or contact method
+// question it is also an owner statement, never a field value. Code never holds such a text to a template field's limit and
 // never writes it into a field: it becomes an owner statement tied to its question, `profile.ownerFacts` (the channel
 // of the owner's chat statement, `owner-facts-flow.mjs`), which the page writer rewords where it places it
 // (`page-writer-owner-facts.mjs`). A fact conflict answered this way stays open, so the plan shows its default as an
@@ -9,8 +10,16 @@
 // folding, nothing fuzzier) is that choice, and keeps the behaviour of a chosen option. Any other reading of the text
 // is the model's (`answer-reading.mjs`). Pure.
 
-/** The topics whose free text is an owner statement, not a value. */
-export const STATEMENT_TOPICS = Object.freeze(['main-button', 'fact-conflict'])
+/** The topics whose typed text the answer reading reads: every question the build chat asks but the site name. */
+export const READ_TOPICS = Object.freeze([
+  'main-button',
+  'fact-conflict',
+  'contact-method',
+  'site-language',
+  'place-choice'
+])
+/** The topics whose typed text is also an owner statement for the page writer, never a field value. */
+export const STATEMENT_TOPICS = Object.freeze(['main-button', 'fact-conflict', 'contact-method'])
 /** The group an owner statement on the main button is placed by: next to a button label the writer words. */
 export const MAIN_BUTTON_GROUP = 'main-button'
 
@@ -24,7 +33,7 @@ const ITEM_GROUPS = { service: 'services', package: 'services', menu_item: 'serv
 
 /** The answer as a choice when its typed text is one of the question's choices, else the answer as given. */
 export function asChosen(answer, question) {
-  if (typeof answer?.text !== 'string' || !STATEMENT_TOPICS.includes(question?.topic)) return answer
+  if (typeof answer?.text !== 'string' || !READ_TOPICS.includes(question?.topic)) return answer
   const typed = plain(answer.text)
   const choice = list(question.choices).find((c) =>
     [c?.label, c?.id, c?.code].some((v) => typeof v === 'string' && plain(v) === typed)
@@ -33,6 +42,10 @@ export function asChosen(answer, question) {
   const { text: _text, ...rest } = answer
   return { ...rest, choice: choice.id }
 }
+
+/** Whether an answer (after `asChosen`) is typed text the answer reading reads. */
+export const isTyped = (answer, question) =>
+  typeof answer?.text === 'string' && READ_TOPICS.includes(question?.topic)
 
 /** Whether an answer (after `asChosen`) is an owner statement: free text on a statement topic. */
 export const isStatement = (answer, question) =>

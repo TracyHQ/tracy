@@ -76,7 +76,7 @@ test('at most five candidates are offered, each once, and long texts fit the car
   )
 })
 
-test('the answer names the picked candidate, None of these, or a typed name matched to a choice', () => {
+test('the answer names the picked candidate, None of these, or a typed exact label; code matches no name', () => {
   const q = placeChoiceQuestionOf([NORTH, SOUTH])
   const answer = (form) => ({ schema: 'tracy-build-answer/v1', question: q.id, ...form })
   assert.equal(checkAnswer(answer({ choice: SOUTH.providerId }), q).ok, true)
@@ -87,10 +87,10 @@ test('the answer names the picked candidate, None of these, or a typed name matc
     address: SOUTH.address
   })
   assert.equal(placeOfChoice(q, answer({ choice: PLACE_CHOICE_NONE })), PLACE_CHOICE_NONE)
-  assert.equal(
-    placeOfChoice(q, answer({ text: '4 fernwick road, brackenford' })).providerId,
-    SOUTH.providerId
-  )
+  // An address or a name typed alone is read by the model first (`answer-reading.mjs`); code matches neither.
+  assert.equal(placeOfChoice(q, answer({ text: '4 fernwick road, brackenford' })), PLACE_CHOICE_NONE)
+  const label = q.choices.find((c) => c.id === SOUTH.providerId).label
+  assert.equal(placeOfChoice(q, answer({ text: label.toLowerCase() })).providerId, SOUTH.providerId)
   assert.equal(placeOfChoice(q, answer({ text: 'the one by the river' })), PLACE_CHOICE_NONE)
   assert.equal(placeOfChoice(q, null), null)
 })

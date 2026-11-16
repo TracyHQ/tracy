@@ -105,6 +105,8 @@ counts once), listed in [Text limits](#text-limits).
   an owner fact tied to its question (with the conflict's candidate values), and a conflict answered that way stays
   open. A text that is exactly an offered choice (label, id or code, equal after trimming and case folding) is that
   choice. Their `freeText.maxLength` is not capped by the template; only the offered choices fit its fields.
+- A free text answer to a `contact-method`, `site-language` or `place-choice` question is read the same way: the
+  contact facts, the language tag or the offered place the model reads in it; code never reads the text itself.
 - Before the plan, one model call reads those typed answers (the answer reading, `answer-reading.mjs`): the choice an
   answer means and the values it states, each quoting the owner's words. What it reads enters the profile with origin
   `answer`: the question's own value settles its conflict over every source, the website included; a second value of

@@ -25,7 +25,7 @@ import { askingOf } from './engine-asking.js'
 import { placeAnswerOf } from './gather-place.js'
 import { brandRunOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
 import { answersStillAsked } from './answers-kept.js'
-import { answerReadingsOf } from './answer-readings.js'
+import { answerReadingsOf, placeReadingOf, placeStatementOf } from './answer-readings.js'
 import { spendGate, spendLeft } from './engine-spend.js'
 import { usageCollector } from './model-usage.js'
 import { discardPlan, putComposed, putRevised, recordFault } from './store.js'
@@ -195,6 +195,15 @@ export function createEngine({
     return { state: { step, state: 'running' } }
   }
 
+  /** The spend gate and model door of the answer reading (`answer-readings.js`): its own ledger step `answers`. */
+  const readingTools = (accountId) => ({
+    reserve: () => admit(accountId, 'answers'),
+    modelOf: async () => {
+      const reading = usageCollector()
+      return { model: await buildModel({ onUsage: reading.onUsage }), cost: reading.cost }
+    }
+  })
+
   /** Run a step with the rerun rule; a model door that is not set stops it at once (`model_missing`). */
   const ranWith = (step, inputs, columnsOf) => async () => {
     const model = await buildModel()
@@ -305,9 +314,13 @@ export function createEngine({
     /** Research from the owner's links; the research and its needs profile go into the draft. */
     async research(accountId, { links, description, name }, row) {
       const kit = row?.template ? kits.loadKit(row.template.slug) : null
-      const inputs = { links, ...(description ? { description } : {}), ...(name ? { name } : {}) }
+      // A typed answer to which place the Google link means is read by the model first, as the `answers` step; the
+      // place it names, else None of these with the owner's text kept in the description (`answer-readings.js`).
+      const readChoice = await placeReadingOf(row, links, readingTools(accountId))
+      const said = placeStatementOf(row, links, readChoice, description)
+      const inputs = { links, ...(said ? { description: said } : {}), ...(name ? { name } : {}) }
       // The owner's answer to which place the Google link means, when this research asked it (`gather-place.js`).
-      const place = placeAnswerOf(row, links)
+      const place = placeAnswerOf(row, links, readChoice)
       return start(
         accountId,
         'research',
@@ -376,14 +389,7 @@ export function createEngine({
       }
       return start(accountId, 'compose', { ...(request ? { request } : {}), template }, async () => {
         // The owner's typed answers are read first, once, as their own ledger step (`answer-readings.js`).
-        const answerReadings = await answerReadingsOf(inputs, {
-          kit,
-          reserve: () => admit(accountId, 'answers'),
-          modelOf: async () => {
-            const reading = usageCollector()
-            return { model: await buildModel({ onUsage: reading.onUsage }), cost: reading.cost }
-          }
-        })
+        const answerReadings = await answerReadingsOf(inputs, { kit, ...readingTools(accountId) })
         const usage = usageCollector()
         const model = await buildModel({ onUsage: usage.onUsage })
         const ran = await runWithRerun(

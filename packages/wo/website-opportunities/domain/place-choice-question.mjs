@@ -7,6 +7,7 @@
 // (`needs-profile-questions.mjs`). Pure.
 import { PLACE_CHOICE_TOPIC } from './build-contract-questions.mjs'
 import { FREE_TEXT_MAX, contractQuestionOf } from './needs-profile-questions.mjs'
+import { asChosen } from './plan-free-answers.mjs'
 
 export { PLACE_CHOICE_TOPIC }
 /** The id of the place choice question. */
@@ -70,23 +71,19 @@ export function placeChoiceQuestionOf(candidates) {
   )
 }
 
-const same = (a, b) => isText(a) && isText(b) && a.trim().toLowerCase() === b.trim().toLowerCase()
-
 /**
  * The place an answer picked, as the picker sends it (`place` of `link-fields.js`), `PLACE_CHOICE_NONE`, or null when
- * there is no answer. A typed answer picks the choice whose name or address it repeats, else none.
+ * there is no answer. A typed answer is that choice only when it is exactly one (label, id or code, after trimming and
+ * case folding, `asChosen`); any other typed text is read by the model first (`answer-reading.mjs`), and the caller
+ * passes the place it read as a choice. Code matches no name or address: unread typed text is none.
  * @param {object} question the place choice question
  * @param {{choice?: string, text?: string} | null | undefined} answer
  */
 export function placeOfChoice(question, answer) {
   if (!answer || typeof answer !== 'object') return null
   const candidates = (question?.choices ?? []).filter((c) => c?.id !== PLACE_CHOICE_NONE)
-  // A typed name alone may fit two branches: the label and the address are tried first.
-  const typed = (key) => candidates.find((c) => same(key(c), answer.text))
-  const picked =
-    answer.choice !== undefined
-      ? candidates.find((c) => c.id === answer.choice)
-      : (typed((c) => c.label) ?? typed((c) => c.params?.address) ?? typed((c) => c.params?.name))
+  const chosen = asChosen(answer, question)
+  const picked = chosen.choice !== undefined ? candidates.find((c) => c.id === chosen.choice) : undefined
   if (!picked) return PLACE_CHOICE_NONE
   return {
     provider: 'google-places',

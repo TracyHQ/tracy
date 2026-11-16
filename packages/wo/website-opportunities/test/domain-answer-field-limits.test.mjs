@@ -1,8 +1,8 @@
 // A customer's answer fits the template's fields (ticket #615): the main button question offers no choice longer than
-// the template's button field holds, a typed contact detail longer than its field is rejected, and the gate reports an
-// answer too long as a problem, never a silent drop. A typed main button answer is an owner statement since 16/11
-// (`plan-free-answers.mjs`): its box is not capped by the template and it is never rejected for its length. The invented pottery template (button label of 18 characters);
-// no real model.
+// the template's button field holds, and the gate reports an answer too long as a problem, never a silent drop. Since
+// 16/11 a typed answer is read by the model (`answer-reading.mjs`): its box is not capped by the template and it is
+// never rejected for its length before the model. The invented pottery template (button label of 18 characters); no
+// real model.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-answer-field-limits.test.mjs
 import assert from 'node:assert/strict'
@@ -46,12 +46,19 @@ test('the answer settling rejects a value longer than the template field of its 
   const profile = { ...potteryProfile(), facts: {} }
   profile.questions = needsProfileOf(pottery().research, { ...pottery().reading, facts: [] }).questions
   const contact = profile.questions.find((q) => q.topic === 'contact-method')
+  // A typed contact answer is read by the model (`answer-reading.mjs`), never held to the field before it: unread, it
+  // writes nothing and stops nothing; read, its value is written and the plan gate judges its length.
   const long = answer(contact.id, { text: 'bookings@kilnmere-studio.example' })
-  assert.throws(() => settleAnswers(profile, [long], limits), /answer problem/)
-  const short = answer(contact.id, { text: 'hi@kilnmere.example' })
+  assert.equal(settleAnswers(profile, [long], limits).profile.facts['contact.email'], undefined)
+  const read = new Map([
+    [
+      contact.id,
+      { facts: [{ kind: 'contact.email', value: 'bookings@kilnmere-studio.example', primary: false }] }
+    ]
+  ])
   assert.equal(
-    settleAnswers(profile, [short], limits).profile.facts['contact.email'][0].value,
-    'hi@kilnmere.example'
+    settleAnswers(profile, [long], limits, read).profile.facts['contact.email'][0].value,
+    'bookings@kilnmere-studio.example'
   )
 })
 

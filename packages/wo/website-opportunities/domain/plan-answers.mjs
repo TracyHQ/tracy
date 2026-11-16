@@ -3,11 +3,12 @@
 // - `fact-conflict`: the fact (or item field) takes the chosen value with that value's sources, and the conflict is
 //   settled (`chosen`), so the plan shows no assumption for it;
 // - `main-button`: the chosen label is the plan's main call to action, the fact `contact.cta_label`;
-// - free text on either of those two is an owner statement for the page writer, never a field value and never held to
-//   a template field's limit (`plan-free-answers.mjs`); text typed exactly as an offered choice is that choice;
-// - `contact-method`: a typed phone, email or link becomes that contact fact; a choice without a value is reported in
-//   the plan's left out list, never invented;
-// - `site-language`: the site language (`plan.language`);
+// - `contact-method`: a choice without a value is reported in the plan's left out list, never invented;
+// - `site-language`: the chosen tag is the site language (`plan.language`);
+// - typed text on any of those four is read by the model (`answer-reading.mjs`), never by code: it is never held to a
+//   template field's limit, and what the reading kept is written (`plan-answer-readings.mjs`; a language tag on the
+//   site language). On the first three it is also an owner statement for the page writer (`plan-free-answers.mjs`).
+//   Unread, it changes no value. Text typed exactly as an offered choice is that choice;
 // - `site-name`: the name the site shows while research keeps the business name off it (`plan-site-name.mjs`); a name
 //   longer than the template's business name fields is `site_name_too_long` (`details.limit`), an empty one or one with
 //   a control character, markup or markdown is `site_name_invalid`; both carry `details.question` (the whole question)
@@ -17,10 +18,10 @@
 // shortened, so it would stop the build after approval) is an `answer_invalid` error, never a silent ignore. A
 // question without an answer keeps its default.
 import { checkAnswer } from './build-contract-questions.mjs'
-import { languageTag, MAIN_BUTTON_KIND } from './needs-profile-questions.mjs'
+import { MAIN_BUTTON_KIND } from './needs-profile-questions.mjs'
 import { conflictPlace } from './plan-conflicts.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
-import { asChosen, isStatement, statementOf } from './plan-free-answers.mjs'
+import { asChosen, isStatement, isTyped, statementOf } from './plan-free-answers.mjs'
 import { applyReading, readingsMapOf } from './plan-answer-readings.mjs'
 import {
   normalisedSiteName,
@@ -32,10 +33,7 @@ import {
 /** The source id an answer's value carries in the settled profile; its origin `answer` reads "Your answer". */
 export const ANSWER_SOURCE = 'customer-answer'
 const list = (value) => (Array.isArray(value) ? value : [])
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PLAN_TAG = /^[a-z]{2,3}(-[A-Z]{2})?$/
-const LINK = /^https?:\/\/\S+$/i
-const PHONE = /^\+?[\d\s().-]{6,}$/
 const CONTACT_CHOICES = Object.freeze({
   phone: 'Your phone number',
   email: 'Your email address',
@@ -67,17 +65,18 @@ function settleConflict(profile, conflict, fact) {
   conflict.chosenBy = 'answer'
 }
 
-/** The contact fact a typed contact answer gives, or null when the text is not a phone, an email or a link. */
-function contactKindOf(text) {
-  if (EMAIL.test(text)) return 'contact.email'
-  if (LINK.test(text)) return 'contact.cta_url'
-  if (PHONE.test(text)) return 'contact.phone'
-  return null
+/** The site language a chosen or read tag gives; a script subtag (`zh-Hant`) keeps its language only. */
+function setLanguage(profile, tag) {
+  profile.language = {
+    ...profile.language,
+    value: PLAN_TAG.test(tag) ? tag : tag.split('-')[0],
+    chosenBy: 'answer'
+  }
 }
 
 /** The fact an answer gives, as `{kind, value, at}`, or null when it gives none. */
 function factOfAnswer(answer, question) {
-  if (isStatement(answer, question)) return null
+  if (isTyped(answer, question)) return null
   const text = typeof answer?.text === 'string' ? answer.text.trim() : undefined
   if (question.topic === 'main-button') {
     const value = text ?? question.choices.find((c) => c.id === answer?.choice)?.label
@@ -85,9 +84,6 @@ function factOfAnswer(answer, question) {
       ? null
       : { kind: MAIN_BUTTON_KIND, value, at: text === undefined ? 'choice' : 'text' }
   }
-  if (text === undefined) return null
-  if (question.topic === 'contact-method') return { kind: contactKindOf(text), value: text, at: 'text' }
-  if (question.topic === 'fact-conflict') return { kind: question.fact, value: text, at: 'text' }
   return null
 }
 
@@ -113,7 +109,11 @@ export function settleAnswers(profile, answers = [], limits = new Map(), reading
   answers = answers.map((given) => {
     const question = questions.get(given?.question)
     const a = asChosen(given, question)
-    const choice = question && isStatement(a, question) ? reads.get(question.id)?.choice : undefined
+    // A contact method's choice names no value, so its reading's facts are what count.
+    const choice =
+      question && isTyped(a, question) && question.topic !== 'contact-method'
+        ? reads.get(question.id)?.choice
+        : undefined
     if (!choice) return a
     typed.set(question.id, a)
     const { text: _text, ...rest } = a
@@ -143,14 +143,6 @@ export function settleAnswers(profile, answers = [], limits = new Map(), reading
       problems.push(found)
       if (isName) nameProblems.push(found)
     }
-    if (question.topic === 'site-language' && answer?.text !== undefined && !languageTag(answer.text))
-      problems.push({ at: `answers[${i}].text`, message: 'not a language Tracy can read' })
-    if (
-      question.topic === 'contact-method' &&
-      typeof answer?.text === 'string' &&
-      !contactKindOf(answer.text.trim())
-    )
-      problems.push({ at: `answers[${i}].text`, message: 'not a phone number, an email address or a link' })
     if (isName && typeof answer?.text === 'string') {
       const named = siteNameProblems(
         answer.text,
@@ -197,13 +189,19 @@ export function settleAnswers(profile, answers = [], limits = new Map(), reading
   for (const answer of answers) {
     if (answer.skipped) continue
     const question = questions.get(answer.question)
-    const original = typed.get(question.id) ?? (isStatement(answer, question) ? answer : null)
+    const original = typed.get(question.id) ?? (isTyped(answer, question) ? answer : null)
     const conflictOf = () => settled.conflicts?.find((c) => c.question === question.id)
-    const statement = original ? statementOf(original, question, conflictOf(), ANSWER_SOURCE) : null
+    const statement =
+      original && isStatement(original, question)
+        ? statementOf(original, question, conflictOf(), ANSWER_SOURCE)
+        : null
     if (statement) settled.ownerFacts = [...list(settled.ownerFacts), statement]
     const reading = original ? reads.get(question.id) : undefined
     if (reading) applyReading(settled, { question, reading, statement, answered, settleConflict })
-    if (isStatement(answer, question)) continue
+    if (isTyped(answer, question)) {
+      if (question.topic === 'site-language' && reading?.language) setLanguage(settled, reading.language)
+      continue
+    }
     if (question.topic === 'fact-conflict') {
       const conflict = settled.conflicts.find((c) => c.question === question.id)
       if (conflict) settleConflict(settled, conflict, conflictValue(answer, question, conflict))
@@ -211,25 +209,15 @@ export function settleAnswers(profile, answers = [], limits = new Map(), reading
       const label = question.choices.find((c) => c.id === answer.choice).label
       settled.facts['contact.cta_label'] = [answered(label)]
     } else if (question.topic === 'contact-method') {
-      if (answer.text === undefined)
-        leftOut.push({
-          what: CONTACT_CHOICES[answer.choice] ?? 'Your contact detail',
-          kind: 'feature',
-          reason: CONTACT_VALUE_MISSING_REASON,
-          code: 'contact_value_missing'
-        })
-      else settled.facts[contactKindOf(answer.text.trim())] = [answered(answer.text.trim())]
+      leftOut.push({
+        what: CONTACT_CHOICES[answer.choice] ?? 'Your contact detail',
+        kind: 'feature',
+        reason: CONTACT_VALUE_MISSING_REASON,
+        code: 'contact_value_missing'
+      })
     } else if (question.topic === 'site-name') {
       if (answer.text !== undefined) settleSiteName(settled, answer.text, answered)
-    } else if (question.topic === 'site-language') {
-      const tag = answer.text !== undefined ? languageTag(answer.text) : answer.choice
-      // A plan language is a tag like `en` or `pt-BR`; a script subtag (`zh-Hant`) keeps its language only.
-      settled.language = {
-        ...settled.language,
-        value: PLAN_TAG.test(tag) ? tag : tag.split('-')[0],
-        chosenBy: 'answer'
-      }
-    }
+    } else if (question.topic === 'site-language') setLanguage(settled, answer.choice)
   }
   if (answers.some((a) => !a.skipped))
     settled.sources = [...list(settled.sources), { id: ANSWER_SOURCE, origin: 'answer' }]
