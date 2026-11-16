@@ -2,7 +2,7 @@
  * English baseline for the `tracy-build-chat` namespace. This package OWNS the namespace; `NS` lives beside `en` so
  * `check-dsh-locale` can find the owner. Wording follows the build chat mock the product owner approved.
  */
-import { ASK_STRINGS } from '@tracy/core/build-chat'
+import { ASK_STRINGS, LINK_READ_STRINGS } from '@tracy/core/build-chat'
 import { rebuildEn } from './rebuild-strings'
 
 export const NS = 'tracy-build-chat'
@@ -275,7 +275,9 @@ export const en = {
   ...rebuildEn,
   // The question card's words (#609): the host says a question in the interface language by these keys
   // (`src/host/ask-words.mjs`); English is the engine's own wording, kept with the code in `@tracy/core/build-chat`.
-  ...ASK_STRINGS
+  ...ASK_STRINGS,
+  // What became of each link the owner gave the research (#609): English kept with the code in `@tracy/core/build-chat`.
+  ...LINK_READ_STRINGS
 } as const
 
 export type StringKey = keyof typeof en

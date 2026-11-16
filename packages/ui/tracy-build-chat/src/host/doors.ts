@@ -71,6 +71,25 @@ export interface ResearchResult {
   questions: BuildQuestion[]
   /** The next card to show, for the questions not answered yet; absent when nothing is left to ask. */
   ask?: AskRequest
+  /** What became of each link the owner gave, one line each, in the order given (#609). */
+  links: LinkLine[]
+}
+
+/**
+ * One link the owner gave the research: named by what it is ("Instagram", "Google Maps", a host name), its state, and
+ * once research ended what came back in plain counts. `reason` is a plain clause, never a provider name or a code.
+ */
+export interface LinkLine {
+  link: string
+  name: string
+  state: 'reading' | 'choice' | 'read' | 'failed'
+  reason?: string
+  facts?: number
+  pictures?: number
+  /** Pictures of this link that were set aside (not downloaded, or not kept). */
+  picturesLost?: number
+  /** Every lost picture was lost because the server had no store to keep it in. */
+  picturesNotKept?: boolean
 }
 
 /** The result of a finished compose or edit step. */
@@ -121,6 +140,8 @@ export interface AskingResult {
   questions: BuildQuestion[]
   /** Its card. */
   ask: AskRequest
+  /** The place question of research: each owner link, the Google one in state `choice` (#609). */
+  links?: LinkLine[]
 }
 
 /**
@@ -132,7 +153,7 @@ export interface AskingResult {
  */
 export type EngineState =
   | { step: null; state: 'idle' }
-  | { step: EngineStep; state: 'running' }
+  | { step: EngineStep; state: 'running'; links?: LinkLine[] }
   | { step: 'research'; state: 'done'; result: ResearchResult }
   | { step: 'brand'; state: 'done'; result: { look: 'ready' } }
   | { step: 'compose' | 'edit'; state: 'done'; say?: string; result: PlanResult }

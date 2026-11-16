@@ -69,6 +69,13 @@ export {
 } from './plan.mjs'
 export { plainTextOf } from './plain-text.mjs'
 export {
+  LINK_READ_STRINGS,
+  linkLineOf,
+  linkNameOf,
+  linkReadsOf,
+  readingLinksOf
+} from './link-reads.mjs'
+export {
   cancelledOf,
   clockOf,
   progressOf,

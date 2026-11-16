@@ -323,7 +323,11 @@ test(
     const opened = await s.app.openDraftPicture(manifest[0].id)
     assert.equal(opened.sha256, manifest[0].sha256)
     assert.deepEqual(stored.research.picturesSetAside, [
-      { url: 'https://cdn.social.example/hollowmere/rye.jpg', reason: 'the picture could not be downloaded' }
+      {
+        url: 'https://cdn.social.example/hollowmere/rye.jpg',
+        source: 'facebook',
+        reason: 'the picture could not be downloaded'
+      }
     ])
     // Research again with one picture gone: the same bytes keep their id, the other row and its object go.
     media = [media[0]]

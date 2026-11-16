@@ -7,6 +7,7 @@
  * events are duck-typed as dsh's session log writes them (`tool/call` with `name`, `callId`, `arguments`;
  * `tool/result` with `message.source.callId`, `message.content`, `message.isError`).
  */
+import { linkReadsOf, readingLinksOf } from './link-reads.mjs'
 import { PLAN_REVIEW_ID, planOfReviewId } from './plan.mjs'
 
 /** The wire name of the engine tool. */
@@ -107,11 +108,11 @@ export function revisedOf(value) {
 /**
  * What one `tracy_build` answer is, told apart by its shape (a `status` call can answer any of them).
  * @param {unknown} text - the result's JSON text
- * @returns {null | { kind: 'research', business: string }
+ * @returns {null | { kind: 'research', business: string, links: import('./link-reads.mjs').LinkRead[] }
  *   | { kind: 'templates', options: any[], none: boolean }
  *   | { kind: 'plan', id: string, revision: number, revised?: { changed: string[], notDone: { what: string, why: string }[] } }
  *   | { kind: 'stopped', step?: string, rerun: boolean }
- *   | { kind: 'running' | 'quiet' }}
+ *   | { kind: 'running', links: import('./link-reads.mjs').LinkRead[] } | { kind: 'quiet' }}
  */
 export function buildToolResultOf(text) {
   let value
@@ -127,7 +128,9 @@ export function buildToolResultOf(text) {
       ...(typeof value.step === 'string' ? { step: value.step } : {}),
       rerun: value.rerun === true
     }
-  if (value.running === true) return { kind: 'running' }
+  // Research names each link it reads (#609): `links` rides on its running, asking and done answers.
+  const links = linkReadsOf(value.links)
+  if (value.running === true) return { kind: 'running', links }
   // Answers meant only for the model: a refusal, a stale plan, nothing started, a step not taken yet, the brand step
   // done and the plan to be asked for again.
   if (
@@ -149,31 +152,40 @@ export function buildToolResultOf(text) {
   if (isObject(value.profile))
     return {
       kind: 'research',
-      business: typeof value.profile.business === 'string' ? value.profile.business : ''
+      business: typeof value.profile.business === 'string' ? value.profile.business : '',
+      links
     }
+  // The place question of research: the lines say which link waits on the owner's choice.
+  if (links.length > 0) return { kind: 'research', business: '', links }
   return null
 }
+
+/** @typedef {import('./link-reads.mjs').LinkRead} LinkRead */
 
 /**
  * The quiet row that stands for one `tracy_build` call in the conversation: what happened, never the JSON. Null for
  * an answer meant only for the model (refused, stale, idle) or one this module cannot read.
  * @param {unknown} rawArgs - the call's arguments
  * @param {string | null} text - the result's JSON text; null while the call runs
- * @returns {null | { kind: 'research', sources: number, business: string } | { kind: 'working', step: string }
+ * @returns {null | { kind: 'research', sources: number, business: string, links: LinkRead[] }
+ *   | { kind: 'working', step: string, links: LinkRead[] }
  *   | { kind: 'templates' | 'plan' | 'edit' | 'stopped' }}
  */
 export function buildToolRowOf(rawArgs, text) {
   const args = argsOf(rawArgs)
   const step = typeof args.action === 'string' ? args.action : 'status'
-  if (text === null) return { kind: 'working', step }
+  // While a research call runs, each of its links reads (`readingLinksOf`); a later answer names them itself.
+  const reading = step === 'research' ? readingLinksOf(args.links) : []
+  if (text === null) return { kind: 'working', step, links: reading }
   const result = buildToolResultOf(text)
   if (result === null || result.kind === 'quiet') return null
-  if (result.kind === 'running') return { kind: 'working', step }
+  if (result.kind === 'running')
+    return { kind: 'working', step, links: result.links.length ? result.links : reading }
   if (result.kind === 'stopped') return { kind: 'stopped' }
   if (result.kind === 'templates') return { kind: 'templates' }
   if (result.kind === 'plan') return { kind: step === 'edit' ? 'edit' : 'plan' }
   const links = step === 'research' && Array.isArray(args.links) ? args.links : []
-  return { kind: 'research', sources: links.length, business: result.business }
+  return { kind: 'research', sources: links.length, business: result.business, links: result.links }
 }
 
 /**

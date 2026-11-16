@@ -66,10 +66,15 @@ test('the tool row says what happened in plain words, never the JSON', () => {
     JSON.stringify({ action: 'research', links: ['https://sunrise.example', 'https://maps.example/x'] }),
     JSON.stringify({ profile: { business: 'Sunrise Tennis Club', counts: { services: 4 } } })
   )
-  assert.deepEqual(research, { kind: 'research', sources: 2, business: 'Sunrise Tennis Club' })
+  assert.deepEqual(research, {
+    kind: 'research',
+    sources: 2,
+    business: 'Sunrise Tennis Club',
+    links: []
+  })
   assert.deepEqual(
     buildToolRowOf(JSON.stringify({ action: 'research', description: 'A tennis club' }), null),
-    { kind: 'working', step: 'research' }
+    { kind: 'working', step: 'research', links: [] }
   )
   assert.deepEqual(buildToolRowOf(JSON.stringify({ action: 'plan' }), JSON.stringify(planResult(1))), {
     kind: 'plan'
@@ -86,7 +91,8 @@ test('the tool row says what happened in plain words, never the JSON', () => {
   )
   assert.deepEqual(buildToolRowOf('{"action":"status"}', JSON.stringify({ running: true, say: 'x' })), {
     kind: 'working',
-    step: 'status'
+    step: 'status',
+    links: []
   })
   assert.deepEqual(buildToolRowOf('{"action":"plan"}', JSON.stringify({ stopped: true, say: 'x' })), {
     kind: 'stopped'

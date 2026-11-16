@@ -12,6 +12,7 @@ import {
   IconWarningOutlineRegular
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import { buildToolRowOf, type BuildToolRow } from '@tracy/core/build-chat'
+import { LinkReadLines } from './LinkReadLines'
 import type { StringKey, Translate } from './strings'
 
 /** The call as dsh's tool tree hands it to a keyed tool view (`tool.call.toolview`). */
@@ -46,7 +47,11 @@ const ICONS = {
 
 /** The row model of one call at its current stage; null draws nothing. */
 export function toolRowOfView({ phase, block }: ToolViewProps): BuildToolRow | null {
-  if (phase !== 'result') return { kind: 'working', step: 'status' }
+  // While the call runs its own arguments say which links research reads (one `reading` line each).
+  if (phase !== 'result') {
+    const row = buildToolRowOf(block.call?.argsRaw ?? block.argsRaw ?? '{}', null)
+    return row?.kind === 'working' ? row : { kind: 'working', step: 'status', links: [] }
+  }
   if (block.isError === true) return { kind: 'stopped' }
   const text = (block.content ?? []).find((b) => b?.type === 'text' && typeof b.text === 'string')?.text ?? ''
   return buildToolRowOf(block.call?.argsRaw ?? '{}', text)
@@ -84,6 +89,7 @@ export function BuildToolRow({ view, t }: { view: ToolViewProps; t: Translate })
           ) : undefined
         }
       />
+      {row.kind === 'research' || row.kind === 'working' ? <LinkReadLines links={row.links} t={t} /> : null}
     </div>
   )
 }

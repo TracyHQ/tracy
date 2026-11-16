@@ -277,7 +277,11 @@ async function storedPicturesOf({
     fairShare: parts.fairShare
   })
   if (!deps.pictures || !accountId)
-    return { run: null, rows: [], setAside: items.map((i) => ({ url: i.url, reason: NO_STORE })) }
+    return {
+      run: null,
+      rows: [],
+      setAside: items.map((i) => ({ url: i.url, source: i.source, reason: NO_STORE }))
+    }
   const run = randomUUID()
   const kept = await deps.pictures.store({
     accountId,

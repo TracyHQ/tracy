@@ -324,6 +324,23 @@ const isPollFault = (res) => res === null || res.status >= 500
  */
 export const RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with exactly the arguments in again, never with action status; a result of that call says stopped again only if it failed again.`
 
+/** Guidance when a link the owner gave could not be read or gave nothing (#609): the owner hears it, plainly. */
+const LINK_GAP_NEXT =
+  "links says what was read from each link the owner gave. In one short sentence, in the language of the owner's interface, tell the owner which link could not be read or gave nothing, by its name, before anything else. Never say a code."
+
+/**
+ * Whether a research answer's link lines hold a link that could not be read, that gave nothing, or whose pictures
+ * were all lost.
+ * @param {unknown} links
+ */
+const linkGapOf = (links) =>
+  Array.isArray(links) &&
+  links.some(
+    (/** @type {any} */ l) =>
+      l?.state === 'failed' ||
+      (l?.state === 'read' && ((!l.facts && !l.pictures) || (!l.pictures && l.picturesLost > 0)))
+  )
+
 /**
  * The action that runs each engine step again: the plan steps are all started by action plan.
  * @type {Readonly<Record<string, string>>}
@@ -737,6 +754,13 @@ export function createBuildTool({
   }
 
   /**
+   * The link lines research answers (#609, tracy-web `link-reads.js`): one per owner link, its state and plain counts.
+   * The chat draws them under the research row; the agent reads them to name a link that gave nothing.
+   * @param {unknown} links
+   */
+  const linksOf = (links) => (Array.isArray(links) && links.length ? { links } : {})
+
+  /**
    * One question for the owner, as the model reads it: the card to pass on, and the sentence to say first if any.
    * @param {any} ask
    * @param {string} [say]
@@ -811,17 +835,22 @@ export function createBuildTool({
     if (state?.state === 'asking') {
       learn(sessionId, result)
       if (!result.ask) return stopped()
-      return askAgain(
-        localAsk(sessionId, result.ask, result.questions),
-        typeof state.say === 'string' ? ownerSay(state.say) : undefined
-      )
+      return {
+        ...askAgain(
+          localAsk(sessionId, result.ask, result.questions),
+          typeof state.say === 'string' ? ownerSay(state.say) : undefined
+        ),
+        ...linksOf(result.links)
+      }
     }
     if (state?.step === 'research') {
       learn(sessionId, result)
       if (!result.profile) return stopped()
       return {
         profile: result.profile,
-        ...(result.ask ? { ask: localAsk(sessionId, result.ask, result.questions) } : {})
+        ...(result.ask ? { ask: localAsk(sessionId, result.ask, result.questions) } : {}),
+        ...linksOf(result.links),
+        ...(linkGapOf(result.links) ? { next: LINK_GAP_NEXT } : {})
       }
     }
     // A written change request (#617): what changed and what was not done, in the words the engine wrote.
@@ -893,6 +922,7 @@ export function createBuildTool({
       if (now() - start >= waitMs)
         return {
           running: true,
+          ...linksOf(state.links),
           say: BUILD_RUNNING_SAY,
           next: 'Say the sentence in say, then call tracy_build with action status to keep waiting.'
         }

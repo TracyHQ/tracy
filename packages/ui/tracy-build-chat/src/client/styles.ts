@@ -263,6 +263,9 @@ export const CSS = `
 
 /* The quiet row of one tracy_build call (BuildToolRow): dsh's own process row, the business name beside it */
 .tv-bc-toolrow-sum { margin-left: 6px; color: var(--muted-foreground); overflow-wrap: normal; word-break: keep-all; }
+/* One quiet line per link the owner gave the research (#609); a link that could not be read keeps the full colour. */
+.tv-bc-linkreads { list-style: none; margin: 2px 0 4px 22px; padding: 0; font-size: 12px; line-height: 1.5; color: var(--muted-foreground); }
+.tv-bc-linkreads li[data-link-state="failed"] { color: var(--foreground); }
 /* The same row above the chat input while a call waits (WorkingDock) */
 /* It sits in the column of the chat: the width axis dsh gives the messages and the input, centred like them. */
 /* dsh pads the transcript by the composer clearance plus 16px on each side (ui-chat ChatView, .scroll), and the */

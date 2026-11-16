@@ -265,7 +265,8 @@ test('a call answered running spins only while it waits: in the history its row 
   const rowOf = (props) => {
     const element = view({ ...props, sessionId: BUILD })
     const tree = element.type(element.props)
-    return tree.props.children.props
+    // The row is the first child; the link lines (#609) may follow it.
+    return [tree.props.children].flat()[0].props
   }
   const call = { argsRaw: '{"action":"plan"}' }
   assert.equal(rowOf({ phase: 'running', block: { call, content: [] } }).running, true)
@@ -277,6 +278,41 @@ test('a call answered running spins only while it waits: in the history its row 
     }
   }
   assert.equal(rowOf(answered).running, false, 'no spinner left in the history')
+})
+
+test('a research call shows one line per link: reading while it runs, what came back once done (#609)', () => {
+  const r = recorder()
+  client.applyWith(r.ctx, { switches: switchBoard(true) })
+  const view = r.of('tool.call.toolview')[0].component
+  const linesOf = (props) => {
+    const element = view({ ...props, sessionId: BUILD })
+    const kids = [element.type(element.props).props.children].flat()
+    const lines = kids[1]
+    if (!lines) return []
+    const list = lines.type(lines.props)
+    return [list.props.children].flat().map((li) => li.props.children)
+  }
+  const call = {
+    argsRaw: JSON.stringify({
+      action: 'research',
+      links: ['https://www.instagram.com/hollowmere.example/', 'https://www.google.com/maps/place/Hollowmere']
+    })
+  }
+  assert.deepEqual(linesOf({ phase: 'running', block: { call, content: [] } }), [
+    'Instagram: reading',
+    'Google Maps: reading'
+  ])
+  const done = JSON.stringify({
+    profile: { business: 'Hollowmere Bakery' },
+    links: [
+      { name: 'Instagram', state: 'read', facts: 18, pictures: 0, picturesLost: 12 },
+      { name: 'Google Maps', state: 'failed', reason: 'Google did not answer for this place' }
+    ]
+  })
+  assert.deepEqual(linesOf({ phase: 'result', block: { call, content: [{ type: 'text', text: done }] } }), [
+    'Instagram: read, but its pictures could not be downloaded. 18 facts',
+    'Google Maps: could not be read (Google did not answer for this place)'
+  ])
 })
 
 test('every build call wakes the build run feed once, so a build approved again after a stop shows its new run', () => {

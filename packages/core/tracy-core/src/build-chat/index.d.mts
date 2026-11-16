@@ -316,18 +316,52 @@ export interface RevisionNote {
 }
 /** Plan text with its HTML character references decoded, as text only (never HTML). */
 export declare function plainTextOf<T>(text: T): T
+/** One link the owner gave the research, and what became of it (#609). */
+export interface LinkRead {
+  name: string
+  state: 'reading' | 'choice' | 'read' | 'failed'
+  reason?: string
+  facts?: number
+  pictures?: number
+  picturesLost?: number
+  picturesNotKept?: boolean
+}
+export type LinkReadKey =
+  | 'links.reading'
+  | 'links.choice'
+  | 'links.failed'
+  | 'links.failedWhy'
+  | 'links.read'
+  | 'links.readNothing'
+  | 'links.readPicturesLost'
+  | 'links.readPicturesNotKept'
+  | 'links.facts.one'
+  | 'links.facts.other'
+  | 'links.pictures.one'
+  | 'links.pictures.other'
+  | 'links.pictures.none'
+  | 'links.pictures.someLost'
+export declare const LINK_READ_STRINGS: Readonly<Record<LinkReadKey, string>>
+export declare function linkNameOf(link: string): string
+export declare function linkReadsOf(value: unknown): LinkRead[]
+export declare function readingLinksOf(links: unknown): LinkRead[]
+export declare function linkLineOf(
+  line: LinkRead,
+  t: (key: LinkReadKey, vars?: Record<string, string | number>) => string
+): string
 export type BuildToolResult =
-  | { kind: 'research'; business: string }
+  | { kind: 'research'; business: string; links: LinkRead[] }
   | { kind: 'templates'; options: TemplateOption[]; none: boolean }
   | { kind: 'plan'; id: string; revision: number; revised?: RevisionNote }
   | { kind: 'stopped'; step?: string; rerun: boolean }
-  | { kind: 'running' | 'quiet' }
+  | { kind: 'running'; links: LinkRead[] }
+  | { kind: 'quiet' }
 export declare function buildToolResultOf(text: unknown): BuildToolResult | null
 /** The note of a change request answer's `revision`, its lines and their codes side by side; null for no object. */
 export declare function revisedOf(value: unknown): Omit<RevisionNote, 'edits'> | null
 export type BuildToolRow =
-  | { kind: 'research'; sources: number; business: string }
-  | { kind: 'working'; step: string }
+  | { kind: 'research'; sources: number; business: string; links: LinkRead[] }
+  | { kind: 'working'; step: string; links: LinkRead[] }
   | { kind: 'templates' | 'plan' | 'edit' | 'stopped' }
 export declare function buildToolRowOf(rawArgs: unknown, text: string | null): BuildToolRow | null
 export interface BuildToolFold {

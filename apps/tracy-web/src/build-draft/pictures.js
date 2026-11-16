@@ -118,7 +118,7 @@ export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime })
       while (next < items.length) {
         const item = items[next++]
         if (remaining() <= 0) {
-          setAside.push({ url: item.url, reason: reasonOf('timeout') })
+          setAside.push({ url: item.url, source: item.source, reason: reasonOf('timeout') })
           continue
         }
         const reference = (reason) => ({ status: 'reference', reason })
@@ -131,7 +131,7 @@ export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime })
         const got = await withinTime(recordOf, remaining())
         const record = got?.timedOut ? { status: 'reference', reason: 'timeout' } : got
         if (record?.status !== 'stored') {
-          setAside.push({ url: item.url, reason: reasonOf(record?.reason) })
+          setAside.push({ url: item.url, source: item.source, reason: reasonOf(record?.reason) })
           continue
         }
         const { rows: saved } = await pool.query(UPSERT, [

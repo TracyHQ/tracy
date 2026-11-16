@@ -113,7 +113,11 @@ test('a website link: its facts, its pictures stored as draft pictures, and the 
     manifest.every((m) => /^[0-9a-f]{64}$/.test(m.sha256) && store.pool.rows.some((r) => r.id === m.id))
   )
   assert.deepEqual(picturesSetAside, [
-    { url: 'https://cdn.social.example/hollowmere/rye.jpg', reason: 'the picture could not be downloaded' }
+    {
+      url: 'https://cdn.social.example/hollowmere/rye.jpg',
+      source: 'facebook',
+      reason: 'the picture could not be downloaded'
+    }
   ])
   assert.ok(store.pool.rows.every((r) => r.research_run === pictureRun && r.account_id === 'acc-1'))
   assert.deepEqual(

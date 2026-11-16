@@ -15,6 +15,7 @@
  * did not fit is replaced by the next one), and `say` the sentence that tells the owner why, when there is one.
  */
 import { planProfileOf } from './engine-steps.js'
+import { linkChoiceOf, linkReadsOf, linkStatesOf } from './link-reads.js'
 
 /** The chat card shows at most three questions at a time (`MAX_QUESTIONS_AT_ONCE` of `@tracy/core/build-chat`). */
 export const MAX_QUESTIONS_AT_ONCE = 3
@@ -138,7 +139,9 @@ export function engineStateOf(row, { kit = null } = {}) {
   const engine = row?.engine
   if (!engine) return { step: null, state: 'idle' }
   const { step, state } = engine
-  if (state === 'running') return { step, state }
+  // Research names each link it reads (`link-reads.js`): one line per link, `reading` while it runs.
+  const readingLinks = step === 'research' ? linkStatesOf(engine.inputs?.links) : []
+  if (state === 'running') return { step, state, ...(readingLinks.length ? { links: readingLinks } : {}) }
   if (state === 'stopped')
     return {
       step,
@@ -152,7 +155,14 @@ export function engineStateOf(row, { kit = null } = {}) {
     const questions = engine.question ? [engine.question] : []
     const ask = askOf(questions, [])
     if (!ask) return { step, state: 'stopped', say: SAY.fault }
-    return { step, state, ...(isText(engine.say) ? { say: engine.say } : {}), result: { questions, ask } }
+    // The place question of research: the Google link waits on the owner's choice.
+    const links = step === 'research' ? linkChoiceOf(engine.inputs?.links) : []
+    return {
+      step,
+      state,
+      ...(isText(engine.say) ? { say: engine.say } : {}),
+      result: { questions, ask, ...(links.length ? { links } : {}) }
+    }
   }
   if (step === 'research') {
     // The questions compose settles: none about what the owner keeps off the site (`planProfileOf`).
@@ -162,7 +172,12 @@ export function engineStateOf(row, { kit = null } = {}) {
     return {
       step,
       state,
-      result: { profile: profileSummaryOf(profile), questions, ...(ask ? { ask } : {}) }
+      result: {
+        profile: profileSummaryOf(profile),
+        questions,
+        ...(ask ? { ask } : {}),
+        links: linkReadsOf(row.research)
+      }
     }
   }
   // The brand step only prepares the look record the plan is composed from: nothing of it is answered but that it is there.
