@@ -7,8 +7,8 @@
  *   links -> judged (`gather-links.js`) -> Google place facts, listing pages, website and social pages read
  *   (`gather-sources.js`) -> the business reading (`gather-reading.js`) -> brief and manifest (`gather-read.js`)
  *
- * The pictures the sources collected are stored as draft pictures (`pictures.js`), within the same deadline: the
- * manifest names only stored copies, and a picture not stored is set aside with its reason (`picturesSetAside`).
+ * The pictures the sources collected, and the Google place's photos, are stored as draft pictures (`pictures.js`),
+ * within the same deadline: the manifest names only stored copies, and a picture not stored is set aside with its reason (`picturesSetAside`).
  *
  * A Google link that matches more than one place stops the step before anything is read, with the question that asks
  * the owner which place is theirs (`place_ambiguous`, `gather-place.js`); the owner's answer comes back as `place`.
@@ -23,7 +23,7 @@ import { placeAmbiguousError } from './gather-place.js'
 import { boundedFetch, isCollected, readSources, withinTime } from './gather-sources.js'
 import { briefOf, profileOfRead } from './gather-read.js'
 import { readingOf } from './gather-reading.js'
-import { NOT_STORED, picturesToStore } from './pictures.js'
+import { NOT_STORED, picturesToStore, placePhotoItems } from './pictures.js'
 
 const NO_STORE = NOT_STORED.store_unavailable
 
@@ -145,6 +145,8 @@ export function createPreSiteGatherer(deps) {
       deps,
       parts,
       rows: read,
+      placeFacts: settings?.googlePlacesPhotos === false ? null : placeRead.facts,
+      googleKey: keys?.google ?? null,
       accountId: context.accountId,
       domain,
       domainDeps,
@@ -217,14 +219,40 @@ export function createPreSiteGatherer(deps) {
 
 /**
  * Store the pictures the sources collected (`pictures.js`), in what is left of the deadline, under one new research
- * run. A server without a picture store, or a research of no account, keeps none: every picture is set aside.
+ * run: the sources' pictures (the listing page's included), their logo hints, and the Google place's photos when the
+ * /ops/wo switch `googlePlacesPhotos` is on (at most `placePhotosMax`, the executor's cap; each Place Photos call is
+ * held by the research step's one reservation, as the social calls are). A server without a picture store, or a
+ * research of no account, keeps none: every picture is set aside.
  */
-async function storedPicturesOf({ deps, parts, rows, accountId, domain, domainDeps, remaining }) {
-  const items = picturesToStore({ rows, hints: parts.logoHintsOf(rows), fairShare: parts.fairShare })
+async function storedPicturesOf({
+  deps,
+  parts,
+  rows,
+  placeFacts,
+  googleKey,
+  accountId,
+  domain,
+  domainDeps,
+  remaining
+}) {
+  const items = picturesToStore({
+    rows,
+    hints: parts.logoHintsOf(rows),
+    placePhotos: placePhotoItems(placeFacts, { max: parts.placePhotosMax }),
+    fairShare: parts.fairShare
+  })
   if (!deps.pictures || !accountId)
     return { run: null, rows: [], setAside: items.map((i) => ({ url: i.url, reason: NO_STORE })) }
   const run = randomUUID()
-  const kept = await deps.pictures.store({ accountId, run, items, domain, deps: domainDeps, remaining })
+  const kept = await deps.pictures.store({
+    accountId,
+    run,
+    items,
+    domain,
+    deps: domainDeps,
+    remaining,
+    googleKey
+  })
   return { run, ...kept }
 }
 

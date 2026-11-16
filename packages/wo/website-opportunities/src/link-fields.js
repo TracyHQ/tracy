@@ -139,7 +139,9 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
           url: refOf(j),
           source: j.source ?? hostOf(j.url),
           ok: read.ok === true,
-          ...(read.ok ? { facts: read.facts } : { reason: read.reason, nameHint: read.nameHint ?? null })
+          ...(read.ok
+            ? { facts: read.facts, ...(read.media?.length ? { media: read.media } : {}) }
+            : { reason: read.reason, nameHint: read.nameHint ?? null })
         }
       })
     )

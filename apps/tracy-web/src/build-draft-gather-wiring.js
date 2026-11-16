@@ -12,7 +12,13 @@ import { withNameDecision } from 'website-opportunities/src/business-name.js'
 import { withHoursDecision } from 'website-opportunities/src/business-hours.js'
 import { withPhoneDecision } from 'website-opportunities/src/business-phones.js'
 import { withRatingDecision } from 'website-opportunities/src/business-rating.js'
-import { fairShare, mergeCollected, mergePalettes, mergeProfile } from 'website-opportunities/src/executor.js'
+import {
+  PLACE_PHOTOS_MAX,
+  fairShare,
+  mergeCollected,
+  mergePalettes,
+  mergeProfile
+} from 'website-opportunities/src/executor.js'
 import { EXT, createMediaStore } from 'website-opportunities/src/media-store.js'
 import { imageInfoWith, logoPaletteOf } from 'website-opportunities/src/media-info.js'
 import { chooseLogo, logoHintsOf } from 'website-opportunities/src/place-logo.js'
@@ -67,6 +73,8 @@ export const preSiteParts = Object.freeze({
   mergeProfile,
   mergePalettes,
   fairShare,
+  // The executor's cap on a place's Google photos.
+  placePhotosMax: PLACE_PHOTOS_MAX,
   fromPlace,
   makeSiteBrief,
   opportunityOf,
@@ -121,6 +129,7 @@ export function placeCandidateFields(raw) {
 /**
  * The private `listing` source row of the listing pages read, made by Website Opportunities' own writer
  * (`saveListingSource`) into a row held in memory: the writer's `insert` is caught, nothing reaches a database.
+ * The pages' pictures of the business are its `collected.media`.
  */
 export async function listingRowOf(listings) {
   let held = null
@@ -141,6 +150,10 @@ export async function listingRowOf(listings) {
     }
   }
   await saveListingSource(memory, randomUUID(), listings)
+  // The pictures each page holds of the business (`listing-pictures.mjs`) become the row's media, so the draft's
+  // picture run stores them as it stores a website's. The Website Opportunities row keeps them inside its listings.
+  const media = listings.flatMap((l) => (l.ok && Array.isArray(l.media) ? l.media : []))
+  if (held && media.length) held.collected = { ...held.collected, media }
   return held
 }
 

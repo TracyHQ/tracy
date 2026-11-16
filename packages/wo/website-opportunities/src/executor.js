@@ -57,7 +57,8 @@ const RESUMABLE = new Set(['timeout', 'rate_limited', 'quota'])
 const MEDIA_BUDGET = 300
 const WEBSITE_PAGES = 40
 const PLACE_FACTS_MAX_AGE_MS = 30 * 24 * 3600 * 1000
-const PLACE_PHOTOS_MAX = 10
+/** Most Google listing photos one research stores (the build chat's research before a site exists keeps the same cap). */
+export const PLACE_PHOTOS_MAX = 10
 /** `wo_media.source` of a photo from the restaurant's Google Places listing. */
 export const GOOGLE_PLACES_SOURCE = 'google-places'
 export { EXT, IMAGE_MAX_BYTES, VIDEO_MAX_BYTES }
@@ -566,7 +567,7 @@ export function createExecutor({
 
   // The media row of one collected item and of downloaded bytes (`media-store.js`), shared with the build chat's
   // research before a site exists.
-  const { mediaRecord, storedRecord } = createMediaStore({ objects, imageInfo, domainDeps })
+  const { mediaRecord, storedRecord, placePhotoRecord } = createMediaStore({ objects, imageInfo, domainDeps })
 
   /**
    * Photos of the Google Places listing (`googlePlacesPhotos` on), stored like any collected picture. Each keeps its
@@ -579,37 +580,13 @@ export function createExecutor({
     for (const [i, photo] of photos.entries()) {
       if (known.has(`${GOOGLE_PLACES_SOURCE}:${photo.name}`)) continue
       if (await ctx.pausePoint({ placePhotos: { done: i, total: photos.length } })) return FEATURE_OFF
-      const result = await withMediaAdmission('image', async () => {
-        let got
-        try {
-          got = await domain.fetchPlacePhoto(photo.name, {
-            ...domainDeps,
-            googleKey: keys.google,
-            attributions: photo.attributions ?? [],
-            maxBytes: IMAGE_MAX_BYTES
-          })
-        } catch (error) {
+      const record = await placePhotoRecord(domain, opportunityOwner(opp), photo, {
+        googleKey: keys.google,
+        reference: () => null,
+        onError: (error) =>
           log.warn(`[opportunities] ${opp.id}: Google photo skipped (${error?.code ?? 'error'})`)
-          return null
-        }
-        const base = {
-          accountId: opp.account_id,
-          opportunityId: opp.id,
-          kind: 'image',
-          category: 'other',
-          caption: null,
-          alt: null,
-          source: GOOGLE_PLACES_SOURCE,
-          sourceUrl: got.sourceUrl,
-          postId: null,
-          postedAt: null
-        }
-        const record = await storedRecord(domain, opportunityOwner(opp), base, got.bytes, () => null)
-        return { record, attributions: got.attributions }
       })
-      const { record, attributions } = result ?? {}
       if (!record) continue
-      record.labels = { ...record.labels, credit: { provider: 'Google', authors: attributions ?? [] } }
       await fenced(pool, lease, (db) => insertMedia(db, record))
     }
     return null

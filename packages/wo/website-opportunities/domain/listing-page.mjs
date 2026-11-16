@@ -6,6 +6,7 @@
  */
 import { fetchLimited } from './fetch-limited.mjs'
 import { businessFromLd, businessNodeOf, ldBlocksOf } from './website-crawler.mjs'
+import { listingPicturesOf } from './listing-pictures.mjs'
 
 const MAX_BYTES = 1536 * 1024
 /** Path words of listing URLs that are not part of the business's name. */
@@ -159,7 +160,8 @@ export function nameHintOfListingUrl(url) {
  * `{ok: false, reason, nameHint}` with the name its URL suggests.
  * @param {string} url
  * @param {{ fetch: typeof fetch, resolve?: Function, timeoutMs?: number }} deps
- * @returns {Promise<{ ok: true, facts: object } | { ok: false, reason: string, nameHint: string | null }>}
+ * @returns {Promise<{ ok: true, facts: object, media?: object[] } | { ok: false, reason: string,
+ *   nameHint: string | null }>} `media`: the pictures the page holds of the business (`listing-pictures.mjs`)
  */
 export async function readListingPage(url, deps = {}) {
   const nameHint = nameHintOfListingUrl(url)
@@ -174,9 +176,11 @@ export async function readListingPage(url, deps = {}) {
     if (got.status === 401 || got.status === 403 || got.status === 429)
       return { ok: false, reason: 'blocked', nameHint }
     if (got.status < 200 || got.status >= 300) return { ok: false, reason: `http_${got.status}`, nameHint }
-    const facts = listingFromHtml(new TextDecoder().decode(got.bytes))
+    const html = new TextDecoder().decode(got.bytes)
+    const facts = listingFromHtml(html)
     if (!facts || !facts.name) return { ok: false, reason: 'no_business', nameHint }
-    return { ok: true, facts }
+    const media = listingPicturesOf(html, got.url ?? url)
+    return { ok: true, facts, ...(media.length ? { media } : {}) }
   } catch (error) {
     return { ok: false, reason: error?.code === 'URL_BLOCKED' ? 'not_public' : 'fetch_failed', nameHint }
   }

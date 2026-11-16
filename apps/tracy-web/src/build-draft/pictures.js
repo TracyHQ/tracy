@@ -38,7 +38,7 @@ export const draftKeyPrefix = (accountId) => `build-drafts/${accountId}`
  * The items to store: every collected picture of the rows, then the logo hints of the sources (`place-logo.js`, kept
  * whatever their size), shared fairly between sources up to the budget.
  */
-export function picturesToStore({ rows, hints = [], fairShare, budget = PICTURE_BUDGET }) {
+export function picturesToStore({ rows, hints = [], placePhotos = [], fairShare, budget = PICTURE_BUDGET }) {
   const queue = new Map()
   for (const r of rows)
     for (const m of r.collected?.media ?? [])
@@ -47,7 +47,25 @@ export function picturesToStore({ rows, hints = [], fairShare, budget = PICTURE_
   for (const h of hints)
     if (typeof h?.url === 'string' && !queue.has(h.url))
       items.push({ url: h.url, kind: 'image', source: h.source })
+  // The Google listing's photos, under their own cap (`placePhotoItems`): downloaded through the Place Photos door.
+  for (const p of placePhotos) if (!queue.has(p.url)) items.push(p)
   return items
+}
+
+/**
+ * The photos of a Google place's facts as picture items (`placeFactsFromDetails` `photos`), at most `max`, each
+ * addressed `google-places:<photo name>` as the stored copy is. None when the place has none.
+ */
+export function placePhotoItems(facts, { max }) {
+  return (Array.isArray(facts?.photos) ? facts.photos : [])
+    .filter((p) => typeof p?.name === 'string' && p.name)
+    .slice(0, max)
+    .map((p) => ({
+      url: `google-places:${p.name}`,
+      kind: 'image',
+      source: 'google-places',
+      placePhoto: { name: p.name, attributions: p.attributions ?? [] }
+    }))
 }
 
 /** A stored row as a brief read's media row (the `wo_place_media` columns `fromPlace` reads), origin `draft`. */
@@ -85,8 +103,11 @@ const UPSERT = `insert into build_draft_picture (account_id, research_run, kind,
  *   mediaStoreOf: (deps: object) => {mediaRecord: Function}, withinTime: Function}} deps
  */
 export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime }) {
-  /** Store the items of one research run: `{rows, setAside}`, rows in the brief read's media shape. */
-  async function store({ accountId, run, items, domain, deps, remaining }) {
+  /**
+   * Store the items of one research run: `{rows, setAside}`, rows in the brief read's media shape. A Google listing
+   * photo (`placePhoto`) is read with `googleKey`, its spend held by the research step's reservation.
+   */
+  async function store({ accountId, run, items, domain, deps, remaining, googleKey = null }) {
     const media = mediaStoreOf(deps)
     const owner = { fields: { accountId }, keyPrefix: draftKeyPrefix(accountId) }
     const rows = []
@@ -100,7 +121,14 @@ export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime })
           setAside.push({ url: item.url, reason: reasonOf('timeout') })
           continue
         }
-        const got = await withinTime(() => media.mediaRecord(domain, owner, item), remaining())
+        const reference = (reason) => ({ status: 'reference', reason })
+        const recordOf = () =>
+          item.placePhoto
+            ? googleKey
+              ? media.placePhotoRecord(domain, owner, item.placePhoto, { googleKey, reference })
+              : reference('download_failed')
+            : media.mediaRecord(domain, owner, item)
+        const got = await withinTime(recordOf, remaining())
         const record = got?.timedOut ? { status: 'reference', reason: 'timeout' } : got
         if (record?.status !== 'stored') {
           setAside.push({ url: item.url, reason: reasonOf(record?.reason) })

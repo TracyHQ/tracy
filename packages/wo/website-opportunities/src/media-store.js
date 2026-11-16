@@ -40,7 +40,8 @@ export const EXT = {
  *   domainDeps: object}} deps `domainDeps`: the `{fetch, resolve, now}` downloads use (the crawl's guarded fetch)
  * @returns {{mediaRecord: (domain: any, owner: {fields: object, keyPrefix: string, shared?: boolean}, m: any) =>
  *   Promise<any>, storedRecord: (domain: any, owner: object, base: object, bytes: Uint8Array, reference: Function) =>
- *   Promise<any>}}
+ *   Promise<any>, placePhotoRecord: (domain: any, owner: object, photo: {name: string, attributions?: object[]},
+ *   opts: {googleKey: string, reference: Function, onError?: Function}) => Promise<any>}}
  */
 export function createMediaStore({ objects, imageInfo, domainDeps }) {
   /** The media row of one collected item (`owner`: `opportunityOwner`, or a place's in `place-executor.js`). */
@@ -145,5 +146,53 @@ export function createMediaStore({ objects, imageInfo, domainDeps }) {
     }
   }
 
-  return { mediaRecord, storedRecord }
+  /**
+   * The media row of one Google listing photo (`photo`: a `placeFactsFromDetails` photo, `{name, attributions}`):
+   * downloaded through the Place Photos door (`domain.fetchPlacePhoto`, the key in a header), then stored by the same
+   * rules as any picture, its authors kept in `labels.credit` (Google requires the credit wherever it is shown). A photo
+   * that does not download is `reference(reason)`; `onError` hears the error. Used by the research executor and by
+   * the build chat's research before a site exists, so both store Google photos alike.
+   */
+  function placePhotoRecord(domain, owner, photo, { googleKey, reference, onError = () => {} }) {
+    return withMediaAdmission('image', async () => {
+      let got
+      try {
+        got = await domain.fetchPlacePhoto(photo.name, {
+          ...domainDeps,
+          googleKey,
+          attributions: photo.attributions ?? [],
+          maxBytes: IMAGE_MAX_BYTES
+        })
+      } catch (error) {
+        onError(error)
+        return reference(PLACE_PHOTO_FAILURES[error?.code] ?? 'download_failed')
+      }
+      const base = {
+        ...owner.fields,
+        kind: 'image',
+        category: 'other',
+        caption: null,
+        alt: null,
+        source: GOOGLE_PLACE_PHOTO_SOURCE,
+        sourceUrl: got.sourceUrl,
+        postId: null,
+        postedAt: null
+      }
+      const record = await storedRecord(domain, owner, base, got.bytes, reference)
+      if (record?.status === 'stored')
+        record.labels = { ...record.labels, credit: { provider: 'Google', authors: got.attributions ?? [] } }
+      return record
+    })
+  }
+
+  return { mediaRecord, storedRecord, placePhotoRecord }
 }
+
+/** The media `source` of a photo from the business's Google listing (`executor.js` `GOOGLE_PLACES_SOURCE`). */
+export const GOOGLE_PLACE_PHOTO_SOURCE = 'google-places'
+/** A Place Photos door failure (`gplaces-details.mjs` `fetchPlacePhoto`) as a media record's reason. */
+const PLACE_PHOTO_FAILURES = Object.freeze({
+  URL_BLOCKED: 'url_blocked',
+  TOO_LARGE: 'too_large',
+  NOT_MEDIA: 'not_media'
+})
