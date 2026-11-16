@@ -137,6 +137,28 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
       reason: `${PLAN_HIDES}: it is already empty on the site`,
       ...(order.hiddenList ? { hiddenList: order.hiddenList } : {})
     }
+  if (via === 'template')
+    return {
+      status: 'skipped',
+      key,
+      reason: `the template paints ${order.file} from its own files and no slot holds it: it is the template's look, not the demo's content, so nothing is taken off`
+    }
+  if (via === 'linked')
+    return {
+      status: 'skipped',
+      key,
+      reason:
+        'a kept link of the plan writes this address: its button keeps its words, so the address stays with them (a button leaves whole or not at all)'
+    }
+  if (via === 'unshown')
+    return {
+      status: 'hidden',
+      key,
+      reason: `${PLAN_HIDES}: it prints only on ${[
+        ...(order.list ? [`the dropped block ${order.list}`] : []),
+        `pages the plan drops (${order.pages.join(', ')})`
+      ].join(' and ')}, so no kept page shows it`
+    }
   if (via === 'rewritten') return rewrittenResult(order, refused)
   if (via === 'carried') return carriedResult(order, { gone, removed, relinked, refused })
   if (via === 'block') {

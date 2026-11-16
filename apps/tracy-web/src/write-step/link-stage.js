@@ -418,9 +418,19 @@ export async function prepareLinks({
     }
   }
 
+  // The addresses a kept plan link writes over the plan's hide of them (link-lines.js `overHide`): the hide stage yields there.
+  const overHides = new Set(
+    [...orders.values()]
+      .filter((o) => o.overHide && (o.via === 'slot' || o.via === 'shared'))
+      .flatMap((o) => [...o.keys, ...(o.alsoKeys ?? [])])
+      .filter((key) => key in changes)
+  )
   return {
     changes,
     evidence,
+    overHides,
+    // The doors, read with the menu rows, which the hide stage reads a hidden link's address by too (hide-plan.js).
+    doorOf,
     stranded,
     emptySlots,
     audioFailures,

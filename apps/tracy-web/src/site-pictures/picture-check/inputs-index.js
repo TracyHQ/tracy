@@ -1,20 +1,12 @@
 // Indexes the plan, the kit and the brief for the picture check rules (ADR 0043). Reads tolerantly: a missing or
 // oddly shaped part yields an empty index and never throws. Nothing here modifies an input.
 import { contentMapKey } from '../../lib/content-map-key.js'
+import { demoFileSize, doorMinWidthOf } from '../../lib/door-min-width.js'
 import { galleryIndex } from '../gallery-tiles.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 const isSize = (x) => Number.isInteger(x) && x > 0
-
-// The demo file size of a content map slot: fit.source, else the width and height the sample's image URL carries
-// (`...?width=1920&height=960`). Both are the size of the file the site holds today.
-function demoFileSize(slot) {
-  const src = slot?.fit?.source
-  if (isSize(src?.width) && isSize(src?.height)) return { width: src.width, height: src.height }
-  const q = /[?&]width=(\d+)&height=(\d+)/.exec(String(slot?.sample ?? ''))
-  return q ? { width: Number(q[1]), height: Number(q[2]) } : null
-}
 
 const pathOnly = (p) => String(p ?? '').split('#')[0]
 
@@ -39,14 +31,16 @@ function indexKit(kit) {
       .filter((s) => isObject(s) && typeof s.key === 'string')
       .map((s) => [s.key, s])
   )
-  // The narrowest file the write door takes for a frame (the slot's fit.minWidth, SlotFit checkPicture): carried on the
-  // frame, so every cut and every drawing for it is written at least that wide (card AI).
+  // The narrowest file the write door takes for a frame (the slot's fit.minWidth, capped at the demo file's width as
+  // SlotFit checkPicture caps it, door-min-width.js): carried on the frame, so every cut and every drawing for it is
+  // written at least that wide (card AI).
   // A frame a T4 layout paints behind the blocks writes the layout's slots (`writesTo`), not one named after it.
   const keysOf = (f, id) =>
     Array.isArray(f?.writesTo) && f.writesTo.length ? f.writesTo : [contentMapKey(id)]
   for (const [id, f] of frames) {
-    const fits = keysOf(f, id).map((k) => slots.get(k)?.fit)
-    const mins = fits.map((fit) => fit?.minWidth).filter(isSize)
+    const held = keysOf(f, id).map((k) => slots.get(k))
+    const fits = held.map((slot) => slot?.fit)
+    const mins = held.map(doorMinWidthOf).filter(isSize)
     // A photo frame can still require alpha (for example a customer-avatar strip). Its classification alone does
     // not describe what the native slot accepts; retain the contract's requirement before choosing a JPEG cut.
     frames.set(id, {
