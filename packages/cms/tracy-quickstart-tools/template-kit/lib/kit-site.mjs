@@ -23,6 +23,8 @@ const ITEM_KINDS = /^(article|contact|user|userProfile)$/ // an entity with a pa
 export function mergeSite(kit, doc, map, words = null, previous = null) {
   if (!doc) {
     kit.site = null
+    // The declared fields wait beside the kit for the assemble that has a site part (declared-site-fields.mjs).
+    keepDeclaredSiteFields(kit, previous)
     kit.errors.push({ kind: 'missing', field: 'site', reason: 'the site part did not run (no site.json)' })
   } else {
     kit.site = doc.site

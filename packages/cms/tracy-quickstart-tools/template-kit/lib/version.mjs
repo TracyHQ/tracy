@@ -6,7 +6,8 @@
 //   3.1.1: assigned T3 Section<N> chrome is captured as its module block.
 //   3.1.2: passive external assets use bounded request transport without changing their URLs or fonts.
 //   3.1.3: inline sentences retain their visible order when choosing the owning block of a stored slot.
-export const TOOL_VERSION = '3.1.3'
+//   3.1.4: a build into a folder holding only a kit keeps its declared site fields and looks through the first assemble.
+export const TOOL_VERSION = '3.1.4'
 export const TOOL = `template-kit ${TOOL_VERSION}`
 
 /** Stamp a kit settled again by a no-browser command: the tool that did it and when. */

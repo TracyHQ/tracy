@@ -70,6 +70,15 @@ export const DECLARED_SITE_FIELDS = Object.freeze([
 
 const LIST_FIELDS = new Set(DECLARED_SITE_FIELDS.filter((d) => d.list).map((d) => d.field))
 
+/**
+ * Where a kit assembled with no site part (no site.json yet) keeps the declared fields of the kit it replaces, until an
+ * assemble with a site part puts them back under `site`. Every `build` assembles once before its site part runs (the
+ * read pass groups the pages through the kit), so without it a build into a folder holding only the committed kit wrote
+ * that kit over with `site: null` and every later assemble had nothing to keep (JA Diner 1.0.8 rebuild, 16/11/2026:
+ * stock screens, hidden page links, the self link container and both reasons of an explicit none were lost).
+ */
+export const DECLARED_WAITING = 'declaredSite'
+
 const valueAt = (site, path) =>
   path.split('.').reduce((v, k) => (v && typeof v === 'object' ? v[k] : undefined), site)
 
@@ -90,29 +99,38 @@ function setAt(site, path, value) {
  * @returns {Record<string, unknown>}
  */
 export function declaredOf(kit) {
-  const site = kit?.site
+  // A kit assembled with no site part may still get a `site` of its own later in the assemble (the content pages),
+  // so the fields waiting beside it are read too; one under `site` wins.
+  const places = [kit?.site, kit?.[DECLARED_WAITING]].filter((s) => s && typeof s === 'object')
   /** @type {Record<string, unknown>} */
   const out = {}
-  if (!site || typeof site !== 'object') return out
   for (const { field } of DECLARED_SITE_FIELDS) {
-    const v = valueAt(site, field)
+    const v = places.map((site) => valueAt(site, field)).find((x) => x !== undefined)
     if (v !== undefined) setAt(out, field, structuredClone(v))
   }
-  const why = Object.entries(site.noneWhy ?? {}).filter(([f]) => LIST_FIELDS.has(f))
+  const why = places
+    .flatMap((site) => Object.entries(site.noneWhy ?? {}))
+    .filter(([f]) => LIST_FIELDS.has(f))
+    .reverse()
   if (why.length) out.noneWhy = Object.fromEntries(why)
   return out
 }
 
 /**
  * Carries the declared fields of `previous` (the kit already in the folder) into `kit`, changed in place. Returns the
- * fields carried. A kit with no site part (no site.json) keeps nothing: its site part is an error already.
+ * fields carried. A kit with no site part (no site.json) keeps them aside, under `DECLARED_WAITING`, for the next
+ * assemble that has one; its site part is an error already.
  * @param {any} kit
  * @param {any} previous
  * @returns {string[]}
  */
 export function keepDeclaredSiteFields(kit, previous) {
-  if (!kit?.site || typeof kit.site !== 'object') return []
   const held = declaredOf(previous)
+  if (!kit?.site || typeof kit.site !== 'object') {
+    if (!Object.keys(held).length) return []
+    kit[DECLARED_WAITING] = held
+    return [DECLARED_WAITING]
+  }
   const kept = []
   for (const { field } of DECLARED_SITE_FIELDS) {
     const v = valueAt(held, field)
