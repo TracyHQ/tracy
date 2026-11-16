@@ -13,7 +13,13 @@ const WHY = {
   no_page_reader: 'no browser was given to read the pages',
   time: 'it ran out of time (run it again into the same folder to resume)',
   passes: 'it ran out of passes before every value reached every field',
-  steps: 'it ran out of site steps while looking for the field that caused a problem',
+  steps: (m) =>
+    'it ran out of site steps' +
+    (m?.steps == null ? '' : ' (' + m.steps + ' used)') +
+    ' while looking for the field that caused a problem',
+  unattributed:
+    'a stop or a broken page needs several values together, and no single one was found to cause it',
+  reruns: 'one pass met more stops than it may write again',
   plain_write_stopped: 'the plain marker build did not finish writing the site',
   plain_pages_broken: 'a page of the plain marker build did not answer as planned',
   plain_build_failed: 'the plain marker build could not be made',
@@ -34,6 +40,7 @@ const WHY = {
   link_probe_cap: 'its links reached the most the link check reads, so some were not read',
   run_state: 'the run state stopped the write (a run record of another plan, a stored picture gone)',
   probe_not_written: 'the build wrote other values than the probes at some places',
+  probe_not_judged: 'some pages printed a value only cut short, so no page showed whether it ran',
   red_without_failures: 'a check reported a problem without naming it',
   record_not_scanned: 'the record itself was not scanned',
   record_gitleaks_not_run: 'gitleaks did not run over the record itself',
@@ -43,6 +50,7 @@ const WHY = {
 }
 export const whyOf = (m) => {
   const code = m?.reason ?? m?.incomplete
+  if (typeof WHY[code] === 'function') return WHY[code](m)
   if (WHY[code]) return WHY[code]
   if (code) return String(code).replaceAll('_', ' ')
   return m?.status === 'not_run' ? 'this run did not include it' : 'it did not finish'
@@ -122,9 +130,12 @@ function variantLine(name, v, hidden = false) {
 const UNTESTED = {
   suspect_of_untraced_stop: 'set aside as suspects of a stop no step was left to trace',
   suspect_of_untraced_page: 'set aside as suspects of a broken page no step was left to trace',
+  suspect_of_unattributed_stop: 'set aside as suspects of a stop no single value was found to cause',
+  suspect_of_unattributed_page: 'set aside as suspects of a broken page no single value was found to cause',
   no_pass_reached_it: 'no pass reached them',
   refused_or_failed: 'every probe they got was refused or failed',
   probe_not_written: 'the build wrote another value than the probe',
+  judged_by_no_page: 'every page printed their value only cut short, so it was judged by none',
   probes_left: 'named by a finding, its other probes never tried'
 }
 
@@ -147,7 +158,10 @@ function writeSafetyLine(m) {
       ' places given a probe had at least one probe reach the site' +
       (could == null ? '' : ' (' + could + ' places could take one)'),
     ...(known
-      ? [n(Math.max(0, (p.probed ?? 0) - short), 'place', 'places') + ' had every probe that applies tried']
+      ? [
+          n(Math.max(0, (p.probed ?? 0) - short), 'place', 'places') +
+            ' had a result for every probe that applies'
+        ]
       : []),
     ...(missing.length
       ? [

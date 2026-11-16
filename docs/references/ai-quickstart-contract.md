@@ -1724,12 +1724,17 @@ names the file, or the adapter's scope (`gate/adapters/joomla-literal-scope.mjs`
 there (a component layout outside any module on a page of its view, inside the wrapper that layout draws and no wrapper
 of a more specific layout of its view: the class names of the layout file's first element, read from the release,
 against the class names around the element, `place.within`; the pagination layout inside an element of class
-`pagination` the page reader marks, `place.pagination`, a module layout in a module of its type, a JA ACM
+`pagination` the page reader marks, `place.pagination`, outside any module (a pagination element inside a module is that
+module's, review 6), a module layout in a module of its type, a JA ACM
 layout in a module whose params pick it); words the write, a contract place or the blank site's row of the module that
 prints them holds are never a literal, nor are words (not a number a pattern keeps) a row of the dump a page prints
 holds (an article, a module, a menu item, a category, a field value, a contact); where the page cannot tell the file
 the words are a leak; a kept design picture (an entry naming a picture file) is exempt only where the page draws it as
-a stylesheet does (a background or a generated picture), never as a picture element; a keep of any of these whose reason says no page draws
+a stylesheet does (a background or a generated picture), never as a picture element. What a kept `pattern` still lets
+through (review 6): a number is held by too many rows to tell whose, so a number a pattern keeps is exempt wherever its
+file prints, bounded only by the pattern and by the row of the module that prints it: on JA Boxing any two digits in the module that prints the features block
+(`acm/features-intro/tmpl/style-4.php`, the card counter), the card count is not checked, and any page number up to 999
+in a pagination element outside modules, the page count of the list is not checked; a keep of any of these whose reason says no page draws
 it is not exempt where it is seen, it is `kit_reason_false`) and the
 framework adapter (`EXEMPTIONS` of the adapter, the page frame of `gate/adapters/web-frame.mjs`: an address of the site
 itself, punctuation and symbols with no letter and no digit, `404` on the missing page that answers 404, a date or the
@@ -1788,7 +1793,10 @@ judge on the list page the items it left out, but only while no page it read is 
 whose own page was read (`article:<item>`, or the detail page type it is) and does not print a value is no list's
 choice, and the value stays unexplained. The row keeps `listItem: {shown, items}`; the reason is worked out from the
 pages the record says were read (`render.pages[].from`), so the guard derives it again and a `listItem` field alone gives
-none. The guard cannot tell from a record which item of a list was shown (a record holds no page HTML): a row of a
+none. Those pages are the record's own, so the release plan check (`gate/release-plan.mjs`) refuses a finished record
+whose read pages lack the own page of any article the kit's build creates (`ownPages`, review 6): an item's page cannot
+be dropped to make its row a list's choice. A record edited consistently past that (the rows and the pages forged
+together, a list page added) is a record invented field by field, the limit `gate/release-binding.mjs` names. The guard cannot tell from a record which item of a list was shown (a record holds no page HTML): a row of a
 shown item whose own page was not read is taken on the run's word. A paged blog list is read on each further page its
 items fill (`<page>:page-<n>`), at the size its menu item gives, so a list card value (an intro picture) of a later
 item is seen where it prints. The ordering itself is the build's (a date per item in plan order would
@@ -1913,8 +1921,12 @@ marker build reads for its dark accent, `<package>/contracts/<slug>/<cms>/<versi
 `template_kit_changed`). The kit carries both `check-record/record.json` (required:
 a verdict alone is no proof) and a small `check-record/verdict.json` (`tracy-ai-quickstart-check-verdict/v1`, made by
 `verdictFileOf(record)`): the binding, `recordSha256` (the sha256 of `record.json` as the gate writes it,
-`recordText(record)`), and the verdict (`pass`, `failing`, `measurements`). `GATE_VERSION` is 7 since the fifth #586
-review: a record of version 6 credited a place with another place's copy of a code-less probe, named a site refusal at
+`recordText(record)`), and the verdict (`pass`, `failing`, `measurements`). `GATE_VERSION` is 8 since the sixth #586
+review: a record of version 7 placed a whole value probe by the code its place got in the pass, which after a field sent
+back is another place's (false `not_written` rows, stops with phantom suspects), named a derived column's failure at
+the location that had the plan entry, took an ellipsis right after the marker for a cut and counted a probe printed only
+cut short as tested, and let a pagination element inside a module keep a page number. 7 since the fifth #586 review:
+a record of version 6 credited a place with another place's copy of a code-less probe, named a site refusal at
 the plain build's first location of the value, made every whole value probe a suspect of every stop, excused an item
 of a list whose own page was read printing nothing (and took that reason from a row field), let a planned page with
 noindex skip its search engine items, exempted a kept literal of an article layout on articles of another layout and a
@@ -2170,6 +2182,14 @@ time is in `record.phases`.
 | Quality | a block failure of a page group the untouched template does not show on the same kind of page, at the same width, with the same selector (or reason when there is no selector): a `regression`, counted once when the look read finds it the same, in the same colours, on both theme sides (`themes` names the sides); a missing SEO item on a page the build writes, or on a system page where the untouched template has it; a measurement in which no group measured anything (every group not applicable) is no pass (`no_group_measured`, incomplete) | a failure the untouched template shows too (`same_as_template`); a system page's SEO item the untouched template misses too; every warning |
 | Secrets | a finding the allow file does not name; an allow entry that matches nothing | an allowed finding, with its reason |
 
+What write safety promises (criterion 1 of #586): every failure it meets is named, by its page, block, field, stored
+location and probe, or, when no step was left or no single value causes it, as a stop or broken page of its own with
+its operation and its number of suspects. It does not promise to try every probe at every place: a template whose
+build or site refuses values ends `failed`, and when a limit (passes, site steps, time, reruns) ends the measurement
+first it is also `incomplete`, and the record counts what was not tried, the (place, probe) pairs never tried
+(`missing`) and every place left untested with why (`ends.untested`). One probe per place per pass: probes that could
+share one value are not packed into one pass (review 6 S5, not done), so a clean template takes about 21 passes.
+
 **Write safety** (`gate/write-safety.mjs`). The probe catalogue (`gate/write-probes.mjs`, `gate/write-probes-edge.mjs`,
 `gate/adapters/joomla-probes.mjs`): markup (a tag, quotes that end an attribute, a JA ACM marker, an escaped tag), letters
 of other scripts, a code address and a quote in a link, then the edge probes of a text place: a value three times the
@@ -2199,15 +2219,19 @@ only when that build refuses there too (`built_alone`), the others stay in the p
 every probe when nothing is named, are traced by bisection over builds; then the build is made again, until it refuses
 nothing, and only then is the site written. A refusal found in memory spends no rerun and no site step; its builds are
 counted (`buildSteps`), limited only by the time. A site stop is searched only among the places its operation stores
-(a probe that replaces the whole value carries no code, so it is placed where the plain build stores its place; only a
-place neither plan stores stays a suspect of every stop) and, when a read back names the column or the slot that
+(a probe that replaces the whole value carries no code, so it is placed where the plain build stores its place, found by
+the place key's own plain code: the code a place gets in a pass is not its plain code once the page writer sent a field
+back, as the marker writer takes a new code on every ask, review 6; only a place neither plan stores stays a suspect of
+every stop) and, when a read back names the column or the slot that
 differed, the places stored there: the one place stored there
 is blamed by the stop itself (`named_alone`, no site step), more are halved over site writes (one trial per halving:
 the rerun meets any other culprit), counted as site steps; that probe is taken out and the pass runs again (a rerun). A
-broken page is traced the same way through its blocks, then its values. A stop or a broken page the step limit leaves
-untraced is a finding of its own (`stop_not_traced`, `page_not_traced`, with the operation or page, the code, the pass
+broken page is traced the same way through its blocks, then its values. A stop or a broken page left untraced, because
+the step limit ran out or because no single value was found to cause it (`why`: `steps` or `unattributed`), is a
+finding of its own (`stop_not_traced`, `page_not_traced`, with the operation or page, the code, the pass
 and `culprit: "not_traced"`) that fails the measurement (the plain build wrote and answered, so a value of the pass broke
-it); its suspects are set aside, untested with that reason, and the pass runs again without them, so every stop a pass
+it); its suspects are set aside, untested with that reason (`suspect_of_untraced_stop` or
+`suspect_of_unattributed_stop`, the same for a page), and the pass runs again without them, so every stop a pass
 meets is recorded.
 
 A place counts as `tested` only when the probe a pass gave it is found in what was written for it
@@ -2219,7 +2243,12 @@ place given it. `tested` means at least one probe reached the place, not every p
 probe) pairs never tried (`missing`) and the tested places set aside in a later pass (`ends.parkedTested`), and the
 review page says both.
 A probe that replaces the whole value (the empty value, a number) carries no code: it is found where the plain build
-stored that place, with exactly its value. A build that writes its plain marker in place of a probe, or drops it,
+stored that place (looked up by the place key's own plain code, never the code the place got in the pass), with exactly
+its value. A content plugin code a page prints only cut short (a list that cuts its items' text: at least the start of
+the code, then an ellipsis) is judged by that page neither way; a probe every page printed only cut short has a result,
+`not_judged` (`why: every_print_cut`), its place is not tested from it (`judged_by_no_page`) and the measurement is
+`incomplete` (`probe_not_judged`). An ellipsis right after the marker, with nothing of the code before it, is no cut:
+the page ran the code. A build that writes its plain marker in place of a probe, or drops it,
 leaves the place untested (`not_written` in the ledger, the measurement `incomplete`, `probe_not_written`), and a probe
 never written is never judged as run by a page. A place where every probe was refused by the build is not tested, and
 any place not tested leaves the measurement `incomplete` (`not_site_tested`). Every place ends one way (`ends`): tested
@@ -2237,8 +2266,11 @@ about 7 s, a full site write about 40 s, a reset and the page reads about 30 s, 
 past one the measurement is `incomplete`, never `passed`. Run 4 spent its 20 site steps tracing two stops by halving
 over 316 places (about 9 steps each) and tested 0 places; a stop now names its place from its operation, and from the
 column or slot when a read back reports one (a door call that failed after its retries, `redo_failed`, names neither),
-and costs one rerun when one probed place is stored there. Run 5 met one stop whose operation stored 1 probed place
-and 105 whole value probes stored elsewhere, which were all suspects then; they are not now. A kit with more stops than its limits allow gets a failed record, never a complete passing
+and costs one rerun when one probed place is stored there. Runs 5 and 6 met stops whose operation stored 1 or 2 probed
+places with 3 to 7 suspects each, whole value probes the gate placed by a code that was another place's (review 6); with
+each place found by its own plain code, an in-memory replay of run 6's six passes gives each of its four stops with a
+place 1 suspect. A `redo_failed` stop names no slot or column, so an operation that stores two probed places still
+costs a site step. A kit with more stops than its limits allow gets a failed record, never a complete passing
 one: a resumed record is never released, so such a kit must be fixed first. Builds in memory (about 1.5 s each) have no limit of their own. The state is saved after each pass (`<out>/write-safety-state.json`, `gate/write-safety-state.mjs`) under a
 key of the gate version, the kit's files, the blank site archive, the plugin, the probe catalogue, the site's address
 and the sha256 of the code of the gate and of the build's write step (`gateCodeSha256`): a run stopped by
@@ -2253,7 +2285,9 @@ release step runs the gate itself, #588); the resumed passes themselves are not 
 
 The record gives `places` (`written`, `probed`, `tested`), `notSiteTested`, `passes`, `steps`, `buildSteps`,
 `findings` (page, block, store block, field, probe, kind, the stored location the failure names: the operation a stop
-reports and its slot or column, or an entry of the page that judged it, else the plain build's first location; how it
+reports and, within it, the slot or column it names, which stays the location even when another location of the
+operation has the plan entry (that entry only lends the page, block and field: an alias read back keeps the column
+`alias`, review 6), or an entry of the page that judged it, else the plain build's first location; how it
 was named, `evidence`: `named_alone`, `built_alone`, `trial` or `page` with `judgedOn`; never the value), `missing` and
 `coverage`. **Coverage** (`gate/write-safety-coverage.mjs`) is one table whose numbers add up, and the release guard
 refuses a passing record whose table does not. In stored locations: `universeWritten` (the places of the marker test's

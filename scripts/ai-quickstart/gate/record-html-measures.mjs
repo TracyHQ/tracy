@@ -24,6 +24,12 @@ const KIND = {
   stop_not_traced: 'The write stopped here; no step was left to name the field',
   page_not_traced: 'The page broke; no step was left to name the field'
 }
+/** An untraced stop or page in words: no step left, or no single value found to cause it (review 6). */
+const UNATTRIBUTED = {
+  stop_not_traced: 'The write stopped here; no single value was found to cause it',
+  page_not_traced: 'The page broke; no single value was found to cause it'
+}
+const kindOf = (f) => (f.why === 'unattributed' ? UNATTRIBUTED[f.kind] : null) ?? KIND[f.kind] ?? f.kind
 
 /** Where a finding was stored: its operation, then its slot or column. */
 const whereOf = (f) =>
@@ -113,8 +119,7 @@ export function measurementsHtml(measurements = {}) {
     whereOf(f),
     f.probe ??
       (f.culprit === 'not_traced' ? 'not traced (' + n(f.suspects ?? 0, 'suspect', 'suspects') + ')' : ''),
-    (KIND[f.kind] ?? f.kind) +
-      (f.culprit === 'not_traced' && f.class ? ' (' + (KIND[f.class] ?? f.class) + ')' : ''),
+    kindOf(f) + (f.culprit === 'not_traced' && f.class ? ' (' + (KIND[f.class] ?? f.class) + ')' : ''),
     f.culprit === 'not_traced' ? '' : evidenceOf(f)
   ])
   const s = m.structure ?? {}

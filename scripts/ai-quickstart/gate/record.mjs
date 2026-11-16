@@ -25,9 +25,12 @@ export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v2'
  * items skip noindex pages. 7 (review 5): a probe counts reached only by its place's own value, a stop names the
  * location it refused and suspects only the places stored there, a list excuses an unseen item only when its own page
  * was not read, noindex on a planned page is a finding, kept literals hold to their layout, a printed row and a drawn
- * picture, a code cut by a list is no run, and the record binds the template kit.
+ * picture, a code cut by a list is no run, and the record binds the template kit. 8 (review 6): a whole value probe
+ * is placed by its place's own plain code, a failure keeps the slot or column it names, an ellipsis right after the
+ * marker is no cut and a probe printed only cut short is `not_judged`, a pagination element inside a module keeps no
+ * page number.
  */
-export const GATE_VERSION = 7
+export const GATE_VERSION = 8
 
 /** The folder of a kit that holds its check record; never part of what the record is measured on. */
 export const CHECK_RECORD_DIR = 'check-record'
