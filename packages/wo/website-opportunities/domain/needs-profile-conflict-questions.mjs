@@ -32,6 +32,7 @@ const rankOf = (role) => (ROLES.includes(role) ? ROLES.indexOf(role) : ROLES.len
 function whereFrom(source) {
   if (source?.origin === 'website') return 'Website'
   if (source?.origin === 'google') return 'Google Maps listing'
+  if (source?.origin === 'listing') return 'Directory listing'
   // The owner's chat answer (origin `answer`, D46) is named as the plan card names it (`SOURCE_NAMES`, `plan-data.mjs`).
   if (source?.origin === 'answer') return SOURCE_NAMES.answer
   const ref = String(source?.ref ?? '').toLowerCase()
@@ -44,6 +45,7 @@ function whereFrom(source) {
 function fromCodeOf(source) {
   if (source?.origin === 'website') return 'website'
   if (source?.origin === 'google') return 'google_maps'
+  if (source?.origin === 'listing') return 'listing'
   if (source?.origin === 'answer') return 'owner_answer'
   const ref = String(source?.ref ?? '').toLowerCase()
   for (const network of ['instagram', 'facebook', 'tiktok']) if (ref.includes(`${network}.`)) return network

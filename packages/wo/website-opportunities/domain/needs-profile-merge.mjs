@@ -20,7 +20,7 @@ import { mergeRows } from './needs-profile-rows.mjs'
  * merged fact after this merge (source `customer-answer`), so it always wins, and a disagreement between the chat
  * statement and another source is a conflict the customer settles by such an answer.
  */
-export const TRUST_ORDER = Object.freeze(['website', 'answer', 'google', 'social'])
+export const TRUST_ORDER = Object.freeze(['website', 'answer', 'google', 'listing', 'social'])
 const [CORROBORATED, SINGLE_SOURCE] = CONFIDENCE_LEVELS
 
 /** Business facts the profile holds once (a disagreement is a conflict). */

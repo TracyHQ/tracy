@@ -37,6 +37,8 @@ const ORIGINS = Object.freeze({
   google: 'google',
   'google-places': 'google',
   'google-maps': 'google',
+  // A business directory's page about the business (`link-kinds.mjs` kind `listing`): a third party, like Google.
+  listing: 'listing',
   instagram: 'social',
   facebook: 'social',
   tiktok: 'social',

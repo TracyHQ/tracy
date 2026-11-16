@@ -14,7 +14,7 @@ import {
   shapeOfPath
 } from './build-contract-shared.mjs'
 
-export const SOURCE_KINDS = Object.freeze(['website', 'google', 'social', 'answer', 'assumption'])
+export const SOURCE_KINDS = Object.freeze(['website', 'google', 'listing', 'social', 'answer', 'assumption'])
 export const LEFT_OUT_KINDS = Object.freeze(['page', 'block', 'item', 'feature'])
 export const LOGO_KINDS = Object.freeze(['own', 'text'])
 /** The plan fields a customer may change, as path shapes (`build-contract-shared.mjs`, `shapeOfPath`). */

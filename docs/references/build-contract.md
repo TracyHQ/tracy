@@ -162,7 +162,7 @@ rejected; and labels, reasons and other short texts are held to their [text limi
 
 - **`revision`** starts at 1; each applied plan edit adds one. **`language`** is a tag like `en` or `pt-BR`.
 - **`facts`**: `kind` is a role of `place-content-roles/3`; each has a `label`, a `value` and at least one source.
-  A source `kind` is `website`, `google`, `social`, `answer` or `assumption`.
+  A source `kind` is `website`, `google`, `listing` (a business directory's page), `social`, `answer` or `assumption`.
 - **`items`**: the data items blocks show (services, people, reviews, photos). `kind` is a group kind of
   `place-content-roles/3`; `count` (optional) is how many like things one item stands for, such as a set of photos.
   Facts and items share one id space.

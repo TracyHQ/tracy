@@ -11,7 +11,7 @@
 //   (`needs-profile-questions.mjs`, `needs-profile-conflict-questions.mjs`).
 //
 // Research, as this step reads it:
-//   { sources: [{ id, origin: 'website' | 'google' | 'social', ref?, language?, text?, captions?: string[],
+//   { sources: [{ id, origin: 'website' | 'google' | 'listing' | 'social', ref?, language?, text?, captions?: string[],
 //                 fields?: { '<data kind>': value | value[] }, reviews?: [{ author?, text, rating? }],
 //                 pictures?: [{ id, ref, label?, alt? }] }] }
 import { createHash } from 'node:crypto'

@@ -74,7 +74,7 @@ test("the statement's facts reach the needs profile with origin answer, read on 
 })
 
 test('answer sits under the website and over Google and social in the trust order', () => {
-  assert.deepEqual(TRUST_ORDER, ['website', 'answer', 'google', 'social'])
+  assert.deepEqual(TRUST_ORDER, ['website', 'answer', 'google', 'listing', 'social'])
   const research = {
     sources: [
       { id: 'google', origin: 'google', fields: { 'contact.phone': '+000 10 000 1111' } },

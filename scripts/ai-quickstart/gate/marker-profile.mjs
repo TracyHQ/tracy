@@ -210,7 +210,7 @@ export function markerProfile({ blockStore, pageRecipes, mapping }, registry, { 
     schema: 'tracy-needs-profile/v1',
     roleVocabularyVersion: 'place-content-roles/3',
     prompt: null,
-    trustOrder: ['website', 'answer', 'google', 'social'],
+    trustOrder: ['website', 'answer', 'google', 'listing', 'social'],
     sources,
     language,
     facts,

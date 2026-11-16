@@ -12,6 +12,7 @@ import { withheldIdsOf } from './plan-withheld.mjs'
 export const SOURCE_NAMES = Object.freeze({
   website: 'Website',
   google: 'Google Maps listing',
+  listing: 'Directory listing',
   social: 'Social profile',
   answer: 'Your answer'
 })
