@@ -45,3 +45,11 @@ test('pattern scope: a page number in the pagination is kept, a number of an art
   )
   assert.equal(exemptionOf(at('25', { element: 'p' }), ctx), null)
 })
+
+// Review 6 S4: the pagination layout prints the pagination of the page's own list, outside any module. A pagination
+// element inside a module (a demo module's own list of numbers) is that module's, and its numbers are no page numbers.
+test('S4: a number in a pagination element inside a module is not the pagination layout', () => {
+  const at = { kind: 'text', value: '12', visible: true, path: 'index.php?view=category' }
+  assert.equal(exemptionOf({ ...at, place: { element: 'span', pagination: true, module: 157 } }, ctx), null)
+  assert.match(exemptionOf({ ...at, place: { element: 'span', pagination: true } }, ctx), /^kept_literal: /)
+})

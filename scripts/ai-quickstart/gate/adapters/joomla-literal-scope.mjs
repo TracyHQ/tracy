@@ -5,9 +5,9 @@
 //   true    the file prints there (a component layout outside any module, on a page of its view, read from the
 //           address or the menu item the page is, inside the wrapper that layout draws and no wrapper of a more
 //           specific layout of its view (review 5 Z4: the wrapper's class names, read from the layout files of the
-//           release, against the class names around the element); the pagination layout in a pagination element; a
-//           module layout in a module of that type; an ACM layout in an ACM module whose params pick that layout and
-//           style)
+//           release, against the class names around the element); the pagination layout in a pagination element
+//           outside any module (review 6 S4); a module layout in a module of that type; an ACM layout in an ACM module
+//           whose params pick that layout and style)
 //   false   the page tells that another file prints there
 //   null    the page cannot tell (a file of another kind, a module the dump does not hold, a component layout whose
 //           wrapper the release does not show or the page does not name)
@@ -148,7 +148,8 @@ export function joomlaLiteralScope({ dump, ids = {}, plan = null, mapping = null
   const renders = (file, { place = null, path = null, view = null } = {}) => {
     const k = fileKindOf(file)
     if (!k) return null
-    if (k.kind === 'pagination') return place?.pagination === true
+    // The pagination of the page's own list prints outside any module; one inside a module is that module's (review 6 S4).
+    if (k.kind === 'pagination') return place?.pagination === true && !place?.module
     if (k.kind === 'component') {
       if (place?.module) return false
       const at = view ?? viewOf(path)
