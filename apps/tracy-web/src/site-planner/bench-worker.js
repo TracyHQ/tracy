@@ -39,7 +39,7 @@ import {
 } from './plan-changes.js'
 import { CHECKER_VERSION, checkPlan, failureListText } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
-import { withHiddenListLinks } from './plan-hidden-links.js'
+import { withHiddenLinkLabels, withHiddenListLinks } from './plan-hidden-links.js'
 import { withDemoVideosHidden } from './plan-demo-videos.js'
 import { withKitCharacterLimits } from './plan-kit-limits.js'
 import { mergePlanParts, partFirstMessages, planningParts, plansInParts } from './plan-parts.js'
@@ -225,10 +225,14 @@ const briefRefOf = (source) => String(source?.revisionId ?? source?.name ?? '')
 //   without the field changes nothing;
 // - a link left undecided under a list or row the plan hides is hidden with it (plan-hidden-links.js);
 // - a copy entry without maxCharacters, or with one above the kit's limit, gets the kit's limit (plan-kit-limits.js);
-// - a template demo video a kept block still shows, left undecided, is hidden (plan-demo-videos.js).
+// - a template demo video a kept block still shows, left undecided, is hidden (plan-demo-videos.js);
+// - the label of a link the decision hides, written by the same decision, is hidden with it (plan-hidden-links.js).
 function normalizedPlan(plan, kit) {
-  return withDemoVideosHidden(
-    withKitCharacterLimits(withHiddenListLinks(withStockScreensDropped(plan, kit), kit), kit),
+  return withHiddenLinkLabels(
+    withDemoVideosHidden(
+      withKitCharacterLimits(withHiddenListLinks(withStockScreensDropped(plan, kit), kit), kit),
+      kit
+    ),
     kit
   )
 }

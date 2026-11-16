@@ -227,3 +227,48 @@ test('a menu item label printed by the header and the mobile menu still takes th
   const result = normalize(value, kit)
   assert.ok(!r10bWhere(result, kit).some((where) => where.endsWith('link header.link-5')))
 })
+
+test('a hidden page control whose words the decision writes is kept; any other hidden link takes its written label with it', async () => {
+  const { withHiddenLinkLabels } = await import('../src/site-planner/plan-hidden-links.js')
+  const control = { id: 'blk.button-1', action: 'page-control', element: 'button', labelId: 'ls-1' }
+  const nav = { id: 'blk.link-2', action: 'navigate', element: 'a', labelId: 'ls-2' }
+  const shared = { id: 'blk.link-3', action: 'navigate', element: 'a', labelId: 'ls-3' }
+  const k = {
+    blocks: [
+      {
+        id: 'blk',
+        links: [control, nav, shared],
+        slots: [{ id: 'ls-1' }, { id: 'ls-2' }, { id: 'ls-3', ownedBy: 'other-block' }]
+      }
+    ]
+  }
+  const decision = {
+    block: 'blk',
+    decision: 'keep',
+    copy: [
+      { slot: 'ls-1', text: 'Send enquiry' },
+      { slot: 'ls-2', text: 'Our story' },
+      { slot: 'ls-3', text: 'Book' }
+    ],
+    hiddenSlots: [
+      { slot: 'blk.button-1', why: 'form submit control; the form is kept' },
+      { slot: 'blk.link-2', why: 'no page to lead to' },
+      { slot: 'blk.link-3', why: 'leads to its own page' }
+    ]
+  }
+  const value = { sharedBlocks: [], pages: [{ id: 'page-contact', decision: 'keep', blocks: [decision] }] }
+  const out = withHiddenLinkLabels(value, k).pages[0].blocks[0]
+  // The submit button stays, with its new words.
+  assert.deepEqual(out.links, [{ link: 'blk.button-1', labelSlot: 'ls-1' }])
+  assert.ok(out.copy.some((c) => c.slot === 'ls-1' && c.text === 'Send enquiry'))
+  assert.ok(!out.hiddenSlots.some((h) => h.slot === 'blk.button-1'))
+  // The hidden navigation link takes its label with it.
+  assert.ok(!out.copy.some((c) => c.slot === 'ls-2'))
+  assert.ok(out.hiddenSlots.some((h) => h.slot === 'ls-2'))
+  // A label another block owns stays written.
+  assert.ok(out.copy.some((c) => c.slot === 'ls-3'))
+  assert.equal(value.pages[0].blocks[0].copy.length, 3, 'the plan is never modified in place')
+  // Nothing to settle: the same plan.
+  const settled = withHiddenLinkLabels(value, k)
+  assert.strictEqual(withHiddenLinkLabels(settled, k), settled)
+})
