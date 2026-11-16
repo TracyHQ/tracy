@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-659-joomla-quickstart-utf8mb4",
+  "kind": "fix",
+  "title": "A Joomla quickstart built by the CLI installer converts its utf8mb3 tables to utf8mb4, so an emoji is stored instead of failing the write",
+  "pr": 659,
+  "area": "provision/joomla",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with a docker daemon (the test starts its own mariadb:11 container and removes it), run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok, none skipped."
+  ],
+  "expect": [
+    "Before the function an emoji written into a utf8mb3 tr_content fails with Incorrect string value; after it the site's tables are utf8mb4_unicode_ci, rows unchanged, and the emoji is stored.",
+    "A table the server refuses is named in a !! line and left; the provision function still returns 0; a site already in utf8mb4 prints nothing.",
+    "The installer road calls the conversion after the CLI install and before the chown."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/fleet/tracy-fleet-operation/test/provision-joomla-utf8mb4.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the site's utf8mb3 tables move to utf8mb4 with their rows, then hold an emoji; other tables stay",
+      "a table the server will not convert is named and left; the others are converted; the provision goes on",
+      "a site already in utf8mb4 is left as it is, and says nothing",
+      "the CLI installer road converts the tables right after the install, before anything reads the site"
+    ]
+  }
+}
