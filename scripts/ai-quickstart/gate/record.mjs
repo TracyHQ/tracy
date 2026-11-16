@@ -28,9 +28,12 @@ export const RECORD_SCHEMA = 'tracy-ai-quickstart-check-record/v2'
  * picture, a code cut by a list is no run, and the record binds the template kit. 8 (review 6): a whole value probe
  * is placed by its place's own plain code, a failure keeps the slot or column it names, an ellipsis right after the
  * marker is no cut and a probe printed only cut short is `not_judged`, a pagination element inside a module keeps no
- * page number.
+ * page number. 9 (review 7): a page finding of a place stored at many locations names none the judging page lacks,
+ * the planner's refusal of a blank fact is a build refusal, every probe the build did not write ends in a class
+ * (normalized by the build, refused alone, unsafe, or tried again), an ellipsis right after the marker judges nothing,
+ * and the record binds the probe catalogue.
  */
-export const GATE_VERSION = 8
+export const GATE_VERSION = 9
 
 /** The folder of a kit that holds its check record; never part of what the record is measured on. */
 export const CHECK_RECORD_DIR = 'check-record'

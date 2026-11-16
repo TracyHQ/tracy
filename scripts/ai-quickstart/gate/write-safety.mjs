@@ -28,9 +28,11 @@ import { packPass, probeLedger } from './write-probes.mjs'
  * on the T4 template of run 4 that is one probed place, blamed with no step, so a stop costs one rerun of the pass, not a
  * bisection over the pass (about 9 steps each in run 4, which left 0 of 316 places tested). A pass may meet many such
  * stops, hence `reruns` 20 per pass; the time limit bounds them all. Past a limit the measurement is `incomplete` and
- * the next run into the same run folder resumes it (a resumed record is never released).
+ * the next run into the same run folder resumes it (a resumed record is never released). Review 7 D2: a probe the
+ * plan does not hold is built alone in memory (about 1.2 s each); the first three passes of the T4 template of run 7 took 145, 157
+ * and 118 s in memory alone (run 7: 155, 154 and 110 s with the site), so the time limit is 90 minutes.
  */
-export const LIMITS = Object.freeze({ passes: 24, steps: 20, minutes: 60, reruns: 20 })
+export const LIMITS = Object.freeze({ passes: 24, steps: 20, minutes: 90, reruns: 20 })
 
 const incompleteOf = (reason, more = {}) => ({ status: 'incomplete', incomplete: reason, reason, ...more })
 

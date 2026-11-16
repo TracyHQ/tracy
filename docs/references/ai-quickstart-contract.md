@@ -1978,9 +1978,16 @@ few seconds, no site): that record passes it, so `publishVerified` is only as st
 (#588) gives it. `releaseProblems` and `assertReleasable`
 do not rebuild the plan (they read files only), and neither does CI.
 
-A passing record goes stale by a bumped `gateVersion` or a changed bound input. It does not go stale by a change of
-what is not bound: the build team's write step, the gate's code between two version bumps, the kit contract
-`contracts/<slug>/<cms>/<version>/template-kit.json`, the block library and the probe catalogue. A change there that
+A passing record goes stale by a bumped `gateVersion` or a changed bound input. The binding holds the sha256 of the
+probe catalogue write safety ran (`probeCatalogueSha256`, `gate/gate-probes.mjs`: each probe's id, flags and the source
+and output of its functions), and the guard refuses a record whose catalogue is not the gate's own
+(`probe_catalogue_changed`, review 7 S7): a real run of a gate with probes taken out writes a true record of a weaker
+gate. The binding also holds `gateCodeSha256` (the gate's code and the build's write step), recorded and not compared:
+a guard run later on a moved repository would refuse every record. So an edited gate can still write a passing record
+that keeps the catalogue and changes anything else (a judge that never fails, a ledger that credits every pair): only a
+publish step that runs the repository's own gate (#588) stops that. A record does not go stale by a change of what is
+not bound: the build team's write step, the gate's code between two version bumps, the kit contract
+`contracts/<slug>/<cms>/<version>/template-kit.json` and the block library. A change there that
 makes an earlier record no proof needs a `GATE_VERSION` bump by hand; nothing checks that it was made. The pins come from
 `apps/tracy-web/src/quickstarts.json` (`quickstart/<slug>/<cms>`: `cowork.version` and `installer.sha256`; a kit whose
 version is not the pinned one is `pin_version`, a template not listed is `no_pin`). `assertReleasable(folder)` throws
@@ -2010,7 +2017,9 @@ names the sha256 of the blank site archive it is about to publish (a call withou
 the record it wrote; without it `gate_not_run`); the record in the kit folder must be the one that run wrote, by its
 sha256 (`record_not_this_run`); the record must hold the kit's own plan (`plan_mismatch`, which a record of redone
 lists passes: the run is the defence); and it calls `publish` only
-when all of that and `releaseProblems` find nothing. A record whose write safety resumed a saved state is refused
+when all of that and `releaseProblems` find nothing, and when every file of the folder is what it was before the checks
+(`kit_changed_during_publish`, review 7 S8: the folder is hashed once the gate wrote into it and again right before
+`publish`). A record whose write safety resumed a saved state is refused
 (`write_safety_resumed`), so the release run measures every pass itself. CI cannot check `blank_site_changed`: the
 archive is not in the repository. CI asks a record only of a kit whose `kit-manifest.json` names a `site`: a kit
 marked `released: true` with no `site` (JA Boxing 1.0.11 today) is asked nothing, by decision: `site` is what makes it
@@ -2182,13 +2191,21 @@ time is in `record.phases`.
 | Quality | a block failure of a page group the untouched template does not show on the same kind of page, at the same width, with the same selector (or reason when there is no selector): a `regression`, counted once when the look read finds it the same, in the same colours, on both theme sides (`themes` names the sides); a missing SEO item on a page the build writes, or on a system page where the untouched template has it; a measurement in which no group measured anything (every group not applicable) is no pass (`no_group_measured`, incomplete) | a failure the untouched template shows too (`same_as_template`); a system page's SEO item the untouched template misses too; every warning |
 | Secrets | a finding the allow file does not name; an allow entry that matches nothing | an allowed finding, with its reason |
 
-What write safety promises (criterion 1 of #586): every failure it meets is named, by its page, block, field, stored
-location and probe, or, when no step was left or no single value causes it, as a stop or broken page of its own with
-its operation and its number of suspects. It does not promise to try every probe at every place: a template whose
-build or site refuses values ends `failed`, and when a limit (passes, site steps, time, reruns) ends the measurement
-first it is also `incomplete`, and the record counts what was not tried, the (place, probe) pairs never tried
-(`missing`) and every place left untested with why (`ends.untested`). One probe per place per pass: probes that could
-share one value are not packed into one pass (review 6 S5, not done), so a clean template takes about 21 passes.
+What write safety promises (criterion 1 of #586): every failure it meets is named, by its probe and its page, and by
+its block, field and stored location wherever the gate can tell them: an SEO place has no field (`field: null`), and a
+failure a page judged at a place stored at several locations none of which is an entry of that page is named by the
+judging page and its number of locations only (`storedAt`, `location: null`, review 7 N1: a menu item's page title
+prints only in the browser title, which no judge reads, so which location printed it is not known). When no step was
+left or no single value causes it, a stop or broken page is a finding of its own with its operation and its number of
+suspects. It does not promise to try every probe at every place: a template whose build or site refuses values ends
+`failed`, and when a limit (passes, site steps, time, reruns) ends the measurement first it is also `incomplete`, and
+the record counts what was not tried, the (place, probe) pairs never tried (`missing`) and every place left untested
+with why (`ends.untested`). A template passes write safety only when every applicable (place, probe) pair ends tested
+on the site, refused by a named build guard, or normalized by the build (below), with no failure. One probe per place
+per pass: probes that could share one value are not packed into one pass (review 6 S5, not done), so a clean template
+takes at least as many passes as its place with the most probes has probes (25 with a declared limit, 23 without), and
+more when the build drops a pair that waits for a later pass. No kit has passed yet: JA Boxing fails on its own
+findings (the site refuses values, pages run content plugin codes).
 
 **Write safety** (`gate/write-safety.mjs`). The probe catalogue (`gate/write-probes.mjs`, `gate/write-probes-edge.mjs`,
 `gate/adapters/joomla-probes.mjs`): markup (a tag, quotes that end an attribute, a JA ACM marker, an escaped tag), letters
@@ -2203,13 +2220,15 @@ test's own write, or one write of its own): otherwise no value can be blamed and
 (`plain_write_stopped`, `plain_pages_broken`). Then a pass writes one probe in every place, a different one per place;
 the ledger keeps which probe reached which place. A stop is classed by its code (`gate/write-safety-judge.mjs`), on
 lists kept by hand in `gate/build-guards.mjs`: a code of the build's own named guards (`BUILD_GUARD_CODES`) is
-`refused_by_build`, recorded only; a code of the run's own state (`RUN_STATE_CODES`: `write_record_stale`,
+`refused_by_build`, recorded only (the planner's own codes too, `PLANNER_GUARD_CODES`, with one decided apart: below); a
+code of the run's own state (`RUN_STATE_CODES`: `write_record_stale`,
 `stored_picture_gone`, `revision_needs_removal`, `site_changed_outside`, `site_key_missing`) is `run_state` and leaves
 the measurement `incomplete` with the code, blaming no value; a door that answered with a code is `door_refused`; no
 answer is `site_unreachable`; a stop with no code, a code a site gives (`SITE_CODES`) and a code the gate does not know
 are `server_error`. `scripts/test/ai-quickstart-gate-build-guards.test.mjs` reads every code the write step throws or
-reports, in the domain files and in the app's step chain files, and fails when one is on no list or a listed one is
-gone, so a person decides each new code. A build refusal is found in memory, never
+reports, in the domain files, in the app's step chain files and in the planner's files (the plan composer the marker
+build calls and every domain file it imports, read by the import graph, review 7 D1), and fails when one is on no list
+or a listed one is gone, so a person decides each new code. A build refusal is found in memory, never
 on the site, and all of a pass's refusals before its write (`gate/write-safety-pass.mjs`, `gate/write-safety-trials.mjs`):
 the page writer's copy check sends back every probe it refuses at once; a write order check or a guard of the write
 plan names every problem it finds; a probed place a problem names by its entry or slot is recorded as
@@ -2247,22 +2266,44 @@ stored that place (looked up by the place key's own plain code, never the code t
 its value. A content plugin code a page prints only cut short (a list that cuts its items' text: at least the start of
 the code, then an ellipsis) is judged by that page neither way; a probe every page printed only cut short has a result,
 `not_judged` (`why: every_print_cut`), its place is not tested from it (`judged_by_no_page`) and the measurement is
-`incomplete` (`probe_not_judged`). An ellipsis right after the marker, with nothing of the code before it, is no cut:
-the page ran the code. A build that writes its plain marker in place of a probe, or drops it,
-leaves the place untested (`not_written` in the ledger, the measurement `incomplete`, `probe_not_written`), and a probe
-never written is never judged as run by a page. A place where every probe was refused by the build is not tested, and
+`incomplete` (`probe_not_judged`). An ellipsis right after the marker, with nothing of the code before it, judges
+nothing on that page either (review 7): a page that ran the code and printed nothing, then a list's own "..." or
+"Read more", reads the same as a list whose length cut fell right after the marker, so the place is judged where it
+prints whole (its own article). A probe never written is never judged as run by a page.
+
+A probe the pass's accepted plan does not hold at its place (`gate/write-safety-unreached.mjs`, review 7 D2) is settled
+in memory before the site write, by building it alone (that probe, every other place plain), once per pair:
+refused alone, it is a finding of the refusal's class (`evidence: "built_alone"`); written otherwise alone too, it is
+`normalized_by_build` in the ledger with what the build wrote (`wrote`: each location's value cut short, or `dropped`),
+a result that does not block a pass, since the value never reached the site (run 7: every empty and single-space
+probe, an empty title replaced by the item key, an empty row dropped, a number wrapped in paragraph markers, an
+unbalanced ACM marker); but when what it wrote still holds the probe's danger without the place's marker (its signature,
+or a content plugin code's opening such as `{emailcloak`), no page can judge it and it fails (`normalized_unsafe`);
+written alone, another place's probe of the pass made the build drop it (an item it took out, a list that closed up:
+195 of run 7's 922 `not_written` pairs), so it is taken out of the pass untried and tried again in a later one, and a
+pair dropped a second time finds the probe that drops it by halving the others in memory, and that probe waits
+instead. The site is written only with a plan that holds every probe the pass keeps, so `not_written` no longer
+arises (run 7: no probe was credited on a page that its plan did not hold, 0 of 3574). Each alone build costs about
+1.2 s, counted in `buildSteps`; the pairs taken out untried are in `deferred` with how many times. A place where every probe was refused by the build is not tested, and
 any place not tested leaves the measurement `incomplete` (`not_site_tested`). Every place ends one way (`ends`): tested
 on the site, refused (a finding names it with its evidence), or untested with why (`suspect_of_untraced_stop`,
 `suspect_of_untraced_page`, `no_pass_reached_it`, `probes_left`, ...).
 
 `unclassified` is a build refusal only: a build that throws a code no guard names (the build wraps a writer's throw as
-`writer_call_failed`) is recorded at its place and ends the measurement `incomplete` (`unclassified_stop`). A site stop
+`writer_call_failed`) is recorded at its place and ends the measurement `incomplete` (`unclassified_stop`). The planner's
+`plan_gate_failed` is met on every kit (an empty or blank business name or address: the needs profile drops the fact,
+and the plan's blocks that read it name an item it no longer holds), and it is a build refusal (`refused_by_build`)
+when every problem it carries is `invented_item` (`PLAN_GATE_REFUSALS`, `gate/build-guards.mjs`); the same code with any
+other problem of the plan's rules gate, or a reply the planner could not read (`reply_unreadable`), stays
+`unclassified`: the two are told apart by `details.problems[].code`. A site stop
 whose code the gate does not know is never `unclassified`: it is classed `server_error`, which fails.
 
 Limits (`LIMITS`), from the times measured on JA Boxing 1.0.11 with a database snapshot reset: a marker build in memory
 about 7 s, a full site write about 40 s, a reset and the page reads about 30 s, so a pass about 80 s; 21 clean passes
 (the text place with a declared limit takes 21 probes, one per pass) take about 28 minutes. 24 passes, 20 site steps
-(about 20 s when the write stops early, 70 s when it runs to the end), 60 minutes, 20 reruns of one pass on the site;
+(about 20 s when the write stops early, 70 s when it runs to the end), 90 minutes (60 before review 7: the alone builds
+of D2 add about 40 to 60 s to a pass, the first three passes of JA Boxing took 145, 157 and 118 s in memory alone), 20
+reruns of one pass on the site;
 past one the measurement is `incomplete`, never `passed`. Run 4 spent its 20 site steps tracing two stops by halving
 over 316 places (about 9 steps each) and tested 0 places; a stop now names its place from its operation, and from the
 column or slot when a read back reports one (a door call that failed after its retries, `redo_failed`, names neither),
@@ -2270,7 +2311,8 @@ and costs one rerun when one probed place is stored there. Runs 5 and 6 met stop
 places with 3 to 7 suspects each, whole value probes the gate placed by a code that was another place's (review 6); with
 each place found by its own plain code, an in-memory replay of run 6's six passes gives each of its four stops with a
 place 1 suspect. A `redo_failed` stop names no slot or column, so an operation that stores two probed places still
-costs a site step. A kit with more stops than its limits allow gets a failed record, never a complete passing
+costs a site step: run 7 needed one trial step at module-169 and three at module-175 (4 site steps of 20; 48 stops named
+alone). A kit with more stops than its limits allow gets a failed record, never a complete passing
 one: a resumed record is never released, so such a kit must be fixed first. Builds in memory (about 1.5 s each) have no limit of their own. The state is saved after each pass (`<out>/write-safety-state.json`, `gate/write-safety-state.mjs`) under a
 key of the gate version, the kit's files, the blank site archive, the plugin, the probe catalogue, the site's address
 and the sha256 of the code of the gate and of the build's write step (`gateCodeSha256`): a run stopped by
@@ -2287,7 +2329,8 @@ The record gives `places` (`written`, `probed`, `tested`), `notSiteTested`, `pas
 `findings` (page, block, store block, field, probe, kind, the stored location the failure names: the operation a stop
 reports and, within it, the slot or column it names, which stays the location even when another location of the
 operation has the plan entry (that entry only lends the page, block and field: an alias read back keeps the column
-`alias`, review 6), or an entry of the page that judged it, else the plain build's first location; how it
+`alias`, review 6), or an entry of the page that judged it, or the place's only location, else none (`storedAt`, the
+judging page only, review 7 N1), and the plain build's first location for a refusal that names none; how it
 was named, `evidence`: `named_alone`, `built_alone`, `trial` or `page` with `judgedOn`; never the value), `missing` and
 `coverage`. **Coverage** (`gate/write-safety-coverage.mjs`) is one table whose numbers add up, and the release guard
 refuses a passing record whose table does not. In stored locations: `universeWritten` (the places of the marker test's
