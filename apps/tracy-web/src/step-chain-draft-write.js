@@ -78,6 +78,18 @@ function stateOf(record, plan, now) {
   return state
 }
 
+/** Optional places left out because their picture cannot take its slot's frame (`step-chain-draft-picture-fit.js`). */
+const placesLeftOf = (state) =>
+  state.left
+    ? {
+        placesLeft: Object.entries(state.left).map(([picture, cause]) => ({
+          code: 'slot_picture_left_out',
+          picture: picture.slice('picture:'.length),
+          cause
+        }))
+      }
+    : {}
+
 /**
  * Run a write plan.
  * @param {{plan: object, doors: object, record: {state?: object, save?: (state: object) => Promise<void>},
@@ -143,7 +155,8 @@ export async function runDraftWrite({
             ...report,
             status: 'failed',
             ran: [...state.done],
-            failed: { op: op.key, code: error?.code ?? null }
+            failed: { op: op.key, code: error?.code ?? null },
+            ...placesLeftOf(state)
           }
           // The process went away: the error is passed on as it is, with what ran, so a half site is never silent.
           if (error?.fatal) throw Object.assign(error, { report: failed })
@@ -164,5 +177,5 @@ export async function runDraftWrite({
     await ctx.save()
   }
   // Each entry counted once: written by an operation, conflicted (lost its place, written nowhere) or skipped.
-  return { ...report, status: 'done', counts: planCountsOf(plan) }
+  return { ...report, ...placesLeftOf(state), status: 'done', counts: planCountsOf(plan) }
 }

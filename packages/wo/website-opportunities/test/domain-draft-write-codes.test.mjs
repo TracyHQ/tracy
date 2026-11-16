@@ -126,6 +126,7 @@ test('the florist plan raises exactly these skip reasons, flags and operation ki
     'contract.apply',
     'library.create',
     'look.accent',
+    'look.favicon',
     'menuItem.create',
     'module.assign',
     'module.copy',

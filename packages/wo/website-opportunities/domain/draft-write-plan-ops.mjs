@@ -9,6 +9,8 @@
 import { lookOp } from './draft-write-plan-accent.mjs'
 import { aliasesOf, reservedAliasesOf } from './draft-write-alias.mjs'
 import { assignOf, copyOp, createOp, drawOf, valuesOf } from './draft-write-plan-records.mjs'
+import { faviconOp } from './draft-write-plan-favicon.mjs'
+import { pictureFitsOf, slotFitKeysOf } from './draft-write-picture-fits.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 /** The fields `site.identity` writes (its read answers these and no other key of the configuration file). */
@@ -55,6 +57,8 @@ export function opsOf(state) {
   const records = [...state.sink.records.values()]
   const created = records.filter((r) => r.kind === 'created')
   for (const note of aliasesOf(created, reservedAliasesOf(state.kit.mapping))) state.sink.unproven.push(note)
+  // The declared frame of every contract slot a picture goes to (`draft-write-picture-fits.mjs`).
+  const fits = pictureFitsOf(state)
   const pictures = [...state.pictures.values()].map((p) => ({
     key: `picture:${p.id}`,
     kind: 'picture.upload',
@@ -65,6 +69,7 @@ export function opsOf(state) {
     alt: p.picture.alt ?? null,
     initials: p.picture.substitute?.initials ?? null,
     ...drawOf(p.picture),
+    ...slotFitKeysOf(fits.get(p.id)),
     entries: [],
     rules: [p.picture.source === 'initials' ? 'initials_drawn_in_frame' : 'pictures_from_stored_bytes']
   }))
@@ -149,7 +154,9 @@ export function opsOf(state) {
         rules: ['hides.setting']
       })),
     ...records.filter((r) => r.kind === 'identity' && r.values.size).map((r) => identityOp(state, r)),
-    ...records.filter((r) => r.kind === 'look').map(lookOp)
+    ...records.filter((r) => r.kind === 'look').map(lookOp),
+    // The site icon at the path the kit declares (`draft-write-plan-favicon.mjs`).
+    ...[faviconOp(state)].filter(Boolean)
   ]
   return ops
 }

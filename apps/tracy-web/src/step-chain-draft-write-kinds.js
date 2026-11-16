@@ -6,6 +6,8 @@ import { getAt, setAt } from 'website-opportunities/domain/draft-write-codec.mjs
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { CREATED_KINDS } from 'website-opportunities/domain/draft-write-plan.mjs'
 import { accentFieldsOf, accentHtmlOf } from './step-chain-draft-write-accent.js'
+import { runFavicon } from './step-chain-draft-favicon.js'
+import { slotPictureOf } from './step-chain-draft-picture-fit.js'
 import {
   readAssignment,
   readContract,
@@ -83,7 +85,10 @@ export const RUN = {
   },
   async 'contract.apply'(op, ctx) {
     const changes = {}
-    for (const v of op.values) changes[v.loc.slot] = String(resolved(v.value, ctx))
+    // A picture left out at an optional place (`state.left`): its slots are not written, the slot keeps the blank value.
+    for (const v of op.values)
+      if (!ctx.state.left?.[v.value?.ref]) changes[v.loc.slot] = String(resolved(v.value, ctx))
+    if (!Object.keys(changes).length && !list(op.removes).length) return
     // Every slot of the record columns the apply writes, read before it: the read back compares them whole.
     const whole = list(op.whole).filter((k) => !(k in changes) && !list(op.removes).includes(k))
     const before = whole.length ? await ctx.doors.read({ slots: whole }) : {}
@@ -114,7 +119,7 @@ export const RUN = {
   },
   async 'picture.upload'(op, ctx) {
     const key = `picture:${op.picture}`
-    if (ctx.state.paths[key]) return
+    if (ctx.state.paths[key] || ctx.state.left?.[key]) return
     if (!op.stored?.id && op.draw && !ctx.drawInitials)
       throw new DraftWriteError(
         'initials_drawer_missing',
@@ -123,7 +128,10 @@ export const RUN = {
           op: op.key
         }
       )
-    const stored = op.stored?.id ? await ctx.openStored(op.stored.id) : await ctx.drawInitials(op.draw)
+    const opened = op.stored?.id ? await ctx.openStored(op.stored.id) : await ctx.drawInitials(op.draw)
+    // Fitted to the frame its contract slots declare; null: an optional place left out (`step-chain-draft-picture-fit.js`).
+    const stored = await slotPictureOf(op, opened, ctx)
+    if (!stored) return
     const path = picturePathOf(stored.bytes, stored.mime)
     const answer = await ctx.doors.upload({
       applyId: ctx.applyId(op, 'upload'),
@@ -166,6 +174,8 @@ export const RUN = {
       ? ctx.state.ids[op.key]
       : await made(op, 'module', accentFieldsOf(op, await accentHtmlOf(op, ctx)), ctx)
     await assign(op, id, op.menuids, ctx)
-  }
+  },
+  // The site icon at the path the kit declares (`step-chain-draft-favicon.js`).
+  'look.favicon': runFavicon
 }
 export const runOf = (op) => RUN[op.kind] ?? (op.kind.endsWith('.create') ? RUN.create : null)

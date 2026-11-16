@@ -42,6 +42,12 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
     values: 'read: the order value each side takes; an unknown word stops (accent_written_as_unknown)'
   },
   'look.accent.sides.values': { light: READ, dark: READ },
+  'look.favicon': {
+    from: 'read: "logo" makes the icon from the logo the plan uploads (draft-write-plan-favicon.mjs)',
+    fallback: 'read: "initials" draws the business initials when the plan has no logo picture',
+    path: 'read: where the icon is uploaded; its extension is the format (.ico, .png; another is flagged)',
+    why: 'not read: prose'
+  },
   'pages.<type>': {
     menuItem: READ,
     under: READ,

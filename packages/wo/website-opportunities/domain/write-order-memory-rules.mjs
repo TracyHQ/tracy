@@ -18,6 +18,8 @@
 //                      SLOT_NOT_REMOVABLE                   a `removes` slot that is no node of an HTML value
 //                      MODULE_TITLE_REQUIRED                a module whose title the blank site emptied, written
 //                                                           without its title in the same apply
+//                      SLOT_IMAGE_INVALID / SLOT_IMAGE_OPAQUE  a picture not of the shape or ground an image slot
+//                                                           declares (`write-order-memory-image.mjs`)
 //   content.update     write_failed                         a new article, category or module with no title or a
 //                                                           blank one, a new contact missing its name, params,
 //                                                           metadata or metadesc column (an empty or blank name is
@@ -31,6 +33,7 @@
 import { isTextNode } from './draft-write-codec.mjs'
 import { doorLength } from './draft-write-length.mjs'
 import { decodeEntities } from './draft-write-entities.mjs'
+import { imageSlotRefusal } from './write-order-memory-image.mjs'
 
 // oxlint-disable-next-line no-control-regex -- the bytes the plugin refuses in a slot
 const MARKUP = /[<>\u0000-\u0008\u000b\u000c\u000e-\u001f]/
@@ -75,7 +78,7 @@ const refuse = (code, message) => {
 const blank = (value) => String(value ?? '').trim() === ''
 
 /** Refuse a contract apply the plugin refuses; nothing is written, the revision does not move. */
-export function checkContract({ expectedRevision, changes, removes }, { slots, revision, modules }) {
+export function checkContract({ expectedRevision, changes, removes }, { slots, revision, modules, uploads }) {
   if (expectedRevision === undefined || expectedRevision === null)
     refuse('REVISION_REQUIRED', 'an apply names the revision its inspect read')
   if (expectedRevision !== revision) refuse('REVISION_STALE', `read ${expectedRevision}, now ${revision}`)
@@ -94,6 +97,8 @@ export function checkContract({ expectedRevision, changes, removes }, { slots, r
       refuse('SLOT_EMPTY_STATE', `${key}: Content cannot remove an occupied slot`)
     if (slot.maxCharacters && doorLength(slot, text) > slot.maxCharacters) refuse('SLOT_TOO_LONG', key)
     if (slot.xpath && /\(\(\/?[a-z]/i.test(text)) refuse('MARKERS_PRINTED_AS_WORDS', key)
+    const picture = imageSlotRefusal(slot, text, uploads)
+    if (picture) refuse(picture.code, picture.message)
   }
   for (const key of removes) {
     if (!slots.has(key)) refuse('SLOT_UNKNOWN', key)

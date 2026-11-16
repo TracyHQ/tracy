@@ -131,7 +131,7 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
       const check = () =>
         checkContract(
           { expectedRevision, changes, removes },
-          { slots, revision: state.revision, modules: records.module }
+          { slots, revision: state.revision, modules: records.module, uploads }
         )
       return act(
         'content.contract',

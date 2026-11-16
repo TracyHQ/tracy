@@ -125,6 +125,7 @@ function unknownKitKeys(mapping) {
   check('look.accent.writtenAs', mapping.look?.accent?.writtenAs)
   check('look.accent.sides', mapping.look?.accent?.sides)
   check('look.accent.sides.values', mapping.look?.accent?.sides?.values)
+  check('look.favicon', mapping.look?.favicon)
   for (const page of Object.values(mapping.pages ?? {})) {
     check('pages.<type>', page)
     for (const key of ['menuItem', 'ownItem', 'under', 'record', 'unbuilt'])
