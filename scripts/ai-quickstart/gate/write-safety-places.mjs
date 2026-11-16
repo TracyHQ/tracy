@@ -115,7 +115,10 @@ export const plainAtOf = (seen, plainIndex) => (key) => {
  * The stored location of a place that a failure names (review 5 Y2): a value the plain build stores in several
  * operations (one address in a hero button and in a call to action) is named where the site refused it, the operation
  * a stop reports and, within it, the slot or column a read back names; a finding judged on a page is named by an entry
- * of that page. Else the first location the plain build stores it in.
+ * of that page. A finding judged on a page none of whose entries stores the place names no location when the place
+ * has more than one (review 7 N1): which of them printed it is not known (a menu item's page title prints only in the
+ * browser title, which no judge reads), so the judging page and the number of locations are recorded
+ * (`{unplaced: true, page, storedAt}`). Else the first location the plain build stores it in.
  * @param {Array<{op: string, entry: string | null, loc: object | null}>} entries where the plain build stores the code
  * @param {{op?: string | null, slot?: string, column?: string, judgedOn?: string | null}} failure
  */
@@ -138,7 +141,9 @@ export function storedFor(entries, failure = {}) {
     onOp[0] ??
     (failure.slot ? list.find((s) => s.loc?.slot === failure.slot) : undefined) ??
     onPage[0] ??
-    list[0]
+    (failure.judgedOn && list.length > 1
+      ? { unplaced: true, page: failure.judgedOn, storedAt: list.length }
+      : list[0])
   )
 }
 
@@ -152,6 +157,16 @@ const pathOf = (loc) => loc?.jsonPath ?? loc?.nestedJson ?? loc?.xpath ?? null
  * @param {object} order the write order (its pages name the store block of each plan block)
  */
 export function nameOf(stored, order) {
+  // A page finding no location of which the judging page has: the page only, no guessed block or field (review 7 N1).
+  if (stored?.unplaced)
+    return {
+      page: stored.page,
+      block: null,
+      storeBlock: null,
+      field: null,
+      location: null,
+      storedAt: stored.storedAt
+    }
   const [page = null, block = null, ...rest] = String(stored?.entry ?? '')
     .split('.')
     .filter(Boolean)

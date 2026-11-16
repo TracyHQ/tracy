@@ -33,9 +33,11 @@ const kindOf = (f) => (f.why === 'unattributed' ? UNATTRIBUTED[f.kind] : null) ?
 
 /** Where a finding was stored: its operation, then its slot or column. */
 const whereOf = (f) =>
-  [f.location?.op ?? f.op, f.location?.slot ?? f.slot ?? f.location?.column ?? f.column]
-    .filter(Boolean)
-    .join(' ')
+  f.storedAt
+    ? 'stored at ' + f.storedAt + ' locations, none of them on the page that judged it'
+    : [f.location?.op ?? f.op, f.location?.slot ?? f.slot ?? f.location?.column ?? f.column]
+        .filter(Boolean)
+        .join(' ')
 /** How a finding was named, in plain words: a build refusal names its value, a site stop where it stopped. */
 const evidenceOf = (f) => {
   if (f.evidence === 'page') return 'seen on the page ' + (f.judgedOn ?? f.page ?? '')
