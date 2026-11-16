@@ -1,5 +1,5 @@
 {
-  "recorded": "2026-11-13",
+  "recorded": "2026-11-16",
   "public": {
     "components": {
       "schemas": {
@@ -18750,6 +18750,34 @@
           "x-audience": ["customer"]
         }
       },
+      "/new/build/start-over": {
+        "get": {
+          "operationId": "get_new_build_start_over",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Platform"],
+          "x-audience": ["customer"]
+        },
+        "post": {
+          "operationId": "post_new_build_start_over",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Platform"],
+          "x-audience": ["customer"]
+        }
+      },
       "/o/{file}": {
         "get": {
           "operationId": "get_o_file_",
@@ -25816,6 +25844,41 @@
           ],
           "tags": ["Accounts & seats"],
           "x-audience": ["agent"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/start-over": {
+        "post": {
+          "operationId": "post_api_build_draft_start_over",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "confirm": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": ["confirm"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer", "agent"],
           "x-internal": true
         }
       },
@@ -53987,6 +54050,34 @@
       "/new/build": {
         "get": {
           "operationId": "get_new_build",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Platform"],
+          "x-audience": ["customer"]
+        }
+      },
+      "/new/build/start-over": {
+        "get": {
+          "operationId": "get_new_build_start_over",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Platform"],
+          "x-audience": ["customer"]
+        },
+        "post": {
+          "operationId": "post_new_build_start_over",
           "responses": {
             "200": {}
           },

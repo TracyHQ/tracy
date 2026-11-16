@@ -13,8 +13,10 @@
  * WHY THE ID IS DERIVED, NOT STORED. The door adopts an existing session when it is asked again
  * with the same ID, cwd and preset, so an ID derived from the account (keyed with this deployment's
  * session secret, so it cannot be guessed from an address) makes every open land in the same
- * conversation with no table to keep. The account draft of TracyHQ/tracy#603 is where a second
- * build of the same account will take a new ID.
+ * conversation. A fresh start (`build-draft/fresh-start.js`, migration 223) moves the account to its
+ * next build generation, kept on the server, and the generation is part of what the ID is derived
+ * from: a new generation is a new, empty conversation, and the browser still never names the ID.
+ * Generation 0 is derived exactly as before, so the conversations opened before it keep their ID.
  */
 import { hmacHex } from '../lib/hmac.js'
 
@@ -30,10 +32,13 @@ export const BUILD_CHAT_PATH = '/new/build'
  * address, the exact form the seat door accepts.
  * @param {string} email - the signed-in address
  * @param {string} secret - this deployment's session secret
+ * @param {number} [generation] - the account's build generation (server side), 0 when it never started over
  * @returns {Promise<string>}
  */
-export async function buildSessionIdFor(email, secret) {
-  const h = await hmacHex(secret, `tracy-build-chat:${email.trim().toLowerCase()}`)
+export async function buildSessionIdFor(email, secret, generation = 0) {
+  const base = `tracy-build-chat:${email.trim().toLowerCase()}`
+  const n = Number.isInteger(generation) && generation > 0 ? generation : 0
+  const h = await hmacHex(secret, n === 0 ? base : `${base}:g${n}`)
   // Version and variant nibbles set like a v4 UUID, so the ID reads as one wherever it is shown.
   const variant = ((parseInt(h[16], 16) & 0x3) | 0x8).toString(16)
   return `session-build-${h.slice(0, 8)}-${h.slice(8, 12)}-4${h.slice(13, 16)}-${variant}${h.slice(17, 20)}-${h.slice(20, 32)}`

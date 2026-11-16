@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-16: The build chat can start over in a new conversation
+
+Added: `GET /new/build/start-over` asks the signed-in owner whether to discard what the build chat gathered so far, and `POST /new/build/start-over` does it: the account moves to its next build generation and `/new/build` opens a new, empty conversation. Refused with a 409 page while the build runs, while a step works, or once a site was built from the draft. Added (internal): `POST /api/build-draft/start-over {confirm: true}`, the same for the build chat tool `tracy_build`. Changed: `GET /new/build` opens a new conversation once the build stopped for good. Nothing is removed.
+
 ## 2026-11-16: The build chat research door takes the business name of an owner with no link
 
 Changed (internal): `POST /api/build-draft/research` takes `name` (at most 120 characters), the business name the owner typed. A research with no link no longer stops asking for a link: the owner's description is its only source and nothing is fetched, and with no `name` it stops with `say` asking the owner for the business name. Public API v1 is unchanged.

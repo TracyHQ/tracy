@@ -242,6 +242,18 @@ export interface BuildAnswerBody {
   run: { events?: unknown[]; outcome?: unknown } | null
 }
 
+/**
+ * `POST /start-over` with `{confirm: true}`: discards the draft and moves the account to a new, empty build
+ * conversation (`apps/tracy-web/src/build-draft/fresh-start.js`). Refused 409 with `{code, say}` when a site was built
+ * from the draft (`SITE_BUILT`), its build runs (`BUILD_RUNNING`) or a step works on it (`ENGINE_BUSY`).
+ */
+export interface StartOverResponse {
+  started: true
+  /** Where the new conversation opens. */
+  open: string
+  say: string
+}
+
 /** The doors, by name, as paths under `/api/build-draft`. */
 export const BUILD_DOORS = {
   build: { method: 'POST', path: '/build' },
@@ -251,5 +263,6 @@ export const BUILD_DOORS = {
   edit: { method: 'POST', path: '/edit' },
   engine: { method: 'GET', path: '/engine' },
   templates: { method: 'GET', path: '/templates' },
-  answers: { method: 'PUT', path: '/answers' }
+  answers: { method: 'PUT', path: '/answers' },
+  startOver: { method: 'POST', path: '/start-over' }
 } as const

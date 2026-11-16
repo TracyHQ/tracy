@@ -51,6 +51,7 @@ import {
 } from '@tracy/core/build-chat'
 import { chatLanguageOf, chatLanguageTagOf } from '../chat-words.mjs'
 import { askWordsFor } from './ask-words.mjs'
+import { startOverAnswerOf, startOverQuestion } from './start-over.mjs'
 
 /**
  * The header in which tracy-web names the interface language of the person the tool acts for, on every build draft
@@ -176,13 +177,16 @@ export const tooLongSay = (question, limit) =>
 /** The longest owner sentence passed through from a door; a longer one is replaced by ours. */
 const SAY_MAX = 300
 
+/** Every action of `tracy_build`. */
+const ACTIONS = ['research', 'templates', 'plan', 'edit', 'build', 'status', 'start-over']
+
 export const BUILD_DESCRIPTION =
-  'tracy_build: the build chat engine. action research {links?, description?, name?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Every call names in language the language the owner writes in, as a two letter code; say every sentence a result gives in that language. Never say the site is built until a build result says built.'
+  'tracy_build: the build chat engine. action research {links?, description?, name?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Every call names in language the language the owner writes in, as a two letter code; say every sentence a result gives in that language. Never say the site is built until a build result says built. start-over ONLY when the owner clearly asks to start the whole build over with a new conversation (not only the plan): first without confirm, then with confirm true once the owner agreed.'
 
 export const BUILD_PARAMETERS = Object.freeze({
   type: 'object',
   properties: {
-    action: { type: 'string', enum: ['research', 'templates', 'plan', 'edit', 'build', 'status'] },
+    action: { type: 'string', enum: ACTIONS },
     language: {
       type: 'string',
       description:
@@ -207,6 +211,11 @@ export const BUILD_PARAMETERS = Object.freeze({
       type: 'boolean',
       description:
         'For plan: true ONLY when the owner clearly asks to start the plan over. It throws away the current plan and every change made to it. Never set it for a change request.'
+    },
+    confirm: {
+      type: 'boolean',
+      description:
+        'For start-over: true ONLY after the owner clearly agreed to discard everything gathered so far.'
     },
     changes: {
       type: 'array',
@@ -1133,11 +1142,13 @@ export function createBuildTool({
     // call the stop named (`again`) instead.
     if (args.action === 'status') args = pendingRetryOf(eventsOf(sessionId)) ?? args
     const action = args.action
-    if (!['research', 'templates', 'plan', 'edit', 'build', 'status'].includes(action))
+    if (!ACTIONS.includes(action))
       return {
         refused: true,
-        next: 'Call tracy_build with action research, templates, plan, edit, build or status.'
+        next: 'Call tracy_build with action research, templates, plan, edit, build, status or start-over.'
       }
+    // The whole build over (`start-over.mjs`): the owner is asked first, the door is reached only once they agreed.
+    if (action === 'start-over' && args.confirm !== true) return startOverQuestion()
 
     /** @type {[string, string, unknown?]} */
     let request
@@ -1186,6 +1197,7 @@ export function createBuildTool({
       ]
     } else if (action === 'templates') request = ['GET', '/templates']
     else if (action === 'build') request = ['POST', '/build']
+    else if (action === 'start-over') request = ['POST', '/start-over', { confirm: true }]
     else request = ['GET', '/engine']
 
     if (origin() === null) return stopped()
@@ -1206,6 +1218,7 @@ export function createBuildTool({
 
     const res = await door(sessionId, assertion, request[0], request[1], request[2])
     if (res === null) return stopped()
+    if (action === 'start-over') return startOverAnswerOf(res, ownerSay)
     if (res.status < 200 || res.status >= 300) return refusal(res)
     if (action === 'templates') {
       const { options, none } = templateChoiceOf(res.body?.templates)

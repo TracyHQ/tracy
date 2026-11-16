@@ -26,6 +26,7 @@ never registered twice. The tool refuses any session that is not a build chat se
 | `plan {request?, restart?}` | `POST /compose` | `{ plan: { id, revision }, review }`; on a living plan with `request`: `{ plan, unchanged, revision: { changed, notDone: [{what, why}] }, review, next }`; on a living plan without one: `{ unchanged: true, say, plan, review, next }`; or `{ ask, say?, next }` when the owner must answer first |
 | `edit {changes}` | `POST /edit` | `{ plan: { id, revision }, review }` |
 | `status` | `GET /engine` | whatever the running step gives when it finishes |
+| `start-over {confirm?}` | `POST /start-over` (only with `confirm: true`) | without `confirm`: `{ confirm: true, say, next }`, the question for the owner; with it: `{ startedOver, open, say, next }` or `{ refused, say, next }` |
 
 - `ask` is passed on from the door unchanged; `review` is `planReviewRequestOf(plan)`. The cards read the full plan
   from `GET /api/build-draft`.
@@ -65,6 +66,7 @@ Typed in [`src/host/doors.ts`](src/host/doors.ts). Every door is under `/api/bui
 | `POST /edit` | `{ changes: { field, value }[] }` | `EngineState` (an edit applies to the current revision) |
 | `GET /engine` | | `EngineState` of the session's latest step |
 | `PUT /answers` (exists) | `{ question: BuildQuestion, answer: BuildAnswer }` | `{ draft }` |
+| `POST /start-over` | `{ confirm: true }` | `{ started, open, say }`; 409 `{ code, say }`: `SITE_BUILT`, `BUILD_RUNNING`, `ENGINE_BUSY` |
 
 `EngineState` is `{ step, state, result?, say? }`:
 

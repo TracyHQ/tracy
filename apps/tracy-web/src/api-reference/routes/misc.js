@@ -96,6 +96,36 @@ export const MISC_ROUTES = [
     internal: false,
     answers: '302 to the build chat, or to `/new/`'
   },
+  // src/workspace/build-chat-route.js
+  {
+    method: 'GET',
+    path: '/new/build/start-over',
+    summary: 'Ask before starting the build chat over',
+    description:
+      'A page that asks the signed-in owner, in plain words, whether to discard what the build chat gathered ' +
+      'so far and start a new, empty conversation. Its form posts to `POST /new/build/start-over`. Changes ' +
+      'nothing. Signed out: 302 to `/login?next=/new/build/start-over`. Uncacheable.',
+    audience: ['customer'],
+    auth: 'session',
+    internal: false,
+    answers: '200 HTML page'
+  },
+  // src/workspace/build-chat-route.js
+  {
+    method: 'POST',
+    path: '/new/build/start-over',
+    summary: 'Start the build chat over',
+    description:
+      'Discards the account’s build draft (research, answers, plan and pictures) and moves it to its next ' +
+      'build generation, so `/new/build` opens a new, empty conversation; the session ID stays derived on the ' +
+      'server. No body. 303 to `/new/build`. Refused with a 409 HTML page that says why when a site was ' +
+      'already built from the draft, its build is running, or a build chat step is working. Signed out: 303 ' +
+      'to `/login?next=/new/build/start-over`.',
+    audience: ['customer'],
+    auth: 'session',
+    internal: false,
+    answers: '303 to `/new/build`, or a 409 page'
+  },
   // src/docs/route.js
   {
     method: 'GET',

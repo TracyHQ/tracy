@@ -1378,6 +1378,19 @@ export const PEOPLE_ROUTES = [
     answers:
       '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
   },
+  // src/build-draft/start-over-route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/start-over',
+    summary: 'Start my build chat over',
+    description:
+      "Body `{confirm: true}` (sent only after the owner agreed). Discards the account’s build draft (research, answers, plan, pictures and their stored objects) and moves the account to its next build generation: the build session ID is derived from it, so `/new/build` opens a new, empty conversation and the old conversation can no longer call the build draft doors (403 `NOT_BUILD_SESSION`). Answers `{started: true, open: '/new/build', say}`. 409 `SITE_BUILT` when a site was built from the draft (the site still reads it), 409 `BUILD_RUNNING` while its approved build runs, 409 `ENGINE_BUSY` while a build chat step works, each with `say`, a sentence for the owner; 404 `NO_DRAFT` when the address has no account; 400 `INVALID_REQUEST` without `confirm: true`. Called by the build chat tool `tracy_build` (action `start-over`) as the person who typed in their build session, or by a signed-in browser. 401 `NOT_SIGNED_IN`. Responses are not cached.",
+    audience: ['customer', 'agent'],
+    auth: 'session-or-actor',
+    internal: true,
+    body: { type: 'object', required: ['confirm'], properties: { confirm: { type: 'boolean' } } },
+    answers: '`{started: true, open, say}`, or `{code, say}`'
+  },
   // src/build-draft/engine-route.js
   {
     method: 'POST',

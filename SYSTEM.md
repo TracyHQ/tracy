@@ -164,6 +164,11 @@ Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) m
    preset only, then redirects to `/new/s/<id>`; switch `chat-build` off or a refused door → `/new/` as before. The root landing of an
    account with no site goes here ([`workspace/build-chat-route.js`](apps/tracy-web/src/workspace/build-chat-route.js), #602). The seat
    door accepting that session, and fencing its tools to research and questions, is a dsh-passwords change still to land.
+   The ID is also derived from the account's build generation (`build_chat_generation`, migration 223,
+   [`build-draft/fresh-start.js`](apps/tracy-web/src/build-draft/fresh-start.js)): a start over (`GET`/`POST /new/build/start-over`,
+   or `POST /api/build-draft/start-over` from `tracy_build`) or a build stopped for good moves it to the next generation and
+   removes the draft row (pictures by cascade, their objects deleted), so `/new/build` opens a new, empty conversation. Refused
+   while the build runs, a step works, or once a site was built from the draft (that site still reads it).
    Demos for outside builders: `/v1/demos*` on the api host, Bearer **account token** with scope `demos` (not a seat key)
    ([`opportunities-build/public-demos-route.js`](apps/tracy-web/src/opportunities-build/public-demos-route.js), see §8 "Website Opportunities").
 3. **Everything else → the dsh of the host holding the site** (`workspace/`): HTTP and WebSocket proxy, in three scopes

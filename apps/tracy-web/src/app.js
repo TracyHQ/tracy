@@ -120,6 +120,8 @@ import { draftPlanForBuild, readEngineDraft } from './build-draft/store.js'
 import { PHOSPHOR_SET, phosphorCatalog } from './lib/picture-paint/icons/phosphor-set.js'
 import { createEngine } from './build-draft/engine.js'
 import { buildEngineRoutes } from './build-draft/engine-route.js'
+import { freshStart } from './build-draft/fresh-start.js'
+import { startOverRoutes } from './build-draft/start-over-route.js'
 import { buildRunRoutes } from './build-draft/build-route.js'
 import { draftRunReader, draftSiteChat, draftSiteStarter } from './build-draft-build-wiring.js'
 import { draftRebuild } from './build-draft-rebuild-wiring.js'
@@ -1199,7 +1201,9 @@ export function buildApp(deps) {
     app.route('/', seenHintRoutes({ config: deps.config, pool: deps.pool }))
     // Only the templates the brand step can resolve a step chain kit for are offered (`draftQuickstartCatalogue`).
     const kits = deps.aiQuickstarts ?? draftQuickstartCatalogue({ log: deps.log ?? console })
-    const buildSessionIdOf = (email) => buildSessionIdFor(email, deps.config.sessionSecret)
+    // The build session of the account's current build generation (`build-draft/fresh-start.js`, migration 223).
+    const buildSessionIdOf = async (email) =>
+      buildSessionIdFor(email, deps.config.sessionSecret, await app.buildChatFresh.generationOf(email))
     // The pre site build draft (`build-draft/route.js`, #603): answers, template and plan before a site exists; choosing a
     // template starts the brand step of the engine below.
     // The build chat's engine doors (`build-draft/engine-route.js`, #609): research, templates, compose and edit before
@@ -1228,13 +1232,21 @@ export function buildApp(deps) {
       })
     // The pictures the research stores before a site exists (`build_draft_picture`), through the objects Website
     // Opportunities stores its own pictures through; `app.openDraftPicture(id)` opens one again by its manifest id.
+    // `pictureDoors` replaces the objects and the measuring in tests.
+    const draftPictureObjects =
+      buildEngine.pictureDoors?.objects ?? placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch)
     const draftPictureStore = draftPictures({
       pool: deps.pool,
       config: deps.config,
-      // `pictureDoors` replaces the objects and the measuring in tests.
-      objects:
-        buildEngine.pictureDoors?.objects ?? placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
+      objects: draftPictureObjects,
       ...(buildEngine.pictureDoors?.imageInfo ? { imageInfo: buildEngine.pictureDoors.imageInfo } : {})
+    })
+    // A fresh start of the build chat (`build-draft/fresh-start.js`): the next generation, the old draft removed.
+    app.buildChatFresh = freshStart({
+      pool: deps.pool,
+      objects: draftPictureObjects,
+      settle: (accountId) => app.buildDraftEngine.read(accountId),
+      log: deps.log ?? console
     })
     app.openDraftPicture = draftPictureReader(draftPictureStore)
     // The build model door and the kits, shared with a step chain run built from an approved draft (#597).
@@ -1282,6 +1294,15 @@ export function buildApp(deps) {
         templateChosen: async (accountId) =>
           (await buildChatOn()) ? app.buildDraftEngine.brandIfDue(accountId) : null,
         settleEngine: (accountId) => app.buildDraftEngine.read(accountId)
+      })
+    )
+    app.route(
+      '/',
+      startOverRoutes({
+        config: deps.config,
+        pool: deps.pool,
+        buildSessionIdOf,
+        fresh: app.buildChatFresh
       })
     )
     app.route(
@@ -1927,6 +1948,13 @@ export function buildApp(deps) {
       buildChatRoutes({
         config: deps.config,
         hiddenSwitches: () => readUiHidden(deps.pool),
+        ...(app.buildChatFresh
+          ? {
+              generationOf: app.buildChatFresh.generationOf,
+              freshIfStopped: app.buildChatFresh.freshIfStopped,
+              fresh: app.buildChatFresh
+            }
+          : {}),
         allocate: async (payload) => {
           const dsh = deps.sites?.dshOf(deps.config.defaultHost)
           if (!dsh?.origin || !dsh.seatSecret) return null
