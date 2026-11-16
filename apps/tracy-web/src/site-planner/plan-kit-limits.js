@@ -3,9 +3,11 @@
 // fix round for it (Central Padel 12/11/2026: 53 of round 0's R06 failures, every one "maxCharacters is missing").
 // So a kept decision's copy entry, its own or a list row's, whose maxCharacters is missing, null or not a number gets
 // the kit's limit for its slot: the same limit R06 reads (plan-check/kit-index.js slotLimit). An entry that names a
-// number keeps it, so R06 still fails one above the kit's limit; a slot the kit gives no limit is left alone.
-// The writer reads the smaller of the kit's and the plan's limit (site-writer/plan-labels.js), so the room it is told
-// does not change. Returns the same plan when nothing was missing.
+// number above the kit's limit gets the kit's limit too: the writer reads the smaller of the two
+// (site-writer/plan-labels.js), so the larger number never reached a page, yet R06 failed on it and a chain build's
+// plan step ended "failed, best version used" (dev, BXR London, 16/11/2026: five entries one or two characters above
+// the kit). A number at or below the limit is kept; a slot the kit gives no limit is left alone. Returns the same plan
+// when nothing changed.
 import { indexKit } from './plan-check/kit-index.js'
 
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -23,9 +25,10 @@ export function withKitCharacterLimits(plan, kit) {
     if (!Array.isArray(copy)) return copy
     let filled = false
     const out = copy.map((entry) => {
-      if (!isObject(entry) || typeof entry.maxCharacters === 'number') return entry
+      if (!isObject(entry)) return entry
       const limit = slotLimit.get(entry.slot)
       if (typeof limit !== 'number') return entry
+      if (typeof entry.maxCharacters === 'number' && entry.maxCharacters <= limit) return entry
       filled = true
       return { ...entry, maxCharacters: limit }
     })

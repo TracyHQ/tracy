@@ -37,20 +37,20 @@ test('a copy entry without maxCharacters gets the kit limit R06 reads, and the p
   assert.strictEqual(normalize(result, k), result, 'a plan with every limit is returned as it is')
 })
 
-test('a number the plan gives is kept, so R06 still fails one above the kit limit', () => {
+test('a number above the kit limit gets the kit limit, the one the writer reads; a number within it is kept', () => {
   const k = kit()
   const value = plan()
   const items = decisionOf(value, 'block-190')
   items.copy[0].maxCharacters = 99
   items.lists[0].items[0].copy[0].maxCharacters = 20
+  const before = structuredClone(value)
+  assert.equal(r06(value, k).status, 'fail')
   const result = withKitCharacterLimits(value, k)
-  assert.strictEqual(result, value)
-  const failing = r06(result, k)
-  assert.equal(failing.status, 'fail')
-  assert.deepEqual(
-    failing.failures.map((f) => f.detail),
-    ['(a final-text limit) plan maxCharacters 99 is above the kit limit 37']
-  )
+  assert.equal(r06(result, k).status, 'pass')
+  assert.equal(decisionOf(result, 'block-190').copy[0].maxCharacters, 37)
+  // 20 is within its slot's limit: kept as the plan wrote it.
+  assert.equal(decisionOf(result, 'block-190').lists[0].items[0].copy[0].maxCharacters, 20)
+  assert.deepEqual(value, before, 'the answer is never modified in place')
 })
 
 test('a slot the kit gives no limit, a hidden block and a dropped page are left alone', () => {

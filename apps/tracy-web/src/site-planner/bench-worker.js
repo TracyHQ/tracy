@@ -40,6 +40,7 @@ import {
 import { CHECKER_VERSION, checkPlan, failureListText } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
 import { withHiddenListLinks } from './plan-hidden-links.js'
+import { withDemoVideosHidden } from './plan-demo-videos.js'
 import { withKitCharacterLimits } from './plan-kit-limits.js'
 import { VISUAL_REVIEW_POLICY, visualReviewInstruction, withVisualReview } from './visual-review.js'
 
@@ -205,7 +206,11 @@ const briefRefOf = (source) => String(source?.revisionId ?? source?.name ?? '')
 // - every stock screen of the kit (site.stockScreens) is dropped, so no answer keeps one (lib/stock-screens.js); a kit
 //   without the field changes nothing;
 // - a link left undecided under a list or row the plan hides is hidden with it (plan-hidden-links.js);
-// - a copy entry without maxCharacters gets the kit's limit for its slot, as the spec says (plan-kit-limits.js).
+// - a copy entry without maxCharacters, or with one above the kit's limit, gets the kit's limit (plan-kit-limits.js);
+// - a template demo video a kept block still shows, left undecided, is hidden (plan-demo-videos.js).
 function normalizedPlan(plan, kit) {
-  return withKitCharacterLimits(withHiddenListLinks(withStockScreensDropped(plan, kit), kit), kit)
+  return withDemoVideosHidden(
+    withKitCharacterLimits(withHiddenListLinks(withStockScreensDropped(plan, kit), kit), kit),
+    kit
+  )
 }
