@@ -256,9 +256,7 @@ export async function placeAgainPlan(
     'google-maps': GOOGLE_MAPS_VERSION,
     tripadvisor: TRIPADVISOR_VERSION
   }
-  const connectors = domain?.connectorsFor
-    ? orderedConnectorsFor(domain, keys, settings)
-    : {}
+  const connectors = domain?.connectorsFor ? orderedConnectorsFor(domain, keys, settings) : {}
   const custom = {}
   // A source today's link rules no longer call that kind (`link-rejudge.js`): the run drops it, whatever its age.
   const wrong = new Set(misjudged(links, snapshot.sources).sources.map((s) => s.source))
