@@ -372,7 +372,7 @@
       "name": "JA Kinetic",
       "base": {
         "quickstart": "quickstart/ja-kinetic/j6",
-        "version": "1.0.11"
+        "version": "1.0.12"
       },
       "template": {
         "element": "ja_kinetic",
@@ -383,17 +383,17 @@
       "multilingual": false,
       "demoTrim": true,
       "demoTrimKeep": ["pages/kineticql"],
-      "contractProfile": "ja-kinetic/j6/1.0.11",
+      "contractProfile": "ja-kinetic/j6/1.0.12",
       "contractFiles": {
-        "design-system-measurement.json": "ef755fea43dc308b6d74a0298bd8e775945b1f2fd9e76828b751990a032d81bd",
-        "content-map.json": "e67f3a6da437206d89d0179be01a6d1f3e7c72a5dc6879b0228bd859ada3e339",
-        "demo-trim-map.json": "8801fe0fcec64f2e74f53f443ac6c5668e9ccbd86ac38c564f74de3a3e465c3a",
-        "manifest.json": "19e2087e4ecc8799968514cbb8aefa6cc35bc9f0195f774fd1e20892c2b28498",
-        "presentation-lock.json": "c74daecbb0224222908eac4bd659c902211cbcda56b954597b4982a8b4bab47a",
-        "showcase-nav-map.json": "ed783c8c719053fc9ec29a98d5be6b0e1b28aa496a89a95a9f48b9fabe47f8b1",
-        "template-kit.json": "593a8e67f9d4fca8a5a86884659b7544fb6292ec54445ae5ba5d61cd8068e321"
+        "design-system-measurement.json": "01cb8430fab14c963296e0b91c270642867fd522e23579b04c7e245904c10bf7",
+        "content-map.json": "671141b8ade05079217a906d4e1170af0d0f8ffb9e2c188fd5aa42bf6e205692",
+        "demo-trim-map.json": "ebc9e1e484b4b96fc54ee2fc3b3d862b0e664c2bec0255c7c3ea2639ddb9986d",
+        "manifest.json": "2aeba798b1443063e84de0683f62e23ede0b9282d98e36e5ebb81e7a6d3fb3d5",
+        "presentation-lock.json": "ffe55ebe4e59175d56a71fd75db9ddb7fb5ee9cbb8cf9c8430ece5a0ec7f018c",
+        "showcase-nav-map.json": "812b53487d499f2f256e05502dca7be495629a2ac73b72a0543e5d3db79d70b5",
+        "template-kit.json": "c16854fc10a3f0b187da544e3ef8798c9746c99ddc80abc75442e396c7554260"
       },
-      "coworkMinVersion": "0.24.86",
+      "coworkMinVersion": "0.24.95",
       "requires": [
         {
           "type": "plugin",
@@ -402,7 +402,7 @@
         }
       ],
       "activation": {
-        "id": "ja-kinetic/j6/1.0.11",
+        "id": "ja-kinetic/j6/1.0.12",
         "styles": [
           {
             "sourceStyleId": 32,
