@@ -20,6 +20,7 @@
 // A frame the manifest returns (the plan wants it filled and the step left it without a picture) is a problem of the
 // package, never silently left out: only the logo frame, which the brand step fills, is not.
 import { contentMapKey } from '../lib/content-map-key.js'
+import { doorMinWidthOf } from '../lib/door-min-width.js'
 import { paintKindOf } from '../lib/picture-paint/paint.js'
 import { ANY_PHOTO_MAX_OVERLAP, cropOverlap } from './gallery-tiles.js'
 import { retainedRejectionProblem } from './looker-call.js'
@@ -33,15 +34,16 @@ import { documentarySourceProblem } from './picture-check/rules-sources.js'
  */
 const NOT_OURS = /^(a logo frame belongs to the brand step|the kit marks this frame not writable)/
 /**
- * The check of a file's width against its content map slot's `fit.minWidth` (the write door's SlotFit checkPicture):
+ * The check of a file's width against its content map slot's `fit.minWidth`, capped at the demo file's width (the write
+ * door's SlotFit checkPicture, door-min-width.js):
  * `(key, width)` gives the problem sentence, or null when the slot takes it. Shared with the write step's package check.
  * @param {{ slots?: object[] } | null | undefined} contentMap
  */
 export function narrowerThanSlot(contentMap) {
   const mins = new Map(
     (Array.isArray(contentMap?.slots) ? contentMap.slots : [])
-      .filter((s) => Number.isInteger(s?.fit?.minWidth) && s.fit.minWidth > 0)
-      .map((s) => [s.key, s.fit.minWidth])
+      .map((s) => [s?.key, doorMinWidthOf(s)])
+      .filter(([, min]) => min !== null)
   )
   return (key, width) => {
     const min = mins.get(key)

@@ -4,6 +4,7 @@
  * from its own bytes into a derived manifest, and the check holds the pinned plugin to the declared list.
  */
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 
@@ -11,7 +12,7 @@ import { defaultContracts } from '../src/lib/contracts.js'
 import { latestPin, readPins, releaseOfPin } from '../src/lib/template-readiness/pinned-release.js'
 import { evidenceOfPackage } from '../src/lib/template-readiness/plugin-doors-of-package.js'
 import { passed, readinessVerdict } from '../src/lib/template-readiness/verdict.js'
-import { WRITE_DOORS_CHECK } from '../src/lib/template-readiness/write-doors-check.js'
+import { HIDE_REVIEW_DOOR, WRITE_DOORS_CHECK } from '../src/lib/template-readiness/write-doors-check.js'
 import { opens, WRITE_STEP_DOORS } from '../src/write-step/plugin-doors.js'
 import { zipOf } from './template-customization-question-readiness-fixtures.mjs'
 
@@ -88,14 +89,29 @@ test('a package that is not a Joomla package of the plugin says so rather than r
 const evidenceOf = (has, doors = WRITE_STEP_DOORS) =>
   Object.fromEntries(doors.map((d) => [d.evidence, typeof has === 'function' ? has(d) : has]))
 
+/** The content map sha256 of a committed contract, as a package's hide review names it. */
+const mapSha = (id) =>
+  createHash('sha256')
+    .update(
+      readFileSync(
+        new URL(
+          `../../../packages/cms/tracy-joomla-quickstart/contracts/${id}/content-map.json`,
+          import.meta.url
+        )
+      )
+    )
+    .digest('hex')
+const BOXING = 'ja-boxing/j6/1.0.11'
+const REVIEWED = { [BOXING]: mapSha(BOXING) }
+
 /** A manifest of four released packages, in the shape scripts/cowork-plugin-doors.mjs writes. */
 const MANIFEST = {
   platform: 'joomla',
   releases: {
-    '0.24.80': { evidence: evidenceOf(false) },
-    '0.24.81': { evidence: evidenceOf((d) => d.id === 'menu-item-alias') },
-    '0.24.85': { evidence: evidenceOf(true) },
-    '0.24.87': { evidence: evidenceOf(true) }
+    '0.24.80': { evidence: evidenceOf(false), reviews: {} },
+    '0.24.81': { evidence: evidenceOf((d) => d.id === 'menu-item-alias'), reviews: {} },
+    '0.24.85': { evidence: evidenceOf(true), reviews: REVIEWED },
+    '0.24.87': { evidence: evidenceOf(true), reviews: REVIEWED }
   }
 }
 
@@ -120,7 +136,7 @@ test('the latest JA Boxing release pins a plugin with every write door: green', 
   assert.deepEqual(judged, {
     state: 'done',
     code: 'cowork-pin-doors-ready',
-    params: { plugin: '0.24.85', doors: WRITE_STEP_DOORS.map((d) => d.id) }
+    params: { plugin: '0.24.85', doors: [...WRITE_STEP_DOORS.map((d) => d.id), 'hide-review'] }
   })
 })
 
@@ -136,7 +152,7 @@ test('a copy of JA Boxing pinned to a plugin without the doors is red, naming th
     code: 'cowork-pin-missing-doors',
     params: {
       plugin: '0.24.81',
-      missing: ['hide-orders', 'rows-remove', 'page-create', 'slot-corrections'],
+      missing: ['hide-orders', 'rows-remove', 'page-create', 'slot-corrections', 'hide-review'],
       fixVersion: '0.24.87'
     }
   })
@@ -187,29 +203,47 @@ test('the check is listed in the verdict and joins its cowork-pin piece', () => 
 })
 
 // JA Diner j6 sat on 0.24.80, a plugin older than every door of the write step; #439 moved its pin to 0.24.87, which
-// carries the same 1.0.5 contract files and every door. The later stable pins retain them; the current reversible-row and alias candidate is 0.24.95-rc.2.
-test('the T3 case: JA Diner j6 on plugin 0.24.80 lacked every write door; on its current pin 0.24.95-rc.2 it has them all', () => {
+// carries the same 1.0.5 contract files and every door. Its pin is now 0.24.95-rc.2, the one package whose hide review covers
+// the 1.0.8 contract; within minutes of the first visit a site's own updater replaced it with the stable 0.24.95, which has no
+// such review (dev, 16/11/2026: Arabian Tea House's log, eighteen hides refused). The verdict now sees what the site runs.
+test('the T3 case: JA Diner j6 on 0.24.80 lacked every write door; on 0.24.95-rc.2 the site updates itself to 0.24.95, which has no review of its contract', () => {
   const pin = latestPin('ja-diner')
   // test-quality: contract the reviewed RC2 candidate must retain every existing write door.
   assert.equal(pin.cowork, '0.24.95-rc.2')
   const contracts = defaultContracts()
   const now = judge(releaseOfPin(pin, contracts), {})
   assert.deepEqual(
-    [now.state, now.code, now.params.plugin],
-    ['done', 'cowork-pin-doors-ready', '0.24.95-rc.2']
+    [now.code, now.params],
+    [
+      'cowork-release-needed',
+      { plugin: '0.24.95', missing: ['hide-review'], doors: ['hide-review'], selfUpdate: '0.24.95-rc.2' }
+    ]
   )
+  assert.ok(['todo', 'warn'].includes(now.state), now.state)
   const pins = structuredClone(readPins())
   pins['quickstart/ja-diner/j6'].cowork.version = '0.24.80'
   const before = judge(releaseOfPin(pin, contracts), { pins })
-  assert.equal(before.state, 'todo')
-  assert.equal(before.code, 'cowork-pin-missing-doors')
+  assert.equal(before.code, 'cowork-release-needed')
+  assert.deepEqual(before.params.missing, [...WRITE_STEP_DOORS.map((d) => d.id), 'hide-review'])
+  // Every other door is in a release a site keeps; the review of this contract is in none.
+  assert.deepEqual(before.params.doors, ['hide-review'])
+  assert.ok(newestReadRelease())
+})
+
+test('a review read against other map bytes, or never read, is no review: the release a site updates itself to is held to it', () => {
+  const manifest = structuredClone(MANIFEST)
+  const boxingCopy = structuredClone(readPins())
+  boxingCopy['quickstart/ja-boxing/j6'].cowork.version = '0.24.85'
+  manifest.releases['0.24.87'].reviews = { [BOXING]: 'f'.repeat(64) }
+  const stale = judge(boxing(), { pluginDoors: manifest, pins: boxingCopy })
+  // The pin has it, the release a site updates itself to does not.
   assert.deepEqual(
-    before.params.missing,
-    WRITE_STEP_DOORS.map((d) => d.id)
+    [stale.code, stale.params.plugin, stale.params.missing, stale.params.selfUpdate],
+    ['cowork-release-needed', '0.24.87', [HIDE_REVIEW_DOOR.id], '0.24.85']
   )
-  // test-quality: contract the fix a missing door names is the newest release the committed manifest has read; it moves
-  // with every plugin release (0.24.89 carries the final JA Voyara 1.0.12 profile), so it is read, not copied.
-  assert.equal(before.params.fixVersion, newestReadRelease())
+  delete manifest.releases['0.24.87'].reviews
+  const unread = judge(boxing(), { pluginDoors: manifest, pins: boxingCopy })
+  assert.deepEqual([unread.code, unread.params.doors], ['cowork-pin-doors-unread', ['hide-review']])
 })
 
 /** The newest Claude Cowork for Joomla release the committed write doors manifest has read. */

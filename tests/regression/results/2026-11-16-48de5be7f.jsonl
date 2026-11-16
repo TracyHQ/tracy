@@ -1,0 +1,1 @@
+{"id":"REG-PR-653-ja-diner-chain-faults","verdict":"PASS","commit":"48de5be7f0b51c5b77ed031aafc59d63297907ea","ran_at":"2026-11-16T13:07:14.712Z","evidence":"tests/regression/.runs/2026-11-16-48de5be7f/REG-PR-653-ja-diner-chain-faults.log"}

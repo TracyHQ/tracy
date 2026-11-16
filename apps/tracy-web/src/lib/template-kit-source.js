@@ -23,6 +23,7 @@ import { openContentMap } from './content-map-source.js'
 import { withMeasuredTitles } from './template-kit/measured-titles.js'
 import { kitOfContract } from './template-kit/reader.js'
 import { kitContracts } from './template-kit-contracts.js'
+import { stockScreenPagesOf } from './stock-screens.js'
 import { compactForPlanner, lookTextOf } from './template-kit-planner-view.js'
 
 export { compactForPlanner, lookTextOf, PLANNER_DROPPED_KIT_FIELDS } from './template-kit-planner-view.js'
@@ -278,10 +279,29 @@ function list(value) {
  *   `history`: the run's saved turns; their read_kit_part calls are replayed (answers dropped), so a resumed run knows
  *   which parts it already sent. `inFirstMessage`: the part ids the first message carries ("contents").
  */
+/**
+ * The pictures of the kit's stock screens (site.stockScreens, lib/stock-screens.js), by image id with the page they show.
+ * Every plan drops those pages (withStockScreensDropped), so their pictures are not opened: on dev (16/11/2026) a
+ * planner opened about 60 page pictures of ja-diner, account pages and colour variants among them, and its later turns
+ * slowed to 70 to 120 s each as the conversation grew.
+ */
+export function stockScreenImages(doc) {
+  const pages = new Map(list(doc?.pages).map((page) => [page?.id, page]))
+  const out = new Map()
+  for (const screen of stockScreenPagesOf(doc)) {
+    if (!screen.inKit) continue
+    const shots = pages.get(screen.id)?.images
+    for (const id of Object.values(shots && typeof shots === 'object' ? shots : {}))
+      if (typeof id === 'string') out.set(id, screen.id)
+  }
+  return out
+}
+
 export function kitTools(doc, { images, imageTool = true, history = [], inFirstMessage = [] } = {}) {
   const parts = kitParts(doc)
   parts.sentFrom(inFirstMessage)
   const imageIds = new Set(list(doc.images).map((image) => image.id))
+  const stockImages = stockScreenImages(doc)
   const idParameter = (description) => ({
     type: 'object',
     properties: { id: { type: 'string', description } },
@@ -331,14 +351,22 @@ export function kitTools(doc, { images, imageTool = true, history = [], inFirstM
       run: ({ id }) =>
         typeof id !== 'string' || id === ''
           ? badId(KIT_TOOL_NAMES.openImage)
-          : images
-            ? images.open(id)
-            : JSON.stringify({
-                error: 'IMAGES_NOT_AVAILABLE',
+          : stockImages.has(id)
+            ? JSON.stringify({
+                skipped: 'STOCK_SCREEN',
                 id,
-                known: imageIds.has(id),
-                detail: 'Kit images are not available on this bench yet. Continue from the kit text.'
+                page: stockImages.get(id),
+                detail:
+                  'This is a picture of a stock screen of the template (site.stockScreens): every plan drops that page, so it is not opened. Decide it as dropped and continue.'
               })
+            : images
+              ? images.open(id)
+              : JSON.stringify({
+                  error: 'IMAGES_NOT_AVAILABLE',
+                  id,
+                  known: imageIds.has(id),
+                  detail: 'Kit images are not available on this bench yet. Continue from the kit text.'
+                })
     }
   ]
   replayReads(tools[0], history)

@@ -10,7 +10,17 @@ const each = (value) => (Array.isArray(value) ? value : [])
 /** The orders that take a label off the page without its control. */
 const TAKES_LABEL = new Set(['slot', 'empty'])
 /** The orders that leave nothing of a control on the page. */
-const LEAVES = new Set(['carried', 'block', 'removed', 'slot', 'empty', 'rewritten', 'menu', 'kept'])
+const LEAVES = new Set([
+  'carried',
+  'block',
+  'removed',
+  'slot',
+  'empty',
+  'rewritten',
+  'menu',
+  'kept',
+  'unshown'
+])
 const leaves = (order) => Boolean(order) && LEAVES.has(order.via) && !order.refused
 
 /** The kit links of kept, undropped blocks, by the label slot they print. */
