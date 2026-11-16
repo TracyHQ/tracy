@@ -3,6 +3,7 @@
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
 import { benchHarnessFor, capsOf, sendsImages } from '../lib/bench-harness.js'
+import { parallelPagesProblem } from './plan-parts.js'
 import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { activeRuns, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
 import { briefShapeProblems } from './brief-shape.js'
@@ -30,7 +31,8 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
  *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object>, noCaps?: boolean, requireVisualReview?: boolean,
- *   kitInFirstMessage?: boolean }} input `kitImages`: the kit
+ *   kitInFirstMessage?: boolean, parallelPages?: number }} input `parallelPages`: the number of parts round 0 is
+ *   planned in at the same time (plan-parts.js; 1 or absent plans it as before and freezes nothing); `kitImages`: the kit
  *   images of this server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests); `noCaps`: the
  *   run is a step of a chain build, so it carries no USD budget (#478).
  */
@@ -45,8 +47,18 @@ export async function startBenchRun({
   index,
   noCaps = false,
   requireVisualReview = false,
-  kitInFirstMessage = false
+  kitInFirstMessage = false,
+  parallelPages
 }) {
+  if (parallelPages !== undefined) {
+    const partsProblem = parallelPagesProblem(parallelPages)
+    if (partsProblem)
+      return {
+        ok: false,
+        code: 'SITE_PLANNER_BAD_PARALLEL_PAGES',
+        reason: `The run cannot start: ${partsProblem}.`
+      }
+  }
   const problems = briefShapeProblems(brief)
   if (problems.length)
     return refuse('SITE_PLANNER_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })
@@ -87,6 +99,8 @@ export async function startBenchRun({
       // Asked for (a chain build's plan step): the whole kit goes in the first message (template-kit-source.js
       // wholeKitFirstMessage); frozen with the run, so a run saved before reads part by part as it did.
       ...(kitInFirstMessage ? { kitInFirstMessage: true } : {}),
+      // Asked for: round 0 planned in parts at the same time (plan-parts.js), frozen with the run.
+      ...(parallelPages > 1 ? { parallelPages } : {}),
       ...(requireVisualReview ? { visualReview: VISUAL_REVIEW_POLICY } : {})
     }
   })

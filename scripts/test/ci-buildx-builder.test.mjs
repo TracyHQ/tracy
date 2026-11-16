@@ -19,11 +19,12 @@ const WORKFLOWS = ['build-app-images.yml', 'build-dsh-image.yml']
 
 const action = load(readFileSync(join(ACTION_DIR, 'action.yml'), 'utf8'))
 const script = action.runs.steps[0].run
-const configHash = createHash('sha256')
-  .update(readFileSync(CONFIG))
-  .update('--driver docker-container\n')
-  .digest('hex')
-  .slice(0, 16)
+// The builder's RAM cap (8 GB, no swap on top), in the create flags so the hash covers it.
+const MEMORY_OPTS = '--driver-opt memory=8g --driver-opt memory-swap=8g'
+const CREATE_ARGS = `--driver docker-container ${MEMORY_OPTS}`
+const hashOf = (config, createArgs) =>
+  createHash('sha256').update(config).update(`${createArgs}\n`).digest('hex').slice(0, 16)
+const configHash = hashOf(readFileSync(CONFIG), CREATE_ARGS)
 
 test('both image workflows get their builder from the shared action, and only from it', () => {
   for (const file of WORKFLOWS) {
@@ -52,7 +53,8 @@ test('both image workflows get their builder from the shared action, and only fr
 function runAction({
   container,
   listed,
-  help = '  --buildkitd-config string   BuildKit daemon config file'
+  help = '  --buildkitd-config string   BuildKit daemon config file',
+  run = script
 }) {
   const dir = mkdtempSync(join(tmpdir(), 'buildx-builder-'))
   try {
@@ -79,7 +81,7 @@ esac
     )
     chmodSync(join(bin, 'docker'), 0o755)
     const githubEnv = join(dir, 'github-env')
-    const r = spawnSync('bash', ['-c', script], {
+    const r = spawnSync('bash', ['-c', run], {
       encoding: 'utf8',
       env: {
         ...process.env,
@@ -101,7 +103,7 @@ esac
 }
 
 const createLine = (flag) =>
-  `buildx create --name tracy-r1 --driver docker-container ${flag} ${CONFIG} ` +
+  `buildx create --name tracy-r1 ${CREATE_ARGS} ${flag} ${CONFIG} ` +
   `--driver-opt env.TRACY_BUILDKITD_CONFIG=${configHash} --bootstrap`
 const currentEnv = `PATH=/usr/bin\nTRACY_BUILDKITD_CONFIG=${configHash}\n`
 
@@ -109,6 +111,31 @@ test('no builder yet: created with the repo config and its hash', () => {
   const { calls } = runAction({ container: null, listed: false })
   assert.ok(calls.includes(createLine('--buildkitd-config')), calls.join('\n'))
   assert.ok(!calls.some((c) => c.startsWith('buildx rm')))
+})
+
+test('the builder is created with an 8 GB RAM cap and no swap on top of it', () => {
+  assert.match(script, new RegExp(`^\\s*create_args="${CREATE_ARGS}"$`, 'm'))
+  const { calls } = runAction({ container: null, listed: false })
+  const create = calls.find((c) => c.startsWith('buildx create --name'))
+  assert.ok(create.includes('--driver-opt memory=8g'), create)
+  assert.ok(create.includes('--driver-opt memory-swap=8g'), create)
+  // What Docker records as HostConfig.Memory for `8g` (go-units RAMInBytes, binary units).
+  assert.equal(bytes('8g'), 8589934592)
+})
+
+test('changing the RAM cap changes the hash, so every builder is replaced on its next job', () => {
+  const other = script.replace(
+    'memory=8g --driver-opt memory-swap=8g',
+    'memory=6g --driver-opt memory-swap=6g'
+  )
+  assert.notEqual(other, script)
+  const otherHash = hashOf(readFileSync(CONFIG), CREATE_ARGS.replaceAll('8g', '6g'))
+  assert.notEqual(otherHash, configHash)
+  // A builder carrying today's hash is not current for the edited action: it is replaced.
+  const { calls } = runAction({ container: currentEnv, listed: true, run: other })
+  const rm = calls.indexOf('buildx rm --keep-state tracy-r1')
+  const create = calls.findIndex((c) => c.includes(`env.TRACY_BUILDKITD_CONFIG=${otherHash}`))
+  assert.ok(rm >= 0 && create > rm, calls.join('\n'))
 })
 
 test('a builder with the current config is reused, not recreated', () => {
@@ -164,7 +191,7 @@ function parseToml(text) {
       list.push(cur)
     } else if ((m = /^\[([\w.]+)\]$/.exec(line))) {
       cur = at(m[1])
-    } else if ((m = /^(\w+)\s*=\s*(.+)$/.exec(line))) {
+    } else if ((m = /^([\w-]+)\s*=\s*(.+)$/.exec(line))) {
       const v = m[2]
       if (v === 'true' || v === 'false') cur[m[1]] = v === 'true'
       else if (/^\d+$/.test(v)) cur[m[1]] = Number(v)
@@ -212,6 +239,43 @@ test('buildkitd.toml is a GC policy BuildKit loads, sized from the 16/11 measure
   for (const cap of caps) assert.ok(cap >= 1.3 * 30.6e9 && cap < 80 * GIB, `cap ${cap / GIB} GiB`)
   // Something removes old records whatever the size, so the record count stays bounded too.
   assert.ok(rules.some((r) => r.keepDuration && !r.filters && !r.maxUsedSpace && !r.minFreeSpace))
+})
+
+test("buildkitd runs at most 4 build steps at once, half of the dev host's 8 CPUs", () => {
+  const conf = parseToml(readFileSync(CONFIG, 'utf8'))
+  // The keys BuildKit's `[worker.oci]` takes (cmd/buildkitd/config/config.go v0.34.2, OCIConfig
+  // and the embedded GCConfig / NetworkConfig): a misspelt key is silently ignored by buildkitd.
+  const ociKeys = new Set([
+    'enabled',
+    'labels',
+    'platforms',
+    'snapshotter',
+    'rootless',
+    'noProcessSandbox',
+    'gc',
+    'gckeepstorage',
+    'gcpolicy',
+    'reservedSpace',
+    'maxUsedSpace',
+    'minFreeSpace',
+    'networkMode',
+    'cniBinaryPath',
+    'cniConfigPath',
+    'cniPoolSize',
+    'bridgeName',
+    'bridgeSubnet',
+    'binary',
+    'userRemapUnsupported',
+    'proxySnapshotterPath',
+    'defaultCgroupParent',
+    'stargzSnapshotter',
+    'apparmor-profile',
+    'selinux',
+    'max-parallelism'
+  ])
+  for (const k of Object.keys(conf.worker.oci))
+    assert.ok(ociKeys.has(k), `[worker.oci] key BuildKit does not know: ${k}`)
+  assert.equal(conf.worker.oci['max-parallelism'], 4)
 })
 
 test('the action points at the config next to it', () => {

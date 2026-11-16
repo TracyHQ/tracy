@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-646-min-width-template-file",
+  "kind": "fix",
+  "title": "An image slot's minimum file width is capped at the template's own picture and never below its box",
+  "pr": 646,
+  "area": "cms/quickstart-tools",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A 1078 px box with a 1408 px template file gets minWidth 1408, not 1617.",
+    "1.5 x box when the file is wider or unmeasured; the box width when the file is narrower than the box."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/cms/tracy-quickstart-tools/test/slot-fit.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a class photo the old rule kept becomes replaceable, with the box of each viewport and its shape",
+      "the minimum file width is one and a half times the box, capped at the template file, never below the box"
+    ]
+  }
+}
