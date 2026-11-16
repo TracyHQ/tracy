@@ -51,18 +51,21 @@ test('a gallery tile no new photo fits reuses a photo of its page, cut elsewhere
   // No photo left (the other photo of the page is in the neighbouring tile, its own was rejected): never hidden, and
   // its own rejected photo is placed despite the looker rather than leaving the demo (owner's rule 2026-11-07).
   assert.ok(!m.returns.some((r) => r.frame === 'block-u.2'), 'never returned')
-  // The last rung tries every photo: the neighbour's is never taken, the tile's own is rejected again.
+  // The last rung tries every photo: the neighbour's is never taken, the tile's own is placed once more and rejected
+  // again. The neighbour's is named as such on the reuse rung, and on whichever any-photo try meets it: the first or
+  // the last, as the photos rank by their use on the site (ladder-state.js usageFor, which counts the frames of other
+  // pages as the round began, since the frames climb side by side).
   const u2 = rungs(m, 'block-u.2')
   assert.ok(u2.some(([r, o]) => r === 'reuse' && o === 'skipped'))
+  assert.equal(u2.filter(([r, o]) => r === 'any-photo' && o === 'placed').length, 1)
   // With no drawer door the draw rungs are skipped (card AK sends a tile no photo fits to the draw rung).
   assert.deepEqual(u2.slice(-2), [
     ['any-photo', 'skipped'],
     ['best-rejected', 'placed']
   ])
-  assert.match(
-    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-2).detail,
-    /is in the neighbouring tile block-u\.1/
-  )
+  const u2Steps = m.ladder.find((l) => l.frame === 'block-u.2').steps
+  assert.match(u2Steps.at(-2).detail, /^every usable owner photo tried/)
+  assert.ok(u2Steps.some((x) => /is in the neighbouring tile block-u\.1/.test(x.detail ?? '')))
   const u2Entry = e.get('block-u.2')
   assert.equal(u2Entry.filledBy.rung, 'best-rejected')
   assert.match(u2Entry.reason, /^placed despite looker: /)

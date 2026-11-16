@@ -57175,6 +57175,10 @@
       {
         "container": ".feature-action",
         "why": "acm/features-intro/tmpl/style-1.php prints each feature row with div.feature-action holding the row link data.btn-link (module-95: the reservation and contact pages), so a plan that drops one of those pages leaves a row link leading to a hidden page"
+      },
+      {
+        "container": ".features-action",
+        "why": "acm/features-intro/tmpl/style-1.php prints the section button of a features block in div.features-action holding basic-btn-link (module-95: the about page, Itemid 142), so a plan that drops that page leaves the button leading to a hidden page"
       }
     ],
     "createdPageHide": [],

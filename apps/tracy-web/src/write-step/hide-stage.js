@@ -27,7 +27,7 @@ function settingsPart(extras, menu) {
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, owners: Map<string, object>,
  *   extras: object, reading: object, changes: Record<string, string>, contract: string,
- *   sleep: (ms: number) => Promise<void>, last?: object, heldWords?: Map<string, string>,
+ *   sleep: (ms: number) => Promise<void>, last?: object, heldWords?: Map<string, string>, linked?: Set<string>, doorOf?: Function | null,
  *   onNoWayOut?: (named: { slot: string, reason: string }[]) => Promise<void> }} input `onNoWayOut`: told before anything is written
  * @returns {Promise<{ stop?: object, reading?: object, emptySlots?: string[], settingsExtras?: object, held?: Map<string, object>,
  *   results?: (done: { emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object> }) =>
@@ -47,6 +47,8 @@ export async function runHideStage(input) {
     sleep,
     last = NO_LAST,
     heldWords = new Map(),
+    linked = new Set(),
+    doorOf = null,
     onNoWayOut = async () => {}
   } = input
   const asksToHide = [...owners.values()].some((c) => c.kind === 'hide')
@@ -62,7 +64,9 @@ export async function runHideStage(input) {
     cannotHide,
     rowsRemove: ops.rowsRemove,
     last,
-    heldWords
+    heldWords,
+    linked,
+    doorOf
   })
   await onNoWayOut(order.noWayOut)
   const total = Object.keys(changes).length + order.emptySlots.length

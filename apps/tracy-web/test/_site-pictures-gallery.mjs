@@ -33,11 +33,11 @@ const frame = (id, width, height) => ({
   picture: `images/demo/${id}.jpg`,
   role: null
 })
-const slot = (id) => ({
+const slot = (id, [width, height] = [300, 300]) => ({
   key: id.replace(/^block-/, 'module-'),
   type: 'image',
   sample: `images/demo/${id}.jpg`,
-  fit: { source: { width: 300, height: 300, format: 'jpg' } }
+  fit: { source: { width, height, format: 'jpg' } }
 })
 export const tiles = (block, n) => Array.from({ length: n }, (_, i) => `${block}.${i + 1}`)
 // A gallery list as the kit tool writes it: one row per tile, each with its image slot; no row may drop (min = max).
@@ -56,21 +56,26 @@ export const LAYOUT = [
   ['page-d', 'block-d', 1, false]
 ]
 
-/** The kit of a layout: [page, block, frame count, gallery] rows. */
+/** The kit of a layout: [page, block, frame count, gallery, frame size (default [300, 300])] rows. */
 export function kit(layout = LAYOUT) {
-  const blocks = layout.map(([, block, n, gallery]) => [block, tiles(block, n), gallery])
+  const blocks = layout.map(([, block, n, gallery, size = [300, 300]]) => [
+    block,
+    tiles(block, n),
+    gallery,
+    size
+  ])
   return {
     kit: 'tracy-template-kit/2',
     contract: 'demo-walls/j6/1.0.0',
     template: { name: 'demo_walls', version: '1.0.0' },
     site: { brandColours: { primary: { value: '#3f6f4f' } } },
-    blocks: blocks.map(([id, ids, gallery]) => ({
+    blocks: blocks.map(([id, ids, gallery, [width, height]]) => ({
       id,
       role: 'section',
-      frames: ids.map((f) => frame(f, 300, 300)),
+      frames: ids.map((f) => frame(f, width, height)),
       lists: gallery ? [galleryList(id, ids)] : []
     })),
-    contentMap: { slots: blocks.flatMap(([, ids]) => ids).map(slot) }
+    contentMap: { slots: blocks.flatMap(([, ids, , size]) => ids.map((id) => slot(id, size))) }
   }
 }
 
@@ -157,14 +162,20 @@ function brief(photos) {
 
 const frameOf = (text) => /block-[a-z]\.\d/.exec(text)?.[0] ?? null
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 /**
  * A fake looker door: rejects every look of the frames in `reject`, and the first look of the frames in `once`, for a
- * thing to avoid.
+ * thing to avoid. `delay(frame, nth)` is how long the nth look of a frame takes (ms); `events` records when each look
+ * was asked and answered, and `peak()` the most looks in flight at once.
  */
-function fakeLooker(reject, once = new Set()) {
+function fakeLooker(reject, once = new Set(), delay = null) {
   const looks = []
   const drawings = []
+  const events = []
   const first = new Set(once)
+  let inFlight = 0
+  let peak = 0
   const fetchImpl = async (_url, init) => {
     const body = JSON.parse(init.body)
     if (isDraw(body)) {
@@ -173,6 +184,14 @@ function fakeLooker(reject, once = new Set()) {
     }
     const f = frameOf(body.messages[1].content[0].text)
     looks.push(f)
+    const nth = looks.filter((x) => x === f).length
+    inFlight++
+    peak = Math.max(peak, inFlight)
+    events.push({ frame: f, nth, at: 'asked', t: performance.now() })
+    const ms = delay?.(f, nth) ?? 0
+    if (ms > 0) await sleep(ms)
+    inFlight--
+    events.push({ frame: f, nth, at: 'answered', t: performance.now() })
     const no = reject.has(f) || first.delete(f)
     const said = no
       ? { verdict: 'fail', faults: ['forbidden item'], seen: 'A sign over a door.' }
@@ -186,7 +205,7 @@ function fakeLooker(reject, once = new Set()) {
       { headers: { 'content-type': 'application/json' } }
     )
   }
-  return { looks, drawings, fetchImpl }
+  return { looks, drawings, events, fetchImpl, peak: () => peak }
 }
 
 /**
@@ -194,15 +213,28 @@ function fakeLooker(reject, once = new Set()) {
  * @param {Set<string>} reject frames the looker always rejects
  * @param {string} runId
  * @param {{ layout?: any[], photos?: Map<string, Buffer>, once?: Set<string>, draw?: boolean, lookAhead?: number,
- *   lookBudget?: number }} [opts]
+ *   lookBudget?: number, lookDelay?: (frame: string, nth: number) => number, storeDelay?: () => number,
+ *   lookConcurrency?: number }} [opts]
  *   `draw`: the run has a (fake) drawer door; `lookAhead`: the finisher's look-ahead (ladder-step.js LOOK_AHEAD);
  *   `lookBudget`: the looks one wave of look-ahead fills (ladder-step.js aheadDepth). The result's `aheadWaves` holds
- *   how many pictures each wave of look-ahead asked the looker about.
+ *   how many pictures each wave of look-ahead asked the looker about. `lookDelay`: how long the nth look of a frame
+ *   takes (ms); `storeDelay`: how long each picture the finisher stores takes (ms), which widens the time between a
+ *   rung choosing a photo and placing it; `lookConcurrency`: the looker's looks in flight (LOOK_CONCURRENCY).
  */
 export async function finished(
   reject,
   runId,
-  { layout = LAYOUT, photos = TALL, once, draw = false, lookAhead, lookBudget } = {}
+  {
+    layout = LAYOUT,
+    photos = TALL,
+    once,
+    draw = false,
+    lookAhead,
+    lookBudget,
+    lookDelay = null,
+    storeDelay = null,
+    lookConcurrency
+  } = {}
 ) {
   const PHOTOS = photos
   const k = kit(layout)
@@ -231,7 +263,7 @@ export async function finished(
   }
   const doc = manifestFor({ base, parts, picker: null, idx }, new Map())
   const prompts = picturePrompts()
-  const looker = fakeLooker(reject, once)
+  const looker = fakeLooker(reject, once, lookDelay)
   const lookerStep = createLooker({
     door: {
       providerId: 'openrouter',
@@ -244,16 +276,26 @@ export async function finished(
     runId,
     idx,
     alts: null,
-    fetchImpl: looker.fetchImpl
+    fetchImpl: looker.fetchImpl,
+    ...(lookConcurrency === undefined ? {} : { concurrency: lookConcurrency })
   })
   const aheadWaves = []
+  const slowStore = storeDelay
+    ? {
+        ...fs,
+        putPicture: async (bytes, ext) => {
+          await sleep(storeDelay())
+          return fs.putPicture(bytes, ext)
+        }
+      }
+    : fs
   const finisher = createFinisher({
     idx,
     plan: p,
     kit: k,
     usable: usablePhotos(b, PHOTOS).usable,
     photoBytes: PHOTOS,
-    store: fs,
+    store: slowStore,
     looker: {
       ...lookerStep,
       ahead: (pairs, memo) => {

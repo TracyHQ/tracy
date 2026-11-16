@@ -97,6 +97,45 @@ test('the report keeps every kept link with its target, the pages it prints on, 
   assert.deepEqual(phones, ['0005550199'], 'a phone kept off the site is not held to the page')
 })
 
+// JA Diner 1.0.8 (dev, 16/11/2026): the plan gave the menu tabs (page controls that open a panel) the live menu address; the
+// link stage writes none ("a control that acts inside the page has no address") and the tab still opens its panel, yet the
+// site check's plan-links blocked three times on a link the page "does not print".
+test('a control that acts inside the page is not held to the plan address the link stage never writes', () => {
+  const tabs = {
+    ...kit,
+    blocks: [
+      ...kit.blocks,
+      {
+        id: 'block-7',
+        links: [
+          {
+            id: 'block-7.link-1',
+            label: 'BREAKFAST',
+            target: null,
+            action: 'page-control',
+            opens: { kind: 'panel', element: '#p1' }
+          }
+        ]
+      }
+    ]
+  }
+  const withTabs = {
+    ...plan,
+    sharedBlocks: [
+      ...plan.sharedBlocks,
+      {
+        block: 'block-7',
+        decision: 'keep',
+        links: [{ link: 'block-7.link-1', leadsTo: 'https://live.example/menu/', labelSlot: 'block-7.0' }]
+      }
+    ]
+  }
+  const { planLinks } = planLinkTable({ plan: withTabs, kit: tabs, brief })
+  assert.ok(!planLinks.some((l) => l.link === 'block-7.link-1'))
+  // A dead control (no address and nothing it opens) stays in, marked, as before.
+  assert.equal(planLinks.find((l) => l.link === 'body-lesson.link-2')?.deadControl, true)
+})
+
 test('targets: a fact off the site, a map, a legal page and a lightbox are not measured', () => {
   const facts = new Map(brief.facts.map((f) => [f.id, f]))
   assert.equal(targetOf('phone:f-off', facts), null)

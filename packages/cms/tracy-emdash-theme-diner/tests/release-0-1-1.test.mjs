@@ -1,7 +1,7 @@
 // The template kit fixes of 0.1.1 (DECISIONS D-K1): what the views, the stylesheet, the field map and the seed limits
 // must keep saying so the kit's self-checks (linksWithoutTarget, phoneNotCallable, slotLimitsDiffering) stay at 0.
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
@@ -87,7 +87,14 @@ test('slot-limits.json holds only limits with a real source: a measured box, or 
   assert.ok(chrome.subscribe_placeholder.length <= limit('chrome.chrome.subscribe_placeholder'))
 })
 
-test('the 0.1.1 content map carries the declared limits and the menu label role', () => {
+// contracts/ is not shipped in the package (distribution.include): this check runs in the repository only (G2).
+const inRepo = {
+  skip: existsSync(path.join(ROOT, 'contracts/0.1.1/content-map.json'))
+    ? false
+    : 'contracts/ is not shipped: a repository test'
+}
+
+test('the 0.1.1 content map carries the declared limits and the menu label role', inRepo, () => {
   const map = json('contracts/0.1.1/content-map.json')
   assert.equal(map.version, '0.1.1')
   const slot = (key) => map.slots.find((s) => s.key === key)

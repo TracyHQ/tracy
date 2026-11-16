@@ -29,7 +29,7 @@ export async function reuseRung({ idx, usable, photoBytes, store }, s, frameId, 
   const frame = idx.frames.get(frameId)
   const cuts = s.cutsOn(frameId)
   const tried = []
-  for (const { a } of rankForFrame(usable, wish, frame, s.usageNow())) {
+  for (const { a } of rankForFrame(usable, wish, frame, s.usageFor(frameId))) {
     const uses = cuts.get(a.id)
     if (!uses || p.reused.has(a.id)) continue
     p.reused.add(a.id)
@@ -82,7 +82,7 @@ async function nextAnyPhoto({ idx, usable, photoBytes }, s, frameId, filled, tri
   const wish = idx.wishes.get(frameId)
   const frame = idx.frames.get(frameId)
   const cuts = s.cutsOn(frameId)
-  for (const { a } of rankForFrame(usable, wish, frame, s.usageNow())) {
+  for (const { a } of rankForFrame(usable, wish, frame, s.usageFor(frameId))) {
     if (filled.has(a.id)) continue
     filled.add(a.id)
     const uses = cuts.get(a.id) ?? []

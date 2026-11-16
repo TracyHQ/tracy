@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-650-emdash-diner-0-1-2-masonry-state",
+  "kind": "feat",
+  "title": "JA Diner EmDash 0.1.2: the blog masonry keeps the Tab order under a keyboard user and follows a column change at once, and the release state carries no QA leftovers",
+  "pr": 650,
+  "area": "emdash-theme/tracy-diner",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In packages/cms/tracy-emdash-theme-diner, install the package's own dependencies (pnpm install --frozen-lockfile --ignore-workspace from a copy of the folder outside the workspace, or the clean install of the release) and a Playwright Chromium (pnpm exec playwright install chromium).",
+    "S2: node --test packages/cms/tracy-emdash-theme-diner/tests/blog-masonry-focus.test.mjs — the view's masonry script in Chromium on 12 fixed-height cards: a deal with unchanged heights, a late font with focus in and out of the list, a Tab walk with a late font halfway, resizes 390 to 1100, 1100 to 800 and 1100 to 390 with focus on a card, and a Tab walk after a zoom.",
+    "S3: node --test packages/cms/tracy-emdash-theme-diner/tests/state-residue.test.mjs packages/cms/tracy-emdash-theme-diner/tests/release-0-1-2.test.mjs — the state residue check on a fresh-seed state and on each QA leftover, and the shipped view, release tool and docs of 0.1.2."
+  ],
+  "expect": [
+    "S2: 9 of 9 pass: no card moves while focus is in the list, the held deal runs once focus leaves it and reaches the arrangement a fresh page settles on, every card is reached once in order, and after each resize the shown columns equal those of a fresh page at the new width with focus kept on its card.",
+    "S3: every test passes: a fresh-seed state has no residue; 2 form submissions, a mail log row, the emdash-smtp provider options, a post at a version its seed receipt does not name, a revision written after the seed and a missing receipted entry are each named; the release takes its state from a fresh seed and stops on any residue."
+  ],
+  "selectors": {
+    "view": "packages/cms/tracy-emdash-theme-diner/src/views/BlogList.astro (.dn-post-grid, .dn-post-col, .dn-blog-card[data-order])",
+    "tool": "packages/cms/tracy-emdash-theme-diner/tools/state-residue.mjs (stateResidue)"
+  },
+  "evidence": "Visual review of the 0.1.2 cuts (16/11/2026): N1, a late font re-dealt the cards around the focused one (card 4 of /our-blog never reached at 1440 px with fonts 2 s late); N2, a resize with focus in the list kept one 277 px column at 1440 px. Independent review of the third cut: the state tarball carried 2 form submissions, 4 mail log rows, the build machine's SMTP host and 3 QA revisions. On the final cut: 72 resize runs and 54 Tab walks with 0 issues; the shipped state has 0 residue.",
+  "fence": "The masonry script's focus guard and column-change deal, run in a real browser; the state residue check that tools/release.mjs runs before packing the state",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/cms/tracy-emdash-theme-diner/tests/blog-masonry-focus.test.mjs",
+      "packages/cms/tracy-emdash-theme-diner/tests/state-residue.test.mjs",
+      "packages/cms/tracy-emdash-theme-diner/tests/release-0-1-2.test.mjs"
+    ]
+  }
+}

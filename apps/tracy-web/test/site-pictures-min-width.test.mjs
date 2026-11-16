@@ -116,3 +116,87 @@ test('the export leaves out a file narrower than its frame minimum width, and th
   ])
   assert.deepEqual(packageItems(old), [])
 })
+
+// A content map measured before #646 asks one and a half times the box whatever the template ships; the write door's
+// SlotFit checkPicture takes any file at least as wide as the demo file (JA Diner 1.0.8 module-106.23: box 1440,
+// minWidth 2160, demo file 1600). The picture step and the package check hold a file to that same width, never more.
+test('the minimum width is capped at the demo file width, as the write door caps it', () => {
+  const band = { width: 1440, height: 389 }
+  const kit = {
+    blocks: [{ id: 'block-b', frames: [{ id: 'block-b.1', kind: 'photo', ...band }] }],
+    contentMap: {
+      slots: [
+        {
+          key: 'module-b.1',
+          type: 'image',
+          sample: 'images/demo/band.jpg',
+          fit: { minWidth: 2160, source: { width: 1600, height: 850 } }
+        }
+      ]
+    }
+  }
+  const idx = indexInputs({ plan: {}, kit, brief: {}, files: {} })
+  assert.equal(idx.frames.get('block-b.1').minWidth, 1600)
+  // A slot whose sample states its size, with no fit.source.
+  const stated = {
+    ...kit,
+    contentMap: {
+      slots: [
+        {
+          key: 'module-b.1',
+          type: 'image',
+          sample: 'images/b.jpg?width=1500&height=405',
+          fit: { minWidth: 2160 }
+        }
+      ]
+    }
+  }
+  assert.equal(
+    indexInputs({ plan: {}, kit: stated, brief: {}, files: {} }).frames.get('block-b.1').minWidth,
+    1500
+  )
+  // No demo size known: the minimum stands as measured; a demo wider than the minimum leaves it as it is.
+  const unknown = {
+    ...kit,
+    contentMap: { slots: [{ key: 'module-b.1', type: 'image', fit: { minWidth: 2160 } }] }
+  }
+  assert.equal(
+    indexInputs({ plan: {}, kit: unknown, brief: {}, files: {} }).frames.get('block-b.1').minWidth,
+    2160
+  )
+  const wide = {
+    ...kit,
+    contentMap: {
+      slots: [
+        { key: 'module-b.1', type: 'image', fit: { minWidth: 2160, source: { width: 2400, height: 648 } } }
+      ]
+    }
+  }
+  assert.equal(
+    indexInputs({ plan: {}, kit: wide, brief: {}, files: {} }).frames.get('block-b.1').minWidth,
+    2160
+  )
+
+  const map = {
+    slots: [
+      { key: 'module-m.1', type: 'image', fit: { minWidth: 2160, source: { width: 1600, height: 1200 } } }
+    ]
+  }
+  const atDemo = exportPictureMapping({
+    pictures: manifest(1600),
+    contract: 'c',
+    revision: 'r',
+    kit: { contentMap: map }
+  })
+  assert.deepEqual(atDemo.problems, [])
+  assert.deepEqual(packageItems(atDemo, map), [])
+  const below = exportPictureMapping({
+    pictures: manifest(1500),
+    contract: 'c',
+    revision: 'r',
+    kit: { contentMap: map }
+  })
+  assert.deepEqual(below.problems, [
+    { where: 'block-m.1', detail: 'its file is 1500 px wide; the kit slot module-m.1 takes at least 1600' }
+  ])
+})

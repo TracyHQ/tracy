@@ -4,6 +4,8 @@ import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
+import { doorMinWidthOf } from '../lib/door-min-width.js'
+
 export const PICTURE_OWNER = 'picture'
 
 /** The plugin's `MAX_MEDIA_BYTES`: the most `media.upload` takes in one call. Nothing on the Apply door is smaller. */
@@ -54,8 +56,8 @@ export function packageItems(pictures, contentMap = null) {
   const sent = new Map(uploads.map((u) => [u?.sitePath, u]))
   const minOf = new Map(
     (Array.isArray(contentMap?.slots) ? contentMap.slots : [])
-      .filter((s) => Number.isInteger(s?.fit?.minWidth) && s.fit.minWidth > 0)
-      .map((s) => [s.key, s.fit.minWidth])
+      .map((s) => [s?.key, doorMinWidthOf(s)])
+      .filter(([, min]) => min !== null)
   )
   for (const [key, value] of Object.entries(mapping.changes)) {
     const frame = key.replace(/^module-/, 'block-')

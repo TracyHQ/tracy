@@ -46,6 +46,7 @@ import { iconLinkLines, iconsOf, linkIconChanges, routeChanges } from './kit-slo
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { proveAudio } from './audio-proof.js'
 import { prepareLinks } from './link-stage.js'
+import { kitWithLiveHead } from './live-head-block.js'
 import { lookGuard } from './look-guard.js'
 import { strandMenuItems, withEveryMenuHide } from './menu-hides.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
@@ -169,6 +170,8 @@ export async function runWriteStep(input) {
   let routes = { routed: new Map(), deferred: new Map() }
   let ordered = {}
   let brand = { active: false, lines: () => [] }
+  // The kit as the head stages read it: its head injection block on a block the plan keeps (live-head-block.js).
+  let headKit = kit.doc
   let sent = {}
   let settled = new Map()
   let strandedLabels = new Map()
@@ -295,11 +298,14 @@ export async function runWriteStep(input) {
     report.inputs = read.inputs
     if (read.stop) return { stop: read.stop }
     const { plan, copy, brief } = read.values
+    const head = kitWithLiveHead(kit.doc, plan)
+    headKit = head.kit
+    if (head.moved) report.headBlock = head.moved
     brand = await prepareBrandStage({
       brand: read.values.brand,
       brandPath: files.brand,
       inputs: read.inputs.brand,
-      kit: kit.doc,
+      kit: headKit,
       accentPlace: input.accentPlace,
       last,
       templateSheets: input.templateSheets && (() => input.templateSheets({ door, siteKey }))
@@ -676,6 +682,8 @@ export async function runWriteStep(input) {
       sleep,
       last,
       heldWords,
+      linked: links?.overHides ?? new Set(),
+      doorOf: links?.doorOf ?? null,
       onNoWayOut: async (named) => {
         report.noWayOut = named
         await onNoWayOut(named)
@@ -864,9 +872,9 @@ export async function runWriteStep(input) {
     ...shared.lines,
     ...formLines,
     // After the contract call, which saves the head block's module in its own form: the kit's empty video button rule.
-    ...(await hideEmptyVideoButtons({ door, siteKey, kit: kit.doc })),
+    ...(await hideEmptyVideoButtons({ door, siteKey, kit: headKit })),
     // And the kit's blocks a created page must not show, on those pages only (card AT).
-    ...(await hideOnCreatedPages({ door, siteKey, kit: kit.doc, created: created.opened }))
+    ...(await hideOnCreatedPages({ door, siteKey, kit: headKit, created: created.opened }))
   ]
   if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
@@ -958,12 +966,12 @@ export async function runWriteStep(input) {
       ...(await hideSelfLinkButtons({
         door,
         siteKey,
-        kit: kit.doc,
+        kit: headKit,
         keptPages: report.keptPages ?? [],
         menutype: hide.settingsExtras?.mainMenu?.menutype ?? null
       })),
       // And the links in the kit's containers that still lead to a page the plan hid read as plain text (card AM).
-      ...(await hideHiddenPageLinks({ door, siteKey, kit: kit.doc, plan, keptPages: report.keptPages ?? [] }))
+      ...(await hideHiddenPageLinks({ door, siteKey, kit: headKit, plan, keptPages: report.keptPages ?? [] }))
     ]
   if (report.audio?.length) {
     if (await isCancelled()) return finish('cancelled', null, written, wrote.refused)

@@ -8,6 +8,7 @@
 import { DEMO_BASELINE_CHECK } from './demo-baseline-check.js'
 import { CONTENT_MAP_LISTS_CHECK } from './content-map-lists-check.js'
 import { HIDDEN_KIT_FIELDS_CHECK } from './hidden-kit-fields.js'
+import { KIT_MODULES_CHECK } from './kit-modules-check.js'
 import { KIT_TOOL_CHECK } from './kit-tool-version-check.js'
 import { PIN_BEHIND_CHECK } from './pin-behind-contract-check.js'
 import { WRITE_DOORS_CHECK } from './write-doors-check.js'
@@ -18,6 +19,7 @@ export const CHECKS = Object.freeze([
   WRITE_DOORS_CHECK,
   HIDDEN_KIT_FIELDS_CHECK,
   KIT_TOOL_CHECK,
+  KIT_MODULES_CHECK,
   PIN_BEHIND_CHECK,
   CONTENT_MAP_LISTS_CHECK,
   DEMO_MEASURES_CHECK,

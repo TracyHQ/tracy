@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-652-ladder-per-frame",
+  "kind": "fix",
+  "title": "Each rejected frame climbs the picture ladder on its own, sharing one bound on looks and drawings, with every look asked and paid once and no photo twice on a page",
+  "pr": 652,
+  "area": "website-opportunities/site-pictures",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A frame whose looks come back at once climbs its whole ladder (three looks, two rungs) before the slow first look of another frame comes back.",
+    "Two frames of one page that are rejected at the same moment and climb at once never show the same owner photo, and the duplicate rule P06 passes.",
+    "With several frames climbing and looking ahead, the provider answers exactly one look per non-cached record, and the save pays each look once.",
+    "One look asked twice at the same time, plus a look-ahead of it, is one provider call and one paid record.",
+    "A frame climbing alone takes the same rungs, photos and verdicts with one look at a time as with random look latencies.",
+    "A gallery tile with no new photo reuses a photo of its page and never takes its neighbour's photo."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-pictures-ladder-per-frame.test.mjs",
+      "apps/tracy-web/test/site-pictures-gallery-reuse.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a slow look of one frame does not hold back the next rung of another",
+      "two frames of one page that climb at once never show the same photo",
+      "with frames climbing at once and looking ahead, every look is asked once and paid once",
+      "two asks of one look at the same time are one look: asked once, paid once, recorded once as paid",
+      "a frame climbing alone takes the same rungs, photos and verdicts however long each look takes",
+      "a gallery tile no new photo fits reuses a photo of its page, cut elsewhere, never next to its other tile"
+    ]
+  }
+}

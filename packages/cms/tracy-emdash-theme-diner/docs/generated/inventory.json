@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-diner",
     "label": "JA Diner",
-    "version": "0.1.1"
+    "version": "0.1.2"
   },
   "locales": {
     "default": "en",
@@ -993,7 +993,7 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
-    "package.json": "sha256:887b4b02fa0a4c58c03ed728d947fb673c28094279f4dcca37484d0096d38a45",
+    "package.json": "sha256:f5059d16d0b9492a19c145e2a3c64a711716da88d9803705642ccc5d964d1588",
     "pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
     "seed/field-map.json": "sha256:0d2efe032532872c9e5be488e75f1bfc92ca9744c38c5fb070af2e7e3099b6dd",
     "seed/media-map.json": "sha256:8ae8d2c1418af210d859f9b9223b78b5b07311ed977933a63a50b7f7fe0e4b17",
@@ -1058,15 +1058,15 @@
     "src/styles/pages/search.css": "sha256:f4e7324e90f6a635e1ffe1d0421394f4d2433b92a718b7ca49beba427a1a74b1",
     "src/styles/tokens.css": "sha256:5e49267a2084661b1d0a90982299cd876a27f77f7bc0ff3e29dccc15dcec0d71",
     "src/views/About.astro": "sha256:f2aa2852e264f9daf11be875f0eec2bd3ade3f9b00ba91f9634ab2222c76bf4d",
-    "src/views/BlogList.astro": "sha256:78f3f0c9384d836a7fec77631798302d7acf875b0e26718d05f871fdc222754d",
+    "src/views/BlogList.astro": "sha256:163365a097bdd910e2b26986bcec3fddc2861bfe82bff77bf9aa14aeda5cae4f",
     "src/views/Contact.astro": "sha256:bb770a92fb44d9171506eb3c8abb1ab881ee25ce00321aa896ed7cfc16079ebe",
-    "src/views/Home.astro": "sha256:63e01a9940bd6fb1ba6c02dd2740b48634ebbf56e5b50ce46a48df4053367c27",
+    "src/views/Home.astro": "sha256:fe6800a860dbbe014ea003d6deb79b610d90dcfb448cdd56b0d792cf4cb4a453",
     "src/views/NotFound.astro": "sha256:9810312dfc16f7e5a0b2e516e07ab2a84de3a1341cf728c355caa31f50ee07b4",
     "src/views/Offers.astro": "sha256:cf6b5498cc021210e3ea0b4036453a51dae530419df9b2447e9531204c9a77e2",
     "src/views/Post.astro": "sha256:a5fa4522bb20f852d6eb24a4342a95937bc5bc55e2d1ea390f1d3efd89f0fe42",
     "src/views/Reservation.astro": "sha256:5e440bdc7da0eadcc0096e5dea40a4c67b65cf888bf3d19a5caf9114c83cb6e5",
     "src/views/Search.astro": "sha256:0f82d395c783589958a7051a04a06970a9d8f0bf43884d8a16aa7c388f04aa1f",
-    "template.config.json": "sha256:26b410ec8031e64f22ba1a6cb6eba0a07c3807dcbf48909eb82d751ee666ce73",
+    "template.config.json": "sha256:5af3d5429d50abcb43895bf9a8ec295986dda8eda2096d482c1492db312ed092",
     "tools/forms.json": "sha256:b338c304ed95527ce5ac509a14e080734d616136c4a899053b62f24084445409",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }
