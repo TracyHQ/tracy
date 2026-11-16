@@ -96,7 +96,11 @@ export function recordBinding({ kit, kitHashes, inputs, plugin }) {
     controls: { human: inputs?.controls?.human ?? null, quality: inputs?.controls?.quality ?? null },
     allowFileSha256: inputs?.secretAllow?.sha256 ?? null,
     // The template kit the marker build read for its dark accent (review 5 Z8), null when it read none.
-    templateKitSha256: inputs?.templateKit?.sha256 ?? null
+    templateKitSha256: inputs?.templateKit?.sha256 ?? null,
+    // The probe catalogue write safety ran and the code of the gate and of the build's write step (review 7 S7):
+    // the guard refuses a catalogue that is not the gate's own; the code hash is recorded, not compared.
+    probeCatalogueSha256: inputs?.probeCatalogue?.sha256 ?? null,
+    gateCodeSha256: inputs?.gateCode?.sha256 ?? null
   }
 }
 

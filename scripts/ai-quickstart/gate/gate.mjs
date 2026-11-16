@@ -37,7 +37,7 @@ import {
 } from '../../../apps/tracy-web/src/lib/picture-paint/icons/phosphor-set.js'
 import { demoRoutesOf } from '../../built-site-check/inputs.mjs'
 import { corpusInputOf, demoCorpus } from '../rendered-scan.mjs'
-import { JOOMLA_PROBES } from './adapters/joomla-probes.mjs'
+import { GATE_PROBES } from './gate-probes.mjs'
 import { joomlaQualityPath } from './adapters/joomla-quality-path.mjs'
 import { DECLARED_HOSTS, EXEMPTIONS, PLATFORM, SYSTEM_PAGES } from './adapters/joomla-t4.mjs'
 import { crawlPages } from './adapters/web-frame.mjs'
@@ -68,7 +68,6 @@ import { qualityOn, siteSession } from './site-session.mjs'
 import { keptLanguageTextsOf } from './kept-language-texts.mjs'
 import { filesOf } from './sources.mjs'
 import { blankControlOf } from './verdict.mjs'
-import { PROBE_CATALOGUE } from './write-probes-edge.mjs'
 import { fileState, gateCodeSha256 } from './write-safety-state.mjs'
 
 const argv = process.argv.slice(2)
@@ -289,7 +288,7 @@ const { record } = await releaseGate({
   writeSafetyState: fileState(path.join(out, 'write-safety-state.json')),
   codeSha256: gateCodeSha256(ROOT),
   baseline: baselineOf(folder, flag('--quality-baseline')),
-  probes: [...PROBE_CATALOGUE, ...JOOMLA_PROBES],
+  probes: GATE_PROBES,
   demoRoutes: demoContent && existsSync(demoContent) ? demoRoutesOf(readJson(demoContent)) : [],
   control: async () => ({
     ...(humanSite

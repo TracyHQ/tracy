@@ -17,6 +17,7 @@
 // input: nothing here names one.
 import { createHash } from 'node:crypto'
 import { measuredInRun } from './control-file.mjs'
+import { probeCatalogueSha256 } from './gate-probes.mjs'
 import { markerBuild } from './marker-plan.mjs'
 import { qualityPhase } from './release-gate-quality.mjs'
 import { GATE_VERSION, kitFilesSha256 } from './record.mjs'
@@ -111,6 +112,8 @@ export async function releaseGate(input) {
     : {}
   const inputs = {
     ...input.inputs,
+    probeCatalogue: { sha256: probeCatalogueSha256(input.probes ?? []) },
+    gateCode: { sha256: input.codeSha256 ?? null },
     controls: {
       human: provenanceOf(control.human, humanSha),
       quality: provenanceOf(control.quality, humanSha)

@@ -18,6 +18,7 @@ import { createHash } from 'node:crypto'
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { controlProblems } from './control-file.mjs'
+import { GATE_PROBES, probeCatalogueSha256 } from './gate-probes.mjs'
 import { consistencyProblems } from './record-consistency.mjs'
 import { detailProblems } from './record-detail.mjs'
 import { CHECK_RECORD_DIR, GATE_VERSION, kitFilesSha256, kitHashesOf } from './record.mjs'
@@ -171,6 +172,13 @@ export function releaseProblems(folder, { pins = {}, blankSiteSha } = {}) {
   if ((record.binding?.templateKitSha256 ?? null) !== templateKitShaOf(folder))
     out.push(
       problem('template_kit_changed', 'the template kit is not the one the marker build read for the record')
+    )
+  if ((record.binding?.probeCatalogueSha256 ?? null) !== probeCatalogueSha256(GATE_PROBES))
+    out.push(
+      problem(
+        'probe_catalogue_changed',
+        "write safety ran another probe catalogue than the gate has: run the repository's own gate"
+      )
     )
   if (v.schema !== VERDICT_SCHEMA)
     out.push(problem('verdict_unreadable', 'schema ' + v.schema + ' is not ' + VERDICT_SCHEMA))
