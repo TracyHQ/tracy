@@ -124,7 +124,17 @@ const title = info?.title ?? masthead?.title ?? ''
 
 <script is:inline>
 	// The source's masonry: each card goes into the shortest column. The page is sent with the cards dealt out in turn; here they are
-	// dealt again by height for the number of columns the grid has at this width.
+	// dealt again by height for the number of columns the grid has at this width. A card's height follows its title's web font, which
+	// may arrive after this script runs, so the cards are dealt again when the fonts are ready and on window load: the last deal reads
+	// the final heights, whatever the load order (0.1.2, L1). A card's picture keeps its box before it loads (width and height
+	// attributes, height: auto), so a picture never changes a height and no picture load deals again (D-K5, F1).
+	// A deal moves only the cards that are not already in their column and place: a card left where it is keeps keyboard focus. When a
+	// card has to move, the element that had focus gets it back and the page keeps its scroll position (F1 of the 0.1.2 review).
+	// No font or load deal runs while focus is inside the list: moving the cards around a keyboard user would change the Tab order
+	// under them, skipping some cards and repeating others (N1 of the 0.1.2 visual review). That deal waits until focus leaves the
+	// list, so the order a user tabs through never changes while they are in it. A resize or zoom that changes the number of columns
+	// deals at once, focus inside or not: the cards must fill the columns the grid now has, and the deal keeps focus and scroll
+	// (N2 of the 0.1.2 visual review: held, the cards stayed in one column at 1440 px, or wrapped under the first at 768 px).
 	(function () {
 		const grid = document.querySelector('.dn-post-grid');
 		if (!grid) return;
@@ -133,21 +143,54 @@ const title = info?.title ?? masthead?.title ?? ''
 		let last = 0;
 		function deal() {
 			const n = Math.min(getComputedStyle(grid).gridTemplateColumns.split(' ').length, cols.length);
+			// every column shown while measuring, so a card in a column hidden at the previous width is not read as 0 px tall
+			cols.forEach(function (c) { c.style.display = ''; });
+			const heights = cards.map(function (card) { return card.offsetHeight; });
 			const h = [];
-			cols.forEach(function (c, i) { c.style.display = i < n ? '' : 'none'; h[i] = 0; });
-			cards.forEach(function (card) {
+			const plan = cols.map(function () { return []; });
+			for (let i = 0; i < n; i++) h[i] = 0;
+			cards.forEach(function (card, j) {
 				let k = 0;
 				for (let i = 1; i < n; i++) if (h[i] < h[k]) k = i;
-				cols[k].appendChild(card);
-				h[k] += card.offsetHeight + 36;
+				plan[k].push(card);
+				h[k] += heights[j] + 36;
 			});
+			const active = document.activeElement;
+			const keep = active && grid.contains(active) ? active : null;
+			const x = window.scrollX;
+			const y = window.scrollY;
+			let moved = false;
+			plan.forEach(function (list, k) {
+				list.forEach(function (card, i) {
+					const at = cols[k].children[i];
+					if (at !== card) { cols[k].insertBefore(card, at || null); moved = true; }
+				});
+			});
+			cols.forEach(function (c, i) { c.style.display = i < n ? '' : 'none'; });
+			if (moved) {
+				if (keep && document.activeElement !== keep) keep.focus({ preventScroll: true });
+				if (window.scrollX !== x || window.scrollY !== y) window.scrollTo(x, y);
+			}
 			last = n;
 		}
 		deal();
+		let pending = false;
+		function requestDeal() {
+			if (grid.contains(document.activeElement)) { pending = true; return; }
+			pending = false;
+			deal();
+		}
+		grid.addEventListener('focusout', function (e) {
+			if (pending && !grid.contains(e.relatedTarget)) setTimeout(requestDeal, 0);
+		});
+		let settle;
+		const again = function () { clearTimeout(settle); settle = setTimeout(requestDeal, 30); };
+		if (document.fonts && document.fonts.ready) document.fonts.ready.then(again);
+		window.addEventListener('load', again);
 		let t;
 		window.addEventListener('resize', function () {
 			clearTimeout(t);
-			t = setTimeout(function () { if (Math.min(getComputedStyle(grid).gridTemplateColumns.split(' ').length, cols.length) !== last) deal(); }, 120);
+			t = setTimeout(function () { if (Math.min(getComputedStyle(grid).gridTemplateColumns.split(' ').length, cols.length) !== last) { pending = false; deal(); } }, 120);
 		});
 	})();
 </script>
