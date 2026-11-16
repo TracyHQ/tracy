@@ -8,12 +8,12 @@
 // snapshot (#343, `door.looker`): a run does not start without the looker. The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor, capsOf } from '../lib/bench-harness.js'
-import { briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { readableKits } from '../lib/template-kit-source.js'
 import { altsOfCopy } from './alt-notes.js'
 import {
-  activeRun,
+  activeRuns,
   createRun,
   readRun,
   requestCancel,
@@ -58,7 +58,8 @@ export async function startPictureRun({
   copy = null,
   storeDir,
   index,
-  noCaps = false
+  noCaps = false,
+  effort
 }) {
   const where = index ? { index } : {}
   const kits = readableKits(where)
@@ -108,8 +109,18 @@ export async function startPictureRun({
     if (!read.ok) return read
     photoSource = read.source
   }
-  const active = await activeRun(pool)
-  if (active) return activeRefusal(active)
+  const running = await activeRuns(pool)
+  if (running.length >= BENCH_RUNS_AT_ONCE) return fullRefusal(running)
+  // An explicit picker effort (native DeepSeek Flash only), frozen with the run as the writer's is (#541).
+  let harness = {}
+  if (door) {
+    try {
+      harness = capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId, { effort }), noCaps)
+    } catch (error) {
+      if (error.code !== 'BENCH_EFFORT_UNSUPPORTED') throw error
+      return refuse('SITE_PICTURES_HARNESS', error.message)
+    }
+  }
   const created = await createRun(pool, {
     startedBy,
     plan,
@@ -126,9 +137,9 @@ export async function startPictureRun({
       looker: looker.snapshot,
       ...(drawer ? { drawer: drawer.snapshot } : {})
     },
-    harness: door ? capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps) : {}
+    harness
   })
-  if (created.error === SITE_PICTURES_RUN_ACTIVE) return activeRefusal(created.active)
+  if (created.error === SITE_PICTURES_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
 }
 
@@ -155,14 +166,7 @@ async function storePhotos(brief, photos, storeDir) {
   return { ok: true, source: { kind: 'folder', name: photos.name, files: photos.files.size, used } }
 }
 
-function activeRefusal(active) {
-  const who = active
-    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
-    : 'another run'
-  return refuse(SITE_PICTURES_RUN_ACTIVE, `Only one picture run at a time: ${who} is still active.`, {
-    active
-  })
-}
+const fullRefusal = (running) => benchFullRefusal(SITE_PICTURES_RUN_ACTIVE, 'picture runs', running)
 
 /** Cancel a run: one no worker holds ends at once; one a worker holds is asked to stop between two steps. */
 export async function cancelPictureRun(pool, runId) {

@@ -1,4 +1,5 @@
 // Match extracted items to content-map slots. Decides: matched | locked | hole | ignored.
+import { audioSourceIdentity } from '../../../../wo/website-opportunities/domain/audio-source.mjs'
 import { normText, normPath, normHref, letterCount, alnumCount, compact } from './normalize.mjs'
 import { isLockedDesignAsset } from './contract.mjs'
 
@@ -23,6 +24,21 @@ export function videoId(href) {
   )
   return m ? m[1] : null
 }
+
+const MONTHS =
+  '(jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|june?|july?|aug(ust)?|sep(t(ember)?)?|oct(ober)?|nov(ember)?|dec(ember)?)'
+// A module's date_format may lead with the weekday ("D, M Y" prints "Tue, Aug 2021").
+const WEEKDAY = '((mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\\s+)?'
+const DATE = new RegExp(
+  `^${WEEKDAY}(\\d{1,2}(st|nd|rd|th)?\\s+${MONTHS},?\\s+\\d{4}|${MONTHS}\\s+\\d{1,2}(st|nd|rd|th)?,?\\s+\\d{4}|\\d{4}-\\d{2}-\\d{2}|${MONTHS}\\s+\\d{4})$`
+)
+// An all-numeric date a layout prints from an item's own date with a format string (JA's latest-news layout: `d.m.Y`
+// -> 06.09.2021): day, month and year in either order, split by dots, slashes or dashes. It is the article's date, not
+// words of the demo; a phone or a price never has this shape.
+const NUMERIC_DATE = /^(\d{1,2}[./-]\d{1,2}[./-]\d{4}|\d{4}[./]\d{1,2}[./]\d{1,2})$/
+
+/** A complete rendered date, never a bare year or a yearless label. */
+export const isRenderedDate = (value) => DATE.test(value) || NUMERIC_DATE.test(value)
 
 export function createMatcher(contract, siteUrl) {
   const { text, textCompact, textList, patterns = [], image, url, rawSample } = contract.index
@@ -94,6 +110,13 @@ export function createMatcher(contract, siteUrl) {
       const p = v.replace(/\s*(\.\.\.|…)$/, '')
       const hit = p.length >= 15 && textList.find((s) => s.norm.startsWith(p) || s.norm.includes(p))
       if (hit) res = { status: 'matched', by: 'truncated', slots: [hit.key] }
+      if (!res && contract.platform === 'joomla' && p.length >= 15) {
+        // Joomla StringHelper::truncate removes every internal space before an ellipsis too.
+        const keys = [
+          ...new Set(textList.filter((s) => s.norm.replaceAll(' ...', '...').startsWith(p)).map((s) => s.key))
+        ]
+        if (keys.length === 1) res = { status: 'matched', by: 'Joomla truncated spacing', slots: keys }
+      }
     }
     if (!res && v.length >= 20 && letterCount(v) >= 12) {
       const hit = textList.find((s) => s.norm.length > v.length && s.norm.includes(v))
@@ -107,6 +130,7 @@ export function createMatcher(contract, siteUrl) {
       // Composite block: remove every slot sample found inside it; what is left is unmatched.
       let rest = v
       const slots = []
+      const ambiguous = []
       // A card excerpt joins a label, a title and the start of a paragraph, then cuts it ("... the component wrapper -
       // your..."): the longest cut tail that starts a slot's text is that slot.
       if (/(\.\.\.|…)$/.test(v)) {
@@ -126,13 +150,37 @@ export function createMatcher(contract, siteUrl) {
         if (s.norm.length > rest.length) continue
         const occ = occurrences(rest, s.norm)
         if (!occ.length) continue
-        slots.push(s.key)
+        const owners = [...new Set(text.get(s.norm))]
+        // Two language strings with the same words: which one prints is for the source classifier to prove, so the
+        // piece stays unexplained. Content slots that repeat a sample (a label in every card) all own it, as a
+        // whole-value match records.
+        if (owners.length > 1 && owners.some((key) => key.startsWith('languageString-')))
+          ambiguous.push(s.norm)
+        else slots.push(...owners)
         rest = rest.split(s.norm).join(' \u0000 ')
       }
+      // Complete literals keep their owner before a numeric fragment can consume their beginning.
+      for (const p of [...patterns].filter((p) => p.fragment).sort((a, b) => b.length - a.length)) {
+        rest = rest.replace(p.fragment, (piece) => {
+          const owners = new Set(
+            patterns.filter((other) => other.fragment && other.re.test(piece)).map((other) => other.key)
+          )
+          if (owners.size !== 1) return piece
+          slots.push(p.key)
+          return ' \u0000 '
+        })
+      }
       for (const f of shortFigures) {
-        if (!occurrences(rest, f.norm).length) continue
-        slots.push(...f.keys)
-        rest = rest.split(f.norm).join(' \u0000 ')
+        // Metadata separators and matched slots bound complete dates; an unrelated year slot cannot own them.
+        rest = rest
+          // oxlint-disable-next-line no-control-regex -- NUL is the internal matched-slot boundary.
+          .split(/(\u0000|·)/)
+          .map((piece) => {
+            if (isRenderedDate(piece.trim()) || !occurrences(piece, f.norm).length) return piece
+            slots.push(...f.keys)
+            return piece.split(f.norm).join(' \u0000 ')
+          })
+          .join('')
       }
       const parts = rest
         .split('\u0000')
@@ -147,6 +195,7 @@ export function createMatcher(contract, siteUrl) {
               x.split(' ').every((w) => joined(compact(w)))
             )
         )
+      parts.push(...ambiguous)
       if (slots.length && !parts.length) res = { status: 'matched', by: 'composite', slots }
       else if (!parts.length) res = { status: 'matched', by: 'slot spans joined without a space', slots: [] }
       // The longest unexplained piece is what gets classified; every piece is reported.
@@ -192,6 +241,15 @@ export function createMatcher(contract, siteUrl) {
       .split('?')[0]
     if (addr !== String(item.value).trim() && rawSample.has(decodeURIComponent(addr)))
       return { status: 'matched', by: 'address slot', slots: rawSample.get(decodeURIComponent(addr)) }
+    // A phone link dials the number a slot writes with spaces, dashes or dots (`tel:+12025550160` for +1-202-555-0160).
+    if (/^tel:/i.test(String(item.value).trim())) {
+      const digits = decodeURIComponent(addr).replace(/[^\d+]/g, '')
+      const keys = [...rawSample]
+        .filter(([sample]) => sample.replace(/[^\d+]/g, '') === digits)
+        .flatMap(([, k]) => k)
+      if (digits.replace('+', '').length >= 7 && keys.length)
+        return { status: 'matched', by: 'phone number slot', slots: [...new Set(keys)] }
+    }
     // Joomla's e-mail cloaking turns an address written in a slot's text into a mailto link.
     if (/^mailto:/i.test(String(item.value).trim()) && addr.includes('@')) {
       const a = decodeURIComponent(addr).toLowerCase()
@@ -216,13 +274,37 @@ export function createMatcher(contract, siteUrl) {
   }
 
   return function match(item) {
+    if (item.kind === 'media') {
+      const identity = audioSourceIdentity(item.value, siteUrl)
+      const hits = (contract.index.audio ?? []).filter(
+        (s) =>
+          identity &&
+          s.sourceIdentity === identity &&
+          item.entity === s.entity &&
+          item.track !== undefined &&
+          String(item.track) === String(s.jsonPath?.[2]) &&
+          s.column === 'attribs' &&
+          s.jsonPath?.[0] === 'ctm_audio' &&
+          s.jsonPath?.[1] === 'audio-src'
+      )
+      return item.mediaKind === 'audio' && hits.length === 1
+        ? { status: 'matched', by: 'audio source and owner row', slots: [hits[0].key] }
+        : { status: 'hole', reason: 'audio source has no unique exact owner and row binding' }
+    }
     if (item.kind === 'image') return matchImage(item.value)
     if (item.kind === 'link') return matchLink(item)
+    if (item.kind === 'text' && typeof item.codeText === 'string') {
+      const keys = contract.index.code?.get(item.codeText)
+      return keys
+        ? { status: 'matched', by: 'exact literal PRE text', slots: keys }
+        : { status: 'hole', reason: 'literal PRE text has no exact declared scalar' }
+    }
+    if (item.inCode) return { status: 'hole', reason: 'unsupported or undeclared code text' }
     const res = matchText(item.value)
     // Inline code is left out of every slot on purpose (capture skips <code>): the words around it are the slot's text.
     if (res.status === 'hole' && typeof item.outsideCode === 'string') {
       const rest = matchText(item.outsideCode)
-      // Only a match counts: a block that is all code (<pre><code>) stays a hole, to be accepted with a reason.
+      // Only declared prose around inline CODE counts; an all-code block stays a hole.
       if (rest.status === 'matched') return { ...rest, by: `text outside inline code (${rest.by})` }
     }
     return res

@@ -286,3 +286,23 @@ test('a non-visual slot (no box draws it) takes no number: every place says so, 
   assert.equal(slotLimitChecks({ kit, errors }), 1)
   assert.equal(errors[0].slot, 'chrome.label')
 })
+
+test('literal PRE: unifyLimits compares literal demo size before accepting a frame or fit', () => {
+  const sample = '<Widget>\n\t&amp; ((strong))Case((/strong))'
+  const source = {
+    key: 'article-2.0',
+    type: 'text',
+    sample,
+    xpath: '/html/body/div/pre/code/text()',
+    maxCharacters: 100,
+    fit: fit(20, 20)
+  }
+  const kit = { blocks: [{ id: 'body', slots: [{ id: 'article-2.0', type: 'text' }] }] }
+  unifyLimits(kit, { mapSlots: [source], textFit: { 'article-2.0': { limit: 22, byWidth: { 1440: 22 } } } })
+  assert.equal(
+    kit.blocks[0].slots[0].maxCharacters,
+    100,
+    'normalized prose length must not make a too-small frame eligible'
+  )
+  assert.match(kit.blocks[0].slots[0].maxCharactersFrom, /^content map declared/)
+})

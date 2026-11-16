@@ -52,6 +52,16 @@ JOB_DIR = "/var/lib/tracy-jobs"
 # A job's whole life on disk: one JSON file per job. Not a database, because the only reader is
 # the relay asking "how far along", and the only writer is the thread doing the work — and a
 # file survives this process being restarted mid-provision, which is exactly when someone asks.
+
+# A template demo folded into the demo farm (scripts/lib/demo-farm.sh) is marked by
+# /srv/tracy/<label>/runtime. Its <label>-web-1 is a TCP forwarder and its database a farm schema:
+# every job of this legacy door that execs into a site container, or changes it, would land in the
+# forwarder. Refused by name instead. tracy-host (apps/tracy-host) is the door that knows the farm.
+def farm_refusal(label: str) -> str | None:
+    if os.path.lexists(f"/srv/tracy/{label}/runtime"):
+        return f"{label} is a demo served by the demo farm; this legacy door does not serve it — unfold it first (provision/unfold.sh {label})"
+    return None
+
 def job_path(job_id):
     return f"{JOB_DIR}/{job_id}.json"
 
@@ -277,6 +287,10 @@ def validate_webroot_payload(kind, body):
 
 def run_webroot_job(job_id: str, body: dict) -> None:
     """A webroot job, run locally: answer first, run after, the result goes into the job record."""
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="run_webroot_job", detail=refused)
+        return
     label = body["label"]
     kind = body["kind"]
     script, fixed = WEBROOT_JOBS[kind]
@@ -391,6 +405,10 @@ def provision(job_id: str, body: dict) -> None:
     Progress is written to a file after every line the script prints: the one asking is the relay, and what
     it asks is "how far along", so the answer must exist even while the job is still running.
     """
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="provision", detail=refused)
+        return
     label = body["label"]
     os.makedirs(LOG_DIR, exist_ok=True)
     log_path = f"{LOG_DIR}/provision-{label}.log"
@@ -462,6 +480,10 @@ def go_live(job_id: str, body: dict) -> None:
     traffic. The `publish_state` flag belongs to the relay, and the relay flips it AFTER this job finishes (towards
     live) or BEFORE calling (towards draft) — see the note at `handleGoLive`.
     """
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="go_live", detail=refused)
+        return
     label = body["label"]
     op = body["op"]
     os.makedirs(LOG_DIR, exist_ok=True)

@@ -12,6 +12,7 @@ import {
   sendsImages,
   startBenchRun
 } from '../src/site-planner/bench-control.js'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { readRun } from '../src/site-planner/bench-store.js'
 import { PLANNER_BRIEF_VIEW } from '../src/site-planner/brief-view.js'
 import { CHECKER_VERSION } from '../src/site-planner/plan-check/check-plan.js'
@@ -176,15 +177,26 @@ test('an unset or switched-off door refuses the run with its reason', opts, asyn
   assert.equal((await pool.query('select count(*)::int as n from site_planner_run')).rows[0].n, 0)
 })
 
-test('a second run is refused while one is active, naming the active run', opts, async () => {
+test('a run past the bench limit is refused while the others are active, naming them', opts, async () => {
   const { pool } = db
   await assignPlannerDoor(pool)
   const first = await startRun(pool)
-  const second = await start(pool)
-  assert.equal(second.ok, false)
-  assert.equal(second.code, 'SITE_PLANNER_RUN_ACTIVE')
-  assert.equal(second.active.id, first.id)
-  assert.match(second.reason, new RegExp(first.id))
+  const others = []
+  for (let n = 1; n < BENCH_RUNS_AT_ONCE; n++) {
+    const started = await start(pool)
+    assert.equal(started.ok, true, started.reason)
+    others.push(started.run)
+  }
+  const past = await start(pool)
+  assert.equal(past.ok, false)
+  assert.equal(past.code, 'SITE_PLANNER_RUN_ACTIVE')
+  assert.equal(past.active.id, first.id)
+  assert.deepEqual(
+    past.activeRuns.map((r) => r.id),
+    [first.id, ...others.map((r) => r.id)]
+  )
+  for (const run of [first, ...others]) assert.match(past.reason, new RegExp(run.id))
+  assert.match(past.reason, new RegExp(`At most ${BENCH_RUNS_AT_ONCE} planner runs at a time`))
 })
 
 test(

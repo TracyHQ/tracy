@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-574-restart-resume",
+  "kind": "fix",
+  "title": "A chain lost on a restart before the write starts again once for the same action; one lost while placing does not",
+  "pr": 574,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a disposable PostgreSQL server, run run.cmd.",
+    "S2: Confirm both tests named in run.tests report ok."
+  ],
+  "expect": [
+    "A chain lost while preparing is restarted once by the same action, which stays queued.",
+    "Lost a second time, it is not restarted again and the build ends with qa.reason LOST_ON_RESTART.",
+    "A chain lost while placing on the site is never restarted by itself and ends with qa.reason LOST_ON_RESTART."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-step-chain-handoff.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a chain lost on a restart before the write starts again once, by the same action",
+      "a chain lost while placing on the site is never started again by itself"
+    ]
+  }
+}

@@ -12,6 +12,9 @@ SQL=/tmp/migrate-sites.sql
 : > "$SQL"
 for d in /srv/tracy/*/; do
   label=$(basename "$d"); [ "$label" = host-dsh ] && continue
+  # A demo folded into the demo farm (lib/site-runtime.sh): its `<label>-web-1` is a forwarder with no
+  # Apache and no CMS image — refused for this one-time migration; unfold it first.
+  if [ -e "$d/runtime" ]; then echo "!! $label: served by the demo farm — unfold it first; skipped" >&2; continue; fi
   port=$(sed -n 's/^HOST_PORT=//p' "$d/.env" 2>/dev/null | sed -n 1p)
   [ -n "$port" ] || { echo "!! $label has no HOST_PORT — skipped" >&2; continue; }
   img=$(docker inspect "${label}-web-1" --format '{{.Config.Image}}' 2>/dev/null || true)

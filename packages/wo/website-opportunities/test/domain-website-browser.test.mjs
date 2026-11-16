@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { crawlWebsiteWithFallback, needsBrowser } from '../domain/website-browser.mjs'
+import { crawlWebsiteWithFallback, needsBrowser, renderedPagesResult } from '../domain/website-browser.mjs'
 
 const resolve = async () => [{ address: '93.184.216.34', family: 4 }]
 const html = (body) => `<!doctype html><html><head><title>Bistro</title></head><body>${body}</body></html>`
@@ -63,6 +63,21 @@ test('a JS-only site is re-read through the Apify browser with the token in a he
   const call = fetch.calls.find((c) => c.url.startsWith('https://api.apify.com/'))
   assert.equal(call.auth, 'Bearer apify_api_secret')
   assert.ok(!call.url.includes('apify_api_secret'))
+})
+
+test('a rendered page keeps its heading, and the reader’s description when its markup has none', () => {
+  const base = { source: 'website', pages: [], media: [], menus: [], socials: {}, profile: {}, provider: 'x' }
+  const r = renderedPagesResult(
+    [
+      { url: 'https://bistro.example/', html: rendered, metadata: { description: 'Pasta in town.' } },
+      { url: 'https://bistro.example/menu', html: html('<p>Menu</p>'), metadata: { title: 'Menu' } }
+    ],
+    base
+  )
+  assert.equal(r.pages[0].heading, 'Bistro')
+  assert.equal(r.pages[0].description, 'Pasta in town.')
+  assert.equal('description' in r.pages[1], false)
+  assert.equal('heading' in r.pages[1], false)
 })
 
 test('without a token the plain result stands; a failed browser run is reported, not hidden', async () => {

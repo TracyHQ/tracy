@@ -105,7 +105,7 @@ function reclassify(result, contract, siteUrl, o) {
   if (dbIndex) Object.assign(result, dumpPeopleOf(dbIndex))
   for (const p of result.pages) {
     for (const it of p.items) for (const k of derived) delete it[k]
-    annotate(p.items, match, classify)
+    annotate(p.items, match, classify, { url: p.url })
     p.counts = count(p.items)
     if (p.unmapped) p.rendersEntity = guessEntity(contract, p)
   }

@@ -15,7 +15,8 @@
  * none | unsupported | outdated>` (the provision reads the exit code only).
  */
 if (PHP_SAPI !== 'cli') exit(1);
-$root = '/var/www/html';
+// TRACY_DOCROOT: the site's files where its PHP runs (a demo folded into the demo farm: its farm docroot).
+$root = getenv('TRACY_DOCROOT') ?: '/var/www/html';
 $lib = $root . '/administrator/components/com_claudecowork/lib/ContentIdentity.php';
 if (!is_file($lib)) {
     echo "    content reader: this Cowork component has none — skipped\n";

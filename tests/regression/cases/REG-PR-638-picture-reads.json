@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-638-picture-reads",
+  "kind": "fix",
+  "title": "A revision's owner photos are read from the object store several at a time, in order, each still checked",
+  "pr": 638,
+  "area": "website-opportunities/site-pictures",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Forty photos are read with more than one and at most PICTURE_READS_AT_ONCE reads in flight, and come back in the rows' order.",
+    "A photo whose bytes are missing or of another hash is left out, as before."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/brief-picture-bytes-reads.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "photos are read several at a time, at most PICTURE_READS_AT_ONCE, and come back in the rows order",
+      "a photo whose bytes are missing or of another hash is still left out"
+    ]
+  }
+}

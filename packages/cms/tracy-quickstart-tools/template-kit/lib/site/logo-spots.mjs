@@ -95,7 +95,10 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
     const settingKey = slot?.setting ?? byLayout ?? null
     const setting = settings.find((s) => s.key === settingKey)
     const entity = g.block ? entities.get(g.block) : null
-    let emptyShows = setting?.prints.find((p) => printsAt(p, where, g.block))?.emptyShows ?? null
+    const print =
+      setting?.prints.find((p) => p.blocks?.includes(g.block)) ??
+      setting?.prints.find((p) => printsAt(p, where, g.block))
+    let emptyShows = print?.emptyShows ?? null
     if (!emptyShows && entity && isFreeHtml(entity) && g.blockTextOnly) emptyShows = 'nothing'
     const viaPhone = !g.at && g.phone
     const m = g.at ?? (viaPhone ? g.phone : g)

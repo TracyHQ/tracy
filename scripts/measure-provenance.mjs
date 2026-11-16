@@ -229,6 +229,28 @@ function readWorkerCeiling(container) {
   }
 }
 
+/**
+ * Whether a site container is a folded demo's forwarder (its `tracy.runtime` label is `farm`).
+ * @param {string} container
+ */
+function isFarmForwarder(container) {
+  try {
+    return (
+      execFileSync(
+        'docker',
+        ['inspect', '--type', 'container', '-f', '{{index .Config.Labels "tracy.runtime"}}', container],
+        {
+          encoding: 'utf8',
+          stdio: ['ignore', 'pipe', 'ignore'],
+          timeout: 15_000
+        }
+      ).trim() === 'farm'
+    )
+  } catch {
+    return false
+  }
+}
+
 /** The CLI. Guarded so the tests can import the pure helpers above without starting a run. */
 async function main() {
   const { values: args, positionals: pages } = parseArgs({
@@ -259,6 +281,15 @@ async function main() {
   }
   const modes = args.mode === 'both' ? ['plain', 'stamped'] : [args.mode]
   const containerName = args.container ?? `${args.site.split('.')[0]}-web-1`
+  // A template demo folded into the demo farm (fleet scripts/lib/demo-farm.sh): its `<label>-web-1`
+  // is a forwarder (label tracy.runtime=farm) with no PHP to read a worker ceiling from, and its
+  // pool's cap is the farm's. Refused rather than measured against the wrong process.
+  if (isFarmForwarder(containerName)) {
+    console.error(
+      `measure-provenance: ${containerName} is a demo served by the demo farm — unfold it first (provision/unfold.sh <label>)`
+    )
+    process.exit(2)
+  }
   const ceiling = readWorkerCeiling(containerName)
   const chosen = chooseConcurrency({ requested: Number(args.concurrency) || undefined, ceiling })
   const slowMs = Math.max(1, Number(args['slow-ms']) || 10_000)

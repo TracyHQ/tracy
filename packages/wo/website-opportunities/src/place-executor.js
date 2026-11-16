@@ -894,6 +894,9 @@ export function createPlaceRunner(h) {
             }
           }
         }
+        // The link-in-bio pages the read points at (the website's links to one, a social page's bio link) are read
+        // into it: the booking links, menus and social pages they list. Not on a campaign's light website check.
+        if (!ctx.prefetch) result = await h.withLinkPages(domain, source, row.ref, result)
         await fenced(pool, lease, async (db) => {
           if (['complete', 'partial'].includes(result.status))
             await collected(

@@ -1,0 +1,1 @@
+{"id":"REG-PR-641-ci-buildx-builder-gc-policy","verdict":"PASS","commit":"d0e419da262d00edfefcd5a66385cac39f0ca4bf","ran_at":"2026-11-16T04:50:25.152Z","evidence":"tests/regression/.runs/2026-11-16-d0e419da2/REG-PR-641-ci-buildx-builder-gc-policy.log"}

@@ -3,9 +3,8 @@
 // picture points at it. Fabricated tennis club template.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-
-import { joomlaAdapter } from '../template-kit/lib/site/adapters/joomla.mjs'
 import { settleSettingSlots } from '../template-kit/lib/setting-slots.mjs'
+import { joomlaAdapter } from '../template-kit/lib/site/adapters/joomla.mjs'
 
 const BG = 'images/demo/others/court-dusk.jpg'
 const PROFILE = 'templates/demo_court/etc/site/default.json'
@@ -136,4 +135,51 @@ test('the site part hands the background settings to the slot step through site.
   settleSettingSlots(kit, { map: {} })
   assert.equal(kit.blocks[0].frames[0].slotId, 'site.body-background')
   assert.equal(kit.site.backgroundSettings, undefined)
+})
+
+// A T4 layout section's background picture is an image slot of the layout (`templateConfig-<id>`): one picture may sit
+// in the sections of several layouts, and every frame showing it writes all of them.
+const HERO = 'images/demo/hero/court-wide.jpg'
+const layoutSlot = (key, sample) => ({ key, entity: key.split('.')[0], type: 'image', sample })
+const LAYOUT_MAP = {
+  slots: [
+    layoutSlot('templateConfig-11.0', HERO),
+    layoutSlot('templateConfig-12.3', `/${HERO.toUpperCase()}#joomlaImage://local-images/x.jpg`),
+    layoutSlot('templateConfig-12.4', 'images/demo/others/elsewhere.jpg'),
+    { key: 'module-20.1', entity: 'module-20', type: 'image', sample: 'images/demo/others/net.jpg' }
+  ]
+}
+
+test('a frame a layout paints behind writes every layout slot holding its picture, its twins too', () => {
+  const kit = kitOf()
+  kit.blocks.push(
+    { id: 'block-30', frames: [behind('block-30.picture-1', HERO)] },
+    { id: 'body-courts', frames: [behind('body-courts.picture-1', HERO, 'block-30.picture-1')] }
+  )
+  kit.blocks.at(-2).frames[0].sameFileAs = 'a content map slot shows the same file elsewhere'
+  const setting = { key: 'body_bg_img', value: BG, template: 'demo_court', file: PROFILE }
+  settleSettingSlots(kit, { map: LAYOUT_MAP, mapSettings: [], backgroundSettings: [setting] })
+  const byId = Object.fromEntries(kit.blocks.flatMap((b) => b.frames).map((f) => [f.id, f]))
+  for (const id of ['block-30.picture-1', 'body-courts.picture-1'])
+    assert.deepEqual(
+      [byId[id].writable, byId[id].writesTo, byId[id].writableReason, byId[id].slotId],
+      [true, ['templateConfig-11.0', 'templateConfig-12.3'], undefined, undefined]
+    )
+  assert.equal(byId['block-30.picture-1'].sameFileAs, undefined)
+  // The page background keeps its setting slot; a picture no layout slot holds stays not writable.
+  assert.deepEqual(
+    [byId['block-20.picture-1'].slotId, byId['block-20.picture-1'].writesTo],
+    ['site.body-background', undefined]
+  )
+  assert.deepEqual(
+    [byId['body-shop.picture-1'].writable, byId['body-shop.picture-1'].writesTo],
+    [false, undefined]
+  )
+  // The layout no longer shows the picture: the frames go back to not writable.
+  settleSettingSlots(kit, { map: { slots: [] }, mapSettings: [] })
+  assert.deepEqual(
+    [byId['block-30.picture-1'].writable, byId['block-30.picture-1'].writesTo],
+    [false, undefined]
+  )
+  assert.match(byId['block-30.picture-1'].writableReason, /painted behind the block/)
 })

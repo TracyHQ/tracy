@@ -9,9 +9,21 @@
 import { withChainRuns, withTemplateEstimates } from './chain-progress.js'
 import { json } from '../lib/http.js'
 import { bornSiteAddress } from '../lib/site-address.js'
+import {
+  demoLinkUrl,
+  ensureDemoLinks,
+  liveTokenSql,
+  opensJsonSql,
+  opensShape,
+  systemPicksJsonSql,
+  systemPicksShape,
+  revokeDemoLinks
+} from '../lib/wo-demo-links.js'
 import { woRuntime } from '../lib/wo-ops.js'
 import { pinsOf, readTemplateCards, templateChoices } from '../lib/wo-revision-choice.js'
 import { findResearchOf, usableResearch } from 'website-opportunities/src/find-research.js'
+import { demoPageSpeedOf } from 'website-opportunities/src/pagespeed.js'
+import { demoOffersOfBrief } from 'website-opportunities/domain/trade-must-haves.mjs'
 import {
   insertOpportunity,
   jobsOfOpportunity,
@@ -46,6 +58,9 @@ import { latestPreviewOf } from './demo-preview.js'
 import { demoBuildRunning, prepareOpportunityDelete } from './demo-removal.js'
 import { withHandoffLock } from './handoff.js'
 import { handOffToAgent } from './handoff-service.js'
+import { handOverDemo, withHandoverLock } from './handover.js'
+import { applyOverRequest, readDemoPages, saveDemoPages } from './demo-pages.js'
+import { urlMapView } from 'website-opportunities/src/url-map-view.js'
 import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
@@ -71,6 +86,8 @@ import {
 } from 'website-opportunities/src/approval.js'
 
 const BASE = '/api/website-opportunities'
+/** The shape the Team invite door accepts (`seats/route.js` EMAIL_SHAPE): checked here so a typo is a 400, not a step. */
+const HANDOVER_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 /** `at`: the later of the latest revision and the latest brief job that ended done, of the opportunity `$1` (#537). */
 const LATEST_BRIEF_AT_SQL = `select greatest(
@@ -85,7 +102,10 @@ const LATEST_BRIEF_AT_SQL = `select greatest(
  *   settingsOf: (domain: any, accountId: string | null) => Promise<object>,
  *   saveSettings: (domain: any, accountId: string, sent: any) => Promise<{status: number, body: object}>,
  *   listedDemoOf: (accountId: string, ids: string[]) => Promise<Map<string, object>>,
+ *   shareLinksOf: (accountId: string, rows: object[]) => Promise<Map<string, string>>,
  *   detailOf: (opp: object, accountId: string) => Promise<object>,
+ *   demoOffersOf: (opportunityId: string) => Promise<Record<string, boolean> | null>,
+ *   urlMapOf: (opportunityId: string) => Promise<object | null>,
  *   demoFactsOf: (accountId: string, ids: string[]) => Promise<Map<string, {built: boolean,
  *     liveSiteKey: string | null, queuedActionId: string | null}>>,
  *   demoJourneySql: typeof demoJourneySql,
@@ -242,7 +262,9 @@ export function createWebsiteBuilder(deps) {
                  'findings', (select jsonb_agg(distinct f->>'id') from jsonb_array_elements(
                      case when jsonb_typeof(b.qa->'rounds'->-1->'failed') = 'array'
                        then b.qa->'rounds'->-1->'failed' else '[]'::jsonb end) f where f->>'id' is not null),
-                 'previewAt', (select p.captured_at from wo_build_preview p where p.build_id = b.id))
+                 'previewAt', (select p.captured_at from wo_build_preview p where p.build_id = b.id),
+                 'shareToken', ${liveTokenSql('b')}, 'opens', ${opensJsonSql('b')},
+                 'systemPicks', ${systemPicksJsonSql('b')})
           from wo_build b join wo_revision r on r.id = b.revision_id
           left join site_creation sc on sc.account_id = b.account_id and sc.build_id = b.build_id::text
           left join site st on st.site_key = b.site_key
@@ -268,7 +290,7 @@ export function createWebsiteBuilder(deps) {
           sites: r.sites ?? [],
           latestBuild: latestBuildShape(r.latest_build),
           demoAction: r.demo_action,
-          demo: listedDemo(r.latest_build, settings.demoFreezeGraceDays, config, r.demo_action, r.id)
+          demo: listedDemo(r.latest_build, settings.demoFreezeGraceDays, config, r.demo_action, r.id, origin)
         }
       ])
     )
@@ -369,6 +391,26 @@ export function createWebsiteBuilder(deps) {
     return approvalOf({ opportunity: opp, research, latestBriefAt: briefAt })
   }
 
+  /**
+   * The share link of each listed row's latest build, made when it has none (`lib/wo-demo-links.js`): what the outreach
+   * draft hands out instead of the demo's bare address, so an open is counted. A build of another account gets none.
+   * @returns {Promise<Map<string, string>>} opportunity id → share link
+   */
+  async function shareLinksOf(accountId, rows) {
+    const builds = rows.map((r) => [r.id, r.latestBuild?.id]).filter(([, build]) => build)
+    const tokens = await ensureDemoLinks(
+      pool,
+      accountId,
+      builds.map(([, build]) => build),
+      now()
+    )
+    return new Map(
+      builds
+        .filter(([, build]) => tokens.has(build))
+        .map(([id, build]) => [id, demoLinkUrl(origin, tokens.get(build))])
+    )
+  }
+
   /** A demo action with its chain progress (`chain-progress.js`), when its build runs the step chain. */
   async function withChainRun(action) {
     await withChainRuns(pool, [action], { now: now() })
@@ -400,8 +442,62 @@ export function createWebsiteBuilder(deps) {
       briefJob: briefJobShape(await briefJobs.latestOf(opp.id)),
       demoAction: await withChainRun((await demoActionsOf(pool, accountId, [opp.id]))[opp.id] ?? null),
       usage: await readDemoUsage(pool, accountId, settings.demoBuildsPerAccountPerDay, now()),
-      builds: builds.map(buildShape)
+      builds: builds.map(buildShape),
+      demoOffers: await demoOffersOf(opp.id, builds)
     }
+  }
+
+  /**
+   * What the opportunity's latest live demo offers a customer, from the brief it was built from
+   * (`trade-must-haves.mjs demoOffersOfBrief`): the trade must-haves' outreach lines claim only these. Null without a
+   * live demo.
+   */
+  async function demoOffersOf(opportunityId, builds = null) {
+    const list = builds ?? (await buildsOfOpportunity(pool, opportunityId))
+    const live = list.find((b) => b.site_key && !b.demo_deleted_at)
+    if (!live) return null
+    const { rows } = await pool.query(
+      `select brief->'integrations' as integrations, brief->'sitemap' as sitemap, brief->'missing' as missing
+         from wo_revision where id = $1`,
+      [live.revision_id]
+    )
+    return rows[0] ? demoOffersOfBrief(rows[0]) : null
+  }
+
+  /**
+   * The old URL → new page map of one build (`website-opportunities/src/url-map-view.js`): the business's current
+   * website as research read it against the demo's pages (`demo-pages.js`). With `live` (the caller's cookie), the
+   * demo's pages are read again first, as the caller, and kept; a read that fails leaves the list kept before, and the
+   * map says when that list was read (`demo.readAt`). Null when the build's opportunity is gone.
+   * @param {any} build a `wo_build` row
+   * @param {{cookie: string} | null} [live]
+   */
+  async function urlMapOfBuild(build, live = null) {
+    let demo = build.built?.pages ?? null
+    if (live && build.site_key && !build.demo_deleted_at) {
+      const read = await readDemoPages(
+        applyOverRequest(request, { siteKey: build.site_key, cookie: live.cookie, origin }),
+        { now }
+      )
+      await saveDemoPages(pool, build.id, read).catch(() => false)
+      if (Array.isArray(read.pages) || !Array.isArray(demo?.pages)) demo = read
+    }
+    const { rows } = await pool.query(
+      'select o.* from wo_opportunity o join wo_revision r on r.opportunity_id = o.id where r.id = $1',
+      [build.revision_id]
+    )
+    return rows[0] ? urlMapView(pool, rows[0], demo) : null
+  }
+
+  /**
+   * The map of the opportunity's latest live demo, from the pages kept on its build (no read of the demo): what the
+   * outreach line `urlMapProof` rests on. Null without a live demo.
+   */
+  async function urlMapOf(opportunityId) {
+    const live = (await buildsOfOpportunity(pool, opportunityId)).find(
+      (b) => b.site_key && !b.demo_deleted_at
+    )
+    return live ? urlMapOfBuild(live) : null
   }
 
   /**
@@ -598,6 +694,84 @@ export function createWebsiteBuilder(deps) {
       const handoff =
         found.qa && !found.qa.baseline && found.handoff.state === 'ready' ? waiting : found.handoff
       return json(c, { handoff, qa: qaShape(found.qa), site: { key: found.site_key } })
+    })
+
+    // Hand the demo SITE to its business owner (`handover.js`): Team invite, Owner role, demo kept for good, and the
+    // owner's own domain when asked, each through its own door and each reported. Only the build's own account: another
+    // account's build answers 404 like a missing one.
+    app.post(`${BASE}/builds/:buildId/handover`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('buildId')
+      const found = who.accountId && UUID.test(id) ? await buildOf(pool, who.accountId, id) : null
+      if (!found) return notFound(c, 'build')
+      if (!(await featureOn())) return featureOff(c)
+      const sent = await body(c)
+      const email = typeof sent?.email === 'string' ? sent.email.trim().toLowerCase() : ''
+      if (!sent || typeof sent !== 'object' || Array.isArray(sent) || !HANDOVER_EMAIL.test(email))
+        return refuse(c, 400, 'INVALID_EMAIL', 'Send {"email": the business owner’s email address}.')
+      const extra = Object.keys(sent).find((key) => key !== 'email' && key !== 'domain')
+      if (extra !== undefined)
+        return refuse(c, 400, 'INVALID_REQUEST', `This door takes email and domain, not ${extra}.`)
+      if (sent.domain !== undefined && sent.domain !== null && typeof sent.domain !== 'string')
+        return refuse(c, 400, 'INVALID_DOMAIN', 'Send domain as text, or leave it out.')
+      const domain =
+        typeof sent.domain === 'string' && sent.domain.trim() ? sent.domain.trim().toLowerCase() : null
+      if (email === String(who.email ?? '').toLowerCase())
+        return refuse(c, 422, 'HANDOVER_TO_SELF', 'Name the business owner’s email, not your own.')
+      if (!found.site_key || found.state === 'deleted')
+        return refuse(c, 409, 'NO_DEMO', 'This build has no live site to hand over.')
+      const demoRefusal = demoStateRefusal(c, found)
+      if (demoRefusal) return demoRefusal
+      const held = await withHandoverLock(pool, found.id, () =>
+        handOverDemo({
+          pool,
+          request,
+          origin,
+          cookie: c.req.header('cookie') ?? '',
+          build: found,
+          email,
+          domain,
+          now
+        })
+      )
+      if (!held.locked)
+        return refuse(
+          c,
+          409,
+          'HANDOVER_IN_PROGRESS',
+          'This demo is being handed over; wait, then press again.'
+        )
+      const { steps, complete } = held.value
+      // The old URL → new page map the owner's redirects need, read again now (`demo-pages.js`): never a reason to fail
+      // the handover, so a map that cannot be made is null.
+      const urlMap = await urlMapOfBuild(found, { cookie: c.req.header('cookie') ?? '' }).catch((error) => {
+        console.warn(
+          `[wo-handover] ${found.id}: no old URL map (${error?.code ?? error?.message ?? 'error'})`
+        )
+        return null
+      })
+      const handover = { buildId: found.id, siteKey: found.site_key, email, complete, steps, urlMap }
+      // A step that failed makes the answer a 207: the steps before and after it are still reported.
+      return json(c, { handover }, steps.some((s) => s.state === 'failed') ? 207 : 200)
+    })
+
+    // The old URL → new page map of a build (`urlMapOfBuild`): where each page of the business's current website should
+    // lead on the demo, read with the demo's pages as they are now. Only the build's own account; a frozen demo still
+    // runs, so it is mapped.
+    app.get(`${BASE}/builds/:buildId/url-map`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('buildId')
+      const found = who.accountId && UUID.test(id) ? await buildOf(pool, who.accountId, id) : null
+      if (!found) return notFound(c, 'build')
+      if (!found.site_key || found.state === 'deleted')
+        return refuse(c, 409, 'NO_DEMO', 'This build has no live site to map.')
+      if (found.demo_deleted_at)
+        return refuse(c, 409, 'DEMO_DELETED', 'This demo was deleted: press Rebuild to make it again.')
+      const urlMap = await urlMapOfBuild(found, { cookie: c.req.header('cookie') ?? '' })
+      if (!urlMap) return notFound(c, 'build')
+      return json(c, { urlMap })
     })
 
     // One press is persisted before any brief, site or agent session is created.
@@ -954,6 +1128,24 @@ export function createWebsiteBuilder(deps) {
       })
     })
 
+    // Stop the demo's share link (`lib/wo-demo-links.js`): its token answers 404 from now on, and the next outreach read
+    // hands out a new one. The opens counted so far stay on the build.
+    app.delete(`${BASE}/:id/demo/link`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+      if (!opp) return notFound(c, 'opportunity')
+      const builds = await buildsOfOpportunity(pool, opp.id)
+      const revoked = await revokeDemoLinks(
+        pool,
+        who.accountId,
+        builds.map((b) => b.id),
+        now()
+      )
+      return json(c, { revoked })
+    })
+
     // The deleted demo made again from the same revision, through the same build path as the first.
     app.post(`${BASE}/:id/demo/rebuild`, async (c) => {
       const who = await caller(c)
@@ -1046,7 +1238,12 @@ export function createWebsiteBuilder(deps) {
     settingsOf,
     saveSettings,
     listedDemoOf,
+    shareLinksOf,
     detailOf,
+    // What the latest live demo offers (`demoOffersOfBrief`): the open layer's trade must-have outreach lines.
+    demoOffersOf: (opportunityId) => demoOffersOf(opportunityId),
+    // The latest live demo's old URL → new page map, from its kept pages: the open layer's outreach line `urlMapProof`.
+    urlMapOf,
     latestBriefAt,
     demoFactsOf,
     demoJourneySql,
@@ -1071,7 +1268,7 @@ export function createWebsiteBuilder(deps) {
  * once its action failed, and Building is timed from the queued action's own `acceptedAt` (27/10/2026). The build
  * row itself stays as the host left it: the Retry provisions on that same row.
  */
-function listedDemo(b, graceDays, config, action = null, opportunityId = null) {
+function listedDemo(b, graceDays, config, action = null, opportunityId = null, origin = '') {
   if (!b) return null
   const frozen = b.frozenAt ? Date.parse(b.frozenAt) : Number.NaN
   const own = b.state === 'refused' || b.siteState === 'failed' ? 'failed' : b.done ? 'done' : 'building'
@@ -1095,6 +1292,9 @@ function listedDemo(b, graceDays, config, action = null, opportunityId = null) {
     // The Your site card (#537, option A), new fields only: what the finished build took, the failing QA checks of its
     // last round (check ids), and its home page picture (`demo-preview.js`).
     built: builtOfListed(b),
+    // The demo's own mobile PageSpeed, measured once its build completed (`demo-pagespeed.js`): `{score, measuredAt}`,
+    // else `{reason}` (`not_measured` while none is kept).
+    pagespeed: demoPageSpeedOf(b.built && typeof b.built === 'object' ? b.built.pagespeed : null),
     findings: Array.isArray(b.findings) ? b.findings.slice(0, 10) : [],
     preview:
       b.previewAt && opportunityId
@@ -1102,14 +1302,30 @@ function listedDemo(b, graceDays, config, action = null, opportunityId = null) {
             url: `${BASE}/${opportunityId}/demo/preview?v=${Date.parse(b.previewAt)}`,
             capturedAt: new Date(b.previewAt).toISOString()
           }
-        : null
+        : null,
+    // The share link the outreach hands out (`lib/wo-demo-links.js`), made by the first outreach read; null before.
+    shareUrl: b.shareToken ? demoLinkUrl(origin, b.shareToken) : null,
+    // Counted opens of this build's share links; null while it never had one (nothing was measured).
+    opens: opensShape(b.opens),
+    // The looks the business owner liked on the share page ("See another look", `demo-link-route.js`); null while the
+    // build never had a link.
+    systemPicks: systemPicksShape(b.systemPicks)
   }
 }
 
 /** A listed row's latest build without the parts only its `demo` reads (`listedDemo`). */
 function latestBuildShape(b) {
   if (!b) return null
-  const { built: _built, chain: _chain, findings: _findings, previewAt: _previewAt, ...rest } = b
+  const {
+    built: _built,
+    chain: _chain,
+    findings: _findings,
+    previewAt: _previewAt,
+    shareToken: _shareToken,
+    opens: _opens,
+    systemPicks: _systemPicks,
+    ...rest
+  } = b
   return rest
 }
 

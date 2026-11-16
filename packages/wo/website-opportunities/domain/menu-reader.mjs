@@ -437,6 +437,11 @@ export async function readMenus({
         accept: ['text/html', 'application/pdf']
       })
       if (res.status >= 400) throw Object.assign(new Error(`HTTP ${res.status}`), { code: 'HTTP_ERROR' })
+      // A PDF over the size cap (`MENU_BYTES`) arrives cut off: what a part of it says is not read as the menu.
+      if (res.mime === 'application/pdf' && res.truncated) {
+        reads.push({ url, kind: 'pdf', status: 'skipped', reason: 'too_large', items: 0 })
+        continue
+      }
       const sha256 = sha256Hex(res.bytes)
       let found
       if (res.mime === 'application/pdf') {

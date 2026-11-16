@@ -83,7 +83,7 @@ export function checkR10h(ctx) {
     'a link whose target the kit does not expose (no link entry) has its label slot hidden; a map button the kit opens on a map setting slot is checked by R19',
     'review quotes appear only in reviews/testimonial blocks; no mix of quote and paraphrase',
     'no service or item appears in two blocks of one page; row says lines are distinct per row',
-    'social rows: one per profile, icon fits the network; summary contact blocks do not exceed the demo line count per kind',
+    'social rows: one per profile (the icon fits the network: R26); summary contact blocks do not exceed the demo line count per kind',
     'forms kept only when the brief says where answers go',
     'owner task exists for a missing logo/favicon, a withheld business name, and each trade offer',
     'business name is not shown when brief.missing withholds it'

@@ -8,6 +8,7 @@ import { fixedTextChecks, fixedTextId, mergeSite } from '../template-kit/lib/kit
 import { matchCmsStrings } from '../template-kit/lib/site/cms-strings.mjs'
 import { languageFileRank } from '../template-kit/lib/site/adapters/joomla.mjs'
 import { judgeHide } from '../template-kit/lib/site/hide-cms-text.mjs'
+import { retainFixedTexts } from '../template-kit/site-cli.mjs'
 
 const INI =
   'JPREV="Prev"\nJNEXT="Next"\nJPREVIOUS_TITLE="Previous article: %s"\nFOOT_LINE2="Example CMS is free software."\n'
@@ -176,4 +177,125 @@ test('one value in several language files: the line is named after the template 
     languageFileRank('language/en-GB/com_users.ini', 'tpl_x') <
       languageFileRank('language/en-GB/en-GB.com_mailer.ini', 'tpl_x')
   )
+})
+
+test('filtered CMS candidates cannot shift measurement errors onto another fixed text', () => {
+  const fixedTexts = [
+    { text: 'Template words', notPrintedByCms: true },
+    { text: 'Unreadable CMS sentence', canHide: null, evidence: { reason: 'unreadable' } },
+    { text: 'Another template guess', notPrintedByCms: true },
+    { text: 'Invalid CMS measurement', canHide: null },
+    { text: 'Kept CMS sentence', canHide: true }
+  ]
+  const unrelated = { kind: 'missing', field: 'site.forms[0]', reason: 'unrelated' }
+  const errors = [
+    { kind: 'missing', field: 'site.fixedTexts[0].canHide', reason: 'filtered candidate' },
+    { kind: 'missing', field: 'site.fixedTexts[1].canHide', reason: 'unreadable' },
+    { kind: 'missing', field: 'site.fixedTexts[2].canHide', reason: 'other filtered candidate' },
+    { kind: 'missing', field: 'site.fixedTexts[3].canHide', reason: 'nothing changed' },
+    unrelated
+  ]
+  const before = structuredClone({ fixedTexts, errors })
+  const result = retainFixedTexts(fixedTexts, errors)
+  assert.deepEqual(result.fixedTexts, [fixedTexts[1], fixedTexts[3], fixedTexts[4]])
+  assert.deepEqual(result.errors, [
+    { ...errors[1], field: 'site.fixedTexts[0].canHide' },
+    { ...errors[3], field: 'site.fixedTexts[1].canHide' },
+    unrelated
+  ])
+  for (const error of result.errors.slice(0, 2)) {
+    const index = Number(/\[(\d+)\]/.exec(error.field)[1])
+    assert.equal(result.fixedTexts[index].canHide, null)
+  }
+  assert.strictEqual(result.fixedTexts[0], fixedTexts[1])
+  assert.strictEqual(result.errors[2], unrelated)
+  assert.deepEqual({ fixedTexts, errors }, before)
+})
+
+test('unfiltered fixed texts preserve null and skipped-measurement errors without hiding invalid paths', () => {
+  const fixedTexts = [
+    { text: 'CMS words', canHide: null },
+    { text: 'More CMS words', canHide: false }
+  ]
+  const errors = [
+    { kind: 'missing', field: 'site.fixedTexts[0].canHide', reason: 'measurement invalid' },
+    { kind: 'missing', field: 'site.fixedTexts[1].canHide', reason: 'not measured (--no-hide-measure)' },
+    { kind: 'missing', field: 'site.fixedTexts[20].canHide', reason: 'invalid original index' }
+  ]
+  assert.deepEqual(retainFixedTexts(fixedTexts, errors), { fixedTexts, errors })
+  assert.deepEqual(retainFixedTexts([], []), { fixedTexts: [], errors: [] })
+})
+
+test('dynamic CMS merge keeps one source-bound counter instead of stale unbound template words', () => {
+  const MAP = { entities: [], slots: [], pages: [] }
+  const make = () => ({
+    pages: [],
+    errors: [],
+    blocks: [
+      {
+        id: 'body-a',
+        lists: [],
+        links: [],
+        frames: [],
+        fixedText: [{ text: 'Hits: 24' }, { text: 'Other Hits: 24' }, { text: 'Prev' }]
+      }
+    ]
+  })
+  const cms = matchCmsStrings({
+    lines: [{ block: 'body-a', text: 'Hits: 25' }],
+    files: [{ file: 'cms.ini', text: 'HITS="Hits: %d"\n' }]
+  }).fixedTexts[0]
+  cms.canHide = null
+  const sourceError = {
+    kind: 'missing',
+    field: 'site.fixedTexts[0].canHide',
+    reason: 'actual observation still required'
+  }
+  const doc = { site: { fixedTexts: [cms] }, mainHeadings: [], errors: [sourceError] }
+  const kit = mergeSite(make(), doc, MAP)
+  assert.deepEqual(
+    kit.blocks[0].fixedText.map((f) => f.text),
+    ['Other Hits: 24', 'Prev', 'Hits: 25']
+  )
+  assert.equal(kit.blocks[0].fixedText.at(-1).source.constant, 'HITS')
+  assert.equal(kit.blocks[0].fixedText.at(-1).canHide, null)
+  assert.ok(kit.errors.includes(sourceError), 'the real source-bound error survives merge')
+  assert.ok(!kit.errors.some((e) => e.field.includes('fixedText[Hits: 24]')))
+  const ambiguous = structuredClone(doc)
+  ambiguous.site.fixedTexts[0].source.formats.push({ file: 'cms.ini', constant: 'OTHER', value: 'Hits: 2%s' })
+  assert.ok(
+    mergeSite(make(), ambiguous, MAP).blocks[0].fixedText.some((f) => f.text === 'Hits: 24'),
+    'ambiguous source never absorbs stale template words'
+  )
+  const otherBlock = structuredClone(doc)
+  otherBlock.site.fixedTexts[0].block = 'body-b'
+  assert.ok(
+    mergeSite(make(), otherBlock, MAP).blocks[0].fixedText.some((f) => f.text === 'Hits: 24'),
+    'format binding is block-local'
+  )
+})
+
+test('copies of one CMS word printed in every card of a row get distinct ids by their place in the block', () => {
+  // JA Nova 1.0.12: the career module prints TPL_SHOW_MORE once per card; each copy is its own record (its holder)
+  const MAP = { entities: [], slots: [], pages: [] }
+  const copy = (path) => ({
+    block: 'block-145',
+    text: 'Show more',
+    source: { file: 'tpl.ini', constant: 'TPL_SHOW_MORE', short: true, constants: ['TPL_SHOW_MORE'] },
+    at: { path: '/career', raw: 'module-145', holder: { path } },
+    canHide: true
+  })
+  const kitOf = () => ({
+    pages: [],
+    errors: [],
+    blocks: [{ id: 'block-145', lists: [], links: [], frames: [], fixedText: [] }]
+  })
+  const site = (fixedTexts) => ({ site: { fixedTexts }, mainHeadings: [], errors: [] })
+  const kit = mergeSite(kitOf(), site([copy([0, 1, 0]), copy([0, 1, 1]), copy([0, 1, 2])]), MAP)
+  const ids = kit.blocks[0].fixedText.map((t) => t.id)
+  assert.equal(new Set(ids).size, 3)
+  assert.equal(kit.checks.fixedTextIdsInvalid, 0)
+  // a single copy keeps the id it had before copies were told apart
+  const alone = mergeSite(kitOf(), site([copy([0, 1, 0])]), MAP).blocks[0].fixedText[0].id
+  assert.equal(alone, 'block-145.fixed-tpl-show-more')
 })

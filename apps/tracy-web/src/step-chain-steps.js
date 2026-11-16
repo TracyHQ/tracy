@@ -4,8 +4,9 @@
 // Every model step runs exactly as its bench runs it: a run queued through the bench's own command line (`run --kit
 // <ref> --brief-revision <id>`), played by the bench worker this server already runs (server.js starts each queue), and
 // its files taken out with the bench's own `get`. So the chain reads the research revision the benches read, with the
-// same prompts, checkers and doors, and each step's USD is its run's own spend record. A bench holds one run at a time; a
-// start that finds another run going waits for it. Step 9 is `runStepNine` whole, its writes through the setup door the
+// same prompts, checkers and doors, and each step's USD is its run's own spend record. A bench holds up to
+// BENCH_RUNS_AT_ONCE runs (lib/bench-sql.js, #633), so builds started together run their steps side by side; a start
+// that finds the bench full waits for a free place. Step 9 is `runStepNine` whole, its writes through the setup door the
 // engine hands it, its site check and 9b repair agent as the write step bench wires them.
 import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -43,7 +44,7 @@ const BY = 'step-chain'
 const NO_CAPS = ['--no-caps']
 const POLL_MS = 10_000
 const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-const RUN_ACTIVE = /_RUN_ACTIVE|Only one run at a time/
+const RUN_ACTIVE = /_RUN_ACTIVE|runs? at a time/
 
 /** A step error that carries the USD its run spent before it failed. */
 const stepError = (message, usd = 0) => Object.assign(new Error(message), { usd })
@@ -86,13 +87,51 @@ export function createStepChainSteps(deps) {
   }
 
   /**
-   * A bench run of one step, from its start to its files in `dir`: started (waiting while the bench holds another run),
-   * followed on its row until it ends, its files taken out. Cancelled when the chain no longer needs it.
+   * The run of this bench that a chain already started on the same inputs and that is still going, or null. A chain
+   * started again after a restart (the action's resume, #574) finds the run its lost attempt queued, which the bench
+   * worker carries on: it takes that run over instead of waiting for it to end and then starting the same work again
+   * (13/11/2026, local stand: a restart during the plan step waited 18 minutes for the old planner run, threw its plan
+   * away and planned again for 13 minutes). The same inputs: started by the chain, the same research revision and kit,
+   * and for the copy and pictures steps the same plan; among several active runs (#633) only such a run is taken, the
+   * newest, never another build's, and never one asked to stop (it ends cancelled, whatever the step waits for). A run
+   * of another build, or of other inputs, is waited for as before.
+   * @param {string} name a bench of `benches`
+   * @param {{ revisionId: string, kitRef: string, plan?: unknown } | null} same
    */
-  async function benchRun(name, argv, dir, signal) {
+  async function ownActiveRun(name, same) {
+    if (!same?.revisionId || !same.kitRef) return null
+    // A step that runs on a plan adopts only a run on the same plan; with its plan unreadable it adopts nothing.
+    const withPlan = 'plan' in same
+    if (withPlan && same.plan == null) return null
+    const { rows } = await pool.query(
+      `select id from ${benches[name].table}
+        where status = 'queued' and started_by = $1 and brief_source ->> 'revisionId' = $2 and kit ->> 'ref' = $3
+              and cancel_requested_at is null ${withPlan ? 'and plan = $4::jsonb' : ''}
+        order by created_at desc
+        limit 1`,
+      [`cli:${BY}`, same.revisionId, same.kitRef, ...(withPlan ? [JSON.stringify(same.plan)] : [])]
+    )
+    return rows[0]?.id ?? null
+  }
+
+  /**
+   * A bench run of one step, from its start to its files in `dir`: this build's own run taken over when one is still
+   * going, else started (waiting while the bench is full), followed on its row until it ends, its files taken out.
+   * Cancelled when the chain no longer needs it.
+   */
+  async function benchRun(name, argv, dir, signal, same = null) {
     let runId = null
     for (;;) {
       if (signal.aborted) throw signal.reason ?? new Error('stopped')
+      // Looked up before every start: with room on the bench a start is no longer refused while the build's own run
+      // goes on, so asking only after a refusal would start the same work a second time beside it (#633).
+      runId = await ownActiveRun(name, same)
+      if (runId) {
+        log.info?.(
+          `[step-chain] ${name}: took over the run ${runId} this build already started on the same inputs`
+        )
+        break
+      }
       const started = await command(name, ['run', ...argv, '--by', BY])
       if (started.code === 0) {
         runId = started.out[0]?.trim()
@@ -152,6 +191,12 @@ export function createStepChainSteps(deps) {
     return folders.get(ctx.runId)
   }
   const revisionOf = (ctx) => String(ctx.brief?.researchRevisionId ?? '')
+  // The plan a copy or pictures run is given, as its row keeps it (`plan`): an unreadable file is null and matches no run.
+  const planOf = (file) =>
+    readFile(file, 'utf8').then(
+      (text) => JSON.parse(text),
+      () => null
+    )
   const exists = (file) =>
     stat(file).then(
       (f) => f.isFile() && f.size > 0,
@@ -223,7 +268,8 @@ export function createStepChainSteps(deps) {
           ...NO_CAPS
         ],
         dir,
-        signal
+        signal,
+        { revisionId: revisionOf(ctx), kitRef: kit.ref }
       )
       const file = path.join(dir, 'brand-file.json')
       return answerOf(ran, { file }, exists(file))
@@ -233,9 +279,20 @@ export function createStepChainSteps(deps) {
       const dir = path.join(await folderOf(ctx), 'plan')
       const ran = await benchRun(
         'plan',
-        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), '--require-visual-review', ...NO_CAPS],
+        [
+          '--kit',
+          kit.ref,
+          '--brief-revision',
+          revisionOf(ctx),
+          '--require-visual-review',
+          // Not --kit-in-first-message: with the whole kit in its first message the planner put all its reasoning into
+          // the turn that writes the plan, and on the local stand (run15, 15/11/2026) that turn hit the 128k output cap
+          // (104k of reasoning) and the build lost its plan; read part by part, the reasoning is spread over turns.
+          ...NO_CAPS
+        ],
         dir,
-        signal
+        signal,
+        { revisionId: revisionOf(ctx), kitRef: kit.ref }
       )
       // The plan the run ended with: the last round that has one, as `get` writes it (plan-vN.json).
       const { rows } = await pool.query(
@@ -258,9 +315,15 @@ export function createStepChainSteps(deps) {
         '--brief-revision',
         revisionOf(ctx),
         '--require-visual-review',
+        // The first draft in three parts written at once (site-writer/writer-parts.js). Local stand, run13's plan
+        // (15/11/2026): 509 s against 594 s, 27 first-draft failures against 79 (repeats 18 against 66), 3 standing
+        // against 11; the copy step's spend doubles (0.19 against 0.09 USD).
+        '--parallel-pages',
+        '3',
         ...NO_CAPS
       ]
-      const ran = await benchRun('copy', argv, dir, signal)
+      const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
+      const ran = await benchRun('copy', argv, dir, signal, same)
       const file = path.join(dir, 'site-copy.json')
       return answerOf(ran, { file }, exists(file))
     },
@@ -276,7 +339,8 @@ export function createStepChainSteps(deps) {
         revisionOf(ctx),
         ...NO_CAPS
       ]
-      const ran = await benchRun('pictures', argv, dir, signal)
+      const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
+      const ran = await benchRun('pictures', argv, dir, signal, same)
       const value = { file: path.join(dir, 'mapping.json'), manifest: path.join(dir, 'site-pictures.json') }
       return answerOf(ran, value, exists(value.file))
     },
@@ -320,6 +384,7 @@ export function createStepChainSteps(deps) {
         : null
       const host = hostMeasure({ hostCall, config, site, selfNames: demoSelfNames, fetchImpl })
       const write = {
+        host,
         door: siteDoor,
         siteKey: ctx.siteKey,
         kit: { ref: inputs.kit.ref, doc: inputs.kit.doc },

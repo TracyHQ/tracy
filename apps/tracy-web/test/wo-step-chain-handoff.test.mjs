@@ -617,3 +617,63 @@ test(
     assert.equal((await w.pool.query('select state from site_brief')).rows[0].state, 'failed')
   }
 )
+
+/** A chain build whose brief row is still preparing when the runner first sees it, with a resume that restarts it. */
+async function preparingChain() {
+  const w = await world(CHAIN, { chainMeasurement: false })
+  await w.pool.query(
+    `insert into site(site_key,label,platform,host,address)
+     values ('harbor-gym.localhost','harbor-gym','joomla','local','https://harbor-gym.localhost')`
+  )
+  await w.pool.query(
+    `insert into site_brief(site_key,account_id,platform,quickstart,brief,state,timings)
+     values ('harbor-gym.localhost',$1,'joomla',$2,$3::jsonb,'preparing','{"chain":{"ending":"running","running":["plan"]}}')`,
+    [w.account, CHAIN.quickstart, JSON.stringify({ workflow: STEP_CHAIN_WORKFLOW })]
+  )
+  await w.press()
+  await w.run()
+  const resumed = []
+  w.deps.resumeFill = async (currentBuild, _email, actionId, authority) => {
+    const row = (await w.pool.query('select * from site_brief where site_key=$1', [currentBuild.site_key]))
+      .rows[0]
+    const started = await restartBrief(w.pool, currentBuild.site_key, row.brief, actionId, authority)
+    if (started) resumed.push(actionId)
+    return started
+  }
+  // What `brief-build.js` `recoverLost` leaves when the worker died with the process.
+  const lose = (lostFrom, error) =>
+    w.pool.query(
+      `update site_brief set state='failed', error=$2,
+       timings = timings || jsonb_build_object('lost','LOST_ON_RESTART','lostFrom',$1::text), updated_at=now()`,
+      [lostFrom, error]
+    )
+  const action = async () => (await w.pool.query('select * from wo_demo_action')).rows[0]
+  return { ...w, resumed, lose, action }
+}
+
+test('a chain lost on a restart before the write starts again once, by the same action', opts, async () => {
+  const w = await preparingChain()
+  const first = await w.action()
+  assert.equal(first.status, 'queued', 'the chain is still preparing')
+  await w.lose('preparing', 'Tracy restarted before your text and pictures were written.')
+  await w.run()
+  assert.deepEqual(w.resumed, [first.id])
+  assert.equal((await w.action()).status, 'queued', 'the same action waits for the restarted chain')
+  assert.equal((await w.pool.query('select state from site_brief')).rows[0].state, 'queued')
+  // Lost a second time: no second restart, the build ends naming the restart.
+  await w.lose('preparing', 'Tracy restarted before your text and pictures were written.')
+  await w.run()
+  assert.deepEqual(w.resumed, [first.id])
+  const ended = await w.action()
+  assert.equal(ended.status, 'failed')
+  assert.equal((await w.pool.query('select qa from wo_build')).rows[0].qa.reason, 'LOST_ON_RESTART')
+})
+
+test('a chain lost while placing on the site is never started again by itself', opts, async () => {
+  const w = await preparingChain()
+  await w.lose('applying', LOST_PLACING)
+  await w.run()
+  assert.deepEqual(w.resumed, [])
+  assert.equal((await w.action()).status, 'failed')
+  assert.equal((await w.pool.query('select qa from wo_build')).rows[0].qa.reason, 'LOST_ON_RESTART')
+})

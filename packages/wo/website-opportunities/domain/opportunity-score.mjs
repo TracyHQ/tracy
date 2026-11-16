@@ -14,14 +14,17 @@
  *     still being checked (the client shows a spinner); `0` = checked, no points. `reason` is the translation key
  *     the client shows. Pure: no clock, no network, no randomness beyond `evidence`.
  *
- * Evidence: { candidate, siteCheck, social, slowSiteThreshold, now }; `now` is a Date, `slowSiteThreshold` is a
- * number (50 unless the operator set another).
+ * Evidence: { candidate, siteCheck, social, slowSiteThreshold, now, mustHaves }; `now` is a Date, `slowSiteThreshold`
+ * is a number (50 unless the operator set another), `mustHaves` the trade must-haves of the place's current website
+ * (`trade-must-haves.mjs assessMustHaves`) or null: only a caller that read the website's research passes it, so a
+ * score made without it is the score it always was.
  */
 import noWebsite from './scoring/no-website.mjs'
 import websiteHealth from './scoring/website-health.mjs'
 import demand from './scoring/demand.mjs'
 import marketing from './scoring/marketing.mjs'
 import contact from './scoring/contact.mjs'
+import tradeMustHaves from './scoring/trade-must-haves.mjs'
 import { isListingUrl } from './link-kinds.mjs'
 
 const GRADE_A = 75
@@ -51,7 +54,14 @@ export function defineScoringRule(rule) {
 }
 
 /** The rules the score is made of, in the order their reasons are listed. */
-export const BUILT_IN_SCORING_RULES = scoringRules([noWebsite, websiteHealth, demand, marketing, contact])
+export const BUILT_IN_SCORING_RULES = scoringRules([
+  noWebsite,
+  websiteHealth,
+  tradeMustHaves,
+  demand,
+  marketing,
+  contact
+])
 
 /** The rules checked as one set: each defined, no id twice. */
 export function scoringRules(rules = BUILT_IN_SCORING_RULES) {
@@ -74,7 +84,14 @@ const clamp = (points, weight) => (points === null ? null : Math.min(weight, Mat
  */
 export function scoreWithRules(
   rules,
-  { candidate = {}, siteCheck = null, social = null, slowSiteThreshold = 50, now = new Date() } = {}
+  {
+    candidate = {},
+    siteCheck = null,
+    social = null,
+    slowSiteThreshold = 50,
+    now = new Date(),
+    mustHaves = null
+  } = {}
 ) {
   // A listing site's page recorded as the website (magicpin, Tripadvisor…) is no website of the business: every
   // rule sees a place without one, and nothing of that page's check is scored.
@@ -84,7 +101,8 @@ export function scoreWithRules(
     siteCheck: listed ? null : siteCheck,
     social,
     slowSiteThreshold: Number.isFinite(slowSiteThreshold) ? slowSiteThreshold : 50,
-    now
+    now,
+    mustHaves: listed ? null : mustHaves
   }
   const reasons = []
   let pending = false
@@ -119,8 +137,16 @@ export function scoreOpportunity({
   social = null,
   status = 'new',
   slowSiteThreshold = 50,
-  now = new Date()
+  now = new Date(),
+  mustHaves = null
 } = {}) {
   void status
-  return scoreWithRules(BUILT_IN_SCORING_RULES, { candidate, siteCheck, social, slowSiteThreshold, now })
+  return scoreWithRules(BUILT_IN_SCORING_RULES, {
+    candidate,
+    siteCheck,
+    social,
+    slowSiteThreshold,
+    now,
+    mustHaves
+  })
 }

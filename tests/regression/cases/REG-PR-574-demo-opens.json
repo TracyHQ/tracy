@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-574-demo-opens",
+  "kind": "feat",
+  "title": "A demo's share link counts who opens it, never a bot or the seller, and the seller marks the outreach state",
+  "pr": 574,
+  "area": "website-opportunities/outreach",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a disposable PostgreSQL server, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "GET /api/website-opportunities/:id/outreach of a QA-passed demo answers url = <origin>/d/<32-character token> and siteUrl = the demo address; the message carries the share link, not the demo address; a second read answers the same link.",
+    "GET /d/<token> answers 302 to the demo address with Cache-Control no-store and Referrer-Policy no-referrer and sets no cookie; /d/<token>/menu?lang=vi answers 302 to <demo>/menu?lang=vi.",
+    "Opens by a phone, a desktop and another signed-in person are counted (3 rows); HEAD, facebookexternalhit, WhatsApp preview, curl, no User-Agent, Sec-Purpose prefetch and the seller's own session are sent on but not counted.",
+    "wo_demo_open has exactly the columns id, link_id, opened_at, path, device; demo.opens on the detail, the list row and /ops/wo reads total 3, phone 1, desktop 2.",
+    "An unknown or malformed token answers 404, a stopped link 404 (DELETE /api/website-opportunities/:id/demo/link, owner only), a deleted demo 410; past 60 counted opens an hour a person is still sent on, uncounted.",
+    "PUT /api/website-opportunities/:id/outreach/state: 401 signed out, 404 for another account, 403 from a foreign Origin or a same-site fetch, 400 INVALID_OUTREACH_STATE for an unknown state; sent keeps its first time, won and lost clear each other, none clears every mark."
+  ],
+  "selectors": {
+    "share_link": "GET /d/:token",
+    "share_link_page": "GET /d/:token/*",
+    "outreach": "GET /api/website-opportunities/:id/outreach",
+    "outreach_state": "PUT /api/website-opportunities/:id/outreach/state",
+    "stop_link": "DELETE /api/website-opportunities/:id/demo/link"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-demo-links.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the device class and what counts as a person are read from the request alone",
+      "the outreach hands out a share link that sends people to the demo and counts them, never the seller or a bot",
+      "an unknown, malformed or stopped link answers 404, a deleted demo 410, and none of them counts",
+      "past the hourly cap of one link a person is still sent on, uncounted",
+      "a demo not ready for outreach gets no link, and reads no opens",
+      "the outreach state door marks sent, replied, won or lost for the owner only, with the time of each"
+    ]
+  }
+}

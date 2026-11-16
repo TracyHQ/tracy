@@ -163,9 +163,87 @@ function oncePerElement(measures, listOf, reasonOf) {
 export function findOrphanRows(measures) {
   return oncePerElement(
     measures,
-    (m) => m.orphanRows,
+    (m) => each(m.orphanRows).filter((o) => !finalPageRemainder(o, m.path)),
     (o) => `${o.lastRow} cards on the last row of ${o.perRow}, leaving ${o.gap} px empty`
   )
+}
+
+/** Keep the geometry, but a proven final page's remainder is ordinary pagination, not lost cards. */
+function finalPageRemainder(row, path) {
+  const p = row?.pagination
+  const a = p?.association
+  if (
+    p?.schemaVersion !== 'tracy-final-pagination/v1' ||
+    !a ||
+    typeof a.owner !== 'string' ||
+    !a.owner.endsWith('.com-content-category-blog') ||
+    a.items !== `${a.owner} > .com-content-category-blog__items` ||
+    a.grid !== `${a.items} > ${row.selector}` ||
+    a.navigation !== `${a.owner} > .com-content-category-blog__navigation` ||
+    !['', '.pagination > '].some(
+      (wrapper) =>
+        a.pager ===
+        `${a.navigation} > .com-content-category-blog__pagination > nav[aria-label] > ${wrapper}ul.pagination`
+    ) ||
+    p.listCount !== 1 ||
+    p.pagerCount !== 1 ||
+    p.next?.disabled !== true ||
+    p.next.href !== null ||
+    p.end?.disabled !== true ||
+    p.end.href !== null ||
+    !Array.isArray(p.pages) ||
+    p.pages.length < 2 ||
+    !Number.isInteger(row.perRow) ||
+    row.perRow < 2 ||
+    !Number.isInteger(row.lastRow) ||
+    row.lastRow < 1 ||
+    row.lastRow >= row.perRow ||
+    !Number.isInteger(row.rows) ||
+    row.rows < 2 ||
+    !Number.isFinite(row.gap) ||
+    row.gap <= 0
+  )
+    return false
+  const current = p.pages.filter((n) => n?.current === true)
+  if (current.length !== 1 || current[0].href !== null || current[0].number <= 1) return false
+  const max = current[0].number
+  const seen = new Set()
+  let previous = false
+  for (const n of p.pages) {
+    if (!Number.isInteger(n?.number) || n.number < 1 || n.number > max || seen.has(n.number)) return false
+    seen.add(n.number)
+    if (n.current === true) continue
+    if (
+      n.current !== false ||
+      typeof n.href !== 'string' ||
+      !n.href.startsWith('/') ||
+      n.href.startsWith('//')
+    )
+      return false
+    try {
+      const base = 'https://pagination.invalid'
+      const target = new URL(n.href, base)
+      const here = new URL(path, base)
+      const listQuery = (url) => {
+        const params = new URLSearchParams(url.search)
+        params.delete('start')
+        params.sort()
+        return params.toString()
+      }
+      if (
+        target.origin !== base ||
+        target.pathname !== here.pathname ||
+        listQuery(target) !== listQuery(here) ||
+        target.hash ||
+        target.href === here.href
+      )
+        return false
+    } catch {
+      return false
+    }
+    previous = true
+  }
+  return previous
 }
 
 /** A footer column that prints no words, link or picture beside one that does (the host's `blankFooterColumns`). */

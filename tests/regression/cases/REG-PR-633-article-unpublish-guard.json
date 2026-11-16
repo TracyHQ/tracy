@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-633-article-unpublish-guard",
+  "kind": "fix",
+  "title": "Unpublishing a dropped page's template article (state 0) leaves no look guard finding; any other state still does",
+  "pr": 633,
+  "area": "website-opportunities/write-step",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "content.update of a template article with fields { state: 0 } through the look guard gives no finding and no refusal.",
+    "state 1, -2 or 2 on a template article gives one finding naming 'only unpublishing (state 0) is open on article 6'."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-look-guard-article-state.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "unpublishing a template article (state 0) is open to the write step and leaves no look guard finding",
+      "publishing or trashing a template article is still a look guard finding"
+    ]
+  }
+}

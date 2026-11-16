@@ -54,6 +54,19 @@ export async function walkPage(page) {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, WALK)
   await page.waitForTimeout(WALK.settleMs)
+  // Some templates ignore reduced motion; finite fades must settle, decorative loops must not hold the shot.
+  await page
+    .waitForFunction(
+      () =>
+        document
+          .getAnimations()
+          .every(
+            (a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Number.POSITIVE_INFINITY
+          ),
+      null,
+      { timeout: 10_000, polling: 200 }
+    )
+    .catch(() => {})
 }
 
 /**
@@ -118,5 +131,5 @@ async function main(argv) {
   return failed.length ? 1 : 0
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href)
+if (typeof process !== 'undefined' && import.meta.url === pathToFileURL(process.argv[1] ?? '').href)
   process.exitCode = await main(process.argv.slice(2))

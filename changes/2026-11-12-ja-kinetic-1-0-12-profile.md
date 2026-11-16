@@ -1,0 +1,3 @@
+- **JA Kinetic (Joomla 6, T4) gets a template profile for 1.0.12** — template readiness maintainers · #625 · `feat/joomla-t4-batch-1-road-to-live` · 2026-11-12
+  **Affects:** whoever builds a site from JA Kinetic 1.0.12: Customize your site reads the same logo layout and profiles as 1.0.11 (`pair`, profiles default, blueprint, signal, Blog, home-magz; brand and favicon still unverified).
+  **Why / Measured:** template ja_kinetic is still 1.0.3 in the 1.0.12 pack, and its 26 profile, logo-layout and logo-style files are byte-identical to the 1.0.11 pack. Without the row, Customize your site on the 1.0.12 pack failed REL-3, FAV-1 and LOGO-1/2/3. The row pairs with the 1.0.12 contract that lands with the JA Kinetic branch.

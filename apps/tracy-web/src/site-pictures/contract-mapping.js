@@ -15,16 +15,15 @@
 // alone, and also listed in `painted` (kind `backdrop`) with the recipe: step 9 paints the backdrop behind the figure
 // in the brand's colours (a file of both, or the backdrop behind the slot), and its preview is only for review.
 //
-// The alt of every frame the export places (a file in `changes`, or initials it paints) is the alt step 8 wrote from that
-// picture, when it wrote one (`alts`, by frame): the write step writes it over the writer's (ADR 0043 section 3f).
+// The alt of every placed picture or painted initials frame comes from the picture step, by frame.
 //
 // A frame the manifest returns (the plan wants it filled and the step left it without a picture) is a problem of the
 // package, never silently left out: only the logo frame, which the brand step fills, is not.
 import { contentMapKey } from '../lib/content-map-key.js'
+import { paintKindOf } from '../lib/picture-paint/paint.js'
 import { ANY_PHOTO_MAX_OVERLAP, cropOverlap } from './gallery-tiles.js'
 import { retainedRejectionProblem } from './looker-call.js'
 import { readPictures } from './manifest-shape.js'
-import { paintKindOf } from '../lib/picture-paint/paint.js'
 import { indexInputs } from './picture-check/inputs-index.js'
 import { documentarySourceProblem } from './picture-check/rules-sources.js'
 
@@ -124,8 +123,15 @@ export function exportPictureMapping({ pictures, contract, revision, kit, plan, 
   // The kit block of each frame, and the cuts of each owner photo already placed in each block: two cuts of one photo
   // in one block share at most ANY_PHOTO_MAX_OVERLAP (card AK: a near duplicate reads as the same picture twice).
   const blockOf = new Map()
+  // A frame a T4 layout paints behind the blocks writes the layout's own slots (`writesTo`, every layout section showing
+  // that picture); any other frame writes the slot of its own id.
+  const writesOf = new Map()
   for (const b of Array.isArray(kit?.blocks) ? kit.blocks : [])
-    for (const f of Array.isArray(b?.frames) ? b.frames : []) if (f?.id) blockOf.set(f.id, b.id)
+    for (const f of Array.isArray(b?.frames) ? b.frames : []) {
+      if (!f?.id) continue
+      blockOf.set(f.id, b.id)
+      if (Array.isArray(f.writesTo) && f.writesTo.length) writesOf.set(f.id, f.writesTo.map(String))
+    }
   const shownIn = new Map()
   const bad = (where, detail) => {
     problems.push({ where, detail })
@@ -200,7 +206,16 @@ export function exportPictureMapping({ pictures, contract, revision, kit, plan, 
   }
 
   for (const e of frames.values()) {
-    const key = contentMapKey(e.frame)
+    const keys = writesOf.get(e.frame) ?? [contentMapKey(e.frame)]
+    const key = keys[0]
+    // shortcut: layout hide/paint stays refused until downstream stages address every bound slot.
+    if (writesOf.has(e.frame) && (e.source === 'hide' || e.paint || e.backdrop)) {
+      bad(
+        e.frame,
+        'layout backgrounds support file placement only; hide and painted writes are not supported'
+      )
+      continue
+    }
     const provenance = sourceProblem(e)
     if (provenance) {
       bad(e.frame, provenance)
@@ -212,23 +227,29 @@ export function exportPictureMapping({ pictures, contract, revision, kit, plan, 
     }
     const p = placement(e)
     if (!p) continue
-    if (p.hide) {
-      hidden.push({
-        frame: e.frame,
-        key,
-        reason: p.returned ? 'source returned' : `its source ${p.hide.frame} is hidden`
-      })
+    if (p.hide && writesOf.has(e.frame)) {
+      bad(
+        e.frame,
+        'layout backgrounds support file placement only; hiding a source cannot hide its layout twin'
+      )
       continue
     }
-    if (imageSlots && !imageSlots.has(key)) {
-      bad(e.frame, `the kit has no image slot ${key}`)
+    if (p.hide) {
+      const reason = p.returned ? 'source returned' : `its source ${p.hide.frame} is hidden`
+      hidden.push({ frame: e.frame, key, reason })
+      continue
+    }
+    const missing = imageSlots ? keys.find((k) => !imageSlots.has(k)) : null
+    if (missing) {
+      bad(e.frame, `the kit has no image slot ${missing}`)
       continue
     }
     // Historical manifests and twins can still carry an opaque photo. JPEG has no alpha; refuse it before upload
     // instead of waiting for SLOT_IMAGE_OPAQUE after the rest of the site has been written. Native validation also
     // checks alpha-capable formats against their actual bytes.
-    if (transparentSlots.has(key) && /\.jpe?g$/i.test(String(e.file))) {
-      bad(e.frame, `the kit slot ${key} requires transparency; its JPEG file is opaque`)
+    const opaqueIn = keys.find((k) => transparentSlots.has(k))
+    if (opaqueIn && /\.jpe?g$/i.test(String(e.file))) {
+      bad(e.frame, `the kit slot ${opaqueIn} requires transparency; its JPEG file is opaque`)
       continue
     }
     if (e.paint) {
@@ -256,12 +277,12 @@ export function exportPictureMapping({ pictures, contract, revision, kit, plan, 
       shownIn.set(key, [...(shownIn.get(key) ?? []), { frame: e.frame, crop: e.crop }])
     }
     // A file narrower than the slot's minimum is refused by the write door and the demo picture stays (card AI).
-    const narrow = tooNarrow(key, e.width)
+    const narrow = keys.map((k) => tooNarrow(k, e.width)).find(Boolean)
     if (narrow) {
       bad(e.frame, narrow)
       continue
     }
-    changes[key] = e.sitePath
+    for (const k of keys) changes[k] = e.sitePath
     altOf(e)
     if (e.backdrop)
       painted.push({

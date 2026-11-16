@@ -134,3 +134,114 @@ test('a page that did not open has no entry', async () => {
   })
   assert.deepEqual([...new Set(result.pageMeasures.map((m) => m.path))], ['/'])
 })
+
+// Run the actual serialized page function against a synthetic DOM; no browser or media request.
+async function audioPage() {
+  const { parseHTML } = await import('linkedom')
+  const { default: vm } = await import('node:vm')
+  const { measurePageInPage, MEASURE_CAPS } = await import('../src/demo-qa-page-measures.js')
+  const { document, window } = parseHTML(`<html><head><base href="https://site.example/sub/"></head><body>
+    <div class="audio-player-wrap" data-audio-entity="article-7">
+      <div id="player" class="jp-jplayer" data-audio-entity="article-7" data-audio-track="2"><audio></audio></div>
+      <div class="jp-audio" data-audio-entity="article-7" data-audio-track="2"></div>
+    </div><audio id="native" data-audio-entity="article-8" data-audio-track="0" src="images/Same.mp3?sig=A%2FB"></audio>
+    </body></html>`)
+  const rect = { x: 0, y: 0, left: 0, top: 0, right: 320, bottom: 60, width: 320, height: 60 }
+  for (const el of document.querySelectorAll('*')) {
+    el.getBoundingClientRect = () => rect
+    el.checkVisibility = () => true
+  }
+  const source = 'https://site.example/sub/images/Same.mp3?sig=A%2FB'
+  Object.defineProperty(document, 'baseURI', { value: 'https://site.example/sub/' })
+  const player = document.getElementById('player')
+  player.getBoundingClientRect = () => ({ ...rect, width: 0, height: 0 })
+  for (const audio of document.querySelectorAll('audio'))
+    Object.assign(audio, { currentSrc: source, readyState: 1, duration: 42, error: null })
+  const state = {
+    status: { src: source, media: { mp3: source } },
+    htmlElement: { audio: player.querySelector('audio') }
+  }
+  window.jQuery = () => ({ data: () => state })
+  const style = new Proxy(
+    {
+      display: 'block',
+      position: 'static',
+      opacity: '1',
+      visibility: 'visible',
+      backgroundImage: 'none',
+      content: 'none'
+    },
+    { get: (o, k) => o[k] ?? '0px' }
+  )
+  const context = vm.createContext({
+    document,
+    window,
+    URL,
+    innerWidth: 1440,
+    innerHeight: 900,
+    location: { href: 'https://site.example/sub/index.php/album' },
+    NodeFilter: { SHOW_TEXT: 4 },
+    getComputedStyle: () => style
+  })
+  return {
+    document,
+    state,
+    read: (cap = MEASURE_CAPS.audio) =>
+      JSON.parse(
+        JSON.stringify(
+          vm.runInContext(
+            `(${measurePageInPage.toString()})(${JSON.stringify({ tolerance: 2, stretch: 0.05, caps: { ...MEASURE_CAPS, audio: cap } })})`,
+            context
+          )
+        )
+      )
+  }
+}
+
+test('audio postwrite host measures preserve exact owner tracks, own zero box and distinct row/list census', async () => {
+  const p = await audioPage()
+  const m = p.read()
+  assert.deepEqual(
+    m.audioSources.map((a) => [a.entity, a.track, a.mechanism]),
+    [
+      ['article-7', '2', 'jplayer'],
+      ['article-8', '0', 'native']
+    ]
+  )
+  assert.equal(m.audioSources[0].rect.width, 0)
+  assert.equal(m.audioRows[0].rect.width, 320)
+  assert.equal(m.audioSources[0].initialized, true)
+  assert.equal(m.audioSources[0].duration, 42)
+  assert.equal(m.audioSources[0].mediaError, null)
+  assert.equal(m.audioSources[0].source, m.audioSources[1].source)
+  assert.equal(m.audioLists.length, 1)
+  assert.equal(m.sourceBase, 'https://site.example/sub/')
+  assert.equal(m.audioTruncated, false)
+  assert.equal(m.audioUnbound, 0)
+  p.state.status.src = 'https://site.example/sub/images/Other.mp3'
+  p.state.htmlElement.audio.error = { code: 4 }
+  p.state.htmlElement.audio.duration = NaN
+  const bad = p.read().audioSources[0]
+  assert.equal(bad.initialized, false)
+  assert.equal(bad.duration, null)
+  assert.equal(bad.mediaError, 4)
+  assert.equal(p.read(1).audioTruncated, true)
+  p.document.querySelector('.jp-audio').removeAttribute('data-audio-entity')
+  assert.equal(p.read().audioUnbound, 1)
+})
+
+test('audio postwrite host census retains hidden rows and all-empty lists rather than treating them as absent', async () => {
+  const p = await audioPage()
+  const row = p.document.querySelector('.jp-audio')
+  row.checkVisibility = () => false
+  p.document.getElementById('player').remove()
+  const hidden = p.read()
+  assert.equal(hidden.audioSources.length, 1)
+  assert.equal(hidden.audioRows.find((a) => a.entity === 'article-7').visible, false)
+  assert.equal(hidden.audioLists.length, 1)
+  row.remove()
+  p.document.querySelector('.audio-player-wrap').remove()
+  const absent = p.read()
+  assert.ok(!absent.audioRows.some((a) => a.entity === 'article-7'))
+  assert.ok(!absent.audioLists.some((a) => a.entity === 'article-7'))
+})

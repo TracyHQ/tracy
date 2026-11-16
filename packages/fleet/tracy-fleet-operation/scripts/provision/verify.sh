@@ -38,7 +38,21 @@ SITE_DIR="$ROOT/$LABEL"
 
 PORT="$(sed -n 's/^HOST_PORT=//p' "$SITE_DIR/.env" 2>/dev/null | head -1 || true)"
 
-in_web() { ( cd "$SITE_DIR" && docker compose exec -T web sh -c "$1" ) 2>/dev/null; }
+# A demo folded into the demo farm (lib/site-runtime.sh) runs its PHP in the farm, as itself, with
+# its docroot at /site/<label>/.webroot: the same shell line, with the per-site docroot renamed.
+# shellcheck source=../lib/roots.sh
+. "$HERE/../lib/roots.sh"
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+TRACY_PRIVATE_ROOT="$ROOT"
+RUNTIME="$(tracy_site_runtime "$LABEL")"
+in_web() {
+  if [ "$RUNTIME" = farm ]; then
+    tracy_site_web_exec "$LABEL" -- sh -c "${1//\/var\/www\/html/$(tracy_farm_docroot "$LABEL")}" 2>/dev/null
+  else
+    ( cd "$SITE_DIR" && docker compose exec -T web sh -c "$1" ) 2>/dev/null
+  fi
+}
 
 # ── version ─────────────────────────────────────────────────────────────────────────────
 # From the site's own manifest, which is what Joomla itself reads. Not from

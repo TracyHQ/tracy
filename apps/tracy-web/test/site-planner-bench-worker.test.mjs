@@ -4,6 +4,7 @@
 // rounds and answers that are not a plan: site-planner-bench-fix-rounds.test.mjs.
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { BENCH_QUEUE, createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { openKit } from '../src/site-planner/kit-source.js'
@@ -55,9 +56,9 @@ async function runOnce(pool, replies, { wrap, index } = {}) {
   return { run: await readRun(pool, run.id), model }
 }
 
-test('the queue survives redeploys: one run at a time, many claims allowed', () => {
-  // test-quality: contract one run at a time is the limit set for the paid model API (spend and rate limits); raising it is a decision, not a refactor
-  assert.equal(BENCH_QUEUE.concurrency, 1)
+test('the queue survives redeploys: as many runs side by side as a start lets in, many claims allowed', () => {
+  // The worker plays every run the start admits (lib/bench-sql.js), so no admitted run waits behind another (#633).
+  assert.equal(BENCH_QUEUE.concurrency, BENCH_RUNS_AT_ONCE)
   assert.ok(BENCH_QUEUE.maxAttempts >= 10)
 })
 

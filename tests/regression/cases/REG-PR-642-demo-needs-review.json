@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-642-demo-needs-review",
+  "kind": "fix",
+  "title": "A built site whose last check found problems reads Needs review with Open demo, never Failed or an unexpected error",
+  "pr": 642,
+  "area": "website-opportunities/demo",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A failed build with QA_NEEDS_REVIEW whose site is there reads review: Open demo, Build again in the menu, the review line.",
+    "Deleted, frozen, failed or missing sites, and every other code, still read failed.",
+    "Step 3 stays current as a review with Try again and the chip Site needs review; the list shows the site and Needs your review."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/ui/tracy-wo-views/test/demo-state.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-stepper.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-opportunity-pieces.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a build that ends needing review while its site is online is review: Open the site, Build again in the menu",
+      "needing review is only review while the site is there: deleted, frozen, failed or rebuilding reads failed",
+      "a site built but needing review keeps step 3 current as a review, never Failed, with Try again",
+      "Demo: a site built but needing review shows its site and reads Needs your review, never Build failed"
+    ]
+  }
+}

@@ -193,10 +193,17 @@ function fakeLooker(reject, once = new Set()) {
  * Code's round 0 and the finished round, on a layout and a photo set.
  * @param {Set<string>} reject frames the looker always rejects
  * @param {string} runId
- * @param {{ layout?: any[], photos?: Map<string, Buffer>, once?: Set<string>, draw?: boolean }} [opts] `draw`: the run
- *   has a (fake) drawer door
+ * @param {{ layout?: any[], photos?: Map<string, Buffer>, once?: Set<string>, draw?: boolean, lookAhead?: number,
+ *   lookBudget?: number }} [opts]
+ *   `draw`: the run has a (fake) drawer door; `lookAhead`: the finisher's look-ahead (ladder-step.js LOOK_AHEAD);
+ *   `lookBudget`: the looks one wave of look-ahead fills (ladder-step.js aheadDepth). The result's `aheadWaves` holds
+ *   how many pictures each wave of look-ahead asked the looker about.
  */
-export async function finished(reject, runId, { layout = LAYOUT, photos = TALL, once, draw = false } = {}) {
+export async function finished(
+  reject,
+  runId,
+  { layout = LAYOUT, photos = TALL, once, draw = false, lookAhead, lookBudget } = {}
+) {
   const PHOTOS = photos
   const k = kit(layout)
   const p = plan(layout)
@@ -225,6 +232,21 @@ export async function finished(reject, runId, { layout = LAYOUT, photos = TALL, 
   const doc = manifestFor({ base, parts, picker: null, idx }, new Map())
   const prompts = picturePrompts()
   const looker = fakeLooker(reject, once)
+  const lookerStep = createLooker({
+    door: {
+      providerId: 'openrouter',
+      baseUrl: 'https://openrouter.test/api/v1',
+      apiKey: 'k',
+      model: LOOKER_MODEL
+    },
+    prompt: { text: prompts.looker, sha256: prompts.roles.looker },
+    storeDir: store.dir,
+    runId,
+    idx,
+    alts: null,
+    fetchImpl: looker.fetchImpl
+  })
+  const aheadWaves = []
   const finisher = createFinisher({
     idx,
     plan: p,
@@ -232,20 +254,13 @@ export async function finished(reject, runId, { layout = LAYOUT, photos = TALL, 
     usable: usablePhotos(b, PHOTOS).usable,
     photoBytes: PHOTOS,
     store: fs,
-    looker: createLooker({
-      door: {
-        providerId: 'openrouter',
-        baseUrl: 'https://openrouter.test/api/v1',
-        apiKey: 'k',
-        model: LOOKER_MODEL
-      },
-      prompt: { text: prompts.looker, sha256: prompts.roles.looker },
-      storeDir: store.dir,
-      runId,
-      idx,
-      alts: null,
-      fetchImpl: looker.fetchImpl
-    }),
+    looker: {
+      ...lookerStep,
+      ahead: (pairs, memo) => {
+        aheadWaves.push(pairs.length)
+        return lookerStep.ahead(pairs, memo)
+      }
+    },
     drawing: draw
       ? createDrawing({
           door: {
@@ -261,13 +276,15 @@ export async function finished(reject, runId, { layout = LAYOUT, photos = TALL, 
           fetchImpl: looker.fetchImpl
         })
       : null,
-    drawer: { model: draw ? DRAWER_MODEL : null, snapshot: null, promptSha256: prompts.roles.drawing }
+    drawer: { model: draw ? DRAWER_MODEL : null, snapshot: null, promptSha256: prompts.roles.drawing },
+    ...(lookAhead === undefined ? {} : { lookAhead }),
+    ...(lookBudget === undefined ? {} : { lookBudget })
   })
   const out = await finisher.finish(doc, { lastRound: true })
   const files = { ...measured }
   for (const f of out.files) files[f.file] = { sha256: f.sha256, width: f.width, height: f.height }
   const check = (pictures, onPlan = p) => checkPictures({ pictures, plan: onPlan, kit: k, brief: b, files })
-  return { parts, out, m: out.doc, check, looker, kit: k }
+  return { parts, out, m: out.doc, check, looker, kit: k, aheadWaves }
 }
 
 export const byFrame = (doc) => new Map(doc.frames.map((e) => [e.frame, e]))

@@ -8,7 +8,7 @@
 //
 //   site-cli.mjs --site <url> [--host-header <host>] --contract <dir> --out <dir>
 //                [--db mysql://user:pass@host:port/name | --db-command '<client prefix>']
-//                [--webroot <dir> [--files-command '<prefix>']] [--capture-index <file>] [--max-pages 60]
+//                [--webroot <dir> [--files-command '<prefix>']] [--capture-index <file>] [--max-pages 400]
 //                [--no-hide-measure]
 //
 // Writes into --out: site.json ({site, mainHeadings, errors}) and site-palette.html.
@@ -47,8 +47,11 @@ export function parseArgs(argv) {
   return o
 }
 
-/** The pages to read: the capture's pages when given, else every map page that opens a page of its own. */
-export function pagesToRead(map, captureIndex, cap) {
+/**
+ * The pages to read: the capture's pages when given, else every map page that opens a page of its own. The cap is the
+ * capture's own (400), so a `build --full` reads every page it shot.
+ */
+export function pagesToRead(map, captureIndex, cap = 400) {
   const list = captureIndex
     ? captureIndex.pages.map((p) => ({ path: p.path, slug: p.slug }))
     : [
@@ -62,6 +65,26 @@ export function pagesToRead(map, captureIndex, cap) {
     .filter((p) => !seen.has(p.path) && seen.add(p.path))
     .slice(0, cap)
     .map((p) => ({ ...p, pageId: pageIdOf(p.slug) }))
+}
+
+/** Retain CMS-printed entries together with their measurement errors. */
+export function retainFixedTexts(fixedTexts, errors) {
+  const indices = new Map()
+  const retained = fixedTexts.filter((f, i) => {
+    if (f.notPrintedByCms) return false
+    indices.set(i, indices.size)
+    return true
+  })
+  return {
+    fixedTexts: retained,
+    errors: errors.flatMap((error) => {
+      const match = /^site\.fixedTexts\[(\d+)\](?=\.|$)/.exec(error.field ?? '')
+      if (!match || Number(match[1]) >= fixedTexts.length) return [error]
+      const index = indices.get(Number(match[1]))
+      if (index === undefined) return []
+      return [{ ...error, field: error.field.replace(match[0], `site.fixedTexts[${index}]`) }]
+    })
+  }
 }
 
 /**
@@ -102,7 +125,10 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
     source.describe.join(' and ') || 'the pages only',
     `(${adapter.cms}${adapter.framework ? ` ${adapter.framework}` : ''})`
   )
-  const pages = pagesToRead(map, capture, Number(o['max-pages'] ?? 60))
+  const pages = pagesToRead(map, capture, o['max-pages'] ? Number(o['max-pages']) : undefined)
+  // The page cap is reported, never applied silently.
+  const listed = pagesToRead(map, capture, Infinity).length
+  if (pages.length < listed) say(listed - pages.length, 'pages left unread by the page cap (--max-pages)')
   const served = await fetchStyles({ pages, siteUrl: o.site, hostHeader })
   const { htmls } = served
   // A page on another colour theme of the template (a theme showcase) does not paint the brand.
@@ -135,8 +161,9 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
     if (fixed.length && cms && !o['no-hide-measure']) {
       const writer = siteWriter({ filesCommand: str(o['files-command']), webroot: str(o.webroot) })
       say(fixed.length, 'fixed CMS sentences; measuring whether each can be hidden')
-      r.errors.push(
-        ...(await measureFixedTexts({
+      const measured = retainFixedTexts(
+        fixed,
+        await measureFixedTexts({
           browser,
           siteUrl: o.site,
           hostHeader,
@@ -146,10 +173,11 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
           readFile: source.readFile,
           writer,
           log: say
-        }))
+        })
       )
       // Words a short language value only seemed to print stay template words: the kit measures them itself.
-      r.site.fixedTexts = fixed.filter((f) => !f.notPrintedByCms)
+      r.site.fixedTexts = measured.fixedTexts
+      r.errors.push(...measured.errors)
     } else if (fixed.length)
       for (const [i] of fixed.entries())
         r.errors.push({

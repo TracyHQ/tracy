@@ -89,6 +89,8 @@ import { callSeatDoor, mintSeatSession, revokeSeatAtDoor } from './workspace/sea
 
 const LOCK_ID = 7_243_002
 const OPPORTUNITY_TICK_MS = 5_000
+/** How often the `/v1/demos` webhook outbox is filled and drained: an event leaves within about this long. */
+const DEMO_WEBHOOK_TICK_MS = 5_000
 const SITE_CHECKS_TICK_MS = 3_000
 const HOURLY_MS = 60 * 60 * 1000
 /** The demo retention sweep's first run after boot. develop restarts its web ~34 times a day, so
@@ -1296,7 +1298,9 @@ export function start(
     socialStatsTick = null,
     socialPrefetchTick = null,
     // Website Opportunities' demo retention sweep, hourly (`opportunities-build/demo-retention.js`).
-    demoRetentionTick = null
+    demoRetentionTick = null,
+    // The webhooks of `/v1/demos`: make the due events and send them (`opportunities-build/demo-webhooks.js`).
+    demoWebhooksTick = null
   } = {}
 ) {
   const log = completeLogger(given)
@@ -1661,6 +1665,15 @@ export function start(
     : null
   demoRetentionFirst?.unref?.()
 
+  // The webhooks of `/v1/demos`: every 5 s, one sweep at a time in this process (the sweep keeps its own flag);
+  // replicas share the outbox through its row locks.
+  const demoWebhooks = demoWebhooksTick
+    ? setInterval(() => {
+        demoWebhooksTick().catch((error) => log.error('[cron] demo webhook sweep failed', error))
+      }, DEMO_WEBHOOK_TICK_MS)
+    : null
+  demoWebhooks?.unref?.()
+
   // The demo QA gate: a hand-off chat whose turn closed while no hook heard it (another replica, a
   // restart). One run at a time here; replicas are kept off the same build by its lease.
   let sweepingQa = false
@@ -1713,6 +1726,7 @@ export function start(
       if (demoRetention) clearInterval(demoRetention)
       if (demoRetentionFirst) clearTimeout(demoRetentionFirst)
       if (demoQa) clearInterval(demoQa)
+      if (demoWebhooks) clearInterval(demoWebhooks)
       stopped = true
       clearTimeout(inventory)
       clearTimeout(daily)

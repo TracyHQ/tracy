@@ -8,6 +8,8 @@
  * xpaths a capture wrote resolve to the same element. Used by `capture-contract.py --inline-markup` (a whole-unit slot
  * keeps the inline tags of its unit) and by the content coverage `resample.mjs` (the same, from a database dump).
  *
+ * CODE is immutable structure outside a text slot: project its surrounding editable words, not its code text.
+ * Other ownership differences still fail the callers' same-word guards; this is not an HTML round-trip serializer.
  * Text is written as it reads (entities decoded, as the helper's text samples are); runs of white space are one space.
  * An attribute whose value holds a parenthesis is left out: the notation cannot carry it.
  */
@@ -22,6 +24,11 @@ function markupOf(DOMNode $node): string
             $out .= $child->textContent;
         } elseif ($child instanceof DOMElement) {
             $tag = strtolower($child->tagName);
+            // Capture/ContentSlots exclude immutable CODE; join its surrounding editable pieces with a space.
+            if ($tag === 'code') {
+                $out .= ' ';
+                continue;
+            }
             $attrs = '';
             foreach ($child->attributes as $attribute) {
                 if (strpbrk($attribute->value, '()') !== false) {

@@ -3,8 +3,8 @@
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
 import { benchHarnessFor, capsOf, sendsImages } from '../lib/bench-harness.js'
-import { briefOfRevision, UUID } from '../lib/bench-sql.js'
-import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
+import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { activeRuns, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
 import { briefShapeProblems } from './brief-shape.js'
 import { PLANNER_BRIEF_VIEW } from './brief-view.js'
 import { sitePlannerDoor } from './door.js'
@@ -29,7 +29,8 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
 /**
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
- *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object>, noCaps?: boolean, requireVisualReview?: boolean }} input `kitImages`: the kit
+ *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object>, noCaps?: boolean, requireVisualReview?: boolean,
+ *   kitInFirstMessage?: boolean }} input `kitImages`: the kit
  *   images of this server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests); `noCaps`: the
  *   run is a step of a chain build, so it carries no USD budget (#478).
  */
@@ -43,7 +44,8 @@ export async function startBenchRun({
   kitImages,
   index,
   noCaps = false,
-  requireVisualReview = false
+  requireVisualReview = false,
+  kitInFirstMessage = false
 }) {
   const problems = briefShapeProblems(brief)
   if (problems.length)
@@ -63,8 +65,8 @@ export async function startBenchRun({
       'SITE_PLANNER_VISUAL_REVIEW_UNAVAILABLE',
       'This WO run requires a model that receives kit images.'
     )
-  const active = await activeRun(pool)
-  if (active) return activeRefusal(active)
+  const running = await activeRuns(pool)
+  if (running.length >= BENCH_RUNS_AT_ONCE) return fullRefusal(running)
   // Last, since the first use of a kit version downloads its image zip: a kit whose images are unusable never queues.
   // A model given no images plans from the looks alone, so its run needs no image zip.
   if (door.snapshot.images) {
@@ -82,19 +84,17 @@ export async function startBenchRun({
     harness: {
       ...capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps),
       briefView: PLANNER_BRIEF_VIEW,
+      // Asked for (a chain build's plan step): the whole kit goes in the first message (template-kit-source.js
+      // wholeKitFirstMessage); frozen with the run, so a run saved before reads part by part as it did.
+      ...(kitInFirstMessage ? { kitInFirstMessage: true } : {}),
       ...(requireVisualReview ? { visualReview: VISUAL_REVIEW_POLICY } : {})
     }
   })
-  if (created.error === SITE_PLANNER_RUN_ACTIVE) return activeRefusal(created.active)
+  if (created.error === SITE_PLANNER_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
 }
 
-function activeRefusal(active) {
-  const who = active
-    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
-    : 'another run'
-  return refuse(SITE_PLANNER_RUN_ACTIVE, `Only one run at a time: ${who} is still active.`, { active })
-}
+const fullRefusal = (running) => benchFullRefusal(SITE_PLANNER_RUN_ACTIVE, 'planner runs', running)
 
 /**
  * Cancel a run. One no worker holds ends at once; one a worker holds is asked to stop, which the worker does

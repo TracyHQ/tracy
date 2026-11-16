@@ -17,6 +17,7 @@ export const USAGE = `usage: node scripts/site-pictures-bench.mjs <command>
   run --plan-file <path> --kit <ref> --brief-revision <id>   queue a run on a plan and the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
       [--no-caps]                         run without the USD budget (a step of a chain build)
+      [--effort <low|high|max>]           the picker's effort, native DeepSeek Flash only, frozen with the run
       [--copy-file <path>]                a writer copy file (site-copy/1): its alts are compared with what the
                                           looker saw, in the manifest's altNotes
   list [--limit <n>]                      the newest runs
@@ -57,6 +58,7 @@ export async function runCli(argv, deps) {
         'copy-file': { type: 'string' },
         by: { type: 'string' },
         'no-caps': { type: 'boolean' },
+        effort: { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -186,6 +188,7 @@ async function startRun(d, values) {
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
     noCaps: values['no-caps'] === true,
+    ...(values.effort !== undefined ? { effort: values.effort } : {}),
     photos,
     copy,
     storeDir: d.storeDir,

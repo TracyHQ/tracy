@@ -2,6 +2,7 @@ import { fetchLimited } from './fetch-limited.mjs'
 import { assertPublicUrl } from './url-guard.mjs'
 import { socialNetworkOf } from './discovery-osm.mjs'
 import { SCHEMA_BUSINESS_TYPES } from './trades.mjs'
+import { isBookingUrl, linkInBioOf } from './link-platforms.mjs'
 
 const DEFAULT_MAX_PAGES = 40
 const TEXT_CAP = 5000
@@ -9,26 +10,16 @@ const PAGE_BYTES = 2 * 1024 * 1024
 const SITEMAP_BYTES = 5 * 1024 * 1024
 const MAX_CHILD_SITEMAPS = 5
 const MAX_SITEMAP_URLS = 500
+/** Link-in-bio pages one crawl keeps for reading (`link-in-bio.mjs` reads at most `BIO_PAGES_MAX` of them). */
+const BIO_LINKS_KEPT = 5
 // A page that is itself the menu, and where a guest books a table.
 const MENU_PAGE = /(^|[/_-])(menu|menus|thuc-don|carte|speisekarte)([/_.-]|$)|\b(menu|thực đơn)\b/i
 const BOOKING_PAGE =
   /(^|[/_-])(book|booking|book-online|reserv|reservation|reservations|dat-ban)([/_.-]|$)|\b(book (a|your) table|book online|reservations?|đặt bàn)\b/i
-const BOOKING_HOSTS = [
-  'opentable.',
-  'resy.com',
-  'sevenrooms.com',
-  'tablecheck.com',
-  'quandoo.',
-  'chope.co',
-  'eatigo.com',
-  'thefork.',
-  'bookatable.',
-  'tock.com',
-  'yelp.com/reservations',
-  'pasaca.'
-]
 /** Words a title segment carries that are a page, not a business ("Home | Acme", "Welcome to Acme"). */
 const GENERIC_TITLE = /^(?:home(?:\s*page)?|welcome|official\s+(?:web)?site|index|main)$/i
+/** What separates the parts of a `<title>` ("Menu | Acme", "Acme – Old Town"); a hyphen inside a word does not. */
+export const TITLE_SEPARATOR = /\s+[|\u2013\u2014\u00b7\u2022:-]+\s+/
 
 /**
  * The business name in a home page's `<title>` when nothing better states it: the first segment before a title
@@ -40,17 +31,37 @@ const GENERIC_TITLE = /^(?:home(?:\s*page)?|welcome|official\s+(?:web)?site|inde
 export function nameFromTitle(title) {
   if (typeof title !== 'string' || !title.trim()) return undefined
   const parts = title
-    .split(/\s+[|\u2013\u2014\u00b7\u2022:-]+\s+/)
+    .split(TITLE_SEPARATOR)
     .map((part) => part.replace(/^welcome\s+to\s+/i, '').trim())
     .filter((part) => part && !GENERIC_TITLE.test(part))
   return parts[0] ?? title.trim()
 }
 
-export function isBookingUrl(url) {
-  return BOOKING_HOSTS.some((h) => url.toLowerCase().includes(h))
+// A booking platform's page (OpenTable, Fresha, Mindbody…): the list is `link-platforms.mjs` BOOKING_PLATFORMS.
+export { isBookingUrl }
+
+// A link whose address or label says it is the menu or the price list: a PDF linked from the site, an entry of a
+// link-in-bio page. The non-English words are written as escapes: the Vietnamese "menu" and "price list", the German
+// "drinks menu".
+const MENU_LINK =
+  /menu|meny|thuc[\s_-]?don|th\u1ef1c[\s_-]?\u0111\u01a1n|carte|carta|speisekarte|getr(?:\u00e4|ae)nkekarte|weinkarte|wine[\s_-]?list|drinks|price[\s_-]?list|pricelist|prices|pricing|preisliste|preise|tarifs?|listino|precios|prijslijst|prijzen|prisliste|prislista|bang[\s_-]?gia|b\u1ea3ng[\s_-]?gi\u00e1/i
+
+/**
+ * Whether a link is a menu or a price list by its address or its label (`MENU_LINK`).
+ * @param {string} url @param {string} [label]
+ */
+export function isMenuLink(url, label = '') {
+  let address = String(url ?? '')
+  try {
+    address = decodeURIComponent(address)
+  } catch {
+    // a malformed escape: the address as it is
+  }
+  return MENU_LINK.test(`${address} ${label}`)
 }
 
-const SKIP_EXT =
+/** A path that is a file, not a page: the crawler never queues it, and the old-URL map (`url-map.mjs`) skips it. */
+export const SKIP_EXT =
   /\.(jpe?g|png|gif|webp|avif|svg|ico|bmp|tiff?|mp4|webm|mov|m4v|mp3|wav|zip|rar|gz|css|js|json|xml|txt|docx?|xlsx?|pptx?)$/i
 // The schema.org types a business states about itself: the LocalBusiness subtypes `trades.mjs` places in a trade
 // (Find's food places and Add site's Build from my business), and the bare LocalBusiness.
@@ -357,6 +368,9 @@ function logoHints({ src, ldBlocks, meta, pageUrl }) {
   return found.sort((a, b) => LOGO_VIA_ORDER.indexOf(a.via) - LOGO_VIA_ORDER.indexOf(b.via))
 }
 
+/** The longest first heading a page keeps (`heading`): a heading is a few words, a longer one is cut. */
+const HEADING_CAP = 200
+
 /** Parses one HTML page. Every string returned is untrusted page data. */
 export function extractPage(html, pageUrl) {
   const src = String(html ?? '')
@@ -369,7 +383,12 @@ export function extractPage(html, pageUrl) {
   const business = businessFromLd(ldBlocks)
 
   const body = stripBlocks(src, ['script', 'style', 'noscript', 'template', 'svg', 'iframe'])
-  const text = toText(stripBlocks(body, ['nav', 'header', 'footer', 'head'])).slice(0, TEXT_CAP)
+  const main = stripBlocks(body, ['nav', 'header', 'footer', 'head'])
+  const text = toText(main).slice(0, TEXT_CAP)
+  // The first `<h1>` of the page's own content (a theme's site title in the header is not it): what the page says it is
+  // about, which the old-URL map (`url-map.mjs`) matches pages by.
+  const heading =
+    toText(main.match(/<h1\b[^>]*>([\s\S]*?)<\/h1\s*>/i)?.[1] ?? '').slice(0, HEADING_CAP) || undefined
 
   const images = []
   const seenImg = new Map()
@@ -446,11 +465,19 @@ export function extractPage(html, pageUrl) {
         pdfs.push({
           url,
           text: label,
-          menu: /menu|thuc[\s_-]?don|thực đơn|carte|speisekarte/i.test(`${url} ${label}`)
+          menu: isMenuLink(url, label)
         })
       continue
     }
     links.push(url)
+  }
+  // A PDF the page shows in place (an embedded viewer) is linked from the site as much as one behind a link.
+  for (const m of src.matchAll(/<(?:iframe|embed|object)\b[^>]*>/gi)) {
+    const attrs = parseAttrs(m[0])
+    const url = abs(attrs.src ?? attrs.data, pageUrl)
+    if (!url || !/\.pdf$/i.test(new URL(url).pathname) || pdfs.some((p) => p.url === url)) continue
+    const label = (attrs.title ?? '').trim()
+    pdfs.push({ url, text: label, menu: isMenuLink(url, label) })
   }
   const navLinks = []
   for (const block of src.matchAll(/<(nav|header)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi)) {
@@ -465,6 +492,7 @@ export function extractPage(html, pageUrl) {
     title,
     description: metaContent('description') ?? metaContent('og:description'),
     siteName: metaContent('og:site_name'),
+    heading,
     text,
     business,
     images,
@@ -475,6 +503,25 @@ export function extractPage(html, pageUrl) {
     phones,
     links: [...new Set(links)],
     navLinks: [...new Set(navLinks)]
+  }
+}
+
+/**
+ * What a crawl keeps of one page: its address, title and text, and the meta description and first heading when the page
+ * has them (the old-URL map carries the description over and matches by the heading). Shared with the browser fallback
+ * (`website-browser.mjs`), so both reads keep the same fields.
+ * @param {ReturnType<typeof extractPage>} page
+ * @param {{ title?: string, text?: string, description?: string }} [rendered] what a rendering service said, when the
+ *   page's own markup says nothing
+ */
+export function pageRead(page, rendered = {}) {
+  const description = page.description ?? rendered.description
+  return {
+    url: page.url,
+    title: page.title || rendered.title || '',
+    text: page.text || rendered.text || '',
+    ...(typeof description === 'string' && description.trim() ? { description: description.trim() } : {}),
+    ...(page.heading ? { heading: page.heading } : {})
   }
 }
 
@@ -596,6 +643,11 @@ export async function crawlWebsite(
       result.menus.push({ url, sourceUrl: from })
     }
   }
+  // Link-in-bio pages the site links (`link-in-bio.mjs` reads them after the crawl): a few, the first ones seen.
+  const addBioLink = (url, from) => {
+    const list = (result.bioLinks ??= [])
+    if (list.length < BIO_LINKS_KEPT && !list.some((b) => b.url === url)) list.push({ url, sourceUrl: from })
+  }
   let first = fetchedBefore === 0
   let stopReason = null
 
@@ -627,12 +679,17 @@ export async function crawlWebsite(
     if (hostKey(res.url) !== host) continue
 
     const page = extractPage(new TextDecoder().decode(res.bytes), res.url)
-    result.pages.push({ url: page.url, title: page.title, text: page.text })
+    result.pages.push(pageRead(page))
     const path = new URL(page.url).pathname
     if (!first && (MENU_PAGE.test(path) || MENU_PAGE.test(page.title ?? ''))) addMenu(page.url, page.url)
     if (!first && (BOOKING_PAGE.test(path) || BOOKING_PAGE.test(page.title ?? '')))
       addBooking(page.url, page.url)
-    for (const l of page.links) if (isBookingUrl(l)) addBooking(l, page.url)
+    for (const l of page.links) {
+      // A booking platform's page on the crawled host itself (a "website" that is an OpenTable page) links other
+      // businesses' pages on that platform, never this one's.
+      if (isBookingUrl(l) && hostKey(l) !== host) addBooking(l, page.url)
+      else if (linkInBioOf(l)) addBioLink(l, page.url)
+    }
 
     // The first page read is the home page: the logo the site presents lives there.
     if (first) result.logos = page.logos.slice(0, LOGOS_PER_SITE).map((l) => ({ ...l, sourceUrl: page.url }))

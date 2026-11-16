@@ -707,10 +707,17 @@ cat > "$SITE_DIR/apache/headers.load" <<'LOAD'
 LoadModule headers_module /usr/lib/apache2/modules/mod_headers.so
 LOAD
 tracy_write_apache_conf "$SITE_DIR" on
+fi
 # A demo install (tracy-host sets TRACY_DEMO_SITE=1 for `demo: true`) runs lean; any other install
 # drops the marker a demo may have left on this label (render-compose.sh, "a demo site is lean").
-tracy_write_demo_limits "$SITE_DIR" "$([ "${TRACY_DEMO_SITE:-}" = 1 ] && echo on || echo off)"
-fi
+# For EVERY Joomla/WordPress install, not only those that fetch a webroot: a fresh install and an
+# installer quickstart write their compose in their own platform_compose (step 3), and until
+# 14/11/2026 this line sat inside the block above, so exactly those demos ran with the image's
+# full-size Apache and MariaDB — and fold.sh, which only takes a marked demo, could not take them.
+case "$PLATFORM" in
+  joomla|wordpress)
+    tracy_write_demo_limits "$SITE_DIR" "$([ "${TRACY_DEMO_SITE:-}" = 1 ] && echo on || echo off)" ;;
+esac
 
 # ── 3. compose stack ────────────────────────────────────────────────────────────────────
 # The default stack is the PHP pair this script always wrote: Apache serving the restored

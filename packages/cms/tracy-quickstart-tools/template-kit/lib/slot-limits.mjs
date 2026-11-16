@@ -9,15 +9,18 @@
 // (`maxCharactersFrom`).
 import { neutralKey } from './ids.mjs'
 import { places } from './text-limits.mjs'
+import { isLiteralPreSlot } from '../../content-coverage/lib/contract.mjs'
 import { partsOf } from './text-format.mjs'
 
 const SLACK = 3 // a box estimate of the demo words reads a few characters wider than the words
 
 /** How many characters the demo shows: every paragraph and bullet of the slot. */
-export const demoLength = (sample) =>
-  partsOf(sample)
-    .map((p) => p.text)
-    .join(' ').length
+export const demoLength = (sample, slot) =>
+  isLiteralPreSlot(slot)
+    ? [...String(sample ?? '')].length
+    : partsOf(sample)
+        .map((p) => p.text)
+        .join(' ').length
 
 /**
  * Every place the kit lists a text slot: `{id, entry, mapOnly?}`. `entry` is the object that carries
@@ -67,7 +70,7 @@ export function groupsOf(kit) {
 function claimsOf(id, mapSlot, textFit) {
   const claims = []
   const notes = []
-  const demo = demoLength(mapSlot?.sample)
+  const demo = demoLength(mapSlot?.sample, mapSlot)
   // A text no page draws in a box (an accessible name, the document title) has no limit to claim: the theme says so.
   if (mapSlot?.nonVisual)
     return { claims, notes, demo, nonVisual: mapSlot.nonVisualFrom ?? 'declared by the theme' }

@@ -180,9 +180,10 @@ test('accent-only: a neutral accent is refused with a reason', () => {
 
 test('brand mode is unchanged: the pinned output of two brand profiles on JA Boxing 1.0.10', () => {
   const sha = (/** @type {string} */ s) => createHash('sha256').update(s).digest('hex')
+  // Re-pinned 12/11/2026: the T4 `.toggle-bars` selector now skips Font Awesome glyphs; nothing else moved.
   const pinned = {
-    '#121111 #a78f45': '4711db689d7805f910bfbbbb67e452d5a1d6fe983cb9b191c59d873788e09142',
-    '#ffffff #042515': '96c8dc49bb30cffc4e465b0c5fc2f862198b9dee1c514b75aeff52f8ecbd0f6b'
+    '#121111 #a78f45': '23ed34c684caf4e09a64732e93a5d3b50f91c681ece5892c5b8fe4d3e80e0e30',
+    '#ffffff #042515': 'f3fe9bc9708612a4f1ff35258f3373024c15e06be62ac36c191e19624ff2e967'
   }
   for (const [key, hash] of Object.entries(pinned)) {
     const [bg, accent] = key.split(' ')

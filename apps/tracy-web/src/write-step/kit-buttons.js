@@ -15,7 +15,8 @@ const words = (text) =>
     .trim()
     .toLowerCase()
 const neutral = (key) => String(key).replace(/^module-/, 'block-')
-const holdsAddress = (slot) => slot?.type === 'url' || String(slot?.role ?? '').endsWith('_url')
+const holdsAddress = (slot) =>
+  slot?.role !== 'business.audio' && (slot?.type === 'url' || String(slot?.role ?? '').endsWith('_url'))
 const anchorOf = (xpath) => /^(.*)\/(?:text\(\)(?:\[\d+\])?|@href)$/.exec(String(xpath ?? ''))?.[1] ?? null
 const samePlace = (a, b) => a.column === b.column && JSON.stringify(a.jsonPath) === JSON.stringify(b.jsonPath)
 

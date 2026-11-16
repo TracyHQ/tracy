@@ -209,6 +209,17 @@ export function kitParts(kitDoc) {
   }
   return {
     contents,
+    /** Every part id the tool answers. */
+    ids: () => [...byId.keys()],
+    /** The parts a first message with the whole kit carries: each holds, or is held in, another carried part. */
+    carried: () => {
+      const listedIds = listed.map((p) => p.id).filter((id) => id !== 'site' && !id.startsWith('site.'))
+      const largeSite = Object.entries(siteView)
+        .filter(([, v]) => v && typeof v === 'object' && typeof v.part === 'string')
+        .map(([key]) => `site.${key}`)
+      const entriesOfLarge = tooLarge.flatMap((key) => list(doc[key]).map((entry) => entry.id))
+      return ['contents', 'site', ...largeSite, ...listedIds, ...entriesOfLarge].filter((id) => byId.has(id))
+    },
     has: (id) => byId.has(id),
     read: (id) => whole(id),
     /** Record parts sent before any call, such as "contents" in the first message. */
@@ -394,6 +405,37 @@ export function firstUserMessage({ kit, brief, imageTool = true, visualReviewTex
     '',
     JSON.stringify(brief)
   ].join('\n')
+}
+
+/**
+ * The first user message of a run whose whole kit goes in that message (harness `kitInFirstMessage`): every part the
+ * part tool answers is below, by id, and the image tool stays, so the visual review is done as before. Measured on the
+ * local stand (Central Padel, 15/11/2026): a planner given only "contents" read nearly the whole kit in four tool turns
+ * (site, page groups, pages, every block), and each turn spent its own reasoning (54k tokens, five and a half minutes)
+ * before the plan. Returns the message and the part ids it carries, for the part tool (`kitTools` `inFirstMessage`).
+ * @param {{ kit: { ref: string, doc: any }, brief: object, visualReviewText?: string }} input
+ * @returns {{ text: string, inFirstMessage: string[] }}
+ */
+export function wholeKitFirstMessage({ kit, brief, visualReviewText }) {
+  const { readPart, openImage } = KIT_TOOL_NAMES
+  const parts = kitParts(kit.doc)
+  const template = kit.doc.template ? ` (template ${kit.doc.template.name} ${kit.doc.template.version})` : ''
+  const carried = parts.carried()
+  const text = [
+    `Input 2, the template kit, is ${kit.ref}${template}. The whole kit is in this message, below, as one JSON object by part id: "contents" lists what the kit holds, then every part your instructions name (the site-wide parts, the page groups, the pages and every block). Read it here: ${readPart} only answers that a part is already in this message.`,
+    '',
+    `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. ${visualReviewText || 'Open an image only where your instructions say a look cannot settle a decision.'}`,
+    '- You may call the image tool several times in the same turn: ask for every image you need at once, rather than one per turn.',
+    '',
+    'The template kit, by part id:',
+    '',
+    `{${carried.map((id) => `${JSON.stringify(id)}:${parts.read(id)}`).join(',')}}`,
+    '',
+    'Input 1, the brief, is this JSON:',
+    '',
+    JSON.stringify(brief)
+  ].join('\n')
+  return { text, inFirstMessage: parts.ids() }
 }
 
 const NO_IMAGES_LINE =

@@ -1,0 +1,452 @@
+{
+  "schemaVersion": "tracy-demo-measures/v1",
+  "quickstart": {
+    "slug": "ja-impact",
+    "version": "1.0.6"
+  },
+  "widths": [
+    1440,
+    390
+  ],
+  "pages": [
+    "/",
+    "/about",
+    "/donations",
+    "/events",
+    "/pages/user/login-form",
+    "/pages/user/registration-form",
+    "/category-blog",
+    "/pages/j-content/featured-articles",
+    "/pages/j-content/author-listting",
+    "/contact",
+    "/help-faqs",
+    "/blog",
+    "/pages/j-content/blog-detail",
+    "/tagged-items",
+    "/category-list",
+    "/pages/j-content/category-blog",
+    "/password-reset",
+    "/username-reminder-request",
+    "/donations/water-treatment-projects",
+    "/component/tags/tag/activism",
+    "/donations/the-mysteries-of-the-jungle-creatures",
+    "/donations/the-african-wildlife-chronicles",
+    "/donations/surviving-the-harsh-polar-realms",
+    "/donations/sea-pollution",
+    "/donations/saving-ensdangered-species",
+    "/donations/saving-animal-preserve",
+    "/donations/save-rainforests",
+    "/donations/oil-pollution",
+    "/events/natures-hidden-gems",
+    "/events/an-adventure-with-animals",
+    "/events/unveiling-natures-best-kept-treasures",
+    "/pages/j-content/author-listting/author/jsteele",
+    "/category-blog/charity-branding-is-yourbrand-digital-ready",
+    "/category-blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+    "/pages/j-content/author-listting/author/rcoleman",
+    "/category-blog/building-empathy-throughremote-user-research",
+    "/pages/j-content/author-listting/author/gbush",
+    "/category-blog/charity-of-the-month-plan-international-uk-2",
+    "/category-blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+    "/category-blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+    "/donations/community-center",
+    "/donations/endangered-species",
+    "/donations/indigenous-people",
+    "/donations?start=9",
+    "/events/afforestation-program",
+    "/events/feed-the-world",
+    "/events/charity-journey-to-africa",
+    "/events/the-day-of-the-african-child",
+    "/events/saving-nature",
+    "/events?start=5",
+    "/category-blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+    "/category-blog/weve-reached-1-million-indonations-and-counting",
+    "/category-blog/donation-and-cleaning-program-foundation",
+    "/category-blog?start=9",
+    "/pages/j-content/featured-articles?start=9",
+    "/pages/j-content/author-listting/author/clitchfield",
+    "/pages/j-content/author-listting/author/jsteve",
+    "/pages/j-content/author-listting/author/mbrown",
+    "/pages/j-content/author-listting?start=6",
+    "/blog?start=9",
+    "/component/tags/tag/animals",
+    "/component/tags/tag/charity",
+    "/component/tags/tag/media",
+    "/component/tags/tag/nature",
+    "/events/a-microscopic-marvel",
+    "/donations/exploring-the-world-of-feline-friends",
+    "/tagged-items?start=20",
+    "/pages/j-content/author-listting/author/jsmith",
+    "/pages/j-content/category-blog/silly-stories-and-jokes-for-young-readers",
+    "/pages/j-content/author-listting/author/slee",
+    "/pages/j-content/category-blog/how-many-people-in-africa-don-t-have-food",
+    "/pages/j-content/category-blog/exploring-magical-worlds",
+    "/pages/j-content/category-blog/legends-and-folktales-from-around-the-world",
+    "/pages/j-content/category-blog/a-journey-of-discovery-and-learning",
+    "/pages/j-content/category-blog/exploring-the-beauty-of-the-animal-kingdom",
+    "/pages/j-content/category-blog/heartwarming-tales-of-kindness-and-togetherness",
+    "/pages/j-content/category-blog/a-journey-through-enchanted-lands",
+    "/pages/j-content/category-blog/exciting-adventures-to-the-past-and-future",
+    "/pages/j-content/author-listting/author/jsteele?start=3",
+    "/pages/j-content/author-listting/author/rcoleman?start=3",
+    "/pages/j-content/author-listting/author/gbush?start=3",
+    "/pages/j-content/author-listting/author/clitchfield?start=3",
+    "/pages/j-content/author-listting/author/jsteve?start=3",
+    "/pages/j-content/author-listting/author/mbrown?start=3",
+    "/pages/j-content/author-listting/author/jsmith?start=3"
+  ],
+  "status": "green",
+  "groups": [
+    {
+      "name": "main-heading",
+      "status": "green",
+      "checked": 85,
+      "failures": [
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/water-treatment-projects",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/the-mysteries-of-the-jungle-creatures",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/the-african-wildlife-chronicles",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/surviving-the-harsh-polar-realms",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/sea-pollution",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/saving-ensdangered-species",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/saving-animal-preserve",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/save-rainforests",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/oil-pollution",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/events/natures-hidden-gems",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/events/an-adventure-with-animals",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/events/unveiling-natures-best-kept-treasures",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/category-blog/charity-branding-is-yourbrand-digital-ready",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/category-blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/category-blog/building-empathy-throughremote-user-research",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/category-blog/charity-of-the-month-plan-international-uk-2",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/category-blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/category-blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/community-center",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/endangered-species",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/indigenous-people",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/events/afforestation-program",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/events/feed-the-world",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/events/charity-journey-to-africa",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/events/the-day-of-the-african-child",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/events/saving-nature",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/category-blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/category-blog/weve-reached-1-million-indonations-and-counting",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/category-blog/donation-and-cleaning-program-foundation",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/events/a-microscopic-marvel",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/donations/exploring-the-world-of-feline-friends",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/pages/j-content/category-blog/silly-stories-and-jokes-for-young-readers",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/pages/j-content/category-blog/how-many-people-in-africa-don-t-have-food",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/pages/j-content/category-blog/exploring-magical-worlds",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/pages/j-content/category-blog/legends-and-folktales-from-around-the-world",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/pages/j-content/category-blog/a-journey-of-discovery-and-learning",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/pages/j-content/category-blog/exploring-the-beauty-of-the-animal-kingdom",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/pages/j-content/category-blog/heartwarming-tales-of-kindness-and-togetherness",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/pages/j-content/category-blog/a-journey-through-enchanted-lands",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/pages/j-content/category-blog/exciting-adventures-to-the-past-and-future",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        }
+      ]
+    },
+    {
+      "name": "empty-frames",
+      "status": "green",
+      "checked": 85,
+      "failures": []
+    },
+    {
+      "name": "text-overflow",
+      "status": "green",
+      "checked": 85,
+      "failures": []
+    },
+    {
+      "name": "orphan-row",
+      "status": "green",
+      "checked": 85,
+      "failures": []
+    },
+    {
+      "name": "blank-footer-column",
+      "status": "green",
+      "checked": 85,
+      "failures": []
+    }
+  ]
+}

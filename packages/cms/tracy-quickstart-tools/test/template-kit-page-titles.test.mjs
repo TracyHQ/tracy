@@ -144,12 +144,48 @@ test('two fields of the page entity with the title words stay open until a field
   assert.equal(measured.titleCandidates, undefined)
 })
 
+test('two fields measured at the title size: the one printed in the h1 is the title', () => {
+  const p = page('page-learn', '/learn-to-swim', 'LEARN TO SWIM', ['body-learn'])
+  const at = (tag) => ({ controls: [{ page: '/learn-to-swim', tag, attribute: 'text', title: true }] })
+  const measured = onePage(p, { 'article-3.0': at('div'), 'article-3.1': at('h1') }).pages[0]
+  assert.equal(measured.titleSlot, 'article-3.1')
+})
+
 test('a page titled by a person or a menu item the page belongs to takes that slot', () => {
   const author = page('page-dana', '/authors/dana', 'Dana Reef', ['header'])
   author.h1.slot = 'user-2.0'
   assert.equal(onePage(author).pages[0].titleSlot, 'user-2.0')
   const own = page('page-timetable', '/timetable', 'Timetable', ['header'])
   assert.equal(onePage(own).pages[0].titleSlot, 'menuItem-7.0')
+})
+
+test('an image text alternative and the menu label of the page are no printed title beside the item the page shows', () => {
+  const map = {
+    ...MAP,
+    slots: [
+      ...MAP.slots,
+      slot('article-5.4', 'Pool Rules', { column: 'images', jsonPath: ['image_intro_alt'] }),
+      slot('menuItem-20.0', 'News'),
+      slot('category-6.0', 'News', { role: 'editorial.heading' })
+    ],
+    pages: [
+      ...MAP.pages,
+      { entity: 'menuItem-20', route: 'news', link: 'index.php?option=com_content&view=category&id=6' },
+      { entity: 'menuItem-21', route: 'pool-rules', link: 'index.php?option=com_content&view=article&id=5' }
+    ]
+  }
+  const titled = (path, text, via = 'template') => {
+    const k = kit([{ id: `page${path}`, path, blocks: { 1440: ['header'] }, h1: { via, text } }])
+    settlePageTitles(k, { map })
+    return k.pages[0]
+  }
+  assert.equal(titled('/pool-rules', 'Pool Rules').titleSlot, 'article-5.0')
+  assert.equal(titled('/news', 'News').titleSlot, 'category-6.0')
+  assert.deepEqual(
+    titled('/news', 'News', 'page-heading').titleCandidates,
+    ['category-6.0', 'menuItem-20.0'],
+    'a page heading may print the menu item title: that stays open'
+  )
 })
 
 test('the gate names every page without exactly one title slot', () => {
@@ -250,6 +286,27 @@ test('a tag page printing its tag with a mark of the template around it is title
   assert.equal(k.pages[0].titleSlot, 'tag-4.0', 'the mark is matched on the page entity only, not on a card')
 })
 
+test('a tag page printing its tag inside a template string ("Tagged: %s") is titled by the tag', () => {
+  const tagged = (format) => {
+    const k = kit([
+      {
+        id: 'page-club_topics_squads',
+        path: '/club/topics/squads',
+        blocks: { 1440: ['body-rules'] },
+        h1: { via: 'template', text: 'Tagged: Squads', block: 'body-rules' }
+      }
+    ])
+    const map = {
+      ...TAG_MAP,
+      slots: [...TAG_MAP.slots, slot('languageString-1.0', format, { role: 'editorial.heading' })]
+    }
+    settlePageTitles(k, { map })
+    return k.pages[0].titleSlot
+  }
+  assert.equal(tagged('Tagged: %s'), 'tag-4.0')
+  assert.equal(tagged('Topic: %s'), null, 'a template string printing other words is no proof')
+})
+
 const noH1 = (id, path) => ({
   id,
   path,
@@ -307,4 +364,49 @@ test('a page printing its title in two h1 with the same words still has that tit
   const two = page('page-rules', '/pool-rules', null, ['body-rules'])
   two.h1 = { via: null, reason: 'the page shows 2 h1', texts: ['Pool Rules', 'Lane Hire'] }
   assert.equal(onePage(two).pages[0].titleSlot, null)
+})
+
+test('two measured H1 fields remain ambiguous', () => {
+  const p = page('page-learn', '/learn-to-swim', 'LEARN TO SWIM', ['body-learn'])
+  const at = () => ({ controls: [{ page: '/learn-to-swim', tag: 'h1', attribute: 'text', title: true }] })
+  const measured = onePage(p, { 'article-3.0': at(), 'article-3.1': at() }).pages[0]
+  assert.equal(measured.titleSlot, null)
+  assert.deepEqual(measured.titleCandidates, ['article-3.0', 'article-3.1'])
+})
+
+test('a title the page reading took from a menu parameter is the slot of that parameter; later pages of a list share it', () => {
+  // JA Nova 1.0.12: /tagged-items prints its menu item's page_title, which holds the same words as the item's title,
+  // and /tagged-items?start=20 is the second page of that list
+  const map = {
+    ...MAP,
+    slots: [
+      ...MAP.slots,
+      slot('menuItem-48.0', 'Tagged Items', { column: 'title' }),
+      slot('menuItem-48.1', 'Tagged Items', { column: 'params', jsonPath: ['page_title'] })
+    ],
+    pages: [...MAP.pages, { entity: 'menuItem-48', route: 'tagged-items' }]
+  }
+  const tagged = (id, path, h1) => ({ id, path, blocks: { 1440: ['header'] }, h1 })
+  const k = kit([
+    tagged('page-tagged-2', '/tagged-items?start=20', {
+      via: 'content-slot',
+      slot: 'menuItem-48.0',
+      text: 'Tagged Items'
+    }),
+    tagged('page-tagged', '/tagged-items', { via: 'menu-param', param: 'page_title', text: 'Tagged Items' })
+  ])
+  settlePageTitles(k, { map })
+  assert.deepEqual(
+    k.pages.map((p) => [p.path, p.titleSlot, p.titleCandidates]),
+    [
+      ['/tagged-items?start=20', 'menuItem-48.1', undefined],
+      ['/tagged-items', 'menuItem-48.1', undefined]
+    ]
+  )
+  // a parameter the page did not read its title from settles nothing
+  const other = kit([
+    tagged('page-tagged', '/tagged-items', { via: 'menu-param', param: 'layout_type', text: 'Tagged Items' })
+  ])
+  settlePageTitles(other, { map })
+  assert.equal(other.pages[0].titleSlot, null)
 })

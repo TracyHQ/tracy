@@ -46,6 +46,7 @@ import { readdir, readFile, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { captureTarget } from './capture.js'
 import { SITE_LABEL } from './mtimes.js'
+import { farmDocroot, siteRuntime, siteWebExecArgv } from './site-exec.js'
 
 /** The marker both provision roads write (`platform/joomla.sh`, `platform/wordpress.sh`). */
 export const CONTENT_IDENTITY_MARKER = 'content-identity.done'
@@ -80,6 +81,38 @@ export const provisionLock = (/** @type {string} */ label) => `/var/lock/tracy-p
 // could not write again.
 export const JOOMLA_EXEC =
   'cd "$2" && exec flock -n -E 75 "$1" timeout 600 docker compose exec -T -u www-data web php'
+
+/**
+ * The same pass for a Joomla demo folded into the demo farm (`site-exec.js`): its `web` service is a
+ * forwarder with no PHP, so the script runs in its own pool's environment in `tracy-demos-web`, as
+ * www-data, under the same provision lock; `$2…` is the docker argv `siteWebExecArgv` builds, and
+ * TRACY_DOCROOT tells the script where its files are.
+ */
+export const FARM_JOOMLA_EXEC = 'exec flock -n -E 75 "$1" timeout 600 docker "${@:2}"'
+
+/**
+ * `bash -c` arguments for one Joomla script run (`JOOMLA_EXEC` / `JOOMLA_DERIVE_EXEC`, or the farm's).
+ * @param {{ label: string, siteDir: string, config: { privateRoot: string }, name: string, derive?: boolean }} input
+ * @returns {Promise<string[]>}
+ */
+export async function joomlaExecArgs({ label, siteDir, config, name, derive = false }) {
+  const runtime = await siteRuntime(config.privateRoot, label)
+  if (runtime === 'site')
+    return derive
+      ? ['-c', JOOMLA_DERIVE_EXEC, name, provisionLock(label), siteDir, label]
+      : ['-c', JOOMLA_EXEC, name, provisionLock(label), siteDir]
+  const docker = await siteWebExecArgv(
+    {
+      privateRoot: config.privateRoot,
+      label,
+      runtime,
+      interactive: true,
+      env: { TRACY_DOCROOT: farmDocroot(label), ...(derive ? { TRACY_LABEL: label } : {}) }
+    },
+    ['php']
+  )
+  return ['-c', FARM_JOOMLA_EXEC, name, provisionLock(label), ...docker]
+}
 
 /** What `flock -E` answers when the provision lock is held: EX_TEMPFAIL, which no road here returns. */
 export const LOCK_BUSY = 75
@@ -308,7 +341,7 @@ async function deriveJoomla({ label, siteDir, config, run }) {
   const script = await readFile(path.join(config.scriptsDir, JOOMLA_DERIVE_SCRIPT), 'utf8')
   const { code, tail } = await run({
     script: 'bash',
-    args: ['-c', JOOMLA_DERIVE_EXEC, 'contract-derive', provisionLock(label), siteDir, label],
+    args: await joomlaExecArgs({ label, siteDir, config, name: 'contract-derive', derive: true }),
     stdin: script
   })
   const said = tail
@@ -417,12 +450,13 @@ async function identifyJoomla({ label, siteDir, config, run }) {
   // 🔒 NEVER A NEW-SITE PASS: no `-e TRACY_NEW_SITE` on the exec, and not in this child's
   // environment either, whatever this process was started with.
   const { TRACY_NEW_SITE: _never, ...env } = process.env
-  const { code, tail } = await run({
-    script: 'bash',
-    args: ['-c', JOOMLA_EXEC, 'content-identity', provisionLock(label), siteDir],
-    env,
-    stdin: script
-  })
+  let args
+  try {
+    args = await joomlaExecArgs({ label, siteDir, config, name: 'content-identity' })
+  } catch (error) {
+    return { state: 'failed', why: String(/** @type {any} */ (error)?.message ?? error).slice(0, 200) }
+  }
+  const { code, tail } = await run({ script: 'bash', args, env, stdin: script })
   const said = tail
     .map((line) => /^TRACY_RESULT content_reader=(\S+)$/.exec(line.trim())?.[1])
     .filter(Boolean)

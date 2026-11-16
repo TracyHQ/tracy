@@ -8,7 +8,7 @@ import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
-import { deflateSync, crc32 } from 'node:zlib'
+import { crc32, deflateSync } from 'node:zlib'
 
 import { chromium } from '@playwright/test'
 
@@ -80,7 +80,7 @@ const CAPTURE = {
   blocks: { 'block-20': { id: 'block-20', source: 'module-20', widths: { 1440: { pages: ['class'] } } } }
 }
 
-async function serve() {
+async function serve(page = PAGE) {
   const server = http.createServer((req, res) => {
     const name = decodeURIComponent(req.url.split('?')[0]).replace(/^\/images\//, '')
     if (PICS[name]) {
@@ -88,7 +88,7 @@ async function serve() {
       return res.end(PICS[name])
     }
     res.writeHead(200, { 'content-type': 'text/html' })
-    res.end(PAGE)
+    res.end(page)
   })
   await new Promise((r) => server.listen(0, 'localhost', r))
   return { server, site: `http://localhost:${server.address().port}` }
@@ -178,6 +178,18 @@ test('rowPartsUnpaired counts a mixed list whose card row pairs nothing, unless 
 
   const unmeasured = kitOf()
   assert.equal(rowPairChecks(unmeasured).rowPartsUnpaired, 0, 'a kit measured before row pairs counts none')
+
+  // A services grid: each card row holds its own title and text, so nothing outside the row is left to pair.
+  const ownTexts = kitOf()
+  ownTexts.blocks[0].lists[0].rows.forEach((r, i) => {
+    Object.assign(r, { printsIn: i ? 'DIV.col-12' : 'block', pairedSlots: [] })
+    r.slots.push({ id: `row-title.${i}`, type: 'text' })
+  })
+  assert.equal(
+    rowPairChecks(ownTexts).rowPartsUnpaired,
+    0,
+    'card rows with their own text slots are paired by the list'
+  )
 })
 
 test('pairListRows keeps declared pairs and leaves rows with no measured picture unmeasured', () => {
@@ -197,4 +209,82 @@ test('pairListRows keeps declared pairs and leaves rows with no measured picture
   pairListRows(fresh, {})
   assert.equal(fresh.blocks[0].lists[0].rowPairsFrom, undefined, 'nothing measured, nothing claimed')
   assert.equal(fresh.blocks[0].lists[0].rows[1].pairedSlots, undefined)
+})
+
+// A carousel (JA Symphony j6 1.0.6 module 104): six slides, four of them `active`, and rows 0, 4 and 5 show the same demo
+// picture. Each row must still take its own slide, and the slider's state classes must not make two kinds of card. A
+// looping carousel (JA Vega j6 1.0.10 modules 111, 117) also prints copies of its slides (`owl-item cloned`) before and
+// after them: a row's picture is its slide, never a copy.
+const SLIDES = ['item-1', 'item-2', 'item-3', 'item-4', 'item-1', 'item-1']
+for (const n of [1, 2, 3, 4]) PICS[`item-${n}.png`] = png(40 * n, 90, 120)
+const CAROUSEL = `<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;font:16px sans-serif}</style></head><body>
+<div id="Mod30" class="moduletable"><div class="owl-carousel" style="overflow:hidden;width:1200px"><div class="owl-stage" style="display:flex;width:3000px">
+${[...SLIDES.slice(-2).map((pic) => [pic, ' cloned']), ...SLIDES.map((pic, i) => [pic, i < 4 ? ' active' : '']), ...SLIDES.slice(0, 2).map((pic) => [pic, ' cloned'])].map(([pic, state]) => `<div class="owl-item${state}" style="width:300px"><div class="item"><img src="/images/${pic}.png" style="width:280px;height:160px;display:block"><p>Gallery Item</p></div></div>`).join('')}
+</div></div></div></body></html>`
+const CAROUSEL_MAP = {
+  entities: [],
+  pages: [],
+  slots: SLIDES.flatMap((pic, row) => {
+    const group = { id: `module-30.gallery.${row}`, item: row, kind: 'gallery' }
+    return [
+      { key: `module-30.${row + 2}`, entity: 'module-30', type: 'image', sample: `images/${pic}.png`, group },
+      { key: `module-30.${row + 8}`, entity: 'module-30', type: 'text', sample: 'Gallery Item', group }
+    ]
+  })
+}
+const CAROUSEL_CAPTURE = {
+  widths: [1440],
+  pages: [{ slug: 'home', path: '/' }],
+  blocks: { 'block-30': { id: 'block-30', source: 'module-30', widths: { 1440: { pages: ['home'] } } } }
+}
+
+test('a carousel whose rows repeat a picture: every row takes its own slide, and the slide state is no second card', async (t) => {
+  let browser
+  try {
+    browser = await chromium.launch()
+    await browser.close()
+  } catch {
+    return t.skip('no Chromium available')
+  }
+  const { server, site } = await serve(CAROUSEL)
+  const out = mkdtempSync(join(tmpdir(), 'kit-row-pairs-carousel-'))
+  try {
+    const evidence = await measureFrames({
+      chromium,
+      siteUrl: site,
+      capture: CAROUSEL_CAPTURE,
+      map: CAROUSEL_MAP,
+      out
+    })
+    const kit = {
+      widths: [1440],
+      checks: {},
+      coverage: { parts: {}, failures: [] },
+      blocks: [
+        {
+          id: 'block-30',
+          lists: [
+            {
+              id: 'block-30.gallery',
+              rowKind: 'slots',
+              rows: SLIDES.map((_, row) => ({
+                index: row,
+                slots: CAROUSEL_MAP.slots
+                  .filter((s) => s.group.item === row)
+                  .map((s) => ({ id: s.key.replace('module-', 'block-'), type: s.type }))
+              }))
+            }
+          ]
+        }
+      ]
+    }
+    pairListRows(kit, evidence)
+    const parts = kit.blocks[0].lists[0].rows.map((r) => r.printsIn)
+    assert.ok(!parts.includes('block'), `no row prints alone: ${parts.join(', ')}`)
+    assert.equal(new Set(parts).size, 1, `one kind of card: ${parts.join(', ')}`)
+    assert.equal(rowPairChecks(kit).rowPartsUnpaired, 0)
+  } finally {
+    server.close()
+    rmSync(out, { recursive: true, force: true })
+  }
 })

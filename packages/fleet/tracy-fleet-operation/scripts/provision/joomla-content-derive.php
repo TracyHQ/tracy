@@ -34,7 +34,7 @@ if (!preg_match('/^[a-z0-9-]{3,80}$/D', $label)) {
 }
 
 try {
-    require '/var/www/html/configuration.php';
+    require (getenv('TRACY_DOCROOT') ?: '/var/www/html') . '/configuration.php';
     $config = new JConfig();
     $prefix = (string) $config->dbprefix;
     if (!preg_match('/^[a-zA-Z0-9_]+$/D', $prefix)) throw new RuntimeException('invalid table prefix');

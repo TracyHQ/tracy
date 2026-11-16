@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { firstUserMessage } from '../src/lib/template-kit-source.js'
 import { SITE_PLANNER_STEP } from '../src/site-planner/bench-worker.js'
@@ -6,6 +7,7 @@ import {
   checkVisualReview,
   reviewedImages,
   VISUAL_REVIEW_POLICY,
+  visualReviewImages,
   visualReviewInstruction
 } from '../src/site-planner/visual-review.js'
 
@@ -114,4 +116,66 @@ test('strict prompt replaces optional image advice and all printed block decisio
     checkVisualReview({ plan: hidden, kit, kitRef: ref, history: evidence(ids.slice(0, 3)) }).status,
     'pass'
   )
+})
+
+test('the first message names every image V01 can require, so a planner can open them before the plan exists', () => {
+  const published = JSON.parse(
+    readFileSync(
+      new URL(
+        '../../../packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.11/template-kit.json',
+        import.meta.url
+      )
+    )
+  )
+  const kitRef = 'ja-boxing/j6/1.0.11'
+  const { groups, blocks } = visualReviewImages(published)
+  const text = visualReviewInstruction(published)
+  const named = [...groups.flatMap((g) => g.ids), ...Object.values(blocks)]
+  for (const id of named) assert.ok(text.includes(id), `${id} is named`)
+  // Blocks that share an image are named with the image they really have, not one guessed from their id.
+  const shared = published.blocks.find((b) => b.images?.['1440'] && b.images['1440'] !== `${b.id}-1440`)
+  assert.equal(blocks[shared.id], shared.images['1440'])
+  assert.ok(text.includes(`"${shared.id}":"${shared.images['1440']}"`))
+  // The widest plan the kit allows: every page kept and every block printed. Opening the named ids passes V01.
+  const everything = {
+    sharedBlocks: [],
+    pages: published.pages.map((page) => ({
+      id: page.id,
+      decision: 'keep',
+      blocks: published.blocks.map((block) => ({ block: block.id, decision: 'keep' }))
+    }))
+  }
+  const sha256 = new Map(published.images.map((image) => [image.id, image.sha256]))
+  const opened = [...new Set(named)]
+  const history = [
+    { n: 0, state: 'answered', sent: [], message: { tool_calls: opened.map(call) } },
+    {
+      n: 1,
+      state: 'answered',
+      sent: [
+        {
+          role: 'user',
+          content: opened.map((image) => ({
+            type: 'image_ref',
+            ref: { kit: kitRef, image, sha256: sha256.get(image) }
+          }))
+        }
+      ],
+      message: {}
+    }
+  ]
+  const result = checkVisualReview({ plan: everything, kit: published, kitRef, history })
+  assert.equal(result.coverage.missing.length, 0)
+  assert.ok(result.coverage.required.every((id) => opened.includes(id)))
+  // Naming ids proves nothing by itself: without the opens, the same plan still fails.
+  assert.equal(checkVisualReview({ plan: everything, kit: published, kitRef, history: [] }).status, 'fail')
+})
+
+test('each page group is named with its desktop and every distinct phone image of its pages', () => {
+  const twoPhones = structuredClone(kit)
+  twoPhones.pages.push({ id: 'page-one-b', group: 'one', images: { 1440: ids[0], 390: 'page-one-b-390' } })
+  twoPhones.pages[0].group = 'one'
+  const { groups } = visualReviewImages(twoPhones)
+  assert.deepEqual(groups.find((g) => g.group === 'one').ids, [ids[0], ids[2], 'page-one-b-390'])
+  assert.match(visualReviewInstruction(kit), /in the same call that reads the block with read_kit_part/)
 })

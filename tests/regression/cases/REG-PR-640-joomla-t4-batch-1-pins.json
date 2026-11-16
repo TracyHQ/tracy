@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-640-joomla-t4-batch-1-pins",
+  "kind": "feat",
+  "title": "JA Vega 1.0.10, JA Nova 1.0.12 and JA Kinetic 1.0.12 (Joomla 6) are pinned on Claude Cowork for Joomla 0.24.95 (or later), sealed by their own contracts, still carrying the version each replaced, and the JA Kinetic design reads the pinned contract",
+  "pr": 640,
+  "area": "quickstart/contracts",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: the quickstart/{ja-vega,ja-nova,ja-kinetic}/j6 entries of both quickstarts.json, and SHA-256 of every contract file each records (contractFiles and alsoCarries) under packages/cms/tracy-joomla-quickstart/contracts/.",
+    "S2: designs['ja-kinetic'] of both design-templates.json and SHA-256 of its contractFiles.",
+    "S3: apps/tracy-web/src/lib/template-readiness/cowork-plugin-doors.json.",
+    "S4: pnpm exec tsx scripts/check-all.ts --only contracts --only design-templates --only joomla-demo-trim."
+  ],
+  "expect": [
+    "S1: both files byte-identical; Vega 1.0.10, Nova 1.0.12, Kinetic 1.0.12 or later; contract <slug>/j6/<version>; plugin 0.24.95 or later, file pkg_claudecowork-<plugin>.zip (Kinetic on 0.24.95: sha256 c03ec9be…); webroot and database files of that version with a GitHub asset id and the joomlart-products release url; every recorded hash equal to the repository file's; while on the batch version, contractVersions and alsoCarries keep 1.0.9 (Vega), 1.0.10 (Nova), 1.0.11 (Kinetic).",
+    "S2: both files byte-identical; base.version, contractProfile and activation.id follow the Kinetic pin; coworkMinVersion not above the pinned plugin; every contract file hash equal to the repository file's.",
+    "S3: 0.24.95 is listed with sha256 c03ec9be1fd05d547018e7156105feef6ab74e2cc11d086ad03ce98ec4fe295f.",
+    "S4: the three gates pass."
+  ],
+  "selectors": {
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy",
+    "designs": "apps/tracy-web/src/design-templates.json and its fleet copy",
+    "contracts": "packages/cms/tracy-joomla-quickstart/contracts/<slug>/j6/"
+  },
+  "evidence": "changes/2026-11-16-joomla-t4-batch-1-pins.md",
+  "fence": "What this repository pins and seals for the three templates. Not covered: a site created from these quickstarts on a stand, or the release's tracy_setting.json.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-640-joomla-t4-batch-1-pins.mjs"],
+    "needs": []
+  }
+}

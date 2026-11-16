@@ -436,3 +436,81 @@ test('a run still going on the site is what a new run is told about, not its old
   frozen.done()
   assert.match(h.err.at(-1), /RUN_ACTIVE/)
 })
+
+test('audio postwrite bench injects its existing host lazily and records a missing browser proof', async () => {
+  const { brief } = await import('./_site-copy-check.mjs')
+  const slot = {
+    key: 'article-7.9',
+    entity: 'article-7',
+    type: 'url',
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', '2'],
+    group: { id: 'article-7.audio.2', item: 2, kind: 'business' },
+    sample: 'images/Old.mp3',
+    current: 'images/Old.mp3',
+    canHide: true
+  }
+  const link = {
+    id: slot.key,
+    sourceSlot: slot.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: slot.sample,
+    sourceBinding: { entity: slot.entity, column: slot.column, jsonPath: slot.jsonPath, group: slot.group }
+  }
+  const kit = structuredClone(made)
+  kit.pages = [{ id: 'page-home', path: '/', blocks: { 1440: ['block-2'] } }]
+  const block = kit.blocks.find((b) => b.id === 'block-2')
+  block.links = [link]
+  block.source = { entity: slot.entity }
+  const dir = mkdtempSync(path.join(tmpdir(), 'audio-bench-kit-'))
+  const kits = new Map([['demo-gym/j6@1.0.0', { id: KIT().ref, dir, platform: 'joomla' }]])
+  writeFileSync(path.join(dir, 'template-kit.json'), JSON.stringify(kit))
+  const value = 'https://media.example/New.mp3?sig=A%2FB'
+  const p = plan()
+  p.pages[0].blocks[0].links = [{ link: slot.key, leadsTo: value }]
+  const b = brief()
+  b.facts.push({ id: 'audio-1', field: 'audio', source: 'stated', value })
+  const frozen = frozenFiles({ plan: p, brief: b })
+  const site = fakeSite({
+    extraKeys: [slot.key],
+    overSlot: (s) => (s.key === slot.key ? { ...slot, current: site.held[slot.key] ?? slot.current } : {})
+  })
+  const apply = site.door.apply
+  site.door.apply = async (call) => {
+    const answer = await apply(call)
+    return call.action === 'content.contract' && call.params.operation === 'inspect'
+      ? { ...answer, ids: { 'article-7': 7 } }
+      : answer
+  }
+  const calls = []
+  const h = harness({
+    site,
+    kits,
+    makeHost: async (key) => {
+      assert.equal(key, SITE)
+      return async (payload) => {
+        calls.push(payload)
+        return { pageMeasures: [] }
+      }
+    }
+  })
+  try {
+    assert.equal(await h.cli(runArgs(frozen.files, ['--brief-file', frozen.files.brief])), 1)
+    assert.equal(calls.length, 1)
+    assert.equal(calls[0].measurePages, true)
+    assert.equal(h.runs.rows[0].report.cause.code, 'AUDIO_PLAYER_READBACK_FAILED')
+    assert.equal(site.held[slot.key], value)
+  } finally {
+    frozen.done()
+    rmSync(dir, { recursive: true, force: true })
+  }
+  const ordinary = frozenFiles()
+  try {
+    const noAudio = harness({ makeHost: () => assert.fail('ordinary run must not create a host reader') })
+    assert.equal(await noAudio.cli(runArgs(ordinary.files)), 0)
+  } finally {
+    ordinary.done()
+  }
+})

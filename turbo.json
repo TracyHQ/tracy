@@ -145,6 +145,7 @@
         "$TURBO_ROOT$/.github/CODEOWNERS",
         "$TURBO_ROOT$/.github/ISSUE_TEMPLATE/**",
         "$TURBO_ROOT$/.github/actions/*",
+        "$TURBO_ROOT$/.github/actions/buildx-builder/**",
         "$TURBO_ROOT$/.github/actions/deploy-host-dsh/**",
         "$TURBO_ROOT$/.github/actions/deploy-tracy-stack/**",
         "$TURBO_ROOT$/.github/actions/dsh-lib/**",

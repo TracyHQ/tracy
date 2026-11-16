@@ -9,7 +9,7 @@ import {
   oversizedReplacements,
   smallEditsMessage
 } from '../src/site-planner/plan-change-size.js'
-import { applyChanges } from '../src/site-planner/plan-changes.js'
+import { applyChanges, applyValidChanges } from '../src/site-planner/plan-changes.js'
 import { plan } from './_site-plan-check.mjs'
 
 const page = (p, id) => p.pages.find((x) => x.id === id)
@@ -80,7 +80,7 @@ test('an edit at a path that is not there, or at an id, is refused and nothing i
     [{ section: 'site', field: 'language.code', with: 'x' }, /language is not an object or list/],
     [{ section: 'site', field: '', with: 'x' }, /no path/],
     [{ section: 'site', field: '__proto__.x', with: 'x' }, /no path/],
-    [{ page: 'page-home', field: 'id', with: 'page-x' }, /cannot replace the page id/],
+    [{ page: 'page-home', field: 'id', with: 'page-about-us' }, /cannot replace the page id/],
     [{ slot: 'block-190.0', remove: 'slot' }, /cannot remove the slot id/],
     [{ section: 'site', add: true, with: {} }, /section site, which is not a list/],
     [{ section: 'site', add: 'footerMenu', with: [{}] }, /not a list/],
@@ -117,4 +117,46 @@ test('a large replacement that is mostly unchanged is flagged; a small one, or n
   assert.equal(out.ok, true, out.reason)
   assert.equal(out.replacements[0].unchangedBytes, 0)
   assert.deepEqual(oversizedReplacements(out.replacements), [])
+})
+
+test('a page given a new id is renamed, and every place the plan names it follows', () => {
+  const before = plan()
+  const named = JSON.stringify(before).split('"page-about-us"').length - 1
+  assert.ok(named > 1, 'the sample plan names the page in more than one place')
+  // The field edit the refusal used to suggest against, and a later change that names the new id.
+  const out = apply([
+    { page: 'page-about-us', field: 'id', with: 'page-about-us_story' },
+    { page: 'page-about-us_story', field: 'slug', with: 'our-story' }
+  ])
+  const text = JSON.stringify(out.plan)
+  assert.equal(text.split('"page-about-us"').length - 1, 0)
+  assert.equal(text.split('"page-about-us_story"').length - 1, named)
+  assert.equal(page(out.plan, 'page-about-us_story').slug, 'our-story')
+  // A whole page given under its new id renames it too, then replaces it.
+  const whole = { ...page(before, 'page-about-us'), id: 'page-about-us_story', why: 'the story of the club' }
+  const replaced = apply([{ page: 'page-about-us', with: whole }]).plan
+  assert.equal(page(replaced, 'page-about-us_story').why, 'the story of the club')
+  assert.equal(JSON.stringify(replaced).split('"page-about-us"').length - 1, 0)
+  // A list of renames only is applied as well.
+  assert.equal(
+    apply([{ page: 'page-about-us', field: 'id', with: 'page-x' }]).plan.pages.some((p) => p.id === 'page-x'),
+    true
+  )
+})
+
+test('with valid changes applied one by one, a rename counts as applied and a rejected change keeps its own index', () => {
+  const out = applyValidChanges(plan(), {
+    changes: [
+      { page: 'page-about-us', field: 'id', with: 'page-about-us_story' },
+      { page: 'page-about-us_story', field: 'slug', with: 'our-story' },
+      { page: 'page-nowhere', field: 'slug', with: 'x' }
+    ]
+  })
+  assert.equal(out.ok, true, out.reason)
+  assert.equal(out.applied, 2)
+  assert.deepEqual(
+    out.rejected.map((r) => r.index),
+    [2]
+  )
+  assert.equal(page(out.plan, 'page-about-us_story').slug, 'our-story')
 })

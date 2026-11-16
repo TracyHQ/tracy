@@ -172,6 +172,7 @@ export const en: Record<string, string> = {
   'demo.line.daysLeft.one': '{count} day left',
   'demo.line.daysLeft.other': '{count} days left',
   'demo.line.stopped': 'Stopped at {step}: {reason}',
+  'demo.line.needsReview': 'Site built. Its last check found problems: review them before you send it.',
   'demo.line.expired': 'Demo expired on {date}',
   'demo.line.expiredUndated': 'The demo expired',
   'demo.step.brief': 'the brief',
@@ -202,6 +203,7 @@ export const en: Record<string, string> = {
   'demo.reason.access': 'This account can no longer reach the demo site.',
   'demo.reason.otherWriter': 'Another task was already changing this demo site.',
   'demo.reason.unknown': 'The demo stopped on an unexpected error.',
+  'demo.reason.needsReview': 'The site is built, but its last check found problems to review.',
 
   // Card
   'cell.research': 'Research',

@@ -9,6 +9,14 @@ export {
   socialNetworkOf
 } from './discovery-osm.mjs'
 export { crawlWebsite, extractPage } from './website-crawler.mjs'
+export {
+  BOOKING_PLATFORMS,
+  LINK_IN_BIO_PLATFORMS,
+  bookingPlatformOf,
+  isBookingUrl,
+  linkInBioOf
+} from './link-platforms.mjs'
+export { bioPageLinks, expandLinkPages, readBioPage, sortBioLinks } from './link-in-bio.mjs'
 export { LISTING_HOSTS, MAX_LINKS, judgeLinks, linkKind, splitPasted } from './link-kinds.mjs'
 export {
   isGoogleHost,

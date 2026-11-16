@@ -43,6 +43,7 @@ import {
   CUSTODY_CASES,
   HOST_FILE_CASES,
   emdashCompose,
+  forwarderCompose,
   phpCompose,
   placeCompose
 } from './token-custody-cases.mjs'
@@ -62,7 +63,10 @@ case "$*" in
   "compose ps -q db")
     [ -n "$FAKE_DB_CID" ] && echo "$FAKE_DB_CID"
     exit 0 ;;
-  "compose exec -T db mariadb"*)
+  "ps -q --filter name=^tracy-demos-db$")
+    [ -n "$FAKE_FARM_DB_CID" ] && echo "$FAKE_FARM_DB_CID"
+    exit 0 ;;
+  "compose exec -T db mariadb"*|"exec -i -e MYSQL_PWD tracy-demos-db mariadb"*)
     sql="$(cat)"
     printf '%s\\n' "$sql" >> "$FAKE_SQL_LOG"
     case "$sql" in
@@ -880,4 +884,47 @@ test('neither Joomla nor EmDash: still NOT_JOOMLA, and the message names both sh
   assert.equal(r.status, 4)
   assert.equal(errorCode(r), 'NOT_JOOMLA')
   assert.match(r.stderr, /EmDash/, 'the refusal still reads as if Joomla were the only road')
+})
+
+// ── a Joomla demo folded into the demo farm ─────────────────────────────────────────────────────
+// Its compose is the forwarder; its data is its own schema in `tracy-demos-db`, reached as its own
+// user (`FARM_DB_*` in .env), never the farm's root and never a `db` service it no longer has.
+function foldedStack(t) {
+  const s = stack(t)
+  const site = path.join(s.privateRoot, LABEL)
+  writeFileSync(path.join(site, 'docker-compose.yml'), forwarderCompose(site))
+  mkdirSync(path.join(site, 'farm'), { recursive: true })
+  writeFileSync(
+    path.join(site, 'farm/per-demo.compose.yml'),
+    phpCompose(site, { flavor: 'joomla', sitesRoot: s.sitesRoot })
+  )
+  mkdirSync(path.join(site, 'apache'), { recursive: true })
+  writeFileSync(path.join(site, 'apache/tracy-demo-limits.conf'), '# lean\n')
+  writeFileSync(path.join(site, 'runtime'), 'farm\n')
+  writeFileSync(
+    path.join(site, '.env'),
+    'HOST_PORT=51770\nDB_PASSWORD=sekret1\nFARM_DB_NAME=d_x_1\nFARM_DB_USER=d_x_1\nFARM_DB_PASSWORD=farmpw\n'
+  )
+  return s
+}
+
+test('a folded Joomla demo: the token is minted in its farm schema, as its own user', (t) => {
+  const s = foldedStack(t)
+  const r = mint(s, { FAKE_READ: 'TOKEN=', FAKE_DB_CID: '', FAKE_FARM_DB_CID: 'cid-farm' })
+  assert.equal(r.status, 0, r.stderr)
+  assert.match(printed(r), /^[0-9a-f]{40}$/)
+  assert.ok(
+    r.calls.some((c) =>
+      c.startsWith('exec -i -e MYSQL_PWD tracy-demos-db mariadb --skip-ssl -N -B -ud_x_1 joomla')
+    )
+  )
+  assert.ok(!r.calls.some((c) => c.startsWith('compose ')), 'no per-site service was asked')
+  assert.ok(!r.calls.some((c) => c.includes('-uroot')), 'never the farm root')
+})
+
+test('a folded Joomla demo with the farm database down is SITE_DOWN, not TOKEN_CUSTODY_UNKNOWN', (t) => {
+  const s = foldedStack(t)
+  const r = mint(s, { FAKE_FARM_DB_CID: '' })
+  assert.equal(r.status, 5)
+  assert.equal(errorCode(r), 'SITE_DOWN')
 })

@@ -14,6 +14,12 @@
 // applied and the invalid ones sent back once. Failures still standing after round 2 keep the writer's text and are
 // stored on the run. A run whose answered calls cost more than the harness's budgetUsd stops before its next call
 // with SITE_WRITER_BUDGET.
+//
+// Parallel parts (2026-11-15, #633; off by default): a run started with harness.parallelPages above 1 writes round 0 in
+// that many parts at the same time instead (writer-parts.js, lib/bench-run-parts.js): each part is a conversation of its
+// own with the fixed part and its own pages; the answers are merged as writing turns are, then checked once, and the fix
+// rounds continue the last part's conversation. A WO run's visual instruction then names only the kit images of the
+// part's own blocks; the image check (WV01) still reads every answered turn of the run.
 
 import { isChangeList } from '../lib/bench-answer.js'
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
@@ -35,9 +41,15 @@ import { siteWriterDoor } from './door.js'
 import { writerInput } from './writer-input.js'
 import { writerPrompt } from './writer-prompt.js'
 import { firstUserMessage, mergeTurnAnswers, nextTurnMessage } from './writer-turns.js'
+import { mergePartAnswers, partMessages, planOfPages, writesInParts, writingParts } from './writer-parts.js'
 import { kitImagesFor } from '../lib/template-kit-images.js'
 import { kitTools } from '../lib/template-kit-source.js'
-import { WRITER_VISUAL_POLICY, writerVisualInstruction, withWriterVisualReview } from './visual-review.js'
+import {
+  WRITER_VISUAL_POLICY,
+  writerVisualInstruction,
+  writerVisualRequirements,
+  withWriterVisualReview
+} from './visual-review.js'
 import { kitIdOf } from '../lib/kit-id.js'
 
 export { BENCH_QUEUE }
@@ -93,6 +105,17 @@ export const SITE_WRITER_STEP = Object.freeze({
     return message === null ? null : visualMessage(message, row, ready)
   },
   mergeTurns: mergeTurnAnswers,
+  // Parallel parts: each part's only user message, or null when the run writes round 0 as before.
+  parts: ({ row, ready }) => {
+    if (!writesInParts(row.harness)) return null
+    const pages = writingParts(ready.input, row.harness.parallelPages)
+    if (pages.length < 2) return null
+    return partMessages(ready.input, pages).map((message, part) => ({
+      about: pages[part],
+      firstUser: partVisualMessage(message, pages[part], row, ready)
+    }))
+  },
+  mergeParts: mergePartAnswers,
   prepare,
   agentRequest
 })
@@ -133,6 +156,14 @@ function visualMessage(message, row, ready) {
   return row.harness?.visualReview === WRITER_VISUAL_POLICY
     ? `${writerVisualInstruction(row.plan, ready.kit.doc)}\n\n${message}`
     : message
+}
+
+// A part's visual instruction names only the images of the blocks its pages print; none when they print no block.
+function partVisualMessage(message, pages, row, ready) {
+  if (row.harness?.visualReview !== WRITER_VISUAL_POLICY) return message
+  const plan = planOfPages(row.plan, pages)
+  if (!writerVisualRequirements(plan, ready.kit.doc).required.length) return message
+  return `${writerVisualInstruction(plan, ready.kit.doc)}\n\n${message}`
 }
 
 function agentRequest({ row, ready, history }) {

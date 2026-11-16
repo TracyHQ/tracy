@@ -150,3 +150,8 @@ COPY --from=tracy-web-files --chmod=0644 tracy-sendmail.ini /usr/local/etc/php/c
 RUN ln -sf /usr/local/bin/tracy-sendmail /usr/sbin/sendmail \
  && php -r 'exit(ini_get("sendmail_path") === "/usr/local/bin/tracy-sendmail -t -i" ? 0 : 1);'
 LABEL tracy.site-mail="v1"
+
+# A customer site's Apache replaces a child after a bounded number of connections (the reason is in
+# the file). conf-enabled reads in name order: a demo's zz-tracy-demo-limits.conf still wins.
+COPY --from=tracy-web-files --chmod=0644 tracy-prefork.conf /etc/apache2/conf-enabled/tracy-prefork.conf
+RUN apache2ctl -t

@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-633-whole-kit-first-message",
+  "kind": "feat",
+  "title": "A planner run asked for it gets the whole kit in its first message, keeps the image tool, and the part tool answers every part as already sent",
+  "pr": 633,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "On the JA Boxing kit, the first message carries contents, site, pageGroups, pages and every block, each exactly as the part tool answers it, then the brief; every id the tool answers is marked as in the first message.",
+    "The tools are still the part tool and the image tool; reading site, a page or a block answers that it was already sent in the first message."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-planner-whole-kit-message.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the first message carries contents, the site, the page groups, the pages and every block, then the brief",
+      "the part tool answers every part as already in the first message, and the image tool stays"
+    ]
+  }
+}

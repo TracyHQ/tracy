@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-633-repair-call-limit",
+  "kind": "fix",
+  "title": "One call of step 9b to the site agent is cut at two minutes, not at the end of the repair window",
+  "pr": 633,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A call with no limit of its own that never answers fails at REPAIR_LIMITS.callMs (two minutes) with '<what> did not answer in the time left'.",
+    "Near the return a call gets only the time left; a call given its own limit keeps it; a call that answers in time gives its value."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-repair-call-limit.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a call that never answers is cut at callMs, two minutes, not at the end of the repair window",
+      "near the return, a call gets only the time left, and an explicit limit is kept"
+    ]
+  }
+}

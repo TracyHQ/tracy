@@ -23,6 +23,7 @@ import { kitImagesFor } from './kit-images.js'
 import {
   FIRST_MESSAGE_PARTS,
   firstUserMessage,
+  wholeKitFirstMessage,
   kitTools,
   openKit,
   preloadedFirstMessage,
@@ -39,6 +40,8 @@ import {
 import { CHECKER_VERSION, checkPlan, failureListText } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
 import { withHiddenListLinks } from './plan-hidden-links.js'
+import { withDemoVideosHidden } from './plan-demo-videos.js'
+import { withKitCharacterLimits } from './plan-kit-limits.js'
 import { VISUAL_REVIEW_POLICY, visualReviewInstruction, withVisualReview } from './visual-review.js'
 
 export { BENCH_QUEUE }
@@ -75,21 +78,15 @@ export const SITE_PLANNER_STEP = Object.freeze({
     },
     failureListText
   }),
-  // After the model, before the checker: every stock screen of the kit (site.stockScreens) is dropped, on a whole plan and on the
-  // plan a fix round's change list leaves, so no answer keeps one (lib/stock-screens.js). A kit without the field changes nothing.
+  // After the model, before the checker, on a whole plan and on the plan a fix round's change list leaves (normalizedPlan).
   readAnswer: (value, { ready }) =>
     value && typeof value === 'object' && !isChangeList(value)
-      ? withHiddenListLinks(withStockScreensDropped(value, ready?.kit?.doc), ready?.kit?.doc)
+      ? normalizedPlan(value, ready?.kit?.doc)
       : value,
   changes: Object.freeze({
     applyValidChanges: (previous, list, { ready } = {}) => {
       const applied = PLAN_CHANGE_RULES.applyValidChanges(previous, list)
-      return applied.ok
-        ? {
-            ...applied,
-            doc: withHiddenListLinks(withStockScreensDropped(applied.doc, ready?.kit?.doc), ready?.kit?.doc)
-          }
-        : applied
+      return applied.ok ? { ...applied, doc: normalizedPlan(applied.doc, ready?.kit?.doc) } : applied
     },
     oversized: oversizedReplacements,
     smallEditsMessage,
@@ -145,22 +142,23 @@ function agentRequest({ row, ready, history }) {
   const imageTool = Boolean(ready.images)
   const strict = row.harness?.visualReview === VISUAL_REVIEW_POLICY
   const writeAfter = strict ? null : row.harness?.writeAfterToolTurns
+  const visualReviewText = strict ? visualReviewInstruction(ready.kit.doc) : undefined
+  // With images, a run frozen with kitInFirstMessage gets the whole kit in its first message and keeps the image tool.
+  const whole =
+    !preloaded && imageTool && row.harness?.kitInFirstMessage === true
+      ? wholeKitFirstMessage({ kit: ready.kit, brief, visualReviewText })
+      : null
   return {
     firstUser: preloaded
       ? preloadedFirstMessage({ kit: ready.kit, brief })
-      : firstUserMessage({
-          kit: ready.kit,
-          brief,
-          imageTool,
-          visualReviewText: strict ? visualReviewInstruction(ready.kit.doc) : undefined
-        }),
+      : (whole?.text ?? firstUserMessage({ kit: ready.kit, brief, imageTool, visualReviewText })),
     tools: preloaded
       ? []
       : kitTools(ready.kit.doc, {
           images: ready.images,
           imageTool,
           history,
-          inFirstMessage: FIRST_MESSAGE_PARTS
+          inFirstMessage: whole?.inFirstMessage ?? FIRST_MESSAGE_PARTS
         }),
     ...(!preloaded && writeAfter
       ? { writeStep: { afterToolTurns: writeAfter, message: WRITE_STEP_MESSAGE } }
@@ -203,3 +201,16 @@ async function prepare({ pool, secret, index, kitImages }, row) {
 }
 
 const briefRefOf = (source) => String(source?.revisionId ?? source?.name ?? '')
+
+// What code settles in a plan without the model, after each answer and before the checker:
+// - every stock screen of the kit (site.stockScreens) is dropped, so no answer keeps one (lib/stock-screens.js); a kit
+//   without the field changes nothing;
+// - a link left undecided under a list or row the plan hides is hidden with it (plan-hidden-links.js);
+// - a copy entry without maxCharacters, or with one above the kit's limit, gets the kit's limit (plan-kit-limits.js);
+// - a template demo video a kept block still shows, left undecided, is hidden (plan-demo-videos.js).
+function normalizedPlan(plan, kit) {
+  return withDemoVideosHidden(
+    withKitCharacterLimits(withHiddenListLinks(withStockScreensDropped(plan, kit), kit), kit),
+    kit
+  )
+}

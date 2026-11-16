@@ -140,3 +140,49 @@ test('cli samples reads the sidecar: the kit slot lists the marks, inlineMarkupL
   const counts = slotShapeChecks(kit, { map, contentCoverage: coverage })
   assert.deepEqual([counts.inlineMarkupLost, counts.inlineEmphasisMissing, counts.samplesCut], [0, 0, 0])
 })
+
+test('literal PRE: kit samples and format preserve one literal scalar without inline marks', async () => {
+  const { sampleOf, formatOf, formatTextSlots } = await import('../template-kit/lib/text-format.mjs')
+  const { demoLength } = await import('../template-kit/lib/slot-limits.mjs')
+  const literal = '  SELECT <Widget>\n\tA &amp; B ((strong))Case((/strong))  '
+  const source = {
+    key: 'article-2.0',
+    type: 'text',
+    sample: literal,
+    xpath: '/html/body/div/pre/code/text()',
+    maxCharacters: 200
+  }
+  const wanted = {
+    sample: literal,
+    demoChars: { total: [...literal].length, lead: null, bullets: [] },
+    inline: []
+  }
+  assert.deepEqual(sampleOf(literal, source), wanted)
+  assert.deepEqual(formatOf(literal, {}, source), {
+    paragraphs: 1,
+    bullets: 0,
+    formatFrom: 'content map',
+    ...wanted
+  })
+  assert.equal(demoLength(literal, source), [...literal].length)
+  const kit = { blocks: [{ id: 'body', slots: [{ id: 'article-2.0', type: 'text' }] }] }
+  settleSamples(kit, { map: { slots: [source] } })
+  assert.equal(kit.blocks[0].slots[0].sample, literal)
+  formatTextSlots({ blocks: kit.blocks, slotOf: () => source, detailsOf: () => ({}) })
+  assert.equal(kit.blocks[0].slots[0].paragraphs, 1)
+  assert.equal(kit.blocks[0].slots[0].bullets, 0)
+  assert.equal(kit.blocks[0].slots[0].demoChars.total, [...literal].length)
+  assert.equal(sampleOf('<b>Ordinary</b>   prose').sample, 'Ordinary prose')
+})
+
+test('literal PRE: sidecar cannot replace literal text through prose equivalence', () => {
+  const source = {
+    key: 'article-2.0',
+    type: 'text',
+    sample: '  CASE &amp; value\n\t',
+    xpath: '/html/body/div/pre/code/text()'
+  }
+  const map = { slots: [source] }
+  const coverage = { inlineMarkup: { samples: { 'article-2.0': '((span))case((/span)) &amp; value' } } }
+  assert.equal(withInlineMarkup(map, coverage).slots[0].sample, source.sample)
+})

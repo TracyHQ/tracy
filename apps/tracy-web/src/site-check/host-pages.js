@@ -1,10 +1,10 @@
 // The page groups' one shared read: every kept page of the site opened by the host (it has the browser; tracy-web has none),
 // at 1440 and at 390, and judged by the host's `demo-qa` measures. The groups below all read this one answer.
 //
-// A site goes to the host in several calls (page-chunks.js).
+// A site goes to the host in several calls (lib/page-chunks.js).
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { forHost } from './demo-baseline.js'
-import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf } from './page-chunks.js'
+import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf } from '../lib/page-chunks.js'
 import { pagePath } from '../lib/hidden-page-links.js'
 import { keptPaths } from '../lib/site-kept-paths.js'
 

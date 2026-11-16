@@ -9,9 +9,10 @@
 // The owner photos of the tiles of one list are then paired with the tiles by what each tile shows (shows-match.js).
 import { initialsOf } from 'website-opportunities/domain/person-avatar.mjs'
 import { initialsAvatar } from '../lib/initials-avatar.js'
-import { cutPhoto, outputSizeFor } from './cut-photo.js'
+import { CUTS_AT_ONCE, cutPhoto, outputSizeFor } from './cut-photo.js'
 import { darkerFirst } from './darken.js'
 import { addTwins, hiddenEntry, pendingEntry, placedEntry } from './frame-entries.js'
+import { inParallel } from './looker-step.js'
 import { INITIALS_PAINT, previewColour } from '../lib/picture-paint/paint.js'
 import { portraitsOf, rankForFrame, sameService, usablePhotos } from './photo-shortlist.js'
 import { indexInputs } from './picture-check/inputs-index.js'
@@ -37,14 +38,17 @@ function personName(brief, factId) {
 
 /**
  * Decide every planned frame by code.
- * @param {{ plan: object, brief: object, kit: object, photoBytes: Map<string, Buffer>, icons?: { fill: Function } | null }} input
+ * @param {{ plan: object, brief: object, kit: object, photoBytes: Map<string, Buffer>, icons?: { fill: Function } | null,
+ *   pickerCut?: typeof cutPhoto }} input
  *   `kit` with its content map under `contentMap`; `photoBytes` the owner photos by brief asset id, their hashes already
- *   checked; `icons` the icon step (icons/fill-icons.js createIconFiller), without it icon frames stay pending
+ *   checked; `icons` the icon step (icons/fill-icons.js createIconFiller), without it icon frames stay pending;
+ *   `pickerCut` what cuts the photos a frame waiting for the picker could take (cut-photo.js cutMemo, shared with
+ *   picker-input.js so each of those cuts is made once), cutPhoto when not given
  * @returns {Promise<{ frames: object[], siteSettings: object[], returns: object[], pending: object[],
  *   usage: object[], refused: object[], files: Map<string, { bytes: Buffer, ext: string, width: number,
  *   height: number, sha256: string }> }>} `files` by their manifest path
  */
-export async function fillFrames({ plan, brief, kit, photoBytes, icons = null }) {
+export async function fillFrames({ plan, brief, kit, photoBytes, icons = null, pickerCut = cutPhoto }) {
   const idx = indexInputs({ plan, kit, brief, files: {} })
   const { usable, refused } = usablePhotos(brief, photoBytes)
   const usage = new Map(usable.map((a) => [a.id, 0]))
@@ -114,13 +118,18 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
     if (p.waitsFor !== WAITS_FOR.picker) continue
     const wish = idx.wishes.get(p.frame)
     const frame = idx.frames.get(p.frame)
-    for (const { a } of rankForFrame(usable, wish, frame, usage)) {
-      if ([...wish.pages].every((pg) => forPicker.has(`${pg} ${a.id}`))) continue
-      const cut = await cutPhoto(photoBytes.get(a.id), a, frame, idx.demoSize(p.frame), {
-        matches: sameService(a, wish)
-      })
-      if (cut.ok) for (const pg of wish.pages) forPicker.add(`${pg} ${a.id}`)
-    }
+    // The frame's photos not yet marked on every page of it, cut CUTS_AT_ONCE at a time. A cut marks only its own
+    // photo, so no cut of this frame decides whether another of its photos is cut: the marks are the ones cutting them
+    // one after another made.
+    const open = rankForFrame(usable, wish, frame, usage)
+      .map((r) => r.a)
+      .filter((a) => ![...wish.pages].every((pg) => forPicker.has(`${pg} ${a.id}`)))
+    const cuts = await inParallel(open, CUTS_AT_ONCE, (a) =>
+      pickerCut(photoBytes.get(a.id), a, frame, idx.demoSize(p.frame), { matches: sameService(a, wish) })
+    )
+    open.forEach((a, i) => {
+      if (cuts[i].ok) for (const pg of wish.pages) forPicker.add(`${pg} ${a.id}`)
+    })
   }
   const pickerWants = (a, wish) => [...wish.pages].some((pg) => forPicker.has(`${pg} ${a.id}`))
 

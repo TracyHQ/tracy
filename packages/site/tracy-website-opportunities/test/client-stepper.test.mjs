@@ -8,7 +8,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { stepperView } from '../src/client/stepper-model.ts'
+import { reviewChipOf, stepperView } from '../src/client/stepper-model.ts'
 
 const RESEARCHED = { state: 'done', researchedAt: '2026-11-09T11:22:00Z', done: true }
 const BRIEF = { id: 'b-3', n: 3, createdAt: '2026-11-09T12:00:00Z' }
@@ -111,6 +111,23 @@ test('a failed or expired demo keeps step 3 current with its own press', () => {
   assert.equal(failed.steps[2].failed, true)
   const expired = stepperView({ research: RESEARCHED, brief: BRIEF, demo: 'expired' })
   assert.equal(expired.action?.kind, 'rebuild')
+})
+
+test('a site built but needing review keeps step 3 current as a review, never Failed, with Try again', () => {
+  const view = stepperView({ research: RESEARCHED, brief: BRIEF, demo: 'review' })
+  assert.equal(view.current, 'build')
+  assert.equal(view.errorKey, null)
+  assert.equal(view.review, true)
+  assert.equal(view.lineKey, 'stepper.build.needsReview')
+  assert.deepEqual(view.action, { kind: 'retry-build', labelKey: 'action.tryAgain' })
+  assert.equal(view.steps[2].failed, false)
+  assert.deepEqual(view.steps[2].status, { key: 'stepper.needsReview', tone: 'warn' })
+  assert.deepEqual(reviewChipOf(view), { key: 'chip.siteReview', tone: 'warn' })
+  // A build that really stopped still reads Failed.
+  assert.deepEqual(reviewChipOf(stepperView({ research: RESEARCHED, brief: BRIEF, demo: 'failed' })), {
+    key: 'stepper.failed',
+    tone: 'error'
+  })
 })
 
 test('demo ready: every step done, no action, Send demo is not a step', () => {

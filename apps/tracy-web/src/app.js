@@ -6,6 +6,13 @@ import { lookup as dnsLookup } from 'node:dns/promises'
 import { Hono } from 'hono'
 import { apiRoutes } from './api/route.js'
 import { publicDemoRoutes } from './opportunities-build/public-demos-route.js'
+import {
+  COMPLETED as DEMO_COMPLETED,
+  createPublicDemos,
+  FAILED as DEMO_FAILED
+} from './opportunities-build/public-demos.js'
+import { createDemoWebhooks } from './opportunities-build/demo-webhooks.js'
+import { DEMO_LOOKS_SWITCH, demoLinkRoutes } from './opportunities-build/demo-link-route.js'
 import { apiReferenceRoutes, docsReferenceRoutes, ownsDocsReferencePath } from './api-reference/route.js'
 import { buildOpenApi } from './api-reference/spec.js'
 import { assistantRoutes } from './assistant/route.js'
@@ -119,6 +126,8 @@ import { createDemoContactPreview } from 'website-opportunities/src/contact-prev
 import { capsFromRuntime, createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
 import { createDemoLook } from './opportunities-build/demo-look.js'
 import { createDemoBuilt } from './opportunities-build/demo-preview.js'
+import { createDemoPageSpeed } from './opportunities-build/demo-pagespeed.js'
+import { readDemoPages } from './opportunities-build/demo-pages.js'
 import { createDemoPhotoLabels } from './opportunities-build/demo-photo-labels.js'
 import { createDemoCopy } from './opportunities-build/demo-copy.js'
 import { ownSiteOn } from './opportunities-build/own-site.js'
@@ -1175,6 +1184,9 @@ export function buildApp(deps) {
   // through this app's own `POST /api/sites` with the caller's cookie, as the widget's do.
   let readAgentNativeInventory = null
   let clientDemoService = null
+  // A WO demo's other looks for its share page (`sites/design-system-demo-systems.js`): filled once the sites routes
+  // below exist, read by `/d/:token` per request (`opportunities-build/demo-link-route.js`).
+  let demoSystems = null
   // The site planner bench's worker (ADR 0041, #301): one run at a time, started and stopped by server.js; runs are
   // started and read from the bench CLI (scripts/site-planner-bench.mjs).
   app.sitePlannerQueue =
@@ -1247,6 +1259,7 @@ export function buildApp(deps) {
   app.socialStatsTick = null
   app.socialPrefetchTick = null
   app.demoRetentionTick = null
+  app.demoWebhooksTick = null
   if (deps.config && deps.pool) {
     // The open layer's only way into Tracy's infrastructure (`website-opportunities/src/host.js`, ADR 0036).
     const woHost = createTracyWoHost({ pool: deps.pool, config: deps.config })
@@ -1522,7 +1535,28 @@ export function buildApp(deps) {
                   },
                   { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 120_000 }
                 )
-            : null
+            : null,
+          // The demo's own mobile PageSpeed beside the research's score of the current site (`demo-pagespeed.js`).
+          pageSpeed: createDemoPageSpeed({
+            config: deps.config,
+            runtime: woRuntimeOf,
+            fetchImpl: deps.fetchImpl ?? fetch,
+            resolve,
+            ...(deps.now ? { now: deps.now } : {})
+          }),
+          // The demo's own page list, where its old URL → new page map may lead (`demo-pages.js`): read through the
+          // Apply door as the account that built it, like the wordmark below.
+          pages: async (build) => {
+            const { rows } = await deps.pool.query('select email from account where id = $1', [
+              build.account_id
+            ])
+            if (!rows[0] || typeof app.applyAs !== 'function')
+              return { readAt: new Date((deps.now ?? Date.now)()).toISOString(), reason: 'NO_SEAT' }
+            return readDemoPages(
+              (call) => app.applyAs(rows[0].email, { siteKey: build.site_key, ...call }),
+              deps.now ? { now: deps.now } : {}
+            )
+          }
         }),
       // The sweep's wordmark on a CMS dsh sets no logo on (Joomla, EmDash): its brand writer, as the account that
       // built the demo (`client-demo.js` `wornLogo`).
@@ -1602,9 +1636,14 @@ export function buildApp(deps) {
       return auth.error ?? auth
     }
     const onApiHostForDemos = (c) => isApiHost(c.req.header('host') ?? new URL(c.req.url).host, deps.config)
-    const publicDemos = publicDemoRoutes({
+    const publicDemoDeps = {
       pool: deps.pool,
-      config: { origin: deps.config.origin, apiOrigin: deps.config.apiOrigin ?? deps.config.origin },
+      config: {
+        origin: deps.config.origin,
+        apiOrigin: deps.config.apiOrigin ?? deps.config.origin,
+        // Seals each account's webhook signing secret (`demo-webhooks.js`).
+        sessionSecret: deps.config.sessionSecret
+      },
       isApiHost: onApiHostForDemos,
       // Part A's resolver (account token, scope `demos`); until it is wired every call is refused.
       requireAccountToken: deps.requireAccountToken ?? demosAccount,
@@ -1619,10 +1658,43 @@ export function buildApp(deps) {
       // The agent demo's site and chat (the same service Tracy's own Build demo uses).
       clientDemo: clientDemoService,
       ...(deps.now ? { now: deps.now } : {})
-    })
+    }
+    const publicDemos = publicDemoRoutes(publicDemoDeps)
     for (const route of publicDemos.routes)
       owners.set(route.handler, { stepsAside: (c) => !onApiHostForDemos(c) })
     app.route('/', publicDemos)
+    // The webhooks of `/v1/demos` (`opportunities-build/demo-webhooks.js`): events made from committed rows by this
+    // sweep, never by a build, and sent through the crawler's pinned fetch (no private address at connect time).
+    // Test-only override: a test's own fetch.
+    const demoWebhooks = createDemoWebhooks({
+      pool: deps.pool,
+      sessionSecret: deps.config.sessionSecret,
+      fetchImpl: deps.demoWebhookFetch ?? crawlFetch,
+      demoBody: createPublicDemos(publicDemoDeps).snapshot,
+      completed: [...DEMO_COMPLETED],
+      failed: [...DEMO_FAILED],
+      log: deps.log ?? console,
+      ...(deps.now ? { now: deps.now } : {})
+    })
+    app.demoWebhooksTick = () => demoWebhooks.tick()
+    // A demo's share link (`lib/wo-demo-links.js`): `/d/<token>` sends the visitor on to the demo and counts the open.
+    app.route(
+      '/',
+      demoLinkRoutes({
+        pool: deps.pool,
+        config: deps.config,
+        log: deps.log ?? console,
+        ...(deps.now ? { now: deps.now } : {}),
+        // "See another look" (switch `wo-demo-looks`): the demo previewed in other design systems, nothing written.
+        // Test-only override: a test's own looks.
+        systems: deps.demoSystems ?? {
+          eligible: async (siteKey) => (demoSystems ? demoSystems.eligible(siteKey) : false),
+          systemsOf: async (siteKey) =>
+            demoSystems ? demoSystems.systemsOf(siteKey) : { ok: false, reason: 'NOT_WIRED' }
+        },
+        switchOn: () => uiSwitchOn(deps.pool, DEMO_LOOKS_SWITCH)
+      })
+    )
     const demoRunner = createDemoRunner({
       ...opportunityDeps,
       runtime: woRuntimeOf,
@@ -2409,6 +2481,7 @@ export function buildApp(deps) {
     }
     app.route('/', sites)
     sitesApp = sites
+    demoSystems = sites.demoSystems ?? null
     app.applyAs = sites.applyAs
     // A setup run's hold on the webroot (SC-3): what the brief runner above calls, reachable the same way as `applyAs`.
     app.setupWebroot = sites.setupWebroot

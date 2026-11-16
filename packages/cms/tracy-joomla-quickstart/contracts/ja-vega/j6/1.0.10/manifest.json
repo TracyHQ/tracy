@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vega/j6/1.0.10",
+  "platform": "joomla",
+  "template": "ja_vega",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-vega",
+    "id": "quickstart/ja-vega/j6",
+    "version": "1.0.10",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_vega",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-vega-j6-webroot-1.0.10.tar.gz",
+        "bytes": 62058336,
+        "sha256": "3a07fb73bac2007e7e994f761f78d13779fcddc5a0bd8421d2f998e94f208587"
+      },
+      "database": {
+        "file": "ja-vega-j6-database-1.0.10.sql.gz",
+        "bytes": 119253,
+        "sha256": "3f1535d85e0b13d8fe832fbae77a3abd7ef9c1eac2f6da53fcc412d4cd0abbb2"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-11-07T17:17:23.842Z",
+    "builtFrom": {
+      "site": "ja-vega-j6",
+      "tag": "local:pack",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-vega/j6",
+    "repository": "JoomlArt-Products/joomlart-products"
+  },
+  "coworkContractVersion": "0.24.91",
+  "mode": "content-recommendation"
+}

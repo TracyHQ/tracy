@@ -30,6 +30,7 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { chown, readFile, rename, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { farmDocroot, siteRuntime, siteWebExecArgv } from './site-exec.js'
 
 /** The `kind` of `POST /_host/site` this module answers. */
 export const LOOK_CSS_KIND = 'site-look-css'
@@ -85,6 +86,23 @@ export function wpCustomCssArgv(container) {
     'eval',
     WP_CUSTOM_CSS_PHP
   ]
+}
+
+/**
+ * `wpCustomCssArgv` for a site as it runs today: a WordPress demo folded into the demo farm
+ * (`site-exec.js`) runs the same wp-cli eval in its own pool's environment in `tracy-demos-web`, as
+ * www-data, with `--path` its farm docroot — `<label>-web-1` is only its forwarder there.
+ * @param {{ privateRoot?: string, label: string }} input
+ * @returns {Promise<string[]>}
+ */
+export async function wpCustomCssArgvFor({ privateRoot, label }) {
+  const runtime = privateRoot ? await siteRuntime(privateRoot, label) : 'site'
+  if (runtime === 'site') return wpCustomCssArgv(`${label}-web-1`)
+  const site = wpCustomCssArgv(`${label}-web-1`)
+  const cmd = site
+    .slice(site.indexOf(`${label}-web-1`) + 1)
+    .map((arg) => (arg === `--path=${CONTAINER_WEBROOT}` ? `--path=${farmDocroot(label)}` : arg))
+  return siteWebExecArgv({ privateRoot, label, runtime, interactive: true }, cmd)
 }
 
 /** The SHA-256 of a CSS text's UTF-8 bytes, as PHP's `hash("sha256", …)` (`look-undo.mjs` `cssHash`). */
@@ -179,13 +197,13 @@ async function markReverted(siteRoot, id, manifest, now) {
 
 /**
  * Run {@link WP_CUSTOM_CSS_PHP} once in the site's container.
- * @param {{ run: Function, label: string, request: Record<string, unknown> }} input
+ * @param {{ run: Function, label: string, request: Record<string, unknown>, privateRoot?: string }} input
  * @returns {Promise<Record<string, unknown>>}
  */
-async function wp({ run, label, request }) {
+async function wp({ run, label, request, privateRoot }) {
   const { code, tail } = await run({
     script: 'docker',
-    args: wpCustomCssArgv(`${label}-web-1`),
+    args: await wpCustomCssArgvFor({ privateRoot, label }),
     env: process.env,
     stdin: JSON.stringify(request),
     timeoutMs: 30_000
@@ -205,7 +223,7 @@ async function wp({ run, label, request }) {
  * (already put back), `LOOK_UNDO_CHANGED_SINCE` (the site no longer holds `c1`). Throws when wp-cli
  * gave no readable answer — the write may or may not have landed, and the job says it failed.
  * @param {{ body: { label: string, mode: 'check' | 'undo', ids?: string[], id?: string },
- *   config: { sitesRoot: string }, run: Function, now?: number }} input
+ *   config: { sitesRoot: string, privateRoot?: string }, run: Function, now?: number }} input
  */
 export async function lookCss({ body, config, run, now = Date.now() }) {
   const label = String(body.label)
@@ -222,7 +240,12 @@ export async function lookCss({ body, config, run, now = Date.now() }) {
         continue
       }
       if (!current.has(entry.stylesheet)) {
-        const read = await wp({ run, label, request: { mode: 'read', stylesheet: entry.stylesheet } })
+        const read = await wp({
+          run,
+          label,
+          request: { mode: 'read', stylesheet: entry.stylesheet },
+          privateRoot: config.privateRoot
+        })
         if (read.ok !== true || typeof read.css !== 'string')
           throw new Error(String(read.error ?? 'no Additional CSS read').slice(0, 200))
         current.set(entry.stylesheet, cssHash(read.css))
@@ -249,7 +272,8 @@ export async function lookCss({ body, config, run, now = Date.now() }) {
     label,
     request: remove
       ? { mode: 'remove', stylesheet: entry.stylesheet, expect: cssHash(entry.after) }
-      : { mode: 'write', stylesheet: entry.stylesheet, css: entry.before, expect: cssHash(entry.after) }
+      : { mode: 'write', stylesheet: entry.stylesheet, css: entry.before, expect: cssHash(entry.after) },
+    privateRoot: config.privateRoot
   })
   if (put.conflict === true) return { ok: false, code: 'LOOK_UNDO_CHANGED_SINCE' }
   if (put.ok !== true)
@@ -265,7 +289,7 @@ export async function lookCss({ body, config, run, now = Date.now() }) {
 
 /**
  * Run one instruction as a job: `output` is the answer as one JSON line.
- * @param {{ jobId: string, body: any, config: { sitesRoot: string }, jobs: any, run: Function }} input
+ * @param {{ jobId: string, body: any, config: { sitesRoot: string, privateRoot?: string }, jobs: any, run: Function }} input
  */
 export async function runLookCssJob({ jobId, body, config, jobs, run }) {
   await jobs.put(jobId, { state: 'running', step: LOOK_CSS_KIND, label: body.label })

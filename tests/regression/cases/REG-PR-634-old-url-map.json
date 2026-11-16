@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-634-old-url-map",
+  "kind": "feat",
+  "title": "A demo build maps each page of the business's current website to the demo page its old address should lead to, or says it is unmatched",
+  "pr": 634,
+  "area": "website-opportunities/url-map",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a disposable PostgreSQL server, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The old home page leads to the demo home (home); /restaurant/menu.html leads to /menu (same-slug); a title 'Gallery | Pho Ba' or a first heading 'Contact' leads to the demo page with that title (same-title); /our-menu and /contact-us lead to /menu and /contact (same-topic).",
+    "A page with no match is 'unmatched' with to null and redirect false: never the home page, never a template sample page (/typography) or an article.",
+    "Assets, tracking and display variants (sameAs names the plainest address kept), login/cart/search/feed addresses, tag/author/date listings, pagination, error pages, other hosts and invalid addresses are skipped, each with its reason.",
+    "The old title, meta description and first heading are carried over as read; a description research did not keep is null.",
+    "GET /api/website-opportunities/builds/:buildId/url-map reads the demo's pages through POST /api/sites/:key/apply {action: 'content.read', params: {view: 'pages'}} with the caller's cookie, keeps them on wo_build.built.pages, and answers the map; a failed read answers from the list kept before and never replaces it; with none kept the map is demo-not-read with the read's code.",
+    "Another account's build answers 404; a deleted demo 409 DEMO_DELETED; a build with no site 409 NO_DEMO; before the card's research finished the map is old-site-not-read.",
+    "The handover answer carries urlMap; a demo whose pages cannot be read still hands over, with urlMap.state demo-not-read.",
+    "GET /api/website-opportunities/:id/outreach carries urlMapProof '3 of your 4 current pages have a matching page on the demo, so their old addresses can lead there.' from the kept list only (no Apply call), without the total after a partial read, and null with no kept list."
+  ],
+  "selectors": {
+    "door": "GET /api/website-opportunities/builds/:buildId/url-map, POST /api/website-opportunities/builds/:buildId/handover (handover.urlMap), GET /api/website-opportunities/:id/outreach (outreach.urlMapProof)"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "packages/wo/website-opportunities/test/domain-url-map.test.mjs",
+      "apps/tracy-web/test/wo-url-map.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the old home page leads to the demo home; a page at the same address keeps it with no redirect",
+      "slug match: the last part of the address, whatever its parent, extension or trailing slash",
+      "title match: the old title with the site name taken out, or the first heading, equals a demo page title",
+      "topic match: the same kind of page by its words; the demo page with the shortest address wins",
+      "unmatched stays unmatched: no target, never the home page, never a template sample or an article",
+      "assets, system, archive, pagination, error pages, other hosts and duplicates are skipped, each with why",
+      "the old title, meta description and heading are carried over as read; none kept is null, never guessed",
+      "the outreach line counts matched pages, names the whole only after a complete read, never says 0",
+      "the map door reads the demo’s pages as the caller, keeps them, and maps each old page or says it is unmatched",
+      "a read of the demo that fails answers from the list kept before; with none kept, the map says it was not read",
+      "only the build’s own account, and only a demo that still has its site",
+      "the handover answers the map beside its steps, read again as the caller",
+      "the outreach line counts the old pages that have a match, from the list the build kept; none without one"
+    ]
+  }
+}

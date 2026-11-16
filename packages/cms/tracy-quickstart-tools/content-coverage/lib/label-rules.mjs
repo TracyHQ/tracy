@@ -22,6 +22,7 @@ import {
   isFactRole,
   isRole
 } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
+import { isLiteralPreSlot } from './contract.mjs'
 import { demoOnlyEntities } from './demo-only.mjs'
 import { slotHash } from './label-judge.mjs'
 import { factKindsOf } from './fact-samples.mjs'
@@ -121,6 +122,8 @@ function repeatsOf(slots) {
 function r2(slots, version) {
   const out = []
   for (const s of slots) {
+    // Capture and the writer validate this literal address; its example facts are code, as in R9.
+    if (isLiteralPreSlot(s)) continue
     const kinds = isTextual(s) ? factKindsOf(s.sample) : []
     if (kinds.length === 0) continue
     if (!hasRole(s, version)) {

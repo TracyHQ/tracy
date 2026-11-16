@@ -35,6 +35,10 @@ SITES="${TRACY_SITES_ROOT:-/srv/tracy-sites}"
 case "$LABEL" in
   .|..|.*|*/*|*[!A-Za-z0-9._-]*) echo "unusable label: $LABEL" >&2; exit 2 ;;
 esac
+# A demo folded into the demo farm: its folders are the farm's mounts now (lib/demo-farm.sh).
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+tracy_refuse_if_farm "${TRACY_PRIVATE_ROOT:-${TRACY_ROOT:-/srv/tracy}}/$LABEL" "$LABEL" "detaching its folders from the host dsh" || exit 1
 
 # Deepest first, and every target attach-site can create — including the emdash pair, whatever the
 # site's platform says today. A site that changed platform, or one whose `.env` has since been

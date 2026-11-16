@@ -41,19 +41,22 @@ function indexKit(kit) {
   )
   // The narrowest file the write door takes for a frame (the slot's fit.minWidth, SlotFit checkPicture): carried on the
   // frame, so every cut and every drawing for it is written at least that wide (card AI).
+  // A frame a T4 layout paints behind the blocks writes the layout's slots (`writesTo`), not one named after it.
+  const keysOf = (f, id) =>
+    Array.isArray(f?.writesTo) && f.writesTo.length ? f.writesTo : [contentMapKey(id)]
   for (const [id, f] of frames) {
-    const fit = slots.get(contentMapKey(id))?.fit
-    const min = fit?.minWidth
+    const fits = keysOf(f, id).map((k) => slots.get(k)?.fit)
+    const mins = fits.map((fit) => fit?.minWidth).filter(isSize)
     // A photo frame can still require alpha (for example a customer-avatar strip). Its classification alone does
     // not describe what the native slot accepts; retain the contract's requirement before choosing a JPEG cut.
     frames.set(id, {
       ...f,
-      ...(isSize(min) ? { minWidth: min } : {}),
-      ...(fit?.transparent === true ? { transparent: true } : {})
+      ...(mins.length ? { minWidth: Math.max(...mins) } : {}),
+      ...(fits.some((fit) => fit?.transparent === true) ? { transparent: true } : {})
     })
   }
   const demoSize = (frameId) => {
-    const s = slots.get(contentMapKey(frameId))
+    const s = slots.get(keysOf(frames.get(frameId), frameId)[0])
     return s ? demoFileSize(s) : null
   }
   // The picture lists a frame sits in (gallery-tiles.js): its block, list and row.

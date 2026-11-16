@@ -7,7 +7,7 @@
 // A picture whose sha256 the kit records (`pictureSha256`) is used only when its bytes match. Nothing here stops a run:
 // no archive, a failed download or a missing file reads as null, and the drawing is then made without a style
 // reference.
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { unzipSync } from 'fflate'
@@ -129,8 +129,9 @@ async function readJson(file) {
   }
 }
 
+// The temporary name is unique per write: picture runs side by side (#633) may fill the same kit's cache at once.
 async function writeOnce(file, bytes) {
-  const temp = `${file}.${process.pid}.${Date.now()}.part`
+  const temp = `${file}.${process.pid}.${randomUUID()}.part`
   await writeFile(temp, bytes)
   await rename(temp, file)
 }

@@ -36,6 +36,19 @@ tracy_front_page_status() {
       if [[ "$code" =~ ^[1-5][0-9]{2}$ ]]; then printf '%s\n' "$code"; return 0; fi
     fi
   done
+  # A demo folded into the demo farm (lib/site-runtime.sh): `<label>-web-1` is a forwarder with no
+  # curl and no PHP. The last road is the farm's own listener for the demo's port, asked from inside
+  # the farm as the demo (`tracy_site_web_exec`); a marker that cannot be read is no answer.
+  local runtime
+  runtime="$(tracy_site_runtime "$label" 2>/dev/null)" || { printf '000\n'; return 0; }
+  if [ "$runtime" = farm ]; then
+    if [[ "$port" =~ ^[1-9][0-9]*$ ]] && code="$(tracy_site_web_exec "$label" -- curl --noproxy '*' -s --max-time 20 -o /dev/null \
+        --write-out '%{http_code}' --header "Host: $(tracy_web_dns_name "$label")" "http://127.0.0.1:$port/" 2>/dev/null)" \
+       && [[ "$code" =~ ^[1-5][0-9]{2}$ ]]; then
+      printf '%s\n' "$code"; return 0
+    fi
+    printf '000\n'; return 0
+  fi
   # Pin the exec to the inspected container ID: a replacement must not change the target.
   identity="$(docker inspect --type container --format '{{.Id}}|{{.State.Running}}|{{index .Config.Labels "com.docker.compose.project"}}|{{index .Config.Labels "com.docker.compose.service"}}' "${label}-web-1" 2>/dev/null)" || identity=''
   IFS='|' read -r id running project service extra <<< "$identity"

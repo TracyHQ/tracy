@@ -13,6 +13,12 @@ export const failed = (reason, extra = {}) => ({ status: 'failed', reason, key: 
 export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys = new Set() }) {
   const { slot: id, content: leadsTo } = claim
   const { link } = door
+  if (door.via === 'audio-refused') return failed(door.reason)
+  if (door.via === 'audio') {
+    if (claim.label || target.kind !== 'audio')
+      return failed(target.reason ?? 'audio is a source, not a labelled navigation link')
+    return { via: 'slot', keys: door.keys, url: target.url }
+  }
   if (door.via === 'menu' && leaving.has(link.menuItem)) return { via: 'menu', item: door.item }
   const label = claim.label ? hiddenKeys.get(contentMapKey(claim.label)) : null
   if (label && door.via !== 'menu') return { via: 'label', label, leadsTo }

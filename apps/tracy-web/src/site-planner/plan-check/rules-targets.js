@@ -1,8 +1,20 @@
+import { audioDecisionProblem } from 'website-opportunities/domain/audio-source.mjs'
 import { arr, has, obj, str } from './rule-set.js'
 
 // R10d links
 export function checkR10d(ctx) {
-  const { R, plan, linkIx, livePages, keptPageIds, decisions, targetProblem, decisionParts, W } = ctx
+  const {
+    R,
+    plan,
+    linkIx,
+    livePages,
+    keptPageIds,
+    decisions,
+    targetProblem,
+    decisionParts,
+    W,
+    audioLinkProblems
+  } = ctx
   const r = R.r10d
   const site = obj(plan.site)
   const pa = obj(site.primaryAction)
@@ -25,6 +37,15 @@ export function checkR10d(ctx) {
     if (x.d.decision !== 'keep') return
     decisionParts(x.d).links.forEach((l) => {
       const kitLink = linkIx.get(l.link)
+      if (kitLink?.action === 'media-source') {
+        const problem =
+          audioLinkProblems?.get(l.link) ??
+          (has(l.labelSlot)
+            ? 'an audio source has no CTA label'
+            : audioDecisionProblem(kitLink, l.leadsTo, arr(ctx.brief?.facts)))
+        problem ? r.fail(W(x, `link ${l.link}`), problem, 'plan') : r.ok()
+        return
+      }
       if (!has(l.leadsTo)) {
         if (kitLink && kitLink.action === 'page-control') return
         return r.fail(W(x, `link ${l.link}`), 'link has no leadsTo')

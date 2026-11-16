@@ -1,0 +1,3 @@
+- **Quickstart stands report network creation errors before starting the database, and reuse an existing network only after inspecting its exact name and full ID.** — design system maintainers · #625 · `fix/ja-nova-readiness` · 2026-11-10
+  **Affects:** Joomla and WordPress stand callers; failed network allocation now stops setup with the original Docker error instead of a later missing-network error. No subnet fallback or retry is added.
+  **Measured:** Focused synthetic CLI tests cover creation failure, successful creation, exact existing-network reuse and rejected identities without contacting Docker.

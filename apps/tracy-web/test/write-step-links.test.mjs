@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readBackGroup } from '../src/site-check/read-back.js'
-import { copy, KIT, plan, runStep } from './_write-step-run.mjs'
+import { copy, fakeSite, KIT, plan, runStep } from './_write-step-run.mjs'
 import { brief as baseBrief } from './_site-copy-check.mjs'
 
 const HOME_ROW = { kind: 'menuItem', id: 101, path: 'home', home: 1, published: 1, type: 'component' }
@@ -758,4 +758,621 @@ test('a menu item the plan takes off the site takes its link with it and is not 
   assert.deepEqual([done.status, done.ordered], ['hidden', '0'])
   assert.deepEqual(done.readFrom.params, { kind: 'menuItem', id: 102 })
   assert.equal(site.updates().filter((u) => u.params.fields?.link).length, 0)
+})
+
+test('audio capability writes only the exact bound source and requires storage readback plus pending playback proof', async () => {
+  const { prepareLinks } = await import('../src/write-step/link-stage.js')
+  const slot = urlSlot('article-7.9', {
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', 2],
+    group: { id: 'article-7.audio.2', item: 2, kind: 'business' },
+    sample: 'images/audio/Old.mp3',
+    current: 'images/audio/Old.mp3',
+    canHide: true
+  })
+  const link = {
+    id: slot.key,
+    sourceSlot: slot.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: slot.sample,
+    sourceBinding: { entity: slot.entity, column: slot.column, jsonPath: slot.jsonPath, group: slot.group }
+  }
+  const kit = { blocks: [{ id: 'body-album', source: { entity: 'article-7' }, links: [link] }], pages: [] }
+  const plan = {
+    pages: [
+      {
+        id: 'page-album',
+        decision: 'keep',
+        blocks: [
+          {
+            block: 'body-album',
+            decision: 'keep',
+            links: [{ link: link.id, leadsTo: 'https://media.example/New.mp3' }]
+          }
+        ]
+      }
+    ]
+  }
+  const reading = { ok: true, contract: 'audio/j6/1', ids: { 'article-7': 7 }, slots: [slot] }
+  const door = {
+    apply: async (call) => (call.params.operation === 'inspect' ? reading : { ok: true, items: [] })
+  }
+  const facts = [{ id: 'audio-1', field: 'audio', value: 'https://media.example/New.mp3', source: 'stated' }]
+  const owners = new Map([[link.id, { slot: link.id, kind: 'link', content: facts[0].value }]])
+  const prepare = (over = {}) =>
+    prepareLinks({
+      door,
+      siteKey: 'fake',
+      kit,
+      plan,
+      brief: { facts },
+      owners,
+      reading,
+      extras: {},
+      taken: {},
+      ...over
+    })
+  const good = await prepare()
+  assert.deepEqual(good.changes, { [slot.key]: facts[0].value })
+  slot.current = facts[0].value
+  const readback = await good.readbackAudio()
+  assert.equal(readback[0].stored, true)
+  assert.equal(readback[0].status, 'pending')
+  assert.match(readback[0].reason, /playback|player/)
+  slot.current = 'https://media.example/Other.mp3'
+  assert.equal((await good.readbackAudio())[0].stored, false)
+  link.sourceBinding.entity = 'article-8'
+  const wrong = await prepare()
+  assert.deepEqual(wrong.changes, {})
+  assert.ok(wrong.audioFailures.length)
+})
+
+test('audio capability neutral absence uses only proven hide eligibility and never creates a demo fallback', async () => {
+  const { prepareLinks } = await import('../src/write-step/link-stage.js')
+  const slot = urlSlot('article-7.9', {
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', '2'],
+    group: { id: 'article-7.audio.2', item: 2, kind: 'business' },
+    sample: 'images/audio/Old.mp3',
+    current: 'images/audio/Old.mp3',
+    canHide: true
+  })
+  const link = {
+    id: slot.key,
+    sourceSlot: slot.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: slot.sample,
+    sourceBinding: { entity: slot.entity, column: slot.column, jsonPath: slot.jsonPath, group: slot.group }
+  }
+  const kit = { blocks: [{ id: 'body-album', source: { entity: 'article-7' }, links: [link] }], pages: [] }
+  const plan = {
+    pages: [
+      { id: 'page-album', decision: 'keep', blocks: [{ block: 'body-album', decision: 'keep', links: [] }] }
+    ]
+  }
+  const reading = { ok: true, contract: 'audio/j6/1', ids: { 'article-7': 7 }, slots: [slot] }
+  const door = {
+    apply: async (call) => (call.params.operation === 'inspect' ? reading : { ok: true, items: [] })
+  }
+  const prepare = () =>
+    prepareLinks({
+      door,
+      siteKey: 'fake',
+      kit,
+      plan,
+      brief: { facts: [] },
+      owners: new Map(),
+      reading,
+      extras: {},
+      taken: {}
+    })
+  const neutral = await prepare()
+  assert.deepEqual(neutral.changes, {})
+  assert.deepEqual(neutral.emptySlots, [slot.key])
+  slot.current = ''
+  assert.equal((await neutral.readbackAudio())[0].stored, true)
+  slot.canHide = 'unmeasured'
+  const blocked = await prepare()
+  assert.deepEqual(blocked.emptySlots, [])
+  assert.ok(blocked.audioFailures.length)
+})
+
+test('audio capability entry point never completes without player proof after exact source storage', async () => {
+  const slot = urlSlot('article-7.9', {
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', 2],
+    group: { id: 'article-7.audio.2', item: 2, kind: 'business' },
+    sample: 'images/audio/Old.mp3',
+    current: 'images/audio/Old.mp3',
+    canHide: true
+  })
+  const link = {
+    id: slot.key,
+    sourceSlot: slot.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: slot.sample,
+    sourceBinding: { entity: slot.entity, column: slot.column, jsonPath: slot.jsonPath, group: slot.group }
+  }
+  const kit = linkKit([link], { source: { entity: slot.entity } })
+  const p = linkPlan({ [link.id]: 'https://media.example/New.mp3?sig=A%2FB' })
+  const b = baseBrief()
+  b.facts.push({
+    id: 'audio-1',
+    field: 'audio',
+    source: 'stated',
+    value: p.pages[0].blocks[0].links[0].leadsTo
+  })
+  const site = fakeSite({
+    records: RECORDS,
+    extraKeys: [slot.key],
+    overSlot: (s) => (s.key === slot.key ? { ...slot, current: site.held[slot.key] ?? slot.current } : {})
+  })
+  withAudioIds(site)
+  const done = await runStep({ plan: p, copy: copy(), brief: b }, {}, { kit, door: site.door })
+  assert.equal(site.held[slot.key], b.facts.at(-1).value)
+  assert.equal(done.report.status, 'stopped')
+  assert.equal(done.report.cause.code, 'AUDIO_PROOF_REQUIRED')
+  assert.equal(done.report.audio[0].stored, true)
+  assert.equal(done.report.audio[0].status, 'pending')
+  assert.equal(done.line(slot.key).mediaProof, 'pending')
+  assert.match(done.line(slot.key).reason, /player/)
+})
+
+test('audio capability refuses invalid explicit decisions and ambiguous slot identity before writing', async () => {
+  const { prepareLinks } = await import('../src/write-step/link-stage.js')
+  const slot = urlSlot('article-7.9', {
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', 2],
+    group: { id: 'article-7.audio.2', item: 2, kind: 'business' },
+    sample: 'images/audio/Old.mp3',
+    canHide: true
+  })
+  const link = {
+    id: slot.key,
+    sourceSlot: slot.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: slot.sample,
+    sourceBinding: { entity: slot.entity, column: slot.column, jsonPath: slot.jsonPath, group: slot.group }
+  }
+  const kit = { blocks: [{ id: 'body-album', source: { entity: slot.entity }, links: [link] }], pages: [] }
+  const plan = { sharedBlocks: [{ block: 'body-album', decision: 'keep' }] }
+  const reading = { ok: true, contract: 'audio/j6/1', ids: { 'article-7': 7 }, slots: [slot] }
+  const door = { apply: async () => ({ ok: true, items: [] }) }
+  const check = (value, facts = [], over = {}) =>
+    prepareLinks({
+      door,
+      siteKey: 'fake',
+      kit,
+      plan,
+      brief: { facts },
+      owners: new Map([[link.id, { kind: 'link', slot: link.id, content: value }]]),
+      reading,
+      extras: {},
+      taken: {},
+      ...over
+    })
+  for (const value of ['page-home', 'https://media.example/New.mp3', 'images/../private.mp3']) {
+    const bad = await check(value)
+    assert.deepEqual(bad.changes, {})
+    assert.deepEqual(bad.emptySlots, [])
+    assert.ok(bad.audioFailures.length)
+  }
+  const value = 'https://media.example/New.mp3'
+  const facts = [{ field: 'audio', value, source: 'stated' }]
+  reading.slots.push({ ...slot })
+  assert.ok((await check(value, facts)).audioFailures.length)
+  reading.slots.pop()
+  kit.blocks[0].links.push({ ...link })
+  assert.ok((await check(value, facts)).audioFailures.length)
+  kit.blocks[0].links.pop()
+  assert.ok(
+    (await check(value, facts, { taken: { [slot.key]: 'images/audio/Competing.mp3' } })).audioFailures.length
+  )
+})
+
+test('audio capability entry point empties a guarded absent source without claiming visual absence', async () => {
+  const slot = urlSlot('article-7.9', {
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', '2'],
+    group: { id: 'article-7.audio.2', item: 2, kind: 'business' },
+    sample: 'images/audio/Old.mp3',
+    current: 'images/audio/Old.mp3',
+    canHide: true
+  })
+  const link = {
+    id: slot.key,
+    sourceSlot: slot.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: slot.sample,
+    sourceBinding: { entity: slot.entity, column: slot.column, jsonPath: slot.jsonPath, group: slot.group }
+  }
+  const kit = linkKit([link], { source: { entity: slot.entity } })
+  const p = linkPlan({})
+  p.pages[0].blocks[0].hiddenSlots = [{ slot: slot.key, why: 'no supplied audio' }]
+  const site = fakeSite({
+    records: RECORDS,
+    extraKeys: [slot.key],
+    overSlot: (s) => (s.key === slot.key ? { ...slot, current: site.held[slot.key] ?? slot.current } : {})
+  })
+  withAudioIds(site)
+  const done = await runStep({ plan: p, copy: copy(), brief: baseBrief() }, {}, { kit, door: site.door })
+  assert.equal(site.held[slot.key], '')
+  assert.equal(done.report.status, 'stopped')
+  assert.equal(done.report.cause.code, 'AUDIO_PROOF_REQUIRED')
+  assert.match(done.report.audio[0].reason, /whole track row and all-empty player absence/)
+})
+
+function audioProofRun({
+  neutral = false,
+  host,
+  drift = false,
+  sibling = false,
+  onPhase,
+  original = 7,
+  ids
+} = {}) {
+  const slot = urlSlot(`article-${original}.9`, {
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', '2'],
+    group: { id: `article-${original}.audio.2`, item: 2, kind: 'business' },
+    sample: 'images/audio/Old.mp3',
+    current: 'images/audio/Old.mp3',
+    canHide: true
+  })
+  const link = {
+    id: slot.key,
+    sourceSlot: slot.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: slot.sample,
+    sourceBinding: { entity: slot.entity, column: slot.column, jsonPath: slot.jsonPath, group: slot.group }
+  }
+  const kit = linkKit([link], { source: { entity: slot.entity } })
+  const value = 'https://media.example/New.mp3?sig=A%2FB'
+  const p = linkPlan(neutral ? {} : { [link.id]: value })
+  if (neutral) p.pages[0].blocks[0].hiddenSlots = [{ slot: slot.key, why: 'no supplied audio' }]
+  const b = baseBrief()
+  if (!neutral) b.facts.push({ id: 'audio-1', field: 'audio', source: 'stated', value })
+  const other = {
+    ...slot,
+    key: `article-${original}.10`,
+    jsonPath: ['ctm_audio', 'audio-src', '7'],
+    group: { id: `article-${original}.audio.7`, item: 7, kind: 'business' }
+  }
+  const site = fakeSite({
+    records: RECORDS,
+    extraKeys: [slot.key, ...(sibling ? [other.key] : [])],
+    overSlot: (s) =>
+      s.key === slot.key
+        ? {
+            ...slot,
+            current:
+              (typeof drift === 'function' ? drift() : drift) && slot.key in site.held
+                ? 'images/audio/Drift.mp3'
+                : (site.held[slot.key] ?? slot.current)
+          }
+        : sibling && s.key === other.key
+          ? other
+          : {}
+  })
+  withAudioIds(site, ids ?? { [slot.entity]: original })
+  return runStep({ plan: p, copy: copy(), brief: b }, {}, { kit, door: site.door, host, onPhase }).then(
+    (done) => ({ ...done, site })
+  )
+}
+const audioBox = { x: 0, y: 0, width: 320, height: 60 }
+function audioMeasures(neutral = false) {
+  return [1440, 390].map((width) => ({
+    path: '/',
+    url: 'https://site.example/',
+    sourceBase: 'https://site.example/',
+    width,
+    audioTruncated: false,
+    audioUnbound: 0,
+    audioSources: neutral
+      ? []
+      : [
+          {
+            entity: 'article-7',
+            track: '2',
+            mechanism: 'jplayer',
+            source: 'https://media.example/New.mp3?sig=A%2FB',
+            currentSrc: 'https://media.example/New.mp3?sig=A%2FB',
+            initialized: true,
+            readyState: 1,
+            duration: 30,
+            mediaError: null,
+            rect: { ...audioBox, width: 0, height: 0 }
+          }
+        ],
+    audioRows: neutral ? [] : [{ entity: 'article-7', track: '2', visible: true, rect: audioBox }],
+    audioLists: neutral ? [] : [{ entity: 'article-7', visible: true, rect: audioBox }]
+  }))
+}
+
+test('audio postwrite connected player proof completes only the exact owner route at both widths', async () => {
+  const calls = []
+  const done = await audioProofRun({
+    host: async (payload) => {
+      calls.push(payload)
+      return audioAnswer(audioMeasures())
+    }
+  })
+  assert.equal(done.report.status, 'done')
+  assert.equal(done.report.audio[0].status, 'verified')
+  assert.equal(done.line('article-7.9').mediaProof, 'verified')
+  assert.equal(calls.length, 1)
+  assert.deepEqual(calls[0].pages, ['/'])
+  assert.deepEqual(calls[0].plan, [])
+  assert.equal(calls[0].discover, false)
+  assert.equal(calls[0].incremental, false)
+  assert.equal(calls[0].measurePages, true)
+  assert.deepEqual(
+    done.report.audio[0].observations.map((o) => o.width),
+    [1440, 390]
+  )
+})
+
+test('audio postwrite missing, wrong-owner, duplicate, metadata, error, redirected and truncated proof refuse', async () => {
+  const cases = [
+    (m) => m.pop(),
+    (m) => {
+      m[0].audioSources[0].entity = 'article-8'
+    },
+    (m) => {
+      m[0].audioSources.push({ ...m[0].audioSources[0] })
+    },
+    (m) => {
+      m[0].audioSources[0].currentSrc += '&changed=1'
+    },
+    (m) => {
+      m[0].audioSources[0].readyState = 0
+    },
+    (m) => {
+      m[0].audioSources[0].duration = null
+    },
+    (m) => {
+      m[0].audioSources[0].mediaError = 4
+    },
+    (m) => {
+      m[0].audioRows = []
+    },
+    (m) => {
+      m[0].audioRows[0].visible = false
+    },
+    (m) => {
+      m[0].audioLists.push({ ...m[0].audioLists[0] })
+    },
+    (m) => {
+      m[0].url = 'https://site.example/wrong'
+    },
+    (m) => {
+      m[0].audioTruncated = true
+    },
+    (m) => {
+      m[0].audioUnbound = 1
+    },
+    (m) => {
+      delete m[0].audioSources
+    }
+  ]
+  for (const change of cases) {
+    const measures = audioMeasures()
+    change(measures)
+    const done = await audioProofRun({ host: async () => audioAnswer(measures) })
+    assert.equal(done.report.status, 'stopped', change.toString())
+    assert.equal(done.report.cause.code, 'AUDIO_PLAYER_READBACK_FAILED')
+    assert.equal(done.report.audio[0].status, 'failed')
+  }
+  let called = false
+  const drift = await audioProofRun({
+    drift: true,
+    host: async () => {
+      called = true
+    }
+  })
+  assert.equal(drift.report.cause.code, 'AUDIO_SOURCE_READBACK_FAILED')
+  assert.equal(called, false)
+})
+
+test('audio postwrite guarded neutral requires whole row and all-empty list absent', async () => {
+  const good = await audioProofRun({ neutral: true, host: async () => audioAnswer(audioMeasures(true)) })
+  assert.equal(good.report.status, 'done')
+  assert.equal(good.report.audio[0].status, 'verified')
+  for (const field of ['audioSources', 'audioRows', 'audioLists']) {
+    const m = audioMeasures(true)
+    m[0][field].push({ entity: 'article-7', track: '2', visible: false, rect: audioBox })
+    const bad = await audioProofRun({ neutral: true, host: async () => audioAnswer(m) })
+    assert.equal(bad.report.status, 'stopped', field)
+    assert.equal(bad.report.cause.code, 'AUDIO_PLAYER_READBACK_FAILED')
+  }
+})
+
+test('audio postwrite does not call the host for an ordinary non-audio write', async () => {
+  const done = await runStep(
+    { plan: plan(), copy: copy() },
+    {},
+    { host: async () => assert.fail('unneeded host read') }
+  )
+  assert.equal(done.report.status, 'done')
+})
+
+test('audio postwrite neutral preserves another sparse track and refuses a dropped or duplicated sibling row', async () => {
+  const measures = audioMeasures(true)
+  for (const m of measures) {
+    m.audioSources = [
+      { entity: 'article-7', track: '7', source: 'https://site.example/images/audio/Old.mp3' }
+    ]
+    m.audioRows = [{ entity: 'article-7', track: '7', visible: true, rect: audioBox }]
+    m.audioLists = [{ entity: 'article-7', visible: true, rect: audioBox }]
+  }
+  const run = (m) => audioProofRun({ neutral: true, sibling: true, host: async () => audioAnswer(m) })
+  const good = await run(measures)
+  assert.equal(good.report.status, 'done')
+  assert.equal(good.report.audio[0].allEmpty, false)
+  assert.deepEqual(
+    good.report.audio[0].ownerTracks.map((t) => t.track),
+    ['2', '7']
+  )
+  const dropped = structuredClone(measures)
+  dropped[0].audioRows = []
+  assert.equal((await run(dropped)).report.cause.code, 'AUDIO_PLAYER_READBACK_FAILED')
+  const duplicate = structuredClone(measures)
+  duplicate[0].audioRows.push({ ...duplicate[0].audioRows[0] })
+  assert.equal((await run(duplicate)).report.cause.code, 'AUDIO_PLAYER_READBACK_FAILED')
+})
+
+test('audio postwrite route requests follow final kept paths, chunk once and refuse missing scope or host errors', async () => {
+  const { proveAudio } = await import('../src/write-step/audio-proof.js')
+  const order = {
+    key: 'article-7.9',
+    entity: 'article-7',
+    track: '2',
+    block: 'body-album',
+    ordered: '',
+    allEmpty: true,
+    ownerTracks: [{ entity: 'article-7', track: '2', ordered: '' }],
+    stored: true,
+    status: 'pending'
+  }
+  const ids = Array.from({ length: 16 }, (_, i) => `page-${i}`)
+  const kit = { pages: ids.map((id) => ({ id, blocks: { 1440: ['body-album'] } })) }
+  const plan = { pages: ids.map((id) => ({ id, decision: 'keep', blocks: [{ block: 'body-album' }] })) }
+  const keptPages = ids.map((id, i) => ({ id, path: `/new-${i}` }))
+  const calls = []
+  const input = {
+    orders: [order],
+    kit,
+    plan,
+    keptPages,
+    isCancelled: async () => false,
+    host: async (payload) => {
+      calls.push(payload)
+      return audioAnswer(
+        [...payload.pages, ...payload.plan].flatMap((path) =>
+          audioMeasures(true).map((m) => ({
+            ...m,
+            path: `/index.php${path}`,
+            url: `https://site.example/index.php${path}`
+          }))
+        )
+      )
+    }
+  }
+  const good = await proveAudio(input)
+  assert.equal(good[0].status, 'verified')
+  assert.equal(calls.length, 2)
+  assert.equal(calls[0].pages.length, 7)
+  assert.equal(calls[0].plan.length, 8)
+  assert.equal(good[0].observations.length, 32)
+  const noScope = await proveAudio({ ...input, keptPages: [], host: async () => assert.fail('no scope') })
+  assert.equal(noScope[0].status, 'failed')
+  const refused = await proveAudio({
+    ...input,
+    host: async () => {
+      throw new Error('bounded timeout')
+    }
+  })
+  assert.match(refused[0].reason, /bounded timeout/)
+  const cancelled = await proveAudio({
+    ...input,
+    isCancelled: async () => true,
+    host: async () => assert.fail('cancelled')
+  })
+  assert.equal(cancelled[0].status, 'pending')
+})
+
+test('audio postwrite neutral never treats failed or skipped HTTP pages as absent players', async () => {
+  for (const over of [{ status: 404 }, { status: 500 }, { skipped: 'not a page' }, { finalPath: '/wrong' }]) {
+    const done = await audioProofRun({
+      neutral: true,
+      host: async () => ({
+        pageMeasures: audioMeasures(true),
+        visited: [{ path: '/', status: 200, finalPath: '/', ...over }]
+      })
+    })
+    assert.equal(done.report.status, 'stopped', JSON.stringify(over))
+    assert.equal(done.report.cause.code, 'AUDIO_PLAYER_READBACK_FAILED')
+  }
+})
+
+function audioAnswer(pageMeasures) {
+  return {
+    pageMeasures,
+    visited: [...new Set(pageMeasures.map((m) => m.path))].map((path) => ({
+      path,
+      status: 200,
+      finalPath: path
+    }))
+  }
+}
+
+test('audio postwrite final inspect catches post-settings storage drift and stops before any host read', async () => {
+  let changed = false
+  const done = await audioProofRun({
+    onPhase: async (stage) => {
+      if (stage === 'settings') changed = true
+    },
+    host: async () => assert.fail('a final inspect failure must not open pages'),
+    drift: () => changed
+  })
+  assert.equal(done.report.cause.code, 'AUDIO_SOURCE_READBACK_FAILED')
+})
+
+function withAudioIds(site, ids = { 'article-7': 7 }) {
+  const apply = site.door.apply
+  site.door.apply = async (call) => {
+    const answer = await apply(call)
+    return call.action === 'content.contract' && call.params.operation === 'inspect'
+      ? { ...answer, ...(typeof ids === 'function' ? ids() : { ids }) }
+      : answer
+  }
+  return site
+}
+
+test('audio postwrite maps original article-14 through trusted actual114 and refuses stale or untrusted renderer identity', async () => {
+  const mapped = audioMeasures()
+  for (const m of mapped)
+    for (const list of [m.audioSources, m.audioRows, m.audioLists])
+      for (const a of list) a.entity = 'article-114'
+  const run = (measures, ids = { 'article-14': 114 }) =>
+    audioProofRun({ original: 14, ids, host: async () => audioAnswer(measures) })
+  const good = await run(mapped)
+  assert.equal(good.report.status, 'done')
+  assert.equal(good.report.audio[0].contractEntity, 'article-14')
+  assert.equal(good.report.audio[0].entity, 'article-114')
+  assert.equal(good.report.audio[0].sourceBinding.entity, 'article-14')
+  assert.equal(good.report.audio[0].ownerTracks[0].entity, 'article-114')
+  const stale = structuredClone(mapped)
+  for (const m of stale)
+    for (const list of [m.audioSources, m.audioRows, m.audioLists])
+      for (const a of list) a.entity = 'article-14'
+  assert.equal((await run(stale)).report.cause.code, 'AUDIO_PLAYER_READBACK_FAILED')
+  for (const ids of [
+    {},
+    { 'article-14': '114' },
+    { 'article-14': 0 },
+    { 'article-14': 114, 'article-15': 114 }
+  ]) {
+    const bad = await run(mapped, ids)
+    assert.equal(bad.report.status, 'stopped')
+    assert.equal(
+      bad.site.applies().some((c) => 'article-14.9' in (c.params.changes ?? {})),
+      false
+    )
+  }
+  let inspected = 0
+  const drift = await run(mapped, () => ({ ids: { 'article-14': ++inspected === 1 ? 114 : 115 } }))
+  assert.equal(drift.report.cause.code, 'AUDIO_SOURCE_READBACK_FAILED')
 })

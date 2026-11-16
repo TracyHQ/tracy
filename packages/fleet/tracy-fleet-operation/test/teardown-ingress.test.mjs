@@ -47,7 +47,7 @@ function stage() {
   )
   // Whatever of the two the tree under test has: a script that does not source the second one runs
   // without it, and one that does fails by itself when it is missing.
-  for (const lib of ['roots.sh', 'site-lifecycle.sh', 'site-network.sh'])
+  for (const lib of ['roots.sh', 'site-lifecycle.sh', 'site-network.sh', 'site-runtime.sh'])
     if (existsSync(path.join(SCRIPTS, 'lib', lib)))
       copyFileSync(path.join(SCRIPTS, 'lib', lib), path.join(root, 'fleet', 'lib', lib))
   const argvLog = path.join(root, 'ingress-argv.log')

@@ -6,6 +6,10 @@
 //     open is waited for only until both are left.
 //   - `noTurnMs`: a prompt that opened no turn by then is resent once; a resend that opened none by then is dropped.
 //   - `pollMs`: how often the turn records are read while a turn is awaited.
+//   - `callMs`: how long one call to the site agent (a session open, a prompt, a turn records read, a cancel, an undo)
+//     may take before it counts as unanswered. A turn's own wait is `turnMs`, made of short reads; without this cap a
+//     single read that never answered took all the time left (15/11/2026, local stand: one turn records read hung for
+//     8.7 minutes, so eight pages were never sent and the turn could not be undone).
 //   - `itemsPerTurn`: the most faults one page turn carries.
 //   - `itemsPerMinute`: the comment requests door's own budget, items a minute per site (sites/comments.js
 //     MAX_REQUESTS_PER_MINUTE): a request waits while that many were asked in the last minute.
@@ -13,9 +17,10 @@
 //   - `cancelSettleMs`: after a turn still open at the limit is cancelled, how long its record is read until it ends.
 //   - `judgeGatherMs`: how long the check after the turns waits for other turns ending at the same moment, to read them
 //     in one check.
+import { REPAIR_WINDOWS } from '../../lib/repair-windows.js'
+
 export const REPAIR_LIMITS = Object.freeze({
-  stopNewWorkMs: 10 * 60_000,
-  returnByMs: 12 * 60_000,
+  ...REPAIR_WINDOWS,
   undoReserveMs: 30_000,
   judgeReserveMs: 60_000,
   noTurnMs: 60_000,
@@ -23,6 +28,7 @@ export const REPAIR_LIMITS = Object.freeze({
   // The chain's two-hour preparation window must not become one repair turn's wait.
   turnMs: 10 * 60_000,
   pollMs: 5_000,
+  callMs: 2 * 60_000,
   itemsPerTurn: 12,
   itemsPerMinute: 20,
   // Native file moments belong to the whole site. Overlapping page turns cannot be undone independently.
@@ -82,8 +88,8 @@ export function repairClock({ now, sleep, limits = null, timer = realTimer }) {
         cancel()
       }
     },
-    /** `work()` within `ms` (by default all the time left), or an error naming `what` once the time is up. */
-    async bounded(what, work, ms = returnAt - now()) {
+    /** `work()` within `ms` (by default `callMs`, never past the return), or an error naming `what` once the time is up. */
+    async bounded(what, work, ms = Math.min(returnAt - now(), set.callMs)) {
       const done = await this.within(work, ms)
       if (done.late) throw new Error(`${what} did not answer in the time left`)
       return done.value
