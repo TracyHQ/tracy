@@ -1609,7 +1609,12 @@ export async function writeCopy({
       const e = seedEntries.find(
         (x) => x.collection === c.collection && x.slug === c.slug && x.locale === locale
       )
-      if (!e || typeof e.data[c.field] !== 'string') return null
+      // 🔒 A RICH-TEXT FIELD IS COPY TOO. Read as strings only, the home welcome of JA Restaurant (`hero_intro`, portable text)
+      // was never asked and kept the demo's "Since 1982 … 4 5th Avenue at St. Marks Place" on a trattoria in Da Nang, with no
+      // word in the report (measured 16/11/2026 on dev, 1.0.2). It is asked as its text, a blank line between its parts, and
+      // written back as blocks (`richCopyOf`, `richFromAnswer`).
+      const rich = e ? richCopyOf(e.data[c.field]) : null
+      if (!e || (typeof e.data[c.field] !== 'string' && rich === null)) return null
       const key = `${c.collection}.${c.slug}.${c.field}`
       // 🔒 A LABEL IS WRITTEN FOR WHERE ITS LINK GOES (TCH #1013, PAGE-5, g60). Asked with a brief and the demo's words
       // only, the hero's second button read "Liên hệ tiệm bánh" over a PDF and the footer's "Xem bánh →" opened /contact
@@ -1623,8 +1628,12 @@ export async function writeCopy({
       }
       // The example is the field as the run already leaves it (the demo brand swapped; a brochure button already the
       // template's contact label), so it never shows a promise its link no longer keeps.
-      const example =
-        typeof planned?.[c.field] === 'string' && planned[c.field].trim() !== ''
+      // A rich-text field is written back over the blocks its example was read from.
+      const source = rich && richCopyOf(planned?.[c.field]) !== null ? planned?.[c.field] : e.data[c.field]
+      const shape = rich ? richCopyOf(source) : null
+      const example = shape
+        ? shape.text
+        : typeof planned?.[c.field] === 'string' && planned[c.field].trim() !== ''
           ? planned[c.field]
           : e.data[c.field]
       return {
@@ -1632,7 +1641,9 @@ export async function writeCopy({
         brief: c.brief,
         maxWords: c.maxWords,
         example,
-        ...(leadsTo ? { leadsTo } : {})
+        ...(shape?.strict ? { parts: shape.parts.map((part) => part.kind) } : {}),
+        ...(leadsTo ? { leadsTo } : {}),
+        ...(shape ? { blocks: source, keyPrefix: `${c.slug.slice(0, 8)}-` } : {})
       }
     })
     .filter(Boolean)
@@ -1652,6 +1663,12 @@ export async function writeCopy({
     // handed both, with no ranking between them, writes from the demo.
     'The `about` field is what this business actually does. Every line must be about THAT. When the demo text is about a different trade, keep only its shape and write the customer’s subject instead.',
     `Never invent credentials, years, prices, addresses, phone numbers or certifications that were not given. ${houseStyle(facts.tone)}`,
+    items.some((it) => it.parts)
+      ? 'An entry with "parts" is written as that many parts, in that order (a heading, a paragraph, a list item), with a blank line between two parts and none inside one.'
+      : '',
+    items.some((it) => /\{mark_[a-z]\}/.test(String(it.example)))
+      ? 'Words between {mark_a} and {mark_a_end} (and any other letter) are a link or an emphasis of the page: keep every such pair exactly once, in the same part, around a few of your own words.'
+      : '',
     items.some((it) => it.leadsTo)
       ? 'An entry with "leadsTo" is the words of a link or a button, or of the call to action around it: they say what that link really does for the visitor. kind "page": name that page or what the visitor does there (a page like /contact is getting in touch, asking for a quote or ordering); kind "email": writing to that address; kind "phone": calling; kind "file": opening that document. Never promise a download, a document, a product or a page the link does not open.'
       : '',
@@ -1671,11 +1688,12 @@ export async function writeCopy({
       address: facts.address ?? null,
       phone: facts.phone ?? null
     },
-    fields: items.map(({ key, brief, maxWords, example, leadsTo }) => ({
+    fields: items.map(({ key, brief, maxWords, example, parts, leadsTo }) => ({
       key,
       brief,
       maxWords,
       example,
+      ...(parts ? { parts } : {}),
       ...(leadsTo ? { leadsTo } : {})
     }))
   })
@@ -1684,8 +1702,13 @@ export async function writeCopy({
   for (const it of items) {
     const v = parsed?.[it.key]
     if (typeof v !== 'string' || v.trim() === '') continue
-    if (!withinWords(v, it.maxWords, { lenient: again })) {
+    if (!withinWords(v.replace(/\{mark_[a-z](?:_end)?\}/g, ''), it.maxWords, { lenient: again })) {
       tooLong?.push(it.key)
+      continue
+    }
+    if (it.blocks) {
+      const blocks = richFromAnswer(it.blocks, v, it.keyPrefix)
+      if (blocks !== null) out[it.key] = blocks
       continue
     }
     out[it.key] = v.trim()
@@ -1743,6 +1766,190 @@ export function linkBearing(rule, data) {
     siblingLinkOf(field, data, null) !== null ||
     /_(?:button|cta)$/i.test(field)
   )
+}
+
+/** The letters a marked run of a block is named by in the text a model is asked (`{mark_a}…{mark_a_end}`). */
+const MARK_LETTERS = 'abcdefghijklmnopqrstuvwxyz'
+
+/**
+ * One text block of a rich-text field as a model is asked it: its words, each run of spans that carry marks (a link, an
+ * emphasis) wrapped in a placeholder pair `{mark_a}…{mark_a_end}` — curly braces, which every prompt that writes or
+ * translates words already keeps and `acceptLabel` checks — and the marks of each run. Null for a block that is not text
+ * the field's words are made of: another type, an inline object, more runs than letters, or a block whose words are all
+ * marked (a link alone is a button: FeaturesIntro.astro draws "Meet Our Team" from it).
+ * @param {any} block @returns {{ text: string, runs: string[][], words: string[] } | null}
+ */
+export function markedTextOf(block) {
+  if (block?._type !== 'block' || !Array.isArray(block.children)) return null
+  if (block.children.some((c) => c?._type !== 'span')) return null
+  /** @type {string[][]} */
+  const runs = []
+  /** @type {string[]} the demo's words of each run */
+  const words = []
+  let text = ''
+  let plainWords = false
+  let open = null
+  const close = () => {
+    if (open !== null) text += `{mark_${MARK_LETTERS[runs.length - 1]}_end}`
+    open = null
+  }
+  for (const span of block.children) {
+    const marks = Array.isArray(span.marks) ? span.marks.map(String) : []
+    const said = String(span.text ?? '')
+    const sig = JSON.stringify(marks)
+    if (marks.length === 0) {
+      close()
+      if (/\p{L}/u.test(said)) plainWords = true
+      text += said
+      continue
+    }
+    if (open !== sig) {
+      close()
+      if (runs.length >= MARK_LETTERS.length) return null
+      runs.push(marks)
+      words.push('')
+      text += `{mark_${MARK_LETTERS[runs.length - 1]}}`
+      open = sig
+    }
+    text += said
+    words[words.length - 1] += said
+  }
+  close()
+  if (!plainWords) return null
+  return { text: text.trim(), runs, words }
+}
+
+/**
+ * Whether a link leads out of the site: a scheme (`https:`, `mailto:`, `tel:`, a maps or social address) or `//`. A path,
+ * an anchor or a query is the site's own.
+ * @param {unknown} href
+ */
+export function leadsOutside(href) {
+  const to = String(href ?? '').trim()
+  return /^[a-z][a-z0-9+.-]*:/i.test(to) || to.startsWith('//')
+}
+
+/**
+ * A block's words written back from an answer in `markedTextOf`'s shape: every run back as a span with its own marks, the
+ * words around them as plain spans; the block keeps its key, style, list level and link definitions. Null when the answer
+ * does not hold each placeholder pair of the block exactly once, around words, and nothing else in that shape.
+ *
+ * 🔒 A LINK NEVER CARRIES THE DEMO'S FACTS ONTO THE CUSTOMER'S WORDS (review, 16/11/2026). Rewritten for a trattoria, JA
+ * Restaurant's welcome linked "our table" to a Google Maps search for "4 5th Avenue, Brooklyn". In a REWRITE (`rewrite`,
+ * with the demo's words of each run in `words`), a link that leads out of the site (`leadsOutside`: a map, a phone, an
+ * email, a social profile, another site) keeps its mark only on the demo's own words; on new words it goes, the words stay
+ * plain text, and its definition leaves the block. A link into the site keeps its address, and an emphasis always stays. A
+ * TRANSLATION says the same words, so every link stays with them.
+ * @param {any} block @param {string[][]} runs @param {unknown} answer
+ * @param {{ rewrite?: boolean, words?: string[] }} [options]
+ * @returns {any | null}
+ */
+export function blockFromMarked(block, runs, answer, { rewrite = false, words = [] } = {}) {
+  if (typeof answer !== 'string' || answer.trim() === '') return null
+  const key = String(block._key ?? 'b')
+  const children = []
+  const seen = new Set()
+  const pair = /\{mark_([a-z])\}([\s\S]*?)\{mark_\1_end\}/g
+  /** The marks of the block that are links out of the site. */
+  const outside = new Set(
+    (Array.isArray(block.markDefs) ? block.markDefs : [])
+      .filter((d) => typeof d?.href === 'string' && leadsOutside(d.href))
+      .map((d) => String(d._key))
+  )
+  const plain = (words) => {
+    if (words === '') return true
+    if (/\{\/?mark_/.test(words)) return false
+    children.push({ _type: 'span', _key: `${key}s${String(children.length)}`, text: words, marks: [] })
+    return true
+  }
+  let at = 0
+  const text = answer.trim()
+  for (const m of text.matchAll(pair)) {
+    const i = MARK_LETTERS.indexOf(m[1])
+    if (i < 0 || i >= runs.length || seen.has(i) || m[2].trim() === '') return null
+    if (!plain(text.slice(at, m.index))) return null
+    seen.add(i)
+    const same = (a) =>
+      String(a ?? '')
+        .trim()
+        .replace(/\s+/g, ' ')
+    const marks =
+      rewrite && same(m[2]) !== same(words[i]) ? runs[i].filter((mark) => !outside.has(mark)) : runs[i]
+    children.push({ _type: 'span', _key: `${key}s${String(children.length)}`, text: m[2], marks })
+    at = m.index + m[0].length
+  }
+  if (!plain(text.slice(at)) || seen.size !== runs.length) return null
+  if (!rewrite) return { ...block, _key: key, children }
+  // A definition no span marks any more (a link that went with the demo's words) leaves the block.
+  const used = new Set(children.flatMap((c) => c.marks))
+  const markDefs = (Array.isArray(block.markDefs) ? block.markDefs : []).filter((d) =>
+    used.has(String(d?._key))
+  )
+  return { ...block, _key: key, markDefs, children }
+}
+
+/**
+ * A rich-text (portable text) field as a `copy` rule asks it: its text blocks (`markedTextOf`), a blank line between two,
+ * their kinds, and whether an answer must keep their shape (`strict`: a block left out, a marked run, or a part that is not
+ * a paragraph). Null for a value with no such block.
+ *
+ * 🔒 A REWRITE KEEPS WHAT THE VIEW DRAWS FROM THE BLOCKS. Flattened to paragraphs, JA Restaurant's "Our Food Network"
+ * lost its "Meet Our Team" button (a block that is one link) and the home welcome its link (review, 16/11/2026). A block
+ * that is not words is left out and stays where it is; a marked run is a placeholder the answer must keep.
+ * @param {unknown} value
+ * @returns {{ text: string, parts: Array<{ at: number, kind: string, text: string, runs: string[][], words: string[] }>, strict: boolean } | null}
+ */
+export function richCopyOf(value) {
+  if (!Array.isArray(value) || value.length === 0) return null
+  const parts = []
+  let left = 0
+  for (const [at, b] of value.entries()) {
+    const marked = markedTextOf(b)
+    if (marked === null) {
+      left += 1
+      continue
+    }
+    const style = String(b.style ?? 'normal')
+    const kind = b.listItem
+      ? 'list item'
+      : /^h[1-6]$/.test(style)
+        ? 'heading'
+        : style === 'blockquote'
+          ? 'quote'
+          : 'paragraph'
+    parts.push({ at, kind, ...marked })
+  }
+  if (parts.length === 0) return null
+  const strict = left > 0 || parts.some((p) => p.runs.length > 0 || p.kind !== 'paragraph')
+  return { text: parts.map((p) => p.text).join('\n\n'), parts, strict }
+}
+
+/**
+ * A model's answer for a rich-text `copy` field, as blocks: a field of plain paragraphs only takes the answer's paragraphs
+ * (`blocksFrom`); any other keeps every block the rewrite left out where it was and takes one part of the answer per text
+ * block, each keeping its marks (`blockFromMarked`). Null when the answer does not keep that shape.
+ * @param {any[]} demo @param {string} answer @param {string} keyPrefix @returns {any[] | null}
+ */
+export function richFromAnswer(demo, answer, keyPrefix) {
+  const rich = richCopyOf(demo)
+  if (rich === null || typeof answer !== 'string') return null
+  if (!rich.strict) {
+    if (/\{\/?mark_/.test(answer)) return null
+    const blocks = blocksFrom(answer, keyPrefix)
+    return blocks.length > 0 ? blocks : null
+  }
+  const parts = answer
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter((p) => p !== '')
+  if (parts.length !== rich.parts.length) return null
+  const out = [...demo]
+  for (const [i, part] of rich.parts.entries()) {
+    const block = blockFromMarked(demo[part.at], part.runs, parts[i], { rewrite: true, words: part.words })
+    if (block === null) return null
+    out[part.at] = block
+  }
+  return out
 }
 
 /** Plain paragraphs → the portable-text blocks EmDash stores a body as. */
@@ -2103,9 +2310,13 @@ export async function rewriteBlock({ model, rule, facts, locale, rows, fetchImpl
   const example = rows.map((row) =>
     Object.fromEntries(rule.itemFields.map((f) => [f, typeof row?.[f] === 'string' ? row[f] : '']))
   )
+  const limits = rowLimitsOf(rule)
   const system = [
     `You write website copy in ${language} for one business. Answer with ONE JSON object: {"rows": [...]}, nothing else.`,
     `Each row is ${rule.brief}. Give exactly ${String(rows.length)} rows, each with the keys ${rule.itemFields.join(', ')}.`,
+    limits.length > 0
+      ? `${limits.map(([f, n]) => `Every ${f} is at most ${String(n)} characters, spaces included`).join('; ')}: a longer one is not used.`
+      : '',
     `Write in ${language} even when the business name or its address are in another language.`,
     `The demo rows are a reference for ${demoRuler(facts.tone)} — never reuse their facts, places or numbers.`,
     `Do not invent counts, dates, prices, certifications or named people. ${houseStyle(facts.tone)}`,
@@ -2135,13 +2346,38 @@ export async function rewriteBlock({ model, rule, facts, locale, rows, fetchImpl
     if (!got || typeof got !== 'object') return row
     const next = { ...row }
     for (const f of rule.itemFields)
-      if (typeof got[f] === 'string' && got[f].trim() !== '' && typeof row?.[f] === 'string') {
+      if (
+        typeof got[f] === 'string' &&
+        got[f].trim() !== '' &&
+        typeof row?.[f] === 'string' &&
+        withinCharacters(got[f], rule.maxCharacters?.[f])
+      ) {
         next[f] = got[f].trim()
         filled += 1
       }
     return next
   })
   return filled > 0 ? { rows: out, why: null } : { rows: null, why: 'nothing in the answer fitted the rows' }
+}
+
+/**
+ * 🔒 A ROW'S WORDS FIT THE BOX THE CONTRACT MEASURED. A `blocks` rule may bound a field of its rows in characters
+ * (`"maxCharacters": { "slide_title": 39 }`), the number the template's contract measured for that slot (template-kit
+ * `maxCharacters`). Unbounded, the home slideshow of JA Restaurant took a five-line title over its photograph and ended
+ * 10 px above the bottom of a box that cuts what overflows (measured 16/11/2026 on dev, 1.0.2, 1440x900). An answer over
+ * the bound is not taken: the row is asked again with the others the model left, then keeps the template's words, named.
+ * @param {{ maxCharacters?: Record<string, unknown> }} rule @returns {Array<[string, number]>}
+ */
+export function rowLimitsOf(rule) {
+  return /** @type {Array<[string, number]>} */ (
+    Object.entries(rule?.maxCharacters ?? {}).filter(([, n]) => Number.isInteger(n) && Number(n) > 0)
+  )
+}
+
+/** Whether a text is within `max` characters, a run of spaces or line breaks counted as one; no bound, always. */
+export function withinCharacters(text, max) {
+  if (!Number.isInteger(max) || Number(max) <= 0) return true
+  return [...String(text).trim().replace(/\s+/g, ' ')].length <= Number(max)
 }
 
 /**
@@ -5179,13 +5415,14 @@ async function main() {
             primaryOf(e.locale) === primaryOf(other)
         ) ??
         null
-      /** @type {Array<{ e: any, field: string, kind: 'text' | 'rows' | 'body', keys?: string[], kept?: boolean }>} */
+      /** @type {Array<{ e: any, field: string, kind: 'text' | 'rows' | 'body' | 'rich', keys?: string[], kept?: boolean }>} */
       const targets = []
       const rootOf = (collection, slug) =>
         seedEntries.find((x) => x.collection === collection && x.slug === slug && x.locale === locale)
       for (const c of map.copy ?? []) {
         const e = rootOf(c.collection, c.slug)
         if (e && typeof e.data[c.field] === 'string') targets.push({ e, field: c.field, kind: 'text' })
+        else if (e && richCopyOf(e.data[c.field]) !== null) targets.push({ e, field: c.field, kind: 'rich' })
       }
       for (const r of map.rewrite ?? [])
         for (const e of entriesOf(r, locale)) {
@@ -5266,12 +5503,19 @@ async function main() {
               if (typeof row?.[key] === 'string' && /\p{L}/u.test(row[key]))
                 leaves.set(id(`${String(i)}.${key}`), row[key])
           })
+        } else if (t.kind === 'rich') {
+          // A rich-text copy field: its text blocks with their marks as placeholders (`richCopyOf`), a block left out stays.
+          for (const part of richCopyOf(base)?.parts ?? [])
+            if (/\p{L}/u.test(part.text)) leaves.set(id(`r${String(part.at)}`), part.text)
         } else if (Array.isArray(base))
           base.forEach((b, i) => {
             if (b?._type !== 'block') return
-            const text = (Array.isArray(b.children) ? b.children : [])
-              .map((c) => String(c?.text ?? ''))
-              .join('')
+            // A block with a link or an emphasis is asked with its marked runs as placeholders, and keeps them (`markedTextOf`).
+            const marked = markedTextOf(b)
+            const text =
+              marked !== null && marked.runs.length > 0
+                ? marked.text
+                : (Array.isArray(b.children) ? b.children : []).map((c) => String(c?.text ?? '')).join('')
             if (/\p{L}/u.test(text)) leaves.set(id(`b${String(i)}`), text)
           })
         toTranslate.push({ ...t, base })
@@ -5317,18 +5561,51 @@ async function main() {
             }
             return next
           })
-        else {
-          const outline = t.base.flatMap((b, i) =>
-            got[`w${String(at)}.b${String(i)}`] !== undefined ? [{ at: i }] : []
+        else if (t.kind === 'rich') {
+          const out = [...t.base]
+          let any = false
+          for (const part of richCopyOf(t.base)?.parts ?? []) {
+            const id = `w${String(at)}.r${String(part.at)}`
+            const block = got[id] === undefined ? null : blockFromMarked(t.base[part.at], part.runs, got[id])
+            if (block === null) {
+              if (got[id] !== undefined) missing.push(id)
+              continue
+            }
+            out[part.at] = block
+            any = true
+          }
+          value = any ? out : undefined
+        } else {
+          /** The blocks asked with their marks (`markedTextOf`): each keeps them, or its demo words when the answer lost one. */
+          const marked = new Map(
+            t.base.flatMap((b, i) => {
+              const m = markedTextOf(b)
+              return m !== null && m.runs.length > 0 ? [[i, m.runs]] : []
+            })
           )
-          value =
+          const outline = t.base.flatMap((b, i) =>
+            got[`w${String(at)}.b${String(i)}`] !== undefined && !marked.has(i) ? [{ at: i }] : []
+          )
+          const out =
             outline.length > 0
               ? bodyFromOutline(
                   t.base,
                   outline,
                   outline.map((o) => got[`w${String(at)}.b${String(o.at)}`])
                 )
-              : undefined
+              : [...t.base]
+          let any = outline.length > 0
+          for (const [i, runs] of marked) {
+            const id = `w${String(at)}.b${String(i)}`
+            if (got[id] === undefined || out === null) continue
+            const block = blockFromMarked(t.base[i], runs, got[id])
+            if (block === null) missing.push(id)
+            else {
+              out[i] = block
+              any = true
+            }
+          }
+          value = any ? (out ?? undefined) : undefined
         }
         if (missing.length > 0)
           rewritten.skipped.push({

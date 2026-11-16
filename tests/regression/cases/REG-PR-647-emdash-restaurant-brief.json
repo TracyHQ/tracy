@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-647-emdash-restaurant-brief",
+  "kind": "fix",
+  "title": "A JA Restaurant EmDash site made from a short brief: the main menu never shows one label twice, the home welcome is rewritten without the demo's year, address or map link, and a slideshow title longer than its contract bound is not taken",
+  "pr": 647,
+  "area": "emdash-theme-restaurant/personalize",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-emdash.test.mjs packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-copy.test.mjs packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-translate.test.mjs packages/cms/tracy-emdash-theme-restaurant/tests/personalize-row-limits.test.mjs packages/cms/tracy-emdash-theme-diner/tests/personalize-rich-copy.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines, and the 'ok' line of every test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests'.",
+    "Menu planner (apps/tracy-web emdash-menus.js) on the real Restaurant seed: the planner's 'Explore → Menu' is asked again and dropped because the item leading to /menu (never planned) already shows 'Menu'; a rename to the label of an item whose own rename was dropped ('Reservation → Explore') is dropped too; no label of the primary menu is shown twice.",
+    "Rich-text copy (tools/personalize.mjs writeCopy) on the real Restaurant seed: every rich-text copy field is asked; hero.welcome-to-res-bar-restaurant.hero_intro is written back as blocks with no 'maps', 'Brooklyn' or '5th' left and the new linked words as plain text; a link out of the site stays only on the demo's own words; the '#' link of welcome-to-res-bar-restaurant-2 keeps its address on new words; the 'Meet Our Team' button block of features_intro.about-us stays byte for byte; an answer that drops or invents a placeholder is not taken; Diner's chef card keeps its h4 heading.",
+    "A root written in Vietnamese: the template's rich-text copy is translated with its link marks, emphasis and button kept.",
+    "Slideshow title bound: seed/personalize.json slideshow rule maxCharacters.slide_title equals the 1.0.2 template-kit maxCharacters (39) for every slide; a 61-character title is not taken; 37 characters fit 37 and not 36."
+  ],
+  "selectors": {
+    "planner": "apps/tracy-web/src/sites/brief-engines/emdash-menus.js (seedMenus kept, planMenuLabels, withoutRepeats)",
+    "tool": "packages/cms/tracy-emdash-theme-*/tools/personalize.mjs (writeCopy, richCopyOf, richFromAnswer, blockFromMarked, leadsOutside, rewriteBlock maxCharacters)",
+    "seed": "packages/cms/tracy-emdash-theme-restaurant/seed/{seed.json,personalize.json}, contracts/1.0.2/template-kit.json"
+  },
+  "evidence": "QA on dev 16/11/2026: a JA Restaurant EmDash site (tracy-restaurant/emdash-0.x 1.0.2) made through POST /api/sites for 'Trattoria Lume', Italian, Da Nang, no address: the main menu read MENU twice (the 'Explore' dropdown renamed 'Menu' by the planner), the home welcome still read 'Since 1982 … 4 5th Avenue at St. Marks Place … Brooklyn' (writeCopy read only string fields, hero_intro is portable text), and the five-line slideshow title ended 10 px above the bottom of a box that cuts what overflows (no bound on the blocks rule). Every test named in run.tests fails on the code before this fix.",
+  "fence": "The menu planner's plan (planMenuLabels → withoutRepeats) and the personalize tool's writes (writeCopy → richFromAnswer → blockFromMarked; rewriteBlock with maxCharacters), checked on their output with a stand-in model.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-emdash.test.mjs",
+      "packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-copy.test.mjs",
+      "packages/cms/tracy-emdash-theme-restaurant/tests/personalize-rich-translate.test.mjs",
+      "packages/cms/tracy-emdash-theme-restaurant/tests/personalize-row-limits.test.mjs",
+      "packages/cms/tracy-emdash-theme-diner/tests/personalize-rich-copy.test.mjs"
+    ],
+    "tests": [
+      "a new label never repeats a label its menu shows that was not planned",
+      "a rename that repeats the label of an item whose own rename was dropped is dropped too",
+      "every rich-text copy field of this template is asked",
+      "the home welcome is rewritten, and its map link never goes with new words",
+      "a link into the site keeps its address on new words",
+      "the \"Meet Our Team\" button of Our Food Network survives the rewrite of its text",
+      "every rich-text copy field is asked, and an answer of its shape comes back as blocks",
+      "a root written in Vietnamese: the rich-text copy is translated, its button and its links kept",
+      "the slideshow rule bounds its titles by the number the contract measured",
+      "a slide title over the bound is not taken, one within it is, and the model is told the bound",
+      "the bound counts a run of spaces or line breaks as one, and a rule with no bound takes any length"
+    ]
+  }
+}

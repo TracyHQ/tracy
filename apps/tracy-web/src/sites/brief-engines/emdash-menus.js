@@ -35,7 +35,8 @@ const SYSTEM =
   'are: Home, About, Services, Products, Projects, News, Blog, Contact, Careers, Pricing, Terms, Privacy, Sitemap. Write each ' +
   'new label in the language of its menu: its `language` when it has one (the site is written in it), else its locale. The ' +
   'description and the sector may be written in another language (often English): say what they name in the language ' +
-  'of the menu, never copy their words. Answer with JSON only: {"relabel": [{"menu": "<name>", "locale": "<locale>", ' +
+  'of the menu, never copy their words. The `kept` of a menu are the labels it shows that stay as they are: a new ' +
+  'label is never one of them. Answer with JSON only: {"relabel": [{"menu": "<name>", "locale": "<locale>", ' +
   '"from": "<label>", "to": "<new label>"}]}, using only menus, locales and labels you were given.' +
   FACT_RULES
 
@@ -222,8 +223,12 @@ export function leadsToTemplatePage(url, locale, samples) {
  * menus are planned, each carrying the `language` its labels are written in: planned by locale alone, a bakery written in
  * Vietnamese read "Breads · Baked Goods" in its menu (measured 08/10/2026 on dev, tamq-7q-edvi).
  * @param {string} seedDir
+ * 🔒 ONE MENU NEVER NAMES TWO ITEMS THE SAME, PLANNED OR NOT. Measured 16/11/2026 on dev (JA Restaurant EmDash 1.0.2, an
+ * Italian trattoria): only "Home", "Explore" and "Reservation" were planned, the planner made the dropdown "Explore" the
+ * restaurant's "Menu", and the main nav read MENU twice — the item that leads to /menu is never planned, so the repeat check
+ * did not know it was there. Each menu carries `kept`: every label it shows, at any depth, that the plan does not change.
  * @param {string[]} languages - what the owner asked for (`en`, `vi`, `vi-VN`…); the default language is always among them
- * @returns {Array<{ name: string, locale: string, labels: string[], language?: string }>}
+ * @returns {Array<{ name: string, locale: string, labels: string[], kept: string[], language?: string }>}
  */
 export function seedMenus(seedDir, languages) {
   let seed = seeds.get(seedDir)
@@ -245,8 +250,17 @@ export function seedMenus(seedDir, languages) {
   // that language's own edition is hidden (TCH #1013, D2); the others keep their editions.
   const into = asked.length > 0 && !asked.includes(primary(seed.defaultLocale)) ? asked[0] : null
   const wanted = new Set(into ? [seed.defaultLocale, ...asked.slice(1)] : [seed.defaultLocale, ...asked])
-  /** @type {Array<{ name: string, locale: string, labels: string[], language?: string }>} */
+  /** @type {Array<{ name: string, locale: string, labels: string[], kept: string[], language?: string }>} */
   const out = []
+  /** Every label of a menu's items, children included, each once. */
+  const allLabels = (/** @type {any[]} */ items, /** @type {Set<string>} */ into = new Set()) => {
+    for (const item of items ?? []) {
+      const label = String(item?.label ?? '').trim()
+      if (label !== '') into.add(label)
+      allLabels(item?.children, into)
+    }
+    return into
+  }
   for (const menu of seed.menus) {
     const locale = String(menu.locale ?? seed.defaultLocale)
     const labels = (menu.items ?? [])
@@ -263,6 +277,7 @@ export function seedMenus(seedDir, languages) {
         name: menu.name,
         locale,
         labels,
+        kept: [...allLabels(menu.items)].filter((l) => !labels.includes(l)),
         ...(into && locale === seed.defaultLocale ? { language: into } : {})
       })
   }
@@ -323,7 +338,7 @@ const sameLabel = (/** @type {unknown} */ text) =>
  * @param {object} input
  * @param {{ chat: Function }} input.model
  * @param {{ name: string, about: string, sector: string | null }} input.business
- * @param {Array<{ name: string, locale: string, labels: string[], language?: string }>} input.menus
+ * @param {Array<{ name: string, locale: string, labels: string[], kept?: string[], language?: string }>} input.menus
  * @param {string} [input.given] - what the owner wrote, for the fact check
  * @param {AbortSignal} [input.signal]
  * @returns {Promise<Array<{ menu: string, locale: string, from: string, to: string }>>} only labels of `menus`
@@ -352,6 +367,8 @@ export async function planMenuLabels({ model, business, menus, given = '', signa
   const facts = factsOf(given, business.about)
   const source = [business.about, business.sector, given].join('\n')
   const known = new Map(menus.map((m) => [`${m.name}\u0000${m.locale}`, new Set(m.labels)]))
+  /** Per menu, the labels it shows that were never planned (`seedMenus` `kept`): a new label never repeats one. */
+  const unplanned = new Map(menus.map((m) => [`${m.name}\u0000${m.locale}`, m.kept ?? []]))
   const languageOf = new Map(menus.map((m) => [`${m.name}\u0000${m.locale}`, m.language ?? m.locale]))
   /** The rows of an answer that are labels of `menus`, cleaned; `taken` keeps one per item. */
   const accepted = (/** @type {any[]} */ rows, /** @type {Set<string>} */ taken) => {
@@ -378,10 +395,10 @@ export async function planMenuLabels({ model, business, menus, given = '', signa
   const first = accepted(parsed.relabel, new Set())
   const rowId = (/** @type {{ menu: string, locale: string, from: string }} */ r) =>
     `${r.menu}\u0000${r.locale}\u0000${r.from}`
-  /** Per menu, the labels its items keep (the ones no row renames). */
+  /** Per menu, the labels its items keep: the ones no row renames, and the ones never planned. */
   const keptOf = (/** @type {string} */ key) => {
     const renamed = new Set(first.filter((r) => `${r.menu}\u0000${r.locale}` === key).map((r) => r.from))
-    return [...(known.get(key) ?? [])].filter((l) => !renamed.has(l))
+    return [...[...(known.get(key) ?? [])].filter((l) => !renamed.has(l)), ...(unplanned.get(key) ?? [])]
   }
   /** The rows that repeat a label their menu already shows: an item it keeps, or an earlier row of the answer. */
   const repeated = new Set()
@@ -450,34 +467,49 @@ export async function planMenuLabels({ model, business, menus, given = '', signa
     if (signal?.aborted) throw error
     // otherwise dropped below
   }
-  // The labels each menu shows once the plan lands: what it keeps, what was right the first time, then each label
-  // asked again, in order, if it is still its own.
-  /** @type {Map<string, Set<string>>} */
-  const shown = new Map()
-  const shownIn = (/** @type {{ menu: string, locale: string }} */ r) => {
-    const key = `${r.menu}\u0000${r.locale}`
-    if (!shown.has(key))
-      shown.set(
-        key,
-        new Set(
-          [
-            ...keptOf(key),
-            ...first
-              .filter((x) => `${x.menu}\u0000${x.locale}` === key && !again.includes(x))
-              .map((x) => x.to)
-          ].map(sameLabel)
-        )
-      )
-    return /** @type {Set<string>} */ (shown.get(key))
-  }
-  return first.flatMap((r) => {
+  // Each label asked again takes its new answer, or is dropped when it has none.
+  const candidates = first.flatMap((r) => {
     if (!again.includes(r)) return [r]
     const to = redone.get(rowId(r))
-    const taken = shownIn(r)
-    if (!to || taken.has(sameLabel(to))) return []
-    taken.add(sameLabel(to))
-    return [{ ...r, to }]
+    return to ? [{ ...r, to }] : []
   })
+  return withoutRepeats(candidates, menus)
+}
+
+/**
+ * The plan without a rename that would make its menu show one label twice, judged on what the menu shows once the plan
+ * lands: the labels never planned (`kept`), each planned label under its new name or, not renamed, its own. A rename that
+ * repeats another label of its menu is taken out, the latest first, and its item shows its own label again, which may in
+ * turn repeat the new name of another: the check runs until no label of any menu is shown twice by a rename.
+ *
+ * 🔒 A DROPPED RENAME GIVES ITS ITEM ITS OWN LABEL BACK. "Explore → Menu" repeats the item leading to /menu and is dropped,
+ * so Explore shows "Explore"; "Reservation → Explore", right on its own, then shows Explore twice and goes too (review of
+ * the fix for JA Restaurant 1.0.2, 16/11/2026).
+ * @param {Array<{ menu: string, locale: string, from: string, to: string }>} rows
+ * @param {Array<{ name: string, locale: string, labels: string[], kept?: string[] }>} menus
+ * @returns {Array<{ menu: string, locale: string, from: string, to: string }>}
+ */
+export function withoutRepeats(rows, menus) {
+  let plan = [...rows]
+  for (;;) {
+    /** @type {Map<string, Map<string, number>>} per menu, how many items show each label */
+    const shown = new Map()
+    for (const m of menus) {
+      const key = `${m.name}\u0000${m.locale}`
+      const count = new Map()
+      const show = (/** @type {string} */ label) =>
+        count.set(sameLabel(label), (count.get(sameLabel(label)) ?? 0) + 1)
+      for (const label of m.kept ?? []) show(label)
+      for (const label of m.labels)
+        show(plan.find((r) => `${r.menu}\u0000${r.locale}` === key && r.from === label)?.to ?? label)
+      shown.set(key, count)
+    }
+    const repeat = plan.findLast(
+      (r) => (shown.get(`${r.menu}\u0000${r.locale}`)?.get(sameLabel(r.to)) ?? 0) > 1
+    )
+    if (repeat === undefined) return plan
+    plan = plan.filter((r) => r !== repeat)
+  }
 }
 
 /**
