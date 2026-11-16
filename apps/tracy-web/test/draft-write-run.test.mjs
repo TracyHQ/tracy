@@ -85,6 +85,8 @@ test('every page shows a module for each of its blocks, in the page order where 
           r.note === `copy:site.${block.block}` ||
           r.id === lockOf(block.block)
       )
+      // A module the plan hides because its picture would print with no file (`plan.emptyPictures`).
+      if (!row && floristPlan.emptyPictures.some((e) => e.block === block.block)) continue
       // A block with no module of its own is the page's content (an article, a category list, a contact).
       if (!row) {
         assert.ok(

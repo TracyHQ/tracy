@@ -94,9 +94,14 @@ export async function freshBuild(revised, { writer = {}, pictures, memory = blan
  * aside: exactly those, no more and no fewer (a revision deletes no file; nothing shows them), and once the records
  * the revision hid or put on no page (#599: a full build never made them) are set aside.
  */
+// A revision keeps the first build's site icon (#597): one file at a fixed path, which no door gives back.
+const withoutIcon = (site) => ({
+  ...site,
+  uploads: site.uploads.filter(([p]) => !String(p).endsWith('/favicon.ico'))
+})
 export function sameSite(partial, fresh, orphaned = []) {
-  const b = canonicalOf(fresh)
-  const a = withoutEmptied(withoutHiddenMade(canonicalOf(partial), b), b)
+  const b = withoutIcon(canonicalOf(fresh))
+  const a = withoutIcon(withoutEmptied(withoutHiddenMade(canonicalOf(partial), b), b))
   const shown = new Set(b.uploads.map(([path]) => path))
   const left = a.uploads.filter(([path]) => !shown.has(path)).map(([path]) => path)
   a.uploads = a.uploads.filter(([path]) => shown.has(path))

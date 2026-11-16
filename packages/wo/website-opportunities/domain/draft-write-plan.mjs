@@ -6,6 +6,7 @@ import { entryCountsOf } from './draft-write-coverage.mjs'
 import { DraftWriteError } from './draft-write-error.mjs'
 import { safeOps } from './draft-write-escape.mjs'
 import { guardPlan } from './draft-write-guards.mjs'
+import { itemOrdersOf } from './draft-write-item-order.mjs'
 import { inNfc } from './draft-write-length.mjs'
 import { libraryExpectsOf } from './draft-write-library-check.mjs'
 import { planBlocks } from './draft-write-plan-blocks.mjs'
@@ -190,6 +191,7 @@ export function writePlanOf(order, aiq, options = {}) {
     under: state.under,
     // Blocks of a page under its list page not written there: they would print on the list page too.
     underNotWritten: state.underNotWritten,
+    emptyPictures: state.emptyPictures ?? [],
     controls: [...sink.records.values()].flatMap((r) =>
       list(r.controls).map((c) => ({ record: r.key, ...c }))
     ),
@@ -198,6 +200,8 @@ export function writePlanOf(order, aiq, options = {}) {
       list(r.fieldGroups).map((g) => ({ record: r.key, block: r.block, ...g }))
     )
   }
+  // The order each placed list block shows: the plan's, or the one its kit declares (`draft-write-item-order.mjs`).
+  plan.itemOrders = itemOrdersOf(state)
   plan.pairs = pairsOf(state)
   guardPlan(plan, { order, kit, ...options })
   delete plan.pairs

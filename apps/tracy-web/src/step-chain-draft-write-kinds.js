@@ -7,6 +7,7 @@ import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.
 import { CREATED_KINDS } from 'website-opportunities/domain/draft-write-plan.mjs'
 import { accentFieldsOf, accentHtmlOf } from './step-chain-draft-write-accent.js'
 import { runFavicon } from './step-chain-draft-favicon.js'
+import { listOrderFields } from './step-chain-draft-item-order.js'
 import { slotPictureOf } from './step-chain-draft-picture-fit.js'
 import {
   readAssignment,
@@ -53,7 +54,9 @@ export const RUN = {
   async create(op, ctx) {
     if (!CREATED_KINDS.includes(op.recordKind))
       throw new DraftWriteError('record_kind_unsupported', `${op.key} is a ${op.recordKind}`, { op: op.key })
-    const base = framed(baseFieldsOf(op, ctx), op, ctx)
+    const fields = framed(baseFieldsOf(op, ctx), op, ctx)
+    // Its rank in its list, as its order (`step-chain-draft-item-order.js`); its dates come with the fields.
+    const base = { ...fields, ...listOrderFields(op) }
     await made(op, op.recordKind, writtenFields(base, op, ctx), ctx, base)
   },
   async 'module.copy'(op, ctx) {

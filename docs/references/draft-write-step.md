@@ -51,9 +51,10 @@ mainMenu, order, entries, ops, skipped, conflicts, unproven, controls}`. Every t
   blank contract slots (`kit_missing`: every slot guard would turn off), and when a created record is of a kind the
   write has no shape for (`record_kind_unsupported`: only `menuItem`, `article`, `category` and `contact` are made).
 
-Coverage of the JA Boxing florist fixture (`node --test` of `domain-draft-write-plan.test.mjs` prints it): 280
-entries in (210 fields, 35 pictures, 10 icons, 6 menu, 18 SEO, 1 look), 142 written, 124 skipped, 14 conflicted, none
-unexplained, none written twice; 64 operations. `domain-draft-write-length.test.mjs` proves the sum on the guarded
+Coverage of the JA Boxing florist fixture (`node --test` of `domain-draft-write-plan.test.mjs` prints it), measured
+2026-11-16 (#597): 279 entries in, 129 written, 137 skipped (6 of them `row_keyed_page_without_block`), 13
+conflicted, none unexplained, none written twice; 63 operations (the footer logo module's assignment gone with a text
+logo, one `look.favicon` added). `domain-draft-write-length.test.mjs` proves the sum on the guarded
 fixture.
 
 Run order:
@@ -73,9 +74,35 @@ Run order:
 | `module.unassign` | a module an `unassign` hide leaves on no page, through the site's unassign door, read back as `[]` | `hides.unassign` |
 | `site.identity` | the site name, description and page title setting | `fact:name` |
 | `look.accent` | nothing: the accent is not written (see unproven); its entries are skipped | `look` |
+| `look.favicon` | the site icon at `look.favicon.path`, from the logo picture's stored bytes, else the business initials on the accent: `.ico` of 16, 32 and 48 pixel PNGs, or one 32 pixel `.png` (`draft-write-plan-favicon.mjs`, `step-chain-draft-favicon.js`); a door refusing the path (`bad_params`) is flagged, never a stop; a revision keeps the first build's icon | `favicon_from_logo`, `favicon_from_initials` |
 
 Each copy and library module carries `ordering`, its block's rank on its first page, so modules sharing a position
-draw in the page order. Each copy and created record carries a mark (the note of a module, the alias of a record),
+draw in the page order. Each created article carries `listOrder: {list, rank, of}`, its rank in its page
+type's list in the plan's order (`draft-write-item-order.mjs`): the step writes the rank as `ordering`. Its dates come
+from one rule only, `dated.rank` (`draft-write-record-columns.mjs`, the same plan list order) turned into `created` and
+`publish_up` by `step-chain-draft-write-dates.js`, so a list the kit orders by publish date shows the plan's order on
+every page. `plan.itemOrders` names, for each placed block that lists records, whether it shows the plan's order
+(`follows: 'plan'`) or the order its kit declares (`follows: 'kit'`, a module's own title or menu order).
+
+Pictures (#597, gate run 7):
+
+- A picture upload whose contract slots declare a frame (`fit` with an `aspect`) carries `slotFit` (the frame, its
+  minimum width, its transparency, its slots) and `slotOptional` (every place's block declares a hide or fallback for
+  no data) (`draft-write-picture-fits.mjs`). The step pads the picture with transparency to the frame (the brand path's
+  `prepareBrand`: nothing is cut) and enlarges it at most twice to reach the minimum width
+  (`step-chain-draft-picture-fit.js`). One it cannot fit leaves an optional place out (not uploaded, its slots not
+  written, `placesLeft` of the report, `slot_picture_left_out`) and stops a required one typed and named
+  (`slot_picture_unfit`, noRerun, `problem`: `slot_picture_too_small`, `slot_picture_opaque`,
+  `slot_picture_shapes_differ`). On JA Boxing every logo place is optional: block-170 hides with no data, the header
+  falls back to the template's logo.
+- An in-place module whose image slot would keep an empty or root-only address hides by its block's no data rule
+  (`plan.emptyPictures`, `draft-write-empty-pictures.mjs`). A picture address that names no file stops the operation
+  typed (`picture_address_empty`, noRerun).
+- A created article's picture carries its alt beside it (`image_intro_alt`, `image_fulltext_alt`): the pictures
+  step's alt for it, else one from the record's title, never empty, never a file name; a place the contract declares
+  decorative (`editorial.decorative_image`) keeps it empty (`draft-write-picture-alts.mjs`).
+- An article or content list menu item that leaves `show_author` on while the kit declares the author pages unbuilt
+  is flagged with the kit key that would turn it off (`author_link_to_unbuilt_page`, `draft-write-author-links.mjs`). Each copy and created record carries a mark (the note of a module, the alias of a record),
 which a resumed run uses to find it again.
 
 - A menu block on the main menu writes no menu items of its own: its entries are the page items
@@ -219,7 +246,8 @@ memory site's scripted failure) is a failed call: the operation is redone once, 
   the write with `read_back_mismatch` (noRerun). It names the operation, the entity, slot, column and lengths, never
   the text.
 - A failing operation is tried twice (`DRAFT_WRITE_ATTEMPTS`). After that, or at once for a typed stop inside an
-  operation (`ref_unresolved`, `initials_drawer_missing`, `record_kind_unsupported`), the write stops with
+  operation (`ref_unresolved`, `initials_drawer_missing`, `record_kind_unsupported`, `picture_address_empty`,
+  `slot_picture_unfit`), the write stops with
   `redo_failed` (noRerun) and the stop's code as `cause`. An operation of no known kind stops it with `op_unknown`.
 - Every stop carries the report: the operations that ran (`ran`), the one that failed (`failed`), the conflicts and the
   unproven flags. A `fatal` error (the process went away) is passed on as it is, with the same report. A

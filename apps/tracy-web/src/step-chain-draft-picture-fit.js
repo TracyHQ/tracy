@@ -74,3 +74,17 @@ export async function slotPictureOf(op, stored, ctx) {
   ctx.state.left[`picture:${op.picture}`] = got.problem
   return null
 }
+
+/** A picture's uploaded address; none stops `ref_unresolved`, one that names no file (the site root) prints an empty
+ * picture and stops `picture_address_empty` before it is written anywhere. */
+export function pictureAddressOf(ref, path) {
+  if (!path) throw new DraftWriteError('ref_unresolved', `${ref} was not uploaded`, { ref })
+  if (/^\s*\/?\s*$/.test(String(path)))
+    throw new DraftWriteError(
+      'picture_address_empty',
+      `${ref} has no file address`,
+      { ref },
+      { noRerun: true }
+    )
+  return path
+}

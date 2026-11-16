@@ -9,6 +9,10 @@
 import { lookOp } from './draft-write-plan-accent.mjs'
 import { aliasesOf, reservedAliasesOf } from './draft-write-alias.mjs'
 import { assignOf, copyOp, createOp, drawOf, valuesOf } from './draft-write-plan-records.mjs'
+import { flagAuthorLinks } from './draft-write-author-links.mjs'
+import { emptyPicturesOf } from './draft-write-empty-pictures.mjs'
+import { listOrdersOf } from './draft-write-item-order.mjs'
+import { planPictureAlts } from './draft-write-picture-alts.mjs'
 import { faviconOp } from './draft-write-plan-favicon.mjs'
 import { pictureFitsOf, slotFitKeysOf } from './draft-write-picture-fits.mjs'
 
@@ -57,6 +61,11 @@ export function opsOf(state) {
   const records = [...state.sink.records.values()]
   const created = records.filter((r) => r.kind === 'created')
   for (const note of aliasesOf(created, reservedAliasesOf(state.kit.mapping))) state.sink.unproven.push(note)
+  // A module whose image slot would print an empty address: hidden by its block's rule (`draft-write-empty-pictures.mjs`).
+  const empty = emptyPicturesOf(state)
+  state.emptyPictures = [...empty.values()]
+  // The alt text beside every picture of a created record (`draft-write-picture-alts.mjs`).
+  planPictureAlts(state)
   // The declared frame of every contract slot a picture goes to (`draft-write-picture-fits.mjs`).
   const fits = pictureFitsOf(state)
   const pictures = [...state.pictures.values()].map((p) => ({
@@ -92,10 +101,13 @@ export function opsOf(state) {
     .filter((r) => r.kind === 'copy')
     .sort((a, b) => Number(Boolean(b.tabsAt)) - Number(Boolean(a.tabsAt)))
   const stores = records.filter((r) => r.kind === 'store')
+  // Each created article's rank in its list: one order wherever the list is shown (`draft-write-item-order.mjs`).
+  const orders = listOrdersOf(state)
+  const listed = (r) => ({ ...createOp(r), ...(orders.has(r.key) ? { listOrder: orders.get(r.key) } : {}) })
   const ops = [
     ...pictures,
     ...home.map(createOp),
-    ...others.map(createOp),
+    ...others.map(listed),
     ...main.map(createOp),
     ...rest.map(createOp),
     ...copies.map(copyOp),
@@ -115,7 +127,8 @@ export function opsOf(state) {
         entries: r.entries,
         rules: ['library.position', 'ordering:page_rank']
       })),
-    ...[...copies, ...stores]
+    // A store module hidden for an empty picture is not assigned; one its kit hides by `unassign` still gets its door.
+    ...[...copies, ...stores.filter((r) => r.unassign || empty.get(r.key)?.rule !== 'hide')]
       .map((r) => assignOf(r, state.kit.mapping.placements?.[r.block]))
       .filter(Boolean),
     ...copies
@@ -158,5 +171,7 @@ export function opsOf(state) {
     // The site icon at the path the kit declares (`draft-write-plan-favicon.mjs`).
     ...[faviconOp(state)].filter(Boolean)
   ]
+  // A link to an author page the build does not make (`draft-write-author-links.mjs`).
+  flagAuthorLinks(state, ops)
   return ops
 }

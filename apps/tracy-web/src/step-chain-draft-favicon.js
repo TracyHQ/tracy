@@ -2,8 +2,9 @@
 // `draft-write-plan-favicon.mjs`). Made from the logo's stored bytes, contained in a transparent square with a small
 // margin and never cut; or, with no logo, the business initials drawn on the accent (`initialsAvatar`, the lettermark
 // the pictures step draws). An `.ico` holds 16, 32 and 48 pixel PNG entries (`pngsToIco`, the brand step's own); a
-// `.png` one 32 pixel square. Uploaded through the media door and read back by its bytes. A logo sharp cannot read
-// falls back to the initials, flagged `favicon_logo_unread`.
+// `.png` one 32 pixel square. Uploaded through the media door and read back by its bytes; a door that refuses the
+// path (`bad_params`) is flagged `favicon_door_refused` and the write goes on. A logo sharp cannot read falls back to the initials,
+// flagged `favicon_logo_unread`.
 import sharp from 'sharp'
 import { pngsToIco } from './brand-step/tools/ico.js'
 import { initialsAvatar } from './lib/initials-avatar.js'
@@ -53,6 +54,16 @@ export async function faviconBytesOf(op, ctx) {
 /** Run a `look.favicon` op: make the file, upload it at the declared path, read it back. */
 export async function runFavicon(op, ctx) {
   const { bytes, mime } = await faviconBytesOf(op, ctx)
-  const answer = await ctx.doors.upload({ applyId: ctx.applyId(op, 'upload'), path: op.path, bytes, mime })
+  let answer
+  try {
+    answer = await ctx.doors.upload({ applyId: ctx.applyId(op, 'upload'), path: op.path, bytes, mime })
+  } catch (error) {
+    // A door that refuses the path (`bad_params`: the media door measures `images/` paths only) leaves the template's
+    // icon: the icon is no place of the plan, so the write goes on and the report says so. Any other failure is
+    // retried as every door call is.
+    if (error?.fatal || error?.code !== 'bad_params') throw error
+    ctx.report.unproven.push({ code: 'favicon_door_refused', op: op.key, path: op.path, cause: error.code })
+    return
+  }
   await readUpload(op, answer?.path ?? op.path, bytes, ctx)
 }

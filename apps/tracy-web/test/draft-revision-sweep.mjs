@@ -1,8 +1,8 @@
 // Helpers of the crash sweeps of the revision run tests (#599). Invented data only.
 import { snapshotOf } from './draft-write-fixtures.mjs'
 
-/** The door calls of the first build of the florist on a blank site. */
-export const FIRST = 63
+/** The door calls of the first build of the florist on a blank site (the favicon upload included). */
+export const FIRST = 64
 
 /** A record whose state is only what `save` stored: `revive()` is the record a new process reads. */
 export function durable() {

@@ -12,7 +12,7 @@
 //               `record_removal_no_door`); `dropped` lists the addresses a rewritten operation no longer writes, which
 //               would keep the old words: the same stop.
 // A picture upload is compared by what gives its bytes (its stored id, its drawing), not its alt text: the alt text is
-// written by the operations that show the picture.
+// written by the operations that show the picture. The site icon (`look.favicon`) is compared by its path only.
 import { createHash } from 'node:crypto'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -25,6 +25,9 @@ const IN_PLACE = new Set(['contract.apply', 'record.patch', 'site.identity'])
 
 /** What decides an operation's effect on the site: the operation, or for an upload what gives its bytes. */
 const effectOf = (op) => {
+  // The site icon is one file at a fixed path: written again it overwrites the file, which no door gives back, so an
+  // abandoned revision could not leave the site as it was. A revision keeps the first build's icon (#597).
+  if (op.kind === 'look.favicon') return { kind: op.kind, path: op.path }
   if (op.kind !== 'picture.upload') return op
   const { alt: _alt, entries: _entries, rules: _rules, ...bytes } = op
   return bytes

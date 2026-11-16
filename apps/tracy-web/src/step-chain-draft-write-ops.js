@@ -14,6 +14,7 @@ import {
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { frameOf } from 'website-opportunities/domain/draft-write-frame.mjs'
 import { datesOf } from './step-chain-draft-write-dates.js'
+import { pictureAddressOf } from './step-chain-draft-picture-fit.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const EXT = { 'image/png': 'png', 'image/webp': 'webp', 'image/svg+xml': 'svg' }
@@ -43,9 +44,7 @@ export function resolved(value, ctx) {
     return value.form === 'address' ? `index.php?Itemid=${page}` : String(page)
   }
   if (ref.startsWith('picture:')) {
-    const path = ctx.state.paths[ref]
-    if (!path) throw new DraftWriteError('ref_unresolved', `${ref} was not uploaded`, { ref })
-    return path
+    return pictureAddressOf(ref, ctx.state.paths[ref])
   }
   if (ref.startsWith('tabs:')) return `tracy-tabs-${id(ref.slice(5))}`
   if (value.form === 'articleLink') return `index.php?option=com_content&view=article&id=${id(ref)}`

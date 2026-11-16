@@ -92,6 +92,7 @@ Every finding has `kind`, `page` (a site address, or a plan page id for a plan p
 | `pages` | `plan_menu_item_missing` | `{menu, path}`: `main`, or the menu type of another menu the write made; never for a page the write plan reaches under its list page (`plan.under`), which has no item of its own and is looked for at its record's alias below the list page |
 | `pages` | `site_page_not_in_plan` | a page read on the site whose address is not under a plan page (a demo leftover) |
 | `pages` | `site_menu_item_not_in_plan` | a menu link to such a page; `excerpt`: its label, at most 40 characters, only when the template's demo content declares that address; else `labelLength` only |
+| `pages` | `empty_picture` | an `img` whose `src` is empty or names only the site root (`/`, the base address): a broken picture (`check-empty-pictures.mjs`, #597); `place`: `{parent, class, src}` of the element, never its words |
 
 ## Design typed
 

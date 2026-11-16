@@ -8,6 +8,7 @@
 // (`kit.demoRoutes`), else only their length. Addresses are compared folded (accents, case and full width forms
 // aside): Joomla writes `cafe-posies` for a page the write named `Café posies` while `slugOf` keeps the accent.
 import { foldHeld } from '../../packages/wo/website-opportunities/domain/held-text-match.mjs'
+import { emptyPictureFindings } from './check-empty-pictures.mjs'
 import { pagePathOf } from './site-pages.mjs'
 
 const EXCERPT = 40
@@ -92,5 +93,7 @@ export function checkPages({ expected, others = [], pages, base, demoRoutes = []
         place: { path: link.to },
         ...(demo.has(key) ? { excerpt: cut(link.label) } : { labelLength: [...String(link.label)].length })
       })
+  // A picture printed with no file (`check-empty-pictures.mjs`).
+  findings.push(...emptyPictureFindings(shown, base))
   return { status: 'ran', notes: [`${expected.length} plan page(s), ${shown.length} page(s) read`], findings }
 }
