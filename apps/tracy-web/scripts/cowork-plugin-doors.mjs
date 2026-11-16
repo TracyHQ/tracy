@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
  * Write `src/lib/template-readiness/cowork-plugin-doors.json`: what each released Claude Cowork for Joomla package offers
- * of the doors the write step declares (`src/write-step/plugin-doors.js`), read from the package's own bytes
- * (`plugin-doors-of-package.js`). The readiness verdict's write doors check reads this file, so no check downloads a zip.
+ * of the doors the write step declares (`src/write-step/plugin-doors.js`), and which contracts its hide review covers
+ * (`reviews`), read from the package's own bytes (`plugin-doors-of-package.js`). The readiness verdict's write doors check
+ * reads this file, so no check downloads a zip.
  *
  *   node apps/tracy-web/scripts/cowork-plugin-doors.mjs [--from 0.24.80] [--dry-run]
  *
@@ -86,7 +87,14 @@ export async function main(argv = process.argv.slice(2)) {
     const { sha256: pinned } = /** @type {{ sha256?: string }} */ (wanted.get(version))
     // Kept only while it answers every door and is the very package a pin states (a pin never changes bytes in place).
     const same = !pinned || kept?.sha256 === pinned.toLowerCase()
-    if (kept && same && evidences.every((e) => typeof kept.evidence?.[e] === 'boolean')) {
+    // A release read before the hide reviews were kept is read again for them (`reviews`, plugin-doors-of-package.js).
+    if (
+      kept &&
+      same &&
+      evidences.every((e) => typeof kept.evidence?.[e] === 'boolean') &&
+      kept.reviews &&
+      typeof kept.reviews === 'object'
+    ) {
       releases[version] = kept
       continue
     }
@@ -94,7 +102,11 @@ export async function main(argv = process.argv.slice(2)) {
     const pkg = await packageOf(url, sha256)
     const read = evidenceOfPackage(pkg.bytes, evidences)
     if (read.version !== version) throw new Error(`${url} says it is ${read.version}, not ${version}`)
-    releases[version] = { sha256: pkg.sha256, evidence: { ...kept?.evidence, ...read.evidence } }
+    releases[version] = {
+      sha256: pkg.sha256,
+      evidence: { ...kept?.evidence, ...read.evidence },
+      reviews: read.reviews
+    }
     process.stdout.write(
       `${version} ${Object.values(read.evidence).filter(Boolean).length}/${evidences.length}\n`
     )

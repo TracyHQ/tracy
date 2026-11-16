@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-653-ja-diner-chain-faults",
+  "kind": "fix",
+  "title": "A JA Diner chain build's write step keeps its head rules when the plan drops the head block, takes the hides no contract slot needs, holds photos to the door's width, and the readiness verdict sees the plugin a site updates itself to and the modules its kit misses",
+  "pr": 653,
+  "area": "website-opportunities/write-step",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database, no stand, no model).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A plan that drops the kit's head injection block moves the head rules to the first kept free HTML block printed on every page, and a stage with no such block says so and writes nothing.",
+    "A hide of a not-writable frame that shows the template's own file is skipped, never a contract refusal; a title printed only on dropped pages and a dropped block is hidden with them; a hidden link whose label also goes takes its emptiable address along.",
+    "A link whose label the plan keeps writes its address over the plan's hide of that address, and the hide yields.",
+    "A tab the plan hides stays (skipped with its reason), a frame the kit read on no page is hidden, and a link printed from an outside address leaves with the one address slot of its block that no other kit link owns and no write fills.",
+    "An image slot's minimum width is capped at its demo file width in the picture step and the package check.",
+    "A control that acts inside the page is not held to a plan address.",
+    "The write doors check requires a hide review of the release's contract and judges the newest stable release a site updates itself to; on the committed pins JA Diner reads cowork-release-needed (hide-review, self-update from 0.24.95-rc.2) and JA Boxing stays green.",
+    "The kit modules check names module-95 and module-104 on the committed JA Diner 1.0.8 kit and nothing on JA Boxing."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-live-head-block.test.mjs",
+      "apps/tracy-web/test/write-step-hide-yields.test.mjs",
+      "apps/tracy-web/test/site-pictures-min-width.test.mjs",
+      "apps/tracy-web/test/write-step-plan-links.test.mjs",
+      "apps/tracy-web/test/template-readiness-plugin-doors.test.mjs",
+      "apps/tracy-web/test/template-readiness-kit-modules.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a plan that drops the head block moves it to the first kept free HTML block printed on every page",
+      "no kept free HTML block on every page: no head block, and the stage says so instead of writing into a dropped one",
+      "the hidden page link rule is written into the block that took the head over",
+      "a template mask the plan hides is the template look: skipped with its reason, never a contract refusal",
+      "the address a kept plan link writes over the plan hide of it is the link's: the hide yields",
+      "a title printed only on pages and a block the plan drops leaves with them; one a kept page prints still fails",
+      "a link whose words stay and whose address the plan hides writes its address; with no label it leaves as before",
+      "a hidden link whose words the plan hides too takes the address the site can empty along: the button leaves whole",
+      "a tab the plan hides stays as the tab it is; a frame the kit read on no page leaves with nothing; a \"Website\" line goes with its address",
+      "the minimum width is capped at the demo file width, as the write door caps it",
+      "a control that acts inside the page is not held to the plan address the link stage never writes",
+      "the T3 case: JA Diner j6 on 0.24.80 lacked every write door; on 0.24.95-rc.2 the site updates itself to 0.24.95, which has no review of its contract",
+      "a review read against other map bytes, or never read, is no review: the release a site updates itself to is held to it",
+      "the latest JA Boxing release is green against the doors read from the released packages (committed manifest)",
+      "the committed JA Diner 1.0.8 kit misses the home features and the chef modules: the verdict names them",
+      "the latest JA Boxing kit holds a block for every module its pages print: nothing to flag"
+    ]
+  },
+  "evidence": "Arabian Tea House on JA Diner j6 1.0.8, dev chain build 16/11/2026: final site check 71 blocks (unaddressable-items 27, hidden-page-links 8, demo-words 7, demo-links 6, plan-links 4, list-rows 2, phone-callable 4 ...); the site's updater log shows 0.24.95-rc.2 replaced by 0.24.95 at 06:15 UTC.",
+  "fence": "write-step hide/link/head stages, the picture step's width rule, and the readiness write doors and kit modules checks"
+}

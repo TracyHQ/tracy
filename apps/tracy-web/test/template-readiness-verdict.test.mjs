@@ -142,7 +142,7 @@ test('the reference: the latest JA Boxing j6 release in the quickstart list is g
   assert.equal(pieceOf(verdict, 'design-system').code, 'ds-not-checked')
 })
 
-test('the T3 case: JA Diner j6 is judged by the same pieces and codes, and is green on every repository piece (#439)', () => {
+test('the T3 case: JA Diner j6 is judged by the same pieces and codes; its kit misses modules its pages print (#439, kit modules)', () => {
   const pin = latestPin('ja-diner')
   assert.equal(pin.tag, 'quickstart/ja-diner/j6')
   const verdict = readinessVerdict(releaseOfPin(pin, defaultContracts()), {
@@ -152,8 +152,9 @@ test('the T3 case: JA Diner j6 is judged by the same pieces and codes, and is gr
   assert.deepEqual(brief(verdict), [
     ['quickstart-release', 'done', 'install-file-ready'],
     ['contract', 'done', 'coverage-ready'],
-    // The kit declares the five hidden-by-CSS fields (#435) and is settled by the current tool (#439).
-    ['template-kit', 'done', 'demo-measures-clean'],
+    // The kit declares the five hidden-by-CSS fields (#435) and is settled by the current tool (#439), but its template-kit
+    // 3.1.0 build read no T3 Section<N> module, so the home features (module-95) and others have no block (kit-modules-check.js).
+    ['template-kit', 'todo', 'kit-modules-missing'],
     ['cowork-pin', 'todo', 'customize-not-checked'],
     ['customize', 'todo', 'customize-not-checked'],
     ['design-system', 'todo', 'ds-not-checked'],
@@ -166,7 +167,7 @@ test('the command line prints the verdict of a named template as text and as JSO
   let text = ''
   assert.equal(await main(['ja-diner', '--pin-only'], { out: (s) => (text += s) }), 1)
   assert.match(text, /^quickstart\/ja-diner\/j6 1\.0\.8 /)
-  assert.match(text, /done {5}template-kit {9}demo-measures-clean/)
+  assert.match(text, /todo {5}template-kit {9}kit-modules-missing/)
   assert.match(text, /todo {5}design-system {8}ds-not-checked/)
   let json = ''
   assert.equal(await main(['quickstart/ja-diner/j6', '--json', '--pin-only'], { out: (s) => (json += s) }), 1)

@@ -112,6 +112,12 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
       byId.set(link?.id, { link, block })
       if (link?.labelId && !byLabel.has(link.labelId)) byLabel.set(link.labelId, { link, block })
     }
+  // The address slot each kit link is itself (its id is a slot of the map), by content map key.
+  const ownSlotOfOther = new Map(
+    [...byId.keys()]
+      .filter((id) => typeof id === 'string' && holdsAddress(slots.get(contentMapKey(id))))
+      .map((id) => [contentMapKey(id), id])
+  )
   const anchorCache = new Map()
   const anchorsOf = (block) => {
     if (!anchorCache.has(block)) anchorCache.set(block, anchorsOfBlock(block, [...slotList, ...removed]))
@@ -141,8 +147,19 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
     return sameAnchor.length === 1 ? sameAnchor[0].key : null
   }
 
-  /** The link slots of its block that hold the address the kit measured on the link. */
+  /**
+   * The link slots of its block that hold the address the kit measured on the link. A slot that is another kit link's own
+   * address slot is that link's: it is left out when another candidate remains (a demo gives one placeholder address to
+   * every link of a contact, so "Website" matched the four social links' slots too; JA Diner 1.0.8's two slides each print
+   * the about page, and the second slide's button has a kit link of its own).
+   */
   function byItsAddress(link, block) {
+    const all = addressMatches(link, block)
+    const others = all.filter((key) => !(ownSlotOfOther.has(key) && ownSlotOfOther.get(key) !== link?.id))
+    return others.length ? others : all
+  }
+
+  function addressMatches(link, block) {
     if (!link?.target) return []
     const entities = new Set([
       block?.source?.entity,
