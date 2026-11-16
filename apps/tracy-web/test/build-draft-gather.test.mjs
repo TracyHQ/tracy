@@ -463,22 +463,6 @@ test('a read past the time budget is set aside as too slow; what was read by the
   assert.equal(brief.googlePlace?.placeId, PLACE_ID)
 })
 
-test('a Google link that matches several places is set aside, the other links still read', async () => {
-  const { domain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
-  domain.searchNamedPlaces = async () => ({
-    candidates: [
-      { provider: 'google-places', providerId: 'ChIJinventedA', name: 'Hollowmere Bakehouse' },
-      { provider: 'google-places', providerId: 'ChIJinventedB', name: 'Hollowmere Bakehouse' }
-    ]
-  })
-  const words = 'https://www.google.com/maps/search/?api=1&query=Hollowmere+Bakehouse'
-  const { setAside } = await gatherer(domain, { keys: { google: 'google-test' } })({
-    links: [words, SITE],
-    description: null
-  })
-  assert.deepEqual(setAside, [{ link: words, reason: 'the Google link matches more than one place' }])
-})
-
 test('a listing page is read once and kept as the private listing source, through its own writer', async () => {
   const { domain } = await fakeDomain()
   const listing = 'https://www.yelp.com/biz/hollowmere-bakehouse-brackenford'

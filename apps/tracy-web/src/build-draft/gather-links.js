@@ -36,18 +36,33 @@ export const reasonOf = (code) => SET_ASIDE[code] ?? SET_ASIDE.error
 
 const aside = (link, code) => ({ link, reason: reasonOf(code) })
 
+/** The owner's answer that none of the places of an ambiguous Google link is theirs. */
+export const NO_PLACE = 'none'
+
 /**
- * The opportunity fields of the owner's links, and the links set aside. A Google link that matches several places is
- * set aside and the others are judged again; no usable link at all answers `fields: null`.
- * @param {{linkFields: Function, domain: object, links: string[], googleKey: boolean}} input
+ * The opportunity fields of the owner's links, and the links set aside. A Google link that matches several places
+ * answers its candidates (`ambiguous`) while the owner has not said which one is theirs (`place` undefined or null),
+ * so the owner is asked first; with the owner's pick (`place`, a candidate as the picker sends it) the link door reads
+ * that place, as the Website Opportunities picker does; with `NO_PLACE` the link is set aside and the others are
+ * judged again. No usable link at all answers `fields: null`.
+ * @param {{linkFields: Function, domain: object, links: string[], googleKey: boolean,
+ *   place?: object | 'none' | null}} input
  * @returns {Promise<{fields: object | null, listings: object[], setAside: Array<{link: string, reason: string}>,
- *   googleLink: string | null}>} `googleLink`: the Google link the place came from, when one was matched
+ *   googleLink: string | null, ambiguous?: object[]}>} `googleLink`: the Google link the place came from, when one
+ *   was matched; `ambiguous`: the candidates to ask about
  */
-export async function linksOf({ linkFields, domain, links, googleKey }) {
+export async function linksOf({ linkFields, domain, links, googleKey, place = null }) {
   const setAside = []
   let raws = [...links]
-  let answer = await linkFields(domain, { raws, typedName: null, place: null, legacy: false })
+  const picked = place && typeof place === 'object' ? place : null
+  let answer = await linkFields(domain, { raws, typedName: null, place: picked, legacy: false })
+  // A pick the link door cannot read (`INVALID_PLACE`) goes on as none of them.
+  if (picked && answer.refusal?.code === 'INVALID_PLACE')
+    answer = await linkFields(domain, { raws, typedName: null, place: null, legacy: false })
   const ambiguous = answer.refusal?.code === 'GOOGLE_LINK_AMBIGUOUS'
+  const candidates = answer.refusal?.extra?.candidates ?? []
+  if (ambiguous && place !== NO_PLACE && candidates.length > 1)
+    return { fields: null, listings: [], setAside, googleLink: null, ambiguous: candidates }
   if (ambiguous) {
     const report = answer.refusal.extra?.links ?? []
     const at = report.findIndex((l) => l.kind === 'google' && l.used)

@@ -21,6 +21,7 @@ import { readEngineRequest } from './engine-request.js'
 import { callerOf } from './caller.js'
 import { requestRefusalOf } from './engine-revise.js'
 import { buildOpen } from './build-store.js'
+import { placeAnswerOf, placeAsked } from './gather-place.js'
 import { TRY_LATER_SAY } from './spend-limits.js'
 
 const BASE = '/api/build-draft'
@@ -138,6 +139,12 @@ export function buildEngineRoutes({
       const row = accountId ? await readEngineRow(pool, accountId) : null
       if (!row) return refuse(c, 'NO_DRAFT')
       if (buildOpen(row.build)) return refuse(c, 'BUILD_RUNNING')
+      // Research asked which place the Google link means (`gather-place.js`): once the owner answered, the plan asked
+      // for runs that research again with the answer; until then the question is answered again.
+      if (placeAsked(row))
+        return placeAnswerOf(row, row.engine.inputs?.links) === undefined
+          ? json(c, await engine.read(accountId))
+          : answer(c, await engine.research(accountId, row.engine.inputs, row))
       if (!row.research?.profile) return refuse(c, 'NO_RESEARCH')
       const chosen = row.plan?.look?.template ?? row.template
       if (!chosen) return refuse(c, 'NO_TEMPLATE')

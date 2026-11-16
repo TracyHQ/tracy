@@ -10,6 +10,8 @@
  * The pictures the sources collected are stored as draft pictures (`pictures.js`), within the same deadline: the
  * manifest names only stored copies, and a picture not stored is set aside with its reason (`picturesSetAside`).
  *
+ * A Google link that matches more than one place stops the step before anything is read, with the question that asks
+ * the owner which place is theirs (`place_ambiguous`, `gather-place.js`); the owner's answer comes back as `place`.
  * A link that cannot be read is set aside with a plain reason (`setAside`); research with nothing read stops with
  * `research_empty` (`noRerun`: the same links read again give the same nothing). One deadline (`budgetMs`) bounds the
  * whole step; what was read by then is kept.
@@ -17,6 +19,7 @@
 import { randomUUID } from 'node:crypto'
 import { EngineStepError } from './engine-steps.js'
 import { linksOf, reasonOf } from './gather-links.js'
+import { placeAmbiguousError } from './gather-place.js'
 import { boundedFetch, isCollected, readSources, withinTime } from './gather-sources.js'
 import { briefOf, profileOfRead } from './gather-read.js'
 import { readingOf } from './gather-reading.js'
@@ -68,14 +71,15 @@ const unreadOf = (rows, pasted) =>
  *   readingDoor?: () => Promise<object>, readingFetch?: typeof fetch, readingBudgetMs?: number,
  *   now?: () => number, budgetMs?: number, log?: Console}} deps `readingDoor`: the business reading's model door
  *   (`woEditorial`); `readingFetch`: the fetch its model call goes out through
- * @returns {(input: {links: string[], description: string | null, withheld?: object | null}, context?: {accountId?: string}) =>
+ * @returns {(input: {links: string[], description: string | null, withheld?: object | null,
+ *   place?: object | 'none' | null}, context?: {accountId?: string}) =>
  *   Promise<{brief: object, manifest: object[], setAside: Array<{link: string, reason: string}>,
  *   picturesSetAside: Array<{url: string, reason: string}>, pictureRun?: string, logoFile?: string,
  *   reading: object}>} `reading`: how the business was read (`gather-reading.js` record)
  */
 export function createPreSiteGatherer(deps) {
   const { parts, now = Date.now, budgetMs = GATHER_BUDGET_MS } = deps
-  return async function gather({ links, description, withheld = null }, context = {}) {
+  return async function gather({ links, description, withheld = null, place = null }, context = {}) {
     const started = now()
     const remaining = () => budgetMs - (now() - started)
     const deadline = AbortSignal.timeout(budgetMs)
@@ -94,8 +98,11 @@ export function createPreSiteGatherer(deps) {
       linkFields: deps.linkFields,
       domain,
       links: links ?? [],
-      googleKey: Boolean(keys?.google)
+      googleKey: Boolean(keys?.google),
+      place
     })
+    // The Google link matches more than one place: the owner says which one first (`gather-place.js`).
+    if (judged.ambiguous) throw placeAmbiguousError(judged.ambiguous)
     const setAside = [...judged.setAside]
     if (!judged.fields)
       throw new EngineStepError('research_empty', 'none of the links can be read', { noRerun: true })
@@ -109,9 +116,9 @@ export function createPreSiteGatherer(deps) {
       provider_id: fields.providerId,
       candidate: fields.candidate
     }
-    const place = await placeFactsOf({ domain, fields, keys, deps: domainDeps, now, remaining })
-    if (place.reason && judged.googleLink)
-      setAside.push({ link: judged.googleLink, reason: reasonOf(place.reason) })
+    const placeRead = await placeFactsOf({ domain, fields, keys, deps: domainDeps, now, remaining })
+    if (placeRead.reason && judged.googleLink)
+      setAside.push({ link: judged.googleLink, reason: reasonOf(placeRead.reason) })
     const rows = await readSources({
       refs: parts.refsOfCandidate(fields.candidate),
       // The place executor's own chain: every social key and the operator's provider order (/ops/wo).
@@ -132,7 +139,7 @@ export function createPreSiteGatherer(deps) {
     setAside.push(...unreadOf(rows, pasted))
     const listingRow = judged.listings.some((l) => l.ok) ? await deps.listingRowOf(judged.listings) : null
     const read = [...rows, ...(listingRow ? [listingRow] : [])]
-    if (!place.facts && !read.some(isCollected))
+    if (!placeRead.facts && !read.some(isCollected))
       throw new EngineStepError('research_empty', 'nothing could be read from the links', { noRerun: true })
     const pictures = await storedPicturesOf({
       deps,
@@ -151,7 +158,7 @@ export function createPreSiteGatherer(deps) {
     const subject = profileOfRead({
       opp,
       rows: read,
-      googlePlace: place.facts,
+      googlePlace: placeRead.facts,
       description,
       domain,
       parts
@@ -162,7 +169,7 @@ export function createPreSiteGatherer(deps) {
       fetch: deps.readingFetch,
       rows: read,
       profile: subject.merged,
-      google: place.facts,
+      google: placeRead.facts,
       trade: subject.trade === 'other' ? null : subject.trade,
       description,
       withheld,
@@ -175,7 +182,7 @@ export function createPreSiteGatherer(deps) {
       opp,
       rows: read,
       media: pictures.rows,
-      googlePlace: place.facts,
+      googlePlace: placeRead.facts,
       description,
       madeAt,
       domain,

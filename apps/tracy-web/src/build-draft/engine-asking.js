@@ -10,15 +10,18 @@
  *   - `site_name_invalid`: the name is empty or holds a control character, markup or markdown: asked again with one
  *     plain sentence.
  *
+ *   - `place_ambiguous` (research, #609): the owner's Google link matches more than one place; the question asks which
+ *     one is theirs (`gather-place.js`), and the research runs again with the answer.
+ *
  * Every site name error carries the whole question to ask (`details.question`) and its id (`details.questionId`);
  * the question is taken from there, never rebuilt. Without a question (a malformed error) it answers null, and the
  * step stops as before.
  */
-import { SITE_NAME_TOPIC } from 'website-opportunities/domain'
+import { PLACE_CHOICE_TOPIC, SITE_NAME_TOPIC } from 'website-opportunities/domain'
 import { SITE_NAME_INVALID_SAY, siteNameTooLongSay } from './engine-state.js'
 
-const isQuestion = (q) =>
-  q && typeof q === 'object' && q.topic === SITE_NAME_TOPIC && typeof q.id === 'string'
+const isQuestion = (q, topic = SITE_NAME_TOPIC) =>
+  q && typeof q === 'object' && q.topic === topic && typeof q.id === 'string'
 
 /**
  * @param {any} error the failure compose ended with
@@ -26,6 +29,9 @@ const isQuestion = (q) =>
  */
 export function askingOf(error) {
   const question = error?.details?.question
+  // Research: the Google link matches more than one place (`gather-place.js`); its question goes on the card first.
+  if (error?.code === 'place_ambiguous')
+    return isQuestion(question, PLACE_CHOICE_TOPIC) ? { state: 'asking', question } : null
   if (!isQuestion(question)) return null
   if (error.code === 'site_name_missing') return { state: 'asking', question }
   if (error.code === 'site_name_invalid') return { state: 'asking', question, say: SITE_NAME_INVALID_SAY }

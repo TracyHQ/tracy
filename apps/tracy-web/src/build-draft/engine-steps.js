@@ -19,6 +19,7 @@
  */
 import { randomUUID } from 'node:crypto'
 import {
+  PLACE_CHOICE_QUESTION_ID,
   SITE_NAME_QUESTION_ID,
   buildNeedsProfile,
   composePlan,
@@ -45,7 +46,7 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
  * profile with its questions. `kit` (the chosen template's, when known) gives the main button's answer its real length.
  * @param {{links: string[], description?: string}} inputs
  * @param {{gather: Function, model: Function, kit?: {blockStore: object, library: object[]} | null,
- *   accountId?: string, withheld?: object | null}} tools `accountId`: whose research it is (the gatherer counts paid
+ *   accountId?: string, withheld?: object | null, place?: object | 'none'}} tools `accountId`: whose research it is (the gatherer counts paid
  *   reads per account); `withheld`: what the draft's earlier research kept off the site
  * @returns {Promise<{links: string[], description: string | null, trade: string | null, brief: object,
  *   manifest: object[], profile: object, setAside?: Array<{link: string, reason: string}>}>} the research record the
@@ -53,12 +54,18 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
  */
 export async function researchStep(
   { links, description },
-  { gather, model, kit, accountId, withheld: kept }
+  { gather, model, kit, accountId, withheld: kept, place }
 ) {
   // What the owner already keeps off the site (a research made before) is told to the gatherer, so the business reading
-  // never sends a held name or person to the model, not even in the owner's own description.
+  // never sends a held name or person to the model, not even in the owner's own description. `place`: the owner's
+  // answer to which place an ambiguous Google link means (`gather-place.js`), when the research runs again with it.
   const gathered = await gather(
-    { links, description: description ?? null, ...(kept ? { withheld: kept } : {}) },
+    {
+      links,
+      description: description ?? null,
+      ...(kept ? { withheld: kept } : {}),
+      ...(place ? { place } : {})
+    },
     accountId ? { accountId } : {}
   )
   if (!gathered?.brief || typeof gathered.brief !== 'object')
@@ -175,7 +182,10 @@ export async function composeStep({ research, answers, template, brand }, { mode
   // is, so a wrong one is still refused.
   const ids = (p) => new Set((Array.isArray(p?.questions) ? p.questions : []).map((q) => q?.id))
   const kept = ids(profile)
-  const dropped = [...ids(research?.profile), SITE_NAME_QUESTION_ID].filter((id) => !kept.has(id))
+  // The place choice is research's own question (`gather-place.js`): never one of the plan's.
+  const dropped = [...ids(research?.profile), SITE_NAME_QUESTION_ID, PLACE_CHOICE_QUESTION_ID].filter(
+    (id) => !kept.has(id)
+  )
   const input = {
     blockStore: kit.blockStore,
     pageRecipes: kit.pageRecipes,

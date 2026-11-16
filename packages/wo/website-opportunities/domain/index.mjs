@@ -177,6 +177,14 @@ export {
   siteNameQuestionOf
 } from './plan-site-name-question.mjs'
 export { normalisedSiteName, siteNameMissingError, withheldShowing } from './plan-site-name.mjs'
+export {
+  PLACE_CHOICES_MAX,
+  PLACE_CHOICE_NONE,
+  PLACE_CHOICE_QUESTION_ID,
+  PLACE_CHOICE_TOPIC,
+  placeChoiceQuestionOf,
+  placeOfChoice
+} from './place-choice-question.mjs'
 export { gateEditedPlan } from './plan-edit-gate.mjs'
 export {
   NOT_DONE_REASONS,

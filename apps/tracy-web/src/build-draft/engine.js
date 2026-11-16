@@ -22,6 +22,7 @@ import { endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js
 import { faultOf, runWithRerun } from './engine-rerun.js'
 import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
 import { askingOf } from './engine-asking.js'
+import { placeAnswerOf } from './gather-place.js'
 import { brandRunOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
 import { answersStillAsked } from './answers-kept.js'
 import { spendGate, spendLeft } from './engine-spend.js'
@@ -198,6 +199,13 @@ export function createEngine({
     return ran.ok ? { ...ran, columns: await columnsOf(ran.value) } : ran
   }
 
+  /** A step whose failure only the owner can lift by answering ends `asking` with the question (`engine-asking.js`). */
+  const askingOrRan = (run) => async () => {
+    const ran = await run()
+    const asking = ran.ok ? null : askingOf(ran.error)
+    return asking ? { ok: true, attempts: ran.attempts, ended: asking, columns: {} } : ran
+  }
+
   /** Run the brand step once (it keeps its own attempts) and keep its record for the template it ran on. */
   function brand(accountId, row, kit) {
     const { slug, version } = kit.template
@@ -295,34 +303,39 @@ export function createEngine({
     async research(accountId, { links, description }, row) {
       const kit = row?.template ? kits.loadKit(row.template.slug) : null
       const inputs = { links, ...(description ? { description } : {}) }
+      // The owner's answer to which place the Google link means, when this research asked it (`gather-place.js`).
+      const place = placeAnswerOf(row, links)
       return start(
         accountId,
         'research',
         inputs,
         withPrune(
           accountId,
-          ranWith(
-            (copy, model) =>
-              researchStep(copy, {
-                gather,
-                model,
-                kit,
-                accountId,
-                withheld: withheldOfResearch(row?.research)
-              }),
-            inputs,
-            // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
-            // New research makes the brand record stale: the brand step reads the research. The answers kept are those
-            // to a question the new research asks the same way (`answers-kept.js`), read when the step ends.
-            (record) => (current) => ({
-              research: record,
-              brand: null,
-              ...(row?.plan ? {} : { needs_profile: record.profile }),
-              ...answersStillAsked(current, [
-                ...(record.profile?.questions ?? []),
-                ...(planProfileOf(record, kit)?.questions ?? [])
-              ])
-            })
+          askingOrRan(
+            ranWith(
+              (copy, model) =>
+                researchStep(copy, {
+                  gather,
+                  model,
+                  kit,
+                  accountId,
+                  withheld: withheldOfResearch(row?.research),
+                  ...(place ? { place } : {})
+                }),
+              inputs,
+              // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
+              // New research makes the brand record stale: the brand step reads the research. The answers kept are those
+              // to a question the new research asks the same way (`answers-kept.js`), read when the step ends.
+              (record) => (current) => ({
+                research: record,
+                brand: null,
+                ...(row?.plan ? {} : { needs_profile: record.profile }),
+                ...answersStillAsked(current, [
+                  ...(record.profile?.questions ?? []),
+                  ...(planProfileOf(record, kit)?.questions ?? [])
+                ])
+              })
+            )
           )
         )
       )

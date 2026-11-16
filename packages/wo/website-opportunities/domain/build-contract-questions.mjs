@@ -11,18 +11,24 @@ import { FACT_ROLES_V3 } from './place-content-roles.mjs'
 
 export const QUESTION_SCHEMA = 'tracy-build-question/v1'
 export const ANSWER_SCHEMA = 'tracy-build-answer/v1'
-/** What a question may be about: the three agreed cases, facts that disagree between sources, and the site name. */
+/**
+ * What a question may be about: the three agreed cases, facts that disagree between sources, the site name, and which
+ * of several Google places is the business's.
+ */
 export const QUESTION_TOPICS = Object.freeze([
   'main-button',
   'contact-method',
   'site-language',
   'fact-conflict',
-  'site-name'
+  'site-name',
+  'place-choice'
 ])
 /** The topic of the free text question for a name the site may show: it carries no choice. */
 export const SITE_NAME_TOPIC = 'site-name'
 /** The most characters a site name answer may hold (the `site-name` cap of the needs profile's free text). */
 export const SITE_NAME_MAX_LENGTH = 120
+/** The topic of the question that asks which of several Google places is the business's (#609). */
+export const PLACE_CHOICE_TOPIC = 'place-choice'
 
 /**
  * The optional text code of a question or a choice and its params (#609), held to the same rules as the plan's codes

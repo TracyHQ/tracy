@@ -87,8 +87,10 @@ counts once), listed in [Text limits](#text-limits).
 ```
 
 - `topic` is `main-button`, `contact-method`, `site-language` (the three agreed cases of spec #577), `fact-conflict`
-  (facts that disagree between sources) or `site-name` (research keeps the business name off the site and nothing
-  neutral names it: the customer types a name the site may show); a `fact-conflict` names its `fact`, a fact role.
+  (facts that disagree between sources), `site-name` (research keeps the business name off the site and nothing
+  neutral names it: the customer types a name the site may show) or `place-choice` (the customer's Google link matches
+  more than one place, and research asks which one is theirs before it reads anything); a `fact-conflict` names its
+  `fact`, a fact role.
 - `choices` has at least one entry, except on a `site-name` question, whose `choices` is an empty list: the name is
   the customer's own words, and a choice could show the held name, so a `site-name` question with a choice is
   rejected. At most one choice is `recommended` (`true` or `false`). `freeText.maxLength` is
@@ -115,7 +117,10 @@ counts once), listed in [Text limits](#text-limits).
 
   `from` names where the value was found, comma separated: `website`, `google_maps`, `owner_answer`, `instagram`,
   `facebook`, `tiktok` or `social` (the choice `detail` says the same in English). The `site-name` question
-  (`plan-site-name-question.mjs`) carries no code yet.
+  (`plan-site-name-question.mjs`) carries no code yet. The `place-choice` question (`place-choice-question.mjs`) is
+  asked by research, not by the needs profile: question code `place_choice` (`{}`); one choice per candidate place, at
+  most five, its id the Google place id, code `place_choice_option` with `{name, address?}`, its label the name and
+  address (no two labels alike); then the choice `none`, code `place_choice_none` (`{}`), label "None of these".
 
 ## Build plan
 
@@ -400,6 +405,11 @@ The outcome adds `result`:
 In a scenario a partial run builds the revision its edit produced, and a writer step names a page of that revision.
 
 ### Changes for consumers
+
+- 16/11/2026 (#609), additive: a question may have `topic: "place-choice"`, asked by the build chat's research when
+  the customer's Google link matches more than one place (section "Question and answer"). Every earlier document
+  stays valid and the schema stays `tracy-build-question/v1`. A reader that switches on `topic` must handle
+  `place-choice`; its answer names a choice by id as any other.
 
 - 15/11/2026 (#609), additive: a question and a choice may carry `code` and `params` (section "Question and answer");
   the needs profile's questions carry them. Every earlier document stays valid and the schema stays

@@ -24,7 +24,8 @@ export const FREE_TEXT_MAX = Object.freeze({
   'main-button': 80,
   'contact-method': 120,
   'site-language': 40,
-  'site-name': 120
+  'site-name': 120,
+  'place-choice': 120
 })
 /** Facts that let a visitor reach the business: any one of them means no contact question. */
 export const CONTACT_KINDS = Object.freeze(['contact.phone', 'contact.email', 'contact.cta_url'])
