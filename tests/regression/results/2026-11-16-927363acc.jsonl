@@ -1,0 +1,1 @@
+{"id":"REG-PR-643-site-apache-child-recycle","verdict":"PASS","commit":"927363acc6650c164c82ad8b43bea3598daef9c2","ran_at":"2026-11-16T05:46:49.500Z","evidence":"tests/regression/.runs/2026-11-16-927363acc/REG-PR-643-site-apache-child-recycle.log"}
