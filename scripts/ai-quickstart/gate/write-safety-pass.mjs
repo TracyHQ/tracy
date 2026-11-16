@@ -15,6 +15,7 @@ import { buildCulprits, pageCulprits, stopOf } from './write-safety-trials.mjs'
 import { buildRefusalOf, judgePage, pageBroken, stopClassOf } from './write-safety-judge.mjs'
 import { placeAt, storedIndex } from './write-safety-places.mjs'
 import { reachedInPlan, reachedOnPage } from './write-safety-reached.mjs'
+import { settleUnreached } from './write-safety-unreached.mjs'
 
 /** Why a search found no culprit: its budget ran out, or the failure needs several values together. */
 const unnamed = (found, budgetName) => (found.exhausted.length ? budgetName : 'unattributed')
@@ -22,8 +23,11 @@ const unnamed = (found, budgetName) => (found.exhausted.length ? budgetName : 'u
 /**
  * The build of a pass that the build itself accepts, found in memory before any site sees it: every refusal of the
  * page writer's copy check and every value the build's guards refuse is recorded and taken out, and the build made
- * again, until it refuses nothing. No rerun, no site step: each round takes at least one probe out, so the rounds end;
- * only the time limit stops them. Answers the attempt, or `{incomplete}`.
+ * again, until it refuses nothing. Then every probe the plan does not hold at its place is settled
+ * (`write-safety-unreached.mjs`: refused or normalized by the build alone, or dropped by another place's probe and
+ * tried again in a later pass), so the site is written only with a plan that holds every probe the pass keeps. No
+ * rerun, no site step: each round takes at least one probe out, so the rounds end; only the time limit stops them.
+ * Answers the attempt, or `{incomplete}`.
  */
 async function builtInMemory(n, active, ctx, take) {
   const { attempt, record, late } = ctx
@@ -40,7 +44,11 @@ async function builtInMemory(n, active, ctx, take) {
       active.delete(key)
     }
     const refusal = buildRefusalOf(a, ctx.plainGaps)
-    if (!refusal) return a
+    if (!refusal) {
+      // A probe the accepted plan does not hold is settled in memory before any site (review 7 D2).
+      if (!(await settleUnreached(n, active, a, ctx)).changed) return a
+      continue
+    }
     const found = await buildCulprits(refusal, a, active, ctx)
     take(found.culprits)
     if (!found.culprits.length) return { incomplete: 'unattributed' }

@@ -11,9 +11,11 @@ const notProbedWhy = (rows) =>
     ? 'probe_not_written'
     : rows.some((r) => r.status === 'not_judged')
       ? 'judged_by_no_page'
-      : rows.length
-        ? 'refused_or_failed'
-        : 'no_pass_reached_it'
+      : rows.length && rows.every((r) => r.status === 'normalized_by_build')
+        ? 'normalized_by_build'
+        : rows.length
+          ? 'refused_or_failed'
+          : 'no_pass_reached_it'
 
 /** The measurement from what the passes found: failed, incomplete with the first reason, or passed. */
 export function resultOf({
@@ -29,6 +31,7 @@ export function resultOf({
   was,
   spent,
   parked = new Map(),
+  deferred = new Map(),
   ranFor = null
 }) {
   const missing = ledger.missing(places, probes)
@@ -91,6 +94,8 @@ export function resultOf({
     notSiteTested,
     notWritten,
     notJudged,
+    // The pairs another place's probe made the build drop, and how many passes took them out untried (review 7 D2).
+    deferred: [...deferred.values()],
     coverage: {
       ...coverage,
       places: {

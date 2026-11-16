@@ -79,6 +79,14 @@ export async function writeSafety(input) {
   // A pass carried from a saved state says so itself (review 4 X5): the record shows it was not measured in this run.
   passes.push(...(was?.passes ?? []).map((p) => ({ ...p, resumed: true })))
   for (const [k, v] of was?.parked ?? []) parked.set(k, v)
+  // The pairs another place's probe made the build drop (review 7 D2), and the class of each pair built alone.
+  const deferred = new Map(was?.deferred ?? [])
+  const alone = new Map(was?.alone ?? [])
+  const defer = (key, probe) => {
+    const pair = key + '\u0000' + probe.id
+    const d = deferred.get(pair) ?? { place: key, probe: probe.id, times: 0 }
+    deferred.set(pair, { ...d, times: d.times + 1 })
+  }
   const budget = stepBudget(Math.max(0, limits.steps - (was?.steps ?? 0)))
   // Builds in memory are counted, never limited: a refusal found there costs no site and no rerun (`write-safety-pass.mjs`).
   const buildBudget = stepBudget(Number.MAX_SAFE_INTEGER)
@@ -100,6 +108,7 @@ export async function writeSafety(input) {
       ...(failure.element ? { element: failure.element } : {}),
       ...(failure.problems ? { problems: failure.problems.map(shortOf) } : {}),
       ...(failure.judgedOn ? { judgedOn: failure.judgedOn } : {}),
+      ...(failure.wrote ? { wrote: failure.wrote } : {}),
       // How the place was found: the only probed place stored where a refusal names (`named_alone`), built alone
       // (`built_alone`), seen on a page that ran it (`page`, `judgedOn`), or a trial of a bisection (`trial`).
       evidence: failure.evidence ?? 'trial',
@@ -158,6 +167,9 @@ export async function writeSafety(input) {
     ledger,
     park,
     untraced,
+    defer,
+    timesDeferred: (key, probe) => deferred.get(key + '\u0000' + probe.id)?.times ?? 0,
+    alone,
     log
   }
   let incomplete = null
@@ -188,6 +200,8 @@ export async function writeSafety(input) {
       findings,
       passes,
       parked: [...parked],
+      deferred: [...deferred],
+      alone: [...alone],
       ...spent()
     })
     if (out.incomplete) {
@@ -209,6 +223,7 @@ export async function writeSafety(input) {
     was,
     spent,
     parked,
+    deferred,
     ranFor: Math.round((now() - start) / 1000)
   })
 }

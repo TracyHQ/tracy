@@ -4,6 +4,8 @@
 //   door_refused      the plugin refused a value a customer could type, or kept another one: fails the gate
 //   refused_by_build  one of the build's own named guards refused it before any site saw it: recorded only
 //   markup_injected   a page prints the value as a live element or runs it as a code: fails the gate
+//   normalized_unsafe the build wrote the value otherwise, built alone, but kept its code without the place's marker,
+//                     so no page can judge it: fails the gate (review 7 D2)
 //   unclassified      the build threw a code it has no named guard for: the measurement cannot pass (incomplete)
 //   run_state         the run's own state stopped the write (a stale run record, a stored picture gone): incomplete
 // The codes are decided by hand, one list each (`build-guards.mjs`); a code a site write stops with that is on none of
@@ -20,6 +22,7 @@ export const FAILING = new Set([
   'site_unreachable',
   'door_refused',
   'markup_injected',
+  'normalized_unsafe',
   'stop_not_traced',
   'page_not_traced'
 ])

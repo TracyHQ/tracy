@@ -38,6 +38,8 @@ const codeProbe = (id, text, why, signed = null) => ({
   types: ['text'],
   text,
   ...(signed ? { signature: (code) => signatureOf(code, signed) } : {}),
+  // The code's own opening: a build that drops the place's marker but keeps it still writes a code a page runs.
+  danger: (code) => text(code).replace(/[\s=}].*$/, ''),
   judge: ({ doc, code }) => {
     const words = wordsOf(doc)
     const marker = 'qx' + String(code).toLowerCase()
