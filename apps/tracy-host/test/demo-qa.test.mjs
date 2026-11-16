@@ -3080,6 +3080,40 @@ test('cta-real: the WhatsApp button the brief gives may leave the demo, no other
   )
 })
 
+test("cta-real: the business's own social profiles the brief gives may leave the demo, no other profile", () => {
+  const socialLinks = [
+    'https://www.facebook.com/ArabianTeaHouse',
+    'https://www.instagram.com/arabianteahouse/'
+  ]
+  const own = [
+    { href: 'https://facebook.com/arabianteahouse/', text: 'Facebook', button: true },
+    { href: 'https://www.instagram.com/arabianteahouse?igsh=x', text: 'Instagram', button: true }
+  ]
+  assert.equal(checkCtaReal([page({ ctas: own })]).pass, false)
+  assert.equal(checkCtaReal([page({ ctas: own })], { socialLinks }).pass, true)
+  for (const href of [
+    'https://www.facebook.com/joomlart',
+    'https://www.facebook.com/sharer.php?u=x',
+    'https://www.instagram.com/',
+    'https://evil.test/arabianteahouse'
+  ])
+    assert.equal(
+      checkCtaReal([page({ ctas: [{ href, text: 'Go', button: true }] })], { socialLinks }).pass,
+      false,
+      href
+    )
+})
+
+test('demoQaBody keeps only social profile addresses in socialLinks', () => {
+  const asked = demoQaBody({
+    label: 'acme',
+    platform: 'joomla',
+    socialLinks: ['https://www.facebook.com/Acme', 'https://evil.test/x', 'javascript:alert(1)', 42]
+  })
+  assert.deepEqual(asked.socialLinks, ['https://www.facebook.com/Acme'])
+  assert.deepEqual(demoQaBody({ label: 'acme', platform: 'joomla' }).socialLinks, [])
+})
+
 test('demoQaBody keeps the accent tokens and WhatsApp links it is sent, only those shapes', () => {
   const asked = demoQaBody({
     label: 'acme',
