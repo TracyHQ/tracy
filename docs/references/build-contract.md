@@ -212,7 +212,9 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   its own). `what` names a section, a page or the data in the customer's words, never a block id. `item`
   (optional): the id of the fact, item or row the entry reports, when the plan lists it; a fact listed in `facts`
   and named by a left out entry is known to the plan but not shown on the site. `params` (optional, only beside a
-  `code`): the values the code's sentence is worded with (`no_gallery_room` `{count}`, the photos left out that way,
+  `code`): the values the code's sentence is worded with (`no_gallery_room` `{count}`, the photos left out that way;
+  `gallery_photo_shown_elsewhere` `{count}`, one entry per gallery, the photos it does not show because each already
+  shows in a gallery on another page and a photo shows once on the site,
   so one sentence agrees for one photo and for many; `section_below_minimum` `{min, shown}` for a section, `{min}`
   for an item it showed).
 - **`display`** (optional, on a fact): the value as the customer reads it, written by code from a structured value,
@@ -413,6 +415,12 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
   empty or holds a control character, markup or markdown. All three carry `details.question` (the whole question to
   ask again) and `details.questionId` (`"site-name"`). Sample:
   `sunrise-tennis-club-site-name` in `packages/wo/website-opportunities/test/fixtures/build-contract/`.
+
+- 16/11/2026, additive: a fact of only white space is no fact (a blank address stops nothing: the plan lists no
+  address fact and its places stay unwritten). A gallery the model repeats on
+  another page with photos an earlier gallery shows takes the business's photos the plan shows nowhere (`placed`,
+  `how: "gallery photo shown once"`); the photos it still cannot show are the left out entry
+  `gallery_photo_shown_elsewhere` `{count}`.
 
 - 13/11/2026 (#597), additive: a step may carry `noRerun: true` (failed on attempt 1, stopped without a re-run), and an
   outcome may have `result: "cancelled"` with `cancelled: {teamNotified: false}` and no `stopped`. Every earlier

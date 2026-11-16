@@ -4,6 +4,7 @@
 import { isBrandLook, lookOfBrandRecord, logoSourceKindOfName, logoSourceName } from './brand-before-site.mjs'
 import { ownPicturesOf } from './picture-frames.mjs'
 import { assignPictures } from './picture-policy.mjs'
+import { shownElsewhereLeftOut } from './plan-gallery-spread.mjs'
 import { LOGO_CODES, PICTURES_ESTIMATE_CODE, sourceKindsOf } from './plan-wording-codes.mjs'
 
 const HEX_COLOUR = /^#[0-9a-fA-F]{6}$/
@@ -156,7 +157,9 @@ export function picturesOf(pages, blocks, data) {
     },
     generated: generatedOf(counts.generated)
   }
-  const leftOut = reduced.map(({ item, reason }) => {
+  // A gallery photo dropped because it already shows in another gallery is said once per gallery, with the count.
+  const elsewhere = shownElsewhereLeftOut(reduced, frames, pictures)
+  const leftOut = elsewhere.rest.map(({ item, reason }) => {
     const code = Object.hasOwn(ITEM_REASONS, reason) ? reason : 'no_own_photo'
     return { what: data.byId.get(item)?.entry?.label ?? item, kind: 'item', reason: ITEM_REASONS[code], code }
   })
@@ -164,6 +167,7 @@ export function picturesOf(pages, blocks, data) {
     const n = frames.filter((f) => f.source === 'none' && f.reason === reason).length
     if (n > 0) leftOut.push({ what: count(n, one, many), kind: 'feature', reason: said, code: reason })
   }
+  leftOut.push(...elsewhere.entries)
   const dropped = new Set(reduced.map((r) => `${r.page}.${r.block}.${r.item}`))
   const kept = list(pages).map((page) => ({
     ...page,

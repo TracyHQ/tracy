@@ -1,5 +1,5 @@
 // What the look record reads from the template kit (ticket #616): the themes the template has, the grounds of each
-// theme, and the colour words take on an accent button. Shared by the no hue rule (`brand-look-accent.mjs`) and the
+// theme (its main ground and its panels), and the colour words take on an accent button. Shared by the no hue rule (`brand-look-accent.mjs`) and the
 // adjusted logo colour (`brand-look-adjust.mjs`, D44), so both hold an accent to the same 3:1 checks. Pure.
 import { MIN_RATIO, contrastRatioOf, hexOf } from './brand-hue.mjs'
 
@@ -21,11 +21,17 @@ export function themesOf(kit) {
 export const sidesOf = (kit, theme) =>
   list(brandColoursOf(kit)?.sides).filter((s) => (s?.groundSide === 'light' ? 'light' : 'dark') === theme)
 
-/** The grounds (`#rrggbb`) an accent of this theme must read on. */
-export const groundsOf = (kit, theme) =>
-  sidesOf(kit, theme)
-    .map((s) => hexOf(s?.ground))
-    .filter(Boolean)
+/**
+ * The grounds (`#rrggbb`) one side paints: its main ground (`ground`) and the panel grounds the template also paints on
+ * that side (`panels`: cards, bands, footers). A side without `panels` (`site.brandColours.sides[].panels`) is read as
+ * its main ground only.
+ */
+export const sideGroundsOf = (side) => [
+  ...new Set([side?.ground, ...list(side?.panels)].map(hexOf).filter(Boolean))
+]
+
+/** The grounds (`#rrggbb`) an accent of this theme must read on: every ground of every side of it, panels included. */
+export const groundsOf = (kit, theme) => [...new Set(sidesOf(kit, theme).flatMap(sideGroundsOf))]
 
 /**
  * The colour words take on an accent button: the template's own text colour for its accent (`primary.wordsOn`) that

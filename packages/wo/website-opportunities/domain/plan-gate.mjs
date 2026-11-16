@@ -40,6 +40,7 @@ import { trimChannelOverflow } from './plan-gate-contact.mjs'
 import { pageRuleProblems } from './plan-gate-page-rules.mjs'
 import { keptAssumptionsOf, pagesOf } from './plan-gate-pages.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
+import { spreadGalleries } from './plan-gallery-spread.mjs'
 import { placeExtraData } from './plan-placement.mjs'
 import { placeExtraFacts } from './plan-placement-facts.mjs'
 import {
@@ -120,7 +121,9 @@ export function gatePlan(reply, context) {
     idTag: context.idTag
   }
   // A channel a block holds beyond its places is placed again or left out with the reason (`plan-gate-contact.mjs`).
-  const items = placeExtraData(trimChannelOverflow(dropped.pages, context), placement)
+  // A gallery photo an earlier gallery shows gives its place to one shown nowhere (`plan-gallery-spread.mjs`).
+  const spread = spreadGalleries(trimChannelOverflow(dropped.pages, context), placement)
+  const items = placeExtraData(spread.pages, placement)
   const facts = placeExtraFacts(items.pages, placement)
   // The page rules hold for the plan after placement too: a problem here is the gate's own placement.
   pageRuleProblems({ pages: facts.pages, leftOut: modelLeftOut }, context, problem)
@@ -168,7 +171,7 @@ export function gatePlan(reply, context) {
     ...rowsLeftOut(context.data, rows.planned, rows.dropped, leftOutIds, shown)
   ]
   for (const entry of rowsOut) leftOutIds.add(entry.id)
-  const placed = [...items.placed, ...facts.placed]
+  const placed = [...spread.placed, ...items.placed, ...facts.placed]
   const accounting = dataAccountingOf({ data: context.data, pages: rows.pages, placed, leftOutIds })
   for (const id of accounting.unexplained)
     problem('data_unaccounted', `data[${id}]`, `${JSON.stringify(id)} is shown nowhere and not left out`)

@@ -12,7 +12,7 @@
 // `accentOfBrandFile` is the one place these rules live.
 import { MIN_RATIO, contrastOf, contrastRatioOf, hexOf, isNeutral } from './brand-hue.mjs'
 import { adjustedAccentOf, adjustedSaid, logoColourOf } from './brand-look-adjust.mjs'
-import { brandColoursOf, themesOf, wordsOnAccentOf } from './brand-look-kit.mjs'
+import { brandColoursOf, sideGroundsOf, themesOf, wordsOnAccentOf } from './brand-look-kit.mjs'
 
 export { themesOf }
 
@@ -49,7 +49,7 @@ function logoColoursOf(brief) {
 /**
  * The black and white accent for the themes the template has: the accent of each theme, the colour words take on an
  * accent button (the template's own text colour for its accent, `primary.wordsOn`, that reads 3:1; else plain white or
- * black, whichever reads), and the 3:1 check of the accent on every ground of that theme.
+ * black, whichever reads), and the 3:1 check of the accent on every ground of that theme, its panels included.
  * @returns {{themes: string[], onAccent: Record<string, string>} | {problem: string}}
  */
 function noHueOf(kit) {
@@ -59,11 +59,13 @@ function noHueOf(kit) {
   for (const theme of themes) onAccent[theme] = wordsOnAccentOf(kit, NO_HUE_ACCENT[theme])
   for (const side of list(colours?.sides)) {
     const accent = NO_HUE_ACCENT[side?.groundSide === 'light' ? 'light' : 'dark']
-    const ratio = contrastRatioOf(accent, side?.ground)
-    if (ratio !== null && ratio < MIN_RATIO)
-      return {
-        problem: `the accent ${accent} reads ${contrastOf(accent, side.ground)}:1 on the ground ${side.ground} of ${side.marker}`
-      }
+    for (const ground of sideGroundsOf(side)) {
+      const ratio = contrastRatioOf(accent, ground)
+      if (ratio !== null && ratio < MIN_RATIO)
+        return {
+          problem: `the accent ${accent} reads ${contrastOf(accent, ground)}:1 on the ground ${ground} of ${side.marker}`
+        }
+    }
   }
   return { themes, onAccent }
 }

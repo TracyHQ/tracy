@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { brandLookOf, lookOfBrandRecord } from '../domain/brand-before-site.mjs'
 import { MIN_RATIO, contrastOf, hexOfOklch, hueDistance, isNeutral, oklchOf } from '../domain/brand-hue.mjs'
 import { themesOf } from '../domain/brand-look-accent.mjs'
-import { groundsOf } from '../domain/brand-look-kit.mjs'
+import { groundsOf, sidesOf } from '../domain/brand-look-kit.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '../../../..')
 
@@ -96,10 +96,15 @@ test('a logo with a hue the step could not wear, on every kit, 12 hues pale and 
   let runs = 0
   let fallen = 0
   let maxHue = 0
+  let panelChecks = 0
   for (const file of kitFiles()) {
     const doc = JSON.parse(readFileSync(file, 'utf8'))
     if (!doc.site?.brandColours) continue
     const kit = { ref: 'kit', doc }
+    // Every side of every kit declares the panel grounds it paints, so the sweep holds the accent to them too.
+    for (const theme of themesOf(kit))
+      for (const side of sidesOf(kit, theme))
+        assert.ok(Array.isArray(side.panels), `${file.slice(root.length + 1)} ${side.marker}: no panels`)
     for (const hex of colours) {
       runs += 1
       try {
@@ -111,8 +116,10 @@ test('a logo with a hue the step could not wear, on every kit, 12 hues pale and 
         for (const theme of themes) {
           const accent = byTheme[theme]
           assert.ok(contrastOf(record.accent.onAccent[theme], accent) >= MIN_RATIO, `${theme} words`)
-          for (const ground of groundsOf(kit, theme))
+          for (const ground of groundsOf(kit, theme)) {
             assert.ok(contrastOf(accent, ground) >= MIN_RATIO, `${accent} on ${ground}`)
+            if (!sidesOf(kit, theme).some((s) => s.ground?.toLowerCase() === ground)) panelChecks += 1
+          }
         }
         if (record.accent.from === 'logo-hue-unreadable') fallen += 1
         else {
@@ -129,8 +136,9 @@ test('a logo with a hue the step could not wear, on every kit, 12 hues pale and 
     }
   }
   console.log(
-    `adjusted accent: ${runs} runs, ${failed.length} failed, ${fallen} fell back, largest hue move ${maxHue.toFixed(2)}`
+    `adjusted accent: ${runs} runs, ${failed.length} failed, ${fallen} fell back, largest hue move ${maxHue.toFixed(2)}, ${panelChecks} panel checks`
   )
+  assert.ok(panelChecks > runs, 'the panel grounds are checked')
   assert.ok(runs >= 17 * 24)
   assert.deepEqual(failed, [])
 })
