@@ -85,3 +85,21 @@ test('the clock hides in the conversation whose question waits, and comes back w
     await page.close()
   }
 })
+
+test('the clock also hides while dsh question card (the build chat) is pending, and returns after', async () => {
+  const page = await browser.newPage()
+  try {
+    await page.setContent(`<!doctype html><html><head><style>${sheet}</style></head><body>
+      <div data-conversation-scroll id="asked">
+        <div data-slot="conversation.view"><div data-chat-running>Thinking for 1m 57s</div></div>
+        <div data-composer-seat><div data-question-key="q1">Which place is yours?</div></div>
+      </div></body></html>`)
+    const shown = () =>
+      page.evaluate(() => getComputedStyle(document.querySelector('[data-chat-running]')).display !== 'none')
+    assert.equal(await shown(), false)
+    await page.evaluate(() => document.querySelector('[data-question-key]').remove())
+    assert.equal(await shown(), true)
+  } finally {
+    await page.close()
+  }
+})

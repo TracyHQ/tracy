@@ -30,7 +30,10 @@
 /* While a question waits in this conversation, dsh's running clock ("Thinking for 1m 15s") is not
    drawn: Tracy is not working, it waits for the person, and the pointer card above the chat box and
    dsh's "Waiting for your action" already say so (Akemi 21/10/2026). The clock returns once the
-   question is answered and the card goes. */
-[data-conversation-scroll]:has([data-tracy-ask-pointer]) [data-chat-running] {
+   question is answered and the card goes. The same holds for dsh's own question card (the build chat
+   asks the owner through it, no pointer card): the core marks that card with data-question-key inside
+   the composer seat for as long as the question is pending. */
+[data-conversation-scroll]:has([data-tracy-ask-pointer], [data-composer-seat] [data-question-key])
+  [data-chat-running] {
   display: none;
 }
