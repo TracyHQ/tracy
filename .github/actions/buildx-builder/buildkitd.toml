@@ -31,11 +31,19 @@
 # `cm.records`), so fewer records means a smaller map — but that scales with the record COUNT, not
 # with gigabytes, and 3,300 records do not explain 1.2 GB of anonymous RSS. cache.db (bbolt) is
 # memory-mapped, i.e. page cache, not anonymous memory. No BuildKit doc or issue found ties RSS to
-# cache size, so this file is a DISK bound only; capping RAM would take `--driver-opt memory=…`,
-# which turns an over-limit build into an OOM-killed build, and is deliberately not done here.
+# cache size, so the GC rules below are a DISK bound only. RAM is capped where only it can be, on
+# the container: `--driver-opt memory=8g` in `action.yml` (why 8 GB, and what happens at the cap,
+# is explained there).
+#
+# PARALLELISM: `max-parallelism = 4` — at most four build steps run at once in this builder, half
+# of the dev host's 8 CPUs, so a full rebuild (all 8 web images in one `build-app-images` run)
+# leaves the other half to the customer sites on the same host. Unset, buildkitd runs as many
+# steps as the build graph allows. Fewer parallel steps also keeps the peak memory of one build
+# under the 8 GB cap.
 
 [worker.oci]
   gc = true
+  max-parallelism = 4
 
 # 1. What is cheapest to rebuild — build contexts, git checkouts and RUN cache mounts (the pnpm
 #    store of the dsh Dockerfile). Default: 48 h. Seven days here, because cache mounts are NEVER

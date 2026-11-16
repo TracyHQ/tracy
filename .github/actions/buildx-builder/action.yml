@@ -25,6 +25,18 @@
 # per edit would leave the old container, and its tens of GB of cache, behind on every host.
 # On a mismatch the container goes but its state volume stays (`--keep-state`, or `docker rm`
 # without `-v`), so the new builder starts warm and the new policy trims it about a minute later.
+#
+# 🔒 THE BUILDER'S RAM IS CAPPED AT 8 GB, IN THE CREATE FLAGS SO THE HASH COVERS IT. The builder
+# shares the dev host (8 CPUs, 31 GB, no swap worth relying on) with the customer sites, and had
+# no limit (`HostConfig.Memory=0`). Measured 16/11/2026: the cgroup `memory.peak` of one builder
+# over two `build-app-images` runs (one rebuilding all 8 web images) and two `build-dsh-image`
+# runs was 7363 MiB — mostly page cache; afterwards anon was 167 MiB and file 3.0 GB. At the cap
+# the kernel reclaims that page cache first; a build that truly needs more than 8 GB of anonymous
+# memory is OOM-killed INSIDE the builder and its job fails, instead of the host's OOM killer
+# picking a site. `memory-swap` equals `memory`, i.e. no swap on top of the cap: the host has none
+# to give, and swapping a build would only slow the sites down. Parallelism is bounded in
+# `buildkitd.toml` (`max-parallelism`). Changing either value recreates every builder on its next
+# job, cache kept, like any other config change.
 name: Image builder of this runner
 description: Create or reuse the docker-container buildx builder of this runner, with the repo's BuildKit GC policy.
 
@@ -44,7 +56,7 @@ runs:
           *--buildkitd-config*) config_flag=--buildkitd-config ;;
           *) config_flag=--config ;;
         esac
-        create_args="--driver docker-container"
+        create_args="--driver docker-container --driver-opt memory=8g --driver-opt memory-swap=8g"
         hash=$( { cat "$CONFIG"; echo "$create_args"; } | sha256sum | cut -c1-16)
 
         # Empty when the container does not exist.
