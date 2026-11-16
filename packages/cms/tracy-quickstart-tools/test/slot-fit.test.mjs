@@ -197,7 +197,8 @@ test('a class photo the old rule kept becomes replaceable, with the box of each 
     phone: { width: 358, height: 154 }
   })
   assert.equal(photo.fit.aspect, 2.3333)
-  assert.equal(photo.fit.minWidth, 1617)
+  // One and a half times the 1078 box is 1617, above the template's own 1408 px file: the file's width.
+  assert.equal(photo.fit.minWidth, 1408)
   assert.equal(photo.fit.crop, 'cover')
   assert.equal(photo.fit.focus, 'top')
   assert.equal(photo.fit.transparent, false)
@@ -707,4 +708,13 @@ test('literal PRE fit: matcher and merged raw evidence measure only the exact su
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }
+})
+
+test('the minimum file width is one and a half times the box, capped at the template file, never below the box', async () => {
+  const { minWidthOf } = await import('../content-coverage/lib/slot-fit.mjs')
+  const boxes = { desktop: { width: 1440, height: 389 }, phone: { width: 390, height: 235 } }
+  assert.equal(minWidthOf(boxes, { width: 1600 }), 1600)
+  assert.equal(minWidthOf(boxes, { width: 4000 }), 2160)
+  assert.equal(minWidthOf(boxes, { width: 900 }), 1440)
+  assert.equal(minWidthOf(boxes, null), 2160)
 })
