@@ -2,7 +2,7 @@
  * The demo progress card of a step chain build and the time and price line under a Build demo button (#516, spec #512).
  */
 import type { JSX } from 'react'
-import { chainProgressView } from '@tracy/wo-views'
+import { chainProgressView, demoStateOf } from '@tracy/wo-views'
 import type { ChainEstimate, ChainRun } from '@tracy/wo-views'
 import { chainStepLabel as stepLabel, chainSubSteps, knownChainStep } from './band-sub-steps-model.ts'
 import { demoFailureKey, type OpportunityListRow } from './opportunity-row.ts'
@@ -11,10 +11,11 @@ import { buildColumns } from './progress-band-build-model.ts'
 import { SubSteps } from './progress-band-subs.tsx'
 import type { Translate } from './strings.ts'
 
-/** The one plain sentence of the card: Ready, where it stopped, or what Tracy is doing now. */
+/** The one plain sentence of the card: Ready, built but needing review, where it stopped, or what Tracy is doing now. */
 function nowSentence(t: Translate, row: OpportunityListRow, run: ChainRun): string {
   const state = row.demoAction?.state
   if (state === 'completed') return t('progress.ready')
+  if (demoStateOf(row) === 'review') return t('chip.siteReview')
   if (state === 'failed')
     return t('progress.stopped', { step: stepLabel(t, run, run.current ?? run.steps[0]?.id ?? '') })
   if (run.current === null) return t('progress.now.start')
@@ -95,9 +96,11 @@ export function DemoProgress({
     )
   }
   const view = chainProgressView(run, now)
+  // Built and online, but its last check found problems: every step ran, and the line under it asks for a review.
+  const review = demoStateOf(row) === 'review'
   const finished = action?.state === 'completed'
   const failed = action?.state === 'failed'
-  const done = finished ? view.total : view.done
+  const done = finished || review ? view.total : view.done
   const why = failed ? demoFailureKey(row) : null
   const facts = finished
     ? []
@@ -126,7 +129,9 @@ export function DemoProgress({
       {!finished && !failed && view.minutesLeft === null ? (
         <span className="tracy-wo-muted tracy-wo-small">{t('progress.firstBuild')}</span>
       ) : null}
-      {why ? <span className="tracy-wo-error tracy-wo-small">{t(why)}</span> : null}
+      {why ? (
+        <span className={`${review ? 'tracy-wo-warn' : 'tracy-wo-error'} tracy-wo-small`}>{t(why)}</span>
+      ) : null}
       {failed ? <BriefBlockers t={t} row={row} /> : null}
       {open ? (
         <BuildColumns t={t} columns={buildColumns(t, run, action?.state, locale)} />

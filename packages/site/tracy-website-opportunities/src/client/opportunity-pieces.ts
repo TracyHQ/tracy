@@ -84,6 +84,8 @@ const STATE_STATUS: Record<DemoState, { key: string; tone: BadgeTone }> = {
   queued: { key: 'my.status.building', tone: 'secondary' },
   building: { key: 'my.status.building', tone: 'secondary' },
   ready: { key: 'my.status.ready', tone: 'live' },
+  // Built and online, but its last check found problems: the seller's review, not a failure.
+  review: { key: 'stepper.needsReview', tone: 'secondary' },
   failed: { key: 'my.status.failed', tone: 'destructive' },
   expired: { key: 'my.status.expired', tone: 'outline' }
 }
@@ -93,7 +95,7 @@ function demoPiece(state: DemoState, row: OpportunityListRow, t: Translate, opts
   if (state === 'queued' || state === 'building') return { kind: 'building' }
   if (state === 'failed') return { kind: 'failed', reason: block.line?.replace(/^[^:]*:\s*/, '') ?? '' }
   if (state === 'expired') return { kind: 'expired', line: block.line ?? '' }
-  if (state === 'ready') {
+  if (state === 'ready' || state === 'review') {
     const expires = row.demo?.expiresAt ? Date.parse(row.demo.expiresAt) : Number.NaN
     const url = text(row.demo?.url)
     return {

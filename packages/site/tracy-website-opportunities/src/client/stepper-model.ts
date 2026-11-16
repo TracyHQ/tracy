@@ -269,6 +269,11 @@ export function stepperView(raw: StepperInput): StepperView {
         if (BUILDING.has(input.demo)) {
           running = true
           lineKey = 'stepper.build.running'
+        } else if (input.demo === 'review') {
+          // Built and online, but its last check found problems: the seller reviews it, or builds again.
+          review = true
+          lineKey = 'stepper.build.needsReview'
+          action = { kind: 'retry-build', labelKey: 'action.tryAgain' }
         } else if (input.demo === 'failed') {
           lineKey = 'stepper.stopped'
           errorKey = 'stepper.build.failed'
@@ -345,6 +350,7 @@ export function reviewChipOf(view: StepperView): StepLine {
     return { key: 'chip.profileApproved', tone: 'ok' }
   }
   if (view.running) return { key: 'chip.building', tone: 'run' }
+  if (view.review) return { key: 'chip.siteReview', tone: 'warn' }
   return { key: 'chip.briefApproved', tone: 'ok' }
 }
 

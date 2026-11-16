@@ -160,6 +160,31 @@ test('Demo: a failed demo shows the reason in words, never the code; next Try ag
   })
 })
 
+test('Demo: a site built but needing review shows its site and reads Needs your review, never Build failed', () => {
+  const row = researched({
+    demoAction: { id: 'a1', state: 'failed', step: 'write', error: 'QA_NEEDS_REVIEW' },
+    demo: {
+      siteKey: 'sunny-fork.tracy.site',
+      url: 'https://sunny-fork.tracy.site',
+      expiresAt: iso(NOW + 14 * D - 60_000),
+      frozenAt: null,
+      deletedAt: null,
+      qa: 'failed',
+      build: { status: 'done', startedAt: iso(NOW - D) }
+    }
+  })
+  const p = placePieces(row, t, opts)
+  assert.equal(p.state, 'review')
+  assert.deepEqual(p.demo, {
+    kind: 'thumb',
+    url: 'https://sunny-fork.tracy.site',
+    address: 'sunny-fork.tracy.site',
+    daysLeft: 14
+  })
+  assert.equal(p.status.label, 'Needs your review')
+  assert.notEqual(p.status.tone, 'destructive')
+})
+
 test('Demo: a build under way is Building, and its button opens Details', () => {
   const row = researched({ demoAction: { id: 'a1', state: 'queued', step: 'brief' } })
   const p = placePieces(row, t, opts)

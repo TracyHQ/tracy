@@ -1,5 +1,5 @@
 /**
- * The demo state machine (spec #512, "Demo site block and progress"): one row's demo read as one of six states, and
+ * The demo state machine (spec #512, "Demo site block and progress"): one row's demo read as one of seven states, and
  * per state the one primary button, the ⋯ menu and the one line under it. The list's Status piece and the Details
  * Demo site block both read this, so a place never says two different things about its demo.
  * Pure: no fetch, no clock read unless the caller leaves `now` out.
@@ -7,7 +7,13 @@
 import { type DemoFacts, demoView } from './demo.ts'
 import type { Translate } from './types.ts'
 
-export type DemoState = 'none' | 'queued' | 'building' | 'ready' | 'failed' | 'expired'
+export type DemoState = 'none' | 'queued' | 'building' | 'ready' | 'review' | 'failed' | 'expired'
+
+/**
+ * The code a build ends with when the site was built and is online but its last site check still found problems
+ * (apps/tracy-web/src/opportunities-build/demo-runner.js). Nothing stopped: the seller reviews the site, or builds again.
+ */
+export const NEEDS_REVIEW = 'QA_NEEDS_REVIEW'
 
 /** The parts of a My opportunities row (`GET /api/website-opportunities`) the demo state reads. */
 export interface DemoStateRow {
@@ -25,6 +31,17 @@ export interface DemoBlock {
 export function demoStateOf(row: DemoStateRow | null | undefined): DemoState {
   const action = row?.demoAction
   const demo = row?.demo
+  // Built and online, but its last check found problems: `review`, never "failed", while the site is still there.
+  if (
+    action?.state === 'failed' &&
+    action.error === NEEDS_REVIEW &&
+    demo?.siteKey &&
+    !demo.deletedAt &&
+    !demo.frozenAt &&
+    demo.build?.status !== 'failed' &&
+    demo.build?.status !== 'building'
+  )
+    return 'review'
   if (action?.state === 'failed' || demo?.build?.status === 'failed') return 'failed'
   if (action?.state === 'queued' || action?.state === 'quality-queued-v1') return 'queued'
   // Any other state of an action that has not completed (running, a quality pass) is a build under way.
@@ -40,6 +57,7 @@ export function demoStateOf(row: DemoStateRow | null | undefined): DemoState {
  * sentence a seller understands. A code missing here reads the generic sentence; the raw code is never shown.
  */
 const REASONS: Record<string, string> = {
+  QA_NEEDS_REVIEW: 'demo.reason.needsReview',
   DEMO_STEP_TIMEOUT: 'demo.reason.timeout',
   DEMO_STEP_FAILED: 'demo.reason.stepFailed',
   DEMO_LEASE_LOST: 'demo.reason.interrupted',
@@ -157,6 +175,13 @@ export function demoBlock(
           { id: 'rebuild', label: t('demo.menu.rebuild') }
         ],
         line: readyLine(r, t, now)
+      }
+    case 'review':
+      // The site is there to open; building again is one press away in the menu.
+      return {
+        primary: { label: t('demo.primary.open'), action: 'open', disabled: false },
+        menu: [{ id: 'rebuild', label: t('demo.menu.rebuild') }],
+        line: t('demo.line.needsReview')
       }
     case 'failed':
       return {
