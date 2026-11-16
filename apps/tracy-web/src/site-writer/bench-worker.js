@@ -41,7 +41,7 @@ import { siteWriterDoor } from './door.js'
 import { writerInput } from './writer-input.js'
 import { writerPrompt } from './writer-prompt.js'
 import { firstUserMessage, mergeTurnAnswers, nextTurnMessage } from './writer-turns.js'
-import { partMessages, planOfPages, writesInParts, writingParts } from './writer-parts.js'
+import { mergePartAnswers, partMessages, planOfPages, writesInParts, writingParts } from './writer-parts.js'
 import { kitImagesFor } from '../lib/template-kit-images.js'
 import { kitTools } from '../lib/template-kit-source.js'
 import {
@@ -115,7 +115,7 @@ export const SITE_WRITER_STEP = Object.freeze({
       firstUser: partVisualMessage(message, pages[part], row, ready)
     }))
   },
-  mergeParts: mergeTurnAnswers,
+  mergeParts: mergePartAnswers,
   prepare,
   agentRequest
 })

@@ -1,0 +1,1 @@
+{"id":"REG-PR-644-chain-standing-failures","verdict":"PASS","commit":"10d8e925a8ffdd887f79ecc189ad5b40dd9a96f5","ran_at":"2026-11-16T06:17:23.577Z","evidence":"tests/regression/.runs/2026-11-16-10d8e925a/REG-PR-644-chain-standing-failures.log"}

@@ -14,13 +14,49 @@
 //   the first of them, and the other is told to put them in other words. The copy check's W06 reads the merged copy
 //   as one site, and the fix rounds correct what still repeats.
 // - The answers are merged as writing turns are (writer-turns.js mergeTurnAnswers): every list in part order, which
-//   is the writing order, the notebook by page.
+//   is the writing order, the notebook by page; then a slot, alt or page's SEO that two parts both wrote keeps the
+//   first part's entry (mergePartAnswers).
 import { hasPhrase, textOfValue, wordsOf } from '../lib/site-copy/text-tools.js'
 import { pagesInWritingOrder } from './writer-input.js'
-import { fixedPart } from './writer-turns.js'
+import { fixedPart, mergeTurnAnswers } from './writer-turns.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
+
+/** What names one entry of each answer list: an entry with the same name from a later part is the same entry again. */
+const ENTRY_NAME = Object.freeze({
+  slots: (e) => e?.slot,
+  alts: (e) => e?.frame,
+  seo: (e) => e?.page,
+  returns: (e) => e?.slot
+})
+
+/**
+ * The parts' answers as one answer (mergeTurnAnswers), each slot, alt, page SEO and return once: the first part's
+ * entry, in the writing order. A slot printed on pages of two parts (a label one module shows on several pages) is
+ * written by both, since no part sees the others' words; kept twice, the copy check's W02 ("every kept slot exactly
+ * once") failed on it and the fix rounds, which continue the last part's conversation only, never cleared it (dev,
+ * JA Boxing, three chain builds on 15–16/11/2026: languageString-76896395.0 written twice, the copy step ended
+ * "failed, best version used"). Writing turns that follow each other are merged as before: a later turn sees the
+ * earlier answers and never writes their slots again.
+ */
+export function mergePartAnswers(answers) {
+  const merged = mergeTurnAnswers(answers)
+  if (answers.length === 1) return merged
+  const out = { ...merged }
+  for (const [key, nameOf] of Object.entries(ENTRY_NAME)) {
+    if (!Array.isArray(merged[key])) continue
+    const seen = new Set()
+    out[key] = merged[key].filter((entry) => {
+      const name = nameOf(entry)
+      if (typeof name !== 'string') return true
+      if (seen.has(name)) return false
+      seen.add(name)
+      return true
+    })
+  }
+  return out
+}
 
 /** The most parts a run may write at the same time. */
 export const MAX_PARALLEL_PAGES = 8
