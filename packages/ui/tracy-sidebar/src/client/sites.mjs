@@ -28,6 +28,25 @@ export function inCreationWorkspace(basePathname) {
 }
 
 /**
+ * Where the build chat opens. Kept in step with `BUILD_CHAT_PATH` of `@tracy/core/build-chat` by a
+ * test; not imported, because that barrel drags the whole build chat model into this bundle.
+ */
+export const BUILD_CHAT_HREF = '/new/build'
+
+/** The operator switch of the build chat (`@tracy/core` ui-switches catalogue, TracyHQ/tracy#602). */
+export const BUILD_CHAT_SWITCH = 'chat-build'
+
+/**
+ * Whether the left column offers Create a website: only in the creation workspace, where a person
+ * has no site yet, and only while the build chat switch is on (off, /new/build opens nothing).
+ * @param {{ basePathname: string, buildChatOn: boolean }} input
+ * @returns {boolean}
+ */
+export function showCreateWebsite({ basePathname, buildChatOn }) {
+  return buildChatOn === true && inCreationWorkspace(basePathname)
+}
+
+/**
  * The site this page is open on, or null.
  *
  * The path names it on arrival (`/<siteKey>/…`); once dsh writes the session into the address the

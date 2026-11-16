@@ -16,12 +16,12 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
  * `slots.inject` instead of editing this column.
  */
 import type { ReactNode } from 'react'
-import { PanelLeft, SquarePen } from 'lucide-react'
+import { Globe, PanelLeft, SquarePen } from 'lucide-react'
 import { Button, cn } from '@tracy/ui'
 import { uiSwitches } from '@tracy/core/ui-switches'
 import type { SidebarKey } from './strings'
 import { OtherSites, basePathname, showSite } from './other-sites'
-import { inCreationWorkspace } from './sites.mjs'
+import { BUILD_CHAT_HREF, BUILD_CHAT_SWITCH, inCreationWorkspace, showCreateWebsite } from './sites.mjs'
 
 type Slot =
   | 'sidebar.brand.mark'
@@ -133,6 +133,8 @@ export function Rail({ collapsed, width, startSession, toggleSidebar, t, renderS
   const showTree = useShown('workspace-tree')
   const showOtherSites = useShown('other-sites')
   const showSettings = useShown('settings-button')
+  const buildChatOn = useShown(BUILD_CHAT_SWITCH)
+  const showCreate = showCreateWebsite({ basePathname: basePathname(), buildChatOn })
   useEffect(() => {
     if (closedOnce) return
     closedOnce = true
@@ -199,6 +201,23 @@ export function Rail({ collapsed, width, startSession, toggleSidebar, t, renderS
           </Button>
         )}
       </div>
+
+      {/* Create a website: the primary action of the creation workspace (a person with no site yet),
+          shown only while the build chat switch is on. Opens the build chat, a page load because the
+          chat is its own route. */}
+      {showCreate ? (
+        <div className={cn('mb-2 shrink-0', wide ? 'px-3' : 'flex justify-center')}>
+          <Button
+            variant="default"
+            className={cn('tsb-create-site gap-2', wide ? 'h-9.5 w-full justify-center' : 'size-9')}
+            onClick={() => window.location.assign(BUILD_CHAT_HREF)}
+            aria-label={t('site.create')}
+          >
+            <Globe />
+            {wide ? t('site.create') : null}
+          </Button>
+        </div>
+      ) : null}
 
       {/* 38px — New session. Its fill and radius come from styles.ts, not from a token: see the
           `tsb-new-session` block there for why `secondary` alone leaves it invisible on light. */}

@@ -2547,7 +2547,8 @@ window.__ModuleLoader__.load({
               "help.open": "M\u1edf\u0020Discord",
               "help.hide": "\u1ea8n\u0020n\u00fat\u0020n\u00e0y",
               "help.close": "\u0110\u00f3ng",
-              "help.hidden": "\u0110\u00e3\u0020\u1ea9n.\u0020M\u1ee5c\u0020C\u1ed9ng\u0020\u0111\u1ed3ng\u0020v\u1eabn\u0020n\u1eb1m\u0020trong\u0020tr\u00ecnh\u0020\u0111\u01a1n\u0020d\u01b0\u1edbi\u0020\u1ea3nh\u0020c\u1ee7a\u0020b\u1ea1n,\u0020\u1edf\u0020cu\u1ed1i\u0020thanh\u0020b\u00ean."
+              "help.hidden": "\u0110\u00e3\u0020\u1ea9n.\u0020M\u1ee5c\u0020C\u1ed9ng\u0020\u0111\u1ed3ng\u0020v\u1eabn\u0020n\u1eb1m\u0020trong\u0020tr\u00ecnh\u0020\u0111\u01a1n\u0020d\u01b0\u1edbi\u0020\u1ea3nh\u0020c\u1ee7a\u0020b\u1ea1n,\u0020\u1edf\u0020cu\u1ed1i\u0020thanh\u0020b\u00ean.",
+              "site.create": "T\u1ea1o\u0020website"
       },
       "tracy-site-build-emdash": {
               "brief.cancel": "Hu\u1ef7",

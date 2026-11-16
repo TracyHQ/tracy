@@ -8,6 +8,8 @@ export const NS = 'tracy-sidebar'
 export const en = {
   /** The New session button. */
   'session.new': 'New session',
+  /** The Create a website button: opens the build chat (creation workspace only). */
+  'site.create': 'Create a website',
   /** aria-label of the collapse toggle while the column is wide. */
   'toggle.collapse': 'Collapse sidebar',
   /** aria-label of the expand toggle while the column is a rail. */

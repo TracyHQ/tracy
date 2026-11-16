@@ -312,3 +312,15 @@ test('a site has a page to open only once it is built: an address alone is a cla
   assert.equal(hasPageToShow({ ...claimed, copyUrl: null, agent: '/' }), false)
   assert.equal(hasPageToShow(undefined), false)
 })
+
+test('Create a website shows only in the creation workspace with the build chat switch on', async () => {
+  const { showCreateWebsite, BUILD_CHAT_SWITCH, BUILD_CHAT_HREF } = await import('../src/client/sites.mjs')
+  const { BUILD_CHAT_PATH } = await import('../../../core/tracy-core/src/build-chat/index.mjs')
+  assert.equal(BUILD_CHAT_SWITCH, 'chat-build')
+  assert.equal(showCreateWebsite({ basePathname: '/new/', buildChatOn: true }), true)
+  assert.equal(showCreateWebsite({ basePathname: '/new/', buildChatOn: false }), false)
+  assert.equal(showCreateWebsite({ basePathname: '/', buildChatOn: true }), false)
+  assert.equal(showCreateWebsite({ basePathname: '/lantern.tracy.test/', buildChatOn: true }), false)
+  // The button opens the build chat route.
+  assert.equal(BUILD_CHAT_HREF, BUILD_CHAT_PATH)
+})

@@ -82,6 +82,7 @@ html[data-windows-titlebar] .tsb-rail .tsb-rail-open { position: fixed; top: cal
 @media (max-width: 767.98px) { [data-sidebar-right-panel='fullscreen'] { max-width: calc(100vw - var(--dsh-frame-sidebar, 0px)); } }
 
 .tsb-new-session { background: color-mix(in oklab, var(--sidebar-foreground) 8%, var(--tsb-surface, var(--sidebar))); border-radius: 8px; font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.tsb-create-site { border-radius: 8px; font-weight: 500; }
 .tsb-new-session:hover { background: color-mix(in oklab, var(--sidebar-foreground) 16%, var(--tsb-surface, var(--sidebar))); }
 /* Collapsed rail: dsh's tree renders its own icon column (search, new folder) at 28/36px with
    18px glyphs, off-centre against Tracy's 36px buttons with 16px lucide icons. Same box, same
