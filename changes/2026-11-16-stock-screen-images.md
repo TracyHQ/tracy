@@ -1,0 +1,3 @@
+- **The planner's image tool does not open pictures of the kit's stock screens** — David (WO pipeline) · #655 · `fix/planner-stock-screen-images` · 2026-11-16
+  **Affects:** Rebuild and deploy tracy-web. `open_kit_image` answers `{ skipped: "STOCK_SCREEN" }` for pictures of pages the kit's `site.stockScreens` names; a kit with none (every published Joomla kit today) is unchanged. Template preparers: declaring demo-only screens with `cli.mjs stock-screens` now also shortens the planner's conversation.
+  **Why / Measured:** Dev, 16/11/2026: a JA Diner planner run opened about 60 page pictures, account pages and colour variants among them; later reading turns took 70-120 s each. Case REG-PR-655-stock-screen-images; planner, kit-source and stock-screen test files 221 pass.
