@@ -68,15 +68,11 @@ test('a published public module with slots, in a position the kit knows, on a ki
   )
 })
 
-test('the committed JA Diner 1.0.8 kit misses the home features and the chef modules: the verdict names them', () => {
+test('the rebuilt JA Diner 1.0.8 kit holds a block for every module its pages print (#667): nothing to flag', () => {
+  // Before #667 the committed kit missed the home features and the chef modules (module-95, 104, 115-117, 121-123); the
+  // check that names missing modules is held by the invented case above.
   const contracts = defaultContracts()
-  const release = releaseOfPin(latestPin('ja-diner'), contracts)
-  const judged = KIT_MODULES_CHECK.judge(release, { contracts })
-  assert.equal(judged.code, 'kit-modules-missing')
-  const names = judged.params.modules.map((m) => m.module)
-  for (const module of ['module-95', 'module-104']) assert.ok(names.includes(module), module)
-  assert.deepEqual(judged.params.modules.find((m) => m.module === 'module-95').pages.slice(0, 1), ['/'])
-  assert.match(judged.params.fix, /module-95/)
+  assert.equal(KIT_MODULES_CHECK.judge(releaseOfPin(latestPin('ja-diner'), contracts), { contracts }), null)
 })
 
 test('the latest JA Boxing kit holds a block for every module its pages print: nothing to flag', () => {
