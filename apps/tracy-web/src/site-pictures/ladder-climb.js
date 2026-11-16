@@ -1,6 +1,8 @@
 // Climbing the fallback ladder (#344, ADR 0043 section 4): each rung for one frame (ladder-rungs.js says which rungs a
 // frame has), on the round's ladder state (ladder-state.js). A rung places a picture (looked at next), ends the frame
 // (its row dropped, hidden or returned to the planner), or is skipped with its reason and the next rung is tried.
+// Each frame climbs on its own (climbFrame, ladder-step.js); the rungs of different frames never run at the same time,
+// except the drawer's wait.
 import { cutPhoto } from './cut-photo.js'
 import { darkerFirst } from './darken.js'
 import { hiddenEntry, placedEntry } from './frame-entries.js'
@@ -8,9 +10,9 @@ import { modeOf, WIDE_BAND } from './ladder-draw.js'
 import { anyPhotoRung, reuseRung } from './ladder-reuse.js'
 import { DRAW_RUNGS, fewerRowsRefusal, rowOf, rungsFor } from './ladder-rungs.js'
 import { onlyMinorFaults } from './looker-call.js'
-import { inParallel } from './looker-step.js'
 import { rankForFrame, sameService } from './photo-shortlist.js'
 
+/** Drawings in flight at once, for every frame of a round (ladder-step.js). */
 export const DRAW_CONCURRENCY = 4
 /** How many other owner photos the "next photo" rung places for one frame before it gives up. */
 export const NEXT_PHOTO_TRIES = 2
@@ -49,7 +51,9 @@ function chooseMode({ idx, usable }, s, frameId, p) {
   p.asset = photo ?? null
 }
 
-async function drawRung(ctx, s, frameId, p, rung) {
+// A drawing rung in three parts, so the drawer's wait holds no other frame back (climbFrame): what to draw, read from the
+// round's state with no wait in between (drawPlan), the drawing itself (drawAsk), and placing it (drawPlaced).
+function drawPlan(ctx, s, frameId, p, rung) {
   const { idx, drawing } = ctx
   if (!drawing) return { skip: 'the run has no drawer door' }
   const alt = rung === 'redraw-alt'
@@ -58,15 +62,24 @@ async function drawRung(ctx, s, frameId, p, rung) {
   chooseMode(ctx, s, frameId, p)
   const frame = idx.frames.get(frameId)
   // Another composition is drawn whole: never extended from an owner photo, whose framing the looker already rejected.
-  if (alt && p.mode === 'outpaint') {
+  // Nor is a photo another frame of the pages took after this frame chose it (its earlier drawing was not placed).
+  if (p.mode === 'outpaint' && (alt || s.onPages(frameId).has(p.asset.id))) {
     p.mode = modeOf(frame)
     p.asset = null
   }
   if (alt) p.alts = (p.alts ?? 0) + 1
+  // The photo to be extended shows on the frame's pages from now on: no other frame takes it while the drawer works.
+  if (p.mode === 'outpaint') s.claims.set(frameId, p.asset.id)
   // A gallery tile drawn after its photo rungs found nothing (card AK): its entry says so, the only drawing P07 lets an
   // any-real frame have.
   const tileDraw = idx.wishes.get(frameId)?.match === 'any-real' && Boolean(idx.galleryTile?.(frameId))
   const attempt = alt ? 2 + p.alts : rung === 'redraw' ? 2 : 1
+  return { draw: { rung, alt, tileDraw, attempt } }
+}
+
+// The drawing of a drawPlan: reads and writes nothing of the round's state but this frame's own mode and notes.
+async function drawAsk({ idx, drawing }, s, frameId, p, { rung, alt, attempt }) {
+  const frame = idx.frames.get(frameId)
   const ask = () =>
     drawing.draw({
       frameId,
@@ -85,14 +98,21 @@ async function drawRung(ctx, s, frameId, p, rung) {
     s.note(frameId, rung, 'skipped', `extend ${p.asset.id}: ${res.problem}`)
     p.mode = modeOf(frame)
     p.asset = null
+    s.claims.delete(frameId)
     res = await ask()
   }
+  return res
+}
+
+function drawPlaced({ idx }, s, frameId, p, { alt, tileDraw, attempt }, res) {
+  s.claims.delete(frameId)
   if (res.call) s.draws.push(res.call)
   // A cut-out whose ground could not be removed: the redraw is told the fault, as after a rejection.
   if (!res.made && res.faults?.length) p.faults = res.faults
   if (!res.made) return { skip: res.problem }
   s.keepFile(res.made, res.call.cached ? 0 : (res.call.costUsd ?? 0))
   if (res.backdropFile) s.keepFile(res.backdropFile, 0)
+  const frame = idx.frames.get(frameId)
   const extended = p.mode === 'outpaint'
   const list = s.listOf(frame)
   const cut = res.extra.cutout
@@ -150,7 +170,7 @@ async function nextPhotoRung({ idx, usable, photoBytes, store, luminance }, s, f
   const frame = idx.frames.get(frameId)
   const used = s.onPages(frameId)
   const ranked = await darkerFirst(
-    rankForFrame(usable, wish, frame, s.usageNow()).map((r) => r.a),
+    rankForFrame(usable, wish, frame, s.usageFor(frameId)).map((r) => r.a),
     frame,
     photoBytes,
     luminance
@@ -213,9 +233,8 @@ function hideRung({ idx }, s, frameId) {
     : { skip: 'the kit does not let this frame be hidden' }
 }
 
-/** Run one rung for a frame. */
+/** Run one rung for a frame that is not a drawing (climbTo runs those in three parts). */
 function runRung(ctx, s, frameId, p, rung) {
-  if (DRAW_RUNGS.has(rung)) return drawRung(ctx, s, frameId, p, rung)
   if (rung === 'best-rejected') return bestRejectedRung(s, frameId, p)
   if (rung === 'next-photo') return nextPhotoRung(ctx, s, frameId, p)
   if (rung === 'fewer-rows') return fewerRowsRung(ctx, s, frameId)
@@ -225,63 +244,93 @@ function runRung(ctx, s, frameId, p, rung) {
   return { ret: true }
 }
 
-// Climb a frame's ladder from where it stands until a rung places a picture or ends the frame.
-async function climb(ctx, s, frameId, firstResult = null) {
-  const p = s.progress.get(frameId)
+// What a rung's result does to the frame: true when it placed a picture or ended the frame, false when the rung was
+// skipped and the next one is tried.
+function settle(ctx, s, frameId, p, rung, result) {
+  if (result.entry) {
+    s.entries.set(frameId, { list: result.list, entry: result.entry })
+    s.note(frameId, rung, 'placed', result.entry.sha256.slice(0, 12))
+    p.last = rung
+    // The photo rungs stay where they are: a rejected photo is followed by another, up to their tries.
+    if (!STAYS.has(rung)) p.at += 1
+    // A kept rejected picture ends the frame: it is not looked at again for a verdict.
+    if (result.final) p.done = true
+    return true
+  }
+  if (result.done) {
+    s.note(frameId, rung, 'done')
+    return true
+  }
+  if (result.hide || result.ret) {
+    s.note(frameId, rung, result.hide ? 'hidden' : 'returned')
+    if (result.hide)
+      s.entries.set(frameId, {
+        list: 'frames',
+        entry: hiddenEntry(frameId, `hidden after: ${s.story(frameId)}`)
+      })
+    else {
+      s.entries.delete(frameId)
+      s.returns.push({
+        frame: frameId,
+        reason: ctx.idx.galleryTile?.(frameId)
+          ? `a gallery tile is never hidden alone, and no owner photo is left for it after: ${s.story(frameId)}`
+          : `no picture is left for this frame after: ${s.story(frameId)}`
+      })
+    }
+    p.done = true
+    return true
+  }
+  s.note(frameId, rung, 'skipped', result.skip)
+  p.at += 1
+  return false
+}
+
+// The rungs of a frame from where it stands, until one places a picture or ends the frame (null), or a drawing rung is
+// reached (what its drawing asks, drawPlan). The frame's progress is read again for every rung: another frame's
+// fewer-rows rung ends the frames of its row with new progress records.
+async function climbTo(ctx, s, frameId) {
   const rungs = rungsFor(ctx.idx, frameId)
-  let result = firstResult
   for (;;) {
-    if (p.done) return
+    const p = s.progress.get(frameId)
+    if (p.done) return null
     const rung = rungs[p.at]
-    result ??= await runRung(ctx, s, frameId, p, rung)
-    if (result.entry) {
-      s.entries.set(frameId, { list: result.list, entry: result.entry })
-      s.note(frameId, rung, 'placed', result.entry.sha256.slice(0, 12))
-      p.last = rung
-      // The photo rungs stay where they are: a rejected photo is followed by another, up to their tries.
-      if (!STAYS.has(rung)) p.at += 1
-      // A kept rejected picture ends the frame: it is not looked at again for a verdict.
-      if (result.final) p.done = true
-      return
-    }
-    if (result.done) return s.note(frameId, rung, 'done')
-    if (result.hide || result.ret) {
-      s.note(frameId, rung, result.hide ? 'hidden' : 'returned')
-      if (result.hide)
-        s.entries.set(frameId, {
-          list: 'frames',
-          entry: hiddenEntry(frameId, `hidden after: ${s.story(frameId)}`)
-        })
-      else {
-        s.entries.delete(frameId)
-        s.returns.push({
-          frame: frameId,
-          reason: ctx.idx.galleryTile?.(frameId)
-            ? `a gallery tile is never hidden alone, and no owner photo is left for it after: ${s.story(frameId)}`
-            : `no picture is left for this frame after: ${s.story(frameId)}`
-        })
-      }
-      p.done = true
-      return
-    }
-    s.note(frameId, rung, 'skipped', result.skip)
-    p.at += 1
-    result = null
+    const result = DRAW_RUNGS.has(rung)
+      ? drawPlan(ctx, s, frameId, p, rung)
+      : await runRung(ctx, s, frameId, p, rung)
+    if (result.draw) return result.draw
+    if (settle(ctx, s, frameId, p, rung, result)) return null
   }
 }
 
 /**
- * Climb several frames one rung on: their drawing rungs at once (DRAW_CONCURRENCY at a time), every other rung one by
- * one, so two frames never take the same photo for one page.
+ * Climb one frame's ladder from where it stands until a rung places a picture or ends the frame. Every rung runs inside
+ * `lock`, one rung of one frame at a time, so what a rung reads of the round (the photos on the frame's pages, their
+ * cuts and use, the list rows) is still true when it places its picture, and two frames never take the same photo for
+ * one page. A drawing rung leaves the lock while the drawer draws (ctx.drawing holds DRAW_CONCURRENCY drawings in
+ * flight) and takes it again to place what it drew; meanwhile the photo it extends is claimed on its pages (drawPlan).
  * @param {{ idx: object, plan: object, kit: object, usable: object[], photoBytes: Map<string, Buffer>, store: object,
  *   drawing: { draw: Function } | null, luminance: Map<string, number> }} ctx
+ * @param {<T>(fn: () => Promise<T> | T) => Promise<T>} lock runs `fn` alone: one lock shared by every frame of the
+ *   round (ladder-step.js frameLock)
  */
-export async function climbAll(ctx, s, frameIds) {
-  const rungOf = (f) => rungsFor(ctx.idx, f)[s.progress.get(f).at]
-  const drawsFirst = frameIds.filter((f) => DRAW_RUNGS.has(rungOf(f)))
-  const drawn = await inParallel(drawsFirst, DRAW_CONCURRENCY, (f) =>
-    drawRung(ctx, s, f, s.progress.get(f), rungOf(f))
-  )
-  const first = new Map(drawsFirst.map((f, i) => [f, drawn[i]]))
-  for (const f of frameIds) await climb(ctx, s, f, first.get(f) ?? null)
+export async function climbFrame(ctx, s, frameId, lock) {
+  for (;;) {
+    const plan = await lock(() => climbTo(ctx, s, frameId))
+    if (!plan) return
+    const p = s.progress.get(frameId)
+    // Its row was dropped by another frame since: nothing is drawn.
+    if (p.done) {
+      s.claims.delete(frameId)
+      return
+    }
+    const res = await drawAsk(ctx, s, frameId, p, plan)
+    const ended = await lock(() => {
+      const now = s.progress.get(frameId)
+      const result = drawPlaced(ctx, s, frameId, now, plan, res)
+      // The frame's row was dropped while it was drawn: the drawing is recorded, not placed.
+      if (now.done) return true
+      return settle(ctx, s, frameId, now, plan.rung, result)
+    })
+    if (ended) return
+  }
 }

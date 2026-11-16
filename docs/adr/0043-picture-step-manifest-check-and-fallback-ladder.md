@@ -485,8 +485,16 @@ a frame the plan asked to fill.
 
 How it runs (#344, `site-pictures/ladder-step.js`). Every checked round is finished where it is saved (the shared run
 loop is unchanged): the frames waiting for the drawer are drawn, dark frames darkened, every picture looked at, and
-each rejected frame climbs one rung, after which the changed pictures are looked at again, until no rejected frame can
-climb. The rungs, in order:
+each rejected frame climbs one rung, after which its changed picture is looked at again, until no rejected frame can
+climb. Each frame does this on its own (16/11/2026): as soon as its look comes back it takes its next rung, while other
+frames still wait for theirs, with at most `LOOK_CONCURRENCY` looks and `DRAW_CONCURRENCY` drawings in flight for the
+whole round. Before, every frame climbed one rung per pass and each pass waited for every look of the manifest (dev,
+BXR London: 155 looks took 405 s where eight in flight needed about 140 s). The rungs of different frames still run one
+at a time, so what a rung reads of the round (the photos on the frame's pages, their cuts, the list rows) holds when it
+places its picture; an owner photo a drawing extends counts as shown on its pages from the moment it is chosen. A rung
+ranks photos by their use counting the frames of other pages as the round began (`ladder-state.js` `usageFor`), so a
+frame's photos and their order never depend on how fast another page's looks came back; frames of one page competing
+for one photo may end differently from run to run, always within the rules. The rungs, in order:
 
 | Rung | Who climbs it | What it does |
 |---|---|---|
@@ -510,8 +518,8 @@ size, but one hidden tile leaves a visible hole in the grid; so the rule lives i
 brief has usable owner photos, so the any-photo rung follows the reuse rung and gives up only the 30% rule. P06 accepts
 a photo twice on a page only for a gallery tile marked `reuse`, not next to the other showing: after the reuse rung the
 two cuts share at most 30%, after the any-photo rung they are not the same cut; any other repeat still fails. P12
-fails a gallery tile hidden alone (one not in a row the ladder dropped, the manifest's `rows`). A tile walks up to 40
-looks (the round's pass limit), one photo per pass.
+fails a gallery tile hidden alone (one not in a row the ladder dropped, the manifest's `rows`). A tile climbs at most 40
+times after a rejection in a round (`MAX_PASSES`, per frame), one photo and one look each.
 
 Owner decision 06/11/2026 (card AK, refines the any-photo rung above): one owner photo may show again in the same kit
 block only in a clearly different cut; a near duplicate (the bug: two tiles of one gallery, cuts sharing 97%) never.

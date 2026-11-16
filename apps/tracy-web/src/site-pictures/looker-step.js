@@ -66,6 +66,36 @@ export function cutoutFacts(frame, entry) {
   }
 }
 
+/**
+ * A bound on work in flight: `run(fn)` starts `fn` once fewer than `n` earlier ones are still running, in the order
+ * asked, and settles as it does. `limiter(1)` runs one at a time.
+ * @param {number} n
+ * @returns {<T>(fn: () => T | Promise<T>) => Promise<T>}
+ */
+export function limiter(n) {
+  const most = Math.max(1, n)
+  const queue = []
+  let running = 0
+  const next = () => {
+    while (running < most && queue.length) {
+      const { fn, resolve, reject } = queue.shift()
+      running++
+      Promise.resolve()
+        .then(fn)
+        .then(resolve, reject)
+        .finally(() => {
+          running--
+          next()
+        })
+    }
+  }
+  return (fn) =>
+    new Promise((resolve, reject) => {
+      queue.push({ fn, resolve, reject })
+      next()
+    })
+}
+
 /** Run `work` over `items`, at most `n` at a time, keeping the order of the results. */
 export async function inParallel(items, n, work) {
   const out = Array.from({ length: items.length })
@@ -103,6 +133,17 @@ export function createLooker({
   const runDir = path.join(store.dir, 'runs', String(runId))
   const kept = (key) => path.join(runDir, 'looks', `${key}.json`)
   const negative = negativeLookCache({ dir: runDir, model: door.model })
+  // The provider calls in flight, for every look of this looker at once: the fallback ladder looks at each frame's
+  // picture as soon as it is placed (ladder-step.js), many calls of `look` and `ahead` side by side, so the bound is
+  // the looker's, not one call's.
+  const asking = limiter(concurrency ?? LOOK_CONCURRENCY)
+  // The looks being taken now, by save (`memo`) and question key: a second ask of the same question waits for the
+  // first instead of paying again.
+  const taking = new WeakMap()
+  const takingOf = (memo) => {
+    if (!taking.has(memo)) taking.set(memo, new Map())
+    return taking.get(memo)
+  }
 
   // What a look at a picture asks, and the key it is kept under: the picture, its display size and the frame's words.
   function questionOf(entry) {
@@ -140,10 +181,23 @@ export function createLooker({
     const question = questionOf(entry)
     const { key, alt } = question
     // A look already taken in this save (the fallback ladder looks again after each rung), readable or not.
-    if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true, limit: alt?.limit ?? null }
-    const looked = await lookFresh(list, entry, question)
-    memo?.set(key, looked.said)
-    return { ...looked, limit: alt?.limit ?? null }
+    const limit = alt?.limit ?? null
+    if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true, limit }
+    if (!memo) return { ...(await lookFresh(list, entry, question)), limit }
+    // The same look being taken in this save right now (another frame's picture, a look-ahead): the same look, which
+    // the first ask records and pays.
+    const inFlight = takingOf(memo)
+    const pending = inFlight.get(key)
+    if (pending) return { list, entry, said: (await pending).said, cached: true, limit }
+    const work = lookFresh(list, entry, question)
+    inFlight.set(key, work)
+    try {
+      const looked = await work
+      memo.set(key, looked.said)
+      return { ...looked, limit }
+    } finally {
+      inFlight.delete(key)
+    }
   }
 
   async function lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface, alt }) {
@@ -183,7 +237,10 @@ export function createLooker({
       await negative.remember(renderKey, key, before)
       return { list, entry, said: before, cached: true }
     }
-    const looked = await negative.run(renderKey, key, async () => {
+    const looked = await negative.run(renderKey, key, () => asking(askBoth))
+    return { list, entry, ...looked }
+
+    async function askBoth() {
       const ask = () =>
         askLooker({
           door,
@@ -217,8 +274,7 @@ export function createLooker({
         said: unreadable(`${first.problem}; asked again: ${second.problem}`, spent),
         cached: false
       }
-    })
-    return { list, entry, ...looked }
+    }
   }
 
   async function keep(key, said) {
@@ -329,8 +385,12 @@ export function createLooker({
     }
   }
 
-  /** Whether this save already took the look a picture would get (`memo` as `look` keeps it). */
-  const known = (entry, memo) => Boolean(memo?.has(questionOf(entry).key))
+  /** Whether this save already took, or is taking now, the look a picture would get (`memo` as `look` keeps it). */
+  const known = (entry, memo) => {
+    if (!memo) return false
+    const { key } = questionOf(entry)
+    return memo.has(key) || Boolean(taking.get(memo)?.has(key))
+  }
 
   /**
    * Looks at pictures not placed yet, all at once (LOOK_CONCURRENCY at a time): each look is the one `look` would take
