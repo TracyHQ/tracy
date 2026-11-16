@@ -179,3 +179,45 @@ test('each page group is named with its desktop and every distinct phone image o
   assert.deepEqual(groups.find((g) => g.group === 'one').ids, [ids[0], ids[2], 'page-one-b-390'])
   assert.match(visualReviewInstruction(kit), /in the same call that reads the block with read_kit_part/)
 })
+
+test('a page group of stock screens asks for no image; a mixed group stands for its first page that is not one', () => {
+  // Dev, JA Diner 16/11/2026: V01 asked for page-home_home-red-1440, a home colour variant the kit declares a stock
+  // screen, which open_kit_image answers STOCK_SCREEN, and the plan step ended "failed, best version used".
+  const stockIds = ['page-red-1440', 'page-red-390', 'page-account-1440', 'page-three-1440']
+  const withStock = {
+    ...kit,
+    site: {
+      stockScreens: [
+        { path: '/home/*', why: 'colour variants of the home page' },
+        { path: '/account', why: 'an account screen with no customer content' }
+      ]
+    },
+    pageGroups: [
+      ...kit.pageGroups,
+      { id: 'red', representative: 'page-red' },
+      { id: 'mixed', representative: 'page-account' }
+    ],
+    pages: [
+      { ...kit.pages[0], path: '/' },
+      { ...kit.pages[1], path: '/two' },
+      { id: 'page-red', group: 'red', path: '/home/red', images: { 1440: stockIds[0], 390: stockIds[1] } },
+      { id: 'page-account', group: 'mixed', path: '/account', images: { 1440: stockIds[2] } },
+      { id: 'page-three', group: 'mixed', path: '/three', images: { 1440: stockIds[3] } }
+    ],
+    images: [...ids, ...stockIds].map((id) => ({ id, sha256: sha }))
+  }
+  const asked = visualReviewImages(withStock).groups.flatMap((g) => g.ids)
+  for (const id of stockIds.slice(0, 3)) assert.ok(!asked.includes(id), id)
+  assert.ok(
+    asked.includes('page-three-1440'),
+    'the mixed group stands for its page that is not a stock screen'
+  )
+  const run = checkVisualReview({
+    plan,
+    kit: withStock,
+    kitRef: ref,
+    history: evidence([...ids, 'page-three-1440'])
+  })
+  assert.equal(run.status, 'pass', run.failures.map((f) => f.where).join('; '))
+  assert.ok(!run.coverage.required.some((id) => stockIds.slice(0, 3).includes(id)))
+})
