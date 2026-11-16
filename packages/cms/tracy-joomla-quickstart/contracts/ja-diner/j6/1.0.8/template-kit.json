@@ -56069,7 +56069,11 @@
       ]
     }
   ],
-  "approval": null,
+  "approval": {
+    "by": "davidd-lgtm",
+    "at": "2026-11-16T17:38:19.769Z",
+    "imagesSha256": "691ab69a7e76f1c101e5b654eb9025546f714352cf6fd6fb9fb03c930ca42746"
+  },
   "site": {
     "logoSpots": [
       {
