@@ -1233,6 +1233,8 @@ export const en = {
   'stepper.build.ready': 'Site content brief ready. Build your site from it.',
   'stepper.build.running': 'Building your site…',
   'stepper.build.failed': 'The demo build stopped before it was finished.',
+  'stepper.build.needsReview':
+    'Your site is built, but its last check found problems. Open it and review them before you send it, or try again.',
   'stepper.build.expired': 'The demo expired. Build it again to send it.',
   'my.status.researched': 'Researched',
   'brief.chip.working': 'Working',
@@ -1301,6 +1303,7 @@ export const en = {
   'chip.briefApproved': 'Site content brief approved',
   'chip.building': 'Building your site',
   'chip.built': 'Site ready',
+  'chip.siteReview': 'Site needs review',
   // My opportunities row, option A (#537, row-step-model.ts): words the band and the header chip do not already have.
   'row.researching': 'Researching business facts…',
   'row.failed.research': 'Research failed',

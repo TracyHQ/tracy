@@ -155,9 +155,11 @@ export function sectionMetas(input: SectionMetaInput): SectionMeta[] {
   const demo =
     input.demo === 'ready'
       ? entry('demo', [{ key: 'section.meta.demo.ready' }], 'ok')
-      : BUILDING.has(input.demo)
-        ? entry('demo', [{ key: 'section.meta.demo.none' }], 'mute')
-        : entry('demo', [{ key: 'section.meta.demo.none' }], 'mute', !hasBrief && input.demo === 'none')
+      : input.demo === 'review'
+        ? entry('demo', [{ key: 'chip.siteReview' }], 'mute')
+        : BUILDING.has(input.demo)
+          ? entry('demo', [{ key: 'section.meta.demo.none' }], 'mute')
+          : entry('demo', [{ key: 'section.meta.demo.none' }], 'mute', !hasBrief && input.demo === 'none')
 
   return [profile, sources, brief, media, demo]
 }

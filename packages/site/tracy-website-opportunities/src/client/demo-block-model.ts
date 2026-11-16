@@ -62,7 +62,8 @@ export function demoCommand(control: DemoControl, row: OpportunityListRow, detai
       return { kind: 'action', action: 'build' }
     case 'failed':
       return { kind: 'action', action: 'retry-demo' }
-    case 'ready': {
+    case 'ready':
+    case 'review': {
       const href = demoHref(full.demo, detail)
       return href === null ? null : { kind: 'open', href }
     }
