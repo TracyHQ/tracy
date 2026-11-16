@@ -80,7 +80,8 @@ test('a store that throws, or no store that says which build the site holds, sto
 /** An owner's edit of a place outside Tracy: one column of a record the revision wrote over. */
 async function ownerEdit(first, build) {
   const [key, kept] = Object.entries(build.write.state.undo.records)[0]
-  const column = Object.keys(kept.fields)[0]
+  // Not the alias: the site folds an alias on save, as Joomla does, so the owner's words would not stay readable.
+  const column = Object.keys(kept.fields).find((name) => name !== 'alias')
   const row = await first.memory.doors.get({ kind: kept.kind, id: kept.id })
   await first.memory.doors.update({
     applyId: 'owner-edit-1',

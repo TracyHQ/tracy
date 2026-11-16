@@ -129,6 +129,8 @@ test('the florist plan raises exactly these skip reasons, flags and operation ki
     'module.assign',
     'module.copy',
     'module.position',
+    // The footer logo module with no logo is left on no page (#587, `hides.block-170` by unassign).
+    'module.unassign',
     'picture.upload',
     'site.identity'
   ])

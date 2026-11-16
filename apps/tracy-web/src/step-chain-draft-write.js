@@ -43,7 +43,7 @@ const sameMark = (a, b) => a.plan === b.plan && a.revision === b.revision && a.o
  * resumed nor overwritten: the site holds half of that plan, and only a decision above this step (a fresh blank site,
  * or that plan run to its end) can settle it (`write_record_stale`, noRerun).
  */
-function stateOf(record, plan) {
+function stateOf(record, plan, now) {
   const mark = planMarkOf(plan)
   record.state ??= { mark, ids: {}, paths: {}, pending: {}, done: [] }
   const state = record.state
@@ -73,6 +73,8 @@ function stateOf(record, plan) {
       }
     )
   state.mark = mark
+  // The time the created articles are dated from (`step-chain-draft-write-dates.js`): kept, so a resume agrees.
+  state.dateBase ??= new Date(now()).toISOString()
   return state
 }
 
@@ -82,11 +84,20 @@ function stateOf(record, plan) {
  *   openStored: (id: string) => Promise<{bytes: Uint8Array, mime?: string}>, runId?: string,
  *   drawInitials?: (draw: {initials: string, width: number, height: number}) => Promise<{bytes: Uint8Array, mime?: string}>}}
  *   input `record`: the run record, kept between attempts and runs (`state` is resumed from, `save` is called after
- *   every step of an op); `drawInitials`: draws the initials picture of a person with no photo
+ *   every step of an op); `drawInitials`: draws the initials picture of a person with no photo; `now`: the clock the
+ *   created articles are dated from on the first run
  * @returns {Promise<{status: 'done', ran: string[], counts: object, unproven: object[]}>}
  */
-export async function runDraftWrite({ plan, doors, record, openStored, drawInitials, runId = 'draft' }) {
-  const state = stateOf(record, plan)
+export async function runDraftWrite({
+  plan,
+  doors,
+  record,
+  openStored,
+  drawInitials,
+  runId = 'draft',
+  now = () => Date.now()
+}) {
+  const state = stateOf(record, plan, now)
   const report = {
     status: 'running',
     ran: [...state.done],
@@ -94,6 +105,8 @@ export async function runDraftWrite({ plan, doors, record, openStored, drawIniti
     // Fact places the kit leaves unwritten by decision: the report says so, never counts them written.
     notWritten: [...list(plan.notWritten)],
     conflicts: [...list(plan.conflicts)],
+    // Words the plan changed before any door (control characters out, plugin codes neutralised), with a code.
+    cleaned: [...list(plan.cleaned)],
     // A revision run (#599): the operations the site already holds from the previous build run nothing.
     ...(state.kept ? { kept: state.kept.length } : {})
   }

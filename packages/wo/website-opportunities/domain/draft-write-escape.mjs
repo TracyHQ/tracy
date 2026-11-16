@@ -22,6 +22,7 @@
 // refused at every place (`doubleParenthesisProblems`); only the declared markers of a codes field are kept there.
 // Pure.
 import { safetyAt } from './draft-write-escape-place.mjs'
+import { cleanedAt } from './draft-write-text-clean.mjs'
 import { addressAt } from './draft-write-place-kinds.mjs'
 import { readTags } from './draft-write-tags.mjs'
 import { placesOfOrder } from './write-order-check.mjs'
@@ -139,11 +140,16 @@ export function doubleParenthesisProblem(value, markers, runsCodeIn) {
 export const entriesByPlace = (order) =>
   new Map(placesOfOrder(order).flatMap(({ place }) => (place.fields ?? []).map((e) => [e.place, e])))
 
+/** The created record columns that hold the plan's words (a contact's `title` is its name): cleaned like values. */
+const WORDED_COLUMNS = new Set(['title'])
+
 /**
  * Every value and created record column of the operations, made safe at its place (`safeValue`); an address at a
- * neutral place is written as it is (no typographic quotes in an address: the guard refuses a quote there).
+ * neutral place is written as it is (no typographic quotes in an address: the guard refuses a quote there). Before
+ * that, every value with an order entry and every worded column of a created record is cleaned (control characters
+ * out, plugin codes neutralised: `draft-write-text-clean.mjs`), each change listed in `cleaned`.
  */
-export function safeOps(ops, { order, kit }) {
+export function safeOps(ops, { order, kit, cleaned = [] }) {
   const mapping = kit.mapping
   const entries = entriesByPlace(order)
   for (const op of ops) {
@@ -151,17 +157,27 @@ export function safeOps(ops, { order, kit }) {
       if (typeof v.value !== 'string') continue
       const entry = v.entry ? entries.get(v.entry) : null
       const slot = v.loc?.slot ? kit.slots.get(v.loc.slot) : null
+      const safety = safetyAt(op, v.loc, { slot, mapping })
+      const address = addressAt(v.loc, entry, slot)
+      if (v.entry)
+        v.value = cleanedAt(
+          v.value,
+          { op: op.key, entry: v.entry, multiline: safety.kind === 'html', address },
+          cleaned
+        )
       v.value = safeValue(v.value, {
-        ...safetyAt(op, v.loc, { slot, mapping }),
+        ...safety,
         markers: v.loc?.nestedJson ? declaredMarkersOf(entry) : new Set(),
-        address: addressAt(v.loc, entry, slot),
+        address,
         escaped: String(v.rule ?? '').includes('inline_html')
       })
     }
     if (op.kind.endsWith('.create') && op.fields)
-      for (const [column, text] of Object.entries(op.fields))
-        if (typeof text === 'string' && column !== 'link')
-          op.fields[column] = safeValue(text, safetyAt(op, { column, entity: op.recordKind }, { mapping }))
+      for (const [column, text] of Object.entries(op.fields)) {
+        if (typeof text !== 'string' || column === 'link') continue
+        const words = WORDED_COLUMNS.has(column) ? cleanedAt(text, { op: op.key, column }, cleaned) : text
+        op.fields[column] = safeValue(words, safetyAt(op, { column, entity: op.recordKind }, { mapping }))
+      }
   }
   return ops
 }

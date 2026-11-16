@@ -75,7 +75,9 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
       record,
       runId: ctx.runId ?? 'draft',
       openStored: (id) => wiring.openStored(id, ctx),
-      drawInitials: wiring.drawInitials ?? drawInitials
+      drawInitials: wiring.drawInitials ?? drawInitials,
+      // The clock the created articles are dated from (tests fix it; the server leaves the wall clock).
+      ...(wiring.now ? { now: wiring.now } : {})
     }
     const { report } = previous
       ? await runRevisionWrite({ ...run, previous: previous.write, beforeDoors })

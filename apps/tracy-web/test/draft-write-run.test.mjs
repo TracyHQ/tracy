@@ -72,7 +72,12 @@ test('every page shows a module for each of its blocks, in the page order where 
     const shown = modulesOfPage(memory, items[floristPlan.under[page.id]?.list ?? page.id].id)
     const marks = [`copy:site.`, `copy:${page.id}.`, `library:${page.id}.`]
     const placed = []
+    // A block whose module an `unassign` hide leaves on no page (#587: the footer logo with no logo) shows nowhere.
+    const unassigned = new Set(
+      floristPlan.ops.filter((op) => op.kind === 'module.unassign').map((op) => op.record)
+    )
     for (const block of page.blocks.filter((b) => b.state === 'show')) {
+      if (unassigned.has(`store:${florist.kit.mapping.placements?.[block.block]?.entity}`)) continue
       const row = shown.find(
         (r) =>
           r.note === `copy:${page.id}.${block.id}` ||

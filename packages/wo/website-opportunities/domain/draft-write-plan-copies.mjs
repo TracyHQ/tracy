@@ -5,13 +5,51 @@
 import { movedAfterCut, rowIndexOf } from './draft-write-codec.mjs'
 import { emptyControl, holdsField, omitRows } from './draft-write-plan-hides.mjs'
 import { categoryRecordOf } from './draft-write-kit-pages.mjs'
+import { DraftWriteError } from './draft-write-error.mjs'
+import { DRAFT_WRITE_HIDE_VALUES } from './draft-write-kit-keys.mjs'
 import { put, unproven } from './draft-write-sink.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
 const elementOf = (xpath) => String(xpath ?? '').replace(/\/(@[\w-]+|text\(\)(\[\d+\])?)$/, '')
 
+/** A hide whose way the write does not know stops the plan, typed, before any door: it is never skipped in silence. */
+function checkHideBy(record, hide) {
+  if (DRAFT_WRITE_HIDE_VALUES.by.includes(hide.by)) return
+  throw new DraftWriteError('hide_by_unknown', `${record.block} declares a hide the write does not know`, {
+    block: record.block,
+    by: hide.by ?? null
+  })
+}
+
+/**
+ * A group of fields (`fields`, #587): fields that print a frame of their own (a tile, a picture), taken off the page
+ * when the record holds none of them. Not a pair: some written and some not is no problem, so it is no control.
+ */
+function fieldsHide(state, record, hide) {
+  if (hide.fields.some((f) => groupHolds(state, record, f))) return
+  if (hide.by === 'empty') emptyControl(state, record, { ...hide, control: hide.fields })
+  else if (hide.by === 'setting') settingHide(state, record, hide)
+  // `unassign`: the record's module on no page (`assignOf` makes it a `module.unassign`).
+  else if (hide.by === 'unassign') record.unassign = { fields: hide.fields, rule: 'hides.unassign' }
+  else unproven(state.sink, 'hide_fields_by_unread', { record: record.key, by: hide.by })
+}
+
+/** Whether the record holds a field of a group: at the field's locations, or, for a fact field, from that fact. */
+function groupHolds(state, record, field) {
+  const fact = state.kit.mapping.blocks?.[record.block]?.fields?.[field]?.fact
+  if (!fact) return holdsField(state, record, field)
+  return [...record.values.values()].some((v) => String(v.rule ?? '').split('+')[0] === `fact:${fact}`)
+}
+
+function settingHide(state, record, hide) {
+  if (record.kind === 'copy')
+    put(state.sink, record.key, hide.location, hide.value, { rule: 'hides.setting' })
+  else record.settings.push({ loc: hide.location, value: hide.value, rule: 'hides.setting' })
+}
+
 function applyHides(state, record) {
+  for (const hide of list(state.kit.mapping.hides?.[record.block])) checkHideBy(record, hide)
   for (const hide of list(state.kit.mapping.hides?.[record.block])) {
     if (hide.by === 'row' && record.kind === 'copy')
       for (const row of Array.isArray(hide.row) ? hide.row : [hide.row]) {
@@ -24,6 +62,7 @@ function applyHides(state, record) {
   }
   // The controls after the rows are cut: an `empty` hide writes only into the rows the copy keeps.
   for (const hide of list(state.kit.mapping.hides?.[record.block])) {
+    if (Array.isArray(hide.fields)) fieldsHide(state, record, hide)
     if (!hide.control) continue
     if (hide.by === 'empty') emptyControl(state, record, hide)
     const written = hide.control.map((f) => holdsField(state, record, f))
@@ -43,11 +82,7 @@ function applyHides(state, record) {
       if (!loc) continue
       // The element the hide declares (`element`), else the one holding the last field of the control.
       record.removes.push({ loc, xpath: hide.element ?? elementOf(link.xpath), rule: 'hides.rows.remove' })
-    } else if (hide.by === 'setting') {
-      if (record.kind === 'copy')
-        put(state.sink, record.key, hide.location, hide.value, { rule: 'hides.setting' })
-      else record.settings.push({ loc: hide.location, value: hide.value, rule: 'hides.setting' })
-    }
+    } else if (hide.by === 'setting') settingHide(state, record, hide)
   }
   // After the rows are cut: an omitted row element is named where it stands once the cut rows are gone.
   for (const hide of list(state.kit.mapping.hides?.[record.block]))

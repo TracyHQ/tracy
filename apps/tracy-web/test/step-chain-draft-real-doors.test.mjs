@@ -68,7 +68,8 @@ async function build({ wiring = realWiring(), onCall, controller = new AbortCont
     secret: 's'.repeat(32),
     log: {},
     recordsDir: records,
-    draft: { ...deps, site: wiring(over, draftWrite) }
+    // The fixtures' fixed clock: created articles are dated from it, so the run compares equal to the reference.
+    draft: { ...deps, site: { now: draftWrite.now, ...wiring(over, draftWrite) } }
   })
   const engine = createStepChainEngine({ steps, applyFor: over.applyFor })
   const run = randomUUID()

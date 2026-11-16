@@ -65,6 +65,12 @@ export const RUN = {
     // Two pages reached under one list page are assigned through that page's one item.
     await assign(op, id, [...new Set(menuids)], ctx)
   },
+  // An `unassign` hide (#587): the module on no page, through the site's unassign door, read back as `[]`.
+  async 'module.unassign'(op, ctx) {
+    const id = ctx.state.ids[op.record] ?? op.sourceId
+    await ctx.doors.unassign({ applyId: ctx.applyId(op, 'unassign'), id })
+    await readAssignment(op, id, [], ctx)
+  },
   async 'module.position'(op, ctx) {
     const id = ctx.state.ids[op.record]
     const row = await ctx.doors.get({ kind: 'module', id })

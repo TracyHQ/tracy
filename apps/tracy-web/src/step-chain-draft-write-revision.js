@@ -81,6 +81,8 @@ export function revisionStateOf(previous, plan, delta, held) {
     mark: planMarkOf(plan),
     base: before.mark,
     seq: (before.seq ?? 1) + 1,
+    // The articles a revision makes again keep the dates the build gave them.
+    ...(before.dateBase ? { dateBase: before.dateBase } : {}),
     baseIds: maskHeld(Object.keys(before.ids ?? {}), held),
     ids: Object.fromEntries(Object.entries(before.ids ?? {}).filter(([k]) => shown(k))),
     paths: Object.fromEntries(
@@ -125,7 +127,7 @@ function heldFilesOf(previous, state, hold) {
  * @returns {Promise<{report: object, delta: object}>}
  */
 export async function runRevisionWrite(input) {
-  const { plan, previous, doors, record, runId, openStored, drawInitials, beforeDoors } = input
+  const { plan, previous, doors, record, runId, openStored, drawInitials, beforeDoors, now } = input
   const hold = { texts: list(previous.hold?.texts), ids: list(previous.hold?.ids) }
   const delta = writeDeltaOf({ previous: previous.ops, plan })
   const removal = removalActsOf(delta, previous.state)
@@ -152,7 +154,15 @@ export async function runRevisionWrite(input) {
     await checkShows(shows, doors, [before, record.state], record.state.undo)
     // Every stop that writes nothing came first: only now is the site marked as this run's (`builds.begin`).
     await beforeDoors?.()
-    report = await runDraftWrite({ plan, doors: journaled, record, openStored, drawInitials, runId: runOf })
+    report = await runDraftWrite({
+      plan,
+      doors: journaled,
+      record,
+      openStored,
+      drawInitials,
+      runId: runOf,
+      now
+    })
     await runRemovals({ acts: removal.acts, doors: journaled, record, previous: before, runId: runOf })
   } catch (error) {
     error.report ??= {

@@ -33,7 +33,8 @@ const SITE = 'site-larkspur-1'
 function engineOf({ draft, memory, site: siteWiring }) {
   const over = applyOverMemory(memory)
   const { draftWrite, ...deps } = depsOf({ draft, model: revisionModel(), memory })
-  const wired = { ...deps, site: siteWiring(over, draftWrite, memory) }
+  // The fixtures' fixed clock: created articles are dated from it, so two runs compare equal.
+  const wired = { ...deps, site: { now: draftWrite.now, ...siteWiring(over, draftWrite, memory) } }
   const steps = createStepChainSteps({
     pool,
     config: {},

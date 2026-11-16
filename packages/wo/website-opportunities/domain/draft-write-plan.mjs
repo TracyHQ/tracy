@@ -14,6 +14,7 @@ import { droppedContainersOf, planFeaturedArticle } from './draft-write-kit-buil
 import { underPagesOf } from './draft-write-kit-pages.mjs'
 import { recipeBlocksOf } from './draft-write-under-blocks.mjs'
 import { planCategories } from './draft-write-plan-categories.mjs'
+import { planRecordColumns } from './draft-write-record-columns.mjs'
 import { planCreatedValues } from './draft-write-row-keys.mjs'
 import { checkMenuItems, planRuleMenuItems } from './draft-write-menu-items.mjs'
 import { planLook } from './draft-write-plan-accent.mjs'
@@ -150,6 +151,7 @@ export function writePlanOf(order, aiq, options = {}) {
   planLook(state)
   planCopies(state)
   planCategories(state)
+  planRecordColumns(state)
   planFeaturedArticle(state)
   planCreatedValues(state)
   nameRecords(state)
@@ -159,7 +161,8 @@ export function writePlanOf(order, aiq, options = {}) {
         record: record.key,
         recordKind: record.recordKind
       })
-  const ops = safeOps(inNfc(opsOf(state)), { order, kit })
+  const cleaned = []
+  const ops = safeOps(inNfc(opsOf(state)), { order, kit, cleaned })
   for (const op of ops)
     if (['created_record_frame', 'initials_drawn_as_figure'].includes(op.unproven))
       sink.unproven.push({ code: op.unproven, op: op.key })
@@ -179,6 +182,8 @@ export function writePlanOf(order, aiq, options = {}) {
     // `written`: the entry is written at another place all the same (it fans out to several places).
     conflicts: [...sink.conflicts.values()].map((c) => ({ ...c, written: sink.consumed.has(c.entry) })),
     unproven: sink.unproven,
+    // Words the write changed before any door: control characters out, plugin codes neutralised (with a code).
+    cleaned,
     // Fact places the kit leaves unwritten by decision (`facts.<f>[i].notWritten`): never sent, never counted written.
     notWritten: state.notWritten,
     // The pages reached under their list page: the list page's id and the address of the page under it.

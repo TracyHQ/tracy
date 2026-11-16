@@ -58,7 +58,13 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
     assignTo: 'read: only "list-page" is known, any other value stops',
     why: 'not read: prose'
   },
-  'pages.<type>.record': { kind: READ, category: READ, base: READ, why: 'not read: prose' },
+  'pages.<type>.record': {
+    kind: READ,
+    category: READ,
+    base: READ,
+    facts: 'read: the business fact a column of every created record holds (draft-write-record-columns.mjs)',
+    why: 'not read: prose'
+  },
   'pages.<type>.record.category': {
     extension: READ,
     parent: 'read: "root", the category is made at the top level',
@@ -126,6 +132,7 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
   'facts.<fact>[i].notWritten': { by: READ, why: 'not read: prose' },
   'hides.<id>[i]': {
     control: READ,
+    fields: 'read: a group of fields taken off the page when the record holds none of them',
     rows: READ,
     by: READ,
     slots: READ,
@@ -142,6 +149,8 @@ export const DRAFT_WRITE_KIT_KEYS = Object.freeze({
 
 /** The values of the hide keys the write knows; any other value is unknown to it. */
 export const DRAFT_WRITE_HIDE_VALUES = Object.freeze({
+  // Any other way stops the plan (`hide_by_unknown`).
+  by: ['empty', 'rows.remove', 'setting', 'omit', 'row', 'unassign'],
   scope: ['item', 'block'],
   from: ['first-item'],
   order: ['packed']

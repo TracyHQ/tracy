@@ -14,7 +14,13 @@
 import { createHash } from 'node:crypto'
 import { memoryHtml } from './write-order-memory-html.mjs'
 import { memorySheetsOf } from './write-order-memory-sheets.mjs'
-import { checkContract, checkUpdate, DoorRefusal, storedIdentity } from './write-order-memory-rules.mjs'
+import {
+  checkContract,
+  checkUpdate,
+  DoorRefusal,
+  storedFields,
+  storedIdentity
+} from './write-order-memory-rules.mjs'
 import { memoryUndoDoors } from './write-order-memory-undo.mjs'
 
 export { memoryHtml }
@@ -113,10 +119,10 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
           const table = records[kind]
           if (Number(id) === 0) {
             const made = next[kind]++
-            table.set(made, { ...structuredClone(fields), id: made })
+            table.set(made, { ...storedFields(structuredClone(fields)), id: made })
             return { id: made }
           }
-          table.set(Number(id), { ...table.get(Number(id)), ...structuredClone(fields) })
+          table.set(Number(id), { ...table.get(Number(id)), ...storedFields(structuredClone(fields)) })
           return { id: Number(id) }
         }
       )

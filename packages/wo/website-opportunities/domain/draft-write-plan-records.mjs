@@ -5,28 +5,8 @@
 export const valuesOf = (record) =>
   [...record.values.values()].map(({ loc, value, entry, rule }) => ({ loc, value, entry, rule }))
 
-/** A URL part of a label: lower case letters and digits joined by dashes, in the label's own script. */
-export const slugOf = (text) =>
-  String(text ?? '')
-    .normalize('NFKC')
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, '-')
-    .replace(/^-+|-+$/g, '') || 'page'
-
-/** Aliases unique per record kind, in plan order: the mark a resumed run finds a created record by. */
-export function aliasesOf(records) {
-  const used = new Map()
-  for (const r of records) {
-    const base = slugOf(r.title ?? r.subject ?? r.key)
-    const kind = r.recordKind
-    const seen = used.get(kind) ?? new Set()
-    used.set(kind, seen)
-    let alias = base
-    for (let n = 2; seen.has(alias); n++) alias = `${base}-${n}`
-    seen.add(alias)
-    r.alias = alias
-  }
-}
+// The alias rule (ASCII, transliterated, unique, a fallback from the key): `draft-write-alias.mjs`.
+export { aliasesOf, slugOf } from './draft-write-alias.mjs'
 
 /**
  * A person with no photo shows their initials, drawn in the frame of the slot (`initials-avatar.js` of tracy-web). The
@@ -64,6 +44,8 @@ export function createOp(record) {
     ...(record.base ? { base: record.base } : {}),
     ...(record.extension ? { extension: record.extension, params: record.params ?? {} } : {}),
     ...(record.frames ? { frames: record.frames } : {}),
+    // A created article's rank among the dates the write gives (0 newest): `draft-write-record-columns.mjs`.
+    ...(record.dated ? { dated: record.dated } : {}),
     ...(record.pageType ? { pageType: record.pageType } : {}),
     values: valuesOf(record),
     entries: record.entries,
@@ -98,6 +80,18 @@ export function copyOp(record) {
 
 export function assignOf(record, placement) {
   if (!placement?.assign) return null
+  // An `unassign` hide (#587): every field of its group is empty, so the module is left on no page, through the
+  // site's unassign door, instead of assigned.
+  if (record.unassign)
+    return {
+      key: `unassign:${record.key}`,
+      kind: 'module.unassign',
+      record: record.key,
+      ...(record.kind === 'store' ? { sourceId: record.sourceId } : {}),
+      fields: record.unassign.fields,
+      entries: [],
+      rules: [record.unassign.rule]
+    }
   const menuids =
     placement.assign === 'every-page'
       ? [0]

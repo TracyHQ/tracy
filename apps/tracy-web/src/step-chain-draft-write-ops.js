@@ -13,6 +13,7 @@ import {
 } from 'website-opportunities/domain/draft-write-codec.mjs'
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { frameOf } from 'website-opportunities/domain/draft-write-frame.mjs'
+import { datesOf } from './step-chain-draft-write-dates.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const EXT = { 'image/png': 'png', 'image/webp': 'webp', 'image/svg+xml': 'svg' }
@@ -120,6 +121,7 @@ export function baseFieldsOf(op, ctx) {
     fulltext: '',
     attribs: '{}',
     images: '{}',
+    ...datesOf(op, ctx),
     ...columnsOf(op.base)
   }
 }

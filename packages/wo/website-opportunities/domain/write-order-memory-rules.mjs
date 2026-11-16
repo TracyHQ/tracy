@@ -5,7 +5,9 @@
 //
 //   content.contract   REVISION_REQUIRED / REVISION_STALE    an apply names the revision its inspect read
 //                      SLOT_UNKNOWN                         a slot of a removed record, or no slot at all
-//                      SLOT_NOT_CONTENT                     `<` or `>`; a straight double quote in a slot that opens empty
+//                      SLOT_NOT_CONTENT                     `<`, `>` or a C0 control but tab and line ends; a Joomla
+//                                                           plugin code (`{loadposition x}`); a straight double quote
+//                                                           in a slot that opens empty
 //                      HTML_SLOT_MISSING                    an empty string at a text node
 //                      SLOT_EMPTY_STATE                     filling a slot whose sample is empty without `opensEmpty`,
 //                                                           or emptying a slot whose sample is not empty
@@ -30,9 +32,36 @@ import { isTextNode } from './draft-write-codec.mjs'
 import { doorLength } from './draft-write-length.mjs'
 import { decodeEntities } from './draft-write-entities.mjs'
 
-/** `site.identity` stores the site name with `<` and `>` taken out and every character reference read (measured). */
+// oxlint-disable-next-line no-control-regex -- the bytes the plugin refuses in a slot
+const MARKUP = /[<>\u0000-\u0008\u000b\u000c\u000e-\u001f]/
+/** A Joomla content plugin code, as the plugin reads one (its identity tokens aside: the memory site has none). */
+const DIRECTIVE = /\{\/?[a-z][^{}]*\}/i
+// oxlint-disable-next-line no-control-regex -- the control characters the site name loses
+const CONTROL = /[\u0000-\u001f\u007f]/g
+
+/**
+ * `site.identity` stores the site name with `<` and `>` taken out and every character reference read (measured), and
+ * without control characters (the real run read another site name back than a name with them was sent).
+ */
 export const storedIdentity = (key, value) =>
-  key === 'sitename' ? decodeEntities(String(value).replace(/[<>]/g, '')) : value
+  key === 'sitename' ? decodeEntities(String(value).replace(/[<>]/g, '').replace(CONTROL, '')) : value
+
+/**
+ * The alias a record is stored with: Joomla with unicode slugs off (`OutputFilter::stringURLSafe`) folds what it is
+ * sent, accents off, lower case, every other character (a letter of another script too, with no transliterator) a
+ * hyphen. An alias already in that form is kept as it is.
+ */
+export function storedFields(fields) {
+  if (typeof fields?.alias !== 'string' || fields.alias === '') return fields
+  const alias = fields.alias
+    .replace(/-/g, ' ')
+    .normalize('NFKD')
+    .replace(/\p{M}+/gu, '')
+    .toLowerCase()
+    .replace(/(\s|[^a-z0-9-])+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  return { ...fields, alias }
+}
 
 export class DoorRefusal extends Error {
   constructor(code, message) {
@@ -54,7 +83,9 @@ export function checkContract({ expectedRevision, changes, removes }, { slots, r
     const slot = slots.get(key)
     if (!slot) refuse('SLOT_UNKNOWN', key)
     const text = String(value)
-    if (/[<>]/.test(text)) refuse('SLOT_NOT_CONTENT', `${key} holds a tag`)
+    // The plugin's own two content rules (`QuickstartContract::checkValue`, seen on the real run of 0.24.85).
+    if (MARKUP.test(text)) refuse('SLOT_NOT_CONTENT', `Markup and control characters are not content: ${key}`)
+    if (DIRECTIVE.test(text)) refuse('SLOT_NOT_CONTENT', `Joomla plugin directives are not content: ${key}`)
     if (slot.opensEmpty && text.includes('"')) refuse('SLOT_NOT_CONTENT', `${key} holds a straight quote`)
     if (text === '' && isTextNode(slot)) refuse('HTML_SLOT_MISSING', key)
     if (blank(slot.sample) && !slot.opensEmpty && !blank(text))

@@ -13,7 +13,7 @@ import { siteWriteOf } from '../src/step-chain-draft-site.js'
 import { runDraftWrite } from '../src/step-chain-draft-write.js'
 import { throughDoor } from './_apply-door.mjs'
 import { applyOverMemory, memorySiteDoors } from './draft-site-doors-memory.mjs'
-import { blankSite, floristPlan, openStored, runOn, snapshotOf } from './draft-write-fixtures.mjs'
+import { blankSite, FIXED_NOW, floristPlan, openStored, runOn, snapshotOf } from './draft-write-fixtures.mjs'
 
 const RUN = '7c1e8a52-3b9d-4f60-9a21-5d4e3c2b1a00'
 const EMAIL = 'owner@larkspur-florist.example'
@@ -112,7 +112,10 @@ function writeThrough(memory, record) {
   const over = applyOverMemory(memory)
   const send = draftSendOf({ apply: over.applyFor(EMAIL, RUN), siteKey: SITE })
   const doors = memorySiteDoors(memory)({ send, siteKey: SITE, publicFile: null, signal: null })
-  return { over, done: runDraftWrite({ plan: floristPlan, doors, record, openStored, runId: RUN }) }
+  return {
+    over,
+    done: runDraftWrite({ plan: floristPlan, doors, record, openStored, runId: RUN, now: FIXED_NOW })
+  }
 }
 
 test('the write through the transport ends as on the memory doors, every call the setup run', async () => {

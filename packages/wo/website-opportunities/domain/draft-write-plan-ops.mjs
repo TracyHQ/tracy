@@ -7,7 +7,8 @@
 // `draft-write-plan-records.mjs`.
 
 import { lookOp } from './draft-write-plan-accent.mjs'
-import { aliasesOf, assignOf, copyOp, createOp, drawOf, valuesOf } from './draft-write-plan-records.mjs'
+import { aliasesOf, reservedAliasesOf } from './draft-write-alias.mjs'
+import { assignOf, copyOp, createOp, drawOf, valuesOf } from './draft-write-plan-records.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 /** The fields `site.identity` writes (its read answers these and no other key of the configuration file). */
@@ -53,7 +54,7 @@ const RANK = { category: 1, article: 2, contact: 2, user: 2, tag: 2, userProfile
 export function opsOf(state) {
   const records = [...state.sink.records.values()]
   const created = records.filter((r) => r.kind === 'created')
-  aliasesOf(created)
+  for (const note of aliasesOf(created, reservedAliasesOf(state.kit.mapping))) state.sink.unproven.push(note)
   const pictures = [...state.pictures.values()].map((p) => ({
     key: `picture:${p.id}`,
     kind: 'picture.upload',

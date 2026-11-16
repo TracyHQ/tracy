@@ -70,6 +70,7 @@ Run order:
 | `module.position` | a container's tab position, `tracy-tabs-<container id>` | `holds.position` |
 | `contract.apply` | one apply per in-place record, through the blank site contract | `one_apply_per_record` |
 | `record.patch` | the setting of an in-place record that hides an empty button | `hides.setting` |
+| `module.unassign` | a module an `unassign` hide leaves on no page, through the site's unassign door, read back as `[]` | `hides.unassign` |
 | `site.identity` | the site name, description and page title setting | `fact:name` |
 | `look.accent` | nothing: the accent is not written (see unproven); its entries are skipped | `look` |
 
@@ -99,6 +100,49 @@ which a resumed run uses to find it again.
 | `setting` | writes the setting that hides an empty button |
 | `empty` | writes `""` in every location of a control none of whose locations is written, label and address together, in the rows the copy keeps. When the control's fields are item fields (one button printed for every card from the first card's words) a written control must hold the same words in every item: otherwise `control_shared_by_items` (unproven) |
 | `omit` | takes every list row element it did not fill out of the copy's value, last first; a row left empty before a filled one stays (`omit_row_gap`); on a record written in place the rows stay (`omit_on_record_in_place`) |
+| `unassign` | (a group of `fields` only, #587) leaves the block's module on no page: a `module.unassign` operation in place of its `module.assign` |
+
+A hide names a control (a button), rows, or a group of `fields` (#587: fields that print a frame of their own, a tile or
+a picture). A group is taken off the page when the record holds none of its fields (a fact field, such as the footer
+logo's `logoDark`, counts as held when the fact is written on the record); it is no pair, so it is not listed in
+`plan.controls` and the pair guard does not read it. JA Boxing: block-166 writes `show-on` `"0"` with no statistic
+(`setting`), block-170 leaves the footer logo module on no page with no logo (`unassign`). A `by` outside
+`DRAFT_WRITE_HIDE_VALUES.by` stops the plan before any door (`hide_by_unknown`, with the block and the `by`).
+
+### Aliases, the owner's words and dates (`draft-write-alias.mjs`, `draft-write-text-clean.mjs`, `draft-write-record-columns.mjs`)
+
+Faults of the real run on plugin 0.24.85, each now a rule of the plan:
+
+- **Aliases.** The blank site has unicode slugs off, so Joomla folds every alias it is sent; an alias that kept an
+  accent read back as other words and stopped the write (`read_back_mismatch`). Every created record is sent an alias
+  in the form Joomla keeps unchanged: ASCII lower case letters and digits joined by one hyphen, accents taken off and
+  `ß`, `æ`, `ø`, `œ`, `ł`, `þ` written as the post slugs write them. A name with no Latin letter (Greek, Cyrillic,
+  Han) takes the fold of the record's key (`alias_from_key`, unproven). Aliases are unique per record kind in plan
+  order (`-2`, `-3`), counting the menu item aliases of the kit's `dataFixes` (the blank site's hidden `system-pages`
+  menu: `search`, `login`, `password-reset`, `username-reminder`) and the ones Joomla refuses on a first level menu
+  item (`component`, a folder of the Joomla root): such a page gets the next free alias (`alias_reserved`). No
+  operation names a menu item id; every one is a `page:` reference resolved to the id the site gave.
+- **Plugin codes.** Joomla's content plugins act on a brace code in the text they print (`{loadposition x}`,
+  `{loadmodule ...}`, `{emailcloak=off}`, `{source}`, any `{word ...}` or `{/word}`), and the plugin refuses that form
+  in a contract slot (`SLOT_NOT_CONTENT`, "Joomla plugin directives are not content"). Every value with an order entry
+  and every created record's title passes one rule in `safeOps` before it is escaped: a word joiner (U+2060) after the
+  brace, `%7B` in an address. The entity `&#123;` was not chosen: libxml writes it back as `{` on the next piece set of
+  the same value, a place every print escapes shows it as six characters, and the neutral and plain guards refuse a
+  character reference. Reported in `plan.cleaned` and the write report, `plugin_code_neutralised`.
+- **Control characters.** The same rule takes out C0 controls but tab and line ends, DEL, the zero width space, word
+  joiner, byte order mark and the bidirectional controls (the joiners that shape emoji and scripts stay); outside a
+  whole HTML column a run of tabs and line ends is one space. Reported `control_characters_stripped`.
+- **Author name.** `pages.<type>.record.facts` (#587): every record a page of that type creates holds the fact in that
+  column (JA Boxing: the business name in an article's `created_by_alias`). A column outside `RECORD_FACT_COLUMNS`
+  stops the plan (`record_fact_column_unknown`); a plan with no entry of the fact leaves it (`record_fact_missing`).
+- **Dates.** Every created article gets a rank (`op.dated.rank`, 0 newest) in the order a store block that lists by
+  date shows it (`itemsOrder: {by: "published", direction}`: `desc` dates the first item newest, `asc` oldest), the
+  articles no such list shows after, in plan order. The run turns ranks into `created` and `publish_up` from one time
+  kept in its run record (`state.dateBase`, kept by a revision too): the newest an hour before it, each next rank one
+  minute older (`step-chain-draft-write-dates.js`), so a resume and the read back agree.
+
+The language override door (`template.languageOverrides`) is not used by the write step: a template language string
+is a contract slot (`languageString-<n>`) written through `content.contract`.
 
 ## The doors
 

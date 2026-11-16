@@ -25,6 +25,7 @@
 //                                        the write typed (`door_not_available`)
 //   deps.site.pictures                   optional `{stored(order), openStored(id)}` in place of the stored pictures of
 //                                        `step-chain-draft-stored.js` (a picture source a test or a later generator gives)
+//   deps.site.now                        optional clock the created articles are dated from (a test fixes it)
 //
 // With no Apply door, no door factory or no site key the wiring is null, and the step stops typed
 // (`write_not_ready_for_draft`), writing nothing. The run record is kept by run id, between the frame's two attempts of
@@ -151,6 +152,7 @@ export function siteWriteOf(deps, ctx, how, inputs, records) {
     },
     stored: async (order) => pictures.stored(order),
     openStored: (id) => pictures.openStored(id),
+    ...(site.now ? { now: site.now } : {}),
     blankContract: (kit) => site.blankContract?.(kit) ?? kit?.aiq?.blankContract ?? null
   }
 }

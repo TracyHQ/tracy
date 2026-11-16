@@ -163,6 +163,8 @@ export function depsOf({ draft, model, memory, builds = new Map(), record = {}, 
         ),
       openStored: async (id) => ({ bytes: Buffer.from(`bytes of ${id}`), mime: 'image/jpeg' }),
       blankContract: () => site.kit.blankContract,
+      // A fixed clock: two builds of one plan date their articles alike.
+      now: () => Date.UTC(2026, 9, 1, 12, 0, 0),
       ...pictures
     }
   }

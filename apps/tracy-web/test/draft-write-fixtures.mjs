@@ -18,9 +18,12 @@ export const openStored = async (id) => ({ bytes: Buffer.from(`bytes of ${id}`),
 export const blankSite = (script = {}) =>
   memoryDoors({ lock: florist.kit.lock, contentMap: florist.kit.blankContract, ...script })
 
+/** The clock the test runs date their articles from: fixed, so two runs of one plan write the same site. */
+export const FIXED_NOW = () => Date.UTC(2026, 9, 1, 12, 0, 0)
+
 /** Run a plan on a memory site with a run record kept in memory (as the step chain keeps it between attempts). */
-export async function runOn(memory, { plan = floristPlan, record = {} } = {}) {
-  return runDraftWrite({ plan, doors: memory.doors, record, openStored, runId: 'run-test' })
+export async function runOn(memory, { plan = floristPlan, record = {}, now = FIXED_NOW } = {}) {
+  return runDraftWrite({ plan, doors: memory.doors, record, openStored, runId: 'run-test', now })
 }
 
 /** What a site holds, in a form two runs can be compared by. */
