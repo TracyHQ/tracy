@@ -1604,7 +1604,8 @@ export async function writeCopy({
   again = false,
   tooLong = null,
   patches = null,
-  linkless = null
+  linkless = null,
+  unshaped = null
 }) {
   const items = (map.copy ?? [])
     .filter((c) => only === null || only.includes(`${c.collection}.${c.slug}`))
@@ -1634,7 +1635,7 @@ export async function writeCopy({
       // template's contact label), so it never shows a promise its link no longer keeps.
       // A rich-text field is written back over the blocks its example was read from.
       const source = rich && richCopyOf(planned?.[c.field]) !== null ? planned?.[c.field] : e.data[c.field]
-      const shape = rich ? richCopyOf(source) : null
+      const shape = rich ? richCopyOf(source, facts) : null
       const example = shape
         ? shape.text
         : typeof planned?.[c.field] === 'string' && planned[c.field].trim() !== ''
@@ -1646,6 +1647,8 @@ export async function writeCopy({
         maxWords: c.maxWords,
         example,
         ...(shape?.strict ? { parts: shape.parts.map((part) => part.kind) } : {}),
+        ...(shape?.optional.length ? { mayLeaveOut: shape.optional } : {}),
+        ...(shape?.linkFacts.length ? { linkFacts: shape.linkFacts } : {}),
         ...(leadsTo ? { leadsTo } : {}),
         ...(shape ? { blocks: source, keyPrefix: `${c.slug.slice(0, 8)}-` } : {})
       }
@@ -1673,6 +1676,12 @@ export async function writeCopy({
     items.some((it) => /\{mark_[a-z]\}/.test(String(it.example)))
       ? 'Words between {mark_a} and {mark_a_end} (and any other letter) are a link or an emphasis of the page: keep every such pair exactly once, in the same part, around a few of your own words.'
       : '',
+    items.some((it) => it.mayLeaveOut)
+      ? 'An entry with "mayLeaveOut" lists the demo words of pairs that link to a fact this business did not give (a map of an address, a phone, an email): such a pair may be left out, words and all, and is when the brief rules out that fact; never write those demo words.'
+      : '',
+    items.some((it) => it.linkFacts)
+      ? 'An entry with "linkFacts" lists the demo words of pairs that link to this business\'s own phone, address or email ("write" names which, its value is under business): keep each such pair, with that value of the business inside it, never the demo words.'
+      : '',
     items.some((it) => it.leadsTo)
       ? 'An entry with "leadsTo" is the words of a link or a button, or of the call to action around it: they say what that link really does for the visitor. kind "page": name that page or what the visitor does there (a page like /contact is getting in touch, asking for a quote or ordering); kind "email": writing to that address; kind "phone": calling; kind "file": opening that document. Never promise a download, a document, a product or a page the link does not open.'
       : '',
@@ -1692,12 +1701,14 @@ export async function writeCopy({
       address: facts.address ?? null,
       phone: facts.phone ?? null
     },
-    fields: items.map(({ key, brief, maxWords, example, parts, leadsTo }) => ({
+    fields: items.map(({ key, brief, maxWords, example, parts, mayLeaveOut, linkFacts, leadsTo }) => ({
       key,
       brief,
       maxWords,
       example,
       ...(parts ? { parts } : {}),
+      ...(mayLeaveOut ? { mayLeaveOut } : {}),
+      ...(linkFacts ? { linkFacts } : {}),
       ...(leadsTo ? { leadsTo } : {})
     }))
   })
@@ -1711,8 +1722,9 @@ export async function writeCopy({
       continue
     }
     if (it.blocks) {
-      const blocks = richFromAnswer(it.blocks, v, it.keyPrefix)
+      const blocks = richFromAnswer(it.blocks, v, it.keyPrefix, facts)
       if (blocks !== null) out[it.key] = blocks
+      else unshaped?.push(it.key)
       continue
     }
     out[it.key] = v.trim()
@@ -1834,6 +1846,89 @@ export function leadsOutside(href) {
 }
 
 /**
+ * The customer's fact a link out of the site stands for: a phone (`tel:`), an email (`mailto:`), an address (a map). Null for
+ * any other link (a social profile, another site).
+ * @param {unknown} href @returns {'phone' | 'email' | 'address' | null}
+ */
+export function factOfLink(href) {
+  const to = String(href ?? '').trim()
+  if (/^tel:/i.test(to)) return 'phone'
+  if (/^mailto:/i.test(to)) return 'email'
+  if (/^geo:/i.test(to)) return 'address'
+  let url
+  try {
+    url = new URL(to.startsWith('//') ? `https:${to}` : to)
+  } catch {
+    return null
+  }
+  // A map: a `maps.` host (maps.google.com, maps.apple.com, maps.app.goo.gl), a `/maps` path (google.com/maps,
+  // bing.com/maps), or OpenStreetMap.
+  const host = url.hostname.toLowerCase()
+  if (!/^https?:$/.test(url.protocol)) return null
+  if (
+    host.split('.').includes('maps') ||
+    /^\/maps(?:\/|$)/i.test(url.pathname) ||
+    /(?:^|\.)openstreetmap\.org$/.test(host)
+  )
+    return 'address'
+  return null
+}
+
+/**
+ * The link to the customer's own phone, email or address, in the forms the themes print them: `tel:` as `telHref` of
+ * `src/lib/tel.ts` (RFC 3966: `+` only in front, an extension as `;ext=`), a Google Maps search as Tracy Coffee's
+ * `Contact.astro`, `mailto:`. Null when the brief gives no such fact.
+ * @param {'phone' | 'email' | 'address' | null} kind @param {Record<string, unknown> | null | undefined} facts
+ * @returns {string | null}
+ */
+export function factHref(kind, facts) {
+  const value = kind ? String(facts?.[kind] ?? '').trim() : ''
+  if (value === '') return null
+  if (kind === 'email') return `mailto:${value}`
+  if (kind === 'address')
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(value)}`
+  const ext = /\s*(?:;\s*ext\s*=\s*|(?:ext\.?|extension|x)\s*)(\d+)\s*$/i.exec(value)
+  const main = ext ? value.slice(0, ext.index) : value
+  const digits = main.replace(/\D/g, '')
+  if (!digits) return null
+  return `tel:${main.startsWith('+') ? '+' : ''}${digits}${ext ? `;ext=${ext[1]}` : ''}`
+}
+
+/**
+ * The link definitions of a block that point out of the site, each with the customer's own link for it (`factHref`), or
+ * null when the brief does not give that fact (or the link is no fact: a social profile, another site).
+ * @param {any} block @param {Record<string, unknown> | null} [facts] @returns {Map<string, string | null>}
+ */
+function outsideLinksOf(block, facts = null) {
+  return new Map(
+    (Array.isArray(block?.markDefs) ? block.markDefs : [])
+      .filter((d) => typeof d?.href === 'string' && leadsOutside(d.href))
+      .map((d) => [String(d._key), factHref(factOfLink(d.href), facts)])
+  )
+}
+
+/**
+ * The marks of a block whose run a rewrite may leave out, words and all: a link out of the site whose fact the brief does
+ * not give (`outsideLinksOf`), or one that leads nowhere (`#`, blank). Such a link stays only on the demo's own words
+ * (`blockFromMarked`), so asking an answer to keep its pair asked for the demo's address or phone, or for nothing. A link to
+ * a phone, an email or an address the brief gives is not loose: its pair stays and leads to the customer's.
+ * @param {any} block @param {Record<string, unknown> | null} [facts] @returns {Set<string>}
+ */
+export function looseMarksOf(block, facts = null) {
+  const outside = outsideLinksOf(block, facts)
+  return new Set(
+    (Array.isArray(block?.markDefs) ? block.markDefs : [])
+      .filter(
+        (d) =>
+          typeof d?.href === 'string' &&
+          (/^#?$/.test(d.href.trim()) ||
+            (outside.has(String(d._key)) && outside.get(String(d._key)) === null))
+      )
+      .map((d) => String(d._key))
+  )
+}
+
+/**
  * A block's words written back from an answer in `markedTextOf`'s shape: every run back as a span with its own marks, the
  * words around them as plain spans; the block keeps its key, style, list level and link definitions. Null when the answer
  * does not hold each placeholder pair of the block exactly once, around words, and nothing else in that shape.
@@ -1844,28 +1939,38 @@ export function leadsOutside(href) {
  * email, a social profile, another site) keeps its mark only on the demo's own words; on new words it goes, the words stay
  * plain text, and its definition leaves the block. A link into the site keeps its address, and an emphasis always stays. A
  * TRANSLATION says the same words, so every link stays with them.
+ *
+ * 🔒 A LINK TO A FACT THE BRIEF GIVES LEADS TO THE CUSTOMER'S (dev qa647-lume, review, 16/11/2026). In a rewrite with the
+ * brief's `facts`, a link to a phone, an email or an address (`factOfLink`) the brief gives is required, its definition
+ * points at the customer's (`factHref`), never at the demo's, and the demo's own words inside it become the customer's.
+ *
+ * 🔒 A REWRITE MAY LEAVE OUT A LINK TO A FACT THE BRIEF DOES NOT GIVE (dev qa647-lume, 16/11/2026). The home welcome's only
+ * pair was the demo's address on a map link, under a brief that says "with no year, address or number": an answer that
+ * obeyed the brief had no pair, was not taken twice, and the demo's "Since 1982 … Brooklyn … 4 5th Avenue" stayed, renamed.
+ * In a rewrite, a run whose marks are all loose (`looseMarksOf`) may be missing from the answer; any other pair (a link into
+ * the site, an emphasis, a link to a fact the brief gives) must still be there, and a TRANSLATION keeps every pair.
  * @param {any} block @param {string[][]} runs @param {unknown} answer
- * @param {{ rewrite?: boolean, words?: string[] }} [options]
+ * @param {{ rewrite?: boolean, words?: string[], facts?: Record<string, unknown> | null }} [options]
  * @returns {any | null}
  */
-export function blockFromMarked(block, runs, answer, { rewrite = false, words = [] } = {}) {
+export function blockFromMarked(block, runs, answer, { rewrite = false, words = [], facts = null } = {}) {
   if (typeof answer !== 'string' || answer.trim() === '') return null
   const key = String(block._key ?? 'b')
   const children = []
   const seen = new Set()
   const pair = /\{mark_([a-z])\}([\s\S]*?)\{mark_\1_end\}/g
-  /** The marks of the block that are links out of the site. */
-  const outside = new Set(
-    (Array.isArray(block.markDefs) ? block.markDefs : [])
-      .filter((d) => typeof d?.href === 'string' && leadsOutside(d.href))
-      .map((d) => String(d._key))
-  )
+  /** The marks of the block that are links out of the site → the customer's link, or null. */
+  const outside = rewrite ? outsideLinksOf(block, facts) : new Map()
   const plain = (words) => {
     if (words === '') return true
     if (/\{\/?mark_/.test(words)) return false
     children.push({ _type: 'span', _key: `${key}s${String(children.length)}`, text: words, marks: [] })
     return true
   }
+  const same = (a) =>
+    String(a ?? '')
+      .trim()
+      .replace(/\s+/g, ' ')
   let at = 0
   const text = answer.trim()
   for (const m of text.matchAll(pair)) {
@@ -1873,23 +1978,43 @@ export function blockFromMarked(block, runs, answer, { rewrite = false, words = 
     if (i < 0 || i >= runs.length || seen.has(i) || m[2].trim() === '') return null
     if (!plain(text.slice(at, m.index))) return null
     seen.add(i)
-    const same = (a) =>
-      String(a ?? '')
-        .trim()
-        .replace(/\s+/g, ' ')
-    const marks =
-      rewrite && same(m[2]) !== same(words[i]) ? runs[i].filter((mark) => !outside.has(mark)) : runs[i]
-    children.push({ _type: 'span', _key: `${key}s${String(children.length)}`, text: m[2], marks })
+    const demoWords = rewrite && same(m[2]) === same(words[i])
+    // The demo's own words on a link to a phone, an email or an address are the demo's fact: the customer's when the brief
+    // gives it, and an answer that repeats one the brief does not give is not taken.
+    if (
+      demoWords &&
+      runs[i].some((mark) => outside.get(mark) === null && factOfLink(hrefOf(block, mark)) !== null)
+    )
+      return null
+    const marks = rewrite && !demoWords ? runs[i].filter((mark) => outside.get(mark) !== null) : runs[i]
+    const given = demoWords ? runs[i].find((mark) => typeof outside.get(mark) === 'string') : undefined
+    const said =
+      given === undefined ? m[2] : String(facts?.[factOfLink(hrefOf(block, given)) ?? ''] ?? m[2]).trim()
+    children.push({ _type: 'span', _key: `${key}s${String(children.length)}`, text: said, marks })
     at = m.index + m[0].length
   }
-  if (!plain(text.slice(at)) || seen.size !== runs.length) return null
+  if (!plain(text.slice(at))) return null
+  const loose = rewrite ? looseMarksOf(block, facts) : new Set()
+  for (const [i, marks] of runs.entries())
+    if (!seen.has(i) && !(marks.length > 0 && marks.every((mark) => loose.has(mark)))) return null
   if (!rewrite) return { ...block, _key: key, children }
-  // A definition no span marks any more (a link that went with the demo's words) leaves the block.
+  // A definition no span marks any more (a link that went with the demo's words) leaves the block; a link to a fact the
+  // brief gives leads to the customer's.
   const used = new Set(children.flatMap((c) => c.marks))
-  const markDefs = (Array.isArray(block.markDefs) ? block.markDefs : []).filter((d) =>
-    used.has(String(d?._key))
-  )
+  const markDefs = (Array.isArray(block.markDefs) ? block.markDefs : [])
+    .filter((d) => used.has(String(d?._key)))
+    .map((d) =>
+      typeof outside.get(String(d._key)) === 'string' ? { ...d, href: outside.get(String(d._key)) } : d
+    )
   return { ...block, _key: key, markDefs, children }
+}
+
+/** The `href` of a block's mark definition, or null. */
+function hrefOf(block, mark) {
+  const d = (Array.isArray(block?.markDefs) ? block.markDefs : []).find(
+    (x) => String(x?._key) === String(mark)
+  )
+  return typeof d?.href === 'string' ? d.href : null
 }
 
 /**
@@ -1900,10 +2025,13 @@ export function blockFromMarked(block, runs, answer, { rewrite = false, words = 
  * 🔒 A REWRITE KEEPS WHAT THE VIEW DRAWS FROM THE BLOCKS. Flattened to paragraphs, JA Restaurant's "Our Food Network"
  * lost its "Meet Our Team" button (a block that is one link) and the home welcome its link (review, 16/11/2026). A block
  * that is not words is left out and stays where it is; a marked run is a placeholder the answer must keep.
- * @param {unknown} value
- * @returns {{ text: string, parts: Array<{ at: number, kind: string, text: string, runs: string[][], words: string[] }>, strict: boolean } | null}
+ * With the brief's `facts`: `optional` holds the demo's words of each pair a rewrite may leave out (`looseMarksOf`), and
+ * `linkFacts` each pair that links to a phone, an email or an address the brief gives, with the fact the answer writes in it
+ * (a letter names a pair in one block only, so the demo's words name them).
+ * @param {unknown} value @param {Record<string, unknown> | null} [facts]
+ * @returns {{ text: string, parts: Array<{ at: number, kind: string, text: string, runs: string[][], words: string[] }>, strict: boolean, optional: string[], linkFacts: Array<{ words: string, write: string }> } | null}
  */
-export function richCopyOf(value) {
+export function richCopyOf(value, facts = null) {
   if (!Array.isArray(value) || value.length === 0) return null
   const parts = []
   let left = 0
@@ -1925,17 +2053,37 @@ export function richCopyOf(value) {
   }
   if (parts.length === 0) return null
   const strict = left > 0 || parts.some((p) => p.runs.length > 0 || p.kind !== 'paragraph')
-  return { text: parts.map((p) => p.text).join('\n\n'), parts, strict }
+  const optional = []
+  const linkFacts = []
+  for (const p of parts) {
+    const loose = looseMarksOf(value[p.at], facts)
+    const outside = outsideLinksOf(value[p.at], facts)
+    for (const [i, marks] of p.runs.entries()) {
+      const words = p.words[i].trim()
+      if (marks.length > 0 && marks.every((mark) => loose.has(mark))) optional.push(words)
+      const given = marks.find((mark) => typeof outside.get(mark) === 'string')
+      if (given !== undefined)
+        linkFacts.push({ words, write: String(factOfLink(hrefOf(value[p.at], given))) })
+    }
+  }
+  return {
+    text: parts.map((p) => p.text).join('\n\n'),
+    parts,
+    strict,
+    optional: [...new Set(optional)],
+    linkFacts
+  }
 }
 
 /**
  * A model's answer for a rich-text `copy` field, as blocks: a field of plain paragraphs only takes the answer's paragraphs
  * (`blocksFrom`); any other keeps every block the rewrite left out where it was and takes one part of the answer per text
- * block, each keeping its marks (`blockFromMarked`). Null when the answer does not keep that shape.
- * @param {any[]} demo @param {string} answer @param {string} keyPrefix @returns {any[] | null}
+ * block, each keeping its marks (`blockFromMarked`, with the brief's `facts`). Null when the answer does not keep that shape.
+ * @param {any[]} demo @param {string} answer @param {string} keyPrefix @param {Record<string, unknown> | null} [facts]
+ * @returns {any[] | null}
  */
-export function richFromAnswer(demo, answer, keyPrefix) {
-  const rich = richCopyOf(demo)
+export function richFromAnswer(demo, answer, keyPrefix, facts = null) {
+  const rich = richCopyOf(demo, facts)
   if (rich === null || typeof answer !== 'string') return null
   if (!rich.strict) {
     if (/\{\/?mark_/.test(answer)) return null
@@ -1949,11 +2097,155 @@ export function richFromAnswer(demo, answer, keyPrefix) {
   if (parts.length !== rich.parts.length) return null
   const out = [...demo]
   for (const [i, part] of rich.parts.entries()) {
-    const block = blockFromMarked(demo[part.at], part.runs, parts[i], { rewrite: true, words: part.words })
+    const block = blockFromMarked(demo[part.at], part.runs, parts[i], {
+      rewrite: true,
+      words: part.words,
+      facts
+    })
     if (block === null) return null
     out[part.at] = block
   }
   return out
+}
+
+/** Words a full stop shortens, not ends a sentence with: "St. Marks Place", "Ave.", "Mr.", "No. 5". */
+const ABBREVIATIONS = new Set(
+  'st ave av rd dr blvd ln ct pl sq mt ste apt fl bldg hwy no nr tel ph mr mrs ms prof jr sr co inc ltd corp vs etc approx e.g i.e'.split(
+    ' '
+  )
+)
+
+/**
+ * Where the sentences of a text end: the index just after a `.`, `!`, `?` or `…` (and any closing quote or bracket) that a
+ * space or the text's end follows. A full stop after an abbreviation (`ABBREVIATIONS`) or a single capital letter (an
+ * initial) ends nothing.
+ * @param {string} text @returns {number[]}
+ */
+export function sentenceEnds(text) {
+  const ends = []
+  for (const m of text.matchAll(/[.!?…]+["'”’)\]]*(?=\s|$)/gu)) {
+    if (m[0].startsWith('.') && !/[!?…]/.test(m[0])) {
+      const word = /([\p{L}.]+)$/u.exec(text.slice(0, m.index))?.[1] ?? ''
+      if (ABBREVIATIONS.has(word.toLowerCase()) || /^\p{Lu}$/u.test(word)) continue
+    }
+    ends.push(m.index + m[0].length)
+  }
+  return ends
+}
+
+/** A word that ties a place or a number to its sentence ("at", "on", "call us at"), left dangling when the run goes. */
+const LEAD_IN =
+  /(?:^|\s+)(?:(?:call|phone|ring|text|email|write to|find|visit|meet)\s+us\s+(?:at|on)|at|on|in|to|via|near|from)\s*$/i
+
+/**
+ * The template's words of a rich-text field the model could not rewrite, without the demo's facts it links out to: each run
+ * that links to a phone, an email or an address takes the customer's (`factHref`) when the brief gives it; when it does not,
+ * the sentence that holds the run goes, or only the run (and a lead-in like "at") when that sentence also holds a link into
+ * the site or an emphasis. A link to another site or a social profile is no fact and stays. Every other word, link into the
+ * site, emphasis and block (a button) stays. Null when no run changed; `readable` is false when no words would be left.
+ *
+ * 🔒 A FIELD MEANT TO BE REWRITTEN NEVER KEEPS THE DEMO'S ADDRESS (dev qa647-lume, 16/11/2026). Kept whole, a rejected home
+ * welcome told a trattoria in Da Nang's guests to come to "4 5th Avenue … Brooklyn", and the reservation intro to call the
+ * demo's number. The first version dropped every block with such a link, which emptied the welcome, the contact card and
+ * the reservation intro, and a paragraph's link to the menu with them (review, 16/11/2026): the smallest unit goes now.
+ * @param {unknown} value @param {Record<string, unknown> | null} [facts]
+ * @returns {{ value: any[], readable: boolean } | null}
+ */
+export function withoutDemoFacts(value, facts = null) {
+  if (!Array.isArray(value)) return null
+  let changed = false
+  const out = value.map((b) => {
+    if (markedTextOf(b) === null) return b
+    const facted = new Map(
+      [...outsideLinksOf(b, facts)].filter(([mark]) => factOfLink(hrefOf(b, mark)) !== null)
+    )
+    if (facted.size === 0) return b
+    /** One entry per character: the span it belongs to and its marks. */
+    let chars = b.children.flatMap((c, s) =>
+      [...String(c.text ?? '')].map((ch) => ({ ch, s, marks: (c.marks ?? []).map(String) }))
+    )
+    const factMark = (x) => x.marks.find((mark) => facted.has(mark))
+    for (;;) {
+      const start = chars.findIndex((x) => factMark(x) !== undefined)
+      if (start < 0) break
+      const mark = factMark(chars[start])
+      let end = start
+      while (end < chars.length && chars[end].marks.includes(mark)) end += 1
+      const href = facted.get(mark)
+      if (typeof href === 'string') {
+        // The customer's own fact, on the run's first span and marks; the link leads to it (markDefs below).
+        const fact = String(facts?.[factOfLink(hrefOf(b, mark))] ?? '').trim()
+        const at = chars[start]
+        chars.splice(
+          start,
+          end - start,
+          ...[...fact].map((ch) => ({ ch, s: at.s, marks: [...at.marks], done: true }))
+        )
+        for (const x of chars) if (x.marks.includes(mark)) x.done = true
+        // A run done is no longer a fact to find.
+        chars = chars.map((x) =>
+          x.done ? { ...x, marks: x.marks.map((m) => (m === mark ? `${m}\u0000` : m)) } : x
+        )
+        changed = true
+        continue
+      }
+      const text = chars.map((x) => x.ch).join('')
+      // The run's sentence: from the last ending before it to the first ending inside it, at its end or after it — a
+      // demo link often holds its sentence's own full stop ("at [4 Demo Street.] Our kitchen …").
+      const ends = sentenceEnds(text)
+      let from = 0
+      for (const p of ends) if (p <= start) from = p
+      while (from < start && /\s/.test(text[from])) from += 1
+      // A full stop that ends the run before a capital or the paragraph's end closes it even after an abbreviation: an
+      // address ("4 Demo St.") ends its sentence.
+      const closes = /[.!?…]$/.test(text.slice(start, end)) && /^(?:\s+\p{Lu}|\s*$)/u.test(text.slice(end))
+      const stop = closes ? end : ends.find((p) => p > start)
+      let to = stop === undefined ? text.length : Math.max(stop, end)
+      while (to < text.length && /\s/.test(text[to])) to += 1
+      const other = chars.slice(from, to).some((x) => x.marks.length > 0 && !x.marks.includes(mark))
+      if (other) {
+        // The sentence also carries a link into the site or an emphasis: only the run and its lead-in go.
+        const lead = LEAD_IN.exec(text.slice(from, start))
+        chars.splice(lead ? start - lead[0].length : start, end - (lead ? start - lead[0].length : start))
+      } else chars.splice(from, to - from)
+      changed = true
+    }
+    // Tidy what a cut leaves: a space before punctuation, two spaces, blank ends.
+    let text = chars.map((x) => x.ch).join('')
+    const drop = new Set()
+    for (const m of text.matchAll(/ +(?=[,.;:!?])| (?= )/g))
+      for (let i = 0; i < m[0].length; i += 1) drop.add(m.index + i)
+    chars = chars.filter((_, i) => !drop.has(i))
+    while (chars.length > 0 && /\s/.test(chars[0].ch)) chars.shift()
+    while (chars.length > 0 && /\s/.test(chars.at(-1).ch)) chars.pop()
+    text = chars.map((x) => x.ch).join('')
+    const children = []
+    for (const x of chars) {
+      // oxlint-disable-next-line no-control-regex -- the NUL suffix is the tool's own mark tag
+      const marks = x.marks.map((m) => m.replace(/\u0000$/, ''))
+      const last = children.at(-1)
+      if (last && last.s === x.s) last.text += x.ch
+      else children.push({ s: x.s, text: x.ch, marks })
+    }
+    const keys = new Set()
+    const spans = children.map((c) => {
+      const base = String(b.children[c.s]._key ?? `${String(b._key)}s${String(c.s)}`)
+      let k = base
+      for (let n = 2; keys.has(k); n += 1) k = `${base}-${String(n)}`
+      keys.add(k)
+      return { ...b.children[c.s], _key: k, text: c.text, marks: c.marks }
+    })
+    const used = new Set(spans.flatMap((c) => c.marks))
+    const markDefs = (Array.isArray(b.markDefs) ? b.markDefs : [])
+      .filter((d) => used.has(String(d?._key)))
+      .map((d) =>
+        typeof facted.get(String(d._key)) === 'string' ? { ...d, href: facted.get(String(d._key)) } : d
+      )
+    return /\p{L}/u.test(text) ? { ...b, markDefs, children: spans } : null
+  })
+  if (!changed) return null
+  const kept = out.filter((b) => b !== null)
+  return { value: kept, readable: kept.some((b) => markedTextOf(b) !== null) }
 }
 
 /** Plain paragraphs → the portable-text blocks EmDash stores a body as. */
@@ -4794,6 +5086,8 @@ async function main() {
     if (entryTally.total > 0) say('entries', 0, entryTally.total)
   }
 
+  /** `<collection>/<slug>/<locale>.<field>` of copy the model did not write, without the demo's linked facts (`withoutDemoFacts`). */
+  const linksOutTaken = new Set()
   // The copy, page by page: each page is one request and goes live as soon as it is answered.
   const copyWork = async () => {
     if (!canRewrite) return
@@ -4809,6 +5103,8 @@ async function main() {
       const items = (map.copy ?? []).filter((c) => `${c.collection}.${c.slug}` === page)
       /** Buttons whose link is not known: not asked, they keep the template's action (`writeCopy`). */
       const linkless = []
+      /** Rich-text fields whose answer did not keep the field's parts and links (`richFromAnswer`). */
+      const unshaped = []
       try {
         const written = await writeCopy({
           model,
@@ -4818,7 +5114,8 @@ async function main() {
           seedEntries,
           only: [page],
           patches,
-          linkless
+          linkless,
+          unshaped
         })
         for (const key of linkless)
           skipped.push({
@@ -4843,7 +5140,8 @@ async function main() {
               only: [page],
               keys: missing,
               again: true,
-              patches
+              patches,
+              unshaped
             })
           )
         const keys = []
@@ -4851,12 +5149,43 @@ async function main() {
           const key = `${c.collection}.${c.slug}.${c.field}`
           if (linkless.includes(key)) continue
           if (written[key] === undefined) {
-            if (
-              seedEntries.some(
-                (x) => x.collection === c.collection && x.slug === c.slug && x.locale === locale
-              )
+            const e = seedEntries.find(
+              (x) => x.collection === c.collection && x.slug === c.slug && x.locale === locale
             )
-              copy.skipped.push({ field: key, locale, why: 'the model gave no usable text' })
+            if (!e) continue
+            const why = unshaped.includes(key)
+              ? 'the answer did not keep the parts and links of the rich text'
+              : 'the model gave no usable text'
+            const p = patchOf(c.collection, c.slug, locale)
+            const k = `${c.collection}/${c.slug}/${locale}`
+            const origin = p.origins[c.field]
+            const left =
+              origin === undefined || origin === 'replaced'
+                ? withoutDemoFacts(p.fields[c.field] ?? e.data[c.field], facts)
+                : null
+            if (left === null) {
+              copy.skipped.push({ field: key, locale, why })
+              continue
+            }
+            // Nothing readable would be left: the field is never written empty, it keeps the template's words as before.
+            if (!left.readable) {
+              copy.skipped.push({
+                field: key,
+                locale,
+                why: `${why}; every sentence links to the demo’s address, phone or email, so the template’s words stay`
+              })
+              continue
+            }
+            // Still the template's words, renamed: a root written in another language translates what is left.
+            p.fields[c.field] = left.value
+            p.origins[c.field] = 'replaced'
+            linksOutTaken.add(`${k}.${c.field}`)
+            copy.skipped.push({
+              field: key,
+              locale,
+              why: `${why}; the template’s words keep, with the demo’s address, phone or email replaced by the customer’s or its sentence taken out`
+            })
+            keys.push(k)
             continue
           }
           const k = `${c.collection}/${c.slug}/${locale}`
@@ -5482,8 +5811,14 @@ async function main() {
           const from = editionOf(borrowed.from.collection, borrowed.from.slug)
           const words = from?.data?.[borrowed.from.field]
           if (typeof words === 'string') value = replaceDeep(words, nameRules, t.field)
-        } else if (edition && edition.data[t.field] !== undefined)
+        } else if (edition && edition.data[t.field] !== undefined) {
           value = replaceDeep(edition.data[t.field], nameRules, t.field)
+          // The edition in the root's language never brings back the demo's address the copy pass took out.
+          if (linksOutTaken.has(`${k}.${t.field}`)) {
+            const left = withoutDemoFacts(value, facts)
+            if (left?.readable) value = left.value
+          }
+        }
         if (value !== undefined && echoed !== null && Array.isArray(value)) {
           // Only the rows the model left as the demo's take the edition's: the rest are the model's.
           const rows = [...p.fields[t.field]]

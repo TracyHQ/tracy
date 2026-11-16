@@ -1,7 +1,8 @@
 // tools/personalize.mjs on THIS template's whole seed, for a root written in another language whose copy the model did not
 // write: the template's words of each rich-text `copy` field are translated part by part (LANG-2), and what the view draws
-// from the blocks stays — the "Meet Our Team" button of FeaturesIntro.astro (a block that is one link) and the link inside
-// the home welcome. Flattened to one span per block, the button was gone and the link with it (review, 16/11/2026).
+// from the blocks stays — the "Meet Our Team" button of FeaturesIntro.astro (a block that is one link) and the emphasis of a
+// post. Flattened to one span per block, the button was gone and the links with it (review, 16/11/2026). A sentence that
+// links out of the site (the home welcome's map of the demo address) leaves instead (dev qa647-lume, 16/11/2026).
 import assert from 'node:assert/strict'
 import { execFile } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -124,15 +125,20 @@ test('a root written in Vietnamese: the rich-text copy is translated, its button
       'the text is translated'
     )
 
+    // The model wrote no welcome, contact card or reservation intro: the sentence on the demo's address or phone leaves
+    // rather than be translated into the customer's site, and the rest is translated (dev qa647-lume, 16/11/2026).
+    const demoFact = /555|Brooklyn|5th Avenue|10845550110|1982/
     const hero = live('hero', 'welcome-to-res-bar-restaurant').hero_intro
-    const demoHero = demo('hero', 'welcome-to-res-bar-restaurant').hero_intro
-    assert.match(textOf(hero), /^VI Since 1982/, 'the welcome is translated')
-    assert.deepEqual(hero[0].markDefs, demoHero[0].markDefs, 'its link definition stays')
-    assert.deepEqual(
-      hero[0].children.filter((c) => c.marks.length > 0).map((c) => [c.text, c.marks]),
-      [['4 5th Avenue at St. Marks Place, Cathedral District', ['l3']]],
-      'the linked words keep their mark'
-    )
+    assert.match(textOf(hero), /^VI Our kitchen cooks/, 'the welcome keeps its other sentence, translated')
+    assert.doesNotMatch(JSON.stringify(hero), demoFact, 'the demo address is not translated into the site')
+    for (const [collection, slug, field] of [
+      ['contact', 'contact', 'card_text'],
+      ['reservation', 'reservation', 'intro']
+    ]) {
+      const value = live(collection, slug)[field]
+      assert.match(textOf(value), /^VI We take reservations/, `${field} is not emptied`)
+      assert.doesNotMatch(JSON.stringify(value), demoFact, `${field} keeps no demo phone`)
+    }
 
     // A rewrite body the model did not write takes the template's words translated, and its emphasis stays.
     const slug = '4-habits-that-can-improve-your-customer-service'
