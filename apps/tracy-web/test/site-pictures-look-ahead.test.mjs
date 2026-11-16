@@ -81,18 +81,27 @@ test('few frames on the rung look further ahead, so their looks fill the looker,
   assert.equal(aheadDepth(1, LOOK_AHEAD, 8), 8)
   assert.equal(aheadDepth(0, LOOK_AHEAD, 8), 8)
 
-  // One rejected tile left on the any-photo rung, its six photos looked at three at a time or as one wave.
+  // One rejected tile left on the any-photo rung, its photos looked at three at a time or as one wave.
   const reject = new Set(['block-g.2'])
-  const narrow = await finished(reject, 'run-ahead-narrow', { ...opts(LOOK_AHEAD), lookBudget: 0, lookMs: 5 })
-  const wide = await finished(reject, 'run-ahead-wide', { ...opts(LOOK_AHEAD), lookMs: 5 })
+  const narrow = await finished(reject, 'run-ahead-narrow', { ...opts(LOOK_AHEAD), lookBudget: 0 })
+  const wide = await finished(reject, 'run-ahead-wide', opts(LOOK_AHEAD))
   assert.deepEqual(placed(wide.m), placed(narrow.m))
   assert.deepEqual(wide.m.ladder, narrow.m.ladder)
   assert.deepEqual(
     [...byFrame(wide.m).values()].map((e) => e.looker?.verdict ?? null),
     [...byFrame(narrow.m).values()].map((e) => e.looker?.verdict ?? null)
   )
-  assert.ok(narrow.looker.most() <= LOOK_AHEAD, `${narrow.looker.most()} looks in flight`)
-  assert.ok(wide.looker.most() > LOOK_AHEAD, `${wide.looker.most()} looks in flight`)
+  // Three at a time: several waves of at most LOOK_AHEAD. One wave: every photo the tile still had, more than three.
+  assert.ok(narrow.aheadWaves.length >= 2, JSON.stringify(narrow.aheadWaves))
+  assert.ok(
+    narrow.aheadWaves.every((n) => n <= LOOK_AHEAD),
+    JSON.stringify(narrow.aheadWaves)
+  )
+  assert.ok(wide.aheadWaves[0] > LOOK_AHEAD, JSON.stringify(wide.aheadWaves))
+  assert.ok(
+    wide.aheadWaves.length < narrow.aheadWaves.length,
+    JSON.stringify([wide.aheadWaves, narrow.aheadWaves])
+  )
   // Every photo the tile tried was looked at once, ahead or not, in both runs; the wide one asked no look twice.
   const asked = (run) =>
     new Set(run.m.looker.calls.filter((c) => !c.cached).map((c) => `${c.frame} ${c.sha256}`))
