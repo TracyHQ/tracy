@@ -24,13 +24,20 @@ test('Z2: a text cut by a list (the start of the code, then an ellipsis) is no r
   assert.deepEqual(judge('emailcloak', '<p>QxABC {emailcloak=...</p>'), { cut: true })
 })
 
-// Review 6 S2: an ellipsis right after the marker, with no part of the code before it, is no cut. The page ran the code
-// and printed nothing in its place; what follows is a list's own "..." or "Read more".
-test('S2: the marker, the code gone and an ellipsis with nothing of the code before it is a run', () => {
-  assert.equal(judge('loadposition', '<p>QxABC ...</p>')?.kind, 'markup_injected')
-  assert.equal(judge('loadposition', '<p>QxABC…</p>')?.kind, 'markup_injected')
-  assert.equal(judge('loadposition', '<p>QxABC</p><span>… Read more</span>')?.kind, 'markup_injected')
-  assert.equal(judge('emailcloak', '<p>QxABC</p><a>...</a>')?.kind, 'markup_injected')
+// Review 7: an ellipsis right after the marker, with no part of the code before it, is read two ways: a page that ran
+// the code and printed nothing in its place, then a list's own "..." or "Read more", or a list whose length cut fell
+// right after the marker. This page cannot tell them apart, so it judges nothing; the place is judged on a page that
+// prints it whole (its own article), and one no page printed whole is `not_judged`.
+test('S2: the marker, then an ellipsis with nothing of the code before it, judges nothing on that page', () => {
+  assert.deepEqual(judge('loadposition', '<p>QxABC ...</p>'), { cut: true })
+  assert.deepEqual(judge('loadposition', '<p>QxABC…</p>'), { cut: true })
+  assert.deepEqual(judge('loadposition', '<p>QxABC</p><span>… Read more</span>'), { cut: true })
+  assert.deepEqual(judge('emailcloak', '<p>QxABC</p><a>...</a>'), { cut: true })
+})
+
+test('S2: the same place printed after the marker with other words on another page is a run there', () => {
+  assert.equal(judge('loadposition', '<p>QxABC Next words</p>')?.kind, 'markup_injected')
+  assert.equal(judge('loadposition', '<li>QxABC...</li><p>QxABC Next words</p>')?.kind, 'markup_injected')
 })
 
 test('S2: a place printed whole on one page and cut on another is judged on the whole print', () => {

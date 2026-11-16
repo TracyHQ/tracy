@@ -17,15 +17,15 @@ const ELLIPSIS = /\.\.\.|\u2026/
  * Whether the words after one print of the marker are the probe cut short by a list (review 5 Z2): the start of the
  * probe, at least one character of it, and then an ellipsis. A list that cuts its items' text to a length (a category
  * module's intro limit) leaves the marker without the rest of the code, as a page that ran the code does, but says so.
- * An ellipsis right after the marker is no cut (review 6 S2): a page that ran the code printed nothing in its place,
- * and a list's own "..." or "Read more" follows.
+ * An ellipsis right after the marker is read as a cut too (review 7): a page that ran the code and printed nothing in
+ * its place, then a list's own "..." or "Read more", looks the same as a list whose length cut fell right after the
+ * marker, so the page judges neither way and the place is judged where it prints whole (or is `not_judged`).
  */
 function cutAfter(after, probe) {
   const rest = after.trimStart()
   const at = rest.search(ELLIPSIS)
   if (at < 0 || at > probe.length) return false
-  const start = rest.slice(0, at).trimEnd()
-  return start.length > 0 && probe.startsWith(start)
+  return probe.startsWith(rest.slice(0, at).trimEnd())
 }
 
 /**
