@@ -2221,6 +2221,7 @@ export function withoutDemoFacts(value, facts = null) {
     text = chars.map((x) => x.ch).join('')
     const children = []
     for (const x of chars) {
+      // oxlint-disable-next-line no-control-regex -- the NUL suffix is the tool's own mark tag
       const marks = x.marks.map((m) => m.replace(/\u0000$/, ''))
       const last = children.at(-1)
       if (last && last.s === x.s) last.text += x.ch
