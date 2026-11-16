@@ -2,21 +2,6 @@
   "platform": "joomla",
   "from": "0.24.80",
   "releases": {
-    "0.24.95-rc.2": {
-      "sha256": "03cffa0c939ae18b60905d32dd374ad6b6b780c4da057d23137e47a43407af81",
-      "evidence": {
-        "'hide_ops' =>": true,
-        "'rows_remove' =>": true,
-        "'page_create' =>": true,
-        "'slot_corrections' =>": true,
-        "function urlSafeAlias(": true
-      },
-      "reviews": {
-        "ja-boxing/j6/1.0.10": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d",
-        "ja-boxing/j6/1.0.11": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8",
-        "ja-diner/j6/1.0.8": "6df56fb093a69d27c69e841e1fa3275e0a088e9b5fd925198ca5690907c28635"
-      }
-    },
     "0.24.37": {
       "sha256": "34a591e8abbd3568a705291b2fcbf0c70bb0667419763e281888ceda76426d10",
       "evidence": {
@@ -265,6 +250,21 @@
       "reviews": {
         "ja-boxing/j6/1.0.10": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d",
         "ja-boxing/j6/1.0.11": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8"
+      }
+    },
+    "0.24.96": {
+      "sha256": "912488ca9e6f6a699f36a6408cf1bf65919a4135d52f7443732b7c27931ddafe",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      },
+      "reviews": {
+        "ja-boxing/j6/1.0.10": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d",
+        "ja-boxing/j6/1.0.11": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8",
+        "ja-diner/j6/1.0.8": "6df56fb093a69d27c69e841e1fa3275e0a088e9b5fd925198ca5690907c28635"
       }
     }
   }
