@@ -59,7 +59,8 @@ test('review 5: one probe reaching a place is not every probe tried there, and t
   const line = lineOf('writeSafety', WS)
   assert.doesNotMatch(line, /values reached the site at 3 of 4 places given a probe/)
   assert.match(line, /3 of 4 places given a probe had at least one probe reach the site/)
-  assert.match(line, /2 places had a result for every probe that applies/)
+  // Review 7 S6: pairs are counted by the class they ended in; this record keeps no ledger, so only the untried ones.
+  assert.doesNotMatch(line, /had a result for every probe/)
   assert.match(line, /3 \(place, probe\) pairs never tried, at 2 places/)
   assert.match(line, /1 place untested \(1 named by a finding, its other probes never tried\)/)
   assert.match(line, /2 tested places set aside in a later pass, their later probes never tried/)

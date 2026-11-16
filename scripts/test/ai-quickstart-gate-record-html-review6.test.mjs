@@ -51,9 +51,10 @@ test('review 6: a stop left for want of steps says so, with the steps used', () 
   assert.match(lineOf(record('steps')), /it ran out of site steps \(20 used\)/)
 })
 
-test('review 6: places are said to have a result for every probe, and an unjudged probe has its own reason', () => {
+test('review 6: pairs never tried are counted, and an unjudged probe has its own reason', () => {
   const line = lineOf(record('steps'))
-  assert.match(line, /2 places had a result for every probe that applies/)
+  assert.doesNotMatch(line, /had a result for every probe/)
+  assert.match(line, /1 \(place, probe\) pair never tried, at 1 place/)
   assert.doesNotMatch(line, /every probe that applies tried/)
   const cut = lineOf({
     ...record('steps'),

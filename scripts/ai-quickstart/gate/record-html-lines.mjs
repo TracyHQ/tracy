@@ -135,59 +135,103 @@ const UNTESTED = {
   no_pass_reached_it: 'no pass reached them',
   refused_or_failed: 'every probe they got was refused or failed',
   probe_not_written: 'the build wrote another value than the probe',
+  normalized_by_build: 'every probe they got the build normalized, so none reached the site',
   judged_by_no_page: 'every page printed their value only cut short, so it was judged by none',
   probes_left: 'named by a finding, its other probes never tried'
 }
 
+/** Each way a value can fail write safety, in plain words, counted apart (review 7 S6). */
+const FAILED_AS = {
+  door_refused: 'the site refused or kept otherwise',
+  markup_injected: 'a page ran as code',
+  server_error: 'the site answered an error',
+  site_unreachable: 'the site stopped answering',
+  normalized_unsafe: 'the build wrote with their code but not their marker'
+}
+/** The class each (place, probe) pair ended in, in the order the line says them. */
+const PAIR_AS = {
+  written: 'tested on the site',
+  refused_by_build: 'refused by the build',
+  normalized_by_build: 'normalized by the build',
+  not_written: 'the build wrote otherwise or dropped (not tested)',
+  not_judged: 'judged by no page (printed only cut short)',
+  ...FAILED_AS,
+  unclassified: 'the build threw with a code the gate does not know'
+}
+const byKind = (items, key) => {
+  const out = {}
+  for (const i of items) out[i[key]] = (out[i[key]] ?? 0) + 1
+  return out
+}
+const said = (counts, words) =>
+  Object.keys(words)
+    .filter((k) => counts[k])
+    .map((k) => counts[k] + ' ' + words[k])
+
 /** What write safety reached and found, true in every state. */
 function writeSafetyLine(m) {
   const p = m.places ?? {}
-  const untraced = (m.findings ?? []).filter((f) => f.culprit === 'not_traced').length
-  const site = (m.findings ?? []).filter((f) => f.kind !== 'refused_by_build').length - untraced
-  const build = (m.findings ?? []).filter((f) => f.kind === 'refused_by_build').length
+  const findings = m.findings ?? []
+  const untraced = findings.filter((f) => f.culprit === 'not_traced').length
+  const failed = byKind(
+    findings.filter((f) => f.culprit !== 'not_traced' && FAILED_AS[f.kind]),
+    'kind'
+  )
+  const site = Object.values(failed).reduce((a, b) => a + b, 0)
+  const thrown = findings.filter((f) => f.kind === 'unclassified').length
+  const build = findings.filter((f) => f.kind === 'refused_by_build').length
   const could = m.coverage?.places?.couldTakeProbe
-  // A place counts as tested from any one probe that reached it: the places tried with every probe that applies and
-  // the (place, probe) pairs never tried are said apart (review 5).
+  // A place counts as tested from any one probe that reached it: every applicable (place, probe) pair is counted by
+  // the class it ended in, so a pair the build wrote otherwise is never counted a result (review 7 S6).
   const known = Array.isArray(m.missing)
   const missing = known ? m.missing : []
   const short = new Set(missing.map((x) => x.place)).size
+  const ledger = Array.isArray(m.ledger) ? m.ledger : null
+  const pairs = ledger
+    ? [
+        n(ledger.length + missing.length, '(place, probe) pair applies', '(place, probe) pairs apply') +
+          ': ' +
+          [
+            ...said(byKind(ledger, 'status'), PAIR_AS),
+            ...(missing.length ? [missing.length + ' never tried, at ' + n(short, 'place', 'places')] : [])
+          ].join(', ')
+      ]
+    : missing.length
+      ? [
+          n(missing.length, '(place, probe) pair', '(place, probe) pairs') +
+            ' never tried, at ' +
+            n(short, 'place', 'places')
+        ]
+      : []
   const parts = [
     (p.tested ?? 0) +
       ' of ' +
       (p.probed ?? 0) +
       ' places given a probe had at least one probe reach the site' +
       (could == null ? '' : ' (' + could + ' places could take one)'),
-    ...(known
-      ? [
-          n(Math.max(0, (p.probed ?? 0) - short), 'place', 'places') +
-            ' had a result for every probe that applies'
-        ]
-      : []),
-    ...(missing.length
-      ? [
-          n(missing.length, '(place, probe) pair', '(place, probe) pairs') +
-            ' never tried, at ' +
-            n(short, 'place', 'places')
-        ]
-      : []),
+    ...pairs,
     n((m.passes ?? []).length, 'pass', 'passes')
   ]
   const notProbed = Object.values(m.coverage?.notProbed ?? {}).reduce((a, b) => a + b, 0)
   if (notProbed)
     parts.push(n(notProbed, 'written place', 'written places') + ' not probed (listed with the reason)')
   // An untraced stop is at least one value: its field was not named, so the count is a floor.
+  const kinds = said(failed, FAILED_AS).join(', ')
   if (untraced)
     parts.push(
       'at least ' +
         n(site + untraced, 'value', 'values') +
-        ' a customer could type broke a page or the site refused it (' +
-        site +
-        ' traced to a field, ' +
+        ' a customer could type failed (' +
+        (site ? site + ' traced to a field: ' + kinds + '; ' : '') +
         n(untraced, 'stop', 'stops') +
         ' left untraced)'
     )
-  else if (site)
-    parts.push(n(site, 'value', 'values') + ' a customer could type broke a page or the site refused it')
+  else if (site) parts.push(n(site, 'value', 'values') + ' a customer could type failed: ' + kinds)
+  if (thrown)
+    parts.push(
+      n(thrown, 'value', 'values') +
+        ' the build threw in memory with a code the gate does not know, before any site saw it (the measurement cannot pass)'
+    )
   if (build)
     parts.push(n(build, 'value', 'values') + ' the build refused, recorded and not tested on the site')
   const untested = m.ends?.untested ?? []

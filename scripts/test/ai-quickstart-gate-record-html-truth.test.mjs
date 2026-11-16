@@ -52,7 +52,7 @@ test('failed: only the variant and the values that failed are named as such', ()
       { kind: 'refused_by_build', probe: 'tag' }
     ]
   })
-  assert.match(ws, /1 value a customer could type broke a page or the site refused it/)
+  assert.match(ws, /1 value a customer could type failed: 1 a page ran as code/)
   assert.match(ws, /1 value the build refused, recorded and not tested on the site/)
   assert.doesNotMatch(ws, /nothing a customer could type/)
   const sec = lineOf('secrets', {

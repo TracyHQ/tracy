@@ -17,7 +17,8 @@ export { measurementLines }
 const KIND = {
   server_error: 'The site answered an error',
   site_unreachable: 'The site stopped answering',
-  unclassified: 'It stopped with a code the gate does not know',
+  unclassified: 'The build threw a code the gate does not know, in memory (no site saw it)',
+  normalized_unsafe: 'The build wrote it with its code but without its marker, so no page can judge it',
   door_refused: 'The site refused it',
   markup_injected: 'The page ran it as code',
   refused_by_build: 'The build refused it (recorded only)',

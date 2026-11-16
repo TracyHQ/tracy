@@ -52,7 +52,7 @@ test('X4: a failed write safety that ran out of steps says so, with its untraced
   assert.match(ws, /^Failed: /)
   assert.match(
     ws,
-    /at least 2 values a customer could type broke a page or the site refused it \(1 traced to a field, 1 stop left untraced\)/
+    /at least 2 values a customer could type failed \(1 traced to a field: 1 the site refused or kept otherwise; 1 stop left untraced\)/
   )
   assert.match(
     ws,
