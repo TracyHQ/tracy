@@ -30,7 +30,7 @@ import { TRIPADVISOR_SOURCE, TRIPADVISOR_VERSION } from './tripadvisor.js'
 import { BudgetExceededError } from './cost-ledger.js'
 import { createPlacePaidReceipts } from './place-paid-receipts.js'
 import { apifyCeilingCents, ceilingCents } from './cost-prices.js'
-import { menuRendererOrder, providerOrderFor, resolveProviderOrder } from './wo-settings.js'
+import { menuRendererOrder, orderedConnectorsFor, resolveProviderOrder } from './wo-settings.js'
 import { checkPageSpeed } from './pagespeed.js'
 import { finishPlaceJob, placeLease } from './place-jobs.js'
 import {
@@ -718,10 +718,7 @@ export function createPlaceRunner(h) {
         })
       }
       // Social pages walk the operator's provider order (/ops/wo › Settings), each provider reserved at its own price.
-      const connectors = domain.connectorsFor(
-        { APIFY_TOKEN: keys.apify ?? undefined, SCRAPECREATORS_API_KEY: keys.scrapecreators ?? undefined },
-        { order: providerOrderFor(settings) }
-      )
+      const connectors = orderedConnectorsFor(domain, keys, settings)
       // Use the same plain/browser collectors, but admit the paid fallback before its POST.
       if (paidReceipt && keys.apify) connectors.website = domain.connectorsFor({}).website
       for (const source of SOURCES) {

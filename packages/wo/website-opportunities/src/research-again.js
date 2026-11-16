@@ -4,7 +4,7 @@
  * state on the research card. Pure: the caller hands the place's rows, the collector versions, what it cannot run
  * and each part's reserved price.
  */
-import { providerOrderFor, resolveProviderOrder } from './wo-settings.js'
+import { orderedConnectorsFor, resolveProviderOrder } from './wo-settings.js'
 import { apifyCeilingCents, ceilingCents } from './cost-prices.js'
 import { GOOGLE_MAPS_VERSION } from './google-maps-research.js'
 import { joinPlace } from './place-jobs.js'
@@ -257,10 +257,7 @@ export async function placeAgainPlan(
     tripadvisor: TRIPADVISOR_VERSION
   }
   const connectors = domain?.connectorsFor
-    ? domain.connectorsFor(
-        { APIFY_TOKEN: keys.apify ?? undefined, SCRAPECREATORS_API_KEY: keys.scrapecreators ?? undefined },
-        { order: providerOrderFor(settings) }
-      )
+    ? orderedConnectorsFor(domain, keys, settings)
     : {}
   const custom = {}
   // A source today's link rules no longer call that kind (`link-rejudge.js`): the run drops it, whatever its age.

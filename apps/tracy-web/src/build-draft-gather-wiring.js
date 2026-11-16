@@ -27,7 +27,7 @@ import {
 } from 'website-opportunities/src/business-reading.js'
 import { BudgetExceededError } from 'website-opportunities/src/cost-ledger.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
-import { DEFAULT_WO_OPS_SETTINGS } from 'website-opportunities/src/wo-settings.js'
+import { DEFAULT_WO_OPS_SETTINGS, orderedConnectorsFor } from 'website-opportunities/src/wo-settings.js'
 import { SOCIAL_SOURCES, SOURCES, refsOfCandidate, refsOfUrls } from 'website-opportunities/src/sources.js'
 import { cleanProfileLinks } from 'website-opportunities/domain/social-links.mjs'
 import { createPreSiteGatherer } from './build-draft/gather.js'
@@ -58,6 +58,8 @@ export function decideProfile(profile, opp, brand = null) {
 /** The Website Opportunities pieces the gatherer composes (`build-draft/gather.js` `parts`). */
 export const preSiteParts = Object.freeze({
   sources: SOURCES,
+  // The social connectors as the place executor builds them (keys and provider order of /ops/wo).
+  orderedConnectorsFor,
   socialSources: SOCIAL_SOURCES,
   refsOfCandidate,
   refsOfUrls,

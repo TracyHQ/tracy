@@ -46,6 +46,14 @@ async function placeFactsOf({ domain, fields, keys, deps, now, remaining }) {
   return answer.timedOut ? { facts: null, reason: 'timeout' } : answer
 }
 
+/**
+ * The charge door of a paid social provider (`collectSocialProfile` `deps.charge`): the call runs as it is. The build
+ * chat reserves the whole research step at its ceiling in the research cost ledger before it starts
+ * (`engine-spend.js`, `STEP_CEILING_CENTS.research`), so each provider call is held by that one reservation; the paid
+ * run per account per day is still counted before a paid page is read (`paidRunAllowed`).
+ */
+const withinResearchReservation = (_spec, call) => call()
+
 /** The owner's links whose rows read nothing, each with its plain reason (a page found on the website is not one). */
 const unreadOf = (rows, pasted) =>
   rows
@@ -106,7 +114,8 @@ export function createPreSiteGatherer(deps) {
       setAside.push({ link: judged.googleLink, reason: reasonOf(place.reason) })
     const rows = await readSources({
       refs: parts.refsOfCandidate(fields.candidate),
-      connectors: domain.connectorsFor({ APIFY_TOKEN: keys?.apify ?? undefined }),
+      // The place executor's own chain: every social key and the operator's provider order (/ops/wo).
+      connectors: parts.orderedConnectorsFor(domain, keys, settings),
       settings,
       keys,
       sources: parts.sources,
@@ -114,7 +123,7 @@ export function createPreSiteGatherer(deps) {
       refsOfUrls: parts.refsOfUrls,
       mergeCollected: parts.mergeCollected,
       paidRunAllowed: () => deps.paidRunAllowed(context.accountId ?? null),
-      deps: domainDeps,
+      deps: { ...domainDeps, charge: withinResearchReservation },
       remaining
     })
     const pasted = new Map(

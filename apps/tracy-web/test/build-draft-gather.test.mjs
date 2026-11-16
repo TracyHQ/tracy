@@ -291,6 +291,62 @@ test('a paid social page past the day count is set aside; nothing else read is r
   assert.ok(sources.some((s) => s.id === 'facebook'))
 })
 
+test('an Instagram page Apify refuses is read through ScrapeCreators, the operator order, as the place executor does', async () => {
+  const { domain } = await fakeDomain()
+  // The domain's own connectors and provider chain; only the providers' answers are fakes.
+  const { connectorsFor } = await import('website-opportunities/domain/connectors.mjs')
+  domain.connectorsFor = connectorsFor
+  const instagram = 'https://www.instagram.com/hollowmere.bakehouse.example/?igsh=invented'
+  const called = []
+  const providers = async (input) => {
+    const url = new URL(String(input instanceof Request ? input.url : input))
+    called.push(url.hostname)
+    const json = (body, status = 200) =>
+      new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } })
+    if (url.hostname === 'api.apify.com') return json({ error: { type: 'user-or-token-not-found' } }, 401)
+    if (url.hostname === 'api.scrapecreators.com' && url.pathname === '/v1/instagram/profile')
+      return json({
+        success: true,
+        data: {
+          user: {
+            id: '901',
+            username: 'hollowmere.bakehouse.example',
+            full_name: 'Hollowmere Bakehouse',
+            biography: 'Sourdough before dawn. Call us +1 555 0142 318',
+            business_phone_number: '+15550142318',
+            edge_owner_to_timeline_media: {
+              count: 1,
+              page_info: { has_next_page: false },
+              edges: [
+                {
+                  node: {
+                    id: 'm1',
+                    shortcode: 'INV1',
+                    display_url: 'https://cdn.social.example/hollowmere/1.jpg',
+                    taken_at_timestamp: 1792000000,
+                    edge_media_to_caption: { edges: [{ node: { text: 'Rye is back on Saturdays' } }] }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      })
+    return json({}, 404)
+  }
+  const { brief, setAside } = await gatherer(domain, {
+    keys: { apify: 'apify-invalid', scrapecreators: 'sc-test' },
+    fetch: providers
+  })({ links: [instagram], description: null }, { accountId: 'acc-1' })
+  assert.ok(called.includes('api.scrapecreators.com'), `the second provider is asked: ${called.join(', ')}`)
+  const row = brief.sources.find((s) => s.source === 'instagram')
+  assert.ok(['complete', 'partial'].includes(row?.status), `Instagram is read: ${JSON.stringify(row)}`)
+  assert.equal(brief.business.phone, '+15550142318', 'the profile phone reaches the brief')
+  assert.ok(!setAside.some((s) => s.link === instagram), 'the Instagram link is not set aside')
+  const { sources } = researchOf(brief, { manifest: [] })
+  assert.ok(sources.find((s) => s.id === 'instagram')?.fields?.['contact.phone'], 'and the needs profile')
+})
+
 test('the link guard always gets a DNS resolver, even when the server injects none', async () => {
   // The server (`app.js`) passes no resolver of its own in production. Without one the real guard refuses every
   // website as `dns_unavailable`, so every owner link was set aside and research stopped (#609, first real run).

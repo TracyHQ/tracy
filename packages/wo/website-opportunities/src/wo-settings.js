@@ -440,6 +440,19 @@ export function providerOrderFor(settings) {
   )
 }
 
+/**
+ * The source connectors of a research run (`domain.connectorsFor`) with every social provider key the server holds
+ * and the operator's provider order (/ops/wo), so a social page walks the same chain everywhere: a provider without
+ * its key, or one that refuses it, hands over to the next. Paid providers then need `deps.charge` at collect time.
+ * The one wiring of the place executor, Research again and the build chat's research before a site exists.
+ */
+export function orderedConnectorsFor(domain, keys, settings) {
+  return domain.connectorsFor(
+    { APIFY_TOKEN: keys?.apify ?? undefined, SCRAPECREATORS_API_KEY: keys?.scrapecreators ?? undefined },
+    { order: providerOrderFor(settings) }
+  )
+}
+
 /** The first demo retention field sent out of its range or of the wrong type, or null. */
 function demoRetentionRefusal(candidate) {
   if (candidate.demoRetentionEnabled !== undefined && typeof candidate.demoRetentionEnabled !== 'boolean')
