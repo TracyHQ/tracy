@@ -90,6 +90,28 @@ export function storedIndex(writePlan) {
 }
 
 /**
+ * Where a probed place is stored in a pass (review 6 U1). A probe with a code is found by it in the pass plan. A probe
+ * that replaces the whole value carries none, and the code the place got in this pass is not its plain code once the
+ * page writer sent a field back (the marker writer takes a new code on every ask): it is found where the plain build
+ * stores the place itself, looked up by the place key (`plainAt`), never by the pass's code, which in the plain plan is
+ * another place's. A coded probe the pass plan lost is placed the same way.
+ * @param {string} key the place key
+ * @param {{code: string, probe: {whole?: boolean}}} u the place in this pass
+ * @param {Map<string, object[]>} index the pass plan's `storedIndex`
+ * @param {(key: string) => object[] | null} plainAt where the plain build stores a place, by its key
+ */
+export function placeAt(key, u, index, plainAt) {
+  const own = u.probe?.whole ? null : index.get(String(u.code).toUpperCase())
+  return own?.length ? own : (plainAt?.(key) ?? null)
+}
+
+/** Where the plain build stores each place, by the place key's own plain code. */
+export const plainAtOf = (seen, plainIndex) => (key) => {
+  const code = seen.get(key)?.code
+  return code == null ? null : (plainIndex.get(String(code).toUpperCase()) ?? null)
+}
+
+/**
  * The stored location of a place that a failure names (review 5 Y2): a value the plain build stores in several
  * operations (one address in a hero button and in a call to action) is named where the site refused it, the operation
  * a stop reports and, within it, the slot or column a read back names; a finding judged on a page is named by an entry
@@ -105,12 +127,14 @@ export function storedFor(entries, failure = {}) {
   const onPage = failure.judgedOn
     ? list.filter((s) => String(s.entry ?? '').split('.')[0] === failure.judgedOn)
     : []
-  // A location the plan names by an entry wins over one it does not (an alias derived from a title, run 6).
-  const named = (s) => Boolean(s.entry)
+  // The location the failure names is the one recorded (review 6 S1); every location in `entries` stores the same
+  // place, so one with no plan entry (an alias derived from a title, run 6) borrows the page, block and field of an
+  // entry of the same operation, never its column or slot.
+  const named = onOp.find((s) => Boolean(s.entry))
+  const hit = failure.slot || failure.column ? onOp.find(within) : undefined
   return (
-    onOp.find((s) => within(s) && named(s)) ??
-    onOp.find(named) ??
-    onOp.find(within) ??
+    (hit && !hit.entry && named ? { ...hit, entry: named.entry } : hit) ??
+    named ??
     onOp[0] ??
     (failure.slot ? list.find((s) => s.loc?.slot === failure.slot) : undefined) ??
     onPage[0] ??

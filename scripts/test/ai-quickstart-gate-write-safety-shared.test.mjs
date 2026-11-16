@@ -18,6 +18,8 @@ const used = new Map([
   ['fact:contact.address#0', { id: 'long', code: 'QxAAB' }],
   ['fact:about.title#0', { id: 'long', code: 'QxAAC' }]
 ])
+/** Where the plain build stores each place, by its key (review 6 U1). */
+const plainAt = (key) => plainIndex.get(String(used.get(key)?.code).toUpperCase()) ?? null
 const refusal = (entries) => ({
   kind: 'refused_by_build',
   code: 'text_over_limit',
@@ -47,7 +49,7 @@ test('W2: a refusal at an entry two places share blames only the place built alo
     attempt,
     buildBudget,
     plainGaps: new Set(),
-    plainIndex
+    plainAt
   })
   assert.deepEqual(
     found.culprits.map((c) => c.unit),
@@ -66,7 +68,7 @@ test('W2: a place stored alone at the entry a refusal names is blamed by that re
     attempt,
     buildBudget: stepBudget(10),
     plainGaps: new Set(),
-    plainIndex
+    plainAt
   })
   assert.deepEqual(
     found.culprits.map((c) => [c.unit, c.failure.evidence]),
@@ -81,7 +83,7 @@ test('W2: two places that share an entry and both refuse alone are both blamed, 
     attempt,
     buildBudget: stepBudget(10),
     plainGaps: new Set(),
-    plainIndex
+    plainAt
   })
   assert.deepEqual(found.culprits.map((c) => c.unit).sort(), [
     'fact:business.name#0',

@@ -3,7 +3,8 @@
 // of that place) or, failing that, the page. A build that writes the plain marker instead of the probe, or drops it,
 // leaves the place untested; and a probe that never reached a page is never judged as run by the page. A probe that
 // replaces the whole value (the empty value, a number) carries no code: its place is found where the plain build
-// stored that place's code, and the value stored there must be the probe exactly. Pure.
+// stored that place (by the place key's own plain code, never the code it got in the pass: review 6 U1), and the value
+// stored there must be the probe exactly. Pure.
 import { placeKeyOf } from './universe.mjs'
 import { storedOf } from './write-safety-places.mjs'
 
@@ -31,17 +32,17 @@ const holds = (stored, text) => {
  * @param {Map<string, {code: string, probe: object, value: string, base: string}>} used
  * @param {object} plan the pass's write plan
  * @param {Map<string, object[]>} index code to where it is stored in this plan (`storedIndex`)
- * @param {Map<string, object[]>} plainIndex the same for the plain build
+ * @param {(key: string) => object[] | null} plainAt where the plain build stores a place, by its key (`plainAtOf`)
  * @returns {Set<string>}
  */
-export function reachedInPlan(used, plan, index, plainIndex) {
+export function reachedInPlan(used, plan, index, plainAt) {
   const out = new Set()
   const byOp = new Map((plan?.ops ?? []).map((op) => [op.key, op]))
   for (const [key, u] of used) {
     const code = String(u.code).toUpperCase()
     if (u.probe.whole) {
-      // No code in the value: the place is where the plain build stored this place's code.
-      const at = plainIndex.get(code) ?? []
+      // No code in the value: the place is where the plain build stored this place, found by its key (review 6 U1).
+      const at = plainAt?.(key) ?? []
       const found = at.some((s) => {
         const op = byOp.get(s.op)
         const where = s.loc ? placeKeyOf(s.loc) : null

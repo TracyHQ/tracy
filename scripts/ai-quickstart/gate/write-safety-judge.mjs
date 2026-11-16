@@ -129,16 +129,18 @@ export function buildRefusalOf({ built, error }, plainGaps) {
 }
 
 /**
- * The probes a page shows as a live element, among the probed places whose code it prints.
+ * The probes a page shows as a live element, among the probed places whose code it prints. A probe whose judge says
+ * this page prints the place only cut short (`{cut: true}`) is judged by this page neither way (`cut`, review 6 S2).
  * @param {string} html
  * @param {Map<string, {code: string, probe: object}>} used
- * @returns {{shown: Set<string>, injected: Array<{place: string, judged: object}>}}
+ * @returns {{shown: Set<string>, injected: Array<{place: string, judged: object}>, cut: Set<string>}}
  */
 export function judgePage(html, used) {
   const text = String(html ?? '')
   const codes = new Set(codesIn(text))
   const shown = new Set()
   const injected = []
+  const cut = new Set()
   let doc = null
   for (const [place, { code, probe }] of used) {
     if (
@@ -149,7 +151,8 @@ export function judgePage(html, used) {
     shown.add(place)
     doc ??= parseHTML(text).document
     const judged = probe.judge?.({ doc, code, html: text }) ?? null
-    if (judged) injected.push({ place, judged })
+    if (judged?.cut) cut.add(place)
+    else if (judged) injected.push({ place, judged })
   }
-  return { shown, injected }
+  return { shown, injected, cut }
 }

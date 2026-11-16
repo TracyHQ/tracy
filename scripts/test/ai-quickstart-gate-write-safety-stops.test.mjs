@@ -142,7 +142,7 @@ test('X4: a pass meets and records every stop, tracing what its steps allow and 
       budget: stepBudget(0),
       buildBudget: stepBudget(100),
       plainGaps: new Set(),
-      plainIndex,
+      plainAt: (k) => plainIndex.get(codeOfPlace(k).toUpperCase()) ?? null,
       late: () => false,
       site: { pages: async () => [], fetch: async () => ({ status: 200, html: '' }) },
       ledger,

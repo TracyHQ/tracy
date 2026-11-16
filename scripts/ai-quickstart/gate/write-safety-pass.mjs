@@ -13,7 +13,7 @@
 import { bisect } from './bisect.mjs'
 import { buildCulprits, pageCulprits, stopOf } from './write-safety-trials.mjs'
 import { buildRefusalOf, judgePage, pageBroken, stopClassOf } from './write-safety-judge.mjs'
-import { storedIndex } from './write-safety-places.mjs'
+import { placeAt, storedIndex } from './write-safety-places.mjs'
 import { reachedInPlan, reachedOnPage } from './write-safety-reached.mjs'
 
 /** Why a search found no culprit: its budget ran out, or the failure needs several values together. */
@@ -50,7 +50,8 @@ async function builtInMemory(n, active, ctx, take) {
 /**
  * @param {number} n the pass number
  * @param {Map<string, object>} assignment place key to probe
- * @param {object} ctx `{attempt, writeOn, record, budget, buildBudget, plainGaps, plainIndex, late, site, ledger}`
+ * @param {object} ctx `{attempt, writeOn, record, budget, buildBudget, plainGaps, plainIndex, plainAt, late, site,
+ *   ledger}`
  * @param {{reruns: number}} limits
  * @returns {Promise<{runs: number, incomplete?: string}>}
  */
@@ -73,12 +74,9 @@ export async function onePass(n, assignment, ctx, limits) {
       if (stop.kind === 'run_state') return { runs: run, incomplete: 'run_state', stop: stop.code }
       const index = storedIndex(a.built.writePlan)
       // A whole value probe (the empty value, a number) carries no code, so the pass plan cannot say where it went:
-      // the plain plan can, as it stores the place's own marker at the same location (review 5 Z1). Only a place
-      // neither plan stores stays a suspect of every stop.
-      const whereOf = (key) => {
-        const code = String(a.opts.used.get(key).code).toUpperCase()
-        return index.get(code) ?? ctx.plainIndex?.get(code) ?? null
-      }
+      // the plain plan can, where it stores the place itself (review 5 Z1), found by the place key and never by the
+      // pass's code (review 6 U1). Only a place neither plan stores stays a suspect of every stop.
+      const whereOf = (key) => placeAt(key, a.opts.used.get(key), index, ctx.plainAt)
       const inOp = (key) => {
         const at = whereOf(key)
         return !stop.op || !at || at.some((s) => s.op === stop.op)
@@ -113,7 +111,11 @@ export async function onePass(n, assignment, ctx, limits) {
         })
         if (!units.length) return { runs: run, incomplete: short }
         for (const key of units) {
-          park(key, { why: 'suspect_of_untraced_stop', op: stop.op ?? null, code: stop.code })
+          park(key, {
+            why: found.exhausted.length ? 'suspect_of_untraced_stop' : 'suspect_of_unattributed_stop',
+            op: stop.op ?? null,
+            code: stop.code
+          })
           active.delete(key)
         }
       }
@@ -121,9 +123,12 @@ export async function onePass(n, assignment, ctx, limits) {
     }
     const pages = await site.pages(a.built, w.record)
     const index = storedIndex(a.built.writePlan)
-    const reached = reachedInPlan(a.opts.used, a.built.writePlan, index, ctx.plainIndex)
+    const reached = reachedInPlan(a.opts.used, a.built.writePlan, index, ctx.plainAt)
     const written = new Map([...a.opts.used].filter(([k]) => reached.has(k)))
     const shown = new Set()
+    // Places a page printed only cut short, and places a page printed so that their probe was judged (review 6 S2).
+    const cutOn = new Set()
+    const judgedOn = new Set()
     let broken = null
     for (const page of pages) {
       const answer = await site.fetch(page.url)
@@ -134,7 +139,11 @@ export async function onePass(n, assignment, ctx, limits) {
       }
       for (const k of reachedOnPage(answer.html, a.opts.used, reached)) reached.add(k)
       const judged = judgePage(answer.html, written)
-      for (const k of judged.shown) shown.add(k)
+      for (const k of judged.shown) {
+        shown.add(k)
+        if (judged.cut.has(k)) cutOn.add(k)
+        else judgedOn.add(k)
+      }
       // Judged on this page, not isolated by trials: the finding says so and names the page (review 5 Z2).
       for (const { place, judged: j } of judged.injected)
         if (active.has(place)) {
@@ -161,16 +170,23 @@ export async function onePass(n, assignment, ctx, limits) {
           why: unnamed(found, 'steps')
         })
         for (const key of suspects) {
-          park(key, { why: 'suspect_of_untraced_page', page: broken.page.pageType ?? null })
+          park(key, {
+            why: found.exhausted?.length ? 'suspect_of_untraced_page' : 'suspect_of_unattributed_page',
+            page: broken.page.pageType ?? null
+          })
           active.delete(key)
         }
       }
       continue
     }
+    // A probe every page printed only cut short was judged by none: it has a result, `not_judged`, and its place is
+    // not tested from it (review 6 S2).
+    const cutOnly = (key) => cutOn.has(key) && !judgedOn.has(key)
     for (const [key, probe] of active)
       if (a.opts.used.has(key))
         ledger.set(key, probe.id, {
-          status: reached.has(key) ? 'written' : 'not_written',
+          status: !reached.has(key) ? 'not_written' : cutOnly(key) ? 'not_judged' : 'written',
+          ...(reached.has(key) && cutOnly(key) ? { why: 'every_print_cut' } : {}),
           site: true,
           reached: reached.has(key),
           pass: n,

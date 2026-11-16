@@ -127,5 +127,5 @@ test("Y1: in the plan a code-less probe counts only where the place's own value 
     ]
   }
   const index = storedIndex(plan)
-  assert.deepEqual([...reachedInPlan(used, plan, index, index)], ['A'])
+  assert.deepEqual([...reachedInPlan(used, plan, index, () => null)], ['A'])
 })

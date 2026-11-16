@@ -14,7 +14,7 @@ import { coverageOf } from './write-safety-coverage.mjs'
 import { gapKey, pageBroken } from './write-safety-judge.mjs'
 import { onePass } from './write-safety-pass.mjs'
 import { resultOf } from './write-safety-result.mjs'
-import { nameOf, passOptions, shortOf, storedFor, storedIndex } from './write-safety-places.mjs'
+import { nameOf, passOptions, plainAtOf, shortOf, storedFor, storedIndex } from './write-safety-places.mjs'
 import { resumed } from './write-safety-state.mjs'
 import { packPass, probeLedger } from './write-probes.mjs'
 
@@ -57,6 +57,8 @@ export async function writeSafety(input) {
     return incompleteOf('plain_build_failed', { code: String(error?.code ?? 'build_failed') })
   }
   const plainIndex = storedIndex(plainBuilt.writePlan)
+  // Where the plain build stores a place, by the place's own plain code: never by the code it got in a pass (review 6 U1).
+  const plainAt = plainAtOf(plain.seen, plainIndex)
   const written = [...plain.seen.values()].filter((p) => plainIndex.has(String(p.code).toUpperCase()))
   const places = written.filter((p) => p.type)
   const coverage = coverageOf(plainBuilt.writePlan, plain.seen, input.universeKeys ?? null)
@@ -86,7 +88,7 @@ export async function writeSafety(input) {
   })
   const record = (key, probe, failure, pass) => {
     // Named where the failure names it, never only the first place the plain build stores the value (review 5 Y2).
-    const stored = storedFor(plainIndex.get(String(plain.seen.get(key)?.code).toUpperCase()), failure)
+    const stored = storedFor(plainAt(key), failure)
     findings.push({
       kind: failure.kind,
       probe: probe.id,
@@ -150,6 +152,7 @@ export async function writeSafety(input) {
     buildBudget,
     plainGaps,
     plainIndex,
+    plainAt,
     late,
     site,
     ledger,

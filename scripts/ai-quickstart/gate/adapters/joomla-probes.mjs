@@ -14,20 +14,24 @@ const wordsOf = (doc) =>
 const ELLIPSIS = /\.\.\.|\u2026/
 
 /**
- * Whether the words after one print of the marker are the probe cut short by a list (review 5 Z2): an ellipsis right
- * after the marker, or the start of the probe and then an ellipsis. A list that cuts its items' text to a length (a
- * category module's intro limit) leaves the marker without the code, as a page that ran the code does, but says so.
+ * Whether the words after one print of the marker are the probe cut short by a list (review 5 Z2): the start of the
+ * probe, at least one character of it, and then an ellipsis. A list that cuts its items' text to a length (a category
+ * module's intro limit) leaves the marker without the rest of the code, as a page that ran the code does, but says so.
+ * An ellipsis right after the marker is no cut (review 6 S2): a page that ran the code printed nothing in its place,
+ * and a list's own "..." or "Read more" follows.
  */
 function cutAfter(after, probe) {
   const rest = after.trimStart()
   const at = rest.search(ELLIPSIS)
   if (at < 0 || at > probe.length) return false
-  return probe.startsWith(rest.slice(0, at).trimEnd())
+  const start = rest.slice(0, at).trimEnd()
+  return start.length > 0 && probe.startsWith(start)
 }
 
 /**
  * A probe whose danger is its own words missing where the field's marker prints. A page that prints the marker only
- * cut short (every print of it followed by a cut) judges nothing; the place is judged on a page that prints it whole.
+ * cut short (every print of it followed by a cut) judges nothing and says so (`{cut: true}`, review 6 S2): the place
+ * is judged on a page that prints it whole, and a place no page printed whole is not judged at all.
  */
 const codeProbe = (id, text, why, signed = null) => ({
   id,
@@ -41,7 +45,7 @@ const codeProbe = (id, text, why, signed = null) => ({
     if (!words.includes(marker) || words.includes(probe)) return null
     for (let i = words.indexOf(marker); i >= 0; i = words.indexOf(marker, i + 1))
       if (!cutAfter(words.slice(i + marker.length), probe)) return { kind: 'markup_injected', element: id }
-    return null
+    return { cut: true }
   },
   why
 })

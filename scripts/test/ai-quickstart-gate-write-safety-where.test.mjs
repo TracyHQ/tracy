@@ -175,3 +175,35 @@ test('Y2 (run 6): a read back at a derived column still names the entry the oper
   assert.equal(named.field, 'name')
   assert.equal(named.location.op, 'article:class-3')
 })
+
+// Review 6 S1: the location the failure names is the one recorded; a named entry of the same operation only lends the
+// page, block and field. The alias read back keeps its column, and a slot the failure names is never traded for
+// another slot of the operation because that one has an entry.
+test('S1: the column or slot a failure names stays its location; the entry only names the field', async () => {
+  const { storedFor, nameOf } = await import('../ai-quickstart/gate/write-safety-places.mjs')
+  const alias = storedFor(
+    [
+      {
+        op: 'article:class-3',
+        entry: 'home.home-b6.class-3.name',
+        loc: { entity: 'article-9', column: 'title', slot: 'article-9.4' }
+      },
+      { op: 'article:class-3', entry: null, loc: { entity: 'article:class-3', column: 'alias' } }
+    ],
+    { op: 'article:class-3', column: 'alias' }
+  )
+  const named = nameOf(alias, order)
+  assert.equal(named.field, 'name')
+  assert.equal(named.block, 'home-b6')
+  assert.equal(named.location.column, 'alias')
+  assert.equal(named.location.slot, null)
+  const slot = storedFor(
+    [
+      { op: 'X', entry: null, loc: { slot: 'X.1', column: 'c' } },
+      { op: 'X', entry: 'home.home-b3.a', loc: { slot: 'X.2', column: 'd' } }
+    ],
+    { op: 'X', slot: 'X.1' }
+  )
+  assert.equal(slot.loc.slot, 'X.1')
+  assert.equal(nameOf(slot, order).field, 'a')
+})

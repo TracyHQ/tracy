@@ -9,9 +9,11 @@ import { FAILING } from './write-safety-judge.mjs'
 const notProbedWhy = (rows) =>
   rows.some((r) => r.status === 'not_written')
     ? 'probe_not_written'
-    : rows.length
-      ? 'refused_or_failed'
-      : 'no_pass_reached_it'
+    : rows.some((r) => r.status === 'not_judged')
+      ? 'judged_by_no_page'
+      : rows.length
+        ? 'refused_or_failed'
+        : 'no_pass_reached_it'
 
 /** The measurement from what the passes found: failed, incomplete with the first reason, or passed. */
 export function resultOf({
@@ -34,6 +36,8 @@ export function resultOf({
   const onSite = new Set(rows.filter((r) => r.status === 'written' && r.reached).map((r) => r.place))
   const inPass = new Set(rows.filter((r) => r.site).map((r) => r.place))
   const notWritten = [...new Set(rows.filter((r) => r.status === 'not_written').map((r) => r.place))]
+  // Pairs no page judged, every print of the place cut short (review 6 S2).
+  const notJudged = [...new Set(rows.filter((r) => r.status === 'not_judged').map((r) => r.place))]
   const notSiteTested = places.filter((p) => !onSite.has(p.key)).map((p) => p.key)
   const notInFinishedPass = {}
   for (const p of places)
@@ -68,9 +72,11 @@ export function resultOf({
         ? 'unclassified_stop'
         : notWritten.length
           ? 'probe_not_written'
-          : notSiteTested.length
-            ? 'not_site_tested'
-            : null)
+          : notJudged.length
+            ? 'probe_not_judged'
+            : notSiteTested.length
+              ? 'not_site_tested'
+              : null)
   return {
     status: failed ? 'failed' : why ? 'incomplete' : 'passed',
     ...(why ? { incomplete: why } : {}),
@@ -84,6 +90,7 @@ export function resultOf({
     missing,
     notSiteTested,
     notWritten,
+    notJudged,
     coverage: {
       ...coverage,
       places: {

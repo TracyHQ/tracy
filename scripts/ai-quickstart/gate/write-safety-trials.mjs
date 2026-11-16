@@ -5,7 +5,7 @@
 // blocks of an erroring page taken off it on the same site). Pure but for the injected build and site.
 import { bisect, bisectBlocks } from './bisect.mjs'
 import { buildRefusalOf, pageBroken, stopClassOf } from './write-safety-judge.mjs'
-import { storedIndex } from './write-safety-places.mjs'
+import { placeAt, storedIndex } from './write-safety-places.mjs'
 
 /** The probes of an assignment kept for a subset of its places. */
 export const only = (assignment, keys) => new Map([...assignment].filter(([k]) => keys.includes(k)))
@@ -25,15 +25,17 @@ const byOp = (p, s) =>
   !p.entry && !p.slot && p.op ? s.op === p.op && (!p.column || s.loc?.column === p.column) : false
 
 /**
- * The probed places a refusal names, found by where the plain build stores each place's code: `exact` with the
- * problem that names each (its entry or slot), `byOp` the places only an operation of a problem names.
+ * The probed places a refusal names, found by where the plain build stores each place, by its key (`plainAt`): never
+ * by the code the place got in the refused build, which is another place's in the plain plan once a field was sent
+ * back (review 6 U1). `exact` with the problem that names each (its entry or slot), `byOp` the places only an operation
+ * of a problem names.
  */
-export function namedPlaces(refusal, used, plainIndex) {
+export function namedPlaces(refusal, used, plainAt) {
   const problems = namedProblems(refusal)
   const exact = new Map()
   const op = []
-  for (const [key, { code }] of used) {
-    const stored = plainIndex.get(String(code).toUpperCase()) ?? []
+  for (const key of used.keys()) {
+    const stored = plainAt(key) ?? []
     const hit = problems.find((p) => stored.some((s) => exactly(p, s)))
     if (hit) exact.set(key, hit)
     else if (problems.some((p) => stored.some((s) => byOp(p, s)))) op.push(key)
@@ -57,9 +59,9 @@ const whereOf = (p) => (p.entry ? 'entry:' + p.entry : p.slot ? 'slot:' + p.slot
  * memory is no site step and no rerun: its trials are counted (`buildBudget`), never limited but by time.
  */
 export async function buildCulprits(refusal, a, active, ctx) {
-  const { attempt, buildBudget, plainGaps, plainIndex } = ctx
+  const { attempt, buildBudget, plainGaps, plainAt } = ctx
   const refuses = async (subset) => buildRefusalOf(await attempt(only(active, subset)), plainGaps)
-  const named = namedPlaces(refusal, a.opts.used, plainIndex)
+  const named = namedPlaces(refusal, a.opts.used, plainAt)
   const at = new Map()
   for (const [unit, p] of named.exact) {
     const w = whereOf(p)
@@ -109,7 +111,7 @@ export async function pageCulprits(page, failure, a, w, active, ctx) {
   const { attempt, writeOn, budget, site, plainGaps } = ctx
   const pageFails = async () => pageBroken(await site.fetch(page.url), page)
   const index = storedIndex(a.built.writePlan)
-  const opsOf = (key) => (index.get(String(a.opts.used.get(key).code).toUpperCase()) ?? []).map((s) => s.op)
+  const opsOf = (key) => (placeAt(key, a.opts.used.get(key), index, ctx.plainAt) ?? []).map((s) => s.op)
   let units = [...a.opts.used.keys()]
   if (site.off && site.back) {
     const ops = [...new Set(units.flatMap(opsOf))]
