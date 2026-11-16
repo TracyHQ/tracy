@@ -3,6 +3,7 @@
 // (`draft-write-plan-facts.mjs`); a derived link is written where the mapping stores it (a page address, the key of a
 // row keyed to a page) or left to the template that draws it; every entry not written is skipped with its reason.
 import { keyedRowTaken } from './draft-write-kit-build.mjs'
+import { ROW_KEYED_PAGE_WITHOUT_BLOCK, rowKeyedOutOfSight } from './draft-write-row-pages.mjs'
 import { put, skip } from './draft-write-sink.mjs'
 import { mappingEntryOf, placesWithScope, targetOf } from './draft-write-targets.mjs'
 import { textAt } from './draft-write-values.mjs'
@@ -51,9 +52,14 @@ function writeAt(state, at, loc, value, { entry, rule, inline }) {
 function rankOf(state, at, scope) {
   if (scope.level !== 'row') return scope
   const placement = state.kit.mapping.placements?.[at.block.block]
-  if (placement?.assign === 'page' || !state.kit.rowHides.get(at.block.block)) return scope
-  // The rows are cut to the ones written: a row left out here is cut, never left with the template's words.
   const keyed = list(at.place.fields).find((e) => e.from === 'derived' && e.target?.page)?.target.page
+  // A row keyed to a page the module is not assigned to is never printed: not written (`draft-write-row-pages.mjs`).
+  // A page reached under its list page keeps its own reason below (`row_page_reached_under`) where rows are cut.
+  const cut = placement?.assign !== 'page' && state.kit.rowHides.get(at.block.block)
+  if (keyed && !(cut && state.under?.[keyed]) && rowKeyedOutOfSight(state, at, keyed))
+    return { skip: ROW_KEYED_PAGE_WITHOUT_BLOCK }
+  if (!cut) return scope
+  // The rows are cut to the ones written: a row left out here is cut, never left with the template's words.
   if (keyed && keyedRowTaken(state, at.block.block, scope, keyed)) return { skip: 'row_keyed_to_page_type' }
   if (keyed && state.under?.[keyed]) return { skip: 'row_page_reached_under' }
   const key = `${at.block.block}.${scope.list}`

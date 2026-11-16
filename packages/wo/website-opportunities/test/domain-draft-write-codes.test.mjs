@@ -112,6 +112,7 @@ test('the florist plan raises exactly these skip reasons, flags and operation ki
     'no_generated_people',
     'page_reached_under',
     'place_fallback',
+    'row_keyed_page_without_block',
     'row_keyed_to_page_type',
     'row_page_reached_under',
     'template_fallback',
