@@ -95,6 +95,14 @@ three real holes:
   (**lives only on the host**). The four heavy runners share one daemon, so the previous run's cache is usable
   by every runner. The cache is not pushed to GHCR: `mode=max` of the dsh build stage weighs several GB, and
   private packages of a free org have a storage quota.
+  - ⚠ **Superseded for the image builds since 20/09/2026:** both image workflows build on a
+    `docker-container` builder per runner (`tracy-$RUNNER_NAME`) with the cache in the registry
+    (`:buildcache`, `mode=max`). The `daemon.json` setting above does **not** reach those builders —
+    each one runs its own buildkitd. Their local cache is bounded since 16/11/2026 by the GC policy in
+    [`.github/actions/buildx-builder/buildkitd.toml`](../../.github/actions/buildx-builder/buildkitd.toml)
+    (50 GB per builder, 20 % disk floor, nothing unused for 14 days; the reasoning and the 16/11
+    measurement are in that file). A builder whose config differs is recreated on its next job with
+    its cache volume kept ([`action.yml`](../../.github/actions/buildx-builder/action.yml)).
 
 ### Two traps that only show on a real push (measured 15/09, `tasks/thu-build-chi-khi-doi.md`)
 

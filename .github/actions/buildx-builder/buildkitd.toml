@@ -1,0 +1,68 @@
+# BuildKit daemon config of the CI image builders (`tracy-$RUNNER_NAME`, docker-container driver).
+# Read by `action.yml` next to this file. Any byte changed here recreates every runner's builder on
+# its next image job (the hash check in `action.yml`); the cache volume is kept across that.
+#
+# WHY THERE IS A POLICY AT ALL (measured 16/11/2026 on the dev host, buildkitd v0.33.1): one builder
+# held 98.5 GB in 3,300 records on a 484 GB disk at 78 % — and default GC had never touched it.
+# With no config, buildkitd v0.33 uses `DefaultGCPolicy` (cmd/buildkitd/config/gcpolicy.go +
+# gcpolicy_unix.go): maxUsedSpace = min(80 % of disk, 100 GB) = 100 GB here, minFreeSpace = 20 %
+# (~91 GB by its rounding) and reservedSpace = min(10 %, 10 GB). 98.5 GB is under 100 GB and the
+# disk still had 22 % free, so no size rule fired; the only age rule is 60 days. The
+# `defaultKeepStorage: 100GB` in the host's `/etc/docker/daemon.json` does not apply: it configures
+# the daemon's own builder, not a docker-container builder, which reads only this file.
+#
+# HOW BUILDKIT APPLIES IT (cache/manager.go v0.33.1): every rule runs in order, ~1 minute after
+# the daemon starts and after builds (throttled to once a minute). A rule with a size limit deletes
+# only while the UNSHARED cache total is above `max(min(maxUsedSpace, total - (minFreeSpace -
+# free)), reservedSpace)`, one record at a time, least recently / least often used first; a
+# `keepDuration` spares everything used more recently than that. A record that a newer layer still
+# builds on is never deleted before that newer layer, so a size cap cannot cut a warm chain while
+# cold leaves remain. Sizes like "50GB" are parsed as GiB (go-units RAMInBytes).
+#
+# SIZING: in the same measurement, records used in the last day — one day of both image workflows
+# on that builder — weighed 30.6 GB; 1–3 days 1.5 GB; 3–7 days 35.6 GB; 7–14 days 30.7 GB. The
+# shared, travelling cache is the registry (`:buildcache`, mode=max), so the local cache only has
+# to keep TODAY's builds warm: 50 GB is that day plus ~60 % headroom for a heavy day and the older
+# parent layers it builds on. Up to four heavy runners share one host daemon, each with its own
+# builder, so minFreeSpace makes every builder shrink when the shared disk gets tight, and
+# reservedSpace is the floor it will never be squeezed under (about one full image chain).
+#
+# MEMORY: buildkitd loads EVERY cache record into an in-memory map at start (`cacheManager.init` →
+# `cm.records`), so fewer records means a smaller map — but that scales with the record COUNT, not
+# with gigabytes, and 3,300 records do not explain 1.2 GB of anonymous RSS. cache.db (bbolt) is
+# memory-mapped, i.e. page cache, not anonymous memory. No BuildKit doc or issue found ties RSS to
+# cache size, so this file is a DISK bound only; capping RAM would take `--driver-opt memory=…`,
+# which turns an over-limit build into an OOM-killed build, and is deliberately not done here.
+
+[worker.oci]
+  gc = true
+
+# 1. What is cheapest to rebuild — build contexts, git checkouts and RUN cache mounts (the pnpm
+#    store of the dsh Dockerfile). Default: 48 h. Seven days here, because cache mounts are NEVER
+#    in the registry cache: a weekend with no push would otherwise empty the pnpm store and make
+#    Monday's first dsh build download every package again.
+[[worker.oci.gcpolicy]]
+  filters = ["type==source.local", "type==exec.cachemount", "type==source.git.checkout"]
+  keepDuration = "168h"
+  maxUsedSpace = "512MB"
+
+# 2. A hard age limit, whatever the size: nothing used in the last 14 days is warm for anybody
+#    (the registry cache has it anyway). It also bounds the record count, and so the record map
+#    above. Records a newer layer still builds on are kept (see HOW).
+[[worker.oci.gcpolicy]]
+  all = true
+  keepDuration = "336h"
+
+# 3. The size cap on ordinary cache records, least recently used first.
+[[worker.oci.gcpolicy]]
+  reservedSpace = "10GB"
+  maxUsedSpace = "50GB"
+  minFreeSpace = "20%"
+
+# 4. Same cap including internal and frontend records, only if 3. was not enough (as the default
+#    policy does).
+[[worker.oci.gcpolicy]]
+  all = true
+  reservedSpace = "10GB"
+  maxUsedSpace = "50GB"
+  minFreeSpace = "20%"

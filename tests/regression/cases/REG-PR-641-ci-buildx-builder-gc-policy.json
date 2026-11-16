@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-641-ci-buildx-builder-gc-policy",
+  "kind": "feat",
+  "title": "CI image builders: every buildx builder runs with the committed BuildKit GC policy, and one made without it is replaced keeping its cache",
+  "pr": 641,
+  "area": "ci/build-images",
+  "cms": ["any"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-reporter=tap scripts/test/ci-buildx-builder.test.mjs",
+    "S2: Record the exit code and the result of the cases named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "build-app-images.yml and build-dsh-image.yml both create their builder only through .github/actions/buildx-builder.",
+    "A builder without the config hash, or with an older one, is removed and created again with the config, and its cache volume is kept; a builder with the current hash is reused.",
+    "buildkitd.toml parses and holds the four GC rules: cheap records 7 days, every record 14 days, a 50 GB cap with a 20 % free-disk floor."
+  ],
+  "selectors": {
+    "builder": ".github/actions/buildx-builder/action.yml",
+    "policy": ".github/actions/buildx-builder/buildkitd.toml"
+  },
+  "evidence": "16/11/2026 dev build host: the builder ran without a buildkitd config and held 98.5 GB of cache (30.6 GB used in the last day, 66 GB unused for 3-14 days); pruning entries older than 7 days freed only 1.47 GB. The runner's buildx is v0.38.1, which takes --buildkitd-config.",
+  "fence": "Unit cases with a fake docker; a real GC sweep on a CI runner is not part of this case's run.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/ci-buildx-builder.test.mjs"],
+    "tests": [
+      "both image workflows get their builder from the shared action, and only from it",
+      "a builder made before the config, or with an older one, is replaced and keeps its cache",
+      "a builder with the current config is reused, not recreated",
+      "buildkitd.toml is a GC policy BuildKit loads, sized from the 16/11 measurement"
+    ]
+  }
+}
