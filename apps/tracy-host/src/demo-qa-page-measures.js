@@ -325,9 +325,15 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
   // Headings and titles with the words a span in them paints, and its colour: the judge holds a heading the demo marks with an
   // accent span to one (`accent-emphasis`). A title is a heading tag, or an element classed as a title outside one.
   const headingSpans = []
+  const MENU_LABEL =
+    'nav,[role="navigation"],[role="menu"],[role="menubar"],[role="menuitem"],.navbar,.t4-megamenu,.t3-megamenu,.dropdown-menu,[class*="nav-item"],[class*="menu-item"]'
   for (const el of document.body.querySelectorAll('h1,h2,h3,h4,h5,h6,[class*="title"],[class*="heading"]')) {
     if (headingSpans.length >= caps.headingSpans) break
     if (!/^H[1-6]$/.test(el.tagName.toUpperCase()) && el.closest('h1,h2,h3,h4,h5,h6')) continue
+    // A menu's label is no title, whatever its class says (a T4 menu's `span.menu-item-title`): judged as one, a page
+    // title written with its accent span read as printed without it, because a menu item shares its words (dev, BXR
+    // London 16/11/2026: "Ways to train", nine blocks for one masthead that printed its span).
+    if (!/^H[1-6]$/.test(el.tagName.toUpperCase()) && el.closest(MENU_LABEL)) continue
     if (!shown(el) || clippedAway(el, getComputedStyle(el))) continue
     const text = (el.innerText ?? '').replace(/\s+/g, ' ').trim()
     if (!text || text.length > 300) continue
