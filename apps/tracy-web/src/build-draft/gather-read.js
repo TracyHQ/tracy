@@ -41,9 +41,25 @@ function brandOf({ rows, media, profile, name, domain, parts, logoPalette }) {
   const isWebsite = (s) => s === 'website'
   // Google listing photos are visitors' shots, not the business's own: no part of its brand colours.
   const isSocial = (s) => parts.socialSources.includes(s)
+  const website = collectedFrom(isWebsite) ? observe('website', isWebsite) : null
+  const social = collectedFrom(isSocial) ? observe('social', isSocial) : null
+  if (website || social) return { website, social }
+  // Neither the website nor a social page was read (a listing or Google alone): nothing to observe, yet the brand step
+  // refuses a brief without a brand part (BRAND_BRIEF_SHAPE). A neutral part names the business and claims nothing:
+  // no colour, no logo, no voice, not official; the brand step then keeps the template's colours and draws a text logo.
+  // The brief schema knows only the website and social origins; this one is marked unofficial with no evidence.
+  return { website: null, social: neutralBrandOf(profile.name ?? name) }
+}
+
+/** The brand part of a business nothing was observed for: its name only (`brandFromSocial` with no input). */
+function neutralBrandOf(name) {
   return {
-    website: collectedFrom(isWebsite) ? observe('website', isWebsite) : null,
-    social: collectedFrom(isSocial) ? observe('social', isSocial) : null
+    origin: 'social',
+    official: false,
+    colors: [],
+    fonts: [],
+    evidence: [],
+    ...(isText(name) ? { name } : {})
   }
 }
 

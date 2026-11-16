@@ -14,6 +14,7 @@ import { createLogoWriter } from '../src/build-draft/logo-file.js'
 import { researchOf } from 'website-opportunities/domain'
 import { draftPictureReader, draftPictures, preSiteGatherer } from '../src/build-draft-wiring.js'
 import { assetManifestOf } from '../src/opportunities-build/asset-manifest.js'
+import { brandBriefProblems } from '../src/brand-step/brand-brief-shape.js'
 import {
   FACEBOOK,
   MAPS,
@@ -440,6 +441,24 @@ test('a listing page is read once and kept as the private listing source, throug
   // A listing page that does not answer is set aside; with nothing else, nothing was read.
   domain.readListingPage = async () => ({ ok: false, reason: 'blocked' })
   await assert.rejects(gatherer(domain)({ links: [listing], description: null }), { code: 'research_empty' })
+})
+
+test('a business read from a listing alone still gets a neutral brand part the brand step accepts', async () => {
+  const { domain } = await fakeDomain()
+  const listing = 'https://www.yelp.com/biz/hollowmere-bakehouse-brackenford'
+  domain.readListingPage = async () => ({
+    ok: true,
+    facts: { name: 'Hollowmere Bakehouse', telephone: '+1 555 0142 318' }
+  })
+  const { brief } = await gatherer(domain)({ links: [listing], description: null })
+  // No website, no social page, no logo: nothing to observe, yet the brand step must still run (text logo, the
+  // template's own colours). A null brand stops the build at BRAND_BRIEF_SHAPE.
+  assert.deepEqual(brandBriefProblems({ ...brief, brand: { ...brief.brand, voice: 'English' } }), [])
+  assert.equal(brief.brand.name, 'Hollowmere Bakehouse')
+  assert.equal(brief.brand.official, false, 'nothing official was observed')
+  assert.deepEqual(brief.brand.colors, [], 'no colour is invented')
+  assert.equal(brief.brand.colorsFrom, undefined, 'the template keeps its own accent')
+  assert.equal(brief.brand.logo, undefined, 'no logo is invented')
 })
 
 test('the logo file is written from its stored copy; anything that is not a stored image is no file', async () => {
