@@ -1,0 +1,3 @@
+- **A shared label stays written when the plan hides one of its links (R10b agrees with R24), and a kept row's field the plan both writes and hides is written** — David (with Claude) · #661 · `fix/plan-shared-label-normalizers` · 2026-11-16
+  **Affects:** Rebuild and deploy tracy-web. The plan step: fewer "failed, best version used" endings on templates whose buttons share a language string (JA Boxing, JA Diner). Anyone reading R10b: a shared label a visible link still prints may stay written beside a hidden link.
+  **Why / Measured:** 20 real dev plans, 16/11/2026: 13 to 15 clean, 127 to 79 failures (R24 36 to 0). Case REG-PR-661-plan-shared-labels.
