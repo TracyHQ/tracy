@@ -42,6 +42,9 @@ export const BUILD_GUARD_CODES = Object.freeze([
   'page_type_not_declared',
   'page_unbuilt',
   'pair_incomplete',
+  // A picture address naming no file, and a picture that cannot take its required slot's declared frame (#597): both
+  // stop before that picture is written anywhere.
+  'picture_address_empty',
   'picture_not_stored',
   'picture_web_address_only',
   'picture_without_alt',
@@ -54,6 +57,7 @@ export const BUILD_GUARD_CODES = Object.freeze([
   'record_name_empty',
   'ref_unresolved',
   'slot_missing',
+  'slot_picture_unfit',
   'straight_quote_in_open_slot',
   'text_over_limit',
   'under_page_position_not_detail',
