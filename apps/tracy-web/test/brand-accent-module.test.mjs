@@ -5,6 +5,16 @@ import { test } from 'node:test'
 import { accentModule, accentSeedModule } from '../src/lib/brand-accent/accent-module.js'
 import { accentRoutes } from '../src/lib/brand-accent/accent-routes.js'
 
+/** The bodies of every rule whose selector list holds `selector`, outside at-rules. */
+const bodiesOf = (text, selector) =>
+  [...text.matchAll(/(?:^|[}\n])([^{}@]+)\{([^{}]*)\}/g)]
+    .filter((m) =>
+      m[1]
+        .split(',')
+        .map((s) => s.trim())
+        .includes(selector)
+    )
+    .map((m) => m[2])
 const SEED = '#7a3ff2'
 const TEMPLATE = `
 @charset "UTF-8";
@@ -110,9 +120,10 @@ test('every kind of route is found in the sheet itself', () => {
 
 test('words reading a variable that also feeds fills take the word tone by scoping the variable, so the cascade stays', () => {
   const text = css(build().html)
-  assert.match(text, /\.tag\{--brand-main:var\(--tracy-accent-text\)\}/)
-  assert.match(text, /\.keep\{--brand-main:var\(--tracy-accent-text\)\}/)
-  assert.doesNotMatch(text, /\.tag\{color:/)
+  // Rules with one declaration may share a selector list (compactRules): read each selector's own bodies.
+  assert.ok(bodiesOf(text, '.tag').includes('--brand-main:var(--tracy-accent-text)'), text)
+  assert.ok(bodiesOf(text, '.keep').includes('--brand-main:var(--tracy-accent-text)'))
+  assert.ok(!bodiesOf(text, '.tag').some((b) => b.startsWith('color:')))
 })
 
 test('a state keeps its step from the resting colour, as a shade of the brand accent', () => {
@@ -133,8 +144,13 @@ test("a page's own markup is reached: SVG paint attributes and inline styles, in
   const text = css(build().html)
   assert.match(text, /\[fill="#7a3ff2" i\]\{fill:var\(--tracy-accent\)\}/)
   assert.match(text, /\[stroke="#7a3ff2" i\]\{stroke:var\(--tracy-accent\)\}/)
-  assert.match(text, /\[style\^="color:#7a3ff2"\]/)
-  assert.match(text, /\[style\*="; background-color:rgb\(122, 63, 242\)"\]/)
+  assert.match(text, /\[style\^="color:#7a3ff2" i\]/)
+  assert.match(text, /\[style\*="; background-color:rgb\(122, 63, 242\)" i\]/)
+  assert.doesNotMatch(
+    text,
+    /#7A3FF2/,
+    'the i flag reads the upper case form; it needs no selector of its own'
+  )
 })
 
 test("words on an accent ground stay the template's while they read, and only then move", () => {
@@ -161,8 +177,12 @@ test('a template with one side uses the side it opens on', () => {
   assert.doesNotMatch(html, /dark-active/)
 })
 
-test('a module over the limit is refused rather than cut', () => {
-  const many = Array.from({ length: 1400 }, (_, i) => `.x${i}{color:#7a3ff2;border-color:#7a3ff2}`).join('')
+test('a module whose stylesheet routes alone pass the limit is refused, never cut', () => {
+  // Each rule under an at-rule of its own: nothing joins them, and no markup form is left to drop.
+  const many = Array.from(
+    { length: 1400 },
+    (_, i) => `@media (min-width:${i}px){.x${i}{color:#7a3ff2;border-color:#7a3ff2}}`
+  ).join('')
   assert.match(build({ sheets: [many] }).problem, /over the limit/)
 })
 
@@ -180,4 +200,65 @@ test('the seed the brand step writes names the accent and carries what the pictu
   assert.match(html, /tracy-ds-slot: brand:accent-only-0a7d6e/)
   assert.match(html, /\/\* picture roles: x\{--ds-c-bg:#ffffff\} \*\//)
   assert.match(html, /\[fill="#7a3ff2" i\]/)
+})
+
+test('rules with one declaration under the same at-rules join into one selector list, only where the cascade allows', async () => {
+  const { compactRules } = await import('../src/lib/brand-accent/accent-module.js')
+  assert.deepEqual(
+    compactRules(['.a{color:var(--x)}', '.b{background:var(--y)}', '.c{color:var(--x)}']),
+    ['.a,.c{color:var(--x)}', '.b{background:var(--y)}'],
+    'a rule of another property between them does not stop the join'
+  )
+  assert.deepEqual(
+    compactRules(['.a{color:var(--x)}', '.b{color:#fff}', '.c{color:var(--x)}']),
+    ['.a{color:var(--x)}', '.b{color:#fff}', '.c{color:var(--x)}'],
+    'a rule of the same property with another value keeps every later rule where it was'
+  )
+  assert.deepEqual(
+    compactRules([
+      '@media (max-width:767px){.a{color:var(--x)}}',
+      '.b{color:var(--x)}',
+      '@media (max-width:767px){.c{color:var(--x)}}'
+    ]),
+    ['@media (max-width:767px){.a,.c{color:var(--x)}}', '.b{color:var(--x)}'],
+    'only rules under the same at-rules join'
+  )
+  assert.deepEqual(
+    compactRules([
+      '.a{color:var(--x)}',
+      '.b::-moz-placeholder{color:var(--x)}',
+      '.c:has(.d){color:var(--x)}',
+      '.e{color:var(--x)}'
+    ]),
+    ['.a,.e{color:var(--x)}', '.b::-moz-placeholder{color:var(--x)}', '.c:has(.d){color:var(--x)}'],
+    'a selector a browser may not know keeps its own rule'
+  )
+  assert.deepEqual(
+    compactRules(['.a{color:var(--x)}', '@keyframes k{0%{color:red}}', '.c{color:var(--x)}']),
+    ['.a{color:var(--x)}', '@keyframes k{0%{color:red}}', '.c{color:var(--x)}'],
+    'a line that is not one plain rule stops every join across it'
+  )
+  assert.deepEqual(compactRules(['.a{fill:var(--x)}.b{stroke:var(--x)}', '.c{fill:var(--x)}']), [
+    '.a,.c{fill:var(--x)}',
+    '.b{stroke:var(--x)}'
+  ])
+})
+
+test('a module over the limit drops the markup forms of the last family colours and keeps the brand accent', async () => {
+  const { ACCENT_MODULE_LIMIT } = await import('../src/lib/brand-accent/accent-module.js')
+  // One template painting its accent and many shades of it, each in its own rule: the markup forms of every shade
+  // alone pass the module limit, as JA Diner's pages did on dev (16/11/2026: 121114 bytes, the accent refused).
+  const shades = Array.from(
+    { length: 40 },
+    (_, i) => `#${(0x7a3ff2 - i * 0x010101).toString(16).padStart(6, '0')}`
+  )
+  const sheet = [`.x{color:${SEED}}`, ...shades.map((hex, i) => `.s${i}{color:${hex}}`)].join('\n')
+  const out = accentModule({ sheets: [sheet], colours: COLOURS, darkHook: HOOK })
+  assert.equal(out.problem, undefined)
+  assert.ok(out.bytes <= ACCENT_MODULE_LIMIT, String(out.bytes))
+  if (out.family.length > 1 && out.markupOmitted) {
+    assert.ok(out.markupOmitted.length > 0)
+    assert.ok(!out.markupOmitted.includes(SEED), "the template accent's own markup forms always stay")
+    assert.match(out.html, new RegExp(`\\[fill="${SEED}" i\\]`))
+  }
 })
