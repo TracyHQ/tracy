@@ -431,7 +431,7 @@ export function main(argv) {
   // A slim release: each profile a checked pin records and the package does not carry is fetched
   // from its own asset and checked against the index, then compared as a carried one.
   const checkedPin = (pin) =>
-    pin.githubAssetId === undefined && triple(pin.version) && compare(pin.version, version) <= 0
+    pin.githubAssetId === undefined && existingVersion(pin.version) && compare(pin.version, version) <= 0
   const fetched = new Set()
   if (published)
     for (const id of named.filter((n) => checkedPin(catalogue[n].cowork)))

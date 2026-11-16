@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-657-ja-diner-cowork-pin",
+  "kind": "fix",
+  "title": "JA Diner j6 1.0.8 is pinned on a stable Claude Cowork release carrying its hide review, and a release candidate pin moves on a slim release",
+  "pr": 657,
+  "area": "quickstart/contracts",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database, no network).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Both quickstarts.json pin quickstart/ja-diner/j6 on the same stable version, at least 0.24.96, and cowork-plugin-doors.json lists that package with the same sha256, every door and the ja-diner/j6/1.0.8 review.",
+    "A pin on X.Y.Z-rc.N moves to X.Y.Z on a slim release, each recorded profile checked from its own asset."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/ja-diner-cowork-pin.test.mjs",
+      "scripts/test/pin-joomla-cowork.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "JA Diner j6 is pinned on a stable Claude Cowork release, the same pin in both catalogues",
+      "the pinned package's hide review covers the JA Diner 1.0.8 contract, read from the same bytes",
+      "a slim release moves an existing RC pin to its stable version, each recorded profile checked from its own asset"
+    ]
+  }
+}

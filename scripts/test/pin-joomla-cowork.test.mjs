@@ -556,6 +556,23 @@ test('a slim release: each recorded profile is checked from its own asset, then 
   }
 })
 
+test('a slim release moves an existing RC pin to its stable version, each recorded profile checked from its own asset', () => {
+  // JA Diner j6 sat on 0.24.95-rc.2 when 0.24.96 was cut (16/11/2026): the slim fetch only ran for stable pins, so the
+  // candidate's profile was never fetched and the move was refused with "carries no ja-diner/j6/1.0.8".
+  const root = tree({ alpha: '0.30.2-rc.2' })
+  try {
+    const rel = slimRelease(root, '0.30.2', carried())
+    const out = run(root, [...rel.args, '--quickstart', 'quickstart/alpha/j6'])
+    assert.equal(out.status, 0, out.stderr)
+    const pin = JSON.parse(texts(root)[0])['quickstart/alpha/j6'].cowork
+    assert.equal(pin.version, '0.30.2')
+    assert.equal(pin.sha256, sha(rel.pkg))
+    assert.match(out.stderr, /0\.30\.2-rc\.2 -> 0\.30\.2/)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
 test('a slim release whose asset is not what its index says, or lists no recorded profile, is refused', () => {
   const cases = [
     [
