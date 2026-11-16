@@ -158,7 +158,8 @@ const press = (revision, over = {}) => ({
   ...over
 })
 
-for (const design of ['ja-boxing', 'ja-diner'])
+// The chain is on for a template whose AI quickstart is pinned (#598): JA Boxing ships one, JA Diner does not.
+for (const design of ['ja-boxing'])
   test(
     `the enabled ${design} template starts the frame with the research revision as its brief`,
     opts,
@@ -198,6 +199,12 @@ test(
       [
         'owner@example.test',
         press(revision, { design: 'ja-kinetic', quickstart: 'quickstart/ja-kinetic/j6' }),
+        409,
+        'STEP_CHAIN_OFF'
+      ],
+      [
+        'owner@example.test',
+        press(revision, { design: 'ja-diner', quickstart: 'quickstart/ja-diner/j6' }),
         409,
         'STEP_CHAIN_OFF'
       ],

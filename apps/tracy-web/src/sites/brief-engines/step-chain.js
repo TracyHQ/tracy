@@ -1,6 +1,6 @@
 /**
  * The step chain as one build (#483, spec #472): a brief-build engine that runs the new build flow on the server for a
- * build whose quickstart template is allow-listed (`lib/step-chain-switch.js`). The run frame (`brief-build.js`) gives it
+ * build whose template has a pinned AI quickstart (`lib/step-chain-switch.js`). The run frame (`brief-build.js`) gives it
  * what it gives every engine: `prepare` while the host creates the base site from the template's quickstart, then
  * `apply` once the site is up. So the order is the bench's:
  *

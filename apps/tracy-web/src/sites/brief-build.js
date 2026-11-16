@@ -209,7 +209,7 @@ function withTimeout(promise, ms, message) {
  * @param {import('pg').Pool} deps.pool
  * @param {Record<string, BriefEngine>} deps.engines - by platform, plus the step chain engine under `STEP_CHAIN_WORKFLOW`
  *   (`brief-engines/step-chain.js`): picked for a build whose brief carries that workflow while its quickstart template is
- *   allow-listed and the master switch is on (`lib/step-chain-switch.js`); every other build runs its platform's engine
+ *   pinned as an AI quickstart, the master switch on (`lib/step-chain-switch.js`); every other build runs its platform's engine
  * @param {(input: BriefInput) => Promise<any>} deps.normalize - brief → what the engines read
  * @param {() => number} [deps.now]
  * @param {{info?: Function, warn?: Function}} [deps.log]

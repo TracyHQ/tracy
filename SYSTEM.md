@@ -2750,14 +2750,14 @@ The result retains the open turn as unverified. Rate waiting and comment request
 step deadline, but the native turn's execution window starts only after its prompt is accepted. Within one site check,
 HTML reads of the exact same path are shared across groups, including failures; the next check reads fresh pages.
 
-**The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
-the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
+**The step chain as one build** (#483, spec #472). A build of an enabled template (`apps/tracy-web/src/lib/step-chain-switch.js`:
+its template has a pinned AI quickstart, the #588 pin read since #598, no template list; `STEP_CHAIN_ENABLED=1` is the
+environment's master switch) reaches `POST /api/sites` with
 `workflow: 'step-chain/1'` and `researchRevisionId` (a `wo_revision` of the caller's own; no `brief`). The door refuses before
 anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`), the revision is not the caller's (404), or a model
 door the chain spends is empty (409 `STEP_CHAIN_DOORS_EMPTY`, `step-chain-doors.js`: no base site is created). A build
-approved in the build chat (`draftId` and `plan` instead of `researchRevisionId`) does not read the template list: it is
-enabled when its quickstart's template has a pinned AI quickstart (`aiQuickstartPathEnabled`, #598), under the same master
-switch. Otherwise the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
+approved in the build chat (`draftId` and `plan` instead of `researchRevisionId`) is enabled by the same rule. Otherwise
+the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
 as the row's brief. The frame picks the step chain engine (`sites/brief-engines/step-chain.js`) for it, with no per-step caps (#478): the
 frame's 25 minute run and apply cuts, the USD budgets of the planner, writer and picture steps and the brand cost cap do not
 apply to it (its bench runs start with `--no-caps`). A 2 hour outer deadline bounds the steps; the Write step has a further

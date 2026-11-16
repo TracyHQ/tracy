@@ -9,11 +9,25 @@ import { createDemoRunner } from '../src/opportunities-build/demo-runner.js'
 import { revisionForAction } from '../src/opportunities-build/revisions.js'
 import { STEP_CHAIN_WORKFLOW } from '../src/lib/step-chain-switch.js'
 import { fileDb } from './_db.mjs'
+import path from 'node:path'
+import { fakePinnedKits } from './_fake-ai-quickstart-pin.mjs'
+import { AI_QUICKSTARTS_DIR } from '../src/build-draft/ai-quickstarts.js'
+import { overrideShippedAiQuickstartPins } from '../src/lib/ai-quickstart-pins.js'
 import { LOST_PLACING, restartBrief } from '../src/sites/brief-store.js'
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const db = fileDb()
 before(db.open)
+// JA Boxing's kit is pinned here with a fake pin (#598): the chain runs only for a pinned AI quickstart, and the
+// shipped pins file is empty until the release gate passes.
+const boxingPin = fakePinnedKits([
+  { slug: 'ja-boxing', version: '1.0.11', from: path.join(AI_QUICKSTARTS_DIR, 'ja-boxing', 'j6', '1.0.11') }
+])
+const restorePins = overrideShippedAiQuickstartPins(boxingPin.read)
+after(() => {
+  restorePins()
+  boxingPin.cleanup()
+})
 beforeEach(db.reset)
 after(db.close)
 

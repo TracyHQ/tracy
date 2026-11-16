@@ -338,7 +338,7 @@ import {
 import { teardownSaid } from './teardown-said.js'
 import { researchRevisionOwned } from '../lib/research-revision.js'
 import { draftBuildApproved } from '../lib/draft-build.js'
-import { aiQuickstartPathEnabled, STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
+import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
 
 /** How long a call to a site's component may take. Why this number: the signal it feeds. */
 const COMPONENT_TIMEOUT_MS = 170_000
@@ -2683,7 +2683,7 @@ export function sitesRoutes({
     )
       return json(c, { code: 'TEMPLATE_VERSION_CHANGED' }, 409)
     // A build that asks for the step chain (#483, spec #472): its research revision is the brief, nothing is built from
-    // chat, and only an enabled template takes it (`lib/step-chain-switch.js`). An enabled template never falls back.
+    // chat, and only an enabled template takes it (`lib/step-chain-switch.js`: a pinned AI quickstart). An enabled template never falls back.
     const chainAsked = body.workflow === STEP_CHAIN_WORKFLOW
     let chainBrief = null
     if (chainAsked) {
@@ -3365,9 +3365,8 @@ export function sitesRoutes({
         return { code: 'INVALID_BUILD_DRAFT', status: 400 }
     } else if (typeof body.researchRevisionId !== 'string' || !UUID.test(body.researchRevisionId))
       return { code: 'INVALID_RESEARCH_REVISION', status: 400 }
-    // A draft run is the AI quickstart build: on when its template has a pinned AI quickstart, read from data (#598).
-    const enabled = fromDraft ? aiQuickstartPathEnabled({ quickstart }) : stepChainEnabled({ quickstart })
-    if (!enabled) return { code: 'STEP_CHAIN_OFF', status: 409 }
+    // On when the template has a pinned AI quickstart, read from data (#598), and the master switch is on.
+    if (!stepChainEnabled({ quickstart })) return { code: 'STEP_CHAIN_OFF', status: 409 }
     if (fromDraft) {
       if (
         !(await draftBuildApproved(pool, {

@@ -2389,8 +2389,8 @@ export function buildApp(deps) {
               applyFor
             })
           ),
-          // The step chain (#483): picked by the frame for a chain build of an allow-listed template
-          // (`lib/step-chain-switch.js`). Its model steps run on the bench queues this server already works.
+          // The step chain (#483): picked by the frame for a chain build of an enabled template (`lib/step-chain-switch.js`:
+          // a pinned AI quickstart). Its model steps run on the bench queues this server already works.
           [STEP_CHAIN_WORKFLOW]: createStepChainEngine({
             applyFor,
             steps: createStepChainSteps({

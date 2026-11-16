@@ -11,14 +11,15 @@
     "Run the step-chain switch and database-backed site creation tests with TEST_DATABASE_URL pointing to an isolated test database."
   ],
   "expect": [
-    "JA Boxing J6 and JA Diner J6 start the step-chain frame with the owned research revision and preserve the selected quickstart in the host provision request.",
-    "The environment master switch blocks both candidates before any site, host job or brief run is created.",
+    "JA Boxing J6, with its AI quickstart pinned (a fake pin in the test: the shipped pins file is empty until the release gate passes), starts the step-chain frame with the owned research revision and preserves the selected quickstart in the host provision request.",
+    "Since #598 the chain is enabled by data, a pinned AI quickstart (#588), not by a template list: JA Diner J6 ships none and is refused with STEP_CHAIN_OFF, and with the shipped empty pins file no template runs the chain.",
+    "The environment master switch blocks every candidate before any site, host job or brief run is created.",
     "Published JA Kinetic J6 remains refused with STEP_CHAIN_OFF; JA Diner WordPress remains off."
   ],
   "selectors": {
     "create": "POST /api/sites"
   },
-  "fence": "Existing allow-list plus the existing STEP_CHAIN_ENABLED master switch",
+  "fence": "A pinned AI quickstart (#588 pin, #598 chooser) plus the existing STEP_CHAIN_ENABLED master switch",
   "run": {
     "cmd": [
       "node",
@@ -29,12 +30,12 @@
       "apps/tracy-web/test/step-chain-create.test.mjs"
     ],
     "tests": [
-      "the contract names the chain workflow and the candidate templates",
-      "a listed template runs the chain only while the master switch is on",
+      "the contract names the chain workflow, and no template list is left",
+      "a template with a pinned AI quickstart runs the chain only while the master switch is on",
       "a version or release prefix on the quickstart does not change the template",
-      "a template that is not listed, or no quickstart, never runs the chain",
+      "a template without a pinned AI quickstart, or no quickstart, never runs the chain",
+      "the shipped data: the pins file is empty, so no template runs the chain until one is pinned",
       "the enabled ja-boxing template starts the frame with the research revision as its brief",
-      "the enabled ja-diner template starts the frame with the research revision as its brief",
       "the step chain is refused, with nothing claimed, for another account\u2019s revision, a template not enabled or the switch off"
     ],
     "needs": ["postgres"]

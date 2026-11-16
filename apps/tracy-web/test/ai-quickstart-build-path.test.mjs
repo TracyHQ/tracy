@@ -9,11 +9,7 @@ import { TRADES, buildPathFor } from 'website-opportunities/domain'
 import { AI_QUICKSTARTS_DIR } from '../src/build-draft/ai-quickstarts.js'
 import { draftQuickstartCatalogue } from '../src/build-draft-wiring.js'
 import { readAiQuickstartPins, shippedAiQuickstartPins } from '../src/lib/ai-quickstart-pins.js'
-import {
-  STEP_CHAIN_TEMPLATES,
-  aiQuickstartPathEnabled,
-  stepChainEnabled
-} from '../src/lib/step-chain-switch.js'
+import { aiQuickstartPathEnabled, stepChainEnabled } from '../src/lib/step-chain-switch.js'
 import { fakePinnedKits } from './_fake-ai-quickstart-pin.mjs'
 
 const FIXTURE = fileURLToPath(
@@ -75,15 +71,13 @@ test('a kit that is not pinned is offered nothing, says why, and its draft run i
   assert.equal(aiQuickstartPathEnabled({ quickstart, env: on, aiQuickstarts: read.pinned }), false)
 })
 
-test('a trade nothing fits keeps the current path, and the old switch answers exactly as before', () => {
+test('a trade nothing fits keeps the current path, and a template without a pin runs no step chain', () => {
   for (const trade of ['food', 'other', undefined]) {
     assert.deepEqual(catalogueOf(one).templatesFor(trade), [], String(trade))
     assert.equal(buildPathFor({ trade, quickstarts: one.read.pinned }).path, 'current')
   }
-  // The research revision builds (Website Opportunities) read the same list as before, whatever the pins say.
-  assert.deepEqual(STEP_CHAIN_TEMPLATES, ['ja-boxing/j6', 'ja-diner/j6'])
-  assert.equal(stepChainEnabled({ quickstart: 'quickstart/example-ring/j6', env: on }), false)
-  for (const quickstart of STEP_CHAIN_TEMPLATES) assert.equal(stepChainEnabled({ quickstart, env: on }), true)
+  // No pin, no step chain, for any build (#598): the template list is gone.
+  assert.equal(stepChainEnabled({ quickstart: 'quickstart/example-other/j6', env: on }), false)
 })
 
 test('a second invented template is offered once it is pinned, with no code change', () => {
