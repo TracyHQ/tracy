@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * The demo state machine (`src/demo-state.ts`, spec #512 "Demo site block and progress"): one row's demo read as
- * one of six states, and per state the one primary button, the menu and the line the list and Details draw.
+ * one of seven states, and per state the one primary button, the menu and the line the list and Details draw.
  *
  *   node --test packages/ui/tracy-wo-views/test/demo-state.test.mjs
  */
@@ -149,4 +149,36 @@ test('every known code reads as a plain sentence, never the raw code', () => {
 test('an unknown, empty or missing code reads as the generic sentence', () => {
   for (const code of ['NOT_A_REAL_CODE', '', null, undefined])
     assert.equal(failureReason(code, t), 'The demo stopped on an unexpected error.')
+})
+
+test('a build that ends needing review while its site is online is review: Open the site, Build again in the menu', () => {
+  const row = {
+    demoAction: { id: 'a', state: 'failed', step: 'write', error: 'QA_NEEDS_REVIEW' },
+    demo: liveDemo({ qa: 'failed' })
+  }
+  assert.equal(demoStateOf(row), 'review')
+  assert.deepEqual(demoBlock('review', row, t, { now: NOW }), {
+    primary: { label: 'Open demo', action: 'open', disabled: false },
+    menu: [{ id: 'rebuild', label: t('demo.menu.rebuild') }],
+    line: 'Site built. Its last check found problems: review them before you send it.'
+  })
+  assert.equal(
+    failureReason('QA_NEEDS_REVIEW', t),
+    'The site is built, but its last check found problems to review.'
+  )
+})
+
+test('needing review is only review while the site is there: deleted, frozen, failed or rebuilding reads failed', () => {
+  const action = { id: 'a', state: 'failed', step: 'write', error: 'QA_NEEDS_REVIEW' }
+  assert.equal(demoStateOf({ demoAction: action, demo: null }), 'failed')
+  assert.equal(demoStateOf({ demoAction: action, demo: liveDemo({ siteKey: null }) }), 'failed')
+  assert.equal(demoStateOf({ demoAction: action, demo: liveDemo({ deletedAt: iso(NOW) }) }), 'failed')
+  assert.equal(demoStateOf({ demoAction: action, demo: liveDemo({ frozenAt: iso(NOW) }) }), 'failed')
+  assert.equal(
+    demoStateOf({ demoAction: action, demo: liveDemo({ build: { status: 'failed', startedAt: iso(NOW) } }) }),
+    'failed'
+  )
+  // Any other code of a failed build is still failed, with its own reason.
+  const other = { demoAction: { ...action, error: 'DEMO_STEP_TIMEOUT' }, demo: liveDemo() }
+  assert.equal(demoStateOf(other), 'failed')
 })

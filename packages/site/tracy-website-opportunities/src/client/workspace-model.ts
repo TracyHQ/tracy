@@ -106,7 +106,7 @@ export function focusOf(
   if (stepper.current === 'brief')
     return stepper.review || (input.brief !== null && input.briefEmpty === null) ? 'brief' : 'profile'
   if (stepper.current === 'build')
-    return input.demo === 'failed' || input.demo === 'expired' ? 'demo' : 'brief'
+    return input.demo === 'failed' || input.demo === 'expired' || input.demo === 'review' ? 'demo' : 'brief'
   return 'demo'
 }
 
@@ -205,13 +205,17 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
           input.demoHost === null ? { key: 'section.meta.demo.ready' } : { text: input.demoHost },
           ...dated('workspace.sum.built', shortDate(buildStep?.doneAt, locale))
         ])
-      : input.demo === 'failed' || input.demo === 'expired'
-        ? section('demo', 'open', [])
-        : input.demo === 'queued' || input.demo === 'building'
-          ? locked('demo', 'site.notYet.building')
-          : stepper.current === 'build'
-            ? locked('demo', 'workspace.wait.build')
-            : locked('demo', buildStep?.lockKey ?? 'workspace.wait.site')
+      : input.demo === 'review'
+        ? section('demo', 'review', [
+            input.demoHost === null ? { key: 'chip.siteReview' } : { text: input.demoHost }
+          ])
+        : input.demo === 'failed' || input.demo === 'expired'
+          ? section('demo', 'open', [])
+          : input.demo === 'queued' || input.demo === 'building'
+            ? locked('demo', 'site.notYet.building')
+            : stepper.current === 'build'
+              ? locked('demo', 'workspace.wait.build')
+              : locked('demo', buildStep?.lockKey ?? 'workspace.wait.site')
 
   return [sources, profile, brief, demo]
 }
