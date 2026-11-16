@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-16: The build chat doors name the caller's interface language
+
+Changed (internal): every door under `/api/build-draft` answers a call of the build chat tool `tracy_build` (an `x-tracy-actor` call) with the person's interface language in the new response header `x-tracy-interface-language`, one of the eight interface languages, absent when the account has none stored. A done revise step of `GET /api/build-draft/engine` answers `result.revision.codes` with, beside the stable code of each line, the parameters of each code (`changedParams`, `notDoneParams`) and the refusal kind of every not done line (`notDoneReasons`), when the plan step sent them. Public API v1 is unchanged.
+
 ## 2026-11-15: A build refused before any step says the site was not started
 
 Changed (internal): `GET` and `POST /api/build-draft/build` answer a build whose site could not be created, so no step ran, with `build.notStarted: 'design-not-buildable' | 'site-not-started'` (`design-not-buildable` when the chosen design has no source to build from) and `run: null`, instead of a run whose first step failed. The plan is kept, and approving it again starts a new build. Public API v1 is unchanged.
