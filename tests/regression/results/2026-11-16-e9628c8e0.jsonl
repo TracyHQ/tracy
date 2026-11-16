@@ -1,0 +1,1 @@
+{"id":"REG-PR-665-heading-spans-not-menus","verdict":"PASS","commit":"e9628c8e0b84eb12ab1437f142366c0b9aa11fe8","ran_at":"2026-11-16T16:57:33.397Z","evidence":"tests/regression/.runs/2026-11-16-e9628c8e0/REG-PR-665-heading-spans-not-menus.log"}
