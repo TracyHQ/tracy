@@ -185,6 +185,24 @@ test('a link whose words stay and whose address the plan hides writes its addres
     url: 'index.php?Itemid=117',
     overHide: true
   })
+  // The address is shared with a row the plan gives up (two slides print the same page address): only the staying row's
+  // address is written, and the other leaves with its row.
+  const shared = lineOrder(
+    { slot: 'block-10.link-3', content: 'page-contact', label: 'block-10.6' },
+    { ...door, via: 'shared', keys: ['module-10.8', 'module-10.9'] },
+    target,
+    {
+      hiddenKeys: new Map([...hiddenKeys, ['module-10.9', 'block-10.9']]),
+      leaving: new Set(),
+      goneKeys: new Set(['module-10.9'])
+    }
+  )
+  assert.deepEqual(shared, {
+    via: 'shared',
+    keys: ['module-10.8'],
+    url: 'index.php?Itemid=117',
+    overHide: true
+  })
   // The label is hidden too: the button leaves whole, with its words.
   const both = lineOrder(
     { slot: 'block-10.link-3', content: 'page-contact', label: 'block-10.6' },
@@ -275,4 +293,134 @@ test('a hidden link whose words the plan hides too takes the address the site ca
   const alone = orders(slots('withRow'), [hide('block-97.link-4')])
   assert.notEqual(alone.orders.get('block-97.link-4').via, 'carried')
   assert.ok(!alone.emptySlots.includes('module-100.1'))
+})
+
+test('a tab the plan hides stays as the tab it is; a frame the kit read on no page leaves with nothing; a "Website" line goes with its address', () => {
+  const tabKit = {
+    pages: [{ id: 'page-home', path: '/', blocks: { 1440: ['block-97', 'block-106', 'body-contact'] } }],
+    blocks: [
+      {
+        id: 'block-97',
+        source: { entity: 'module-97' },
+        links: [
+          {
+            id: 'block-97.link-1',
+            label: 'MAIN DISHES',
+            target: null,
+            action: 'page-control',
+            opens: { kind: 'panel', element: '#m' },
+            labelId: 'block-100.32'
+          }
+        ]
+      },
+      {
+        id: 'block-106',
+        source: { entity: 'module-106' },
+        frames: [{ id: 'block-106.24', picture: 'images/demo/search.jpg', width: null, kind: null }]
+      },
+      {
+        id: 'body-contact',
+        source: { entity: 'contact-1' },
+        links: [
+          {
+            id: 'contact-1.9',
+            label: 'FACEBOOK',
+            target: 'http://demo.invalid',
+            action: 'external-profile',
+            labelId: 'contact-1.8'
+          },
+          {
+            id: 'body-contact.link-5',
+            label: 'http://demo.invalid',
+            target: 'http://demo.invalid',
+            action: 'navigation'
+          }
+        ]
+      }
+    ],
+    errors: [
+      {
+        kind: 'missing',
+        field: 'blocks[block-106].frames[block-106.24].width',
+        reason: 'the frame is not shown at any captured width'
+      }
+    ]
+  }
+  const tabPlan = {
+    pages: [{ id: 'page-home', decision: 'keep', blocks: [] }],
+    sharedBlocks: ['block-97', 'block-106', 'body-contact'].map((block) => ({ block, decision: 'keep' }))
+  }
+  const reading = {
+    slots: [
+      {
+        key: 'module-106.24',
+        entity: 'module-106',
+        column: 'params',
+        type: 'image',
+        current: 'images/demo/search.jpg'
+      },
+      {
+        key: 'contact-1.5',
+        entity: 'contact-1',
+        column: 'webpage',
+        type: 'url',
+        current: 'http://demo.invalid',
+        sample: 'http://demo.invalid',
+        canHide: 'unmeasured'
+      },
+      {
+        key: 'contact-1.9',
+        entity: 'contact-1',
+        column: 'params',
+        jsonPath: ['linka'],
+        type: 'url',
+        current: 'http://demo.invalid',
+        sample: 'http://demo.invalid',
+        canHide: 'unmeasured'
+      }
+    ]
+  }
+  const order = hideOrders({
+    plan: tabPlan,
+    kit: tabKit,
+    owners: new Map([
+      hide('block-97.link-1'),
+      hide('block-106.24'),
+      hide('contact-1.5'),
+      hide('body-contact.link-5')
+    ]),
+    extras: {},
+    reading,
+    changes: { 'contact-1.9': 'https://social.invalid/house' },
+    cannotHide: null,
+    rowsRemove: true
+  })
+  assert.equal(order.orders.get('block-97.link-1').via, 'inpage')
+  assert.deepEqual(order.orders.get('block-106.24'), {
+    via: 'unshown',
+    key: 'module-106.24',
+    pages: [],
+    unseen: true
+  })
+  // The social link's slot is another kit link's own and the plan writes it: only the web page holds the "Website" line.
+  assert.deepEqual(order.orders.get('body-contact.link-5'), {
+    via: 'carried',
+    key: 'contact-1.5',
+    keys: ['contact-1.5'],
+    holder: 'address'
+  })
+  assert.deepEqual(order.noWayOut, [])
+  const lines = hideLines({
+    order,
+    words: { refusedAll: null, refused: new Map() },
+    blocks: new Map(),
+    pages: new Map(),
+    cannotHide: null,
+    emptied: ['contact-1.5'],
+    refused: new Map(),
+    settled: new Map()
+  }).hides
+  assert.equal(lines.get('block-97.link-1').status, 'skipped')
+  assert.equal(lines.get('block-106.24').status, 'hidden')
+  assert.equal(lines.get('body-contact.link-5').status, 'hidden')
 })

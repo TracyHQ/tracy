@@ -150,6 +150,19 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
       reason:
         'a kept link of the plan writes this address: its button keeps its words, so the address stays with them (a button leaves whole or not at all)'
     }
+  if (via === 'inpage')
+    return {
+      status: 'skipped',
+      key,
+      reason:
+        "a tab that opens a panel of this page has no slot and no address: it stays, doing what it does, and its words are its label slot's"
+    }
+  if (via === 'unshown' && order.unseen)
+    return {
+      status: 'hidden',
+      key,
+      reason: `${PLAN_HIDES}: the kit read it on no page at any width, so no kept page shows it`
+    }
   if (via === 'unshown')
     return {
       status: 'hidden',

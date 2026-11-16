@@ -46,8 +46,10 @@ export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys =
       // at all (hide-plan.js), and a kept label over an emptied address draws a button to the page it is on. The link writes
       // the address, and the hide of it yields (`overHide`, hide-plan.js `linked`). Seen on every JA Diner plan of 16/11/2026:
       // "the button's destination is set by its link decision, so this URL slot is dropped".
-      if (claim.label && door.keys.every((key) => hiddenKeys.has(key) && !goneKeys.has(key)))
-        return { via: door.via, keys: door.keys, url: target.url, overHide: true }
+      // Only the addresses of rows that stay: an address of a row the plan gives up leaves with that row.
+      const staying = door.keys.filter((key) => !goneKeys.has(key))
+      if (claim.label && staying.length)
+        return { via: door.via, keys: staying, url: target.url, overHide: true }
       return { via: 'words', key: door.keys[0], leadsTo }
     }
     return { via: door.via, keys, url: target.url }
