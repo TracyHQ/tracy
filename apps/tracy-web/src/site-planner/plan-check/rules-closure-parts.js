@@ -1,4 +1,5 @@
 import { arr, has, obj, str } from './rule-set.js'
+import { sharedLabels } from './rules-labels.js'
 
 // R10b list / frame / link closure + picture wishes
 export function checkR10b(ctx) {
@@ -13,12 +14,23 @@ export function checkR10b(ctx) {
     isLabelSlot,
     linkLabelSlot,
     slotOwnedBy,
+    slotRole,
     keptDecisions,
     decisionParts,
     W
   } = ctx
   const r = R.r10b
   const navBlocks = new Set([...navGroups.values()].map((g) => g.block))
+  // A label several kit blocks print (R24's shared label: a template string), not a menu item's: R24 wants it written
+  // whatever links the plan hides, since hiding a link takes no button out by its shared words.
+  const printedBy = sharedLabels(ctx)
+  const menuLabels = new Set(
+    [...navGroups.values()].flatMap((g) => arr(g.items).map((it) => obj(it).labelSlot))
+  )
+  const sharedLabel = (id) =>
+    (printedBy.get(id)?.size ?? 0) > 1 &&
+    !menuLabels.has(id) &&
+    !String(slotRole?.get(id) ?? '').endsWith('menu_label')
   // Label slots decided anywhere in the kept plan: written (with text) or hidden. A label slot can be owned by
   // another block (a menu label shown in several blocks), so the check looks across the whole plan.
   const labelWritten = new Set()
@@ -122,6 +134,11 @@ export function checkR10b(ctx) {
         owner !== x.d.block &&
         labelStillUsed(want, h.slot)
       )
+        return r.ok()
+      // A shared label (R24: written, never hidden) a kept, visible link elsewhere still prints: a hidden link leaves it
+      // written, as for an owned one. Before (dev corpus, 16/11/2026) this said "hide its label" while R24 said "never
+      // hide it", and a JA Boxing plan could not pass both. Every link printing it hidden still fails, as above.
+      if (labelWritten.has(want) && !labelHidden.has(want) && sharedLabel(want) && labelStillUsed(want, h.slot))
         return r.ok()
       if (labelWritten.has(want) && !labelHidden.has(want))
         r.fail(W(x, `link ${h.slot}`), `link is hidden but its label slot ${want} is still written`, 'plan')

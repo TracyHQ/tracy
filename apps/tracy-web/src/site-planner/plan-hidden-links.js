@@ -132,12 +132,22 @@ function sharedLabels(kit, linkLabelSlot) {
  *   with its label slot. Hiding its label instead would leave a form's submit button with no words.
  * - Any other link the decision hides takes its label with it (the spec: "hide its label slot, and the link with it"):
  *   the label moves from the copy to the hidden slots.
- * A label owned by another block (`ownedBy`, shown there too and written for its own link, R24) and a label the
- * decision does not write itself stay as the planner left them. Returns the same plan when nothing changed.
+ * A label owned by another block (`ownedBy`, shown there too and written for its own link, R24), a label several kit
+ * blocks print (R24: written, never hidden; the dev corpus of 16/11/2026 had 28 R24 failures this function made, a
+ * JA Boxing "Book a class" string hidden with three of its buttons) and a label the decision does not write itself
+ * stay as the planner left them. Returns the same plan when nothing changed.
  */
 export function withHiddenLinkLabels(plan, kit) {
   if (!plan || typeof plan !== 'object') return plan
-  const { linkIx, linkLabelSlot, slotOwnedBy } = indexKit(kit && typeof kit === 'object' ? kit : {})
+  const { linkIx, linkLabelSlot, slotOwnedBy, navGroups, slotRole } = indexKit(
+    kit && typeof kit === 'object' ? kit : {}
+  )
+  // A label several kit blocks print is written, never hidden (R24), whatever links the plan hides: it stays in the copy.
+  const shared = sharedLabels(kit, linkLabelSlot)
+  const menuLabels = new Set(
+    [...navGroups.values()].flatMap((group) => each(group?.items).map((it) => it?.labelSlot))
+  )
+  const isMenuLabel = (id) => menuLabels.has(id) || String(slotRole.get(id) ?? '').endsWith('menu_label')
   let changed = false
   const fix = (decision) => {
     if (!decision || typeof decision !== 'object' || decision.decision !== 'keep') return decision
@@ -152,6 +162,7 @@ export function withHiddenLinkLabels(plan, kit) {
       if (!label || !link || hiddenIds.has(label) || !written.has(label)) continue
       const owner = slotOwnedBy.get(label)
       if (owner && owner !== decision.block) continue
+      if (link.action !== 'page-control' && shared.has(label) && !isMenuLabel(label)) continue
       if (link.action === 'page-control') keepControls.set(h.slot, label)
       else hideLabels.set(label, h.slot)
     }
