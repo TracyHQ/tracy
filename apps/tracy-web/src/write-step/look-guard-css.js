@@ -2,6 +2,7 @@
 // itself paints its accent, so a declaration passes when the template's own stylesheets hold the same selector and property with
 // the same value apart from its colours. A corner, a font, a size or a border width is in no such route. Pure.
 import { coloursIn, tripleIn } from '../lib/brand-accent/accent-colours.js'
+import { MARKUP_SELECTOR, selectorParts } from '../lib/brand-accent/accent-module.js'
 import { accentRoutes } from '../lib/brand-accent/accent-routes.js'
 import { readRules } from '../lib/brand-accent/css-rules.js'
 import { stripAll } from './site-sheets.js'
@@ -10,7 +11,8 @@ const TONES = new Set(['--tracy-accent', '--tracy-accent-text'])
 const HEX = /^#[0-9a-f]{6}$/i
 const TONE_VALUE = /^var\(--tracy-accent(?:-text)?\)$/
 const ROOT = /^:root\b/
-const MARKUP_PART = /^\[(?:(?:fill|stroke|stop-color|flood-color)="#[0-9a-f]{6}" i|style[\^*]="[^"]*")\]$/i
+// The markup forms of the accent module, case-insensitive inline style selectors included (` i`).
+const MARKUP_PART = MARKUP_SELECTOR
 const MARKUP_PROPS = new Set([
   'fill',
   'stroke',
@@ -105,7 +107,7 @@ function unreadFaults(css) {
 }
 
 const markupForm = (selector, { prop, value }) =>
-  selector.split(/,(?=\[)/).every((part) => MARKUP_PART.test(part.trim())) &&
+  selectorParts(selector).every((part) => MARKUP_PART.test(part)) &&
   MARKUP_PROPS.has(prop) &&
   TONE_VALUE.test(value)
 
@@ -148,7 +150,11 @@ export function cssFaults(css, { routes = null, except = () => false } = {}) {
   for (const rule of rules)
     for (const decl of rule.decls) {
       if (except(rule, decl)) continue
-      const fault = declFault(rule, decl, routes)
+      // A rule the module joined (compactRules) holds several routes in one selector list: each part is held to its own.
+      let fault = declFault(rule, decl, routes)
+      const parts = fault ? selectorParts(rule.selector) : []
+      if (parts.length > 1 && parts.every((part) => !declFault({ ...rule, selector: part }, decl, routes)))
+        fault = null
       if (fault) faults.push(fault)
     }
   for (const k of keyframes) {

@@ -409,6 +409,7 @@ export function createStepChainSteps(deps) {
           baseline,
           kit: inputs.kit.doc,
           pictures: manifest,
+          brief: rows[0].brief,
           allGroups,
           ...(pages ? { pages } : {})
         })

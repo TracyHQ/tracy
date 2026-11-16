@@ -10,8 +10,9 @@ import { indexRows, shownRows } from './rules-kept-rows.js'
 // Not checked here: contact lines (an email or a phone number that is itself the link) are not label slots, and menu
 // item labels (role menu_label, or a navigation item's labelSlot) leave with their menu item, which R04 checks.
 
-// Label slot -> the kit blocks whose links print it, and the blocks the kit says also show it.
-function sharedLabels(ctx) {
+// Label slot -> the kit blocks whose links print it, and the blocks the kit says also show it. R10b reads it too: a
+// hidden link may leave a shared label written (R24 wants it written).
+export function sharedLabels(ctx) {
   const { kitBlocks, linkLabelSlot, slotRole } = ctx
   const out = new Map()
   const add = (label, block) => {

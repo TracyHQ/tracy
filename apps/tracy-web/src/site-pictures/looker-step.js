@@ -45,7 +45,9 @@ import { letteringRejection, negativeLookCache, negativeLookKey } from './looker
  * scene-text photos, a Central Padel build looked at every frame's real photo: 3483 s of looks, 42 minutes of picture
  * step at 4 at once. Eight halves that wait; the provider calls are independent and the step's verdicts do not change.
  */
-export const LOOK_CONCURRENCY = 8
+// Twelve since 16/11/2026 (a build asked for in 15 minutes): on dev the looks of a BXR London ladder ran 35 per 30 seconds
+// at eight, about 7 s each, in bursts the picker's rounds wait on.
+export const LOOK_CONCURRENCY = 12
 /** The sources whose picture the looker checks. */
 export const LOOKED_SOURCES = new Set(['owner-photo', 'owner-photo-extended', 'drawn'])
 export const LOOKER_RULE = Object.freeze({ id: 'L01', title: 'The looker passes every finished picture' })

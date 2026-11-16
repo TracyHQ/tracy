@@ -71,6 +71,7 @@ import { climbTextFallback, withTextFallback } from './text-fallback.js'
 import { unaddressableOf, withGuardFindings, withUnaddressable } from './unaddressable-lines.js'
 import { hideEmptyVideoButtons } from './video-buttons-stage.js'
 import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
+import { withIconHoldersHidden } from './icon-holders.js'
 
 /** What one contract call takes (the seeder's and the plugin's own limits); more is refused whole, so it is said first. */
 const MAX_SLOTS = 1500
@@ -297,7 +298,11 @@ export async function runWriteStep(input) {
     const read = await readFrozenFiles(files)
     report.inputs = read.inputs
     if (read.stop) return { stop: read.stop }
-    const { plan, copy, brief } = read.values
+    const { copy, brief } = read.values
+    // Icons drawn inside a slot that holds only them leave with that slot, whatever the plan said of each (icon-holders.js).
+    const iconHolders = withIconHoldersHidden(read.values.plan, { kit: kit.doc, contentMap })
+    const plan = iconHolders.plan
+    if (iconHolders.moved.length) report.iconHolders = iconHolders.moved
     const head = kitWithLiveHead(kit.doc, plan)
     headKit = head.kit
     if (head.moved) report.headBlock = head.moved

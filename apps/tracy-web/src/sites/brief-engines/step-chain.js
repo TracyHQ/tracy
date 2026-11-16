@@ -33,7 +33,6 @@
  * Steps are injected (`app.js` wires the real ones, `step-chain-steps.js`); each answers `{ value, usd }` or throws (an
  * error may carry the `value` it still made, and the `usd` it spent), and is given the run's `AbortSignal`.
  */
-import { REPAIR_WINDOWS } from '../../lib/repair-windows.js'
 
 /**
  * The outer deadline of a chain run (#478): the model steps get this long, counted from the start of `prepare`. A step
@@ -46,9 +45,19 @@ export const STEP_CHAIN_DEADLINE_MS = 2 * 60 * 60_000
 export const STEP_CHAIN_HANDOVER_MS = 15 * 60_000
 
 /**
- * Step 9b's windows for a chain build, from how far into the run the Write step starts. 9b keeps its own 10 and 12 minute
- * windows (`lib/repair-windows.js`, the repair pass's own `REPAIR_LIMITS`), cut shorter when the deadline is nearer; once the deadline has passed it starts no new work
- * and returns within the handover window.
+ * Step 9b's windows in a chain build: no new repair turn after 2 minutes from the end of the write, the site handed over by
+ * 4. The repair pass's own windows (10 and 12 minutes, `lib/repair-windows.js`) stay for the write step bench.
+ *
+ * 🔒 A BUILD IS ASKED FOR IN 15 MINUTES (David, 16/11/2026). Measured on dev (16/11/2026, four chain builds of Arabian Tea
+ * House and BXR London): 9b took 9.5 to 11.6 of a 23.6 to 38.2 minute build and took off 0, 9, 9 and 13 of 44 to 105
+ * final-check blocks, nearly all template words a page kept (demo-words). It keeps one turn here, the one that takes most
+ * of them, and the rest is for the steps before it to leave no such words.
+ */
+export const CHAIN_REPAIR_WINDOWS = Object.freeze({ stopNewWorkMs: 2 * 60_000, returnByMs: 4 * 60_000 })
+
+/**
+ * Step 9b's windows for a chain build, from how far into the run the Write step starts: `CHAIN_REPAIR_WINDOWS`, cut shorter
+ * when the deadline is nearer; once the deadline has passed it starts no new work and returns within the handover window.
  *
  * 🔒 THE DEADLINE BOUNDS THE MODEL STEPS, NOT 9b'S WINDOW. #478 let 9b run until the 2 hour deadline. Measured on the local
  * stand (12/11/2026, Central Padel): the write began 22 minutes in, so 9b could start new work for 98 minutes, and it went
@@ -59,10 +68,10 @@ export const STEP_CHAIN_HANDOVER_MS = 15 * 60_000
 export function chainRepairLimits(elapsedMs) {
   const left = Math.max(0, STEP_CHAIN_DEADLINE_MS - elapsedMs)
   if (left === 0) return { stopNewWorkMs: 0, returnByMs: STEP_CHAIN_HANDOVER_MS }
-  const stopNewWorkMs = Math.min(left, REPAIR_WINDOWS.stopNewWorkMs)
+  const stopNewWorkMs = Math.min(left, CHAIN_REPAIR_WINDOWS.stopNewWorkMs)
   return {
     stopNewWorkMs,
-    returnByMs: stopNewWorkMs + (REPAIR_WINDOWS.returnByMs - REPAIR_WINDOWS.stopNewWorkMs)
+    returnByMs: stopNewWorkMs + (CHAIN_REPAIR_WINDOWS.returnByMs - CHAIN_REPAIR_WINDOWS.stopNewWorkMs)
   }
 }
 

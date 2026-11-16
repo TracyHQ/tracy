@@ -1,6 +1,7 @@
 // A frozen, opt-in WO policy. Evidence comes from answered turns carrying server-resolved kit images,
 // not a model claiming to have looked or merely requesting the image tool.
 import { reviewedImages } from '../lib/kit-image-review.js'
+import { stockScreenOf, stockScreensOf } from '../lib/stock-screens.js'
 export { reviewedImages } from '../lib/kit-image-review.js'
 
 export const VISUAL_REVIEW_POLICY = 'kit-images/1'
@@ -9,12 +10,27 @@ const list = (value) => (Array.isArray(value) ? value : [])
 const LIMIT = 32
 const title = 'The planner reviews representative pages and kept responsive content through actual kit images'
 
-export function representativeImages(kit) {
+// A page group's page whose images stand for it: its representative, unless that is a stock screen of the kit
+// (`site.stockScreens`, a page every plan drops, whose pictures the image tool does not open: #655), then its first
+// page that is not one. A group of stock screens only has none, so V01 asks for none of its images. Dev, JA Diner
+// 16/11/2026: the plan step ended "failed, best version used" on V01 asking for page-home_home-red-1440, a colour
+// variant of the home page the kit declares a stock screen, which the tool answered STOCK_SCREEN.
+function groupPages(kit) {
   const pages = new Map(list(kit?.pages).map((page) => [page.id, page]))
+  const { screens } = stockScreensOf(kit)
+  const stock = (page) => screens.length > 0 && Boolean(stockScreenOf(page?.path ?? '', screens))
+  return list(kit?.pageGroups).map((group) => {
+    const members = list(kit?.pages).filter((page) => page.group === group.id && !stock(page))
+    const first = pages.get(group.representative ?? group.root)
+    return { group, representative: first && !stock(first) ? first : (members[0] ?? null), members }
+  })
+}
+
+export function representativeImages(kit) {
   return [
     ...new Set(
-      list(kit?.pageGroups)
-        .map((group) => pages.get(group.representative ?? group.root)?.images?.['1440'])
+      groupPages(kit)
+        .map((g) => g.representative?.images?.['1440'])
         .filter(Boolean)
     )
   ]
@@ -26,18 +42,10 @@ export function representativeImages(kit) {
 // share one, so a block's image id cannot be guessed from the block id). Whatever the plan keeps, V01's required set
 // is a subset of these ids.
 export function visualReviewImages(kit) {
-  const pages = new Map(list(kit?.pages).map((page) => [page.id, page]))
   const groups = []
-  for (const group of list(kit?.pageGroups)) {
-    const desktop = pages.get(group.representative ?? group.root)?.images?.['1440']
-    const phone = [
-      ...new Set(
-        list(kit?.pages)
-          .filter((page) => page.group === group.id)
-          .map((page) => page.images?.['390'])
-          .filter(Boolean)
-      )
-    ]
+  for (const { group, representative, members } of groupPages(kit)) {
+    const desktop = representative?.images?.['1440']
+    const phone = [...new Set(members.map((page) => page.images?.['390']).filter(Boolean))]
     const ids = [...new Set([desktop, ...phone].filter(Boolean))]
     if (ids.length) groups.push({ group: group.id, ids })
   }
@@ -74,8 +82,11 @@ export function checkVisualReview({ plan, kit, kitRef, history }) {
   const declarations = []
   const pages = new Map(list(kit?.pages).map((page) => [page.id, page]))
   const blocks = new Map(list(kit?.blocks).map((block) => [block.id, block]))
-  for (const group of list(kit?.pageGroups)) {
-    if (!pages.get(group.representative ?? group.root)?.images?.['1440'])
+  for (const { group, representative } of groupPages(kit)) {
+    // A group of stock screens only has nothing to review: every plan drops it.
+    if (representative && !representative.images?.['1440'])
+      declarations.push(`page group ${group.id} has no representative 1440 image`)
+    else if (!representative && !list(kit?.pages).some((page) => page.group === group.id))
       declarations.push(`page group ${group.id} has no representative 1440 image`)
   }
   const kept = list(plan?.pages).filter((page) => page.decision === 'keep')

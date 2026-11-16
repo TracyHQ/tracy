@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-661-plan-shared-labels",
+  "kind": "fix",
+  "title": "A shared label stays written when one of its links is hidden, and a kept row's doubly decided field is written",
+  "pr": 661,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A label two blocks' buttons print stays in the copy when one link is hidden; R10b and R24 both pass.",
+    "Every link printing a shared label hidden still fails R10b.",
+    "A field of a kept row that the decision writes and hides is written; a row not shown stays as the planner left it."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-planner-hidden-links.test.mjs",
+      "apps/tracy-web/test/site-planner-row-fields.test.mjs",
+      "apps/tracy-web/test/site-plan-check-closure.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a label several blocks print stays written when its link is hidden: R10b and R24 agree, and no normalizer hides it",
+      "R10b a hidden link still fails when every link using the shared label slot is hidden",
+      "a written field of a row the decision keeps is no longer hidden; the rest of the decision stays",
+      "a row the decision does not show, a slot it only hides and a dropped page stay as the planner left them"
+    ]
+  }
+}

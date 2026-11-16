@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-666-unshown-read-back",
+  "kind": "fix",
+  "title": "A hide no kept page prints is not held to an empty slot by the read-back",
+  "pr": 666,
+  "area": "website-opportunities/site-check",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "An unshown hide line carries printed: false and reads back green with its words; the same line without the flag is red."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-check-read-back.test.mjs",
+      "apps/tracy-web/test/write-step-carried-hides.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a hidden line no kept page prints keeps its words and is green (unshown, not emptied on purpose)",
+      "a hide no kept page prints is reported hidden with printed: false, so the read-back asks no empty slot of it"
+    ]
+  }
+}

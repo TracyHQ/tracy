@@ -113,6 +113,7 @@ Today (VERIFIED on `origin/develop` 97a8f2fa3e and a53ab6f331, 25/10):
   (`facts` of ja-restaurant WordPress) gets a line under the address.
 
 
+
 ## Amendment 27/10/2026: one fact envelope with confidence and an on-site decision, one source of truth, key messages (settled by Akemi)
 
 - **Who decided, when.** Akemi (COO) settled it on 27/10/2026, issue #1791, choosing option A for all four questions.
@@ -149,3 +150,21 @@ Today (VERIFIED on `origin/develop` 97a8f2fa3e and a53ab6f331, 25/10):
 - **Code.** `domain/fact-confidence.mjs`, `domain/fact-assessment.mjs` (`factDecisions`, `ALLOWED_INFERRED_KINDS`),
   `src/owner-fact-picks.js`, the doors `PUT /api/website-opportunities/:id/facts` and `PUT …/:id/key-messages`,
   `GET …/:id/place-profile` now also returns `decisions`; `freezePlaceProfile` reads the opportunity's `factOverrides`.
+
+## Amendment 16/11/2026: a button may lead to the business's own social profiles
+
+- **Who decided, when.** David, 16/11/2026, in the work to make JA Diner chain builds end complete (his standing rule: when
+  a call is open, take the recommended option and record it). Open to the product owner's review: reversing it is the
+  `socialLinks` line of `cta-real`.
+- **Decision.** Besides `tel:`, `mailto:` and the brief's WhatsApp, a button of the demo may lead to the business's **own**
+  social profiles as the brief gives them (`brief.business.socials`: Facebook, Instagram, TikTok, YouTube, X). Any other
+  address off the demo still fails: another profile on the same network, a share or login link, the network's home, the
+  business's live site, its menu, a booking service.
+- **Why.** Templates print the contact card's network links as buttons (JA Diner's `button-Facebook`), and a site shows
+  where the business is; the 22/10/2026 rule keeps the visitor away from the business's old site and from third-party
+  booking, which a profile link is neither. Hiding those links instead takes real ways to reach the business off the page.
+- **Code.** tracy-host `demo-qa.js` `checkCtaReal` (`socialLinks`, compared by `socialProfileKey`: network host without
+  `www.`/`m.`, profile path, case and trailing slash ignored). The links come from the brief:
+  `opportunities-build/brand-on-site.js` `siteSocialLinksOf`. The write step's site check now sends both these and the
+  brief's WhatsApp (`site-check/host-pages.js` `briefLinks`); until 16/11/2026 it sent neither, so the WhatsApp button the
+  26/10 amendment allows failed every write step's final check that placed it.

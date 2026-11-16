@@ -272,3 +272,26 @@ test('a hidden page control whose words the decision writes is kept; any other h
   const settled = withHiddenLinkLabels(value, k)
   assert.strictEqual(withHiddenLinkLabels(settled, k), settled)
 })
+
+test('a label several blocks print stays written when its link is hidden: R10b and R24 agree, and no normalizer hides it', () => {
+  // The call buttons of block-176 and block-190 print one label (a template string). Before (dev corpus, 16/11/2026)
+  // R10b said "link is hidden but its label slot is still written" while R24 said such a label is never hidden, and the
+  // label normalizer hid it: 28 R24 failures of 20 real plans came from that.
+  const kit = fixtureKit()
+  kit.blocks.find((b) => b.id === 'block-176').links[0].labelId = 'block-176.1'
+  kit.blocks.find((b) => b.id === 'block-190').links[0].labelId = 'block-176.1'
+  const value = plan()
+  const call = value.sharedBlocks.find((block) => block.block === 'block-176')
+  call.copy = [{ slot: 'block-176.1', says: 'the call button', text: 'Call us', basis: 'trade', factIds: [] }]
+  call.links = []
+  call.hiddenSlots = [{ slot: 'block-176.link-1', why: 'no phone line to lead to' }]
+  const result = normalize(value, kit)
+  const got = result.sharedBlocks.find((block) => block.block === 'block-176')
+  assert.ok(got.copy.some((c) => c.slot === 'block-176.1' && c.text === 'Call us'))
+  assert.ok(!got.hiddenSlots.some((h) => h.slot === 'block-176.1'))
+  assert.ok(
+    !r10bWhere(result, kit).some((where) => where.endsWith('link block-176.link-1')),
+    r10bWhere(result, kit).join('\n')
+  )
+  assert.equal(ruleOn('R24', result, kit).failures.length, 0)
+})

@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-660-site-check-brief-links",
+  "kind": "fix",
+  "title": "The write step's site check lets the brief's WhatsApp and the business's own social profiles pass cta-real, and nothing else off the demo",
+  "pr": 660,
+  "area": "website-opportunities/write-step",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Every page read of the site check sends whatsappLinks and socialLinks from the brief; no brief sends none.",
+    "With them the brief's WhatsApp and profile buttons pass cta-real; another profile, a share link, the network's home and the business's live menu fail."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-check-brief-links.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the brief gives its WhatsApp and its social profiles, nothing that is not an address; no brief gives none",
+      "the site check's page read sends the brief's links with every call to the host",
+      "with them, the contact page's network buttons and the WhatsApp button pass cta-real; another profile does not"
+    ]
+  }
+}

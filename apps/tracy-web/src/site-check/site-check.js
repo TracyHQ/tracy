@@ -129,7 +129,7 @@ const notGreenAfter = (status, stoppedBy) => (stoppedBy && passes(status) ? stop
 /**
  * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
  *   pageHtml?: (path: string) => Promise<string | null>, baseline?: object | null, kit?: object | null, pictures?: object | null,
- *   allGroups?: boolean, pages?: string[] | null }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
+ *   allGroups?: boolean, pages?: string[] | null, brief?: object | null }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
  *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`).
  *   `pageHtml` reads a page's markup: without it `written-not-printed` does not run. A `kit` adds `kit-version` first.
  *   `allGroups` runs the groups a red or unmeasured group would stop; each says `ranDespite`, and the status stays what the
@@ -145,6 +145,7 @@ export async function runSiteCheck({
   baseline = null,
   kit = null,
   pictures = null,
+  brief = null,
   groups = [
     ...(kit ? KIT_GROUPS : []),
     ...SITE_CHECK_GROUPS,
@@ -181,6 +182,8 @@ export async function runSiteCheck({
     baseline: baselineAtRoutes(baseline, report.routes),
     kit,
     pictures,
+    // The research brief the site was built from: the off-site links it gives a button (host-pages.js).
+    brief,
     read: readsOnly(door, siteKey)
   }
   const results = []

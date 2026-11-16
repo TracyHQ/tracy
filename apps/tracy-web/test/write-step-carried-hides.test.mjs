@@ -194,3 +194,22 @@ test('the full write step carries a hidden submit button only after its own nati
     assert.ok((await check()).failures.some((failure) => failure.slot === button.slot))
   }
 })
+
+test('a hide no kept page prints is reported hidden with printed: false, so the read-back asks no empty slot of it', () => {
+  const order = {
+    orders: new Map([
+      ['category-2.0', { via: 'unshown', key: 'category-2.0', pages: ['/our-blog/2-restaurant-business'] }],
+      ['block-106.24', { via: 'unshown', key: 'module-106.24', unseen: true, pages: [] }]
+    ]),
+    blocks: new Map(),
+    emptySlots: [],
+    strings: {},
+    pages: [],
+    noWayOut: []
+  }
+  const lines = results(order).hides
+  for (const slot of ['category-2.0', 'block-106.24']) {
+    assert.equal(lines.get(slot).status, 'hidden', slot)
+    assert.equal(lines.get(slot).printed, false, slot)
+  }
+})
