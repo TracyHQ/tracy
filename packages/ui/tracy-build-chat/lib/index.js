@@ -617,6 +617,22 @@ function isBuildChatSession(sessionId) {
   return typeof sessionId === "string" && BUILD_SESSION.test(sessionId);
 }
 
+// src/chat-words.mjs
+function chatLanguageTagOf(tag) {
+  if (typeof tag !== "string") return null;
+  const primary = tag.trim().toLowerCase().split(/[-_]/)[0];
+  return /^[a-z]{2}$/.test(primary) ? primary : null;
+}
+function wordsOver(table, english2) {
+  return (key, vars = {}) => {
+    const text2 = Object.hasOwn(table, key) ? table[key] : Object.hasOwn(english2, key) ? english2[key] : null;
+    return text2 === null ? null : text2.replace(/\{(\w+)\}/g, (_, name2) => String(
+      /** @type {any} */
+      vars[name2] ?? ""
+    ));
+  };
+}
+
 // ../../locale/tracy-locales/de/tracy-build-chat.json
 var tracy_build_chat_default = {
   "cancelled.body": "Sie haben diesen Aufbau abgebrochen. Ihr Plan und Ihre Antworten bleiben erhalten.",
@@ -2815,14 +2831,9 @@ var tracy_build_chat_default7 = {
   "plan.source.listing": "Trang danh b\u1EA1"
 };
 
-// src/chat-words.mjs
+// src/host/chat-tables.mjs
 var TABLES = { de: tracy_build_chat_default, es: tracy_build_chat_default2, fr: tracy_build_chat_default3, it: tracy_build_chat_default4, nl: tracy_build_chat_default5, zh: tracy_build_chat_default6, vi: tracy_build_chat_default7 };
 var CHAT_LANGUAGES = Object.freeze(["en", ...Object.keys(TABLES)]);
-function chatLanguageTagOf(tag) {
-  if (typeof tag !== "string") return null;
-  const primary = tag.trim().toLowerCase().split(/[-_]/)[0];
-  return /^[a-z]{2}$/.test(primary) ? primary : null;
-}
 function chatLanguageOf(spoken, interfaceLanguage) {
   const said = chatLanguageTagOf(spoken);
   if (said !== null && CHAT_LANGUAGES.includes(said)) return said;
@@ -2830,14 +2841,7 @@ function chatLanguageOf(spoken, interfaceLanguage) {
 }
 function chatWordsIn(language, english2) {
   if (typeof language !== "string" || !CHAT_LANGUAGES.includes(language)) return null;
-  const table = TABLES[language] ?? {};
-  return (key, vars = {}) => {
-    const text2 = Object.hasOwn(table, key) ? table[key] : Object.hasOwn(english2, key) ? english2[key] : null;
-    return text2 === null ? null : text2.replace(/\{(\w+)\}/g, (_, name2) => String(
-      /** @type {any} */
-      vars[name2] ?? ""
-    ));
-  };
+  return wordsOver(TABLES[language] ?? {}, english2);
 }
 
 // src/host/ask-words.mjs

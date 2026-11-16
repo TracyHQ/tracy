@@ -44,9 +44,13 @@ const result = await build({
   minify: true,
   write: false,
   logLevel: 'info',
+  // The locale packages are read at run time through the module loader (`src/client/locale-packages.ts`): the
+  // translations stay data there, and this bundle holds English only.
   // Exactly React's entry points — never `react*`, which also externalises `react-day-picker`.
   external: [
     '@deepseek-ai/dsh-client-ui-primitives',
+    '@tracy/dsh-tracy-locale-vi',
+    '@tracy/dsh-tracy-locales',
     'react',
     'react-dom',
     'react/jsx-runtime',

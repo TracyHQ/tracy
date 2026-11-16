@@ -49,7 +49,8 @@ import {
   templateChoiceOf,
   textTooLongOf
 } from '@tracy/core/build-chat'
-import { chatLanguageOf, chatLanguageTagOf } from '../chat-words.mjs'
+import { chatLanguageTagOf } from '../chat-words.mjs'
+import { chatLanguageOf } from './chat-tables.mjs'
 import { askWordsFor } from './ask-words.mjs'
 import { startOverAnswerOf, startOverQuestion } from './start-over.mjs'
 

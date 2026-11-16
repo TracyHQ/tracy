@@ -28,7 +28,11 @@
         "@deepseek-ai/dsh-client-locale",
         "@deepseek-ai/dsh-client-ui-primitives"
       ],
-      "platform": "web"
+      "platform": "web",
+      "external": [
+        "@tracy/dsh-tracy-locale-vi",
+        "@tracy/dsh-tracy-locales"
+      ]
     }
   },
   "devDependencies": {

@@ -52,6 +52,8 @@ const bundled = await build({
   jsx: 'automatic',
   write: false,
   logLevel: 'silent',
+  // Read at run time through dsh's module loader (`locale-packages.ts`); in node the require throws and is caught.
+  external: ['@tracy/dsh-tracy-locale-vi', '@tracy/dsh-tracy-locales'],
   plugins: [stubPrimitives]
 })
 const file = path.join(out, 'client.mjs')

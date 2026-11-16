@@ -102,7 +102,17 @@ const bundle = `window.__ModuleLoader__.load({
       }
     }
 
+    /**
+     * One namespace's dictionary in one language of this package, or null. dsh's locale service translates in the
+     * active language only; a plugin that draws in another language (the build chat speaks the language of its
+     * conversation) reads its own namespace here, so its own bundle holds English only.
+     */
+    function dictionaryOf(ns, lang) {
+      return Object.hasOwn(DICTIONARIES, lang) && Object.hasOwn(DICTIONARIES[lang], ns) ? DICTIONARIES[lang][ns] : null
+    }
+
     exports.apply = apply
+    exports.dictionaryOf = dictionaryOf
     exports.inject = inject
     return module.exports
   }

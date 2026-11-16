@@ -3,13 +3,18 @@
  * language the person is chatting in). Every `tracy_build` answer names the language its cards use (`chatLanguage`:
  * the language the owner writes in when the build chat has words for it, else the interface language), and the fold
  * carries it on the values the cards read (`buildToolFoldOf`). A card drawn with a known language reads this plugin's
- * bundled table of it (`../chat-words.mjs`); with none known yet, the account's interface language, as dsh binds it.
+ * table of it from a table source (`locale-tables.ts`: the locale packages dsh already ships, so this bundle holds
+ * English only); with none known yet, or a language the source has no table of, the account's interface language, as
+ * dsh binds it.
  *
  * The language last seen per session is kept here, so a piece that reads no value of its own (the plan review bar,
  * the working line, the Try again button) speaks the same language as the cards around it.
  */
-import { chatWordsIn } from '../chat-words.mjs'
+import { wordsOver } from '../chat-words.mjs'
 import { en, type StringKey, type Translate } from './strings'
+
+/** One language's `tracy-build-chat` table, or null when none can be read. */
+export type TableSource = (language: string) => Readonly<Record<string, string>> | null
 
 export interface ChatLanguages {
   /**
@@ -21,22 +26,27 @@ export interface ChatLanguages {
   languageOf(sessionId?: string | null): string | null
 }
 
-/** A translator over this plugin's bundled table of `language`, or null for a language it has no table of. */
-export function translatorIn(language: unknown): Translate | null {
-  const words = chatWordsIn(language, en)
-  if (words === null) return null
+/** A translator over the table of `language`, or null for a language the source has no table of. English needs none. */
+export function translatorIn(language: unknown, tables: TableSource): Translate | null {
+  if (typeof language !== 'string' || !/^[a-z]{2}$/.test(language)) return null
+  const table = language === 'en' ? {} : tables(language)
+  if (table === null) return null
+  const words = wordsOver(table, en)
   return (key: StringKey, vars?: Record<string, string | number>) => words(key, vars) ?? key
 }
 
-/** @param bound - the interface language's translator, as dsh binds it at the time of the call */
-export function createChatLanguages(bound: () => Translate): ChatLanguages {
+/**
+ * @param bound - the interface language's translator, as dsh binds it at the time of the call
+ * @param tables - where the other languages' tables are read; without one, only English and the interface language
+ */
+export function createChatLanguages(bound: () => Translate, tables: TableSource = () => null): ChatLanguages {
   const seen = new Map<string, string>()
   const translators = new Map<string, Translate>()
-  const inLanguage = (language: string | null): Translate | null => {
-    if (language === null) return null
+  const inLanguage = (language: unknown): Translate | null => {
+    if (typeof language !== 'string') return null
     let t = translators.get(language)
     if (!t) {
-      const made = translatorIn(language)
+      const made = translatorIn(language, tables)
       if (made === null) return null
       translators.set(language, (t = made))
     }
@@ -47,9 +57,9 @@ export function createChatLanguages(bound: () => Translate): ChatLanguages {
   return {
     languageOf,
     t(sessionId, language) {
-      const given = typeof language === 'string' && translatorIn(language) !== null ? language : null
-      if (given !== null && typeof sessionId === 'string') seen.set(sessionId, given)
-      return inLanguage(given ?? languageOf(sessionId)) ?? bound()
+      const given = inLanguage(language)
+      if (given !== null && typeof sessionId === 'string') seen.set(sessionId, language as string)
+      return given ?? inLanguage(languageOf(sessionId)) ?? bound()
     }
   }
 }

@@ -23,7 +23,8 @@
 import { BUILD_TOOL, HANDOFF_FENCE, isBuildChatSession } from '@tracy/core/build-chat'
 import { uiSwitches } from '@tracy/core/ui-switches'
 import { BuildToolRow, languageOfView, type ToolViewProps } from './BuildToolRow'
-import { createChatLanguages } from './chat-language'
+import { createChatLanguages, type TableSource } from './chat-language'
+import { localeTables } from './locale-packages'
 import {
   sendToChat,
   type ConversationFace,
@@ -95,6 +96,8 @@ export interface ApplyDeps {
   runs?: BuildRunFeed
   /** Where change request notes go for the plan card; a test passes its own. */
   notes?: RevisionNotes
+  /** Where the cards read a language other than English; a test passes its own (`locale-tables.ts`). */
+  tables?: TableSource
 }
 
 export const inject = ['locale', 'slots', 'uiConversation', 'conversation', 'sessions']
@@ -133,7 +136,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
 
   const t = (): Translate => ctx.locale.bind?.(NS) ?? english
   // A build session's cards speak the language of its conversation (`chat-language.ts`), else the interface language.
-  const languages = createChatLanguages(t)
+  const languages = createChatLanguages(t, deps.tables ?? localeTables)
   const drafts = createDraftSource(deps.fetch)
   const reviews = createReviewPresence()
   const notes = deps.notes ?? createRevisionNotes()

@@ -92,7 +92,17 @@ ${dictionaries}
       }
     }
 
+    /**
+     * One namespace's Vietnamese dictionary, or null. dsh's locale service translates in the active language only;
+     * a plugin that draws in another language (the build chat speaks the language of its conversation) reads its
+     * own namespace here, so its own bundle holds English only.
+     */
+    function dictionaryOf(ns, lang) {
+      return lang === 'vi' && Object.hasOwn(VI, ns) ? VI[ns] : null
+    }
+
     exports.apply = apply
+    exports.dictionaryOf = dictionaryOf
     exports.inject = inject
     return module.exports
   }
