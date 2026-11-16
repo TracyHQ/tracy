@@ -58,7 +58,7 @@ const PAGES = {
     <img id="fine" src="/wide.png" style="width:200px;height:50px" alt="">`,
   '/clean': `${head}<nav><a href="/fine">Fine</a></nav><p>Short and sound.</p><section style="height:300px">Block</section>
     <img src="/wide.png" style="width:200px;height:50px" alt="">`,
-  '/list': `${head}<style>.hero-title span{color:rgb(191,91,61)}</style><h1 class="hero-title"><span>NO1</span> Boxing studio</h1><section id="steps"><p>Warm up first.</p><ul id="points"><li>Jog</li><li>Pads and bags</li><li style="display:none">Hidden</li></ul></section>`,
+  '/list': `${head}<style>.hero-title span{color:rgb(191,91,61)}</style><nav class="navbar"><ul class="nav"><li class="nav-item"><a class="nav-link" href="/classes"><span itemprop="name"><span class="menu-item-title">Ways to train</span></span></a></li></ul></nav><h1 class="hero-title"><span>NO1</span> Boxing studio</h1><section id="steps"><p>Warm up first.</p><ul id="points"><li>Jog</li><li>Pads and bags</li><li style="display:none">Hidden</li></ul></section>`,
   '/fine': `${head}<p>Fine</p>`
 }
 
@@ -150,6 +150,8 @@ test(
         assert.deepEqual(list, { selector: 'ul#points', chars: 17, items: [3, 13] })
         assert.deepEqual(m.headingSpans[0].spans, [{ text: 'NO1', color: 'rgb(191, 91, 61)' }])
         assert.equal(m.headingSpans[0].text, 'NO1 Boxing studio')
+        // A menu's label is no title, though its class says so (T4's span.menu-item-title).
+        assert.ok(!m.headingSpans.some((h) => /ways to train/i.test(h.text)), JSON.stringify(m.headingSpans))
         const section = m.textBlocks.find((b) => b.selector === 'section#steps')
         assert.ok(section.chars >= 31 && !('items' in section), JSON.stringify(section))
       }
