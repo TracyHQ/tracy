@@ -368,7 +368,7 @@ test('forwarder: re-rendering a folded demo by hand reads its facts from the kep
   try {
     ok(
       h.bash('tracy_render_compose', {
-        WEB_IMAGE: 'tracy/web-joomla:6-apache-20261027-r1',
+        WEB_IMAGE: 'tracy/web-joomla:6-apache-20261116-r1',
         COMPOSE_FLAVOR: 'fresh',
         DB_NAME: 'site',
         DB_SQL_MODE: 'NO_ENGINE_SUBSTITUTION'

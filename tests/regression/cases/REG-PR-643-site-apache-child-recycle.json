@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-643-site-apache-child-recycle",
+  "kind": "fix",
+  "title": "Site web images: Apache replaces a child after 100 connections, so memory a heavy request grew is given back",
+  "pr": 643,
+  "area": "fleet/site-images",
+  "cms": ["jo", "wp"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/web-prefork-recycle.test.mjs",
+    "S2: Record the exit code and the result of the cases named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "web/tracy-prefork.conf sets a finite MaxConnectionsPerChild inside an mpm_prefork_module block, and both joomla.Dockerfile and wordpress.Dockerfile copy it into conf-enabled under a name that sorts before the demo limits file.",
+    "web/build.sh hashes tracy-prefork.conf for the joomla and wordpress images only; the demos and emdash hashes do not take it."
+  ],
+  "selectors": {
+    "conf": "packages/fleet/tracy-fleet-operation/web/tracy-prefork.conf",
+    "hash": "WEB_FILES / APACHE_FILES in packages/fleet/tracy-fleet-operation/web/build.sh"
+  },
+  "evidence": "16/11/2026 dev host: a customer Joomla site's web container held 550 MiB with 11 Apache children alive for 20 days, three at about 180 MB RSS, for 168 requests in 24 h; apache2ctl showed MaxConnectionsPerChild 0 (image default).",
+  "fence": "Static checks of the conf, the Dockerfiles and build.sh; building the real images and moving a site on a host are not part of this case's run.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/web-prefork-recycle.test.mjs"
+    ],
+    "tests": [
+      "the customer-site prefork file sets a finite MaxConnectionsPerChild",
+      "joomla.Dockerfile ships it into conf-enabled, ahead of the demo file",
+      "wordpress.Dockerfile ships it into conf-enabled, ahead of the demo file",
+      "only the joomla and wordpress image hashes take tracy-prefork.conf; demos and emdash do not"
+    ]
+  }
+}
