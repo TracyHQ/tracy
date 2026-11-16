@@ -159,12 +159,14 @@ const frameOf = (text) => /block-[a-z]\.\d/.exec(text)?.[0] ?? null
 
 /**
  * A fake looker door: rejects every look of the frames in `reject`, and the first look of the frames in `once`, for a
- * thing to avoid.
+ * thing to avoid. A look takes `lookMs` (none by default); `most()` is the most looks it had in flight at once.
  */
-function fakeLooker(reject, once = new Set()) {
+function fakeLooker(reject, once = new Set(), lookMs = 0) {
   const looks = []
   const drawings = []
   const first = new Set(once)
+  let inFlight = 0
+  let most = 0
   const fetchImpl = async (_url, init) => {
     const body = JSON.parse(init.body)
     if (isDraw(body)) {
@@ -173,6 +175,11 @@ function fakeLooker(reject, once = new Set()) {
     }
     const f = frameOf(body.messages[1].content[0].text)
     looks.push(f)
+    if (lookMs) {
+      most = Math.max(most, ++inFlight)
+      await new Promise((resolve) => setTimeout(resolve, lookMs))
+      inFlight--
+    }
     const no = reject.has(f) || first.delete(f)
     const said = no
       ? { verdict: 'fail', faults: ['forbidden item'], seen: 'A sign over a door.' }
@@ -186,20 +193,22 @@ function fakeLooker(reject, once = new Set()) {
       { headers: { 'content-type': 'application/json' } }
     )
   }
-  return { looks, drawings, fetchImpl }
+  return { looks, drawings, fetchImpl, most: () => most }
 }
 
 /**
  * Code's round 0 and the finished round, on a layout and a photo set.
  * @param {Set<string>} reject frames the looker always rejects
  * @param {string} runId
- * @param {{ layout?: any[], photos?: Map<string, Buffer>, once?: Set<string>, draw?: boolean, lookAhead?: number }} [opts]
- *   `draw`: the run has a (fake) drawer door; `lookAhead`: the finisher's look-ahead (ladder-step.js LOOK_AHEAD)
+ * @param {{ layout?: any[], photos?: Map<string, Buffer>, once?: Set<string>, draw?: boolean, lookAhead?: number,
+ *   lookBudget?: number, lookMs?: number }} [opts]
+ *   `draw`: the run has a (fake) drawer door; `lookAhead`: the finisher's look-ahead (ladder-step.js LOOK_AHEAD);
+ *   `lookBudget`: the looks one wave of look-ahead fills (ladder-step.js aheadDepth); `lookMs`: how long a fake look takes
  */
 export async function finished(
   reject,
   runId,
-  { layout = LAYOUT, photos = TALL, once, draw = false, lookAhead } = {}
+  { layout = LAYOUT, photos = TALL, once, draw = false, lookAhead, lookBudget, lookMs = 0 } = {}
 ) {
   const PHOTOS = photos
   const k = kit(layout)
@@ -228,7 +237,7 @@ export async function finished(
   }
   const doc = manifestFor({ base, parts, picker: null, idx }, new Map())
   const prompts = picturePrompts()
-  const looker = fakeLooker(reject, once)
+  const looker = fakeLooker(reject, once, lookMs)
   const finisher = createFinisher({
     idx,
     plan: p,
@@ -266,7 +275,8 @@ export async function finished(
         })
       : null,
     drawer: { model: draw ? DRAWER_MODEL : null, snapshot: null, promptSha256: prompts.roles.drawing },
-    ...(lookAhead === undefined ? {} : { lookAhead })
+    ...(lookAhead === undefined ? {} : { lookAhead }),
+    ...(lookBudget === undefined ? {} : { lookBudget })
   })
   const out = await finisher.finish(doc, { lastRound: true })
   const files = { ...measured }
