@@ -116,6 +116,51 @@ SQL
   echo "==> checked in every record the captured site had open in an editor"
 }
 
+# Every table of the site in utf8mb4, the character set Joomla 4+ creates its own tables in.
+#
+# 🔒 Measured on dev, 16/11/2026: a JA Diner j6 1.0.8 site built by the CLI installer had 75 of its 139 tables
+# in utf8mb3 (`utf8mb3_general_ci`: tr_content, tr_contact_details, tr_menu, tr_users, ...) — the quickstart's
+# `custom.sql` drops and creates them again in `utf8`, after Joomla's own `base.sql` made them utf8mb4. A utf8mb3
+# column cannot hold a character above U+FFFF, so the first emoji the site was given (a brown heart in an
+# Instagram caption the copy quoted) ended the chain build's write step: "Incorrect string value: '\xF0\x9F\xA4\x8E
+# #...' for column `joomla`.`tr_content`.`fulltext`; every write of this batch was taken back". The same text in a
+# customer's chat edit would be refused the same way. A JA Boxing site from the same installer had 115 of 115 in
+# utf8mb4. Joomla's own update converts its core tables once and records it in `#__utf8_conversion`, which the
+# demo dump says is done, so nothing on the site would ever convert them.
+#
+# This site's tables only (its prefix); each converted on its own, so a table the server refuses (a key too long
+# for its row format, say) stays as it was, is named, and the rest are still converted. A refusal never stops the
+# provision: the site works as before, and only that table still refuses such a character.
+joomla_tables_utf8mb4() {
+  local prefix tables table failed=() converted=0
+  prefix="$(grep -oE "dbprefix['\"]? *= *['\"][a-zA-Z0-9_]+" "$(tracy_webroot_dir "$LABEL")/configuration.php" \
+            | grep -oE "[a-zA-Z0-9_]+$")"
+  [ -n "$prefix" ] || { echo "!! could not read the table prefix — tables left in their character set" >&2; return 0; }
+  tables="$( ( cd "$SITE_DIR" && docker compose exec -T db sh -c \
+      "exec mariadb --skip-ssl -N -B -uroot -p\"$DB_PASSWORD\" \"$DB_NAME\"" <<SQL
+SELECT table_name FROM information_schema.tables
+ WHERE table_schema = DATABASE() AND table_type = 'BASE TABLE'
+   AND table_name LIKE '${prefix//_/\\_}%'
+   AND table_collation NOT LIKE 'utf8mb4\\_%';
+SQL
+  ) )" || { echo "!! could not list the tables outside utf8mb4 — left as they are" >&2; return 0; }
+  [ -n "$tables" ] || return 0
+  while IFS= read -r table; do
+    [[ "$table" =~ ^[A-Za-z0-9_]+$ ]] || continue
+    if ( cd "$SITE_DIR" && docker compose exec -T db sh -c \
+        "exec mariadb --skip-ssl -uroot -p\"$DB_PASSWORD\" \"$DB_NAME\"" \
+        <<< "ALTER TABLE \`$table\` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" ) >/dev/null; then
+      converted=$((converted + 1))
+    else
+      failed+=("$table")
+    fi
+  done <<< "$tables"
+  [ "$converted" -gt 0 ] && echo "==> converted $converted table(s) to utf8mb4, so the site can hold any character"
+  [ "${#failed[@]}" -eq 0 ] ||
+    echo "!! ${#failed[@]} table(s) stay outside utf8mb4 and refuse characters above U+FFFF: ${failed[*]}" >&2
+  return 0
+}
+
 # The second place a Joomla site keeps its address, and the one configuration.php does not cover.
 #
 # 🔒 Measured on joomlart-com-0871462c, 2026-08-17, with live_site already correctly set to the
@@ -861,6 +906,9 @@ LOAD
       # Belt and braces: the CLI removes this itself on a Stable release and keeps it on a
       # development build, and Joomla redirects to a missing installer with a 500 rather than serving.
       rm -rf "$webroot/installation"
+
+      # Before anything reads or writes content: a demo `custom.sql` may have left tables in utf8mb3.
+      joomla_tables_utf8mb4
 
       # Stage 6a chowns the webroot — but only for platforms that FETCH one, and this shape fetches
       # none. Without it the site answers 500 (measured 16/09; see the block at the top).
