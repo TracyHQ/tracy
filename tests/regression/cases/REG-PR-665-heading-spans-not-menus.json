@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-665-heading-spans-not-menus",
+  "kind": "fix",
+  "title": "A menu's label is no title for the accent emphasis measure",
+  "pr": 665,
+  "area": "website-opportunities/site-check",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies and Playwright's Chromium installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok, none skipped."
+  ],
+  "expect": [
+    "A T4 menu's span.menu-item-title is not among the heading spans; the hero title with its accent span still is."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-host/test/demo-qa-page-measures-browser.test.mjs"
+    ],
+    "needs": [],
+    "tests": ["every block reports how much text it prints, and a list the length of each shown item"]
+  }
+}
