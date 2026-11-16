@@ -10,6 +10,7 @@ import { GroupUnmeasured } from './group-unmeasured.js'
 import { keptPaths } from '../lib/site-kept-paths.js'
 import { pagesRead } from './host-pages.js'
 import { whereShown } from './page-measures.js'
+import { pathOfMeasure } from './page-faults.js'
 import { WRITE_STEP } from '../lib/site-build-steps.js'
 
 const keyOf = (slot) => String(slot ?? '').replace(/^block-/, 'module-')
@@ -84,10 +85,20 @@ async function run(context) {
   if (!Array.isArray(reading.slots)) throw new GroupUnmeasured('The site listed no slots.')
   const slots = new Map(reading.slots.map((s) => [s?.key, s]))
   const pageOf = new Map()
+  // Every page an entity prints on, as the host names pages: a url slot is judged only where its block prints.
+  const pagesOf = new Map()
+  const prints = (entity, route) => {
+    if (!pagesOf.has(entity)) pagesOf.set(entity, new Set())
+    pagesOf.get(entity).add(pathOfMeasure(route))
+  }
   for (const page of Array.isArray(reading.pages) ? reading.pages : []) {
     const route = keptPaths({ pages: [page] })[0]
     pageOf.set(page.entity, route)
-    for (const m of page.assignedModules ?? []) if (!pageOf.has(m.entity)) pageOf.set(m.entity, route)
+    prints(page.entity, route)
+    for (const m of page.assignedModules ?? []) {
+      if (!pageOf.has(m.entity)) pageOf.set(m.entity, route)
+      prints(m.entity, route)
+    }
   }
   const held = (u) => slots.get(keyOf(u.slot))
   const holding = unowned.filter((u) => typeof held(u)?.current === 'string' && held(u).current.trim() !== '')
@@ -108,8 +119,13 @@ async function run(context) {
   for (const u of holding) {
     const slot = held(u)
     const path = u.type === 'url' ? pathOfValue(slot.current, rows) : null
+    // A url slot shows where its block prints. Another block's link to the same page with the same words is that block's (dev,
+    // BXR London 16/11/2026: the home page's trainer cards linked each trainer's page by name, and the Our trainers block's
+    // url slots, printed only there, read as shown on the home page: four blocks).
+    const where = u.type === 'url' ? pagesOf.get(slot.entity ?? entityOf(keyOf(u.slot))) : null
+    const scoped = where?.size ? measures?.filter((m) => where.has(pathOfMeasure(m.path))) : measures
     const shown = measures
-      ? whereShown(measures, {
+      ? whereShown(scoped, {
           type: u.type,
           value: slot.current,
           path,

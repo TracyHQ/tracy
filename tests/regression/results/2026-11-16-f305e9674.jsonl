@@ -1,0 +1,1 @@
+{"id":"REG-PR-668-unowned-url-scope","verdict":"PASS","commit":"f305e9674f817fac918b7d65f2b85a38ea6bcd34","ran_at":"2026-11-16T17:05:18.320Z","evidence":"tests/regression/.runs/2026-11-16-f305e9674/REG-PR-668-unowned-url-scope.log"}

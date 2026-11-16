@@ -631,3 +631,51 @@ test('an orphan row and a blank footer column fail the check through their group
   for (const name of ['orphan-row', 'blank-footer-column'])
     assert.equal(group(older, name).status, 'unmeasured', name)
 })
+
+test('an unowned url slot is judged only on the pages its block prints, not where another block links the same page', async () => {
+  // Dev, BXR London 16/11/2026: the Our trainers block's url slots, printed only on that page, read as shown on the home
+  // page, whose own trainer cards linked the same trainer pages: four blocks.
+  const site = pagedSite(2, {}, [{ key: 'module-5.0', entity: 'module-5', type: 'url', current: '/page-1' }])
+  site.door.apply = ((apply) => async (call) => {
+    // The url is a path, so no menu row is needed to read it.
+    if (call.action === 'content.list') return { ok: true, items: [] }
+    const answer = await apply(call)
+    if (call.action === 'content.contract') answer.pages[1].assignedModules.push({ entity: 'module-5' })
+    return answer
+  })(site.door.apply)
+  const report = writtenReport({ unowned: [{ slot: 'block-5.0', type: 'url', block: 'block-5' }] })
+  const link = { href: 'http://site.test/index.php/page-1', text: 'Darlene Robertson' }
+  const run = (pages) =>
+    runSiteCheck({
+      door: site.door,
+      report,
+      host: fakeHost(
+        { '/': pageRead('/'), '/page-1': pageRead('/page-1') },
+        {
+          measures: () => [
+            ...BOTH('/', {
+              1440: { shownText: '', shownLinks: pages['/'], shownPictures: [] },
+              390: { shownText: '', shownLinks: pages['/'], shownPictures: [] }
+            }),
+            ...BOTH('/page-1', {
+              1440: { shownText: '', shownLinks: pages['/page-1'], shownPictures: [] },
+              390: { shownText: '', shownLinks: pages['/page-1'], shownPictures: [] }
+            })
+          ]
+        }
+      ).host,
+      baseline: null
+    })
+  // Only the home page links /page-1 (another block's card): the slot's own page shows no such link.
+  const elsewhere = group(await run({ '/': [link], '/page-1': [] }), 'unowned-slots')
+  assert.deepEqual(
+    elsewhere.failures.map((f) => [f.level, f.page, f.slot]),
+    [['warn', '/page-1', 'block-5.0']]
+  )
+  // Its own page shows it: a block there.
+  const own = group(await run({ '/': [], '/page-1': [link] }), 'unowned-slots')
+  assert.deepEqual(
+    own.failures.map((f) => [f.level, f.page, f.slot]),
+    [['block', '/page-1', 'block-5.0']]
+  )
+})
