@@ -5,8 +5,9 @@
 // (`page-writer-owner-facts.mjs`). A fact conflict answered this way stays open, so the plan shows its default as an
 // assumption and both candidate values ride on the statement; code invents no resolution.
 //
-// A typed text that is exactly one of the offered choices (its label, id or code, ignoring case and outer spaces) is
-// that choice, and keeps the behaviour of a chosen option. Pure.
+// A typed text that is exactly one of the offered choices (its label, id or code, equal after trimming and case
+// folding, nothing fuzzier) is that choice, and keeps the behaviour of a chosen option. Any other reading of the text
+// is the model's (`answer-reading.mjs`). Pure.
 
 /** The topics whose free text is an owner statement, not a value. */
 export const STATEMENT_TOPICS = Object.freeze(['main-button', 'fact-conflict'])
@@ -14,10 +15,10 @@ export const STATEMENT_TOPICS = Object.freeze(['main-button', 'fact-conflict'])
 export const MAIN_BUTTON_GROUP = 'main-button'
 
 const list = (value) => (Array.isArray(value) ? value : [])
+// Exact equality after trimming and case folding, nothing fuzzier: code never interprets what the owner typed.
 const plain = (value) =>
   String(value ?? '')
     .trim()
-    .replace(/\s+/g, ' ')
     .toLowerCase()
 const ITEM_GROUPS = { service: 'services', package: 'services', menu_item: 'services', person: 'team' }
 

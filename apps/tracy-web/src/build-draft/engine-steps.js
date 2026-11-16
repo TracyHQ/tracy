@@ -173,10 +173,11 @@ export function planProfileOf(research, kit = null) {
  * stored brand record. `composePlan` itself stops a site nothing may name: `site_name_missing` while the site name
  * question is open, `site_name_too_long` when the answer is longer than the template holds, both before any model
  * call and `noRerun` (`engine-asking.js` turns them into a question for the owner).
- * @param {{research: object, answers: object[], template: object, brand: object | null}} inputs
+ * @param {{research: object, answers: object[], answerReadings?: Map<string, object> | null, template: object,
+ *   brand: object | null}} inputs
  * @param {{model: Function, kit: object}} tools
  */
-export async function composeStep({ research, answers, template, brand }, { model, kit }) {
+export async function composeStep({ research, answers, answerReadings, template, brand }, { model, kit }) {
   const profile = planProfileOf(research, kit)
   // An answer to a question the withheld profile drops (about the held name or a held person) settles nothing that is
   // shown, and `composePlan` would refuse it as no question of the profile (`answer_invalid`). So does a site name
@@ -196,6 +197,8 @@ export async function composeStep({ research, answers, template, brand }, { mode
     brand,
     profile,
     answers: (Array.isArray(answers) ? answers : []).filter((a) => !dropped.includes(a?.question)),
+    // What the answer reading kept of the owner's typed answers (`answer-readings.js`), null without one.
+    answerReadings: answerReadings ?? null,
     planId: `plan-${randomUUID()}`
   }
   const composed = await composePlan({ ...input, model })

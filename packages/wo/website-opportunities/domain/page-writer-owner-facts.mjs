@@ -6,6 +6,8 @@
 //   - a team member's fact (`team`): the first such block that shows a person;
 //   - the owner's free text answer to the main button question (`main-button`): the first block, home page first, with
 //     a main button label the writer words, so the statement sits next to that button; else as any other fact;
+//   - a statement flagged with contact values no field holds (`mention`): the contact page (type `contact`), on its block
+//     with the most room to write, so the writer may name them in contact copy; else as any other fact;
 //   - any other fact (a story line, a fact, a key message, a USP theme, an audience, a service area): the home page
 //     (the page of type `home`, else the first page), on its block with the most room to write (the largest sum of
 //     the limits of its copy fields about the business, `editorial.*` and `business.*` but the copyright line and the
@@ -32,7 +34,11 @@ const list = (value) => (Array.isArray(value) ? value : [])
 const KINDS = { services: new Set(['service', 'package', 'menu_item']), team: new Set(['person']) }
 
 /** An owner's fact as the writer reads it, among a block's data. */
-export const ownerFactView = ({ id, text, asked, candidates }) => ({
+/** The plain instruction a flagged contact value carries in the writer request. */
+export const OWNER_MENTION_USE =
+  'contact values the owner gave that no field of the site holds: you may name them in contact copy, exactly as written'
+
+export const ownerFactView = ({ id, text, asked, candidates, mention }) => ({
   id,
   kind: OWNER_FACT_DATA_KIND,
   label: 'What the owner states',
@@ -40,7 +46,8 @@ export const ownerFactView = ({ id, text, asked, candidates }) => ({
   use: OWNER_FACT_USE,
   // A free text answer: the question it answers, and the values found when it answers a conflict.
   ...(asked ? { question: asked } : {}),
-  ...(Array.isArray(candidates) ? { candidates } : {})
+  ...(Array.isArray(candidates) ? { candidates } : {}),
+  ...(Array.isArray(mention) && mention.length ? { mention, mentionUse: OWNER_MENTION_USE } : {})
 })
 
 /** A copy field a fact can be said in: words about the business, never a button label, a copyright line or a name. */
@@ -54,6 +61,15 @@ const roomOf = (block, slots) =>
   slots
     .filter((s) => s.block === block.id && SAYS(s.field?.kind))
     .reduce((sum, s) => sum + (s.field?.limit ?? 0), 0)
+
+/** A page's block with the most room to write, the first on a tie, as `{page, block}`, or null when none has room. */
+function roomiestOf(page, slots) {
+  const best = list(page.blocks).reduce((top, b) => {
+    const room = roomOf(b, slots)
+    return room > (top?.room ?? 0) ? { block: b, room } : top
+  }, null)
+  return best ? { page, block: best.block } : null
+}
 
 /** The first block, home page first, with a main button label the writer words, as `{page, block}`, or null. */
 function buttonBlockOf(pages, homeIndex, slotsOf) {
@@ -90,22 +106,18 @@ export function placeOwnerFacts(plan, context, fieldsByPage) {
     0,
     pages.findIndex((p) => p.pageType === 'home')
   )
-  const home = pages[homeIndex]
-  const homeBlock = home
-    ? list(home.blocks).reduce((best, b) => {
-        const room = roomOf(b, slotsOf(homeIndex))
-        return room > (best?.room ?? 0) ? { block: b, room } : best
-      }, null)
-    : null
+  const homeBlock = pages[homeIndex] ? roomiestOf(pages[homeIndex], slotsOf(homeIndex)) : null
   const button = buttonBlockOf(pages, homeIndex, slotsOf)
+  const contactIndex = pages.findIndex((p) => p.pageType === 'contact')
+  const contact = contactIndex < 0 ? null : roomiestOf(pages[contactIndex], slotsOf(contactIndex))
   for (const fact of facts) {
     const where = KINDS[fact.group]
       ? firstShowing(KINDS[fact.group])
       : fact.group === MAIN_BUTTON_GROUP && button
         ? button
-        : homeBlock
-          ? { page: home, block: homeBlock.block }
-          : null
+        : list(fact.mention).length && contact
+          ? contact
+          : homeBlock
     if (!where) {
       out.unplaced.push({
         id: fact.id,
@@ -124,7 +136,10 @@ export function placeOwnerFacts(plan, context, fieldsByPage) {
 export const knownOf = (known, data) => [
   ...known,
   ...list(data?.ownerFacts).flatMap((f) =>
-    [f.text, ...list(f.candidates)].map((value) => ({ kind: OWNER_FACT_DATA_KIND, value }))
+    [f.text, ...list(f.candidates), ...list(f.mention).map((m) => m.value)].map((value) => ({
+      kind: OWNER_FACT_DATA_KIND,
+      value
+    }))
   )
 ]
 

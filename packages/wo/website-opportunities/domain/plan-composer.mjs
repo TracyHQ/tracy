@@ -67,6 +67,7 @@ export function blockMapOf(blockStore, library = []) {
 export function composerContextOf({
   profile: given,
   answers = [],
+  answerReadings = null,
   blockStore,
   pageRecipes,
   library = [],
@@ -76,7 +77,7 @@ export function composerContextOf({
   allowTemplateLook = false
 }) {
   const blocks = blockMapOf(blockStore, library)
-  const settled = settleAnswers(given, answers, kindLimitsOf(blocks.values()))
+  const settled = settleAnswers(given, answers, kindLimitsOf(blocks.values()), answerReadings)
   const profile = settled.profile
   const data = addItemFieldFacts(profile, planDataOf(profile))
   const recipes = new Map(list(pageRecipes?.recipes).map((r) => [r?.pageType, r]))

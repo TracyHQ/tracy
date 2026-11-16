@@ -21,6 +21,7 @@ import { languageTag, MAIN_BUTTON_KIND } from './needs-profile-questions.mjs'
 import { conflictPlace } from './plan-conflicts.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 import { asChosen, isStatement, statementOf } from './plan-free-answers.mjs'
+import { applyReading, readingsMapOf } from './plan-answer-readings.mjs'
 import {
   normalisedSiteName,
   settleSiteName,
@@ -95,15 +96,29 @@ function factOfAnswer(answer, question) {
  * @param {object} profile a needs profile (`needs-profile.mjs`)
  * @param {object[]} [answers] Contract B answers (`tracy-build-answer/v1`)
  * @param {Map<string, number>} [limits] the template's smallest text limit per data kind (`kindLimitsOf`)
+ * @param {Map<string, object> | object | null} [readings] what the answer reading kept per question
+ *   (`answer-reading.mjs`): a free answer it read as a choice settles as that choice, its facts are written with the
+ *   answer source (`plan-answer-readings.mjs`); the typed text stays an owner statement either way
  * @returns {{profile: object, leftOut: object[], answered: string[]}} `answered`: the ids of the questions answered
  * @throws {PlanComposerError} `answer_invalid` with `details.problems`
  */
-export function settleAnswers(profile, answers = [], limits = new Map()) {
+export function settleAnswers(profile, answers = [], limits = new Map(), readings = null) {
   const problems = []
   if (!Array.isArray(answers))
     throw new PlanComposerError('answer_invalid', 'answers must be a list', {}, { noRerun: true })
   const questions = new Map(list(profile?.questions).map((q) => [q.id, q]))
-  answers = answers.map((a) => asChosen(a, questions.get(a?.question)))
+  const reads = readingsMapOf(readings)
+  // The typed answers the reading read as an offered choice: settled as that choice, kept as a statement too.
+  const typed = new Map()
+  answers = answers.map((given) => {
+    const question = questions.get(given?.question)
+    const a = asChosen(given, question)
+    const choice = question && isStatement(a, question) ? reads.get(question.id)?.choice : undefined
+    if (!choice) return a
+    typed.set(question.id, a)
+    const { text: _text, ...rest } = a
+    return { ...rest, choice }
+  })
   const seen = new Set()
   let tooLong
   const nameProblems = []
@@ -182,13 +197,14 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
   for (const answer of answers) {
     if (answer.skipped) continue
     const question = questions.get(answer.question)
-    if (isStatement(answer, question)) {
-      const conflict = settled.conflicts?.find((c) => c.question === question.id)
-      settled.ownerFacts = [
-        ...list(settled.ownerFacts),
-        statementOf(answer, question, conflict, ANSWER_SOURCE)
-      ]
-    } else if (question.topic === 'fact-conflict') {
+    const original = typed.get(question.id) ?? (isStatement(answer, question) ? answer : null)
+    const conflictOf = () => settled.conflicts?.find((c) => c.question === question.id)
+    const statement = original ? statementOf(original, question, conflictOf(), ANSWER_SOURCE) : null
+    if (statement) settled.ownerFacts = [...list(settled.ownerFacts), statement]
+    const reading = original ? reads.get(question.id) : undefined
+    if (reading) applyReading(settled, { question, reading, statement, answered, settleConflict })
+    if (isStatement(answer, question)) continue
+    if (question.topic === 'fact-conflict') {
       const conflict = settled.conflicts.find((c) => c.question === question.id)
       if (conflict) settleConflict(settled, conflict, conflictValue(answer, question, conflict))
     } else if (question.topic === 'main-button') {

@@ -25,6 +25,7 @@ import { askingOf } from './engine-asking.js'
 import { placeAnswerOf } from './gather-place.js'
 import { brandRunOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
 import { answersStillAsked } from './answers-kept.js'
+import { answerReadingsOf } from './answer-readings.js'
 import { spendGate, spendLeft } from './engine-spend.js'
 import { usageCollector } from './model-usage.js'
 import { discardPlan, putComposed, putRevised, recordFault } from './store.js'
@@ -374,9 +375,21 @@ export function createEngine({
         brand: brandFor(row, template)
       }
       return start(accountId, 'compose', { ...(request ? { request } : {}), template }, async () => {
+        // The owner's typed answers are read first, once, as their own ledger step (`answer-readings.js`).
+        const answerReadings = await answerReadingsOf(inputs, {
+          kit,
+          reserve: () => admit(accountId, 'answers'),
+          modelOf: async () => {
+            const reading = usageCollector()
+            return { model: await buildModel({ onUsage: reading.onUsage }), cost: reading.cost }
+          }
+        })
         const usage = usageCollector()
         const model = await buildModel({ onUsage: usage.onUsage })
-        const ran = await runWithRerun((copy) => composeStep(copy, { model, kit }), inputs)
+        const ran = await runWithRerun(
+          (copy) => composeStep(copy, { model, kit }),
+          answerReadings ? { ...inputs, answerReadings } : inputs
+        )
         if (!ran.ok) {
           // The owner has one more thing to answer (the site name): a question on the card, not a fault.
           const asking = askingOf(ran.error)

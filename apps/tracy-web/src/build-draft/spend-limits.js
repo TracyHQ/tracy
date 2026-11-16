@@ -1,6 +1,7 @@
 /**
  * How often the owner may start a step that spends money (#609): research (place details, a crawl, the business reading
- * and the needs profile), compose (a plan model call), a change request (a model call) and the brand step (the brand
+ * and the needs profile), compose (a plan model call), the answer reading (one short model call before compose when the
+ * owner typed an answer), a change request (a model call) and the brand step (the brand
  * bench and its image). Counted per account in a fixed one hour window (`lib/rate.js` `overLimitOrClosed`); a build
  * draft belongs to exactly one account, so a limit per account is a limit per draft too. A start past its limit is
  * refused with one plain sentence (`TRY_LATER_SAY`) and nothing runs.
@@ -24,6 +25,8 @@ export const SPEND_WINDOW_MS = 3_600_000
 export const SPEND_LIMITS = Object.freeze({
   research: Object.freeze({ perHour: 6 }),
   compose: Object.freeze({ perHour: 10 }),
+  // The answer reading runs at most once per compose that has a typed answer, so it never needs more starts.
+  answers: Object.freeze({ perHour: 10 }),
   revise: Object.freeze({ perHour: 20 }),
   brand: Object.freeze({ perHour: 4 })
 })
@@ -33,7 +36,16 @@ export const SPEND_LIMITS = Object.freeze({
  * (3), the editorial reading (held to its own job cap) and the needs profile call; the brand step: its bench of model
  * calls and one generated image; compose and revise: one plan sized model answer.
  */
-export const STEP_CEILING_CENTS = Object.freeze({ research: 40, compose: 15, revise: 10, brand: 30 })
+export const STEP_CEILING_CENTS = Object.freeze({
+  research: 40,
+  compose: 15,
+  // The answer reading (`answer-readings.js`): a few short typed answers with their questions in, a short reply out,
+  // well under a tenth of the plan composer's call (the whole profile and every block in, a plan out), so a tenth of
+  // compose's ceiling, rounded up to whole cents with headroom.
+  answers: 2,
+  revise: 10,
+  brand: 30
+})
 
 /** The ledger's provider and purpose names for the build chat's steps. */
 export const LEDGER_PROVIDER = 'tracy-build-chat'
