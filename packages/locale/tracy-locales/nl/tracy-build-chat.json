@@ -185,7 +185,7 @@
   "tool.working": "Uw site-plan wordt opgesteld",
   "plan.revised.notDone.owner_value_not_shown.what": "{label} op de site tonen",
   "plan.revised.notDone.owner_value_not_shown.why": "Uw antwoord is opgeslagen, maar uw ontwerp heeft geen plek die het toont.",
-  "plan.revised.names.counted": "{name} ({count})",
+  "plan.revised.names.counted": "{count} {plural}",
   "plan.revised.notDone.reason.no_recipe": "Uw ontwerp heeft geen pagina van deze soort.",
   "plan.revised.notDone.reason.no_data": "Niets van uw bedrijf vult deze sectie.",
   "plan.revised.notDone.reason.fact_missing": "Uw bedrijf heeft dit gegeven niet.",

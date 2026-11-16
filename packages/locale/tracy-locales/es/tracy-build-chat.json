@@ -185,7 +185,7 @@
   "tool.working": "Preparando el plan de su site",
   "plan.revised.notDone.owner_value_not_shown.what": "Mostrar {label} en el site",
   "plan.revised.notDone.owner_value_not_shown.why": "Su respuesta está guardada, pero su diseño no tiene ningún lugar que la muestre.",
-  "plan.revised.names.counted": "{name} ({count})",
+  "plan.revised.names.counted": "{count} {plural}",
   "plan.revised.notDone.reason.no_recipe": "Su diseño no tiene una página de este tipo.",
   "plan.revised.notDone.reason.no_data": "No hay nada de su negocio que llene esta sección.",
   "plan.revised.notDone.reason.fact_missing": "Su negocio no tiene este dato.",

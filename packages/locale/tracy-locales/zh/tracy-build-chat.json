@@ -185,7 +185,7 @@
   "tool.working": "正在制定你的 site 计划",
   "plan.revised.notDone.owner_value_not_shown.what": "在 site 上显示你的{label}",
   "plan.revised.notDone.owner_value_not_shown.why": "你的回答已保存，但你的设计里没有显示它的位置。",
-  "plan.revised.names.counted": "{name}（{count}）",
+  "plan.revised.names.counted": "{count} 个{plural}",
   "plan.revised.notDone.reason.no_recipe": "你的设计没有这类页面。",
   "plan.revised.notDone.reason.no_data": "你的业务没有可以填进这个区块的内容。",
   "plan.revised.notDone.reason.fact_missing": "你的业务没有这项信息。",

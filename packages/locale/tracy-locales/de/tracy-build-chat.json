@@ -185,7 +185,7 @@
   "tool.working": "Ihr Site-Plan wird erstellt",
   "plan.revised.notDone.owner_value_not_shown.what": "{label} auf der Site zeigen",
   "plan.revised.notDone.owner_value_not_shown.why": "Ihre Antwort ist gespeichert, aber Ihr Design hat keinen Platz, an dem sie erscheint.",
-  "plan.revised.names.counted": "{name} ({count})",
+  "plan.revised.names.counted": "{count} {plural}",
   "plan.revised.notDone.reason.no_recipe": "Ihr Design hat keine Seite dieser Art.",
   "plan.revised.notDone.reason.no_data": "Von Ihrem Unternehmen gibt es nichts, das diesen Abschnitt füllt.",
   "plan.revised.notDone.reason.fact_missing": "Diese Angabe gibt es für Ihr Unternehmen nicht.",

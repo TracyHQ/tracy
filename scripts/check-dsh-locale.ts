@@ -180,7 +180,16 @@ const KEPT_VERBATIM = new Set<string>([
   'tracy-website-opportunities.brief.source.youtube',
   'tracy-website-opportunities.chip.word.google',
   'tracy-website-opportunities.media.moreShort',
-  'tracy-website-opportunities.progress.col.done'
+  'tracy-website-opportunities.progress.col.done',
+  // The build chat's plan card (#609): "Menu" (the site's navigation, the header section) and
+  // "Video" are the words Vietnamese web people say as they are, like "Media" and "Logo" above;
+  // the two opening hours joins and the counted name ("{count} {plural}") are nothing but
+  // placeholders and separators.
+  'tracy-build-chat.plan.section.header',
+  'tracy-build-chat.plan.section.video',
+  'tracy-build-chat.plan.hours.group',
+  'tracy-build-chat.plan.hours.groups',
+  'tracy-build-chat.plan.revised.names.counted'
 ])
 
 type Dict = Record<string, string>

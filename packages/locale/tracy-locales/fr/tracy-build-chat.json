@@ -185,7 +185,7 @@
   "tool.working": "Préparation du plan de votre site",
   "plan.revised.notDone.owner_value_not_shown.what": "Afficher {label} sur le site",
   "plan.revised.notDone.owner_value_not_shown.why": "Votre réponse est enregistrée, mais votre design n’a aucun emplacement qui l’affiche.",
-  "plan.revised.names.counted": "{name} ({count})",
+  "plan.revised.names.counted": "{count} {plural}",
   "plan.revised.notDone.reason.no_recipe": "Votre design n’a pas de page de ce type.",
   "plan.revised.notDone.reason.no_data": "Rien de votre entreprise ne remplit cette section.",
   "plan.revised.notDone.reason.fact_missing": "Votre entreprise n’a pas cette information.",

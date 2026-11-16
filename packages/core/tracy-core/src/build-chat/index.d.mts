@@ -223,7 +223,14 @@ export interface PlanCard {
   }
   assumptions: ({ id: string; said: string } & PlanTextCode)[]
   /** One line per distinct thing and reason; `count` when several were left out for the same reason. */
-  leftOut: { what: string; kind: string; reason: string; count?: number; code?: string; params?: Record<string, unknown> }[]
+  leftOut: {
+    what: string
+    kind: string
+    reason: string
+    count?: number
+    code?: string
+    params?: Record<string, unknown>
+  }[]
   counts: { pages: number; services: number }
 }
 export interface PlanChange {
