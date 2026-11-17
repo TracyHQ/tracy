@@ -88,14 +88,14 @@ test('a black and grey logo on a light and dark template: black on light, white 
     )
 })
 
-test('3:1 holds: plain words when no template words colour reads; a ground too dark for black stops', () => {
+test('3:1 holds: plain words when no template words colour reads; a ground too dark for black keeps the step accent', () => {
   const plain = brandLookOf({ ...inkwellBindery(), kit: lightAndDarkKit({ wordsOn: ['#555555'] }) })
   // #555555 reads on white (the dark theme accent) but not on black: plain white there.
   assert.deepEqual(plain.accent.onAccent, { light: '#ffffff', dark: '#555555' })
-  assert.throws(
-    () => brandLookOf({ ...inkwellBindery(), kit: lightAndDarkKit({ lightGround: '#3a3a3a' }) }),
-    (e) => e instanceof BrandStepError && e.code === 'brand_file_unreadable' && /reads/.test(e.message)
-  )
+  // The step chain writes the accent the step kept (#575): that accent, with why, never a stop.
+  const kept = brandLookOf({ ...inkwellBindery(), kit: lightAndDarkKit({ lightGround: '#3a3a3a' }) })
+  assert.deepEqual([kept.accent.from, kept.accent.hex], ['template-accent-kept', '#225588'])
+  assert.match(kept.accent.why, /reads/)
 })
 
 test('a template with one theme gets that theme colour only: black for light only, white for dark only', () => {

@@ -128,7 +128,7 @@ test('no logo at all: the made logo and the template accent, each said and recor
     [
       [
         'look.logo',
-        "No logo was found, so I made a temporary one: a simple icon of your trade beside your business name, in the design's main colour. Send your logo here in the chat to replace it."
+        'No logo was found, so your business name is shown as text in place of a logo, and the design keeps its main colour. Send your logo here in the chat to replace it.'
       ]
     ]
   )

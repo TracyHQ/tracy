@@ -7,6 +7,8 @@ import {
   ACCENT_LOGO_UNREADABLE,
   ACCENT_LOGO_WITHOUT_HUE,
   ACCENT_NO_LOGO,
+  ACCENT_LOGO_UNMEASURED,
+  ACCENT_TEMPLATE_KEPT,
   NO_HUE_ACCENT
 } from './brand-look-accent.mjs'
 import { isNeutral } from './brand-hue.mjs'
@@ -44,7 +46,9 @@ export function lookProblemsOf({ plan, template, lookSources }) {
   const accentDark = lower(look.accentDark)
   const templateAccent = lower(template?.accent)
   const from = lookSources?.accent?.from
-  const noLogo = from === ACCENT_NO_LOGO
+  // The template's accent may stay with no logo, and where the step chain writes the accent the step kept (a logo whose
+  // colours were never measured, or black and white that read on no ground of the template), recorded as such.
+  const noLogo = [ACCENT_NO_LOGO, ACCENT_LOGO_UNMEASURED, ACCENT_TEMPLATE_KEPT].includes(from)
   // A logo whose own colour (as measured, or adjusted to read, D44) is the template's accent wears it as the business's
   // colour, recorded as such.
   const ownColour =

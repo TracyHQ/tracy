@@ -217,6 +217,7 @@ export {
   ACCENT_LOGO_ADJUSTED,
   ACCENT_LOGO_UNMEASURED,
   ACCENT_LOGO_UNREADABLE,
+  ACCENT_TEMPLATE_KEPT,
   NO_HUE_ACCENT,
   accentOfBrandFile
 } from './brand-look-accent.mjs'

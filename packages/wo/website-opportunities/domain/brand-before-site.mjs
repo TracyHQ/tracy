@@ -11,6 +11,7 @@ import {
   ACCENT_LOGO_UNREADABLE,
   ACCENT_LOGO_WITHOUT_HUE,
   ACCENT_NO_LOGO,
+  ACCENT_TEMPLATE_KEPT,
   accentOfBrandFile,
   researchLogoIdOf
 } from './brand-look-accent.mjs'
@@ -33,6 +34,7 @@ export {
   ACCENT_LOGO_UNREADABLE,
   ACCENT_LOGO_WITHOUT_HUE,
   ACCENT_NO_LOGO,
+  ACCENT_TEMPLATE_KEPT,
   LOGO_DRAWN
 }
 
@@ -104,8 +106,11 @@ export function brandLookOf({ brandFile, brief, kit, minRatio }) {
   const accent = accentOfBrandFile({ brandFile, brief, kit, minRatio })
   if (accent.problem) throw unreadable(accent.problem)
   const material = brandFile.logo?.material
-  const mark = brandFile.logo?.mark?.decision
-  if (!isText(mark)) throw unreadable('logo.mark.decision is missing')
+  // A safe version for a held name makes no mark (`brand-safe-version.js`): the step chain writes that file as it is,
+  // so it is read as a made logo with no mark, never a stop.
+  const decision = brandFile.logo?.mark?.decision
+  const mark = isText(decision) ? decision : null
+  if (!mark && material) throw unreadable('logo.mark.decision is missing')
   const usedId = isObject(material) && isText(material.mediaId) ? material.mediaId : null
   // A logo the research found but the step did not use (its safe version writes `material: null`) is still the
   // business's logo: a made logo says so ("could not be used"), never "no logo was found".
@@ -129,14 +134,15 @@ export function brandLookOf({ brandFile, brief, kit, minRatio }) {
 /** Whether a value is a look record of `brandLookOf`. */
 export const isBrandLook = (brand) => isObject(brand) && brand.schema === BRAND_LOOK_SCHEMA
 
-/** What the made logo shows, per the brand step's mark decision. */
-const MADE_MARKS = Object.freeze({ icon: 'a simple icon of your trade', lettermark: 'your initials' })
-/** What the customer reads about a temporary logo: none found (in the template's accent), or theirs unusable. */
+/**
+ * What the customer reads when the step made a temporary logo: none found, or theirs unusable. The build chat does not
+ * write the made logo yet (it prints the business name as text in the logo's place, `draft-write-plan-facts.mjs`), so
+ * the sentence says the name is shown as text, never an image the site will not show.
+ */
 function madeLogoSaid(logo) {
-  const shows = MADE_MARKS[logo.mark] ?? 'a simple mark'
   return logo.mediaId
-    ? `Your logo could not be used as it is, so I made a temporary one: ${shows} beside your business name. Send your logo file here in the chat to replace it.`
-    : `No logo was found, so I made a temporary one: ${shows} beside your business name, in the design's main colour. Send your logo here in the chat to replace it.`
+    ? 'Your logo could not be used as it is, so your business name is shown as text in place of a logo. Send your logo file here in the chat to replace it.'
+    : 'No logo was found, so your business name is shown as text in place of a logo, and the design keeps its main colour. Send your logo here in the chat to replace it.'
 }
 /** What the customer reads about a black and white accent, per the themes it is worn on. */
 function noHueSaid(accent, accentDark) {
@@ -153,7 +159,16 @@ const ACCENT_NAMES = Object.freeze({
   [ACCENT_LOGO_WITHOUT_HUE]: 'Your logo (it has no colour)',
   [ACCENT_LOGO_ADJUSTED]: 'Your logo, adjusted so it stays readable',
   [ACCENT_LOGO_UNREADABLE]: 'Your logo (its colour is hard to read on buttons)',
-  [ACCENT_NO_LOGO]: 'The design colour, because there is no logo'
+  [ACCENT_NO_LOGO]: 'The design colour, because there is no logo',
+  [ACCENT_LOGO_UNMEASURED]: 'The design colour, because the colours of your logo could not be read',
+  [ACCENT_TEMPLATE_KEPT]: 'The design colour, because the colours of your logo would not read on this design'
+})
+/** What the customer reads when the accent the step kept stays (the step chain writes it as it is). */
+const KEPT_SAID = Object.freeze({
+  [ACCENT_LOGO_UNMEASURED]:
+    "The colours of your logo could not be read, so buttons and links keep the design's main colour.",
+  [ACCENT_TEMPLATE_KEPT]:
+    "The colours of your logo would not read on this design, so buttons and links keep the design's main colour."
 })
 
 /**
@@ -163,12 +178,12 @@ const ACCENT_NAMES = Object.freeze({
  * @param {{slug: string, name: string, version: string, accent?: string}} template the chosen template
  * @param {object} record the record of `brandLookOf`
  * @throws {PlanComposerError} `brand_missing` when there is no record or it is broken;
- *   `brand_logo_colours_unmeasured` when the logo's colours were never measured, so no rule can read its accent
+ *   `brand_logo_colours_unmeasured` for a record stored before the kept accent rode on it (no `accent.hex`)
  */
 export function lookOfBrandRecord(template, record) {
   if (!isBrandLook(record)) throw brandMissing('no brand step result was given')
   const from = record.accent?.from
-  if (from === ACCENT_LOGO_UNMEASURED)
+  if (from === ACCENT_LOGO_UNMEASURED && !HEX_COLOUR.test(record.accent.hex ?? ''))
     throw new PlanComposerError(
       'brand_logo_colours_unmeasured',
       'the brand step kept the template accent and the colours of the logo were never measured',
@@ -191,6 +206,8 @@ export function lookOfBrandRecord(template, record) {
     assumptions.push({ id: 'accent', field: 'look.accent', said: noHueSaid(accent, accentDark) })
   if (from === ACCENT_LOGO_UNREADABLE)
     assumptions.push({ id: 'accent', field: 'look.accent', said: unreadableSaid(accent, accentDark) })
+  if (Object.hasOwn(KEPT_SAID, from))
+    assumptions.push({ id: 'accent', field: 'look.accent', said: KEPT_SAID[from] })
   let logo
   // A drawn logo stays an image logo on the plan (Contract B `own`: the write step places its file), said as drawn. A
   // stored record of an earlier version that said `own` is the same brand step output and is read the same way.
@@ -218,11 +235,8 @@ export function lookOfBrandRecord(template, record) {
       id: 'logo',
       field: 'look.logo',
       said: madeLogoSaid(record.logo),
-      code: LOGO_ASSUMPTION_CODES.made,
-      params: {
-        found: Boolean(record.logo.mediaId),
-        mark: record.logo.mark in MADE_MARKS ? record.logo.mark : 'mark'
-      }
+      code: LOGO_ASSUMPTION_CODES.nameAsText,
+      params: { found: Boolean(record.logo.mediaId) }
     })
   } else throw brandMissing('the brand step result has no logo')
   // The template's accent goes only with a business that has no logo at all: anything else is a broken record.

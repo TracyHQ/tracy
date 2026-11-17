@@ -8,7 +8,10 @@
 //   - a logo with a hue the step could not wear (D44): the logo colour with its hue kept and its lightness moved until
 //     buttons read on every theme (`brand-look-adjust.mjs`), `ACCENT_LOGO_ADJUSTED`; when no lightness reads, black on
 //     light and white on dark as for a logo with no hue, `ACCENT_LOGO_UNREADABLE`; never the template's accent;
-//   - a logo whose colours were never measured: `ACCENT_LOGO_UNMEASURED`, and no plan is composed from it.
+//   - a logo whose colours were never measured: the accent the step kept, recorded as `ACCENT_LOGO_UNMEASURED`;
+//   - black and white that read on no ground of the template: the accent the step kept, `ACCENT_TEMPLATE_KEPT`.
+// The last two are the step chain's own branch (#575): its Write step writes the brand file's kept accent, so the plan
+// card shows that accent and says why, never a stop where the step chain carries on.
 // `accentOfBrandFile` is the one place these rules live.
 import { MIN_RATIO, contrastOf, contrastRatioOf, hexOf, isNeutral } from './brand-hue.mjs'
 import { adjustedAccentOf, adjustedSaid, logoColourOf } from './brand-look-adjust.mjs'
@@ -22,6 +25,7 @@ export const ACCENT_NO_LOGO = 'template-accent-no-logo'
 export const ACCENT_LOGO_ADJUSTED = 'logo-adjusted'
 export const ACCENT_LOGO_UNREADABLE = 'logo-hue-unreadable'
 export const ACCENT_LOGO_UNMEASURED = 'logo-colours-unmeasured'
+export const ACCENT_TEMPLATE_KEPT = 'template-accent-kept'
 /** The accent of a logo with no hue, per theme. */
 export const NO_HUE_ACCENT = Object.freeze({ light: '#000000', dark: '#ffffff' })
 
@@ -70,12 +74,18 @@ function noHueOf(kit) {
   return { themes, onAccent }
 }
 
-/** Black on light and white on dark, for the themes the template has (the no hue rule), recorded as `from`. */
-function noHueAccentOf(kit, from, brandColour, why) {
+/**
+ * Black on light and white on dark, for the themes the template has (the no hue rule), recorded as `from`. When black
+ * and white read on no ground of the template, the accent the step kept (`kept`), as the step chain writes it.
+ */
+function noHueAccentOf(kit, from, brandColour, why, kept) {
   if (!kit)
     return { problem: 'the template kit is needed for a logo with no hue (its themes and button text)' }
   const noHue = noHueOf(kit)
-  if (noHue.problem) return { problem: noHue.problem }
+  if (noHue.problem)
+    return kept
+      ? { hex: kept, from: ACCENT_TEMPLATE_KEPT, brandColour, say: null, why: noHue.problem }
+      : { problem: noHue.problem }
   const [first, second] = noHue.themes
   const dark = second ? { dark: NO_HUE_ACCENT[second] } : {}
   return { hex: NO_HUE_ACCENT[first], ...dark, onAccent: noHue.onAccent, from, brandColour, say: null, why }
@@ -115,16 +125,19 @@ export function accentOfBrandFile({ brandFile, brief, kit, minRatio = MIN_RATIO 
   }
   const measured = logoColoursOf(brief)
   if (measured.length > 0 && measured.every(isNeutral))
-    return noHueAccentOf(kit, ACCENT_LOGO_WITHOUT_HUE, null, why)
+    return noHueAccentOf(kit, ACCENT_LOGO_WITHOUT_HUE, null, why, kept)
   // The step keeps the template's accent when the brand colour is that accent (the gate's own rule): the colour is the
   // business's all the same.
   if (kept && measured.includes(kept)) return plain(kept, ACCENT_FROM_LOGO)
   const logoColour = logoColourOf(brief)
-  if (!logoColour) return plain(null, ACCENT_LOGO_UNMEASURED)
+  if (!logoColour) {
+    if (!kept) return { problem: 'a kept accent without a #rrggbb colours.accent' }
+    return plain(kept, ACCENT_LOGO_UNMEASURED)
+  }
   if (!kit)
     return { problem: 'the template kit is needed to adjust the logo colour (its themes and button text)' }
   const adjusted = adjustedAccentOf(logoColour, kit, { minRatio })
-  if (!adjusted) return noHueAccentOf(kit, ACCENT_LOGO_UNREADABLE, logoColour, why)
+  if (!adjusted) return noHueAccentOf(kit, ACCENT_LOGO_UNREADABLE, logoColour, why, kept)
   const [first, second] = adjusted.themes
   return {
     hex: adjusted.accents[first],
