@@ -113,7 +113,7 @@ function planLibrary(state) {
  * @param {{blockStore: object, mapping: object, pageRecipes?: object, blankContract?: object}} aiq the AI quickstart
  *   declarations; `blankContract`: the blank site contract's content map (its slots: limits, `opensEmpty`)
  * @param {{stored?: Record<string, {id: string, mime?: string}>, withheld?: object, approved?: object,
- *   iconKeys?: string[]}} [options] `stored`: the stored bytes of every picture and icon the site shows, by frame or
+ *   iconKeys?: string[], accentShifts?: object[] | null}} [options] `accentShifts`: the brand file's colour shifts `stored`: the stored bytes of every picture and icon the site shows, by frame or
  *   icon id; `withheld`: the profile's held texts; `approved`: the approved plan; `iconKeys`: the icon library's names
  * @returns {{schema: string, ops: object[], skipped: object[], unproven: object[]}}
  */
@@ -136,6 +136,8 @@ export function writePlanOf(order, aiq, options = {}) {
     pictures: new Map(),
     rows: new Map(),
     stored: options.stored ?? {},
+    // The brand file's colour shifts per side, when the plan's accent is the brand file's (`draft-write-plan-accent.mjs`).
+    accentShifts: Array.isArray(options.accentShifts) ? options.accentShifts : null,
     notWritten: [],
     dropReasons: new Map(),
     underNotWritten: []

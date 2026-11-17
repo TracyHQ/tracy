@@ -137,8 +137,23 @@ export function planBlocks(state) {
       ...list(place.icons).map((i) => i.id)
     ]
     if (!shown) {
-      for (const id of ids)
+      // A block the template fills (`fallback`: the header's menu rebuilt from the page titles) still takes the
+      // business's logo: a logo frame is a fact of the site's settings, never the block's own words (#575, P1 of the
+      // brand audit; "a logo frame counts as shown", docs/references/write-order.md).
+      const logos =
+        place.state === 'fallback' && block.state !== 'hidden'
+          ? list(place.pictures).filter((p) => p.reason === 'logo_from_brand_step')
+          : []
+      for (const id of ids) {
+        if (logos.some((p) => p.frame === id)) continue
         skip(state.sink, id, block.state === 'hidden' ? 'block_hidden' : `place_${place.state}`)
+      }
+      if (logos.length) {
+        const scope = rankOf(state, at, at.scope)
+        for (const p of logos)
+          if (scope.skip) skip(state.sink, p.frame, scope.skip)
+          else writePicture(state, at, scope, p, 'picture')
+      }
       continue
     }
     // A container that holds none of the page's blocks is not kept (`holds.copies.keptWhen`), nor a block of a page

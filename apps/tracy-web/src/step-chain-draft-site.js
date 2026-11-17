@@ -116,6 +116,9 @@ export function siteWriteOf(deps, ctx, how, inputs, records) {
       manifest: inputs?.plan?.research?.manifest,
       look: inputs?.plan?.plan?.look ?? null,
       accountId: ctx.accountId ?? null,
+      // The kept brand file of the plan's look: the logo frames and the site icon take its pictures (#575).
+      brand: inputs?.plan?.brand ?? null,
+      mapping: inputs?.kit?.aiq?.mapping ?? null,
       openDraftPicture: deps.openDraftPicture
     })
   return {

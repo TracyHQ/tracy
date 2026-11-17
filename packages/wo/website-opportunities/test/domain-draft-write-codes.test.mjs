@@ -111,7 +111,8 @@ test('the florist plan raises exactly these skip reasons, flags and operation ki
     'no_fitting_video',
     'no_generated_people',
     'page_reached_under',
-    'place_fallback',
+    // No `place_fallback`: the header the template fills held only its logo frames, and a logo frame takes the
+    // logo in a block the template fills too (#575); the florist's text logo skips them as `text_logo_prints_site_name`.
     'row_keyed_page_without_block',
     'row_keyed_to_page_type',
     'row_page_reached_under',
