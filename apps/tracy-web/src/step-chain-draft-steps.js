@@ -23,7 +23,12 @@
 import { selectBuildIcons, placeBuildPictures } from 'website-opportunities/domain/picture-step.mjs'
 import { writePages } from 'website-opportunities/domain/page-writer.mjs'
 import { withoutWithheld } from 'website-opportunities/domain/plan-withheld.mjs'
-import { refusedPicture, visionThrough, withDraftPictures } from './step-chain-draft-pictures.js'
+import {
+  refusedPicture,
+  researchPicturesOf,
+  visionThrough,
+  withDraftPictures
+} from './step-chain-draft-pictures.js'
 import { draftError, draftSource } from './step-chain-draft-source.js'
 import { keptModelOf, reuseOf, revisionOf, revisionRecordOf } from './step-chain-draft-revision.js'
 import { siteWriteOf } from './step-chain-draft-site.js'
@@ -151,10 +156,13 @@ export function createDraftSteps(deps) {
         accountId: ctx.accountId,
         openDraftPicture: deps.openDraftPicture
       })
+      const research = researchPicturesOf(plan.research)
       const placed = await placeBuildPictures({
         plan: plan.plan,
         profile: opened.profile,
         ...declared(kit),
+        pictures: research.videos,
+        labels: research.labels,
         vision: visionThrough(model, opened.refs),
         refuse: refusedPicture(plan.profile?.withheld, opened.profile)
       })
@@ -162,7 +170,9 @@ export function createDraftSteps(deps) {
         used: opened.used,
         missing: opened.missing,
         unstored: opened.unstored,
-        refused: placed.refused.length
+        refused: placed.refused.length,
+        videos: research.videos.length,
+        videosLeftOut: research.videosLeftOut
       }
       const recorded = {
         calls: { asked: model.asked, replayed: model.replayed },

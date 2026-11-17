@@ -12,6 +12,7 @@ import { unfitReason } from './picture-fit.mjs'
 import { labelOwnPictures, PicturePolicyError } from './picture-labelling.mjs'
 import { assignPictures } from './picture-policy.mjs'
 import { planDataOf } from './plan-data.mjs'
+import { withResearchLabels } from './picture-research-labels.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
@@ -70,7 +71,9 @@ const planPages = (plan, Failure) => {
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], vision: Function,
  *   pictures?: object[]}} input `pictures` adds own picture records the profile does not hold (a video of the
  *   business's own channel); `vision` is the standard build model's vision call (the labelling); `refuse(picture)`
- *   true keeps a picture off the site, asked before the labelling and again with the label it got (`refused`: their ids)
+ *   true keeps a picture off the site, asked before the labelling and again with the label it got (`refused`: their ids);
+ *   `labels` the research's vision labels by address (`picture-research-labels.mjs` `researchLabelsOf`): a photo they
+ *   label in full is not looked at again, any other photo is
  * @returns {Promise<{frames: object[], reduced: object[], droppedFrames: object[], counts: object, notes: object[],
  *   leftOut: object[], difference: object | null, labelled: string[], refused?: string[],
  *   prompt: {file: string, sha256: string} | null}>}
@@ -83,13 +86,15 @@ export async function placeBuildPictures({
   library = [],
   vision,
   pictures = [],
-  refuse
+  refuse,
+  labels = null
 }) {
   planPages(plan, PicturePolicyError)
   const data = planDataOf(profile)
   // A refused picture is never shown to the vision call nor placed: its frame has no own photo (the policy decides).
   const allowed = (p) => typeof refuse !== 'function' || !refuse(p)
-  const records = [...ownPicturesOf(data), ...list(pictures)].filter(allowed)
+  const own = [...ownPicturesOf(data), ...list(pictures)].filter(allowed)
+  const records = labels instanceof Map ? withResearchLabels(own, labels) : own
   const labelled = await labelOwnPictures({ pictures: records, vision })
   const refused = labelled.pictures.filter((p) => !allowed(p)).map((p) => p.id)
   const labelling = { ...labelled, pictures: labelled.pictures.filter(allowed) }

@@ -14,6 +14,8 @@
 // its file name or address, its item's id, label, alt, caption or title, as words or in a slug) is refused
 // (`refusedPicture`): never shown to the vision call when its texts already name one, never placed, its frame left
 // to the picture policy, which never draws a person. The alt text hand-off lives in `step-chain-draft-alt.js`.
+import { researchOf } from 'website-opportunities/domain/needs-research.mjs'
+import { researchLabelsOf } from 'website-opportunities/domain/picture-research-labels.mjs'
 import { heldTextsOf, itemTextsOf, namesHeldInAnyForm } from 'website-opportunities/domain/plan-withheld.mjs'
 import { draftError } from './step-chain-draft-source.js'
 import { OPENED, openOptionsOf } from './step-chain-draft-stored.js'
@@ -85,6 +87,23 @@ export async function withDraftPictures({ profile, manifest, accountId, openDraf
     missing: [...new Set(missing)],
     unstored
   }
+}
+
+/**
+ * What the draft's research knows of its pictures (#575 pictures gap audit, ports 2 and 9): the research's vision
+ * labels by address (a photo labelled in full is not looked at again), and the business's own videos, which the
+ * needs profile never reads. A video is offered to a video frame only with a caption to label it: the vision call is
+ * shown stored still pictures, never a video (`videosLeftOut` counts the others).
+ * @param {{brief?: object, manifest?: object[]} | null | undefined} research the approved draft's research record
+ * @returns {{labels: Map<string, object>, videos: object[], videosLeftOut: number}}
+ */
+export function researchPicturesOf(research) {
+  const brief = research?.brief
+  const manifest = list(research?.manifest)
+  if (!brief || typeof brief !== 'object') return { labels: new Map(), videos: [], videosLeftOut: 0 }
+  const all = researchOf(brief, { manifest }).videos
+  const videos = all.filter((v) => isText(v.label))
+  return { labels: researchLabelsOf(brief, manifest), videos, videosLeftOut: all.length - videos.length }
 }
 
 /**

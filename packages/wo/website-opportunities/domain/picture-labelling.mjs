@@ -8,6 +8,7 @@
 // skipped silently: a picture is labelled or the step fails.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
+import { PHOTO_RISKS } from './picture-research-labels.mjs'
 import { ASSET_CONTENT_KINDS, orientationOf } from './pictures/asset-labels.mjs'
 
 /** The draft prompt (product owner review: #600). Its hash is recorded with every labelling it made. */
@@ -72,10 +73,13 @@ function burnedInTextOf(picture, answer) {
 /** One picture with the vision call's answer, or null when the answer cannot label it. */
 function labelled(picture, answer) {
   if (!isText(answer?.label) || !CONTENT.has(answer?.content)) return null
+  // The three photo risks the step chain's shortlist reads (`photo-shortlist.js`): a reply that leaves one undecided
+  // labels nothing, as a photo with an undecided risk can never be placed.
+  if (!PHOTO_RISKS.every((k) => typeof answer[k] === 'boolean')) return null
   const measured = orientationOf(picture.width, picture.height)
   const orientation =
     measured !== 'unknown' ? measured : ORIENTATIONS.has(answer.orientation) ? answer.orientation : 'unknown'
-  const { burnedInText: _research, ...rest } = picture
+  const { burnedInText: _research, needsLook: _look, ...rest } = picture
   const burnedInText = burnedInTextOf(picture, answer)
   return {
     ...rest,
@@ -83,6 +87,7 @@ function labelled(picture, answer) {
     content: answer.content,
     people: answer.people === true || answer.content === 'team' || answer.content === 'people-in-action',
     ...(burnedInText === undefined ? {} : { burnedInText }),
+    ...Object.fromEntries(PHOTO_RISKS.map((k) => [k, answer[k]])),
     orientation,
     labelledBy: 'vision'
   }
@@ -96,7 +101,8 @@ function labelled(picture, answer) {
  */
 export async function labelOwnPictures({ pictures, vision }) {
   const all = list(pictures)
-  const unlabelled = all.filter((p) => !p.stock && !isLabelled(p))
+  // A photo whose research label decides nothing is looked at again (`picture-research-labels.mjs` `needsLook`).
+  const unlabelled = all.filter((p) => !p.stock && (!isLabelled(p) || p.needsLook === true))
   if (unlabelled.length === 0) return { pictures: all, labelled: [], prompt: null }
   if (typeof vision !== 'function')
     throw new PicturePolicyError('vision_missing', 'own pictures need a label and no vision call was given', {
