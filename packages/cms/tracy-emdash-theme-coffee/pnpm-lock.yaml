@@ -22,6 +22,10 @@ overrides:
   vite@>=8.3.0 <8.3.3: 8.3.8
   deepmerge@>=4.2.0 <=4.3.1: 4.1.1
 
+patchedDependencies:
+  picomatch@2.3.2: e662ac00569116ba1c32f46c976da1b72e185b1e0f58ff7c1cad19ed422bb7ab
+  picomatch@4.0.7: 5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc
+
 importers:
 
   .:
@@ -5637,7 +5641,7 @@ snapshots:
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
       js-yaml: 4.3.2
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       retext-smartypants: 6.2.0
       shiki: 4.4.3
       smol-toml: 1.9.1
@@ -5647,7 +5651,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       retext-smartypants: 6.2.0
       shiki: 4.6.0
       smol-toml: 1.9.1
@@ -6253,11 +6257,11 @@ snapshots:
       enquirer: 2.4.1
       env-paths: 2.2.1
       execa: 5.1.1
-      fdir: 6.5.0(picomatch@4.0.7)
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc))
       ignore: 5.3.2
       object-treeify: 1.1.33
       open: 8.4.2
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       systeminformation: 5.33.16
       undici: 7.30.1
       which: 4.0.0
@@ -8524,7 +8528,7 @@ snapshots:
   anymatch@3.1.3:
     dependencies:
       normalize-path: 3.0.0
-      picomatch: 2.3.2
+      picomatch: 2.3.2(patch_hash=e662ac00569116ba1c32f46c976da1b72e185b1e0f58ff7c1cad19ed422bb7ab)
 
   arctic@3.7.0:
     dependencies:
@@ -8589,7 +8593,7 @@ snapshots:
       p-queue: 10.0.0
       package-manager-detector: 1.9.0
       piccolore: 0.1.3
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       rolldown: 1.2.19
       shiki: 4.6.0
       smol-toml: 1.9.1
@@ -9311,9 +9315,9 @@ snapshots:
     dependencies:
       reusify: 1.1.0
 
-  fdir@6.5.0(picomatch@4.0.7):
+  fdir@6.5.0(picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)):
     optionalDependencies:
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
 
   fetch-blob@3.2.0:
     dependencies:
@@ -9860,7 +9864,7 @@ snapshots:
   micromatch@4.0.8:
     dependencies:
       braces: 3.0.3
-      picomatch: 2.3.2
+      picomatch: 2.3.2(patch_hash=e662ac00569116ba1c32f46c976da1b72e185b1e0f58ff7c1cad19ed422bb7ab)
 
   mime-db@1.54.0: {}
 
@@ -10123,9 +10127,9 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  picomatch@2.3.2: {}
+  picomatch@2.3.2(patch_hash=e662ac00569116ba1c32f46c976da1b72e185b1e0f58ff7c1cad19ed422bb7ab): {}
 
-  picomatch@4.0.7: {}
+  picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc): {}
 
   pkce-challenge@5.0.1: {}
 
@@ -10879,8 +10883,8 @@ snapshots:
 
   tinyglobby@0.2.17:
     dependencies:
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc))
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
 
   tinyps@0.5.2: {}
 
@@ -11066,7 +11070,7 @@ snapshots:
   vite@8.3.8(@types/node@24.10.13)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1):
     dependencies:
       lightningcss: 1.33.0
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       postcss: 8.5.33
       rolldown: 1.2.19
       tinyglobby: 0.2.17
@@ -11095,7 +11099,7 @@ snapshots:
       magic-string: 0.30.21
       obug: 2.2.1
       pathe: 2.0.3
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       std-env: 4.2.0
       tinybench: 2.9.0
       tinyexec: 1.3.1

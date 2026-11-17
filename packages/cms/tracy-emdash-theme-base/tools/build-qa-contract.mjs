@@ -8,7 +8,7 @@
 //        [--seed seed/seed.json] [--out qa.contract.json]
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { initContract, filesUnder } from './qa-contract.mjs'
+import { initContract, filesUnder, withPatches } from './qa-contract.mjs'
 import { deriveShots } from './fast-gate.mjs'
 
 const args = process.argv.slice(2)
@@ -797,7 +797,7 @@ const BASE = { Projects: 'projects', News: 'news', Page: 'terms' }
     }
   }
 }
-c.distribution.include = [
+c.distribution.include = withPatches([
   'package.json',
   'pnpm-lock.yaml',
   'pnpm-workspace.yaml',
@@ -819,7 +819,7 @@ c.distribution.include = [
   'LICENSE',
   'artifact.json',
   '.env.example'
-]
+])
 c.distribution.required = [
   // What the fleet needs to turn the zip into a running site: tracy-host unzips it to app.new/ and
   // runs `docker build` there. Without these two the release packs, uploads, and dies on the host

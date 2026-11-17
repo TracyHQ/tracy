@@ -13,7 +13,7 @@
 // (with its strings) once a crawl provides it.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { initContract, filesUnder } from './qa-contract.mjs'
+import { initContract, filesUnder, withPatches } from './qa-contract.mjs'
 import { deriveShots } from './fast-gate.mjs'
 import { importClosure } from './visual-lib.mjs'
 
@@ -1280,33 +1280,35 @@ c.reviews = Object.fromEntries(Object.keys(c.reviews).map((g) => [g, { mode: 're
 c.capabilities = ['forms', 'search', 'seo', 'media']
 // The shipped file set: source, lockfile, seed with its media, tools + ingest + contract, docs. Never
 // data/, uploads/, .env, tokens, node_modules — and never qa.contract.json (qa-contract.md).
-c.distribution.include = [
-  'package.json',
-  'pnpm-lock.yaml',
-  'pnpm-workspace.yaml',
-  'template.config.json',
-  'astro.config.mjs',
-  'tsconfig.json',
-  'components.json',
-  'emdash-env.d.ts',
-  '.env.example',
-  'public',
-  'seed',
-  'src',
-  'tools',
-  'ingest',
-  'contract',
-  'tests',
-  'docs',
-  'README.md',
-  'AGENTS.md',
-  'PROVENANCE.md',
-  // release.mjs copies LICENSE out of the packed artifact, so it has to be inside it.
-  'LICENSE',
-  // The fleet builds the site image from the packed template (emdash.sh → emdash_build_image), so the
-  // Dockerfile ships too; its entrypoint is tools/docker-entrypoint.sh, already under tools/.
-  'Dockerfile'
-].filter((p) => existsSync(p) || fail(`distribution include missing: ${p}`))
+c.distribution.include = withPatches(
+  [
+    'package.json',
+    'pnpm-lock.yaml',
+    'pnpm-workspace.yaml',
+    'template.config.json',
+    'astro.config.mjs',
+    'tsconfig.json',
+    'components.json',
+    'emdash-env.d.ts',
+    '.env.example',
+    'public',
+    'seed',
+    'src',
+    'tools',
+    'ingest',
+    'contract',
+    'tests',
+    'docs',
+    'README.md',
+    'AGENTS.md',
+    'PROVENANCE.md',
+    // release.mjs copies LICENSE out of the packed artifact, so it has to be inside it.
+    'LICENSE',
+    // The fleet builds the site image from the packed template (emdash.sh -> emdash_build_image), so the
+    // Dockerfile ships too; its entrypoint is tools/docker-entrypoint.sh, already under tools/.
+    'Dockerfile'
+  ].filter((p) => existsSync(p) || fail(`distribution include missing: ${p}`))
+)
 c.distribution.required = [
   'package.json',
   'pnpm-lock.yaml',

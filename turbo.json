@@ -256,6 +256,7 @@
         "$TURBO_ROOT$/packages/web/tracy-wo-find-page/**",
         "$TURBO_ROOT$/packages/wo/*",
         "$TURBO_ROOT$/packages/wo/website-opportunities/**",
+        "$TURBO_ROOT$/patches/*",
         "$TURBO_ROOT$/pnpm-lock.yaml",
         "$TURBO_ROOT$/pnpm-workspace.yaml",
         "$TURBO_ROOT$/run.sh",

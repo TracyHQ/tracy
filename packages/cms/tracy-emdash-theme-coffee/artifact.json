@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "Ember Roasters",
-	"generatedAt": "2026-11-17T11:22:52.245Z",
+	"generatedAt": "2026-11-17T17:45:35.822Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,7 +75,7 @@
 		"docs/content-model.md": "sha256:ea67fe1f0020961f8fe060deb61acd1000cb7e3299ec0895f6c1a666f9d46959",
 		"docs/content-rules.md": "sha256:e78406d24f1f7663b1ac066f8bf602b64260893a9bbbb55a6af817dacb0bf1be",
 		"docs/design-system.md": "sha256:3ce14c22121330dea9fd9416892b85c5535c1294796cdc4d3017669c57ae81c2",
-		"docs/generated/inventory.json": "sha256:2b9533940a122bc6a1f2f2cc655f873a3bc27d7c36dd4bc911737c307cf4e7ea",
+		"docs/generated/inventory.json": "sha256:1e228362929248ba80877fbb5853cbf8ff5908648e65218da37e4badf477b3a9",
 		"docs/generated/inventory.md": "sha256:48a2262f917b7e4d4298f31520e42ca21c2e9bbe38b5f1d842d5976ab676866b",
 		"docs/install.md": "sha256:a0c39767b658915438707192b7309dd18c6566330c9166605859285a0295d6cd",
 		"docs/kept-for-later.md": "sha256:b6be307d1258104e09d72c07a3f87c675c8becba46c1da7b85a580e43d67c06b",
@@ -85,7 +85,7 @@
 		"seed/seed.json": "sha256:af257e75097c6242f12227a2aa07f58a721215b6dbe0ce089892304416902afe",
 		"seed/media-map.json": "sha256:eaf7ecc9b46576b582d8337298cc1ca53b5a3e863e0e902fb271d520a526f13a",
 		"seed/field-map.json": "sha256:25445ee973524e149435aa5ec97338087e44875ace7ef10d5b4aa1206ed91a48",
-		"pnpm-lock.yaml": "sha256:b1e4f142ce4f100fbbed1b08a9883e2015bf5299d205ecd0976eec2addd30957",
+		"pnpm-lock.yaml": "sha256:b9195b73ec34fb1f4c5820e193b506bbdb98ecf7b8aefa21e8cceda4db2b808f",
 		"tools/forms.json": "sha256:a9c78a8909278efb02bf7b690dd1460d9ed94fa2602df9a9fb2964c6cb9d983f",
 		"seed/media/*": "sha256:5d22607288350d9e432ee8ae7fa2b11779c1333054cc07eed2032dc9972ed14f (56 files)"
 	}
