@@ -899,45 +899,42 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   step runs once more with the same inputs, never after a `noRerun` failure; the second failure records `fault` and the
   owner reads one sentence. A compose that needs the owner's site name first (`site_name_missing`, `site_name_too_long`)
   records no fault: it ends `asking` with the question ([`build-draft/engine-asking.js`](apps/tracy-web/src/build-draft/engine-asking.js)),
-  and the answer comes back through the same answers door. Research reads the owner's links in memory ([`build-draft/gather.js`](apps/tracy-web/src/build-draft/gather.js),
-  wired in `build-draft-gather-wiring.js` `preSiteGatherer`): the Website Opportunities link door judges and guards them, the
-  executor's connectors read the website and social pages (its page, post and charge limits, the account's daily paid
-  run count), Google Place Details reads a matched Google place, and `mergeProfile` / `fromPlace` / `makeSiteBrief`
-  make the brief and `assetManifestOf` the manifest a revision stores. No `wo_*` row is written. The collected pictures
-  are stored within the same deadline by the executor's own media rules (`media-store.js` `createMediaStore`: admission,
-  limits, sniffing, measuring) as draft pictures ([`build-draft/pictures.js`](apps/tracy-web/src/build-draft/pictures.js)):
-  migration 218 adds `build_draft_picture` (one row per picture bytes of an account, cascading with the draft), the bytes
-  in the Website Opportunities objects door under `build-drafts/<account>/<sha256>.<ext>`. The manifest names them by
-  row id with origin `draft`; `app.openDraftPicture(id)` opens one again; a picture not stored is out of the manifest,
-  in `research.picturesSetAside` with its reason. Once a research step's record is in the draft, the rows and objects of
-  older research runs are pruned, except those the research, the living plan's research or an open build's snapshot
-  still names; an account deletion drops the rows but not the objects (no object cleanup hook yet).
-  The business logo (`place-logo.js` rule) is measured from its stored copy (`media-info.js` `logoPaletteOf`, as the
-  executor's brand stage does), so the brief's brand carries the logo's own colours (`colorsFrom: 'logo'`, `accent`),
-  and written from that copy as a file in `build-draft-logos/` beside the
-  brand bench run folders for the brand step, which reads the draft's brief and that file, never a revision. The business
-  is then read by the place executor's own reading step ([`build-draft/gather-reading.js`](apps/tracy-web/src/build-draft/gather-reading.js)
-  over `business-reading.js` `readBusiness` / `readingInputOf`, model door `woEditorial`) and laid on the profile as
-  `businessReading`, so the brief's services, prices, team and story come from it as a revision's do; the reading
-  writes no `wo_cost_ledger` row of its own (the engine reserves the whole research step): each call is held in memory to `/ops/wo` `researchJobCapCents`, and `research.reading` records
-  method, reason, calls, tokens and cents. No door, a spent cap, a failure (one rerun) or its own two minutes past: the
-  rules' reading or none, with its reason, never a failed research. The owner's typed description (decision D46) is a source,
-  never copy: it is not laid in as the seller's bio (the bio based paths read the sources' own bio), it guides the
-  trade guess only when the sources name no trade, and its sentences of five words or more are kept out of the
-  brief's hero, story, story facts, headline line and brand voice evidence word for word
-  ([`build-draft/description-guard.js`](apps/tracy-web/src/build-draft/description-guard.js), each removal in
-  `research.descriptionKeptOut`). Its facts are read: the business reading takes it as its own passage, the source `owner-statement`
-  (`readingInputOf` with `ownerStatement` and the research's `withheld`, which is always passed so a held name or person
-  never reaches the model), so a fact only it states reaches the needs profile as "Your answer" and no sentence of it is
-  copied onto the site (the reading drops its own copies, `research.reading` and the brief's `ownerEchoDropped` record
-  them without the owner's words). How it was read is `research.descriptionFacts` (`{read: true, heldOut, cut}`, or
-  `{read: false, reason}` when everything named something held, the reading ran without a model, or it did not run); no
-  description, no record. The guard above stays for the places the sources' own bio feeds. Unread links are set aside with a reason; nothing read is
-  `research_empty`; reading the links is bounded to three minutes and the business reading to two more. The brand step before the site (#616,
+  and the answer comes back through the same answers door. Research of the owner's links is the step chain's own (#575,
+  [`build-draft/place-research.js`](apps/tracy-web/src/build-draft/place-research.js)): the Website Opportunities link
+  door judges and guards the links (a Google link matching several places ends `asking` with the place question, before
+  anything is saved), then the business is saved and researched as Build from my business does it
+  ([`opportunities-build/business-research.js`](apps/tracy-web/src/opportunities-build/business-research.js), shared with
+  `own-site.js`, exposed as `app.businessResearch`): the account's private opportunity marked `ownSite` (with
+  `buildDraft`, the draft's id), its listing pages' row, and the shared place research (`startResearch`, every stage of
+  the place executor, its ledger, receipts, daily counts and job cap; the executor also runs while the build chat
+  switch is on). The research step stays `running` across polls (`build_draft.engine.place` names the opportunity, place
+  and job; no process owns it, so it is never stopped as an orphan): each poll reads the place run's own source rows
+  (`wo_place_snapshot_source`), resumes a paused run by Build from my business's rule (three times), and turns each link
+  into `reading`, `read` or `failed`. Once the place run ended, the poll's process takes the step over (`adoptStep`) and
+  makes the content brief with `createRevision` (a `wo_revision`, its photographs labelled first), keeps the owner's
+  description out of the draft's brief copy word for word ([`build-draft/description-guard.js`](apps/tracy-web/src/build-draft/description-guard.js),
+  D46, each removal in `research.descriptionKeptOut`), hands the description to the needs profile as the owner's
+  statement (`owner-statement`, "Your answer"), and stores the brief, its asset manifest, the place profile and
+  `research.ids` (`opportunityId`, `placeId`, `revisionId`). The place the owner chose is the saved opportunity's: a
+  later research of the same Google link reads it from there and never asks again. The manifest names the place's and
+  the account's pictures (origins `place`, `opportunity`); a draft site run opens them through one reader
+  ([`lib/research-picture-reader.js`](apps/tracy-web/src/lib/research-picture-reader.js): `wo_place_media` or `wo_media`,
+  hash checked, a place picture only for an account holding an opportunity on that place). Start over deletes the
+  draft and removes `ownSite.buildDraft` from its opportunity; the shared place research stays.
+  Research of the owner's words alone ([`build-draft/gather.js`](apps/tracy-web/src/build-draft/gather.js)) saves
+  nothing: the business is read by the place executor's own reading step ([`build-draft/gather-reading.js`](apps/tracy-web/src/build-draft/gather-reading.js)
+  over `business-reading.js`, model door `woEditorial`, held to `/ops/wo` `researchJobCapCents` and its own two
+  minutes) with the description as its own passage (`owner-statement`, the research's `withheld` always passed), and
+  `fromPlace` / `makeSiteBrief` make the brief; `research.reading` and `research.descriptionFacts` record how. Its
+  sentences of five words or more are kept out of the brief word for word as above. Pictures a research made before
+  #575 stored as draft pictures ([`build-draft/pictures.js`](apps/tracy-web/src/build-draft/pictures.js), migration 218,
+  `build_draft_picture`, origin `draft`) still open through the same reader and are pruned once nothing reads them; an
+  account deletion drops the rows but not the objects (no object cleanup hook yet). The brand step before the site (#616,
   [`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`) is the engine's own
   `brand` step: choosing a template on a researched draft starts it (compose starts it when the record is missing), and
   its look record is kept in `build_draft.brand` (migration 217) for that template; compose only reads it, and new
-  research clears it. On a draft it runs on the research brief (`--brief-file`), so a draft without a brief or a known kit stops with
+  research clears it. On a draft researched from links it runs on the research's revision (`--brief-revision`), else on
+  the research brief (`--brief-file`), so a draft without a brief or a known kit stops with
   `brand_input_missing` and never shows the template's look.
   The engine's own model calls (needs profile, plan composer) spend the `buildModel` door (Model & AI); the brand step
   spends the brand bench's doors.
