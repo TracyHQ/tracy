@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-678-clock-skew-db-times",
+  "kind": "fix",
+  "title": "tracy-web: a brief settled after a restart and the /ops Website opportunities queue judge database-written times on one clock, so an app clock ahead of PostgreSQL no longer marks a live shared worker's lease expired or drops interruptedAt",
+  "pr": 678,
+  "area": "tracy-web/website-opportunities/ops-queue",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set, from the checkout run: node --import ./scripts/clock-shift.mjs --test --test-reporter=tap apps/tracy-web/test/brief-build.test.mjs apps/tracy-web/test/ops-wo-shared-research.test.mjs (the preload moves the JavaScript clock 400 days ahead; PostgreSQL stays on the real clock).",
+    "S2: Record the exit code and the result of the cases named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with \"# fail 0\" and \"# skipped 0\".",
+    "A brief that a starting process settles carries timings.interruptedAt from the build module's own clock (the same clock as its other writers and its reader), within the last minute of Date.now().",
+    "/ops lists a shared worker whose lease_until is an hour after the database's now() as collecting (\"Collecting website (2/3 done)\"), not \"Worker lease expired on shared-worker\", although Date.now() is past lease_until.",
+    "The live duration of a running research job is measured on the database clock: 120 to 129 seconds for a job created two minutes earlier by now()."
+  ],
+  "selectors": {
+    "brief": "apps/tracy-web/src/sites/brief-build.js (recoverLost: interruptedAt bound as $7 from now())",
+    "ops": "apps/tracy-web/src/lib/wo-ops.js (jobClock, db_now in the listWoQueue job query)"
+  },
+  "evidence": "17/11/2026 release PR develop→main, job \"build check (checks)\", step \"Tests with the clock moved forward\" (scripts/run-clock-shift.mjs): brief-build.test.mjs:1048 failed Number(prep.timings.interruptedAt) > Date.now() - 60_000; ops-wo-shared-research.test.mjs:75/118/125 got 'Worker lease expired on shared-worker' instead of 'Collecting website (2/3 done)' and a durationSec outside 120..129. Both files were green on the real clock: the product compared PostgreSQL now()/clock_timestamp() times with JavaScript Date.now().",
+  "fence": "The shifted-clock preload stands in for an application clock that drifts ahead of the database; the real PostgreSQL writes every fixture time with now().",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "./scripts/clock-shift.mjs",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-build.test.mjs",
+      "apps/tracy-web/test/ops-wo-shared-research.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a process that starts settles at once the open rows a dead process left",
+      "Ops follows the active shared worker and current snapshot, preserving request identity",
+      "private research keeps its own diagnostics and live elapsed duration",
+      "shared work without a snapshot still exposes worker checkpoints"
+    ]
+  }
+}
