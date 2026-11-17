@@ -35,12 +35,13 @@ test('an entry naming a shown fact by its id is dropped, not a problem', () => {
 })
 
 test('an entry naming a fact no block shows by its id reports that fact, named by its label', () => {
-  const result = gated([{ what: CTA_LABEL, kind: 'feature', reason: REASON }], { withoutLabel: true })
+  // The hours: no identity fact and no answer, so the model may leave them out (`plan-left-out-protected.mjs`).
+  const result = gated([{ what: 'contact-hours', kind: 'feature', reason: REASON }])
   assert.equal(result.ok, true, JSON.stringify(result.problems))
-  const entry = result.plan.leftOut.find((e) => e.item === CTA_LABEL)
+  const entry = result.plan.leftOut.find((e) => e.item === 'contact-hours')
   assert.ok(entry, JSON.stringify(result.plan.leftOut))
-  assert.doesNotMatch(entry.what, /cta|-/i)
-  assert.equal(result.plan.leftOut.filter((e) => e.item === CTA_LABEL).length, 1)
+  assert.doesNotMatch(entry.what, /-/)
+  assert.equal(result.plan.leftOut.filter((e) => e.item === 'contact-hours').length, 1)
 })
 
 test('a build word code cannot fix goes back to the model with the entry and the word', () => {

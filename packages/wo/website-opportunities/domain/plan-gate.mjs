@@ -57,6 +57,7 @@ import { withLabelCodes } from './plan-wording-codes.mjs'
 import { wordingProblems } from './plan-gate-wording.mjs'
 import { planRows } from './plan-rows.mjs'
 import { modelLeftOutOf, withNamedIds, withReasonCodes } from './plan-left-out-wording.mjs'
+import { withoutProtectedLeftOut } from './plan-left-out-protected.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -95,8 +96,11 @@ export function gatePlan(reply, context) {
   const fix = (entry) => fixes.push(entry)
   if (!replyShapeProblems(reply, problem)) return { ok: false, problems, fixes, composition: reply }
   // An item a block shows and the model also leaves out keeps showing: its left out entry goes (`plan-gate-fixes.mjs`).
-  // A left out entry that names a fact or item by its id reports that id (`withNamedIds`).
-  const composition = withoutShownLeftOut(withNamedIds(reply, context.data, fix), context.data, fix)
+  // A left out entry that names a fact or item by its id reports that id (`withNamedIds`); one of a fact the model may
+  // never leave out (the owner's answer, the name, phone, address, main button) is dropped (`plan-left-out-protected`).
+  const named = withNamedIds(reply, context.data, fix)
+  const guarded = withoutProtectedLeftOut(named, context.data, fix, context.askedOff)
+  const composition = withoutShownLeftOut(guarded, context.data, fix)
   const failed = () => ({ ok: false, problems, fixes, composition })
   compositionProblems(composition, context, problem)
   if (problems.length > 0) return failed()

@@ -158,7 +158,9 @@ given); a `label` names a section of the site and stays in the site's language.
 - `assumptions`: what you assumed where the sources were silent, each with the plan `field` it sets (for example
   `language`, `facts[contact-hours].value`, `pages[home].name`) and what you assumed, in one sentence.
 - `leftOut`: every page, block or item you chose not to show, with the reason in one sentence. For a fact or an
-  item, give its id as `item` and no `what`: never write an id in `what`. Never list an item you also show.
+  item, give its id as `item` and no `what`: never write an id in `what`. Never list an item you also show. Never
+  leave out the business name, a phone, the address, the main button, or any fact whose source is the owner's answer:
+  show each in a block with a field for it; code places any you do not.
 
 The plan is closed: every fact and item of `business` is shown by a block or listed in `leftOut`, and every kept
 page keeps its main block.
