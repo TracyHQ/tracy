@@ -54,9 +54,12 @@ function freeAnswersOf(profile, answers) {
     .filter(({ answer, question }) => question && isTyped(answer, question))
 }
 
-/** The data kinds an answer may state: a conflict's own fact and the contact kinds; none for a language or a place. */
+/**
+ * The data kinds an answer may state: a conflict's own fact and the contact kinds; none for a language, a place or a
+ * trade.
+ */
 function kindsOf(question) {
-  if (['site-language', 'place-choice'].includes(question.topic)) return []
+  if (['site-language', 'place-choice', 'business-trade'].includes(question.topic)) return []
   return question.topic === 'fact-conflict' && isText(question.fact)
     ? [...new Set([question.fact, ...ANSWER_CONTACT_KINDS])]
     : [...ANSWER_CONTACT_KINDS]

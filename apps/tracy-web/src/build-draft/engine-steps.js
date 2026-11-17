@@ -19,12 +19,13 @@
  */
 import { randomUUID } from 'node:crypto'
 import {
-  PLACE_CHOICE_QUESTION_ID,
-  SITE_NAME_QUESTION_ID,
+  BUSINESS_TRADE_QUESTION_ID,
   buildNeedsProfile,
   composePlan,
   composerContextOf,
+  PLACE_CHOICE_QUESTION_ID,
   researchOf,
+  SITE_NAME_QUESTION_ID,
   withheldOfBrief,
   withWithheld
 } from 'website-opportunities/domain'
@@ -209,10 +210,14 @@ export async function composeStep({ research, answers, answerReadings, template,
   // is, so a wrong one is still refused.
   const ids = (p) => new Set((Array.isArray(p?.questions) ? p.questions : []).map((q) => q?.id))
   const kept = ids(profile)
-  // The place choice is research's own question (`gather-place.js`): never one of the plan's.
-  const dropped = [...ids(research?.profile), SITE_NAME_QUESTION_ID, PLACE_CHOICE_QUESTION_ID].filter(
-    (id) => !kept.has(id)
-  )
+  // The place choice and the business trade are research's own questions (`gather-place.js`, `trade-question.js`):
+  // never one of the plan's.
+  const dropped = [
+    ...ids(research?.profile),
+    SITE_NAME_QUESTION_ID,
+    PLACE_CHOICE_QUESTION_ID,
+    BUSINESS_TRADE_QUESTION_ID
+  ].filter((id) => !kept.has(id))
   const input = {
     blockStore: kit.blockStore,
     pageRecipes: kit.pageRecipes,

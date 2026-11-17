@@ -26,12 +26,12 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
   BLOCK_STORE_FILE,
+  checkAiQuickstartContract,
+  formatAiQuickstartProblem as formatProblem,
   MAPPING_FILE,
   PAGE_RECIPES_FILE,
   TRACY_LIBRARY,
-  TRADES,
-  checkAiQuickstartContract,
-  formatAiQuickstartProblem as formatProblem
+  TRADES
 } from 'website-opportunities/domain'
 
 const IN_IMAGE = fileURLToPath(new URL('../ai-quickstarts/', import.meta.url))
@@ -144,7 +144,7 @@ const NO_CHAIN_KIT =
  *   => unknown, log?: {warn?: Function}}} [options] `library`: the Tracy library blocks (default: `TRACY_LIBRARY`);
  *   `kitFor`: truthy when the step chain has a kit for the template version
  * @returns {{templatesFor: (trade: string) => Array<{slug: string, name: string, version: string, picture: string,
- *   reason: string, quickstart: 'released', fits: true}>, loadKit: (slug: string) => ({template: object,
+ *   reason: string, quickstart: 'released', fits: true}>, trades: () => string[], loadKit: (slug: string) => ({template: object,
  *   blockStore: object, pageRecipes: object, mapping: object | null, library: object[]} | null),
  *   skipped: () => Array<{slug: string, reason: string}>}}
  */
@@ -190,6 +190,17 @@ export function aiQuickstartCatalogue({ root = AI_QUICKSTARTS_DIR, library, kitF
           quickstart: 'released',
           fits: true
         }))
+    },
+    /** The trades some offered template is released for: the choices of the business trade question. */
+    trades() {
+      return [
+        ...new Set(
+          [...all().values()]
+            .filter((k) => k.kit && k.problems.length === 0)
+            .filter(hasChainKit)
+            .flatMap((k) => k.manifest.trades)
+        )
+      ]
     },
     loadKit(slug) {
       if (typeof slug !== 'string' || !SEGMENT.test(slug)) return null

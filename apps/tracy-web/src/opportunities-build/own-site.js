@@ -25,7 +25,6 @@
  */
 import { json, requireViewer } from '../lib/http.js'
 import { overLimitOrClosed } from '../lib/rate.js'
-import { tradeOfWords } from '../lib/wo-revision-choice.js'
 import { uiSwitchOn } from '../lib/ui-setting.js'
 import { AGENT_DEMO } from './agent-demo.js'
 import { CLIENT_DEMO } from './client-demo.js'
@@ -35,6 +34,7 @@ import { freezeDemoResearchInput } from './revisions.js'
 import { bestKnownName } from 'website-opportunities/src/business-name.js'
 import { sourcesOf } from 'website-opportunities/src/store.js'
 import { pausedForGood, researchJobOf, resumeOwnResearch, saveOwnBusiness } from './business-research.js'
+import { tradeOfResearchProfile } from './business-trade.js'
 
 export const OWN_SITE_SWITCH = 'site-from-business'
 const BASE = '/api/sites/from-business'
@@ -216,17 +216,8 @@ export function ownSiteRoutes(app, h) {
     } catch {
       return 'other'
     }
-    const google = profile?.googlePlace ?? null
-    const byGoogle = google
-      ? domain.tradeOfPlace({ primaryType: google.primaryType, types: google.types })
-      : 'other'
-    const typed = byGoogle !== 'other' ? byGoogle : domain.tradeOfSchemaType(profile?.businessType)
-    // Neither said: its own words — the name first, then what it says about itself (`tradeOfWords`).
-    const named = typed !== 'other' ? typed : tradeOfWords(profile?.name ?? opp.name)
-    const trade =
-      named !== 'other'
-        ? named
-        : tradeOfWords(profile?.bio, Array.isArray(profile?.cuisine) ? profile.cuisine.join(' ') : null)
+    // Google's types, the website's schema.org type, then its own words (`business-trade.js`).
+    const trade = tradeOfResearchProfile(domain, profile, opp.name)
     if (trade !== 'other')
       await pool.query(
         `update wo_opportunity set candidate = jsonb_set(candidate, '{trade}', to_jsonb($3::text))
