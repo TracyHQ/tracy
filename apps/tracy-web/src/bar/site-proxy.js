@@ -468,6 +468,8 @@ function originRequest(
  * @param {string} input.viewerHost - the Host header the browser actually used.
  * @param {'draft'|'published'} input.publish - `site.publish`, decides
  *   whether `x-robots-tag: noindex, nofollow` rides the response.
+ * @param {boolean} [input.demo] - `site.demo`: a public quickstart demo carries
+ *   `x-robots-tag: noindex, nofollow` too, published or not (see `noindex` below).
  * @param {'draft'|'managed'|'advert'|'none'} [input.variant] - `badgeVariantFor(site)`;
  *   a demo is `advert` (its own badge) or `none` (installed without one). `create` is accepted and
  *   still handled below, but nothing produces it any more — see `badgeVariantFor`. Left out, it
@@ -537,6 +539,7 @@ export async function proxySite(
     viewerHost,
     viewerProto = 'https',
     publish,
+    demo = false,
     variant = publish === 'published' ? 'managed' : 'draft',
     badgeScriptUrl = '',
     badgeTemplate = null,
@@ -665,7 +668,11 @@ export async function proxySite(
 
   const contentType = upstream.headers.get('content-type') ?? ''
   const isHtml = contentType.includes('text/html')
-  const noindex = publish !== 'published'
+  // A draft copy is hidden from search and AI. So is a public DEMO (`site.demo`, 17/11/2026): it
+  // stays open to everyone and keeps its "Create with Tracy" badge, but its pages are JoomlArt's
+  // sample content, and indexed under tracy.ai they drew most of the domain's search impressions on
+  // unrelated queries. A published customer site is never touched by this line.
+  const noindex = publish !== 'published' || demo === true
 
   // Badge injection must only touch HTML, and only a GET response — ported verbatim as a rule
   // from `proxyWithBar`. Everything else (an asset, a POST's redirect, a JSON API response)
@@ -796,8 +803,9 @@ export async function proxySite(
     headers.set('cache-control', 'no-store')
     headers.set('x-robots-tag', 'noindex, nofollow')
   }
-  // The bar tells every visitor a DRAFT copy is hidden from search and AI — a published site is
-  // the live site, and its own robots.txt (proxied by `bar/route.js`, never cached: `forgetRobots`) speaks for it.
+  // The bar tells every visitor a DRAFT copy (and a demo, see `noindex`) is hidden from search and
+  // AI. A published customer site is the live site, and its own robots.txt (proxied by
+  // `bar/route.js`, never cached: `forgetRobots`) speaks for it.
   if (noindex) headers.set('x-robots-tag', 'noindex, nofollow')
   if (preview) markPickerResponse(headers, preview)
   return new Response(body, { status: upstream.status, statusText: upstream.statusText, headers })
