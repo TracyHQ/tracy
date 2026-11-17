@@ -187,6 +187,8 @@ var BUILD_DONE_SAY = "Your site is ready. You can see it in the Browser tab, and
 var nameTooLongSay = (limit) => `That name is too long for this design. Please use ${limit} characters or fewer.`;
 var answerTooLongSay = (limit) => `That answer is too long. Please use ${limit} characters or fewer.`;
 var requestTooLongSay = (limit) => `That request is too long. Please use ${limit} characters or fewer.`;
+var RESEARCH_READ_SAY = "I have read what you gave me about your business.";
+var SAY_STRINGS = { "say.researchRead": RESEARCH_READ_SAY };
 
 // ../../core/tracy-core/src/build-chat/plain-text.mjs
 var NAMED = Object.freeze({
@@ -944,7 +946,19 @@ var tracy_build_chat_default = {
   "links.pictures.one": "{count} Bild",
   "links.pictures.other": "{count} Bilder",
   "links.pictures.none": "Keine Bilder",
-  "links.pictures.someLost": "{count} weitere konnten nicht heruntergeladen werden"
+  "links.pictures.someLost": "{count} weitere konnten nicht heruntergeladen werden",
+  "tool.working.research": "Ihre Links werden gelesen",
+  "tool.working.about": "Angaben zu Ihrem Unternehmen werden gelesen",
+  "tool.working.templates": "Designs f\xFCr Ihre Site werden gesucht",
+  "tool.working.build": "Ihre Site wird erstellt",
+  "tool.working.startOver": "Neustart l\xE4uft",
+  "tool.waiting.place": "Wartet auf Ihre Wahl des Standorts",
+  "links.pictures.foundSome": "{count} Bilder gefunden, {usable} verwendbar",
+  "links.pictures.foundNotOwn.one": "{count} Bild gefunden, nicht vom Unternehmen ver\xF6ffentlicht",
+  "links.pictures.foundNotOwn.other": "{count} Bilder gefunden, keines vom Unternehmen ver\xF6ffentlicht",
+  "links.pictures.foundNone.one": "{count} Bild gefunden, nicht verwendbar",
+  "links.pictures.foundNone.other": "{count} Bilder gefunden, keines verwendbar",
+  "say.researchRead": "Ich habe gelesen, was Sie mir \xFCber Ihr Unternehmen gegeben haben."
 };
 
 // ../../locale/tracy-locales/es/tracy-build-chat.json
@@ -1258,7 +1272,19 @@ var tracy_build_chat_default2 = {
   "links.pictures.one": "{count} imagen",
   "links.pictures.other": "{count} im\xE1genes",
   "links.pictures.none": "Sin im\xE1genes",
-  "links.pictures.someLost": "{count} m\xE1s no se pudieron descargar"
+  "links.pictures.someLost": "{count} m\xE1s no se pudieron descargar",
+  "tool.working.research": "Leyendo sus enlaces",
+  "tool.working.about": "Leyendo sobre su negocio",
+  "tool.working.templates": "Buscando dise\xF1os para su site",
+  "tool.working.build": "Creando su site",
+  "tool.working.startOver": "Empezando de nuevo",
+  "tool.waiting.place": "Esperando a que elija su ubicaci\xF3n",
+  "links.pictures.foundSome": "{count} im\xE1genes encontradas, {usable} utilizables",
+  "links.pictures.foundNotOwn.one": "{count} imagen encontrada, no publicada por el negocio",
+  "links.pictures.foundNotOwn.other": "{count} im\xE1genes encontradas, ninguna publicada por el negocio",
+  "links.pictures.foundNone.one": "{count} imagen encontrada, no utilizable",
+  "links.pictures.foundNone.other": "{count} im\xE1genes encontradas, ninguna utilizable",
+  "say.researchRead": "He le\xEDdo lo que me ha dado sobre su negocio."
 };
 
 // ../../locale/tracy-locales/fr/tracy-build-chat.json
@@ -1572,7 +1598,19 @@ var tracy_build_chat_default3 = {
   "links.pictures.one": "{count} image",
   "links.pictures.other": "{count} images",
   "links.pictures.none": "Aucune image",
-  "links.pictures.someLost": "{count} autres n\u2019ont pas pu \xEAtre t\xE9l\xE9charg\xE9es"
+  "links.pictures.someLost": "{count} autres n\u2019ont pas pu \xEAtre t\xE9l\xE9charg\xE9es",
+  "tool.working.research": "Lecture de vos liens",
+  "tool.working.about": "Lecture des informations sur votre entreprise",
+  "tool.working.templates": "Recherche de designs pour votre site",
+  "tool.working.build": "Cr\xE9ation de votre site",
+  "tool.working.startOver": "Reprise depuis le d\xE9but",
+  "tool.waiting.place": "En attente de votre choix de l\u2019\xE9tablissement",
+  "links.pictures.foundSome": "{count} images trouv\xE9es, {usable} utilisables",
+  "links.pictures.foundNotOwn.one": "{count} image trouv\xE9e, non publi\xE9e par l\u2019entreprise",
+  "links.pictures.foundNotOwn.other": "{count} images trouv\xE9es, aucune publi\xE9e par l\u2019entreprise",
+  "links.pictures.foundNone.one": "{count} image trouv\xE9e, non utilisable",
+  "links.pictures.foundNone.other": "{count} images trouv\xE9es, aucune utilisable",
+  "say.researchRead": "J\u2019ai lu ce que vous m\u2019avez transmis sur votre entreprise."
 };
 
 // ../../locale/tracy-locales/it/tracy-build-chat.json
@@ -1886,7 +1924,19 @@ var tracy_build_chat_default4 = {
   "links.pictures.one": "{count} immagine",
   "links.pictures.other": "{count} immagini",
   "links.pictures.none": "Nessuna immagine",
-  "links.pictures.someLost": "Non \xE8 stato possibile scaricarne altre {count}"
+  "links.pictures.someLost": "Non \xE8 stato possibile scaricarne altre {count}",
+  "tool.working.research": "Lettura dei suoi link",
+  "tool.working.about": "Lettura delle informazioni sulla sua attivit\xE0",
+  "tool.working.templates": "Ricerca di design per il suo site",
+  "tool.working.build": "Creazione del suo site",
+  "tool.working.startOver": "Si ricomincia da capo",
+  "tool.waiting.place": "In attesa che scelga la sua sede",
+  "links.pictures.foundSome": "{count} immagini trovate, {usable} utilizzabili",
+  "links.pictures.foundNotOwn.one": "{count} immagine trovata, non pubblicata dall\u2019attivit\xE0",
+  "links.pictures.foundNotOwn.other": "{count} immagini trovate, nessuna pubblicata dall\u2019attivit\xE0",
+  "links.pictures.foundNone.one": "{count} immagine trovata, non utilizzabile",
+  "links.pictures.foundNone.other": "{count} immagini trovate, nessuna utilizzabile",
+  "say.researchRead": "Ho letto ci\xF2 che mi ha fornito sulla sua attivit\xE0."
 };
 
 // ../../locale/tracy-locales/nl/tracy-build-chat.json
@@ -2200,7 +2250,19 @@ var tracy_build_chat_default5 = {
   "links.pictures.one": "{count} afbeelding",
   "links.pictures.other": "{count} afbeeldingen",
   "links.pictures.none": "Geen afbeeldingen",
-  "links.pictures.someLost": "{count} andere konden niet worden gedownload"
+  "links.pictures.someLost": "{count} andere konden niet worden gedownload",
+  "tool.working.research": "Uw links worden gelezen",
+  "tool.working.about": "Informatie over uw bedrijf wordt gelezen",
+  "tool.working.templates": "Ontwerpen voor uw site worden gezocht",
+  "tool.working.build": "Uw site wordt gebouwd",
+  "tool.working.startOver": "Opnieuw beginnen",
+  "tool.waiting.place": "Wacht tot u uw locatie kiest",
+  "links.pictures.foundSome": "{count} afbeeldingen gevonden, {usable} bruikbaar",
+  "links.pictures.foundNotOwn.one": "{count} afbeelding gevonden, niet door het bedrijf geplaatst",
+  "links.pictures.foundNotOwn.other": "{count} afbeeldingen gevonden, geen enkele door het bedrijf geplaatst",
+  "links.pictures.foundNone.one": "{count} afbeelding gevonden, niet bruikbaar",
+  "links.pictures.foundNone.other": "{count} afbeeldingen gevonden, geen enkele bruikbaar",
+  "say.researchRead": "Ik heb gelezen wat u mij over uw bedrijf hebt gegeven."
 };
 
 // ../../locale/tracy-locales/zh/tracy-build-chat.json
@@ -2514,7 +2576,19 @@ var tracy_build_chat_default6 = {
   "links.pictures.one": "{count} \u5F20\u56FE\u7247",
   "links.pictures.other": "{count} \u5F20\u56FE\u7247",
   "links.pictures.none": "\u6CA1\u6709\u56FE\u7247",
-  "links.pictures.someLost": "\u53E6\u6709 {count} \u5F20\u65E0\u6CD5\u4E0B\u8F7D"
+  "links.pictures.someLost": "\u53E6\u6709 {count} \u5F20\u65E0\u6CD5\u4E0B\u8F7D",
+  "tool.working.research": "\u6B63\u5728\u8BFB\u53D6\u4F60\u7684\u94FE\u63A5",
+  "tool.working.about": "\u6B63\u5728\u4E86\u89E3\u4F60\u7684\u4E1A\u52A1",
+  "tool.working.templates": "\u6B63\u5728\u4E3A\u4F60\u7684 site \u67E5\u627E\u8BBE\u8BA1",
+  "tool.working.build": "\u6B63\u5728\u521B\u5EFA\u4F60\u7684 site",
+  "tool.working.startOver": "\u6B63\u5728\u91CD\u65B0\u5F00\u59CB",
+  "tool.waiting.place": "\u7B49\u5F85\u4F60\u9009\u62E9\u4F60\u7684\u5730\u70B9",
+  "links.pictures.foundSome": "\u627E\u5230 {count} \u5F20\u56FE\u7247\uFF0C{usable} \u5F20\u53EF\u7528",
+  "links.pictures.foundNotOwn.one": "\u627E\u5230 {count} \u5F20\u56FE\u7247\uFF0C\u5E76\u975E\u5546\u5BB6\u53D1\u5E03",
+  "links.pictures.foundNotOwn.other": "\u627E\u5230 {count} \u5F20\u56FE\u7247\uFF0C\u5747\u975E\u5546\u5BB6\u53D1\u5E03",
+  "links.pictures.foundNone.one": "\u627E\u5230 {count} \u5F20\u56FE\u7247\uFF0C\u4E0D\u53EF\u7528",
+  "links.pictures.foundNone.other": "\u627E\u5230 {count} \u5F20\u56FE\u7247\uFF0C\u5747\u4E0D\u53EF\u7528",
+  "say.researchRead": "\u6211\u5DF2\u9605\u8BFB\u4F60\u63D0\u4F9B\u7684\u4E1A\u52A1\u4FE1\u606F\u3002"
 };
 
 // ../../locale/tracy-locale-vi/vi/tracy-build-chat.json
@@ -2828,7 +2902,19 @@ var tracy_build_chat_default7 = {
   "ask.choice.main_button_contact_short": "Li\xEAn h\u1EC7",
   "ask.choice.main_button_text": "Ch\u1EEF tr\xEAn n\xFAt: {text}",
   "ask.source.listing": "Trang danh b\u1EA1",
-  "plan.source.listing": "Trang danh b\u1EA1"
+  "plan.source.listing": "Trang danh b\u1EA1",
+  "tool.working.research": "\u0110ang \u0111\u1ECDc c\xE1c link c\u1EE7a b\u1EA1n",
+  "tool.working.about": "\u0110ang t\xECm hi\u1EC3u v\u1EC1 doanh nghi\u1EC7p c\u1EE7a b\u1EA1n",
+  "tool.working.templates": "\u0110ang t\xECm m\u1EABu thi\u1EBFt k\u1EBF cho site c\u1EE7a b\u1EA1n",
+  "tool.working.build": "\u0110ang d\u1EF1ng site c\u1EE7a b\u1EA1n",
+  "tool.working.startOver": "\u0110ang b\u1EAFt \u0111\u1EA7u l\u1EA1i",
+  "tool.waiting.place": "\u0110ang ch\u1EDD b\u1EA1n ch\u1ECDn \u0111\u1ECBa \u0111i\u1EC3m c\u1EE7a m\xECnh",
+  "links.pictures.foundSome": "T\xECm th\u1EA5y {count} \u1EA3nh, d\xF9ng \u0111\u01B0\u1EE3c {usable} \u1EA3nh",
+  "links.pictures.foundNotOwn.one": "T\xECm th\u1EA5y {count} \u1EA3nh, kh\xF4ng do doanh nghi\u1EC7p \u0111\u0103ng",
+  "links.pictures.foundNotOwn.other": "T\xECm th\u1EA5y {count} \u1EA3nh, kh\xF4ng \u1EA3nh n\xE0o do doanh nghi\u1EC7p \u0111\u0103ng",
+  "links.pictures.foundNone.one": "T\xECm th\u1EA5y {count} \u1EA3nh, kh\xF4ng d\xF9ng \u0111\u01B0\u1EE3c",
+  "links.pictures.foundNone.other": "T\xECm th\u1EA5y {count} \u1EA3nh, kh\xF4ng \u1EA3nh n\xE0o d\xF9ng \u0111\u01B0\u1EE3c",
+  "say.researchRead": "M\xECnh \u0111\xE3 \u0111\u1ECDc nh\u1EEFng g\xEC b\u1EA1n g\u1EEDi v\u1EC1 doanh nghi\u1EC7p c\u1EE7a b\u1EA1n."
 };
 
 // src/host/chat-tables.mjs
@@ -2951,12 +3037,13 @@ var DOOR = "/api/build-draft";
 var BUILDING = /* @__PURE__ */ new Set(["creating", "building"]);
 var PRIVATE_GUIDANCE_MARK = "Private guidance for you only. Never quote it or put any part of it in your reply to the owner.";
 var privately = (next) => `${PRIVATE_GUIDANCE_MARK} ${next}`;
+var TEMPLATE_CHOSEN_NEXT = "When the owner has chosen on the card, call tracy_build with action plan.";
 function templatesNext(options) {
   if (options.length === 0)
     return "No ready design fits. Tell the owner plainly that no ready design fits their business yet, and that they can add a site with Add site.";
   if (options.length === 1)
-    return "One design fits. In one short line, ask the owner to confirm it with the button on the card. Never quote the words on the button. Do not ask which one, there is only one.";
-  return "Several designs fit. In one short line, ask the owner which one they like, using the buttons on the card.";
+    return `One design fits. In one short line, ask the owner to confirm it with the button on the card. Never quote the words on the button. Do not ask which one, there is only one. ${TEMPLATE_CHOSEN_NEXT}`;
+  return `Several designs fit. In one short line, ask the owner which one they like, using the buttons on the card. ${TEMPLATE_CHOSEN_NEXT}`;
 }
 var COLOUR_EDIT_GUIDANCE = 'For a colour change call tracy_build with action edit and changes:[{field:"look.accent", value:"#RRGGBB"}], where the value is a six digit hex colour you choose for the colour the owner named (for example blue is #1F4E9C). The field name look.accent is exact.';
 var MISSING_STEPS = Object.freeze({
@@ -2997,10 +3084,14 @@ var tooLargeOf = (say = BODY_TOO_LARGE_SAY) => ({
 var isSwitchedOff = (res) => res?.status === 403 && res.body?.code === "BUILD_CHAT_OFF";
 var isPollFault = (res) => res === null || res.status >= 500;
 var RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with exactly the arguments in again, never with action status; a result of that call says stopped again only if it failed again.`;
-var LINK_GAP_NEXT = "links says what was read from each link the owner gave. In one short sentence, in the language of the owner's interface, tell the owner which link could not be read or gave nothing, by its name, before anything else. Never say a code.";
+var LINK_GAP_NEXT = "links says what was read from each link the owner gave. In one short sentence, in the language the owner writes in, tell the owner which link could not be read or gave nothing, by its name. Never say a code.";
 var linkGapOf = (links) => Array.isArray(links) && links.some(
   (l) => l?.state === "failed" || l?.state === "read" && (!l.facts && !l.pictures || !l.pictures && l.picturesLost > 0)
 );
+var ANSWERS_ARRIVE_GUIDANCE = "The owner's answers reach tracy_build by themselves. Never call research again to pass an answer, and never put an answer into description.";
+var RESEARCH_QUESTIONS_NEXT = `Pass ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action templates.`;
+var RESEARCH_DONE_NEXT = "Research is done. Call tracy_build with action templates now.";
+var researchNextOf = (result) => [linkGapOf(result.links) ? LINK_GAP_NEXT : null, result.ask ? RESEARCH_QUESTIONS_NEXT : RESEARCH_DONE_NEXT].filter(Boolean).join(" ");
 var ACTION_OF_STEP = Object.freeze({ research: "research", brand: "plan", compose: "plan", revise: "plan" });
 function startArgsOf(args) {
   if (args?.action === "research") {
@@ -3173,6 +3264,12 @@ function createBuildTool({
   }
   const reviews = /* @__PURE__ */ new Map();
   const stored = /* @__PURE__ */ new Map();
+  const opened = /* @__PURE__ */ new Set();
+  function openingSay(sessionId) {
+    if (opened.has(sessionId)) return null;
+    opened.add(sessionId);
+    return chatWordsIn(chatLanguageFor(sessionId), SAY_STRINGS)?.("say.researchRead") ?? RESEARCH_READ_SAY;
+  }
   const questionsOf = (sessionId) => {
     let known = issued.get(sessionId);
     if (!known) issued.set(sessionId, known = /* @__PURE__ */ new Map());
@@ -3198,6 +3295,12 @@ function createBuildTool({
     const known = questionsOf(sessionId);
     for (const q of Array.isArray(result?.questions) ? result.questions : [])
       if (typeof q?.id === "string") known.set(q.id, q);
+    const asked = new Set(
+      (Array.isArray(result?.ask?.questions) ? result.ask.questions : []).map((q) => q?.id)
+    );
+    if (asked.size === 0) return;
+    const done = setOf(stored, sessionId);
+    for (const key of done) if (asked.has(key.slice(0, key.indexOf("\n")))) done.delete(key);
   }
   async function door(sessionId, assertion, method, path, body) {
     const base = origin();
@@ -3256,7 +3359,7 @@ ${JSON.stringify(answer)}`;
   const askAgain = (ask, say) => ({
     ask,
     ...say ? { say } : {},
-    next: `${say ? "Say the sentence in say, then pass" : "Pass"} ask to ask_user_question exactly as given. When the owner has answered, call tracy_build with action plan again.`
+    next: `${say ? "Say the sentence in say, then pass" : "Pass"} ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action plan again: it reads the answer and goes on from there.`
   });
   function refusal(res) {
     if (isSwitchedOff(res)) return switchedOff();
@@ -3314,11 +3417,13 @@ ${JSON.stringify(answer)}`;
     if (state?.step === "research") {
       learn(sessionId, result);
       if (!result.profile) return stopped();
+      const say = openingSay(sessionId);
       return {
         profile: result.profile,
+        ...say ? { say } : {},
         ...result.ask ? { ask: localAsk(sessionId, result.ask, result.questions) } : {},
         ...linksOf(result.links),
-        ...linkGapOf(result.links) ? { next: LINK_GAP_NEXT } : {}
+        next: `${say ? "Begin with the sentence in say, as it is. " : ""}${researchNextOf(result)}`
       };
     }
     if (state?.step === "revise") {

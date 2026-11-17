@@ -102,7 +102,11 @@ test('both bundles carry the generated build agent with the build engine row', (
       /- id: tracy-build-chat\n\s+name: '@tracy\/dsh-build-chat'\n\s+config:\n\s+tool: true\n/,
       file
     )
-    assert.match(preset, /Call tracy_build with action research first\./, file)
+    assert.match(
+      preset,
+      /Call tracy_build with action research first, and write nothing to the owner before that first call/,
+      file
+    )
     assert.doesNotMatch(preset, /sports businesses/, file)
     for (const banned of ['tool-bash', 'tool-fs', 'tool-skill', 'skill-filesystem', 'tracy-webroot-read']) {
       assert.doesNotMatch(preset, new RegExp(`- id: ${banned}\\n`), `${file}: ${banned}`)

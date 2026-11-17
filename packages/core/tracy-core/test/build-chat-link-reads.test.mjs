@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
   buildToolRowOf,
+  LINK_FOUND_STRINGS,
   LINK_READ_STRINGS,
   linkLineOf,
   linkNameOf,
@@ -11,7 +12,9 @@ import {
 
 /** @type {(key: string, vars?: Record<string, string | number>) => string} */
 const english = (key, vars = {}) =>
-  LINK_READ_STRINGS[key].replace(/\{(\w+)\}/g, (_, name) => String(vars[name] ?? ''))
+  ({ ...LINK_READ_STRINGS, ...LINK_FOUND_STRINGS })[key].replace(/\{(\w+)\}/g, (_, name) =>
+    String(vars[name] ?? '')
+  )
 
 const INSTAGRAM = 'https://www.instagram.com/hollowmere.bakery.example/'
 const LISTING = 'https://www.yelp.com/biz/hollowmere-bakery-example'
@@ -70,9 +73,25 @@ test('while research runs, each link of the call reads; the place question needs
       ]
     })
   )
-  assert.deepEqual(asking?.kind === 'research' && asking.links.map((l) => linkLineOf(l, english)), [
+  // Nothing is read yet: a waiting row, never "Read 2 sources".
+  assert.deepEqual(asking?.kind === 'waiting' && asking.links.map((l) => linkLineOf(l, english)), [
     'Instagram: reading',
     'Google Maps: needs your choice'
+  ])
+})
+
+test('a link that found pictures says how many it found and how many the site may use', () => {
+  const lines = linkReadsOf([
+    { name: 'Google Maps', state: 'read', facts: 6, pictures: 0, picturesFound: 9, picturesNotOwn: true },
+    { name: 'Instagram', state: 'read', facts: 4, pictures: 10, picturesFound: 21 },
+    { name: 'hollowmere.example', state: 'read', facts: 0, pictures: 0, picturesFound: 1 },
+    { name: 'Facebook', state: 'read', facts: 2, pictures: 3, picturesFound: 3 }
+  ]).map((l) => linkLineOf(l, english))
+  assert.deepEqual(lines, [
+    'Google Maps: read. 6 facts. 9 pictures found, none posted by the business',
+    'Instagram: read. 4 facts, 21 pictures found, 10 usable',
+    'hollowmere.example: read. 1 picture found, not usable',
+    'Facebook: read. 2 facts, 3 pictures'
   ])
 })
 

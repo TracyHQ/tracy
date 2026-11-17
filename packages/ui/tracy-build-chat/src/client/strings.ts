@@ -2,7 +2,7 @@
  * English baseline for the `tracy-build-chat` namespace. This package OWNS the namespace; `NS` lives beside `en` so
  * `check-dsh-locale` can find the owner. Wording follows the build chat mock the product owner approved.
  */
-import { ASK_STRINGS, LINK_READ_STRINGS } from '@tracy/core/build-chat'
+import { ASK_STRINGS, LINK_FOUND_STRINGS, LINK_READ_STRINGS, SAY_STRINGS } from '@tracy/core/build-chat'
 import { rebuildEn } from './rebuild-strings'
 
 export const NS = 'tracy-build-chat'
@@ -256,6 +256,12 @@ export const en = {
   'tool.research.other': 'Read {count} sources',
   'tool.research.none': 'Read about your business',
   'tool.working': 'Working on your site plan',
+  'tool.working.research': 'Reading your links',
+  'tool.working.about': 'Reading about your business',
+  'tool.working.templates': 'Finding designs for your site',
+  'tool.working.build': 'Building your site',
+  'tool.working.startOver': 'Starting over',
+  'tool.waiting.place': 'Waiting for you to choose your place',
   'tool.templates': 'Found designs for your site',
   'tool.plan': 'Prepared your site plan',
   'tool.edit': 'Updated your site plan',
@@ -277,7 +283,10 @@ export const en = {
   // (`src/host/ask-words.mjs`); English is the engine's own wording, kept with the code in `@tracy/core/build-chat`.
   ...ASK_STRINGS,
   // What became of each link the owner gave the research (#609): English kept with the code in `@tracy/core/build-chat`.
-  ...LINK_READ_STRINGS
+  ...LINK_READ_STRINGS,
+  ...LINK_FOUND_STRINGS,
+  // The sentences the tool says in the language of the chat (#609): English kept with the code in `@tracy/core/build-chat`.
+  ...SAY_STRINGS
 } as const
 
 export type StringKey = keyof typeof en

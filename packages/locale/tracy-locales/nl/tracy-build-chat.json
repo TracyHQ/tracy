@@ -308,5 +308,17 @@
   "links.pictures.one": "{count} afbeelding",
   "links.pictures.other": "{count} afbeeldingen",
   "links.pictures.none": "Geen afbeeldingen",
-  "links.pictures.someLost": "{count} andere konden niet worden gedownload"
+  "links.pictures.someLost": "{count} andere konden niet worden gedownload",
+  "tool.working.research": "Uw links worden gelezen",
+  "tool.working.about": "Informatie over uw bedrijf wordt gelezen",
+  "tool.working.templates": "Ontwerpen voor uw site worden gezocht",
+  "tool.working.build": "Uw site wordt gebouwd",
+  "tool.working.startOver": "Opnieuw beginnen",
+  "tool.waiting.place": "Wacht tot u uw locatie kiest",
+  "links.pictures.foundSome": "{count} afbeeldingen gevonden, {usable} bruikbaar",
+  "links.pictures.foundNotOwn.one": "{count} afbeelding gevonden, niet door het bedrijf geplaatst",
+  "links.pictures.foundNotOwn.other": "{count} afbeeldingen gevonden, geen enkele door het bedrijf geplaatst",
+  "links.pictures.foundNone.one": "{count} afbeelding gevonden, niet bruikbaar",
+  "links.pictures.foundNone.other": "{count} afbeeldingen gevonden, geen enkele bruikbaar",
+  "say.researchRead": "Ik heb gelezen wat u mij over uw bedrijf hebt gegeven."
 }

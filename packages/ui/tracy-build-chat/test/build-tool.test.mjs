@@ -141,7 +141,11 @@ test('research forwards links and description as the person who typed, and retur
     links: ['https://harbour-lane.example', 'https://maps.example/harbour-lane'],
     description: 'A small tennis club by the harbour'
   })
-  assert.deepEqual(answer, { profile: PROFILE, ask: ASK })
+  // The first research of the chat opens it with the tool's own sentence, and names what comes after the answers.
+  const { next, say, ...rest } = answer
+  assert.deepEqual(rest, { profile: PROFILE, ask: ASK })
+  assert.equal(typeof say, 'string')
+  assert.match(next, /action templates/)
   const [call] = web.calls
   assert.equal(call.path, '/api/build-draft/research')
   assert.deepEqual(call.body, {

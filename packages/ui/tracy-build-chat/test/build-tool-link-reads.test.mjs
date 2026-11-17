@@ -54,7 +54,8 @@ test('every link read with something gives no guidance about links', async () =>
     toolAnswering([{ step: 'research', state: 'done', result: { profile: PROFILE, links: [READ] } }])
   )
   assert.deepEqual(answer.links, [READ])
-  assert.equal(answer.next, undefined)
+  assert.doesNotMatch(answer.next, /could not be read or gave nothing/)
+  assert.match(answer.next, /action templates/)
 })
 
 test('a link whose pictures were all lost is a gap the agent names', async () => {

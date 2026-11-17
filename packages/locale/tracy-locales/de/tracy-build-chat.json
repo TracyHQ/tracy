@@ -308,5 +308,17 @@
   "links.pictures.one": "{count} Bild",
   "links.pictures.other": "{count} Bilder",
   "links.pictures.none": "Keine Bilder",
-  "links.pictures.someLost": "{count} weitere konnten nicht heruntergeladen werden"
+  "links.pictures.someLost": "{count} weitere konnten nicht heruntergeladen werden",
+  "tool.working.research": "Ihre Links werden gelesen",
+  "tool.working.about": "Angaben zu Ihrem Unternehmen werden gelesen",
+  "tool.working.templates": "Designs für Ihre Site werden gesucht",
+  "tool.working.build": "Ihre Site wird erstellt",
+  "tool.working.startOver": "Neustart läuft",
+  "tool.waiting.place": "Wartet auf Ihre Wahl des Standorts",
+  "links.pictures.foundSome": "{count} Bilder gefunden, {usable} verwendbar",
+  "links.pictures.foundNotOwn.one": "{count} Bild gefunden, nicht vom Unternehmen veröffentlicht",
+  "links.pictures.foundNotOwn.other": "{count} Bilder gefunden, keines vom Unternehmen veröffentlicht",
+  "links.pictures.foundNone.one": "{count} Bild gefunden, nicht verwendbar",
+  "links.pictures.foundNone.other": "{count} Bilder gefunden, keines verwendbar",
+  "say.researchRead": "Ich habe gelesen, was Sie mir über Ihr Unternehmen gegeben haben."
 }

@@ -25,6 +25,7 @@ import { askingOf } from './engine-asking.js'
 import { placeAnswerOf } from './gather-place.js'
 import { brandRunOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
 import { answersStillAsked } from './answers-kept.js'
+import { keptPlaceOf, keptRecordOf } from './research-repeat.js'
 import { answerReadingsOf, placeReadingOf, placeStatementOf } from './answer-readings.js'
 import { spendGate, spendLeft } from './engine-spend.js'
 import { usageCollector } from './model-usage.js'
@@ -319,8 +320,9 @@ export function createEngine({
       const readChoice = await placeReadingOf(row, links, readingTools(accountId))
       const said = placeStatementOf(row, links, readChoice, description)
       const inputs = { links, ...(said ? { description: said } : {}), ...(name ? { name } : {}) }
-      // The owner's answer to which place the Google link means, when this research asked it (`gather-place.js`).
-      const place = placeAnswerOf(row, links, readChoice)
+      // The owner's answer to which place the Google link means, when this research asked it (`gather-place.js`), else
+      // the place they chose for the same Google link in an earlier research (`research-repeat.js`): asked once.
+      const place = placeAnswerOf(row, links, readChoice) ?? keptPlaceOf(row?.research, links)
       return start(
         accountId,
         'research',
@@ -343,7 +345,7 @@ export function createEngine({
               // New research makes the brand record stale: the brand step reads the research. The answers kept are those
               // to a question the new research asks the same way (`answers-kept.js`), read when the step ends.
               (record) => (current) => ({
-                research: record,
+                research: keptRecordOf(record, place),
                 brand: null,
                 ...(row?.plan ? {} : { needs_profile: record.profile }),
                 ...answersStillAsked(current, [

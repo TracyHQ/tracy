@@ -112,7 +112,8 @@ export function revisedOf(value) {
  *   | { kind: 'templates', options: any[], none: boolean }
  *   | { kind: 'plan', id: string, revision: number, revised?: { changed: string[], notDone: { what: string, why: string }[] } }
  *   | { kind: 'stopped', step?: string, rerun: boolean }
- *   | { kind: 'running', links: import('./link-reads.mjs').LinkRead[] } | { kind: 'quiet' }}
+ *   | { kind: 'running', links: import('./link-reads.mjs').LinkRead[] }
+ *   | { kind: 'choosing', links: import('./link-reads.mjs').LinkRead[] } | { kind: 'quiet' }}
  */
 export function buildToolResultOf(text) {
   let value
@@ -155,8 +156,8 @@ export function buildToolResultOf(text) {
       business: typeof value.profile.business === 'string' ? value.profile.business : '',
       links
     }
-  // The place question of research: the lines say which link waits on the owner's choice.
-  if (links.length > 0) return { kind: 'research', business: '', links }
+  // The place question of research: nothing is read yet, the lines say which link waits on the owner's choice.
+  if (links.length > 0) return { kind: 'choosing', links }
   return null
 }
 
@@ -168,7 +169,7 @@ export function buildToolResultOf(text) {
  * @param {unknown} rawArgs - the call's arguments
  * @param {string | null} text - the result's JSON text; null while the call runs
  * @returns {null | { kind: 'research', sources: number, business: string, links: LinkRead[] }
- *   | { kind: 'working', step: string, links: LinkRead[] }
+ *   | { kind: 'working', step: string, links: LinkRead[] } | { kind: 'waiting', links: LinkRead[] }
  *   | { kind: 'templates' | 'plan' | 'edit' | 'stopped' }}
  */
 export function buildToolRowOf(rawArgs, text) {
@@ -182,6 +183,8 @@ export function buildToolRowOf(rawArgs, text) {
   if (result.kind === 'running')
     return { kind: 'working', step, links: result.links.length ? result.links : reading }
   if (result.kind === 'stopped') return { kind: 'stopped' }
+  // Research waits on the owner's choice of place: a waiting row, never "Read N sources".
+  if (result.kind === 'choosing') return { kind: 'waiting', links: result.links }
   if (result.kind === 'templates') return { kind: 'templates' }
   if (result.kind === 'plan') return { kind: step === 'edit' ? 'edit' : 'plan' }
   const links = step === 'research' && Array.isArray(args.links) ? args.links : []

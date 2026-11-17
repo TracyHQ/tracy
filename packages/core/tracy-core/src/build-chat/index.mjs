@@ -52,6 +52,8 @@ export {
   FAULT_SAY,
   nameTooLongSay,
   requestTooLongSay,
+  RESEARCH_READ_SAY,
+  SAY_STRINGS,
   TEAM_SEES_SAY,
   UNCHANGED_SAY
 } from './owner-sentences.mjs'
@@ -69,6 +71,7 @@ export {
 } from './plan.mjs'
 export { plainTextOf } from './plain-text.mjs'
 export {
+  LINK_FOUND_STRINGS,
   LINK_READ_STRINGS,
   linkLineOf,
   linkNameOf,

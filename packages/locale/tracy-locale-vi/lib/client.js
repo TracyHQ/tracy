@@ -1365,7 +1365,19 @@ window.__ModuleLoader__.load({
               "ask.choice.main_button_contact_short": "Li\u00ean\u0020h\u1ec7",
               "ask.choice.main_button_text": "Ch\u1eef\u0020tr\u00ean\u0020n\u00fat:\u0020{text}",
               "ask.source.listing": "Trang\u0020danh\u0020b\u1ea1",
-              "plan.source.listing": "Trang\u0020danh\u0020b\u1ea1"
+              "plan.source.listing": "Trang\u0020danh\u0020b\u1ea1",
+              "tool.working.research": "\u0110ang\u0020\u0111\u1ecdc\u0020c\u00e1c\u0020link\u0020c\u1ee7a\u0020b\u1ea1n",
+              "tool.working.about": "\u0110ang\u0020t\u00ecm\u0020hi\u1ec3u\u0020v\u1ec1\u0020doanh\u0020nghi\u1ec7p\u0020c\u1ee7a\u0020b\u1ea1n",
+              "tool.working.templates": "\u0110ang\u0020t\u00ecm\u0020m\u1eabu\u0020thi\u1ebft\u0020k\u1ebf\u0020cho\u0020site\u0020c\u1ee7a\u0020b\u1ea1n",
+              "tool.working.build": "\u0110ang\u0020d\u1ef1ng\u0020site\u0020c\u1ee7a\u0020b\u1ea1n",
+              "tool.working.startOver": "\u0110ang\u0020b\u1eaft\u0020\u0111\u1ea7u\u0020l\u1ea1i",
+              "tool.waiting.place": "\u0110ang\u0020ch\u1edd\u0020b\u1ea1n\u0020ch\u1ecdn\u0020\u0111\u1ecba\u0020\u0111i\u1ec3m\u0020c\u1ee7a\u0020m\u00ecnh",
+              "links.pictures.foundSome": "T\u00ecm\u0020th\u1ea5y\u0020{count}\u0020\u1ea3nh,\u0020d\u00f9ng\u0020\u0111\u01b0\u1ee3c\u0020{usable}\u0020\u1ea3nh",
+              "links.pictures.foundNotOwn.one": "T\u00ecm\u0020th\u1ea5y\u0020{count}\u0020\u1ea3nh,\u0020kh\u00f4ng\u0020do\u0020doanh\u0020nghi\u1ec7p\u0020\u0111\u0103ng",
+              "links.pictures.foundNotOwn.other": "T\u00ecm\u0020th\u1ea5y\u0020{count}\u0020\u1ea3nh,\u0020kh\u00f4ng\u0020\u1ea3nh\u0020n\u00e0o\u0020do\u0020doanh\u0020nghi\u1ec7p\u0020\u0111\u0103ng",
+              "links.pictures.foundNone.one": "T\u00ecm\u0020th\u1ea5y\u0020{count}\u0020\u1ea3nh,\u0020kh\u00f4ng\u0020d\u00f9ng\u0020\u0111\u01b0\u1ee3c",
+              "links.pictures.foundNone.other": "T\u00ecm\u0020th\u1ea5y\u0020{count}\u0020\u1ea3nh,\u0020kh\u00f4ng\u0020\u1ea3nh\u0020n\u00e0o\u0020d\u00f9ng\u0020\u0111\u01b0\u1ee3c",
+              "say.researchRead": "M\u00ecnh\u0020\u0111\u00e3\u0020\u0111\u1ecdc\u0020nh\u1eefng\u0020g\u00ec\u0020b\u1ea1n\u0020g\u1eedi\u0020v\u1ec1\u0020doanh\u0020nghi\u1ec7p\u0020c\u1ee7a\u0020b\u1ea1n."
       },
       "tracy-chat-input": {
               "chat.thread": "Trao\u0020\u0111\u1ed5i",

@@ -75,6 +75,8 @@ export declare const BUILD_DONE_SAY: string
 export declare function nameTooLongSay(limit: number): string
 export declare function answerTooLongSay(limit: number): string
 export declare function requestTooLongSay(limit: number): string
+export declare const RESEARCH_READ_SAY: string
+export declare const SAY_STRINGS: Readonly<Record<'say.researchRead', string>>
 export declare function researchRowOf(
   research: { summary: string; sources: ResearchSource[] },
   t?: (key: string, vars?: Record<string, unknown>) => string
@@ -323,6 +325,10 @@ export interface LinkRead {
   reason?: string
   facts?: number
   pictures?: number
+  /** Every picture the link gave, set aside ones too, when more than the ones the site may use (`pictures`). */
+  picturesFound?: number
+  /** None of the pictures found is usable, only because the business did not post them. */
+  picturesNotOwn?: boolean
   picturesLost?: number
   picturesNotKept?: boolean
 }
@@ -341,7 +347,15 @@ export type LinkReadKey =
   | 'links.pictures.other'
   | 'links.pictures.none'
   | 'links.pictures.someLost'
-export declare const LINK_READ_STRINGS: Readonly<Record<LinkReadKey, string>>
+  | LinkFoundKey
+export type LinkFoundKey =
+  | 'links.pictures.foundSome'
+  | 'links.pictures.foundNotOwn.one'
+  | 'links.pictures.foundNotOwn.other'
+  | 'links.pictures.foundNone.one'
+  | 'links.pictures.foundNone.other'
+export declare const LINK_READ_STRINGS: Readonly<Record<Exclude<LinkReadKey, LinkFoundKey>, string>>
+export declare const LINK_FOUND_STRINGS: Record<LinkFoundKey, string>
 export declare function linkNameOf(link: string): string
 export declare function linkReadsOf(value: unknown): LinkRead[]
 export declare function readingLinksOf(links: unknown): LinkRead[]
@@ -355,6 +369,7 @@ export type BuildToolResult =
   | { kind: 'plan'; id: string; revision: number; revised?: RevisionNote }
   | { kind: 'stopped'; step?: string; rerun: boolean }
   | { kind: 'running'; links: LinkRead[] }
+  | { kind: 'choosing'; links: LinkRead[] }
   | { kind: 'quiet' }
 export declare function buildToolResultOf(text: unknown): BuildToolResult | null
 /** The note of a change request answer's `revision`, its lines and their codes side by side; null for no object. */
@@ -362,6 +377,7 @@ export declare function revisedOf(value: unknown): Omit<RevisionNote, 'edits'> |
 export type BuildToolRow =
   | { kind: 'research'; sources: number; business: string; links: LinkRead[] }
   | { kind: 'working'; step: string; links: LinkRead[] }
+  | { kind: 'waiting'; links: LinkRead[] }
   | { kind: 'templates' | 'plan' | 'edit' | 'stopped' }
 export declare function buildToolRowOf(rawArgs: unknown, text: string | null): BuildToolRow | null
 export interface BuildToolFold {

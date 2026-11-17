@@ -28,16 +28,31 @@ export interface ToolViewProps {
 
 const noop = () => {}
 
+/** What a call that still works is doing, by its step; a step with no title of its own works on the plan. */
+const WORKING_TITLES: Readonly<Record<string, StringKey>> = {
+  templates: 'tool.working.templates',
+  build: 'tool.working.build',
+  'start-over': 'tool.working.startOver'
+}
+
 function titleOf(row: BuildToolRow, t: Translate): string {
   if (row.kind === 'research') {
     if (row.sources === 0) return t('tool.research.none')
     return t(row.sources === 1 ? 'tool.research.one' : 'tool.research.other', { count: row.sources })
+  }
+  if (row.kind === 'waiting') return t('tool.waiting.place')
+  if (row.kind === 'working') {
+    // Research reads the owner's links (a `status` call waiting on it carries the same lines), or their words alone.
+    if (row.step === 'research' || row.links.length > 0)
+      return t(row.links.length > 0 ? 'tool.working.research' : 'tool.working.about')
+    return t(WORKING_TITLES[row.step] ?? 'tool.working')
   }
   return t(`tool.${row.kind}` as StringKey)
 }
 
 const ICONS = {
   research: IconSearchOutlineRegular,
+  waiting: IconSearchOutlineRegular,
   working: IconSparkleRegular,
   templates: IconChecklistOutlineRegular,
   plan: IconChecklistOutlineRegular,
@@ -89,7 +104,9 @@ export function BuildToolRow({ view, t }: { view: ToolViewProps; t: Translate })
           ) : undefined
         }
       />
-      {row.kind === 'research' || row.kind === 'working' ? <LinkReadLines links={row.links} t={t} /> : null}
+      {row.kind === 'research' || row.kind === 'working' || row.kind === 'waiting' ? (
+        <LinkReadLines links={row.links} t={t} />
+      ) : null}
     </div>
   )
 }

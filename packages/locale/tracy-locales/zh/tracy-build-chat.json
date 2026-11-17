@@ -308,5 +308,17 @@
   "links.pictures.one": "{count} 张图片",
   "links.pictures.other": "{count} 张图片",
   "links.pictures.none": "没有图片",
-  "links.pictures.someLost": "另有 {count} 张无法下载"
+  "links.pictures.someLost": "另有 {count} 张无法下载",
+  "tool.working.research": "正在读取你的链接",
+  "tool.working.about": "正在了解你的业务",
+  "tool.working.templates": "正在为你的 site 查找设计",
+  "tool.working.build": "正在创建你的 site",
+  "tool.working.startOver": "正在重新开始",
+  "tool.waiting.place": "等待你选择你的地点",
+  "links.pictures.foundSome": "找到 {count} 张图片，{usable} 张可用",
+  "links.pictures.foundNotOwn.one": "找到 {count} 张图片，并非商家发布",
+  "links.pictures.foundNotOwn.other": "找到 {count} 张图片，均非商家发布",
+  "links.pictures.foundNone.one": "找到 {count} 张图片，不可用",
+  "links.pictures.foundNone.other": "找到 {count} 张图片，均不可用",
+  "say.researchRead": "我已阅读你提供的业务信息。"
 }

@@ -308,5 +308,17 @@
   "links.pictures.one": "{count} imagen",
   "links.pictures.other": "{count} imágenes",
   "links.pictures.none": "Sin imágenes",
-  "links.pictures.someLost": "{count} más no se pudieron descargar"
+  "links.pictures.someLost": "{count} más no se pudieron descargar",
+  "tool.working.research": "Leyendo sus enlaces",
+  "tool.working.about": "Leyendo sobre su negocio",
+  "tool.working.templates": "Buscando diseños para su site",
+  "tool.working.build": "Creando su site",
+  "tool.working.startOver": "Empezando de nuevo",
+  "tool.waiting.place": "Esperando a que elija su ubicación",
+  "links.pictures.foundSome": "{count} imágenes encontradas, {usable} utilizables",
+  "links.pictures.foundNotOwn.one": "{count} imagen encontrada, no publicada por el negocio",
+  "links.pictures.foundNotOwn.other": "{count} imágenes encontradas, ninguna publicada por el negocio",
+  "links.pictures.foundNone.one": "{count} imagen encontrada, no utilizable",
+  "links.pictures.foundNone.other": "{count} imágenes encontradas, ninguna utilizable",
+  "say.researchRead": "He leído lo que me ha dado sobre su negocio."
 }

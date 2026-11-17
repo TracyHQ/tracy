@@ -308,5 +308,17 @@
   "links.pictures.one": "{count} image",
   "links.pictures.other": "{count} images",
   "links.pictures.none": "Aucune image",
-  "links.pictures.someLost": "{count} autres n’ont pas pu être téléchargées"
+  "links.pictures.someLost": "{count} autres n’ont pas pu être téléchargées",
+  "tool.working.research": "Lecture de vos liens",
+  "tool.working.about": "Lecture des informations sur votre entreprise",
+  "tool.working.templates": "Recherche de designs pour votre site",
+  "tool.working.build": "Création de votre site",
+  "tool.working.startOver": "Reprise depuis le début",
+  "tool.waiting.place": "En attente de votre choix de l’établissement",
+  "links.pictures.foundSome": "{count} images trouvées, {usable} utilisables",
+  "links.pictures.foundNotOwn.one": "{count} image trouvée, non publiée par l’entreprise",
+  "links.pictures.foundNotOwn.other": "{count} images trouvées, aucune publiée par l’entreprise",
+  "links.pictures.foundNone.one": "{count} image trouvée, non utilisable",
+  "links.pictures.foundNone.other": "{count} images trouvées, aucune utilisable",
+  "say.researchRead": "J’ai lu ce que vous m’avez transmis sur votre entreprise."
 }

@@ -37,3 +37,15 @@ export const answerTooLongSay = (limit) => `That answer is too long. Please use 
 /** @param {number} limit */
 export const requestTooLongSay = (limit) =>
   `That request is too long. Please use ${limit} characters or fewer.`
+
+/**
+ * Said by the tool when research has read what the owner gave, before the questions or the designs (#609): the build
+ * chat's first line comes from the tool, in the language of the chat, never from the agent before its first call.
+ */
+export const RESEARCH_READ_SAY = 'I have read what you gave me about your business.'
+
+/**
+ * The sentences the tool says in the language of the chat (`tracy-build-chat` namespace; `strings.ts` spreads them).
+ * A plain object, not frozen, as `ASK_STRINGS`: a bundle that does not read it drops it.
+ */
+export const SAY_STRINGS = { 'say.researchRead': RESEARCH_READ_SAY }

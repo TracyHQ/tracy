@@ -308,5 +308,17 @@
   "ask.choice.main_button_contact_short": "Liên hệ",
   "ask.choice.main_button_text": "Chữ trên nút: {text}",
   "ask.source.listing": "Trang danh bạ",
-  "plan.source.listing": "Trang danh bạ"
+  "plan.source.listing": "Trang danh bạ",
+  "tool.working.research": "Đang đọc các link của bạn",
+  "tool.working.about": "Đang tìm hiểu về doanh nghiệp của bạn",
+  "tool.working.templates": "Đang tìm mẫu thiết kế cho site của bạn",
+  "tool.working.build": "Đang dựng site của bạn",
+  "tool.working.startOver": "Đang bắt đầu lại",
+  "tool.waiting.place": "Đang chờ bạn chọn địa điểm của mình",
+  "links.pictures.foundSome": "Tìm thấy {count} ảnh, dùng được {usable} ảnh",
+  "links.pictures.foundNotOwn.one": "Tìm thấy {count} ảnh, không do doanh nghiệp đăng",
+  "links.pictures.foundNotOwn.other": "Tìm thấy {count} ảnh, không ảnh nào do doanh nghiệp đăng",
+  "links.pictures.foundNone.one": "Tìm thấy {count} ảnh, không dùng được",
+  "links.pictures.foundNone.other": "Tìm thấy {count} ảnh, không ảnh nào dùng được",
+  "say.researchRead": "Mình đã đọc những gì bạn gửi về doanh nghiệp của bạn."
 }

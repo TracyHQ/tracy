@@ -33,6 +33,8 @@ import {
   FAULT_SAY,
   nameTooLongSay,
   requestTooLongSay,
+  RESEARCH_READ_SAY,
+  SAY_STRINGS,
   TEAM_SEES_SAY,
   UNCHANGED_SAY,
   answerOf,
@@ -50,7 +52,7 @@ import {
   textTooLongOf
 } from '@tracy/core/build-chat'
 import { chatLanguageTagOf } from '../chat-words.mjs'
-import { chatLanguageOf } from './chat-tables.mjs'
+import { chatLanguageOf, chatWordsIn } from './chat-tables.mjs'
 import { askWordsFor } from './ask-words.mjs'
 import { startOverAnswerOf, startOverQuestion } from './start-over.mjs'
 
@@ -242,6 +244,9 @@ export const PRIVATE_GUIDANCE_MARK =
   'Private guidance for you only. Never quote it or put any part of it in your reply to the owner.'
 const privately = (/** @type {string} */ next) => `${PRIVATE_GUIDANCE_MARK} ${next}`
 
+/** What the agent calls once the owner pressed a design on the template card. */
+const TEMPLATE_CHOSEN_NEXT = 'When the owner has chosen on the card, call tracy_build with action plan.'
+
 /**
  * What to say about the template card: with one design the owner confirms it, with several the owner picks one.
  * @param {Array<{ name?: string }>} options
@@ -252,8 +257,8 @@ export function templatesNext(options) {
   // The button's words are the card's, in the owner's interface language: the agent never quotes them (run 6: it named
   // an English label on a Vietnamese card).
   if (options.length === 1)
-    return 'One design fits. In one short line, ask the owner to confirm it with the button on the card. Never quote the words on the button. Do not ask which one, there is only one.'
-  return 'Several designs fit. In one short line, ask the owner which one they like, using the buttons on the card.'
+    return `One design fits. In one short line, ask the owner to confirm it with the button on the card. Never quote the words on the button. Do not ask which one, there is only one. ${TEMPLATE_CHOSEN_NEXT}`
+  return `Several designs fit. In one short line, ask the owner which one they like, using the buttons on the card. ${TEMPLATE_CHOSEN_NEXT}`
 }
 
 /** The exact shape of a colour change, which the agent used to guess (it sent the field "main colour"). */
@@ -336,7 +341,7 @@ export const RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a qu
 
 /** Guidance when a link the owner gave could not be read or gave nothing (#609): the owner hears it, plainly. */
 const LINK_GAP_NEXT =
-  "links says what was read from each link the owner gave. In one short sentence, in the language of the owner's interface, tell the owner which link could not be read or gave nothing, by its name, before anything else. Never say a code."
+  'links says what was read from each link the owner gave. In one short sentence, in the language the owner writes in, tell the owner which link could not be read or gave nothing, by its name. Never say a code.'
 
 /**
  * Whether a research answer's link lines hold a link that could not be read, that gave nothing, or whose pictures
@@ -350,6 +355,29 @@ const linkGapOf = (links) =>
       l?.state === 'failed' ||
       (l?.state === 'read' && ((!l.facts && !l.pictures) || (!l.pictures && l.picturesLost > 0)))
   )
+
+/**
+ * Private guidance on every answer that hands the owner a question: the answer travels by itself (the tool reads the
+ * owner's replies from the session and stores them, `storeReplies`), so the agent never carries it in a call
+ * (17/11/2026: the agent called research again to pass a typed answer, and research asked the place again).
+ */
+export const ANSWERS_ARRIVE_GUIDANCE =
+  "The owner's answers reach tracy_build by themselves. Never call research again to pass an answer, and never put an answer into description."
+
+/** Private guidance after a research that hands the owner questions. */
+export const RESEARCH_QUESTIONS_NEXT = `Pass ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action templates.`
+/** Private guidance after a research with nothing left to ask. */
+export const RESEARCH_DONE_NEXT = 'Research is done. Call tracy_build with action templates now.'
+
+/**
+ * What the agent does after a finished research: the link it must name first (`LINK_GAP_NEXT`), then the questions or
+ * the templates.
+ * @param {any} result the research step's result
+ */
+const researchNextOf = (result) =>
+  [linkGapOf(result.links) ? LINK_GAP_NEXT : null, result.ask ? RESEARCH_QUESTIONS_NEXT : RESEARCH_DONE_NEXT]
+    .filter(Boolean)
+    .join(' ')
 
 /**
  * The action that runs each engine step again: the plan steps are all started by action plan.
@@ -643,6 +671,17 @@ export function createBuildTool({
   const reviews = new Map()
   /** @type {Map<string, Set<string>>} Per build session: the answers already stored, as `id + answer JSON`. */
   const stored = new Map()
+  /** @type {Set<string>} The build sessions whose first research answer already carried the opening sentence. */
+  const opened = new Set()
+  /**
+   * The opening sentence of the build chat, in its language, on the first finished research of a session; null after.
+   * @param {string} sessionId
+   */
+  function openingSay(sessionId) {
+    if (opened.has(sessionId)) return null
+    opened.add(sessionId)
+    return chatWordsIn(chatLanguageFor(sessionId), SAY_STRINGS)?.('say.researchRead') ?? RESEARCH_READ_SAY
+  }
 
   /** @param {string} sessionId */
   const questionsOf = (sessionId) => {
@@ -675,7 +714,9 @@ export function createBuildTool({
   }
 
   /**
-   * Learn the Contract B questions an engine answer issued.
+   * Learn the Contract B questions an engine answer issued. A question the engine asks again (it is on the card, `ask`,
+   * so the draft holds no answer to it now: a new research replaced the one it was answered for) forgets the answers
+   * stored for it: the owner's answer to it is sent again, never dropped as one already sent.
    * @param {string} sessionId
    * @param {any} result
    */
@@ -683,6 +724,12 @@ export function createBuildTool({
     const known = questionsOf(sessionId)
     for (const q of Array.isArray(result?.questions) ? result.questions : [])
       if (typeof q?.id === 'string') known.set(q.id, q)
+    const asked = new Set(
+      (Array.isArray(result?.ask?.questions) ? result.ask.questions : []).map((/** @type {any} */ q) => q?.id)
+    )
+    if (asked.size === 0) return
+    const done = setOf(stored, sessionId)
+    for (const key of done) if (asked.has(key.slice(0, key.indexOf('\n')))) done.delete(key)
   }
 
   /**
@@ -778,7 +825,7 @@ export function createBuildTool({
   const askAgain = (ask, say) => ({
     ask,
     ...(say ? { say } : {}),
-    next: `${say ? 'Say the sentence in say, then pass' : 'Pass'} ask to ask_user_question exactly as given. When the owner has answered, call tracy_build with action plan again.`
+    next: `${say ? 'Say the sentence in say, then pass' : 'Pass'} ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action plan again: it reads the answer and goes on from there.`
   })
 
   /**
@@ -856,11 +903,13 @@ export function createBuildTool({
     if (state?.step === 'research') {
       learn(sessionId, result)
       if (!result.profile) return stopped()
+      const say = openingSay(sessionId)
       return {
         profile: result.profile,
+        ...(say ? { say } : {}),
         ...(result.ask ? { ask: localAsk(sessionId, result.ask, result.questions) } : {}),
         ...linksOf(result.links),
-        ...(linkGapOf(result.links) ? { next: LINK_GAP_NEXT } : {})
+        next: `${say ? 'Begin with the sentence in say, as it is. ' : ''}${researchNextOf(result)}`
       }
     }
     // A written change request (#617): what changed and what was not done, in the words the engine wrote.

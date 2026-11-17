@@ -26,6 +26,18 @@ export const LINK_READ_STRINGS = Object.freeze({
   'links.pictures.someLost': '{count} more could not be downloaded'
 })
 
+/**
+ * The lines of a link that found more pictures than the site may use (#609). A plain object apart from
+ * `LINK_READ_STRINGS`, as `ASK_STRINGS`: a bundle that never draws a link line drops it.
+ */
+export const LINK_FOUND_STRINGS = {
+  'links.pictures.foundSome': '{count} pictures found, {usable} usable',
+  'links.pictures.foundNotOwn.one': '{count} picture found, not posted by the business',
+  'links.pictures.foundNotOwn.other': '{count} pictures found, none posted by the business',
+  'links.pictures.foundNone.one': '{count} picture found, not usable',
+  'links.pictures.foundNone.other': '{count} pictures found, none usable'
+}
+
 const STATES = new Set(['reading', 'choice', 'read', 'failed'])
 const PLATFORMS = Object.freeze({
   'instagram.com': 'Instagram',
@@ -64,7 +76,9 @@ export function linkNameOf(link) {
 
 /**
  * @typedef {{ name: string, state: 'reading' | 'choice' | 'read' | 'failed', reason?: string, facts?: number,
- *   pictures?: number, picturesLost?: number, picturesNotKept?: boolean }} LinkRead
+ *   pictures?: number, picturesFound?: number, picturesNotOwn?: boolean, picturesLost?: number,
+ *   picturesNotKept?: boolean }} LinkRead `pictures`: the ones the site may use; `picturesFound`: every picture the
+ *   link gave, set aside ones too, when more than that
  */
 
 /**
@@ -82,6 +96,9 @@ export function linkReadsOf(value) {
     if (line.state === 'read') {
       read.facts = countOf(line.facts)
       read.pictures = countOf(line.pictures)
+      if (countOf(line.picturesFound) > read.pictures) read.picturesFound = countOf(line.picturesFound)
+      if (read.picturesFound && read.pictures === 0 && line.picturesNotOwn === true)
+        read.picturesNotOwn = true
       if (countOf(line.picturesLost) > 0) read.picturesLost = countOf(line.picturesLost)
       if (line.picturesNotKept === true) read.picturesNotKept = true
     }
@@ -113,8 +130,18 @@ export function linkLineOf(line, t) {
   const facts = line.facts ?? 0
   const pictures = line.pictures ?? 0
   const lost = line.picturesLost ?? 0
+  const found = line.picturesFound ?? 0
   const factPart =
     facts > 0 ? [t(facts === 1 ? 'links.facts.one' : 'links.facts.other', { count: facts })] : []
+  // Pictures found but none the site may use: said as found, with why, never as "No pictures".
+  if (pictures === 0 && lost === 0 && found > 0) {
+    const key = line.picturesNotOwn ? 'links.pictures.foundNotOwn' : 'links.pictures.foundNone'
+    return [
+      t('links.read', { name }),
+      ...factPart,
+      t(`${key}.${found === 1 ? 'one' : 'other'}`, { count: found })
+    ].join('. ')
+  }
   if (facts === 0 && pictures === 0 && lost === 0) return t('links.readNothing', { name })
   if (pictures === 0 && lost > 0)
     return [
@@ -128,7 +155,9 @@ export function linkLineOf(line, t) {
       : [
           [
             ...factPart,
-            t(pictures === 1 ? 'links.pictures.one' : 'links.pictures.other', { count: pictures })
+            found > pictures
+              ? t('links.pictures.foundSome', { count: found, usable: pictures })
+              : t(pictures === 1 ? 'links.pictures.one' : 'links.pictures.other', { count: pictures })
           ].join(', ')
         ]
   return [
