@@ -254,6 +254,16 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   hoursN}` (N from 1; days as two letter codes `mo` to `su`; `hoursN` is `HH:MM-HH:MM`, ranges joined by a comma, or
   `closed`), so the card says the day names in the customer's language. `value` stays the structured value; a value
   that does not read as a week has no `display`.
+- **Intent for the writer** (optional, #575, the step chain's `visitorQuestion`, `keyMessage`, `seo`, `endAction`,
+  block `message`, `site.primaryAction` and `ownerTasks`): notes in note form, never final copy, and none is shown as
+  words on the site. A page may carry `visitorQuestion` (what a visitor came to find out), `keyMessage` (the one thing
+  they should leave with), `seo` (`searchTerms`, at least one, the words a visitor searches for, made by code from the
+  plan's data; `titleIntent` and `descriptionIntent`, what the search title and description must get across) and
+  `endAction` (`block`, a block of the same page that leads to the main action, and `factIds`, the facts it carries).
+  A block may carry `message` (its point in one line) and `carries` (the ids of the plan's `keyMessages` it gets
+  across). The plan may carry `keyMessages` (`{id, label}`, the brief's points the site leads with), `primaryAction`
+  (`factIds`: the main button's facts) and `later` (`{what, reason, code, params?}`: what the owner can send after
+  approval and what it opens, built by code; codes `later_<field>`). The page writer reads them; the plan card may.
 - **`labelCode`** (optional, on a block): the stable key of the section the block is (its block type, or
   `page_header` for a page title hero; the key a change line names as `section`), by which the card translates the
   section name. `label` is the composer's own words and stays the English fallback.
@@ -432,6 +442,11 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
 
 ### Changes for consumers
 
+- 17/11/2026 (#575), additive: a build plan may carry the step chain's intent for the writer: on a page
+  `visitorQuestion`, `keyMessage`, `seo` (`searchTerms`, `titleIntent?`, `descriptionIntent?`) and `endAction`
+  (`block`, `factIds`); on a block `message` and `carries` (key message ids); on the plan `keyMessages` (`{id, label}`),
+  `primaryAction` (`factIds`) and `later` (`{what, reason, code, params?}`). Every earlier plan stays valid and the
+  schema stays `tracy-build-plan/v1`. A reader that does not know them ignores them; the plan card shows none yet.
 - 17/11/2026 (#575), additive: a build plan may carry `legalPages` (one Privacy Policy page, the template's own or
   one created with the id `legal:privacy`, a `says` line and `factIds`) and `notFound` (`says`, `leadsTo`), as the step
   chain's site plan does. The plan card shows neither; the draft write builds neither yet and lists both under its
@@ -538,12 +553,17 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `choice` | `id`, `label`, `detail?`, `recommended?`, `code?`, `params?` |
 | `free text` | `maxLength`, `placeholder?` |
 | `answer` | `schema`, `question`, `choice?`, `text?`, `skipped?` |
-| `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut`, `rows?`, `legalPages?`, `notFound?` |
+| `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut`, `rows?`, `legalPages?`, `notFound?`, `keyMessages?`, `primaryAction?`, `later?` |
 | `fact` | `id`, `kind`, `label`, `value`, `sources`, `display?`, `code?`, `params?` |
 | `item` | `id`, `kind`, `label`, `sources`, `count?` |
 | `source` | `kind`, `name` |
-| `page` | `id`, `name`, `pageType`, `blocks` |
-| `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason`, `lists?`, `labelCode?`, `basis?`, `factIds?` |
+| `page` | `id`, `name`, `pageType`, `blocks`, `visitorQuestion?`, `keyMessage?`, `seo?`, `endAction?` |
+| `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason`, `lists?`, `labelCode?`, `basis?`, `factIds?`, `message?`, `carries?` |
+| `page seo` | `searchTerms`, `titleIntent?`, `descriptionIntent?` |
+| `end action` | `block`, `factIds` |
+| `key message` | `id`, `label` |
+| `primary action` | `factIds` |
+| `later entry` | `what`, `reason`, `code`, `params?` |
 | `row` | `id`, `label`, `sources` |
 | `child list` | `name`, `rows`, `item?` |
 | `planned row` | `data?`, `page?`, `lists?` |
@@ -596,6 +616,8 @@ reason in a sentence or two. A test compares this table with the code.
 | `reason` | 200 | block, left out entry, generated pictures and stop report reasons; a not done entry's `why` |
 | `said` | 200 | an assumption |
 | `says` | 200 | what a created legal page or the not-found page must get across, for the writer |
+| `intent` | 160 | a page's `visitorQuestion`, `keyMessage`, `seo.titleIntent` and `seo.descriptionIntent`; a block's `message` |
+| `searchTerms[]` | 60 | each search term of a page |
 | `prompt` | 200 | a question |
 | `request.text` | 1000 | the text of a change request |
 | `changed[]` | 200 | each line of what a change request changed |

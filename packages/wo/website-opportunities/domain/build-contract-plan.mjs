@@ -13,6 +13,7 @@ import {
 import { blockListsProblems, rowDataProblems } from './build-contract-plan-rows.mjs'
 import { codeProblems, paramsProblems } from './build-contract-plan-codes.mjs'
 import { systemPagesProblems } from './build-contract-plan-system.mjs'
+import { intentProblems } from './build-contract-plan-intent.mjs'
 import { closedShapeProblems, textProblems } from './build-contract-shapes.mjs'
 import { idListProblems, isName, isObject, isWhole, label } from './build-contract-shared.mjs'
 import {
@@ -186,4 +187,5 @@ export function buildPlanProblems(plan, report) {
   assumptionsProblems(plan, report)
   leftOutProblems(plan.leftOut, report, known)
   systemPagesProblems(plan, known, report)
+  intentProblems(plan, known, report)
 }
