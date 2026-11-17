@@ -28,6 +28,7 @@ import { draftError, draftSource } from './step-chain-draft-source.js'
 import { keptModelOf, reuseOf, revisionOf, revisionRecordOf } from './step-chain-draft-revision.js'
 import { siteWriteOf } from './step-chain-draft-site.js'
 import { orderStep, writeStep } from './step-chain-draft-steps-late.js'
+import { spendOf, usageCollector } from './build-draft/model-usage.js'
 
 /** The build model door's id in `LLM_DOORS`, the only door an assembled run spends. */
 export const ASSEMBLED_MODEL_DOOR = 'buildModel'
@@ -48,10 +49,11 @@ export function createDraftSteps(deps) {
   const source = draftSource(deps)
   /** The run records of the real site wiring, by run id, kept between the frame's attempts of the write step. */
   const records = new Map()
-  async function modelOf() {
+  /** The build model; `onUsage` (optional) is told what each call used and cost (`build-draft/model-usage.js`). */
+  async function modelOf(options) {
     if (typeof deps.buildModel !== 'function')
       throw draftError('model_missing', 'this server has no build model door for a step chain run')
-    const model = await deps.buildModel()
+    const model = await (options ? deps.buildModel(options) : deps.buildModel())
     if (typeof model !== 'function')
       throw draftError('model_missing', 'the build model door answered no model to call')
     return model
@@ -121,7 +123,9 @@ export function createDraftSteps(deps) {
     },
 
     async copy(_ctx, { kit, plan }, { signal, attempt = 1 } = {}) {
-      const model = await modelOf()
+      // What each writer call used and cost (the step chain's writer records its spend; #575 page writer audit 12).
+      const usage = usageCollector()
+      const model = await modelOf({ onUsage: usage.onUsage })
       const written = await writePages({
         plan: plan.plan,
         profile: withoutWithheld(plan.profile),
@@ -133,14 +137,22 @@ export function createDraftSteps(deps) {
         rewrite: attempt <= 1,
         reuse: reuseOf(plan),
         // What the owner typed in the build chat (D46): no written word may copy it (`page-writer-owner-echo.mjs`).
-        ownerStatement: plan.research?.description ?? null
+        ownerStatement: plan.research?.description ?? null,
+        // The template's own name, which no written word may carry (the step chain's W07 demo name check).
+        template: kit.aiq.template ?? null
       })
+      const spent = spendOf(usage)
       const recorded = {
         pages: written.pages.map((p) => ({ id: p.id, calls: p.attempts.length })),
+        prompt: written.prompt,
+        ...(written.systemPages?.length
+          ? { systemPages: written.systemPages.map((p) => ({ id: p.id, calls: p.attempts.length })) }
+          : {}),
+        usage: spent.calls,
         // Where each owner's fact is said, and the ones no block could say with why: ids, never a text.
         ...(written.ownerFacts ? { ownerFacts: written.ownerFacts } : {})
       }
-      return { value: { ...written, recorded }, usd: null, knownUsd: 0 }
+      return { value: { ...written, recorded }, usd: spent.usd, knownUsd: spent.knownUsd }
     },
 
     async pictures(ctx, { kit, plan }) {

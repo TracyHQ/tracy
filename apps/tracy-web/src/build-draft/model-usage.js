@@ -84,3 +84,24 @@ export function usageCollector() {
     }
   }
 }
+
+/**
+ * What a step's model calls spent: `usd` when every call reported its cost, else null (the step chain then keeps its
+ * own count); `knownUsd` the cost the calls did report; `calls` each call's model and tokens, never a word of it.
+ */
+export function spendOf(usage) {
+  const calls = usage.calls()
+  const known = calls.filter((c) => Number.isFinite(c.costCents)).reduce((sum, c) => sum + c.costCents, 0)
+  const all = usage.cost()
+  return {
+    usd: Number.isFinite(all.costCents) ? all.costCents / 100 : null,
+    knownUsd: known / 100,
+    calls: calls.map(({ provider, model, inputTokens, outputTokens, failed }) => ({
+      provider,
+      model,
+      inputTokens,
+      outputTokens,
+      ...(failed ? { failed: true } : {})
+    }))
+  }
+}
