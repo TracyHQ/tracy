@@ -187,3 +187,11 @@ jobs:
     steps:
       - name: Review dependency changes
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          # picomatch 2.3.2 and 4.0.7 (GHSA-fc5q-39xc-vjpf, ReDoS through single-branch repeated
+          # extglobs) are patched locally with pnpm patches in patches/ and in each EmDash theme's
+          # patches/ (the lib/parse.js fix of upstream PR #246; #238 is the other open upstream fix).
+          # No upstream release fixes it, and this action compares lockfile versions, so it cannot
+          # see a pnpm patch. Remove this allow once picomatch ships a fixed release and the
+          # lockfiles move to it.
+          allow-ghsas: GHSA-fc5q-39xc-vjpf

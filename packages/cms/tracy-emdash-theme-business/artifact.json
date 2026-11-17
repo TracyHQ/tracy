@@ -7,7 +7,7 @@
 		"version": "1.7.25"
 	},
 	"demoContent": "Northgate Industrial",
-	"generatedAt": "2026-11-17T11:22:52.190Z",
+	"generatedAt": "2026-11-17T17:45:35.745Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -154,7 +154,7 @@
 		"docs/content-model.md": "sha256:f6384fb348581709ee3f7869934270a14cc1176b0ec54936e20db6097a196861",
 		"docs/content-rules.md": "sha256:e240519da730f44c9fa0ef2e90a99f11f2b7c2d5776d43e6b6741affd3f86202",
 		"docs/design-system.md": "sha256:90626d6c8cd84669be1977a419a37dddd23465a832a7865cce2bcc72cca3df93",
-		"docs/generated/inventory.json": "sha256:7f29a6dc8492d10e994bd45974c660d1a96b6afd86ed8581a22604cdea133309",
+		"docs/generated/inventory.json": "sha256:37dc4dbd23471b27f8a5dc3ac2901860fd8cdd9cca27af75c88f39a96514d74d",
 		"docs/generated/inventory.md": "sha256:7ad75c47243c735d022166b46bf8df28bc1e072bdb31d8091d60f02cf799fa07",
 		"docs/install.md": "sha256:db5def2f8ab8c908c6fb33814b74658d9452d3f1b29f87c5776ce342436a2771",
 		"docs/languages.md": "sha256:8d9fa744009add75c9d847c26121ef3f98f77727388545372da98713309b1b33",
@@ -162,7 +162,7 @@
 		"seed/seed.json": "sha256:f269c81281f22c5918ff298a0511b954c71813c0d44c61fcd19eabe37a20e7cf",
 		"seed/media-map.json": "sha256:f62125be2fda732dfc8a4a9d05ff341d2f4ec4dab7cbf08f5900d9e12a929bd6",
 		"seed/field-map.json": "sha256:b463bc104be5dcf058893c8d2b9e333de95faf7791dd945dc2f28345af30d334",
-		"pnpm-lock.yaml": "sha256:ffe99efb4b9557e229762f8df56a33a2ce5ebfcb4147ac8f701c4bc4955cd707",
+		"pnpm-lock.yaml": "sha256:522d99acc55732c4ef88486414fdad2e10e466718bcf74682681046deeffd306",
 		"tools/forms.json": "sha256:75b8fadc91e8dc4991d588c06a9219b07fc4e36b7719eee6ebcb3ad3f49cdc85",
 		"seed/media/*": "sha256:ca0909c701f80ac1144fc633ff4668b66ce3499790c3c985ba402e80397fd81b (39 files)"
 	}

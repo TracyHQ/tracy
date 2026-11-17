@@ -56,3 +56,10 @@ overrides:
 # release; only the shadcn CLI (a dev tool for adding UI primitives) uses it, so it takes 4.1.1, the last
 # release before the affected range.
   "deepmerge@>=4.2.0 <=4.3.1": 4.1.1
+# picomatch has GHSA-fc5q-39xc-vjpf (ReDoS through single-branch repeated extglobs such as `+(*a)`)
+# and no fixed release, so both copies carry the lib/parse.js part of upstream PR #246 from
+# patches/ (the Dockerfile and distribution.include ship that folder). Drop these lines, and
+# patches/, once picomatch ships a fixed release.
+patchedDependencies:
+  picomatch@2.3.2: patches/picomatch@2.3.2.patch
+  picomatch@4.0.7: patches/picomatch@4.0.7.patch
