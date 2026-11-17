@@ -34,15 +34,7 @@ import { demoActionOf, recommendTemplate } from './demo-actions.js'
 import { freezeDemoResearchInput } from './revisions.js'
 import { bestKnownName } from 'website-opportunities/src/business-name.js'
 import { sourcesOf } from 'website-opportunities/src/store.js'
-import { resumeRequest } from 'website-opportunities/src/place-requests.js'
-import { reviewSourcesRequired } from 'website-opportunities/src/tripadvisor-research.js'
-
-/**
- * How many times a business's research that paused (a source's time or page budget ran out, its cursor kept) is
- * resumed by itself. A customer has no Resume button here (Website Opportunities has one): measured 24/10/2026, a
- * shop's crawl paused on its budget and the page said "researching" for ever.
- */
-const OWN_SITE_RESUMES = 3
+import { pausedForGood, researchJobOf, resumeOwnResearch, saveOwnBusiness } from './business-research.js'
 
 export const OWN_SITE_SWITCH = 'site-from-business'
 const BASE = '/api/sites/from-business'
@@ -179,26 +171,12 @@ export function ownSiteRoutes(app, h) {
       ...(b.label?.trim() ? { label: b.label.trim() } : {}),
       at: new Date(now()).toISOString()
     }
-    const { row } = await h.insertOpportunity(pool, me.accountId, {
-      ...fields,
-      candidate: { ...fields.candidate, ownSite: own }
-    })
-    if (made) await h.saveListingSource(pool, row.id, made.listings)
-    // The customer's own business, saved before (as theirs or as an opportunity): now theirs, this press.
-    const opp =
-      row.candidate?.ownSite?.requestId === b.requestId
-        ? row
-        : (
-            await pool.query(
-              `update wo_opportunity set candidate = candidate || jsonb_build_object('ownSite', $3::jsonb,
-                 'trade', coalesce(candidate->>'trade', $4)) where id = $1 and account_id = $2 returning *`,
-              [row.id, me.accountId, JSON.stringify(own), fields.candidate.trade]
-            )
-          ).rows[0]
-    const started = await h.startResearch({
+    // Saved and researched by the steps the build chat shares (`business-research.js`).
+    const { opp, started } = await saveOwnBusiness(h, {
       accountId: me.accountId,
-      opp,
-      requestId: `${b.requestId}:research`
+      fields,
+      listings: made ? made.listings : null,
+      own
     })
     if (started.refusal) return refuse(c, started.refusal.status, started.refusal.code, started.refusal.next)
     return json(
@@ -329,60 +307,14 @@ export function ownSiteRoutes(app, h) {
     return json(c, { business: { ...state, phase: 'build', action: accepted.body.actions[0] } }, 202)
   })
 
-  /** The request waits on its place run: its queued row alone cannot say whether research stopped. */
-  async function researchJob(opportunityId) {
-    const job = (await h.jobsOfOpportunity(pool, opportunityId))[0] ?? null
-    if (!job?.place_job_id || job.result_snapshot_id || !RESEARCH_RUNNING.has(job.state)) return job
-    const place = (
-      await pool.query('select state, last_error from wo_place_job where id = $1', [job.place_job_id])
-    ).rows[0]
-    return place && place.state !== 'completed'
-      ? { ...job, state: place.state, last_error: place.last_error }
-      : job
-  }
-
-  /** Serialise polls of this business, and count only a resume that actually queued its research. */
+  /** Resume a paused research (`business-research.js`), answered as the business's view. */
   async function resumeResearch(accountId, opp, view) {
-    const lock = await pool.connect()
-    const key = `own-site-research:${opp.id}`
-    let held = false
-    try {
-      held = (await lock.query('select pg_try_advisory_lock(hashtextextended($1,0)) as held', [key])).rows[0]
-        ?.held
-      if (!held) return { ...view, phase: 'research' }
-      const own = (
-        await pool.query('select candidate from wo_opportunity where id = $1 and account_id = $2', [
-          opp.id,
-          accountId
-        ])
-      ).rows[0]?.candidate?.ownSite
-      const job = await researchJob(opp.id)
-      if (!own || job?.state !== 'paused')
-        return { ...view, phase: 'research', job: job ? h.jobShape(job) : null }
-      const resumes = Number(own.resumes ?? 0)
-      if (job.last_error?.code === 'RESEARCH_RECOVERY_LIMIT' || resumes >= OWN_SITE_RESUMES)
-        return {
-          ...view,
-          phase: 'failed',
-          code: job.last_error?.code ?? 'SOURCE_PAUSED',
-          job: h.jobShape(job)
-        }
-      const resumed = await resumeRequest(pool, accountId, job.id, {
-        shared: config.woSharedResearch !== false,
-        now,
-        requiredSources: reviewSourcesRequired(await h.runtime())
-      })
-      if (resumed)
-        await pool.query(
-          `update wo_opportunity set candidate = jsonb_set(candidate, '{ownSite,resumes}', to_jsonb($3::int))
-           where id = $1 and account_id = $2`,
-          [opp.id, accountId, resumes + 1]
-        )
-      const current = resumed ?? (await researchJob(opp.id))
-      return { ...view, phase: 'research', job: current ? h.jobShape(current) : null }
-    } finally {
-      if (held) await lock.query('select pg_advisory_unlock(hashtextextended($1,0))', [key]).catch(() => {})
-      lock.release()
+    const r = await resumeOwnResearch(h, accountId, opp.id)
+    return {
+      ...view,
+      phase: r.phase,
+      ...(r.code ? { code: r.code } : {}),
+      ...(r.job !== undefined ? { job: r.job ? h.jobShape(r.job) : null } : {})
     }
   }
 
@@ -418,10 +350,10 @@ export function ownSiteRoutes(app, h) {
       )
     ).rows[0]
     if (action) return { ...view, phase: 'build', action: await demoActionOf(pool, accountId, action.id) }
-    const job = await researchJob(opp.id)
+    const job = await researchJobOf(h, opp.id)
     if (job?.state === 'paused') {
       if (advance) return resumeResearch(accountId, opp, view)
-      if (job.last_error?.code === 'RESEARCH_RECOVERY_LIMIT' || Number(own.resumes ?? 0) >= OWN_SITE_RESUMES)
+      if (pausedForGood(opp, job))
         return {
           ...view,
           phase: 'failed',

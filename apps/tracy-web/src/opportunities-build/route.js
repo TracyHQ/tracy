@@ -48,6 +48,7 @@ import { withHandoffLock } from './handoff.js'
 import { handOffToAgent } from './handoff-service.js'
 import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
+import { createBusinessResearch } from './business-research.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
 import { qualityEvidenceRoutes } from './quality-route.js'
 import {
@@ -104,29 +105,29 @@ export function createWebsiteBuilder(deps) {
 
   const demoSettings = async () => (await runtime()).settings
   // The Content brief as a background job (#524): the brief step labels the photographs, then writes the brief.
-  const briefJobs = createBriefJobs({
-    pool,
-    log: deps.log ?? console,
-    make: async ({ accountId, opportunityId, onStep }) => {
-      const label = deps.pictureLabels ?? null
-      return createRevision(pool, {
-        accountId,
-        opportunityId,
-        domain: await loadDomain(),
-        now,
-        pictureLabels: label
-          ? async (input) => {
-              onStep('labelling')
-              try {
-                return await label(input)
-              } finally {
-                onStep('writing')
-              }
+  /** The Content brief of an opportunity's research: its photographs labelled first (F08), then the brief written. */
+  const makeBrief = async ({ accountId, opportunityId, onStep = () => {} }) => {
+    const label = deps.pictureLabels ?? null
+    return createRevision(pool, {
+      accountId,
+      opportunityId,
+      domain: await loadDomain(),
+      now,
+      pictureLabels: label
+        ? async (input) => {
+            onStep('labelling')
+            try {
+              return await label(input)
+            } finally {
+              onStep('writing')
             }
-          : null
-      })
-    }
-  })
+          }
+        : null
+    })
+  }
+  const briefJobs = createBriefJobs({ pool, log: deps.log ?? console, make: makeBrief })
+  /** One business researched for its owner (`business-research.js`), made once the router hands its helpers. */
+  let businessResearch = null
   const qualityMode = (accountId) => qualityModeOf(pool, accountId, { available: deps.quality?.available })
   async function acceptActions(args) {
     if (args.entries.some((entry) => entry.workflow === AGENT_DEMO))
@@ -1039,10 +1040,27 @@ export function createWebsiteBuilder(deps) {
       // Read at call time: the client demo service is set after this builder is made.
       warmPictureLabels: (args) => deps.clientDemo?.warmPictureLabels?.(args)
     })
+    // The same steps for the build chat's research (#575): it researches the owner's business as this door does.
+    businessResearch = createBusinessResearch({
+      pool,
+      config,
+      now,
+      runtime: ctx.runtime,
+      loadDomain,
+      linkFields: ctx.linkFields,
+      insertOpportunity,
+      saveListingSource: ctx.saveListingSource,
+      startResearch: ctx.startResearch,
+      jobsOfOpportunity,
+      opportunityOf,
+      makeBrief
+    })
   }
 
   return {
     routes,
+    // The research of one business for its owner, once the doors are mounted (null before): the build chat's research.
+    businessResearch: () => businessResearch,
     settingsOf,
     saveSettings,
     listedDemoOf,
