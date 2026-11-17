@@ -106,7 +106,10 @@ test('paragraph-only HTML params normalize through the guard while native ACM pa
   const slot = { ...HTML_SLOT, jsonPath: ['top-desc'], xpath: '/html/body/div/text()' }
   const map = { slots: [slot, ACM_SLOT] }
   const site = rowsDoor({
-    'module-2': { id: 2, params: params({ 'top-desc': sent.replace('&', '&amp;').replace('<', '&lt;') }) }
+    'module-2': {
+      id: 2,
+      params: params({ 'top-desc': sent.replaceAll('&', '&amp;').replaceAll('<', '&lt;') })
+    }
   })
   const guard = lookGuard({ kit: KIT().doc, contentMap: map })
   const result = await runEmphasisStage({

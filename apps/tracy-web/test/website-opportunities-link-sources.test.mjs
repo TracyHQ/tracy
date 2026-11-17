@@ -214,7 +214,10 @@ test('a bio link that is a booking platform page is the booking link, with no pa
   const booksy = 'https://booksy.com/en-gb/12345_harbour-cuts_hair-salon_6789_bristol'
   const r = await research({ bio: booksy })
   assert.deepEqual(r.profile.booking, [{ url: booksy, verified: true, source: 'instagram' }])
-  assert.equal(r.requests.includes(LINKTREE), false)
+  assert.equal(
+    r.requests.some((u) => u === LINKTREE),
+    false
+  )
   assert.equal(r.sources.instagram.collected.bioPages, undefined)
 })
 
@@ -223,7 +226,10 @@ test(
   opts,
   async () => {
     const r = await research({ bio: SITE })
-    assert.equal(r.requests.includes(LINKTREE), false)
+    assert.equal(
+      r.requests.some((u) => u === LINKTREE),
+      false
+    )
     assert.equal(r.sources.instagram.collected.bioPages, undefined)
     assert.equal(r.profile.booking, undefined)
     assert.equal(r.profile.menus, undefined)

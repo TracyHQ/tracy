@@ -195,7 +195,7 @@ function parseToml(text) {
       const v = m[2]
       if (v === 'true' || v === 'false') cur[m[1]] = v === 'true'
       else if (/^\d+$/.test(v)) cur[m[1]] = Number(v)
-      else if (/^"[^"]*"$/.test(v) || /^\[\s*("[^"]*"\s*,?\s*)*\]$/.test(v)) cur[m[1]] = JSON.parse(v)
+      else if (/^"[^"]*"$/.test(v) || /^\[\s*(?:"[^"]*"\s*(?:,\s*)?)*\]$/.test(v)) cur[m[1]] = JSON.parse(v)
       else assert.fail(`buildkitd.toml:${i + 1}: value not understood: ${v}`)
     } else assert.fail(`buildkitd.toml:${i + 1}: line not understood: ${raw}`)
   }

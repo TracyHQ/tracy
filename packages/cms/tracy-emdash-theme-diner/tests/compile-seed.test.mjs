@@ -283,8 +283,7 @@ test('CLI: a media file name that leaves the seed or source folder is refused, n
         const r = run(bad, ...args)
         assert.notEqual(r.status, 0, bad)
         assert.ok(
-          r.stderr.includes(JSON.stringify(bad).slice(1, -1).replace(/\\\\/g, '\\\\')) ||
-            r.stderr.includes('media file'),
+          r.stderr.includes(JSON.stringify(bad).slice(1, -1)) || r.stderr.includes('media file'),
           `${bad}: ${r.stderr}`
         )
       }

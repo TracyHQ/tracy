@@ -41,8 +41,26 @@ export const LABEL = /^[a-z0-9][a-z0-9-]{0,62}$/
  * path travelled into `docker exec` verbatim and every `grep`/`glob` call came back as a bare
  * `exit 127` — "executable file not found", with no message naming a file. Measured 06/09 on the
  * dev cluster (the tester read it as a blocked cross-site search; it blocked EVERY search).
+ * @param {string} program - argv[0] as the tool call names it.
+ * @returns {boolean}
  */
-export const RG_PACKAGED = /[\\/]@vscode[\\/]ripgrep(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?[\\/].*[\\/]rg(?:\.exe)?$/
+export function isPackagedRg(program) {
+  // Path segments, not one regex over the whole string: an unanchored `@vscode/ripgrep/.*/rg`
+  // rescans the tail from every `/`, and `program` is whatever the model's tool call names.
+  const parts = program.split(/[\\/]/)
+  const last = parts.length - 1
+  if (parts[last] !== 'rg' && parts[last] !== 'rg.exe') return false
+  // Between the package folder and `rg` the path may not break a line (the old `.*` did not).
+  let lastBreak = -1
+  for (let k = 0; k < last; k++) if (LINE_BREAK.test(parts[k])) lastBreak = k
+  for (let i = 1; i + 3 <= last; i++)
+    if (parts[i] === '@vscode' && RG_PACKAGE_DIR.test(parts[i + 1]) && i + 2 > lastBreak) return true
+  return false
+}
+
+/** `ripgrep`, or a platform package like `ripgrep-linux-arm64`. */
+const RG_PACKAGE_DIR = /^ripgrep(?:-[a-z0-9]+)*$/
+const LINE_BREAK = /[\n\r\u2028\u2029]/
 
 /**
  * The other shape `resolveRgPath()` can return: a single-file runtime's sidecar NEXT TO THE
@@ -80,7 +98,9 @@ const ENV_NAME = /^[A-Za-z_][A-Za-z0-9_]*$/
  * @returns {string}
  */
 function trimRoot(root) {
-  const trimmed = root.replace(/\/+$/, '')
+  let end = root.length
+  while (end > 0 && root[end - 1] === '/') end--
+  const trimmed = root.slice(0, end)
   if (trimmed === '') throw new Error('subprocess-docker: sitesRoot must not be the filesystem root')
   return trimmed
 }
@@ -196,7 +216,7 @@ export function envFlags(env) {
 export function mapProgram(program, sitesRoot, execPath) {
   // The site's own tree first, and it wins over every rule below: that file is the customer's.
   if (sitesRoot !== undefined && program.startsWith(`${trimRoot(sitesRoot)}/`)) return program
-  if (RG_PACKAGED.test(program)) return 'rg'
+  if (isPackagedRg(program)) return 'rg'
   return program === rgSidecar(execPath) ? 'rg' : program
 }
 
@@ -228,7 +248,7 @@ export const RG_HARNESS_VALUE_FLAGS = Object.freeze(['--regexp=', '--glob='])
  * path inside tracy-dsh (`/site` is a bind mount), so the search can run in place, as dsh's child.
  *
  * That trades the kernel boundary for this check, so the check is narrow:
- * - the program is the harness's binary: a normalized absolute path matching {@link RG_PACKAGED}
+ * - the program is the harness's binary: a normalized absolute path accepted by {@link isPackagedRg}
  *   (or exactly {@link rgSidecar}) and outside the sites tree, where a binary is a customer's;
  * - every argument before `--` is on {@link RG_HARNESS_FLAGS} or {@link RG_HARNESS_VALUE_FLAGS};
  * - the cwd is a site path (`siteOf`: inside `sitesRoot`, no `..`), and the single search root after
@@ -249,7 +269,7 @@ export function runsOnHarness({ argv, cwd, sitesRoot, execPath, allowRoot }) {
   const [program, ...args] = argv
   if (program === undefined || !program.startsWith('/') || posix.normalize(program) !== program) return false
   if (program.startsWith(`${trimRoot(sitesRoot)}/`)) return false
-  if (!RG_PACKAGED.test(program) && program !== rgSidecar(execPath)) return false
+  if (!isPackagedRg(program) && program !== rgSidecar(execPath)) return false
   const siteRoot = siteRootOf(cwd, sitesRoot)
   const end = args.indexOf('--')
   for (const flag of end === -1 ? args : args.slice(0, end)) {

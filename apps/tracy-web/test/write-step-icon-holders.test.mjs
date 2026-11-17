@@ -40,6 +40,9 @@ test('a slot of links only is told from a slot with words', () => {
   assert.equal(linksOnly('<a href="#"><i class="fab fa-x"></i></a>&nbsp;'), true)
   assert.equal(linksOnly('Call ((a href="tel:1"))us((/a))'), false)
   assert.equal(linksOnly('Head of Combat'), false)
+  assert.equal(linksOnly('<a href="#">((a href="#"))  \n'), true)
+  assert.equal(linksOnly('<a href="#"></a><script'), false)
+  assert.equal(linksOnly(`<a href="#"></a>${'<'.repeat(20_000)}`), false)
 })
 
 test("every icon the plan decides in a slot of icons only is hidden, and the slot with them; the card's other decisions stay", () => {

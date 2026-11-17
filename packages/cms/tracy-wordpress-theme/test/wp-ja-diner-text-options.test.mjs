@@ -75,7 +75,10 @@ for (const copy of COPIES) {
   }, () => {
     const out = render(copy, OPTIONS)
     for (const demo of Object.values(OPTIONS))
-      assert.ok(out.includes(demo.replace('\n', '<br>')), `${demo} is printed (a line break drawn as a br)`)
+      assert.ok(
+        out.includes(demo.replaceAll('\n', '<br>')),
+        `${demo} is printed (a line break drawn as a br)`
+      )
     assert.ok(out.includes('<a href="mailto:Info@joomlart.com">Info@joomlart.com</a>'))
   })
 

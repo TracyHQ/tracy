@@ -677,8 +677,8 @@ test('literal PRE fit: matcher and merged raw evidence measure only the exact su
     for (const codeText of [
       undefined,
       literal.toLowerCase(),
-      literal.replace('\t', ' '),
-      literal.replace('\n', ' '),
+      literal.replaceAll('\t', ' '),
+      literal.replaceAll('\n', ' '),
       literal.replace('&amp;', '&')
     ]) {
       assert.equal(fit({ ...items[0], codeText }).measured, false, JSON.stringify(codeText))
@@ -696,7 +696,11 @@ test('literal PRE fit: matcher and merged raw evidence measure only the exact su
       'ordinary slot cannot trust code label'
     )
     assert.equal(fit({ ...items[0], codeText: undefined }).measured, false)
-    for (const changed of [literal.toLowerCase(), literal.replace('\t', ' '), literal.replace('\n', ' ')]) {
+    for (const changed of [
+      literal.toLowerCase(),
+      literal.replaceAll('\t', ' '),
+      literal.replaceAll('\n', ' ')
+    ]) {
       const changedItems = annotate(
         mergeViewports({ desktop: { items: [raw(changed)] } }, site),
         match,

@@ -137,8 +137,9 @@ test('the brief shows the owner links with a label for every preset network, and
   assert.equal(on.business.socials.linkedin, 'https://www.linkedin.com/company/harbour-sport')
   assert.equal(on.business.socials.whatsapp, 'https://wa.me/971501234567')
   assert.deepEqual(on.business.socialLabels, { other: 'Links' })
-  assert.ok(on.integrations.some((i) => i.kind === 'social' && i.url.includes('linkedin.com')))
-  assert.ok(on.integrations.some((i) => i.kind === 'social' && i.url.includes('linktr.example')))
+  const socialHosts = on.integrations.filter((i) => i.kind === 'social').map((i) => new URL(i.url).hostname)
+  assert.ok(socialHosts.some((host) => host === 'linkedin.com' || host.endsWith('.linkedin.com')))
+  assert.ok(socialHosts.some((host) => host === 'linktr.example'))
   // The owner's off on the researched Instagram link: it leaves the brief (#537 R16 fix).
   const fact = on.facts.find((f) => f.field === 'socials')
   assert.ok(fact, 'the fixture states its Instagram link as a fact')
