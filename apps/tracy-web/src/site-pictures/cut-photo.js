@@ -13,7 +13,8 @@
 // A low quality photo always goes through the gate, and only into a small frame. Never an AI upscale.
 import sharp from 'sharp'
 import { subjectCrop } from 'website-opportunities/domain/pictures/subject-crop.mjs'
-import { judgePhoto, SHARPNESS_VERSION } from '../lib/photo-sharpness.js'
+import { SHARPNESS_VERSION } from '../lib/photo-sharpness.js'
+import { judgePhotoOffThread } from '../lib/photo-sharpness-pool.js'
 import { sha256Hex } from './file-store.js'
 import { headBoxesOf } from './head-boxes.js'
 import { MAX_ENLARGE, SMALL_FRAME_MAX } from './picture-check/rules-files.js'
@@ -180,7 +181,8 @@ export async function writeRect(bytes, rect, frame, demo, low) {
   let cut = await open(bytes).rotate().extract(rect).jpeg(OWN_JPEG).toBuffer()
   let sharpness = null
   if (enlarge > 1 || low) {
-    const judged = await judgePhoto(cut, slotClassOfFrame(frame), { source: bytes, scale: 1 })
+    // On the gate's worker threads: the same verdict, several worked out at once (photo-sharpness-pool.js).
+    const judged = await judgePhotoOffThread(cut, slotClassOfFrame(frame), { source: bytes, scale: 1 })
     sharpness = {
       passed: judged.verdict !== 'fail',
       verdict: judged.verdict,

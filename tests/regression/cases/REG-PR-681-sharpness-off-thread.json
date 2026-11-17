@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-681-sharpness-off-thread",
+  "kind": "fix",
+  "title": "The sharpness gate's blur is equal to the bit to its first version, and its verdicts from worker threads equal the main thread ones",
+  "pr": 681,
+  "area": "website-opportunities/pictures",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The rewritten blur gives the same floats to the bit as the first version, for tiny, narrow and large pictures and both sigmas.",
+    "A verdict from the worker pool equals judgePhoto on the main thread, corrected bytes included; several at once all come back; an unreadable picture fails its own verdict and the pool keeps working.",
+    "The sharpness gate's own verdict tests still pass."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/photo-sharpness-blur.test.mjs",
+      "apps/tracy-web/test/photo-sharpness-pool.test.mjs",
+      "apps/tracy-web/test/photo-sharpness.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the blur gives the same floats to the bit as the first version, edges and tiny pictures included",
+      "the blur of a large picture, both sigmas the gate uses, is equal to the first version",
+      "a verdict from the pool equals the main thread one, corrected bytes included",
+      "several verdicts asked at once all come back, each the one asked for",
+      "a picture the gate cannot read fails its own verdict and the pool keeps working"
+    ]
+  }
+}
