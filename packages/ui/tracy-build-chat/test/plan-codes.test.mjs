@@ -21,6 +21,10 @@ import {
   NOTHING_TO_SHOW_REASON
 } from '../../../wo/website-opportunities/domain/plan-left-out-plain.mjs'
 import { DERIVED_LEFT_OUT_REASONS } from '../../../wo/website-opportunities/domain/plan-left-out-wording.mjs'
+import {
+  PAGE_NOT_PLANNED,
+  PAGE_NOTHING_TO_SHOW
+} from '../../../wo/website-opportunities/domain/plan-left-out-pages.mjs'
 import { REVIEW_PROBLEM_CODES } from '../../../wo/website-opportunities/domain/library-reviews-content.mjs'
 import { generatedOf } from '../../../wo/website-opportunities/domain/plan-look-pictures.mjs'
 import { WITHHELD_REASON } from '../../../wo/website-opportunities/domain/plan-withheld.mjs'
@@ -146,6 +150,9 @@ test('every English sentence of the table is the sentence the plan step writes f
     )
   assert.equal(lib.leftOutReasonOf(en, { code: 'owner_withheld' }, 'x'), WITHHELD_REASON)
   assert.equal(lib.leftOutReasonOf(en, { code: 'no_items_to_show' }, 'x'), NOTHING_TO_SHOW_REASON)
+  // The pages the plan does not keep, listed by code (#575 walk, fourth round).
+  for (const page of [PAGE_NOT_PLANNED, PAGE_NOTHING_TO_SHOW])
+    assert.equal(lib.leftOutReasonOf(en, { code: page.code, kind: 'page' }, 'x'), page.reason, page.code)
   for (const n of [1, 4]) assert.equal(lib.picturesEstimateOf(en, generatedOf(n), 'x'), generatedOf(n).reason)
   for (const [kind, name] of Object.entries(LOGO_SOURCE_NAMES))
     assert.equal(lib.logoSourceOf(en, { code: 'logo_source_own', sourceKind: kind }, 'x'), name, kind)

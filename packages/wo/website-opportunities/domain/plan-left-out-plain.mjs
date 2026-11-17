@@ -8,9 +8,11 @@
 //   (`no_items_to_show`);
 // - a section reason saying the business has no logo, on a plan whose look has a logo (its own or one Tracy drew),
 //   is not true of the plan: it takes the sentence code knows, else the neutral one;
-// - a photo reason saying the galleries have no room takes the sentence of a photo no gallery has room for
-//   (`no_gallery_room`), which `withCountedReasons` then words for the number of photos left out that way, with
-//   `params.count`, so "26 photos" never reads "this photo". Pure.
+// - a photo of the business the model leaves out (an item of data kind `gallery`, known by its id, whatever the words
+//   of its reason: #575 walk, fourth round, a reason in the owner's language read as no reason code knows) takes the
+//   sentence placement gives every photo no gallery shows (`no_gallery_room`, `plan-placement.mjs`), which
+//   `withCountedReasons` then words for the number of photos left out that way, with `params.count`, so "26 photos"
+//   never reads "this photo". A photo the owner asked to take off keeps the owner's reason (`askedOff`). Pure.
 import { SECTION_LABELS } from './plan-gate-fixes.mjs'
 
 /** The code of the neutral sentence, and the sentence by entry kind. */
@@ -32,8 +34,6 @@ export const galleryRoomReason = (count) =>
 
 const NOTHING = /\b(?:no|nothing)\b[^.]*\b(?:data|content|information|details)\b[^.]*\bto show\b/i
 const NO_LOGO = /\b(?:no|without(?: a| any)?)\s+logos?\b/i
-const PHOTO_ROOM =
-  /\bmore photos\b|\b(?:no|not enough)\s+(?:room|space)\b|\bgaller(?:y|ies)\b[^.]*\bcan show\b/i
 
 /** The block type a section label names (`Footer` is `footer`, `Page header` a hero), or null. */
 const typeOfLabel = (what) =>
@@ -45,11 +45,12 @@ const typeOfLabel = (what) =>
  * The sentence code writes in place of a model reason, or null to keep the model's.
  * @param {{what: string, kind: string, reason: string, item?: string}} entry the entry after its naming
  * @param {{data: object, blocks: Map<string, object>, look?: object, internal: boolean,
- *   derive: (description: object) => {code: string, reason: string} | null}} context `internal`: the reason holds a
- *   build word; `derive`: the reason code knows for a block of the store
+ *   derive: (description: object) => {code: string, reason: string} | null, askedOff?: Set<string>}} context
+ *   `internal`: the reason holds a build word; `derive`: the reason code knows for a block of the store; `askedOff`:
+ *   the reasons of what the owner asked to take off
  * @returns {{code: string, reason: string, rule: string} | null}
  */
-export function replacedReasonOf(entry, { data, blocks, look, internal, derive }) {
+export function replacedReasonOf(entry, { data, blocks, look, internal, derive, askedOff }) {
   const { kind, reason } = entry
   const known = () => {
     const type = kind === 'block' ? typeOfLabel(entry.what) : null
@@ -57,11 +58,11 @@ export function replacedReasonOf(entry, { data, blocks, look, internal, derive }
     const derived = description ? derive(description) : null
     return derived ?? { code: NEUTRAL_LEFT_OUT_CODE, reason: NEUTRAL_LEFT_OUT[kind] ?? NEUTRAL_LEFT_OUT.item }
   }
-  if (entry.item !== undefined && data.byId.get(entry.item)?.kind === 'gallery' && PHOTO_ROOM.test(reason))
+  if (entry.item !== undefined && data.byId.get(entry.item)?.kind === 'gallery' && !askedOff?.has(reason))
     return {
       code: GALLERY_ROOM_CODE,
       reason: galleryRoomReason(1),
-      rule: 'a photo no gallery has room for is said by code'
+      rule: 'a photo the plan does not show is said by code, as placement says it'
     }
   if (kind === 'block' && NOTHING.test(reason))
     return {

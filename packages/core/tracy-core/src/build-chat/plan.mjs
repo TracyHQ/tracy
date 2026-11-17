@@ -188,6 +188,22 @@ function shownOnPagesOf(plan) {
 }
 
 /**
+ * The fact kinds the card always lists among the business facts, with a fact the owner answered: who the business is
+ * and how to reach it (the plan step's `IDENTITY_FACT_KINDS`, `plan-left-out-protected.mjs`). A left out entry of one
+ * says the site does not show it (no place of the design takes opening hours), never that the plan does not know it
+ * (#575 walk, fourth round: the hours the owner kept were missing from the card).
+ */
+const KEPT_FACT_KINDS = new Set([
+  'business.name',
+  'contact.phone',
+  'contact.address',
+  'contact.cta_label',
+  'contact.hours'
+])
+const keptOnCard = (fact) =>
+  KEPT_FACT_KINDS.has(fact.kind) || listOr(fact.sources).some((s) => s?.kind === 'answer')
+
+/**
  * The plan card's content. Services are the service items some page shows: an item the plan keeps on no page (taken
  * off, or nothing to show it in) is said under Left out, never as a numbered service, and the counts follow the card.
  * @param {any} contractPlan - a Contract B plan
@@ -204,7 +220,8 @@ export function planCardOf(contractPlan) {
   const serviceIds = services.map((s) => s.id)
   const name = text(plan.facts.find((f) => f.kind === 'business.name')?.value ?? '')
   // A fact a left out entry reports (`leftOut[].item`) is known to the plan but not shown on the site (Contract B): it
-  // is said under Left out only, never also listed as a business fact the site shows. A fact some page shows stays.
+  // is said under Left out only, never also listed as a business fact the site shows. A fact some page shows stays,
+  // and so does an identity fact or one the owner answered (`keptOnCard`): its row and its left out line both show.
   const leftOutFacts = new Set(
     listOr(plan.leftOut)
       .map((l) => l?.item)
@@ -215,7 +232,7 @@ export function planCardOf(contractPlan) {
     revision: plan.revision,
     name,
     facts: plan.facts
-      .filter((f) => !leftOutFacts.has(f.id))
+      .filter((f) => !leftOutFacts.has(f.id) || keptOnCard(f))
       .map((f) => {
         const field = `facts[${f.id}].value`
         const assumption = disputed.get(field)

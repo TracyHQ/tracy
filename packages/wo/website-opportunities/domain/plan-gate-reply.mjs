@@ -10,7 +10,7 @@ const SHAPES = Object.freeze({
   page: { required: ['pageType', 'name', 'blocks'], optional: [] },
   block: { required: ['block', 'label', 'data', 'reason'], optional: ['targets'] },
   assumption: { required: ['field', 'said'], optional: [] },
-  'left out entry': { required: ['reason'], optional: ['item', 'what', 'kind'] }
+  'left out entry': { required: ['reason'], optional: ['item', 'what', 'kind', 'pageType'] }
 })
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 const isText = (value) => typeof value === 'string'
@@ -93,13 +93,17 @@ export function replyShapeProblems(reply, problem) {
   const leftOutItems = new Set()
   list(reply.leftOut, 'leftOut', counted, (entry, at) => {
     if (!closed(entry, 'left out entry', at, counted)) return
-    for (const key of ['item', 'what', 'kind', 'reason']) texts(entry[key], `${at}.${key}`, counted, key)
+    for (const key of ['item', 'what', 'kind', 'reason', 'pageType'])
+      texts(entry[key], `${at}.${key}`, counted, key)
     if (entry.item === undefined && (entry.what === undefined || entry.kind === undefined))
       counted('reply_shape', at, 'a left out entry names an `item` id, or `what` and `kind`')
     if (entry.kind !== undefined && !LEFT_OUT_KINDS.includes(entry.kind))
       counted('reply_shape', `${at}.kind`, `kind is one of ${LEFT_OUT_KINDS.join(', ')}`)
     if (entry.item !== undefined && entry.kind !== undefined && entry.kind !== 'item')
       counted('reply_shape', `${at}.kind`, 'a left out item has the kind "item"')
+    // A page entry names its page type; code lists the pages the plan does not keep (`plan-left-out-keyed.mjs`).
+    if (entry.pageType !== undefined && entry.kind !== 'page')
+      counted('reply_shape', `${at}.pageType`, 'only a left out page names a pageType')
     if (isText(entry.item) && leftOutItems.has(entry.item))
       counted('reply_shape', `${at}.item`, `${JSON.stringify(entry.item)} is left out twice`)
     if (isText(entry.item)) leftOutItems.add(entry.item)

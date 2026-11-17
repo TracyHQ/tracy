@@ -40,6 +40,16 @@ test('a request to remove a page returns a revised plan that passes the rules ga
   // The coach only that page showed leaves the site with it, and the customer is told.
   assert.deepEqual(result.changed, ['The Coaches page is removed.', 'No longer shown: Ilse Varrow.'])
   assert.ok(result.plan.leftOut.some((e) => e.what === 'Coaches' && e.reason === REMOVED_PAGE_REASON))
+  // The page the owner removed is said once, as removed, never again as a page the plan does not need (#575 walk).
+  const pages = result.plan.leftOut.filter((e) => e.kind === 'page')
+  assert.deepEqual(
+    pages.filter((e) => e.code === 'page_removed').map((e) => [e.what, e.params]),
+    [['Coaches', { pageType: 'team' }]]
+  )
+  assert.equal(
+    pages.some((e) => e.params?.page === 'Team'),
+    false
+  )
   ok(result.plan)
   ok(result.revision)
 })

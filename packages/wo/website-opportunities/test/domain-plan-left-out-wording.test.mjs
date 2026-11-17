@@ -1,6 +1,7 @@
 // The left out list as the customer reads it (#609 defects of a real run): an entry the model names by a block store
 // id is named by its section, its reason is the one code knows from the block and the data, with a stable code; a page
-// type slug reads as words, a single post page is not listed; a reason with a build word the gate cannot replace goes back to the model. The invented
+// entry of the model is dropped (code lists the pages, a single post page never); a reason with a build word the gate
+// cannot replace goes back to the model. The invented
 // florist on the JA Boxing block store. No model is called.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-plan-left-out-wording.test.mjs
@@ -52,8 +53,9 @@ test('a block the model names by its store id is named by its section, with the 
     { what: 'news-post page', kind: 'page', reason: 'No post was provided for its main block.' }
   ])
   assert.equal(result.ok, true, JSON.stringify(result.problems))
-  const model = result.plan.leftOut.slice(0, 3)
-  assert.deepEqual(model, [
+  const model = result.plan.leftOut.filter((e) => e.kind !== 'page')
+  const pages = result.plan.leftOut.filter((e) => e.kind === 'page')
+  assert.deepEqual(model.slice(0, 2), [
     {
       what: 'Newsletter',
       kind: 'block',
@@ -65,7 +67,11 @@ test('a block the model names by its store id is named by its section, with the 
       kind: 'block',
       reason: DERIVED_LEFT_OUT_REASONS.shown_in_other_sections,
       code: 'shown_in_other_sections'
-    },
+    }
+  ])
+  // The featured posts page is listed by code, from the template's page types and the data, never from the entry.
+  assert.deepEqual(
+    pages.find((e) => e.params.page === 'Featured posts'),
     {
       what: 'Featured posts page',
       kind: 'page',
@@ -73,7 +79,7 @@ test('a block the model names by its store id is named by its section, with the 
       code: 'page_nothing_to_show',
       params: { page: 'Featured posts' }
     }
-  ])
+  )
   // A single post page is never listed: the posts page says it (`plan-left-out-pages.mjs`).
   assert.equal(
     result.plan.leftOut.some((e) => /news post/i.test(e.what)),
@@ -86,13 +92,12 @@ test('a block the model names by its store id is named by its section, with the 
   assert.deepEqual(
     result.fixes.map((f) => `${f.code}@${f.at}`),
     [
+      'left_out_unkeyed@leftOut[2]',
+      'left_out_unkeyed@leftOut[3]',
       'left_out_internal_name@leftOut[0].what',
       'left_out_reason_derived@leftOut[0].reason',
       'left_out_internal_name@leftOut[1].what',
-      'left_out_reason_derived@leftOut[1].reason',
-      'left_out_internal_name@leftOut[2].what',
-      'left_out_reason_derived@leftOut[2].reason',
-      'left_out_detail_page@leftOut[3]'
+      'left_out_reason_derived@leftOut[1].reason'
     ]
   )
   assert.equal(checkBuildDocument(result.plan).ok, true)
@@ -101,7 +106,7 @@ test('a block the model names by its store id is named by its section, with the 
 test('a reason with a build word is replaced by code; a section name with one goes back to the model', () => {
   const fixed = gated([{ what: 'Booking strip', kind: 'block', reason: 'No contact CTA URL was provided.' }])
   assert.equal(fixed.ok, true, JSON.stringify(fixed.problems))
-  assert.equal(fixed.plan.leftOut[0].code, 'left_out_neutral')
+  assert.equal(fixed.plan.leftOut.find((e) => e.what === 'Booking strip').code, 'left_out_neutral')
   const result = gated([{ what: 'CTA strip', kind: 'block', reason: 'Nothing to say here.' }])
   assert.equal(result.ok, false)
   assert.deepEqual(
@@ -134,17 +139,18 @@ test('an entry with no code of its own gets one, and Contract B refuses an item 
   const profile = florist()
   const context = {
     ...contextOf(profile),
-    leftOut: [{ what: 'About page', kind: 'page', reason: 'You removed it.' }]
+    leftOut: [{ what: 'Price list', kind: 'feature', reason: 'You removed it.' }]
   }
   const result = gatePlan(composition([homeOf(profile), contact()]), context)
   assert.equal(result.ok, true, JSON.stringify(result.problems))
-  assert.equal(result.plan.leftOut.find((e) => e.what === 'About page').code, 'stated')
+  const at = result.plan.leftOut.findIndex((e) => e.what === 'Price list')
+  assert.equal(result.plan.leftOut[at].code, 'stated')
   const plan = structuredClone(result.plan)
-  plan.leftOut[0] = { ...plan.leftOut[0], item: 'no-such-fact', code: 'Not A Code' }
+  plan.leftOut[at] = { ...plan.leftOut[at], item: 'no-such-fact', code: 'Not A Code' }
   assert.deepEqual(
     checkBuildDocument(plan)
       .problems.map((p) => p.at)
       .sort(),
-    ['leftOut[0].code', 'leftOut[0].item']
+    [`leftOut[${at}].code`, `leftOut[${at}].item`]
   )
 })

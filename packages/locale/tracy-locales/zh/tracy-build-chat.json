@@ -362,6 +362,7 @@
   "plan.leftOut.reason.hours_sources_disagree": "您的各个来源给出的营业时间不同，因此在您确认之前不会放到网站上。",
   "plan.leftOut.reason.no_fitting_video": "您的视频都不适合这个位置（横向画面且上面没有文字），因此这里不显示视频。",
   "plan.leftOut.reason.page_nothing_to_show": "您目前还没有可在这些页面上展示的内容。",
+  "plan.leftOut.reason.page_not_planned": "您的计划不需要这些页面。",
   "plan.leftOut.reason.library_section_refused": "未在 Tracy 板块中显示：{why}。",
   "plan.leftOut.why.not_google_review": "这不是 Google 评价",
   "plan.leftOut.why.no_text": "它没有文字",

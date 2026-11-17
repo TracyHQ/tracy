@@ -82,7 +82,8 @@ qualifies, a place) that no fact states.
 ## What you may decide
 
 - Each page type of `recipes`: keep or leave out. A page keeps its recipe's `mainBlock`; leave out a page whose main
-  block has nothing to show, with the reason. A page the business has nothing true for is left out.
+  block has nothing to show. A page the business has nothing true for is left out. A page you leave out is simply not
+  planned: code lists it, with the reason the data gives.
 - A page made of person items is kept when the business names at least one person, one item per named person. Leave
   it out only when the business names no one.
 - Each block on a kept page: keep or leave out. Use only blocks of `blocks` and page types of `recipes`. A `template`
@@ -127,7 +128,8 @@ qualifies, a place) that no fact states.
    its contact channels and the one action a visitor should take.
 2. Decide the pages, then each kept page's blocks, in recipe order.
 3. For each block that shows items, count the true items of its kind first, then choose which and in what order.
-4. Where the business has nothing for a block or a page, leave it out with the reason, instead of filling it.
+4. Where the business has nothing for a block or a page, leave it out instead of filling it: a block with the
+   reason, a page simply not planned (code lists the pages you do not plan, with their reasons).
 5. Run the self-check, then answer.
 
 ## Output: the site plan
@@ -151,14 +153,16 @@ given); a `label` names a section of the site and stays in the site's language.
     }
   ],
   "assumptions": [{ "field": "language", "said": "Every source is in English, so the site is in English." }],
-  "leftOut": [{ "what": "Prices page", "kind": "page", "reason": "No public prices were found." }]
+  "leftOut": [{ "item": "<id>", "reason": "It shows the same room as a photo the gallery keeps." }]
 }
 ```
 
 - `assumptions`: what you assumed where the sources were silent, each with the plan `field` it sets (for example
   `language`, `facts[contact-hours].value`, `pages[home].name`) and what you assumed, in one sentence.
-- `leftOut`: every page, block or item you chose not to show, with the reason in one sentence. For a fact or an
-  item, give its id as `item` and no `what`: never write an id in `what`. Never list an item you also show. Never
+- `leftOut`: every block, fact or item you chose not to show, with the reason in one sentence. For a fact or an
+  item, give its id as `item` and no `what`: never write an id in `what`; an entry of a fact or item without its id
+  is ignored. Do not list pages: code lists every page of `recipes` you do not plan, with the reason the data gives.
+  If you still write a page entry, give its `pageType` from `recipes`. Never list an item you also show. Never
   leave out the business name, a phone, the address, the main button, or any fact whose source is the owner's answer:
   show each in a block with a field for it; code places any you do not.
 

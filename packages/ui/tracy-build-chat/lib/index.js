@@ -474,6 +474,14 @@ function shownOnPagesOf(plan) {
     }
   return shown;
 }
+var KEPT_FACT_KINDS = /* @__PURE__ */ new Set([
+  "business.name",
+  "contact.phone",
+  "contact.address",
+  "contact.cta_label",
+  "contact.hours"
+]);
+var keptOnCard = (fact) => KEPT_FACT_KINDS.has(fact.kind) || listOr2(fact.sources).some((s) => s?.kind === "answer");
 function planCardOf(contractPlan) {
   const plan = wholePlanOf(contractPlan);
   const disputed = new Map(
@@ -490,7 +498,7 @@ function planCardOf(contractPlan) {
     planId: plan.id,
     revision: plan.revision,
     name: name2,
-    facts: plan.facts.filter((f) => !leftOutFacts.has(f.id)).map((f) => {
+    facts: plan.facts.filter((f) => !leftOutFacts.has(f.id) || keptOnCard(f)).map((f) => {
       const field = `facts[${f.id}].value`;
       const assumption = disputed.get(field);
       return {
@@ -1093,6 +1101,7 @@ var tracy_build_chat_default = {
   "plan.leftOut.reason.hours_sources_disagree": "Ihre Quellen nennen unterschiedliche \xD6ffnungszeiten, daher bleiben sie von Ihrer Site fern, bis Sie sie best\xE4tigen.",
   "plan.leftOut.reason.no_fitting_video": "Keines Ihrer Videos passt in diesen Platz (breite Bilder ohne Text dar\xFCber), daher zeigt er kein Video.",
   "plan.leftOut.reason.page_nothing_to_show": "Sie haben noch nichts, was diese Seiten zeigen k\xF6nnten.",
+  "plan.leftOut.reason.page_not_planned": "Ihr Plan braucht diese Seiten nicht.",
   "plan.leftOut.reason.library_section_refused": "Im Tracy-Bereich nicht gezeigt: {why}.",
   "plan.leftOut.why.not_google_review": "es ist keine Google-Bewertung",
   "plan.leftOut.why.no_text": "sie hat keinen Text",
@@ -1494,6 +1503,7 @@ var tracy_build_chat_default2 = {
   "plan.leftOut.reason.hours_sources_disagree": "Sus fuentes dan horarios distintos, as\xED que quedan fuera de su sitio hasta que usted los confirme.",
   "plan.leftOut.reason.no_fitting_video": "Ninguno de sus v\xEDdeos encaja en este espacio (im\xE1genes anchas sin texto encima), as\xED que no muestra ning\xFAn v\xEDdeo.",
   "plan.leftOut.reason.page_nothing_to_show": "Todav\xEDa no tiene nada que mostrar en estas p\xE1ginas.",
+  "plan.leftOut.reason.page_not_planned": "Su plan no necesita estas p\xE1ginas.",
   "plan.leftOut.reason.library_section_refused": "No se muestra en la secci\xF3n de Tracy: {why}.",
   "plan.leftOut.why.not_google_review": "no es una rese\xF1a de Google",
   "plan.leftOut.why.no_text": "no tiene texto",
@@ -1895,6 +1905,7 @@ var tracy_build_chat_default3 = {
   "plan.leftOut.reason.hours_sources_disagree": "Vos sources donnent des horaires diff\xE9rents, donc ils restent hors de votre site jusqu\u2019\xE0 ce que vous les confirmiez.",
   "plan.leftOut.reason.no_fitting_video": "Aucune de vos vid\xE9os ne convient \xE0 cet emplacement (images larges sans texte par dessus), donc il n\u2019affiche pas de vid\xE9o.",
   "plan.leftOut.reason.page_nothing_to_show": "Vous n'avez encore rien \xE0 montrer sur ces pages.",
+  "plan.leftOut.reason.page_not_planned": "Votre plan n'a pas besoin de ces pages.",
   "plan.leftOut.reason.library_section_refused": "Non affich\xE9 dans la section Tracy : {why}.",
   "plan.leftOut.why.not_google_review": "ce n'est pas un avis Google",
   "plan.leftOut.why.no_text": "il n'a pas de texte",
@@ -2296,6 +2307,7 @@ var tracy_build_chat_default4 = {
   "plan.leftOut.reason.hours_sources_disagree": "Le tue fonti indicano orari diversi, quindi restano fuori dal tuo sito finch\xE9 non li confermi.",
   "plan.leftOut.reason.no_fitting_video": "Nessuno dei tuoi video si adatta a questo spazio (immagini larghe senza testo sopra), quindi non mostra alcun video.",
   "plan.leftOut.reason.page_nothing_to_show": "Non ha ancora nulla da mostrare in queste pagine.",
+  "plan.leftOut.reason.page_not_planned": "Il suo piano non ha bisogno di queste pagine.",
   "plan.leftOut.reason.library_section_refused": "Non mostrata nella sezione di Tracy: {why}.",
   "plan.leftOut.why.not_google_review": "non \xE8 una recensione Google",
   "plan.leftOut.why.no_text": "non ha testo",
@@ -2697,6 +2709,7 @@ var tracy_build_chat_default5 = {
   "plan.leftOut.reason.hours_sources_disagree": "Uw bronnen noemen verschillende openingstijden, dus ze blijven van uw site tot u ze bevestigt.",
   "plan.leftOut.reason.no_fitting_video": "Geen van uw video\u2019s past op deze plek (brede beelden zonder tekst erover), dus hij toont geen video.",
   "plan.leftOut.reason.page_nothing_to_show": "U hebt nog niets om op deze pagina's te tonen.",
+  "plan.leftOut.reason.page_not_planned": "Uw plan heeft deze pagina's niet nodig.",
   "plan.leftOut.reason.library_section_refused": "Niet getoond in de Tracy-sectie: {why}.",
   "plan.leftOut.why.not_google_review": "het is geen Google-review",
   "plan.leftOut.why.no_text": "hij heeft geen tekst",
@@ -3098,6 +3111,7 @@ var tracy_build_chat_default6 = {
   "plan.leftOut.reason.hours_sources_disagree": "\u60A8\u7684\u5404\u4E2A\u6765\u6E90\u7ED9\u51FA\u7684\u8425\u4E1A\u65F6\u95F4\u4E0D\u540C\uFF0C\u56E0\u6B64\u5728\u60A8\u786E\u8BA4\u4E4B\u524D\u4E0D\u4F1A\u653E\u5230\u7F51\u7AD9\u4E0A\u3002",
   "plan.leftOut.reason.no_fitting_video": "\u60A8\u7684\u89C6\u9891\u90FD\u4E0D\u9002\u5408\u8FD9\u4E2A\u4F4D\u7F6E\uFF08\u6A2A\u5411\u753B\u9762\u4E14\u4E0A\u9762\u6CA1\u6709\u6587\u5B57\uFF09\uFF0C\u56E0\u6B64\u8FD9\u91CC\u4E0D\u663E\u793A\u89C6\u9891\u3002",
   "plan.leftOut.reason.page_nothing_to_show": "\u60A8\u76EE\u524D\u8FD8\u6CA1\u6709\u53EF\u5728\u8FD9\u4E9B\u9875\u9762\u4E0A\u5C55\u793A\u7684\u5185\u5BB9\u3002",
+  "plan.leftOut.reason.page_not_planned": "\u60A8\u7684\u8BA1\u5212\u4E0D\u9700\u8981\u8FD9\u4E9B\u9875\u9762\u3002",
   "plan.leftOut.reason.library_section_refused": "\u672A\u5728 Tracy \u677F\u5757\u4E2D\u663E\u793A\uFF1A{why}\u3002",
   "plan.leftOut.why.not_google_review": "\u8FD9\u4E0D\u662F Google \u8BC4\u4EF7",
   "plan.leftOut.why.no_text": "\u5B83\u6CA1\u6709\u6587\u5B57",
@@ -3499,6 +3513,7 @@ var tracy_build_chat_default7 = {
   "plan.leftOut.reason.hours_sources_disagree": "C\xE1c ngu\u1ED3n c\u1EE7a b\u1EA1n ghi gi\u1EDD m\u1EDF c\u1EEDa kh\xE1c nhau, n\xEAn gi\u1EDD m\u1EDF c\u1EEDa ch\u01B0a l\xEAn site cho \u0111\u1EBFn khi b\u1EA1n x\xE1c nh\u1EADn.",
   "plan.leftOut.reason.no_fitting_video": "Kh\xF4ng video n\xE0o c\u1EE7a b\u1EA1n v\u1EEBa ch\u1ED7 n\xE0y (\u1EA3nh ngang, kh\xF4ng c\xF3 ch\u1EEF \u0111\xE8 l\xEAn), n\xEAn ch\u1ED7 n\xE0y kh\xF4ng hi\u1EC3n th\u1ECB video.",
   "plan.leftOut.reason.page_nothing_to_show": "B\u1EA1n ch\u01B0a c\xF3 g\xEC \u0111\u1EC3 \u0111\u01B0a l\xEAn c\xE1c trang n\xE0y.",
+  "plan.leftOut.reason.page_not_planned": "K\u1EBF ho\u1EA1ch c\u1EE7a b\u1EA1n kh\xF4ng c\u1EA7n c\xE1c trang n\xE0y.",
   "plan.leftOut.reason.library_section_refused": "Kh\xF4ng hi\u1EC3n th\u1ECB trong ph\u1EA7n \u0111\xE1nh gi\xE1 c\u1EE7a Tracy: {why}.",
   "plan.leftOut.why.not_google_review": "\u0111\xE2y kh\xF4ng ph\u1EA3i \u0111\xE1nh gi\xE1 tr\xEAn Google",
   "plan.leftOut.why.no_text": "\u0111\xE1nh gi\xE1 kh\xF4ng c\xF3 n\u1ED9i dung",

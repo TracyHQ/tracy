@@ -15,7 +15,8 @@ import { scriptedModel } from './fixtures/plan-composer/invented-club.mjs'
 import { boxingProfile } from './fixtures/write-order/boxing-florist.mjs'
 import { INPUT, composition, contactPage, contextOf, homeOf } from './fixtures/write-order/boxing-gate.mjs'
 
-// The shape of the three reasons that stopped the real first compose, in invented words.
+// The shape of the reasons that stopped the real first compose, in invented words. A page entry of the model is dropped
+// before any reason is read: code lists the pages the plan does not keep (`plan-left-out-keyed.mjs`).
 const BUILD_WORD_ENTRIES = () => [
   { what: 'About page', kind: 'page', reason: 'No about text matching the main section fields was given.' },
   { what: 'Footer', kind: 'block', reason: 'This footer section has no fields or business data to show.' },
@@ -47,20 +48,28 @@ function withMorePhotos(n) {
   }
   return { profile, home }
 }
+/** The plan's left out entries other than the template pages code lists. */
+const modelLines = (result) => result.plan.leftOut.filter((e) => e.kind !== 'page')
 const firstOf = (result, n) =>
-  result.plan.leftOut.slice(0, n).map(({ what, reason, code }) => ({ what, reason, code }))
+  modelLines(result)
+    .slice(0, n)
+    .map(({ what, reason, code }) => ({ what, reason, code }))
 
 test('a left out reason with a build word is fixed by the gate and recorded, never sent back', () => {
   const result = gated(BUILD_WORD_ENTRIES())
   assert.equal(result.ok, true, JSON.stringify(result.problems))
-  assert.deepEqual(firstOf(result, 3), [
-    { what: 'About page', reason: NEUTRAL_LEFT_OUT.page, code: 'left_out_neutral' },
+  assert.deepEqual(firstOf(result, 2), [
     { what: 'Footer', reason: DERIVED_LEFT_OUT_REASONS.no_items_to_show, code: 'no_items_to_show' },
     { what: 'Contact details', reason: NEUTRAL_LEFT_OUT.block, code: 'left_out_neutral' }
   ])
   assert.deepEqual(
     result.fixes.filter((f) => f.code === 'left_out_internal_wording').map((f) => f.at),
-    ['leftOut[0].reason', 'leftOut[1].reason', 'leftOut[2].reason']
+    ['leftOut[0].reason', 'leftOut[1].reason']
+  )
+  assert.ok(result.fixes.some((f) => f.code === 'left_out_unkeyed' && f.was.what === 'About page'))
+  assert.equal(
+    result.plan.leftOut.some((e) => e.what === 'About page' && e.code !== 'page_not_planned'),
+    false
   )
   assert.equal(checkBuildDocument(result.plan).ok, true)
 })
@@ -97,11 +106,27 @@ test('"no logo" is not said of a plan with a logo, own or drawn by Tracy; it sta
     look: { logo: { kind: 'own', source: 'Tracy, drawn from your business name', code: 'logo_source_drawn' } }
   })
   assert.equal(drawn.ok, true, JSON.stringify(drawn.problems))
-  assert.doesNotMatch(drawn.plan.leftOut[0].reason, /logo/i)
-  assert.notEqual(drawn.plan.leftOut[0].code, 'model_reason')
+  assert.doesNotMatch(modelLines(drawn)[0].reason, /logo/i)
+  assert.notEqual(modelLines(drawn)[0].code, 'model_reason')
   const text = gated([entry])
-  assert.equal(text.plan.leftOut[0].reason, entry.reason)
-  assert.equal(text.plan.leftOut[0].code, 'model_reason')
+  assert.equal(modelLines(text)[0].reason, entry.reason)
+  assert.equal(modelLines(text)[0].code, 'model_reason')
+})
+
+test('a photo the model leaves out takes code sentence whatever the words of its reason (#575 walk)', () => {
+  const { profile, home } = withMorePhotos(2)
+  const ids = profile.items.gallery.map((g) => g.id).filter((id) => !home.includes(id))
+  const c = composition([homeOf(profile), contactPage()])
+  c.pages[0].blocks.find((b) => b.block === 'block-166').data = home
+  // Invented words standing for a reason in the owner's language: no pattern of English words reads them.
+  c.leftOut = ids.map((item) => ({ item, kind: 'item', reason: 'Zorvel mira tolvan.' }))
+  const result = gatePlan(c, contextOf(profile))
+  assert.equal(result.ok, true, JSON.stringify(result.problems))
+  const photos = result.plan.leftOut.filter((e) => ids.includes(e.item))
+  assert.deepEqual(
+    photos.map((e) => [e.code, e.reason]),
+    ids.map(() => ['no_gallery_room', galleryRoomReason(2)])
+  )
 })
 
 test('photos no gallery has room for read one sentence agreeing with their number, with params.count', () => {

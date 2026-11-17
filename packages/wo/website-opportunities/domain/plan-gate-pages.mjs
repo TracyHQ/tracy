@@ -8,14 +8,13 @@ const list = (value) => (Array.isArray(value) ? value : [])
 /**
  * The pages as the plan holds them, with ids, and each page's index in the composition. A block the model left with no
  * data is left out, as the gate's messages ask (`no_data` is never sent back); a page whose main block is missing or
- * empty is dropped with its reason. A first composition's ids follow the positions (`home`, `home-b2`). A revision
+ * empty is dropped, and the template's pages the plan does not keep are listed by code (`kitPagesLeftOut`). A first composition's ids follow the positions (`home`, `home-b2`). A revision
  * (`plan-request.mjs`) gives `givenIds`, per composition page `{page, blocks}` with `null` for what it adds, and
  * `idTag` (`r<revision>`): a page or block it keeps keeps its id, and a new one gets an id with the tag, so it never
  * takes an id this plan used before.
  */
 export function pagesOf(composition, { recipes, blocks, givenIds, idTag }) {
   const pages = []
-  const leftOut = []
   const ids = new Set(
     list(givenIds)
       .map((g) => g?.page)
@@ -24,15 +23,7 @@ export function pagesOf(composition, { recipes, blocks, givenIds, idTag }) {
   const index = new Map()
   for (const [i, page] of composition.pages.entries()) {
     const recipe = recipes.get(page.pageType)
-    if (!page.blocks.some((b) => b.block === recipe.mainBlock && b.data.length > 0)) {
-      leftOut.push({
-        what: page.name,
-        kind: 'page',
-        reason: 'There was nothing to show in the main section of this page.',
-        code: 'page_main_section_empty'
-      })
-      continue
-    }
+    if (!page.blocks.some((b) => b.block === recipe.mainBlock && b.data.length > 0)) continue
     const given = givenIds?.[i]
     const base = given ? `${page.pageType}-${idTag}` : page.pageType
     let id = given?.page ?? base
@@ -48,7 +39,7 @@ export function pagesOf(composition, { recipes, blocks, givenIds, idTag }) {
     })
     pages.push({ id, name: page.name, pageType: page.pageType, blocks: kept })
   }
-  return { pages, leftOut, index }
+  return { pages, index }
 }
 
 /** Whether an assumption's field is on a page the plan keeps: one about a dropped page goes with the page. */

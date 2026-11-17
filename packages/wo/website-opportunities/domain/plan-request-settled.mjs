@@ -4,9 +4,12 @@
 // - every fact and item the current plan leaves out stays left out with its reason, unless a change shows it, so the
 //   gate's placement never brings back what the customer or the first plan kept off (`carriedLeftOutOf`); what the
 //   customer took off with a plan edit (shown nowhere, in no entry) is left out as asked (`REQUESTED_OFF_REASON`);
-// - left out entries no rule writes again (pages and sections left out, what the customer keeps private, a contact
-//   method chosen without its value) are carried; a page or section entry whose reason names a page the request
-//   removed ("shown on the trainers page") is carried with `STALE_PAGE_REASON`, as its own reason no longer holds;
+// - left out entries no rule writes again (sections left out, what the customer keeps private, a contact method chosen
+//   without its value, a page the customer asked to remove) are carried; a section entry whose reason names a page the
+//   request removed ("shown on the trainers page") is carried with `STALE_PAGE_REASON`, as its own reason no longer
+//   holds. The other pages the plan does not keep are listed again by code (`plan-left-out-pages.mjs`), so none is
+//   carried; a page the customer removed carries its page type (`params.pageType`, code `page_removed`), so code
+//   never lists it twice (`removedTypes`, the gate's `removedPageTypes`);
 // - the model's own assumption lines are carried; one whose page or section the revision removed is dropped, with no
 //   line (an assumption explains a part of the plan, and that part is gone);
 // - the ids of every page and section the revision keeps (`pagesOf`, `givenIds`);
@@ -24,6 +27,7 @@ import { REQUESTED_OFF_REASON, leftOutEntryOf, namesOf } from './plan-request-ta
 import { WITHHELD_REASON } from './plan-withheld.mjs'
 
 export const REMOVED_PAGE_REASON = 'You asked to remove this page.'
+export const REMOVED_PAGE_CODE = 'page_removed'
 /** The reason of a left out page or section whose reason named a page the request removed. */
 export const STALE_PAGE_REASON = 'It is not part of your plan.'
 const escaped = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -44,8 +48,9 @@ const shownOn = (pages) => new Set(list(pages).flatMap((p) => p.blocks.flatMap((
  * The left out entries the revised composition carries: `{item, reason}` for every fact and item the current plan
  * leaves out that the changed pages do not show (`takenOff`: with the reason the change gives), and the entries no
  * rule writes again, as `{what, kind, reason}`.
- * @returns {{composition: object[], context: object[], codes: Map<string, string>}} `composition`: model style entries
- *   naming an item; `context`: entries the gate adds as they are; `codes`: the code of each carried item's entry
+ * @returns {{composition: object[], context: object[], codes: Map<string, string>, removedTypes: Set<string>}}
+ *   `composition`: model style entries naming an item; `context`: entries the gate adds as they are; `codes`: the code
+ *   of each carried item's entry; `removedTypes`: the page types the customer removed, which the plan does not keep
  */
 export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fresh = new Set() }) {
   const before = new Set([...shownOn(plan.pages), ...rowDataIdsOf(plan.pages)])
@@ -69,11 +74,16 @@ export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fr
     if (entry?.code) codes.set(id, entry.code)
   }
   const names = new Set(pages.map((p) => p.name))
+  const types = new Set(pages.map((p) => p.pageType))
+  const removedOf = (e) =>
+    e.kind === 'page' && e.code === REMOVED_PAGE_CODE && !types.has(e.params?.pageType)
+      ? e.params.pageType
+      : null
   const context = list(plan.leftOut)
     .filter(
       (e) =>
         !used.has(e) &&
-        (CARRIED_REASONS.has(e.reason) || ((e.kind === 'page' || e.kind === 'block') && !names.has(e.what)))
+        (CARRIED_REASONS.has(e.reason) || (e.kind === 'block' && !names.has(e.what)) || removedOf(e) !== null)
     )
     .map((e) =>
       !CARRIED_REASONS.has(e.reason) && namesRemoved(e.reason, removedPages)
@@ -81,8 +91,15 @@ export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fr
         : e
     )
   for (const page of removedPages)
-    context.push({ what: page.name, kind: 'page', reason: REMOVED_PAGE_REASON })
-  return { composition, context, codes }
+    context.push({
+      what: page.name,
+      kind: 'page',
+      reason: REMOVED_PAGE_REASON,
+      code: REMOVED_PAGE_CODE,
+      params: { pageType: page.pageType }
+    })
+  const removedTypes = new Set(context.map(removedOf).filter((type) => type !== null))
+  return { composition, context, codes, removedTypes }
 }
 
 /**

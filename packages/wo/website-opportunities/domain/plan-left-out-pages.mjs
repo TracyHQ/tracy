@@ -1,15 +1,18 @@
-// The model's left out pages as the owner reads them (#575 walk, second round: 12 of 22 left out lines were pages of
-// the template, one per page, a single post, a single author and a single trainer among them):
-// - a page entry is matched to the template's page type it names (`news-post page`, `News post page`, `Plans`), and
-//   carries the page's name in `params.page`, so the plan card says it inside a sentence of the owner's language and
-//   groups the pages left out for one reason into one line;
+// The pages of the template the plan does not keep, as the owner reads them in the left out list, written by code
+// alone (#575 walk, fourth round: two identical walks showed 9 and 16 left out lines because the model named pages in
+// the owner's language and a matcher read page names in English). Nothing here reads the model's words:
+// - the pages left out are the template's page types (`recipes`) minus the page types the plan keeps, minus the ones a
+//   caller already reports (`except`: a page the owner asked to remove);
 // - a detail page type (one page per item: a single post, a single author, a single trainer) is never listed: the
 //   page of its list says it already. A type is a detail page when the template repeats it per item (`itemPageTypesOf`)
 //   or when its pages lie under the pages of another type whose main block shows the same kind of item (the trainer
-//   page under the trainers page). A recorded fix (`left_out_detail_page`): nothing the site shows changes;
-// - a page whose main block shows a kind of item the business has none of says so in code's words
-//   (`page_nothing_to_show`), the same reason for every such page, so they read as one line.
-// Pure.
+//   page under the trainers page);
+// - the reason comes from the data: a page whose main block shows a kind of item the business has none of has nothing
+//   to show (`page_nothing_to_show`); any other page is one the plan does not need (`page_not_planned`). One reason per
+//   kind of page, so the plan card says the pages left out for one reason in one line;
+// - a page is named by the template's own name of its type ("News post" for `news-post`), carried in `params.page`:
+//   site content, never translated by the card.
+// The model's own left out entries of pages are dropped before (`plan-left-out-keyed.mjs`). Pure.
 import { BLOCK_TYPES } from './place-content-roles.mjs'
 import { itemPageTypesOf } from './write-order-targets.mjs'
 
@@ -17,7 +20,10 @@ export const PAGE_NOTHING_TO_SHOW = Object.freeze({
   code: 'page_nothing_to_show',
   reason: 'You have nothing yet for these pages to show.'
 })
-export const DETAIL_PAGE_FIX = 'left_out_detail_page'
+export const PAGE_NOT_PLANNED = Object.freeze({
+  code: 'page_not_planned',
+  reason: 'Your plan does not need these pages.'
+})
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const kindOfMain = (recipe, blocks) => BLOCK_TYPES[blocks?.get(recipe?.mainBlock)?.type]?.itemKind ?? null
@@ -39,46 +45,30 @@ export function detailPageTypesOf(recipes, blocks) {
   return detail
 }
 
-/**
- * The page type a left out page entry names, or null: its slug, or its words joined by hyphens, " page" set aside; else
- * the type those words name with " detail" set aside ("Class detail page" is the class page), else the type whose
- * main block they name (`class-detail`, the block of the class pages: #575 walk, third round).
- */
-export function pageTypeOfEntry(what, recipes) {
-  const said = String(what ?? '')
-    .trim()
-    .toLowerCase()
-  const bare = said.replace(/\s+page$/, '')
-  const slug = bare.replace(/\s+/g, '-')
-  for (const candidate of [said, bare, slug, slug.replace(/-details?$/, '')])
-    if (recipes?.has(candidate)) return candidate
-  for (const recipe of recipes?.values?.() ?? []) if (recipe?.mainBlock === slug) return recipe.pageType
-  return null
-}
-
-const pageNameOf = (pageType) => {
-  const words = pageType.replace(/-/g, ' ')
+/** The template's name of a page type: its words, the first one capitalised (`news-post` is "News post"). */
+export function pageNameOf(pageType) {
+  const words = String(pageType).replace(/[-_]+/g, ' ').trim()
   return words.charAt(0).toUpperCase() + words.slice(1)
 }
 
 /**
- * A model page entry as the owner reads it, or null when it is a detail page and is not listed.
- * @param {{what: string, reason: string}} entry
- * @param {{recipes?: Map<string, object>, blocks: Map<string, object>, data: object, at: string,
- *   fix: (entry: object) => void}} context
- * @returns {{what: string, page?: string, derived?: {code: string, reason: string}} | null}
+ * The left out entries of the template's pages the plan does not keep, in the template's page order.
+ * @param {{recipes: Map<string, object>, blocks: Map<string, object>, data: {items?: object[]}, pages: object[],
+ *   except?: Set<string>}} input `pages`: the plan's final pages; `except`: page types reported already
+ * @returns {Array<{what: string, kind: 'page', reason: string, code: string, params: {page: string}}>}
  */
-export function pageLeftOutOf(entry, { recipes, blocks, data, at, fix }) {
-  const pageType = pageTypeOfEntry(entry.what, recipes)
-  if (!pageType) return { what: entry.what }
-  if (detailPageTypesOf(recipes, blocks).has(pageType)) {
-    const rule =
-      'a page of one item (a single post, a single author) is never listed: the page of its list says it'
-    fix({ code: DETAIL_PAGE_FIX, at, rule, was: entry.what, now: null })
-    return null
+export function kitPagesLeftOut({ recipes, blocks, data, pages, except = new Set() }) {
+  const kept = new Set(list(pages).map((p) => p.pageType))
+  const detail = detailPageTypesOf(recipes, blocks)
+  const kinds = new Set(list(data?.items).map((i) => i.kind))
+  const out = []
+  for (const recipe of recipes?.values?.() ?? []) {
+    const type = recipe?.pageType
+    if (typeof type !== 'string' || kept.has(type) || except.has(type) || detail.has(type)) continue
+    const kind = kindOfMain(recipe, blocks)
+    const { code, reason } = kind && !kinds.has(kind) ? PAGE_NOTHING_TO_SHOW : PAGE_NOT_PLANNED
+    const page = pageNameOf(type)
+    out.push({ what: `${page} page`, kind: 'page', reason, code, params: { page } })
   }
-  const page = pageNameOf(pageType)
-  const kind = kindOfMain(recipes.get(pageType), blocks)
-  const none = kind && !list(data?.items).some((i) => i.kind === kind)
-  return { what: `${page} page`, page, ...(none ? { derived: PAGE_NOTHING_TO_SHOW } : {}) }
+  return out
 }

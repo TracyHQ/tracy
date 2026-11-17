@@ -362,6 +362,7 @@
   "plan.leftOut.reason.hours_sources_disagree": "Các nguồn của bạn ghi giờ mở cửa khác nhau, nên giờ mở cửa chưa lên site cho đến khi bạn xác nhận.",
   "plan.leftOut.reason.no_fitting_video": "Không video nào của bạn vừa chỗ này (ảnh ngang, không có chữ đè lên), nên chỗ này không hiển thị video.",
   "plan.leftOut.reason.page_nothing_to_show": "Bạn chưa có gì để đưa lên các trang này.",
+  "plan.leftOut.reason.page_not_planned": "Kế hoạch của bạn không cần các trang này.",
   "plan.leftOut.reason.library_section_refused": "Không hiển thị trong phần đánh giá của Tracy: {why}.",
   "plan.leftOut.why.not_google_review": "đây không phải đánh giá trên Google",
   "plan.leftOut.why.no_text": "đánh giá không có nội dung",

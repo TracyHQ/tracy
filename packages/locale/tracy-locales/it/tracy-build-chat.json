@@ -362,6 +362,7 @@
   "plan.leftOut.reason.hours_sources_disagree": "Le tue fonti indicano orari diversi, quindi restano fuori dal tuo sito finché non li confermi.",
   "plan.leftOut.reason.no_fitting_video": "Nessuno dei tuoi video si adatta a questo spazio (immagini larghe senza testo sopra), quindi non mostra alcun video.",
   "plan.leftOut.reason.page_nothing_to_show": "Non ha ancora nulla da mostrare in queste pagine.",
+  "plan.leftOut.reason.page_not_planned": "Il suo piano non ha bisogno di queste pagine.",
   "plan.leftOut.reason.library_section_refused": "Non mostrata nella sezione di Tracy: {why}.",
   "plan.leftOut.why.not_google_review": "non è una recensione Google",
   "plan.leftOut.why.no_text": "non ha testo",

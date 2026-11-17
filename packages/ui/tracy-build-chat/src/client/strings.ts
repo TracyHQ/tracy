@@ -174,6 +174,7 @@ export const en = {
   'plan.leftOut.reason.no_fitting_video':
     'None of your videos fit this space (wide pictures without text on top), so it shows no video.',
   'plan.leftOut.reason.page_nothing_to_show': 'You have nothing yet for these pages to show.',
+  'plan.leftOut.reason.page_not_planned': 'Your plan does not need these pages.',
   // A review the Tracy reviews section does not show (`library_section_refused`), by why (`params.why`); the reasons
   // of one line are said after one lead in, joined by a semicolon.
   'plan.leftOut.reason.library_section_refused': 'Not shown in the Tracy section: {why}.',

@@ -27,7 +27,11 @@
 //   and recorded instead of failing the plan (`plan-gate-fixes.mjs`, #614): a left out entry of a shown item, an
 //   assumption naming a block by its store id, a label repeating its one datum, a count a reason no longer holds;
 // - every left out entry reads in the customer's words with a reason code (`plan-left-out-wording.mjs`), and every
-//   block of a known section carries its `labelCode` (`plan-wording-codes.mjs`).
+//   block of a known section carries its `labelCode` (`plan-wording-codes.mjs`);
+// - the model's left out entries are kept only when keyed by data (`plan-left-out-keyed.mjs`): the pages the plan does
+//   not keep are listed by code from the template (`plan-left-out-pages.mjs`), and the opening hours are shown only by
+//   a block with a field for them (`plan-field-only-facts.mjs`), so the plan card does not change with the model's
+//   words.
 // Composition in, `{ok, problems, fixes, composition, plan, placed, accounting}` out. `composition` is the reply as the
 // gate read it after its fixes: the place of every problem is a place in it.
 import { lookProblemsOf } from './brand-look-problems.mjs'
@@ -58,6 +62,9 @@ import { wordingProblems } from './plan-gate-wording.mjs'
 import { planRows } from './plan-rows.mjs'
 import { modelLeftOutOf, withNamedIds, withReasonCodes } from './plan-left-out-wording.mjs'
 import { withoutProtectedLeftOut } from './plan-left-out-protected.mjs'
+import { withKeyedLeftOut } from './plan-left-out-keyed.mjs'
+import { kitPagesLeftOut } from './plan-left-out-pages.mjs'
+import { withoutFactsWithoutPlace } from './plan-field-only-facts.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -98,9 +105,10 @@ export function gatePlan(reply, context) {
   // An item a block shows and the model also leaves out keeps showing: its left out entry goes (`plan-gate-fixes.mjs`).
   // A left out entry that names a fact or item by its id reports that id (`withNamedIds`); one of a fact the model may
   // never leave out (the owner's answer, the name, phone, address, main button) is dropped (`plan-left-out-protected`).
-  const named = withNamedIds(reply, context.data, fix)
+  // Only entries keyed by data stay (`plan-left-out-keyed.mjs`); hours in a block with no field for them leave it.
+  const named = withKeyedLeftOut(withNamedIds(reply, context.data, fix), fix)
   const guarded = withoutProtectedLeftOut(named, context.data, fix, context.askedOff)
-  const composition = withoutShownLeftOut(guarded, context.data, fix)
+  const composition = withoutFactsWithoutPlace(withoutShownLeftOut(guarded, context.data, fix), context, fix)
   const failed = () => ({ ok: false, problems, fixes, composition })
   compositionProblems(composition, context, problem)
   if (problems.length > 0) return failed()
@@ -184,6 +192,9 @@ export function gatePlan(reply, context) {
   const fromModel = modelLeftOutOf(modelLeftOut, withheld, { ...context, pages: rows.pages, fix, problem })
   const kept = ({ id }) =>
     !context.data.withheld?.has(id) && !context.data.withheld?.has(context.data.rowsById?.get(id)?.owner)
+  // The template's pages the plan does not keep, by code (a page dropped for its empty main block among them), except
+  // a page the owner asked to remove, which a revision reports itself (`context.removedPageTypes`).
+  const kitPages = kitPagesLeftOut({ ...context, pages: rows.pages, except: context.removedPageTypes })
   const plan = {
     schema: BUILD_PLAN_SCHEMA,
     id: context.planId,
@@ -198,9 +209,9 @@ export function gatePlan(reply, context) {
     pictures: picturesOf(rows.pages, context.blocks, context.data).pictures,
     assumptions: [...context.assumptions, ...keptAssumptionsOf(composition, pictures.pages, context, fix)],
     leftOut: [
+      ...kitPages,
       ...fromModel,
       ...list(context.leftOut),
-      ...dropped.leftOut,
       ...items.leftOut.map(namedBy(context.labels)),
       ...facts.leftOut.map(namedBy(context.labels)),
       ...pictures.leftOut,

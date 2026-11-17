@@ -152,7 +152,8 @@ export const goodComposition = () => ({
   assumptions: [
     { field: 'pages[team].name', said: 'Your website calls them coaches, so the page is named Coaches.' }
   ],
-  leftOut: [{ what: 'Prices page', kind: 'page', reason: 'Only two of your services show a price.' }]
+  // A section left out: the pages the plan does not keep are code's to list, never the model's (#575 walk).
+  leftOut: [{ what: 'Price list', kind: 'block', reason: 'Only two of your services show a price.' }]
 })
 
 /** A scripted fake build model: answers each call with the next reply, records every request. */

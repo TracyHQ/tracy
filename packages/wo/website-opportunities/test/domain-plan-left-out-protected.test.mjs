@@ -48,21 +48,36 @@ test('the main button named by its id in what (the walk shape) is never a left o
   assert.ok(result.fixes.some((f) => f.code === 'left_out_protected_fact'))
 })
 
-test('an entry naming a protected fact by its label is dropped too', () => {
+test('an entry naming a protected fact by its label, with no id, is dropped too: no entry is read by its words', () => {
   const entry = { what: 'Main button', kind: 'feature', reason: 'Not needed.' }
   const result = gated([entry], ['contact-cta-label'])
   assert.equal(result.ok, true, JSON.stringify(result.problems))
+  assert.ok(result.fixes.some((f) => f.code === 'left_out_unkeyed' && f.was.what === 'Main button'))
   assert.equal(
     result.plan.leftOut.some((e) => e.what === 'Main button' && e.code === 'model_reason'),
     false
   )
 })
 
-test('a fact that is neither identity nor answered may still be left out by the model', () => {
+test('a fact that is neither identity nor answered is not protected; the opening hours are', () => {
+  const profile = boxingProfile()
+  const { data } = contextOf(profile)
+  assert.equal(isProtectedFact('contact-email', data), false)
+  assert.equal(isProtectedFact('contact-social-url', data), false)
+  assert.equal(isProtectedFact('contact-hours', data), true)
+})
+
+test('the opening hours are protected like the name: the model never leaves them out (#575 walk, fourth round)', () => {
   const entry = { item: 'contact-hours', kind: 'item', reason: 'The hours change every season.' }
   const result = gated([entry], ['contact-hours'])
   assert.equal(result.ok, true, JSON.stringify(result.problems))
-  assert.ok(result.plan.leftOut.some((e) => e.item === 'contact-hours'))
+  assert.ok(result.fixes.some((f) => f.code === 'left_out_protected_fact' && f.now === 'contact-hours'))
+  // Code says what is true of the design: JA Boxing has no hours field, never the model's reason.
+  const hours = result.plan.leftOut.filter((e) => e.item === 'contact-hours')
+  assert.deepEqual(
+    hours.map((e) => e.code),
+    ['no_place_in_design']
+  )
 })
 
 test('an entry the owner asked for on a change request stays', () => {

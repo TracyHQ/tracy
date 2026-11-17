@@ -432,6 +432,12 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
   plan. The schema stays `tracy-build-question/v1`.
 - 17/11/2026 (#575), additive: a left out entry may carry `params.page` (the template page's name) with the code
   `page_nothing_to_show` or `model_reason`; a page of one item (a single post) is never a left out entry.
+- 17/11/2026 (#575), changed: every left out page is written by code from the template's page types the plan does not
+  keep, with `params.page` and the code `page_nothing_to_show` or `page_not_planned` (no longer `model_reason`, and no
+  longer `page_main_section_empty`); a page the customer removed on a change request has the code `page_removed` and
+  `params.pageType`. A left out fact of kind `contact.hours`, `business.name`, `contact.phone`, `contact.address` or
+  `contact.cta_label`, or one the owner answered, stays among the plan card's business facts; its entry says the site
+  does not show it. Opening hours are shown only by a block with a field of kind `contact.hours`.
 - 17/11/2026 (#575), additive: a left out entry of code `library_section_refused` (a review the Tracy reviews section
   does not show) may carry `params.why`, the reason's code: `not_google_review`, `no_text`, `no_star_rating`,
   `stars_below_four`, `stars_not_whole`, `reviewer_anonymous`, `no_reviewer_name`, `reviewer_name_too_long`,

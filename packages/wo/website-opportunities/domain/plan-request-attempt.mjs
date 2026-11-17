@@ -100,6 +100,7 @@ export function revisionOf(reply, { plan, request, context, owner = null }) {
   const gated = gatePlan(composition, {
     ...context,
     leftOut: [...context.leftOut, ...carried.context],
+    removedPageTypes: carried.removedTypes,
     carriedCodes: carried.codes,
     givenIds: givenIdsOf(applied.pages),
     idTag: `r${plan.revision + 1}`,

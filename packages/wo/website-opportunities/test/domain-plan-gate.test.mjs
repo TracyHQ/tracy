@@ -102,8 +102,19 @@ test('a page without its main block is dropped and reported; with no page left t
     result.plan.pages.map((p) => p.id),
     ['home', 'contact']
   )
-  const dropped = result.plan.leftOut.find((e) => e.kind === 'page' && e.what === 'Coaches')
-  assert.ok(dropped?.reason)
+  // Code lists the page the plan no longer keeps by the template's name of its type, never by the model's name.
+  const dropped = result.plan.leftOut.find((e) => e.kind === 'page' && e.params?.page === 'Team')
+  assert.deepEqual(dropped, {
+    what: 'Team page',
+    kind: 'page',
+    reason: 'Your plan does not need these pages.',
+    code: 'page_not_planned',
+    params: { page: 'Team' }
+  })
+  assert.equal(
+    result.plan.leftOut.some((e) => e.what === 'Coaches'),
+    false
+  )
   // The coach lost the page that showed him. The team block cannot move to the home page, whose recipe does not list
   // it, so the coach is reported in the left out list.
   assert.ok(!result.placed.some((p) => p.item === COACH))
@@ -226,7 +237,7 @@ test('the plan carries the look, the pictures summary, the assumptions and the l
   )
   assert.deepEqual(
     plan.leftOut.map((e) => e.what),
-    ['Prices page']
+    ['Price list']
   )
   assert.equal(PHOTOS.length, 3)
 })

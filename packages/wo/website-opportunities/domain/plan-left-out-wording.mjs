@@ -7,8 +7,8 @@
 //   it (`derivedReasonOf`): a sign up form with no email to send to, a button with no booking link, a section with
 //   nothing to show, what the section would show already shown elsewhere. A recorded fix (`left_out_internal_name`,
 //   `left_out_reason_derived`): nothing the site shows changes, only the words of the entry.
-// - A page entry is read by `plan-left-out-pages.mjs`: named in words with its name in `params.page`, a detail page not
-//   listed, a page with nothing to show given code's reason; "main block" and "block" in a model's reason read "main
+// - The model's page entries never reach this module: the pages the plan does not keep are code's own entries
+//   (`plan-left-out-pages.mjs`, `plan-left-out-keyed.mjs`). "main block" and "block" in a model's reason read "main
 //   section" and "section" (`left_out_wording`, recorded).
 // - A model reason carrying a build word (a block id, CTA, URL, field, id, schema), or one the plan contradicts, takes
 //   the sentence code writes for it (`plan-left-out-plain.mjs`), a recorded fix: it never costs the owner a retry. A
@@ -16,7 +16,6 @@
 // - A model sentence code cannot derive keeps its words with code `model_reason`. Pure.
 import { sectionLabelOf } from './plan-gate-fixes.mjs'
 import { BLOCK_TYPES } from './place-content-roles.mjs'
-import { pageLeftOutOf } from './plan-left-out-pages.mjs'
 import { replacedReasonOf } from './plan-left-out-plain.mjs'
 import { WITHHELD_REASON, withheldWhatOf } from './plan-withheld.mjs'
 
@@ -107,108 +106,79 @@ const plainWords = (reason) =>
  * The model's left out entries as the customer reads them, each with its `code`.
  * @param {Array<{item?: string, what: string, kind: string, reason: string}>} entries the model's entries, in their
  *   order, named already (`item`: the data id the entry reports, its `what` the data's own label)
- * @param {{data: object, blocks: Map<string, object>, recipes?: Map<string, object>, pages: object[],
+ * @param {{data: object, blocks: Map<string, object>, pages: object[],
  *   fix: (entry: object) => void, problem: (code: string, at: string, message: string) => void}} context
  */
 export function plainModelLeftOut(entries, context) {
-  const { data, blocks, recipes, pages, look, carriedCodes, fix, problem } = context
-  return entries
-    .map((entry, i) => {
-      const at = `leftOut[${i}]`
-      let { what, kind, reason } = entry
-      const ofData = entry.item !== undefined
-      // A code a revision carries with its entry (`carriedLeftOutOf`, `context.carriedCodes`) stays: code wrote it.
-      const carried = ofData ? carriedCodes?.get(entry.item) : undefined
-      if (typeof carried === 'string' && carried !== MODEL_REASON_CODE)
-        return { what, kind, reason, code: carried, item: entry.item }
-      let code = MODEL_REASON_CODE
-      let page
-      const named = kind === 'page' || ofData ? null : namedBlockOf(what, blocks)
-      if (named) {
-        const label = sectionLabelOf(named) ?? capital(named.type.replace(/_/g, ' '))
-        const rule = 'a left out block is named by its section, never by its block id'
-        fix({ code: 'left_out_internal_name', at: `${at}.what`, rule, was: what, now: label })
-        what = label
-        kind = 'block'
-        const derived = derivedReasonOf(named, { data, pages })
-        if (derived) {
-          code = derived
-          const now = DERIVED_LEFT_OUT_REASONS[derived]
-          const why = 'the reason of a left out block is the one code knows from the block and the data'
-          if (now !== reason)
-            fix({ code: 'left_out_reason_derived', at: `${at}.reason`, rule: why, was: reason, now })
-          reason = now
-        }
-      } else if (kind === 'page') {
-        // A detail page is not listed; a page of the template is named in words and carries its name (`plan-left-out-pages`).
-        const read = pageLeftOutOf({ what, reason }, { recipes, blocks, data, at, fix })
-        if (read === null) return null
-        if (read.what !== what)
-          fix({
-            code: 'left_out_internal_name',
-            at: `${at}.what`,
-            rule: 'a page is named in words',
-            was: what,
-            now: read.what
-          })
-        what = read.what
-        page = read.page
-        if (read.derived) {
-          if (read.derived.reason !== reason)
-            fix({
-              code: 'left_out_reason_derived',
-              at: `${at}.reason`,
-              rule: 'a page whose main section has nothing of the business to show says so in the same words',
-              was: reason,
-              now: read.derived.reason
-            })
-          ;({ code, reason } = read.derived)
-        }
-      }
-      if (code === MODEL_REASON_CODE) {
-        const now = plainWords(reason)
+  const { data, blocks, pages, look, carriedCodes, askedOff, fix, problem } = context
+  return entries.map((entry, i) => {
+    const at = `leftOut[${i}]`
+    let { what, kind, reason } = entry
+    const ofData = entry.item !== undefined
+    // A code a revision carries with its entry (`carriedLeftOutOf`, `context.carriedCodes`) stays: code wrote it.
+    const carried = ofData ? carriedCodes?.get(entry.item) : undefined
+    if (typeof carried === 'string' && carried !== MODEL_REASON_CODE)
+      return { what, kind, reason, code: carried, item: entry.item }
+    let code = MODEL_REASON_CODE
+    const named = ofData ? null : namedBlockOf(what, blocks)
+    if (named) {
+      const label = sectionLabelOf(named) ?? capital(named.type.replace(/_/g, ' '))
+      const rule = 'a left out block is named by its section, never by its block id'
+      fix({ code: 'left_out_internal_name', at: `${at}.what`, rule, was: what, now: label })
+      what = label
+      kind = 'block'
+      const derived = derivedReasonOf(named, { data, pages })
+      if (derived) {
+        code = derived
+        const now = DERIVED_LEFT_OUT_REASONS[derived]
+        const why = 'the reason of a left out block is the one code knows from the block and the data'
         if (now !== reason)
-          fix({
-            code: 'left_out_wording',
-            at: `${at}.reason`,
-            rule: 'a section is never a block',
-            was: reason,
-            now
-          })
+          fix({ code: 'left_out_reason_derived', at: `${at}.reason`, rule: why, was: reason, now })
         reason = now
-        const internal = INTERNAL_WORDS.test(reason)
-        const derive = (d) => {
-          const c = derivedReasonOf(d, { data, pages })
-          return c ? { code: c, reason: DERIVED_LEFT_OUT_REASONS[c] } : null
-        }
-        const replaced = replacedReasonOf(
-          { what, kind, reason, item: entry.item },
-          { data, blocks, look, internal, derive }
+      }
+    }
+    if (code === MODEL_REASON_CODE) {
+      const now = plainWords(reason)
+      if (now !== reason)
+        fix({
+          code: 'left_out_wording',
+          at: `${at}.reason`,
+          rule: 'a section is never a block',
+          was: reason,
+          now
+        })
+      reason = now
+      const internal = INTERNAL_WORDS.test(reason)
+      const derive = (d) => {
+        const c = derivedReasonOf(d, { data, pages })
+        return c ? { code: c, reason: DERIVED_LEFT_OUT_REASONS[c] } : null
+      }
+      const replaced = replacedReasonOf(
+        { what, kind, reason, item: entry.item },
+        { data, blocks, look, internal, derive, askedOff }
+      )
+      if (replaced) {
+        const fixCode = internal ? 'left_out_internal_wording' : 'left_out_reason_derived'
+        fix({ code: fixCode, at: `${at}.reason`, rule: replaced.rule, was: reason, now: replaced.reason })
+        ;({ code, reason } = replaced)
+      }
+      // A build word in the name of a section the model wrote has no sentence code knows: the model names it again.
+      const word = ofData ? null : INTERNAL_WORDS.exec(what)?.[0]
+      if (word)
+        problem(
+          'left_out_internal_wording',
+          `${at}.what`,
+          `the left out entry ${JSON.stringify(what)} uses the build word ${JSON.stringify(word)}, which the owner never reads: name what is left out in plain words, as the owner calls it, and for a fact or item give its id as "item" instead of a name`
         )
-        if (replaced) {
-          const fixCode = internal ? 'left_out_internal_wording' : 'left_out_reason_derived'
-          fix({ code: fixCode, at: `${at}.reason`, rule: replaced.rule, was: reason, now: replaced.reason })
-          ;({ code, reason } = replaced)
-        }
-        // A build word in the name of a section the model wrote has no sentence code knows: the model names it again.
-        const word = ofData ? null : INTERNAL_WORDS.exec(what)?.[0]
-        if (word)
-          problem(
-            'left_out_internal_wording',
-            `${at}.what`,
-            `the left out entry ${JSON.stringify(what)} uses the build word ${JSON.stringify(word)}, which the owner never reads: name what is left out in plain words, as the owner calls it, and for a fact or item give its id as "item" instead of a name`
-          )
-      }
-      return {
-        what,
-        kind,
-        reason,
-        code,
-        ...(page ? { params: { page } } : {}),
-        ...(ofData ? { item: entry.item } : {})
-      }
-    })
-    .filter((entry) => entry !== null)
+    }
+    return {
+      what,
+      kind,
+      reason,
+      code,
+      ...(ofData ? { item: entry.item } : {})
+    }
+  })
 }
 
 /**

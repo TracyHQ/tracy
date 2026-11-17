@@ -362,6 +362,7 @@
   "plan.leftOut.reason.hours_sources_disagree": "Uw bronnen noemen verschillende openingstijden, dus ze blijven van uw site tot u ze bevestigt.",
   "plan.leftOut.reason.no_fitting_video": "Geen van uw video’s past op deze plek (brede beelden zonder tekst erover), dus hij toont geen video.",
   "plan.leftOut.reason.page_nothing_to_show": "U hebt nog niets om op deze pagina's te tonen.",
+  "plan.leftOut.reason.page_not_planned": "Uw plan heeft deze pagina's niet nodig.",
   "plan.leftOut.reason.library_section_refused": "Niet getoond in de Tracy-sectie: {why}.",
   "plan.leftOut.why.not_google_review": "het is geen Google-review",
   "plan.leftOut.why.no_text": "hij heeft geen tekst",

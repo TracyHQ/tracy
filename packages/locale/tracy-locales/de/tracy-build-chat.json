@@ -362,6 +362,7 @@
   "plan.leftOut.reason.hours_sources_disagree": "Ihre Quellen nennen unterschiedliche Öffnungszeiten, daher bleiben sie von Ihrer Site fern, bis Sie sie bestätigen.",
   "plan.leftOut.reason.no_fitting_video": "Keines Ihrer Videos passt in diesen Platz (breite Bilder ohne Text darüber), daher zeigt er kein Video.",
   "plan.leftOut.reason.page_nothing_to_show": "Sie haben noch nichts, was diese Seiten zeigen könnten.",
+  "plan.leftOut.reason.page_not_planned": "Ihr Plan braucht diese Seiten nicht.",
   "plan.leftOut.reason.library_section_refused": "Im Tracy-Bereich nicht gezeigt: {why}.",
   "plan.leftOut.why.not_google_review": "es ist keine Google-Bewertung",
   "plan.leftOut.why.no_text": "sie hat keinen Text",

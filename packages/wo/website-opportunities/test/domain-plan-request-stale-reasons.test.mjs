@@ -19,23 +19,24 @@ const REMOVE_CONTACT = answer([
   }
 ])
 
-async function planWithPagesLeftOut() {
+// Sections left out: the pages the plan does not keep are listed by code, never carried from the model (#575 walk).
+async function planWithSectionsLeftOut() {
   const composition = goodComposition()
   composition.leftOut = [
     ...(composition.leftOut ?? []),
-    { kind: 'page', what: 'location page', reason: 'Your address is shown on the Contact page.' },
-    { kind: 'page', what: 'blog page', reason: 'No posts were supplied.' }
+    { kind: 'block', what: 'Location map', reason: 'Your address is shown on the Contact page.' },
+    { kind: 'block', what: 'Blog posts', reason: 'No posts were supplied.' }
   ]
   return firstPlan(composition)
 }
 
 test('a left out reason naming a page the request removed is replaced; one naming no removed page stays', async () => {
-  const first = await planWithPagesLeftOut()
+  const first = await planWithSectionsLeftOut()
   assert.ok(first.plan.leftOut.some((e) => e.reason === 'Your address is shown on the Contact page.'))
   const { input } = revision(first, 'Remove the contact page.', REMOVE_CONTACT)
   const result = await revisePlan(input)
   const reasonOf = (what) => result.plan.leftOut.find((e) => e.what === what)?.reason
-  assert.equal(reasonOf('location page'), STALE_PAGE_REASON)
-  assert.equal(reasonOf('blog page'), 'No posts were supplied.')
+  assert.equal(reasonOf('Location map'), STALE_PAGE_REASON)
+  assert.equal(reasonOf('Blog posts'), 'No posts were supplied.')
   assert.ok(!result.plan.leftOut.some((e) => /contact page/i.test(e.reason) && e.what !== 'Contact'))
 })
