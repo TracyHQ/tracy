@@ -37,6 +37,12 @@ import { DEFAULT_WO_OPS_SETTINGS, orderedConnectorsFor } from 'website-opportuni
 import { SOCIAL_SOURCES, SOURCES, refsOfCandidate, refsOfUrls } from 'website-opportunities/src/sources.js'
 import { cleanProfileLinks } from 'website-opportunities/domain/social-links.mjs'
 import { createPreSiteGatherer } from './build-draft/gather.js'
+import { createBriefPictureLabels } from './opportunities-build/brief-picture-labels.js'
+import {
+  failedPictureLabelling,
+  pictureLabelInputOf,
+  withPictureLabels
+} from './opportunities-build/revisions.js'
 import { withinTime } from './build-draft/gather-sources.js'
 import { createLogoWriter } from './build-draft/logo-file.js'
 import { createDraftPictures } from './build-draft/pictures.js'
@@ -91,8 +97,38 @@ export const preSiteParts = Object.freeze({
   ownerStatementRecordOf,
   modelTokensOf,
   BudgetExceededError,
-  defaultJobCapCents: DEFAULT_WO_OPS_SETTINGS.researchJobCapCents
+  defaultJobCapCents: DEFAULT_WO_OPS_SETTINGS.researchJobCapCents,
+  // The step chain's picture labelling input and result (`revisions.js`), read by `gather-vision.js`.
+  pictureLabelInputOf,
+  withPictureLabels,
+  failedPictureLabelling
 })
+
+/**
+ * The step chain's picture labelling of a brief's photographs (`brief-picture-labels.js` `createBriefPictureLabels`:
+ * the vision call, the ownership rank, the observed facts), made per research with that research's charge door
+ * (`gather-vision.js` `jobCharge`). A thin adapter only: the draft's pictures are read through `openDraftPicture`, the
+ * reader the labelling already takes for a build draft's own pictures (#610), and their labels land on their
+ * `build_draft_picture` rows. `label` and `observe` replace the model calls in tests.
+ * @param {{pool: {query: Function}, openDraftPicture: Function,
+ *   visionFor: () => Promise<{door: object, key: string} | null>, label?: Function, observe?: Function | null,
+ *   maxPictures?: number, log?: Console}} deps
+ * @returns {(chargeable: Function) => (input: object) => Promise<object>}
+ */
+export function draftPictureLabels({ pool, openDraftPicture, visionFor, label, observe, maxPictures, log }) {
+  return (chargeable) =>
+    createBriefPictureLabels({
+      pool,
+      objects: null,
+      openDraftPicture,
+      visionFor,
+      chargeable,
+      ...(label ? { label } : {}),
+      ...(observe !== undefined ? { observe } : {}),
+      ...(maxPictures ? { maxPictures } : {}),
+      ...(log ? { log } : {})
+    })
+}
 
 /**
  * Where the build chat's research keeps the business logo files: `build-draft-logos` beside the brand bench's run
@@ -192,10 +228,13 @@ export const draftPictureReader =
  * addresses at connect time (`pinned-fetch.js`); the pictures stored as draft pictures (`pictures`, `draftPictures`).
  * The business is read by the model /ops assigns to "WO editorial" (`businessReadingDoorFor`, door `woEditorial`), its
  * call sent through the server's own fetch as the executor's is (`apiFetch`); a server without a database has no door.
+ * The photographs are labelled by the step chain's labelling (`draftPictureLabels`) on the vision door `visionFor` (the
+ * one Website Opportunities labels with, `app.js` `visionDoorFor`); without it nothing is labelled.
  * `overrides` replaces any door (tests: the domain's network doors, the objects, the measuring, `readingDoor` and
- * `readingFetch` for the reading's model).
+ * `readingFetch` for the reading's model, `visionFor`, `visionLabel` and `visionObserve` for the labelling's).
  * @param {{pool: import('pg').Pool, config: object, pictures?: object | null, fetchImpl?: typeof fetch,
- *   dnsResolve?: Function, now?: () => number, overrides?: object}} deps
+ *   dnsResolve?: Function, now?: () => number, visionFor?: Function | null, maxPictures?: number,
+ *   log?: Console, overrides?: object}} deps
  */
 export function preSiteGatherer({
   pool,
@@ -204,6 +243,9 @@ export function preSiteGatherer({
   fetchImpl,
   dnsResolve,
   now = Date.now,
+  visionFor = null,
+  maxPictures,
+  log,
   overrides = {}
 }) {
   const loadDomain = overrides.loadDomain ?? websiteOpportunitiesDomain
@@ -222,6 +264,19 @@ export function preSiteGatherer({
     overrides.objects !== undefined
       ? draftPictures({ pool, config, objects: overrides.objects, imageInfo: overrides.imageInfo })
       : pictures
+  const labelDoor = overrides.visionFor ?? visionFor
+  const pictureLabelsWith =
+    labelDoor && stored
+      ? draftPictureLabels({
+          pool: overrides.labelPool ?? pool,
+          openDraftPicture: draftPictureReader(stored),
+          visionFor: labelDoor,
+          label: overrides.visionLabel,
+          observe: overrides.visionObserve,
+          maxPictures,
+          log
+        })
+      : null
   return createPreSiteGatherer({
     loadDomain,
     runtime,
@@ -251,7 +306,9 @@ export function preSiteGatherer({
             )
         : null),
     readingFetch: overrides.readingFetch ?? fetchImpl ?? globalThis.fetch,
+    pictureLabelsWith,
     now,
+    ...(log ? { log } : {}),
     ...(overrides.budgetMs ? { budgetMs: overrides.budgetMs } : {}),
     ...(overrides.readingBudgetMs ? { readingBudgetMs: overrides.readingBudgetMs } : {})
   })

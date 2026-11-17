@@ -96,24 +96,24 @@ export function profileOfRead({ opp, rows, googlePlace, description, domain, par
 }
 
 /**
- * The brief and manifest of what was read.
+ * The read a brief is made from, before any picture is labelled: the profile decided (`decideProfile`), the brand
+ * observed, the stored pictures through the brief read's own filters and mapping (`fromPlace`), and the opportunity the
+ * brief names (`opportunityOf`), as a place's research read holds it. The step chain's picture labelling reads exactly
+ * this (`revisions.js` `pictureLabelInputOf`), so the build chat labels what its brief will read.
  * @param {{opp: object, rows: object[], media?: object[], googlePlace: object | null, description: string | null,
- *   madeAt: string, domain: object, parts: object, logoResearch?: object | null, logoPalette?: object[] | null,
- *   reading?: object | null}} input
- *   `media`: the stored pictures (`pictures.js`), as rows; `logoResearch`: the chosen logo (`gather.js` `logoOf`),
- *   named by the brief as `brand.logo`; `logoPalette`: that logo's own colours, measured from its stored copy;
- *   `reading`: the business reading (`gather-reading.js`), laid on the profile as `businessReading`, where a place's
- *   research keeps it
- * @returns {{brief: object, manifest: object[], keptOut: {sentence: string, where: string}[]} | {invalid: object[]}}
- *   `keptOut`: the description's sentences taken out of the brief (`description-guard.js`)
+ *   domain: object, parts: object, logoResearch?: object | null, logoPalette?: object[] | null,
+ *   reading?: object | null}} input `media`: the stored pictures (`pictures.js`), as rows; `logoResearch`: the
+ *   chosen logo (`gather.js` `logoOf`), named by the brief as `brand.logo`; `logoPalette`: that logo's own colours,
+ *   measured from its stored copy; `reading`: the business reading (`gather-reading.js`), laid on the profile as
+ *   `businessReading`, where a place's research keeps it
+ * @returns {{owned: object, trade: string, read: object}}
  */
-export function briefOf({
+export function briefReadOf({
   opp,
   rows,
   media = [],
   googlePlace,
   description,
-  madeAt,
   domain,
   parts,
   logoResearch = null,
@@ -135,7 +135,25 @@ export function briefOf({
   const brand = logoResearch ? { ...observed, logoResearch } : observed
   // The stored pictures go through the brief read's own filters (junk, near copies) and mapping (`fromPlace`).
   const read = parts.fromPlace({ sources: rows, profile, brand, media, shown: rows })
-  const brief = parts.makeSiteBrief(domain, read, { opportunity: parts.opportunityOf(owned), madeAt })
+  return { owned, trade, read: { ...read, opportunity: parts.opportunityOf(owned) } }
+}
+
+/**
+ * The brief and manifest of what was read: `prepared` (`briefReadOf`), else made from the same input, its photographs
+ * carrying the step chain's labels when they were asked for (`pictureLabelling`, `revisions.js` `withPictureLabels`).
+ * @param {{opp: object, rows: object[], media?: object[], googlePlace: object | null, description: string | null,
+ *   madeAt: string, domain: object, parts: object, logoResearch?: object | null, logoPalette?: object[] | null,
+ *   reading?: object | null, prepared?: {owned: object, trade: string, read: object} | null,
+ *   pictureLabelling?: object | null}} input as `briefReadOf`, plus `madeAt`
+ * @returns {{brief: object, manifest: object[], keptOut: {sentence: string, where: string}[]} | {invalid: object[]}}
+ *   `keptOut`: the description's sentences taken out of the brief (`description-guard.js`)
+ */
+export function briefOf(input) {
+  const { description, madeAt, domain, parts, pictureLabelling = null } = input
+  const { trade, read: plain } = input.prepared ?? briefReadOf(input)
+  const read =
+    pictureLabelling && parts.withPictureLabels ? parts.withPictureLabels(plain, pictureLabelling) : plain
+  const brief = parts.makeSiteBrief(domain, read, { opportunity: read.opportunity, madeAt })
   const keptOut = keepDescriptionOut(brief, description)
   const checked = domain.validateBrief(brief)
   if (!checked?.ok) return { invalid: checked?.errors ?? [] }

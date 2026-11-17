@@ -15,7 +15,9 @@
  * the brand step, when every call of its run reported a cost, and compose and revise, when every call they made through
  * the build model door reported its usage and the price table lists the model (`model-usage.js`). The others settle at
  * their ceiling: research knows the cost of its business reading and its needs profile only, not of its place details
- * and crawl.
+ * and crawl. The step chain's paid picture calls inside research (the photograph labelling and its observation,
+ * `gather-vision.js`) run under the same research reservation, each counted against the operator's cap for one
+ * research job (`/ops/wo` researchJobCapCents) together with the business reading, and refused past it.
  */
 
 /** One hour, the window every limit counts in. */

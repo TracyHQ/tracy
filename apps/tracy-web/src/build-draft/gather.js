@@ -23,7 +23,8 @@ import { EngineStepError } from './engine-steps.js'
 import { linksOf, reasonOf } from './gather-links.js'
 import { placeAmbiguousError } from './gather-place.js'
 import { boundedFetch, isCollected, readSources, withinTime } from './gather-sources.js'
-import { briefOf, profileOfRead } from './gather-read.js'
+import { briefOf, briefReadOf, profileOfRead } from './gather-read.js'
+import { jobCharge, pictureLabellingOf } from './gather-vision.js'
 import { readingOf } from './gather-reading.js'
 import { NOT_STORED, picturesToStore, placePhotoItems } from './pictures.js'
 
@@ -89,8 +90,10 @@ const unreadOf = (rows, pasted) =>
  *   paidRunAllowed: (accountId: string | null) => Promise<boolean>, parts: object, fetch: typeof fetch,
  *   pictures?: {store: Function, open: Function} | null, writeLogo?: Function, resolve?: Function,
  *   readingDoor?: () => Promise<object>, readingFetch?: typeof fetch, readingBudgetMs?: number,
+ *   pictureLabelsWith?: ((charge: Function) => (input: object) => Promise<object>) | null,
  *   now?: () => number, budgetMs?: number, log?: Console}} deps `readingDoor`: the business reading's model door
- *   (`woEditorial`); `readingFetch`: the fetch its model call goes out through
+ *   (`woEditorial`); `readingFetch`: the fetch its model call goes out through; `pictureLabelsWith`: the step
+ *   chain's picture labelling, made with the research's own charge door (`gather-vision.js`)
  * @returns {(input: {links: string[], description: string | null, name?: string | null, withheld?: object | null,
  *   place?: object | 'none' | null}, context?: {accountId?: string}) =>
  *   Promise<{brief: object, manifest: object[], setAside: Array<{link: string, reason: string}>,
@@ -200,6 +203,7 @@ export function createPreSiteGatherer(deps) {
       domain,
       parts
     })
+    const capCents = settings?.researchJobCapCents ?? parts.defaultJobCapCents
     const reading = await readingOf({
       parts,
       readingDoor: deps.readingDoor,
@@ -210,12 +214,18 @@ export function createPreSiteGatherer(deps) {
       trade: subject.trade === 'other' ? null : subject.trade,
       description,
       withheld,
-      capCents: settings?.researchJobCapCents ?? parts.defaultJobCapCents,
+      capCents,
       now,
       ...(deps.readingBudgetMs ? { budgetMs: deps.readingBudgetMs } : {}),
       ...(deps.log ? { log: deps.log } : {})
     })
-    const made = briefOf({
+    // The step chain's paid picture calls share the research job's cap with the reading (`gather-vision.js`).
+    const charge = jobCharge({
+      capCents,
+      spentCents: reading.record?.costCents ?? 0,
+      BudgetExceededError: parts.BudgetExceededError
+    })
+    const briefInput = {
       opp,
       rows: read,
       media: pictures.rows,
@@ -226,7 +236,18 @@ export function createPreSiteGatherer(deps) {
       parts,
       reading: reading.reading,
       ...(logo ? { logoResearch: logo.research, logoPalette: logo.palette } : {})
+    }
+    const prepared = briefReadOf(briefInput)
+    // The photographs are labelled by the step chain before the brief is made, as a place's brief is (F08).
+    const pictureLabelling = await pictureLabellingOf({
+      labelsWith: deps.pictureLabelsWith,
+      charge,
+      read: prepared.read,
+      accountId: context.accountId ?? null,
+      parts,
+      ...(deps.log ? { log: deps.log } : {})
     })
+    const made = briefOf({ ...briefInput, prepared, pictureLabelling })
     if (made.invalid)
       throw new EngineStepError(
         'research_unusable',

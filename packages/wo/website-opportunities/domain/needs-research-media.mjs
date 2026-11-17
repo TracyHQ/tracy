@@ -1,12 +1,14 @@
 // The pictures and videos of the needs profile research (#597, `needs-research.mjs`): only the business's own media the
 // brief KEPT for the site, read the way the brief reads its usable photos (`brief.mjs`: not a stale event photo, a
-// photograph only, so never the logo or a profile picture, `photographsOnly`). Own = an owner upload or a picture of the
-// business's own channels (`uploaderRoleOf`, `asset-origin.mjs`); a map photo by someone else (`isMapPhotoByOthers`) and
-// a guest's photo are set aside. The address of each comes from the asset manifest stored beside the brief.
+// photograph only, so never the logo or a profile picture, `photographsOnly`). Own = the step chain's ownership result
+// the brief records on each asset (`isOwnersPhoto`, `asset-origin.mjs`): an owner upload, a picture of the business's own
+// channels, a Google photo whose author is the business, or one the vision labelling called the business's own
+// (`assetRelationsOf` `isOwnPhoto`). A map photo by someone else (`isMapPhotoByOthers`) and a guest's photo are set
+// aside. The address of each comes from the asset manifest stored beside the brief.
 // The needs profile reads no video: own videos come back apart (`videos`), in the record the pictures step takes as
 // its extra own pictures (`picturesStep({pictures})`). Every asset lands in exactly one of pictures, videos, setAside;
 // one set aside keeps its source and kind, so what a link found is told apart from what the site may use.
-import { isMapPhotoByOthers, uploaderRoleOf } from './pictures/asset-origin.mjs'
+import { isMapPhotoByOthers, isOwnersPhoto } from './pictures/asset-origin.mjs'
 import { photographsOnly } from './pictures/brief-media.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -29,10 +31,6 @@ function teamOnlyIdsOf(brief) {
       for (const id of list(section?.assetIds)) (section.kind === 'team' ? team : other).add(id)
   return new Set([...team].filter((id) => !other.has(id)))
 }
-
-const isOwn = (asset) =>
-  asset.uploaderRole === 'owner' ||
-  (asset.uploaderRole !== 'customer' && uploaderRoleOf({ source: asset.source }) === 'owner')
 
 /**
  * The own media of a brief, split for the research.
@@ -75,7 +73,7 @@ export function mediaOf(brief, manifest, sourceOf) {
       aside(asset, 'the logo or a profile picture')
     else if (teamOnly.has(asset.id)) aside(asset, 'a team member photo, shown with that person only')
     else if (isMapPhotoByOthers(asset)) aside(asset, 'a map photo posted by someone else', true)
-    else if (!isOwn(asset)) aside(asset, 'not the business own photo', true)
+    else if (!isOwnersPhoto(asset)) aside(asset, 'not the business own photo', true)
     else if (!isText(asset.sourceUrl)) aside(asset, 'no address in the asset manifest')
     else if (!source) aside(asset, 'from a source outside the trust order')
     else if (asset.kind === 'video')

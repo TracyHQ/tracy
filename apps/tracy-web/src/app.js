@@ -1264,6 +1264,15 @@ export function buildApp(deps) {
           pictures: draftPictureStore,
           fetchImpl: deps.fetchImpl,
           dnsResolve: deps.dnsResolve,
+          // The step chain's picture labelling, on the vision door Website Opportunities labels with (#575).
+          visionFor: async () => {
+            const door = await visionDoorFor(deps)
+            return door ? { door, key: visionKey(door) } : null
+          },
+          ...(Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) > 0
+            ? { maxPictures: Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) }
+            : {}),
+          log: deps.log ?? console,
           ...(deps.now ? { now: deps.now } : {}),
           overrides: buildEngine.gatherDoors ?? {}
         }),
