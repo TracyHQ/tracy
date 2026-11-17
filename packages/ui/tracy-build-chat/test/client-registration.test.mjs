@@ -262,7 +262,7 @@ test('the definitions publish the latest templates and plan on their own turn, a
 
 test('a call answered running spins only while it waits: in the history its row is settled', () => {
   const r = recorder()
-  client.applyWith(r.ctx, { switches: switchBoard(true) })
+  client.applyWith(r.ctx, { switches: switchBoard(true), engine: null })
   const view = r.of('tool.call.toolview')[0].component
   const rowOf = (props) => {
     const element = view({ ...props, sessionId: BUILD })
@@ -284,7 +284,7 @@ test('a call answered running spins only while it waits: in the history its row 
 
 test('a research call shows one line per link: reading while it runs, what came back once done (#609)', () => {
   const r = recorder()
-  client.applyWith(r.ctx, { switches: switchBoard(true) })
+  client.applyWith(r.ctx, { switches: switchBoard(true), engine: null })
   const view = r.of('tool.call.toolview')[0].component
   const linesOf = (props) => {
     const element = view({ ...props, sessionId: BUILD })

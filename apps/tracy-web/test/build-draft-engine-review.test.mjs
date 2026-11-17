@@ -12,13 +12,16 @@ import * as club from '../../../packages/wo/website-opportunities/test/fixtures/
 import { buildApp } from '../src/app.js'
 import { answersStillAsked } from '../src/build-draft/answers-kept.js'
 import { BUSY_SAY } from '../src/build-draft/engine-state.js'
-import { SPEND_LIMITS, STEP_CEILING_CENTS, TRY_LATER_SAY } from '../src/build-draft/spend-limits.js'
+import { SPEND_LIMITS, STEP_CEILING_CENTS } from '../src/build-draft/spend-limits.js'
 import { changeDraft, createDraft, putComposed } from '../src/build-draft/store.js'
 import { ensureAccount } from '../src/seats/store.js'
 import { buildSessionIdFor } from '../src/workspace/build-chat-session.js'
 import { fileDb } from './_db.mjs'
 import { OWNER, actor, config, gatheredBrief, kits, needsReading } from './build-draft-engine-fixtures.mjs'
 
+/** The try later sentence with its time (`spend-limits.js` `tryLaterSay`). */
+const TRY_LATER_TIMED =
+  /^I have done this many times in a short while, so I paused here\. Please try again in about \d+ (minute|minutes|hours)\.$/
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const db = fileDb()
 before(db.open)
@@ -227,10 +230,15 @@ function twoPhones(websitePhone, googlePhone) {
 }
 const PHONE_Q = 'fact-conflict.facts.contact.phone'
 
-/** Research with `brief`, then answer the phone question with its first choice. */
+let researches = 0
+/**
+ * Research with `brief`, then answer the phone question with its first choice. Each research names other words: the
+ * same call on a done research answers that research as it is (#575), it researches nothing again.
+ */
 async function researchAndAnswer(s, brief) {
   s.next = brief
-  await s.call('POST', '/research', { links: [SITE] })
+  researches += 1
+  await s.call('POST', '/research', { links: [SITE], description: `A racquet club, research ${researches}.` })
   await s.settled()
   const done = await s.call('GET', '/engine')
   return done.body.result
@@ -279,16 +287,18 @@ test(
 test('M5: research is held to its limit per account, with a plain sentence', opts, async () => {
   const s = phoneServer()
   const limit = SPEND_LIMITS.research.perHour
+  // Each research names other words: the same call again answers the research it made (#575), counted nowhere.
   for (let n = 0; n < limit; n++) {
     s.next = gatheredBrief()
-    const started = await s.call('POST', '/research', { links: [SITE] })
+    const started = await s.call('POST', '/research', { links: [SITE], description: `Visit ${n}.` })
     assert.equal(started.status, 200, `research ${n + 1}: ${JSON.stringify(started.body)}`)
     await s.settled()
   }
-  const refused = await s.call('POST', '/research', { links: [SITE] })
+  const refused = await s.call('POST', '/research', { links: [SITE], description: 'One more.' })
   assert.equal(refused.status, 429, JSON.stringify(refused.body))
   assert.equal(refused.body.code, 'TRY_LATER')
-  assert.equal(refused.body.say, TRY_LATER_SAY)
+  assert.match(refused.body.say, TRY_LATER_TIMED)
+  assert.ok(Date.parse(refused.body.retryAt) > Date.now(), 'the refusal says when to try again')
 })
 
 test('M5: compose and the brand step are held to their limits per account', opts, async () => {
@@ -310,7 +320,7 @@ test('M5: compose and the brand step are held to their limits per account', opts
   }
   const refused = await s.call('POST', '/compose', {})
   assert.equal(refused.status, 429, JSON.stringify(refused.body))
-  assert.equal(refused.body.say, TRY_LATER_SAY)
+  assert.match(refused.body.say, TRY_LATER_TIMED)
   // The brand step: the record goes, and each compose would start the brand step again.
   const id = await s.accountId()
   for (let n = 0; n < SPEND_LIMITS.brand.perHour; n++) {

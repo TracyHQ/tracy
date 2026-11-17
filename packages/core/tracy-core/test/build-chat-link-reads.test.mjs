@@ -109,3 +109,10 @@ test('a line of unknown shape is dropped, never shown raw', () => {
   assert.equal(linkNameOf('https://m.facebook.com/hollowmere.example'), 'Facebook')
   assert.equal(linkNameOf('https://www.hollowmere.example/menu'), 'hollowmere.example')
 })
+
+test('a link read while research still runs says read, never that it gave nothing (#575)', () => {
+  const [line] = linkReadsOf([{ name: 'Instagram', state: 'read' }])
+  assert.deepEqual(line, { name: 'Instagram', state: 'read' })
+  assert.equal(linkLineOf(line, english), english('links.read', { name: 'Instagram' }))
+  assert.notEqual(linkLineOf(line, english), english('links.readNothing', { name: 'Instagram' }))
+})

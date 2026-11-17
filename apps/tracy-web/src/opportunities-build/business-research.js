@@ -12,6 +12,7 @@
  * second copy of the research.
  */
 import { resumeRequest } from 'website-opportunities/src/place-requests.js'
+import { researchItemsOf, researchRunOf } from 'website-opportunities/src/research-progress.js'
 import { reviewSourcesRequired } from 'website-opportunities/src/tripadvisor-research.js'
 
 /**
@@ -137,6 +138,19 @@ async function sourceRowsOf(pool, job, opportunityId) {
 }
 
 /**
+ * Each source row of a running place run with the step chain's own reading of where it stands (`research-progress.js`,
+ * the Progress card's sub steps): `run` is `done` or `failed` once this run tried it, `running` or `waiting` before.
+ * A row carried over from the last research reads `waiting` until this run tries it, so a link never reads done from
+ * an older research while the new one is still collecting. Rows of a run that is not running keep their status only.
+ */
+async function withRunStates(pool, opportunityId, rows) {
+  const run = await researchRunOf(pool, opportunityId).catch(() => null)
+  if (!run || !['queued', 'running', 'paused'].includes(run.job?.state)) return rows
+  const items = new Map(researchItemsOf(run).map((item) => [item.key, item.state]))
+  return rows.map((row) => (items.has(row.source) ? { ...row, run: items.get(row.source) } : row))
+}
+
+/**
  * The research service the build chat calls: the same helpers, one account's business at a time.
  * @param {object} h `pool`, `config`, `now`, `runtime`, `loadDomain`, `linkFields`, `insertOpportunity`,
  *   `saveListingSource`, `startResearch`, `jobsOfOpportunity`, `opportunityOf`, `makeBrief`
@@ -159,7 +173,7 @@ export function createBusinessResearch(h) {
     },
     /**
      * Where the research stands, a paused one resumed first: `{state: 'running' | 'done' | 'failed', code?, sources}`,
-     * `sources` each `{source, ref, status, reason}` as the place run recorded it so far.
+     * `sources` each `{source, ref, status, reason, run?}` as the place run recorded it so far, `run` while it runs.
      */
     async progress({ accountId, opportunityId }) {
       const resumed = await resumeOwnResearch(h, accountId, opportunityId)
@@ -167,7 +181,7 @@ export function createBusinessResearch(h) {
       const sources = await sourceRowsOf(h.pool, job, opportunityId)
       if (resumed.phase === 'failed') return { state: 'failed', code: resumed.code, sources }
       if (!job || RESEARCH_RUNNING.has(job.state) || job.state === 'paused')
-        return { state: 'running', sources }
+        return { state: 'running', sources: await withRunStates(h.pool, opportunityId, sources) }
       if (job.state === 'completed') return { state: 'done', sources }
       return { state: 'failed', code: job.last_error?.code ?? 'RESEARCH_FAILED', sources }
     },

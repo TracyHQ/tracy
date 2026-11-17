@@ -3089,9 +3089,39 @@ var linkGapOf = (links) => Array.isArray(links) && links.some(
   (l) => l?.state === "failed" || l?.state === "read" && (!l.facts && !l.pictures || !l.pictures && l.picturesLost > 0)
 );
 var ANSWERS_ARRIVE_GUIDANCE = "The owner's answers reach tracy_build by themselves. Never call research again to pass an answer, and never put an answer into description.";
+var PAUSED_NEXT = "Say the sentence in say once and stop here. It says when the owner can continue. Ask no question, and do not call tracy_build again before retryAt.";
+var PAUSED_AGAIN_NEXT = "Nothing was started: the pause is not over yet. Do not repeat the earlier sentence about the pause. Answer what the owner just wrote in one short sentence, and say once that you can continue after minutesLeft minutes. Do not call tracy_build again before retryAt.";
 var RESEARCH_QUESTIONS_NEXT = `Pass ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action templates.`;
 var RESEARCH_DONE_NEXT = "Research is done. Call tracy_build with action templates now.";
-var researchNextOf = (result) => [linkGapOf(result.links) ? LINK_GAP_NEXT : null, result.ask ? RESEARCH_QUESTIONS_NEXT : RESEARCH_DONE_NEXT].filter(Boolean).join(" ");
+var joined = (items) => items.length < 2 ? items[0] ?? "" : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
+var foundLineOf = (line) => {
+  if (line?.state === "failed")
+    return `${line.name}: could not be read${line.reason ? ` (${line.reason})` : ""}`;
+  const facts = Number(line?.facts) || 0;
+  const pictures = Number(line?.pictures) || 0;
+  return `${line?.name}: ${facts} ${facts === 1 ? "fact" : "facts"}, ${pictures} ${pictures === 1 ? "picture" : "pictures"}`;
+};
+function foundNextOf(result) {
+  const links = (Array.isArray(result?.links) ? result.links : []).map(foundLineOf);
+  const missing = Array.isArray(result?.missing) ? result.missing : [];
+  const held = missing.filter((m) => m?.held).map((m) => m.what);
+  const absent = missing.filter((m) => !m?.held).map((m) => m.what);
+  const parts = [
+    links.length ? `what each link gave: ${links.join("; ")}` : null,
+    held.length ? `found but kept off the site until the owner confirms it: ${joined(held)}` : null,
+    absent.length ? `not found: ${joined(absent)}` : null
+  ].filter(Boolean);
+  if (!parts.length) return null;
+  return `In two or three short sentences, tell the owner what research found, in plain words with the counts, the link names as they are and no code: ${parts.join(". ")}. Only then go on.`;
+}
+var researchNextOf = (result) => {
+  const found = foundNextOf(result);
+  return [
+    found,
+    linkGapOf(result.links) ? LINK_GAP_NEXT : null,
+    result.ask ? RESEARCH_QUESTIONS_NEXT : RESEARCH_DONE_NEXT
+  ].filter(Boolean).join(" ");
+};
 var ACTION_OF_STEP = Object.freeze({ research: "research", brand: "plan", compose: "plan", revise: "plan" });
 function startArgsOf(args) {
   if (args?.action === "research") {
@@ -3149,11 +3179,13 @@ function pendingRetryOf(events) {
 var stoppedStateOf = (state, events = []) => {
   if (state?.rerun !== true) return stopped(state?.say);
   const again = rerunArgsOf(events, state.step);
+  const retryAt = typeof state.retryAt === "string" ? state.retryAt : null;
   return {
     ...stopped(state.say),
     ...typeof state.step === "string" ? { step: state.step } : {},
     rerun: true,
     ...again ? { again } : {},
+    ...retryAt ? { retryAt } : {},
     next: RERUN_GUIDANCE
   };
 };
@@ -3264,6 +3296,7 @@ function createBuildTool({
   }
   const reviews = /* @__PURE__ */ new Map();
   const stored = /* @__PURE__ */ new Map();
+  const pausedUntil = /* @__PURE__ */ new Map();
   const opened = /* @__PURE__ */ new Set();
   function openingSay(sessionId) {
     if (opened.has(sessionId)) return null;
@@ -3381,7 +3414,8 @@ ${JSON.stringify(answer)}`;
       return {
         paused: true,
         say: ownerSay(res.body?.say, TRY_LATER_FALLBACK_SAY),
-        next: "Say the sentence in say and stop here. Ask no question, and do not call tracy_build again until the owner asks."
+        ...typeof res.body?.retryAt === "string" ? { retryAt: res.body.retryAt } : {},
+        next: PAUSED_NEXT
       };
     if (res.status === 413) return tooLargeOf();
     if (res.status === 409)
@@ -3699,8 +3733,20 @@ ${JSON.stringify(answer)}`;
       );
     }
     if (action === "build") return build(sessionId, assertion);
+    const until = pausedUntil.get(sessionId) ?? 0;
+    if ((action === "research" || action === "plan") && until > now())
+      return {
+        paused: true,
+        retryAt: new Date(until).toISOString(),
+        minutesLeft: Math.max(1, Math.ceil((until - now()) / 6e4)),
+        next: PAUSED_AGAIN_NEXT
+      };
     const res = await door(sessionId, assertion, request[0], request[1], request[2]);
     if (res === null) return stopped();
+    if (res.status === 429) {
+      const at = Date.parse(res.body?.retryAt ?? "");
+      if (Number.isFinite(at)) pausedUntil.set(sessionId, at);
+    }
     if (action === "start-over") return startOverAnswerOf(res, ownerSay);
     if (res.status < 200 || res.status >= 300) return refusal(res);
     if (action === "templates") {

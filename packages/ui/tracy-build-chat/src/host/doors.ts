@@ -73,6 +73,11 @@ export interface ResearchResult {
   ask?: AskRequest
   /** What became of each link the owner gave, one line each, in the order given (#609). */
   links: LinkLine[]
+  /**
+   * What the brief keeps off the site (#575): each by what it is, `held` when research found it but holds it until the
+   * owner confirms it, else not found.
+   */
+  missing?: { what: string; held: boolean }[]
 }
 
 /**
@@ -159,7 +164,14 @@ export type EngineState =
   | { step: 'compose' | 'edit'; state: 'done'; say?: string; result: PlanResult }
   | { step: 'revise'; state: 'done'; result: RevisionResult }
   | { step: 'compose'; state: 'asking'; say?: string; result: AskingResult }
-  | { step: EngineStep; state: 'stopped'; say: string; reason?: 'brand-unavailable' | string }
+  | {
+      step: EngineStep
+      state: 'stopped'
+      say: string
+      reason?: 'brand-unavailable' | 'try-later' | string
+      /** A stop on a limit: when the owner may try again (ISO time). */
+      retryAt?: string
+    }
 
 /** `POST /api/build-draft/research`: starts research; creates the account's draft when it has none. */
 export interface ResearchRequest {

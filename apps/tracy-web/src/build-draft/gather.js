@@ -30,7 +30,37 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
  */
 export function createPreSiteGatherer(deps) {
   const { parts, now = Date.now } = deps
-  return async function gather({ links, description, name = null, withheld = null }) {
+  /** The business reading over the owner's words, as `gather` reads them, for a business known by `name`. */
+  async function readWords({ description, name, withheld, trade = null }) {
+    const [domain, { settings }] = await Promise.all([deps.loadDomain(), deps.runtime()])
+    // A business known by the name the owner typed and by no place. Its id names no `wo_opportunity` row.
+    const opp = {
+      id: randomUUID(),
+      name: isText(name) ? name.trim() : '',
+      branch: null,
+      provider: null,
+      provider_id: null,
+      candidate: {}
+    }
+    const subject = profileOfRead({ opp, rows: [], googlePlace: null, description, domain, parts })
+    const reading = await readingOf({
+      parts,
+      readingDoor: deps.readingDoor,
+      fetch: deps.readingFetch,
+      rows: [],
+      profile: subject.merged,
+      google: null,
+      trade: trade ?? (subject.trade === 'other' ? null : subject.trade),
+      description,
+      withheld,
+      capCents: settings?.researchJobCapCents ?? parts.defaultJobCapCents,
+      now,
+      ...(deps.readingBudgetMs ? { budgetMs: deps.readingBudgetMs } : {}),
+      ...(deps.log ? { log: deps.log } : {})
+    })
+    return { domain, opp, reading }
+  }
+  const gather = async function gather({ links, description, name = null, withheld = null }) {
     if (links?.length)
       throw new EngineStepError('research_unavailable', "links are read by the step chain's research", {
         noRerun: true
@@ -45,33 +75,8 @@ export function createPreSiteGatherer(deps) {
       throw Object.assign(new EngineStepError('research_empty', 'no name was given', { noRerun: true }), {
         reason: 'no_name'
       })
-    const [domain, { settings }] = await Promise.all([deps.loadDomain(), deps.runtime()])
-    // A business known by the name the owner typed and by no place. Its id names no `wo_opportunity` row.
-    const opp = {
-      id: randomUUID(),
-      name: name.trim(),
-      branch: null,
-      provider: null,
-      provider_id: null,
-      candidate: {}
-    }
+    const { domain, opp, reading } = await readWords({ description, name, withheld })
     const madeAt = new Date(now()).toISOString()
-    const subject = profileOfRead({ opp, rows: [], googlePlace: null, description, domain, parts })
-    const reading = await readingOf({
-      parts,
-      readingDoor: deps.readingDoor,
-      fetch: deps.readingFetch,
-      rows: [],
-      profile: subject.merged,
-      google: null,
-      trade: subject.trade === 'other' ? null : subject.trade,
-      description,
-      withheld,
-      capCents: settings?.researchJobCapCents ?? parts.defaultJobCapCents,
-      now,
-      ...(deps.readingBudgetMs ? { budgetMs: deps.readingBudgetMs } : {}),
-      ...(deps.log ? { log: deps.log } : {})
-    })
     const briefInput = {
       opp,
       rows: [],
@@ -101,4 +106,20 @@ export function createPreSiteGatherer(deps) {
       ...(made.keptOut?.length ? { descriptionKeptOut: made.keptOut } : {})
     }
   }
+  /**
+   * The owner's words read beside a research of links (#575, `place-research.js` `finishPlaceResearch`): the same
+   * business reading, given what the owner keeps off the site, whose answer is only how the words were read
+   * (`descriptionFacts`) and the reading's record. Nothing of it is a brief.
+   * @param {{description: string, name?: string | null, trade?: string | null, withheld?: object | null}} input
+   *   `trade`: the trade the research found, when it found one
+   */
+  gather.readDescription = async ({ description, name = null, trade = null, withheld = null }) => {
+    if (!isText(description)) return null
+    const { reading } = await readWords({ description, name, withheld, trade })
+    return {
+      reading: reading.record,
+      ...(reading.ownerStatement ? { descriptionFacts: reading.ownerStatement } : {})
+    }
+  }
+  return gather
 }

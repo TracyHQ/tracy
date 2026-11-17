@@ -123,8 +123,10 @@ export function linkReadsFrom({ links, rows, sources, setAside, picturesSetAside
     const { source } = linkOf(line.link)
     const aside = list(setAside).find((a) => a?.link === line.link)
     if (aside) return { ...line, state: 'failed', reason: aside.reason || UNREAD_REASON }
-    const row = list(rows).find((r) => sourceIdOf(r?.source) === source)
-    if (row && !COLLECTED.has(row.status)) return { ...line, state: 'failed', reason: UNREAD_REASON }
+    // A link several source rows feed (Google's place details and its map page) was read when any of them was.
+    const fed = list(rows).filter((r) => sourceIdOf(r?.source) === source)
+    const row = fed.find((r) => COLLECTED.has(r?.status)) ?? fed[0]
+    if (row && !COLLECTED.has(row.status)) return { ...line, state: 'failed', reason: reasonOf(row.reason) }
     const read = list(sources).find((s) => s?.id === source)
     const lost = list(picturesSetAside).filter((p) => sourceIdOf(p?.source) === source)
     const pictures = list(read?.pictures).length
@@ -170,7 +172,14 @@ export function linkProgressOf(links, { sources = [], setAside = [] } = {}) {
     // A listing page is read once when the links are judged (`link-fields.js`): one not set aside then was read.
     if (source === 'listing') return { ...line, state: 'read' }
     const rows = list(sources).filter((r) => sourceIdOf(r?.source) === source)
-    if (rows.length === 0 || rows.some((r) => !DONE.has(r?.status))) return line
+    // While the run goes on, a row is done once THIS run tried it (`run`, the step chain's own reading of its rows,
+    // `research-progress.js`): a row carried over from an older research still reads.
+    const settled = (r) => (r?.run ? r.run === 'done' || r.run === 'failed' : DONE.has(r?.status))
+    if (rows.length === 0 || !rows.every(settled)) {
+      // One source of the link read already (Google's place details before its map page): the link reads as read.
+      const early = rows.find((r) => r?.run === 'done' && COLLECTED.has(r.status))
+      return early ? { ...line, state: 'read' } : line
+    }
     if (rows.some((r) => COLLECTED.has(r.status))) return { ...line, state: 'read' }
     return { ...line, state: 'failed', reason: reasonOf(rows[0].reason) }
   })

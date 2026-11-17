@@ -30,6 +30,11 @@ export const SET_ASIDE = Object.freeze({
   timeout: 'the page took longer to read than the research allows',
   unsupported: 'this kind of page is not read',
   error: 'the page could not be read',
+  // The place run's own source reasons (`wo_place_snapshot_source.reason`), said plainly for the owner's link.
+  HTTP_402: 'the service that reads this kind of page is not available on this server right now',
+  HTTP_429: 'the service that reads this kind of page is busy, so it was not read this time',
+  credential_invalid: 'this server cannot read this kind of page right now',
+  not_found: 'no page of the business was found there',
   nothing: 'the page was read but said nothing about the business'
 })
 

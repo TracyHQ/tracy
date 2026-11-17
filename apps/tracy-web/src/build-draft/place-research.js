@@ -21,6 +21,7 @@ import { keepDescriptionOut } from './description-guard.js'
 import { EngineStepError } from './engine-steps.js'
 import { linksOf } from './gather-links.js'
 import { placeAmbiguousError } from './gather-place.js'
+import { tradeOfWords } from '../lib/wo-revision-choice.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -97,10 +98,20 @@ export async function startPlaceResearch({ links, name }, tools) {
  * (`engine-steps.js` `researchRecordOf`): the brief with the owner's description kept out word for word (D46), its
  * asset manifest, the place profile, the ids later steps read (the brand step reads the revision), and the owner's
  * description as the owner's statement the needs profile reads for its facts.
- * @param {{description?: string | null}} inputs
- * @param {{service: object, accountId: string, place: object}} tools `place`: the running step's ids
+ *
+ * 🔒 THE OWNER'S WORDS STILL REACH THE BUSINESS READING (#575). The place research is shared data and never reads one
+ * owner's words, so the description is read beside it as the build chat read it before the step chain's research
+ * (`readDescription`: the business reading of the words alone, `gather.js`, given what the owner keeps off the site):
+ * what it read is the record's `descriptionFacts`, and the trade the description names guides the brief's trade when
+ * the sources name none (`gather-read.js` `tradeOf`, the description as its hint). Its sentences never reach the brief.
+ * @param {{description?: string | null, name?: string | null}} inputs
+ * @param {{service: object, accountId: string, place: object, readDescription?: Function | null,
+ *   withheld?: object | null}} tools `place`: the running step's ids
  */
-export async function finishPlaceResearch({ description }, { service, accountId, place }) {
+export async function finishPlaceResearch(
+  { description, name = null },
+  { service, accountId, place, readDescription = null, withheld = null }
+) {
   const made = await service.brief({ accountId, opportunityId: place.opportunityId })
   const revision = made?.revision
   if (!revision?.brief)
@@ -108,8 +119,24 @@ export async function finishPlaceResearch({ description }, { service, accountId,
       noRerun: made?.error === 'BRIEF_INVALID' || made?.error === 'NOT_FOUND'
     })
   const brief = structuredClone(revision.brief)
+  // The trade the owner's words name, when the sources named none (the hint of `tradeOf`).
+  if (isText(description) && (!isText(brief.trade) || brief.trade === 'other')) {
+    const hinted = tradeOfWords(description)
+    if (hinted !== 'other') brief.trade = hinted
+  }
   const keptOut = keepDescriptionOut(brief, description)
+  const read =
+    isText(description) && readDescription
+      ? await readDescription({
+          description,
+          name: isText(name) ? name : (brief.business?.name ?? null),
+          trade: isText(brief.trade) && brief.trade !== 'other' ? brief.trade : null,
+          withheld
+        }).catch(() => null)
+      : null
   return {
+    ...(read?.descriptionFacts ? { descriptionFacts: read.descriptionFacts } : {}),
+    ...(read?.reading ? { reading: read.reading } : {}),
     brief,
     manifest: list(revision.asset_manifest),
     placeProfile: revision.place_profile ?? null,

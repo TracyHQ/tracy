@@ -16,6 +16,7 @@
  */
 import { planProfileOf } from './engine-steps.js'
 import { linkChoiceOf, linkProgressOf, linkReadsOf, linkStatesOf } from './link-reads.js'
+import { researchMissingOf } from './research-missing.js'
 
 /** The chat card shows at most three questions at a time (`MAX_QUESTIONS_AT_ONCE` of `@tracy/core/build-chat`). */
 export const MAX_QUESTIONS_AT_ONCE = 3
@@ -158,6 +159,8 @@ export function engineStateOf(row, { kit = null, progress = null } = {}) {
       state,
       say: engine.say ?? SAY.fault,
       ...(engine.reason ? { reason: engine.reason } : {}),
+      // A stop on a limit says when the owner may try again (`engine.js`).
+      ...(engine.retryAt ? { retryAt: engine.retryAt } : {}),
       // The owner may have the step run again (`engine.js stoppedOf`); a stop written without it may not.
       ...(engine.rerun === true ? { rerun: true } : {})
     }
@@ -186,7 +189,10 @@ export function engineStateOf(row, { kit = null, progress = null } = {}) {
         profile: profileSummaryOf(profile),
         questions,
         ...(ask ? { ask } : {}),
-        links: linkReadsOf(row.research)
+        links: linkReadsOf(row.research),
+        // What the brief keeps off the site, found but held or not found (`research-missing.js`), for the account
+        // the owner reads after research.
+        missing: researchMissingOf(row.research?.brief)
       }
     }
   }

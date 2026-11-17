@@ -50,11 +50,12 @@ test('stopped for good: a refused build with no site, or a team fault whose re-r
     assert.equal(stoppedForGood(row), false, why)
 })
 
-test('a start over is refused while a build runs, once a site is built, and while a step works', () => {
+test('a start over is refused while a build runs and once a site is built, never while a step works', () => {
   assert.equal(startOverRefusal({ build: { site: null, endedAt: null } }), 'BUILD_RUNNING')
   assert.equal(startOverRefusal({ build: { site, endedAt: null } }), 'BUILD_RUNNING')
   assert.equal(startOverRefusal({ build: { site, endedAt: ended, result: 'done' } }), 'SITE_BUILT')
-  assert.equal(startOverRefusal({ engine: { state: 'running' } }), 'ENGINE_BUSY')
+  // A step still running never holds the owner (#575): the draft lets go of it.
+  assert.equal(startOverRefusal({ engine: { state: 'running' } }), null)
   assert.equal(startOverRefusal({ engine: { state: 'done' } }), null)
   assert.equal(startOverRefusal({ build: { refusal: { code: 'X' }, site: null } }), null)
   assert.equal(startOverRefusal(null), null)

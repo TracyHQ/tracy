@@ -364,20 +364,74 @@ const linkGapOf = (links) =>
 export const ANSWERS_ARRIVE_GUIDANCE =
   "The owner's answers reach tracy_build by themselves. Never call research again to pass an answer, and never put an answer into description."
 
+/** Private guidance after a start refused for its limit: said once, with when, and nothing called until then. */
+export const PAUSED_NEXT =
+  'Say the sentence in say once and stop here. It says when the owner can continue. Ask no question, and do not call tracy_build again before retryAt.'
+/**
+ * Private guidance when the owner writes again while a start is still paused (#575, 17/11/2026 walk: the agent said
+ * the same pause sentence after every message): the tool does not ask tracy-web again, and the agent answers what the
+ * owner wrote instead of repeating itself.
+ */
+export const PAUSED_AGAIN_NEXT =
+  'Nothing was started: the pause is not over yet. Do not repeat the earlier sentence about the pause. Answer what the owner just wrote in one short sentence, and say once that you can continue after minutesLeft minutes. Do not call tracy_build again before retryAt.'
+
 /** Private guidance after a research that hands the owner questions. */
 export const RESEARCH_QUESTIONS_NEXT = `Pass ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action templates.`
 /** Private guidance after a research with nothing left to ask. */
 export const RESEARCH_DONE_NEXT = 'Research is done. Call tracy_build with action templates now.'
 
+/** The words of a list, joined plainly: `a, b and c`. */
+const joined = (/** @type {string[]} */ items) =>
+  items.length < 2 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`
+
 /**
- * What the agent does after a finished research: the link it must name first (`LINK_GAP_NEXT`), then the questions or
- * the templates.
+ * What one link gave, in plain English for the agent to say in the owner's language: its counts, or why it could not
+ * be read. Never a code: the reason is the plain clause tracy-web wrote.
+ * @param {any} line
+ */
+const foundLineOf = (line) => {
+  if (line?.state === 'failed')
+    return `${line.name}: could not be read${line.reason ? ` (${line.reason})` : ''}`
+  const facts = Number(line?.facts) || 0
+  const pictures = Number(line?.pictures) || 0
+  return `${line?.name}: ${facts} ${facts === 1 ? 'fact' : 'facts'}, ${pictures} ${pictures === 1 ? 'picture' : 'pictures'}`
+}
+
+/**
+ * Private guidance after a finished research (#575, 17/11/2026 walk: the owner read one empty sentence, then a
+ * question card): a short account of what each link gave and what is still missing, built by code from the result
+ * (`links`, `missing`), said in the owner's language before the first question.
  * @param {any} result the research step's result
  */
-const researchNextOf = (result) =>
-  [linkGapOf(result.links) ? LINK_GAP_NEXT : null, result.ask ? RESEARCH_QUESTIONS_NEXT : RESEARCH_DONE_NEXT]
+export function foundNextOf(result) {
+  const links = (Array.isArray(result?.links) ? result.links : []).map(foundLineOf)
+  const missing = Array.isArray(result?.missing) ? result.missing : []
+  const held = missing.filter((/** @type {any} */ m) => m?.held).map((/** @type {any} */ m) => m.what)
+  const absent = missing.filter((/** @type {any} */ m) => !m?.held).map((/** @type {any} */ m) => m.what)
+  const parts = [
+    links.length ? `what each link gave: ${links.join('; ')}` : null,
+    held.length ? `found but kept off the site until the owner confirms it: ${joined(held)}` : null,
+    absent.length ? `not found: ${joined(absent)}` : null
+  ].filter(Boolean)
+  if (!parts.length) return null
+  return `In two or three short sentences, tell the owner what research found, in plain words with the counts, the link names as they are and no code: ${parts.join('. ')}. Only then go on.`
+}
+
+/**
+ * What the agent does after a finished research: the account of what was found (`foundNextOf`), the link it must name
+ * (`LINK_GAP_NEXT`), then the questions or the templates.
+ * @param {any} result the research step's result
+ */
+const researchNextOf = (result) => {
+  const found = foundNextOf(result)
+  return [
+    found,
+    linkGapOf(result.links) ? LINK_GAP_NEXT : null,
+    result.ask ? RESEARCH_QUESTIONS_NEXT : RESEARCH_DONE_NEXT
+  ]
     .filter(Boolean)
     .join(' ')
+}
 
 /**
  * The action that runs each engine step again: the plan steps are all started by action plan.
@@ -474,11 +528,14 @@ export function pendingRetryOf(events) {
 const stoppedStateOf = (state, events = []) => {
   if (state?.rerun !== true) return stopped(state?.say)
   const again = rerunArgsOf(events, state.step)
+  // A stop on a limit (`try-later`) says when the step may run again: its sentence carries the time already.
+  const retryAt = typeof state.retryAt === 'string' ? state.retryAt : null
   return {
     ...stopped(state.say),
     ...(typeof state.step === 'string' ? { step: state.step } : {}),
     rerun: true,
     ...(again ? { again } : {}),
+    ...(retryAt ? { retryAt } : {}),
     next: RERUN_GUIDANCE
   }
 }
@@ -671,6 +728,8 @@ export function createBuildTool({
   const reviews = new Map()
   /** @type {Map<string, Set<string>>} Per build session: the answers already stored, as `id + answer JSON`. */
   const stored = new Map()
+  /** @type {Map<string, number>} Per build session: until when a start refused for its limit stays paused (ms). */
+  const pausedUntil = new Map()
   /** @type {Set<string>} The build sessions whose first research answer already carried the opening sentence. */
   const opened = new Set()
   /**
@@ -851,12 +910,13 @@ export function createBuildTool({
         say: ownerSay(res.body?.say, BUILD_BUSY_SAY),
         next: 'Say the sentence in say. Do not call tracy_build again now; make the change again when the owner asks for it.'
       }
-    // Started too often for now (`TRY_LATER`): no fault, nothing to retry, nothing to ask.
+    // Started too often for now (`TRY_LATER`): no fault, nothing to retry, nothing to ask. The sentence says when.
     if (res.status === 429)
       return {
         paused: true,
         say: ownerSay(res.body?.say, TRY_LATER_FALLBACK_SAY),
-        next: 'Say the sentence in say and stop here. Ask no question, and do not call tracy_build again until the owner asks.'
+        ...(typeof res.body?.retryAt === 'string' ? { retryAt: res.body.retryAt } : {}),
+        next: PAUSED_NEXT
       }
     if (res.status === 413) return tooLargeOf()
     if (res.status === 409)
@@ -1266,8 +1326,21 @@ export function createBuildTool({
     }
     if (action === 'build') return build(sessionId, assertion)
 
+    // A start still paused for its limit is not asked again: the owner hears an answer, not the same sentence.
+    const until = pausedUntil.get(sessionId) ?? 0
+    if ((action === 'research' || action === 'plan') && until > now())
+      return {
+        paused: true,
+        retryAt: new Date(until).toISOString(),
+        minutesLeft: Math.max(1, Math.ceil((until - now()) / 60_000)),
+        next: PAUSED_AGAIN_NEXT
+      }
     const res = await door(sessionId, assertion, request[0], request[1], request[2])
     if (res === null) return stopped()
+    if (res.status === 429) {
+      const at = Date.parse(res.body?.retryAt ?? '')
+      if (Number.isFinite(at)) pausedUntil.set(sessionId, at)
+    }
     if (action === 'start-over') return startOverAnswerOf(res, ownerSay)
     if (res.status < 200 || res.status >= 300) return refusal(res)
     if (action === 'templates') {

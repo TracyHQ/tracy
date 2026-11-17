@@ -2,13 +2,14 @@
  * The spend gate of the build chat's engine (#609): before a step that spends money starts, the account's hourly limit
  * for that step is counted (`spend-limits.js`), then the step is reserved in the research cost ledger at its ceiling
  * (`chargeable`, the Website Opportunities ledger seam), so the deployment's daily research cap holds for the build chat
- * too. A refusal of either answers null: the door says `TRY_LATER_SAY` and nothing runs.
+ * too. A refusal of either answers null: the door says `TRY_LATER_SAY` with when to try again, nothing runs, and the
+ * refused start is not counted.
  *
  * The reservation is admitted BEFORE the step is marked running, and the step runs inside it: a step that then cannot
  * start releases it (`notSent`), a step that fails leaves it to the ledger's rule (unreconciled, it may have been
  * billed), a step that ends settles it.
  */
-import { overLimitOrClosed } from '../lib/rate.js'
+import { overLimitOrClosed, refundOne } from '../lib/rate.js'
 import {
   LEDGER_PROVIDER,
   LEDGER_PURPOSE,
@@ -56,19 +57,17 @@ export function stepCostCents(ran) {
 export function spendGate({ pool, charge, now }) {
   return async function admit(accountId, step, ceilingStep = step) {
     const limit = SPEND_LIMITS[step]
-    if (
-      limit &&
-      (await overLimitOrClosed(
-        pool,
-        `build-chat:${step}:${accountId}`,
-        limit.perHour,
-        now(),
-        SPEND_WINDOW_MS
-      ))
-    )
+    const bucket = `build-chat:${step}:${accountId}`
+    const at = now()
+    // 🔒 A start that does not happen costs the owner nothing (#575): a refused or cancelled start gives its count back.
+    const giveBack = () =>
+      limit ? refundOne(pool, bucket, at, SPEND_WINDOW_MS).catch(() => {}) : Promise.resolve()
+    if (limit && (await overLimitOrClosed(pool, bucket, limit.perHour, at, SPEND_WINDOW_MS))) {
+      await giveBack()
       return null
+    }
     const maxCents = STEP_CEILING_CENTS[ceilingStep]
-    if (!charge || maxCents === undefined) return { run: (fn) => fn(), cancel: () => {} }
+    if (!charge || maxCents === undefined) return { run: (fn) => fn(), cancel: () => void giveBack() }
     let admitted
     const admission = new Promise((resolve) => (admitted = resolve))
     let go
@@ -94,10 +93,16 @@ export function spendGate({ pool, charge, now }) {
     })
     // A reservation the caps refused never reaches the step: nothing to start.
     charged.catch(() => admitted(false))
-    if (!(await admission)) return null
+    if (!(await admission)) {
+      await giveBack()
+      return null
+    }
     return {
       run: (fn) => (go.resolve(fn), charged),
-      cancel: () => go.reject(new Error('the step did not start'))
+      cancel: () => {
+        go.reject(new Error('the step did not start'))
+        void giveBack()
+      }
     }
   }
 }

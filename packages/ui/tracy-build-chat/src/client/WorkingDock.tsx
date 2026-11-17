@@ -4,12 +4,14 @@
  * collapsed process, so without this line the owner sees nothing move. It is the same row, drawn in
  * `conversation.input.dock` (shown while the composer is), for as long as the session's open turn carries the
  * `tracy_build:working` value (`definitions.ts`): the call is not answered yet, or answered `running`. A turn that
- * ended (stopped, failed) shows nothing.
+ * ended (stopped, failed) shows nothing. Its title is the step the engine really runs and, for research, each link's
+ * line as it is read (`engine-feed.ts`), so the owner sees the work move without opening anything (#575).
  */
 import { isBuildChatSession } from '@tracy/core/build-chat'
 import { useSyncExternalStore } from 'react'
 import { BuildToolRow } from './BuildToolRow'
 import { WORKING_KEY, type WorkingValue } from './definitions'
+import type { EngineFeed } from './engine-feed'
 import type { Translate } from './strings'
 
 /** The slice of dsh's turn location the line reads (ui-conversation `TurnLocation`). */
@@ -29,6 +31,8 @@ interface ChatLike {
 export interface WorkingDockProps {
   sessionId?: string
   useChat?: <T>(select: (snapshot: ChatLike) => T) => T
+  /** The engine's running step (`engine-feed.ts`): the row says the step that really runs, and each link's line. */
+  engine?: EngineFeed
 }
 
 const NONE = { getSnapshot: () => undefined, subscribe: () => () => {} }
@@ -39,7 +43,7 @@ const lastTurnOf = (snapshot: ChatLike): TurnLike | null => {
   return last === undefined ? null : (snapshot.timeline.turns?.get(last) ?? null)
 }
 
-export function WorkingDock({ sessionId, useChat = noChat, t }: WorkingDockProps & { t: Translate }) {
+export function WorkingDock({ sessionId, useChat = noChat, engine, t }: WorkingDockProps & { t: Translate }) {
   const turn = useChat(lastTurnOf)
   const closed = turn?.status === 'closed'
   const source = turn?.data?.source?.(WORKING_KEY) ?? NONE
@@ -56,7 +60,13 @@ export function WorkingDock({ sessionId, useChat = noChat, t }: WorkingDockProps
       aria-live="polite"
       data-build-working={on ? working.step : undefined}
     >
-      {on && <BuildToolRow view={{ phase: 'start', block: {} }} t={t} />}
+      {on && (
+        <BuildToolRow
+          view={{ phase: 'start', block: { argsRaw: JSON.stringify({ action: working.step }) } }}
+          t={t}
+          {...(engine ? { engine } : {})}
+        />
+      )}
     </div>
   )
 }

@@ -22,7 +22,7 @@ import { callerOf } from './caller.js'
 import { requestRefusalOf } from './engine-revise.js'
 import { buildOpen } from './build-store.js'
 import { placeAnswerOf, placeAsked } from './gather-place.js'
-import { TRY_LATER_SAY } from './spend-limits.js'
+import { tryLaterSay } from './spend-limits.js'
 
 const BASE = '/api/build-draft'
 
@@ -95,9 +95,19 @@ export function buildEngineRoutes({
         : await principalOf(pool, caller.email)
       return run(c, accountId)
     }
+  // A start past its limit says when the owner can try again (`retryAt`), in the sentence and beside it.
   const answer = (c, result) =>
     result.error
-      ? refuse(c, result.error, result.error === 'TRY_LATER' ? { say: TRY_LATER_SAY } : {})
+      ? refuse(
+          c,
+          result.error,
+          result.error === 'TRY_LATER'
+            ? {
+                say: tryLaterSay(result.retryAt, Date.now()),
+                ...(result.retryAt ? { retryAt: result.retryAt } : {})
+              }
+            : {}
+        )
       : json(c, result.state)
 
   app.use(`${BASE}/*`, async (c, next) => {

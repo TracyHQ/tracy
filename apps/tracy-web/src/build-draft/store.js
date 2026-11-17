@@ -199,9 +199,15 @@ export function chooseTemplate(pool, accountId, sent, kits) {
  * @param {{research?: object, runner?: string, lookSources?: object}} [extra] `runner`: the engine runner whose running
  *   compose step this ends (`engine.js`): the plan and the step's done state are one write, so a restart can never leave
  *   a stored plan beside a step that reads as stopped; a step no longer that runner's (`NOT_RUNNING`) writes nothing.
- *   `lookSources`: where the plan's accent and logo came from, as `composePlan` answered them, kept with the brand record
+ *   `lookSources`: where the plan's accent and logo came from, as `composePlan` answered them, kept with the brand record;
+ *   `draftId`: the draft the step was started for, when it must still be the account's draft
  */
-export function putComposed(pool, accountId, { plan, profile } = {}, { research, runner, lookSources } = {}) {
+export function putComposed(
+  pool,
+  accountId,
+  { plan, profile } = {},
+  { research, runner, lookSources, draftId } = {}
+) {
   const problems = planProblem(plan)
   if (problems) return { error: 'INVALID_PLAN', problems }
   if (!profile || typeof profile !== 'object' || Array.isArray(profile))
@@ -214,6 +220,8 @@ export function putComposed(pool, accountId, { plan, profile } = {}, { research,
       return { error: 'STALE_PLAN', revision: row.plan.revision }
     if (runner !== undefined && (row.engine?.state !== 'running' || row.engine.runner !== runner))
       return { error: 'NOT_RUNNING' }
+    // A start over replaced the draft the step worked for (`fresh-start.js`): its plan is no plan of this one.
+    if (draftId !== undefined && row.id !== draftId) return { error: 'NOT_RUNNING' }
     return {
       ...(runner === undefined
         ? {}

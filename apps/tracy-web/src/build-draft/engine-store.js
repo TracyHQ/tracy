@@ -15,34 +15,37 @@ export async function readEngineRow(pool, accountId) {
 }
 
 /**
- * Mark a step running, unless one is running already. Answers `{started: true}`, `{running: engine}` when a step of
+ * Mark a step running, unless one is running already. Answers `{started: true, draftId}`, `{running: engine}` when a step of
  * this process still runs, or `{error: 'NO_DRAFT'}`. `isLive(engine)` says whether a running state is still worked on.
  * @param {{step: string, inputs: object, runner: string, now: () => number}} start
  */
 export async function startStep(pool, accountId, { step, inputs, runner, now }, isLive) {
   let running = null
+  let draftId = null
   const result = await changeDraft(pool, accountId, (row) => {
     if (row.engine?.state === 'running' && isLive(row.engine)) {
       running = row.engine
       return { error: 'RUNNING' }
     }
+    draftId = row.id
     return {
       engine: { step, state: 'running', runner, inputs, startedAt: new Date(now()).toISOString() }
     }
   })
   if (running) return { running }
-  return result.error ? result : { started: true }
+  return result.error ? result : { started: true, draftId }
 }
 
 /**
  * End the running step of `runner`: `ended` is `{state: 'done'}` or `{state: 'stopped', say, reason?}`, `columns` the
  * draft columns the step writes with it, or a function of the row that answers them (read in the same transaction, so
  * what the owner answered while the step ran is seen). A step that is no longer this runner's (a later start replaced
- * it) changes nothing.
+ * it) changes nothing, nor does one whose draft a start over replaced (`draftId`, the draft it was started for).
  */
-export function endStep(pool, accountId, runner, ended, columns = {}, now = Date.now) {
+export function endStep(pool, accountId, runner, ended, columns = {}, now = Date.now, draftId = null) {
   return changeDraft(pool, accountId, (row) => {
     if (row.engine?.state !== 'running' || row.engine.runner !== runner) return { error: 'NOT_RUNNING' }
+    if (draftId && row.id !== draftId) return { error: 'NOT_RUNNING' }
     return {
       ...(typeof columns === 'function' ? columns(row) : columns),
       engine: { ...row.engine, ...ended, endedAt: new Date(now()).toISOString() }
@@ -85,9 +88,10 @@ export function putEndedStep(pool, accountId, engine, now = Date.now) {
  * Keep a step running past the work of its runner (#575): a research whose place run goes on in the step chain's
  * executor. `patch` is laid on the running state (no end time); a step no longer this runner's changes nothing.
  */
-export function continueStep(pool, accountId, runner, patch) {
+export function continueStep(pool, accountId, runner, patch, draftId = null) {
   return changeDraft(pool, accountId, (row) => {
     if (row.engine?.state !== 'running' || row.engine.runner !== runner) return { error: 'NOT_RUNNING' }
+    if (draftId && row.id !== draftId) return { error: 'NOT_RUNNING' }
     return { engine: { ...row.engine, ...patch } }
   })
 }

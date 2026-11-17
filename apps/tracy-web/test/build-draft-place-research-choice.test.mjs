@@ -136,3 +136,29 @@ test('the owner words alone still make the research, with no opportunity saved',
   assert.equal(research.brief.business.name, 'Pellmoor Cycle Workshop')
   assert.equal(research.ids, undefined)
 })
+
+test(
+  'a research refused for its limit after the place question stops with when, never stuck asking (#575)',
+  opts,
+  async () => {
+    const objects = memoryObjects()
+    const { domain } = await twoBranches()
+    const s = server(db.pool, { domain, objects })
+    await s.call('POST', '/research', { links: [WORDS, SITE] })
+    await s.app.buildDraftEngine.settled(await s.accountId())
+    const asked = await s.call('GET', '/engine')
+    assert.equal(asked.body.state, 'asking')
+    const question = asked.body.result.questions[0]
+    await s.call('PUT', '/answers', {
+      question,
+      answer: { schema: 'tracy-build-answer/v1', question: question.id, choice: question.choices[0].id }
+    })
+    // Every research start of this hour is spent.
+    await db.pool.query(`update rate_bucket set count = 1000 where bucket like 'build-chat:research%'`)
+    const refused = await s.call('POST', '/research', { links: [WORDS, SITE] })
+    assert.equal(refused.body.state, 'stopped', JSON.stringify(refused.body))
+    assert.match(refused.body.say, /try again in about \d+ (minute|minutes|hours)\./)
+    assert.ok(Date.parse(refused.body.retryAt) > Date.now())
+    assert.equal((await s.call('GET', '/engine')).body.state, 'stopped', 'the draft is not left asking')
+  }
+)

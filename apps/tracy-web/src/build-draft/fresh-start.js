@@ -10,7 +10,7 @@
  * 🔒 A BUILT SITE KEEPS ITS DRAFT. The rebuild of a site (#612), its chat move (#611) and its pictures still read the
  * account's draft row after the build, so a draft whose build made a site is never removed here (`SITE_BUILT`): a
  * second site of the same account is a later ticket. A draft whose approved build has not ended is never removed
- * either (`BUILD_RUNNING`), nor one a step still works on (`ENGINE_BUSY`).
+ * either (`BUILD_RUNNING`). A draft a step still works on is (`startOverRefusal`): the step is let go (`detach`).
  *
  * 🔒 NOTHING OF THE OLD DRAFT REACHES THE NEW ONE. The row goes (its research, answers, plan and fault), its picture
  * rows go with it by cascade, and their stored objects are deleted before the answer. The old conversation stays in
@@ -61,7 +61,9 @@ export function startOverRefusal(row) {
   const build = row.build
   if (build && !build.endedAt && !build.refusal) return 'BUILD_RUNNING'
   if (build?.site) return 'SITE_BUILT'
-  if (row.engine?.state === 'running') return 'ENGINE_BUSY'
+  // 🔒 A STEP STILL RUNNING NEVER HOLDS THE OWNER (#575, 17/11/2026 walk: refused while research waited on the place
+  // run). The draft lets go of it: a research's place run is shared data and finishes by itself, and a step of this
+  // process ends writing nothing (it was started for the draft that goes, `engine.js` `detach`).
   return null
 }
 
@@ -131,9 +133,16 @@ export async function moveToNextGeneration(pool, accountId, { only, objects = nu
 
 /**
  * What `app.js` hands the doors: everything by the signed-in address, the account read on the server.
- * `settle(accountId)` stops a step whose process ended (`engine.js read`), so a step that is gone never refuses.
+ * `settle(accountId)` stops a step whose process ended (`engine.js read`); `detach(accountId)` lets go of a step this
+ * process still runs for the draft a start over removed (`engine.js detach`).
  */
-export function freshStart({ pool, objects = null, settle = async () => {}, log = console }) {
+export function freshStart({
+  pool,
+  objects = null,
+  settle = async () => {},
+  detach = () => {},
+  log = console
+}) {
   const accountOf = (email) => principalOf(pool, email)
   return {
     async generationOf(email) {
@@ -156,6 +165,8 @@ export function freshStart({ pool, objects = null, settle = async () => {}, log 
       if (!accountId) return { error: 'NO_DRAFT' }
       await settle(accountId).catch(() => null)
       const moved = await moveToNextGeneration(pool, accountId, { only: 'asked', objects, log })
+      // A step of this process worked for the draft that went: the new conversation's first step never waits on it.
+      if (!moved.error) detach(accountId)
       return moved.error
         ? { ...moved, say: START_OVER_SAY[moved.error] ?? START_OVER_SAY.ENGINE_BUSY }
         : moved

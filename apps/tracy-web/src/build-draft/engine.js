@@ -18,7 +18,15 @@
  * (`brand-before-site.js`) and is never wrapped in a second rerun.
  */
 import { randomUUID } from 'node:crypto'
-import { adoptStep, continueStep, endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js'
+import {
+  adoptStep,
+  continueStep,
+  endStep,
+  putEndedStep,
+  readEngineRow,
+  startStep,
+  stopOrphan
+} from './engine-store.js'
 import { faultOf, runWithRerun } from './engine-rerun.js'
 import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
 import { askingOf } from './engine-asking.js'
@@ -34,7 +42,7 @@ import {
 } from './engine-steps.js'
 import { answersStillAsked } from './answers-kept.js'
 import { finishPlaceResearch, startPlaceResearch } from './place-research.js'
-import { TRY_LATER_SAY } from './spend-limits.js'
+import { nextDayAt, nextWindowAt, tryLaterSay } from './spend-limits.js'
 import { answerReadingsOf, placeReadingOf, placeStatementOf } from './answer-readings.js'
 import { spendGate, spendLeft } from './engine-spend.js'
 import { usageCollector } from './model-usage.js'
@@ -73,8 +81,12 @@ const BRAND_CANCEL_CODE = 'brand_step_stopped'
 export const SAY_CANCELLED =
   'I stopped as you asked. Your answers are kept, and you can continue when you are ready.'
 
-/** The stopped state of a fault: one sentence for the owner, and why, by its code. */
-export function stoppedOf(fault) {
+/**
+ * The stopped state of a fault: one sentence for the owner, and why, by its code.
+ * @param {object} fault
+ * @param {number} [now] when it stopped: a daily limit says when the owner can try again from it
+ */
+export function stoppedOf(fault, now = Date.now()) {
   if (fault.code === BRAND_CANCEL_CODE) return { state: 'stopped', say: SAY_CANCELLED, reason: 'cancelled' }
   // A change request that could not be applied leaves the living plan as it was: the owner reads that, not a stop.
   if (fault.step === 'revise') return { state: 'stopped', say: SAY.revise, reason: 'revise-failed' }
@@ -89,7 +101,11 @@ export function stoppedOf(fault) {
     return { state: 'stopped', say: SAY.links }
   if (fault.code === 'research_empty' && fault.reason === 'no_name')
     return { state: 'stopped', say: SAY.name }
-  if (LIMIT_CODES.has(fault.code)) return { state: 'stopped', say: TRY_LATER_SAY, reason: 'try-later' }
+  if (LIMIT_CODES.has(fault.code)) {
+    // The step chain's daily limits open again with the next UTC day (`place-requests.js`): the owner reads when.
+    const at = nextDayAt(now)
+    return { state: 'stopped', say: tryLaterSay(at, now), reason: 'try-later', retryAt: at.toISOString() }
+  }
   const stopped = { state: 'stopped', say: RESEARCH_CODES.has(fault.code) ? SAY.research : SAY.fault }
   return mayRerun(fault) ? { ...stopped, rerun: true } : stopped
 }
@@ -106,6 +122,16 @@ const OWNER_RERUN_CODES = new Set(['plan_gate_failed'])
  */
 const mayRerun = (fault) =>
   fault.code !== 'research_empty' && (fault.noRerun !== true || OWNER_RERUN_CODES.has(fault.code))
+
+const listOf = (value) => (Array.isArray(value) ? value : [])
+const textOf = (value) => (typeof value === 'string' ? value.trim() : '')
+/** Whether two calls name the same links, in the same order. */
+const sameLinks = (a, b) => JSON.stringify(listOf(a)) === JSON.stringify(listOf(b))
+/** Whether a research call names exactly what the draft's research was made from: its links, words and name. */
+const sameResearch = (inputs, call) =>
+  sameLinks(inputs?.links, call.links) &&
+  textOf(inputs?.description) === textOf(call.description) &&
+  textOf(inputs?.name) === textOf(call.name)
 
 /** Whether a running step is a research waiting on the step chain's place run (`place-research.js`). */
 const waiting = (engine) => engine?.step === 'research' && Boolean(engine.place)
@@ -165,31 +191,50 @@ export function createEngine({
     return pictureRun && prunePictures ? { ...ran, after: () => prunePictures(accountId, pictureRun) } : ran
   }
 
-  async function finish(accountId, step, run) {
+  /** End a step with what its run answered; `draftId`: the draft it was started for, so a later draft is never written. */
+  async function finish(accountId, step, run, draftId = null) {
     const ran = await run().catch((error) => ({ ok: false, error, attempts: 1 }))
     // Its work goes on outside this process (the step chain's place run): the step stays running, with what it names.
     if (ran.ok && ran.ended?.state === 'running') {
       const { state: _running, ...patch } = ran.ended
-      return continueStep(pool, accountId, runner, patch)
+      return continueStep(pool, accountId, runner, patch, draftId)
     }
     if (ran.ok) {
-      const ended = await endStep(pool, accountId, runner, ran.ended ?? { state: 'done' }, ran.columns, now)
+      const ended = await endStep(
+        pool,
+        accountId,
+        runner,
+        ran.ended ?? { state: 'done' },
+        ran.columns,
+        now,
+        draftId
+      )
       // Once the draft names the new research, what it replaced goes (the pictures of older research runs). A step
       // whose end was refused (no longer this runner's, or a build holds the draft) wrote nothing: nothing goes.
       if (!ended.error) await ran.after?.().catch(() => null)
       return ended
     }
     const fault = faultOf(step, ran)
-    // An owner cancel is not a fault the team needs to see.
-    if (fault.code !== BRAND_CANCEL_CODE) await recordFault(pool, accountId, fault)
-    return endStep(pool, accountId, runner, stoppedOf(fault), {}, now)
+    // An owner cancel is not a fault the team needs to see; a draft a start over replaced is not this step's.
+    const current = draftId ? (await readEngineRow(pool, accountId))?.id === draftId : true
+    if (fault.code !== BRAND_CANCEL_CODE && current) await recordFault(pool, accountId, fault)
+    return endStep(pool, accountId, runner, stoppedOf(fault, now()), {}, now, draftId)
   }
 
   /**
-   * Mark the step running and run it in the background; answers the engine state at once. `ceiling`: the ledger step
-   * its reservation is held at, when not its own (`spend-limits.js`).
+   * When a start refused by the spend gate may be tried again: the next hour window when the step's hourly limit is
+   * spent, else the next day (the ledger's daily cap).
    */
-  async function start(accountId, step, inputs, run, { ceiling } = {}) {
+  async function retryAtOf(accountId, limit) {
+    return (await spendLeft(pool, accountId, limit, now)) ? nextDayAt(now()) : nextWindowAt(now())
+  }
+
+  /**
+   * Mark the step running and run it in the background; answers the engine state at once. `limit`: the hourly limit
+   * the start counts against, when not the step's own; `ceiling`: the ledger step its reservation is held at, when not
+   * its limit's (`spend-limits.js`). A refused start answers `{error: 'TRY_LATER', retryAt}`.
+   */
+  async function start(accountId, step, inputs, run, { limit = step, ceiling = limit } = {}) {
     if (jobs.has(accountId))
       return {
         state: { step: (await readEngineRow(pool, accountId))?.engine?.step ?? step, state: 'running' }
@@ -198,11 +243,11 @@ export function createEngine({
     let release
     jobs.set(accountId, new Promise((resolve) => (release = resolve)))
     // The owner's hourly limit for this step, and its reservation in the research cost ledger (`engine-spend.js`).
-    const spend = await admit(accountId, step, ceiling).catch(() => null)
+    const spend = await admit(accountId, limit, ceiling).catch(() => null)
     if (!spend) {
       jobs.delete(accountId)
       release()
-      return { error: 'TRY_LATER' }
+      return { error: 'TRY_LATER', retryAt: (await retryAtOf(accountId, limit)).toISOString() }
     }
     // A research waiting on its place run is worked on outside this process: it is live, never replaced.
     const started = await startStep(pool, accountId, { step, inputs, runner, now }, waiting).catch(
@@ -221,10 +266,11 @@ export function createEngine({
       if (started.thrown) throw started.thrown
       return started
     }
-    const job = finish(accountId, step, () => spend.run(run))
+    const job = finish(accountId, step, () => spend.run(run), started.draftId)
       .catch((error) => console.error(`[build-draft] ${step} could not record its end:`, error))
       .finally(() => {
-        jobs.delete(accountId)
+        // A start over may have let this account's draft go meanwhile (`detach`): only this job's own entry goes.
+        if (jobs.get(accountId) === job) jobs.delete(accountId)
         release()
       })
     jobs.set(accountId, job)
@@ -239,7 +285,7 @@ export function createEngine({
       .then(work)
       .catch((error) => console.error('[build-draft] research could not record its end:', error))
       .finally(() => {
-        jobs.delete(accountId)
+        if (jobs.get(accountId) === job) jobs.delete(accountId)
         release()
       })
     jobs.set(accountId, job)
@@ -273,36 +319,60 @@ export function createEngine({
         `the place research ended ${progress.code ?? 'failed'}`,
         { noRerun: true }
       )
-      await finish(accountId, 'research', async () => ({ ok: false, error, attempts: 1 }))
+      await finish(accountId, 'research', async () => ({ ok: false, error, attempts: 1 }), row.id)
       return
     }
     const spend = await admit(accountId, 'profile').catch(() => null)
     if (!spend) {
-      await endStep(pool, accountId, runner, { state: 'stopped', say: TRY_LATER_SAY, rerun: true }, {}, now)
+      const at = await retryAtOf(accountId, 'profile')
+      await endStep(
+        pool,
+        accountId,
+        runner,
+        { state: 'stopped', say: tryLaterSay(at, now()), rerun: true, retryAt: at.toISOString() },
+        {},
+        now,
+        row.id
+      )
       return
     }
     const kit = row.template ? kits.loadKit(row.template.slug) : null
     const service = placeResearch()
-    await finish(accountId, 'research', () =>
-      spend.run(async () => {
-        const model = await buildModel()
-        const ran = await runWithRerun(
-          async (copy) =>
-            researchRecordOf(
-              await finishPlaceResearch(copy, { service, accountId, place: engine.place }),
-              copy,
-              { model, kit }
-            ),
-          { links: engine.inputs?.links ?? [], description: engine.inputs?.description ?? null }
-        )
-        if (!ran.ok) return ran
-        return {
-          ...ran,
-          columns: researchColumns(row, kit)(ran.value),
-          // The draft pictures of research made before (#609) are not this research's: they go.
-          ...(prunePictures ? { after: () => prunePictures(accountId, randomUUID()) } : {})
-        }
-      })
+    await finish(
+      accountId,
+      'research',
+      () =>
+        spend.run(async () => {
+          const model = await buildModel()
+          const ran = await runWithRerun(
+            async (copy) =>
+              researchRecordOf(
+                await finishPlaceResearch(copy, {
+                  service,
+                  accountId,
+                  place: engine.place,
+                  // The owner's words read beside the place research, as before it (`gather.js` `readDescription`).
+                  readDescription: gather?.readDescription ?? null,
+                  withheld: withheldOfResearch(row.research)
+                }),
+                copy,
+                { model, kit }
+              ),
+            {
+              links: engine.inputs?.links ?? [],
+              description: engine.inputs?.description ?? null,
+              name: engine.inputs?.name ?? null
+            }
+          )
+          if (!ran.ok) return ran
+          return {
+            ...ran,
+            columns: researchColumns(row, kit)(ran.value),
+            // The draft pictures of research made before (#609) are not this research's: they go.
+            ...(prunePictures ? { after: () => prunePictures(accountId, randomUUID()) } : {})
+          }
+        }),
+      row.id
     )
   }
 
@@ -444,6 +514,17 @@ export function createEngine({
      */
     async research(accountId, { links, description, name }, row) {
       const kit = row?.template ? kits.loadKit(row.template.slug) : null
+      // 🔒 A call that starts nothing is answered with the step as it is, and counted nowhere (#575): research that
+      // still runs, or that already ended for the same words (`sameResearch`).
+      const engine = row?.engine
+      if (engine?.step === 'research' && engine.state === 'running')
+        return { state: await this.read(accountId) }
+      if (
+        engine?.step === 'research' &&
+        engine.state === 'done' &&
+        sameResearch(engine.inputs, { links, description, name })
+      )
+        return { state: engineStateOf(row, { kit }) }
       // A typed answer to which place the Google link means is read by the model first, as the `answers` step; the
       // place it names, else None of these with the owner's text kept in the description (`answer-readings.js`).
       const readChoice = await placeReadingOf(row, links, readingTools(accountId))
@@ -451,6 +532,40 @@ export function createEngine({
       const inputs = { links, ...(said ? { description: said } : {}), ...(name ? { name } : {}) }
       // The owner's answer to which place the Google link means, when this research asked it (`gather-place.js`).
       const place = placeAnswerOf(row, links, readChoice)
+      // The place question still waits on the owner for these links: asked again, never researched again.
+      if (
+        engine?.step === 'research' &&
+        engine.state === 'asking' &&
+        place === undefined &&
+        sameLinks(engine.inputs?.links, links)
+      )
+        return { state: engineStateOf(row, { kit }) }
+      const started = await this.startResearch(accountId, { inputs, place, kit }, row)
+      // A start refused while the place question was open never leaves the draft asking with no card (#575): it stops
+      // with when to try again, and the owner may run it again then.
+      if (started.error === 'TRY_LATER' && engine?.state === 'asking') {
+        const at = new Date(started.retryAt)
+        await putEndedStep(
+          pool,
+          accountId,
+          {
+            step: 'research',
+            state: 'stopped',
+            inputs: engine.inputs,
+            say: tryLaterSay(at, now()),
+            reason: 'try-later',
+            rerun: true,
+            retryAt: started.retryAt
+          },
+          now
+        )
+        return { state: engineStateOf(await readEngineRow(pool, accountId)) }
+      }
+      return started
+    },
+    /** Start the research with its inputs read (`research`): the step chain's place research of links, or `gather`. */
+    startResearch(accountId, { inputs, place, kit }, row) {
+      const { links } = inputs
       const service = links?.length ? placeResearch() : null
       if (service)
         return start(
@@ -473,7 +588,8 @@ export function createEngine({
               return { ok: false, error, attempts: 1 }
             }
           }),
-          { ceiling: 'researchLinks' }
+          // Counted as its link judging only: the place research is held by the step chain's own limits.
+          { limit: 'researchLinks' }
         )
       return start(
         accountId,
@@ -547,6 +663,7 @@ export function createEngine({
         const { lookSources } = ran.value
         const put = await putComposed(pool, accountId, ran.value, {
           runner,
+          draftId: row.id,
           ...(lookSources ? { lookSources } : {})
         })
         if (put.error) throw Object.assign(new Error(`putComposed: ${put.error}`), { code: put.error })
@@ -576,6 +693,13 @@ export function createEngine({
       return engineStateOf(row, { kit })
     },
     /** Resolves when the account's step of this process has ended (tests, and a clean shutdown). */
-    settled: (accountId) => jobs.get(accountId) ?? Promise.resolve()
+    settled: (accountId) => jobs.get(accountId) ?? Promise.resolve(),
+    /**
+     * Let go of the account's step in this process (#575): a start over removed the draft it worked for. The step
+     * runs on and its end writes nothing (no draft names its runner); a new step of the new draft starts at once.
+     */
+    detach(accountId) {
+      jobs.delete(accountId)
+    }
   }
 }

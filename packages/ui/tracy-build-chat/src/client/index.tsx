@@ -43,6 +43,7 @@ import { createRevisionNotes, type RevisionNotes } from './revision-notes'
 import { createReviewPresence } from './review-presence'
 import { ReviewBar, type PendingReview, selectPlanReview } from './ReviewBar'
 import { createBuildRunFeed, createDraftSource, type BuildRunFeed } from './sources'
+import { createEngineFeed, type EngineFeed } from './engine-feed'
 import { CSS } from './styles'
 import { en, english, NS, type Translate } from './strings'
 import { LivePlan, makeTails, type TailDeps } from './tails'
@@ -94,6 +95,8 @@ export interface ApplyDeps {
   switches: { isShown(id: string): boolean; subscribe(listener: () => void): () => void }
   fetch?: typeof fetch
   runs?: BuildRunFeed
+  /** The engine's running step for the working row; a test passes its own, or `null` to read none. */
+  engine?: EngineFeed | null
   /** Where change request notes go for the plan card; a test passes its own. */
   notes?: RevisionNotes
   /** Where the cards read a language other than English; a test passes its own (`locale-tables.ts`). */
@@ -141,6 +144,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
   const reviews = createReviewPresence()
   const notes = deps.notes ?? createRevisionNotes()
   const runs = deps.runs ?? createBuildRunFeed(deps.fetch)
+  const engine = deps.engine === null ? undefined : (deps.engine ?? createEngineFeed(deps.fetch))
   const tailDeps: TailDeps = {
     drafts,
     reviews,
@@ -220,7 +224,9 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
           id: 'tracy-build-chat-working',
           inject: (sessionId: string) => ({ sessionId })
         },
-        (props: WorkingDockProps) => <WorkingDock {...props} t={languages.t(props.sessionId)} />
+        (props: WorkingDockProps) => (
+          <WorkingDock {...props} {...(engine ? { engine } : {})} t={languages.t(props.sessionId)} />
+        )
       )
     )
   )
@@ -232,7 +238,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
       { name: 'tool.call.toolview', key: BUILD_TOOL, inject: (sessionId: string) => ({ sessionId }) },
       (view: ToolViewProps & { sessionId?: string }) =>
         isBuildChatSession(view.sessionId) ? (
-          <BuildToolRow view={view} t={languages.t(view.sessionId, languageOfView(view))} />
+          <BuildToolRow view={view} engine={engine} t={languages.t(view.sessionId, languageOfView(view))} />
         ) : null
     )
   )

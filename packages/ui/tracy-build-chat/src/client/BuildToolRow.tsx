@@ -12,6 +12,8 @@ import {
   IconWarningOutlineRegular
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import { buildToolRowOf, type BuildToolRow } from '@tracy/core/build-chat'
+import { useSyncExternalStore } from 'react'
+import { type EngineFeed, type EngineSeen, rowOfRunning } from './engine-feed'
 import { LinkReadLines } from './LinkReadLines'
 import type { StringKey, Translate } from './strings'
 
@@ -30,6 +32,10 @@ const noop = () => {}
 
 /** What a call that still works is doing, by its step; a step with no title of its own works on the plan. */
 const WORKING_TITLES: Readonly<Record<string, StringKey>> = {
+  // The engine's own steps (`engine-feed.ts`): the brand step, compose and a change request all work on the plan.
+  brand: 'tool.working',
+  compose: 'tool.working',
+  revise: 'tool.working',
   templates: 'tool.working.templates',
   build: 'tool.working.build',
   'start-over': 'tool.working.startOver'
@@ -84,8 +90,24 @@ export function languageOfView({ phase, block }: ToolViewProps): string | null {
   }
 }
 
-export function BuildToolRow({ view, t }: { view: ToolViewProps; t: Translate }) {
-  const row = toolRowOfView(view)
+export function BuildToolRow({
+  view,
+  t,
+  engine,
+  live
+}: {
+  view: ToolViewProps
+  t: Translate
+  /** The engine's running step, read while this call waits (`engine-feed.ts`); none reads only the call itself. */
+  engine?: EngineFeed | undefined
+  /** What the engine said, once `LiveBuildToolRow` read it. */
+  live?: EngineSeen | null
+}) {
+  // A call that still waits reads the engine through its own component: a settled row never subscribes.
+  if (engine && live === undefined && view.phase !== 'result')
+    return <LiveBuildToolRow view={view} t={t} engine={engine} />
+  const own = toolRowOfView(view)
+  const row = own === null ? null : rowOfRunning(own, live ?? null)
   if (row === null) return null
   const Icon = ICONS[row.kind]
   return (
@@ -109,4 +131,10 @@ export function BuildToolRow({ view, t }: { view: ToolViewProps; t: Translate })
       ) : null}
     </div>
   )
+}
+
+/** The row of a waiting call, redrawn each time the engine's running step changes. */
+function LiveBuildToolRow({ view, t, engine }: { view: ToolViewProps; t: Translate; engine: EngineFeed }) {
+  const live = useSyncExternalStore(engine.subscribe, engine.read, () => null)
+  return <BuildToolRow view={view} t={t} live={live} />
 }

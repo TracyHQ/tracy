@@ -93,7 +93,8 @@ export function linkReadsOf(value) {
     /** @type {LinkRead} */
     const read = { name: line.name, state: line.state }
     if (line.state === 'failed' && isText(line.reason)) read.reason = line.reason
-    if (line.state === 'read') {
+    // A line read while research still runs carries no counts yet: it says read, never "nothing found".
+    if (line.state === 'read' && (line.facts !== undefined || line.pictures !== undefined)) {
       read.facts = countOf(line.facts)
       read.pictures = countOf(line.pictures)
       if (countOf(line.picturesFound) > read.pictures) read.picturesFound = countOf(line.picturesFound)
@@ -127,6 +128,7 @@ export function linkLineOf(line, t) {
   if (line.state === 'choice') return t('links.choice', { name })
   if (line.state === 'failed')
     return line.reason ? t('links.failedWhy', { name, reason: line.reason }) : t('links.failed', { name })
+  if (line.facts === undefined && line.pictures === undefined) return t('links.read', { name })
   const facts = line.facts ?? 0
   const pictures = line.pictures ?? 0
   const lost = line.picturesLost ?? 0

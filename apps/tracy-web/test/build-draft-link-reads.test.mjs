@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { engineStateOf } from '../src/build-draft/engine-state.js'
 import { linkChoiceOf, linkOf, linkReadsFrom, linkStatesOf } from '../src/build-draft/link-reads.js'
+import { SET_ASIDE } from '../src/build-draft/gather-links.js'
 
 const INSTAGRAM = 'https://www.instagram.com/hollowmere.bakery.example/'
 const LISTING = 'https://www.yelp.com/biz/hollowmere-bakery-example'
@@ -63,7 +64,9 @@ test('a source row that read nothing is a link that could not be read', () => {
     rows: [{ source: 'instagram', status: 'failed', reason: 'HTTP_429', coverage: { fetched: 0 } }]
   })
   assert.equal(line.state, 'failed')
-  assert.equal(line.reason, 'the page could not be read', 'never the row reason code')
+  // Said in plain words for its reason, never the row's reason code (#575).
+  assert.equal(line.reason, SET_ASIDE.HTTP_429)
+  assert.ok(!line.reason.includes('HTTP'), 'never the row reason code')
 })
 
 test('pictures all set aside are counted on their link, a missing store is said as not kept', () => {

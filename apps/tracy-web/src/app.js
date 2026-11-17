@@ -1242,6 +1242,7 @@ export function buildApp(deps) {
       pool: deps.pool,
       objects: draftPictureObjects,
       settle: (accountId) => app.buildDraftEngine.read(accountId),
+      detach: (accountId) => app.buildDraftEngine.detach(accountId),
       log: deps.log ?? console
     })
     // One opener for every picture a draft's research names (#575): its own draft pictures and, for a research of
