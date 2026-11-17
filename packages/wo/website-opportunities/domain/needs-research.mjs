@@ -11,7 +11,10 @@
 //   - a fact of a kind the needs profile reads from words (services, team, story, audience, posts, contact channels,
 //     service areas) gives its evidence quotes to the `text` of the source that said them; a source with no quote (a
 //     caption over 300 characters loses its quote in the brief) gives the fact's own text or name;
-//   - a fact of a kind the needs profile has no place for (`NO_KIND`) is set aside with that reason;
+//   - a fact of a kind the needs profile has no place for (`NO_KIND`) is set aside with that reason; a restaurant's dish
+//     (field `menu` holding a dish) is a typed offering of the source its evidence names (`needs-research-facts.mjs`);
+//   - the brief's own decision about each fact taken as a field (confidence, onSite, decidedBy, reasons) rides along
+//     as `assessed`, so the needs profile states it instead of counting sources again;
 //   - the opening hours Google lists (`googlePlace.openingHours`) when the brief holds no hours fact at all;
 //   - the posts the brief keeps (`content.items`) are `captions` of their source, never one credited to someone else;
 //   - Google's reviews the brief keeps; the own photos and videos it keeps for the site (`needs-research-media.mjs`);
@@ -20,6 +23,7 @@
 // A fact the brief keeps off the site is not research for the site; a held name and held people are `withheld`
 // (`plan-withheld.mjs`). Everything lands in exactly one place, counted in `taken`, or in `setAside` with a reason.
 import { mediaOf } from './needs-research-media.mjs'
+import { assessmentOf, dishItemOf } from './needs-research-facts.mjs'
 import { addReadingOfBrief } from './needs-research-reading.mjs'
 import { ownerFactsOfBrief, ownerValuesOfBrief } from './owner-facts-flow.mjs'
 import { withheldOfBrief } from './plan-withheld.mjs'
@@ -150,11 +154,23 @@ export function researchOf(brief, { manifest = [] } = {}) {
     if (!source.text.includes(words)) source.text.push(words)
   }
   const facts = list(brief?.facts)
+  // The brief's own decision about each fact taken as a field, passed on to the needs profile (`needs-research-facts`).
+  const assessed = []
   for (const fact of facts) {
     const aside = (reason) => setAside.push({ what: 'fact', id: fact?.id, reason })
+    const dish = dishItemOf(fact)
+    const dishSource = dish
+      ? list(fact.evidence)
+          .map((e) => sourceOf(e?.source))
+          .find(Boolean)
+      : null
     if (fact?.sourceKind === 'observed') aside('seen in a photo, not said by a source')
     else if (fact?.onSite === false) aside('kept off the site')
-    else if (NO_KIND[fact?.field]) aside(NO_KIND[fact.field])
+    else if (dish && !dishSource) aside('no known source names it')
+    else if (dish) {
+      dishSource.items = [...list(dishSource.items), { id: fact.id, ...dish }]
+      taken.dishes = [...list(taken.dishes), fact.id]
+    } else if (NO_KIND[fact?.field]) aside(NO_KIND[fact.field])
     else if (FIELD_KINDS[fact?.field]) {
       const value = fieldText(fact.field, fact.value)
       const named = list(fact.evidence)
@@ -170,6 +186,8 @@ export function researchOf(brief, { manifest = [] } = {}) {
       else {
         for (const source of named) addField(source, FIELD_KINDS[fact.field], value)
         taken.fields.push(fact.id)
+        const assessment = assessmentOf(fact)
+        if (assessment) assessed.push({ kind: FIELD_KINDS[fact.field], value, fact: fact.id, ...assessment })
       }
     } else {
       let used = false
@@ -260,6 +278,7 @@ export function researchOf(brief, { manifest = [] } = {}) {
     ...(isText(brief?.madeAt) ? { madeAt: brief.madeAt } : {}),
     setAside,
     taken,
+    ...(assessed.length ? { assessed } : {}),
     ...withheldOfBrief(brief)
   }
 }

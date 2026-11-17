@@ -18,6 +18,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { ROLE_VOCABULARY_V3 } from './place-content-roles.mjs'
 import { TRUST_ORDER, mergeFacts, mergeItems } from './needs-profile-merge.mjs'
+import { withBriefAssessment } from './needs-profile-assessed.mjs'
 import { modelObservations, structuredObservations } from './needs-profile-observations.mjs'
 import { questionsOf, siteLanguageOf } from './needs-profile-questions.mjs'
 import { kindLimitsOf, storeBlocksOf } from './answer-field-limits.mjs'
@@ -110,7 +111,7 @@ export function readModelReply(reply) {
 
 /**
  * The needs profile from research and the model's reading of it. Pure: the same inputs give the same profile.
- * @param {{sources: object[]}} research
+ * @param {{sources: object[], assessed?: object[]}} research `assessed`: the brief's decisions (`researchOf`)
  * @param {{facts?: object[], items?: object[], pictures?: object[], languages?: object[], voice?: object}} reading
  *   `voice` (optional): the business's own voice (`needs-profile-voice.mjs`), kept on the profile as `voice`
  * @param {{blockStore?: object, library?: object[]}} [template] the template's block store and the Tracy library, when
@@ -132,7 +133,11 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
     if (item.kind === 'gallery' && !item.label)
       item.label = labels.get(`${item.source.id}/${item.pictureId}`) ?? item.alt
   const conflicts = []
-  const facts = mergeFacts([...structured.facts, ...read.facts], conflicts)
+  // The brief's own decision about each fact it stated, when the research carries it (`needs-profile-assessed.mjs`).
+  const facts = withBriefAssessment(
+    mergeFacts([...structured.facts, ...read.facts], conflicts),
+    research?.assessed
+  )
   // The reading's services, typed (`needs-profile-typed.mjs`), then the owner's own held to the offer rules (#609).
   const typed = typedObservations(sources, { at })
   const merged = mergeItems([...typed.items, ...read.items, ...structured.items], conflicts)
