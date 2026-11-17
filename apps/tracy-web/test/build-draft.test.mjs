@@ -464,6 +464,14 @@ test('a system fault is kept for the team and never answered by a door', opts, a
   assert.equal(JSON.stringify(card.body).includes('plan_gate_failed'), false)
 })
 
+test('a stored plan clears the fault an earlier try of it left (#575 walk)', opts, async () => {
+  await call(OWNER, 'POST')
+  const accountId = await accountIdOf(OWNER)
+  await recordFault(db.pool, accountId, { step: 'compose', code: 'plan_gate_failed' })
+  await putPlan()
+  assert.equal((await readEngineDraft(db.pool, accountId)).fault, null)
+})
+
 test('the plan card and the build engine read the same plan from the draft', opts, async () => {
   await call(OWNER, 'POST')
   assert.equal(

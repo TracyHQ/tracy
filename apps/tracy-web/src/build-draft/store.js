@@ -194,7 +194,8 @@ export function chooseTemplate(pool, accountId, sent, kits) {
  * Put a plan the plan composer returned (`composePlan`: it passed the rules gate) as the living plan, with the settled
  * needs profile it was composed from and, when given, the research record. The same plan again needs a higher revision,
  * so no revision ever names two plans; the undo and the last edit belong to the plan they edited and are cleared.
- * The only plan writer besides the gated edits: no door calls it with a body a browser sent.
+ * The only plan writer besides the gated edits: no door calls it with a body a browser sent. The fault an earlier try
+ * left is cleared with it.
  * @param {{plan: object, profile: object}} composed what `composePlan` answered
  * @param {{research?: object, runner?: string, lookSources?: object}} [extra] `runner`: the engine runner whose running
  *   compose step this ends (`engine.js`): the plan and the step's done state are one write, so a restart can never leave
@@ -229,6 +230,8 @@ export function putComposed(
       plan,
       needs_profile: profile,
       template: plan.look.template,
+      // A stored plan ends the fault an earlier try of it left (#575 walk): the draft no longer reads as failed.
+      fault: null,
       last_edit: null,
       undo_edit: null,
       undo_profile: null,

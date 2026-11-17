@@ -37,6 +37,36 @@ const INTERNAL_WORDS = /\b(?:block-\d+|cta|urls?|fields?|ids?|schema|data kinds?
 const capital = (text) => text.charAt(0).toUpperCase() + text.slice(1)
 const escaped = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+/**
+ * The reply with every left out entry that names a fact or item by its id in `what`, and gives no `item`, read as
+ * the entry of that id (a recorded `left_out_internal_name` fix): the card then names it by its label. A real run
+ * wrote `{what: "contact-cta-label"}` three times over and failed the plan on the build word in it (#575 walk). An
+ * entry of an id another entry already reports is dropped. Pure: the reply is copied when anything changes.
+ * @param {object} reply the model's reply, its shape already checked
+ * @param {{byId: Map<string, object>}} data
+ * @param {(fix: object) => void} fix
+ */
+export function withNamedIds(reply, data, fix) {
+  const entries = list(reply?.leftOut)
+  const idOf = (e) =>
+    e?.item === undefined && typeof e?.what === 'string' && data.byId.has(e.what.trim())
+      ? e.what.trim()
+      : null
+  if (!entries.some(idOf)) return reply
+  const reported = new Set(entries.map((e) => e?.item).filter((id) => id !== undefined))
+  const leftOut = []
+  entries.forEach((entry, i) => {
+    const id = idOf(entry)
+    if (id === null) return leftOut.push(entry)
+    const rule = 'an entry that names a fact or item by its id reports that id'
+    fix({ code: 'left_out_internal_name', at: `leftOut[${i}].item`, rule, was: entry.what, now: id })
+    if (reported.has(id)) return
+    reported.add(id)
+    leftOut.push({ item: id, kind: 'item', reason: entry.reason })
+  })
+  return { ...reply, leftOut }
+}
+
 /** The block of the store or library a text names by its id, or null. */
 function namedBlockOf(text, blocks) {
   for (const [id, description] of blocks)
@@ -150,11 +180,12 @@ export function plainModelLeftOut(entries, context) {
         ;({ code, reason } = replaced)
       }
       // A build word in the name of a section the model wrote has no sentence code knows: the model names it again.
-      if (!ofData && INTERNAL_WORDS.test(what))
+      const word = ofData ? null : INTERNAL_WORDS.exec(what)?.[0]
+      if (word)
         problem(
           'left_out_internal_wording',
           `${at}.what`,
-          `${JSON.stringify(what)} uses a build word the customer never reads (a block id, CTA, URL, field, id, schema): say it in plain words`
+          `the left out entry ${JSON.stringify(what)} uses the build word ${JSON.stringify(word)}, which the owner never reads: name what is left out in plain words, as the owner calls it, and for a fact or item give its id as "item" instead of a name`
         )
     }
     return { what, kind, reason, code, ...(ofData ? { item: entry.item } : {}) }
