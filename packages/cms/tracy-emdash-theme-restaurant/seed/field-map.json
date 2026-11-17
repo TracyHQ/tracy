@@ -1,6 +1,6 @@
 {
 	"generatedAt": "2026-11-04T02:33:51.029Z",
-	"roleVocabularyVersion": "place-content-roles/2",
+	"roleVocabularyVersion": "place-content-roles/3",
 	"settings": {
 		"title": {
 			"role": "business.name",
@@ -27,7 +27,8 @@
 		"pages.body": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Body"
+			"label": "Body",
+			"role": "editorial.paragraph"
 		},
 		"pages.view": {
 			"source": "text",
@@ -38,7 +39,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Image",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"pages.caption": {
 			"source": "text",
@@ -72,29 +73,31 @@
 			"source": "text",
 			"target": "string",
 			"label": "Title",
-			"role": "editorial.heading"
+			"role": "article.title"
 		},
 		"posts.excerpt": {
 			"source": "prose",
 			"target": "text",
 			"label": "Excerpt",
-			"role": "editorial.paragraph"
+			"role": "article.lead"
 		},
 		"posts.body": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Body"
+			"label": "Body",
+			"role": "editorial.paragraph"
 		},
 		"posts.date": {
 			"source": "date",
 			"target": "datetime",
-			"label": "Date"
+			"label": "Date",
+			"role": "article.date"
 		},
 		"posts.cover": {
 			"source": "image",
 			"target": "image",
 			"label": "Cover",
-			"role": "editorial.decorative_image"
+			"role": "article.image"
 		},
 		"posts.featured": {
 			"source": "boolean",
@@ -116,7 +119,10 @@
 			"target": "repeater",
 			"label": "Photos",
 			"subRoles": {
-				"image": "editorial.decorative_image"
+				"image": "business.gallery_image"
+			},
+			"group": {
+				"kind": "gallery"
 			}
 		},
 		"posts.path": {
@@ -135,15 +141,19 @@
 			"target": "repeater",
 			"label": "Items",
 			"subRoles": {
-				"image": "editorial.decorative_image",
-				"slide_title": "editorial.heading"
+				"image": "editorial.illustration",
+				"slide_title": "claim.heading",
+				"slide_link": "editorial.navigation_url"
+			},
+			"group": {
+				"kind": "claim"
 			}
 		},
 		"slideshow.background": {
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"slideshow.section_style": {
 			"source": "text",
@@ -165,13 +175,14 @@
 		"hero.hero_intro": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Hero intro"
+			"label": "Hero intro",
+			"role": "editorial.paragraph"
 		},
 		"hero.hero_img": {
 			"source": "text",
 			"target": "image",
 			"label": "Hero img",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"hero.title": {
 			"source": "text",
@@ -183,7 +194,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"hero.section_style": {
 			"source": "text",
@@ -205,25 +216,27 @@
 		"features_intro.description": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Description"
+			"label": "Description",
+			"role": "editorial.paragraph"
 		},
 		"features_intro.img_features": {
 			"source": "text",
 			"target": "image",
 			"label": "Img features",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"features_intro.items": {
 			"source": "group",
 			"target": "repeater",
 			"label": "Items",
 			"subRoles": {
-				"img_icon": "offering.image",
+				"img_icon": "editorial.item_icon",
 				"title": "offering.name",
 				"description": "editorial.paragraph",
 				"btn_value": "editorial.button_label",
 				"short_desc": "offering.description",
-				"price": "offering.price"
+				"price": "offering.price",
+				"btn_link": "editorial.navigation_url"
 			},
 			"group": {
 				"kind": "menu_item"
@@ -233,7 +246,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"features_intro.section_style": {
 			"source": "text",
@@ -271,7 +284,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"menu.section_style": {
 			"source": "text",
@@ -305,7 +318,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"tabs.section_style": {
 			"source": "text",
@@ -347,7 +360,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"testimonials.section_style": {
 			"source": "text",
@@ -369,7 +382,8 @@
 		"statistics.button_link": {
 			"source": "url",
 			"target": "string",
-			"label": "Button link"
+			"label": "Button link",
+			"role": "editorial.navigation_url"
 		},
 		"statistics.button_icon": {
 			"source": "text",
@@ -398,7 +412,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"statistics.section_style": {
 			"source": "text",
@@ -440,7 +454,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"teams.section_style": {
 			"source": "text",
@@ -477,7 +491,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"timeline.section_style": {
 			"source": "text",
@@ -520,7 +534,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"opentime.section_style": {
 			"source": "text",
@@ -554,13 +568,17 @@
 			"source": "text",
 			"target": "image",
 			"label": "Hp bg",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"happyhours.hp_brand": {
 			"source": "text",
 			"target": "image",
 			"label": "Hp brand",
-			"role": "editorial.decorative_image"
+			"role": "business.logo",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
 		},
 		"happyhours.hp_title": {
 			"source": "text",
@@ -578,7 +596,11 @@
 			"source": "text",
 			"target": "string",
 			"label": "Hp info",
-			"role": "editorial.paragraph"
+			"role": "contact.hours",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"happyhours.hp_badge": {
 			"source": "text",
@@ -595,7 +617,8 @@
 		"happyhours.hp_link": {
 			"source": "url",
 			"target": "string",
-			"label": "Hp link"
+			"label": "Hp link",
+			"role": "editorial.navigation_url"
 		},
 		"happyhours.title": {
 			"source": "text",
@@ -607,13 +630,17 @@
 			"source": "text",
 			"target": "string",
 			"label": "Hp other info",
-			"role": "editorial.paragraph"
+			"role": "contact.phone",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"happyhours.background": {
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"happyhours.section_style": {
 			"source": "text",
@@ -691,7 +718,12 @@
 		"chrome.footer_map_url": {
 			"source": "url",
 			"target": "string",
-			"label": "Footer map url"
+			"label": "Footer map url",
+			"role": "contact.map",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"chrome.footer_hours_title": {
 			"source": "text",
@@ -723,14 +755,22 @@
 			"label": "Footer contact",
 			"subRoles": {
 				"label": "editorial.heading",
-				"value": "editorial.paragraph"
+				"value": "contact.phone",
+				"href": "contact.cta_url"
+			},
+			"group": {
+				"kind": "contact"
 			}
 		},
 		"chrome.copyright": {
 			"source": "text",
 			"target": "string",
 			"label": "Copyright",
-			"role": "editorial.paragraph"
+			"role": "business.copyright",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
 		},
 		"chrome.skip_label": {
 			"source": "text",
@@ -831,7 +871,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"banner.title": {
 			"source": "text",
@@ -843,13 +883,17 @@
 			"source": "image",
 			"target": "image",
 			"label": "Image",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"banner.price": {
 			"source": "text",
 			"target": "string",
 			"label": "Price",
-			"role": "editorial.heading"
+			"role": "offering.price",
+			"group": {
+				"kind": "claim",
+				"name": "offer"
+			}
 		},
 		"banner.points": {
 			"source": "group",
@@ -868,7 +912,8 @@
 		"banner.button_link": {
 			"source": "text",
 			"target": "string",
-			"label": "Button link"
+			"label": "Button link",
+			"role": "editorial.navigation_url"
 		},
 		"category_info.title": {
 			"source": "text",
@@ -886,7 +931,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Image",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"subscribe.title": {
 			"source": "text",
@@ -949,7 +994,8 @@
 		"contact.card_text": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Card text"
+			"label": "Card text",
+			"role": "editorial.paragraph"
 		},
 		"contact.details_title": {
 			"source": "text",
@@ -961,7 +1007,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Image",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"contact.address": {
 			"source": "text",
@@ -1002,18 +1048,23 @@
 		"reservation.intro": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Intro"
+			"label": "Intro",
+			"role": "editorial.paragraph"
 		},
 		"reservation.blocks": {
 			"source": "group",
 			"target": "repeater",
 			"label": "Blocks",
 			"subRoles": {
-				"image": "editorial.decorative_image",
-				"title": "editorial.heading",
-				"text": "editorial.paragraph",
-				"points": "editorial.paragraph",
-				"button_label": "editorial.button_label"
+				"image": "editorial.illustration",
+				"title": "offering.name",
+				"text": "offering.description",
+				"points": "offering.schedule",
+				"button_label": "editorial.button_label",
+				"button_link": "editorial.navigation_url"
+			},
+			"group": {
+				"kind": "service"
 			}
 		},
 		"reservation.online_title": {
@@ -1032,12 +1083,114 @@
 			"source": "text",
 			"target": "string",
 			"label": "Online button",
-			"role": "editorial.button_label"
+			"role": "contact.cta_label",
+			"group": {
+				"kind": "contact",
+				"name": "online"
+			}
 		},
 		"reservation.online_link": {
 			"source": "text",
 			"target": "string",
-			"label": "Online link"
+			"label": "Online link",
+			"role": "contact.cta_url",
+			"group": {
+				"kind": "contact",
+				"name": "online"
+			}
+		}
+	},
+	"taxonomyRoles": {
+		"category": {
+			"role": "editorial.heading"
+		},
+		"tag": {
+			"role": "editorial.heading"
+		}
+	},
+	"slotRoles": {
+		"menu.snacks-x-salads.items[5].dish_description": {
+			"role": "offering.price_note"
+		},
+		"menu.icream-and-juice.items[5].dish_description": {
+			"role": "offering.price_note"
+		},
+		"menu.icream-and-juice.items[6].dish_description": {
+			"role": "offering.price_note"
+		},
+		"menu.simple-menu.items[5].dish_description": {
+			"role": "offering.price_note"
+		},
+		"menu.simple-menu.items[6].dish_description": {
+			"role": "offering.price_note"
+		},
+		"menu.2-column-menu.items[5].dish_description": {
+			"role": "offering.price_note"
+		},
+		"menu.2-column-menu.items[6].dish_description": {
+			"role": "offering.price_note"
+		},
+		"chrome.chrome.footer_contact[2].value": {
+			"role": "contact.email"
+		},
+		"banner.banner.points[3].text": {
+			"role": "offering.schedule",
+			"group": {
+				"kind": "claim",
+				"name": "offer"
+			}
+		},
+		"pages.our-history.lead_title": {
+			"role": "claim.heading",
+			"group": {
+				"kind": "claim",
+				"name": "claim"
+			}
+		},
+		"pages.our-history.body": {
+			"role": "business.long_description",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		},
+		"hero.welcome-to-res-bar-restaurant.hero_intro": {
+			"role": "business.long_description",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		},
+		"features_intro.features-intro.items[0].description": {
+			"role": "business.long_description"
+		},
+		"statistics.you-re-in-good-restaurant.section_intro": {
+			"role": "claim.notice",
+			"group": {
+				"kind": "claim",
+				"name": "claim"
+			}
+		},
+		"timeline.our-history-timeline.section_intro": {
+			"role": "claim.notice",
+			"group": {
+				"kind": "claim",
+				"name": "claim"
+			}
+		},
+		"masthead.about-us.description": {
+			"role": "business.summary",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		},
+		"masthead.default.description": {
+			"role": "business.summary",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
 		}
 	}
 }

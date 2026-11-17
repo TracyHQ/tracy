@@ -1,6 +1,6 @@
 {
 	"generatedAt": "2026-11-08T11:08:13.201Z",
-	"roleVocabularyVersion": "place-content-roles/2",
+	"roleVocabularyVersion": "place-content-roles/3",
 	"settings": {
 		"title": {
 			"role": "business.name",
@@ -27,7 +27,8 @@
 		"pages.body": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Body"
+			"label": "Body",
+			"role": "editorial.paragraph"
 		},
 		"pages.view": {
 			"source": "text",
@@ -43,39 +44,43 @@
 			"source": "text",
 			"target": "string",
 			"label": "Title",
-			"role": "editorial.heading"
+			"role": "article.title"
 		},
 		"posts.excerpt": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Excerpt"
+			"label": "Excerpt",
+			"role": "article.lead"
 		},
 		"posts.body": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Body"
+			"label": "Body",
+			"role": "editorial.paragraph"
 		},
 		"posts.date": {
 			"source": "date",
 			"target": "datetime",
-			"label": "Date"
+			"label": "Date",
+			"role": "article.date"
 		},
 		"posts.cover": {
 			"source": "image",
 			"target": "image",
 			"label": "Cover",
-			"role": "editorial.decorative_image"
+			"role": "article.image"
 		},
 		"posts.detail_image": {
 			"source": "image",
 			"target": "image",
 			"label": "Detail image",
-			"role": "editorial.decorative_image"
+			"role": "article.image"
 		},
 		"posts.created": {
 			"source": "date",
 			"target": "datetime",
-			"label": "Created"
+			"label": "Created",
+			"role": "article.date"
 		},
 		"posts.path": {
 			"source": "text",
@@ -85,7 +90,8 @@
 		"slideshow.title_link": {
 			"source": "url",
 			"target": "string",
-			"label": "Title link"
+			"label": "Title link",
+			"role": "editorial.navigation_url"
 		},
 		"slideshow.title": {
 			"source": "text",
@@ -98,11 +104,13 @@
 			"target": "repeater",
 			"label": "Items",
 			"subRoles": {
-				"image": "editorial.decorative_image",
+				"image": "editorial.illustration",
 				"title": "editorial.heading",
 				"desc": "editorial.paragraph",
 				"button1": "editorial.button_label",
-				"button2": "editorial.button_label"
+				"button2": "editorial.button_label",
+				"btn_link1": "editorial.navigation_url",
+				"btn_link2": "editorial.navigation_url"
 			}
 		},
 		"features_intro.basic_description": {
@@ -120,7 +128,8 @@
 		"features_intro.basic_btn_link": {
 			"source": "url",
 			"target": "string",
-			"label": "Basic btn link"
+			"label": "Basic btn link",
+			"role": "editorial.navigation_url"
 		},
 		"features_intro.title": {
 			"source": "text",
@@ -137,12 +146,13 @@
 			"source": "image",
 			"target": "image",
 			"label": "Img features",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"features_intro.description": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Description"
+			"label": "Description",
+			"role": "editorial.paragraph"
 		},
 		"features_intro.title_small": {
 			"source": "text",
@@ -165,18 +175,22 @@
 		"features_intro.button_link": {
 			"source": "url",
 			"target": "string",
-			"label": "Button link"
+			"label": "Button link",
+			"role": "editorial.navigation_url"
 		},
 		"features_intro.items": {
 			"source": "group",
 			"target": "repeater",
 			"label": "Items",
 			"subRoles": {
-				"ft_img": "editorial.decorative_image",
+				"ft_img": "editorial.illustration",
 				"title": "editorial.heading",
 				"description": "editorial.paragraph",
 				"btn_title": "editorial.button_label",
-				"img": "editorial.decorative_image"
+				"img": "editorial.illustration",
+				"btn_link": "editorial.navigation_url",
+				"link_img": "editorial.navigation_url",
+				"link": "editorial.navigation_url"
 			}
 		},
 		"features_intro.sub_heading": {
@@ -189,7 +203,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Image intro",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"container_tabs.position": {
 			"source": "text",
@@ -217,7 +231,8 @@
 		"menu.basic_btn_link": {
 			"source": "url",
 			"target": "string",
-			"label": "Basic btn link"
+			"label": "Basic btn link",
+			"role": "editorial.navigation_url"
 		},
 		"menu.title": {
 			"source": "text",
@@ -242,7 +257,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Hp img",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"happyhours.hp_title": {
 			"source": "text",
@@ -260,7 +275,11 @@
 			"source": "text",
 			"target": "string",
 			"label": "Hp info",
-			"role": "editorial.paragraph"
+			"role": "contact.hours",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"happyhours.hp_badge": {
 			"source": "text",
@@ -272,12 +291,21 @@
 			"source": "url",
 			"target": "string",
 			"label": "Hp link text",
-			"role": "editorial.button_label"
+			"role": "contact.cta_label",
+			"group": {
+				"kind": "contact",
+				"name": "cta"
+			}
 		},
 		"happyhours.hp_link": {
 			"source": "url",
 			"target": "string",
-			"label": "Hp link"
+			"label": "Hp link",
+			"role": "contact.cta_url",
+			"group": {
+				"kind": "contact",
+				"name": "cta"
+			}
 		},
 		"happyhours.title": {
 			"source": "text",
@@ -316,7 +344,8 @@
 				"img": "person.image",
 				"name_member": "person.name",
 				"name_office": "person.role",
-				"description": "person.bio"
+				"description": "person.bio",
+				"link_social": "person.social_url"
 			},
 			"group": {
 				"kind": "person"
@@ -331,7 +360,8 @@
 		"modules.content": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Content"
+			"label": "Content",
+			"role": "editorial.paragraph"
 		},
 		"chrome.title": {
 			"source": "text",
@@ -463,7 +493,11 @@
 			"source": "text",
 			"target": "string",
 			"label": "Copyright",
-			"role": "editorial.paragraph"
+			"role": "business.copyright",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
 		},
 		"chrome.skip_label": {
 			"source": "text",
@@ -551,7 +585,8 @@
 		"chrome.footer_map_url": {
 			"source": "url",
 			"target": "string",
-			"label": "Footer map url"
+			"label": "Footer map url",
+			"role": "editorial.navigation_url"
 		},
 		"chrome.logo_dark": {
 			"source": "image",
@@ -638,7 +673,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Background",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"category_info.title": {
 			"source": "text",
@@ -656,7 +691,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Image",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"contact.title": {
 			"source": "text",
@@ -668,7 +703,7 @@
 			"source": "image",
 			"target": "image",
 			"label": "Image",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"contact.card_title": {
 			"source": "text",
@@ -679,7 +714,8 @@
 		"contact.card_text": {
 			"source": "prose",
 			"target": "portableText",
-			"label": "Card text"
+			"label": "Card text",
+			"role": "editorial.paragraph"
 		},
 		"contact.social_title": {
 			"source": "text",
@@ -692,7 +728,11 @@
 			"target": "repeater",
 			"label": "Social links",
 			"subRoles": {
-				"label": "editorial.menu_label"
+				"label": "contact.social_label",
+				"url": "contact.social_url"
+			},
+			"group": {
+				"kind": "contact"
 			}
 		},
 		"contact.address": {
@@ -725,12 +765,21 @@
 			"source": "text",
 			"target": "string",
 			"label": "Web label",
-			"role": "editorial.button_label"
+			"role": "contact.cta_label",
+			"group": {
+				"kind": "contact",
+				"name": "web"
+			}
 		},
 		"contact.webpage": {
 			"source": "url",
 			"target": "string",
-			"label": "Webpage"
+			"label": "Webpage",
+			"role": "contact.cta_url",
+			"group": {
+				"kind": "contact",
+				"name": "web"
+			}
 		},
 		"contact.form_title": {
 			"source": "text",
@@ -760,18 +809,19 @@
 			"target": "repeater",
 			"label": "Blocks",
 			"subRoles": {
-				"image": "editorial.decorative_image",
+				"image": "editorial.illustration",
 				"label": "editorial.heading",
 				"title": "editorial.heading",
 				"text": "editorial.paragraph",
-				"button_label": "editorial.button_label"
+				"button_label": "editorial.button_label",
+				"button_link": "editorial.navigation_url"
 			}
 		},
 		"reservation.online_image": {
 			"source": "image",
 			"target": "image",
 			"label": "Online image",
-			"role": "editorial.decorative_image"
+			"role": "editorial.illustration"
 		},
 		"reservation.online_title": {
 			"source": "text",
@@ -800,6 +850,41 @@
 			"target": "string",
 			"label": "Online button",
 			"role": "editorial.button_label"
+		}
+	},
+	"taxonomyRoles": {
+		"category": {
+			"role": "editorial.heading"
+		}
+	},
+	"slotRoles": {
+		"features_intro.meet-three-broomsticks.items[0].description": {
+			"role": "contact.address",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"features_intro.meet-three-broomsticks.items[1].description": {
+			"role": "contact.hours",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"features_intro.meet-our-chef.description": {
+			"role": "person.name",
+			"group": {
+				"kind": "person",
+				"name": "chef"
+			}
+		},
+		"chrome.chrome.news_title": {
+			"role": "claim.heading",
+			"group": {
+				"kind": "claim",
+				"name": "claim"
+			}
 		}
 	}
 }

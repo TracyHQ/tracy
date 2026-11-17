@@ -442,6 +442,30 @@ test('R8: adjacent short slots of one entity on one line are flagged as a cut he
   assert.deepEqual(rule(res, 'R8').keys, ['h.a + h.b'])
 })
 
+test('R8: the terms of a tag cloud on one line are whole labels, never a cut heading (JA Restaurant EmDash)', () => {
+  // An EmDash content map writes every term of a taxonomy as its own `term` slot of the entity `taxonomy.<name>`; the
+  // tags of a post sit side by side on one line, and each is a whole label of its own (1.0.2: "fish + menus").
+  const map = cleanMap()
+  const term = (slug) => ({
+    key: `taxonomy.tag.${slug}`,
+    entity: 'taxonomy.tag',
+    type: 'term',
+    sample: slug,
+    role: 'editorial.heading'
+  })
+  map.slots.push(term('fish'), term('menus'))
+  const pages = [
+    {
+      url: 'https://site.example/posts/fish-sauces',
+      items: [
+        item('fish', 'taxonomy.tag.fish', { x: 100, y: 200, w: 40, h: 20 }),
+        item('menus', 'taxonomy.tag.menus', { x: 146, y: 200, w: 52, h: 20 })
+      ]
+    }
+  ]
+  assert.deepEqual(fails(labelRulesOf({ map, pages })), [])
+})
+
 test('R8: names of two cards side by side on one line are not a cut heading', () => {
   const map = cleanMap()
   const pages = [

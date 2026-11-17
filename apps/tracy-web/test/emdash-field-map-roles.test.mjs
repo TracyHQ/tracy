@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { readSlotRoles } from '../src/lib/contract-slot-roles.js'
 import {
   checkFieldMapRoles,
+  contentMapOfFieldMap,
   fieldMapRolesOf,
   isCopylessField,
   normalizeFieldMap
@@ -278,4 +279,106 @@ test('a picture needs a role whatever its name: Restaurant img_icon is a food ph
     'field "features_intro.icon" has no role',
     'repeater sub-field "features_intro.items.img_icon" has no role'
   ])
+})
+
+// place-content-roles/3 (ADR 0040), the vocabulary JA Restaurant 1.0.3 and JA Diner 0.1.3 declare: a link, a date and a
+// rich text need a role too, a taxonomy's terms take one role, one entry's slot may hold another fact than its field's
+// other entries, and `customize: "keep"` follows from the role.
+const V3_SEED = {
+  defaultLocale: 'en',
+  collections: [
+    {
+      slug: 'menu',
+      fields: [
+        { slug: 'title', type: 'string' },
+        { slug: 'button_link', type: 'string' },
+        { slug: 'body', type: 'portableText' },
+        { slug: 'icon', type: 'image' },
+        {
+          slug: 'items',
+          type: 'repeater',
+          validation: { subFields: [{ slug: 'dish_name' }, { slug: 'dish_description' }] }
+        }
+      ]
+    }
+  ],
+  content: {
+    menu: [
+      {
+        slug: 'mains',
+        data: {
+          title: 'Mains',
+          button_link: '/book',
+          body: [{ _type: 'block', children: [{ _type: 'span', text: 'Cooked to order.' }] }],
+          icon: 'leaf.svg',
+          items: [
+            { dish_name: 'Duck', dish_description: 'with plum' },
+            { dish_name: 'Slider', dish_description: 'extra patty $4' }
+          ]
+        }
+      }
+    ]
+  },
+  taxonomies: [{ name: 'tag', terms: [{ slug: 'warm', label: 'Warm' }] }]
+}
+const v3FieldMap = () => ({
+  roleVocabularyVersion: 'place-content-roles/3',
+  settings: {
+    title: { role: 'business.name', group: { kind: 'business', name: 'identity' } },
+    tagline: { role: 'business.tagline', group: { kind: 'business', name: 'identity' } }
+  },
+  fields: {
+    'menu.title': { role: 'editorial.heading' },
+    'menu.button_link': { role: 'editorial.navigation_url' },
+    'menu.body': { role: 'editorial.paragraph' },
+    'menu.icon': { role: 'editorial.item_icon' },
+    'menu.items': {
+      group: { kind: 'menu_item' },
+      subRoles: { dish_name: 'offering.name', dish_description: 'offering.description' }
+    }
+  },
+  taxonomyRoles: { tag: { role: 'editorial.heading' } },
+  slotRoles: { 'menu.mains.items[1].dish_description': { role: 'offering.price_note' } }
+})
+
+test('a version 3 field map: links, rich texts and terms take roles, one slot its own, keep follows the role', () => {
+  const fieldMap = normalizeFieldMap(v3FieldMap(), V3_SEED)
+  assert.deepEqual(checkFieldMapRoles(fieldMap).errors, [])
+  const { slots, errors } = contentMapOfFieldMap({ seed: V3_SEED, fieldMap })
+  assert.equal(errors, undefined)
+  const by = Object.fromEntries(slots.map((s) => [s.key, s]))
+  assert.equal(by['menu.mains.button_link'].role, 'editorial.navigation_url')
+  assert.equal(by['menu.mains.button_link'].customize, 'keep')
+  assert.equal(by['menu.mains.icon'].customize, 'keep')
+  assert.equal(by['menu.mains.body'].role, 'editorial.paragraph')
+  assert.equal(by['menu.mains.title'].customize, undefined)
+  assert.equal(by['taxonomy.tag.warm'].role, 'editorial.heading')
+  assert.equal(by['menu.mains.items[0].dish_description'].role, 'offering.description')
+  assert.deepEqual(
+    [by['menu.mains.items[1].dish_description'].role, by['menu.mains.items[1].dish_description'].group.id],
+    ['offering.price_note', 'menu.mains.items.1']
+  )
+})
+
+test('a version 3 field map: a link without a role, or a slot declaration that names no slot, is reported', () => {
+  const raw = v3FieldMap()
+  delete raw.fields['menu.button_link'].role
+  raw.slotRoles['menu.mains.items[7].dish_description'] = { role: 'offering.price_note' }
+  const fieldMap = normalizeFieldMap(raw, V3_SEED)
+  assert.deepEqual(checkFieldMapRoles(fieldMap).errors, ['field "menu.button_link" has no role'])
+  assert.deepEqual(contentMapOfFieldMap({ seed: V3_SEED, fieldMap }).errors, [
+    'slotRoles."menu.mains.items[7].dish_description" names no slot the field map gives a role'
+  ])
+  // Version 2 asks no role of a link.
+  assert.deepEqual(
+    checkFieldMapRoles({
+      ...fieldMap,
+      roleVocabularyVersion: 'place-content-roles/2',
+      collections: fieldMap.collections.map((c) => ({
+        ...c,
+        fields: c.fields.filter((f) => f.slug !== 'body' && f.slug !== 'icon')
+      }))
+    }).errors,
+    []
+  )
 })

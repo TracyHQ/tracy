@@ -5,8 +5,11 @@
  *
  * The declaration, all of it optional so a field map without roles keeps working:
  *
- *   top level   "roleVocabularyVersion": "place-content-roles/2"
+ *   top level   "roleVocabularyVersion": "place-content-roles/2" (or "place-content-roles/3", ADR 0040)
  *               "settings": { "title": {role, group}, "tagline": {role, group} }   the two site settings slots
+ *               "taxonomyRoles": { "category": {role} }   the words of every term of a taxonomy
+ *               "slotRoles": { "<slot key>": {role, group: {kind, name}} }   one entry's slot that holds another fact than
+ *                            its field's other entries (a dish description that ends on a price)
  *   a field     { "slug": "price", "type": "string", "role": "package.price", "group": {"kind": "package"} }
  *   a repeater  { "slug": "faq_items", "type": "repeater", "subFields": ["question:string", "answer:text"],
  *                 "group": {"kind": "faq"}, "subRoles": {"question": "faq.question", "answer": "faq.answer"} }
@@ -20,23 +23,42 @@
  * `{source, target, label}`); the same keys (`role`, `group`, `subRoles`) go on that entry, and `normalizeFieldMap`
  * reads it as the shape above, taking the field types and repeater sub-fields from the seed's collections.
  *
- * Fields that hold no copy are exempt from needing a role: links, alt text, identifiers (`isCopylessField`).
+ * Fields that hold no copy are exempt from needing a role: links, alt text, identifiers (`isCopylessField`). A version 3
+ * field map gives a role to every link, date and rich text too, and its slots carry `customize: "keep"` exactly when the
+ * role keeps the template's content (ADR 0040 decision 3).
  */
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import {
   checkContentMapRoles,
-  GROUP_KINDS,
+  CONTENT_MAP_ROLE_VOCABULARY_VERSIONS,
+  customizeOfRole,
+  GROUP_KINDS_V3,
   isFactRole,
+  isGroupKind,
   isRole,
-  ROLE_VOCABULARY_VERSION,
+  ROLE_VOCABULARY_V3,
   slotRolesOfContentMap
 } from 'website-opportunities/domain'
 
 const COPY_TYPES = new Set(['string', 'text', 'image'])
+/** A field whose words or address a visitor meets: version 3 has a role for each (a link, a date, a rich text). */
+const COPY_TYPES_V3 = new Set([...COPY_TYPES, 'portableText', 'datetime'])
+/** A link field (`slide_link`, `button_link`, `footer_map_url`): the content map makes it a `url` slot. */
+export const LINK_FIELD = /(^|_)(url|href|webpage)\d*$|link\d*$|^link(_|$)/
 
-/** Whether a field of this type needs a role: a picture always does (a name like `img_icon` is no layout setting). */
-const needsRole = (type, slug) => COPY_TYPES.has(type) && (type === 'image' || !isCopylessField(slug))
+/**
+ * Whether a field of this type needs a role: a picture always does (a name like `img_icon` is no layout setting). In a
+ * version 3 field map a link, a date and a rich text do too (label rule R3 asks a role of every URL slot, ADR 0040).
+ */
+const needsRole = (type, slug, version) => {
+  if (version === ROLE_VOCABULARY_V3) {
+    if (!COPY_TYPES_V3.has(type)) return false
+    if (type === 'image' || type === 'portableText' || type === 'datetime') return true
+    return LINK_FIELD.test(slug) || !isCopylessField(slug)
+  }
+  return COPY_TYPES.has(type) && (type === 'image' || !isCopylessField(slug))
+}
 const SETTINGS_FIELDS = ['title', 'tagline']
 
 const has = (object, key) => Boolean(object && typeof object === 'object' && Object.hasOwn(object, key))
@@ -81,11 +103,13 @@ export function fieldMapDeclaresRoles(fieldMap) {
   )
 }
 
-function declarationProblem(role, group, named, { needsGroup }) {
-  if (!isRole(role)) return `${named} has unknown role ${JSON.stringify(role)}`
+function declarationProblem(role, group, named, { needsGroup, version }) {
+  if (!isRole(role, version)) return `${named} has unknown role ${JSON.stringify(role)}`
   if (!isFactRole(role) || !needsGroup) return null
-  if (!has(GROUP_KINDS, group?.kind))
-    return `${named} has fact role "${role}" and needs group.kind (one of ${Object.keys(GROUP_KINDS).join(', ')})`
+  if (!isGroupKind(group?.kind, version))
+    return `${named} has fact role "${role}" and needs group.kind (one of ${Object.keys(GROUP_KINDS_V3)
+      .filter((k) => isGroupKind(k, version))
+      .join(', ')})`
   return null
 }
 
@@ -100,17 +124,19 @@ function declarationProblem(role, group, named, { needsGroup }) {
 export function checkFieldMapRoles(fieldMap) {
   if (!fieldMapDeclaresRoles(fieldMap)) return { declared: false, ok: true, errors: [] }
   const errors = []
-  if (fieldMap.roleVocabularyVersion !== ROLE_VOCABULARY_VERSION)
+  const version = fieldMap.roleVocabularyVersion
+  if (!CONTENT_MAP_ROLE_VOCABULARY_VERSIONS.includes(version))
     errors.push(
-      `roleVocabularyVersion must be "${ROLE_VOCABULARY_VERSION}", got ${JSON.stringify(fieldMap.roleVocabularyVersion)}`
+      `roleVocabularyVersion must be one of ${CONTENT_MAP_ROLE_VOCABULARY_VERSIONS.map((v) => `"${v}"`).join(', ')}, got ${JSON.stringify(version)}`
     )
+  const known = CONTENT_MAP_ROLE_VOCABULARY_VERSIONS.includes(version) ? version : undefined
 
   for (const name of SETTINGS_FIELDS) {
     const decl = fieldMap.settings?.[name]
     const named = `settings field "${name}"`
     if (!has(decl, 'role')) errors.push(`${named} has no role`)
     else {
-      const problem = declarationProblem(decl.role, decl.group, named, { needsGroup: true })
+      const problem = declarationProblem(decl.role, decl.group, named, { needsGroup: true, version: known })
       if (problem) errors.push(problem)
     }
   }
@@ -124,10 +150,13 @@ export function checkFieldMapRoles(fieldMap) {
         for (const sub of subs) {
           const subNamed = `repeater sub-field "${col.collection}.${field.slug}.${sub.name}"`
           if (!has(roles, sub.name)) {
-            if (needsRole(sub.type, sub.name)) errors.push(`${subNamed} has no role`)
+            if (needsRole(sub.type, sub.name, known)) errors.push(`${subNamed} has no role`)
             continue
           }
-          const problem = declarationProblem(roles[sub.name], field.group, subNamed, { needsGroup: true })
+          const problem = declarationProblem(roles[sub.name], field.group, subNamed, {
+            needsGroup: true,
+            version: known
+          })
           if (problem) errors.push(problem)
         }
         for (const name of Object.keys(roles))
@@ -136,10 +165,20 @@ export function checkFieldMapRoles(fieldMap) {
         continue
       }
       if (!has(field, 'role')) {
-        if (needsRole(field.type, field.slug)) errors.push(`${named} has no role`)
+        if (needsRole(field.type, field.slug, known)) errors.push(`${named} has no role`)
         continue
       }
-      const problem = declarationProblem(field.role, field.group, named, { needsGroup: true })
+      const problem = declarationProblem(field.role, field.group, named, { needsGroup: true, version: known })
+      if (problem) errors.push(problem)
+    }
+  }
+  for (const [name, decl] of Object.entries(
+    fieldMap.taxonomyRoles && typeof fieldMap.taxonomyRoles === 'object' ? fieldMap.taxonomyRoles : {}
+  )) {
+    const named = `taxonomy "${name}"`
+    if (!has(decl, 'role')) errors.push(`${named} has no role`)
+    else {
+      const problem = declarationProblem(decl.role, decl.group, named, { needsGroup: true, version: known })
       if (problem) errors.push(problem)
     }
   }
@@ -186,6 +225,22 @@ export function normalizeFieldMap(fieldMap, seed) {
 }
 
 /**
+ * A link with no address, or a list of links written as markup, is no slot (the content map drops it too). Read in a
+ * version 3 field map only, where a link has a role; a version 2 one keeps the slots it always had.
+ */
+const isNoLink = (slug, value) =>
+  LINK_FIELD.test(slug) && (!String(value ?? '').trim() || String(value).trim().startsWith('<'))
+
+/** Whether a Portable Text value holds words or a picture: an empty one is no slot. */
+const holdsWords = (blocks) =>
+  blocks.some(
+    (b) =>
+      b?._type === 'image' ||
+      (typeof b?.caption === 'string' && b.caption.trim()) ||
+      (Array.isArray(b?.children) && b.children.some((c) => String(c?.text ?? '').trim()))
+  )
+
+/**
  * The content-map view of a field map's roles: one slot per entry field (and per repeater item sub-field) that has a
  * role, keyed the way the slot inventory keys them (`<collection>.<slug>.<field>`, `...<field>[<i>].<sub>`,
  * `settings.<field>`), with the `role` and `group` fields of a content-map slot. Feed it to `checkContentMapRoles` and
@@ -194,10 +249,19 @@ export function normalizeFieldMap(fieldMap, seed) {
  */
 export function contentMapOfFieldMap({ seed, fieldMap }) {
   const slots = []
-  const slotOf = (key, role, group) => {
+  const v3 = fieldMap.roleVocabularyVersion === ROLE_VOCABULARY_V3
+  /** The entity of each slot (`<collection>.<slug>`), where a slot's own declaration (`slotRoles`) opens its card. */
+  const entityOf = new Map()
+  /** The card each slot belongs to (a repeater item's), fact role or not: where a fact `slotRoles` gives it stays. */
+  const cardOf = new Map()
+  const slotOf = (key, role, group, entity = key.split('.').slice(0, 2).join('.')) => {
     const slot = { key, role }
     if (isFactRole(role)) slot.group = group
+    if (group?.kind) cardOf.set(key, group)
+    // ADR 0040 decision 3: in a version 3 map the role decides keep, and `customize` follows from it.
+    if (v3 && customizeOfRole(role)) slot.customize = customizeOfRole(role)
     slots.push(slot)
+    entityOf.set(key, entity)
   }
   for (const name of SETTINGS_FIELDS) {
     const decl = fieldMap.settings?.[name]
@@ -225,7 +289,11 @@ export function contentMapOfFieldMap({ seed, fieldMap }) {
       if (!slug) continue
       const scalar = (field, value) => {
         const decl = fields.get(field)
-        if (!decl || !has(decl, 'role') || Array.isArray(value)) return
+        if (!decl || !has(decl, 'role')) return
+        if (Array.isArray(value) ? decl.type !== 'portableText' || !holdsWords(value) : false) return
+        // A date or a rich text with nothing in it is no slot of this entry (the content map counts the same way).
+        if (decl.type === 'datetime' && !String(value ?? '').trim()) return
+        if (v3 && isNoLink(field, value)) return
         const cardName = decl.group?.name ?? field
         slotOf(`${collection}.${slug}.${field}`, decl.role, {
           id: `${collection}.${slug}.${cardName}.0`,
@@ -237,7 +305,7 @@ export function contentMapOfFieldMap({ seed, fieldMap }) {
       const data = entry?.data && typeof entry.data === 'object' ? entry.data : {}
       for (const [field, value] of Object.entries(data)) {
         const decl = fields.get(field)
-        if (!Array.isArray(value)) {
+        if (!Array.isArray(value) || decl?.type === 'portableText') {
           scalar(field, value)
           continue
         }
@@ -246,6 +314,7 @@ export function contentMapOfFieldMap({ seed, fieldMap }) {
           if (!item || typeof item !== 'object') return
           for (const sub of subFieldsOf(decl)) {
             if (sub.type === 'boolean' || !has(decl.subRoles, sub.name)) continue
+            if (v3 && isNoLink(sub.name, item[sub.name])) continue
             slotOf(`${collection}.${slug}.${field}[${i}].${sub.name}`, decl.subRoles[sub.name], {
               id: `${collection}.${slug}.${field}.${i}`,
               item: i,
@@ -256,7 +325,59 @@ export function contentMapOfFieldMap({ seed, fieldMap }) {
       }
     }
   }
-  return { roleVocabularyVersion: fieldMap.roleVocabularyVersion, slots }
+  // The words of a taxonomy's terms (a post category, a tag): one role for every term (`taxonomyRoles.<name>.role`).
+  const locale = seed?.defaultLocale ?? 'en'
+  for (const taxonomy of (Array.isArray(seed?.taxonomies) ? seed.taxonomies : []).filter(
+    (t) => !t?.locale || t.locale === locale
+  )) {
+    const decl = fieldMap.taxonomyRoles?.[taxonomy?.name]
+    if (!has(decl, 'role')) continue
+    for (const term of taxonomy.terms ?? []) {
+      if (!term?.slug) continue
+      const key = `taxonomy.${taxonomy.name}.${term.slug}`
+      slotOf(key, decl.role, {
+        id: `${key}.${decl.group?.name ?? 'term'}.0`,
+        item: 0,
+        kind: decl.group?.kind
+      })
+    }
+  }
+
+  // One slot that holds another fact than its field's other entries (a dish description that ends on a price):
+  // `slotRoles.<slot key>` gives it its own role. A fact role stays in the slot's card (a repeater item's, whatever role
+  // its field gives), or joins the entry's card `group.name` (item 0, kind `group.kind`).
+  const errors = []
+  for (const [key, decl] of Object.entries(
+    fieldMap.slotRoles && typeof fieldMap.slotRoles === 'object' ? fieldMap.slotRoles : {}
+  )) {
+    const slot = slots.find((x) => x.key === key)
+    if (!slot) {
+      errors.push(`slotRoles."${key}" names no slot the field map gives a role`)
+      continue
+    }
+    if (!has(decl, 'role')) {
+      errors.push(`slotRoles."${key}" has no role`)
+      continue
+    }
+    // A fact role stays in the slot's own card (a repeater item's) unless `group` names another one.
+    const group = decl.group?.name
+      ? { id: `${entityOf.get(key)}.${decl.group.name}.0`, item: 0, kind: decl.group.kind }
+      : (slot.group ?? cardOf.get(key) ?? null)
+    if (isFactRole(decl.role) && !group) {
+      errors.push(`slotRoles."${key}" has fact role "${decl.role}" and needs group.kind and group.name`)
+      continue
+    }
+    slot.role = decl.role
+    delete slot.group
+    delete slot.customize
+    if (isFactRole(decl.role)) slot.group = group
+    if (v3 && customizeOfRole(decl.role)) slot.customize = customizeOfRole(decl.role)
+  }
+  return {
+    roleVocabularyVersion: fieldMap.roleVocabularyVersion,
+    slots,
+    ...(errors.length ? { errors } : {})
+  }
 }
 
 /**
@@ -274,7 +395,11 @@ export function fieldMapRolesOf(seedDir, { contract = null } = {}) {
   const contentMap = contentMapOfFieldMap({ seed, fieldMap })
   const fieldCheck = checkFieldMapRoles(fieldMap)
   const cardCheck = checkContentMapRoles(contentMap)
-  const errors = [...fieldCheck.errors, ...cardCheck.errors.filter((e) => !fieldCheck.errors.includes(e))]
+  const errors = [
+    ...fieldCheck.errors,
+    ...(contentMap.errors ?? []),
+    ...cardCheck.errors.filter((e) => !fieldCheck.errors.includes(e))
+  ]
   return {
     declared: true,
     ok: errors.length === 0,

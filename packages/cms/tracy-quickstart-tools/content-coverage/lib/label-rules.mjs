@@ -12,7 +12,8 @@
 //       may also prove a number: `stat.proof_image`, ADR 0040)
 //   R6  no link or list item inside a fact slot
 //   R7  siblings of a repeat share a role (info cards, one contact fact per card, may each hold their own)
-//   R8  adjacent short slots of one entity and one card on one line are flagged as a cut heading
+//   R8  adjacent short slots of one entity and one card on one line are flagged as a cut heading (a taxonomy term,
+//       a whole label of its own, never is)
 //   R9  a fact-like hole blocks (an accepted reason does not lift it: a fact the map misses stays the demo's), except
 //       inside a code sample (<pre>, <code>): "user@example.com" in a log line is code, not the business's
 //
@@ -233,7 +234,16 @@ function r8(slots, pages) {
           ? byKey.get(it.slots[0])
           : null
       const rect = it.viewports?.desktop?.visible ? it.viewports.desktop.rect : null
-      if (!slot || !rect || !slot.entity || !short(it.value) || ['a', 'button', 'li'].includes(it.tag))
+      // A term (an EmDash category or tag, `taxonomy.<name>.<slug>`) is a whole label of its own: the tags of a post side
+      // by side on one line are never one heading cut in words.
+      if (
+        !slot ||
+        !rect ||
+        !slot.entity ||
+        slot.type === 'term' ||
+        !short(it.value) ||
+        ['a', 'button', 'li'].includes(it.tag)
+      )
         continue
       boxes.push({ slot, rect })
     }
