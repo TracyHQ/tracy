@@ -15,7 +15,8 @@
 //     (field `menu` holding a dish) is a typed offering of the source its evidence names (`needs-research-facts.mjs`);
 //   - the brief's own decision about each fact taken as a field (confidence, onSite, decidedBy, reasons) rides along
 //     as `assessed`, so the needs profile states it instead of counting sources again;
-//   - the opening hours Google lists (`googlePlace.openingHours`) when the brief holds no hours fact at all;
+//   - the opening hours Google lists (`googlePlace.openingHours`) when the brief holds no hours fact at all and does not
+//     hold the hours off the site (`missing`);
 //   - the posts the brief keeps (`content.items`) are `captions` of their source, never one credited to someone else;
 //   - Google's reviews the brief keeps; the own photos and videos it keeps for the site (`needs-research-media.mjs`);
 //   - the owner's contact values and own tagline (`owner-facts-flow.mjs`), and the business reading's lines, typed
@@ -207,7 +208,15 @@ export function researchOf(brief, { manifest = [] } = {}) {
   }
   const hoursFact = facts.some((f) => f?.field === 'hours')
   const opening = list(brief?.googlePlace?.openingHours).filter(isText)
-  if (!hoursFact && opening.length) {
+  // Hours the brief holds off the site (sources disagree, one source says open all week, the owner left them off) have
+  // no fact and a `missing` entry: Google's listed hours never stand in for them (gap audit of the plan stage, row 4).
+  const heldHours = list(brief?.missing).find((m) => m?.field === 'hours')
+  if (!hoursFact && opening.length && heldHours)
+    setAside.push({
+      what: 'opening hours',
+      reason: isText(heldHours.why) ? heldHours.why : 'the brief keeps the opening hours off the site'
+    })
+  else if (!hoursFact && opening.length) {
     const value = hoursText(opening)
     if (value) addField(sourceOf('google'), 'contact.hours', value)
     else
