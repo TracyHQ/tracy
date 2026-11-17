@@ -66,6 +66,10 @@ test('the request bodies are read into plain inputs, and anything else is refuse
   assert.deepEqual(readEngineRequest('compose', { restart: true }), { restart: true })
   assert.deepEqual(readEngineRequest('compose', { restart: false }), {})
   assert.equal(readEngineRequest('compose', { restart: 'yes' }), null)
+  // The language the owner chats in (#575): two lower case letters, else the body is refused.
+  assert.deepEqual(readEngineRequest('compose', { language: 'vi' }), { language: 'vi' })
+  for (const language of ['VI', 'vie', 'Vietnamese', 3])
+    assert.equal(readEngineRequest('compose', { language }), null)
   assert.deepEqual(
     readEngineRequest('edit', { changes: [{ field: 'items[x].label', value: 'Y', extra: 1 }] }),
     {
@@ -449,4 +453,19 @@ test('a stop says whether the owner may have the step run again (#609)', () => {
     state: 'stopped',
     say: SAY.fault
   })
+})
+
+test('compose asks the model for the owner facing sentences in the language the owner chats in (#575)', async () => {
+  const model = club.scriptedModel(JSON.stringify(withoutTeam()))
+  await composeStep(
+    {
+      research: { profile: club.clubProfile() },
+      answers: [],
+      template: club.template(),
+      brand: club.brand(),
+      ownerLanguage: 'vi'
+    },
+    { model, kit: kits.loadKit(club.template().slug) }
+  )
+  assert.equal(JSON.parse(model.calls[0].user).ownerLanguage, 'vi')
 })

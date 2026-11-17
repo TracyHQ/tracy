@@ -190,6 +190,8 @@ export interface ComposeRequest {
   request?: string
   /** Only when the owner asked to start the plan over: discards the living plan and its edits, then composes anew. */
   restart?: boolean
+  /** The two letter language the owner chats in (#575): the plan's sentences for the owner are written in it. */
+  language?: string
 }
 
 /** `POST /api/build-draft/edit`: one simple change applied to the current plan revision. */

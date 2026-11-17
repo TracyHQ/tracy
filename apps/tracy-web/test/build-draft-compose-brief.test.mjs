@@ -37,7 +37,7 @@ test('the stored brief reaches the composer; what no block can show is left out 
     held: [{ field: 'prices', why: 'No supported price is available: show no price.' }]
   })
   assert.ok(!model.calls[0].user.includes(WHATSAPP))
-  assert.ok(plan.leftOut.some((e) => e.what === 'WhatsApp' && e.code === 'stated'))
+  assert.ok(plan.leftOut.some((e) => e.what === 'WhatsApp' && e.code === 'no_place_for_whatsapp'))
 })
 
 test('a research record without a brief composes as before', async () => {

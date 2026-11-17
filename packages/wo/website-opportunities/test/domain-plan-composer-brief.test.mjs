@@ -11,6 +11,7 @@ import {
   BRIEF_LEFT_OUT,
   briefContextOf,
   briefLeftOutOf,
+  HELD_HOURS_LEFT_OUT,
   NEUTRAL_HELD_REASON
 } from '../domain/plan-composer-brief.mjs'
 import {
@@ -93,9 +94,9 @@ test('what no block can show is left out with a plain reason, its value never re
   assert.deepEqual(
     entries.map((e) => [e.what, e.kind, e.code]),
     [
-      ['WhatsApp', 'feature', 'stated'],
-      ['Other phone numbers', 'feature', 'stated'],
-      ['Google rating', 'feature', 'stated']
+      ['WhatsApp', 'feature', 'no_place_for_whatsapp'],
+      ['Other phone numbers', 'feature', 'no_place_for_other_phones'],
+      ['Google rating', 'feature', 'no_place_for_google_rating']
     ]
   )
   assert.ok(!JSON.stringify(entries).match(/555|4\.7/))
@@ -113,7 +114,7 @@ test('the composer model reads the brief context; the plan card lists what no bl
   const listed = plan.leftOut.filter((e) => Object.values(BRIEF_LEFT_OUT).some((b) => b.what === e.what))
   assert.deepEqual(
     listed.map((e) => [e.what, e.reason, e.code]),
-    Object.values(BRIEF_LEFT_OUT).map((b) => [b.what, b.reason, 'stated'])
+    Object.values(BRIEF_LEFT_OUT).map((b) => [b.what, b.reason, b.code])
   )
   assert.deepEqual(checkBuildDocument(plan), { ok: true, problems: [] })
 })
@@ -176,4 +177,20 @@ test('the prompt keeps the step chain planner rules that shape the plan card', (
     assert.match(PLAN_COMPOSER_PROMPT, rule)
   // An en or em dash, written by code point.
   assert.doesNotMatch(PLAN_COMPOSER_PROMPT, new RegExp(`[${String.fromCodePoint(0x2013, 0x2014)}]`))
+})
+
+test('opening hours held until the owner confirms them are on the left out list, by their code, never their values', () => {
+  const ALL_DAY = 'Monday: Open 24 hours'
+  const held = {
+    missing: [{ field: 'hours', why: 'Held.', withheld: [{ hours: [ALL_DAY], source: 'google' }] }],
+    facts: [{ field: 'hours', value: [ALL_DAY], onSite: false, reasons: ['implausible-all-week-hours'] }]
+  }
+  const [entry] = briefLeftOutOf(held)
+  assert.deepEqual(entry, { ...HELD_HOURS_LEFT_OUT.unconfirmed, kind: 'feature' })
+  assert.ok(!JSON.stringify(entry).includes(ALL_DAY))
+  const disagree = { missing: [{ field: 'hours', why: 'Held.', conflicting: [{ source: 'google' }] }] }
+  assert.equal(briefLeftOutOf(disagree)[0].code, 'hours_sources_disagree')
+  // Hours the owner left off are not waiting for the owner: nothing to confirm.
+  const off = { ...held, facts: [{ ...held.facts[0], reasons: ['owner-left-off'] }] }
+  assert.deepEqual(briefLeftOutOf(off), [])
 })

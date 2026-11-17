@@ -38,6 +38,7 @@ import {
   assumptionOf,
   factShownOf,
   leftOutReasonOf,
+  leftOutWhatOf,
   logoSourceOf,
   picturesEstimateOf,
   sectionLabelOf
@@ -633,9 +634,18 @@ export function PlanCard({
         <div className="tv-bc-kv">
           <Row label={t('plan.pictures.own')}>
             <Value>
-              {plural(t, 'plan.pictures.ownValue', card.pictures.own.frames, {
-                from: listOf(t, ownPhotoSourcesOf(t, card.pictures.own))
-              })}
+              {/* The photos the plan places, beside all the owner's photos it holds when it holds more (#575). */}
+              {plural(
+                t,
+                card.pictures.own.photos > card.pictures.own.frames
+                  ? 'plan.pictures.ownOfValue'
+                  : 'plan.pictures.ownValue',
+                card.pictures.own.frames,
+                {
+                  total: card.pictures.own.photos,
+                  from: listOf(t, ownPhotoSourcesOf(t, card.pictures.own))
+                }
+              )}
             </Value>
           </Row>
           <Row label={t('plan.pictures.drawn')}>
@@ -672,7 +682,9 @@ export function PlanCard({
                   <IconCloseOutlineRegular aria-hidden />
                 </span>
                 <span>
-                  <span className="tv-bc-what">{sentenceOf(l.what)}</span>{' '}
+                  <span className="tv-bc-what">
+                    {sentenceOf(leftOutWhatOf(t, l, (kind, label) => factLabelOf(t, kind, label)))}
+                  </span>{' '}
                   <span className="tv-bc-muted">{leftOutReasonOf(t, l, l.reason)}</span>
                 </span>
               </li>

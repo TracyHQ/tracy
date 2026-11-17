@@ -13,6 +13,7 @@
  */
 import { BUILD_CHAT_STRINGS } from './conversation.mjs'
 import { plainTextOf as text } from './plain-text.mjs'
+import { leftOutOf } from './plan-left-out.mjs'
 
 const PLAN_EDIT_SCHEMA = 'tracy-build-plan-edit/v1'
 /** The id of the plan review request: the one question the tool's guard admits beside the engine's own. */
@@ -27,6 +28,16 @@ const firstSource = (sources) => text(sources?.[0]?.name ?? '')
 /** The origin code of the first source (`website`, `google`, `social`, `answer`), for the card's own words; null if none. */
 const firstSourceKind = (sources) => (typeof sources?.[0]?.kind === 'string' ? sources[0].kind : null)
 const isWebsite = (alternative) => (alternative.sources ?? []).some((s) => s.kind === 'website')
+
+/**
+ * A fact's sources as the card names the first: a social link names the social profile it is first when one of its
+ * sources is one (#575 walk: an Instagram address read "Google Maps listing" because Google listed it too).
+ */
+const sourcesOfFact = (fact) => {
+  const sources = Array.isArray(fact.sources) ? fact.sources : []
+  if (fact.kind !== 'contact.social_url') return sources
+  return [...sources].sort((a, b) => Number(b?.kind === 'social') - Number(a?.kind === 'social'))
+}
 
 /** The values of a disputed fact, the website's first, the current value selected. */
 function choiceOf(fact, assumption) {
@@ -114,60 +125,16 @@ function rowLabelOf(row, plan) {
 }
 
 /**
- * A left out label in plain words. The engine may name a page by its slug ("news-post page"): hyphens between letters
- * become spaces and the first letter is upper case ("News post page"). A proper owner readable label should come from
- * the contract; until it carries one, no slug reaches the card.
- * @param {string} what
+ * How many photos of the owner the plan holds: its gallery items, each counting as many as it stands for, those no
+ * gallery has room for included (they stay with the photos the picture step places). Beside `frames`, the spots the
+ * owner's photos fill on the planned pages, the card can say "13 of your 19 photos" (#575 walk: it said 13 and the
+ * owner had given 19).
  */
-function plainWordsOf(what) {
-  const text = String(what ?? '').replace(/(\p{L})-(?=\p{L})/gu, '$1 ')
-  return text.charAt(0).toUpperCase() + text.slice(1)
-}
-
-/** "photos" for "Photo": the plural of a one word label, the first letter lower case unless it is an acronym. */
-function pluralOf(word) {
-  const lower = /^\p{Lu}\p{Lu}/u.test(word) ? word : word.charAt(0).toLowerCase() + word.slice(1)
-  if (/(s|x|z|ch|sh)$/i.test(lower)) return `${lower}es`
-  if (/[^aeiou]y$/i.test(lower)) return `${lower.slice(0, -1)}ies`
-  return `${lower}s`
-}
-
-/**
- * What was left out, one line per distinct thing and reason, in plan order: 37 photos left out for the same reason
- * are one line, "37 photos", with `count`. A label of several words is not made plural by guesswork; it takes its
- * count after it, "Video in the top banner (2)". A plural label should come from the contract.
- * @param {any[]} leftOut
- */
-function leftOutOf(leftOut) {
-  const lines = []
-  const byKey = new Map()
-  for (const l of leftOut ?? []) {
-    const what = plainWordsOf(text(l.what))
-    const reason = text(l.reason)
-    // The reason's stable code and its parameters (#609): the card says a coded reason in its own words.
-    const code = typeof l.code === 'string' && l.code !== '' ? l.code : null
-    const params = code && isPlainObject(l.params) ? l.params : null
-    const key = JSON.stringify([what, l.kind, reason, code, params])
-    const seen = byKey.get(key)
-    if (seen) seen.count += 1
-    else {
-      const line = {
-        what,
-        kind: l.kind,
-        reason,
-        ...(code ? { code } : {}),
-        ...(params ? { params } : {}),
-        count: 1
-      }
-      byKey.set(key, line)
-      lines.push(line)
-    }
-  }
-  return lines.map(({ count, ...line }) => {
-    if (count === 1) return line
-    const what = /\s/.test(line.what) ? `${line.what} (${count})` : `${count} ${pluralOf(line.what)}`
-    return { ...line, what, count }
-  })
+function ownPhotosOf(plan) {
+  const photos = plan.items
+    .filter((i) => i.kind === 'gallery')
+    .reduce((n, i) => n + (Number.isSafeInteger(i.count) && i.count > 0 ? i.count : 1), 0)
+  return photos
 }
 
 const listOr = (value) => (Array.isArray(value) ? value : [])
@@ -263,8 +230,8 @@ export function planCardOf(contractPlan) {
           // `value`, which stays what an edit changes.
           ...(typeof f.display === 'string' && f.display !== '' ? { display: text(f.display) } : {}),
           ...codeOf(f),
-          source: firstSource(f.sources),
-          sourceKind: firstSourceKind(f.sources),
+          source: firstSource(sourcesOfFact(f)),
+          sourceKind: firstSourceKind(sourcesOfFact(f)),
           choice: assumption ? choiceOf(f, assumption) : null
         }
       }),
@@ -313,6 +280,7 @@ export function planCardOf(contractPlan) {
     pictures: {
       own: {
         frames: plan.pictures.own.frames,
+        photos: ownPhotosOf(plan),
         from: [...(plan.pictures.own.from ?? [])],
         // The source kind of each name in `from`, same order (`website`, `google`, `social`, `answer`).
         ...(Array.isArray(plan.pictures.own.fromKinds) ? { fromKinds: [...plan.pictures.own.fromKinds] } : {})
@@ -327,7 +295,7 @@ export function planCardOf(contractPlan) {
     assumptions: (plan.assumptions ?? [])
       .filter((a) => !disputed.has(a.field))
       .map((a) => ({ id: a.id, said: text(a.said), ...codeOf(a) })),
-    leftOut: leftOutOf(plan.leftOut),
+    leftOut: leftOutOf(plan.leftOut, plan),
     counts: { pages: plan.pages.length, services: services.length }
   }
 }

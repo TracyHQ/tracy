@@ -41,6 +41,8 @@ export function planComposerRequest(context, problems = [], firstPlan = null) {
   const user = {
     business: modelViewOf(context.data),
     language: context.language,
+    // The language the owner reads the plan card in (#575): the owner facing sentences are written in it.
+    ...(context.ownerLanguage ? { ownerLanguage: context.ownerLanguage } : {}),
     blocks: [...context.blocks.values()].map(modelBlockOf),
     recipes: [...context.recipes.values()].map(({ pageType, mainBlock, blocks }) => ({
       pageType,

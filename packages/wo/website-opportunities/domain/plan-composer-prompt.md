@@ -38,7 +38,8 @@ The user message is JSON. `business` is the only source of truth about the busin
   appear on the site, not even as a guess, and no block may rest on it (opening hours the sources disagree on: no
   block shows hours).
 
-`language` is the language of the site.
+`language` is the language of the site. `ownerLanguage`, when given, is the language the owner reads the plan card
+in (a two letter code), which may differ from the site's.
 
 ## Input 2: the template form
 
@@ -133,7 +134,9 @@ qualifies, a place) that no fact states.
 
 Reply with one JSON object, nothing before or after it, with exactly the keys of the shape below. The owner reads
 every `label`, `reason`, assumption and left out entry on the plan card: speak to the owner as "you", in plain
-words, one sentence each, no dashes, no build words (block id, field, URL, CTA).
+words, one sentence each, no dashes, no build words (block id, field, URL, CTA). Write every `reason`, every
+assumption's `said` and every left out `what` and `reason` in `ownerLanguage` (in the site's language when it is not
+given); a `label` names a section of the site and stays in the site's language.
 
 ```json
 {
@@ -154,8 +157,8 @@ words, one sentence each, no dashes, no build words (block id, field, URL, CTA).
 
 - `assumptions`: what you assumed where the sources were silent, each with the plan `field` it sets (for example
   `language`, `facts[contact-hours].value`, `pages[home].name`) and what you assumed, in one sentence.
-- `leftOut`: every page, block or item you chose not to show, with the reason in one sentence. For an item, give its
-  id as `item`. Never list an item you also show.
+- `leftOut`: every page, block or item you chose not to show, with the reason in one sentence. For a fact or an
+  item, give its id as `item` and no `what`: never write an id in `what`. Never list an item you also show.
 
 The plan is closed: every fact and item of `business` is shown by a block or listed in `leftOut`, and every kept
 page keeps its main block.

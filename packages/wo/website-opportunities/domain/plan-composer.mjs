@@ -57,12 +57,16 @@ export function blockMapOf(blockStore, library = []) {
   return blocks
 }
 
+/** A language the owner chats in: two lower case letters. */
+const OWNER_LANGUAGE = /^[a-z]{2}$/
+
 /**
  * What the composer works from: the profile's data with plan ids (after the customer's answers), every block of the
  * store and of the Tracy library, the recipes, the look and the assumptions the profile and the look bring. `profile`
  * in the result is the settled profile: the page writer reads its item fields. The look comes from the brand step's
  * record (`brandLookOf`, #616); only `allowTemplateLook: true`, for tests, keeps the old template fallback. `brief`: the
- * content brief research stored, when there is one (`plan-composer-brief.mjs`).
+ * content brief research stored, when there is one (`plan-composer-brief.mjs`). `ownerLanguage`: the language the owner
+ * chats in (#575), which the model writes its owner facing sentences in.
  * @throws {PlanComposerError} `answer_invalid` when an answer does not fit its question; `brand_missing` without a
  *   brand record; `brand_logo_colours_unmeasured` when the brand step kept the template accent and the logo's colours
  *   were never measured
@@ -78,7 +82,8 @@ export function composerContextOf({
   brand,
   planId = 'plan',
   allowTemplateLook = false,
-  brief = null
+  brief = null,
+  ownerLanguage = null
 }) {
   const blocks = blockMapOf(blockStore, library)
   const settled = settleAnswers(given, answers, kindLimitsOf(blocks.values()), answerReadings)
@@ -105,6 +110,8 @@ export function composerContextOf({
     planId,
     profile,
     language,
+    // The two letter language the owner chats in, when known: the model writes its sentences for the owner in it.
+    ...(OWNER_LANGUAGE.test(ownerLanguage ?? '') ? { ownerLanguage } : {}),
     data,
     blocks,
     recipes,

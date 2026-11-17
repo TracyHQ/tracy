@@ -86,6 +86,9 @@ export const en = {
   'plan.pictures.own': 'Your photos',
   'plan.pictures.ownValue.one': '{count} photo from {from}',
   'plan.pictures.ownValue.other': '{count} photos from {from}',
+  // The photos the plan places beside all the photos of the owner it holds, when it holds more.
+  'plan.pictures.ownOfValue.one': '{count} of your {total} photos, from {from}',
+  'plan.pictures.ownOfValue.other': '{count} of your {total} photos, from {from}',
   'plan.pictures.drawn': 'Pictures Tracy creates',
   'plan.pictures.drawnValue.one': 'About {count} picture',
   'plan.pictures.drawnValue.other': 'About {count} pictures',
@@ -157,6 +160,27 @@ export const en = {
     'No gallery has room for this photo. It stays with your photos and may be used elsewhere on the site.',
   'plan.leftOut.reason.no_gallery_room.other':
     'No gallery has room for these {count} photos. They stay with your photos and may be used elsewhere on the site.',
+  'plan.leftOut.reason.no_place_in_design': 'Your design has no place that shows this.',
+  'plan.leftOut.reason.no_place_for_whatsapp':
+    'This design has no place for a WhatsApp link, so your site does not show it.',
+  'plan.leftOut.reason.no_place_for_other_phones':
+    'This design shows one phone number, so your site shows your main one.',
+  'plan.leftOut.reason.no_place_for_google_rating':
+    'This design has no place for your Google rating, so your site does not show it.',
+  'plan.leftOut.reason.hours_unconfirmed':
+    'Only one source gives your opening hours, as open 24 hours every day, so they stay off your site until you confirm them.',
+  'plan.leftOut.reason.hours_sources_disagree':
+    'Your sources give different opening hours, so they stay off your site until you confirm them.',
+  'plan.leftOut.reason.no_fitting_video':
+    'None of your videos fit this space (wide pictures without text on top), so it shows no video.',
+  // What a left out line names, by its code, when it reports no fact or item of the plan.
+  'plan.leftOut.what.no_place_for_whatsapp': 'WhatsApp',
+  'plan.leftOut.what.no_place_for_other_phones': 'Other phone numbers',
+  'plan.leftOut.what.no_place_for_google_rating': 'Google rating',
+  'plan.leftOut.what.hours_unconfirmed': 'Opening hours',
+  'plan.leftOut.what.hours_sources_disagree': 'Opening hours',
+  'plan.leftOut.what.no_fitting_video.one': '{count} video spot',
+  'plan.leftOut.what.no_fitting_video.other': '{count} video spots',
   // The pictures estimate, by its code.
   'plan.pictures.estimate.one':
     'About {count} picture will be created where you have no suitable photo. The final number depends on your photos.',
@@ -187,6 +211,26 @@ export const en = {
     "No logo was found, so I made a temporary one: your initials beside your business name, in the design's main colour. Send your logo here in the chat to replace it.",
   'plan.assumption.logo_made.none.mark':
     "No logo was found, so I made a temporary one: a simple mark beside your business name, in the design's main colour. Send your logo here in the chat to replace it.",
+  // The main colour assumption, by its code and parameters; an English card keeps the plan's own sentence.
+  'plan.assumption.accent_logo_moved.lighter':
+    'The colour of your logo was made lighter so buttons and links stand out on the design.',
+  'plan.assumption.accent_logo_moved.darker':
+    'The colour of your logo was made darker so buttons and links stand out on the design.',
+  'plan.assumption.accent_logo_kept': 'Buttons and links use the colour of your logo.',
+  'plan.assumption.accent_no_hue.black': 'Your logo has no colour, so buttons and links are black.',
+  'plan.assumption.accent_no_hue.white': 'Your logo has no colour, so buttons and links are white.',
+  'plan.assumption.accent_no_hue.both':
+    'Your logo has no colour, so buttons and links are black on light pages and white on dark pages.',
+  'plan.assumption.accent_unreadable.black':
+    'The colour of your logo is hard to read on buttons, so buttons and links are black.',
+  'plan.assumption.accent_unreadable.white':
+    'The colour of your logo is hard to read on buttons, so buttons and links are white.',
+  'plan.assumption.accent_unreadable.both':
+    'The colour of your logo is hard to read on buttons, so buttons and links are black on light pages and white on dark pages.',
+  'plan.assumption.accent_kept_unmeasured':
+    "The colours of your logo could not be read, so buttons and links keep the design's main colour.",
+  'plan.assumption.accent_kept_template':
+    "The colours of your logo would not read on this design, so buttons and links keep the design's main colour.",
   // Opening hours, from their parameters: "Monday to Friday, 6:00 to 21:00; Saturday, 8:00 to 16:00".
   'plan.hours.days': '{from} to {to}',
   'plan.hours.time': '{from} to {to}',

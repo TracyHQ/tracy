@@ -672,7 +672,7 @@ export function createEngine({
      * Only `restart` (the owner asked to start the plan over) discards the plan and its edits, then composes as for a
      * first plan.
      */
-    async compose(accountId, { request, restart }, inputRow, kit) {
+    async compose(accountId, { request, restart, language }, inputRow, kit) {
       let row = inputRow
       if (row.plan && !restart && !request) return { state: unchangedOf(row) }
       if (row.plan && !restart) return lookFirst(accountId, row, kit) ?? revise(accountId, row, kit, request)
@@ -691,7 +691,9 @@ export function createEngine({
         research: row.research,
         answers: row.answers,
         template,
-        brand: brandFor(row, template)
+        brand: brandFor(row, template),
+        // The language the owner chats in: the plan's sentences for the owner are asked for in it (#575).
+        ...(language ? { ownerLanguage: language } : {})
       }
       return start(accountId, 'compose', { ...(request ? { request } : {}), template }, async () => {
         // The owner's typed answers are read first, once, as their own ledger step (`answer-readings.js`).

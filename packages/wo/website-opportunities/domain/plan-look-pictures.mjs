@@ -161,11 +161,25 @@ export function picturesOf(pages, blocks, data) {
   const elsewhere = shownElsewhereLeftOut(reduced, frames, pictures)
   const leftOut = elsewhere.rest.map(({ item, reason }) => {
     const code = Object.hasOwn(ITEM_REASONS, reason) ? reason : 'no_own_photo'
-    return { what: data.byId.get(item)?.entry?.label ?? item, kind: 'item', reason: ITEM_REASONS[code], code }
+    // The item it reports rides as `item`: the plan card counts it with its kind, never by its own words (#575).
+    return {
+      item,
+      what: data.byId.get(item)?.entry?.label ?? item,
+      kind: 'item',
+      reason: ITEM_REASONS[code],
+      code
+    }
   })
   for (const [reason, [one, many, said]] of Object.entries(EMPTY_FRAME_REASONS)) {
     const n = frames.filter((f) => f.source === 'none' && f.reason === reason).length
-    if (n > 0) leftOut.push({ what: count(n, one, many), kind: 'feature', reason: said, code: reason })
+    if (n > 0)
+      leftOut.push({
+        what: count(n, one, many),
+        kind: 'feature',
+        reason: said,
+        code: reason,
+        params: { count: n }
+      })
   }
   leftOut.push(...elsewhere.entries)
   const dropped = new Set(reduced.map((r) => `${r.page}.${r.block}.${r.item}`))

@@ -266,6 +266,78 @@ function plainTextOf(text2) {
   );
 }
 
+// ../../core/tracy-core/src/build-chat/plan-left-out.mjs
+var TEMPLATE_SPOT_CODES = /* @__PURE__ */ new Set(["no_generated_people", "no_own_logo", "gallery_own_photos_only"]);
+var COUNTED_KINDS = /* @__PURE__ */ new Set(["service", "person", "quote", "gallery"]);
+var COUNT_WORDS = Object.freeze({
+  service: ["service", "services"],
+  person: ["person", "people"],
+  quote: ["review", "reviews"],
+  gallery: ["photo", "photos"],
+  item: ["item", "items"]
+});
+var isPlainObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var listOr = (value) => Array.isArray(value) ? value : [];
+function plainWordsOf(what) {
+  const said = String(what ?? "").replace(new RegExp("(\\p{L})-(?=\\p{L})", "gu"), "$1 ");
+  return said.charAt(0).toUpperCase() + said.slice(1);
+}
+function pluralOf(word) {
+  const lower = new RegExp("^\\p{Lu}\\p{Lu}", "u").test(word) ? word : word.charAt(0).toLowerCase() + word.slice(1);
+  if (/(x|z|ch|sh)$/i.test(lower)) return `${lower}es`;
+  if (/[^aeiou]y$/i.test(lower)) return `${lower.slice(0, -1)}ies`;
+  return `${lower}s`;
+}
+function countedWhatOf(line, count) {
+  if (line.dataKind !== void 0) {
+    const [one, many] = COUNT_WORDS[COUNTED_KINDS.has(line.dataKind) ? line.dataKind : "item"];
+    return `${count} ${count === 1 ? one : many}`;
+  }
+  if (count === 1) return line.what;
+  return /\s/.test(line.what) || /s$/i.test(line.what) ? `${line.what} (${count})` : `${count} ${pluralOf(line.what)}`;
+}
+function leftOutOf(leftOut, plan) {
+  const facts = new Map(listOr(plan?.facts).map((f) => [f.id, f]));
+  const items = new Map(listOr(plan?.items).map((i) => [i.id, i]));
+  const lines = [];
+  const byKey = /* @__PURE__ */ new Map();
+  for (const l of listOr(leftOut)) {
+    if (l?.kind === "block") continue;
+    const code = typeof l?.code === "string" && l.code !== "" ? l.code : null;
+    if (code !== null && TEMPLATE_SPOT_CODES.has(code)) continue;
+    const params = code && isPlainObject(l.params) ? l.params : null;
+    const fact = typeof l.item === "string" ? facts.get(l.item) : void 0;
+    const item = typeof l.item === "string" && !fact ? items.get(l.item) : void 0;
+    const dataKind = item ? typeof item.kind === "string" ? item.kind : "item" : void 0;
+    const factKind = fact && typeof fact.kind === "string" ? fact.kind : void 0;
+    const what = fact ? plainTextOf(fact.label ?? fact.kind) : plainWordsOf(plainTextOf(l.what));
+    const reason = plainTextOf(l.reason);
+    const n = item && Number.isSafeInteger(item.count) && item.count > 0 ? item.count : 1;
+    const key = JSON.stringify([dataKind ?? what, l.kind, reason, code, params]);
+    const seen = byKey.get(key);
+    if (seen) {
+      seen.count += n;
+      continue;
+    }
+    const line = {
+      what,
+      kind: l.kind,
+      reason,
+      ...code ? { code } : {},
+      ...params ? { params } : {},
+      ...dataKind !== void 0 ? { dataKind } : {},
+      ...factKind !== void 0 ? { factKind } : {},
+      count: n
+    };
+    byKey.set(key, line);
+    lines.push(line);
+  }
+  return lines.map(({ count, ...line }) => {
+    if (count === 1 && line.dataKind === void 0) return line;
+    return { ...line, what: countedWhatOf(line, count), count };
+  });
+}
+
 // ../../core/tracy-core/src/build-chat/plan.mjs
 var PLAN_REVIEW_ID = "plan-review";
 var REVIEW_ID = PLAN_REVIEW_ID;
@@ -273,6 +345,11 @@ var english = (key, vars = {}) => BUILD_CHAT_STRINGS[key].replace(/\{(\w+)\}/g, 
 var firstSource = (sources) => plainTextOf(sources?.[0]?.name ?? "");
 var firstSourceKind = (sources) => typeof sources?.[0]?.kind === "string" ? sources[0].kind : null;
 var isWebsite = (alternative) => (alternative.sources ?? []).some((s) => s.kind === "website");
+var sourcesOfFact = (fact) => {
+  const sources = Array.isArray(fact.sources) ? fact.sources : [];
+  if (fact.kind !== "contact.social_url") return sources;
+  return [...sources].sort((a, b) => Number(b?.kind === "social") - Number(a?.kind === "social"));
+};
 function choiceOf(fact, assumption) {
   const ordered = [...assumption.alternatives].sort((a, b) => Number(isWebsite(b)) - Number(isWebsite(a)));
   return {
@@ -335,57 +412,21 @@ function rowLabelOf(row, plan) {
   const found = (plan.rows ?? []).find((r) => r.id === id)?.label ?? plan.facts.find((f) => f.id === id)?.value ?? plan.items.find((i) => i.id === id)?.label;
   return plainTextOf(found ?? null);
 }
-function plainWordsOf(what) {
-  const text2 = String(what ?? "").replace(new RegExp("(\\p{L})-(?=\\p{L})", "gu"), "$1 ");
-  return text2.charAt(0).toUpperCase() + text2.slice(1);
+function ownPhotosOf(plan) {
+  const photos = plan.items.filter((i) => i.kind === "gallery").reduce((n, i) => n + (Number.isSafeInteger(i.count) && i.count > 0 ? i.count : 1), 0);
+  return photos;
 }
-function pluralOf(word) {
-  const lower = new RegExp("^\\p{Lu}\\p{Lu}", "u").test(word) ? word : word.charAt(0).toLowerCase() + word.slice(1);
-  if (/(s|x|z|ch|sh)$/i.test(lower)) return `${lower}es`;
-  if (/[^aeiou]y$/i.test(lower)) return `${lower.slice(0, -1)}ies`;
-  return `${lower}s`;
-}
-function leftOutOf(leftOut) {
-  const lines = [];
-  const byKey = /* @__PURE__ */ new Map();
-  for (const l of leftOut ?? []) {
-    const what = plainWordsOf(plainTextOf(l.what));
-    const reason = plainTextOf(l.reason);
-    const code = typeof l.code === "string" && l.code !== "" ? l.code : null;
-    const params = code && isPlainObject(l.params) ? l.params : null;
-    const key = JSON.stringify([what, l.kind, reason, code, params]);
-    const seen = byKey.get(key);
-    if (seen) seen.count += 1;
-    else {
-      const line = {
-        what,
-        kind: l.kind,
-        reason,
-        ...code ? { code } : {},
-        ...params ? { params } : {},
-        count: 1
-      };
-      byKey.set(key, line);
-      lines.push(line);
-    }
-  }
-  return lines.map(({ count, ...line }) => {
-    if (count === 1) return line;
-    const what = /\s/.test(line.what) ? `${line.what} (${count})` : `${count} ${pluralOf(line.what)}`;
-    return { ...line, what, count };
-  });
-}
-var listOr = (value) => Array.isArray(value) ? value : [];
-var isPlainObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-var codeOf = (part) => typeof part?.code === "string" && part.code !== "" ? { code: part.code, params: isPlainObject(part.params) ? part.params : {} } : {};
+var listOr2 = (value) => Array.isArray(value) ? value : [];
+var isPlainObject2 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var codeOf = (part) => typeof part?.code === "string" && part.code !== "" ? { code: part.code, params: isPlainObject2(part.params) ? part.params : {} } : {};
 function wholePlanOf(plan) {
   const look = plan?.look ?? {};
   const pictures = plan?.pictures ?? {};
   return {
     ...plan,
-    facts: listOr(plan?.facts),
-    items: listOr(plan?.items),
-    pages: listOr(plan?.pages).map((p) => ({ ...p, blocks: listOr(p?.blocks) })),
+    facts: listOr2(plan?.facts),
+    items: listOr2(plan?.items),
+    pages: listOr2(plan?.pages).map((p) => ({ ...p, blocks: listOr2(p?.blocks) })),
     look: { ...look, template: look.template ?? {}, logo: look.logo ?? {} },
     pictures: {
       own: { frames: 0, ...pictures.own },
@@ -394,8 +435,8 @@ function wholePlanOf(plan) {
   };
 }
 function rowDataOf(lists, out = /* @__PURE__ */ new Set()) {
-  for (const list of listOr(lists))
-    for (const row of listOr(list?.rows)) {
+  for (const list of listOr2(lists))
+    for (const row of listOr2(list?.rows)) {
       if (typeof row?.data === "string") out.add(row.data);
       rowDataOf(row?.lists, out);
     }
@@ -405,7 +446,7 @@ function shownOnPagesOf(plan) {
   const shown = /* @__PURE__ */ new Set();
   for (const page of plan.pages)
     for (const block of page.blocks) {
-      for (const id of listOr(block.data)) shown.add(id);
+      for (const id of listOr2(block.data)) shown.add(id);
       rowDataOf(block.lists, shown);
     }
   return shown;
@@ -420,7 +461,7 @@ function planCardOf(contractPlan) {
   const serviceIds = services.map((s) => s.id);
   const name2 = plainTextOf(plan.facts.find((f) => f.kind === "business.name")?.value ?? "");
   const leftOutFacts = new Set(
-    listOr(plan.leftOut).map((l) => l?.item).filter((id) => typeof id === "string" && !shown.has(id))
+    listOr2(plan.leftOut).map((l) => l?.item).filter((id) => typeof id === "string" && !shown.has(id))
   );
   return {
     planId: plan.id,
@@ -440,8 +481,8 @@ function planCardOf(contractPlan) {
         // `value`, which stays what an edit changes.
         ...typeof f.display === "string" && f.display !== "" ? { display: plainTextOf(f.display) } : {},
         ...codeOf(f),
-        source: firstSource(f.sources),
-        sourceKind: firstSourceKind(f.sources),
+        source: firstSource(sourcesOfFact(f)),
+        sourceKind: firstSourceKind(sourcesOfFact(f)),
         choice: assumption ? choiceOf(f, assumption) : null
       };
     }),
@@ -485,6 +526,7 @@ function planCardOf(contractPlan) {
     pictures: {
       own: {
         frames: plan.pictures.own.frames,
+        photos: ownPhotosOf(plan),
         from: [...plan.pictures.own.from ?? []],
         // The source kind of each name in `from`, same order (`website`, `google`, `social`, `answer`).
         ...Array.isArray(plan.pictures.own.fromKinds) ? { fromKinds: [...plan.pictures.own.fromKinds] } : {}
@@ -497,7 +539,7 @@ function planCardOf(contractPlan) {
     },
     // A disputed fact is settled at the fact itself; every other assumption is listed, with its code when it has one.
     assumptions: (plan.assumptions ?? []).filter((a) => !disputed.has(a.field)).map((a) => ({ id: a.id, said: plainTextOf(a.said), ...codeOf(a) })),
-    leftOut: leftOutOf(plan.leftOut),
+    leftOut: leftOutOf(plan.leftOut, plan),
     counts: { pages: plan.pages.length, services: services.length }
   };
 }
@@ -1013,7 +1055,34 @@ var tracy_build_chat_default = {
   "links.pictures.foundNotOwn.other": "{count} Bilder gefunden, keines vom Unternehmen ver\xF6ffentlicht",
   "links.pictures.foundNone.one": "{count} Bild gefunden, nicht verwendbar",
   "links.pictures.foundNone.other": "{count} Bilder gefunden, keines verwendbar",
-  "say.researchRead": "Ich habe gelesen, was Sie mir \xFCber Ihr Unternehmen gegeben haben."
+  "say.researchRead": "Ich habe gelesen, was Sie mir \xFCber Ihr Unternehmen gegeben haben.",
+  "plan.leftOut.reason.no_place_in_design": "Ihr Design hat keinen Platz, der dies zeigt.",
+  "plan.leftOut.reason.no_place_for_whatsapp": "Dieses Design hat keinen Platz f\xFCr einen WhatsApp Link, daher zeigt Ihre Site ihn nicht.",
+  "plan.leftOut.reason.no_place_for_other_phones": "Dieses Design zeigt eine Telefonnummer, daher zeigt Ihre Site Ihre Hauptnummer.",
+  "plan.leftOut.reason.no_place_for_google_rating": "Dieses Design hat keinen Platz f\xFCr Ihre Google Bewertung, daher zeigt Ihre Site sie nicht.",
+  "plan.leftOut.reason.hours_unconfirmed": "Nur eine Quelle nennt Ihre \xD6ffnungszeiten, als rund um die Uhr an jedem Tag ge\xF6ffnet, daher bleiben sie von Ihrer Site fern, bis Sie sie best\xE4tigen.",
+  "plan.leftOut.reason.hours_sources_disagree": "Ihre Quellen nennen unterschiedliche \xD6ffnungszeiten, daher bleiben sie von Ihrer Site fern, bis Sie sie best\xE4tigen.",
+  "plan.leftOut.reason.no_fitting_video": "Keines Ihrer Videos passt in diesen Platz (breite Bilder ohne Text dar\xFCber), daher zeigt er kein Video.",
+  "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
+  "plan.leftOut.what.no_place_for_other_phones": "Weitere Telefonnummern",
+  "plan.leftOut.what.no_place_for_google_rating": "Google Bewertung",
+  "plan.leftOut.what.hours_unconfirmed": "\xD6ffnungszeiten",
+  "plan.leftOut.what.hours_sources_disagree": "\xD6ffnungszeiten",
+  "plan.leftOut.what.no_fitting_video.one": "{count} Videoplatz",
+  "plan.leftOut.what.no_fitting_video.other": "{count} Videopl\xE4tze",
+  "plan.pictures.ownOfValue.one": "{count} von Ihren {total} Fotos, von {from}",
+  "plan.pictures.ownOfValue.other": "{count} von Ihren {total} Fotos, von {from}",
+  "plan.assumption.accent_logo_moved.lighter": "Die Farbe Ihres Logos wurde heller gemacht, damit Schaltfl\xE4chen und Links im Design hervortreten.",
+  "plan.assumption.accent_logo_moved.darker": "Die Farbe Ihres Logos wurde dunkler gemacht, damit Schaltfl\xE4chen und Links im Design hervortreten.",
+  "plan.assumption.accent_logo_kept": "Schaltfl\xE4chen und Links verwenden die Farbe Ihres Logos.",
+  "plan.assumption.accent_no_hue.black": "Ihr Logo hat keine Farbe, daher sind Schaltfl\xE4chen und Links schwarz.",
+  "plan.assumption.accent_no_hue.white": "Ihr Logo hat keine Farbe, daher sind Schaltfl\xE4chen und Links wei\xDF.",
+  "plan.assumption.accent_no_hue.both": "Ihr Logo hat keine Farbe, daher sind Schaltfl\xE4chen und Links auf hellen Seiten schwarz und auf dunklen Seiten wei\xDF.",
+  "plan.assumption.accent_unreadable.black": "Die Farbe Ihres Logos ist auf Schaltfl\xE4chen schwer lesbar, daher sind Schaltfl\xE4chen und Links schwarz.",
+  "plan.assumption.accent_unreadable.white": "Die Farbe Ihres Logos ist auf Schaltfl\xE4chen schwer lesbar, daher sind Schaltfl\xE4chen und Links wei\xDF.",
+  "plan.assumption.accent_unreadable.both": "Die Farbe Ihres Logos ist auf Schaltfl\xE4chen schwer lesbar, daher sind Schaltfl\xE4chen und Links auf hellen Seiten schwarz und auf dunklen Seiten wei\xDF.",
+  "plan.assumption.accent_kept_unmeasured": "Die Farben Ihres Logos konnten nicht gelesen werden, daher behalten Schaltfl\xE4chen und Links die Hauptfarbe des Designs.",
+  "plan.assumption.accent_kept_template": "Die Farben Ihres Logos w\xE4ren in diesem Design nicht lesbar, daher behalten Schaltfl\xE4chen und Links die Hauptfarbe des Designs."
 };
 
 // ../../locale/tracy-locales/es/tracy-build-chat.json
@@ -1366,7 +1435,34 @@ var tracy_build_chat_default2 = {
   "links.pictures.foundNotOwn.other": "{count} im\xE1genes encontradas, ninguna publicada por el negocio",
   "links.pictures.foundNone.one": "{count} imagen encontrada, no utilizable",
   "links.pictures.foundNone.other": "{count} im\xE1genes encontradas, ninguna utilizable",
-  "say.researchRead": "He le\xEDdo lo que me ha dado sobre su negocio."
+  "say.researchRead": "He le\xEDdo lo que me ha dado sobre su negocio.",
+  "plan.leftOut.reason.no_place_in_design": "Su dise\xF1o no tiene un lugar que muestre esto.",
+  "plan.leftOut.reason.no_place_for_whatsapp": "Este dise\xF1o no tiene lugar para un enlace de WhatsApp, as\xED que su sitio no lo muestra.",
+  "plan.leftOut.reason.no_place_for_other_phones": "Este dise\xF1o muestra un n\xFAmero de tel\xE9fono, as\xED que su sitio muestra el principal.",
+  "plan.leftOut.reason.no_place_for_google_rating": "Este dise\xF1o no tiene lugar para su valoraci\xF3n de Google, as\xED que su sitio no la muestra.",
+  "plan.leftOut.reason.hours_unconfirmed": "Solo una fuente da su horario, abierto las 24 horas todos los d\xEDas, as\xED que queda fuera de su sitio hasta que usted lo confirme.",
+  "plan.leftOut.reason.hours_sources_disagree": "Sus fuentes dan horarios distintos, as\xED que quedan fuera de su sitio hasta que usted los confirme.",
+  "plan.leftOut.reason.no_fitting_video": "Ninguno de sus v\xEDdeos encaja en este espacio (im\xE1genes anchas sin texto encima), as\xED que no muestra ning\xFAn v\xEDdeo.",
+  "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
+  "plan.leftOut.what.no_place_for_other_phones": "Otros n\xFAmeros de tel\xE9fono",
+  "plan.leftOut.what.no_place_for_google_rating": "Valoraci\xF3n de Google",
+  "plan.leftOut.what.hours_unconfirmed": "Horario de apertura",
+  "plan.leftOut.what.hours_sources_disagree": "Horario de apertura",
+  "plan.leftOut.what.no_fitting_video.one": "{count} espacio para v\xEDdeo",
+  "plan.leftOut.what.no_fitting_video.other": "{count} espacios para v\xEDdeo",
+  "plan.pictures.ownOfValue.one": "{count} de sus {total} fotos, de {from}",
+  "plan.pictures.ownOfValue.other": "{count} de sus {total} fotos, de {from}",
+  "plan.assumption.accent_logo_moved.lighter": "El color de su logotipo se aclar\xF3 para que los botones y enlaces destaquen en el dise\xF1o.",
+  "plan.assumption.accent_logo_moved.darker": "El color de su logotipo se oscureci\xF3 para que los botones y enlaces destaquen en el dise\xF1o.",
+  "plan.assumption.accent_logo_kept": "Los botones y enlaces usan el color de su logotipo.",
+  "plan.assumption.accent_no_hue.black": "Su logotipo no tiene color, as\xED que los botones y enlaces son negros.",
+  "plan.assumption.accent_no_hue.white": "Su logotipo no tiene color, as\xED que los botones y enlaces son blancos.",
+  "plan.assumption.accent_no_hue.both": "Su logotipo no tiene color, as\xED que los botones y enlaces son negros en las p\xE1ginas claras y blancos en las oscuras.",
+  "plan.assumption.accent_unreadable.black": "El color de su logotipo se lee mal en los botones, as\xED que los botones y enlaces son negros.",
+  "plan.assumption.accent_unreadable.white": "El color de su logotipo se lee mal en los botones, as\xED que los botones y enlaces son blancos.",
+  "plan.assumption.accent_unreadable.both": "El color de su logotipo se lee mal en los botones, as\xED que los botones y enlaces son negros en las p\xE1ginas claras y blancos en las oscuras.",
+  "plan.assumption.accent_kept_unmeasured": "No se pudieron leer los colores de su logotipo, as\xED que los botones y enlaces mantienen el color principal del dise\xF1o.",
+  "plan.assumption.accent_kept_template": "Los colores de su logotipo no se leer\xEDan en este dise\xF1o, as\xED que los botones y enlaces mantienen el color principal del dise\xF1o."
 };
 
 // ../../locale/tracy-locales/fr/tracy-build-chat.json
@@ -1719,7 +1815,34 @@ var tracy_build_chat_default3 = {
   "links.pictures.foundNotOwn.other": "{count} images trouv\xE9es, aucune publi\xE9e par l\u2019entreprise",
   "links.pictures.foundNone.one": "{count} image trouv\xE9e, non utilisable",
   "links.pictures.foundNone.other": "{count} images trouv\xE9es, aucune utilisable",
-  "say.researchRead": "J\u2019ai lu ce que vous m\u2019avez transmis sur votre entreprise."
+  "say.researchRead": "J\u2019ai lu ce que vous m\u2019avez transmis sur votre entreprise.",
+  "plan.leftOut.reason.no_place_in_design": "Votre design n\u2019a aucun emplacement qui affiche ceci.",
+  "plan.leftOut.reason.no_place_for_whatsapp": "Ce design n\u2019a pas de place pour un lien WhatsApp, donc votre site ne l\u2019affiche pas.",
+  "plan.leftOut.reason.no_place_for_other_phones": "Ce design affiche un seul num\xE9ro de t\xE9l\xE9phone, donc votre site affiche votre num\xE9ro principal.",
+  "plan.leftOut.reason.no_place_for_google_rating": "Ce design n\u2019a pas de place pour votre note Google, donc votre site ne l\u2019affiche pas.",
+  "plan.leftOut.reason.hours_unconfirmed": "Une seule source donne vos horaires, ouvert 24 heures sur 24 tous les jours, donc ils restent hors de votre site jusqu\u2019\xE0 ce que vous les confirmiez.",
+  "plan.leftOut.reason.hours_sources_disagree": "Vos sources donnent des horaires diff\xE9rents, donc ils restent hors de votre site jusqu\u2019\xE0 ce que vous les confirmiez.",
+  "plan.leftOut.reason.no_fitting_video": "Aucune de vos vid\xE9os ne convient \xE0 cet emplacement (images larges sans texte par dessus), donc il n\u2019affiche pas de vid\xE9o.",
+  "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
+  "plan.leftOut.what.no_place_for_other_phones": "Autres num\xE9ros de t\xE9l\xE9phone",
+  "plan.leftOut.what.no_place_for_google_rating": "Note Google",
+  "plan.leftOut.what.hours_unconfirmed": "Horaires d\u2019ouverture",
+  "plan.leftOut.what.hours_sources_disagree": "Horaires d\u2019ouverture",
+  "plan.leftOut.what.no_fitting_video.one": "{count} emplacement vid\xE9o",
+  "plan.leftOut.what.no_fitting_video.other": "{count} emplacements vid\xE9o",
+  "plan.pictures.ownOfValue.one": "{count} de vos {total} photos, depuis {from}",
+  "plan.pictures.ownOfValue.other": "{count} de vos {total} photos, depuis {from}",
+  "plan.assumption.accent_logo_moved.lighter": "La couleur de votre logo a \xE9t\xE9 \xE9claircie pour que les boutons et les liens ressortent sur le design.",
+  "plan.assumption.accent_logo_moved.darker": "La couleur de votre logo a \xE9t\xE9 assombrie pour que les boutons et les liens ressortent sur le design.",
+  "plan.assumption.accent_logo_kept": "Les boutons et les liens utilisent la couleur de votre logo.",
+  "plan.assumption.accent_no_hue.black": "Votre logo n\u2019a pas de couleur, donc les boutons et les liens sont noirs.",
+  "plan.assumption.accent_no_hue.white": "Votre logo n\u2019a pas de couleur, donc les boutons et les liens sont blancs.",
+  "plan.assumption.accent_no_hue.both": "Votre logo n\u2019a pas de couleur, donc les boutons et les liens sont noirs sur les pages claires et blancs sur les pages sombres.",
+  "plan.assumption.accent_unreadable.black": "La couleur de votre logo est difficile \xE0 lire sur les boutons, donc les boutons et les liens sont noirs.",
+  "plan.assumption.accent_unreadable.white": "La couleur de votre logo est difficile \xE0 lire sur les boutons, donc les boutons et les liens sont blancs.",
+  "plan.assumption.accent_unreadable.both": "La couleur de votre logo est difficile \xE0 lire sur les boutons, donc les boutons et les liens sont noirs sur les pages claires et blancs sur les pages sombres.",
+  "plan.assumption.accent_kept_unmeasured": "Les couleurs de votre logo n\u2019ont pas pu \xEAtre lues, donc les boutons et les liens gardent la couleur principale du design.",
+  "plan.assumption.accent_kept_template": "Les couleurs de votre logo ne seraient pas lisibles sur ce design, donc les boutons et les liens gardent la couleur principale du design."
 };
 
 // ../../locale/tracy-locales/it/tracy-build-chat.json
@@ -2072,7 +2195,34 @@ var tracy_build_chat_default4 = {
   "links.pictures.foundNotOwn.other": "{count} immagini trovate, nessuna pubblicata dall\u2019attivit\xE0",
   "links.pictures.foundNone.one": "{count} immagine trovata, non utilizzabile",
   "links.pictures.foundNone.other": "{count} immagini trovate, nessuna utilizzabile",
-  "say.researchRead": "Ho letto ci\xF2 che mi ha fornito sulla sua attivit\xE0."
+  "say.researchRead": "Ho letto ci\xF2 che mi ha fornito sulla sua attivit\xE0.",
+  "plan.leftOut.reason.no_place_in_design": "Il tuo design non ha un posto che mostri questo.",
+  "plan.leftOut.reason.no_place_for_whatsapp": "Questo design non ha posto per un link WhatsApp, quindi il tuo sito non lo mostra.",
+  "plan.leftOut.reason.no_place_for_other_phones": "Questo design mostra un solo numero di telefono, quindi il tuo sito mostra quello principale.",
+  "plan.leftOut.reason.no_place_for_google_rating": "Questo design non ha posto per la tua valutazione Google, quindi il tuo sito non la mostra.",
+  "plan.leftOut.reason.hours_unconfirmed": "Solo una fonte indica i tuoi orari, aperto 24 ore su 24 ogni giorno, quindi restano fuori dal tuo sito finch\xE9 non li confermi.",
+  "plan.leftOut.reason.hours_sources_disagree": "Le tue fonti indicano orari diversi, quindi restano fuori dal tuo sito finch\xE9 non li confermi.",
+  "plan.leftOut.reason.no_fitting_video": "Nessuno dei tuoi video si adatta a questo spazio (immagini larghe senza testo sopra), quindi non mostra alcun video.",
+  "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
+  "plan.leftOut.what.no_place_for_other_phones": "Altri numeri di telefono",
+  "plan.leftOut.what.no_place_for_google_rating": "Valutazione Google",
+  "plan.leftOut.what.hours_unconfirmed": "Orari di apertura",
+  "plan.leftOut.what.hours_sources_disagree": "Orari di apertura",
+  "plan.leftOut.what.no_fitting_video.one": "{count} spazio video",
+  "plan.leftOut.what.no_fitting_video.other": "{count} spazi video",
+  "plan.pictures.ownOfValue.one": "{count} delle tue {total} foto, da {from}",
+  "plan.pictures.ownOfValue.other": "{count} delle tue {total} foto, da {from}",
+  "plan.assumption.accent_logo_moved.lighter": "Il colore del tuo logo \xE8 stato schiarito perch\xE9 pulsanti e link risaltino sul design.",
+  "plan.assumption.accent_logo_moved.darker": "Il colore del tuo logo \xE8 stato scurito perch\xE9 pulsanti e link risaltino sul design.",
+  "plan.assumption.accent_logo_kept": "Pulsanti e link usano il colore del tuo logo.",
+  "plan.assumption.accent_no_hue.black": "Il tuo logo non ha colore, quindi pulsanti e link sono neri.",
+  "plan.assumption.accent_no_hue.white": "Il tuo logo non ha colore, quindi pulsanti e link sono bianchi.",
+  "plan.assumption.accent_no_hue.both": "Il tuo logo non ha colore, quindi pulsanti e link sono neri sulle pagine chiare e bianchi su quelle scure.",
+  "plan.assumption.accent_unreadable.black": "Il colore del tuo logo \xE8 difficile da leggere sui pulsanti, quindi pulsanti e link sono neri.",
+  "plan.assumption.accent_unreadable.white": "Il colore del tuo logo \xE8 difficile da leggere sui pulsanti, quindi pulsanti e link sono bianchi.",
+  "plan.assumption.accent_unreadable.both": "Il colore del tuo logo \xE8 difficile da leggere sui pulsanti, quindi pulsanti e link sono neri sulle pagine chiare e bianchi su quelle scure.",
+  "plan.assumption.accent_kept_unmeasured": "Non \xE8 stato possibile leggere i colori del tuo logo, quindi pulsanti e link mantengono il colore principale del design.",
+  "plan.assumption.accent_kept_template": "I colori del tuo logo non si leggerebbero su questo design, quindi pulsanti e link mantengono il colore principale del design."
 };
 
 // ../../locale/tracy-locales/nl/tracy-build-chat.json
@@ -2425,7 +2575,34 @@ var tracy_build_chat_default5 = {
   "links.pictures.foundNotOwn.other": "{count} afbeeldingen gevonden, geen enkele door het bedrijf geplaatst",
   "links.pictures.foundNone.one": "{count} afbeelding gevonden, niet bruikbaar",
   "links.pictures.foundNone.other": "{count} afbeeldingen gevonden, geen enkele bruikbaar",
-  "say.researchRead": "Ik heb gelezen wat u mij over uw bedrijf hebt gegeven."
+  "say.researchRead": "Ik heb gelezen wat u mij over uw bedrijf hebt gegeven.",
+  "plan.leftOut.reason.no_place_in_design": "Uw ontwerp heeft geen plek die dit toont.",
+  "plan.leftOut.reason.no_place_for_whatsapp": "Dit ontwerp heeft geen plek voor een WhatsApp link, dus uw site toont die niet.",
+  "plan.leftOut.reason.no_place_for_other_phones": "Dit ontwerp toont \xE9\xE9n telefoonnummer, dus uw site toont uw hoofdnummer.",
+  "plan.leftOut.reason.no_place_for_google_rating": "Dit ontwerp heeft geen plek voor uw Google beoordeling, dus uw site toont die niet.",
+  "plan.leftOut.reason.hours_unconfirmed": "Slechts \xE9\xE9n bron noemt uw openingstijden, elke dag 24 uur open, dus ze blijven van uw site tot u ze bevestigt.",
+  "plan.leftOut.reason.hours_sources_disagree": "Uw bronnen noemen verschillende openingstijden, dus ze blijven van uw site tot u ze bevestigt.",
+  "plan.leftOut.reason.no_fitting_video": "Geen van uw video\u2019s past op deze plek (brede beelden zonder tekst erover), dus hij toont geen video.",
+  "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
+  "plan.leftOut.what.no_place_for_other_phones": "Andere telefoonnummers",
+  "plan.leftOut.what.no_place_for_google_rating": "Google beoordeling",
+  "plan.leftOut.what.hours_unconfirmed": "Openingstijden",
+  "plan.leftOut.what.hours_sources_disagree": "Openingstijden",
+  "plan.leftOut.what.no_fitting_video.one": "{count} videoplek",
+  "plan.leftOut.what.no_fitting_video.other": "{count} videoplekken",
+  "plan.pictures.ownOfValue.one": "{count} van uw {total} foto\u2019s, van {from}",
+  "plan.pictures.ownOfValue.other": "{count} van uw {total} foto\u2019s, van {from}",
+  "plan.assumption.accent_logo_moved.lighter": "De kleur van uw logo is lichter gemaakt zodat knoppen en links opvallen in het ontwerp.",
+  "plan.assumption.accent_logo_moved.darker": "De kleur van uw logo is donkerder gemaakt zodat knoppen en links opvallen in het ontwerp.",
+  "plan.assumption.accent_logo_kept": "Knoppen en links gebruiken de kleur van uw logo.",
+  "plan.assumption.accent_no_hue.black": "Uw logo heeft geen kleur, dus knoppen en links zijn zwart.",
+  "plan.assumption.accent_no_hue.white": "Uw logo heeft geen kleur, dus knoppen en links zijn wit.",
+  "plan.assumption.accent_no_hue.both": "Uw logo heeft geen kleur, dus knoppen en links zijn zwart op lichte pagina\u2019s en wit op donkere pagina\u2019s.",
+  "plan.assumption.accent_unreadable.black": "De kleur van uw logo is slecht leesbaar op knoppen, dus knoppen en links zijn zwart.",
+  "plan.assumption.accent_unreadable.white": "De kleur van uw logo is slecht leesbaar op knoppen, dus knoppen en links zijn wit.",
+  "plan.assumption.accent_unreadable.both": "De kleur van uw logo is slecht leesbaar op knoppen, dus knoppen en links zijn zwart op lichte pagina\u2019s en wit op donkere pagina\u2019s.",
+  "plan.assumption.accent_kept_unmeasured": "De kleuren van uw logo konden niet worden gelezen, dus knoppen en links houden de hoofdkleur van het ontwerp.",
+  "plan.assumption.accent_kept_template": "De kleuren van uw logo zouden in dit ontwerp niet leesbaar zijn, dus knoppen en links houden de hoofdkleur van het ontwerp."
 };
 
 // ../../locale/tracy-locales/zh/tracy-build-chat.json
@@ -2778,7 +2955,34 @@ var tracy_build_chat_default6 = {
   "links.pictures.foundNotOwn.other": "\u627E\u5230 {count} \u5F20\u56FE\u7247\uFF0C\u5747\u975E\u5546\u5BB6\u53D1\u5E03",
   "links.pictures.foundNone.one": "\u627E\u5230 {count} \u5F20\u56FE\u7247\uFF0C\u4E0D\u53EF\u7528",
   "links.pictures.foundNone.other": "\u627E\u5230 {count} \u5F20\u56FE\u7247\uFF0C\u5747\u4E0D\u53EF\u7528",
-  "say.researchRead": "\u6211\u5DF2\u9605\u8BFB\u4F60\u63D0\u4F9B\u7684\u4E1A\u52A1\u4FE1\u606F\u3002"
+  "say.researchRead": "\u6211\u5DF2\u9605\u8BFB\u4F60\u63D0\u4F9B\u7684\u4E1A\u52A1\u4FE1\u606F\u3002",
+  "plan.leftOut.reason.no_place_in_design": "\u60A8\u7684\u8BBE\u8BA1\u6CA1\u6709\u53EF\u4EE5\u663E\u793A\u6B64\u9879\u7684\u4F4D\u7F6E\u3002",
+  "plan.leftOut.reason.no_place_for_whatsapp": "\u6B64\u8BBE\u8BA1\u6CA1\u6709\u653E\u7F6E WhatsApp \u94FE\u63A5\u7684\u4F4D\u7F6E\uFF0C\u56E0\u6B64\u60A8\u7684\u7F51\u7AD9\u4E0D\u663E\u793A\u5B83\u3002",
+  "plan.leftOut.reason.no_place_for_other_phones": "\u6B64\u8BBE\u8BA1\u53EA\u663E\u793A\u4E00\u4E2A\u7535\u8BDD\u53F7\u7801\uFF0C\u56E0\u6B64\u60A8\u7684\u7F51\u7AD9\u663E\u793A\u60A8\u7684\u4E3B\u53F7\u7801\u3002",
+  "plan.leftOut.reason.no_place_for_google_rating": "\u6B64\u8BBE\u8BA1\u6CA1\u6709\u653E\u7F6E\u60A8\u7684 Google \u8BC4\u5206\u7684\u4F4D\u7F6E\uFF0C\u56E0\u6B64\u60A8\u7684\u7F51\u7AD9\u4E0D\u663E\u793A\u5B83\u3002",
+  "plan.leftOut.reason.hours_unconfirmed": "\u53EA\u6709\u4E00\u4E2A\u6765\u6E90\u7ED9\u51FA\u60A8\u7684\u8425\u4E1A\u65F6\u95F4\uFF0C\u4E14\u4E3A\u6BCF\u5929 24 \u5C0F\u65F6\u8425\u4E1A\uFF0C\u56E0\u6B64\u5728\u60A8\u786E\u8BA4\u4E4B\u524D\u4E0D\u4F1A\u653E\u5230\u7F51\u7AD9\u4E0A\u3002",
+  "plan.leftOut.reason.hours_sources_disagree": "\u60A8\u7684\u5404\u4E2A\u6765\u6E90\u7ED9\u51FA\u7684\u8425\u4E1A\u65F6\u95F4\u4E0D\u540C\uFF0C\u56E0\u6B64\u5728\u60A8\u786E\u8BA4\u4E4B\u524D\u4E0D\u4F1A\u653E\u5230\u7F51\u7AD9\u4E0A\u3002",
+  "plan.leftOut.reason.no_fitting_video": "\u60A8\u7684\u89C6\u9891\u90FD\u4E0D\u9002\u5408\u8FD9\u4E2A\u4F4D\u7F6E\uFF08\u6A2A\u5411\u753B\u9762\u4E14\u4E0A\u9762\u6CA1\u6709\u6587\u5B57\uFF09\uFF0C\u56E0\u6B64\u8FD9\u91CC\u4E0D\u663E\u793A\u89C6\u9891\u3002",
+  "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
+  "plan.leftOut.what.no_place_for_other_phones": "\u5176\u4ED6\u7535\u8BDD\u53F7\u7801",
+  "plan.leftOut.what.no_place_for_google_rating": "Google \u8BC4\u5206",
+  "plan.leftOut.what.hours_unconfirmed": "\u8425\u4E1A\u65F6\u95F4",
+  "plan.leftOut.what.hours_sources_disagree": "\u8425\u4E1A\u65F6\u95F4",
+  "plan.leftOut.what.no_fitting_video.one": "{count} \u4E2A\u89C6\u9891\u4F4D\u7F6E",
+  "plan.leftOut.what.no_fitting_video.other": "{count} \u4E2A\u89C6\u9891\u4F4D\u7F6E",
+  "plan.pictures.ownOfValue.one": "\u60A8\u7684 {total} \u5F20\u7167\u7247\u4E2D\u7684 {count} \u5F20\uFF0C\u6765\u81EA {from}",
+  "plan.pictures.ownOfValue.other": "\u60A8\u7684 {total} \u5F20\u7167\u7247\u4E2D\u7684 {count} \u5F20\uFF0C\u6765\u81EA {from}",
+  "plan.assumption.accent_logo_moved.lighter": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5DF2\u8C03\u4EAE\uFF0C\u4F7F\u6309\u94AE\u548C\u94FE\u63A5\u5728\u8BBE\u8BA1\u4E2D\u66F4\u9192\u76EE\u3002",
+  "plan.assumption.accent_logo_moved.darker": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5DF2\u8C03\u6697\uFF0C\u4F7F\u6309\u94AE\u548C\u94FE\u63A5\u5728\u8BBE\u8BA1\u4E2D\u66F4\u9192\u76EE\u3002",
+  "plan.assumption.accent_logo_kept": "\u6309\u94AE\u548C\u94FE\u63A5\u4F7F\u7528\u60A8\u7684\u6807\u5FD7\u989C\u8272\u3002",
+  "plan.assumption.accent_no_hue.black": "\u60A8\u7684\u6807\u5FD7\u6CA1\u6709\u989C\u8272\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4E3A\u9ED1\u8272\u3002",
+  "plan.assumption.accent_no_hue.white": "\u60A8\u7684\u6807\u5FD7\u6CA1\u6709\u989C\u8272\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4E3A\u767D\u8272\u3002",
+  "plan.assumption.accent_no_hue.both": "\u60A8\u7684\u6807\u5FD7\u6CA1\u6709\u989C\u8272\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u5728\u6D45\u8272\u9875\u9762\u4E0A\u4E3A\u9ED1\u8272\uFF0C\u5728\u6DF1\u8272\u9875\u9762\u4E0A\u4E3A\u767D\u8272\u3002",
+  "plan.assumption.accent_unreadable.black": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5728\u6309\u94AE\u4E0A\u96BE\u4EE5\u8FA8\u8BA4\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4E3A\u9ED1\u8272\u3002",
+  "plan.assumption.accent_unreadable.white": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5728\u6309\u94AE\u4E0A\u96BE\u4EE5\u8FA8\u8BA4\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4E3A\u767D\u8272\u3002",
+  "plan.assumption.accent_unreadable.both": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5728\u6309\u94AE\u4E0A\u96BE\u4EE5\u8FA8\u8BA4\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u5728\u6D45\u8272\u9875\u9762\u4E0A\u4E3A\u9ED1\u8272\uFF0C\u5728\u6DF1\u8272\u9875\u9762\u4E0A\u4E3A\u767D\u8272\u3002",
+  "plan.assumption.accent_kept_unmeasured": "\u65E0\u6CD5\u8BFB\u53D6\u60A8\u7684\u6807\u5FD7\u989C\u8272\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4FDD\u7559\u8BBE\u8BA1\u7684\u4E3B\u8272\u3002",
+  "plan.assumption.accent_kept_template": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5728\u6B64\u8BBE\u8BA1\u4E0A\u4E0D\u6613\u8FA8\u8BA4\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4FDD\u7559\u8BBE\u8BA1\u7684\u4E3B\u8272\u3002"
 };
 
 // ../../locale/tracy-locale-vi/vi/tracy-build-chat.json
@@ -3131,7 +3335,34 @@ var tracy_build_chat_default7 = {
   "links.pictures.foundNotOwn.other": "T\xECm th\u1EA5y {count} \u1EA3nh, kh\xF4ng \u1EA3nh n\xE0o do doanh nghi\u1EC7p \u0111\u0103ng",
   "links.pictures.foundNone.one": "T\xECm th\u1EA5y {count} \u1EA3nh, kh\xF4ng d\xF9ng \u0111\u01B0\u1EE3c",
   "links.pictures.foundNone.other": "T\xECm th\u1EA5y {count} \u1EA3nh, kh\xF4ng \u1EA3nh n\xE0o d\xF9ng \u0111\u01B0\u1EE3c",
-  "say.researchRead": "M\xECnh \u0111\xE3 \u0111\u1ECDc nh\u1EEFng g\xEC b\u1EA1n g\u1EEDi v\u1EC1 doanh nghi\u1EC7p c\u1EE7a b\u1EA1n."
+  "say.researchRead": "M\xECnh \u0111\xE3 \u0111\u1ECDc nh\u1EEFng g\xEC b\u1EA1n g\u1EEDi v\u1EC1 doanh nghi\u1EC7p c\u1EE7a b\u1EA1n.",
+  "plan.leftOut.reason.no_place_in_design": "M\u1EABu thi\u1EBFt k\u1EBF c\u1EE7a b\u1EA1n kh\xF4ng c\xF3 ch\u1ED7 n\xE0o hi\u1EC3n th\u1ECB m\u1EE5c n\xE0y.",
+  "plan.leftOut.reason.no_place_for_whatsapp": "M\u1EABu thi\u1EBFt k\u1EBF n\xE0y kh\xF4ng c\xF3 ch\u1ED7 cho \u0111\u01B0\u1EDDng d\u1EABn WhatsApp, n\xEAn site c\u1EE7a b\u1EA1n kh\xF4ng hi\u1EC3n th\u1ECB n\xF3.",
+  "plan.leftOut.reason.no_place_for_other_phones": "M\u1EABu thi\u1EBFt k\u1EBF n\xE0y ch\u1EC9 hi\u1EC3n th\u1ECB m\u1ED9t s\u1ED1 \u0111i\u1EC7n tho\u1EA1i, n\xEAn site c\u1EE7a b\u1EA1n hi\u1EC3n th\u1ECB s\u1ED1 ch\xEDnh.",
+  "plan.leftOut.reason.no_place_for_google_rating": "M\u1EABu thi\u1EBFt k\u1EBF n\xE0y kh\xF4ng c\xF3 ch\u1ED7 cho \u0111i\u1EC3m \u0111\xE1nh gi\xE1 Google c\u1EE7a b\u1EA1n, n\xEAn site c\u1EE7a b\u1EA1n kh\xF4ng hi\u1EC3n th\u1ECB n\xF3.",
+  "plan.leftOut.reason.hours_unconfirmed": "Ch\u1EC9 m\u1ED9t ngu\u1ED3n ghi gi\u1EDD m\u1EDF c\u1EEDa c\u1EE7a b\u1EA1n l\xE0 m\u1EDF 24 gi\u1EDD m\u1ED7i ng\xE0y, n\xEAn gi\u1EDD m\u1EDF c\u1EEDa ch\u01B0a l\xEAn site cho \u0111\u1EBFn khi b\u1EA1n x\xE1c nh\u1EADn.",
+  "plan.leftOut.reason.hours_sources_disagree": "C\xE1c ngu\u1ED3n c\u1EE7a b\u1EA1n ghi gi\u1EDD m\u1EDF c\u1EEDa kh\xE1c nhau, n\xEAn gi\u1EDD m\u1EDF c\u1EEDa ch\u01B0a l\xEAn site cho \u0111\u1EBFn khi b\u1EA1n x\xE1c nh\u1EADn.",
+  "plan.leftOut.reason.no_fitting_video": "Kh\xF4ng video n\xE0o c\u1EE7a b\u1EA1n v\u1EEBa ch\u1ED7 n\xE0y (\u1EA3nh ngang, kh\xF4ng c\xF3 ch\u1EEF \u0111\xE8 l\xEAn), n\xEAn ch\u1ED7 n\xE0y kh\xF4ng hi\u1EC3n th\u1ECB video.",
+  "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
+  "plan.leftOut.what.no_place_for_other_phones": "C\xE1c s\u1ED1 \u0111i\u1EC7n tho\u1EA1i kh\xE1c",
+  "plan.leftOut.what.no_place_for_google_rating": "\u0110i\u1EC3m \u0111\xE1nh gi\xE1 Google",
+  "plan.leftOut.what.hours_unconfirmed": "Gi\u1EDD m\u1EDF c\u1EEDa",
+  "plan.leftOut.what.hours_sources_disagree": "Gi\u1EDD m\u1EDF c\u1EEDa",
+  "plan.leftOut.what.no_fitting_video.one": "{count} ch\u1ED7 \u0111\u1EB7t video",
+  "plan.leftOut.what.no_fitting_video.other": "{count} ch\u1ED7 \u0111\u1EB7t video",
+  "plan.pictures.ownOfValue.one": "{count} trong {total} \u1EA3nh c\u1EE7a b\u1EA1n, t\u1EEB {from}",
+  "plan.pictures.ownOfValue.other": "{count} trong {total} \u1EA3nh c\u1EE7a b\u1EA1n, t\u1EEB {from}",
+  "plan.assumption.accent_logo_moved.lighter": "M\xE0u logo c\u1EE7a b\u1EA1n \u0111\u01B0\u1EE3c l\xE0m s\xE1ng h\u01A1n \u0111\u1EC3 n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn n\u1ED5i b\u1EADt tr\xEAn m\u1EABu thi\u1EBFt k\u1EBF.",
+  "plan.assumption.accent_logo_moved.darker": "M\xE0u logo c\u1EE7a b\u1EA1n \u0111\u01B0\u1EE3c l\xE0m t\u1ED1i h\u01A1n \u0111\u1EC3 n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn n\u1ED5i b\u1EADt tr\xEAn m\u1EABu thi\u1EBFt k\u1EBF.",
+  "plan.assumption.accent_logo_kept": "N\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn d\xF9ng m\xE0u logo c\u1EE7a b\u1EA1n.",
+  "plan.assumption.accent_no_hue.black": "Logo c\u1EE7a b\u1EA1n kh\xF4ng c\xF3 m\xE0u, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn c\xF3 m\xE0u \u0111en.",
+  "plan.assumption.accent_no_hue.white": "Logo c\u1EE7a b\u1EA1n kh\xF4ng c\xF3 m\xE0u, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn c\xF3 m\xE0u tr\u1EAFng.",
+  "plan.assumption.accent_no_hue.both": "Logo c\u1EE7a b\u1EA1n kh\xF4ng c\xF3 m\xE0u, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn m\xE0u \u0111en tr\xEAn trang n\u1EC1n s\xE1ng v\xE0 m\xE0u tr\u1EAFng tr\xEAn trang n\u1EC1n t\u1ED1i.",
+  "plan.assumption.accent_unreadable.black": "M\xE0u logo c\u1EE7a b\u1EA1n kh\xF3 \u0111\u1ECDc tr\xEAn n\xFAt b\u1EA5m, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn c\xF3 m\xE0u \u0111en.",
+  "plan.assumption.accent_unreadable.white": "M\xE0u logo c\u1EE7a b\u1EA1n kh\xF3 \u0111\u1ECDc tr\xEAn n\xFAt b\u1EA5m, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn c\xF3 m\xE0u tr\u1EAFng.",
+  "plan.assumption.accent_unreadable.both": "M\xE0u logo c\u1EE7a b\u1EA1n kh\xF3 \u0111\u1ECDc tr\xEAn n\xFAt b\u1EA5m, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn m\xE0u \u0111en tr\xEAn trang n\u1EC1n s\xE1ng v\xE0 m\xE0u tr\u1EAFng tr\xEAn trang n\u1EC1n t\u1ED1i.",
+  "plan.assumption.accent_kept_unmeasured": "M\xECnh kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c m\xE0u logo c\u1EE7a b\u1EA1n, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn gi\u1EEF m\xE0u ch\xEDnh c\u1EE7a m\u1EABu thi\u1EBFt k\u1EBF.",
+  "plan.assumption.accent_kept_template": "M\xE0u logo c\u1EE7a b\u1EA1n kh\xF4ng \u0111\u1ECDc r\xF5 tr\xEAn m\u1EABu thi\u1EBFt k\u1EBF n\xE0y, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn gi\u1EEF m\xE0u ch\xEDnh c\u1EE7a m\u1EABu thi\u1EBFt k\u1EBF."
 };
 
 // src/host/chat-tables.mjs
@@ -3927,10 +4158,15 @@ ${JSON.stringify(answer)}`;
           next: "Say the sentence in say, then wait for the owner to write a shorter request."
         };
       const asked = text(args.request);
+      const language = spoken.get(sessionId) ?? chatLanguageFor(sessionId);
       request = [
         "POST",
         "/compose",
-        { ...asked !== "" ? { request: asked } : {}, ...args.restart === true ? { restart: true } : {} }
+        {
+          ...asked !== "" ? { request: asked } : {},
+          ...args.restart === true ? { restart: true } : {},
+          ...language ? { language } : {}
+        }
       ];
     } else if (action === "edit") {
       const changes = (Array.isArray(args.changes) ? args.changes : []).filter(

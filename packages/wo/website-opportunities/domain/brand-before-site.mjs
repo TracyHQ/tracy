@@ -15,6 +15,7 @@ import {
   accentOfBrandFile,
   researchLogoIdOf
 } from './brand-look-accent.mjs'
+import { accentCodeOf } from './brand-accent-codes.mjs'
 import { unreadableSaid } from './brand-look-adjust.mjs'
 import {
   DRAWN_LOGO_NAME,
@@ -208,6 +209,9 @@ export function lookOfBrandRecord(template, record) {
     assumptions.push({ id: 'accent', field: 'look.accent', said: unreadableSaid(accent, accentDark) })
   if (Object.hasOwn(KEPT_SAID, from))
     assumptions.push({ id: 'accent', field: 'look.accent', said: KEPT_SAID[from] })
+  // Every accent line carries its code, so the plan card says it in the chat's language (`brand-accent-codes.mjs`).
+  const accentCode = accentCodeOf(from, { accent, accentDark, brandColour: record.accent.brandColour })
+  for (const a of assumptions) if (a.id === 'accent') Object.assign(a, accentCode)
   let logo
   // A drawn logo stays an image logo on the plan (Contract B `own`: the write step places its file), said as drawn. A
   // stored record of an earlier version that said `own` is the same brand step output and is read the same way.

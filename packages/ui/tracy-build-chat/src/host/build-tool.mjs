@@ -1301,11 +1301,17 @@ export function createBuildTool({
           next: 'Say the sentence in say, then wait for the owner to write a shorter request.'
         }
       const asked = text(args.request)
+      // The language the owner writes in, else the cards' (#575): the plan's sentences for the owner are written in it.
+      const language = spoken.get(sessionId) ?? chatLanguageFor(sessionId)
       // Starting over is its own intent: sent only when the model set restart to true.
       request = [
         'POST',
         '/compose',
-        { ...(asked !== '' ? { request: asked } : {}), ...(args.restart === true ? { restart: true } : {}) }
+        {
+          ...(asked !== '' ? { request: asked } : {}),
+          ...(args.restart === true ? { restart: true } : {}),
+          ...(language ? { language } : {})
+        }
       ]
     } else if (action === 'edit') {
       const changes = (Array.isArray(args.changes) ? args.changes : []).filter(

@@ -64,6 +64,53 @@ export function leftOutReasonOf(
   return known(key) ? t(key) : reason
 }
 
+/** Codes of left out lines that name no fact or item of the plan and have a name of their own. */
+const NAMED_LEFT_OUT = new Set([
+  'no_place_for_whatsapp',
+  'no_place_for_other_phones',
+  'no_place_for_google_rating',
+  'hours_unconfirmed',
+  'hours_sources_disagree'
+])
+
+/**
+ * What a left out line names, in the card's words: a count of items of one kind ("3 reviews", `dataKind`), a fact by
+ * its label (`factKind`, `factLabel`), a named code, or the plan's own words. Site content in `what` (a page's name)
+ * stays as the plan has it.
+ */
+export function leftOutWhatOf(
+  t: Translate,
+  line: {
+    what: string
+    code?: string | null
+    params?: Params
+    dataKind?: string
+    factKind?: string
+    count?: number
+  },
+  factLabel: (kind: string, label: string) => string
+): string {
+  if (typeof line.dataKind === 'string' && typeof line.count === 'number') {
+    const kind = COUNTED_KINDS.has(line.dataKind) ? line.dataKind : 'item'
+    return t(`plan.count.${kind}.${line.count === 1 ? 'one' : 'other'}` as StringKey, { count: line.count })
+  }
+  if (typeof line.factKind === 'string') return factLabel(line.factKind, line.what)
+  if (typeof line.code === 'string' && NAMED_LEFT_OUT.has(line.code))
+    return t(`plan.leftOut.what.${line.code}` as StringKey)
+  if (line.code === 'no_fitting_video') {
+    const n = count(line.params)
+    if (n !== null && n > 0)
+      return t(
+        n === 1 ? 'plan.leftOut.what.no_fitting_video.one' : 'plan.leftOut.what.no_fitting_video.other',
+        {
+          count: n
+        }
+      )
+  }
+  return line.what
+}
+const COUNTED_KINDS = new Set(['service', 'person', 'quote', 'gallery'])
+
 /** The pictures estimate by its code (`pictures.generated.code`, `params.count`), or the plan's own sentence. */
 export function picturesEstimateOf(
   t: Translate,
@@ -94,7 +141,23 @@ export function logoSourceOf(
 const DRAWN_REASONS = new Set(['new-symbol-drawn', 'symbol-cut-from-logo', 'name-set-in-template-font'])
 const MADE_MARKS = new Set(['icon', 'lettermark', 'mark'])
 
-/** An assumption by its code (`assumptions[].code`, `params`): the logo Tracy drew or made; else the plan's text. */
+/** The main colour line's keys by its code and parameters (`brand-accent-codes.mjs`), or null. */
+function accentKeyOf(code: unknown, params: Record<string, unknown>): StringKey | null {
+  const plain = ['black', 'white', 'both'].includes(String(params.colours)) ? String(params.colours) : null
+  let key: string | null = null
+  if (code === 'accent_logo_moved' && ['lighter', 'darker'].includes(String(params.direction)))
+    key = `plan.assumption.accent_logo_moved.${params.direction}`
+  else if ((code === 'accent_no_hue' || code === 'accent_unreadable') && plain)
+    key = `plan.assumption.${code}.${plain}`
+  else if (typeof code === 'string') key = `plan.assumption.${code}`
+  return key !== null && code !== 'logo_drawn' && code !== 'logo_made' && known(key) ? key : null
+}
+
+/**
+ * An assumption by its code (`assumptions[].code`, `params`): the logo Tracy drew or made, the main colour; else the
+ * plan's text. The main colour line keeps the plan's own sentence on an English card: the brand step may say more
+ * there (the colour's name) than the coded sentence does.
+ */
 export function assumptionOf(
   t: Translate,
   a: { code?: string | null; params?: Params },
@@ -110,6 +173,11 @@ export function assumptionOf(
     MADE_MARKS.has(params.mark)
   )
     return t(`plan.assumption.logo_made.${params.found ? 'found' : 'none'}.${params.mark}` as StringKey)
+  const accent = accentKeyOf(a.code, params)
+  if (accent !== null) {
+    const coded = t(accent)
+    return coded !== en[accent] ? coded : said
+  }
   return said
 }
 

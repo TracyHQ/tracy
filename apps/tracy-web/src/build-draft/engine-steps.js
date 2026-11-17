@@ -202,10 +202,13 @@ export function planProfileOf(research, kit = null) {
  * question is open, `site_name_too_long` when the answer is longer than the template holds, both before any model
  * call and `noRerun` (`engine-asking.js` turns them into a question for the owner).
  * @param {{research: object, answers: object[], answerReadings?: Map<string, object> | null, template: object,
- *   brand: object | null}} inputs
+ *   brand: object | null, ownerLanguage?: string}} inputs
  * @param {{model: Function, kit: object}} tools
  */
-export async function composeStep({ research, answers, answerReadings, template, brand }, { model, kit }) {
+export async function composeStep(
+  { research, answers, answerReadings, template, brand, ownerLanguage },
+  { model, kit }
+) {
   const profile = planProfileOf(research, kit)
   // An answer to a question the withheld profile drops (about the held name or a held person) settles nothing that is
   // shown, and `composePlan` would refuse it as no question of the profile (`answer_invalid`). So does a site name
@@ -236,7 +239,9 @@ export async function composeStep({ research, answers, answerReadings, template,
     // The content brief research stored: its key messages, audience, voice and held fields reach the composer, and
     // what no block can show is listed as left out (`plan-composer-brief.mjs`).
     brief: research?.brief ?? null,
-    planId: `plan-${randomUUID()}`
+    planId: `plan-${randomUUID()}`,
+    // The language the owner chats in, when the chat named it (`composerContextOf`).
+    ...(ownerLanguage ? { ownerLanguage } : {})
   }
   const composed = await composePlan({ ...input, model })
   // `composePlan` hands on the profile without what the owner keeps off the site (for the page writer). The draft keeps

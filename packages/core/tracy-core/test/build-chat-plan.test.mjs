@@ -128,7 +128,7 @@ test('look, pictures, assumptions and left out come straight from the plan', () 
     logo: { kind: 'own', source: 'Instagram profile picture' }
   })
   assert.deepEqual(card.pictures, {
-    own: { frames: 31, from: ['Instagram', 'Website'] },
+    own: { frames: 31, photos: 12, from: ['Instagram', 'Website'] },
     generated: { frames: 2, reason: 'Two spots have no fitting photo; generated pictures show no people.' }
   })
   // The conflict is shown at its fact; the other assumptions are listed.
@@ -188,7 +188,7 @@ test('a plan stored under an older shape still draws: missing parts read as empt
   const card = planCardOf(old)
   assert.equal(card.look.template, '')
   assert.deepEqual(card.look.logo, { kind: null })
-  assert.deepEqual(card.pictures, { own: { frames: 0, from: [] }, generated: { frames: 0 } })
+  assert.deepEqual(card.pictures, { own: { frames: 0, photos: 12, from: [] }, generated: { frames: 0 } })
   assert.deepEqual(card.pages[0].blocks, [])
   assert.equal(planReviewRequestOf(old).questions.length, 1)
   assert.equal(planCardOf({ id: 'p', revision: 1 }).name, '')

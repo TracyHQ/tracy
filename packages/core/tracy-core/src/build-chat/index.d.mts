@@ -220,7 +220,8 @@ export interface PlanCard {
     }[]
   }[]
   pictures: {
-    own: { frames: number; from: string[]; fromKinds?: string[] }
+    /** `frames`: the picture spots the owner's photos fill; `photos`: the owner's photos the plan holds. */
+    own: { frames: number; photos: number; from: string[]; fromKinds?: string[] }
     generated: { frames: number; reason?: string } & PlanTextCode
   }
   assumptions: ({ id: string; said: string } & PlanTextCode)[]
@@ -232,6 +233,10 @@ export interface PlanCard {
     count?: number
     code?: string
     params?: Record<string, unknown>
+    /** The data kind of the items the line counts (`quote`, `gallery`...): the card says "3 reviews" in its words. */
+    dataKind?: string
+    /** The data kind of the fact the line names (`contact.hours`): the card says its label in its words. */
+    factKind?: string
   }[]
   counts: { pages: number; services: number }
 }

@@ -19,22 +19,53 @@ export const NEUTRAL_HELD_REASON = 'Kept off the site until the owner confirms i
 /** Held fields whose reason names what is held (`whyOf` in `brief-facts.mjs`). */
 const NAMING_FIELDS = new Set(['name', 'team'])
 
-/** The code of a left out entry this module writes: a sentence of its own, kept as written by the card. */
-export const BRIEF_LEFT_OUT_CODE = 'stated'
+/**
+ * The left out entries this module writes, each with its own stable code (#575 walk: one shared code kept them in
+ * English on a card in another language): the plan card names and says each by its code.
+ */
 export const BRIEF_LEFT_OUT = Object.freeze({
   whatsapp: {
     what: 'WhatsApp',
-    reason: 'This design has no place for a WhatsApp link, so your site does not show it.'
+    reason: 'This design has no place for a WhatsApp link, so your site does not show it.',
+    code: 'no_place_for_whatsapp'
   },
   otherPhones: {
     what: 'Other phone numbers',
-    reason: 'This design shows one phone number, so your site shows your main one.'
+    reason: 'This design shows one phone number, so your site shows your main one.',
+    code: 'no_place_for_other_phones'
   },
   googleRating: {
     what: 'Google rating',
-    reason: 'This design has no place for your Google rating, so your site does not show it.'
+    reason: 'This design has no place for your Google rating, so your site does not show it.',
+    code: 'no_place_for_google_rating'
   }
 })
+/**
+ * Opening hours the brief holds until the owner confirms them (#575 walk: seven hours lines were read and the card said
+ * nothing of them): one source alone says open 24 hours every day, or the sources disagree. Never their values.
+ */
+export const HELD_HOURS_LEFT_OUT = Object.freeze({
+  unconfirmed: {
+    what: 'Opening hours',
+    reason:
+      'Only one source gives your opening hours, as open 24 hours every day, so they stay off your site until you confirm them.',
+    code: 'hours_unconfirmed'
+  },
+  disagree: {
+    what: 'Opening hours',
+    reason: 'Your sources give different opening hours, so they stay off your site until you confirm them.',
+    code: 'hours_sources_disagree'
+  }
+})
+
+/** The held hours entry of the brief, or null when it holds none waiting for the owner. */
+function heldHoursOf(brief) {
+  const held = list(brief?.missing).find((m) => m?.field === 'hours')
+  if (!held) return null
+  if (held.conflicting) return HELD_HOURS_LEFT_OUT.disagree
+  const fact = list(brief?.facts).find((f) => f?.field === 'hours')
+  return list(fact?.reasons).includes('implausible-all-week-hours') ? HELD_HOURS_LEFT_OUT.unconfirmed : null
+}
 
 /** Every value the brief keeps off the site, as text: no reason the model reads may hold one. */
 function heldValuesOf(brief) {
@@ -90,7 +121,7 @@ export function briefContextOf(brief) {
 /**
  * The left out entries of what the brief holds and no block can show, in the plan's left out shape.
  * @param {object | null | undefined} brief
- * @returns {Array<{what: string, kind: 'feature', reason: string, code: string}>}
+ * @returns {Array<{what: string, kind: 'feature', reason: string, code: string}>} with held opening hours last
  */
 export function briefLeftOutOf(brief) {
   if (!brief || typeof brief !== 'object') return []
@@ -99,7 +130,9 @@ export function briefLeftOutOf(brief) {
     otherPhones: list(brief.business?.otherPhones).some((p) => isText(p?.phone)),
     googleRating: Number.isFinite(brief.googlePlace?.rating)
   }
-  return Object.entries(BRIEF_LEFT_OUT)
-    .filter(([key]) => has[key])
-    .map(([, entry]) => ({ ...entry, kind: 'feature', code: BRIEF_LEFT_OUT_CODE }))
+  const hours = heldHoursOf(brief)
+  return [
+    ...Object.entries(BRIEF_LEFT_OUT).filter(([key]) => has[key]),
+    ...(hours ? [['hours', hours]] : [])
+  ].map(([, entry]) => ({ ...entry, kind: 'feature' }))
 }

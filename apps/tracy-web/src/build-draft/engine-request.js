@@ -11,6 +11,9 @@ export const MAX_NAME = 120
 export const MAX_REQUEST = 2000
 export const MAX_CHANGES = 20
 
+/** A language the owner chats in: two lower case letters. */
+const LANGUAGE = /^[a-z]{2}$/
+
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 const isObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
 const optionalText = (value, max) =>
@@ -55,16 +58,19 @@ const READERS = {
     }
   },
   /**
-   * `{request?, restart?}`: the owner's words for a larger change; `restart: true` only when the owner asked to start the
-   * plan over (it discards the living plan and its edits).
+   * `{request?, restart?, language?}`: the owner's words for a larger change; `restart: true` only when the owner asked
+   * to start the plan over (it discards the living plan and its edits); `language`, the two letter language the owner
+   * chats in (#575), which the plan's sentences for the owner are written in.
    */
   compose(body) {
     const request = optionalText(body.request, MAX_REQUEST)
     if (!request) return null
     if (body.restart !== undefined && typeof body.restart !== 'boolean') return null
+    if (body.language !== undefined && !LANGUAGE.test(String(body.language))) return null
     return {
       ...(request.value ? { request: request.value } : {}),
-      ...(body.restart ? { restart: true } : {})
+      ...(body.restart ? { restart: true } : {}),
+      ...(body.language !== undefined ? { language: body.language } : {})
     }
   },
   /** `{changes: {field, value}[]}`: one simple change or a few, each naming a field of the plan. */
