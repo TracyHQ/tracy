@@ -1,7 +1,7 @@
 {
 	"templateId": "tracy-base",
 	"label": "Tracy Base",
-	"version": "0.5.8",
+	"version": "0.5.6",
 	"package": {
 		"name": "@tracy/emdash-theme-base",
 		"version": "0.5.8"
