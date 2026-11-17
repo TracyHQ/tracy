@@ -276,9 +276,10 @@ export function createBriefBuilds({
       const { rowCount } = await pool.query(
         `update site_brief set state = $3, stage = null, error = $4,
            timings = timings || jsonb_build_object('lost', $5::text, 'lostFrom', $2::text,
-             'interruptedAt', floor(extract(epoch from clock_timestamp()) * 1000)), updated_at = now()
+             'interruptedAt', $7::bigint), updated_at = now()
          where site_key = $1 and state = $2 and updated_at = $6::timestamptz`,
-        [row.site_key, row.state, ending.state, ending.error, LOST_ON_RESTART, row.seen]
+        // `now()`, as every other writer of `interruptedAt`: one clock for the stamp its readers compare with `now()`.
+        [row.site_key, row.state, ending.state, ending.error, LOST_ON_RESTART, row.seen, now()]
       )
       if (rowCount === 1)
         log.warn?.(`[brief] ${row.site_key}: its worker died with a process; ${ending.state}`)

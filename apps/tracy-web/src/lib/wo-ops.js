@@ -154,6 +154,12 @@ function demoContentRunning(opp, build) {
 }
 
 /**
+ * "Now" for a job row: the database's clock, read with the row (`db_now`). Its lease, creation and update
+ * times are written by `now()` in SQL, so they are judged on that clock, as the claimer judges the lease.
+ */
+const jobClock = (job) => (job?.db_now ? new Date(job.db_now).getTime() : Date.now())
+
+/**
  * Derive the 0..7 lifecycle stage and attention state of a Website Opportunity row from its
  * latest job (`wo_job`), sources (`wo_source`), media (`wo_media`), revision (`wo_revision`),
  * demo build (`wo_build`) and latest demo action (`wo_demo_action`).
@@ -178,7 +184,7 @@ function deriveOpportunityLifecycle(
   const leaseExpired =
     latestJob?.state === 'running' &&
     latestJob?.lease_until &&
-    new Date(latestJob.lease_until).getTime() < Date.now()
+    new Date(latestJob.lease_until).getTime() < jobClock(latestJob)
 
   const jobErrText = errorTextOf(latestJob?.last_error)
 
@@ -402,7 +408,7 @@ function deriveOpportunityLifecycle(
 
   // Stage 1 & 2: Queued / Waiting for worker lease
   if (latestJob?.state === 'queued') {
-    const ageMs = Date.now() - new Date(latestJob.created_at).getTime()
+    const ageMs = jobClock(latestJob) - new Date(latestJob.created_at).getTime()
     if (ageMs > 15_000) {
       return {
         stage: '2-waiting',
@@ -729,7 +735,7 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
                   case when pj.id is not null then pj.heartbeat_at else j.heartbeat_at end as heartbeat_at,
                   case when pj.id is not null then pj.attempt else j.attempt end as attempt,
                   case when pj.id is not null then pj.last_error else j.last_error end as last_error,
-                  j.created_at, j.updated_at,
+                  j.created_at, j.updated_at, now() as db_now,
                   coalesce((select jsonb_agg(jsonb_build_object(
                     'source', s.source, 'ref', s.ref, 'status', s.status,
                     'reason', s.reason, 'coverage', s.coverage))
@@ -914,7 +920,7 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
             1,
             Math.round(
               ((['queued', 'running'].includes(latestJob.state)
-                ? Date.now()
+                ? jobClock(latestJob)
                 : new Date(latestJob.updated_at).getTime()) -
                 new Date(latestJob.created_at).getTime()) /
                 1000

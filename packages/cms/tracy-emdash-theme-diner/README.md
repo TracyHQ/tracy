@@ -6,14 +6,14 @@ JoomlArt's Joomla template JA Diner (j6 1.0.5): home with slideshow, intro block
 search; 404. English only. Demo content: the JA Diner sample site.
 Identity, form bindings, mail defaults and the SEO audit policy live in `template.config.json`; every tool reads it.
 
-Built with **EmDash 1.1.0** on **Astro 7.3.3** (SSR, Node adapter), **Tailwind CSS 4.3.3**. Fonts: Work Sans (Google
+Built with **EmDash 1.1.0** on **Astro 7.4.12** (SSR, Node adapter), **Tailwind CSS 4.3.3**. Fonts: Work Sans (Google
 provider) and Eczar (local woff2 in `src/fonts/`). All copy, images, menus and figures are editable in the EmDash admin;
 the layout is the template's. A dark theme is derived from the source palette (it has no source to compare with).
 Provenance: `PROVENANCE.md`.
 
 ## Requirements
 
-Node >= 22.16, pnpm via corepack (`pnpm@11.9.0`). Everything else is pinned in `package.json` + `pnpm-lock.yaml`.
+Node >= 22.23.4, pnpm via corepack (`pnpm@11.9.0`). Everything else is pinned in `package.json` + `pnpm-lock.yaml`.
 Optional for local mail testing: Docker (Mailpit).
 
 ## Install and run (development)
