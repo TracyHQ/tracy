@@ -159,11 +159,11 @@ test('the run stopped mid write: no plugin call goes out after the signal, the b
   assert.notEqual(r.outcome.value?.chain?.ending, 'complete')
 })
 
-// THE NEXT BLOCKER of a real run, reproduced and NOT fixed here: with the doors wired, a draft whose plan has generated
-// pictures stops at the write plan's guard, before any door, because no generator stores their bytes yet.
-test('next blocker: with the real stored pictures the build stops picture_not_stored, before any door', async () => {
+// The blocker the first draft runs met, fixed (#575 pictures, port 1): with the doors wired, a draft whose plan has
+// frames no photo fills drew them, stored the drawings as draft pictures, and uploads their stored bytes.
+test('with the real stored pictures the drawn frames are uploaded from their stored drawings, the build ends', async () => {
   const r = await build({ wiring: realWiring({ realPictures: true }) })
-  assert.equal(r.stop?.step, 'write')
-  assert.equal(r.stop?.code, 'picture_not_stored')
-  assert.equal(r.over.calls.length, 0)
+  assert.equal(r.stop?.code, undefined, JSON.stringify(r.stop ?? null))
+  assert.equal(r.outcome.value?.chain?.ending, 'complete')
+  assert.ok(r.over.calls.some((c) => c.action === 'media.upload'))
 })

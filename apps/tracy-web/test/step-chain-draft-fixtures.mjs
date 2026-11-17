@@ -8,6 +8,7 @@ import { PAGE_WRITER_PROMPT } from 'website-opportunities/domain/page-writer.mjs
 import { composePlan, composerContextOf } from 'website-opportunities/domain/plan-composer.mjs'
 import { withWithheld } from 'website-opportunities/domain/plan-withheld.mjs'
 import { firstCandidate } from '../../../packages/wo/website-opportunities/test/fixtures/icon-fields/invented-yoga.mjs'
+import { finishReply } from './draft-picture-finish-fakes.mjs'
 import { visionReply } from '../../../packages/wo/website-opportunities/test/fixtures/picture-policy/invented-pictures.mjs'
 import { scriptedModel } from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 import {
@@ -144,14 +145,17 @@ const WRITES = {
 
 /**
  * The fake build model: the writer's calls (by its prompt), the labelling (a call with images) and the icon ranking.
- * `label(id)` overrides a picture's label; `writer(slot, rewrite)` overrides what the writer writes.
+ * `label(id)` overrides a picture's label; `writer(slot, rewrite)` overrides what the writer writes; `look(request)`
+ * answers a second look (`draft-picture-finish-fakes.mjs`).
  */
-export function fakeBuildModel({ label = () => undefined, writer } = {}) {
+export function fakeBuildModel({ label = () => undefined, writer, look } = {}) {
   const requests = []
   const rank = firstCandidate()
   let rewrites = 0
   const model = async (request) => {
     requests.push(request)
+    const finished = finishReply(request, { look })
+    if (finished !== null) return finished
     if (Array.isArray(request.images) && request.images.length) {
       const ids = JSON.parse(request.user).pictures.map((p) => p.id)
       const over = Object.fromEntries(

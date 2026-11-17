@@ -7,6 +7,8 @@
 // choices that passes the alt guard, recorded by where it came from (`altFrom`: `label`, `item`, `site`) so the build
 // record counts the fallbacks.
 //
+//   look     first of all, the alt the second look wrote of the picture placed, asked in the site's language
+//            (`step-chain-draft-look.js`, the step chain's looker alt, ADR 0043 section 3f, #575)
 //   choices  an English site: the picture's label, the item's own label, the site name. Any other site: the label or
 //            the item's label only when its text reads as the site language (`tinyld`), else the site name; an
 //            English label is never the alt of a site in another language.
@@ -92,6 +94,7 @@ export function withAltTexts(frames, { profile, language, withheld, template }) 
     if (frame?.source !== 'own' && frame?.source !== 'generated') return frame
     const item = frame.item ? items.get(frame.item) : null
     const choices = [
+      ['look', frame.lookAlt ?? null],
       ['label', inSite(frame.label)],
       ['item', inSite(itemLabelOf(item))],
       ['site', site]
@@ -106,7 +109,7 @@ export function withAltTexts(frames, { profile, language, withheld, template }) 
 
 /** How the alts of the frames were settled: by choice, `fallbacks` being every alt that is not the picture's label. */
 export function altCountsOf(frames) {
-  const counts = { label: 0, item: 0, site: 0, none: 0 }
+  const counts = { look: 0, label: 0, item: 0, site: 0, none: 0 }
   for (const f of list(frames))
     if (f && 'altFrom' in f) counts[f.altFrom ?? 'none'] = (counts[f.altFrom ?? 'none'] ?? 0) + 1
   return { ...counts, fallbacks: counts.item + counts.site }

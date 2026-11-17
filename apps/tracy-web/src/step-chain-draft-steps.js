@@ -10,7 +10,9 @@
 //             ONE BUILD: a failure in the rewrite round is noRerun; a failure before it may be re-run once by the
 //             frame, and that second attempt writes once with no rewrite round (`rewrite: false`)
 //   pictures  the draft pictures opened, labelled by vision calls of eight, as thumbnails, assigned to every frame (`placeBuildPictures`);
-//             a picture whose own texts name a held text is refused (`refusedPicture`)
+//             a picture whose own texts name a held text is refused (`refusedPicture`); every placed photo looked
+//             at again and every frame that waits drawn and looked at (`finishPictures`), with `deps.pictureDrawer`
+//             (the drawer door's resolver) and `deps.drawnPictures` (the store of drawings)
 //   icons     `selectBuildIcons` over the written copy and the placed frames
 //   order, write   `step-chain-draft-steps-late.js`: the write order, and the write on the site through the doors
 //             `deps.draftWrite` injects, else the real doors over the run's Apply door (`step-chain-draft-site.js`,
@@ -29,6 +31,7 @@ import {
   visionThrough,
   withDraftPictures
 } from './step-chain-draft-pictures.js'
+import { altAskOf, drawerOf, finishPictures } from './step-chain-draft-finish-wiring.js'
 import { draftError, draftSource } from './step-chain-draft-source.js'
 import { keptModelOf, reuseOf, revisionOf, revisionRecordOf } from './step-chain-draft-revision.js'
 import { siteWriteOf } from './step-chain-draft-site.js'
@@ -176,6 +179,20 @@ export function createDraftSteps(deps) {
         vision: visionThrough(model, opened.refs),
         refuse: refusedPicture(plan.profile?.withheld, opened.profile)
       })
+      // The second look at every placed photo, then the drawings (`step-chain-draft-finish.js`, #575).
+      const finished = await finishPictures({
+        placed,
+        plan: plan.plan,
+        profile: opened.profile,
+        kit: declared(kit),
+        bytes: opened.bytes,
+        labels: research.labels,
+        model,
+        drawer: await drawerOf(deps),
+        drawn: deps.drawnPictures ?? null,
+        accountId: ctx.accountId ?? null,
+        altOf: altAskOf(plan.plan, opened.profile)
+      })
       const draft = {
         used: opened.used,
         missing: opened.missing,
@@ -186,14 +203,16 @@ export function createDraftSteps(deps) {
       }
       const recorded = {
         calls: { asked: model.asked, replayed: model.replayed },
-        counts: placed.counts,
+        counts: finished.counts,
         // Photos and spots apart, as the plan card counts them (`picture-tally.mjs`).
-        tally: placed.tally,
-        leftOut: placed.leftOut,
-        difference: placed.difference,
+        tally: finished.tally,
+        leftOut: finished.leftOut,
+        difference: finished.difference,
+        looks: finished.looks,
+        ...(finished.drawing ? { drawing: finished.drawing } : {}),
         draft
       }
-      const value = { ...placed, profile: opened.profile, draft, replies: model.replies, recorded }
+      const value = { ...finished, profile: opened.profile, draft, replies: model.replies, recorded }
       return { value, usd: null, knownUsd: 0 }
     },
 

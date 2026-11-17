@@ -46,9 +46,17 @@ test('a full build on a site that holds a build stops before any model call; a b
 test('two revisions racing from the same build: one ends done, the other stops before any door', async () => {
   const first = await firstBuild()
   const before = first.memory.calls
+  // Both reach the site before either begins on it: the race is at the site, whatever their earlier steps cost.
+  let arrived = 0
+  let bothThere
+  const both = new Promise((resolve) => (bothThere = resolve))
+  const beforeBegin = async () => {
+    if (++arrived === 2) bothThere()
+    await both
+  }
   const [a, b] = await Promise.all([
-    revisionRun(first, revisedBy('change the phone'), { runId: 'run-a' }),
-    revisionRun(first, revisedBy('rename a service'), { runId: 'run-b' })
+    revisionRun(first, revisedBy('change the phone'), { runId: 'run-a', beforeBegin }),
+    revisionRun(first, revisedBy('rename a service'), { runId: 'run-b', beforeBegin })
   ])
   const done = [a, b].filter((r) => !r.error)
   const stopped = [a, b].filter((r) => r.error)

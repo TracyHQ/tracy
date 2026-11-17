@@ -116,6 +116,8 @@ import { AI_QUICKSTARTS_DIR } from './build-draft/ai-quickstarts.js'
 import { blankContractReader } from './step-chain-draft-blank-contract.js'
 import { buildDraftRoutes } from './build-draft/route.js'
 import { buildDraftBodyLimit } from './build-draft/body-limits.js'
+import { drawnPicturesStore } from './build-draft/drawn-pictures.js'
+import { pictureDrawerDoor } from './site-pictures/drawer-door.js'
 import { buildModelDoor } from './build-draft/build-model.js'
 import { draftPlanForBuild, readEngineDraft } from './build-draft/store.js'
 import { PHOSPHOR_SET, phosphorCatalog } from './lib/picture-paint/icons/phosphor-set.js'
@@ -1247,6 +1249,8 @@ export function buildApp(deps) {
     })
     // One opener for every picture a draft's research names (#575): its own draft pictures and, for a research of
     // links, the step chain's place and account pictures, read where the step chain keeps them (`research-picture-reader.js`).
+    // The drawings of a draft run's pictures step, kept as draft pictures by their request (#575 pictures, port 1).
+    app.drawnPictures = drawnPicturesStore({ pool: deps.pool, objects: draftPictureObjects })
     app.openDraftPicture = researchPictureReader({
       pool: deps.pool,
       objects: draftPictureObjects,
@@ -2473,6 +2477,10 @@ export function buildApp(deps) {
                         })
                       ),
                 openDraftPicture: (id, opts) => app.openDraftPicture?.(id, opts) ?? null,
+                // The step chain's picture drawer door and the store of its drawings (#575 pictures, port 1).
+                pictureDrawer: () =>
+                  pictureDrawerDoor({ pool: deps.pool, secret: deps.config.sessionSecret }),
+                drawnPictures: app.drawnPictures ?? null,
                 iconLibrary: () => ({ set: PHOSPHOR_SET, icons: phosphorCatalog() }),
                 // The write step's site wiring (`step-chain-draft-site.js`): the real door client, see `draftSite`.
                 site: draftSite,

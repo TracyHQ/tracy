@@ -147,7 +147,14 @@ test('on a site not in English no English label is an alt, and the record counts
   for (const p of placed) assert.ok(!/Invented label|Shop photo/.test(p.alt), p.alt)
   // No item text of the invented florist reads as German: every alt is the site name, and the record says so.
   assert.ok(placed.every((p) => p.alt === SITE_NAME))
-  assert.deepEqual(r.run.inputs.order.recorded.alts, { label: 0, item: 0, site: 8, none: 0, fallbacks: 8 })
+  assert.deepEqual(r.run.inputs.order.recorded.alts, {
+    look: 0,
+    label: 0,
+    item: 0,
+    site: 8,
+    none: 0,
+    fallbacks: 8
+  })
   const en = await run(await setUp({}))
   const alts = en.run.inputs.order.recorded.alts
   assert.equal(alts.none, 0)

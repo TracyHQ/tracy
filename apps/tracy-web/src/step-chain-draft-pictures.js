@@ -32,13 +32,14 @@ const IMAGE_FIELD = /(?:\.image|_image|_logo)$/
  * used and missing, and `unstored`: picture values with no stored picture behind them (left out like a missing one).
  * @param {{profile: object, manifest?: object[], accountId: string,
  *   openDraftPicture?: (id: string, opts: {accountId: string}) => Promise<{bytes: Uint8Array, mime?: string} | null>}} input
- * @returns {Promise<{profile: object, refs: Map<string, string>, used: string[], missing: string[], unstored: number}>}
+ * @returns {Promise<{profile: object, refs: Map<string, string>, bytes: Map<string, Uint8Array>, used: string[], missing: string[], unstored: number}>}
  */
 export async function withDraftPictures({ profile, manifest, accountId, openDraftPicture }) {
   const drafts = list(manifest).filter((m) => OPENED.has(m?.origin) && isText(m.id))
   const byId = new Map(drafts.map((m) => [m.id, m]))
   const byUrl = new Map(drafts.filter((m) => isText(m.sourceUrl)).map((m) => [m.sourceUrl, m]))
   const refs = new Map()
+  const bytes = new Map()
   const used = []
   const missing = []
   let unstored = 0
@@ -75,6 +76,7 @@ export async function withDraftPictures({ profile, manifest, accountId, openDraf
           continue
         }
         used.push(entry.id)
+        bytes.set(field.value, got.bytes)
         refs.set(field.value, await visionAddressOf(got, entry))
       }
       items[kind].push({ ...item, fields })
@@ -83,6 +85,8 @@ export async function withDraftPictures({ profile, manifest, accountId, openDraf
   return {
     profile: { ...profile, items },
     refs,
+    // The opened bytes by address: the second look cuts each placed photo from them (`step-chain-draft-finish.js`).
+    bytes,
     used: [...new Set(used)],
     missing: [...new Set(missing)],
     unstored

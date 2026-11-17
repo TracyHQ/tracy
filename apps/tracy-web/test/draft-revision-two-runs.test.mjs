@@ -57,11 +57,15 @@ test('two runs that read the same build: the one that begins second stops before
       runId,
       rebuildFrom: first.ref
     })
-  const a = go('rename a service', 'run-a', {})
+  // A begins only once B has reached the site, whatever B's earlier steps cost.
+  let bThere
+  const bArrived = new Promise((resolve) => (bThere = resolve))
+  const a = go('rename a service', 'run-a', {}, () => bArrived)
   // B read the first build as the site's build, and reaches its begin only once A is done.
   const lateRecord = {}
   const calls = { at: 0 }
   const b = go('change the phone', 'run-b', lateRecord, async () => {
+    bThere()
     await a.catch(() => {})
     calls.at = first.memory.calls
   })

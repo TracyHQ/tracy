@@ -79,12 +79,13 @@ test('changing nothing calls no model and no door; one edit writes less than a b
     const mine = rows.filter((r) => r.writer === writer)
     const nothing = mine.find((r) => r.edit === 'change nothing')
     assert.deepEqual(
-      [nothing.model, nothing.writes, nothing.written, nothing.rewrite, nothing.added],
-      [0, 0, 0, 0, 0]
+      [nothing.model, nothing.pictureCalls, nothing.writes, nothing.written, nothing.rewrite, nothing.added],
+      [0, 0, 0, 0, 0, 0]
     )
     for (const row of mine.filter((r) => !r.stop && r.writes > 0)) {
       assert.ok(row.writes < nothing.same, row.edit)
-      // The model is called for the pages written again only, plus an icon ranking whose request changed.
+      // The model is called for the pages written again only, plus an icon ranking whose request changed (the
+      // pictures step's wish call and looks, for frames whose request changed only, are counted apart).
       assert.ok(row.model <= row.written + 1, `${writer}: ${row.edit}`)
     }
   }

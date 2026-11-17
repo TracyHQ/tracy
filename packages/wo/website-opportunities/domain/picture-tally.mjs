@@ -26,6 +26,8 @@ function grouped(codes) {
  */
 export function unusedReasonOf(picture, assignment) {
   if (picture.stock) return 'stock'
+  // The looker rejected it where it was placed (`picture-step.mjs` `placeAgainWithout`).
+  if (picture.lookRejected) return 'looker_rejected'
   if (list(assignment.reduced).some((r) => r.item === picture.item)) return 'item_dropped'
   const frame = list(assignment.frames).find((f) => f.item && f.item === picture.item && f.place !== 'video')
   return frame ? (unfitReason(picture, frame) ?? 'frame_taken') : 'no_fitting_frame'

@@ -48,13 +48,22 @@ export async function firstBuild({
 
 /**
  * The revision run of `revised` (`{plan, profile}`) on the site of `first`, with its own model and run record, from the
- * build `from` (the first build by default).
+ * build `from` (the first build by default); `beforeBegin` is awaited before the run begins on the site.
  * @returns {Promise<{run?: object, error?: object, model: object, writes: number, record: object}>}
  */
 export async function revisionRun(
   first,
   revised,
-  { runId = 'run-larkspur-2', record = {}, memory, model, writer = {}, pictures, from = first.ref } = {}
+  {
+    runId = 'run-larkspur-2',
+    record = {},
+    memory,
+    model,
+    writer = {},
+    pictures,
+    from = first.ref,
+    beforeBegin
+  } = {}
 ) {
   const on = memory ?? first.memory
   const mine = model ?? revisionModel(writer)
@@ -65,7 +74,8 @@ export async function revisionRun(
     memory: on,
     builds: first.builds,
     record,
-    pictures
+    pictures,
+    beforeBegin
   })
   const out = { model: mine, record, steps }
   try {
@@ -149,7 +159,9 @@ export async function matrixRow(name, { writer = {}, site: blank = blankSite } =
   const row = {
     edit: name,
     writes: partial.writes,
-    model: partial.model.calls.length,
+    // The pictures step's own calls (the drawings' wish call and the looks, #575) are counted apart.
+    model: partial.model.calls.filter((c) => c.kind !== 'pictures').length,
+    pictureCalls: partial.model.calls.filter((c) => c.kind === 'pictures').length,
     pages: partial.model.pages
   }
   if (partial.error) return { ...row, stop: partial.error.code }

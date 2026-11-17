@@ -146,7 +146,7 @@ test('without a door factory the write step still stops typed, one attempt, noth
   assert.equal(run.over.calls.length, 0)
 })
 
-test('with the real stored pictures a frame with no stored bytes stops the build at the guard, before any door', async () => {
+test('with the real stored pictures the drawn frames are stored drawings: the build ends complete', async () => {
   const run = await build({
     site: (over, _, memory) => ({
       siteDoors: memorySiteDoors(memory),
@@ -154,7 +154,9 @@ test('with the real stored pictures a frame with no stored bytes stops the build
       blankContract: () => site.kit.blankContract
     })
   })
-  // The fixture's generated frames have no stored bytes (no generator stores them yet): typed, nothing called.
-  assert.equal(run.outcome.error?.stop?.code, 'picture_not_stored')
-  assert.equal(run.over.calls.length, 0)
+  // The fixture's generated frames are drawn by the fake drawer and stored (`draft-picture-finish-fakes.mjs`).
+  assert.equal(run.outcome.error?.stop?.code, undefined, JSON.stringify(run.outcome.error?.stop ?? null))
+  assert.equal(run.outcome.value?.chain?.ending, 'complete')
+  const pictures = run.prepared.inputs.pictures.frames.filter((f) => f.source === 'generated')
+  assert.ok(pictures.length > 0 && pictures.every((f) => f.file?.startsWith('drawn:')))
 })

@@ -13,6 +13,7 @@ import {
   floristDraft,
   floristIcons
 } from './step-chain-draft-fixtures.mjs'
+import { fakeDrawer } from './draft-picture-finish-fakes.mjs'
 
 export const records = mkdtempSync(path.join(tmpdir(), 'step-chain-draft-'))
 after(() => rmSync(records, { recursive: true, force: true }))
@@ -43,6 +44,7 @@ export async function setUp({
   const draft = await floristDraft({ heldInPlan })
   if (mutate) await mutate(draft)
   const opened = []
+  const drawer = fakeDrawer()
   const reads = { engine: 0, approved: 0, door: 0 }
   const steps = createStepChainSteps({
     pool,
@@ -63,6 +65,9 @@ export async function setUp({
         return bytes ? { id, bytes, mime: 'image/png' } : null
       },
       iconLibrary: floristIcons,
+      // The drawer of the frames no photo fills, over a fake provider.
+      pictureDrawer: drawer.pictureDrawer,
+      drawnPictures: drawer.drawnPictures,
       ...doors
     }
   })
@@ -75,5 +80,5 @@ export async function setUp({
     signal: new AbortController().signal,
     progress: async () => {}
   }
-  return { engine, steps, ctx, draft, model, opened, reads }
+  return { engine, steps, ctx, draft, model, opened, reads, drawer }
 }

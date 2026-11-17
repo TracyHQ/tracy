@@ -26,7 +26,8 @@ const full = (id, more = {}) => ({
 })
 const askedIds = (requests) =>
   requests
-    .filter((r) => Array.isArray(r.images) && r.images.length)
+    // The labelling calls (the second look, #575, sends one picture under a plain text message: not a labelling).
+    .filter((r) => Array.isArray(r.images) && r.images.length && String(r.user).startsWith('{'))
     .flatMap((r) => JSON.parse(r.user).pictures.map((p) => p.id))
 
 test('a photo labelled in full by research is not looked at again; one with lettering never fills a frame', async () => {

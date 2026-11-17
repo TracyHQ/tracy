@@ -81,8 +81,14 @@ test('2. unaffected pages and blocks are untouched and cause no model call', () 
   const calls = partial.model.pages
   for (const page of run.plan.revision.impact.reuse) assert.equal(calls[page] ?? 0, 0, page)
   assert.ok(run.plan.revision.impact.reuse.length >= 3)
-  // Only writer calls: the labelling and the icons were answered from the previous build's replies.
-  assert.deepEqual([...new Set(partial.model.calls.map((c) => c.kind))], ['writer'])
+  // Only writer calls: the labelling and the icons were answered from the previous build's replies. The one other call
+  // is the drawings' wish call (#575), asked again because the renamed service is one it draws for; every drawing and
+  // every look was answered from the previous build.
+  const kinds = partial.model.calls.map((c) => c.kind)
+  assert.deepEqual([...new Set(kinds.filter((k) => k !== 'pictures'))], ['writer'])
+  const pictures = partial.model.calls.filter((c) => c.kind === 'pictures')
+  assert.ok(pictures.length <= 1)
+  assert.ok(pictures.every((c) => JSON.parse(c.user).frames.some((f) => f.item?.fields?.['offering.name'])))
   assert.equal(run.icons.recorded.calls.asked, 0)
   // The words of every kept page are the previous build's.
   for (const id of run.plan.revision.impact.reuse)

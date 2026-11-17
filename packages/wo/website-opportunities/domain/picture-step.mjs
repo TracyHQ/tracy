@@ -92,7 +92,7 @@ export async function placeBuildPictures({
     data,
     pictures: labelling.pictures
   })
-  return {
+  const placed = {
     ...assignment,
     leftOut: leftOutOf(assignment.frames),
     difference: differenceOf(assignment, approved, labelling.pictures),
@@ -102,6 +102,38 @@ export async function placeBuildPictures({
     // Only a step that asks to refuse pictures is told which were.
     ...(typeof refuse === 'function' ? { refused } : {}),
     prompt: labelling.prompt
+  }
+  // The own pictures as labelled, for a later rung that places them again without a rejected one
+  // (`placeAgainWithout`). Not enumerable: the step's output stays what the unsplit step gave (#597).
+  return Object.defineProperty(placed, 'pictures', { value: labelling.pictures, enumerable: false })
+}
+
+/**
+ * The placement again, without the own pictures `without` names (the looker rejected them where they were placed, the
+ * step chain's "next photo" rung, `ladder-climb.js`): the same policy over the pictures `placed` was labelled with, no
+ * new labelling. Every frame is decided again, so a frame may take another photo, be drawn or stay empty.
+ * @param {{plan: object, profile: object, blockStore: object, library?: object[], placed: object,
+ *   without: Set<string>}} input `placed`: a result of `placeBuildPictures`
+ */
+export function placeAgainWithout({ plan, profile, blockStore, library = [], placed, without }) {
+  const data = planDataOf(profile)
+  // A rejected photo stays one of the owner's photos (the tally counts it, unused `looker_rejected`), never placed.
+  const pictures = list(placed.pictures).map((p) => (without.has(p.id) ? { ...p, lookRejected: true } : p))
+  const assignment = assignPictures({
+    pages: plan.pages,
+    blocks: blocksOf(blockStore, library),
+    data,
+    pictures: pictures.filter((p) => !p.lookRejected)
+  })
+  return { ...placed, ...assignment, pictures, ...talliesOf(assignment, plan.pictures ?? {}, pictures) }
+}
+
+/** The counts that follow the frames: what the customer is told is empty, the difference and the tally. */
+export function talliesOf(assignment, approved, pictures) {
+  return {
+    leftOut: leftOutOf(assignment.frames),
+    difference: differenceOf(assignment, approved, pictures),
+    tally: pictureTallyOf(assignment, pictures)
   }
 }
 

@@ -11,6 +11,7 @@ import {
   firstCandidate,
   iconLibrary
 } from '../../../packages/wo/website-opportunities/test/fixtures/icon-fields/invented-yoga.mjs'
+import { fakeDrawer, finishReply } from './draft-picture-finish-fakes.mjs'
 import { visionReply } from '../../../packages/wo/website-opportunities/test/fixtures/picture-policy/invented-pictures.mjs'
 import { createDraftSteps } from '../src/step-chain-draft-steps.js'
 import { memoryDoors } from 'website-opportunities/domain/write-order-memory-doors.mjs'
@@ -67,6 +68,11 @@ export function revisionModel({ leak, cross = false, seed = (text) => text, fixe
   const rank = firstCandidate()
   const model = async (request) => {
     calls.push(request)
+    const finished = finishReply(request)
+    if (finished !== null) {
+      calls.at(-1).kind = 'pictures'
+      return finished
+    }
     if (Array.isArray(request.images) && request.images.length) {
       calls.at(-1).kind = 'vision'
       return JSON.stringify(visionReply(JSON.parse(request.user).pictures.map((p) => p.id)))
@@ -142,15 +148,25 @@ const kitOf = () => ({ ...site.aiq, template: { slug: 'ja-boxing', version: '1.0
  * `builds`: a Map the steps keep each finished build in (`deps.builds`); `record`: the run record of the write;
  * `pictures`: `{stored, openStored}` in place of the stored pictures below (new bytes, other stored ids).
  */
-export function depsOf({ draft, model, memory, builds = new Map(), record = {}, pictures = {} }) {
+export function depsOf({
+  draft,
+  model,
+  memory,
+  builds = new Map(),
+  record = {},
+  pictures = {},
+  beforeBegin
+}) {
   return {
     readEngineDraft: async (accountId) => (accountId === ACCOUNT ? draft.engine : null),
     draftPlanForBuild: async (accountId) => (accountId === ACCOUNT ? draft.approved : null),
     loadAiqKit: (slug) => (slug === 'ja-boxing' ? kitOf() : null),
     buildModel: async () => model,
     openDraftPicture: async (id) => ({ id, bytes: Buffer.from(`picture ${id}`), mime: 'image/png' }),
+    // The drawer of the frames no photo fills, over a fake provider (`draft-picture-finish-fakes.mjs`).
+    ...drawerDeps(memory),
     iconLibrary,
-    builds: buildStoreOf(builds),
+    builds: gatedBegin(buildStoreOf(builds), beforeBegin),
     draftWrite: {
       doors: async () => memory.doors,
       record: async () => record,
@@ -169,6 +185,27 @@ export function depsOf({ draft, model, memory, builds = new Map(), record = {}, 
     }
   }
 }
+
+/**
+ * The drawer door and the store of drawings of a fake drawer, one per site: the store of drawings outlives a run, as
+ * the account's draft pictures do, so a revision finds the drawings its first build paid for.
+ */
+const drawers = new WeakMap()
+const drawerDeps = (site) => {
+  const key = site && typeof site === 'object' ? site : drawerDeps
+  if (!drawers.has(key)) drawers.set(key, fakeDrawer())
+  const { pictureDrawer, drawnPictures } = drawers.get(key)
+  return { pictureDrawer, drawnPictures }
+}
+
+/**
+ * The build store with `beforeBegin()` awaited before a run begins on the site: a test that races two runs sets the
+ * order they reach the site in, instead of leaving it to how long their earlier steps take.
+ */
+const gatedBegin = (store, beforeBegin) =>
+  beforeBegin
+    ? { ...store, begin: async (run, ctx) => (await beforeBegin(run), store.begin(run, ctx)) }
+    : store
 
 /** The draft steps over `depsOf`. */
 export const stepsOf = (input) => createDraftSteps(depsOf(input))

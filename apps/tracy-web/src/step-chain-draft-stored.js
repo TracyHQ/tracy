@@ -11,7 +11,9 @@
 //   brand picture    a logo frame (`logo_from_brand_step`) and the site icon (`look.favicon`): the picture of the brand
 //                    file the draft keeps (`step-chain-draft-brand-pictures.js`): `brand:<id>`, opened through
 //                    `openDraftPicture` and held to the hash the brand file kept
-//   anything else    no stored bytes: a generated picture (no generator is wired), an icon on a plate, a picture with
+//   a drawing        a generated frame the pictures step drew names its stored drawing (`file: drawn:<id>`,
+//                    `step-chain-draft-finish.js`), a draft picture opened like an owner photo (#575)
+//   anything else    no stored bytes: a generated frame with no drawing, an icon on a plate, a picture with
 //                    no stored draft picture. The write guard then stops the build (`picture_not_stored`), typed.
 import { createHash } from 'node:crypto'
 import { iconPicture } from './lib/picture-paint/icons/icon-render.js'
@@ -22,6 +24,7 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
 const HEX = /^#[0-9a-f]{6}$/i
 const DRAFT = 'draft:'
 const ICON = 'icon:'
+const DRAWN = 'drawn:'
 
 /** The colour an icon variant is drawn in: its own, the plan's accent when it says `accent`, else neutral. */
 function colourOf(variant, look, theme) {
@@ -86,6 +89,8 @@ export function storedPicturesOf({
         const entry = p?.source === 'own' && isText(p.ref) ? byUrl.get(p.ref) : null
         if (entry)
           out[p.frame] = { id: `${DRAFT}${entry.id}`, ...(isText(entry.mime) ? { mime: entry.mime } : {}) }
+        else if (p?.source === 'generated' && isText(p.file) && p.file.startsWith(DRAWN))
+          out[p.frame] = { id: p.file, mime: 'image/jpeg' }
       }
       for (const p of list(order?.pictures))
         if (!out[p?.frame] && isText(p?.sameAs) && out[p.sameAs]) out[p.frame] = { ...out[p.sameAs] }
@@ -112,6 +117,11 @@ export function storedPicturesOf({
         // Held to the hash the brand file kept, measured on the bytes themselves: a reader need not say it.
         if (got?.bytes?.length > 0 && createHash('sha256').update(got.bytes).digest('hex') === sha256)
           return { bytes: got.bytes, mime: isText(got.mime) ? got.mime : 'image/png' }
+      }
+      if (text.startsWith(DRAWN) && typeof openDraftPicture === 'function') {
+        const got = await openDraftPicture(text.slice(DRAWN.length), { accountId, origin: 'draft' })
+        if (got?.bytes instanceof Uint8Array && got.bytes.length > 0)
+          return { bytes: got.bytes, mime: isText(got.mime) ? got.mime : 'image/jpeg' }
       }
       if (text.startsWith(DRAFT) && typeof openDraftPicture === 'function') {
         const entry = byId.get(text.slice(DRAFT.length))

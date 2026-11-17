@@ -115,7 +115,10 @@ test('a copy that still repeats after its one rewrite stops the build at copy, o
     ]
   )
   // Three first writings and two rewrites: no third call for any page, and nothing after the copy step.
-  assert.equal(model.requests.filter((r) => JSON.parse(r.user ?? '{}').blocks).length, 5)
+  assert.equal(
+    model.requests.filter((r) => String(r.user ?? '{}').startsWith('{') && JSON.parse(r.user).blocks).length,
+    5
+  )
   assert.ok(!error.chain || !JSON.stringify(error.chain).includes('"order"'))
 })
 
