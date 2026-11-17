@@ -79,13 +79,15 @@ test('changing nothing calls no model and no door; one edit writes less than a b
     const mine = rows.filter((r) => r.writer === writer)
     const nothing = mine.find((r) => r.edit === 'change nothing')
     assert.deepEqual(
-      [nothing.model, nothing.writes, nothing.written, nothing.rewrite, nothing.added],
-      [0, 0, 0, 0, 0]
+      [nothing.model, nothing.privacy, nothing.writes, nothing.written, nothing.rewrite, nothing.added],
+      [0, 0, 0, 0, 0, 0]
     )
     for (const row of mine.filter((r) => !r.stop && r.writes > 0)) {
       assert.ok(row.writes < nothing.same, row.edit)
       // The model is called for the pages written again only, plus an icon ranking whose request changed.
       assert.ok(row.model <= row.written + 1, `${writer}: ${row.edit}`)
+      // The Privacy page is written again only when what it is written from changed (the site name), once.
+      assert.ok(row.privacy <= 1, `${writer}: ${row.edit}`)
     }
   }
 })

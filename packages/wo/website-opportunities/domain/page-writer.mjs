@@ -28,6 +28,8 @@ import { ownerFactsRecordOf, placeOwnerFacts } from './page-writer-owner-facts.m
 import { pageOut } from './page-writer-page.mjs'
 import { writeAll, writtenOf, writtenWordsOf } from './page-writer-rounds.mjs'
 import { scopesOfPage } from './page-writer-scope.mjs'
+import { writePrivacyPage } from './page-writer-system.mjs'
+import { PRIVACY_PAGE_ID } from './plan-system-pages.mjs'
 import { isTradeBlock } from './plan-gate-trade.mjs'
 import { withTradeCards } from './trade-cards.mjs'
 
@@ -97,9 +99,12 @@ function keptOf(kept, fields) {
 }
 
 /**
- * Write every page of a plan, in parallel.
+ * Write every page of a plan: the first page, then the others in parallel after it, then the created Privacy page.
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], mapping?: object, others?: object[],
- *   model: (request: object) => Promise<unknown>, signal?: AbortSignal, rewrite?: boolean, reuse?: Map<string, object>}}
+ *   model: (request: object) => Promise<unknown>, signal?: AbortSignal, rewrite?: boolean, reuse?: Map<string, object>,
+ *   ownerStatement?: string | null, template?: {name?: string}, legal?: boolean}}
+ *   `template`: the kit's template, whose name no written word carries; `legal`: the call writes the whole plan, so it
+ *   writes the Privacy page the plan creates too (`page-writer-system.mjs`, returned as `systemPages`);
  *   input `plan`: the approved plan
  *   (`composePlan`); `profile`: the needs profile it was composed from, which holds the item field values and the
  *   business's voice; `mapping`: the template mapping, for its SEO limits; `others`: pages written before by another
@@ -127,7 +132,8 @@ export async function writePages({
   rewrite = true,
   reuse,
   ownerStatement,
-  template
+  template,
+  legal = false
 }) {
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
@@ -217,10 +223,24 @@ export async function writePages({
       },
       { noRerun: true }
     )
+  // The created Privacy page, after every other page (the step chain's writing order), when the call writes the whole
+  // plan (`legal`): a call that writes some pages only leaves it to the call that writes them all.
+  const privacy = legal
+    ? await writePrivacyPage({
+        plan,
+        context,
+        model,
+        signal,
+        others: [...before, ...states.map(writtenOf)],
+        rewrite,
+        kept: reuse?.get(PRIVACY_PAGE_ID)?.systemPage
+      })
+    : null
   const ownerFacts = ownerFactsRecordOf(placement)
   return {
     pages: pages.map(({ id, fields, attempts, seo }) => ({ id, fields, attempts, ...(seo ? { seo } : {}) })),
     prompt: { file: PAGE_WRITER_PROMPT_FILE, sha256: PROMPT_SHA256 },
+    ...(privacy ? { systemPages: [privacy] } : {}),
     ...(ownerFacts ? { ownerFacts } : {})
   }
 }

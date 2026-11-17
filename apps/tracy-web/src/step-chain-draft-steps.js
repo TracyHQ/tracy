@@ -139,7 +139,9 @@ export function createDraftSteps(deps) {
         // What the owner typed in the build chat (D46): no written word may copy it (`page-writer-owner-echo.mjs`).
         ownerStatement: plan.research?.description ?? null,
         // The template's own name, which no written word may carry (the step chain's W07 demo name check).
-        template: kit.aiq.template ?? null
+        template: kit.aiq.template ?? null,
+        // The whole plan is written here, so the Privacy page the plan creates is written too (`systemPages`).
+        legal: true
       })
       const spent = spendOf(usage)
       const recorded = {
