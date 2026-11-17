@@ -573,9 +573,10 @@ test('the preview ceiling holds every call a run can make', opts, async () => {
     keys: { ...base.keys, serpapi: 'serp-test', rapidapi: 'rapid-test' }
   })
   const cents = Object.fromEntries(plan.run.map((r) => [r.part, r.ceilingCents]))
-  // Each of three queries: a 1¢ search and up to three page reads (Facebook 2¢, Instagram 1¢); then the page itself.
+  // Each of three queries: a 1¢ search and up to three page reads (Facebook 2¢, Instagram 1¢); then the page itself
+  // (Instagram's with up to three pages of its posts, 4¢).
   assert.equal(cents['facebook-search'], 3 * (1 + 3 * 2) + 2)
-  assert.equal(cents['instagram-search'], 3 * (1 + 3 * 1) + 1)
+  assert.equal(cents['instagram-search'], 3 * (1 + 3 * 1) + 4)
   // Google's branch location (3¢), then each keyed provider: a search, up to three place reads and the reviews.
   assert.equal(cents.tripadvisor, 3 + (3 + 3 * 3 + 3) + (1 + 3 * 1 + 1))
 })

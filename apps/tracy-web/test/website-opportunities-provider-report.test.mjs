@@ -162,6 +162,11 @@ test('a ledger row names its capability group and provider', () => {
     group: 'facebook',
     provider: 'scrapecreators'
   })
+  // An Instagram page read that pages its posts is the Instagram group's too.
+  assert.deepEqual(capabilityOfCharge('scrapecreators', 'instagram-profile-posts'), {
+    group: 'instagram',
+    provider: 'scrapecreators'
+  })
   assert.deepEqual(capabilityOfCharge('apify', 'apify~instagram-scraper'), {
     group: 'instagram',
     provider: 'apify'

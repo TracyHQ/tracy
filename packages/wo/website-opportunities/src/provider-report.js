@@ -34,8 +34,9 @@ const APIFY_GROUP = new Map(Object.entries(APIFY_ACTORS).map(([group, actor]) =>
 export function capabilityOfCharge(provider, operation) {
   const at = (group, id = provider) => ({ group, provider: id })
   if (provider === 'scrapecreators') {
-    const network = operation.replace(/-profile$/, '')
-    return operation.endsWith('-profile') && SOCIAL_GROUPS.includes(network) ? at(network) : null
+    // An Instagram read that pages its posts (`instagram-profile-posts`) is the same group's.
+    const network = operation.replace(/-profile(?:-posts)?$/, '')
+    return /-profile(?:-posts)?$/.test(operation) && SOCIAL_GROUPS.includes(network) ? at(network) : null
   }
   if (provider === 'apify') {
     if (operation === BROWSER_ACTOR) return at('website-content', 'apify-browser')

@@ -6,6 +6,7 @@ import { collectYoutubePublic } from './youtube-public.mjs'
 import { providerAnswer, runInOrder } from './capabilities.mjs'
 import { parseSocialUrl } from './social-stats/handles.mjs'
 import { scrapeCreators, SocialStatsError } from './social-stats/providers.mjs'
+import { INSTAGRAM_POSTS_MAX, pageInstagramPosts, pagesInstagramPosts } from './instagram-posts.mjs'
 
 const str = (v) => (typeof v === 'string' && v.trim() ? v.trim() : undefined)
 const list = (v) => (Array.isArray(v) ? v : [])
@@ -153,27 +154,54 @@ async function scInstagram(ctx, t, { limit }) {
   const timeline = user.edge_owner_to_timeline_media ?? {}
   const media = []
   picture(media, user.profile_pic_url_hd ?? user.profile_pic_url, { sourceUrl: t.url, role: 'profile' })
-  const posts = []
-  for (const { node } of list(timeline.edges)
+  // The posts the profile answer embeds (its newest 12): what the page keeps when the posts door fails.
+  const embedded = list(timeline.edges)
     .slice(0, limit)
-    .filter((e) => e?.node)) {
-    const post = compact({
-      id: str(String(node.id ?? '')),
-      url: node.shortcode ? `https://www.instagram.com/p/${node.shortcode}/` : undefined,
-      caption: str(node.edge_media_to_caption?.edges?.[0]?.node?.text),
-      postedAt: isoDate(node.taken_at_timestamp ?? node.taken_at)
-    })
+    .filter((e) => e?.node)
+    .map(({ node }) => ({
+      post: compact({
+        id: str(String(node.id ?? '')),
+        url: node.shortcode ? `https://www.instagram.com/p/${node.shortcode}/` : undefined,
+        caption: str(node.edge_media_to_caption?.edges?.[0]?.node?.text),
+        postedAt: isoDate(node.taken_at_timestamp ?? node.taken_at)
+      }),
+      image: node.display_url,
+      video: node.is_video ? str(node.video_url) : undefined
+    }))
+  // 🔒 More posts through the paged posts door (`instagram-posts.mjs`), capped; its failure leaves the page standing.
+  // A read asking for no more than the embedded posts, and a page whose embedded posts are all it has, ask no more.
+  const total = count(timeline.count)
+  const more =
+    pagesInstagramPosts(limit) && !user.is_private && !(total !== undefined && total <= embedded.length)
+  let read = embedded
+  try {
+    const paged = more
+      ? await pageInstagramPosts(
+          (path, params) => scrapeCreators(ctx, path, params),
+          str(user.username) ?? t.handle
+        )
+      : { items: [] }
+    if (paged.items.length) {
+      const keys = new Set(paged.items.flatMap(({ post }) => [post.id, post.url].filter(Boolean)))
+      const rest = embedded.filter(({ post }) => !keys.has(post.id) && !keys.has(post.url))
+      read = [...paged.items, ...rest].slice(0, INSTAGRAM_POSTS_MAX)
+    }
+  } catch (e) {
+    if (!(e instanceof SocialStatsError)) throw e
+  }
+  const posts = []
+  for (const { post, image, video } of read) {
     posts.push(post)
-    picture(media, node.display_url, {
+    picture(media, image, {
       sourceUrl: post.url,
       postId: post.id,
       postedAt: post.postedAt,
       caption: post.caption
     })
-    if (node.is_video && str(node.video_url))
+    if (video)
       media.push(
         compact({
-          url: node.video_url,
+          url: video,
           kind: 'video',
           sourceUrl: post.url,
           postId: post.id,
@@ -190,7 +218,7 @@ async function scInstagram(ctx, t, { limit }) {
       email: str(user.business_email),
       website: str(user.external_url),
       followers: count(user.edge_followed_by?.count),
-      posts: count(timeline.count),
+      posts: total,
       handle: str(user.username) ?? t.handle,
       platformId: str(String(user.id)),
       url: t.url
@@ -257,6 +285,11 @@ const SC_OPERATIONS = Object.freeze({
   instagram: 'instagram-profile',
   tiktok: 'tiktok-profile'
 })
+/** The priced operation of one read: an Instagram read that may page its posts is its own, dearer one. */
+const scOperationOf = (network, opts) =>
+  network === 'instagram' && pagesInstagramPosts(opts?.limit)
+    ? 'instagram-profile-posts'
+    : SC_OPERATIONS[network]
 const SC_READERS = Object.freeze({ facebook: scFacebook, instagram: scInstagram, tiktok: scTiktok })
 
 function scrapeCreatorsTier(network) {
@@ -273,7 +306,7 @@ function scrapeCreatorsTier(network) {
       }
       try {
         const data = await deps.charge(
-          { provider: 'scrapecreators', operation: SC_OPERATIONS[network], source: network },
+          { provider: 'scrapecreators', operation: scOperationOf(network, opts), source: network },
           () => SC_READERS[network](ctx, t, opts)
         )
         return answered('scrapecreators', { status: 'complete', cursor: null, ...data })

@@ -8,6 +8,7 @@
  * guess holds too much (research pauses early), never too little (Tracy is billed past the cap).
  * Re-check them against the invoices once the ledger has a month of rows.
  */
+import { INSTAGRAM_PROFILE_REQUESTS_MAX } from '../domain/instagram-posts.mjs'
 
 /** Apify actors, per item returned (the run bills per result), plus a run start fee. */
 const APIFY_ACTORS = Object.freeze({
@@ -63,7 +64,10 @@ const FIXED = Object.freeze({
   // credit a request ($0.00188). Each request is rounded UP to 1 cent; a profile = its requests.
   scrapecreators: Object.freeze({
     'facebook-profile': 2,
+    // The profile alone (a search checking a candidate page reads no more than its embedded posts).
     'instagram-profile': 1,
+    // The page read: the profile plus at most `INSTAGRAM_POST_PAGES_MAX` pages of its posts (`instagram-posts.mjs`).
+    'instagram-profile-posts': INSTAGRAM_PROFILE_REQUESTS_MAX,
     'tiktok-profile': 2,
     'google-search': 1,
     // Social stats (`social-stats.js`) count each request on its own: one credit, rounded up to 1 cent.

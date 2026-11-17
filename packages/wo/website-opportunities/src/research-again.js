@@ -196,8 +196,10 @@ const price = (provider, operation) => {
   }
 }
 
-/** One social page read: ScrapeCreators when it has a key, else an Apify run. */
+/** One social page read: ScrapeCreators when it has a key (Instagram's with its posts pages), else an Apify run. */
 function profilePrice(network, keys) {
+  if (keys.scrapecreators && network === 'instagram')
+    return price('scrapecreators', 'instagram-profile-posts')
   if (keys.scrapecreators && network !== 'youtube') return price('scrapecreators', `${network}-profile`)
   if (keys.apify && APIFY_ACTOR[network]) return apifyCeilingCents(APIFY_ACTOR[network], { items: 30 })
   return 0
