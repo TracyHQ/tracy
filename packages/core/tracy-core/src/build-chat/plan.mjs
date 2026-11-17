@@ -139,6 +139,22 @@ function ownPhotosOf(plan) {
 }
 
 const listOr = (value) => (Array.isArray(value) ? value : [])
+
+/** `{code, count}` entries as the card reads them. */
+const countsOf = (entries) =>
+  listOr(entries)
+    .filter((e) => typeof e?.code === 'string' && Number.isSafeInteger(e.count) && e.count > 0)
+    .map((e) => ({ code: e.code, count: e.count }))
+
+/**
+ * The card's own photo counts: from the plan's tally when it has one (photos placed of the owner's photos, the spots
+ * apart), else the spots against the gallery photos, as a plan made before the tally reads.
+ */
+function ownCountsOf(own, galleryPhotos) {
+  const tallied = Number.isSafeInteger(own.placed) && Number.isSafeInteger(own.photos)
+  if (!tallied) return { frames: own.frames, photos: galleryPhotos }
+  return { frames: own.placed, photos: own.photos, spots: own.frames, unused: countsOf(own.unused) }
+}
 const isPlainObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
 /** A stable text code and its parameters as the card reads them: `{code, params}`, or nothing when there is no code. */
 const codeOf = (part) =>
@@ -162,7 +178,8 @@ function wholePlanOf(plan) {
     look: { ...look, template: look.template ?? {}, logo: look.logo ?? {} },
     pictures: {
       own: { frames: 0, ...pictures.own },
-      generated: { frames: 0, ...pictures.generated }
+      generated: { frames: 0, ...pictures.generated },
+      ...(Array.isArray(pictures.empty) ? { empty: pictures.empty } : {})
     }
   }
 }
@@ -303,8 +320,9 @@ export function planCardOf(contractPlan, { lookSources = null } = {}) {
     })),
     pictures: {
       own: {
-        frames: plan.pictures.own.frames,
-        photos: ownPhotosOf(plan),
+        // With the plan's picture tally (`picture-tally.mjs`) the card counts photos, not spots: `frames` is the photos
+        // placed, `photos` the owner's photos, `spots` the spots they fill, `unused` the others with their codes.
+        ...ownCountsOf(plan.pictures.own, ownPhotosOf(plan)),
         from: [...(plan.pictures.own.from ?? [])],
         // The source kind of each name in `from`, same order (`website`, `google`, `social`, `answer`).
         ...(Array.isArray(plan.pictures.own.fromKinds) ? { fromKinds: [...plan.pictures.own.fromKinds] } : {})
@@ -313,7 +331,8 @@ export function planCardOf(contractPlan, { lookSources = null } = {}) {
         frames: plan.pictures.generated.frames,
         ...(plan.pictures.generated.reason ? { reason: text(plan.pictures.generated.reason) } : {}),
         ...codeOf(plan.pictures.generated)
-      }
+      },
+      ...(Array.isArray(plan.pictures.empty) ? { empty: countsOf(plan.pictures.empty) } : {})
     },
     // A disputed fact is settled at the fact itself; every other assumption is listed, with its code when it has one.
     assumptions: (plan.assumptions ?? [])

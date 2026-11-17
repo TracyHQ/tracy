@@ -8,10 +8,11 @@ import { framesOfPlan, ownPicturesOf } from './picture-frames.mjs'
 import { iconProblemsOf } from './icon-check.mjs'
 import { IconSelectionError } from './icon-ranking.mjs'
 import { selectIcons } from './icon-selection.mjs'
-import { unfitReason } from './picture-fit.mjs'
 import { labelOwnPictures, PicturePolicyError } from './picture-labelling.mjs'
 import { assignPictures } from './picture-policy.mjs'
 import { planDataOf } from './plan-data.mjs'
+import { withResearchLabels } from './picture-research-labels.mjs'
+import { emptySpotsOf, pictureTallyOf, unusedReasonOf } from './picture-tally.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
@@ -25,10 +26,7 @@ export function blocksOf(blockStore, library = []) {
 }
 
 /** The frames left without a picture that the customer is told about: every empty frame but the brand step's logo. */
-const leftOutOf = (frames) =>
-  frames
-    .filter((f) => f.source === 'none' && !f.sameAs && f.reason !== 'logo_from_brand_step')
-    .map((f) => ({ frame: f.id, reason: f.reason }))
+const leftOutOf = (frames) => emptySpotsOf(frames).map((f) => ({ frame: f.id, reason: f.reason }))
 
 /**
  * How the build differs from the plan's estimate: the estimated own and generated counts against the placed ones, with
@@ -41,20 +39,9 @@ export function differenceOf(assignment, approved, pictures) {
   const placed = { own: assignment.counts.own, generated: assignment.counts.generated }
   if (want.own === placed.own && want.generated === placed.generated) return null
   const used = new Set(assignment.frames.filter((f) => f.source === 'own').map((f) => f.picture))
-  const dropped = new Set(assignment.reduced.map((r) => r.item))
   const unplaced = list(pictures)
     .filter((p) => !used.has(p.id))
-    .map((p) => {
-      const frame = assignment.frames.find((f) => f.item && f.item === p.item && f.place !== 'video')
-      const reason = p.stock
-        ? 'stock'
-        : dropped.has(p.item)
-          ? 'item_dropped'
-          : frame
-            ? (unfitReason(p, frame) ?? 'frame_taken')
-            : 'no_fitting_frame'
-      return { picture: p.id, reason }
-    })
+    .map((p) => ({ picture: p.id, reason: unusedReasonOf(p, assignment) }))
   return { approved: want, placed, unplaced, empty: leftOutOf(assignment.frames) }
 }
 
@@ -70,7 +57,9 @@ const planPages = (plan, Failure) => {
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], vision: Function,
  *   pictures?: object[]}} input `pictures` adds own picture records the profile does not hold (a video of the
  *   business's own channel); `vision` is the standard build model's vision call (the labelling); `refuse(picture)`
- *   true keeps a picture off the site, asked before the labelling and again with the label it got (`refused`: their ids)
+ *   true keeps a picture off the site, asked before the labelling and again with the label it got (`refused`: their ids);
+ *   `labels` the research's vision labels by address (`picture-research-labels.mjs` `researchLabelsOf`): a photo they
+ *   label in full is not looked at again, any other photo is
  * @returns {Promise<{frames: object[], reduced: object[], droppedFrames: object[], counts: object, notes: object[],
  *   leftOut: object[], difference: object | null, labelled: string[], refused?: string[],
  *   prompt: {file: string, sha256: string} | null}>}
@@ -83,13 +72,15 @@ export async function placeBuildPictures({
   library = [],
   vision,
   pictures = [],
-  refuse
+  refuse,
+  labels = null
 }) {
   planPages(plan, PicturePolicyError)
   const data = planDataOf(profile)
   // A refused picture is never shown to the vision call nor placed: its frame has no own photo (the policy decides).
   const allowed = (p) => typeof refuse !== 'function' || !refuse(p)
-  const records = [...ownPicturesOf(data), ...list(pictures)].filter(allowed)
+  const own = [...ownPicturesOf(data), ...list(pictures)].filter(allowed)
+  const records = labels instanceof Map ? withResearchLabels(own, labels) : own
   const labelled = await labelOwnPictures({ pictures: records, vision })
   const refused = labelled.pictures.filter((p) => !allowed(p)).map((p) => p.id)
   const labelling = { ...labelled, pictures: labelled.pictures.filter(allowed) }
@@ -105,6 +96,8 @@ export async function placeBuildPictures({
     ...assignment,
     leftOut: leftOutOf(assignment.frames),
     difference: differenceOf(assignment, approved, labelling.pictures),
+    // The same counts the plan card shows, after labelling (`picture-tally.mjs`).
+    tally: pictureTallyOf(assignment, labelling.pictures),
     labelled: labelling.labelled,
     // Only a step that asks to refuse pictures is told which were.
     ...(typeof refuse === 'function' ? { refused } : {}),

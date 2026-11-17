@@ -273,7 +273,12 @@ function plainTextOf(text2) {
 }
 
 // ../../core/tracy-core/src/build-chat/plan-left-out.mjs
-var TEMPLATE_SPOT_CODES = /* @__PURE__ */ new Set(["no_generated_people", "no_own_logo", "gallery_own_photos_only"]);
+var TEMPLATE_SPOT_CODES = /* @__PURE__ */ new Set([
+  "no_generated_people",
+  "no_own_logo",
+  "gallery_own_photos_only",
+  "documentary_not_drawn"
+]);
 var COUNTED_KINDS = /* @__PURE__ */ new Set(["service", "person", "quote", "gallery"]);
 var COUNT_WORDS = Object.freeze({
   service: ["service", "services"],
@@ -361,6 +366,37 @@ function leftOutOf(leftOut, plan) {
   });
 }
 
+// ../../core/tracy-core/src/build-chat/plan-look-brand.mjs
+var PLAIN_ID = /^[A-Za-z0-9-]{1,64}$/;
+var isPlainObject2 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+function pictureOf(value) {
+  if (!isPlainObject2(value) || typeof value.picture !== "string" || !PLAIN_ID.test(value.picture)) return null;
+  return { picture: value.picture, ...typeof value.mime === "string" ? { mime: value.mime } : {} };
+}
+function lookBrandOf(plan, lookSources) {
+  const pictures = isPlainObject2(lookSources?.pictures) ? lookSources.pictures : {};
+  const accent = isPlainObject2(lookSources?.accent) ? lookSources.accent : {};
+  const logo = isPlainObject2(lookSources?.logo) ? lookSources.logo : {};
+  const said = (Array.isArray(plan?.assumptions) ? plan.assumptions : []).find(
+    (a) => a?.field === "look.accent"
+  );
+  return {
+    logo: {
+      light: pictureOf(pictures.logoLight),
+      dark: pictureOf(pictures.logoDark),
+      from: typeof logo.from === "string" ? logo.from : null,
+      name: typeof logo.name === "string" ? plainTextOf(logo.name) : null
+    },
+    favicon: pictureOf(pictures.favicon),
+    accent: {
+      from: typeof accent.from === "string" ? accent.from : null,
+      name: typeof accent.name === "string" ? plainTextOf(accent.name) : null,
+      said: typeof said?.said === "string" ? plainTextOf(said.said) : null,
+      ...typeof said?.code === "string" && said.code !== "" ? { code: said.code, params: isPlainObject2(said.params) ? said.params : {} } : {}
+    }
+  };
+}
+
 // ../../core/tracy-core/src/build-chat/plan.mjs
 var PLAN_REVIEW_ID = "plan-review";
 var REVIEW_ID = PLAN_REVIEW_ID;
@@ -440,8 +476,14 @@ function ownPhotosOf(plan) {
   return photos;
 }
 var listOr2 = (value) => Array.isArray(value) ? value : [];
-var isPlainObject2 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-var codeOf = (part) => typeof part?.code === "string" && part.code !== "" ? { code: part.code, params: isPlainObject2(part.params) ? part.params : {} } : {};
+var countsOf = (entries) => listOr2(entries).filter((e) => typeof e?.code === "string" && Number.isSafeInteger(e.count) && e.count > 0).map((e) => ({ code: e.code, count: e.count }));
+function ownCountsOf(own, galleryPhotos) {
+  const tallied = Number.isSafeInteger(own.placed) && Number.isSafeInteger(own.photos);
+  if (!tallied) return { frames: own.frames, photos: galleryPhotos };
+  return { frames: own.placed, photos: own.photos, spots: own.frames, unused: countsOf(own.unused) };
+}
+var isPlainObject3 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var codeOf = (part) => typeof part?.code === "string" && part.code !== "" ? { code: part.code, params: isPlainObject3(part.params) ? part.params : {} } : {};
 function wholePlanOf(plan) {
   const look = plan?.look ?? {};
   const pictures = plan?.pictures ?? {};
@@ -453,7 +495,8 @@ function wholePlanOf(plan) {
     look: { ...look, template: look.template ?? {}, logo: look.logo ?? {} },
     pictures: {
       own: { frames: 0, ...pictures.own },
-      generated: { frames: 0, ...pictures.generated }
+      generated: { frames: 0, ...pictures.generated },
+      ...Array.isArray(pictures.empty) ? { empty: pictures.empty } : {}
     }
   };
 }
@@ -482,7 +525,7 @@ var KEPT_FACT_KINDS = /* @__PURE__ */ new Set([
   "contact.hours"
 ]);
 var keptOnCard = (fact) => KEPT_FACT_KINDS.has(fact.kind) || listOr2(fact.sources).some((s) => s?.kind === "answer");
-function planCardOf(contractPlan) {
+function planCardOf(contractPlan, { lookSources = null } = {}) {
   const plan = wholePlanOf(contractPlan);
   const disputed = new Map(
     (plan.assumptions ?? []).filter((a) => Array.isArray(a.alternatives) && /^facts\[[^\]]+\]\.value$/.test(a.field)).map((a) => [a.field, a])
@@ -529,7 +572,9 @@ function planCardOf(contractPlan) {
         source: plan.look.logo.source,
         ...typeof plan.look.logo.code === "string" ? { code: plan.look.logo.code } : {},
         ...typeof plan.look.logo.sourceKind === "string" ? { sourceKind: plan.look.logo.sourceKind } : {}
-      } : { kind: plan.look.logo.kind ?? null }
+      } : { kind: plan.look.logo.kind ?? null },
+      // With the draft's look sources: the logo on each ground, the site icon and the accent's origin (#575).
+      ...lookSources ? { brand: lookBrandOf(plan, lookSources) } : {}
     },
     services: services.map((s) => ({
       id: s.id,
@@ -559,8 +604,9 @@ function planCardOf(contractPlan) {
     })),
     pictures: {
       own: {
-        frames: plan.pictures.own.frames,
-        photos: ownPhotosOf(plan),
+        // With the plan's picture tally (`picture-tally.mjs`) the card counts photos, not spots: `frames` is the photos
+        // placed, `photos` the owner's photos, `spots` the spots they fill, `unused` the others with their codes.
+        ...ownCountsOf(plan.pictures.own, ownPhotosOf(plan)),
         from: [...plan.pictures.own.from ?? []],
         // The source kind of each name in `from`, same order (`website`, `google`, `social`, `answer`).
         ...Array.isArray(plan.pictures.own.fromKinds) ? { fromKinds: [...plan.pictures.own.fromKinds] } : {}
@@ -569,7 +615,8 @@ function planCardOf(contractPlan) {
         frames: plan.pictures.generated.frames,
         ...plan.pictures.generated.reason ? { reason: plainTextOf(plan.pictures.generated.reason) } : {},
         ...codeOf(plan.pictures.generated)
-      }
+      },
+      ...Array.isArray(plan.pictures.empty) ? { empty: countsOf(plan.pictures.empty) } : {}
     },
     // A disputed fact is settled at the fact itself; every other assumption is listed, with its code when it has one.
     assumptions: (plan.assumptions ?? []).filter((a) => !disputed.has(a.field)).map((a) => ({ id: a.id, said: plainTextOf(a.said), ...codeOf(a) })),

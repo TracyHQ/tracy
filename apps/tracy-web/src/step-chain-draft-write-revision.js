@@ -127,7 +127,8 @@ function heldFilesOf(previous, state, hold) {
  * @returns {Promise<{report: object, delta: object}>}
  */
 export async function runRevisionWrite(input) {
-  const { plan, previous, doors, record, runId, openStored, drawInitials, beforeDoors, now } = input
+  const { plan, previous, doors, record, runId, openStored, drawInitials, beforeDoors, now, pictureLabels } =
+    input
   const hold = { texts: list(previous.hold?.texts), ids: list(previous.hold?.ids) }
   const delta = writeDeltaOf({ previous: previous.ops, plan })
   const removal = removalActsOf(delta, previous.state)
@@ -161,7 +162,8 @@ export async function runRevisionWrite(input) {
       openStored,
       drawInitials,
       runId: runOf,
-      now
+      now,
+      pictureLabels
     })
     await runRemovals({ acts: removal.acts, doors: journaled, record, previous: before, runId: runOf })
   } catch (error) {

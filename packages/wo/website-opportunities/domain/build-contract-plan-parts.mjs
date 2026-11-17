@@ -3,6 +3,7 @@
 // `build-contract-plan.mjs` runs them; every object here is a closed shape (`build-contract-shapes.mjs`).
 
 import { codeProblems, kindsProblems, paramsProblems } from './build-contract-plan-codes.mjs'
+import { tallyProblems } from './build-contract-plan-tally.mjs'
 import { closedShapeProblems, textProblems } from './build-contract-shapes.mjs'
 import {
   isName,
@@ -103,6 +104,7 @@ export function picturesProblems(pictures, report) {
   else {
     closedShapeProblems(own, 'own pictures', 'pictures.own', report)
     kindsProblems(own.fromKinds, 'pictures.own.fromKinds', report)
+    tallyProblems(pictures, report)
     if (own.frames > 0 && (!Array.isArray(own.from) || own.from.length === 0))
       report('pictures.own.from', 'own photos name the sources they came from')
     else if (own.from !== undefined && !Array.isArray(own.from))
