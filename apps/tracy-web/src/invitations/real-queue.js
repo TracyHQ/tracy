@@ -288,7 +288,8 @@ async function runOne({ pool, keys, config, fetcher, q }) {
       if (WAIT.has(code)) return { waiting: code }
       // aMember not answering, or an unexpected error: try again on a later pass, until it has failed
       // for the whole window.
-      if (RETRY.has(code) && (await amemberFailing(pool, campaignId)) < AMEMBER_RETRY_MS) return { waiting: code }
+      if (RETRY.has(code) && (await amemberFailing(pool, campaignId)) < AMEMBER_RETRY_MS)
+        return { waiting: code }
       await pause(pool, campaignId, code)
       return { paused: code }
     }
