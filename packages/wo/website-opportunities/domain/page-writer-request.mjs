@@ -19,7 +19,7 @@ const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
 /** A data entry as the writer reads it: a fact's value, or an item's field values by data kind. */
-function dataView(id, byId) {
+export function dataView(id, byId) {
   const entry = byId.get(id)
   if (!entry) return null
   if (entry.what === 'fact') {
@@ -31,8 +31,16 @@ function dataView(id, byId) {
     id,
     kind: entry.kind,
     label: entry.entry.label,
+    // A person the customers named in reviews (the profile stage's `namedBy`): name and role only, never a bio.
+    ...(namedByOf(entry) ? { namedBy: namedByOf(entry) } : {}),
     fields: Object.fromEntries(Object.entries(fields).map(([role, f]) => [role, f?.value]))
   }
+}
+
+/** Who named a person item, read defensively from the profile item or its plan entry. */
+const namedByOf = (entry) => {
+  const by = entry.source?.namedBy ?? entry.entry?.namedBy
+  return typeof by === 'string' && by.trim() ? by : null
 }
 
 /** A planned row as the writer reads it: its values by data kind (a row of the profile, a fact) or its page. */

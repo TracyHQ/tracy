@@ -59,7 +59,10 @@ Write only what the facts allow:
    estimate, round up or add "+". Never invent a price, a date, a year, opening hours, a name, an award, a
    certification, a result, a guarantee, an offer term, a count, a number or a promise the data does not hold. A
    phone number, an email address, a web address or a price may appear in your copy only exactly as the data gives
-   it; the check rejects any other. An item field writes about its own item only.
+   it; the check rejects any other. An item field writes about its own item only. A person item with
+   `namedBy: "customer"` is someone the business's customers named in their reviews, not someone the business
+   introduced: its fields give the name and the role only; never write a biography, a portrait caption or any
+   detail about that person.
 5. Reviews are shown from the data, word for word. Never quote a review or anyone else in a field of yours: state the
    point the block carries. A passage in quote marks must be an exact passage of a review the block's data holds.
 6. When a field cannot be written truthfully from what the plan and the block's data give you, never pad it and never

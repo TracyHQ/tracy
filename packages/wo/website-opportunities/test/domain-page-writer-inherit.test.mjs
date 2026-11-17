@@ -6,7 +6,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { withEmphasisMarkers } from '../domain/page-writer-emphasis.mjs'
-import { writePages } from '../domain/page-writer.mjs'
+import { PAGE_WRITER_PROMPT, writePages } from '../domain/page-writer.mjs'
+import { dataView } from '../domain/page-writer-request.mjs'
 import { composePlan } from '../domain/plan-composer.mjs'
 import {
   blockStore,
@@ -184,4 +185,25 @@ test('the template name, a quote and a number of another block are sent back', a
     second.rewrite.map((f) => f.key),
     [HERO]
   )
+})
+
+test('a person the customers named in reviews reaches the writer marked, so it writes name and role only', () => {
+  const byId = new Map([
+    [
+      'p-1',
+      {
+        what: 'item',
+        kind: 'person',
+        entry: { id: 'p-1', label: 'Odile Varnsby' },
+        source: { namedBy: 'customer', fields: { 'person.name': { value: 'Odile Varnsby' } } }
+      }
+    ],
+    [
+      'p-2',
+      { what: 'item', kind: 'person', entry: { id: 'p-2', label: 'Brannoc Tull' }, source: { fields: {} } }
+    ]
+  ])
+  assert.equal(dataView('p-1', byId).namedBy, 'customer')
+  assert.equal('namedBy' in dataView('p-2', byId), false)
+  assert.match(PAGE_WRITER_PROMPT, /namedBy: "customer"/)
 })
