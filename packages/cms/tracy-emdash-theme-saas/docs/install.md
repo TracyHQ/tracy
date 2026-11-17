@@ -6,7 +6,7 @@ and encryption keys are private installation state, never source assets.
 
 ## Requirements
 
-Node >= 22.16 (24.11.1 is what the template was built with) and pnpm 11 (`packageManager` in
+Node >= 22.23.4 (24.11.1 is what the template was built with) and pnpm 11 (`packageManager` in
 `package.json`). The package is a standalone pnpm project: its own `pnpm-workspace.yaml` marker and
 lockfile. `better-sqlite3`, `esbuild` and `sharp` compile native parts during install.
 

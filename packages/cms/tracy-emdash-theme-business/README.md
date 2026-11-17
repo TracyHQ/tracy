@@ -15,7 +15,7 @@ Build record and decisions: `tasks/emdash-northgate/` in the TCH repo (not shipp
 
 ## Requirements
 
-Node ≥ 22.16 (24.x used), pnpm 11 via corepack. Everything else is pinned in `package.json` +
+Node ≥ 22.23.4 (24.x used), pnpm 11 via corepack. Everything else is pinned in `package.json` +
 `pnpm-lock.yaml`. Optional for local mail testing: Docker (Mailpit).
 
 ## Install and run (development)

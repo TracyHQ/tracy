@@ -5,7 +5,7 @@ Versions from `package.json` (exact pins) and `astro.config.mjs`. "Declared" is 
 | Plugin | Package | Version | Role | Used by this template yet? |
 |---|---|---|---|---|
 | EmDash core | `emdash` | 1.1.0 | CMS runtime, admin, content API | Yes: all views read collections, menus, taxonomies |
-| Node adapter | `@astrojs/node` | 11.1.3 | SSR standalone server | Yes |
+| Node adapter | `@astrojs/node` | 11.1.13 | SSR standalone server | Yes |
 | Audit log | `@emdash-cms/plugin-audit-log` | 0.2.3 | records admin/content changes | Registered; no template code reads it |
 | Forms | `@emdash-cms/plugin-forms` | 0.2.9 | form builder and submissions (`defaultSpamProtection: 'honeypot'`) | Registered, **no form built yet** (`tools/forms.json` empty, `forms.bindings` empty); the subscribe form is P4/P5 (D6 (G-03)) |
 | SMTP | `emdash-smtp` | 0.3.3 | outgoing mail (`template.config.json` `mail`) | Registered; configured by `tools/configure-smtp.mjs`; no mail is sent by the views |

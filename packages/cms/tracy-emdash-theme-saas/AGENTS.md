@@ -6,8 +6,8 @@ landing pages composed from editable sections, and a blog with categories, tags,
 search. Demo content is "Helix", a fictional observability product, in English. The design was ported
 from the JA Kinetic Joomla 6 quickstart 1.0.0 (see docs/content-rules.md for what that means for release).
 
-Runtime: EmDash 1.1.0 on Astro 7.0.0 with the `@astrojs/node` standalone adapter, SQLite storage, Node
->= 22.16 (built and tested on 24.11.1), pnpm with the committed `pnpm-lock.yaml`. It is a standalone pnpm
+Runtime: EmDash 1.1.0 on Astro 7.4.12 with the `@astrojs/node` standalone adapter, SQLite storage, Node
+>= 22.23.4 (built and tested on 24.11.1), pnpm with the committed `pnpm-lock.yaml`. It is a standalone pnpm
 project: install inside this directory.
 
 Read docs/architecture.md before changing the application. Use docs/install.md for

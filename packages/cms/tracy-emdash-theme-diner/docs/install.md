@@ -2,7 +2,7 @@
 
 ## Commands
 
-Node >= 22.16 and pnpm 11.9.0 (corepack); versions are pinned in `package.json` and `pnpm-lock.yaml`. From an empty
+Node >= 22.23.4 and pnpm 11.9.0 (corepack); versions are pinned in `package.json` and `pnpm-lock.yaml`. From an empty
 destination, with a copy of this package in it:
 
 ```bash
