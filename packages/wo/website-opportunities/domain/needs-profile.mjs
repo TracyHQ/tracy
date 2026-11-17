@@ -29,6 +29,8 @@ import { profileExtrasOf, typedObservations } from './needs-profile-typed.mjs'
 import { settleOwnerItems } from './needs-profile-owner-items.mjs'
 import { mergeNearDuplicates } from './needs-profile-near-duplicates.mjs'
 import { researchTimeOf } from './needs-profile-events.mjs'
+import { mergeSameOffers } from './needs-profile-same-offers.mjs'
+import { heldBackOfResearch, videosOfResearch } from './needs-profile-research-extras.mjs'
 
 export const NEEDS_PROFILE_SCHEMA = 'tracy-needs-profile/v1'
 /** The draft prompt (product owner review: #600). Its hash is recorded on every profile it made. */
@@ -79,6 +81,13 @@ const unusableSourcesOf = (research) =>
       scope: 'observation'
     }))
 
+/** The names of the typed services and packages a research source carries. */
+const offerNamesOf = (source) =>
+  list(source?.items)
+    .filter((it) => it?.kind === 'service' || it?.kind === 'package')
+    .map((it) => it.fields?.[it.kind === 'service' ? 'offering.name' : 'package.name'])
+    .filter(isText)
+
 /** The request of the one model call: the prompt, and the words of every source (never the template or the demo). */
 export function needsProfileRequest(sources) {
   const read = sources.map((s) => ({
@@ -86,6 +95,9 @@ export function needsProfileRequest(sources) {
     origin: s.origin,
     ...(isText(s.text) ? { text: s.text } : {}),
     ...(list(s.captions).length ? { captions: list(s.captions).filter(isText) } : {}),
+    // The services and packages already read from this source (`needs-profile-typed.mjs`), by name only: the model
+    // pairs one with an offer it reads under another name (`sameOffers`, `needs-profile-same-offers.mjs`).
+    ...(offerNamesOf(s).length ? { offers: offerNamesOf(s) } : {}),
     ...(list(s.pictures).length
       ? { pictures: list(s.pictures).map((p) => ({ id: p.id, ...(isText(p.alt) ? { alt: p.alt } : {}) })) }
       : {})
@@ -145,7 +157,11 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
   const ownerDropped = owned.dropped
   // One offer named twice by the same sources is one item; each merge is recorded (`needs-profile-near-duplicates`).
   const businessName = facts['business.name']?.[0]?.value ?? null
-  const { items, merged: nearDuplicates } = mergeNearDuplicates(owned.items, { businessName })
+  const near = mergeNearDuplicates(owned.items, { businessName })
+  // One offer under two names the model read as one (`needs-profile-same-offers.mjs`): checked in code, recorded.
+  const same = mergeSameOffers(near.items, reading?.sameOffers)
+  const items = same.items
+  const nearDuplicates = [...near.merged, ...same.merged]
   // Rows of the business itself, most trusted source first; the key is present only when a row was kept.
   const order = (row) => TRUST_ORDER.indexOf(row.source.origin)
   const rows = mergeRows(
@@ -188,6 +204,9 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
     ...(voice.voice ? { voice: voice.voice } : {}),
     ...(ownerFacts.length ? { ownerFacts } : {}),
     ...profileExtrasOf(sources),
+    // The owner's own videos (count, sources) and what the brief holds back, by code (`needs-profile-research-extras`).
+    ...videosOfResearch(research, sources),
+    ...heldBackOfResearch(research),
     conflicts: conflicts.map((c) => ({ ...c, ...asked.get(c.id) })),
     ...(nearDuplicates.length ? { merged: nearDuplicates } : {}),
     questions,
@@ -198,6 +217,7 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
       ...ownerDropped,
       ...read.dropped,
       ...voice.dropped,
+      ...same.dropped,
       ...unread,
       ...notes
     ]

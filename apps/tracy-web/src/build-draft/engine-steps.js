@@ -93,11 +93,14 @@ export async function researchRecordOf(gathered, { links, description }, { model
     throw new EngineStepError('research_empty', 'the research gave no brief')
   const manifest = Array.isArray(gathered.manifest) ? gathered.manifest : []
   // What the owner keeps off the site (a held business name, held people) rides on the record: compose reads it.
-  const { sources, withheld, assessed } = researchOf(gathered.brief, { manifest })
+  const { sources, withheld, assessed, videos, heldBack } = researchOf(gathered.brief, { manifest })
   const profile = await buildNeedsProfile({
     research: {
       sources: withOwnerStatement(sources, gathered.ownerStatement),
-      ...(assessed ? { assessed } : {})
+      ...(assessed ? { assessed } : {}),
+      // The owner's own videos (counted on the profile, #575 P10) and what the brief holds back, by code.
+      ...(videos?.length ? { videos } : {}),
+      ...(heldBack ? { heldBack } : {})
     },
     model,
     ...(kit ? { blockStore: kit.blockStore, library: kit.library } : {})

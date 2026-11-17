@@ -7,6 +7,9 @@
 //   - a service or package the model reads from a source whose audience quotes are known (`source.audience`) must have
 //     its evidence somewhere in that source's words outside those quotes: "a clinic for anxious patients" in an
 //     audience quote names who it serves, not a service it sells;
+//   - a typed person (`needs-research-people.mjs`) is a person only guest reviews name whom the brief shows: taken
+//     with its name and role only (never a bio or another field) and its `namedBy` mark, its role not held to the
+//     quote, because the brief's reading gave it and the brief's rule lifted the person;
 //   - the About line (`source.about`) and the owner's tagline (`source.ownerTagline`) ride to the profile as
 //     `about: {value, sources}` and `ownerTagline: {id, value, source}`, each only when present.
 import { ITEM_KINDS, primaryRoleOf } from './needs-profile-merge.mjs'
@@ -38,6 +41,12 @@ export function typedObservations(sources, { at = null } = {}) {
     const ref = { id: source.id, origin: source.origin }
     for (const it of list(source.items)) {
       const what = { from: 'research', source: source.id, kind: it?.kind }
+      if (it?.kind === 'person') {
+        const person = typedPersonOf(it, ref)
+        if (person) items.push(person)
+        else dropped.push(drop('typed_item_unreadable', what))
+        continue
+      }
       const name = TYPED.has(it?.kind) ? it.fields?.[primaryRoleOf(it.kind)] : null
       if (!isText(name)) {
         dropped.push(drop('typed_item_unreadable', what))
@@ -61,6 +70,19 @@ export function typedObservations(sources, { at = null } = {}) {
     }
   }
   return { items, dropped }
+}
+
+/** A typed person as an observation: its name and role only, with its `namedBy` mark; null without a name. */
+function typedPersonOf(it, ref) {
+  const name = it.fields?.['person.name']
+  if (!isText(name)) return null
+  const role = it.fields?.['person.role']
+  return {
+    kind: 'person',
+    fields: { 'person.name': name.trim(), ...(isText(role) ? { 'person.role': role.trim() } : {}) },
+    source: ref,
+    ...(isText(it.namedBy) ? { namedBy: it.namedBy } : {})
+  }
 }
 
 /** Whether a model item of `source` stands only on words inside the source's audience quotes (rule above). */

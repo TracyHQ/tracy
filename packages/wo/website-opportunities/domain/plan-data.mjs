@@ -145,14 +145,37 @@ export function planDataOf(profile) {
     rowsById,
     rowsOf,
     withheld,
-    ...(ownerFacts.length ? { ownerFacts } : {})
+    ...(ownerFacts.length ? { ownerFacts } : {}),
+    ...videosOfProfile(profile, origins)
+  }
+}
+
+/**
+ * The owner's own videos as the plan reads them (#575, P10): how many, and how many from each kind of source, never a
+ * video's address. Only when the profile holds some (`needs-profile-research-extras.mjs`).
+ */
+function videosOfProfile(profile, origins) {
+  const count = profile?.videos?.count
+  if (!Number.isInteger(count) || count < 1) return {}
+  const bySource = new Map()
+  for (const s of list(profile.videos.sources)) {
+    const origin = origins.get(s?.id) ?? s?.origin
+    if (!SOURCE_NAMES[origin] || !Number.isInteger(s?.count)) continue
+    bySource.set(origin, (bySource.get(origin) ?? 0) + s.count)
+  }
+  return {
+    videos: {
+      count,
+      sources: [...bySource].map(([kind, n]) => ({ kind, name: SOURCE_NAMES[kind], count: n }))
+    }
   }
 }
 
 /**
  * What the model reads of the business: every fact and item by plan id, with its values; never a source's text. A fact
  * that stands for a field of an item (`plan-conflicts.mjs`) is not listed: the model reads it among the item's fields.
- * What the owner keeps off the site (`data.withheld`) is not listed either.
+ * What the owner keeps off the site (`data.withheld`) is not listed either. A person customers named carries
+ * `namedBy`, and the owner's videos are counted (`videos`), each only when present.
  */
 export function modelViewOf(data) {
   const shown = ({ id }) => !data.withheld?.has(id)
@@ -163,12 +186,17 @@ export function modelViewOf(data) {
       .map(({ id, kind, label, value }) => ({ id, kind, label, value })),
     items: data.items.filter(shown).map(({ id, kind, label }) => {
       const fields = data.byId.get(id).source.fields ?? {}
+      const namedBy = data.byId.get(id).source.namedBy
       return {
         id,
         kind,
         label,
-        fields: Object.fromEntries(Object.entries(fields).map(([role, f]) => [role, f?.value]))
+        fields: Object.fromEntries(Object.entries(fields).map(([role, f]) => [role, f?.value])),
+        // A person only customers named in reviews (`needs-research-people.mjs`): name and role, nothing more.
+        ...(typeof namedBy === 'string' ? { namedBy } : {})
       }
-    })
+    }),
+    // The owner's own videos, counted (P10): a block with a video place may use one.
+    ...(data.videos ? { videos: data.videos } : {})
   }
 }

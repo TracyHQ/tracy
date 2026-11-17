@@ -190,6 +190,8 @@ export function mergeItems(observations, conflicts) {
         sources,
         confidence: sources.length > 1 ? CORROBORATED : SINGLE_SOURCE,
         ...(kind === 'gallery' ? { label } : {}),
+        // A person only customers named (`needs-research-people.mjs`): every observation of it says so.
+        ...(group.every((o) => o.namedBy) ? { namedBy: group[0].namedBy } : {}),
         ...(rows.length ? { rows } : {})
       }
     })

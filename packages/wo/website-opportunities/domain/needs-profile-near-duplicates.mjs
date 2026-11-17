@@ -9,8 +9,8 @@
 // so one name holds the other whole and adds only such words. Two offers that merely share words ("Muay Thai Basics
 // Course" and "Muay Thai Sparring Course", "Boxing Classes" and "Kids Boxing Classes") stay two.
 // The better one is kept: the one with a description or a price, else the shorter name. It takes every field it lacks
-// and every source and row of the other. Each merge is recorded in `merged` with its code and reason, so the items in
-// are the items kept plus the items merged.
+// and every source and row of the other. Each merge is recorded in `merged` with its code, its reason and the whole
+// record merged away (`item`), so the items in are the items kept plus the items merged, and a merge can be undone.
 import { primaryRoleOf } from './needs-profile-merge.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -110,6 +110,8 @@ export function mergeNearDuplicates(items, { businessName = null } = {}) {
         into: winner.id,
         code: NEAR_DUPLICATE_CODE,
         reason: NEAR_DUPLICATE_REASON,
+        // The whole record merged away, so a wrong merge can be undone (#575, P8).
+        item: loser,
         scope: 'observation'
       })
     }
