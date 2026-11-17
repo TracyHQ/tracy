@@ -198,6 +198,20 @@ test('everything the brief holds lands in one place, each set aside with its rea
       ['a10', 'a document asset, not a photo or a video']
     ]
   )
+  // A picture set aside keeps where it came from, so a link's line counts every picture it found (#609).
+  assert.deepEqual(
+    asideMedia.map((s) => [s.id, s.source, s.kind, s.notOwn === true]),
+    [
+      ['a2', 'google-places', 'image', true],
+      ['a3', 'instagram', 'image', false],
+      ['a4', 'instagram', 'video', false],
+      ['a5', 'website', 'image', false],
+      ['a6', 'google-places', 'image', true],
+      ['a7', 'website', 'image', false],
+      ['a8', 'instagram', 'image', false],
+      ['a10', 'website', 'document', false]
+    ]
+  )
   assert.deepEqual(videos, [
     {
       id: 'a9',

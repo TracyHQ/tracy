@@ -128,3 +128,36 @@ test('no reason a line can carry names a provider or shows a code', async () => 
       /apify|scrapecreators|serpapi|outscraper|HTTP_|\b[45]\d\d\b|[A-Z]{3,}_[A-Z]{2,}/i
     )
 })
+
+test('pictures research set aside still count as found on their link, apart from the usable ones', () => {
+  const google = { id: 'google', origin: 'google', fields: { 'contact.phone': '+1 555 0142 318' } }
+  const aside = (n, source, notOwn) =>
+    Array.from({ length: n }, (_, i) => ({
+      what: 'picture',
+      id: `${source}-${i}`,
+      source,
+      kind: 'image',
+      notOwn
+    }))
+  const lines = linkReadsFrom({
+    links: [INSTAGRAM, MAPS],
+    rows: [
+      { source: 'instagram', status: 'complete' },
+      { source: 'google-places', status: 'complete' }
+    ],
+    sources: [{ ...research.sources[0], pictures: pictures(10) }, google],
+    picturesNotUsed: [...aside(9, 'google-places', true), ...aside(11, 'instagram', false)]
+  })
+  assert.deepEqual(
+    lines.map(({ name, pictures: usable, picturesFound, picturesNotOwn }) => [
+      name,
+      usable,
+      picturesFound,
+      picturesNotOwn
+    ]),
+    [
+      ['Instagram', 10, 21, undefined],
+      ['Google Maps', 0, 9, true]
+    ]
+  )
+})

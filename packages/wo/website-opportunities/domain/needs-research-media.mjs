@@ -4,7 +4,8 @@
 // business's own channels (`uploaderRoleOf`, `asset-origin.mjs`); a map photo by someone else (`isMapPhotoByOthers`) and
 // a guest's photo are set aside. The address of each comes from the asset manifest stored beside the brief.
 // The needs profile reads no video: own videos come back apart (`videos`), in the record the pictures step takes as
-// its extra own pictures (`picturesStep({pictures})`). Every asset lands in exactly one of pictures, videos, setAside.
+// its extra own pictures (`picturesStep({pictures})`). Every asset lands in exactly one of pictures, videos, setAside;
+// one set aside keeps its source and kind, so what a link found is told apart from what the site may use.
 import { isMapPhotoByOthers, uploaderRoleOf } from './pictures/asset-origin.mjs'
 import { photographsOnly } from './pictures/brief-media.mjs'
 
@@ -54,7 +55,17 @@ export function mediaOf(brief, manifest, sourceOf) {
   )
   const videos = []
   const setAside = []
-  const aside = (asset, reason) => setAside.push({ what: 'picture', id: asset?.id, reason })
+  // Each asset set aside names its source and kind, so a link's line can say how many pictures it found in all, and
+  // `notOwn` marks the ones set aside only because the business did not post them (`link-reads.js` of tracy-web).
+  const aside = (asset, reason, notOwn = false) =>
+    setAside.push({
+      what: 'picture',
+      id: asset?.id,
+      reason,
+      source: isText(asset?.source) ? asset.source : null,
+      kind: isText(asset?.kind) ? asset.kind : null,
+      ...(notOwn ? { notOwn: true } : {})
+    })
   for (const asset of assets) {
     const source = sourceOf(asset.source)
     if (asset.kind !== 'image' && asset.kind !== 'video')
@@ -63,8 +74,8 @@ export function mediaOf(brief, manifest, sourceOf) {
     else if (asset.kind === 'image' && !photographs.has(asset.id))
       aside(asset, 'the logo or a profile picture')
     else if (teamOnly.has(asset.id)) aside(asset, 'a team member photo, shown with that person only')
-    else if (isMapPhotoByOthers(asset)) aside(asset, 'a map photo posted by someone else')
-    else if (!isOwn(asset)) aside(asset, 'not the business own photo')
+    else if (isMapPhotoByOthers(asset)) aside(asset, 'a map photo posted by someone else', true)
+    else if (!isOwn(asset)) aside(asset, 'not the business own photo', true)
     else if (!isText(asset.sourceUrl)) aside(asset, 'no address in the asset manifest')
     else if (!source) aside(asset, 'from a source outside the trust order')
     else if (asset.kind === 'video')

@@ -84,29 +84,37 @@ function factsOf(source) {
  */
 export function linkReadsOf(research) {
   if (!research?.brief) return []
-  let sources = []
+  let read = { sources: [], setAside: [] }
   try {
-    sources = researchOf(research.brief, { manifest: list(research.manifest) }).sources
+    read = researchOf(research.brief, { manifest: list(research.manifest) })
   } catch {
-    sources = []
+    read = { sources: [], setAside: [] }
   }
   return linkReadsFrom({
     links: research.links,
     rows: research.brief.sources,
-    sources,
+    sources: read.sources,
     setAside: research.setAside,
-    picturesSetAside: research.picturesSetAside
+    picturesSetAside: research.picturesSetAside,
+    picturesNotUsed: list(read.setAside).filter((p) => p?.what === 'picture' && p.kind === 'image')
   })
 }
 
 /**
  * The line of each owner link from the parts of a research record.
- * @param {{links: string[], rows?: object[], sources?: object[], setAside?: object[], picturesSetAside?: object[]}} input
- *   `rows`: the brief's source rows (`brief.sources`); `sources`: the needs profile research sources (`researchOf`)
+ *
+ * 🔒 FOUND IS NOT USABLE. `pictures` counts the pictures the site may use (the business's own, `researchOf`);
+ * `picturesFound` counts every picture the link gave, the ones research set aside too (`picturesNotUsed`), and
+ * `picturesNotOwn` says none was usable only because the business did not post them. A link that gave nine pictures
+ * posted by others never reads "No pictures".
+ * @param {{links: string[], rows?: object[], sources?: object[], setAside?: object[], picturesSetAside?: object[],
+ *   picturesNotUsed?: object[]}} input `rows`: the brief's source rows (`brief.sources`); `sources`: the needs profile
+ *   research sources (`researchOf`); `picturesNotUsed`: the pictures research set aside, each with its source
  * @returns {Array<{link: string, name: string, state: 'read' | 'failed', reason?: string, facts?: number,
- *   pictures?: number, picturesLost?: number, picturesNotKept?: boolean}>}
+ *   pictures?: number, picturesFound?: number, picturesNotOwn?: boolean, picturesLost?: number,
+ *   picturesNotKept?: boolean}>}
  */
-export function linkReadsFrom({ links, rows, sources, setAside, picturesSetAside }) {
+export function linkReadsFrom({ links, rows, sources, setAside, picturesSetAside, picturesNotUsed }) {
   return linkStatesOf(links, 'read').map((line) => {
     const { source } = linkOf(line.link)
     const aside = list(setAside).find((a) => a?.link === line.link)
@@ -115,10 +123,16 @@ export function linkReadsFrom({ links, rows, sources, setAside, picturesSetAside
     if (row && !COLLECTED.has(row.status)) return { ...line, state: 'failed', reason: UNREAD_REASON }
     const read = list(sources).find((s) => s?.id === source)
     const lost = list(picturesSetAside).filter((p) => sourceIdOf(p?.source) === source)
+    const pictures = list(read?.pictures).length
+    const notUsed = list(picturesNotUsed).filter((p) => sourceIdOf(p?.source) === source)
     return {
       ...line,
       facts: factsOf(read),
-      pictures: list(read?.pictures).length,
+      pictures,
+      ...(notUsed.length ? { picturesFound: pictures + notUsed.length } : {}),
+      ...(notUsed.length && pictures === 0 && notUsed.every((p) => p.notOwn === true)
+        ? { picturesNotOwn: true }
+        : {}),
       ...(lost.length ? { picturesLost: lost.length } : {}),
       ...(lost.length && lost.every((p) => NOT_KEPT.has(p.reason)) ? { picturesNotKept: true } : {})
     }
