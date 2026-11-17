@@ -1,0 +1,2 @@
+- **The write order carries the channel facts the plan holds from the brief (#575).** -- AI quickstart work for #575 | PR pending | `feat/ai-quickstart-575` | 2026-11-17
+  **Affects:** A build from the chat. The WhatsApp link and the second phone the plan places from the brief are no fact of the profile; the page writer already carries them into its plan data, and the write order now does the same, so a block that shows them is named in the order's data index and holds to the plan instead of failing the order check. The tracy-web image carries it.

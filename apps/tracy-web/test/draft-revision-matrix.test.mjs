@@ -79,7 +79,15 @@ test('changing nothing calls no model and no door; one edit writes less than a b
     const mine = rows.filter((r) => r.writer === writer)
     const nothing = mine.find((r) => r.edit === 'change nothing')
     assert.deepEqual(
-      [nothing.model, nothing.pictureCalls, nothing.privacy, nothing.writes, nothing.written, nothing.rewrite, nothing.added],
+      [
+        nothing.model,
+        nothing.pictureCalls,
+        nothing.privacy,
+        nothing.writes,
+        nothing.written,
+        nothing.rewrite,
+        nothing.added
+      ],
       [0, 0, 0, 0, 0, 0, 0]
     )
     for (const row of mine.filter((r) => !r.stop && r.writes > 0)) {
