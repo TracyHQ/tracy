@@ -26,7 +26,10 @@ import { PageWriterError, knownEntriesOf } from './page-writer-fields.mjs'
 import { ownerEchoContextOf } from './page-writer-owner-echo.mjs'
 import { ownerFactsRecordOf, placeOwnerFacts } from './page-writer-owner-facts.mjs'
 import { pageOut } from './page-writer-page.mjs'
-import { writeAll } from './page-writer-rounds.mjs'
+import { writeAll, writtenOf, writtenWordsOf } from './page-writer-rounds.mjs'
+import { scopesOfPage } from './page-writer-scope.mjs'
+import { isTradeBlock } from './plan-gate-trade.mjs'
+import { withTradeCards } from './trade-cards.mjs'
 
 export { PageWriterError } from './page-writer-fields.mjs'
 export { readWriterReply, readWriterSeo } from './page-writer-page.mjs'
@@ -123,20 +126,38 @@ export async function writePages({
   signal,
   rewrite = true,
   reuse,
-  ownerStatement
+  ownerStatement,
+  template
 }) {
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
     throw new PageWriterError('plan_missing', 'the plan has no pages to write')
   const context = {
     ...writerContextOf({ profile, blockStore, library, mapping }),
-    prompt: PAGE_WRITER_PROMPT
+    prompt: PAGE_WRITER_PROMPT,
+    // The template's own name: no written word carries it (the step chain's W07 demo name rule).
+    templateNames: [template?.name].filter((n) => typeof n === 'string' && n.trim() !== '')
   }
+  // A repeating block kept on trade basis gets its cards (`trade-cards.mjs`), written from the trade.
+  const traded = withTradeCards(plan, context.blocks, context.data)
+  plan = traded.plan
+  context.data = traded.data
+  context.byId = traded.data.byId
   // A row's copy field is checked against the other rows of its own list: it never carries a sibling row's data.
   const fieldsByPage = plan.pages.map((page) => writerFieldsOf(page, context))
   // The owner's facts, each on one block (D46); the owner echo check, when the build has the owner's statement.
   const placement = placeOwnerFacts(plan, context, fieldsByPage)
   context.ownerFacts = placement.byBlock
+  // Each copy field is held to its own block's data (`page-writer-scope.mjs`), a trade block's to none of the business.
+  plan.pages.forEach((page, i) => {
+    const scopes = scopesOfPage(page, context.data, placement.byBlock, traded.cards)
+    const trade = new Set(page.blocks.filter(isTradeBlock).map((b) => b.id))
+    for (const f of fieldsByPage[i])
+      if (f.from === 'writer') {
+        f.known = scopes.get(f.block) ?? []
+        if (trade.has(f.block)) f.trade = true
+      }
+  })
   context.ownerEcho = ownerEchoContextOf(ownerStatement, {
     known: knownEntriesOf(context.byId, context.data.rowsById),
     data: context.data
@@ -158,14 +179,20 @@ export async function writePages({
     unreadable: [],
     failing: []
   }))
-  await writeAll(states, {
-    plan,
-    context,
-    model,
-    signal,
-    others: Array.isArray(others) ? others : [],
-    rewrite
-  })
+  // The first page is written first, then the others in parallel with its copy before them (the step chain's writing
+  // order: the home page, then the other pages with the copy notebook, #575 audit item 5).
+  const before = Array.isArray(others) ? others : []
+  const [first, ...rest] = states
+  const how = { plan, model, signal, rewrite }
+  await writeAll([first], { ...how, context, others: before })
+  if (rest.length) {
+    const earlier = [...before, writtenOf(first)]
+    await writeAll(rest, {
+      ...how,
+      context: { ...context, written: writtenWordsOf(earlier) },
+      others: earlier
+    })
+  }
   const pages = states.map((s) => ({
     id: s.page.id,
     fields: pageOut(s),

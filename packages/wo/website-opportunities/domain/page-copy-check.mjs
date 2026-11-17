@@ -27,6 +27,8 @@ import { visibleLength } from './draft-write-length.mjs'
 import { DOUBLE_PARENTHESIS } from './draft-write-tags.mjs'
 import { tokensIn } from './needs-profile-grounding.mjs'
 import { inventedDataOf } from './page-writer-data-guard.mjs'
+import { numbersNotInScope, quotesNotInReviews } from './page-writer-scope.mjs'
+import { tradeTermsOf } from './plan-gate-trade.mjs'
 
 // Figure dash, en dash, em dash, horizontal bar, minus sign, two and three em dashes, small em dash.
 const DASHES = /[\u2012\u2013\u2014\u2015\u2212\u2E3A\u2E3B\uFE58]/u
@@ -60,10 +62,18 @@ export const charCount = (value) => visibleLength(value)
  * @param {{known?: string[], foreign?: string[]}} [context] `known`: every value of the plan data, so copy never carries
  *   an invented phone number, email address, URL or price (`page-writer-data-guard.mjs`); `foreign`: for a child list
  *   row's copy field, the values of the other rows, none of which it may carry (whole words, `tokensIn`); `avoid`: the
- *   phrases the business's voice avoids (needs profile `voice.avoid`), none of which copy may use (whole words)
+ *   phrases the business's voice avoids (needs profile `voice.avoid`), none of which copy may use (whole words);
+ *   `templateNames`: the template's own name, which copy never carries (the step chain's W07 demo name rule);
+ *   `quotes`: `known` is the field's own block scope, so every number in digits must be one of its values (W04) and
+ *   every quoted passage a passage of its reviews (W05, `page-writer-scope.mjs`); `trade`: the
+ *   field is written from common practice of the trade, so it states no terms (R10f's tests, `tradeTermsOf`)
  * @returns {Array<{code: string, message: string}>}
  */
-export function fieldValueProblems(field, value, { known, foreign, avoid } = {}) {
+export function fieldValueProblems(
+  field,
+  value,
+  { known, foreign, avoid, templateNames, quotes = false, trade = false } = {}
+) {
   if (!WRITER_FIELD_TYPES.includes(field?.type))
     return [{ code: 'not_a_copy_field', message: `a ${field?.type} field is not written by the writer` }]
   if (value === undefined || value === null)
@@ -123,6 +133,30 @@ export function fieldValueProblems(field, value, { known, foreign, avoid } = {})
         code: 'avoided_phrase',
         message: `${JSON.stringify(phrase)} is a phrase the business avoids: say it another way`
       })
+  for (const name of templateNames ?? [])
+    if (tokensIn(name, value))
+      problems.push({
+        code: 'template_name',
+        message: `${JSON.stringify(name)} is the template's name: never mention the template or how the site was made`
+      })
+  if (quotes && known && !problems.some((p) => p.code === 'invented_data'))
+    for (const number of numbersNotInScope(value, known))
+      problems.push({
+        code: 'invented_data',
+        message: `the number ${JSON.stringify(number)} is not in the data of this block: write it only as this block's data gives it, or leave it out`
+      })
+  if (quotes && known)
+    for (const passage of quotesNotInReviews(value, known))
+      problems.push({
+        code: 'quote_not_a_review',
+        message: `"${passage}" is quoted but is no passage of a review this block shows: state the point in your own words, without quote marks`
+      })
+  const terms = trade ? tradeTermsOf(value) : null
+  if (terms)
+    problems.push({
+      code: 'trade_terms',
+      message: `written from the trade, so it states no terms; it states ${terms}: say what is done, without any number, price, duration, schedule or promise`
+    })
   for (const other of foreign ?? [])
     if (tokensIn(other, value))
       problems.push({
@@ -141,9 +175,16 @@ export function fieldValueProblems(field, value, { known, foreign, avoid } = {})
  */
 export function checkPageCopy(slots, values, context) {
   const failing = []
-  for (const { key, field, foreign } of slots) {
+  for (const { key, field, foreign, known, trade } of slots) {
     const value = values?.[key]
-    const problems = fieldValueProblems(field, value, foreign ? { ...context, foreign } : context)
+    // A field is held to its own block's data when it has a scope (`page-writer-scope.mjs`), and quotes are checked.
+    const own = known ? { known, quotes: true } : {}
+    const problems = fieldValueProblems(field, value, {
+      ...context,
+      ...own,
+      ...(foreign ? { foreign } : {}),
+      ...(trade ? { trade } : {})
+    })
     if (problems.length > 0) failing.push({ key, value, problems })
   }
   return { ok: failing.length === 0, failing }

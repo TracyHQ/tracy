@@ -5,6 +5,7 @@ import { checkPageCopy, fieldValueProblems } from './page-copy-check.mjs'
 import { PageWriterError } from './page-writer-fields.mjs'
 import { ownerEchoFailing } from './page-writer-owner-echo.mjs'
 import { pageWriterUser } from './page-writer-request.mjs'
+import { emphasisProblems } from './page-writer-emphasis.mjs'
 
 /** The keys of the page's search title and description in a rewrite and in the failing fields. */
 export const SEO_KEYS = Object.freeze({ title: 'seo.title', description: 'seo.description' })
@@ -33,9 +34,26 @@ export function readWriterSeo(reply) {
   return Object.keys(out).length ? out : null
 }
 
+/** The emphasis of a reply by key (strings only), or an empty object. */
+export function readWriterEmphasis(reply) {
+  const emphasis = parsed(reply)?.emphasis
+  if (!emphasis || typeof emphasis !== 'object' || Array.isArray(emphasis)) return {}
+  return Object.fromEntries(Object.entries(emphasis).filter(([, v]) => typeof v === 'string'))
+}
+
+/** The fields a reply returns, `key -> reason`: each with a reason of its own, the step chain's `returns`. */
+export function readWriterReturns(reply) {
+  const out = {}
+  for (const r of Array.isArray(parsed(reply)?.returns) ? parsed(reply).returns : [])
+    if (typeof r?.key === 'string' && typeof r.reason === 'string' && r.reason.trim() !== '')
+      out[r.key] = r.reason.trim()
+  return out
+}
+
 /**
- * The problems of the written search title and description. Both are optional (the write order then builds its own),
- * but a written one is held like a copy field: plain text within the limit, no invented data, no dash.
+ * The problems of the written search title and description. Both are optional (the write order then builds its own,
+ * `write-order-pages.mjs` `seoOf`, so every page still has both, as the step chain's W09 asks), but a written one is
+ * held like a copy field: plain text within the limit, no invented data, no dash.
  */
 export function seoFailing(seo, limits, context) {
   const failing = []
@@ -60,17 +78,23 @@ const unreadable = (slots) =>
  * check (`page-writer-owner-echo.mjs`, only when the build has the owner's statement) over every written value.
  */
 export function pageFailing(state, context) {
-  const check = { known: context.known, avoid: context.voice?.avoid }
+  const check = { known: context.known, avoid: context.voice?.avoid, templateNames: context.templateNames }
   const lost = new Set(state.unreadable.map((f) => f.key))
+  const returned = state.returned ?? {}
+  const checked = state.slots.filter((s) => !lost.has(s.key) && !Object.hasOwn(returned, s.key))
   const failing = [
     ...state.unreadable,
-    ...checkPageCopy(
-      state.slots.filter((s) => !lost.has(s.key)),
-      state.values,
-      check
-    ).failing,
+    ...checkPageCopy(checked, state.values, check).failing,
     ...seoFailing(state.seo, context.seoLimits, check)
   ]
+  // W16: the accent words of every written field (`page-writer-emphasis.mjs`).
+  for (const slot of checked) {
+    const problems = emphasisProblems(slot.field, state.values[slot.key], state.emphasis?.[slot.key])
+    if (problems.length === 0) continue
+    const same = failing.find((x) => x.key === slot.key)
+    if (same) same.problems.push(...problems)
+    else failing.push({ key: slot.key, value: state.values[slot.key], problems })
+  }
   for (const f of ownerEchoFailing(state, context.ownerEcho, SEO_KEYS)) {
     if (lost.has(f.key)) continue
     const same = failing.find((x) => x.key === f.key)
@@ -122,8 +146,28 @@ export async function callPage(state, { plan, context, model, signal, rewrite })
   }
   const written = readWriterReply(reply)
   const asked = rewrite ? slots.filter((s) => rewrite.some((f) => f.key === s.key)) : slots
-  // Only the slots this call was asked for are taken: a value for any other key is dropped, never written.
-  if (written) for (const { key } of asked) if (Object.hasOwn(written, key)) state.values[key] = written[key]
+  // Only the slots this call was asked for are taken: a value for any other key is dropped, never written. A field the
+  // writer returns (with its reason) is no longer its: the block's no data rule takes it (`pageOut`).
+  const returns = readWriterReturns(reply)
+  const emphasis = readWriterEmphasis(reply)
+  state.returned ??= {}
+  state.emphasis ??= {}
+  if (written)
+    for (const { key } of asked) {
+      if (Object.hasOwn(returns, key) && !Object.hasOwn(written, key)) {
+        state.returned[key] = returns[key]
+        delete state.values[key]
+        continue
+      }
+      delete state.returned[key]
+      if (Object.hasOwn(written, key)) state.values[key] = written[key]
+      // An emphasis a rewrite leaves out is kept while the new value still holds its words.
+      const kept = state.emphasis[key]
+      const declares = Boolean(asked.find((s) => s.key === key)?.field?.emphasis)
+      if (Object.hasOwn(emphasis, key)) state.emphasis[key] = emphasis[key]
+      else if (!(declares && typeof kept === 'string' && String(state.values[key]).includes(kept)))
+        delete state.emphasis[key]
+    }
   const seo = readWriterSeo(reply)
   for (const name of ['title', 'description'])
     if (seo?.[name] !== undefined && (!askedSeo || askedSeo.some((f) => f.key === SEO_KEYS[name])))
@@ -134,20 +178,39 @@ export async function callPage(state, { plan, context, model, signal, rewrite })
 
 /** A page's fields as the writer returns them, in block order. */
 export function pageOut(state) {
-  return state.fields.map(
-    ({ key, block, item, row, list, field, from, value, data, action, fallback, derived }) => ({
-      key,
-      block,
-      ...(item ? { item } : {}),
-      ...(row ? { row, list } : {}),
-      field: field.name,
-      kind: field.kind,
-      from,
-      ...(from === 'writer' ? { value: state.values[key] } : {}),
-      ...(from === 'data' ? { value, data } : {}),
-      ...(from === 'no-data'
-        ? { action, ...(fallback === undefined ? {} : { fallback }), ...(derived ? { derived } : {}) }
-        : {})
-    })
-  )
+  return state.fields.map((f) => {
+    const reason = state.returned?.[f.key]
+    if (f.from === 'writer' && reason !== undefined)
+      return fieldOut(state, {
+        ...f,
+        from: 'no-data',
+        action: f.noData?.action ?? 'hide',
+        ...(f.noData?.fallback === undefined ? {} : { fallback: f.noData.fallback }),
+        returned: reason
+      })
+    return fieldOut(state, f)
+  })
+}
+
+function fieldOut(
+  state,
+  { key, block, item, row, list, field, from, value, data, action, fallback, derived, returned }
+) {
+  const emphasis = from === 'writer' ? state.emphasis?.[key] : undefined
+  return {
+    key,
+    block,
+    ...(item ? { item } : {}),
+    ...(row ? { row, list } : {}),
+    field: field.name,
+    kind: field.kind,
+    from,
+    ...(from === 'writer' ? { value: state.values[key] } : {}),
+    ...(from === 'data' ? { value, data } : {}),
+    ...(from === 'no-data'
+      ? { action, ...(fallback === undefined ? {} : { fallback }), ...(derived ? { derived } : {}) }
+      : {}),
+    ...(typeof emphasis === 'string' ? { emphasis } : {}),
+    ...(returned === undefined ? {} : { returned })
+  }
 }

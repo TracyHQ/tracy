@@ -12,7 +12,7 @@ import { siteCopyFailing } from './page-writer-site-check.mjs'
 export const PAGE_WRITE_ATTEMPTS = 2
 
 /** A written page as the site check reads it: its fields with their declared limits, and its search texts. */
-const writtenOf = (state) => ({
+export const writtenOf = (state) => ({
   id: state.page.id,
   fields: pageOut(state).map((f, i) => ({ ...f, limit: state.fields[i].field.limit })),
   seo: state.seo
@@ -64,4 +64,19 @@ export async function writeAll(states, { plan, context, model, signal, others, r
     })
     if (rewrite.size === 0) break
   }
+}
+
+/** The copy of earlier pages as a later writer call reads it: each page's written words, in field order. */
+export function writtenWordsOf(pages) {
+  return pages
+    .map((p) => ({
+      page: p.id,
+      words: [
+        ...(p.fields ?? [])
+          .filter((f) => f.from === 'writer' && typeof f.value === 'string')
+          .map((f) => f.value),
+        ...(typeof p.seo?.description === 'string' ? [p.seo.description] : [])
+      ]
+    }))
+    .filter((p) => p.words.length > 0)
 }

@@ -14,6 +14,7 @@ import { joinLibraryBlock } from './write-order-library.mjs'
 import { classedIcons, libraryPositionOf, lookOf } from './write-order-look.mjs'
 import { menuOf, pagesInOrder, seoLimitsOf, seoOf } from './write-order-pages.mjs'
 import { itemPageTypesOf } from './write-order-targets.mjs'
+import { withTradeCards } from './trade-cards.mjs'
 
 export { NO_RERUN, WriteOrderError } from './write-order-error.mjs'
 export { answerLimitOf } from './write-order-buttons.mjs'
@@ -32,16 +33,17 @@ const list = (value) => (Array.isArray(value) ? value : [])
  * @returns {object} the order (`docs/references/write-order.md`)
  */
 export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, icons, records = {} }) {
-  const plan = approval?.plan
+  const approved = approval?.plan
   const profile = approval?.profile
-  if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
+  if (!Array.isArray(approved?.pages) || approved.pages.length === 0)
     throw new WriteOrderError('plan_missing', 'the write order needs the approved plan with its pages')
   if (!profile) throw new WriteOrderError('profile_missing', 'the write order needs the approved profile')
   if (!Array.isArray(pictures?.frames))
     throw new WriteOrderError('pictures_missing', 'the write order needs the frames of the pictures step')
   const declarations = declarationsOf(aiq)
-  const answer = refuseInput(plan, aiq, profile)
-  const data = planDataOf(profile)
+  const answer = refuseInput(approved, aiq, profile)
+  // A repeating block kept on trade basis shows the cards the page writer wrote (`trade-cards.mjs`, #575).
+  const { plan, data } = withTradeCards(approved, declarations, planDataOf(profile))
   const written = writtenPagesOf(writers)
   const missing = plan.pages.filter((p) => !written.has(p.id)).map((p) => p.id)
   if (missing.length)
