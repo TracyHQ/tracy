@@ -625,10 +625,7 @@ export async function pictureLabelInputOf(pool, { accountId, opportunityId, froz
   }
 }
 
-/**
- * A read whose photographs carry the vision labels asked for, and the note of how that went. Also the build chat's
- * (`build-draft/gather-vision.js`): its brief reads labels laid on exactly as a place's brief does.
- */
+/** A read whose photographs carry the vision labels asked for, and the note of how that went. */
 export function withPictureLabels(read, labelling) {
   if (!labelling) return read
   const labels = labelling.labels ?? new Map()

@@ -2,7 +2,8 @@
  * The owner's links of the build chat's research (#609), judged by the same door Website Opportunities creates an
  * opportunity from pasted links with (`link-fields.js` `createLinkFields`, injected as `linkFields`): which links are
  * usable (`judgeLinks`), the public-URL guard on every link but Google's, a Google link turned into exactly one place,
- * a listing page read once. Nothing is saved: the answer is the opportunity's fields, kept in memory.
+ * a listing page read once. Nothing is saved here: the answer is the opportunity's fields, which the research then
+ * saves as the owner's business (`place-research.js`).
  *
  * A link that cannot be used is set aside with a plain reason (`SET_ASIDE`), never a failure of the research.
  */
@@ -46,19 +47,20 @@ export const NO_PLACE = 'none'
  * that place, as the Website Opportunities picker does; with `NO_PLACE` the link is set aside and the others are
  * judged again. No usable link at all answers `fields: null`.
  * @param {{linkFields: Function, domain: object, links: string[], googleKey: boolean,
- *   place?: object | 'none' | null}} input
+ *   place?: object | 'none' | null, typedName?: string | null}} input `typedName`: the business name the owner typed,
+ *   which the link door matches a Google link against and keeps as the final name (`business-name.js`)
  * @returns {Promise<{fields: object | null, listings: object[], setAside: Array<{link: string, reason: string}>,
  *   googleLink: string | null, ambiguous?: object[]}>} `googleLink`: the Google link the place came from, when one
  *   was matched; `ambiguous`: the candidates to ask about
  */
-export async function linksOf({ linkFields, domain, links, googleKey, place = null }) {
+export async function linksOf({ linkFields, domain, links, googleKey, place = null, typedName = null }) {
   const setAside = []
   let raws = [...links]
   const picked = place && typeof place === 'object' ? place : null
-  let answer = await linkFields(domain, { raws, typedName: null, place: picked, legacy: false })
+  let answer = await linkFields(domain, { raws, typedName, place: picked, legacy: false })
   // A pick the link door cannot read (`INVALID_PLACE`) goes on as none of them.
   if (picked && answer.refusal?.code === 'INVALID_PLACE')
-    answer = await linkFields(domain, { raws, typedName: null, place: null, legacy: false })
+    answer = await linkFields(domain, { raws, typedName, place: null, legacy: false })
   const ambiguous = answer.refusal?.code === 'GOOGLE_LINK_AMBIGUOUS'
   const candidates = answer.refusal?.extra?.candidates ?? []
   if (ambiguous && place !== NO_PLACE && candidates.length > 1)
@@ -70,7 +72,7 @@ export async function linksOf({ linkFields, domain, links, googleKey, place = nu
     if (dropped) setAside.push(aside(dropped, 'ambiguous'))
     raws = raws.filter((_, i) => i !== at)
     answer = raws.length
-      ? await linkFields(domain, { raws, typedName: null, place: null, legacy: false })
+      ? await linkFields(domain, { raws, typedName, place: null, legacy: false })
       : { refusal: { extra: { links: [] } } }
   }
   const report = answer.links ?? answer.refusal?.extra?.links ?? []

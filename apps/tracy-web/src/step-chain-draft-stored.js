@@ -42,17 +42,28 @@ function iconIdOf(icon, look) {
 }
 
 /**
+ * The manifest origins a run opens (#575): the draft's own pictures, and the step chain's content brief's place and
+ * account pictures of a research of links, all through the one opener (`lib/research-picture-reader.js`).
+ */
+export const OPENED = new Set(['draft', 'place', 'opportunity'])
+
+/** What the opener needs of an entry: its origin, and the hash its bytes are checked against. */
+export const openOptionsOf = (entry, accountId) => ({
+  accountId,
+  origin: entry.origin,
+  ...(isText(entry.sha256) ? { sha256: entry.sha256 } : {})
+})
+
+/**
  * The stored pictures of a run.
  * @param {{manifest?: object[], look?: object | null, accountId?: string | null,
  *   openDraftPicture?: (id: string, opts: {accountId: string | null}) => Promise<{bytes: Uint8Array, mime?: string} | null>}} input
  *   `manifest`: the approved snapshot's asset manifest; `look`: the approved plan's look
  */
 export function storedPicturesOf({ manifest, look = null, accountId = null, openDraftPicture }) {
-  const byUrl = new Map(
-    list(manifest)
-      .filter((m) => m?.origin === 'draft' && isText(m.id) && isText(m.sourceUrl))
-      .map((m) => [m.sourceUrl, m])
-  )
+  const opened = list(manifest).filter((m) => OPENED.has(m?.origin) && isText(m.id))
+  const byUrl = new Map(opened.filter((m) => isText(m.sourceUrl)).map((m) => [m.sourceUrl, m]))
+  const byId = new Map(opened.map((m) => [m.id, m]))
   return {
     /** `{<frame or icon id>: {id, mime?}}` for every one with stored bytes. */
     stored(order) {
@@ -80,7 +91,8 @@ export function storedPicturesOf({ manifest, look = null, accountId = null, open
         return { bytes: drawn.bytes, mime: 'image/png' }
       }
       if (text.startsWith(DRAFT) && typeof openDraftPicture === 'function') {
-        const got = await openDraftPicture(text.slice(DRAFT.length), { accountId })
+        const entry = byId.get(text.slice(DRAFT.length))
+        const got = entry ? await openDraftPicture(entry.id, openOptionsOf(entry, accountId)) : null
         if (got?.bytes instanceof Uint8Array && got.bytes.length > 0)
           return { bytes: got.bytes, mime: isText(got.mime) ? got.mime : 'image/jpeg' }
       }

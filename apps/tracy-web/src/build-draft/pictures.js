@@ -1,172 +1,19 @@
 /**
- * The pictures the build chat's research stores before a site exists (#609), table `build_draft_picture` (migration
- * 218). Each collected picture is downloaded, sniffed, measured and put in the object store by the Website
- * Opportunities media rules (`media-store.js` `createMediaStore`, injected as `mediaStoreOf`) under a key of the draft
- * (`build-drafts/<account>/<sha256>.<ext>`); a draft row records it. No `wo_*` row is written.
+ * The pictures a build chat research stored before a site exists (#609), table `build_draft_picture` (migration 218),
+ * under a key of the draft (`build-drafts/<account>/<sha256>.<ext>`). Since #575 a research of links keeps its pictures
+ * in the step chain's own store (`wo_place_media`, opened through `lib/research-picture-reader.js`) and stores none
+ * here; the rows a research made before #575 stay readable until nothing reads them.
  *
- * A picture that is not stored (a failed download, not a picture, too large, refused by the guard, no store, the
- * research's time ran out) stays out of the manifest, its address and reason set aside.
- *
- * 🔒 A NEWER RESEARCH REPLACES THE PICTURES. One row per picture bytes of an account: research again on the same
- * bytes keeps the row and its id, moved to the new run. Once a research step's record is in the draft, `prune` deletes
- * the rows of every older run and their objects, so the draft holds exactly the pictures its current research names,
- * the pictures of the research its living plan was composed from, and those of an approved build's research until
- * that build ends (#610).
+ * 🔒 A NEWER RESEARCH REPLACES THE PICTURES. Once a research step's record is in the draft, `prune` deletes the rows of
+ * every older run and their objects, so the draft holds exactly the pictures its current research names, the pictures
+ * of the research its living plan was composed from, and those of an approved build's research until that build ends
+ * (#610).
  */
-
-/** The executor's media budget (`executor.js` `MEDIA_BUDGET`), and its admission's parallel downloads. */
-export const PICTURE_BUDGET = 300
-const AT_ONCE = 5
-
-/** Plain reasons a picture was not stored, by the media record's `reason`. */
-export const NOT_STORED = Object.freeze({
-  download_failed: 'the picture could not be downloaded',
-  url_expired: 'the picture address had expired before it was downloaded',
-  too_large: 'the picture is larger than a picture may be',
-  not_media: 'the address is not a picture or a video',
-  image_unreadable: 'the picture could not be read',
-  store_failed: 'the picture could not be kept',
-  store_unavailable: 'this server has no store to keep pictures in',
-  url_blocked: 'a private address, or one that does not answer on the internet',
-  timeout: 'the research ran out of time before this picture was kept'
-})
-const reasonOf = (code) => NOT_STORED[code] ?? NOT_STORED.download_failed
-
-export const draftKeyPrefix = (accountId) => `build-drafts/${accountId}`
 
 /**
- * The items to store: every collected picture of the rows, then the logo hints of the sources (`place-logo.js`, kept
- * whatever their size), shared fairly between sources up to the budget.
+ * @param {{pool: import('pg').Pool, objects: {get: Function, delete?: Function} | null}} deps
  */
-export function picturesToStore({ rows, hints = [], placePhotos = [], fairShare, budget = PICTURE_BUDGET }) {
-  const queue = new Map()
-  for (const r of rows)
-    for (const m of r.collected?.media ?? [])
-      if (typeof m?.url === 'string' && !queue.has(m.url)) queue.set(m.url, { ...m, source: r.source })
-  const items = fairShare([...queue.values()], budget)
-  for (const h of hints)
-    if (typeof h?.url === 'string' && !queue.has(h.url))
-      items.push({ url: h.url, kind: 'image', source: h.source })
-  // The Google listing's photos, under their own cap (`placePhotoItems`): downloaded through the Place Photos door.
-  for (const p of placePhotos) if (!queue.has(p.url)) items.push(p)
-  return items
-}
-
-/**
- * The photos of a Google place's facts as picture items (`placeFactsFromDetails` `photos`), at most `max`, each
- * addressed `google-places:<photo name>` as the stored copy is. None when the place has none.
- */
-export function placePhotoItems(facts, { max }) {
-  return (Array.isArray(facts?.photos) ? facts.photos : [])
-    .filter((p) => typeof p?.name === 'string' && p.name)
-    .slice(0, max)
-    .map((p) => ({
-      url: `google-places:${p.name}`,
-      kind: 'image',
-      source: 'google-places',
-      placePhoto: { name: p.name, attributions: p.attributions ?? [] }
-    }))
-}
-
-/** A stored row as a brief read's media row (the `wo_place_media` columns `fromPlace` reads), origin `draft`. */
-const asMediaRow = (r) => ({
-  id: r.id,
-  origin: 'draft',
-  status: 'stored',
-  kind: r.kind,
-  category: r.category,
-  sha256: r.sha256,
-  mime: r.mime,
-  width: r.width,
-  height: r.height,
-  source: r.source,
-  source_url: r.source_url,
-  post_id: r.post_id,
-  posted_at: r.posted_at,
-  caption: r.caption,
-  alt: r.alt,
-  bytes: r.bytes,
-  dhash: r.dhash,
-  labels: r.labels
-})
-
-const UPSERT = `insert into build_draft_picture (account_id, research_run, kind, category, source, source_url, post_id,
-    posted_at, caption, alt, sha256, object_key, mime, bytes, width, height, duration_s, palette, dhash, labels)
-  values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18::jsonb,$19,$20::jsonb)
-  on conflict (account_id, sha256) do update set research_run = excluded.research_run, source = excluded.source,
-    source_url = excluded.source_url, post_id = excluded.post_id, posted_at = excluded.posted_at,
-    caption = excluded.caption, alt = excluded.alt, category = excluded.category
-  returning *`
-
-/**
- * @param {{pool: import('pg').Pool, objects: {get: Function, delete?: Function} | null,
- *   mediaStoreOf: (deps: object) => {mediaRecord: Function}, withinTime: Function}} deps
- */
-export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime }) {
-  /**
-   * Store the items of one research run: `{rows, setAside}`, rows in the brief read's media shape. A Google listing
-   * photo (`placePhoto`) is read with `googleKey`, its spend held by the research step's reservation.
-   */
-  async function store({ accountId, run, items, domain, deps, remaining, googleKey = null }) {
-    const media = mediaStoreOf(deps)
-    const owner = { fields: { accountId }, keyPrefix: draftKeyPrefix(accountId) }
-    const rows = []
-    const setAside = []
-    const keptAt = new Map()
-    let next = 0
-    async function worker() {
-      while (next < items.length) {
-        const item = items[next++]
-        if (remaining() <= 0) {
-          setAside.push({ url: item.url, source: item.source, reason: reasonOf('timeout') })
-          continue
-        }
-        const reference = (reason) => ({ status: 'reference', reason })
-        const recordOf = () =>
-          item.placePhoto
-            ? googleKey
-              ? media.placePhotoRecord(domain, owner, item.placePhoto, { googleKey, reference })
-              : reference('download_failed')
-            : media.mediaRecord(domain, owner, item)
-        const got = await withinTime(recordOf, remaining())
-        const record = got?.timedOut ? { status: 'reference', reason: 'timeout' } : got
-        if (record?.status !== 'stored') {
-          setAside.push({ url: item.url, source: item.source, reason: reasonOf(record?.reason) })
-          continue
-        }
-        const { rows: saved } = await pool.query(UPSERT, [
-          accountId,
-          run,
-          record.kind,
-          record.category ?? null,
-          record.source,
-          record.sourceUrl,
-          record.postId ?? null,
-          record.postedAt ?? null,
-          record.caption ?? null,
-          record.alt ?? null,
-          record.sha256,
-          record.objectKey,
-          record.mime,
-          record.bytes,
-          record.width ?? null,
-          record.height ?? null,
-          record.durationS ?? null,
-          record.palette ? JSON.stringify(record.palette) : null,
-          record.dhash ?? null,
-          record.labels ? JSON.stringify(record.labels) : null
-        ])
-        // Two addresses of the same bytes are one picture.
-        if (!keptAt.has(saved[0].id)) {
-          keptAt.set(saved[0].id, true)
-          rows.push({ ...asMediaRow(saved[0]), palette: saved[0].palette, objectKey: saved[0].object_key })
-        }
-      }
-    }
-    await Promise.all(Array.from({ length: Math.min(AT_ONCE, items.length) }, worker))
-    return { rows, setAside }
-  }
-
+export function createDraftPictures({ pool, objects }) {
   /**
    * Delete the account's pictures of every run but `run`, rows and objects. Answers how many went. 🔒 A picture a
    * research the draft still reads is kept, by its run or by its id in that research's manifest: the draft's research,
@@ -222,5 +69,5 @@ export function createDraftPictures({ pool, objects, mediaStoreOf, withinTime })
     }
   }
 
-  return { store, prune, open }
+  return { prune, open }
 }

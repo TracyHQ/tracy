@@ -50,11 +50,11 @@ export function stepCostCents(ran) {
 
 /**
  * @param {{pool: import('pg').Pool, charge?: (spec: object, fn: Function) => Promise<any>, now: () => number}} deps
- * @returns {(accountId: string, step: string) => Promise<null | {run: (fn: () => Promise<any>) => Promise<any>,
+ * @returns {(accountId: string, step: string, ceilingStep?: string) => Promise<null | {run: (fn: () => Promise<any>) => Promise<any>,
  *   cancel: () => void}>}
  */
 export function spendGate({ pool, charge, now }) {
-  return async function admit(accountId, step) {
+  return async function admit(accountId, step, ceilingStep = step) {
     const limit = SPEND_LIMITS[step]
     if (
       limit &&
@@ -67,7 +67,7 @@ export function spendGate({ pool, charge, now }) {
       ))
     )
       return null
-    const maxCents = STEP_CEILING_CENTS[step]
+    const maxCents = STEP_CEILING_CENTS[ceilingStep]
     if (!charge || maxCents === undefined) return { run: (fn) => fn(), cancel: () => {} }
     let admitted
     const admission = new Promise((resolve) => (admitted = resolve))
@@ -75,7 +75,7 @@ export function spendGate({ pool, charge, now }) {
     const started = new Promise((resolve, reject) => (go = { resolve, reject }))
     const spec = {
       provider: LEDGER_PROVIDER,
-      operation: step,
+      operation: ceilingStep,
       maxCents,
       purpose: LEDGER_PURPOSE,
       payer: { kind: 'account', accountId },

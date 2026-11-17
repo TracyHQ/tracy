@@ -38,6 +38,9 @@ const ORIGINS = Object.freeze({
   owner: 'website',
   'owner-statement': 'answer',
   website: 'website',
+  // The menu document a dish was read from (`menu-items.js`, part `menu-file`): the business's own menu. A link a web
+  // search found never states a dish (the brief keeps none of its words as a fact), and menu photos stay unmapped.
+  'menu-file': 'website',
   google: 'google',
   'google-places': 'google',
   'google-maps': 'google',

@@ -65,6 +65,7 @@ import { createOpsSignal } from './lib/ops-signal.js'
 import { markOwnReads } from './lib/own-read.js'
 import { pictureFeatures } from './lib/picture-cut.js'
 import { labelWithVision, visionDoor, visionKey } from './lib/picture-vision.js'
+import { researchPictureReader } from './lib/research-picture-reader.js'
 import { newDoorProbeToken, previewDoorHealth } from './lib/preview-door-health.js'
 import { pickAllowed } from './lib/preview-ticket.js'
 import { readReleases, templateOfTag } from './lib/quickstart-releases.js'
@@ -1230,17 +1231,12 @@ export function buildApp(deps) {
         fetchImpl: deps.fetchImpl ?? fetch,
         log: deps.log ?? console
       })
-    // The pictures the research stores before a site exists (`build_draft_picture`), through the objects Website
-    // Opportunities stores its own pictures through; `app.openDraftPicture(id)` opens one again by its manifest id.
-    // `pictureDoors` replaces the objects and the measuring in tests.
+    // The pictures a research made before #575 stored (`build_draft_picture`), in the objects Website Opportunities
+    // stores its own pictures in; `app.openDraftPicture(id)` opens one again by its manifest id. `pictureDoors`
+    // replaces the objects in tests.
     const draftPictureObjects =
       buildEngine.pictureDoors?.objects ?? placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch)
-    const draftPictureStore = draftPictures({
-      pool: deps.pool,
-      config: deps.config,
-      objects: draftPictureObjects,
-      ...(buildEngine.pictureDoors?.imageInfo ? { imageInfo: buildEngine.pictureDoors.imageInfo } : {})
-    })
+    const draftPictureStore = draftPictures({ pool: deps.pool, objects: draftPictureObjects })
     // A fresh start of the build chat (`build-draft/fresh-start.js`): the next generation, the old draft removed.
     app.buildChatFresh = freshStart({
       pool: deps.pool,
@@ -1248,7 +1244,13 @@ export function buildApp(deps) {
       settle: (accountId) => app.buildDraftEngine.read(accountId),
       log: deps.log ?? console
     })
-    app.openDraftPicture = draftPictureReader(draftPictureStore)
+    // One opener for every picture a draft's research names (#575): its own draft pictures and, for a research of
+    // links, the step chain's place and account pictures, read where the step chain keeps them (`research-picture-reader.js`).
+    app.openDraftPicture = researchPictureReader({
+      pool: deps.pool,
+      objects: draftPictureObjects,
+      openDraft: draftPictureReader(draftPictureStore)
+    })
     // The build model door and the kits, shared with a step chain run built from an approved draft (#597).
     app.buildModel = buildEngine.buildModel ?? buildModelDoor({ pool: deps.pool, config: deps.config })
     app.loadAiqKit = (slug) => kits.loadKit(slug)
@@ -1261,22 +1263,16 @@ export function buildApp(deps) {
         preSiteGatherer({
           pool: deps.pool,
           config: deps.config,
-          pictures: draftPictureStore,
-          objects: draftPictureObjects,
           fetchImpl: deps.fetchImpl,
-          dnsResolve: deps.dnsResolve,
-          // The step chain's picture labelling, on the vision door Website Opportunities labels with (#575).
-          visionFor: async () => {
-            const door = await visionDoorFor(deps)
-            return door ? { door, key: visionKey(door) } : null
-          },
-          ...(Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) > 0
-            ? { maxPictures: Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) }
-            : {}),
           log: deps.log ?? console,
           ...(deps.now ? { now: deps.now } : {}),
           overrides: buildEngine.gatherDoors ?? {}
         }),
+      // The owner's links are the step chain's own research (#575): the service Build from my business runs, set once
+      // the Website Opportunities doors are mounted (`app.businessResearch`), or the test's (`buildEngine.businessResearch`).
+      // A test that fakes the whole research (`buildEngine.gather`) and no step chain keeps its fake for links too.
+      placeResearch: () =>
+        buildEngine.businessResearch ?? (buildEngine.gather ? null : (app.businessResearch ?? null)),
       brandStep: buildEngine.brandStep ?? draftBrandStep({ pool: deps.pool, stepsOf: brandSteps }),
       prunePictures: buildEngine.prunePictures ?? draftPictureStore.prune,
       // Each step is reserved in the research cost ledger, under `/ops/wo`'s daily research cap (`spend-limits.js`).
@@ -1563,8 +1559,12 @@ export function buildApp(deps) {
     // Background fetches stop with the feature's switch; an unreadable switch is off.
     const woSwitchOn = () => uiSwitchOn(deps.pool, WO_SWITCH).catch(() => false)
     // Research and build work also runs for Add site's Build from my business (`opportunities-build/own-site.js`), whose
-    // switch is its own; the background crawls of found restaurants (site checks, social stats, prefetch) do not.
-    const woWorkOn = async () => (await woSwitchOn()) || (await ownSiteOn(deps.pool))
+    // switch is its own, and for the build chat's research of the owner's links (#575, `build-draft/place-research.js`),
+    // whose switch is its own too; the background crawls of found restaurants (site checks, social stats, prefetch) do not.
+    const woWorkOn = async () =>
+      (await woSwitchOn()) ||
+      (await ownSiteOn(deps.pool)) ||
+      (await uiSwitchOn(deps.pool, BUILD_CHAT_SWITCH).catch(() => false))
     // A homepage that refuses Node's TLS is read once more as Chrome, through the loopback proxy that refuses
     // private addresses at connect time. Off unless WO_SITE_READ_TLS; `impit` resolves from this app's node_modules.
     const siteReadTiers = createEscalatingFetch({
@@ -1790,6 +1790,8 @@ export function buildApp(deps) {
       })
     )
     app.route('/', websiteOpportunitiesRoutes(opportunityDeps))
+    // The research of one business for its owner, made by the doors just mounted: the build chat's research (#575).
+    app.businessResearch = opportunityDeps.builder.businessResearch()
     // `/v1/demos` (tasks/todo-wo-public-demos.md B): an outside builder asks for a demo with an account token, on the
     // api host only, through the same demo actions as the Build demo button. Before `/v1`'s own 404 (`api/route.js`).
     // Account tokens (device flow, `lib/account-token.js`), made here so `/v1/demos` and `/v1` share one resolver.

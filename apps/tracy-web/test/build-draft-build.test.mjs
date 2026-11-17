@@ -281,9 +281,7 @@ test("the approved research run's pictures are kept until the build ends", opts,
   const deleted = []
   const pictures = createDraftPictures({
     pool: db.pool,
-    objects: { get: async () => null, delete: async (key) => deleted.push(key) },
-    mediaStoreOf: () => ({}),
-    withinTime: async (run) => run()
+    objects: { get: async () => null, delete: async (key) => deleted.push(key) }
   })
   assert.equal(await pictures.prune(accountId, RUN_B), 0, 'the approved run is kept while the build is open')
   const build = await readBuild(db.pool, accountId)

@@ -80,3 +80,29 @@ export function putEndedStep(pool, accountId, engine, now = Date.now) {
       : { engine: { ...engine, startedAt: at, endedAt: at } }
   )
 }
+
+/**
+ * Keep a step running past the work of its runner (#575): a research whose place run goes on in the step chain's
+ * executor. `patch` is laid on the running state (no end time); a step no longer this runner's changes nothing.
+ */
+export function continueStep(pool, accountId, runner, patch) {
+  return changeDraft(pool, accountId, (row) => {
+    if (row.engine?.state !== 'running' || row.engine.runner !== runner) return { error: 'NOT_RUNNING' }
+    return { engine: { ...row.engine, ...patch } }
+  })
+}
+
+/**
+ * Take a research that waits on its place run over for this runner, to end it here (#575): only while it still runs
+ * and still names the same place run (`opportunityId`). Answers whether it was taken.
+ */
+export async function adoptStep(pool, accountId, runner, opportunityId) {
+  let taken = false
+  await changeDraft(pool, accountId, (row) => {
+    if (row.engine?.state !== 'running' || row.engine.place?.opportunityId !== opportunityId)
+      return { error: 'NOT_WAITING' }
+    taken = true
+    return { engine: { ...row.engine, runner, finishing: true } }
+  })
+  return taken
+}

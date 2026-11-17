@@ -15,7 +15,7 @@
  * did not fit is replaced by the next one), and `say` the sentence that tells the owner why, when there is one.
  */
 import { planProfileOf } from './engine-steps.js'
-import { linkChoiceOf, linkReadsOf, linkStatesOf } from './link-reads.js'
+import { linkChoiceOf, linkProgressOf, linkReadsOf, linkStatesOf } from './link-reads.js'
 
 /** The chat card shows at most three questions at a time (`MAX_QUESTIONS_AT_ONCE` of `@tracy/core/build-chat`). */
 export const MAX_QUESTIONS_AT_ONCE = 3
@@ -132,15 +132,25 @@ export function profileSummaryOf(profile) {
 /**
  * The engine state of a draft row (`engine-store.js readEngineRow`) as the doors answer it.
  * @param {object | null} row
- * @param {{kit?: {blockStore: object, library: object[]} | null}} [options] the chosen template's kit, when the draft
- *   names one: the site name question is held to its business name limit
+ * @param {{kit?: {blockStore: object, library: object[]} | null, progress?: {sources?: object[]}}} [options] the
+ *   chosen template's kit, when the draft names one: the site name question is held to its business name limit;
+ *   `progress`: the step chain's place run of a running research, read on this poll (`place-research.js`)
  */
-export function engineStateOf(row, { kit = null } = {}) {
+export function engineStateOf(row, { kit = null, progress = null } = {}) {
   const engine = row?.engine
   if (!engine) return { step: null, state: 'idle' }
   const { step, state } = engine
-  // Research names each link it reads (`link-reads.js`): one line per link, `reading` while it runs.
-  const readingLinks = step === 'research' ? linkStatesOf(engine.inputs?.links) : []
+  // Research names each link it reads (`link-reads.js`): one line per link, `reading` while it runs, and, while the
+  // step chain's place run reads them, each link `read` or `failed` as its source ends.
+  const readingLinks =
+    step !== 'research'
+      ? []
+      : engine.place
+        ? linkProgressOf(engine.inputs?.links, {
+            sources: progress?.sources ?? [],
+            setAside: engine.place.setAside ?? []
+          })
+        : linkStatesOf(engine.inputs?.links)
   if (state === 'running') return { step, state, ...(readingLinks.length ? { links: readingLinks } : {}) }
   if (state === 'stopped')
     return {

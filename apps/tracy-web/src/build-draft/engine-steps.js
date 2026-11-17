@@ -3,11 +3,11 @@
  * rerun rule copies, `engine-rerun.js`) and its tools, and calls the build engine of the WO package; neither writes the
  * draft (`engine.js` does, once the step has finished).
  *
- * RESEARCH BEFORE A SITE EXISTS. `gather({links, description})` produces the research brief and its asset manifest in
- * the shapes a website opportunity's revision stores (`wo_revision.brief`, `wo_revision.asset_manifest`), which is
- * what `researchOf` reads. It is injected: the default (`gather.js`, wired in `build-draft-gather-wiring.js`) reads the links
- * with the Website Opportunities collectors in memory and writes no `wo_*` row. The links it set aside, each with a
- * plain reason, are kept in the research record (`setAside`).
+ * RESEARCH BEFORE A SITE EXISTS (#575). A research of links is the step chain's own (`place-research.js`): the owner's
+ * business saved and researched as Build from my business does, and its content brief a `wo_revision`. A research of
+ * the owner's words alone (`gather.js`) makes its brief in memory from those words. Both end in `researchRecordOf`,
+ * the record `researchOf` and the needs profile read. The links set aside, each with a plain reason, are kept in the
+ * research record (`setAside`).
  *
  * 🔒 THE PLAN NEVER SHOWS THE TEMPLATE'S LOOK (decision D40). Compose reads the business's brand from
  * `brandStep({research, template, kit})`: the pre site brand step of #616 (`brand-before-site.js`), which answers its
@@ -42,24 +42,22 @@ export class EngineStepError extends Error {
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
 /**
- * Research the business from the owner's links: the brief, the needs profile research made from it, and the needs
- * profile with its questions. `kit` (the chosen template's, when known) gives the main button's answer its real length.
+ * Research the business from the owner's own words, with no link (`gather.js`): the brief, the needs profile research
+ * made from it, and the needs profile with its questions. `kit` (the chosen template's, when known) gives the main
+ * button's answer its real length. A research of links runs the step chain's place research instead
+ * (`place-research.js`) and ends in `researchRecordOf` the same way.
  * @param {{links: string[], description?: string, name?: string}} inputs `name`: the business name the owner typed,
  *   which names a business researched from its owner's words alone
  * @param {{gather: Function, model: Function, kit?: {blockStore: object, library: object[]} | null,
- *   accountId?: string, withheld?: object | null, place?: object | 'none'}} tools `accountId`: whose research it is (the gatherer counts paid
- *   reads per account); `withheld`: what the draft's earlier research kept off the site
- * @returns {Promise<{links: string[], description: string | null, trade: string | null, brief: object,
- *   manifest: object[], profile: object, setAside?: Array<{link: string, reason: string}>}>} the research record the
- *   draft keeps
+ *   accountId?: string, withheld?: object | null, place?: object | 'none'}} tools `accountId`: whose research it is;
+ *   `withheld`: what the draft's earlier research kept off the site
  */
 export async function researchStep(
   { links, description, name },
   { gather, model, kit, accountId, withheld: kept, place }
 ) {
   // What the owner already keeps off the site (a research made before) is told to the gatherer, so the business reading
-  // never sends a held name or person to the model, not even in the owner's own description. `place`: the owner's
-  // answer to which place an ambiguous Google link means (`gather-place.js`), when the research runs again with it.
+  // never sends a held name or person to the model, not even in the owner's own description.
   const gathered = await gather(
     {
       links,
@@ -70,16 +68,38 @@ export async function researchStep(
     },
     accountId ? { accountId } : {}
   )
+  return researchRecordOf(gathered, { links, description }, { model, kit })
+}
+
+/** The owner's description as the needs profile's `owner-statement` source (D46), when no source of it is there yet. */
+function withOwnerStatement(sources, statement) {
+  if (!isText(statement) || sources.some((s) => s.id === 'owner-statement')) return sources
+  return [...sources, { id: 'owner-statement', origin: 'answer', text: statement }]
+}
+
+/**
+ * The research record the draft keeps, from what research gathered: the brief, the needs profile research made from it
+ * (`researchOf`, with the brief's own fact decisions) and the needs profile with its questions.
+ * @param {object} gathered `{brief, manifest, setAside?, reading?, descriptionFacts?, descriptionKeptOut?, logoFile?,
+ *   pictureRun?, picturesSetAside?, placeProfile?, ids?, googleLink?, ownerStatement?}`
+ * @param {{links: string[], description?: string | null}} inputs
+ * @param {{model: Function, kit?: object | null}} tools
+ */
+export async function researchRecordOf(gathered, { links, description }, { model, kit }) {
   if (!gathered?.brief || typeof gathered.brief !== 'object')
     throw new EngineStepError('research_empty', 'the research gave no brief')
   const manifest = Array.isArray(gathered.manifest) ? gathered.manifest : []
   // What the owner keeps off the site (a held business name, held people) rides on the record: compose reads it.
-  const { sources, withheld } = researchOf(gathered.brief, { manifest })
+  const { sources, withheld, assessed } = researchOf(gathered.brief, { manifest })
   const profile = await buildNeedsProfile({
-    research: { sources },
+    research: {
+      sources: withOwnerStatement(sources, gathered.ownerStatement),
+      ...(assessed ? { assessed } : {})
+    },
     model,
     ...(kit ? { blockStore: kit.blockStore, library: kit.library } : {})
   })
+  const has = (key) => gathered[key] !== undefined && gathered[key] !== null
   return {
     links,
     description: description ?? null,
@@ -91,18 +111,22 @@ export async function researchStep(
     ...(Array.isArray(gathered.setAside) && gathered.setAside.length ? { setAside: gathered.setAside } : {}),
     // How the business was read (`gather-reading.js`): by the model or the rules, why, its calls, tokens and cost.
     ...(gathered.reading && typeof gathered.reading === 'object' ? { reading: gathered.reading } : {}),
-    // What became of the owner's description (D46, `gather-read.js`): the description itself stays under its own key
-    // (`description`); whether its facts were read, and the sentences kept out of the brief word for word.
+    // What became of the owner's description (D46): the description itself stays under its own key (`description`);
+    // whether its facts were read, and the sentences kept out of the brief word for word.
     ...(gathered.descriptionFacts && typeof gathered.descriptionFacts === 'object'
       ? { descriptionFacts: gathered.descriptionFacts }
       : {}),
     ...(Array.isArray(gathered.descriptionKeptOut) && gathered.descriptionKeptOut.length
       ? { descriptionKeptOut: gathered.descriptionKeptOut }
       : {}),
-    // The business logo the gatherer saved as a file (the brand step reads it); kept so a rerun reads the same file.
+    // A research of links (`place-research.js`): the step chain's place profile, the ids of the saved business, its
+    // place and its content brief (the brand step and a build read the revision), and the Google link the place
+    // was chosen for.
+    ...(has('placeProfile') ? { placeProfile: gathered.placeProfile } : {}),
+    ...(has('ids') ? { ids: gathered.ids } : {}),
+    ...(isText(gathered.googleLink) ? { googleLink: gathered.googleLink } : {}),
+    // A record made before #575 kept a logo file and its draft picture run; kept as they were when present.
     ...(isText(gathered.logoFile) ? { logoFile: gathered.logoFile } : {}),
-    // The research run its stored pictures belong to (`pictures.js`), and the pictures that were not stored, each with
-    // its plain reason: they are not in the manifest.
     ...(isText(gathered.pictureRun) ? { pictureRun: gathered.pictureRun } : {}),
     ...(Array.isArray(gathered.picturesSetAside) && gathered.picturesSetAside.length
       ? { picturesSetAside: gathered.picturesSetAside }

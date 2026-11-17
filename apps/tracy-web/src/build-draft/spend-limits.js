@@ -14,10 +14,16 @@
  * its real cost, marked reported, when its result knows the cost of all it spent (`engine-spend.js` `stepCostCents`):
  * the brand step, when every call of its run reported a cost, and compose and revise, when every call they made through
  * the build model door reported its usage and the price table lists the model (`model-usage.js`). The others settle at
- * their ceiling: research knows the cost of its business reading and its needs profile only, not of its place details
- * and crawl. The step chain's paid picture calls inside research (the photograph labelling and its observation,
- * `gather-vision.js`) run under the same research reservation, each counted against the operator's cap for one
- * research job (`/ops/wo` researchJobCapCents) together with the business reading, and refused past it.
+ * their ceiling.
+ *
+ * 🔒 A RESEARCH OF LINKS IS PAID BY THE STEP CHAIN'S OWN ACCOUNTING (#575). The owner's links are researched by the
+ * step chain's place research (`place-research.js`): every paid call of it (Google, the crawl, social pages, review
+ * sites, menus, the business reading, the picture labelling of its brief) is reserved in the same ledger by the step
+ * chain itself, with its receipts, its daily counts per account (new places a day, Research again a day, paid runs a
+ * day) and its cap per research job (`/ops/wo`). So the build chat reserves only what is its own: the link judging
+ * (`researchLinks`: the link door's one Google search when a Google link must be matched) when the step starts, and
+ * the needs profile call (`profile`) when it ends. The hourly limit of `research` still counts each start. A research of
+ * the owner's words alone keeps the `research` ceiling: its business reading and needs profile run inside it.
  */
 
 /** One hour, the window every limit counts in. */
@@ -40,6 +46,10 @@ export const SPEND_LIMITS = Object.freeze({
  */
 export const STEP_CEILING_CENTS = Object.freeze({
   research: 40,
+  // A research of links (#575): the link door's Google match only; the place research is the step chain's own spend.
+  researchLinks: 4,
+  // The needs profile call that ends a research of links: one profile sized model answer.
+  profile: 10,
   compose: 15,
   // The answer reading (`answer-readings.js`): a few short typed answers with their questions in, a short reply out,
   // well under a tenth of the plan composer's call (the whole profile and every block in, a plan out), so a tenth of

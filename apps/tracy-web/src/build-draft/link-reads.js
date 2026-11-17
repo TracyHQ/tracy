@@ -10,6 +10,7 @@
  * hidden. A reason is a plain clause (`gather-links.js` `SET_ASIDE`), never a provider name or an error code.
  */
 import { linkKind, researchOf } from 'website-opportunities/domain'
+import { reasonOf } from './gather-links.js'
 
 /** The owner's words for a social platform's link. */
 const PLATFORMS = Object.freeze({
@@ -22,6 +23,9 @@ const PLATFORMS = Object.freeze({
   threads: 'Threads',
   pinterest: 'Pinterest'
 })
+
+/** The source rows of a running research that are done reading, and those that read nothing. */
+const DONE = new Set(['complete', 'partial', 'failed', 'blocked', 'skipped'])
 
 /** The research's source names that are Google's (`needs-research.mjs` origins). */
 const GOOGLE = new Set(['google', 'google-places', 'google-maps'])
@@ -147,4 +151,27 @@ export function linkChoiceOf(links) {
   return linkStatesOf(links).map((line) =>
     linkOf(line.link).source === 'google' ? { ...line, state: 'choice' } : line
   )
+}
+
+/**
+ * The lines while the step chain's place research runs (#575): each link `reading` until the place run's own row of
+ * its source says it is done, then `read`, or `failed` with the row's plain reason; a link set aside when the links
+ * were judged is `failed` with its reason from the start. A link whose source the run has no row for yet reads on.
+ * @param {string[]} links the owner's links
+ * @param {{sources?: Array<{source: string, status: string, reason?: string | null}>,
+ *   setAside?: Array<{link: string, reason: string}>}} progress the place run's source rows (`business-research.js`
+ *   `progress`) and the links set aside when the research started
+ */
+export function linkProgressOf(links, { sources = [], setAside = [] } = {}) {
+  return linkStatesOf(links).map((line) => {
+    const aside = list(setAside).find((a) => a?.link === line.link)
+    if (aside) return { ...line, state: 'failed', reason: aside.reason || UNREAD_REASON }
+    const { source } = linkOf(line.link)
+    // A listing page is read once when the links are judged (`link-fields.js`): one not set aside then was read.
+    if (source === 'listing') return { ...line, state: 'read' }
+    const rows = list(sources).filter((r) => sourceIdOf(r?.source) === source)
+    if (rows.length === 0 || rows.some((r) => !DONE.has(r?.status))) return line
+    if (rows.some((r) => COLLECTED.has(r.status))) return { ...line, state: 'read' }
+    return { ...line, state: 'failed', reason: reasonOf(rows[0].reason) }
+  })
 }

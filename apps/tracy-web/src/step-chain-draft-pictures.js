@@ -1,7 +1,8 @@
 // The customer's pictures of an assembled run (#597).
 //
 // DRAFT PICTURES. The build chat's research stores the customer's pictures before a site exists (manifest entries of
-// origin `draft`). The profile names each by its web address (`ref`) and, for a gallery photo, its manifest id
+// origin `draft`); the step chain's content brief of a research of links names the place's and the account's pictures
+// (origins `place` and `opportunity`, #575), opened by the same door. The profile names each by its web address (`ref`) and, for a gallery photo, its manifest id
 // (`pictureId`). Their bytes are opened through the injected `openDraftPicture(id, {accountId})`, and the vision call
 // is shown those bytes (a `data:` address) in place of the web address. 🔒 ONLY STORED BYTES COUNT: a picture value
 // with no stored picture behind it, or one that cannot be opened (`null`, a throw, no bytes: gone, changed, pruned,
@@ -15,6 +16,7 @@
 // to the picture policy, which never draws a person. The alt text hand-off lives in `step-chain-draft-alt.js`.
 import { heldTextsOf, itemTextsOf, namesHeldInAnyForm } from 'website-opportunities/domain/plan-withheld.mjs'
 import { draftError } from './step-chain-draft-source.js'
+import { OPENED, openOptionsOf } from './step-chain-draft-stored.js'
 
 export { altProblemsOf, withAltTexts } from './step-chain-draft-alt.js'
 
@@ -30,7 +32,7 @@ const IMAGE_FIELD = /(?:\.image|_image|_logo)$/
  * @returns {Promise<{profile: object, refs: Map<string, string>, used: string[], missing: string[], unstored: number}>}
  */
 export async function withDraftPictures({ profile, manifest, accountId, openDraftPicture }) {
-  const drafts = list(manifest).filter((m) => m?.origin === 'draft' && isText(m.id))
+  const drafts = list(manifest).filter((m) => OPENED.has(m?.origin) && isText(m.id))
   const byId = new Map(drafts.map((m) => [m.id, m]))
   const byUrl = new Map(drafts.filter((m) => isText(m.sourceUrl)).map((m) => [m.sourceUrl, m]))
   const refs = new Map()
@@ -42,7 +44,10 @@ export async function withDraftPictures({ profile, manifest, accountId, openDraf
     if (!opened.has(entry.id)) {
       let got = null
       try {
-        got = typeof openDraftPicture === 'function' ? await openDraftPicture(entry.id, { accountId }) : null
+        got =
+          typeof openDraftPicture === 'function'
+            ? await openDraftPicture(entry.id, openOptionsOf(entry, accountId))
+            : null
       } catch {
         got = null
       }

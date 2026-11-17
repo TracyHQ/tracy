@@ -41,9 +41,7 @@ async function seed(labels) {
 const picturesOf = () =>
   createDraftPictures({
     pool: db.pool,
-    objects: { get: async () => new Response(BYTES) },
-    mediaStoreOf: () => ({}),
-    withinTime: async (run) => run()
+    objects: { get: async () => new Response(BYTES) }
   })
 
 test('a stored picture opens with its labels', opts, async () => {

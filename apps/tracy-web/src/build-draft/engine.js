@@ -18,14 +18,23 @@
  * (`brand-before-site.js`) and is never wrapped in a second rerun.
  */
 import { randomUUID } from 'node:crypto'
-import { endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js'
+import { adoptStep, continueStep, endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js'
 import { faultOf, runWithRerun } from './engine-rerun.js'
 import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
 import { askingOf } from './engine-asking.js'
 import { placeAnswerOf } from './gather-place.js'
-import { brandRunOf, composeStep, planProfileOf, researchStep, withheldOfResearch } from './engine-steps.js'
+import {
+  EngineStepError,
+  brandRunOf,
+  composeStep,
+  planProfileOf,
+  researchRecordOf,
+  researchStep,
+  withheldOfResearch
+} from './engine-steps.js'
 import { answersStillAsked } from './answers-kept.js'
-import { keptPlaceOf, keptRecordOf } from './research-repeat.js'
+import { finishPlaceResearch, startPlaceResearch } from './place-research.js'
+import { TRY_LATER_SAY } from './spend-limits.js'
 import { answerReadingsOf, placeReadingOf, placeStatementOf } from './answer-readings.js'
 import { spendGate, spendLeft } from './engine-spend.js'
 import { usageCollector } from './model-usage.js'
@@ -48,6 +57,8 @@ const BRAND_CODES = new Set([
 /** The rules gate's look problems (D40, D42): a plan that failed the gate on them stops like a missing brand. */
 const LOOK_PROBLEMS = new Set(['template_accent', 'neutral_accent', 'template_logo', 'template_look_said'])
 const RESEARCH_CODES = new Set(['research_unusable', 'research_empty', 'research_unavailable'])
+/** The step chain's research refused for one of its daily limits (`place-research.js`): try again later. */
+const LIMIT_CODES = new Set(['research_limit'])
 /**
  * The stops only the owner could lift, when the failure carries no question to ask (#609, #593 G4):
  * `site_name_missing` without `details.question`. With its question the step ends `asking` instead
@@ -78,6 +89,7 @@ export function stoppedOf(fault) {
     return { state: 'stopped', say: SAY.links }
   if (fault.code === 'research_empty' && fault.reason === 'no_name')
     return { state: 'stopped', say: SAY.name }
+  if (LIMIT_CODES.has(fault.code)) return { state: 'stopped', say: TRY_LATER_SAY, reason: 'try-later' }
   const stopped = { state: 'stopped', say: RESEARCH_CODES.has(fault.code) ? SAY.research : SAY.fault }
   return mayRerun(fault) ? { ...stopped, rerun: true } : stopped
 }
@@ -94,6 +106,9 @@ const OWNER_RERUN_CODES = new Set(['plan_gate_failed'])
  */
 const mayRerun = (fault) =>
   fault.code !== 'research_empty' && (fault.noRerun !== true || OWNER_RERUN_CODES.has(fault.code))
+
+/** Whether a running step is a research waiting on the step chain's place run (`place-research.js`). */
+const waiting = (engine) => engine?.step === 'research' && Boolean(engine.place)
 
 /** Whether the step's inputs name this template. */
 const sameTemplate = (engine, template) =>
@@ -113,7 +128,11 @@ export const brandFor = (row, template) =>
  * @param {{loadKit: (slug: string) => object | null}} deps.kits the AI quickstart catalogue
  * @param {() => Promise<Function>} deps.buildModel the build model door (`build-model.js`); throws `model_missing`
  * @param {(input: {links: string[], description: string | null}, context: {accountId?: string}) =>
- *   Promise<{brief: object, manifest: object[], setAside?: object[]}>} deps.gather
+ *   Promise<{brief: object, manifest: object[], setAside?: object[]}>} deps.gather the research of the owner's words
+ *   alone (`gather.js`); with no `placeResearch` it reads whatever it is given (tests)
+ * @param {() => object | null} [deps.placeResearch] the step chain's research of one business for its owner
+ *   (`opportunities-build/business-research.js`), read at call time: a research of links runs it
+ *   (`place-research.js`), over several polls of the engine
  * @param {(input: {research: object, template: object, kit: object}) => Promise<object | null>} deps.brandStep the
  *   pre site brand step (#616): answers the look record (`tracy-brand-look/v1`)
  * @param {(accountId: string, run: string) => Promise<unknown>} [deps.prunePictures] deletes the pictures an older
@@ -128,6 +147,7 @@ export function createEngine({
   kits,
   buildModel,
   gather,
+  placeResearch = () => null,
   brandStep,
   prunePictures,
   charge,
@@ -147,6 +167,11 @@ export function createEngine({
 
   async function finish(accountId, step, run) {
     const ran = await run().catch((error) => ({ ok: false, error, attempts: 1 }))
+    // Its work goes on outside this process (the step chain's place run): the step stays running, with what it names.
+    if (ran.ok && ran.ended?.state === 'running') {
+      const { state: _running, ...patch } = ran.ended
+      return continueStep(pool, accountId, runner, patch)
+    }
     if (ran.ok) {
       const ended = await endStep(pool, accountId, runner, ran.ended ?? { state: 'done' }, ran.columns, now)
       // Once the draft names the new research, what it replaced goes (the pictures of older research runs). A step
@@ -160,8 +185,11 @@ export function createEngine({
     return endStep(pool, accountId, runner, stoppedOf(fault), {}, now)
   }
 
-  /** Mark the step running and run it in the background; answers the engine state at once. */
-  async function start(accountId, step, inputs, run) {
+  /**
+   * Mark the step running and run it in the background; answers the engine state at once. `ceiling`: the ledger step
+   * its reservation is held at, when not its own (`spend-limits.js`).
+   */
+  async function start(accountId, step, inputs, run, { ceiling } = {}) {
     if (jobs.has(accountId))
       return {
         state: { step: (await readEngineRow(pool, accountId))?.engine?.step ?? step, state: 'running' }
@@ -170,15 +198,22 @@ export function createEngine({
     let release
     jobs.set(accountId, new Promise((resolve) => (release = resolve)))
     // The owner's hourly limit for this step, and its reservation in the research cost ledger (`engine-spend.js`).
-    const spend = await admit(accountId, step).catch(() => null)
+    const spend = await admit(accountId, step, ceiling).catch(() => null)
     if (!spend) {
       jobs.delete(accountId)
       release()
       return { error: 'TRY_LATER' }
     }
-    const started = await startStep(pool, accountId, { step, inputs, runner, now }, () => false).catch(
+    // A research waiting on its place run is worked on outside this process: it is live, never replaced.
+    const started = await startStep(pool, accountId, { step, inputs, runner, now }, waiting).catch(
       (error) => ({ thrown: error })
     )
+    if (started.running) {
+      spend.cancel()
+      jobs.delete(accountId)
+      release()
+      return { state: { step: started.running.step, state: 'running' } }
+    }
     if (started.thrown || started.error) {
       spend.cancel()
       jobs.delete(accountId)
@@ -194,6 +229,95 @@ export function createEngine({
       })
     jobs.set(accountId, job)
     return { state: { step, state: 'running' } }
+  }
+
+  /** Run `work` as this process's step of the account, so a read in between never takes it for an orphan. */
+  function background(accountId, work) {
+    let release
+    jobs.set(accountId, new Promise((resolve) => (release = resolve)))
+    const job = Promise.resolve()
+      .then(work)
+      .catch((error) => console.error('[build-draft] research could not record its end:', error))
+      .finally(() => {
+        jobs.delete(accountId)
+        release()
+      })
+    jobs.set(accountId, job)
+    return job
+  }
+
+  /** The columns a research writes when it ends: the record, a stale brand gone, the answers it still asks. */
+  const researchColumns = (row, kit) => (record) => (current) => ({
+    research: record,
+    brand: null,
+    // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
+    ...(row?.plan ? {} : { needs_profile: record.profile }),
+    ...answersStillAsked(current, [
+      ...(record.profile?.questions ?? []),
+      ...(planProfileOf(record, kit)?.questions ?? [])
+    ])
+  })
+
+  /**
+   * End a research whose place run ended (#575), in this process: its content brief made and the needs profile read
+   * (`place-research.js` `finishPlaceResearch`, then `researchRecordOf`), with the rerun rule, under the ledger step
+   * `profile` (the place run's own spend is in the step chain's ledger already). A place run that failed stops with
+   * its code. Pictures of older research runs of the draft go once the record is in.
+   */
+  async function endPlaceResearch(accountId, row, progress) {
+    const engine = row.engine
+    if (!(await adoptStep(pool, accountId, runner, engine.place.opportunityId))) return
+    if (progress.state === 'failed') {
+      const error = new EngineStepError(
+        'research_unavailable',
+        `the place research ended ${progress.code ?? 'failed'}`,
+        { noRerun: true }
+      )
+      await finish(accountId, 'research', async () => ({ ok: false, error, attempts: 1 }))
+      return
+    }
+    const spend = await admit(accountId, 'profile').catch(() => null)
+    if (!spend) {
+      await endStep(pool, accountId, runner, { state: 'stopped', say: TRY_LATER_SAY, rerun: true }, {}, now)
+      return
+    }
+    const kit = row.template ? kits.loadKit(row.template.slug) : null
+    const service = placeResearch()
+    await finish(accountId, 'research', () =>
+      spend.run(async () => {
+        const model = await buildModel()
+        const ran = await runWithRerun(
+          async (copy) =>
+            researchRecordOf(
+              await finishPlaceResearch(copy, { service, accountId, place: engine.place }),
+              copy,
+              { model, kit }
+            ),
+          { links: engine.inputs?.links ?? [], description: engine.inputs?.description ?? null }
+        )
+        if (!ran.ok) return ran
+        return {
+          ...ran,
+          columns: researchColumns(row, kit)(ran.value),
+          // The draft pictures of research made before (#609) are not this research's: they go.
+          ...(prunePictures ? { after: () => prunePictures(accountId, randomUUID()) } : {})
+        }
+      })
+    )
+  }
+
+  /**
+   * A research waiting on its place run, read on a poll: the run's progress (a paused run resumed by the step chain's
+   * own rule), and, once it ended, its end started in this process. Answers the engine state.
+   */
+  async function advanceResearch(accountId, row) {
+    const service = placeResearch()
+    const progress = service
+      ? await service.progress({ accountId, opportunityId: row.engine.place.opportunityId }).catch(() => null)
+      : { state: 'failed', code: 'RESEARCH_UNAVAILABLE', sources: [] }
+    if (progress && progress.state !== 'running' && !jobs.has(accountId))
+      background(accountId, () => endPlaceResearch(accountId, row, progress))
+    return engineStateOf(row, { progress: progress ?? undefined })
   }
 
   /** The spend gate and model door of the answer reading (`answer-readings.js`): its own ledger step `answers`. */
@@ -312,7 +436,12 @@ export function createEngine({
       // Past its limit the brand step does not start: compose starts it again later, and says so.
       return started?.error ? null : started
     },
-    /** Research from the owner's links; the research and its needs profile go into the draft. */
+    /**
+     * Research the business; the research and its needs profile go into the draft. Links (with the step chain's research
+     * wired) run the step chain's own place research over several polls (`place-research.js`): the step starts, keeps
+     * running while the place run reads each source, and ends once its content brief is made. The owner's words alone
+     * are read by `gather` in one step.
+     */
     async research(accountId, { links, description, name }, row) {
       const kit = row?.template ? kits.loadKit(row.template.slug) : null
       // A typed answer to which place the Google link means is read by the model first, as the `answers` step; the
@@ -320,9 +449,32 @@ export function createEngine({
       const readChoice = await placeReadingOf(row, links, readingTools(accountId))
       const said = placeStatementOf(row, links, readChoice, description)
       const inputs = { links, ...(said ? { description: said } : {}), ...(name ? { name } : {}) }
-      // The owner's answer to which place the Google link means, when this research asked it (`gather-place.js`), else
-      // the place they chose for the same Google link in an earlier research (`research-repeat.js`): asked once.
-      const place = placeAnswerOf(row, links, readChoice) ?? keptPlaceOf(row?.research, links)
+      // The owner's answer to which place the Google link means, when this research asked it (`gather-place.js`).
+      const place = placeAnswerOf(row, links, readChoice)
+      const service = links?.length ? placeResearch() : null
+      if (service)
+        return start(
+          accountId,
+          'research',
+          inputs,
+          askingOrRan(async () => {
+            try {
+              const started = await startPlaceResearch(inputs, {
+                service,
+                accountId,
+                draftId: row?.id ?? null,
+                research: row?.research ?? null,
+                now,
+                ...(place ? { place } : {})
+              })
+              return { ok: true, attempts: 1, ended: { state: 'running', place: started }, columns: {} }
+            } catch (error) {
+              // The place question, a refused start: one attempt, ended as the rerun rule ends a step.
+              return { ok: false, error, attempts: 1 }
+            }
+          }),
+          { ceiling: 'researchLinks' }
+        )
       return start(
         accountId,
         'research',
@@ -341,18 +493,7 @@ export function createEngine({
                   ...(place ? { place } : {})
                 }),
               inputs,
-              // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
-              // New research makes the brand record stale: the brand step reads the research. The answers kept are those
-              // to a question the new research asks the same way (`answers-kept.js`), read when the step ends.
-              (record) => (current) => ({
-                research: keptRecordOf(record, place),
-                brand: null,
-                ...(row?.plan ? {} : { needs_profile: record.profile }),
-                ...answersStillAsked(current, [
-                  ...(record.profile?.questions ?? []),
-                  ...(planProfileOf(record, kit)?.questions ?? [])
-                ])
-              })
+              (record) => researchColumns(row, kit)(record)
             )
           )
         )
@@ -418,6 +559,8 @@ export function createEngine({
      */
     async read(accountId) {
       const row = await readEngineRow(pool, accountId)
+      // A research waiting on the step chain's place run lives outside this process: it is read, never orphaned.
+      if (waiting(row?.engine) && row.engine.state === 'running') return advanceResearch(accountId, row)
       if (row?.engine?.state === 'running' && !(row.engine.runner === runner && jobs.has(accountId))) {
         await stopOrphan(
           pool,

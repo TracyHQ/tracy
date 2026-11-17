@@ -15,6 +15,8 @@
  * 🔒 NOTHING OF THE OLD DRAFT REACHES THE NEW ONE. The row goes (its research, answers, plan and fault), its picture
  * rows go with it by cascade, and their stored objects are deleted before the answer. The old conversation stays in
  * dsh; its tool calls are refused from then on (`caller.js`: its session is no longer the account's build session).
+ * The business a research of links saved (#575) stays the account's private opportunity and its place research stays
+ * shared: the draft's ids go with the row, and the opportunity forgets the draft (`ownSite.buildDraft`).
  */
 import { en } from '../lib/i18n/strings.js'
 import { principalOf } from '../lib/wo-principal.js'
@@ -97,6 +99,13 @@ export async function moveToNextGeneration(pool, accountId, { only, objects = nu
         await client.query('select object_key from build_draft_picture where account_id = $1', [accountId])
       ).rows.map((r) => r.object_key)
       await client.query('delete from build_draft where id = $1', [row.id])
+      // The business the draft's research saved (#575, `place-research.js`) stays the account's, with its shared place
+      // research: only its mark of this draft goes, so nothing of the new conversation reads the old research.
+      await client.query(
+        `update wo_opportunity set candidate = candidate #- '{ownSite,buildDraft}'
+          where account_id = $1 and candidate->'ownSite'->>'buildDraft' = $2::text`,
+        [accountId, row.id]
+      )
       // The draft's fault was the team's only record of what stopped it: it is logged before it goes.
       if (row.fault)
         log.warn?.('[build-chat] fresh start removed a draft with fault', JSON.stringify(row.fault))

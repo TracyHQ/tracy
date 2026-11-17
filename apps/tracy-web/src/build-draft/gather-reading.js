@@ -15,7 +15,10 @@
  * A failed model call (an error, an empty or unreadable answer) is read once more on the same inputs, then the research
  * goes on with the rules' reading. A reading that throws, or one past its time, gives no reading and its reason.
  */
-import { boundedFetch, isCollected, withinTime } from './gather-sources.js'
+import { boundedFetch, withinTime } from './within-time.js'
+
+const COLLECTED = new Set(['complete', 'partial'])
+const isCollected = (row) => COLLECTED.has(row?.status)
 
 /**
  * Two minutes: one call of the Website Opportunities reading may take this long (`business-reading.js` `CALL_MS`), so

@@ -6,8 +6,9 @@
 // research revision and a template kit (`{revisionId, kitRef, siteLanguage}`) and answers the look record. The brand
 // bench reads its brief from that revision (`--brief-revision`, a `wo_revision` row) and spends its own doors
 // (`brandAgent`, `brandReviewer`, `seedImage`), not the build model. A draft researched before any website opportunity
-// holds no such revision: the step takes the draft's research brief instead (`--brief-file`, #616) with the logo file
-// the gatherer saved, and a draft without a brief or a known kit answers `brand_input_missing`.
+// holds no such revision: a research of links makes one (#575, `build-draft/place-research.js`), and a research of the
+// owner's words alone gives the step its brief instead (`--brief-file`, #616). A draft without a brief or a known kit
+// answers `brand_input_missing`.
 import { createBrandBeforeSite } from './brand-before-site.js'
 import { aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
 import { briefOfRevision } from './lib/bench-sql.js'
@@ -18,11 +19,8 @@ import { existsSync } from 'node:fs'
 
 export {
   decideProfile,
-  draftLogoDir,
   draftPictureReader,
   draftPictures,
-  listingRowOf,
-  placeCandidateFields,
   preSiteGatherer,
   preSiteParts
 } from './build-draft-gather-wiring.js'
@@ -87,8 +85,9 @@ export function draftQuickstartCatalogue({
 }
 
 /**
- * The engine's `brandStep({research, template})` over #616's step, on the draft's own research: the brief the gatherer
- * made and, when one was found, the business logo file it saved (`research.logoFile`), never a research revision.
+ * The engine's `brandStep({research, template})` over #616's step, on the draft's own research: the step chain's content
+ * brief revision of a research of links (`research.ids.revisionId`, #575), else the brief the words-only research made
+ * (a draft researched before #575 may also hold the logo file it saved, `research.logoFile`).
  * `stepsOf()` makes the step chain's steps (`createStepChainSteps`), only once a run can start, so a server whose
  * drafts never reach it builds no bench wiring. A logo file gone from the disk is not passed: the step then follows
  * its own rule for a business without a logo.
@@ -113,11 +112,16 @@ export function draftBrandStep({ pool, stepsOf, brandBeforeSite, kitRefOf: refOf
         return found.ok ? found.brief : null
       }
     })
-    const logoFile =
-      typeof research.logoFile === 'string' && existsSync(research.logoFile) ? research.logoFile : null
     const language = research.profile?.language?.value
+    // A research of links is the step chain's own (#575): its content brief is a revision, which the bench reads as
+    // a Website Opportunities build does (`--brief-revision`), with the logo its place research chose.
+    const revisionId = typeof research.ids?.revisionId === 'string' ? research.ids.revisionId : null
+    const logoFile =
+      !revisionId && typeof research.logoFile === 'string' && existsSync(research.logoFile)
+        ? research.logoFile
+        : null
     const { record, usd } = await run({
-      brief,
+      ...(revisionId ? { revisionId } : { brief }),
       ...(logoFile ? { logoFile } : {}),
       kitRef,
       ...(language ? { siteLanguage: language } : {})
