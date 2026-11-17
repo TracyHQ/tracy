@@ -146,7 +146,12 @@ const MULTICALL = new Set(['busybox', 'toybox'])
  * @returns {string}
  */
 function unquote(word) {
-  return word.replace(/^["']+|["']+$/g, '').replace(/\\(.)/g, '$1')
+  const quote = (c) => c === '"' || c === "'"
+  let start = 0
+  let end = word.length
+  while (start < end && quote(word[start])) start++
+  while (end > start && quote(word[end - 1])) end--
+  return word.slice(start, end).replace(/\\(.)/g, '$1')
 }
 
 /**

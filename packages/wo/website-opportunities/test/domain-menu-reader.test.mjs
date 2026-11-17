@@ -379,3 +379,13 @@ test('a menu page drawn by script is read again through the rendered readers in 
     [['needs_render', 'no_readable_text', ['jina']]]
   )
 })
+
+test('a menu page full of unclosed comments and tags is read in linear time, and a commented-out dish stays out', () => {
+  const html =
+    '<ul><li><span>Egg coffee</span> 55.000đ</li><!-- <li><span>Old dish</span> 9.000đ</li> --></ul>'
+  const names = menuItemsFromHtml(html, { source: SRC, collectedAt: AT }).map((i) => i.name)
+  assert.deepEqual(names, ['Egg coffee'])
+  const started = performance.now()
+  menuItemsFromHtml(`${'<!--'.repeat(50_000)}${'<'.repeat(50_000)}`, { source: SRC, collectedAt: AT })
+  assert.ok(performance.now() - started < 500)
+})

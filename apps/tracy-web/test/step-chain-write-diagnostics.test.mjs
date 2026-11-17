@@ -142,3 +142,22 @@ test('oversized and hostile reports remain bounded without losing overall failur
   assert.equal(JSON.stringify(diagnostic).includes('/Users'), false)
   assert.equal(JSON.stringify(diagnostic).includes('Bearer secret'), false)
 })
+
+test('page and slot shapes are read in linear time and keep their meaning', () => {
+  const kept = (page, slot) => {
+    const check = {
+      status: 'red',
+      counts: { block: 1 },
+      groups: [{ name: 'read-back', status: 'red', checked: 1, failures: [{ page, slot }] }]
+    }
+    const [fault] = stepNineDiagnostics({ report: { status: 'stopped' }, siteCheck: check }).finalCheck.faults
+    return [fault.page, fault.slot]
+  }
+  assert.deepEqual(kept('/', 'module-1'), ['/', 'module-1'])
+  assert.deepEqual(kept('/blog/post-1/', 'menu-0--x.y:z'), ['/blog/post-1/', 'menu-0--x.y:z'])
+  assert.deepEqual(kept('//double', 'menu-0-'), [null, null])
+  assert.deepEqual(kept('/a/../b', 'menu-0-.x'), [null, null])
+  const started = performance.now()
+  assert.deepEqual(kept(`/${'-'.repeat(158)}!`, `menu-0-${'--'.repeat(45)}!`), [null, null])
+  assert.ok(performance.now() - started < 200)
+})

@@ -168,6 +168,24 @@ def rebuild(full_name: str, label: str, slug: str, site_key: str) -> None:
 # The caller is the relay, not a user — but an endpoint that trusts its caller is an endpoint
 # broken the first time its caller is fooled.
 SAFE_ARG = __import__("re").compile(r"^[A-Za-z0-9._:/@-]+$")
+# A site's own folder. SAFE_ARG guards a command line, not a path: it lets `/` and `..` through,
+# so a door that turns a label into a path under /srv/tracy asks site_dir() instead — one plain
+# folder name, and the joined path, symlinks resolved, checked to still sit inside SITES_ROOT.
+# provision.sh makes every site folder with `mkdir -p`, so a site entry that is a link leading out
+# is never a real site; the root itself may be reached through a link (resolved on both sides).
+SITES_ROOT = "/srv/tracy"
+SITE_LABEL = __import__("re").compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,99}")
+
+
+def site_dir(label) -> str | None:
+    """`/srv/tracy/<label>`, or None when the label is not one folder name inside it."""
+    if not isinstance(label, str) or not SITE_LABEL.fullmatch(label):
+        return None
+    root = os.path.realpath(SITES_ROOT)
+    path = os.path.realpath(os.path.join(root, label))
+    if not path.startswith(root + os.sep):
+        return None
+    return path
 PROVISION_FLAGS = {
     "site": "--site",
     "label": "--label",
@@ -1084,7 +1102,10 @@ class Handler(BaseHTTPRequestHandler):
         label = payload.get("label", "")
         if not label or not SAFE_ARG.match(str(label)):
             return self._answer(400, "bad label")
-        token_path = f"/srv/tracy/{label}/tracy-agent.token"
+        folder = site_dir(label)
+        if folder is None:
+            return self._answer(400, "bad label")
+        token_path = os.path.join(folder, "tracy-agent.token")
         try:
             with open(token_path, encoding="utf-8") as fh:
                 token = fh.read().strip()
@@ -1215,9 +1236,10 @@ class Handler(BaseHTTPRequestHandler):
         # See the note at DEMO_LABEL — the relay cannot check this on our behalf.
         if kind in TRY_ON_JOBS:
             demo = str(payload.get("demo") or "")
-            if not DEMO_LABEL.match(demo):
+            folder = site_dir(demo)
+            if folder is None or not DEMO_LABEL.match(demo):
                 return self._answer(400, "refused demo: a try-on may only write to a demo copy")
-            if not os.path.isdir(f"/srv/tracy/{demo}"):
+            if not os.path.isdir(folder):
                 return self._answer(404, "no such demo copy")
             job_id = uuid.uuid4().hex[:12]
             write_job(job_id, state="queued", step=kind, label=demo)
@@ -1227,10 +1249,10 @@ class Handler(BaseHTTPRequestHandler):
             # Per-site core source (ADR 0070 appendix): the desk fetches the manifest from the site itself via the relay
             # and sends it down here; the Core-zone gate reads this file instead of a static list. Writes one
             # JSON file next to the webroot — no script, no shell.
-            if not SAFE_ARG.match(str(payload.get("label", ""))):
+            folder = site_dir(payload.get("label"))
+            if folder is None or not SAFE_ARG.match(payload["label"]):
                 return self._answer(400, "refused label")
-            site_dir = f"/srv/tracy/{payload['label']}"
-            if not os.path.isdir(site_dir):
+            if not os.path.isdir(folder):
                 return self._answer(404, "no such site")
             raw = payload.get("contentBase64")
             if not isinstance(raw, str) or not raw or len(raw) > 2 * 1024 * 1024:
@@ -1245,10 +1267,10 @@ class Handler(BaseHTTPRequestHandler):
                     raise ValueError("not a core manifest")
             except Exception:
                 return self._answer(400, "refused contentBase64: not a core manifest")
-            tmp = f"{site_dir}/core-manifest.json.tmp"
+            tmp = os.path.join(folder, "core-manifest.json.tmp")
             with open(tmp, "wb") as f:
                 f.write(decoded)
-            os.replace(tmp, f"{site_dir}/core-manifest.json")
+            os.replace(tmp, os.path.join(folder, "core-manifest.json"))
             job_id = uuid.uuid4().hex[:12]
             write_job(job_id, state="done", step=kind, label=payload["label"],
                       output=json.dumps({"ok": True, "extensions": len(manifest["extensions"])}))

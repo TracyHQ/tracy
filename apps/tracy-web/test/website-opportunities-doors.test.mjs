@@ -2602,7 +2602,7 @@ test(
     await app.socialStats.drain()
     await app.siteChecks.drain()
     assert.ok(
-      fetched.some((u) => u.includes('tiktok-api23.p.rapidapi.com')),
+      fetched.some((u) => URL.parse(u)?.hostname === 'tiktok-api23.p.rapidapi.com'),
       'the social stats tick ran'
     )
     const [social, site] = await states()

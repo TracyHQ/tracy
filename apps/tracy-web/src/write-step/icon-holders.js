@@ -13,14 +13,15 @@ import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { linkDoors } from './link-doors.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
-// Content map markup is written in doubled round brackets; a page read gives real tags.
-const TAG = /\(\([^)]*\)\)|<[^>]*>/g
+// Content map markup is written in doubled round brackets; a page read gives real tags. The whole sample is matched
+// as tags and white space, not stripped of its tags and compared with '': a check, not a sanitizer.
+const LINKS_ONLY = /^(?:\(\([^)]*\)\)|<[^>]*>|&nbsp;|\s)*$/
 const ANCHOR = /\(\(a[\s)]|<a[\s>]/i
 
 /** Whether a holder's sample is links only: tags and white space, no word a visitor reads. */
 export function linksOnly(sample) {
   const text = String(sample ?? '')
-  return ANCHOR.test(text) && text.replace(TAG, '').replace(/&nbsp;|\s/g, '') === ''
+  return ANCHOR.test(text) && LINKS_ONLY.test(text)
 }
 
 const WHY_LINK = (holder) =>

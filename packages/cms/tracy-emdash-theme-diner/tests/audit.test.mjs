@@ -27,6 +27,10 @@ const config = {
 const cfgFile = path.join(mkdtempSync(path.join(tmpdir(), 'audit-')), 'config.json')
 writeFileSync(cfgFile, JSON.stringify(config))
 
+// The request's path and query reach the page below; escaped like any server echoing a request into HTML.
+const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
+const esc = (v) => String(v).replace(/[&<>"']/g, (c) => HTML_ESCAPES[c])
+
 function page({
   origin,
   locale,
@@ -46,11 +50,11 @@ function page({
     `${origin}${l === 'de' ? base : `/fr${base === '/' ? '' : base}`}${pageNo ? `?page=${pageNo}` : ''}`
   const alts = hreflang
     ? [
-        ...LOCALES.map((l) => `<link rel="alternate" hreflang="${l}" href="${forLocale(l)}">`),
-        `<link rel="alternate" hreflang="x-default" href="${forLocale('de')}">`
+        ...LOCALES.map((l) => `<link rel="alternate" hreflang="${esc(l)}" href="${esc(forLocale(l))}">`),
+        `<link rel="alternate" hreflang="x-default" href="${esc(forLocale('de'))}">`
       ].join('')
     : ''
-  return `<!doctype html><html lang="${bodyLang ?? locale}"><head><title>${title}</title><link rel="canonical" href="${canonical ?? forLocale(locale)}">${noindex ? '<meta name="robots" content="noindex, follow">' : ''}${alts}</head><body><h1>${title}</h1><nav>${links.map((l) => `<a href="${l}">${l}</a>`).join('')}</nav><p>${other}</p></body></html>`
+  return `<!doctype html><html lang="${esc(bodyLang ?? locale)}"><head><title>${esc(title)}</title><link rel="canonical" href="${esc(canonical ?? forLocale(locale))}">${noindex ? '<meta name="robots" content="noindex, follow">' : ''}${alts}</head><body><h1>${esc(title)}</h1><nav>${links.map((l) => `<a href="${esc(l)}">${esc(l)}</a>`).join('')}</nav><p>${esc(other)}</p></body></html>`
 }
 function serve(broken, extra = {}) {
   return new Promise((res) => {
