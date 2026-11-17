@@ -21,6 +21,7 @@ import {
   BUILD_STOPPED_SAY,
   DESIGN_NOT_BUILDABLE,
   DESIGN_NOT_BUILDABLE_SAY,
+  CARD_SAYS_WHY,
   PRIVATE_GUIDANCE_MARK,
   SITE_NOT_STARTED_SAY,
   UNCHANGED_FALLBACK_SAY,
@@ -121,6 +122,9 @@ const researchDone = {
   state: 'done',
   result: { profile: PROFILE, questions: [PHONE, LANGUAGE], ask: ASK }
 }
+
+/** What the model is told on a stop the chat draws a card for: the card says why, never the agent. */
+const CARD_NEXT = `${PRIVATE_GUIDANCE_MARK} ${CARD_SAYS_WHY}`
 
 test('refuses outside a build chat session and calls no door', async () => {
   const web = fakeWeb({})
@@ -429,7 +433,8 @@ test('a stopped door answer yields stopped with the owner sentence and no ask', 
   const answer = await run(toolWith(web), { action: 'research', description: 'A small tennis club' })
   assert.deepEqual(answer, {
     stopped: true,
-    say: 'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.'
+    say: 'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.',
+    next: CARD_NEXT
   })
 })
 
@@ -445,14 +450,15 @@ test('a stopped step the owner may have run again says so, with private guidance
     { stopped: true, say, step: 'compose', rerun: true }
   )
   assert.ok(answer.next.startsWith(`${PRIVATE_GUIDANCE_MARK} `))
-  assert.match(answer.next, /say the sentence in say and stop/i)
+  assert.ok(answer.next.includes(CARD_SAYS_WHY), 'the card says why, not the agent')
+  assert.doesNotMatch(answer.next, /say the sentence in say and stop/i)
   assert.match(answer.next, /do not ask a question/i)
   assert.match(answer.next, /Please try again\./)
   // A stop without `rerun` stays exactly the sentence.
   const plain = fakeWeb({
     'POST /api/build-draft/compose': { body: { step: 'compose', state: 'stopped', say } }
   })
-  assert.deepEqual(await run(toolWith(plain), { action: 'plan' }), { stopped: true, say })
+  assert.deepEqual(await run(toolWith(plain), { action: 'plan' }), { stopped: true, say, next: CARD_NEXT })
 })
 
 test('faults never leak: a refused door, an unreachable tracy-web and nobody to act as all say the stopped sentence', async () => {
@@ -461,7 +467,8 @@ test('faults never leak: a refused door, an unreachable tracy-web and nobody to 
   })
   assert.deepEqual(await run(toolWith(forbidden), { action: 'plan' }), {
     stopped: true,
-    say: BUILD_STOPPED_SAY
+    say: BUILD_STOPPED_SAY,
+    next: CARD_NEXT
   })
   const broken = {
     http: async () => {
@@ -470,12 +477,14 @@ test('faults never leak: a refused door, an unreachable tracy-web and nobody to 
   }
   assert.deepEqual(await run(toolWith(broken), { action: 'templates' }), {
     stopped: true,
-    say: BUILD_STOPPED_SAY
+    say: BUILD_STOPPED_SAY,
+    next: CARD_NEXT
   })
   const nobody = fakeWeb({})
   assert.deepEqual(await run(toolWith(nobody, { actor: null }), { action: 'templates' }), {
     stopped: true,
-    say: BUILD_STOPPED_SAY
+    say: BUILD_STOPPED_SAY,
+    next: CARD_NEXT
   })
   assert.equal(nobody.calls.length, 0)
 })
@@ -663,7 +672,8 @@ test('plan waits on the brand step it started, then says to ask for the plan aga
   assert.deepEqual(await run(toolWith(stoppedWeb), { action: 'plan' }), {
     stopped: true,
     say: 'We could not read your brand yet.',
-    reason: 'brand-unavailable'
+    reason: 'brand-unavailable',
+    next: CARD_NEXT
   })
 })
 
@@ -1030,7 +1040,8 @@ test('after a restart the plan is the one the answered review named; a stopped b
   const answer = await run(toolWith(web, { events: reviewed('Approve', 4) }), { action: 'build' })
   assert.deepEqual(answer, {
     stopped: true,
-    say: 'Your site could not be built this time. The Tracy team can see what happened and will look into it.'
+    say: 'Your site could not be built this time. The Tracy team can see what happened and will look into it.',
+    next: CARD_NEXT
   })
   assert.deepEqual(
     web.calls.find((c) => c.method === 'POST').body,
@@ -1466,4 +1477,32 @@ test('the door and the tool say the shared owner sentences with the same words',
   assert.equal(door.siteNameTooLongSay(20), core.nameTooLongSay(20))
   assert.equal(revise.requestTooLongSay(1000), core.requestTooLongSay(1000))
   if (store) assert.equal(store.TEMPLATE_CHANGE_SAY, core.DESIGN_CHANGE_SAY)
+})
+
+test('a stop the chat draws a card for tells the model to leave the reason to the card; one the owner answers by talking keeps its sentence', async () => {
+  const limit = fakeWeb({
+    'POST /api/build-draft/research': {
+      status: 429,
+      body: { code: 'TRY_LATER', say: 'Paused.', retryAt: '2026-11-18T00:00:00.000Z' }
+    }
+  })
+  const paused = await run(toolWith(limit), { action: 'research', description: 'A small tennis club' })
+  assert.equal(paused.paused, true)
+  assert.ok(paused.next.includes(CARD_SAYS_WHY), 'a limit: the card says when, the agent does not')
+  for (const rerun of [true, false]) {
+    const web = fakeWeb({
+      'POST /api/build-draft/compose': { body: { step: 'compose', state: 'stopped', say: 'Stopped.', rerun } }
+    })
+    const answer = await run(toolWith(web), { action: 'plan' })
+    assert.ok(answer.next.includes(CARD_SAYS_WHY), `a fault (rerun ${rerun}): one explanation, the card's`)
+  }
+  assert.match(CARD_SAYS_WHY, /Do not say why/)
+  assert.doesNotMatch(CARD_SAYS_WHY, /[\u2013\u2014]/)
+  const talk = fakeWeb({
+    'GET /api/build-draft/engine': {
+      body: { step: 'research', state: 'stopped', say: 'Which town is it in?', reason: 'details-asked' }
+    }
+  })
+  const asked = await run(toolWith(talk), { action: 'status' })
+  assert.equal(asked.next, undefined, 'no card, so the sentence the owner reads is the agent')
 })

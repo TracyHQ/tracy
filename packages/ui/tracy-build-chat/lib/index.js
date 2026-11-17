@@ -716,6 +716,33 @@ var EMPTY = Object.freeze({
   build: null
 });
 var RETRY_MESSAGE = "Please try again.";
+var MAX_STEP_RETRIES = 2;
+var canRetryStop = (stop) => stop?.rerun === true && stop.retries < MAX_STEP_RETRIES;
+
+// ../../core/tracy-core/src/build-chat/stop-card.mjs
+var OWNER_CONTINUES = /* @__PURE__ */ new Set(["cancelled", "revise-failed", "stale", "details-asked"]);
+function stopCardOf({ stop = null, engine = null, now = Date.now() }) {
+  if (engine?.state === "running") return null;
+  const fromEngine = engine?.state === "stopped" ? {
+    step: typeof engine.step === "string" ? engine.step : "status",
+    rerun: engine.rerun === true,
+    retries: 0,
+    ...typeof engine.reason === "string" ? { reason: engine.reason } : {},
+    ...typeof engine.retryAt === "string" ? { retryAt: engine.retryAt } : {}
+  } : null;
+  const seen = stop ?? fromEngine;
+  if (!seen || seen.reason && OWNER_CONTINUES.has(seen.reason)) return null;
+  const at = typeof seen.retryAt === "string" ? Date.parse(seen.retryAt) : Number.NaN;
+  const retryAt = Number.isFinite(at) ? (
+    /** @type {string} */
+    seen.retryAt
+  ) : null;
+  const retry = !canRetryStop(
+    /** @type {any} */
+    seen
+  ) ? "none" : retryAt && at > now ? "waiting" : "offered";
+  return { step: seen.step, limit: retryAt !== null, retryAt, retry };
+}
 
 // ../../core/tracy-core/src/build-chat/index.mjs
 var BUILD_SESSION = /^session-build-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -3777,7 +3804,11 @@ var text = (value) => typeof value === "string" ? value.trim().slice(0, TEXT_MAX
 function ownerSay(said, fallback = BUILD_STOPPED_SAY) {
   return typeof said === "string" && said.trim() !== "" && said.length <= SAY_MAX && !/[–—]/.test(said) ? said.trim() : fallback;
 }
-var stopped = (said = void 0) => ({ stopped: true, say: ownerSay(said) });
+var stopped = (said = void 0, card = true) => ({
+  stopped: true,
+  say: ownerSay(said),
+  ...card ? { next: CARD_SAYS_WHY } : {}
+});
 var switchedOff = () => ({ stopped: true, say: BUILD_CHAT_OFF_SAY });
 var tooLargeOf = (say = BODY_TOO_LARGE_SAY) => ({
   refused: true,
@@ -3786,13 +3817,14 @@ var tooLargeOf = (say = BODY_TOO_LARGE_SAY) => ({
 });
 var isSwitchedOff = (res) => res?.status === 403 && res.body?.code === "BUILD_CHAT_OFF";
 var isPollFault = (res) => res === null || res.status >= 500;
-var RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with exactly the arguments in again, never with action status; a result of that call says stopped again only if it failed again.`;
+var CARD_SAYS_WHY = 'The chat shows the owner a card under your message that says why it stopped and offers the next step. Do not say why, do not say when to try again and do not repeat the sentence in say: say one short line of at most six words, such as "I had to pause here.", and stop.';
+var RERUN_GUIDANCE = `${CARD_SAYS_WHY} Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with exactly the arguments in again, never with action status; a result of that call says stopped again only if it failed again.`;
 var LINK_GAP_NEXT = "links says what was read from each link the owner gave. In one short sentence, in the language the owner writes in, tell the owner which link could not be read or gave nothing, by its name. Never say a code.";
 var linkGapOf = (links) => Array.isArray(links) && links.some(
   (l) => l?.state === "failed" || l?.state === "read" && (!l.facts && !l.pictures || !l.pictures && l.picturesLost > 0)
 );
 var ANSWERS_ARRIVE_GUIDANCE = "The owner's answers reach tracy_build by themselves. Never call research again to pass an answer, and never put an answer into description.";
-var PAUSED_NEXT = `Say the sentence in say once and stop here. It says when the owner can continue; the chat shows the owner a Try again button for then. Ask no question, and do not call tracy_build again before retryAt. When the owner sends "${RETRY_MESSAGE}" after retryAt, call tracy_build once more with exactly the arguments in again.`;
+var PAUSED_NEXT = `${CARD_SAYS_WHY} Ask no question, and do not call tracy_build again before retryAt. When the owner sends "${RETRY_MESSAGE}" after retryAt, call tracy_build once more with exactly the arguments in again.`;
 var PAUSED_AGAIN_NEXT = "Nothing was started: the pause is not over yet. Do not repeat the earlier sentence about the pause. Answer what the owner just wrote in one short sentence, and say once that you can continue after minutesLeft minutes. Do not call tracy_build again before retryAt.";
 var NEEDS_NAME_NEXT = "Research needs the business name first. In one short message in the owner's language, ask for the name of their business and the city or town it is in. Then call tracy_build with action research, no links, name and city as the owner gave them, and their words as description. Do not say anything failed.";
 var RESEARCH_QUESTIONS_NEXT = `Pass ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action templates.`;
@@ -3884,11 +3916,12 @@ function pendingRetryOf(events) {
 }
 var stoppedStateOf = (state, events = []) => {
   const reason = typeof state?.reason === "string" ? { reason: state.reason } : {};
-  if (state?.rerun !== true) return { ...stopped(state?.say), ...reason };
+  const card = stopCardOf({ engine: { state: "stopped", step: state?.step, rerun: state?.rerun, ...reason } }) !== null;
+  if (state?.rerun !== true) return { ...stopped(state?.say, card), ...reason };
   const again = rerunArgsOf(events, state.step);
   const retryAt = typeof state.retryAt === "string" ? state.retryAt : null;
   return {
-    ...stopped(state.say),
+    ...stopped(state.say, false),
     ...typeof state.step === "string" ? { step: state.step } : {},
     rerun: true,
     ...again ? { again } : {},

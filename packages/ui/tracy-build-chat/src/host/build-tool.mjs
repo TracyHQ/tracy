@@ -35,6 +35,7 @@ import {
   requestTooLongSay,
   RESEARCH_READ_SAY,
   SAY_STRINGS,
+  stopCardOf,
   TEAM_SEES_SAY,
   UNCHANGED_SAY,
   answerOf,
@@ -313,7 +314,11 @@ function ownerSay(said, fallback = BUILD_STOPPED_SAY) {
     : fallback
 }
 
-const stopped = (/** @type {unknown} */ said = undefined) => ({ stopped: true, say: ownerSay(said) })
+const stopped = (/** @type {unknown} */ said = undefined, card = true) => ({
+  stopped: true,
+  say: ownerSay(said),
+  ...(card ? { next: CARD_SAYS_WHY } : {})
+})
 
 /** The operator switched the build chat off (`BUILD_CHAT_OFF`): no fault, and nobody is looking into one. */
 const switchedOff = () => ({ stopped: true, say: BUILD_CHAT_OFF_SAY })
@@ -337,11 +342,19 @@ const isSwitchedOff = (res) => res?.status === 403 && res.body?.code === 'BUILD_
 const isPollFault = (res) => res === null || res.status >= 500
 
 /**
+ * Private guidance on every stop the chat draws a card for (#575): the card says why it stopped, and when a limit
+ * ends, in one plain sentence of its own, so the agent saying the sentence in `say` too would show the owner two
+ * explanations that can disagree (the limit case showed "something went wrong on our side" above a card that said
+ * the step ran too often). The agent only leads in, briefly, and stays out of the reason.
+ */
+export const CARD_SAYS_WHY =
+  'The chat shows the owner a card under your message that says why it stopped and offers the next step. Do not say why, do not say when to try again and do not repeat the sentence in say: say one short line of at most six words, such as "I had to pause here.", and stop.'
+/**
  * Private guidance after a stop the owner may have run again: the sentence, no question, and the one fixed message
  * the Try again button sends. The call to make names the step that stopped (`again`), never `status`: reading the
  * stop again shows the owner the same failure (run 6, turn 3.1). The persona says the same.
  */
-export const RERUN_GUIDANCE = `Say the sentence in say and stop. Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with exactly the arguments in again, never with action status; a result of that call says stopped again only if it failed again.`
+export const RERUN_GUIDANCE = `${CARD_SAYS_WHY} Do not ask a question about it. If the owner then sends "${RETRY_MESSAGE}", call tracy_build once more with exactly the arguments in again, never with action status; a result of that call says stopped again only if it failed again.`
 
 /** Guidance when a link the owner gave could not be read or gave nothing (#609): the owner hears it, plainly. */
 const LINK_GAP_NEXT =
@@ -369,7 +382,7 @@ export const ANSWERS_ARRIVE_GUIDANCE =
   "The owner's answers reach tracy_build by themselves. Never call research again to pass an answer, and never put an answer into description."
 
 /** Private guidance after a start refused for its limit: said once, with when, and nothing called until then. */
-export const PAUSED_NEXT = `Say the sentence in say once and stop here. It says when the owner can continue; the chat shows the owner a Try again button for then. Ask no question, and do not call tracy_build again before retryAt. When the owner sends "${RETRY_MESSAGE}" after retryAt, call tracy_build once more with exactly the arguments in again.`
+export const PAUSED_NEXT = `${CARD_SAYS_WHY} Ask no question, and do not call tracy_build again before retryAt. When the owner sends "${RETRY_MESSAGE}" after retryAt, call tracy_build once more with exactly the arguments in again.`
 /**
  * Private guidance when the owner writes again while a start is still paused (#575, 17/11/2026 walk: the agent said
  * the same pause sentence after every message): the tool does not ask tracy-web again, and the agent answers what the
@@ -543,12 +556,15 @@ export function pendingRetryOf(events) {
 const stoppedStateOf = (state, events = []) => {
   // Why it stopped, when the engine names it (`try-later`, `cancelled`...): the stop card reads it (#575).
   const reason = typeof state?.reason === 'string' ? { reason: state.reason } : {}
-  if (state?.rerun !== true) return { ...stopped(state?.say), ...reason }
+  // A stop the owner continues from by talking (a cancel, a change not applied) draws no card: its sentence is said.
+  const card =
+    stopCardOf({ engine: { state: 'stopped', step: state?.step, rerun: state?.rerun, ...reason } }) !== null
+  if (state?.rerun !== true) return { ...stopped(state?.say, card), ...reason }
   const again = rerunArgsOf(events, state.step)
   // A stop on a limit (`try-later`) says when the step may run again: its sentence carries the time already.
   const retryAt = typeof state.retryAt === 'string' ? state.retryAt : null
   return {
-    ...stopped(state.say),
+    ...stopped(state.say, false),
     ...(typeof state.step === 'string' ? { step: state.step } : {}),
     rerun: true,
     ...(again ? { again } : {}),

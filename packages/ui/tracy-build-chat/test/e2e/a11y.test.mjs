@@ -592,8 +592,11 @@ test('Try again: none for a stop that may not be rerun, after two retries, or wh
   assert.equal(await offered({ results: [STOPPED, STOPPED, STOPPED] }), 0)
   assert.equal(await offered({ results: [STOPPED], run: run('building') }), 0)
   assert.equal(await offered({ results: [STOPPED], run: run('cancelled') }), 0)
-  // The stop sentence stays when the button goes.
-  assert.match(await page.locator('#root').innerText(), /Something went wrong on our side/)
+  // The card's sentence stays when the button goes, and it is the only explanation of why it stopped.
+  await mount(page, 'retry', { results: [STOPPED_FOR_GOOD] })
+  const text = await page.locator('#root').innerText()
+  assert.match(text, /This step could not finish, so I stopped here/)
+  assert.doesNotMatch(text, /Something went wrong on our side/)
   await page.close()
 })
 
@@ -601,7 +604,13 @@ test('the stop card: a limit waits for its time, Start over asks once and calls 
   const { page } = await open(browser, VIEWPORTS[0], 'light', code)
   await mount(page, 'retry', { results: [PAUSED] })
   assert.equal(await page.getByRole('button', { name: 'Try again' }).isDisabled(), true)
-  assert.match(await page.locator('#root').innerText(), /You can try again from /)
+  const waiting = await page.locator('#root').innerText()
+  assert.match(
+    waiting,
+    /I paused because this step ran many times in a short while\. You can try again from /
+  )
+  // One explanation only: the agent's lead in above the card says no reason that could contradict the card.
+  assert.doesNotMatch(waiting, /Something went wrong on our side|Tracy team can see/)
   await mount(page, 'retry', { results: [PAUSED_OVER] })
   assert.equal(await page.getByRole('button', { name: 'Try again' }).isDisabled(), false)
   await page.getByRole('button', { name: 'Start over' }).click()

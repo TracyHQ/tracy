@@ -246,8 +246,9 @@ function DshColumn() {
 }
 
 const BUILD_SESSION = 'session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e'
-const STOP_SAY =
-  'Something went wrong on our side, so I stopped here. The Tracy team can see what happened and will look into it.'
+// What the agent says above the card: a short lead in only (the tool tells it so, `CARD_SAYS_WHY`), because the
+// card carries the one explanation of why it stopped.
+const STOP_SAY = 'I had to pause here.'
 
 /**
  * The turn tail Try again, drawn by the real tails over the real fold of the session's recorded `tracy_build`
