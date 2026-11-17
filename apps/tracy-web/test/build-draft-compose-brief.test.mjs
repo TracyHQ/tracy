@@ -28,11 +28,12 @@ const compose = (research, model) =>
   )
 
 test('the stored brief reaches the composer; what no block can show is left out on the plan card', async () => {
-  const model = club.scriptedModel(JSON.stringify(club.goodComposition()))
+  // With a brief, the reply carries the intent the prompt asks for (#575, `plan-intent.mjs`).
+  const model = club.scriptedModel(JSON.stringify(club.withIntentNotes(club.goodComposition(), ['km-1'])))
   const { plan } = await compose({ profile: club.clubProfile(), brief }, model)
   const sent = JSON.parse(model.calls[0].user)
   assert.deepEqual(sent.brief, {
-    keyMessages: ['Courts open to every level'],
+    keyMessages: [{ id: 'km-1', label: 'Courts open to every level' }],
     audience: ['Weekend players'],
     held: [{ field: 'prices', why: 'No supported price is available: show no price.' }]
   })
