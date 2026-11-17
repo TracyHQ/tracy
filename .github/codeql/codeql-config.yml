@@ -1,6 +1,7 @@
 # CodeQL config for the `analyze` job of `.github/workflows/codeql.yml`: team pull requests into
 # `develop`, pushes to `develop`/`main` and the weekly scan. Fork pull requests and pull requests
-# into `main` run `analyze-full`, which reads no config and scans everything.
+# into `main` run `analyze-full`, and pushes to `develop` also run `analyze-develop-full`; both read
+# no config and scan everything.
 #
 # Only `paths-ignore` belongs here. Adding `queries`, `packs`, `query-filters` or
 # `disable-default-queries` turns off overlay (incremental) analysis for JavaScript, and the pull

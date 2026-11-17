@@ -35,7 +35,10 @@ import { fileURLToPath } from 'node:url'
 import { CI_REPOSITORY } from './ci-repository.mjs'
 import { githubJson, githubRead } from './github-read.mjs'
 
-/** The `category:` values `codeql.yml` uploads; keep in step with its matrix. */
+/**
+ * The `category:` values the `analyze` job of `codeql.yml` uploads; keep in step with its matrix.
+ * The `/language:<language>/full` categories of `analyze-develop-full` are not watched here.
+ */
 export const CATEGORIES = ['/language:javascript-typescript', '/language:python', '/language:actions']
 /** How long after its commit the develop head may still be waiting for its analysis. */
 export const DEVELOP_GRACE_HOURS = 24
