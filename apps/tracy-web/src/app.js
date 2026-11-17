@@ -1274,7 +1274,13 @@ export function buildApp(deps) {
       // A test that fakes the whole research (`buildEngine.gather`) and no step chain keeps its fake for links too.
       placeResearch: () =>
         buildEngine.businessResearch ?? (buildEngine.gather ? null : (app.businessResearch ?? null)),
-      brandStep: buildEngine.brandStep ?? draftBrandStep({ pool: deps.pool, stepsOf: brandSteps }),
+      brandStep:
+        buildEngine.brandStep ??
+        draftBrandStep({
+          pool: deps.pool,
+          stepsOf: brandSteps,
+          openPicture: draftPictureReader(draftPictureStore)
+        }),
       prunePictures: buildEngine.prunePictures ?? draftPictureStore.prune,
       // Each step is reserved in the research cost ledger, under `/ops/wo`'s daily research cap (`spend-limits.js`).
       charge:

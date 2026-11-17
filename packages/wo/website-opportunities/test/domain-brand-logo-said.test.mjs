@@ -16,8 +16,8 @@ import {
 } from './fixtures/plan-composer/invented-brands.mjs'
 import { template } from './fixtures/plan-composer/invented-club.mjs'
 
-const NOT_FOUND = /^No logo was found, so I made a temporary one/
-const NOT_USED = /^Your logo could not be used as it is, so I made a temporary one/
+const NOT_FOUND = /^No logo was found, so your business name is shown as text/
+const NOT_USED = /^Your logo could not be used as it is, so your business name is shown as text/
 
 /** The safe version of the brand step: no logo material, a lettermark, the owner task for a temporary logo. */
 const safe = (input) => {

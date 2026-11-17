@@ -418,7 +418,7 @@ export function createEngine({
     const { slug, version } = kit.template
     return start(accountId, 'brand', { template: { slug, version } }, async () => {
       const { record, costCents } = await brandRunOf(
-        { research: row.research, template: kit.template },
+        { research: row.research, template: kit.template, accountId },
         { brandStep, kit }
       )
       if (!record)

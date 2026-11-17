@@ -286,9 +286,7 @@ test(
     // Something that is not the brand step's look record is no brand: the composer refuses it (#616).
     for (const [brandStep, code] of [
       [async () => ({ website: { colors: [{ hex: '#1F7A4D', role: 'primary' }] } }), 'brand_missing'],
-      [async () => null, 'brand_missing'],
-      // The brand step kept the template accent for a logo whose colours were never measured: no rule of #616 reads it.
-      [async () => recordOf(unmeasured(brands.saltmarshKayaks())), 'brand_logo_colours_unmeasured']
+      [async () => null, 'brand_missing']
     ]) {
       const t = server({ buildModel: async () => model, brandStep, buildChatOn: async () => true })
       // A brand step that stopped for this template answers again as stopped: the next case starts afresh.
@@ -316,7 +314,25 @@ test(
     assert.equal(ended.body.state, 'done', JSON.stringify(ended.body))
     const { plan } = ended.body.result
     assert.equal(plan.look.logo.kind, 'text', 'the temporary logo is a text logo on the plan')
-    assert.ok(plan.assumptions.some((a) => a.field === 'look.logo' && /temporary/.test(a.said)))
+    assert.ok(plan.assumptions.some((a) => a.field === 'look.logo' && /shown as text/.test(a.said)))
+  }
+)
+
+test(
+  'a logo whose colours were never measured composes with the accent the step kept, as the step chain writes it',
+  opts,
+  async () => {
+    const model = club.scriptedModel(JSON.stringify(club.goodComposition()))
+    const s = server({
+      buildModel: async () => model,
+      brandStep: async () => recordOf(unmeasured(brands.saltmarshKayaks())),
+      buildChatOn: async () => true
+    })
+    await researchedClub(s)
+    const { ended } = await askPlan(s)
+    assert.equal(ended.body.state, 'done', JSON.stringify(ended.body))
+    const { plan } = ended.body.result
+    assert.ok(plan.assumptions.some((a) => a.field === 'look.accent' && /could not be read/.test(a.said)))
   }
 )
 

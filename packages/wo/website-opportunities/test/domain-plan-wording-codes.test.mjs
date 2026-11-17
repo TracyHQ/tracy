@@ -48,12 +48,12 @@ test('a drawn logo: its source line has a code and the source kind, its assumpti
   assert.equal(bakery.assumptions.find((a) => a.field === 'look.logo').params.reason, 'symbol-cut-from-logo')
 })
 
-test('a made logo: a text logo with no source line, its assumption says it is temporary by code', () => {
+test('a made logo: a text logo with no source line, its assumption says the name is shown as text by code', () => {
   const { look: planLook, assumptions } = look(quaysidePianoCare())
   assert.deepEqual(planLook.logo, { kind: 'text' })
   const said = assumptions.find((a) => a.field === 'look.logo')
-  assert.equal(said.code, 'logo_made')
-  assert.deepEqual(said.params, { found: false, mark: 'icon' })
+  assert.equal(said.code, 'logo_name_as_text')
+  assert.deepEqual(said.params, { found: false })
 })
 
 test('the old fallback look (tests only) names an own logo by code and source kind', () => {

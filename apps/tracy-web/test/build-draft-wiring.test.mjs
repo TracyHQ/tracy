@@ -15,7 +15,14 @@ import { STEP_CHAIN_NO_OUTPUT } from '../src/sites/brief-engines/step-chain.js'
 
 const template = { slug: 'example-court', name: 'Example Court', version: '1.0.0' }
 const kits = [{ ref: 'example-court/j6/0.9.0' }, { ref: 'example-court/j6/1.0.0' }, { ref: 'other/j6/1.0.0' }]
-const brief = { schemaVersion: 2, business: { name: 'Example Court Club' }, facts: [] }
+const brief = {
+  schemaVersion: 2,
+  business: { name: 'Example Court Club' },
+  facts: [],
+  brand: { name: 'Example Court Club', logo: 'logo-ecc' }
+}
+/** The brief without its logo: what the step gets when neither the logo file nor its stored copy can be had. */
+const noLogo = { ...brief, brand: { ...brief.brand, logo: null } }
 const record = { schema: 'tracy-brand-look/v1', accent: { from: 'logo', hex: '#1f7a4d' } }
 
 test('the kit ref of a template is the step chain kit of its slug and version, or null', () => {
@@ -36,11 +43,12 @@ test('the brand step gets the draft brief, the logo file, the kit ref and the si
   })
   const research = { brief, logoFile, profile: { language: { value: 'en' } } }
   assert.deepEqual(await step({ research, template }), record)
-  // A logo file no longer on the disk is not passed: the step follows its rule for a business without a logo.
+  // A logo file no longer on the disk, with no stored copy to write it again from: the brief goes without its logo
+  // (`build-draft-brand-logo.js`), and sources with no language run in the plan's own language.
   await step({ research: { brief, logoFile: path.join(dir, 'gone.png') }, template })
   assert.deepEqual(calls, [
     { brief, logoFile, kitRef: 'example-court/j6/1.0.0', siteLanguage: 'en' },
-    { brief, kitRef: 'example-court/j6/1.0.0' }
+    { brief: noLogo, kitRef: 'example-court/j6/1.0.0', siteLanguage: 'en' }
   ])
   rmSync(dir, { recursive: true, force: true })
 })
@@ -78,7 +86,7 @@ test('through the real step: the step chain context holds the brief and the logo
   const notTypeError = (e) => !(e instanceof TypeError)
   await assert.rejects(step({ research: { brief, logoFile }, template }), notTypeError)
   await assert.rejects(step({ research: { brief, revisionId: 'r-1' }, template }), notTypeError)
-  assert.deepEqual(seen, [{ researchBrief: brief, logoFile }, { researchBrief: brief }])
+  assert.deepEqual(seen, [{ researchBrief: brief, logoFile }, { researchBrief: noLogo }])
   assert.ok(seen.every((b) => !('researchRevisionId' in b)))
   rmSync(dir, { recursive: true, force: true })
 })

@@ -98,10 +98,14 @@ test('which logo colour: the one the brief marks as the accent, else the most ch
   assert.equal(logoColourOf({ brand: { colors: [{ hex: '#2a6f97' }] } }), null, 'not measured from the logo')
 })
 
-test('a logo whose colours were never measured stays an error, with a clear code and no rerun', () => {
+test('a logo whose colours were never measured keeps the accent the step kept; an old record without it is an error', () => {
   const unmeasured = lemonGroveCider()
   delete unmeasured.brief.brand.colorsFrom
   const record = brandLookOf({ ...unmeasured, kit: lightAndDarkKit() })
+  // The step chain writes the accent the step kept (#575): the plan shows it, never a stop.
+  assert.equal(lookOfBrandRecord(template(), record).look.accent, template().accent)
+  // A record stored before the kept accent rode on it has no colour to show.
+  record.accent.hex = null
   assert.throws(
     () => lookOfBrandRecord(template(), record),
     (e) => e instanceof PlanComposerError && e.code === 'brand_logo_colours_unmeasured' && e.noRerun === true
