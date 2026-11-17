@@ -64,7 +64,9 @@ export function planLook(state) {
       showtitle: w.showtitle ?? 0,
       style: w.style ?? ''
     },
-    menuids: ASSIGN[w.assign]
+    menuids: ASSIGN[w.assign],
+    // The brand file's own fill and words per side (#575, P4 of the brand audit), when the plan's accent is its own.
+    ...(state.accentShifts?.length ? { shifts: state.accentShifts } : {})
   })
   for (const id of entries) consume(state.sink, id, record.key)
   return entries
@@ -80,7 +82,13 @@ export function lookOp(record) {
     accent: record.accent,
     variables: record.variables,
     ...(record.module
-      ? { tones: record.tones, sides: record.sides, module: record.module, menuids: record.menuids }
+      ? {
+          tones: record.tones,
+          sides: record.sides,
+          module: record.module,
+          menuids: record.menuids,
+          ...(record.shifts ? { shifts: record.shifts } : {})
+        }
       : { accentDark: record.accentDark }),
     entries: record.entries,
     rules: record.module ? ['look.accent.writtenAs', 'look.accent.sides.values'] : ['look'],

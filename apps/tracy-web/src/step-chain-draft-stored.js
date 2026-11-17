@@ -8,9 +8,14 @@
 //   a dark twin      a frame with `sameAs` and no picture of its own shows the stored picture of the frame it names
 //   library icon     the Phosphor glyph the icons step chose, drawn at its frame's size in one colour (the plan's
 //                    accent when its paint says `accent`): `icon:<json>`, drawn by `lib/picture-paint/icons/icon-render.js`
+//   brand picture    a logo frame (`logo_from_brand_step`) and the site icon (`look.favicon`): the picture of the brand
+//                    file the draft keeps (`step-chain-draft-brand-pictures.js`): `brand:<id>`, opened through
+//                    `openDraftPicture` and held to the hash the brand file kept
 //   anything else    no stored bytes: a generated picture (no generator is wired), an icon on a plate, a picture with
 //                    no stored draft picture. The write guard then stops the build (`picture_not_stored`), typed.
+import { createHash } from 'node:crypto'
 import { iconPicture } from './lib/picture-paint/icons/icon-render.js'
+import { BRAND_STORED, brandHashOf, brandStoredOf } from './step-chain-draft-brand-pictures.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -56,18 +61,27 @@ export const openOptionsOf = (entry, accountId) => ({
 
 /**
  * The stored pictures of a run.
- * @param {{manifest?: object[], look?: object | null, accountId?: string | null,
+ * @param {{manifest?: object[], look?: object | null, accountId?: string | null, brand?: object | null,
+ *   mapping?: object | null,
  *   openDraftPicture?: (id: string, opts: {accountId: string | null}) => Promise<{bytes: Uint8Array, mime?: string} | null>}} input
- *   `manifest`: the approved snapshot's asset manifest; `look`: the approved plan's look
+ *   `manifest`: the approved snapshot's asset manifest; `look`: the approved plan's look; `brand`: the kept brand file
+ *   of the plan (`{file, template}`); `mapping`: the kit's mapping file
  */
-export function storedPicturesOf({ manifest, look = null, accountId = null, openDraftPicture }) {
+export function storedPicturesOf({
+  manifest,
+  look = null,
+  accountId = null,
+  brand = null,
+  mapping = null,
+  openDraftPicture
+}) {
   const opened = list(manifest).filter((m) => OPENED.has(m?.origin) && isText(m.id))
   const byUrl = new Map(opened.filter((m) => isText(m.sourceUrl)).map((m) => [m.sourceUrl, m]))
   const byId = new Map(opened.map((m) => [m.id, m]))
   return {
     /** `{<frame or icon id>: {id, mime?}}` for every one with stored bytes. */
     stored(order) {
-      const out = {}
+      const out = brandStoredOf({ order, brand, mapping })
       for (const p of list(order?.pictures)) {
         const entry = p?.source === 'own' && isText(p.ref) ? byUrl.get(p.ref) : null
         if (entry)
@@ -89,6 +103,15 @@ export function storedPicturesOf({ manifest, look = null, accountId = null, open
           JSON.parse(Buffer.from(text.slice(ICON.length), 'base64url').toString())
         )
         return { bytes: drawn.bytes, mime: 'image/png' }
+      }
+      if (text.startsWith(BRAND_STORED) && typeof openDraftPicture === 'function') {
+        const sha256 = brandHashOf(brand, text)
+        const got = sha256
+          ? await openDraftPicture(text.slice(BRAND_STORED.length), { accountId, origin: 'draft' })
+          : null
+        // Held to the hash the brand file kept, measured on the bytes themselves: a reader need not say it.
+        if (got?.bytes?.length > 0 && createHash('sha256').update(got.bytes).digest('hex') === sha256)
+          return { bytes: got.bytes, mime: isText(got.mime) ? got.mime : 'image/png' }
       }
       if (text.startsWith(DRAFT) && typeof openDraftPicture === 'function') {
         const entry = byId.get(text.slice(DRAFT.length))

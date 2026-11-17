@@ -35,6 +35,12 @@ const COLUMNS = [
   'undo_plan'
 ]
 
+/** What a build keeps of the draft's brand record: the brand file and the template it was made on, or null. */
+export const keptBrandOf = (brand) =>
+  brand?.file && typeof brand.file === 'object'
+    ? { file: brand.file, template: brand.template ?? null }
+    : null
+
 /** The account's draft as the doors answer it, or null when it has none. */
 export async function readDraft(pool, accountId) {
   const { rows } = await pool.query('select * from build_draft where account_id = $1', [accountId])
@@ -72,19 +78,33 @@ export async function draftPlanForBuild(pool, accountId) {
  * the last system fault (a team report, never shown to the owner). Null when the account has no draft. Once a plan is
  * approved it answers the approval's snapshot: its profile and research, and no fault (approval is refused while a
  * step runs, and the fault column keeps every past fault, even one a later research replaced).
- * @returns {Promise<{draftId: string, needsProfile: object | null, research: object | null, fault: object | null} | null>}
+ * `brand`: the brand file the plan's look was made from with its stored pictures (`{file, template}`), or null.
+ * @returns {Promise<{draftId: string, needsProfile: object | null, research: object | null, fault: object | null,
+ *   brand: object | null} | null>}
  */
 export async function readEngineDraft(pool, accountId) {
   const { rows } = await pool.query(
-    'select id, needs_profile, research, fault, build from build_draft where account_id = $1',
+    'select id, needs_profile, research, fault, brand, build from build_draft where account_id = $1',
     [accountId]
   )
   const row = rows[0]
   const snapshot = row?.build?.snapshot
   if (snapshot)
-    return { draftId: row.id, needsProfile: snapshot.profile, research: snapshot.research, fault: null }
+    return {
+      draftId: row.id,
+      needsProfile: snapshot.profile,
+      research: snapshot.research,
+      fault: null,
+      brand: snapshot.brand ?? null
+    }
   return row
-    ? { draftId: row.id, needsProfile: row.needs_profile, research: row.research, fault: row.fault }
+    ? {
+        draftId: row.id,
+        needsProfile: row.needs_profile,
+        research: row.research,
+        fault: row.fault,
+        brand: keptBrandOf(row.brand)
+      }
     : null
 }
 

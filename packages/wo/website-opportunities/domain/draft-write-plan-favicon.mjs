@@ -36,8 +36,26 @@ export function faviconOp(state) {
     state.sink.unproven.push({ code: 'favicon_format_unknown', path: declared.path, format })
     return null
   }
+  // The brand step's own icon in the path's format (`look.favicon` among the stored pictures, #575 P3 of the brand
+  // audit): its set was made from the logo and checked by the bench (`favicon-check.js`), so it is written as it is.
+  const brand = declared.from === 'logo' ? state.stored?.['look.favicon'] : null
   const logo = declared.from === 'logo' ? logoOf(state) : null
   const initials = declared.fallback === 'initials' ? initialsOf(nameOf(state.order)) : ''
+  const draw = { initials, colours: [state.order.look?.accent].filter(Boolean) }
+  // A brand icon that fails its check at write time falls back to the logo, then to the initials (`fallback`).
+  if (brand?.id)
+    return {
+      key: 'look.favicon',
+      kind: 'look.favicon',
+      path: declared.path,
+      format,
+      sizes: FAVICON_SIZES[format],
+      from: 'brand',
+      stored: brand,
+      fallback: logo ? { from: 'logo', ...logo } : { from: 'initials', draw },
+      entries: [],
+      rules: ['favicon_from_brand_file']
+    }
   if (!logo && !initials) {
     state.sink.unproven.push({ code: 'favicon_without_source', path: declared.path })
     return null
@@ -50,7 +68,7 @@ export function faviconOp(state) {
     sizes: FAVICON_SIZES[format],
     from: logo ? 'logo' : 'initials',
     ...logo,
-    ...(logo ? {} : { draw: { initials, colours: [state.order.look?.accent].filter(Boolean) } }),
+    ...(logo ? {} : { draw }),
     entries: [],
     rules: [logo ? 'favicon_from_logo' : 'favicon_from_initials']
   }

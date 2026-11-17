@@ -15,7 +15,7 @@
  * until the build ends (`pictures.js` `prune`).
  */
 import { createHash } from 'node:crypto'
-import { changeDraft } from './store.js'
+import { changeDraft, keptBrandOf } from './store.js'
 
 /** A UUID shaped id that is a pure function of the account and the draft (sha256, version 4 layout bits). */
 export function draftBuildId(accountId, draftId) {
@@ -73,7 +73,9 @@ export async function approveBuild(pool, accountId, { plan, now = Date.now }) {
         lastEdit: row.last_edit ?? null,
         profile: row.needs_profile,
         // The research the plan was composed from, not a newer one made since (`store.js` `plan_research`).
-        research: row.plan_research ?? row.research
+        research: row.plan_research ?? row.research,
+        // The brand file the plan's look was made from, with its stored pictures: the write places them (#575).
+        brand: keptBrandOf(row.brand)
       },
       site: null,
       refusal: null,
