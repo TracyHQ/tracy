@@ -11,6 +11,7 @@
 // `plan-placement-facts.mjs`. Pure: placed pages in, new pages, left out entries (with the ids they name) and what was
 // placed out.
 import { libraryEntryProblem } from './library.mjs'
+import { REVIEW_PROBLEM_CODES } from './library-reviews-content.mjs'
 import { ITEM_KINDS } from './needs-profile-merge.mjs'
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { ITEM_NOUNS } from './plan-data.mjs'
@@ -128,6 +129,9 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
               : fewer
                 ? 'fewer_than_section_needs'
                 : 'no_room_left',
+        ...(kind !== 'gallery' && REVIEW_PROBLEM_CODES[refusedBy.get(item.id)]
+          ? { params: { why: REVIEW_PROBLEM_CODES[refusedBy.get(item.id)] } }
+          : {}),
         reason:
           kind === 'gallery'
             ? 'No gallery has room for it. It stays with your photos and may be used elsewhere on the site.'

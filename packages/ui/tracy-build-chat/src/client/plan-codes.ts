@@ -60,8 +60,19 @@ export function leftOutReasonOf(
       }
     )
   }
+  if (code === LIBRARY_REFUSED) {
+    const why = whyOf(t, entry.params)
+    return why === null ? reason : t('plan.leftOut.reason.library_section_refused', { why })
+  }
   const key = `plan.leftOut.reason.${code}`
   return known(key) ? t(key) : reason
+}
+
+const LIBRARY_REFUSED = 'library_section_refused'
+/** Why the Tracy reviews section does not show a review, in the interface language, or null for no known code. */
+function whyOf(t: Translate, params: Params): string | null {
+  const key = `plan.leftOut.why.${String(params?.why)}`
+  return typeof params?.why === 'string' && known(key) ? t(key) : null
 }
 
 /** Codes of left out lines that name no fact or item of the plan and have a name of their own. */
@@ -134,9 +145,20 @@ export function leftOutReasonsOf(
   }
 ): string {
   const also = Array.isArray(line.also) ? line.also : []
-  return [line, ...also.map((a) => ({ ...a, kind: line.kind }))]
-    .map((r) => leftOutReasonOf(t, r, r.reason))
-    .join(' ')
+  const reasons = [line, ...also.map((a) => ({ ...a, kind: line.kind }))]
+  // The reasons the Tracy reviews section gives are said after one lead in (#575 walk, third round: it read twice).
+  const whys = reasons.filter((r) => r.code === LIBRARY_REFUSED).map((r) => whyOf(t, r.params))
+  const joined =
+    whys.length > 1 && whys.every((w) => w !== null)
+      ? t('plan.leftOut.reason.library_section_refused', {
+          why: [...new Set(whys)].join('; ')
+        })
+      : null
+  const said = reasons.map((r) =>
+    joined !== null && r.code === LIBRARY_REFUSED ? joined : leftOutReasonOf(t, r, r.reason)
+  )
+  // The same sentence twice is said once.
+  return [...new Set(said)].join(' ')
 }
 
 /** The pictures estimate by its code (`pictures.generated.code`, `params.count`), or the plan's own sentence. */

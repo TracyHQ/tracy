@@ -109,17 +109,28 @@ export async function drain(ex) {
   }
 }
 
-/** One running server: the build draft doors as the owner's build chat calls them, with the step chain's research. */
+/**
+ * One running server: the build draft doors as the owner's build chat calls them, with the step chain's research.
+ * `offered`: the AI quickstart catalogue (the invented club's kit by default); `brandStep`: a fake pre site brand step.
+ */
 export function server(
   pool,
-  { domain, objects, model = club.scriptedModel(JSON.stringify(needsReading())), gatherDoors, appDeps = {} }
+  {
+    domain,
+    objects,
+    model = club.scriptedModel(JSON.stringify(needsReading())),
+    gatherDoors,
+    appDeps = {},
+    offered = kits,
+    brandStep
+  }
 ) {
   const app = buildApp({
     ...appDeps,
     config,
     pool,
     mail: { send: async () => {} },
-    aiQuickstarts: kits,
+    aiQuickstarts: offered,
     websiteOpportunitiesDomain: async () => domain,
     websiteOpportunitiesObjects: objects,
     dnsResolve: async () => [{ address: '93.184.216.34', family: 4 }],
@@ -128,7 +139,8 @@ export function server(
       buildModel: async () => model,
       buildChatOn: async () => true,
       pictureDoors: { objects },
-      ...(gatherDoors ? { gatherDoors } : {})
+      ...(gatherDoors ? { gatherDoors } : {}),
+      ...(brandStep ? { brandStep } : {})
     }
   })
   async function call(method, path, body, { as = OWNER } = {}) {

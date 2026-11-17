@@ -432,6 +432,10 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
   plan. The schema stays `tracy-build-question/v1`.
 - 17/11/2026 (#575), additive: a left out entry may carry `params.page` (the template page's name) with the code
   `page_nothing_to_show` or `model_reason`; a page of one item (a single post) is never a left out entry.
+- 17/11/2026 (#575), additive: a left out entry of code `library_section_refused` (a review the Tracy reviews section
+  does not show) may carry `params.why`, the reason's code: `not_google_review`, `no_text`, `no_star_rating`,
+  `stars_below_four`, `stars_not_whole`, `reviewer_anonymous`, `no_reviewer_name`, `reviewer_name_too_long`,
+  `review_too_long`. The held hours answer is never one of the plan's answers.
 
 - 17/11/2026 (#575), additive: research with no link may ask `topic: "place-choice"` with question code
   `place_choice_found` (the places the business name and city found), and `topic: "brief-gap"`, id

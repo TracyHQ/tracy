@@ -156,6 +156,7 @@ test('with the library block already on the plan, a review it refuses is left ou
         what: 'Review by Osric Vale',
         kind: 'item',
         code: 'library_section_refused',
+        params: { why: 'stars_below_four' },
         reason: 'Not shown in the Tracy section: only reviews of four or five stars are shown.',
         item: 'quote-my-two-kids-love-the-junior-coaching'
       }

@@ -45,6 +45,23 @@ export function reviewOf(review) {
 }
 
 /**
+ * The stable code of each reason the block gives for not showing a review (`reviewProblem`, `reviewerNameProblem`):
+ * the plan's left out entry carries it (`params.why`), so the plan card says the reason in the owner's language (#575
+ * walk, third round: the reviews line was English in a Vietnamese chat).
+ */
+export const REVIEW_PROBLEM_CODES = Object.freeze({
+  'it is not a Google review': 'not_google_review',
+  'it has no text': 'no_text',
+  'it has no star rating': 'no_star_rating',
+  'only reviews of four or five stars are shown': 'stars_below_four',
+  'its star rating is not a whole number': 'stars_not_whole',
+  'its reviewer is anonymous on Google': 'reviewer_anonymous',
+  'it has no reviewer name': 'no_reviewer_name',
+  'its reviewer name is longer than the section holds, and a name is never cut': 'reviewer_name_too_long',
+  'it is longer than the section holds, and a review is never cut': 'review_too_long'
+})
+
+/**
  * Why the block does not show this review, or null when it does.
  * @param {object} review a profile item or `{text, author, rating}`
  * @param {{textLimit?: number, authorLimit?: number, origins?: Map<string, string>}} [options] the block's text and

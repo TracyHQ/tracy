@@ -23,12 +23,14 @@ import {
   buildNeedsProfile,
   composePlan,
   composerContextOf,
+  HELD_HOURS_ID,
   PLACE_CHOICE_QUESTION_ID,
   researchOf,
   SITE_NAME_QUESTION_ID,
   withheldOfBrief,
   withWithheld
 } from 'website-opportunities/domain'
+import { TYPED_ID as HELD_HOURS_TYPED_ID } from './held-hours.js'
 
 /** An error of a step, with the code and the rerun rule the WO package's errors carry. */
 export class EngineStepError extends Error {
@@ -223,6 +225,10 @@ export async function composeStep(
     SITE_NAME_QUESTION_ID,
     PLACE_CHOICE_QUESTION_ID,
     BUSINESS_TRADE_QUESTION_ID,
+    // The held opening hours are research's too (`held-hours.js`): settled into the brief before compose, whether the
+    // answer gave a pick or not.
+    HELD_HOURS_ID,
+    HELD_HOURS_TYPED_ID,
     // The brief questions of a research of the owner's words: answered into the brief, never the plan's.
     ...(Array.isArray(research?.gapQuestions) ? research.gapQuestions.map((q) => q?.id) : [])
   ].filter((id) => !kept.has(id))

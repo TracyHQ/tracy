@@ -21,6 +21,7 @@ import {
   NOTHING_TO_SHOW_REASON
 } from '../../../wo/website-opportunities/domain/plan-left-out-plain.mjs'
 import { DERIVED_LEFT_OUT_REASONS } from '../../../wo/website-opportunities/domain/plan-left-out-wording.mjs'
+import { REVIEW_PROBLEM_CODES } from '../../../wo/website-opportunities/domain/library-reviews-content.mjs'
 import { generatedOf } from '../../../wo/website-opportunities/domain/plan-look-pictures.mjs'
 import { WITHHELD_REASON } from '../../../wo/website-opportunities/domain/plan-withheld.mjs'
 import { bundleClient, translatorOf, viTablePath } from './bundle-client.mjs'
@@ -155,4 +156,46 @@ test('every English sentence of the table is the sentence the plan step writes f
   assert.equal(lib.sectionNameOf(en, 'page_header'), 'Page header')
   const shown = hoursDisplayOf(HOURS)
   assert.equal(lib.openingHoursOf(en, shown.params, 'en'), shown.display)
+  // The reviews the Tracy section does not show: the placement's sentence for each reason (`plan-placement.mjs`).
+  for (const [why, code] of Object.entries(REVIEW_PROBLEM_CODES))
+    assert.equal(
+      lib.leftOutReasonOf(en, { code: 'library_section_refused', params: { why: code } }, 'x'),
+      `Not shown in the Tracy section: ${why}.`,
+      code
+    )
+})
+
+test('the reviews line says its reasons in the interface language, after one lead in (#575 walk)', () => {
+  const refused = (why) => ({
+    reason: `Not shown in the Tracy section: ${why}.`,
+    code: 'library_section_refused',
+    params: { why: REVIEW_PROBLEM_CODES[why] }
+  })
+  const rating = refused('it has no star rating')
+  const long = refused('it is longer than the section holds, and a review is never cut')
+  const line = { ...rating, kind: 'item', also: [long] }
+  const said = lib.leftOutReasonsOf(vi, line)
+  assert.equal(
+    said,
+    vi('plan.leftOut.reason.library_section_refused', {
+      why: `${vi('plan.leftOut.why.no_star_rating')}; ${vi('plan.leftOut.why.review_too_long')}`
+    })
+  )
+  assert.ok(!said.includes('Not shown'), said)
+  // English says the same one lead in; a reason without a known code keeps the plan's own sentence.
+  assert.equal(
+    lib.leftOutReasonsOf(lib.english, line),
+    'Not shown in the Tracy section: it has no star rating; it is longer than the section holds, and a review is never cut.'
+  )
+  const unknown = { reason: 'Not shown in the Tracy section: a new rule.', code: 'library_section_refused' }
+  assert.equal(lib.leftOutReasonOf(vi, unknown, unknown.reason), unknown.reason)
+  // The same sentence twice is said once.
+  assert.equal(
+    lib.leftOutReasonsOf(vi, {
+      ...rating,
+      kind: 'item',
+      also: [{ ...rating, params: { why: 'no_star_rating' } }]
+    }),
+    vi('plan.leftOut.reason.library_section_refused', { why: vi('plan.leftOut.why.no_star_rating') })
+  )
 })

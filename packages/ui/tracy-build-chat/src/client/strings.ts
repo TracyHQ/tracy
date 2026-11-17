@@ -174,6 +174,19 @@ export const en = {
   'plan.leftOut.reason.no_fitting_video':
     'None of your videos fit this space (wide pictures without text on top), so it shows no video.',
   'plan.leftOut.reason.page_nothing_to_show': 'You have nothing yet for these pages to show.',
+  // A review the Tracy reviews section does not show (`library_section_refused`), by why (`params.why`); the reasons
+  // of one line are said after one lead in, joined by a semicolon.
+  'plan.leftOut.reason.library_section_refused': 'Not shown in the Tracy section: {why}.',
+  'plan.leftOut.why.not_google_review': 'it is not a Google review',
+  'plan.leftOut.why.no_text': 'it has no text',
+  'plan.leftOut.why.no_star_rating': 'it has no star rating',
+  'plan.leftOut.why.stars_below_four': 'only reviews of four or five stars are shown',
+  'plan.leftOut.why.stars_not_whole': 'its star rating is not a whole number',
+  'plan.leftOut.why.reviewer_anonymous': 'its reviewer is anonymous on Google',
+  'plan.leftOut.why.no_reviewer_name': 'it has no reviewer name',
+  'plan.leftOut.why.reviewer_name_too_long':
+    'its reviewer name is longer than the section holds, and a name is never cut',
+  'plan.leftOut.why.review_too_long': 'it is longer than the section holds, and a review is never cut',
   // What a left out line names, by its code, when it reports no fact or item of the plan.
   'plan.leftOut.what.no_place_for_whatsapp': 'WhatsApp',
   'plan.leftOut.what.no_place_for_other_phones': 'Other phone numbers',

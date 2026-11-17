@@ -30,3 +30,44 @@ export function answersStillAsked({ questions, answers }, asked) {
   const ids = new Set(kept.map((q) => q.id))
   return { questions: kept, answers: list(answers).filter((a) => ids.has(a?.question)) }
 }
+
+/**
+ * Which of the owner's answers a research MADE AGAIN keeps (#575 walk: the held hours settled before compose). The
+ * owner answered these questions already, so a rebuild never undoes an answer: one whose question is asked the very
+ * same way is kept; one whose question came back in another shape is carried onto the new question when its choice is
+ * still offered (by its label) or its text still allowed; any other answer is dropped with a record (`dropped`:
+ * `{question, reason}`), never an error, and compose goes on with the answers kept.
+ * @param {{questions?: object[], answers?: object[]}} draft the questions and answers the draft holds
+ * @param {object[]} asked every question the research made again asks
+ * @returns {{questions: object[], answers: object[], dropped: Array<{question: string, reason: string}>}}
+ */
+export function answersCarriedOver({ questions, answers }, asked) {
+  const now = new Map(list(asked).map((q) => [q?.id, q]))
+  const before = new Map(list(questions).map((q) => [q?.id, q]))
+  const kept = []
+  const dropped = []
+  for (const answer of list(answers)) {
+    const id = answer?.question
+    const question = now.get(id)
+    if (!question) {
+      dropped.push({ question: id, reason: 'question_gone' })
+      continue
+    }
+    const carried = carriedAnswer(answer, before.get(id), question)
+    if (carried) kept.push({ question, answer: carried })
+    else dropped.push({ question: id, reason: 'choice_gone' })
+  }
+  return { questions: kept.map((k) => k.question), answers: kept.map((k) => k.answer), dropped }
+}
+
+/** The answer as it reads against the question asked now, or null when it cannot be given to it any more. */
+function carriedAnswer(answer, was, question) {
+  if (was && shapeOf(was) === shapeOf(question)) return answer
+  if (answer.skipped === true) return answer
+  if (typeof answer.choice === 'string') {
+    const label = list(was?.choices).find((c) => c?.id === answer.choice)?.label
+    const same = list(question.choices).find((c) => c?.label === label)
+    return label !== undefined && same ? { ...answer, choice: same.id } : null
+  }
+  return typeof answer.text === 'string' && question.freeText ? answer : null
+}

@@ -21,7 +21,7 @@ import { randomUUID } from 'node:crypto'
 import { answerReadingsOf, placeReadingOf, placeStatementOf, readAnswersOf } from './answer-readings.js'
 import { findOwnerPlace, ownerAnswersWaiting, ownerBriefOf } from './owner-research.js'
 import { heldHoursQuestionsOf, settleHeldHours } from './held-hours.js'
-import { answersStillAsked } from './answers-kept.js'
+import { answersCarriedOver, answersStillAsked } from './answers-kept.js'
 import { askingOf } from './engine-asking.js'
 import { faultOf, runWithRerun } from './engine-rerun.js'
 import { planRequestOf, reviseStep, revisionOf } from './engine-revise.js'
@@ -299,24 +299,30 @@ export function createEngine({
     return job
   }
 
-  /** The columns a research writes when it ends: the record, a stale brand gone, the answers it still asks. */
-  const researchColumns = (row, kit) => (made) => (current) => {
-    // Research that found no trade asks the owner what kind of business it is (`trade-question.js`).
-    const record = withTradeQuestion(made, kits)
-    return {
-      research: record,
-      brand: null,
-      // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
-      ...(row?.plan ? {} : { needs_profile: record.profile }),
-      ...answersStillAsked(current, [
-        ...(tradeQuestionOf(record) ? [record.tradeQuestion] : []),
-        ...heldHoursQuestionsOf({ research: record, answers: current?.answers }),
-        ...(record.gapQuestions ?? []),
-        ...(record.profile?.questions ?? []),
-        ...(planProfileOf(record, kit)?.questions ?? [])
-      ])
+  /**
+   * The columns a research writes when it ends: the record, a stale brand gone, the answers it still asks. `keep`: which
+   * answers stay (`answers-kept.js`), a new research's rule unless the research was made again (`answersCarriedOver`).
+   */
+  const researchColumns =
+    (row, kit, keep = answersStillAsked) =>
+    (made) =>
+    (current) => {
+      // Research that found no trade asks the owner what kind of business it is (`trade-question.js`).
+      const record = withTradeQuestion(made, kits)
+      return {
+        research: record,
+        brand: null,
+        // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
+        ...(row?.plan ? {} : { needs_profile: record.profile }),
+        ...keep(current, [
+          ...(tradeQuestionOf(record) ? [record.tradeQuestion] : []),
+          ...heldHoursQuestionsOf({ research: record, answers: current?.answers }),
+          ...(record.gapQuestions ?? []),
+          ...(record.profile?.questions ?? []),
+          ...(planProfileOf(record, kit)?.questions ?? [])
+        ])
+      }
     }
-  }
 
   /**
    * End a research whose place run ended (#575), in this process: its content brief made and the needs profile read
@@ -739,11 +745,25 @@ export function createEngine({
           rebuild: () => rebuiltResearchOf(accountId, row, kit)
         })
         if (settled) {
-          await changeDraft(pool, accountId, (current) => {
-            const { brand: _kept, ...columns } = researchColumns(row, kit)(settled)(current)
-            return columns
+          // 🔒 The owner's answers outlive the rebuild (#575 walk: the held hours answer, asked by research and settled
+          // here, stopped compose as no question of the profile). Compose reads the answers the draft keeps after it,
+          // each carried onto its question as asked now; one that cannot be is dropped with a record, never a fault.
+          let dropped = []
+          const carry = (draft, asked) => {
+            const { dropped: gone, ...kept } = answersCarriedOver(draft, asked)
+            dropped = gone
+            return kept
+          }
+          const changed = await changeDraft(pool, accountId, (current) => {
+            const { brand: _kept, ...columns } = researchColumns(row, kit, carry)(settled)(current)
+            return dropped.length
+              ? { ...columns, research: { ...columns.research, answersDropped: dropped } }
+              : columns
           })
-          inputs.research = settled
+          if (changed.error)
+            throw Object.assign(new Error(`held hours: ${changed.error}`), { code: changed.error })
+          inputs.research = dropped.length ? { ...settled, answersDropped: dropped } : settled
+          inputs.answers = changed.draft.answers
         }
         // The owner's typed answers are read first, once, as their own ledger step (`answer-readings.js`).
         const answerReadings = await answerReadingsOf(inputs, { kit, ...readingTools(accountId) })

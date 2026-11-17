@@ -31,6 +31,17 @@ test('a page entry names its page type by slug or by words, with or without the 
   assert.equal(pageTypeOfEntry('Prices page', recipes), null)
 })
 
+test('a page entry named by its main block or as a detail page is that page type (#575 walk, third round)', () => {
+  // The model named the single class page "Class detail page": the block id of the class pages, not their type.
+  assert.equal(pageTypeOfEntry('Class detail page', recipes), 'class')
+  assert.equal(pageTypeOfEntry('class-detail', recipes), 'class')
+  assert.equal(pageTypeOfEntry('Author details page', recipes), 'author')
+  const context = { recipes, blocks, data: { items: [] }, at: 'leftOut[0]', fix: () => {} }
+  assert.equal(pageLeftOutOf({ what: 'Class detail page', reason: 'x' }, context), null)
+  // A list page is never taken for its detail page.
+  assert.equal(pageTypeOfEntry('Classes page', recipes), 'classes')
+})
+
 test('a detail page is not listed; a page with no item of its kind takes the shared reason', () => {
   const fixes = []
   const context = { recipes, blocks, data: { items: [] }, at: 'leftOut[0]', fix: (f) => fixes.push(f) }

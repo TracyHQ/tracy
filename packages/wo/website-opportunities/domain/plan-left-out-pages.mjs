@@ -39,14 +39,20 @@ export function detailPageTypesOf(recipes, blocks) {
   return detail
 }
 
-/** The page type a left out page entry names, or null: its slug, or its words joined by hyphens, " page" set aside. */
+/**
+ * The page type a left out page entry names, or null: its slug, or its words joined by hyphens, " page" set aside; else
+ * the type those words name with " detail" set aside ("Class detail page" is the class page), else the type whose
+ * main block they name (`class-detail`, the block of the class pages: #575 walk, third round).
+ */
 export function pageTypeOfEntry(what, recipes) {
   const said = String(what ?? '')
     .trim()
     .toLowerCase()
   const bare = said.replace(/\s+page$/, '')
-  for (const candidate of [said, bare, bare.replace(/\s+/g, '-')])
+  const slug = bare.replace(/\s+/g, '-')
+  for (const candidate of [said, bare, slug, slug.replace(/-details?$/, '')])
     if (recipes?.has(candidate)) return candidate
+  for (const recipe of recipes?.values?.() ?? []) if (recipe?.mainBlock === slug) return recipe.pageType
   return null
 }
 
