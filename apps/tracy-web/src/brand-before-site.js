@@ -20,6 +20,7 @@
 // picture door for drawn icons (`seedImage`, one call per drawing attempt, only when an icon is drawn).
 import { readFile } from 'node:fs/promises'
 import { BrandStepError, brandLookOf } from 'website-opportunities/domain/brand-before-site.mjs'
+import { keptBrandFileOf } from './brand-before-site-files.js'
 import { STEP_CHAIN_ATTEMPTS, STEP_CHAIN_NO_OUTPUT } from './sites/brief-engines/step-chain.js'
 import { brandInputResolver } from './step-chain-brand-input.js'
 import { chainOf, spendOfRecord } from './brand-before-site-chain.js'
@@ -106,16 +107,19 @@ async function attemptStep(run, step, inputs, call) {
 
 /**
  * @param {{steps: {kit: Function, brand: Function, dispose: Function}, briefOf: (revisionId: string) =>
- *   Promise<object | null>, now?: () => number, readJson?: (file: string) => Promise<object>}} deps `steps`: the step
+ *   Promise<object | null>, now?: () => number, readJson?: (file: string) => Promise<object>,
+ *   readBytes?: (file: string) => Promise<Buffer>}} deps `readBytes`: reads a picture the brand file names `steps`: the step
  *   chain's steps (`createStepChainSteps`); `briefOf`: the stored research brief of a revision (for example
  *   `briefOfRevision` of `brand-step/brand-control.js`)
  * @returns {(input: {revisionId?: string, brief?: object, logoFile?: string, kitRef: string, siteLanguage?: string, signal?: AbortSignal}) =>
- *   Promise<{record: object, records: object[], usd: number | null, knownUsd?: number, prompt: object, runId: string}>}
+ *   Promise<{record: object, brand: object, pictures: Map<string, Buffer>, records: object[], usd: number | null,
+ *   knownUsd?: number, prompt: object, runId: string}>} `brand`: the whole brand file as the draft keeps it, and
+ *   `pictures` the bytes of every picture it names (`brand-before-site-files.js`)
  * @throws {BrandStepError} `brand_step_failed` (`noRerun`: its attempts are spent) or `brand_step_stopped` (the signal
  *   stopped it) with the record and the stop report; before any step, a coded `noRerun` error of the input check:
  *   `brand_input_ambiguous` (both inputs), `brand_input_missing` (neither), `brand_logo_path_relative`
  */
-export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson }) {
+export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson, readBytes }) {
   const read = readJson ?? (async (file) => JSON.parse(await readFile(file, 'utf8')))
   return async function brandBeforeSite({
     revisionId,
@@ -169,8 +173,17 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
             if (!file) return ran
             // Reading the file is part of the attempt: a failure keeps the spend of the run that wrote it.
             try {
-              const record = brandLookOf({ brandFile: await read(file), brief, kit: kit.value })
-              return { ...ran, value: { file, record } }
+              const brandFile = await read(file)
+              const record = brandLookOf({ brandFile, brief, kit: kit.value })
+              // The whole brand file and its pictures, read now: the run's folder is no store of the draft.
+              const kept = await keptBrandFileOf({
+                brandFile,
+                file,
+                kit: kit.value,
+                ...(readBytes ? { read: readBytes } : {})
+              })
+              // The record line keeps what it kept before: the file and the look record, never the pictures.
+              return { ...ran, value: { file, record, kept, recorded: { file, record } } }
             } catch (error) {
               throw Object.assign(error, { usd: ran.usd, knownUsd: ran.knownUsd, value: { file } })
             }
@@ -183,8 +196,16 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
           { records: run.record, stop: brand.stop },
           { noRerun: true }
         )
-      const record = brand.value.record
-      return { record, records: run.record, ...spendOfRecord(run.record), prompt: BRAND_STEP_PROMPT, runId }
+      const { record, kept } = brand.value
+      return {
+        record,
+        brand: kept.kept,
+        pictures: kept.bytes,
+        records: run.record,
+        ...spendOfRecord(run.record),
+        prompt: BRAND_STEP_PROMPT,
+        runId
+      }
     } finally {
       await steps.dispose({ runId, chain: chainOf(run, stop) })
     }

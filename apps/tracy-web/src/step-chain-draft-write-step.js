@@ -27,6 +27,7 @@ import { writePlanOf } from 'website-opportunities/domain/draft-write-plan.mjs'
 import { researchLabelsOf } from 'website-opportunities/domain/picture-research-labels.mjs'
 import { buildResultOf } from 'website-opportunities/domain/build-result.mjs'
 import { opsRecordOf } from 'website-opportunities/domain/revision-write-delta.mjs'
+import { accentShiftsOf } from './step-chain-draft-brand-pictures.js'
 import { draftError } from './step-chain-draft-source.js'
 import { runDraftWrite } from './step-chain-draft-write.js'
 import { runRevisionWrite } from './step-chain-draft-write-revision.js'
@@ -64,6 +65,8 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
   try {
     plan = writePlanOf(order, aiq, {
       stored: (await wiring.stored?.(order, ctx)) ?? {},
+      // The brand file's fill and words per side, when the plan's accent is its own (#575).
+      accentShifts: accentShiftsOf(inputs.plan?.brand, inputs.plan?.plan?.look),
       withheld: inputs.plan?.profile?.withheld,
       approved: inputs.plan?.plan,
       iconKeys: (iconLibrary?.()?.icons ?? []).map((icon) => icon?.name)

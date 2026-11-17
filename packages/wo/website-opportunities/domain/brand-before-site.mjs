@@ -71,6 +71,9 @@ export class BrandStepError extends Error {
   }
 }
 
+/** How the customer reads where a made logo came from. */
+const MADE_LOGO_NAME = 'A temporary logo made for you'
+
 /** The owner task the brand step adds when the logo it set is temporary (`gate-finish.js`). */
 const TEMPORARY_LOGO_TASK = 'replace-temporary-logo'
 /** Where a made logo came from: the brand step made it, for the business has no usable logo. */
@@ -127,7 +130,14 @@ export function brandLookOf({ brandFile, brief, kit, minRatio }) {
           mediaId,
           mark
         }
-      : { kind: 'made', from: LOGO_MADE, mark, mediaId }
+      : {
+          kind: 'made',
+          from: LOGO_MADE,
+          mark,
+          mediaId,
+          // The made logo has pictures the write places (#575, P2 of the brand audit): its own spots with a file.
+          ...(list(brandFile.logo?.spots).some((s) => isText(s?.file)) ? { pictured: true } : {})
+        }
   const name = isText(brandFile.name?.value) ? brandFile.name.value : null
   return { schema: BRAND_LOOK_SCHEMA, kit: brandFile.kit ?? null, name, accent, logo }
 }
@@ -135,12 +145,20 @@ export function brandLookOf({ brandFile, brief, kit, minRatio }) {
 /** Whether a value is a look record of `brandLookOf`. */
 export const isBrandLook = (brand) => isObject(brand) && brand.schema === BRAND_LOOK_SCHEMA
 
+/** What the made logo shows, per the brand step's mark decision. */
+const MADE_MARKS = Object.freeze({ icon: 'a simple icon of your trade', lettermark: 'your initials' })
 /**
- * What the customer reads when the step made a temporary logo: none found, or theirs unusable. The build chat does not
- * write the made logo yet (it prints the business name as text in the logo's place, `draft-write-plan-facts.mjs`), so
- * the sentence says the name is shown as text, never an image the site will not show.
+ * What the customer reads when the step made a temporary logo: none found, or theirs unusable. A made logo with
+ * pictures (`pictured`) is written in the logo's place (#575, P2 of the brand audit) and said as made; one without is
+ * not, and the business name is printed as text in its place (`draft-write-plan-facts.mjs`), said so.
  */
 function madeLogoSaid(logo) {
+  if (logo.pictured) {
+    const shows = MADE_MARKS[logo.mark] ?? 'a simple mark'
+    return logo.mediaId
+      ? `Your logo could not be used as it is, so I made a temporary one: ${shows} beside your business name. Send your logo file here in the chat to replace it.`
+      : `No logo was found, so I made a temporary one: ${shows} beside your business name, in the design's main colour. Send your logo here in the chat to replace it.`
+  }
   return logo.mediaId
     ? 'Your logo could not be used as it is, so your business name is shown as text in place of a logo. Send your logo file here in the chat to replace it.'
     : 'No logo was found, so your business name is shown as text in place of a logo, and the design keeps its main colour. Send your logo here in the chat to replace it.'
@@ -232,9 +250,21 @@ export function lookOfBrandRecord(template, record) {
       said: drawnLogoSaid(reason),
       ...drawnLogoCodeOf(reason, sourceKind)
     })
+  } else if (record.logo?.kind === 'made' && record.logo.pictured === true) {
+    // A made logo with pictures is an image logo on the plan (Contract B `own`): the write places its pictures.
+    logo = { kind: 'own', source: MADE_LOGO_NAME }
+    sources.logo = { from: LOGO_MADE, name: MADE_LOGO_NAME, pictured: true }
+    const mark = Object.hasOwn(MADE_MARKS, record.logo.mark) ? record.logo.mark : 'mark'
+    assumptions.push({
+      id: 'logo',
+      field: 'look.logo',
+      said: madeLogoSaid(record.logo),
+      code: LOGO_ASSUMPTION_CODES.made,
+      params: { found: Boolean(record.logo.mediaId), mark }
+    })
   } else if (record.logo?.kind === 'made') {
     logo = { kind: 'text' }
-    sources.logo = { from: LOGO_MADE, name: 'A temporary logo made for you' }
+    sources.logo = { from: LOGO_MADE, name: MADE_LOGO_NAME }
     assumptions.push({
       id: 'logo',
       field: 'look.logo',

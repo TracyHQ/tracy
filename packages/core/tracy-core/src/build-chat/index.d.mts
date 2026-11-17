@@ -205,6 +205,23 @@ export interface PlanCard {
     accent: string
     accentDark: string | null
     logo: { kind: string; source?: string; code?: string; sourceKind?: string }
+    /** Only when the draft's `lookSources` were given: what the card needs to show the business's look (#575). */
+    brand?: {
+      logo: {
+        light: PlanLookPicture | null
+        dark: PlanLookPicture | null
+        from: string | null
+        name: string | null
+      }
+      favicon: PlanLookPicture | null
+      accent: {
+        from: string | null
+        name: string | null
+        said: string | null
+        code?: string
+        params?: Record<string, unknown>
+      }
+    }
   }
   services: { id: string; field: string; label: string; source: string; sourceKind: string | null }[]
   pages: {
@@ -257,8 +274,16 @@ export interface PlanEdit {
   changes: PlanChange[]
 }
 type BuildChatT = (key: string, vars?: Record<string, unknown>) => string
-// biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
-export declare function planCardOf(plan: any): PlanCard
+/** A picture the brand step kept with the draft, named by its draft picture id. */
+export interface PlanLookPicture {
+  picture: string
+  mime?: string
+}
+export declare function planCardOf(
+  // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
+  plan: any,
+  options?: { lookSources?: PlanDraft['lookSources'] }
+): PlanCard
 // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
 export declare function planEditOf(plan: any, changes: PlanChange[], id: string): PlanEdit
 export declare function planChangeOf(
@@ -275,7 +300,9 @@ export interface PlanDraft {
   /** Where the plan's accent and logo came from; a logo the machine drew from the owner's logo says `drawn-from-logo`. */
   lookSources?: {
     accent?: { from: string; name?: string }
-    logo?: { from: string; name?: string; reason?: string }
+    logo?: { from: string; name?: string; reason?: string; pictured?: boolean }
+    /** The pictures the brand step kept with the draft (#575): the logo on each ground and the site icon. */
+    pictures?: { logoLight?: PlanLookPicture; logoDark?: PlanLookPicture; favicon?: PlanLookPicture }
   } | null
 }
 export declare function changedFieldsOf(draft: PlanDraft): string[]

@@ -3,7 +3,8 @@
 // picture by the plugin (`SLOT_IMAGE_INVALID`, `SLOT_IMAGE_OPAQUE`), and a refusal stopped the whole write. The plan
 // names, on each picture upload, the declared frame of every contract slot the picture goes to (`slotFit`), and
 // whether those places may be left out: a place is optional when the block that owns its record declares what it
-// does with no data (`noData.rule` `hide` or `fallback`, the block store), required otherwise. The write step fits
+// does with no data (`noData.rule` `hide` or `fallback`, the block store), required otherwise; a site setting no block
+// places answers by the block that shows it (`shownBy`, `draft-write-plan-facts.mjs`). The write step fits
 // the picture to that frame (`step-chain-draft-picture-fit.js`). One picture sent to slots of two shapes cannot be
 // one file: the op says so (`slotFitConflict`) and the run stops typed for those places. Pure; part of `opsOf`.
 import { slotAspectOf } from './write-order-memory-image.mjs'
@@ -31,7 +32,9 @@ function frameOf(slot) {
 
 /** Whether the block owning a record may be left out when it has no picture, by its own declaration. */
 const optionalOf = (state, record) =>
-  OPTIONAL_RULES.has(state.kit.store.get(record.block ?? state.kit.ownerOf.get(record.entity))?.noData?.rule)
+  OPTIONAL_RULES.has(
+    state.kit.store.get(record.block ?? state.kit.ownerOf.get(record.entity) ?? record.shownBy)?.noData?.rule
+  )
 
 /**
  * The frames every picture of the plan goes to through the contract, by picture id.

@@ -123,7 +123,17 @@ export function createDraftSteps(deps) {
         pages: plan.pages.length,
         ...(revision ? { rebuild: revisionRecordOf(revision) } : {})
       }
-      const value = { draftId, plan, profile, lastEdit, research: draft.research, revision, recorded }
+      // `brand`: the kept brand file of the plan's look (`step-chain-draft-source.js`), whose pictures the write places.
+      const value = {
+        draftId,
+        plan,
+        profile,
+        lastEdit,
+        research: draft.research,
+        brand: draft.brand ?? null,
+        revision,
+        recorded
+      }
       return { value: { ...value, previous: revision?.previous ?? null }, usd: 0 }
     },
 

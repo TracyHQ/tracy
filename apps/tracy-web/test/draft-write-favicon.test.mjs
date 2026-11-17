@@ -42,7 +42,8 @@ test('with a logo picture the icon is made from the logo, contained in a clear s
   const plan = planOf(order)
   const op = faviconOf(plan)
   assert.equal(op.from, 'logo')
-  assert.equal(op.stored.id, 'stored-home.home-b8.logo')
+  // The header's light logo, the first logo the plan uploads since the header takes the logo too (#575).
+  assert.equal(op.stored.id, 'stored-home.home-b1.logo-light')
   const logo = await sharp({ create: { width: 300, height: 100, channels: 3, background: '#2f6d4a' } })
     .png()
     .toBuffer()

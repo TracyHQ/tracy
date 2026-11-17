@@ -471,7 +471,7 @@ export function createEngine({
   function brand(accountId, row, kit) {
     const { slug, version } = kit.template
     return start(accountId, 'brand', { template: { slug, version } }, async () => {
-      const { record, costCents } = await brandRunOf(
+      const { record, costCents, file } = await brandRunOf(
         { research: row.research, template: kit.template, accountId },
         { brandStep, kit }
       )
@@ -484,7 +484,8 @@ export function createEngine({
       return {
         ok: true,
         attempts: 1,
-        columns: { brand: { record, template: { slug, version } } },
+        // The whole brand file rides with the record (`file`): the draft write places its logo and icons from it.
+        columns: { brand: { record, template: { slug, version }, ...(file ? { file } : {}) } },
         ...(costCents !== undefined ? { costCents } : {})
       }
     })
