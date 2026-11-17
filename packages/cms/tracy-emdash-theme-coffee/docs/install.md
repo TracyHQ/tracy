@@ -4,7 +4,7 @@ Read ../AGENTS.md first.
 
 ## Inputs
 
-- Node `>=22.16` (24.11.1 used and pinned in `Dockerfile`), pnpm 11 through corepack
+- Node `>=22.23.4` (24.11.1 used and pinned in `Dockerfile`), pnpm 11 through corepack
   (`packageManager` in `package.json`). Every dependency is an exact pin in `pnpm-lock.yaml`.
 - An **empty destination directory** for a new site. `tools/clean-install.sh <dir> <port>` refuses an
   existing, non-empty, symlinked or nested destination and a busy port, before writing anything.

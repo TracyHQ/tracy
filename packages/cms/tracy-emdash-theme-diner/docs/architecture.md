@@ -1,7 +1,7 @@
 # Architecture
 
 Template `tracy-diner` (label "JA Diner", `template.config.json`): a port of the Joomla/T3 template JA Diner j6 1.0.5 to
-EmDash 1.1.0 on Astro 7.3.3, Tailwind 4.3.3, shadcn 4.21.0 (`package.json`). Read `../AGENTS.md` first. This is an
+EmDash 1.1.0 on Astro 7.4.12, Tailwind 4.3.3, shadcn 4.21.0 (`package.json`). Read `../AGENTS.md` first. This is an
 EmDash/Astro application, not a Joomla template, and not a universal upload ZIP.
 
 ## Runtime and storage

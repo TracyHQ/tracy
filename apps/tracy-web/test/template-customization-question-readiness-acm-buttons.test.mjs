@@ -231,7 +231,7 @@ test('PAGE-5: commented, quoted, dead or reassigned section guards cannot hide a
       .split('\n')
       .map((line) => `// ${line}`)
       .join('\n')}\n${active}`,
-    `<?php $example = "${body.replace(/"/g, '\\"')}"; ${active}`,
+    `<?php $example = "${body.replace(/[\\"]/g, '\\$&')}"; ${active}`,
     `<?php if (false) { ${body} } ${active}`,
     `${SECTION_CHROME}\n${active}`
   ])

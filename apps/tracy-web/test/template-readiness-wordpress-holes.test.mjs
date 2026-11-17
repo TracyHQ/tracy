@@ -294,8 +294,17 @@ for (const c of CASES) {
 }
 
 // H15: the demo-measures fault `demo-main-heading`, found by counting `<h1` per route (the recipe's own detect step).
-const h1sOf = (html) =>
-  [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim())
+const textOf = (fragment) => {
+  // Repeated until nothing changes: one pass leaves a tag that two removed tags spelled together.
+  let text = fragment
+  let previous
+  do {
+    previous = text
+    text = text.replace(/<[^>]+>/g, '')
+  } while (text !== previous)
+  return text.trim()
+}
+const h1sOf = (html) => [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g)].map((m) => textOf(m[1]))
 const MASTHEAD = (tag) => `<${tag} class="site-title">Fresh Bakery</${tag}>`
 const PAGES_H15 = {
   broken: { '/': `${MASTHEAD('h1')}<h1>Fresh bread</h1>`, '/error': `${MASTHEAD('h1')}<p>Not found</p>` },
