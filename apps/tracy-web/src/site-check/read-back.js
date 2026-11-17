@@ -8,6 +8,9 @@ import { GroupUnmeasured } from './group-unmeasured.js'
 import { sameValue } from './slot-values.js'
 import { contractRefusals } from './write-findings.js'
 
+/** An anchor with an address in stored words: a link those words still print. */
+const HOLDS_LINK = /<a\b[^>]*\bhref\s*=/i
+
 const INSPECT = 'content.contract inspect'
 
 /** Each entity's first page, from inspect's `pages`. An entity no page names (a category, a user) has no page. */
@@ -104,6 +107,20 @@ function judge(line, held) {
   // (dev, JA Diner 16/11/2026) four category titles printed only on dropped blog pages, and a masthead background the kit
   // read on no page, were five read-back blocks for words nobody sees.
   if (line.status === 'hidden' && line.printed === false) return { result: 'match' }
+  // A link printed inside words the write step replaced with words that hold no link (hide-lines.js) is read on those
+  // words: hidden when they hold no link any more. They are the new words, so they are not empty. Before (dev, BXR London
+  // on JA Boxing, 17/11/2026) the trainers' social links inside each trainer's role line were 34 read-back blocks: the role
+  // words that replaced them ("Head of Combat") were read as words the hidden link still held.
+  if (line.status === 'hidden' && line.inReplacedWords)
+    return HOLDS_LINK.test(held.value)
+      ? {
+          result: 'differs',
+          failure: {
+            ...base,
+            reason: 'The plan hides this link and the words that held it still hold a link'
+          }
+        }
+      : { result: 'match' }
   if (line.status === 'hidden')
     return held.value.trim() === ''
       ? { result: 'match' }
