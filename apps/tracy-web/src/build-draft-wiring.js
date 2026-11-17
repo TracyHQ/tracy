@@ -18,7 +18,6 @@ import { fittingAiQuickstarts } from 'website-opportunities/domain'
 import { existsSync } from 'node:fs'
 
 export {
-  decideProfile,
   draftPictureReader,
   draftPictures,
   preSiteGatherer,

@@ -126,6 +126,9 @@ export async function researchRecordOf(gathered, { links, description }, { model
     ...(has('placeProfile') ? { placeProfile: gathered.placeProfile } : {}),
     ...(has('ids') ? { ids: gathered.ids } : {}),
     ...(isText(gathered.googleLink) ? { googleLink: gathered.googleLink } : {}),
+    // A research of the owner's words (`owner-research.js`): what to ask next, and what the owner said and was asked.
+    ...(Array.isArray(gathered.gapQuestions) ? { gapQuestions: gathered.gapQuestions } : {}),
+    ...(gathered.owner && typeof gathered.owner === 'object' ? { owner: gathered.owner } : {}),
     // A record made before #575 kept a logo file and its draft picture run; kept as they were when present.
     ...(isText(gathered.logoFile) ? { logoFile: gathered.logoFile } : {}),
     ...(isText(gathered.pictureRun) ? { pictureRun: gathered.pictureRun } : {}),
@@ -216,7 +219,9 @@ export async function composeStep({ research, answers, answerReadings, template,
     ...ids(research?.profile),
     SITE_NAME_QUESTION_ID,
     PLACE_CHOICE_QUESTION_ID,
-    BUSINESS_TRADE_QUESTION_ID
+    BUSINESS_TRADE_QUESTION_ID,
+    // The brief questions of a research of the owner's words: answered into the brief, never the plan's.
+    ...(Array.isArray(research?.gapQuestions) ? research.gapQuestions.map((q) => q?.id) : [])
   ].filter((id) => !kept.has(id))
   const input = {
     blockStore: kit.blockStore,

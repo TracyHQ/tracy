@@ -1,20 +1,13 @@
 /**
- * The build chat's research of the owner's own words, with no link (#609): an owner with no website, no map listing and
- * no social page says what the business is, and the research brief and asset manifest are made from those words alone,
- * in the shapes a website opportunity's revision stores (`wo_revision.brief`, `wo_revision.asset_manifest`), the input
- * of `researchOf` (`engine-steps.js`). Nothing is fetched and nothing is saved: the description is read by the step
- * chain's business reading as the owner's answer (D46, `gather-reading.js`), and the brief is made by its own brief
- * makers (`gather-read.js`). Every door is injected (`build-draft-gather-wiring.js` `preSiteGatherer`).
- *
- * 🔒 LINKS ARE THE STEP CHAIN'S OWN RESEARCH (#575). A research with links runs the step chain's place research
- * (`place-research.js`, through the engine), never this gatherer: given links, it refuses with `research_unavailable`.
- *
- * With neither a link nor a description, the step stops with `research_empty` and reason `no_links`; with a
- * description but no business name, with reason `no_name`.
+ * The build chat's reading of the owner's own words (#609, #575): the step chain's business reading (D46,
+ * `gather-reading.js`) over what the owner said, for a business known by the name the owner typed. Its answer is how
+ * the words were read and the reading itself, which a research of the owner's words keeps as the business's
+ * `businessReading` (`owner-business.js`) and a research of links keeps as `descriptionFacts`. Nothing is fetched and
+ * nothing is saved here. Every door is injected (`build-draft-gather-wiring.js` `preSiteGatherer`).
  */
 import { randomUUID } from 'node:crypto'
 import { EngineStepError } from './engine-steps.js'
-import { briefOf, briefReadOf, profileOfRead } from './gather-read.js'
+import { profileOfRead } from './gather-read.js'
 import { readingOf } from './gather-reading.js'
 
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -24,9 +17,8 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
  *   readingDoor?: () => Promise<object>, readingFetch?: typeof fetch, readingBudgetMs?: number,
  *   now?: () => number, log?: Console}} deps `readingDoor`: the business reading's model door (`woEditorial`);
  *   `readingFetch`: the fetch its model call goes out through
- * @returns {(input: {links?: string[], description: string | null, name?: string | null, withheld?: object | null},
- *   context?: {accountId?: string}) => Promise<{brief: object, manifest: object[], setAside: [], reading: object,
- *   descriptionFacts?: object, descriptionKeptOut?: object[]}>} `reading`: how the business was read
+ * @returns {Function & {readDescription: Function}} a gatherer that refuses to research by itself, with the
+ *   reading of the owner's words (`readDescription`)
  */
 export function createPreSiteGatherer(deps) {
   const { parts, now = Date.now } = deps
@@ -60,56 +52,19 @@ export function createPreSiteGatherer(deps) {
     })
     return { domain, opp, reading }
   }
-  const gather = async function gather({ links, description, name = null, withheld = null }) {
-    if (links?.length)
-      throw new EngineStepError('research_unavailable', "links are read by the step chain's research", {
-        noRerun: true
-      })
-    // Neither a link nor the owner's words: nothing to read (`stoppedOf`, reason `no_links`).
-    if (!isText(description))
-      throw Object.assign(new EngineStepError('research_empty', 'nothing was given', { noRerun: true }), {
-        reason: 'no_links'
-      })
-    // No link names the business, so the owner does: a brief needs its name (`stoppedOf`, reason `no_name`).
-    if (!isText(name))
-      throw Object.assign(new EngineStepError('research_empty', 'no name was given', { noRerun: true }), {
-        reason: 'no_name'
-      })
-    const { domain, opp, reading } = await readWords({ description, name, withheld })
-    const madeAt = new Date(now()).toISOString()
-    const briefInput = {
-      opp,
-      rows: [],
-      media: [],
-      googlePlace: null,
-      description,
-      madeAt,
-      domain,
-      parts,
-      reading: reading.reading
-    }
-    const made = briefOf({ ...briefInput, prepared: briefReadOf(briefInput), pictureLabelling: null })
-    if (made.invalid)
-      throw new EngineStepError(
-        'research_unusable',
-        `the brief is not valid: ${JSON.stringify(made.invalid).slice(0, 300)}`,
-        { noRerun: true }
-      )
-    return {
-      brief: made.brief,
-      manifest: made.manifest,
-      setAside: [],
-      reading: reading.record,
-      // What became of the owner's description (D46): how the reading read it as a source, and its sentences kept out
-      // of the brief.
-      ...(reading.ownerStatement ? { descriptionFacts: reading.ownerStatement } : {}),
-      ...(made.keptOut?.length ? { descriptionKeptOut: made.keptOut } : {})
-    }
+  /**
+   * 🔒 RESEARCH IS THE STEP CHAIN'S (#575): links run its place research (`place-research.js`), no link its research of
+   * the owner's words (`owner-research.js`), both through the engine. This gatherer only reads the owner's words for
+   * them (`readDescription`); asked to research by itself, it refuses.
+   */
+  const gather = async function gather() {
+    throw new EngineStepError('research_unavailable', "research is the step chain's own", { noRerun: true })
   }
   /**
-   * The owner's words read beside a research of links (#575, `place-research.js` `finishPlaceResearch`): the same
-   * business reading, given what the owner keeps off the site, whose answer is only how the words were read
-   * (`descriptionFacts`) and the reading's record. Nothing of it is a brief.
+   * The owner's words read for a research (#575): beside a research of links (`place-research.js`
+   * `finishPlaceResearch`), and as the only source of a research of the owner's words (`owner-research.js`), given what
+   * the owner keeps off the site: how the words were read (`descriptionFacts`), the reading itself
+   * (`businessReading`) and the reading's record. Nothing of it is a brief.
    * @param {{description: string, name?: string | null, trade?: string | null, withheld?: object | null}} input
    *   `trade`: the trade the research found, when it found one
    */
@@ -118,6 +73,9 @@ export function createPreSiteGatherer(deps) {
     const { reading } = await readWords({ description, name, withheld, trade })
     return {
       reading: reading.record,
+      // The business reading itself, the step chain's `profile.businessReading` of a business known by its owner's
+      // words (`owner-business.js`).
+      ...(reading.reading ? { businessReading: reading.reading } : {}),
       ...(reading.ownerStatement ? { descriptionFacts: reading.ownerStatement } : {})
     }
   }

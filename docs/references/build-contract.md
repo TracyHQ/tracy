@@ -91,7 +91,8 @@ counts once), listed in [Text limits](#text-limits).
   neutral names it: the customer types a name the site may show) or `place-choice` (the customer's Google link matches
   more than one place, and research asks which one is theirs before it reads anything) or `business-trade` (research
   could name no trade for the business, so no template list could be offered: the customer says what kind of business
-  it is); a `fact-conflict` names its `fact`, a fact role.
+  it is) or `brief-gap` (a business known only by the customer's words: what its content brief still misses, read from
+  the brief's readiness, `brief-gap-questions.mjs`); a `fact-conflict` names its `fact`, a fact role.
 - `choices` has at least one entry, except on a `site-name` question, whose `choices` is an empty list: the name is
   the customer's own words, and a choice could show the held name, so a `site-name` question with a choice is
   rejected. At most one choice is `recommended` (`true` or `false`). `freeText.maxLength` is
@@ -421,6 +422,13 @@ The outcome adds `result`:
 In a scenario a partial run builds the revision its edit produced, and a writer step names a page of that revision.
 
 ### Changes for consumers
+
+- 17/11/2026 (#575), additive: research with no link may ask `topic: "place-choice"` with question code
+  `place_choice_found` (the places the business name and city found), and `topic: "brief-gap"`, id
+  `brief-gap.<field>` (`offerings`, `menu`, `offering-descriptions`, `prices`, `hours`, `phone`, `address`, `booking`,
+  `story`), question code `brief_gap_<field>` with non letters as `_`, one choice `skip` (code `brief_gap_skip`, "Leave
+  it out for now") and free text, which is an owner statement the brief is made again with. The schema stays
+  `tracy-build-question/v1`.
 
 - 17/11/2026 (#575), additive: a question may have `topic: "business-trade"`, asked by the build chat when research
   names no trade (`business-trade-question.mjs`): question code `business_trade` (`{}`), one choice per trade the

@@ -89,54 +89,6 @@ test(
   }
 )
 
-/** An invented model door for the business reading of the owner's words: it quotes the repair service. */
-const READING = {
-  readingDoor: async () => ({
-    state: 'ready',
-    door: {
-      url: 'https://llm.example/v1/chat/completions',
-      key: 'test-key',
-      model: 'invented',
-      effort: 'off'
-    }
-  }),
-  readingFetch: async (_url, init) => {
-    const prompt = JSON.parse(init.body).messages[1].content
-    const ref = [...prompt.matchAll(/^\[([^\]]+)\] \([^)]*\)\n"(.*)"$/gm)].find((m) =>
-      m[2].includes('repairs')
-    )?.[1]
-    const answer = ref
-      ? { services: [{ name: 'Bike repairs', quote: REPAIRS, ref, price: '' }] }
-      : { uspThemes: [] }
-    return Response.json({
-      choices: [{ message: { content: JSON.stringify(answer) }, finish_reason: 'stop' }],
-      usage: { prompt_tokens: 400, completion_tokens: 100, total_tokens: 500 }
-    })
-  }
-}
-const REPAIRS = 'Pellmoor Cycle Workshop repairs bikes in Quarrytown, the same day, from 25 dollars.'
-
-test('the owner words alone still make the research, with no opportunity saved', opts, async () => {
-  const objects = memoryObjects()
-  const { domain } = await bakeryDomain({ png: await pngBytes() })
-  const s = server(db.pool, { domain, objects, gatherDoors: READING })
-  await s.call('POST', '/research', {
-    links: [],
-    name: 'Pellmoor Cycle Workshop',
-    description: REPAIRS
-  })
-  await s.app.buildDraftEngine.settled(await s.accountId())
-  const ended = await s.call('GET', '/engine')
-  const fault = (await db.pool.query('select fault from build_draft')).rows[0]?.fault
-  assert.equal(ended.body.state, 'done', JSON.stringify(fault))
-  assert.equal(await count('wo_opportunity'), 0)
-  const { research } = (
-    await db.pool.query('select research from build_draft where account_id = $1', [await s.accountId()])
-  ).rows[0]
-  assert.equal(research.brief.business.name, 'Pellmoor Cycle Workshop')
-  assert.equal(research.ids, undefined)
-})
-
 test(
   'a research refused for its limit after the place question stops with when, never stuck asking (#575)',
   opts,

@@ -1047,6 +1047,7 @@ export function createWebsiteBuilder(deps) {
       now,
       runtime: ctx.runtime,
       loadDomain,
+      domainDeps,
       linkFields: ctx.linkFields,
       insertOpportunity,
       saveListingSource: ctx.saveListingSource,

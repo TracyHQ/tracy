@@ -55,6 +55,17 @@ var ASK_STRINGS = {
   "ask.question.fact_conflict_item.price": "Your public pages give different values for the price of {item}. Which one is right?",
   "ask.question.place_choice": "We found more than one place on Google Maps under this name. Which one is yours?",
   "ask.choice.place_choice_none": "None of these",
+  "ask.question.place_choice_found": "We looked for your business on Google Maps by its name and city. Is it one of these?",
+  "ask.question.brief_gap_offerings": "What does your business offer? Name your main services or products.",
+  "ask.question.brief_gap_menu": "What is on your menu? Name a few dishes or drinks.",
+  "ask.question.brief_gap_offering_descriptions": "How would you describe what you offer, in a sentence or two each?",
+  "ask.question.brief_gap_prices": "What do your main services or products cost?",
+  "ask.question.brief_gap_hours": "What are your opening hours?",
+  "ask.question.brief_gap_phone": "Which phone number should customers call?",
+  "ask.question.brief_gap_address": "What is your street address, or the area you serve?",
+  "ask.question.brief_gap_booking": "How should customers book with you?",
+  "ask.question.brief_gap_story": "How would you describe your business in a few sentences?",
+  "ask.choice.brief_gap_skip": "Leave it out for now",
   "ask.question.business_trade": "What kind of business is it?",
   "ask.choice.business_trade_food": "Food and drink",
   "ask.choice.business_trade_beauty": "Beauty",
@@ -110,7 +121,7 @@ var CONFLICT_NOUNS = {
 };
 function promptByCode(question, words) {
   const { code, params = {} } = question ?? {};
-  if (code === "main_button" || code === "contact_method" || code === "site_language" || code === "place_choice" || code === "business_trade")
+  if (code === "main_button" || code === "contact_method" || code === "site_language" || code === "place_choice" || code === "place_choice_found" || code === "business_trade" || /^brief_gap_[a-z_]+$/.test(code))
     return words(`ask.question.${code}`);
   const noun = CONFLICT_NOUNS[params?.fact];
   if (!noun) return null;
@@ -130,7 +141,7 @@ function languageNameIn(tag, language) {
 function choiceLabelByCode(choice, words, language) {
   const { code, params = {} } = choice ?? {};
   if (typeof code !== "string") return null;
-  if (/^(contact_method|business_trade)_[a-z]+$/.test(code) || code === "place_choice_none")
+  if (/^(contact_method|business_trade)_[a-z]+$/.test(code) || code === "place_choice_none" || code === "brief_gap_skip")
     return words(`ask.choice.${code}`);
   if (MAIN_BUTTON_CHOICE.test(code)) return words(`ask.choice.${code}`);
   if (code === "site_language_option" && typeof params?.language === "string")
@@ -935,6 +946,17 @@ var tracy_build_chat_default = {
   "ask.source.social": "Social-Media-Profil",
   "ask.question.place_choice": "Wir haben unter diesem Namen mehr als einen Ort in Google Maps gefunden. Welcher ist Ihrer?",
   "ask.choice.place_choice_none": "Keiner davon",
+  "ask.question.place_choice_found": "Wir haben Ihr Unternehmen auf Google Maps nach Name und Stadt gesucht. Ist es einer dieser Orte?",
+  "ask.question.brief_gap_offerings": "Was bietet Ihr Unternehmen an? Nennen Sie Ihre wichtigsten Leistungen oder Produkte.",
+  "ask.question.brief_gap_menu": "Was steht auf Ihrer Karte? Nennen Sie ein paar Gerichte oder Getr\xE4nke.",
+  "ask.question.brief_gap_offering_descriptions": "Wie w\xFCrden Sie Ihr Angebot beschreiben, mit ein oder zwei S\xE4tzen pro Punkt?",
+  "ask.question.brief_gap_prices": "Was kosten Ihre wichtigsten Leistungen oder Produkte?",
+  "ask.question.brief_gap_hours": "Wie sind Ihre \xD6ffnungszeiten?",
+  "ask.question.brief_gap_phone": "Unter welcher Telefonnummer sollen Kunden anrufen?",
+  "ask.question.brief_gap_address": "Wie lautet Ihre Adresse, oder in welchem Gebiet sind Sie t\xE4tig?",
+  "ask.question.brief_gap_booking": "Wie sollen Kunden bei Ihnen buchen?",
+  "ask.question.brief_gap_story": "Wie w\xFCrden Sie Ihr Unternehmen in ein paar S\xE4tzen beschreiben?",
+  "ask.choice.brief_gap_skip": "Vorerst weglassen",
   "ask.question.business_trade": "Was f\xFCr ein Unternehmen ist es?",
   "ask.choice.business_trade_food": "Essen und Trinken",
   "ask.choice.business_trade_beauty": "Beauty",
@@ -1277,6 +1299,17 @@ var tracy_build_chat_default2 = {
   "ask.source.social": "Perfil en redes sociales",
   "ask.question.place_choice": "Hemos encontrado m\xE1s de un lugar en Google Maps con este nombre. \xBFCu\xE1l es el suyo?",
   "ask.choice.place_choice_none": "Ninguno de estos",
+  "ask.question.place_choice_found": "Buscamos tu negocio en Google Maps por su nombre y ciudad. \xBFEs alguno de estos?",
+  "ask.question.brief_gap_offerings": "\xBFQu\xE9 ofrece tu negocio? Nombra tus principales servicios o productos.",
+  "ask.question.brief_gap_menu": "\xBFQu\xE9 hay en tu carta? Nombra algunos platos o bebidas.",
+  "ask.question.brief_gap_offering_descriptions": "\xBFC\xF3mo describir\xEDas lo que ofreces, en una o dos frases cada cosa?",
+  "ask.question.brief_gap_prices": "\xBFCu\xE1nto cuestan tus principales servicios o productos?",
+  "ask.question.brief_gap_hours": "\xBFCu\xE1l es tu horario de apertura?",
+  "ask.question.brief_gap_phone": "\xBFA qu\xE9 n\xFAmero de tel\xE9fono deben llamar los clientes?",
+  "ask.question.brief_gap_address": "\xBFCu\xE1l es tu direcci\xF3n, o la zona en la que trabajas?",
+  "ask.question.brief_gap_booking": "\xBFC\xF3mo deben reservar contigo los clientes?",
+  "ask.question.brief_gap_story": "\xBFC\xF3mo describir\xEDas tu negocio en unas pocas frases?",
+  "ask.choice.brief_gap_skip": "Dejarlo fuera por ahora",
   "ask.question.business_trade": "\xBFQu\xE9 tipo de negocio es?",
   "ask.choice.business_trade_food": "Comida y bebida",
   "ask.choice.business_trade_beauty": "Belleza",
@@ -1619,6 +1652,17 @@ var tracy_build_chat_default3 = {
   "ask.source.social": "Profil sur un r\xE9seau social",
   "ask.question.place_choice": "Nous avons trouv\xE9 plusieurs lieux sur Google Maps sous ce nom. Lequel est le v\xF4tre ?",
   "ask.choice.place_choice_none": "Aucun de ces lieux",
+  "ask.question.place_choice_found": "Nous avons cherch\xE9 votre entreprise sur Google Maps par son nom et sa ville. Est-ce l\u2019un de ces lieux ?",
+  "ask.question.brief_gap_offerings": "Que propose votre entreprise ? Citez vos principaux services ou produits.",
+  "ask.question.brief_gap_menu": "Qu\u2019y a-t-il sur votre carte ? Citez quelques plats ou boissons.",
+  "ask.question.brief_gap_offering_descriptions": "Comment d\xE9cririez-vous ce que vous proposez, en une ou deux phrases chacun ?",
+  "ask.question.brief_gap_prices": "Combien co\xFBtent vos principaux services ou produits ?",
+  "ask.question.brief_gap_hours": "Quels sont vos horaires d\u2019ouverture ?",
+  "ask.question.brief_gap_phone": "Quel num\xE9ro de t\xE9l\xE9phone les clients doivent-ils appeler ?",
+  "ask.question.brief_gap_address": "Quelle est votre adresse, ou la zone que vous desservez ?",
+  "ask.question.brief_gap_booking": "Comment les clients doivent-ils r\xE9server chez vous ?",
+  "ask.question.brief_gap_story": "Comment d\xE9cririez-vous votre entreprise en quelques phrases ?",
+  "ask.choice.brief_gap_skip": "Laisser de c\xF4t\xE9 pour l\u2019instant",
   "ask.question.business_trade": "Quel type d\u2019entreprise est-ce ?",
   "ask.choice.business_trade_food": "Restauration",
   "ask.choice.business_trade_beauty": "Beaut\xE9",
@@ -1961,6 +2005,17 @@ var tracy_build_chat_default4 = {
   "ask.source.social": "Profilo social",
   "ask.question.place_choice": "Abbiamo trovato pi\xF9 di un luogo su Google Maps con questo nome. Qual \xE8 il suo?",
   "ask.choice.place_choice_none": "Nessuno di questi",
+  "ask.question.place_choice_found": "Abbiamo cercato la tua attivit\xE0 su Google Maps per nome e citt\xE0. \xC8 uno di questi luoghi?",
+  "ask.question.brief_gap_offerings": "Che cosa offre la tua attivit\xE0? Indica i tuoi principali servizi o prodotti.",
+  "ask.question.brief_gap_menu": "Che cosa c\u2019\xE8 nel tuo menu? Indica qualche piatto o bevanda.",
+  "ask.question.brief_gap_offering_descriptions": "Come descriveresti ci\xF2 che offri, con una o due frasi ciascuno?",
+  "ask.question.brief_gap_prices": "Quanto costano i tuoi principali servizi o prodotti?",
+  "ask.question.brief_gap_hours": "Quali sono i tuoi orari di apertura?",
+  "ask.question.brief_gap_phone": "Quale numero di telefono devono chiamare i clienti?",
+  "ask.question.brief_gap_address": "Qual \xE8 il tuo indirizzo, o la zona che servi?",
+  "ask.question.brief_gap_booking": "Come devono prenotare i clienti con te?",
+  "ask.question.brief_gap_story": "Come descriveresti la tua attivit\xE0 in poche frasi?",
+  "ask.choice.brief_gap_skip": "Lascialo fuori per ora",
   "ask.question.business_trade": "Che tipo di attivit\xE0 \xE8?",
   "ask.choice.business_trade_food": "Cibo e bevande",
   "ask.choice.business_trade_beauty": "Bellezza",
@@ -2303,6 +2358,17 @@ var tracy_build_chat_default5 = {
   "ask.source.social": "Profiel op sociale media",
   "ask.question.place_choice": "We hebben op Google Maps meer dan \xE9\xE9n plaats met deze naam gevonden. Welke is van u?",
   "ask.choice.place_choice_none": "Geen van deze",
+  "ask.question.place_choice_found": "We hebben je bedrijf op Google Maps gezocht op naam en plaats. Is het een van deze?",
+  "ask.question.brief_gap_offerings": "Wat biedt je bedrijf aan? Noem je belangrijkste diensten of producten.",
+  "ask.question.brief_gap_menu": "Wat staat er op je kaart? Noem een paar gerechten of drankjes.",
+  "ask.question.brief_gap_offering_descriptions": "Hoe zou je beschrijven wat je aanbiedt, in een of twee zinnen per onderdeel?",
+  "ask.question.brief_gap_prices": "Wat kosten je belangrijkste diensten of producten?",
+  "ask.question.brief_gap_hours": "Wat zijn je openingstijden?",
+  "ask.question.brief_gap_phone": "Welk telefoonnummer moeten klanten bellen?",
+  "ask.question.brief_gap_address": "Wat is je adres, of het gebied dat je bedient?",
+  "ask.question.brief_gap_booking": "Hoe moeten klanten bij je boeken?",
+  "ask.question.brief_gap_story": "Hoe zou je je bedrijf in een paar zinnen beschrijven?",
+  "ask.choice.brief_gap_skip": "Voorlopig weglaten",
   "ask.question.business_trade": "Wat voor soort bedrijf is het?",
   "ask.choice.business_trade_food": "Eten en drinken",
   "ask.choice.business_trade_beauty": "Beauty",
@@ -2645,6 +2711,17 @@ var tracy_build_chat_default6 = {
   "ask.source.social": "\u793E\u4EA4\u5A92\u4F53\u4E3B\u9875",
   "ask.question.place_choice": "\u6211\u4EEC\u5728 Google \u5730\u56FE\u4E0A\u627E\u5230\u4E86\u591A\u4E2A\u540C\u540D\u5730\u70B9\u3002\u54EA\u4E00\u4E2A\u662F\u4F60\u7684\uFF1F",
   "ask.choice.place_choice_none": "\u4EE5\u4E0A\u90FD\u4E0D\u662F",
+  "ask.question.place_choice_found": "\u6211\u4EEC\u6309\u540D\u79F0\u548C\u57CE\u5E02\u5728 Google \u5730\u56FE\u4E0A\u67E5\u627E\u4E86\u4F60\u7684\u5546\u5BB6\u3002\u662F\u4EE5\u4E0B\u5176\u4E2D\u4E4B\u4E00\u5417\uFF1F",
+  "ask.question.brief_gap_offerings": "\u4F60\u7684\u5546\u5BB6\u63D0\u4F9B\u4EC0\u4E48\uFF1F\u8BF7\u8BF4\u51FA\u4F60\u7684\u4E3B\u8981\u670D\u52A1\u6216\u4EA7\u54C1\u3002",
+  "ask.question.brief_gap_menu": "\u4F60\u7684\u83DC\u5355\u4E0A\u6709\u4EC0\u4E48\uFF1F\u8BF7\u8BF4\u51FA\u51E0\u9053\u83DC\u6216\u996E\u54C1\u3002",
+  "ask.question.brief_gap_offering_descriptions": "\u4F60\u4F1A\u5982\u4F55\u63CF\u8FF0\u4F60\u63D0\u4F9B\u7684\u4E1C\u897F\uFF0C\u6BCF\u6837\u7528\u4E00\u4E24\u53E5\u8BDD\uFF1F",
+  "ask.question.brief_gap_prices": "\u4F60\u7684\u4E3B\u8981\u670D\u52A1\u6216\u4EA7\u54C1\u4EF7\u683C\u662F\u591A\u5C11\uFF1F",
+  "ask.question.brief_gap_hours": "\u4F60\u7684\u8425\u4E1A\u65F6\u95F4\u662F\u4EC0\u4E48\uFF1F",
+  "ask.question.brief_gap_phone": "\u5BA2\u6237\u5E94\u8BE5\u62E8\u6253\u54EA\u4E2A\u7535\u8BDD\u53F7\u7801\uFF1F",
+  "ask.question.brief_gap_address": "\u4F60\u7684\u8857\u9053\u5730\u5740\u662F\u4EC0\u4E48\uFF0C\u6216\u4F60\u670D\u52A1\u7684\u533A\u57DF\uFF1F",
+  "ask.question.brief_gap_booking": "\u5BA2\u6237\u5E94\u8BE5\u5982\u4F55\u5411\u4F60\u9884\u7EA6\uFF1F",
+  "ask.question.brief_gap_story": "\u4F60\u4F1A\u5982\u4F55\u7528\u51E0\u53E5\u8BDD\u63CF\u8FF0\u4F60\u7684\u5546\u5BB6\uFF1F",
+  "ask.choice.brief_gap_skip": "\u6682\u65F6\u4E0D\u586B",
   "ask.question.business_trade": "\u8FD9\u662F\u4EC0\u4E48\u7C7B\u578B\u7684\u5546\u5BB6\uFF1F",
   "ask.choice.business_trade_food": "\u9910\u996E",
   "ask.choice.business_trade_beauty": "\u7F8E\u5BB9",
@@ -3001,6 +3078,17 @@ var tracy_build_chat_default7 = {
   "ask.source.social": "Trang m\u1EA1ng x\xE3 h\u1ED9i",
   "ask.question.place_choice": "Ch\xFAng t\xF4i t\xECm th\u1EA5y nhi\u1EC1u \u0111\u1ECBa \u0111i\u1EC3m tr\xEAn Google Maps c\xF3 c\xF9ng t\xEAn n\xE0y. \u0110\xE2u l\xE0 \u0111\u1ECBa \u0111i\u1EC3m c\u1EE7a b\u1EA1n?",
   "ask.choice.place_choice_none": "Kh\xF4ng ph\u1EA3i \u0111\u1ECBa \u0111i\u1EC3m n\xE0o \u1EDF tr\xEAn",
+  "ask.question.place_choice_found": "Ch\xFAng t\xF4i \u0111\xE3 t\xECm doanh nghi\u1EC7p c\u1EE7a b\u1EA1n tr\xEAn Google Maps theo t\xEAn v\xE0 th\xE0nh ph\u1ED1. C\xF3 ph\u1EA3i l\xE0 m\u1ED9t trong nh\u1EEFng \u0111\u1ECBa \u0111i\u1EC3m n\xE0y kh\xF4ng?",
+  "ask.question.brief_gap_offerings": "Doanh nghi\u1EC7p c\u1EE7a b\u1EA1n cung c\u1EA5p g\xEC? H\xE3y k\u1EC3 t\xEAn c\xE1c d\u1ECBch v\u1EE5 ho\u1EB7c s\u1EA3n ph\u1EA9m ch\xEDnh.",
+  "ask.question.brief_gap_menu": "Th\u1EF1c \u0111\u01A1n c\u1EE7a b\u1EA1n c\xF3 g\xEC? H\xE3y k\u1EC3 t\xEAn v\xE0i m\xF3n \u0103n ho\u1EB7c \u0111\u1ED3 u\u1ED1ng.",
+  "ask.question.brief_gap_offering_descriptions": "B\u1EA1n m\xF4 t\u1EA3 nh\u1EEFng g\xEC b\u1EA1n cung c\u1EA5p th\u1EBF n\xE0o, m\u1ED7i th\u1EE9 m\u1ED9t hai c\xE2u?",
+  "ask.question.brief_gap_prices": "C\xE1c d\u1ECBch v\u1EE5 ho\u1EB7c s\u1EA3n ph\u1EA9m ch\xEDnh c\u1EE7a b\u1EA1n c\xF3 gi\xE1 bao nhi\xEAu?",
+  "ask.question.brief_gap_hours": "Gi\u1EDD m\u1EDF c\u1EEDa c\u1EE7a b\u1EA1n l\xE0 khi n\xE0o?",
+  "ask.question.brief_gap_phone": "Kh\xE1ch h\xE0ng n\xEAn g\u1ECDi s\u1ED1 \u0111i\u1EC7n tho\u1EA1i n\xE0o?",
+  "ask.question.brief_gap_address": "\u0110\u1ECBa ch\u1EC9 c\u1EE7a b\u1EA1n l\xE0 g\xEC, ho\u1EB7c khu v\u1EF1c b\u1EA1n ph\u1EE5c v\u1EE5?",
+  "ask.question.brief_gap_booking": "Kh\xE1ch h\xE0ng n\xEAn \u0111\u1EB7t l\u1ECBch v\u1EDBi b\u1EA1n b\u1EB1ng c\xE1ch n\xE0o?",
+  "ask.question.brief_gap_story": "B\u1EA1n m\xF4 t\u1EA3 doanh nghi\u1EC7p c\u1EE7a m\xECnh th\u1EBF n\xE0o trong v\xE0i c\xE2u?",
+  "ask.choice.brief_gap_skip": "T\u1EA1m th\u1EDDi b\u1ECF qua",
   "ask.question.business_trade": "Doanh nghi\u1EC7p c\u1EE7a b\u1EA1n thu\u1ED9c lo\u1EA1i n\xE0o?",
   "ask.choice.business_trade_food": "\u0102n u\u1ED1ng",
   "ask.choice.business_trade_beauty": "L\xE0m \u0111\u1EB9p",
@@ -3120,7 +3208,7 @@ var REQUEST_TOO_LONG_SAY = requestTooLongSay(REQUEST_MAX_LENGTH);
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? nameTooLongSay(limit) : answerTooLongSay(limit);
 var SAY_MAX = 300;
 var ACTIONS = ["research", "templates", "plan", "edit", "build", "status", "start-over"];
-var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?, name?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Every call names in language the language the owner writes in, as a two letter code; say every sentence a result gives in that language. Never say the site is built until a build result says built. start-over ONLY when the owner clearly asks to start the whole build over with a new conversation (not only the plan): first without confirm, then with confirm true once the owner agreed.';
+var BUILD_DESCRIPTION = 'tracy_build: the build chat engine. action research {links?, description?, name?, city?} first (an owner with no link: ask the business name and the city it is in, then pass name and city, with their words in description); templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Every call names in language the language the owner writes in, as a two letter code; say every sentence a result gives in that language. Never say the site is built until a build result says built. start-over ONLY when the owner clearly asks to start the whole build over with a new conversation (not only the plan): first without confirm, then with confirm true once the owner agreed.';
 var BUILD_PARAMETERS = Object.freeze({
   type: "object",
   properties: {
@@ -3138,6 +3226,10 @@ var BUILD_PARAMETERS = Object.freeze({
     name: {
       type: "string",
       description: "For research with no link: the business name exactly as the owner gave it."
+    },
+    city: {
+      type: "string",
+      description: "For research with no link: the city or town the business is in, as the owner gave it."
     },
     request: {
       type: "string",
@@ -3257,11 +3349,13 @@ function startArgsOf(args) {
     const links = (Array.isArray(args.links) ? args.links : []).map(text).filter((l) => l !== "");
     const description = text(args.description);
     const name2 = text(args.name);
+    const city = text(args.city);
     return {
       action: "research",
       ...links.length ? { links: links.slice(0, LINKS_MAX) } : {},
       ...description !== "" ? { description } : {},
-      ...name2 !== "" ? { name: name2 } : {}
+      ...name2 !== "" ? { name: name2 } : {},
+      ...city !== "" ? { city } : {}
     };
   }
   if (args?.action === "plan") {
@@ -3808,16 +3902,22 @@ ${JSON.stringify(answer)}`;
     if (action === "research") {
       const links = (Array.isArray(args.links) ? args.links : []).map(text).filter((l) => l !== "").slice(0, LINKS_MAX);
       const description = text(args.description);
-      if (links.length === 0 && description === "")
+      const name2 = text(args.name);
+      const city = text(args.city);
+      if (links.length === 0 && description === "" && name2 === "")
         return {
           refused: true,
-          next: "Call tracy_build with action research and the owner's links or their own words about the business."
+          next: "Call tracy_build with action research and the owner's links, or with no link the business name and city the owner gave."
         };
-      const name2 = text(args.name);
       request = [
         "POST",
         "/research",
-        { links, ...description !== "" ? { description } : {}, ...name2 !== "" ? { name: name2 } : {} }
+        {
+          links,
+          ...description !== "" ? { description } : {},
+          ...name2 !== "" ? { name: name2 } : {},
+          ...city !== "" ? { city } : {}
+        }
       ];
     } else if (action === "plan") {
       if (typeof args.request === "string" && [...args.request.trim()].length > REQUEST_MAX_LENGTH)

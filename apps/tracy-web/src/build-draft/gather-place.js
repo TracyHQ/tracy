@@ -19,9 +19,12 @@ import {
 } from 'website-opportunities/domain'
 import { EngineStepError } from './engine-steps.js'
 
-/** The stop of a research whose Google link matches more than one place, with the question to ask. */
-export function placeAmbiguousError(candidates) {
-  const question = placeChoiceQuestionOf(candidates)
+/**
+ * The stop of a research whose Google link matches more than one place, or whose business name and city found places
+ * (`found`, `owner-research.js`), with the question to ask.
+ */
+export function placeAmbiguousError(candidates, { found = false } = {}) {
+  const question = placeChoiceQuestionOf(candidates, { found })
   return Object.assign(
     new EngineStepError('place_ambiguous', 'the Google link matches more than one place', { noRerun: true }),
     { details: { question, questionId: question.id } }

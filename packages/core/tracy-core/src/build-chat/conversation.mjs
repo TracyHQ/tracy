@@ -143,6 +143,19 @@ export const ASK_STRINGS = {
   'ask.question.place_choice':
     'We found more than one place on Google Maps under this name. Which one is yours?',
   'ask.choice.place_choice_none': 'None of these',
+  'ask.question.place_choice_found':
+    'We looked for your business on Google Maps by its name and city. Is it one of these?',
+  'ask.question.brief_gap_offerings': 'What does your business offer? Name your main services or products.',
+  'ask.question.brief_gap_menu': 'What is on your menu? Name a few dishes or drinks.',
+  'ask.question.brief_gap_offering_descriptions':
+    'How would you describe what you offer, in a sentence or two each?',
+  'ask.question.brief_gap_prices': 'What do your main services or products cost?',
+  'ask.question.brief_gap_hours': 'What are your opening hours?',
+  'ask.question.brief_gap_phone': 'Which phone number should customers call?',
+  'ask.question.brief_gap_address': 'What is your street address, or the area you serve?',
+  'ask.question.brief_gap_booking': 'How should customers book with you?',
+  'ask.question.brief_gap_story': 'How would you describe your business in a few sentences?',
+  'ask.choice.brief_gap_skip': 'Leave it out for now',
   'ask.question.business_trade': 'What kind of business is it?',
   'ask.choice.business_trade_food': 'Food and drink',
   'ask.choice.business_trade_beauty': 'Beauty',
@@ -213,7 +226,9 @@ function promptByCode(question, words) {
     code === 'contact_method' ||
     code === 'site_language' ||
     code === 'place_choice' ||
-    code === 'business_trade'
+    code === 'place_choice_found' ||
+    code === 'business_trade' ||
+    /^brief_gap_[a-z_]+$/.test(code)
   )
     return words(`ask.question.${code}`)
   const noun = CONFLICT_NOUNS[params?.fact]
@@ -244,7 +259,11 @@ function languageNameIn(tag, language) {
 function choiceLabelByCode(choice, words, language) {
   const { code, params = {} } = choice ?? {}
   if (typeof code !== 'string') return null
-  if (/^(contact_method|business_trade)_[a-z]+$/.test(code) || code === 'place_choice_none')
+  if (
+    /^(contact_method|business_trade)_[a-z]+$/.test(code) ||
+    code === 'place_choice_none' ||
+    code === 'brief_gap_skip'
+  )
     return words(`ask.choice.${code}`)
   if (MAIN_BUTTON_CHOICE.test(code)) return words(`ask.choice.${code}`)
   if (code === 'site_language_option' && typeof params?.language === 'string')

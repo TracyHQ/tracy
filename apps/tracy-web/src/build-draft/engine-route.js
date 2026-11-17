@@ -22,6 +22,7 @@ import { requestRefusalOf } from './engine-revise.js'
 import { BUSY_SAY, engineStateOf } from './engine-state.js'
 import { readEngineRow } from './engine-store.js'
 import { placeAnswerOf, placeAsked } from './gather-place.js'
+import { ownerAnswersWaiting, ownerInputsOf } from './owner-research.js'
 import { tryLaterSay } from './spend-limits.js'
 import { createDraft, editPlan } from './store.js'
 
@@ -157,6 +158,10 @@ export function buildEngineRoutes({
         return placeAnswerOf(row, row.engine.inputs?.links) === undefined
           ? json(c, await engine.read(accountId))
           : answer(c, await engine.research(accountId, row.engine.inputs, row))
+      // The owner answered what the brief of their words still missed (`owner-research.js`): the brief is made again
+      // with the answers before any plan.
+      if (ownerAnswersWaiting(row))
+        return answer(c, await engine.research(accountId, ownerInputsOf(row), row))
       if (!row.research?.profile) return refuse(c, 'NO_RESEARCH')
       const chosen = row.plan?.look?.template ?? row.template
       if (!chosen) return refuse(c, 'NO_TEMPLATE')

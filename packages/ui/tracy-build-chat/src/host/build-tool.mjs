@@ -184,7 +184,7 @@ const SAY_MAX = 300
 const ACTIONS = ['research', 'templates', 'plan', 'edit', 'build', 'status', 'start-over']
 
 export const BUILD_DESCRIPTION =
-  'tracy_build: the build chat engine. action research {links?, description?, name?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Every call names in language the language the owner writes in, as a two letter code; say every sentence a result gives in that language. Never say the site is built until a build result says built. start-over ONLY when the owner clearly asks to start the whole build over with a new conversation (not only the plan): first without confirm, then with confirm true once the owner agreed.'
+  'tracy_build: the build chat engine. action research {links?, description?, name?, city?} first (an owner with no link: ask the business name and the city it is in, then pass name and city, with their words in description); templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; build ONLY after the owner pressed Approve on the plan review, to create the site and build it from that plan (call it again only when the owner asks how a build that said building is going); status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. Each next in a result is private guidance: never repeat it to the owner. A colour change is edit with changes:[{field:"look.accent", value:"#RRGGBB"}], the field name exact and the value a hex colour you choose. stopped: say its sentence and stop; when it says rerun, ask no question about it, and call the tool once more with exactly the arguments in its again, never with action status, only after the owner sends "Please try again.". unchanged: say its sentence; the plan did not change. Every call names in language the language the owner writes in, as a two letter code; say every sentence a result gives in that language. Never say the site is built until a build result says built. start-over ONLY when the owner clearly asks to start the whole build over with a new conversation (not only the plan): first without confirm, then with confirm true once the owner agreed.'
 
 export const BUILD_PARAMETERS = Object.freeze({
   type: 'object',
@@ -204,6 +204,10 @@ export const BUILD_PARAMETERS = Object.freeze({
     name: {
       type: 'string',
       description: 'For research with no link: the business name exactly as the owner gave it.'
+    },
+    city: {
+      type: 'string',
+      description: 'For research with no link: the city or town the business is in, as the owner gave it.'
     },
     request: {
       type: 'string',
@@ -444,7 +448,8 @@ const ACTION_OF_STEP = Object.freeze({ research: 'research', brand: 'plan', comp
  * links and words, plan with its request. `restart` is never kept: a stopped start over already discarded the plan, so
  * plan alone composes the first plan again.
  * @param {any} args
- * @returns {{ action: string, links?: string[], description?: string, name?: string, request?: string } | null}
+ * @returns {{ action: string, links?: string[], description?: string, name?: string, city?: string,
+ *   request?: string } | null}
  */
 function startArgsOf(args) {
   if (args?.action === 'research') {
@@ -453,11 +458,13 @@ function startArgsOf(args) {
       .filter((/** @type {string} */ l) => l !== '')
     const description = text(args.description)
     const name = text(args.name)
+    const city = text(args.city)
     return {
       action: 'research',
       ...(links.length ? { links: links.slice(0, LINKS_MAX) } : {}),
       ...(description !== '' ? { description } : {}),
-      ...(name !== '' ? { name } : {})
+      ...(name !== '' ? { name } : {}),
+      ...(city !== '' ? { city } : {})
     }
   }
   if (args?.action === 'plan') {
@@ -1268,16 +1275,22 @@ export function createBuildTool({
         .filter((/** @type {string} */ l) => l !== '')
         .slice(0, LINKS_MAX)
       const description = text(args.description)
-      if (links.length === 0 && description === '')
+      const name = text(args.name)
+      const city = text(args.city)
+      if (links.length === 0 && description === '' && name === '')
         return {
           refused: true,
-          next: "Call tracy_build with action research and the owner's links or their own words about the business."
+          next: "Call tracy_build with action research and the owner's links, or with no link the business name and city the owner gave."
         }
-      const name = text(args.name)
       request = [
         'POST',
         '/research',
-        { links, ...(description !== '' ? { description } : {}), ...(name !== '' ? { name } : {}) }
+        {
+          links,
+          ...(description !== '' ? { description } : {}),
+          ...(name !== '' ? { name } : {}),
+          ...(city !== '' ? { city } : {})
+        }
       ]
     } else if (action === 'plan') {
       // A request longer than a change request holds is never sent: the owner writes a shorter one.

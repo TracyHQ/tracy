@@ -14,6 +14,8 @@
 import { resumeRequest } from 'website-opportunities/src/place-requests.js'
 import { researchItemsOf, researchRunOf } from 'website-opportunities/src/research-progress.js'
 import { reviewSourcesRequired } from 'website-opportunities/src/tripadvisor-research.js'
+import { findOwnBusiness } from './own-site.js'
+import { ownerBrief } from './owner-business.js'
 
 /**
  * How many times a business's research that paused (a source's time or page budget ran out, its cursor kept) is
@@ -152,7 +154,7 @@ async function withRunStates(pool, opportunityId, rows) {
 
 /**
  * The research service the build chat calls: the same helpers, one account's business at a time.
- * @param {object} h `pool`, `config`, `now`, `runtime`, `loadDomain`, `linkFields`, `insertOpportunity`,
+ * @param {object} h `pool`, `config`, `now`, `runtime`, `loadDomain`, `domainDeps`, `linkFields`, `insertOpportunity`,
  *   `saveListingSource`, `startResearch`, `jobsOfOpportunity`, `opportunityOf`, `makeBrief`
  */
 export function createBusinessResearch(h) {
@@ -186,6 +188,14 @@ export function createBusinessResearch(h) {
       return { state: 'failed', code: job.last_error?.code ?? 'RESEARCH_FAILED', sources }
     },
     /** The step chain's content brief of the researched business (`createRevision`): `{revision}` or `{error}`. */
-    brief: ({ accountId, opportunityId }) => h.makeBrief({ accountId, opportunityId })
+    brief: ({ accountId, opportunityId }) => h.makeBrief({ accountId, opportunityId }),
+    /**
+     * The places a business name and city find (Build from my business's own search, `findOwnBusiness`, its hourly
+     * count shared): `{candidates}` or `{refusal}`.
+     */
+    find: async ({ accountId, query }) =>
+      findOwnBusiness(h, { accountId, query, domain: await h.loadDomain() }),
+    /** A business known only by its owner's words, and its content brief (`owner-business.js`). */
+    ownerBrief: (input) => ownerBrief(h, input)
   }
 }

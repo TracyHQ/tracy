@@ -13,8 +13,9 @@ export const QUESTION_SCHEMA = 'tracy-build-question/v1'
 export const ANSWER_SCHEMA = 'tracy-build-answer/v1'
 /**
  * What a question may be about (`business-trade`: what kind of business it is, when research could not tell,
- * `business-trade-question.mjs`): the three agreed cases, facts that disagree between sources, the site name, and which
- * of several Google places is the business's.
+ * `business-trade-question.mjs`): the three agreed cases, facts that disagree between sources, the site name, which
+ * of several Google places is the business's, and a field the content brief of a business known only by its owner's
+ * words still misses (`brief-gap`, `brief-gap-questions.mjs`).
  */
 export const QUESTION_TOPICS = Object.freeze([
   'main-button',
@@ -23,7 +24,8 @@ export const QUESTION_TOPICS = Object.freeze([
   'fact-conflict',
   'site-name',
   'place-choice',
-  'business-trade'
+  'business-trade',
+  'brief-gap'
 ])
 /** The topic of the free text question for a name the site may show: it carries no choice. */
 export const SITE_NAME_TOPIC = 'site-name'

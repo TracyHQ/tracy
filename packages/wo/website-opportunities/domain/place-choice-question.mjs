@@ -19,6 +19,9 @@ export const PLACE_CHOICES_MAX = 5
 export const PLACE_CHOICE_PROMPT =
   'We found more than one place on Google Maps under this name. Which one is yours?'
 export const PLACE_CHOICE_NONE_LABEL = 'None of these'
+/** The question when the places were found by the business name and city the owner gave (no link, #575). */
+export const PLACE_CHOICE_FOUND_PROMPT =
+  'We looked for your business on Google Maps by its name and city. Is it one of these?'
 
 /** A text cut to the card's limit (80 characters for a label and a detail), counted by code point. */
 function clip(text, max = 80) {
@@ -36,8 +39,10 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
  * The question for the candidates of an ambiguous Google link (`{provider, providerId, name, address?}`, as
  * `pickerCandidateOf` makes them). A candidate's choice id is its place id, so the answer names the place itself.
  * @param {Array<{provider?: string, providerId: string, name: string, address?: string}>} candidates
+ * @param {{found?: boolean}} [opts] `found`: the places come from a search by the name and city the owner gave, not
+ *   from a Google link (one place may be offered then: the owner still says whether it is theirs)
  */
-export function placeChoiceQuestionOf(candidates) {
+export function placeChoiceQuestionOf(candidates, { found = false } = {}) {
   const seen = new Set()
   const offered = (Array.isArray(candidates) ? candidates : [])
     .filter((c) => isText(c?.providerId) && isText(c?.name) && c.providerId !== PLACE_CHOICE_NONE)
@@ -63,11 +68,11 @@ export function placeChoiceQuestionOf(candidates) {
   ]
   return contractQuestionOf(
     PLACE_CHOICE_TOPIC,
-    PLACE_CHOICE_PROMPT,
+    found ? PLACE_CHOICE_FOUND_PROMPT : PLACE_CHOICE_PROMPT,
     choices,
     null,
     FREE_TEXT_MAX[PLACE_CHOICE_TOPIC],
-    { code: 'place_choice' }
+    { code: found ? 'place_choice_found' : 'place_choice' }
   )
 }
 
