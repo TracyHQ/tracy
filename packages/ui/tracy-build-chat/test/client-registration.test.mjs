@@ -9,6 +9,7 @@ import path from 'node:path'
 import { after, test } from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { build } from 'esbuild'
+import { linkLineOf } from '../../../core/tracy-core/src/build-chat/index.mjs'
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const out = mkdtempSync(path.join(tmpdir(), 'build-chat-client-'))
@@ -59,6 +60,13 @@ const bundled = await build({
 const file = path.join(out, 'client.mjs')
 writeFileSync(file, bundled.outputFiles[0].text)
 const client = await import(pathToFileURL(file).href)
+
+/** The host tree a function component draws, its own hook free components unwrapped (shallow, no React). */
+function drawn(element) {
+  let tree = element
+  while (tree && typeof tree.type === 'function') tree = tree.type(tree.props)
+  return tree
+}
 
 const BUILD = 'session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e'
 const OTHER = 'session-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e'
@@ -129,6 +137,7 @@ test('switch on: five turn tails, the review bar ahead of dsh, the working line,
       'tracy_build:plan',
       'tracy_build:working',
       'tracy_build:retry',
+      'tracy_build:superseded',
       'tracy_build:build',
       'tracy_build:history',
       'tracy_build:handoff'
@@ -315,8 +324,7 @@ test('a call answered running spins only while it waits: in the history its row 
   client.applyWith(r.ctx, { switches: switchBoard(true), engine: null })
   const view = r.of('tool.call.toolview')[0].component
   const rowOf = (props) => {
-    const element = view({ ...props, sessionId: BUILD })
-    const tree = element.type(element.props)
+    const tree = drawn(view({ ...props, sessionId: BUILD }))
     // The row is the first child; the link lines (#609) may follow it.
     return [tree.props.children].flat()[0].props
   }
@@ -337,12 +345,13 @@ test('a research call shows one line per link: reading while it runs, what came 
   client.applyWith(r.ctx, { switches: switchBoard(true), engine: null })
   const view = r.of('tool.call.toolview')[0].component
   const linesOf = (props) => {
-    const element = view({ ...props, sessionId: BUILD })
-    const kids = [element.type(element.props).props.children].flat()
+    const kids = [drawn(view({ ...props, sessionId: BUILD })).props.children].flat()
+    // A finished research is one done line (#575): its link lines are what it opens to.
+    if (kids[0]?.props?.links) return kids[0].props.links.map((line) => linkLineOf(line, client.english))
     const lines = kids[1]
     if (!lines) return []
     const list = lines.type(lines.props)
-    return [list.props.children].flat().map((li) => li.props.children)
+    return [list.props.children].flat().map((li) => li.props.children[1].props.children)
   }
   const call = {
     argsRaw: JSON.stringify({
@@ -486,4 +495,50 @@ test('the stop card: published on the last turn of the session with the latest s
   // The next call clears the stop at once; the last turn stays published for the engine door's read.
   feed(turnStart(3))
   assert.equal(feed(call(3, 'b', 'plan')).value.stop, null)
+})
+
+/** A selector list split at its own commas, not at the commas inside :has() or :not(). */
+function topLevelSelectors(list) {
+  const out = ['']
+  let depth = 0
+  for (const ch of list) {
+    if (ch === '(') depth += 1
+    if (ch === ')') depth -= 1
+    if (ch === ',' && depth === 0) out.push('')
+    else out[out.length - 1] += ch
+  }
+  return out.map((x) => x.trim()).filter(Boolean)
+}
+
+test('the build session chrome rules mount only while the build chat is switched on (#575)', () => {
+  const head = new Set()
+  const element = () => {
+    const e = { id: '', textContent: '', remove: () => head.delete(e) }
+    return e
+  }
+  globalThis.document = {
+    getElementById: (id) => [...head].find((e) => e.id === id) ?? null,
+    createElement: element,
+    head: { appendChild: (e) => head.add(e) }
+  }
+  try {
+    const board = switchBoard(true)
+    client.applyWith(recorder().ctx, { switches: board })
+    const chrome = () => [...head].filter((e) => e.id === 'tracy-build-chat-session-chrome')
+    assert.equal(chrome().length, 1)
+    // Every rule is scoped to a build chat session: nothing reaches another chat.
+    const rules = chrome()[0]
+      .textContent.split('}')
+      .filter((r) => r.includes('{'))
+    assert.ok(rules.length > 0)
+    for (const rule of rules)
+      for (const selector of topLevelSelectors(rule.slice(0, rule.indexOf('{'))))
+        assert.match(selector, /^\[data-conversation-session\^="session-build-"\] /)
+    board.flip(false)
+    assert.equal(chrome().length, 0, 'switched off, dsh draws its own chrome again')
+    board.flip(true)
+    assert.equal(chrome().length, 1)
+  } finally {
+    delete globalThis.document
+  }
 })

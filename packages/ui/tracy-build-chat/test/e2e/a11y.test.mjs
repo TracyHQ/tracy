@@ -16,13 +16,13 @@ import path from 'node:path'
 import { after, test } from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { build } from 'esbuild'
-import { DSH_COLUMN_CSS } from './dsh-column.css.mjs'
-import { DESIGN_NOT_BUILDABLE_SAY, SITE_NOT_STARTED_SAY } from '../../src/host/build-tool.mjs'
 import {
   STAGES,
   stageDocuments,
   TEMPLATES
 } from '../../../../core/tracy-core/test/fixtures/build-chat/stages.mjs'
+import { DESIGN_NOT_BUILDABLE_SAY, SITE_NOT_STARTED_SAY } from '../../src/host/build-tool.mjs'
+import { DSH_COLUMN_CSS } from './dsh-column.css.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(here, '../../../../..')
@@ -137,6 +137,8 @@ const STATES = [
   ['not-started', 'progress', { run: { notStarted: 'site-not-started' } }],
   ['not-started-design', 'progress', { run: { notStarted: 'design-not-buildable' } }],
   ['working', 'working', {}],
+  ['research-working', 'chat', { stage: 'working' }],
+  ['research-done', 'chat', { stage: 'done', folded: true }],
   ['try-again', 'retry', { results: [STOPPED] }],
   ['try-again-second', 'retry', { results: [STOPPED, STOPPED] }],
   ['try-again-no-rerun', 'retry', { results: [STOPPED_FOR_GOOD] }],
@@ -243,6 +245,8 @@ const measure = (page) =>
       .filter((x) => x.h > 0 && x.h < 40)
     const clipped = [...document.querySelectorAll('#root *')]
       .filter((e) => !/Shimmer/.test(String(e.className)))
+      // a line for screen readers only is clipped on purpose
+      .filter((e) => e.getBoundingClientRect().width > 1)
       .filter((e) => {
         const s = getComputedStyle(e)
         return (
@@ -530,30 +534,106 @@ test('change request note: collapsed lines, a reason for what was not done, dism
   await page.close()
 })
 
-test('working line sits in the message column of dsh at phone, tablet and desktop width', async () => {
-  for (const width of [390, 768, 1280]) {
-    const theme = width === 390 ? 'dark' : 'light'
-    const { page } = await open(browser, { width, height: 800 }, theme, code)
-    await mount(page, 'dsh-column', {})
-    await page.waitForSelector('[data-build-working]')
-    if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${TAG}-dock-column-${width}-${theme}.png`) })
-    const edges = await page.evaluate(() => {
-      const box = (sel) => {
-        const r = document.querySelector(sel).getBoundingClientRect()
-        return { left: r.left, right: r.right }
-      }
-      return { message: box('.dsh-column'), dock: box('.tv-bc-dock') }
-    })
-    assert.ok(
-      Math.abs(edges.dock.left - edges.message.left) <= 1,
-      `at ${width} the working line starts at ${edges.dock.left}, the message column at ${edges.message.left}`
-    )
-    assert.ok(
-      Math.abs(edges.dock.right - edges.message.right) <= 1,
-      `at ${width} the working line ends at ${edges.dock.right}, the message column at ${edges.message.right}`
-    )
+/** What the owner can see of the build chat scene: visible text of the pieces the chrome rules govern. */
+const sceneSeen = (page) =>
+  page.evaluate(() => {
+    // Drawn for the eye: rendered (not skipped under a hidden="until-found" fold), and more than a screen reader's 1px.
+    const shown = (e) => {
+      const r = e.getBoundingClientRect()
+      return e.checkVisibility({ visibilityProperty: true }) && r.width > 1 && r.height > 1
+    }
+    const texts = (selector) =>
+      [...document.querySelectorAll(selector)].filter(shown).map((e) => e.innerText.trim())
+    return {
+      rows: texts('.tv-bc-toolrow'),
+      header: texts('[data-step-process] > div:not([data-step-process-body]) button'),
+      think: texts('[data-variant="think"]'),
+      running: texts('[data-chat-running]'),
+      ask: texts('[data-tool="ask_user_question"]'),
+      failed: texts('[data-state="error"]'),
+      control: texts('[data-chat-flow-kind="turn-process"]'),
+      dock: texts('.tv-bc-dock'),
+      dockLive: [...document.querySelectorAll('.tv-bc-dock[aria-live="polite"]')].map((e) => e.textContent)
+    }
+  })
+
+const PROGRESS_SHOTS = process.env.PROGRESS_SHOTS ?? null
+if (PROGRESS_SHOTS) mkdirSync(PROGRESS_SHOTS, { recursive: true })
+
+test('research working: one progress block in the conversation, no tool chrome, nothing drawn twice', async () => {
+  for (const theme of THEMES) {
+    const { page, errors } = await open(browser, VIEWPORTS[1], theme, code)
+    await mount(page, 'chat', { stage: 'working', failedTool: true })
+    await page.getByText('Reading your links').first().waitFor()
+    if (PROGRESS_SHOTS)
+      await page.screenshot({ path: path.join(PROGRESS_SHOTS, `research-working-${theme}.png`) })
+    const seen = await sceneSeen(page)
+    assert.equal(seen.rows.length, 1, `one block, saw ${JSON.stringify(seen.rows)}`)
+    assert.match(seen.rows[0], /^Reading your links/)
+    for (const line of ['Google Maps: read', 'example-court.example: reading', 'Instagram: reading'])
+      assert.ok(seen.rows[0].includes(line), `the block names ${line}`)
+    assert.ok(!seen.rows[0].includes('Waiting for you to choose'), 'the call it carried on gave way')
+    assert.deepEqual(seen.header, [], 'no Calling tools header')
+    assert.deepEqual(seen.think, [], 'no Think row')
+    assert.deepEqual(seen.running, [], 'no Thinking for line')
+    assert.deepEqual(seen.ask, [], 'no settled Ask question summary')
+    assert.deepEqual(seen.dock, [], 'nothing drawn again above the input')
+    assert.equal(seen.failed.length, 1, 'an error is never hidden')
+    // The step is still announced politely, once, without being drawn twice.
+    assert.deepEqual(seen.dockLive, ['Reading your links'])
+    assert.deepEqual(errors, [])
     await page.close()
   }
+})
+
+test('research done: one short done line, folded turn or not, opened by keyboard', async () => {
+  for (const theme of THEMES) {
+    const { page, errors } = await open(browser, VIEWPORTS[1], theme, code)
+    await mount(page, 'chat', { stage: 'done', folded: true })
+    await page.getByText('Read 3 sources').waitFor()
+    if (PROGRESS_SHOTS)
+      await page.screenshot({ path: path.join(PROGRESS_SHOTS, `research-done-${theme}.png`) })
+    const seen = await sceneSeen(page)
+    assert.equal(seen.rows.length, 1)
+    assert.match(seen.rows[0], /^Read 3 sources/)
+    assert.ok(!/reading|: read/.test(seen.rows[0]), 'the per link lines are folded into the done line')
+    assert.deepEqual(seen.control, [], 'no whole turn control')
+    assert.deepEqual(seen.header, [])
+    // The line opens on Enter to show what each link gave.
+    const head = page.getByRole('button', { name: /Read 3 sources/ })
+    await head.focus()
+    await page.keyboard.press('Enter')
+    await page.getByText('Instagram: read').waitFor()
+    assert.equal(await page.getByRole('button', { name: /Read 3 sources/, expanded: true }).count(), 1)
+    if (PROGRESS_SHOTS && theme === 'light')
+      await page.screenshot({ path: path.join(PROGRESS_SHOTS, `research-done-open-${theme}.png`) })
+    assert.deepEqual(errors, [])
+    await page.close()
+  }
+})
+
+test('reload: the same log draws the same single done line', async () => {
+  const { page } = await open(browser, VIEWPORTS[0], 'light', code)
+  await mount(page, 'chat', { stage: 'done', folded: true })
+  const before = (await sceneSeen(page)).rows
+  await page.reload()
+  await page.addScriptTag({ content: code.js })
+  await mount(page, 'chat', { stage: 'done', folded: true })
+  await page.getByText('Read 3 sources').waitFor()
+  assert.deepEqual((await sceneSeen(page)).rows, before)
+  assert.equal(before.length, 1)
+  await page.close()
+})
+
+test('the chrome rules reach build chats only: another chat keeps every dsh row', async () => {
+  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
+  await mount(page, 'chat', { session: 'other', stage: 'working' })
+  const seen = await sceneSeen(page)
+  assert.deepEqual(seen.header, ['Calling tools'])
+  assert.deepEqual(seen.running, ['Thinking for 27s ···'])
+  // dsh's collapsed group keeps its rows folded there, as dsh decides.
+  assert.deepEqual(seen.think, [])
+  await page.close()
 })
 
 test('Try again: reached by Tab, pressed with Space, one fixed message, gone while it goes', async () => {

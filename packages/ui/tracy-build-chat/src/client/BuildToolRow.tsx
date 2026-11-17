@@ -1,8 +1,13 @@
 /**
  * The row that stands for one `tracy_build` call in the conversation (#609), in place of dsh's generic tool card,
  * which would show the owner the call's JSON. One quiet line in dsh's own process row (`DisclosureRow`): what the
- * step did, in plain words, and nothing to open. An answer meant only for the model (refused, stale, idle) draws
- * nothing. The cards themselves are drawn at the turn's tail (`tails.tsx`).
+ * step does or did, in plain words. An answer meant only for the model (refused, stale, idle) draws nothing. The
+ * cards themselves are drawn at the turn's tail (`tails.tsx`).
+ *
+ * One progress block per working step (#575, the build chat mock, screen 2): the row of the call that waits is the
+ * block, its title the step the engine really runs and one line per link under it, updated in place. A call that a
+ * later call carried on draws nothing (`call-supersede.ts`), and a finished research settles into one done line,
+ * "Read 3 sources" with the business, that opens to show what each link gave.
  */
 import {
   DisclosureRow,
@@ -11,14 +16,18 @@ import {
   IconSparkleRegular,
   IconWarningOutlineRegular
 } from '@deepseek-ai/dsh-client-ui-primitives'
-import { buildToolRowOf, type BuildToolRow } from '@tracy/core/build-chat'
+import { type BuildToolRow, buildToolRowOf } from '@tracy/core/build-chat'
 import { useSyncExternalStore } from 'react'
+import { rowAfterSupersede, type SupersededCalls } from './call-supersede'
 import { type EngineFeed, type EngineSeen, rowOfRunning } from './engine-feed'
 import { LinkReadLines } from './LinkReadLines'
+import { ResearchDone } from './ResearchDone'
 import type { StringKey, Translate } from './strings'
 
 /** The call as dsh's tool tree hands it to a keyed tool view (`tool.call.toolview`). */
 export interface ToolViewProps {
+  /** The call's id, the same at every stage (dsh's owner props). */
+  callId?: string
   phase: 'preparing' | 'start' | 'result'
   block: {
     argsRaw?: string
@@ -41,10 +50,12 @@ const WORKING_TITLES: Readonly<Record<string, StringKey>> = {
   'start-over': 'tool.working.startOver'
 }
 
-function titleOf(row: BuildToolRow, t: Translate): string {
+export function titleOf(row: BuildToolRow, t: Translate): string {
   if (row.kind === 'research') {
-    if (row.sources === 0) return t('tool.research.none')
-    return t(row.sources === 1 ? 'tool.research.one' : 'tool.research.other', { count: row.sources })
+    // A research finished on a later status call names its links in the answer, not in that call's arguments.
+    const sources = Math.max(row.sources, row.links.length)
+    if (sources === 0) return t('tool.research.none')
+    return t(sources === 1 ? 'tool.research.one' : 'tool.research.other', { count: sources })
   }
   if (row.kind === 'waiting') return t('tool.waiting.place')
   if (row.kind === 'working') {
@@ -94,21 +105,74 @@ export function BuildToolRow({
   view,
   t,
   engine,
-  live
+  superseded
 }: {
   view: ToolViewProps
   t: Translate
   /** The engine's running step, read while this call waits (`engine-feed.ts`); none reads only the call itself. */
   engine?: EngineFeed | undefined
-  /** What the engine said, once `LiveBuildToolRow` read it. */
-  live?: EngineSeen | null
+  /** The calls a later build call carried on (`call-supersede.ts`); none keeps every row. */
+  superseded?: SupersededCalls | undefined
 }) {
-  // A call that still waits reads the engine through its own component: a settled row never subscribes.
-  if (engine && live === undefined && view.phase !== 'result')
-    return <LiveBuildToolRow view={view} t={t} engine={engine} />
+  // A call that still waits reads the engine; a settled one asks whether a later call carried it on.
+  if (view.phase !== 'result')
+    return engine ? (
+      <LiveBuildToolRow view={view} t={t} engine={engine} />
+    ) : (
+      <RowOf view={view} t={t} live={null} />
+    )
+  if (superseded && view.callId)
+    return <SettledBuildToolRow view={view} t={t} superseded={superseded} callId={view.callId} />
+  return <RowOf view={view} t={t} live={null} />
+}
+
+/** The row of a waiting call, redrawn each time the engine's running step changes. */
+function LiveBuildToolRow({ view, t, engine }: { view: ToolViewProps; t: Translate; engine: EngineFeed }) {
+  const live = useSyncExternalStore(engine.subscribe, engine.read, () => null)
+  return <RowOf view={view} t={t} live={live} />
+}
+
+/** The row of an answered call, gone once a later call carried its step on. */
+function SettledBuildToolRow({
+  view,
+  t,
+  superseded,
+  callId
+}: {
+  view: ToolViewProps
+  t: Translate
+  superseded: SupersededCalls
+  callId: string
+}) {
+  const gone = useSyncExternalStore(
+    superseded.subscribe,
+    () => superseded.has(callId),
+    () => false
+  )
+  return <RowOf view={view} t={t} live={null} gone={gone} />
+}
+
+function RowOf({
+  view,
+  t,
+  live,
+  gone = false
+}: {
+  view: ToolViewProps
+  t: Translate
+  live: EngineSeen | null
+  gone?: boolean
+}) {
   const own = toolRowOfView(view)
-  const row = own === null ? null : rowOfRunning(own, live ?? null)
+  const row = rowAfterSupersede(own === null ? null : rowOfRunning(own, live), gone)
   if (row === null) return null
+  // A finished research is one done line that opens to its links (`ResearchDone`).
+  if (row.kind === 'research' && row.links.length > 0)
+    return (
+      <div className="tv-bc-toolrow" data-build-tool={row.kind}>
+        <ResearchDone title={titleOf(row, t)} business={row.business} links={row.links} t={t} />
+      </div>
+    )
   const Icon = ICONS[row.kind]
   return (
     <div className="tv-bc-toolrow" data-build-tool={row.kind}>
@@ -131,10 +195,4 @@ export function BuildToolRow({
       ) : null}
     </div>
   )
-}
-
-/** The row of a waiting call, redrawn each time the engine's running step changes. */
-function LiveBuildToolRow({ view, t, engine }: { view: ToolViewProps; t: Translate; engine: EngineFeed }) {
-  const live = useSyncExternalStore(engine.subscribe, engine.read, () => null)
-  return <BuildToolRow view={view} t={t} live={live} />
 }

@@ -1,26 +1,36 @@
 // Fixture for the build cards accessibility and phone width run (#613): the plugin's own components, drawn over a
 // stub draft door, one named state at a time. `window.probe.mount(name, data)` draws a state; `window.probe.log`
 // reads back what the cards sent. No dsh host: the question card and the review chrome of dsh are not drawn here.
+
+import { BUILD_TOOL, buildToolFoldOf } from '@tracy/core/build-chat'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BUILD_TOOL, buildToolFoldOf } from '@tracy/core/build-chat'
 import {
   parseFieldPath,
   resolveFieldPath
 } from '../../../../wo/website-opportunities/domain/build-contract-shared.mjs'
 import { BuildProgress } from '../../src/client/BuildProgress'
 import { BuildNotStarted, BuildStopped } from '../../src/client/BuildStopped'
+import { BUILD_SESSION_CHROME_CSS } from '../../src/client/build-session-chrome'
 import { PLAN_KEY } from '../../src/client/definitions'
 import { EarlierConversation } from '../../src/client/handoff'
 import { PlanCard } from '../../src/client/PlanCard'
 import { ReviewBar } from '../../src/client/ReviewBar'
-import { savePlanEdit } from '../../src/client/save-plan-edit'
+import { savePlanEdit, undoPlanEdit } from '../../src/client/save-plan-edit'
 import { saveTemplateChoice } from '../../src/client/save-template'
 import { english } from '../../src/client/strings'
 import { TemplateCard } from '../../src/client/TemplateCard'
 import { makeTails } from '../../src/client/tails'
 import { WorkingDock } from '../../src/client/WorkingDock'
-import { undoPlanEdit } from '../../src/client/save-plan-edit'
+import { ChatScene } from './chat-scene'
+
+// The build session chrome rules, mounted as the plugin mounts them: their own style element.
+const chrome = document.createElement('style')
+chrome.textContent = `${BUILD_SESSION_CHROME_CSS}
+.dsh-scene { display: flex; flex-direction: column; gap: 8px; max-width: 680px; margin: 0 auto; padding: 16px 0; }
+.dsh-scene-user { align-self: flex-end; padding: 8px 12px; border-radius: 12px; background: var(--muted); }
+.dsh-scene-input { margin-top: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 16px; color: var(--muted-foreground); }`
+document.head.appendChild(chrome)
 
 // biome-ignore lint/suspicious/noExplicitAny: test stub
 type Any = any
@@ -214,37 +224,6 @@ function Turns({ view }: { view: Any }) {
 }
 let endSecondTurn = () => {}
 
-/**
- * The box dsh draws its chat column in, so the working line can be measured against the message column. The rules are
- * copied from the vendored dsh client (vendor/tracy/deepseek-harness/packages/client), see `dsh-column.css.mjs`.
- * The body width is published the way dsh does (`--dsh-conversation-column-width`).
- */
-function DshColumn() {
-  const body = useRef<HTMLDivElement>(null)
-  useLayoutEffect(() => {
-    const el = body.current
-    if (el) el.style.setProperty('--dsh-conversation-column-width', `${el.clientWidth}px`)
-  }, [])
-  return (
-    <div className="dsh-body" ref={body}>
-      <div className="dsh-scrollBody">
-        <div className="dsh-scroll">
-          <div className="dsh-column">
-            <p className="dsh-message">Calling tools</p>
-          </div>
-        </div>
-        <div className="dsh-composerSeat">
-          <WorkingDock
-            sessionId="session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e"
-            useChat={(select: Any) => select(working)}
-            t={english}
-          />
-        </div>
-      </div>
-    </div>
-  )
-}
-
 const BUILD_SESSION = 'session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e'
 // What the agent says above the card: a short lead in only (the tool tells it so, `CARD_SAYS_WHY`), because the
 // card carries the one explanation of why it stopped.
@@ -354,8 +333,8 @@ function State({ name, view }: { name: string; view: Any }) {
       return <ReviewColumn view={view} />
     case 'turns':
       return <Turns view={view} />
-    case 'dsh-column':
-      return <DshColumn />
+    case 'chat':
+      return <ChatScene view={view} />
     case 'earlier':
       return (
         <EarlierConversation

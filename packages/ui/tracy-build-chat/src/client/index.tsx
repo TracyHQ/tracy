@@ -7,10 +7,11 @@
  *   and may be rerun, and the build run (`tails.tsx`);
  * - `conversation.composer` (chain, ahead of dsh's): the plan review bar (`ReviewBar.tsx`), with the living plan card
  *   above it while the review waits (a turn tail shows only once its turn ends);
- * - `tool.call.toolview` keyed `tracy_build`: a quiet row in place of the call's JSON (`BuildToolRow.tsx`);
- * - `conversation.input.dock`: the same row above the chat input while a call waits (`WorkingDock.tsx`), since dsh
- *   folds the call's own row into the turn's collapsed process;
- * - six conversation node definitions that fold the calls into per turn values (`definitions.ts`);
+ * - `tool.call.toolview` keyed `tracy_build`: a quiet row in place of the call's JSON (`BuildToolRow.tsx`), the one
+ *   progress block of a working step; a call a later call carried on draws nothing (`call-supersede.ts`, #575);
+ * - `conversation.input.dock`: the polite announcement of the working step, drawn nowhere (`WorkingDock.tsx`);
+ * - dsh's tool call chrome taken out of build chat sessions, by CSS scoped to them (`build-session-chrome.ts`);
+ * - the conversation node definitions that fold the calls into per turn values (`definitions.ts`);
  * - once the build is done, the move to the new site's chat with the whole conversation, and in that chat the earlier
  *   conversation and the plan, its first message folded into a chip (#611, `handoff.tsx`).
  *
@@ -22,14 +23,15 @@
  */
 import { BUILD_TOOL, HANDOFF_FENCE, isBuildChatSession } from '@tracy/core/build-chat'
 import { uiSwitches } from '@tracy/core/ui-switches'
-import { BuildToolRow, languageOfView, type ToolViewProps } from './BuildToolRow'
-import { createChatLanguages, type TableSource } from './chat-language'
-import { localeTables } from './locale-packages'
 import {
-  sendToChat,
   type ConversationFace,
-  type SessionFace
+  type SessionFace,
+  sendToChat
 } from '../../../../site/tracy-site-tabs/src/client/chat-send'
+import { BuildToolRow, languageOfView, type ToolViewProps } from './BuildToolRow'
+import { BUILD_SESSION_CHROME_CSS } from './build-session-chrome'
+import { createSupersededCalls, supersedeDefinitionFor } from './call-supersede'
+import { createChatLanguages, type TableSource } from './chat-language'
 import {
   buildDefinitionFor,
   handoffDefinition,
@@ -39,13 +41,14 @@ import {
   templatesDefinition,
   workingDefinition
 } from './definitions'
-import { createRevisionNotes, type RevisionNotes } from './revision-notes'
-import { createReviewPresence } from './review-presence'
-import { ReviewBar, type PendingReview, selectPlanReview } from './ReviewBar'
-import { createBuildRunFeed, createDraftSource, type BuildRunFeed } from './sources'
 import { createEngineFeed, type EngineFeed } from './engine-feed'
-import { CSS } from './styles'
+import { localeTables } from './locale-packages'
+import { type PendingReview, ReviewBar, selectPlanReview } from './ReviewBar'
+import { createReviewPresence } from './review-presence'
+import { createRevisionNotes, type RevisionNotes } from './revision-notes'
+import { type BuildRunFeed, createBuildRunFeed, createDraftSource } from './sources'
 import { en, english, NS, type Translate } from './strings'
+import { CSS } from './styles'
 import { LivePlan, makeTails, type TailDeps } from './tails'
 import { WorkingDock, type WorkingDockProps } from './WorkingDock'
 
@@ -135,6 +138,18 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
     document.head.appendChild(style)
     return () => style.remove()
   }, 'tracy-build-chat: styles')
+  // dsh's tool call chrome out of build chats (#575): only while the build chat is switched on, like its cards.
+  ctx.effect(
+    () =>
+      whileShown(deps.switches, () => {
+        const style = document.createElement('style')
+        style.id = 'tracy-build-chat-session-chrome'
+        style.textContent = BUILD_SESSION_CHROME_CSS
+        document.head.appendChild(style)
+        return () => style.remove()
+      }),
+    'tracy-build-chat: build session chrome'
+  )
   ctx.effect(() => ctx.locale.register(NS, { en }) as (() => void) | void, 'tracy-build-chat: dictionaries')
 
   const t = (): Translate => ctx.locale.bind?.(NS) ?? english
@@ -145,6 +160,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
   const notes = deps.notes ?? createRevisionNotes()
   const runs = deps.runs ?? createBuildRunFeed(deps.fetch)
   const engine = deps.engine === null ? undefined : (deps.engine ?? createEngineFeed(deps.fetch))
+  const superseded = createSupersededCalls()
   const tailDeps: TailDeps = {
     drafts,
     reviews,
@@ -162,6 +178,7 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
     planDefinitionFor(notes),
     workingDefinition,
     retryDefinition,
+    supersedeDefinitionFor(superseded),
     buildDefinitionFor(runs),
     historyDefinition,
     handoffDefinition
@@ -238,7 +255,12 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
       { name: 'tool.call.toolview', key: BUILD_TOOL, inject: (sessionId: string) => ({ sessionId }) },
       (view: ToolViewProps & { sessionId?: string }) =>
         isBuildChatSession(view.sessionId) ? (
-          <BuildToolRow view={view} engine={engine} t={languages.t(view.sessionId, languageOfView(view))} />
+          <BuildToolRow
+            view={view}
+            engine={engine}
+            superseded={superseded}
+            t={languages.t(view.sessionId, languageOfView(view))}
+          />
         ) : null
     )
   )

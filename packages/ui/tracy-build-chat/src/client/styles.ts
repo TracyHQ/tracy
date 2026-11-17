@@ -263,27 +263,21 @@ export const CSS = `
 
 /* The quiet row of one tracy_build call (BuildToolRow): dsh's own process row, the business name beside it */
 .tv-bc-toolrow-sum { margin-left: 6px; color: var(--muted-foreground); overflow-wrap: normal; word-break: keep-all; }
-/* One quiet line per link the owner gave the research (#609); a link that could not be read keeps the full colour. */
+/* One quiet line per link the owner gave the research (#609), each led by its status dot as in the build chat mock */
+/* (#575); a link that could not be read keeps the full colour. */
 .tv-bc-linkreads { list-style: none; margin: 2px 0 4px 22px; padding: 0; font-size: 12px; line-height: 1.5; color: var(--muted-foreground); }
+.tv-bc-linkreads li { display: flex; align-items: flex-start; gap: 6px; }
+.tv-bc-linkreads li .tv-bc-sd { height: 18px; }
 .tv-bc-linkreads li[data-link-state="failed"] { color: var(--foreground); }
-/* The same row above the chat input while a call waits (WorkingDock) */
-/* It sits in the column of the chat: the width axis dsh gives the messages and the input, centred like them. */
-/* dsh pads the transcript by the composer clearance plus 16px on each side (ui-chat ChatView, .scroll), and the */
-/* column is the smaller of its width axis and what is left; the seat this line sits in has no such padding, so */
-/* the line takes the same two sides off itself. On a phone the axis (680px at least) is wider than the seat. */
+/* The polite announcement of the working step (WorkingDock): heard, never drawn, so the block is not shown twice */
 .tv-bc-dock {
-  box-sizing: border-box; min-width: 0; margin: 0 auto; padding: 0 0 4px;
-  width: min(
-    var(--dsh-chat-content-width, 100%),
-    calc(100% - 2 * (var(--dsh-composer-side-clearance, 16px) + 16px))
-  );
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
 }
-/* The live region stays in place with nothing in it: it takes no room then */
-.tv-bc-dock:empty { padding: 0; }
 
 /* The plan review bar (ReviewBar): the shape of dsh's plan review panel, in Tracy tokens */
-/* It sits in the chat column like the working line above (.tv-bc-dock): the seat dsh gives the composer chain is the */
-/* whole body width, so the frame takes the column's width axis and centres itself, the plan card inside it too. */
+/* It sits in the chat column: the seat dsh gives the composer chain is the whole body width, so the frame takes the */
+/* column's width axis and centres itself, the plan card inside it too. */
 .tv-bc-review-frame {
   box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 6px 0 10px;
   container-type: inline-size; min-width: 0; margin: 0 auto;
