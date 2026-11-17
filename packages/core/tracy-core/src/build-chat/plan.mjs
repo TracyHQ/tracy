@@ -14,6 +14,7 @@
 import { BUILD_CHAT_STRINGS } from './conversation.mjs'
 import { plainTextOf as text } from './plain-text.mjs'
 import { leftOutOf } from './plan-left-out.mjs'
+import { lookBrandOf } from './plan-look-brand.mjs'
 
 const PLAN_EDIT_SCHEMA = 'tracy-build-plan-edit/v1'
 /** The id of the plan review request: the one question the tool's guard admits beside the engine's own. */
@@ -204,11 +205,12 @@ const keptOnCard = (fact) =>
   KEPT_FACT_KINDS.has(fact.kind) || listOr(fact.sources).some((s) => s?.kind === 'answer')
 
 /**
- * The plan card's content. Services are the service items some page shows: an item the plan keeps on no page (taken
+ * The plan card's content. `lookSources`: the draft's (`GET /api/build-draft`), read into `look.brand` when given.
+ * Services are the service items some page shows: an item the plan keeps on no page (taken
  * off, or nothing to show it in) is said under Left out, never as a numbered service, and the counts follow the card.
  * @param {any} contractPlan - a Contract B plan
  */
-export function planCardOf(contractPlan) {
+export function planCardOf(contractPlan, { lookSources = null } = {}) {
   const plan = wholePlanOf(contractPlan)
   const disputed = new Map(
     (plan.assumptions ?? [])
@@ -269,7 +271,9 @@ export function planCardOf(contractPlan) {
                 ? { sourceKind: plan.look.logo.sourceKind }
                 : {})
             }
-          : { kind: plan.look.logo.kind ?? null }
+          : { kind: plan.look.logo.kind ?? null },
+      // With the draft's look sources: the logo on each ground, the site icon and the accent's origin (#575).
+      ...(lookSources ? { brand: lookBrandOf(plan, lookSources) } : {})
     },
     services: services.map((s) => ({
       id: s.id,

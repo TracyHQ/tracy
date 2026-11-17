@@ -1289,7 +1289,7 @@ export const PEOPLE_ROUTES = [
     path: '/api/build-draft',
     summary: 'Read my pre site build draft',
     description:
-      "The signed-in account's build draft (#603): the Contract B questions asked and their answers, the chosen template `{slug, name, version}`, the one living build plan (`tracy-build-plan/v1`), the last plan edit applied (`lastEdit`) and whether one undo is offered (`canUndo`) and, when the brand step ran, where the plan's accent and logo came from (`lookSources`: `{accent?, logo?: {from, name, reason?}}`; a logo the machine drew from the owner's logo says `drawn-from-logo`). It is the one source of the plan card and of the plan the build engine runs. An account with no draft answers `{draft: null}`; a read never creates an account. 401 `NOT_SIGNED_IN`.",
+      "The signed-in account's build draft (#603): the Contract B questions asked and their answers, the chosen template `{slug, name, version}`, the one living build plan (`tracy-build-plan/v1`), the last plan edit applied (`lastEdit`) and whether one undo is offered (`canUndo`) and, when the brand step ran, where the plan's accent and logo came from (`lookSources`: `{accent?, logo?: {from, name, reason?, pictured?}, pictures?}`; a logo the machine drew from the owner's logo says `drawn-from-logo`; `pictures` names the brand step's kept pictures by draft picture id, `{logoLight?, logoDark?, favicon?: {picture, mime}}`, #575). It is the one source of the plan card and of the plan the build engine runs. An account with no draft answers `{draft: null}`; a read never creates an account. 401 `NOT_SIGNED_IN`.",
     audience: ['customer', 'agent'],
     auth: 'session',
     internal: true,
