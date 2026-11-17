@@ -122,6 +122,31 @@ test('W06 still fails prose repeated around a fact value or with no fact in it',
   )
 })
 
+// bxr-london-lat10b (dev, 17/11/2026): the copy step's only failure after its last fix round was "are the club s own",
+// five words two different sentences shared, four of them function words.
+test('W06 lets two sentences share a run of function words, and still fails a run that carries meaning', () => {
+  const c = copy()
+  slotOf(c, 'block-3.6').text = 'Retreats are the club s own training trips each spring.'
+  c.pages[1].body = ['The recovery studio and the sauna are the club s own as well.']
+  assert.equal(status(c, 'W06'), 'pass', JSON.stringify(check(c).rules.find((x) => x.id === 'W06').failures))
+  breaks(
+    'W06',
+    (x) => {
+      slotOf(x, 'block-3.6').text = 'Retreats are the club s own training trips each spring.'
+      x.pages[1].body = ['Members join the club s own training trips every year.']
+    },
+    /notFound.*block-3\.6/
+  )
+  breaks(
+    'W06',
+    (x) => {
+      slotOf(x, 'block-3.6').text = 'Come with a friend. Early sessions run before the working day.'
+      x.pages[1].body = ['Come with a friend.']
+    },
+    /notFound.*block-3\.6/
+  )
+})
+
 test('W07 fails a demo sentence or a demo proper name left in the copy', () => {
   breaks(
     'W07',

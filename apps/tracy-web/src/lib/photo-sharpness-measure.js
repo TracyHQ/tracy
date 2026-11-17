@@ -24,8 +24,15 @@ const BAND_WIDTH = 512
 const open = (/** @type {Uint8Array} */ bytes) =>
   sharp(Buffer.from(bytes), { limitInputPixels: MAX_PIXELS, failOn: 'none' })
 
-/** A separable Gaussian blur of a float grey picture. */
-function blur(/** @type {Float32Array} */ src, w, h, sigma) {
+/**
+ * A separable Gaussian blur of a float grey picture, edges clamped. Every output pixel is the sum of its taps in tap
+ * order, added up in a double and stored as a float, so the result is the same to the bit as summing each pixel's
+ * taps with the edge clamp written into every read (the calibration of photo-sharpness.js was measured on that).
+ * Only the work around it is cheaper: the clamp is paid at the edges alone, and the column pass adds whole rows (in
+ * Float64 accumulators) instead of walking down columns. A dev picture step (17/11/2026, JA Diner, 981 cuts) spent
+ * 82% of its frame preparation, about 135 of 166 s, in the per-read clamp version of this function.
+ */
+export function blur(/** @type {Float32Array} */ src, w, h, sigma) {
   const r = Math.ceil(sigma * 3)
   const k = new Float32Array(2 * r + 1)
   let total = 0
@@ -33,18 +40,40 @@ function blur(/** @type {Float32Array} */ src, w, h, sigma) {
   for (let i = 0; i < k.length; i += 1) k[i] /= total
   const tmp = new Float32Array(w * h)
   const out = new Float32Array(w * h)
-  for (let y = 0; y < h; y += 1)
-    for (let x = 0; x < w; x += 1) {
+  // Row pass: x in [r, w - r) reads no pixel past an edge.
+  const inFrom = Math.min(r, w)
+  const inTo = Math.max(inFrom, w - r)
+  for (let y = 0; y < h; y += 1) {
+    const row = y * w
+    for (let x = 0; x < inFrom; x += 1) {
       let a = 0
-      for (let i = -r; i <= r; i += 1) a += k[i + r] * src[y * w + Math.min(w - 1, Math.max(0, x + i))]
-      tmp[y * w + x] = a
+      for (let i = -r; i <= r; i += 1) a += k[i + r] * src[row + Math.min(w - 1, Math.max(0, x + i))]
+      tmp[row + x] = a
     }
-  for (let y = 0; y < h; y += 1)
-    for (let x = 0; x < w; x += 1) {
+    for (let x = inFrom; x < inTo; x += 1) {
       let a = 0
-      for (let i = -r; i <= r; i += 1) a += k[i + r] * tmp[Math.min(h - 1, Math.max(0, y + i)) * w + x]
-      out[y * w + x] = a
+      const at = row + x - r
+      for (let j = 0; j <= 2 * r; j += 1) a += k[j] * src[at + j]
+      tmp[row + x] = a
     }
+    for (let x = inTo; x < w; x += 1) {
+      let a = 0
+      for (let i = -r; i <= r; i += 1) a += k[i + r] * src[row + Math.min(w - 1, Math.max(0, x + i))]
+      tmp[row + x] = a
+    }
+  }
+  // Column pass: one output row at a time, each of its taps a whole source row added in tap order.
+  const acc = new Float64Array(w)
+  for (let y = 0; y < h; y += 1) {
+    acc.fill(0)
+    for (let i = -r; i <= r; i += 1) {
+      const kv = k[i + r]
+      const from = Math.min(h - 1, Math.max(0, y + i)) * w
+      for (let x = 0; x < w; x += 1) acc[x] += kv * tmp[from + x]
+    }
+    const row = y * w
+    for (let x = 0; x < w; x += 1) out[row + x] = acc[x]
+  }
   return out
 }
 

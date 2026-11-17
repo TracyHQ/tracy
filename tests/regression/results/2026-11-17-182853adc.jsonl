@@ -1,0 +1,1 @@
+{"id":"REG-PR-681-sharpness-off-thread","verdict":"PASS","commit":"182853adce0614c525d9b48e94f32d16a51fa71a","ran_at":"2026-11-17T15:50:52.855Z","evidence":"tests/regression/.runs/2026-11-17-182853adc/REG-PR-681-sharpness-off-thread.log"}
