@@ -308,13 +308,33 @@ export function withheldMissing(facts, { otherNames = [] } = {}) {
     // values. Only its text: the logo picture may still show the name it carries.
     if (others && otherNames.length)
       withheld.push({ source: 'own-marks', values: [...new Set(otherNames.map((n) => n.name))] })
+    const counts = field === 'posts' ? postCounts(group, facts) : null
     return {
       field,
-      why: whyOf(field, group, facts, others ? otherNames : []),
+      why: (counts && postsWhy(counts)) || whyOf(field, group, facts, others ? otherNames : []),
       withheld,
+      ...(counts ? { counts } : {}),
       ...(others && otherNames.length ? { otherNames } : {})
     }
   })
+}
+
+/**
+ * How many of the posts are held, and why, as numbers any reader can render: `{held, total, reason}`. `reason` is
+ * `stale` when every held post is held only for its age; null otherwise (the sentence then falls back to the generic one).
+ */
+function postCounts(group, facts) {
+  const total = (Array.isArray(facts) ? facts : []).filter((f) => f.field === 'posts').length
+  const onlyStale = group.every((f) => f.decidedBy !== 'owner' && f.reasons.every((r) => r === 'stale'))
+  return { held: group.length, total, reason: onlyStale ? 'stale' : null }
+}
+
+/** The `posts` entry in words (a post held only for its age): the truth in counts, not "all posts are off". */
+function postsWhy({ held, total, reason }) {
+  if (reason !== 'stale') return null
+  if (total === 1) return 'The only post is older than a year and stays off the site.'
+  if (held === total) return `All ${total} posts are older than a year and stay off the site.`
+  return `${held} of ${total} posts ${held === 1 ? 'is' : 'are'} older than a year and ${held === 1 ? 'stays' : 'stay'} off the site; the other ${total - held} may be used.`
 }
 
 // The reading items a message may rest on, by the brief field their facts carry.

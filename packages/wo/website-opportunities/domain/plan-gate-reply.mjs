@@ -7,12 +7,13 @@
 // that show the business does that activity; a left out block may name its block id and the facts that show the
 // business does not (`plan-gate-trade.mjs`, the step chain's "Trade knowledge").
 import { LEFT_OUT_KINDS } from './build-contract-plan.mjs'
+import { systemPagesShapeProblems } from './plan-system-pages-shape.mjs'
 
 /** The basis of a block kept from general knowledge of the owner's trade (the step chain's `basis: "trade"`). */
 export const TRADE_BASIS = 'trade'
 
 const SHAPES = Object.freeze({
-  reply: { required: ['pages'], optional: ['assumptions', 'leftOut'] },
+  reply: { required: ['pages'], optional: ['assumptions', 'leftOut', 'legalPages', 'notFound'] },
   page: { required: ['pageType', 'name', 'blocks'], optional: [] },
   block: { required: ['block', 'label', 'data', 'reason'], optional: ['targets', 'basis', 'factIds'] },
   assumption: { required: ['field', 'said'], optional: [] },
@@ -135,5 +136,7 @@ export function replyShapeProblems(reply, problem) {
       counted('reply_shape', `${at}.item`, `${JSON.stringify(entry.item)} is left out twice`)
     if (isText(entry.item)) leftOutItems.add(entry.item)
   })
+  // The legal and not-found pages, the step chain's `site.legalPages` and `site.notFound` (`plan-system-pages.mjs`).
+  systemPagesShapeProblems(reply, counted)
   return count === 0
 }

@@ -12,6 +12,7 @@ import {
 } from './build-contract-plan-parts.mjs'
 import { blockListsProblems, rowDataProblems } from './build-contract-plan-rows.mjs'
 import { codeProblems, paramsProblems } from './build-contract-plan-codes.mjs'
+import { systemPagesProblems } from './build-contract-plan-system.mjs'
 import { closedShapeProblems, textProblems } from './build-contract-shapes.mjs'
 import { idListProblems, isName, isObject, isWhole, label } from './build-contract-shared.mjs'
 import {
@@ -184,4 +185,5 @@ export function buildPlanProblems(plan, report) {
   picturesProblems(plan.pictures, report)
   assumptionsProblems(plan, report)
   leftOutProblems(plan.leftOut, report, known)
+  systemPagesProblems(plan, known, report)
 }

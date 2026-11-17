@@ -32,7 +32,7 @@ export const CONTRACT_SHAPES = Object.freeze({
       'assumptions',
       'leftOut'
     ],
-    ['rows'],
+    ['rows', 'legalPages', 'notFound'],
     { plan: true }
   ),
   fact: shape(['id', 'kind', 'label', 'value', 'sources'], ['display', 'code', 'params'], { plan: true }),
@@ -56,6 +56,8 @@ export const CONTRACT_SHAPES = Object.freeze({
   assumption: shape(['id', 'field', 'said'], ['alternatives', 'code', 'params'], { plan: true }),
   alternative: shape(['value', 'sources'], [], { plan: true }),
   'left out entry': shape(['what', 'kind', 'reason'], ['code', 'item', 'params'], { plan: true }),
+  'legal page': shape(['kind', 'use', 'id'], ['says', 'factIds'], { plan: true }),
+  'not found page': shape(['says', 'leadsTo'], [], { plan: true }),
   'plan edit': shape(['schema', 'id', 'plan', 'changes']),
   'plan reference': shape(['id', 'revision']),
   change: shape(['field', 'value']),
@@ -88,6 +90,7 @@ export const TEXT_LIMITS = Object.freeze({
   'facts[].value': 200,
   reason: 200,
   said: 200,
+  says: 200,
   prompt: 200,
   'request.text': 1000,
   'changed[]': 200

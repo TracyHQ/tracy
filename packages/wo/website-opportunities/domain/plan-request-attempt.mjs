@@ -10,6 +10,7 @@ import {
   REMOVED_PAGE_DATA_REASON
 } from './plan-request-apply.mjs'
 import { requestTextProblems } from './plan-request-guard.mjs'
+import { systemPagesCompositionOf } from './plan-system-pages.mjs'
 import { changedEntriesOf, notDoneLinesOf } from './plan-request-lines.mjs'
 import { ownerValuesNotShown, withoutContradicted } from './plan-request-owner-apply.mjs'
 import { requestReplyProblems } from './plan-request-reply.mjs'
@@ -95,7 +96,9 @@ export function revisionOf(reply, { plan, request, context, owner = null }) {
   const composition = {
     pages: compositionPagesOf(applied.pages),
     assumptions: carriedAssumptionsOf(plan, applied.pages),
-    leftOut: carried.composition
+    leftOut: carried.composition,
+    // The legal and not-found pages the plan carries, on the pages the changes keep (`plan-system-pages.mjs`).
+    ...systemPagesCompositionOf(plan, applied.pages, context.data)
   }
   const gated = gatePlan(composition, {
     ...context,
