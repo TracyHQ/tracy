@@ -112,3 +112,23 @@ test('the vision call is shown a 512 pixel JPEG thumbnail of each stored photo, 
   const meta = await sharp(Buffer.from(ref.split(',')[1], 'base64')).metadata()
   assert.deepEqual([meta.width, meta.height], [512, 341])
 })
+
+test('bytes no picture format starts with are shown as stored, never handed to sharp', async () => {
+  const url = 'https://larkspur-florist.example/img/two.jpg'
+  const opened = await withDraftPictures({
+    profile: {
+      items: {
+        gallery: [
+          { id: 'g2', kind: 'gallery', pictureId: 'm2', fields: { 'business.gallery_image': { value: url } } }
+        ]
+      }
+    },
+    manifest: [{ id: 'm2', origin: 'draft', sourceUrl: url }],
+    accountId: 'acct',
+    openDraftPicture: async () => ({ bytes: Buffer.from('not a picture'), mime: 'image/png' })
+  })
+  assert.equal(
+    opened.refs.get(url),
+    `data:image/png;base64,${Buffer.from('not a picture').toString('base64')}`
+  )
+})
