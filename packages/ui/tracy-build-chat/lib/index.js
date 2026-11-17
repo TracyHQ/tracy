@@ -273,7 +273,12 @@ function plainTextOf(text2) {
 }
 
 // ../../core/tracy-core/src/build-chat/plan-left-out.mjs
-var TEMPLATE_SPOT_CODES = /* @__PURE__ */ new Set(["no_generated_people", "no_own_logo", "gallery_own_photos_only"]);
+var TEMPLATE_SPOT_CODES = /* @__PURE__ */ new Set([
+  "no_generated_people",
+  "no_own_logo",
+  "gallery_own_photos_only",
+  "documentary_not_drawn"
+]);
 var COUNTED_KINDS = /* @__PURE__ */ new Set(["service", "person", "quote", "gallery"]);
 var COUNT_WORDS = Object.freeze({
   service: ["service", "services"],
@@ -440,6 +445,12 @@ function ownPhotosOf(plan) {
   return photos;
 }
 var listOr2 = (value) => Array.isArray(value) ? value : [];
+var countsOf = (entries) => listOr2(entries).filter((e) => typeof e?.code === "string" && Number.isSafeInteger(e.count) && e.count > 0).map((e) => ({ code: e.code, count: e.count }));
+function ownCountsOf(own, galleryPhotos) {
+  const tallied = Number.isSafeInteger(own.placed) && Number.isSafeInteger(own.photos);
+  if (!tallied) return { frames: own.frames, photos: galleryPhotos };
+  return { frames: own.placed, photos: own.photos, spots: own.frames, unused: countsOf(own.unused) };
+}
 var isPlainObject2 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var codeOf = (part) => typeof part?.code === "string" && part.code !== "" ? { code: part.code, params: isPlainObject2(part.params) ? part.params : {} } : {};
 function wholePlanOf(plan) {
@@ -453,7 +464,8 @@ function wholePlanOf(plan) {
     look: { ...look, template: look.template ?? {}, logo: look.logo ?? {} },
     pictures: {
       own: { frames: 0, ...pictures.own },
-      generated: { frames: 0, ...pictures.generated }
+      generated: { frames: 0, ...pictures.generated },
+      ...Array.isArray(pictures.empty) ? { empty: pictures.empty } : {}
     }
   };
 }
@@ -559,8 +571,9 @@ function planCardOf(contractPlan) {
     })),
     pictures: {
       own: {
-        frames: plan.pictures.own.frames,
-        photos: ownPhotosOf(plan),
+        // With the plan's picture tally (`picture-tally.mjs`) the card counts photos, not spots: `frames` is the photos
+        // placed, `photos` the owner's photos, `spots` the spots they fill, `unused` the others with their codes.
+        ...ownCountsOf(plan.pictures.own, ownPhotosOf(plan)),
         from: [...plan.pictures.own.from ?? []],
         // The source kind of each name in `from`, same order (`website`, `google`, `social`, `answer`).
         ...Array.isArray(plan.pictures.own.fromKinds) ? { fromKinds: [...plan.pictures.own.fromKinds] } : {}
@@ -569,7 +582,8 @@ function planCardOf(contractPlan) {
         frames: plan.pictures.generated.frames,
         ...plan.pictures.generated.reason ? { reason: plainTextOf(plan.pictures.generated.reason) } : {},
         ...codeOf(plan.pictures.generated)
-      }
+      },
+      ...Array.isArray(plan.pictures.empty) ? { empty: countsOf(plan.pictures.empty) } : {}
     },
     // A disputed fact is settled at the fact itself; every other assumption is listed, with its code when it has one.
     assumptions: (plan.assumptions ?? []).filter((a) => !disputed.has(a.field)).map((a) => ({ id: a.id, said: plainTextOf(a.said), ...codeOf(a) })),

@@ -9,7 +9,7 @@
 //             fields, then `copy_check_failed` (noRerun) naming pages and codes. 🔒 A PAGE IS WRITTEN AT MOST TWICE IN
 //             ONE BUILD: a failure in the rewrite round is noRerun; a failure before it may be re-run once by the
 //             frame, and that second attempt writes once with no rewrite round (`rewrite: false`)
-//   pictures  the draft pictures opened, labelled by ONE vision call, assigned to every frame (`placeBuildPictures`);
+//   pictures  the draft pictures opened, labelled by vision calls of eight, as thumbnails, assigned to every frame (`placeBuildPictures`);
 //             a picture whose own texts name a held text is refused (`refusedPicture`)
 //   icons     `selectBuildIcons` over the written copy and the placed frames
 //   order, write   `step-chain-draft-steps-late.js`: the write order, and the write on the site through the doors
@@ -23,7 +23,12 @@
 import { selectBuildIcons, placeBuildPictures } from 'website-opportunities/domain/picture-step.mjs'
 import { writePages } from 'website-opportunities/domain/page-writer.mjs'
 import { withoutWithheld } from 'website-opportunities/domain/plan-withheld.mjs'
-import { refusedPicture, visionThrough, withDraftPictures } from './step-chain-draft-pictures.js'
+import {
+  refusedPicture,
+  researchPicturesOf,
+  visionThrough,
+  withDraftPictures
+} from './step-chain-draft-pictures.js'
 import { draftError, draftSource } from './step-chain-draft-source.js'
 import { keptModelOf, reuseOf, revisionOf, revisionRecordOf } from './step-chain-draft-revision.js'
 import { siteWriteOf } from './step-chain-draft-site.js'
@@ -165,10 +170,13 @@ export function createDraftSteps(deps) {
         accountId: ctx.accountId,
         openDraftPicture: deps.openDraftPicture
       })
+      const research = researchPicturesOf(plan.research)
       const placed = await placeBuildPictures({
         plan: plan.plan,
         profile: opened.profile,
         ...declared(kit),
+        pictures: research.videos,
+        labels: research.labels,
         vision: visionThrough(model, opened.refs),
         refuse: refusedPicture(plan.profile?.withheld, opened.profile)
       })
@@ -176,11 +184,15 @@ export function createDraftSteps(deps) {
         used: opened.used,
         missing: opened.missing,
         unstored: opened.unstored,
-        refused: placed.refused.length
+        refused: placed.refused.length,
+        videos: research.videos.length,
+        videosLeftOut: research.videosLeftOut
       }
       const recorded = {
         calls: { asked: model.asked, replayed: model.replayed },
         counts: placed.counts,
+        // Photos and spots apart, as the plan card counts them (`picture-tally.mjs`).
+        tally: placed.tally,
         leftOut: placed.leftOut,
         difference: placed.difference,
         draft

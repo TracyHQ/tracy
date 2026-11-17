@@ -268,6 +268,15 @@
   "labelled": ["service-court-hire:offering.image", "person-ilse-varrow:person.image"],
   "prompt": {
     "file": "picture-labelling-prompt.md",
-    "sha256": "35260b27810ca6b0b0028734f43184bc80665d4713d983fcb694dd29319852ef"
+    "sha256": "84bffeee39e0a19150ee5e8a5a58dbd8b9d1c18ff97945d40748c0c68cfe1cd1"
+  },
+  "tally": {
+    "photos": 8,
+    "placed": 6,
+    "unused": [{ "code": "no_fitting_frame", "count": 1 }, { "code": "stock", "count": 1 }],
+    "spots": 6,
+    "empty": [{ "code": "no_fitting_video", "count": 1 }],
+    "emptySpots": 1,
+    "drawn": 3
   }
 }

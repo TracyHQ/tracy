@@ -225,7 +225,10 @@ test('the plan carries the look, the pictures summary, the assumptions and the l
   assert.deepEqual(plan.pictures.own, {
     frames: 3,
     from: ['Website', 'Google Maps listing', 'Social profile'],
-    fromKinds: ['website', 'google', 'social']
+    fromKinds: ['website', 'google', 'social'],
+    photos: 3,
+    placed: 3,
+    unused: []
   })
   assert.equal(plan.pictures.generated.frames, 1)
   assert.ok(plan.pictures.generated.reason)

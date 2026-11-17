@@ -9,9 +9,28 @@
 // its extra own pictures (`picturesStep({pictures})`). Every asset lands in exactly one of pictures, videos, setAside;
 // one set aside keeps its source and kind, so what a link found is told apart from what the site may use.
 import { isMapPhotoByOthers, isOwnersPhoto } from './pictures/asset-origin.mjs'
+import { orientationOf } from './pictures/asset-labels.mjs'
 import { photographsOnly } from './pictures/brief-media.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
+
+/**
+ * What the research's labels say of text printed over a video (the step chain's `letteringOf`, `photo-shortlist.js`):
+ * true or false when a label decides it, nothing otherwise, so the video check (`videoFits`) refuses an undecided one.
+ */
+function videoLabelsOf(asset) {
+  const out = {}
+  const text =
+    asset.textPresence === 'present' || asset.hasTextOverlay === true || asset.hasTextOrWatermark === true
+      ? true
+      : asset.hasTextOrWatermark === false
+        ? false
+        : null
+  if (text !== null) out.burnedInText = text
+  const shape = orientationOf(asset.width, asset.height)
+  if (shape !== 'unknown') out.orientation = shape
+  return out
+}
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
 /** The ids of the stale event photos the brief lists (`stale[].field` `media:<id>`). */
@@ -87,7 +106,8 @@ export function mediaOf(brief, manifest, sourceOf) {
         width: asset.width ?? null,
         height: asset.height ?? null,
         stock: false,
-        from: [source.id]
+        from: [source.id],
+        ...videoLabelsOf(asset)
       })
     else
       source.pictures.push({

@@ -3,8 +3,10 @@
 // (`SLOT_IMAGE_OPAQUE`), and a square logo in the footer logo slot (393 x 113, transparent) stopped the whole write.
 // The plan names the frame on the upload op (`slotFit`, `draft-write-picture-fits.mjs`).
 //
-//   fit       the picture padded with transparency, centred, to the frame's aspect (`prepareBrand`, the brand path's
-//             own padding): nothing is cut, so a logo is never cropped; enlarged only to reach the frame's
+//   fit       an owner photo is cut to the frame around its subject, as the step chain cuts it
+//             (`step-chain-draft-photo-cut.js`, a JPEG, enlarged at most 1.5 times); a logo, or a slot that needs a
+//             clear ground, is padded with transparency, centred, to the frame's aspect (`prepareBrand`, the brand
+//             path's own padding): nothing is cut, so a logo is never cropped; enlarged only to reach the frame's
 //             minimum width, and at most `FIT_UPSCALE_LIMIT` times
 //   cannot    too small to reach the minimum width within the limit (`slot_picture_too_small`), an opaque corner left
 //             where the slot needs a clear ground (`slot_picture_opaque`), or one picture sent to slots of two shapes
@@ -17,6 +19,7 @@
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import sharp from 'sharp'
 import { prepareBrand } from './sites/brief-engines/brand-images.js'
+import { cutSlotPhoto, isCutPhoto } from './step-chain-draft-photo-cut.js'
 
 /** The most a picture is enlarged to reach a slot's minimum width: past it the picture would read blurred. */
 export const FIT_UPSCALE_LIMIT = 2
@@ -59,7 +62,9 @@ export async function slotPictureOf(op, stored, ctx) {
   if (!op.slotFit) return stored
   const got = op.slotFitConflict
     ? { problem: 'slot_picture_shapes_differ' }
-    : await fittedPicture(stored, op.slotFit)
+    : isCutPhoto(op)
+      ? await cutSlotPhoto(stored, op.slotFit, ctx.pictureLabels?.get?.(op.ref))
+      : await fittedPicture(stored, op.slotFit)
   if (got.unread) {
     ctx.report.unproven.push({ code: 'slot_picture_unread', op: op.key })
     return stored

@@ -20,7 +20,12 @@
 import { plainTextOf as text } from './plain-text.mjs'
 
 /** Codes of picture spots of the template that stay empty: not something of the owner's (`plan-look-pictures.mjs`). */
-const TEMPLATE_SPOT_CODES = new Set(['no_generated_people', 'no_own_logo', 'gallery_own_photos_only'])
+const TEMPLATE_SPOT_CODES = new Set([
+  'no_generated_people',
+  'no_own_logo',
+  'gallery_own_photos_only',
+  'documentary_not_drawn'
+])
 /** The item kinds the card counts in words of their own; any other kind is counted as items. */
 export const COUNTED_KINDS = new Set(['service', 'person', 'quote', 'gallery'])
 const COUNT_WORDS = Object.freeze({
