@@ -17,6 +17,7 @@
 import { planProfileOf } from './engine-steps.js'
 import { linkChoiceOf, linkProgressOf, linkReadsOf, linkStatesOf } from './link-reads.js'
 import { researchMissingOf } from './research-missing.js'
+import { tradeQuestionOf } from './trade-question.js'
 
 /** The chat card shows at most three questions at a time (`MAX_QUESTIONS_AT_ONCE` of `@tracy/core/build-chat`). */
 export const MAX_QUESTIONS_AT_ONCE = 3
@@ -180,7 +181,9 @@ export function engineStateOf(row, { kit = null, progress = null } = {}) {
   if (step === 'research') {
     // The questions compose settles: none about what the owner keeps off the site (`planProfileOf`).
     const profile = planProfileOf(row.research, kit)
-    const questions = list(profile?.questions)
+    // Research that found no trade asks what kind of business it is first (`trade-question.js`).
+    const trade = tradeQuestionOf(row.research)
+    const questions = [...(trade ? [trade] : []), ...list(profile?.questions)]
     const ask = askOf(questions, row.answers)
     return {
       step,

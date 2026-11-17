@@ -89,8 +89,9 @@ counts once), listed in [Text limits](#text-limits).
 - `topic` is `main-button`, `contact-method`, `site-language` (the three agreed cases of spec #577), `fact-conflict`
   (facts that disagree between sources), `site-name` (research keeps the business name off the site and nothing
   neutral names it: the customer types a name the site may show) or `place-choice` (the customer's Google link matches
-  more than one place, and research asks which one is theirs before it reads anything); a `fact-conflict` names its
-  `fact`, a fact role.
+  more than one place, and research asks which one is theirs before it reads anything) or `business-trade` (research
+  could name no trade for the business, so no template list could be offered: the customer says what kind of business
+  it is); a `fact-conflict` names its `fact`, a fact role.
 - `choices` has at least one entry, except on a `site-name` question, whose `choices` is an empty list: the name is
   the customer's own words, and a choice could show the held name, so a `site-name` question with a choice is
   rejected. At most one choice is `recommended` (`true` or `false`). `freeText.maxLength` is
@@ -108,8 +109,8 @@ counts once), listed in [Text limits](#text-limits).
 - Every question but `site-name` takes a typed answer of up to 1000 characters (`TYPED_ANSWER_MAX_LENGTH`, the same
   bound as a written change request): a transport bound only, never the size of a field. A `site-name` answer is
   pasted into the name fields, so it keeps its real limit (at most 120, lowered to the template's name fields).
-- A free text answer to a `contact-method`, `site-language` or `place-choice` question is read the same way: the
-  contact facts, the language tag or the offered place the model reads in it; code never reads the text itself.
+- A free text answer to a `contact-method`, `site-language`, `place-choice` or `business-trade` question is read the
+  same way: the contact facts, the language tag, the offered place or the offered trade the model reads in it; code never reads the text itself.
 - Before the plan, one model call reads those typed answers (the answer reading, `answer-reading.mjs`): the choice an
   answer means and the values it states, each quoting the owner's words. What it reads enters the profile with origin
   `answer`: the question's own value settles its conflict over every source, the website included; a second value of
@@ -420,6 +421,11 @@ The outcome adds `result`:
 In a scenario a partial run builds the revision its edit produced, and a writer step names a page of that revision.
 
 ### Changes for consumers
+
+- 17/11/2026 (#575), additive: a question may have `topic: "business-trade"`, asked by the build chat when research
+  names no trade (`business-trade-question.mjs`): question code `business_trade` (`{}`), one choice per trade the
+  template catalogue offers (id the trade code, code `business_trade_<trade>`), then `other` ("Something else"). The
+  schema stays `tracy-build-question/v1`; a reader that does not know the code shows `prompt` and `label`.
 
 - 16/11/2026 (#609), additive: a question may have `topic: "place-choice"`, asked by the build chat's research when
   the customer's Google link matches more than one place (section "Question and answer"). Every earlier document

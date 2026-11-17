@@ -40,6 +40,19 @@ async function readingsOf(profile, answers, { reserve, modelOf }) {
 }
 
 /**
+ * The offered choice a typed answer to one research question means (the place question, the business trade question),
+ * read under the ledger step `answers`; null when there is no typed answer, the reading made none, or it was refused.
+ * @param {object} question
+ * @param {object} answer the stored answer, after `asChosen`
+ * @param {{reserve: Function, modelOf: Function}} tools as `answerReadingsOf`
+ */
+export async function typedChoiceOf(question, answer, tools) {
+  if (typeof answer?.text !== 'string' || !answer.text.trim()) return null
+  const readings = await readingsOf({ questions: [question] }, [answer], tools)
+  return readings?.get(question.id)?.choice ?? null
+}
+
+/**
  * The place a typed answer to research's place question means (`gather-place.js`), read by the same call under the
  * same ledger step: the offered choice id the model read (a place, or `none`), or null when there is no typed answer,
  * the reading made none, or it was refused or failed. Research then treats null as None of these, and the caller keeps
@@ -51,9 +64,7 @@ async function readingsOf(profile, answers, { reserve, modelOf }) {
  */
 export async function placeReadingOf(row, links, tools) {
   const typed = placeTypedOf(row, links)
-  if (!typed) return null
-  const readings = await readingsOf({ questions: [typed.question] }, [typed.answer], tools)
-  return readings?.get(typed.question.id)?.choice ?? null
+  return typed ? typedChoiceOf(typed.question, typed.answer, tools) : null
 }
 
 /**

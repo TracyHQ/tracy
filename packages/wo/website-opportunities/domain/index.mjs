@@ -185,6 +185,14 @@ export {
   placeChoiceQuestionOf,
   placeOfChoice
 } from './place-choice-question.mjs'
+export {
+  BUSINESS_TRADE_OTHER,
+  BUSINESS_TRADE_QUESTION_ID,
+  BUSINESS_TRADE_TOPIC,
+  TRADE_LABELS,
+  businessTradeQuestionOf,
+  tradeOfAnswer
+} from './business-trade-question.mjs'
 export { gateEditedPlan } from './plan-edit-gate.mjs'
 export {
   NOT_DONE_REASONS,

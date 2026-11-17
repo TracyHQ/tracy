@@ -143,6 +143,22 @@ export const ASK_STRINGS = {
   'ask.question.place_choice':
     'We found more than one place on Google Maps under this name. Which one is yours?',
   'ask.choice.place_choice_none': 'None of these',
+  'ask.question.business_trade': 'What kind of business is it?',
+  'ask.choice.business_trade_food': 'Food and drink',
+  'ask.choice.business_trade_beauty': 'Beauty',
+  'ask.choice.business_trade_health': 'Health',
+  'ask.choice.business_trade_fitness': 'Sports and fitness',
+  'ask.choice.business_trade_hospitality': 'Hotel or stay',
+  'ask.choice.business_trade_travel': 'Travel',
+  'ask.choice.business_trade_professional': 'Professional services',
+  'ask.choice.business_trade_creative': 'Creative work',
+  'ask.choice.business_trade_education': 'Education',
+  'ask.choice.business_trade_retail': 'Shop',
+  'ask.choice.business_trade_auto': 'Cars and vehicles',
+  'ask.choice.business_trade_home': 'Home services',
+  'ask.choice.business_trade_events': 'Events',
+  'ask.choice.business_trade_nonprofit': 'Non profit',
+  'ask.choice.business_trade_other': 'Something else',
   'ask.choice.main_button_book': 'Book online',
   'ask.choice.main_button_call': 'Call us',
   'ask.choice.main_button_email': 'Email us',
@@ -196,7 +212,8 @@ function promptByCode(question, words) {
     code === 'main_button' ||
     code === 'contact_method' ||
     code === 'site_language' ||
-    code === 'place_choice'
+    code === 'place_choice' ||
+    code === 'business_trade'
   )
     return words(`ask.question.${code}`)
   const noun = CONFLICT_NOUNS[params?.fact]
@@ -227,7 +244,8 @@ function languageNameIn(tag, language) {
 function choiceLabelByCode(choice, words, language) {
   const { code, params = {} } = choice ?? {}
   if (typeof code !== 'string') return null
-  if (/^contact_method_[a-z]+$/.test(code) || code === 'place_choice_none') return words(`ask.choice.${code}`)
+  if (/^(contact_method|business_trade)_[a-z]+$/.test(code) || code === 'place_choice_none')
+    return words(`ask.choice.${code}`)
   if (MAIN_BUTTON_CHOICE.test(code)) return words(`ask.choice.${code}`)
   if (code === 'site_language_option' && typeof params?.language === 'string')
     return languageNameIn(params.language, language)

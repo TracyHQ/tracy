@@ -9,20 +9,21 @@
  * draft. 403 when the session is not the person's build session or the build chat is switched off; 409 when the
  * draft is not ready for the step or moved on; 422 `{problems}` the owner can read.
  */
-import { Hono } from 'hono'
+
 import { randomUUID } from 'node:crypto'
+import { Hono } from 'hono'
 import { PLAN_EDIT_SCHEMA } from 'website-opportunities/domain'
 import { json } from '../lib/http.js'
 import { principalOf } from '../lib/wo-principal.js'
+import { buildOpen } from './build-store.js'
+import { callerOf } from './caller.js'
+import { readEngineRequest } from './engine-request.js'
+import { requestRefusalOf } from './engine-revise.js'
 import { BUSY_SAY, engineStateOf } from './engine-state.js'
 import { readEngineRow } from './engine-store.js'
-import { createDraft, editPlan } from './store.js'
-import { readEngineRequest } from './engine-request.js'
-import { callerOf } from './caller.js'
-import { requestRefusalOf } from './engine-revise.js'
-import { buildOpen } from './build-store.js'
 import { placeAnswerOf, placeAsked } from './gather-place.js'
 import { tryLaterSay } from './spend-limits.js'
+import { createDraft, editPlan } from './store.js'
 
 const BASE = '/api/build-draft'
 
@@ -135,8 +136,9 @@ export function buildEngineRoutes({
     `${BASE}/templates`,
     door(async (c, accountId) => {
       const row = accountId ? await readEngineRow(pool, accountId) : null
-      const trade = row?.research?.trade
-      // No researched trade, or no released kit fitting it, is an empty list: never a template made up.
+      // The researched trade, else the owner's answer to the trade question (`trade-question.js`). None yet, or no
+      // released kit fitting it, is an empty list: never a template made up.
+      const trade = row ? await engine.templateTrade(accountId, row) : null
       return json(c, { templates: typeof trade === 'string' ? kits.templatesFor(trade) : [] })
     })
   )

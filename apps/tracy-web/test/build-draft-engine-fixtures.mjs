@@ -128,6 +128,7 @@ export const kits = {
           }
         ]
       : [],
+  trades: () => ['fitness'],
   skipped: catalogue.skipped
 }
 export const KIT_ROOT = kitRoot

@@ -18,6 +18,22 @@
  * (`brand-before-site.js`) and is never wrapped in a second rerun.
  */
 import { randomUUID } from 'node:crypto'
+import { answerReadingsOf, placeReadingOf, placeStatementOf } from './answer-readings.js'
+import { answersStillAsked } from './answers-kept.js'
+import { askingOf } from './engine-asking.js'
+import { faultOf, runWithRerun } from './engine-rerun.js'
+import { planRequestOf, reviseStep, revisionOf } from './engine-revise.js'
+import { spendGate, spendLeft } from './engine-spend.js'
+import { engineStateOf, SAY, unchangedOf } from './engine-state.js'
+import {
+  brandRunOf,
+  composeStep,
+  EngineStepError,
+  planProfileOf,
+  researchRecordOf,
+  researchStep,
+  withheldOfResearch
+} from './engine-steps.js'
 import {
   adoptStep,
   continueStep,
@@ -27,27 +43,12 @@ import {
   startStep,
   stopOrphan
 } from './engine-store.js'
-import { faultOf, runWithRerun } from './engine-rerun.js'
-import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
-import { askingOf } from './engine-asking.js'
 import { placeAnswerOf } from './gather-place.js'
-import {
-  EngineStepError,
-  brandRunOf,
-  composeStep,
-  planProfileOf,
-  researchRecordOf,
-  researchStep,
-  withheldOfResearch
-} from './engine-steps.js'
-import { answersStillAsked } from './answers-kept.js'
+import { usageCollector } from './model-usage.js'
 import { finishPlaceResearch, startPlaceResearch } from './place-research.js'
 import { nextDayAt, nextWindowAt, tryLaterSay } from './spend-limits.js'
-import { answerReadingsOf, placeReadingOf, placeStatementOf } from './answer-readings.js'
-import { spendGate, spendLeft } from './engine-spend.js'
-import { usageCollector } from './model-usage.js'
-import { discardPlan, putComposed, putRevised, recordFault } from './store.js'
-import { planRequestOf, reviseStep, revisionOf } from './engine-revise.js'
+import { changeDraft, discardPlan, putComposed, putRevised, recordFault } from './store.js'
+import { answeredTradeOf, tradeQuestionOf, withTradeQuestion } from './trade-question.js'
 
 /** The failures that mean the business's own look could not be shown (#616): the owner reads the brand sentence. */
 const BRAND_CODES = new Set([
@@ -293,16 +294,21 @@ export function createEngine({
   }
 
   /** The columns a research writes when it ends: the record, a stale brand gone, the answers it still asks. */
-  const researchColumns = (row, kit) => (record) => (current) => ({
-    research: record,
-    brand: null,
-    // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
-    ...(row?.plan ? {} : { needs_profile: record.profile }),
-    ...answersStillAsked(current, [
-      ...(record.profile?.questions ?? []),
-      ...(planProfileOf(record, kit)?.questions ?? [])
-    ])
-  })
+  const researchColumns = (row, kit) => (made) => (current) => {
+    // Research that found no trade asks the owner what kind of business it is (`trade-question.js`).
+    const record = withTradeQuestion(made, kits)
+    return {
+      research: record,
+      brand: null,
+      // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
+      ...(row?.plan ? {} : { needs_profile: record.profile }),
+      ...answersStillAsked(current, [
+        ...(tradeQuestionOf(record) ? [record.tradeQuestion] : []),
+        ...(record.profile?.questions ?? []),
+        ...(planProfileOf(record, kit)?.questions ?? [])
+      ])
+    }
+  }
 
   /**
    * End a research whose place run ended (#575), in this process: its content brief made and the needs profile read
@@ -669,6 +675,22 @@ export function createEngine({
         if (put.error) throw Object.assign(new Error(`putComposed: ${put.error}`), { code: put.error })
         return { ...ran, columns: {}, ...usage.cost() }
       })
+    },
+    /**
+     * The trade the template list is offered for: the research's, else the owner's answer to the trade question
+     * (`trade-question.js`), kept on the research once read. Null while nothing names one.
+     */
+    async templateTrade(accountId, row) {
+      const held = row?.research?.trade
+      if (typeof held === 'string') return held
+      const trade = await answeredTradeOf(row, readingTools(accountId)).catch(() => null)
+      if (!trade) return null
+      await changeDraft(pool, accountId, (current) =>
+        current.research && typeof current.research.trade !== 'string'
+          ? { research: { ...current.research, trade } }
+          : {}
+      )
+      return trade
     },
     /**
      * The engine state of the account's draft; a step whose process ended is stopped first. The chosen template's kit,

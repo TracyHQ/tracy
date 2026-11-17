@@ -12,7 +12,8 @@ import { FACT_ROLES_V3 } from './place-content-roles.mjs'
 export const QUESTION_SCHEMA = 'tracy-build-question/v1'
 export const ANSWER_SCHEMA = 'tracy-build-answer/v1'
 /**
- * What a question may be about: the three agreed cases, facts that disagree between sources, the site name, and which
+ * What a question may be about (`business-trade`: what kind of business it is, when research could not tell,
+ * `business-trade-question.mjs`): the three agreed cases, facts that disagree between sources, the site name, and which
  * of several Google places is the business's.
  */
 export const QUESTION_TOPICS = Object.freeze([
@@ -21,7 +22,8 @@ export const QUESTION_TOPICS = Object.freeze([
   'site-language',
   'fact-conflict',
   'site-name',
-  'place-choice'
+  'place-choice',
+  'business-trade'
 ])
 /** The topic of the free text question for a name the site may show: it carries no choice. */
 export const SITE_NAME_TOPIC = 'site-name'
