@@ -24,7 +24,7 @@ import { linksOf, reasonOf } from './gather-links.js'
 import { placeAmbiguousError } from './gather-place.js'
 import { boundedFetch, isCollected, readSources, websiteReader, withinTime } from './gather-sources.js'
 import { briefOf, briefReadOf, profileOfRead } from './gather-read.js'
-import { jobCharge, pictureLabellingOf } from './gather-vision.js'
+import { jobCharge, logoOf, pictureLabellingOf } from './gather-vision.js'
 import { readingOf } from './gather-reading.js'
 import { NOT_STORED, picturesToStore, placePhotoItems } from './pictures.js'
 
@@ -205,10 +205,6 @@ export function createPreSiteGatherer(deps) {
       domainDeps,
       remaining
     })
-    // The logo is chosen and written before the brief is made, so the brief names it (`brand.logo`, as a website
-    // opportunity's brief does from its place's `logoResearch`): the brand step refuses a logo file the brief does not
-    // name (`BRAND_LOGO_NO_ID`).
-    const logo = await logoOf({ deps, parts, rows: read, stored: pictures.rows, name: opp.name, context })
     const madeAt = new Date(now()).toISOString()
     const subject = profileOfRead({
       opp,
@@ -239,6 +235,19 @@ export function createPreSiteGatherer(deps) {
       capCents,
       spentCents: reading.record?.costCents ?? 0,
       BudgetExceededError: parts.BudgetExceededError
+    })
+    // The logo is chosen by the step chain's logo research and written before the brief is made, so the brief names it
+    // (`brand.logo`, as a website opportunity's brief does from its place's `logoResearch`): the brand step refuses a
+    // logo file the brief does not name (`BRAND_LOGO_NO_ID`).
+    const logo = await logoOf({
+      deps,
+      parts,
+      rows: read,
+      stored: pictures.rows,
+      name: opp.name,
+      accountId: context.accountId ?? null,
+      charge,
+      now
     })
     const briefInput = {
       opp,
@@ -329,35 +338,4 @@ async function storedPicturesOf({
     googleKey
   })
   return { run, ...kept }
-}
-
-/**
- * The business's logo as a file the brand step reads (`brand-before-site.js` `logoFile`), and the logo research the
- * brief names it by, or null. The logo is the one Website Opportunities' own rule picks without a vision model
- * (`place-logo.js`: the sources' logo hints, then `chooseLogo`, which trusts only what a page says of itself), among the
- * hints whose picture was stored; the file is written from that stored copy (`writeLogo`). A logo not found or not
- * stored is no file and no logo in the brief: the brand step then follows its own rule for a business without one.
- * The logo's own colours are measured from the same stored bytes (`media-info.js` `logoPaletteOf`, as the executor's
- * brand stage does from its stored copy): null when they cannot be read.
- * @returns {Promise<{file: string, research: {status: 'found', chosen: object, candidates: object[]},
- *   palette: object[] | null} | null>}
- */
-async function logoOf({ deps, parts, rows, stored, name, context }) {
-  if (!deps.writeLogo || !deps.pictures?.open) return null
-  const byUrl = new Map(stored.map((m) => [m.source_url, m]))
-  const candidates = parts.logoHintsOf(rows).flatMap((h) => {
-    const m = byUrl.get(h.url)
-    return m
-      ? [{ mediaId: m.id, url: h.url, via: h.via, source: h.source, width: m.width, height: m.height }]
-      : []
-  })
-  const { chosen } = parts.chooseLogo(candidates, { name })
-  if (!chosen?.mediaId) return null
-  const picture = await deps.pictures.open(chosen.mediaId, { accountId: context.accountId }).catch(() => null)
-  const file = (await deps.writeLogo(picture).catch(() => null)) ?? null
-  if (!file) return null
-  const palette = parts.logoPaletteOf
-    ? ((await parts.logoPaletteOf(picture.bytes).catch(() => null)) ?? null)
-    : null
-  return { file, research: { status: 'found', chosen, candidates }, palette }
 }

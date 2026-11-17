@@ -1262,6 +1262,7 @@ export function buildApp(deps) {
           pool: deps.pool,
           config: deps.config,
           pictures: draftPictureStore,
+          objects: draftPictureObjects,
           fetchImpl: deps.fetchImpl,
           dnsResolve: deps.dnsResolve,
           // The step chain's picture labelling, on the vision door Website Opportunities labels with (#575).

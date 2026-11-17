@@ -8,12 +8,16 @@
  *   Google author named as the business, the observed facts), asked with the step chain's own input
  *   (`revisions.js` `pictureLabelInputOf`) and laid on the read as the step chain lays them (`withPictureLabels`).
  *   A draft picture keeps its labels on its own `build_draft_picture` row, so a later build never pays for it again.
+ * - The logo is chosen by the step chain's logo research (`place-logo.js` `researchLogo`: the stored candidates, each
+ *   looked at by the vision model the place executor's logo research uses, then `chooseLogo`), on the draft's stored
+ *   pictures in the shape of the place's media rows it reads.
  *
  * Spend: every paid call here is held by the research step's one ledger reservation (`engine-spend.js`), as the social
  * calls are, and counted in memory against the operator's cap for one research job (`/ops/wo` `researchJobCapCents`),
  * the cap the step chain's ledger holds each research job to (`cost-ledger.js` `jobCapCents`), what the business
- * reading already spent counted first. A call past that cap is refused before it is sent (`BudgetExceededError`), and
- * the labelling then says it labelled nothing; it never stops the research.
+ * reading already spent counted first. A call past that cap is refused before it is sent (`BudgetExceededError`): the
+ * labelling then says it labelled nothing, the logo research lets the page's own word decide; neither stops the
+ * research.
  */
 
 /**
@@ -62,4 +66,54 @@ export async function pictureLabellingOf({ labelsWith, charge, read, accountId, 
     log.warn?.('build draft picture labelling failed', { error: error?.message })
     return parts.failedPictureLabelling('vision_failed')
   }
+}
+
+/** The vision door the logo research looks with, as `researchLogo` takes it: a door that cannot be looked up is none. */
+async function logoDoorOf(logoDoor) {
+  if (!logoDoor) return { state: 'not_configured' }
+  try {
+    return (await logoDoor()) ?? { state: 'not_configured' }
+  } catch {
+    return { state: 'unavailable', reason: 'door_lookup_failed' }
+  }
+}
+
+/**
+ * The business's logo as a file the brand step reads (`brand-before-site.js` `logoFile`), the step chain's logo
+ * research the brief names it by, and the logo's own colours, or null. The research (`researchLogo`) reads the draft's
+ * stored pictures as the place's media rows (`object_key`), the sources' logo hints, and looks at each candidate with
+ * `deps.logoDoor`'s vision model (none: the page's own word decides, as in the step chain); its paid calls go through
+ * `charge` (`jobCharge`). The file is written from the chosen stored copy (`writeLogo`); a logo not found or not
+ * stored is no file and no logo in the brief, and the brand step then follows its own rule for a business without
+ * one. The colours are measured from the same stored bytes (`media-info.js` `logoPaletteOf`, as the executor's brand
+ * stage does), null when they cannot be read.
+ * @returns {Promise<{file: string, research: object, palette: object[] | null} | null>}
+ */
+export async function logoOf({ deps, parts, rows, stored, name, accountId, charge, now = Date.now }) {
+  if (!deps.writeLogo || !deps.pictures?.open) return null
+  let research = null
+  try {
+    research = await parts.researchLogo({
+      media: stored.map((m) => ({ ...m, object_key: m.objectKey })),
+      sources: rows,
+      door: await logoDoorOf(deps.logoDoor),
+      name,
+      image: async (c) => (deps.logoImage ? deps.logoImage(c) : null),
+      charge,
+      fetchImpl: deps.readingFetch ?? globalThis.fetch,
+      now
+    })
+  } catch (error) {
+    deps.log?.warn?.('build draft logo research failed', { error: error?.message })
+    return null
+  }
+  const chosen = research?.status === 'found' ? research.chosen : null
+  if (!chosen?.mediaId) return null
+  const picture = await deps.pictures.open(chosen.mediaId, { accountId }).catch(() => null)
+  const file = (await deps.writeLogo(picture).catch(() => null)) ?? null
+  if (!file) return null
+  const palette = parts.logoPaletteOf
+    ? ((await parts.logoPaletteOf(picture.bytes).catch(() => null)) ?? null)
+    : null
+  return { file, research, palette }
 }

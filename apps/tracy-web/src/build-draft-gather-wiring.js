@@ -21,7 +21,8 @@ import {
 } from 'website-opportunities/src/executor.js'
 import { EXT, createMediaStore } from 'website-opportunities/src/media-store.js'
 import { imageInfoWith, logoPaletteOf } from 'website-opportunities/src/media-info.js'
-import { chooseLogo, logoHintsOf } from 'website-opportunities/src/place-logo.js'
+import { logoCandidateImage, logoHintsOf, researchLogo } from 'website-opportunities/src/place-logo.js'
+import { menuVisionDoorFor } from 'website-opportunities/src/menu-photo-reading.js'
 import { createLinkFields, saveListingSource } from 'website-opportunities/src/link-fields.js'
 import { createPinnedFetch } from 'website-opportunities/src/pinned-fetch.js'
 import { withProfileEdits } from 'website-opportunities/src/profile-edits.js'
@@ -96,7 +97,8 @@ export const preSiteParts = Object.freeze({
   tradeOfWords,
   assetManifestOf,
   logoHintsOf,
-  chooseLogo,
+  // The step chain's logo research: candidates, the vision look at each, the choice (`place-logo.js`).
+  researchLogo,
   // The chosen logo's own colours, read finer than a photo's (the executor's brand stage, `logoPaletteOfStored`).
   logoPaletteOf,
   // The business reading of the place executor's profile stage (`gather-reading.js`), and what its cost is held to.
@@ -239,10 +241,13 @@ export const draftPictureReader =
  * The photographs are labelled by the step chain's labelling (`draftPictureLabels`) on the vision door `visionFor` (the
  * one Website Opportunities labels with, `app.js` `visionDoorFor`); without it nothing is labelled.
  * `overrides` replaces any door (tests: the domain's network doors, the objects, the measuring, `readingDoor` and
- * `readingFetch` for the reading's model, `visionFor`, `visionLabel` and `visionObserve` for the labelling's).
+ * `readingFetch` for the reading's model, `visionFor`, `visionLabel` and `visionObserve` for the labelling's,
+ * `logoDoor` for the logo research's). The logo research looks with the vision door the place executor's logo
+ * research uses (`menuVisionDoorFor`), at candidates read from `objects` (the draft pictures' object store), and sends
+ * its calls through `readingFetch`.
  * @param {{pool: import('pg').Pool, config: object, pictures?: object | null, fetchImpl?: typeof fetch,
  *   dnsResolve?: Function, now?: () => number, visionFor?: Function | null, maxPictures?: number,
- *   log?: Console, overrides?: object}} deps
+ *   objects?: object | null, log?: Console, overrides?: object}} deps
  */
 export function preSiteGatherer({
   pool,
@@ -253,6 +258,7 @@ export function preSiteGatherer({
   now = Date.now,
   visionFor = null,
   maxPictures,
+  objects = null,
   log,
   overrides = {}
 }) {
@@ -272,11 +278,12 @@ export function preSiteGatherer({
     overrides.objects !== undefined
       ? draftPictures({ pool, config, objects: overrides.objects, imageInfo: overrides.imageInfo })
       : pictures
+  const pictureObjects = overrides.objects !== undefined ? overrides.objects : objects
   const labelDoor = overrides.visionFor ?? visionFor
   const pictureLabelsWith =
     labelDoor && stored
       ? draftPictureLabels({
-          pool: overrides.labelPool ?? pool,
+          pool,
           openDraftPicture: draftPictureReader(stored),
           visionFor: labelDoor,
           label: overrides.visionLabel,
@@ -315,6 +322,12 @@ export function preSiteGatherer({
         : null),
     readingFetch: overrides.readingFetch ?? fetchImpl ?? globalThis.fetch,
     pictureLabelsWith,
+    logoDoor:
+      overrides.logoDoor ??
+      (pool && config?.sessionSecret
+        ? () => menuVisionDoorFor(pool, config.sessionSecret, (host ??= createTracyWoHost({ pool, config })))
+        : null),
+    ...(pictureObjects ? { logoImage: (c) => logoCandidateImage(pictureObjects, c) } : {}),
     now,
     ...(log ? { log } : {}),
     ...(overrides.budgetMs ? { budgetMs: overrides.budgetMs } : {}),
