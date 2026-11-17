@@ -8,11 +8,11 @@ import { framesOfPlan, ownPicturesOf } from './picture-frames.mjs'
 import { iconProblemsOf } from './icon-check.mjs'
 import { IconSelectionError } from './icon-ranking.mjs'
 import { selectIcons } from './icon-selection.mjs'
-import { unfitReason } from './picture-fit.mjs'
 import { labelOwnPictures, PicturePolicyError } from './picture-labelling.mjs'
 import { assignPictures } from './picture-policy.mjs'
 import { planDataOf } from './plan-data.mjs'
 import { withResearchLabels } from './picture-research-labels.mjs'
+import { emptySpotsOf, pictureTallyOf, unusedReasonOf } from './picture-tally.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
@@ -26,10 +26,7 @@ export function blocksOf(blockStore, library = []) {
 }
 
 /** The frames left without a picture that the customer is told about: every empty frame but the brand step's logo. */
-const leftOutOf = (frames) =>
-  frames
-    .filter((f) => f.source === 'none' && !f.sameAs && f.reason !== 'logo_from_brand_step')
-    .map((f) => ({ frame: f.id, reason: f.reason }))
+const leftOutOf = (frames) => emptySpotsOf(frames).map((f) => ({ frame: f.id, reason: f.reason }))
 
 /**
  * How the build differs from the plan's estimate: the estimated own and generated counts against the placed ones, with
@@ -42,20 +39,9 @@ export function differenceOf(assignment, approved, pictures) {
   const placed = { own: assignment.counts.own, generated: assignment.counts.generated }
   if (want.own === placed.own && want.generated === placed.generated) return null
   const used = new Set(assignment.frames.filter((f) => f.source === 'own').map((f) => f.picture))
-  const dropped = new Set(assignment.reduced.map((r) => r.item))
   const unplaced = list(pictures)
     .filter((p) => !used.has(p.id))
-    .map((p) => {
-      const frame = assignment.frames.find((f) => f.item && f.item === p.item && f.place !== 'video')
-      const reason = p.stock
-        ? 'stock'
-        : dropped.has(p.item)
-          ? 'item_dropped'
-          : frame
-            ? (unfitReason(p, frame) ?? 'frame_taken')
-            : 'no_fitting_frame'
-      return { picture: p.id, reason }
-    })
+    .map((p) => ({ picture: p.id, reason: unusedReasonOf(p, assignment) }))
   return { approved: want, placed, unplaced, empty: leftOutOf(assignment.frames) }
 }
 
@@ -110,6 +96,8 @@ export async function placeBuildPictures({
     ...assignment,
     leftOut: leftOutOf(assignment.frames),
     difference: differenceOf(assignment, approved, labelling.pictures),
+    // The same counts the plan card shows, after labelling (`picture-tally.mjs`).
+    tally: pictureTallyOf(assignment, labelling.pictures),
     labelled: labelling.labelled,
     // Only a step that asks to refuse pictures is told which were.
     ...(typeof refuse === 'function' ? { refused } : {}),

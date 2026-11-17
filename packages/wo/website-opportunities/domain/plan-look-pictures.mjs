@@ -4,6 +4,7 @@
 import { isBrandLook, lookOfBrandRecord, logoSourceKindOfName, logoSourceName } from './brand-before-site.mjs'
 import { ownPicturesOf } from './picture-frames.mjs'
 import { assignPictures } from './picture-policy.mjs'
+import { pictureTallyOf } from './picture-tally.mjs'
 import { shownElsewhereLeftOut } from './plan-gallery-spread.mjs'
 import { LOGO_CODES, PICTURES_ESTIMATE_CODE, sourceKindsOf } from './plan-wording-codes.mjs'
 
@@ -151,16 +152,23 @@ export function picturesOf(pages, blocks, data) {
   const pictures = ownPicturesOf(data).map((p) =>
     p.stock || isText(p.label) ? p : { ...p, label: TO_BE_LABELLED }
   )
-  const { frames, reduced, counts } = assignPictures({ pages, blocks, data, pictures })
+  const assignment = assignPictures({ pages, blocks, data, pictures })
+  const { frames, reduced, counts } = assignment
   const from = [...new Set(frames.filter((f) => f.source === 'own').flatMap((f) => f.from))]
+  // Photos and spots apart (`picture-tally.mjs`): `frames` counts the spots, `photos` and `placed` the owner's photos.
+  const tally = pictureTallyOf(assignment, pictures)
   const summary = {
     own: {
       frames: counts.own,
       from: counts.own > 0 ? from : [],
       // The kinds of those sources as data (`website`, `google`, `social`, `answer`), beside their names.
-      ...(counts.own > 0 && sourceKindsOf(from).length > 0 ? { fromKinds: sourceKindsOf(from) } : {})
+      ...(counts.own > 0 && sourceKindsOf(from).length > 0 ? { fromKinds: sourceKindsOf(from) } : {}),
+      photos: tally.photos,
+      placed: tally.placed,
+      unused: tally.unused
     },
-    generated: generatedOf(counts.generated)
+    generated: generatedOf(counts.generated),
+    empty: tally.empty
   }
   // A gallery photo dropped because it already shows in another gallery is said once per gallery, with the count.
   const elsewhere = shownElsewhereLeftOut(reduced, frames, pictures)

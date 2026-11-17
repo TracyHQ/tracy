@@ -177,6 +177,8 @@ export function createDraftSteps(deps) {
       const recorded = {
         calls: { asked: model.asked, replayed: model.replayed },
         counts: placed.counts,
+        // Photos and spots apart, as the plan card counts them (`picture-tally.mjs`).
+        tally: placed.tally,
         leftOut: placed.leftOut,
         difference: placed.difference,
         draft
