@@ -22,7 +22,7 @@ import { randomUUID } from 'node:crypto'
 import { EngineStepError } from './engine-steps.js'
 import { linksOf, reasonOf } from './gather-links.js'
 import { placeAmbiguousError } from './gather-place.js'
-import { boundedFetch, isCollected, readSources, withinTime } from './gather-sources.js'
+import { boundedFetch, isCollected, readSources, websiteReader, withinTime } from './gather-sources.js'
 import { briefOf, briefReadOf, profileOfRead } from './gather-read.js'
 import { jobCharge, pictureLabellingOf } from './gather-vision.js'
 import { readingOf } from './gather-reading.js'
@@ -155,20 +155,35 @@ export function createPreSiteGatherer(deps) {
     const placeRead = await placeFactsOf({ domain, fields, keys, deps: domainDeps, now, remaining })
     if (placeRead.reason && judged.googleLink)
       setAside.push({ link: judged.googleLink, reason: reasonOf(placeRead.reason) })
+    const paidRunAllowed = () => deps.paidRunAllowed(context.accountId ?? null)
+    const sourceDeps = { ...domainDeps, charge: withinResearchReservation }
+    // The step chain's website reading (`website-reading.js`): the crawl is the plain one, the browser its own paid run.
+    const websiteOrder = parts.resolveProviderOrder(settings, 'website-content').order
+    const connectors = parts.orderedConnectorsFor(domain, keys, settings)
     const rows = wordsOnly
       ? []
       : await readSources({
           refs: parts.refsOfCandidate(fields.candidate),
           // The place executor's own chain: every social key and the operator's provider order (/ops/wo).
-          connectors: parts.orderedConnectorsFor(domain, keys, settings),
+          connectors: { ...connectors, website: domain.connectorsFor({}).website },
+          websiteOrder,
+          website: websiteReader({
+            readWebsite: parts.readWebsite,
+            domain,
+            keys,
+            order: websiteOrder,
+            settings,
+            paidRunAllowed,
+            deps: sourceDeps
+          }),
           settings,
           keys,
           sources: parts.sources,
           socialSources: parts.socialSources,
           refsOfUrls: parts.refsOfUrls,
           mergeCollected: parts.mergeCollected,
-          paidRunAllowed: () => deps.paidRunAllowed(context.accountId ?? null),
-          deps: { ...domainDeps, charge: withinResearchReservation },
+          paidRunAllowed,
+          deps: sourceDeps,
           remaining
         })
     const pasted = new Map(

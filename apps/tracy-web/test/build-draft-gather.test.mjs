@@ -96,7 +96,9 @@ test('a website link: its facts, its pictures stored as draft pictures, and the 
       [FACEBOOK, 20]
     ]
   )
-  assert.deepEqual(paidFor, ['acc-1'], 'the paid social run is counted against the account')
+  // The thin website is read again through the Apify browser (the step chain's website reading, #575), then the
+  // social page: each paid run is counted against the account.
+  assert.deepEqual(paidFor, ['acc-1', 'acc-1'], 'each paid run is counted against the account')
   assert.equal(brief.business.name, 'Hollowmere Bakehouse')
   assert.ok(brief.facts.some((f) => f.field === 'phone' && f.value === '+1 555 0142 318'))
   assert.equal(brief.trade, 'food')

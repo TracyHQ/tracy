@@ -96,6 +96,18 @@ export async function fakeDomain({ connectors = {}, details = placeDetails, real
     async readListingPage(url) {
       calls.push(['listing', url])
       return { ok: false, reason: 'blocked' }
+    },
+    // The Apify browser the website reading falls back to on a thin page (`website-reading.js`): never the network.
+    async crawlWithBrowser(url) {
+      calls.push(['browser', url])
+      return {
+        source: 'website',
+        status: 'failed',
+        reason: 'error',
+        pages: [],
+        media: [],
+        coverage: { fetched: 0 }
+      }
     }
   }
   return { domain: fake, calls }

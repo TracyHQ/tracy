@@ -33,7 +33,12 @@ import {
 } from 'website-opportunities/src/business-reading.js'
 import { BudgetExceededError } from 'website-opportunities/src/cost-ledger.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
-import { DEFAULT_WO_OPS_SETTINGS, orderedConnectorsFor } from 'website-opportunities/src/wo-settings.js'
+import {
+  DEFAULT_WO_OPS_SETTINGS,
+  orderedConnectorsFor,
+  resolveProviderOrder
+} from 'website-opportunities/src/wo-settings.js'
+import { readWebsite } from 'website-opportunities/src/website-reading.js'
 import { SOCIAL_SOURCES, SOURCES, refsOfCandidate, refsOfUrls } from 'website-opportunities/src/sources.js'
 import { cleanProfileLinks } from 'website-opportunities/domain/social-links.mjs'
 import { createPreSiteGatherer } from './build-draft/gather.js'
@@ -72,6 +77,9 @@ export const preSiteParts = Object.freeze({
   sources: SOURCES,
   // The social connectors as the place executor builds them (keys and provider order of /ops/wo).
   orderedConnectorsFor,
+  // The step chain's website reading: the operator's reader order and the browser fallback (`website-reading.js`).
+  readWebsite,
+  resolveProviderOrder,
   socialSources: SOCIAL_SOURCES,
   refsOfCandidate,
   refsOfUrls,

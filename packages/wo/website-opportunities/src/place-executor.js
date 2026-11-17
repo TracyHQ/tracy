@@ -32,6 +32,7 @@ import { createPlacePaidReceipts } from './place-paid-receipts.js'
 import { apifyCeilingCents, ceilingCents } from './cost-prices.js'
 import { menuRendererOrder, orderedConnectorsFor, resolveProviderOrder } from './wo-settings.js'
 import { checkPageSpeed } from './pagespeed.js'
+import { readWebsite } from './website-reading.js'
 import { finishPlaceJob, placeLease } from './place-jobs.js'
 import {
   GOOGLE_FACTS_SOURCE,
@@ -458,48 +459,6 @@ export function createPlaceRunner(h) {
   }
 
   /**
-   * The website-content order (/ops/wo) when it does not open with the direct crawl then the Apify browser, or the
-   * readers after those two when it does: each reader in turn until
-   * one gives a page that is not thin (`needsBrowser`). A reader without its key, or a resumed crawl for a
-   * one-page reader, is skipped; nothing usable keeps the first answer, as the browser fallback did.
-   */
-  async function readWebsiteInOrder(ctx, order, { row, cursor, runDirect, browserReceipt }) {
-    const { domain, keys } = ctx
-    const readers = { jina: domain.readWithJina, firecrawl: domain.readWithFirecrawl }
-    let first = null
-    let firstUsable = null
-    for (const id of order) {
-      let result = null
-      let fetchedAt = null
-      if (id === 'direct') result = await runDirect()
-      else if (id === 'apify-browser') {
-        if (!paidReceipt || !keys.apify || cursor) continue
-        const receipt = await browserReceipt()
-        result = receipt.result
-        fetchedAt = receipt.fetchedAt
-      } else if (readers[id]) {
-        if (!keys[id] || cursor) continue
-        result = await charge(ctx, id, 'read', ceilingCents(id, 'read'), () =>
-          readers[id](row.ref, { key: keys[id], fetch: h.apiFetch })
-        )
-      } else continue
-      first ??= result
-      const usable = ['complete', 'partial'].includes(result.status)
-      if (usable) firstUsable ??= { result, fetchedAt }
-      if (usable && !domain.needsBrowser(result))
-        return {
-          result:
-            result === first
-              ? result
-              : { ...result, fallbackFrom: { status: first.status, reason: first.reason ?? null } },
-          fetchedAt
-        }
-    }
-    if (firstUsable) return firstUsable
-    return { result: first ?? { status: 'skipped', reason: 'credential_missing' }, fetchedAt: null }
-  }
-
-  /**
    * The rendered readers a menu page with no dish is read again through (`menu-reader.mjs` `renderers`): Jina and
    * Firecrawl (`menuRendererOrder`: as the website-content order names them, both by default), each only with its key, each call charged and
    * logged like a website read. No key, no reader: the read stays `needs_render` and nothing is called.
@@ -749,10 +708,6 @@ export function createPlaceRunner(h) {
           )
           continue
         }
-        // An order opening with the direct crawl then the Apify browser (the default does) runs those two as research
-        // always has; the readers after them read a page they left thin.
-        const legacyWebsite = websiteOrder?.[0] === 'direct' && websiteOrder[1] === 'apify-browser'
-        const customWebsite = websiteOrder !== null && !legacyWebsite
         const social = SOCIAL_SOURCES.includes(source)
         // Without a research ledger the Apify run keeps its old durable-run record (`h.apifyRun`).
         const legacyRun = social && !paidReceipt && Boolean(keys.apify)
@@ -862,40 +817,23 @@ export function createPlaceRunner(h) {
               )
           )
         let result
-        if (customWebsite) {
-          const r = await readWebsiteInOrder(ctx, websiteOrder, { row, cursor, runDirect, browserReceipt })
+        if (source === 'website') {
+          // The website reading both research paths share (`website-reading.js`): the reader order, the browser
+          // fallback on a thin page, the readers after them.
+          const r = await readWebsite({
+            domain,
+            keys,
+            order: websiteOrder,
+            ref: row.ref,
+            cursor,
+            runDirect,
+            browser: paidReceipt ? browserReceipt : null,
+            charge: (id, call) => charge(ctx, id, 'read', ceilingCents(id, 'read'), call),
+            fetch: h.apiFetch
+          })
           result = r.result
           if (r.fetchedAt) fetchedAt = r.fetchedAt
-        } else {
-          result = await runDirect()
-          if (source === 'website' && paidReceipt && keys.apify && !cursor && domain.needsBrowser(result)) {
-            const receipt = await browserReceipt()
-            if (['complete', 'partial'].includes(receipt.result.status)) {
-              result = {
-                ...receipt.result,
-                fallbackFrom: { status: result.status, reason: result.reason ?? null }
-              }
-              fetchedAt = receipt.fetchedAt
-            } else
-              result = {
-                ...result,
-                fallback: {
-                  provider: 'apify-browser',
-                  status: receipt.result.status,
-                  reason: receipt.result.reason
-                }
-              }
-          }
-          const rest = legacyWebsite ? websiteOrder.slice(2) : []
-          const usable = ['complete', 'partial'].includes(result.status)
-          if (rest.length && !cursor && (!usable || domain.needsBrowser(result))) {
-            const r = await readWebsiteInOrder(ctx, rest, { row, cursor, runDirect, browserReceipt })
-            if (['complete', 'partial'].includes(r.result.status) && !domain.needsBrowser(r.result)) {
-              result = { ...r.result, fallbackFrom: { status: result.status, reason: result.reason ?? null } }
-              if (r.fetchedAt) fetchedAt = r.fetchedAt
-            }
-          }
-        }
+        } else result = await runDirect()
         await fenced(pool, lease, async (db) => {
           if (['complete', 'partial'].includes(result.status))
             await collected(

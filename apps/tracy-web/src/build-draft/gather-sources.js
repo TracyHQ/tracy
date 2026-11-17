@@ -1,7 +1,10 @@
 /**
  * The sources of the build chat's research (#609): the website and the social pages the owner's links name, each read
  * once by the Website Opportunities connector of its kind (`domain.connectorsFor`, the same the research executor
- * runs), with the executor's own limits: 40 website pages, 20 posts a social page, the operator's per-run charge
+ * runs). The website is read by the step chain's own website reading (#575, `website-reading.js` `readWebsite`): the
+ * operator's reader order (/ops/wo `website-content`, an empty order switching the website off), the plain crawl, the
+ * Apify browser when the crawl answered a thin page (a paid run, so the account's daily count holds it as it holds a
+ * social page), then the rendered readers. All of it with the executor's own limits: 40 website pages, 20 posts a social page, the operator's per-run charge
  * ceiling (`/ops/wo` `maxChargeUsdPerRun`) and the account's daily count of paid runs (`apify-budget.js`, injected as
  * `paidRunAllowed`). A source switched off on `/ops/wo` is skipped as there.
  *
@@ -47,13 +50,25 @@ const row = (source, ref, status, reason, extra = {}) => ({
 
 /**
  * One read of one source, as the executor's `collectOne` makes it: a connector that cannot run is `blocked` with its
- * reason, a refused address `blocked`/`url_blocked`, a charge refused `skipped`/`cost`, anything else `failed`.
+ * reason, a refused address `blocked`/`url_blocked`, a charge refused `skipped`/`cost`, anything else `failed`. A
+ * website goes through `website` (`websiteReader`): the connector's crawl is its direct read.
  */
-async function readOne({ connector, source, ref, limit, deps, maxChargeUsd, remaining, merge }) {
+async function readOne({
+  connector,
+  source,
+  ref,
+  limit,
+  deps,
+  maxChargeUsd,
+  remaining,
+  merge,
+  website = null
+}) {
   if (!connector?.available) return row(source, ref, 'blocked', connector?.reason ?? 'unsupported')
   const answer = await withinTime(async () => {
     try {
-      return await connector.collect(ref, { cursor: null, limit }, { ...deps, maxChargeUsd })
+      const direct = () => connector.collect(ref, { cursor: null, limit }, { ...deps, maxChargeUsd })
+      return website ? await website(ref, direct) : await direct()
     } catch (error) {
       if (error?.code === 'URL_BLOCKED') return { status: 'blocked', reason: 'url_blocked' }
       if (error?.name === 'BudgetExceededError' || error?.code === 'BUDGET_EXCEEDED')
@@ -74,11 +89,49 @@ async function readOne({ connector, source, ref, limit, deps, maxChargeUsd, rema
 }
 
 /**
+ * The step chain's website reading (`readWebsite`) with the build chat's doors: the operator's order, the Apify
+ * browser only with a key and a paid run left today (`paidRunAllowed`), each reader's call held by the research
+ * step's one ledger reservation, as a social provider's call is (`gather.js`).
+ * @returns {(ref: string, direct: () => Promise<object>) => Promise<object>} the read's result
+ */
+export function websiteReader({ readWebsite, domain, keys, order, settings, paidRunAllowed, deps }) {
+  return async (ref, direct) => {
+    const browser = keys?.apify
+      ? async () => {
+          if (!(await paidRunAllowed()))
+            return { result: { status: 'skipped', reason: 'quota' }, fetchedAt: null }
+          const result = await domain.crawlWithBrowser(
+            ref,
+            { maxPages: WEBSITE_PAGES },
+            { ...deps, token: keys.apify, maxChargeUsd: settings?.maxChargeUsdPerRun }
+          )
+          return { result, fetchedAt: null }
+        }
+      : null
+    const read = await readWebsite({
+      domain,
+      keys: keys ?? {},
+      order,
+      ref,
+      cursor: null,
+      runDirect: direct,
+      browser,
+      charge: (_provider, call) => call(),
+      fetch: deps.fetch
+    })
+    return read.result
+  }
+}
+
+/**
  * Read every source the refs name, the website first; social pages the website links to are read too, as the
  * executor does. Answers the rows in collection order.
  * @param {{refs: Record<string, string>, connectors: object, settings: object, keys: object, sources: string[],
  *   socialSources: string[], refsOfUrls: Function, mergeCollected: Function, paidRunAllowed: () => Promise<boolean>,
- *   deps: object, remaining: () => number}} input
+ *   deps: object, remaining: () => number, websiteOrder?: string[] | null,
+ *   website?: ((ref: string, direct: () => Promise<object>) => Promise<object>) | null}} input `websiteOrder`: the
+ *   operator's website-content order (an empty one switches the website off); `website`: the website reading
+ *   (`websiteReader`)
  */
 export async function readSources(input) {
   const { connectors, settings, keys, sources, socialSources, refsOfUrls, mergeCollected } = input
@@ -91,7 +144,10 @@ export async function readSources(input) {
       rows.push(row(source, ref, 'failed', 'timeout'))
       continue
     }
-    if (settings?.autoCollectSources?.[source] === false) {
+    if (
+      settings?.autoCollectSources?.[source] === false ||
+      (source === 'website' && input.websiteOrder?.length === 0)
+    ) {
       rows.push(row(source, ref, 'skipped', 'switched_off'))
       continue
     }
@@ -108,7 +164,8 @@ export async function readSources(input) {
       deps: input.deps,
       maxChargeUsd: settings?.maxChargeUsdPerRun,
       remaining: input.remaining,
-      merge: mergeCollected
+      merge: mergeCollected,
+      website: source === 'website' ? (input.website ?? null) : null
     })
     rows.push(read)
     // The website names the business's social pages: they are read too (`executor.js` collection).
