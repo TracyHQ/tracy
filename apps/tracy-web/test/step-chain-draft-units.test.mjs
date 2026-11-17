@@ -183,7 +183,9 @@ test('on a site not in English the alt is the item own label or the site name, n
   ])
 })
 
-test('only stored bytes count: a draft picture not opened and a picture with no stored one both leave the profile', async () => {
+// A place picture the research stored (origin `place`, #575) is opened like a draft one, through the one opener; a
+// picture value no stored entry stands behind is never fetched.
+test('only stored bytes count: a stored picture not opened and a picture with no stored one both leave the profile', async () => {
   const profile = {
     items: {
       gallery: [
@@ -197,7 +199,8 @@ test('only stored bytes count: a draft picture not opened and a picture with no 
           pictureId: 'm2',
           fields: { 'business.gallery_image': { value: 'https://shop.example/2.jpg' } }
         },
-        { id: 'g3', fields: { 'business.gallery_image': { value: 'https://shop.example/3.jpg' } } }
+        { id: 'g3', fields: { 'business.gallery_image': { value: 'https://shop.example/3.jpg' } } },
+        { id: 'g4', fields: { 'business.gallery_image': { value: 'https://shop.example/4.jpg' } } }
       ]
     }
   }
@@ -217,16 +220,17 @@ test('only stored bytes count: a draft picture not opened and a picture with no 
   })
   assert.deepEqual(asked, [
     ['m1', 'a1'],
-    ['m2', 'a1']
+    ['m2', 'a1'],
+    ['m3', 'a1']
   ])
   assert.deepEqual(out.used, ['m1'])
-  assert.deepEqual(out.missing, ['m2'])
+  assert.deepEqual(out.missing, ['m2', 'm3'])
   assert.equal(
     out.refs.get('https://shop.example/1.jpg'),
     `data:image/png;base64,${Buffer.from('x').toString('base64')}`
   )
   const values = out.profile.items.gallery.map((g) => g.fields['business.gallery_image'].value)
-  assert.deepEqual(values, ['https://shop.example/1.jpg', null, null])
+  assert.deepEqual(values, ['https://shop.example/1.jpg', null, null, null])
   assert.equal(out.unstored, 1)
 })
 
