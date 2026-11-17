@@ -367,7 +367,9 @@ test('compose shows a held name by its neutral identity and never shows the held
 test('a draft researched before research kept withheld gets it again from its stored brief', async () => {
   const legacy = { profile: club.clubProfile(), brief: heldClubBrief(NEUTRAL) }
   assert.deepEqual(planProfileOf(legacy).withheld.siteName, NEUTRAL)
-  const model = club.scriptedModel(JSON.stringify(withoutTeam()))
+  // A reply without the intent notes a brief asks for goes back twice and is kept on the last attempt (#575).
+  const reply = JSON.stringify(withoutTeam())
+  const model = club.scriptedModel(reply, reply, reply)
   const plan = JSON.stringify((await composeHeld(legacy, model)).plan)
   for (const held of [HELD_NAME, ...HELD_PEOPLE]) assert.equal(plan.includes(held), false, held)
   // Nothing held and no brief: the stored profile as it is.

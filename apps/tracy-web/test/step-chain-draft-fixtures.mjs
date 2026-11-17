@@ -19,6 +19,8 @@ import {
   floristPageRecipes,
   floristProfile
 } from '../../../packages/wo/website-opportunities/test/fixtures/write-order/invented-florist.mjs'
+import { PRIVACY_PROMPT } from 'website-opportunities/domain/page-writer-system.mjs'
+import { privacyReply } from '../../../packages/wo/website-opportunities/test/fixtures/page-writer/invented-policy.mjs'
 
 /** The business name the owner keeps off the site, the name the site shows instead, and the reviewer held. */
 export const HELD_NAME = 'Example Larkspur Florist'
@@ -163,6 +165,9 @@ export function fakeBuildModel({ label = () => undefined, writer, look } = {}) {
       )
       return JSON.stringify(visionReply(ids, over))
     }
+    if (request.system === PRIVACY_PROMPT) {
+      return privacyReply()
+    }
     if (request.system === PAGE_WRITER_PROMPT) {
       const user = JSON.parse(request.user)
       const fields = {}
@@ -171,7 +176,9 @@ export function fakeBuildModel({ label = () => undefined, writer, look } = {}) {
           const own = writer?.(slot, Boolean(user.rewrite))
           const text =
             own ??
-            (user.rewrite ? `Fresh wording ${(rewrites += 1)}` : (WRITES[slot.kind] ?? 'Fresh flowers'))
+            (user.rewrite
+              ? `Fresh wording ${COUNT_WORDS[((rewrites += 1)) % COUNT_WORDS.length]}`
+              : (WRITES[slot.kind] ?? 'Fresh flowers'))
           fields[slot.key] = text.slice(0, slot.limit ?? text.length)
         }
       return JSON.stringify({ fields })
@@ -180,6 +187,22 @@ export function fakeBuildModel({ label = () => undefined, writer, look } = {}) {
   }
   return Object.assign(model, { requests })
 }
+
+/** Words that tell rewrites apart without a number: a number no data gives is invented (#575, W04). */
+const COUNT_WORDS = [
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+  'eleven',
+  'twelve'
+]
 
 export { floristIcons }
 

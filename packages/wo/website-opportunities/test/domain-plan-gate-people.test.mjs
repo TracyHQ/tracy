@@ -27,6 +27,13 @@ import {
 } from './fixtures/write-order/boxing-florist.mjs'
 import { ANSWERED_LABEL } from './fixtures/write-order/invented-florist.mjs'
 
+// The end action the gate gives a page with a call to action block (#575) is checked in domain-plan-intent.test.mjs.
+const withoutEndAction = (attempts) =>
+  attempts.map(({ fixes, ...attempt }) => {
+    const kept = (fixes ?? []).filter((f) => !f.code.startsWith('end_action'))
+    return kept.length ? { ...attempt, fixes: kept } : attempt
+  })
+
 const person = (name) => ({
   id: `person-${name.toLowerCase().replace(/\s+/g, '-')}`,
   kind: 'person',
@@ -53,7 +60,7 @@ test('JA Boxing, one person: shown in a block that holds one, on the page or by 
     ...boxingInput(profile),
     model: scriptedModel(JSON.stringify(boxingComposition(profile)))
   })
-  assert.deepEqual(attempts, [{ problems: [] }])
+  assert.deepEqual(withoutEndAction(attempts), [{ problems: [] }])
   assert.deepEqual(showing(plan, id), ['home/block-163'])
   // A trainer page whose one trainer block shows the person passes as it is.
   const trainer = boxingComposition(profile)

@@ -183,6 +183,12 @@ export const en = {
     'Only one source gives your opening hours, as open 24 hours every day, so they stay off your site until you confirm them.',
   'plan.leftOut.reason.hours_sources_disagree':
     'Your sources give different opening hours, so they stay off your site until you confirm them.',
+  // What the content brief holds back (`plan-held-back.mjs`), by code.
+  'plan.leftOut.reason.not_collected':
+    'None of the sources we read gives this, so your site does not show it yet.',
+  'plan.leftOut.reason.sources_disagree':
+    'Your sources disagree on this, so it stays off your site until you confirm it.',
+  'plan.leftOut.reason.kept_off_site': 'This stays off your site until you confirm it.',
   'plan.leftOut.reason.no_fitting_video':
     'None of your videos fit this space (wide pictures without text on top), so it shows no video.',
   'plan.leftOut.reason.page_nothing_to_show': 'You have nothing yet for these pages to show.',

@@ -20,6 +20,7 @@ import { OWNER_SOURCE_ID } from './owner-facts-flow.mjs'
 import { ANSWER_SOURCE } from './plan-answers.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
 import { rowFieldsOf } from './page-writer-rows.mjs'
+import { emphasisViewOf } from './page-writer-emphasis.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const textOf = (value) =>
@@ -58,12 +59,16 @@ export function blockDescriptionsOf(blockStore, library = []) {
 export const slotKey = (blockId, fieldName, itemId) =>
   itemId === undefined ? `${blockId}/${fieldName}` : `${blockId}/${itemId}/${fieldName}`
 
-/** The field as the writer reads it: its limit is the smallest of the stored places it writes (`limitOf`). */
+/**
+ * The field as the writer reads it: its limit is the smallest of the stored places it writes (`limitOf`), and
+ * `emphasis` (`{at}`) when the template draws some of its words in the accent colour (`page-writer-emphasis.mjs`).
+ */
 const declared = (field, placeLimits) => ({
   name: field.name,
   type: field.type,
   ...(field.kind ? { kind: field.kind } : {}),
-  limit: limitOf(field, placeLimits)
+  limit: limitOf(field, placeLimits),
+  ...emphasisViewOf(field)
 })
 
 /** The origin of a text field (`data` or `copy`), or false for a field the writer never fills. */
@@ -160,7 +165,12 @@ export function pageFieldsOf(page, { blocks, byId, data = { byId }, placeLimits 
       }
       if (origin === 'copy') {
         const answered = answeredValueOf({ field, block, item, byId })
-        return out.push(answered ? { ...base, from: 'data', ...answered } : { ...base, from: 'writer' })
+        // A copy field the writer returns (it cannot be written truthfully) follows the block's no data rule.
+        return out.push(
+          answered
+            ? { ...base, from: 'data', ...answered }
+            : { ...base, from: 'writer', noData: noDataOf(description) }
+        )
       }
       const found = dataValueOf({ field, block, item, byId })
       out.push(

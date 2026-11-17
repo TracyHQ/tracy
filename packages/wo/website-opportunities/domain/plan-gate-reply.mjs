@@ -14,8 +14,13 @@ export const TRADE_BASIS = 'trade'
 
 const SHAPES = Object.freeze({
   reply: { required: ['pages'], optional: ['assumptions', 'leftOut', 'legalPages', 'notFound'] },
-  page: { required: ['pageType', 'name', 'blocks'], optional: [] },
-  block: { required: ['block', 'label', 'data', 'reason'], optional: ['targets', 'basis', 'factIds'] },
+  // The step chain's page and block intent (#575, `plan-intent.mjs`): notes for the writer, never copy.
+  page: { required: ['pageType', 'name', 'blocks'], optional: ['visitorQuestion', 'keyMessage', 'seo'] },
+  'page seo': { required: [], optional: ['titleIntent', 'descriptionIntent'] },
+  block: {
+    required: ['block', 'label', 'data', 'reason'],
+    optional: ['targets', 'basis', 'factIds', 'message', 'carries']
+  },
   assumption: { required: ['field', 'said'], optional: [] },
   'left out entry': {
     required: ['reason'],
@@ -80,13 +85,19 @@ export function replyShapeProblems(reply, problem) {
       if (!closed(page, 'page', at, counted)) return
       texts(page.pageType, `${at}.pageType`, counted, 'pageType')
       texts(page.name, `${at}.name`, counted, 'name')
+      for (const key of ['visitorQuestion', 'keyMessage']) texts(page[key], `${at}.${key}`, counted, key)
+      if (page.seo !== undefined && closed(page.seo, 'page seo', `${at}.seo`, counted))
+        for (const key of ['titleIntent', 'descriptionIntent'])
+          texts(page.seo[key], `${at}.seo.${key}`, counted, key)
       list(
         page.blocks,
         `${at}.blocks`,
         counted,
         (block, blockAt) => {
           if (!closed(block, 'block', blockAt, counted)) return
-          for (const key of ['block', 'label', 'reason']) texts(block[key], `${blockAt}.${key}`, counted, key)
+          for (const key of ['block', 'label', 'reason', 'message'])
+            texts(block[key], `${blockAt}.${key}`, counted, key)
+          idList(block.carries, `${blockAt}.carries`, counted, { optional: true })
           idList(block.data, `${blockAt}.data`, counted)
           idList(block.targets, `${blockAt}.targets`, counted, { optional: true })
           idList(block.factIds, `${blockAt}.factIds`, counted, { optional: true })

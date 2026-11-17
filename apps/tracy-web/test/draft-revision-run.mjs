@@ -159,9 +159,11 @@ export async function matrixRow(name, { writer = {}, site: blank = blankSite } =
   const row = {
     edit: name,
     writes: partial.writes,
-    // The pictures step's own calls (the drawings' wish call and the looks, #575) are counted apart.
-    model: partial.model.calls.filter((c) => c.kind !== 'pictures').length,
+    // The pictures step's own calls (the drawings' wish call and the looks, #575) and the created Privacy page
+    // (written apart from the plan's pages, #575) are counted apart.
+    model: partial.model.calls.filter((c) => c.kind !== 'pictures' && c.kind !== 'privacy').length,
     pictureCalls: partial.model.calls.filter((c) => c.kind === 'pictures').length,
+    privacy: partial.model.calls.filter((c) => c.kind === 'privacy').length,
     pages: partial.model.pages
   }
   if (partial.error) return { ...row, stop: partial.error.code }

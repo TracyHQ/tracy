@@ -103,12 +103,13 @@ test('a writer that copies the owner is asked once for other words, then the bui
 test("a business value the owner also typed is the data's wording: written as it is, it copies no one", async () => {
   const built = await ownerPlan(ownerBrief())
   const model = factWriter((fact) =>
-    fact.value === STORY ? 'Visit 14 Quillmoor Lane, Fernhollow' : undefined
+    // Words of the address, without its number: a number is held to the data of its own block (#575, W04).
+    fact.value === STORY ? 'Visit Quillmoor Lane, Fernhollow' : undefined
   )
   const written = await writeOwnerPlan(built, model)
   assert.equal(model.calls.length, 2, 'one call per page, no rewrite')
   assert.ok(
-    written.pages.flatMap((p) => p.fields).some((f) => f.value === 'Visit 14 Quillmoor Lane, Fernhollow')
+    written.pages.flatMap((p) => p.fields).some((f) => f.value === 'Visit Quillmoor Lane, Fernhollow')
   )
 })
 

@@ -90,7 +90,7 @@ test('a block the model names by its store id is named by its section, with the 
     assert.equal(typeof e.code, 'string')
   }
   assert.deepEqual(
-    result.fixes.map((f) => `${f.code}@${f.at}`),
+    result.fixes.filter((f) => !f.code.startsWith('end_action')).map((f) => `${f.code}@${f.at}`),
     [
       'left_out_unkeyed@leftOut[2]',
       'left_out_unkeyed@leftOut[3]',

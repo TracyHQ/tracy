@@ -21,6 +21,7 @@ import { ANSWER_SOURCE } from './plan-answers.mjs'
 import { networkNameOf, TEXT_OF_NETWORK } from './row-network-text.mjs'
 import { dataIdOf, dataValueOf, valueText } from './write-order-data.mjs'
 import { targetOf } from './write-order-targets.mjs'
+import { withEmphasisMarkers } from './page-writer-emphasis.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -148,7 +149,9 @@ function textEntryOf(at, field, ctx) {
       ...noData(base, at),
       ...(written.action === 'fallback' ? { action: 'fallback', fallback: written.fallback } : {})
     }
-  return { ...extras, ...base, from: 'writer', value: written.value }
+  // The accent words the writer named (`emphasis`), wrapped in the declared span of a `codes` field (#575).
+  const value = withEmphasisMarkers(written.value, written.emphasis, base.declared?.inline)
+  return { ...extras, ...base, from: 'writer', value }
 }
 const hasText = (value) => valueText(value) !== null
 

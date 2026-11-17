@@ -23,6 +23,7 @@ import { editedIdProblems } from './plan-edit-withheld.mjs'
 import { editRefusals } from './plan-edit-words.mjs'
 import { editedNameProblems } from './plan-edit-site-name.mjs'
 import { renameItems } from './plan-edit-item-names.mjs'
+import { withSearchTerms } from './plan-intent-seo.mjs'
 import { normalisedSiteName, withheldShowing } from './plan-site-name.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -149,6 +150,8 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
   next.pictures = counted
   // An hours value changed on the card is shown again from its new value (`plan-hours-display.mjs`).
   next.facts = list(next.facts).map(withHoursDisplay)
+  // Search terms are made again from the edited data: a renamed service, a changed address (`plan-intent-seo.mjs`).
+  if (next.pages.some((p) => p.seo)) next.pages = withSearchTerms(next.pages, planDataOf(after))
   const contract = checkBuildDocument(next).problems
   if (contract.length > 0) return failed(editRefusals(contract, next))
   return { ok: true, plan: next, profile: after, problems: [] }

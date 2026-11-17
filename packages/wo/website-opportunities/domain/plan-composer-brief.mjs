@@ -8,8 +8,11 @@
 //   reason holding any value the brief keeps off the site is too, so no held value reaches the model.
 // - `briefLeftOutOf`: what the brief holds that no data kind of the needs profile can carry, so no block of the
 //   template form can show it (a WhatsApp number, a second phone, Google's rating; `needs-research.mjs` NO_KIND). The
-//   step chain placed these elsewhere on the site; the build chat cannot yet, so the plan card says so in its left out
-//   list instead of losing them in silence. Values are never repeated in the entry.
+//   step chain placed these elsewhere on the site; the build chat places WhatsApp and a second phone where the
+//   template has a field for them (`plan-composer-channels.mjs`), and the plan card says what still has no place in its
+//   left out list instead of losing it in silence. Values are never repeated in the entry.
+
+import { keyMessagesOf } from './plan-composer-intent.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -95,14 +98,13 @@ function heldOf(brief) {
 /**
  * The brief as the composer's model reads it, or null when the brief gives nothing of it.
  * @param {object | null | undefined} brief the content brief the research stored (`wo_revision.brief`)
- * @returns {{keyMessages?: string[], audience?: string[], voice?: string, held?: Array<{field: string,
+ * @returns {{keyMessages?: Array<{id: string, label: string}>, audience?: string[], voice?: string, held?: Array<{field: string,
  *   why: string}>} | null}
  */
 export function briefContextOf(brief) {
   if (!brief || typeof brief !== 'object') return null
-  const keyMessages = list(brief.keyMessages)
-    .filter((m) => isText(m?.label))
-    .map((m) => (m.basis === 'praise' ? `Customers praise: ${m.label.trim()}` : m.label.trim()))
+  // Each key message keeps its id (#575): a block names the key messages it carries by id (`plan-intent.mjs`).
+  const keyMessages = keyMessagesOf(brief).forModel
   const audience = list(brief.reading?.audience)
     .map((a) => (isText(a) ? a : a?.label))
     .filter(isText)
@@ -121,13 +123,17 @@ export function briefContextOf(brief) {
 /**
  * The left out entries of what the brief holds and no block can show, in the plan's left out shape.
  * @param {object | null | undefined} brief
+ * @param {Set<string>} [placed] the brief entries the plan holds as facts already (`plan-composer-channels.mjs`)
  * @returns {Array<{what: string, kind: 'feature', reason: string, code: string}>} with held opening hours last
  */
-export function briefLeftOutOf(brief) {
+export function briefLeftOutOf(brief, placed = new Set()) {
   if (!brief || typeof brief !== 'object') return []
   const has = {
-    whatsapp: isText(brief.contact?.whatsapp?.number) || isText(brief.contact?.whatsapp?.href),
-    otherPhones: list(brief.business?.otherPhones).some((p) => isText(p?.phone)),
+    whatsapp:
+      !placed.has('whatsapp') &&
+      (isText(brief.contact?.whatsapp?.number) || isText(brief.contact?.whatsapp?.href)),
+    otherPhones:
+      !placed.has('otherPhones') && list(brief.business?.otherPhones).some((p) => isText(p?.phone)),
     googleRating: Number.isFinite(brief.googlePlace?.rating)
   }
   const hours = heldHoursOf(brief)

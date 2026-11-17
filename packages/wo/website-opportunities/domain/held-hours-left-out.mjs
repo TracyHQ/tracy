@@ -48,9 +48,9 @@ export function heldHoursLeftOutOf(brief, blocks) {
 
 /**
  * `briefLeftOutOf` with its hours line decided by `heldHoursLeftOutOf`: the composer's hook (`composerContextOf`,
- * `leftOut`), in place of `briefLeftOutOf(brief)`.
+ * `leftOut`), in place of `briefLeftOutOf(brief)`. `placed`: the brief channels the plan holds as facts.
  */
-export function briefLeftOutWithHoursOf(brief, blocks) {
+export function briefLeftOutWithHoursOf(brief, blocks, placed = new Set()) {
   const hours = heldHoursLeftOutOf(brief, blocks)
-  return [...briefLeftOutOf(brief).filter((e) => !HOURS_CODES.has(e.code)), ...(hours ? [hours] : [])]
+  return [...briefLeftOutOf(brief, placed).filter((e) => !HOURS_CODES.has(e.code)), ...(hours ? [hours] : [])]
 }

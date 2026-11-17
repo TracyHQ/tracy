@@ -148,6 +148,8 @@ export function reuseOf(plan) {
     const ask = new Set(blocks.map((b) => b.block))
     if (ask.size) out.set(page, { ...keptWordsOf(kept.get(page)), ask, askItems: askItemsOf(blocks) })
   }
+  // The created Privacy page of the previous build: kept by the writer while its inputs are unchanged (#575).
+  for (const page of list(plan.previous.copy?.systemPages)) out.set(page.id, { systemPage: page })
   return out
 }
 

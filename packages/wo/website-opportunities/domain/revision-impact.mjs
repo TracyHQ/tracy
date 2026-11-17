@@ -109,7 +109,13 @@ export function revisionImpactOf({ previous, next, blockStore, library = [], map
   const requests = (side) =>
     writerRequestsOf(
       side.plan,
-      writerContextOf({ profile: withoutWithheld(side.profile), blockStore, library, mapping })
+      writerContextOf({
+        profile: withoutWithheld(side.profile),
+        blockStore,
+        library,
+        mapping,
+        plan: side.plan
+      })
     )
   const before = requests(previous)
   const after = requests(next)

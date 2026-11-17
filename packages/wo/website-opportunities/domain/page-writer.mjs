@@ -26,7 +26,12 @@ import { PageWriterError, knownEntriesOf } from './page-writer-fields.mjs'
 import { ownerEchoContextOf } from './page-writer-owner-echo.mjs'
 import { ownerFactsRecordOf, placeOwnerFacts } from './page-writer-owner-facts.mjs'
 import { pageOut } from './page-writer-page.mjs'
-import { writeAll } from './page-writer-rounds.mjs'
+import { writeAll, writtenOf, writtenWordsOf } from './page-writer-rounds.mjs'
+import { scopesOfPage } from './page-writer-scope.mjs'
+import { writePrivacyPage } from './page-writer-system.mjs'
+import { PRIVACY_PAGE_ID } from './plan-system-pages.mjs'
+import { isTradeBlock } from './plan-gate-trade.mjs'
+import { withTradeCards } from './trade-cards.mjs'
 
 export { PageWriterError } from './page-writer-fields.mjs'
 export { readWriterReply, readWriterSeo } from './page-writer-page.mjs'
@@ -94,9 +99,12 @@ function keptOf(kept, fields) {
 }
 
 /**
- * Write every page of a plan, in parallel.
+ * Write every page of a plan: the first page, then the others in parallel after it, then the created Privacy page.
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], mapping?: object, others?: object[],
- *   model: (request: object) => Promise<unknown>, signal?: AbortSignal, rewrite?: boolean, reuse?: Map<string, object>}}
+ *   model: (request: object) => Promise<unknown>, signal?: AbortSignal, rewrite?: boolean, reuse?: Map<string, object>,
+ *   ownerStatement?: string | null, template?: {name?: string}, legal?: boolean}}
+ *   `template`: the kit's template, whose name no written word carries; `legal`: the call writes the whole plan, so it
+ *   writes the Privacy page the plan creates too (`page-writer-system.mjs`, returned as `systemPages`);
  *   input `plan`: the approved plan
  *   (`composePlan`); `profile`: the needs profile it was composed from, which holds the item field values and the
  *   business's voice; `mapping`: the template mapping, for its SEO limits; `others`: pages written before by another
@@ -123,20 +131,39 @@ export async function writePages({
   signal,
   rewrite = true,
   reuse,
-  ownerStatement
+  ownerStatement,
+  template,
+  legal = false
 }) {
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
     throw new PageWriterError('plan_missing', 'the plan has no pages to write')
   const context = {
-    ...writerContextOf({ profile, blockStore, library, mapping }),
-    prompt: PAGE_WRITER_PROMPT
+    ...writerContextOf({ profile, blockStore, library, mapping, plan }),
+    prompt: PAGE_WRITER_PROMPT,
+    // The template's own name: no written word carries it (the step chain's W07 demo name rule).
+    templateNames: [template?.name].filter((n) => typeof n === 'string' && n.trim() !== '')
   }
+  // A repeating block kept on trade basis gets its cards (`trade-cards.mjs`), written from the trade.
+  const traded = withTradeCards(plan, context.blocks, context.data)
+  plan = traded.plan
+  context.data = traded.data
+  context.byId = traded.data.byId
   // A row's copy field is checked against the other rows of its own list: it never carries a sibling row's data.
   const fieldsByPage = plan.pages.map((page) => writerFieldsOf(page, context))
   // The owner's facts, each on one block (D46); the owner echo check, when the build has the owner's statement.
   const placement = placeOwnerFacts(plan, context, fieldsByPage)
   context.ownerFacts = placement.byBlock
+  // Each copy field is held to its own block's data (`page-writer-scope.mjs`), a trade block's to none of the business.
+  plan.pages.forEach((page, i) => {
+    const scopes = scopesOfPage(page, context.data, placement.byBlock, traded.cards)
+    const trade = new Set(page.blocks.filter(isTradeBlock).map((b) => b.id))
+    for (const f of fieldsByPage[i])
+      if (f.from === 'writer') {
+        f.known = scopes.get(f.block) ?? []
+        if (trade.has(f.block)) f.trade = true
+      }
+  })
   context.ownerEcho = ownerEchoContextOf(ownerStatement, {
     known: knownEntriesOf(context.byId, context.data.rowsById),
     data: context.data
@@ -158,14 +185,20 @@ export async function writePages({
     unreadable: [],
     failing: []
   }))
-  await writeAll(states, {
-    plan,
-    context,
-    model,
-    signal,
-    others: Array.isArray(others) ? others : [],
-    rewrite
-  })
+  // The first page is written first, then the others in parallel with its copy before them (the step chain's writing
+  // order: the home page, then the other pages with the copy notebook, #575 audit item 5).
+  const before = Array.isArray(others) ? others : []
+  const [first, ...rest] = states
+  const how = { plan, model, signal, rewrite }
+  await writeAll([first], { ...how, context, others: before })
+  if (rest.length) {
+    const earlier = [...before, writtenOf(first)]
+    await writeAll(rest, {
+      ...how,
+      context: { ...context, written: writtenWordsOf(earlier) },
+      others: earlier
+    })
+  }
   const pages = states.map((s) => ({
     id: s.page.id,
     fields: pageOut(s),
@@ -190,10 +223,24 @@ export async function writePages({
       },
       { noRerun: true }
     )
+  // The created Privacy page, after every other page (the step chain's writing order), when the call writes the whole
+  // plan (`legal`): a call that writes some pages only leaves it to the call that writes them all.
+  const privacy = legal
+    ? await writePrivacyPage({
+        plan,
+        context,
+        model,
+        signal,
+        others: [...before, ...states.map(writtenOf)],
+        rewrite,
+        kept: reuse?.get(PRIVACY_PAGE_ID)?.systemPage
+      })
+    : null
   const ownerFacts = ownerFactsRecordOf(placement)
   return {
     pages: pages.map(({ id, fields, attempts, seo }) => ({ id, fields, attempts, ...(seo ? { seo } : {}) })),
     prompt: { file: PAGE_WRITER_PROMPT_FILE, sha256: PROMPT_SHA256 },
+    ...(privacy ? { systemPages: [privacy] } : {}),
     ...(ownerFacts ? { ownerFacts } : {})
   }
 }

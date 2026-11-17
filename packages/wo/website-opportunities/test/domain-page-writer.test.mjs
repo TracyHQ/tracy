@@ -68,7 +68,7 @@ function overlappingModel(reply) {
 
 const pageOf = (request) => JSON.parse(request.user).page.id
 
-test('pages are written in parallel, one call per page, each with only its own fields and no demo copy', async () => {
+test('the first page is written first, the others after it with its copy; one call per page, no demo copy', async () => {
   const { plan, profile } = await approvedPlan()
   const store = blockStore()
   store.blocks[1].demo = { heading: DEMO }
@@ -76,8 +76,13 @@ test('pages are written in parallel, one call per page, each with only its own f
   const model = overlappingModel(answer())
   const { pages, prompt } = await writePages({ plan, profile, blockStore: store, library: library(), model })
   assert.equal(model.calls.length, WRITTEN.length)
-  assert.equal(model.maxOpen, WRITTEN.length, 'every page call is open at the same time')
-  assert.deepEqual(model.calls.map(pageOf).sort(), WRITTEN)
+  // The step chain's writing order (#575): the home page first, then the other pages, which read its copy.
+  assert.equal(model.maxOpen, 1, 'the home page is written before the others')
+  assert.deepEqual(model.calls.map(pageOf), WRITTEN)
+  const team = JSON.parse(model.calls[1].user)
+  assert.equal(team.written[0].page, 'home')
+  assert.ok(team.written[0].words.length > 0)
+  assert.equal(JSON.parse(model.calls[0].user).written, undefined)
   assert.equal(prompt.file, 'page-writer-prompt.md')
   assert.match(PAGE_WRITER_PROMPT, /DRAFT, not approved/)
   for (const call of model.calls) {
@@ -258,7 +263,7 @@ test('a sentence another page already says is rewritten on the later page, once;
   )
 })
 
-test('in the rewrite round the rewritten page is the offender: a clean page is never failed by it', async () => {
+test('a page written after the first one is the offender when it repeats it, never the first page', async () => {
   const { plan, profile } = await approvedPlan()
   const SAME = 'Coaching for all ages here'
   const seen = {}
@@ -277,12 +282,13 @@ test('in the rewrite round the rewritten page is the offender: a clean page is n
       assert.equal(error.code, 'copy_check_failed')
       assert.deepEqual(
         error.details.failing.map((f) => [f.page, f.key, f.problems[0].code]),
-        [['home', 'home-b2/heading', 'repeated_copy']]
+        [['team', 'team-b1/heading', 'repeated_copy']]
       )
       return true
     }
   )
-  assert.equal(model.calls.length, WRITTEN.length + 1, 'only home is called again; team passed and stays')
+  // home: written, then rewritten for its length; team: written after home, rewritten for the repeat, still repeating.
+  assert.equal(model.calls.length, WRITTEN.length * 2)
 })
 
 test('a label may be the same on every page; a body sentence may not', async () => {

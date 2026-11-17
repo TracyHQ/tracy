@@ -16,6 +16,8 @@ import { visionReply } from '../../../packages/wo/website-opportunities/test/fix
 import { createDraftSteps } from '../src/step-chain-draft-steps.js'
 import { memoryDoors } from 'website-opportunities/domain/write-order-memory-doors.mjs'
 import { buildStoreOf } from './draft-revision-store.mjs'
+import { PRIVACY_PROMPT } from 'website-opportunities/domain/page-writer-system.mjs'
+import { privacyReply } from '../../../packages/wo/website-opportunities/test/fixtures/page-writer/invented-policy.mjs'
 
 export { buildStoreOf }
 
@@ -76,6 +78,10 @@ export function revisionModel({ leak, cross = false, seed = (text) => text, fixe
     if (Array.isArray(request.images) && request.images.length) {
       calls.at(-1).kind = 'vision'
       return JSON.stringify(visionReply(JSON.parse(request.user).pictures.map((p) => p.id)))
+    }
+    if (request.system === PRIVACY_PROMPT) {
+      calls.at(-1).kind = 'privacy'
+      return privacyReply()
     }
     if (request.system === PAGE_WRITER_PROMPT) {
       const user = JSON.parse(request.user)

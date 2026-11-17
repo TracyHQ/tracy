@@ -682,7 +682,7 @@ test(
     c.pages.splice(1, 1)
     c.assumptions = []
     const s = server({
-      buildModel: async () => club.scriptedModel(JSON.stringify(c)),
+      buildModel: async () => everyAttempt(c),
       brandStep: ownBrand,
       buildChatOn: async () => true
     })
@@ -750,6 +750,12 @@ test('the composed plan and the done state of its step are one write', opts, asy
 /** A draft researched before research kept `withheld`: only its stored brief holds the name and people off the site. */
 const heldClubResearch = (siteName) => ({ ...clubResearch(), brief: heldClubBrief(siteName) })
 
+/** A reply without the intent notes a brief asks for goes back twice and is kept on the last attempt (#575). */
+const everyAttempt = (composition) => {
+  const reply = JSON.stringify(composition)
+  return club.scriptedModel(reply, reply, reply)
+}
+
 test(
   'compose holds what the owner keeps off the site: the stored plan never shows the held name or people',
   opts,
@@ -757,7 +763,7 @@ test(
     const c = club.goodComposition()
     c.pages.splice(1, 1)
     c.assumptions = []
-    const model = club.scriptedModel(JSON.stringify(c))
+    const model = everyAttempt(c)
     const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
     await researchedClub(s, { research: heldClubResearch('Racket club by the river') })
     const { ended } = await askPlan(s)
@@ -796,7 +802,7 @@ test(
     const c = club.goodComposition()
     c.pages.splice(1, 1)
     c.assumptions = []
-    const model = club.scriptedModel(JSON.stringify(c))
+    const model = everyAttempt(c)
     const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
     await researchedClub(s, { research: heldClubResearch(null) })
     const { ended } = await askPlan(s)
@@ -833,7 +839,7 @@ test(
     const c = club.goodComposition()
     c.pages.splice(1, 1)
     c.assumptions = []
-    const model = club.scriptedModel(JSON.stringify(c))
+    const model = everyAttempt(c)
     const s = server(
       { buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true },
       limitKits()

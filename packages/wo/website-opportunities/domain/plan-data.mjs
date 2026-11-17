@@ -129,6 +129,8 @@ export function planDataOf(profile) {
       const sources = sourcesOf(item?.sources, origins)
       if (!isText(item?.id) || byId.has(item.id) || sources.length === 0) continue
       const entry = { id: item.id, kind, label: itemLabel(item), sources }
+      // A person only customers named in reviews says so on the plan (`needs-research-people.mjs`, #575).
+      if (item.namedBy === 'customer') entry.namedBy = 'customer'
       items.push(entry)
       byId.set(item.id, { what: 'item', kind, entry, source: item })
     }

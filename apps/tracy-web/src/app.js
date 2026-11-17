@@ -2467,9 +2467,9 @@ export function buildApp(deps) {
                 readEngineDraft: (accountId) => readEngineDraft(deps.pool, accountId),
                 draftPlanForBuild: (accountId) => draftPlanForBuild(deps.pool, accountId),
                 loadAiqKit: (slug) => app.loadAiqKit?.(slug) ?? null,
-                buildModel: () =>
+                buildModel: (options) =>
                   app.buildModel
-                    ? app.buildModel()
+                    ? app.buildModel(options)
                     : Promise.reject(
                         Object.assign(new Error('no build model door'), {
                           code: 'model_missing',

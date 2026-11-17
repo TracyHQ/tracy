@@ -32,18 +32,25 @@ export const CONTRACT_SHAPES = Object.freeze({
       'assumptions',
       'leftOut'
     ],
-    ['rows', 'legalPages', 'notFound'],
+    ['rows', 'legalPages', 'notFound', 'keyMessages', 'primaryAction', 'later'],
     { plan: true }
   ),
   fact: shape(['id', 'kind', 'label', 'value', 'sources'], ['display', 'code', 'params'], { plan: true }),
-  item: shape(['id', 'kind', 'label', 'sources'], ['count'], { plan: true }),
+  item: shape(['id', 'kind', 'label', 'sources'], ['count', 'namedBy'], { plan: true }),
   source: shape(['kind', 'name'], [], { plan: true }),
-  page: shape(['id', 'name', 'pageType', 'blocks'], [], { plan: true }),
+  page: shape(['id', 'name', 'pageType', 'blocks'], ['visitorQuestion', 'keyMessage', 'seo', 'endAction'], {
+    plan: true
+  }),
   block: shape(
     ['id', 'type', 'block', 'source', 'label', 'data', 'reason'],
-    ['lists', 'labelCode', 'basis', 'factIds'],
+    ['lists', 'labelCode', 'basis', 'factIds', 'message', 'carries'],
     { plan: true }
   ),
+  'page seo': shape(['searchTerms'], ['titleIntent', 'descriptionIntent'], { plan: true }),
+  'end action': shape(['block', 'factIds'], [], { plan: true }),
+  'key message': shape(['id', 'label'], [], { plan: true }),
+  'primary action': shape(['factIds'], [], { plan: true }),
+  'later entry': shape(['what', 'reason', 'code'], ['params'], { plan: true }),
   row: shape(['id', 'label', 'sources'], [], { plan: true }),
   'child list': shape(['name', 'rows'], ['item'], { plan: true }),
   'planned row': shape([], ['data', 'page', 'lists'], { plan: true }),
@@ -91,6 +98,8 @@ export const TEXT_LIMITS = Object.freeze({
   reason: 200,
   said: 200,
   says: 200,
+  intent: 160,
+  'searchTerms[]': 60,
   prompt: 200,
   'request.text': 1000,
   'changed[]': 200
