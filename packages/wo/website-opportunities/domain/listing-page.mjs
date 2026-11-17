@@ -7,6 +7,7 @@
 import { fetchLimited } from './fetch-limited.mjs'
 import { businessFromLd, businessNodeOf, ldBlocksOf } from './website-crawler.mjs'
 import { listingPicturesOf } from './listing-pictures.mjs'
+import { listingDescriptionOfNextData } from './listing-next-data.mjs'
 
 const MAX_BYTES = 1536 * 1024
 /** Path words of listing URLs that are not part of the business's name. */
@@ -93,7 +94,9 @@ export function copiedRatingVerdict(listing, direct) {
  * platform's rating the listing shows.
  * @param {string} html
  * @returns {null | { name?: string, address?: string, telephone?: string, category?: string, hours?: string[],
- *   geo?: { lat: number, lng: number }, rating?: number, reviews?: number, ratingOf?: string }}
+ *   geo?: { lat: number, lng: number }, rating?: number, reviews?: number, ratingOf?: string, description?: string }}
+ *   `description`: the business node's, else the page data's (`listing-next-data.mjs`); the listing's words, kept on
+ *   the listing read only, never the business's own story.
  */
 export function listingFromHtml(html) {
   const blocks = ldBlocksOf(html)
@@ -122,6 +125,11 @@ export function listingFromHtml(html) {
     const shown = listingRatingOfNextData(html)
     if (shown) Object.assign(out, shown)
   }
+  const description =
+    typeof node.description === 'string' && node.description.trim()
+      ? node.description.trim().slice(0, 2000)
+      : listingDescriptionOfNextData(html)
+  if (description) out.description = description
   return out
 }
 
