@@ -10,12 +10,12 @@
 // owner's words alone gives the step its brief instead (`--brief-file`, #616). A draft without a brief or a known kit
 // answers `brand_input_missing`.
 import { createBrandBeforeSite } from './brand-before-site.js'
+import { brandLogoInputOf } from './build-draft-brand-logo.js'
 import { aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
 import { briefOfRevision } from './lib/bench-sql.js'
 import { readableKits } from './lib/template-kit-source.js'
 import { shippedAiQuickstartPins } from './lib/ai-quickstart-pins.js'
 import { fittingAiQuickstarts } from 'website-opportunities/domain'
-import { existsSync } from 'node:fs'
 
 export {
   decideProfile,
@@ -89,13 +89,22 @@ export function draftQuickstartCatalogue({
  * brief revision of a research of links (`research.ids.revisionId`, #575), else the brief the words-only research made
  * (a draft researched before #575 may also hold the logo file it saved, `research.logoFile`).
  * `stepsOf()` makes the step chain's steps (`createStepChainSteps`), only once a run can start, so a server whose
- * drafts never reach it builds no bench wiring. A logo file gone from the disk is not passed: the step then follows
- * its own rule for a business without a logo.
- * @param {{pool: import('pg').Pool, stepsOf: () => object, brandBeforeSite?: Function, kitRefOf?: Function}} deps
+ * drafts never reach it builds no bench wiring. The logo of a brief held in memory follows the step chain's branches
+ * (`build-draft-brand-logo.js`): written again from its stored copy, else no logo. Sources that showed no language
+ * run in the plan's own language (`plan-composer.mjs`: English), so the bench fills a missing voice as a build does.
+ * @param {{pool: import('pg').Pool, stepsOf: () => object, brandBeforeSite?: Function, kitRefOf?: Function,
+ *   openPicture?: Function | null, logoDir?: string}} deps `openPicture`: the draft picture reader
  */
-export function draftBrandStep({ pool, stepsOf, brandBeforeSite, kitRefOf: refOf = kitRefOf }) {
+export function draftBrandStep({
+  pool,
+  stepsOf,
+  brandBeforeSite,
+  kitRefOf: refOf = kitRefOf,
+  openPicture = null,
+  logoDir
+}) {
   let run = brandBeforeSite ?? null
-  return async ({ research, template }) => {
+  return async ({ research, template, accountId = null }) => {
     const brief = research?.brief
     if (!brief || typeof brief !== 'object')
       throw fault('brand_input_missing', 'the draft research holds no brief for the brand step')
@@ -112,20 +121,20 @@ export function draftBrandStep({ pool, stepsOf, brandBeforeSite, kitRefOf: refOf
         return found.ok ? found.brief : null
       }
     })
-    const language = research.profile?.language?.value
+    const language = research.profile?.language?.value || 'en'
     // A research of links is the step chain's own (#575): its content brief is a revision, which the bench reads as
     // a Website Opportunities build does (`--brief-revision`), with the logo its place research chose.
     const revisionId = typeof research.ids?.revisionId === 'string' ? research.ids.revisionId : null
-    const logoFile =
-      !revisionId && typeof research.logoFile === 'string' && existsSync(research.logoFile)
-        ? research.logoFile
-        : null
-    const { record, usd } = await run({
-      ...(revisionId ? { revisionId } : { brief }),
-      ...(logoFile ? { logoFile } : {}),
-      kitRef,
-      ...(language ? { siteLanguage: language } : {})
-    })
+    const given = revisionId
+      ? { revisionId }
+      : await brandLogoInputOf({
+          brief,
+          logoFile: research.logoFile,
+          accountId,
+          openPicture,
+          ...(logoDir ? { logoDir } : {})
+        })
+    const { record, usd } = await run({ ...given, kitRef, siteLanguage: language })
     // The run's cost is known only when every one of its calls reported one (`spendOfRecord`: `usd` is null else). Then
     // the step answers it beside the record, so the ledger settles at it (`engine-steps.js` `brandRunOf`).
     return Number.isFinite(usd) && usd >= 0 && record ? { record, costCents: usd * 100 } : record

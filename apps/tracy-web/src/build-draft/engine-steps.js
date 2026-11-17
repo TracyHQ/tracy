@@ -139,8 +139,8 @@ export async function researchRecordOf(gathered, { links, description }, { model
  * `brand` step, once research and a template are in the draft; the step keeps its own attempts, so nothing reruns it.
  * @returns {Promise<object | null>} the look record, or null when the step has none
  */
-export async function brandOf({ research, template }, { brandStep, kit }) {
-  return (await brandRunOf({ research, template }, { brandStep, kit })).record
+export async function brandOf({ research, template, accountId }, { brandStep, kit }) {
+  return (await brandRunOf({ research, template, accountId }, { brandStep, kit })).record
 }
 
 /**
@@ -149,8 +149,8 @@ export async function brandOf({ research, template }, { brandStep, kit }) {
  * that shape (it carries its `schema`).
  * @returns {Promise<{record: object | null, costCents?: number}>}
  */
-export async function brandRunOf({ research, template }, { brandStep, kit }) {
-  const answer = (await brandStep({ research, template, kit })) ?? null
+export async function brandRunOf({ research, template, accountId = null }, { brandStep, kit }) {
+  const answer = (await brandStep({ research, template, kit, accountId })) ?? null
   if (answer && typeof answer === 'object' && !('schema' in answer) && 'record' in answer)
     return {
       record: answer.record ?? null,
