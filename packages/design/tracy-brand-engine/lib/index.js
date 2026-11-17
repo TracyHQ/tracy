@@ -1116,7 +1116,9 @@ var EXEC_USER = Object.freeze({
   "read-only": "nobody"
 });
 function trimRoot(root) {
-  const trimmed = root.replace(/\/+$/, "");
+  let end = root.length;
+  while (end > 0 && root[end - 1] === "/") end--;
+  const trimmed = root.slice(0, end);
   if (trimmed === "") throw new Error("subprocess-docker: sitesRoot must not be the filesystem root");
   return trimmed;
 }
