@@ -32,6 +32,11 @@ function videoLabelsOf(asset) {
   return out
 }
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
+/** The id a label links to (`{id, evidence}` or the id itself); never `general`, which ties to nothing. */
+const linkOf = (link) => {
+  const id = typeof link === 'string' ? link : link?.id
+  return isText(id) && id !== 'general' ? id : null
+}
 
 /** The ids of the stale event photos the brief lists (`stale[].field` `media:<id>`). */
 const staleIdsOf = (brief) =>
@@ -90,7 +95,8 @@ export function mediaOf(brief, manifest, sourceOf) {
     else if (stale.has(asset.id)) aside(asset, 'a past event photo the brief keeps off the site')
     else if (asset.kind === 'image' && !photographs.has(asset.id))
       aside(asset, 'the logo or a profile picture')
-    else if (teamOnly.has(asset.id)) aside(asset, 'a team member photo, shown with that person only')
+    else if (teamOnly.has(asset.id) && !(linkOf(asset.portraitOf) && source && isText(asset.sourceUrl)))
+      aside(asset, 'a team member photo, shown with that person only')
     else if (isMapPhotoByOthers(asset)) aside(asset, 'a map photo posted by someone else', true)
     else if (!isOwnersPhoto(asset)) aside(asset, 'not the business own photo', true)
     else if (!isText(asset.sourceUrl)) aside(asset, 'no address in the asset manifest')
@@ -113,7 +119,13 @@ export function mediaOf(brief, manifest, sourceOf) {
       source.pictures.push({
         id: asset.id,
         ref: asset.sourceUrl,
-        ...(isText(asset.caption) ? { label: asset.caption } : {})
+        ...(isText(asset.caption) ? { label: asset.caption } : {}),
+        // What the research's vision tied it to (the step chain's `depicts` and `portraitOf`, `photo-shortlist.js`):
+        // the needs profile puts it on that item (`needs-profile-observations.mjs`). A team member photo rides with
+        // its portrait only.
+        ...(linkOf(asset.depicts) && !teamOnly.has(asset.id) ? { depicts: linkOf(asset.depicts) } : {}),
+        ...(linkOf(asset.portraitOf) ? { portraitOf: linkOf(asset.portraitOf) } : {}),
+        ...(teamOnly.has(asset.id) ? { portraitOnly: true } : {})
       })
   }
   return { videos, setAside }

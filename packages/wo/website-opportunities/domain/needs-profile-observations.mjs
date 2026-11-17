@@ -29,6 +29,7 @@ const REASONS = Object.freeze({
   review_without_text: 'a review without text',
   rating_not_readable: 'the rating is not a number or a text',
   picture_without_ref: 'a picture without a ref',
+  portrait_without_person: 'a team member photo whose person the research does not hold',
   unknown_kind: 'not a fact or item kind the model reads',
   missing_primary_field: 'the item has no name field',
   unknown_source: 'unknown source',
@@ -61,8 +62,46 @@ const corpusOf = (source) =>
 const ratingOf = (rating) =>
   (typeof rating === 'number' && Number.isFinite(rating)) || isText(rating) ? String(rating).trim() : null
 
+/** The typed items of every source (the reading's services, the people reviews name) by their research id. */
+function typedItemsOf(sources) {
+  const out = new Map()
+  for (const source of sources)
+    for (const item of list(source.items)) if (isText(item?.id) && !out.has(item.id)) out.set(item.id, item)
+  return out
+}
+
+/** The image field each typed item kind takes, beside the field that names it. */
+const TIED = { service: ['offering.name', 'offering.image'], person: ['person.name', 'person.image'] }
+
+/**
+ * A picture the research's vision tied to one item, as an observation of that item: its name and its image field, so
+ * the profile joins it to the item (`mergeItems` groups by the name). The step chain's rules (`photo-shortlist.js`
+ * `sameService`, `portraitsOf`): a photo goes to the offering its `depicts` names, a portrait only to the person its
+ * `portraitOf` names, never by a guess from words; a person only customers named keeps that mark. Null when the
+ * picture names no item of the research.
+ */
+function tiedItemOf(picture, typed) {
+  for (const [link, kind] of [
+    [picture.portraitOf, 'person'],
+    [picture.depicts, 'service']
+  ]) {
+    const item = isText(link) ? typed.get(link) : null
+    if (!item || item.kind !== kind) continue
+    const [nameRole, imageRole] = TIED[kind]
+    const name = item.fields?.[nameRole]
+    if (!isText(name)) continue
+    return {
+      kind,
+      fields: { [nameRole]: name, [imageRole]: picture.ref },
+      ...(item.namedBy ? { namedBy: item.namedBy } : {})
+    }
+  }
+  return null
+}
+
 /** Observations from structured listing fields, reviews and pictures, taken as they are; the rest goes to `dropped`. */
 export function structuredObservations(sources) {
+  const typed = typedItemsOf(sources)
   const facts = []
   const items = []
   const dropped = []
@@ -93,6 +132,15 @@ export function structuredObservations(sources) {
     for (const p of list(source.pictures)) {
       if (!isText(p?.ref)) {
         dropped.push(drop('picture_without_ref', { ...from, kind: 'gallery', picture: p?.id ?? null }))
+        continue
+      }
+      const tied = tiedItemOf(p, typed)
+      if (tied) {
+        items.push({ ...tied, source: ref, pictureId: p.id })
+        continue
+      }
+      if (p.portraitOnly) {
+        dropped.push(drop('portrait_without_person', { ...from, kind: 'person', picture: p.id ?? null }))
         continue
       }
       items.push({
