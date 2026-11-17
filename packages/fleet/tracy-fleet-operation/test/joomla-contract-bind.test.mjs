@@ -66,32 +66,34 @@ after(() => php?.stop())
  * Runs one PHP snippet with the bootstrap's pure half already loaded, and returns its JSON answer.
  * The source travels in the environment: nothing here needs a directory shared with PHP, since the
  * snippets build what they need themselves.
+ *
+ * Data never becomes code: `args` travels as JSON in `TRACY_TEST_ARGS` and the snippet reads it as
+ * `$args['name']`, so the PHP text of a call is the same whatever values the test hands it.
  */
-const run = (snippet) => {
-  const code = `putenv('TRACY_BOOTSTRAP_LIB_ONLY=1'); eval('?>' . getenv('TRACY_BOOTSTRAP_SRC')); ${snippet}`
-  const [out] = php.run([{ args: ['-r', code], env: { TRACY_BOOTSTRAP_SRC: SOURCE } }])
+const run = (snippet, args = {}) => {
+  const code = `putenv('TRACY_BOOTSTRAP_LIB_ONLY=1'); eval('?>' . getenv('TRACY_BOOTSTRAP_SRC')); $args = json_decode(getenv('TRACY_TEST_ARGS'), true); ${snippet}`
+  const env = {
+    TRACY_BOOTSTRAP_SRC: SOURCE,
+    TRACY_TEST_ARGS: JSON.stringify(args, (k, v) => (v === undefined ? null : v))
+  }
+  const [out] = php.run([{ args: ['-r', code], env }])
   assert.equal(out.status, 0, `php failed: ${out.stderr}`)
   return JSON.parse(out.stdout)
 }
-
-/**
- * A JSON value as a PHP expression — an object literal is not something PHP can read. The JSON
- * travels base64-encoded: a JSON string is not a PHP string (`$` and `\` mean other things there),
- * and base64 has no character a single-quoted PHP string treats specially.
- */
-const asPhp = (value) =>
-  `json_decode(base64_decode('${Buffer.from(JSON.stringify(value) ?? 'null').toString('base64')}'), true)`
 
 /**
  * Asks `tracy_contract_retry_path` about one answer, against a webroot holding exactly `files`.
  * The webroot is built inside the PHP process, so this needs no directory shared with it.
  */
 const retryPath = (answer, files) =>
-  run(`
+  run(
+    `
     $root = sys_get_temp_dir() . '/tracy-webroot-' . bin2hex(random_bytes(6));
-    foreach (${asPhp(files)} as $f) { @mkdir(dirname("$root/$f"), 0777, true); file_put_contents("$root/$f", 'x'); }
-    echo json_encode(tracy_contract_retry_path(${asPhp(answer)}, $root));
-  `)
+    foreach ($args['files'] as $f) { @mkdir(dirname("$root/$f"), 0777, true); file_put_contents("$root/$f", 'x'); }
+    echo json_encode(tracy_contract_retry_path($args['answer'], $root));
+  `,
+    { files, answer }
+  )
 
 const refusal = (message) => ({ ok: false, error: 'contract_failed', message })
 
@@ -153,7 +155,7 @@ test('a site with no menu at all is still warmed', { skip: PHP_SKIP }, () => {
 // deliberate and the stylesheets belong to template styles, not to individual pages.
 test('the warm-up is bounded', { skip: PHP_SKIP }, () => {
   const ids = Array.from({ length: 200 }, (_, i) => i + 1)
-  assert.equal(run(`echo json_encode(count(tracy_warm_urls(${asPhp(ids)})));`), 61)
+  assert.equal(run(`echo json_encode(count(tracy_warm_urls($args['ids'])));`, { ids }), 61)
 })
 
 // Measured 20/09 on `site-n38jbp`: `media/t4/css/NN.css` is named after the TEMPLATE STYLE whose
@@ -179,7 +181,7 @@ test('an asset that is not a template stylesheet has no aimed URL', { skip: PHP_
     'media/t4/css/x.css'
   ])
     assert.deepEqual(
-      run(`echo json_encode(tracy_warm_urls_for_missing(${asPhp(path)}));`),
+      run(`echo json_encode(tracy_warm_urls_for_missing($args['path']));`, { path }),
       [],
       `aimed at ${path}`
     )
@@ -206,7 +208,7 @@ test('a bind that is not retried says what the Claude Cowork plugin answered, an
     message: 'Presentation asset changed: media/t4/css/33.css',
     token: 'never-print-this'
   }
-  const said = run(`echo json_encode(tracy_bind_failure(${asPhp(answer)}, ''));`)
+  const said = run(`echo json_encode(tracy_bind_failure($args['answer'], ''));`, { answer })
   assert.match(said, /^Quickstart contract binding failed: /)
   assert.match(said, /"error":"contract_failed"/)
   assert.match(said, /Presentation asset changed: media\/t4\/css\/33\.css/)
@@ -242,11 +244,14 @@ test('unreadable bind responses expose bounded categories without leaking respon
     ['Warning: private-secret in private-path\n{"ok":true}', 'application/json', /php-warning=yes/],
     [JSON.stringify({ 'secret-key-name': 'secret-body-value' }), 'attacker-secret-mime', /content-type=other/]
   ]) {
-    const result = run(`
-      [$answer, $transport, $status] = tracy_decode_door_response(${asPhp(raw)}, '', 200, ${asPhp(mime)});
+    const result = run(
+      `
+      [$answer, $transport, $status] = tracy_decode_door_response($args['raw'], '', 200, $args['mime']);
       echo json_encode(['accepted' => tracy_bind_accepted($answer, 'ja-boxing/j6/1.0.11', $status),
         'status' => $status, 'failure' => tracy_bind_failure($answer, $transport, $status)]);
-    `)
+    `,
+      { raw, mime }
+    )
     assert.equal(result.accepted, false)
     assert.equal(result.status, 200)
     assert.match(result.failure, expected)
@@ -259,9 +264,9 @@ test('unreadable bind responses expose bounded categories without leaking respon
 test('response diagnostics preserve successful binds and HTTP refusals', { skip: PHP_SKIP }, () => {
   const accepted = { ok: true, bound: true, contract: 'ja-boxing/j6/1.0.11' }
   assert.deepEqual(
-    run(
-      `echo json_encode(tracy_decode_door_response(${asPhp(JSON.stringify(accepted))}, '', 200, 'application/json'));`
-    ),
+    run(`echo json_encode(tracy_decode_door_response($args['raw'], '', 200, 'application/json'));`, {
+      raw: JSON.stringify(accepted)
+    }),
     [accepted, '', 200]
   )
   const refused = run(`
@@ -373,7 +378,7 @@ function tracy_scenario(array $s): void {
 `
 
 /** Runs one scenario through the real `tracy_bootstrap` and answers what it did. */
-const scenario = (s) => run(`${FAKE_SITE} tracy_scenario(${asPhp(s)});`)
+const scenario = (s) => run(`${FAKE_SITE} tracy_scenario($args['s']);`, { s })
 
 const KINETIC = 'ja-kinetic/j6/1.0.0'
 const TOKEN = 'a'.repeat(64)
@@ -936,7 +941,11 @@ test('REGRESSION #824: a re-run is confirmed by the same answer, after a bind or
 
 /** Asks `tracy_inspect_confirms` about one decoded door answer, of any JSON type. */
 const inspectConfirms = (answer, contract = KINETIC, status = 200) =>
-  run(`echo json_encode(tracy_inspect_confirms(${asPhp(answer)}, ${asPhp(contract)}, ${status}));`)
+  run(`echo json_encode(tracy_inspect_confirms($args['answer'], $args['contract'], $args['status']));`, {
+    answer,
+    contract,
+    status
+  })
 
 // Every inspect answer that must NOT end a pairing. `bound` and `construction` may be absent; when
 // either is there it has to be the boolean that agrees with a bound site, and nothing else.
@@ -1056,7 +1065,11 @@ test('a refused read-back still says what the component answered, and only the f
   skip: PHP_SKIP
 }, () => {
   const said = (answer, transport = '', status = 200) =>
-    run(`echo json_encode(tracy_inspect_failure(${asPhp(answer)}, ${asPhp(transport)}, ${status}));`)
+    run(`echo json_encode(tracy_inspect_failure($args['answer'], $args['transport'], $args['status']));`, {
+      answer,
+      transport,
+      status
+    })
   const head = 'Quickstart contract inspect after bind did not confirm it: '
   assert.equal(
     said({

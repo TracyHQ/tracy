@@ -79,15 +79,24 @@ function defuseScripts(html) {
   return html.replace(/<script\b/gi, '<script type="text/od-defused-script"')
 }
 
-/** @param {string} s */
-function decodeEntities(s) {
-  return s
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&nbsp;/g, ' ')
+/** @type {Record<string, string>} */
+const ENTITIES = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#39;': "'",
+  '&apos;': "'",
+  '&nbsp;': ' '
+}
+
+/**
+ * The few entities a title or link carries, decoded in ONE pass: `&amp;lt;` stays `&lt;` (a chain of
+ * replaces that decodes `&amp;` first would turn it into `<`).
+ * @param {string} s
+ */
+export function decodeEntities(s) {
+  return s.replace(/&(?:amp|lt|gt|quot|#39|apos|nbsp);/g, (e) => ENTITIES[e] ?? e)
 }
 
 /** @param {string} fragment */
