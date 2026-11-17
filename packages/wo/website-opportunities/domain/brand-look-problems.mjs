@@ -74,7 +74,11 @@ export function lookProblemsOf({ plan, template, lookSources }) {
   const logoFrom = lookSources?.logo?.from
   if (look.logo?.kind === 'own' && (logoFrom === 'template' || logoNames.includes(lower(look.logo.source))))
     add('template_logo', 'look.logo', "the logo is the template's own")
-  else if (logoFrom && (look.logo?.kind === 'text') !== (logoFrom === LOGO_MADE))
+  // A made logo is a text logo, unless it has pictures the write places (`pictured`, #575): then it is an image one.
+  else if (
+    logoFrom &&
+    (look.logo?.kind === 'text') !== (logoFrom === LOGO_MADE && lookSources?.logo?.pictured !== true)
+  )
     add('template_logo', 'look.logo', `a ${look.logo?.kind} logo cannot come from ${logoFrom}`)
   const says = templateLookWordsOf(template)
   list(plan?.assumptions).forEach((assumption, i) => {

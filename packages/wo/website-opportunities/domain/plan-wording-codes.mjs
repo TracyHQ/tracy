@@ -13,10 +13,14 @@ export const LOGO_CODES = Object.freeze({
 })
 /**
  * `assumptions[].code` of the logo assumptions code writes (params: `reason` and `sourceKind` of a drawn logo; `found`
- * of a logo set as the business name in text, `logo_name_as_text`). The earlier `logo_made` (a temporary image beside
- * the name) is no longer written: the build chat prints the name as text in its place.
+ * of a logo set as the business name in text, `logo_name_as_text`; `found` and `mark` of a temporary logo the brand
+ * step made with pictures the write places, `logo_made`, #575).
  */
-export const LOGO_ASSUMPTION_CODES = Object.freeze({ drawn: 'logo_drawn', nameAsText: 'logo_name_as_text' })
+export const LOGO_ASSUMPTION_CODES = Object.freeze({
+  drawn: 'logo_drawn',
+  nameAsText: 'logo_name_as_text',
+  made: 'logo_made'
+})
 
 export const keyOf = (table, name) => Object.entries(table).find(([, value]) => value === name)?.[0] ?? null
 
