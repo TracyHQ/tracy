@@ -145,12 +145,34 @@ test('English policy reads trusted base code and scans fork Git data without run
   for (const event of ['opened', 'edited', 'synchronize', 'reopened'])
     assert.ok(trigger.types.includes(event), event)
   const checkouts = job.steps.filter((s) => s.uses?.startsWith('actions/checkout@'))
-  assert.equal(checkouts.length, 2)
+  assert.equal(checkouts.length, 3)
   assert.equal(checkouts[0].with.ref, '${{ github.event.pull_request.base.sha }}')
   assert.equal(checkouts[0].with.path, 'trusted')
   assert.equal(checkouts[1].with.ref, '${{ github.event.pull_request.head.sha }}')
   assert.equal(checkouts[1].with.path, 'candidate')
   assert.equal(checkouts[1].with['fetch-depth'], 0)
+  // A release pull request also reads develop's history, as Git data only, to skip what it checked.
+  assert.equal(checkouts[2].with.ref, 'develop')
+  assert.equal(checkouts[2].with.path, 'develop-history')
+  assert.equal(checkouts[2].with['fetch-depth'], 0)
+  const release = (base, head, fork = false) => ({
+    github: {
+      repository: 'TracyHQ/tracy',
+      event: {
+        pull_request: {
+          base: { ref: base },
+          head: { ref: head, repo: { full_name: fork ? 'someone/tracy' : 'TracyHQ/tracy' } }
+        }
+      }
+    }
+  })
+  assert.equal(evaluate(checkouts[2].if, release('main', 'release/develop-to-main-2026-11-09')), true)
+  for (const ctx of [
+    release('develop', 'release/develop-to-main-2026-11-09'),
+    release('main', 'feat/release/develop-to-main-x'),
+    release('main', 'release/develop-to-main-2026-11-09', true)
+  ])
+    assert.equal(evaluate(checkouts[2].if, ctx), false)
   for (const step of job.steps) {
     assert.ok(!JSON.stringify(step).includes('secrets.'))
     if (checkouts.includes(step)) {
@@ -161,7 +183,11 @@ test('English policy reads trusted base code and scans fork Git data without run
   }
   const commands = job.steps.filter((s) => s.run)
   assert.equal(commands.length, 1)
-  assert.match(commands[0].run, /^node trusted\/scripts\/check-language-policy\.mjs\s+--repo candidate /)
+  const nodes = commands[0].run.match(/^\s*node .*$/gm)
+  assert.equal(nodes.length, 1, 'only the trusted validator runs')
+  assert.match(nodes[0], /^\s*node trusted\/scripts\/check-language-policy\.mjs \\$/)
+  assert.match(commands[0].run, /\n\s+--repo candidate /)
+  assert.doesNotMatch(commands[0].run, /\b(npm|npx|pnpm)\b|candidate\/[^\s"]/)
   assert.ok(commands[0].run.includes('--event "$GITHUB_EVENT_PATH"'))
   assert.equal(commands[0].env.BASE, '${{ github.event.pull_request.base.sha }}')
   assert.equal(commands[0].env.HEAD, '${{ github.event.pull_request.head.sha }}')
@@ -169,8 +195,8 @@ test('English policy reads trusted base code and scans fork Git data without run
 
 /**
  * Evaluate a GitHub Actions expression (the `${{ }}` body or a bare `if:`) against a context. Only
- * what `codeql.yml` uses: context paths, '…' strings, ==, !=, !, &&, || (both returning an operand,
- * as in Actions), parentheses and format(). Actions compares strings case-insensitively; the values
+ * what `codeql.yml` and `language-policy.yml` use: context paths, '…' strings, ==, !=, !, &&, ||
+ * (both returning an operand, as in Actions), parentheses, format() and startsWith(). Actions compares strings case-insensitively; the values
  * here are all lower-case, so plain equality is enough.
  */
 function evaluate(expr, ctx) {
@@ -178,12 +204,13 @@ function evaluate(expr, ctx) {
     if (tok.startsWith("'")) return JSON.stringify(tok.slice(1, -1).replaceAll("''", "'"))
     if (tok === '==') return '==='
     if (tok === '!=') return '!=='
-    if (tok === 'format') return 'format'
+    if (tok === 'format' || tok === 'startsWith') return tok
     const [head, ...rest] = tok.split('.')
     return `ctx[${JSON.stringify(head)}]` + rest.map((k) => `?.[${JSON.stringify(k)}]`).join('')
   })
   const format = (f, ...args) => f.replace(/\{(\d+)\}/g, (_, n) => String(args[n]))
-  return new Function('ctx', 'format', `return (${js})`)(ctx, format)
+  const startsWith = (text, prefix) => String(text ?? '').startsWith(prefix)
+  return new Function('ctx', 'format', 'startsWith', `return (${js})`)(ctx, format, startsWith)
 }
 
 /** A template string with `${{ }}` parts, as GitHub renders it. */
@@ -230,21 +257,33 @@ test('CodeQL: forks and pull requests into main scan everything, team pull reque
   // A pull request into any base gets a result; `edited` catches a retarget without a new commit.
   assert.equal(doc.on.pull_request.branches, undefined, 'no base filter on pull requests')
   assert.ok(doc.on.pull_request.types.includes('edited'))
-  const { analyze, 'analyze-full': full, 'dependency-review': review } = doc.jobs
+  const {
+    analyze,
+    'analyze-full': full,
+    'analyze-develop-full': developFull,
+    'dependency-review': review
+  } = doc.jobs
   const initOf = (job) => job.steps.find((s) => String(s.uses).startsWith('github/codeql-action/init@'))
   // The overlay-base cache key carries the job id and the matrix: one job, one matrix, every event.
   assert.equal(initOf(analyze).with['config-file'], './.github/codeql/codeql-config.yml')
   assert.equal(initOf(full).with['config-file'], undefined, 'the full scan reads no exclusions')
   assert.equal(initOf(full).with.config, undefined)
   assert.deepEqual(full.strategy.matrix, analyze.strategy.matrix)
+  // The full develop scan has its own job id (no overlay cache) and its own categories.
+  assert.equal(initOf(developFull).with['config-file'], undefined)
+  assert.deepEqual(developFull.strategy.matrix, analyze.strategy.matrix)
+  const categoryOf = (job) =>
+    job.steps.find((s) => String(s.uses).startsWith('github/codeql-action/analyze@')).with.category
+  assert.equal(categoryOf(full), categoryOf(analyze))
+  assert.equal(categoryOf(developFull), `${categoryOf(analyze)}/full`)
 
   const runs = (ctx) =>
-    Object.entries({ analyze, full, review })
+    Object.entries({ analyze, full, developFull, review })
       .filter(([, job]) => evaluate(job.if, ctx))
       .map(([id]) => id)
   const retarget = { base: { ref: { from: 'develop' } } }
   const cases = [
-    [{ name: 'push', base: 'develop' }, ['analyze']],
+    [{ name: 'push', base: 'develop' }, ['analyze', 'developFull']],
     [{ name: 'push', base: 'main' }, ['analyze']],
     [{ name: 'schedule', base: 'main' }, ['analyze']],
     [{ base: 'develop' }, ['analyze', 'review']],
