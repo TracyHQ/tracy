@@ -110,6 +110,11 @@ const EMPTY_FRAME_REASONS = Object.freeze({
     'gallery photo spot',
     'gallery photo spots',
     'A gallery shows only your own photos, so these spots stay empty until you add a photo.'
+  ],
+  documentary_not_drawn: [
+    'event or post photo spot',
+    'event or post photo spots',
+    'Tracy never draws an event or a post that really happened, so these spots stay empty until you add your photo.'
   ]
 })
 /** A label that stands in, for counting only, for an own photo the pictures step labels before it places it. */

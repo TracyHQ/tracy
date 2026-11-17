@@ -194,7 +194,7 @@ Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
 | Reason | Why |
 |---|---|
 | `left_empty`, `template_fallback`, `place_fallback`, `place_<state>`, `block_hidden` | the order leaves the place empty, to the template, or not shown |
-| `no_candidate_icon`, `gallery_own_photos_only`, `no_fitting_video`, `no_generated_people` | the order's own reason for a picture or icon it does not fill |
+| `no_candidate_icon`, `gallery_own_photos_only`, `no_fitting_video`, `no_generated_people`, `documentary_not_drawn` | the order's own reason for a picture or icon it does not fill |
 | `address_shared` | another entry already writes the same words at that place (other words: a conflict, see the plan) |
 | `menu_item_is_page_item` | a menu block on the main menu: its items are the page items |
 | `menu_item_without_page`, `menu_item_without_label`, `menu_item_title` | a menu item with no page to link to; one with a page but no label; a menu item title, written by the page |
