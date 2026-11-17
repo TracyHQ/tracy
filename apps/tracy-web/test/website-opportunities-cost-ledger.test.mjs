@@ -264,6 +264,8 @@ test('price table: a ScrapeCreators profile reserves one cent per credit call it
   // Facebook and TikTok read the page and its posts (two calls); Instagram's profile carries its posts.
   assert.equal(ceilingCents('scrapecreators', 'facebook-profile'), 2)
   assert.equal(ceilingCents('scrapecreators', 'instagram-profile'), 1)
+  // Instagram's page read then asks up to three pages of its posts (`instagram-posts.mjs`).
+  assert.equal(ceilingCents('scrapecreators', 'instagram-profile-posts'), 4)
   assert.equal(ceilingCents('scrapecreators', 'tiktok-profile'), 2)
 })
 

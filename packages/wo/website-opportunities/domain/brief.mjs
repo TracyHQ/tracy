@@ -358,27 +358,12 @@ export function buildBrief({
   const otherPhones = (Array.isArray(profile.otherPhones) ? profile.otherPhones : [])
     .filter((p) => nonEmpty(p?.phone) && p.phone !== phone)
     .map((p) => ({ phone: p.phone.trim(), ...(p.whatsapp === true ? { whatsapp: true } : {}) }))
-  const pool = Array.isArray(posts)
-    ? contentPool({
-        posts,
-        now: resolvedAt,
-        facts: { phone: profile.phone ?? cand.phone, address: profile.address ?? cand.address }
-      })
-    : null
-  const contentItems = pool ? pool.items.slice(0, CONTENT_MAX) : []
-  // A menu link the restaurant's posts carry is a menu source like one on its website.
-  const postMenus = (pool?.links ?? [])
-    .filter((l) => l.kind === 'menu')
-    .map((l) => ({ url: l.url, source: l.source }))
   // Dishes and prices read off the menus, links and photos (`menu-items.js`): each one collected, with its source.
   const read = menuItemsOf(profile.menuItems)
   const readMenus = read.map((i) => ({
     url: i.source.url,
     source: i.source.kind === 'photo' ? 'menu photo' : 'menu'
   }))
-  const menus = [...(profile.menus ?? []), ...postMenus, ...readMenus].filter(
-    (m, i, all) => nonEmpty(m?.url) && all.findIndex((x) => x.url === m.url) === i
-  )
   const bookings = (profile.booking ?? []).filter((b) => nonEmpty(b?.url))
   const booking = bookings.find((b) => b.verified === true)
   const bio = nonEmpty(profile.bio) ? profile.bio.trim() : null
@@ -407,6 +392,29 @@ export function buildBrief({
     heldPeople
   )
   const stated = factsWithoutHeldQuotes(statedLifted, { names: heldPeople, held: heldReviews })
+  // 🔒 The content pool follows the fact decisions: a post whose fact the brief holds off (stale, or the owner's off)
+  // is no content item, so the pool and the `posts` entry of `missing` agree.
+  const heldPostTexts = new Set(
+    stated.filter((f) => f.field === 'posts' && f.onSite === false).map((f) => f.value?.text)
+  )
+  const postsKept = Array.isArray(posts)
+    ? posts.filter((p) => !heldPostTexts.has(p?.caption ?? p?.text))
+    : posts
+  const pool = Array.isArray(posts)
+    ? contentPool({
+        posts: postsKept,
+        now: resolvedAt,
+        facts: { phone: profile.phone ?? cand.phone, address: profile.address ?? cand.address }
+      })
+    : null
+  const contentItems = pool ? pool.items.slice(0, CONTENT_MAX) : []
+  // A menu link the restaurant's posts carry is a menu source like one on its website.
+  const postMenus = (pool?.links ?? [])
+    .filter((l) => l.kind === 'menu')
+    .map((l) => ({ url: l.url, source: l.source }))
+  const menus = [...(profile.menus ?? []), ...postMenus, ...readMenus].filter(
+    (m, i, all) => nonEmpty(m?.url) && all.findIndex((x) => x.url === m.url) === i
+  )
   const isOn = (field, match) => shown(factOf(stated, field, match))
   // The fact of a field as research read it (`match` sees the value research read, before the owner's edit).
   const readFactOf = (field, match) =>
