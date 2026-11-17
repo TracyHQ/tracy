@@ -97,7 +97,8 @@ const placesLeftOf = (state) =>
  *   drawInitials?: (draw: {initials: string, width: number, height: number}) => Promise<{bytes: Uint8Array, mime?: string}>}}
  *   input `record`: the run record, kept between attempts and runs (`state` is resumed from, `save` is called after
  *   every step of an op); `drawInitials`: draws the initials picture of a person with no photo; `now`: the clock the
- *   created articles are dated from on the first run
+ *   created articles are dated from on the first run; `pictureLabels`: the research labels of the owner photos by
+ *   address (`picture-research-labels.mjs`), read by the photo cut (`step-chain-draft-photo-cut.js`)
  * @returns {Promise<{status: 'done', ran: string[], counts: object, unproven: object[]}>}
  */
 export async function runDraftWrite({
@@ -107,7 +108,8 @@ export async function runDraftWrite({
   openStored,
   drawInitials,
   runId = 'draft',
-  now = () => Date.now()
+  now = () => Date.now(),
+  pictureLabels = null
 }) {
   const state = stateOf(record, plan, now)
   const report = {
@@ -135,6 +137,8 @@ export async function runDraftWrite({
     report,
     openStored,
     drawInitials,
+    // The research labels of the owner photos by address: the photo cut keeps their subject and heads whole.
+    pictureLabels,
     save: () => record.save?.(state),
     // One id per door call of an operation, the same on every retry and resume: `<run>:<op>:<call>`.
     applyId: (op, call) => `${runId}:${op.key}:${call}`
