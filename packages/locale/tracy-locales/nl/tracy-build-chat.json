@@ -22,6 +22,7 @@
   "plan.edit": "{label} bewerken: {value}",
   "plan.facts": "Bedrijfsgegevens",
   "plan.fromServices": "Uit Diensten",
+  "plan.trade": "Geschreven op basis van algemene kennis van uw vak. Verwijder het met Plan wijzigen als het niet past.",
   "plan.language": "Taal van de site",
   "plan.leftOut": "Weggelaten",
   "plan.leftOut.showAll": "Alles tonen ({count})",

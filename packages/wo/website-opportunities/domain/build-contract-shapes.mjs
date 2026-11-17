@@ -39,9 +39,11 @@ export const CONTRACT_SHAPES = Object.freeze({
   item: shape(['id', 'kind', 'label', 'sources'], ['count'], { plan: true }),
   source: shape(['kind', 'name'], [], { plan: true }),
   page: shape(['id', 'name', 'pageType', 'blocks'], [], { plan: true }),
-  block: shape(['id', 'type', 'block', 'source', 'label', 'data', 'reason'], ['lists', 'labelCode'], {
-    plan: true
-  }),
+  block: shape(
+    ['id', 'type', 'block', 'source', 'label', 'data', 'reason'],
+    ['lists', 'labelCode', 'basis', 'factIds'],
+    { plan: true }
+  ),
   row: shape(['id', 'label', 'sources'], [], { plan: true }),
   'child list': shape(['name', 'rows'], ['item'], { plan: true }),
   'planned row': shape([], ['data', 'page', 'lists'], { plan: true }),

@@ -21,9 +21,15 @@ const pick = (field) => {
   return { name, type, ...(kind ? { kind } : {}), ...(limit ? { limit } : {}) }
 }
 
-/** A block as the model reads it: its declared shape only. Nothing else of the store reaches the model. */
+/**
+ * A block as the model reads it: its declared shape only, and its original name when the kit gives one
+ * (`ai-quickstart-block-names.mjs`), by which the model recognises a block that shows how the trade works. A field's
+ * data `kind` says whether it is written copy (`editorial.*`) or a fact of the business. Nothing else of the store
+ * reaches the model.
+ */
 const modelBlockOf = (block) => ({
   id: block.id,
+  ...(typeof block.name === 'string' && block.name.trim() ? { name: block.name.trim() } : {}),
   type: block.type,
   source: block.source ?? 'template',
   items: { min: block.items?.min, max: block.items?.max },

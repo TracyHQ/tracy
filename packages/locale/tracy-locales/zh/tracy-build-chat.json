@@ -22,6 +22,7 @@
   "plan.edit": "编辑{label}：{value}",
   "plan.facts": "业务信息",
   "plan.fromServices": "来自服务",
+  "plan.trade": "根据你所在行业的通用知识撰写。如果不合适，可以用“修改计划”删除。",
   "plan.language": "site 语言",
   "plan.leftOut": "未包含",
   "plan.leftOut.showAll": "显示全部 ({count})",

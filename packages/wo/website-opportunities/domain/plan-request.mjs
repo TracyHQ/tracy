@@ -65,7 +65,14 @@ function planRequestModelRequest(context, plan, text, problems = [], firstAnswer
     id,
     name,
     pageType,
-    blocks: blocks.map((b) => ({ id: b.id, block: b.block, label: b.label, data: [...b.data] }))
+    blocks: blocks.map((b) => ({
+      id: b.id,
+      block: b.block,
+      label: b.label,
+      data: [...b.data],
+      // A block kept from trade knowledge stays so unless the request removes it (`plan-gate-trade.mjs`).
+      ...(b.basis ? { basis: b.basis, factIds: [...b.factIds] } : {})
+    }))
   }))
   const user = {
     request: text,

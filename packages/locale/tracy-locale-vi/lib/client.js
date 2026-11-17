@@ -1079,6 +1079,7 @@ window.__ModuleLoader__.load({
               "plan.edit": "S\u1eeda\u0020{label}:\u0020{value}",
               "plan.facts": "Th\u00f4ng\u0020tin\u0020doanh\u0020nghi\u1ec7p",
               "plan.fromServices": "T\u1eeb\u0020D\u1ecbch\u0020v\u1ee5",
+              "plan.trade": "Vi\u1ebft\u0020t\u1eeb\u0020hi\u1ec3u\u0020bi\u1ebft\u0020chung\u0020v\u1ec1\u0020ng\u00e0nh\u0020c\u1ee7a\u0020b\u1ea1n.\u0020B\u1ecf\u0020m\u1ee5c\u0020n\u00e0y\u0020b\u1eb1ng\u0020\u0110\u1ed5i\u0020k\u1ebf\u0020ho\u1ea1ch\u0020n\u1ebfu\u0020kh\u00f4ng\u0020ph\u00f9\u0020h\u1ee3p.",
               "plan.language": "Ng\u00f4n\u0020ng\u1eef\u0020c\u1ee7a\u0020site",
               "plan.leftOut": "\u0110\u00e3\u0020b\u1ecf\u0020qua",
               "plan.leftOut.showAll": "Hi\u1ec7n\u0020t\u1ea5t\u0020c\u1ea3\u0020({count})",

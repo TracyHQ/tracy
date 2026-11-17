@@ -22,6 +22,7 @@
   "plan.edit": "Editar {label}: {value}",
   "plan.facts": "Datos del negocio",
   "plan.fromServices": "De Servicios",
+  "plan.trade": "Escrito a partir del conocimiento general de su sector. Quítelo con Cambiar el plan si no encaja.",
   "plan.language": "Idioma del site",
   "plan.leftOut": "Omitido",
   "plan.leftOut.showAll": "Mostrar todo ({count})",

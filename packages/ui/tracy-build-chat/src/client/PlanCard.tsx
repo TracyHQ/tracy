@@ -622,6 +622,7 @@ export function PlanCard({
                   >
                     {holdsText(t, b.holds)}
                   </Value>
+                  {b.trade && <div className="tv-bc-trade tv-bc-note">{t('plan.trade')}</div>}
                   {b.lists && <BlockLists lists={b.lists} />}
                 </li>
               ))}

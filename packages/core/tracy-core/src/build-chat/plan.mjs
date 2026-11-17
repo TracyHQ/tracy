@@ -290,6 +290,9 @@ export function planCardOf(contractPlan) {
           ...(typeof b.labelCode === 'string' && b.labelCode !== '' ? { labelCode: b.labelCode } : {}),
           reason: text(b.reason),
           holds: holdsOf(b, plan, serviceIds),
+          // Kept from general knowledge of the owner's trade (Contract B `basis: "trade"`, #575): the card says so,
+          // and that the owner can remove it with Change the plan (the step chain's owner task to confirm it).
+          ...(b.basis === 'trade' ? { trade: true } : {}),
           ...(lists.length > 0 ? { lists } : {})
         }
       })

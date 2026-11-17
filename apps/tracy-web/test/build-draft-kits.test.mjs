@@ -188,3 +188,15 @@ test('the shipped tree: JA Boxing fits fitness, and is offered only once its kit
   assert.ok(offered !== Boolean(skipped), 'offered or skipped with a reason, never both')
   assert.ok(shipped.loadKit('ja-boxing')?.blockStore.blocks.length > 0)
 })
+
+test('the shipped tree: loadKit names each block by its section title in the kit content map, and never guesses', () => {
+  const blocks = aiQuickstartCatalogue({ root: AI_QUICKSTARTS_DIR }).loadKit('ja-boxing').blockStore.blocks
+  const nameOf = (id) => blocks.find((b) => b.id === id)?.name
+  assert.equal(nameOf('block-157'), 'The workout')
+  assert.equal(nameOf('block-165'), 'Training route')
+  assert.equal(nameOf('block-183'), 'Our Story')
+  // A block of no titled section of the template has no name.
+  assert.equal(nameOf('contact-details'), undefined)
+  // A fixture kit has no content map: its blocks stay unnamed.
+  assert.ok(catalogue.loadKit('kit-released').blockStore.blocks.every((b) => b.name === undefined))
+})

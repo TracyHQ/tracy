@@ -81,6 +81,9 @@ export const en = {
   'plan.sections.one': '{count} section',
   'plan.sections.other': '{count} sections',
   'plan.fromServices': 'From Services',
+  // A section kept from general knowledge of the owner's trade (plan block `basis: "trade"`, #575).
+  'plan.trade':
+    'Written from general knowledge of your trade. Remove it with Change the plan if it does not fit.',
   'plan.count.service.one': '{count} service',
   'plan.count.service.other': '{count} services',
   'plan.count.person.one': '{count} person',

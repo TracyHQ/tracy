@@ -209,6 +209,7 @@ export const CSS = `
 }
 .tv-bc-bn { font-size: 13px; padding-top: 5px; }
 .tv-bc-lists { grid-column: 3; min-width: 0; padding-bottom: 4px; }
+.tv-bc-page ol > li > .tv-bc-trade { grid-column: 3; min-width: 0; padding-bottom: 4px; }
 .tv-bc-list { margin-top: 2px; }
 .tv-bc-lh { font-size: 12.5px; color: var(--muted-foreground); padding-top: 2px; overflow-wrap: break-word; }
 .tv-bc-rows { margin: 0; padding: 0 0 0 14px; list-style: none; font-size: 13px; }
@@ -237,7 +238,9 @@ export const CSS = `
   .tv-bc-kv { grid-template-columns: 1fr; gap: 0; }
   .tv-bc-kv .tv-bc-k { padding-top: 6px; padding-bottom: 0; }
   .tv-bc-page ol > li { grid-template-columns: 18px minmax(0, 1fr); }
-  .tv-bc-page ol > li > .tv-bc-val, .tv-bc-page ol > li > .tv-bc-lists { grid-column: 2; }
+  .tv-bc-page ol > li > .tv-bc-val, .tv-bc-page ol > li > .tv-bc-lists, .tv-bc-page ol > li > .tv-bc-trade {
+    grid-column: 2;
+  }
   /* A source never breaks inside a word: when the row is narrow it drops under the value */
   .tv-bc-val-row { flex-wrap: wrap; row-gap: 0; }
   .tv-bc-opt { flex-wrap: wrap; row-gap: 0; }

@@ -216,6 +216,8 @@ export interface PlanCard {
       labelCode?: string
       reason: string
       holds: BlockHolds
+      /** Kept from general knowledge of the owner's trade (Contract B `basis: "trade"`). */
+      trade?: true
       lists?: BlockList[]
     }[]
   }[]

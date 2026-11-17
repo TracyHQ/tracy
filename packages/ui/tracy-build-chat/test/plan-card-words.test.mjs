@@ -354,3 +354,25 @@ test('a section that holds the same kind twice lists it once, with its count (ru
     assert.equal(html.includes(`${link}, ${link}`), false)
   }
 })
+
+test('a section kept from general knowledge of the trade says so, and that Change the plan removes it', () => {
+  const p = plan()
+  p.pages[0].blocks.splice(1, 0, {
+    id: 'home-trade',
+    type: 'text',
+    block: 'what-to-bring',
+    source: 'template',
+    label: 'What to bring',
+    data: [],
+    reason: 'New players know what to bring to a first lesson.',
+    basis: 'trade',
+    factIds: [p.items[0].id]
+  })
+  for (const t of [vi, lib.english]) {
+    const html = draw({ plan: p, t })
+    assert.equal(html.split(`>${t('plan.trade')}<`).length, 2, 'one note, under the trade section only')
+    assert.ok(html.includes('>New players know what to bring to a first lesson.<'))
+  }
+  assert.equal(draw({ plan: plan() }).includes(lib.en['plan.trade']), false)
+  assert.notEqual(viTable['plan.trade'], undefined)
+})

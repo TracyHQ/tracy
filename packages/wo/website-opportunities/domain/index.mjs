@@ -111,6 +111,7 @@ export {
   checkAiQuickstartContract,
   formatProblem as formatAiQuickstartProblem
 } from './ai-quickstart-contract.mjs'
+export { blockNamesOf, withBlockNames } from './ai-quickstart-block-names.mjs'
 export { BUSINESS_FACTS, SEO_FIELDS, SHARE_IMAGE_FRAME } from './ai-quickstart-mapping.mjs'
 export { LIBRARY_SCHEMA, checkLibraryDeclaration } from './ai-quickstart-library.mjs'
 export {

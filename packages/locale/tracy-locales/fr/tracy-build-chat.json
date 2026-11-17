@@ -22,6 +22,7 @@
   "plan.edit": "Modifier {label} : {value}",
   "plan.facts": "Informations sur l’activité",
   "plan.fromServices": "Depuis Services",
+  "plan.trade": "Rédigé à partir de connaissances générales sur votre métier. Retirez-le avec Modifier le plan s’il ne convient pas.",
   "plan.language": "Langue du site",
   "plan.leftOut": "Laissé de côté",
   "plan.leftOut.showAll": "Tout afficher ({count})",

@@ -22,6 +22,7 @@
   "plan.edit": "Sửa {label}: {value}",
   "plan.facts": "Thông tin doanh nghiệp",
   "plan.fromServices": "Từ Dịch vụ",
+  "plan.trade": "Viết từ hiểu biết chung về ngành của bạn. Bỏ mục này bằng Đổi kế hoạch nếu không phù hợp.",
   "plan.language": "Ngôn ngữ của site",
   "plan.leftOut": "Đã bỏ qua",
   "plan.leftOut.showAll": "Hiện tất cả ({count})",

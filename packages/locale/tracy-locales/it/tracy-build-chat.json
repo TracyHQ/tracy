@@ -22,6 +22,7 @@
   "plan.edit": "Modifica {label}: {value}",
   "plan.facts": "Dati dell’attività",
   "plan.fromServices": "Da Servizi",
+  "plan.trade": "Scritto in base alla conoscenza generale del suo settore. Lo rimuova con Modifica il piano se non è adatto.",
   "plan.language": "Lingua del site",
   "plan.leftOut": "Escluso",
   "plan.leftOut.showAll": "Mostra tutto ({count})",

@@ -1,13 +1,14 @@
 // The pages of a gated plan as the composition gives them (`plan-gate.mjs`, #593), and the model's assumption lines
 // the plan keeps.
 import { assumptionFieldOf } from './plan-gate-fixes.mjs'
+import { TRADE_BASIS } from './plan-gate-reply.mjs'
 import { heldTextsOf, namesHeld } from './plan-withheld.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
 /**
  * The pages as the plan holds them, with ids, and each page's index in the composition. A block the model left with no
- * data is left out, as the gate's messages ask (`no_data` is never sent back); a page whose main block is missing or
+ * data is left out, unless it is kept on trade basis (with its `basis` and `factIds`), as the gate's messages ask (`no_data` is never sent back); a page whose main block is missing or
  * empty is dropped, and the template's pages the plan does not keep are listed by code (`kitPagesLeftOut`). A first composition's ids follow the positions (`home`, `home-b2`). A revision
  * (`plan-request.mjs`) gives `givenIds`, per composition page `{page, blocks}` with `null` for what it adds, and
  * `idTag` (`r<revision>`): a page or block it keeps keeps its id, and a new one gets an id with the tag, so it never
@@ -35,7 +36,11 @@ export function pagesOf(composition, { recipes, blocks, givenIds, idTag }) {
     const kept = page.blocks.flatMap((b, j) => {
       const d = blocks.get(b.block)
       const block = { id: blockId(j), type: d.type, block: d.id, source: d.source ?? 'template' }
-      return b.data.length ? [{ ...block, label: b.label, data: [...b.data], reason: b.reason }] : []
+      const trade = b.basis === TRADE_BASIS ? { basis: b.basis, factIds: [...b.factIds] } : {}
+      // A block kept from trade knowledge shows no data of its own and stays (`plan-gate-trade.mjs`).
+      return b.data.length || trade.basis
+        ? [{ ...block, label: b.label, data: [...b.data], reason: b.reason, ...trade }]
+        : []
     })
     pages.push({ id, name: page.name, pageType: page.pageType, blocks: kept })
   }

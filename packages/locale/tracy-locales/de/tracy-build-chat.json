@@ -22,6 +22,7 @@
   "plan.edit": "{label} bearbeiten: {value}",
   "plan.facts": "Fakten zum Unternehmen",
   "plan.fromServices": "Aus Leistungen",
+  "plan.trade": "Aus allgemeinem Wissen über Ihre Branche geschrieben. Entfernen Sie den Abschnitt mit Plan ändern, wenn er nicht passt.",
   "plan.language": "Sprache der Site",
   "plan.leftOut": "Weggelassen",
   "plan.leftOut.showAll": "Alle anzeigen ({count})",

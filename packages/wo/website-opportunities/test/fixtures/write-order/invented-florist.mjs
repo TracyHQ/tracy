@@ -140,10 +140,15 @@ const labelAll = () =>
     )
   )
 
-/** Every saved step value of the florist's build, from the real modules. */
-export async function floristBuild() {
-  const blockStore = floristBlockStore()
-  const pageRecipes = floristPageRecipes()
+/**
+ * Every saved step value of the florist's build, from the real modules. A test may give its own block store, recipes
+ * and composition (`(services, photos) => composition`); the defaults are the florist's.
+ */
+export async function floristBuild({
+  blockStore = floristBlockStore(),
+  pageRecipes = floristPageRecipes(),
+  composition = floristComposition
+} = {}) {
   const research = floristProfile()
   const services = research.items.service.map((s) => s.id)
   const photos = research.items.gallery.map((g) => g.id)
@@ -158,7 +163,7 @@ export async function floristBuild() {
     // A research brand, not the brand step's record (#616): read through the test-only fallback.
     allowTemplateLook: true,
     planId: 'plan-larkspur',
-    model: scriptedModel(JSON.stringify(floristComposition(services, photos)))
+    model: scriptedModel(JSON.stringify(composition(services, photos)))
   })
   const { plan, profile } = composed
   // One writer step per page, as the step chain runs it (`writer:<page>`).

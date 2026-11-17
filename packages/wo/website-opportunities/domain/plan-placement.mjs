@@ -15,6 +15,7 @@ import { REVIEW_PROBLEM_CODES } from './library-reviews-content.mjs'
 import { ITEM_KINDS } from './needs-profile-merge.mjs'
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { ITEM_NOUNS } from './plan-data.mjs'
+import { TRADE_BASIS } from './plan-gate-reply.mjs'
 import { extraBlockId, insertBlock, pageFor } from './plan-placement-pages.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -55,7 +56,8 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
   const tier = (remaining, kind, how, fit) => {
     for (const { page, block } of onPlan()) {
       const description = blocks.get(block.block)
-      if (!description || !fit(description)) continue
+      // A block kept on trade basis writes its cards from the trade: the business's items never fill it.
+      if (!description || !fit(description) || block.basis === TRADE_BASIS) continue
       const room =
         description.items.max - block.data.filter((id) => data.byId.get(id)?.what === 'item').length
       for (const item of remaining.splice(0, Math.max(room, 0))) {

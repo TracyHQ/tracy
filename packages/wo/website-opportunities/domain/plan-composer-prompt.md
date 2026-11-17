@@ -51,7 +51,11 @@ read the form that describes its parts.
 - `blocks[]`: every block you may place. Each has an `id`, a block `type`, a `source` (`template` or `library`),
   item counts `items: {min, max}`, a rule for no data (`noData`), and its `fields` and `itemFields`, each with a
   `name`, a `type`, a data `kind` and, for text, a length `limit`. A field of type `design` belongs to the
-  template's design and is never filled.
+  template's design and is never filled. A field whose `kind` starts with `editorial.` is written copy (a heading, a
+  paragraph, a button's words, an icon): it is written after approval and holds no fact of the business. Every other
+  kind is a fact of the business, filled only from `business`.
+- `name`, when a block has one, is the name the template gives that section (for example "The workout" or "Training
+  route"). It tells you what the section is about; it is never data, never a label of yours, and never shown.
 - The business name, logo, favicon and brand colours are handled by a brand step; you never decide them. The menu,
   the footer and every link are made from your pages after approval.
 
@@ -71,13 +75,27 @@ which, in plain words for the owner.
 ## Trade knowledge
 
 Some blocks explain how the trade works in general (how a first visit goes, what to bring, how an order is placed).
-The template form cannot yet fill a block from trade knowledge: a block shows only the business's data. So a block
-with no data of this business to show is left out, with the reason in `leftOut`. Never fill it with items of your
-own.
+When the business shows it does that activity, keep such a block and plan it from common practice of the trade; leave
+it out only when what it says needs facts about this business that `business` does not hold. You recognise such a
+block by its `name` and its fields; a block without a `name` you cannot recognise is not kept this way.
 
-Anything you infer from the trade, rather than read in a fact, is never stated as a fact of the business. A reason
-or a label never states the terms of an offer (a price, "free", a discount, a duration, a count, a format, who
-qualifies, a place) that no fact states.
+A block that shows how a session, a visit, an order or a first contact typically runs (its stages, what happens first
+and what next, what to bring) is trade content. A form, a price list, a list of articles, reviews, photos, people,
+contact details, a map, a menu, events, figures, a video, a timetable, the header and the footer are never trade
+content. Keep it with `basis: "trade"` when every field of it that your
+`data` does not fill is written copy (`editorial.`): its words, and its cards when it has `itemFields`, are then
+written from the trade after approval. Cite in `factIds` the fact or item of `business` that shows the business does
+that activity (the service whose first lesson the block explains). A field for a fact of the business that your
+`data` does not fill still follows the block's `noData` rule: such a block is not kept on trade basis.
+
+Anything you infer from the trade, rather than read in a fact, is `basis: "trade"`, never stated as a fact of the
+business. Its `label` and `reason` name what every business of the trade does, never its terms: no number, price,
+"free", discount, duration, count, schedule, format, eligibility, place, result or guarantee. The owner is told on
+the plan card that such a block is written from general knowledge of the trade and can remove it.
+
+When a page you keep may show a block with a `name` whose fields are all written copy, leave that block out only when a fact shows
+the business does not do its activity: list it in `leftOut` with `kind: "block"`, its id as `block`, and that fact's
+id in `factIds`.
 
 ## What you may decide
 
@@ -86,12 +104,12 @@ qualifies, a place) that no fact states.
   planned: code lists it, with the reason the data gives.
 - A page made of person items is kept when the business names at least one person, one item per named person. Leave
   it out only when the business names no one.
-- Each block on a kept page: keep or leave out. Use only blocks of `blocks` and page types of `recipes`. A `template`
+- Each block on a kept page: keep, keep on trade basis (see Trade knowledge), or leave out. Use only blocks of `blocks` and page types of `recipes`. A `template`
   block goes only on a page whose recipe lists it; a `library` block may go on any page. A block appears at most once
   on a page.
 - A block that shows items (services, team, reviews, gallery and so on) shows at least `items.min` and at most
   `items.max` of them, of the kind its type shows, never more than the business has true items for. A block with
-  nothing to show is left out. A fact goes into a block that shows items only when that block has a field of the
+  nothing to show is left out, unless it is kept on trade basis; a block kept on trade basis shows no item. A fact goes into a block that shows items only when that block has a field of the
   fact's `kind`.
 - The order: put first what matters most to this business and its key messages. The order of `data` in a block is
   the order shown.
@@ -148,15 +166,22 @@ given); a `label` names a section of the site and stays in the site's language.
       "name": "Home",
       "blocks": [
         { "block": "<block id>", "label": "Services", "data": ["<id>", "<id>"], "targets": ["<field name>"],
-          "reason": "All the services you offer, the most booked first." }
+          "reason": "All the services you offer, the most booked first." },
+        { "block": "<block id>", "label": "Your first lesson", "data": [], "basis": "trade", "factIds": ["<id>"],
+          "reason": "New players see how a first lesson goes before they book one." }
       ]
     }
   ],
   "assumptions": [{ "field": "language", "said": "Every source is in English, so the site is in English." }],
-  "leftOut": [{ "item": "<id>", "reason": "It shows the same room as a photo the gallery keeps." }]
+  "leftOut": [
+    { "item": "<id>", "reason": "It shows the same room as a photo the gallery keeps." },
+    { "kind": "block", "block": "<block id>", "what": "What to bring", "factIds": ["<id>"],
+      "reason": "Your club only hires out courts, so there is no class to come prepared for." }
+  ]
 }
 ```
 
+- `basis` and `factIds`: only on a block kept on trade basis (see Trade knowledge); every other block has neither.
 - `assumptions`: what you assumed where the sources were silent, each with the plan `field` it sets (for example
   `language`, `facts[contact-hours].value`, `pages[home].name`) and what you assumed, in one sentence.
 - `leftOut`: every block, fact or item you chose not to show, with the reason in one sentence. For a fact or an
@@ -181,6 +206,10 @@ page keeps its main block.
 - Is every contact channel on the contact page, or placed elsewhere or left out with a reason?
 - Does any block, label or reason rest on something in `brief.held`?
 - Is there any number, price, person or hour without a fact?
+- Does every block kept on trade basis cite in `factIds` the fact that shows the business does that activity, leave
+  no field for a fact of the business unfilled, and state no terms in its label or reason? Is every block of written
+  copy only that a kept page may show, and that shows how the trade works, kept on trade basis or left out with the
+  fact that shows the business does not do it?
 - Does every kept block's `reason` say the question, message or proof it carries, without a number of items it
   does not show? Does any `label` repeat its one datum?
 - Is every fact and item shown or left out, and every left out entry worded for the owner?

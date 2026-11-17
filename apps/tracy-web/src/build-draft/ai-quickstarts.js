@@ -31,7 +31,8 @@ import {
   MAPPING_FILE,
   PAGE_RECIPES_FILE,
   TRACY_LIBRARY,
-  TRADES
+  TRADES,
+  withBlockNames
 } from 'website-opportunities/domain'
 
 const IN_IMAGE = fileURLToPath(new URL('../ai-quickstarts/', import.meta.url))
@@ -43,6 +44,8 @@ export const AI_QUICKSTARTS_DIR = existsSync(IN_IMAGE) ? IN_IMAGE : IN_CHECKOUT
 export const KIT_MANIFEST_FILE = 'kit-manifest.json'
 export const KIT_MANIFEST_SCHEMA = 'tracy-ai-quickstart-kit/v1'
 const MAPPING_PENDING_FILE = 'mapping.pending.json'
+/** The kit's blank site content map: the original name of each block's section (`withBlockNames`). */
+const CONTENT_MAP_FILE = path.join('blank-site-contract', 'content-map.json')
 const SEGMENT = /^[a-z0-9][a-z0-9._-]*$/i
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
@@ -112,9 +115,19 @@ function readKit(dir, slug, library) {
   const manifestFile = path.join(dir, KIT_MANIFEST_FILE)
   const manifest = existsSync(manifestFile) ? readJson(manifestFile) : { problem: 'no kit manifest' }
   if (unreadable.length) return { slug, kit: null, problems: unreadable }
-  const [blockStore, pageRecipes, mapping = null] = read.map((r) => r.doc)
-  const checked = checkAiQuickstartContract({ blockStore, pageRecipes, mapping, mappingPending: pending })
+  const [stored, pageRecipes, mapping = null] = read.map((r) => r.doc)
+  const checked = checkAiQuickstartContract({
+    blockStore: stored,
+    pageRecipes,
+    mapping,
+    mappingPending: pending
+  })
   if (!checked.ok) return { slug, kit: null, problems: checked.problems.map(formatProblem) }
+  // Each block's original name, for the composer to recognise a block that shows how the trade works (#575). A kit
+  // without a readable content map keeps unnamed blocks: nothing is guessed.
+  const contentMapFile = path.join(dir, CONTENT_MAP_FILE)
+  const contentMap = existsSync(contentMapFile) ? (readJson(contentMapFile).doc ?? null) : null
+  const blockStore = withBlockNames(stored, contentMap)
   const m = manifest.doc ?? null
   const template = m?.template
     ? { slug, name: m.template.name, version: m.template.version }

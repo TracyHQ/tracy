@@ -193,7 +193,9 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   `type` (a block type), `block` (the block of the store it places), `source` (`template` or `library`), a `label`
   and a `reason` the customer can read, and **`data`**: the facts and items it shows, at least one. An item must fit
   the block type (a `team` block shows `person` items); a block type without items, such as `contact`, shows facts
-  only.
+  only. A block whose written copy comes from general knowledge of the owner's trade (how a first visit runs, what
+  to bring: the step chain's "Trade knowledge") carries **`basis: "trade"`** and **`factIds`**, the facts or items
+  that show the business does that activity, at least one; its `data` may then be empty.
 - **`look`**: the chosen `template` `{slug, name, version}`, the brand `accent` as `#rrggbb`, and the `logo`, either
   `{kind: "own", source}` or `{kind: "text"}` (the business name set as text). An optional `accentDark` (`#rrggbb`,
   #616) is the accent of the dark theme when it differs from the light one: a logo with no hue gives black on the
@@ -531,7 +533,7 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `item` | `id`, `kind`, `label`, `sources`, `count?` |
 | `source` | `kind`, `name` |
 | `page` | `id`, `name`, `pageType`, `blocks` |
-| `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason`, `lists?`, `labelCode?` |
+| `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason`, `lists?`, `labelCode?`, `basis?`, `factIds?` |
 | `row` | `id`, `label`, `sources` |
 | `child list` | `name`, `rows`, `item?` |
 | `planned row` | `data?`, `page?`, `lists?` |

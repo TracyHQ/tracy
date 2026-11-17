@@ -80,7 +80,8 @@ function dataProblems(plan, report) {
 function blockDataProblems(block, at, known, report) {
   if (block.data === undefined)
     return report(`${at}.data`, 'missing data: the facts and data items this block shows')
-  idListProblems(block.data, `${at}.data`, report, { allowEmpty: false })
+  // A block kept from general knowledge of the owner's trade (`basis: "trade"`) may show no data of its own.
+  idListProblems(block.data, `${at}.data`, report, { allowEmpty: block.basis === 'trade' })
   if (!Array.isArray(block.data)) return
   const itemKind = BLOCK_TYPES[block.type]?.itemKind ?? null
   const allowed = itemKind ? GROUP_KINDS_V3[itemKind].allowedKinds : []
@@ -123,6 +124,20 @@ function blockProblems(block, at, known, pageIds, report) {
   )
   blockDataProblems(block, at, known, report)
   blockListsProblems(block, at, known, pageIds, report)
+  tradeBasisProblems(block, at, known, report)
+}
+
+/** A block kept on trade basis cites the facts or items that show the business does that activity, at least one. */
+function tradeBasisProblems(block, at, known, report) {
+  if (block.basis === undefined && block.factIds === undefined) return
+  if (block.basis !== 'trade') return report(`${at}.basis`, 'basis is "trade" when a block cites factIds')
+  idListProblems(block.factIds, `${at}.factIds`, report, { allowEmpty: false })
+  const ids = Array.isArray(block.factIds) ? block.factIds : []
+  ids.forEach((id, i) => {
+    const entry = known.get(id)
+    if (isName(id) && (!entry || entry.what === 'row'))
+      report(`${at}.factIds[${i}]`, `${JSON.stringify(id)} is not a fact or item of the plan`)
+  })
 }
 
 function pagesProblems(plan, known, report) {

@@ -2,15 +2,24 @@
 // shape, every value has its type, no list holds an id twice. A reply that fails here is reported as `reply_shape`
 // problems, goes through the one retry with them, then stops as `plan_gate_failed`; no later code of the gate ever
 // reads a value of the wrong type. The closed block shape is also the first guard of the design typed fields: a block
-// carries only `block`, `label`, `data`, `reason` and `targets`, so no key can address a field (see `plan-gate.mjs`).
+// carries only `block`, `label`, `data`, `reason`, `targets` and the trade basis (`basis`, `factIds`), so no key can
+// address a field (see `plan-gate.mjs`). A block kept from trade knowledge says `basis: "trade"` and cites the facts
+// that show the business does that activity; a left out block may name its block id and the facts that show the
+// business does not (`plan-gate-trade.mjs`, the step chain's "Trade knowledge").
 import { LEFT_OUT_KINDS } from './build-contract-plan.mjs'
+
+/** The basis of a block kept from general knowledge of the owner's trade (the step chain's `basis: "trade"`). */
+export const TRADE_BASIS = 'trade'
 
 const SHAPES = Object.freeze({
   reply: { required: ['pages'], optional: ['assumptions', 'leftOut'] },
   page: { required: ['pageType', 'name', 'blocks'], optional: [] },
-  block: { required: ['block', 'label', 'data', 'reason'], optional: ['targets'] },
+  block: { required: ['block', 'label', 'data', 'reason'], optional: ['targets', 'basis', 'factIds'] },
   assumption: { required: ['field', 'said'], optional: [] },
-  'left out entry': { required: ['reason'], optional: ['item', 'what', 'kind', 'pageType'] }
+  'left out entry': {
+    required: ['reason'],
+    optional: ['item', 'what', 'kind', 'pageType', 'block', 'factIds']
+  }
 })
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 const isText = (value) => typeof value === 'string'
@@ -79,6 +88,21 @@ export function replyShapeProblems(reply, problem) {
           for (const key of ['block', 'label', 'reason']) texts(block[key], `${blockAt}.${key}`, counted, key)
           idList(block.data, `${blockAt}.data`, counted)
           idList(block.targets, `${blockAt}.targets`, counted, { optional: true })
+          idList(block.factIds, `${blockAt}.factIds`, counted, { optional: true })
+          if (block.basis !== undefined && block.basis !== TRADE_BASIS)
+            counted('reply_shape', `${blockAt}.basis`, `basis is ${JSON.stringify(TRADE_BASIS)} or absent`)
+          if (block.factIds !== undefined && block.basis !== TRADE_BASIS)
+            counted(
+              'reply_shape',
+              `${blockAt}.factIds`,
+              `a block cites facts in factIds only when it is kept on basis ${JSON.stringify(TRADE_BASIS)}`
+            )
+          if (block.basis === TRADE_BASIS && block.factIds === undefined)
+            counted(
+              'reply_shape',
+              `${blockAt}.factIds`,
+              'a block kept on trade basis cites the activity facts'
+            )
         },
         { optional: false }
       )
@@ -93,8 +117,11 @@ export function replyShapeProblems(reply, problem) {
   const leftOutItems = new Set()
   list(reply.leftOut, 'leftOut', counted, (entry, at) => {
     if (!closed(entry, 'left out entry', at, counted)) return
-    for (const key of ['item', 'what', 'kind', 'reason', 'pageType'])
+    for (const key of ['item', 'what', 'kind', 'reason', 'pageType', 'block'])
       texts(entry[key], `${at}.${key}`, counted, key)
+    idList(entry.factIds, `${at}.factIds`, counted, { optional: true })
+    if ((entry.block !== undefined || entry.factIds !== undefined) && entry.kind !== 'block')
+      counted('reply_shape', at, 'only a left out block names its `block` id and `factIds`')
     if (entry.item === undefined && (entry.what === undefined || entry.kind === undefined))
       counted('reply_shape', at, 'a left out entry names an `item` id, or `what` and `kind`')
     if (entry.kind !== undefined && !LEFT_OUT_KINDS.includes(entry.kind))

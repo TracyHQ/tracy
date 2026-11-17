@@ -19,12 +19,14 @@ const MAIN_BLOCK_KEPT =
   'a page cannot lose its main section: remove the page only when the request asks for that, or report the wish under notDone with reason outside_plan'
 
 const list = (value) => (Array.isArray(value) ? value : [])
-const blockOf = ({ block, label, data, reason, targets }) => ({
+const blockOf = ({ block, label, data, reason, targets, basis, factIds }) => ({
   block,
   label,
   data: [...data],
   reason,
-  ...(targets ? { targets: [...targets] } : {})
+  ...(targets ? { targets: [...targets] } : {}),
+  // A block kept from trade knowledge keeps its basis and the facts it cites through a revision.
+  ...(basis ? { basis, factIds: [...(factIds ?? [])] } : {})
 })
 const workingPagesOf = (plan) =>
   list(plan?.pages).map((page) => ({

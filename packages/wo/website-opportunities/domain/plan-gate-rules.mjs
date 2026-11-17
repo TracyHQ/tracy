@@ -3,13 +3,16 @@
 // - every id names a fact or item of the needs profile, of a kind the block shows, within its counts
 //   (`plan-gate-items.mjs`); a fact inside an item block needs a field of that fact's kind in the block;
 // - a template block sits only on a page type whose recipe lists it, and at most once per page (Contract A declares
-//   no repetition, so none is allowed); a block left with no data is left out, never a problem;
+//   no repetition, so none is allowed); a block left with no data is left out, never a problem, unless it is kept on
+//   trade basis (`plan-gate-trade.mjs`: it cites the activity's fact, fills every field for a fact of the business,
+//   states no terms; a block of written copy left out for want of facts is sent back);
 // - `targets` names fields of the block and never a design typed field;
 // - an item the model leaves out is not also shown; customer text carries no dash;
 // - the page rules restored from the locked planner (`plan-gate-page-rules.mjs`).
 import { TAKE_OUT, blockItemProblems } from './plan-gate-items.mjs'
 import { pageRuleProblems } from './plan-gate-page-rules.mjs'
 import { BLOCK_TYPES } from './place-content-roles.mjs'
+import { isTradeBlock, tradeBlockProblems, tradeLeftOutProblems } from './plan-gate-trade.mjs'
 import { fitsRecipe, recipeBlocksOf } from './plan-placement-pages.mjs'
 
 /** En dash, em dash, figure dash, horizontal bar and minus sign: none of them in customer text. */
@@ -75,8 +78,9 @@ function blockProblems(block, at, page, context, problem) {
     if (!isText(block[key]))
       problem(key === 'reason' ? 'no_reason' : 'reply_shape', `${at}.${key}`, `a block needs its ${key}`)
     else dashFree(block[key], `${at}.${key}`, problem)
+  if (isTradeBlock(block)) tradeBlockProblems(block, description, at, data, problem)
   // A block with no data is left out of the plan (`plan-gate.mjs` `pagesOf`): following a message that takes an id
-  // out of a block never fails the second attempt on an empty block (#593 review G2).
+  // out of a block never fails the second attempt on an empty block (#593 review G2). A trade block is kept.
   if (block.data.length === 0) return
   block.data.forEach((id, i) => {
     if (data.byId.get(id)?.itemField)
@@ -86,7 +90,7 @@ function blockProblems(block, at, page, context, problem) {
         `${JSON.stringify(id)} is a field of an item: show the item instead, and leave the block out when it then shows nothing`
       )
   })
-  blockItemProblems(block, description, at, data, problem)
+  blockItemProblems(block, description, at, data, problem, { trade: isTradeBlock(block) })
   factFieldProblems(block, description, at, data, problem)
   const fields = [...(description.fields ?? []), ...(description.itemFields ?? [])]
   ;(block.targets ?? []).forEach((name, i) => {
@@ -153,6 +157,7 @@ export function compositionProblems(composition, context, problem) {
     for (const key of ['what', 'reason'])
       if (isText(entry[key])) dashFree(entry[key], `leftOut[${i}].${key}`, problem)
   })
+  tradeLeftOutProblems(composition, context, problem)
   ;(composition.assumptions ?? []).forEach((a, i) => {
     if (isText(a.said)) dashFree(a.said, `assumptions[${i}].said`, problem)
   })

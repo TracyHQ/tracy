@@ -15,8 +15,9 @@ export const TAKE_OUT = 'take it out of this block, and leave the block out when
  * @param {string} at where the block sits, e.g. `pages[0].blocks[2]`
  * @param {object} data the plan data (`plan-data.mjs`)
  * @param {(code: string, at: string, message: string) => void} problem
+ * @param {{trade?: boolean}} [options] `trade`: the block is kept on trade basis
  */
-export function blockItemProblems(block, description, at, data, problem) {
+export function blockItemProblems(block, description, at, data, problem, { trade = false } = {}) {
   const itemKind = BLOCK_TYPES[description.type]?.itemKind ?? null
   const allowed = itemKind ? GROUP_KINDS_V3[itemKind].allowedKinds : []
   let items = 0
@@ -44,7 +45,8 @@ export function blockItemProblems(block, description, at, data, problem) {
         `${description.id} does not show ${JSON.stringify(id)}: ${refused}; ${TAKE_OUT}`
       )
   })
-  if (itemKind && items < description.items.min)
+  // A trade block that shows no item has its cards written from the trade (`plan-gate-trade.mjs`): no minimum.
+  if (itemKind && items < description.items.min && !(trade && items === 0))
     problem(
       'too_few_items',
       `${at}.data`,
