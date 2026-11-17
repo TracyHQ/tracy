@@ -308,7 +308,7 @@ test('a step that still works on the plan refuses an edit with its own sentence,
   assert.deepEqual(shownOf('edit', answer), { row: null, retry: false })
 })
 
-test('a step started too often says the door sentence, asks nothing, and offers no Try again', async () => {
+test('a step started too often says the door sentence, asks nothing, and names the call Try again runs later', async () => {
   const say = 'I have done this many times in a short while, so I paused here. Please try again later.'
   for (const [action, path, args] of [
     ['research', '/research', { links: ['https://harbour-lane.example'] }],
@@ -321,8 +321,10 @@ test('a step started too often says the door sentence, asks nothing, and offers 
     assert.equal(answer.paused, true, action)
     assert.equal(answer.say, say, action)
     assert.equal(answer.ask, undefined, action)
-    assert.equal(answer.rerun, undefined, action)
-    assert.deepEqual(shownOf(action, answer), { row: null, retry: false }, action)
+    // The stop card's Try again (#575) waits for retryAt, then runs exactly this call again.
+    assert.equal(answer.rerun, true, action)
+    assert.deepEqual(answer.again, { action, ...args }, action)
+    assert.equal(shownOf(action, answer).row, null, action)
     // Only the one door call: nothing is asked again.
     assert.equal(web.calls.length, 1, action)
   }
@@ -484,10 +486,8 @@ test('brand unavailable yields stopped: the plan is never composed with the temp
     { step: 'compose', state: 'stopped', reason: 'brand-unavailable' }
   ]) {
     const web = fakeWeb({ 'POST /api/build-draft/compose': { body } })
-    assert.deepEqual(await run(toolWith(web), { action: 'plan', request: 'Make it feel calm' }), {
-      stopped: true,
-      say: BUILD_STOPPED_SAY
-    })
+    const answer = await run(toolWith(web), { action: 'plan', request: 'Make it feel calm' })
+    assert.deepEqual({ stopped: answer.stopped, say: answer.say }, { stopped: true, say: BUILD_STOPPED_SAY })
     assert.deepEqual(web.calls[0].body, { request: 'Make it feel calm' })
   }
 })
@@ -662,7 +662,8 @@ test('plan waits on the brand step it started, then says to ask for the plan aga
   })
   assert.deepEqual(await run(toolWith(stoppedWeb), { action: 'plan' }), {
     stopped: true,
-    say: 'We could not read your brand yet.'
+    say: 'We could not read your brand yet.',
+    reason: 'brand-unavailable'
   })
 })
 
@@ -1373,6 +1374,49 @@ test('a stop names the exact call that runs its step again; Please try again rer
     'GET /api/build-draft/engine': { body: { step: 'compose', state: 'stopped', say, rerun: true } }
   })
   assert.deepEqual((await run(toolWith(bare), { action: 'status' })).again, { action: 'plan' })
+})
+
+test('a start paused for its limit is started again by Please try again; a stop names its reason (#575)', async () => {
+  const say = 'I have done this many times in a short while, so I paused here. Please try again later.'
+  const links = ['https://harbour-lane.example']
+  const web = fakeWeb({
+    'POST /api/build-draft/research': { status: 429, body: { code: 'TRY_LATER', say } },
+    'GET /api/build-draft/engine': { body: { step: 'compose', state: 'done' } }
+  })
+  const log = sessionLog()
+  const tool = toolWith(web, { events: log.events })
+  const paused = await log.call(tool, { action: 'research', links })
+  assert.deepEqual(paused.again, { action: 'research', links })
+  log.say('Please try again.')
+  await log.call(tool, { action: 'status' })
+  const posts = web.calls.filter((c) => c.method === 'POST')
+  assert.equal(posts.length, 2, 'the status call made for the button starts the research again')
+  assert.deepEqual(posts[1].body.links, links)
+  const limit = fakeWeb({
+    'GET /api/build-draft/engine': {
+      body: {
+        step: 'research',
+        state: 'stopped',
+        say,
+        reason: 'try-later',
+        rerun: true,
+        retryAt: '2026-11-18T00:00:00.000Z'
+      }
+    }
+  })
+  const stop = await run(toolWith(limit), { action: 'status' })
+  assert.equal(stop.reason, 'try-later')
+  assert.equal(stop.retryAt, '2026-11-18T00:00:00.000Z')
+  const asked = fakeWeb({
+    'GET /api/build-draft/engine': {
+      body: { step: 'research', state: 'stopped', say, reason: 'details-asked' }
+    }
+  })
+  assert.deepEqual(await run(toolWith(asked), { action: 'status' }), {
+    stopped: true,
+    say,
+    reason: 'details-asked'
+  })
 })
 
 test('a build refused before any step says the site was not started, keeps the plan and hands its review out again', async () => {

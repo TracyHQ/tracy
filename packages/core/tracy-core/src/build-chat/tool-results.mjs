@@ -111,7 +111,7 @@ export function revisedOf(value) {
  * @returns {null | { kind: 'research', business: string, links: import('./link-reads.mjs').LinkRead[] }
  *   | { kind: 'templates', options: any[], none: boolean }
  *   | { kind: 'plan', id: string, revision: number, revised?: { changed: string[], notDone: { what: string, why: string }[] } }
- *   | { kind: 'stopped', step?: string, rerun: boolean }
+ *   | { kind: 'stopped', step?: string, rerun: boolean, reason?: string, retryAt?: string, paused?: true }
  *   | { kind: 'running', links: import('./link-reads.mjs').LinkRead[] }
  *   | { kind: 'choosing', links: import('./link-reads.mjs').LinkRead[] } | { kind: 'quiet' }}
  */
@@ -127,7 +127,17 @@ export function buildToolResultOf(text) {
     return {
       kind: 'stopped',
       ...(typeof value.step === 'string' ? { step: value.step } : {}),
-      rerun: value.rerun === true
+      rerun: value.rerun === true,
+      ...(typeof value.reason === 'string' ? { reason: value.reason } : {}),
+      ...(typeof value.retryAt === 'string' ? { retryAt: value.retryAt } : {})
+    }
+  // A start refused for its limit (#575): nothing ran, and the owner may start it again once `retryAt` came.
+  if (value.paused === true)
+    return {
+      kind: 'stopped',
+      rerun: true,
+      paused: true,
+      ...(typeof value.retryAt === 'string' ? { retryAt: value.retryAt } : {})
     }
   // Research names each link it reads (#609): `links` rides on its running, asking and done answers.
   const links = linkReadsOf(value.links)
@@ -182,7 +192,8 @@ export function buildToolRowOf(rawArgs, text) {
   if (result === null || result.kind === 'quiet') return null
   if (result.kind === 'running')
     return { kind: 'working', step, links: result.links.length ? result.links : reading }
-  if (result.kind === 'stopped') return { kind: 'stopped' }
+  // A start refused for its limit ran nothing: no row, the stop card says it (#575).
+  if (result.kind === 'stopped') return result.paused ? null : { kind: 'stopped' }
   // Research waits on the owner's choice of place: a waiting row, never "Read N sources".
   if (result.kind === 'choosing') return { kind: 'waiting', links: result.links }
   if (result.kind === 'templates') return { kind: 'templates' }
@@ -196,7 +207,8 @@ export function buildToolRowOf(rawArgs, text) {
  * @typedef {{ turn: number, seq: number, id: string, revision: number,
  *   revised?: { changed: string[], notDone: { what: string, why: string }[] } }} PlanSeen
  * @typedef {{ turn: number, seq: number, step: string }} WorkingSeen
- * @typedef {{ turn: number, seq: number, step: string, rerun: boolean, retries: number }} StopSeen
+ * @typedef {{ turn: number, seq: number, step: string, rerun: boolean, retries: number, reason?: string,
+ *   retryAt?: string, paused?: true, language?: string }} StopSeen
  * @typedef {{ turn: number, seq: number, callId: string }} BuildAskSeen
  * @typedef {{ calls: Readonly<Record<string, string>>, templates: TemplatesSeen | null, plan: PlanSeen | null,
  *   working: WorkingSeen | null, stop: StopSeen | null, streak: { step: string, count: number } | null,
@@ -293,11 +305,19 @@ export function buildToolFoldOf(state = EMPTY, event) {
   if (!Number.isSafeInteger(turn) || turn < 0) return state
   if (result?.kind === 'stopped') {
     const step = result.step ?? state.calls[callId]
+    const seen = {
+      ...(result.reason ? { reason: result.reason } : {}),
+      ...(result.retryAt ? { retryAt: result.retryAt } : {}),
+      ...said
+    }
+    // A start refused for its limit ran nothing, so it is no retry that stopped again: the count stays as it was.
+    if (result.paused)
+      return { ...state, stop: { turn, seq, step, rerun: true, retries: 0, paused: true, ...seen } }
     const count = state.streak?.step === step ? state.streak.count + 1 : 1
     return {
       ...state,
       streak: { step, count },
-      stop: { turn, seq, step, rerun: result.rerun, retries: count - 1, ...said }
+      stop: { turn, seq, step, rerun: result.rerun, retries: count - 1, ...seen }
     }
   }
   // Any answer that moves the build on ends the run of stops; guidance for the model and unreadable answers do not.

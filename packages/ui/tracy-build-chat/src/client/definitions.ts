@@ -10,8 +10,9 @@
  * - `tracy_build:working`: the latest call while it waits (unanswered, or answered `running`), for the line that
  *   says work is going on above the chat input (`WorkingDock.tsx`);
  * - `tracy_build:retry`: the latest stop, until the next call, with whether the step may be run again and how many
- *   retries of it in a row stopped again, for the Try again button (`TryAgain.tsx`). Counted from the results the
- *   session logged, so a reload shows the same.
+ *   retries of it in a row stopped again, for the stop card (`StopCard.tsx`). Counted from the results the session
+ *   logged, so a reload shows the same. Published on the session's LAST turn (#575), so the card stays at the end of
+ *   the conversation and an older turn keeps no live card.
  *
  * Duck-typed: nothing is imported from dsh at run time.
  */
@@ -35,7 +36,11 @@ export const RETRY_KEY = `${BUILD_TOOL}:retry`
 export type TemplatesValue = NonNullable<BuildToolFold['templates']>
 export type PlanValue = NonNullable<BuildToolFold['plan']>
 export type WorkingValue = NonNullable<BuildToolFold['working']>
-export type RetryValue = NonNullable<BuildToolFold['stop']>
+/** The session's last turn, with the latest stop when one stands (null: the card asks the engine door). */
+export interface RetryValue {
+  turn: number
+  stop: BuildToolFold['stop']
+}
 
 interface EventLike {
   type: string
@@ -124,7 +129,57 @@ export function buildDefinitionFor(runs: { wake?: (key: string) => void }) {
   }
 }
 export const workingDefinition = definitionOf<WorkingValue>(WORKING_KEY, (fold) => fold.working)
-export const retryDefinition = definitionOf<RetryValue>(RETRY_KEY, (fold) => fold.stop)
+interface RetryState {
+  fold: BuildToolFold
+  lastTurn: number | null
+  value: RetryValue | null
+}
+const retryStep = (state: RetryState, event: EventLike): RetryState => {
+  if (event.type === 'turn/start') {
+    const turn = Number(event.data?.turn)
+    return Number.isSafeInteger(turn) && turn >= 0 && turn !== state.lastTurn
+      ? settleRetry({ ...state, lastTurn: Math.max(turn, state.lastTurn ?? turn) })
+      : state
+  }
+  const fold = buildToolFoldOf(state.fold, event)
+  const said = Number(event.data?.turn)
+  const lastTurn =
+    Number.isSafeInteger(said) && said >= 0 ? Math.max(said, state.lastTurn ?? said) : state.lastTurn
+  return fold === state.fold && lastTurn === state.lastTurn
+    ? state
+    : settleRetry({ ...state, fold, lastTurn })
+}
+/** The published value, made again only when the last turn or the stop changed, so dsh keeps the same object. */
+const settleRetry = (state: RetryState): RetryState => {
+  if (state.lastTurn === null) return state
+  const stop = state.fold.stop
+  if (state.value?.turn === state.lastTurn && state.value.stop === stop) return state
+  return { ...state, value: { turn: state.lastTurn, stop } }
+}
+const retryMatch = (event: EventLike) =>
+  event.type === 'turn/start' ? { id: SESSION, role: 'start' as const } : match(event)
+
+export const retryDefinition = {
+  kind: RETRY_KEY,
+  match: retryMatch,
+  start: (_context: unknown, m: { event: EventLike }): RetryState =>
+    retryStep(
+      { fold: buildToolFoldOf(undefined, { type: 'none', seq: 0 }), lastTurn: null, value: null },
+      m.event
+    ),
+  update: (context: { state: RetryState }, m: { event: EventLike }): RetryState =>
+    retryStep(context.state, m.event),
+  buildLocationData: (
+    context: { state?: RetryState },
+    scope: string,
+    previous: LocationData<RetryValue> | null
+  ): LocationData<RetryValue> | null => {
+    const value = scope === 'turn' ? (context.state?.value ?? null) : null
+    if (value === null) return null
+    if (previous?.value === value) return previous
+    return { kind: 'turn', turn: value.turn, key: RETRY_KEY, value }
+  }
+}
 
 /** The owner props dsh hands a turn tail entry; only what the cards read. */
 export interface TurnTailOwnerLike {

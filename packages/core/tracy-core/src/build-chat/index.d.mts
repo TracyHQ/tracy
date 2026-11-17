@@ -376,7 +376,7 @@ export type BuildToolResult =
   | { kind: 'research'; business: string; links: LinkRead[] }
   | { kind: 'templates'; options: TemplateOption[]; none: boolean }
   | { kind: 'plan'; id: string; revision: number; revised?: RevisionNote }
-  | { kind: 'stopped'; step?: string; rerun: boolean }
+  | { kind: 'stopped'; step?: string; rerun: boolean; reason?: string; retryAt?: string; paused?: true }
   | { kind: 'running'; links: LinkRead[] }
   | { kind: 'choosing'; links: LinkRead[] }
   | { kind: 'quiet' }
@@ -418,9 +418,29 @@ export interface StopSeen {
   step: string
   rerun: boolean
   retries: number
+  /** Why it stopped, when the engine named a reason (`try-later`, `cancelled`, ...). */
+  reason?: string
+  /** A stop on a limit: when the owner may try again (ISO time). */
+  retryAt?: string
+  /** A start refused for its limit: nothing ran. */
+  paused?: true
   /** The language the cards use, when the answer named one. */
   language?: string
 }
+/** The stop card at the end of the build chat: why, and whether Try again is offered now, later or not at all. */
+export interface StopCard {
+  step: string
+  /** A stop on a limit: the card says when the owner may try again. */
+  limit: boolean
+  retryAt: string | null
+  retry: 'offered' | 'waiting' | 'none'
+}
+export declare function stopCardOf(seen: {
+  stop?: StopSeen | null
+  // biome-ignore lint/suspicious/noExplicitAny: the engine door's state, duck-typed
+  engine?: any
+  now?: number
+}): StopCard | null
 /** The one fixed message the Try again button sends as the owner. */
 export declare const RETRY_MESSAGE: 'Please try again.'
 /** How many times the owner may press Try again for the same step in a row. */

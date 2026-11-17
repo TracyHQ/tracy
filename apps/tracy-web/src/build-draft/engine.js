@@ -100,14 +100,22 @@ export function stoppedOf(fault, now = Date.now()) {
   const owner = Object.hasOwn(OWNER_INPUT_CODES, fault.code) ? OWNER_INPUT_CODES[fault.code] : null
   if (owner) return { state: 'stopped', say: SAY[owner.say], reason: owner.reason }
   // Nothing to read at all (no link and no words), or no link and no name: the owner is asked for them.
+  // `details-asked`: the chat asks the owner, so the build chat's stop card stands aside (#575).
   if (fault.code === 'research_empty' && fault.reason === 'no_links')
-    return { state: 'stopped', say: SAY.links }
+    return { state: 'stopped', say: SAY.links, reason: 'details-asked' }
   if (fault.code === 'research_empty' && fault.reason === 'no_name')
-    return { state: 'stopped', say: SAY.name }
+    return { state: 'stopped', say: SAY.name, reason: 'details-asked' }
   if (LIMIT_CODES.has(fault.code)) {
-    // The step chain's daily limits open again with the next UTC day (`place-requests.js`): the owner reads when.
+    // The step chain's daily limits open again with the next UTC day (`place-requests.js`): the owner reads when, and
+    // may run the step again from then on (#575: the stop card's Try again waits for `retryAt`).
     const at = nextDayAt(now)
-    return { state: 'stopped', say: tryLaterSay(at, now), reason: 'try-later', retryAt: at.toISOString() }
+    return {
+      state: 'stopped',
+      say: tryLaterSay(at, now),
+      reason: 'try-later',
+      retryAt: at.toISOString(),
+      rerun: true
+    }
   }
   const stopped = { state: 'stopped', say: RESEARCH_CODES.has(fault.code) ? SAY.research : SAY.fault }
   return mayRerun(fault) ? { ...stopped, rerun: true } : stopped

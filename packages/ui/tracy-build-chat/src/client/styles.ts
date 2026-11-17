@@ -11,9 +11,6 @@ export const CSS = `
 }
 .tv-bc-card *, .tv-bc-todo *, .tv-bc-notice *, .tv-bc-plan * { box-sizing: border-box; }
 .tv-bc-muted { color: var(--muted-foreground); }
-/* Try again after a step that stopped: no box of its own, only a size container so the phone rules reach its button */
-.tv-bc-retry { container-type: inline-size; box-sizing: border-box; margin-top: 8px; font-size: 14px; line-height: 1.5; }
-.tv-bc-retry .tv-bc-tfoot { margin-top: 0; }
 .tv-bc-small { font-size: 12.5px; }
 
 .tv-bc-btn {

@@ -369,8 +369,7 @@ export const ANSWERS_ARRIVE_GUIDANCE =
   "The owner's answers reach tracy_build by themselves. Never call research again to pass an answer, and never put an answer into description."
 
 /** Private guidance after a start refused for its limit: said once, with when, and nothing called until then. */
-export const PAUSED_NEXT =
-  'Say the sentence in say once and stop here. It says when the owner can continue. Ask no question, and do not call tracy_build again before retryAt.'
+export const PAUSED_NEXT = `Say the sentence in say once and stop here. It says when the owner can continue; the chat shows the owner a Try again button for then. Ask no question, and do not call tracy_build again before retryAt. When the owner sends "${RETRY_MESSAGE}" after retryAt, call tracy_build once more with exactly the arguments in again.`
 /**
  * Private guidance when the owner writes again while a start is still paused (#575, 17/11/2026 walk: the agent said
  * the same pause sentence after every message): the tool does not ask tracy-web again, and the agent answers what the
@@ -524,7 +523,9 @@ export function pendingRetryOf(events) {
   if (lastResult === null || retrySeq < lastResultSeq) return null
   try {
     const answer = JSON.parse(lastResult)
-    return answer?.stopped === true && answer.rerun === true && startArgsOf(answer.again)
+    return (answer?.stopped === true || answer?.paused === true) &&
+      answer.rerun === true &&
+      startArgsOf(answer.again)
       ? answer.again
       : null
   } catch {
@@ -540,7 +541,9 @@ export function pendingRetryOf(events) {
  * @param {readonly any[]} [events] - the session's log, which names the call that started the step
  */
 const stoppedStateOf = (state, events = []) => {
-  if (state?.rerun !== true) return stopped(state?.say)
+  // Why it stopped, when the engine names it (`try-later`, `cancelled`...): the stop card reads it (#575).
+  const reason = typeof state?.reason === 'string' ? { reason: state.reason } : {}
+  if (state?.rerun !== true) return { ...stopped(state?.say), ...reason }
   const again = rerunArgsOf(events, state.step)
   // A stop on a limit (`try-later`) says when the step may run again: its sentence carries the time already.
   const retryAt = typeof state.retryAt === 'string' ? state.retryAt : null
@@ -550,8 +553,21 @@ const stoppedStateOf = (state, events = []) => {
     rerun: true,
     ...(again ? { again } : {}),
     ...(retryAt ? { retryAt } : {}),
+    ...reason,
     next: RERUN_GUIDANCE
   }
+}
+
+/**
+ * A start refused for its limit (`paused`) names the call that starts it again once `retryAt` came (#575): the stop
+ * card's Try again sends "Please try again." then, and a status call made for it runs that call (`pendingRetryOf`).
+ * Any other answer is returned as it is.
+ * @param {any} answer
+ * @param {any} args - the call that was refused
+ */
+const pausedWithAgain = (answer, args) => {
+  const again = answer?.paused === true ? startArgsOf(args) : null
+  return again ? { ...answer, rerun: true, again } : answer
 }
 
 /**
@@ -1357,12 +1373,15 @@ export function createBuildTool({
     // A start still paused for its limit is not asked again: the owner hears an answer, not the same sentence.
     const until = pausedUntil.get(sessionId) ?? 0
     if ((action === 'research' || action === 'plan') && until > now())
-      return {
-        paused: true,
-        retryAt: new Date(until).toISOString(),
-        minutesLeft: Math.max(1, Math.ceil((until - now()) / 60_000)),
-        next: PAUSED_AGAIN_NEXT
-      }
+      return pausedWithAgain(
+        {
+          paused: true,
+          retryAt: new Date(until).toISOString(),
+          minutesLeft: Math.max(1, Math.ceil((until - now()) / 60_000)),
+          next: PAUSED_AGAIN_NEXT
+        },
+        args
+      )
     const res = await door(sessionId, assertion, request[0], request[1], request[2])
     if (res === null) return stopped()
     if (res.status === 429) {
@@ -1370,7 +1389,7 @@ export function createBuildTool({
       if (Number.isFinite(at)) pausedUntil.set(sessionId, at)
     }
     if (action === 'start-over') return startOverAnswerOf(res, ownerSay)
-    if (res.status < 200 || res.status >= 300) return refusal(res)
+    if (res.status < 200 || res.status >= 300) return pausedWithAgain(refusal(res), args)
     if (action === 'templates') {
       const { options, none } = templateChoiceOf(res.body?.templates)
       return { options, none, next: templatesNext(options) }

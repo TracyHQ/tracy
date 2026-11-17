@@ -93,6 +93,15 @@ const run = (name) => scenarioOf(name).runs.at(-1)
 // What the engine said, as `tracy_build` answers it (#609): a stop the owner may have run again, and one that may not.
 const STOPPED = { stopped: true, say: 'Stopped.', step: 'compose', rerun: true }
 const STOPPED_FOR_GOOD = { stopped: true, say: 'Stopped.' }
+// A start refused for its limit (#575): Try again waits for retryAt.
+const PAUSED = {
+  paused: true,
+  say: 'Paused.',
+  retryAt: new Date(Date.now() + 40 * 60_000).toISOString(),
+  rerun: true,
+  again: { action: 'plan' }
+}
+const PAUSED_OVER = { ...PAUSED, retryAt: new Date(Date.now() - 60_000).toISOString() }
 const MESSAGES = [
   { role: 'user', text: 'Build a website for my tennis club. https://sunrise-tennis.example' },
   { role: 'assistant', text: 'I found 4 services, 38 photos and 6 reviews. Two quick questions.' },
@@ -133,6 +142,8 @@ const STATES = [
   ['try-again-no-rerun', 'retry', { results: [STOPPED_FOR_GOOD] }],
   ['try-again-after-two-retries', 'retry', { results: [STOPPED, STOPPED, STOPPED] }],
   ['try-again-build-locked', 'retry', { results: [STOPPED], run: run('building') }],
+  ['stop-limit-waiting', 'retry', { results: [PAUSED] }],
+  ['stop-limit-over', 'retry', { results: [PAUSED_OVER] }],
   ['earlier', 'earlier', { plan: PLAN, messages: MESSAGES }]
 ]
 
@@ -583,6 +594,35 @@ test('Try again: none for a stop that may not be rerun, after two retries, or wh
   assert.equal(await offered({ results: [STOPPED], run: run('cancelled') }), 0)
   // The stop sentence stays when the button goes.
   assert.match(await page.locator('#root').innerText(), /Something went wrong on our side/)
+  await page.close()
+})
+
+test('the stop card: a limit waits for its time, Start over asks once and calls the door only when confirmed', async () => {
+  const { page } = await open(browser, VIEWPORTS[0], 'light', code)
+  await mount(page, 'retry', { results: [PAUSED] })
+  assert.equal(await page.getByRole('button', { name: 'Try again' }).isDisabled(), true)
+  assert.match(await page.locator('#root').innerText(), /You can try again from /)
+  await mount(page, 'retry', { results: [PAUSED_OVER] })
+  assert.equal(await page.getByRole('button', { name: 'Try again' }).isDisabled(), false)
+  await page.getByRole('button', { name: 'Start over' }).click()
+  await page.getByText('Starting over discards what Tracy has gathered so far').waitFor()
+  await page.getByRole('button', { name: 'Cancel' }).click()
+  assert.equal(await page.getByRole('button', { name: 'Try again' }).count(), 1)
+  assert.equal(
+    (await page.evaluate(() => window.probe.log())).requests.length,
+    0,
+    'nothing sent before a yes'
+  )
+  await page.getByRole('button', { name: 'Start over' }).click()
+  await page.getByRole('button', { name: 'Discard and start over' }).click()
+  await page.waitForFunction(() => window.probe.log().requests.some((r) => r.navigate))
+  assert.deepEqual((await page.evaluate(() => window.probe.log())).requests, [
+    { url: '/api/build-draft/start-over' },
+    { navigate: '/new/build' }
+  ])
+  // A step that runs again takes the card away.
+  await mount(page, 'retry', { results: [STOPPED], engine: { step: 'compose', state: 'running' } })
+  await page.waitForFunction(() => !document.querySelector('[data-build-stop]'))
   await page.close()
 })
 

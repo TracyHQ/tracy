@@ -50,8 +50,8 @@ export function stoppedForGood(row) {
   const engine = row.engine
   if (engine?.state !== 'stopped' || engine.rerun) return false
   if (engine.reason) return false
-  // A research that asks the owner about the business (`SAY.links`) or for its name (`SAY.name`) has no reason but
-  // waits for the owner's answer (`engine.js`, `research_empty`).
+  // A research that asks the owner about the business (`SAY.links`) or for its name (`SAY.name`) waits for the owner's
+  // answer (`engine.js`, `research_empty`): it says `details-asked` now, and a stop written before that has no reason.
   return engine.say !== SAY.links && engine.say !== SAY.name
 }
 

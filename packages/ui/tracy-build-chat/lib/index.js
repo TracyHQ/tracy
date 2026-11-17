@@ -883,6 +883,14 @@ var tracy_build_chat_default = {
   "rebuild.undo": "Unvollst\xE4ndige Aktualisierung r\xFCckg\xE4ngig machen",
   "rebuild.update": "Meine Site aktualisieren",
   "retry.button": "Erneut versuchen",
+  "stop.fault": "Dieser Schritt konnte nicht abgeschlossen werden, daher habe ich hier angehalten. Was ich bisher gesammelt habe, bleibt erhalten.",
+  "stop.limit": "Ich habe pausiert, weil dieser Schritt in kurzer Zeit sehr oft ausgef\xFChrt wurde. Sie k\xF6nnen es ab {time} erneut versuchen.",
+  "stop.limit.now": "Ich habe pausiert, weil dieser Schritt in kurzer Zeit sehr oft ausgef\xFChrt wurde. Sie k\xF6nnen es jetzt erneut versuchen.",
+  "stop.startOver": "Neu beginnen",
+  "stop.startOver.confirm": "Beim Neubeginn wird verworfen, was Tracy bisher gesammelt hat, und eine neue Unterhaltung ge\xF6ffnet. Eine bereits erstellte Site ist nicht betroffen.",
+  "stop.startOver.yes": "Verwerfen und neu beginnen",
+  "stop.cancel": "Abbrechen",
+  "stop.startOver.failed": "Ich kann gerade nicht neu beginnen. Sie k\xF6nnen in dieser Unterhaltung weitermachen.",
   "review.failed": "Ihre Antwort wurde nicht gesendet. Versuchen Sie es erneut.",
   "review.question": "Diesen Plan freigeben?",
   "review.approve": "Freigeben",
@@ -1285,6 +1293,14 @@ var tracy_build_chat_default2 = {
   "rebuild.undo": "Deshacer la actualizaci\xF3n sin terminar",
   "rebuild.update": "Actualizar mi site",
   "retry.button": "Reintentar",
+  "stop.fault": "Este paso no se pudo completar, as\xED que me detuve aqu\xED. Lo que he reunido hasta ahora se conserva.",
+  "stop.limit": "Hice una pausa porque este paso se ejecut\xF3 muchas veces en poco tiempo. Puede volver a intentarlo a partir de {time}.",
+  "stop.limit.now": "Hice una pausa porque este paso se ejecut\xF3 muchas veces en poco tiempo. Puede volver a intentarlo ahora.",
+  "stop.startOver": "Empezar de nuevo",
+  "stop.startOver.confirm": "Empezar de nuevo descarta lo que Tracy ha reunido hasta ahora y abre una conversaci\xF3n nueva. Un site ya creado no se ve afectado.",
+  "stop.startOver.yes": "Descartar y empezar de nuevo",
+  "stop.cancel": "Cancelar",
+  "stop.startOver.failed": "No puedo empezar de nuevo ahora. Puede continuar en esta conversaci\xF3n.",
   "review.failed": "No se envi\xF3 su respuesta. Int\xE9ntelo de nuevo.",
   "review.question": "\xBFAprobar este plan?",
   "review.approve": "Aprobar",
@@ -1687,6 +1703,14 @@ var tracy_build_chat_default3 = {
   "rebuild.undo": "Annuler la mise \xE0 jour inachev\xE9e",
   "rebuild.update": "Mettre \xE0 jour mon site",
   "retry.button": "R\xE9essayer",
+  "stop.fault": "Cette \xE9tape n\u2019a pas pu aboutir, je me suis donc arr\xEAt\xE9 ici. Ce que j\u2019ai rassembl\xE9 jusqu\u2019ici est conserv\xE9.",
+  "stop.limit": "J\u2019ai fait une pause car cette \xE9tape a \xE9t\xE9 lanc\xE9e de nombreuses fois en peu de temps. Vous pourrez r\xE9essayer \xE0 partir de {time}.",
+  "stop.limit.now": "J\u2019ai fait une pause car cette \xE9tape a \xE9t\xE9 lanc\xE9e de nombreuses fois en peu de temps. Vous pouvez r\xE9essayer maintenant.",
+  "stop.startOver": "Recommencer",
+  "stop.startOver.confirm": "Recommencer supprime ce que Tracy a rassembl\xE9 jusqu\u2019ici et ouvre une nouvelle conversation. Un site d\xE9j\xE0 cr\xE9\xE9 n\u2019est pas concern\xE9.",
+  "stop.startOver.yes": "Supprimer et recommencer",
+  "stop.cancel": "Annuler",
+  "stop.startOver.failed": "Je ne peux pas recommencer pour le moment. Vous pouvez continuer dans cette conversation.",
   "review.failed": "Votre r\xE9ponse n\u2019a pas \xE9t\xE9 envoy\xE9e. R\xE9essayez.",
   "review.question": "Approuver ce plan ?",
   "review.approve": "Approuver",
@@ -2089,6 +2113,14 @@ var tracy_build_chat_default4 = {
   "rebuild.undo": "Annulla l\u2019aggiornamento non completato",
   "rebuild.update": "Aggiorna il mio site",
   "retry.button": "Riprova",
+  "stop.fault": "Questo passaggio non \xE8 stato completato, quindi mi sono fermato qui. Ci\xF2 che ho raccolto finora \xE8 conservato.",
+  "stop.limit": "Mi sono fermato perch\xE9 questo passaggio \xE8 stato eseguito molte volte in poco tempo. Pu\xF2 riprovare a partire da {time}.",
+  "stop.limit.now": "Mi sono fermato perch\xE9 questo passaggio \xE8 stato eseguito molte volte in poco tempo. Pu\xF2 riprovare ora.",
+  "stop.startOver": "Ricomincia",
+  "stop.startOver.confirm": "Ricominciare elimina ci\xF2 che Tracy ha raccolto finora e apre una nuova conversazione. Un site gi\xE0 creato non viene modificato.",
+  "stop.startOver.yes": "Elimina e ricomincia",
+  "stop.cancel": "Annulla",
+  "stop.startOver.failed": "Non posso ricominciare in questo momento. Pu\xF2 continuare in questa conversazione.",
   "review.failed": "La sua risposta non \xE8 stata inviata. Riprovi.",
   "review.question": "Approvare questo piano?",
   "review.approve": "Approva",
@@ -2491,6 +2523,14 @@ var tracy_build_chat_default5 = {
   "rebuild.undo": "Onvoltooide update ongedaan maken",
   "rebuild.update": "Mijn site bijwerken",
   "retry.button": "Opnieuw proberen",
+  "stop.fault": "Deze stap kon niet worden afgerond, dus ben ik hier gestopt. Wat ik tot nu toe heb verzameld, blijft bewaard.",
+  "stop.limit": "Ik heb gepauzeerd omdat deze stap in korte tijd vaak is uitgevoerd. U kunt het vanaf {time} opnieuw proberen.",
+  "stop.limit.now": "Ik heb gepauzeerd omdat deze stap in korte tijd vaak is uitgevoerd. U kunt het nu opnieuw proberen.",
+  "stop.startOver": "Opnieuw beginnen",
+  "stop.startOver.confirm": "Opnieuw beginnen verwijdert wat Tracy tot nu toe heeft verzameld en opent een nieuw gesprek. Een site die al is gebouwd, verandert niet.",
+  "stop.startOver.yes": "Verwijderen en opnieuw beginnen",
+  "stop.cancel": "Annuleren",
+  "stop.startOver.failed": "Ik kan nu niet opnieuw beginnen. U kunt in dit gesprek verdergaan.",
   "review.failed": "Uw antwoord is niet verzonden. Probeer het opnieuw.",
   "review.question": "Dit plan goedkeuren?",
   "review.approve": "Goedkeuren",
@@ -2893,6 +2933,14 @@ var tracy_build_chat_default6 = {
   "rebuild.undo": "\u64A4\u9500\u672A\u5B8C\u6210\u7684\u66F4\u65B0",
   "rebuild.update": "\u66F4\u65B0\u6211\u7684 site",
   "retry.button": "\u91CD\u8BD5",
+  "stop.fault": "\u8FD9\u4E00\u6B65\u672A\u80FD\u5B8C\u6210\uFF0C\u6240\u4EE5\u6211\u5728\u8FD9\u91CC\u505C\u4E86\u4E0B\u6765\u3002\u5230\u76EE\u524D\u4E3A\u6B62\u6536\u96C6\u7684\u5185\u5BB9\u90FD\u5DF2\u4FDD\u7559\u3002",
+  "stop.limit": "\u8FD9\u4E00\u6B65\u5728\u77ED\u65F6\u95F4\u5185\u8FD0\u884C\u4E86\u592A\u591A\u6B21\uFF0C\u6240\u4EE5\u6211\u6682\u505C\u4E86\u3002\u4F60\u53EF\u4EE5\u4ECE {time} \u8D77\u91CD\u8BD5\u3002",
+  "stop.limit.now": "\u8FD9\u4E00\u6B65\u5728\u77ED\u65F6\u95F4\u5185\u8FD0\u884C\u4E86\u592A\u591A\u6B21\uFF0C\u6240\u4EE5\u6211\u6682\u505C\u4E86\u3002\u4F60\u73B0\u5728\u53EF\u4EE5\u91CD\u8BD5\u3002",
+  "stop.startOver": "\u91CD\u65B0\u5F00\u59CB",
+  "stop.startOver.confirm": "\u91CD\u65B0\u5F00\u59CB\u4F1A\u4E22\u5F03 Tracy \u5230\u76EE\u524D\u4E3A\u6B62\u6536\u96C6\u7684\u5185\u5BB9\uFF0C\u5E76\u6253\u5F00\u65B0\u7684\u5BF9\u8BDD\u3002\u5DF2\u7ECF\u5EFA\u597D\u7684 site \u4E0D\u53D7\u5F71\u54CD\u3002",
+  "stop.startOver.yes": "\u4E22\u5F03\u5E76\u91CD\u65B0\u5F00\u59CB",
+  "stop.cancel": "\u53D6\u6D88",
+  "stop.startOver.failed": "\u73B0\u5728\u65E0\u6CD5\u91CD\u65B0\u5F00\u59CB\u3002\u4F60\u53EF\u4EE5\u5728\u8FD9\u4E2A\u5BF9\u8BDD\u4E2D\u7EE7\u7EED\u3002",
   "review.failed": "\u4F60\u7684\u56DE\u7B54\u6CA1\u6709\u53D1\u9001\u3002\u8BF7\u91CD\u8BD5\u3002",
   "review.question": "\u6279\u51C6\u8FD9\u4E2A\u8BA1\u5212\uFF1F",
   "review.approve": "\u6279\u51C6",
@@ -3295,6 +3343,14 @@ var tracy_build_chat_default7 = {
   "rebuild.undo": "Hu\u1EF7 l\u01B0\u1EE3t c\u1EADp nh\u1EADt ch\u01B0a xong",
   "rebuild.update": "C\u1EADp nh\u1EADt site",
   "retry.button": "Th\u1EED l\u1EA1i",
+  "stop.fault": "B\u01B0\u1EDBc n\xE0y kh\xF4ng ho\xE0n t\u1EA5t \u0111\u01B0\u1EE3c n\xEAn m\xECnh \u0111\xE3 d\u1EEBng \u1EDF \u0111\xE2y. Nh\u1EEFng g\xEC m\xECnh thu th\u1EADp \u0111\u01B0\u1EE3c \u0111\u1EBFn gi\u1EDD v\u1EABn \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.",
+  "stop.limit": "M\xECnh t\u1EA1m d\u1EEBng v\xEC b\u01B0\u1EDBc n\xE0y \u0111\xE3 ch\u1EA1y qu\xE1 nhi\u1EC1u l\u1EA7n trong th\u1EDDi gian ng\u1EAFn. B\u1EA1n c\xF3 th\u1EC3 th\u1EED l\u1EA1i t\u1EEB {time}.",
+  "stop.limit.now": "M\xECnh t\u1EA1m d\u1EEBng v\xEC b\u01B0\u1EDBc n\xE0y \u0111\xE3 ch\u1EA1y qu\xE1 nhi\u1EC1u l\u1EA7n trong th\u1EDDi gian ng\u1EAFn. B\u1EA1n c\xF3 th\u1EC3 th\u1EED l\u1EA1i ngay b\xE2y gi\u1EDD.",
+  "stop.startOver": "B\u1EAFt \u0111\u1EA7u l\u1EA1i",
+  "stop.startOver.confirm": "B\u1EAFt \u0111\u1EA7u l\u1EA1i s\u1EBD b\u1ECF nh\u1EEFng g\xEC Tracy \u0111\xE3 thu th\u1EADp \u0111\u1EBFn gi\u1EDD v\xE0 m\u1EDF m\u1ED9t cu\u1ED9c tr\xF2 chuy\u1EC7n m\u1EDBi. Site \u0111\xE3 d\u1EF1ng xong kh\xF4ng b\u1ECB \u1EA3nh h\u01B0\u1EDFng.",
+  "stop.startOver.yes": "B\u1ECF v\xE0 b\u1EAFt \u0111\u1EA7u l\u1EA1i",
+  "stop.cancel": "Hu\u1EF7",
+  "stop.startOver.failed": "Hi\u1EC7n m\xECnh ch\u01B0a th\u1EC3 b\u1EAFt \u0111\u1EA7u l\u1EA1i. B\u1EA1n c\xF3 th\u1EC3 ti\u1EBFp t\u1EE5c trong cu\u1ED9c tr\xF2 chuy\u1EC7n n\xE0y.",
   "review.failed": "C\xE2u tr\u1EA3 l\u1EDDi c\u1EE7a b\u1EA1n ch\u01B0a \u0111\u01B0\u1EE3c g\u1EEDi. H\xE3y th\u1EED l\u1EA1i.",
   "review.question": "Duy\u1EC7t k\u1EBF ho\u1EA1ch n\xE0y?",
   "review.approve": "Duy\u1EC7t",
@@ -3726,7 +3782,7 @@ var linkGapOf = (links) => Array.isArray(links) && links.some(
   (l) => l?.state === "failed" || l?.state === "read" && (!l.facts && !l.pictures || !l.pictures && l.picturesLost > 0)
 );
 var ANSWERS_ARRIVE_GUIDANCE = "The owner's answers reach tracy_build by themselves. Never call research again to pass an answer, and never put an answer into description.";
-var PAUSED_NEXT = "Say the sentence in say once and stop here. It says when the owner can continue. Ask no question, and do not call tracy_build again before retryAt.";
+var PAUSED_NEXT = `Say the sentence in say once and stop here. It says when the owner can continue; the chat shows the owner a Try again button for then. Ask no question, and do not call tracy_build again before retryAt. When the owner sends "${RETRY_MESSAGE}" after retryAt, call tracy_build once more with exactly the arguments in again.`;
 var PAUSED_AGAIN_NEXT = "Nothing was started: the pause is not over yet. Do not repeat the earlier sentence about the pause. Answer what the owner just wrote in one short sentence, and say once that you can continue after minutesLeft minutes. Do not call tracy_build again before retryAt.";
 var NEEDS_NAME_NEXT = "Research needs the business name first. In one short message in the owner's language, ask for the name of their business and the city or town it is in. Then call tracy_build with action research, no links, name and city as the owner gave them, and their words as description. Do not say anything failed.";
 var RESEARCH_QUESTIONS_NEXT = `Pass ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action templates.`;
@@ -3811,13 +3867,14 @@ function pendingRetryOf(events) {
   if (lastResult === null || retrySeq < lastResultSeq) return null;
   try {
     const answer = JSON.parse(lastResult);
-    return answer?.stopped === true && answer.rerun === true && startArgsOf(answer.again) ? answer.again : null;
+    return (answer?.stopped === true || answer?.paused === true) && answer.rerun === true && startArgsOf(answer.again) ? answer.again : null;
   } catch {
     return null;
   }
 }
 var stoppedStateOf = (state, events = []) => {
-  if (state?.rerun !== true) return stopped(state?.say);
+  const reason = typeof state?.reason === "string" ? { reason: state.reason } : {};
+  if (state?.rerun !== true) return { ...stopped(state?.say), ...reason };
   const again = rerunArgsOf(events, state.step);
   const retryAt = typeof state.retryAt === "string" ? state.retryAt : null;
   return {
@@ -3826,8 +3883,13 @@ var stoppedStateOf = (state, events = []) => {
     rerun: true,
     ...again ? { again } : {},
     ...retryAt ? { retryAt } : {},
+    ...reason,
     next: RERUN_GUIDANCE
   };
+};
+var pausedWithAgain = (answer, args) => {
+  const again = answer?.paused === true ? startArgsOf(args) : null;
+  return again ? { ...answer, rerun: true, again } : answer;
 };
 function argsOf(value) {
   if (typeof value !== "string") return value && typeof value === "object" ? value : {};
@@ -4387,12 +4449,15 @@ ${JSON.stringify(answer)}`;
     if (action === "build") return build(sessionId, assertion);
     const until = pausedUntil.get(sessionId) ?? 0;
     if ((action === "research" || action === "plan") && until > now())
-      return {
-        paused: true,
-        retryAt: new Date(until).toISOString(),
-        minutesLeft: Math.max(1, Math.ceil((until - now()) / 6e4)),
-        next: PAUSED_AGAIN_NEXT
-      };
+      return pausedWithAgain(
+        {
+          paused: true,
+          retryAt: new Date(until).toISOString(),
+          minutesLeft: Math.max(1, Math.ceil((until - now()) / 6e4)),
+          next: PAUSED_AGAIN_NEXT
+        },
+        args
+      );
     const res = await door(sessionId, assertion, request[0], request[1], request[2]);
     if (res === null) return stopped();
     if (res.status === 429) {
@@ -4400,7 +4465,7 @@ ${JSON.stringify(answer)}`;
       if (Number.isFinite(at)) pausedUntil.set(sessionId, at);
     }
     if (action === "start-over") return startOverAnswerOf(res, ownerSay);
-    if (res.status < 200 || res.status >= 300) return refusal(res);
+    if (res.status < 200 || res.status >= 300) return pausedWithAgain(refusal(res), args);
     if (action === "templates") {
       const { options, none } = templateChoiceOf(res.body?.templates);
       return { options, none, next: templatesNext(options) };

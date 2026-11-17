@@ -285,18 +285,28 @@ function Retry({ view }: { view: Any }) {
     reviews: { has: () => false, subscribe: () => () => {} } as Any,
     runs: { read: () => view.run ?? null, subscribe: () => () => {}, load: async () => {} } as Any,
     t: () => english,
+    // The engine door the stop card reads once (#575): the state a view names, else a step that is done.
+    fetch: (async (url: string) => {
+      if (!url.endsWith('/start-over')) return ok(view.engine ?? { step: 'compose', state: 'done' })
+      log.requests.push({ url })
+      return ok({ started: true, open: '/new/build' })
+    }) as Any,
+    navigate: (href: string) => log.requests.push({ navigate: href }),
     send: async (_session, text) => {
       log.sent.push(text)
       return view.sendResult ?? 'sent'
     }
   })
+  const turn = Math.max(1, (view.results as Any[]).length)
+  // The definition publishes on the session's last turn: the latest stop, or none.
+  const value = { turn, stop: fold.stop }
   return (
     <div>
       <p>{STOP_SAY}</p>
       {tails.retry({
         sessionId: BUILD_SESSION,
         seq: 1,
-        turn: { turn: fold.stop?.turn ?? 0, data: { get: () => fold.stop } }
+        turn: { turn, data: { get: () => value } }
       } as Any)}
     </div>
   )

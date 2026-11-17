@@ -11,8 +11,8 @@
  *   `savePlanEdit` / `undoPlanEdit`, and the card follows the draft the door answers with. While the plan review bar
  *   shows, the bar draws this card instead (`LivePlan`, `review-presence.ts`): dsh draws a tail only once its turn
  *   ends, and the turn that asks the review waits for the answer;
- * - Try again in the turn whose call stopped on a step that may be rerun, while no build run exists and fewer than two
- *   retries of the step in a row stopped again (`RetryTail`);
+ * - the stop card at the end of the conversation while the draft's step stands stopped (or a start was refused for
+ *   its limit) and no build run exists, with Try again and Start over for the CURRENT state (`StopTail`, #575);
  * - the task list and the stop notice in the session's last turn, once a build run exists (`BuildRunFeed`);
  * - in a site chat, the earlier conversation carried from the build chat, with the plan and its update card only
  *   while the viewer's own build is the build of that site (`CarriedPlan`).
@@ -20,7 +20,7 @@
  * Every tail draws nothing outside a build chat session. The switch `chat-build` decides whether they are
  * registered at all (`index.tsx`).
  */
-import { canRetryStop, isBuildChatSession, RETRY_MESSAGE } from '@tracy/core/build-chat'
+import { isBuildChatSession, RETRY_MESSAGE } from '@tracy/core/build-chat'
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { BuildProgress } from './BuildProgress'
 import { BuildNotStarted, BuildStopped } from './BuildStopped'
@@ -49,7 +49,7 @@ import { hasNote, type RevisionNotes } from './revision-notes'
 import type { BuildRunFeed, DraftSource } from './sources'
 import type { Translate } from './strings'
 import { TemplateCard } from './TemplateCard'
-import { TryAgain } from './TryAgain'
+import { StopTail } from './stop-tail'
 
 export interface TailDeps {
   drafts: DraftSource
@@ -195,7 +195,7 @@ export function LivePlan({
 }
 
 /** The slice of dsh's turn location data a tail reads live (ui-conversation `ConversationLocationDataStore`). */
-interface TurnDataLike {
+export interface TurnDataLike {
   get?: (key: string) => unknown
   source?: (key: string) => { getSnapshot(): unknown; subscribe(listener: () => void): () => void }
 }
@@ -232,19 +232,6 @@ function PlanTail({
       revision={`${live.id}:${live.revision}`}
       sessionId={sessionId}
       language={live.language}
-    />
-  )
-}
-
-/** Try again. A build run (locked, stopped or cancelled) takes it away: the build has its own notice. */
-function RetryTail({ deps, sessionId }: { deps: TailDeps; sessionId: string }) {
-  const read = () => deps.runs.read(sessionId)
-  const run = useSyncExternalStore(deps.runs.subscribe, read, read)
-  if (run !== null) return null
-  return (
-    <TryAgain
-      t={deps.t(sessionId)}
-      send={() => deps.send?.(sessionId, RETRY_MESSAGE) ?? Promise.resolve('no-chat' as const)}
     />
   )
 }
@@ -332,8 +319,17 @@ export function makeTails(deps: TailDeps) {
     },
     retry: (props: TailProps) => {
       const value = inBuild(props) ? turnValueOf<RetryValue>(props, RETRY_KEY) : null
-      return value === null || !canRetryStop(value) ? null : (
-        <RetryTail deps={deps} sessionId={props.sessionId as string} />
+      return value === null ? null : (
+        <StopTail
+          deps={deps}
+          value={value}
+          sessionId={props.sessionId as string}
+          turn={props.turn?.turn}
+          data={props.turn?.data as TurnDataLike | undefined}
+          useChat={props.useChat ?? noChat}
+          retryMessage={RETRY_MESSAGE}
+          navigate={deps.navigate ?? goTo}
+        />
       )
     },
     run: (props: TailProps) =>

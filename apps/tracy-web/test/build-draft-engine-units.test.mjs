@@ -455,6 +455,17 @@ test('a stop says whether the owner may have the step run again (#609)', () => {
   })
 })
 
+test('a limit stop may be run again once its time came; a request for the business details says so (#575)', () => {
+  const now = Date.parse('2026-11-17T10:00:00.000Z')
+  const limit = stoppedOf({ code: 'research_limit' }, now)
+  assert.equal(limit.reason, 'try-later')
+  assert.equal(limit.rerun, true)
+  assert.ok(Date.parse(limit.retryAt) > now)
+  // The stop card stands aside for these: the chat asks the owner, nothing failed.
+  assert.equal(stoppedOf({ code: 'research_empty', reason: 'no_links' }).reason, 'details-asked')
+  assert.equal(stoppedOf({ code: 'research_empty', reason: 'no_name' }).reason, 'details-asked')
+})
+
 test('compose asks the model for the owner facing sentences in the language the owner chats in (#575)', async () => {
   const model = club.scriptedModel(JSON.stringify(withoutTeam()))
   await composeStep(

@@ -441,12 +441,13 @@ test('a change request answer reaches the plan card note store, once per plan re
   assert.equal(notes.read('plan-1:5'), null, 'the same note again keeps its dismissal')
 })
 
-test('Try again: published on the turn of the stop, drawn only for a step that may be rerun and fewer than two retries', () => {
+test('the stop card: published on the last turn of the session with the latest stop, following it to newer turns (#575)', () => {
   const r = recorder()
   client.applyWith(r.ctx, { switches: switchBoard(true) })
   const retry = r.definitions.find((d) => d.kind === 'tracy_build:retry')
   const tail = r.of('conversation.chat.turnTail').find((e) => e.options.id === 'tracy-build-chat-retry')
   let seq = 0
+  const turnStart = (turn) => ({ type: 'turn/start', seq: ++seq, data: { turn } })
   const call = (turn, callId, action) => ({
     type: 'tool/call',
     seq: ++seq,
@@ -463,27 +464,26 @@ test('Try again: published on the turn of the stop, drawn only for a step that m
   let published = null
   const feed = (event) => {
     const m = retry.match(event)
+    assert.ok(m, event.type)
     state =
       state === undefined ? retry.start({}, { event, role: m.role }) : retry.update({ state }, { event })
     published = retry.buildLocationData({ state }, 'turn', published)
     return published
   }
-  assert.equal(feed(call(1, 'a', 'plan')), null)
-  assert.equal(feed(result(1, 'a', stop)).turn, 1)
-  const owner = (value) => ({ sessionId: BUILD, seq: 9, turn: { turn: 1, data: { get: () => value } } })
-  const drawn = tail.component(owner(published.value))
-  assert.notEqual(drawn, null)
+  assert.equal(feed(turnStart(1)).value.stop, null, 'the last turn is published with nothing stopped')
+  feed(call(1, 'a', 'plan'))
+  const stopped = feed(result(1, 'a', stop))
+  assert.equal(stopped.turn, 1)
+  assert.equal(stopped.value.stop.step, 'compose')
+  // The owner writes again without a tool call: the stop moves to the end of the conversation.
+  const moved = feed(turnStart(2))
+  assert.equal(moved.turn, 2)
+  assert.equal(moved.value.stop, stopped.value.stop)
+  const owner = (value) => ({ sessionId: BUILD, seq: 9, turn: { turn: 2, data: { get: () => value } } })
+  assert.notEqual(tail.component(owner(moved.value)), null)
   assert.equal(tail.component(owner(null)), null)
-  assert.equal(tail.component({ ...owner(published.value), sessionId: OTHER }), null)
-  // The next call takes the button away at once; a second and third stop in a row bring it back, then take it for good.
-  assert.equal(feed(call(2, 'b', 'plan')), null)
-  assert.equal(feed(result(2, 'b', stop)).value.retries, 1)
-  assert.equal(feed(call(3, 'c', 'plan')), null)
-  assert.equal(feed(result(3, 'c', stop)).value.retries, 2)
-  assert.equal(tail.component(owner(published.value)), null, 'only the sentence stays after two retries')
-  assert.equal(
-    tail.component(owner({ turn: 1, seq: 1, step: 'compose', rerun: false, retries: 0 })),
-    null,
-    'a stop that may not be rerun offers nothing'
-  )
+  assert.equal(tail.component({ ...owner(moved.value), sessionId: OTHER }), null)
+  // The next call clears the stop at once; the last turn stays published for the engine door's read.
+  feed(turnStart(3))
+  assert.equal(feed(call(3, 'b', 'plan')).value.stop, null)
 })
