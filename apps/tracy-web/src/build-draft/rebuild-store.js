@@ -16,7 +16,7 @@
  * site back through the build store (`rebuild-route.js`).
  */
 import { randomUUID } from 'node:crypto'
-import { changeDraft } from './store.js'
+import { changeDraft, keptBrandOf } from './store.js'
 
 const samePlan = (a, b) => a?.id === b?.id && a?.revision === b?.revision
 
@@ -71,7 +71,9 @@ export async function reviseBuild(
         plan: row.plan,
         lastEdit: row.last_edit ?? null,
         profile: row.needs_profile,
-        research: row.plan_research ?? row.research
+        research: row.plan_research ?? row.research,
+        // The brand file of the plan's look (#575), as the first build's snapshot keeps it.
+        brand: keptBrandOf(row.brand)
       },
       refusal: null,
       endedAt: null,

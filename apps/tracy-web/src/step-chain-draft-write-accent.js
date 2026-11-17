@@ -31,6 +31,28 @@ export function templateAccentOf(sheets, variables) {
   )
 }
 
+const HEX = /^#[0-9a-f]{6}$/i
+
+/**
+ * The fill and words per side. As measured (door-measures-kit-accent.mjs): the dark tone fills and words on the dark
+ * side, opening there when the template opens on it. When the plan's accent is the brand file's own (`op.shifts`, #575
+ * P4 of the brand audit), the brand file's shifts are written as the step chain wrote them (`write-step/brand-stage.js`):
+ * its fill per side, and the words its bench measured to read on each side, which may differ from the fill.
+ */
+export function shiftsOf(op) {
+  const opens = op.sides?.opensOn === 'dark'
+  const base = [
+    { side: 'dark', opens, colour: 'accent', to: op.tones.dark },
+    { side: 'dark', colour: 'accent-text', to: op.tones.dark }
+  ]
+  const brand = list(op.shifts).filter(
+    (s) =>
+      ['light', 'dark'].includes(s?.side) && ['accent', 'accent-text'].includes(s?.colour) && HEX.test(s?.to)
+  )
+  // The brand file's shifts as the step chain wrote them (`brand-stage.js` hands `brand.colours` to `accentModule`).
+  return brand.length ? brand.map((s) => ({ ...s })) : base
+}
+
 /** The module text of the plan's accent op, built from the site's stylesheets. */
 export async function accentHtmlOf(op, ctx) {
   if (typeof ctx.doors.sheets !== 'function')
@@ -42,18 +64,13 @@ export async function accentHtmlOf(op, ctx) {
       }
     )
   const sheets = await ctx.doors.sheets({ variables: op.variables })
-  const { light, dark } = op.tones
+  const { light } = op.tones
   const made = accentModule({
     sheets,
     colours: {
       accent: light,
       replaces: templateAccentOf(sheets, op.variables),
-      // As measured (door-measures-kit-accent.mjs): the dark fill and words on the dark side, opening there when
-      // the template opens on it.
-      shifts: [
-        { side: 'dark', opens: op.sides.opensOn === 'dark', colour: 'accent', to: dark },
-        { side: 'dark', colour: 'accent-text', to: dark }
-      ]
+      shifts: shiftsOf(op)
     },
     darkHook: op.sides.darkHook ?? null
   })

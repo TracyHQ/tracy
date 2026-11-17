@@ -5,7 +5,8 @@
 //   previous   the ref of the build this one revised, or null
 //   plan       the approved plan, and `profile` the gated needs profile it was built from (with `withheld`)
 //   kit        the kit ref (`<slug>@<version>`) the site was written from
-//   copy       the writer's pages (`{pages, prompt}`): a revision keeps the words of every page whose request is the same
+//   copy       the writer's pages (`{pages, prompt, systemPages?}`): a revision keeps the words of every page whose
+//              request is the same, and the created Privacy page's text while its inputs are unchanged
 //   replies    the kept model replies of the labelling and the icons (`keptModel`)
 //   write      `{state, ops}`: the run record's state (`{mark, ids, paths, done, seq, base, kept, rewrite, undo}`) and the
 //              ops record (`opsRecordOf`); `undo` is what a revision run wrote over, by address, for the restore;
@@ -25,7 +26,16 @@ export function buildResultOf({ ref, previous = null, plan, profile, kit, copy, 
     plan,
     profile,
     kit,
-    copy: copy ? { pages: copy.pages, prompt: copy.prompt ?? null } : null,
+    copy: copy
+      ? {
+          pages: copy.pages,
+          prompt: copy.prompt ?? null,
+          // The created Privacy page's text (#575): a revision keeps it while its inputs are unchanged.
+          ...(Array.isArray(copy.systemPages) && copy.systemPages.length
+            ? { systemPages: copy.systemPages.map(({ attempts: _a, ...page }) => page) }
+            : {})
+        }
+      : null,
     replies: Array.isArray(replies) ? replies : [],
     write: { state, ops }
   }

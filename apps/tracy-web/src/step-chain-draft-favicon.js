@@ -1,5 +1,5 @@
 // The site icon written at the path the kit declares (#597, gate run 7; op `look.favicon`,
-// `draft-write-plan-favicon.mjs`). Made from the logo's stored bytes, contained in a transparent square with a small
+// `draft-write-plan-favicon.mjs`). The brand file's own icon when the draft keeps one (#575), else made from the logo's stored bytes, contained in a transparent square with a small
 // margin and never cut; or, with no logo, the business initials drawn on the accent (`initialsAvatar`, the lettermark
 // the pictures step draws). An `.ico` holds 16, 32 and 48 pixel PNG entries (`pngsToIco`, the brand step's own); a
 // `.png` one 32 pixel square. Uploaded through the media door and read back by its bytes; a door that refuses the
@@ -41,8 +41,47 @@ async function sourceOf(op, ctx) {
     .bytes
 }
 
+/** The square sizes of an ICO's entries, read from its directory (0 is 256). */
+const icoSizes = (bytes) =>
+  bytes.length >= 6 && bytes.readUInt16LE(0) === 0 && bytes.readUInt16LE(2) === 1
+    ? Array.from({ length: bytes.readUInt16LE(4) }, (_, i) => bytes[6 + 16 * i] || 256)
+    : []
+
+/**
+ * The brand file's own icon (#575, P3 of the brand audit) as it is, once it passes the write's checks: an `.ico` holding
+ * every size the path's format takes, or a `.png` of the one 32 pixel square that also passes the tab check the bench
+ * ran (`brand-step/favicon-check.js`: fills its square, stands out on a light and a dark tab). Null when it fails one.
+ */
+async function brandIconOf(op, ctx) {
+  let stored
+  try {
+    stored = await ctx.openStored(op.stored.id)
+  } catch {
+    return null
+  }
+  const bytes = Buffer.from(stored.bytes)
+  if (op.format === 'ico') {
+    const sizes = icoSizes(bytes)
+    return op.sizes.every((n) => sizes.includes(n)) ? { bytes, mime: 'image/x-icon' } : null
+  }
+  try {
+    const meta = await sharp(bytes).metadata()
+    if (meta.width !== op.sizes[0] || meta.height !== op.sizes[0]) return null
+    const { checkFavicon } = await import('./brand-step/favicon-check.js')
+    return (await checkFavicon(bytes)).pass ? { bytes, mime: 'image/png' } : null
+  } catch {
+    return null
+  }
+}
+
 /** The favicon file's bytes in the format its path names. */
 export async function faviconBytesOf(op, ctx) {
+  if (op.from === 'brand') {
+    const icon = await brandIconOf(op, ctx)
+    if (icon) return icon
+    ctx.report.unproven.push({ code: 'favicon_brand_icon_unfit', op: op.key })
+    return faviconBytesOf({ ...op, ...op.fallback }, ctx)
+  }
   const source = await sourceOf(op, ctx)
   const pngs = []
   for (const n of op.sizes) pngs.push(await squareOf(source, n))

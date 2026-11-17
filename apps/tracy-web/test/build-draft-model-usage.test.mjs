@@ -86,12 +86,15 @@ test('a cost is null, never a guess: unlisted model, other host, no usage, a fai
   const seen = []
   const failing = modelCallOf(PRICED, {
     fetchImpl: async () => new Response('{}', { status: 500 }),
-    onUsage: (u) => seen.push(u)
+    onUsage: (u) => seen.push(u),
+    // One attempt: the retry of a transient error is its own test (`build-draft-model-retry.test.mjs`).
+    retry: { policy: { attempts: 1 } }
   })
   await assert.rejects(failing({ system: 'S', user: 'U' }), { code: 'model_call_failed' })
   const thrown = modelCallOf(PRICED, {
     fetchImpl: async () => Promise.reject(new Error('down')),
-    onUsage: (u) => seen.push(u)
+    onUsage: (u) => seen.push(u),
+    retry: { policy: { attempts: 1 } }
   })
   await assert.rejects(thrown({ system: 'S', user: 'U' }), { message: 'down' })
   assert.deepEqual(

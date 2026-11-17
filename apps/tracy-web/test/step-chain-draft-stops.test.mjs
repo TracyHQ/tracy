@@ -115,7 +115,9 @@ for (const [name, rule, writer, stop] of ORDERS)
     const r = await run(s)
     assert.equal(stopOf(r), stop)
     const pages = Object.keys(model.calls)
-    assert.equal(pages.length, 3)
+    // The first page is written before the others (#575, the step chain's order): when its call always fails, the
+    // other pages are never asked.
+    assert.equal(pages.length, rule('home', 2, false) && rule('home', 1, false) ? 1 : 3)
     for (const page of pages) assert.ok(model.calls[page] <= 2, `${page}: ${model.calls[page]} calls`)
     assert.ok(attemptsOf(r, 'copy') <= 2)
   })

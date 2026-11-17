@@ -52,6 +52,31 @@ export function undoEditOf(before, edit) {
   }
 }
 
+/** The kept picture of a brand file entry: `{picture, mime}`, or nothing when it was never stored. */
+function shownPicture(file, name) {
+  const p = file?.pictures?.[name]
+  return typeof p?.id === 'string' && p.id !== '' ? { picture: p.id, mime: p.mime ?? 'image/png' } : null
+}
+
+/**
+ * The draft's `lookSources`, with `pictures` when it keeps a brand file: the logo on a light and on a dark ground (the
+ * first logo spot of each side, the header's), and the site icon (its 32 pixel one, else the set).
+ */
+function lookSourcesOf(brand) {
+  const file = brand?.file
+  const side = (name) => (Array.isArray(file?.logos) ? file.logos : []).find((l) => l?.side === name)?.file
+  const pictures = Object.fromEntries(
+    [
+      ['logoLight', shownPicture(file, side('light'))],
+      ['logoDark', shownPicture(file, side('dark'))],
+      ['favicon', shownPicture(file, file?.favicon?.png32) ?? shownPicture(file, file?.favicon?.ico)]
+    ].filter(([, picture]) => picture)
+  )
+  const kept = Object.keys(pictures).length > 0
+  if (!brand?.lookSources && !kept) return {}
+  return { lookSources: { ...brand?.lookSources, ...(kept ? { pictures } : {}) } }
+}
+
 /** What the doors answer for a draft row: the Contract B documents as stored, and whether one undo is offered. */
 export function draftShape(row) {
   return {
@@ -63,8 +88,9 @@ export function draftShape(row) {
     lastEdit: row.last_edit,
     // One undo: of the last card edit, or of the last change asked for in the chat (`undo_plan`, `store.js`).
     canUndo: row.undo_edit !== null || (row.undo_plan ?? null) !== null,
-    // Where the plan's accent and logo came from (the brand step's own record), when the draft holds one.
-    ...(row.brand?.lookSources ? { lookSources: row.brand.lookSources } : {}),
+    // Where the plan's accent and logo came from (the brand step's own record), when the draft holds one, with the
+    // pictures of the brand file the draft keeps, by draft picture id (#575): what the card shows the look with.
+    ...lookSourcesOf(row.brand),
     createdAt: row.created_at.toISOString(),
     updatedAt: row.updated_at.toISOString()
   }

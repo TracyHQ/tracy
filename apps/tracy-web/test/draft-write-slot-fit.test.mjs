@@ -13,7 +13,10 @@ import { pictureShapeOf } from 'website-opportunities/domain/write-order-memory-
 import { runDraftWrite } from '../src/step-chain-draft-write.js'
 import { blankSite, florist, openStored, planOf } from './draft-write-fixtures.mjs'
 
-const LOGO = 'home.home-b8.logo'
+// The dark logo fact is uploaded once, from its first place: the header's dark logo since the header takes the logo
+// (#575), and it goes to the dark site logo setting and the footer logo slot both.
+const LOGO = 'home.home-b1.logo-dark'
+const SLOTS = ['module-170.1', 'siteSetting-211586990.0']
 const order = structuredClone(florist.order)
 order.look.logo = { kind: 'own' }
 const plan = planOf(order)
@@ -28,7 +31,7 @@ const run = (memory, logo, p = plan) =>
 
 test('the plan names the frame of the footer logo slot on its upload, and the place is optional', () => {
   const op = plan.ops.find((o) => o.kind === 'picture.upload' && o.picture === LOGO)
-  assert.deepEqual(op.slotFit.slots, ['module-170.1'])
+  assert.deepEqual(op.slotFit.slots, SLOTS)
   assert.equal(op.slotFit.transparent, true)
   assert.ok(Math.abs(op.slotFit.width / op.slotFit.height - 393 / 113) < 0.02)
   assert.equal(op.slotOptional, true)
@@ -67,7 +70,7 @@ test('a logo too small to enlarge twice is left out at this optional place; the 
   assert.deepEqual(done.placesLeft, [
     { code: 'slot_picture_left_out', picture: LOGO, cause: 'slot_picture_too_small' }
   ])
-  assert.ok(!String(memory.site.slots.get('module-170.1').current).startsWith('images/'))
+  for (const slot of SLOTS) assert.ok(!String(memory.site.slots.get(slot).current).startsWith('images/'))
 })
 
 test('at a required place the same logo stops the write, typed and named', async () => {
@@ -77,7 +80,7 @@ test('at a required place the same logo stops the write, typed and named', async
     assert.equal(error.code, 'redo_failed')
     assert.equal(error.details.cause, 'slot_picture_unfit')
     assert.equal(error.details.problem, 'slot_picture_too_small')
-    assert.deepEqual(error.details.slots, ['module-170.1'])
+    assert.deepEqual(error.details.slots, SLOTS)
     return true
   })
 })

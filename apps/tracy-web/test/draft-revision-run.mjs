@@ -149,7 +149,9 @@ export async function matrixRow(name, { writer = {}, site: blank = blankSite } =
   const row = {
     edit: name,
     writes: partial.writes,
-    model: partial.model.calls.length,
+    // The created Privacy page is written apart from the plan's pages (#575): counted on its own, at most once.
+    model: partial.model.calls.filter((c) => c.kind !== 'privacy').length,
+    privacy: partial.model.calls.filter((c) => c.kind === 'privacy').length,
     pages: partial.model.pages
   }
   if (partial.error) return { ...row, stop: partial.error.code }

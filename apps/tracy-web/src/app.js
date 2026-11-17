@@ -1279,7 +1279,9 @@ export function buildApp(deps) {
         draftBrandStep({
           pool: deps.pool,
           stepsOf: brandSteps,
-          openPicture: draftPictureReader(draftPictureStore)
+          openPicture: draftPictureReader(draftPictureStore),
+          // The pictures of the brand file the draft keeps (#575): stored as draft pictures, opened by the write.
+          keepPicture: (accountId, picture) => draftPictureStore.keepBrand(accountId, picture)
         }),
       prunePictures: buildEngine.prunePictures ?? draftPictureStore.prune,
       // Each step is reserved in the research cost ledger, under `/ops/wo`'s daily research cap (`spend-limits.js`).
@@ -2461,9 +2463,9 @@ export function buildApp(deps) {
                 readEngineDraft: (accountId) => readEngineDraft(deps.pool, accountId),
                 draftPlanForBuild: (accountId) => draftPlanForBuild(deps.pool, accountId),
                 loadAiqKit: (slug) => app.loadAiqKit?.(slug) ?? null,
-                buildModel: () =>
+                buildModel: (options) =>
                   app.buildModel
-                    ? app.buildModel()
+                    ? app.buildModel(options)
                     : Promise.reject(
                         Object.assign(new Error('no build model door'), {
                           code: 'model_missing',

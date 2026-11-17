@@ -144,9 +144,21 @@ test('copy that smuggles a phone number the data does not hold fails; the real o
     )
     return true
   })
-  const honest = recording((f) => (f.key === 'home-b2/heading' ? 'Call +1 555 0142 778' : 'Fine'))
-  const { pages } = await run(honest)
-  assert.equal(fieldOf(pages, 'home-b2/heading').value, 'Call +1 555 0142 778')
+  // The business's real phone is held to the block that writes it (#575, the step chain's W04 per slot): the hero
+  // does not show the phone, so naming it there is invented for that block; the contact strip shows it.
+  const elsewhere = recording((f) => (f.key === 'home-b2/heading' ? 'Call +1 555 0142 778' : 'Fine'))
+  await assert.rejects(run(elsewhere), (error) => {
+    assert.deepEqual(
+      error.details.failing.map((f) => [f.key, f.problems[0].code]),
+      [['home-b2/heading', 'invented_data']]
+    )
+    return true
+  })
+  const { checkPageCopy } = await import('../domain/page-copy-check.mjs')
+  const slot = (known) => ({ key: 'k', field: { name: 'heading', type: 'text', limit: 60 }, known })
+  const values = { k: 'Call +1 555 0142 778' }
+  assert.equal(checkPageCopy([slot([{ kind: 'contact.phone', value: '+1 555 0142 778' }])], values).ok, true)
+  assert.equal(checkPageCopy([slot([])], values).ok, false)
 })
 
 test('a text field of a role without text, or of no known role, is a typed error', async () => {

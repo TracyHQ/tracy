@@ -37,7 +37,8 @@ const samePlan = (plan, pin) => plan?.id === pin.id && plan?.revision === pin.re
  * shows only what the profile holds.
  * @param {{readEngineDraft: Function, draftPlanForBuild: Function}} doors
  * @param {{accountId?: string | null, brief: {draftId: string, plan?: {id: string, revision: number}}}} ctx
- * @returns {Promise<{draftId: string, plan: object, lastEdit: object | null, profile: object, research: object}>}
+ * @returns {Promise<{draftId: string, plan: object, lastEdit: object | null, profile: object, research: object,
+ *   brand: object | null}>}
  */
 async function readRunDraft({ readEngineDraft, draftPlanForBuild }, ctx) {
   const wanted = ctx.brief.draftId
@@ -96,8 +97,28 @@ async function readRunDraft({ readEngineDraft, draftPlanForBuild }, ctx) {
     plan: planWithoutWithheld(approved.plan, engine.needsProfile),
     lastEdit: approved.lastEdit ?? null,
     profile: engine.needsProfile,
-    research: engine.research
+    research: engine.research,
+    brand: brandOfPlan(engine.brand, approved.plan)
   }
+}
+
+/**
+ * The brand file the approved plan's look was made from (`{file, template}`), or null when the draft keeps none (a draft
+ * branded before the brand file was kept). A brand file of another template than the plan's stops the build: its
+ * pictures fit another kit's logo places (the write step's own same kit check, `brand-write-orders.js`).
+ */
+function brandOfPlan(brand, plan) {
+  if (!brand?.file || typeof brand.file !== 'object') return null
+  const look = plan?.look?.template ?? {}
+  const made = brand.template ?? {}
+  const kit = `${look.slug}@${look.version}`
+  if (made.slug !== look.slug || made.version !== look.version || brand.file.kit !== kit)
+    throw draftError(
+      'draft_brand_other_template',
+      `the kept brand file was made on ${brand.file.kit ?? 'an unknown kit'}, the plan is for ${kit}`,
+      { brand: brand.file.kit ?? null, plan: kit }
+    )
+  return brand
 }
 
 /**

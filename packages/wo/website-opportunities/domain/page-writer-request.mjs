@@ -13,12 +13,13 @@ export {
 
 import { ownerFactView } from './page-writer-owner-facts.mjs'
 import { rowContextOf } from './page-writer-rows.mjs'
+import { cardsOf, intentOf, pageView, primaryActionOf } from './page-writer-intent.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
 /** A data entry as the writer reads it: a fact's value, or an item's field values by data kind. */
-function dataView(id, byId) {
+export function dataView(id, byId) {
   const entry = byId.get(id)
   if (!entry) return null
   if (entry.what === 'fact') {
@@ -30,8 +31,16 @@ function dataView(id, byId) {
     id,
     kind: entry.kind,
     label: entry.entry.label,
+    // A person the customers named in reviews (the profile stage's `namedBy`): name and role only, never a bio.
+    ...(namedByOf(entry) ? { namedBy: namedByOf(entry) } : {}),
     fields: Object.fromEntries(Object.entries(fields).map(([role, f]) => [role, f?.value]))
   }
+}
+
+/** Who named a person item, read defensively from the profile item or its plan entry. */
+const namedByOf = (entry) => {
+  const by = entry.source?.namedBy ?? entry.entry?.namedBy
+  return typeof by === 'string' && by.trim() ? by : null
 }
 
 /** A planned row as the writer reads it: its values by data kind (a row of the profile, a fact) or its page. */
@@ -64,10 +73,12 @@ export const KEPT_NOTE =
 
 /** A block as the writer reads it, without its fields: its data (and the owner's facts placed on it) and what it shows. */
 function blockView(block, { byId, data, blocks, shown, plan, ownerFacts }) {
+  const description = blocks.get(block.block)
   return {
     id: block.id,
-    type: blocks.get(block.block)?.type,
+    type: description?.type,
     label: block.label,
+    ...intentOf(block, description, (id) => dataView(id, byId)),
     data: [
       ...list(block.data)
         .map((id) => dataView(id, byId))
@@ -84,6 +95,7 @@ function blockView(block, { byId, data, blocks, shown, plan, ownerFacts }) {
         value
       })),
     ...rowsOfBlock(block, shown, byId, data, plan.pages),
+    ...cardsOf(block, byId),
     ...blockIntentView(block, plan)
   }
 }
@@ -127,7 +139,8 @@ function pageIntentView(page) {
  * `ownerFacts` (block id -> the owner's facts placed there, `page-writer-owner-facts.mjs`) adds each as an entry of
  * that block's `data` marked to be reworded. `kept` (a revision call that asks some blocks only, #599): the slots of the
  * other blocks with their current words (`{...slot, value}`), sent as read-only context under `kept`, with a plain
- * note; the answer for a kept key is never taken (`callPage`). With neither, the message is what it always was.
+ * note; the answer for a kept key is never taken (`callPage`). `written` (`[{page, words}]`): the copy earlier pages
+ * already say, never to be repeated. With none of these, the message is what it always was.
  * @param {{plan: object, page: object, slots: object[], shown?: object[], byId: Map<string, object>,
  *   blocks: Map<string, object>, rewrite?: Array<{key: string, value: unknown, problems: object[]}>, voice?: object,
  *   seo?: {title: number, description: number}, ownerFacts?: Map<string, object[]>, kept?: object[]}} input
@@ -144,7 +157,8 @@ export function pageWriterUser({
   voice,
   seo,
   ownerFacts,
-  kept
+  kept,
+  written
 }) {
   const wanted = rewrite ? new Set(rewrite.map((f) => f.key)) : null
   const asked = wanted ? slots.filter((s) => wanted.has(s.key)) : slots
@@ -153,7 +167,8 @@ export function pageWriterUser({
   const out = {
     language: plan.language,
     business: isText(name) ? { name } : {},
-    page: { id: page.id, name: page.name, pageType: page.pageType, ...pageIntentView(page) },
+    ...primaryActionOf(plan),
+    page: { ...pageView(page), ...pageIntentView(page) },
     ...(voice ? { voice } : {}),
     ...(seo ? { seo: { titleLimit: seo.title, descriptionLimit: seo.description } } : {}),
     blocks: list(page.blocks)
@@ -181,6 +196,8 @@ export function pageWriterUser({
     }))
     .filter((block) => Object.keys(block.words).length > 0)
   if (keptBlocks.length) out.kept = { note: KEPT_NOTE, blocks: keptBlocks }
+  // The copy the site's earlier pages already say (the step chain's writing order and notebook, #575 audit item 5).
+  if (list(written).length) out.written = written
   if (rewrite)
     out.rewrite = rewrite.map(({ key, value, problems }) => ({
       key,
