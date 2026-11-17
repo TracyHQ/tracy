@@ -172,6 +172,11 @@ Thresholds and decisions (named constants in the code):
   labels are the planner's words). The later place is reported and names the earlier one.
   A shared run or an equal sentence that lies wholly inside the normalised value of any brief fact (phone, address,
   opening hours, name) is not a repeat, so fact values may appear wherever they are needed (`site-copy-check/2`).
+  A shared run of 5 words counts only when at least 2 of its words are not English function words
+  (`MIN_MEANING_WORDS`, `FUNCTION_WORDS` in `rules-repeat.js`): "are the club's own" or "and how to ask about" is not
+  a repeated sentence. An equal sentence still counts whatever its words. A site in another language keeps the strict
+  reading, since none of its words is in the list (`site-copy-check/13`, 17/11/2026: 5 of the 25 repeats left after
+  the last fix round of a week of dev copy runs were such runs).
 - **W07 demo leftovers.** Demo sentences are the kit slot samples, split into sentences of at least 3 words.
   Demo proper names are the template name, the logo and title name samples in `site.nameSlots`, and the samples of
   `person.name` slots. A name is matched as a whole phrase, case-insensitive, in every written text.
