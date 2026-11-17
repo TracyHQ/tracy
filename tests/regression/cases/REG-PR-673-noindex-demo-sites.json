@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-673-noindex-demo-sites",
+  "kind": "fix",
+  "title": "A public quickstart demo answers with x-robots-tag noindex, nofollow while staying published; a published customer site keeps no noindex",
+  "pr": 673,
+  "area": "bar/robots",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Through barRoutes, GET / on a published demo (site.demo = true, badge on) and read x-robots-tag and the body.",
+    "S2: The same on a published demo installed without a badge.",
+    "S3: GET /robots.txt on a published demo and compare the body with the site's own robots.txt.",
+    "S4: GET / on a published customer site and read x-robots-tag.",
+    "S5: Call proxySite directly with publish published/draft and demo true/false and read x-robots-tag."
+  ],
+  "expect": [
+    "S1: x-robots-tag is \"noindex, nofollow\" and the Tracy badge script is in the page.",
+    "S2: x-robots-tag is \"noindex, nofollow\" and the page is untouched.",
+    "S3: the site's own robots.txt, not the draft Disallow-all text.",
+    "S4: no x-robots-tag header.",
+    "S5: null for a published customer site, \"noindex, nofollow\" for a draft and for every demo."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/bar/site-proxy.js, apps/tracy-web/src/bar/route.js",
+    "tool": "apps/tracy-web/test/bar.test.mjs"
+  },
+  "evidence": "Google Search Console for tracy.ai: demos took most impressions on unrelated queries; 2026-11-17 the demos answered with no x-robots-tag",
+  "fence": "The noindex decision in proxySite (publish !== 'published' || demo === true) and the demo flag passed by bar/route.js",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/bar.test.mjs"],
+    "cwd": "apps/tracy-web",
+    "needs": ["postgres"],
+    "tests": [
+      "a demo advertises with the Tracy badge",
+      "a demo installed without a badge is proxied untouched",
+      "a demo robots.txt is its own, proxied",
+      "a published customer site keeps the managed pill",
+      "proxySite: noindex follows publish for a customer site and is always on for a demo"
+    ]
+  }
+}
