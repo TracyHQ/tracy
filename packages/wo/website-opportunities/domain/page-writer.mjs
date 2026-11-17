@@ -139,7 +139,7 @@ export async function writePages({
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
     throw new PageWriterError('plan_missing', 'the plan has no pages to write')
   const context = {
-    ...writerContextOf({ profile, blockStore, library, mapping }),
+    ...writerContextOf({ profile, blockStore, library, mapping, plan }),
     prompt: PAGE_WRITER_PROMPT,
     // The template's own name: no written word carries it (the step chain's W07 demo name rule).
     templateNames: [template?.name].filter((n) => typeof n === 'string' && n.trim() !== '')

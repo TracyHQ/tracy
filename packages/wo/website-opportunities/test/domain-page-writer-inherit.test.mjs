@@ -71,11 +71,11 @@ function scripted(write = () => undefined, extra = () => ({})) {
   return Object.assign(model, { calls })
 }
 
-const run = async (model, { store = blockStore(), change = (p) => p } = {}) => {
+const run = async (model, { store = blockStore(), change = (p) => p, changeProfile = (p) => p } = {}) => {
   const { plan, profile } = await approved()
   return writePages({
     plan: change(plan),
-    profile,
+    profile: changeProfile(profile),
     blockStore: store,
     library: library(),
     model,
@@ -84,11 +84,18 @@ const run = async (model, { store = blockStore(), change = (p) => p } = {}) => {
 }
 const fieldOf = (out, key) => out.pages.flatMap((p) => p.fields).find((f) => f.key === key)
 
-test('what each block and page is for reaches the writer, read defensively', async () => {
+test('what each block and page is for reaches the writer, in words', async () => {
   const model = scripted()
   await run(model, {
+    // The owner's main button words, from the same source as the booking link (the plan's main action facts).
+    changeProfile: (profile) => {
+      const [link] = profile.facts['contact.cta_url']
+      profile.facts['contact.cta_label'] = [{ value: 'Book a court', sources: link.sources }]
+      return profile
+    },
     change: (plan) => {
-      plan.primaryAction = 'Book a court'
+      plan.keyMessages = [{ id: 'proof', label: 'Courts kept in top shape' }]
+      plan.primaryAction = { factIds: ['contact-cta-label', 'contact-cta-url'] }
       plan.pages[0].visitorQuestion = 'Can I play here this week?'
       plan.pages[0].keyMessage = 'Courts for every level'
       plan.pages[0].blocks[2].message = 'Coaching comes first'
@@ -97,13 +104,14 @@ test('what each block and page is for reaches the writer, read defensively', asy
     }
   })
   const home = model.calls.find((u) => u.page.id === 'home')
-  assert.equal(home.primaryAction, 'Book a court')
+  assert.deepEqual(home.primaryAction, { label: 'Book a court', channel: 'booking link' })
   assert.equal(home.page.visitorQuestion, 'Can I play here this week?')
   assert.equal(home.page.keyMessage, 'Courts for every level')
   const services = home.blocks.find((b) => b.id === 'home-b3')
   assert.equal(services.reason, 'All four things you offer, coaching first.')
   assert.equal(services.message, 'Coaching comes first')
-  assert.deepEqual(services.carries, ['proof'])
+  assert.deepEqual(services.keyMessages, ['Courts kept in top shape'])
+  assert.equal('carries' in services, false)
   // Absent fields are absent, never empty.
   const team = model.calls.find((u) => u.page.id === 'team')
   assert.equal(team.page.visitorQuestion, undefined)

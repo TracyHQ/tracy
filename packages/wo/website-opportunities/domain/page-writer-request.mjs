@@ -13,7 +13,7 @@ export {
 
 import { ownerFactView } from './page-writer-owner-facts.mjs'
 import { rowContextOf } from './page-writer-rows.mjs'
-import { cardsOf, intentOf, pageView, primaryActionOf } from './page-writer-intent.mjs'
+import { cardsOf, intentOf, keyMessageLabelsOf, pageView, primaryActionOf } from './page-writer-intent.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -26,22 +26,22 @@ export function dataView(id, byId) {
     const { kind, label, value } = entry.entry
     return { id, kind, label, value }
   }
-  const fields = entry.source?.fields ?? {}
+  const namedBy = isText(entry.source?.namedBy) ? entry.source.namedBy : null
+  // A person the customers named in reviews (the profile stage's `namedBy`): its name and role only, never a bio.
+  const fields = Object.entries(entry.source?.fields ?? {}).filter(
+    ([role]) => !namedBy || NAMED_BY_FIELDS.has(role)
+  )
   return {
     id,
     kind: entry.kind,
     label: entry.entry.label,
-    // A person the customers named in reviews (the profile stage's `namedBy`): name and role only, never a bio.
-    ...(namedByOf(entry) ? { namedBy: namedByOf(entry) } : {}),
-    fields: Object.fromEntries(Object.entries(fields).map(([role, f]) => [role, f?.value]))
+    ...(namedBy ? { namedBy } : {}),
+    fields: Object.fromEntries(fields.map(([role, f]) => [role, f?.value]))
   }
 }
 
-/** Who named a person item, read defensively from the profile item or its plan entry. */
-const namedByOf = (entry) => {
-  const by = entry.source?.namedBy ?? entry.entry?.namedBy
-  return typeof by === 'string' && by.trim() ? by : null
-}
+/** The fields of a person the customers named that reach the writer (`needs-profile-typed.mjs` keeps only these). */
+const NAMED_BY_FIELDS = new Set(['person.name', 'person.role'])
 
 /** A planned row as the writer reads it: its values by data kind (a row of the profile, a fact) or its page. */
 function rowView(row, byId, data, pages) {
@@ -78,7 +78,7 @@ function blockView(block, { byId, data, blocks, shown, plan, ownerFacts }) {
     id: block.id,
     type: description?.type,
     label: block.label,
-    ...intentOf(block, description, (id) => dataView(id, byId)),
+    ...intentOf(block, description, (id) => dataView(id, byId), keyMessageLabelsOf(plan)),
     data: [
       ...list(block.data)
         .map((id) => dataView(id, byId))
@@ -95,38 +95,7 @@ function blockView(block, { byId, data, blocks, shown, plan, ownerFacts }) {
         value
       })),
     ...rowsOfBlock(block, shown, byId, data, plan.pages),
-    ...cardsOf(block, byId),
-    ...blockIntentView(block, plan)
-  }
-}
-
-/**
- * The plan's intent for the writer (#575, the step chain writer's `pages[]` notes, writer-prompt.md lines 30 to 31 and
- * 205 to 208): a block's point and the key messages it carries, by their words; a page's visitor question, key
- * message, search intent and terms, and the block that leads to the main action. Absent from a plan without them.
- */
-function blockIntentView(block, plan) {
-  const labels = new Map(list(plan.keyMessages).map((m) => [m.id, m.label]))
-  const carries = list(block.carries)
-    .map((id) => labels.get(id))
-    .filter(isText)
-  return {
-    ...(isText(block.message) ? { message: block.message } : {}),
-    ...(carries.length ? { keyMessages: carries } : {})
-  }
-}
-function pageIntentView(page) {
-  const { titleIntent, descriptionIntent, searchTerms } = page.seo ?? {}
-  const search = {
-    ...(isText(titleIntent) ? { titleIntent } : {}),
-    ...(isText(descriptionIntent) ? { descriptionIntent } : {}),
-    ...(list(searchTerms).length ? { searchTerms: [...searchTerms] } : {})
-  }
-  return {
-    ...(isText(page.visitorQuestion) ? { visitorQuestion: page.visitorQuestion } : {}),
-    ...(isText(page.keyMessage) ? { keyMessage: page.keyMessage } : {}),
-    ...(Object.keys(search).length ? { search } : {}),
-    ...(isText(page.endAction?.block) ? { endsWith: page.endAction.block } : {})
+    ...cardsOf(block, byId)
   }
 }
 
@@ -167,8 +136,8 @@ export function pageWriterUser({
   const out = {
     language: plan.language,
     business: isText(name) ? { name } : {},
-    ...primaryActionOf(plan),
-    page: { ...pageView(page), ...pageIntentView(page) },
+    ...primaryActionOf(plan, byId),
+    page: pageView(page, byId),
     ...(voice ? { voice } : {}),
     ...(seo ? { seo: { titleLimit: seo.title, descriptionLimit: seo.description } } : {}),
     blocks: list(page.blocks)

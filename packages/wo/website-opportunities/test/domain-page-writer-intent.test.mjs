@@ -1,5 +1,5 @@
 // The page writer reads the plan's intent (#575, the step chain writer's page notes): each page's visitor question,
-// key message, search intent and terms, the block that ends it, and each block's point and the key messages it
+// key message, search intent and terms, and each block's point and the key messages it
 // carries, by their words. A plan without them sends what it always sent. Invented data only, no model call.
 import assert from 'node:assert/strict'
 import test from 'node:test'
@@ -45,8 +45,7 @@ test('the writer reads the page and block intent of the plan', () => {
     pageType: 'home',
     visitorQuestion: 'Can I learn to row here?',
     keyMessage: 'Rowing for every age, close to home.',
-    search: { titleIntent: 'The club and its town', searchTerms: ['rowing lessons Fernhollow'] },
-    endsWith: 'b1'
+    search: { titleIntent: 'The club and its town', searchTerms: ['rowing lessons Fernhollow'] }
   })
   assert.equal(user.blocks[0].message, 'Who the club is for.')
   assert.deepEqual(user.blocks[0].keyMessages, ['Rowing for every age'])

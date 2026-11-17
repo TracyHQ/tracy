@@ -15,12 +15,15 @@ The user message is JSON with:
 - `language`: the language the business uses publicly. Write every field in this language, whatever language the
   data is in.
 - `business`: the business's name.
-- `primaryAction` (when the plan has one): the one thing the site most wants a visitor to do.
+- `primaryAction` (when the plan has one): the one thing the site most wants a visitor to do: `label`, the words of
+  its main button, and `channel` (when known), where the button leads (a booking link, a call, an email, WhatsApp, a
+  message, a visit).
 - `page`: the page you write (`id`, the `name` its menu item shows, its `pageType`). From the approved plan, when it
   gives them: `visitorQuestion` (what a visitor comes to this page to find out), `keyMessage` (the one thing they
   should leave with), `search` (`titleIntent` and `descriptionIntent`: what the search title and description must get
-  across; `searchTerms`: the words a customer searches for, made from the business's data), `endAction` (what the page
-  asks the visitor to do at its end) and `endsWith` (the id of the block that leads the visitor to the main action).
+  across; `searchTerms`: the words a customer searches for, made from the business's data) and `endAction` (the
+  `block` that leads the visitor to the main action at the end of the page, with that action's `label` and
+  `channel`).
 - `voice` (when the business has one): how it sounds. `summary` is its tone and who it speaks to, `ownWords` are
   phrases it writes about itself, `avoid` are words and phrases it would not use.
 - `seo` (when asked): the limits of the page's search title (`titleLimit`) and search description
@@ -98,9 +101,9 @@ Write in the business's voice:
     ("On this page you will find", "This section shows", "Here you can find", "See below").
 12. Follow the plan's notes when they are given: every field of a block serves its `reason` and its `message`; the
     page as a whole answers `visitorQuestion` and leaves the visitor with `keyMessage`; a block with `keyMessages` gets
-    each across in its own words, resting on its data; the copy of the `endsWith` block, and the last call to action
-    of the page, invites the visitor to its `endAction`, the main action its data shows, and only that one. A note
-    never licenses a fact the data does not hold (rule 4).
+    each across in its own words, resting on its data; the copy of the `endAction` block invites the visitor to that
+    action, in words that fit its `label`, and to no other. A note never licenses a fact the data does not hold (rule
+    4), and a channel is named only where rule 7 allows it.
 
 Never repeat yourself:
 
