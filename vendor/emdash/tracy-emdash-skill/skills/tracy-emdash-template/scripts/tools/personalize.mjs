@@ -264,6 +264,9 @@ export function factsFrom(answers, questions = null, now = new Date()) {
   if (contact) {
     const phone = phoneIn(contact)
     if (phone) facts.phone = phone
+    // The same number as a link (`tel:+…`, the themes' `telHref` form): a reservation button that dials it.
+    const tel = phone ? factHref('phone', { phone }) : null
+    if (tel) facts.tel = tel
     const address = addressIn(contact, phone)
     if (address) facts.address = address
   }
@@ -370,6 +373,7 @@ const ANSWER_OF = {
   NAME: 'name',
   initials: 'name',
   phone: 'contact',
+  tel: 'contact',
   address: 'contact',
   email: 'email',
   hours: 'hours',
@@ -2129,6 +2133,70 @@ export function sentenceEnds(text) {
   return ends
 }
 
+/**
+ * The demo's place as the template's own address names it: the capitalised words of the demo values of the fields its
+ * `identity` rules write `{address}` into ("Brooklyn", "Marks", "Cathedral" of "4 5th Avenue at St. Marks Place, Cathedral
+ * District Brooklyn"). Only proper names count: a street-type word or a direction (`STREET_WORDS`: "Place", "Avenue",
+ * "District", "St", "North", ...) is a word any copy may use ("Place your order"), never the demo's place. A template with
+ * no such rule names no place.
+ * @param {any} map the personalize map @param {Array<{collection: string, slug: string, data: any}>} seedEntries
+ * @returns {Set<string>}
+ */
+export function demoPlaceWordsOf(map, seedEntries) {
+  const words = new Set()
+  for (const rule of Array.isArray(map?.identity) ? map.identity : []) {
+    const raw = rule?.value
+    const template = typeof raw === 'string' ? raw : raw && typeof raw === 'object' ? raw.en : null
+    if (typeof template !== 'string' || !template.includes('{address}')) continue
+    for (const e of seedEntries) {
+      const demo = e.collection === rule.collection && e.slug === rule.slug ? e.data?.[rule.field] : null
+      if (typeof demo !== 'string') continue
+      for (const m of demo.matchAll(/\p{Lu}\p{Ll}{2,}/gu))
+        if (!isStreetWord(m[0].toLowerCase())) words.add(m[0])
+    }
+  }
+  return words
+}
+
+/**
+ * The common words of an address that are never a place's own name: the common nouns of `ADDRESS_NOUNS`, the
+ * abbreviations of `ABBREVIATIONS` ("St", "Pl", "Ave"), and the street types and directions they leave out.
+ */
+const STREET_WORDS = new Set(
+  'place street avenue road boulevard lane square suite floor court way terrace crescent close row alley parkway circle mount saint north south east west upper lower old new main pkwy cir'.split(
+    ' '
+  )
+)
+const isStreetWord = (word) =>
+  STREET_WORDS.has(word) || ADDRESS_NOUNS.has(word) || ABBREVIATIONS.has(word)
+
+/** Whether a text names one of `places` as a whole word. */
+const holdsPlace = (text, places) => (String(text).match(/\p{L}+/gu) ?? []).some((w) => places.has(w))
+
+/**
+ * 🔒 A ROW KEPT AS THE DEMO'S NEVER KEEPS THE DEMO'S PLACE ONCE THE CUSTOMER GAVE AN ADDRESS (QA on dev, 16/11/2026). Both
+ * slide titles of a site built from a brief with an address kept "The Best Bar & Restaurant in Brooklyn" after two refused
+ * asks. Of the rows still the demo's after every ask (`left`), each field naming the demo's place is emptied, the way a
+ * rewrite the model never wrote is emptied, never another company's; the row's other fields stay. With no address in the
+ * brief the demo's address stays on the site (`unanswered: keep-demo`), and so do these rows, named in the report.
+ * @param {{ rule: { itemFields: string[] }, rows: any[], left: number[], places: Set<string>, facts: Record<string, unknown> }} input
+ * @returns {{ rows: any[], left: number[], emptied: number[] }}
+ */
+export function rowsWithoutDemoPlace({ rule, rows, left, places, facts }) {
+  if (String(facts?.address ?? '').trim() === '' || places.size === 0) return { rows, left, emptied: [] }
+  const out = [...rows]
+  const emptied = []
+  for (const i of left) {
+    const row = out[i]
+    if (!row || typeof row !== 'object') continue
+    const naming = rule.itemFields.filter((f) => typeof row[f] === 'string' && holdsPlace(row[f], places))
+    if (naming.length === 0) continue
+    out[i] = { ...row, ...Object.fromEntries(naming.map((f) => [f, ''])) }
+    emptied.push(i)
+  }
+  return { rows: out, left: left.filter((i) => !emptied.includes(i)), emptied }
+}
+
 /** A word that ties a place or a number to its sentence ("at", "on", "call us at"), left dangling when the run goes. */
 const LEAD_IN =
   /(?:^|\s+)(?:(?:call|phone|ring|text|email|write to|find|visit|meet)\s+us\s+(?:at|on)|at|on|in|to|via|near|from)\s*$/i
@@ -2144,22 +2212,44 @@ const LEAD_IN =
  * welcome told a trattoria in Da Nang's guests to come to "4 5th Avenue … Brooklyn", and the reservation intro to call the
  * demo's number. The first version dropped every block with such a link, which emptied the welcome, the contact card and
  * the reservation intro, and a paragraph's link to the menu with them (review, 16/11/2026): the smallest unit goes now.
+ *
+ * 🔒 NOR THE DEMO'S PLACE IN PLAIN WORDS (QA on dev, 16/11/2026). With the customer's address in the link, the welcome
+ * still read "Since 1982, Trattoria Lume has welcomed Brooklyn to one of the neighborhood's oldest buildings, at 12 Bach
+ * Dang". When the brief gives an address, a sentence that names the demo's place (`places`, `demoPlaceWordsOf`) goes
+ * whole, with any link or emphasis it carries (its words are read across every span); with no address the demo's address stays on the
+ * site (`unanswered: keep-demo`), and so do these words.
  * @param {unknown} value @param {Record<string, unknown> | null} [facts]
+ * @param {{ places?: Set<string> }} [opts]
  * @returns {{ value: any[], readable: boolean } | null}
  */
-export function withoutDemoFacts(value, facts = null) {
+export function withoutDemoFacts(value, facts = null, { places = new Set() } = {}) {
   if (!Array.isArray(value)) return null
   let changed = false
+  const placesOn = String(facts?.address ?? '').trim() !== '' && places.size > 0
   const out = value.map((b) => {
     if (markedTextOf(b) === null) return b
     const facted = new Map(
       [...outsideLinksOf(b, facts)].filter(([mark]) => factOfLink(hrefOf(b, mark)) !== null)
     )
-    if (facted.size === 0) return b
+    const placed = placesOn && holdsPlace(b.children.map((c) => String(c?.text ?? '')).join(''), places)
+    if (facted.size === 0 && !placed) return b
     /** One entry per character: the span it belongs to and its marks. */
     let chars = b.children.flatMap((c, s) =>
       [...String(c.text ?? '')].map((ch) => ({ ch, s, marks: (c.marks ?? []).map(String) }))
     )
+    if (placed) {
+      // Each sentence that names the demo's place, last first so the earlier ranges hold.
+      const text = chars.map((x) => x.ch).join('')
+      const bounds = [0, ...sentenceEnds(text).filter((p) => p < text.length), text.length]
+      for (let k = bounds.length - 2; k >= 0; k -= 1) {
+        const [from, to] = [bounds[k], bounds[k + 1]]
+        if (!holdsPlace(text.slice(from, to), places)) continue
+        // Read across every span, emphasis and link included: an emphasised "Brooklyn" is the demo's place all the same,
+        // and the sentence goes whole with the marks it carries.
+        chars.splice(from, to - from)
+        changed = true
+      }
+    }
     const factMark = (x) => x.marks.find((mark) => facted.has(mark))
     for (;;) {
       const start = chars.findIndex((x) => factMark(x) !== undefined)
@@ -2595,7 +2685,7 @@ export async function rewriteBody({ model, rule, facts, locale, entry, given = n
  * the answer keeps the list's length and every key the row already had (an icon, an order).
  * @returns {Promise<{ rows: unknown[] | null, why: string | null }>}
  */
-export async function rewriteBlock({ model, rule, facts, locale, rows, fetchImpl = fetch }) {
+export async function rewriteBlock({ model, rule, facts, locale, rows, tooLong = [], fetchImpl = fetch }) {
   if (!Array.isArray(rows) || rows.length === 0) return { rows: null, why: 'nothing to write' }
   const language = languageNameOfWritten(locale, writtenAs)
   const example = rows.map((row) =>
@@ -2607,6 +2697,9 @@ export async function rewriteBlock({ model, rule, facts, locale, rows, fetchImpl
     `Each row is ${rule.brief}. Give exactly ${String(rows.length)} rows, each with the keys ${rule.itemFields.join(', ')}.`,
     limits.length > 0
       ? `${limits.map(([f, n]) => `Every ${f} is at most ${String(n)} characters, spaces included`).join('; ')}: a longer one is not used.`
+      : '',
+    tooLong.length > 0
+      ? `Your last answer was not used: ${tooLong.map((t) => `the ${t.field} of row ${String(t.row + 1)} was ${String(t.length)} characters`).join('; ')}. Write each one shorter.`
       : '',
     `Write in ${language} even when the business name or its address are in another language.`,
     `The demo rows are a reference for ${demoRuler(facts.tone)} — never reuse their facts, places or numbers.`,
@@ -2632,23 +2725,31 @@ export async function rewriteBlock({ model, rule, facts, locale, rows, fetchImpl
   const answer = Array.isArray(parsed?.rows) ? parsed.rows : null
   if (answer === null) return { rows: null, why: 'the model gave no rows' }
   let filled = 0
+  /** The answers over a row's bound: what the next ask is told. */
+  const over = []
   const out = rows.map((row, i) => {
     const got = answer[i]
     if (!got || typeof got !== 'object') return row
     const next = { ...row }
-    for (const f of rule.itemFields)
-      if (
-        typeof got[f] === 'string' &&
-        got[f].trim() !== '' &&
-        typeof row?.[f] === 'string' &&
-        withinCharacters(got[f], rule.maxCharacters?.[f])
-      ) {
-        next[f] = got[f].trim()
-        filled += 1
+    for (const f of rule.itemFields) {
+      if (typeof got[f] !== 'string' || got[f].trim() === '' || typeof row?.[f] !== 'string') continue
+      if (!withinCharacters(got[f], rule.maxCharacters?.[f])) {
+        over.push({ row: i, field: f, length: charactersOf(got[f]) })
+        continue
       }
+      next[f] = got[f].trim()
+      filled += 1
+    }
     return next
   })
-  return filled > 0 ? { rows: out, why: null } : { rows: null, why: 'nothing in the answer fitted the rows' }
+  const said = over.length > 0 ? { tooLong: over } : {}
+  return filled > 0
+    ? { rows: out, why: null, ...said }
+    : {
+        rows: null,
+        why: over.length > 0 ? 'every answer was over its bound' : 'nothing in the answer fitted the rows',
+        ...said
+      }
 }
 
 /**
@@ -2665,10 +2766,13 @@ export function rowLimitsOf(rule) {
   )
 }
 
+/** How many characters a text is, a run of spaces or line breaks counted as one. */
+const charactersOf = (text) => [...String(text).trim().replace(/\s+/g, ' ')].length
+
 /** Whether a text is within `max` characters, a run of spaces or line breaks counted as one; no bound, always. */
 export function withinCharacters(text, max) {
   if (!Number.isInteger(max) || Number(max) <= 0) return true
-  return [...String(text).trim().replace(/\s+/g, ' ')].length <= Number(max)
+  return charactersOf(text) <= Number(max)
 }
 
 /**
@@ -4311,6 +4415,8 @@ async function main() {
     closed: unpickedPageRules(answers, seed).rules.map((r) => r.path ?? `/${r.slug}`)
   })
   const nameRules = nameRulesOf(map, facts).rules
+  /** The demo's place, as the template's own address fields name it (`rowsWithoutDemoPlace`, `withoutDemoFacts`). */
+  const demoPlaces = demoPlaceWordsOf(map, seedEntries)
 
   // 🔒 A REDRAW IS ONLY A REDRAW. Asked for one picture ("make the home one bread"), this used to
   // rewrite every word of the site first and reach the pictures minutes later — measured 15/09, the
@@ -5147,7 +5253,7 @@ async function main() {
             const origin = p.origins[c.field]
             const left =
               origin === undefined || origin === 'replaced'
-                ? withoutDemoFacts(p.fields[c.field] ?? e.data[c.field], facts)
+                ? withoutDemoFacts(p.fields[c.field] ?? e.data[c.field], facts, { places: demoPlaces })
                 : null
             if (left === null) {
               copy.skipped.push({ field: key, locale, why })
@@ -5357,7 +5463,14 @@ async function main() {
       if (hiddenByRule.has(`${rule.collection}/${rule.slug}/${locale}`)) return
       let out = await rewriteBlock({ model, rule, facts, locale, rows: e.data[rule.field] })
       if (out.rows === null)
-        out = await rewriteBlock({ model, rule, facts, locale, rows: e.data[rule.field] })
+        out = await rewriteBlock({
+          model,
+          rule,
+          facts,
+          locale,
+          rows: e.data[rule.field],
+          tooLong: out.tooLong ?? []
+        })
       entryTally.done += 1
       say('entries', entryTally.done, entryTally.total)
       const key = `${rule.collection}/${rule.slug}/${locale}`
@@ -5374,13 +5487,31 @@ async function main() {
       const echoed = () => out.rows.flatMap((row, i) => (sig(row) === sig(demoRows[i]) ? [i] : []))
       const again = echoed()
       if (again.length > 0) {
-        const retry = await rewriteBlock({ model, rule, facts, locale, rows: again.map((i) => demoRows[i]) })
+        // The rows a bound refused are told how long their answer was (QA on dev, 16/11/2026: both slide titles refused twice).
+        const tooLong = (out.tooLong ?? [])
+          .filter((t) => again.includes(t.row))
+          .map((t) => ({ ...t, row: again.indexOf(t.row) }))
+        const retry = await rewriteBlock({
+          model,
+          rule,
+          facts,
+          locale,
+          rows: again.map((i) => demoRows[i]),
+          tooLong
+        })
         if (retry.rows !== null)
           again.forEach((at, j) => {
             if (sig(retry.rows[j]) !== sig(demoRows[at])) out.rows[at] = retry.rows[j]
           })
       }
-      const left = echoed()
+      const placed = rowsWithoutDemoPlace({ rule, rows: out.rows, left: echoed(), places: demoPlaces, facts })
+      out.rows = placed.rows
+      if (placed.emptied.length > 0)
+        rewritten.skipped.push({
+          entry: `${key}.${rule.field}`,
+          why: `${String(placed.emptied.length)} row(s) still the template's words after two asks name the demo's place: emptied, the brief gives another address`
+        })
+      const left = placed.left
       if (left.length > 0) echoedRows.set(`${key}.${rule.field}`, left)
       if (left.length > 0)
         rewritten.skipped.push({
@@ -5801,7 +5932,7 @@ async function main() {
           value = replaceDeep(edition.data[t.field], nameRules, t.field)
           // The edition in the root's language never brings back the demo's address the copy pass took out.
           if (linksOutTaken.has(`${k}.${t.field}`)) {
-            const left = withoutDemoFacts(value, facts)
+            const left = withoutDemoFacts(value, facts, { places: demoPlaces })
             if (left?.readable) value = left.value
           }
         }
