@@ -398,6 +398,16 @@ export {
   draftRunInputOf
 } from './build-run-draft-steps.mjs'
 export { FIELD_KINDS, HOURS_LIMIT, NO_KIND, researchOf } from './needs-research.mjs'
+export { addReviewPeopleOfBrief, NAMED_BY_CUSTOMER } from './needs-research-people.mjs'
+export { HELD_BACK_CODES, heldBackOf, reasonCode } from './brief-held-back.mjs'
+export { heldBackOfResearch, videosOfResearch } from './needs-profile-research-extras.mjs'
+export {
+  mergeSameOffers,
+  SAME_OFFER_CODE,
+  SAME_OFFER_DROPS,
+  SAME_OFFER_REASON
+} from './needs-profile-same-offers.mjs'
+export { briefLeftOutWithHoursOf, heldHoursLeftOutOf, kitShowsHours } from './held-hours-left-out.mjs'
 export {
   PAGE_WRITER_PROMPT_FILE,
   PAGE_WRITE_ATTEMPTS,

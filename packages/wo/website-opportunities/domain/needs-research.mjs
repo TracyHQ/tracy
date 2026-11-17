@@ -28,6 +28,8 @@ import { assessmentOf, dishItemOf } from './needs-research-facts.mjs'
 import { addReadingOfBrief } from './needs-research-reading.mjs'
 import { ownerFactsOfBrief, ownerValuesOfBrief } from './owner-facts-flow.mjs'
 import { withheldOfBrief } from './plan-withheld.mjs'
+import { addReviewPeopleOfBrief } from './needs-research-people.mjs'
+import { heldBackOf, reasonCode } from './brief-held-back.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -57,6 +59,13 @@ const ORIGINS = Object.freeze({
   threads: 'social',
   pinterest: 'social'
 })
+/** The code of a fact the brief keeps off the site: the owner's choice, else its first reason (`brief-held-back`). */
+const offSiteCode = (fact) =>
+  fact?.decidedBy === 'owner' || list(fact?.reasons).includes('owner-left-off')
+    ? 'owner_left_off'
+    : (list(fact?.reasons)
+        .filter((r) => isText(r) && r !== 'owner-override')
+        .map(reasonCode)[0] ?? 'kept_off_site')
 const sourceIdOf = (name) => (ORIGINS[name] === 'google' ? 'google' : name === 'twitter' ? 'x' : name)
 
 /** Brief fact field -> the needs profile's fact kind. */
@@ -158,23 +167,28 @@ export function researchOf(brief, { manifest = [] } = {}) {
     if (!source.text.includes(words)) source.text.push(words)
   }
   const facts = list(brief?.facts)
+  // People only reviews name whom the brief shows: typed person items, never plain text (`needs-research-people.mjs`).
+  const peopleFacts = addReviewPeopleOfBrief(brief, { sourceOf, setAside, taken })
   // The brief's own decision about each fact taken as a field, passed on to the needs profile (`needs-research-facts`).
   const assessed = []
   for (const fact of facts) {
-    const aside = (reason) => setAside.push({ what: 'fact', id: fact?.id, reason })
+    // Each fact set aside names its field and a stable code beside its reason (`brief-held-back.mjs`).
+    const aside = (reason, code) =>
+      setAside.push({ what: 'fact', id: fact?.id, field: fact?.field ?? null, code, reason })
     const dish = dishItemOf(fact)
     const dishSource = dish
       ? list(fact.evidence)
           .map((e) => sourceOf(e?.source))
           .find(Boolean)
       : null
-    if (fact?.sourceKind === 'observed') aside('seen in a photo, not said by a source')
-    else if (fact?.onSite === false) aside('kept off the site')
-    else if (dish && !dishSource) aside('no known source names it')
+    if (peopleFacts.has(fact?.id)) continue
+    if (fact?.sourceKind === 'observed') aside('seen in a photo, not said by a source', 'observed_only')
+    else if (fact?.onSite === false) aside('kept off the site', offSiteCode(fact))
+    else if (dish && !dishSource) aside('no known source names it', 'no_known_source')
     else if (dish) {
       dishSource.items = [...list(dishSource.items), { id: fact.id, ...dish }]
       taken.dishes = [...list(taken.dishes), fact.id]
-    } else if (NO_KIND[fact?.field]) aside(NO_KIND[fact.field])
+    } else if (NO_KIND[fact?.field]) aside(NO_KIND[fact.field], 'no_profile_kind')
     else if (FIELD_KINDS[fact?.field]) {
       const value = fieldText(fact.field, fact.value)
       const named = list(fact.evidence)
@@ -184,9 +198,10 @@ export function researchOf(brief, { manifest = [] } = {}) {
         aside(
           fact.field === 'hours'
             ? `hours longer than ${HOURS_LIMIT} characters, or unreadable`
-            : 'no readable value'
+            : 'no readable value',
+          'value_unreadable'
         )
-      else if (named.length === 0) aside('no known source names it')
+      else if (named.length === 0) aside('no known source names it', 'no_known_source')
       else {
         for (const source of named) addField(source, FIELD_KINDS[fact.field], value)
         taken.fields.push(fact.id)
@@ -203,7 +218,7 @@ export function researchOf(brief, { manifest = [] } = {}) {
         used = true
       }
       if (used) taken.text.push(fact.id)
-      else aside('no words from a known source')
+      else aside('no words from a known source', 'no_known_source')
     }
   }
   const hoursFact = facts.some((f) => f?.field === 'hours')
@@ -214,6 +229,8 @@ export function researchOf(brief, { manifest = [] } = {}) {
   if (!hoursFact && opening.length && heldHours)
     setAside.push({
       what: 'opening hours',
+      field: 'hours',
+      code: list(heldHours.conflicting).length ? 'sources_disagree' : 'held_by_brief',
       reason: isText(heldHours.why) ? heldHours.why : 'the brief keeps the opening hours off the site'
     })
   else if (!hoursFact && opening.length) {
@@ -222,6 +239,8 @@ export function researchOf(brief, { manifest = [] } = {}) {
     else
       setAside.push({
         what: 'opening hours',
+        field: 'hours',
+        code: 'value_unreadable',
         reason: `Google's hours are longer than ${HOURS_LIMIT} characters`
       })
   }
@@ -264,6 +283,7 @@ export function researchOf(brief, { manifest = [] } = {}) {
   if (values.values.length) taken.ownerValues = values.values.map((v) => v.kind)
   // The reading's lines, typed services, audience quotes and About line (`needs-research-reading.mjs`).
   addReadingOfBrief(brief, { sourceOf, addText, setAside, taken })
+  const heldBack = heldBackOf(brief)
   return {
     sources: [...sources.values()].map(
       ({ text, captions, fields, reviews, pictures, ownerFacts, ...source }) => ({
@@ -291,6 +311,8 @@ export function researchOf(brief, { manifest = [] } = {}) {
     setAside,
     taken,
     ...(assessed.length ? { assessed } : {}),
+    // What the brief holds back from the site, by code and count (`brief-held-back.mjs`): carried to the profile.
+    ...(heldBack.length ? { heldBack } : {}),
     ...withheldOfBrief(brief)
   }
 }
