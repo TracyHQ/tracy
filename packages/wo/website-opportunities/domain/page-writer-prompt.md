@@ -11,7 +11,11 @@ The user message is JSON with:
 - `language`: the language the business uses publicly. Write every field in this language, whatever language the
   data is in.
 - `business`: the business's name.
-- `page`: the page you write (`id`, the `name` its menu item shows, its `pageType`).
+- `page`: the page you write (`id`, the `name` its menu item shows, its `pageType`). From the approved plan, when it
+  gives them: `visitorQuestion` (what a visitor comes to this page to find out), `keyMessage` (the one thing they
+  should leave with), `search` (`titleIntent` and `descriptionIntent`: what the search title and description must get
+  across; `searchTerms`: the words a customer searches for, made from the business's data) and `endsWith` (the id of
+  the block that leads the visitor to the main action).
 - `voice` (when the business has one): how it sounds. `summary` is its tone and who it speaks to, `ownWords` are
   phrases it writes about itself, `avoid` are words and phrases it would not use.
 - `seo` (when asked): the limits of the page's search title (`titleLimit`) and search description
@@ -23,7 +27,9 @@ The user message is JSON with:
   `name`, a `type` (always `text`), a data `kind`, and a `limit`: the most characters it holds. A field with an
   `item` belongs to that item of the block's data. A field with a `row` belongs to one row of a list inside the block
   (a session of a class, a step of a project); the block's `rows` give each row's own data (`fields` by data kind) or
-  the page it stands for (`page`). Write a row field about its own row only.
+  the page it stands for (`page`). Write a row field about its own row only. A block may carry the plan's notes for
+  it: `message` (the point it must get across) and `keyMessages` (the business's key messages it carries, in plain
+  words). They are notes, not copy: never paste them as a field.
 - `rewrite` (only on a second call): the fields that failed the check, with what you wrote and why it failed. Write
   only those fields again, and fix every problem. A key `seo.title` or `seo.description` is the page's search title
   or description: write it again in `seo`. A problem that says the text repeats another page means the site already
@@ -53,10 +59,16 @@ Rules:
    ("On this page you will find", "This section shows", "Here you can find", "See below").
 9. Never mention a contact channel (a call, an email, WhatsApp, a message, a booking link, a visit) in a block that
    does not show it: name a channel only when the block's `data` or `shows` holds that channel's value.
-10. Every sentence on the site is its own. Pages are written at the same time, so never reuse a stock sentence, an
+10. Follow the plan's notes when they are given: every field of a block serves its `message`; the page as a whole
+    answers `visitorQuestion` and leaves the visitor with `keyMessage`; a block with `keyMessages` gets each across in
+    its own words, resting on its data; the copy of the `endsWith` block invites the visitor to the main action its
+    data shows, and only that one. A note never licenses a fact the data does not hold (rule 4).
+11. Every sentence on the site is its own. Pages are written at the same time, so never reuse a stock sentence, an
     opening or a call to action you would write on any page: tie each one to this page and its blocks.
-11. When `seo` is given, write the page's search title and description: in `language`, with the words a customer
-    searches for (the business name, what the page offers, the town of its address when the data gives one), the
+12. When `seo` is given, write the page's search title and description: in `language`, with the words a customer
+    searches for (the business name, what the page offers, the town of its address when the data gives one; the
+    page's `search.searchTerms` when given, most important first), following `search.titleIntent` and
+    `search.descriptionIntent` when given, the
     title within `titleLimit` and the description within `descriptionLimit` characters, plain text. Each page has its
     own title: never only the business name on a page other than the home page.
 

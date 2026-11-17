@@ -35,6 +35,8 @@ const trainers = (profile, extra = []) => ({
   blocks: [...SHARED(), header(), b('block-178', ['person-p1', 'person-p2']), ...extra]
 })
 const codeAt = (list) => list.map((p) => `${p.code}@${p.at}`)
+// The end action the gate gives a page with a call to action block (#575) is checked in domain-plan-intent.test.mjs.
+const notEndAction = (f) => !f.code.startsWith('end_action')
 
 test('a page header labelled with the business name takes the section name, on every page, recorded', () => {
   const profile = florist()
@@ -42,7 +44,7 @@ test('a page header labelled with the business name takes the section name, on e
   contact.blocks.splice(2, 0, header('Business name'))
   const gated = gatePlan(composition([homeOf(profile), trainers(profile), contact]), contextOf(profile))
   assert.equal(gated.ok, true, JSON.stringify(gated.problems))
-  assert.deepEqual(codeAt(gated.fixes), ['label_repeats_data@pages[2].blocks[2].label'])
+  assert.deepEqual(codeAt(gated.fixes.filter(notEndAction)), ['label_repeats_data@pages[2].blocks[2].label'])
   assert.deepEqual(
     gated.plan.pages.find((p) => p.id === 'contact').blocks.find((x) => x.block === 'block-162').label,
     'Page header'
@@ -66,7 +68,7 @@ test('an assumption naming a block by its store id names the plan id of that blo
     [`pages[home].blocks[${services}].data`, 'pages[home].name']
   )
   assert.deepEqual(
-    gated.fixes.map(({ code, at, now }) => ({ code, at, now })),
+    gated.fixes.filter(notEndAction).map(({ code, at, now }) => ({ code, at, now })),
     [
       { code: 'contract_b', at: 'assumptions[0].field', now: `pages[home].blocks[${services}].data` },
       { code: 'contract_b', at: 'assumptions[1].field', now: null }

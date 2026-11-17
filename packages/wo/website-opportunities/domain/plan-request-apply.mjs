@@ -10,6 +10,7 @@
 // not move it to another page; a contact channel is the exception, as the contact rules decide where it goes.
 // Pure: the plan given is never changed.
 import { CONTACT_CHANNEL_KINDS } from './plan-gate-contact.mjs'
+import { blockIntentOf, pageIntentOf } from './plan-intent.mjs'
 import { REQUESTED_OFF_REASON } from './plan-request-taken-off.mjs'
 import { sameWords } from './plan-request-words.mjs'
 
@@ -19,27 +20,37 @@ const MAIN_BLOCK_KEPT =
   'a page cannot lose its main section: remove the page only when the request asks for that, or report the wish under notDone with reason outside_plan'
 
 const list = (value) => (Array.isArray(value) ? value : [])
-const blockOf = ({ block, label, data, reason, targets, basis, factIds }) => ({
+const blockOf = ({ block, label, data, reason, targets, basis, factIds, message, carries }) => ({
   block,
   label,
   data: [...data],
   reason,
   ...(targets ? { targets: [...targets] } : {}),
   // A block kept from trade knowledge keeps its basis and the facts it cites through a revision.
-  ...(basis ? { basis, factIds: [...(factIds ?? [])] } : {})
+  ...(basis ? { basis, factIds: [...(factIds ?? [])] } : {}),
+  // Its intent for the writer too (#575, `plan-intent.mjs`).
+  ...blockIntentOf({ message, carries })
 })
+
 const workingPagesOf = (plan) =>
   list(plan?.pages).map((page) => ({
     origin: page.id,
     pageType: page.pageType,
     name: page.name,
+    // Its intent for the writer, kept through a revision (the search terms are made again by code).
+    ...pageIntentOf(page),
     blocks: page.blocks.map((b) => ({ origin: b.id, ...blockOf(b) }))
   }))
 const isNew = (id) => typeof id === 'string' && id.startsWith('new-')
 
 /** The composition the gate reads, from working pages: no ids. */
 export const compositionPagesOf = (pages) =>
-  pages.map(({ pageType, name, blocks }) => ({ pageType, name, blocks: blocks.map(blockOf) }))
+  pages.map(({ pageType, name, blocks, ...page }) => ({
+    pageType,
+    name,
+    ...pageIntentOf(page),
+    blocks: blocks.map(blockOf)
+  }))
 
 /** The plan ids the gate keeps, per page of the composition: `null` for a page or block this answer adds. */
 export const givenIdsOf = (pages) =>

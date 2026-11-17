@@ -56,6 +56,8 @@ export function planComposerRequest(context, problems = [], firstPlan = null) {
       blocks
     })),
     ...(context.brief ? { brief: context.brief } : {}),
+    // The main action the owner chose (the step chain's `primaryAction`): the facts of the main button (#575).
+    ...(context.primaryAction ? { primaryAction: context.primaryAction } : {}),
     ...(problems.length ? { problems: problems.map(({ at, message }) => ({ at, message })) } : {}),
     ...(problems.length && firstPlan ? { firstPlan } : {})
   }

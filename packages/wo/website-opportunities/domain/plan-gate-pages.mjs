@@ -1,6 +1,7 @@
 // The pages of a gated plan as the composition gives them (`plan-gate.mjs`, #593), and the model's assumption lines
 // the plan keeps.
 import { assumptionFieldOf } from './plan-gate-fixes.mjs'
+import { blockIntentOf, pageIntentOf } from './plan-intent.mjs'
 import { TRADE_BASIS } from './plan-gate-reply.mjs'
 import { heldTextsOf, namesHeld } from './plan-withheld.mjs'
 
@@ -39,10 +40,10 @@ export function pagesOf(composition, { recipes, blocks, givenIds, idTag }) {
       const trade = b.basis === TRADE_BASIS ? { basis: b.basis, factIds: [...b.factIds] } : {}
       // A block kept from trade knowledge shows no data of its own and stays (`plan-gate-trade.mjs`).
       return b.data.length || trade.basis
-        ? [{ ...block, label: b.label, data: [...b.data], reason: b.reason, ...trade }]
+        ? [{ ...block, label: b.label, data: [...b.data], reason: b.reason, ...trade, ...blockIntentOf(b) }]
         : []
     })
-    pages.push({ id, name: page.name, pageType: page.pageType, blocks: kept })
+    pages.push({ id, name: page.name, pageType: page.pageType, ...pageIntentOf(page), blocks: kept })
   }
   return { pages, index }
 }

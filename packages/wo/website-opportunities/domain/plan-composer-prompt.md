@@ -29,14 +29,18 @@ The user message is JSON. `business` is the only source of truth about the busin
 
 `brief`, when given, says how the business wants to come across. It holds no data you may show:
 
-- `keyMessages[]`: the points the business leads with, in its own sources' words. Put first the blocks and data
-  that carry them, and let a block's `reason` name the key message it carries.
+- `keyMessages[]`: `{ id, label }`, the points the business leads with, in its own sources' words. Put first the
+  blocks and data that carry them, and let a block's `reason` name the key message it carries. A block names the key
+  messages it gets across in `carries`, by `id`. Every key message has a block on the home page that carries it.
 - `audience[]`: who the business serves, in its own sources' words. Use it to choose and order what a visitor
   of that kind came to find out.
 - `voice`: how the business sounds. It shapes the words of your labels and reasons, never their facts.
 - `held[]`: `{ field, why }`. What the business did not give or keeps off the site, and why. Nothing listed here may
   appear on the site, not even as a guess, and no block may rest on it (opening hours the sources disagree on: no
   block shows hours).
+
+`primaryAction`, when given, is the one action a visitor should take, as the owner chose it: `factIds` names the
+main button's words first, then the channel it leads to (a phone, a booking link, an email).
 
 `language` is the language of the site. `ownerLanguage`, when given, is the language the owner reads the plan card
 in (a two letter code), which may differ from the site's.
@@ -71,6 +75,19 @@ repeat the page's primary action.
 Every page answers one question a visitor came with, and every kept block carries one thing toward that answer: the
 question it answers, the message it gets across, or the proof that makes the page believable. Its `reason` says
 which, in plain words for the owner.
+
+The plan is a brief for the writer, who writes the words after approval from your notes and adds nothing of their
+own. So every kept page says what the visitor came to find out (`visitorQuestion`) and the one thing they should leave
+with (`keyMessage`), and every kept block says its point in one line (`message`): what it must get across about this
+business, resting on its data, a key message or the trade. A note states the point, never the sentence itself.
+
+A page ends with the main action: when its recipe lists a call to action block, keep it and give it the main
+button's facts of `primaryAction` it has fields for; otherwise the last block before the footer shows the main button
+when it has a field for its words. A call to action never promises a channel the main action does not lead to.
+
+Each kept page says what its search title and description must get across (`seo.titleIntent`,
+`seo.descriptionIntent`): what the page offers and for whom, with the business name where it fits. Code adds the
+words a visitor searches for from the data the page shows.
 
 ## Trade knowledge
 
@@ -138,8 +155,14 @@ not-found page says.
   profile) goes on the contact page (the page whose main block is a `contact` block), in a block with a free field of
   that channel's `kind`. A channel with no free field left there is placed elsewhere or left out with a reason. A
   block every recipe lists (a header, a footer) shows on every page, so a channel it holds counts.
+- WhatsApp (`contact-whatsapp`, a link of kind `contact.social_url`) goes in a row of a social links block like any
+  social profile; a second phone (`contact-phone-2`) goes in a free phone field on the contact page, the main phone
+  keeping its own place. Each is in `business` only when the template has such a place.
 - Never promise a contact channel (WhatsApp, a DM, a call) in a block that does not show it.
 - A `map` block shows the business's address fact; without an address, leave it out.
+- Reviews: choose them on purpose. Show first the reviews that back a key message or name a person of the business,
+  then the others, as many as the reviews block holds of the true ones. Never shorten or merge a review: the writer
+  quotes it as written.
 - Forms: a `newsletter` block is a form. Keep it only when the business has an email its answers can go to.
 - People: when the business has fewer people than a team block needs, show them in another block that can hold that
   many, on a page whose recipe lists it; when it holds fewer than you have, show as many as it holds and leave the
@@ -182,11 +205,16 @@ given); a `label` names a section of the site and stays in the site's language.
     {
       "pageType": "home",
       "name": "Home",
+      "visitorQuestion": "Is there a lesson here for me or my children?",
+      "keyMessage": "Coaching for every age and level, close to home.",
+      "seo": { "titleIntent": "The club's coaching and its town", "descriptionIntent": "Who the lessons are for and how to book" },
       "blocks": [
         { "block": "<block id>", "label": "Services", "data": ["<id>", "<id>"], "targets": ["<field name>"],
-          "reason": "All the services you offer, the most booked first." },
+          "reason": "All the services you offer, the most booked first.",
+          "message": "Lessons for every age and level, juniors first.", "carries": ["<key message id>"] },
         { "block": "<block id>", "label": "Your first lesson", "data": [], "basis": "trade", "factIds": ["<id>"],
-          "reason": "New players see how a first lesson goes before they book one." }
+          "reason": "New players see how a first lesson goes before they book one.",
+          "message": "A first lesson is easy to start: what happens and what to bring." }
       ]
     }
   ],
@@ -206,6 +234,8 @@ given); a `label` names a section of the site and stays in the site's language.
 ```
 
 - `basis` and `factIds`: only on a block kept on trade basis (see Trade knowledge); every other block has neither.
+- `visitorQuestion`, `keyMessage`, `seo` and each block's `message`: notes for the writer in the site's language, one
+  short line each, never final copy, never a fact `business` does not hold. `carries`: ids of `brief.keyMessages` only.
 - `assumptions`: what you assumed where the sources were silent, each with the plan `field` it sets (for example
   `language`, `facts[contact-hours].value`, `pages[home].name`) and what you assumed, in one sentence.
 - `leftOut`: every block, fact or item you chose not to show, with the reason in one sentence. For a fact or an
@@ -236,6 +266,9 @@ page keeps its main block.
   no field for a fact of the business unfilled, and state no terms in its label or reason? Is every block of written
   copy only that a kept page may show, and that shows how the trade works, kept on trade basis or left out with the
   fact that shows the business does not do it?
+- Does every kept page carry its `visitorQuestion`, `keyMessage` and `seo` intents, and every kept block its
+  `message`? Does a block of the home page carry each key message in `carries`?
+- Does every page whose recipe lists a call to action block keep it with the main button's facts?
 - Does every kept block's `reason` say the question, message or proof it carries, without a number of items it
   does not show? Does any `label` repeat its one datum?
 - Is every fact and item shown or left out, and every left out entry worded for the owner?

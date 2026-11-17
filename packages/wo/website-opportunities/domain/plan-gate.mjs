@@ -67,6 +67,8 @@ import { kitPagesLeftOut } from './plan-left-out-pages.mjs'
 import { withoutFactsWithoutPlace } from './plan-field-only-facts.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 import { systemPagesOf } from './plan-system-pages.mjs'
+import { planIntentOf } from './plan-intent.mjs'
+import { withEndActions } from './plan-intent-end-action.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
@@ -139,6 +141,8 @@ export function gatePlan(reply, context) {
   const spread = spreadGalleries(trimChannelOverflow(dropped.pages, context), placement)
   const items = placeExtraData(spread.pages, placement)
   const facts = placeExtraFacts(items.pages, placement)
+  // Every page ends with a block that leads to the main action when its template has one (`plan-intent-end-action`).
+  facts.pages = withEndActions(facts.pages, context, fix, dropped.index)
   // The page rules hold for the plan after placement too: a problem here is the gate's own placement.
   pageRuleProblems({ pages: facts.pages, leftOut: modelLeftOut }, context, problem)
   if (problems.length > 0) return failed()
@@ -200,6 +204,8 @@ export function gatePlan(reply, context) {
   const before = problems.length
   const systemPages = systemPagesOf(composition, { pages: rows.pages, data: context.data }, problem)
   const systemProblems = problems.length > before
+  // The step chain's intent for the writer (`plan-intent.mjs`): notes, key messages placed, search terms, main action.
+  const intent = planIntentOf(composition, rows.pages, context, { fix, problem, index: dropped.index, kept })
   const plan = {
     schema: BUILD_PLAN_SCHEMA,
     id: context.planId,
@@ -208,7 +214,7 @@ export function gatePlan(reply, context) {
     facts: context.data.facts.filter(kept),
     items: context.data.items.filter(kept),
     ...(list(context.data.rows).filter(kept).length ? { rows: context.data.rows.filter(kept) } : {}),
-    pages: withLabelCodes(rows.pages, context.blocks),
+    pages: withLabelCodes(intent.pages, context.blocks),
     look: context.look,
     // Counted on the final pages: a frame of an item the gate took off later is no picture to create.
     pictures: picturesOf(rows.pages, context.blocks, context.data).pictures,
@@ -225,7 +231,8 @@ export function gatePlan(reply, context) {
       ...rowsOut.map(namedBy(context.labels)),
       ...listsBelowMinLeftOut(rows.dropped, rows.pages)
     ],
-    ...systemPages
+    ...systemPages,
+    ...intent.fields
   }
   plan.leftOut = withCountedReasons(withReasonCodes(plan.leftOut, plan))
   // A plan whose legal or not-found page the model got wrong goes back with those problems, never with their echo.

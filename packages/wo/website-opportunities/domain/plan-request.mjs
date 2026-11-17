@@ -114,7 +114,14 @@ export async function revisePlan({ plan, profile, request, model, ...kit }) {
     ? null
     : { edits, ...applyOwnerEdits({ plan, profile, edits, kit: { blockStore, pageRecipes, library } }) }
   const working = owner?.plan ?? plan
-  const base = composerContextOf({ ...kit, profile: owner?.profile ?? profile, answers: [], planId: plan.id })
+  const base = composerContextOf({
+    ...kit,
+    profile: owner?.profile ?? profile,
+    answers: [],
+    planId: plan.id,
+    // The plan's intent inputs (key messages, main action, later list, channels placed from the brief) carry over (#575).
+    fromPlan: working
+  })
   preflightContext(base)
   // The language the customer chose on the plan card stays; the look is composed as a first plan's (and checked as
   // one), then the look fields the customer changed are put back (`settleRevisedPlan`).

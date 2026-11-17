@@ -27,6 +27,13 @@ import {
 } from './fixtures/write-order/boxing-florist.mjs'
 import { ANSWERED_LABEL } from './fixtures/write-order/invented-florist.mjs'
 
+// The end action the gate gives a page with a call to action block (#575) is checked in domain-plan-intent.test.mjs.
+const withoutEndAction = (attempts) =>
+  attempts.map(({ fixes, ...attempt }) => {
+    const kept = (fixes ?? []).filter((f) => !f.code.startsWith('end_action'))
+    return kept.length ? { ...attempt, fixes: kept } : attempt
+  })
+
 /** The invented store with a sign-up form and a map block the home recipe lists. */
 function storeWithFormAndMap() {
   const store = blockStore()
@@ -154,7 +161,9 @@ test('JA Boxing: the florist composition on the real block store passes the gate
     allowTemplateLook: true,
     model: scriptedModel(reply)
   })
-  assert.deepEqual(attempts, [{ problems: [] }])
+  assert.deepEqual(withoutEndAction(attempts), [{ problems: [] }])
+  // The home recipe's call to action band (block-161) ends the home page with the main button (#575).
+  assert.ok(attempts[0].fixes.some((f) => f.code === 'end_action_added' && f.now === 'block-161'))
   // Without its footer, the contact page loses the social profiles only the footer has a field for.
   const cut = boxingComposition(boxingProfile())
   cut.pages[0].blocks = cut.pages[0].blocks.filter((b) => b.block !== 'block-171')

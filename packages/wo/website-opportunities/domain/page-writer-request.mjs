@@ -83,7 +83,38 @@ function blockView(block, { byId, data, blocks, shown, plan, ownerFacts }) {
         ...(row ? { row } : {}),
         value
       })),
-    ...rowsOfBlock(block, shown, byId, data, plan.pages)
+    ...rowsOfBlock(block, shown, byId, data, plan.pages),
+    ...blockIntentView(block, plan)
+  }
+}
+
+/**
+ * The plan's intent for the writer (#575, the step chain writer's `pages[]` notes, writer-prompt.md lines 30 to 31 and
+ * 205 to 208): a block's point and the key messages it carries, by their words; a page's visitor question, key
+ * message, search intent and terms, and the block that leads to the main action. Absent from a plan without them.
+ */
+function blockIntentView(block, plan) {
+  const labels = new Map(list(plan.keyMessages).map((m) => [m.id, m.label]))
+  const carries = list(block.carries)
+    .map((id) => labels.get(id))
+    .filter(isText)
+  return {
+    ...(isText(block.message) ? { message: block.message } : {}),
+    ...(carries.length ? { keyMessages: carries } : {})
+  }
+}
+function pageIntentView(page) {
+  const { titleIntent, descriptionIntent, searchTerms } = page.seo ?? {}
+  const search = {
+    ...(isText(titleIntent) ? { titleIntent } : {}),
+    ...(isText(descriptionIntent) ? { descriptionIntent } : {}),
+    ...(list(searchTerms).length ? { searchTerms: [...searchTerms] } : {})
+  }
+  return {
+    ...(isText(page.visitorQuestion) ? { visitorQuestion: page.visitorQuestion } : {}),
+    ...(isText(page.keyMessage) ? { keyMessage: page.keyMessage } : {}),
+    ...(Object.keys(search).length ? { search } : {}),
+    ...(isText(page.endAction?.block) ? { endsWith: page.endAction.block } : {})
   }
 }
 
@@ -122,7 +153,7 @@ export function pageWriterUser({
   const out = {
     language: plan.language,
     business: isText(name) ? { name } : {},
-    page: { id: page.id, name: page.name, pageType: page.pageType },
+    page: { id: page.id, name: page.name, pageType: page.pageType, ...pageIntentView(page) },
     ...(voice ? { voice } : {}),
     ...(seo ? { seo: { titleLimit: seo.title, descriptionLimit: seo.description } } : {}),
     blocks: list(page.blocks)

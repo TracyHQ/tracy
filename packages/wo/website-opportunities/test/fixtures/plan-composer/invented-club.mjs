@@ -167,3 +167,23 @@ export function scriptedModel(...replies) {
   }
   return Object.assign(model, { calls })
 }
+
+/**
+ * A composition with the step chain's intent the prompt asks for (#575): each page's visitor question, key message and
+ * search intents, each block's point, and the key messages `carries` names on the services block of the home page.
+ */
+export function withIntentNotes(composition, carries = []) {
+  const c = structuredClone(composition)
+  for (const page of c.pages) {
+    page.visitorQuestion = `What does the ${page.name} page tell me about the club?`
+    page.keyMessage = 'A friendly club with coaching for every age.'
+    page.seo = {
+      titleIntent: `The ${page.name} page of the club and its town`,
+      descriptionIntent: 'What the page offers'
+    }
+    for (const block of page.blocks) block.message = `${block.label}: why it matters to a visitor.`
+  }
+  const services = c.pages[0].blocks.find((b) => b.block === 'services-grid')
+  if (carries.length) services.carries = [...carries]
+  return c
+}

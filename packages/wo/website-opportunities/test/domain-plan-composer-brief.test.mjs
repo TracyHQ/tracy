@@ -22,7 +22,8 @@ import {
   library,
   pageRecipes,
   scriptedModel,
-  template
+  template,
+  withIntentNotes
 } from './fixtures/plan-composer/invented-club.mjs'
 
 const WHATSAPP = '+00 555 0100 77'
@@ -72,8 +73,8 @@ const inventing = () => {
 test('the brief context holds key messages, audience, voice and held fields, never a held value', () => {
   const context = briefContextOf(brief())
   assert.deepEqual(context.keyMessages, [
-    'Coaching for every age, from first serve to league play',
-    'Customers praise: friendly coaches'
+    { id: 'km-1', label: 'Coaching for every age, from first serve to league play' },
+    { id: 'km-2', label: 'Customers praise: friendly coaches' }
   ])
   assert.deepEqual(context.audience, ['Families with children learning tennis'])
   assert.equal(context.voice, 'Warm and encouraging')
@@ -104,7 +105,7 @@ test('what no block can show is left out with a plain reason, its value never re
 })
 
 test('the composer model reads the brief context; the plan card lists what no block can show', async () => {
-  const model = scriptedModel(JSON.stringify(goodComposition()))
+  const model = scriptedModel(JSON.stringify(withIntentNotes(goodComposition(), ['km-1', 'km-2'])))
   const { plan } = await composePlan(inputs(model, { brief: brief() }))
   const sent = JSON.parse(model.calls[0].user)
   assert.deepEqual(Object.keys(sent).sort(), ['blocks', 'brief', 'business', 'language', 'recipes'])
