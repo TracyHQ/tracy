@@ -109,6 +109,10 @@ function writeEntry(state, at, scope, e) {
   writeAt(state, at, me, e.value, { entry: e.place, rule: `field:${e.from}`, inline })
 }
 
+/** Whether a picture of the order is the business's own video, placed by its web address. */
+const isVideoLink = (p) =>
+  p?.kind === 'business.video' && p.source === 'own' && /^https?:\/\/\S+$/i.test(String(p.ref ?? ''))
+
 function writePicture(state, at, scope, p, kind) {
   const id = kind === 'icon' ? p.id : p.frame
   const logo = p.reason === 'logo_from_brand_step'
@@ -119,6 +123,10 @@ function writePicture(state, at, scope, p, kind) {
   if (!isLocation(me)) return skip(state.sink, id, 'no_mapping_entry')
   if (kind === 'icon' && p.storage === 'class-name')
     return writeAt(state, at, me, p.className ?? '', { entry: id, rule: 'icon_class' })
+  // A placed own video is a link field of the kit (`business.video`, type `link`, a url slot): its web address is
+  // written as the link, never uploaded as a picture (#575 pictures, the write stage hook).
+  if (kind === 'picture' && isVideoLink(p))
+    return writeAt(state, at, me, p.ref, { entry: id, rule: 'video_link' })
   state.pictures.set(id, { id, kind, picture: p })
   writeAt(state, at, me, { ref: `picture:${id}` }, { entry: id, rule: `${kind}_file` })
 }
