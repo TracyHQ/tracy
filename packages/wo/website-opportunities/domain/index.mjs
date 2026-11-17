@@ -112,6 +112,18 @@ export {
   formatProblem as formatAiQuickstartProblem
 } from './ai-quickstart-contract.mjs'
 export { blockNamesOf, withBlockNames } from './ai-quickstart-block-names.mjs'
+export {
+  CREATE_PAGE,
+  PRIVACY_KIND,
+  PRIVACY_PAGE_ID,
+  systemPagesCompositionOf,
+  systemPagesOf
+} from './plan-system-pages.mjs'
+export {
+  LEGAL_PAGE_NOT_BUILT,
+  NOT_FOUND_PAGE_NOT_WRITTEN,
+  systemPagesNotBuiltOf
+} from './draft-write-system-pages.mjs'
 export { BUSINESS_FACTS, SEO_FIELDS, SHARE_IMAGE_FRAME } from './ai-quickstart-mapping.mjs'
 export { LIBRARY_SCHEMA, checkLibraryDeclaration } from './ai-quickstart-library.mjs'
 export {

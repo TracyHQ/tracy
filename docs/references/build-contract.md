@@ -242,6 +242,12 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   shows in a gallery on another page and a photo shows once on the site,
   so one sentence agrees for one photo and for many; `section_below_minimum` `{min, shown}` for a section, `{min}`
   for an item it showed).
+- **`legalPages`** (optional, #575, the step chain's `site.legalPages`): one entry of `kind: "privacy"`, either the
+  template's own page of the plan (`use` and `id` both the plan's page id) or one the build creates (`use: "create"`,
+  `id: "legal:privacy"`, a `says` line for the writer and `factIds`, the facts or items it rests on, at least one).
+  **`notFound`** (optional): what the not-found page says (`says`) and the plan's pages it leads to (`leadsTo`, at
+  least one). Neither is shown on the plan card; a created page is no page of `pages`, so it gets no menu item and no
+  left out line. A plan the composer gates always carries both; a plan stored before them may not.
 - **`display`** (optional, on a fact): the value as the customer reads it, written by code from a structured value,
   with its `code` and `params`. Opening hours (`contact.hours`, value `Mo-Fr 06:00-21:00; Sa 08:00-16:00`) read
   `Monday to Friday, 6:00 to 21:00; Saturday, 8:00 to 16:00`, code `opening_hours`, params `{groups, fromN, toN,
@@ -426,6 +432,10 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
 
 ### Changes for consumers
 
+- 17/11/2026 (#575), additive: a build plan may carry `legalPages` (one Privacy Policy page, the template's own or
+  one created with the id `legal:privacy`, a `says` line and `factIds`) and `notFound` (`says`, `leadsTo`), as the step
+  chain's site plan does. The plan card shows neither; the draft write builds neither yet and lists both under its
+  `notBuilt` with a reason.
 - 17/11/2026 (#575), additive: research may ask `topic: "held-hours"`, id `held-hours`, when its content brief holds
   the opening hours until the customer confirms them: question code `held_hours_unconfirmed` (one source alone says
   open 24 hours every day; choices `keep`, `edit`, `leave`) or `held_hours_disagree` (the sources disagree; choices
@@ -528,7 +538,7 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `choice` | `id`, `label`, `detail?`, `recommended?`, `code?`, `params?` |
 | `free text` | `maxLength`, `placeholder?` |
 | `answer` | `schema`, `question`, `choice?`, `text?`, `skipped?` |
-| `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut`, `rows?` |
+| `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut`, `rows?`, `legalPages?`, `notFound?` |
 | `fact` | `id`, `kind`, `label`, `value`, `sources`, `display?`, `code?`, `params?` |
 | `item` | `id`, `kind`, `label`, `sources`, `count?` |
 | `source` | `kind`, `name` |
@@ -546,6 +556,8 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `assumption` | `id`, `field`, `said`, `alternatives?`, `code?`, `params?` |
 | `alternative` | `value`, `sources` |
 | `left out entry` | `what`, `kind`, `reason`, `code?`, `item?`, `params?` |
+| `legal page` | `kind`, `use`, `id`, `says?`, `factIds?` |
+| `not found page` | `says`, `leadsTo` |
 | `plan edit` | `schema`, `id`, `plan`, `changes` |
 | `plan reference` | `id`, `revision` |
 | `change` | `field`, `value` |
@@ -583,6 +595,7 @@ reason in a sentence or two. A test compares this table with the code.
 | `facts[].value` | 200 | a fact value, and a fact alternative's value |
 | `reason` | 200 | block, left out entry, generated pictures and stop report reasons; a not done entry's `why` |
 | `said` | 200 | an assumption |
+| `says` | 200 | what a created legal page or the not-found page must get across, for the writer |
 | `prompt` | 200 | a question |
 | `request.text` | 1000 | the text of a change request |
 | `changed[]` | 200 | each line of what a change request changed |

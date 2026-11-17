@@ -66,6 +66,7 @@ import { withKeyedLeftOut } from './plan-left-out-keyed.mjs'
 import { kitPagesLeftOut } from './plan-left-out-pages.mjs'
 import { withoutFactsWithoutPlace } from './plan-field-only-facts.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
+import { systemPagesOf } from './plan-system-pages.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
@@ -195,6 +196,10 @@ export function gatePlan(reply, context) {
   // The template's pages the plan does not keep, by code (a page dropped for its empty main block among them), except
   // a page the owner asked to remove, which a revision reports itself (`context.removedPageTypes`).
   const kitPages = kitPagesLeftOut({ ...context, pages: rows.pages, except: context.removedPageTypes })
+  // The Privacy Policy page and the not-found page, on the final pages (`plan-system-pages.mjs`, step chain R09).
+  const before = problems.length
+  const systemPages = systemPagesOf(composition, { pages: rows.pages, data: context.data }, problem)
+  const systemProblems = problems.length > before
   const plan = {
     schema: BUILD_PLAN_SCHEMA,
     id: context.planId,
@@ -219,9 +224,12 @@ export function gatePlan(reply, context) {
       ...below.leftOut.map(namedBy(context.labels)),
       ...rowsOut.map(namedBy(context.labels)),
       ...listsBelowMinLeftOut(rows.dropped, rows.pages)
-    ]
+    ],
+    ...systemPages
   }
   plan.leftOut = withCountedReasons(withReasonCodes(plan.leftOut, plan))
+  // A plan whose legal or not-found page the model got wrong goes back with those problems, never with their echo.
+  if (systemProblems) return failed()
   for (const p of checkBuildDocument(plan).problems) problem('contract_b', p.at, p.message)
   // The plan never shows the template's look for approval (#616): its accent, its logo, or a line naming them, written
   // by the model or not. Off only for the template fallback of the tests (`allowTemplateLook`).

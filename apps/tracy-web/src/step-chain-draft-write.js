@@ -116,6 +116,8 @@ export async function runDraftWrite({
     unproven: [...list(plan.unproven)],
     // Fact places the kit leaves unwritten by decision: the report says so, never counts them written.
     notWritten: [...list(plan.notWritten)],
+    // The approved plan's created legal pages and its not-found page, not built yet: the report says so (#575).
+    notBuilt: [...list(plan.notBuilt)],
     conflicts: [...list(plan.conflicts)],
     // Words the plan changed before any door (control characters out, plugin codes neutralised), with a code.
     cleaned: [...list(plan.cleaned)],

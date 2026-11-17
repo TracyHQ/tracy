@@ -114,6 +114,8 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
             column,
             by
           })),
+          // The created legal pages and the not-found page the write does not build, with the reason (#575).
+          notBuilt: report.notBuilt ?? [],
           // Two entries with other words for one place: how many lost a place, and which (entry ids, never the words).
           conflicts: { count: report.counts.conflicts.length, entries: report.counts.conflicts },
           ...(report.delta ? { delta: report.delta } : {})

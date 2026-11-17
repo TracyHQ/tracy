@@ -97,6 +97,24 @@ When a page you keep may show a block with a `name` whose fields are all written
 the business does not do its activity: list it in `leftOut` with `kind: "block"`, its id as `block`, and that fact's
 id in `factIds`.
 
+## Legal and not-found pages
+
+Every site has a Privacy Policy page, the template's own or one you plan, resting only on facts; plan what the
+not-found page says.
+
+- `legalPages`: one entry of `kind: "privacy"`. When a page type of `recipes` is the template's own privacy page, keep
+  that page and name it: `use` and `id` are its `pageType`. Otherwise plan one: `use: "create"`, the fixed id
+  `legal:privacy`, and a `says` line. A Privacy page you plan is not a page of `pages` and gets no block: it is
+  written after approval.
+- A Privacy page you plan rests only on facts of `business`: who the business is, the contact channels the site
+  shows, and the forms your plan keeps. Cite those facts and items in `factIds`, at least one. Its `says` line names
+  what it must get across from them, never a legal claim the facts do not support: no law, certificate, retention
+  period, partner, tool or processor that `business` does not name.
+- `notFound`: what the not-found page says (`says`) and the kept pages it leads back to (`leadsTo`, their
+  `pageType`, at least one).
+- A `says` line states what a page must get across, in note form, for the writer. It is not shown on the plan card.
+- The menu, the footer and the links are made by code after approval; you never place these pages in them.
+
 ## What you may decide
 
 - Each page type of `recipes`: keep or leave out. A page keeps its recipe's `mainBlock`; leave out a page whose main
@@ -177,7 +195,13 @@ given); a `label` names a section of the site and stays in the site's language.
     { "item": "<id>", "reason": "It shows the same room as a photo the gallery keeps." },
     { "kind": "block", "block": "<block id>", "what": "What to bring", "factIds": ["<id>"],
       "reason": "Your club only hires out courts, so there is no class to come prepared for." }
-  ]
+  ],
+  "legalPages": [
+    { "kind": "privacy", "use": "create", "id": "legal:privacy",
+      "says": "Who runs the club and how to reach it; what the booking form and the email are used for.",
+      "factIds": ["<id>", "<id>"] }
+  ],
+  "notFound": { "says": "The page is not here; lead back to the lessons and the home page.", "leadsTo": ["home"] }
 }
 ```
 
@@ -190,6 +214,8 @@ given); a `label` names a section of the site and stays in the site's language.
   If you still write a page entry, give its `pageType` from `recipes`. Never list an item you also show. Never
   leave out the business name, a phone, the address, the main button, or any fact whose source is the owner's answer:
   show each in a block with a field for it; code places any you do not.
+
+- `legalPages` and `notFound`: see Legal and not-found pages. Their `says` lines are in the site's language.
 
 The plan is closed: every fact and item of `business` is shown by a block or listed in `leftOut`, and every kept
 page keeps its main block.
@@ -213,6 +239,8 @@ page keeps its main block.
 - Does every kept block's `reason` say the question, message or proof it carries, without a number of items it
   does not show? Does any `label` repeat its one datum?
 - Is every fact and item shown or left out, and every left out entry worded for the owner?
+- Does the plan carry one Privacy Policy entry (the template's own page, or `legal:privacy` with a `says` line resting
+  only on the facts it cites) and a not-found `says` that leads back to a kept page?
 
 ## After you answer
 

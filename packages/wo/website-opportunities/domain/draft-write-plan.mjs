@@ -26,6 +26,7 @@ import { pairsOf } from './draft-write-plan-pairs.mjs'
 import { mainMenuOf, planMenuItems, planPages } from './draft-write-plan-pages.mjs'
 import { consume, recordOf, sinkOf } from './draft-write-sink.mjs'
 import { siteOf } from './draft-write-site.mjs'
+import { systemPagesNotBuiltOf } from './draft-write-system-pages.mjs'
 import { blockRecordOf } from './draft-write-targets.mjs'
 import { checkWriteOrder } from './write-order-check.mjs'
 
@@ -192,6 +193,8 @@ export function writePlanOf(order, aiq, options = {}) {
     // Blocks of a page under its list page not written there: they would print on the list page too.
     underNotWritten: state.underNotWritten,
     emptyPictures: state.emptyPictures ?? [],
+    // The approved plan's created legal pages and its not-found page: not built, each with its reason (#575).
+    notBuilt: systemPagesNotBuiltOf(options.approved),
     controls: [...sink.records.values()].flatMap((r) =>
       list(r.controls).map((c) => ({ record: r.key, ...c }))
     ),
