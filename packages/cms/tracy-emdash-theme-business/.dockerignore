@@ -5,6 +5,8 @@
 !package.json
 !pnpm-lock.yaml
 !pnpm-workspace.yaml
+!patches/
+!patches/**
 !astro.config.mjs
 !tsconfig.json
 !components.json

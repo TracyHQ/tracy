@@ -17,6 +17,25 @@ export function forbidden(file) {
         (/^\.env(?:\.|$)/.test(part) && part !== '.env.example')
     )
 }
+// The patch files pnpm-workspace.yaml names under `patchedDependencies`, as written there.
+export function patchFilesOf(text) {
+  const files = []
+  let inside = false
+  for (const line of text.split('\n')) {
+    if (/^patchedDependencies:\s*$/.test(line)) {
+      inside = true
+      continue
+    }
+    if (!inside || /^\s*(?:#|$)/.test(line)) continue
+    if (!/^\s/.test(line)) {
+      inside = false
+      continue
+    }
+    const m = line.match(/:\s*['"]?([^'"#\s]+)['"]?\s*$/)
+    if (m) files.push(path.posix.normalize(m[1]))
+  }
+  return files
+}
 export function distributionFiles(root, contract) {
   const files = new Set()
   for (const entry of contract.distribution.include) {
@@ -33,6 +52,14 @@ export function distributionFiles(root, contract) {
   }
   for (const required of contract.distribution.required)
     if (!files.has(required)) throw new Error(`Required asset omitted: ${required}`)
+  // A package whose pnpm-workspace.yaml names a patch file it does not carry cannot be installed:
+  // `pnpm install --frozen-lockfile` stops on the missing file (Dockerfile build, clean install).
+  if (files.has('pnpm-workspace.yaml'))
+    for (const patch of patchFilesOf(readFileSync(path.join(root, 'pnpm-workspace.yaml'), 'utf8')))
+      if (!files.has(patch))
+        throw new Error(
+          `Patch file omitted: ${patch} (pnpm-workspace.yaml patchedDependencies); list patches in distribution.include`
+        )
   return [...files].sort()
 }
 // One definition of "the artifact hash": qa.mjs reports it from the source tree, pack() writes it

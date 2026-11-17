@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-684-picomatch-extglob-redos",
+  "kind": "fix",
+  "title": "picomatch is patched against single-branch repeated extglob ReDoS (GHSA-fc5q-39xc-vjpf): '+(*)' answers a long non-match at once, ordinary globs match as before",
+  "pr": 684,
+  "area": "deps/picomatch",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout after pnpm install, run run.cmd (no database, no network).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Every picomatch copy the root install holds (2.3.2 and 4.0.7) is the patched one.",
+    "picomatch('+(*)') and makeRe('+(*a)') answer a long non-matching input well under the test timeout; *.js, **/*.md, +(a|b), !(x) match as before.",
+    "Each EmDash theme carries the root patch files and names them in patchedDependencies."
+  ],
+  "selectors": {
+    "patches": "patches/picomatch@2.3.2.patch, patches/picomatch@4.0.7.patch",
+    "workspace": "pnpm-workspace.yaml patchedDependencies"
+  },
+  "fence": "lib/parse.js change of micromatch/picomatch#246 applied via pnpm patchedDependencies in root and the six themes",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "scripts/test/picomatch-extglob-redos.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the root install has a patched copy of every picomatch version it holds",
+      "picomatch 2.3.2: single-branch repeated extglobs answer a long non-match quickly",
+      "picomatch 2.3.2: ordinary globs match as before",
+      "picomatch 4.0.7: single-branch repeated extglobs answer a long non-match quickly",
+      "picomatch 4.0.7: ordinary globs match as before",
+      "each EmDash theme carries the root patch files and names them in patchedDependencies"
+    ]
+  }
+}

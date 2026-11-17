@@ -41,6 +41,8 @@ patchedDependencies:
   '@fortune-sheet/react@1.0.4': 2932e52e79afcd4ced08cfa123b5eded786c85043da32f622f3e80af6fc96c37
   exceljs@4.4.0: c1bf8ac8f319dab382f08e3a669b715e691d46c703ac5a4163eb383fbedd1d48
   node-pty@1.2.0-beta.15: b40ae545608897914bd25fb009c97eeac478c34e8a910298ddcb01b746534bb0
+  picomatch@2.3.2: e662ac00569116ba1c32f46c976da1b72e185b1e0f58ff7c1cad19ed422bb7ab
+  picomatch@4.0.7: 5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc
 
 importers:
 
@@ -3035,7 +3037,7 @@ importers:
         version: 4.0.3
       picomatch:
         specifier: ^4.0.3
-        version: 4.0.7
+        version: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:~
@@ -6862,7 +6864,7 @@ importers:
         version: 2.1.1
       picomatch:
         specifier: ^4.0.4
-        version: 4.0.7
+        version: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -9384,7 +9386,7 @@ importers:
         version: 4.3.2
       picomatch:
         specifier: ^4.0.4
-        version: 4.0.7
+        version: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:~
@@ -9418,7 +9420,7 @@ importers:
         version: 6.0.3
       picomatch:
         specifier: ^4.0.4
-        version: 4.0.7
+        version: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       readable-stream:
         specifier: ^4.7.0
         version: 4.7.0
@@ -15387,7 +15389,7 @@ importers:
         version: 4.0.3
       picomatch:
         specifier: ^4.0.3
-        version: 4.0.7
+        version: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
     devDependencies:
       '@types/babel__code-frame':
         specifier: ^7.27.0
@@ -30206,7 +30208,7 @@ snapshots:
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
       js-yaml: 4.3.2
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       retext-smartypants: 6.2.0
       shiki: 4.4.3
       smol-toml: 1.9.0
@@ -32270,7 +32272,7 @@ snapshots:
       '@deepseek-ai/schemastery': 3.18.5-alpha.1
       chokidar: 4.0.3
       node-addon-require-builtin: 0.1.6
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
 
   '@deepseek-ai/dsh-home-paths@0.2.0-rc.2(@deepseek-ai/cordis@vendor+tracy+deepseek-harness+vendor+cordis)':
     dependencies:
@@ -37150,7 +37152,7 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.9
       estree-walker: 2.0.2
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
     optionalDependencies:
       rollup: 4.63.1
 
@@ -39169,7 +39171,7 @@ snapshots:
   anymatch@3.1.3:
     dependencies:
       normalize-path: 3.0.0
-      picomatch: 2.3.2
+      picomatch: 2.3.2(patch_hash=e662ac00569116ba1c32f46c976da1b72e185b1e0f58ff7c1cad19ed422bb7ab)
 
   anynum@1.0.1: {}
 
@@ -39348,7 +39350,7 @@ snapshots:
       p-queue: 9.3.3
       package-manager-detector: 1.8.0
       piccolore: 0.1.3
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       shiki: 4.4.3
       smol-toml: 1.9.0
       svgo: 4.1.0
@@ -40903,9 +40905,9 @@ snapshots:
     dependencies:
       pend: 1.2.0
 
-  fdir@6.5.0(picomatch@4.0.7):
+  fdir@6.5.0(picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)):
     optionalDependencies:
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
 
   fetch-blob@3.2.0:
     dependencies:
@@ -42708,7 +42710,7 @@ snapshots:
   micromatch@4.0.8:
     dependencies:
       braces: 3.0.3
-      picomatch: 2.3.2
+      picomatch: 2.3.2(patch_hash=e662ac00569116ba1c32f46c976da1b72e185b1e0f58ff7c1cad19ed422bb7ab)
 
   mime-db@1.52.0: {}
 
@@ -43256,9 +43258,9 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  picomatch@2.3.2: {}
+  picomatch@2.3.2(patch_hash=e662ac00569116ba1c32f46c976da1b72e185b1e0f58ff7c1cad19ed422bb7ab): {}
 
-  picomatch@4.0.7: {}
+  picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc): {}
 
   pkce-challenge@5.0.1: {}
 
@@ -44689,8 +44691,8 @@ snapshots:
 
   tinyglobby@0.2.17:
     dependencies:
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc))
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
 
   tinyld@1.3.4: {}
 
@@ -44814,7 +44816,7 @@ snapshots:
       hookable: 6.1.1
       import-without-cache: 0.4.0
       obug: 2.1.4
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       rolldown: 1.2.7
       rolldown-plugin-dts: 0.27.14(oxc-resolver@11.21.2)(rolldown@1.2.7)(typescript@5.9.3)
       tinyexec: 1.3.1
@@ -45045,7 +45047,7 @@ snapshots:
     dependencies:
       '@jridgewell/remapping': 2.3.5
       acorn: 8.18.0
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       webpack-virtual-modules: 0.6.2
 
   unrun@0.2.39:
@@ -45204,8 +45206,8 @@ snapshots:
   vite@6.4.4(@types/node@22.20.1)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.22.4)(yaml@2.9.1):
     dependencies:
       esbuild: 0.25.12
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc))
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       postcss: 8.5.28
       rollup: 4.63.1
       tinyglobby: 0.2.17
@@ -45220,8 +45222,8 @@ snapshots:
   vite@6.4.4(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.22.4)(yaml@2.9.1):
     dependencies:
       esbuild: 0.25.12
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc))
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       postcss: 8.5.28
       rollup: 4.63.1
       tinyglobby: 0.2.17
@@ -45236,8 +45238,8 @@ snapshots:
   vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.22.4)(yaml@2.9.0):
     dependencies:
       esbuild: 0.28.2
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc))
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       postcss: 8.5.28
       rollup: 4.63.1
       tinyglobby: 0.2.17
@@ -45252,8 +45254,8 @@ snapshots:
   vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.22.4)(yaml@2.9.1):
     dependencies:
       esbuild: 0.28.2
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc))
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       postcss: 8.5.28
       rollup: 4.63.1
       tinyglobby: 0.2.17
@@ -45268,7 +45270,7 @@ snapshots:
   vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.1):
     dependencies:
       lightningcss: 1.33.0
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       postcss: 8.5.28
       rolldown: 1.2.11
       tinyglobby: 0.2.17
@@ -45299,7 +45301,7 @@ snapshots:
       expect-type: 1.4.0
       magic-string: 0.30.21
       pathe: 2.0.3
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       std-env: 3.10.0
       tinybench: 2.9.0
       tinyexec: 0.3.2
@@ -45342,7 +45344,7 @@ snapshots:
       magic-string: 0.30.21
       obug: 2.1.4
       pathe: 2.0.3
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       std-env: 4.2.0
       tinybench: 2.9.0
       tinyexec: 1.3.1
@@ -45373,7 +45375,7 @@ snapshots:
       magic-string: 0.30.21
       obug: 2.1.4
       pathe: 2.0.3
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       std-env: 4.2.0
       tinybench: 2.9.0
       tinyexec: 1.3.1
@@ -45404,7 +45406,7 @@ snapshots:
       magic-string: 0.30.21
       obug: 2.1.4
       pathe: 2.0.3
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=5e7f8d17238c86eb819bbcb4a17ca1df237e83a44e3132591a7cd1bf3ab6fcbc)
       std-env: 4.2.0
       tinybench: 2.9.0
       tinyexec: 1.3.1
