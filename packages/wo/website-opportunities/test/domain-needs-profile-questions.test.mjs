@@ -54,7 +54,8 @@ test('a conflict on an important fact is one fact-conflict question, labelled by
       ['+1 555 0142 779', 'From Google Maps listing', false]
     ]
   )
-  assert.equal(q.freeText.maxLength, IMPORTANT_CONFLICTS['contact.phone'].maxLength)
+  // A typed value is an owner statement the model reads: no field sized cap, only the transport bound.
+  assert.equal(q.freeText.maxLength, 1000)
   assert.deepEqual(problemsOf(q), [])
 })
 

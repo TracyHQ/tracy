@@ -236,7 +236,8 @@ test('research with a chosen kit gives the needs profile the kit, so answers get
   const limit = kindLimitsOf(storeBlocksOf(kit.blockStore, kit.library)).get('contact.cta_label')
   assert.ok(limit < 80, 'the kit has a button field limit')
   for (const c of main.choices) assert.ok([...c.label].length <= limit, c.label)
-  assert.equal(main.freeText.maxLength, 80)
+  // Only the transport bound holds a typed answer (`TYPED_ANSWER_MAX_LENGTH`, #609).
+  assert.equal(main.freeText.maxLength, 1000)
   assert.equal(record.trade, 'fitness')
   await assert.rejects(researchStep({ links: [] }, { gather: async () => ({}), model, kit: null }), {
     code: 'research_empty'

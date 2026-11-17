@@ -11,7 +11,7 @@
 // Every question and choice also carries a stable text `code` and its `params` (#609): the chat may word it in the
 // customer's language from the code; the English text stays the fallback. Codes: `docs/references/build-contract.md`.
 import { cappedLength } from './answer-field-limits.mjs'
-import { QUESTION_SCHEMA } from './build-contract-questions.mjs'
+import { QUESTION_SCHEMA, TYPED_ANSWER_MAX_LENGTH } from './build-contract-questions.mjs'
 import { conflictQuestionsOf } from './needs-profile-conflict-questions.mjs'
 import { languageName, primary } from './needs-profile-language.mjs'
 
@@ -19,14 +19,21 @@ export { languageTag, siteLanguageOf } from './needs-profile-language.mjs'
 
 /** The Contract B topics a needs profile asks about (contact conflicts come first, price conflicts last). */
 export const ASKED_TOPICS = Object.freeze(['fact-conflict', 'main-button', 'contact-method', 'site-language'])
-/** How long a free text answer may be, per topic, before the template's own limit (`answer-field-limits.mjs`). */
+/**
+ * How long a free text answer may be, per topic. Every typed answer but the site name is an owner statement the build
+ * model reads (`answer-reading.mjs`): it gets the transport bound only (`TYPED_ANSWER_MAX_LENGTH`), never a field sized
+ * cap. The site name is pasted into the name fields, so it keeps its real limit, lowered to the template's own
+ * (`answer-field-limits.mjs`).
+ */
 export const FREE_TEXT_MAX = Object.freeze({
-  'main-button': 80,
-  'contact-method': 120,
-  'site-language': 40,
+  'main-button': TYPED_ANSWER_MAX_LENGTH,
+  'contact-method': TYPED_ANSWER_MAX_LENGTH,
+  'site-language': TYPED_ANSWER_MAX_LENGTH,
   'site-name': 120,
-  'place-choice': 120
+  'place-choice': TYPED_ANSWER_MAX_LENGTH
 })
+/** The longest main button label offered as a choice, before the template's own button limit. */
+export const MAIN_BUTTON_LABEL_MAX = 80
 /** Facts that let a visitor reach the business: any one of them means no contact question. */
 export const CONTACT_KINDS = Object.freeze(['contact.phone', 'contact.email', 'contact.cta_url'])
 
@@ -102,7 +109,7 @@ export const contractQuestionOf = (
 export function questionsOf({ facts, items, conflicts, sources, language, limits }) {
   const asked = conflictQuestionsOf({ conflicts, items, sources })
   const questions = [...asked.contact]
-  const max = cappedLength(FREE_TEXT_MAX['main-button'], MAIN_BUTTON_KIND, limits)
+  const max = cappedLength(MAIN_BUTTON_LABEL_MAX, MAIN_BUTTON_KIND, limits)
   // Never offer a choice the answer settling would reject, and never a question without one (Contract B): when no
   // label fits the template's button, the short labels of the business's own channels that fit are offered. A button
   // shorter than the short label of every channel it has is not asked about: the writer words it, and the profile

@@ -20,9 +20,10 @@ const mainButton = (profile) => profile.questions.find((q) => q.topic === 'main-
 
 test('with the template known, the main button question offers what its button field holds', () => {
   const { research, reading } = pottery()
-  assert.equal(mainButton(needsProfileOf(research, reading)).freeText.maxLength, 80)
+  // A typed answer is an owner statement the model reads: only the transport bound, with or without a template.
+  assert.equal(mainButton(needsProfileOf(research, reading)).freeText.maxLength, 1000)
   const question = mainButton(needsProfileOf(research, reading, { blockStore: potteryStore() }))
-  assert.equal(question.freeText.maxLength, 80)
+  assert.equal(question.freeText.maxLength, 1000)
   assert.ok(question.choices.length > 0)
   for (const choice of question.choices) assert.ok([...choice.label].length <= 18, choice.label)
 })

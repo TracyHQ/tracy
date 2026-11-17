@@ -27,6 +27,13 @@ export const QUESTION_TOPICS = Object.freeze([
 export const SITE_NAME_TOPIC = 'site-name'
 /** The most characters a site name answer may hold (the `site-name` cap of the needs profile's free text). */
 export const SITE_NAME_MAX_LENGTH = 120
+/**
+ * The longest typed answer to a question whose answer the build model reads as the owner's statement (every question
+ * but the site name: a fact conflict, the main button, the contact method, the site language, the place choice). It is
+ * a transport bound only, the same as a written change request: a typed answer is never held to the size of a field,
+ * because code never pastes it into one (`plan-free-answers.mjs`, `answer-reading.mjs`).
+ */
+export const TYPED_ANSWER_MAX_LENGTH = 1000
 /** The topic of the question that asks which of several Google places is the business's (#609). */
 export const PLACE_CHOICE_TOPIC = 'place-choice'
 

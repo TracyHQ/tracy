@@ -82,7 +82,7 @@ counts once), listed in [Text limits](#text-limits).
     { "id": "website", "label": "04 000 0000", "detail": "From your website", "recommended": true },
     { "id": "maps", "label": "04 000 0009", "detail": "From Google Maps" }
   ],
-  "freeText": { "maxLength": 40, "placeholder": "Type the correct number" }
+  "freeText": { "maxLength": 1000, "placeholder": "Type the correct number" }
 }
 ```
 
@@ -105,6 +105,9 @@ counts once), listed in [Text limits](#text-limits).
   an owner fact tied to its question (with the conflict's candidate values), and a conflict answered that way stays
   open. A text that is exactly an offered choice (label, id or code, equal after trimming and case folding) is that
   choice. Their `freeText.maxLength` is not capped by the template; only the offered choices fit its fields.
+- Every question but `site-name` takes a typed answer of up to 1000 characters (`TYPED_ANSWER_MAX_LENGTH`, the same
+  bound as a written change request): a transport bound only, never the size of a field. A `site-name` answer is
+  pasted into the name fields, so it keeps its real limit (at most 120, lowered to the template's name fields).
 - A free text answer to a `contact-method`, `site-language` or `place-choice` question is read the same way: the
   contact facts, the language tag or the offered place the model reads in it; code never reads the text itself.
 - Before the plan, one model call reads those typed answers (the answer reading, `answer-reading.mjs`): the choice an

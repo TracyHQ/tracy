@@ -125,8 +125,8 @@ test('the free text box of a question is no longer capped by the template field'
   const store = blockStore()
   const profile = needsProfileOf(club.research, club.reading, { blockStore: store, library: library() })
   const button = profile.questions.find((q) => q.topic === 'main-button')
-  assert.equal(button.freeText.maxLength, 80)
+  assert.equal(button.freeText.maxLength, 1000)
   // The offered choices still fit the template's button (18 characters in the invented club's store).
   for (const c of button.choices) assert.ok([...c.label].length <= 18, c.label)
-  assert.equal(profile.questions.find((q) => q.id === PHONE_QUESTION).freeText.maxLength, 40)
+  assert.equal(profile.questions.find((q) => q.id === PHONE_QUESTION).freeText.maxLength, 1000)
 })

@@ -114,7 +114,7 @@ test('an invalid answer is a typed error before any model call, never a silent i
     [answer(PHONE_QUESTION, { skipped: true })],
     [answer('no-such-question', { choice: 'x' })],
     [answer('main-button', { choice: 'book' }), answer('main-button', { choice: 'call' })],
-    [answer(PHONE_QUESTION, { text: 'x'.repeat(41) })],
+    [answer(PHONE_QUESTION, { text: 'x'.repeat(1001) })],
     [{ question: PHONE_QUESTION, choice: 'value-1' }],
     'not a list'
   ]
