@@ -141,7 +141,9 @@ const JOOMLA_SKIPPED = Object.freeze({
  *
  * `<privateRoot>/<label>/contract-derived.done`, next to `CONTENT_IDENTITY_MARKER`, is written once a
  * site is derived and never touched again — same shape as identity: a plugin too old for the `derive`
- * operation is skipped, not failed, so an upgrade is picked up at a later start.
+ * operation is skipped, not failed, so an upgrade is picked up at a later start. A site the plugin
+ * finds already bound to a quickstart contract (`QUICKSTART_BOUND`) is settled too, `kept`: derive
+ * refuses to replace that contract by design, and it already serves the Edit picker.
  */
 export const CONTRACT_DERIVED_MARKER = 'contract-derived.done'
 
@@ -161,7 +163,15 @@ export const JOOMLA_DERIVE_EXEC =
 const UNKNOWN_DERIVE_OPERATION = /unknown .*operation|unknown action/i
 
 /**
+ * The plugin's refusal to derive over a quickstart contract it is already bound to: `error:"conflict"`
+ * with this sentence (matched whole, so "is not bound…" never passes), from both the Joomla component and the WordPress plugin (dev host, 16/11/2026).
+ * Narrow on purpose — any other `conflict` stays a failure, retried at the next start.
+ */
+const QUICKSTART_BOUND = /is bound to a quickstart contract; derive refuses to replace it/i
+
+/**
  * @typedef {{ state: 'enabled' | 'skipped' | 'failed', why: string }} Outcome
+ * @typedef {{ state: 'enabled' | 'kept' | 'skipped' | 'failed', why: string }} Derived
  * @typedef {{ enabled: string[], skipped: string[], failed: string[], why: Record<string, string> }} Backfill
  * @typedef {(input: { script: string, args?: string[], env?: object, stdin?: string }) =>
  *   Promise<{ code: number, tail: string[] }>} Run
@@ -274,6 +284,8 @@ async function identifySite({ label, config, run, fetchImpl, log, now, timeoutMs
       const derived = await deriveSite({ label, siteDir, platform, config, run, fetchImpl, timeoutMs })
       if (derived !== null) {
         if (derived.state === 'enabled') log.log(`[host] ${label}: content contract derived (${derived.why})`)
+        if (derived.state === 'kept')
+          log.log(`[host] ${label}: keeps its quickstart contract; nothing derived`)
         if (derived.state === 'failed')
           log.warn(
             `[host] ${label}: content contract not derived — ${derived.why}; tried again at the next start`
@@ -295,7 +307,7 @@ async function identifySite({ label, config, run, fetchImpl, log, now, timeoutMs
  * @param {{ label: string, siteDir: string, platform: 'joomla' | 'wordpress',
  *   config: { sitesRoot: string, scriptsDir: string }, run: Run, fetchImpl: typeof fetch,
  *   timeoutMs: number }} input
- * @returns {Promise<{ state: 'enabled' | 'skipped' | 'failed', why: string } | null>}
+ * @returns {Promise<Derived | null>}
  */
 async function deriveSite({ label, siteDir, platform, config, run, fetchImpl, timeoutMs }) {
   const derivedMarker = path.join(siteDir, CONTRACT_DERIVED_MARKER)
@@ -307,9 +319,12 @@ async function deriveSite({ label, siteDir, platform, config, run, fetchImpl, ti
     platform === 'joomla'
       ? await deriveJoomla({ label, siteDir, config, run })
       : await deriveWordPress({ label, siteDir, fetchImpl, timeoutMs })
-  if (outcome.state === 'enabled') {
+  if (outcome.state === 'enabled' || outcome.state === 'kept') {
     try {
-      await writeFile(derivedMarker, `${new Date().toISOString()} tracy-host backfill (${platform})\n`)
+      await writeFile(
+        derivedMarker,
+        `${new Date().toISOString()} tracy-host backfill (${platform}, ${outcome.state})\n`
+      )
     } catch {
       // Bound all the same: `derive` reads the DB, it does not consume anything, so the next start
       // sending the same call once more is harmless.
@@ -335,7 +350,7 @@ async function siteOrigin(/** @type {string} */ sitesRoot, /** @type {string} */
 
 /**
  * @param {{ label: string, siteDir: string, config: { scriptsDir: string }, run: Run }} input
- * @returns {Promise<{ state: 'enabled' | 'skipped' | 'failed', why: string }>}
+ * @returns {Promise<Derived>}
  */
 async function deriveJoomla({ label, siteDir, config, run }) {
   const script = await readFile(path.join(config.scriptsDir, JOOMLA_DERIVE_SCRIPT), 'utf8')
@@ -359,12 +374,13 @@ async function deriveJoomla({ label, siteDir, config, run }) {
     return { state: 'enabled', why: `Joomla, ${entities} entities, ${slots} slots, calibrated=${calibrated}` }
   if (derived === 'unsupported')
     return { state: 'skipped', why: 'this Cowork component has no derive operation' }
+  if (derived === 'kept') return { state: 'kept', why: 'bound to a quickstart contract' }
   return { state: 'failed', why: `the script reported derived=${derived}` }
 }
 
 /**
  * @param {{ label: string, siteDir: string, fetchImpl: typeof fetch, timeoutMs: number }} input
- * @returns {Promise<{ state: 'enabled' | 'skipped' | 'failed', why: string }>}
+ * @returns {Promise<Derived>}
  */
 async function deriveWordPress({ label, siteDir, fetchImpl, timeoutMs }) {
   let token = ''
@@ -415,7 +431,7 @@ async function deriveWordPress({ label, siteDir, fetchImpl, timeoutMs }) {
  * The plugin's answer to `content.contract {operation:'derive'}`.
  * @param {number} status
  * @param {string} text
- * @returns {{ state: 'enabled' | 'skipped' | 'failed', why: string }}
+ * @returns {Derived}
  */
 export function judgeDerive(status, text) {
   let answer
@@ -438,6 +454,8 @@ export function judgeDerive(status, text) {
   const said = String(answer.message || answer.error || '')
   if (UNKNOWN_DERIVE_OPERATION.test(said))
     return { state: 'skipped', why: 'this Claude Cowork plugin has no derive operation' }
+  if (answer.error === 'conflict' && QUICKSTART_BOUND.test(String(answer.message ?? '')))
+    return { state: 'kept', why: 'bound to a quickstart contract' }
   return { state: 'failed', why: said.slice(0, 200) || `HTTP ${status}` }
 }
 

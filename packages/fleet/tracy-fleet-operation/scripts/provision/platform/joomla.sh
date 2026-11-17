@@ -464,6 +464,7 @@ joomla_derive_contract() {
     bound\ *)
       printf '%s\n' "$said" | sed -n 's/^bound entities=\([0-9]*\) slots=\([0-9]*\) calibrated=\([01]\).*$/    derived contract: \1 entities, \2 slots, calibrated=\3/p' \
         | sed 's/calibrated=1$/calibrated/; s/calibrated=0$/not calibrated/' ;;
+    kept\ *|kept) echo '    derived contract: none — this copy keeps its quickstart contract' ;;
     *) said="${said%% *}"; echo "!! derived contract: not bound (${said:-no outcome named}) — the Edit picker resolves by text only on this copy" >&2 ;;
   esac
   return 0
