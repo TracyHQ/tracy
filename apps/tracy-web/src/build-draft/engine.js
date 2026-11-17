@@ -20,6 +20,7 @@
 import { randomUUID } from 'node:crypto'
 import { answerReadingsOf, placeReadingOf, placeStatementOf, readAnswersOf } from './answer-readings.js'
 import { findOwnerPlace, ownerAnswersWaiting, ownerBriefOf } from './owner-research.js'
+import { heldHoursQuestionsOf, settleHeldHours } from './held-hours.js'
 import { answersStillAsked } from './answers-kept.js'
 import { askingOf } from './engine-asking.js'
 import { faultOf, runWithRerun } from './engine-rerun.js'
@@ -124,6 +125,9 @@ const OWNER_RERUN_CODES = new Set(['plan_gate_failed'])
  */
 const mayRerun = (fault) =>
   fault.code !== 'research_empty' && (fault.noRerun !== true || OWNER_RERUN_CODES.has(fault.code))
+
+/** The answer to a research call with no link and no name: what the owner is asked before research can run. */
+export const NEEDS_NAME = Object.freeze({ step: 'research', state: 'needs', needs: ['name', 'city'] })
 
 const listOf = (value) => (Array.isArray(value) ? value : [])
 const textOf = (value) => (typeof value === 'string' ? value.trim() : '')
@@ -306,6 +310,7 @@ export function createEngine({
       ...(row?.plan ? {} : { needs_profile: record.profile }),
       ...answersStillAsked(current, [
         ...(tradeQuestionOf(record) ? [record.tradeQuestion] : []),
+        ...heldHoursQuestionsOf({ research: record, answers: current?.answers }),
         ...(record.gapQuestions ?? []),
         ...(record.profile?.questions ?? []),
         ...(planProfileOf(record, kit)?.questions ?? [])
@@ -422,6 +427,32 @@ export function createEngine({
     return asking ? { ok: true, attempts: ran.attempts, ended: asking, columns: {} } : ran
   }
 
+  /**
+   * The research record of a research of links made again from the business's content brief as it is now (the owner's
+   * hours pick kept on it, `held-hours.js`): the place run is not repeated, only the brief and the needs profile.
+   */
+  async function rebuiltResearchOf(accountId, row, kit) {
+    const research = row.research
+    const copy = { links: research.links ?? [], description: research.description ?? null }
+    const gathered = await finishPlaceResearch(copy, {
+      service: placeResearch(),
+      accountId,
+      place: {
+        opportunityId: research.ids.opportunityId,
+        placeId: research.ids.placeId ?? null,
+        ...(research.googleLink ? { googleLink: research.googleLink } : {}),
+        setAside: research.setAside ?? []
+      },
+      readDescription: gather?.readDescription ?? null,
+      withheld: withheldOfResearch(research)
+    })
+    const record = await researchRecordOf(gathered, copy, { model: await buildModel(), kit })
+    // A trade the owner answered (`trade-question.js`) stays when the brief again names none.
+    return typeof record.trade === 'string' || typeof research.trade !== 'string'
+      ? record
+      : { ...record, trade: research.trade }
+  }
+
   /** Run the brand step once (it keeps its own attempts) and keep its record for the template it ran on. */
   function brand(accountId, row, kit) {
     const { slug, version } = kit.template
@@ -522,6 +553,9 @@ export function createEngine({
      * are read by `gather` in one step.
      */
     async research(accountId, { links, description, name, city }, row) {
+      // 🔒 No link and no name is no research to run and no fault (#575 walk): the agent asks the owner for the
+      // business name and city first. Nothing is written, nothing is counted.
+      if (placeResearch() && !links?.length && !textOf(name)) return { state: NEEDS_NAME }
       const kit = row?.template ? kits.loadKit(row.template.slug) : null
       // 🔒 A call that starts nothing is answered with the step as it is, and counted nowhere (#575): research that
       // still runs, or that already ended for the same words (`sameResearch`).
@@ -696,6 +730,21 @@ export function createEngine({
         ...(language ? { ownerLanguage: language } : {})
       }
       return start(accountId, 'compose', { ...(request ? { request } : {}), template }, async () => {
+        // Hours the owner confirmed in the chat are kept the step chain's way, and the brief is made again from them
+        // before the plan (`held-hours.js`); the look record stays, the hours are no part of it.
+        const settled = await settleHeldHours(row, {
+          service: placeResearch(),
+          accountId,
+          readAnswers: (questions, answers) => readAnswersOf(questions, answers, readingTools(accountId)),
+          rebuild: () => rebuiltResearchOf(accountId, row, kit)
+        })
+        if (settled) {
+          await changeDraft(pool, accountId, (current) => {
+            const { brand: _kept, ...columns } = researchColumns(row, kit)(settled)(current)
+            return columns
+          })
+          inputs.research = settled
+        }
         // The owner's typed answers are read first, once, as their own ledger step (`answer-readings.js`).
         const answerReadings = await answerReadingsOf(inputs, { kit, ...readingTools(accountId) })
         const usage = usageCollector()

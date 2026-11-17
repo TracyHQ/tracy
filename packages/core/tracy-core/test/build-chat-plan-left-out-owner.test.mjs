@@ -63,14 +63,14 @@ test('template sections and empty picture spots are never listed; items are coun
   const lines = planCardOf(withReviews()).leftOut
   assert.deepEqual(lines, [
     { what: 'Prices page', kind: 'page', reason: 'No public prices found.' },
-    { what: '2 reviews', kind: 'item', reason: TOO_LONG, code: 'model_reason', dataKind: 'quote', count: 2 },
     {
-      what: '1 review',
+      what: '3 reviews',
       kind: 'item',
-      reason: 'No rating.',
+      reason: TOO_LONG,
       code: 'model_reason',
       dataKind: 'quote',
-      count: 1
+      also: [{ reason: 'No rating.', code: 'model_reason' }],
+      count: 3
     },
     {
       what: 'About',
@@ -84,6 +84,42 @@ test('template sections and empty picture spots are never listed; items are coun
   const said = JSON.stringify(lines)
   for (const name of ['Wren', 'Pim', 'Lovely', 'serviceses', 'Footer'])
     assert.equal(said.includes(name), false, name)
+})
+
+test('the pages of the template left out for one reason are one line, a few named and the others counted', () => {
+  const p = plan()
+  const page = (name, reason = 'Nothing yet.', code = 'page_nothing_to_show') => ({
+    what: `${name} page`,
+    kind: 'page',
+    reason,
+    code,
+    params: { page: name }
+  })
+  p.leftOut = [
+    page('News'),
+    page('Featured posts'),
+    page('Home', 'No photo for its banner.', 'model_reason'),
+    page('Authors'),
+    page('Plans'),
+    page('Trainers')
+  ]
+  const lines = planCardOf(p).leftOut
+  assert.deepEqual(lines, [
+    {
+      what: 'News, Featured posts, Authors and 2 more pages',
+      kind: 'page',
+      reason: 'Nothing yet.',
+      code: 'page_nothing_to_show',
+      pages: ['News', 'Featured posts', 'Authors', 'Plans', 'Trainers']
+    },
+    {
+      what: 'Home page',
+      kind: 'page',
+      reason: 'No photo for its banner.',
+      code: 'model_reason',
+      pages: ['Home']
+    }
+  ])
 })
 
 test('a one word label that is plural already takes its count after it', () => {

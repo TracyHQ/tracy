@@ -173,6 +173,7 @@ export const en = {
     'Your sources give different opening hours, so they stay off your site until you confirm them.',
   'plan.leftOut.reason.no_fitting_video':
     'None of your videos fit this space (wide pictures without text on top), so it shows no video.',
+  'plan.leftOut.reason.page_nothing_to_show': 'You have nothing yet for these pages to show.',
   // What a left out line names, by its code, when it reports no fact or item of the plan.
   'plan.leftOut.what.no_place_for_whatsapp': 'WhatsApp',
   'plan.leftOut.what.no_place_for_other_phones': 'Other phone numbers',
@@ -181,6 +182,11 @@ export const en = {
   'plan.leftOut.what.hours_sources_disagree': 'Opening hours',
   'plan.leftOut.what.no_fitting_video.one': '{count} video spot',
   'plan.leftOut.what.no_fitting_video.other': '{count} video spots',
+  // The template's pages left out for one reason; the page names are site content, never translated.
+  'plan.leftOut.what.pages.one': '{page} page',
+  'plan.leftOut.what.pages.two': '{first} and {last} pages',
+  'plan.leftOut.what.pages.three': '{first}, {second} and {last} pages',
+  'plan.leftOut.what.pages.more': '{first}, {second}, {third} and {count} more pages',
   // The pictures estimate, by its code.
   'plan.pictures.estimate.one':
     'About {count} picture will be created where you have no suitable photo. The final number depends on your photos.',

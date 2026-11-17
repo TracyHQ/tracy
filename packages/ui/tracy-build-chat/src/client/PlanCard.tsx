@@ -37,7 +37,7 @@ import { factLabelOf, sentenceOf, sourceNameOf } from './plan-words'
 import {
   assumptionOf,
   factShownOf,
-  leftOutReasonOf,
+  leftOutReasonsOf,
   leftOutWhatOf,
   logoSourceOf,
   picturesEstimateOf,
@@ -685,7 +685,7 @@ export function PlanCard({
                   <span className="tv-bc-what">
                     {sentenceOf(leftOutWhatOf(t, l, (kind, label) => factLabelOf(t, kind, label)))}
                   </span>{' '}
-                  <span className="tv-bc-muted">{leftOutReasonOf(t, l, l.reason)}</span>
+                  <span className="tv-bc-muted">{leftOutReasonsOf(t, l)}</span>
                 </span>
               </li>
             ))}

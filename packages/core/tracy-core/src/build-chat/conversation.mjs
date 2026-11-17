@@ -157,6 +157,15 @@ export const ASK_STRINGS = {
   'ask.question.brief_gap_story': 'How would you describe your business in a few sentences?',
   'ask.choice.brief_gap_skip': 'Leave it out for now',
   'ask.question.business_trade': 'What kind of business is it?',
+  'ask.question.held_hours_unconfirmed':
+    'Only one source gives your opening hours, as open 24 hours every day. Are these your opening hours?',
+  'ask.question.held_hours_disagree':
+    'Your sources give different opening hours. Which hours should your site show?',
+  'ask.question.held_hours_typed':
+    'Type your opening hours, one line per group of days, for example Mon to Fri 9:00 to 18:00.',
+  'ask.choice.held_hours_keep': 'Keep these hours',
+  'ask.choice.held_hours_edit': 'They are wrong, I will type them',
+  'ask.choice.held_hours_leave': 'Leave hours off the site',
   'ask.choice.business_trade_food': 'Food and drink',
   'ask.choice.business_trade_beauty': 'Beauty',
   'ask.choice.business_trade_health': 'Health',
@@ -228,7 +237,8 @@ function promptByCode(question, words) {
     code === 'place_choice' ||
     code === 'place_choice_found' ||
     code === 'business_trade' ||
-    /^brief_gap_[a-z_]+$/.test(code)
+    /^brief_gap_[a-z_]+$/.test(code) ||
+    /^held_hours_(unconfirmed|disagree|typed)$/.test(code)
   )
     return words(`ask.question.${code}`)
   const noun = CONFLICT_NOUNS[params?.fact]
@@ -262,7 +272,8 @@ function choiceLabelByCode(choice, words, language) {
   if (
     /^(contact_method|business_trade)_[a-z]+$/.test(code) ||
     code === 'place_choice_none' ||
-    code === 'brief_gap_skip'
+    code === 'brief_gap_skip' ||
+    /^held_hours_(keep|edit|leave)$/.test(code)
   )
     return words(`ask.choice.${code}`)
   if (MAIN_BUTTON_CHOICE.test(code)) return words(`ask.choice.${code}`)

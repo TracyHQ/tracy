@@ -237,6 +237,10 @@ export interface PlanCard {
     dataKind?: string
     /** The data kind of the fact the line names (`contact.hours`): the card says its label in its words. */
     factKind?: string
+    /** The names of the template's pages left out for this line's reason, in plan order (site content). */
+    pages?: string[]
+    /** The other reasons the items of this line's kind were left out for. */
+    also?: { reason: string; code?: string; params?: Record<string, unknown> }[]
   }[]
   counts: { pages: number; services: number }
 }

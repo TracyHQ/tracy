@@ -6,7 +6,7 @@
 //
 // 🔒 BLOCKING FIRST, A FEW AT A TIME, EACH FIELD ONCE. The questions of the checks whose verdict blocks the build come
 // first, then the others in the readiness's own order; a field already asked is never asked again, and at most
-// `BRIEF_GAP_MAX` are issued at once. Only what the owner can answer in words is asked: the picture checks (photos,
+// `BRIEF_GAP_MAX` are issued at once. Once a round was asked, a later round asks only the fields that block. Only what the owner can answer in words is asked: the picture checks (photos,
 // hero, portraits, a photo of each offering) need a picture, which the chat cannot take. Pure.
 import { TYPED_ANSWER_MAX_LENGTH } from './build-contract-questions.mjs'
 import { contractQuestionOf } from './needs-profile-questions.mjs'
@@ -55,8 +55,11 @@ export const briefGapIdOf = (field) => `${BRIEF_GAP_TOPIC}.${field}`
 export const briefGapFieldOf = (id) =>
   typeof id === 'string' && id.startsWith(`${BRIEF_GAP_TOPIC}.`) ? id.slice(BRIEF_GAP_TOPIC.length + 1) : null
 
-/** The readiness's owner questions, those of a blocking check first, each mapped to the field the chat asks. */
-function fieldsInOrder(readiness) {
+/**
+ * The readiness's owner questions, those of a blocking check first, each mapped to the field the chat asks; only the
+ * blocking ones when `blockingOnly`.
+ */
+function fieldsInOrder(readiness, blockingOnly = false) {
   const blocking = new Set(
     list(readiness?.checks)
       .filter((c) => c?.verdict === 'block')
@@ -65,7 +68,7 @@ function fieldsInOrder(readiness) {
   const questions = list(readiness?.ownerQuestions)
   const ordered = [
     ...questions.filter((q) => blocking.has(q?.id)),
-    ...questions.filter((q) => !blocking.has(q?.id))
+    ...(blockingOnly ? [] : questions.filter((q) => !blocking.has(q?.id)))
   ]
   return [...new Set(ordered.map((q) => FIELD_OF[q?.field]).filter(Boolean))]
 }
@@ -78,7 +81,9 @@ function fieldsInOrder(readiness) {
  */
 export function briefGapQuestionsOf(readiness, { asked = [], max = BRIEF_GAP_MAX } = {}) {
   const done = new Set(asked)
-  return fieldsInOrder(readiness)
+  // One round of the readiness's questions; after it, only what blocks the build (#575 no link walk: an owner who had
+  // answered three was asked six more, and never reached the template card).
+  return fieldsInOrder(readiness, done.size > 0)
     .filter((field) => !done.has(field))
     .slice(0, Math.max(0, max))
     .map((field) => ({

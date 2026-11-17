@@ -96,3 +96,15 @@ test('a start paused for its limit is not asked again before its time, and says 
   await research(tool)
   assert.equal(calls.length, 2, 'after the time the start is asked again')
 })
+
+test('research with no link and no name asks the owner for them and says nothing failed', async () => {
+  const { tool } = toolAnswering([{ body: { step: 'research', state: 'needs', needs: ['name', 'city'] } }])
+  const value = await tool.execute(
+    { action: 'research', description: 'I want a website.' },
+    { agent: { session: { id: SESSION } } }
+  )
+  assert.deepEqual(value.needs, ['name', 'city'])
+  assert.equal(value.stopped, undefined)
+  assert.match(value.next, /business name/)
+  assert.match(value.next, /Do not say anything failed/)
+})

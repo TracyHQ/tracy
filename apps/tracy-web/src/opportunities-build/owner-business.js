@@ -62,8 +62,20 @@ function ownerEditsOf(candidate, facts, at) {
   const hours = pick('contact.hours')
   return {
     ...(Object.keys(edits).length ? { profileEdits: edits } : {}),
-    // The card's own "Edit hours" choice: a line it cannot read is never shown (`hoursPickOf`).
-    ...(hours ? { hoursPick: { choice: 'edit', hours: [hours], at } } : {})
+    // The card's own "Edit hours" choice, one line per group of days as the answer reading writes them: a line it
+    // cannot read is never shown (`hoursPickOf`).
+    ...(hours
+      ? {
+          hoursPick: {
+            choice: 'edit',
+            hours: hours
+              .split('\n')
+              .map((l) => l.trim())
+              .filter(Boolean),
+            at
+          }
+        }
+      : {})
   }
 }
 

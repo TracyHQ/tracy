@@ -13,6 +13,7 @@
  */
 import { resumeRequest } from 'website-opportunities/src/place-requests.js'
 import { researchItemsOf, researchRunOf } from 'website-opportunities/src/research-progress.js'
+import { saveHoursPick } from 'website-opportunities/src/store.js'
 import { reviewSourcesRequired } from 'website-opportunities/src/tripadvisor-research.js'
 import { findOwnBusiness } from './own-site.js'
 import { ownerBrief } from './owner-business.js'
@@ -187,6 +188,11 @@ export function createBusinessResearch(h) {
       if (job.state === 'completed') return { state: 'done', sources }
       return { state: 'failed', code: job.last_error?.code ?? 'RESEARCH_FAILED', sources }
     },
+    /**
+     * Keep the owner's choice for the opening hours on the business, as the Profile card keeps it (`saveHoursPick`,
+     * `{choice: 'keep' | 'leave'}` or `{choice: 'edit', hours}`): every later brief reads it. The row, or null.
+     */
+    hours: ({ accountId, opportunityId, pick }) => saveHoursPick(h.pool, accountId, opportunityId, pick),
     /** The step chain's content brief of the researched business (`createRevision`): `{revision}` or `{error}`. */
     brief: ({ accountId, opportunityId }) => h.makeBrief({ accountId, opportunityId }),
     /**

@@ -202,6 +202,12 @@ export {
   briefGapIdOf,
   briefGapQuestionsOf
 } from './brief-gap-questions.mjs'
+export {
+  HELD_HOURS_ID,
+  HELD_HOURS_TOPIC,
+  heldHoursPickOf,
+  heldHoursQuestionOf
+} from './held-hours-question.mjs'
 export { gateEditedPlan } from './plan-edit-gate.mjs'
 export {
   NOT_DONE_REASONS,

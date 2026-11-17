@@ -9,6 +9,9 @@
  * - an entry that reports an item of the plan (`item`) is grouped with the others of its data kind and reason, and
  *   named by its count in the card's words ("3 reviews"), never by a reviewer or a review's words (`dataKind`);
  * - an entry that reports a fact is named by the fact's label, with its data kind for the card's words (`factKind`);
+ * - a page of the template (`params.page`) is named inside the line of its reason: the pages left out for one reason
+ *   are one line, a few named and the others counted (`pages`, `PAGES_NAMED`);
+ * - the items of one kind are one line whatever their reasons: the first reason is the line's, the others are `also`;
  * - the same thing left out for the same reason is one line with its `count`. A one word label is made plural only
  *   when it is not one already ("Photo" reads "37 photos", "Services" reads "Services (2)"); a longer one takes its
  *   count after it.
@@ -60,8 +63,21 @@ function countedWhatOf(line, count) {
     : `${count} ${pluralOf(line.what)}`
 }
 
+/** The most page names a page line says; the others are counted ("and 3 more"). */
+export const PAGES_NAMED = 3
+
+/** A page line's name in English: "News page", "News, Plans and Authors pages", "News, Plans, Authors and 2 more pages". */
+function pagesWhatOf(pages) {
+  const named = pages.slice(0, PAGES_NAMED)
+  const more = pages.length - named.length
+  if (pages.length === 1) return `${pages[0]} page`
+  if (more > 0) return `${named.join(', ')} and ${more} more pages`
+  return `${named.slice(0, -1).join(', ')} and ${named.at(-1)} pages`
+}
+
 /**
- * What was left out, one line per distinct thing and reason, in plan order.
+ * What was left out, in plan order: one line per page reason (the pages named in it, `pages`), one line per kind of
+ * item (its reasons after the first in `also`), one line per fact or other thing and reason.
  * @param {any[]} leftOut the plan's left out entries
  * @param {{facts: any[], items: any[]}} plan the plan whose facts and items the entries report
  */
@@ -81,28 +97,44 @@ export function leftOutOf(leftOut, plan) {
     const factKind = fact && typeof fact.kind === 'string' ? fact.kind : undefined
     const what = fact ? text(fact.label ?? fact.kind) : plainWordsOf(text(l.what))
     const reason = text(l.reason)
+    // A page of the template carries its name (`params.page`): the pages left out for one reason are one line.
+    const page = l.kind === 'page' && typeof params?.page === 'string' ? text(params.page) : null
     // An item counts as many as it stands for (`count`, a set of photos); its own name never reaches the line.
     const n = item && Number.isSafeInteger(item.count) && item.count > 0 ? item.count : 1
-    const key = JSON.stringify([dataKind ?? what, l.kind, reason, code, params])
+    const key =
+      page !== null
+        ? JSON.stringify(['page', reason, code])
+        : dataKind !== undefined
+          ? JSON.stringify(['items', dataKind])
+          : JSON.stringify([what, l.kind, reason, code, params])
     const seen = byKey.get(key)
     if (seen) {
       seen.count += n
+      if (page !== null && !seen.pages.includes(page)) seen.pages.push(page)
+      // Items of one kind left out for another reason: one line, both reasons (`also`), never the same one twice.
+      const said = [seen, ...(seen.also ?? [])]
+      if (dataKind !== undefined && !said.some((r) => r.reason === reason && (r.code ?? null) === code))
+        (seen.also ??= []).push({ reason, ...(code ? { code } : {}), ...(params ? { params } : {}) })
       continue
     }
+    const { page: _page, ...restParams } = params ?? {}
+    const kept = page !== null ? (Object.keys(restParams).length ? restParams : null) : params
     const line = {
       what,
       kind: l.kind,
       reason,
       ...(code ? { code } : {}),
-      ...(params ? { params } : {}),
+      ...(kept ? { params: kept } : {}),
       ...(dataKind !== undefined ? { dataKind } : {}),
       ...(factKind !== undefined ? { factKind } : {}),
+      ...(page !== null ? { pages: [page] } : {}),
       count: n
     }
     byKey.set(key, line)
     lines.push(line)
   }
   return lines.map(({ count, ...line }) => {
+    if (line.pages) return { ...line, what: pagesWhatOf(line.pages) }
     if (count === 1 && line.dataKind === undefined) return line
     // A line of a data kind always carries its count: the card says it in its own words.
     return { ...line, what: countedWhatOf(line, count), count }

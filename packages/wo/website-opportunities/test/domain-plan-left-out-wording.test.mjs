@@ -1,6 +1,6 @@
 // The left out list as the customer reads it (#609 defects of a real run): an entry the model names by a block store
 // id is named by its section, its reason is the one code knows from the block and the data, with a stable code; a page
-// type slug reads as words; a reason with a build word the gate cannot replace goes back to the model. The invented
+// type slug reads as words, a single post page is not listed; a reason with a build word the gate cannot replace goes back to the model. The invented
 // florist on the JA Boxing block store. No model is called.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-plan-left-out-wording.test.mjs
@@ -8,6 +8,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { checkBuildDocument } from '../domain/build-contract.mjs'
 import { gatePlan } from '../domain/plan-gate.mjs'
+import { PAGE_NOTHING_TO_SHOW } from '../domain/plan-left-out-pages.mjs'
 import { DERIVED_LEFT_OUT_REASONS, derivedReasonOf } from '../domain/plan-left-out-wording.mjs'
 import { boxingProfile } from './fixtures/write-order/boxing-florist.mjs'
 import { SHARED, b, composition, contextOf, homeOf } from './fixtures/write-order/boxing-gate.mjs'
@@ -47,6 +48,7 @@ test('a block the model names by its store id is named by its section, with the 
       kind: 'block',
       reason: 'Its item fields do not match the service data.'
     },
+    { what: 'featured-posts page', kind: 'page', reason: 'No post was provided for its main block.' },
     { what: 'news-post page', kind: 'page', reason: 'No post was provided for its main block.' }
   ])
   assert.equal(result.ok, true, JSON.stringify(result.problems))
@@ -65,12 +67,18 @@ test('a block the model names by its store id is named by its section, with the 
       code: 'shown_in_other_sections'
     },
     {
-      what: 'News post page',
+      what: 'Featured posts page',
       kind: 'page',
-      reason: 'No post was provided for its main section.',
-      code: 'model_reason'
+      reason: PAGE_NOTHING_TO_SHOW.reason,
+      code: 'page_nothing_to_show',
+      params: { page: 'Featured posts' }
     }
   ])
+  // A single post page is never listed: the posts page says it (`plan-left-out-pages.mjs`).
+  assert.equal(
+    result.plan.leftOut.some((e) => /news post/i.test(e.what)),
+    false
+  )
   for (const e of result.plan.leftOut) {
     assert.doesNotMatch(`${e.what} ${e.reason}`, BUILD_WORDS)
     assert.equal(typeof e.code, 'string')
@@ -83,7 +91,8 @@ test('a block the model names by its store id is named by its section, with the 
       'left_out_internal_name@leftOut[1].what',
       'left_out_reason_derived@leftOut[1].reason',
       'left_out_internal_name@leftOut[2].what',
-      'left_out_wording@leftOut[2].reason'
+      'left_out_reason_derived@leftOut[2].reason',
+      'left_out_detail_page@leftOut[3]'
     ]
   )
   assert.equal(checkBuildDocument(result.plan).ok, true)

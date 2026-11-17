@@ -92,7 +92,8 @@ counts once), listed in [Text limits](#text-limits).
   more than one place, and research asks which one is theirs before it reads anything) or `business-trade` (research
   could name no trade for the business, so no template list could be offered: the customer says what kind of business
   it is) or `brief-gap` (a business known only by the customer's words: what its content brief still misses, read from
-  the brief's readiness, `brief-gap-questions.mjs`); a `fact-conflict` names its `fact`, a fact role.
+  the brief's readiness, `brief-gap-questions.mjs`) or `held-hours` (opening hours the content brief holds until the
+  customer confirms them, `held-hours-question.mjs`); a `fact-conflict` names its `fact`, a fact role.
 - `choices` has at least one entry, except on a `site-name` question, whose `choices` is an empty list: the name is
   the customer's own words, and a choice could show the held name, so a `site-name` question with a choice is
   rejected. At most one choice is `recommended` (`true` or `false`). `freeText.maxLength` is
@@ -422,6 +423,15 @@ The outcome adds `result`:
 In a scenario a partial run builds the revision its edit produced, and a writer step names a page of that revision.
 
 ### Changes for consumers
+
+- 17/11/2026 (#575), additive: research may ask `topic: "held-hours"`, id `held-hours`, when its content brief holds
+  the opening hours until the customer confirms them: question code `held_hours_unconfirmed` (one source alone says
+  open 24 hours every day; choices `keep`, `edit`, `leave`) or `held_hours_disagree` (the sources disagree; choices
+  `edit`, `leave`), choice codes `held_hours_<id>`, and free text read by the answer reading as `contact.hours`. The
+  answer is kept on the business as the Profile card's `hoursPick`, and the brief is made again with it before the
+  plan. The schema stays `tracy-build-question/v1`.
+- 17/11/2026 (#575), additive: a left out entry may carry `params.page` (the template page's name) with the code
+  `page_nothing_to_show` or `model_reason`; a page of one item (a single post) is never a left out entry.
 
 - 17/11/2026 (#575), additive: research with no link may ask `topic: "place-choice"` with question code
   `place_choice_found` (the places the business name and city found), and `topic: "brief-gap"`, id

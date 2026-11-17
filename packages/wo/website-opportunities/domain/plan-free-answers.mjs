@@ -18,7 +18,8 @@ export const READ_TOPICS = Object.freeze([
   'site-language',
   'place-choice',
   'business-trade',
-  'brief-gap'
+  'brief-gap',
+  'held-hours'
 ])
 /** The topics whose typed text is also an owner statement for the page writer, never a field value. */
 export const STATEMENT_TOPICS = Object.freeze(['main-button', 'fact-conflict', 'contact-method'])

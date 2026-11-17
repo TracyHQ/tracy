@@ -87,9 +87,11 @@ export function leftOutWhatOf(
     dataKind?: string
     factKind?: string
     count?: number
+    pages?: string[]
   },
   factLabel: (kind: string, label: string) => string
 ): string {
+  if (Array.isArray(line.pages) && line.pages.length > 0) return pagesOf(t, line.pages)
   if (typeof line.dataKind === 'string' && typeof line.count === 'number') {
     const kind = COUNTED_KINDS.has(line.dataKind) ? line.dataKind : 'item'
     return t(`plan.count.${kind}.${line.count === 1 ? 'one' : 'other'}` as StringKey, { count: line.count })
@@ -110,6 +112,32 @@ export function leftOutWhatOf(
   return line.what
 }
 const COUNTED_KINDS = new Set(['service', 'person', 'quote', 'gallery'])
+
+/** The pages of a left out line in a sentence of the interface language: a few named, the others counted. */
+function pagesOf(t: Translate, pages: string[]): string {
+  const [first, second, third] = pages
+  if (pages.length === 1) return t('plan.leftOut.what.pages.one', { page: first })
+  if (pages.length === 2) return t('plan.leftOut.what.pages.two', { first, last: second })
+  if (pages.length === 3) return t('plan.leftOut.what.pages.three', { first, second, last: third })
+  return t('plan.leftOut.what.pages.more', { first, second, third, count: pages.length - 3 })
+}
+
+/** A left out line's reasons in the interface language: its own, then the other reasons of its items (`also`). */
+export function leftOutReasonsOf(
+  t: Translate,
+  line: {
+    reason: string
+    code?: string | null
+    params?: Params
+    kind?: string | null
+    also?: { reason: string; code?: string | null; params?: Params }[]
+  }
+): string {
+  const also = Array.isArray(line.also) ? line.also : []
+  return [line, ...also.map((a) => ({ ...a, kind: line.kind }))]
+    .map((r) => leftOutReasonOf(t, r, r.reason))
+    .join(' ')
+}
 
 /** The pictures estimate by its code (`pictures.generated.code`, `params.count`), or the plan's own sentence. */
 export function picturesEstimateOf(

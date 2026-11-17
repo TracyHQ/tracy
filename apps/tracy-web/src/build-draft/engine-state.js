@@ -15,6 +15,7 @@
  * did not fit is replaced by the next one), and `say` the sentence that tells the owner why, when there is one.
  */
 import { planProfileOf } from './engine-steps.js'
+import { heldHoursQuestionsOf } from './held-hours.js'
 import { linkChoiceOf, linkProgressOf, linkReadsOf, linkStatesOf } from './link-reads.js'
 import { researchMissingOf } from './research-missing.js'
 import { tradeQuestionOf } from './trade-question.js'
@@ -183,9 +184,11 @@ export function engineStateOf(row, { kit = null, progress = null } = {}) {
     const profile = planProfileOf(row.research, kit)
     // Research that found no trade asks what kind of business it is first (`trade-question.js`).
     const trade = tradeQuestionOf(row.research)
-    // A research of the owner's words asks what its brief still misses (`owner-research.js`).
+    // Hours the brief holds until the owner confirms them come next (`held-hours.js`), then what a research of the
+    // owner's words still misses (`owner-research.js`).
     const questions = [
       ...(trade ? [trade] : []),
+      ...heldHoursQuestionsOf(row),
       ...list(row.research?.gapQuestions),
       ...list(profile?.questions)
     ]

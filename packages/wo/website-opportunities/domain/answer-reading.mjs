@@ -4,7 +4,8 @@
 // which offered choice each means and which values it states. Code keeps only what it can prove:
 // - a choice is one of the question's offered ids;
 // - a fact's kind is the question's fact or a contact kind, its evidence is words of the owner's text, and its value is
-//   written in that text or is one of the conflict's candidate values;
+//   written in that text or is one of the conflict's candidate values; opening hours are hours lines every one of which
+//   an hours check can read (the model writes them from the owner's words);
 // - at most one value of a kind is marked primary;
 // - a site language is a supported language tag (`supportedLanguageTag`), never a name code looks up.
 // Code never interprets the owner's words (no keyword, pattern or language rule): which choice, which values and which
@@ -14,6 +15,7 @@
 // nothing stops. `plan-answer-readings.mjs` writes what is kept into the profile.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
+import { readableHours } from './hours-check.mjs'
 import { supportedLanguageTag } from './needs-profile-language.mjs'
 import { asChosen, isTyped } from './plan-free-answers.mjs'
 
@@ -94,6 +96,16 @@ export function answerReadingRequest(profile, answers) {
 const grounded = (value, text, candidates) =>
   plain(text).includes(plain(value)) || candidates.some((c) => plain(c) === plain(value))
 
+/**
+ * Opening hours are kept as the hours lines the model wrote from the owner's words (`Mo-Fr 06:00-21:00`, one line per
+ * group of days), never the owner's sentence: no hours check reads a sentence, so the brief kept missing hours the
+ * owner had typed (#575 no link walk). Code checks only that every line can be read (`readableHours`); the evidence is
+ * still the owner's words.
+ */
+const hoursLinesOf = (value) => readableHours(String(value).split('\n'))
+const kept = (fact, text, candidates) =>
+  fact.kind === 'contact.hours' ? hoursLinesOf(fact.value) !== null : grounded(fact.value, text, candidates)
+
 function parsed(reply) {
   if (reply && typeof reply === 'object') return reply
   try {
@@ -129,7 +141,7 @@ export function checkAnswerReading(reply, profile, answers) {
           isText(f.value) &&
           isText(f.evidence) &&
           plain(text).includes(plain(f.evidence)) &&
-          grounded(f.value, text, candidates)
+          kept(f, text, candidates)
       )
       .map((f) => ({ kind: f.kind, value: f.value.trim(), primary: f.primary === true }))
       // Two values of one kind both marked primary is no answer to which one is: that kind is left unread.

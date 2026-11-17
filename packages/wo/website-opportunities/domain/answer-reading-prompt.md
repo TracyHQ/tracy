@@ -18,6 +18,9 @@ Rules:
 2. Report each value the answer states as a fact: `kind` (one of `kinds`), `value` and `evidence`. The `value` is
    written in the text, or is one of the `candidates` the text points to ("use both", "the second one"). The
    `evidence` is the exact words of the text that state it. Never invent, complete or correct a value.
+   For `contact.hours` the `value` is the hours the text states written as lines, one per group of days, joined by a
+   line break: days as `Mo Tu We Th Fr Sa Su` (a range `Mo-Fr`), times on a 24 hour clock (`Mo-Fr 06:00-21:00`, a day
+   off as `Su closed`). Write only days and times the text states.
 3. When the answer keeps two values of one kind, report both, and mark `"primary": true` on the one the owner states
    first or prefers. Mark none when the owner states no preference.
 4. When `asks` is `language`, give `language`: the language tag (such as `fr` or `pt-BR`) of the language the answer

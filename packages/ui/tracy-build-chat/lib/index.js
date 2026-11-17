@@ -67,6 +67,12 @@ var ASK_STRINGS = {
   "ask.question.brief_gap_story": "How would you describe your business in a few sentences?",
   "ask.choice.brief_gap_skip": "Leave it out for now",
   "ask.question.business_trade": "What kind of business is it?",
+  "ask.question.held_hours_unconfirmed": "Only one source gives your opening hours, as open 24 hours every day. Are these your opening hours?",
+  "ask.question.held_hours_disagree": "Your sources give different opening hours. Which hours should your site show?",
+  "ask.question.held_hours_typed": "Type your opening hours, one line per group of days, for example Mon to Fri 9:00 to 18:00.",
+  "ask.choice.held_hours_keep": "Keep these hours",
+  "ask.choice.held_hours_edit": "They are wrong, I will type them",
+  "ask.choice.held_hours_leave": "Leave hours off the site",
   "ask.choice.business_trade_food": "Food and drink",
   "ask.choice.business_trade_beauty": "Beauty",
   "ask.choice.business_trade_health": "Health",
@@ -121,7 +127,7 @@ var CONFLICT_NOUNS = {
 };
 function promptByCode(question, words) {
   const { code, params = {} } = question ?? {};
-  if (code === "main_button" || code === "contact_method" || code === "site_language" || code === "place_choice" || code === "place_choice_found" || code === "business_trade" || /^brief_gap_[a-z_]+$/.test(code))
+  if (code === "main_button" || code === "contact_method" || code === "site_language" || code === "place_choice" || code === "place_choice_found" || code === "business_trade" || /^brief_gap_[a-z_]+$/.test(code) || /^held_hours_(unconfirmed|disagree|typed)$/.test(code))
     return words(`ask.question.${code}`);
   const noun = CONFLICT_NOUNS[params?.fact];
   if (!noun) return null;
@@ -141,7 +147,7 @@ function languageNameIn(tag, language) {
 function choiceLabelByCode(choice, words, language) {
   const { code, params = {} } = choice ?? {};
   if (typeof code !== "string") return null;
-  if (/^(contact_method|business_trade)_[a-z]+$/.test(code) || code === "place_choice_none" || code === "brief_gap_skip")
+  if (/^(contact_method|business_trade)_[a-z]+$/.test(code) || code === "place_choice_none" || code === "brief_gap_skip" || /^held_hours_(keep|edit|leave)$/.test(code))
     return words(`ask.choice.${code}`);
   if (MAIN_BUTTON_CHOICE.test(code)) return words(`ask.choice.${code}`);
   if (code === "site_language_option" && typeof params?.language === "string")
@@ -296,6 +302,14 @@ function countedWhatOf(line, count) {
   if (count === 1) return line.what;
   return /\s/.test(line.what) || /s$/i.test(line.what) ? `${line.what} (${count})` : `${count} ${pluralOf(line.what)}`;
 }
+var PAGES_NAMED = 3;
+function pagesWhatOf(pages) {
+  const named = pages.slice(0, PAGES_NAMED);
+  const more = pages.length - named.length;
+  if (pages.length === 1) return `${pages[0]} page`;
+  if (more > 0) return `${named.join(", ")} and ${more} more pages`;
+  return `${named.slice(0, -1).join(", ")} and ${named.at(-1)} pages`;
+}
 function leftOutOf(leftOut, plan) {
   const facts = new Map(listOr(plan?.facts).map((f) => [f.id, f]));
   const items = new Map(listOr(plan?.items).map((i) => [i.id, i]));
@@ -312,27 +326,36 @@ function leftOutOf(leftOut, plan) {
     const factKind = fact && typeof fact.kind === "string" ? fact.kind : void 0;
     const what = fact ? plainTextOf(fact.label ?? fact.kind) : plainWordsOf(plainTextOf(l.what));
     const reason = plainTextOf(l.reason);
+    const page = l.kind === "page" && typeof params?.page === "string" ? plainTextOf(params.page) : null;
     const n = item && Number.isSafeInteger(item.count) && item.count > 0 ? item.count : 1;
-    const key = JSON.stringify([dataKind ?? what, l.kind, reason, code, params]);
+    const key = page !== null ? JSON.stringify(["page", reason, code]) : dataKind !== void 0 ? JSON.stringify(["items", dataKind]) : JSON.stringify([what, l.kind, reason, code, params]);
     const seen = byKey.get(key);
     if (seen) {
       seen.count += n;
+      if (page !== null && !seen.pages.includes(page)) seen.pages.push(page);
+      const said = [seen, ...seen.also ?? []];
+      if (dataKind !== void 0 && !said.some((r) => r.reason === reason && (r.code ?? null) === code))
+        (seen.also ??= []).push({ reason, ...code ? { code } : {}, ...params ? { params } : {} });
       continue;
     }
+    const { page: _page, ...restParams } = params ?? {};
+    const kept = page !== null ? Object.keys(restParams).length ? restParams : null : params;
     const line = {
       what,
       kind: l.kind,
       reason,
       ...code ? { code } : {},
-      ...params ? { params } : {},
+      ...kept ? { params: kept } : {},
       ...dataKind !== void 0 ? { dataKind } : {},
       ...factKind !== void 0 ? { factKind } : {},
+      ...page !== null ? { pages: [page] } : {},
       count: n
     };
     byKey.set(key, line);
     lines.push(line);
   }
   return lines.map(({ count, ...line }) => {
+    if (line.pages) return { ...line, what: pagesWhatOf(line.pages) };
     if (count === 1 && line.dataKind === void 0) return line;
     return { ...line, what: countedWhatOf(line, count), count };
   });
@@ -1000,6 +1023,12 @@ var tracy_build_chat_default = {
   "ask.question.brief_gap_story": "Wie w\xFCrden Sie Ihr Unternehmen in ein paar S\xE4tzen beschreiben?",
   "ask.choice.brief_gap_skip": "Vorerst weglassen",
   "ask.question.business_trade": "Was f\xFCr ein Unternehmen ist es?",
+  "ask.question.held_hours_unconfirmed": "Nur eine Quelle nennt Ihre \xD6ffnungszeiten, als rund um die Uhr an jedem Tag ge\xF6ffnet. Sind das Ihre \xD6ffnungszeiten?",
+  "ask.question.held_hours_disagree": "Ihre Quellen nennen unterschiedliche \xD6ffnungszeiten. Welche Zeiten soll Ihre Site zeigen?",
+  "ask.question.held_hours_typed": "Geben Sie Ihre \xD6ffnungszeiten ein, eine Zeile pro Gruppe von Tagen, zum Beispiel Mo bis Fr 9:00 bis 18:00.",
+  "ask.choice.held_hours_keep": "Diese Zeiten behalten",
+  "ask.choice.held_hours_edit": "Sie sind falsch, ich gebe sie ein",
+  "ask.choice.held_hours_leave": "Keine \xD6ffnungszeiten auf der Site",
   "ask.choice.business_trade_food": "Essen und Trinken",
   "ask.choice.business_trade_beauty": "Beauty",
   "ask.choice.business_trade_health": "Gesundheit",
@@ -1063,6 +1092,7 @@ var tracy_build_chat_default = {
   "plan.leftOut.reason.hours_unconfirmed": "Nur eine Quelle nennt Ihre \xD6ffnungszeiten, als rund um die Uhr an jedem Tag ge\xF6ffnet, daher bleiben sie von Ihrer Site fern, bis Sie sie best\xE4tigen.",
   "plan.leftOut.reason.hours_sources_disagree": "Ihre Quellen nennen unterschiedliche \xD6ffnungszeiten, daher bleiben sie von Ihrer Site fern, bis Sie sie best\xE4tigen.",
   "plan.leftOut.reason.no_fitting_video": "Keines Ihrer Videos passt in diesen Platz (breite Bilder ohne Text dar\xFCber), daher zeigt er kein Video.",
+  "plan.leftOut.reason.page_nothing_to_show": "Sie haben noch nichts, was diese Seiten zeigen k\xF6nnten.",
   "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
   "plan.leftOut.what.no_place_for_other_phones": "Weitere Telefonnummern",
   "plan.leftOut.what.no_place_for_google_rating": "Google Bewertung",
@@ -1070,6 +1100,10 @@ var tracy_build_chat_default = {
   "plan.leftOut.what.hours_sources_disagree": "\xD6ffnungszeiten",
   "plan.leftOut.what.no_fitting_video.one": "{count} Videoplatz",
   "plan.leftOut.what.no_fitting_video.other": "{count} Videopl\xE4tze",
+  "plan.leftOut.what.pages.one": "Seite {page}",
+  "plan.leftOut.what.pages.two": "Seiten {first} und {last}",
+  "plan.leftOut.what.pages.three": "Seiten {first}, {second} und {last}",
+  "plan.leftOut.what.pages.more": "Seiten {first}, {second}, {third} und {count} weitere",
   "plan.pictures.ownOfValue.one": "{count} von Ihren {total} Fotos, von {from}",
   "plan.pictures.ownOfValue.other": "{count} von Ihren {total} Fotos, von {from}",
   "plan.assumption.accent_logo_moved.lighter": "Die Farbe Ihres Logos wurde heller gemacht, damit Schaltfl\xE4chen und Links im Design hervortreten.",
@@ -1380,6 +1414,12 @@ var tracy_build_chat_default2 = {
   "ask.question.brief_gap_story": "\xBFC\xF3mo describir\xEDas tu negocio en unas pocas frases?",
   "ask.choice.brief_gap_skip": "Dejarlo fuera por ahora",
   "ask.question.business_trade": "\xBFQu\xE9 tipo de negocio es?",
+  "ask.question.held_hours_unconfirmed": "Solo una fuente indica su horario, como abierto las 24 horas todos los d\xEDas. \xBFEs este su horario?",
+  "ask.question.held_hours_disagree": "Sus fuentes indican horarios distintos. \xBFQu\xE9 horario debe mostrar su sitio?",
+  "ask.question.held_hours_typed": "Escriba su horario, una l\xEDnea por grupo de d\xEDas, por ejemplo lun a vie 9:00 a 18:00.",
+  "ask.choice.held_hours_keep": "Mantener este horario",
+  "ask.choice.held_hours_edit": "Es incorrecto, lo escribir\xE9",
+  "ask.choice.held_hours_leave": "No mostrar el horario en el sitio",
   "ask.choice.business_trade_food": "Comida y bebida",
   "ask.choice.business_trade_beauty": "Belleza",
   "ask.choice.business_trade_health": "Salud",
@@ -1443,6 +1483,7 @@ var tracy_build_chat_default2 = {
   "plan.leftOut.reason.hours_unconfirmed": "Solo una fuente da su horario, abierto las 24 horas todos los d\xEDas, as\xED que queda fuera de su sitio hasta que usted lo confirme.",
   "plan.leftOut.reason.hours_sources_disagree": "Sus fuentes dan horarios distintos, as\xED que quedan fuera de su sitio hasta que usted los confirme.",
   "plan.leftOut.reason.no_fitting_video": "Ninguno de sus v\xEDdeos encaja en este espacio (im\xE1genes anchas sin texto encima), as\xED que no muestra ning\xFAn v\xEDdeo.",
+  "plan.leftOut.reason.page_nothing_to_show": "Todav\xEDa no tiene nada que mostrar en estas p\xE1ginas.",
   "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
   "plan.leftOut.what.no_place_for_other_phones": "Otros n\xFAmeros de tel\xE9fono",
   "plan.leftOut.what.no_place_for_google_rating": "Valoraci\xF3n de Google",
@@ -1450,6 +1491,10 @@ var tracy_build_chat_default2 = {
   "plan.leftOut.what.hours_sources_disagree": "Horario de apertura",
   "plan.leftOut.what.no_fitting_video.one": "{count} espacio para v\xEDdeo",
   "plan.leftOut.what.no_fitting_video.other": "{count} espacios para v\xEDdeo",
+  "plan.leftOut.what.pages.one": "P\xE1gina {page}",
+  "plan.leftOut.what.pages.two": "P\xE1ginas {first} y {last}",
+  "plan.leftOut.what.pages.three": "P\xE1ginas {first}, {second} y {last}",
+  "plan.leftOut.what.pages.more": "P\xE1ginas {first}, {second}, {third} y {count} m\xE1s",
   "plan.pictures.ownOfValue.one": "{count} de sus {total} fotos, de {from}",
   "plan.pictures.ownOfValue.other": "{count} de sus {total} fotos, de {from}",
   "plan.assumption.accent_logo_moved.lighter": "El color de su logotipo se aclar\xF3 para que los botones y enlaces destaquen en el dise\xF1o.",
@@ -1760,6 +1805,12 @@ var tracy_build_chat_default3 = {
   "ask.question.brief_gap_story": "Comment d\xE9cririez-vous votre entreprise en quelques phrases ?",
   "ask.choice.brief_gap_skip": "Laisser de c\xF4t\xE9 pour l\u2019instant",
   "ask.question.business_trade": "Quel type d\u2019entreprise est-ce ?",
+  "ask.question.held_hours_unconfirmed": "Une seule source donne vos horaires, ouvert 24 heures sur 24 tous les jours. Sont-ce bien vos horaires ?",
+  "ask.question.held_hours_disagree": "Vos sources donnent des horaires diff\xE9rents. Quels horaires votre site doit-il afficher ?",
+  "ask.question.held_hours_typed": "Saisissez vos horaires, une ligne par groupe de jours, par exemple lun au ven 9:00 \xE0 18:00.",
+  "ask.choice.held_hours_keep": "Garder ces horaires",
+  "ask.choice.held_hours_edit": "Ils sont faux, je vais les saisir",
+  "ask.choice.held_hours_leave": "Ne pas afficher les horaires sur le site",
   "ask.choice.business_trade_food": "Restauration",
   "ask.choice.business_trade_beauty": "Beaut\xE9",
   "ask.choice.business_trade_health": "Sant\xE9",
@@ -1823,6 +1874,7 @@ var tracy_build_chat_default3 = {
   "plan.leftOut.reason.hours_unconfirmed": "Une seule source donne vos horaires, ouvert 24 heures sur 24 tous les jours, donc ils restent hors de votre site jusqu\u2019\xE0 ce que vous les confirmiez.",
   "plan.leftOut.reason.hours_sources_disagree": "Vos sources donnent des horaires diff\xE9rents, donc ils restent hors de votre site jusqu\u2019\xE0 ce que vous les confirmiez.",
   "plan.leftOut.reason.no_fitting_video": "Aucune de vos vid\xE9os ne convient \xE0 cet emplacement (images larges sans texte par dessus), donc il n\u2019affiche pas de vid\xE9o.",
+  "plan.leftOut.reason.page_nothing_to_show": "Vous n'avez encore rien \xE0 montrer sur ces pages.",
   "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
   "plan.leftOut.what.no_place_for_other_phones": "Autres num\xE9ros de t\xE9l\xE9phone",
   "plan.leftOut.what.no_place_for_google_rating": "Note Google",
@@ -1830,6 +1882,10 @@ var tracy_build_chat_default3 = {
   "plan.leftOut.what.hours_sources_disagree": "Horaires d\u2019ouverture",
   "plan.leftOut.what.no_fitting_video.one": "{count} emplacement vid\xE9o",
   "plan.leftOut.what.no_fitting_video.other": "{count} emplacements vid\xE9o",
+  "plan.leftOut.what.pages.one": "Page {page}",
+  "plan.leftOut.what.pages.two": "Pages {first} et {last}",
+  "plan.leftOut.what.pages.three": "Pages {first}, {second} et {last}",
+  "plan.leftOut.what.pages.more": "Pages {first}, {second}, {third} et {count} autres",
   "plan.pictures.ownOfValue.one": "{count} de vos {total} photos, depuis {from}",
   "plan.pictures.ownOfValue.other": "{count} de vos {total} photos, depuis {from}",
   "plan.assumption.accent_logo_moved.lighter": "La couleur de votre logo a \xE9t\xE9 \xE9claircie pour que les boutons et les liens ressortent sur le design.",
@@ -2140,6 +2196,12 @@ var tracy_build_chat_default4 = {
   "ask.question.brief_gap_story": "Come descriveresti la tua attivit\xE0 in poche frasi?",
   "ask.choice.brief_gap_skip": "Lascialo fuori per ora",
   "ask.question.business_trade": "Che tipo di attivit\xE0 \xE8?",
+  "ask.question.held_hours_unconfirmed": "Solo una fonte indica i suoi orari, aperto 24 ore su 24 tutti i giorni. Sono questi i suoi orari?",
+  "ask.question.held_hours_disagree": "Le sue fonti indicano orari diversi. Quali orari deve mostrare il suo sito?",
+  "ask.question.held_hours_typed": "Scriva i suoi orari, una riga per gruppo di giorni, per esempio lun a ven 9:00 alle 18:00.",
+  "ask.choice.held_hours_keep": "Mantieni questi orari",
+  "ask.choice.held_hours_edit": "Sono sbagliati, li scrivo io",
+  "ask.choice.held_hours_leave": "Non mostrare gli orari sul sito",
   "ask.choice.business_trade_food": "Cibo e bevande",
   "ask.choice.business_trade_beauty": "Bellezza",
   "ask.choice.business_trade_health": "Salute",
@@ -2203,6 +2265,7 @@ var tracy_build_chat_default4 = {
   "plan.leftOut.reason.hours_unconfirmed": "Solo una fonte indica i tuoi orari, aperto 24 ore su 24 ogni giorno, quindi restano fuori dal tuo sito finch\xE9 non li confermi.",
   "plan.leftOut.reason.hours_sources_disagree": "Le tue fonti indicano orari diversi, quindi restano fuori dal tuo sito finch\xE9 non li confermi.",
   "plan.leftOut.reason.no_fitting_video": "Nessuno dei tuoi video si adatta a questo spazio (immagini larghe senza testo sopra), quindi non mostra alcun video.",
+  "plan.leftOut.reason.page_nothing_to_show": "Non ha ancora nulla da mostrare in queste pagine.",
   "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
   "plan.leftOut.what.no_place_for_other_phones": "Altri numeri di telefono",
   "plan.leftOut.what.no_place_for_google_rating": "Valutazione Google",
@@ -2210,6 +2273,10 @@ var tracy_build_chat_default4 = {
   "plan.leftOut.what.hours_sources_disagree": "Orari di apertura",
   "plan.leftOut.what.no_fitting_video.one": "{count} spazio video",
   "plan.leftOut.what.no_fitting_video.other": "{count} spazi video",
+  "plan.leftOut.what.pages.one": "Pagina {page}",
+  "plan.leftOut.what.pages.two": "Pagine {first} e {last}",
+  "plan.leftOut.what.pages.three": "Pagine {first}, {second} e {last}",
+  "plan.leftOut.what.pages.more": "Pagine {first}, {second}, {third} e altre {count}",
   "plan.pictures.ownOfValue.one": "{count} delle tue {total} foto, da {from}",
   "plan.pictures.ownOfValue.other": "{count} delle tue {total} foto, da {from}",
   "plan.assumption.accent_logo_moved.lighter": "Il colore del tuo logo \xE8 stato schiarito perch\xE9 pulsanti e link risaltino sul design.",
@@ -2520,6 +2587,12 @@ var tracy_build_chat_default5 = {
   "ask.question.brief_gap_story": "Hoe zou je je bedrijf in een paar zinnen beschrijven?",
   "ask.choice.brief_gap_skip": "Voorlopig weglaten",
   "ask.question.business_trade": "Wat voor soort bedrijf is het?",
+  "ask.question.held_hours_unconfirmed": "Slechts \xE9\xE9n bron noemt uw openingstijden, elke dag 24 uur open. Zijn dit uw openingstijden?",
+  "ask.question.held_hours_disagree": "Uw bronnen noemen verschillende openingstijden. Welke tijden moet uw site tonen?",
+  "ask.question.held_hours_typed": "Typ uw openingstijden, \xE9\xE9n regel per groep dagen, bijvoorbeeld ma tot vr 9:00 tot 18:00.",
+  "ask.choice.held_hours_keep": "Deze tijden houden",
+  "ask.choice.held_hours_edit": "Ze kloppen niet, ik typ ze",
+  "ask.choice.held_hours_leave": "Geen openingstijden op de site",
   "ask.choice.business_trade_food": "Eten en drinken",
   "ask.choice.business_trade_beauty": "Beauty",
   "ask.choice.business_trade_health": "Gezondheid",
@@ -2583,6 +2656,7 @@ var tracy_build_chat_default5 = {
   "plan.leftOut.reason.hours_unconfirmed": "Slechts \xE9\xE9n bron noemt uw openingstijden, elke dag 24 uur open, dus ze blijven van uw site tot u ze bevestigt.",
   "plan.leftOut.reason.hours_sources_disagree": "Uw bronnen noemen verschillende openingstijden, dus ze blijven van uw site tot u ze bevestigt.",
   "plan.leftOut.reason.no_fitting_video": "Geen van uw video\u2019s past op deze plek (brede beelden zonder tekst erover), dus hij toont geen video.",
+  "plan.leftOut.reason.page_nothing_to_show": "U hebt nog niets om op deze pagina's te tonen.",
   "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
   "plan.leftOut.what.no_place_for_other_phones": "Andere telefoonnummers",
   "plan.leftOut.what.no_place_for_google_rating": "Google beoordeling",
@@ -2590,6 +2664,10 @@ var tracy_build_chat_default5 = {
   "plan.leftOut.what.hours_sources_disagree": "Openingstijden",
   "plan.leftOut.what.no_fitting_video.one": "{count} videoplek",
   "plan.leftOut.what.no_fitting_video.other": "{count} videoplekken",
+  "plan.leftOut.what.pages.one": "Pagina {page}",
+  "plan.leftOut.what.pages.two": "Pagina's {first} en {last}",
+  "plan.leftOut.what.pages.three": "Pagina's {first}, {second} en {last}",
+  "plan.leftOut.what.pages.more": "Pagina's {first}, {second}, {third} en nog {count}",
   "plan.pictures.ownOfValue.one": "{count} van uw {total} foto\u2019s, van {from}",
   "plan.pictures.ownOfValue.other": "{count} van uw {total} foto\u2019s, van {from}",
   "plan.assumption.accent_logo_moved.lighter": "De kleur van uw logo is lichter gemaakt zodat knoppen en links opvallen in het ontwerp.",
@@ -2900,6 +2978,12 @@ var tracy_build_chat_default6 = {
   "ask.question.brief_gap_story": "\u4F60\u4F1A\u5982\u4F55\u7528\u51E0\u53E5\u8BDD\u63CF\u8FF0\u4F60\u7684\u5546\u5BB6\uFF1F",
   "ask.choice.brief_gap_skip": "\u6682\u65F6\u4E0D\u586B",
   "ask.question.business_trade": "\u8FD9\u662F\u4EC0\u4E48\u7C7B\u578B\u7684\u5546\u5BB6\uFF1F",
+  "ask.question.held_hours_unconfirmed": "\u53EA\u6709\u4E00\u4E2A\u6765\u6E90\u7ED9\u51FA\u4E86\u60A8\u7684\u8425\u4E1A\u65F6\u95F4\uFF0C\u663E\u793A\u4E3A\u6BCF\u5929 24 \u5C0F\u65F6\u8425\u4E1A\u3002\u8FD9\u662F\u60A8\u7684\u8425\u4E1A\u65F6\u95F4\u5417\uFF1F",
+  "ask.question.held_hours_disagree": "\u60A8\u7684\u5404\u4E2A\u6765\u6E90\u7ED9\u51FA\u7684\u8425\u4E1A\u65F6\u95F4\u4E0D\u4E00\u81F4\u3002\u60A8\u7684\u7F51\u7AD9\u5E94\u663E\u793A\u54EA\u4E2A\u65F6\u95F4\uFF1F",
+  "ask.question.held_hours_typed": "\u8BF7\u8F93\u5165\u60A8\u7684\u8425\u4E1A\u65F6\u95F4\uFF0C\u6BCF\u7EC4\u65E5\u671F\u4E00\u884C\uFF0C\u4F8B\u5982 \u5468\u4E00\u81F3\u5468\u4E94 9:00 \u81F3 18:00\u3002",
+  "ask.choice.held_hours_keep": "\u4FDD\u7559\u8FD9\u4E9B\u65F6\u95F4",
+  "ask.choice.held_hours_edit": "\u65F6\u95F4\u4E0D\u5BF9\uFF0C\u6211\u6765\u8F93\u5165",
+  "ask.choice.held_hours_leave": "\u7F51\u7AD9\u4E0A\u4E0D\u663E\u793A\u8425\u4E1A\u65F6\u95F4",
   "ask.choice.business_trade_food": "\u9910\u996E",
   "ask.choice.business_trade_beauty": "\u7F8E\u5BB9",
   "ask.choice.business_trade_health": "\u5065\u5EB7",
@@ -2963,6 +3047,7 @@ var tracy_build_chat_default6 = {
   "plan.leftOut.reason.hours_unconfirmed": "\u53EA\u6709\u4E00\u4E2A\u6765\u6E90\u7ED9\u51FA\u60A8\u7684\u8425\u4E1A\u65F6\u95F4\uFF0C\u4E14\u4E3A\u6BCF\u5929 24 \u5C0F\u65F6\u8425\u4E1A\uFF0C\u56E0\u6B64\u5728\u60A8\u786E\u8BA4\u4E4B\u524D\u4E0D\u4F1A\u653E\u5230\u7F51\u7AD9\u4E0A\u3002",
   "plan.leftOut.reason.hours_sources_disagree": "\u60A8\u7684\u5404\u4E2A\u6765\u6E90\u7ED9\u51FA\u7684\u8425\u4E1A\u65F6\u95F4\u4E0D\u540C\uFF0C\u56E0\u6B64\u5728\u60A8\u786E\u8BA4\u4E4B\u524D\u4E0D\u4F1A\u653E\u5230\u7F51\u7AD9\u4E0A\u3002",
   "plan.leftOut.reason.no_fitting_video": "\u60A8\u7684\u89C6\u9891\u90FD\u4E0D\u9002\u5408\u8FD9\u4E2A\u4F4D\u7F6E\uFF08\u6A2A\u5411\u753B\u9762\u4E14\u4E0A\u9762\u6CA1\u6709\u6587\u5B57\uFF09\uFF0C\u56E0\u6B64\u8FD9\u91CC\u4E0D\u663E\u793A\u89C6\u9891\u3002",
+  "plan.leftOut.reason.page_nothing_to_show": "\u60A8\u76EE\u524D\u8FD8\u6CA1\u6709\u53EF\u5728\u8FD9\u4E9B\u9875\u9762\u4E0A\u5C55\u793A\u7684\u5185\u5BB9\u3002",
   "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
   "plan.leftOut.what.no_place_for_other_phones": "\u5176\u4ED6\u7535\u8BDD\u53F7\u7801",
   "plan.leftOut.what.no_place_for_google_rating": "Google \u8BC4\u5206",
@@ -2970,6 +3055,10 @@ var tracy_build_chat_default6 = {
   "plan.leftOut.what.hours_sources_disagree": "\u8425\u4E1A\u65F6\u95F4",
   "plan.leftOut.what.no_fitting_video.one": "{count} \u4E2A\u89C6\u9891\u4F4D\u7F6E",
   "plan.leftOut.what.no_fitting_video.other": "{count} \u4E2A\u89C6\u9891\u4F4D\u7F6E",
+  "plan.leftOut.what.pages.one": "{page} \u9875\u9762",
+  "plan.leftOut.what.pages.two": "{first} \u548C {last} \u9875\u9762",
+  "plan.leftOut.what.pages.three": "{first}\u3001{second} \u548C {last} \u9875\u9762",
+  "plan.leftOut.what.pages.more": "{first}\u3001{second}\u3001{third} \u7B49\u53E6\u5916 {count} \u4E2A\u9875\u9762",
   "plan.pictures.ownOfValue.one": "\u60A8\u7684 {total} \u5F20\u7167\u7247\u4E2D\u7684 {count} \u5F20\uFF0C\u6765\u81EA {from}",
   "plan.pictures.ownOfValue.other": "\u60A8\u7684 {total} \u5F20\u7167\u7247\u4E2D\u7684 {count} \u5F20\uFF0C\u6765\u81EA {from}",
   "plan.assumption.accent_logo_moved.lighter": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5DF2\u8C03\u4EAE\uFF0C\u4F7F\u6309\u94AE\u548C\u94FE\u63A5\u5728\u8BBE\u8BA1\u4E2D\u66F4\u9192\u76EE\u3002",
@@ -3294,6 +3383,12 @@ var tracy_build_chat_default7 = {
   "ask.question.brief_gap_story": "B\u1EA1n m\xF4 t\u1EA3 doanh nghi\u1EC7p c\u1EE7a m\xECnh th\u1EBF n\xE0o trong v\xE0i c\xE2u?",
   "ask.choice.brief_gap_skip": "T\u1EA1m th\u1EDDi b\u1ECF qua",
   "ask.question.business_trade": "Doanh nghi\u1EC7p c\u1EE7a b\u1EA1n thu\u1ED9c lo\u1EA1i n\xE0o?",
+  "ask.question.held_hours_unconfirmed": "Ch\u1EC9 m\u1ED9t ngu\u1ED3n ghi gi\u1EDD m\u1EDF c\u1EEDa c\u1EE7a b\u1EA1n, l\xE0 m\u1EDF 24 gi\u1EDD m\u1ED7i ng\xE0y. \u0110\xE2y c\xF3 ph\u1EA3i gi\u1EDD m\u1EDF c\u1EEDa c\u1EE7a b\u1EA1n kh\xF4ng?",
+  "ask.question.held_hours_disagree": "C\xE1c ngu\u1ED3n ghi gi\u1EDD m\u1EDF c\u1EEDa kh\xE1c nhau. Site c\u1EE7a b\u1EA1n n\xEAn hi\u1EC3n th\u1ECB gi\u1EDD n\xE0o?",
+  "ask.question.held_hours_typed": "H\xE3y g\xF5 gi\u1EDD m\u1EDF c\u1EEDa c\u1EE7a b\u1EA1n, m\u1ED7i nh\xF3m ng\xE0y m\u1ED9t d\xF2ng, v\xED d\u1EE5 Th\u1EE9 Hai \u0111\u1EBFn Th\u1EE9 S\xE1u 9:00 \u0111\u1EBFn 18:00.",
+  "ask.choice.held_hours_keep": "Gi\u1EEF gi\u1EDD n\xE0y",
+  "ask.choice.held_hours_edit": "Gi\u1EDD n\xE0y sai, t\xF4i s\u1EBD g\xF5 l\u1EA1i",
+  "ask.choice.held_hours_leave": "Kh\xF4ng \u0111\u01B0a gi\u1EDD m\u1EDF c\u1EEDa l\xEAn site",
   "ask.choice.business_trade_food": "\u0102n u\u1ED1ng",
   "ask.choice.business_trade_beauty": "L\xE0m \u0111\u1EB9p",
   "ask.choice.business_trade_health": "S\u1EE9c kh\u1ECFe",
@@ -3343,6 +3438,7 @@ var tracy_build_chat_default7 = {
   "plan.leftOut.reason.hours_unconfirmed": "Ch\u1EC9 m\u1ED9t ngu\u1ED3n ghi gi\u1EDD m\u1EDF c\u1EEDa c\u1EE7a b\u1EA1n l\xE0 m\u1EDF 24 gi\u1EDD m\u1ED7i ng\xE0y, n\xEAn gi\u1EDD m\u1EDF c\u1EEDa ch\u01B0a l\xEAn site cho \u0111\u1EBFn khi b\u1EA1n x\xE1c nh\u1EADn.",
   "plan.leftOut.reason.hours_sources_disagree": "C\xE1c ngu\u1ED3n c\u1EE7a b\u1EA1n ghi gi\u1EDD m\u1EDF c\u1EEDa kh\xE1c nhau, n\xEAn gi\u1EDD m\u1EDF c\u1EEDa ch\u01B0a l\xEAn site cho \u0111\u1EBFn khi b\u1EA1n x\xE1c nh\u1EADn.",
   "plan.leftOut.reason.no_fitting_video": "Kh\xF4ng video n\xE0o c\u1EE7a b\u1EA1n v\u1EEBa ch\u1ED7 n\xE0y (\u1EA3nh ngang, kh\xF4ng c\xF3 ch\u1EEF \u0111\xE8 l\xEAn), n\xEAn ch\u1ED7 n\xE0y kh\xF4ng hi\u1EC3n th\u1ECB video.",
+  "plan.leftOut.reason.page_nothing_to_show": "B\u1EA1n ch\u01B0a c\xF3 g\xEC \u0111\u1EC3 \u0111\u01B0a l\xEAn c\xE1c trang n\xE0y.",
   "plan.leftOut.what.no_place_for_whatsapp": "WhatsApp",
   "plan.leftOut.what.no_place_for_other_phones": "C\xE1c s\u1ED1 \u0111i\u1EC7n tho\u1EA1i kh\xE1c",
   "plan.leftOut.what.no_place_for_google_rating": "\u0110i\u1EC3m \u0111\xE1nh gi\xE1 Google",
@@ -3350,6 +3446,10 @@ var tracy_build_chat_default7 = {
   "plan.leftOut.what.hours_sources_disagree": "Gi\u1EDD m\u1EDF c\u1EEDa",
   "plan.leftOut.what.no_fitting_video.one": "{count} ch\u1ED7 \u0111\u1EB7t video",
   "plan.leftOut.what.no_fitting_video.other": "{count} ch\u1ED7 \u0111\u1EB7t video",
+  "plan.leftOut.what.pages.one": "Trang {page}",
+  "plan.leftOut.what.pages.two": "C\xE1c trang {first} v\xE0 {last}",
+  "plan.leftOut.what.pages.three": "C\xE1c trang {first}, {second} v\xE0 {last}",
+  "plan.leftOut.what.pages.more": "C\xE1c trang {first}, {second}, {third} v\xE0 {count} trang kh\xE1c",
   "plan.pictures.ownOfValue.one": "{count} trong {total} \u1EA3nh c\u1EE7a b\u1EA1n, t\u1EEB {from}",
   "plan.pictures.ownOfValue.other": "{count} trong {total} \u1EA3nh c\u1EE7a b\u1EA1n, t\u1EEB {from}",
   "plan.assumption.accent_logo_moved.lighter": "M\xE0u logo c\u1EE7a b\u1EA1n \u0111\u01B0\u1EE3c l\xE0m s\xE1ng h\u01A1n \u0111\u1EC3 n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn n\u1ED5i b\u1EADt tr\xEAn m\u1EABu thi\u1EBFt k\u1EBF.",
@@ -3543,6 +3643,7 @@ var linkGapOf = (links) => Array.isArray(links) && links.some(
 var ANSWERS_ARRIVE_GUIDANCE = "The owner's answers reach tracy_build by themselves. Never call research again to pass an answer, and never put an answer into description.";
 var PAUSED_NEXT = "Say the sentence in say once and stop here. It says when the owner can continue. Ask no question, and do not call tracy_build again before retryAt.";
 var PAUSED_AGAIN_NEXT = "Nothing was started: the pause is not over yet. Do not repeat the earlier sentence about the pause. Answer what the owner just wrote in one short sentence, and say once that you can continue after minutesLeft minutes. Do not call tracy_build again before retryAt.";
+var NEEDS_NAME_NEXT = "Research needs the business name first. In one short message in the owner's language, ask for the name of their business and the city or town it is in. Then call tracy_build with action research, no links, name and city as the owner gave them, and their words as description. Do not say anything failed.";
 var RESEARCH_QUESTIONS_NEXT = `Pass ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action templates.`;
 var RESEARCH_DONE_NEXT = "Research is done. Call tracy_build with action templates now.";
 var joined = (items) => items.length < 2 ? items[0] ?? "" : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
@@ -3888,6 +3989,7 @@ ${JSON.stringify(answer)}`;
     return stopped(res.body?.say);
   }
   function finished(sessionId, state) {
+    if (state?.state === "needs") return { needs: ["name", "city"], next: NEEDS_NAME_NEXT };
     if (state?.state === "stopped") return stoppedStateOf(state, eventsOf(sessionId));
     const isOpen = (review) => openReviewsOf(eventsOf(sessionId)).has(review.questions[0]?.id);
     const result = state?.result ?? {};

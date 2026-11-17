@@ -59,7 +59,7 @@ export const HELD_HOURS_LEFT_OUT = Object.freeze({
 })
 
 /** The held hours entry of the brief, or null when it holds none waiting for the owner. */
-function heldHoursOf(brief) {
+export function heldHoursOf(brief) {
   const held = list(brief?.missing).find((m) => m?.field === 'hours')
   if (!held) return null
   if (held.conflicting) return HELD_HOURS_LEFT_OUT.disagree

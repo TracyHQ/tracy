@@ -260,6 +260,56 @@ test('the definitions publish the latest templates and plan on their own turn, a
   assert.equal(run(templates, later).turn, 1)
 })
 
+test('another tool answered before the first build call still lets every card publish (#575 no link walk)', () => {
+  // dsh's assembler (ui-conversation): a context whose first match is an update throws when its start arrives, and
+  // the session's cards never draw. Here the agent's own question tool answered before research was called.
+  const r = recorder()
+  client.applyWith(r.ctx, { switches: switchBoard(true) })
+  let seq = 0
+  const events = [
+    {
+      type: 'tool/result',
+      seq: ++seq,
+      surfaceOp: 'append',
+      data: {
+        turn: 1,
+        message: { source: { callId: 'q' }, isError: true, content: [{ type: 'text', text: 'no' }] }
+      }
+    },
+    {
+      type: 'tool/call',
+      seq: ++seq,
+      data: { turn: 4, name: 'tracy_build', callId: 't', arguments: '{"action":"templates"}' }
+    },
+    {
+      type: 'tool/result',
+      seq: ++seq,
+      surfaceOp: 'append',
+      data: {
+        turn: 4,
+        message: {
+          source: { callId: 't' },
+          content: [{ type: 'text', text: '{"options":[{"slug":"ja-boxing"}],"none":false}' }]
+        }
+      }
+    }
+  ]
+  for (const definition of r.definitions.filter((d) => d.kind.startsWith('tracy_build:') && d.match)) {
+    let context = null
+    let published = null
+    for (const event of events) {
+      const m = definition.match(event)
+      if (m === null) continue
+      if (context === null) {
+        assert.equal(m.role, 'start', `${definition.kind}: the first match of a context must start it`)
+        context = { state: definition.start({}, { event, role: m.role }) }
+      } else context.state = definition.update(context, { event, role: m.role })
+      published = definition.buildLocationData?.(context, 'turn', published) ?? published
+    }
+    if (definition.kind === 'tracy_build:templates') assert.equal(published?.turn, 4)
+  }
+})
+
 test('a call answered running spins only while it waits: in the history its row is settled', () => {
   const r = recorder()
   client.applyWith(r.ctx, { switches: switchBoard(true), engine: null })

@@ -225,7 +225,7 @@ test(
 )
 
 test(
-  'a description with no link and no name stops and asks the owner for the name, in plain words',
+  'a description with no link and no name asks for the name and city, and records no fault (#575 no link walk)',
   opts,
   async () => {
     const { domain } = await fakeDomain()
@@ -238,15 +238,11 @@ test(
         fetch: async () => assert.fail('no fetch')
       }
     })
-    const { ended } = await s.run('POST', '/research', { description: 'A family bakery that opens early.' })
-    assert.equal(ended.body.state, 'stopped')
-    assert.equal(ended.body.say, SAY.name)
-    assert.doesNotMatch(ended.body.say, DASHES)
-    const { fault } = await row(s)
-    assert.deepEqual(
-      [fault.code, fault.reason, fault.noRerun, fault.attempts],
-      ['research_empty', 'no_name', true, 1]
-    )
+    const { started } = await s.run('POST', '/research', { description: 'A family bakery that opens early.' })
+    assert.equal(started.body.state, 'needs')
+    assert.deepEqual(started.body.needs, ['name', 'city'])
+    // Nothing started, nothing counted: no fault the owner would read as "this step could not finish".
+    assert.equal((await row(s))?.fault ?? null, null)
   }
 )
 

@@ -379,6 +379,13 @@ export const PAUSED_NEXT =
 export const PAUSED_AGAIN_NEXT =
   'Nothing was started: the pause is not over yet. Do not repeat the earlier sentence about the pause. Answer what the owner just wrote in one short sentence, and say once that you can continue after minutesLeft minutes. Do not call tracy_build again before retryAt.'
 
+/**
+ * Private guidance when research was called with no link and no business name (#575 walk: the owner read "this step
+ * could not complete" before being asked the name).
+ */
+export const NEEDS_NAME_NEXT =
+  "Research needs the business name first. In one short message in the owner's language, ask for the name of their business and the city or town it is in. Then call tracy_build with action research, no links, name and city as the owner gave them, and their words as description. Do not say anything failed."
+
 /** Private guidance after a research that hands the owner questions. */
 export const RESEARCH_QUESTIONS_NEXT = `Pass ask to ask_user_question exactly as given. ${ANSWERS_ARRIVE_GUIDANCE} When the owner has answered, call tracy_build with action templates.`
 /** Private guidance after a research with nothing left to ask. */
@@ -950,6 +957,8 @@ export function createBuildTool({
    * @param {any} state
    */
   function finished(sessionId, state) {
+    // Research needs the business name and city first (no link and no name): no fault, the agent asks for them.
+    if (state?.state === 'needs') return { needs: ['name', 'city'], next: NEEDS_NAME_NEXT }
     if (state?.state === 'stopped') return stoppedStateOf(state, eventsOf(sessionId))
     /** Whether the review this plan answer hands out is open on the owner's screen already. */
     const isOpen = (/** @type {any} */ review) =>

@@ -50,13 +50,18 @@ interface LocationData<V> {
   value: V
 }
 
-/** One context for the whole session: every tool call and every appended result goes to it, in order. */
+/**
+ * One context for the whole session: every tool call and every appended result goes to it, in order. Every match says
+ * 'start': dsh starts the context on the first one and reads every later one as an update. A result said 'update'
+ * that came before the first build call (the agent's own question tool, answered first: #575 no link walk) made dsh
+ * throw when that call arrived, and no card of the session drew again; the fold ignores a result of another tool.
+ */
 const SESSION = 'session'
 const match = (event: EventLike) => {
   if (event.type === 'tool/call' && event.data?.name === BUILD_TOOL)
     return { id: SESSION, role: 'start' as const }
   if (event.type === 'tool/result' && event.surfaceOp === 'append')
-    return { id: SESSION, role: 'update' as const }
+    return { id: SESSION, role: 'start' as const }
   return null
 }
 
