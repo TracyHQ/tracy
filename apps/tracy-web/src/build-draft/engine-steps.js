@@ -150,17 +150,19 @@ export async function brandOf({ research, template, accountId }, { brandStep, ki
 }
 
 /**
- * The brand step's look record and, when the step knew it, what the whole step cost (`costCents`). The step answers
- * its look record, or `{record, costCents}` when it also knows its cost (`draftBrandStep`); a look record is never
- * that shape (it carries its `schema`).
- * @returns {Promise<{record: object | null, costCents?: number}>}
+ * The brand step's look record and, when the step knew it, what the whole step cost (`costCents`) and the whole brand
+ * file it kept (`file`). The step answers its look record, or `{record, costCents?, file?}` (`draftBrandStep`); a look
+ * record is never that shape (it carries its `schema`).
+ * @returns {Promise<{record: object | null, costCents?: number, file?: object}>}
  */
 export async function brandRunOf({ research, template, accountId = null }, { brandStep, kit }) {
   const answer = (await brandStep({ research, template, kit, accountId })) ?? null
   if (answer && typeof answer === 'object' && !('schema' in answer) && 'record' in answer)
     return {
       record: answer.record ?? null,
-      ...(Number.isFinite(answer.costCents) && answer.costCents >= 0 ? { costCents: answer.costCents } : {})
+      ...(Number.isFinite(answer.costCents) && answer.costCents >= 0 ? { costCents: answer.costCents } : {}),
+      // The whole brand file with its stored pictures (`draftBrandStep`), kept beside the record (P1 of the audit).
+      ...(answer.file && typeof answer.file === 'object' ? { file: answer.file } : {})
     }
   return { record: answer }
 }

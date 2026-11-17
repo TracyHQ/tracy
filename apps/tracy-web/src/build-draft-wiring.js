@@ -84,6 +84,23 @@ export function draftQuickstartCatalogue({
 }
 
 /**
+ * The kept brand file with the draft picture id of every picture it names, each stored once; null when the run kept no
+ * brand file or no store is wired. A picture that cannot be stored stops the step typed (`brand_picture_not_stored`).
+ */
+async function keptWithIds({ brand, pictures, accountId, keepPicture }) {
+  if (!brand || typeof keepPicture !== 'function') return null
+  const out = structuredClone(brand)
+  for (const [name, entry] of Object.entries(out.pictures ?? {})) {
+    const bytes = pictures?.get?.(name)
+    const id = bytes ? await keepPicture(accountId, { ...entry, bytes, name }).catch(() => null) : null
+    if (typeof id !== 'string' || id === '')
+      throw fault('brand_picture_not_stored', `the brand picture ${name} could not be stored with the draft`)
+    entry.id = id
+  }
+  return out
+}
+
+/**
  * The engine's `brandStep({research, template})` over #616's step, on the draft's own research: the step chain's content
  * brief revision of a research of links (`research.ids.revisionId`, #575), else the brief the words-only research made
  * (a draft researched before #575 may also hold the logo file it saved, `research.logoFile`).
@@ -91,8 +108,14 @@ export function draftQuickstartCatalogue({
  * drafts never reach it builds no bench wiring. The logo of a brief held in memory follows the step chain's branches
  * (`build-draft-brand-logo.js`): written again from its stored copy, else no logo. Sources that showed no language
  * run in the plan's own language (`plan-composer.mjs`: English), so the bench fills a missing voice as a build does.
+ *
+ * The whole brand file the step answers beside its look record (`brand-before-site-files.js`) is kept with the draft
+ * (`file`) once every picture it names is in the draft picture store (`keepPicture`, `build-draft/pictures.js`
+ * `keepBrand`): each picture then carries the id it is opened by. Without a store wired, only the record is answered.
  * @param {{pool: import('pg').Pool, stepsOf: () => object, brandBeforeSite?: Function, kitRefOf?: Function,
- *   openPicture?: Function | null, logoDir?: string}} deps `openPicture`: the draft picture reader
+ *   openPicture?: Function | null, keepPicture?: ((accountId: string | null, picture: {bytes: Buffer, sha256: string,
+ *   mime: string, name: string}) => Promise<string>) | null, logoDir?: string}} deps `openPicture`: the draft picture
+ *   reader; `keepPicture`: stores one brand picture and answers its draft picture id
  */
 export function draftBrandStep({
   pool,
@@ -100,6 +123,7 @@ export function draftBrandStep({
   brandBeforeSite,
   kitRefOf: refOf = kitRefOf,
   openPicture = null,
+  keepPicture = null,
   logoDir
 }) {
   let run = brandBeforeSite ?? null
@@ -133,9 +157,12 @@ export function draftBrandStep({
           openPicture,
           ...(logoDir ? { logoDir } : {})
         })
-    const { record, usd } = await run({ ...given, kitRef, siteLanguage: language })
+    const { record, usd, brand, pictures } = await run({ ...given, kitRef, siteLanguage: language })
+    const file = record ? await keptWithIds({ brand, pictures, accountId, keepPicture }) : null
     // The run's cost is known only when every one of its calls reported one (`spendOfRecord`: `usd` is null else). Then
     // the step answers it beside the record, so the ledger settles at it (`engine-steps.js` `brandRunOf`).
-    return Number.isFinite(usd) && usd >= 0 && record ? { record, costCents: usd * 100 } : record
+    const known = Number.isFinite(usd) && usd >= 0 && record
+    if (!known && !file) return record
+    return { record, ...(known ? { costCents: usd * 100 } : {}), ...(file ? { file } : {}) }
   }
 }
