@@ -129,7 +129,7 @@ test('a no logo plan on a template whose own accent is black is not a neutral ac
 test("the plan gate holds the model's lines to the look check: a line naming the template accent is composed again", async () => {
   const naming = goodComposition()
   naming.assumptions.push({ field: 'look.accent', said: 'Buttons use the template accent #225588.' })
-  const model = scriptedModel(JSON.stringify(naming), JSON.stringify(naming))
+  const model = scriptedModel(JSON.stringify(naming), JSON.stringify(naming), JSON.stringify(naming))
   await assert.rejects(
     composePlan({
       profile: clubProfile(),
@@ -145,7 +145,7 @@ test("the plan gate holds the model's lines to the look check: a line naming the
       e.code === 'plan_gate_failed' &&
       JSON.stringify(e.details).includes('template_look_said')
   )
-  assert.equal(model.calls.length, 2)
+  assert.equal(model.calls.length, 3)
 })
 
 test('the template fallback of the tests is not held to the look check', async () => {

@@ -1,6 +1,6 @@
 // Page rules of the plan gate restored from the locked planner prompt (2026-11-03; audit rows P2, P13, P14, P16,
 // P21), read once the reply has its shape. Each problem has a code and a message the model reads on its second
-// attempt (`plan-composer.mjs`: one more composition, then stop and report).
+// attempt (`plan-composer.mjs`: up to two more compositions, then stop and report).
 // - `item_repeated_on_page` (P21): an item (a service, a person, a review) is shown by one block of a page, never two;
 //   except the subject of a detail page, which its page describes in several blocks (a class and its schedule). A page
 //   is a detail page when (a) its type is one the template repeats per item (`itemPageTypesOf`, the write order's

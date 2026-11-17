@@ -1,5 +1,5 @@
 // A malformed reply never crashes the plan step (ticket #593): every part of the model's reply is shape checked before
-// any rule reads it, so a malformed reply goes through the one retry and then stops as `plan_gate_failed`, a
+// any rule reads it, so a malformed reply goes through the two fix rounds and then stops as `plan_gate_failed`, a
 // `PlanComposerError` and nothing else. Scripted fake model only.
 import assert from 'node:assert/strict'
 import test from 'node:test'
@@ -88,15 +88,15 @@ test(`a table of ${Object.keys(MALFORMED).length} malformed replies: the gate re
   }
 })
 
-test('every malformed reply goes through the one retry, then stops as plan_gate_failed and nothing else', async () => {
+test('every malformed reply goes through the two fix rounds, then stops as plan_gate_failed and nothing else', async () => {
   for (const [name, reply] of Object.entries(MALFORMED)) {
-    const model = scriptedModel(JSON.stringify(reply), reply)
+    const model = scriptedModel(JSON.stringify(reply), reply, reply)
     await assert.rejects(
       composePlan(inputs(model)),
       (e) => e instanceof PlanComposerError && e.code === 'plan_gate_failed',
       name
     )
-    assert.equal(model.calls.length, 2, name)
+    assert.equal(model.calls.length, 3, name)
   }
 })
 

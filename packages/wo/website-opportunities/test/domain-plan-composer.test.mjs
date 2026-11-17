@@ -1,5 +1,5 @@
 // The plan composer (ticket #593): one call to a scripted fake build model composes the plan, the rules gate checks it,
-// a failing plan is composed once more with the gate's problems, a second failure stops with a typed error. The brand
+// a failing plan is composed again with the gate's problems (two fix rounds), a third failure stops with a typed error. The brand
 // step runs in parallel with the needs profile and has finished before the plan exists. No test calls a real model.
 import assert from 'node:assert/strict'
 import test from 'node:test'
@@ -90,14 +90,18 @@ test('a plan that fails the gate is composed again once, with the problems, and 
   assert.equal(checkBuildDocument(plan).ok, true)
 })
 
-test('a second failure stops with a typed error that keeps every problem, after exactly two calls', async () => {
-  const model = scriptedModel(JSON.stringify(inventing()), JSON.stringify(targetingDesign()))
+test('a third failure stops with a typed error that keeps every problem, after exactly three calls', async () => {
+  const model = scriptedModel(
+    JSON.stringify(inventing()),
+    JSON.stringify(inventing()),
+    JSON.stringify(targetingDesign())
+  )
   await assert.rejects(composePlan(inputs(model)), (error) => {
     assert.ok(error instanceof PlanComposerError)
     assert.equal(error.code, 'plan_gate_failed')
     assert.deepEqual(
       error.details.attempts.map((a) => a.problems.map((p) => p.code)),
-      [['invented_item'], ['design_field']]
+      [['invented_item'], ['invented_item'], ['design_field']]
     )
     assert.deepEqual(
       error.details.problems.map((p) => p.code),
@@ -105,11 +109,11 @@ test('a second failure stops with a typed error that keeps every problem, after 
     )
     return true
   })
-  assert.equal(model.calls.length, 2)
+  assert.equal(model.calls.length, 3)
 })
 
 test('a model that keeps inventing a service never gets a plan through', async () => {
-  const model = scriptedModel(JSON.stringify(inventing()), inventing())
+  const model = scriptedModel(JSON.stringify(inventing()), inventing(), inventing())
   await assert.rejects(
     composePlan(inputs(model)),
     (e) => e.code === 'plan_gate_failed' && e.details.problems.every((p) => p.code === 'invented_item')
@@ -123,7 +127,10 @@ test('an unreadable reply counts as a failed attempt and is composed again', asy
     attempts.map((a) => a.problems.map((p) => p.code)),
     [['reply_unreadable'], []]
   )
-  await assert.rejects(composePlan(inputs(scriptedModel('[]', 'nope'))), (e) => e.code === 'plan_gate_failed')
+  await assert.rejects(
+    composePlan(inputs(scriptedModel('[]', 'nope', '{'))),
+    (e) => e.code === 'plan_gate_failed'
+  )
   await assert.rejects(composePlan(inputs(undefined)), (e) => e.code === 'model_missing')
 })
 

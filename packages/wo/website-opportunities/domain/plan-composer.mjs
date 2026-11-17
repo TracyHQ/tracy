@@ -6,17 +6,18 @@
 // The customer's answers to the profile's questions are applied first (`plan-answers.mjs`). Everything the model does
 // not produce is checked before the call (`plan-preflight.mjs`), with its own error code and no model call.
 //
-// A plan that fails the gate is composed again ONCE, with the gate's problems and the first plan as the gate read it
-// (`firstPlan`, after the gate's own fixes), so the second attempt corrects its plan instead of composing a new one
-// with new faults. A mechanical fault the gate fixes itself never costs an attempt (`plan-gate-fixes.mjs`); every fix
-// is recorded with its attempt and returned as `fixes` with the plan. A second failure throws a
+// A plan that fails the gate is composed again, at most TWICE as the step chain's site planner is, with the gate's
+// problems and the last plan as the gate read it (`firstPlan`, after the gate's own fixes), so each fix round corrects
+// that plan instead of composing a new one with new faults. A mechanical fault the gate fixes itself never costs an attempt (`plan-gate-fixes.mjs`); every fix
+// is recorded with its attempt and returned as `fixes` with the plan. A third failure throws a
 // `PlanComposerError` with code `plan_gate_failed` and every problem, for the stop and report rule (ADR 0047, #591).
-// That error carries `noRerun: true`: it already includes its own second attempt, so the step chain does not run the
+// That error carries `noRerun: true`: it already includes its own fix rounds, so the step chain does not run the
 // step again. A model call that throws is left as it is, so the step chain may run the step once more. `buildPlanStep`
 // (`plan-step.mjs`) settles the brand record, builds the needs profile, then composes the plan.
 import { settleAnswers } from './plan-answers.mjs'
 import { kindLimitsOf } from './answer-field-limits.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
+import { briefContextOf, briefLeftOutOf } from './plan-composer-brief.mjs'
 import { addItemFieldFacts, conflictAssumptionsOf } from './plan-conflicts.mjs'
 import { planDataOf } from './plan-data.mjs'
 import { gatePlan } from './plan-gate.mjs'
@@ -39,8 +40,9 @@ export {
   readComposerReply
 } from './plan-composer-request.mjs'
 
-/** How many times the model composes: the first attempt and one more with the gate's problems. */
-export const PLAN_COMPOSE_ATTEMPTS = 2
+/** How many times the model composes: the first attempt and two fix rounds with the gate's problems, as the step
+ * chain's site planner has (gap audit of the plan stage, 17/11/2026). */
+export const PLAN_COMPOSE_ATTEMPTS = 3
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -59,7 +61,8 @@ export function blockMapOf(blockStore, library = []) {
  * What the composer works from: the profile's data with plan ids (after the customer's answers), every block of the
  * store and of the Tracy library, the recipes, the look and the assumptions the profile and the look bring. `profile`
  * in the result is the settled profile: the page writer reads its item fields. The look comes from the brand step's
- * record (`brandLookOf`, #616); only `allowTemplateLook: true`, for tests, keeps the old template fallback.
+ * record (`brandLookOf`, #616); only `allowTemplateLook: true`, for tests, keeps the old template fallback. `brief`: the
+ * content brief research stored, when there is one (`plan-composer-brief.mjs`).
  * @throws {PlanComposerError} `answer_invalid` when an answer does not fit its question; `brand_missing` without a
  *   brand record; `brand_logo_colours_unmeasured` when the brand step kept the template accent and the logo's colours
  *   were never measured
@@ -74,7 +77,8 @@ export function composerContextOf({
   template,
   brand,
   planId = 'plan',
-  allowTemplateLook = false
+  allowTemplateLook = false,
+  brief = null
 }) {
   const blocks = blockMapOf(blockStore, library)
   const settled = settleAnswers(given, answers, kindLimitsOf(blocks.values()), answerReadings)
@@ -109,13 +113,16 @@ export function composerContextOf({
     template,
     allowTemplateLook,
     assumptions: [...conflicts.assumptions, ...lookAssumptions, ...languageAssumption],
-    leftOut: settled.leftOut,
+    // What the content brief holds and no block can show: on the plan card, never lost (`plan-composer-brief.mjs`).
+    leftOut: [...settled.leftOut, ...briefLeftOutOf(brief)],
+    // The brief as the model reads it: key messages, audience, voice, held fields with their reasons.
+    brief: briefContextOf(brief),
     conflicts: conflicts.accounting
   }
 }
 
 /**
- * Compose the plan: one model call, the gate, and at most one more call with the gate's problems.
+ * Compose the plan: one model call, the gate, and at most two more calls with the gate's problems.
  * @param {Parameters<typeof composerContextOf>[0] & {model: (request: object) => Promise<unknown>}} input
  * @returns {Promise<{plan: object, profile: object, attempts: Array<{problems: object[], fixes?: object[]}>,
  *   fixes: object[], placed: object[],

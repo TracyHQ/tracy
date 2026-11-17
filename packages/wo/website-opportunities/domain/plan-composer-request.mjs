@@ -1,6 +1,7 @@
-// The request of one plan composer model call (#593, split out of `plan-composer.mjs` in #614): the locked prompt, the
-// user message the code builds (the business, the blocks, the recipes; on the second attempt the gate's problems and
-// the first plan as the gate read it), and the reading of the reply. The prompt file is never edited here.
+// The request of one plan composer model call (#593, split out of `plan-composer.mjs` in #614): the draft prompt, the
+// user message the code builds (the business, the brief's context when there is one, the blocks, the recipes; on a fix
+// round the gate's problems and the last plan as the gate read it), and the reading of the reply. The prompt file is
+// never edited here.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { modelViewOf } from './plan-data.mjs'
@@ -32,8 +33,9 @@ const modelBlockOf = (block) => ({
 })
 
 /**
- * The request of one model call: the prompt, the business, the blocks and the recipes; on the second attempt the
- * problems to fix and `firstPlan`, the first reply as the gate read it, which every problem's place points into.
+ * The request of one model call: the prompt, the business, the brief's context (`briefContextOf`), the blocks and the
+ * recipes; on a fix round the problems to fix and `firstPlan`, the last reply as the gate read it, which every
+ * problem's place points into.
  */
 export function planComposerRequest(context, problems = [], firstPlan = null) {
   const user = {
@@ -45,6 +47,7 @@ export function planComposerRequest(context, problems = [], firstPlan = null) {
       mainBlock,
       blocks
     })),
+    ...(context.brief ? { brief: context.brief } : {}),
     ...(problems.length ? { problems: problems.map(({ at, message }) => ({ at, message })) } : {}),
     ...(problems.length && firstPlan ? { firstPlan } : {})
   }

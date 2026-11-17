@@ -223,6 +223,9 @@ export async function composeStep({ research, answers, answerReadings, template,
     answers: (Array.isArray(answers) ? answers : []).filter((a) => !dropped.includes(a?.question)),
     // What the answer reading kept of the owner's typed answers (`answer-readings.js`), null without one.
     answerReadings: answerReadings ?? null,
+    // The content brief research stored: its key messages, audience, voice and held fields reach the composer, and
+    // what no block can show is listed as left out (`plan-composer-brief.mjs`).
+    brief: research?.brief ?? null,
     planId: `plan-${randomUUID()}`
   }
   const composed = await composePlan({ ...input, model })

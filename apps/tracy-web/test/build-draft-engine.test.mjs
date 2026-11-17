@@ -400,12 +400,12 @@ test(
 )
 
 test('a failure that says noRerun is never run again; a missing model stops at once', opts, async () => {
-  const unreadable = club.scriptedModel('not json', 'still not json')
+  const unreadable = club.scriptedModel('not json', 'still not json', 'never json')
   const s = server({ buildModel: async () => unreadable, brandStep: ownBrand, buildChatOn: async () => true })
   await researchedClub(s)
   const { ended } = await askPlan(s)
   assert.equal(ended.body.state, 'stopped')
-  assert.equal(unreadable.calls.length, 2, 'the composer own two attempts, no third')
+  assert.equal(unreadable.calls.length, 3, 'the composer own three attempts, no fourth')
   assert.deepEqual([(await row(s)).fault.code, (await row(s)).fault.attempts], ['plan_gate_failed', 1])
 
   const missing = server({

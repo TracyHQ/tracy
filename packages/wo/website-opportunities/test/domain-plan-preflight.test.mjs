@@ -93,7 +93,7 @@ test('plan_gate_failed carries noRerun; a model call that throws does not', asyn
   const bad = goodComposition()
   bad.pages[0].blocks[2].data.push('service-padel-nights')
   await assert.rejects(
-    composePlan(inputs(scriptedModel(JSON.stringify(bad), JSON.stringify(bad)))),
+    composePlan(inputs(scriptedModel(JSON.stringify(bad), JSON.stringify(bad), JSON.stringify(bad)))),
     (e) => e instanceof PlanComposerError && e.code === 'plan_gate_failed' && e.noRerun === true
   )
   const throwing = async () => {
