@@ -4,8 +4,11 @@ import {
   crawlWebsite,
   extractPage,
   keepFallbackCopy,
+  ldBlocksOf,
   nameFromTitle,
-  originalImageUrl
+  originalImageUrl,
+  stripComments,
+  stripTags
 } from '../domain/website-crawler.mjs'
 
 const resolve = async () => [{ address: '93.184.216.34', family: 4 }]
@@ -48,7 +51,7 @@ test('extractPage pulls title, visible text, JSON-LD, images, videos, PDFs and s
   assert.deepEqual(p.business.openingHours, ['Mo-Su 07:00-21:00'])
   assert.equal(p.business.menu, 'https://phin.test/menu.pdf')
   assert.deepEqual(p.business.servesCuisine, ['Vietnamese'])
-  assert.ok(p.business.sameAs.includes('https://www.facebook.com/brewletcoffeehoian'))
+  assert.ok(p.business.sameAs.some((url) => url === 'https://www.facebook.com/brewletcoffeehoian'))
 
   const images = p.images.map((i) => i.url)
   assert.deepEqual(images, [
@@ -70,7 +73,7 @@ test('extractPage pulls title, visible text, JSON-LD, images, videos, PDFs and s
     'share links are ignored, sameAs counts'
   )
   assert.equal(p.phones[0], '+842355550134')
-  assert.ok(p.links.includes('https://phin.test/about'))
+  assert.ok(p.links.some((url) => url === 'https://phin.test/about'))
 })
 
 test('a resized copy on a documented image host offers the original first and keeps the copy as fallback', async () => {
@@ -202,7 +205,8 @@ test('crawlWebsite reads the sitemap index, then pages, staying on the same host
     r.pages.map((p) => p.title),
     ['Brewlet Coffee & Kitchen — Hội An', 'Menu', 'Contact', 'About', 'Gallery']
   )
-  assert.ok(!calls.some((u) => u.startsWith('https://evil.test') || u.startsWith('https://other.test')))
+  const offSite = (host) => ['evil.test', 'other.test'].some((h) => host === h || host.endsWith(`.${h}`))
+  assert.ok(!calls.some((u) => offSite(new URL(u).hostname)))
   assert.equal(r.profile.name, 'Brewlet Coffee')
   assert.equal(r.profile.phone, '+84 235 555 0134')
   assert.equal(r.profile.bio, 'Slow coffee in the old town.')
@@ -527,4 +531,18 @@ test('the crawl keeps appointment platforms and link-in-bio pages, and no bookin
     ['https://www.sevenrooms.com/reservations/thelanterncafe'],
     "another restaurant's page on the platform is not this one's booking link"
   )
+})
+
+test('JSON-LD, comments and tags are read tag by tag: same answers, linear time on a hostile page', () => {
+  const page = `<script>var a = 1</script><SCRIPT type='application/ld+json'>{"@type":"Cafe"}</SCRIPT>
+    <script type=application/ld+json id=x>[1]</script><script type="application/ld+json">{bad</script>
+    <script type="text/plain">{"@type":"Not"}</script>`
+  assert.deepEqual(ldBlocksOf(page), [{ '@type': 'Cafe' }, [1]])
+  assert.equal(stripComments('a<!-- b -->c<!-- open', ' '), 'a c<!-- open')
+  assert.equal(stripTags('a<b>c<>d<e', ' '), 'a c<>d<e')
+  const started = performance.now()
+  assert.deepEqual(ldBlocksOf('<script type=application/ld+json"'.repeat(20_000)), [])
+  assert.equal(stripComments('<!--'.repeat(50_000), ''), '<!--'.repeat(50_000))
+  assert.equal(stripTags('<'.repeat(50_000), ''), '<'.repeat(50_000))
+  assert.ok(performance.now() - started < 500)
 })

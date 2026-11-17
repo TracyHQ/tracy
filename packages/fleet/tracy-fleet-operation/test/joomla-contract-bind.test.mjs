@@ -74,8 +74,13 @@ const run = (snippet) => {
   return JSON.parse(out.stdout)
 }
 
-/** A JSON value as a PHP expression — an object literal is not something PHP can read. */
-const asPhp = (value) => `json_decode(${JSON.stringify(JSON.stringify(value))}, true)`
+/**
+ * A JSON value as a PHP expression — an object literal is not something PHP can read. The JSON
+ * travels base64-encoded: a JSON string is not a PHP string (`$` and `\` mean other things there),
+ * and base64 has no character a single-quoted PHP string treats specially.
+ */
+const asPhp = (value) =>
+  `json_decode(base64_decode('${Buffer.from(JSON.stringify(value) ?? 'null').toString('base64')}'), true)`
 
 /**
  * Asks `tracy_contract_retry_path` about one answer, against a webroot holding exactly `files`.
@@ -174,7 +179,7 @@ test('an asset that is not a template stylesheet has no aimed URL', { skip: PHP_
     'media/t4/css/x.css'
   ])
     assert.deepEqual(
-      run(`echo json_encode(tracy_warm_urls_for_missing(${JSON.stringify(path)}));`),
+      run(`echo json_encode(tracy_warm_urls_for_missing(${asPhp(path)}));`),
       [],
       `aimed at ${path}`
     )
@@ -931,7 +936,7 @@ test('REGRESSION #824: a re-run is confirmed by the same answer, after a bind or
 
 /** Asks `tracy_inspect_confirms` about one decoded door answer, of any JSON type. */
 const inspectConfirms = (answer, contract = KINETIC, status = 200) =>
-  run(`echo json_encode(tracy_inspect_confirms(${asPhp(answer)}, ${JSON.stringify(contract)}, ${status}));`)
+  run(`echo json_encode(tracy_inspect_confirms(${asPhp(answer)}, ${asPhp(contract)}, ${status}));`)
 
 // Every inspect answer that must NOT end a pairing. `bound` and `construction` may be absent; when
 // either is there it has to be the boolean that agrees with a bound site, and nothing else.
@@ -1051,7 +1056,7 @@ test('a refused read-back still says what the component answered, and only the f
   skip: PHP_SKIP
 }, () => {
   const said = (answer, transport = '', status = 200) =>
-    run(`echo json_encode(tracy_inspect_failure(${asPhp(answer)}, ${JSON.stringify(transport)}, ${status}));`)
+    run(`echo json_encode(tracy_inspect_failure(${asPhp(answer)}, ${asPhp(transport)}, ${status}));`)
   const head = 'Quickstart contract inspect after bind did not confirm it: '
   assert.equal(
     said({

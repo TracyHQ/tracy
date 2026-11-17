@@ -94,8 +94,11 @@ before(async () => {
   server = http.createServer((req, res) => {
     const pathname = req.url.split('?')[0]
     const name = pathname === '/host.example/' ? 'building-in-site.html' : pathname.replace(/^\//, '')
+    // Only a file the test wrote: a request path that resolves outside outDir is a 404.
+    const file = path.resolve(outDir, name)
     try {
-      const bytes = readFileSync(path.join(outDir, name))
+      if (!file.startsWith(path.resolve(outDir) + path.sep)) throw new Error('outside the test folder')
+      const bytes = readFileSync(file)
       res.writeHead(200, { 'content-type': name.endsWith('.js') ? 'text/javascript' : 'text/html' })
       res.end(bytes)
     } catch {

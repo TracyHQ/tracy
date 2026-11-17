@@ -89,6 +89,45 @@ export function decodeEntities(s) {
   })
 }
 
+/**
+ * `html` with every `<!-- … -->` comment replaced by `gap`, in one linear pass: a regex rescans the
+ * rest of the page from every unclosed `<!--`. An unclosed comment stays as it was.
+ * @param {string} html
+ * @param {string} gap
+ * @returns {string}
+ */
+export function stripComments(html, gap) {
+  let out = ''
+  let at = 0
+  for (;;) {
+    const open = html.indexOf('<!--', at)
+    const close = open === -1 ? -1 : html.indexOf('-->', open + 4)
+    if (close === -1) return out + html.slice(at)
+    out += html.slice(at, open) + gap
+    at = close + 3
+  }
+}
+
+/**
+ * `html` with every tag (`<` … `>`, at least one character inside) replaced by `gap`, in one linear
+ * pass. A `<` with no `>` after it is text, as it is for `/<[^>]+>/g`.
+ * @param {string} html
+ * @param {string} gap
+ * @returns {string}
+ */
+export function stripTags(html, gap) {
+  let out = ''
+  let at = 0
+  for (;;) {
+    let open = html.indexOf('<', at)
+    while (open !== -1 && html[open + 1] === '>') open = html.indexOf('<', open + 2)
+    const close = open === -1 ? -1 : html.indexOf('>', open + 1)
+    if (close === -1) return out + html.slice(at)
+    out += html.slice(at, open) + gap
+    at = close + 1
+  }
+}
+
 function parseAttrs(tag) {
   const attrs = {}
   const inner = tag.replace(/^<\s*[\w:-]+/, '').replace(/\/?>$/, '')
@@ -103,15 +142,13 @@ function tags(html, name) {
 }
 
 function stripBlocks(html, names) {
-  let out = html.replace(/<!--[\s\S]*?-->/g, ' ')
+  let out = stripComments(html, ' ')
   for (const n of names) out = out.replace(new RegExp(`<${n}\\b[^>]*>[\\s\\S]*?<\\/${n}\\s*>`, 'gi'), ' ')
   return out
 }
 
 function toText(fragment) {
-  return decodeEntities(fragment.replace(/<[^>]+>/g, ' '))
-    .replace(/\s+/g, ' ')
-    .trim()
+  return decodeEntities(stripTags(fragment, ' ')).replace(/\s+/g, ' ').trim()
 }
 
 function abs(href, base) {
@@ -239,12 +276,23 @@ function flattenLd(data) {
 
 /** The JSON-LD blocks of a page's source; malformed ones are skipped. */
 export function ldBlocksOf(src) {
+  const html = String(src ?? '')
   const blocks = []
-  for (const m of String(src ?? '').matchAll(
-    /<script\b[^>]*type\s*=\s*["']?application\/ld\+json["']?[^>]*>([\s\S]*?)<\/script>/gi
-  )) {
+  // Tag by tag with indexOf, not one regex over the page: `<script\b[^>]*type…[^>]*>` backtracks
+  // over every attribute of every script tag, and the page is whatever the site sends.
+  const open = /<script\b/gi
+  const end = /<\/script>/gi
+  for (let m = open.exec(html); m; m = open.exec(html)) {
+    const tagEnd = html.indexOf('>', m.index)
+    if (tagEnd === -1) break
+    end.lastIndex = tagEnd + 1
+    const close = end.exec(html)
+    if (!close) break
+    open.lastIndex = close.index + close[0].length
+    const type = parseAttrs(html.slice(m.index, tagEnd + 1)).type ?? ''
+    if (!/^application\/ld\+json/i.test(type.trim())) continue
     try {
-      blocks.push(JSON.parse(m[1].trim()))
+      blocks.push(JSON.parse(html.slice(tagEnd + 1, close.index).trim()))
     } catch {
       // malformed JSON-LD is common; skip it
     }

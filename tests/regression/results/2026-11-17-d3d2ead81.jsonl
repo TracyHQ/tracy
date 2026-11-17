@@ -1,0 +1,1 @@
+{"id":"REG-PR-679-hook-site-dir-confinement","verdict":"PASS","commit":"d3d2ead81043f225b7d05e47f7df9392a2b28a96","ran_at":"2026-11-17T12:31:04.979Z","evidence":"tests/regression/.runs/2026-11-17-d3d2ead81/REG-PR-679-hook-site-dir-confinement.log"}

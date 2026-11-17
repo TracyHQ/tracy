@@ -700,8 +700,8 @@ test('literal PRE: exact code text owns only its declared scalar, never prose no
   assert.deepEqual(match(item(literal)).slots, ['article-2.code'])
   for (const changed of [
     literal.toLowerCase(),
-    literal.replace('\t', ' '),
-    literal.replace('\n', ' '),
+    literal.replaceAll('\t', ' '),
+    literal.replaceAll('\n', ' '),
     literal.replace('&amp;', '&'),
     literal + ' '
   ])

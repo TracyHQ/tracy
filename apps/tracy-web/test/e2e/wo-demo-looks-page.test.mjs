@@ -127,7 +127,7 @@ async function openShare({
 }
 
 const frameUrl = async (page) => new URL(await page.locator('#dl-frame').getAttribute('src'))
-const demoFrame = (page) => page.frames().find((f) => f.url().startsWith(DEMO))
+const demoFrame = (page) => page.frames().find((f) => URL.parse(f.url())?.origin === new URL(DEMO).origin)
 
 test('the control shows once the looks load, previews a look by its ticket, keeps the page, and sends the pick', async () => {
   const { context, page, picks, csp } = await openShare({

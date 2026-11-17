@@ -57,14 +57,14 @@ const counts = (v) =>
 const page = (v) =>
   typeof v === 'string' &&
   v.length <= 160 &&
-  /^\/(?:[a-zA-Z0-9._~-]+\/?)*$/.test(v) &&
+  /^\/(?:[a-zA-Z0-9._~-]+(?:\/[a-zA-Z0-9._~-]+)*\/?)?$/.test(v) &&
   !/^\/(?:Users|home|private|tmp|var|etc|proc|root)(?:\/|$)/i.test(v) &&
   !v.split('/').includes('..')
     ? v
     : null
 const slot = (v) =>
   typeof v === 'string' &&
-  /^(?:module|article|contact|menu|category|component|custom|site|image)-\d+(?:[.:-][a-zA-Z0-9_-]+)*$/.test(
+  /^(?:module|article|contact|menu|category|component|custom|site|image)-\d+(?:-[a-zA-Z0-9_-]+)?(?:[.:][a-zA-Z0-9_-]+)*$/.test(
     v
   ) &&
   v.length <= 100

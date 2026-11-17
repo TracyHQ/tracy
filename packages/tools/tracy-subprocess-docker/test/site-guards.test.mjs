@@ -324,3 +324,12 @@ test('reading a link, an inside-site link and a hard link are not refused', () =
   ])
     assert.equal(commandApprovalReason(cmd), null, cmd)
 })
+
+test('quotes around a command word are taken off in linear time, and a quoted ln is still read', () => {
+  assert.ok(commandApprovalReason(`"ln" -s '/etc/passwd' leak`))
+  assert.ok(commandApprovalReason(`'/bin/ln' -s "/site/victim" f`))
+  assert.equal(commandApprovalReason(`"ln" -s 'assets/img.png' hero.png`), null)
+  const started = performance.now()
+  assert.equal(commandApprovalReason(`echo ${'"'.repeat(50_000)}x`), null)
+  assert.ok(performance.now() - started < 500)
+})
