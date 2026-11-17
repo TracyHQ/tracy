@@ -206,7 +206,11 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   on every theme, each theme on its own (`accent`, `accentDark`); when no lightness reads, black on light and white on
   dark as for a logo with no hue. Never the template's accent.
 - **`pictures`**: `own.frames` filled by the business's own photos (with `from`, the sources), and `generated.frames`
-  to be generated, with a `reason` when above zero. `generated.frames` is an estimate, never a cap (D45): the
+  to be generated. `own.frames` counts spots, not photos: one photo may fill several. The photos are counted apart
+  (`picture-tally.mjs`): `own.photos` the owner's photos the plan holds, `own.placed` those that fill a spot, and
+  `own.unused` the others as `{code, count}` entries, so photos = placed + every unused count; `empty` lists the spots
+  left without a picture the same way. The three own counts are given together or not at all. `generated.frames` has
+  a `reason` when above zero. `generated.frames` is an estimate, never a cap (D45): the
   customer reads "about N pictures will be drawn", and the pictures step draws every drawable frame left without a
   fitting own photo once the photos are labelled. An item shown in several frames on different pages whose aspect
   ratios lie within 15% of each other is drawn once and counted once, at the largest width and height among them;
@@ -570,8 +574,8 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `look` | `template`, `accent`, `logo`, `accentDark?` |
 | `template` | `slug`, `name`, `version` |
 | `logo` | `kind`, `source?`, `code?`, `sourceKind?` |
-| `pictures` | `own`, `generated` |
-| `own pictures` | `frames`, `from?`, `fromKinds?` |
+| `pictures` | `own`, `generated`, `empty?` |
+| `own pictures` | `frames`, `from?`, `fromKinds?`, `photos?`, `placed?`, `unused?` |
 | `generated pictures` | `frames`, `reason?`, `code?`, `params?` |
 | `assumption` | `id`, `field`, `said`, `alternatives?`, `code?`, `params?` |
 | `alternative` | `value`, `sources` |

@@ -50,7 +50,16 @@ const plan = {
   pictures: { own: { frames: 1, from: ['Website'] }, generated: { frames: 0 } }
 }
 const LABEL = {
-  pictures: [{ id: 'gallery-courts', label: 'Two padel courts under lights', content: 'venue-exterior' }]
+  pictures: [
+    {
+      id: 'gallery-courts',
+      label: 'Two padel courts under lights',
+      content: 'venue-exterior',
+      isBlurry: false,
+      hasTextOrWatermark: false,
+      showsOtherBusiness: false
+    }
+  ]
 }
 
 /** A fake vision call answering each call with the next scripted answer (an Error is thrown). */

@@ -33,16 +33,58 @@ function tooSmall(picture, frame) {
   return enlargedPast(width, picture.width) || enlargedPast(height, picture.height)
 }
 
+/** The longest side of a frame a low quality photo may fill (the step chain's `SMALL_FRAME_MAX`, `rules-files.js`). */
+export const SMALL_FRAME_MAX = 600
+
+const bool = (x) => (typeof x === 'boolean' ? x : null)
+
+/**
+ * Lettering or a watermark on the photo (the step chain's `letteringOf`, `photo-shortlist.js:16`): scene lettering
+ * or an overlay the vision label saw, the direct answer, then the build labelling's `burnedInText`.
+ */
+export function letteringOf(p) {
+  if (p.textPresence === 'present' || p.hasTextOverlay === true || p.burnedInText === true) return true
+  return bool(p.hasTextOrWatermark)
+}
+
+/**
+ * Why a photo can never fill a frame by its labels (the step chain's `photoRefusal`, `photo-shortlist.js:42`), or
+ * null. Only a labelled photo is judged: the plan counts photos before they are labelled (`labelledBy` unset).
+ * @returns {null | 'not_a_picture_for_this_frame' | 'lettering' | 'other_business' | 'label_unknown' | 'blurry'}
+ */
+function refusalOf(p) {
+  if (p.isGraphic === true) return 'not_a_picture_for_this_frame'
+  if (letteringOf(p) === true) return 'lettering'
+  if (p.showsOtherBusiness === true) return 'other_business'
+  // An undecided risk refuses a photo only once it is labelled; a photo the plan counts before labelling is not judged.
+  if (p.labelledBy && (letteringOf(p) === null || bool(p.showsOtherBusiness) === null)) return 'label_unknown'
+  if (p.isBlurry === true) return 'blurry'
+  return null
+}
+
+/** Whether a low quality photo is kept out of a frame: only a sized frame no longer than `SMALL_FRAME_MAX` takes one. */
+function lowQualityOut(p, frame) {
+  if (p.quality !== 'low') return false
+  const { width, height } = frame.size ?? {}
+  return !(Math.max(Number(width) || 0, Number(height) || 0) > 0) || Math.max(width, height) > SMALL_FRAME_MAX
+}
+
 /**
  * Why a photo does not fit a frame, or null when it fits. A frame takes a photograph (never a video); a logo or a text
  * graphic only in a logo frame; never a portrait photo in the hero; never a photo of the opposite shape (a landscape
  * frame never takes a portrait photo, nor back; a square or undeclared frame takes either); never a photo smaller than
- * the frame's declared size.
- * @returns {null | 'not_a_photo' | 'not_a_picture_for_this_frame' | 'shape_unfit' | 'too_small'}
+ * the frame's declared size; never one its labels refuse (`refusalOf`), outside a logo frame; a low quality photo
+ * only in a small frame.
+ * @returns {null | 'not_a_photo' | 'not_a_picture_for_this_frame' | 'lettering' | 'other_business' |
+ *   'label_unknown' | 'blurry' | 'low_quality' | 'shape_unfit' | 'too_small'}
  */
 export function unfitReason(picture, frame) {
   if (picture.media !== 'photo') return 'not_a_photo'
-  if (!LOGO_FRAMES.has(frame.kind) && NOT_A_HERO.has(picture.content)) return 'not_a_picture_for_this_frame'
+  const logoFrame = LOGO_FRAMES.has(frame.kind)
+  if (!logoFrame && NOT_A_HERO.has(picture.content)) return 'not_a_picture_for_this_frame'
+  const refused = logoFrame ? null : refusalOf(picture)
+  if (refused) return refused
+  if (lowQualityOut(picture, frame)) return 'low_quality'
   const shape = orientation(picture)
   if (frame.place === 'hero' && shape === 'portrait') return 'shape_unfit'
   if (OPPOSITE[frame.shape] === shape) return 'shape_unfit'

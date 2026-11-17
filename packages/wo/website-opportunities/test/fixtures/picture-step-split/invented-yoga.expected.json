@@ -441,5 +441,6 @@
   "leftOut": [],
   "difference": null,
   "labelled": [],
-  "prompt": null
+  "prompt": null,
+  "tally": { "photos": 0, "placed": 0, "unused": [], "spots": 0, "empty": [], "emptySpots": 0, "drawn": 0 }
 }

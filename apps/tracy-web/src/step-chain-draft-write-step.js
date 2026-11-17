@@ -24,6 +24,7 @@
 // A revision run (#599: the plan step found the previous build, `inputs.plan.previous`) writes only what the revision
 // changed, on a record of its own (`step-chain-draft-write-revision.js`).
 import { writePlanOf } from 'website-opportunities/domain/draft-write-plan.mjs'
+import { researchLabelsOf } from 'website-opportunities/domain/picture-research-labels.mjs'
 import { buildResultOf } from 'website-opportunities/domain/build-result.mjs'
 import { opsRecordOf } from 'website-opportunities/domain/revision-write-delta.mjs'
 import { draftError } from './step-chain-draft-source.js'
@@ -76,6 +77,8 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
       runId: ctx.runId ?? 'draft',
       openStored: (id) => wiring.openStored(id, ctx),
       drawInitials: wiring.drawInitials ?? drawInitials,
+      // The research labels of the owner photos, by address: the photo cut keeps their subject whole.
+      pictureLabels: researchLabelsOf(inputs.plan?.research?.brief, inputs.plan?.research?.manifest),
       // The clock the created articles are dated from (tests fix it; the server leaves the wall clock).
       ...(wiring.now ? { now: wiring.now } : {})
     }

@@ -133,6 +133,9 @@ export const visionReply = (ids, over = {}) => ({
     content: 'venue-exterior',
     people: false,
     burnedInText: false,
+    isBlurry: false,
+    hasTextOrWatermark: false,
+    showsOtherBusiness: false,
     orientation: 'landscape',
     ...over[id]
   }))

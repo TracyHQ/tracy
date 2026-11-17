@@ -7,14 +7,15 @@
 // logo; an award or partner logo is the other entity's own mark, never drawn), the template's design values, an icon
 // (icons come from the icon library, `icon-selection.mjs`), a map, a video and a gallery picture (a gallery shows the
 // business's own photos only, never a drawing; the locked planner rule).
+// 🔒 NEVER DRAWN, AS IT HAPPENED: an event's or a post's picture shows something real that took place; a drawing would
+// invent it (the step chain's documentary rule #548, `site-pictures/picture-check/inputs-index.js` `documentaryFrame`:
+// a frame grounded in the business's posts or in what was observed takes a real photo or stays empty).
 import { modeOfRole, PLACE_CONTENT_ROLES_V3 } from './place-content-roles.mjs'
 
 /** Roles a build may generate a picture for when no own photo fits (every such frame, no cap, D45). */
 export const GENERATED_PICTURE_ROLES = Object.freeze([
   'business.hero_image',
   'offering.image',
-  'event.image',
-  'article.image',
   'editorial.illustration'
 ])
 
@@ -29,7 +30,9 @@ export const NEVER_GENERATED_ROLES = Object.freeze({
   'editorial.item_icon': 'icon_from_icon_library',
   'contact.map': 'map_not_generated',
   'business.video': 'no_fitting_video',
-  'business.gallery_image': 'gallery_own_photos_only'
+  'business.gallery_image': 'gallery_own_photos_only',
+  'event.image': 'documentary_not_drawn',
+  'article.image': 'documentary_not_drawn'
 })
 
 /** The reason a frame of a gallery records when no own photo fills it: a gallery is never drawn. */
