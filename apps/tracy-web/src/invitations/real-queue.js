@@ -12,7 +12,15 @@
  * morning). So it does not pause at once: the queue waits and asks again on each later pass, and pauses
  * only once aMember has failed for `AMEMBER_RETRY_MS` without one clear answer in between. Nothing is
  * sent or skipped while it waits, so a retry can neither double-send nor lose a customer. Every pause
- * the cron makes is told to the ops topic (`invitations.queue_paused`). */
+ * the cron makes is told to the ops topic (`invitations.queue_paused`).
+ *
+ * Two more errors get the same window (measured 16/11/2026: a queue paused at 13:23 on REAL_INTERNAL with
+ * the mailbox still connected, and lay still for 20 hours until a person pressed Resume, which worked at
+ * once; on 05/11/2026 one paused on MAILBOX_TOKEN_UNAVAILABLE the same way): an unexpected server error
+ * (`REAL_INTERNAL`), and Gmail not handing out an access token for a moment. Both are safe to try again:
+ * an unexpected error either came before the send row was written, or the same request key replays that
+ * row; a token refusal is recorded `failed` before anything left, and the next try sends under a new
+ * request key, so the customer is neither skipped nor sent twice. */
 import { REAL_GROUPS, listRealRecipients, readRealRecipient } from './real-import.js'
 import { realRecord } from './real-fields.js'
 import { realError, realId, realTransaction } from './real-store.js'
@@ -30,8 +38,13 @@ const SKIP = new Set([
 ])
 // Not now: try again on a later pass.
 const WAIT = new Set(['REAL_PILOT_PACING', 'REAL_SEND_BUSY'])
-/** How long aMember may keep failing before the queue pauses for a person. */
+/** How long aMember (or another error that may clear up, below) may keep failing before the queue
+ * pauses for a person. */
 export const AMEMBER_RETRY_MS = 30 * 60_000
+// Errors that may clear up on their own: wait and try again inside the window.
+const RETRY = new Set(['REAL_MEMBERSHIP_UNKNOWN', 'REAL_INTERNAL'])
+// Gmail refused before anything left: the same customer is tried again under a new request key.
+const RETRY_FAILED = new Set(['MAILBOX_TOKEN_UNAVAILABLE'])
 
 async function queueRow(db, campaignId) {
   return (await db.query('select * from invitations_real_queue where campaign_id=$1', [campaignId])).rows[0]
@@ -180,7 +193,8 @@ const pause = (pool, campaignId, reason) =>
     [campaignId, reason]
   )
 
-/** aMember failed for this queue: when it first did (kept), and how long ago that was, in ms. */
+/** aMember (or another error that may clear up) failed for this queue: when it first did (kept), and
+ * how long ago that was, in ms. */
 async function amemberFailing(pool, campaignId) {
   const row = (
     await pool.query(
@@ -234,6 +248,16 @@ async function runOne({ pool, keys, config, fetcher, q }) {
       )
       return { done: true }
     }
+    // Each try after a Gmail token refusal gets its own request key: the refused try is a `failed`
+    // row under the old key, and replaying that key would return it again.
+    const refused = Number(
+      (
+        await pool.query(
+          "select count(*) as n from invitations_real_send where campaign_id=$1 and recipient_id=$2 and kind='invitation' and state='failed'",
+          [campaignId, item.recipient_id]
+        )
+      ).rows[0].n
+    )
     let row
     try {
       const recipient = await readRealRecipient({ pool, keys, campaignId, recipientId: item.recipient_id })
@@ -246,8 +270,9 @@ async function runOne({ pool, keys, config, fetcher, q }) {
         campaignId,
         recipientId: item.recipient_id,
         actorId: q.actor_id,
-        // One key per customer and draft revision: a pass that stopped mid-send replays the same row.
-        requestKey: `queue-${item.recipient_id}-r${draftRevision}`,
+        // One key per customer, draft revision and refused try: a pass that stopped mid-send replays
+        // the same row.
+        requestKey: `queue-${item.recipient_id}-r${draftRevision}${refused ? `-a${refused}` : ''}`,
         draftRevision,
         fetcher
       })
@@ -261,12 +286,18 @@ async function runOne({ pool, keys, config, fetcher, q }) {
         continue
       }
       if (WAIT.has(code)) return { waiting: code }
-      // aMember not answering: ask again on a later pass, until it has failed for the whole window.
-      if (code === 'REAL_MEMBERSHIP_UNKNOWN' && (await amemberFailing(pool, campaignId)) < AMEMBER_RETRY_MS)
-        return { waiting: code }
+      // aMember not answering, or an unexpected error: try again on a later pass, until it has failed
+      // for the whole window.
+      if (RETRY.has(code) && (await amemberFailing(pool, campaignId)) < AMEMBER_RETRY_MS) return { waiting: code }
       await pause(pool, campaignId, code)
       return { paused: code }
     }
+    if (
+      row.state === 'failed' &&
+      RETRY_FAILED.has(row.errorCode) &&
+      (await amemberFailing(pool, campaignId)) < AMEMBER_RETRY_MS
+    )
+      return { waiting: row.errorCode }
     await amemberAnswered(pool, campaignId)
     if (row.state === 'failed') {
       await settle(pool, campaignId, item.recipient_id, {
@@ -304,6 +335,11 @@ export async function runRealQueues({ pool, keys, config, fetcher = fetch }) {
     } catch (error) {
       const reason =
         typeof error?.code === 'string' && /^REAL_[A-Z0-9_]+$/.test(error.code) ? error.code : 'REAL_INTERNAL'
+      // An error outside one send (the database, say) gets the same window as one inside it.
+      const failing = RETRY.has(reason)
+        ? await amemberFailing(pool, q.campaign_id).catch(() => AMEMBER_RETRY_MS)
+        : AMEMBER_RETRY_MS
+      if (failing < AMEMBER_RETRY_MS) continue
       await pause(pool, q.campaign_id, reason).catch(() => {})
       paused.push({ campaignId: q.campaign_id, reason })
     }
