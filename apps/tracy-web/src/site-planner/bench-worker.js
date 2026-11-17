@@ -228,7 +228,8 @@ const briefRefOf = (source) => String(source?.revisionId ?? source?.name ?? '')
 // - a copy entry without maxCharacters, or with one above the kit's limit, gets the kit's limit (plan-kit-limits.js);
 // - a template demo video a kept block still shows, left undecided, is hidden (plan-demo-videos.js);
 // - the label of a link the decision hides, written by the same decision, is hidden with it, unless several kit blocks
-//   print it (plan-hidden-links.js);
+//   print it, and a page control (a tab, a form's submit) whose words the decision writes is kept, whether the decision
+//   hid it or left it undecided (plan-hidden-links.js);
 // - a field of a kept list row that the decision both writes and hides is written (plan-row-fields.js).
 function normalizedPlan(plan, kit) {
   return withWrittenRowFieldsShown(

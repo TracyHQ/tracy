@@ -132,6 +132,11 @@ function sharedLabels(kit, linkLabelSlot) {
  *   with its label slot. Hiding its label instead would leave a form's submit button with no words.
  * - Any other link the decision hides takes its label with it (the spec: "hide its label slot, and the link with it"):
  *   the label moves from the copy to the hidden slots.
+ * - A page control the decision leaves undecided (neither in its links nor hidden) while it writes the control's words
+ *   is kept the same way. Dev, Arabian Tea House on JA Diner, 17/11/2026 (lat12): the last fix round wrote the three
+ *   menu tab labels and rewrote the block's hidden slots without the tabs it had hidden in round 1, so the tabs were
+ *   neither kept nor hidden and R10b ended the plan step "failed, best version used". Written words on a tab say the
+ *   tab stays; a tab whose words are hidden or not written stays with the planner.
  * A label owned by another block (`ownedBy`, shown there too and written for its own link, R24), a label several kit
  * blocks print (R24: written, never hidden; the dev corpus of 16/11/2026 had 28 R24 failures this function made, a
  * JA Boxing "Book a class" string hidden with three of its buttons) and a label the decision does not write itself
@@ -148,6 +153,7 @@ export function withHiddenLinkLabels(plan, kit) {
     [...navGroups.values()].flatMap((group) => each(group?.items).map((it) => it?.labelSlot))
   )
   const isMenuLabel = (id) => menuLabels.has(id) || String(slotRole.get(id) ?? '').endsWith('menu_label')
+  const kitLinks = new Map(each(kit?.blocks).map((block) => [block?.id, each(block?.links)]))
   let changed = false
   const fix = (decision) => {
     if (!decision || typeof decision !== 'object' || decision.decision !== 'keep') return decision
@@ -165,6 +171,15 @@ export function withHiddenLinkLabels(plan, kit) {
       if (link.action !== 'page-control' && shared.has(label) && !isMenuLabel(label)) continue
       if (link.action === 'page-control') keepControls.set(h.slot, label)
       else hideLabels.set(label, h.slot)
+    }
+    const linked = new Set(each(decision.links).map((l) => l?.link))
+    for (const link of kitLinks.get(decision.block) ?? []) {
+      if (link?.action !== 'page-control' || linked.has(link.id) || hiddenIds.has(link.id)) continue
+      const label = linkLabelSlot.get(link.id)
+      if (!label || hiddenIds.has(label) || !written.has(label)) continue
+      const owner = slotOwnedBy.get(label)
+      if (owner && owner !== decision.block) continue
+      keepControls.set(link.id, label)
     }
     if (!keepControls.size && !hideLabels.size) return decision
     changed = true

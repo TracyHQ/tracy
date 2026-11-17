@@ -311,6 +311,33 @@ test('a hidden line no kept page prints keeps its words and is green (unshown, n
   assert.match(failuresOf(red)[0].reason, /still holds words/)
 })
 
+test('a link hidden inside words the write step replaced is green while those words hold no link, red while they still do', async () => {
+  // Dev, BXR London on JA Boxing 17/11/2026 (lat12): each trainer's social links were printed inside the role line, which
+  // the write step replaced with the role alone. The 34 hidden links were read as still holding the role's words.
+  const inWords = {
+    ...written('block-163.link-4', 'module-163.12'),
+    status: 'hidden',
+    ordered: undefined,
+    inReplacedWords: true,
+    reason:
+      'the plan hides this slot: it was printed inside the words of module-163.12, which the write step replaced with words that hold no link'
+  }
+  const green = await check(checkSite({ 'module-163.12': '<p>Head of Combat</p>' }), report([inWords]))
+  assert.equal(green.status, 'green', JSON.stringify(failuresOf(green)))
+  const red = await check(
+    checkSite({
+      'module-163.12': '<p>Head of Combat</p><a class="fa" href="https://instagram.com/demo"></a>'
+    }),
+    report([inWords])
+  )
+  assert.equal(red.status, 'red')
+  assert.match(failuresOf(red)[0].reason, /still hold a link/)
+  // A hidden line that is not inside replaced words is still held to an empty slot.
+  const plain = { ...inWords, inReplacedWords: undefined }
+  const words = await check(checkSite({ 'module-163.12': '<p>Head of Combat</p>' }), report([plain]))
+  assert.match(failuresOf(words)[0].reason, /still holds words/)
+})
+
 test('a hidden line gone with its block is read on the block: green unpublished, red while still published', async () => {
   const hidden = {
     ...written('block-4.1', 'module-4.1'),

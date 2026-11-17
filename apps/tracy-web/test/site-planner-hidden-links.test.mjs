@@ -295,3 +295,82 @@ test('a label several blocks print stays written when its link is hidden: R10b a
   )
   assert.equal(ruleOn('R24', result, kit).failures.length, 0)
 })
+
+test('an undecided page control whose words the decision writes is kept; undecided links of any other kind stay with the planner', async () => {
+  const { withHiddenLinkLabels } = await import('../src/site-planner/plan-hidden-links.js')
+  const k = {
+    blocks: [
+      {
+        id: 'menu',
+        links: [
+          { id: 'menu.link-1', action: 'page-control', element: 'a', labelId: 'tab-1' },
+          { id: 'menu.link-2', action: 'page-control', element: 'a', labelId: 'tab-2' },
+          { id: 'menu.link-3', action: 'page-control', element: 'a', labelId: 'tab-3' },
+          { id: 'menu.link-4', action: 'go-to-item', element: 'a', labelId: 'more' }
+        ],
+        slots: [{ id: 'tab-1' }, { id: 'tab-2' }, { id: 'tab-3' }, { id: 'more' }]
+      }
+    ]
+  }
+  // As the last fix round of arabian-tea-lat12 left it: tab words written, the tabs neither kept nor hidden.
+  const decision = {
+    block: 'menu',
+    decision: 'keep',
+    copy: [
+      { slot: 'tab-1', says: 'tab label for the breakfast dishes' },
+      { slot: 'tab-2', says: 'tab label for the main dishes' },
+      { slot: 'more', says: 'a call to see more' }
+    ],
+    hiddenSlots: [{ slot: 'tab-3', why: 'no drinks in the brief' }],
+    links: []
+  }
+  const value = { sharedBlocks: [decision], pages: [] }
+  const out = withHiddenLinkLabels(value, k).sharedBlocks[0]
+  // The two tabs with written words stay; the tab whose words are hidden and the undecided go-to link do not move.
+  assert.deepEqual(out.links, [
+    { link: 'menu.link-1', labelSlot: 'tab-1' },
+    { link: 'menu.link-2', labelSlot: 'tab-2' }
+  ])
+  assert.deepEqual(out.hiddenSlots, decision.hiddenSlots)
+  assert.deepEqual(out.copy, decision.copy)
+  assert.deepEqual(value.sharedBlocks[0].links, [], 'the plan is never modified in place')
+  // A tab the planner decided itself is left as it is, and a settled plan is returned unchanged.
+  assert.strictEqual(withHiddenLinkLabels(withHiddenLinkLabels(value, k), k).sharedBlocks.length, 1)
+  const settled = withHiddenLinkLabels(value, k)
+  assert.strictEqual(withHiddenLinkLabels(settled, k), settled)
+})
+
+test('JA Diner 1.0.8: the menu block whose tab labels the plan writes keeps its three tabs, and its go-to link stays hidden', async () => {
+  const { withHiddenLinkLabels } = await import('../src/site-planner/plan-hidden-links.js')
+  const diner = JSON.parse(
+    readFileSync(
+      new URL(
+        '../../../packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/template-kit.json',
+        import.meta.url
+      )
+    )
+  )
+  const decision = {
+    block: 'block-97',
+    decision: 'keep',
+    copy: ['block-97.1', 'block-97.2', 'block-100.32', 'block-101.32', 'block-102.32'].map((slot) => ({
+      slot,
+      says: 'words'
+    })),
+    hiddenSlots: [
+      { slot: 'block-100.0', why: 'no full menu page' },
+      { slot: 'block-97.link-4', why: 'no full menu page' }
+    ],
+    links: []
+  }
+  const out = withHiddenLinkLabels({ sharedBlocks: [decision], pages: [] }, diner).sharedBlocks[0]
+  assert.deepEqual(
+    out.links.map((l) => [l.link, l.labelSlot]),
+    [
+      ['block-97.link-1', 'block-100.32'],
+      ['block-97.link-2', 'block-101.32'],
+      ['block-97.link-3', 'block-102.32']
+    ]
+  )
+  assert.ok(out.hiddenSlots.some((h) => h.slot === 'block-97.link-4'))
+})
