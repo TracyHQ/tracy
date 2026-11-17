@@ -70,8 +70,8 @@ test('crawlSite: breadth first over the same host, HTML only, scripts defused, o
     assert.equal(result.pages[1].file, 'pages/02-tools.html')
     assert.equal(result.pages[3].file, 'pages/04-tools-hammer.html')
 
-    assert.ok(!calls.includes('https://twitter.com/acme'), 'never leaves the host')
-    assert.ok(!calls.includes('https://acme.example/wp-admin/'), 'admin doors are not pages')
+    assert.ok(!calls.some((u) => u === 'https://twitter.com/acme'), 'never leaves the host')
+    assert.ok(!calls.some((u) => u === 'https://acme.example/wp-admin/'), 'admin doors are not pages')
     assert.equal(
       calls.filter((u) => u === 'https://acme.example/').length,
       1,
