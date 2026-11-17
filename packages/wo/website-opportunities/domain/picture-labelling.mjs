@@ -1,5 +1,6 @@
 // Labelling the business's own pictures before they are placed (ticket #595, spec #577). An own picture without a label
-// is not discarded: ONE vision call of the standard build model labels every unlabelled own picture of the site. A
+// is not discarded: the standard build model labels every unlabelled own picture of the site, in vision calls of at most
+// eight pictures (the step chain's batch). A
 // stock picture is never labelled, since it is never used.
 //
 // 🔒 A LABELLING FAILURE IS A STEP FAILURE. A vision call that throws, an unreadable reply, or a reply that leaves a
@@ -93,8 +94,38 @@ function labelled(picture, answer) {
   }
 }
 
+/** The most pictures one vision call is shown: the step chain's batch (`lib/picture-vision.js`). */
+export const LABEL_BATCH = 8
+
+/** One vision call over a batch: its answers by id, or a `picture_labelling_failed` error naming the batch. */
+async function askBatch(vision, batch) {
+  let reply
+  try {
+    reply = await vision(labellingRequest(batch))
+  } catch (error) {
+    throw new PicturePolicyError(
+      'picture_labelling_failed',
+      `the vision call failed: ${error?.message ?? error}`,
+      {
+        pictures: batch.map((p) => p.id),
+        cause: error
+      }
+    )
+  }
+  const answers = readReply(reply)
+  if (!answers)
+    throw new PicturePolicyError(
+      'picture_labelling_failed',
+      'the vision reply is not a JSON object with pictures',
+      {
+        pictures: batch.map((p) => p.id)
+      }
+    )
+  return answers
+}
+
 /**
- * Label every unlabelled own picture with one vision call; labelled and stock pictures are returned as they are.
+ * Label every unlabelled own picture with vision calls of at most `LABEL_BATCH` pictures each; labelled and stock pictures are returned as they are.
  * @param {{pictures: object[], vision: (request: object) => Promise<unknown>}} input own picture records
  *   (`picture-frames.mjs` `ownPicturesOf`) and the standard build model's vision call
  * @returns {Promise<{pictures: object[], labelled: string[], prompt: {file: string, sha256: string} | null}>}
@@ -108,28 +139,12 @@ export async function labelOwnPictures({ pictures, vision }) {
     throw new PicturePolicyError('vision_missing', 'own pictures need a label and no vision call was given', {
       pictures: unlabelled.map((p) => p.id)
     })
-  let reply
-  try {
-    reply = await vision(labellingRequest(unlabelled))
-  } catch (error) {
-    throw new PicturePolicyError(
-      'picture_labelling_failed',
-      `the vision call failed: ${error?.message ?? error}`,
-      {
-        pictures: unlabelled.map((p) => p.id),
-        cause: error
-      }
-    )
-  }
-  const answers = readReply(reply)
-  if (!answers)
-    throw new PicturePolicyError(
-      'picture_labelling_failed',
-      'the vision reply is not a JSON object with pictures',
-      {
-        pictures: unlabelled.map((p) => p.id)
-      }
-    )
+  // In batches of `LABEL_BATCH`, as the step chain labels them (`lib/picture-vision.js` `labelWithVision`, batch 8):
+  // one call per batch, every batch answered or the step fails.
+  const answers = new Map()
+  for (let at = 0; at < unlabelled.length; at += LABEL_BATCH)
+    for (const [id, answer] of await askBatch(vision, unlabelled.slice(at, at + LABEL_BATCH)))
+      answers.set(id, answer)
   const done = new Map()
   for (const picture of unlabelled) {
     const result = labelled(picture, answers.get(picture.id))

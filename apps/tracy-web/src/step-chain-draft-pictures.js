@@ -17,6 +17,7 @@
 import { researchOf } from 'website-opportunities/domain/needs-research.mjs'
 import { researchLabelsOf } from 'website-opportunities/domain/picture-research-labels.mjs'
 import { heldTextsOf, itemTextsOf, namesHeldInAnyForm } from 'website-opportunities/domain/plan-withheld.mjs'
+import { thumbnail } from './lib/picture-vision.js'
 import { draftError } from './step-chain-draft-source.js'
 import { OPENED, openOptionsOf } from './step-chain-draft-stored.js'
 
@@ -74,8 +75,7 @@ export async function withDraftPictures({ profile, manifest, accountId, openDraf
           continue
         }
         used.push(entry.id)
-        const mime = isText(got.mime) ? got.mime : isText(entry.mime) ? entry.mime : 'image/jpeg'
-        refs.set(field.value, `data:${mime};base64,${Buffer.from(got.bytes).toString('base64')}`)
+        refs.set(field.value, await visionAddressOf(got, entry))
       }
       items[kind].push({ ...item, fields })
     }
@@ -104,6 +104,19 @@ export function researchPicturesOf(research) {
   const all = researchOf(brief, { manifest }).videos
   const videos = all.filter((v) => isText(v.label))
   return { labels: researchLabelsOf(brief, manifest), videos, videosLeftOut: all.length - videos.length }
+}
+
+/**
+ * The address the vision call is shown a stored picture by: the step chain's thumbnail (`lib/picture-vision.js`, long
+ * edge 512, JPEG 70), or the stored bytes as they are when sharp cannot read them.
+ */
+async function visionAddressOf(got, entry) {
+  try {
+    return `data:image/jpeg;base64,${(await thumbnail(got.bytes)).toString('base64')}`
+  } catch {
+    const mime = isText(got.mime) ? got.mime : isText(entry.mime) ? entry.mime : 'image/jpeg'
+    return `data:${mime};base64,${Buffer.from(got.bytes).toString('base64')}`
+  }
 }
 
 /**

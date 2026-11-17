@@ -147,3 +147,29 @@ test('a low quality photo goes only into a small frame', () => {
   assert.equal(unfitReason(low, frame({ size: { width: 1200, height: 800 } })), 'low_quality')
   assert.equal(unfitReason(low, frame()), 'low_quality')
 })
+
+test('the photos are labelled in batches of eight, as the step chain labels them (picture-vision.js batch)', async () => {
+  const pictures = Array.from({ length: 10 }, (_, n) => record(`b${n}`))
+  const calls = []
+  const out = await labelOwnPictures({
+    pictures,
+    vision: (request) => {
+      const ids = JSON.parse(request.user).pictures.map((p) => p.id)
+      calls.push(ids.length)
+      assert.equal(request.images.length, ids.length)
+      return {
+        pictures: ids.map((id) => ({
+          id,
+          label: `Looked at ${id}`,
+          content: 'food',
+          isBlurry: false,
+          hasTextOrWatermark: false,
+          showsOtherBusiness: false,
+          orientation: 'square'
+        }))
+      }
+    }
+  })
+  assert.deepEqual(calls, [8, 2])
+  assert.equal(out.labelled.length, 10)
+})

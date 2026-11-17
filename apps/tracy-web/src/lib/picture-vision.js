@@ -33,7 +33,7 @@ const SCHEMA_VERSION = 's2'
 /** What a photo shows for any trade: the brief's asset vocabulary (`asset-labels.mjs`). */
 export const CONTENT_KINDS = ASSET_CONTENT_KINDS
 /** The thumbnail sent: long edge and JPEG quality (part of the cache key). */
-const THUMB = { edge: 512, quality: 70 }
+export const THUMB = { edge: 512, quality: 70 }
 export const SUBJECTS = Object.freeze([
   'food',
   'drink',
@@ -174,7 +174,8 @@ export function visionKey({ model }) {
   return `${model}|${VISION_PROMPT_VERSION}|${SCHEMA_VERSION}|${THUMB.edge}q${THUMB.quality}`
 }
 
-async function thumbnail(bytes) {
+/** The thumbnail a vision call is shown of a picture: its long edge `THUMB.edge`, a JPEG at `THUMB.quality`. */
+export async function thumbnail(bytes) {
   return sharp(Buffer.from(bytes), { failOn: 'none', limitInputPixels: 100_000_000 })
     .rotate()
     .resize(THUMB.edge, THUMB.edge, { fit: 'inside', withoutEnlargement: false })

@@ -9,7 +9,7 @@
 //             fields, then `copy_check_failed` (noRerun) naming pages and codes. 🔒 A PAGE IS WRITTEN AT MOST TWICE IN
 //             ONE BUILD: a failure in the rewrite round is noRerun; a failure before it may be re-run once by the
 //             frame, and that second attempt writes once with no rewrite round (`rewrite: false`)
-//   pictures  the draft pictures opened, labelled by ONE vision call, assigned to every frame (`placeBuildPictures`);
+//   pictures  the draft pictures opened, labelled by vision calls of eight, as thumbnails, assigned to every frame (`placeBuildPictures`);
 //             a picture whose own texts name a held text is refused (`refusedPicture`)
 //   icons     `selectBuildIcons` over the written copy and the placed frames
 //   order, write   `step-chain-draft-steps-late.js`: the write order, and the write on the site through the doors

@@ -6,7 +6,8 @@
 //   node --test --test-concurrency=1 apps/tracy-web/test/step-chain-draft-research-pictures.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { researchPicturesOf } from '../src/step-chain-draft-pictures.js'
+import sharp from 'sharp'
+import { researchPicturesOf, withDraftPictures } from '../src/step-chain-draft-pictures.js'
 import { setUp } from './step-chain-draft-harness.mjs'
 
 const full = (id, more = {}) => ({
@@ -87,4 +88,27 @@ test('the business own videos with a caption are offered to the pictures step; t
     [['v1', false, 'landscape']]
   )
   assert.equal(got.videosLeftOut, 1)
+})
+
+test('the vision call is shown a 512 pixel JPEG thumbnail of each stored photo, as the step chain shows it', async () => {
+  const png = await sharp({ create: { width: 1200, height: 800, channels: 3, background: '#4b7a9c' } })
+    .png()
+    .toBuffer()
+  const url = 'https://larkspur-florist.example/img/one.jpg'
+  const opened = await withDraftPictures({
+    profile: {
+      items: {
+        gallery: [
+          { id: 'g1', kind: 'gallery', pictureId: 'm1', fields: { 'business.gallery_image': { value: url } } }
+        ]
+      }
+    },
+    manifest: [{ id: 'm1', origin: 'draft', sourceUrl: url }],
+    accountId: 'acct',
+    openDraftPicture: async () => ({ bytes: new Uint8Array(png), mime: 'image/png' })
+  })
+  const ref = opened.refs.get(url)
+  assert.ok(ref.startsWith('data:image/jpeg;base64,'))
+  const meta = await sharp(Buffer.from(ref.split(',')[1], 'base64')).metadata()
+  assert.deepEqual([meta.width, meta.height], [512, 341])
 })
