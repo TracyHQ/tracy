@@ -1,15 +1,14 @@
-// The build chat's research with no link at all (#609): an owner with no website, no map listing and no social page
-// says what the business is in their own words, and the research builds from those words alone. The Website
-// Opportunities reading is the real one; only its model door is a fake answering what an invented model would. Every
-// business, place and price is invented. No database, no network, no key.
+// The build chat's reading of the owner's own words (#609, #575): the step chain's business reading over what the owner
+// said, which a research of the owner's words keeps as the business's reading and a research of links as how the
+// words were read. Research itself is the step chain's (`owner-research.js`, `place-research.js`): the gatherer never
+// researches by itself. The Website Opportunities reading is the real one; only its model door is a fake answering
+// what an invented model would. Every business, place and price is invented. No database, no network, no key.
 //
 //   node --test --test-concurrency=1 apps/tracy-web/test/build-draft-gather-description-only.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { researchOf } from 'website-opportunities/domain'
 import { BUSINESS_READING_SYSTEM } from 'website-opportunities/domain/business-reading.mjs'
 import { preSiteGatherer } from '../src/build-draft-wiring.js'
-import { researchStep } from '../src/build-draft/engine-steps.js'
 import { fakeDomain, runtimeWith } from './build-draft-gather-fakes.mjs'
 
 const SERVICE = 'Bike repairs and tune ups from 25 dollars, done the same day.'
@@ -67,79 +66,35 @@ function gatherer(domain, rest = {}) {
   })
 }
 
-test("no link but the owner's words: the research reads the words as the owner's answer and makes a brief", async () => {
+test("the owner's words are read by the business reading: how they were read, and the reading itself", async () => {
   const { domain, calls } = await fakeDomain()
   const model = fakeModel()
-  const gathered = await gatherer(domain, { readingDoor: async () => READY, readingFetch: model.fetch })(
-    { links: [], description: WORDS, name: 'Pellmoor Cycle Workshop' },
-    {}
-  )
+  const gather = gatherer(domain, { readingDoor: async () => READY, readingFetch: model.fetch })
+  const read = await gather.readDescription({ description: WORDS, name: 'Pellmoor Cycle Workshop' })
   assert.equal(calls.filter(([door]) => door === 'guard').length, 0, 'no link is judged or read')
   assert.equal(model.calls.length, 1, 'the words are read once by the business reading')
-  assert.deepEqual(gathered.descriptionFacts, { read: true, heldOut: 0, cut: false })
-  assert.deepEqual(gathered.setAside, [])
-  const { brief } = gathered
-  assert.ok(brief.reading.services.some((s) => s.label === 'Bike repairs'))
-  assert.equal(brief.business.name, 'Pellmoor Cycle Workshop', 'the name the owner typed names the business')
-  // The brand step refuses a brief with no brand part: nothing was observed, so it is the neutral one, claiming nothing.
-  assert.deepEqual(
-    [brief.brand?.origin, brief.brand?.official, brief.brand?.colors, brief.brand?.name],
-    ['social', false, [], 'Pellmoor Cycle Workshop'],
-    'the brief has a brand part'
+  assert.deepEqual(read.descriptionFacts, { read: true, heldOut: 0, cut: false })
+  assert.ok(
+    read.businessReading.services.some((s) => s.label === 'Bike repairs'),
+    JSON.stringify(read.businessReading)
   )
-  // The needs profile's research reads the owner's facts with the origin "answer".
-  const { sources } = researchOf(brief, { manifest: gathered.manifest })
-  const own = sources.filter((s) => s.id === 'owner-statement')
-  assert.ok(own.length, 'the research has the owner statement as a source')
-  assert.ok(own.every((s) => s.origin === 'answer'))
 })
 
-test('no link and no words: there is nothing to read, and the research says so', async () => {
-  const { domain } = await fakeDomain()
-  await assert.rejects(gatherer(domain)({ links: [], description: null }, {}), {
-    code: 'research_empty',
-    reason: 'no_links',
-    noRerun: true
-  })
-})
-
-test('no link and no name: the owner is asked for the name, nothing is read', async () => {
-  const { domain, calls } = await fakeDomain()
-  await assert.rejects(gatherer(domain)({ links: [], description: WORDS }, {}), {
-    code: 'research_empty',
-    reason: 'no_name',
-    noRerun: true
-  })
-  assert.equal(calls.length, 0)
-})
-
-test('research from the words alone: the needs profile reads the owner as its source and asks the ordinary questions', async () => {
+test('no words: nothing is read', async () => {
   const { domain } = await fakeDomain()
   const model = fakeModel()
   const gather = gatherer(domain, { readingDoor: async () => READY, readingFetch: model.fetch })
-  // The needs profile model's scripted reading: the repair service, from the owner's own statement.
-  const needs = async () =>
-    JSON.stringify({
-      languages: [{ source: 'owner-statement', language: 'en' }],
-      facts: [],
-      items: [
-        {
-          source: 'owner-statement',
-          kind: 'service',
-          fields: { 'offering.name': 'Bike repairs' },
-          evidence: SERVICE
-        }
-      ]
-    })
-  const record = await researchStep(
-    { links: [], description: WORDS, name: 'Pellmoor Cycle Workshop' },
-    { gather, model: needs, kit: null }
-  )
-  assert.equal(record.brief.business.name, 'Pellmoor Cycle Workshop')
-  // The ordinary questions of a business that states no contact: its main button and how to reach it. None asks for a
-  // link, the site name or a place.
-  assert.deepEqual(
-    record.profile.questions.map((q) => q.topic),
-    ['main-button', 'contact-method']
+  assert.equal(await gather.readDescription({ description: '  ', name: 'Pellmoor Cycle Workshop' }), null)
+  assert.equal(model.calls.length, 0)
+})
+
+test('the gatherer never researches by itself: research is the step chain own', async () => {
+  const { domain } = await fakeDomain()
+  await assert.rejects(
+    gatherer(domain)({ links: [], description: WORDS, name: 'Pellmoor Cycle Workshop' }, {}),
+    {
+      code: 'research_unavailable',
+      noRerun: true
+    }
   )
 })

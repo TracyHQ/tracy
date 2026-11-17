@@ -183,7 +183,12 @@ export function engineStateOf(row, { kit = null, progress = null } = {}) {
     const profile = planProfileOf(row.research, kit)
     // Research that found no trade asks what kind of business it is first (`trade-question.js`).
     const trade = tradeQuestionOf(row.research)
-    const questions = [...(trade ? [trade] : []), ...list(profile?.questions)]
+    // A research of the owner's words asks what its brief still misses (`owner-research.js`).
+    const questions = [
+      ...(trade ? [trade] : []),
+      ...list(row.research?.gapQuestions),
+      ...list(profile?.questions)
+    ]
     const ask = askOf(questions, row.answers)
     return {
       step,

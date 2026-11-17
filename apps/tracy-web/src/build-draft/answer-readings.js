@@ -39,6 +39,9 @@ async function readingsOf(profile, answers, { reserve, modelOf }) {
   return ran?.readings ?? null
 }
 
+/** The readings of typed answers to research's own questions (`questions`), under the ledger step `answers`. */
+export const readAnswersOf = (questions, answers, tools) => readingsOf({ questions }, answers, tools)
+
 /**
  * The offered choice a typed answer to one research question means (the place question, the business trade question),
  * read under the ledger step `answers`; null when there is no typed answer, the reading made none, or it was refused.

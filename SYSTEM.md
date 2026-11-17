@@ -921,11 +921,16 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   ([`lib/research-picture-reader.js`](apps/tracy-web/src/lib/research-picture-reader.js): `wo_place_media` or `wo_media`,
   hash checked, a place picture only for an account holding an opportunity on that place). Start over deletes the
   draft and removes `ownSite.buildDraft` from its opportunity; the shared place research stays.
-  Research of the owner's words alone ([`build-draft/gather.js`](apps/tracy-web/src/build-draft/gather.js)) saves
-  nothing: the business is read by the place executor's own reading step ([`build-draft/gather-reading.js`](apps/tracy-web/src/build-draft/gather-reading.js)
-  over `business-reading.js`, model door `woEditorial`, held to `/ops/wo` `researchJobCapCents` and its own two
-  minutes) with the description as its own passage (`owner-statement`, the research's `withheld` always passed), and
-  `fromPlace` / `makeSiteBrief` make the brief; `research.reading` and `research.descriptionFacts` record how. Its
+  Research with no link is the step chain's too (#575, [`build-draft/owner-research.js`](apps/tracy-web/src/build-draft/owner-research.js)):
+  the business name and city the agent asked for go to Build from my business's own name search (`findOwnBusiness`,
+  its hourly count shared); places found end `asking` with the place question, and the place picked is researched
+  exactly as a link. With no place, the business is saved as the account's private opportunity of provider
+  `owner-statement` (marked `ownSite`, no place, [`opportunities-build/owner-business.js`](apps/tracy-web/src/opportunities-build/owner-business.js)):
+  a `wo_source` row `owner-statement` holds what the owner said, `wo_profile` the business reading of it (the place
+  executor's own reading step, [`build-draft/gather-reading.js`](apps/tracy-web/src/build-draft/gather-reading.js), model
+  door `woEditorial`) and a neutral brand part, the facts an answer states the Profile card's owner edits; the brief is
+  `createRevision`'s, as for links. What is asked next comes from that brief's readiness (`brief-gap` questions,
+  blocking first, three at a time); each answer is one more statement and the brief is made again. Its
   sentences of five words or more are kept out of the brief word for word as above. Pictures a research made before
   #575 stored as draft pictures ([`build-draft/pictures.js`](apps/tracy-web/src/build-draft/pictures.js), migration 218,
   `build_draft_picture`, origin `draft`) still open through the same reader and are pruned once nothing reads them; an

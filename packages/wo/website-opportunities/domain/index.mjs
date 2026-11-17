@@ -193,6 +193,15 @@ export {
   businessTradeQuestionOf,
   tradeOfAnswer
 } from './business-trade-question.mjs'
+export {
+  BRIEF_GAP_MAX,
+  BRIEF_GAP_PROMPTS,
+  BRIEF_GAP_SKIP,
+  BRIEF_GAP_TOPIC,
+  briefGapFieldOf,
+  briefGapIdOf,
+  briefGapQuestionsOf
+} from './brief-gap-questions.mjs'
 export { gateEditedPlan } from './plan-edit-gate.mjs'
 export {
   NOT_DONE_REASONS,

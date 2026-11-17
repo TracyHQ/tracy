@@ -18,7 +18,8 @@
  * (`brand-before-site.js`) and is never wrapped in a second rerun.
  */
 import { randomUUID } from 'node:crypto'
-import { answerReadingsOf, placeReadingOf, placeStatementOf } from './answer-readings.js'
+import { answerReadingsOf, placeReadingOf, placeStatementOf, readAnswersOf } from './answer-readings.js'
+import { findOwnerPlace, ownerAnswersWaiting, ownerBriefOf } from './owner-research.js'
 import { answersStillAsked } from './answers-kept.js'
 import { askingOf } from './engine-asking.js'
 import { faultOf, runWithRerun } from './engine-rerun.js'
@@ -132,7 +133,8 @@ const sameLinks = (a, b) => JSON.stringify(listOf(a)) === JSON.stringify(listOf(
 const sameResearch = (inputs, call) =>
   sameLinks(inputs?.links, call.links) &&
   textOf(inputs?.description) === textOf(call.description) &&
-  textOf(inputs?.name) === textOf(call.name)
+  textOf(inputs?.name) === textOf(call.name) &&
+  textOf(inputs?.city) === textOf(call.city)
 
 /** Whether a running step is a research waiting on the step chain's place run (`place-research.js`). */
 const waiting = (engine) => engine?.step === 'research' && Boolean(engine.place)
@@ -304,6 +306,7 @@ export function createEngine({
       ...(row?.plan ? {} : { needs_profile: record.profile }),
       ...answersStillAsked(current, [
         ...(tradeQuestionOf(record) ? [record.tradeQuestion] : []),
+        ...(record.gapQuestions ?? []),
         ...(record.profile?.questions ?? []),
         ...(planProfileOf(record, kit)?.questions ?? [])
       ])
@@ -518,7 +521,7 @@ export function createEngine({
      * running while the place run reads each source, and ends once its content brief is made. The owner's words alone
      * are read by `gather` in one step.
      */
-    async research(accountId, { links, description, name }, row) {
+    async research(accountId, { links, description, name, city }, row) {
       const kit = row?.template ? kits.loadKit(row.template.slug) : null
       // 🔒 A call that starts nothing is answered with the step as it is, and counted nowhere (#575): research that
       // still runs, or that already ended for the same words (`sameResearch`).
@@ -528,14 +531,21 @@ export function createEngine({
       if (
         engine?.step === 'research' &&
         engine.state === 'done' &&
-        sameResearch(engine.inputs, { links, description, name })
+        sameResearch(engine.inputs, { links, description, name, city }) &&
+        // The owner answered what the brief of their words still missed: the brief is made again with the answers.
+        !ownerAnswersWaiting(row)
       )
         return { state: engineStateOf(row, { kit }) }
       // A typed answer to which place the Google link means is read by the model first, as the `answers` step; the
       // place it names, else None of these with the owner's text kept in the description (`answer-readings.js`).
       const readChoice = await placeReadingOf(row, links, readingTools(accountId))
       const said = placeStatementOf(row, links, readChoice, description)
-      const inputs = { links, ...(said ? { description: said } : {}), ...(name ? { name } : {}) }
+      const inputs = {
+        links,
+        ...(said ? { description: said } : {}),
+        ...(name ? { name } : {}),
+        ...(city ? { city } : {})
+      }
       // The owner's answer to which place the Google link means, when this research asked it (`gather-place.js`).
       const place = placeAnswerOf(row, links, readChoice)
       // The place question still waits on the owner for these links: asked again, never researched again.
@@ -569,11 +579,42 @@ export function createEngine({
       }
       return started
     },
-    /** Start the research with its inputs read (`research`): the step chain's place research of links, or `gather`. */
+    /**
+     * Start the research with its inputs read (`research`), with the step chain's research wired: links, or the place
+     * the owner picked among those their business name and city found, run its place research; no link runs the
+     * research of the owner's words (`owner-research.js`). Without it (tests), `gather`.
+     */
     startResearch(accountId, { inputs, place, kit }, row) {
       const { links } = inputs
-      const service = links?.length ? placeResearch() : null
-      if (service)
+      const service = placeResearch()
+      const picked = place && typeof place === 'object'
+      if (service && !links?.length && !picked)
+        return start(
+          accountId,
+          'research',
+          inputs,
+          askingOrRan(
+            ranWith(
+              async (copy, model) => {
+                await findOwnerPlace(copy, { service, accountId, place, row })
+                const gathered = await ownerBriefOf(copy, {
+                  service,
+                  accountId,
+                  row,
+                  readDescription: gather?.readDescription ?? null,
+                  readAnswers: (questions, answers) =>
+                    readAnswersOf(questions, answers, readingTools(accountId)),
+                  withheld: withheldOfResearch(row?.research),
+                  now
+                })
+                return researchRecordOf(gathered, copy, { model, kit })
+              },
+              inputs,
+              (record) => researchColumns(row, kit)(record)
+            )
+          )
+        )
+      if (service && (links?.length || picked))
         return start(
           accountId,
           'research',

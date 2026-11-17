@@ -64,6 +64,30 @@ const suggestionOf = (t) => ({
   reason: t.reason
 })
 
+/**
+ * Find a customer's own business by its name and city (Google Places Text Search, any trade): the search of this
+ * page's find door, shared with the build chat's research of a business given with no link (#575). One billable
+ * search a call, `FINDS_PER_HOUR` an hour per account (one count for both). Answers `{candidates}` (at most
+ * `FIND_MAX`) or `{refusal}`: `CREDENTIAL_MISSING`, `RATE_LIMITED`, or the search's own code (`SEARCH_FAILED`).
+ * @param {{pool: object, now: () => number, runtime: Function, domainDeps: Function}} h
+ * @param {{accountId: string, query: string, domain: object}} input
+ */
+export async function findOwnBusiness(h, { accountId, query, domain }) {
+  const { keys } = await h.runtime()
+  if (!keys.google) return { refusal: 'CREDENTIAL_MISSING' }
+  if (await overLimitOrClosed(h.pool, `own:find:${accountId}`, FINDS_PER_HOUR, h.now()))
+    return { refusal: 'RATE_LIMITED' }
+  try {
+    const found = await domain.searchNamedPlaces(
+      { query, limit: FIND_MAX, anyKind: true },
+      { ...h.domainDeps(), googleKey: keys.google }
+    )
+    return { candidates: found.candidates.slice(0, FIND_MAX) }
+  } catch (error) {
+    return { refusal: error?.code ?? 'SEARCH_FAILED' }
+  }
+}
+
 /** The switch, read per request; unreadable is off. */
 export const ownSiteOn = (pool) => uiSwitchOn(pool, OWN_SITE_SWITCH).catch(() => false)
 
@@ -99,30 +123,19 @@ export function ownSiteRoutes(app, h) {
       return refuse(c, 400, 'INVALID_SEARCH', 'Type the business name and its city, 2–200 characters.')
     const domain = await h.domainOr(c)
     if (domain instanceof Response) return domain
-    const { keys } = await h.runtime()
-    if (!keys.google)
+    const found = await findOwnBusiness(h, { accountId: me.accountId, query: q, domain })
+    if (found.refusal === 'CREDENTIAL_MISSING')
       return refuse(
         c,
         503,
         'CREDENTIAL_MISSING',
         'Search is not set up here: paste the website or Maps link.'
       )
-    if (await overLimitOrClosed(pool, `own:find:${me.accountId}`, FINDS_PER_HOUR, now()))
+    if (found.refusal === 'RATE_LIMITED')
       return refuse(c, 429, 'RATE_LIMITED', 'Wait for the next hour before searching again.')
-    try {
-      const found = await domain.searchNamedPlaces(
-        { query: q, limit: FIND_MAX, anyKind: true },
-        { ...h.domainDeps(), googleKey: keys.google }
-      )
-      return json(c, { candidates: found.candidates.slice(0, FIND_MAX) })
-    } catch (error) {
-      return refuse(
-        c,
-        502,
-        error?.code ?? 'SEARCH_FAILED',
-        'Search did not answer: try again, or paste a link.'
-      )
-    }
+    if (found.refusal)
+      return refuse(c, 502, found.refusal, 'Search did not answer: try again, or paste a link.')
+    return json(c, { candidates: found.candidates })
   })
 
   app.post(BASE, async (c) => {

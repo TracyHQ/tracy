@@ -18,7 +18,6 @@ import { shippedAiQuickstartPins } from './lib/ai-quickstart-pins.js'
 import { fittingAiQuickstarts } from 'website-opportunities/domain'
 
 export {
-  decideProfile,
   draftPictureReader,
   draftPictures,
   preSiteGatherer,

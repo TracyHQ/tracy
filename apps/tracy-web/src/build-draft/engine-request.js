@@ -33,8 +33,9 @@ function linkOf(value) {
 
 const READERS = {
   /**
-   * `{links: string[], description?, name?}`: at least one link or a description; `name`, the business name the owner
-   * typed, is what a research with no link names the business by.
+   * `{links: string[], description?, name?, city?}`: at least one link, a description or a name; `name`, the business
+   * name the owner typed, is what a research with no link names the business by, and with `city` (where it is) what
+   * that research looks it up on Google Maps by (#575).
    */
   research(body) {
     const links = body.links ?? []
@@ -43,11 +44,14 @@ const READERS = {
     if (read.some((l) => l === null)) return null
     const description = optionalText(body.description, MAX_DESCRIPTION)
     const name = optionalText(body.name, MAX_NAME)
-    if (!description || !name || (read.length === 0 && !description.value)) return null
+    const city = optionalText(body.city, MAX_NAME)
+    if (!description || !name || !city || (read.length === 0 && !description.value && !name.value))
+      return null
     return {
       links: [...new Set(read)],
       ...(description.value ? { description: description.value } : {}),
-      ...(name.value ? { name: name.value } : {})
+      ...(name.value ? { name: name.value } : {}),
+      ...(city.value ? { city: city.value } : {})
     }
   },
   /**

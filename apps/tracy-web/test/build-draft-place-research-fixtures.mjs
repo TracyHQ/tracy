@@ -134,7 +134,12 @@ export function server(
   async function call(method, path, body, { as = OWNER } = {}) {
     const headers = {
       'x-tracy-actor': actor(as),
-      'x-tracy-session': await buildSessionIdFor(as, config.sessionSecret)
+      // The build session of the person's current generation: a start over moves it on (`fresh-start.js`).
+      'x-tracy-session': await buildSessionIdFor(
+        as,
+        config.sessionSecret,
+        await app.buildChatFresh.generationOf(as)
+      )
     }
     if (body !== undefined) headers['content-type'] = 'application/json'
     const res = await app.fetch(
