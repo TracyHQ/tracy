@@ -36,7 +36,7 @@ export const CONTRACT_SHAPES = Object.freeze({
     { plan: true }
   ),
   fact: shape(['id', 'kind', 'label', 'value', 'sources'], ['display', 'code', 'params'], { plan: true }),
-  item: shape(['id', 'kind', 'label', 'sources'], ['count'], { plan: true }),
+  item: shape(['id', 'kind', 'label', 'sources'], ['count', 'namedBy'], { plan: true }),
   source: shape(['kind', 'name'], [], { plan: true }),
   page: shape(['id', 'name', 'pageType', 'blocks'], ['visitorQuestion', 'keyMessage', 'seo', 'endAction'], {
     plan: true

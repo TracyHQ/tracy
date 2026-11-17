@@ -160,6 +160,10 @@ not-found page says.
   keeping its own place. Each is in `business` only when the template has such a place.
 - Never promise a contact channel (WhatsApp, a DM, a call) in a block that does not show it.
 - A `map` block shows the business's address fact; without an address, leave it out.
+- An item with `namedBy: "customer"` is a person only customers named in their reviews. Show their name and role
+  only, in a block for people: never a biography, never a portrait, and never as staff the business presents.
+- `business.videos` counts the owner's own videos. A block with a video field may use one of them; never plan a video
+  place the count cannot fill.
 - Reviews: choose them on purpose. Show first the reviews that back a key message or name a person of the business,
   then the others, as many as the reviews block holds of the true ones. Never shorten or merge a review: the writer
   quotes it as written.

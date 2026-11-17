@@ -555,7 +555,7 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `answer` | `schema`, `question`, `choice?`, `text?`, `skipped?` |
 | `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut`, `rows?`, `legalPages?`, `notFound?`, `keyMessages?`, `primaryAction?`, `later?` |
 | `fact` | `id`, `kind`, `label`, `value`, `sources`, `display?`, `code?`, `params?` |
-| `item` | `id`, `kind`, `label`, `sources`, `count?` |
+| `item` | `id`, `kind`, `label`, `sources`, `count?`, `namedBy?` |
 | `source` | `kind`, `name` |
 | `page` | `id`, `name`, `pageType`, `blocks`, `visitorQuestion?`, `keyMessage?`, `seo?`, `endAction?` |
 | `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason`, `lists?`, `labelCode?`, `basis?`, `factIds?`, `message?`, `carries?` |

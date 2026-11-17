@@ -17,7 +17,9 @@
 import { settleAnswers } from './plan-answers.mjs'
 import { kindLimitsOf } from './answer-field-limits.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
-import { briefContextOf, briefLeftOutOf } from './plan-composer-brief.mjs'
+import { briefContextOf } from './plan-composer-brief.mjs'
+import { briefLeftOutWithHoursOf } from './held-hours-left-out.mjs'
+import { heldBackLeftOutOf } from './plan-held-back.mjs'
 import { addItemFieldFacts, conflictAssumptionsOf } from './plan-conflicts.mjs'
 import { intentContextOf } from './plan-composer-intent.mjs'
 import { planDataOf } from './plan-data.mjs'
@@ -67,8 +69,7 @@ const OWNER_LANGUAGE = /^[a-z]{2}$/
  * in the result is the settled profile: the page writer reads its item fields. The look comes from the brand step's
  * record (`brandLookOf`, #616); only `allowTemplateLook: true`, for tests, keeps the old template fallback. `brief`: the
  * content brief research stored, when there is one (`plan-composer-brief.mjs`). `ownerLanguage`: the language the owner
- * chats in (#575), which the model writes its owner facing sentences in. `fromPlan`: the plan a change request revises,
- * whose key messages, main action, later list and brief channels carry over (`plan-request.mjs`).
+ * chats in (#575). `fromPlan`: the plan a change request revises, whose intent inputs carry over (`plan-request.mjs`).
  * @throws {PlanComposerError} `answer_invalid` when an answer does not fit its question; `brand_missing` without a
  *   brand record; `brand_logo_colours_unmeasured` when the brand step kept the template accent and the logo's colours
  *   were never measured
@@ -109,7 +110,7 @@ export function composerContextOf({
         }
       ]
   const conflicts = conflictAssumptionsOf(profile, data)
-  // The step chain's intent inputs and the brief's channels (`plan-composer-intent.mjs`, #575).
+  // The step chain's intent inputs (key messages, main action, later list) and the brief's channels (#575).
   const intent = intentContextOf({ brief, profile, answers, data, blocks, recipes, look, fromPlan })
   return {
     planId,
@@ -125,15 +126,15 @@ export function composerContextOf({
     template,
     allowTemplateLook,
     assumptions: [...conflicts.assumptions, ...lookAssumptions, ...languageAssumption],
-    // What the content brief holds and no block can show: on the plan card, never lost (`plan-composer-brief.mjs`).
+    // What the brief holds and no block can show, and what it holds back: on the plan card, never lost (#575).
     leftOut: [
       ...settled.leftOut,
       ...intent.channels.leftOut,
-      ...briefLeftOutOf(brief, intent.channels.placed)
+      ...briefLeftOutWithHoursOf(brief, blocks, intent.channels.placed),
+      ...heldBackLeftOutOf(profile)
     ],
     // The brief as the model reads it: key messages, audience, voice, held fields with their reasons.
     brief: briefContextOf(brief),
-    // The brief's key messages with their ids and quotes, the main action, what the owner can send later.
     keyMessages: intent.keyMessages,
     keyMessageQuotes: intent.keyMessageQuotes,
     primaryAction: intent.primaryAction,
