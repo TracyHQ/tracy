@@ -6,8 +6,8 @@
   },
   "platform": "emdash",
   "contract": {
-    "id": "tracy-diner/emdash-0.x/0.1.3",
-    "contentMapSha256": "3bc75d1d16b146dcee50b30a5907d0112c7b297cd011622b41ce556e2660a540",
+    "id": "tracy-diner/emdash-0.x/0.1.4",
+    "contentMapSha256": "54ac9d2001b3df3c1398099502f8eae7a170be2e568b2a573ffe8b7642f4bce7",
     "presentationLockSha256": null
   },
   "measuredAt": "2026-11-17T05:50:04.649Z",

@@ -1,15 +1,15 @@
 {
   "kit": "tracy-template-kit/2",
   "tool": "template-kit 3.1.3",
-  "contract": "tracy-diner/emdash-0.x/0.1.3",
+  "contract": "tracy-diner/emdash-0.x/0.1.4",
   "template": {
     "name": "tracy-diner",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "measuredFrom": "flag --template-version"
   },
   "quickstart": {
     "product": "tracy-diner",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "cms": null
   },
   "widths": [

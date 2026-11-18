@@ -281,7 +281,7 @@ test('a picture needs a role whatever its name: Restaurant img_icon is a food ph
   ])
 })
 
-// place-content-roles/3 (ADR 0040), the vocabulary JA Restaurant 1.0.3 and JA Diner 0.1.3 declare: a link, a date and a
+// place-content-roles/3 (ADR 0040), the vocabulary JA Restaurant 1.0.4 and JA Diner 0.1.4 declare: a link, a date and a
 // rich text need a role too, a taxonomy's terms take one role, one entry's slot may hold another fact than its field's
 // other entries, and `customize: "keep"` follows from the role.
 const V3_SEED = {

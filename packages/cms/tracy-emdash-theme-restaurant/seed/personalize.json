@@ -505,7 +505,7 @@
       "maxCharacters": {
         "slide_title": 39
       },
-      "maxCharactersFrom": "contracts/1.0.3/template-kit.json (the same in 1.0.2), slideshow.slideshow.items[*].slide_title: kit frame (390px 47, 1440px 39); the title is 100 px capitals in a 720 px box that cuts what overflows"
+      "maxCharactersFrom": "contracts/1.0.4/template-kit.json (the same in 1.0.2), slideshow.slideshow.items[*].slide_title: kit frame (390px 47, 1440px 39); the title is 100 px capitals in a 720 px box that cuts what overflows"
     },
     {
       "collection": "features_intro",

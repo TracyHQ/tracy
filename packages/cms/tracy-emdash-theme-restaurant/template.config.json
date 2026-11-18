@@ -1,7 +1,7 @@
 {
   "id": "tracy-restaurant",
   "label": "JA Restaurant",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "vendor": { "name": "JoomlArt", "domains": ["joomlart.com"] },
   "locales": ["en"],
   "defaultLocale": "en",

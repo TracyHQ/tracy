@@ -1,6 +1,6 @@
 // tools/personalize.mjs, a `blocks` rule bounded in characters. Measured 16/11/2026 on dev (JA Restaurant EmDash 1.0.2,
 // "Trattoria Lume", 1440x900): the slideshow title the model wrote ran to five lines of 100 px capitals and ended 10 px above
-// the bottom of a 720 px box that cuts what overflows. The contract bounds that slot (template-kit `maxCharacters` 39, the same in 1.0.2 and 1.0.3); the
+// the bottom of a 720 px box that cuts what overflows. The contract bounds that slot (template-kit `maxCharacters` 39, the same in 1.0.2 and 1.0.4); the
 // rule carries the same number, and an answer over it is not taken.
 import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'

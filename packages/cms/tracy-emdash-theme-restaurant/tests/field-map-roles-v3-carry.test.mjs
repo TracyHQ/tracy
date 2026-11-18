@@ -1,5 +1,5 @@
 // tools/carry-field-map-roles.mjs on this template's own field map: a regenerated seed keeps the place-content-roles/3
-// declarations the content map of 1.0.3 is built from, the per-taxonomy roles (`taxonomyRoles`) and the per-slot ones
+// declarations the content map of 1.0.4 is built from, the per-taxonomy roles (`taxonomyRoles`) and the per-slot ones
 // (`slotRoles`) included. Without them a recompile of the seed would leave every category and tag without a role and
 // put the dish descriptions that end on a price back under `offering.description` (label rule R2), silently.
 import assert from 'node:assert/strict'

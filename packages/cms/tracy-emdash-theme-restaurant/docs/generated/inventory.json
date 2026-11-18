@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-restaurant",
     "label": "JA Restaurant",
-    "version": "1.0.3"
+    "version": "1.0.4"
   },
   "locales": {
     "default": "en",
@@ -1277,7 +1277,7 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:81b84d0f0e6516da5f3e30c7b604a4459c1e61955d41199cacac48b5b56b57bf",
-    "package.json": "sha256:f26e930d84991e594d7dcf0cb24d970bed4028f05bafa0b2f451964fc2ba5b3e",
+    "package.json": "sha256:d4b360946b9747b0c011476d37a1ffd3ee03924c2ee6b18e7e8a5b83df7b9117",
     "pnpm-lock.yaml": "sha256:d7a904f4d0cc00b3c5d5012916f76bcd7a021cfedb84133d3ea15adf598f96af",
     "seed/field-map.json": "sha256:ab54e7247c9dae40fd3e48713303a50e2dac574c6c7eab055444acd951514ac8",
     "seed/media-map.json": "sha256:abeff3c9896fc913a0521cc254bb885dc4d90db64f4e84a58a3def2d2f95c883",
@@ -1354,7 +1354,7 @@
     "src/views/Page.astro": "sha256:ef525001ce8bd7421965d525e28182f1d66e25361e600f7817edcaf4fbbcd34a",
     "src/views/Post.astro": "sha256:f374a407aa658ba28f1dd6bd509cd9339fdced38b84a4bee9a10f9649ced2e11",
     "src/views/Search.astro": "sha256:da88111bf2ac4ee48a8a18251a522e35054cdf3b19b34f7d5fd7ea5b6551c21a",
-    "template.config.json": "sha256:72a4f93bbbe7ae13606a8a7ea2bf10de313a3300aca8c38601947bf0ae496587",
+    "template.config.json": "sha256:d760bec00806db853c31c05db356a35bb06810cc89945f910ad8d6185779be36",
     "tools/forms.json": "sha256:762e87a9fda1fba307ee2e2ebf2f9535c23d93c4b97801b11e91731dca548777",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

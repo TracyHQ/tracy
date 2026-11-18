@@ -6,8 +6,8 @@
   },
   "platform": "emdash",
   "contract": {
-    "id": "tracy-restaurant/emdash-0.x/1.0.3",
-    "contentMapSha256": "e352379f3aaddc348f489a8f0b753e420305a76d6c2268a22a48071adb64cc7c",
+    "id": "tracy-restaurant/emdash-0.x/1.0.4",
+    "contentMapSha256": "a151db3396226cedeee06c9c6f078559ba935b4b17938543fa51cda9254c88a7",
     "presentationLockSha256": null
   },
   "measuredAt": "2026-11-17T07:29:51.025Z",

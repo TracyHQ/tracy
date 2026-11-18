@@ -1,4 +1,4 @@
-// What 1.0.3 changes: the content map is built on role vocabulary v3 (place-content-roles/3) and measured again, the contact
+// What 1.0.4 changes (cut as 1.0.3 until the renumber, DECISIONS D97; the review names below keep that number): the content map is built on role vocabulary v3 (place-content-roles/3) and measured again, the contact
 // card's phone and the demo place names reach Personalize, and the five documentation gaps of the 1.0.2 independent
 // handover are closed (inventory/content-gaps.md G-23).
 import assert from 'node:assert/strict'
@@ -28,10 +28,10 @@ test('G-23: the release-tool cases that need a Tracy checkout skip in the packag
   )
 })
 
-test('1.0.3 is the version the template, the package and the image label name', () => {
-  assert.equal(JSON.parse(read('package.json')).version, '1.0.3')
-  assert.equal(JSON.parse(read('template.config.json')).version, '1.0.3')
-  assert.match(read('Dockerfile'), /io\.tracy\.template\.version="1\.0\.3"/)
+test('1.0.4 is the version the template, the package and the image label name', () => {
+  assert.equal(JSON.parse(read('package.json')).version, '1.0.4')
+  assert.equal(JSON.parse(read('template.config.json')).version, '1.0.4')
+  assert.match(read('Dockerfile'), /io\.tracy\.template\.version="1\.0\.4"/)
 })
 
 test('independent review of 1.0.3, item 1: the shipped row-limits test reads contracts/ only behind its skip', () => {

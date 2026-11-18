@@ -3,7 +3,7 @@
   "template": "tracy-diner",
   "cms": "emdash",
   "tag": "tracy-diner/emdash-0.x",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "measuredAt": "2026-11-17T13:32:53.775Z",
   "machine": "linux-arm64",
   "measuredBy": "tdsr flow.mjs --cms emdash --template emdash-tracy-diner",

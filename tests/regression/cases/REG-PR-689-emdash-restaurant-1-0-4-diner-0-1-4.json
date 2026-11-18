@@ -1,5 +1,5 @@
 {
-  "id": "REG-PR-689-emdash-restaurant-1-0-3-diner-0-1-3",
+  "id": "REG-PR-689-emdash-restaurant-1-0-4-diner-0-1-4",
   "kind": "feat",
   "title": "EmDash personalize leaves no demo place, phone or web domain on the site, keeps the customer's own words, never empties a field and keeps button labels, post titles and the vendor's credit; the design source is captured offline except its webfonts",
   "pr": 689,
@@ -31,7 +31,7 @@
       "--test-reporter=tap",
       "--test-concurrency=1",
       "tracy-emdash-theme-restaurant/tests/personalize-demo-street.test.mjs",
-      "tracy-emdash-theme-restaurant/tests/release-1-0-3.test.mjs",
+      "tracy-emdash-theme-restaurant/tests/release-1-0-4.test.mjs",
       "tracy-emdash-theme-restaurant/tests/source-offline.test.mjs",
       "tracy-emdash-theme-diner/tests/personalize-diner-briefs.test.mjs"
     ],
