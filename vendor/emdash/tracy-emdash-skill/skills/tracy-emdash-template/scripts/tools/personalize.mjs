@@ -2671,7 +2671,8 @@ const LABEL_KEY = /(?:^|_)(?:button|btn|cta)\d*(?:_|$)|(?:^|_)link_(?:text|title
  */
 export const shortText = (v) => {
   if (typeof v !== 'string') return false
-  const t = v.replace(/<[^>]*>/g, '').trim()
+  // A tag becomes a space, not nothing: words either side of it stay apart.
+  const t = v.replace(/<[^>]*>/g, ' ').trim()
   if (t === '' || t.includes('\n')) return false
   return sentenceEnds(t).filter((at) => at < t.length).length === 0 && t.split(/\s+/).length <= 30
 }
