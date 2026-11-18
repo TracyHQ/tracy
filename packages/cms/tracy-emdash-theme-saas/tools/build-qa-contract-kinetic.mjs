@@ -61,13 +61,22 @@ const textOf = (html) =>
   decode(html.replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<[^>]+>/g, ' '))
     .replace(/\s+/g, ' ')
     .trim()
+// Script elements carry no page text. Removed until none is left, so a tag split by a removal
+// cannot reassemble, and matched in any case.
+const withoutScripts = (html) => {
+  let out = html
+  for (let prev; prev !== out; ) {
+    prev = out
+    out = out.replace(/<script(?=[\s/>])[\s\S]*?<\/script\s*>/gi, '')
+  }
+  return out
+}
+// A literal string as a RegExp source.
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 const htmlCache = new Map()
 const htmlOf = (file) => {
   if (!htmlCache.has(file))
-    htmlCache.set(
-      file,
-      readFileSync(path.join(sourceDir, file), 'utf8').replace(/<script[\s\S]*?<\/script>/g, '')
-    )
+    htmlCache.set(file, withoutScripts(readFileSync(path.join(sourceDir, file), 'utf8')))
   return htmlCache.get(file)
 }
 // The text of the first element whose opening tag carries `cls` (a class token). Fails loudly: a
@@ -102,9 +111,7 @@ const pAfter = (file, cls) => {
 // item is the item's title, which every crawled page prints in its megamenu.
 const menuLabel = (file, url) => {
   const m = htmlOf(file).match(
-    new RegExp(
-      `href="${url.replace(/[.?]/g, '\\$&')}"[^>]*>(?:\\s*<span[^>]*>)*\\s*<span class="menu-item-title">([^<]+)<`
-    )
+    new RegExp(`href="${escapeRe(url)}"[^>]*>(?:\\s*<span[^>]*>)*\\s*<span class="menu-item-title">([^<]+)<`)
   )
   if (!m) fail(`source ${file}: no menu item for ${url}`)
   return textOf(m[1])
