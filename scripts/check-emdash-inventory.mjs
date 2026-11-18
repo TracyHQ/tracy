@@ -31,7 +31,8 @@ export const TEMPLATES = [
   'tracy-emdash-theme-saas',
   'tracy-emdash-theme-coffee',
   'tracy-emdash-theme-restaurant',
-  'tracy-emdash-theme-diner'
+  'tracy-emdash-theme-diner',
+  'tracy-emdash-theme-essence'
 ]
 export const GENERATOR = 'tools/generate-docs.mjs'
 

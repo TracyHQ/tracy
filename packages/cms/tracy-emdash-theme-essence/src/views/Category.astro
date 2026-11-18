@@ -12,6 +12,8 @@ import type { Chrome } from '@/lib/chrome'
 import { authorPath, categoryPath, loadAuthors, loadCategoryInfo, loadPosts, tagPath } from '@/lib/posts'
 import { livePosts } from '@/lib/link-gate'
 import { stampFor } from '@/lib/stamps'
+import { categoryDot } from '@/lib/category-dot'
+import { mediaUrl } from '@/lib/media'
 import { ui } from '@/lib/ui'
 import { uiCount } from '@/lib/ui-words'
 
@@ -59,6 +61,10 @@ const page = Math.min(pages, Math.max(1, parseInt(Astro.url.searchParams.get('pa
 const shown = posts.slice((page - 1) * perPage, page * perPage)
 const count = uiCount(tag, { other: w.countArticles, one: w.countArticlesOne ?? w.countArticles }, posts.length)
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+// an author's page opens with the profile the Authors card shows in short
+const profile = by === 'author' && !missing ? authors[slug] ?? null : null
+const $a = stampFor(Astro.request, 'authors', profile ? { id: profile.id, slug: profile.slug } : null)
+const photo = profile ? mediaUrl(profile.avatar) : null
 ---
 
 {missing ? (
@@ -69,26 +75,26 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 			<PageOwner stamp={$c} />
 			<div class="es-wrap">
 				{style === 'sidebar' ? <h1 class="sr-only">{title}</h1> : (
-					<header class="es-cat-head">
-						<h1 class="es-cat-title"><span>{title}</span></h1>
-						<p class="es-cat-count">{count}</p>
+					<header class:list={['es-cat-head', profile && 'is-profile']}>
+						{photo && <img class="es-cat-photo" src={photo} alt="" width="120" height="120" {...$a('avatar')} />}
+						<h1 class="es-cat-title"><span style={by === 'category' ? `--dot:${categoryDot(slug)}` : undefined}>{title}</span></h1>
+						{profile?.jobTitle && <p class="es-cat-role" {...$a('job_title')}>{profile.jobTitle}</p>}
+						{profile?.bio && <p class="es-cat-desc" {...$a('bio')}>{profile.bio}</p>}
+						{!profile && <p class="es-cat-count">{count}</p>}
 						{description && <p class="es-cat-desc">{description}</p>}
 					</header>
 				)}
 				{posts.length === 0 && <p class="es-cat-empty">{w.noArticles}</p>}
 				<div class="es-cat-body">
 					<div class="es-cat-list">
-						{style === 'grid' && <div class="es-cat-grid">{shown.map((p, i) => <GridCard post={p} chrome={chrome} authors={authors} eager={i < 3} />)}</div>}
-						{style === 'stack' && shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={authors} eager={i === 0} />)}
-						{style === 'sidebar' && shown.map((p, i) => <GridCard post={p} chrome={chrome} authors={authors} wide eager={i === 0} />)}
+						{style === 'grid' && <div class="es-cat-grid">{shown.map((p, i) => <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i < 3} />)}</div>}
+						{style === 'stack' && shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i === 0} />)}
+						{style === 'sidebar' && shown.map((p, i) => <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} wide eager={i === 0} />)}
 						<Pager path={href(locale, basePath)} page={page} pages={pages} locale={locale} />
 					</div>
 					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} />}
 				</div>
 			</div>
-			{chrome.site.more_read_list_title && (
-				<div class="es-wrap"><h2 class="es-sec-title es-cat-more" {...$c('more_read_list_title')}>{chrome.site.more_read_list_title}</h2></div>
-			)}
 		</main>
 	</Base>
 )}

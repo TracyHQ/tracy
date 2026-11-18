@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 23,
+  "revision": 28,
   "pending": [],
   "locales": [
     "en"
@@ -2459,8 +2459,8 @@
         "source": "index.html",
         "styles": {
           "1440-light": {
-            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "14px",
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
@@ -2469,8 +2469,8 @@
             "background-color": "color(srgb 0.129412 0.145098 0.160784 / 0.1)"
           },
           "1440-dark": {
-            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "14px",
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
@@ -2479,8 +2479,8 @@
             "background-color": "color(srgb 0.933333 0.945098 0.964706 / 0.1)"
           },
           "768-light": {
-            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "14px",
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
@@ -2489,8 +2489,8 @@
             "background-color": "color(srgb 0.129412 0.145098 0.160784 / 0.1)"
           },
           "768-dark": {
-            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "14px",
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
@@ -2499,8 +2499,8 @@
             "background-color": "color(srgb 0.933333 0.945098 0.964706 / 0.1)"
           },
           "390-light": {
-            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "14px",
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
@@ -2509,8 +2509,8 @@
             "background-color": "color(srgb 0.129412 0.145098 0.160784 / 0.1)"
           },
           "390-dark": {
-            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "14px",
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
@@ -4069,69 +4069,142 @@
         "id": "cat-more",
         "selector": ".es-cat-more",
         "source": "category/category-style-1/index.html",
+        "styles": {},
+        "optional": true
+      },
+      {
+        "id": "profile-role",
+        "selector": ".es-cat-role",
+        "source": "pages/j-content/author-listting/author/Eula%20Ward/index.html",
         "styles": {
           "1440-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "16px",
             "font-weight": "400",
-            "line-height": "52px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(33, 37, 41)",
+            "color": "rgba(37, 36, 36, 0.7)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "16px",
             "font-weight": "400",
-            "line-height": "52px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(238, 241, 246)",
+            "color": "rgb(194, 201, 214)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "16px",
             "font-weight": "400",
-            "line-height": "52px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(33, 37, 41)",
+            "color": "rgba(37, 36, 36, 0.7)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "16px",
             "font-weight": "400",
-            "line-height": "52px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(238, 241, 246)",
+            "color": "rgb(194, 201, 214)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "28px",
+            "font-size": "16px",
             "font-weight": "400",
-            "line-height": "36.4px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(33, 37, 41)",
+            "color": "rgba(37, 36, 36, 0.7)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "28px",
+            "font-size": "16px",
             "font-weight": "400",
-            "line-height": "36.4px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(238, 241, 246)",
+            "color": "rgb(194, 201, 214)",
             "background-color": "rgba(0, 0, 0, 0)"
           }
-        },
-        "optional": true
+        }
+      },
+      {
+        "id": "profile-bio",
+        "selector": ".es-cat[data-by=\"author\"] .es-cat-desc",
+        "source": "pages/j-content/author-listting/author/Eula%20Ward/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
       },
       {
         "id": "mini-title",
@@ -5058,6 +5131,14 @@
           "site": ".es-cat-title",
           "source": ".author-name"
         },
+        "authorRole": {
+          "site": ".es-cat-role",
+          "source": ".author-title span"
+        },
+        "authorBio": {
+          "site": ".es-cat[data-by=\"author\"] .es-cat-desc",
+          "source": ".author-about-me"
+        },
         "postTitle": {
           "site": ".es-post-title",
           "source": "h2[itemprop=\"headline\"]"
@@ -5947,7 +6028,7 @@
         "default"
       ],
       "status": 200,
-      "identity": ".es-cat-count",
+      "identity": ".es-cat-title",
       "source": [
         "pages/j-content/author-listting/author/Eula%20Ward/index.html"
       ],
@@ -5969,15 +6050,18 @@
         "footer-button",
         "copyright",
         "author-title",
-        "cat-count",
         "author-card-title",
-        "cat-more"
+        "cat-more",
+        "profile-role",
+        "profile-bio"
       ],
       "parity": [
         "nav",
         "authorHeading",
         "catCard",
-        "ground"
+        "ground",
+        "authorRole",
+        "authorBio"
       ],
       "images": "placeholders",
       "content": [
@@ -6661,11 +6745,7 @@
       "representative": "en-cat-grid",
       "pages": [
         "en-cat-grid",
-        "en-cat-stack",
-        "en-cat-fashion",
-        "en-cat-sidebar",
-        "en-tag",
-        "en-author"
+        "en-cat-fashion"
       ],
       "states": [
         "default"
@@ -6678,10 +6758,7 @@
       "view": "src/views/Post.astro",
       "representative": "en-post-type1",
       "pages": [
-        "en-post-type1",
-        "en-post-type2",
-        "en-post-video",
-        "en-post-gallery"
+        "en-post-type1"
       ],
       "states": [
         "default"
@@ -6714,6 +6791,97 @@
       ],
       "family": "page",
       "hasSource": false
+    },
+    {
+      "id": "CategoryStack",
+      "view": "src/views/Category.astro",
+      "representative": "en-cat-stack",
+      "pages": [
+        "en-cat-stack"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "list",
+      "hasSource": true
+    },
+    {
+      "id": "CategorySidebar",
+      "view": "src/views/Category.astro",
+      "representative": "en-cat-sidebar",
+      "pages": [
+        "en-cat-sidebar"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "list",
+      "hasSource": true
+    },
+    {
+      "id": "TagList",
+      "view": "src/views/Category.astro",
+      "representative": "en-tag",
+      "pages": [
+        "en-tag"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "list",
+      "hasSource": true
+    },
+    {
+      "id": "AuthorList",
+      "view": "src/views/Category.astro",
+      "representative": "en-author",
+      "pages": [
+        "en-author"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "list",
+      "hasSource": true
+    },
+    {
+      "id": "PostType2",
+      "view": "src/views/Post.astro",
+      "representative": "en-post-type2",
+      "pages": [
+        "en-post-type2"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "detail",
+      "hasSource": true
+    },
+    {
+      "id": "PostVideo",
+      "view": "src/views/Post.astro",
+      "representative": "en-post-video",
+      "pages": [
+        "en-post-video"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "detail",
+      "hasSource": true
+    },
+    {
+      "id": "PostGallery",
+      "view": "src/views/Post.astro",
+      "representative": "en-post-gallery",
+      "pages": [
+        "en-post-gallery"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "detail",
+      "hasSource": true
     }
   ],
   "visual": {

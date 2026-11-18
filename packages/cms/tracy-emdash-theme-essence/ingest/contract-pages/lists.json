@@ -64,6 +64,16 @@
       ".es-cat-more",
       "category/category-style-1/index.html",
       true
+    ],
+    [
+      "profile-role",
+      ".es-cat-role",
+      "pages/j-content/author-listting/author/Eula%20Ward/index.html"
+    ],
+    [
+      "profile-bio",
+      ".es-cat[data-by=\"author\"] .es-cat-desc",
+      "pages/j-content/author-listting/author/Eula%20Ward/index.html"
     ]
   ],
   "parity": {
@@ -78,6 +88,14 @@
     "authorHeading": {
       "site": ".es-cat-title",
       "source": ".author-name"
+    },
+    "authorRole": {
+      "site": ".es-cat-role",
+      "source": ".author-title span"
+    },
+    "authorBio": {
+      "site": ".es-cat[data-by=\"author\"] .es-cat-desc",
+      "source": ".author-about-me"
     }
   },
   "pages": [
@@ -341,7 +359,7 @@
       "source": [
         "pages/j-content/author-listting/author/Eula%20Ward/index.html"
       ],
-      "identity": ".es-cat-count",
+      "identity": ".es-cat-title",
       "collections": [
         "chrome",
         "posts",
@@ -351,15 +369,18 @@
       ],
       "rules": [
         "author-title",
-        "cat-count",
         "author-card-title",
-        "cat-more"
+        "cat-more",
+        "profile-role",
+        "profile-bio"
       ],
       "parity": [
         "nav",
         "authorHeading",
         "catCard",
-        "ground"
+        "ground",
+        "authorRole",
+        "authorBio"
       ],
       "content": [
         [

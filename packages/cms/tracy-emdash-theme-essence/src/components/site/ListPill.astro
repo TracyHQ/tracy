@@ -4,6 +4,7 @@ import { href } from '@/lib/i18n'
 import { categoryPath, type PostRow } from '@/lib/posts'
 import { liveLinks } from '@/lib/link-gate'
 import type { Chrome } from '@/lib/chrome'
+import { categoryDot } from '@/lib/category-dot'
 
 interface Props { post: PostRow; chrome: Chrome; class?: string }
 const { post, chrome, class: cls = '' } = Astro.props
@@ -12,5 +13,5 @@ const live = cat ? await liveLinks(Astro.request, chrome.locale, [categoryPath(c
 ---
 
 {cat && (live(categoryPath(cat.slug))
-	? <a class:list={['es-pill', cls]} href={href(chrome.locale, categoryPath(cat.slug))}>{cat.label}</a>
-	: <span class:list={['es-pill', cls]}>{cat.label}</span>)}
+	? <a class:list={['es-pill', cls]} href={href(chrome.locale, categoryPath(cat.slug))} style={`--dot:${categoryDot(cat.slug)}`}>{cat.label}</a>
+	: <span class:list={['es-pill', cls]} style={`--dot:${categoryDot(cat.slug)}`}>{cat.label}</span>)}

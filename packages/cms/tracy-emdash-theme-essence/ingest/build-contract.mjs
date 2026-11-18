@@ -230,6 +230,23 @@ for (const fr of FRAGMENTS)
     ),
     ...(fr.layout.hasSource === false ? { hasSource: false } : {})
   })
+// The visual gate shoots one page per layout. A page whose view draws something the family representative does not (the stack and
+// sidebar list styles, the tag and author lists, the article layouts type-2, video and gallery) is its own layout, so a lens reads it.
+const OWN_LAYOUT = {
+  'en-cat-stack': 'CategoryStack',
+  'en-cat-sidebar': 'CategorySidebar',
+  'en-tag': 'TagList',
+  'en-author': 'AuthorList',
+  'en-post-type2': 'PostType2',
+  'en-post-video': 'PostVideo',
+  'en-post-gallery': 'PostGallery'
+}
+for (const [pageId, layoutId] of Object.entries(OWN_LAYOUT)) {
+  const from = contract.layouts.find((l) => l.pages.includes(pageId))
+  if (!from) throw new Error(`no layout holds ${pageId}`)
+  from.pages = from.pages.filter((x) => x !== pageId)
+  contract.layouts.push({ ...from, id: layoutId, representative: pageId, pages: [pageId] })
+}
 // ── parity: the same logical element on the source render and on the site ─────────────────────────────────────
 contract.design.parity = {
   selectors: {

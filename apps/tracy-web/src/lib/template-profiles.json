@@ -3795,6 +3795,14 @@
         "note": "As 0.1.0, read off the 0.1.2 release zip: Header.astro, BrandLogo.astro, lib/brand.ts, lib/demo-logo.ts, layouts/Base.astro and public/favicon.svg are byte-identical to 0.1.0 and 0.1.1; 0.1.1 changed only the footer phone lines (tel: links) and the menu tab stamps, 0.1.2 only the blog list's masonry script and the home news slider fit, so the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
       }
     },
+    "tracy-essence/emdash-0.x": {
+      "0.1.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "Read off the 0.1.0 pack source: two logo spots, the header (BrandLogo with logoSpots('themed'); the template's text lockup \"JA Essence\" while no logo is given) and the footer (BrandLogo with logoSpots('themed'); the demo wordmark public/brand/logo.png, lifted in dark mode by its file name), both switched by the appearance toggle and the visitor system; settings.logo in the light spot and the chrome entry's logo_dark in the dark one; the template icon (public/favicon.svg) only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
+      }
+    },
     "tracy-restaurant/emdash-0.x": {
       "1.0.0": {
         "logos": "pair",

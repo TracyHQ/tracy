@@ -100,7 +100,9 @@ const STANDALONE = [
   // JA Restaurant (EmDash port of the JA Restaurant Joomla site): same shape as the four above.
   'packages/cms/tracy-emdash-theme-restaurant',
   // JA Diner (EmDash port of the JA Diner Joomla site): same shape as the five above.
-  'packages/cms/tracy-emdash-theme-diner'
+  'packages/cms/tracy-emdash-theme-diner',
+  // JA Essence (EmDash port of the JA Essence Joomla site): same shape as the six above.
+  'packages/cms/tracy-emdash-theme-essence'
 ] as const
 
 /** One run group: the command that runs it, and the test files that command picks up. */

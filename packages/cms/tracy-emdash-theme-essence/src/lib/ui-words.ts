@@ -28,6 +28,8 @@ export interface UiWords {
   themeToggle: string
   firstPage: string
   previousPage: string
+  previousSlide: string
+  nextSlide: string
   nextPage: string
   lastPage: string
   hits: string
@@ -59,6 +61,8 @@ export const UI_WORDS: Record<string, Partial<UiWords>> = {
     themeToggle: 'Toggle dark mode',
     firstPage: 'First page',
     previousPage: 'Previous page',
+    previousSlide: 'Previous picture',
+    nextSlide: 'Next picture',
     nextPage: 'Next page',
     lastPage: 'Last page',
     hits: 'Hits: {count}',

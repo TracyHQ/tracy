@@ -10,6 +10,8 @@ const { chrome } = Astro.props
 const { site } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 // No form bound yet: the box is drawn complete and its button is disabled, never a fake submit.
+// the two document names read as links in the source's consent line
+const termsParts = String(site.newsletter_terms ?? '').split(/(Terms and conditions|Privacy policy)/)
 const formId = String(site.form_id ?? '').trim()
 ---
 
@@ -22,7 +24,7 @@ const formId = String(site.form_id ?? '').trim()
 		<button type="submit" class="es-btn is-dark is-block" disabled={!formId} {...$c('newsletter_button')}>{site.newsletter_button}</button>
 		<label class="es-newsletter-terms">
 			<input type="checkbox" name="consent" value="true" required />
-			<span {...$c('newsletter_terms')}>{site.newsletter_terms}</span>
+			<span {...$c('newsletter_terms')}>{termsParts.map((t, i) => (i % 2 ? <strong>{t}</strong> : t))}</span>
 		</label>
 	</form>
 	<p class="es-newsletter-status" role="status" aria-live="polite"></p>

@@ -1,5 +1,7 @@
 ---
 /** A category or tag pill: grey rounded label with a coloured dot (the dot colour cycles by the slug, as the source's `cat-*` classes do). */
+import { categoryDot } from '@/lib/category-dot'
+
 interface Props {
   href: string | null
   label: string
@@ -8,10 +10,7 @@ interface Props {
   tone?: 'grey' | 'white'
 }
 const { href, label, slug, tone = 'grey' } = Astro.props
-const DOTS = ['#dc3545', '#6f42c1', '#4d6bff', '#20c997', '#fd7e14']
-let h = 0
-for (const c of slug) h = (h * 31 + c.charCodeAt(0)) >>> 0
-const dot = DOTS[h % DOTS.length]
+const dot = categoryDot(slug)
 ---
 
 {href

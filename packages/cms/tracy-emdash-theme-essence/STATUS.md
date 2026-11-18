@@ -34,7 +34,4 @@
 - Not run: `scripts/opensource/scan.mjs` (needs gitleaks, no network), Tracy's own checks (D38/D40 class), `release.mjs --site-pages` lists Home, Authors, Contact (the "Categories" heading is skipped with a warning); P4 editor-edit/conflict evidence; P4.6 `tests/brand.test.mjs` re-run on the final tree.
 
 ## Owner questions (batched)
-- `[LEE]` D14: Be Vietnam Pro ships (behind `:lang(vi)`) because Jost has no Vietnamese letters; keep, or accept the LANG-2 finding?
-- `[LEE]` D15/D16: the source's per-menu-item list layouts are reduced to three list styles; the Home "Features Lead" strips are driven by `home_lead` / `featured` fields; confirm the reduction.
-- `[LEE]` D18: the template icon (accent square, white E) because the source's favicon is Joomla's logo.
-- The `follow-me` / header social links are `#` in the source: drawn as plain glyphs, no link, until a customer gives addresses.
+- (closed, D24) D14, D15/D16, D18 and the `#` social glyphs were accepted by the owner.

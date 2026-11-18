@@ -53,8 +53,9 @@ if (post) {
   // newest first: the next in the list is the older article
   prev = i >= 0 ? (sameCategory[i + 1] ?? null) : null
   next = i > 0 ? sameCategory[i - 1] : null
-  const wide = post.layout === 'default'
-  byAuthor = visible.filter((p) => p.author === post.author && p.id !== post.id).slice(0, wide ? 2 : 3)
+  const wide = post.layout === 'default' && post.kind === 'standard'
+  // the demo repeats titles across categories: the article being read never lists itself under another slug
+  byAuthor = visible.filter((p) => p.author === post.author && p.id !== post.id && p.title !== post.title).slice(0, post.layout === 'default' ? 2 : 3)
   related = relatedPosts(visible, post, wide ? 4 : 3)
   body = await liveBlocks(Astro.request, locale, stampBlocks($p, 'body', post.body as any[]))
 }
@@ -70,7 +71,7 @@ const image = post ? mediaUrl(post.hero) : null
 			<div class="es-post-grid">
 				<div class="es-post-col">
 					<article class="es-article" itemscope itemtype="https://schema.org/Article">
-						<PostHero post={post} />
+						<PostHero locale={locale} post={post} />
 						<PostHead post={post} chrome={chrome} locale={locale} author={author} categoryLive={categoryLive} />
 						<PostBody value={body} />
 						<PostFoot post={post} chrome={chrome} locale={locale} prev={prev} next={next} />
@@ -82,7 +83,7 @@ const image = post ? mediaUrl(post.hero) : null
 		)}
 		{layout === 'type-1' && (
 			<article class="es-article is-narrow" itemscope itemtype="https://schema.org/Article">
-				<PostHero post={post} />
+				<PostHero locale={locale} post={post} />
 				<div class="es-narrow">
 					<PostHead post={post} chrome={chrome} locale={locale} author={author} categoryLive={categoryLive} />
 				</div>
@@ -94,7 +95,7 @@ const image = post ? mediaUrl(post.hero) : null
 		{layout === 'type-2' && (
 			<div class="es-post-top" itemscope itemtype="https://schema.org/Article">
 				<PostHead post={post} chrome={chrome} locale={locale} author={author} white categoryLive={categoryLive} />
-				<PostHero post={post} tall />
+				<PostHero locale={locale} post={post} tall />
 				<div class="es-post-grid is-aside">
 					<div class="es-article">
 						<PostBody value={body} />
@@ -108,7 +109,7 @@ const image = post ? mediaUrl(post.hero) : null
 				</div>
 			</div>
 		)}
-		<MoreRead chrome={chrome} locale={locale} posts={related} variant={layout === 'default' ? 'list' : 'cards'} />
+		<MoreRead chrome={chrome} locale={locale} posts={related} variant={layout === 'default' && post.kind === 'standard' ? 'list' : 'cards'} />
 	</main>
 </Base>
 )}
