@@ -19,8 +19,11 @@ const pics = post.kind === 'gallery' ? post.gallery.map((g) => ({ src: mediaUrl(
 
 {video
 	? (
-		<div class="es-hero is-video" {...$p('video_id')}>
-			<iframe src={`https://www.youtube-nocookie.com/embed/${video}`} title={post.title} allow="accelerometer; compute-pressure; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+		<div class="es-hero is-video" data-es-video={video} data-es-video-title={post.title} {...$p('video_id')}>
+			<button type="button" class="es-video-play" aria-label={`${w.playVideo}: ${post.title}`}>
+				{hero && <img src={hero} alt="" width={hw} height={hh} loading="eager" />}
+				<span class="es-video-badge"><Icon name="play" size={28} weight="fill" /></span>
+			</button>
 		</div>
 	)
 	: pics.length > 1
@@ -39,6 +42,23 @@ const pics = post.kind === 'gallery' ? post.gallery.map((g) => ({ src: mediaUrl(
 		: hero && <figure class:list={['es-hero', tall && 'is-tall']}><img src={hero} alt="" width={hw} height={hh} loading="eager" fetchpriority="high" {...$p('hero')} /></figure>}
 
 <script is:inline>
+	(function () {
+		// the player is a click-to-play facade: nothing is fetched from the video host until the visitor presses play
+		document.querySelectorAll('[data-es-video]').forEach(function (root) {
+			var btn = root.querySelector('.es-video-play');
+			if (!btn) return;
+			btn.addEventListener('click', function () {
+				var f = document.createElement('iframe');
+				f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(root.getAttribute('data-es-video')) + '?autoplay=1';
+				f.title = root.getAttribute('data-es-video-title') || '';
+				f.setAttribute('allow', 'accelerometer; autoplay; compute-pressure; encrypted-media; gyroscope; picture-in-picture; fullscreen');
+				f.setAttribute('allowfullscreen', '');
+				f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+				root.replaceChildren(f);
+				f.focus();
+			});
+		});
+	})();
 	(function () {
 		document.querySelectorAll('[data-es-slider]').forEach(function (root) {
 			var track = root.querySelector('[data-es-slides]');
