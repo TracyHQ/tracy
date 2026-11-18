@@ -210,7 +210,12 @@ export interface PlanReviewPage {
   lock: string | null
   keyMessage?: string
   visitorQuestion?: string
-  seo: { searchTerms: string[]; titleIntent?: string; descriptionIntent?: string; ownerAdded: string[] } | null
+  seo: {
+    searchTerms: string[]
+    titleIntent?: string
+    descriptionIntent?: string
+    ownerAdded: string[]
+  } | null
   sections: (PlanSectionRef & {
     type: string
     library?: true
