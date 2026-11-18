@@ -42,6 +42,8 @@ for (const file of ['block-store.json', 'page-recipes.json'])
   cpSync(path.join(WO_FIXTURES, 'plan-composer', file), path.join(kitDir, file))
 writeFileSync(path.join(kitDir, 'mapping.pending.json'), JSON.stringify({ ticket: '#1' }))
 const catalogue = aiQuickstartCatalogue({ root: kitRoot, library: club.library() })
+/** A review as the store keeps it: the kit's locks, which the door adds to every answer, aside. */
+const bare = ({ locks: _locks, ...review }) => review
 const aiQuickstarts = { loadKit: catalogue.loadKit, skipped: catalogue.skipped, templatesFor: () => [] }
 
 const OWNER = 'owner@brindlewick-tennis.test'
@@ -132,7 +134,12 @@ test(
     await call(OWNER, 'POST')
     await putPlan()
     const fresh = await call(OWNER, 'GET')
-    assert.deepEqual(fresh.body.draft.review, { count: 0, canRevert: false, removals: [] })
+    assert.deepEqual(bare(fresh.body.draft.review), { count: 0, canRevert: false, removals: [] })
+    // The kit's locks come with the draft, so the card shows no trash where the gate would refuse.
+    const locks = fresh.body.draft.review.locks
+    assert.deepEqual(Object.keys(locks).sort(), ['blocks', 'facts', 'minItems', 'pages'])
+    assert.equal(locks.pages.home, 'first_page')
+    assert.equal(locks.pages.team, undefined)
     const off = await call(OWNER, 'POST', '/plan-edits', operation(1, { op: 'remove-page', page: 'team' }))
     assert.equal(off.status, 200, JSON.stringify(off.body))
     const draft = off.body.draft
@@ -143,7 +150,7 @@ test(
     )
     assert.equal(draft.canUndo, true)
     assert.equal(draft.lastEdit, null)
-    assert.deepEqual(draft.review, {
+    assert.deepEqual(bare(draft.review), {
       count: 1,
       canRevert: true,
       removals: [{ id: 'removal-2', op: 'remove-page', target: { page: 'team' } }]
@@ -181,7 +188,7 @@ test(
     assert.equal(undone.status, 200, JSON.stringify(undone.body))
     assert.deepEqual(withoutRevision(undone.body.draft.plan), withoutRevision(composed.plan))
     assert.equal(undone.body.draft.plan.revision, 3)
-    assert.deepEqual(undone.body.draft.review, { count: 0, canRevert: false, removals: [] })
+    assert.deepEqual(bare(undone.body.draft.review), { count: 0, canRevert: false, removals: [] })
     assert.deepEqual(await profileOf(), composed.profile)
     assert.equal((await call(OWNER, 'POST', '/plan-undo')).body.code, 'NOTHING_TO_UNDO')
   }
@@ -208,7 +215,7 @@ test(
     const reverted = await call(OWNER, 'POST', '/plan-edits', operation(3, { op: 'revert' }))
     assert.equal(reverted.status, 200, JSON.stringify(reverted.body))
     assert.deepEqual(withoutRevision(reverted.body.draft.plan), withoutRevision(composed.plan))
-    assert.deepEqual(reverted.body.draft.review, { count: 0, canRevert: false, removals: [] })
+    assert.deepEqual(bare(reverted.body.draft.review), { count: 0, canRevert: false, removals: [] })
     assert.deepEqual(await profileOf(), composed.profile)
     const undone = await call(OWNER, 'POST', '/plan-undo')
     assert.deepEqual(
@@ -252,7 +259,11 @@ test('a new plan starts the review over', opts, async () => {
     plan: { ...composed.plan, revision: 5 },
     profile: composed.profile
   })
-  assert.deepEqual((await call(OWNER, 'GET')).body.draft.review, { count: 0, canRevert: false, removals: [] })
+  assert.deepEqual(bare((await call(OWNER, 'GET')).body.draft.review), {
+    count: 0,
+    canRevert: false,
+    removals: []
+  })
 })
 
 /** A draft whose look names one kept logo picture of its account, as the brand step leaves it. */

@@ -869,7 +869,8 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   channel or a later entry off, bring it back, or go back to the original) goes through the same door to
   `gateOperatedPlan`; migration 224 adds `plan_review` (the plan and profile before the owner's first change, the count
   of changes, the removal records a restore puts back, and the review before the last change for the one undo), never
-  answered whole. `GET /api/build-draft/pictures/:id` answers the owner a picture the draft's look names (the logo on
+  answered whole; every draft answer adds `review.locks`, what the plan's kit keeps (`planLocksOf`), computed on read
+  and never stored. `GET /api/build-draft/pictures/:id` answers the owner a picture the draft's look names (the logo on
   each ground, the site icon), from `build_draft_picture`, and nothing else. A compose on a draft that holds a plan never composes: with the owner's written request it runs the engine's
   `revise` step ([`build-draft/engine-revise.js`](apps/tracy-web/src/build-draft/engine-revise.js), the plan step's
   `revisePlan` of #617, in the background like compose), whose plan and profile are written with its done state only

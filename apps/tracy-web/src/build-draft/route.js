@@ -14,6 +14,7 @@
  * ground, the site icon), never any other stored picture.
  */
 import { Hono } from 'hono'
+import { planLocksOf } from 'website-opportunities/domain'
 import { json } from '../lib/http.js'
 import { principalOf } from '../lib/wo-principal.js'
 import { callerOf } from './caller.js'
@@ -86,8 +87,24 @@ export function buildDraftRoutes({
   openPicture = async () => null
 }) {
   const app = new Hono()
+  /**
+   * The draft with what the owner cannot take off the plan (`review.locks`, #575): decided from the plan's kit
+   * (`planLocksOf`), so the card shows no trash where the gate would refuse. No kit on this server: no locks.
+   */
+  const withLocks = (draft) => {
+    if (!draft?.plan) return draft
+    const kit = kits.loadKit?.(draft.plan.look?.template?.slug)
+    const locks = kit
+      ? planLocksOf(draft.plan, {
+          blockStore: kit.blockStore,
+          pageRecipes: kit.pageRecipes,
+          library: kit.library
+        })
+      : null
+    return { ...draft, review: { ...draft.review, locks } }
+  }
   const answer = (c, result, okStatus = 200) => {
-    if (!result.error) return json(c, { draft: result.draft }, okStatus)
+    if (!result.error) return json(c, { draft: withLocks(result.draft) }, okStatus)
     const [status, next] = REFUSALS[result.error]
     const { error: code, ...extra } = result
     return json(c, { code, next, ...(code === 'ENGINE_BUSY' ? { say: BUSY_SAY } : {}), ...extra }, status)
@@ -118,7 +135,7 @@ export function buildDraftRoutes({
   app.get(BASE, async (c) => {
     const accountId = await accountOf(c)
     if (accountId instanceof Response) return accountId
-    return json(c, { draft: accountId ? await readDraft(pool, accountId) : null })
+    return json(c, { draft: accountId ? withLocks(await readDraft(pool, accountId)) : null })
   })
 
   app.post(BASE, async (c) => {

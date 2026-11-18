@@ -12,7 +12,7 @@ sources:
 
 ## 2026-11-18: The plan card takes parts off the build plan and brings them back
 
-Changed (internal): `POST /api/build-draft/plan-edits` takes a plan edit that carries one `operation` instead of `changes` (`remove-page`, `remove-block`, `remove-item`, `remove-key-message`, `remove-channel`, `remove-later`, `restore`, `revert`), and edits of the plan's intent notes (`keyMessages[].label`, `pages[].keyMessage`, `pages[].visitorQuestion`, `pages[].seo.*`, `pages[].blocks[].message`). The draft answers `review: {count, canRevert, removals}`. Added (internal): `GET /api/build-draft/pictures/:id`, the pictures the plan look names, to their owner only. Public API v1 is unchanged.
+Changed (internal): `POST /api/build-draft/plan-edits` takes a plan edit that carries one `operation` instead of `changes` (`remove-page`, `remove-block`, `remove-item`, `remove-key-message`, `remove-channel`, `remove-later`, `restore`, `revert`), and edits of the plan's intent notes (`keyMessages[].label`, `pages[].keyMessage`, `pages[].visitorQuestion`, `pages[].seo.*`, `pages[].blocks[].message`). The draft answers `review: {count, canRevert, removals, locks}`, `locks` naming what the plan's kit keeps (`pages`, `blocks`, `facts` by refusal code, `minItems` per block). Added (internal): `GET /api/build-draft/pictures/:id`, the pictures the plan look names, to their owner only. Public API v1 is unchanged.
 
 ## 2026-11-16: The build chat can start over in a new conversation
 
