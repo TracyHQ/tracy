@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-XXXX-emdash-restaurant-1-0-3-diner-0-1-3",
+  "id": "REG-PR-689-emdash-restaurant-1-0-3-diner-0-1-3",
   "kind": "feat",
   "title": "EmDash personalize leaves no demo place, phone or web domain on the site, keeps the customer's own words, never empties a field and keeps button labels, post titles and the vendor's credit; the design source is captured offline except its webfonts",
-  "pr": 0,
+  "pr": 689,
   "area": "templates/emdash/personalize",
   "cms": ["em"],
   "needs": [],
