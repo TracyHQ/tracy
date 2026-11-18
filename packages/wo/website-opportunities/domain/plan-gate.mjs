@@ -57,6 +57,14 @@ import { dropBelowMinBlocks } from './plan-below-min-blocks.mjs'
 import { dropEmptiedBlocks } from './plan-emptied-blocks.mjs'
 import { withoutShownLeftOut } from './plan-gate-fixes.mjs'
 import { withCountedReasons } from './plan-left-out-plain.mjs'
+import {
+  keptOffPhotosOf,
+  leftOutCodesOf,
+  leftOutKeptOff,
+  pictureCountProblems,
+  withFramedPlaced,
+  withoutPlacedPhotos
+} from './plan-picture-count.mjs'
 import { withLabelCodes } from './plan-wording-codes.mjs'
 import { wordingProblems } from './plan-gate-wording.mjs'
 import { planRows } from './plan-rows.mjs'
@@ -146,7 +154,9 @@ export function gatePlan(reply, context) {
   // The page rules hold for the plan after placement too: a problem here is the gate's own placement.
   pageRuleProblems({ pages: facts.pages, leftOut: modelLeftOut }, context, problem)
   if (problems.length > 0) return failed()
-  const pictures = picturesOf(facts.pages, context.blocks, context.data)
+  // A photo the owner keeps off the site or asked to take off fills no picture frame either (`plan-picture-count.mjs`).
+  const keepOff = keptOffPhotosOf(modelLeftOut, context.data.withheld ?? [], context.askedOff)
+  const pictures = picturesOf(facts.pages, context.blocks, context.data, { keepOff })
   // Items the pictures summary takes off a page (no own photo) are reported in its left out list.
   const after = new Set(pictures.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
   const reduced = facts.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)).filter((id) => !after.has(id))
@@ -190,7 +200,7 @@ export function gatePlan(reply, context) {
   ]
   for (const entry of rowsOut) leftOutIds.add(entry.id)
   const placed = [...spread.placed, ...items.placed, ...facts.placed]
-  const accounting = dataAccountingOf({ data: context.data, pages: rows.pages, placed, leftOutIds })
+  let accounting = dataAccountingOf({ data: context.data, pages: rows.pages, placed, leftOutIds })
   for (const id of accounting.unexplained)
     problem('data_unaccounted', `data[${id}]`, `${JSON.stringify(id)} is shown nowhere and not left out`)
   // The model's entries and the withheld ones, in the customer's words with a reason code (`plan-left-out-wording.mjs`).
@@ -216,8 +226,7 @@ export function gatePlan(reply, context) {
     ...(list(context.data.rows).filter(kept).length ? { rows: context.data.rows.filter(kept) } : {}),
     pages: withLabelCodes(intent.pages, context.blocks),
     look: context.look,
-    // Counted on the final pages: a frame of an item the gate took off later is no picture to create.
-    pictures: picturesOf(rows.pages, context.blocks, context.data).pictures,
+    pictures: pictures.pictures,
     assumptions: [...context.assumptions, ...keptAssumptionsOf(composition, pictures.pages, context, fix)],
     leftOut: [
       ...kitPages,
@@ -235,6 +244,18 @@ export function gatePlan(reply, context) {
     ...intent.fields
   }
   plan.leftOut = withCountedReasons(withReasonCodes(plan.leftOut, plan))
+  // Counted on the final pages: a frame of an item the gate took off later is no picture to create. A photo the final
+  // left out list keeps off (`leftOutKeptOff`) fills no frame, as the pictures step reads it at build time.
+  const finalPictures = picturesOf(rows.pages, context.blocks, context.data, {
+    keepOff: new Set([...keepOff, ...leftOutKeptOff(plan.leftOut)])
+  })
+  // One count of the owner's photos (`plan-picture-count.mjs`): a photo a frame takes is placed, not left out, and an
+  // unused photo the list names is counted under that entry's code. The guard refuses numbers that still disagree.
+  const framedPhotos = withoutPlacedPhotos(plan.leftOut, finalPictures.placedItems)
+  plan.leftOut = framedPhotos.leftOut
+  accounting = withFramedPlaced(accounting, framedPhotos.framed)
+  plan.pictures = finalPictures.recount(leftOutCodesOf(plan.leftOut))
+  for (const p of pictureCountProblems(plan)) problem('picture_count', p.at, p.message)
   // A plan whose legal or not-found page the model got wrong goes back with those problems, never with their echo.
   if (systemProblems) return failed()
   for (const p of checkBuildDocument(plan).problems) problem('contract_b', p.at, p.message)

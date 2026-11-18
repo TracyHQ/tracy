@@ -30,7 +30,9 @@ test('a section removed: the page, the section and the code of its label; the ph
   const codes = await run(first, 'Remove the photos.', [
     { op: 'remove_block', page: 'home', block: 'home-b4', request: 'Remove the photos', said: 'ok' }
   ])
-  assert.deepEqual(codes.changed, ['block-removed', 'data-off', 'pictures-own', 'pictures-drawn'])
+  // The photos the owner took off fill no other frame either (`plan-picture-count.mjs`): the hero keeps its drawing,
+  // so the drawn count does not change and has no line.
+  assert.deepEqual(codes.changed, ['block-removed', 'data-off', 'pictures-own'])
   assert.deepEqual(codes.changedParams[0], {
     page: 'home',
     pageName: 'Home',
@@ -38,8 +40,7 @@ test('a section removed: the page, the section and the code of its label; the ph
     label: 'Photos',
     section: 'gallery'
   })
-  assert.deepEqual(codes.changedParams[2], { count: 1 })
-  assert.deepEqual(codes.changedParams[3], { count: 0 })
+  assert.deepEqual(codes.changedParams[2], { count: 0 })
 })
 
 test('a section whose data changes: the names are grouped with their counts', async () => {

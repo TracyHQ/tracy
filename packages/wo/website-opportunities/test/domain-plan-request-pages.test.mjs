@@ -170,8 +170,9 @@ test('lines name the final state, and the pictures estimate a revision changes h
     answer([{ op: 'remove_block', page: 'home', block: 'home-b4', request: 'Remove the photos' }])
   )
   const result = await revisePlan(photos.input)
+  // The photos taken off fill no other frame (`plan-picture-count.mjs`): none is used, and the drawn count is unchanged.
   assert.deepEqual(result.changed.slice(-2), [
-    'The plan now uses 1 photo of yours.',
-    'Tracy will not create any pictures now.'
+    'No longer shown: Three clay courts at dusk, Clubhouse terrace, Players at a cardio tennis evening.',
+    'The plan now uses 0 photos of yours.'
   ])
 })

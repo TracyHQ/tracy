@@ -208,7 +208,13 @@ rejected; and labels, reasons and other short texts are held to their [text limi
 - **`pictures`**: `own.frames` filled by the business's own photos (with `from`, the sources), and `generated.frames`
   to be generated. `own.frames` counts spots, not photos: one photo may fill several. The photos are counted apart
   (`picture-tally.mjs`): `own.photos` the owner's photos the plan holds, `own.placed` those that fill a spot, and
-  `own.unused` the others as `{code, count}` entries, so photos = placed + every unused count; `empty` lists the spots
+  `own.unused` the others as `{code, count}` entries, so photos = placed + every unused count. A photo is placed or
+  unused, never both: a photo that fills any spot (a gallery, the hero, another section picture) is not in `leftOut`,
+  and an unused photo whose item a `leftOut` entry names is counted under that entry's `code`, so the photos left out
+  as `no_gallery_room` are exactly the `no_gallery_room` unused count (`plan-picture-count.mjs`; the composer's gate
+  refuses a plan where they differ, code `picture_count`). A photo the owner keeps off the site or asked to take off
+  fills no spot of the plan. Which spot outside the galleries takes which photo is
+  decided by the pictures step once the photos are labelled, so the plan names no spot; `empty` lists the spots
   left without a picture the same way. The three own counts are given together or not at all. `generated.frames` has
   a `reason` when above zero. `generated.frames` is an estimate, never a cap (D45): the
   customer reads "about N pictures will be drawn", and the pictures step draws every drawable frame left without a
@@ -245,7 +251,10 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   `gallery_photo_shown_elsewhere` `{count}`, one entry per gallery, the photos it does not show because each already
   shows in a gallery on another page and a photo shows once on the site,
   so one sentence agrees for one photo and for many; `section_below_minimum` `{min, shown}` for a section, `{min}`
-  for an item it showed).
+  for an item it showed). The owner's videos the plan has no place for are one entry of kind `feature`, code
+  `no_place_in_design`, `params` `{count, known}`: `count` the videos left out, `known` the videos the plan knows,
+  each video frame of the plan counting as taking one, so known = placed + left out (`plan-videos.mjs`). A photo the
+  left out list names with any code but `no_gallery_room` fills no frame, at compose time and in the pictures step.
 - **`legalPages`** (optional, #575, the step chain's `site.legalPages`): one entry of `kind: "privacy"`, either the
   template's own page of the plan (`use` and `id` both the plan's page id) or one the build creates (`use: "create"`,
   `id: "legal:privacy"`, a `says` line for the writer and `factIds`, the facts or items it rests on, at least one).
