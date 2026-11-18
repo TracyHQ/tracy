@@ -311,7 +311,16 @@ contract.visual = {
     }
   ],
   fastGate: {
-    add: []
+    add: [
+      { page: 'en-contact', reason: 'Contact draws the form box (own components, not shared with the other pages)' },
+      { page: 'en-search', reason: 'Search draws its own result list (own components)' },
+      { page: 'en-cat-stack', reason: 'the stack list style puts the picture beside the text (own card, not the grid card)' },
+      { page: 'en-cat-sidebar', reason: 'the sidebar list style carries the sidebar next to the cards' },
+      { page: 'en-post-type2', reason: 'article layout type-2: title above the picture and the author box' },
+      { page: 'en-post-gallery', reason: 'a gallery article draws the slider in place of the hero picture' },
+      { page: 'en-post-video', reason: 'a video article draws the player in place of the hero picture' },
+      { page: 'en-post-type1', reason: 'article layout type-1: centred narrow column, no sidebar' }
+    ]
   },
   renderInputs: [
     'src/styles/**',

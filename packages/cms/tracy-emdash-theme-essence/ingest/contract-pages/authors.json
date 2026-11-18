@@ -1,0 +1,29 @@
+{
+  "layout": { "id": "Authors", "view": "src/views/Authors.astro", "family": "page" },
+  "rules": [
+    ["author-name", ".es-author-name", "pages/j-content/author-listting/index.html"],
+    ["author-job", ".es-author-title", "pages/j-content/author-listting/index.html"],
+    ["author-bio", ".es-author-bio", "pages/j-content/author-listting/index.html"]
+  ],
+  "parity": {
+    "authorName": { "site": ".es-author-name", "source": ".author-name" },
+    "authorJob": { "site": ".es-author-title", "source": ".author-title" }
+  },
+  "pages": [
+    {
+      "id": "en-authors",
+      "path": "/our-authors",
+      "source": ["pages/j-content/author-listting/index.html"],
+      "identity": ".es-authors",
+      "collections": ["chrome", "pages", "authors", "social"],
+      "rules": ["page-h1", "author-name", "author-job", "author-bio"],
+      "parity": ["nav", "authorName", "authorJob", "footerButton", "ground"],
+      "content": [
+        ["name", ".es-author-name >> text=Eula Ward", "pages/j-content/author-listting/index.html", "field", "authors.name", "Eula Ward"],
+        ["job", ".es-author-title", "pages/j-content/author-listting/index.html", "field", "authors.job_title", "Collaborator & Editor"],
+        ["bio", ".es-author-bio", "pages/j-content/author-listting/index.html", "field", "authors.bio", "It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride."]
+      ],
+      "images": "placeholders"
+    }
+  ]
+}

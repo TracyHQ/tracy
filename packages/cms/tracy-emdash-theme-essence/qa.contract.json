@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 11,
+  "revision": 15,
   "pending": [],
   "locales": [
     "en"
@@ -55,8 +55,7 @@
       {
         "path": "category/category-style-1/index.html",
         "sha256": "sha256:5bfa9605490728249ee918ceef77e1b845fe9c3c95ad0fb6a7945d25996cb523",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "category/category-style-1/index~start=9.html",
@@ -91,8 +90,7 @@
       {
         "path": "category/category-style-2/index.html",
         "sha256": "sha256:df6bad67168d23c9cf5ab6098072568b82b23989d3dae0c23406258dd40c3249",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "category/category-style-2/index~start=6.html",
@@ -181,8 +179,7 @@
       {
         "path": "category/category-style-3/index.html",
         "sha256": "sha256:30f7ac194c24a38e8ba446da6635ec40db075abab29abe14cd7cc822ee909f1c",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "category/category-style-3/vintage-inspired-martini-cocktail-glasses/index.html",
@@ -271,8 +268,7 @@
       {
         "path": "category/category-style-4/index.html",
         "sha256": "sha256:05f3ec2b5f6fabc39ca2ef7350084dba79d4034b2aa94711c14c9cc43c486118",
-        "disposition": "excluded",
-        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
+        "disposition": "converted"
       },
       {
         "path": "category/category-style-4/index~start=6.html",
@@ -295,8 +291,7 @@
       {
         "path": "component/tags/tag/health/index.html",
         "sha256": "sha256:59dfeb42d9014e2673906cba3612c7f2cf16146981b314e99ff97268ba651146",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "component/tags/tag/health/index~start=20.html",
@@ -361,8 +356,7 @@
       {
         "path": "contact/index.html",
         "sha256": "sha256:3ba4bb2f234036ea0fc4b7b390eea7fb93e1640960e9782c4cba21b9316e951f",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "crawl.json",
@@ -372,8 +366,7 @@
       {
         "path": "detail/gallery/index.html",
         "sha256": "sha256:a028798acfc902d4d398fc7f35c3052376275206d9d80b756d5d3ccdebcfe150",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "detail/layout-1/index.html",
@@ -383,20 +376,17 @@
       {
         "path": "detail/layout-2/index.html",
         "sha256": "sha256:3e09c6bc91f4a7214fe66858a5734ad86006b71761901a1dba10d6a274436f4c",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "detail/layout-3/index.html",
         "sha256": "sha256:ea2400799b0b24652689a6552aa318f862920a6cfd144e6c230accd13793fd75",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "detail/video/index.html",
         "sha256": "sha256:297da8c15e8f2b79f3f2322bb7559ee283b59ed4906c31cbcc7a56ad028d4bcf",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "home/home-1/index.html",
@@ -1014,8 +1004,7 @@
       {
         "path": "index~start=6.html",
         "sha256": "sha256:3c0c9afdda97c6d9ec441229f5643ac32ff009dfceb0cf11e19cc8e8dec8a84d",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "lifestyle/essential-nutrients-for-optimal-health/index.html",
@@ -1295,8 +1284,7 @@
       {
         "path": "pages/j-content/author-listting/author/Eula%20Ward/index.html",
         "sha256": "sha256:94b3775e0bb8de07c543e812f287c6976f8a06c11e1bf7c2492e1044a219e45d",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "pages/j-content/author-listting/author/Eula%20Ward/index~start=0.html",
@@ -1403,8 +1391,7 @@
       {
         "path": "pages/j-content/author-listting/index.html",
         "sha256": "sha256:ac53217b1e29e30253f51a6016b9d951b1e5cd132a12471df85bf486ab8b861a",
-        "disposition": "excluded",
-        "reason": "no built page reads this file (see the reason in DECISIONS)"
+        "disposition": "converted"
       },
       {
         "path": "pages/j-content/author-listting/index~start=0.html",
@@ -3070,6 +3057,1012 @@
         }
       },
       {
+        "id": "author-name",
+        "selector": ".es-author-name",
+        "source": "pages/j-content/author-listting/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "author-job",
+        "selector": ".es-author-title",
+        "source": "pages/j-content/author-listting/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "20.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "20.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "20.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "20.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "20.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "20.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "author-bio",
+        "selector": ".es-author-bio",
+        "source": "pages/j-content/author-listting/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "contact-title",
+        "selector": ".es-contact h1",
+        "source": "contact/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "contact-intro",
+        "selector": ".es-contact-intro",
+        "source": "contact/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "cat-title",
+        "selector": "h1.es-cat-title",
+        "source": "category/category-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "38px",
+            "font-weight": "400",
+            "line-height": "49.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "38px",
+            "font-weight": "400",
+            "line-height": "49.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "cat-count",
+        "selector": ".es-cat-count",
+        "source": "category/category-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "cat-desc",
+        "selector": ".es-cat-desc",
+        "source": "category/category-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "side-title",
+        "selector": ".es-side-title",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "newsletter-title",
+        "selector": "#es-newsletter-title",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "newsletter-text",
+        "selector": ".es-newsletter-text, .es-newsletter-status",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "mini-title",
+        "selector": ".es-mini.is-card .es-mini-title",
+        "source": "detail/video/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "abox-title",
+        "selector": ".es-author-box h3",
+        "source": "detail/layout-3/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "abox-bio",
+        "selector": ".es-abox-bio",
+        "source": "detail/layout-3/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "mini-thumb-title",
+        "selector": ".es-mini.is-thumb .es-mini-title",
+        "source": "detail/video/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
         "id": "post-title",
         "selector": ".es-post-title",
         "source": "detail/layout-1/index.html",
@@ -3271,73 +4264,6 @@
         }
       },
       {
-        "id": "side-title",
-        "selector": ".es-side-title",
-        "source": "detail/layout-1/index.html",
-        "styles": {
-          "1440-light": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31.2px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(33, 37, 41)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "1440-dark": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31.2px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(238, 241, 246)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "768-light": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31.2px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(33, 37, 41)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "768-dark": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31.2px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(238, 241, 246)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "390-light": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31.2px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(33, 37, 41)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "390-dark": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31.2px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(238, 241, 246)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          }
-        }
-      },
-      {
         "id": "body-h2",
         "selector": ".es-body h2",
         "source": "detail/layout-1/index.html",
@@ -3406,7 +4332,7 @@
       },
       {
         "id": "sec-title",
-        "selector": ".es-sec-title",
+        "selector": ".es-sec-title:not(.is-small)",
         "source": "detail/layout-1/index.html",
         "styles": {
           "1440-light": {
@@ -3467,73 +4393,6 @@
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(238, 241, 246)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          }
-        }
-      },
-      {
-        "id": "newsletter-title",
-        "selector": "#es-newsletter-title",
-        "source": "detail/layout-1/index.html",
-        "styles": {
-          "1440-light": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "1440-dark": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "768-light": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "768-dark": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "390-light": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
-            "background-color": "rgba(0, 0, 0, 0)"
-          },
-          "390-dark": {
-            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
-            "font-weight": "400",
-            "line-height": "31px",
-            "letter-spacing": "normal",
-            "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           }
         }
@@ -3673,68 +4532,136 @@
         }
       },
       {
-        "id": "newsletter-text",
-        "selector": ".es-newsletter-text, .es-newsletter-status",
+        "id": "sec-title-small",
+        "selector": ".es-sec-title.is-small",
         "source": "detail/layout-1/index.html",
         "styles": {
           "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
+        "id": "search-count",
+        "selector": ".es-search-count",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
             "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "16px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
+            "color": "rgba(37, 36, 36, 0.7)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
             "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "16px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
+            "color": "rgb(194, 201, 214)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-light": {
             "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "16px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
+            "color": "rgba(37, 36, 36, 0.7)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
             "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "16px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
+            "color": "rgb(194, 201, 214)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-light": {
             "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "16px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
+            "color": "rgba(37, 36, 36, 0.7)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
             "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
-            "font-size": "16px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(255, 255, 255)",
+            "color": "rgb(194, 201, 214)",
             "background-color": "rgba(0, 0, 0, 0)"
           }
         }
@@ -3763,6 +4690,30 @@
           "source": ".error-msg h2"
         },
         "ground": "body",
+        "authorName": {
+          "site": ".es-cat-title",
+          "source": ".author-name"
+        },
+        "authorJob": {
+          "site": ".es-author-title",
+          "source": ".author-title"
+        },
+        "contactTitle": {
+          "site": ".es-contact h1",
+          "source": ".title-lead h2"
+        },
+        "contactSubmit": {
+          "site": ".ec-form-submit",
+          "source": "button.validate"
+        },
+        "catTitle": {
+          "site": ".es-cat-title",
+          "source": "h1.page-subtitle"
+        },
+        "catCard": {
+          "site": ".es-card-title",
+          "source": ".page-header h2"
+        },
         "postTitle": {
           "site": ".es-post-title",
           "source": "h2[itemprop=\"headline\"]"
@@ -4024,6 +4975,1058 @@
       ]
     },
     {
+      "id": "en-authors",
+      "path": "/our-authors",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-authors",
+      "source": [
+        "pages/j-content/author-listting/index.html"
+      ],
+      "render": {
+        "view": "src/views/Authors.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "authors",
+          "social"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "page-h1",
+        "author-name",
+        "author-job",
+        "author-bio"
+      ],
+      "parity": [
+        "nav",
+        "authorName",
+        "authorJob",
+        "footerButton",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "name",
+          "selector": ".es-author-name >> text=Eula Ward",
+          "source": "pages/j-content/author-listting/index.html",
+          "owner": "field",
+          "binding": "authors.name",
+          "attribute": "text",
+          "expected": "Eula Ward"
+        },
+        {
+          "id": "job",
+          "selector": ".es-author-title >> nth=0",
+          "source": "pages/j-content/author-listting/index.html",
+          "owner": "field",
+          "binding": "authors.job_title",
+          "attribute": "text",
+          "expected": "Collaborator & Editor"
+        },
+        {
+          "id": "bio",
+          "selector": ".es-author-bio >> nth=0",
+          "source": "pages/j-content/author-listting/index.html",
+          "owner": "field",
+          "binding": "authors.bio",
+          "attribute": "text",
+          "expected": "It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride."
+        }
+      ]
+    },
+    {
+      "id": "en-contact",
+      "path": "/contact",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-contact",
+      "source": [
+        "contact/index.html"
+      ],
+      "render": {
+        "view": "src/views/Contact.astro",
+        "collections": [
+          "chrome",
+          "contact"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "contact-title",
+        "contact-intro"
+      ],
+      "parity": [
+        "nav",
+        "contactTitle",
+        "contactSubmit",
+        "footerButton",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "title",
+          "selector": ".es-contact h1 >> nth=0",
+          "source": "contact/index.html",
+          "owner": "field",
+          "binding": "contact.title",
+          "attribute": "text",
+          "expected": "We’d love to hear from you"
+        },
+        {
+          "id": "intro",
+          "selector": ".es-contact-intro >> nth=0",
+          "source": "contact/index.html",
+          "owner": "field",
+          "binding": "contact.intro",
+          "attribute": "text",
+          "expected": "It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines."
+        },
+        {
+          "id": "send",
+          "selector": ".ec-form-submit >> nth=0",
+          "source": "contact/index.html",
+          "owner": "field",
+          "binding": "forms.submit_label",
+          "attribute": "text",
+          "expected": "Send message"
+        }
+      ]
+    },
+    {
+      "id": "en-home-2",
+      "path": "/?page=2",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-strip",
+      "source": [
+        "index~start=6.html"
+      ],
+      "render": {
+        "view": "src/views/Home.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "posts",
+          "gallery",
+          "social"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "strip-title",
+        "lead-title",
+        "strip-meta",
+        "card-title",
+        "card-intro",
+        "page-count",
+        "page-h1"
+      ],
+      "parity": [
+        "nav",
+        "stripTitle",
+        "cardTitle",
+        "footerButton",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "strip-1",
+          "selector": ".es-strip-item h3 >> nth=0",
+          "source": "index~start=6.html",
+          "owner": "derived",
+          "binding": "posts with home_lead (second page)",
+          "attribute": "text",
+          "expected": "Abstract Wonders: Exploring Line Art Composition"
+        },
+        {
+          "id": "pager",
+          "selector": ".es-page-count >> nth=0",
+          "source": "index~start=6.html",
+          "owner": "derived",
+          "binding": "template word (page counter)",
+          "attribute": "text",
+          "expected": "Page 2 of 3"
+        },
+        {
+          "id": "footer-cta",
+          "selector": ".es-footer-right .es-btn >> nth=0",
+          "source": "index~start=6.html",
+          "owner": "field",
+          "binding": "chrome.footer_cta_label",
+          "attribute": "text",
+          "expected": "Become a subscriber"
+        }
+      ]
+    },
+    {
+      "id": "en-cat-grid",
+      "path": "/category/blog-health",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-cat-title",
+      "source": [
+        "category/category-style-1/index.html"
+      ],
+      "render": {
+        "view": "src/views/Category.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "pages",
+          "authors",
+          "social"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "cat-title",
+        "cat-count",
+        "cat-desc",
+        "card-title",
+        "page-count"
+      ],
+      "parity": [
+        "nav",
+        "catTitle",
+        "catCard",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "title",
+          "selector": ".es-cat-title >> nth=0",
+          "source": "category/category-style-1/index.html",
+          "owner": "derived",
+          "binding": "categories.title (list heading)",
+          "attribute": "text",
+          "expected": "Health"
+        },
+        {
+          "id": "card1",
+          "selector": ".es-card-title >> nth=0",
+          "source": "category/category-style-1/index.html",
+          "owner": "derived",
+          "binding": "posts, first of the category",
+          "attribute": "text",
+          "expected": "Capturing Essence: Expressive Line Art Techniques"
+        },
+        {
+          "id": "pager",
+          "selector": ".es-page-count >> nth=0",
+          "source": "category/category-style-1/index.html",
+          "owner": "derived",
+          "binding": "template word (page counter)",
+          "attribute": "text",
+          "expected": "Page 1 of 2"
+        }
+      ]
+    },
+    {
+      "id": "en-cat-stack",
+      "path": "/category/blog-design",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-cat-title",
+      "source": [
+        "category/category-style-2/index.html"
+      ],
+      "render": {
+        "view": "src/views/Category.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "pages",
+          "authors",
+          "social"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "cat-title",
+        "cat-count",
+        "cat-desc",
+        "card-title",
+        "card-intro",
+        "page-count"
+      ],
+      "parity": [
+        "nav",
+        "catTitle",
+        "catCard",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "title",
+          "selector": ".es-cat-title >> nth=0",
+          "source": "category/category-style-2/index.html",
+          "owner": "derived",
+          "binding": "categories.title (list heading)",
+          "attribute": "text",
+          "expected": "Design"
+        },
+        {
+          "id": "card1",
+          "selector": ".es-card-title >> nth=0",
+          "source": "category/category-style-2/index.html",
+          "owner": "derived",
+          "binding": "posts, first of the category",
+          "attribute": "text",
+          "expected": "Beyond Black and White: Adding Colors to Line Art"
+        },
+        {
+          "id": "pager",
+          "selector": ".es-page-count >> nth=0",
+          "source": "category/category-style-2/index.html",
+          "owner": "derived",
+          "binding": "template word (page counter)",
+          "attribute": "text",
+          "expected": "Page 1 of 2"
+        }
+      ]
+    },
+    {
+      "id": "en-cat-fashion",
+      "path": "/category/blog-fashion",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-cat-title",
+      "source": [
+        "category/category-style-3/index.html"
+      ],
+      "render": {
+        "view": "src/views/Category.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "pages",
+          "authors",
+          "social"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "cat-title",
+        "cat-count",
+        "cat-desc",
+        "card-title"
+      ],
+      "parity": [
+        "nav",
+        "catTitle",
+        "catCard",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "title",
+          "selector": ".es-cat-title >> nth=0",
+          "source": "category/category-style-3/index.html",
+          "owner": "derived",
+          "binding": "categories.title (list heading)",
+          "attribute": "text",
+          "expected": "Fashion"
+        },
+        {
+          "id": "card1",
+          "selector": ".es-card-title >> nth=0",
+          "source": "category/category-style-3/index.html",
+          "owner": "derived",
+          "binding": "posts, first of the category",
+          "attribute": "text",
+          "expected": "Natural Remedies for Common Ailments"
+        }
+      ]
+    },
+    {
+      "id": "en-cat-sidebar",
+      "path": "/category/blog-normal-health",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-card-intro",
+      "source": [
+        "category/category-style-4/index.html"
+      ],
+      "render": {
+        "view": "src/views/Category.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "pages",
+          "authors",
+          "social"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "page-h1",
+        "card-title",
+        "card-intro",
+        "side-title",
+        "newsletter-title",
+        "newsletter-text"
+      ],
+      "parity": [
+        "nav",
+        "catCard",
+        "sideTitle",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "card1",
+          "selector": ".es-card-title >> nth=0",
+          "source": "category/category-style-4/index.html",
+          "owner": "derived",
+          "binding": "posts, first of the category",
+          "attribute": "text",
+          "expected": "Capturing Essence: Expressive Line Art Techniques"
+        },
+        {
+          "id": "intro1",
+          "selector": ".es-card-intro >> nth=0",
+          "source": "category/category-style-4/index.html",
+          "owner": "derived",
+          "binding": "posts, first paragraph",
+          "attribute": "text",
+          "expected": "Its sometimes her behaviour are contented."
+        }
+      ]
+    },
+    {
+      "id": "en-tag",
+      "path": "/tag/health",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-cat-count",
+      "source": [
+        "component/tags/tag/health/index.html"
+      ],
+      "render": {
+        "view": "src/views/Category.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "pages",
+          "authors",
+          "social"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "cat-title",
+        "cat-count",
+        "card-title",
+        "page-count"
+      ],
+      "parity": [
+        "nav",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "title",
+          "selector": ".es-cat-title >> nth=0",
+          "source": "component/tags/tag/health/index.html",
+          "owner": "derived",
+          "binding": "tags.title (list heading)",
+          "attribute": "text",
+          "expected": "Health"
+        },
+        {
+          "id": "card1",
+          "selector": ".es-card-title >> nth=0",
+          "source": "component/tags/tag/health/index.html",
+          "owner": "derived",
+          "binding": "posts, first of the tag",
+          "attribute": "text",
+          "expected": "Capturing Essence: Expressive Line Art Techniques"
+        }
+      ]
+    },
+    {
+      "id": "en-author",
+      "path": "/author/eula-ward",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-cat-count",
+      "source": [
+        "pages/j-content/author-listting/author/Eula%20Ward/index.html"
+      ],
+      "render": {
+        "view": "src/views/Category.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "pages",
+          "authors",
+          "social"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "cat-title",
+        "cat-count",
+        "card-title"
+      ],
+      "parity": [
+        "nav",
+        "authorName",
+        "catCard",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "title",
+          "selector": ".es-cat-title >> nth=0",
+          "source": "pages/j-content/author-listting/author/Eula%20Ward/index.html",
+          "owner": "field",
+          "binding": "authors.title",
+          "attribute": "text",
+          "expected": "Eula Ward"
+        },
+        {
+          "id": "card1",
+          "selector": ".es-card-title >> nth=0",
+          "source": "pages/j-content/author-listting/author/Eula%20Ward/index.html",
+          "owner": "derived",
+          "binding": "posts by the author",
+          "attribute": "text",
+          "expected": "Capturing Essence: Expressive Line Art Techniques"
+        }
+      ]
+    },
+    {
+      "id": "en-post-type1",
+      "path": "/blog/mental-health-and-well-being-strategies-blog-health",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-article",
+      "source": [
+        "detail/layout-2/index.html"
+      ],
+      "render": {
+        "view": "src/views/Post.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "authors",
+          "social",
+          "gallery"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "post-title",
+        "post-body",
+        "post-quote",
+        "quote-by",
+        "body-h2",
+        "sec-title",
+        "mini-title",
+        "sec-title-small",
+        "mini-thumb-title"
+      ],
+      "parity": [
+        "nav",
+        "postTitle",
+        "footerButton",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": ".es-post-title >> nth=0",
+          "source": "detail/layout-2/index.html",
+          "owner": "field",
+          "binding": "posts.title",
+          "attribute": "text",
+          "expected": "Mental Health and Well-being Strategies"
+        },
+        {
+          "id": "p1",
+          "selector": ".es-body > p >> nth=0",
+          "source": "detail/layout-2/index.html",
+          "owner": "field",
+          "binding": "posts.body",
+          "attribute": "text",
+          "expected": "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        },
+        {
+          "id": "h2",
+          "selector": ".es-body h2 >> nth=0",
+          "source": "detail/layout-2/index.html",
+          "owner": "field",
+          "binding": "posts.body",
+          "attribute": "text",
+          "expected": "Me unpleasing impossible"
+        }
+      ]
+    },
+    {
+      "id": "en-post-type2",
+      "path": "/blog/essential-nutrients-for-optimal-health-blog-health",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-article",
+      "source": [
+        "detail/layout-3/index.html"
+      ],
+      "render": {
+        "view": "src/views/Post.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "authors",
+          "social",
+          "gallery"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "post-title",
+        "post-body",
+        "post-quote",
+        "quote-by",
+        "body-h2",
+        "sec-title",
+        "mini-title",
+        "abox-title",
+        "abox-bio",
+        "newsletter-title",
+        "newsletter-text",
+        "sec-title-small",
+        "mini-thumb-title"
+      ],
+      "parity": [
+        "nav",
+        "postTitle",
+        "footerButton",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": ".es-post-title >> nth=0",
+          "source": "detail/layout-3/index.html",
+          "owner": "field",
+          "binding": "posts.title",
+          "attribute": "text",
+          "expected": "Essential Nutrients for Optimal Health"
+        },
+        {
+          "id": "p1",
+          "selector": ".es-body > p >> nth=0",
+          "source": "detail/layout-3/index.html",
+          "owner": "field",
+          "binding": "posts.body",
+          "attribute": "text",
+          "expected": "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        },
+        {
+          "id": "h2",
+          "selector": ".es-body h2 >> nth=0",
+          "source": "detail/layout-3/index.html",
+          "owner": "field",
+          "binding": "posts.body",
+          "attribute": "text",
+          "expected": "Me unpleasing impossible"
+        },
+        {
+          "id": "written",
+          "selector": ".es-author-box h3 >> nth=0",
+          "source": "detail/layout-3/index.html",
+          "owner": "field",
+          "binding": "chrome.written_by",
+          "attribute": "text",
+          "expected": "Written by"
+        }
+      ]
+    },
+    {
+      "id": "en-post-video",
+      "path": "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-article",
+      "source": [
+        "detail/video/index.html"
+      ],
+      "render": {
+        "view": "src/views/Post.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "authors",
+          "social",
+          "gallery"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "post-title",
+        "post-body",
+        "post-quote",
+        "quote-by",
+        "body-h2",
+        "sec-title",
+        "mini-title",
+        "side-title",
+        "newsletter-title",
+        "newsletter-text",
+        "sec-title-small",
+        "mini-thumb-title"
+      ],
+      "parity": [
+        "nav",
+        "postTitle",
+        "sideTitle",
+        "footerButton",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": ".es-post-title >> nth=0",
+          "source": "detail/video/index.html",
+          "owner": "field",
+          "binding": "posts.title",
+          "attribute": "text",
+          "expected": "Fitness Tips for a Healthy Lifestyle"
+        },
+        {
+          "id": "p1",
+          "selector": ".es-body > p >> nth=0",
+          "source": "detail/video/index.html",
+          "owner": "field",
+          "binding": "posts.body",
+          "attribute": "text",
+          "expected": "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        },
+        {
+          "id": "h2",
+          "selector": ".es-body h2 >> nth=0",
+          "source": "detail/video/index.html",
+          "owner": "field",
+          "binding": "posts.body",
+          "attribute": "text",
+          "expected": "Me unpleasing impossible"
+        },
+        {
+          "id": "side",
+          "selector": ".es-side-title >> nth=0",
+          "source": "detail/video/index.html",
+          "owner": "field",
+          "binding": "chrome.latest_title",
+          "attribute": "text",
+          "expected": "Articles - Latest"
+        }
+      ]
+    },
+    {
+      "id": "en-post-gallery",
+      "path": "/blog/natural-remedies-for-common-ailments-blog-fashion",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-article",
+      "source": [
+        "detail/gallery/index.html"
+      ],
+      "render": {
+        "view": "src/views/Post.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "authors",
+          "social",
+          "gallery"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "post-title",
+        "post-body",
+        "post-quote",
+        "quote-by",
+        "body-h2",
+        "sec-title",
+        "mini-title",
+        "side-title",
+        "newsletter-title",
+        "newsletter-text",
+        "sec-title-small",
+        "mini-thumb-title"
+      ],
+      "parity": [
+        "nav",
+        "postTitle",
+        "sideTitle",
+        "footerButton",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": ".es-post-title >> nth=0",
+          "source": "detail/gallery/index.html",
+          "owner": "field",
+          "binding": "posts.title",
+          "attribute": "text",
+          "expected": "Natural Remedies for Common Ailments"
+        },
+        {
+          "id": "p1",
+          "selector": ".es-body > p >> nth=0",
+          "source": "detail/gallery/index.html",
+          "owner": "field",
+          "binding": "posts.body",
+          "attribute": "text",
+          "expected": "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        },
+        {
+          "id": "h2",
+          "selector": ".es-body h2 >> nth=0",
+          "source": "detail/gallery/index.html",
+          "owner": "field",
+          "binding": "posts.body",
+          "attribute": "text",
+          "expected": "Me unpleasing impossible"
+        },
+        {
+          "id": "side",
+          "selector": ".es-side-title >> nth=0",
+          "source": "detail/gallery/index.html",
+          "owner": "field",
+          "binding": "chrome.latest_title",
+          "attribute": "text",
+          "expected": "Articles - Latest"
+        }
+      ]
+    },
+    {
       "id": "en-post",
       "path": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
       "locale": "en",
@@ -4069,7 +6072,8 @@
         "newsletter-title",
         "article-h3",
         "quote-by",
-        "newsletter-text"
+        "newsletter-text",
+        "sec-title-small"
       ],
       "parity": [
         "nav",
@@ -4108,6 +6112,46 @@
           "expected": "Articles - Latest"
         }
       ]
+    },
+    {
+      "id": "en-search",
+      "path": "/search?q=line",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-search-form",
+      "source": [],
+      "render": {
+        "view": "src/views/Search.astro",
+        "collections": [
+          "chrome",
+          "posts"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "page-h1",
+        "search-count"
+      ],
+      "parity": [
+        "ground"
+      ],
+      "content": []
     }
   ],
   "reviews": {
@@ -4221,6 +6265,79 @@
       "hasSource": true
     },
     {
+      "id": "Authors",
+      "view": "src/views/Authors.astro",
+      "representative": "en-authors",
+      "pages": [
+        "en-authors"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "page",
+      "hasSource": true
+    },
+    {
+      "id": "Contact",
+      "view": "src/views/Contact.astro",
+      "representative": "en-contact",
+      "pages": [
+        "en-contact"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "page",
+      "hasSource": true
+    },
+    {
+      "id": "HomeList",
+      "view": "src/views/Home.astro",
+      "representative": "en-home-2",
+      "pages": [
+        "en-home-2"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "list",
+      "hasSource": true
+    },
+    {
+      "id": "Category",
+      "view": "src/views/Category.astro",
+      "representative": "en-cat-grid",
+      "pages": [
+        "en-cat-grid",
+        "en-cat-stack",
+        "en-cat-fashion",
+        "en-cat-sidebar",
+        "en-tag",
+        "en-author"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "list",
+      "hasSource": true
+    },
+    {
+      "id": "PostVariants",
+      "view": "src/views/Post.astro",
+      "representative": "en-post-type1",
+      "pages": [
+        "en-post-type1",
+        "en-post-type2",
+        "en-post-video",
+        "en-post-gallery"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "detail",
+      "hasSource": true
+    },
+    {
       "id": "Post",
       "view": "src/views/Post.astro",
       "representative": "en-post",
@@ -4232,6 +6349,19 @@
       ],
       "family": "detail",
       "hasSource": true
+    },
+    {
+      "id": "Search",
+      "view": "src/views/Search.astro",
+      "representative": "en-search",
+      "pages": [
+        "en-search"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "page",
+      "hasSource": false
     }
   ],
   "visual": {
@@ -4338,7 +6468,40 @@
       }
     ],
     "fastGate": {
-      "add": []
+      "add": [
+        {
+          "page": "en-contact",
+          "reason": "Contact draws the form box (own components, not shared with the other pages)"
+        },
+        {
+          "page": "en-search",
+          "reason": "Search draws its own result list (own components)"
+        },
+        {
+          "page": "en-cat-stack",
+          "reason": "the stack list style puts the picture beside the text (own card, not the grid card)"
+        },
+        {
+          "page": "en-cat-sidebar",
+          "reason": "the sidebar list style carries the sidebar next to the cards"
+        },
+        {
+          "page": "en-post-type2",
+          "reason": "article layout type-2: title above the picture and the author box"
+        },
+        {
+          "page": "en-post-gallery",
+          "reason": "a gallery article draws the slider in place of the hero picture"
+        },
+        {
+          "page": "en-post-video",
+          "reason": "a video article draws the player in place of the hero picture"
+        },
+        {
+          "page": "en-post-type1",
+          "reason": "article layout type-1: centred narrow column, no sidebar"
+        }
+      ]
     },
     "renderInputs": [
       "src/styles/**",

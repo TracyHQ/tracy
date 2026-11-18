@@ -32,7 +32,7 @@
     ],
     [
       "sec-title",
-      ".es-sec-title",
+      ".es-sec-title:not(.is-small)",
       "detail/layout-1/index.html"
     ],
     [
@@ -54,6 +54,12 @@
       "newsletter-text",
       ".es-newsletter-text, .es-newsletter-status",
       "detail/layout-1/index.html"
+    ],
+    [
+      "sec-title-small",
+      ".es-sec-title.is-small",
+      "detail/layout-1/index.html",
+      true
     ]
   ],
   "parity": {
@@ -91,7 +97,8 @@
         "newsletter-title",
         "article-h3",
         "quote-by",
-        "newsletter-text"
+        "newsletter-text",
+        "sec-title-small"
       ],
       "parity": [
         "nav",

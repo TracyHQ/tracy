@@ -1,0 +1,69 @@
+{
+  "layout": {
+    "id": "HomeList",
+    "view": "src/views/Home.astro",
+    "family": "list"
+  },
+  "rules": [],
+  "parity": {},
+  "pages": [
+    {
+      "id": "en-home-2",
+      "path": "/?page=2",
+      "source": [
+        "index~start=6.html"
+      ],
+      "identity": ".es-strip",
+      "collections": [
+        "chrome",
+        "pages",
+        "posts",
+        "gallery",
+        "social"
+      ],
+      "rules": [
+        "strip-title",
+        "lead-title",
+        "strip-meta",
+        "card-title",
+        "card-intro",
+        "page-count",
+        "page-h1"
+      ],
+      "parity": [
+        "nav",
+        "stripTitle",
+        "cardTitle",
+        "footerButton",
+        "ground"
+      ],
+      "content": [
+        [
+          "strip-1",
+          ".es-strip-item h3",
+          "index~start=6.html",
+          "derived",
+          "posts with home_lead (second page)",
+          "Abstract Wonders: Exploring Line Art Composition"
+        ],
+        [
+          "pager",
+          ".es-page-count",
+          "index~start=6.html",
+          "derived",
+          "template word (page counter)",
+          "Page 2 of 3"
+        ],
+        [
+          "footer-cta",
+          ".es-footer-right .es-btn",
+          "index~start=6.html",
+          "field",
+          "chrome.footer_cta_label",
+          "Become a subscriber"
+        ]
+      ],
+      "images": "placeholders"
+    }
+  ]
+}
