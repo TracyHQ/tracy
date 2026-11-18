@@ -99,17 +99,29 @@ const leaves = (v, p = '', acc = []) => {
   return acc
 }
 
+/** The text leaves of `before` that are empty or gone in `after`; a field that is gone counts as emptied (D-K16, P2). */
+const emptiedLeaves = (before, after, at = '') => {
+  const now = new Map(leaves(after))
+  const out = []
+  for (const [p, v] of leaves(before)) {
+    if (v.trim() === '') continue
+    if (!now.has(p)) out.push(`${at}${p} (missing)`)
+    else if (now.get(p).trim() === '') out.push(`${at}${p}`)
+  }
+  return out
+}
+
+test('the emptied-field check counts a deleted field (code review of D-K14, P2)', () => {
+  assert.deepEqual(emptiedLeaves({ a: 'x', b: { c: 'y' } }, { b: {} }), ['.a (missing)', '.b.c (missing)'])
+  assert.deepEqual(emptiedLeaves({ a: 'x' }, { a: ' ' }), ['.a'])
+  assert.deepEqual(emptiedLeaves({ a: 'x', url: 'http://x' }, { a: 'x' }), [], 'a link target is not text')
+})
+
 test('a field that held text before still holds text after, with an address (empty home headings, D-K14)', () => {
   const { data } = out.address
-  const emptied = []
-  for (const e of entries) {
-    const after = data(e.collection, e.slug)
-    for (const [p, v] of leaves(e.data)) {
-      if (v.trim() === '') continue
-      const now = leaves(after).find(([q]) => q === p)
-      if (now && now[1].trim() === '') emptied.push(`${e.collection}/${e.slug}${p}`)
-    }
-  }
+  const emptied = entries.flatMap((e) =>
+    emptiedLeaves(e.data, data(e.collection, e.slug), `${e.collection}/${e.slug}`)
+  )
   assert.deepEqual(emptied, [])
   const intro = data('features_intro', 'meet-three-broomsticks').sub_heading
   const news = data('chrome', 'chrome').news_title

@@ -2246,14 +2246,14 @@ export function demoPlaceWordsOf(map, seedEntries, { ordinary = ordinaryWordsOf(
         // commas, lines and line breaks); in each, a run of capitalised words that are not street or address nouns is ONE
         // place ("Mountain View", "Hogsmeade"); a one-word place the template's own text also writes in lower case is an
         // ordinary word, never a place on its own; and the last segment of an address of three segments or more, one word
-        // with no digit, is its country ("Britain"): too wide to say where the demo is, so no place word (the demo post
-        // "nominated for the Britain Restaurant Awards" became the brand's name).
+        // with no digit, was its country; a country is now any name of a real list (`isCountry`, D-K16): too wide to
+        // say where the demo is, so no place word (the demo post "nominated for the Britain Restaurant Awards" became the brand).
         const segments = demo
           .replace(/<[^>]*>/g, ',')
           .split(/[,\n]+/)
           .map((x) => x.trim())
           .filter(Boolean)
-        segments.forEach((segment, i) => {
+        for (const segment of segments) {
           const runs = []
           let run = []
           for (const m of segment.matchAll(/[\p{L}\p{N}][\p{L}\p{N}.'’-]*/gu)) {
@@ -2265,16 +2265,18 @@ export function demoPlaceWordsOf(map, seedEntries, { ordinary = ordinaryWordsOf(
             }
           }
           if (run.length > 0) runs.push(run)
-          const country =
-            i === segments.length - 1 &&
-            segments.length >= 3 &&
-            !/\d/.test(segment) &&
-            runs.length === 1 &&
-            runs[0].length === 1 &&
-            segment.replace(/[.\s]+$/, '') === runs[0][0]
-          if (country) return
-          for (const r of runs) if (r.length > 1 || !ordinary.has(r[0].toLowerCase())) words.add(r.join(' '))
-        })
+          // a segment that names a country, or a run that does, is no place (`isCountry`)
+          if (isCountry(segment)) continue
+          for (const r of runs) {
+            const place = r.join(' ')
+            if (isCountry(place)) continue
+            // A one-word place the template's own text writes in lower case is an ordinary word (D-K14). Known limit
+            // (D-K16): an ordinary word the seed never writes in lower case ("View" in "Mountain View" spelled alone) can
+            // still be taken for a place; it then matches only as a whole word, case-sensitive, in the fields the place
+            // rules name, never in a button's or a link's label.
+            if (r.length > 1 || !ordinary.has(r[0].toLowerCase())) words.add(place)
+          }
+        }
         // A numbered street ("5th Avenue", "42nd Street") has no proper name of its own: the phrase is the demo's place
         // (independent review of JA Restaurant 1.0.3, 17/11/2026: "Four decades on 5th Avenue" stayed on a renamed site).
         for (const m of demo.matchAll(/(?<![\p{L}\p{N}])\d+(?:st|nd|rd|th)\s+(\p{Lu}\p{Ll}+)/gu))
@@ -2284,6 +2286,54 @@ export function demoPlaceWordsOf(map, seedEntries, { ordinary = ordinaryWordsOf(
   }
   return words
 }
+
+/**
+ * 🔒 A COUNTRY IS NOT THE DEMO'S PLACE (code review of D-K14, 18/11/2026): the names come from a real list, every ISO 3166
+ * region Node knows in English (`Intl.DisplayNames`, type `region`), never from where a segment stands in the address
+ * ("London, Britain" made Britain a place; "…, United Kingdom" too), and a few common names added on purpose (Britain,
+ * Great Britain, UK, USA, America, England, Scotland, Wales, Northern Ireland, Holland, Turkey). Lower case.
+ */
+const COUNTRY_NAMES = (() => {
+  const names = new Set([
+    'britain',
+    'great britain',
+    'uk',
+    'u.k',
+    'usa',
+    'u.s.a',
+    'u.s',
+    'america',
+    'england',
+    'scotland',
+    'wales',
+    'northern ireland',
+    'holland',
+    'turkey'
+  ])
+  try {
+    const regions = new Intl.DisplayNames(['en'], { type: 'region', fallback: 'none' })
+    for (let a = 65; a <= 90; a += 1)
+      for (let b = 65; b <= 90; b += 1) {
+        const code = String.fromCharCode(a, b)
+        const name = regions.of(code)
+        if (typeof name !== 'string' || name === code || /^unknown/i.test(name)) continue
+        names.add(name.toLowerCase())
+        names.add(name.toLowerCase().replace(/ & /g, ' and '))
+      }
+  } catch {
+    // a Node without ICU region names keeps the names above
+  }
+  return names
+})()
+/** Whether a text (an address segment or a run of words) is a country's name. */
+const isCountry = (text) =>
+  COUNTRY_NAMES.has(
+    String(text)
+      .replace(/[.,;:\s]+$/, '')
+      .replace(/^the\s+/i, '')
+      .trim()
+      .toLowerCase()
+  )
 
 /**
  * The words a template's own text writes in lower case, its ordinary words ("view", "menu"), read from the text of the
@@ -2790,7 +2840,7 @@ export function withoutDemoPlace(
   value,
   places,
   facts = null,
-  { fallback = null, required = false, unresolved = null, only = null } = {}
+  { fallback = null, required = false, unresolved = null, only = null, at = '' } = {}
 ) {
   if (places.size === 0) return null
   const protect = customerSpansOf(facts)
@@ -2814,28 +2864,37 @@ export function withoutDemoPlace(
     // is reported (`places-kept`).
     if (text !== '') return text
     if (typeof fallback === 'string' && fallback !== '') return fallback
-    unresolved?.push(value)
+    // the report names the text that stayed by its path inside the field (`[0].description`), never the whole field
+    unresolved?.push({ at, value })
     return null
   }
   if (Array.isArray(value)) {
     if (value.some((b) => b && typeof b === 'object' && b._type === 'block')) {
+      const inner = []
       const left = withoutDemoFacts(
         value,
         { ...facts, address: facts?.address || ' ' },
-        { places, fallback, unresolved }
+        { places, fallback, unresolved: inner }
       )
+      for (const u of inner) unresolved?.push({ at, value: u?.value ?? u })
       // a heading block kept as written (no fallback) leaves the value as it was: nothing changed
       if (left === null || JSON.stringify(left.value) === JSON.stringify(value)) return null
       // a rich text with nothing readable left keeps its words and is reported, never emptied (D-K14)
       if (!left.readable) {
-        unresolved?.push(value)
+        unresolved?.push({ at, value })
         return null
       }
       return left.value
     }
     let changed = false
-    const out = value.map((row) => {
-      const next = withoutDemoPlace(row, places, facts, { fallback, required, unresolved, only })
+    const out = value.map((row, n) => {
+      const next = withoutDemoPlace(row, places, facts, {
+        fallback,
+        required,
+        unresolved,
+        only,
+        at: `${at}[${String(n)}]`
+      })
       if (next === null) return row
       changed = true
       return next
@@ -2853,7 +2912,12 @@ export function withoutDemoPlace(
       // name; its other words have none.
       const heading = HEADING_KEYS.test(key) || shortText(v)
       const own = heading ? (yearOf(value) ?? fallback ?? nameFallbackOf(facts)) : null
-      const next = withoutDemoPlace(v, places, facts, { fallback: own, required: heading, unresolved })
+      const next = withoutDemoPlace(v, places, facts, {
+        fallback: own,
+        required: heading,
+        unresolved,
+        at: `${at}.${key}`
+      })
       if (next !== null) {
         out[key] = next
         changed = true
@@ -2874,29 +2938,40 @@ export function withoutDemoPlace(
  * @returns {{ rows: any[], left: number[], emptied: number[] }}
  */
 export function rowsWithoutDemoPlace({ rule, rows, left, places, facts }) {
-  if (String(facts?.address ?? '').trim() === '' || places.size === 0) return { rows, left, emptied: [] }
+  if (String(facts?.address ?? '').trim() === '' || places.size === 0)
+    return { rows, left, emptied: [], kept: [] }
   const out = [...rows]
   const emptied = []
+  /** The row fields that keep the demo's place because nothing would be left of them: `{ row, field, value }`. */
+  const kept = []
+  const protect = customerSpansOf(facts)
   for (const i of left) {
     const row = out[i]
     if (!row || typeof row !== 'object') continue
-    const protect = customerSpansOf(facts)
+    // 🔒 THE SAME RULES AS THE PLACE PASS (code review of D-K14, D-K16): never a button's or a link's label
+    // (`LABEL_KEY`: Diner's reservation `button_label`), and never an emptied field: only the place phrase goes; a field
+    // with nothing left takes the row's year or the site's name when it is a heading or one short sentence, else keeps its
+    // words and is reported (`kept`).
     const naming = rule.itemFields.filter(
-      (f) => typeof row[f] === 'string' && holdsPlace(row[f], places, protect)
+      (f) => !LABEL_KEY.test(f) && typeof row[f] === 'string' && holdsPlace(row[f], places, protect)
     )
     if (naming.length === 0) continue
-    // Only the place phrase goes ("The Best Bar & Restaurant in Brooklyn" → "The Best Bar & Restaurant"); a field emptied
-    // only when nothing readable is left of it (second independent review of JA Restaurant 1.0.3), a heading never: it takes
-    // the row's year or the site's name, else keeps its words (code review, 18/11/2026).
-    const cut = (f) => {
-      const left = lineWithoutDemoPlace(row[f], places, protect) ?? row[f]
-      if (left !== '' || !HEADING_KEYS.test(f)) return left
-      return yearOf(row) ?? nameFallbackOf(facts) ?? row[f]
+    const changes = {}
+    for (const f of naming) {
+      const chained = HEADING_KEYS.test(f) || shortText(row[f])
+      const stayed = []
+      const next = withoutDemoPlace(row[f], places, facts, {
+        fallback: chained ? (yearOf(row) ?? nameFallbackOf(facts)) : null,
+        unresolved: stayed
+      })
+      if (next !== null) changes[f] = next
+      for (const u of stayed) kept.push({ row: i, field: f, value: u?.value ?? u })
     }
-    out[i] = { ...row, ...Object.fromEntries(naming.map((f) => [f, cut(f)])) }
+    if (Object.keys(changes).length === 0) continue
+    out[i] = { ...row, ...changes }
     emptied.push(i)
   }
-  return { rows: out, left: left.filter((i) => !emptied.includes(i)), emptied }
+  return { rows: out, left: left.filter((i) => !emptied.includes(i)), emptied, kept }
 }
 
 /** A word that ties a place or a number to its sentence ("at", "on", "call us at"), left dangling when the run goes. */
@@ -6270,7 +6345,12 @@ async function main() {
       if (placed.emptied.length > 0)
         rewritten.skipped.push({
           entry: `${key}.${rule.field}`,
-          why: `${String(placed.emptied.length)} row(s) still the template's words after two asks name the demo's place: emptied, the brief gives another address`
+          why: `${String(placed.emptied.length)} row(s) still the template's words after two asks named the demo's place: the place taken out, the brief gives another address`
+        })
+      if (placed.kept.length > 0)
+        rewritten.skipped.push({
+          entry: `${key}.${rule.field}`,
+          why: `the demo's place stays where nothing would be left: ${placed.kept.map((x) => `[${String(x.row)}].${x.field}`).join(', ')}`
         })
       const left = placed.left
       if (left.length > 0) echoedRows.set(`${key}.${rule.field}`, left)
@@ -6993,7 +7073,7 @@ async function main() {
           unresolved: stayed,
           only
         })
-        for (const text of stayed) placesUnresolved.push(`${k}.${f}: ${plainOf(text)}`)
+        for (const u of stayed) placesUnresolved.push(`${k}.${f}${u?.at ?? ''}: ${plainOf(u?.value ?? u)}`)
         if (next === null) continue
         const before = now !== undefined ? now : e.data?.[f]
         const p = patchOf(e.collection, e.slug, e.locale)

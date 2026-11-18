@@ -355,7 +355,7 @@ test('a place that is a core argument takes its whole sentence; a detachable one
   // a field left with nothing is never emptied (D-K14): it keeps its words and is reported
   const keptWhole = []
   assert.equal(withoutDemoPlace('Brooklyn loves us.', places, facts, { unresolved: keptWhole }), null)
-  assert.deepEqual(keptWhole, ['Brooklyn loves us.'])
+  assert.deepEqual(keptWhole, [{ at: '', value: 'Brooklyn loves us.' }])
   // a one-sentence field with a fallback takes it, as a heading does
   assert.equal(
     withoutDemoPlace('Brooklyn loves us.', places, facts, { fallback: 'Test Bistro' }),
@@ -472,7 +472,12 @@ test('code review 2: a heading, caption or alt text is never left empty; with no
   assert.equal(withoutDemoPlace(row, places, { address: 'Elsewhere' }), null)
   const left = []
   withoutDemoPlace(row, places, { address: 'Elsewhere' }, { unresolved: left })
-  assert.deepEqual(left, ['Brooklyn', 'Brooklyn', 'Brooklyn'])
+  // each kept text is named by its path inside the field (D-K16)
+  assert.deepEqual(left, [
+    { at: '[0].title', value: 'Brooklyn' },
+    { at: '[0].caption', value: 'Brooklyn' },
+    { at: '[0].alt', value: 'Brooklyn' }
+  ])
   // the chain: the row's year, then the caller's fallback, then the site's name
   assert.deepEqual(
     withoutDemoPlace([{ date: '1982-05-14', title: 'Brooklyn' }], places, { address: 'Elsewhere' }),
@@ -637,6 +642,102 @@ test("JA Diner 0.1.3 review (D-K14): a place is a name, a country is no place, l
     ['joomlart.com'],
     "without the vendor list it is the demo's"
   )
+})
+
+const CR = {
+  places: new Set(['Brooklyn', 'Hogsmeade']),
+  facts: { address: '1 Main St, Springfield', name: 'Test Cafe' }
+}
+const wordsOfAddress = (address) =>
+  demoPlaceWordsOf({ identity: [{ collection: 'c', slug: 'c', field: 'a', value: '{address}' }] }, [
+    { collection: 'c', slug: 'c', data: { a: address } }
+  ])
+
+test('code review of D-K14, P1 (D-K16): the row pass never empties a field', () => {
+  const { places, facts } = CR
+  // a one-sentence description takes the chain (the site's name)
+  const one = rowsWithoutDemoPlace({
+    rule: { itemFields: ['description'] },
+    rows: [{ description: 'Brooklyn loves us.' }],
+    left: [0],
+    places,
+    facts
+  })
+  assert.equal(one.rows[0].description, 'Test Cafe')
+  // a longer one with nothing left keeps its words and is reported
+  const two = rowsWithoutDemoPlace({
+    rule: { itemFields: ['description'] },
+    rows: [{ description: 'Brooklyn loves us. Brooklyn serves you.' }],
+    left: [0],
+    places,
+    facts
+  })
+  assert.equal(two.rows[0].description, 'Brooklyn loves us. Brooklyn serves you.')
+  assert.deepEqual(two.kept, [
+    { row: 0, field: 'description', value: 'Brooklyn loves us. Brooklyn serves you.' }
+  ])
+})
+
+test("code review of D-K14, P1 (D-K16): the row pass never touches a button's or a link's label", () => {
+  const { places, facts } = CR
+  const label = rowsWithoutDemoPlace({
+    rule: { itemFields: ['title', 'button_label'] },
+    rows: [{ title: 'Book now', button_label: 'Visit Hogsmeade' }],
+    left: [0],
+    places,
+    facts
+  })
+  assert.equal(label.rows[0].button_label, 'Visit Hogsmeade')
+})
+
+test('code review of D-K14, P1 (D-K16): a country is a name of a real list, wherever it stands in the address', () => {
+  assert.deepEqual([...wordsOfAddress('London, Britain')], ['London'])
+  assert.equal(withoutDemoPlace('Award in Britain.', wordsOfAddress('London, Britain'), CR.facts), null)
+  assert.deepEqual(
+    [...wordsOfAddress('10 Downing Street, Westminster, London, United Kingdom')],
+    ['Downing', 'Westminster', 'London']
+  )
+  assert.deepEqual(
+    [...wordsOfAddress('48 Kiln Street, Maplewood')],
+    ['Kiln', 'Maplewood'],
+    'a town is no country'
+  )
+})
+
+test('code review of D-K14, P1 (D-K16, known limit): an ordinary word taken for a place matches only whole, in named fields, never a label', () => {
+  const view = wordsOfAddress('12 Main Road, View')
+  // the limit: with no lower-case "view" in the seed, View is still a place word
+  assert.deepEqual([...view], ['View'])
+  // whole word, case-sensitive, only in the fields the rule names, never a label: in the place pass and in the row pass
+  assert.equal(
+    withoutDemoPlace(
+      [{ title: 'A Viewpoint over the views', button2: 'View menu', link_text: 'View map' }],
+      view,
+      CR.facts,
+      { only: ['title'] }
+    ),
+    null
+  )
+  const rows = rowsWithoutDemoPlace({
+    rule: { itemFields: ['title', 'button_label'] },
+    rows: [{ title: 'Our menu', button_label: 'View menu' }],
+    left: [0],
+    places: view,
+    facts: CR.facts
+  })
+  assert.equal(rows.rows[0].button_label, 'View menu')
+})
+
+test('code review of D-K14, P1 (D-K16): places-kept names the text that stayed by its path, not the whole field the pass changed', () => {
+  const kept = []
+  const changed = withoutDemoPlace(
+    [{ description: 'Brooklyn loves us.\nBrooklyn serves you.' }, { description: 'Welcome in Brooklyn.' }],
+    CR.places,
+    { address: CR.facts.address },
+    { unresolved: kept }
+  )
+  assert.equal(changed[1].description, 'Welcome.')
+  assert.deepEqual(kept, [{ at: '[0].description', value: 'Brooklyn loves us.\nBrooklyn serves you.' }])
 })
 
 test('the address is a map link a template field can take ({map})', () => {
