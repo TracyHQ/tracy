@@ -94,9 +94,9 @@ brief's own values are never the demo's place: with the name "Brooklyn Bistro", 
 and the demo's own "Brooklyn" elsewhere still goes (a sentence where it is a core part goes whole, as for any name). With no
 address, the demo's address, its map link and those words stay, as a placeholder (`unanswered: keep-demo` in
 `seed/personalize.json`).
-A field whose only sentence goes is left empty, and the section keeps its heading: with an address, the Our History
-timeline intro ("From a twelve-table neighborhood bar to a Brooklyn favourite: …") goes and the timeline shows its heading and its
-cards. A detachable place can leave a phrase shorter than the demo's ("to the people of Brooklyn" reads "to the
+No field is left empty: a short field whose only sentence goes takes the entry's title or the customer's name (with an
+address, the Our History timeline intro, "From a twelve-table neighborhood bar to a Brooklyn favourite: …", reads "Our
+History"), and a longer one with nothing left keeps its words and is named in the report (`skipped`, rule `places-kept`). A detachable place can leave a phrase shorter than the demo's ("to the people of Brooklyn" reads "to the
 people"). To read every such change, open the report (`--json`): its `skipped` line with rule `places` names each field
 that held the demo's place and lists `changes`, one `{ field, before, after }` per field. A field that changed for
 another reason (a phone) is not listed there. "Fulton market", "Hudson Valley" and "New York" stay on purpose: they name

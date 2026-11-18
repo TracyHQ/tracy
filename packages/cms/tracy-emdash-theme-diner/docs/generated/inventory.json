@@ -1066,7 +1066,7 @@
     "src/views/Post.astro": "sha256:a5fa4522bb20f852d6eb24a4342a95937bc5bc55e2d1ea390f1d3efd89f0fe42",
     "src/views/Reservation.astro": "sha256:5e440bdc7da0eadcc0096e5dea40a4c67b65cf888bf3d19a5caf9114c83cb6e5",
     "src/views/Search.astro": "sha256:0f82d395c783589958a7051a04a06970a9d8f0bf43884d8a16aa7c388f04aa1f",
-    "template.config.json": "sha256:ead2de993abb9a166d633623da7c534a9936756532211a544d1826978252aa89",
+    "template.config.json": "sha256:a526249d2580c41d5dd2ebad4cab7ddc40f2033f59f8ba41cf7bf1ac49ebe907",
     "tools/forms.json": "sha256:b338c304ed95527ce5ac509a14e080734d616136c4a899053b62f24084445409",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }
