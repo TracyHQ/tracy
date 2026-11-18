@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-18T18:27:33.008Z",
+	"generatedAt": "2026-11-18T19:58:47.515Z",
 	"fields": {
 		"pages.title": {
 			"source": "text",
@@ -360,6 +360,11 @@
 			"source": "text",
 			"target": "string",
 			"label": "More read title"
+		},
+		"chrome.more_read_list_title": {
+			"source": "text",
+			"target": "string",
+			"label": "More read list title"
 		},
 		"chrome.author_articles_title": {
 			"source": "text",

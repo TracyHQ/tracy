@@ -165,6 +165,7 @@ export interface Chrome {
   tags_title?: string;
   follow_title?: string;
   more_read_title?: string;
+  more_read_list_title?: string;
   author_articles_title?: string;
   written_by?: string;
   share_label?: string;

@@ -414,6 +414,10 @@
           "type": "text"
         },
         {
+          "name": "more_read_list_title",
+          "type": "text"
+        },
+        {
           "name": "author_articles_title",
           "type": "text"
         },
@@ -2918,6 +2922,7 @@
         "tags_title": "Tags cloud",
         "follow_title": "Follow me",
         "more_read_title": "More reading",
+        "more_read_list_title": "More Read",
         "author_articles_title": "Author’s latest articles",
         "written_by": "Written by",
         "share_label": "Share article:",

@@ -58,6 +58,12 @@
       ".es-cat[data-by=\"author\"] .es-grid-card .es-card-title",
       "category/category-style-1/index.html",
       true
+    ],
+    [
+      "cat-more",
+      ".es-cat-more",
+      "category/category-style-1/index.html",
+      true
     ]
   ],
   "parity": {
@@ -94,7 +100,8 @@
         "cat-count",
         "cat-desc",
         "grid-card-title",
-        "page-count"
+        "page-count",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -150,7 +157,8 @@
         "cat-desc",
         "card-title",
         "card-intro",
-        "page-count"
+        "page-count",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -204,7 +212,8 @@
         "cat-title",
         "cat-count",
         "cat-desc",
-        "grid-card-title"
+        "grid-card-title",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -252,7 +261,8 @@
         "card-intro",
         "side-title",
         "newsletter-title",
-        "newsletter-text"
+        "newsletter-text",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -298,7 +308,8 @@
         "cat-title",
         "cat-count",
         "grid-card-title",
-        "page-count"
+        "page-count",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -341,7 +352,8 @@
       "rules": [
         "author-title",
         "cat-count",
-        "author-card-title"
+        "author-card-title",
+        "cat-more"
       ],
       "parity": [
         "nav",

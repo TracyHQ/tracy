@@ -202,3 +202,11 @@
 	.es-side-tags .es-pill-cat { background: var(--color-bg); }
 	@media (max-width: 767px) { .es-side-box { padding: 36px; } }
 }
+
+@layer components {
+	/* tablet and phone measurements of the source (detail/layout-1): the article box pads 18px on a phone, the sidebar boxes follow, the newsletter form keeps a 424px field column */
+	.es-main.es-post { padding-block: 72px; }
+	@media (max-width: 767px) { .es-main.es-post { padding-block: 36px; } }
+	@media (max-width: 575px) { .es-article { padding: 18px; } .es-side-box { padding: 18px; } }
+	@media (min-width: 576px) and (max-width: 991px) { .es-newsletter-form { max-width: 424px; margin-inline: auto; } }
+}

@@ -14,7 +14,7 @@
 	.es-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; margin: 0; font-size: 14px; line-height: 21px; }
 	.es-card-meta > div { display: flex; align-items: center; }
 	.es-card-meta dd { display: flex; align-items: center; gap: 4px; margin: 0; }
-	.es-card-meta > div:not(:last-child)::after { content: "-"; margin: 0 8px; }
+	.es-card-meta > div:not(:last-child)::after { content: "-"; margin: 0 5px; }
 	.es-card-meta a, .es-card-author { font-weight: 700; color: var(--color-heading); }
 	.es-card-hits svg { color: var(--color-accent-text); }
 	.es-card-intro { margin: 24px 0 0; }
@@ -44,7 +44,7 @@
 	.es-grid-card .es-card-pic img { aspect-ratio: 3 / 2; height: auto; }
 	.es-grid-info { display: flex; flex-direction: column; align-items: center; margin-top: 36px; padding-bottom: 12px; }
 	.es-grid-card .es-card-title { font-size: 24px; line-height: 31.2px; }
-	.es-grid-card .es-card-meta { justify-content: center; padding-inline: 10px; }
+	.es-grid-card .es-card-meta { justify-content: center; padding-inline: 0; }
 	.es-grid-card.is-wide { padding: 36px; margin-bottom: 36px; text-align: start; }
 	.es-grid-card.is-wide .es-grid-info { align-items: flex-start; margin-top: 36px; padding-bottom: 0; }
 	.es-grid-card.is-wide .es-card-title { font-size: 32px; line-height: 41.6px; }
@@ -98,4 +98,9 @@
 		.es-cat[data-by="author"] .es-grid-card .es-card-title { font-size: 24px; line-height: 31.2px; }
 		.es-cat[data-by="author"] .es-cat-title { font-size: 24px; line-height: 31.2px; }
 	}
+}
+
+@layer components {
+	.es-cat-more { margin: 72px 0 24px; }
+	@media (max-width: 767px) { .es-cat-more { margin: 36px 0 18px; } }
 }

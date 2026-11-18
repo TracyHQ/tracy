@@ -51,3 +51,7 @@
 		.es-home-blog { padding-block: 36px; }
 	}
 }
+
+@layer components {
+	@media (min-width: 576px) and (max-width: 991px) { .es-home-blog { padding-inline: 42px; } }
+}

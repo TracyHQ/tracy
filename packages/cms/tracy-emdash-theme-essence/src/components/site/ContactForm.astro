@@ -25,7 +25,7 @@ const LABELS: [string, string][] = [['name', c.name_label], ['email', c.email_la
 
 <div class="es-contact-form">
 	{formId ? (
-		<FormWords tag={uiTag(locale)}><ContactFormWords c={c} stamp={$c}><FormEmbed node={{ formId }} /></ContactFormWords></FormWords>
+		<ContactFormWords c={c} stamp={$c}><FormWords tag={uiTag(locale)}><FormEmbed node={{ formId }} /></FormWords></ContactFormWords>
 	) : (
 		<form class="ec-form is-disabled" aria-disabled="true" onsubmit="return false">
 			<fieldset class="ec-form-page" disabled>

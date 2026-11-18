@@ -144,6 +144,8 @@
 			.es-header.is-home .es-header-bar { grid-template-columns: 1fr auto; }
 		.es-header.is-inner .es-header-bar { min-height: 72px; }
 		.es-header.is-inner .es-bar-left { order: 3; }
+		.es-header.is-inner .es-bar-right { margin-left: auto; }
+		.es-header.is-inner .es-header-bar { justify-content: flex-start; }
 	}
 
 	/* the picture strip: a scroll-snap row (5 pictures at a time on a wide screen, 3 on a tablet, 1 on a phone), dots under it */
@@ -206,5 +208,5 @@
 
 @layer components {
 	.es-search-results .es-pager { margin-top: 48px; }
-	@media (max-width: 575px) { .es-pagination .is-end:first-child, .es-pagination .is-end:last-child { display: none; } }
+	@media (max-width: 575px) { .es-pagination[data-many] .is-end:first-child, .es-pagination[data-many] .is-end:last-child { display: none; } }
 }

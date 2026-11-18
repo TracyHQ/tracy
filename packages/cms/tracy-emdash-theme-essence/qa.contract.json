@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 20,
+  "revision": 23,
   "pending": [],
   "locales": [
     "en"
@@ -4066,6 +4066,74 @@
         "optional": true
       },
       {
+        "id": "cat-more",
+        "selector": ".es-cat-more",
+        "source": "category/category-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
         "id": "mini-title",
         "selector": ".es-mini.is-card .es-mini-title",
         "source": "detail/video/index.html",
@@ -5528,7 +5596,8 @@
         "cat-count",
         "cat-desc",
         "grid-card-title",
-        "page-count"
+        "page-count",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -5609,7 +5678,8 @@
         "cat-desc",
         "card-title",
         "card-intro",
-        "page-count"
+        "page-count",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -5688,7 +5758,8 @@
         "cat-title",
         "cat-count",
         "cat-desc",
-        "grid-card-title"
+        "grid-card-title",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -5760,7 +5831,8 @@
         "card-intro",
         "side-title",
         "newsletter-title",
-        "newsletter-text"
+        "newsletter-text",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -5830,7 +5902,8 @@
         "cat-title",
         "cat-count",
         "grid-card-title",
-        "page-count"
+        "page-count",
+        "cat-more"
       ],
       "parity": [
         "nav",
@@ -5897,7 +5970,8 @@
         "copyright",
         "author-title",
         "cat-count",
-        "author-card-title"
+        "author-card-title",
+        "cat-more"
       ],
       "parity": [
         "nav",

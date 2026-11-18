@@ -86,6 +86,9 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} />}
 				</div>
 			</div>
+			{chrome.site.more_read_list_title && (
+				<div class="es-wrap"><h2 class="es-sec-title es-cat-more" {...$c('more_read_list_title')}>{chrome.site.more_read_list_title}</h2></div>
+			)}
 		</main>
 	</Base>
 )}

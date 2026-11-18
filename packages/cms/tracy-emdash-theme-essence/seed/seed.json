@@ -524,6 +524,11 @@
 					"type": "string"
 				},
 				{
+					"slug": "more_read_list_title",
+					"label": "More read list title",
+					"type": "string"
+				},
+				{
 					"slug": "author_articles_title",
 					"label": "Author articles title",
 					"type": "string"
@@ -15659,6 +15664,7 @@
 					"tags_title": "Tags cloud",
 					"follow_title": "Follow me",
 					"more_read_title": "More reading",
+					"more_read_list_title": "More Read",
 					"author_articles_title": "Author’s latest articles",
 					"written_by": "Written by",
 					"share_label": "Share article:",
