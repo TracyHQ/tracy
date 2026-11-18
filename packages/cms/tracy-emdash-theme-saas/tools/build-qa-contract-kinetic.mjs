@@ -16,6 +16,7 @@ import path from 'node:path'
 import { initContract, filesUnder, withPatches } from './qa-contract.mjs'
 import { deriveShots } from './fast-gate.mjs'
 import { importClosure } from './visual-lib.mjs'
+import { escapeRe, withoutScripts } from './html-text.mjs'
 
 const args = process.argv.slice(2)
 const opt = (n, d) => {
@@ -61,18 +62,6 @@ const textOf = (html) =>
   decode(html.replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<[^>]+>/g, ' '))
     .replace(/\s+/g, ' ')
     .trim()
-// Script elements carry no page text. Removed until none is left, so a tag split by a removal
-// cannot reassemble, and matched in any case.
-const withoutScripts = (html) => {
-  let out = html
-  for (let prev; prev !== out; ) {
-    prev = out
-    out = out.replace(/<script(?=[\s/>])[\s\S]*?<\/script\s*>/gi, '')
-  }
-  return out
-}
-// A literal string as a RegExp source.
-const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 const htmlCache = new Map()
 const htmlOf = (file) => {
   if (!htmlCache.has(file))
