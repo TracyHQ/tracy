@@ -2,8 +2,7 @@
   "fields": {
     "posts.body": { "type": "portableText" },
     "posts.excerpt": { "type": "portableText" },
-    "pages.body": { "type": "portableText" },
-    "modules.content": { "type": "portableText" }
+    "pages.body": { "type": "portableText" }
   },
   "collections": {
     "posts": { "label": "Posts", "labelSingular": "Post", "sortOrder": 2, "routable": true, "supports": ["revisions", "search"], "editLocking": false, "description": "Articles. `path` records the address a post is served at." },

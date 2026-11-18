@@ -1,6 +1,6 @@
 # Installed template: agent instructions
 
-DOCS_REQUIRED: Identify this template and its supported runtime from package/config.
+This is `tracy-essence` (JA Essence), an EmDash 1.1.0 site template on Astro 7 (SSR, Node adapter), Tailwind CSS 4 and shadcn/ui, built from the JA Essence Joomla 6 quickstart. English only; package `@tracy/emdash-theme-essence`.
 
 Read docs/architecture.md before changing the application. Use docs/install.md for
 an empty-target install and docs/content-api.md before touching CMS state. Identify

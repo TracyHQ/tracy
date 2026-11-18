@@ -1,6 +1,6 @@
 # STATUS — tracy-essence
 
-**Phase reached: P0 and P1 done (checkpoint 2/11); P2 started (seed compiles mechanically, not yet enriched).** Session 1 (coordinator P0–P1). Evidence is under `/home/agent/out/essence/` (outside the repo).
+**Phase reached: P2 done (checkpoint 3/11); next P3.** Sessions 1–2 (coordinator P0–P2). Evidence is under `/home/agent/out/essence/` (outside the repo).
 
 | Item | State | Evidence |
 |---|---|---|
@@ -16,12 +16,15 @@
 
 Tools run from a copy of the WP skill: `/home/agent/out/essence/wp-skill` (`npm install` done there); `node wp-skill/scripts/ingest/joomla-dump.mjs --out j6 --container essence-db --web-container essence-web --db joomla --prefix jd_ --user root --password root --site-url http://127.0.0.1:18081 --capture` then `from-joomla.mjs j6 --out spec --site-url …`. Playwright's Chromium is installed in `~/.cache/ms-playwright`.
 
-**P2 so far:** `seed/site-model.json` = adapter model + `ingest/dedupe-slugs.mjs` (D10); `seed/compile.config.json`; `compile-seed.mjs` runs (5 collections, 79 entries, 2 menus; trial output `/home/agent/out/essence/seedtry`). Not committed as a seed: the model lacks author, hits, tags, intro/full images, `ctm_*` fields (D11).
+| P2 | `seed/seed.json` valid (8 collections, 76 entries, 2 menus, 2 taxonomies: 51 posts, 9 authors, 8 category pages, 6 tags; 97 images, 330 targets); `ingest/enrich-essence.mjs` + `rebuild-seed.sh`; `docs/{content-model,content-rules}.md`, `seed/plugin-matrix.md`, `seed/field-map.json` | `node tools/validate-seed.mjs seed/seed.json` → valid, 0 errors |
+| Owner answers (session 2) | Home: one at `/` (D8); D10 kept 51 posts, `[LEE]` closed; licence GPL-2.0-or-later (D13); fonts local (D14: Jost has no Vietnamese, Noto Serif has; Be Vietnam Pro behind `:lang(vi)`, `[LEE]` confirm) | `DECISIONS.md` |
+| Licence files | `package.json`, `LICENSE`, `PROVENANCE.md`, `docs/licensing.md` table + grant list, `THIRD_PARTY_NOTICES.md`, `src/fonts/OFL.txt` | — |
 
-**Next commands** (from this folder), P2:
-1. Write `ingest/enrich-essence.mjs` (from `/home/agent/out/essence/spec/content.json` + `j6/inventory.json`: post author/hits/tags/sticky/featured/images/video+gallery fields, authors, category descriptions, header/footer chrome, sidebar blocks) and `ingest/shape-model.mjs` for the pages kept (D8); model on `../tracy-emdash-theme-diner/ingest/` (copy, rename, do not keep Diner names). `ingest/rebuild-seed.sh` is the order.
-2. `node tools/compile-seed.mjs seed/site-model.json seed --config seed/compile.config.json`, `node tools/validate-seed.mjs seed/seed.json`, then `html-to-portable-text`, `build-media-map` (resolve by owning folder, Diner D-4).
-3. `AGENTS.md` + `docs/{content-model,content-rules,design-system}.md`; `node tools/checkpoint.mjs complete checkpoint.json P2 …`.
+**Next commands** (from this folder), P3: runtime + a Home slice + one article, then the Fast Gate.
+1. Rebuild the seed any time: `SRC_WORK=/home/agent/out/essence ingest/rebuild-seed.sh` (`webroot` there is a symlink to the extracted release).
+2. Write `src/fonts.json` (local variants, D14), `src/styles/global.css` (tokens from `inventory/visual-contract.md` and the product `design-system.md`), `src/layouts/Base.astro`, `src/components/site/{Header,Footer,...}`, `src/views/{Home,Post,Category,Authors,Contact,Search}.astro`, `src/pages/{[...path],404}.astro` — model on `../tracy-emdash-theme-diner/src` (grep before writing new).
+3. `tools/bootstrap-site.sh`, `node tools/qa-contract.mjs init`, `fast-gate.mjs` on Home + a post (+ /404).
+4. Release wiring, at P8: `turbo.json` inputs (root, `apps/tracy-web`, `packages/cms/tracy-quickstart-tools`, `packages/site/tracy-site-build-emdash`), `docs/README.md` (`pnpm docs:index`), `docs/references/vocabulary.md` list, `apps/tracy-web/test/emdash-*.test.mjs` template lists.
 
 The stand containers were removed at the end of session 1; rebuild with `source/REBUILD.md` (the extracted, configured webroot is kept at `/home/agent/out/essence/stand/webroot`; the dump import is the only slow step). The crawl, render and `spec/`/`j6/` outputs stay on disk, so P2 needs no stand until a re-render.
 
