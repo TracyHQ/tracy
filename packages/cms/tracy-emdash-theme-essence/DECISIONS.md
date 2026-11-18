@@ -1,0 +1,16 @@
+# DECISIONS — tracy-essence
+
+Reversible defaults taken without asking (batched owner questions are at the end of `STATUS.md`).
+`[LEE]` = needs the owner before a release.
+
+| ID | Decision | Why | Reversible by |
+|---|---|---|---|
+| D1 | Package `packages/cms/tracy-emdash-theme-essence`, npm name `@tracy/emdash-theme-essence`, template id `tracy-essence`, label `JA Essence`, version `0.1.0`, English only. | Given by the task. | rename |
+| D2 | Source = release `quickstart/ja-essence/j6` **1.0.10** (Joomla 6.1.1, template `ja_essence`), staged as webroot tarball (sha256 `d6285e99…df8a46`) + database dump (sha256 `890fc10c…448c26`), both checked against `tracy_setting.json`. Stand: `mariadb:11` + a local `php:8.3-apache` image (gd, intl, mysqli, zip, rewrite), webroot copied and bind-mounted, `127.0.0.1:18081`; `configuration.php` pointed at the db container, `.htaccess` + `sef_rewrite` on, `AllowOverride All`. The dump is imported with `mariadb`; prefix `jd_`. | The release is webroot + dump, not an installer zip (Diner D2). | — |
+| D3 | Road = `contract` (`detect-source`: Joomla, T4/ACM, local): `joomla-dump.mjs --capture` → `from-joomla.mjs` → `site-model.json` (79 records, 5 types) → `compile-seed.mjs`. The WP skill's ingest scripts run from a copy with its own `npm install` (outside the repo). Stack pins copied from the sibling Diner (emdash 1.1.0, astro 7.4.12, Tailwind 4.3.3). | One tested set. | — |
+| D4 | One language (`en`), no prefix, no `i18n.fallback`. | `locales.all = ["en"]`; invariant 6. | add a locale |
+| D5 | The WordPress port 1.0.20 (`wp7/`) is a second reference for layout decisions only; nothing is read from it as a source. | Task. | — |
+| D6 | Fonts (plan, P3): `provider: local` with the files of the source's own Google CSS request (`Noto Serif` 400/700 + `Jost`), not Astro's Google provider (Diner D-9: a different file draws 4–5 % wider text). The release also ships Be Vietnam Pro (OFL) in `templates/ja_essence/fonts/` for `language-fonts.css` (Vietnamese); decide in P3 whether the English-only template needs it. | Diner finding. | — |
+| D7 | The theme toggle (light/dark, `html[data-theme]`, cookie `ja_essence-theme`, `docs/checks.md` 7–8) is part of the design and is ported; `qa.theme` in `template.config.json` declares it. | The source has two themes. | drop dark |
+| D8 | Not ported (as in Diner D6): front-end accounts (login, registration, profile), Typography, Offline and Error demo pages, Smart Search / Tagged Items utility pages unless a lens round shows the design needs them. The five Home demos (`home-1`…`home-5`) are header/layout variants of one site: Home = `/`; variants are decided at P2 (`[LEE]` which are kept as presets). | A customer site has one home. | add |
+| D9 | The crawl snapshot (`/home/agent/out/essence/snapshot`, 148 pages) is evidence outside the repo; `source/snapshot-SHA256SUMS` is committed (322 files). Rebuild steps follow Diner's `source/REBUILD.md`, with this stand. | Source size. | — |
