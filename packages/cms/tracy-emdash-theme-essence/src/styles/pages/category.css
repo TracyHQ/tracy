@@ -101,6 +101,7 @@
 }
 
 @layer components {
-	.es-cat-more { margin: 72px 0 24px; }
-	@media (max-width: 767px) { .es-cat-more { margin: 36px 0 18px; } }
+	.es-cat .es-cat-more { margin: 80px 0 24px; }
+	.es-cat { padding-bottom: 0; }
+	@media (max-width: 767px) { .es-cat .es-cat-more { margin: 36px 0 0; } }
 }

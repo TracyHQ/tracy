@@ -208,5 +208,5 @@
 	.es-main.es-post { padding-block: 72px; }
 	@media (max-width: 767px) { .es-main.es-post { padding-block: 36px; } }
 	@media (max-width: 575px) { .es-article { padding: 18px; } .es-side-box { padding: 18px; } }
-	@media (min-width: 576px) and (max-width: 991px) { .es-newsletter-form { max-width: 424px; margin-inline: auto; } }
+	@media (min-width: 576px) and (max-width: 991px) { .es-newsletter-form { max-width: 424px; margin-inline: 0; } }
 }

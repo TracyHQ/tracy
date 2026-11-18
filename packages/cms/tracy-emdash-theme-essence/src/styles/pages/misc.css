@@ -93,3 +93,13 @@
 @layer components {
 	html[data-theme="dark"] .es-contact .ec-form-input:not([type="checkbox"]) { background: var(--ds-c-surface-warm, #222a3b); border-color: var(--ds-c-border, #3a4459); color: var(--color-heading); }
 }
+
+@layer components {
+	/* tablet and phone measurements of the source: the contact card pads 18px, the Authors pager sits 105px under the last card on a phone */
+	@media (max-width: 991px) { .es-box.es-contact { padding: 18px; } }
+	@media (max-width: 575px) { .es-authors-main .es-authors-pager { margin-top: 105px; } }
+}
+
+@layer components {
+	@media (max-width: 575px) { .es-newsletter { padding: 18px; } }
+}
