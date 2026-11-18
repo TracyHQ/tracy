@@ -351,8 +351,16 @@ test('a place that is a core argument takes its whole sentence; a detachable one
     withoutDemoPlace('Local beer for the people of Brooklyn.', places, facts),
     'Local beer for the people.'
   )
-  // nothing else readable: the field is empty, and a heading takes its neutral value
-  assert.equal(withoutDemoPlace('Brooklyn loves us.', places, facts), '')
+  // nothing else readable: a heading takes its neutral value, any other field keeps its words (D-K14)
+  // a field left with nothing is never emptied (D-K14): it keeps its words and is reported
+  const keptWhole = []
+  assert.equal(withoutDemoPlace('Brooklyn loves us.', places, facts, { unresolved: keptWhole }), null)
+  assert.deepEqual(keptWhole, ['Brooklyn loves us.'])
+  // a one-sentence field with a fallback takes it, as a heading does
+  assert.equal(
+    withoutDemoPlace('Brooklyn loves us.', places, facts, { fallback: 'Test Bistro' }),
+    'Test Bistro'
+  )
   assert.equal(withoutDemoPlace('Brooklyn loves us.', places, facts, { fallback: 'History' }), 'History')
   // rich text: the sentence goes with the demo address link it carries, the paragraph keeps its other sentence
   const rich = withoutDemoPlace(
@@ -497,8 +505,8 @@ test('code review 2: a heading, caption or alt text is never left empty; with no
     facts: { address: 'Elsewhere', name: 'Test Bistro' }
   })
   assert.equal(named.rows[0].title, 'Test Bistro')
-  // a body that is not a heading may still be emptied (documented)
-  assert.equal(withoutDemoPlace('Brooklyn', places, { address: 'Elsewhere' }), '')
+  // no field is emptied, heading or not (D-K14): with no fallback it keeps its words
+  assert.equal(withoutDemoPlace('Brooklyn', places, { address: 'Elsewhere' }), null)
 })
 
 test('code review 3: the demo domain is a whole host or a subdomain of it, never a substring', () => {
@@ -535,6 +543,99 @@ test('code review 3: the demo domain is a whole host or a subdomain of it, never
       facts
     ),
     'Read our partner at https://notres.example today.'
+  )
+})
+
+test("JA Diner 0.1.3 review (D-K14): a place is a name, a country is no place, labels and unnamed row fields stay, the vendor's domain is no demo domain", () => {
+  const diner = {
+    identity: [
+      { collection: 'chrome', slug: 'chrome', field: 'footer_address', value: '{address}' },
+      { collection: 'contact', slug: 'contact', field: 'address', value: '{address}' },
+      { collection: 'chrome', slug: 'chrome', field: 'footer_email', value: '{email}' },
+      {
+        collection: 'intro',
+        slug: 'home',
+        field: 'items',
+        rowKey: 'title',
+        rows: { 'Location.': { fields: { description: '{address}' } } }
+      }
+    ]
+  }
+  const rows = [
+    {
+      collection: 'chrome',
+      slug: 'chrome',
+      locale: 'en',
+      data: {
+        footer_address: '398 North 23th Dumbledore Street,\nHogsmeade Village, Britain.',
+        footer_email: 'Info@joomlart.com'
+      }
+    },
+    {
+      collection: 'contact',
+      slug: 'contact',
+      locale: 'en',
+      data: { address: '1600 Amphitheatre Parkway, Mountain View 5692' }
+    },
+    {
+      collection: 'intro',
+      slug: 'home',
+      locale: 'en',
+      data: { items: [{ title: 'Location.', description: 'Kiln Yard,<br/> Oldtown' }] }
+    },
+    { collection: 'pages', slug: 'about', locale: 'en', data: { body: 'A fine view of the sea.' } }
+  ]
+  const words = demoPlaceWordsOf(diner, rows)
+  // one place per run of names; the country of a three-part address is no place; a row field filled with {address} counts
+  assert.deepEqual([...words].sort(), [
+    'Amphitheatre',
+    'Dumbledore',
+    'Hogsmeade',
+    'Kiln',
+    'Mountain View',
+    'Oldtown'
+  ])
+  // a one-word name the template also writes in lower case is an ordinary word, never a place on its own
+  const viewOnly = demoPlaceWordsOf(
+    { identity: [{ collection: 'c', slug: 'c', field: 'a', value: '{address}' }] },
+    [
+      { collection: 'c', slug: 'c', data: { a: '12 Harbour Road, View' } },
+      { collection: 'p', slug: 'p', data: { t: 'a view of the sea' } }
+    ]
+  )
+  assert.ok(!viewOnly.has('View'))
+  const facts = { address: '1 Main St, Springfield', name: 'Test Cafe' }
+  // a button's or a link's label is never touched, and a blocks rule's `only` keeps the pass to the fields it names
+  const slides = [
+    {
+      title: 'Hello Hogsmeade friends',
+      desc: 'Best in Hogsmeade.',
+      button2: 'Visit Hogsmeade',
+      link_text: 'Hogsmeade map'
+    }
+  ]
+  const next = withoutDemoPlace(slides, words, facts, { only: ['title', 'desc'] })
+  assert.equal(next[0].button2, 'Visit Hogsmeade')
+  assert.equal(next[0].link_text, 'Hogsmeade map')
+  assert.equal(next[0].desc, 'Best.')
+  // a one-sentence field takes the heading chain whatever its key: the site's name, never empty
+  const card = withoutDemoPlace([{ sub_heading: 'Hogsmeade loves us.' }], words, facts)
+  assert.equal(card[0].sub_heading, 'Test Cafe')
+  // the vendor's domain (template.config.json `vendor.domains`) is never a demo domain; the demo's e-mail still is its own
+  const contacts = demoContactsOf(diner, rows, { vendorDomains: ['joomlart.com'] })
+  assert.deepEqual([...contacts.emails], ['Info@joomlart.com'])
+  assert.deepEqual([...contacts.domains], [])
+  assert.equal(
+    withCustomerContacts('Designed by JoomlArt.com.', contacts, {
+      phone: '+1 555 0100',
+      address: facts.address
+    }),
+    null
+  )
+  assert.deepEqual(
+    [...demoContactsOf(diner, rows).domains],
+    ['joomlart.com'],
+    "without the vendor list it is the demo's"
   )
 })
 

@@ -45,7 +45,9 @@ test('independent review of 1.0.3, item 1: the shipped row-limits test reads con
 })
 
 test('independent review of 1.0.3, item 2: with an address, the footer map follows the brief and no rule-owned field keeps the demo street', async () => {
-  const { demoPlaceWordsOf, demoPlacesBesides, withoutDemoPlace } = await import('../tools/personalize.mjs')
+  const { demoPlaceWordsOf, demoPlacesBesides, shortText, withoutDemoPlace } = await import(
+    '../tools/personalize.mjs'
+  )
   const map = JSON.parse(read('seed/personalize.json'))
   const seed = JSON.parse(read('seed/seed.json'))
   const rule = map.identity.find((r) => r.collection === 'chrome' && r.field === 'footer_map_url')
@@ -67,7 +69,16 @@ test('independent review of 1.0.3, item 2: with an address, the footer map follo
     for (const [c, slugs, fields] of owned)
       if (c === e.collection && (slugs === null || slugs.includes(e.slug)))
         for (const f of fields) {
-          const v = withoutDemoPlace(e.data?.[f], places, facts) ?? e.data?.[f]
+          // the lane's fallback: a heading, the body or a one-sentence field takes the entry's title (D-K14 of JA Diner)
+          const chained =
+            f !== 'title' &&
+            (/^(?:title|name|heading|label|alt|caption|lead_title)$/.test(f) ||
+              f === 'body' ||
+              shortText(e.data?.[f]))
+          const v =
+            withoutDemoPlace(e.data?.[f], places, facts, {
+              fallback: chained ? (e.data.title ?? null) : null
+            }) ?? e.data?.[f]
           if (/5th Avenue|St\. Marks|Cathedral District|Brooklyn/.test(JSON.stringify(v ?? '')))
             left.push(`${c}/${e.slug}.${f}`)
         }
@@ -75,7 +86,9 @@ test('independent review of 1.0.3, item 2: with an address, the footer map follo
 })
 
 test('second and third review rounds of 1.0.3: with an address, a detachable demo place leaves the words around it, a core one takes its sentence, no heading is emptied, the 1982 card and the band keep their words', async () => {
-  const { demoPlaceWordsOf, demoPlacesBesides, withoutDemoPlace } = await import('../tools/personalize.mjs')
+  const { demoPlaceWordsOf, demoPlacesBesides, shortText, withoutDemoPlace } = await import(
+    '../tools/personalize.mjs'
+  )
   const map = JSON.parse(read('seed/personalize.json'))
   const seed = JSON.parse(read('seed/seed.json'))
   const entries = Object.entries(seed.content).flatMap(([collection, rows]) =>
@@ -96,7 +109,10 @@ test('second and third review rounds of 1.0.3: with an address, a detachable dem
     for (const [c, slugs, fields] of owned)
       if (c === e.collection && (slugs === null || slugs.includes(e.slug)))
         for (const f of fields) {
-          const fallback = HEADING.test(f) || f === 'body' ? (e.data.title ?? null) : null
+          const fallback =
+            f !== 'title' && (HEADING.test(f) || f === 'body' || shortText(e.data?.[f]))
+              ? (e.data.title ?? null)
+              : null
           const v = withoutDemoPlace(e.data?.[f], places, facts, { fallback })
           after.set(`${c}/${e.slug}.${f}`, v ?? e.data?.[f])
         }
@@ -142,7 +158,8 @@ test('second and third review rounds of 1.0.3: with an address, a detachable dem
   assert.equal(at('pages/our-history.caption'), 'Our dining room')
   // "a Brooklyn favourite": the place is inside a phrase, not a detachable modifier, so its only sentence goes (third
   // review round); the intro is no heading, so it is left empty and the view draws none
-  assert.equal(at('timeline/our-history-timeline.section_intro'), '')
+  // no field is left empty (D92): the one-sentence intro takes the entry's title
+  assert.equal(at('timeline/our-history-timeline.section_intro'), 'Our History')
   // the home welcome: "has welcomed Brooklyn to" is a core argument, the sentence goes; its paragraph keeps the next one
   const welcome = at('hero/welcome-to-res-bar-restaurant.hero_intro')
   assert.equal(welcome.length, 1)

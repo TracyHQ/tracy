@@ -3,9 +3,11 @@
 // (seed/questions.json → name · sector · contact), by the map in seed/personalize.json:
 //
 //   identity  deterministic fields — brand name and mark, hotline, address, copyright, site title —
-//             written exactly; an answer the customer did not give leaves the field EMPTY (or is
-//             skipped and reported), never the demo value: a wrong hotline on a live site is worse
-//             than none;
+//             written exactly. An answer the customer did not give keeps the template's value as a
+//             placeholder, named in the report (`unanswered`): a rule marked `unanswered: keep-demo`
+//             (the contact lines, the address, the footer) says so, and only a rule that names an
+//             `empty` value empties the field. The demo company's social links lead nowhere until the
+//             customer gives a profile (`socialKept`);
 //   replace   every mention of the demo brand ("Northgate", «Норткейт») in every string of every
 //             entry becomes the customer's name — URLs, slugs and references excluded;
 //   copy      the sentences a template cannot write ahead of time (tagline, hero, ledes, calls to
@@ -932,9 +934,25 @@ export function planFrom(
         let changed = false
         const out = []
         for (const row of demo) {
-          const spec = rule.rows[String(row?.label ?? '')]
+          const spec = rule.rows[String(row?.[rule.rowKey ?? 'label'] ?? '')]
           if (!spec) {
             out.push(row)
+            continue
+          }
+          // a row's own fields filled from the facts (`fields`: { description: '{address}' }), keep-demo when one is missing
+          if (spec.fields && typeof spec.fields === 'object') {
+            const filled = Object.entries(spec.fields).map(([key, t]) => [key, fill(String(t), facts)])
+            const lacking = filled.find(([, v]) => 'missing' in v)
+            if (lacking === undefined) {
+              out.push({ ...row, ...Object.fromEntries(filled.map(([key, v]) => [key, v.value])) })
+              changed = true
+            } else {
+              out.push(row)
+              unanswered.push({
+                rule: `${rule.collection}.${rule.slug}.${rule.field} ${String(row[rule.rowKey ?? 'label'])}`,
+                why: `${noAnswer(lacking[1].missing)}: the template's value stays as a placeholder`
+              })
+            }
             continue
           }
           const value = spec.value === undefined ? { missing: null } : fill(String(spec.value), facts)
@@ -2190,24 +2208,88 @@ export function sentenceEnds(text) {
  * @param {any} map the personalize map @param {Array<{collection: string, slug: string, data: any}>} seedEntries
  * @returns {Set<string>}
  */
-export function demoPlaceWordsOf(map, seedEntries) {
+export function demoPlaceWordsOf(map, seedEntries, { ordinary = ordinaryWordsOf(seedEntries) } = {}) {
   const words = new Set()
-  for (const rule of Array.isArray(map?.identity) ? map.identity : []) {
+  /** The demo values a rule fills with `{address}`: the field itself, or the fields of the rows a `rows` rule names. */
+  const sources = (rule, e) => {
     const raw = rule?.value
     const template = typeof raw === 'string' ? raw : raw && typeof raw === 'object' ? raw.en : null
-    if (typeof template !== 'string' || !template.includes('{address}')) continue
+    if (typeof template === 'string')
+      return template.includes('{address}') && typeof e.data?.[rule.field] === 'string' ? [e.data[rule.field]] : []
+    if (!rule?.rows || typeof rule.rows !== 'object' || !Array.isArray(e.data?.[rule.field])) return []
+    const out = []
+    for (const row of e.data[rule.field]) {
+      const spec = rule.rows[String(row?.[rule.rowKey ?? 'label'] ?? '')]
+      const templates = { value: spec?.value, ...spec?.fields }
+      for (const [key, t] of Object.entries(templates))
+        if (typeof t === 'string' && t.includes('{address}') && typeof row?.[key] === 'string') out.push(row[key])
+    }
+    return out
+  }
+  for (const rule of Array.isArray(map?.identity) ? map.identity : []) {
     for (const e of seedEntries) {
-      const demo = e.collection === rule.collection && e.slug === rule.slug ? e.data?.[rule.field] : null
-      if (typeof demo !== 'string') continue
-      for (const m of demo.matchAll(/\p{Lu}\p{Ll}{2,}/gu))
-        if (!isStreetWord(m[0].toLowerCase())) words.add(m[0])
-      // A numbered street ("5th Avenue", "42nd Street") has no proper name of its own: the phrase is the demo's place
-      // (independent review of JA Restaurant 1.0.3, 17/11/2026: "Four decades on 5th Avenue" stayed on a renamed site).
-      for (const m of demo.matchAll(/(?<![\p{L}\p{N}])\d+(?:st|nd|rd|th)\s+(\p{Lu}\p{Ll}+)/gu))
-        if (isStreetWord(m[1].toLowerCase())) words.add(m[0].replace(/\s+/g, ' '))
+      if (e.collection !== rule.collection || e.slug !== rule.slug) continue
+      for (const demo of sources(rule, e)) {
+        // 🔒 A PLACE IS A NAME, NOT A WORD (independent review of JA Diner 0.1.3, 18/11/2026, D-K14): "Mountain View" made
+        // "View" a place, and both slides lost their "View full menu" button. The address is read segment by segment (its
+        // commas, lines and line breaks); in each, a run of capitalised words that are not street or address nouns is ONE
+        // place ("Mountain View", "Hogsmeade"); a one-word place the template's own text also writes in lower case is an
+        // ordinary word, never a place on its own; and the last segment of an address of three segments or more, one word
+        // with no digit, is its country ("Britain"): too wide to say where the demo is, so no place word (the demo post
+        // "nominated for the Britain Restaurant Awards" became the brand's name).
+        const segments = demo
+          .replace(/<[^>]*>/g, ',')
+          .split(/[,\n]+/)
+          .map((x) => x.trim())
+          .filter(Boolean)
+        segments.forEach((segment, i) => {
+          const runs = []
+          let run = []
+          for (const m of segment.matchAll(/[\p{L}\p{N}][\p{L}\p{N}.'’-]*/gu)) {
+            const w = m[0].replace(/\.+$/, '')
+            if (/^\p{Lu}\p{Ll}{2,}$/u.test(w) && !isStreetWord(w.toLowerCase())) run.push(w)
+            else {
+              if (run.length > 0) runs.push(run)
+              run = []
+            }
+          }
+          if (run.length > 0) runs.push(run)
+          const country =
+            i === segments.length - 1 &&
+            segments.length >= 3 &&
+            !/\d/.test(segment) &&
+            runs.length === 1 &&
+            runs[0].length === 1 &&
+            segment.replace(/[.\s]+$/, '') === runs[0][0]
+          if (country) return
+          for (const r of runs) if (r.length > 1 || !ordinary.has(r[0].toLowerCase())) words.add(r.join(' '))
+        })
+        // A numbered street ("5th Avenue", "42nd Street") has no proper name of its own: the phrase is the demo's place
+        // (independent review of JA Restaurant 1.0.3, 17/11/2026: "Four decades on 5th Avenue" stayed on a renamed site).
+        for (const m of demo.matchAll(/(?<![\p{L}\p{N}])\d+(?:st|nd|rd|th)\s+(\p{Lu}\p{Ll}+)/gu))
+          if (isStreetWord(m[1].toLowerCase())) words.add(m[0].replace(/\s+/g, ' '))
+      }
     }
   }
   return words
+}
+
+/**
+ * The words a template's own text writes in lower case, its ordinary words ("view", "menu"), read from the text of the
+ * seed, never from its slugs, paths or links (`we-ve-been-nominated-for-the-britain-…` names no ordinary "britain").
+ * @param {Array<{data: any}>} seedEntries @returns {Set<string>}
+ */
+export function ordinaryWordsOf(seedEntries) {
+  const low = new Set()
+  const walk = (v, key = '') => {
+    if (typeof v === 'string') {
+      if (/^_|(?:^|_)(?:slug|id|url|href|link|path|src)$/i.test(key) || /:\/\/|^\/|^[\w./@-]+$/.test(v.trim())) return
+      for (const m of v.matchAll(/(?<![\p{L}\p{N}_/.@-])\p{Ll}+(?![\p{L}\p{N}_/@-])/gu)) low.add(m[0])
+    } else if (Array.isArray(v)) v.forEach((x) => walk(x, key))
+    else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walk(x, k)
+  }
+  for (const e of seedEntries ?? []) walk(e?.data)
+  return low
 }
 
 /**
@@ -2450,6 +2532,24 @@ function lineWithoutDemoPlace(line, places, protect = []) {
   return tidyCut(kept)
 }
 
+/**
+ * A key that holds a button's or a link's own label ("button2", "basic_btn_title", "hp_link_text"): the place pass never
+ * touches it (independent review of JA Diner 0.1.3, D-K14: "View full menu" lost its button).
+ */
+const LABEL_KEY = /(?:^|_)(?:button|btn|cta)\d*(?:_|$)|(?:^|_)link_(?:text|title|label)$/i
+
+/**
+ * A text of one short sentence on one line (a heading, a tag line, a card's line): a place taken from it follows a
+ * heading's fallback chain, whatever its key is called (D-K14: `sub_heading` and `news_title` were emptied).
+ * @param {unknown} v @returns {boolean}
+ */
+export const shortText = (v) => {
+  if (typeof v !== 'string') return false
+  const t = v.replace(/<[^>]*>/g, '').trim()
+  if (t === '' || t.includes('\n')) return false
+  return sentenceEnds(t).filter((at) => at < t.length).length === 0 && t.split(/\s+/).length <= 30
+}
+
 /** The keys of a card row or an entry that a visitor reads as its heading or a picture's words: never left empty. */
 const HEADING_KEYS = /^(?:title|name|heading|label|alt|caption|lead_title)$/
 /** A year a row carries in a date-like field ("1982-05-14" → "1982"): the neutral title of a milestone. */
@@ -2503,7 +2603,7 @@ const isDemoPhone = (digits, phones) =>
  * @param {any} map @param {Array<{collection: string, slug: string, data: any}>} seedEntries
  * @returns {{ phones: Set<string>, emails: Set<string>, domains: Set<string> }}
  */
-export function demoContactsOf(map, seedEntries) {
+export function demoContactsOf(map, seedEntries, { vendorDomains = [] } = {}) {
   const phones = new Set()
   const emails = new Set()
   const domains = new Set()
@@ -2516,7 +2616,11 @@ export function demoContactsOf(map, seedEntries) {
     if (/\{email\}/.test(t))
       for (const m of String(demo ?? '').matchAll(EMAIL_RUN)) {
         emails.add(m[0])
-        domains.add(m[0].split('@')[1].toLowerCase())
+        // 🔒 THE TEMPLATE VENDOR'S DOMAIN IS NEVER A DEMO DOMAIN (independent review of JA Diner 0.1.3, D-K14): the demo's
+        // e-mail on joomlart.com took the credit "Designed by JoomlArt.com." with it. The vendor's domains come from the
+        // template's own config (`vendor.domains` of template.config.json); the e-mail itself is still the demo's.
+        const domain = m[0].split('@')[1].toLowerCase()
+        if (!vendorDomains.some((v) => domain === v || domain.endsWith(`.${v}`))) domains.add(domain)
       }
   }
   for (const rule of Array.isArray(map?.identity) ? map.identity : [])
@@ -2525,7 +2629,7 @@ export function demoContactsOf(map, seedEntries) {
       const demo = e.data?.[rule.field]
       if (rule.rows && typeof rule.rows === 'object') {
         for (const row of Array.isArray(demo) ? demo : []) {
-          const spec = rule.rows[String(row?.label ?? '')]
+          const spec = rule.rows[String(row?.[rule.rowKey ?? 'label'] ?? '')]
           if (!spec) continue
           take(spec.value, row.value)
           take(spec.href, row.href)
@@ -2646,7 +2750,12 @@ export function demoContactsLeft(value, demo, facts) {
  * @param {unknown} value @param {Set<string>} places @param {Record<string, unknown> | null} [facts]
  * @returns {any}
  */
-export function withoutDemoPlace(value, places, facts = null, { fallback = null, required = false, unresolved = null } = {}) {
+export function withoutDemoPlace(
+  value,
+  places,
+  facts = null,
+  { fallback = null, required = false, unresolved = null, only = null } = {}
+) {
   if (places.size === 0) return null
   const protect = customerSpansOf(facts)
   if (typeof value === 'string') {
@@ -2663,10 +2772,11 @@ export function withoutDemoPlace(value, places, facts = null, { fallback = null,
     if (!changed) return null
     // a line that went leaves no blank at the end of the one before it
     const text = kept.join('\n').replace(/[ \t]+$/, '')
-    // 🔒 A HEADING, AN ALT TEXT OR A REQUIRED FIELD IS NEVER LEFT EMPTY (second independent review of JA Restaurant 1.0.3; code
-    // review, 18/11/2026): the neutral value the caller names (the row's year, the entry's title, the site's name), never the
-    // demo's place; with none of them, the text stays as written and is reported, never emptied.
-    if (text !== '' || !(required || (typeof fallback === 'string' && fallback !== ''))) return text
+    // 🔒 NO FIELD THE PLACE PASS TOUCHES IS LEFT EMPTY (D84, D88; independent review of JA Diner 0.1.3, 18/11/2026, D-K14:
+    // two home headings and the Location card were emptied). With nothing left of it: the neutral value the caller names
+    // (the row's year, the entry's title, the site's name), never the demo's place; with none, the text stays as written and
+    // is reported (`places-kept`).
+    if (text !== '') return text
     if (typeof fallback === 'string' && fallback !== '') return fallback
     unresolved?.push(value)
     return null
@@ -2676,11 +2786,16 @@ export function withoutDemoPlace(value, places, facts = null, { fallback = null,
       const left = withoutDemoFacts(value, { ...facts, address: facts?.address || ' ' }, { places, fallback, unresolved })
       // a heading block kept as written (no fallback) leaves the value as it was: nothing changed
       if (left === null || JSON.stringify(left.value) === JSON.stringify(value)) return null
-      return left.readable ? left.value : []
+      // a rich text with nothing readable left keeps its words and is reported, never emptied (D-K14)
+      if (!left.readable) {
+        unresolved?.push(value)
+        return null
+      }
+      return left.value
     }
     let changed = false
     const out = value.map((row) => {
-      const next = withoutDemoPlace(row, places, facts, { fallback, required, unresolved })
+      const next = withoutDemoPlace(row, places, facts, { fallback, required, unresolved, only })
       if (next === null) return row
       changed = true
       return next
@@ -2692,8 +2807,11 @@ export function withoutDemoPlace(value, places, facts = null, { fallback = null,
     const out = { ...value }
     for (const [key, v] of Object.entries(value)) {
       if (key.startsWith('_')) continue
-      // A row's heading falls back to the row's year, else the caller's, else the site's name; its other words have none.
-      const heading = HEADING_KEYS.test(key)
+      // only the row fields the rule names, and never a button's or a link's label (D-K14)
+      if ((Array.isArray(only) && !only.includes(key)) || LABEL_KEY.test(key)) continue
+      // A row's heading, or a field of one short sentence, falls back to the row's year, else the caller's, else the site's
+      // name; its other words have none.
+      const heading = HEADING_KEYS.test(key) || shortText(v)
       const own = heading ? (yearOf(value) ?? fallback ?? nameFallbackOf(facts)) : null
       const next = withoutDemoPlace(v, places, facts, { fallback: own, required: heading, unresolved })
       if (next !== null) {
@@ -4882,6 +5000,21 @@ async function brandOnly() {
 }
 
 // ───────────────────────── main ─────────────────────────
+/**
+ * The template vendor's own web domains (`vendor.domains` of template.config.json, beside the seed): a credit or a link to
+ * the vendor is never the demo's contact, even when the demo's e-mail sits on that domain (D-K14). None when not declared.
+ * @returns {string[]}
+ */
+function templateVendorDomains() {
+  const file = path.resolve(SEED_DIR, '..', 'template.config.json')
+  try {
+    const domains = JSON.parse(readFileSync(file, 'utf8')).vendor?.domains
+    return Array.isArray(domains) ? domains.map((d) => String(d).toLowerCase()) : []
+  } catch {
+    return []
+  }
+}
+
 /** The template's own version, for the request hash: a new release is a new request. */
 function templateVersion() {
   const file = path.resolve(SEED_DIR, '..', 'template.config.json')
@@ -6728,6 +6861,13 @@ async function main() {
     const places = demoPlacesBesides(demoPlaces, facts)
     if (places.size === 0) return
     const protect = customerSpansOf(facts)
+    /** Each collection's own labels, lower case: an entry titled with one is a record, not a visitor's heading. */
+    const recordLabels = new Map(
+      (Array.isArray(seed.collections) ? seed.collections : []).map((c) => [
+        c.slug,
+        new Set([c.label, c.labelSingular].filter((l) => typeof l === 'string').map((l) => l.trim().toLowerCase()))
+      ])
+    )
     const owned = [
       ...(map.copy ?? []).map((r) => ({ collection: r.collection, slugs: [r.slug], fields: [r.field] })),
       ...(map.rewrite ?? []).map((r) => ({
@@ -6735,7 +6875,12 @@ async function main() {
         slugs: Array.isArray(r.slugs) ? r.slugs : r.slug ? [r.slug] : null,
         fields: Array.isArray(r.fields) ? r.fields : []
       })),
-      ...(map.blocks ?? []).map((r) => ({ collection: r.collection, slugs: [r.slug], fields: [r.field] })),
+      ...(map.blocks ?? []).map((r) => ({
+        collection: r.collection,
+        slugs: [r.slug],
+        fields: [r.field],
+        only: Array.isArray(r.itemFields) ? r.itemFields : null
+      })),
       ...(map.facts ?? []).map((r) => ({ collection: r.collection, slugs: [r.slug], fields: [r.field] }))
     ]
     const keys = new Set()
@@ -6743,21 +6888,39 @@ async function main() {
       if (!locales.includes(e.locale)) continue
       const k = `${e.collection}/${e.slug}/${e.locale}`
       if (hiddenByRule.has(k)) continue
-      const fields = new Set(
-        owned
-          .filter((r) => r.collection === e.collection && (r.slugs === null || r.slugs.includes(e.slug)))
-          .flatMap((r) => r.fields)
-      )
-      for (const f of fields) {
+      // each field the rules name, with the row fields a `blocks` rule limits it to (null: the whole field)
+      /** @type {Map<string, string[] | null>} */
+      const fields = new Map()
+      for (const r of owned.filter(
+        (x) => x.collection === e.collection && (x.slugs === null || x.slugs.includes(e.slug))
+      ))
+        for (const f of r.fields) {
+          if (!r.only) fields.set(f, null)
+          else if (!fields.has(f)) fields.set(f, [...r.only])
+          else if (fields.get(f) !== null) fields.set(f, [...fields.get(f), ...r.only])
+        }
+      for (const [f, only] of fields) {
         const now = patches.get(k)?.fields?.[f]
         // the fallback chain of a heading: the entry's title as this run leaves it (renamed), else the site's name
         const current = patches.get(k)?.fields?.title ?? e.data?.title
-        const title = typeof current === 'string' && !holdsPlace(current, places, protect) ? current : null
+        // an entry title that is its collection's own label ("Site chrome") names the record for editors, not for
+        // visitors: no fallback (D-K14: `news_title` read "Site chrome")
+        const title =
+          typeof current === 'string' &&
+          !holdsPlace(current, places, protect) &&
+          !recordLabels.get(e.collection)?.has(current.trim().toLowerCase())
+            ? current
+            : null
         const stayed = []
-        const next = withoutDemoPlace(now !== undefined ? now : e.data?.[f], places, facts, {
-          fallback: HEADING_KEYS.test(f) || f === 'body' ? (title ?? nameFallbackOf(facts)) : null,
+        const value = now !== undefined ? now : e.data?.[f]
+        // 🔒 AN ENTRY'S OWN TITLE NEVER BECOMES THE BRAND (D-K14): a post's title is editorial content; with its place a core
+        // word and nothing left, it keeps its words and is reported. A heading or a one-sentence field takes the chain.
+        const chained = f !== 'title' && (HEADING_KEYS.test(f) || f === 'body' || shortText(value))
+        const next = withoutDemoPlace(value, places, facts, {
+          fallback: chained ? (title ?? nameFallbackOf(facts)) : null,
           required: HEADING_KEYS.test(f),
-          unresolved: stayed
+          unresolved: stayed,
+          only
         })
         for (const text of stayed) placesUnresolved.push(`${k}.${f}: ${plainOf(text)}`)
         if (next === null) continue
@@ -6777,7 +6940,7 @@ async function main() {
     if (placesUnresolved.length > 0)
       skipped.push({
         rule: 'places-kept',
-        why: `the demo's place stays where taking it would empty a heading with no fallback or cut the customer's own words: ${placesUnresolved.join(' · ')}`
+        why: `the demo's place stays where taking it would leave a field empty with no fallback, or cut the customer's own words: ${placesUnresolved.join(' · ')}`
       })
     if (keys.size === 0) return
     await flush([...keys])
@@ -6793,7 +6956,7 @@ async function main() {
   // ── 2d. The brief's phone and e-mail replace the demo's everywhere (`withCustomerContacts`), then the check ──────────
   /** `<collection>/<slug>/<locale>.<field>` where a demo contact took the brief's. */
   const contactsTaken = []
-  const demoContacts = demoContactsOf(map, seedEntries)
+  const demoContacts = demoContactsOf(map, seedEntries, { vendorDomains: templateVendorDomains() })
   const contactsWork = async () => {
     if (redrawOnly || !(facts.phone || facts.email || facts.address)) return
     if (demoContacts.phones.size + demoContacts.emails.size === 0) return
@@ -6822,6 +6985,19 @@ async function main() {
     })
   }
   await lane('contacts', contactsWork)
+  // 🔒 THE REPORT SAYS WHAT STAYS (D-K14): a field the contacts pass changed is no longer the template's placeholder, so the
+  // `unanswered` line that called it kept goes (the `contacts` line names the field).
+  {
+    const changed = new Set(
+      contactsTaken.map((t) => {
+        const at = t.lastIndexOf('.')
+        const [collection, slug] = t.slice(0, at).split('/')
+        return `${collection}.${slug}.${t.slice(at + 1)}`
+      })
+    )
+    for (let i = report.unanswered.length - 1; i >= 0; i -= 1)
+      if (changed.has(report.unanswered[i].rule)) report.unanswered.splice(i, 1)
+  }
   // 🔒 THE CHECK: the demo's phone left anywhere while the brief gives one, or its e-mail domain while the brief gives an
   // e-mail, fails the run (exit 4), field by field.
   if (!redrawOnly)
