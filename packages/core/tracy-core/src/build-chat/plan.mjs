@@ -14,6 +14,7 @@
 import { BUILD_CHAT_STRINGS } from './conversation.mjs'
 import { plainTextOf as text } from './plain-text.mjs'
 import { leftOutOf } from './plan-left-out.mjs'
+import { planReviewPartsOf } from './plan-card-review.mjs'
 import { lookBrandOf } from './plan-look-brand.mjs'
 
 const PLAN_EDIT_SCHEMA = 'tracy-build-plan-edit/v1'
@@ -223,11 +224,12 @@ const keptOnCard = (fact) =>
 
 /**
  * The plan card's content. `lookSources`: the draft's (`GET /api/build-draft`), read into `look.brand` when given.
+ * `review`: the draft's plan review (`{locks, removals}`), for what the owner can take off and bring back (#575).
  * Services are the service items some page shows: an item the plan keeps on no page (taken
  * off, or nothing to show it in) is said under Left out, never as a numbered service, and the counts follow the card.
  * @param {any} contractPlan - a Contract B plan
  */
-export function planCardOf(contractPlan, { lookSources = null } = {}) {
+export function planCardOf(contractPlan, { lookSources = null, review = null } = {}) {
   const plan = wholePlanOf(contractPlan)
   const disputed = new Map(
     (plan.assumptions ?? [])
@@ -246,6 +248,7 @@ export function planCardOf(contractPlan, { lookSources = null } = {}) {
       .map((l) => l?.item)
       .filter((id) => typeof id === 'string' && !shown.has(id))
   )
+  const leftOut = leftOutOf(plan.leftOut, plan)
   return {
     planId: plan.id,
     revision: plan.revision,
@@ -268,7 +271,9 @@ export function planCardOf(contractPlan, { lookSources = null } = {}) {
           ...codeOf(f),
           source: firstSource(sourcesOfFact(f)),
           sourceKind: firstSourceKind(sourcesOfFact(f)),
-          choice: assumption ? choiceOf(f, assumption) : null
+          choice: assumption ? choiceOf(f, assumption) : null,
+          // Kept on the card although no page shows it: the card marks it as not on the site (#575 C3).
+          ...(leftOutFacts.has(f.id) ? { offSite: true } : {})
         }
       }),
     language: plan.language,
@@ -338,8 +343,9 @@ export function planCardOf(contractPlan, { lookSources = null } = {}) {
     assumptions: (plan.assumptions ?? [])
       .filter((a) => !disputed.has(a.field))
       .map((a) => ({ id: a.id, said: text(a.said), ...codeOf(a) })),
-    leftOut: leftOutOf(plan.leftOut, plan),
-    counts: { pages: plan.pages.length, services: services.length }
+    leftOut,
+    counts: { pages: plan.pages.length, services: services.length },
+    ...planReviewPartsOf(plan, leftOut, review)
   }
 }
 
@@ -355,6 +361,23 @@ export function planEditOf(plan, changes, id) {
     id,
     plan: { id: plan.id, revision: plan.revision },
     changes: changes.map((c) => ({ field: c.field, value: c.value }))
+  }
+}
+
+/**
+ * The plan edit that carries one structured operation of the plan card (#575): take a part off (`remove-page`,
+ * `remove-block`, `remove-item`, `remove-key-message`, `remove-channel`, `remove-later`), bring back what one removal
+ * took (`restore`, with its `removal` id) or go back to the original plan (`revert`). The draft door's gate decides.
+ * @param {any} plan - the plan the edit applies to
+ * @param {{ op: string } & Record<string, string>} operation
+ * @param {string} id
+ */
+export function planOperationOf(plan, operation, id) {
+  return {
+    schema: PLAN_EDIT_SCHEMA,
+    id,
+    plan: { id: plan.id, revision: plan.revision },
+    operation: { ...operation }
   }
 }
 

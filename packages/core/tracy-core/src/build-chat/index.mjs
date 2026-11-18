@@ -64,11 +64,13 @@ export {
   planChangeOf,
   planEditOf,
   planOfReviewId,
+  planOperationOf,
   PLAN_REVIEW_APPROVE,
   PLAN_REVIEW_CHANGE,
   planReviewIdOf,
   planReviewRequestOf
 } from './plan.mjs'
+export { NOT_ON_SITE_GROUPS } from './plan-card-review.mjs'
 export { plainTextOf } from './plain-text.mjs'
 export {
   LINK_FOUND_STRINGS,

@@ -179,6 +179,106 @@ export interface PlanFact {
   /** The display's stable code (`opening_hours`) and its parameters. */
   code?: string
   params?: Record<string, unknown>
+  /** Kept on the card although no page shows it (a left out entry reports it): marked as not on the site. */
+  offSite?: true
+}
+/** A fact as the review parts of the card name it. */
+export interface PlanFactRef {
+  id: string
+  kind: string | null
+  label: string
+  value: string
+}
+/** A section as the review parts of the card name it. */
+export interface PlanSectionRef {
+  id: string
+  label: string
+  labelCode?: string
+}
+/** Where a fact is shown: the page, the section, and whether that section is a footer. */
+export interface PlanPlace {
+  page: string
+  pageName: string
+  section: PlanSectionRef
+  footer: boolean
+}
+/** One page as the card reviews it (#575): its intent for the writer, its sections, what the owner can take off. */
+export interface PlanReviewPage {
+  id: string
+  name: string
+  removable: boolean
+  lock: string | null
+  keyMessage?: string
+  visitorQuestion?: string
+  seo: { searchTerms: string[]; titleIntent?: string; descriptionIntent?: string; ownerAdded: string[] } | null
+  sections: (PlanSectionRef & {
+    type: string
+    library?: true
+    message?: string
+    carries: { id: string; label: string }[]
+    end: boolean
+    removable: boolean
+    items: { id: string; kind: string; label: string; removable: boolean }[]
+    facts: PlanFactRef[]
+  })[]
+}
+/** What the owner took off at this review, one line per removal. */
+export interface PlanRemovedLine {
+  removal: string
+  what: string
+  kind: string
+  dataKind?: string | null
+  details: number
+  restorable: boolean
+}
+/** The review parts of the plan card (#575): intent, reach, shared parts, pages, not on the site, sources, later. */
+export interface PlanReviewParts {
+  keyMessages: {
+    id: string
+    label: string
+    field: string
+    carriedBy: { page: string; pageName: string; blocks: PlanSectionRef[] }[]
+  }[]
+  reach: {
+    primary: (PlanFactRef & { places: PlanPlace[] })[]
+    ends: { page: string; pageName: string; section: PlanSectionRef; facts: PlanFactRef[] }[]
+    channels: (PlanFactRef & { places: PlanPlace[]; footerPages: number; removable: boolean })[]
+  }
+  site: { menu: string[]; header: PlanFactRef[]; footer: PlanFactRef[]; privacyLink: boolean }
+  sitePages: PlanReviewPage[]
+  standard: {
+    privacy: { page: string | null; facts: PlanFactRef[] } | null
+    notFound: { leadsTo: string[] } | null
+  }
+  notOnSite: {
+    removed: PlanRemovedLine[]
+    /** Each group with its lines, as indexes into the card's `leftOut`. */
+    groups: { group: string; lines: number[] }[]
+    /** The picture spots of people the template has and nothing fills. */
+    peopleSpots: number
+  }
+  sources: {
+    kind: string
+    facts: PlanFactRef[]
+    shownFacts: PlanFactRef[]
+    items: { kind: string; got: number; shown: number }[]
+  }[]
+  later: { code: string; what: string; reason: string; params: Record<string, unknown> }[]
+  /** No locks were answered (an older server): nothing is offered for removal but key messages and later entries. */
+  locked: boolean
+}
+export declare const NOT_ON_SITE_GROUPS: readonly string[]
+/** The draft's plan review (#575), as `GET /api/build-draft` answers it. */
+export interface PlanReview {
+  count: number
+  canRevert: boolean
+  removals: { id: string; op: string; target: Record<string, string> }[]
+  locks?: {
+    pages: Record<string, string>
+    blocks: Record<string, string>
+    facts: Record<string, string>
+    minItems: Record<string, number>
+  } | null
 }
 /** A stable text code and its parameters, beside the English text it stands for. */
 export interface PlanTextCode {
@@ -194,7 +294,7 @@ export interface BlockList {
   head?: string
   rows: { label: string; lists?: BlockList[] }[]
 }
-export interface PlanCard {
+export interface PlanCard extends PlanReviewParts {
   planId: string
   revision: number
   name: string
@@ -271,8 +371,19 @@ export interface PlanEdit {
   schema: 'tracy-build-plan-edit/v1'
   id: string
   plan: { id: string; revision: number }
-  changes: PlanChange[]
+  changes?: PlanChange[]
+  operation?: PlanOperation
 }
+/** One structured operation of the plan card (#575). */
+export type PlanOperation =
+  | { op: 'remove-page'; page: string }
+  | { op: 'remove-block'; page: string; block: string }
+  | { op: 'remove-item'; page: string; block: string; item: string }
+  | { op: 'remove-key-message'; message: string }
+  | { op: 'remove-channel'; fact: string }
+  | { op: 'remove-later'; later: string }
+  | { op: 'restore'; removal: string }
+  | { op: 'revert' }
 type BuildChatT = (key: string, vars?: Record<string, unknown>) => string
 /** A picture the brand step kept with the draft, named by its draft picture id. */
 export interface PlanLookPicture {
@@ -282,10 +393,12 @@ export interface PlanLookPicture {
 export declare function planCardOf(
   // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
   plan: any,
-  options?: { lookSources?: PlanDraft['lookSources'] }
+  options?: { lookSources?: PlanDraft['lookSources']; review?: PlanReview | null }
 ): PlanCard
 // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
 export declare function planEditOf(plan: any, changes: PlanChange[], id: string): PlanEdit
+// biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
+export declare function planOperationOf(plan: any, operation: PlanOperation, id: string): PlanEdit
 export declare function planChangeOf(
   field: string,
   current: string | number,
@@ -297,6 +410,8 @@ export interface PlanDraft {
   plan: any
   lastEdit?: PlanEdit | null
   canUndo?: boolean
+  /** The owner's review on the plan card (#575): changes counted, parts that can come back, the kit's locks. */
+  review?: PlanReview | null
   /** Where the plan's accent and logo came from; a logo the machine drew from the owner's logo says `drawn-from-logo`. */
   lookSources?: {
     accent?: { from: string; name?: string }

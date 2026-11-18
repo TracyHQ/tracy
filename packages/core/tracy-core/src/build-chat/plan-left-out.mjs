@@ -12,6 +12,7 @@
  * - a page of the template (`params.page`) is named inside the line of its reason: the pages left out for one reason
  *   are one line, a few named and the others counted (`pages`, `PAGES_NAMED`);
  * - the items of one kind are one line whatever their reasons: the first reason is the line's, the others are `also`;
+ * - what the owner took off at plan review (`owner_removed`) is not listed here: the card lists it with its removal;
  * - the same thing left out for the same reason is one line with its `count`. A one word label is made plural only
  *   when it is not one already ("Photo" reads "37 photos", "Services" reads "Services (2)"); a longer one takes its
  *   count after it.
@@ -93,6 +94,8 @@ export function leftOutOf(leftOut, plan) {
   const byKey = new Map()
   for (const l of listOr(leftOut)) {
     if (l?.kind === 'block') continue
+    // What the owner took off at plan review is said with its removal, where it can be brought back (#575).
+    if (l?.code === 'owner_removed') continue
     const code = typeof l?.code === 'string' && l.code !== '' ? l.code : null
     if (code !== null && TEMPLATE_SPOT_CODES.has(code)) continue
     const params = code && isPlainObject(l.params) ? l.params : null
