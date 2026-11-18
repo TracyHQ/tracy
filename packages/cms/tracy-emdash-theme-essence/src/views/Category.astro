@@ -89,9 +89,9 @@ const photo = profile ? mediaUrl(profile.avatar) : null
 				{posts.length === 0 && <p class="es-cat-empty">{w.noArticles}</p>}
 				<div class="es-cat-body">
 					<div class="es-cat-list">
-						{style === 'grid' && <div class="es-cat-grid">{shown.map((p, i) => <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i < 3} />)}</div>}
+						{style === 'grid' && <div class="es-cat-grid">{shown.map((p, i) => p.highlight ? <StackCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i < 3} /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i < 3} />)}</div>}
 						{style === 'stack' && shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i === 0} />)}
-						{style === 'sidebar' && shown.map((p, i) => <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} wide eager={i === 0} />)}
+						{style === 'sidebar' && shown.map((p, i) => p.highlight ? <StackCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i === 0} /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} wide eager={i === 0} />)}
 						<Pager path={href(locale, basePath)} page={page} pages={pages} locale={locale} />
 					</div>
 					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} />}

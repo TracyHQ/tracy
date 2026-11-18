@@ -37,6 +37,7 @@ export interface Post {
   featured?: boolean;
   featured_order?: number;
   home_lead?: boolean;
+  highlight?: boolean;
   kind?: string;
   layout?: string;
   video_source?: string;

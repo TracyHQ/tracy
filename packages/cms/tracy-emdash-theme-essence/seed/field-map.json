@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-18T19:58:47.515Z",
+	"generatedAt": "2026-11-18T23:21:49.129Z",
 	"fields": {
 		"pages.title": {
 			"source": "text",
@@ -80,6 +80,11 @@
 			"source": "boolean",
 			"target": "boolean",
 			"label": "Home lead"
+		},
+		"posts.highlight": {
+			"source": "boolean",
+			"target": "boolean",
+			"label": "Highlight"
 		},
 		"posts.kind": {
 			"source": "text",

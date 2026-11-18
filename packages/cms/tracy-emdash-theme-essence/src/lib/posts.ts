@@ -20,6 +20,8 @@ export interface PostRow {
   featured: boolean
   featuredOrder: number
   homeLead: boolean
+  /** the source draws this article's list card as a picture with the text over it */
+  highlight: boolean
   kind: 'standard' | 'video' | 'gallery'
   layout: 'default' | 'type-1' | 'type-2'
   videoSource: string
@@ -75,6 +77,7 @@ export async function loadPosts(locale: Locale): Promise<PostRow[]> {
       featured: Boolean(d.featured),
       featuredOrder: Number(d.featured_order ?? 0),
       homeLead: Boolean(d.home_lead),
+      highlight: Boolean(d.highlight),
       kind: (d.kind as PostRow['kind']) || 'standard',
       layout: (d.layout as PostRow['layout']) || 'default',
       videoSource: (d.video_source as string) ?? '',

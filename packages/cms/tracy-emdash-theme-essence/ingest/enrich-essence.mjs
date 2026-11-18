@@ -103,6 +103,8 @@ for (const r of model.records.filter((x) => x.type === 'posts')) {
   v.featured = Boolean(src.sticky) && MAIN_CATEGORIES.includes(cat)
   v.featured_order = v.featured ? Number(src.joomla.featuredOrdering) : 0
   v.home_lead = false
+  // the article's own note says whether the source's lists draw it as a picture card with the text over it
+  v.highlight = art.note === 'item-highlight'
   v.kind = kind
   v.layout = (attribs.article_layout ?? '').replace(/^.*:/, '').replace(/^default$/, '') || 'default'
   v.video_source = kind === 'video' && youtube.has(attribs.ctm_source) ? attribs.ctm_source : ''
@@ -156,6 +158,7 @@ setType({
     field('featured', 'boolean'),
     field('featured_order', 'number'),
     field('home_lead', 'boolean'),
+    field('highlight', 'boolean'),
     field('kind', 'text'),
     field('layout', 'text'),
     field('video_source', 'text'),

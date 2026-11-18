@@ -17,7 +17,7 @@ const url = href(chrome.locale, postPath(post))
 const intro = firstParagraph(post.excerpt) || firstParagraph(post.body)
 ---
 
-<article class="es-card es-stack" {...$p()}>
+<article class:list={['es-card', 'es-stack', post.highlight && 'is-highlight']} {...$p()}>
 	<div class="es-stack-top">
 		<ListPic post={post} locale={chrome.locale} $p={$p} width={200} height={200} eager={eager} />
 		<div class="es-stack-info">
