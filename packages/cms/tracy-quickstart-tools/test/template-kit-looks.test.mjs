@@ -177,6 +177,24 @@ test('pack carries each look to the pages and blocks drawn by the shot of anothe
   }
 })
 
+test('a rebuild in its own folder keeps the looks through the assemble that runs before any shot is taken', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'kit-looks-'))
+  try {
+    const kit = gallery(dir)
+    assert.deepEqual(applyLooks(kit, entriesFor(lookWorklist(kit, dir).need)).errors, [])
+    // `build` assembles after its read pass with no shot yet: the kit it writes is the next assemble's previous kit.
+    const unshot = { ...gallery(dir), images: [] }
+    assert.equal(keepLooks(unshot, kit), 0)
+    assert.equal(unshot.looksWaiting.length, 5, 'the looks wait beside the kit')
+    const shot = gallery(dir)
+    assert.equal(keepLooks(shot, unshot), 5)
+    assert.deepEqual(lookWorklist(shot, dir).need, [])
+    assert.equal(shot.looksWaiting, undefined, 'nothing waits once the shots are there')
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
 test('placeLook keeps key order; indentOf reads the file indent', () => {
   const item = placeLook({ id: 'x', images: {}, frames: [] }, { image: 'x-1440', sha256: 'a', text: 't' })
   assert.deepEqual(Object.keys(item), ['id', 'images', 'look', 'frames'])

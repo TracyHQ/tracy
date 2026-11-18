@@ -1,0 +1,1 @@
+{"id":"REG-PR-686-skipped-dirs-second-run","verdict":"PASS","commit":"9a9b3b0f5a7c6646d135ad0441681c7549786c40","ran_at":"2026-11-18T01:45:40.165Z","evidence":"tests/regression/.runs/2026-11-18-9a9b3b0f5/REG-PR-686-skipped-dirs-second-run.log"}

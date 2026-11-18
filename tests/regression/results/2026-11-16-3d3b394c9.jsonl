@@ -1,0 +1,1 @@
+{"id":"REG-PR-667-kit-rebuild-keeps-declared-fields","verdict":"PASS","commit":"3d3b394c920bce3f1b7076c95ce786444fa00816","ran_at":"2026-11-16T17:10:47.881Z","evidence":"tests/regression/.runs/2026-11-16-3d3b394c9/REG-PR-667-kit-rebuild-keeps-declared-fields.log"}

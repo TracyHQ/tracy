@@ -1,0 +1,3 @@
+- **A Joomla import whose live site has Akeeba Backup 7.x no longer fails right after the signed access verifier** — Lucas (with Claude) · #686 · `fix/skipped-dirs-rerun-exit` · 2026-11-18
+  **Affects:** Fleet provisioning (`/opt/tracy-fleet` on each host, shipped by the stack deploy). `tracy_webroot_restore_skipped_dirs` now always returns 0; what it made is still printed on stdout. Sites that failed this way can be provisioned again.
+  **Why / Measured:** Production 17/11/2026: the `logatel.com` import failed with exit code 1 and no error line, because `own_webroot` runs twice under `set -e` and the second run met the guard files of the first. Case REG-PR-686-skipped-dirs-second-run.

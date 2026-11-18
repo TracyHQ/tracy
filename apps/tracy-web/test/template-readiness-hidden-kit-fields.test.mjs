@@ -174,11 +174,11 @@ test('in the verdict: the latest JA Boxing and JA Diner releases are green, T4 a
     [boxing.step, boxing.state, boxing.code],
     ['kit-hidden-fields', 'done', 'kit-hidden-fields-declared']
   )
+  // JA Diner's rebuilt kit (#667) declares its hidden fields too; its template-kit piece now stops on the two gallery gaps
+  // the 1.0.9 template takes out (kit-gaps), a check of its own.
   const diner = pieceOf('ja-diner')
-  assert.deepEqual(
-    [diner.step, diner.state, diner.code],
-    ['kit-hidden-fields', 'done', 'kit-hidden-fields-declared']
-  )
+  assert.notEqual(diner.step, 'kit-hidden-fields')
+  assert.equal(diner.code, 'kit-gaps')
   const read = hiddenKitFieldsOf(kitAt(DINER))
   assert.deepEqual(read.missing, [])
   assert.deepEqual(read.declared, ['selfLinkButtons', 'hiddenPageLinks'])

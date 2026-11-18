@@ -71,4 +71,10 @@ tracy_webroot_restore_skipped_dirs() {
     tracy_webroot_guard_file "$webroot/$dir/index.html" '<!DOCTYPE html><title></title>' \
       && printf '%s\0' "$dir/index.html"
   done < <(tracy_webroot_skipped_dir_rules)
+  # 🔒 SUCCESS IS SAID OUT LOUD. Without this line the function returns the status of the loop's last
+  # command: a guard file already there (`[ ! -e ]` false) on the last rule made it return 1, and
+  # provision.sh, which calls `own_webroot` twice under `set -e`, died on the second call with no
+  # error printed (logatel.com import, 17/11/2026). A file already there is the normal case, not a
+  # failure; what was made is reported on stdout, never through the exit code.
+  return 0
 }
