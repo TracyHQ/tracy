@@ -79,8 +79,8 @@
     "tracy-saas/emdash-0.x": "1.4.12"
   },
   "maxVersion": {
-    "tracy-saas/emdash-0.x": "1.4.14"
+    "tracy-saas/emdash-0.x": "1.4.17"
   },
-  "maxVersionNote": "1.4.13 (TCH #1297, 13/10/2026) is 1.4.12 with only tools/personalize.mjs changed (Name left blank, a contact page unticked): src/ byte-identical, the same reader; 1.4.14 (branch feat/tdsr-emdash-base-saas, 14/10/2026) is 1.4.13 plus the two-mode slot: lib/ds-slot.ts reads the sheet's mode line (the same reader as Tracy Business 1.7.18), Base.astro opens on the system's side from it, ThemeToggle.astro keeps a choice made under a system under kinetic-theme@<id>; every stylesheet byte-identical to 1.4.13, re-measured on the release build (contracts/1.4.14)",
+  "maxVersionNote": "1.4.13 (TCH #1297, 13/10/2026) is 1.4.12 with only tools/personalize.mjs changed (Name left blank, a contact page unticked): src/ byte-identical, the same reader; 1.4.14 (branch feat/tdsr-emdash-base-saas, 14/10/2026) is 1.4.13 plus the two-mode slot: lib/ds-slot.ts reads the sheet's mode line (the same reader as Tracy Business 1.7.18), Base.astro opens on the system's side from it, ThemeToggle.astro keeps a choice made under a system under kinetic-theme@<id>; every stylesheet byte-identical to 1.4.13, re-measured on the release build (contracts/1.4.14) 1.4.17 is 1.4.14 with the picomatch patch (GHSA-fc5q-39xc-vjpf) and the version only: src/ and every stylesheet byte-identical to 1.4.14, the same reader (contracts/1.4.17 carries the 1.4.14 measurement).",
   "rolesNote": "15/10/2026 (v10 inner measure, /pages/helixql and /product/features 4/12): the container role named the article masthead's reading column on /pages/helixql (blog/Masthead.astro `.k-container.inner.narrow`, max-width 820px, 756px of content) where the system's 1200 (Moxie) / 1320 (Stripe) was asked; it now skips the narrow masthead and reads the page's own container, as on the home page. The button role read the closing call's primary button (Cta.astro .cta-btn), see templateNote"
 }
