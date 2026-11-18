@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 15,
+  "revision": 17,
   "pending": [],
   "locales": [
     "en"
@@ -6146,7 +6146,9 @@
         "footer-button",
         "copyright",
         "page-h1",
-        "search-count"
+        "search-count",
+        "pager",
+        "page-count"
       ],
       "parity": [
         "ground"

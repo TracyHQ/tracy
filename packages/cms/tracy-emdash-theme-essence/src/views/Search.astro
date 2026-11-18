@@ -3,6 +3,7 @@
 import { search } from 'emdash'
 import Base from '@/layouts/Base.astro'
 import PageOwner from '@/components/site/PageOwner.astro'
+import Pager from '@/components/site/Pager.astro'
 import Icon from '@/components/site/Icon.astro'
 import type { Chrome } from '@/lib/chrome'
 import { fill, formatDate, href, type Locale } from '@/lib/i18n'
@@ -41,6 +42,10 @@ const results =
         const hay = `${p.title} ${plain(p.excerpt)} ${plain(p.body)}`.toLowerCase()
         return words.every((x) => hay.includes(x))
       })
+const PER_PAGE = 10
+const pages = Math.max(1, Math.ceil(results.length / PER_PAGE))
+const page = Math.min(pages, Math.max(1, Number(Astro.url.searchParams.get('page')) || 1))
+const shown = results.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 ---
 
@@ -57,7 +62,7 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 				<p class="es-search-count">{results.length > 0 ? fill(w.searchResultsLine, { count: results.length, query: q }) : fill(w.searchEmpty, { query: q })}</p>
 				{results.length > 0 && (
 					<ul class="es-search-list">
-						{results.map((p) => (
+						{shown.map((p) => (
 							<li>
 								<a href={href(locale, postPath(p))}>{p.title}</a>
 								<time datetime={p.date}>{formatDate(p.date, tag)}</time>
@@ -65,6 +70,7 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 						))}
 					</ul>
 				)}
+				{results.length > PER_PAGE && <Pager path={`${href(locale, '/search')}?q=${encodeURIComponent(q)}`} page={page} pages={pages} locale={locale} />}
 			</div>
 		)}
 	</main>

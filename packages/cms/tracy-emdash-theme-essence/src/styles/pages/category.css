@@ -28,6 +28,16 @@
 	.es-stack-top .es-card-badge { top: 12px; left: 12px; width: 40px; height: 40px; }
 	.es-stack-info { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
 	.es-stack .es-card-intro { margin-top: 16px; }
+	/* the list pages draw the stack wider than the Home does: a 330px picture on a desktop, 200px on a tablet, on top on a phone (measured on category-style-2) */
+	.es-cat .es-stack-top .es-card-pic { width: 330px; }
+	.es-cat .es-stack-top .es-card-pic img { width: 330px; height: 330px; object-fit: cover; }
+	.es-cat .es-stack-info { align-self: center; }
+	@media (max-width: 1199px) { .es-cat .es-stack-top .es-card-pic, .es-cat .es-stack-top .es-card-pic img { width: 200px; } .es-cat .es-stack-top .es-card-pic img { height: 200px; } }
+	@media (max-width: 767px) {
+		.es-cat .es-stack-top { flex-direction: column; gap: 24px; }
+		.es-cat .es-stack-top .es-card-pic { width: 100%; }
+		.es-cat .es-stack-top .es-card-pic img { width: 100%; height: auto; aspect-ratio: 3 / 2; }
+	}
 
 	/* grid: picture on top, centred */
 	.es-grid-card { padding: 18px; margin-bottom: 0; text-align: center; }

@@ -203,3 +203,8 @@
 @layer components {
 	@media (max-width: 575px) { .es-pagination { gap: 6px; } .es-pagination a, .es-pagination span { min-width: 44px; padding: 0 8px; } }
 }
+
+@layer components {
+	.es-search-results .es-pager { margin-top: 48px; }
+	@media (max-width: 575px) { .es-pagination .is-end:first-child, .es-pagination .is-end:last-child { display: none; } }
+}

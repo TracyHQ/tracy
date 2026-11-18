@@ -89,3 +89,7 @@
 	.es-newsletter-status:not(:empty) { margin-top: 18px; }
 	.es-newsletter-status[data-state="error"] { font-weight: 700; }
 }
+
+@layer components {
+	html[data-theme="dark"] .es-contact .ec-form-input:not([type="checkbox"]) { background: var(--ds-c-surface-warm, #222a3b); border-color: var(--ds-c-border, #3a4459); color: var(--color-heading); }
+}
