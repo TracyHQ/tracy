@@ -1,6 +1,13 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { LISTING_HOSTS, MAX_LINKS, judgeLinks, linkKind, splitPasted } from '../domain/link-kinds.mjs'
+import {
+  LISTING_HOSTS,
+  MAX_LINKS,
+  judgeLinks,
+  linkKind,
+  splitPasted,
+  unsupportedLinkOf
+} from '../domain/link-kinds.mjs'
 
 const SHARE = 'https://share.google/hscFakeLink01'
 const MAGICPIN = 'https://magicpin.com/uae/Dubai/Al-Barsha/Fitness/Padel-and-Tennis-Coach/store/1000001'
@@ -49,7 +56,29 @@ test('listing hosts incl. any-TLD and subdomains', () => {
   assert.equal(linkKind('https://deliveroo.ae/menu/x').source, 'Deliveroo')
   assert.equal(linkKind('https://www.fresha.com/a/x').source, 'Fresha')
   assert.equal(linkKind('https://notyelp.com/x').kind, 'website')
-  assert.ok(LISTING_HOSTS['magicpin.com'])
+  assert.ok(LISTING_HOSTS['magicpin.*'])
+  assert.equal(
+    linkKind('https://magicpin.in/New-Delhi/Saket/Restaurant/Example-Cafe/store/1000002').source,
+    'magicpin'
+  )
+  assert.equal(linkKind('https://magicpin.com/uae/Dubai/x').source, 'magicpin')
+  assert.equal(linkKind('https://notmagicpin.in/x').kind, 'website')
+})
+
+test('links Tracy cannot read name their platform', () => {
+  for (const [raw, platform] of [
+    ['https://x.com/harbor_gym_example', 'X'],
+    ['https://mobile.twitter.com/harbor_gym_example', 'X'],
+    ['https://www.linkedin.com/company/harbor-gym-example', 'LinkedIn'],
+    ['https://www.threads.net/@harbor.gym.example', 'Threads'],
+    ['https://linktr.ee/harborgymexample', 'Linktree'],
+    ['wa.me/15550100', 'WhatsApp'],
+    ['https://api.whatsapp.com/send?phone=15550100', 'WhatsApp']
+  ])
+    assert.equal(unsupportedLinkOf(raw)?.platform, platform, raw)
+  assert.equal(unsupportedLinkOf('https://harbor-gym.example/'), null)
+  assert.equal(unsupportedLinkOf('https://notx.com/a'), null)
+  assert.equal(unsupportedLinkOf('not a link'), null)
 })
 
 test('social links and handles', () => {

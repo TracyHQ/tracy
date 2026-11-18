@@ -1,0 +1,4 @@
+{"id":"REG-PR-541-chain-full-backup-recovery","verdict":"PASS","commit":"6e5b7e6913f360aee971717a91c35cabcebb434a","ran_at":"2026-11-10T14:30:10.797Z","evidence":"REG-PR-541-chain-full-backup-recovery.log"}
+{"id":"REG-PR-541-chain-retry-timing","verdict":"PASS","commit":"6e5b7e6913f360aee971717a91c35cabcebb434a","ran_at":"2026-11-10T14:30:16.382Z","evidence":"REG-PR-541-chain-retry-timing.log"}
+{"id":"REG-PR-541-chain-action-wait","verdict":"FAIL","commit":"6e5b7e6913f360aee971717a91c35cabcebb434a","ran_at":"2026-11-10T14:35:02.982Z","evidence":"REG-PR-541-chain-action-wait.log"}
+{"id":"REG-PR-541-chain-action-wait","verdict":"PASS","commit":"6e5b7e6913f360aee971717a91c35cabcebb434a","ran_at":"2026-11-10T14:36:36.295Z","evidence":"REG-PR-541-chain-action-wait.log"}

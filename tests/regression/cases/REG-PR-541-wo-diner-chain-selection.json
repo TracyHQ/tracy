@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-541-wo-diner-chain-selection",
+  "kind": "feat",
+  "title": "JA Diner Joomla uses the gated step chain and unsupported variants cannot provision",
+  "pr": 541,
+  "area": "website-opportunities/template-selection",
+  "cms": ["jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the step-chain switch and database-backed site creation tests with TEST_DATABASE_URL pointing to an isolated test database."
+  ],
+  "expect": [
+    "JA Boxing J6 and JA Diner J6 start the step-chain frame with the owned research revision and preserve the selected quickstart in the host provision request.",
+    "The environment master switch blocks both candidates before any site, host job or brief run is created.",
+    "Published JA Kinetic J6 remains refused with STEP_CHAIN_OFF; JA Diner WordPress remains off."
+  ],
+  "selectors": {
+    "create": "POST /api/sites"
+  },
+  "fence": "Existing allow-list plus the existing STEP_CHAIN_ENABLED master switch",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/step-chain-switch.test.mjs",
+      "apps/tracy-web/test/step-chain-create.test.mjs"
+    ],
+    "tests": [
+      "the contract names the chain workflow and the candidate templates",
+      "a listed template runs the chain only while the master switch is on",
+      "a version or release prefix on the quickstart does not change the template",
+      "a template that is not listed, or no quickstart, never runs the chain",
+      "the enabled ja-boxing template starts the frame with the research revision as its brief",
+      "the enabled ja-diner template starts the frame with the research revision as its brief",
+      "the step chain is refused, with nothing claimed, for another account\u2019s revision, a template not enabled or the switch off"
+    ],
+    "needs": ["postgres"]
+  }
+}

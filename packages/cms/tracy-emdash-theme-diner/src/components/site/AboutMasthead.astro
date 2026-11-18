@@ -1,0 +1,19 @@
+---
+/** The page banner of the content pages (About, Offers): title and description over the entry's background. */
+import { mediaUrl } from '@/lib/media'
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  masthead: Record<string, any> | null
+  stamp: Stamp
+}
+const { masthead, stamp: $ma } = Astro.props
+const bg = mediaUrl(masthead?.background)
+---
+
+<div class="dn-masthead" style={bg ? `background-image:url('${bg}')` : undefined}>
+	<div class="dn-wrap">
+		<h1 class="dn-masthead-title" {...$ma('title')}>{masthead?.title}</h1>
+		<div class="dn-masthead-desc" {...$ma('description')}>{masthead?.description}</div>
+	</div>
+</div>

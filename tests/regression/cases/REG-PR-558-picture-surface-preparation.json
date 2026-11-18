@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-558-picture-surface-preparation",
+  "kind": "fix",
+  "title": "Picture preparation measures cold surface waits and shares exact concurrent downloads",
+  "pr": 558,
+  "area": "wo/pictures",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Exercise real picture preparation with a virtual five-minute success and timeout, then concurrent and repeated surface reads."
+  ],
+  "expect": [
+    "The entire surface wait is included in picture timing.code for success and failure.",
+    "Exact concurrent measurement inputs share one download; different identities stay independent.",
+    "Verified warm cache reuse avoids fetching; failed download remains unknown and retries later.",
+    "Unknown or missing template overlay measurement stays unknown in looker context, with strict raw-picture text and independent subject checks; verified absent and covering overlays keep their existing behavior."
+  ],
+  "selectors": {},
+  "fence": "Keep contract hash validation, unknown overlay fallback and normal retry; never infer overlays from missing evidence.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-pictures-frame-surface.test.mjs",
+      "apps/tracy-web/test/site-pictures-surface-timing.test.mjs"
+    ],
+    "tests": [
+      "a five-minute cold surface fetch is included in picture preparation code time",
+      "a five-minute cold surface failure is included in picture preparation code time",
+      "an unknown template overlay stays unknown while raw text and subject checks remain strict"
+    ],
+    "needs": []
+  }
+}

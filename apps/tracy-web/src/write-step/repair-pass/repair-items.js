@@ -5,6 +5,7 @@
 // comment turn, built by the popover's own turn builder (lib/comment-turn.js) once the comment requests door has numbered
 // them, so the agent's writes can cite each number. Pure but for the builder it is given.
 import { SENT_KINDS } from './repair-kinds.js'
+import { pictureInstruction } from './repair-picture-slots.js'
 import { quotedWords } from './repair-served-element.js'
 
 const MAX_SEEN = 300
@@ -42,7 +43,10 @@ function detailOf(fault) {
   if (fault.kind === 'glued-words' && measured)
     return ` The words that run together: "${measured}".${seen ? ` (seen: ${seen}).` : ''}`
   const said = measured || seen
-  return said ? ` (seen: ${said}).` : ''
+  const observations = fault.observations
+    ?.map((o) => `${o.width ?? 'unknown'}px/${o.side ?? 'unknown'}`)
+    .join(', ')
+  return `${said ? ` (seen: ${said}).` : ''}${observations ? ` Observed on ${observations}; these are measurements of one element.` : ''}`
 }
 
 /** Where the change goes: the exact slot (the alt slot for an alt fault), its block and its record, or the words quoted. */
@@ -60,13 +64,17 @@ function whereOf(fault) {
     return ` Where: ${slot}${fault.block ? ` (block ${fault.block})` : ''}${inRecord}.`
   }
   if (fault.block) return ` Where: block ${fault.block}${inRecord}.`
+  if (fault.target) return ` Where: the verified measured element ${fault.target.path} on this page.`
+  // A control names no slot: the element the host measured, and where it leads.
+  if (fault.selector)
+    return ` Where: the element ${fault.selector}${fault.href ? ` that links to ${fault.href}` : ''} on this page.`
   if (quoted) return ` Where: the element showing "${quoted}" on this page.`
   return ' Where: on this page, as the note describes.'
 }
 
 /** The words a person would type in the popover for this fault: what to do, what was seen, and where. One paragraph. */
 export const changeSentence = (fault) => {
-  const base = SENT_KINDS[fault.kind]()
+  const base = pictureInstruction(fault) ?? SENT_KINDS[fault.kind]()
   return `${base}${detailOf(fault)}${whereOf(fault)}`.replace(/\s+/g, ' ').trim()
 }
 
@@ -77,12 +85,11 @@ export const changeSentence = (fault) => {
  */
 function levelsOf(fault) {
   const record = recordOf(fault.slot) ?? recordOf(fault.block)
+  const writable = !fault.altBlocked
   return [
-    ...(fault.slot ? [{ kind: 'field', label: slotLabelOf(fault), writable: true }] : []),
-    ...(fault.block ? [{ kind: 'block', label: fault.block, writable: true }] : []),
-    ...(record
-      ? [{ kind: 'record', label: `${record.kind} ${record.id}`, native: record, writable: true }]
-      : [])
+    ...(fault.slot ? [{ kind: 'field', label: slotLabelOf(fault), writable }] : []),
+    ...(fault.block ? [{ kind: 'block', label: fault.block, writable }] : []),
+    ...(record ? [{ kind: 'record', label: `${record.kind} ${record.id}`, native: record, writable }] : [])
   ]
 }
 
@@ -95,7 +102,7 @@ function levelsOf(fault) {
  */
 export function commentItem(fault, { url, element = null, located = null }) {
   const levels = levelsOf(fault)
-  const answer = located?.answer ?? null
+  const answer = fault.altBlocked ? null : (located?.answer ?? null)
   const measured = typeof fault.measured === 'string' ? fault.measured : ''
   return {
     page: fault.page,
@@ -105,14 +112,16 @@ export function commentItem(fault, { url, element = null, located = null }) {
       url,
       selector: element?.selector ?? '',
       label: fault.slot ?? fault.block ?? fault.kind,
-      text: element ? element.text || (element.image ? '' : measured) : measured,
+      text: element ? element.text || (element.image || fault.selector ? '' : measured) : measured,
       marks: element?.marks ?? [],
       tag: element?.tag ?? '',
       image: element?.image ?? null
     },
     locate: answer ?? { status: 'unchecked', levels },
     locateFrom: answer ? 'content.locate' : 'fault',
-    ...(answer ? {} : { locateProblem: located?.problem ?? 'content.locate was not asked' })
+    ...(answer
+      ? {}
+      : { locateProblem: fault.altBlocked ?? located?.problem ?? 'content.locate was not asked' })
   }
 }
 
@@ -121,7 +130,7 @@ export function commentItem(fault, { url, element = null, located = null }) {
  * @param {(comment: object) => string} buildCommentTurn
  */
 export function pageTurn(buildCommentTurn, items, numbers) {
-  return buildCommentTurn({
+  const comments = buildCommentTurn({
     numbered: true,
     items: items.map((item, i) => ({
       n: numbers[i],
@@ -131,4 +140,5 @@ export function pageTurn(buildCommentTurn, items, numbers) {
       locate: item.locate
     }))
   })
+  return `${comments}\n\nThis is an automated site build with no person waiting in this session. Do not ask the user questions or wait for uploads or approval. Use the existing business assets; when none can replace a demo picture, remove or hide it only when the measured frame permits hiding and a supported site door allows it. Preserve frames that cannot be hidden and report their unresolved pictures. For contract writes, read the affected content first and follow its writable next; use a fresh inspect revision as expected_revision. After REVISION_STALE, inspect again and reconsider the affected changes before applying; never replay a stale revision. Text slots take plain content, without HTML markup or control characters; preserve the declared slot limits. After SLOT_IMAGE_INVALID, prepare the image to the native slot fit before retrying. For text readability, use only the freshly verified element and its clean words and provenance. Pass its exact element selector as page.look style.selector and look.set target.selector; do not substitute a text occurrence. Widths and themes are observations of that element, not occurrence numbers. Never derive a target nth value from a finding or comment number. If a fresh lookup cannot resolve that same element uniquely, leave it unresolved; do not widen the target to the body, another equal text or shared chrome. Preserve the site navigation and required controls. If a site door returns CONFIRM_FIRST or another refusal requiring customer consent, do not ask its question, retry with confirm:true, or bypass the refusal through files or another door. Record that change as blocked and continue with independent repairs. If a supported change is unavailable, record what remains and finish the turn. Never invent business facts or pictures.`
 }

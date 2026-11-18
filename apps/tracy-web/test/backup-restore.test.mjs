@@ -11,6 +11,7 @@ import { mintSession } from '../src/lib/session.js'
 import { databaseOf, withDatabases } from '../src/sites/backups.js'
 import { resetReconcileThrottle } from '../src/sites/operations.js'
 import { dbSitesResolver } from '../src/sites/resolver.js'
+import { httpSiteDoor } from '../src/write-step/bench-site-door.js'
 import { fileDb } from './_db.mjs'
 
 const db = fileDb()
@@ -646,3 +647,86 @@ test(
     assert.equal((await operations(pool))[0].action, 'reset')
   }
 )
+
+test(
+  'chain recovery uses the real owner backup and restore routes with a verified full point',
+  opts,
+  async () => {
+    const { pool } = db
+    await site(pool)
+    const host = fakeHost({
+      'webroot-history': HISTORY,
+      'webroot-restore-everything': EVERYTHING_OK,
+      'webroot-commit': RESTORE_COMMIT
+    })
+    const { send } = harness(pool, host.fetchImpl)
+    const door = httpSiteDoor({
+      baseUrl: 'http://tracy.test',
+      secret: env.SESSION_SECRET,
+      email: 'owner@x.y',
+      platform: 'wordpress',
+      templateOf: async () => null,
+      fetchImpl: (url, init) =>
+        send(
+          init.method,
+          new URL(url).pathname,
+          init.headers.cookie,
+          init.body ? JSON.parse(init.body) : undefined
+        ),
+      sleep: async () => {}
+    })
+    const point = await door.recoveryPoint(SITE)
+    assert.equal(point.version, 3, 'the route proves v3 full; v2 is files only and v1 is missing its dump')
+    assert.equal(point.sha, S3)
+    assert.equal(point.database.state, 'full')
+    assert.equal(point.database.sha256, DB3)
+    const restored = await door.restorePoint(SITE, point, 'chain-recovery-route')
+    assert.equal(
+      restored.ok,
+      true,
+      'the real restore route accepts confirm restore and settles the host proof'
+    )
+    const again = await door.restorePoint(SITE, point, 'chain-recovery-route')
+    assert.equal(again.ok, true)
+    assert.equal(again.operationId, restored.operationId)
+    assert.equal(host.calls.filter((c) => c.kind === 'webroot-restore-everything').length, 1)
+    const [operation] = await operations(pool)
+    assert.equal(operation.status, 'succeeded')
+    assert.equal(operation.target_sha, S3)
+    assert.equal(operation.resulting_sha, HEAD)
+  }
+)
+
+test('pending backup history resumes one authorized host job across two door deadlines', opts, async () => {
+  const { pool } = db
+  await site(pool)
+  let clock = Date.now()
+  const host = fakeHost(
+    { 'webroot-history': HISTORY },
+    {
+      'webroot-history': (job) => {
+        if (job.polls <= 2) {
+          clock += 45_001
+          return 'running'
+        }
+        return 'done'
+      }
+    }
+  )
+  const { cookieFor, send } = harness(pool, host.fetchImpl, () => clock)
+  const owner = await cookieFor('owner@x.y')
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const pending = await send('GET', `/api/sites/${SITE}/backups`, owner)
+    assert.equal(pending.status, 202)
+    assert.equal((await pending.json()).code, 'FLEET_JOB_PENDING')
+  }
+  const denied = await send('GET', `/api/sites/${SITE}/backups`, await cookieFor('stranger@x.y'))
+  assert.equal(denied.status, 403)
+  const full = await send('GET', `/api/sites/${SITE}/backups`, owner)
+  assert.equal(full.status, 200)
+  const body = await full.json()
+  assert.equal(body.may.restoreEverything, true)
+  assert.equal(body.rows.find((row) => row.version === 3).database.sha256, DB3)
+  assert.equal(host.calls.filter((call) => call.kind === 'webroot-history').length, 1)
+  assert.equal(host.jobs.get('job-1').polls, 3)
+})

@@ -88,11 +88,15 @@ export function judgeListRows(report, measures, { pagesOf } = {}) {
       .filter((l) => keys.has(l.key))
       .map((l) => words(l.ordered))
       .filter(usable)
-    // Words other blocks on this page wrote: shared by them, they cannot tell this list from theirs.
+    // Words other blocks on this page wrote: shared by them, they cannot tell this list from theirs. A line whose block no
+    // page names (a menu item: its title prints in the menus of every page) may print on any page (15/11/2026, Central
+    // Padel: the one kept person's name was also a menu title, and the footer menu of four pages was taken for the team).
+    const printsOn = (key, path) => {
+      const on = pagesOf?.get(entityOf(key))
+      return !pagesOf || !on || on.has(path)
+    }
     const othersOn = (path) =>
-      lines
-        .filter((l) => entityOf(l.key) !== entity && (!pagesOf || pagesOf.get(entityOf(l.key))?.has(path)))
-        .map((l) => words(l.ordered))
+      lines.filter((l) => entityOf(l.key) !== entity && printsOn(l.key, path)).map((l) => words(l.ordered))
     const found = each(measures)
       .filter((m) => !printedOn || printedOn.has(pathOfMeasure(m.path)))
       .flatMap((m) => {

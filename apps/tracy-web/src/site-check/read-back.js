@@ -71,6 +71,19 @@ function judge(line, held) {
       result: 'failed',
       failure: { ...base, reason: `The plugin refused this slot: ${line.reason}` }
     }
+  // A slot that left the stored field with its row is listed by inspect under `removedSlots`, not `slots`: what a hidden
+  // line ordered, and what a line meant to be written never may.
+  if (held.removed)
+    return line.status === 'hidden'
+      ? { result: 'match' }
+      : {
+          result: 'differs',
+          failure: {
+            ...base,
+            measured: 'removed',
+            reason: 'The slot left the stored field with its row, so what was ordered is not on the site'
+          }
+        }
   if (!held.found)
     return {
       result: 'unread',
@@ -87,6 +100,10 @@ function judge(line, held) {
           result: 'differs',
           failure: { ...base, reason: 'The plan hides this and what holds it is still published' }
         }
+  // A hide no kept page prints keeps its words on purpose (hide-lines.js `unshown`): a visitor never reads them. Before
+  // (dev, JA Diner 16/11/2026) four category titles printed only on dropped blog pages, and a masthead background the kit
+  // read on no page, were five read-back blocks for words nobody sees.
+  if (line.status === 'hidden' && line.printed === false) return { result: 'match' }
   if (line.status === 'hidden')
     return held.value.trim() === ''
       ? { result: 'match' }
@@ -141,6 +158,8 @@ async function run({ report, read }) {
       ]
     }
   const slots = new Map((Array.isArray(reading.slots) ? reading.slots : []).map((s) => [s?.key, s]))
+  const removedSlots =
+    reading.removedSlots && typeof reading.removedSlots === 'object' ? reading.removedSlots : {}
   const pages = pageIndex(reading.pages)
   const reads = tally()
   const lines = {}
@@ -163,6 +182,7 @@ async function run({ report, read }) {
     const slot = slots.get(line.key)
     return {
       found: Boolean(slot),
+      removed: !slot && typeof line.key === 'string' && Object.hasOwn(removedSlots, line.key),
       page: pages.get(slot?.entity) ?? null,
       value: slot?.current ?? null,
       why: 'inspect',

@@ -484,6 +484,15 @@ export function validateContract(c, sourceRoot) {
 }
 
 const CONVERTED = /\.html?$/i
+// pnpm reads the patch files pnpm-workspace.yaml names (patchedDependencies) on every install, and
+// `pnpm install --frozen-lockfile` stops on a missing one, so a template that has patches/ ships it.
+// Every contract generator passes its include list through here: `patches` goes in after
+// pnpm-workspace.yaml when the folder exists and is not listed yet, and nowhere otherwise.
+export function withPatches(include, root = '.') {
+  if (include.includes('patches') || !existsSync(path.join(root, 'patches'))) return include
+  const at = include.indexOf('pnpm-workspace.yaml')
+  return at < 0 ? [...include, 'patches'] : [...include.slice(0, at + 1), 'patches', ...include.slice(at + 1)]
+}
 export function initContract(sourceRoot, config = {}) {
   const files = filesUnder(sourceRoot).map((p) => ({
     path: p,
@@ -527,7 +536,7 @@ export function initContract(sourceRoot, config = {}) {
     reviews,
     capabilities: list(config.forms?.bindings).length ? ['i18n', 'forms'] : ['i18n'],
     distribution: {
-      include: [
+      include: withPatches([
         'package.json',
         'pnpm-lock.yaml',
         'pnpm-workspace.yaml',
@@ -546,7 +555,7 @@ export function initContract(sourceRoot, config = {}) {
         'PROVENANCE.md',
         'artifact.json',
         '.env.example'
-      ],
+      ]),
       required: ['public/favicon.svg', 'seed/seed.json', 'seed/media-map.json']
     }
   }

@@ -101,12 +101,12 @@ function usesVietnameseBodyFont(htmlLang) {
 /**
  * The `<link>` tags for the body font: Be Vietnam Pro for Vietnamese pages, General Sans for every
  * other language. Only the font the page actually uses is fetched. The matching CSS is the
- * `:lang(vi)` rule right after `body` in the style block.
+ * `:lang(vi)` rule right after `body` in the style block. Exported with `SHELL_TOKENS` for the demo share page.
  *
  * @param {string} htmlLang - the already-validated `<html lang>` tag.
  * @returns {string} preconnect + stylesheet tags.
  */
-function bodyFontLinks(htmlLang) {
+export function bodyFontLinks(htmlLang) {
   const gstatic = '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
   if (usesVietnameseBodyFont(htmlLang)) {
     return `${gstatic}
@@ -117,6 +117,42 @@ function bodyFontLinks(htmlLang) {
 ${gstatic}
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f%5B%5D=general-sans@300,400,500,600&display=swap">`
 }
+
+/**
+ * The token block of the page shell: every variable of `docs/references/page-shell-tokens.md`, light then dark
+ * (`prefers-color-scheme`). Exported for the one Tracy page that cannot use the shell's centred card layout, the share
+ * page of a Website Opportunities demo (`opportunities-build/demo-look-page.js`), so the tokens are declared in one
+ * place still. No comments inside: see the shell's file comment.
+ */
+export const SHELL_TOKENS = `:root{
+  --radius:0.625rem;
+  --radius-md:calc(var(--radius) - 2px);
+  --radius-xl:calc(var(--radius) + 4px);
+  --background:oklch(1 0 0);--foreground:oklch(0.145 0 0);
+  --card:oklch(1 0 0);--card-foreground:oklch(0.145 0 0);
+  --primary:oklch(0.565 0.136 37.4);--primary-foreground:oklch(0.985 0 0);
+  --ring:oklch(0.588 0.136 37.4);
+  --secondary:oklch(0.97 0 0);--secondary-foreground:oklch(0.205 0 0);
+  --muted:oklch(0.97 0 0);--muted-foreground:oklch(0.556 0 0);
+  --accent:oklch(0.97 0 0);--accent-foreground:oklch(0.205 0 0);
+  --destructive:oklch(0.577 0.245 27.325);
+  --success:oklch(0.696 0.17 162.48);
+  --border:oklch(0.922 0 0);--input:oklch(0.922 0 0);
+  --shadow-xs:0 1px 2px 0 rgb(0 0 0 / .05);
+  --shadow-sm:0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --background:oklch(0.175 0 0);--foreground:oklch(0.985 0 0);
+    --card:oklch(0.195 0 0);--card-foreground:oklch(0.985 0 0);
+    --secondary:oklch(0.269 0 0);--secondary-foreground:oklch(0.985 0 0);
+    --muted:oklch(0.269 0 0);--muted-foreground:oklch(0.708 0 0);
+    --accent:oklch(0.269 0 0);--accent-foreground:oklch(0.985 0 0);
+    --destructive:oklch(0.704 0.191 22.216);
+    --border:oklch(1 0 0 / 14%);--input:oklch(1 0 0 / 15%);
+  }
+}
+`
 
 /**
  * The shared document shell.
@@ -145,35 +181,7 @@ ${bodyFontLinks(htmlLang)}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400&display=swap">
 <title>${escapeHtml(title)}</title>
 <style>
-:root{
-  --radius:0.625rem;
-  --radius-md:calc(var(--radius) - 2px);
-  --radius-xl:calc(var(--radius) + 4px);
-  --background:oklch(1 0 0);--foreground:oklch(0.145 0 0);
-  --card:oklch(1 0 0);--card-foreground:oklch(0.145 0 0);
-  --primary:oklch(0.565 0.136 37.4);--primary-foreground:oklch(0.985 0 0);
-  --ring:oklch(0.588 0.136 37.4);
-  --secondary:oklch(0.97 0 0);--secondary-foreground:oklch(0.205 0 0);
-  --muted:oklch(0.97 0 0);--muted-foreground:oklch(0.556 0 0);
-  --accent:oklch(0.97 0 0);--accent-foreground:oklch(0.205 0 0);
-  --destructive:oklch(0.577 0.245 27.325);
-  --success:oklch(0.696 0.17 162.48);
-  --border:oklch(0.922 0 0);--input:oklch(0.922 0 0);
-  --shadow-xs:0 1px 2px 0 rgb(0 0 0 / .05);
-  --shadow-sm:0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
-}
-@media (prefers-color-scheme:dark){
-  :root{
-    --background:oklch(0.175 0 0);--foreground:oklch(0.985 0 0);
-    --card:oklch(0.195 0 0);--card-foreground:oklch(0.985 0 0);
-    --secondary:oklch(0.269 0 0);--secondary-foreground:oklch(0.985 0 0);
-    --muted:oklch(0.269 0 0);--muted-foreground:oklch(0.708 0 0);
-    --accent:oklch(0.269 0 0);--accent-foreground:oklch(0.985 0 0);
-    --destructive:oklch(0.704 0.191 22.216);
-    --border:oklch(1 0 0 / 14%);--input:oklch(1 0 0 / 15%);
-  }
-}
-:root{--dsw-specific-sidebar-fill:var(--background);--dsw-alias-label-primary:var(--foreground)}
+${SHELL_TOKENS}:root{--dsw-specific-sidebar-fill:var(--background);--dsw-alias-label-primary:var(--foreground)}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;min-height:100dvh;display:flex;padding:calc(32px + env(titlebar-area-height,0px)) 20px 32px;

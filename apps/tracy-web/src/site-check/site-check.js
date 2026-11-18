@@ -18,6 +18,7 @@ import { GroupUnmeasured } from './group-unmeasured.js'
 import { kitVersionGroup } from './kit-version.js'
 import { PAGE_CHECK_GROUPS } from './page-groups.js'
 import { baselineAtRoutes, hasRouteTable, pageSlugGroup } from './page-slug.js'
+import { reachablePagesGroup, iconGlyphsGroup } from './reachable-pages.js'
 import { readBackGroup } from './read-back.js'
 import { WRITE_FINDING_GROUPS } from './write-findings.js'
 import { writtenNotPrintedGroup } from './written-not-printed.js'
@@ -36,8 +37,14 @@ export const ROUTE_GROUPS = [pageSlugGroup]
 /**
  * The groups that read pages as a visitor's browser gets them, with no browser: they run when a page reader is given.
  * `alt-matches-picture` also needs step 8's manifest (`pictures`); without it, it is unmeasured when pictures were written.
+ * `reachable-pages` and `icon-glyphs` (reachable-pages.js) open every page a kept page links to and read its icons.
  */
-export const PAGE_READ_GROUPS = [writtenNotPrintedGroup, altMatchesPictureGroup]
+export const PAGE_READ_GROUPS = [
+  writtenNotPrintedGroup,
+  altMatchesPictureGroup,
+  reachablePagesGroup,
+  iconGlyphsGroup
+]
 
 const READ_OPERATIONS = new Set(['inspect', 'read'])
 /** Actions that only read by what they are (the plugin marks `content.get` and `content.list` as writing nothing) and take no operation. */
@@ -122,7 +129,7 @@ const notGreenAfter = (status, stoppedBy) => (stoppedBy && passes(status) ? stop
 /**
  * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
  *   pageHtml?: (path: string) => Promise<string | null>, baseline?: object | null, kit?: object | null, pictures?: object | null,
- *   allGroups?: boolean, pages?: string[] | null }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
+ *   allGroups?: boolean, pages?: string[] | null, brief?: object | null }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
  *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`).
  *   `pageHtml` reads a page's markup: without it `written-not-printed` does not run. A `kit` adds `kit-version` first.
  *   `allGroups` runs the groups a red or unmeasured group would stop; each says `ranDespite`, and the status stays what the
@@ -138,6 +145,7 @@ export async function runSiteCheck({
   baseline = null,
   kit = null,
   pictures = null,
+  brief = null,
   groups = [
     ...(kit ? KIT_GROUPS : []),
     ...SITE_CHECK_GROUPS,
@@ -150,6 +158,18 @@ export async function runSiteCheck({
   pages = null
 }) {
   const siteKey = report.site
+  // One read snapshot per check, including rejected reads. A later post-write check starts fresh.
+  const html = new Map()
+  const sharedPageHtml = pageHtml
+    ? (path) => {
+        if (!html.has(path))
+          html.set(
+            path,
+            Promise.resolve().then(() => pageHtml(path))
+          )
+        return html.get(path)
+      }
+    : undefined
   const context = {
     report,
     siteKey,
@@ -157,11 +177,13 @@ export async function runSiteCheck({
     host,
     // Only these kept pages are opened by the host (step 9b's check after a turn, joined by lib/scoped-site-check.js).
     pages,
-    pageHtml,
+    pageHtml: sharedPageHtml,
     // Measured at the demo's addresses; the kept pages answer at the plan's now (page-slug.js).
     baseline: baselineAtRoutes(baseline, report.routes),
     kit,
     pictures,
+    // The research brief the site was built from: the off-site links it gives a button (host-pages.js).
+    brief,
     read: readsOnly(door, siteKey)
   }
   const results = []

@@ -1,0 +1,19 @@
+✔ import pages validate detection, method selection, Back and Review edits (19233.791583ms)
+✔ failed import detection leaves every platform unselected (7009.890917ms)
+✔ wizard renders an import handover and a failed build (17025.620916ms)
+✔ creation workspace: a handover clears the resume pointer (the wizard filed the build, #1664) (7568.919583ms)
+✔ creation workspace: a handover clears the resume pointer (the host filed the build, #1664) (8289.636292ms)
+✔ creation workspace: a manual handover retry clears the resume pointer (#1664) (8154.518541ms)
+✔ a read still going when the tab closed is followed again on reopen (C3) (7970.163667ms)
+✔ creating from an existing site keeps the ready screen until the new workspace is opened (10338.800416ms)
+✔ Customize answers that did not all go in: the console said it was writing them, and the ready screen stays to say so (8257.739ms)
+✔ Copy details works without the Clipboard API and after a denied write, restoring focus (11632.033042ms)
+✔ a failed import marks its operation failed without claiming all steps completed (#392) (10779.774459ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 131661.559167

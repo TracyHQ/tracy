@@ -9,6 +9,7 @@ import path from 'node:path'
 import { assignDoor, saveModels, saveProvider } from '../src/lib/llm-store.js'
 import { looksMissingOf } from '../src/lib/template-kit/reader.js'
 import { startBenchRun } from '../src/site-planner/bench-control.js'
+import { PLANNER_BRIEF_VIEW } from '../src/site-planner/brief-view.js'
 import { SITE_PLANNER_PROVIDER } from '../src/site-planner/door.js'
 import { openKit } from '../src/site-planner/kit-source.js'
 import { brief } from './_site-plan-check-inputs.mjs'
@@ -88,6 +89,10 @@ export async function startRun(pool, over = {}) {
     ...over
   })
   assert.equal(started.ok, true, JSON.stringify(started))
+  const {
+    rows: [frozen]
+  } = await pool.query('select harness from site_planner_run where id=$1', [started.run.id])
+  assert.equal(frozen.harness.briefView, PLANNER_BRIEF_VIEW)
   return started.run
 }
 

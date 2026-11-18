@@ -39,7 +39,13 @@ const isText = (x) => typeof x === 'string' && x.trim() !== ''
  * @param {{ fingerprint: object, index: { expected: Map<string, object> } }} context
  */
 export function assembleCopy(answer, { fingerprint, index }) {
-  const { version: _version, fingerprint: _fingerprint, slots, ...rest } = answer
+  const { version: _version, fingerprint: _fingerprint, slots: given, ...rest } = answer
+  // A slot the plan neither writes nor hides is never the writer's (W02 "unknown slot"): it is left out here rather than
+  // sent back for a fix round. Dev, BXR London 16/11/2026: the copy step ended "failed, best version used" after two fix
+  // rounds on one trainer's name the plan had not decided (block-178.9), 9 minutes of a 38 minute build.
+  const slots = Array.isArray(given)
+    ? given.filter((s) => !isObject(s) || index.expected.has(s.slot) || Boolean(index.hidden?.has(s.slot)))
+    : given
   let all = slots
   if (slots === undefined || Array.isArray(slots)) {
     const written = new Set(arr(slots).map((s) => (isObject(s) ? s.slot : null)))

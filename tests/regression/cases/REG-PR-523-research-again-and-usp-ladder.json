@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-523-research-again-and-usp-ladder",
+  "kind": "feat",
+  "title": "Research again researches a place from scratch, and the business reading keeps a grounded USP theme by a ladder",
+  "pr": 523,
+  "area": "website-opportunities/research-again",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the research-again plan, research-again and business-reading test files of apps/tracy-web one at a time with --test-concurrency=1 and TEST_DATABASE_URL set.",
+    "S2: Run the business-reading-usp-themes and domain-hero-usp test files of packages/wo/website-opportunities."
+  ],
+  "expect": [
+    "S1: every test reports ok: a researched place with every source fresh still gets every part in run with reason again, and a Research again from scratch calls the reading model again although the held reading matches its texts and version.",
+    "S2: every test reports ok: the ladder keeps two-review themes first, else one-review, else owner words; a quote naming a review-only person drops only that quote; uspThemesDropped records why; the hero accepts one-review and owner themes on their own rung."
+  ],
+  "selectors": {
+    "file": "packages/wo/website-opportunities/src/research-again.js"
+  },
+  "evidence": "On dev after Research again the logo kept readsAs null from an older pass and the reading kept uspThemes null with uspThemesReason rejected, while the same model and reviews kept a theme locally",
+  "fence": "The plan's fromScratch branch and the executor's held-reading and logo force on a whole from-scratch run; the ladder in checkUspThemesOf and the basis rungs in checkUspTheme",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-research-again-plan.test.mjs",
+      "apps/tracy-web/test/website-opportunities-research-again.test.mjs",
+      "apps/tracy-web/test/website-opportunities-business-reading.test.mjs",
+      "packages/wo/website-opportunities/test/business-reading-usp-themes.test.mjs",
+      "packages/wo/website-opportunities/test/domain-hero-usp.test.mjs"
+    ],
+    "tests": [
+      "from scratch, every part runs again whatever its age; only parts this server cannot run are kept",
+      "a researched place with every source fresh still gets every part from scratch",
+      "a Research again from scratch reads the business again although its texts and version are unchanged",
+      "rung 2: with no theme two reviews share, a theme one review states is kept with basis one-review",
+      "rung 3: with no review theme, the business's own words carry it, with basis owner",
+      "a quote naming a review-only person drops that quote only; the theme stands on what is left",
+      "the reading records the dropped themes, and keeps uspThemesReason only when nothing stands",
+      "a theme the reading kept on one review or on the business own words passes on its own rung only"
+    ]
+  }
+}

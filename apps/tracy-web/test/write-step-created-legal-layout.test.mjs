@@ -3,6 +3,7 @@
 // print. Every business, row and layout here is invented.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { readBackGroup } from '../src/site-check/read-back.js'
 import { pagesKit, pagesPlan, pagesSite, runOn } from './_write-step-pages.mjs'
 
 // The template's content pages: articles under a category item whose file prints a booking bar.
@@ -80,3 +81,32 @@ test('a route an earlier run gave the content pages file takes it off on the rer
   assert.equal(layoutOf(s), undefined)
   assert.deepEqual(again.report.guard.findings, [])
 })
+
+for (const routed of [false, true]) {
+  test(`a ${routed ? 'category-routed' : 'direct'} legal page prints its body once and upgrades an older receipt`, async () => {
+    const s = routed ? site() : pagesSite()
+    const options = routed ? { kit: kit(), over: { plan: plan() } } : {}
+    const first = await runOn(s, options)
+    const article = s.rows('article').find((row) => row.note === 'tracy-page:legal:privacy')
+    assert.equal(JSON.parse(article.attribs).show_intro, '0')
+    const check = async (report) =>
+      readBackGroup.run({ report, read: (action, params) => s.door.apply({ siteKey: 's', action, params }) })
+    assert.equal((await check(first.report)).lines['legal:privacy:intro'], 'match')
+    const attrs = JSON.parse(article.attribs)
+    delete attrs.show_intro
+    s.records.set(`article-${article.id}`, {
+      ...article,
+      attribs: JSON.stringify({ ...attrs, custom: 'kept' })
+    })
+    const older = structuredClone(first.report)
+    older.slots = older.slots.filter((line) => line.slot !== 'legal:privacy:intro')
+    s.calls.length = 0
+    const again = await runOn(s, { ...options, last: older })
+    const updated = JSON.parse(s.records.get(`article-${article.id}`).attribs)
+    assert.equal(updated.show_intro, '0')
+    assert.equal(updated.custom, 'kept')
+    assert.equal((await check(again.report)).lines['legal:privacy:intro'], 'match')
+    assert.equal(s.batches().length, 0, 'existing native rows are reused')
+    assert.deepEqual(again.report.guard.findings, [])
+  })
+}

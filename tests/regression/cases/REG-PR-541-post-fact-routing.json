@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-541-post-fact-routing",
+  "kind": "fix",
+  "title": "Original post facts retain article roles and source evidence in brief routing",
+  "pr": 541,
+  "area": "wo/brief",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the brief item routing tests on builder-produced briefs and the current brief schema."],
+  "expect": [
+    "Original post facts route to article title, lead and date without changing their source evidence.",
+    "Every item kind produced by the current brief schema and builder has roles or an explicit reason.",
+    "Unknown item kinds still appear as unrouted instead of being silently accepted."
+  ],
+  "selectors": {},
+  "fence": "A route maps existing facts to existing article roles; it creates no content, photo, date or source evidence.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/brief-item-routes.test.mjs"
+    ],
+    "tests": [
+      "original post facts route to article copy and dates without losing their source evidence",
+      "no item of a fictional brief is without a role or a reason",
+      "a kind with no row is reported as unrouted",
+      "every kind the brief schema and the builder can produce has a row"
+    ],
+    "needs": []
+  }
+}

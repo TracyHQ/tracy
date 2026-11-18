@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-574-social-row-icon",
+  "kind": "fix",
+  "title": "The plan check fails a kept social row whose icon cannot draw its linked profile (R26)",
+  "pr": 574,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm both tests named in run.tests report ok."
+  ],
+  "expect": [
+    "On the released JA Boxing kit, block-171.10 (a twitter icon) linked to a TikTok profile fails R26 with a message to hide the row or link a twitter profile.",
+    "A twitter or x profile on that row, a YouTube profile on the telegram row (the family can draw fa-youtube), a hidden link and a hidden block all pass R26."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-plan-check-social-icons.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "R26 fails a twitter row linked to a profile the template has no icon for, and says how to fix the plan",
+      "R26 passes a row of its own network, a network the icon family can draw, and a row that is not shown"
+    ]
+  }
+}

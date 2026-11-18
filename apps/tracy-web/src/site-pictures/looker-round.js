@@ -28,16 +28,21 @@ export function withLookerRule(result, rule, doc) {
  * and its store's saveRound finishes every checked round before it is written.
  */
 export function withLooker(step) {
+  // The ready state of every run the loop plays now, by run id: up to BENCH_QUEUE.concurrency runs side by side (#633).
+  // Each is let go when its run's play ends (release); a run claimed again replaces its own entry, and the end of an
+  // older play of the same run never removes the newer one's.
   const readyOf = new Map()
   const { store } = step
   return Object.freeze({
     ...step,
     prepare: async (deps, row) => {
       const ready = await step.prepare(deps, row)
-      // One run at a time (BENCH_QUEUE): the last prepared run is the only one the loop plays.
-      readyOf.clear()
       if (ready.ok) readyOf.set(row.id, { ready, row })
       return ready
+    },
+    release: (row) => {
+      if (readyOf.get(row.id)?.row === row) readyOf.delete(row.id)
+      step.release?.(row)
     },
     store: Object.freeze({
       ...store,

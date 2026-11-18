@@ -246,8 +246,9 @@ test('warnings alone never turn the check red, and are counted', async () => {
     ['logo-readable', 'broken-sentence']
   )
   assert.ok(check.groups.every((g) => g.status !== 'red'))
-  // 14, not 13: emphasis-codes-left (card N) finds no emphasis codes written into an HTML slot here, so it is not applicable (decision 27).
-  assert.deepEqual(check.counts, { block: 0, warn: 1, unmeasured: 2, notApplicable: 14 })
+  // 15: emphasis-codes-left (card N) finds no emphasis codes written into an HTML slot here, and slot-disputes no dispute, so both
+  // are not applicable (decision 27).
+  assert.deepEqual(check.counts, { block: 0, warn: 1, unmeasured: 2, notApplicable: 15 })
 })
 
 test('when the host answers no page measures, the groups that need them are unmeasured and dead pages are still found', async () => {
@@ -469,6 +470,138 @@ test('an orphan card row and a blank footer column are found once per page, with
   )
 })
 
+test('only complete associated final-page evidence explains an orphan row; raw geometry and unproven rows remain', () => {
+  const row = { selector: 'div.items-row', perRow: 3, lastRow: 1, rows: 2, gap: 960 }
+  const owner = 'div.com-content-category-blog'
+  const items = `${owner} > .com-content-category-blog__items`
+  const navigation = `${owner} > .com-content-category-blog__navigation`
+  const pagination = {
+    schemaVersion: 'tracy-final-pagination/v1',
+    association: {
+      owner,
+      items,
+      grid: `${items} > div.items-row`,
+      navigation,
+      pager: `${navigation} > .com-content-category-blog__pagination > nav[aria-label] > .pagination > ul.pagination`
+    },
+    listCount: 1,
+    pagerCount: 1,
+    pages: [
+      { number: 1, current: false, href: '/donations' },
+      { number: 2, current: true, href: null }
+    ],
+    next: { disabled: true, href: null },
+    end: { disabled: true, href: null }
+  }
+  const measure = (extra) => [{ path: '/donations?start=9', width: 1440, orphanRows: [{ ...row, ...extra }] }]
+  const proven = measure({ pagination })
+  assert.deepEqual(findOrphanRows(proven), [])
+  const direct = {
+    ...pagination,
+    association: {
+      ...pagination.association,
+      pager: `${navigation} > .com-content-category-blog__pagination > nav[aria-label] > ul.pagination`
+    }
+  }
+  assert.deepEqual(findOrphanRows(measure({ pagination: direct })), [])
+  assert.deepEqual(
+    proven[0].orphanRows[0],
+    { ...row, pagination },
+    'the measured row is never removed or mutated'
+  )
+  const invalid = [
+    {},
+    { intentional: 'final-paginated-results' },
+    { pagination: { intentional: 'final-paginated-results' } },
+    ...[
+      `${navigation} > .com-content-category-blog__pagination > nav[aria-label] > .unsupported > ul.pagination`,
+      `${navigation} > .com-content-category-blog__pagination nav[aria-label] ul.pagination`,
+      `${navigation} > .com-content-category-blog__pagination > nav[aria-label] > .pagination > .extra > ul.pagination`
+    ].map((pager) => ({
+      pagination: { ...pagination, association: { ...pagination.association, pager } }
+    })),
+    {
+      pagination: {
+        ...pagination,
+        association: { ...pagination.association, grid: `${items} > div.other-grid` }
+      }
+    },
+    { pagination: { ...pagination, listCount: 2 } },
+    { pagination: { ...pagination, pagerCount: 2 } },
+    { pagination: { ...pagination, next: { disabled: false, href: '/donations?start=18' } } },
+    { pagination: { ...pagination, end: undefined } },
+    {
+      pagination: {
+        ...pagination,
+        pages: [...pagination.pages, { number: 3, current: false, href: '/donations?start=18' }]
+      }
+    },
+    { pagination: { ...pagination, pages: [{ number: 2, current: true, href: null }] } },
+    {
+      pagination: {
+        ...pagination,
+        pages: [{ number: 1, current: false, href: '/events' }, pagination.pages[1]]
+      }
+    },
+    {
+      pagination: {
+        ...pagination,
+        pages: [{ number: 1, current: false, href: '/donations?start=9' }, pagination.pages[1]]
+      }
+    },
+    {
+      pagination: {
+        ...pagination,
+        pages: [{ number: 1, current: false, href: '//elsewhere.invalid/donations' }, pagination.pages[1]]
+      }
+    },
+    {
+      pagination: {
+        ...pagination,
+        pages: [{ number: '1', current: false, href: '/donations' }, pagination.pages[1]]
+      }
+    },
+    {
+      pagination: {
+        ...pagination,
+        pages: [pagination.pages[0], { number: 2, current: false, href: '/donations?start=9' }]
+      }
+    },
+    { pagination: { ...pagination, association: { ...pagination.association, navigation: 'nav.unrelated' } } }
+  ]
+  for (const extra of invalid) {
+    const faults = findOrphanRows(measure(extra))
+    assert.equal(faults.length, 1, JSON.stringify(extra))
+    assert.equal(faults[0].selector, 'div.items-row')
+  }
+  const queryCase = (path, prior) => [
+    {
+      path,
+      width: 1440,
+      orphanRows: [
+        {
+          ...row,
+          pagination: {
+            ...pagination,
+            pages: [{ number: 1, current: false, href: prior }, pagination.pages[1]]
+          }
+        }
+      ]
+    }
+  ]
+  assert.deepEqual(
+    findOrphanRows(queryCase('/index.php?Itemid=101&catid=5&start=9', '/index.php?catid=5&Itemid=101')),
+    []
+  )
+  for (const prior of [
+    '/index.php?Itemid=102&catid=5',
+    '/index.php?Itemid=101&catid=6',
+    '/index.php?Itemid=101',
+    '/index.php?Itemid=101&catid=5&filter=featured'
+  ])
+    assert.equal(findOrphanRows(queryCase('/index.php?Itemid=101&catid=5&start=9', prior)).length, 1, prior)
+})
+
 test('an orphan row and a blank footer column fail the check through their groups; an older host leaves them unmeasured', async () => {
   const faults = {
     orphanRows: [{ selector: 'div.grid', perRow: 3, lastRow: 1, rows: 2, gap: 780 }],
@@ -497,4 +630,52 @@ test('an orphan row and a blank footer column fail the check through their group
   })
   for (const name of ['orphan-row', 'blank-footer-column'])
     assert.equal(group(older, name).status, 'unmeasured', name)
+})
+
+test('an unowned url slot is judged only on the pages its block prints, not where another block links the same page', async () => {
+  // Dev, BXR London 16/11/2026: the Our trainers block's url slots, printed only on that page, read as shown on the home
+  // page, whose own trainer cards linked the same trainer pages: four blocks.
+  const site = pagedSite(2, {}, [{ key: 'module-5.0', entity: 'module-5', type: 'url', current: '/page-1' }])
+  site.door.apply = ((apply) => async (call) => {
+    // The url is a path, so no menu row is needed to read it.
+    if (call.action === 'content.list') return { ok: true, items: [] }
+    const answer = await apply(call)
+    if (call.action === 'content.contract') answer.pages[1].assignedModules.push({ entity: 'module-5' })
+    return answer
+  })(site.door.apply)
+  const report = writtenReport({ unowned: [{ slot: 'block-5.0', type: 'url', block: 'block-5' }] })
+  const link = { href: 'http://site.test/index.php/page-1', text: 'Darlene Robertson' }
+  const run = (pages) =>
+    runSiteCheck({
+      door: site.door,
+      report,
+      host: fakeHost(
+        { '/': pageRead('/'), '/page-1': pageRead('/page-1') },
+        {
+          measures: () => [
+            ...BOTH('/', {
+              1440: { shownText: '', shownLinks: pages['/'], shownPictures: [] },
+              390: { shownText: '', shownLinks: pages['/'], shownPictures: [] }
+            }),
+            ...BOTH('/page-1', {
+              1440: { shownText: '', shownLinks: pages['/page-1'], shownPictures: [] },
+              390: { shownText: '', shownLinks: pages['/page-1'], shownPictures: [] }
+            })
+          ]
+        }
+      ).host,
+      baseline: null
+    })
+  // Only the home page links /page-1 (another block's card): the slot's own page shows no such link.
+  const elsewhere = group(await run({ '/': [link], '/page-1': [] }), 'unowned-slots')
+  assert.deepEqual(
+    elsewhere.failures.map((f) => [f.level, f.page, f.slot]),
+    [['warn', '/page-1', 'block-5.0']]
+  )
+  // Its own page shows it: a block there.
+  const own = group(await run({ '/': [], '/page-1': [link] }), 'unowned-slots')
+  assert.deepEqual(
+    own.failures.map((f) => [f.level, f.page, f.slot]),
+    [['block', '/page-1', 'block-5.0']]
+  )
 })

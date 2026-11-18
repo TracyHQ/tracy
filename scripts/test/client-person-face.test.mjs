@@ -55,6 +55,13 @@ const SKIPPED =
  */
 const ALLOWED = [
   {
+    file: 'packages/site/tracy-website-opportunities/src/client/business-facts-model.ts',
+    rule: 'helper',
+    match: 'initialsOf',
+    reason:
+      "a researched business's own initials, and a team member read from its public pages: no Tracy account, so no server face exists"
+  },
+  {
     file: 'packages/core/tracy-core/src/team/address-face.mjs',
     rule: 'first-char',
     match: 'address',

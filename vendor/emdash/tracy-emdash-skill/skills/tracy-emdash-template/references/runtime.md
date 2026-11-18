@@ -81,3 +81,5 @@ formsPlugin({ defaultSpamProtection: "honeypot" }), emdashSmtp()] })`, `fonts: [
 
 `emdash seed <file> --no-content --on-conflict update` **still updates content** (measured) — don't use it on
 a site with an editor; `--on-conflict skip` only for creating new collections/taxonomies/menus.
+
+- **The Google font provider may not serve the file the source's CSS names.** A variable file instead of the source's static one made text 4–5 % wider and every line of that face broke differently; measure one string in both pages and, when it differs, use `provider: local` with the source's own unicode-range files.

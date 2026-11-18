@@ -182,6 +182,65 @@ def open_release(url, headers):
     raise AssertionError('unreachable')
 
 
+def release_coordinates(url):
+    """(owner, repo, tag, file) of a github.com release download address, else None.
+
+    TRACY_GITHUB_ORIGIN and TRACY_GITHUB_API_ORIGIN exist for the tests, which play GitHub on a local port."""
+    web = urllib.parse.urlsplit(os.environ.get('TRACY_GITHUB_ORIGIN') or 'https://github.com')
+    split = urllib.parse.urlsplit(url)
+    if (split.scheme, split.netloc) != (web.scheme, web.netloc) or split.query:
+        return None
+    parts = split.path.split('/')
+    if len(parts) != 7 or parts[0] != '' or parts[3:5] != ['releases', 'download'] or not all(parts[1:3] + parts[5:7]):
+        return None
+    return parts[1], parts[2], urllib.parse.unquote(parts[5]), urllib.parse.unquote(parts[6])
+
+
+def open_through_api(coordinates):
+    """Open one release file through the GitHub API: the release by tag, the asset by name, the asset by id.
+
+    The release credential is sent when the host has one (its quota is larger) and the call is repeated
+    without it when GitHub refuses it outright: a public release needs no credential at all."""
+    owner, repo, tag, name = coordinates
+    api = os.environ.get('TRACY_GITHUB_API_ORIGIN') or 'https://api.github.com'
+    base = f'{api}/repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repo)}/releases'
+    common = {'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
+    token = os.environ.get('TRACY_RELEASES_GITHUB_TOKEN')
+    credentials = ([{'Authorization': f'Bearer {token}'}] if token else []) + [{}]
+    for index, credential in enumerate(credentials):
+        try:
+            with open_release(f'{base}/tags/{urllib.parse.quote(tag, safe="/")}', {**common, **credential}) as answer:
+                release = json.load(answer)
+        except urllib.error.HTTPError as error:
+            last = index == len(credentials) - 1
+            if not last and error.code in (401, 403, 404) and rate_limit_wait(error, time.time()) is None:
+                continue
+            raise
+        assets = release.get('assets') if isinstance(release, dict) else None
+        asset = next((a for a in assets or [] if isinstance(a, dict) and a.get('name') == name), None)
+        asset_id = asset.get('id') if asset else None
+        if not isinstance(asset_id, int) or isinstance(asset_id, bool) or asset_id < 1:
+            raise ValueError(f'release {tag} of {owner}/{repo} carries no {name}')
+        return open_release(f'{base}/assets/{asset_id}', {**common, **credential, 'Accept': 'application/octet-stream'})
+    raise AssertionError('unreachable')
+
+
+def open_download(url, headers):
+    """Open a release file, going through the GitHub API when the github.com download route is down.
+
+    08/11/2026: github.com/<owner>/<repo>/releases/download/<tag>/... answered HTTP 504 for every file of
+    one Claude Cowork release for more than ten minutes while the API served the same asset in under a
+    second, and a demo update stopped at prefetch twice. Only a 5xx is retried there: a 4xx is an answer."""
+    try:
+        return open_release(url, headers)
+    except urllib.error.HTTPError as error:
+        coordinates = None if headers else release_coordinates(url)
+        if error.code < 500 or coordinates is None:
+            raise
+        print(f'release download answered HTTP {error.code}; fetching {coordinates[3]} through the GitHub API', file=sys.stderr, flush=True)
+        return open_through_api(coordinates)
+
+
 def prefetch(entry):
     """Fetch and verify every pinned part of an entry, so the provision after it reads them from the cache.
 
@@ -235,7 +294,7 @@ def download(artifact, output, part):
                 # file handler would take the address as given.
                 opened = open(local, 'rb')
             else:
-                opened = open_release(url, headers)
+                opened = open_download(url, headers)
             with opened as source, file.open('wb') as target:
                 size = 0
                 sha = hashlib.sha256()

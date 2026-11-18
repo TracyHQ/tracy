@@ -38,6 +38,13 @@ test('Research is a separate view and old Dubai anchors still open it', () => {
   assert.equal(parseWoAddress('?view=places', '#dubai-pilot').view, 'places')
 })
 
+test('Chain builds is a view of its own and writes nothing but its view', () => {
+  const builds = parseWoAddress('?view=builds&user=lee&stage=3')
+  assert.equal(builds.view, 'builds')
+  assert.deepEqual(builds.queue, WO_QUEUE_DEFAULT)
+  assert.equal(woSearchFor(builds), '?view=builds')
+})
+
 test('customer journey filters round-trip without truncating their names', () => {
   for (const stage of ['research', 'demo', 'outreach', 'cancelled', 'attention']) {
     assert.equal(woSearchFor(parseWoAddress(`?stage=${stage}`)), `?stage=${stage}`)

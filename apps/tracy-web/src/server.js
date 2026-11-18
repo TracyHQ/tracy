@@ -123,7 +123,9 @@ export async function start({ env = process.env, log = console, deps = {} } = {}
         socialStatsTick: app.socialStatsTick ?? null,
         socialPrefetchTick: app.socialPrefetchTick ?? null,
         // Demo retention of Website Opportunities (`opportunities-build/demo-retention.js`).
-        demoRetentionTick: app.demoRetentionTick ?? null
+        demoRetentionTick: app.demoRetentionTick ?? null,
+        // The webhooks of `/v1/demos` (`opportunities-build/demo-webhooks.js`).
+        demoWebhooksTick: app.demoWebhooksTick ?? null
       })
     : { stop() {} }
   // The AI Assistant's handoff to a person: its Telegram outbox, and on a laptop its long poll.
@@ -225,6 +227,7 @@ export async function start({ env = process.env, log = console, deps = {} } = {}
       app.brandQueue?.stop()
       app.siteWriterQueue?.stop()
       app.sitePicturesQueue?.stop()
+      app.siteBriefBuilds?.stop?.()
       await support.stop()
       await app.betaLogin?.stop()
       await new Promise((r) => server.close(r))

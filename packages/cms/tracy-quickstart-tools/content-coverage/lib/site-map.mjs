@@ -151,18 +151,22 @@ function headerParts(contract, result, rows) {
     const m = match(item)
     return m.status === 'matched' ? (m.slots ?? []) : []
   }
+  // WordPress prints its own address in every src and href: the file keeps the path, never the measured machine.
+  const origin = new URL(result.site).origin
+  const local = (u) =>
+    typeof u === 'string' && u.startsWith(`${origin}/`) ? u.slice(origin.length) : (u ?? null)
   const logo = raw.logo
     ? {
-        image: raw.logo.image ?? null,
+        image: local(raw.logo.image),
         alt: raw.logo.alt ?? null,
         text: raw.logo.text ?? null,
-        href: raw.logo.href ?? null,
+        href: local(raw.logo.href),
         slots: raw.logo.image ? slotsOf({ kind: 'image', value: raw.logo.image }) : []
       }
     : null
   const menu = (raw.menu ?? []).map((m) => ({
     text: m.text,
-    href: m.href ?? null,
+    href: local(m.href),
     depth: m.depth ?? 0,
     visible: m.visible !== false,
     ...leads(m.href),
@@ -170,7 +174,7 @@ function headerParts(contract, result, rows) {
   }))
   const buttons = (raw.buttons ?? []).map((b) => ({
     text: b.text,
-    href: b.href ?? null,
+    href: local(b.href),
     iconOnly: b.iconOnly === true,
     visible: b.visible !== false,
     opens: b.href ? leads(b.href).opens : null,

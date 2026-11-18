@@ -4,13 +4,21 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { applyJoomlaContract } from '../../../packages/cms/tracy-seeder/src/apply-joomla-contract.mjs'
 import { exportPictureMapping } from '../src/site-pictures/contract-mapping.js'
-import { FILES, kit, pictures } from './_site-pictures-check.mjs'
+import { brief, FILES, kit, pictures, plan } from './_site-pictures-check.mjs'
 
 const CONTRACT = 'demo-clay/j6/1.0.0'
 const sha = (name) => FILES[`out/${name}`].sha256
 const path = (name) => `images/tracy-content/${sha(name)}.png`
 const run = (over = {}) =>
-  exportPictureMapping({ pictures: pictures(), contract: CONTRACT, revision: 'rev-1', kit: kit(), ...over })
+  exportPictureMapping({
+    pictures: pictures(),
+    contract: CONTRACT,
+    revision: 'rev-1',
+    kit: kit(),
+    plan: plan(),
+    brief: brief(),
+    ...over
+  })
 
 // A site that holds the kit's image slots, and a media library that holds what was uploaded. The door call below is
 // the real applyJoomlaContract; only the site behind it is faked (it refuses an image path nobody uploaded).

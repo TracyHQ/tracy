@@ -1,0 +1,3 @@
+{"id":"REG-PR-558-logo-only-main-menu","verdict":"PASS","commit":"a6f22713da528caed385bed6ae0d44ccea3006ba","ran_at":"2026-11-11T14:57:19.776Z","evidence":"REG-PR-558-logo-only-main-menu.log"}
+{"id":"REG-PR-558-repair-turn-packing","verdict":"PASS","commit":"a6f22713da528caed385bed6ae0d44ccea3006ba","ran_at":"2026-11-11T14:57:19.883Z","evidence":"REG-PR-558-repair-turn-packing.log"}
+{"id":"REG-PR-558-repair-undo-stop","verdict":"PASS","commit":"a6f22713da528caed385bed6ae0d44ccea3006ba","ran_at":"2026-11-11T14:57:20.226Z","evidence":"REG-PR-558-repair-undo-stop.log"}

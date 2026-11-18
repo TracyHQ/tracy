@@ -3,7 +3,7 @@
  * string, so a pasted link reopens the same screen and F5 keeps it.
  *
  * Parameters (only the current view's section is written; defaults are never written):
- *   view    research | places | settings      (queue is the default)
+ *   view    research | places | builds | settings   (queue is the default)
  *   Queue:  search   free text                 user  login or account id   city  city name
  *           cms      joomla | wordpress | emdash
  *           range    24h | 7d | 90d | any       (30d default)
@@ -15,7 +15,7 @@
  *           search   the submitted place search
  *           place    the opened place's id
  *           dialog   caps                       (the Research caps dialog)
- *   Settings writes nothing but `view=settings`.
+ *   Builds and Settings write nothing but their `view`.
  *
  * Reading reads only the named view's section (the others are their defaults) and drops an
  * unknown or invalid value on its own; parameters this module does not own are kept as they are.
@@ -23,7 +23,7 @@
 import { WO_CUSTOMER_STAGES, type WoCms, type WoFilter, type WoSortKey, type WoStage } from './wo-api.ts'
 import { PLACE_FILTERS, type PlaceFilter } from './wo-places-api.ts'
 
-export type WoView = 'queue' | 'research' | 'places' | 'settings'
+export type WoView = 'queue' | 'research' | 'places' | 'builds' | 'settings'
 export type WoRange = '24h' | '7d' | '30d' | '90d' | 'any'
 export type WoDateField = 'updated' | 'created' | 'built'
 
@@ -78,7 +78,7 @@ const STAGES: readonly WoStage[] = [
   '6-uploading',
   '7-live'
 ]
-const VIEWS: readonly WoView[] = ['queue', 'research', 'places', 'settings']
+const VIEWS: readonly WoView[] = ['queue', 'research', 'places', 'builds', 'settings']
 const CMSES: readonly WoCms[] = ['joomla', 'wordpress', 'emdash']
 const RANGES: readonly WoRange[] = ['24h', '7d', '30d', '90d', 'any']
 const DATE_FIELDS: readonly WoDateField[] = ['updated', 'created', 'built']

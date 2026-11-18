@@ -29,6 +29,63 @@ test('R12 skips a contact setting slot even when its copy says phone', () => {
   assert.equal(r.failures.length, 0)
 })
 
+// The two class-page notes reproduce the normal WO planner's generic CTA false positives.
+function ctaRule({
+  says = 'closing call to action: book an assessment',
+  text = 'Book an assessment',
+  phoneLink = false
+} = {}) {
+  const p = plan()
+  for (const block of ['body-classes_group-boxing', 'body-classes_advanced-boxing']) {
+    p.pages = p.pages.filter((page) => page.id !== block.replace(/^body-/, 'page-'))
+    p.pages.push({
+      id: block.replace(/^body-/, 'page-'),
+      decision: 'keep',
+      blocks: [
+        {
+          block,
+          decision: 'keep',
+          copy: [{ slot: 'languageString-76896395.0', says, text }],
+          links: phoneLink ? [{ link: 'diagnostic-phone-link', leadsTo: 'phone:f-phone' }] : []
+        }
+      ]
+    })
+  }
+  return ruleOf(p, 'R12')
+}
+
+test('R12 generic call-to-action notes on two class pages do not promise a phone channel', () => {
+  const result = ctaRule()
+  assert.equal(result.failures.length, 0)
+})
+
+test('R12 generic CTA wording is ignored in notes and labels regardless of case or hyphenation', () => {
+  const result = ctaRule({ says: 'Closing CALL-TO-ACTION', text: 'Call to action: book a visit' })
+  assert.equal(result.failures.length, 0)
+})
+
+test('R12 generic CTA wording does not conceal a real phone promise in the same note or label', () => {
+  for (const content of [
+    { says: 'call to action: call +971 555 0100', text: 'Book now' },
+    { says: 'call to action: book a visit', text: 'Call us' },
+    { says: 'call-to-action by phone', text: 'Book now' },
+    { says: 'call to action: ring us', text: 'Book now' }
+  ]) {
+    const result = ctaRule(content)
+    assert.equal(result.failures.length, 2, JSON.stringify(content))
+    assert.ok(result.failures.every((failure) => failure.detail.includes('names a phone channel')))
+  }
+})
+
+test('R12 real phone promises still pass with a phone target, while WhatsApp and DM requirements remain', () => {
+  assert.equal(ctaRule({ says: 'call to action: call us', phoneLink: true }).failures.length, 0)
+  for (const channel of ['WhatsApp', 'DM us']) {
+    const result = ctaRule({ says: `call to action: ${channel}` })
+    assert.equal(result.failures.length, 2)
+    assert.ok(result.failures.every((failure) => !failure.detail.includes('names a phone channel')))
+  }
+})
+
 test('R13 a link that leads to the page it is shown on', () => {
   breaks(
     'R13',

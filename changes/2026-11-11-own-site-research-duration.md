@@ -1,0 +1,2 @@
+- **Own-site research describes the sources being read without a fixed ten-minute promise.** — Site build maintainers · #541 · `fix/david-issue-completion` · 2026-11-11
+  **Affects:** Build it from my business in all eight interface languages. The existing elapsed time and measured source/photo progress remain visible; no completion estimate is invented for an individual run. Addresses the research-duration symptom of #509.

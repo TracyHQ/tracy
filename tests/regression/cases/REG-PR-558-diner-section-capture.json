@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-558-diner-section-capture",
+  "kind": "fix",
+  "title": "Assigned T3 section wrappers become kit blocks without claiming unrelated elements",
+  "pr": 558,
+  "area": "website-opportunities/template-kit",
+  "cms": ["jo"],
+  "needs": ["browser:chromium"],
+  "flaky_model": false,
+  "steps": [
+    "Run the focused real-browser block-capture regression with Chromium installed. No model or running site is required."
+  ],
+  "expect": [
+    "Three assigned T3 section modules sharing one position are distinct visible blocks.",
+    "Unassigned, unrelated, leading-zero and ambiguous identifiers are not claimed.",
+    "Hidden and off-canvas visibility, existing wrappers and T4 behavior remain intact."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=assigned T3 section chrome",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-blocks.test.mjs"
+    ],
+    "tests": ["assigned T3 section chrome exposes each module without guessing layout or ambiguous ids"],
+    "needs": []
+  }
+}

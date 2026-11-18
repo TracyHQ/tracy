@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-568-chain-restart-reason",
+  "kind": "fix",
+  "title": "Chain build QA distinguishes persisted restart recovery from terminal QA failure while preserving the action error and private diagnostics",
+  "pr": 568,
+  "area": "website-opportunities/chain-diagnostics",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed and TEST_DATABASE_URL set to a disposable PostgreSQL test server, run run.cmd. The existing fileDb helper isolates all writes to its own scratch database or schema.",
+    "S2: Confirm the four tests named in run.tests execute successfully. The full file executes twenty tests, with zero failures or skips; no name filter is used."
+  ],
+  "expect": [
+    "The recorded dev restart shape (kit and brand finished, plan running) with persisted LOST_ON_RESTART produces qa.reason=LOST_ON_RESTART while action.error remains QA_NEEDS_REVIEW.",
+    "A terminal failed write produces qa.reason=QA_NEEDS_REVIEW; arbitrary interruption markers cannot become a public reason.",
+    "A passed final write clears qa.reason even with historical LOST_ON_RESTART metadata.",
+    "Raw brief-error and private timing sentinels do not enter stored/public build QA. The owned detail projection exposes the bounded reason.",
+    "A different signed-in account receives404 from the actual detail endpoint and no restart reason; an anonymous request receives401."
+  ],
+  "selectors": {
+    "detail": "/api/website-opportunities/:id"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-chain-progress.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "chain QA reason distinguishes restart before writing without exposing raw diagnostics",
+      "chain QA reason distinguishes terminal site QA failure without exposing raw diagnostics",
+      "chain QA reason distinguishes untrusted interruption metadata without exposing raw diagnostics",
+      "chain QA reason distinguishes successful write with historical interruption metadata without exposing raw diagnostics"
+    ]
+  }
+}

@@ -3,9 +3,11 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { runAgent } from '../src/lib/agent-over-door.js'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { compactTurn } from '../src/site-planner/bench-export.js'
 import {
   activeRun,
+  activeRuns,
   createRun,
   listRuns,
   readRun,
@@ -22,6 +24,7 @@ import {
 import { DOOR, finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
 import { brief } from './_site-plan-check-inputs.mjs'
+import { PLANNER_BRIEF_VIEW } from '../src/site-planner/brief-view.js'
 
 const db = fileDb()
 before(db.open)
@@ -39,6 +42,7 @@ const input = (over = {}) => ({
   checkerVersion: 'site-plan-check/1',
   door: { door: 'sitePlanner', providerId: 'openrouter', model: 'anthropic/claude-opus-5.5' },
   harness: {
+    briefView: PLANNER_BRIEF_VIEW,
     maxTokens: 64000,
     effort: 'high',
     cacheTtl: { system: '1h', rolling: '5m' },
@@ -129,18 +133,34 @@ test('a run stores its inputs and waits in the queue', opts, async () => {
   assert.equal(run.attempts, 0)
 })
 
-test('only one run is active at a time; the refusal names the running one', opts, async () => {
+test('up to the bench limit runs are active at once; the refusal names the running ones', opts, async () => {
   const { pool } = db
   const first = await createRun(pool, input())
-  const second = await createRun(pool, input({ startedBy: 'admin@tracy.test' }))
-  assert.equal(second.error, SITE_PLANNER_RUN_ACTIVE)
-  assert.equal(second.active.id, first.run.id)
-  assert.equal(second.active.startedBy, 'owner@tracy.test')
+  const held = [first.run.id]
+  for (let n = 1; n < BENCH_RUNS_AT_ONCE; n++) {
+    const more = await createRun(pool, input({ startedBy: `admin${n}@tracy.test` }))
+    assert.equal(more.error, undefined)
+    held.push(more.run.id)
+  }
+  const past = await createRun(pool, input({ startedBy: 'admin@tracy.test' }))
+  assert.equal(past.error, SITE_PLANNER_RUN_ACTIVE)
+  assert.equal(past.active.id, first.run.id)
+  assert.equal(past.active.startedBy, 'owner@tracy.test')
+  assert.deepEqual(
+    past.activeRuns.map((r) => r.id),
+    held
+  )
   assert.equal((await activeRun(pool)).id, first.run.id)
+  assert.deepEqual(
+    (await activeRuns(pool)).map((r) => r.id),
+    held
+  )
   await pool.query("update site_planner_run set status = 'succeeded' where id = $1", [first.run.id])
+  assert.equal((await activeRun(pool)).id, held[1])
+  const again = await createRun(pool, input())
+  assert.equal(again.error, undefined)
+  await pool.query("update site_planner_run set status = 'succeeded' where status = 'queued'")
   assert.equal(await activeRun(pool), null)
-  const third = await createRun(pool, input())
-  assert.equal(third.error, undefined)
 })
 
 test('the inputs of a run are frozen once stored', opts, async () => {

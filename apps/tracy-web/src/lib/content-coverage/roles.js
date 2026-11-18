@@ -13,8 +13,7 @@ import { readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 
 import { readSlotRoles } from '../contract-slot-roles.js'
-import { contractFor } from '../contracts.js'
-import { slotRolesOfRelease } from '../slot-roles-of-release.js'
+import { contractOfRelease, slotRolesOfRelease } from '../slot-roles-of-release.js'
 
 /** How many slot keys the group names itself. */
 const SHOWN_KEYS = 8
@@ -55,7 +54,7 @@ const missing = (keys, reason = null) => ({
 
 /**
  * @param {ReturnType<typeof readSlotRoles>} read what the shared reader answered
- * @param {string | null | undefined} dir the contract folder it read
+ * @param {string | null | undefined} dir the contract folder it read (null for an EmDash theme, which has no content map)
  * @returns {Roles}
  */
 export function rolesOfRead(read, dir) {
@@ -65,6 +64,17 @@ export function rolesOfRead(read, dir) {
     // "has no role" errors are the missing group above; anything else is a broken declaration
     const broken = (read.errors ?? []).filter((e) => !e.endsWith(' has no role'))
     if (read.state === 'invalid' && broken.length > 0) return { state: 'invalid', reason: broken[0] }
+    return { state: 'ready' }
+  }
+  if (read.source === 'field-map') {
+    // An EmDash theme declares roles per field (ADR 0038 decision 5): a field with none is the missing group, any other
+    // problem a broken declaration. The names are fields (`pages.title`), not entry slots: one field is every entry's.
+    const errors = read.errors ?? []
+    const keys = errors
+      .filter((e) => e.endsWith(' has no role'))
+      .map((e) => e.replace(/ has no role$/, '').replace(/^[a-z -]*"([^"]+)"$/, '$1'))
+    if (keys.length > 0) return missing(keys)
+    if (read.state === 'invalid' && errors.length > 0) return { state: 'invalid', reason: errors[0] }
     return { state: 'ready' }
   }
   if (read.source === 'sidecar') {
@@ -89,8 +99,7 @@ export function rolesOfRead(read, dir) {
  * @returns {Roles}
  */
 export function rolesOfRelease(release, contracts) {
-  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
-  const dir = contractFor(contracts, release?.tag, version)?.dir ?? null
+  const dir = contractOfRelease(release, contracts)?.dir ?? null
   if (!dir) return rolesOfRead(slotRolesOfRelease(release, contracts), null)
   // Re-read only when a file changed: /ops builds every road on each list read.
   const stamp = ['content-map.json', 'slot-roles.json', 'manifest.json', 'presentation-lock.json']

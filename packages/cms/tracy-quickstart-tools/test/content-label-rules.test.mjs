@@ -79,6 +79,11 @@ test('R2: a phone, email, address, price or hours sample with an editorial role 
     text('ok.price', '$4.00', 'offering.price', { group: grp('m.0', 0, 'menu_item') }),
     text('ok.claim', 'A platform that helped raise over $500 million for startups', 'claim.notice'),
     text('ok.stat', '$4.8m', 'stat.value'),
+    text('ok.dish', 'Salad ((span class="dish-price"))$30((/span))', 'offering.name', {
+      markup: 'inline',
+      group: grp('m.0', 0, 'menu_item')
+    }),
+    text('menu.plain-name', 'Salad $30', 'offering.name', { group: grp('m.1', 1, 'menu_item') }),
     text('ok.stat2', '$ 250k', 'stat.value'),
     text('home.price', 'Lakeside villa, $1.2 million', 'editorial.paragraph'),
     text('stat.phone', 'Call (555) 010-9921', 'stat.value'),
@@ -87,7 +92,28 @@ test('R2: a phone, email, address, price or hours sample with an editorial role 
       '((svg viewBox="0 0 40 40"))((path d="M3.75 2.5 10.6250 12.5000 18.7684 15.7303"))((/svg))',
       'editorial.item_icon'
     ),
-    text('ok.hours', 'Mon-Fri 8am - 6pm', 'contact.hours', { group: grp('site.0', 0, 'business') })
+    text('ok.hours', 'Mon-Fri 8am - 6pm', 'contact.hours', { group: grp('site.0', 0, 'business') }),
+    text('ok.when', 'Mon. Tue. Thu. & Sun ((br/))12 Noon to\u00a011 PM', 'event.date_or_year', {
+      group: grp('promo.0', 0, 'event')
+    }),
+    // a body card that holds an address or hours must carry a contact role, not a description role
+    text('card.addr', '398 North 23th Marlow Street, ((br/))Sometown, Britain.', 'offering.description', {
+      group: grp('card.0', 0, 'menu_item')
+    }),
+    text(
+      'card.hours',
+      'Tuesday - Saturday: 9a.m - Close. ((br/))Sunday: 10a.m - Close.',
+      'offering.description',
+      {
+        group: grp('card.1', 1, 'menu_item')
+      }
+    ),
+    text('ok.card.addr', '398 North 23th Marlow Street, ((br/))Sometown, Britain.', 'contact.address', {
+      group: grp('card.2', 0, 'contact')
+    }),
+    text('ok.card.hours', 'Tuesday - Saturday: 9a.m - Close.', 'contact.hours', {
+      group: grp('card.3', 0, 'contact')
+    })
   )
   const res = labelRulesOf({ map })
   assert.deepEqual(fails(res), ['R2'])
@@ -96,10 +122,62 @@ test('R2: a phone, email, address, price or hours sample with an editorial role 
     'about.hours',
     'about.mail',
     'about.p',
+    'card.addr',
+    'card.hours',
     'home.price',
     'menu.cost',
+    'menu.plain-name',
     'stat.phone'
   ])
+})
+
+test('R2: literal PRE text samples are code rather than business facts', () => {
+  const map = cleanMap()
+  const samples = [
+    ['phone', 'phone = "(555) 010-9921"'],
+    ['price', 'cost = "$12.00"'],
+    ['email', 'WARN\tperson@example.com\n'],
+    ['hours', 'schedule = "Mon-Fri 8am - 6pm"'],
+    ['address', 'address = "14 Marlow Street"']
+  ]
+  map.slots.push(
+    ...samples.map(([kind, sample], i) =>
+      text(`code.${kind}`, sample, 'editorial.paragraph', {
+        xpath: i % 2 ? '/html/body/div/section/pre[2]/code/text()[1]' : '/html/body/div/pre/code/text()'
+      })
+    )
+  )
+  const before = JSON.stringify(map)
+  const res = labelRulesOf({ map })
+  assert.equal(rule(res, 'R2').count, 0)
+  assert.deepEqual(rule(res, 'R2').keys, [])
+  assert.deepEqual(res.r1, { facts: 9, slots: 15, percent: 60 })
+  assert.equal(JSON.stringify(map), before)
+})
+
+test('R2: ordinary and unsupported code addresses still require fact roles', () => {
+  const map = cleanMap()
+  const controls = [
+    ['ordinary', {}],
+    ['bare-pre', { xpath: '/html/body/div/pre/text()' }],
+    ['inline-code', { xpath: '/html/body/div/p/code/text()' }],
+    ['html', { type: 'html', xpath: '/html/body/div/pre/code/text()' }],
+    ['leaf', { leaf: { kind: 'text' }, xpath: '/html/body/div/pre/code/text()' }],
+    ['element', { xpath: '/html/body/div/pre/code' }],
+    ['second-text', { xpath: '/html/body/div/pre/code/text()[2]' }],
+    ['invalid-index', { xpath: '/html/body/div/pre[0]/code/text()' }]
+  ]
+  map.slots.push(
+    ...controls.map(([key, extra]) =>
+      text(`control.${key}`, 'Call (555) 010-9921', 'editorial.paragraph', extra)
+    )
+  )
+  const res = labelRulesOf({ map })
+  assert.equal(rule(res, 'R2').count, controls.length)
+  assert.deepEqual(
+    rule(res, 'R2').keys,
+    controls.map(([key]) => `control.${key}`)
+  )
 })
 
 test('R3: a URL slot without a role fails', () => {

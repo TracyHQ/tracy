@@ -11,18 +11,17 @@ const BODY = copy()
   .body.map((t) => `<p>${t}</p>`)
   .join('\n')
 
-test('the check stops before anything is written when a page to create has no words in the copy', async () => {
+test('a page to create with no words in the copy is not created and said once on step 6; the rest is written', async () => {
   const site = pagesSite()
   const bare = copy()
   bare.pages = bare.pages.filter((p) => p.page !== 'legal:privacy')
   const { report } = await runOn(site, { over: { copy: bare } })
-  assert.equal(report.status, 'stopped')
-  assert.equal(report.cause.code, 'PAGE_WITHOUT_COPY')
-  assert.match(report.cause.reason, /legal:privacy/)
-  assert.deepEqual(
-    site.calls.filter((c) => c.action !== 'info' && c.params.operation !== 'inspect'),
-    []
-  )
+  assert.equal(report.status, 'done')
+  const item = report.unaddressable.find((u) => u.slot === 'legal:privacy')
+  assert.equal(item.step, 6)
+  assert.match(item.reason, /holds no words/)
+  assert.deepEqual(site.rows('article'), [])
+  assert.ok(site.calls.some((c) => c.action === 'content.contract' && c.params.operation === 'apply'))
 })
 
 test('a page is created first, with the words of the copy, and a menu link is pointed at it', async () => {

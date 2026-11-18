@@ -20,6 +20,10 @@
 import { createRoot } from 'react-dom/client'
 import { en } from '../../src/client/strings'
 import { AddSiteWizard } from '../../src/client/wizard'
+import { CSS, TAILWIND } from '../../src/client/styles'
+const style = document.createElement('style')
+style.textContent = TAILWIND + CSS
+document.head.append(style)
 
 /** The dsh Translate, backed by the shipped English base and simple {name} interpolation. */
 function t(key: string, params?: Record<string, string | number>): string {
@@ -125,6 +129,15 @@ window.fetch = (async (input: RequestInfo | URL, init?: RequestInit): Promise<Re
       ? runs.find((r) => r.id === body.runId)
       : runs.findLast((r) => r.siteKey === body.siteKey)
     if (!run) return json(404, { code: 'RUN_UNKNOWN' })
+    if (new URLSearchParams(window.location.search).has('import-failed')) {
+      return json(200, {
+        ...run,
+        state: 'error',
+        step: 'installing',
+        error: 'php_too_old',
+        errorDetail: { php: '7.3.33', minimumPhp: '7.4' }
+      })
+    }
     harness.statusPolls += 1
     // First poll shows the reader packing files (the screen #166 froze on); the next reports done so
     // the handover fires. A short two-step so the test sees the spinner give way to the terminal.

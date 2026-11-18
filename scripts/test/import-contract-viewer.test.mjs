@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { prepareViewer, viewerWorkspaceUrl } from '../e2e/import-contract-viewer.mjs'
+import { dismissWelcome, prepareViewer, viewerWorkspaceUrl } from '../e2e/import-contract-viewer.mjs'
 
 test('supported preview deep link preserves session and requests the copy root in edit mode', () => {
   const url = new URL(viewerWorkspaceUrl('/site/s/session-abc?tab=files', 'http://tracy.test:51710'))
@@ -24,7 +24,12 @@ test('closed pane opens and asynchronous copy navigation is awaited without acce
         opened = true
       }
     }),
-    locator: () => ({ waitFor: async () => {}, last: () => ({ waitFor: async () => {} }) }),
+    locator: () => ({
+      isVisible: async () => false,
+      waitFor: async () => {},
+      first: () => ({ isVisible: async () => false }),
+      last: () => ({ waitFor: async () => {} })
+    }),
     frames: () => (polls ? [main, source, copy] : [main, source]),
     mainFrame: () => main,
     waitForTimeout: async () => {
@@ -39,7 +44,12 @@ test('closed pane opens and asynchronous copy navigation is awaited without acce
 test('a missing viewer fails within the caller budget before any model submission', async () => {
   const page = {
     getByRole: () => ({ isVisible: async () => false }),
-    locator: () => ({ waitFor: async () => {}, last: () => ({ waitFor: async () => {} }) })
+    locator: () => ({
+      isVisible: async () => false,
+      waitFor: async () => {},
+      first: () => ({ isVisible: async () => false }),
+      last: () => ({ waitFor: async () => {} })
+    })
   }
   await assert.rejects(
     prepareViewer(page, 'http://copy.test/', { timeoutMs: 0 }),
@@ -59,10 +69,45 @@ test('hydration removing the open button is retried while waiting for copy navig
         throw new Error('button detached')
       }
     }),
-    locator: () => ({ waitFor: async () => {}, last: () => ({ waitFor: async () => {} }) }),
+    locator: () => ({
+      isVisible: async () => false,
+      waitFor: async () => {},
+      first: () => ({ isVisible: async () => false }),
+      last: () => ({ waitFor: async () => {} })
+    }),
     frames: () => (hydrated ? [main, copy] : [main]),
     mainFrame: () => main,
     waitForTimeout: async () => {}
   }
   assert.equal(await prepareViewer(page, 'http://copy.test/'), copy)
+})
+
+test('visible Welcome dialog is closed before the measured send', async () => {
+  const actions = []
+  const page = {
+    locator: (selector) => ({
+      isVisible: async () => selector === '.tv-welcome .tv-wl-close',
+      click: async () => actions.push('close'),
+      waitFor: async ({ state }) => actions.push(`wait-${state}`),
+      first: () => ({ isVisible: async () => false })
+    })
+  }
+  await dismissWelcome(page)
+  assert.deepEqual(actions, ['close', 'wait-hidden', 'wait-visible', 'wait-hidden'])
+})
+
+test('guided tour is dismissed before a measured send', async () => {
+  const actions = []
+  const page = {
+    locator: (selector) => ({
+      isVisible: async () => selector === '.tv-tour',
+      waitFor: async ({ state }) => actions.push(`${selector}:${state}`),
+      first: () => ({
+        isVisible: async () => selector === '.tv-tour .tv-tour-link',
+        click: async () => actions.push('tour-later')
+      })
+    })
+  }
+  await dismissWelcome(page)
+  assert.deepEqual(actions, ['tour-later', '.tv-tour:hidden', '.tracy-boot-cover:hidden'])
 })

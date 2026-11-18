@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-572-emdash-apply-keeps-imported-pictures",
+  "kind": "fix",
+  "title": "EmDash Apply keeps the pictures the importer placed: a seed picture path (JA Restaurant, JA Diner) never replaces an imported picture",
+  "pr": 572,
+  "area": "emdash-theme-restaurant/personalize",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-emdash-theme-restaurant/tests/personalize-imported-pictures.test.mjs packages/cms/tracy-emdash-theme-diner/tests/personalize-imported-pictures.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (6): keepImportedPictures puts the imported picture back for a seed path at a media-map spot and leaves a picture the run chose; a whole-seed Restaurant and Diner site, its pictures placed as the importer leaves them, keeps every picture after a personalize run with no model and with a model rewriting the rows."
+  ],
+  "selectors": {
+    "tool": "packages/cms/tracy-emdash-theme-*/tools/personalize.mjs (keepImportedPictures, writeEntry)",
+    "seed": "packages/cms/tracy-emdash-theme-{restaurant,diner}/seed/{seed.json,media-map.json}"
+  },
+  "evidence": "11/11/2026 on dev: a new site made through Add site from JA Restaurant 1.0.2 showed 8 broken pictures on Home and 17 on Menu at /images/joomlart/... after Apply, while the demo site restaurant-emdash, never personalized, served them from /_emdash/api/media/file/. Locally, with the fix bypassed, the model case lists slideshow items[0..2].image, features_intro img_icon and menu dish_image as source paths; Diner loses 6 pictures the same way.",
+  "fence": "The write door of the personalize tool (writeEntry): a string at a media-map spot that equals the seed's value there is replaced by the value the site holds, before keepSiteRowKeys.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-emdash-theme-restaurant/tests/personalize-imported-pictures.test.mjs",
+      "packages/cms/tracy-emdash-theme-diner/tests/personalize-imported-pictures.test.mjs"
+    ],
+    "tests": [
+      "keepImportedPictures: a seed picture path the site holds an imported picture for keeps the picture",
+      "a described restaurant keeps every picture the importer placed, with no model",
+      "a described restaurant keeps every picture the importer placed, with a model rewriting the rows",
+      "a described business keeps every picture the importer placed, with no model",
+      "a described business keeps every picture the importer placed, with a model rewriting the rows"
+    ]
+  }
+}

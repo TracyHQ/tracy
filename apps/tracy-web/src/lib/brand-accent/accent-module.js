@@ -50,9 +50,11 @@ const swapped = (value, family, variable, seed, encode) => {
 const wrap = (at, rule) => at.reduceRight((inner, head) => `${head}{${inner}}`, rule)
 const bang = (important) => (important ? '!important' : '')
 
+// The forms an inline style writes a colour in. The selectors match them case-insensitively (`i`), so `#E08A70` and
+// `RGB(` need no selector of their own: a fifth of the module on a template with a nine-colour accent family.
 const VALUE_FORMS = (hex) => {
   const triple = tripleOf(hex)
-  return [hex, hex.toUpperCase(), `rgb(${triple})`, `rgb(${triple.replaceAll(',', ', ')})`]
+  return [hex, `rgb(${triple})`, `rgb(${triple.replaceAll(',', ', ')})`]
 }
 const LEADS = (prop) => [`[style^="${prop}:`, `[style*=";${prop}:`, `[style*="; ${prop}:`]
 
@@ -71,7 +73,7 @@ function markupRules(hex, fill, word) {
   ]
     .map(([written, prop, tone]) => {
       const selectors = LEADS(written).flatMap((lead) =>
-        VALUE_FORMS(hex).flatMap((form) => [`${lead}${form}"]`, `${lead} ${form}"]`])
+        VALUE_FORMS(hex).flatMap((form) => [`${lead}${form}" i]`, `${lead} ${form}" i]`])
       )
       return `${selectors.join(',')}{${prop}:var(${tone})!important}`
     })
@@ -119,24 +121,37 @@ export function accentModule({ sheets, colours, darkHook = null }) {
     const family = coloursIn(k.body).filter((c) => routes.colours.includes(c.hex))
     add(wrap(k.at, `${k.head}{${swapped(k.body, family, FILL, seed, encodeURIComponent(accent))}}`))
   }
-  for (const hex of routes.colours) add(markupRules(hex, FILL, WORD))
-
-  const html = moduleText({
-    lines,
-    tones,
-    opens,
-    accent,
-    seed,
-    family: routes.colours,
-    words: wordsMoved ? readable : null
-  })
-  const bytes = Buffer.byteLength(html)
+  // The markup forms of each colour of the family, the template's accent first (routes.colours keeps it first). Every
+  // stylesheet route always goes in; a module over the limit drops the markup forms of the last family colours, one
+  // by one, and keeps the brand accent, rather than leaving the template's accent everywhere (dev, JA Diner 16/11/2026:
+  // the module of every page's sheets was 121114 bytes and the site kept the template's colour, a final-check block).
+  // A page whose own markup writes a dropped shade inline keeps that shade there; the stylesheets still move.
+  const markup = routes.colours.map((hex) => markupRules(hex, FILL, WORD))
+  const built = (n) => {
+    const html = moduleText({
+      lines: compactRules([...lines, ...markup.slice(0, n).filter((line) => !lines.includes(line))]),
+      tones,
+      opens,
+      accent,
+      seed,
+      family: routes.colours,
+      words: wordsMoved ? readable : null
+    })
+    return { html, bytes: Buffer.byteLength(html) }
+  }
+  let kept = markup.length
+  let { html, bytes } = built(kept)
+  while (bytes > ACCENT_MODULE_LIMIT && kept > 1) {
+    kept -= 1
+    ;({ html, bytes } = built(kept))
+  }
   if (bytes > ACCENT_MODULE_LIMIT)
     return { problem: `the accent module is ${bytes} bytes, over the limit of ${ACCENT_MODULE_LIMIT}` }
   return {
     html,
     bytes,
     family: routes.colours,
+    ...(kept < markup.length ? { markupOmitted: routes.colours.slice(kept) } : {}),
     routes: {
       written: routes.literal.length,
       words: routes.rescope.length,
@@ -146,6 +161,112 @@ export function accentModule({ sheets, colours, darkHook = null }) {
 }
 
 /** The style itself: the slot line older readers look for, the facts the site check judges by, the side a template opens on. */
+// One rule line as `wrap` writes it: the at-rule heads around it, its selector and its one declaration.
+const ONE_RULE = /^((?:[^{}]+\{)*)([^{}]+)\{([^{}:]+):([^{}]*)\}(\}*)$/
+// A property's name as CSS compares it: case-insensitive, but a custom property (`--name`) is case-sensitive.
+const propOf = (name) => (name.trim().startsWith('--') ? name.trim() : name.trim().toLowerCase())
+// Rules side by side with no at-rule around them: `sel{prop:value}sel{prop:value}`.
+const FLAT_RULES = /[^{}]+\{[^{}]*\}/g
+// A selector a browser may not know drops every selector of its list with it: such a selector keeps a rule of its own.
+const OWN_RULE = /:-|::-|:has\(|:is\(|:where\(|:host|::part|::slotted/i
+
+/**
+ * The module's rules with the same declaration under the same at-rules joined into one selector list, so a template
+ * that paints its accent in many rules still fits the module (dev, JA Diner 16/11/2026: 75708 and 121114 bytes, over
+ * the 64000 a module holds, so the site kept the template's accent: a final-check block). A rule joins an earlier one
+ * only when no rule between them sets the same property to another value, so no element can end up with another value; a
+ * line that is not one plain rule (several rules, a keyframe) is never joined and stops every join across it. A
+ * selector a browser may not know (a vendor pseudo-class, `:has()`) keeps its own rule, since one unknown selector
+ * drops its whole list.
+ * @param {string[]} lines
+ * @returns {string[]}
+ */
+export function compactRules(lines) {
+  /** @type {{ line: string, rule: null | { heads: string, selectors: string[], prop: string, value: string, own: boolean } }[]} */
+  const out = []
+  // A line of several flat rules side by side (the markup forms of one colour) is read as its rules, in order.
+  const split = lines.flatMap((line) => {
+    const rules = line.match(FLAT_RULES)
+    return rules && rules.join('') === line ? rules : [line]
+  })
+  for (const line of split) {
+    const m = ONE_RULE.exec(line)
+    const heads = m?.[1] ?? ''
+    const parsed =
+      m && m[5].length === (heads.match(/\{/g) ?? []).length
+        ? { heads, selectors: [m[2].trim()], prop: propOf(m[3]), value: m[4].trim(), own: !joinable(m[2]) }
+        : null
+    if (!parsed) {
+      out.push({ line, rule: null })
+      continue
+    }
+    let joined = false
+    for (let i = out.length - 1; i >= 0 && !parsed.own; i -= 1) {
+      const earlier = out[i].rule
+      if (!earlier) break
+      if (
+        !earlier.own &&
+        earlier.heads === parsed.heads &&
+        earlier.prop === parsed.prop &&
+        earlier.value === parsed.value
+      ) {
+        for (const selector of parsed.selectors)
+          if (!earlier.selectors.includes(selector)) earlier.selectors.push(selector)
+        joined = true
+        break
+      }
+      // The same property with another value: the later rule must stay after it. The same value cannot change what wins.
+      if (earlier.prop === parsed.prop && earlier.value !== parsed.value) break
+    }
+    if (!joined) out.push({ line, rule: parsed })
+  }
+  return out.map(({ line, rule }) =>
+    rule
+      ? `${rule.heads}${rule.selectors.join(',')}{${rule.prop}:${rule.value}}${'}'.repeat((rule.heads.match(/\{/g) ?? []).length)}`
+      : line
+  )
+}
+
+/**
+ * A selector list's selectors, split at its top-level commas only: a comma inside brackets, parentheses or quotes
+ * (`[style*="rgb(1, 2, 3)"]`, `:is(.a, .b)`) belongs to its selector. The write step's look guard reads a joined rule
+ * the same way (look-guard-css.js).
+ * @param {string} selector
+ * @returns {string[]}
+ */
+export function selectorParts(selector) {
+  const parts = []
+  let depth = 0
+  let quote = null
+  let from = 0
+  for (let i = 0; i < selector.length; i += 1) {
+    const ch = selector[i]
+    if (quote) {
+      if (ch === quote && selector[i - 1] !== '\\') quote = null
+    } else if (ch === '"' || ch === "'") quote = ch
+    else if (ch === '(' || ch === '[') depth += 1
+    else if (ch === ')' || ch === ']') depth -= 1
+    else if (ch === ',' && depth === 0) {
+      parts.push(selector.slice(from, i).trim())
+      from = i + 1
+    }
+  }
+  parts.push(selector.slice(from).trim())
+  return parts.filter(Boolean)
+}
+
+/** A selector of the markup forms (markupRules): an SVG paint attribute or an inline style, of one colour. */
+export const MARKUP_SELECTOR =
+  /^\[(?:(?:fill|stroke|stop-color|flood-color)="#[0-9a-f]{6}" i|style[\^*]="[^"]*"(?: i)?)\]$/i
+
+// A rule may join a list when a browser surely knows its selector and the look guard can still read each part: one
+// selector, or a list of markup forms only. A template's own list (`.a, .b`) keeps its rule, as its route names it.
+function joinable(selector) {
+  if (OWN_RULE.test(selector)) return false
+  const parts = selectorParts(selector)
+  return parts.length === 1 || parts.every((part) => MARKUP_SELECTOR.test(part))
+}
+
 function moduleText({ lines, tones, opens, accent, seed, family, words, note = '' }) {
   const slot = `${ACCENT_SLOT_STEM}${accent.slice(1)}`
   const facts = [

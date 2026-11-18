@@ -80,3 +80,5 @@ detail: breadcrumb from term/`short_title`; prev/next by `date` in the same loca
 h2 blocks with stable ids (`toc.ts`) · search: `?q` + `?type` + count per collection, `cache-control:
 no-store` · 404: full chrome, search form, suggestions from a field · kit: static samples from `sample` json, no simulated
 submit · legal: title-only when the source has no body · HTML sitemap from menu + collections.
+
+- **EmDash's image component ships unlayered scoped rules** (`figure { margin: 24px 0 }`, `.emdash-image[data-astro-cid] figcaption { text-align: center }`) that beat any rule inside `@layer`; a Tailwind-layered theme loses to them silently (an offset, centred captions), so override in an unlayered block or with `!important`.

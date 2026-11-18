@@ -7,7 +7,7 @@
 // cannot take is failed instead of pretended. Whatever is refused is failed in the plugin's words and the rest goes. What the
 // last report says is off the site already is not ordered off it again, and its line reads as it did.
 import { hideLines } from './hide-lines.js'
-import { hideOrders } from './hide-plan.js'
+import { articleOwners, hideOrders } from './hide-plan.js'
 import { dropPages, emptyConstants, hideOpsOf, removeRows, unpublishBlocks } from './hide-writes.js'
 import { NO_LAST } from './no-last-report.js'
 import { answerWords } from './settings-door.js'
@@ -27,7 +27,7 @@ function settingsPart(extras, menu) {
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, owners: Map<string, object>,
  *   extras: object, reading: object, changes: Record<string, string>, contract: string,
- *   sleep: (ms: number) => Promise<void>, last?: object,
+ *   sleep: (ms: number) => Promise<void>, last?: object, heldWords?: Map<string, string>, linked?: Set<string>, doorOf?: Function | null,
  *   onNoWayOut?: (named: { slot: string, reason: string }[]) => Promise<void> }} input `onNoWayOut`: told before anything is written
  * @returns {Promise<{ stop?: object, reading?: object, emptySlots?: string[], settingsExtras?: object, held?: Map<string, object>,
  *   results?: (done: { emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object> }) =>
@@ -46,6 +46,9 @@ export async function runHideStage(input) {
     contract,
     sleep,
     last = NO_LAST,
+    heldWords = new Map(),
+    linked = new Set(),
+    doorOf = null,
     onNoWayOut = async () => {}
   } = input
   const asksToHide = [...owners.values()].some((c) => c.kind === 'hide')
@@ -60,7 +63,10 @@ export async function runHideStage(input) {
     changes,
     cannotHide,
     rowsRemove: ops.rowsRemove,
-    last
+    last,
+    heldWords,
+    linked,
+    doorOf
   })
   await onNoWayOut(order.noWayOut)
   const total = Object.keys(changes).length + order.emptySlots.length
@@ -72,13 +78,24 @@ export async function runHideStage(input) {
       }
     }
   const pages = new Map()
-  const gonePage = ({ page }) => last.hidden(page.id)
+  const gonePage = ({ page }) => {
+    if (!last.hidden(page.id)) return false
+    const articles = articleOwners(page, kit)
+    const read = last.line(page.id)?.readFrom
+    return (
+      !articles.length ||
+      (articles.length === 1 &&
+        read?.params?.kind === 'article' &&
+        read.params.id === articles[0] &&
+        read.path?.join('.') === 'item.state')
+    )
+  }
   for (const entry of order.pages.filter(gonePage)) {
     const { status, reason, ordered, readFrom } = last.line(entry.page.id)
     pages.set(entry.page.id, { status, reason, ordered, readFrom })
   }
   const toDrop = order.pages.filter((entry) => !gonePage(entry))
-  let wrote = await dropPages({ door, siteKey, pages: toDrop, results: pages })
+  let wrote = await dropPages({ door, siteKey, pages: toDrop, results: pages, kit, plan })
   let words = { refusedAll: null, refused: new Map() }
   if (Object.keys(order.strings).length) {
     const template = kit?.template?.name
@@ -126,6 +143,8 @@ export async function runHideStage(input) {
   return {
     reading,
     emptySlots: order.emptySlots,
+    // Label words written instead of a hide that would leave a control with no words (hide-control-labels.js).
+    restored: order.restored,
     // The slots the hide stage takes out with their row, this run or an earlier one: the closing rule leaves them alone.
     takenSlots: [
       ...new Set([

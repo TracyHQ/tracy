@@ -16,15 +16,14 @@ import {
 import { pathOfMeasure } from './page-faults.js'
 import { TEMPLATE_STEP } from '../lib/site-build-steps.js'
 import { hex, neutralReason } from '../lib/brand-accent/colour-math.js'
+import { LOGO_BLOCK_SHARE, LOGO_GONE_RATIO, LOGO_WARN_SHARE } from '../lib/logo-contrast.js'
 
 /**
  * The share of a logo's ink that reads under LOGO_GONE_RATIO against its ground: over LOGO_BLOCK_SHARE the logo is gone (a block),
  * from LOGO_WARN_SHARE it needs a person's eye (a warning), under it the logo still reads. The owner ruled a logo with 31% to 34% of
  * its ink under 2:1 no fault (04/11/2026): the club name stayed readable and only the dark part of the mark faded.
  */
-export const LOGO_GONE_RATIO = 2
-export const LOGO_BLOCK_SHARE = 0.6
-export const LOGO_WARN_SHARE = 0.4
+export { LOGO_BLOCK_SHARE, LOGO_GONE_RATIO, LOGO_WARN_SHARE }
 
 /**
  * The bar for words the brand style coloured with its accent: 3:1, WCAG's level for large text and controls. An accent reads as a
@@ -175,7 +174,7 @@ export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
         const id =
           kind === 'grey'
             ? `grey ${side} ${w.selector} ${w.fg} ${fileOf(w.underSrc)}`
-            : `${m.path} ${m.width} ${side} ${w.selector} ${w.fg}`
+            : `${m.path} ${m.width} ${side} ${w.target?.path ?? w.selector} ${w.fg}`
         if (seen.has(id)) continue
         seen.add(id)
         const before = w.fgOff ? overPictureRatio(w.fgOff, w.under) : ratio
@@ -189,6 +188,11 @@ export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
         const base = {
           page: m.path,
           width: m.width,
+          side,
+          key: w.key,
+          selector: w.selector,
+          text: w.text,
+          ...(w.target ? { target: w.target } : {}),
           measured: `${w.selector} "${w.text}" ${rgb(w.fg)} reads ${round(ratio)}:1 over ${fileOf(w.underSrc) || 'a gradient'}${was === null ? '' : `, ${round(was)}:1 on the untouched site`}`,
           file: w.underSrc ?? null
         }

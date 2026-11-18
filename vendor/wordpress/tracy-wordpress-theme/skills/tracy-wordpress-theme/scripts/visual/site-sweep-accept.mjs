@@ -10,10 +10,11 @@
 //   evidence  a path (absolute, or relative to the dossier) that exists, or an http(s) URL
 //   kind      "source-fault" (the source is wrong) | "decided" (the port keeps the difference on purpose) | "not-measurable" (below)
 //   key       optional: words the decision's own text must contain
+//   intermittent  optional, true: the group fails in one run and not the next (the source's own measure); a run without it, or without some of the cells the row names, is no error
 //
 // A third kind records what the tool COULD NOT MEASURE (the not-measured causes of site-sweep.md: `icons-unpairable`, `icon-covered`,
 // `touch-control-not-found`, `form-purpose-unknown`, a chips cause…) after the dossier measured it by hand:
-//   { check, cause, kind: "not-measurable", cases, reason, measurement, evidence }
+//   { check, cause, kind: "not-measurable", cases, reason, measurement, evidence [, intermittent: true] }
 //   cause        the not-measured cause key as site-sweep.md prints it (`icons-unpairable`)
 //   cases        how many not-measured cases of that cause the hand measurement covers (a positive integer)
 //   reason       why the tool cannot read it;   measurement  what was measured by hand and found;   evidence  as above (a file that exists, or a URL)
@@ -64,6 +65,7 @@ export function validateSweepAccept(rows, { decisions, runRoot }) {
       else if (!isUrl(row.evidence) && !existsSync(evidencePath(row.evidence, runRoot))) E(`evidence ${row.evidence} does not exist (${evidencePath(row.evidence, runRoot)})`)
       return
     }
+    if (row.intermittent !== undefined && row.intermittent !== true) E('intermittent must be true (or left out): the row stays valid when its group is absent from a run')
     for (const m of routeErrors(row.routes)) E(m)
     if (row.widths !== undefined && (!Array.isArray(row.widths) || !row.widths.length || !row.widths.every((w) => Number.isInteger(w) && w > 0))) E('widths must be a non-empty list of integers')
     if (row.schemes !== undefined && (!Array.isArray(row.schemes) || !row.schemes.length || !row.schemes.every((x) => typeof x === 'string' && x))) E('schemes must be a non-empty list of names')
@@ -104,13 +106,15 @@ export function applyAccept(judged, rows, scope) {
     const j = judged[row.check]
     const fail = (message) => errors.push({ check: row.check, row: n, cause: row.cause, message: `sweep.accept[${n}] ${row.check} "${row.cause}": ${message}` })
     if (!j) return skipped.push({ row: n, why: `${row.check} was not run` })
-    if (row.kind === 'not-measurable') return closeNotMeasured(j, row, { fail, accepted, closedItems, unvalidated: partial ? () => skipped.push({ row: n, why: 'its cause was not in the measured scope', unvalidated: true }) : null })
+    if (row.kind === 'not-measurable') return closeNotMeasured(j, row, { fail, accepted, closedItems, unvalidated: partial ? () => skipped.push({ row: n, why: 'its cause was not in the measured scope', unvalidated: true }) : null, intermittent: row.intermittent === true ? () => skipped.push({ row: n, why: 'intermittent row: its cause is not among the not-measured causes of this run', unvalidated: true }) : null })
     if (scope?.routes && !row.routes.some((r) => ran.has(r))) return skipped.push({ row: n, why: 'none of its routes was part of this run' })
     // heights reads its own widths (576 and 992 beside the run's): a heights row is in this run when heights read one of its widths
     const ranWidths = row.check === 'heights' && scope?.heightsWidths ? scope.heightsWidths : scope?.widths
     if (ranWidths && row.widths && !row.widths.some((w) => ranWidths.includes(w))) return skipped.push({ row: n, why: 'none of its widths was part of this run' })
     const same = original[row.check].filter((d) => causeOf(d) === row.cause)
     if (!same.length && partial) return skipped.push({ row: n, why: 'its group was not in the measured scope', unvalidated: true })
+    // `intermittent: true`: the cell fails in one run and not the next (the source's own measure), so a run without the group is no error
+    if (!same.length && row.intermittent === true) return skipped.push({ row: n, why: 'intermittent row: its group is absent from this run', unvalidated: true })
     if (!same.length) {
       const known = [...new Set(original[row.check].map(causeOf))].slice(0, 5)
       return fail(`matches no defect group in this run — a stale exception (the fault is gone, or the cause key changed)${known.length ? `; the groups of ${row.check} are: ${known.map((k) => `"${k}"`).join(', ')}` : `; ${row.check} has no defect group`}`)
@@ -123,7 +127,9 @@ export function applyAccept(judged, rows, scope) {
     for (const w of row.widths ?? []) if ((!ranWidths || ranWidths.includes(w)) && !covered.some((d) => d.width === w)) over.push(`width ${w}`)
     for (const x of row.schemes ?? []) if (!covered.some((d) => d.scheme === x || d.state === x)) over.push(`scheme ${x}`)
     if (partial && !covered.length) return skipped.push({ row: n, why: 'its group was not in the measured scope', unvalidated: true })
-    if (over.length && !partial) return fail(`names ${over.join(', ')} where the group does not occur — a row covers only what it was measured on`)
+    // an intermittent row tolerates cells it names that did not occur in this run; it covers the ones that did
+    if (row.intermittent === true && !covered.length) return skipped.push({ row: n, why: 'intermittent row: none of its cells occurred in this run', unvalidated: true })
+    if (over.length && !partial && row.intermittent !== true) return fail(`names ${over.join(', ')} where the group does not occur — a row covers only what it was measured on`)
     const twice = covered.find((d) => claimed.has(d))
     if (twice) return fail(`a defect row (${twice.route}${twice.width != null ? ` @${twice.width}` : ''}) is also covered by sweep.accept[${claimed.get(twice)}]: a group is matched to at most one row`)
     for (const d of covered) claimed.set(d, n)
@@ -157,10 +163,12 @@ export const notMeasuredCausesOf = (n) => (Array.isArray(n.causes) && n.causes.l
  * Close the not-measured cases of one cause with a `not-measurable` row. A case with several causes (chips) is closed when every cause
  * of it is recorded. More cases than the row says is an error and closes nothing: the cases stay not measured.
  */
-function closeNotMeasured(j, row, { fail, accepted, closedItems, unvalidated = null }) {
+function closeNotMeasured(j, row, { fail, accepted, closedItems, unvalidated = null, intermittent = null }) {
   if (j.closed?.some((c) => c.row.cause === row.cause)) return fail('the cause is recorded by another not-measurable row: one row per cause')
   const mine = j.notMeasured.filter((x) => notMeasuredCausesOf(x).includes(row.cause))
   if (!mine.length && unvalidated) return unvalidated()
+  // `intermittent: true`: the probe finds this cause in one run and not the next, so a run without it is no error
+  if (!mine.length && intermittent) return intermittent()
   if (!mine.length) {
     const known = [...new Set(j.notMeasured.flatMap(notMeasuredCausesOf))].slice(0, 5)
     return fail(`matches no not-measured cause in this run — a stale row (the cause is gone, or its key changed)${known.length ? `; the not-measured causes of ${row.check} are: ${known.map((k) => `"${k}"`).join(', ')}` : `; ${row.check} has nothing not measured`}`)

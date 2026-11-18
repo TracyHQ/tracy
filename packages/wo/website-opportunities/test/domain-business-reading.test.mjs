@@ -5,6 +5,7 @@ import {
   checkBusinessReading,
   readBusinessByRules,
   readingSourcesOf,
+  readingCardOf,
   withReadingPicks
 } from '../domain/business-reading.mjs'
 
@@ -76,7 +77,9 @@ test('an item survives only when its quote is in the source it names and its lab
       ['Padel sessions', 'service', 'post'],
       ['Swimming lessons', 'service', 'bio'],
       // The bio lists "Tennis & Padel": the part no kept service names stays (F10).
-      ['Tennis', 'service', 'bio']
+      ['Tennis', 'service', 'bio'],
+      // The invalid model label is dropped; the explicitly offered, quoted label is recovered.
+      ['Customized fitness lessons', 'service', 'post']
     ]
   )
   assert.equal(
@@ -130,14 +133,55 @@ test('the About line uses only quoted words; removed items leave it; a review-on
   )
   assert.equal(
     aboutLineOf('Ace Coach', read),
-    'Ace Coach offers Swiss coaching in Lisbon: tennis & padel and swimming lessons, for all ages and levels.'
+    'Ace Coach offers Swiss coaching in Lisbon: tennis & padel, swimming lessons and customized fitness lessons, for all ages and levels.'
   )
   const picked = withReadingPicks(read, { removed: [read.services[0].id], shown: [] })
   assert.deepEqual(
     picked.services.map((s) => s.label),
-    ['Swimming lessons']
+    ['Swimming lessons', 'Customized fitness lessons']
   )
   assert.equal(picked.team[0].onSite, false)
   assert.equal(withReadingPicks(read, { shown: [read.team[0].id] }).team[0].onSite, true)
   assert.equal(aboutLineOf('Ace Coach', { services: [], story: [], audience: [] }), null)
+})
+
+test('the Profile card shows a person only reviews name as the brief does: a role or two mentions, or the owner', () => {
+  const person = (id, label, role) => ({
+    id,
+    label,
+    ...(role ? { role } : {}),
+    quote: `lessons with ${label}`,
+    source: { kind: 'review', ref: 'review:1' },
+    reviewsOnly: true
+  })
+  const reading = {
+    method: 'model',
+    services: [],
+    audience: [],
+    story: [],
+    team: [person('p1', 'Alex', 'coach'), person('p2', 'Sam'), person('p3', 'Jo'), person('p4', 'Kim')]
+  }
+  const reviews = [
+    { author: 'Guest A', text: 'Padel coaching with Alex and Sam, and Jo was great.' },
+    { author: 'Guest B', text: 'Jo keeps every lesson lively.' }
+  ]
+  const team = (picks) =>
+    readingCardOf(reading, picks, null, { reviews }).team.map((p) => [
+      p.label,
+      p.onSite,
+      p.fromReviews === true
+    ])
+  assert.deepEqual(team(null), [
+    ['Alex', true, true],
+    ['Sam', false, false],
+    ['Jo', true, true],
+    ['Kim', false, false]
+  ])
+  // The owner shows Sam: on the site by the owner's choice, not flagged.
+  assert.deepEqual(team({ shown: ['p2'] })[1], ['Sam', true, false])
+  // Without the reviews a card falls back to the role alone.
+  assert.deepEqual(
+    readingCardOf(reading, null).team.map((p) => p.onSite),
+    [true, false, false, false]
+  )
 })

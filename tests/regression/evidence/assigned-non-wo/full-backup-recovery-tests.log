@@ -1,0 +1,238 @@
+TAP version 13
+# Subtest: create posts the customer request as the bench account and wants a 202 with a job id
+ok 1 - create posts the customer request as the bench account and wants a 202 with a job id
+  ---
+  duration_ms: 16.599291
+  type: 'test'
+  ...
+# Subtest: a quickstart no template card installs is refused before anything is asked of the server
+ok 2 - a quickstart no template card installs is refused before anything is asked of the server
+  ---
+  duration_ms: 0.248542
+  type: 'test'
+  ...
+# Subtest: a refused create keeps the code
+ok 3 - a refused create keeps the code
+  ---
+  duration_ms: 7.828375
+  type: 'test'
+  ...
+# Subtest: job states map to running, done and failed
+ok 4 - job states map to running, done and failed
+  ---
+  duration_ms: 9.868083
+  type: 'test'
+  ...
+# Subtest: inspect reads the contract through the Apply door
+ok 5 - inspect reads the contract through the Apply door
+  ---
+  duration_ms: 2.100792
+  type: 'test'
+  ...
+# Subtest: remove waits through a pending delete until the site is removed
+ok 6 - remove waits through a pending delete until the site is removed
+  ---
+  duration_ms: 9.980458
+  type: 'test'
+  ...
+# Subtest: apply hands back the plugin answer, per-slot errors included, and shapes a door refusal as a refusal
+ok 7 - apply hands back the plugin answer, per-slot errors included, and shapes a door refusal as a refusal
+  ---
+  duration_ms: 11.466458
+  type: 'test'
+  ...
+# Subtest: recovery pins only a full backup and restores through one verified, idempotent customer operation
+ok 8 - recovery pins only a full backup and restores through one verified, idempotent customer operation
+  ---
+  duration_ms: 4.531375
+  type: 'test'
+  ...
+# Subtest: recovery refuses changed backup bytes and never restores a files-only point
+ok 9 - recovery refuses changed backup bytes and never restores a files-only point
+  ---
+  duration_ms: 3.725125
+  type: 'test'
+  ...
+# Subtest: step 9 is write, first check, 9b on its faults, a check of the changed pages; no finder stage
+ok 10 - step 9 is write, first check, 9b on its faults, a check of the changed pages; no finder stage
+  ---
+  duration_ms: 96.7095
+  type: 'test'
+  ...
+# Subtest: 9b sends the first check's customer-visible faults, never accent emphasis or a step's own check
+ok 11 - 9b sends the first check's customer-visible faults, never accent emphasis or a step's own check
+  ---
+  duration_ms: 24.513583
+  type: 'test'
+  ...
+# Subtest: a page whose faults do not fit one comment turn is split into several turns, each within the limit
+ok 12 - a page whose faults do not fit one comment turn is split into several turns, each within the limit
+  ---
+  duration_ms: 24.480042
+  type: 'test'
+  ...
+# Subtest: a turn that throws is logged for its page, the other pages proceed, and the second check runs
+ok 13 - a turn that throws is logged for its page, the other pages proceed, and the second check runs
+  ---
+  duration_ms: 14.601417
+  type: 'test'
+  ...
+# Subtest: an item carries the content.locate answer for its element and the served block selector, as the popover sends it
+ok 14 - an item carries the content.locate answer for its element and the served block selector, as the popover sends it
+  ---
+  duration_ms: 121.946666
+  type: 'test'
+  ...
+# Subtest: with content.locate unavailable the item keeps the fault levels (slot and record) and says so
+ok 15 - with content.locate unavailable the item keeps the fault levels (slot and record) and says so
+  ---
+  duration_ms: 19.239583
+  type: 'test'
+  ...
+# Subtest: a comment page address is the page as the site serves it; an agent with no page address is refused
+ok 16 - a comment page address is the page as the site serves it; an agent with no page address is refused
+  ---
+  duration_ms: 25.584417
+  type: 'test'
+  ...
+# Subtest: a prompt the queue runs after the resend gave up is judged and undone like the rest
+ok 17 - a prompt the queue runs after the resend gave up is judged and undone like the rest
+  ---
+  duration_ms: 48.543667
+  type: 'test'
+  ...
+# Subtest: a resend that yields two turns keeps both, and both are judged
+ok 18 - a resend that yields two turns keeps both, and both are judged
+  ---
+  duration_ms: 10.159125
+  type: 'test'
+  ...
+# Subtest: a turn still open at ten minutes is waited for, never judged while open, and the step returns by twelve
+ok 19 - a turn still open at ten minutes is waited for, never judged while open, and the step returns by twelve
+  ---
+  duration_ms: 24.7395
+  type: 'test'
+  ...
+# Subtest: a turn still open at the return is cancelled through its session, logged, and kept when it made nothing worse
+ok 20 - a turn still open at the return is cancelled through its session, logged, and kept when it made nothing worse
+  ---
+  duration_ms: 74.850959
+  type: 'test'
+  ...
+# Subtest: every agent call and the site check are raced against the time left; the comment request is told it
+ok 21 - every agent call and the site check are raced against the time left; the comment request is told it
+  ---
+  duration_ms: 11.888459
+  type: 'test'
+  ...
+# Subtest: the first check shares the step clock: a slow first check leaves 9b less time for new work
+ok 22 - the first check shares the step clock: a slow first check leaves 9b less time for new work
+  ---
+  duration_ms: 11.267
+  type: 'test'
+  ...
+# Subtest: the pages a turn changed come from what it wrote, not only the page it was sent for
+ok 23 - the pages a turn changed come from what it wrote, not only the page it was sent for
+  ---
+  duration_ms: 12.72975
+  type: 'test'
+  ...
+# Subtest: a write the pass cannot place on a page counts as changing every page
+ok 24 - a write the pass cannot place on a page counts as changing every page
+  ---
+  duration_ms: 8.195875
+  type: 'test'
+  ...
+# Subtest: an undo the site refuses, or that throws, is kept in repair-pass.json as undo-failed with its reason
+ok 25 - an undo the site refuses, or that throws, is kept in repair-pass.json as undo-failed with its reason
+  ---
+  duration_ms: 7.819916
+  type: 'test'
+  ...
+# Subtest: a turn that only changed design files counts as changing every page: a new blocking failure anywhere undoes it whole
+ok 26 - a turn that only changed design files counts as changing every page: a new blocking failure anywhere undoes it whole
+  ---
+  duration_ms: 12.393166
+  type: 'test'
+  ...
+# Subtest: an automatic repair turn cannot wait on a human until the chain two-hour deadline
+ok 27 - an automatic repair turn cannot wait on a human until the chain two-hour deadline
+  ---
+  duration_ms: 19.333958
+  type: 'test'
+  ...
+# Subtest: a refused or unsettled Stop never judges an open writer or starts another page writer
+ok 28 - a refused or unsettled Stop never judges an open writer or starts another page writer
+  ---
+  duration_ms: 11.171542
+  type: 'test'
+  ...
+# Subtest: the native turn gets its execution window after rate waiting and request submission
+ok 29 - the native turn gets its execution window after rate waiting and request submission
+  ---
+  duration_ms: 0.815208
+  type: 'test'
+  ...
+# Subtest: a failed read after Stop leaves the writer unverified and prevents subsequent repairs
+ok 30 - a failed read after Stop leaves the writer unverified and prevents subsequent repairs
+  ---
+  duration_ms: 16.844083
+  type: 'test'
+  ...
+# Subtest: a write that breaks a previously healthy site restores its pinned full backup and verifies the home
+ok 31 - a write that breaks a previously healthy site restores its pinned full backup and verifies the home
+  ---
+  duration_ms: 1.270958
+  type: 'test'
+  ...
+# Subtest: ordinary content faults and transient reads never restore the template
+ok 32 - ordinary content faults and transient reads never restore the template
+  ---
+  duration_ms: 1.82075
+  type: 'test'
+  ...
+# Subtest: a missing full baseline refuses writes instead of advertising a files-only recovery point
+ok 33 - a missing full baseline refuses writes instead of advertising a files-only recovery point
+  ---
+  duration_ms: 0.316459
+  type: 'test'
+  ...
+# Subtest: an open repair writer prevents a full restore from racing its writes
+ok 34 - an open repair writer prevents a full restore from racing its writes
+  ---
+  duration_ms: 0.197958
+  type: 'test'
+  ...
+# Subtest: a pending restore or failed read-back is never reported as restored
+ok 35 - a pending restore or failed read-back is never reported as restored
+  ---
+  duration_ms: 0.302916
+  type: 'test'
+  ...
+# Subtest: home recovery probes distinguish confirmed CMS failure from network and access failures
+ok 36 - home recovery probes distinguish confirmed CMS failure from network and access failures
+  ---
+  duration_ms: 1.098458
+  type: 'test'
+  ...
+# Subtest: missing settlement evidence prevents a restore even when no open turn is listed
+ok 37 - missing settlement evidence prevents a restore even when no open turn is listed
+  ---
+  duration_ms: 0.318542
+  type: 'test'
+  ...
+# Subtest: step 9 proves native writer settlement from every prompted request record
+ok 38 - step 9 proves native writer settlement from every prompted request record
+  ---
+  duration_ms: 304.421708
+  type: 'test'
+  ...
+1..38
+# tests 38
+# suites 0
+# pass 38
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 680.344292

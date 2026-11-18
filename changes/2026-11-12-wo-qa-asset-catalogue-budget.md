@@ -1,0 +1,2 @@
+- **Keep photo metadata out of agent demo QA fact evidence** — WO pipeline maintainers · PR pending · `fix/wo-dev-full-flow-acceptance` · 2026-11-12
+  **Affects:** Agent demo baseline and QA requests after rebuilding tracy-web. The frozen asset catalogue no longer consumes the business-prose budget or supplies numeric business facts; original assets, complete research content and review testimony remain available through their existing paths. The complete-evidence limit remains unchanged.

@@ -1,0 +1,475 @@
+TAP version 13
+# Subtest: no session: 401 NOT_SIGNED_IN
+ok 1 - no session: 401 NOT_SIGNED_IN
+  ---
+  duration_ms: 2398.142875
+  type: 'test'
+  ...
+# Subtest: switch off: every door that starts work answers FEATURE_OFF; my records stay readable
+ok 2 - switch off: every door that starts work answers FEATURE_OFF; my records stay readable
+  ---
+  duration_ms: 195.995833
+  type: 'test'
+  ...
+# Subtest: settings: a new account takes the deployment’s Default CMS; a change is per account and persists
+ok 3 - settings: a new account takes the deployment’s Default CMS; a change is per account and persists
+  ---
+  duration_ms: 143.581041
+  type: 'test'
+  ...
+# Subtest: capabilities: social sources say credential_missing without a token, the website is available
+ok 4 - capabilities: social sources say credential_missing without a token, the website is available
+  ---
+  duration_ms: 97.923959
+  type: 'test'
+  ...
+# Subtest: approx-location: Cloudflare headers first, then the client address, then a local stand's own network
+ok 5 - approx-location: Cloudflare headers first, then the client address, then a local stand's own network
+  ---
+  duration_ms: 48.952834
+  type: 'test'
+  ...
+# Subtest: search answers deduplicated candidates; a radius over 50 km is refused
+ok 6 - search answers deduplicated candidates; a radius over 50 km is refused
+  ---
+  duration_ms: 50.572875
+  type: 'test'
+  ...
+# Subtest: create: the same candidate twice is one opportunity (201 then 200)
+ok 7 - create: the same candidate twice is one opportunity (201 then 200)
+  ---
+  duration_ms: 42.74675
+  type: 'test'
+  ...
+# Subtest: create from a URL: a private, loopback or rebinding address is refused (SSRF)
+ok 8 - create from a URL: a private, loopback or rebinding address is refused (SSRF)
+  ---
+  duration_ms: 76.782291
+  type: 'test'
+  ...
+# Subtest: owner isolation: account B gets 404 on everything of account A
+ok 9 - owner isolation: account B gets 404 on everything of account A
+  ---
+  duration_ms: 143.123333
+  type: 'test'
+  ...
+# Subtest: research: the same requestId is the same job; a second one while active is JOB_ACTIVE
+ok 10 - research: the same requestId is the same job; a second one while active is JOB_ACTIVE
+  ---
+  duration_ms: 65.412167
+  type: 'test'
+  ...
+# Subtest: an agent build waits for its research: none or a paused one is refused, nothing accepted
+ok 11 - an agent build waits for its research: none or a paused one is refused, nothing accepted
+  ---
+  duration_ms: 48.910375
+  type: 'test'
+  ...
+# Subtest: a brief is a research snapshot: the same research answers it again, and a Settings change only reaches the next build
+ok 12 - a brief is a research snapshot: the same research answers it again, and a Settings change only reaches the next build
+  ---
+  duration_ms: 188.735458
+  type: 'test'
+  ...
+# Subtest: build: acceptance queues the action and does no work; the same request replays it
+ok 13 - build: acceptance queues the action and does no work; the same request replays it
+  ---
+  duration_ms: 65.282958
+  type: 'test'
+  ...
+# Subtest: build: the server sends the revision CMS, ignores the client CMS, and a retry is one site
+ok 14 - build: the server sends the revision CMS, ignores the client CMS, and a retry is one site
+  ---
+  duration_ms: 216.537458
+  type: 'test'
+  ...
+# Subtest: build: a template withdrawn after acceptance is refused before anything is created
+ok 15 - build: a template withdrawn after acceptance is refused before anything is created
+  ---
+  duration_ms: 69.105666
+  type: 'test'
+  ...
+# Subtest: crash after provision: a build with no receipt is reconciled from site_creation, never created twice
+ok 16 - crash after provision: a build with no receipt is reconciled from site_creation, never created twice
+  ---
+  duration_ms: 84.675042
+  type: 'test'
+  ...
+# Subtest: build: no label → the server names the site after the place, and a taken name gets -2
+ok 17 - build: no label → the server names the site after the place, and a taken name gets -2
+  ---
+  duration_ms: 173.099125
+  type: 'test'
+  ...
+# Subtest: build: a label sent is kept, a retry without one keeps the first choice, a bad one is refused
+ok 18 - build: a label sent is kept, a retry without one keeps the first choice, a bad one is refused
+  ---
+  duration_ms: 258.05225
+  type: 'test'
+  ...
+# Subtest: handoff: the stored pictures go onto the ready site one by one, once, and the prompt names their paths
+ok 19 - handoff: the stored pictures go onto the ready site one by one, once, and the prompt names their paths
+  ---
+  duration_ms: 201.261958
+  type: 'test'
+  ...
+# Subtest: handoff: a refused prompt fails closed; the next press uses the same session and request id
+ok 20 - handoff: a refused prompt fails closed; the next press uses the same session and request id
+  ---
+  duration_ms: 134.035542
+  type: 'test'
+  ...
+# Subtest: handoff: the QA baseline is read off the site once, before the agent, and both reads answer the qa
+ok 21 - handoff: the QA baseline is read off the site once, before the agent, and both reads answer the qa
+  ---
+  duration_ms: 139.763667
+  type: 'test'
+  ...
+# Subtest: handoff: a baseline the host could not read sends no prompt and the page gets none; a later press reads it and sends it
+ok 22 - handoff: a baseline the host could not read sends no prompt and the page gets none; a later press reads it and sends it
+  ---
+  duration_ms: 132.698292
+  type: 'test'
+  ...
+# Subtest: handoff: a second press while the first still runs is told so — one chat, one baseline, one prompt
+ok 23 - handoff: a second press while the first still runs is told so — one chat, one baseline, one prompt
+  ---
+  duration_ms: 161.358833
+  type: 'test'
+  ...
+# Subtest: handoff: a press after the QA verdict keeps it, uploads nothing and sends nothing
+ok 24 - handoff: a press after the QA verdict keeps it, uploads nothing and sends nothing
+  ---
+  duration_ms: 139.420541
+  type: 'test'
+  ...
+# Subtest: handoff: it waits for the site’s brief to finish, uploads only what the build did not place, and names what it placed
+ok 25 - handoff: it waits for the site’s brief to finish, uploads only what the build did not place, and names what it placed
+  ---
+  duration_ms: 133.322708
+  type: 'test'
+  ...
+# Subtest: build: the create door gets its own Site questions answered from the brief, or just the about line
+ok 26 - build: the create door gets its own Site questions answered from the brief, or just the about line
+  ---
+  duration_ms: 170.956667
+  type: 'test'
+  ...
+# Subtest: build: the create door gets the contact facts the brief holds, each with its source, also when the questions are down
+ok 27 - build: the create door gets the contact facts the brief holds, each with its source, also when the questions are down
+  ---
+  duration_ms: 106.373167
+  type: 'test'
+  ...
+# Subtest: revision: the brief makes its content from the posts each source collected
+ok 28 - revision: the brief makes its content from the posts each source collected
+  ---
+  duration_ms: 75.142916
+  type: 'test'
+  ...
+# Subtest: template fit without a restaurant template: a hospitality card beats the first one listed
+ok 29 - template fit without a restaurant template: a hospitality card beats the first one listed
+  ---
+  duration_ms: 20.494334
+  type: 'test'
+  ...
+# Subtest: build: a refused create is asked again by the same requestId, and only then makes the site
+ok 30 - build: a refused create is asked again by the same requestId, and only then makes the site
+  ---
+  duration_ms: 146.717042
+  type: 'test'
+  ...
+# Subtest: capabilities read the keys saved on /ops/wo: Places with a Google key, Google Maps with an Apify one
+ok 31 - capabilities read the keys saved on /ops/wo: Places with a Google key, Google Maps with an Apify one
+  ---
+  duration_ms: 38.501375
+  type: 'test'
+  ...
+# Subtest: search with nothing saved on /ops: env Apify token, 2 km, auto chain — as before
+ok 32 - search with nothing saved on /ops: env Apify token, 2 km, auto chain — as before
+  ---
+  duration_ms: 49.327959
+  type: 'test'
+  ...
+# Subtest: search follows /ops/wo settings: default radius, provider, place limit, charge ceiling, Google key
+ok 33 - search follows /ops/wo settings: default radius, provider, place limit, charge ceiling, Google key
+  ---
+  duration_ms: 93.069291
+  type: 'test'
+  ...
+# Subtest: searchRunsPerDay counts Apify searches only: Places answers are given back, Google Maps ones spend the day
+ok 34 - searchRunsPerDay counts Apify searches only: Places answers are given back, Google Maps ones spend the day
+  ---
+  duration_ms: 68.08775
+  type: 'test'
+  ...
+# Subtest: a revision carries the profile’s Google Place facts and the current site’s PageSpeed
+ok 35 - a revision carries the profile’s Google Place facts and the current site’s PageSpeed
+  ---
+  duration_ms: 50.100709
+  type: 'test'
+  ...
+# Subtest: search v2: filters go to the domain, depth follows the radius, chains are hidden and counted
+ok 36 - search v2: filters go to the domain, depth follows the radius, chains are hidden and counted
+  ---
+  duration_ms: 88.488167
+  type: 'test'
+  ...
+# Subtest: search v2: social pages the site check found on the website are in the candidate on first paint
+ok 37 - search v2: social pages the site check found on the website are in the candidate on first paint
+  ---
+  duration_ms: 40.200791
+  type: 'test'
+  ...
+# Subtest: search v2: status comes from my own opportunities, jobs and builds; the site check is read, never queued
+ok 38 - search v2: status comes from my own opportunities, jobs and builds; the site check is read, never queued
+  ---
+  duration_ms: 140.020167
+  type: 'test'
+  ...
+# Subtest: create keeps the find fields of a candidate: kind, cuisine, distance, price, photo, reviews, phone
+ok 39 - create keeps the find fields of a candidate: kind, cuisine, distance, price, photo, reviews, phone
+  ---
+  duration_ms: 142.336792
+  type: 'test'
+  ...
+# [site-checks] https://two.example: down (http_500)
+# [site-checks] https://phoba.example: down (http_500)
+# Subtest: site-checks door: queues the first N unknown addresses, answers what is known, validates and rate-limits
+ok 40 - site-checks door: queues the first N unknown addresses, answers what is known, validates and rate-limits
+  ---
+  duration_ms: 6808.079292
+  type: 'test'
+  ...
+# Subtest: place photo doors: by name (as /search gave it) or by place id (Details, photos mask only); nothing cached here
+ok 41 - place photo doors: by name (as /search gave it) or by place id (Details, photos mask only); nothing cached here
+  ---
+  duration_ms: 106.083292
+  type: 'test'
+  ...
+# Subtest: capabilities v2: kinds, cuisines, the browser map key and the search limits
+ok 42 - capabilities v2: kinds, cuisines, the browser map key and the search limits
+  ---
+  duration_ms: 45.307333
+  type: 'test'
+  ...
+# [social-stats] tiktok:phoba: provider_error
+# [social-stats] instagram:phoba: provider_error
+# [social-stats] facebook:phoba: provider_error
+# Subtest: social-stats door: queues the first N unknown profiles, answers what is known, force, validates and rate-limits
+ok 43 - social-stats door: queues the first N unknown profiles, answers what is known, force, validates and rate-limits
+  ---
+  duration_ms: 286.417292
+  type: 'test'
+  ...
+# [social-stats] tiktok:phoba: provider_error
+# [site-checks] https://three.example: down (http_500)
+# [site-checks] https://three.example: lease lost, result dropped
+# [site-checks] https://phoba.vn: down (http_500)
+# Subtest: switch off: the social-stats and site-checks ticks claim nothing; switch on: they run (dev round L5)
+ok 44 - switch off: the social-stats and site-checks ticks claim nothing; switch on: they run (dev round L5)
+  ---
+  duration_ms: 5058.168959
+  type: 'test'
+  ...
+# Subtest: search v2: known social stats ride on each candidate (read only) and fill the marketing points
+ok 45 - search v2: known social stats ride on each candidate (read only) and fill the marketing points
+  ---
+  duration_ms: 132.713958
+  type: 'test'
+  ...
+# Subtest: capabilities: socialStats says which networks, limits and providers this deployment runs
+ok 46 - capabilities: socialStats says which networks, limits and providers this deployment runs
+  ---
+  duration_ms: 47.660334
+  type: 'test'
+  ...
+# Subtest: pins: a build naming only its CMS takes the CMS pin saved on /ops/wo
+ok 47 - pins: a build naming only its CMS takes the CMS pin saved on /ops/wo
+  ---
+  duration_ms: 128.138875
+  type: 'test'
+  ...
+# Subtest: pins: an operator pin on /ops/wo wins over the default pin
+ok 48 - pins: an operator pin on /ops/wo wins over the default pin
+  ---
+  duration_ms: 156.960333
+  type: 'test'
+  ...
+# Subtest: pins: a pin no longer offered falls back to the restaurant fit and says why
+ok 49 - pins: a pin no longer offered falls back to the restaurant fit and says why
+  ---
+  duration_ms: 98.622375
+  type: 'test'
+  ...
+# Subtest: pins: a pin no longer offered under the strict policy is refused 409 before any work or charge
+ok 50 - pins: a pin no longer offered under the strict policy is refused 409 before any work or charge
+  ---
+  duration_ms: 40.793875
+  type: 'test'
+  ...
+# Subtest: pins: a requested template of another CMS, or not offered, is refused 400
+ok 51 - pins: a requested template of another CMS, or not offered, is refused 400
+  ---
+  duration_ms: 103.205125
+  type: 'test'
+  ...
+# Subtest: pins: the /ops/wo Default CMS is what Settings offers an account with none; each CMS builds on its pin
+ok 52 - pins: the /ops/wo Default CMS is what Settings offers an account with none; each CMS builds on its pin
+  ---
+  duration_ms: 142.919042
+  type: 'test'
+  ...
+# Subtest: build: a provision the host failed reads failed with the host reason, and the same requestId builds it again
+ok 53 - build: a provision the host failed reads failed with the host reason, and the same requestId builds it again
+  ---
+  duration_ms: 166.22075
+  type: 'test'
+  ...
+# Subtest: build: a provision that ended with nobody watching is written on the build by the sweep
+ok 54 - build: a provision that ended with nobody watching is written on the build by the sweep
+  ---
+  duration_ms: 74.226958
+  type: 'test'
+  ...
+# Subtest: build: one live demo per (brief, choice) — the same CMS and template again is refused BUILD_EXISTS before any charge
+ok 55 - build: one live demo per (brief, choice) — the same CMS and template again is refused BUILD_EXISTS before any charge
+  ---
+  duration_ms: 211.873666
+  type: 'test'
+  ...
+# Subtest: build: only requesting, provisioning and done are live — a build in any other state (deleted) does not block a rebuild
+ok 56 - build: only requesting, provisioning and done are live — a build in any other state (deleted) does not block a rebuild
+  ---
+  duration_ms: 161.416042
+  type: 'test'
+  ...
+# Subtest: build: a request whose process died before the create door is lost after ten minutes, not live for ever
+ok 57 - build: a request whose process died before the create door is lost after ten minutes, not live for ever
+  ---
+  duration_ms: 178.043916
+  type: 'test'
+  ...
+# Subtest: suggest door: Google Autocomplete through the domain, short input answers nothing, no key is 503, validated and rate-limited
+ok 58 - suggest door: Google Autocomplete through the domain, short input answers nothing, no key is 503, validated and rate-limited
+  ---
+  duration_ms: 763.548041
+  type: 'test'
+  ...
+# Subtest: search by a picked suggestion: lat/lon with its label as query skips the geocoder
+ok 59 - search by a picked suggestion: lat/lon with its label as query skips the geocoder
+  ---
+  duration_ms: 54.340208
+  type: 'test'
+  ...
+# Subtest: the template snapshot carries the design system its archive wears, so the brief and the site’s record agree
+ok 60 - the template snapshot carries the design system its archive wears, so the brief and the site’s record agree
+  ---
+  duration_ms: 15.860791
+  type: 'test'
+  ...
+# Subtest: a build that gets its site starts the demo clock, and the list row carries its demo
+ok 61 - a build that gets its site starts the demo clock, and the list row carries its demo
+  ---
+  duration_ms: 263.534334
+  type: 'test'
+  ...
+# Subtest: opening the detail page touches the demo: a new term from now
+ok 62 - opening the detail page touches the demo: a new term from now
+  ---
+  duration_ms: 130.517458
+  type: 'test'
+  ...
+# Subtest: reopen thaws a frozen demo; extend pushes a live one; each refuses the wrong state
+ok 63 - reopen thaws a frozen demo; extend pushes a live one; each refuses the wrong state
+  ---
+  duration_ms: 189.406209
+  type: 'test'
+  ...
+# Subtest: rebuild makes a new demo from the old revision once the old one was deleted
+ok 64 - rebuild makes a new demo from the old revision once the old one was deleted
+  ---
+  duration_ms: 158.287375
+  type: 'test'
+  ...
+# Subtest: a deleted demo is not "Demo built": the stage falls back, and Rebuild takes a build marked deleted
+ok 65 - a deleted demo is not "Demo built": the stage falls back, and Rebuild takes a build marked deleted
+  ---
+  duration_ms: 141.82975
+  type: 'test'
+  ...
+# Subtest: the hourly demo retention tick freezes a demo whose term ran out
+ok 66 - the hourly demo retention tick freezes a demo whose term ran out
+  ---
+  duration_ms: 104.676625
+  type: 'test'
+  ...
+# Subtest: switch off: the demo retention tick freezes nothing; switch on: it runs (stand wo2 R8)
+ok 67 - switch off: the demo retention tick freezes nothing; switch on: it runs (stand wo2 R8)
+  ---
+  duration_ms: 120.615625
+  type: 'test'
+  ...
+# Subtest: all build doors share the daily action counter; a refused bulk/manual/rebuild/retry starts nothing
+ok 68 - all build doors share the daily action counter; a refused bulk/manual/rebuild/retry starts nothing
+  ---
+  duration_ms: 92.976583
+  type: 'test'
+  ...
+# Subtest: handoff uploads the frozen 6-picture limit instead of the former fixed 24
+ok 69 - handoff uploads the frozen 6-picture limit instead of the former fixed 24
+  ---
+  duration_ms: 253.027375
+  type: 'test'
+  ...
+# Subtest: handoff uploads the frozen 26-picture limit instead of the former fixed 24
+ok 70 - handoff uploads the frozen 26-picture limit instead of the former fixed 24
+  ---
+  duration_ms: 185.004167
+  type: 'test'
+  ...
+# Subtest: named Find bypasses area geocoding and Apify, preserves chains, and retains account decoration
+ok 71 - named Find bypasses area geocoding and Apify, preserves chains, and retains account decoration
+  ---
+  duration_ms: 38.673875
+  type: 'test'
+  ...
+# Subtest: named Find refuses absent credentials and malformed intent/ID without provider calls, and returns empty results honestly
+ok 72 - named Find refuses absent credentials and malformed intent/ID without provider calls, and returns empty results honestly
+  ---
+  duration_ms: 47.222
+  type: 'test'
+  ...
+# Subtest: a geographic city result from direct Google search retains nearby discovery without Nominatim
+ok 73 - a geographic city result from direct Google search retains nearby discovery without Nominatim
+  ---
+  duration_ms: 40.096125
+  type: 'test'
+  ...
+# Subtest: Find reuses published public research, timestamps and account-owned actions without collecting
+ok 74 - Find reuses published public research, timestamps and account-owned actions without collecting
+  ---
+  duration_ms: 156.663583
+  type: 'test'
+  ...
+# Subtest: Build from my business: its own switch; any business found by name; researched, then one build of the customer’s own site
+ok 75 - Build from my business: its own switch; any business found by name; researched, then one build of the customer’s own site
+  ---
+  duration_ms: 241.49625
+  type: 'test'
+  ...
+# Subtest: Build from my business: a pasted link, a bad link, a forged place, and the daily cap
+ok 76 - Build from my business: a pasted link, a bad link, a forged place, and the daily cap
+  ---
+  duration_ms: 90.228833
+  type: 'test'
+  ...
+1..76
+# tests 76
+# suites 0
+# pass 76
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 24912.717708

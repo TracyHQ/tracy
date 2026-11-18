@@ -155,3 +155,5 @@ of any tier.
 - Probed an accordion/drawer/dropdown closed, never opened it in dark. → Open every reveal state.
 - Ticked ✅ from a subagent's summary. → Re-probe yourself.
 - Lee sees a visible defect after you said "done". → The sweep lacked perception/interaction; widen it.
+
+- **`networkidle` waits are the slow part of a render.** On pages with long-polling or external requests the source render ran about two minutes per page and passed the foreground limit, and a screenshot tool left a Chromium behind, while `waitUntil: 'load'` shot the same pages in seconds; a stand without URL rewriting also answers the model's routes with 404, so open the first shot of each route before trusting the set.

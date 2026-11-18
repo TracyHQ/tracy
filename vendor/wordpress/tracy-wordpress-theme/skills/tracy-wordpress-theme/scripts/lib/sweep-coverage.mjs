@@ -192,6 +192,14 @@ export function coverageFromReport(report) {
     routes: uniq(rows.map((r) => r.route).filter((x) => typeof x === 'string')),
     widths: uniq(list(report?.rows).map((r) => r?.width).filter((x) => Number.isInteger(x))).sort((a, b) => a - b),
     heightsWidths: uniq(list(report?.heights?.widths).filter((x) => Number.isInteger(x))).sort((a, b) => a - b),
-    schemes: uniq(list(report?.rows).map((r) => r?.scheme).filter((x) => x === 'light' || x === 'dark')).sort()
+    schemes: uniq([...list(report?.rows).map((r) => r?.scheme), ...derivedSchemes(report, uniq(rows.map((r) => r.route).filter((x) => typeof x === 'string')))].filter((x) => x === 'light' || x === 'dark')).sort()
   }
+}
+
+/** A scheme the contract declares derived (source.darkDerived: the source has none of its own to compare) on EVERY measured route is covered by that declaration, not by rows. */
+function derivedSchemes(report, routes) {
+  const entries = (Array.isArray(report?.notOwed) ? report.notOwed : []).filter((e) => e && typeof e === 'object' && typeof e.reason === 'string' && e.reason.includes('source.darkDerived'))
+  const out = []
+  for (const scheme of new Set(entries.map((e) => e.scheme))) if (routes.length && routes.every((r) => entries.some((e) => e.scheme === scheme && e.route === r))) out.push(scheme)
+  return out
 }

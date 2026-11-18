@@ -14,7 +14,7 @@ export async function moduleBoxes({ chromium, openContext, findings }) {
   const failures = []
   try {
     for (const vp of ['desktop', 'phone']) {
-      const ctx = await openContext(browser, vp)
+      const ctx = await openContext(browser, vp, { siteUrl: findings.site })
       for (const p of findings.pages) {
         const page = await ctx.newPage()
         try {

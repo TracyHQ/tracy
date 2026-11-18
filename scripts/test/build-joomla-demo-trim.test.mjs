@@ -16,8 +16,8 @@ const SCRIPT = path.join(ROOT, 'scripts/build-joomla-demo-trim.mjs')
 const CONTRACTS = path.join(ROOT, 'packages/cms/tracy-joomla-quickstart/contracts')
 const PREVIOUS = 'ja-kinetic/j6/1.0.9'
 const NEW = 'ja-kinetic/j6/1.0.10'
-/** What the registries pin today, so the copied tree passes the pinned checks on its own (Kinetic moved on to 1.0.11). */
-const PINNED = ['ja-kinetic/j6/1.0.11', 'tracy-business/j6/1.2.6']
+/** What the registries pin today, so the copied tree passes the pinned checks on its own (Kinetic moved on to 1.0.12). */
+const PINNED = ['ja-kinetic/j6/1.0.12', 'tracy-business/j6/1.2.6']
 const MAP = 'demo-trim-map.json'
 
 const made = []

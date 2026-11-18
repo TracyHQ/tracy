@@ -2,12 +2,14 @@
 // fake brand tools answering in the shapes the real ones do, an in-memory run folder holding the pictures of an
 // invented business (drawn by code, test/_brand-gate-files.mjs), and a model router that gives the agent and the
 // reviewer their own scripted replies. No real model is called and no money is spent.
-import { logoStaged } from '../src/brand-step/brand-logo.js'
+
 import assert from 'node:assert/strict'
 import sharp from 'sharp'
 import { startBrandRun } from '../src/brand-step/brand-control.js'
+import { logoStaged } from '../src/brand-step/brand-logo.js'
 import { readRun } from '../src/brand-step/brand-store.js'
 import { createBrandQueue } from '../src/brand-step/brand-worker.js'
+import { tool as nameSlotsTool } from '../src/brand-step/tools/name-slots.js'
 import { assignDoor, saveModels, saveProvider } from '../src/lib/llm-store.js'
 import { finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { loadCase } from './_brand-gate-files.mjs'
@@ -121,7 +123,7 @@ export function fakeTools({ onCall = () => {}, failOn = null } = {}) {
         }
       ]
     }),
-    tool('name_slots', { ok: true, slots: [], ownerTasks: [] }),
+    tool('name_slots', (input, ctx) => nameSlotsTool.run(input, ctx)),
     tool('look_logo', async (input, ctx) => {
       const { answer, cost } = await ctx.review({
         images: [{ mediaType: 'image/png', bytes: PNG }],

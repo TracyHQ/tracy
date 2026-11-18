@@ -1,0 +1,28 @@
+$ node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern=from-scratch.*research apps/tracy-web/test/website-opportunities-shared-research.test.mjs
+TAP version 13
+# Subtest: from-scratch research recovers failed downloads without reviving blocked or revoked media
+ok 1 - from-scratch research recovers failed downloads without reviving blocked or revoked media
+  ---
+  duration_ms: 4248.866833
+  type: 'test'
+  ...
+# Subtest: from-scratch Tripadvisor research retries its failed media downloads
+ok 2 - from-scratch Tripadvisor research retries its failed media downloads
+  ---
+  duration_ms: 292.559084
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5833.574125
+
+--- stderr ---
+
+--- verdict ---
+PASS 

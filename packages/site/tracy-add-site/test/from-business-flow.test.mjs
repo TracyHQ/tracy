@@ -6,6 +6,7 @@ import {
   businessQuestionOf,
   chatEntryOf,
   failureKey,
+  fromBusinessApi,
   followBusiness,
   linkOf,
   linksStart,
@@ -14,6 +15,20 @@ import {
   placeLine,
   startOutcome
 } from '../src/client/from-business-flow.mjs'
+
+test('an own-site retry sends the failed action without a new research or template selection', async () => {
+  const calls = []
+  const api = fromBusinessApi(async (url, init) => {
+    calls.push({ url, ...init, body: JSON.parse(init.body) })
+    return new Response(JSON.stringify({ business: { phase: 'build' } }), { status: 202 })
+  })
+  const answer = await api.retry('business-1', 'failed-action-1')
+  assert.equal(answer.ok, true)
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0].url, '/api/sites/from-business/business-1/build')
+  assert.equal(calls[0].method, 'POST')
+  assert.deepEqual(calls[0].body, { retryOf: 'failed-action-1' })
+})
 
 test('a link is told from a name: scheme, www. or a bare domain, never a name with spaces', () => {
   for (const link of [
@@ -545,4 +560,70 @@ test('startOutcome keeps the server verdict of each link on a started business',
   const links = [{ url: 'https://share.google/x', kind: 'google', used: false, reason: 'unresolvable' }]
   const out = startOutcome({ ok: true, status: 201, body: { business: { id: 'b1', name: 'Club' }, links } })
   assert.deepEqual(out.links, links)
+})
+
+test('a server-owned chain build is followed without preparing or sending a legacy chat brief', async () => {
+  const opened = []
+  let polls = 0
+  const out = await followBusiness({
+    api: {
+      state: async () => ({
+        ok: true,
+        body: {
+          business: {
+            phase: 'build',
+            action: {
+              id: 'chain-action',
+              workflow: 'agent-demo/1',
+              state: ++polls === 1 ? 'queued' : 'completed',
+              siteKey: 'invented.tracy.test'
+            }
+          }
+        }
+      }),
+      prepare: async () => {
+        throw new Error('a chain must not prepare a legacy writer')
+      }
+    },
+    id: 'business',
+    onState() {},
+    open: (href) => opened.push(href),
+    signal: new AbortController().signal,
+    wait: async () => {}
+  })
+  assert.deepEqual(out, { opened: true })
+  assert.equal(polls, 2)
+  assert.deepEqual(opened, ['/invented.tracy.test'])
+})
+
+test('a failed chain build reports its error and never opens a site as completed', async () => {
+  const out = await followBusiness({
+    api: {
+      state: async () => ({
+        ok: true,
+        body: {
+          business: {
+            phase: 'build',
+            action: {
+              id: 'chain-action',
+              workflow: 'agent-demo/1',
+              state: 'failed',
+              error: 'STEP_NINE_CHECK_FAILED'
+            }
+          }
+        }
+      }),
+      prepare: async () => {
+        throw new Error('unexpected prepare')
+      }
+    },
+    id: 'business',
+    onState() {},
+    open() {
+      throw new Error('unexpected navigation')
+    },
+    signal: new AbortController().signal,
+    wait: async () => {}
+  })
+  assert.deepEqual(out, { failed: 'STEP_NINE_CHECK_FAILED' })
 })

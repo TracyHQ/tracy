@@ -98,7 +98,7 @@ test('a report with nothing found and nothing left out is not applicable, never 
   })
   assert.deepEqual(
     clean.groups.map((g) => g.status),
-    ['not-applicable', 'not-applicable', 'not-applicable']
+    ['not-applicable', 'not-applicable', 'not-applicable', 'not-applicable']
   )
   assert.equal(clean.status, 'green')
   const older = report([])
@@ -107,7 +107,7 @@ test('a report with nothing found and nothing left out is not applicable, never 
   const old = await runSiteCheck({ door: checkSite({}).door, groups: WRITE_FINDING_GROUPS, report: older })
   assert.deepEqual(
     old.groups.map((g) => g.status),
-    ['unmeasured', 'unmeasured', 'not-applicable']
+    ['unmeasured', 'unmeasured', 'not-applicable', 'not-applicable']
   )
   assert.equal(old.status, 'unmeasured')
 })
@@ -197,4 +197,27 @@ test('a heading the emphasis stage could not convert blocks the write step with 
     report: report([acm])
   })
   assert.equal(group(none, 'emphasis-codes-left').status, 'not-applicable')
+})
+
+test('every slot dispute the write step settled blocks, on the step whose claim lost', async () => {
+  const disputed = report([])
+  disputed.disputes = [
+    {
+      slot: 'block-9.4',
+      claims: [
+        { owner: 'writer', file: 'copy.json', kind: 'text', content: '["https://social.example/quay"]' },
+        { owner: 'plan', file: 'plan.json', kind: 'link', content: 'fact:f-social' }
+      ],
+      settled: { owner: 'plan', file: 'plan.json', kind: 'link', content: 'fact:f-social' },
+      reason: 'plan.json (plan) wins'
+    }
+  ]
+  const check = await runSiteCheck({
+    door: checkSite({}).door,
+    groups: WRITE_FINDING_GROUPS,
+    report: disputed
+  })
+  const g = group(check, 'slot-disputes')
+  assert.equal(g.status, 'red')
+  assert.deepEqual(blocks(g), [['block-9.4', 6, 'block']])
 })

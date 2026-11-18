@@ -828,8 +828,7 @@ export const en: Record<string, string> = {
   own_pick: 'Pick your business',
   own_none: 'No business found. Check the name and city, or paste its website or Google Maps link.',
   own_build: 'Build my site',
-  own_research:
-    'Tracy is reading what is public about {name}: its website, photos and reviews. This takes about ten minutes.',
+  own_research: 'Tracy is reading what is public about {name}: its website, photos and reviews.',
   own_progress_website: 'Now reading its website',
   own_progress_source: 'Now reading {source}',
   own_progress_photos: 'Photos saved: {done} of {total}',
@@ -896,8 +895,7 @@ export const en: Record<string, string> = {
   // Above "Pick your business" when the places come from an ambiguous Google link.
   own_pick_note: 'This Google link matches more than one place.',
   // The research line once links were sent: `{sources}` lists them ("Google, magicpin and Instagram").
-  own_research_links:
-    'Tracy is reading what is public about {name}: {sources}. This takes about ten minutes.',
+  own_research_links: 'Tracy is reading what is public about {name}: {sources}.',
   // The business's own website in `{sources}`; the other sources are brand names.
   own_source_website: 'its website',
 

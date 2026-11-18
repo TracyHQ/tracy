@@ -127,9 +127,13 @@ const verdict = (rel, contracts) => {
   return [step.state, step.code]
 }
 
-test('only JA Boxing is opted in', () => {
-  // test-quality: contract only JA Boxing is opted in to the demo baseline publish hold (product decision, #419)
-  assert.deepEqual(DEMO_BASELINE_POLICY.holdPublishFor, [OPTED])
+test('JA Boxing, JA Diner and JA Voyara are opted in', () => {
+  // test-quality: contract the templates at the JA Boxing level are opted in to the publish hold (product decision, #419, F18)
+  assert.deepEqual(DEMO_BASELINE_POLICY.holdPublishFor, [
+    OPTED,
+    'quickstart/ja-diner/j6',
+    'quickstart/ja-voyara/j6'
+  ])
 })
 
 test('an opted in template without demo-baseline.json is held from Publish by the Template kit step', () => {
@@ -189,12 +193,17 @@ test('another template reads exactly as before: no file asked for, nothing held'
   assert.equal(kitStepOf(roadFor(release(OTHER), contracts)).params.flowGaps, undefined)
 })
 
-test('the committed JA Boxing 1.0.11 baseline is read beside its contract, with nothing of a machine in it', () => {
-  const rel = { tag: OPTED, setting: { version: '1.0.11' } }
-  const baseline = baselineOfRelease(rel, defaultContracts())
-  assert.equal(baseline.state, 'read')
-  assert.equal(baseline.doc.quickstart, 'ja-boxing/j6/1.0.11')
-  assert.equal(baseline.doc.measuredAt, undefined)
-  const text = JSON.stringify(baseline.doc)
-  assert.doesNotMatch(text, /https?:\/\/|\b\d{1,3}(\.\d{1,3}){3}\b|\d{4}-\d{2}-\d{2}T/)
+test('the committed baselines of the opted in templates are read beside their contracts, with nothing of a machine in them', () => {
+  for (const [tag, version, id] of [
+    [OPTED, '1.0.11', 'ja-boxing/j6/1.0.11'],
+    ['quickstart/ja-diner/j6', '1.0.5', 'ja-diner/j6/1.0.5'],
+    ['quickstart/ja-voyara/j6', '1.0.12', 'ja-voyara/j6/1.0.12']
+  ]) {
+    const baseline = baselineOfRelease({ tag, setting: { version } }, defaultContracts())
+    assert.equal(baseline.state, 'read', id)
+    assert.equal(baseline.doc.quickstart, id)
+    assert.equal(baseline.doc.measuredAt, undefined)
+    const text = JSON.stringify(baseline.doc)
+    assert.doesNotMatch(text, /https?:\/\/|\b\d{1,3}(\.\d{1,3}){3}\b|\d{4}-\d{2}-\d{2}T/)
+  }
 })

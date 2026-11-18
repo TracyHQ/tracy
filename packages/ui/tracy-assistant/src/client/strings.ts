@@ -25,6 +25,8 @@ export const en = {
   'onboarding.action.import.short': 'Import',
   /** The chat box's paperclip on the creation screen: read aloud and shown on hover. */
   'onboarding.attach': 'Attach files',
+  /** Shown while a question carries files: Help receives their names and types, not their contents. */
+  'onboarding.filesLimit': 'Help can see file names and types, but cannot read file contents.',
   /** Over the page while files are dragged onto it. */
   'onboarding.drop': 'Drop files to attach them',
   /** A file chip while its upload runs (screen readers); `{name}` is the file name. */

@@ -1,0 +1,14 @@
+{"id":"REG-PR-541-artifact-write-quality","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:16:12.282Z","evidence":"REG-PR-541-artifact-write-quality.log"}
+{"id":"REG-PR-541-brief-startup-recovery","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:16:17.080Z","evidence":"REG-PR-541-brief-startup-recovery.log"}
+{"id":"REG-PR-541-chain-action-wait","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:16:27.671Z","evidence":"REG-PR-541-chain-action-wait.log"}
+{"id":"REG-PR-541-chain-full-backup-recovery","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:16:41.150Z","evidence":"REG-PR-541-chain-full-backup-recovery.log"}
+{"id":"REG-PR-541-chain-retry-timing","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:16:52.154Z","evidence":"REG-PR-541-chain-retry-timing.log"}
+{"id":"REG-PR-541-failed-research-media-recovery","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:16:59.450Z","evidence":"REG-PR-541-failed-research-media-recovery.log"}
+{"id":"REG-PR-541-media-admission","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:17:03.335Z","evidence":"REG-PR-541-media-admission.log"}
+{"id":"REG-PR-541-native-image-measurement","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:17:03.840Z","evidence":"REG-PR-541-native-image-measurement.log"}
+{"id":"REG-PR-541-object-storage-deadlines","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:17:04.783Z","evidence":"REG-PR-541-object-storage-deadlines.log"}
+{"id":"REG-PR-541-quiet-picture-analysis","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:17:05.071Z","evidence":"REG-PR-541-quiet-picture-analysis.log"}
+{"id":"REG-PR-541-research-crash-recovery","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:17:08.689Z","evidence":"REG-PR-541-research-crash-recovery.log"}
+{"id":"REG-PR-541-truthful-chain-qa","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:17:15.848Z","evidence":"REG-PR-541-truthful-chain-qa.log"}
+{"id":"REG-PR-541-unresolved-bench-checks","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:17:15.955Z","evidence":"REG-PR-541-unresolved-bench-checks.log"}
+{"id":"REG-PR-541-writer-effort","verdict":"PASS","commit":"5dc581853fde4fdd0dd9fb7ab313f3c9b56ad931","ran_at":"2026-11-10T18:17:16.144Z","evidence":"REG-PR-541-writer-effort.log"}

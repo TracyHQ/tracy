@@ -1,0 +1,653 @@
+{
+  "note": "path = the route the EmDash site serves (site-model routes). source.url = what the running Joomla answers for it, when the crawl met it; the model drops the article id and the category segment Joomla keeps, so many detail routes have no equal path on the source.",
+  "unknownRouteBehaviour": {
+    "status": 404,
+    "chrome": true,
+    "view": "NotFound"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "home",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php",
+        "joomla": {
+          "menuId": "101",
+          "joomlaPath": "/",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "front-page",
+        "sections": [
+          {
+            "position": "slideshow",
+            "via": "layout",
+            "modules": ["94"]
+          },
+          {
+            "position": "section-top",
+            "via": "layout",
+            "modules": ["95", "96", "97", "103"]
+          },
+          {
+            "position": "section-bottom",
+            "via": "layout",
+            "modules": ["104", "127"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/contact-us",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "contact-us",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/contact-us",
+        "joomla": {
+          "menuId": "117",
+          "joomlaPath": "/contact-us",
+          "option": "com_contact",
+          "view": "contact",
+          "id": "1"
+        },
+        "view": "page-contact",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["106"]
+          },
+          {
+            "position": "section-bottom",
+            "via": "layout",
+            "modules": ["127"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/offers",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "offers",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/offers",
+        "joomla": {
+          "menuId": "141",
+          "joomlaPath": "/offers",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["106"]
+          },
+          {
+            "position": "section-top",
+            "via": "layout",
+            "modules": ["116", "117", "115"]
+          },
+          {
+            "position": "section-bottom",
+            "via": "layout",
+            "modules": ["127"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/about-us",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "about-us",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/about-us",
+        "joomla": {
+          "menuId": "142",
+          "joomlaPath": "/about-us",
+          "option": "com_content",
+          "view": "article",
+          "id": "27"
+        },
+        "view": "page",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["106"]
+          },
+          {
+            "position": "section-top",
+            "via": "layout",
+            "modules": ["121", "122", "123"]
+          },
+          {
+            "position": "section-bottom",
+            "via": "layout",
+            "modules": ["127"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/reservation",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "reservation",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/reservation",
+        "joomla": {
+          "menuId": "144",
+          "joomlaPath": "/reservation",
+          "option": "com_content",
+          "view": "article",
+          "id": "28"
+        },
+        "view": "page",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["106"]
+          },
+          {
+            "position": "section-bottom",
+            "via": "layout",
+            "modules": ["104", "127"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/our-blog",
+      "kind": "list",
+      "cms": {
+        "collection": "posts",
+        "slug": "our-blog",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog",
+        "joomla": {
+          "menuId": "108",
+          "joomlaPath": "/our-blog",
+          "option": "com_content",
+          "view": "category",
+          "id": "8"
+        },
+        "view": "category",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["106"]
+          },
+          {
+            "position": "section-bottom",
+            "via": "layout",
+            "modules": ["127"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/other/lorem-ipsum",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "lorem-ipsum",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": {
+          "articleId": "2",
+          "joomlaPath": "/2-lorem-ipsum",
+          "reason": "no route renders a single post; the representative post stands in"
+        },
+        "view": "single",
+        "sections": []
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-news/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/10-restaurant-news/3-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-business/we-ve-been-nominated-for-the-britain-restaurant-awards",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "we-ve-been-nominated-for-the-britain-restaurant-awards",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/2-restaurant-business/4-we-ve-been-nominated-for-the-britain-restaurant-awards",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-guide/three-broomsticks-welcomes-new-chef-caleb-nunez",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "three-broomsticks-welcomes-new-chef-caleb-nunez",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/11-restaurant-guide/5-three-broomsticks-welcomes-new-chef-caleb-nunez",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-news/three-broomsticks-s-autumn-menu-unveiled",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "three-broomsticks-s-autumn-menu-unveiled",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/10-restaurant-news/6-three-broomsticks-s-autumn-menu-unveiled",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-business/4-habits-that-can-improve-your-customer-service",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "4-habits-that-can-improve-your-customer-service",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/2-restaurant-business/10-4-habits-that-can-improve-your-customer-service",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-business/8-trends-trickling-down-to-mainstream-menus",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "8-trends-trickling-down-to-mainstream-menus",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/2-restaurant-business/11-8-trends-trickling-down-to-mainstream-menus",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-business/starbucks-brings-under-armour-exec-on-board",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "starbucks-brings-under-armour-exec-on-board",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/2-restaurant-business/12-starbucks-brings-under-armour-exec-on-board",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-business/inside-olive-garden-s-never-ending-pasta-pass",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "inside-olive-garden-s-never-ending-pasta-pass",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/2-restaurant-business/13-inside-olive-garden-s-never-ending-pasta-pass",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-business/century-old-nathan-s-famous-aims-for-youth-with-new-look",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "century-old-nathan-s-famous-aims-for-youth-with-new-look",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/2-restaurant-business/14-century-old-nathan-s-famous-aims-for-youth-with-new-look",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-marketing/did-ihop-s-publicity-stunt-hurt-applebee-s",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "did-ihop-s-publicity-stunt-hurt-applebee-s",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/9-restaurant-marketing/15-did-ihop-s-publicity-stunt-hurt-applebee-s",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-marketing/buffalo-wild-wings-considers-adding-sports-betting",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "buffalo-wild-wings-considers-adding-sports-betting",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/9-restaurant-marketing/16-buffalo-wild-wings-considers-adding-sports-betting",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-marketing/this-week-s-restaurant-nightmares-language-people",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "this-week-s-restaurant-nightmares-language-people",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/9-restaurant-marketing/17-this-week-s-restaurant-nightmares-language-people",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-marketing/jason-alexander-is-kfc-s-new-colonel",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "jason-alexander-is-kfc-s-new-colonel",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/9-restaurant-marketing/18-jason-alexander-is-kfc-s-new-colonel",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-news/10-most-alluring-ltos-on-menus-in-july",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "10-most-alluring-ltos-on-menus-in-july",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/10-restaurant-news/19-10-most-alluring-ltos-on-menus-in-july",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-news/newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/10-restaurant-news/20-newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-news/this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/10-restaurant-news/21-this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-news/5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/10-restaurant-news/22-5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-news/burger-king-takes-a-stand-on-the-pink-tax",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "burger-king-takes-a-stand-on-the-pink-tax",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/10-restaurant-news/23-burger-king-takes-a-stand-on-the-pink-tax",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-guide/efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/11-restaurant-guide/24-efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-guide/how-restaurants-can-promote-a-james-beard-recognition",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "how-restaurants-can-promote-a-james-beard-recognition",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/11-restaurant-guide/25-how-restaurants-can-promote-a-james-beard-recognition",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-guide/from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/our-blog/11-restaurant-guide/26-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/404",
+      "kind": "system",
+      "cms": {
+        "collection": null,
+        "slug": null,
+        "found": false
+      },
+      "source": {
+        "url": "/index.php/nope-404",
+        "joomla": null,
+        "view": "error",
+        "sections": null
+      },
+      "expected": {
+        "status": 404
+      }
+    }
+  ]
+}

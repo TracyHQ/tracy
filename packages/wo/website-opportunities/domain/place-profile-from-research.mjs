@@ -4,19 +4,20 @@ import { decideGoogleRating, googleRatingOf, ratingPickOf } from './google-ratin
 import { copiedRatingVerdict } from './listing-page.mjs'
 import { offeringKindOf } from './offering-kind.mjs'
 import { withReadingPicks } from './business-reading.mjs'
-import { cleanSocialUrl } from './social-links.mjs'
+import { cleanSocialUrl, untrackedUrl } from './social-links.mjs'
 import { brandNameOf } from './brand-social.mjs'
 import { candidateAsRead } from './candidate-as-read.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
-import { defaultOfferingKind, statedTradeOf, tradeOfPlace, tradeOfSchemaType } from './trades.mjs'
+import { statedTradeOf, tradeOfCategory, tradeOfPlace, tradeOfSchemaType } from './trades.mjs'
 import { emptyPlaceProfile, sourceRef, webAddress } from './place-profile.mjs'
 import { ownMarkNamesOf } from './own-marks.mjs'
+import { isTradeDescriptionName, placeWordsOf } from './trade-description-name.mjs'
 import { nameKey } from './business-name.mjs'
 import { directMessageUrlOf, ownChannelInvitesOf, socialNetworkOfUrl } from './own-channels.mjs'
 
 const VERSION = 'place-profile-from-research/1'
 const SOCIAL_NETWORKS = new Set(['facebook', 'instagram', 'tiktok', 'youtube'])
-const MAPPING = 'tracy-trade/1'
+const MAPPING = 'tracy-trade/2'
 const list = (value) => (Array.isArray(value) ? value : [])
 const present = (value) => value !== undefined && value !== null && value !== ''
 const iso = (value) => (value instanceof Date ? value.toISOString() : value)
@@ -244,7 +245,40 @@ export function placeProfileFromResearch({
   const backingHandles = new Set(
     ownNames.flatMap((n) => n.marks.filter((m) => m.via === 'handle').map((m) => nameKey(m.text)))
   )
-  if (ownNames.length) {
+  // 🔒 Own marks over a trade description (#189, name rule 1): a listing name that is only category words plus a place
+  // ("Padel & Squash Coach") is no name and causes no conflict, so when the own marks give ONE name, that name is the
+  // business name, cited by the marks. Two own names, or a listing name that is a proper name, keep the hold below.
+  const listingIsDescription =
+    ownNames.length === 1 &&
+    doc.business.name &&
+    isTradeDescriptionName(doc.business.name.value, {
+      places: placeWordsOf({
+        address: doc.business.address?.value ?? profile.address,
+        addressComponents: google.addressComponents
+      })
+    })
+  if (listingIsDescription) {
+    const [own] = ownNames
+    const refs = own.marks.map((m) =>
+      m.source === 'logo'
+        ? evidenceFor(
+            sourceOf('logo', webAddress(logoRead?.url)),
+            { kind: 'jsonPath', value: '$.brand.logoResearch.chosen.readsAs' },
+            m.text,
+            { method: 'logo-reading', version: logoRead?.recognised ?? 'unrecorded' }
+          )
+        : evidenceFor(
+            sourceFor(m.source),
+            { kind: 'jsonPath', value: `$.profile.nameClaims[${m.index}]` },
+            m.text
+          )
+    )
+    doc.business.name = {
+      id: id('fact', 'own-marks', ['$.ownMarks', own.name]),
+      value: own.name,
+      evidenceRefs: [...new Set(refs)]
+    }
+  } else if (ownNames.length) {
     const held = doc.business.name
     const markRef = (m) =>
       m.source === 'logo'
@@ -342,6 +376,7 @@ export function placeProfileFromResearch({
     )
   // A site's own schema.org type, as its source row read it, when the merged profile did not keep it.
   const schemaTypes = present(profile.businessType) ? [profile.businessType] : []
+  const socialTrades = new Set()
   for (const row of sources.filter(readable)) {
     const category = row.collected?.profile?.category
     if (typeof category === 'string' && category)
@@ -352,6 +387,10 @@ export function placeProfileFromResearch({
           '$.collected.profile.category'
         )
       )
+    if (SOCIAL_NETWORKS.has(row.source)) {
+      const mapped = tradeOfCategory(category)
+      if (mapped && mapped !== 'other') socialTrades.add(mapped)
+    }
     const stated = row.collected?.profile?.businessType
     if (typeof stated === 'string' && stated && !schemaTypes.includes(stated)) {
       schemaTypes.push(stated)
@@ -366,6 +405,9 @@ export function placeProfileFromResearch({
   }
   let trade = tradeOfPlace(pick(types, ['primaryType', 'types']))
   for (const type of schemaTypes) if (trade === 'other') trade = tradeOfSchemaType(type)
+  // A source's explicit category is evidence, not a biography keyword. Conflicting recognized social trades stay
+  // unknown, and neither a social category nor its disagreement overrides an authoritative Google/schema trade.
+  if (trade === 'other' && socialTrades.size === 1) trade = [...socialTrades][0]
   // The trade rests on the categories it was read from; with none it is Tracy's default, said as such.
   const tradeValue = { taxonomy: 'tracy-trade', code: trade, mappingVersion: MAPPING }
   const tradeFact = {
@@ -384,7 +426,7 @@ export function placeProfileFromResearch({
           )
         ],
     derivation: {
-      method: 'tradeOfPlace/tradeOfSchemaType',
+      method: 'tradeOfPlace/tradeOfSchemaType/tradeOfCategory',
       version: MAPPING,
       inputRefs: providerCategories.map((f) => f.id)
     }
@@ -606,14 +648,24 @@ export function placeProfileFromResearch({
         `${group.path}[${i}]`
       )
     }
+  // 🔒 Google's editorial summary is a fact of the business (#537 R18), one the owner switches off or edits like any
+  // other; the summaries a model wrote of the place or its reviews stay quotes attributed to Google.
+  if (typeof google.summaries?.editorial === 'string' && google.summaries.editorial)
+    doc.business.editorialSummary = fact(
+      google.summaries.editorial,
+      googleSource(),
+      '$.googlePlace.editorialSummary',
+      {
+        locator: { kind: 'jsonPath', value: '$.googlePlace.summaries.editorial' }
+      }
+    )
   for (const [kind, text] of Object.entries(google.summaries ?? {})) {
+    if (kind === 'editorial') continue
     addQuote(
       { kind: 'story', text, attribution: 'Google', restrictions: [] },
       googleSource(),
       `$.googlePlace.summaries.${kind}`,
-      kind === 'editorial'
-        ? {}
-        : { derivation: { method: 'provider-generated-summary', version: 'unrecorded', reason: kind } }
+      { derivation: { method: 'provider-generated-summary', version: 'unrecorded', reason: kind } }
     )
   }
 
@@ -636,7 +688,7 @@ export function placeProfileFromResearch({
     const readingFact = (value, item, group, reason) =>
       fact(value, readingVia(item), `$.businessReading.${group}.${item.id}`, {
         locator: item.source?.url
-          ? { kind: 'post', value: item.source.url }
+          ? { kind: item.source.kind === 'website' ? 'url' : 'post', value: item.source.url }
           : { kind: 'jsonPath', value: `$.businessReading.${group}.${item.id}` },
         excerpt: item.quote,
         extraction: {
@@ -651,7 +703,9 @@ export function placeProfileFromResearch({
           {
             kind: item.kind ?? 'service',
             name: item.label,
-            variants: [{ price: { kind: 'unknown', raw: '' } }]
+            variants: [
+              { price: item.price ? { kind: 'exact', raw: item.price } : { kind: 'unknown', raw: '' } }
+            ]
           },
           item,
           'services',
@@ -1025,7 +1079,9 @@ export function placeProfileFromResearch({
           {
             amount: held[key],
             label: key,
-            scope: entry.source.ref ?? entry.source.kind,
+            // The page counted, without share tracking, as every link Tracy shows (#1780 item 10).
+            scope:
+              (entry.source.ref && untrackedUrl(entry.source.ref)) ?? entry.source.ref ?? entry.source.kind,
             ...(entry.asOf ? { asOf: iso(entry.asOf) } : {}),
             restrictions: entry.restrictions ?? []
           },
@@ -1102,7 +1158,9 @@ export function placeProfileFromResearch({
     ['website', 'google-places', 'facebook', 'instagram'].includes(s.source)
   )
   cover('menu', menuOfferings.length > 0, menuRows, {
-    applicable: defaultOfferingKind(statedTradeOf(doc)) === 'dish' || menuRows.length > 0
+    // An unmapped or conflicting category proves no non-food trade. Without a menu collector attempt, this is
+    // not researched, never a claim that a menu does not apply. Actual menu rows retain their measured outcome.
+    applicable: trade === 'food' || trade === 'other' || menuRows.length > 0
   })
   // The reading step looked for services and people: "found" or "looked, not there", and says when only rules read.
   const readingRows = reading

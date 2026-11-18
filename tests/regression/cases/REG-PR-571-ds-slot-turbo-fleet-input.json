@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-571-ds-slot-turbo-fleet-input",
+  "kind": "fix",
+  "title": "The turbo-config input audit of @tracy/ds-slot#test:ci covers the fleet IMAGE_TAGS its stand-image suites read",
+  "pr": 571,
+  "area": "ci/turbo-config",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Trace the ds-slot suites test/stand-images.test.mjs and test/stand-version.test.mjs with scripts/ci/trace-reads.mjs.",
+    "Ask Turbo (turbo run test:ci --filter=@tracy/ds-slot --dry=json) which files it hashes for @tracy/ds-slot#test:ci.",
+    "Run coverageProblems from scripts/ci/turbo-setup.mjs (the audit of turbo-setup.mjs --check) over those reads, that hash and the task's turbo.json inputs."
+  ],
+  "expect": [
+    "Both suites are green and their traced reads include packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS.",
+    "Turbo hashes packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS for @tracy/ds-slot#test:ci.",
+    "The audit reports no problem; before the fix it reported \"@tracy/ds-slot#test:ci: its suite reads packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS, which is not among the task's inputs\"."
+  ],
+  "selectors": {},
+  "evidence": "build check (tests packages) red on every PR built on develop after #558: turbo-config: @tracy/ds-slot#test:ci: its suite reads packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS, which is not among the task's inputs",
+  "fence": "The task's turbo.json inputs, judged by the same coverageProblems audit the turbo-config gate runs",
+  "run": {
+    "cmd": ["node", "--import", "tsx", "tests/regression/scripts/REG-PR-571-ds-slot-turbo-fleet-input.mjs"],
+    "needs": [],
+    "timeout_s": 300
+  }
+}

@@ -11,6 +11,8 @@
 //
 // A WordPress content map has no menu item: its main menu is the theme's header navigation (main-menu-wordpress.js),
 // read when the content map carries `navigationSource` (content-map-source.js).
+
+import { mainMenuFromPages } from './main-menu-from-pages.js'
 import { wordpressMainMenuOf } from './main-menu-wordpress.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
@@ -92,7 +94,7 @@ export function mainMenuOf({ plan, kit, contentMap }) {
     if (type) votes.set(type, (votes.get(type) ?? 0) + 1)
   }
   const menutype = [...votes].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
-  if (!menutype) return empty()
+  if (!menutype) return mainMenuFromPages({ plan, kit, entities, demo })
 
   const byPath = new Map()
   const tree = []

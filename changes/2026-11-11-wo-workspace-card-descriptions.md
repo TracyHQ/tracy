@@ -1,0 +1,2 @@
+- **Workspace rows carry a one-line description under their title, and the Business facts body in the Workspace card groups the facts (Business, Contact) beside a three by two photo mosaic with N/A for missing facts** — Akemi · #522 · `feat/wo-ux-512` · 2026-11-11
+  **Affects:** Website Opportunities customers on Details: every row that opens shows a chevron, locked rows carry the header shade, and the raw Research details block and Google's duplicate raw facts are gone from the facts page. New English strings for the descriptions and group titles, not translated yet.

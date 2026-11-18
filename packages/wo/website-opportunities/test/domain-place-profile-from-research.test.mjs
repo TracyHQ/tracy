@@ -118,7 +118,7 @@ test('a gym keeps Google types, has no food fallback, and does not claim its pri
   })
   valid(doc)
   assert.equal(doc.classification.derivedCategories[0].value.code, 'fitness')
-  assert.equal(doc.classification.derivedCategories[0].value.mappingVersion, 'tracy-trade/1')
+  assert.equal(doc.classification.derivedCategories[0].value.mappingVersion, 'tracy-trade/2')
   assert.deepEqual(doc.offerings, [])
   assert.equal(coverage(doc, 'prices'), 'not_researched')
   assert.equal(coverage(doc, 'faqs'), 'not_researched')

@@ -971,9 +971,14 @@ test('the creation chat box uploads a picked file, holds Send until it is stored
   )
   const picker = mounted.container.querySelector('input[type="file"]')
   assert.ok(picker, 'the paperclip has its file picker')
+  assert.equal(mounted.container.querySelector('.tv-onboarding-file-limit'), null)
   const file = new File([new Uint8Array([1, 2, 3])], 'logo.png', { type: 'image/png' })
   lib.act(() => lib.propsOf(picker).onChange({ target: { files: [file], value: 'logo.png' } }))
   assert.match(mounted.container.innerHTML, /data-state="uploading"/)
+  assert.equal(
+    mounted.container.querySelector('.tv-onboarding-file-limit')?.textContent,
+    t('onboarding.filesLimit')
+  )
   const send = mounted.container.querySelector('button[type="submit"]')
   assert.equal(send.disabled, true, 'nothing goes while a file is on its way')
   await lib.act(async () => {
@@ -989,6 +994,7 @@ test('the creation chat box uploads a picked file, holds Send until it is stored
   lib.act(() => lib.propsOf(mounted.container.querySelector('form')).onSubmit({ preventDefault() {} }))
   assert.deepEqual(asked, [{ text: '', files: [stored] }])
   assert.doesNotMatch(mounted.container.innerHTML, /tv-chip/, 'the chips leave with the question')
+  assert.equal(mounted.container.querySelector('.tv-onboarding-file-limit'), null)
   mounted.stop()
 })
 
@@ -1011,6 +1017,7 @@ test('a file the chat box cannot take is refused at once with its name, and neve
   assert.equal(uploads, 0)
   assert.match(mounted.container.innerHTML, /data-state="error"/)
   assert.ok(mounted.container.textContent.includes(t('file.type', { name: 'page.html' })))
+  assert.equal(mounted.container.querySelector('.tv-onboarding-file-limit'), null)
   mounted.stop()
 })
 

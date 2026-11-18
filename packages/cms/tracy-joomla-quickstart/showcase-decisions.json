@@ -556,6 +556,123 @@
       ],
       "keep": []
     },
+    "ja-diner/j6/1.0.6": {
+      "hide": [
+        {
+          "menutype": "joomla-pages",
+          "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+        },
+        {
+          "key": "menuItem-119",
+          "path": "j-pages/login",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-120",
+          "path": "j-pages/registration",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-121",
+          "path": "j-pages/user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-122",
+          "path": "j-pages/edit-user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-125",
+          "path": "other-pages/smart-search",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-diner/j6/1.0.7": {
+      "hide": [
+        {
+          "menutype": "joomla-pages",
+          "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+        },
+        {
+          "key": "menuItem-119",
+          "path": "j-pages/login",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-120",
+          "path": "j-pages/registration",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-121",
+          "path": "j-pages/user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-122",
+          "path": "j-pages/edit-user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-125",
+          "path": "other-pages/smart-search",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-diner/j6/1.0.8": {
+      "hide": [
+        {
+          "menutype": "joomla-pages",
+          "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+        },
+        {
+          "key": "menuItem-119",
+          "path": "j-pages/login",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-120",
+          "path": "j-pages/registration",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-121",
+          "path": "j-pages/user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-122",
+          "path": "j-pages/edit-user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-125",
+          "path": "other-pages/smart-search",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
     "ja-directory/j6/1.0.3": {
       "hide": [
         {
@@ -646,6 +763,29 @@
           "menutype": "mainmenu",
           "subtree": true,
           "reason": "\"J!Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-kinetic/j6/1.0.12": {
+      "hide": [
+        {
+          "key": "menuItem-230",
+          "path": "pages/kineticql",
+          "menutype": "mainmenu",
+          "reason": "KineticQL is a sample article entry inside the template Pages showcase branch. The existing product decision of 2026-10-25 removes sample Pages entries from customer menus; this exact menu entry leaves navigation only, while article 75, its direct URL and featured exposure remain published."
+        },
+        {
+          "key": "menuItem-253",
+          "path": "pages/engineering",
+          "menutype": "mainmenu",
+          "reason": "Engineering is a sample category-layout entry inside the template Pages showcase branch. The existing product decision of 2026-10-25 removes sample Pages entries from customer menus; category 29, its 31 published articles, direct URLs and the Product all-categories route remain available."
+        },
+        {
+          "key": "menuItem-254",
+          "path": "pages/author",
+          "menutype": "mainmenu",
+          "reason": "This menu opens one fixed demo author as a sample detail screen inside the template Pages showcase branch. The existing product decision of 2026-10-25 removes sample Pages entries from customer menus; the Product authors index and author-card destinations remain published and working."
         }
       ],
       "keep": []

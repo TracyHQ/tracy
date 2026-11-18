@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-523-vision-call-ceiling",
+  "kind": "fix",
+  "title": "Picture vision batches are not cut off after 60 s: the per-call ceiling is ten minutes",
+  "pr": 523,
+  "area": "website-opportunities/picture-vision",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the picture-vision and picture-vision-risk-labels test files one at a time with --test-concurrency=1.",
+    "S2: Read CALL_MS in apps/tracy-web/src/lib/picture-vision.js."
+  ],
+  "expect": [
+    "S1: every test reports ok, including the batch, refusal, pool and p6 risk-label tests.",
+    "S2: CALL_MS is 600_000 and is the only deadline on the vision call path."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/lib/picture-vision.js"
+  },
+  "evidence": "On dev, 8 of 19 photos failed with reason timeout twice in a row after the p6 prompt added three questions per picture",
+  "fence": "The vision call path keeps working end to end with the longer ceiling; the ceiling itself is a constant that no test waits on",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/picture-vision.test.mjs",
+      "apps/tracy-web/test/picture-vision-risk-labels.test.mjs"
+    ],
+    "tests": [
+      "one call per batch: every picture is introduced by its id",
+      "a batch the model refuses or garbles costs that batch only",
+      "a bounded pool",
+      "p6 asks whether a picture shows another business"
+    ]
+  }
+}

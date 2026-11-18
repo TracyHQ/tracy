@@ -37,6 +37,7 @@ function logoOrder(k, s) {
   // The same decision as the Template kit gate: a T3 style param goes through its frame, not the T4 profile.
   const path = logoWritePath(k)
   if (path.via === 'none') return { ...base, via: 'none', reason: path.reason }
+  if (path.via === 'emdash-setting') return { ...order, via: 'emdash-setting', key: path.key }
   if (path.via === 'contract') return { ...order, via: 'contract', slot: path.frame, key: path.key }
   if (path.via === 'small-logo')
     return { ...order, via: 'small-logo', key: path.key, side: k.ground?.side ?? 'light' }
@@ -46,6 +47,15 @@ function logoOrder(k, s) {
 function faviconOrders(favicon, kit, headModule) {
   const setting = /site setting (\w+)/.exec(String(kit?.site?.favicon?.mechanism?.setting ?? ''))?.[1]
   const none = (slot, reason) => ({ item: 'favicon', slot, via: 'none', reason })
+  // EmDash prints the tab icon from core `settings.favicon`; the picture is one media file, so no ico, no head link.
+  if (kit?.site?.favicon?.mechanism?.setting === 'settings.favicon') {
+    const file = favicon?.png512 ?? favicon?.png32
+    return [
+      file
+        ? { item: 'favicon', slot: 'favicon-setting', file, via: 'emdash-setting', key: 'settings.favicon' }
+        : none('favicon-setting', 'the brand file has no png icon')
+    ]
+  }
   const icon = (slot, file, order) =>
     file ? { item: 'favicon', slot, file, ...order } : none(slot, 'the brand file has no such icon')
   const head = (slot, file, link) =>

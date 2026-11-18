@@ -1,0 +1,3 @@
+- **The language policy lists the exact non-English lines of the JA Restaurant EmDash 1.0.2 template kit** · Template readiness · `chore/language-policy-restaurant-kit-102` · 2026-11-11
+  **Affects:** nobody else; the `language-policy` gate of `fix/emdash-restaurant-pages-link` reads the policy from the base branch, so these exact lines must be on `develop` first.
+  **Why / Measured:** 7 distinct lines of `contracts/1.0.2/template-kit.json` (menu text with accented French culinary words), each by path, sha256 and count; the checker passes that branch with them and reports the same 9 lines without them.

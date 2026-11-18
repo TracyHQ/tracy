@@ -103,19 +103,61 @@ export function logoHintsOf(sources) {
           ...(typeof l?.fallbackUrl === 'string' ? { fallbackUrl: l.fallbackUrl } : {}),
           kind: 'image',
           source: 'website',
-          via: l?.via
+          via: l?.via,
+          ...mediaIdOf(l)
         })
     if (SOCIAL_SOURCES.includes(s.source)) {
       const items = (s.collected?.media ?? []).filter((m) => m?.kind !== 'video')
       const marked = items.filter((m) => m?.role === 'profile')
-      for (const m of marked) add({ url: m.url, kind: 'image', source: s.source, via: 'social-profile' })
+      for (const m of marked)
+        add({ url: m.url, kind: 'image', source: s.source, via: 'social-profile', ...mediaIdOf(m) })
       // Collected before profile photos were marked: the page's own picture is the first one that belongs to no post.
       const first =
         marked.length === 0 && !items.some((m) => m?.role)
           ? items.find((m) => m?.sourceUrl && !m.postId)
           : null
-      if (first) add({ url: first.url, kind: 'image', source: s.source, via: 'social-profile', guess: true })
+      if (first)
+        add({
+          url: first.url,
+          kind: 'image',
+          source: s.source,
+          via: 'social-profile',
+          guess: true,
+          ...mediaIdOf(first)
+        })
     }
+  }
+  return out
+}
+
+/** The media row a hint's url became, as the media step recorded it (`bindLogoHints`). */
+const mediaIdOf = (item) =>
+  typeof item?.mediaId === 'string' && item.mediaId ? { mediaId: item.mediaId } : {}
+
+/**
+ * The source rows whose logo hints learn which media row their url became, for the media step to store back.
+ * A CDN signs its urls afresh at each collection (another host, another signature), and the media step keeps one row
+ * per picture (sha256): the new url downloads the same bytes and is shown as the row an older url stored. The hint
+ * then matches no row by url, so it carries the row's id. A general rule for any rotated url, not one network's.
+ * @param {{source: string, collected?: any}[]} sources
+ * @param {(url: string) => string | null | undefined} rowOf the media row id a url was stored or shown as
+ * @returns {{source: string, collected: any}[]} only the rows that changed
+ */
+export function bindLogoHints(sources, rowOf) {
+  const hinted = new Set(logoHintsOf(sources).flatMap((h) => [h.url, h.fallbackUrl].filter(Boolean)))
+  const bind = (item) => {
+    if (!item || typeof item.url !== 'string' || !hinted.has(item.url)) return item
+    const id = rowOf(item.url) ?? (typeof item.fallbackUrl === 'string' ? rowOf(item.fallbackUrl) : null)
+    return id && id !== item.mediaId ? { ...item, mediaId: id } : item
+  }
+  const out = []
+  for (const s of sources ?? []) {
+    const field = s.source === 'website' ? 'logos' : SOCIAL_SOURCES.includes(s.source) ? 'media' : null
+    const items = field ? s.collected?.[field] : null
+    if (!Array.isArray(items)) continue
+    const next = items.map(bind)
+    if (next.some((item, i) => item !== items[i]))
+      out.push({ source: s.source, collected: { ...s.collected, [field]: next } })
   }
   return out
 }
@@ -127,9 +169,12 @@ export function logoHintsOf(sources) {
  */
 export function logoCandidatesOf({ media, sources }) {
   const hints = new Map()
+  // A hint whose url was re-signed since its picture was stored finds that row by the id the media step recorded.
+  const hintsByRow = new Map()
   for (const h of logoHintsOf(sources)) {
-    for (const url of [h.url, h.fallbackUrl])
-      if (url && !hints.has(url)) hints.set(url, { via: h.via, guess: h.guess === true })
+    const hint = { via: h.via, guess: h.guess === true }
+    for (const url of [h.url, h.fallbackUrl]) if (url && !hints.has(url)) hints.set(url, hint)
+    if (h.mediaId && !hintsByRow.has(h.mediaId)) hintsByRow.set(h.mediaId, hint)
   }
   const seen = new Set()
   const out = []
@@ -143,7 +188,7 @@ export function logoCandidatesOf({ media, sources }) {
       .split('?')[0]
       .split('/')
       .pop()
-    const hinted = hints.get(m.source_url)
+    const hinted = hints.get(m.source_url) ?? hintsByRow.get(m.id)
     const named = m.source === 'website' && LOGO_WORD.test(`${fileName} ${m.alt ?? ''} ${m.caption ?? ''}`)
     const via = hinted?.via ?? (named ? 'img-named' : null)
     if (!via || seen.has(m.sha256)) continue
@@ -415,6 +460,20 @@ export function sameLogoFindings(a, b) {
   // Key-sorted: the held side comes back from jsonb with its keys reordered.
   const findings = (r) => canonicalJson([r.version, r.status, r.chosen ?? null, r.candidates ?? []])
   return Boolean(a && b) && findings(a) === findings(b)
+}
+
+/**
+ * The logo research a run stores: what it found, unless that is the research on record already, or a none that looked
+ * at zero candidates while the logo on record is still a picture of the snapshot. A none with zero candidates is a
+ * lookup failure (the hints matched no stored row), not a finding: storing it would replace a found logo by nothing.
+ * @param {{found: object | null, held: object | null, media: {id: string}[]}} input
+ */
+export function logoResearchToKeep({ found, held, media }) {
+  if (!found || sameLogoFindings(found, held)) return held ?? found
+  const lookupFailed = found.status === 'none' && (found.candidates ?? []).length === 0
+  const heldId = held?.status === 'found' ? held.chosen?.mediaId : null
+  if (lookupFailed && heldId && (media ?? []).some((m) => m.id === heldId)) return held
+  return found
 }
 
 export async function researchLogo({ media, sources, previous = null, ...rest }) {

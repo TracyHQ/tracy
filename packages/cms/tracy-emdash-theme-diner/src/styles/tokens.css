@@ -1,0 +1,65 @@
+/*
+ * JA Diner design tokens. Light values are the source template's own, measured on the rendered source home
+ * (inventory/visual-contract.md; LESS: templates/ja_diner/less/variables.less). Every colour reads its Design-system
+ * role first (`--ds-c-<role>`, the names of design-system-roles.json) and keeps the template's own value as the
+ * fallback, so with no system worn the site looks exactly as designed.
+ * Dark values are NOT in the source (the T3 sheets change no body colour under data-theme="dark", DECISIONS D12):
+ * derived from the same warm paper and terracotta.
+ */
+@theme {
+	--font-display: var(--ds-font-display, var(--font-eczar), "Eczar", Georgia, "Times New Roman", serif);
+	--font-body: var(--ds-font-body, var(--font-work-sans), "Work Sans", Helvetica, Arial, sans-serif);
+
+	--color-bg: var(--ds-c-bg, #fcfaf6);
+	--color-surface: var(--ds-c-surface, #ffffff);
+	--color-fg: var(--ds-c-fg, #555555);
+	--color-heading: var(--ds-c-heading, #222222);
+	--color-meta: var(--ds-c-meta, #6b6b6b);
+	--color-muted: var(--ds-c-muted, #666666);
+	--color-line: var(--ds-c-border, #e5e0d6);
+	--color-line-soft: var(--ds-c-border-soft, #efebe2);
+
+	--color-accent: var(--ds-c-accent, #c36349);
+	--color-accent-on: var(--ds-c-accent-on, #ffffff);
+	--color-accent-hover: var(--ds-c-accent-hover, #a94f37);
+	--color-accent-text: var(--ds-c-accent-text, #b4573e);
+	/* the dark double rule above the copyright and the quote bar: ink in light, a line in dark */
+	--color-rule: var(--ds-c-fg-2, #222222);
+	/* a rule or underline drawn in the accent: the same in both themes (a border brighter in dark than in light is a leak) */
+	--color-accent-line: var(--ds-c-accent, #c36349);
+	/* the highlighter under a heading's marked words (the source's @bg-text-highlight, yellow) */
+	--color-mark: var(--ds-c-accent-band, #ffcc00);
+	/* the dark band (newsletter, slideshow scrim) and the words on it */
+	--color-ink: var(--ds-c-ink, #222222);
+	--color-on-ink: var(--ds-c-on-ink, #ffffff);
+	--color-on-ink-soft: color-mix(in srgb, var(--ds-c-on-ink, #fff) 80%, transparent);
+
+	/* shadcn semantic tokens, mapped onto the design */
+	--color-background: var(--color-bg);
+	--color-foreground: var(--color-fg);
+	--color-primary: var(--color-accent);
+	--color-primary-foreground: var(--color-accent-on);
+	--color-card: var(--color-surface);
+	--color-card-foreground: var(--color-fg);
+	--color-border: var(--color-line);
+	--color-input: var(--color-line);
+	--color-ring: var(--color-accent);
+	--radius: var(--ds-card-radius, 0);
+}
+
+html[data-theme="dark"] {
+	--color-bg: var(--ds-c-bg, #1c1a17);
+	--color-surface: var(--ds-c-surface, #262320);
+	--color-fg: var(--ds-c-fg, #c9c4bb);
+	--color-heading: var(--ds-c-heading, #f3efe7);
+	--color-meta: var(--ds-c-meta, #9d978c);
+	--color-muted: var(--ds-c-muted, #8f897e);
+	--color-line: var(--ds-c-border, #3a3631);
+	--color-line-soft: var(--ds-c-border-soft, #2f2c28);
+	--color-accent: var(--ds-c-accent, #d4745a);
+	--color-accent-hover: var(--ds-c-accent-hover, #e08b73);
+	--color-accent-text: var(--ds-c-accent-text, #e08b73);
+	--color-mark: var(--ds-c-accent-band, #b8941f);
+	--color-ink: var(--ds-c-ink, #0f0e0d);
+	--color-rule: var(--ds-c-border, #4f4a43);
+}

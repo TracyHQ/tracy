@@ -7,7 +7,10 @@
 #
 #   WordPress / Joomla   `mariadb-dump --single-transaction` run in the site's own `db` container
 #                        through `docker compose exec -T db` (the socket tracy-host holds; the agent's
-#                        dsh never reaches `<label>-db-1`), gzip → backups/v<N>.mysql.gz
+#                        dsh never reaches `<label>-db-1`), gzip → backups/v<N>.mysql.gz. A demo folded
+#                        into the demo farm (lib/site-runtime.sh) has no `db` service: its data is ONE
+#                        schema of `tracy-demos-db`, reached as the demo's own user (grants on that
+#                        schema only) — `tracy_db_exec` decides, every caller below goes through it.
 #   EmDash               SQLite online backup API on data/data.db (never the raw file: the WAL is
 #                        open) → backups/v<N>.sqlite.gz, plus uploads/ → backups/v<N>.uploads.tar.gz.
 #                        Template code (the `<label>_app` volume) is NOT in it — said, not hidden.
@@ -35,6 +38,11 @@
 
 tracy_backup_dir() { printf '%s/backups' "$STACK"; }
 
+if ! declare -F tracy_runtime_of_dir >/dev/null; then
+  # shellcheck source=site-runtime.sh
+  . "$(dirname "${BASH_SOURCE[0]}")/site-runtime.sh"
+fi
+
 # `KEY=value` from the site's .env, or empty.
 _tracy_env_value() {
   sed -n "s/^$1=//p" "$STACK/.env" 2>/dev/null | sed -n 1p | sed -e 's/^"//' -e 's/"$//'
@@ -58,6 +66,9 @@ tracy_backup_kind() {
 }
 
 tracy_backup_db_name() {
+  local runtime
+  runtime="$(tracy_backup_runtime)" || return 1
+  if [ "$runtime" = farm ]; then _tracy_env_value FARM_DB_NAME; return; fi
   case "$(tracy_backup_platform)" in
     wordpress) echo wordpress ;;
     joomla) echo joomla ;;
@@ -67,7 +78,32 @@ tracy_backup_db_name() {
 # One command in the site's database container. The password travels in the container's
 # environment (MYSQL_PWD), never in an argv anybody can read with `ps`.
 tracy_db_exec() {
+  local runtime
+  runtime="$(tracy_backup_runtime)" || return 1
+  if [ "$runtime" = farm ]; then _tracy_farm_db_exec "$@"; return; fi
   ( cd "$STACK" && docker compose exec -T -e MYSQL_PWD="$(_tracy_env_value DB_PASSWORD)" db "$@" )
+}
+
+# `site` or `farm` (lib/site-runtime.sh): which database server holds this stack's data. A marker it
+# cannot read stops the caller rather than send a dump or a DROP to the wrong server.
+tracy_backup_runtime() {
+  local runtime
+  runtime="$(tracy_runtime_of_dir "$STACK" "${LABEL:-$STACK}")" || { echo "!! the runtime of ${LABEL:-$STACK} is unreadable" >&2; return 1; }
+  printf '%s' "$runtime"
+}
+
+# A folded demo's database command: the farm's server, as the demo's own user. Callers here speak
+# the per-site container's dialect (`-uroot`); that argument becomes the demo's user, whose grants
+# end at its own schema — so a scratch schema (`CREATE DATABASE`) is refused by the server itself.
+_tracy_farm_db_exec() {
+  local user args=() a
+  user="$(_tracy_env_value FARM_DB_USER)"
+  [ -n "$user" ] || { echo "!! $LABEL is folded but its farm database user is not on record" >&2; return 1; }
+  for a in "$@"; do
+    [ "$a" = -uroot ] && a="-u$user"
+    args+=("$a")
+  done
+  MYSQL_PWD="$(_tracy_env_value FARM_DB_PASSWORD)" docker exec -i -e MYSQL_PWD "$TRACY_DEMOS_DB_CONTAINER" "${args[@]}"
 }
 
 # tracy_db_load_dump <schema> <dump.gz> <work dir> [skip file]: a live read (live-pull.mjs's dump) into
@@ -118,7 +154,7 @@ tracy_db_tables() {
 
 # The triggers of schema $1 as SQL `mariadb` can load (DELIMITER, DEFINER and sql_mode kept).
 tracy_db_triggers_sql() {
-  ( cd "$STACK" && docker compose exec -T -e MYSQL_PWD="$(_tracy_env_value DB_PASSWORD)" db \
+  ( tracy_db_exec \
       mariadb-dump -uroot --skip-opt --no-data --no-create-info --no-create-db --triggers --skip-comments "$1" )
 }
 
@@ -138,7 +174,7 @@ tracy_db_drop_triggers() {
 tracy_db_triggers_sql_of() {
   local schema="$1"; shift
   [ "$#" -gt 0 ] || return 0
-  ( cd "$STACK" && docker compose exec -T -e MYSQL_PWD="$(_tracy_env_value DB_PASSWORD)" db \
+  ( tracy_db_exec \
       mariadb-dump -uroot --skip-opt --no-data --no-create-info --no-create-db --triggers --skip-comments "$schema" "$@" )
 }
 
@@ -251,7 +287,7 @@ _tracy_dump_mysql() {
   set +e
   # gzip -6 on the host's cores (lib/pgzip.py): one core of gzip was most of a dump's time.
   ( umask 077
-    ( cd "$STACK" && docker compose exec -T -e MYSQL_PWD="$(_tracy_env_value DB_PASSWORD)" db \
+    ( tracy_db_exec \
         mariadb-dump -uroot --single-transaction --quick --routines --triggers --events \
           --max-allowed-packet=256M ${ignore[@]+"${ignore[@]}"} "$db" ) | python3 "$_TRACY_BACKUP_LIB/pgzip.py" -6 > "$tmp"
     rcs=("${PIPESTATUS[@]}")
@@ -412,7 +448,13 @@ _tracy_trash_prune() {
 # Foreign-key cutover plans share the restore's private artifact directory. SQL uses the same
 # site-local client as the dump; the password travels in its environment, never in a log.
 tracy_db_foreign_keys() {
-  local client
-  client="$(python3 -c 'import json,sys; print(json.dumps(["docker", "compose", "exec", "-T", "-e", "MYSQL_PWD=" + sys.argv[1], "db", "mariadb", "-uroot"]))' "$(_tracy_env_value DB_PASSWORD)")" || return 1
+  local client runtime
+  runtime="$(tracy_backup_runtime)" || return 1
+  if [ "$runtime" = farm ]; then
+    client="$(python3 -c 'import json,sys; print(json.dumps(["docker", "exec", "-i", "-e", "MYSQL_PWD=" + sys.argv[1], sys.argv[3], "mariadb", "-u" + sys.argv[2]]))' \
+      "$(_tracy_env_value FARM_DB_PASSWORD)" "$(_tracy_env_value FARM_DB_USER)" "$TRACY_DEMOS_DB_CONTAINER")" || return 1
+  else
+    client="$(python3 -c 'import json,sys; print(json.dumps(["docker", "compose", "exec", "-T", "-e", "MYSQL_PWD=" + sys.argv[1], "db", "mariadb", "-uroot"]))' "$(_tracy_env_value DB_PASSWORD)")" || return 1
+  fi
   ( cd "$STACK" && TRACY_SYNC_SQL="$client" python3 "$LIB_DIR/foreign_keys.py" "$@" )
 }

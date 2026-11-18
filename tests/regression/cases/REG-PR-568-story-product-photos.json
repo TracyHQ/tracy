@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-568-story-product-photos",
+  "kind": "fix",
+  "title": "Known retail products and equipment cannot illustrate the business story",
+  "pr": 568,
+  "area": "website-opportunities/brief",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run run.cmd and require four passing tests with no skips."],
+  "expect": [
+    "Positively labelled product and equipment photos are absent from About story while retained as assets and gallery photos.",
+    "Stored nested vision labels and legacy product subjects obey the same boundary.",
+    "Product-only sources leave the story without a photo; unlabelled images are not guessed from captions."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-brief-story-products.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "retail product and equipment photographs cannot illustrate the business story",
+      "stored vision labels and legacy positive product subjects also exclude a story photo",
+      "a product-only catalogue leaves the story without a photograph and keeps its product assets",
+      "an unlabelled picture is not inferred to be a product from its caption"
+    ]
+  }
+}

@@ -89,7 +89,9 @@ import path from "node:path";
 // ../../tools/tracy-subprocess-docker/src/route.mjs
 var LABEL = /^[a-z0-9][a-z0-9-]{0,62}$/;
 function trimRoot(root) {
-  const trimmed = root.replace(/\/+$/, "");
+  let end = root.length;
+  while (end > 0 && root[end - 1] === "/") end--;
+  const trimmed = root.slice(0, end);
   if (trimmed === "") throw new Error("subprocess-docker: sitesRoot must not be the filesystem root");
   return trimmed;
 }

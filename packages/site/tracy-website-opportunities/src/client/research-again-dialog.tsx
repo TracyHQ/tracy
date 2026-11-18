@@ -1,6 +1,7 @@
 /**
  * Research again on the place card (Steps › Research) and the public Find: a button, a line saying how many
- * parts need a new look, and a dialog listing what will run, why and the most it may cost, what is kept, and
+ * parts need a new look (or, for the account's press from scratch, that every source is collected again and up to
+ * what), and a dialog listing what will run, why and the most it may cost, what is kept, and
  * who pays. The same view for both; only the doors behind `useResearchAgain` differ.
  */
 import { type JSX, useEffect, useRef, useState } from 'react'
@@ -136,6 +137,7 @@ export function ResearchAgainButton({
   const due = preview?.plan ? preview.plan.run.length : null
   const closed = phase === 'ready' && preview !== null && !preview.open
   const upToDate = due === 0
+  const scratch = preview?.plan?.fromScratch === true
   return (
     <div className="tracy-wo-again">
       <span className="tracy-wo-row tracy-wo-wrap">
@@ -149,8 +151,12 @@ export function ResearchAgainButton({
           <RefreshCw aria-hidden="true" />
           {t(upToDate ? 'again.upToDate' : 'again.button')}
         </Button>
-        {due !== null && due > 0 && !closed ? (
-          <span className="tracy-wo-muted tracy-wo-small">{t(dueKey(due, locale), { count: due })}</span>
+        {due !== null && due > 0 && !closed && preview?.plan ? (
+          <span className="tracy-wo-muted tracy-wo-small">
+            {scratch
+              ? t('again.due.scratch', { total: againView(preview.plan, locale).total })
+              : t(dueKey(due, locale), { count: due })}
+          </span>
         ) : null}
         {closed ? (
           <span className="tracy-wo-muted tracy-wo-small">
@@ -167,6 +173,8 @@ export function ResearchAgainButton({
 export interface AgainCopy {
   titleKey: string
   leadKey: string
+  /** The lead when the plan researches from scratch; absent: `leadKey` either way. */
+  scratchLeadKey?: string
   buttonKey: string
   /** The note on pages found by a web search; irrelevant when no search can run. */
   pagesNote: boolean
@@ -175,6 +183,7 @@ export interface AgainCopy {
 const RESEARCH_AGAIN_COPY: AgainCopy = {
   titleKey: 'again.title',
   leadKey: 'again.lead',
+  scratchLeadKey: 'again.lead.scratch',
   buttonKey: 'again.button',
   pagesNote: true
 }
@@ -201,7 +210,9 @@ export function ResearchAgainDialog({
       <DialogContent className="tracy-wo tracy-wo-again-dialog" closeLabel={t('again.cancel')}>
         <DialogHeader>
           <DialogTitle>{t(copy.titleKey, { name })}</DialogTitle>
-          <DialogDescription>{t(copy.leadKey)}</DialogDescription>
+          <DialogDescription>
+            {t(view?.fromScratch && copy.scratchLeadKey ? copy.scratchLeadKey : copy.leadKey)}
+          </DialogDescription>
         </DialogHeader>
         {phase === 'loading' || phase === 'idle' ? (
           <span className="tracy-wo-row">

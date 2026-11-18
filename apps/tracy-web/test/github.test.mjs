@@ -26,6 +26,7 @@ import {
   ownsRepo
 } from '../src/github/app.js'
 import { createRepoFor, deleteRepoFor, mintGitToken, githubRoutes } from '../src/github/route.js'
+import { refreshReleases, releaseEventWanted, RELEASES_REPO } from '../src/lib/quickstart-releases.js'
 import { repoFor, writeRepo, siteKeyOfRepo, mergeSanctioned } from '../src/github/store.js'
 import { labelPrefix } from '../src/sites/label.js'
 import { createWorkspace, grantWorkspace, declareSiteWorkspace } from '../src/workspaces/store.js'
@@ -400,6 +401,33 @@ test('ensureRepoWebhook: creates a fresh hook, then a second call PATCHes the sa
   // The token used to mint/patch the hook was revoked, never left standing.
   const deletes = gh.calls.filter((c) => c.url.endsWith('/installation/token') && c.method === 'DELETE')
   assert.equal(deletes.length, 2)
+})
+
+test('the hook a releases read wires on the releases repo sends the event /github/release reads', async () => {
+  // Found 2026-11-08: the hook on the releases repo was created with `push` only, while the door
+  // behind it reads `release` only, so no publish ever reached the Design system check: a new
+  // version waited for the ten-minute read of the releases.
+  const gh = fakeGithub()
+  gh.installations[RELEASES_REPO] = 11
+  const pool = { query: async () => ({ rows: [] }) }
+  const quiet = { log() {}, warn() {}, error() {} }
+  await refreshReleases(
+    pool,
+    { github: GITHUB, origin: 'https://tracy.test' },
+    { fetchImpl: gh.fetchImpl, log: quiet }
+  )
+  // the hook is wired on the way past, without being awaited: wait on real time, generously
+  const until = Date.now() + 10_000
+  while (!gh.repoHooks[RELEASES_REPO]?.length && Date.now() < until)
+    await new Promise((resolve) => setTimeout(resolve, 20))
+  const [hook] = gh.repoHooks[RELEASES_REPO] ?? []
+  assert.ok(hook, 'a releases read wires a hook on the releases repo')
+  assert.equal(hook.config.url, 'https://tracy.test/github/release')
+  const payload = { repository: { full_name: RELEASES_REPO } }
+  assert.ok(
+    hook.events.some((event) => releaseEventWanted(event, payload)),
+    `the hook sends ${hook.events.join(', ')}, none of which the release door reads`
+  )
 })
 
 test('ensureRepoWebhook: mint refused for lacking repository_hooks vs. the repo actually being gone', async () => {

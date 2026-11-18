@@ -73,6 +73,8 @@ async function fixture({
   })
   const real = await websiteOpportunitiesDomain()
   const stats = { website: 0, vision: 0, downloads: [] }
+  // The CDN signature of the logo's url: a later collection may hand out another url for the same bytes.
+  const world = { signature: null }
   const blocked = { available: false, collect: async () => ({ status: 'blocked', media: [] }) }
   const stored = new Map()
   const domain = {
@@ -97,7 +99,11 @@ async function fixture({
               { url: 'https://pho.test/img/facebook-icon.png', kind: 'image', sourceUrl: 'https://pho.test/' }
             ],
             logos: [
-              { url: 'https://pho.test/brand/logo.png', via: 'jsonld-logo', sourceUrl: 'https://pho.test/' },
+              {
+                url: `https://pho.test/brand/logo.png${world.signature ? `?sig=${world.signature}` : ''}`,
+                via: 'jsonld-logo',
+                sourceUrl: 'https://pho.test/'
+              },
               { url: 'https://pho.test/favicon.png', via: 'icon', sourceUrl: 'https://pho.test/' },
               {
                 url: 'https://pho.test/img/facebook-icon.png',
@@ -172,7 +178,7 @@ async function fixture({
   })
   const research = (requestId, extra = {}) =>
     requestResearch(pool, { accountId, opportunity, requestId, requiredSources: {}, ...extra })
-  return { pool, ex, opportunity, research, stats }
+  return { pool, ex, opportunity, research, stats, world }
 }
 
 const brandOf = async (h) => (await placeViewOf(h.pool, h.opportunity)).brand
@@ -329,5 +335,36 @@ test(
       brief.logoResearch.candidates.some((c) => c.mediaId === icon.id),
       false
     )
+  }
+)
+
+test(
+  'a whole research again whose logo url was re-signed keeps the logo found and reads it again (dev 09/11/2026)',
+  opts,
+  async () => {
+    const h = await fixture()
+    h.world.signature = 'first'
+    await h.research('first-run')
+    await drain(h.ex)
+    const before = await brandOf(h)
+    assert.equal(before.logoResearch.status, 'found')
+    assert.equal(h.stats.vision, 2)
+    // Same bytes under a freshly signed url: the media step keeps the row the first url stored (one per sha256).
+    h.world.signature = 'second'
+    await h.research('from-scratch', { force: true })
+    await drain(h.ex)
+    const rows = (
+      await h.pool.query("select source_url from wo_place_media where source_url like '%logo.png%'")
+    ).rows
+    assert.deepEqual(
+      rows.map((r) => r.source_url),
+      ['https://pho.test/brand/logo.png?sig=first']
+    )
+    const after = await brandOf(h)
+    assert.equal(after.logoResearch.status, 'found')
+    assert.equal(after.logoResearch.chosen.mediaId, before.logoResearch.chosen.mediaId)
+    assert.equal(after.logoResearch.chosen.via, 'jsonld-logo')
+    // Forced: both candidates are read by the vision model again.
+    assert.equal(h.stats.vision, 4)
   }
 )

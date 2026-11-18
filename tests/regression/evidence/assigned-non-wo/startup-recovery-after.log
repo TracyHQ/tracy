@@ -1,0 +1,286 @@
+TAP version 13
+# Subtest: a site made with no brief has no row, and the gate never holds it
+ok 1 - a site made with no brief has no row, and the gate never holds it
+  ---
+  duration_ms: 1747.504625
+  type: 'test'
+  ...
+# Subtest: the words are made first, written when the site is up, and the customer is held until then
+ok 2 - the words are made first, written when the site is up, and the customer is held until then
+  ---
+  duration_ms: 28.839041
+  type: 'test'
+  ...
+# Subtest: a poll after the handover only says "working", and is silent for a site that was never handed over
+ok 3 - a poll after the handover only says "working", and is silent for a site that was never handed over
+  ---
+  duration_ms: 17.794667
+  type: 'test'
+  ...
+# Subtest: a site whose host job reaches its last step is written without waiting for `done` or for the wizard
+ok 4 - a site whose host job reaches its last step is written without waiting for `done` or for the wizard
+  ---
+  duration_ms: 73.52975
+  type: 'test'
+  ...
+# Subtest: a host job that is already done starts the work too, and one that failed stops it
+ok 5 - a host job that is already done starts the work too, and one that failed stops it
+  ---
+  duration_ms: 20.623041
+  type: 'test'
+  ...
+# Subtest: a site that cannot be paired early waits for the wizard’s handover, and a host that cannot say changes nothing
+ok 6 - a site that cannot be paired early waits for the wizard’s handover, and a host that cannot say changes nothing
+  ---
+  duration_ms: 61.74025
+  type: 'test'
+  ...
+# Subtest: the same site started twice is one piece of work
+ok 7 - the same site started twice is one piece of work
+  ---
+  duration_ms: 16.680667
+  type: 'test'
+  ...
+# Subtest: a site deleted and made again under the same address is written from its own answers, not the deleted site's
+ok 8 - a site deleted and made again under the same address is written from its own answers, not the deleted site's
+  ---
+  duration_ms: 28.706333
+  type: 'test'
+  ...
+# Subtest: a site made again with no brief under a deleted site's address answers no brief at all
+ok 9 - a site made again with no brief under a deleted site's address answers no brief at all
+  ---
+  duration_ms: 18.162708
+  type: 'test'
+  ...
+# Subtest: a model that fails hands the site over with the template's own words, and says so
+ok 10 - a model that fails hands the site over with the template's own words, and says so
+  ---
+  duration_ms: 13.82025
+  type: 'test'
+  ...
+# Subtest: a write the site refuses is a soft failure too
+ok 11 - a write the site refuses is a soft failure too
+  ---
+  duration_ms: 12.288375
+  type: 'test'
+  ...
+# Subtest: a failed Apply hands its reason to the gate that settles it
+ok 12 - a failed Apply hands its reason to the gate that settles it
+  ---
+  duration_ms: 10.849208
+  type: 'test'
+  ...
+# Subtest: an Apply that wrote nothing it had nothing to write from says so on the finished row and to the gate
+ok 13 - an Apply that wrote nothing it had nothing to write from says so on the finished row and to the gate
+  ---
+  duration_ms: 10.281208
+  type: 'test'
+  ...
+# Subtest: an Apply that wrote nothing of a description it was given fails, with what happened
+ok 14 - an Apply that wrote nothing of a description it was given fails, with what happened
+  ---
+  duration_ms: 13.117125
+  type: 'test'
+  ...
+# Subtest: an apply cut at its deadline writes nothing after it
+ok 15 - an apply cut at its deadline writes nothing after it
+  ---
+  duration_ms: 256.307083
+  type: 'test'
+  ...
+# Subtest: a finished Apply that wrote and said nothing carries no reason
+ok 16 - a finished Apply that wrote and said nothing carries no reason
+  ---
+  duration_ms: 23.120917
+  type: 'test'
+  ...
+# Subtest: notes an engine leaves ride on the finished row
+ok 17 - notes an engine leaves ride on the finished row
+  ---
+  duration_ms: 19.232833
+  type: 'test'
+  ...
+# Subtest: every apply id the writes named is kept on the row, in order, once each, a failed run included
+ok 18 - every apply id the writes named is kept on the row, in order, once each, a failed run included
+  ---
+  duration_ms: 33.056292
+  type: 'test'
+  ...
+# Subtest: the brand step runs after apply, before the row says applied, and its apply id is kept
+ok 19 - the brand step runs after apply, before the row says applied, and its apply id is kept
+  ---
+  duration_ms: 19.976083
+  type: 'test'
+  ...
+# Subtest: the brand step runs when apply threw, and a brand failure never fails the build
+ok 20 - the brand step runs when apply threw, and a brand failure never fails the build
+  ---
+  duration_ms: 21.65575
+  type: 'test'
+  ...
+# Subtest: a platform with no engine fails softly at once
+ok 21 - a platform with no engine fails softly at once
+  ---
+  duration_ms: 87.063292
+  type: 'test'
+  ...
+# Subtest: a prepare that never ends is given up on, and the site is handed over
+ok 22 - a prepare that never ends is given up on, and the site is handed over
+  ---
+  duration_ms: 52.035542
+  type: 'test'
+  ...
+# Subtest: once the site is up, prepare is told to hand back what it has after the grace, and apply takes it
+ok 23 - once the site is up, prepare is told to hand back what it has after the grace, and apply takes it
+  ---
+  duration_ms: 77.00775
+  type: 'test'
+  ...
+# Subtest: a prepare that will not hand anything back is given up on soon after the site is up, and the site is handed over
+ok 24 - a prepare that will not hand anything back is given up on soon after the site is up, and the site is handed over
+  ---
+  duration_ms: 100.452708
+  type: 'test'
+  ...
+# Subtest: an apply id this Apply did not mint (the install’s own receipt) is kept apart, so undo reverts only its own
+ok 25 - an apply id this Apply did not mint (the install’s own receipt) is kept apart, so undo reverts only its own
+  ---
+  duration_ms: 18.264417
+  type: 'test'
+  ...
+# Subtest: a run that is over is stopped, and an id its engine names late never lands on the row of the run that replaced it
+ok 26 - a run that is over is stopped, and an id its engine names late never lands on the row of the run that replaced it
+  ---
+  duration_ms: 139.583417
+  type: 'test'
+  ...
+# Subtest: a host that could not install the site abandons the words
+ok 27 - a host that could not install the site abandons the words
+  ---
+  duration_ms: 16.032417
+  type: 'test'
+  ...
+# Subtest: a build whose install failed and was pressed again has its words made again
+ok 28 - a build whose install failed and was pressed again has its words made again
+  ---
+  duration_ms: 21.371875
+  type: 'test'
+  ...
+# Subtest: WO fill Retry queues once per action, atomically, even if the new fill fails
+ok 29 - WO fill Retry queues once per action, atomically, even if the new fill fails
+  ---
+  duration_ms: 34.075666
+  type: 'test'
+  ...
+# Subtest: WO fill Retry never inserts a missing brief or restarts a replaced site’s brief
+ok 30 - WO fill Retry never inserts a missing brief or restarts a replaced site’s brief
+  ---
+  duration_ms: 46.418166
+  type: 'test'
+  ...
+# Subtest: an open row whose worker died with the process is not held for ever
+ok 31 - an open row whose worker died with the process is not held for ever
+  ---
+  duration_ms: 17.852834
+  type: 'test'
+  ...
+# Subtest: a worker that died while placing words that reached the site says they are partly in, not that none are
+ok 32 - a worker that died while placing words that reached the site says they are partly in, not that none are
+  ---
+  duration_ms: 22.699125
+  type: 'test'
+  ...
+# Subtest: a worker that died as placing began, before any write was kept, does not claim the site is untouched
+ok 33 - a worker that died as placing began, before any write was kept, does not claim the site is untouched
+  ---
+  duration_ms: 24.047208
+  type: 'test'
+  ...
+# Subtest: a worker that died after a write that reused an apply id says the words are partly in
+ok 34 - a worker that died after a write that reused an apply id says the words are partly in
+  ---
+  duration_ms: 11.683542
+  type: 'test'
+  ...
+# Subtest: a recent open row of another process is held, not taken over
+ok 35 - a recent open row of another process is held, not taken over
+  ---
+  duration_ms: 8.06225
+  type: 'test'
+  ...
+# Subtest: a setup run holds the webroot: opened before its first write, its moment taken after the brand, once
+ok 36 - a setup run holds the webroot: opened before its first write, its moment taken after the brand, once
+  ---
+  duration_ms: 13.752792
+  type: 'test'
+  ...
+# Subtest: a failed apply still takes the moment: what landed is the run’s, not "source unknown"
+ok 37 - a failed apply still takes the moment: what landed is the run’s, not "source unknown"
+  ---
+  duration_ms: 12.972959
+  type: 'test'
+  ...
+# Subtest: a webroot that cannot be held is no reason to fail the site
+ok 38 - a webroot that cannot be held is no reason to fail the site
+  ---
+  duration_ms: 13.62675
+  type: 'test'
+  ...
+# Subtest: a process that starts settles at once the open rows a dead process left
+ok 39 - a process that starts settles at once the open rows a dead process left
+  ---
+  duration_ms: 13.971333
+  type: 'test'
+  ...
+# Subtest: startup recovery retries a transient database failure without a customer poll
+ok 40 - startup recovery retries a transient database failure without a customer poll
+  ---
+  duration_ms: 38.97325
+  type: 'test'
+  ...
+# Subtest: startup recovery stops on permanent errors and after its transient retry budget
+ok 41 - startup recovery stops on permanent errors and after its transient retry budget
+  ---
+  duration_ms: 11.439916
+  type: 'test'
+  ...
+# Subtest: shutdown cancels startup recovery backoff before it can write an orphaned row
+ok 42 - shutdown cancels startup recovery backoff before it can write an orphaned row
+  ---
+  duration_ms: 68.587042
+  type: 'test'
+  ...
+# Subtest: a row too fresh to judge at start is settled once it misses its heartbeat, and a beating one is left alone
+ok 43 - a row too fresh to judge at start is settled once it misses its heartbeat, and a beating one is left alone
+  ---
+  duration_ms: 314.931125
+  type: 'test'
+  ...
+# Subtest: quickstart workflow cannot finish after a missing or skipped required brand write
+ok 44 - quickstart workflow cannot finish after a missing or skipped required brand write
+  ---
+  duration_ms: 40.190708
+  type: 'test'
+  ...
+# Subtest: startup recovery with no saved apply ID prevents Create and WO retry from overwriting uncertain writes
+ok 45 - startup recovery with no saved apply ID prevents Create and WO retry from overwriting uncertain writes
+  ---
+  duration_ms: 12.47675
+  type: 'test'
+  ...
+# Subtest: a legacy uncertain-placement row without phase metadata cannot be replayed
+ok 46 - a legacy uncertain-placement row without phase metadata cannot be replayed
+  ---
+  duration_ms: 11.847625
+  type: 'test'
+  ...
+1..46
+# tests 46
+# suites 0
+# pass 46
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3797.796917

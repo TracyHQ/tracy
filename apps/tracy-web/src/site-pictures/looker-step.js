@@ -34,11 +34,20 @@ import {
   LOOK_UNREADABLE,
   lookImage,
   lookWords,
-  onlyMinorFaults,
+  retainedRejectionProblem,
   surfaceFacts
 } from './looker-call.js'
+import { letteringRejection, negativeLookCache, negativeLookKey } from './looker-negative-cache.js'
 
-export const LOOK_CONCURRENCY = 4
+/**
+ * Looks in flight at once. Each look is one vision call that waits on the provider (35 to 56 s each on the local stand,
+ * 12/11/2026), so the pictures step's wall time is the looks divided by this. Once the shortlist kept the business's
+ * scene-text photos, a Central Padel build looked at every frame's real photo: 3483 s of looks, 42 minutes of picture
+ * step at 4 at once. Eight halves that wait; the provider calls are independent and the step's verdicts do not change.
+ */
+// Twelve since 16/11/2026 (a build asked for in 15 minutes): on dev the looks of a BXR London ladder ran 35 per 30 seconds
+// at eight, about 7 s each, in bursts the picker's rounds wait on.
+export const LOOK_CONCURRENCY = 12
 /** The sources whose picture the looker checks. */
 export const LOOKED_SOURCES = new Set(['owner-photo', 'owner-photo-extended', 'drawn'])
 export const LOOKER_RULE = Object.freeze({ id: 'L01', title: 'The looker passes every finished picture' })
@@ -57,6 +66,36 @@ export function cutoutFacts(frame, entry) {
     figure: Number.isFinite(entry.cutout?.figure) ? entry.cutout.figure : null,
     demoFigure: Number.isFinite(clear) ? Math.round((1 - clear) * 1000) / 1000 : null
   }
+}
+
+/**
+ * A bound on work in flight: `run(fn)` starts `fn` once fewer than `n` earlier ones are still running, in the order
+ * asked, and settles as it does. `limiter(1)` runs one at a time.
+ * @param {number} n
+ * @returns {<T>(fn: () => T | Promise<T>) => Promise<T>}
+ */
+export function limiter(n) {
+  const most = Math.max(1, n)
+  const queue = []
+  let running = 0
+  const next = () => {
+    while (running < most && queue.length) {
+      const { fn, resolve, reject } = queue.shift()
+      running++
+      Promise.resolve()
+        .then(fn)
+        .then(resolve, reject)
+        .finally(() => {
+          running--
+          next()
+        })
+    }
+  }
+  return (fn) =>
+    new Promise((resolve, reject) => {
+      queue.push({ fn, resolve, reject })
+      next()
+    })
 }
 
 /** Run `work` over `items`, at most `n` at a time, keeping the order of the results. */
@@ -93,9 +132,23 @@ export function createLooker({
   concurrency
 }) {
   const store = fileStore(storeDir)
-  const kept = (key) => path.join(store.dir, 'runs', String(runId), 'looks', `${key}.json`)
+  const runDir = path.join(store.dir, 'runs', String(runId))
+  const kept = (key) => path.join(runDir, 'looks', `${key}.json`)
+  const negative = negativeLookCache({ dir: runDir, model: door.model })
+  // The provider calls in flight, for every look of this looker at once: the fallback ladder looks at each frame's
+  // picture as soon as it is placed (ladder-step.js), many calls of `look` and `ahead` side by side, so the bound is
+  // the looker's, not one call's.
+  const asking = limiter(concurrency ?? LOOK_CONCURRENCY)
+  // The looks being taken now, by save (`memo`) and question key: a second ask of the same question waits for the
+  // first instead of paying again.
+  const taking = new WeakMap()
+  const takingOf = (memo) => {
+    if (!taking.has(memo)) taking.set(memo, new Map())
+    return taking.get(memo)
+  }
 
-  async function lookAt(list, entry, memo) {
+  // What a look at a picture asks, and the key it is kept under: the picture, its display size and the frame's words.
+  function questionOf(entry) {
     const frame = idx.frames.get(entry.frame)
     const wish = idx.wishes.get(entry.frame)
     const words = lookWords(wish)
@@ -123,18 +176,37 @@ export function createLooker({
         ...(alt ? [alt] : [])
       ])
     )
+    return { key, words, box, realPart, cutout, anyReal, surface, alt }
+  }
+
+  async function lookAt(list, entry, memo) {
+    const question = questionOf(entry)
+    const { key, alt } = question
     // A look already taken in this save (the fallback ladder looks again after each rung), readable or not.
-    if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true, limit: alt?.limit ?? null }
-    const looked = await lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface, alt })
-    memo?.set(key, looked.said)
-    return { ...looked, limit: alt?.limit ?? null }
+    const limit = alt?.limit ?? null
+    if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true, limit }
+    if (!memo) return { ...(await lookFresh(list, entry, question)), limit }
+    // The same look being taken in this save right now (another frame's picture, a look-ahead): the same look, which
+    // the first ask records and pays.
+    const inFlight = takingOf(memo)
+    const pending = inFlight.get(key)
+    if (pending) return { list, entry, said: (await pending).said, cached: true, limit }
+    const work = lookFresh(list, entry, question)
+    inFlight.set(key, work)
+    try {
+      const looked = await work
+      memo.set(key, looked.said)
+      return { ...looked, limit }
+    } finally {
+      inFlight.delete(key)
+    }
   }
 
   async function lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface, alt }) {
     const before = await readFile(kept(key), 'utf8')
       .then(JSON.parse)
       .catch(() => null)
-    if (before) return { list, entry, said: before, cached: true }
+    if (before && !letteringRejection(before)) return { list, entry, said: before, cached: true }
     const bytes = await store.readPicture(path.basename(entry.file))
     const unreadable = (problem, spent = {}) => ({
       verdict: 'fail',
@@ -150,37 +222,60 @@ export function createLooker({
       checks: Boolean(cutout),
       background: cutout?.pageBackground ?? null
     })
-    const ask = () =>
-      askLooker({
-        door,
-        system: prompt.text,
-        words,
-        image,
-        outlined: Boolean(realPart),
-        cutout,
-        anyReal,
-        surface,
-        alt,
-        fetchImpl
-      })
-    const first = await ask()
-    if (first.verdict) return { list, entry, said: await keep(key, first), cached: false }
-    // Asked once more; both calls are counted.
-    const second = await ask()
-    const spent = {
-      ms: first.ms + second.ms,
-      costUsd:
-        first.costUsd === null && second.costUsd === null
-          ? null
-          : (first.costUsd ?? 0) + (second.costUsd ?? 0)
+    const renderKey = negativeLookKey({
+      sourceSha256: entry.sha256,
+      renderedSha256: sha256Hex(Buffer.from(image.base64, 'base64')),
+      box,
+      realPart,
+      cutout,
+      anyReal,
+      surface,
+      providerId: door.providerId,
+      model: door.model,
+      promptSha256: prompt.sha256
+    })
+    if (before) {
+      // Derive a versioned proof from this exact historical question without modifying its paid record or alt.
+      await negative.remember(renderKey, key, before)
+      return { list, entry, said: before, cached: true }
     }
-    if (second.verdict) return { list, entry, said: await keep(key, { ...second, ...spent }), cached: false }
-    // An unreadable look is not kept: the next round or a resumed run asks again.
-    return {
-      list,
-      entry,
-      said: unreadable(`${first.problem}; asked again: ${second.problem}`, spent),
-      cached: false
+    const looked = await negative.run(renderKey, key, () => asking(askBoth))
+    return { list, entry, ...looked }
+
+    async function askBoth() {
+      const ask = () =>
+        askLooker({
+          door,
+          system: prompt.text,
+          words,
+          image,
+          outlined: Boolean(realPart),
+          cutout,
+          anyReal,
+          surface,
+          alt,
+          fetchImpl
+        })
+      const first = await ask()
+      if (first.verdict) return { list, entry, said: await keep(key, first), cached: false }
+      // Asked once more; both calls are counted.
+      const second = await ask()
+      const spent = {
+        ms: first.ms + second.ms,
+        costUsd:
+          first.costUsd === null && second.costUsd === null
+            ? null
+            : (first.costUsd ?? 0) + (second.costUsd ?? 0)
+      }
+      if (second.verdict)
+        return { list, entry, said: await keep(key, { ...second, ...spent }), cached: false }
+      // An unreadable look is not kept: the next round or a resumed run asks again.
+      return {
+        list,
+        entry,
+        said: unreadable(`${first.problem}; asked again: ${second.problem}`, spent),
+        cached: false
+      }
     }
   }
 
@@ -215,7 +310,8 @@ export function createLooker({
         model: said.model ?? door.model,
         ms: said.ms ?? 0,
         costUsd: said.costUsd ?? null,
-        cached: Boolean(cached)
+        cached: Boolean(cached),
+        ...(said.cacheSource ? { cacheSource: said.cacheSource } : {})
       })
       entry.seen = said.seen
       const alt = limit ? cleanAlt(said.alt, limit) : null
@@ -229,13 +325,15 @@ export function createLooker({
       }
       if (said.dropped?.length)
         notes.push(`${entry.frame}: fault names outside the list dropped: ${said.dropped.join(', ')}`)
-      // A rejected picture the ladder kept (rung best-rejected) is noted, not failed: with minor faults only, or placed
-      // despite the looker because nothing better was made (a rejection never leaves the demo, owner's rule 2026-11-07).
-      if (said.verdict === 'fail' && entry.filledBy?.rung === 'best-rejected')
+      // Keeping a fallback file does not accept a hard visual rejection. The existing
+      // minor-fault tolerance remains explicit; wrong subjects and cut faces still fail L01.
+      if (
+        said.verdict === 'fail' &&
+        entry.filledBy?.rung === 'best-rejected' &&
+        !retainedRejectionProblem(entry)
+      )
         notes.push(
-          onlyMinorFaults(said.faults)
-            ? `${entry.frame}: kept with minor faults (${said.faults.join(', ')}): no better picture fits`
-            : `${entry.frame}: placed despite looker: ${said.faults.join(', ') || 'no fault named'}: no better picture was made`
+          `${entry.frame}: kept with minor faults (${said.faults.join(', ')}): no better picture fits`
         )
       else if (said.verdict === 'fail')
         failures.push({
@@ -289,5 +387,34 @@ export function createLooker({
     }
   }
 
-  return { look }
+  /** Whether this save already took, or is taking now, the look a picture would get (`memo` as `look` keeps it). */
+  const known = (entry, memo) => {
+    if (!memo) return false
+    const { key } = questionOf(entry)
+    return memo.has(key) || Boolean(taking.get(memo)?.has(key))
+  }
+
+  /**
+   * Looks at pictures not placed yet, all at once (LOOK_CONCURRENCY at a time): each look is the one `look` would take
+   * of the picture once placed, kept in `memo` and in the run's store, so the pass that places it reads it at once
+   * (ladder-step.js looksAhead). Returns one call record per look, marked `ahead`, with its time and cost; a picture
+   * never placed after all keeps its record, since its look was paid.
+   * @param {Array<[string, object]>} pairs [list, entry] as `look` holds them
+   */
+  async function ahead(pairs, memo) {
+    const looks = await inParallel(pairs, concurrency ?? LOOK_CONCURRENCY, ([list, e]) =>
+      lookAt(list, e, memo)
+    )
+    return looks.map(({ entry, said, cached }) => ({
+      frame: entry.frame,
+      sha256: entry.sha256,
+      model: said.model ?? door.model,
+      ms: said.ms ?? 0,
+      costUsd: said.costUsd ?? null,
+      cached: Boolean(cached),
+      ahead: true
+    }))
+  }
+
+  return { look, known, ahead }
 }

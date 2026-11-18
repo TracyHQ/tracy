@@ -122,6 +122,8 @@ export function fromBusinessApi(fetchImpl = tracyWebFetch) {
     state: (id) => call(`${BASE}/${encodeURIComponent(id)}`),
     /** @param {string} id @param {{ cms: string, design: string, quickstart: string } | { auto: true }} selection */
     build: (id, selection) => call(`${BASE}/${encodeURIComponent(id)}/build`, 'POST', { selection }),
+    /** Retry the same failed build; the server keeps its site, brief and template. @param {string} id @param {string} actionId */
+    retry: (id, actionId) => call(`${BASE}/${encodeURIComponent(id)}/build`, 'POST', { retryOf: actionId }),
     /** The template catalogue (`GET /api/templates`), for the suggestion's picture, sentence and demo. */
     templates: () => call('/api/templates'),
     /** @param {string} actionId */
@@ -385,6 +387,17 @@ export async function followBusiness({
       if (business.phase === 'failed') return { failed: business.code ?? 'RESEARCH_FAILED' }
       if (business.phase === 'choose') return { choose: business }
       if (business.phase === 'build' && business.action?.id) {
+        const action = business.action
+        if (action.state === 'failed') return { failed: action.error ?? 'BUILD_FAILED' }
+        // Server-owned builds have no brief for a browser to submit. Follow the same durable action.
+        if (action.workflow === 'agent-demo/1' && !action.chatMode) {
+          if (action.state === 'completed' && typeof action.siteKey === 'string' && action.siteKey) {
+            open(`/${encodeURIComponent(action.siteKey)}`)
+            return { opened: true }
+          }
+          await pause(POLL_MS)
+          continue
+        }
         const prepared = await api.prepare(business.action.id)
         if (signal.aborted) return { failed: 'STOPPED' }
         // 🔒 The server never holds the request while the demo's logo research may still answer (tracy-web

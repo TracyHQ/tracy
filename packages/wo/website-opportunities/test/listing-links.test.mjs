@@ -9,7 +9,13 @@ import { mergeProfile } from '../src/executor.js'
 import { scoreOpportunity } from '../domain/opportunity-score.mjs'
 import { withSiteSocials } from '../domain/site-socials.mjs'
 import { candidateFromGplaces } from '../domain/discovery-gplaces.mjs'
-import { linkRequestOf, mergeListings } from '../src/link-fields.js'
+import {
+  createLinkFields,
+  linkRequestOf,
+  mergeListings,
+  pastedLinkField,
+  pastedLinksOf
+} from '../src/link-fields.js'
 
 const MAGICPIN = 'https://magicpin.com/uae/Dubai/Al-Barsha/Fitness/Padel-and-Tennis-Coach/store/1000001'
 
@@ -79,6 +85,68 @@ test('saving again adds only the links the saved candidate lacks', () => {
   assert.deepEqual(mergeListings([{ url: 'a' }], [{ url: 'a' }, { url: 'b' }]), [{ url: 'a' }, { url: 'b' }])
 })
 
+test('the links the person pasted: by the source each feeds, first per source; older candidates fall back', () => {
+  const pasted = pastedLinksOf({
+    provider: 'google-places',
+    candidate: {
+      socials: { instagram: 'https://www.instagram.com/coach', facebook: 'https://www.facebook.com/coach' },
+      pastedLinks: [
+        { source: 'google-places', url: 'https://maps.app.goo.gl/sample' },
+        { source: 'instagram', url: 'https://www.instagram.com/coach' },
+        { source: LISTING_SOURCE, url: MAGICPIN },
+        { source: LISTING_SOURCE, url: 'https://listing.example/coach' }
+      ]
+    }
+  })
+  assert.deepEqual(Object.fromEntries(pasted), {
+    'google-places': 'https://maps.app.goo.gl/sample',
+    instagram: 'https://www.instagram.com/coach',
+    listing: MAGICPIN
+  })
+  // Before `pastedLinks`: a Google place's socials may be Google's own, so only its listings count.
+  const google = {
+    provider: 'google-places',
+    candidate: { socials: { instagram: 'x' }, listings: [{ url: MAGICPIN }] }
+  }
+  assert.deepEqual(Object.fromEntries(pastedLinksOf(google)), { listing: MAGICPIN })
+  const byLinks = {
+    provider: 'url',
+    candidate: { website: 'https://coach.example/', socials: { instagram: 'y' } }
+  }
+  assert.deepEqual(Object.fromEntries(pastedLinksOf(byLinks)), {
+    website: 'https://coach.example/',
+    instagram: 'y'
+  })
+  assert.equal(pastedLinksOf({ candidate: { pastedLinks: [] }, provider: 'url' }).size, 0)
+})
+
+test('saving again keeps the links pasted before and adds the new ones the candidate researches', () => {
+  const held = {
+    website: 'https://coach.example/',
+    pastedLinks: [{ source: 'website', url: 'https://coach.example/' }]
+  }
+  const merged = candidateWithNewRefs(held, {
+    website: 'https://other.example/',
+    socials: { facebook: 'https://facebook.com/coach' },
+    pastedLinks: [
+      { source: 'website', url: 'https://other.example/' },
+      { source: 'facebook', url: 'https://facebook.com/coach' }
+    ]
+  })
+  assert.deepEqual(merged.pastedLinks, [
+    { source: 'website', url: 'https://coach.example/' },
+    { source: 'facebook', url: 'https://facebook.com/coach' }
+  ])
+  // A pasted link the candidate already researches is recorded, and asks no new run.
+  const found = { socials: { instagram: 'https://instagram.com/coach' } }
+  const recorded = candidateWithNewRefs(found, {
+    socials: { instagram: 'https://instagram.com/coach' },
+    pastedLinks: [{ source: 'instagram', url: 'https://instagram.com/coach' }]
+  })
+  assert.deepEqual(recorded.pastedLinks, [{ source: 'instagram', url: 'https://instagram.com/coach' }])
+  assert.equal(recorded.linksAddedAt, undefined)
+})
+
 test('mergeProfile reads the listing last: a fact it alone states is kept, any other source outranks it', () => {
   const opp = { provider: 'url', name: 'instagram.com', candidate: { name: 'instagram.com' } }
   const listing = {
@@ -119,4 +187,29 @@ test('linkRequestOf: links, the old url, and what is refused', () => {
   assert.equal(linkRequestOf({ links: [] }).error.code, 'INVALID_LINKS')
   assert.equal(linkRequestOf({ links: [1] }).error.code, 'INVALID_LINKS')
   assert.equal(linkRequestOf({}), null)
+})
+
+test('a pasted link is recorded and shown on Details without share tracking', async () => {
+  const tracked = 'https://www.instagram.com/harbour.sportclub?igsh=x&utm_source=qr'
+  const linkFields = createLinkFields({
+    domainDeps: () => ({}),
+    runtime: async () => ({}),
+    candidateFields: () => null
+  })
+  const domain = { assertPublicUrl: async () => {} }
+  const { fields } = await linkFields(domain, {
+    raws: [tracked],
+    typedName: null,
+    place: null,
+    legacy: false
+  })
+  assert.deepEqual(fields.candidate.pastedLinks, [
+    { source: 'instagram', url: 'https://www.instagram.com/harbour.sportclub' }
+  ])
+  // An old record kept the link as pasted: Details shows it clean, still as the link the person added.
+  const old = pastedLinksOf({ candidate: { pastedLinks: [{ source: 'instagram', url: tracked }] } })
+  const shown = pastedLinkField(old.get('instagram')).pastedLink
+  assert.doesNotMatch(shown, /igsh|utm_/)
+  assert.match(shown, /^https:\/\/www\.instagram\.com\/harbour\.sportclub\/?$/)
+  assert.deepEqual(pastedLinkField(null), {})
 })

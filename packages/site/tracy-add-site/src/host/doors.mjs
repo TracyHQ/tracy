@@ -58,6 +58,18 @@ export function isEngineAnswer(value) {
  * @returns {Record<string, unknown> | null}
  */
 export function engineReply(text) {
+  const lines = text.split(/\r?\n/)
+  let end = lines.length
+  let trailing = false
+  while (end > 0) {
+    const line = lines[end - 1].trim()
+    if (line === '' || /^<br\s*\/?>$/i.test(line)) end--
+    else if (PHP_NOTICE_LINE.test(line)) {
+      trailing = true
+      end--
+    } else break
+  }
+  if (trailing) text = lines.slice(0, end).join('\n')
   const parsed = parseJson(text)
   if (isEngineAnswer(parsed)) return /** @type {Record<string, unknown>} */ (parsed)
   // The engine's JSON with PHP's own notices printed in front of it is still the engine's reply.
@@ -145,6 +157,8 @@ export function answerKind(text) {
  */
 export function pageKind(text) {
   const t = String(text ?? '')
+  if (/id=["']loginform["']/i.test(t) && /name=["']log["']/i.test(t) && /name=["']pwd["']/i.test(t))
+    return 'login_form'
   if (
     /name=["']?(?:username|passwd|password)["']?/i.test(t) &&
     /option=com_login|task=login|id=["']?form-login/i.test(t)

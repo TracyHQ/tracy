@@ -24,10 +24,11 @@
 // price (USD per million tokens) computes each turn's cost from its tokens, for a provider that reports none; such a
 // turn carries costSource 'price-table'. A timed price (agent-over-door-wire.js priceAt) picks its peak or off-peak
 // table by the UTC time the call is dispatched; the turn's request keeps the table used and `priceRate`. A cancel
-// (signal) is honoured between turns only; a call in flight is never cut.
+// (signal) cuts a call in flight and records an uncertain failed receipt: the provider may have charged before Stop.
 //
-// Guards. budgetUsd: before each call, a conversation whose answered turns already cost more than this stops with
-// AGENT_BUDGET (turns without a cost count as nothing). maxTurns bounds the number of calls. writeStep
+// Guards. budgetUsd: before each call, a conversation whose answered turns already cost this much stops with
+// AGENT_BUDGET. A turn with unknown cost stops a budgeted conversation before another call; zero is not a price.
+// maxTurns bounds the number of calls. writeStep
 // ({ afterToolTurns, message }) ends the reading: once the conversation has `afterToolTurns` answers that called
 // tools, or an answer whose every tool call was answered as a repeat (a tool result with `repeated: true`), the
 // message goes out as a user message after the tool results, and from then on every request of the conversation
@@ -173,12 +174,19 @@ export async function runAgent({
     if (signal?.aborted) throw new AgentError('AGENT_ABORTED', { turn: turns.length })
     if (turns.length >= o.maxTurns)
       throw new AgentError('AGENT_TURN_LIMIT', { reason: `${o.maxTurns} model calls` })
-    const spent = totalsOf(turns).cost
-    if (o.budgetUsd !== undefined && spent > o.budgetUsd)
-      throw new AgentError('AGENT_BUDGET', {
-        turn: turns.length,
-        reason: `the conversation has cost $${spent.toFixed(4)}, past its budget of $${o.budgetUsd.toFixed(2)}`
-      })
+    if (o.budgetUsd !== undefined) {
+      const totals = totalsOf(turns)
+      if (totals.turnsWithoutCost > 0)
+        throw new AgentError('AGENT_BUDGET_UNKNOWN', {
+          turn: turns.length,
+          reason: `${totals.turnsWithoutCost} answered model call(s) have no known cost; the $${o.budgetUsd.toFixed(2)} budget cannot be checked`
+        })
+      if (totals.cost >= o.budgetUsd)
+        throw new AgentError('AGENT_BUDGET', {
+          turn: turns.length,
+          reason: `the conversation has cost $${totals.cost.toFixed(4)}, at or past its budget of $${o.budgetUsd.toFixed(2)}`
+        })
+    }
     const toolChoice =
       tools.length && o.writeStep && sentWriteStep([...messages, ...next], o.writeStep.message)
         ? 'none'
@@ -214,26 +222,37 @@ export async function runAgent({
     await onTurn(structuredClone(turn))
     const report = progressReport(onProgress, turn.n)
     const attempt = () =>
-      callModel(door, body, { ...o, fetchImpl, n: turn.n, price: priced?.table, progress: report.progress })
-    const { answer, retries } = await withRetries(attempt, { policy: o.retry, sleep, random }).catch(
-      async (error) => {
-        await report.settled()
-        Object.assign(turn, {
-          state: 'failed',
-          error: {
-            code: error.code,
-            reason: error.reason,
-            status: error.status,
-            uncertain: error.uncertain === true,
-            attempts: (error.retries?.length ?? 0) + 1
-          },
-          retries: error.retries ?? [],
-          answeredAt: new Date().toISOString()
-        })
-        await onTurn(structuredClone(turn))
-        throw error
-      }
-    )
+      callModel(door, body, {
+        ...o,
+        fetchImpl,
+        n: turn.n,
+        price: priced?.table,
+        progress: report.progress,
+        signal
+      })
+    const { answer, retries } = await withRetries(attempt, {
+      policy: o.retry,
+      sleep,
+      random,
+      signal,
+      abortError: () => Object.assign(new AgentError('AGENT_ABORTED', { turn: turn.n }), { uncertain: true })
+    }).catch(async (error) => {
+      await report.settled()
+      Object.assign(turn, {
+        state: 'failed',
+        error: {
+          code: error.code,
+          reason: error.reason,
+          status: error.status,
+          uncertain: error.uncertain === true,
+          attempts: (error.retries?.length ?? 0) + 1
+        },
+        retries: error.retries ?? [],
+        answeredAt: new Date().toISOString()
+      })
+      await onTurn(structuredClone(turn))
+      throw error
+    })
     await report.settled()
     const choice = answer.choices[0]
     Object.assign(turn, {

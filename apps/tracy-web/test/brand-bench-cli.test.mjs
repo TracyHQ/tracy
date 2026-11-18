@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { runCli } from '../src/brand-step/brand-cli.js'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { fileDb } from './_db.mjs'
 import {
   API_KEY,
@@ -71,9 +72,14 @@ test('run queues a run from a brief file and prints its id; refusals say why and
   const id = k.out.at(-1)
   const row = (await pool.query('select started_by, brief_source from brand_run where id = $1', [id])).rows[0]
   assert.deepEqual([row.started_by, row.brief_source], ['cli:tester', { kind: 'file', name: 'brief.json' }])
-  // A second run is refused while this one is active; the brief file's path is never stored.
+  // A run past the bench limit is refused while the others are active; the brief file's path is never stored.
+  for (let n = 1; n < BENCH_RUNS_AT_ONCE; n++)
+    assert.equal(await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json']), 0)
   assert.equal(await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json']), 1)
-  assert.match(k.err.at(-1), /BRAND_RUN_ACTIVE.*Only one brand run at a time/)
+  assert.match(
+    k.err.at(-1),
+    new RegExp(`BRAND_RUN_ACTIVE.*At most ${BENCH_RUNS_AT_ONCE} brand runs at a time.*${id}`)
+  )
   writeFileSync(path.join(k.dir, 'bad.json'), '{not json')
   assert.equal(await k.run(['run', '--kit', KIT_REF, '--brief-file', 'bad.json']), 1)
   assert.equal(await k.run(['run', '--brief-file', 'brief.json']), 2)
@@ -153,5 +159,48 @@ test(
     assert.ok(!all.join('\n').includes(API_KEY))
     assert.equal(await k.run(['status', '00000000-0000-4000-8000-000000000000']), 1)
     k.done()
+  }
+)
+
+test(
+  'the CLI projects a missing brand voice from the selected language and records its origin without changing the input',
+  opts,
+  async () => {
+    const c = await brandCase()
+    delete c.brief.brand.voice
+    const original = JSON.stringify(c.brief)
+    const k = cli(c)
+    try {
+      await assignBrandDoors(db.pool)
+      writeFileSync(path.join(k.dir, 'brief.json'), original)
+      assert.equal(
+        await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json', '--site-language', 'zz']),
+        1
+      )
+      assert.match(k.err.at(-1), /BRAND_SITE_LANGUAGE_REQUIRED/)
+      assert.equal((await db.pool.query('select count(*)::int as n from brand_run')).rows[0].n, 0)
+      assert.equal(
+        await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json', '--site-language', 'es']),
+        0
+      )
+      const row = (
+        await db.pool.query('select brief, brief_source from brand_run where id=$1', [k.out.at(-1)])
+      ).rows[0]
+      assert.equal(row.brief.brand.voice, 'Spanish')
+      assert.deepEqual(row.brief_source, {
+        kind: 'file',
+        name: 'brief.json',
+        brandBriefProjection: {
+          version: 'brand-brief-language/1',
+          source: 'selected-site-language',
+          tag: 'es',
+          language: 'Spanish'
+        }
+      })
+      assert.equal(readFileSync(path.join(k.dir, 'brief.json'), 'utf8'), original)
+      assert.equal(JSON.stringify(c.brief), original)
+    } finally {
+      k.done()
+    }
   }
 )

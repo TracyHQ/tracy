@@ -13,11 +13,12 @@ import sharp from 'sharp'
 import { withCmsLine } from '../src/lib/cms-line.js'
 import { startPictureRun } from '../src/site-pictures/bench-control.js'
 import { runFiles } from '../src/site-pictures/bench-export.js'
-import { filesOf, inputsOf, readRun } from '../src/site-pictures/bench-store.js'
+import { createRun, filesOf, inputsOf, readRun } from '../src/site-pictures/bench-store.js'
+import { CHECKER_VERSION } from '../src/site-pictures/picture-check/check-pictures.js'
 import { PICKER_PROMPT_FILE, picturePrompts } from '../src/site-pictures/picture-prompts.js'
 import { scriptedModel } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
-import { brief, kitIndex, KIT_REF, photoFolder, storeDir } from './_site-pictures-bench.mjs'
+import { brief, KIT_REF, kitIndex, photoFolder, storeDir } from './_site-pictures-bench.mjs'
 import {
   assignPickerDoor,
   balances,
@@ -332,5 +333,40 @@ test(
     const e = byFrame(run.rounds.at(-1).pictures)
     assert.equal(e.get('block-2.0').source, 'owner-photo')
     assert.equal(e.get('block-6.1').source, 'drawn', 'the feature the picker gave up on is drawn')
+  }
+)
+
+test(
+  'a picture run started before the readability policy refuses resume before any model call',
+  opts,
+  async () => {
+    const { pool } = db
+    const legacyHash = createHash('sha256')
+      .update(
+        Object.entries(picturePrompts().roles)
+          .map(([role, hash]) => `${role} ${hash}`)
+          .join('\n')
+      )
+      .digest('hex')
+    // Queue the immutable inputs with the lifetime fingerprint a pre-policy worker would have stored. The queue
+    // must refuse before reading kit/photos, opening model doors or paying for any work.
+    const { run: started } = await createRun(pool, {
+      startedBy: 'policy-regression',
+      planSource: {},
+      briefSource: {},
+      photoSource: {},
+      plan: {},
+      brief: {},
+      kit: {},
+      prompts: { ...picturePrompts(), sha256: legacyHash },
+      checkerVersion: CHECKER_VERSION
+    })
+    const model = scriptedModel([])
+    await drainPicker(pool, { ...where, fetchImpl: model.fetchImpl, balanceFetch: balances(['10.00']) })
+    const run = await readRun(pool, started.id)
+    assert.equal(run.status, 'failed')
+    assert.match(run.error, /^SITE_PICTURES_PROMPT_CHANGED:/)
+    assert.equal(model.requests.length, 0)
+    assert.equal(run.rounds.length, 0)
   }
 )

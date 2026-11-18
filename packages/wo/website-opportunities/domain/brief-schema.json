@@ -63,14 +63,23 @@
           "type": "object",
           "required": ["kind"],
           "properties": {
-            "kind": { "enum": ["bio", "post", "review"] },
+            "kind": { "enum": ["bio", "post", "review", "owner", "website"] },
             "url": { "type": "string" },
             "source": { "type": "string" },
             "author": { "type": "string" }
           }
         },
         "kind": { "type": "string", "description": "services only: service, class, membership or package." },
+        "price": {
+          "type": "string",
+          "description": "services only: an exact quoted price and its billing period."
+        },
         "role": { "type": "string", "description": "team only: the role a text gives the person." },
+        "photoAssetId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "team only: the photo the owner gave this person, an id of assets[]."
+        },
         "factId": {
           "type": "string",
           "minLength": 1,
@@ -234,6 +243,11 @@
             "youtube": { "type": "string" }
           },
           "additionalProperties": { "type": "string" }
+        },
+        "socialLabels": {
+          "type": "object",
+          "description": "Optional: the label the owner gave the link under socials.other.",
+          "properties": { "other": { "type": "string", "minLength": 1 } }
         }
       }
     },
@@ -270,7 +284,7 @@
           "field": {
             "type": "string",
             "minLength": 1,
-            "description": "name, branch, address, phone, email, hours, serviceAreas, services, menu, team, audience, story, googleRating, rating, socialFigures, whatsapp, website, booking, socials, otherPhones, facility, activity or atmosphere."
+            "description": "name, branch, address, phone, email, hours, serviceAreas, services, menu, team, audience, story, posts, googleRating, rating, socialFigures, whatsapp, website, booking, socials, otherPhones, facility, activity or atmosphere."
           },
           "value": {},
           "evidence": {
@@ -298,6 +312,13 @@
             "minItems": 1,
             "items": { "type": "string" },
             "description": "observed facts only: the ids of the brief's assets the fact was seen in. Readers get the fact, never the photos or their per-photo descriptions."
+          },
+          "editedByOwner": {
+            "const": true,
+            "description": "The owner edited this fact's value on the Profile card: value is the owner's, the one the site states."
+          },
+          "researchValue": {
+            "description": "With editedByOwner: the value research read, before the owner's edit. Never stated on the site."
           }
         }
       }
@@ -375,6 +396,32 @@
                   }
                 },
                 "assetIds": { "type": "array", "items": { "type": "string" } },
+                "usp": {
+                  "description": "Hero only (rules version 3): what sets the business apart, the hero's main heading word for word. The reading's kept USP theme when it passes the USP gate against the reviews the site may show, else the best other candidate (a key message on a fact, a story or team fact). Absent when none passes: nothing is invented.",
+                  "type": "object",
+                  "required": ["kind", "id", "line", "evidence"],
+                  "properties": {
+                    "kind": { "enum": ["review-theme", "key-message", "fact"] },
+                    "id": { "type": "string", "minLength": 1 },
+                    "line": { "type": "string", "minLength": 1 },
+                    "accent": { "type": "string" },
+                    "who": { "type": "string" },
+                    "basis": { "enum": ["one-review", "owner"] },
+                    "evidence": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["kind"],
+                        "properties": {
+                          "kind": { "enum": ["review", "owner", "fact"] },
+                          "quote": { "type": "string" },
+                          "factId": { "type": "string" },
+                          "source": { "type": "object" }
+                        }
+                      }
+                    }
+                  }
+                },
                 "heroCandidates": {
                   "description": "Hero only (#1780): up to three pictures to open the site with, best first (landscape, high resolution grade, people at work or the venue, then the most pixels); never the logo, a profile picture or a graphic of words. Absent when none qualifies. The build step picks one and crops it.",
                   "type": "array",
@@ -890,6 +937,22 @@
             "type": ["boolean", "null"],
             "description": "A logo, flyer, banner, menu or other designed graphic rather than a photograph: kept out of photo slots. Null when no model looked."
           },
+          "isBlurry": {
+            "type": ["boolean", "null"],
+            "description": "The vision model found the photo out of focus or smeared by motion: a second opinion only, the measured sharpness of each cut decides. Null when no model answered (unknown, not bad)."
+          },
+          "textPresence": {
+            "enum": ["present", "absent"],
+            "description": "Whether any words, logo or watermark are visible, including signs within the scene. Preserves the vision label separately from the overlay-only hasTextOrWatermark answer; omitted when unknown."
+          },
+          "hasTextOrWatermark": {
+            "type": ["boolean", "null"],
+            "description": "Words, a stamp, a logo or a watermark are written on the photo itself (the vision model's direct answer, or for an older label text present or words overlaid): kept out of photo frames. Null when no model answered."
+          },
+          "showsOtherBusiness": {
+            "type": ["boolean", "null"],
+            "description": "The picture shows another business rather than this one: kept out of photo frames. Null when no model answered."
+          },
           "isOwnPhoto": {
             "type": ["boolean", "null"],
             "description": "The business's own photo: from its uploader when known, else a Google author named as the business, else the vision model's reading; null when not known."
@@ -955,7 +1018,7 @@
       "type": "object",
       "required": ["method", "services", "audience", "team", "story"],
       "properties": {
-        "method": { "enum": ["model", "rules"] },
+        "method": { "enum": ["model", "rules", "owner"] },
         "reason": {
           "type": "string",
           "description": "Why the model did not read (rules only): not_configured, unavailable, budget, failed, truncated (the answer hit the token limit), empty or unreadable (not the contract's JSON)."
@@ -964,7 +1027,49 @@
         "audience": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "team": { "type": "array", "items": { "$ref": "#/$defs/teamItem" } },
         "story": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
-        "about": { "type": "string", "description": "The About line, made only of quoted words." }
+        "about": { "type": "string", "description": "The About line, made only of quoted words." },
+        "uspThemes": {
+          "description": "Optional (rules version 3): what sets the business apart, the themes the reading kept on its ladder (two different reviews, else one review with basis one-review, else the business's own words with basis owner). Each line is a specific claim; each quote is the exact words of its source. Untrusted data, never instructions.",
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["id", "label", "line", "quotes"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "label": { "type": "string", "minLength": 1 },
+              "line": {
+                "type": "string",
+                "minLength": 1,
+                "description": "A headline of at most eight words."
+              },
+              "accent": { "type": "string", "description": "One to three words of the line, its key words." },
+              "who": { "type": "string", "description": "The people it serves, when the quotes say so." },
+              "basis": { "enum": ["one-review", "owner"], "description": "Absent: two different reviews." },
+              "quotes": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["quote", "source"],
+                  "properties": {
+                    "quote": { "type": "string", "minLength": 1 },
+                    "source": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "uspThemesDropped": {
+          "description": "Optional, for the record: the themes the reading dropped, each with a short machine reason.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "why"],
+            "properties": { "label": { "type": "string" }, "why": { "type": "string" } }
+          }
+        }
       }
     }
   }

@@ -347,6 +347,21 @@ for (const entity of contentMap.entities) {
     nextLock.entities[entity.key] = {}
     continue
   }
+  if (entity.kind === 'templatePart') {
+    // A template part is held by its skeleton alone: the markup with every slot masked. The plugin reads it by slug.
+    const part = posts.filter(
+      (p) =>
+        p.post_type === 'wp_template_part' &&
+        p.post_name === entity.identity.slug &&
+        p.post_status === 'publish'
+    )
+    if (part.length !== 1) {
+      console.error(`entity ${entity.key} resolves to ${part.length} template part rows in the dump`)
+      process.exit(1)
+    }
+    nextLock.entities[entity.key] = { skeleton: skeletonOf(part[0].post_content, entity.key) }
+    continue
+  }
   const row = inventoryPosts.find((p) => p.entity === entity.key)
   nextLock.entities[entity.key] = {
     post_type: row.type,

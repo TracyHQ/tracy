@@ -18,9 +18,12 @@ import type { Translate } from './strings.ts'
 export function ProfileKeyMessages({
   t,
   messages,
-  onSave
+  onSave,
+  titled = true
 }: {
   t: Translate
+  /** false: drawn under its own section heading, so the row label is left out. */
+  titled?: boolean
   /** The list as the server holds it. */
   messages: KeyMessageView[]
   /** Resolves true once the list is saved and the page read again. */
@@ -47,7 +50,7 @@ export function ProfileKeyMessages({
   }
   return (
     <div className="tracy-wo-field">
-      <dt className="tracy-wo-muted tracy-wo-small">{t('keyMessages.title')}</dt>
+      {titled ? <dt className="tracy-wo-muted tracy-wo-small">{t('keyMessages.title')}</dt> : null}
       <dd>
         <p className="tracy-wo-muted tracy-wo-small">{t('keyMessages.lead')}</p>
         {draft.length === 0 ? (

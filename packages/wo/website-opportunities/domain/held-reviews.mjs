@@ -75,8 +75,8 @@ export function isHeldReviewQuote(item, { names = [], held = [] } = {}) {
  * The business reading less every quote of a held review (pure, `isHeldReviewQuote`): the quotes of the kind of
  * business, the key messages and an item's mentions are dropped one by one, an item that stands on such a quote alone
  * (a service, an audience, a story line, a service area, a fact it states) is dropped, and a key message left with no
- * quote goes. A team entry stays, which is how the brief holds a person only held reviews name, but without the held
- * review's words: its name, role and where it was read, no quote.
+ * quote goes, as does a USP theme. A team entry stays, which is how the brief holds a person only held reviews name,
+ * but without the held review's words: its name, role and where it was read, no quote.
  */
 export function readingWithoutHeldReviews(reading, opts = {}) {
   if (!reading || typeof reading !== 'object') return reading
@@ -103,6 +103,11 @@ export function readingWithoutHeldReviews(reading, opts = {}) {
       const kept = quotes(mentions)
       return Array.isArray(kept) && kept.length ? { ...rest, mentions: kept } : rest
     })
+  // A USP theme drops a held review's quote, as a key message does; a theme left with none goes (`checkUspThemesOf`).
+  if (Array.isArray(reading.uspThemes))
+    out.uspThemes = reading.uspThemes
+      .map((t) => (Array.isArray(t?.quotes) ? { ...t, quotes: quotes(t.quotes) } : t))
+      .filter((t) => !Array.isArray(t?.quotes) || t.quotes.length > 0)
   if (reading.subTrade && Array.isArray(reading.subTrade.quotes))
     out.subTrade = { ...reading.subTrade, quotes: quotes(reading.subTrade.quotes) }
   return out

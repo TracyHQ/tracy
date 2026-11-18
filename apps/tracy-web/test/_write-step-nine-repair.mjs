@@ -76,7 +76,7 @@ export function checkOf(failures, name = 'check') {
  * that long after the prompt (a prompt the session queue runs late), `{ openForMs }` keeps the turn open that long,
  * `{ changes }` the changes the turn claims (one apply by default), `{ changesAfterCancel }` writes that show only once
  * the session's work was cancelled (a turn cut short that still wrote). `locate(params)` answers content.locate (none:
- * the agent has no locate); `cancel` is offered when `canCancel`. Every comment request (with the time it was made),
+ * the agent has no locate); `cancel` is offered when `canCancel`, `retire` when `canRetire`. Every comment request (with the time it was made),
  * prompt, locate, cancel and undo is recorded in `sent`; `sent.mostOpen` is the most turns open at once.
  */
 export function fakeAgent({
@@ -84,9 +84,19 @@ export function fakeAgent({
   clock = null,
   undo = () => ({ ok: true }),
   locate = null,
-  canCancel = false
+  canCancel = false,
+  canRetire = false
 } = {}) {
-  const sent = { opened: 0, requests: [], prompts: [], undone: [], located: [], cancelled: 0, mostOpen: 0 }
+  const sent = {
+    opened: 0,
+    requests: [],
+    prompts: [],
+    undone: [],
+    located: [],
+    cancelled: 0,
+    retired: [],
+    mostOpen: 0
+  }
   const made = []
   const pageOfSession = new Map()
   const turnsOfSession = new Map()
@@ -151,6 +161,12 @@ export function fakeAgent({
       sent.located.push(params)
       return locate(params)
     }
+  // A build's agent retires each session once the pass is over (write-step-bench-repair-agent.js `setupRun`).
+  if (canRetire)
+    agent.retire = async ({ sessionId }) => {
+      sent.retired.push(sessionId)
+      return { ok: true }
+    }
   if (canCancel)
     agent.cancel = async ({ sessionId }) => {
       sent.cancelled += 1
@@ -176,7 +192,14 @@ export function scopedTo(check, pages) {
  * site agent fake, `files` frozen files beside the plan and copy (a brief). A check asked for some `pages` holds only
  * their failures (`scopedTo`).
  */
-export async function stepNine({ checks, agent, clock = fakeClock(), input = {}, files = {} }) {
+export async function stepNine({
+  checks,
+  agent,
+  clock = fakeClock(),
+  input = {},
+  files = {},
+  contentMap = null
+}) {
   const site = fakeSite()
   const frozen = frozenFiles(files)
   const ran = []
@@ -185,7 +208,7 @@ export async function stepNine({ checks, agent, clock = fakeClock(), input = {},
   const logged = []
   try {
     const result = await runStepNine({
-      write: { door: site.door, siteKey: SITE, kit: KIT(), contentMap: null, files: frozen.files },
+      write: { door: site.door, siteKey: SITE, kit: KIT(), contentMap, files: frozen.files },
       checkSite: async (report, options) => {
         ran.push(report)
         checkOptions.push(options)

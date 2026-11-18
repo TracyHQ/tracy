@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-541-artifact-write-quality",
+  "kind": "fix",
+  "title": "Step nine normalizes exported paragraphs, proves icons and retains measured template backdrop colours",
+  "pr": 541,
+  "area": "website-opportunities/step-nine",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the listed suites sequentially with Node 24. They execute the real write and checker code against fictional site fixtures and generated pictures."
+  ],
+  "expect": [
+    "Paragraph-only and list values become safe HTML at HTML storage; ACM codes remain native and malformed markup is refused.",
+    "Correct body icon classes pass; missing, wrong, head-only and text-only representations fail.",
+    "An accent-only brand uses the original matching template backdrop's measured neutral; changed or unreadable pictures never supply a guessed colour.",
+    "Only a successfully closed matching form discharges its submit-label failure; shared controls and reopened forms still fail read-back."
+  ],
+  "selectors": {},
+  "fence": "Storage-specific normalization, rendered icon semantics and measured per-recipe template neutral provenance",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-emphasis.test.mjs",
+      "apps/tracy-web/test/printed-icon-classes.test.mjs",
+      "apps/tracy-web/test/write-step-painted.test.mjs",
+      "apps/tracy-web/test/write-step-form-close.test.mjs"
+    ],
+    "tests": [
+      "paragraph-only HTML params normalize through the guard while native ACM paragraphs keep their codes",
+      "HTML list normalization preserves its template class and the rest of the record",
+      "unsupported paragraph attributes remain blocked and never become a site update",
+      "a text-valued icon slot needs its complete classes on a body icon element, not visible class words",
+      "the site check accepts a rendered icon and reports a missing glyph as an icon failure",
+      "an accent-only brand redraws a measured template backdrop in its actual neutral, without a colour module",
+      "a changed or unreadable template backdrop never supplies an invented surface colour",
+      "the write orchestration discharges a submit-label refusal only after its own form closes",
+      "a shared label still blocks when a different control remains on the page"
+    ],
+    "needs": []
+  }
+}

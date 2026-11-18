@@ -23,6 +23,29 @@
 # any more, so their objects stay loose.
 TRACY_REPO_GIT_CONFIG=(-c gc.auto=0 -c maintenance.auto=false -c gc.autoDetach=false)
 
+# The repo does not exist on the first read. Fence its initialization outside it, before either
+# a reader snapshots the tree or provision starts changing it. Provision waits at most 120 seconds;
+# readers try once and answer building, so they never hold heavy slots waiting for provision.
+# Descriptor 5 survives into provision's child ensure/backup scripts; the marker prevents reentry.
+tracy_webroot_init_lock() { # private directory, wait seconds (0 for a reader), optional shared mode
+  [[ -n "${TRACY_WEBROOT_INIT_LOCK_HELD:-}" ]] && return 0
+  command -v flock >/dev/null 2>&1 || return 0
+  mkdir -p "$1"
+  exec 5>"$1/tracy-webroot-init.lock"
+  local mode=-x
+  [[ "${3:-}" = shared ]] && mode=-s
+  if ! flock "$mode" -n 5; then
+    if [[ "$2" = 0 ]]; then exec 5>&-; return 1; fi
+    echo "==> waiting for this site's webroot initialization" >&2
+    if ! flock "$mode" -w "$2" 5; then
+      echo "another webroot initialization holds this site; try again shortly" >&2
+      exec 5>&-
+      return 1
+    fi
+  fi
+  export TRACY_WEBROOT_INIT_LOCK_HELD=1
+}
+
 # ── who owns what a write puts in the webroot ─────────────────────────────────────────────────
 # The site's web container reads and writes its webroot as its own user; a file or folder this
 # host's root leaves there is one the CMS cannot write again (Media Manager uploads, extension

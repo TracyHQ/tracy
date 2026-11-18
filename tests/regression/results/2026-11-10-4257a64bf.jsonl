@@ -1,0 +1,2 @@
+{"id":"REG-PR-294-brand-layer-primary-contrast","verdict":"PASS","commit":"4257a64bfd551d64ec346eeba4eeae36f14cdc71","ran_at":"2026-11-10T08:21:34.573Z","evidence":"tests/regression/evidence/assigned-non-wo/2026-11-10-4257a64bf/REG-PR-294-brand-layer-primary-contrast.log"}
+{"id":"REG-PR-311-taken-delete-leaves-id-map","verdict":"PASS","commit":"4257a64bfd551d64ec346eeba4eeae36f14cdc71","ran_at":"2026-11-10T08:24:38.164Z","evidence":"tests/regression/evidence/assigned-non-wo/2026-11-10-4257a64bf/REG-PR-311-taken-delete-leaves-id-map.log"}

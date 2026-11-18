@@ -659,6 +659,42 @@ done
 say "    every site on this host is reachable by container name"
 fi
 
+# ── 6c. The demo farm, left as it is ───────────────────────────────────────────────────────────
+#
+# A host that folded demos (fleet scripts/lib/demo-farm.sh) runs `tracy-demos-web` + `tracy-demos-db`
+# as a compose project of their own (`tracy-demos`), which this script never names, so `compose up`
+# above neither recreates nor stops them. A folded demo's `<label>-web-1` is its forwarder, re-joined
+# by 6b like any site. The one thing a deploy can take from the farm is its attachment to the shared
+# `tracy` network (its site-mail road to tracy-web), if that network was re-created: put back by a
+# `network connect`, never by recreating the farm. A farm that is not running is said, not "fixed":
+# every folded demo is down with it, and check-server.sh / server-status-alert.sh report it.
+# The farm web is two slots (tracy-demos-web-a / -b; one container named tracy-demos-web on a host that
+# folded before slots): every running one is checked, and re-joined if it lost the network.
+farm_webs="$(docker ps -a --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' || true)"
+if [ -n "$farm_webs" ]; then
+  say
+  say "==> the demo farm"
+  TRACY_PRIVATE_ROOT_V="$(read_env TRACY_PRIVATE_ROOT)"
+  farm_running="$(docker ps --format '{{.Names}}' 2>/dev/null | grep -E '^tracy-demos-web(-[ab])?$' || true)"
+  if [ -z "$farm_running" ] \
+     || [ "$(docker inspect -f '{{.State.Running}}' tracy-demos-db 2>/dev/null)" != true ]; then
+    say "    !! tracy-demos-web or tracy-demos-db is not running — every folded demo on this host is down (left as found; see check-server.sh)"
+  else
+    farm_mail_net="${TRACY_SITE_NETWORK:-tracy_tracy}"
+    for farm_web in $farm_running; do
+      farm_nets="$(docker inspect "$farm_web" --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}')"
+      if docker network inspect "$farm_mail_net" >/dev/null 2>&1 && grep -q "name: $farm_mail_net\$" "${TRACY_PRIVATE_ROOT_V:-/nonexistent}/_demos/compose.yml" 2>/dev/null; then
+        case " $farm_nets " in
+          *" $farm_mail_net "*) say "    $farm_web running, on $farm_mail_net" ;;
+          *) docker network connect "$farm_mail_net" "$farm_web" && say "    $farm_web re-joined $farm_mail_net (site mail of the folded demos)" ;;
+        esac
+      else
+        say "    $farm_web running"
+      fi
+    done
+  fi
+fi
+
 # ── 7. Prove they answer, from the host's own loopback ─────────────────────────────────────────
 #
 # Both requests are made from inside `tracy-host`, which runs `network_mode: host` — see the block

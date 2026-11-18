@@ -2,14 +2,17 @@
 // it is queued (the brief's shape, the kit, the door, the kit's images) and stores what the run will use, so a refused start leaves
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
-import { benchHarnessFor, sendsImages } from '../lib/bench-harness.js'
-import { briefOfRevision, UUID } from '../lib/bench-sql.js'
-import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
+import { benchHarnessFor, capsOf, sendsImages } from '../lib/bench-harness.js'
+import { parallelPagesProblem } from './plan-parts.js'
+import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { activeRuns, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
 import { briefShapeProblems } from './brief-shape.js'
+import { PLANNER_BRIEF_VIEW } from './brief-view.js'
 import { sitePlannerDoor } from './door.js'
 import { openKit, readableKits } from './kit-source.js'
 import { CHECKER_VERSION } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
+import { VISUAL_REVIEW_POLICY } from './visual-review.js'
 
 export {
   BENCH_HARNESS,
@@ -27,8 +30,11 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
 /**
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
- *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object> }} input `kitImages`: the kit
- *   images of this server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests).
+ *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object>, noCaps?: boolean, requireVisualReview?: boolean,
+ *   kitInFirstMessage?: boolean, parallelPages?: number }} input `parallelPages`: the number of parts round 0 is
+ *   planned in at the same time (plan-parts.js; 1 or absent plans it as before and freezes nothing); `kitImages`: the kit
+ *   images of this server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests); `noCaps`: the
+ *   run is a step of a chain build, so it carries no USD budget (#478).
  */
 export async function startBenchRun({
   pool,
@@ -38,8 +44,21 @@ export async function startBenchRun({
   kitRef,
   startedBy,
   kitImages,
-  index
+  index,
+  noCaps = false,
+  requireVisualReview = false,
+  kitInFirstMessage = false,
+  parallelPages
 }) {
+  if (parallelPages !== undefined) {
+    const partsProblem = parallelPagesProblem(parallelPages)
+    if (partsProblem)
+      return {
+        ok: false,
+        code: 'SITE_PLANNER_BAD_PARALLEL_PAGES',
+        reason: `The run cannot start: ${partsProblem}.`
+      }
+  }
   const problems = briefShapeProblems(brief)
   if (problems.length)
     return refuse('SITE_PLANNER_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })
@@ -53,8 +72,13 @@ export async function startBenchRun({
   const opened = openKit(kitRef, index ? { index } : {})
   const door = await sitePlannerDoor({ pool, secret, kit: opened, sendsImages })
   if (!door.ok) return refuse(door.code, door.reason, door.lacking ? { lacking: door.lacking } : {})
-  const active = await activeRun(pool)
-  if (active) return activeRefusal(active)
+  if (requireVisualReview && !door.snapshot.images)
+    return refuse(
+      'SITE_PLANNER_VISUAL_REVIEW_UNAVAILABLE',
+      'This WO run requires a model that receives kit images.'
+    )
+  const running = await activeRuns(pool)
+  if (running.length >= BENCH_RUNS_AT_ONCE) return fullRefusal(running)
   // Last, since the first use of a kit version downloads its image zip: a kit whose images are unusable never queues.
   // A model given no images plans from the looks alone, so its run needs no image zip.
   if (door.snapshot.images) {
@@ -69,18 +93,22 @@ export async function startBenchRun({
     promptSha256: plannerPrompt().sha256,
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
-    harness: benchHarnessFor(door.snapshot.model, door.snapshot.providerId)
+    harness: {
+      ...capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps),
+      briefView: PLANNER_BRIEF_VIEW,
+      // Asked for (a chain build's plan step): the whole kit goes in the first message (template-kit-source.js
+      // wholeKitFirstMessage); frozen with the run, so a run saved before reads part by part as it did.
+      ...(kitInFirstMessage ? { kitInFirstMessage: true } : {}),
+      // Asked for: round 0 planned in parts at the same time (plan-parts.js), frozen with the run.
+      ...(parallelPages > 1 ? { parallelPages } : {}),
+      ...(requireVisualReview ? { visualReview: VISUAL_REVIEW_POLICY } : {})
+    }
   })
-  if (created.error === SITE_PLANNER_RUN_ACTIVE) return activeRefusal(created.active)
+  if (created.error === SITE_PLANNER_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
 }
 
-function activeRefusal(active) {
-  const who = active
-    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
-    : 'another run'
-  return refuse(SITE_PLANNER_RUN_ACTIVE, `Only one run at a time: ${who} is still active.`, { active })
-}
+const fullRefusal = (running) => benchFullRefusal(SITE_PLANNER_RUN_ACTIVE, 'planner runs', running)
 
 /**
  * Cancel a run. One no worker holds ends at once; one a worker holds is asked to stop, which the worker does

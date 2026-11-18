@@ -1,0 +1,2 @@
+{"id":"REG-PR-633-repair-kind-unchanged","verdict":"PASS","commit":"38ed3357f3accf1ed03a8c03d5e1835477b719aa","ran_at":"2026-11-15T15:33:57.981Z","evidence":"tests/regression/.runs/2026-11-15-38ed3357f/REG-PR-633-repair-kind-unchanged.log"}
+{"id":"REG-PR-633-whole-kit-first-message","verdict":"PASS","commit":"38ed3357f3accf1ed03a8c03d5e1835477b719aa","ran_at":"2026-11-15T15:33:58.409Z","evidence":"tests/regression/.runs/2026-11-15-38ed3357f/REG-PR-633-whole-kit-first-message.log"}

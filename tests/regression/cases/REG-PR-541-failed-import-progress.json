@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-541-failed-import-progress",
+  "kind": "fix",
+  "title": "A failed import marks its operation failed and spaces recovery instructions in both modes",
+  "pr": 541,
+  "area": "add-site/import",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Render the real import wizard with production CSS in Chromium. Complete its form, then answer the status door with php_too_old on PHP 7.3.33. Inspect light/dark at 390/1440px."
+  ],
+  "expect": [
+    "The import segment is failed and aria-current=step, All steps completed is absent and provisioning never starts.",
+    "Recovery retry has bottom padding and its heading is inline-flex in every viewport/mode."
+  ],
+  "selectors": {
+    "operation": "[data-wizard-goto=\"import\"]"
+  },
+  "fence": "ImportWizard and AddSiteWizard progress state, recovery CSS",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#392",
+      "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs"
+    ],
+    "tests": ["a failed import marks its operation failed without claiming all steps completed"],
+    "timeout_s": 180
+  }
+}

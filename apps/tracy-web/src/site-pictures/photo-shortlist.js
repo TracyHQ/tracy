@@ -12,8 +12,18 @@ const QUALITY_RANK = { high: 0, medium: 1, unknown: 2, low: 3 }
 
 const bool = (x) => (typeof x === 'boolean' ? x : null)
 
-/** Lettering or a watermark: the brief label, else the vision label names the picture check also reads (P09). */
+/**
+ * Lettering or a watermark (P09, ADR 0043 section 2): the brief label `hasTextOrWatermark` (words, a logo, a stamp or a
+ * watermark written on the photo itself, not signs that are part of the scene), else the vision label names. Words
+ * added on top of the photo always count.
+ *
+ * 🔒 SCENE TEXT IS NOT LETTERING. From 11/11/2026 any `textPresence: present` refused the photo; on the measured Central
+ * Padel build (12/11/2026) that refused 239 of the business's 245 photos (its name on shirts, court banners, racket
+ * prints), left 8 for 37 frames and 10 frames to step 9b as template pictures. The looker reads the same rule
+ * (looker-prompt.md "stray lettering"), so a photo admitted here is not turned away there.
+ */
 export function letteringOf(a) {
+  if (a.hasTextOverlay === true) return true
   const own = bool(a.hasTextOrWatermark)
   if (own !== null) return own
   const vision = [
@@ -23,6 +33,18 @@ export function letteringOf(a) {
   return vision.length ? vision.includes(true) : null
 }
 export const otherBusinessOf = (a) => bool(a.showsOtherBusiness) ?? bool(a.otherBusiness)
+
+/**
+ * Whether the photo is blurry. The measured sharpness gate is primary: its record (`{passed, verdict, ...}`, written by
+ * cut-photo.js writeRect from lib/photo-sharpness.js judgePhoto) decides when present. The vision model's `isBlurry` is a
+ * second opinion, read only when no measurement exists, so a photo the machine measured sharp is never refused for it.
+ */
+export function blurryOf(a) {
+  const measured = a?.sharpness
+  if (measured && typeof measured === 'object' && typeof measured.passed === 'boolean')
+    return !measured.passed
+  return a?.isBlurry === true
+}
 
 /** Why a brief asset can never fill a picture frame, or null when it may. */
 export function photoRefusal(a) {
@@ -34,7 +56,7 @@ export function photoRefusal(a) {
   if (text === true) return 'lettering or a watermark'
   if (other === true) return 'another business'
   if (text === null || other === null) return 'a label that decides it is unknown'
-  if (a.isBlurry === true) return 'blurry'
+  if (blurryOf(a)) return 'blurry'
   return null
 }
 

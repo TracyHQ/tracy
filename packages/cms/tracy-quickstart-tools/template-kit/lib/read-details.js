@@ -189,7 +189,41 @@ export function readDetails() {
         ...(current ? { current: true } : {})
       })
     }
+    const audioSources = []
+    for (const player of root.querySelectorAll('audio, .jp-jplayer')) {
+      if (player.tagName === 'AUDIO' && player.closest('.jp-jplayer')) continue
+      const native = player.tagName === 'AUDIO'
+      const state = native ? null : window.jQuery?.(player)?.data('jPlayer')
+      const audio = native ? player : state?.htmlElement?.audio
+      const raw = native
+        ? player.currentSrc ||
+          player.getAttribute('src') ||
+          player.querySelector('source[src]')?.getAttribute('src')
+        : state?.status?.media?.mp3
+      if (!raw) continue
+      let value, initializedSource
+      try {
+        value = new URL(raw, document.baseURI || location.href).href
+        initializedSource = new URL(
+          native ? player.currentSrc : state?.status?.src,
+          document.baseURI || location.href
+        ).href
+      } catch {
+        continue
+      }
+      audioSources.push({
+        element: player,
+        value,
+        entity: player.getAttribute('data-audio-entity'),
+        track: player.getAttribute('data-audio-track'),
+        mechanism: native ? 'native' : 'jplayer',
+        initialized: !!(native ? player.currentSrc : state?.status?.src) && initializedSource === value,
+        metadata: !!audio && audio.readyState >= 1 && Number.isFinite(audio.duration) && audio.duration > 0,
+        mediaError: audio ? (audio.error?.code ?? null) : 'unavailable'
+      })
+    }
     const texts = new Set()
+    const inlineTexts = new Set()
     // How many shown elements print each text: a text printed by three elements is three slots, never one.
     const textCounts = {}
     for (const el of root.querySelectorAll('*')) {
@@ -208,6 +242,29 @@ export function readDetails() {
         const v = el.tagName === 'INPUT' || el.tagName === 'BUTTON' ? el.getAttribute(attr) : null
         if (v && v.trim().length >= 2 && el.type !== 'hidden') texts.add(v.trim())
       }
+    }
+    // Direct text nodes are kept above for counting. Ownership additionally needs the actual sentence order:
+    // "before <span>highlight</span> after" must not become "before after | highlight". Read only an inline
+    // sentence, never join separate block paragraphs, nested kit blocks, or hidden descendants into a match.
+    const inlineText = (node) => {
+      if (node.nodeType === 3) return node.textContent
+      if (node.nodeType !== 1 || !ofRoot(node) || !visible(node)) return ''
+      if (/^(SCRIPT|STYLE|NOSCRIPT|SVG)$/i.test(node.tagName)) return ''
+      if (node.tagName === 'BR') return ' '
+      return [...node.childNodes].map(inlineText).join('')
+    }
+    for (const el of root.querySelectorAll('*')) {
+      if (!el.children.length || !ofRoot(el) || !visible(el)) continue
+      const descendants = [...el.querySelectorAll('*')].filter((x) => ofRoot(x) && visible(x))
+      if (
+        descendants.some((x) => {
+          const display = getComputedStyle(x).display
+          return !display.startsWith('inline') && display !== 'contents'
+        })
+      )
+        continue
+      const sentence = inlineText(el).replace(/\s+/g, ' ').trim()
+      if (sentence.length >= 2) inlineTexts.add(sentence)
     }
     // Every shown clickable element that is not a link with an address (a button, an element acting as one, a submit
     // input) with its label and what it opens: a modal or panel it targets, the form it sends, or a script.
@@ -380,7 +437,11 @@ export function readDetails() {
       maps: maps.slice(0, 5),
       ...(pageSizeControl ? { pageSizeControl } : {}),
       links,
+      audioSources: audioSources
+        .filter((a) => ofRoot(a.element))
+        .map(({ element, ...source }) => ({ ...source, selector: describe(element) })),
       texts: [...texts],
+      inlineTexts: [...inlineTexts],
       textCounts,
       clickables,
       pictures: picturesOf(root),

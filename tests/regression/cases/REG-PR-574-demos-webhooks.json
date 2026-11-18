@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-574-demos-webhooks",
+  "kind": "feat",
+  "title": "/v1/demos sends signed webhook events from committed state, retried with back-off and given up after 8 attempts",
+  "pr": 574,
+  "area": "website-opportunities/public-demos",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a disposable PostgreSQL server, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "signatureHeader('whsec_example', the vector body, 1762905600) is t=1762905600,v1=e396dc7d073278dfc386f213665bad695987053bdabcfbb049f4158dcfe7543a (openssl dgst -sha256 -hmac gives the same hex).",
+    "PUT /v1/demos/webhook refuses 422 INVALID_WEBHOOK_URL with errors [{path: url, code}]: HTTPS_REQUIRED for http, CREDENTIALS_NOT_ALLOWED, PORT_NOT_ALLOWED, PRIVATE_ADDRESS for 127.0.0.1, 10/8, 169.254.169.254, ::1, fe80::1, localhost and a host resolving to a private address; nothing is kept.",
+    "A valid PUT answers the secret (whsec_ + 43 characters) once; the row keeps it sealed; GET never answers it; a replacing PUT makes a new secret and keeps since; DELETE answers removed true, then false.",
+    "The sweep makes demo.accepted, demo.completed (with site.shareUrl), demo.failed (error.code) and demo.opened (one per counted open) once each, only for demos accepted after registration, never for a cancelled demo or a rolled-back status; the body is {id, type, createdAt, demo} with demo equal to GET /v1/demos/:id.",
+    "Delivery POSTs with redirect manual, an AbortSignal, X-Tracy-Event-Id and the signature; 500, a network error, a timeout and a 302 retry after 30 s tripling; 204 delivers and is never sent again; the 8th failed attempt gives up; a replaced address receives pending events signed with its new secret; a removed address gives them up unsent."
+  ],
+  "selectors": {
+    "read": "GET /v1/demos/webhook",
+    "register": "PUT /v1/demos/webhook",
+    "remove": "DELETE /v1/demos/webhook",
+    "signature_header": "X-Tracy-Signature"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-demo-webhooks.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the signature is the hex HMAC-SHA256 of \"<t>.<body>\" keyed with the whole secret",
+      "a webhook address is https, on the default port, without credentials, on a public host",
+      "register, read and remove: the secret is answered once and kept sealed; the token decides the account",
+      "each event of a demo accepted after registration is made once, from committed state, with the demo as GET answers it",
+      "delivery: a signed POST, 2xx delivers; a failure waits and retries; the 8th failure, or no address, gives up",
+      "the sweep makes then sends in one tick, one tick at a time, and keeps old settled events a month",
+      "the app answers the webhook doors on the api host only, seals with its own secret and wires the sweep"
+    ]
+  }
+}

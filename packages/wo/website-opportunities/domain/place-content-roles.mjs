@@ -160,6 +160,7 @@ export const PLACE_CONTENT_ROLES = Object.freeze([...FACT_ROLES, ...EDITORIAL_RO
 // Version 3 additions (ADR 0040). Each is a fact about the business: filled from the place profile, never kept as demo.
 export const FACT_ROLES_ADDED_IN_V3 = Object.freeze([
   'business.gallery_image', // a picture of a gallery: the business's own photos
+  'business.audio', // an explicit audio source belonging to the business
   'business.video', // a video of the business (its file or its link)
   'business.copyright', // the copyright line: it names the business and a year
   'contact.map', // a map of the business's address (an embed or its picture)
@@ -332,6 +333,7 @@ export const DEFAULT_NEUTRAL_BY_ROLE = Object.freeze({
   // Version 3 fact and article roles: nothing is invented, the slot empties (a build's neutral substitute keeps the
   // layout, ADR 0037).
   'business.gallery_image': freezeRule({ policy: 'empty' }),
+  'business.audio': freezeRule({ policy: 'empty' }),
   'business.video': freezeRule({ policy: 'empty' }),
   'business.copyright': freezeRule({ policy: 'empty' }),
   'contact.map': freezeRule({ policy: 'empty' }),
@@ -367,7 +369,8 @@ export function modeOfRole(role) {
     role.endsWith('.logo') ||
     role.endsWith('_image') ||
     role.endsWith('_logo') ||
-    role === 'business.video'
+    role === 'business.video' ||
+    role === 'business.audio'
   )
     return 'asset'
   if (

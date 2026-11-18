@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-558-repair-undo-stop",
+  "kind": "fix",
+  "title": "An unverified required undo stops additional paid repair work",
+  "pr": 558,
+  "area": "wo/step-nine",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the real step-nine repair lifecycle with a required undo refusal or exception, then exercise failures during numbering, native waiting and later rollback waits."
+  ],
+  "expect": [
+    "No later page, remaining batch or resend starts a paid prompt after a required undo is unverified.",
+    "Already accepted requests stay in the ledger for settlement and judgement.",
+    "The result remains incomplete and never claims the failed undo succeeded."
+  ],
+  "selectors": {},
+  "fence": "Do not cancel or abandon accepted writers, bypass undo verification, or restore a backup while writes are open.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-nine-undo-stop.test.mjs",
+      "apps/tracy-web/test/write-step-nine-repair-turns.test.mjs",
+      "apps/tracy-web/test/write-step-nine-settlement.test.mjs"
+    ],
+    "tests": [
+      "an unverified required undo stops later repair prompts (refused)",
+      "a required undo failure during request numbering prevents the first paid prompt",
+      "a required undo failure while awaiting a missing turn prevents a paid resend",
+      "a failed undo stops new work before the next rollback call finishes"
+    ],
+    "needs": []
+  }
+}

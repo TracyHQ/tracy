@@ -1,0 +1,3 @@
+{"id":"REG-PR-311-taken-delete-leaves-id-map","verdict":"FAIL","commit":"298863ee5ba999556bd375146556ae940a0425c6","ran_at":"2026-11-10T08:26:55.675Z","evidence":"tests/regression/evidence/assigned-non-wo/docker-disconnect-note.md"}
+{"id":"REG-PR-541-failed-import-progress","verdict":"PASS","commit":"298863ee5ba999556bd375146556ae940a0425c6","ran_at":"2026-11-10T08:27:36.056Z","evidence":"tests/regression/evidence/assigned-non-wo/2026-11-10-298863ee5/REG-PR-541-failed-import-progress.log"}
+{"id":"REG-PR-311-taken-delete-leaves-id-map","verdict":"PASS","commit":"298863ee5ba999556bd375146556ae940a0425c6","ran_at":"2026-11-10T12:05:13.638Z","evidence":"tests/regression/evidence/assigned-non-wo/2026-11-10-298863ee5/REG-PR-311-taken-delete-leaves-id-map.log"}

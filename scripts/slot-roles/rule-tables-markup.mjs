@@ -118,7 +118,16 @@ export function proposeMarkupBindings(slots, { vocabulary3 }) {
         itemIndex: 0,
         role: info.anchorPart === 'label' ? 'contact.cta_label' : 'contact.cta_url'
       })
-    } else if (vocabulary3 && internalUrl) out.set(key, { groupId: null, role: 'editorial.navigation_url' })
+    } else if (vocabulary3 && internalUrl) {
+      // A bare article-body placeholder names no destination; labelled links and list navigation keep their branches.
+      if (
+        entity.startsWith('article-') &&
+        ['introtext', 'fulltext'].includes(slot.column) &&
+        String(slot.sample).trim() === '#'
+      )
+        continue
+      out.set(key, { groupId: null, role: 'editorial.navigation_url' })
+    }
   }
   return out
 }

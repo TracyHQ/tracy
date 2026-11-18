@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-541-wo-writer-icon-fields",
+  "kind": "fix",
+  "title": "Explicit kit icon fields preserve verified classes without weakening demo copy checks",
+  "pr": 541,
+  "area": "website-opportunities/writer",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run node --test apps/tracy-web/test/site-copy-check-icon-fields.test.mjs."],
+  "expect": [
+    "Declared Facebook and Instagram backing-field values from the actual JA Boxing 1.0.11 kit do not fail W06 or W07.",
+    "Prose and undeclared classes in mapped icon fields fail W03 with icon-field cause.",
+    "The three-word demo heading What to bring and unmapped CSS-looking text still fail W07."
+  ],
+  "selectors": {},
+  "fence": "Explicit kit icon.field mapping and exact declared fieldValue, never text appearance alone",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-copy-check-icon-fields.test.mjs"
+    ],
+    "tests": [
+      "released JA Boxing icon backing fields retain their declared Facebook and Instagram classes",
+      "an icon backing field cannot replace its technical class with prose or an undeclared class",
+      "three-word demo headings remain forbidden even though valid technical classes are excluded",
+      "CSS-looking text without an explicit icon.field declaration remains demo prose",
+      "an icon class printed in an ordinary prose slot is still checked as prose"
+    ],
+    "needs": []
+  }
+}

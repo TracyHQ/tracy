@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-496-help-stream-admission",
+  "kind": "fix",
+  "title": "Help counts model calls while the provider first response is pending",
+  "pr": 496,
+  "area": "assistant/stream-admission",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: start two Help requests with a scripted model that holds its first response.",
+    "S2: send a third Help request for the same account before releasing either response.",
+    "S3: release the first responses and finish the pending requests."
+  ],
+  "expect": [
+    "S1: two calls reach the scripted model and hold two stream slots.",
+    "S2: the third request receives HTTP 429 BUSY without reaching the model.",
+    "S3: the first two requests complete and release their slots."
+  ],
+  "selectors": {
+    "door": "POST /api/assistant/turns",
+    "test": "apps/tracy-web/test/assistant.test.mjs"
+  },
+  "evidence": "On the dev web source commit, the route incremented the local stream count only after the provider's first response. A local test reproduced a third call starting while two first responses were held.",
+  "fence": "A provider call owns a per-account slot throughout its pending first response and releases it on every exit.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=Help reserves a stream slot",
+      "apps/tracy-web/test/assistant.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": ["Help reserves a stream slot while waiting for the provider first response"]
+  }
+}

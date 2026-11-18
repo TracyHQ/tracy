@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-541-wo-local-test-input-isolation",
+  "kind": "fix",
+  "title": "Local test credentials stay outside Turbo hashes while actual credential reads remain failures",
+  "pr": 541,
+  "area": "ci/turbo",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run node --test scripts/test/ci-turbo-inputs.test.mjs scripts/test/ci-turbo-local-credentials.test.mjs apps/tracy-host/test/server.test.mjs apps/tracy-host/test/mtimes.test.mjs."
+  ],
+  "expect": [
+    "A fake local credential and its backup are excluded from broad tch inputs, while profile source remains covered.",
+    "A test reading the fake ignored credential is still uncovered.",
+    "Host HTTP tests boot and close with test-owned temporary roots; dedicated mtime refresh tests still pass."
+  ],
+  "selectors": {},
+  "fence": "Exact ignored credential exclusions approve no reads; measured cross-package source inputs remain additive.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/test/ci-turbo-inputs.test.mjs",
+      "scripts/test/ci-turbo-local-credentials.test.mjs",
+      "apps/tracy-host/test/server.test.mjs",
+      "apps/tracy-host/test/mtimes.test.mjs"
+    ],
+    "tests": [
+      "local credential files are excluded from broad Turbo inputs while profile sources remain covered",
+      "excluding local credentials from a hash never permits a test to read them",
+      "start: boots a real HTTP server, serves /health, and closes cleanly"
+    ],
+    "needs": []
+  }
+}

@@ -9,6 +9,14 @@ export {
   socialNetworkOf
 } from './discovery-osm.mjs'
 export { crawlWebsite, extractPage } from './website-crawler.mjs'
+export {
+  BOOKING_PLATFORMS,
+  LINK_IN_BIO_PLATFORMS,
+  bookingPlatformOf,
+  isBookingUrl,
+  linkInBioOf
+} from './link-platforms.mjs'
+export { bioPageLinks, expandLinkPages, readBioPage, sortBioLinks } from './link-in-bio.mjs'
 export { LISTING_HOSTS, MAX_LINKS, judgeLinks, linkKind, splitPasted } from './link-kinds.mjs'
 export {
   isGoogleHost,
@@ -128,6 +136,7 @@ export { SUB_TRADE_WORDS, TRADE_WORDS, businessWords, otherKindWords, tradeWords
 export { SUB_TRADES, decideSubTrade, subTradeChoicesOf, subTradeOfGoogleTypes } from './sub-trades.mjs'
 export { validatePlaceProfile } from './place-profile.mjs'
 export { placeProfileFromResearch } from './place-profile-from-research.mjs'
+export { savedProfileOf, stampDecisions, factsWithPaths, ownerChoicesOf } from './saved-profile.mjs'
 export { placeProfileFromBrief } from './place-profile-from-brief.mjs'
 export { placeProfileFromDemoRequest } from './place-profile-from-demo-request.mjs'
 export { placeProfileForHost } from './place-profile-for-host.mjs'
@@ -221,8 +230,10 @@ export {
   renderBriefMarkdown,
   BRIEF_SCHEMA_VERSION,
   BRIEF_SCHEMA_VERSIONS,
+  BRIEF_RULES_VERSION,
   BRIEF_REQUIRED
 } from './brief.mjs'
+export { BUSINESS_READING_VERSION } from './business-reading.mjs'
 export { factOnSite, withheldMissing } from './brief-facts.mjs'
 export {
   matchDishPhotos,

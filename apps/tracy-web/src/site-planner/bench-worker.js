@@ -13,15 +13,17 @@
 // preloadedFirstMessage) and the run sends no tools, so its first answer is the plan. A run that reads with tools gets
 // the write step: after the harness's writeAfterToolTurns answers that called a tool, or an answer that only re-read
 // parts already sent, WRITE_STEP_MESSAGE goes out and every later request carries tool_choice "none". A run whose
-// answered calls cost more than the harness's budgetUsd stops before its next call with SITE_PLANNER_BUDGET.
+// answered calls cost at least the harness's budgetUsd stops before its next call with SITE_PLANNER_BUDGET.
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { withStockScreensDropped } from '../lib/stock-screens.js'
 import { SITE_PLANNER_STORE } from './bench-store.js'
 import { sitePlannerDoor } from './door.js'
+import { PLANNER_BRIEF_VIEW, plannerBriefView } from './brief-view.js'
 import { kitImagesFor } from './kit-images.js'
 import {
   FIRST_MESSAGE_PARTS,
   firstUserMessage,
+  wholeKitFirstMessage,
   kitTools,
   openKit,
   preloadedFirstMessage,
@@ -37,6 +39,12 @@ import {
 } from './plan-changes.js'
 import { CHECKER_VERSION, checkPlan, failureListText } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
+import { withHiddenLinkLabels, withHiddenListLinks } from './plan-hidden-links.js'
+import { withDemoVideosHidden } from './plan-demo-videos.js'
+import { withWrittenRowFieldsShown } from './plan-row-fields.js'
+import { withKitCharacterLimits } from './plan-kit-limits.js'
+import { mergePlanParts, partFirstMessages, planningParts, plansInParts } from './plan-parts.js'
+import { VISUAL_REVIEW_POLICY, visualReviewInstruction, withVisualReview } from './visual-review.js'
 
 export { BENCH_QUEUE }
 
@@ -59,20 +67,28 @@ export const SITE_PLANNER_STEP = Object.freeze({
   prompt: plannerPrompt,
   checker: Object.freeze({
     version: CHECKER_VERSION,
-    check: ({ doc, row, ready }) =>
-      checkPlan({ plan: doc, kit: ready.kit.doc, brief: row.brief, briefRef: briefRefOf(row.brief_source) }),
+    check: ({ doc, row, ready, history }) => {
+      const result = checkPlan({
+        plan: doc,
+        kit: ready.kit.doc,
+        brief: row.brief,
+        briefRef: briefRefOf(row.brief_source)
+      })
+      return row.harness?.visualReview === VISUAL_REVIEW_POLICY
+        ? withVisualReview(result, { plan: doc, kit: ready.kit.doc, kitRef: row.kit.ref, history })
+        : result
+    },
     failureListText
   }),
-  // After the model, before the checker: every stock screen of the kit (site.stockScreens) is dropped, on a whole plan and on the
-  // plan a fix round's change list leaves, so no answer keeps one (lib/stock-screens.js). A kit without the field changes nothing.
+  // After the model, before the checker, on a whole plan and on the plan a fix round's change list leaves (normalizedPlan).
   readAnswer: (value, { ready }) =>
     value && typeof value === 'object' && !isChangeList(value)
-      ? withStockScreensDropped(value, ready?.kit?.doc)
+      ? normalizedPlan(value, ready?.kit?.doc)
       : value,
   changes: Object.freeze({
     applyValidChanges: (previous, list, { ready } = {}) => {
       const applied = PLAN_CHANGE_RULES.applyValidChanges(previous, list)
-      return applied.ok ? { ...applied, doc: withStockScreensDropped(applied.doc, ready?.kit?.doc) } : applied
+      return applied.ok ? { ...applied, doc: normalizedPlan(applied.doc, ready?.kit?.doc) } : applied
     },
     oversized: oversizedReplacements,
     smallEditsMessage,
@@ -83,6 +99,23 @@ export const SITE_PLANNER_STEP = Object.freeze({
     wholeDoc: WHOLE_PLAN_MESSAGE,
     notADoc: NOT_A_PLAN_MESSAGE
   }),
+  // Parallel parts (plan-parts.js): each part's first message, or null when the run plans round 0 as before; then the
+  // merge of the parts' plans into one, normalized like any answer.
+  parts: ({ row, ready }) => {
+    if (!plansInParts(row.harness)) return null
+    const groups = planningParts(ready.kit.doc, row.harness.parallelPages)
+    if (groups.length < 2) return null
+    const { firstUser } = agentRequest({ row, ready, history: [] })
+    return partFirstMessages(firstUser, groups, ready.kit.doc).map((message, part) => ({
+      about: groups[part],
+      firstUser: message
+    }))
+  },
+  mergeParts: (values, { row, ready }) =>
+    normalizedPlan(
+      mergePlanParts(values, planningParts(ready.kit.doc, row.harness.parallelPages), ready.kit.doc),
+      ready.kit.doc
+    ),
   prepare,
   agentRequest
 })
@@ -123,20 +156,28 @@ export function createSitePlannerQueue({
 // no tools; a run that already went out with tools (saved before the kit was preloaded) keeps them, since its
 // conversation holds tool calls.
 function agentRequest({ row, ready, history }) {
+  const brief = plannerBriefView(row.brief, row.harness?.briefView)
   const preloaded = !ready.images && (history.length === 0 || !history[0].request?.tools?.length)
   const imageTool = Boolean(ready.images)
-  const writeAfter = row.harness?.writeAfterToolTurns
+  const strict = row.harness?.visualReview === VISUAL_REVIEW_POLICY
+  const writeAfter = strict ? null : row.harness?.writeAfterToolTurns
+  const visualReviewText = strict ? visualReviewInstruction(ready.kit.doc) : undefined
+  // With images, a run frozen with kitInFirstMessage gets the whole kit in its first message and keeps the image tool.
+  const whole =
+    !preloaded && imageTool && row.harness?.kitInFirstMessage === true
+      ? wholeKitFirstMessage({ kit: ready.kit, brief, visualReviewText })
+      : null
   return {
     firstUser: preloaded
-      ? preloadedFirstMessage({ kit: ready.kit, brief: row.brief })
-      : firstUserMessage({ kit: ready.kit, brief: row.brief, imageTool }),
+      ? preloadedFirstMessage({ kit: ready.kit, brief })
+      : (whole?.text ?? firstUserMessage({ kit: ready.kit, brief, imageTool, visualReviewText })),
     tools: preloaded
       ? []
       : kitTools(ready.kit.doc, {
           images: ready.images,
           imageTool,
           history,
-          inFirstMessage: FIRST_MESSAGE_PARTS
+          inFirstMessage: whole?.inFirstMessage ?? FIRST_MESSAGE_PARTS
         }),
     ...(!preloaded && writeAfter
       ? { writeStep: { afterToolTurns: writeAfter, message: WRITE_STEP_MESSAGE } }
@@ -148,6 +189,12 @@ function agentRequest({ row, ready, history }) {
 // Everything the run was started with must still hold (the loop checks the prompt and the checker first): a run that
 // silently ran on another model, or a kit the server no longer reads, would not measure what it records.
 async function prepare({ pool, secret, index, kitImages }, row) {
+  if (row.harness?.briefView !== PLANNER_BRIEF_VIEW)
+    return {
+      ok: false,
+      code: 'SITE_PLANNER_BRIEF_VIEW_CHANGED',
+      reason: 'The planner brief view changed since the run started; start a new run instead of replaying it.'
+    }
   const kit = openKit(row.kit?.ref, index ? { index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_PLANNER_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
@@ -173,3 +220,25 @@ async function prepare({ pool, secret, index, kitImages }, row) {
 }
 
 const briefRefOf = (source) => String(source?.revisionId ?? source?.name ?? '')
+
+// What code settles in a plan without the model, after each answer and before the checker:
+// - every stock screen of the kit (site.stockScreens) is dropped, so no answer keeps one (lib/stock-screens.js); a kit
+//   without the field changes nothing;
+// - a link left undecided under a list or row the plan hides is hidden with it (plan-hidden-links.js);
+// - a copy entry without maxCharacters, or with one above the kit's limit, gets the kit's limit (plan-kit-limits.js);
+// - a template demo video a kept block still shows, left undecided, is hidden (plan-demo-videos.js);
+// - the label of a link the decision hides, written by the same decision, is hidden with it, unless several kit blocks
+//   print it (plan-hidden-links.js);
+// - a field of a kept list row that the decision both writes and hides is written (plan-row-fields.js).
+function normalizedPlan(plan, kit) {
+  return withWrittenRowFieldsShown(
+    withHiddenLinkLabels(
+      withDemoVideosHidden(
+        withKitCharacterLimits(withHiddenListLinks(withStockScreensDropped(plan, kit), kit), kit),
+        kit
+      ),
+      kit
+    ),
+    kit
+  )
+}

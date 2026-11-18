@@ -1,0 +1,36 @@
+{
+  "pr": 541,
+  "area": "website-opportunities/step-nine",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "id": "REG-PR-541-wo-script-repair-boundary",
+  "kind": "fix",
+  "title": "Native repair Undo preserves scripted personalization and refuses skipped opening seals",
+  "steps": [
+    "Hold setup, write personalized files, then run step 9 with a native CSS repair and whole-moment Undo using the actual host Git script.",
+    "Delay or reject the setup checkpoint and inspect native admission.",
+    "Complete a skipped opening seal and native moment through the real turn store and Undo planner."
+  ],
+  "expect": [
+    "Undo restores only the repair CSS while preserving initial personalized assets and settings.",
+    "Native admission waits for the scripted moment; a failed or missing hold sends no repair prompts.",
+    "Any skipped opening remains unsealed and cannot authorize whole-turn Undo; setup opening preserves outside receipts then refuses."
+  ],
+  "fence": "awaited setup file checkpoint before native turns and fail-closed seal evidence",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=step 9 commits setup files|a chain commits scripted setup|a missing setup hold|a failed scripted write checkpoint|skipped|setupWebroot",
+      "packages/fleet/tracy-fleet-operation/test/webroot-git.test.mjs",
+      "apps/tracy-web/test/brief-build.test.mjs",
+      "apps/tracy-web/test/write-step-nine-flow.test.mjs",
+      "apps/tracy-web/test/door-follow-up.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs"
+    ],
+    "needs": ["postgres"]
+  },
+  "selectors": {}
+}

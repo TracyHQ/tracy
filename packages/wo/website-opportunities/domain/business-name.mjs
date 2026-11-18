@@ -7,6 +7,8 @@
 
 import { normalName } from './google-link.mjs'
 import { linkKind } from './link-kinds.mjs'
+import { ownMarkNamesOf } from './own-marks.mjs'
+import { isTradeDescriptionName } from './trade-description-name.mjs'
 
 /**
  * @typedef {'google' | 'osm' | 'website' | 'facebook' | 'instagram' | 'tiktok' | 'youtube' | 'listing' | 'logo'} NameSource
@@ -110,10 +112,15 @@ const sourceId = (c) => (c.source === 'listing' ? `listing:${c.label ?? ''}` : c
  * - Else, when two independent sources other than Google agree on a name that differs from today's name (Google's
  *   when it has one, else the first source's), that name is suggested; else today's name stays.
  * - Shown names that disagree mark the decision `check` until a person acts, with each name and who says it.
- * @param {{ claims?: NameClaim[], fallback?: string | null, chosen?: ChosenName | null }} input
+ * - Own marks over a trade description (#189, name rule 1): when today's name only describes the trade (category
+ *   words plus the business's place, `trade-description-name.mjs`) and the business's own marks (its logo text, its
+ *   social page's name or handle, `own-marks.mjs`) agree on ONE name, the description is no claim and that name is
+ *   the decision. Two own names, or a listing name that is a proper name, keep the rules above.
+ * @param {{ claims?: NameClaim[], fallback?: string | null, chosen?: ChosenName | null, places?: string[] }} input
+ *   `places`: the words of the business's address (`placeWordsOf`), which a trade description may name
  * @returns {NameDecision}
  */
-export function decideBusinessName({ claims = [], fallback = null, chosen = null } = {}) {
+export function decideBusinessName({ claims = [], fallback = null, chosen = null, places = [] } = {}) {
   /** @type {Map<string, { shown: string | null, logo: string | null, sources: Map<string, { source: NameSource, label?: string }>, first: number }>} */
   const groups = new Map()
   const handles = claims.filter((c) => c?.via === 'handle')
@@ -164,7 +171,35 @@ export function decideBusinessName({ claims = [], fallback = null, chosen = null
   const base = { suggested, current, options: ordered, disagree }
   if (pick && (chosen.by === 'typed' || chosen.by === 'picked'))
     return { name: pick, state: 'chosen', chosen: { name: pick, by: chosen.by }, ...base }
+  // A social page's name that is only its handle backs the own marks as the handle it is, never as a name.
+  const ownClaims = claims.map((c) =>
+    c?.via === 'name' && handleOnly(c, clean(c.name)) ? { ...c, via: 'handle' } : c
+  )
+  const own = ownNameOverDescription(current, ownClaims, places)
+  if (own) return own
   return { name: suggested, state: ordered.length > 1 ? 'check' : 'agreed', ...base }
+}
+
+/**
+ * The one name the own marks agree on when `listing` only describes the trade, as an agreed decision whose only option
+ * is that name with the marks that give it; else null.
+ * @param {string} listing @param {NameClaim[]} claims @param {string[]} places
+ * @returns {NameDecision | null}
+ */
+function ownNameOverDescription(listing, claims, places) {
+  if (!clean(listing) || !isTradeDescriptionName(listing, { places })) return null
+  const own = ownMarkNamesOf({ chosen: listing, claims })
+  if (own.length !== 1) return null
+  const [{ name, marks }] = own
+  const sources = [...new Set(marks.map((m) => m.source))].map((source) => ({ source }))
+  return {
+    name,
+    state: 'agreed',
+    suggested: name,
+    current: name,
+    options: [{ name, sources }],
+    disagree: false
+  }
 }
 
 /**

@@ -60,6 +60,7 @@ const manifest = () => ({
 const imageSlot = (key) => ({ key, type: 'image' })
 const kitDoc = () => ({
   contract: CONTRACT,
+  blocks: [{ id: 'block-4', frames: [{ id: 'block-4.picture-1', kind: 'photo' }] }],
   contentMap: { slots: ['module-2.0', 'module-2.1', 'module-3.0'].map(imageSlot) }
 })
 
@@ -68,8 +69,23 @@ const run = (rounds) => ({
   status: 'succeeded',
   step: 'done',
   kitRef: CONTRACT,
-  brief: { business: { name: 'Fernwood Pottery' } },
-  plan: { kit: `tracy-template-kit/2 ${CONTRACT}` },
+  brief: { business: { name: 'Fernwood Pottery' }, facts: [] },
+  plan: {
+    kit: `tracy-template-kit/2 ${CONTRACT}`,
+    pages: [
+      {
+        id: 'home',
+        decision: 'keep',
+        blocks: [
+          {
+            block: 'block-4',
+            decision: 'keep',
+            pictures: [{ frame: 'block-4.picture-1', match: 'specific', factIds: [] }]
+          }
+        ]
+      }
+    ]
+  },
   rounds,
   standingFailures: ''
 })
@@ -142,12 +158,14 @@ test('get writes mapping.json beside site-pictures.json and files/, and the writ
   }
 })
 
-test('with no kit the mapping names the run kit and checks no slot; with no manifest there is no mapping', async () => {
+test('with no kit the mapping names the run kit and refuses generated provenance; with no manifest there is no mapping', async () => {
   const dir = await exported(run([doneRound()]), null)
   try {
     const pkg = JSON.parse(readFileSync(path.join(dir, 'mapping.json'), 'utf8'))
     assert.equal(pkg.mapping.contract, CONTRACT)
-    assert.deepEqual(pkg.problems, [])
+    assert.equal(pkg.problems.length, 1)
+    assert.match(pkg.problems[0].detail, /provenance is unknown/)
+    assert.deepEqual(pkg.siteSettings, [])
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }
@@ -160,6 +178,7 @@ test('with no kit the mapping names the run kit and checks no slot; with no mani
 
 test('a kit without the slot a frame fills is a problem in the file, which the write step refuses', async () => {
   const kit = {
+    ...kitDoc(),
     contract: CONTRACT,
     contentMap: { slots: [imageSlot('module-2.1'), imageSlot('module-3.0')] }
   }

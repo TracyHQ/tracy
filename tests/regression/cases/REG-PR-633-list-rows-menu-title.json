@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-633-list-rows-menu-title",
+  "kind": "fix",
+  "title": "list-rows does not take a menu that lists a kept person's page for the team list",
+  "pr": 633,
+  "area": "website-opportunities/site-check",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm the test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A team list cut to one person whose name is also a menu item title: the footer menu of four items (one of them the name) is not judged as the team list; the row is unread, with no failure.",
+    "A team list that really prints four people with the kept person's role words still fails with 4 printed."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-check-reach.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a kept row whose name is also a menu title is not found in the menu: the footer menu is not the team list"
+    ]
+  }
+}

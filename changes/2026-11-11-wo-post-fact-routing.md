@@ -1,0 +1,4 @@
+- **Original business post facts route to article title, lead and date roles instead of remaining unrouted.** — WO pipeline maintainers · #541 · `fix/wo-artifact-integration-current` · 2026-11-11
+  **Affects:** Brief routing under rules version 5. The route follows the existing news-content convention; it does not create an article, choose a photo, invent a date or alter source evidence. Existing section and content routes remain unchanged.
+  **Why / Measured:** Integrated verification exposed `fact.posts` in the new brief schema and builder without a corresponding route-table row. The regression checks the actual built brief and the schema-wide routing invariant.
+  **Validation:** The integrated planner, picture and brief pure-test set passed 237 tests across 24 files with zero failures or skips; the post-fact routing regression passed. No database or provider was used.

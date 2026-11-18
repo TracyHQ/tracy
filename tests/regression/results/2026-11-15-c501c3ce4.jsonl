@@ -1,0 +1,1 @@
+{"id":"REG-PR-638-picture-reads","verdict":"PASS","commit":"c501c3ce4c7aac2c2152406108edfede862df356","ran_at":"2026-11-15T21:39:43.350Z","evidence":"tests/regression/.runs/2026-11-15-c501c3ce4/REG-PR-638-picture-reads.log"}

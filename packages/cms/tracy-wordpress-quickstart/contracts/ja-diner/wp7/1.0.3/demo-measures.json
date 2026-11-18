@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "tracy-demo-measures/v1",
+  "quickstart": {
+    "slug": "ja-diner",
+    "version": "1.0.3"
+  },
+  "widths": [
+    1440,
+    390
+  ],
+  "pages": [
+    "/",
+    "/home/home-red",
+    "/home/home-pink",
+    "/home/home-green",
+    "/home/home-blue",
+    "/about-us",
+    "/reservation",
+    "/offers",
+    "/our-blog",
+    "/contact-us",
+    "/j-pages/login",
+    "/j-pages/registration",
+    "/other-pages/smart-search",
+    "/other-pages/error-page",
+    "/other-pages/offline-page",
+    "/content/all-categories",
+    "/content/fetured-articles",
+    "/content/tagged-items",
+    "/content/typography",
+    "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+    "/we-ve-been-nominated-for-the-britain-restaurant-awards",
+    "/three-broomsticks-welcomes-new-chef-caleb-nunez",
+    "/three-broomsticks-s-autumn-menu-unveiled",
+    "/4-habits-that-can-improve-your-customer-service",
+    "/8-trends-trickling-down-to-mainstream-menus",
+    "/starbucks-brings-under-armour-exec-on-board",
+    "/inside-olive-garden-s-never-ending-pasta-pass",
+    "/century-old-nathan-s-famous-aims-for-youth-with-new-look",
+    "/did-ihop-s-publicity-stunt-hurt-applebee-s",
+    "/buffalo-wild-wings-considers-adding-sports-betting",
+    "/this-week-s-restaurant-nightmares-language-people",
+    "/jason-alexander-is-kfc-s-new-colonel",
+    "/10-most-alluring-ltos-on-menus-in-july",
+    "/newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+    "/this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+    "/5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+    "/category/our-blog/restaurant-business",
+    "/category/our-blog/restaurant-marketing",
+    "/category/our-blog/restaurant-news",
+    "/category/our-blog/restaurant-guide",
+    "/username-reminder-request",
+    "/password-reset",
+    "/tag/food",
+    "/tag/meet",
+    "/tag/menu",
+    "/efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+    "/burger-king-takes-a-stand-on-the-pink-tax",
+    "/from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+    "/how-restaurants-can-promote-a-james-beard-recognition"
+  ],
+  "status": "green",
+  "groups": [
+    {
+      "name": "main-heading",
+      "status": "green",
+      "checked": 49,
+      "failures": []
+    },
+    {
+      "name": "empty-frames",
+      "status": "green",
+      "checked": 49,
+      "failures": []
+    },
+    {
+      "name": "text-overflow",
+      "status": "green",
+      "checked": 49,
+      "failures": []
+    },
+    {
+      "name": "orphan-row",
+      "status": "green",
+      "checked": 49,
+      "failures": []
+    },
+    {
+      "name": "blank-footer-column",
+      "status": "green",
+      "checked": 49,
+      "failures": []
+    }
+  ]
+}

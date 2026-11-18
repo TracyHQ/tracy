@@ -1,0 +1,82 @@
+{
+  "_note": "Forms plugin definitions: the contact form of the source (Joomla com_contact: Name, Email, Subject, Message) and the newsletter band (AcyMailing, one email field; bound to the Forms plugin, which stores the submissions only, DECISIONS D13). Created by tools/seed-apply.mjs forms. Not carried: the confirmation line of the newsletter box (not in the source) and the 'Send a copy to yourself' checkbox (the Forms plugin sends no copy to the sender).",
+  "forms": [
+    {
+      "name": "Contact form (EN)",
+      "slug": "contact-en",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-en",
+              "type": "text",
+              "label": "Name",
+              "name": "name",
+              "required": true,
+              "width": "half"
+            },
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "half"
+            },
+            {
+              "id": "subject-en",
+              "type": "text",
+              "label": "Subject",
+              "name": "subject",
+              "required": true,
+              "width": "full"
+            },
+            {
+              "id": "message-en",
+              "type": "textarea",
+              "label": "Message",
+              "name": "message",
+              "required": true,
+              "width": "full"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thank you for your email.",
+        "notifyEmails": ["hello@ja-diner.example"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Send Email",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Subscribe (EN)",
+      "slug": "subscribe-en",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Email"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thank you for your submission.",
+        "notifyEmails": ["hello@ja-diner.example"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Subscribe",
+        "retentionDays": 0
+      }
+    }
+  ]
+}

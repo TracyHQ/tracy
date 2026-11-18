@@ -5,12 +5,12 @@
  * is "Business name" with a `Not on the site` chip, the neutral name the site goes by instead and why it is held.
  */
 import { type JSX, useId, useState } from 'react'
-import { Badge, Button, Input } from '@tracy/ui'
-import { cn } from '@tracy/ui/cn'
+import { Button, Input } from '@tracy/ui'
 import { interfaceLocale } from '@tracy/core/interface-languages'
 
 import type { HeldNameView, NameRowView, NameSourceView } from './profile-name-model.ts'
 import { REASON_CODES } from './profile-facts-model.ts'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 /** Product names stay as they are written; the other sources are words of the interface. */
@@ -79,15 +79,12 @@ export function ProfileNameRow({
       <dd>
         <span className="tracy-wo-row tracy-wo-wrap">
           <span>{view.name}</span>
-          {view.held ? (
-            <Badge variant="outline" className="tracy-wo-name-chip is-held">
-              {t('name.chip.held')}
-            </Badge>
-          ) : null}
+          {view.held ? <StatusPill state="off" label={t('name.chip.held')} /> : null}
           {view.chip !== null ? (
-            <Badge variant="outline" className={cn('tracy-wo-name-chip', `is-${view.chip}`)}>
-              {t(view.chip === 'check' ? 'name.chip.check' : 'name.chip.checked')}
-            </Badge>
+            <StatusPill
+              state={view.chip === 'check' ? 'attention' : 'done'}
+              label={t(view.chip === 'check' ? 'name.chip.check' : 'name.chip.checked')}
+            />
           ) : null}
         </span>
         {view.held ? (

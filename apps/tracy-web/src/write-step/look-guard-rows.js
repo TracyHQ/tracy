@@ -2,7 +2,7 @@
 // setting is closed unless it is listed here, so a new one fails by name. The settings of a row are judged by what changed from what
 // was read of it, so a template's other settings, whatever they are, stay as they were and stay green.
 import { fallbackBlocksIn, isFallbackBlock, withoutFallbackBlocks } from '../lib/printed-in-body.js'
-import { HEAD_END, HEAD_START } from './brand-head-block.js'
+import { HEAD_END, HEAD_START, menuThemeCss } from './brand-head-block.js'
 import { videoBlockFor, videoBlockIn, withVideoBlock } from '../lib/empty-video-buttons.js'
 import { isSelfLinkBlock, selfLinkBlockIn, withSelfLinkBlock } from '../lib/self-link-buttons.js'
 import { hiddenLinkBlockIn, isHiddenLinkBlock, withHiddenLinkBlock } from '../lib/hidden-page-links.js'
@@ -55,9 +55,11 @@ const CREATED_FIELDS = {
 }
 // `alias` is the address a kept page answers at: the route stage gives it the plan's slug (page-route-stage.js). An address
 // restyles nothing, so it is open, and only as a slug, which can hold no markup and no other setting.
+/** The article state the write step may set on a template article: unpublished (Joomla `state` 0). */
+const UNPUBLISHED = 0
 const TEMPLATE_FIELDS = {
   article: new Set(['metadesc', 'attribs', 'alias']),
-  menuItem: new Set(['published', 'link', 'params', 'alias'])
+  menuItem: new Set(['published', 'link', 'params', 'alias', 'parent_id', 'title'])
 }
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const ACCENT_FIELDS = new Set([
@@ -139,6 +141,15 @@ function rowFaults(kind, id, fields, { state, created, kitNamed }) {
         faults.push(fault(WRITE, `${what} ${name}`, 'a setting slot holds words, with no markup'))
       continue
     }
+    // A page the plan drops has its native article unpublished (hide-writes.js, #569), as a dropped page's menu item
+    // is: on a template article only that value is open, never publishing or trashing it.
+    if (kind === 'article' && name === 'state' && !created) {
+      if (String(value) !== String(UNPUBLISHED))
+        faults.push(
+          fault(WRITE, `${what} ${name}`, `only unpublishing (state ${UNPUBLISHED}) is open on ${what}`)
+        )
+      continue
+    }
     if (!listed?.has(name)) {
       faults.push(
         fault(WRITE, `${what} ${name}`, `the column ${name} of ${what} is not open to the write step`)
@@ -165,6 +176,14 @@ function rowFaults(kind, id, fields, { state, created, kitNamed }) {
       )
     else if (name === 'published' && !created && Number(value) !== 0)
       faults.push(fault(WRITE, `${what} published`, 'a template row can only be taken off, by the plan'))
+    else if (name === 'parent_id' && (!Number.isSafeInteger(value) || value < 1))
+      faults.push(
+        fault(
+          WRITE,
+          `${what} parent_id`,
+          'a menu parent is a positive integer; Joomla owns the tree move and undo'
+        )
+      )
     else if (name === 'alias' && !SLUG.test(String(value)))
       faults.push(
         fault(WRITE, `${what} alias`, 'an alias is a slug: lower case letters and digits joined by hyphens')
@@ -184,7 +203,9 @@ function rowFaults(kind, id, fields, { state, created, kitNamed }) {
 function headFaults(inside, what) {
   const { blocks, rest } = stylesOf(inside)
   const faults = blocks.flatMap((b) =>
-    cssFaults(b.css, { except: phoneLogo }).map((f) => fault(BRAND, `${what} head block`, f.reason))
+    cssFaults(b.css.replace(menuThemeCss, ''), { except: phoneLogo }).map((f) =>
+      fault(BRAND, `${what} head block`, f.reason)
+    )
   )
   for (const tag of rest.match(/<[^>]+>/g) ?? [])
     if (!/^<link\b[^>]*\brel="(?:shortcut icon|icon|apple-touch-icon)"[^>]*>$/i.test(tag))

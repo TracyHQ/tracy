@@ -1,0 +1,3 @@
+- **Keep parallel Brand and Planner exports in one owned chain directory so disposal removes both.** — WO pipeline maintainers · #558 · `fix/assigned-non-wo-issues` · 2026-11-11
+  **Affects:** The web chain caches the pending directory allocation before parallel bench steps yield. Failed allocations remain retryable, and the explicit keep-files option still retains evidence. Rebuild tracy-web; no active run is changed by the source fix.
+  **Why / Measured:** A local Diner retry left a second Brand-only temporary directory. The production lifecycle reproduction showed an exported directory surviving disposal before the fix; after the fix, both exports disappear and cancellation regressions pass.

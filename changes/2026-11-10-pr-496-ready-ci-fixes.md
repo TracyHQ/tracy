@@ -1,0 +1,3 @@
+- **The site-tools host bundle matches its source and browser bench fixtures exercise their intended paths after the budget and USP changes** — Tracy engineering · #496 · `docs/ai-capabilities-audit-2026-11-08` · 2026-11-10
+  **Affects:** the shipped native site-tools bundle and the web test suite; rebuild the host image for the bundle, and keep transcript, image and business-reading tests aligned with the guarded model flow.
+  **Why / Measured:** Ready CI found a stale `lib/index.js`, bench fixtures spending past their $2 cap or lacking a priced answer, and a research fixture that now makes a USP retry. The rebuilt bundle gate and 22 focused database-backed tests pass locally.

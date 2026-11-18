@@ -7,7 +7,7 @@ import { normalizeWoOpsSettings } from 'website-opportunities/src/wo-settings.js
 import { createExecutor } from 'website-opportunities/src/executor.js'
 import { imageInfoWith } from 'website-opportunities/src/media-info.js'
 import { joinPlace } from 'website-opportunities/src/place-jobs.js'
-import { requestResearch } from 'website-opportunities/src/place-requests.js'
+import { requestResearch, resumeRequest } from 'website-opportunities/src/place-requests.js'
 import { SOURCE_RETRY_MS } from 'website-opportunities/src/places.js'
 import { placeAgainPlan, queueResearchAgain } from 'website-opportunities/src/research-again.js'
 import { insertOpportunity } from 'website-opportunities/src/store.js'
@@ -254,6 +254,43 @@ test(
     assert.equal(new Date(ig.attempted_at).getTime(), clock.now, 'the try is on the current research')
   }
 )
+
+test('a researched place with every source fresh still gets every part from scratch', opts, async () => {
+  const pages = { current: {} }
+  const { domain } = await domainWith(pages)
+  const clock = { now: Date.parse('2026-10-24T05:00:00Z') }
+  const ex = executor(db.pool, domain, clock)
+  const { placeId } = await researchOnce(db.pool, ex)
+  const base = { now: clock.now + 60_000, ...keysAndSettings(domain) }
+  const due = await placeAgainPlan(db.pool, placeId, base)
+  assert.deepEqual(due.run, [], 'nothing is due')
+  const plan = await placeAgainPlan(db.pool, placeId, { ...base, fromScratch: true })
+  assert.deepEqual(plan.fromScratch, { at: new Date(base.now).toISOString(), whole: true })
+  const parts = due.kept.filter((k) => k.reason !== 'unavailable').map((k) => k.part)
+  assert.ok(parts.length > 0)
+  assert.deepEqual(
+    plan.run.map((r) => [r.part, r.reason]),
+    parts.map((p) => [p, 'again'])
+  )
+  assert.ok(plan.kept.every((k) => ['unavailable', 'none'].includes(k.reason)))
+  // The run it queues collects them again, each once, and reads the place again.
+  const before = (await searchRows(db.pool)).map((r) => new Date(r.attempted_at).getTime())
+  assert.equal(before.length, 2, 'both searches ran in the first research')
+  clock.now = base.now
+  const out = await queueResearchAgain(db.pool, placeId, {
+    ...base,
+    starter: { kind: 'operator' },
+    fromScratch: true
+  })
+  assert.ok(out.job)
+  assert.equal(out.job.again_plan.fromScratch.whole, true)
+  await drain(ex)
+  const after = (await searchRows(db.pool)).map((r) => new Date(r.attempted_at).getTime())
+  assert.ok(
+    after.every((t, i) => t > before[i]),
+    'every search was tried again'
+  )
+})
 
 test('a Research again pressed while a run is going joins it and queues nothing more', opts, async () => {
   const pages = { current: {} }
@@ -605,3 +642,101 @@ test('/ops adds a social page the search did not find; Research again then colle
     (e) => e.code === 'PLACE_NOT_FOUND'
   )
 })
+
+test(
+  'provider payment failure blocks the preview and source-only request before quota; repaired setup reopens it',
+  opts,
+  async () => {
+    const { domain, calls } = await domainWith({ current: {} })
+    const clock = { now: Date.parse('2026-10-24T05:00:00Z') }
+    const { accountId, placeId } = await researchOnce(db.pool, executor(db.pool, domain, clock))
+    const opportunity = (await db.pool.query('select * from wo_opportunity where account_id=$1', [accountId]))
+      .rows[0]
+    // This retry was accepted before the provider failed, then paused with its original source scope.
+    const waiting = await requestResearch(db.pool, {
+      accountId,
+      opportunity,
+      requestId: 'source-before-provider-failure',
+      onlySource: 'google-places',
+      now: () => clock.now
+    })
+    await db.pool.query("update wo_place_job set state='paused' where id=$1", [waiting.job.place_job_id])
+    await db.pool.query("update wo_job set state='paused' where id=$1", [waiting.job.id])
+    await writeAsHistory(
+      db.pool,
+      `update wo_place_snapshot_source set attempted_at=$2, last_error=$3::jsonb
+     where source='google-places' and snapshot_id=(select current_snapshot_id from wo_place where id=$1)`,
+      [
+        placeId,
+        new Date(clock.now),
+        JSON.stringify({ reason: 'HTTP_402', at: new Date(clock.now).toISOString() })
+      ]
+    )
+    await db.pool.query(
+      `insert into wo_ops_setting(id,settings,updated_at,updated_by) values(true,'{}',$1,'owner@example.test')
+    on conflict(id) do update set updated_at=excluded.updated_at`,
+      [new Date(clock.now - 1000)]
+    )
+    const config = {
+      ...keysAndSettings(domain),
+      now: clock.now + 2000,
+      onlyParts: ['google-places'],
+      fromScratch: true
+    }
+    const plan = await placeAgainPlan(db.pool, placeId, config)
+    assert.deepEqual(plan.run, [])
+    assert.deepEqual(plan.kept, [{ part: 'google-places', reason: 'unavailable', detail: 'HTTP_402' }])
+    const jobs = async () => (await db.pool.query('select count(*)::int as n from wo_place_job')).rows[0].n
+    const before = await jobs()
+    const queued = await queueResearchAgain(db.pool, placeId, {
+      ...config,
+      starter: { kind: 'account', accountId }
+    })
+    assert.equal(queued.job, undefined)
+    await assert.rejects(
+      requestResearch(db.pool, {
+        accountId,
+        opportunity,
+        requestId: 'paid-source-retry',
+        onlySource: 'google-places',
+        now: () => config.now
+      }),
+      { code: 'NOTHING_DUE' }
+    )
+    await assert.rejects(
+      resumeRequest(db.pool, accountId, waiting.job.id, { shared: true, now: () => config.now }),
+      { code: 'NOTHING_DUE' }
+    )
+    assert.equal(
+      (await db.pool.query('select state from wo_place_job where id=$1', [waiting.job.place_job_id])).rows[0]
+        .state,
+      'paused',
+      'blocked resume does not queue the provider again'
+    )
+    assert.equal(await jobs(), before, 'neither retry nor resume creates a chargeable research run')
+    await db.pool.query('update wo_ops_setting set updated_at=$1 where id', [new Date(clock.now + 1000)])
+    assert.deepEqual(
+      (await placeAgainPlan(db.pool, placeId, config)).run.map((r) => r.part),
+      ['google-places']
+    )
+    const resumed = await resumeRequest(db.pool, accountId, waiting.job.id, {
+      shared: true,
+      now: () => config.now
+    })
+    assert.equal(resumed.state, 'queued')
+    assert.equal(resumed.place_job_id, waiting.job.place_job_id, 'resume retains its paid checkpoints')
+    assert.equal(
+      (await db.pool.query('select only_source from wo_place_job where id=$1', [resumed.place_job_id]))
+        .rows[0].only_source,
+      'google-places'
+    )
+    const ex = executor(db.pool, domain, clock)
+    clock.now = config.now
+    await drain(ex)
+    assert.equal(calls.details, 2, 'only the repaired source is collected again')
+    assert.equal(
+      (await db.pool.query('select state from wo_job where id=$1', [waiting.job.id])).rows[0].state,
+      'completed'
+    )
+  }
+)

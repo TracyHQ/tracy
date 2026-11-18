@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-573-develop-follows-568",
+  "kind": "fix",
+  "title": "Develop tests follow #568: step 9 Undo with a measured readability target, picture bench reads check version 5, a hard-rejected fallback is not exported",
+  "pr": 573,
+  "area": "wo/step-nine+site-pictures",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Start a throwaway PostgreSQL and export TEST_DATABASE_URL.",
+    "Run run.cmd: the step 9 webroot-git suite, the picture bench CLI suite and the picture ladder suite, sequentially."
+  ],
+  "expect": [
+    "Step 9 sends the readability fault that carries a complete measured target, and whole-turn Undo restores only the repair commit while the personalised setup files stay.",
+    "The bench status line shows site-pictures-check/5 with 0 fail.",
+    "The ladder test passes: a hard-rejected best-rejected fallback is not exported, the frame keeps its demo picture, the export and the picture package name the problem, and L01 fails for that frame alone.",
+    "Every file reports zero failures and zero skips."
+  ],
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/test/webroot-git.test.mjs apps/tracy-web/test/site-pictures-bench-cli.test.mjs apps/tracy-web/test/site-pictures-ladder.test.mjs apps/tracy-web/src/write-step/repair-pass/repair-locate.js apps/tracy-web/src/site-pictures/contract-mapping.js apps/tracy-web/src/site-pictures/looker-step.js"
+  },
+  "evidence": "develop at e775c6ecd: three suites red after #568 (2a39089b0, 2a9129287); the tests still asserted the behaviour #568 deliberately replaced.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/webroot-git.test.mjs",
+      "apps/tracy-web/test/site-pictures-bench-cli.test.mjs",
+      "apps/tracy-web/test/site-pictures-ladder.test.mjs"
+    ],
+    "tests": [
+      "step 9 commits setup files before native repair so whole-turn Undo preserves personalization",
+      "run, status, list and get: the output folder holds the manifest, files, check results and turns",
+      "every rung of the ladder, in order, and never a drawing in an any-real or a person frame"
+    ],
+    "needs": ["postgres"]
+  }
+}

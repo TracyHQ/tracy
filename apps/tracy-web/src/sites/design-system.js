@@ -39,6 +39,7 @@
 import { DS_TEMPLATE_LOCKED, LOCKED_REASON } from '../lib/design-system-customer-lock.js'
 import { IMPORTED_REASON, isImportedSite } from '../lib/design-system-imported-site.js'
 import { designSystemFit } from './design-system-fit.js'
+import { designSystemDemoSystems } from './design-system-demo-systems.js'
 import { APPLY_ID, lastOf, TEMPLATE_DEFAULT_ID, wornOf } from './design-system-ids.js'
 import { mountDesignSystemLibrary } from './design-system-library-doors.js'
 import { mountDesignSystemReads } from './design-system-site-reads.js'
@@ -109,8 +110,10 @@ export function isChatCall(c, auth) {
  *   preview?: { innerOf: (site: any) => URL, publicOf: (site: any) => string | null, fetchImpl: typeof fetch,
  *     waitMs?: number, origin?: string | null, secret?: string },
  *   previewRate?: (email: string) => Promise<{ over: boolean, retryAfterS: number }>,
- *   customerLock?: { blocked: (email: string | null | undefined, templateKey: string | null | undefined) => Promise<boolean> }
- * }} deps - `customerLock`: the templates customers may not put a NEW design system on
+ *   customerLock?: { blocked: (email: string | null | undefined, templateKey: string | null | undefined) => Promise<boolean> },
+ *   servedHere?: (site: any) => boolean
+ * }} deps - `servedHere`: whether this server's site proxy answers the site (a demo's share page offers looks only
+ *   then; none: never). `customerLock`: the templates customers may not put a NEW design system on
  *   (`lib/design-system-customer-lock.js`; staff pass); none: no template is locked (tests of the other rules). - `previewRate`: the per-account cap on the preview door (`previewRateLimiter`), the SAME
  *   instance the Add site preview door gets, so the two spend one budget; none: this mount's own
  *   in-memory count. - `preview`: where the preview door reads the site's home page (`innerOf`: its web
@@ -456,6 +459,23 @@ export function mountDesignSystem(app, deps) {
       if (!deps.customerLock || !tag) return null
       const templateKey = ds.quickstartTemplateOf ? ds.quickstartTemplateOf({ platform, tag }) : null
       return (await lockedFor(email, templateKey)) ? DS_TEMPLATE_LOCKED : null
-    }
+    },
+
+    /**
+     * A demo's other looks for its share page (`design-system-demo-systems.js`): judged through this file's fit, library,
+     * customer lock and preview secret, so the share page can never offer a look the Design system doors would refuse.
+     */
+    demoSystems: designSystemDemoSystems({
+      siteByKey,
+      ds,
+      offered,
+      survey,
+      lockedFor,
+      publicOf: (site) => deps.preview?.publicOf(site) ?? null,
+      secret: deps.preview?.secret ?? null,
+      servedHere: deps.servedHere ?? (() => false),
+      platforms: PLATFORMS,
+      now
+    })
   }
 }

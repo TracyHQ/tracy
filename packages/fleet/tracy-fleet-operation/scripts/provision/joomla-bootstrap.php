@@ -500,6 +500,29 @@ function tracy_cowork_row($db, string $prefix): ?array
  * POST one JSON body to the site's own component; answers [decoded answer or [], transport error,
  * HTTP status (0 when nothing answered)].
  */
+/**
+ * Decode a door response without retaining its body in diagnostics. A successful HTTP response can
+ * still be an HTML error page or unexpected JSON; those used to collapse to an unexplained "no answer".
+ * Only fixed categories and counts are reported: response bodies, headers, keys and request credentials
+ * are never copied into this diagnostic. This observes a refusal; it does not make it acceptable.
+ */
+function tracy_decode_door_response($raw, string $transport, int $status, string $mime): array
+{
+    $answer = is_string($raw) ? json_decode($raw, true) : null;
+    $jsonError = is_string($raw) ? json_last_error() : JSON_ERROR_NONE;
+    $known = is_array($answer) ? count(array_intersect(['ok', 'error', 'code', 'message', 'contract', 'bound'], array_keys($answer))) : 0;
+    if (is_string($raw) && (!is_array($answer) || $known === 0)) {
+        $type = strtolower(trim(explode(';', $mime, 2)[0]));
+        $type = in_array($type, ['application/json', 'application/problem+json', 'text/html', 'text/plain'], true) ? $type : ($type === '' ? 'missing' : 'other');
+        $detail = 'response content-type=' . $type . '; bytes=' . strlen($raw)
+            . '; json-error=' . $jsonError . '; known-fields=' . $known
+            . '; html=' . (preg_match('/<!doctype\s+html|<html\b/i', $raw) ? 'yes' : 'no')
+            . '; php-warning=' . (preg_match('/(?:PHP )?(?:Warning|Fatal error):/i', $raw) ? 'yes' : 'no');
+        $transport = $transport === '' ? $detail : $transport . '; ' . $detail;
+    }
+    return [is_array($answer) ? $answer : [], $transport, $status];
+}
+
 function tracy_door(string $url): callable
 {
     return static function (array $body, int $timeout) use ($url): array {
@@ -508,8 +531,8 @@ function tracy_door(string $url): callable
         $raw = curl_exec($ch);
         $error = curl_error($ch);
         $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        $answer = is_string($raw) ? json_decode($raw, true) : null;
-        return [is_array($answer) ? $answer : [], $error, $status];
+        $mime = (string) curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+        return tracy_decode_door_response($raw, $error, $status, $mime);
     };
 }
 

@@ -1,0 +1,197 @@
+$ node --test --test-concurrency=1 --test-reporter=tap apps/tracy-web/test/ops-wo-chain-builds.test.mjs apps/tracy-web/test/step-chain-build.test.mjs
+TAP version 13
+# Subtest: one row per chain build, newest first, with template, start, totals and ending
+ok 1 - one row per chain build, newest first, with template, start, totals and ending
+  ---
+  duration_ms: 1767.85025
+  type: 'test'
+  ...
+# Subtest: a run far above the usual duration is highlighted, and only then
+ok 2 - a run far above the usual duration is highlighted, and only then
+  ---
+  duration_ms: 13.460709
+  type: 'test'
+  ...
+# Subtest: a running build is a row with its elapsed minutes, current step and spend so far, and is highlighted past the threshold
+ok 3 - a running build is a row with its elapsed minutes, current step and spend so far, and is highlighted past the threshold
+  ---
+  duration_ms: 9.706708
+  type: 'test'
+  ...
+# Subtest: a snapshot on a row that is no longer open is a hard failure at the step that was under way
+ok 4 - a snapshot on a row that is no longer open is a hard failure at the step that was under way
+  ---
+  duration_ms: 9.488292
+  type: 'test'
+  ...
+# Subtest: with too few builds there is no usual duration, so nothing is highlighted
+ok 5 - with too few builds there is no usual duration, so nothing is highlighted
+  ---
+  duration_ms: 11.696792
+  type: 'test'
+  ...
+# Subtest: a retried chain measures its current attempt without changing the site generation
+ok 6 - a retried chain measures its current attempt without changing the site generation
+  ---
+  duration_ms: 10.534667
+  type: 'test'
+  ...
+# Subtest: chain attempt ordering uses the retry start and ignores malformed legacy stamps
+ok 7 - chain attempt ordering uses the retry start and ignores malformed legacy stamps
+  ---
+  duration_ms: 8.620167
+  type: 'test'
+  ...
+# Subtest: an internal email gets the table
+ok 8 - an internal email gets the table
+  ---
+  duration_ms: 18.844459
+  type: 'test'
+  ...
+# Subtest: an email that is not internal gets no table data, and nothing is read for it
+ok 9 - an email that is not internal gets no table data, and nothing is read for it
+  ---
+  duration_ms: 7.69025
+  type: 'test'
+  ...
+# Subtest: nobody signed in is sent to sign in, and gets no table data
+ok 10 - nobody signed in is sent to sign in, and gets no table data
+  ---
+  duration_ms: 6.390584
+  type: 'test'
+  ...
+# Subtest: an allow-listed template with the switch on runs the step chain, not the CMS engine
+ok 11 - an allow-listed template with the switch on runs the step chain, not the CMS engine
+  ---
+  duration_ms: 1776.542875
+  type: 'test'
+  ...
+# Subtest: a build that did not ask for the chain runs the CMS engine exactly as today
+    # Subtest: a typed brief
+    ok 1 - a typed brief
+      ---
+      duration_ms: 16.536917
+      type: 'test'
+      ...
+    # Subtest: another workflow
+    ok 2 - another workflow
+      ---
+      duration_ms: 73.555917
+      type: 'test'
+      ...
+    1..2
+ok 12 - a build that did not ask for the chain runs the CMS engine exactly as today
+  ---
+  duration_ms: 153.136125
+  type: 'test'
+  ...
+# Subtest: a chain build stays on the chain when the switch is turned off after the press, never falling back to the old build
+ok 13 - a chain build stays on the chain when the switch is turned off after the press, never falling back to the old build
+  ---
+  duration_ms: 48.300125
+  type: 'test'
+  ...
+# Subtest: the kit comes first; base site, brand and planner run together; the Write step waits for the site and every input
+ok 14 - the kit comes first; base site, brand and planner run together; the Write step waits for the site and every input
+  ---
+  duration_ms: 110.447
+  type: 'test'
+  ...
+# Subtest: a Write step on a site that is not up yet waits for the base site
+ok 15 - a Write step on a site that is not up yet waits for the base site
+  ---
+  duration_ms: 56.241792
+  type: 'test'
+  ...
+# Subtest: every Write step write carries the run id, and Site changes shows exactly one Tracy setup row for the build
+ok 16 - every Write step write carries the run id, and Site changes shows exactly one Tracy setup row for the build
+  ---
+  duration_ms: 188.120041
+  type: 'test'
+  ...
+# Subtest: a failing picture step still writes the plan, copy and brand, and the run ends as a soft failure
+ok 17 - a failing picture step still writes the plan, copy and brand, and the run ends as a soft failure
+  ---
+  duration_ms: 21.481125
+  type: 'test'
+  ...
+# Subtest: a planner that made nothing still lets the Write step run, with the brand and no plan or copy, so no demo is left
+ok 18 - a planner that made nothing still lets the Write step run, with the brand and no plan or copy, so no demo is left
+  ---
+  duration_ms: 75.778417
+  type: 'test'
+  ...
+# Subtest: a writer whose versions the checks all rejected hands over its best one, which the Write step uses
+ok 19 - a writer whose versions the checks all rejected hands over its best one, which the Write step uses
+  ---
+  duration_ms: 18.545583
+  type: 'test'
+  ...
+# Subtest: a template kit that cannot be read hands the base site over as created, ending as a soft failure at the kit
+ok 20 - a template kit that cannot be read hands the base site over as created, ending as a soft failure at the kit
+  ---
+  duration_ms: 15.975209
+  type: 'test'
+  ...
+# Subtest: a Write step that stops or throws still hands the site over, ending as a soft failure at the write
+ok 21 - a Write step that stops or throws still hands the site over, ending as a soft failure at the write
+  ---
+  duration_ms: 35.085208
+  type: 'test'
+  ...
+# Subtest: the row keeps minutes and USD per step, the totals and the ending
+ok 22 - the row keeps minutes and USD per step, the totals and the ending
+  ---
+  duration_ms: 18.59175
+  type: 'test'
+  ...
+# Subtest: the base site is a step of its own: minutes from the press until the host had it up, no USD
+ok 23 - the base site is a step of its own: minutes from the press until the host had it up, no USD
+  ---
+  duration_ms: 16.548416
+  type: 'test'
+  ...
+# Subtest: a retried chain base-site duration excludes the previous failed attempt
+ok 24 - a retried chain base-site duration excludes the previous failed attempt
+  ---
+  duration_ms: 20.396583
+  type: 'test'
+  ...
+# Subtest: the customer is told "working" until the chain has handed the site over, a soft failure included
+ok 25 - the customer is told "working" until the chain has handed the site over, a soft failure included
+  ---
+  duration_ms: 31.488041
+  type: 'test'
+  ...
+# Subtest: while the chain runs the row keeps a snapshot, and a hard failure leaves it at the step that was under way
+ok 26 - while the chain runs the row keeps a snapshot, and a hard failure leaves it at the step that was under way
+  ---
+  duration_ms: 18.891667
+  type: 'test'
+  ...
+# Subtest: a chain build past the frame's old 25 minute cut is not cut (\#478)
+ok 27 - a chain build past the frame's old 25 minute cut is not cut (\#478)
+  ---
+  duration_ms: 16.124666
+  type: 'test'
+  ...
+# Subtest: at the 2 hour deadline the steps still running are stopped, the Write step runs and the site is handed over (\#478)
+ok 28 - at the 2 hour deadline the steps still running are stopped, the Write step runs and the site is handed over (\#478)
+  ---
+  duration_ms: 16.0845
+  type: 'test'
+  ...
+1..28
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5549.73375
+
+--- stderr ---
+
+--- verdict ---
+PASS 

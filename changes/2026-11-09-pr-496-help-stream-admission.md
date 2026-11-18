@@ -1,0 +1,3 @@
+- **Help reserves a concurrent stream slot before waiting for the provider's first response** — Codex · #496 · `docs/ai-capabilities-audit-2026-11-08` · 2026-11-09
+  **Affects:** the Help turn door in the tracy-web image. A third simultaneous request in one process receives BUSY while two model calls are pending; deployments with several web processes still have a per-process ceiling.
+  **Why / Measured:** a local Postgres-backed test held two provider first responses. Before the fix, a third model call started; after it, the third request was refused and the four adjacent assistant suites passed (94 tests).

@@ -1,0 +1,71 @@
+{
+  "sourceCommit": "e7ca54b1a6321564ea93793d4938d214624f956a",
+  "accepted": false,
+  "results": [
+    {
+      "label": "urban-boxer",
+      "width": 1440,
+      "error": "TimeoutError"
+    },
+    {
+      "label": "urban-boxer",
+      "width": 390,
+      "error": "TimeoutError"
+    },
+    {
+      "label": "boxica",
+      "width": 1440,
+      "error": "TimeoutError"
+    },
+    {
+      "label": "boxica",
+      "width": 390,
+      "status": 502,
+      "title": "Site unavailable",
+      "text": "Cowork\nSite unavailable\n\nCould not reach the site. Try again shortly.",
+      "scrollWidth": 390,
+      "images": 0,
+      "brokenImages": 0
+    },
+    {
+      "label": "fitrepublik",
+      "width": 1440,
+      "status": 502,
+      "title": "Site unavailable",
+      "text": "Cowork\nSite unavailable\n\nCould not reach the site. Try again shortly.",
+      "scrollWidth": 1440,
+      "images": 0,
+      "brokenImages": 0
+    },
+    {
+      "label": "fitrepublik",
+      "width": 390,
+      "status": 502,
+      "title": "Site unavailable",
+      "text": "Cowork\nSite unavailable\n\nCould not reach the site. Try again shortly.",
+      "scrollWidth": 390,
+      "images": 0,
+      "brokenImages": 0
+    },
+    {
+      "label": "embody",
+      "width": 1440,
+      "status": 502,
+      "title": "Site unavailable",
+      "text": "Cowork\nSite unavailable\n\nCould not reach the site. Try again shortly.",
+      "scrollWidth": 1440,
+      "images": 0,
+      "brokenImages": 0
+    },
+    {
+      "label": "embody",
+      "width": 390,
+      "status": 502,
+      "title": "Site unavailable",
+      "text": "Cowork\nSite unavailable\n\nCould not reach the site. Try again shortly.",
+      "scrollWidth": 390,
+      "images": 0,
+      "brokenImages": 0
+    }
+  ]
+}

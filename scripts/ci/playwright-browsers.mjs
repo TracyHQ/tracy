@@ -24,7 +24,7 @@ import { load } from 'js-yaml'
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
 /** The standalone templates: their own lockfile, outside the workspace (`pnpm-workspace.yaml`). */
-export const STANDALONE_LOCKS = ['base', 'business', 'saas', 'restaurant'].map(
+export const STANDALONE_LOCKS = ['base', 'business', 'saas', 'restaurant', 'diner'].map(
   (t) => `packages/cms/tracy-emdash-theme-${t}/pnpm-lock.yaml`
 )
 const NAMES = ['playwright', '@playwright/test']
@@ -81,6 +81,12 @@ function installArgs(version) {
   return ownVersion === version ? ['exec', 'playwright', ...tail] : ['dlx', `playwright@${version}`, ...tail]
 }
 
+/** One `pnpm <args>` with its output shown; true when it exited 0. */
+function install(args) {
+  console.log(`playwright-browsers: pnpm ${args.join(' ')}`)
+  return spawnSync('pnpm', args, { cwd: ROOT, stdio: 'inherit' }).status === 0
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const mode = process.argv[2]
   const versions = playwrightVersions()
@@ -88,12 +94,18 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   else if (mode === '--install') {
     for (const version of versions) {
       const args = installArgs(version)
-      console.log(`playwright-browsers: pnpm ${args.join(' ')}`)
-      const run = spawnSync('pnpm', args, { cwd: ROOT, stdio: 'inherit' })
-      if (run.status !== 0) {
-        console.error(`playwright-browsers: installing Chromium for playwright ${version} failed`)
-        process.exit(1)
-      }
+      if (install(args)) continue
+      // `--with-deps` runs apt for Chromium's libraries and fonts, and a runner whose apt mirror does not
+      // resolve fails there with the browser itself already restored from the cache. Retry once for a
+      // passing fault, then take the browser alone: the hosted image carries the libraries, so only the
+      // extra fonts are missed.
+      console.error(`playwright-browsers: --with-deps failed for playwright ${version}; retrying once`)
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 20_000)
+      if (install(args)) continue
+      console.error('playwright-browsers: apt still fails; installing the browser without --with-deps')
+      if (install(args.filter((arg) => arg !== '--with-deps'))) continue
+      console.error(`playwright-browsers: installing Chromium for playwright ${version} failed`)
+      process.exit(1)
     }
   } else {
     console.error('usage: node scripts/ci/playwright-browsers.mjs --print | --install')

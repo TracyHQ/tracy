@@ -1600,7 +1600,8 @@ export async function writeCopy({
   again = false,
   tooLong = null,
   patches = null,
-  linkless = null
+  linkless = null,
+  unshaped = null
 }) {
   const items = (map.copy ?? [])
     .filter((c) => only === null || only.includes(`${c.collection}.${c.slug}`))
@@ -1609,7 +1610,12 @@ export async function writeCopy({
       const e = seedEntries.find(
         (x) => x.collection === c.collection && x.slug === c.slug && x.locale === locale
       )
-      if (!e || typeof e.data[c.field] !== 'string') return null
+      // 🔒 A RICH-TEXT FIELD IS COPY TOO. Read as strings only, the home welcome of JA Restaurant (`hero_intro`, portable text)
+      // was never asked and kept the demo's "Since 1982 … 4 5th Avenue at St. Marks Place" on a trattoria in Da Nang, with no
+      // word in the report (measured 16/11/2026 on dev, 1.0.2). It is asked as its text, a blank line between its parts, and
+      // written back as blocks (`richCopyOf`, `richFromAnswer`).
+      const rich = e ? richCopyOf(e.data[c.field]) : null
+      if (!e || (typeof e.data[c.field] !== 'string' && rich === null)) return null
       const key = `${c.collection}.${c.slug}.${c.field}`
       // 🔒 A LABEL IS WRITTEN FOR WHERE ITS LINK GOES (TCH #1013, PAGE-5, g60). Asked with a brief and the demo's words
       // only, the hero's second button read "Liên hệ tiệm bánh" over a PDF and the footer's "Xem bánh →" opened /contact
@@ -1623,8 +1629,12 @@ export async function writeCopy({
       }
       // The example is the field as the run already leaves it (the demo brand swapped; a brochure button already the
       // template's contact label), so it never shows a promise its link no longer keeps.
-      const example =
-        typeof planned?.[c.field] === 'string' && planned[c.field].trim() !== ''
+      // A rich-text field is written back over the blocks its example was read from.
+      const source = rich && richCopyOf(planned?.[c.field]) !== null ? planned?.[c.field] : e.data[c.field]
+      const shape = rich ? richCopyOf(source, facts) : null
+      const example = shape
+        ? shape.text
+        : typeof planned?.[c.field] === 'string' && planned[c.field].trim() !== ''
           ? planned[c.field]
           : e.data[c.field]
       return {
@@ -1632,7 +1642,11 @@ export async function writeCopy({
         brief: c.brief,
         maxWords: c.maxWords,
         example,
-        ...(leadsTo ? { leadsTo } : {})
+        ...(shape?.strict ? { parts: shape.parts.map((part) => part.kind) } : {}),
+        ...(shape?.optional.length ? { mayLeaveOut: shape.optional } : {}),
+        ...(shape?.linkFacts.length ? { linkFacts: shape.linkFacts } : {}),
+        ...(leadsTo ? { leadsTo } : {}),
+        ...(shape ? { blocks: source, keyPrefix: `${c.slug.slice(0, 8)}-` } : {})
       }
     })
     .filter(Boolean)
@@ -1652,6 +1666,18 @@ export async function writeCopy({
     // handed both, with no ranking between them, writes from the demo.
     'The `about` field is what this business actually does. Every line must be about THAT. When the demo text is about a different trade, keep only its shape and write the customer’s subject instead.',
     `Never invent credentials, years, prices, addresses, phone numbers or certifications that were not given. ${houseStyle(facts.tone)}`,
+    items.some((it) => it.parts)
+      ? 'An entry with "parts" is written as that many parts, in that order (a heading, a paragraph, a list item), with a blank line between two parts and none inside one.'
+      : '',
+    items.some((it) => /\{mark_[a-z]\}/.test(String(it.example)))
+      ? 'Words between {mark_a} and {mark_a_end} (and any other letter) are a link or an emphasis of the page: keep every such pair exactly once, in the same part, around a few of your own words.'
+      : '',
+    items.some((it) => it.mayLeaveOut)
+      ? 'An entry with "mayLeaveOut" lists the demo words of pairs that link to a fact this business did not give (a map of an address, a phone, an email): such a pair may be left out, words and all, and is when the brief rules out that fact; never write those demo words.'
+      : '',
+    items.some((it) => it.linkFacts)
+      ? 'An entry with "linkFacts" lists the demo words of pairs that link to this business\'s own phone, address or email ("write" names which, its value is under business): keep each such pair, with that value of the business inside it, never the demo words.'
+      : '',
     items.some((it) => it.leadsTo)
       ? 'An entry with "leadsTo" is the words of a link or a button, or of the call to action around it: they say what that link really does for the visitor. kind "page": name that page or what the visitor does there (a page like /contact is getting in touch, asking for a quote or ordering); kind "email": writing to that address; kind "phone": calling; kind "file": opening that document. Never promise a download, a document, a product or a page the link does not open.'
       : '',
@@ -1671,11 +1697,14 @@ export async function writeCopy({
       address: facts.address ?? null,
       phone: facts.phone ?? null
     },
-    fields: items.map(({ key, brief, maxWords, example, leadsTo }) => ({
+    fields: items.map(({ key, brief, maxWords, example, parts, mayLeaveOut, linkFacts, leadsTo }) => ({
       key,
       brief,
       maxWords,
       example,
+      ...(parts ? { parts } : {}),
+      ...(mayLeaveOut ? { mayLeaveOut } : {}),
+      ...(linkFacts ? { linkFacts } : {}),
       ...(leadsTo ? { leadsTo } : {})
     }))
   })
@@ -1684,8 +1713,14 @@ export async function writeCopy({
   for (const it of items) {
     const v = parsed?.[it.key]
     if (typeof v !== 'string' || v.trim() === '') continue
-    if (!withinWords(v, it.maxWords, { lenient: again })) {
+    if (!withinWords(v.replace(/\{mark_[a-z](?:_end)?\}/g, ''), it.maxWords, { lenient: again })) {
       tooLong?.push(it.key)
+      continue
+    }
+    if (it.blocks) {
+      const blocks = richFromAnswer(it.blocks, v, it.keyPrefix, facts)
+      if (blocks !== null) out[it.key] = blocks
+      else unshaped?.push(it.key)
       continue
     }
     out[it.key] = v.trim()
@@ -1743,6 +1778,469 @@ export function linkBearing(rule, data) {
     siblingLinkOf(field, data, null) !== null ||
     /_(?:button|cta)$/i.test(field)
   )
+}
+
+/** The letters a marked run of a block is named by in the text a model is asked (`{mark_a}…{mark_a_end}`). */
+const MARK_LETTERS = 'abcdefghijklmnopqrstuvwxyz'
+
+/**
+ * One text block of a rich-text field as a model is asked it: its words, each run of spans that carry marks (a link, an
+ * emphasis) wrapped in a placeholder pair `{mark_a}…{mark_a_end}` — curly braces, which every prompt that writes or
+ * translates words already keeps and `acceptLabel` checks — and the marks of each run. Null for a block that is not text
+ * the field's words are made of: another type, an inline object, more runs than letters, or a block whose words are all
+ * marked (a link alone is a button: FeaturesIntro.astro draws "Meet Our Team" from it).
+ * @param {any} block @returns {{ text: string, runs: string[][], words: string[] } | null}
+ */
+export function markedTextOf(block) {
+  if (block?._type !== 'block' || !Array.isArray(block.children)) return null
+  if (block.children.some((c) => c?._type !== 'span')) return null
+  /** @type {string[][]} */
+  const runs = []
+  /** @type {string[]} the demo's words of each run */
+  const words = []
+  let text = ''
+  let plainWords = false
+  let open = null
+  const close = () => {
+    if (open !== null) text += `{mark_${MARK_LETTERS[runs.length - 1]}_end}`
+    open = null
+  }
+  for (const span of block.children) {
+    const marks = Array.isArray(span.marks) ? span.marks.map(String) : []
+    const said = String(span.text ?? '')
+    const sig = JSON.stringify(marks)
+    if (marks.length === 0) {
+      close()
+      if (/\p{L}/u.test(said)) plainWords = true
+      text += said
+      continue
+    }
+    if (open !== sig) {
+      close()
+      if (runs.length >= MARK_LETTERS.length) return null
+      runs.push(marks)
+      words.push('')
+      text += `{mark_${MARK_LETTERS[runs.length - 1]}}`
+      open = sig
+    }
+    text += said
+    words[words.length - 1] += said
+  }
+  close()
+  if (!plainWords) return null
+  return { text: text.trim(), runs, words }
+}
+
+/**
+ * Whether a link leads out of the site: a scheme (`https:`, `mailto:`, `tel:`, a maps or social address) or `//`. A path,
+ * an anchor or a query is the site's own.
+ * @param {unknown} href
+ */
+export function leadsOutside(href) {
+  const to = String(href ?? '').trim()
+  return /^[a-z][a-z0-9+.-]*:/i.test(to) || to.startsWith('//')
+}
+
+/**
+ * The customer's fact a link out of the site stands for: a phone (`tel:`), an email (`mailto:`), an address (a map). Null for
+ * any other link (a social profile, another site).
+ * @param {unknown} href @returns {'phone' | 'email' | 'address' | null}
+ */
+export function factOfLink(href) {
+  const to = String(href ?? '').trim()
+  if (/^tel:/i.test(to)) return 'phone'
+  if (/^mailto:/i.test(to)) return 'email'
+  if (/^geo:/i.test(to)) return 'address'
+  let url
+  try {
+    url = new URL(to.startsWith('//') ? `https:${to}` : to)
+  } catch {
+    return null
+  }
+  // A map: a `maps.` host (maps.google.com, maps.apple.com, maps.app.goo.gl), a `/maps` path (google.com/maps,
+  // bing.com/maps), or OpenStreetMap.
+  const host = url.hostname.toLowerCase()
+  if (!/^https?:$/.test(url.protocol)) return null
+  if (
+    host.split('.').includes('maps') ||
+    /^\/maps(?:\/|$)/i.test(url.pathname) ||
+    /(?:^|\.)openstreetmap\.org$/.test(host)
+  )
+    return 'address'
+  return null
+}
+
+/**
+ * The link to the customer's own phone, email or address, in the forms the themes print them: `tel:` as `telHref` of
+ * `src/lib/tel.ts` (RFC 3966: `+` only in front, an extension as `;ext=`), a Google Maps search as Tracy Coffee's
+ * `Contact.astro`, `mailto:`. Null when the brief gives no such fact.
+ * @param {'phone' | 'email' | 'address' | null} kind @param {Record<string, unknown> | null | undefined} facts
+ * @returns {string | null}
+ */
+export function factHref(kind, facts) {
+  const value = kind ? String(facts?.[kind] ?? '').trim() : ''
+  if (value === '') return null
+  if (kind === 'email') return `mailto:${value}`
+  if (kind === 'address')
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(value)}`
+  const ext = /\s*(?:;\s*ext\s*=\s*|(?:ext\.?|extension|x)\s*)(\d+)\s*$/i.exec(value)
+  const main = ext ? value.slice(0, ext.index) : value
+  const digits = main.replace(/\D/g, '')
+  if (!digits) return null
+  return `tel:${main.startsWith('+') ? '+' : ''}${digits}${ext ? `;ext=${ext[1]}` : ''}`
+}
+
+/**
+ * The link definitions of a block that point out of the site, each with the customer's own link for it (`factHref`), or
+ * null when the brief does not give that fact (or the link is no fact: a social profile, another site).
+ * @param {any} block @param {Record<string, unknown> | null} [facts] @returns {Map<string, string | null>}
+ */
+function outsideLinksOf(block, facts = null) {
+  return new Map(
+    (Array.isArray(block?.markDefs) ? block.markDefs : [])
+      .filter((d) => typeof d?.href === 'string' && leadsOutside(d.href))
+      .map((d) => [String(d._key), factHref(factOfLink(d.href), facts)])
+  )
+}
+
+/**
+ * The marks of a block whose run a rewrite may leave out, words and all: a link out of the site whose fact the brief does
+ * not give (`outsideLinksOf`), or one that leads nowhere (`#`, blank). Such a link stays only on the demo's own words
+ * (`blockFromMarked`), so asking an answer to keep its pair asked for the demo's address or phone, or for nothing. A link to
+ * a phone, an email or an address the brief gives is not loose: its pair stays and leads to the customer's.
+ * @param {any} block @param {Record<string, unknown> | null} [facts] @returns {Set<string>}
+ */
+export function looseMarksOf(block, facts = null) {
+  const outside = outsideLinksOf(block, facts)
+  return new Set(
+    (Array.isArray(block?.markDefs) ? block.markDefs : [])
+      .filter(
+        (d) =>
+          typeof d?.href === 'string' &&
+          (/^#?$/.test(d.href.trim()) ||
+            (outside.has(String(d._key)) && outside.get(String(d._key)) === null))
+      )
+      .map((d) => String(d._key))
+  )
+}
+
+/**
+ * A block's words written back from an answer in `markedTextOf`'s shape: every run back as a span with its own marks, the
+ * words around them as plain spans; the block keeps its key, style, list level and link definitions. Null when the answer
+ * does not hold each placeholder pair of the block exactly once, around words, and nothing else in that shape.
+ *
+ * 🔒 A LINK NEVER CARRIES THE DEMO'S FACTS ONTO THE CUSTOMER'S WORDS (review, 16/11/2026). Rewritten for a trattoria, JA
+ * Restaurant's welcome linked "our table" to a Google Maps search for "4 5th Avenue, Brooklyn". In a REWRITE (`rewrite`,
+ * with the demo's words of each run in `words`), a link that leads out of the site (`leadsOutside`: a map, a phone, an
+ * email, a social profile, another site) keeps its mark only on the demo's own words; on new words it goes, the words stay
+ * plain text, and its definition leaves the block. A link into the site keeps its address, and an emphasis always stays. A
+ * TRANSLATION says the same words, so every link stays with them.
+ *
+ * 🔒 A LINK TO A FACT THE BRIEF GIVES LEADS TO THE CUSTOMER'S (dev qa647-lume, review, 16/11/2026). In a rewrite with the
+ * brief's `facts`, a link to a phone, an email or an address (`factOfLink`) the brief gives is required, its definition
+ * points at the customer's (`factHref`), never at the demo's, and the demo's own words inside it become the customer's.
+ *
+ * 🔒 A REWRITE MAY LEAVE OUT A LINK TO A FACT THE BRIEF DOES NOT GIVE (dev qa647-lume, 16/11/2026). The home welcome's only
+ * pair was the demo's address on a map link, under a brief that says "with no year, address or number": an answer that
+ * obeyed the brief had no pair, was not taken twice, and the demo's "Since 1982 … Brooklyn … 4 5th Avenue" stayed, renamed.
+ * In a rewrite, a run whose marks are all loose (`looseMarksOf`) may be missing from the answer; any other pair (a link into
+ * the site, an emphasis, a link to a fact the brief gives) must still be there, and a TRANSLATION keeps every pair.
+ * @param {any} block @param {string[][]} runs @param {unknown} answer
+ * @param {{ rewrite?: boolean, words?: string[], facts?: Record<string, unknown> | null }} [options]
+ * @returns {any | null}
+ */
+export function blockFromMarked(block, runs, answer, { rewrite = false, words = [], facts = null } = {}) {
+  if (typeof answer !== 'string' || answer.trim() === '') return null
+  const key = String(block._key ?? 'b')
+  const children = []
+  const seen = new Set()
+  const pair = /\{mark_([a-z])\}([\s\S]*?)\{mark_\1_end\}/g
+  /** The marks of the block that are links out of the site → the customer's link, or null. */
+  const outside = rewrite ? outsideLinksOf(block, facts) : new Map()
+  const plain = (words) => {
+    if (words === '') return true
+    if (/\{\/?mark_/.test(words)) return false
+    children.push({ _type: 'span', _key: `${key}s${String(children.length)}`, text: words, marks: [] })
+    return true
+  }
+  const same = (a) =>
+    String(a ?? '')
+      .trim()
+      .replace(/\s+/g, ' ')
+  let at = 0
+  const text = answer.trim()
+  for (const m of text.matchAll(pair)) {
+    const i = MARK_LETTERS.indexOf(m[1])
+    if (i < 0 || i >= runs.length || seen.has(i) || m[2].trim() === '') return null
+    if (!plain(text.slice(at, m.index))) return null
+    seen.add(i)
+    const demoWords = rewrite && same(m[2]) === same(words[i])
+    // The demo's own words on a link to a phone, an email or an address are the demo's fact: the customer's when the brief
+    // gives it, and an answer that repeats one the brief does not give is not taken.
+    if (
+      demoWords &&
+      runs[i].some((mark) => outside.get(mark) === null && factOfLink(hrefOf(block, mark)) !== null)
+    )
+      return null
+    const marks = rewrite && !demoWords ? runs[i].filter((mark) => outside.get(mark) !== null) : runs[i]
+    const given = demoWords ? runs[i].find((mark) => typeof outside.get(mark) === 'string') : undefined
+    const said =
+      given === undefined ? m[2] : String(facts?.[factOfLink(hrefOf(block, given)) ?? ''] ?? m[2]).trim()
+    children.push({ _type: 'span', _key: `${key}s${String(children.length)}`, text: said, marks })
+    at = m.index + m[0].length
+  }
+  if (!plain(text.slice(at))) return null
+  const loose = rewrite ? looseMarksOf(block, facts) : new Set()
+  for (const [i, marks] of runs.entries())
+    if (!seen.has(i) && !(marks.length > 0 && marks.every((mark) => loose.has(mark)))) return null
+  if (!rewrite) return { ...block, _key: key, children }
+  // A definition no span marks any more (a link that went with the demo's words) leaves the block; a link to a fact the
+  // brief gives leads to the customer's.
+  const used = new Set(children.flatMap((c) => c.marks))
+  const markDefs = (Array.isArray(block.markDefs) ? block.markDefs : [])
+    .filter((d) => used.has(String(d?._key)))
+    .map((d) =>
+      typeof outside.get(String(d._key)) === 'string' ? { ...d, href: outside.get(String(d._key)) } : d
+    )
+  return { ...block, _key: key, markDefs, children }
+}
+
+/** The `href` of a block's mark definition, or null. */
+function hrefOf(block, mark) {
+  const d = (Array.isArray(block?.markDefs) ? block.markDefs : []).find(
+    (x) => String(x?._key) === String(mark)
+  )
+  return typeof d?.href === 'string' ? d.href : null
+}
+
+/**
+ * A rich-text (portable text) field as a `copy` rule asks it: its text blocks (`markedTextOf`), a blank line between two,
+ * their kinds, and whether an answer must keep their shape (`strict`: a block left out, a marked run, or a part that is not
+ * a paragraph). Null for a value with no such block.
+ *
+ * 🔒 A REWRITE KEEPS WHAT THE VIEW DRAWS FROM THE BLOCKS. Flattened to paragraphs, JA Restaurant's "Our Food Network"
+ * lost its "Meet Our Team" button (a block that is one link) and the home welcome its link (review, 16/11/2026). A block
+ * that is not words is left out and stays where it is; a marked run is a placeholder the answer must keep.
+ * With the brief's `facts`: `optional` holds the demo's words of each pair a rewrite may leave out (`looseMarksOf`), and
+ * `linkFacts` each pair that links to a phone, an email or an address the brief gives, with the fact the answer writes in it
+ * (a letter names a pair in one block only, so the demo's words name them).
+ * @param {unknown} value @param {Record<string, unknown> | null} [facts]
+ * @returns {{ text: string, parts: Array<{ at: number, kind: string, text: string, runs: string[][], words: string[] }>, strict: boolean, optional: string[], linkFacts: Array<{ words: string, write: string }> } | null}
+ */
+export function richCopyOf(value, facts = null) {
+  if (!Array.isArray(value) || value.length === 0) return null
+  const parts = []
+  let left = 0
+  for (const [at, b] of value.entries()) {
+    const marked = markedTextOf(b)
+    if (marked === null) {
+      left += 1
+      continue
+    }
+    const style = String(b.style ?? 'normal')
+    const kind = b.listItem
+      ? 'list item'
+      : /^h[1-6]$/.test(style)
+        ? 'heading'
+        : style === 'blockquote'
+          ? 'quote'
+          : 'paragraph'
+    parts.push({ at, kind, ...marked })
+  }
+  if (parts.length === 0) return null
+  const strict = left > 0 || parts.some((p) => p.runs.length > 0 || p.kind !== 'paragraph')
+  const optional = []
+  const linkFacts = []
+  for (const p of parts) {
+    const loose = looseMarksOf(value[p.at], facts)
+    const outside = outsideLinksOf(value[p.at], facts)
+    for (const [i, marks] of p.runs.entries()) {
+      const words = p.words[i].trim()
+      if (marks.length > 0 && marks.every((mark) => loose.has(mark))) optional.push(words)
+      const given = marks.find((mark) => typeof outside.get(mark) === 'string')
+      if (given !== undefined)
+        linkFacts.push({ words, write: String(factOfLink(hrefOf(value[p.at], given))) })
+    }
+  }
+  return {
+    text: parts.map((p) => p.text).join('\n\n'),
+    parts,
+    strict,
+    optional: [...new Set(optional)],
+    linkFacts
+  }
+}
+
+/**
+ * A model's answer for a rich-text `copy` field, as blocks: a field of plain paragraphs only takes the answer's paragraphs
+ * (`blocksFrom`); any other keeps every block the rewrite left out where it was and takes one part of the answer per text
+ * block, each keeping its marks (`blockFromMarked`, with the brief's `facts`). Null when the answer does not keep that shape.
+ * @param {any[]} demo @param {string} answer @param {string} keyPrefix @param {Record<string, unknown> | null} [facts]
+ * @returns {any[] | null}
+ */
+export function richFromAnswer(demo, answer, keyPrefix, facts = null) {
+  const rich = richCopyOf(demo, facts)
+  if (rich === null || typeof answer !== 'string') return null
+  if (!rich.strict) {
+    if (/\{\/?mark_/.test(answer)) return null
+    const blocks = blocksFrom(answer, keyPrefix)
+    return blocks.length > 0 ? blocks : null
+  }
+  const parts = answer
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter((p) => p !== '')
+  if (parts.length !== rich.parts.length) return null
+  const out = [...demo]
+  for (const [i, part] of rich.parts.entries()) {
+    const block = blockFromMarked(demo[part.at], part.runs, parts[i], {
+      rewrite: true,
+      words: part.words,
+      facts
+    })
+    if (block === null) return null
+    out[part.at] = block
+  }
+  return out
+}
+
+/** Words a full stop shortens, not ends a sentence with: "St. Marks Place", "Ave.", "Mr.", "No. 5". */
+const ABBREVIATIONS = new Set(
+  'st ave av rd dr blvd ln ct pl sq mt ste apt fl bldg hwy no nr tel ph mr mrs ms prof jr sr co inc ltd corp vs etc approx e.g i.e'.split(
+    ' '
+  )
+)
+
+/**
+ * Where the sentences of a text end: the index just after a `.`, `!`, `?` or `…` (and any closing quote or bracket) that a
+ * space or the text's end follows. A full stop after an abbreviation (`ABBREVIATIONS`) or a single capital letter (an
+ * initial) ends nothing.
+ * @param {string} text @returns {number[]}
+ */
+export function sentenceEnds(text) {
+  const ends = []
+  for (const m of text.matchAll(/[.!?…]+["'”’)\]]*(?=\s|$)/gu)) {
+    if (m[0].startsWith('.') && !/[!?…]/.test(m[0])) {
+      const word = /([\p{L}.]+)$/u.exec(text.slice(0, m.index))?.[1] ?? ''
+      if (ABBREVIATIONS.has(word.toLowerCase()) || /^\p{Lu}$/u.test(word)) continue
+    }
+    ends.push(m.index + m[0].length)
+  }
+  return ends
+}
+
+/** A word that ties a place or a number to its sentence ("at", "on", "call us at"), left dangling when the run goes. */
+const LEAD_IN =
+  /(?:^|\s+)(?:(?:call|phone|ring|text|email|write to|find|visit|meet)\s+us\s+(?:at|on)|at|on|in|to|via|near|from)\s*$/i
+
+/**
+ * The template's words of a rich-text field the model could not rewrite, without the demo's facts it links out to: each run
+ * that links to a phone, an email or an address takes the customer's (`factHref`) when the brief gives it; when it does not,
+ * the sentence that holds the run goes, or only the run (and a lead-in like "at") when that sentence also holds a link into
+ * the site or an emphasis. A link to another site or a social profile is no fact and stays. Every other word, link into the
+ * site, emphasis and block (a button) stays. Null when no run changed; `readable` is false when no words would be left.
+ *
+ * 🔒 A FIELD MEANT TO BE REWRITTEN NEVER KEEPS THE DEMO'S ADDRESS (dev qa647-lume, 16/11/2026). Kept whole, a rejected home
+ * welcome told a trattoria in Da Nang's guests to come to "4 5th Avenue … Brooklyn", and the reservation intro to call the
+ * demo's number. The first version dropped every block with such a link, which emptied the welcome, the contact card and
+ * the reservation intro, and a paragraph's link to the menu with them (review, 16/11/2026): the smallest unit goes now.
+ * @param {unknown} value @param {Record<string, unknown> | null} [facts]
+ * @returns {{ value: any[], readable: boolean } | null}
+ */
+export function withoutDemoFacts(value, facts = null) {
+  if (!Array.isArray(value)) return null
+  let changed = false
+  const out = value.map((b) => {
+    if (markedTextOf(b) === null) return b
+    const facted = new Map(
+      [...outsideLinksOf(b, facts)].filter(([mark]) => factOfLink(hrefOf(b, mark)) !== null)
+    )
+    if (facted.size === 0) return b
+    /** One entry per character: the span it belongs to and its marks. */
+    let chars = b.children.flatMap((c, s) =>
+      [...String(c.text ?? '')].map((ch) => ({ ch, s, marks: (c.marks ?? []).map(String) }))
+    )
+    const factMark = (x) => x.marks.find((mark) => facted.has(mark))
+    for (;;) {
+      const start = chars.findIndex((x) => factMark(x) !== undefined)
+      if (start < 0) break
+      const mark = factMark(chars[start])
+      let end = start
+      while (end < chars.length && chars[end].marks.includes(mark)) end += 1
+      const href = facted.get(mark)
+      if (typeof href === 'string') {
+        // The customer's own fact, on the run's first span and marks; the link leads to it (markDefs below).
+        const fact = String(facts?.[factOfLink(hrefOf(b, mark))] ?? '').trim()
+        const at = chars[start]
+        chars.splice(
+          start,
+          end - start,
+          ...[...fact].map((ch) => ({ ch, s: at.s, marks: [...at.marks], done: true }))
+        )
+        for (const x of chars) if (x.marks.includes(mark)) x.done = true
+        // A run done is no longer a fact to find.
+        chars = chars.map((x) =>
+          x.done ? { ...x, marks: x.marks.map((m) => (m === mark ? `${m}\u0000` : m)) } : x
+        )
+        changed = true
+        continue
+      }
+      const text = chars.map((x) => x.ch).join('')
+      // The run's sentence: from the last ending before it to the first ending inside it, at its end or after it — a
+      // demo link often holds its sentence's own full stop ("at [4 Demo Street.] Our kitchen …").
+      const ends = sentenceEnds(text)
+      let from = 0
+      for (const p of ends) if (p <= start) from = p
+      while (from < start && /\s/.test(text[from])) from += 1
+      // A full stop that ends the run before a capital or the paragraph's end closes it even after an abbreviation: an
+      // address ("4 Demo St.") ends its sentence.
+      const closes = /[.!?…]$/.test(text.slice(start, end)) && /^(?:\s+\p{Lu}|\s*$)/u.test(text.slice(end))
+      const stop = closes ? end : ends.find((p) => p > start)
+      let to = stop === undefined ? text.length : Math.max(stop, end)
+      while (to < text.length && /\s/.test(text[to])) to += 1
+      const other = chars.slice(from, to).some((x) => x.marks.length > 0 && !x.marks.includes(mark))
+      if (other) {
+        // The sentence also carries a link into the site or an emphasis: only the run and its lead-in go.
+        const lead = LEAD_IN.exec(text.slice(from, start))
+        chars.splice(lead ? start - lead[0].length : start, end - (lead ? start - lead[0].length : start))
+      } else chars.splice(from, to - from)
+      changed = true
+    }
+    // Tidy what a cut leaves: a space before punctuation, two spaces, blank ends.
+    let text = chars.map((x) => x.ch).join('')
+    const drop = new Set()
+    for (const m of text.matchAll(/ +(?=[,.;:!?])| (?= )/g))
+      for (let i = 0; i < m[0].length; i += 1) drop.add(m.index + i)
+    chars = chars.filter((_, i) => !drop.has(i))
+    while (chars.length > 0 && /\s/.test(chars[0].ch)) chars.shift()
+    while (chars.length > 0 && /\s/.test(chars.at(-1).ch)) chars.pop()
+    text = chars.map((x) => x.ch).join('')
+    const children = []
+    for (const x of chars) {
+      const marks = x.marks.map((m) => m.replace(/\u0000$/, ''))
+      const last = children.at(-1)
+      if (last && last.s === x.s) last.text += x.ch
+      else children.push({ s: x.s, text: x.ch, marks })
+    }
+    const keys = new Set()
+    const spans = children.map((c) => {
+      const base = String(b.children[c.s]._key ?? `${String(b._key)}s${String(c.s)}`)
+      let k = base
+      for (let n = 2; keys.has(k); n += 1) k = `${base}-${String(n)}`
+      keys.add(k)
+      return { ...b.children[c.s], _key: k, text: c.text, marks: c.marks }
+    })
+    const used = new Set(spans.flatMap((c) => c.marks))
+    const markDefs = (Array.isArray(b.markDefs) ? b.markDefs : [])
+      .filter((d) => used.has(String(d?._key)))
+      .map((d) =>
+        typeof facted.get(String(d._key)) === 'string' ? { ...d, href: facted.get(String(d._key)) } : d
+      )
+    return /\p{L}/u.test(text) ? { ...b, markDefs, children: spans } : null
+  })
+  if (!changed) return null
+  const kept = out.filter((b) => b !== null)
+  return { value: kept, readable: kept.some((b) => markedTextOf(b) !== null) }
 }
 
 /** Plain paragraphs → the portable-text blocks EmDash stores a body as. */
@@ -2103,9 +2601,13 @@ export async function rewriteBlock({ model, rule, facts, locale, rows, fetchImpl
   const example = rows.map((row) =>
     Object.fromEntries(rule.itemFields.map((f) => [f, typeof row?.[f] === 'string' ? row[f] : '']))
   )
+  const limits = rowLimitsOf(rule)
   const system = [
     `You write website copy in ${language} for one business. Answer with ONE JSON object: {"rows": [...]}, nothing else.`,
     `Each row is ${rule.brief}. Give exactly ${String(rows.length)} rows, each with the keys ${rule.itemFields.join(', ')}.`,
+    limits.length > 0
+      ? `${limits.map(([f, n]) => `Every ${f} is at most ${String(n)} characters, spaces included`).join('; ')}: a longer one is not used.`
+      : '',
     `Write in ${language} even when the business name or its address are in another language.`,
     `The demo rows are a reference for ${demoRuler(facts.tone)} — never reuse their facts, places or numbers.`,
     `Do not invent counts, dates, prices, certifications or named people. ${houseStyle(facts.tone)}`,
@@ -2135,13 +2637,38 @@ export async function rewriteBlock({ model, rule, facts, locale, rows, fetchImpl
     if (!got || typeof got !== 'object') return row
     const next = { ...row }
     for (const f of rule.itemFields)
-      if (typeof got[f] === 'string' && got[f].trim() !== '' && typeof row?.[f] === 'string') {
+      if (
+        typeof got[f] === 'string' &&
+        got[f].trim() !== '' &&
+        typeof row?.[f] === 'string' &&
+        withinCharacters(got[f], rule.maxCharacters?.[f])
+      ) {
         next[f] = got[f].trim()
         filled += 1
       }
     return next
   })
   return filled > 0 ? { rows: out, why: null } : { rows: null, why: 'nothing in the answer fitted the rows' }
+}
+
+/**
+ * 🔒 A ROW'S WORDS FIT THE BOX THE CONTRACT MEASURED. A `blocks` rule may bound a field of its rows in characters
+ * (`"maxCharacters": { "slide_title": 39 }`), the number the template's contract measured for that slot (template-kit
+ * `maxCharacters`). Unbounded, the home slideshow of JA Restaurant took a five-line title over its photograph and ended
+ * 10 px above the bottom of a box that cuts what overflows (measured 16/11/2026 on dev, 1.0.2, 1440x900). An answer over
+ * the bound is not taken: the row is asked again with the others the model left, then keeps the template's words, named.
+ * @param {{ maxCharacters?: Record<string, unknown> }} rule @returns {Array<[string, number]>}
+ */
+export function rowLimitsOf(rule) {
+  return /** @type {Array<[string, number]>} */ (
+    Object.entries(rule?.maxCharacters ?? {}).filter(([, n]) => Number.isInteger(n) && Number(n) > 0)
+  )
+}
+
+/** Whether a text is within `max` characters, a run of spaces or line breaks counted as one; no bound, always. */
+export function withinCharacters(text, max) {
+  if (!Number.isInteger(max) || Number(max) <= 0) return true
+  return [...String(text).trim().replace(/\s+/g, ' ')].length <= Number(max)
 }
 
 /**
@@ -2783,6 +3310,131 @@ export function keepSiteRowKeys(value, live) {
   })
 }
 
+/**
+ * What the run writes, with every picture path of the seed that the importer replaced on this site put back to the picture.
+ *
+ * 🔒 A SEED MAY HOLD THE SOURCE'S PICTURE PATH WHERE THE IMPORTER PUTS THE PICTURE (TCH, measured 11/11/2026 on dev, JA
+ * Restaurant 1.0.2 through Add site). Restaurant and Diner keep `images/joomlart/slideshow/slide-1.jpg` at
+ * `items[0].image` (`seed/media-map.json` names the spot), and the importer replaces it with the picture on the site; the
+ * kit's seeds leave the spot empty. A list rewritten from the seed (`blocks`, `replace`) carried the path, a key the
+ * written row names wins (`keepSiteRowKeys`), and the path is no file on the site: the home slideshow, the offer cards
+ * and the menu pages showed 33 broken pictures at /images/joomlart/... . A path is matched by its value, not its row, so a
+ * row moved up keeps its own picture; a value the run chose (drawn, uploaded, emptied) is no seed path and still wins.
+ *
+ * 🔒 THE PICTURE IS FOUND BY WHAT IT IS, NOT WHERE THE SITE HOLDS IT (review of TracyHQ/tracy#572). Pairing the seed's
+ * `items[i].image` with the site's `items[i].image` holds only while the site's rows are in seed order: after an Apply
+ * moved rows, the next Apply gave each path another row's picture. The spot names its media-map item, and the importer
+ * writes that item's file name into the value it puts there (`seed-apply.mjs` `media()`, `filename` from `receiptFor`):
+ * the one picture on the entry's spots with that name is the item's, wherever it sits.
+ *
+ * 🔒 A NAME TWO FILES SHARE NAMES NEITHER (review of TracyHQ/tracy#572, round 2). `a/cover.jpg` and `b/cover.jpg` on one
+ * entry: the library keeps the second as `cover-2.jpg` (`ensureUniqueFilename`), so `cover.jpg` found the first picture
+ * for both paths and Apply wrote it twice. A name carried by two source files of the entry is not used, and a picture the
+ * name hands to two seed paths is given by name to neither. JA Restaurant and JA Diner share names across entries only
+ * (gallery/ and features-intro/).
+ *
+ * 🔒 THE LIBRARY RENAMES A NAME IT ALREADY HOLDS (TracyHQ/tracy, after #36). The upload asks `ensureUniqueFilename`, and
+ * EmDash 1.1.0 `MediaRepository.findAvailableFilename` (src/database/repositories/media.ts:438) keeps a name the library
+ * already holds (any case) as `<stem>-<n><ext>`, n = 2, 3, ..., split at the last dot. JA Restaurant (gallery/ and
+ * features-intro/ intro-1..5,8.jpg) and JA Diner (blog/, slideshow/, features/ item-1..4.jpg) share names across
+ * entries, so a fresh import names one entry's picture `intro-1-2.jpg`; matched by the bare name it was never found and
+ * the list kept the source path (404). A value's name is a source file's when it is that file's name or the name with
+ * the library's suffix; a value whose name fits two source files of the entry (`item.jpg`, `item-2.jpg`) is not used.
+ *
+ * 🔒 A SPOT IN A LIST IS NEVER PAIRED BY POSITION (review of TracyHQ/tracy#572, round 3). Comparing a row's other values
+ * with the seed row took two rows alike in every other value (the same title), swapped, for rows still in seed order,
+ * and swapped their pictures. Only a spot in no list (`hero`, `sample.image`) cannot move, and only there is the site's
+ * value at the spot taken without a name. A picture is one seed path's at most; every other path keeps the source path as written: a
+ * missing picture is seen, a wrong one is not.
+ * @param {Record<string, unknown>} fields - what the run writes, by field @param {Record<string, unknown>} live - the
+ * site's data @param {Record<string, unknown> | undefined} seedData - the seed's data of the entry
+ * @param {Array<string | { path: string, file?: string }>} spots - the media-map spots of the entry (`items[0].image`)
+ * and the file of the item each names
+ */
+export function keepImportedPictures(fields, live, seedData, spots) {
+  const steps = (/** @type {string} */ p) => p.replace(/\[(\d+)\]/g, '.$1').split('.')
+  const at = (/** @type {unknown} */ data, /** @type {string[]} */ parts) =>
+    parts.reduce((/** @type {any} */ node, k) => (node == null ? undefined : node[k]), data)
+  const isRow = (/** @type {unknown} */ r) => r !== null && typeof r === 'object' && !Array.isArray(r)
+  const list = spots.map((s) => (typeof s === 'string' ? { path: s } : s)).filter((s) => typeof s?.path === 'string')
+  const nameOf = (/** @type {string | undefined} */ file) => (typeof file === 'string' ? file.split('/').pop() : null)
+  const keyOf = (/** @type {any} */ v) => v.id ?? JSON.stringify(v)
+  /** The library's name for a file named `name`: the name, or `<stem>-<n><ext>` with n >= 2 (`findAvailableFilename`). */
+  const isNameOf = (/** @type {unknown} */ filename, /** @type {string} */ name) => {
+    if (typeof filename !== 'string') return false
+    if (filename === name) return true
+    const dot = name.lastIndexOf('.')
+    const [stem, ext] = dot > 0 ? [name.slice(0, dot), name.slice(dot)] : [name, '']
+    if (!filename.startsWith(`${stem}-`) || !filename.endsWith(ext)) return false
+    const n = filename.slice(stem.length + 1, filename.length - ext.length)
+    return /^[1-9]\d*$/.test(n) && Number(n) >= 2
+  }
+  /** The pictures the site holds at the entry's spots, one per media item. */
+  const held = new Map()
+  for (const s of list) {
+    const v = at(live, steps(s.path))
+    if (isRow(v)) held.set(keyOf(v), v)
+  }
+  /** A file name → the source files of the entry that carry it: one name, two files, and the name says neither. */
+  const filesOf = new Map()
+  for (const s of list) {
+    const name = nameOf(s.file)
+    if (!name) continue
+    if (!filesOf.has(name)) filesOf.set(name, new Set())
+    filesOf.get(name).add(s.file)
+  }
+  /** The seed's path → the picture its name finds. */
+  const byName = new Map()
+  /** The seed's path → its first spot, for the position rule (a spot in no list). */
+  const spotOf = new Map()
+  for (const s of list) {
+    const parts = steps(s.path)
+    const was = at(seedData, parts)
+    if (typeof was !== 'string' || was === '' || spotOf.has(was)) continue
+    spotOf.set(was, parts)
+    const name = nameOf(s.file)
+    if (!name || filesOf.get(name).size > 1) continue
+    // A picture whose name fits two source files of the entry is neither's.
+    const named = [...held.values()].filter(
+      (v) => isNameOf(v.filename, name) && [...filesOf.keys()].filter((n) => isNameOf(v.filename, n)).length === 1
+    )
+    if (named.length === 1) byName.set(was, named[0])
+  }
+  // A picture the name hands to two seed paths is no one's by name.
+  const claims = (/** @type {Map<string, any>} */ m) => {
+    const n = new Map()
+    for (const v of m.values()) n.set(keyOf(v), (n.get(keyOf(v)) ?? 0) + 1)
+    return n
+  }
+  const byNameClaims = claims(byName)
+  for (const [was, v] of byName) if (byNameClaims.get(keyOf(v)) > 1) byName.delete(was)
+  /** The seed's path → the picture the site holds in its place. */
+  const imported = new Map()
+  for (const [was, parts] of spotOf) {
+    if (byName.has(was)) imported.set(was, byName.get(was))
+    else {
+      const now = at(live, parts)
+      // A spot in a list can have moved, and rows alike in every other value move unseen: never paired by position.
+      if (isRow(now) && !parts.some((k) => /^\d+$/.test(k))) imported.set(was, now)
+    }
+  }
+  // And a picture is still one seed path's at most: two that claim it keep their source path.
+  const allClaims = claims(imported)
+  for (const [was, v] of imported) if (allClaims.get(keyOf(v)) > 1) imported.delete(was)
+  if (imported.size === 0) return fields
+  const out = structuredClone(fields)
+  for (const s of list) {
+    const parts = steps(s.path)
+    const holder = parts.length > 1 ? at(out, parts.slice(0, -1)) : out
+    const last = parts[parts.length - 1]
+    if (holder === null || typeof holder !== 'object') continue
+    const value = /** @type {any} */ (holder)[last]
+    if (typeof value === 'string' && imported.has(value))
+      /** @type {any} */ (holder)[last] = structuredClone(imported.get(value))
+  }
+  return out
+}
+
 /** JSON with every object's keys sorted, so the same answers hash the same however they were typed. */
 export function canonical(v) {
   if (Array.isArray(v)) return `[${v.map(canonical).join(',')}]`
@@ -3255,10 +3907,35 @@ async function personaliseForm(api, { model, rule, facts, locale, journal = null
 }
 
 /**
+ * How to send the bytes of an upload EmDash asked for (`POST /_emdash/api/media/upload-url`). The answer is either the
+ * site's own relative route or a signed URL on the storage's origin (`upload-url.ts`). The site's token goes to the
+ * site's own origin only: a signed URL carries its own authority, so a foreign origin never sees the bearer, and the
+ * headers the answer names (the signed ones) are kept. A redirect is refused: it could carry the request, and the
+ * headers with it, to another origin.
+ * @param {{ uploadUrl: string, method?: string, headers?: Record<string, string> }} ask
+ * @param {{ site: string, token: string, mime: string }} o
+ */
+export function uploadRequest(ask, { site, token, mime }) {
+  const target = new URL(ask.uploadUrl, site)
+  const own = target.origin === new URL(site).origin
+  const headers = new Headers(ask.headers ?? {})
+  if (own) {
+    // The site's own door wants the same bearer the API calls carry: without it the PUT is answered 401.
+    headers.set('authorization', `Bearer ${token}`)
+    headers.set('X-EmDash-Request', '1')
+  } else {
+    headers.delete('authorization')
+    headers.delete('x-emdash-request')
+  }
+  headers.set('content-type', mime)
+  return { url: target, init: { method: ask.method ?? 'PUT', headers, redirect: 'error' } }
+}
+
+/**
  * Put one picture in the site's library and answer the value an image field holds — the same shape
  * `tools/seed-apply.mjs` writes, so the site resolves it the way it resolves the template's own.
  */
-async function uploadPicture(api, token, { bytes, mime, filename, alt }) {
+export async function uploadPicture(api, token, { bytes, mime, filename, alt }, { fetchImpl = fetch, site = SITE } = {}) {
   const hash = `sha1:${createHash('sha1').update(bytes).digest('hex')}`
   const ask = await api('POST', '/_emdash/api/media/upload-url', {
     filename,
@@ -3269,17 +3946,8 @@ async function uploadPicture(api, token, { bytes, mime, filename, alt }) {
     ensureUniqueFilename: true
   })
   if (!ask.existing) {
-    // The upload door is the site's own, and it wants the same bearer the API calls carry —
-    // without it the PUT is answered 401 and the picture is drawn for nothing (measured 15/09).
-    const headers = new Headers(ask.headers ?? {})
-    headers.set('authorization', `Bearer ${token}`)
-    headers.set('X-EmDash-Request', '1')
-    headers.set('content-type', mime)
-    const put = await fetch(ask.uploadUrl.startsWith('http') ? ask.uploadUrl : `${SITE}${ask.uploadUrl}`, {
-      method: ask.method ?? 'PUT',
-      headers,
-      body: bytes
-    })
+    const { url, init } = uploadRequest(ask, { site, token, mime })
+    const put = await fetchImpl(url, { ...init, body: bytes })
     if (!put.ok) throw new Error(`upload ${filename} → HTTP ${String(put.status)}`)
     await api('POST', `/_emdash/api/media/${ask.mediaId}/confirm`, { contentHash: hash, size: bytes.length })
   }
@@ -3916,6 +4584,24 @@ async function main() {
       )
     return siteFields.get(collection)
   }
+  /** `collection/slug/locale` → the paths the importer fills with a file of the template, and the file (`seed/media-map.json`). */
+  const pictureSpotsOf = new Map()
+  for (const item of Array.isArray(mediaMap?.items)
+    ? mediaMap.items
+    : Array.isArray(mediaMap)
+      ? mediaMap
+      : [])
+    for (const t of Array.isArray(item?.targets) ? item.targets : []) {
+      if (typeof t?.path !== 'string') continue
+      const at = `${t.collection}/${t.slug}/${t.locale ?? seed.defaultLocale ?? 'en'}`
+      if (!pictureSpotsOf.has(at)) pictureSpotsOf.set(at, [])
+      pictureSpotsOf.get(at).push({ path: t.path, file: item.file })
+    }
+  /** The seed's own data of one entry: what the importer started from, before any row was trimmed. */
+  const seedDataOf = (collection, slug, locale) =>
+    (seed.content?.[collection] ?? []).find(
+      (e) => e.slug === slug && (e.locale ?? seed.defaultLocale ?? 'en') === locale
+    )?.data
   const writeEntry = async (k) => {
     const planned = patches.get(k)
     if (!planned) return
@@ -3945,11 +4631,16 @@ async function main() {
     for (const f of Object.keys(gate.ok))
       if (known && !known.has(f))
         skipped.push({ rule: `${k}.${f}`, why: "this site's release of the template has no such field" })
-    // A list keeps the keys only the site's rows hold (the importer's pictures), before anything is hashed or journaled.
+    // A list keeps the keys only the site's rows hold (the importer's pictures), and a seed's picture path the picture the
+    // importer put in its place (`keepImportedPictures`), before anything is hashed or journaled.
+    const pictured = keepImportedPictures(
+      Object.fromEntries(Object.entries(gate.ok).filter(([f]) => !known || known.has(f))),
+      liveData,
+      seedDataOf(p.collection, p.slug, p.locale),
+      pictureSpotsOf.get(`${p.collection}/${p.slug}/${p.locale}`) ?? []
+    )
     const fields = Object.fromEntries(
-      Object.entries(gate.ok)
-        .filter(([f]) => !known || known.has(f))
-        .map(([f, v]) => [f, keepSiteRowKeys(v, liveData[f])])
+      Object.entries(pictured).map(([f, v]) => [f, keepSiteRowKeys(v, liveData[f])])
     )
     if (Object.keys(fields).length === 0) return
     const receipt = receipts.entries[k]
@@ -4381,6 +5072,8 @@ async function main() {
     if (entryTally.total > 0) say('entries', 0, entryTally.total)
   }
 
+  /** `<collection>/<slug>/<locale>.<field>` of copy the model did not write, without the demo's linked facts (`withoutDemoFacts`). */
+  const linksOutTaken = new Set()
   // The copy, page by page: each page is one request and goes live as soon as it is answered.
   const copyWork = async () => {
     if (!canRewrite) return
@@ -4396,6 +5089,8 @@ async function main() {
       const items = (map.copy ?? []).filter((c) => `${c.collection}.${c.slug}` === page)
       /** Buttons whose link is not known: not asked, they keep the template's action (`writeCopy`). */
       const linkless = []
+      /** Rich-text fields whose answer did not keep the field's parts and links (`richFromAnswer`). */
+      const unshaped = []
       try {
         const written = await writeCopy({
           model,
@@ -4405,7 +5100,8 @@ async function main() {
           seedEntries,
           only: [page],
           patches,
-          linkless
+          linkless,
+          unshaped
         })
         for (const key of linkless)
           skipped.push({
@@ -4430,7 +5126,8 @@ async function main() {
               only: [page],
               keys: missing,
               again: true,
-              patches
+              patches,
+              unshaped
             })
           )
         const keys = []
@@ -4438,12 +5135,43 @@ async function main() {
           const key = `${c.collection}.${c.slug}.${c.field}`
           if (linkless.includes(key)) continue
           if (written[key] === undefined) {
-            if (
-              seedEntries.some(
-                (x) => x.collection === c.collection && x.slug === c.slug && x.locale === locale
-              )
+            const e = seedEntries.find(
+              (x) => x.collection === c.collection && x.slug === c.slug && x.locale === locale
             )
-              copy.skipped.push({ field: key, locale, why: 'the model gave no usable text' })
+            if (!e) continue
+            const why = unshaped.includes(key)
+              ? 'the answer did not keep the parts and links of the rich text'
+              : 'the model gave no usable text'
+            const p = patchOf(c.collection, c.slug, locale)
+            const k = `${c.collection}/${c.slug}/${locale}`
+            const origin = p.origins[c.field]
+            const left =
+              origin === undefined || origin === 'replaced'
+                ? withoutDemoFacts(p.fields[c.field] ?? e.data[c.field], facts)
+                : null
+            if (left === null) {
+              copy.skipped.push({ field: key, locale, why })
+              continue
+            }
+            // Nothing readable would be left: the field is never written empty, it keeps the template's words as before.
+            if (!left.readable) {
+              copy.skipped.push({
+                field: key,
+                locale,
+                why: `${why}; every sentence links to the demo’s address, phone or email, so the template’s words stay`
+              })
+              continue
+            }
+            // Still the template's words, renamed: a root written in another language translates what is left.
+            p.fields[c.field] = left.value
+            p.origins[c.field] = 'replaced'
+            linksOutTaken.add(`${k}.${c.field}`)
+            copy.skipped.push({
+              field: key,
+              locale,
+              why: `${why}; the template’s words keep, with the demo’s address, phone or email replaced by the customer’s or its sentence taken out`
+            })
+            keys.push(k)
             continue
           }
           const k = `${c.collection}/${c.slug}/${locale}`
@@ -5015,13 +5743,14 @@ async function main() {
             primaryOf(e.locale) === primaryOf(other)
         ) ??
         null
-      /** @type {Array<{ e: any, field: string, kind: 'text' | 'rows' | 'body', keys?: string[], kept?: boolean }>} */
+      /** @type {Array<{ e: any, field: string, kind: 'text' | 'rows' | 'body' | 'rich', keys?: string[], kept?: boolean }>} */
       const targets = []
       const rootOf = (collection, slug) =>
         seedEntries.find((x) => x.collection === collection && x.slug === slug && x.locale === locale)
       for (const c of map.copy ?? []) {
         const e = rootOf(c.collection, c.slug)
         if (e && typeof e.data[c.field] === 'string') targets.push({ e, field: c.field, kind: 'text' })
+        else if (e && richCopyOf(e.data[c.field]) !== null) targets.push({ e, field: c.field, kind: 'rich' })
       }
       for (const r of map.rewrite ?? [])
         for (const e of entriesOf(r, locale)) {
@@ -5068,8 +5797,14 @@ async function main() {
           const from = editionOf(borrowed.from.collection, borrowed.from.slug)
           const words = from?.data?.[borrowed.from.field]
           if (typeof words === 'string') value = replaceDeep(words, nameRules, t.field)
-        } else if (edition && edition.data[t.field] !== undefined)
+        } else if (edition && edition.data[t.field] !== undefined) {
           value = replaceDeep(edition.data[t.field], nameRules, t.field)
+          // The edition in the root's language never brings back the demo's address the copy pass took out.
+          if (linksOutTaken.has(`${k}.${t.field}`)) {
+            const left = withoutDemoFacts(value, facts)
+            if (left?.readable) value = left.value
+          }
+        }
         if (value !== undefined && echoed !== null && Array.isArray(value)) {
           // Only the rows the model left as the demo's take the edition's: the rest are the model's.
           const rows = [...p.fields[t.field]]
@@ -5102,12 +5837,19 @@ async function main() {
               if (typeof row?.[key] === 'string' && /\p{L}/u.test(row[key]))
                 leaves.set(id(`${String(i)}.${key}`), row[key])
           })
+        } else if (t.kind === 'rich') {
+          // A rich-text copy field: its text blocks with their marks as placeholders (`richCopyOf`), a block left out stays.
+          for (const part of richCopyOf(base)?.parts ?? [])
+            if (/\p{L}/u.test(part.text)) leaves.set(id(`r${String(part.at)}`), part.text)
         } else if (Array.isArray(base))
           base.forEach((b, i) => {
             if (b?._type !== 'block') return
-            const text = (Array.isArray(b.children) ? b.children : [])
-              .map((c) => String(c?.text ?? ''))
-              .join('')
+            // A block with a link or an emphasis is asked with its marked runs as placeholders, and keeps them (`markedTextOf`).
+            const marked = markedTextOf(b)
+            const text =
+              marked !== null && marked.runs.length > 0
+                ? marked.text
+                : (Array.isArray(b.children) ? b.children : []).map((c) => String(c?.text ?? '')).join('')
             if (/\p{L}/u.test(text)) leaves.set(id(`b${String(i)}`), text)
           })
         toTranslate.push({ ...t, base })
@@ -5153,18 +5895,51 @@ async function main() {
             }
             return next
           })
-        else {
-          const outline = t.base.flatMap((b, i) =>
-            got[`w${String(at)}.b${String(i)}`] !== undefined ? [{ at: i }] : []
+        else if (t.kind === 'rich') {
+          const out = [...t.base]
+          let any = false
+          for (const part of richCopyOf(t.base)?.parts ?? []) {
+            const id = `w${String(at)}.r${String(part.at)}`
+            const block = got[id] === undefined ? null : blockFromMarked(t.base[part.at], part.runs, got[id])
+            if (block === null) {
+              if (got[id] !== undefined) missing.push(id)
+              continue
+            }
+            out[part.at] = block
+            any = true
+          }
+          value = any ? out : undefined
+        } else {
+          /** The blocks asked with their marks (`markedTextOf`): each keeps them, or its demo words when the answer lost one. */
+          const marked = new Map(
+            t.base.flatMap((b, i) => {
+              const m = markedTextOf(b)
+              return m !== null && m.runs.length > 0 ? [[i, m.runs]] : []
+            })
           )
-          value =
+          const outline = t.base.flatMap((b, i) =>
+            got[`w${String(at)}.b${String(i)}`] !== undefined && !marked.has(i) ? [{ at: i }] : []
+          )
+          const out =
             outline.length > 0
               ? bodyFromOutline(
                   t.base,
                   outline,
                   outline.map((o) => got[`w${String(at)}.b${String(o.at)}`])
                 )
-              : undefined
+              : [...t.base]
+          let any = outline.length > 0
+          for (const [i, runs] of marked) {
+            const id = `w${String(at)}.b${String(i)}`
+            if (got[id] === undefined || out === null) continue
+            const block = blockFromMarked(t.base[i], runs, got[id])
+            if (block === null) missing.push(id)
+            else {
+              out[i] = block
+              any = true
+            }
+          }
+          value = any ? (out ?? undefined) : undefined
         }
         if (missing.length > 0)
           rewritten.skipped.push({

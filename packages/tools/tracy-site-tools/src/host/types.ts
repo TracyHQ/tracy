@@ -197,6 +197,12 @@ export interface Config {
     timedOut: boolean
     spawnError?: string
   }>
+  /**
+   * The `tracy.runtime` label of a site container (`farm` = a template demo folded into the demo farm,
+   * whose `<label>-web-1` is a forwarder: every exec into it is refused, `exec.mjs` FARM_DEMO_REFUSAL).
+   * Absent: asked of docker on the real road, not asked when `exec` is injected.
+   */
+  farmLabel?: (container: string) => Promise<string>
 
   /**
    * dsh's own browser, for `tracy_design_check` on a site whose container has none (every Joomla

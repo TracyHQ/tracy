@@ -9,7 +9,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 
-import { crawlSite } from '../src/host/crawl.mjs'
+import { crawlSite, decodeEntities } from '../src/host/crawl.mjs'
 
 /** A fake site: `pages` maps a URL (after normalisation) to its body; anything else is a 404. */
 function fakeFetch(pages, { types = {} } = {}) {
@@ -70,8 +70,8 @@ test('crawlSite: breadth first over the same host, HTML only, scripts defused, o
     assert.equal(result.pages[1].file, 'pages/02-tools.html')
     assert.equal(result.pages[3].file, 'pages/04-tools-hammer.html')
 
-    assert.ok(!calls.includes('https://twitter.com/acme'), 'never leaves the host')
-    assert.ok(!calls.includes('https://acme.example/wp-admin/'), 'admin doors are not pages')
+    assert.ok(!calls.some((u) => u === 'https://twitter.com/acme'), 'never leaves the host')
+    assert.ok(!calls.some((u) => u === 'https://acme.example/wp-admin/'), 'admin doors are not pages')
     assert.equal(
       calls.filter((u) => u === 'https://acme.example/').length,
       1,
@@ -128,4 +128,10 @@ test('crawlSite: maxPages and maxDepth bound the walk; www and apex are one host
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
+})
+
+test('decodeEntities: one pass, so an escaped entity stays an entity', () => {
+  assert.equal(decodeEntities('&amp;lt;b&amp;gt;'), '&lt;b&gt;')
+  assert.equal(decodeEntities('&lt;a&gt; &amp; &quot;x&quot; &#39;y&apos;&nbsp;z'), '<a> & "x" \'y\' z')
+  assert.equal(decodeEntities('&unknown; &copy;'), '&unknown; &copy;')
 })

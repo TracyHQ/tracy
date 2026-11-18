@@ -6,6 +6,7 @@ import FormWords from '@/components/site/FormWords.astro'
 import { section } from '@/lib/content'
 import { mediaUrl } from '@/lib/media'
 import { uiTag } from '@/lib/ui'
+import { telHref } from '@/lib/tel'
 import { stampBlocks, stampFor } from '@/lib/stamps'
 import { liveBlocks } from '@/lib/link-gate'
 import type { Chrome } from '@/lib/chrome'
@@ -40,8 +41,8 @@ const img = c ? mediaUrl(c.image) : null
 				<div class="rs-contact-details">
 					<h2 class="rs-display" {...$c('details_title')}>{c.details_title}</h2>
 					{c.address && <p {...$c('address')}>{c.address}</p>}
-					{c.phone && <p {...$c('phone')}><a href={`tel:${String(c.phone).replace(/[^+\d]/g, '')}`}>{c.phone}</a></p>}
-					{c.mobile && <p {...$c('mobile')}>{c.mobile}</p>}
+					{c.phone && <p {...$c('phone')}>{telHref(c.phone) ? <a href={telHref(c.phone)}>{c.phone}</a> : c.phone}</p>}
+					{c.mobile && <p {...$c('mobile')}>{telHref(c.mobile) ? <a href={telHref(c.mobile)}>{c.mobile}</a> : c.mobile}</p>}
 				</div>
 			</div>
 		</aside>

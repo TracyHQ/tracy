@@ -1,0 +1,2 @@
+{"id":"REG-PR-558-brand-site-language","verdict":"PASS","commit":"4de33d4e6d576ce8c29dc7fba52f069afe988136","ran_at":"2026-11-11T13:30:13.635Z","evidence":"REG-PR-558-brand-site-language.log"}
+{"id":"REG-PR-558-interrupted-chain-measurement","verdict":"PASS","commit":"4de33d4e6d576ce8c29dc7fba52f069afe988136","ran_at":"2026-11-11T13:30:19.412Z","evidence":"REG-PR-558-interrupted-chain-measurement.log"}

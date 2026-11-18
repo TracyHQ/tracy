@@ -7,6 +7,7 @@ import { forbiddenFillers } from './slot-fill-manifest.mjs'
 import { TRADE_WORDS, businessWords, otherKindWords } from './trade-words.mjs'
 import { untrackedUrl } from './social-links.mjs'
 import { siteNameOf } from './held-name.mjs'
+import { briefHeroUsp } from './hero-usp.mjs'
 
 // 🔒 No filler stands in for a fact (plan §7, 26/10/2026): these words show only as a sourced value.
 const NO_FILLER = `Never write ${forbiddenFillers('en')
@@ -132,6 +133,12 @@ export function renderAgentPrompt({
   if (messages.length)
     line(
       `   Lead the home page's hero and intro with the brief's key messages, in their order: ${messages.map((m) => JSON.stringify(m.label)).join(', ')}. Write each from its quotes and facts ("Key messages" in the brief), adding no claim.`
+    )
+  // Owner decision 09/11/2026: what the research found sets the business apart is the first thing a visitor reads.
+  const usp = briefHeroUsp(brief)
+  if (usp)
+    line(
+      `   The home page hero's main heading is the brief's USP statement, word for word: ${JSON.stringify(usp.line)} (Sitemap, hero, with the quotes it rests on). Add no claim to it and keep the hero's lead and call to action under it.`
     )
   if (pictures)
     line(

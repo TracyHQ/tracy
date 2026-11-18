@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-541-chain-action-wait",
+  "kind": "fix",
+  "title": "A business build waits for its content chain after the base site finishes",
+  "pr": 541,
+  "area": "website-opportunities/chain",
+  "cms": ["jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the two PostgreSQL cases in wo-chain-progress.test.mjs with STEP_CHAIN_ENABLED enabled by the fixture. Finish the host provision while the site brief is applying, then settle the brief. Repeat with a live chain past the two-hour action deadline."
+  ],
+  "expect": [
+    "The action stays queued while the content chain is applying even though the base provision is done.",
+    "The action completes after the chain reaches applied and retains its recorded write step.",
+    "A chain still writing beyond the two-hour action deadline keeps the action open within its maximum action window."
+  ],
+  "selectors": {
+    "table": "wo_demo_action",
+    "brief": "site_brief"
+  },
+  "fence": "Demo runner chainRunOpen wait and chainAliveSql deadline protection, reused from PR #522 commit 8ba53e9943023adaa78c48953e9b5e73b57ac0a1",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-chain-progress.test.mjs"
+    ],
+    "tests": [
+      "the runner marks the demo action with the chain step identifiers in order as each step starts",
+      "a chain still writing past the two hour action deadline keeps its action open until it ends"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 180
+  }
+}

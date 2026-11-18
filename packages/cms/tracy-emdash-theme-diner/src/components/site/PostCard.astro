@@ -1,0 +1,25 @@
+---
+/** One article card: cover, date, title, the first paragraph and the Read More link. Used by the home news row and the blog list. */
+import { formatShortDate, href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { postPath, type PostRow } from '@/lib/posts'
+import { firstParagraph } from '@/lib/prose-text'
+
+interface Props {
+  post: PostRow
+  locale: Locale
+  readMore: string
+}
+const { post, locale, readMore } = Astro.props
+const cover = mediaUrl(post.cover)
+const url = href(locale, postPath(post))
+const intro = firstParagraph(post.excerpt) || firstParagraph(post.body)
+---
+
+<article class="dn-card">
+	{cover && <a class="dn-card-img" href={url} tabindex="-1" aria-hidden="true"><img src={cover} alt="" width={post.cover?.width ?? 279} height={post.cover?.height ?? 200} loading="lazy" /></a>}
+	<p class="dn-card-meta"><time datetime={post.created ?? post.date}>{formatShortDate(post.created ?? post.date)}</time></p>
+	<h3><a href={url}>{post.title}</a></h3>
+	{intro && <p class="dn-card-intro">{intro}</p>}
+	<a class="dn-readmore" href={url}>{readMore}<span class="dn-arr" aria-hidden="true"></span></a>
+</article>

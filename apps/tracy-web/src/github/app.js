@@ -236,7 +236,8 @@ export async function deleteSiteRepo(config, repo, fetchImpl = fetch) {
 }
 
 /**
- * Attach (or repair) the push webhook on `repo`, pointed at `url`. Idempotent by URL: an existing
+ * Attach (or repair) the webhook on `repo`, pointed at `url`, sending `events` (`push` unless the
+ * caller names others: the releases repo hook reads `release`). Idempotent by URL: an existing
  * hook with the same URL is PATCHed (GitHub never returns a webhook's secret, so overwriting it is
  * the only way to be sure both sides still agree on it); no existing hook is created fresh.
  *
@@ -244,7 +245,7 @@ export async function deleteSiteRepo(config, repo, fetchImpl = fetch) {
  * reason to fail the repo creation it usually follows. The caller gets `{ok:false, reason}` back
  * to report, matching this file's `mintGitToken`-style refuse-with-a-reason discipline.
  */
-export async function ensureRepoWebhook(config, repo, { url, secret }, fetchImpl = fetch) {
+export async function ensureRepoWebhook(config, repo, { url, secret, events = ['push'] }, fetchImpl = fetch) {
   if (!secret) return { ok: false, reason: 'no_webhook_secret' }
   const [org, name] = repo.split('/')
   if (!org || !name) return { ok: false, reason: 'bad_repo' }
@@ -283,14 +284,15 @@ export async function ensureRepoWebhook(config, repo, { url, secret }, fetchImpl
         ? await githubFetch(fetchImpl, `${API}/repos/${repo}/hooks/${existing.id}`, {
             method: 'PATCH',
             headers: { ...headers(token), 'content-type': 'application/json' },
-            body: JSON.stringify({ active: true, events: ['push'], config: hookConfig })
+            body: JSON.stringify({ active: true, events, config: hookConfig })
           })
         : await githubFetch(fetchImpl, `${API}/repos/${repo}/hooks`, {
             method: 'POST',
             headers: { ...headers(token), 'content-type': 'application/json' },
-            // Only `push`: the police door (`route.js`) reads a push event's ref and shas, and
-            // nothing else — do not ask GitHub to send events nobody reads.
-            body: JSON.stringify({ name: 'web', active: true, events: ['push'], config: hookConfig })
+            // Only the events the door behind `url` reads: the police door (`route.js`) reads a
+            // push event's ref and shas, the release door a release event; do not ask GitHub to
+            // send events nobody reads.
+            body: JSON.stringify({ name: 'web', active: true, events, config: hookConfig })
           })
       if (!answer.ok) return { ok: false, reason: 'github_unavailable' }
       return { ok: true, created: !existing }

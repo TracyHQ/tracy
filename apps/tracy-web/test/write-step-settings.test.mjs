@@ -249,7 +249,7 @@ function menuFixture() {
   return { kit, plan: p, copy: c, contentMap }
 }
 
-test('the menu items the plan hides are unpublished and read back as published 0', async () => {
+test('ordinary hidden menu items are unpublished while the native default Home stays published', async () => {
   const { kit, plan: p, copy: c, contentMap } = menuFixture()
   const { report, site } = await runStep(
     { plan: p, copy: c },
@@ -259,12 +259,15 @@ test('the menu items the plan hides are unpublished and read back as published 0
   assert.equal(report.status, 'done', JSON.stringify(report.cause))
   const hidden = report.slots.filter((s) => s.part === 'menu-hide')
   assert.deepEqual(hidden.map((s) => s.slot).sort(), ['menuItem-101', 'menuItem-103'])
-  for (const line of hidden) {
+  const home = hidden.find((line) => line.slot === 'menuItem-101')
+  assert.equal(home.status, 'failed')
+  assert.match(home.reason, /default Home menu item/)
+  for (const line of hidden.filter((line) => line !== home)) {
     assert.equal(line.status, 'written')
     assert.equal(line.ordered, '0')
     assert.deepEqual(line.readFrom.path, ['item', 'published'])
   }
-  assert.equal(site.records.get('menuItem-101').published, 0)
+  assert.equal(site.records.get('menuItem-101').published, 1)
   assert.equal(site.records.get('menuItem-103').published, 0)
   assert.equal(site.records.get('menuItem-102').published, 1, 'the kept item stays')
 })
@@ -277,7 +280,7 @@ test('a refused unpublish is failed in the plugin words and the other item still
       : null
   const { report, site } = await runStep(
     { plan: p, copy: c },
-    { records: records(), refuseUpdate, extraKeys: MENU_KEYS },
+    { records: records().map((row) => ({ ...row, home: 0 })), refuseUpdate, extraKeys: MENU_KEYS },
     { kit, contentMap }
   )
   const line = (slot) => report.slots.find((s) => s.slot === slot)

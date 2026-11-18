@@ -47,6 +47,8 @@ export function runFiles(run, turns, fileRows, kitDoc = null) {
       json(
         exportPictureMapping({
           pictures: manifest,
+          plan,
+          brief: run.brief,
           contract,
           revision: `site-pictures-run ${run.id}`,
           ...(kitDoc ? { kit: kitDoc } : {})

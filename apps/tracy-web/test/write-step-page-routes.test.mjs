@@ -430,3 +430,48 @@ test('a rerun with the same files after renamed pages is done, writes nothing ne
   assert.equal(again.slots.find((s) => s.slot === 'page-about:slug').status, 'written')
   assert.equal(again.routes[0].to, '/coaching')
 })
+
+test('the planned top-level News page leaves demo menu ancestors and restores them before a rerun', async () => {
+  // A heading used solely to organise a template showcase must not be in the customer address or breadcrumb.
+  const news = item(20, 'category-blog', 'pages/j-content/category-blog', 19, {
+    link: 'index.php?option=com_content&view=category&id=9'
+  })
+  const records = [item(18, 'pages', 'pages', 1), item(19, 'j-content', 'pages/j-content', 18), news]
+  // Use a minimal door with real row reads and acknowledged tree moves.
+  const rows = structuredClone(records)
+  const calls = []
+  const door = {
+    apply: async ({ action, params }) => {
+      calls.push({ action, params })
+      if (action === 'content.list') return { ok: true, items: rows }
+      const row = rows.find((r) => r.id === params.id)
+      if (action === 'content.get') return { ok: true, item: { ...row } }
+      if (action === 'content.update') {
+        Object.assign(row, params.fields)
+        return { ok: true, alias: row.alias }
+      }
+      throw new Error(action)
+    }
+  }
+  const kit = { pages: [{ id: 'news', path: '/pages/j-content/category-blog', titleSlot: 'block-162.9' }] }
+  const plan = { mainMenu: [{ page: 'news' }], pages: [{ id: 'news', decision: 'keep', slug: 'news' }] }
+  const out = await runRouteStage({
+    door,
+    siteKey: SITE,
+    kit,
+    plan,
+    copySlots: [{ slot: 'block-162.9', items: ['News from Harbor Club'] }],
+    keptPages: [{ id: 'news', path: kit.pages[0].path }]
+  })
+  assert.equal(out.routes[0].outcome, 'written')
+  assert.equal(out.routes[0].to, '/news')
+  assert.equal(rows[2].parent_id, 1)
+  assert.equal(rows[2].title, 'News from Harbor Club')
+  assert.ok(out.lines.some((l) => l.part === 'page-menu-title' && l.status === 'written'))
+  assert.equal(out.keptPages[0].path, '/news')
+  assert.ok(out.lines.some((l) => l.part === 'page-menu-parent' && l.ordered === 1))
+  const restored = await restoreRoutes({ door, siteKey: SITE, routes: out.routes })
+  assert.equal(restored.stop, undefined)
+  assert.equal(rows[2].parent_id, 19)
+  assert.equal(rows[2].alias, 'category-blog')
+})

@@ -21,6 +21,7 @@ import { type Api, type Capabilities, sendPicks } from './api.ts'
 import { type FindMode, ModeSwitch } from '@tracy/wo-views/link-rows'
 import { rowsOf, spreadPaste } from '@tracy/wo-views/link-rows-model'
 import { FindLinks } from './find-links.tsx'
+import { PageHeader } from './page-header.tsx'
 import { CUISINES } from 'website-opportunities/domain/place-kinds.mjs'
 import { AdvancedPanel, DEFAULT_ADVANCED, DEFAULT_FILTERS } from './find-advanced.tsx'
 import {
@@ -538,6 +539,7 @@ export function FindView({
   const parts = findParts(mode, isPublic)
   return (
     <div className="tracy-wo-stack">
+      {!isPublic && <PageHeader title={t('find.title')} description={t('find.desc')} />}
       {!isPublic && (
         <ModeSwitch
           mode={mode}

@@ -63,6 +63,11 @@ export function linesOf(order, done) {
   return {
     results,
     lines: [
+      own(
+        `${order.id}:intro`,
+        'page-intro',
+        result('0', readRow('article', articleId, 'attribs', ['show_intro']))
+      ),
       own(`${order.id}:heading`, 'page-heading', result(order.title, readRow('article', articleId, 'title'))),
       own(`${order.id}:address`, 'page-address', result('1', readRow('menuItem', itemId, 'published'))),
       ...(routeLink
@@ -99,7 +104,7 @@ export function heldByLast(order, last, routed = false, layout = null) {
       (last.same(`${order.id}:title`, order.seo.title) &&
         last.same(`${order.id}:description`, order.seo.description)))
   const address = last.line(`${order.id}:address`)
-  if (!same || !address) return null
+  if (!same || !address || !last.same(`${order.id}:intro`, '0')) return null
   const route = last.line(`${order.id}:route`)
   if (routed && route?.articleLayout === undefined) return null
   // A route the last run gave another file than the one this page prints through now is written again (card AN).

@@ -65,10 +65,25 @@ export function emdashHost({ served = ['en'], on = () => ({ ok: true }) } = {}) 
     },
     on: (/** @type {string} */ name, /** @type {Function} */ fn) =>
       listeners.set(name, [...(listeners.get(name) ?? []), fn]),
-    get: () => undefined
+    get: (name) =>
+      name === 'sessions'
+        ? {
+            get: () => ({
+              snapshotEvents: () => [
+                {
+                  type: 'user/message',
+                  data: { source: { kind: 'user', prompter: { user: 'An', email: 'an@example.test' } } }
+                }
+              ]
+            })
+          }
+        : name === 'tracyAssertion'
+          ? { mint: (email) => `signed:${email}` }
+          : undefined
   }
   apply(ctx, {
     origin: 'http://door.test',
+    fetch: async () => new Response(JSON.stringify({ ok: true }), { status: 200 }),
     now: () => new Date('2026-09-30T12:00:00Z'),
     emdash: { cms: async () => 'emdash' },
     exec

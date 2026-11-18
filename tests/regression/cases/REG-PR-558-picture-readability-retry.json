@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-558-picture-readability-retry",
+  "kind": "fix",
+  "title": "Retry a visually unreadable picture once without relaxing independent review",
+  "pr": 558,
+  "area": "wo/pictures",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run generated low-mean bright-patch, fallback, independent-look replay and lifetime fingerprint fixtures."
+  ],
+  "expect": [
+    "A low-mean picture rejected solely for text readability receives exactly one recorded transform and a fresh independent look before fallback.",
+    "Subject faults, cut-outs and verified covering template overlays receive no readability retry; unknown overlays grant no exemption.",
+    "Crash replay reuses cached independent looks; completed and later-round manifests do not transform the same candidate again.",
+    "Processing semantics change the run lifetime fingerprint while role prompt hashes stay unchanged."
+  ],
+  "selectors": {},
+  "fence": "No real models, customer-site writes, prompt changes or visual acceptance exemptions.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-pictures-readability-retry.test.mjs"
+    ],
+    "tests": [
+      "a low-mean bright patch receives one readability transform and a fresh independent look before fallback",
+      "mixed readability and subject failures advance fallback without any transform or extra look",
+      "replaying the original or completed manifest reuses deterministic files and cached independent looks",
+      "cut-outs and verified template overlays never receive a readability retry",
+      "an unknown template mask does not exempt a candidate and repeated readability failure advances fallback",
+      "a previously retried source cannot receive another transform when reintroduced in a later round",
+      "picker fix rounds preserve transformed bytes and retry history when the same original candidate is selected",
+      "a transformed picture cannot pass without a readable independent verdict",
+      "processing policy changes the run lifetime fingerprint without changing role prompt hashes"
+    ],
+    "needs": []
+  }
+}

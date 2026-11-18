@@ -65,8 +65,13 @@ export async function writeBrand({ orders, plan, pictures, accent, ask, results,
       uploaded.set(path, await ask('media.upload', { path, content_b64 }))
     }
     if (refused(uploaded.get(path))) fail([order], uploaded.get(path))
-    else order.path = path
+    else {
+      order.path = path
+      // An EmDash settings reference names the media item, which the upload answers.
+      if (order.via === 'emdash-setting') order.mediaId = uploaded.get(path)?.id
+    }
   }
+  await writeEmdashSettings({ orders: ready(by('emdash-setting')), ask, done, fail })
   const settings = ready(by('profile'))
   const small = by('small-logo').filter((o) => kept.has(o) || !results.has(o))
   const heads = by('head').filter((o) => o.path)
@@ -113,6 +118,51 @@ export async function writeBrand({ orders, plan, pictures, accent, ask, results,
         action: 'content.get',
         params: { operation: 'read', kind: 'module', id },
         path: ['item', 'content']
+      })
+  }
+}
+
+/**
+ * The brand pictures of an EmDash theme (`emdash-setting` orders, `logo-write-path.js`): core `settings.logo` and
+ * `settings.favicon` in one `emdash.settings` call (`{logo: {mediaId}, favicon: {mediaId}}`, the shape of EmDash's
+ * `settings_update`), and the image field of the theme's chrome entry that holds the dark logo (`chrome.logo_dark`) in an
+ * `emdash.entryField` call, which makes the field when the schema lacks it and writes the published languages. Each is
+ * read back through the same action. An order whose picture did not upload has no `mediaId` and was failed already.
+ */
+async function writeEmdashSettings({ orders, ask, done, fail }) {
+  const refused = (answer) => !answer || answer.ok === false
+  const todo = orders.filter((o) => o.mediaId)
+  const core = todo.filter((o) => o.key.startsWith('settings.'))
+  if (core.length) {
+    const fields = Object.fromEntries(
+      core.map((o) => [o.key.slice('settings.'.length), { mediaId: o.mediaId }])
+    )
+    const answer = await ask('emdash.settings', { operation: 'set', fields })
+    if (refused(answer)) fail(core, answer)
+    else
+      for (const o of core)
+        done(o, o.mediaId, {
+          action: 'emdash.settings',
+          params: { operation: 'read' },
+          path: ['fields', o.key.slice('settings.'.length), 'mediaId']
+        })
+  }
+  for (const o of todo.filter((x) => !x.key.startsWith('settings.'))) {
+    // `<collection>.<field>`: a template's singleton entry has the collection's name as its slug (chrome/chrome).
+    const [collection, field] = o.key.split('.')
+    const where = { collection, slug: collection, field }
+    const answer = await ask('emdash.entryField', {
+      operation: 'set',
+      ...where,
+      label: 'Logo for dark backgrounds',
+      media: o.mediaId
+    })
+    if (refused(answer)) fail([o], answer)
+    else
+      done(o, o.mediaId, {
+        action: 'emdash.entryField',
+        params: { operation: 'read', ...where },
+        path: ['mediaId']
       })
   }
 }
@@ -227,7 +277,9 @@ async function writeAccent({ html, place, ask }) {
 export function brandAsker({ apply, siteKey, applyId, sleep }) {
   const READS = new Set(['content.get', 'content.list'])
   return async (action, params) => {
-    const write = !READS.has(action) && !(action === 'template.siteSettings' && params.operation !== 'set')
+    const write =
+      !READS.has(action) &&
+      !(/^(template\.siteSettings|emdash\.\w+)$/.test(action) && params.operation !== 'set')
     const call = { siteKey, action, params: write ? { apply_id: applyId, ...params } : params }
     for (const wait of [...BUSY_WAITS_MS, null]) {
       const answer = await apply(call)

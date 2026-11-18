@@ -186,6 +186,17 @@ test('kit-setting-slot-missing only warns: a map button or a frame painted behin
   )
 })
 
+test('a frame a T4 layout paints behind and writes through the layout slots is no setting slot gap', () => {
+  const blocks = [
+    {
+      id: 'block-7',
+      ...SHOT,
+      frames: [{ id: 'block-7.1', paintedBehind: true, writesTo: ['templateConfig-3.0'] }]
+    }
+  ]
+  assert.deepEqual(codesOf(kit({ blocks })), [])
+})
+
 test('a kit built on another contract of the same version is stale', () => {
   const step = stepOf(kit({ contract: 'ja-sample/j6/1.0.2-seed' }))
   assert.deepEqual([step.state, step.code], ['todo', 'kit-stale'])

@@ -284,7 +284,14 @@ test(
         workflow: 'agent-demo/1',
         researchInput,
         snapshotAt: new Date().toISOString()
-      })
+      }),
+      // As the runner makes it: with its photograph labelling (here, nothing to label).
+      {
+        pictureLabels: async () => ({
+          labels: new Map(),
+          note: { status: 'none', asked: 0, labelled: 0, cached: 0 }
+        })
+      }
     )
     const opp = async () =>
       (await db.pool.query('select * from wo_opportunity where id = $1', [args.opportunityId])).rows[0]

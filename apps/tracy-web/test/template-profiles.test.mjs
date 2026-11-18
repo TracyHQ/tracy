@@ -98,6 +98,11 @@ test('a release rebuilt only to tokenize its stylesheets has its own row, the sa
     assert.ok(source, `${tag}@${from}: the version it was built from has no row`)
     const { note: _n, release: _r, version: _v, fallbackFrom: _f, ...fields } = source
     const { note, ...ownFields } = own
+    // A re-cut that replaces template files may change the logo layout on purpose (JA Diner 1.0.6 adds a dark logo,
+    // logos single -> pair); its row then says what it ships instead of "Same logos as", and is not held to its source.
+    const ownLayout =
+      String(q.builtFrom.change ?? '').startsWith('repaired: ') && !/^Same logos? /.test(String(note))
+    if (ownLayout) continue
     assert.deepEqual(ownFields, fields, `${tag}@${q.version} differs from ${tag}@${from}`)
     // "and content" is left out when the re-cut also carries a demo-content edit (JA Donate 1.0.7); the logo
     // fields above are what must stay equal, and they are compared in full

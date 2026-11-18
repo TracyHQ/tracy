@@ -30,7 +30,7 @@ test('the three rungs, each tried once: plain words, then hide, then a failed li
           return { code: 'SLOT_NOT_CONTENT', message: 'Markup is not content' }
         return null
       },
-      overSlot: (slot) => (slot.key === 'module-3.1' ? { canHide: true } : {})
+      overSlot: (slot) => ({ canHide: slot.key === 'module-3.1' })
     },
     { kit }
   )
@@ -92,7 +92,25 @@ test('plain words refused as well go to the hide rung, and a slot the kit keeps 
 })
 
 test('a refused slot whose plain words are the words sent, and which the site cannot hide, fails at once', async () => {
-  const { site, line } = await runStep({}, { refuse: { 'module-2.1': TOO_LONG } }, {})
+  const { site, line } = await runStep(
+    {},
+    { refuse: { 'module-2.1': TOO_LONG }, overSlot: () => ({ canHide: false }) },
+    {}
+  )
   assert.equal(line('block-2.1').textFallback, 'demo-remains')
   assert.equal(site.applies().length, 2)
 })
+
+for (const capability of ['measured', 'unmeasured']) {
+  test(`native ${capability} permission hides refused plain text`, async () => {
+    const { site, line } = await runStep(
+      {},
+      {
+        refuseWhen: (key, value) => (key === 'module-2.1' && value ? TOO_LONG : null),
+        overSlot: (slot) => (slot.key === 'module-2.1' ? { canHide: capability } : {})
+      }
+    )
+    assert.equal(site.held['module-2.1'], '')
+    assert.equal(line('block-2.1').textFallback, 'hidden')
+  })
+}

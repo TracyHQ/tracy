@@ -1,0 +1,1 @@
+{"id":"REG-PR-496-bench-stop-in-flight","verdict":"PASS","commit":"6e2d1f3a6e84f3dfb22cf93d31c241e420fafea2","ran_at":"2026-11-09T03:52:58.133Z","evidence":"tests/regression/.runs/2026-11-09-6e2d1f3a6/REG-PR-496-bench-stop-in-flight.log"}

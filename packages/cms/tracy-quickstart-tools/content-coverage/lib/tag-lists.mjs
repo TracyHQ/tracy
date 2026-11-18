@@ -20,8 +20,9 @@ const lastSegment = (path) =>
     ?.toLowerCase() ?? null
 
 // The page heading prints the tag's title among other words ("Tagged: Metrics"). The matcher may give those words
-// to a slot of another entity with the same words (a feature named "Metrics") and not to the tag: the words still
-// tie the page to the tag, whose alias its path already ends with.
+// to a slot of another entity with the same words (a feature named "Metrics") and not to the tag, or to the template
+// string that prints them (`Tagged: %s`): the words still tie the page to the tag, whose alias its path already ends
+// with.
 const headedBy = (p, tagKey, slotsByKey, title) =>
   (p.items ?? []).some(
     (i) =>
@@ -30,7 +31,13 @@ const headedBy = (p, tagKey, slotsByKey, title) =>
       i.status === 'matched' &&
       (i.slots ?? []).some((k) => {
         const s = slotsByKey.get(k)
-        return s?.entity === tagKey || (title && normText(s?.sample) === title)
+        if (s?.entity === tagKey || (title && normText(s?.sample) === title)) return true
+        const format = String(s?.sample ?? '')
+        return (
+          !!title &&
+          format.split('%s').length === 2 &&
+          normText(format.replace('%s', title)) === normText(i.value)
+        )
       })
   )
 

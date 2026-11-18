@@ -5,13 +5,16 @@ import {
   copyFileSync,
   existsSync,
   mkdirSync,
+  lstatSync,
+  realpathSync,
   readdirSync,
   readFileSync,
   rmSync,
   statSync,
   writeFileSync
 } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { basename, dirname, join, resolve, relative, isAbsolute } from 'node:path'
+import { isDeepStrictEqual } from 'node:util'
 import { fileURLToPath } from 'node:url'
 import { contractBase, loadContract } from '../src/library.mjs'
 import { editContentMap, editDump, editLock, loadContentEdits } from '../src/release-content-edits.mjs'
@@ -22,6 +25,7 @@ import { editContentMap, editDump, editLock, loadContentEdits } from '../src/rel
  *   node scripts/release-joomla.mjs <release tag> --template <contract> --out <dir> [--from <x.y.z>]
  *                                   [--rolling-as <x.y.z>]   (a rolling pre-release with one zip and no switch)
  *                                   [--as <x.y.z>]           (the new version, when the next patch is already taken)
+ *                                   [--from-dir <pack> --base-contract-dir <corrected contract>] (local inputs, no GitHub)
  *                                   [--contract-from <x.y.z>] (the tch contract the new one starts from; default: the release's)
  *                                   [--overlay <dir>] [--sql <file>] [--replace <file>] [--no-tokenize] [--devmode-off]
  *                                   [--remove-user <username>]... (a demo account taken out of the database)
@@ -81,6 +85,15 @@ const opt = (n) => {
 const name = opt('--template')
 const OUT = opt('--out')
 const FROM = opt('--from')
+// Local sources are explicit and paired; a missing value must not become another option's path.
+const localOpt = (flag) => {
+  const i = args.indexOf(flag)
+  if (i !== -1 && (!args[i + 1] || args[i + 1].startsWith('--')))
+    throw new Error(`${flag}: a directory is required`)
+  return opt(flag)
+}
+const FROM_DIR = localOpt('--from-dir')
+const BASE_CONTRACT_DIR = localOpt('--base-contract-dir')
 const ROLLING_AS = opt('--rolling-as')
 // --as: the version to cut, when the next patch is already taken by another line's build that is not on the
 // release yet (JA Kinetic 1.0.7 of #1375, 16/10/2026: its contract is in the tree, its files are not uploaded);
@@ -104,7 +117,7 @@ const STAND_PORT = Number(opt('--port') ?? 52371)
 const tag = args.find((a) => !a.startsWith('--'))
 if (!tag || (!name && !NO_TOKENIZE) || !OUT) {
   console.error(
-    'usage: release-joomla.mjs <release tag> --template <contract> --out <dir> [--from <x.y.z>] [--rolling-as <x.y.z>] [--overlay <dir>] [--sql <file>] [--replace <file>] [--no-tokenize] [--devmode-off] [--remove-user <username>]... [--untag-archived]'
+    'usage: release-joomla.mjs <release tag> --template <contract> --out <dir> [--from <x.y.z>] [--from-dir <pack> --base-contract-dir <contract>] [--rolling-as <x.y.z>] [--overlay <dir>] [--sql <file>] [--replace <file>] [--no-tokenize] [--devmode-off] [--remove-user <username>]... [--untag-archived]'
   )
   process.exit(1)
 }
@@ -112,6 +125,7 @@ const sha = (buf) => createHash('sha256').update(buf).digest('hex')
 const shaFile = (f) => sha(readFileSync(f))
 // three tries: a download that meets a network blip ("error connecting to api.github.com") is retried
 const gh = (...a) => {
+  if (FROM_DIR) throw new Error('local input mode forbids GitHub fallback')
   for (let i = 1; ; i++)
     try {
       return execFileSync('gh', a, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
@@ -124,91 +138,209 @@ const bump = (v) => v.replace(/(\d+)$/, (n) => String(Number(n) + 1))
 
 // ── the current pair ──
 const dl = join(OUT, 'from')
-mkdirSync(dl, { recursive: true })
+// Canonicalize even a not-yet-created output, so it cannot contain or overwrite a source tree.
+const canonical = (path) => {
+  const at = resolve(path)
+  return existsSync(at) ? realpathSync(at) : join(canonical(dirname(at)), basename(at))
+}
+const contains = (parent, child) => {
+  const rel = relative(parent, child)
+  return (
+    rel === '' ||
+    (!isAbsolute(rel) && rel !== '..' && !rel.startsWith(`..${process.platform === 'win32' ? '\\' : '/'}`))
+  )
+}
+function localInputs() {
+  if (!FROM_DIR || !BASE_CONTRACT_DIR || CONTRACT_FROM || ROLLING_AS)
+    throw new Error(
+      'local inputs require --from-dir and --base-contract-dir, without --contract-from or --rolling-as'
+    )
+  if (!/^quickstart\/[a-z0-9-]+\/j6$/.test(tag))
+    throw new Error('local input requires a Joomla quickstart tag')
+  const pack = realpathSync(FROM_DIR)
+  const baseContract = realpathSync(BASE_CONTRACT_DIR)
+  const output = canonical(OUT)
+  for (const source of [pack, baseContract])
+    if (contains(source, output) || contains(output, source))
+      throw new Error('local source and output directories must not overlap')
+  if (existsSync(output) && readdirSync(output).length)
+    throw new Error('local input output directory must be empty')
+  const files = []
+  const read = (root, file) => {
+    const path = join(root, file)
+    if (!lstatSync(path).isFile()) throw new Error(`local input is not a regular file: ${file}`)
+    const bytes = readFileSync(path)
+    files.push({ root, path, file, sha256: sha(bytes), bytes: bytes.length })
+    return bytes
+  }
+  const object = (root, file) => {
+    const value = JSON.parse(read(root, file))
+    if (!value || typeof value !== 'object' || Array.isArray(value))
+      throw new Error(`local input is not an object: ${file}`)
+    return value
+  }
+  const manifest = object(pack, 'manifest.json')
+  const setting = object(pack, 'tracy_setting.json')
+  const product = tag.replace(/^quickstart\//, '').split('/')[0]
+  if (
+    manifest.schemaVersion !== 'tracy-quickstart/v1' ||
+    manifest.platform !== 'joomla' ||
+    manifest.product !== product ||
+    manifest.id !== tag ||
+    manifest.release !== tag ||
+    !/^\d+\.\d+\.\d+$/.test(manifest.version ?? '') ||
+    !/^[a-zA-Z0-9_]+$/.test(manifest.template ?? '') ||
+    manifest.cms?.name !== 'joomla' ||
+    !manifest.cms?.version ||
+    (manifest.repository !== undefined && manifest.repository !== REPO) ||
+    (FROM && FROM !== manifest.version)
+  )
+    throw new Error('local pack manifest identity does not match the requested source')
+  const keys = Object.keys(manifest.parts ?? {}).sort()
+  if (!isDeepStrictEqual(keys, ['installer']) && !isDeepStrictEqual(keys, ['database', 'webroot']))
+    throw new Error('local pack must name an installer or a webroot/database pair')
+  if (
+    setting.schemaVersion !== 'tracy-setting/v1' ||
+    setting.platform !== manifest.platform ||
+    setting.version !== manifest.version ||
+    setting.template !== manifest.template ||
+    setting.cms !== manifest.cms.version ||
+    !isDeepStrictEqual(Object.keys(setting.install ?? {}).sort(), keys)
+  )
+    throw new Error('local switch identity does not match the pack manifest')
+  const names = new Set(['manifest.json', 'tracy_setting.json'])
+  for (const key of keys) {
+    const p = manifest.parts[key]
+    if (
+      !p ||
+      !/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/.test(p.file ?? '') ||
+      names.has(p.file) ||
+      !/^[0-9a-f]{64}$/.test(p.sha256 ?? '') ||
+      !Number.isSafeInteger(p.bytes) ||
+      p.bytes < 1
+    )
+      throw new Error(`local ${key}: invalid file, byte count or sha256`)
+    names.add(p.file)
+    const sw = setting.install[key]
+    if (sw?.file !== p.file || sw?.sha256 !== p.sha256)
+      throw new Error(`local ${key}: switch and manifest disagree`)
+    const bytes = read(pack, p.file)
+    if (bytes.length !== p.bytes || sha(bytes) !== p.sha256)
+      throw new Error(`local ${key}: bytes or sha256 mismatch`)
+  }
+  const cm = object(baseContract, 'manifest.json')
+  if (
+    cm.schemaVersion !== 'tracy-quickstart-contract/v1' ||
+    cm.id !== `${product}/j6/${manifest.version}` ||
+    cm.platform !== manifest.platform ||
+    cm.template !== manifest.template ||
+    !isDeepStrictEqual(cm.quickstart, manifest)
+  )
+    throw new Error('explicit base contract does not describe this exact local pack')
+  object(baseContract, 'content-map.json')
+  object(baseContract, 'presentation-lock.json')
+  // Snapshot only the explicit three-file base; never mix held repository companions into this cut.
+  for (const f of files) {
+    const dest = join(f.root === baseContract ? join(OUT, 'base-contract') : dl, f.file)
+    mkdirSync(dirname(dest), { recursive: true })
+    copyFileSync(f.path, dest)
+    if (shaFile(dest) !== f.sha256) throw new Error(`local input changed during copy: ${f.file}`)
+  }
+  writeFileSync(
+    join(OUT, 'source-inputs.json'),
+    `${JSON.stringify({ mode: 'local', pack, baseContract, files }, null, 2)}\n`
+  )
+  return manifest
+}
+if (Boolean(FROM_DIR) !== Boolean(BASE_CONTRACT_DIR))
+  throw new Error('local inputs require both --from-dir and --base-contract-dir')
+if (!FROM_DIR) mkdirSync(dl, { recursive: true })
 // the release's own manifest, else (older JA releases: an installer zip, or a pair cut by hand)
 // the one its latest tch contract embeds — what the fleet's catalog reads
 const product = tag.replace(/^quickstart\//, '').split('/')[0]
 let cur
-try {
-  gh('release', 'download', tag, '-R', REPO, '-D', dl, '-p', 'manifest.json', '--clobber')
-  cur = JSON.parse(readFileSync(join(dl, 'manifest.json'), 'utf8'))
-  // an older single-zip manifest is not the release's current state (tracy-business/j6), nor is the manifest of a
-  // version uploaded but not switched on when --from names the one the switch serves (release-current-manifest.mjs)
-  const refusal = releaseManifestRefusal(cur, FROM)
-  if (refusal) throw new Error(refusal)
-} catch {
-  const base = join(CONTRACTS, product, 'j6')
-  // the version the release serves is the one its switch names (a contract built here for the next
-  // version is newer, and its files are not on the release yet)
-  let live = null
+if (FROM_DIR) cur = localInputs()
+else
   try {
-    gh('release', 'download', tag, '-R', REPO, '-D', dl, '-p', 'tracy_setting.json', '--clobber')
-    live = JSON.parse(readFileSync(join(dl, 'tracy_setting.json'), 'utf8')).version
-  } catch {}
-  const versions = existsSync(base) ? readdirSync(base).filter((x) => /^\d+\.\d+\.\d+$/.test(x)) : []
-  // no tch contract either (gavick-gk-*, purity-iii, t3/t4-framework): the switch itself names the
-  // installer zip and its SHA-256 — what the fleet reads
-  let sw = existsSync(join(dl, 'tracy_setting.json'))
-    ? JSON.parse(readFileSync(join(dl, 'tracy_setting.json'), 'utf8'))
-    : null
-  // --rolling-as <x.y.z>: a rolling pre-release (JA Civica, 11/10/2026: one unversioned installer
-  // zip that upload_quickstart_to_release.rb replaces, no switch, no manifest, no tch contract) is read
-  // as that version (the one /ops' setting proposal gives it by default, setting-proposal.js: 1.0.0),
-  // so the next version is the first switch that names a tokenized zip. Its SHA-256 is GitHub's asset
-  // digest, its Joomla the installer's own libraries/src/Version.php. Opt-in: without the flag such a
-  // release still fails below, as before
-  if (ROLLING_AS && !sw && !versions.length) {
-    const assets = JSON.parse(gh('release', 'view', tag, '-R', REPO, '--json', 'assets')).assets
-    const zips = assets.filter((a) => a.name.endsWith('.zip'))
-    if (zips.length !== 1)
-      throw new Error(`${tag}: --rolling-as needs exactly one zip asset, found ${zips.length}`)
-    const digest = /^sha256:([0-9a-f]{64})$/.exec(zips[0].digest ?? '')?.[1]
-    if (!digest) throw new Error(`${tag}: ${zips[0].name} has no sha256 digest`)
-    gh('release', 'download', tag, '-R', REPO, '-D', dl, '-p', zips[0].name, '--clobber')
-    const php = execFileSync('unzip', ['-p', join(dl, zips[0].name), 'libraries/src/Version.php'], {
-      encoding: 'utf8',
-      maxBuffer: 1 << 24
-    })
-    const cms = ['MAJOR_VERSION', 'MINOR_VERSION', 'PATCH_VERSION'].map(
-      (k) => new RegExp(`const\\s+${k}\\s*=\\s*(\\d+)\\s*;`).exec(php)?.[1]
-    )
-    if (cms.some((x) => x === undefined)) throw new Error(`${tag}: no Joomla version in the installer`)
-    sw = {
-      schemaVersion: 'tracy-setting/v1',
-      platform: 'joomla',
-      version: ROLLING_AS,
-      cms: cms.join('.'),
-      template: loadContract(name).template?.split('/').pop()?.replace(/-/g, '_'),
-      install: { installer: { file: zips[0].name, sha256: digest } }
+    gh('release', 'download', tag, '-R', REPO, '-D', dl, '-p', 'manifest.json', '--clobber')
+    cur = JSON.parse(readFileSync(join(dl, 'manifest.json'), 'utf8'))
+    // an older single-zip manifest is not the release's current state (tracy-business/j6), nor is the manifest of a
+    // version uploaded but not switched on when --from names the one the switch serves (release-current-manifest.mjs)
+    const refusal = releaseManifestRefusal(cur, FROM)
+    if (refusal) throw new Error(refusal)
+  } catch {
+    const base = join(CONTRACTS, product, 'j6')
+    // the version the release serves is the one its switch names (a contract built here for the next
+    // version is newer, and its files are not on the release yet)
+    let live = null
+    try {
+      gh('release', 'download', tag, '-R', REPO, '-D', dl, '-p', 'tracy_setting.json', '--clobber')
+      live = JSON.parse(readFileSync(join(dl, 'tracy_setting.json'), 'utf8')).version
+    } catch {}
+    const versions = existsSync(base) ? readdirSync(base).filter((x) => /^\d+\.\d+\.\d+$/.test(x)) : []
+    // no tch contract either (gavick-gk-*, purity-iii, t3/t4-framework): the switch itself names the
+    // installer zip and its SHA-256 — what the fleet reads
+    let sw = existsSync(join(dl, 'tracy_setting.json'))
+      ? JSON.parse(readFileSync(join(dl, 'tracy_setting.json'), 'utf8'))
+      : null
+    // --rolling-as <x.y.z>: a rolling pre-release (JA Civica, 11/10/2026: one unversioned installer
+    // zip that upload_quickstart_to_release.rb replaces, no switch, no manifest, no tch contract) is read
+    // as that version (the one /ops' setting proposal gives it by default, setting-proposal.js: 1.0.0),
+    // so the next version is the first switch that names a tokenized zip. Its SHA-256 is GitHub's asset
+    // digest, its Joomla the installer's own libraries/src/Version.php. Opt-in: without the flag such a
+    // release still fails below, as before
+    if (ROLLING_AS && !sw && !versions.length) {
+      const assets = JSON.parse(gh('release', 'view', tag, '-R', REPO, '--json', 'assets')).assets
+      const zips = assets.filter((a) => a.name.endsWith('.zip'))
+      if (zips.length !== 1)
+        throw new Error(`${tag}: --rolling-as needs exactly one zip asset, found ${zips.length}`)
+      const digest = /^sha256:([0-9a-f]{64})$/.exec(zips[0].digest ?? '')?.[1]
+      if (!digest) throw new Error(`${tag}: ${zips[0].name} has no sha256 digest`)
+      gh('release', 'download', tag, '-R', REPO, '-D', dl, '-p', zips[0].name, '--clobber')
+      const php = execFileSync('unzip', ['-p', join(dl, zips[0].name), 'libraries/src/Version.php'], {
+        encoding: 'utf8',
+        maxBuffer: 1 << 24
+      })
+      const cms = ['MAJOR_VERSION', 'MINOR_VERSION', 'PATCH_VERSION'].map(
+        (k) => new RegExp(`const\\s+${k}\\s*=\\s*(\\d+)\\s*;`).exec(php)?.[1]
+      )
+      if (cms.some((x) => x === undefined)) throw new Error(`${tag}: no Joomla version in the installer`)
+      sw = {
+        schemaVersion: 'tracy-setting/v1',
+        platform: 'joomla',
+        version: ROLLING_AS,
+        cms: cms.join('.'),
+        template: loadContract(name).template?.split('/').pop()?.replace(/-/g, '_'),
+        install: { installer: { file: zips[0].name, sha256: digest } }
+      }
+      // the rolling zip laid out as a release of that version, so release-batch.mjs verify can stand
+      // it up beside the next one (stand.mjs --from-dir <out>/from)
+      writeFileSync(
+        join(dl, 'manifest.json'),
+        `${JSON.stringify({ product, platform: 'joomla', version: ROLLING_AS, cms: { version: sw.cms }, template: sw.template, parts: { installer: { file: zips[0].name, bytes: statSync(join(dl, zips[0].name)).size, sha256: digest } } }, null, 2)}\n`
+      )
     }
-    // the rolling zip laid out as a release of that version, so release-batch.mjs verify can stand
-    // it up beside the next one (stand.mjs --from-dir <out>/from)
-    writeFileSync(
-      join(dl, 'manifest.json'),
-      `${JSON.stringify({ product, platform: 'joomla', version: ROLLING_AS, cms: { version: sw.cms }, template: sw.template, parts: { installer: { file: zips[0].name, bytes: statSync(join(dl, zips[0].name)).size, sha256: digest } } }, null, 2)}\n`
-    )
+    // --from <x.y.z>: a version cut and uploaded but not switched on yet (its switch waits for the deploy:
+    // Tracy Business 1.2.4 on 16/10/2026) is the base of the next cut, from its tch contract's manifest
+    const v =
+      FROM && versions.includes(FROM)
+        ? FROM
+        : live && versions.includes(live)
+          ? live
+          : versions
+              .sort((a, b) =>
+                a
+                  .split('.')
+                  .map(Number)
+                  .reduce((r, x, i) => r || x - b.split('.').map(Number)[i], 0)
+              )
+              .pop()
+    // (the Joomla the installer carries, `cms.version`, is what release-batch.mjs writes into the next switch)
+    cur =
+      v || !sw
+        ? JSON.parse(readFileSync(join(base, v, 'manifest.json'), 'utf8')).quickstart
+        : manifestFromSetting(tag, sw)
   }
-  // --from <x.y.z>: a version cut and uploaded but not switched on yet (its switch waits for the deploy:
-  // Tracy Business 1.2.4 on 16/10/2026) is the base of the next cut, from its tch contract's manifest
-  const v =
-    FROM && versions.includes(FROM)
-      ? FROM
-      : live && versions.includes(live)
-        ? live
-        : versions
-            .sort((a, b) =>
-              a
-                .split('.')
-                .map(Number)
-                .reduce((r, x, i) => r || x - b.split('.').map(Number)[i], 0)
-            )
-            .pop()
-  // (the Joomla the installer carries, `cms.version`, is what release-batch.mjs writes into the next switch)
-  cur =
-    v || !sw
-      ? JSON.parse(readFileSync(join(base, v, 'manifest.json'), 'utf8')).quickstart
-      : manifestFromSetting(tag, sw)
-}
 if (cur.platform !== 'joomla' || !cur.parts) throw new Error(`${tag} is not a Joomla quickstart release`)
 if (FROM && FROM !== cur.version) throw new Error(`${tag} is at ${cur.version}, not ${FROM}`)
 const slug = cur.product ?? product
@@ -621,7 +753,7 @@ writeFileSync(
 
 // ── 4. the tch contract for the new version ──
 const cdir = join(CONTRACTS, slug, 'j6')
-const prev = join(cdir, CONTRACT_FROM ?? cur.version)
+const prev = FROM_DIR ? join(OUT, 'base-contract') : join(cdir, CONTRACT_FROM ?? cur.version)
 if (CONTRACT_FROM && !existsSync(join(prev, 'manifest.json')))
   throw new Error(`--contract-from ${CONTRACT_FROM}: no contract`)
 let contractOut = null
@@ -698,6 +830,7 @@ if (existsSync(join(prev, 'manifest.json'))) {
 console.log(
   JSON.stringify({
     tag,
+    ...(FROM_DIR && { source: join(OUT, 'source-inputs.json') }),
     from: cur.version,
     to: next,
     cssFiles: Object.keys(changed).filter((f) => !overlaid.has(f)).length,

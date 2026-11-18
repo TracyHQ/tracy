@@ -2,6 +2,7 @@
 // keeps on a kept block and every page's end action, with where it should lead; the business's coordinates; its phone numbers.
 // Nothing here calls the site. A page target is named by its id, since the route stage may rename the page after this is made: the
 // check reads its address in the report's `keptPages`.
+import { actsInsidePage } from './link-doors.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const FACT = /^(phone|whatsapp|email|social|map):(.+)$/
@@ -78,6 +79,10 @@ export function planLinkTable({ plan, kit, brief }) {
       const target = targetOf(link.leadsTo, facts)
       if (!target) continue
       const kitLink = kitLinks.get(link.link)
+      if (kitLink?.action === 'media-source') continue
+      // A control that acts inside the page (a tab, a modal, a lightbox) has no address: the link stage writes none and says so
+      // (link-lines.js), and the control still does what it does, so the page is never held to the plan's address for it.
+      if (actsInsidePage(kitLink) || link.leadsTo === 'lightbox') continue
       planLinks.push({
         link: link.link,
         block: d.block,

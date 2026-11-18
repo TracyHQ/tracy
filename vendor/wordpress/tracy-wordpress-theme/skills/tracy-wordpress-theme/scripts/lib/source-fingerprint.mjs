@@ -95,6 +95,15 @@ export function fingerprintOf({ url, html, template = null }) {
 }
 const idOf = (url, htmlSha256, tpl) => sha(JSON.stringify([FINGERPRINT_ALGORITHM, url, htmlSha256, tpl]))
 
+/**
+ * The same fingerprint named by another home URL: the page hash and the template are kept and the id follows the new URL.
+ * A release publishes its fingerprints this way, with the stand origin the source answered on replaced by a placeholder,
+ * so the published record stays a valid fingerprint without naming the build machine's address.
+ */
+export function withUrl(f, url) {
+  return { ...f, url, id: idOf(url, f.htmlSha256, f.template ?? null) }
+}
+
 /** Why `f` is not a source fingerprint of this algorithm: a list of messages, empty when it is one. */
 export function validateFingerprint(f) {
   if (!isObj(f)) return ['the source fingerprint is not an object']

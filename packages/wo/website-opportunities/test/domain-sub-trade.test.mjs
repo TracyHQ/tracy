@@ -57,10 +57,19 @@ const briefOf = (b, reading) =>
   })
 
 /** The brief's own words: every line but the quoted source text (`> …`), which is the business's, not the brief's. */
-const ownLines = (md) =>
-  md
+const ownLines = (md, brief) =>
+  brief.facts
+    .filter((fact) => fact.field === 'posts')
+    // Keep original source words out of the vocabulary check, in both JSON and plain-text form.
+    .reduce(
+      (text, fact) =>
+        text
+          .replaceAll(JSON.stringify(fact.value.text), '<original post>')
+          .replaceAll(fact.value.text, '<original post>'),
+      md
+    )
     .split('\n')
-    .filter((l) => !l.startsWith('>'))
+    .filter((line) => !line.startsWith('>'))
     .join('\n')
     // A CSS class of the template is no trade word.
     .replaceAll('`tracy-sec-<name>` class', '')
@@ -156,7 +165,7 @@ test('sports_club with no usable model answer keeps the fitness words', () => {
 test('Harbour Sport Club as coaching: no gym, class or schedule word in the brief or the build prompt', () => {
   const brief = briefOf(HSC, readingOf(HSC, HSC_ANSWER))
   const md = renderBriefMarkdown(brief)
-  const own = ownLines(md)
+  const own = ownLines(md, brief)
   assert.doesNotMatch(own, GYM_WORDS, own.match(new RegExp(`.*(${GYM_WORDS.source}).*`, 'gim'))?.join('\n'))
   assert.match(own, /## Content from the coaching team's own posts/)
   assert.match(
@@ -175,7 +184,7 @@ test('Harbour Sport Club as coaching: no gym, class or schedule word in the brie
   assert.match(forbid, /"class", "classes" stay nowhere/)
   assert.match(forbid, /a button, a menu entry, a footer menu heading/)
   assert.match(forbid, /"lesson", "lessons", "Book a lesson"/)
-  const promptOwn = ownLines(prompt.replace(forbid, ''))
+  const promptOwn = ownLines(prompt.replace(forbid, ''), brief)
   assert.doesNotMatch(
     promptOwn,
     GYM_WORDS,

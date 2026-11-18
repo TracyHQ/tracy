@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "tracy-quickstart-editions/wordpress/v1",
+  "contract": "ja-diner/wp7/1.0.3",
+  "baseHash": "85b6d1f521d2e7db8b9a389665a5be52bac78fa9bae2f32ec53c83f5cb6800e6",
+  "source": {
+    "language": "en",
+    "locale": "en_US",
+    "tag": "en-us"
+  },
+  "locales": {}
+}

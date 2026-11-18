@@ -12,7 +12,7 @@ import { ALT_MAX, altAskFor, cleanAlt } from '../src/site-pictures/alt-ask.js'
 import { exportPictureMapping } from '../src/site-pictures/contract-mapping.js'
 import { fileStore } from '../src/site-pictures/file-store.js'
 import { createLooker } from '../src/site-pictures/looker-step.js'
-import { kit, pictures } from './_site-pictures-check.mjs'
+import { brief, kit, pictures, plan } from './_site-pictures-check.mjs'
 
 const door = { providerId: 'openrouter', baseUrl: 'https://models.test/api/v1', apiKey: 'k', model: 'm' }
 const prompt = { text: 'look', sha256: 'p'.repeat(64) }
@@ -148,14 +148,28 @@ test('the export hands the write step the alt of every placed picture, and the n
   at('block-4.1').alt = 'Rosa Vell'
   at('block-7.1').alt = 'A drawn shelf of jugs'
   at('block-3.2').alt = 'Hidden frames never place an alt'
-  const out = exportPictureMapping({ pictures: m, contract: 'c', revision: 'r', kit: kit() })
+  const out = exportPictureMapping({
+    pictures: m,
+    contract: 'c',
+    revision: 'r',
+    kit: kit(),
+    plan: plan(),
+    brief: brief()
+  })
   assert.deepEqual(out.alts, {
     'block-2.0': 'A hand-thrown bowl on the wheel',
     'block-4.1': 'Rosa Vell',
     'block-7.1': 'A drawn shelf of jugs'
   })
   assert.deepEqual(
-    exportPictureMapping({ pictures: pictures(), contract: 'c', revision: 'r', kit: kit() }).alts,
+    exportPictureMapping({
+      pictures: pictures(),
+      contract: 'c',
+      revision: 'r',
+      kit: kit(),
+      plan: plan(),
+      brief: brief()
+    }).alts,
     {}
   )
 })

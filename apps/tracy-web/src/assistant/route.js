@@ -523,13 +523,6 @@ export function assistantRoutes({
       return json(c, { code: 'RATE_LIMITED', window: 'minute' }, 429)
     if (await overLimitOrClosed(pool, `assistant:day:${accountId}`, TURNS_PER_DAY, at, 86_400_000))
       return json(c, { code: 'RATE_LIMITED', window: 'day' }, 429)
-    if ((streaming.get(accountId) ?? 0) >= MAX_STREAMS_PER_ACCOUNT) {
-      // Not an answer: give both counts back, it never reached a model.
-      await refundOne(pool, `assistant:min:${accountId}`, at, 60_000).catch(() => {})
-      await refundOne(pool, `assistant:day:${accountId}`, at, 86_400_000).catch(() => {})
-      return json(c, { code: 'BUSY' }, 429)
-    }
-
     const hidden = await readUiHidden(pool)
     const links = navigationFor(ctx, { start, hidden })
     const history = await historyOf(pool, accountId, conversation.id, start ? DRAFT_TURNS : undefined)
@@ -554,6 +547,21 @@ export function assistantRoutes({
       { role: 'user', content: question }
     ]
 
+    // Claim before opening the provider stream. Its first answer may take seconds, and requests
+    // arriving during that wait must count toward the same process's concurrent stream limit.
+    if ((streaming.get(accountId) ?? 0) >= MAX_STREAMS_PER_ACCOUNT) {
+      await refundOne(pool, `assistant:min:${accountId}`, at, 60_000).catch(() => {})
+      await refundOne(pool, `assistant:day:${accountId}`, at, 86_400_000).catch(() => {})
+      return json(c, { code: 'BUSY' }, 429)
+    }
+    streaming.set(accountId, (streaming.get(accountId) ?? 0) + 1)
+    let slotHeld = true
+    const releaseSlot = () => {
+      if (!slotHeld) return
+      slotHeld = false
+      streaming.set(accountId, Math.max(0, (streaming.get(accountId) ?? 1) - 1))
+    }
+
     const abort = new AbortController()
     const deadline = setTimeout(() => abort.abort(), TURN_DEADLINE_MS)
     c.req.raw.signal?.addEventListener('abort', () => abort.abort(), { once: true })
@@ -566,6 +574,7 @@ export function assistantRoutes({
       first = await answer.next()
     } catch (error) {
       clearTimeout(deadline)
+      releaseSlot()
       // 🔒 A TURN THE MODEL NEVER STARTED IS NOT A TURN: the person is not charged for it.
       await refundOne(pool, `assistant:min:${accountId}`, at, 60_000).catch(() => {})
       await refundOne(pool, `assistant:day:${accountId}`, at, 86_400_000).catch(() => {})
@@ -604,16 +613,17 @@ export function assistantRoutes({
       // A database failure here would leave the provider stream open until the deadline.
       clearTimeout(deadline)
       abort.abort()
+      releaseSlot()
       if (error?.code === 'ATTACHMENT_NOT_FOUND') return json(c, { code: error.code }, 409)
       throw error
     }
     if (userTurnId === null) {
       clearTimeout(deadline)
       abort.abort()
+      releaseSlot()
       return json(c, { code: 'CONVERSATION_CHANGED' }, 409)
     }
 
-    streaming.set(accountId, (streaming.get(accountId) ?? 0) + 1)
     const encoder = new TextEncoder()
     let said = ''
     // The asker's side ended the stream (Stop, or the page closed): `cancel` below.
@@ -648,7 +658,7 @@ export function assistantRoutes({
           log.warn(`[assistant] stream ${failure}`)
         }
         clearTimeout(deadline)
-        streaming.set(accountId, Math.max(0, (streaming.get(accountId) ?? 1) - 1))
+        releaseSlot()
         // What this turn cost, in characters: the provider's own token counts are not asked for
         // (`stream_options` is not every vendor's), but a per-account trace is what an operator needs.
         log.info?.(

@@ -693,6 +693,10 @@ tracy_dns_alias_main() {
   tracy_label_ok "$LABEL" || die "unusable label — refusing before any path is built"
 
   SITE_DIR="$ROOT/$LABEL"
+  # A demo folded into the demo farm has no runtime of its own to change (lib/site-runtime.sh).
+  # shellcheck source=../lib/site-runtime.sh
+  . "$HERE/../lib/site-runtime.sh"
+  tracy_refuse_if_farm "$SITE_DIR" "$LABEL" "migrating its web DNS alias" || exit 1
   TARGET="site-$(target_id "$LABEL")"
   # `|| PROJECT=…` not `&& PROJECT=…`: under `set -e` a `[ … ] && …` that short-circuits returns
   # non-zero and would abort the script.

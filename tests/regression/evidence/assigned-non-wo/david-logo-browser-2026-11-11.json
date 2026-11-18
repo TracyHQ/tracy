@@ -1,0 +1,197 @@
+{
+  "source": "Existing public site DOM, candidate CSS injected only in this isolated browser context; no server writes",
+  "results": [
+    {
+      "width": 390,
+      "theme": "light",
+      "before": [
+        {
+          "classes": "d-light d-block d-sm-none",
+          "display": "block",
+          "width": 111
+        },
+        {
+          "classes": "d-dark d-block d-sm-none",
+          "display": "block",
+          "width": 111
+        },
+        {
+          "classes": "d-light  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        }
+      ],
+      "after": [
+        {
+          "classes": "d-light d-block d-sm-none",
+          "display": "block",
+          "width": 111
+        },
+        {
+          "classes": "d-dark d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-light  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "before": [
+        {
+          "classes": "d-light d-block d-sm-none",
+          "display": "block",
+          "width": 111
+        },
+        {
+          "classes": "d-dark d-block d-sm-none",
+          "display": "block",
+          "width": 111
+        },
+        {
+          "classes": "d-light  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        }
+      ],
+      "after": [
+        {
+          "classes": "d-light d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark d-block d-sm-none",
+          "display": "block",
+          "width": 111
+        },
+        {
+          "classes": "d-light  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "before": [
+        {
+          "classes": "d-light d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-light  d-none d-sm-block",
+          "display": "block",
+          "width": 111.421875
+        },
+        {
+          "classes": "d-dark  d-none d-sm-block",
+          "display": "block",
+          "width": 111.421875
+        }
+      ],
+      "after": [
+        {
+          "classes": "d-light d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-light  d-none d-sm-block",
+          "display": "block",
+          "width": 111.421875
+        },
+        {
+          "classes": "d-dark  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "before": [
+        {
+          "classes": "d-light d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-light  d-none d-sm-block",
+          "display": "block",
+          "width": 111.421875
+        },
+        {
+          "classes": "d-dark  d-none d-sm-block",
+          "display": "block",
+          "width": 111.421875
+        }
+      ],
+      "after": [
+        {
+          "classes": "d-light d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark d-block d-sm-none",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-light  d-none d-sm-block",
+          "display": "none",
+          "width": 0
+        },
+        {
+          "classes": "d-dark  d-none d-sm-block",
+          "display": "block",
+          "width": 111.421875
+        }
+      ]
+    }
+  ]
+}

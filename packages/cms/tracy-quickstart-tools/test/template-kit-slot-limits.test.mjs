@@ -253,3 +253,56 @@ test('no number below the demo words: a short frame reading is set aside, and a 
   assert.equal(basic.maxCharacters, 40)
   assert.equal(trial.maxCharacters, 40)
 })
+
+test('a non-visual slot (no box draws it) takes no number: every place says so, and the self-check accepts it', () => {
+  const kit = kitOf()
+  const map = [
+    ...MAP,
+    {
+      key: 'chrome.label',
+      type: 'text',
+      role: 'editorial.paragraph',
+      sample: 'Switch between light and dark',
+      nonVisual: true,
+      nonVisualFrom: 'the aria-label of an icon button',
+      fit: { measured: false }
+    }
+  ]
+  kit.blocks[0].slots.push({
+    id: 'chrome.label',
+    type: 'text',
+    maxCharacters: 80,
+    maxCharactersFrom: 'invented'
+  })
+  unifyLimits(kit, { mapSlots: map, textFit: TEXT_FIT })
+  const label = kit.blocks[0].slots.find((s) => s.id === 'chrome.label')
+  assert.equal('maxCharacters' in label, false, 'an invented number is dropped')
+  assert.equal(label.nonVisual, true)
+  assert.match(label.maxCharactersFrom, /^not drawn in a box: the aria-label of an icon button/)
+  assert.equal(slotLimitChecks({ kit, errors: [] }), 0)
+  // the same slot without the declaration is a text slot with no limit and source
+  delete label.nonVisual
+  const errors = []
+  assert.equal(slotLimitChecks({ kit, errors }), 1)
+  assert.equal(errors[0].slot, 'chrome.label')
+})
+
+test('literal PRE: unifyLimits compares literal demo size before accepting a frame or fit', () => {
+  const sample = '<Widget>\n\t&amp; ((strong))Case((/strong))'
+  const source = {
+    key: 'article-2.0',
+    type: 'text',
+    sample,
+    xpath: '/html/body/div/pre/code/text()',
+    maxCharacters: 100,
+    fit: fit(20, 20)
+  }
+  const kit = { blocks: [{ id: 'body', slots: [{ id: 'article-2.0', type: 'text' }] }] }
+  unifyLimits(kit, { mapSlots: [source], textFit: { 'article-2.0': { limit: 22, byWidth: { 1440: 22 } } } })
+  assert.equal(
+    kit.blocks[0].slots[0].maxCharacters,
+    100,
+    'normalized prose length must not make a too-small frame eligible'
+  )
+  assert.match(kit.blocks[0].slots[0].maxCharactersFrom, /^content map declared/)
+})

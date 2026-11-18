@@ -49,8 +49,35 @@ export function withInit(compose) {
 
 const docker = (args, options) => execFileSync('docker', args, { timeout: 40_000, stdio: 'pipe', ...options })
 
+// A demo folded into the demo farm (lib/site-runtime.sh) has no Apache of its own: `<label>-web-1` is
+// a TCP forwarder. Its tracy-noindex.conf is included by its vhost in tracy-demos-web, so a change
+// there is the farm's re-render of that vhost + graceful reload (provision/farm-refresh.sh, which
+// tests the config before the running farm sees it) — never an apache2ctl in the forwarder.
+const FARM_REFRESH = path.join(
+  path.dirname(new URL(import.meta.url).pathname),
+  '../provision/farm-refresh.sh'
+)
+const refreshFarm = (root, label) =>
+  execFileSync('bash', [FARM_REFRESH, label, '--root', root], { timeout: 180_000, stdio: 'pipe' })
+
+/** `site` or `farm`, from `<private>/<label>/runtime`; anything else is refused, not guessed. */
+export function runtimeOf(directory) {
+  const file = path.join(directory, 'runtime')
+  const text = readPlain(file, true)
+  if (text === null) return 'site'
+  if (text.trim() === 'farm') return 'farm'
+  throw new Error('unreadable runtime marker')
+}
+
 /** Called with the site's lifecycle lock held. It never changes CMS content or publish state. */
-export function reconcileFramePolicy({ root, label, policy, publicOrigin, run = docker }) {
+export function reconcileFramePolicy({
+  root,
+  label,
+  policy,
+  publicOrigin,
+  run = docker,
+  refresh = refreshFarm
+}) {
   if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(label)) throw new Error('unsafe label')
   const directory = path.join(root, label)
   if (!existsSync(directory)) return { state: 'unmanaged' }
@@ -59,6 +86,12 @@ export function reconcileFramePolicy({ root, label, policy, publicOrigin, run = 
   const metadata = readPlain(path.join(directory, '.frame-policy.json'), true)
   const previous = metadata ? JSON.parse(metadata) : null
   if (previous && previous.schema !== 'tracy-frame-policy/v1') return { state: 'unmanaged' }
+  const farm = runtimeOf(directory) === 'farm'
+  const reloadApache = () => {
+    if (farm) return refresh(root, label)
+    run(['exec', `${label}-web-1`, 'apache2ctl', '-t'])
+    run(['exec', `${label}-web-1`, 'apache2ctl', '-k', 'graceful'])
+  }
   const apache = path.join(directory, 'apache/tracy-noindex.conf')
   const originals = new Map()
   let current, apply
@@ -77,9 +110,11 @@ export function reconcileFramePolicy({ root, label, policy, publicOrigin, run = 
         apache,
         text.replace(matches[0][0], `Header always set Content-Security-Policy "frame-ancestors ${policy}"`)
       )
-      run(['exec', `${label}-web-1`, 'apache2ctl', '-t'])
-      run(['exec', `${label}-web-1`, 'apache2ctl', '-k', 'graceful'])
+      reloadApache()
     }
+  } else if (farm) {
+    // A folded demo always has its tracy-noindex.conf (the farm vhost refuses to render without it).
+    return { state: 'unmanaged' }
   } else {
     const envFile = path.join(directory, '.env')
     const env = readPlain(envFile, true)
@@ -143,8 +178,7 @@ export function reconcileFramePolicy({ root, label, policy, publicOrigin, run = 
     // Re-apply the previous configuration if a reload/recreate had already started.
     try {
       if (originals.has(apache)) {
-        run(['exec', `${label}-web-1`, 'apache2ctl', '-t'])
-        run(['exec', `${label}-web-1`, 'apache2ctl', '-k', 'graceful'])
+        reloadApache()
       } else {
         const composeFile = [...originals.keys()].find((f) => f.endsWith('.yml'))
         run(

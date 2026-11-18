@@ -167,3 +167,8 @@ the table above must change with it — no gate catches that.
 and invitation pages (`seats/pages.js`), the notice pages of customer sites (`bar/pages.js`). Changing it there
 changes them all. (Before 16/09/2026 this was `page()` in the fleet-bar Worker's `pages.js`, a tree since
 deleted.)
+
+One Tracy page cannot use the shell's centred card: the share page of a Website Opportunities demo
+(`apps/tracy-web/src/opportunities-build/demo-look-page.js`) fills the window with the demo and floats one control over
+it. It does not redeclare the tokens: it takes `SHELL_TOKENS` and `bodyFontLinks()` from `page-shell.js`, so this
+table still has one implementation.

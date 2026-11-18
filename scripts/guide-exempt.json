@@ -12,6 +12,7 @@
     "tracy-help-about": "Settings › Help & about page",
     "website-opportunities": "operator tool, off by default for customers",
     "website-opportunities-public-find": "operator gate for the sign-in-free /find page, off by default; nothing on a customer's dsh page",
+    "wo-demo-looks": "operator gate for the business owner's share page of a Website Opportunities demo, off by default; nothing on a customer's dsh page",
     "appearance": "Settings › Appearance page: the screen is the explanation",
     "font-size": "Settings › Font size: the screen is the explanation",
     "transcript-view": "Settings › Work details: a display option",

@@ -8,10 +8,12 @@
   "needs": [],
   "flaky_model": false,
   "steps": [
-    "Run the live-sync-pushed cases for #307 (real MariaDB): a Joomla article the push made is deleted on live with the copy unchanged; the same with Tracy having changed it; a site already stuck with a new copy article under the deleted number; a WordPress post with a copy-only revision and meta deleted on live."
+    "Run the live-sync-pushed cases for #307 (real MariaDB): a Joomla article the push made is deleted on live with the copy unchanged; the same with Tracy having changed it; a site already stuck with a new copy article under the deleted number; a WordPress post with a copy-only revision and meta deleted on live.",
+    "Run the reversed pushed-ID cases on Joomla and WordPress, with ordinary and already inflated copy IDs, and the one-time fingerprint repair flow."
   ],
   "expect": [
-    "Taken delete: idMap has no content entry, idMapForgotten names it, jos_content AUTO_INCREMENT stays 2 or more, the copy-only versions are gone (counts.orphansRemoved 2). Kept: the article, its versions and workflow row stay, its live number leaves the map. Stuck site: the entry goes, the new article stays. WordPress: the post, its meta, terms and copy-only revision are gone."
+    "Taken delete: idMap has no content entry, idMapForgotten names it, jos_content AUTO_INCREMENT stays 2 or more, the copy-only versions are gone (counts.orphansRemoved 2). Kept: the article, its versions and workflow row stay, its live number leaves the map. Stuck site: the entry goes, the new article stays. WordPress: the post, its meta, terms and copy-only revision are gone.",
+    "A repeated push with reversed live IDs merges without duplicate keys; low counters stay low, existing high IDs and postmeta references survive. An old stale map is pruned on an unmoved live site and the revision marker is written."
   ],
   "selectors": {},
   "evidence": "Issue #307: content {1: 1} stayed in the id map, the next copy article took id 1 and was refused as live-record",
@@ -21,14 +23,20 @@
       "node",
       "--test",
       "--test-reporter=tap",
-      "--test-name-pattern=#307",
-      "packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs"
+      "--test-name-pattern=#307|#536",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
     ],
     "tests": [
       "Joomla: an article a push made and the live site deleted for good leaves the id map",
       "Joomla: an article the merge keeps",
       "WordPress: a picture Tracy retitled and the live site deleted for good",
-      "Joomla: a site already stuck"
-    ]
+      "Joomla: a site already stuck",
+      "Joomla: repeated push with reversed live ids syncs without counter pollution",
+      "WordPress: reversed pushed post ids sync with references",
+      "an unchanged live site bypasses the fingerprint once",
+      "Joomla: a taken mapped table preserves real counters"
+    ],
+    "timeout_s": 600
   }
 }

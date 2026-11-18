@@ -13,7 +13,8 @@ const TEMPLATES = [
   'tracy-emdash-theme-business',
   'tracy-emdash-theme-saas',
   'tracy-emdash-theme-coffee',
-  'tracy-emdash-theme-restaurant'
+  'tracy-emdash-theme-restaurant',
+  'tracy-emdash-theme-diner'
 ]
 
 /** @param {string} a @param {string} b */

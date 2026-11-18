@@ -1,0 +1,3 @@
+{"id":"REG-PR-558-brand-held-name","verdict":"PASS","commit":"5f00854cf365750e7a9f3626b270871a4a26a979","ran_at":"2026-11-11T14:09:44.144Z","evidence":"REG-PR-558-brand-held-name.log"}
+{"id":"REG-PR-558-documentary-export-provenance","verdict":"PASS","commit":"5f00854cf365750e7a9f3626b270871a4a26a979","ran_at":"2026-11-11T14:09:44.976Z","evidence":"REG-PR-558-documentary-export-provenance.log"}
+{"id":"REG-PR-558-original-post-export-write-provenance","verdict":"PASS","commit":"5f00854cf365750e7a9f3626b270871a4a26a979","ran_at":"2026-11-11T14:09:45.549Z","evidence":"REG-PR-558-original-post-export-write-provenance.log"}

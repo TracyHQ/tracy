@@ -1,0 +1,3 @@
+- **Help tells a person that attached files are kept but their contents are not read by the model** — Codex · #496 · `docs/ai-capabilities-audit-2026-11-08` · 2026-11-09
+  **Affects:** the creation chat composer on web and desktop. A short note appears while a usable file is attached and leaves when the draft is sent or cleared; all eight interface languages carry the note.
+  **Why / Measured:** the upload flow previously showed file chips without explaining that Help receives names and types only. The composer test checks the note before attachment, during upload, after send and for a refused file.

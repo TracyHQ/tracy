@@ -130,8 +130,16 @@ export function measureBrandColours(styles, { variables = [] } = {}) {
     [...votes.primary.entries()]
       .filter(([hex]) => rolesOf(hex).some((r) => FILL_ROLES.has(r)))
       .sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
+  // A colour the template's own brand token names (`brand: true` on a variable the adapter read, an EmDash theme's
+  // `--color-accent`) is the brand when the winner is only a link colour and no role rule shows a fill: a theme that paints
+  // its buttons with its own classes has no `.btn-primary` for the roles above to find.
+  const tokenBrand = () =>
+    declared
+      .filter((v) => v.brand === true && declaresPrimary(v))
+      .map((v) => hexOfValue(v.value))
+      .find((hex) => hex && votes.primary.has(hex)) ?? null
   const voted = top(votes.primary)
-  const primary = voted && linkOnly(voted) ? (filler() ?? voted) : voted
+  const primary = voted && linkOnly(voted) ? (filler() ?? tokenBrand() ?? voted) : voted
   for (const hex of votes.secondary.keys())
     if (!primary || hueGapOf(/** @type {any} */ (rgbOf(hex)), /** @type {any} */ (rgbOf(primary))) < 20)
       votes.secondary.delete(hex)

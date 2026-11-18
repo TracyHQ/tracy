@@ -1,0 +1,18 @@
+/* search page family (P5). Imported by global.css. */
+.dn-search { min-width: 0; }
+.dn-search-form label { display: block; font-family: var(--font-display); font-size: 36px; line-height: 57.6px; font-weight: 400; color: var(--color-fg); margin: 0 0 12px; }
+.dn-search-row { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.dn-search-row input { width: 100%; box-sizing: border-box; height: 54px; padding: 18px; border: 1px solid var(--color-line); background: var(--color-surface); color: var(--color-fg); font: 15px/24px var(--font-body); border-radius: var(--ds-input-radius, 0); }
+.dn-search-row .dn-btn { height: 54px; padding: 16px 36px; }
+.dn-search-results { margin-top: 48px; }
+.dn-search-count { font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 30px; color: var(--color-heading); margin: 0 0 24px; }
+.dn-search-empty { margin: 0; }
+.dn-search-results ol { list-style: none; margin: 0; padding: 0; }
+.dn-search-results li + li { margin-top: 36px; padding-top: 36px; border-top: 1px solid var(--color-line-soft); }
+.dn-search-results h3 { font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 29.33px; margin: 0 0 6px; }
+.dn-search-results h3 a { color: var(--color-heading); }
+.dn-search-results h3 a:hover { color: var(--color-accent-text); }
+.dn-search-results li p { margin: 0 0 12px; }
+@media (max-width: 575px) {
+	.dn-search-form label { font-size: 28px; line-height: 40px; }
+}

@@ -55,10 +55,12 @@ export async function recordDemoJob(pool, { id, siteKey, host, kind, by = null, 
 /** A log line without its PHP timestamp or the scripts' `!!` marker. */
 const bare = (l) => l.replace(/^\[[^\]]*UTC\]\s*/, '').replace(/^!!\s*/, '')
 /**
- * The one-line refusal a fleet step writes as `<helper>: <why>`: `emdash/configure-mail.mjs`, and
- * `platform/joomla.sh`'s `!! installer: <message>` for Joomla's CLI installer.
+ * The one-line refusal a fleet step writes as `<helper>: <why>`: `emdash/configure-mail.mjs`,
+ * `platform/joomla.sh`'s `!! installer: <message>` for Joomla's CLI installer, and
+ * `joomla-contract-fetch.php`'s `!! contract-fetch: <why>`, which the shell's own "not on disk"
+ * line after it used to hide (ja-voyara 1.0.12 on /ops read only "not on disk", 08/11/2026).
  */
-const HELPER_LINE = /^(configure-mail|installer): /
+const HELPER_LINE = /^(configure-mail|installer|contract-fetch): /
 /**
  * A Symfony Console synopsis (`install [--site-name SITE-NAME] …`): what Joomla's CLI installer
  * prints AFTER its error block. It is never a reason, and being the last unindented line it used to

@@ -6,13 +6,17 @@
 // the total, the lead paragraph against the demo lead, and the average point against the average demo point. A short heading
 // (demo of 40 characters or less) keeps only its limit.
 import {
-  boundsOf,
   DEMO_FLOOR_RATIO,
   demoPointMean,
-  demoTotalFor,
+  lengthWindow,
+  partWindows,
   SHORT_DEMO_MAX,
   slotShape
 } from '../../lib/site-copy/slot-shape.js'
+
+import { networkOfClass } from '../../lib/template-kit/icon-classes.js'
+import { socialIconTargets } from '../../lib/template-kit/social-icon-targets.js'
+import { ownerPostExcerptFor } from '../../lib/site-copy/owner-post-excerpts.js'
 
 export const FLOOR_RATIO = DEMO_FLOOR_RATIO // W03: a text must reach this share of the demo text length ...
 export const FLOOR_DEMO_MIN = SHORT_DEMO_MAX // ... when the demo text is longer than this many characters.
@@ -86,15 +90,16 @@ export function checkW02({ R, view, idx }) {
 }
 
 /** The parts of a lead and points slot measured against the same parts of the demo. */
-function partFaults(kit, items) {
+function partFaults(kit, items, excerpt = false) {
   const shape = slotShape(kit)
   if (!shape.points || items.length < 2) return []
   const out = []
   const points = shape.lead ? items.slice(1) : items
+  const windows = partWindows(kit)
   if (shape.lead) {
-    const lead = boundsOf(shape.leadChars, 0)
+    const lead = windows.lead
     const n = items[0].trim().length
-    if (lead && n < lead.floor)
+    if (!excerpt && lead && n < lead.floor)
       out.push({
         detail: `lead paragraph ${n} characters, floor ${lead.floor} (${Math.round(FLOOR_RATIO * 100)}% of the ${shape.leadChars} character demo lead)`,
         cause: 'under'
@@ -106,11 +111,11 @@ function partFaults(kit, items) {
       })
   }
   const demoMean = demoPointMean(kit)
-  const part = boundsOf(demoMean === null ? null : Math.round(demoMean), 0)
+  const part = windows.point
   if (part && points.length) {
     const mean = Math.round(points.reduce((a, t) => a + t.trim().length, 0) / points.length)
     const demo = Math.round(demoMean)
-    if (mean < part.floor)
+    if (!excerpt && mean < part.floor)
       out.push({
         detail: `points average ${mean} characters, floor ${part.floor} (${Math.round(FLOOR_RATIO * 100)}% of the ${demo} character average demo point)`,
         cause: 'under'
@@ -124,7 +129,8 @@ function partFaults(kit, items) {
   return out
 }
 
-export function checkW03({ R, view, idx }) {
+export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
+  const socialTargets = socialIconTargets({ plan, kit: templateKit, brief })
   const returned = new Set(view.returns.map((r) => r.slot).filter(Boolean))
   const seen = new Set()
   for (const s of view.slots) {
@@ -133,13 +139,16 @@ export function checkW03({ R, view, idx }) {
     const kit = idx.kitSlots.get(s.slot)
     const exp = idx.expected.get(s.slot)
     if (!kit && !exp) continue
-    const limits = [kit?.maxCharacters, exp?.maxCharacters].filter((n) => typeof n === 'number' && n > 0)
-    const limit = limits.length ? Math.min(...limits) : null
     const chars = lengthOf(s.items)
-    const demo = demoTotalFor(kit ?? {}, s.items.length)
-    const bounds = kit ? boundsOf(demo) : null
-    const floor = bounds ? Math.min(bounds.floor, limit ?? Infinity) : 0
-    const ceiling = bounds ? Math.min(bounds.ceiling, limit ?? Infinity) : null
+    const excerpt = ownerPostExcerptFor(s, idx, brief)?.valid === true
+    // The same window the writer is given for the slot (writer-input.js), for as many items as were written.
+    const { limit, demo, floor, ceiling } = lengthWindow({
+      slot: kit ?? null,
+      planLimit: exp?.maxCharacters ?? null,
+      written: s.items.length,
+      excerpt
+    })
+    const longDemo = ceiling !== null
     // A lead and points slot holds its lead paragraph and every point; otherwise the larger of the two counts.
     const shape = kit ? slotShape(kit) : null
     const allowed = shape?.lead
@@ -151,6 +160,21 @@ export function checkW03({ R, view, idx }) {
       R.w03.fail(s.slot, `${s.slot}: ${detail}`, cause)
     }
     const pct = (n) => `${Math.round(n * 100)}%`
+    if (idx.iconFields?.has(s.slot) && !idx.iconFields.get(s.slot).has(s.items.join(' ')))
+      fail('icon field must use a class supported by its kit icon family', 'icon-field')
+    const social = socialTargets.get(s.slot)
+    const glyph = networkOfClass(s.items.join(' '))
+    const actualNetwork =
+      { 'x-twitter': 'twitter', 'facebook-f': 'facebook', 'linkedin-in': 'linkedin' }[glyph] ??
+      glyph ??
+      (s.items.join(' ') === social?.value ? social.network : null)
+    if (social && actualNetwork && actualNetwork !== social.target)
+      fail(
+        social.expected
+          ? `declared ${actualNetwork} icon links to the planned ${social.target} profile; use ${social.expected} from the template icon family`
+          : `declared ${actualNetwork} icon links to the planned ${social.target} profile; return this row to planner when the kit declares no matching icon class`,
+        'icon-network'
+      )
     if (chars === 0) fail('text is empty', 'empty')
     else if (limit !== null && chars > limit) fail(`${chars} characters, limit ${limit}`, 'over')
     else if (floor && chars < floor)
@@ -163,7 +187,8 @@ export function checkW03({ R, view, idx }) {
         `${chars} characters, ceiling ${ceiling} (the ${demo} character demo text is the top)`,
         'over-demo'
       )
-    if (chars > 0 && kit && bounds) for (const d of partFaults(kit, s.items)) fail(d.detail, d.cause)
+    if (chars > 0 && kit && longDemo)
+      for (const d of partFaults(kit, s.items, excerpt)) fail(d.detail, d.cause)
     if (s.items.length > allowed)
       fail(`${s.items.length} paragraphs, the kit allows ${allowed}`, 'paragraphs')
     if (!bad) R.w03.ok()

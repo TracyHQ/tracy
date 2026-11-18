@@ -18,7 +18,13 @@ import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { DEFAULT_WO_OPS_SETTINGS } from 'website-opportunities/src/wo-settings.js'
-import { acceptDemoActions, demoProgress, readDemoUsage } from '../src/opportunities-build/demo-actions.js'
+import {
+  acceptDemoActions,
+  demoActionOf,
+  demoProgress,
+  readDemoUsage
+} from '../src/opportunities-build/demo-actions.js'
+import { checkBusinessReading, readingSourcesOf } from 'website-opportunities/domain/business-reading.mjs'
 import {
   claimAndRunQa,
   failedQaHash,
@@ -2942,6 +2948,176 @@ test(
 )
 
 test(
+  'a historical server build keeps its existing brief path without new photo-label waits',
+  opts,
+  async () => {
+    const w = await world()
+    let asked = 0
+    w.deps.pictureLabels = async () => {
+      asked += 1
+      return { labels: new Map(), note: { status: 'none', asked: 0, labelled: 0, cached: 0 } }
+    }
+    await w.accept()
+    await w.runner().drain()
+    assert.equal(w.creates(), 1, 'historical builds still provision in the existing runner pass')
+    assert.equal(asked, 0, 'the new agent-demo label wait does not change historical workflows')
+  }
+)
+
+/** Eight sharp photographs of the fictional restaurant's own website, as a frozen research input holds them. */
+const ownPhotos = () =>
+  Array.from({ length: 8 }, (_, i) => ({
+    id: `photo-${i}`,
+    kind: 'image',
+    origin: 'place',
+    source: 'website',
+    sourceUrl: `https://phoba.example/photo-${i}.jpg`,
+    sha256: String(i).repeat(64),
+    width: 2000,
+    height: 1200,
+    category: 'other'
+  }))
+/** What the fictional restaurant offers, read from its bio: business content a brief can build on (#554). */
+const phoBaReading = () => {
+  const bio = 'Pho Ba serves beef noodle soup and fresh spring rolls.'
+  return {
+    method: 'model',
+    ...checkBusinessReading(
+      { services: [{ name: 'Beef noodle soup', quote: 'beef noodle soup', ref: 'bio' }], team: [] },
+      readingSourcesOf({ bio, reviews: [] })
+    )
+  }
+}
+/** Freeze the photos (and, unless left out, the reading) into an accepted action's research input. */
+async function freezeResearch(w, actionId, { reading = phoBaReading() } = {}) {
+  await w.pool.query(
+    `update wo_demo_action set selection = jsonb_set(
+       jsonb_set(selection || '{"ownSite":true}'::jsonb, '{researchInput,media}', $2::jsonb),
+       '{researchInput,profile}', coalesce(selection#>'{researchInput,profile}', '{}'::jsonb) || $3::jsonb)
+     where id=$1`,
+    [actionId, JSON.stringify(ownPhotos()), JSON.stringify(reading ? { businessReading: reading } : {})]
+  )
+}
+/** Answer every photo's label at once, as the shared picture-label run does. */
+const labelAll = () => ({
+  labels: new Map(
+    ownPhotos().map((m) => [
+      m.id,
+      {
+        key: 'fixture|p3',
+        model: 'fixture',
+        labels: { content: 'venue-exterior', caption: 'The restaurant exterior' }
+      }
+    ])
+  ),
+  note: { status: 'labelled', asked: 8, labelled: 8, cached: 0, max: 60 }
+})
+
+test(
+  'a brief with good photos but no offering, story or fact is refused with its own reason and charges nothing more (#554)',
+  opts,
+  async () => {
+    const w = await world({ historical: false, agentWorkflow: true, readiness: 'measured' })
+    const actionId = (await w.accept()).body.actions[0].id
+    await freezeResearch(w, actionId, { reading: null })
+    // Labelling good photos is a paid vision call: the labeller marks the action first (#564), so it stays charged.
+    w.deps.pictureLabels = async (input) => {
+      await input.beforePaidCall?.()
+      return labelAll()
+    }
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    const usage = async () =>
+      (
+        await w.pool.query('select kind, used from wo_demo_usage where account_id=$1 order by kind', [
+          w.account
+        ])
+      ).rows
+    const accepted = await usage()
+    const runner = w.runner()
+    await runner.drain()
+    await w.deps.clientDemo.pictureRuns.idle()
+    await w.advance()
+    await runner.drain()
+    const brief = (await w.pool.query('select brief from wo_revision')).rows[0].brief
+    const verdicts = Object.fromEntries(brief.readiness.checks.map((c) => [c.id, c.verdict]))
+    assert.equal(verdicts['labelled-share'], 'pass')
+    assert.equal(verdicts['source-and-credit'], 'pass')
+    assert.equal(verdicts['business-content'], 'block')
+    assert.deepEqual([brief.readiness.verdict, brief.readiness.next], ['block', 'research-again'])
+    const action = (await w.pool.query('select status, error from wo_demo_action where id=$1', [actionId]))
+      .rows[0]
+    assert.deepEqual([action.status, action.error], ['failed', 'BRIEF_NOT_READY'])
+    // The seller's row carries the reason the progress views name (`brief.check.business-content`).
+    const shown = await demoActionOf(w.pool, w.account, actionId)
+    assert.ok(shown.readiness.checks.includes('business-content'), shown.readiness.checks.join(', '))
+    assert.ok(!shown.readiness.checks.includes('own-usable-photos'))
+    assert.equal(w.creates(), 0, 'no site was asked for')
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+    assert.deepEqual(await usage(), accepted, 'the refusal adds no usage to what the press reserved')
+  }
+)
+
+test(
+  'a server-owned build waits for the shared photo labels before freezing its first brief',
+  opts,
+  async () => {
+    const w = await world({ historical: false, agentWorkflow: true, readiness: 'measured' })
+    const actionId = (await w.accept()).body.actions[0].id
+    const media = ownPhotos()
+    await freezeResearch(w, actionId)
+    const asked = []
+    let settle
+    const answer = new Promise((resolve) => {
+      settle = resolve
+    })
+    w.deps.pictureLabels = (input) => {
+      asked.push(input)
+      return answer
+    }
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    const runner = w.runner()
+    await runner.drain()
+    assert.equal(
+      (await w.pool.query('select id from wo_revision')).rowCount,
+      0,
+      'the first brief cannot freeze while its photograph labels are pending'
+    )
+    assert.equal(w.creates(), 0)
+    let action = (await w.pool.query('select * from wo_demo_action where id=$1', [actionId])).rows[0]
+    assert.equal(action.status, 'queued')
+    assert.equal(action.error, null)
+    assert.equal(new Date(action.next_at).getTime(), w.deps.now() + 4_000)
+    await w.advance()
+    await runner.drain()
+    assert.equal(asked.length, 1, 'queue retries share one in-flight labelling run')
+    settle({
+      labels: new Map(
+        media.map((m) => [
+          m.id,
+          {
+            key: 'fixture|p3',
+            model: 'fixture',
+            labels: { content: 'venue-exterior', caption: 'The restaurant exterior' }
+          }
+        ])
+      ),
+      note: { status: 'labelled', asked: 8, labelled: 8, cached: 0, max: 60 }
+    })
+    await w.deps.clientDemo.pictureRuns.idle()
+    await w.advance()
+    await runner.drain()
+    const brief = (await w.pool.query('select brief from wo_revision')).rows[0].brief
+    assert.equal(brief.assetLabelling.labelled, 8)
+    const labelled = brief.readiness.checks.find((check) => check.id === 'labelled-share')
+    assert.equal(labelled.verdict, 'pass')
+    assert.equal(labelled.measured.share, 1)
+    assert.notEqual(brief.readiness.verdict, 'block')
+    assert.equal(asked.length, 1)
+    assert.equal(w.creates(), 1)
+  }
+)
+
+test(
   'a client demo whose logo research answers in time is briefed from the place read again',
   opts,
   async () => {
@@ -3404,9 +3580,16 @@ test(
     // The fictional restaurant of these worlds has no photo at all: measured, its brief blocks.
     const w = await world({ readiness: 'measured' })
     await w.accept()
+    const charged = 'select used from wo_demo_usage where account_id=$1'
+    assert.equal((await w.pool.query(charged, [w.account])).rows[0].used, 1, 'the press reserves its build')
     await w.runner().drain()
-    const action = (await w.pool.query('select status, error from wo_demo_action')).rows[0]
+    const action = (await w.pool.query('select status, error, selection from wo_demo_action')).rows[0]
     assert.deepEqual([action.status, action.error], ['failed', 'BRIEF_NOT_READY'])
+    // #564: refused before any billable work, the build is given back as the action fails (raw row: no read sweep).
+    assert.equal((await w.pool.query(charged, [w.account])).rows[0].used, 0)
+    assert.equal((await readDemoUsage(w.pool, w.account, 20, w.deps.now())).used, 0)
+    assert.ok(action.selection.readiness.checks.includes('own-usable-photos'))
+    assert.equal(action.selection.readiness.next, 'research-again')
     assert.equal(w.creates(), 0, 'the create door was never asked')
     assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
     const { readiness } = (await w.pool.query('select brief from wo_revision')).rows[0].brief
@@ -3416,6 +3599,175 @@ test(
     assert.ok(readiness.ownerQuestions.some((q) => q.id === 'owner.photos'))
   }
 )
+
+test(
+  'a blocked client-send brief fails promptly with its readiness cause and leaves the frozen revision unchanged',
+  opts,
+  async () => {
+    const w = await world({
+      historical: false,
+      agentWorkflow: true,
+      chatMode: 'client-send/1',
+      readiness: 'measured'
+    })
+    const actionId = (await w.accept()).body.actions[0].id
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
+      code: 'BRIEF_NOT_READY'
+    })
+    const frozen = (await w.pool.query('select * from wo_revision')).rows
+    // No logo/photo requested marker is required: prepare already froze a blocked brief.
+    await w.advance()
+    await w.runner().drain()
+    const action = (
+      await w.pool.query('select status,error,step from wo_demo_action where id=$1', [actionId])
+    ).rows[0]
+    assert.deepEqual(action, { status: 'failed', error: 'BRIEF_NOT_READY', step: 'brief' })
+    assert.equal(
+      (await w.pool.query('select used from wo_demo_usage where account_id=$1', [w.account])).rows[0].used,
+      0,
+      'a client-send press refused before its site gives its build back (#564)'
+    )
+    const metadata = (await w.pool.query('select selection from wo_demo_action')).rows[0].selection.readiness
+    assert.ok(metadata.checks.includes('own-usable-photos'))
+    assert.deepEqual((await w.pool.query('select * from wo_revision')).rows, frozen)
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+    assert.equal(w.creates(), 0)
+    assert.equal(w.messages.size, 0)
+    assert.equal(w.allocations.length, 0)
+    for (let i = 0; i < 660; i++) await w.advance()
+    await w.runner().drain()
+    assert.equal(
+      (await w.pool.query('select error from wo_demo_action where id=$1', [actionId])).rows[0].error,
+      'BRIEF_NOT_READY'
+    )
+  }
+)
+
+test(
+  'client-send photo-label timeout fails with its actual cause without freezing a brief or adopting late results',
+  opts,
+  async () => {
+    const w = await world({ historical: false, agentWorkflow: true, chatMode: 'client-send/1' })
+    const actionId = (await w.accept()).body.actions[0].id
+    await w.pool.query(
+      `update wo_demo_action set selection=selection || '{"ownSite":true}'::jsonb where id=$1`,
+      [actionId]
+    )
+    let settle
+    // A vision call in flight: marked as paid work before it is sent, then it hangs.
+    w.deps.pictureLabels = async (input) => {
+      await input.beforePaidCall?.()
+      return new Promise((resolve) => {
+        settle = resolve
+      })
+    }
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
+      code: PICTURE_LABELS_PENDING
+    })
+    await w.advance()
+    await w.runner().drain()
+    assert.deepEqual(
+      (await w.pool.query('select status,error from wo_demo_action where id=$1', [actionId])).rows[0],
+      { status: 'queued', error: null }
+    )
+    for (let i = 0; i < 28; i++) await w.advance()
+    await w.runner().drain()
+    assert.deepEqual(
+      (await w.pool.query('select status,error from wo_demo_action where id=$1', [actionId])).rows[0],
+      { status: 'failed', error: 'DEMO_PICTURE_LABELS_TIMEOUT' }
+    )
+    // #564: the labelling run this action started may have made paid vision calls, so its build stays counted.
+    assert.ok(
+      (await w.pool.query('select work_started_at from wo_demo_action where id=$1', [actionId])).rows[0]
+        .work_started_at
+    )
+    assert.equal((await readDemoUsage(w.pool, w.account, 20, w.deps.now())).used, 1)
+    settle({ labels: new Map(), note: { status: 'none', asked: 0, labelled: 0, cached: 0 } })
+    await w.deps.clientDemo.pictureRuns.idle()
+    await w.advance()
+    await w.runner().drain()
+    assert.equal((await w.pool.query('select id from wo_revision')).rowCount, 0)
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+    assert.equal(w.messages.size, 0)
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
+      code: 'AGENT_DEMO_ACTION_CLOSED'
+    })
+    const retried = await acceptDemoActions(w.pool, {
+      accountId: w.account,
+      now: w.deps.now,
+      entries: [{ opportunityId: w.opportunity, requestId: 'retry-photo-label-timeout', retryOf: actionId }]
+    })
+    assert.equal(retried.status, 202)
+    const prepared = await w.deps.clientDemo.prepare({
+      accountId: w.account,
+      actionId: retried.body.actions[0].id
+    })
+    assert.ok(prepared.brief.hash, 'only explicit Retry adopts the settled labels and creates its brief')
+    assert.equal((await w.pool.query('select id from wo_revision')).rowCount, 1)
+    assert.equal(w.messages.size, 0)
+  }
+)
+
+// #564: the labelling run this action starts marks it only when it sends a picture to a paid model call.
+for (const [name, sends, used] of [
+  ['with no photograph to label gives its daily build back', false, 0],
+  ['after its own labelling run sent pictures keeps its daily build', true, 1]
+])
+  test(`a blocked brief ${name} (#564)`, opts, async () => {
+    const w = await world({
+      historical: false,
+      agentWorkflow: true,
+      chatMode: 'client-send/1',
+      readiness: 'measured'
+    })
+    const actionId = (await w.accept()).body.actions[0].id
+    await w.pool.query(
+      `update wo_demo_action set selection=selection || '{"ownSite":true}'::jsonb where id=$1`,
+      [actionId]
+    )
+    let labelled = 0
+    // The labeller calls `beforePaidCall` right before its paid vision call, as `brief-picture-labels.js` does.
+    w.deps.pictureLabels = async (input) => {
+      labelled++
+      if (sends) await input.beforePaidCall()
+      return { labels: new Map(), note: { status: 'none', asked: sends ? 1 : 0, labelled: 0, cached: 0 } }
+    }
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
+      code: PICTURE_LABELS_PENDING
+    })
+    await w.deps.clientDemo.pictureRuns.idle()
+    await w.advance()
+    await w.runner().drain()
+    assert.equal(labelled, 1)
+    assert.deepEqual(
+      (await w.pool.query('select status,error from wo_demo_action where id=$1', [actionId])).rows[0],
+      { status: 'failed', error: 'BRIEF_NOT_READY' }
+    )
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+    assert.equal((await readDemoUsage(w.pool, w.account, 20, w.deps.now())).used, used)
+  })
+
+test('a client-send preparation outage retains the runner bounded retry policy', opts, async () => {
+  const w = await world({ historical: false, agentWorkflow: true, chatMode: 'client-send/1' })
+  const actionId = (await w.accept()).body.actions[0].id
+  await w.pool.query(
+    `update wo_demo_action set selection=selection || '{"pictureLabels":{"state":"requested"}}'::jsonb where id=$1`,
+    [actionId]
+  )
+  w.deps.revisionForAction = async () => {
+    throw Object.assign(new Error('Templates unavailable'), { code: 'TEMPLATES_UNREADABLE', status: 503 })
+  }
+  await w.runner().drain()
+  assert.deepEqual(
+    (await w.pool.query('select status,error from wo_demo_action where id=$1', [actionId])).rows[0],
+    { status: 'queued', error: 'TEMPLATES_UNREADABLE' }
+  )
+  assert.equal((await w.pool.query('select id from wo_revision')).rowCount, 0)
+  assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+  assert.equal(w.messages.size, 0)
+})
 
 test('a warned brief builds and its build carries the owner questions', opts, async () => {
   const warned = {

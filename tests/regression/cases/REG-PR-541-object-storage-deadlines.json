@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-541-object-storage-deadlines",
+  "kind": "fix",
+  "title": "Object storage requests and streamed bodies honor cancellation and deadlines",
+  "pr": 541,
+  "area": "website-opportunities/storage",
+  "cms": ["any"],
+  "needs": ["local-http"],
+  "flaky_model": false,
+  "steps": [
+    "Run the object storage adapter tests against suite-owned local HTTP servers that stall headers or a body after its first bytes."
+  ],
+  "expect": [
+    "PUT, GET, HEAD and DELETE abort stalled requests and close their connections.",
+    "A GET body remains subject to its deadline after response headers, and caller cancellation interrupts an active body read.",
+    "Successful response status, headers, URL and bytes remain intact; metadata-only operations cancel unused bodies.",
+    "Transport failures preserve false/null adapter results."
+  ],
+  "selectors": {
+    "module": "apps/tracy-web/src/lib/store-objects.js"
+  },
+  "fence": "native fetch AbortSignal deadline remains active through streaming response consumption",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/store-objects.test.mjs",
+      "apps/tracy-web/test/wo-place-media-store.test.mjs"
+    ],
+    "tests": [
+      "object GET deadline remains active after headers and first bytes",
+      "caller cancellation aborts object GET body and PUT before the deadline",
+      "routed media storage preserves caller cancellation through real storage requests"
+    ],
+    "needs": []
+  }
+}

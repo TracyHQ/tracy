@@ -41,7 +41,7 @@ export function freezeFloating() {
  * - modules wrapped as `#Mod<N>`;
  * - ACM blocks that only carry `#acm-<name>-<N>` (a hero rendered without the module wrapper);
  * - a module assigned to the page that prints with no wrapper but an id of its own ending in `-<module id>` (a T3 ACM
- *   block `#block-slideshow-101`, a raw-chrome module `#mod-105`), from `assigned`: only the outermost such element,
+ *   block `#block-slideshow-101`, a raw-chrome module `#mod-105`, or `.t3-section.module#Section105`), from `assigned`: only the outermost such element,
  *   and only when it is the one element of the page whose id ends in that number;
  * - modules assigned to the page whose position renders with no wrapper (`.t4-<position>`, `.t3-<position>`);
  * - the template header (`#t4-header`, `#t3-header`) and the component area (`#t4-main-body`, `#t3-mainbody`, or
@@ -134,7 +134,10 @@ export function findBlocks(assigned) {
   )
   const byId = new Map()
   for (const el of assignedIds.size ? document.querySelectorAll('[id]') : []) {
-    const m = /^[a-z][a-z0-9_]*(?:-[a-z][a-z0-9_]*)*-(\d+)$/i.exec(el.id)
+    // T3 section chrome uses Section<N> without a hyphen. Its classes and the exact assigned id
+    // distinguish a module from an unrelated layout element sharing its trailing digits.
+    const section = el.matches('.t3-section.module') ? /^Section(\d+)$/.exec(el.id) : null
+    const m = section ?? /^[a-z][a-z0-9_]*(?:-[a-z][a-z0-9_]*)*-(\d+)$/i.exec(el.id)
     if (!m || LAYOUT_ID.test(el.id) || !assignedIds.has(m[1]) || taken.has(`module-${m[1]}`)) continue
     // Outside every block found so far, and around none: a wrapper holding one only shares the digits.
     if (el.closest('[data-kit-block]') || el.querySelector('[data-kit-block]')) continue

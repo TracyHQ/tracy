@@ -1,0 +1,22 @@
+{
+  "id": "REG-PR-565-owner-post-excerpts",
+  "kind": "fix",
+  "title": "Original owner post citations cannot authorize invented article bodies",
+  "pr": 565,
+  "area": "website-opportunities/article-copy",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the article excerpt regression through the copy checker, contract exporter and write step."],
+  "expect": [
+    "An invented crowd narrative with a valid owner post citation fails W04 and is never applied to the site.",
+    "A faithful short excerpt passes without demo-length padding, while maximum characters, paragraph limits and ordinary prose floors remain enforced.",
+    "A hidden, unrelated or differently cited fact cannot authorize an article body."
+  ],
+  "selectors": { "test": "apps/tracy-web/test/site-copy-owner-post-excerpts.test.mjs" },
+  "fence": "The writer's citation and actual article body must both match the planned original owner post.",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/site-copy-owner-post-excerpts.test.mjs"],
+    "timeout_s": 60
+  }
+}

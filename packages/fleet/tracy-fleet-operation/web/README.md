@@ -84,6 +84,16 @@ started.
 not in this repo) — requested together with `provision/`. Without it `IMAGE_TAGS` does not reach the
 host, and every new site comes up on the upstream image with a `!!` line in the provision log.
 
+## The demo farm image: `demos.Dockerfile` (14/11/2026)
+
+Not a site image: ONE container per host serves every PHP template demo folded into the demo farm
+(`scripts/provision/fold.sh`, the shape in `scripts/lib/demo-farm.sh`). Apache event + PHP-FPM 8.4, built
+FROM `joomla:6-php8.4-fpm` for the same PHP build and extension set as the per-site Joomla image (a
+superset of WordPress's), plus Apache with the modules and conf of the apache images, the site-mail shim
+and wp-cli. No Chromium, no Node. Its tag is `web/DEMOS_IMAGE`, not an IMAGE_TAGS line (no site's
+provision resolves it), and it is built only when asked by name: `bash web/build.sh demos`. A change to
+`demos.Dockerfile` or `demos/` is a new tag there, the same input-label rule as every other image here.
+
 ## Site mail: the `tracy-sendmail` shim (23/09)
 
 The web image has no MTA, and must not have one: PHP's `mail()` (and the `sendmail` that Joomla/EmDash call) goes

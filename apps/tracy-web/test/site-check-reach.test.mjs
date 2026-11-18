@@ -349,6 +349,52 @@ test('a row whose names another block also says in a sentence is still found, an
   )
 })
 
+test('a kept row whose name is also a menu title is not found in the menu: the footer menu is not the team list', () => {
+  const card = (text) => ({ chars: text.length, text, pictures: 0 })
+  const r = {
+    slots: [
+      { slot: 'block-163.4', key: 'module-163.4', status: 'written', ordered: 'Othman Bouayad' },
+      { slot: 'block-163.8', key: 'module-163.8', status: 'written', ordered: 'Co-founder and head coach' },
+      { slot: 'menuItem-197.0', key: 'menuItem-197.0', status: 'written', ordered: 'Othman Bouayad' }
+    ],
+    rows: [
+      {
+        block: 'block-163',
+        list: 'block-163.person',
+        plan: 1,
+        demo: 4,
+        kept: 1,
+        keptKeys: ['module-163.0', 'module-163.4', 'module-163.8', 'module-163.12']
+      }
+    ]
+  }
+  // One team card is no list (lists are two shown siblings or more); the footer menu lists four pages, one of them the person.
+  const home = (lists) => page('/', { width: 1440, lists })
+  const footer = {
+    selector: 'ul.footer-menu>li',
+    items: [card('About'), card('Our team'), card('Contact'), card('Othman Bouayad')]
+  }
+  const pagesOf = new Map([['module-163', new Set(['/'])]])
+  const { failures, unread } = judgeListRows(r, [home([footer])], { pagesOf })
+  assert.deepEqual(failures, [])
+  assert.deepEqual(unread, ['block-163.person'])
+  // A team list that really prints four people still blocks: the role words are the row's own.
+  const team = {
+    selector: 'div.acm-teams>div.item',
+    items: [
+      card('Othman Bouayad Co-founder and head coach'),
+      card('Darlene Robertson Coach'),
+      card('Jane Cooper Coach'),
+      card('Cody Fisher Coach')
+    ]
+  }
+  const real = judgeListRows(r, [home([footer, team])], { pagesOf })
+  assert.deepEqual(
+    real.failures.map((f) => [f.slot, f.measured]),
+    [['block-163.person', 4]]
+  )
+})
+
 test('list-rows that finds most of its lists nowhere is unmeasured, not green', async () => {
   const card = (text) => ({ chars: text.length, text, pictures: 1 })
   const rows = ['block-70', 'block-71', 'block-72'].map((block) => ({

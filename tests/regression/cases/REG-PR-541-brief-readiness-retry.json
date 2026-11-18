@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-541-brief-readiness-retry",
+  "kind": "fix",
+  "title": "An immutable blocked brief cannot charge another futile retry",
+  "pr": 541,
+  "area": "website-opportunities/build",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": ["Run the specified mechanism suite against this checkout. All data in the suite is fictional."],
+  "expect": [
+    "A blocked-brief retry returns BRIEF_NOT_READY with the saved reasons.",
+    "No second quota reservation or action is inserted."
+  ],
+  "selectors": {},
+  "fence": "An immutable blocked brief cannot charge another futile retry",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-demo-actions.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 180
+  }
+}

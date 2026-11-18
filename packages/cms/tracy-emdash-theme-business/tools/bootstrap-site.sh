@@ -81,6 +81,14 @@ echo "==> content"; node tools/seed-apply.mjs content "${common[@]}" || rc=$?
 echo "==> media";   node tools/seed-apply.mjs media   "${common[@]}" || rc=$?
 echo "==> forms";   node tools/seed-apply.mjs forms   "${common[@]}" || rc=$?
 echo "==> status";  node tools/seed-apply.mjs status  "${common[@]}"
+# Full-text search: a collection that declares `search` support has no index until it is switched on
+# (POST /search/enable builds the FTS5 table and indexes the live entries); without it `search()` returns nothing.
+echo "==> search index"
+for c in $(node -e 'const s=JSON.parse(require("fs").readFileSync(process.argv[1]+"/seed.json","utf8"));for(const c of s.collections||[])if((c.supports||[]).includes("search"))console.log(c.slug)' "$SEED"); do
+  curl -fsS -X POST "$SITE/_emdash/api/search/enable" -H "Authorization: Bearer $(cat "$TOKEN")" -H 'content-type: application/json' -H 'X-EmDash-Request: 1' \
+    --data-binary "{\"collection\":\"$c\",\"enabled\":true}" | cut -c1-160 || { echo "!! search enable failed for $c" >&2; rc=1; }
+  echo
+done
 if [ "$rc" = 3 ]; then
   echo "!! finished with entries that need a decision (see receipts.runs / the 'conflict' lines above)." >&2
   echo "   Review them; 'seed-apply adopt' claims untouched entries, '--force' overwrites -- neither runs by itself." >&2

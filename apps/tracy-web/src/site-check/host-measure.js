@@ -4,6 +4,15 @@
 export const underIndex = (platform, p) =>
   platform === 'joomla' && p !== '/' && !/^\/index\.php(?=\/|$)/.test(p) ? `/index.php${p}` : p
 
+/** A page reader whose asked `pages` go under `/index.php` on Joomla, as `hostMeasure` sends them (the host itself adds it to `plan` only). */
+export const underIndexHost =
+  (host, platform = 'joomla') =>
+  ({ pages, ...payload }) =>
+    host({
+      ...payload,
+      ...(Array.isArray(pages) ? { pages: pages.map((p) => underIndex(platform, p)) } : {})
+    })
+
 /**
  * @param {{ hostCall: Function, config: object, site: object, selfNames: Function, fetchImpl?: typeof fetch }} input
  *   `site` is the site's row (label, platform, port, host); `hostCall` is `host/client.js`'s; `selfNames(config, site)`

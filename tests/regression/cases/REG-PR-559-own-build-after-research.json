@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-559-own-build-after-research",
+  "kind": "fix",
+  "title": "A later own-business press recovers terminal work with an existing base",
+  "pr": 559,
+  "area": "website-opportunities/build-from-business",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Exercise the real own-business HTTP doors against a scratch PostgreSQL database: change the request, leave an earlier failed or completed owned build with a live base, read it again and delete its base."
+  ],
+  "expect": [
+    "A later press finds the earlier failed action instead of offering a choice that BUILD_EXISTS refuses.",
+    "A completed action remains reachable; a replaced action cannot displace its replacement.",
+    "Another account receives 404, and a deleted base no longer holds the business at its terminal action."
+  ],
+  "selectors": {
+    "business": "/api/sites/from-business/:id"
+  },
+  "fence": "The own-business state query preserves access to existing terminal owned work across request IDs without weakening duplicate-build or account boundaries.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=Build from my business: its own switch",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs"
+    ],
+    "tests": [
+      "Build from my business: its own switch; any business found by name; researched, then one build of the customer’s own site"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 180
+  }
+}

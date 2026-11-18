@@ -127,7 +127,7 @@ orders them. Those live next to the template:
 A collection with an entry in `collections` is written **exactly as declared, in that key order**;
 only a collection with no entry gets the derived shape. **"Exactly" includes what is missing**: `{ "supports": ["revisions", "search"] }`
 alone drops `label`, `sortOrder`, `routable` and `editLocking` — spell the collection out in full (the compiler warns when `label` is
-absent). Search needs the collection to list `search` in `supports` **and** the fields to be `searchable`.
+absent). Search needs the collection to list `search` in `supports` **and** the fields to be `searchable`. `POST /_emdash/api/search/enable` builds the index of each such collection and refuses (`SEARCH_ERROR`, 500, no hint) when no field is `searchable`; `bootstrap-site.sh` calls it for every collection whose seed `supports` has `search`, marking the fields `searchable` is the model's job, and without it `search()` returns no items.
 
 Three things the compiler does that the config can steer: a `prose` field is stored as `text` unless `fields["<type>.<field>"].type`
 says `portableText` — and the compiler **warns** when such a `text` field holds HTML (the admin then shows markup in a textarea; there

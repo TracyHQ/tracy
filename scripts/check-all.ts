@@ -260,6 +260,9 @@ const GATES: readonly Gate[] = [
   // Measured 26/09 (#404): both were stale on `develop` since the commits that last wrote them,
   // because the kit generator's `--check` ran in no gate. Compare, never regenerate.
   { name: 'emdash-inventory', script: 'check-emdash-inventory.mjs' },
+  // An EmDash theme's content map is generated from its seed, field map and content API map and committed beside its
+  // contract data; Road to live reads roles, Slot fit and content coverage from it. A stale one describes the old theme.
+  { name: 'emdash-content-map', script: 'check-emdash-content-map.mjs' },
   { name: 'bundles', script: 'check-bundles.ts' },
   // `image-lock` retired on 06/09, the same day the private registry retired, and it retired because of
   // LOST DATA, NOT BECAUSE ANYONE FOUND IT ANNOYING. That gate compared two lockfiles to answer "does the

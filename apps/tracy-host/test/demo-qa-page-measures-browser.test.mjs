@@ -58,7 +58,7 @@ const PAGES = {
     <img id="fine" src="/wide.png" style="width:200px;height:50px" alt="">`,
   '/clean': `${head}<nav><a href="/fine">Fine</a></nav><p>Short and sound.</p><section style="height:300px">Block</section>
     <img src="/wide.png" style="width:200px;height:50px" alt="">`,
-  '/list': `${head}<style>.hero-title span{color:rgb(191,91,61)}</style><h1 class="hero-title"><span>NO1</span> Boxing studio</h1><section id="steps"><p>Warm up first.</p><ul id="points"><li>Jog</li><li>Pads and bags</li><li style="display:none">Hidden</li></ul></section>`,
+  '/list': `${head}<style>.hero-title span{color:rgb(191,91,61)}</style><nav class="navbar"><ul class="nav"><li class="nav-item"><a class="nav-link" href="/classes"><span itemprop="name"><span class="menu-item-title">Ways to train</span></span></a></li></ul></nav><h1 class="hero-title"><span>NO1</span> Boxing studio</h1><section id="steps"><p>Warm up first.</p><ul id="points"><li>Jog</li><li>Pads and bags</li><li style="display:none">Hidden</li></ul></section>`,
   '/fine': `${head}<p>Fine</p>`
 }
 
@@ -82,7 +82,10 @@ test(
   opts,
   async () => {
     const { server, base } = await site()
-    const browser = await playwright.chromium.launch({ headless: true })
+    const browser = await playwright.chromium.launch({
+      headless: true,
+      args: ['--disable-features=MacAppCodeSignClone']
+    })
     try {
       const page = await (await browser.newContext()).newPage()
       const r = await readDemoPage(page, `${base}/broken`, '/broken', { measurePages: true })
@@ -135,7 +138,10 @@ test(
   opts,
   async () => {
     const { server, base } = await site()
-    const browser = await playwright.chromium.launch({ headless: true })
+    const browser = await playwright.chromium.launch({
+      headless: true,
+      args: ['--disable-features=MacAppCodeSignClone']
+    })
     try {
       const page = await (await browser.newContext()).newPage()
       const r = await readDemoPage(page, `${base}/list`, '/list', { measurePages: true })
@@ -144,6 +150,8 @@ test(
         assert.deepEqual(list, { selector: 'ul#points', chars: 17, items: [3, 13] })
         assert.deepEqual(m.headingSpans[0].spans, [{ text: 'NO1', color: 'rgb(191, 91, 61)' }])
         assert.equal(m.headingSpans[0].text, 'NO1 Boxing studio')
+        // A menu's label is no title, though its class says so (T4's span.menu-item-title).
+        assert.ok(!m.headingSpans.some((h) => /ways to train/i.test(h.text)), JSON.stringify(m.headingSpans))
         const section = m.textBlocks.find((b) => b.selector === 'section#steps')
         assert.ok(section.chars >= 31 && !('items' in section), JSON.stringify(section))
       }
@@ -159,7 +167,10 @@ test(
   opts,
   async () => {
     const { server, base } = await site()
-    const browser = await playwright.chromium.launch({ headless: true })
+    const browser = await playwright.chromium.launch({
+      headless: true,
+      args: ['--disable-features=MacAppCodeSignClone']
+    })
     try {
       const page = await (await browser.newContext()).newPage()
       const r = await readDemoPage(page, `${base}/clean`, '/clean', { measurePages: true })
@@ -177,14 +188,19 @@ test(
 )
 
 test(
-  'text running past the right edge of a phone is reported, and one cut by an outer clip is not',
+  'text running past the right edge of a phone is reported; one cut by an outer clip, in a closed panel parked off screen or in a scrolling code box is not',
   opts,
   async () => {
     const { server, base } = await site()
     PAGES['/edge'] =
       `${head}<div style="width:2000px"><p style="margin-left:1200px;white-space:nowrap">Pushed out to the right of every screen</p></div>
-    <div style="width:100px;overflow:hidden"><p style="margin-left:300px;white-space:nowrap">Hidden by its parent</p></div>`
-    const browser = await playwright.chromium.launch({ headless: true })
+    <div style="width:100px;overflow:hidden"><p style="margin-left:300px;white-space:nowrap">Hidden by its parent</p></div>
+    <aside style="position:fixed;top:0;left:0;width:330px;transform:translateX(390px)"><a href="/fine" style="display:block">Closed panel link</a></aside>
+    <div style="width:300px">Article text above a code block<pre style="overflow-x:auto;white-space:pre"><code>a code line far too long to fit on any phone screen at all, scrolled in its box</code></pre></div>`
+    const browser = await playwright.chromium.launch({
+      headless: true,
+      args: ['--disable-features=MacAppCodeSignClone']
+    })
     try {
       const page = await (await browser.newContext()).newPage()
       const r = await readDemoPage(page, `${base}/edge`, '/edge', { measurePages: true })
@@ -192,6 +208,44 @@ test(
       assert.equal(phone.textBoxes.length, 1)
       assert.match(phone.textBoxes[0].text, /Pushed out/)
       assert.ok(phone.textBoxes[0].right > 390 + 2)
+    } finally {
+      await browser.close()
+      server.close()
+    }
+  }
+)
+
+test(
+  'main headings exclude ancestor-clipped clones but retain partial headings and headings below the viewport',
+  opts,
+  async () => {
+    const { server, base } = await site()
+    PAGES['/clipped-headings'] = `${head}<style>
+      .window { width: 300px; overflow: hidden; position: relative }
+      .track { width: 1200px; display: flex; transform: translateX(-300px) }
+      .slide { flex: 0 0 300px }
+      .partial { position: relative; left: 280px; width: 200px }
+      .below { margin-top: 2000px }
+    </style>
+    <div class="window"><div class="track">
+      <div class="slide"><h1>Parked clone</h1></div>
+      <div class="slide"><h1>Readable title</h1></div>
+      <div class="slide"><h1>Other parked clone</h1></div>
+    </div></div>
+    <div class="window"><h1 class="partial">Partly readable title</h1></div>
+    <h1 class="below">Another visible heading below the fold</h1>`
+    const browser = await playwright.chromium.launch({ headless: true })
+    try {
+      const page = await (await browser.newContext()).newPage()
+      const r = await readDemoPage(page, `${base}/clipped-headings`, '/clipped-headings', {
+        measurePages: true
+      })
+      for (const m of r.measures)
+        assert.deepEqual(m.mainHeadings, [
+          'Readable title',
+          'Partly readable title',
+          'Another visible heading below the fold'
+        ])
     } finally {
       await browser.close()
       server.close()
@@ -210,7 +264,10 @@ test(
     <p>Words on the page</p><p style="display:none">Words off the page</p>
     <a href="/fine">Read on</a><a href="/missing" style="display:none">Hidden link</a>
     <img src="/wide.png" style="width:200px;height:50px" alt=""><img src="/fine?hidden" style="display:none" alt="">`
-    const browser = await playwright.chromium.launch({ headless: true })
+    const browser = await playwright.chromium.launch({
+      headless: true,
+      args: ['--disable-features=MacAppCodeSignClone']
+    })
     try {
       const page = await (await browser.newContext()).newPage()
       const r = await readDemoPage(page, `${base}/shown`, '/shown', { measurePages: true })
@@ -239,7 +296,10 @@ test(
     const { server, base } = await site()
     PAGES['/buttons'] =
       `${head}<a class="btn" href="javascript:;" onclick="window.opened = 1">Share</a> <a class="btn" href="javascript:;">Dead</a>`
-    const browser = await playwright.chromium.launch({ headless: true })
+    const browser = await playwright.chromium.launch({
+      headless: true,
+      args: ['--disable-features=MacAppCodeSignClone']
+    })
     try {
       const page = await (await browser.newContext()).newPage()
       const r = await readDemoPage(page, `${base}/buttons`, '/buttons')
@@ -265,7 +325,10 @@ test(
     PAGES['/transition'] = `${head}<style>.share a{display:inline-block;transition:all 1s}</style>
       <header><a href="/" class="custom-logo-link"><img class="custom-logo" src="/wide.png" width="200" height="50" alt="Quay"></a></header>
       <main><h1>A page of the site</h1><div class="share"><a class="button-first" href="/fine">Share it</a></div></main>`
-    const browser = await playwright.chromium.launch({ headless: true })
+    const browser = await playwright.chromium.launch({
+      headless: true,
+      args: ['--disable-features=MacAppCodeSignClone']
+    })
     try {
       const page = await (await browser.newContext()).newPage()
       const r = await readDemoPage(page, `${base}/transition`, '/transition', { measurePages: true })
@@ -276,6 +339,62 @@ test(
           [390, true]
         ]
       )
+    } finally {
+      await browser.close()
+      server.close()
+    }
+  }
+)
+
+test(
+  'list rows count canonical Owl items without counting clone subtrees or deduplicating real repeated cards',
+  opts,
+  async () => {
+    const card = (classes, text, nested = false) =>
+      `<div class="${classes}"><p>${text}</p>${nested ? '<ul><li>Nested clone first</li><li>Nested clone second</li></ul>' : ''}</div>`
+    PAGES['/owl-list-identity'] = `${head}<style>.owl-stage{display:flex}.owl-item{min-width:180px}</style>
+    <section id="looping" class="owl-carousel owl-loaded"><div class="owl-stage">
+      ${card('owl-item cloned', 'Terrace chairs', true)}${card('owl-item cloned', 'Indoor benches', true)}
+      ${card('owl-item active', 'Terrace chairs')}${card('owl-item', 'Indoor benches')}
+      ${card('owl-item cloned', 'Terrace chairs', true)}${card('owl-item cloned', 'Indoor benches', true)}
+    </div></section>
+    <section id="repeated" class="owl-carousel"><div class="owl-stage">${Array.from({ length: 4 }, () => card('owl-item', 'Identical real offering')).join('')}</div></section>
+    <section id="ordinary">${card('cloned', 'Ordinary first')}${card('cloned', 'Ordinary second')}</section>
+    <section id="unverified">${card('owl-item cloned', 'Unverified first')}${card('owl-item cloned', 'Unverified second')}</section>
+    <section id="no-original" class="owl-carousel"><div class="owl-stage">${card('owl-item cloned', 'No original first')}${card('owl-item cloned', 'No original second')}</div></section>`
+    const { server, base } = await site()
+    const browser = await playwright.chromium.launch({
+      headless: true,
+      args: ['--disable-features=MacAppCodeSignClone']
+    })
+    try {
+      const page = await (await browser.newContext()).newPage()
+      const result = await readDemoPage(page, `${base}/owl-list-identity`, '/owl-list-identity', {
+        measurePages: true
+      })
+      assert.deepEqual(
+        result.measures.map((m) => m.width),
+        [1440, 390]
+      )
+      for (const m of result.measures) {
+        const looping = m.lists.filter((list) =>
+          list.items.some((it) => /Terrace chairs|Indoor benches/.test(it.text))
+        )
+        assert.equal(looping.length, 1)
+        assert.deepEqual(
+          looping[0].items.map((it) => it.text),
+          ['Terrace chairs', 'Indoor benches']
+        )
+        assert.ok(!m.lists.some((list) => list.items.some((it) => /Nested clone/.test(it.text))))
+        const repeated = m.lists.find((list) =>
+          list.items.every((it) => it.text === 'Identical real offering')
+        )
+        assert.equal(repeated.items.length, 4)
+        for (const prefix of ['Ordinary', 'Unverified', 'No original']) {
+          const list = m.lists.find((list) => list.items.every((it) => it.text.startsWith(prefix)))
+          assert.equal(list.items.length, 2, `${prefix} classes do not establish an Owl clone identity`)
+        }
+      }
     } finally {
       await browser.close()
       server.close()

@@ -32,13 +32,40 @@
 # tracy_db_wait_ready <site-dir> <root-password> [database]
 # Returns 0 once the stack's `db` service answers as the server that stays up (with `database` open,
 # when one is named). Otherwise prints why on stderr and returns 1.
+#
+# A demo folded into the demo farm (lib/site-runtime.sh, marker `<site-dir>/runtime`) has no `db`
+# service: the question goes to the farm's server as the demo's own user, and `database`, when named,
+# is replaced by the demo's own schema (FARM_DB_NAME in its .env) — the per-site name means nothing
+# there. `password` is then unused: the demo's farm password is read from the same .env.
+# TRACY_DB_RUNTIME=site|farm overrides the marker: unfold.sh waits for the demo's OWN server while
+# the marker still says farm (it is removed only once the demo is home).
 tracy_db_wait_ready() {
-  local dir="$1" password="$2" database="${3:-}" tries=90 i answer last="no answer"
+  local dir="$1" password="$2" database="${3:-}" tries=90 i answer last="no answer" runtime rc
+  if ! declare -F tracy_runtime_of_dir >/dev/null; then
+    # shellcheck source=site-runtime.sh
+    . "$(dirname "${BASH_SOURCE[0]}")/site-runtime.sh"
+  fi
+  runtime="${TRACY_DB_RUNTIME:-}"
+  [ -n "$runtime" ] || runtime="$(tracy_runtime_of_dir "$dir")" || return 1
+  local farm_user="" farm_password=""
+  if [ "$runtime" = farm ]; then
+    farm_user="$(sed -n 's/^FARM_DB_USER=//p' "$dir/.env" 2>/dev/null | sed -n 1p)"
+    farm_password="$(sed -n 's/^FARM_DB_PASSWORD=//p' "$dir/.env" 2>/dev/null | sed -n 1p)"
+    [ -z "$database" ] || database="$(sed -n 's/^FARM_DB_NAME=//p' "$dir/.env" 2>/dev/null | sed -n 1p)"
+    [ -n "$farm_user" ] && [ -n "$farm_password" ] || { echo "the farm database user of $(basename "$dir") is not on record" >&2; return 1; }
+  fi
   for ((i = 1; i <= tries; i++)); do
     # stderr folded in: the last refusal is the reason given if this never succeeds. The verdict is
     # read from the marker it asked for, so nothing else the client prints can pass for it.
-    if answer="$( cd "$dir" && docker compose exec -T db mariadb -uroot -p"$password" -N -B \
-        -e "SELECT CONCAT('skip_networking=', @@skip_networking + 0)" ${database:+"$database"} 2>&1 )"; then
+    rc=0
+    if [ "$runtime" = farm ]; then
+      answer="$( MYSQL_PWD="$farm_password" docker exec -e MYSQL_PWD "$TRACY_DEMOS_DB_CONTAINER" mariadb "-u$farm_user" -N -B \
+        -e "SELECT CONCAT('skip_networking=', @@skip_networking + 0)" ${database:+"$database"} 2>&1 )" || rc=$?
+    else
+      answer="$( cd "$dir" && docker compose exec -T db mariadb -uroot -p"$password" -N -B \
+        -e "SELECT CONCAT('skip_networking=', @@skip_networking + 0)" ${database:+"$database"} 2>&1 )" || rc=$?
+    fi
+    if [ "$rc" = 0 ]; then
       case "$answer" in
         *skip_networking=0*|*skip_networking=OFF*) return 0 ;;
         *skip_networking=1*|*skip_networking=ON*) last="networking is off (the first boot's temporary server, or a server started with --skip-networking)" ;;

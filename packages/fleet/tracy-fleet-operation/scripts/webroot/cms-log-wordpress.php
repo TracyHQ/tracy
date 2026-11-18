@@ -16,7 +16,7 @@ ini_set('display_errors', '0');
 ob_start();
 define('SHORTINIT', true);
 // The site's root; `TRACY_CMS_LOG_WP_ROOT` exists for the adapter's own test (a stub WordPress).
-$wpRoot = getenv('TRACY_CMS_LOG_WP_ROOT') ?: '/var/www/html';
+$wpRoot = getenv('TRACY_CMS_LOG_WP_ROOT') ?: (getenv('TRACY_DOCROOT') ?: '/var/www/html');
 require $wpRoot . '/wp-load.php';
 global $wpdb;
 $table = $wpdb->prefix . 'tracy_admin_log';

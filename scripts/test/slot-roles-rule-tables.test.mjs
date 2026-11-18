@@ -56,7 +56,9 @@ test('a slot that already has a role keeps it: the tables only fill what is empt
   const { contentMap, unplaced } = proposeContentMapRoles(map, { cms: 'wordpress' })
   assert.equal(contentMap.slots[6].role, 'editorial.heading')
   assert.equal(contentMap.slots[1].role, 'offering.description')
-  assert.deepEqual(unplaced, [])
+  // The first card has no name left (its name slot was given another role), so it is no card: the price, which no
+  // editorial default fits, is left to the packaging agent.
+  assert.deepEqual(unplaced, ['home.menu.dish-price.1'])
 })
 
 test('from the command line, a capture step in any language reads the same proposal', () => {
@@ -115,4 +117,294 @@ test('a Joomla menu entry that opens a social network is a contact card, the nth
   // Not a social network: the address keeps no role and the title stays a menu label.
   assert.deepEqual(got['menuItem-7.1'], [null, null])
   assert.equal(got['menuItem-7.0'][1], null)
+})
+
+const joomlaMenuMap = (links) => ({
+  entities: links.map((_, index) => ({
+    key: `menuItem-${index + 40}`,
+    kind: 'menuItem',
+    identity: { menutype: 'mainmenu' }
+  })),
+  slots: links.flatMap(({ href, title = 'Visit us', titleRole, linkRole }, index) => [
+    {
+      key: `menuItem-${index + 40}.0`,
+      entity: `menuItem-${index + 40}`,
+      column: 'title',
+      type: 'text',
+      sample: title,
+      ...(titleRole ? { role: titleRole } : {})
+    },
+    {
+      key: `menuItem-${index + 40}.1`,
+      entity: `menuItem-${index + 40}`,
+      column: 'link',
+      type: 'url',
+      sample: href,
+      ...(linkRole ? { role: linkRole } : {})
+    }
+  ])
+})
+
+test('Joomla internal menu links get only a navigation role in vocabulary 3', () => {
+  const hrefs = [
+    'about',
+    '/',
+    '/events',
+    'pages/contact?view=all#team',
+    'index.php?Itemid=44',
+    '?Itemid=44',
+    '#team'
+  ]
+  const input = joomlaMenuMap(hrefs.map((href) => ({ href })))
+  const { contentMap, unplaced } = proposeContentMapRoles(input, {
+    cms: 'joomla',
+    vocabulary: 'place-content-roles/3'
+  })
+  for (const slot of contentMap.slots.filter((s) => s.column === 'link')) {
+    assert.equal(slot.role, 'editorial.navigation_url', slot.sample)
+    assert.equal(slot.group, undefined)
+    assert.equal(slot.customize, 'keep')
+  }
+  assert.deepEqual(unplaced, [])
+  assert.equal(checkContentMapRoles(contentMap).ok, true)
+  assert.equal(input.slots[1].role, undefined)
+})
+
+test('Joomla internal menu links leave external, unsafe and ambiguous targets for review', () => {
+  const hrefs = [
+    'https://example.org/shop',
+    'http://example.org',
+    '//example.org',
+    '///example.org',
+    'javascript:alert(1)',
+    'data:text/html,test',
+    'mailto:team@example.org',
+    'tel:123',
+    'example.org/shop',
+    'www.example.org',
+    '../about',
+    '',
+    ' about',
+    'about\n',
+    '/\\example.org',
+    '/%2fexample.org',
+    '/%252fexample.org',
+    'java\tscript:alert(1)'
+  ]
+  const { contentMap } = proposeContentMapRoles(joomlaMenuMap(hrefs.map((href) => ({ href }))), {
+    cms: 'joomla',
+    vocabulary: 'place-content-roles/3'
+  })
+  for (const slot of contentMap.slots.filter((s) => s.column === 'link')) {
+    assert.equal(slot.role, undefined, JSON.stringify(slot.sample))
+    assert.equal(slot.group, undefined)
+  }
+})
+
+test('Joomla internal menu links preserve social precedence, numbering and assigned titles', () => {
+  const input = joomlaMenuMap([
+    { href: 'about' },
+    { href: '#', title: 'Instagram' },
+    { href: 'contact' },
+    { href: 'https://www.facebook.com/example', title: 'Our page' },
+    { href: '#', title: 'Threads', titleRole: 'editorial.menu_label' }
+  ])
+  const { contentMap } = proposeContentMapRoles(input, { cms: 'joomla', vocabulary: 'place-content-roles/3' })
+  const slots = Object.fromEntries(contentMap.slots.map((s) => [s.key, s]))
+  for (const [id, item] of [
+    [41, 0],
+    [43, 1],
+    [44, 2]
+  ]) {
+    assert.equal(slots[`menuItem-${id}.1`].role, 'contact.social_url')
+    assert.deepEqual(slots[`menuItem-${id}.1`].group, { id: `menuItem-${id}.social`, item, kind: 'contact' })
+  }
+  assert.equal(slots['menuItem-41.0'].role, 'contact.social_label')
+  assert.equal(slots['menuItem-43.0'].role, 'contact.social_label')
+  assert.equal(slots['menuItem-44.0'].role, 'editorial.menu_label')
+  assert.equal(slots['menuItem-44.0'].group, undefined)
+})
+
+test('Joomla internal menu links preserve assigned link roles and version 2 behavior', () => {
+  const input = joomlaMenuMap([{ href: '/contact', linkRole: 'contact.cta_url' }])
+  input.slots[1].group = { id: 'reviewed-contact', item: 0, kind: 'contact' }
+  const before = structuredClone(input.slots[1])
+  const { contentMap } = proposeContentMapRoles(input, { cms: 'joomla', vocabulary: 'place-content-roles/3' })
+  assert.deepEqual(contentMap.slots[1], before)
+  const v2 = proposeContentMapRoles(joomlaMenuMap([{ href: 'about' }]), { cms: 'joomla' })
+  assert.equal(v2.contentMap.slots[1].role, undefined)
+  const v2AssignedTitle = proposeContentMapRoles(
+    joomlaMenuMap([{ href: '#', title: 'Instagram', titleRole: 'editorial.menu_label' }]),
+    { cms: 'joomla' }
+  )
+  assert.equal(v2AssignedTitle.contentMap.slots[1].role, undefined)
+})
+
+test('a WordPress card whose name is no slot gets no group: its other slots fall back to an editorial role', () => {
+  // A fictional bakery theme: the dish name heading carries inline price markup, so only the description is a slot.
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      {
+        key: 'home.menu.dish-description.1',
+        type: 'text',
+        sample: 'Rye crust, honey glaze and toasted seeds.'
+      },
+      { key: 'home.menu.dish-image.1', type: 'image', sample: 'loaf-1.jpg' },
+      { key: 'home.menu.dish-name.2', type: 'text', sample: 'Fig twist' },
+      { key: 'home.menu.dish-description.2', type: 'text', sample: 'Folded with dried figs and orange zest.' }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, {
+    cms: 'wordpress',
+    vocabulary: 'place-content-roles/3'
+  })
+  const got = fieldsOf(contentMap)
+  assert.equal(got['home.menu.dish-description.1'][1], null)
+  assert.equal(got['home.menu.dish-image.1'][1], null)
+  assert.match(String(got['home.menu.dish-description.1'][0]), /^editorial\./)
+  // The card that has its name keeps its group.
+  assert.deepEqual(got['home.menu.dish-description.2'], [
+    'offering.description',
+    { id: 'home.menu.dish.1', item: 1, kind: 'menu_item' }
+  ])
+  const check = checkContentMapRoles(contentMap)
+  assert.deepEqual(
+    check.errors.filter((e) => e.includes('lacks the role')),
+    []
+  )
+})
+
+test('a WordPress slot joins a card whose name the map already placed', () => {
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      {
+        key: 'home.menu.dish-name.1',
+        type: 'text',
+        sample: 'Fig twist',
+        role: 'offering.name',
+        group: { id: 'home.menu.dish.0', item: 0, kind: 'menu_item' }
+      },
+      { key: 'home.menu.dish-image.1', type: 'image', sample: 'fig-1.jpg' }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, {
+    cms: 'wordpress',
+    vocabulary: 'place-content-roles/3'
+  })
+  assert.deepEqual(fieldsOf(contentMap)['home.menu.dish-image.1'], [
+    'offering.image',
+    { id: 'home.menu.dish.0', item: 0, kind: 'menu_item' }
+  ])
+})
+
+test('an hours-shaped sample takes the role of the card it sits in, or contact.hours when it sits in none', () => {
+  const V3 = 'place-content-roles/3'
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      { key: 'home.menu.dish-name.1', type: 'text', sample: 'Smoked oolong' },
+      {
+        key: 'home.menu.dish-when.1',
+        type: 'text',
+        sample: 'Mon. Tue. & Sun ((br/))12 Noon to 11 PM',
+        markup: 'inline'
+      },
+      { key: 'home.happyhours.hp-title', type: 'text', sample: 'Evening special' },
+      {
+        key: 'home.happyhours.hp-info',
+        type: 'text',
+        sample: 'Mon. Tue. Thu. & Sun ((br/))12 Noon to 11 PM',
+        markup: 'inline'
+      },
+      { key: 'home.happyhours-2.hp-title', type: 'text', sample: 'Late special' },
+      {
+        key: 'home.happyhours-2.hp-info',
+        type: 'text',
+        sample: 'Fri. Sat. ((br/))9 PM to 1 AM',
+        markup: 'inline'
+      },
+      { key: 'home.footer.opening-line', type: 'text', sample: 'Open Mon to Fri, 9 AM to 5 PM' },
+      {
+        key: 'home.story.paragraph',
+        type: 'text',
+        sample:
+          'On Monday mornings at 9 AM our bakers start the dough, and by the end of the week the whole street smells of it.'
+      }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, { cms: 'wordpress', vocabulary: V3 })
+  const by = Object.fromEntries(contentMap.slots.map((s) => [s.key, s]))
+  assert.equal(by['home.menu.dish-when.1'].role, 'offering.schedule')
+  assert.deepEqual(by['home.menu.dish-when.1'].group, by['home.menu.dish-name.1'].group)
+  for (const sec of ['happyhours', 'happyhours-2']) {
+    assert.equal(by[`home.${sec}.hp-title`].role, 'event.title')
+    assert.equal(by[`home.${sec}.hp-info`].role, 'event.date_or_year')
+    assert.deepEqual(by[`home.${sec}.hp-info`].group, by[`home.${sec}.hp-title`].group)
+  }
+  assert.equal(by['home.footer.opening-line'].role, 'contact.hours')
+  assert.notEqual(
+    by['home.story.paragraph'].role,
+    'contact.hours',
+    'prose that mentions a day and a time is not an hours line'
+  )
+  assert.equal(
+    checkContentMapRoles(contentMap).errors.length,
+    0,
+    JSON.stringify(checkContentMapRoles(contentMap).errors)
+  )
+})
+
+test('WordPress version 3: a sample post is one article card, and a picture named after its page joins the text card', () => {
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      { key: 'site.name', type: 'text', sample: 'Larkspur Tea Room' },
+      {
+        key: 'post-first-brew.title',
+        entity: 'post-first-brew',
+        type: 'text',
+        sample: 'First brew',
+        target: { field: 'post_title' }
+      },
+      {
+        key: 'post-first-brew.excerpt',
+        entity: 'post-first-brew',
+        type: 'text',
+        sample: 'A short note on the first pot.',
+        target: { field: 'post_excerpt' }
+      },
+      {
+        key: 'post-first-brew.featured-image',
+        entity: 'post-first-brew',
+        type: 'image',
+        sample: 'brew.jpg',
+        target: { meta: '_thumbnail_id' }
+      },
+      {
+        key: 'post-first-brew.intro-picture',
+        entity: 'post-first-brew',
+        type: 'image',
+        sample: 'brew-2.jpg',
+        target: { meta: 'intro_picture' }
+      },
+      { key: 'about.team.member-name.1', type: 'text', sample: 'Ada Reed' },
+      { key: 'page-about.team.member-image.1', type: 'image', sample: 'ada.jpg' }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, {
+    cms: 'wordpress',
+    vocabulary: 'place-content-roles/3'
+  })
+  const post = { id: 'post-first-brew.article.0', item: 0, kind: 'post' }
+  assert.deepEqual(fieldsOf(contentMap), {
+    'site.name': ['business.name', { id: 'site.identity.0', item: 0, kind: 'business' }],
+    'post-first-brew.title': ['article.title', post],
+    'post-first-brew.excerpt': ['article.lead', post],
+    'post-first-brew.featured-image': ['article.image', post],
+    'post-first-brew.intro-picture': ['article.image', post],
+    'about.team.member-name.1': ['person.name', { id: 'about.team.member.0', item: 0, kind: 'person' }],
+    'page-about.team.member-image.1': ['person.image', { id: 'about.team.member.0', item: 0, kind: 'person' }]
+  })
 })

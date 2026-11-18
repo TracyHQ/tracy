@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-558-host-list-rows-owl",
+  "kind": "fix",
+  "title": "Host list rows exclude structurally identified Owl copies without merging real repeated cards",
+  "pr": 558,
+  "area": "wo/site-check",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Read an invented looping Owl carousel and control lists in the real browser at desktop1440 and mobile390."
+  ],
+  "expect": [
+    "The looping Owl list reports only its two canonical original cards, not four copied cards or lists nested inside copies.",
+    "Four canonical cards with identical words remain four items.",
+    "Ordinary cloned classes, unverified Owl-like markup and clone-only stages retain their original item counts."
+  ],
+  "selectors": {},
+  "fence": "Do not deduplicate by text, suppress unexplained rows or change the site-check row-count requirements. No customer-site writes or model calls.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=list rows count canonical Owl items",
+      "apps/tracy-host/test/demo-qa-page-measures-browser.test.mjs"
+    ],
+    "tests": [
+      "list rows count canonical Owl items without counting clone subtrees or deduplicating real repeated cards"
+    ],
+    "needs": []
+  }
+}

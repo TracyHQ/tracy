@@ -431,6 +431,12 @@ test(
         candidate: { provider: 'google-places', providerId: PLACE_ID, name: 'Pho Shared', socials: {} }
       })
     ).body.opportunity
+    // Nothing shows before this card's own Research (#524); the imported place answers it at once.
+    assert.deepEqual((await call('GET', `${BASE}/${opp.id}`)).body.media, [])
+    assert.equal(
+      (await call('POST', `${BASE}/${opp.id}/research`, { requestId: 'buyer-research-1' })).status,
+      202
+    )
     const detail = (await call('GET', `${BASE}/${opp.id}`)).body
     assert.equal(detail.media.length, 2)
     const destinationPlace = await one(destination.pool, 'select id from wo_place')

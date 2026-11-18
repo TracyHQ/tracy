@@ -10,6 +10,7 @@
     ".": "./src/index.ts",
     "./strings": "./src/strings.ts",
     "./model": "./src/model.ts",
+    "./demo-state": "./src/demo-state.ts",
     "./styles.css": "./src/styles.css",
     "./link-rows": "./src/link-rows.tsx",
     "./link-rows-model": "./src/link-rows-model.ts",

@@ -1,0 +1,2 @@
+- **Keep reviewed slot keys and roles attached to their unique write addresses during recapture.** — Kinetic executor · #625 · `fix/ja-kinetic-readiness` · 2026-11-10
+  **Affects:** Joomla quickstart capture with `--previous-map`. Newly discovered slots reserve prior keys rather than inheriting another field's identity. Entity bindings and all write selectors must agree uniquely; ordinary inline markup may keep equivalent words, while literal PRE samples require exact case and whitespace. Only reviewed role/group are carried; fit, limits and evidence rules are recomputed.

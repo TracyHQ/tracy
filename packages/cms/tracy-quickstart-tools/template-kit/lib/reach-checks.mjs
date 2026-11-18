@@ -35,10 +35,14 @@ function slotsOf(block) {
   ]
 }
 
-/** A link with words and no door: the template prints it, and nothing can send it anywhere. */
+/**
+ * A link with words and no door: the template prints it, and nothing can send it anywhere. The current page of a
+ * pagination prints no address on purpose (template-gaps.mjs skips it the same way).
+ */
 export const isDeadControl = (link) =>
   link?.action === 'page-control' &&
   hasWords(link.label) &&
+  !link.current &&
   !link.opens &&
   !link.target &&
   !link.menu &&
@@ -104,7 +108,9 @@ function uncallablePhonesOf(kit) {
         PHONE_ROLE.test(String(s?.role ?? '')) &&
         s?.id &&
         !named.has(s.id) &&
-        !(typeof s.sample === 'string' && !hasWords(s.sample))
+        !(typeof s.sample === 'string' && !hasWords(s.sample)) &&
+        // The slot holding a `tel:` address is the link's own address: the number it calls is printed inside it.
+        !(typeof s.sample === 'string' && /^tel:/i.test(s.sample.trim()))
       )
         add(b, s.id, 'phone slot')
   }

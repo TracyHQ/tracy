@@ -35,7 +35,7 @@ body.error404 .text-error span {
 body.error404 .group-text {
 	display: block;
 }
-body.error404 .group-text .error-message h2 {
+body.error404 .group-text .error-message :is(h1, h2) {
 	font-family: var(--ds-font-display, var(--ja-font-display, 'Eczar'), Helvetica, Arial, sans-serif);
 	font-size: 48px;
 	font-weight: 400;
@@ -43,7 +43,7 @@ body.error404 .group-text .error-message h2 {
 	margin: 0 0 24px;
 	position: relative;
 }
-body.error404 .group-text .error-message h2::before {
+body.error404 .group-text .error-message :is(h1, h2)::before {
 	background: var(--ds-c-accent, #ffd33d);
 	bottom: -8px;
 	content: '';
@@ -55,7 +55,7 @@ body.error404 .group-text .error-message h2::before {
 	transform: translateX(-50%);
 	width: 40%;
 }
-body.error404 .group-text .error-message h2 span {
+body.error404 .group-text .error-message :is(h1, h2) span {
 	position: relative;
 	z-index: 99;
 }
@@ -86,10 +86,10 @@ body.error404 .btn-home-page:active {
 	body.error404 .error-code {
 		font-size: 190px;
 	}
-	body.error404 .group-text .error-message h2 {
+	body.error404 .group-text .error-message :is(h1, h2) {
 		font-size: 36px;
 	}
-	body.error404 .group-text .error-message h2::before {
+	body.error404 .group-text .error-message :is(h1, h2)::before {
 		height: 12px;
 	}
 }

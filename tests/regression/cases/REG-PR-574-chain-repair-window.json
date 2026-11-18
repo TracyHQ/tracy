@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-574-chain-repair-window",
+  "kind": "fix",
+  "title": "A chain build's step 9b keeps its 10 and 12 minute windows, cut shorter only by the 2 hour deadline",
+  "pr": 574,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm the test named in run.tests reports ok."
+  ],
+  "expect": [
+    "chainRepairLimits(30 min) is stopNewWorkMs 10 min and returnByMs 12 min, not the 90 minutes left to the deadline.",
+    "Started 5 minutes before the deadline, 9b starts new work only until the deadline and returns 2 minutes later.",
+    "After the deadline, 9b starts no new work and returns within the 15 minute handover window.",
+    "The 2 hour chain deadline and the run cut of 135 minutes are unchanged."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-no-caps.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "step 9b keeps its 10 and 12 minute windows in a chain build too, cut shorter only by the deadline"
+    ]
+  }
+}

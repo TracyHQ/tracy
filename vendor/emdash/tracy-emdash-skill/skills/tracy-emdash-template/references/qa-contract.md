@@ -138,3 +138,7 @@ prove each gate **can fail** before trusting it to pass — mapped to the table 
 | White surface/black text in dark, low contrast, bright border, double seam, jumping hover, megamenu gap, a component no rule measures, drift from the source, stuck theme, page not rendering | F12 `tests/visual.test.mjs` (`visual-qa`, `visual-scan`, `mega-hover`) |
 | Receipt of another package / edited evidence / future time | F10 `assessReceipt` |
 | Missing matrix cell, duplicate case, case without a shot | F10 `assessObservations` |
+
+- **A content probe's `expected` is compared with the text the visitor sees.** The browser gate reads `allInnerTexts()` after `text-transform`, case-sensitively, so write the probe as rendered; the state check also moves a real pointer onto the panel, so a rule that selects a link inside it measures the hover colour — select `…:not(:hover)`.
+
+- **`reviews.forms` set `not-applicable` by `qa-contract.mjs init` stays so.** When `init` runs before the template has a form binding, a template that gets its forms in P4/P5 passes the whole contract with the Forms gate off; set it to `required` when the first form exists.

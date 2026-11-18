@@ -7,6 +7,7 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSyn
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { runCli } from '../src/site-pictures/bench-cli.js'
 import { fileDb } from './_db.mjs'
 import {
@@ -88,7 +89,7 @@ test(
       const status = await cli(['status', id], cwd)
       assert.equal(status.code, 0)
       assert.match(status.out.join('\n'), /state\s+succeeded \(after round 0\)/)
-      assert.match(status.out.join('\n'), /site-pictures-check\/1: \d+ pass, 0 fail/)
+      assert.match(status.out.join('\n'), /site-pictures-check\/5: \d+ pass, 0 fail/)
       assert.match((await cli(['list'], cwd)).out.join('\n'), new RegExp(id))
 
       const got = await cli(['get', id, '--out', 'run-files'], cwd)
@@ -148,13 +149,15 @@ test(
   }
 )
 
-test('cancel ends a queued run nobody holds; a second run waits for none', opts, async () => {
+test('cancel ends a queued run nobody holds; a run past the bench limit waits for none', opts, async () => {
   const cwd = workFolder()
   try {
     const id = (await cli(RUN, cwd)).out[0]
-    const second = await cli(RUN, cwd)
-    assert.equal(second.code, 1)
-    assert.match(second.err[0], /SITE_PICTURES_RUN_ACTIVE/)
+    for (let n = 1; n < BENCH_RUNS_AT_ONCE; n++) assert.equal((await cli(RUN, cwd)).code, 0)
+    const past = await cli(RUN, cwd)
+    assert.equal(past.code, 1)
+    assert.match(past.err[0], /SITE_PICTURES_RUN_ACTIVE/)
+    assert.match(past.err[0], new RegExp(`At most ${BENCH_RUNS_AT_ONCE} picture runs at a time`))
     const cancelled = await cli(['cancel', id], cwd)
     assert.deepEqual([cancelled.code, cancelled.out], [0, [`${id} cancelled`]])
     assert.match((await cli(['status', id], cwd)).out.join('\n'), /state\s+cancelled/)

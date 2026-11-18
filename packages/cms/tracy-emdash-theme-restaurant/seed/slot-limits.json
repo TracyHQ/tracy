@@ -1,0 +1,40 @@
+{
+	"$comment": "Limits of text slots that no visible box on the pages measures (read by packages/cms/tracy-quickstart-tools/content-coverage/emdash-content-map.mjs into the content map). A number needs a real source: a box that was measured (how is said in `from`; Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme) or a field's schema maxLength (none of these fields declares one). A text no page draws in a box has no number: it is declared `nonVisual` with where it is used, and the kit asks no limit of it.",
+	"limits": [
+		{
+			"slot": "pages.phone-reservation.title",
+			"maxCharacters": 21,
+			"from": "the page's menu label, a sub-menu item that opens on hover: its box is 218 px wide with 25 px of padding on each side and 7.9 px per character at 1440 px, measured with the menu open (the smallest of the menu's rows)"
+		},
+		{
+			"slot": "testimonials.happy-customers.items[*].testimonial_text",
+			"maxCharacters": 132,
+			"from": "the quote that is showing, filled until it needs another line (390 px: 132, 1440 px: 133); the other quotes of the slider share its layout and are hidden until their turn"
+		},
+		{
+			"slot": "testimonials.happy-customers.items[*].author_name",
+			"maxCharacters": 30,
+			"from": "the author line of the quote that is showing, filled until it needs another line (390 px: 36, 1440 px: 30); the other quotes share its layout"
+		},
+		{
+			"slot": "subscribe.subscribe.placeholder",
+			"maxCharacters": 15,
+			"from": "the placeholder is drawn inside the e-mail field on one line: the field is 126 px wide inside its padding at 390 px (8.2 px per character, 15 characters) and 333 px at 1440 px (40 characters)"
+		},
+		{
+			"slot": "chrome.chrome.brand_name",
+			"maxCharacters": 32,
+			"from": "the business name is printed in the footer copyright line and nowhere else as visible words; filled until the line gains a row: 105 characters at 1440 px, 45 at 768 px, 32 at 390 px"
+		},
+		{
+			"slot": "settings.title",
+			"nonVisual": true,
+			"from": "the site title is used only in the document `<title>` and `og:site_name` (Base.astro): no page draws it in a box and the setting declares no maxLength, so it has no limit (the business name the footer prints is its own slot, chrome.brand_name, which is measured)"
+		},
+		{
+			"slot": "chrome.chrome.appearance_label",
+			"nonVisual": true,
+			"from": "the label is the accessible name (`aria-label`) of the light/dark icon button in the header (Header.astro): no page draws it in a box, and the field declares no maxLength, so it has no limit"
+		}
+	]
+}

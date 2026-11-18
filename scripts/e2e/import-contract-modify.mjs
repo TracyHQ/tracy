@@ -16,15 +16,15 @@
  * are supported for overlapping writes; deployment version attestation remains external.
  */
 import { execFileSync } from 'node:child_process'
-import { readFileSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { newestSessionLog, readSessionLog } from '../measure/session-metrics.mjs'
-import { correlatedTurn, turnMetrics, totalMetrics } from './import-contract-metrics.mjs'
-import { overlapSummary, modelEvidence } from './import-contract-overlap.mjs'
-import { prepareViewer, viewerWorkspaceUrl } from './import-contract-viewer.mjs'
 import { mintSession } from '../../apps/tracy-web/src/lib/session.js'
+import { newestSessionLog, readSessionLog } from '../measure/session-metrics.mjs'
+import { correlatedTurn, totalMetrics, turnMetrics } from './import-contract-metrics.mjs'
+import { modelEvidence, overlapSummary } from './import-contract-overlap.mjs'
+import { dismissWelcome, prepareViewer, viewerWorkspaceUrl } from './import-contract-viewer.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const spec = JSON.parse(readFileSync(process.argv[2], 'utf8'))
@@ -326,8 +326,9 @@ try {
       const before = events(page, true).length
       const started = Date.now()
       await composer.fill(turn.prompt)
-      quiescent = false
+      await dismissWelcome(page)
       await page.locator('button:visible[aria-label="Send message"]').first().click()
+      quiescent = false
       let rows = []
       let finished = false
       while (Date.now() - started < (spec.timeoutMs ?? 300000)) {

@@ -224,6 +224,7 @@ Template: JA Restaurant (tracy-restaurant). Default locale: en. Locales: en.
 | next_label | string | no | Next label |
 | more_label | string | no | More label |
 | photos_label | string | no | Photos label |
+| search_label | string | no | Search label |
 | gallery_link_label | string | no | Gallery link label |
 | not_found_code | string | no | Not found code |
 | not_found_title | string | no | Not found title |
@@ -321,7 +322,7 @@ Declared pins only; enabled plugin registration is owned by astro.config.mjs. Na
 
 | Dependency | Declared version |
 | --- | --- |
-| @astrojs/node | 11.1.3 |
+| @astrojs/node | 11.1.13 |
 | @astrojs/react | 6.0.0 |
 | @cloudflare/kumo | 2.6.0 |
 | @emdash-cms/auth | 1.1.0 |
@@ -329,7 +330,7 @@ Declared pins only; enabled plugin registration is owned by astro.config.mjs. Na
 | @emdash-cms/plugin-forms | 0.2.9 |
 | @phosphor-icons/react | 2.1.10 |
 | @tailwindcss/vite | 4.3.3 |
-| astro | 7.3.3 |
+| astro | 7.4.12 |
 | better-sqlite3 | 12.11.1 |
 | class-variance-authority | 0.7.1 |
 | clsx | 2.1.1 |

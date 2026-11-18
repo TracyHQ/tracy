@@ -40,8 +40,9 @@
 //   the row pair check (lib/row-pairs.mjs: rowPartsUnpaired), each with the reasons of reach-accepts.json in --out
 //   (lib/check-accepts.mjs), and stamps `tool` and `settledAt`.
 //   cli.mjs measure-fields --site <url> --out <dir> --contract <dir> --db-command '<client prefix>' --scratch-site
-//                 [--host-header <host>]   (WRITES to the site, each field set to a marker and put back: only on a
-//                 throwaway site rebuilt from the quickstart, which --scratch-site says it is; field-drives.json)
+//                 [--host-header <host>] [--slots <prefix,…>]   (WRITES to the site, each field set to a marker and put
+//                 back: only on a throwaway site rebuilt from the quickstart, which --scratch-site says it is;
+//                 field-drives.json; --slots measures only the slots whose id starts so, into the file already there)
 //   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
 //                 its shot; build --full runs it last)
 //   cli.mjs looks --kit <template-kit.json> [--images <dir>] --list [--to <worklist.json>]
@@ -89,6 +90,7 @@ import { dirname, join, resolve } from 'node:path'
 
 import { assembleKit, reachAcceptsOf, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
+import { platformOf, readManifest } from './lib/contract-manifest.mjs'
 import { readContractMap, readContractSamples } from './lib/contract-read.mjs'
 import { contactFieldChecks, listLabelSlots } from './lib/coverage-gate.mjs'
 import { DECLARED_SITE_FIELDS } from './lib/declared-site-fields.mjs'
@@ -110,6 +112,7 @@ import { writeSheets } from './lib/sheets.mjs'
 import { adapterFor, usePlatform } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { runFieldMeasure } from './lib/site/measure-fields.mjs'
+import { settleEmdashSections } from './lib/site/emdash-sections-file.mjs'
 import { settleWordPressSections } from './lib/site/wordpress-sections-file.mjs'
 import { settleSlotRoles } from './lib/slot-roles.mjs'
 import { settleSamples } from './lib/slot-samples.mjs'
@@ -238,6 +241,19 @@ function samples(o, out) {
   return samplesCut || inlineEmphasisMissing || inlineMarkupLost ? 1 : 0
 }
 
+/** The content map with only the slots whose id starts with one of `prefixes` (comma-separated), or all of them. */
+export function onlySlots(map, prefixes) {
+  const keep = prefixes?.split(',').filter(Boolean)
+  return keep?.length
+    ? { ...map, slots: map.slots.filter((s) => keep.some((p) => s.key.startsWith(p))) }
+    : map
+}
+
+/** Save a partial measurement without erasing unselected fields; a full run replaces the file. */
+export function writeFieldDrives(file, drives, partial) {
+  writeJson(file, partial ? { ...readIf(file), ...drives } : drives)
+}
+
 /** Measure what each stored field drives on a throwaway site, into field-drives.json. */
 async function measureFields(o, out) {
   if (o['scratch-site'] !== true || !str(o['db-command']))
@@ -250,10 +266,11 @@ async function measureFields(o, out) {
     hostHeader: str(o['host-header']),
     dbCommand: o['db-command'],
     kit: readJson(join(out, 'template-kit.json')),
-    map: readContractSamples(o.contract),
+    map: onlySlots(readContractSamples(o.contract), str(o.slots)),
     log
   })
-  writeJson(join(out, 'field-drives.json'), drives)
+  const file = join(out, 'field-drives.json')
+  writeFieldDrives(file, drives, Boolean(str(o.slots)))
   return Object.values(drives).some((d) => d.error) ? 1 : 0
 }
 
@@ -281,7 +298,7 @@ function settingSlots(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
   const map = readContractMap(o.contract)
-  const manifest = readJson(join(o.contract, 'manifest.json'))
+  const manifest = readManifest(o.contract, { release: str(o['release-tag']) })
   const source = siteSource({
     db: str(o.db),
     dbCommand: str(o['db-command']),
@@ -389,7 +406,7 @@ function baseline(o) {
   if (!str(o.from) || !str(o.contract))
     throw new Error('baseline needs --from <measured baseline.json> and --contract <dir>')
   const dir = resolve(o.contract)
-  const contractId = readJson(join(dir, 'manifest.json'))?.id
+  const contractId = readManifest(dir, { release: str(o['release-tag']) }).id
   const r = contractBaselineOf(readJson(resolve(o.from)), { contractId: String(contractId) })
   if (r.error) {
     console.error(`nothing written: ${r.error}`)
@@ -427,12 +444,29 @@ async function main() {
   const out = resolve(o.out)
   mkdirSync(join(out, 'images'), { recursive: true })
   // Page addresses are spelled the platform's way (lib/kit-paths.mjs urlOfPath).
-  const platform = o.contract ? readIf(join(o.contract, 'manifest.json'))?.platform : undefined
+  const platform = o.contract ? platformOf(o.contract) : undefined
   if (o.contract) usePlatform(platform)
   // A WordPress page is read as its sections (the top-level blocks of its post content), from the database or the
   // work folder's wordpress-sections.json.
   const split = settleWordPressSections({ platform, out, db: str(o.db), dbCommand: str(o['db-command']) })
   if (split) log('wordpress sections', split.pages, 'pages, from', split.from)
+  // An EmDash page is read as its parts (top bar, header, each section of main, footer): from the work folder's
+  // emdash-sections.json, and, on `build` with a site, from the site itself when none is there yet (--reread-sections
+  // reads again). Page addresses are `contract/content-map.json`'s own.
+  if (platform === 'emdash') {
+    const parts = await settleEmdashSections({
+      platform,
+      out,
+      map: readJson(join(o.contract, 'content-map.json')),
+      siteUrl: str(o.site),
+      hostHeader: str(o['host-header']),
+      chromium: cmd === 'build' ? await chromiumOf() : null,
+      tokenFile: str(o['token-file']),
+      reread: !!o['reread-sections'],
+      log
+    })
+    log('emdash sections', parts.pages, 'pages, from', parts.from)
+  }
   if (cmd === 'sheet') return sheet(o, out).then(() => 0)
   if (cmd === 'approve') return approve(o, out)
   if (cmd === 'pack') return pack(out)

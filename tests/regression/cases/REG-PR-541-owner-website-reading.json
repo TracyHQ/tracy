@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-541-owner-website-reading",
+  "kind": "fix",
+  "title": "Owner pages retain services, team, story and quoted prices",
+  "pr": 541,
+  "area": "website-opportunities/research",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the specified mechanism suite against this checkout. All data in the suite is fictional."],
+  "expect": [
+    "Owner page passages survive a large post feed and many similar class pages.",
+    "Unsupported prices are rejected and exact quotes retain the website URL."
+  ],
+  "selectors": {},
+  "fence": "Owner pages retain services, team, story and quoted prices",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/business-reading-website.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 180
+  }
+}

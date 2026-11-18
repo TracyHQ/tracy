@@ -135,7 +135,7 @@ function shownAttributes(body) {
 /**
  * Which of a page's written slots the page prints.
  * @param {string} html the page as the site serves it
- * @param {{ slot: string, kind: 'picture' | 'text', value: string }[]} slots the page's written slots, in the kit's order
+ * @param {{ slot: string, kind: 'picture' | 'text' | 'icon', value: string }[]} slots the page's written slots, in the kit's order
  * @param {{ native?: boolean }} [options] `native`: judge what the template prints of itself, fallback blocks left out
  * @returns {{ printed: Map<string, 'template' | 'fallback'>, notPrinted: string[] }}
  */
@@ -144,7 +144,28 @@ export function pagePrints(html, slots, { native = false } = {}) {
   const printed = new Map()
   const words = wordsKey(body.replace(/<[^<>]*>/g, ' '))
   const attributes = shownAttributes(body)
+  // Font icons print their class as a glyph, not as words. Each written icon needs its own body element.
+  const icons = [...body.matchAll(TAG)]
+    .filter((m) => /^<(?:i|span)\b/i.test(m[0]))
+    .map(
+      (m) =>
+        new Set(
+          decoded(attr(m[0], 'class') ?? '')
+            .split(/\s+/)
+            .filter(Boolean)
+        )
+    )
   for (const s of slots) {
+    if (s.kind === 'icon') {
+      const classes = String(s.value).trim().split(/\s+/)
+      const valid = classes.length && classes.every((c) => /^[\w-]+$/.test(c))
+      const index = valid ? icons.findIndex((held) => classes.every((c) => held.has(c))) : -1
+      if (index >= 0) {
+        printed.set(s.slot, 'template')
+        icons.splice(index, 1)
+      }
+      continue
+    }
     const key = s.kind === 'text' ? wordsKey(s.value) : ''
     if (key && (words.includes(key) || attributes.some((a) => a.includes(key))))
       printed.set(s.slot, 'template')
@@ -210,7 +231,8 @@ function kitSlotKinds(kit) {
   const kinds = new Map()
   for (const block of each(kit?.blocks)) {
     const rows = each(block?.lists).flatMap((l) => each(l?.rows).flatMap((r) => each(r?.slots)))
-    for (const s of [...each(block?.slots), ...rows]) if (typeof s?.id === 'string') kinds.set(s.id, s)
+    for (const s of [...each(block?.slots), ...rows, ...each(block?.demoOwned)])
+      if (typeof s?.id === 'string') kinds.set(s.id, s)
   }
   return kinds
 }
@@ -233,6 +255,8 @@ export function printedSlotsOf(lines, kit = null) {
     if (l?.status !== 'written' || typeof l.ordered !== 'string' || !l.ordered.trim()) continue
     if (PICTURE_PARTS.has(l.part) && IMAGE.test(l.ordered))
       out.push({ slot: l.slot, kind: 'picture', value: l.ordered })
+    else if (!l.part && kinds?.get(l.slot)?.role === 'editorial.item_icon')
+      out.push({ slot: l.slot, kind: 'icon', value: l.ordered })
     else if (
       !l.part &&
       !IMAGE.test(l.ordered) &&

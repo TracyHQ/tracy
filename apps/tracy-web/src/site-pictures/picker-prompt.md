@@ -19,8 +19,7 @@ How to choose:
 - Never pick a photo whose people are introduced as someone else: a photo of one person is fine for a scene, never as
   the portrait of another named person.
 - Prefer a different photo for every frame of the site. Never use one photo twice on the same page.
-- When no listed photo fits, answer "none". A frame answered "none" is drawn later from the plan's words; a wrong
-  photo is worse than a drawn one.
+- When no listed photo fits, answer "none". Documentary frames, including galleries and photos of the actual place or an owner post, never substitute a drawing. Code reduces, hides or returns the unfilled frame. Generic illustrations may be drawn later.
 
 Your reason is one short sentence saying what the chosen photo shows that matches the frame, or why none fits.
 

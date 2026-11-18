@@ -1,0 +1,805 @@
+{
+	"generatedAt": "2026-11-08T11:08:13.201Z",
+	"roleVocabularyVersion": "place-content-roles/2",
+	"settings": {
+		"title": {
+			"role": "business.name",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		},
+		"tagline": {
+			"role": "business.tagline",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		}
+	},
+	"fields": {
+		"pages.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"pages.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"pages.view": {
+			"source": "text",
+			"target": "string",
+			"label": "View"
+		},
+		"pages.path": {
+			"source": "text",
+			"target": "string",
+			"label": "Path"
+		},
+		"posts.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"posts.excerpt": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Excerpt"
+		},
+		"posts.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"posts.date": {
+			"source": "date",
+			"target": "datetime",
+			"label": "Date"
+		},
+		"posts.cover": {
+			"source": "image",
+			"target": "image",
+			"label": "Cover",
+			"role": "editorial.decorative_image"
+		},
+		"posts.detail_image": {
+			"source": "image",
+			"target": "image",
+			"label": "Detail image",
+			"role": "editorial.decorative_image"
+		},
+		"posts.created": {
+			"source": "date",
+			"target": "datetime",
+			"label": "Created"
+		},
+		"posts.path": {
+			"source": "text",
+			"target": "string",
+			"label": "Path"
+		},
+		"slideshow.title_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Title link"
+		},
+		"slideshow.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"slideshow.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items",
+			"subRoles": {
+				"image": "editorial.decorative_image",
+				"title": "editorial.heading",
+				"desc": "editorial.paragraph",
+				"button1": "editorial.button_label",
+				"button2": "editorial.button_label"
+			}
+		},
+		"features_intro.basic_description": {
+			"source": "text",
+			"target": "string",
+			"label": "Basic description",
+			"role": "editorial.paragraph"
+		},
+		"features_intro.basic_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Basic btn title",
+			"role": "editorial.button_label"
+		},
+		"features_intro.basic_btn_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Basic btn link"
+		},
+		"features_intro.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"features_intro.align": {
+			"source": "text",
+			"target": "string",
+			"label": "Align"
+		},
+		"features_intro.img_features": {
+			"source": "image",
+			"target": "image",
+			"label": "Img features",
+			"role": "editorial.decorative_image"
+		},
+		"features_intro.description": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Description"
+		},
+		"features_intro.title_small": {
+			"source": "text",
+			"target": "string",
+			"label": "Title small",
+			"role": "editorial.heading"
+		},
+		"features_intro.title_large": {
+			"source": "text",
+			"target": "string",
+			"label": "Title large",
+			"role": "editorial.heading"
+		},
+		"features_intro.button": {
+			"source": "text",
+			"target": "string",
+			"label": "Button",
+			"role": "editorial.button_label"
+		},
+		"features_intro.button_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Button link"
+		},
+		"features_intro.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items",
+			"subRoles": {
+				"ft_img": "editorial.decorative_image",
+				"title": "editorial.heading",
+				"description": "editorial.paragraph",
+				"btn_title": "editorial.button_label",
+				"img": "editorial.decorative_image"
+			}
+		},
+		"features_intro.sub_heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub heading",
+			"role": "editorial.heading"
+		},
+		"container_tabs.image_intro": {
+			"source": "image",
+			"target": "image",
+			"label": "Image intro",
+			"role": "editorial.decorative_image"
+		},
+		"container_tabs.position": {
+			"source": "text",
+			"target": "string",
+			"label": "Position"
+		},
+		"container_tabs.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"container_tabs.sub_heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub heading",
+			"role": "editorial.heading"
+		},
+		"menu.basic_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Basic btn title",
+			"role": "editorial.button_label"
+		},
+		"menu.basic_btn_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Basic btn link"
+		},
+		"menu.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.menu_label"
+		},
+		"menu.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items",
+			"subRoles": {
+				"dish_name": "offering.name",
+				"dish_description": "offering.description",
+				"dish_price": "offering.price"
+			},
+			"group": {
+				"kind": "menu_item"
+			}
+		},
+		"happyhours.hp_img": {
+			"source": "image",
+			"target": "image",
+			"label": "Hp img",
+			"role": "editorial.decorative_image"
+		},
+		"happyhours.hp_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp title",
+			"role": "editorial.heading"
+		},
+		"happyhours.hp_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp desc",
+			"role": "editorial.paragraph"
+		},
+		"happyhours.hp_info": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp info",
+			"role": "editorial.paragraph"
+		},
+		"happyhours.hp_badge": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp badge",
+			"role": "editorial.heading"
+		},
+		"happyhours.hp_link_text": {
+			"source": "url",
+			"target": "string",
+			"label": "Hp link text",
+			"role": "editorial.button_label"
+		},
+		"happyhours.hp_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Hp link"
+		},
+		"happyhours.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"teams.number_column": {
+			"source": "text",
+			"target": "string",
+			"label": "Number column"
+		},
+		"teams.title_section": {
+			"source": "text",
+			"target": "string",
+			"label": "Title section",
+			"role": "editorial.heading"
+		},
+		"teams.description_section": {
+			"source": "text",
+			"target": "string",
+			"label": "Description section",
+			"role": "editorial.paragraph"
+		},
+		"teams.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"teams.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items",
+			"subRoles": {
+				"img": "person.image",
+				"name_member": "person.name",
+				"name_office": "person.role",
+				"description": "person.bio"
+			},
+			"group": {
+				"kind": "person"
+			}
+		},
+		"modules.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"modules.content": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Content"
+		},
+		"chrome.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"chrome.brand_name": {
+			"source": "text",
+			"target": "string",
+			"label": "Brand name",
+			"role": "business.name",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		},
+		"chrome.footer_location_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer location title",
+			"role": "editorial.heading"
+		},
+		"chrome.footer_address": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer address",
+			"role": "contact.address",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"chrome.footer_map_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer map label",
+			"role": "contact.map_label",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"chrome.footer_hours_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer hours title",
+			"role": "editorial.heading"
+		},
+		"chrome.footer_hours": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer hours",
+			"role": "contact.hours",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"chrome.footer_contact_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer contact title",
+			"role": "editorial.heading"
+		},
+		"chrome.footer_phone": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer phone",
+			"role": "contact.phone",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"chrome.footer_email": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer email",
+			"role": "contact.email",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"chrome.subscribe_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe label",
+			"role": "editorial.heading"
+		},
+		"chrome.subscribe_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe title",
+			"role": "editorial.heading"
+		},
+		"chrome.subscribe_placeholder": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe placeholder",
+			"role": "editorial.button_label"
+		},
+		"chrome.subscribe_button": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe button",
+			"role": "editorial.button_label"
+		},
+		"chrome.subscribe_note": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe note",
+			"role": "editorial.paragraph"
+		},
+		"chrome.news_label": {
+			"source": "text",
+			"target": "string",
+			"label": "News label",
+			"role": "editorial.heading"
+		},
+		"chrome.news_title": {
+			"source": "text",
+			"target": "string",
+			"label": "News title",
+			"role": "editorial.heading"
+		},
+		"chrome.copyright": {
+			"source": "text",
+			"target": "string",
+			"label": "Copyright",
+			"role": "editorial.paragraph"
+		},
+		"chrome.skip_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Skip label",
+			"role": "editorial.button_label"
+		},
+		"chrome.menu_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Menu label",
+			"role": "editorial.menu_label"
+		},
+		"chrome.appearance_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Appearance label",
+			"role": "editorial.button_label"
+		},
+		"chrome.categories_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Categories title",
+			"role": "editorial.heading"
+		},
+		"chrome.prev_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Prev label",
+			"role": "editorial.button_label"
+		},
+		"chrome.next_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Next label",
+			"role": "editorial.button_label"
+		},
+		"chrome.more_label": {
+			"source": "text",
+			"target": "string",
+			"label": "More label",
+			"role": "editorial.button_label"
+		},
+		"chrome.read_more": {
+			"source": "text",
+			"target": "string",
+			"label": "Read more",
+			"role": "editorial.button_label"
+		},
+		"chrome.breadcrumb_home": {
+			"source": "text",
+			"target": "string",
+			"label": "Breadcrumb home",
+			"role": "editorial.menu_label"
+		},
+		"chrome.latest_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Latest title",
+			"role": "editorial.heading"
+		},
+		"chrome.not_found_code": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found code"
+		},
+		"chrome.not_found_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found title",
+			"role": "editorial.heading"
+		},
+		"chrome.not_found_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found text",
+			"role": "editorial.paragraph"
+		},
+		"chrome.not_found_back_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found back label",
+			"role": "editorial.button_label"
+		},
+		"chrome.footer_map_url": {
+			"source": "url",
+			"target": "string",
+			"label": "Footer map url"
+		},
+		"chrome.logo_dark": {
+			"source": "image",
+			"target": "image",
+			"label": "Logo dark",
+			"role": "business.logo",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		},
+		"chrome.form_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Form id"
+		},
+		"chrome.search_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Search title",
+			"role": "editorial.heading"
+		},
+		"chrome.search_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Search label",
+			"role": "editorial.button_label"
+		},
+		"chrome.search_placeholder": {
+			"source": "text",
+			"target": "string",
+			"label": "Search placeholder",
+			"role": "editorial.button_label"
+		},
+		"chrome.search_button": {
+			"source": "text",
+			"target": "string",
+			"label": "Search button",
+			"role": "editorial.button_label"
+		},
+		"chrome.search_results": {
+			"source": "text",
+			"target": "string",
+			"label": "Search results",
+			"role": "editorial.paragraph"
+		},
+		"chrome.search_empty": {
+			"source": "text",
+			"target": "string",
+			"label": "Search empty",
+			"role": "editorial.paragraph"
+		},
+		"chrome.page_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Page label",
+			"role": "editorial.button_label"
+		},
+		"chrome.start_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Start label",
+			"role": "editorial.button_label"
+		},
+		"chrome.end_label": {
+			"source": "text",
+			"target": "string",
+			"label": "End label",
+			"role": "editorial.button_label"
+		},
+		"masthead.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"masthead.description": {
+			"source": "text",
+			"target": "string",
+			"label": "Description",
+			"role": "editorial.paragraph"
+		},
+		"masthead.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background",
+			"role": "editorial.decorative_image"
+		},
+		"category_info.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"category_info.description": {
+			"source": "text",
+			"target": "string",
+			"label": "Description",
+			"role": "editorial.paragraph"
+		},
+		"category_info.image": {
+			"source": "image",
+			"target": "image",
+			"label": "Image",
+			"role": "editorial.decorative_image"
+		},
+		"contact.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"contact.image": {
+			"source": "image",
+			"target": "image",
+			"label": "Image",
+			"role": "editorial.decorative_image"
+		},
+		"contact.card_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Card title",
+			"role": "editorial.heading"
+		},
+		"contact.card_text": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Card text"
+		},
+		"contact.social_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Social title",
+			"role": "editorial.heading"
+		},
+		"contact.social_links": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Social links",
+			"subRoles": {
+				"label": "editorial.menu_label"
+			}
+		},
+		"contact.address": {
+			"source": "text",
+			"target": "string",
+			"label": "Address",
+			"role": "contact.address",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"contact.phone_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Phone label",
+			"role": "editorial.button_label"
+		},
+		"contact.phone": {
+			"source": "text",
+			"target": "string",
+			"label": "Phone",
+			"role": "contact.phone",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"contact.web_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Web label",
+			"role": "editorial.button_label"
+		},
+		"contact.webpage": {
+			"source": "url",
+			"target": "string",
+			"label": "Webpage"
+		},
+		"contact.form_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Form title",
+			"role": "editorial.heading"
+		},
+		"contact.form_note": {
+			"source": "text",
+			"target": "string",
+			"label": "Form note",
+			"role": "editorial.paragraph"
+		},
+		"contact.form_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Form id"
+		},
+		"reservation.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title",
+			"role": "editorial.heading"
+		},
+		"reservation.blocks": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Blocks",
+			"subRoles": {
+				"image": "editorial.decorative_image",
+				"label": "editorial.heading",
+				"title": "editorial.heading",
+				"text": "editorial.paragraph",
+				"button_label": "editorial.button_label"
+			}
+		},
+		"reservation.online_image": {
+			"source": "image",
+			"target": "image",
+			"label": "Online image",
+			"role": "editorial.decorative_image"
+		},
+		"reservation.online_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Online title",
+			"role": "editorial.heading"
+		},
+		"reservation.online_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Online text",
+			"role": "editorial.paragraph"
+		},
+		"reservation.online_phone": {
+			"source": "text",
+			"target": "string",
+			"label": "Online phone",
+			"role": "contact.phone",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
+		},
+		"reservation.online_button": {
+			"source": "text",
+			"target": "string",
+			"label": "Online button",
+			"role": "editorial.button_label"
+		}
+	}
+}

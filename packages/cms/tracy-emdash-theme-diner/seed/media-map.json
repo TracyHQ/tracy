@@ -1,0 +1,1407 @@
+{
+	"generatedAt": "2026-11-08T08:06:02.581Z",
+	"source": "JA Diner j6 1.0.5 webroot",
+	"items": [
+		{
+			"key": "images/joomlart/blog/item-1",
+			"file": "images/joomlart/blog/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d34e99e1c4f083e83583cb141fcfcfc302f56c3dc4c530043a5f3cd01e445708",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/marketing-detail-1",
+			"file": "images/joomlart/blog/marketing-detail-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "56bdfd9905d79bcf86050065af9d15f6cb3bd0c23ba95b714a4d668571ca7876",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "posts",
+					"slug": "did-ihop-s-publicity-stunt-hurt-applebee-s",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "category_info",
+					"slug": "restaurant-marketing",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "reservation",
+					"slug": "reservation-layout",
+					"locale": "en",
+					"path": "online_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/item-2",
+			"file": "images/joomlart/blog/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "cfe5e82651630e88fe1c9a5320bb15457480f78c6850e2ef8d8ba8887e5e6364",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "we-ve-been-nominated-for-the-britain-restaurant-awards",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/marketing-detail-2",
+			"file": "images/joomlart/blog/marketing-detail-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3e27860a73f2068d32927f73620512ed5c9d4ffbf2600bae1cb92b4b47e08947",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "we-ve-been-nominated-for-the-britain-restaurant-awards",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "posts",
+					"slug": "three-broomsticks-welcomes-new-chef-caleb-nunez",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "posts",
+					"slug": "buffalo-wild-wings-considers-adding-sports-betting",
+					"locale": "en",
+					"path": "detail_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/item-3",
+			"file": "images/joomlart/blog/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "7e616b66dec3587f7a9080e0c9b5a5a72231d58116d9e48d6202a7c956d70173",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "three-broomsticks-welcomes-new-chef-caleb-nunez",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/item-4",
+			"file": "images/joomlart/blog/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "5e06e9ccfb57f18423ed06ccd8c2efc9530c5d881e7bceace679a55dbfe47f91",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "three-broomsticks-s-autumn-menu-unveiled",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-detail-5",
+			"file": "images/joomlart/blog/news-detail-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e8b992ee9428b6d2c8a9ba39e06ef14e2cde2c4031fa7ea9b4c99a8777d6667a",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "three-broomsticks-s-autumn-menu-unveiled",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "posts",
+					"slug": "burger-king-takes-a-stand-on-the-pink-tax",
+					"locale": "en",
+					"path": "detail_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-1",
+			"file": "images/joomlart/blog/business-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a63cdc8d870aad46cd587cae6bd62e5fa6a893acf5b8199d37227443f14de9b9",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "4-habits-that-can-improve-your-customer-service",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-detail-1",
+			"file": "images/joomlart/blog/business-detail-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3844d0193d83e1f8e7bf21b6342aae502995b5aee54c261315c3dac9fab2480c",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "4-habits-that-can-improve-your-customer-service",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "category_info",
+					"slug": "restaurant-business",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-2",
+			"file": "images/joomlart/blog/business-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a59720de3664e2348a4074868e5a84c94f9776da83642cf24e4d4b462addb25c",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "8-trends-trickling-down-to-mainstream-menus",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-detail-2",
+			"file": "images/joomlart/blog/business-detail-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6cbbc97a02481852d73fe15b03bafa2f2efd2bbee57868098f55a88991f55c9a",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "8-trends-trickling-down-to-mainstream-menus",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "posts",
+					"slug": "we-ve-been-nominated-for-the-britain-restaurant-awards",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "three-broomsticks-welcomes-new-chef-caleb-nunez",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "three-broomsticks-s-autumn-menu-unveiled",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "4-habits-that-can-improve-your-customer-service",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "8-trends-trickling-down-to-mainstream-menus",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "starbucks-brings-under-armour-exec-on-board",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "inside-olive-garden-s-never-ending-pasta-pass",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "century-old-nathan-s-famous-aims-for-youth-with-new-look",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "did-ihop-s-publicity-stunt-hurt-applebee-s",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "buffalo-wild-wings-considers-adding-sports-betting",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "this-week-s-restaurant-nightmares-language-people",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "jason-alexander-is-kfc-s-new-colonel",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "10-most-alluring-ltos-on-menus-in-july",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "burger-king-takes-a-stand-on-the-pink-tax",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-restaurants-can-promote-a-james-beard-recognition",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+					"locale": "en",
+					"path": "body[4].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-3",
+			"file": "images/joomlart/blog/business-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b783c1fb6b0aa1b4a0a989a28c7be24f1cc709564b3746eb9bba8df79a508986",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "starbucks-brings-under-armour-exec-on-board",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-detail-3",
+			"file": "images/joomlart/blog/business-detail-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b16aa344ffa36905425a843f1da4e6bd493b1683b24dbbd33307648fb6f7e5b8",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "starbucks-brings-under-armour-exec-on-board",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "reservation",
+					"slug": "reservation-layout",
+					"locale": "en",
+					"path": "blocks[0].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-4",
+			"file": "images/joomlart/blog/business-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9316acecba9786cedaebe5d0db1941d10ddfb9597f30672d4d78ae348c7d411a",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "inside-olive-garden-s-never-ending-pasta-pass",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-detail-4",
+			"file": "images/joomlart/blog/business-detail-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1b547a1e880b4a978759b065db18d6990a60d130fe7089b5c28f6f9cc9cb668a",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "inside-olive-garden-s-never-ending-pasta-pass",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "posts",
+					"slug": "we-ve-been-nominated-for-the-britain-restaurant-awards",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "three-broomsticks-welcomes-new-chef-caleb-nunez",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "three-broomsticks-s-autumn-menu-unveiled",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "4-habits-that-can-improve-your-customer-service",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "8-trends-trickling-down-to-mainstream-menus",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "starbucks-brings-under-armour-exec-on-board",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "inside-olive-garden-s-never-ending-pasta-pass",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "century-old-nathan-s-famous-aims-for-youth-with-new-look",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "did-ihop-s-publicity-stunt-hurt-applebee-s",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "buffalo-wild-wings-considers-adding-sports-betting",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "this-week-s-restaurant-nightmares-language-people",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "jason-alexander-is-kfc-s-new-colonel",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "10-most-alluring-ltos-on-menus-in-july",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "burger-king-takes-a-stand-on-the-pink-tax",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-restaurants-can-promote-a-james-beard-recognition",
+					"locale": "en",
+					"path": "body[13].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+					"locale": "en",
+					"path": "body[13].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-5",
+			"file": "images/joomlart/blog/business-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "af70c907e0596d0082cb833c6cc27748bdd3196cd2dfbcb312142764aacf470e",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "century-old-nathan-s-famous-aims-for-youth-with-new-look",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/business-detail-5",
+			"file": "images/joomlart/blog/business-detail-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ae0c4a793063928b08d79b06edaf35bf999e8236f11abc01448c2be73820f9bf",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "century-old-nathan-s-famous-aims-for-youth-with-new-look",
+					"locale": "en",
+					"path": "detail_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/marketing-1",
+			"file": "images/joomlart/blog/marketing-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "33dfecbb21378e48b709af3a5be0fab7bc431fd760b1f3315a4db014833f2797",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "did-ihop-s-publicity-stunt-hurt-applebee-s",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/marketing-2",
+			"file": "images/joomlart/blog/marketing-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d67bfe8a89be92121eac281afe66cbc82e035a76ba52f50b15683c49436ca2f4",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "buffalo-wild-wings-considers-adding-sports-betting",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/marketing-3",
+			"file": "images/joomlart/blog/marketing-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b89b5cd5cd3fdd6cced5d2afd7b613ad7dcbc02d2704846e2411f6b8c74c0df0",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "this-week-s-restaurant-nightmares-language-people",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/marketing-detail-3",
+			"file": "images/joomlart/blog/marketing-detail-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d05bbab7e0fde69cbe9b62632c3b71d4a2b08b69d20d16cea5cf62662266547a",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "this-week-s-restaurant-nightmares-language-people",
+					"locale": "en",
+					"path": "detail_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/marketing-4",
+			"file": "images/joomlart/blog/marketing-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "47788b281c1f71abfb0721817f2d89e7334d86ce4f02639604cbf56bdc0e214b",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "jason-alexander-is-kfc-s-new-colonel",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/marketing-detail-4",
+			"file": "images/joomlart/blog/marketing-detail-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2eff17d129fad1f6188ba3ba42948049b7e92892c95b583f306f0a2f741ad44b",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "jason-alexander-is-kfc-s-new-colonel",
+					"locale": "en",
+					"path": "detail_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-1",
+			"file": "images/joomlart/blog/news-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "88ec6e61491736b64e488f043225ab3c274643d6e6e75ce107bcd45bc3b509e6",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "10-most-alluring-ltos-on-menus-in-july",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-detail-1",
+			"file": "images/joomlart/blog/news-detail-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "c8581add00176b673c0a5064fc01adf34dac5f192820175908c452c82d3253d3",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "10-most-alluring-ltos-on-menus-in-july",
+					"locale": "en",
+					"path": "detail_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-2",
+			"file": "images/joomlart/blog/news-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "07989e1292d170b86ff607943ffb015a75610f0c0eee52cb0109fa7ab714a885",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-detail-2",
+			"file": "images/joomlart/blog/news-detail-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d8a0088515b43e45801b40a93f90fbf7f193d11f2254ff1be94b0981243f475e",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "reservation",
+					"slug": "reservation-layout",
+					"locale": "en",
+					"path": "blocks[1].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-3",
+			"file": "images/joomlart/blog/news-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "83d303874e43deb75a9c21b8f7de442a95df67d428350c3c392487967fe90ed8",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-detail-3",
+			"file": "images/joomlart/blog/news-detail-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "517697c7d808634d6b3b13badafa06738920c8a7b09d4bf83786654cd84f97f1",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "category_info",
+					"slug": "restaurant-news",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-4",
+			"file": "images/joomlart/blog/news-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "cfcadd6faacb7cc6ea36b2d6f393ad04f6298ef82769f1d3a8f7019e9a30cc6c",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-detail-4",
+			"file": "images/joomlart/blog/news-detail-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2b54d8ed3b3b81641043589377d610bb699c4769201e5a57a52797d4954de4f7",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+					"locale": "en",
+					"path": "detail_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/news-5",
+			"file": "images/joomlart/blog/news-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "5d4bc64b46225991469f7e154cf2803c4050c6a0927beccbb389bafda02c79a5",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "burger-king-takes-a-stand-on-the-pink-tax",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/guide-1",
+			"file": "images/joomlart/blog/guide-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "02c891dcd4eedc921477e336cc1b293f90f9d9cfa859b41a31406948d6dc0a93",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/guide-detail-1",
+			"file": "images/joomlart/blog/guide-detail-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ac12adda776024fff33b72e0d65b01731b67c6e8a019a30d73f6732c31901b76",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+					"locale": "en",
+					"path": "detail_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/guide-2",
+			"file": "images/joomlart/blog/guide-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2ccbeb679a8a657f47e9f95ef97e9f474c6794c92dd33e00617fc1bf4be5a9be",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-restaurants-can-promote-a-james-beard-recognition",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/guide-detail-2",
+			"file": "images/joomlart/blog/guide-detail-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "22a603727852e2f1357baa0cc0f1d2dd7806a799d807cf06860697316814828e",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-restaurants-can-promote-a-james-beard-recognition",
+					"locale": "en",
+					"path": "detail_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/guide-3",
+			"file": "images/joomlart/blog/guide-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "c8045129aa21bdd7b9d5a3bd8e74ac3137a3dadc897e4cb2780bb77e4d1265c4",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/guide-detail-3",
+			"file": "images/joomlart/blog/guide-detail-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "906a1ec6b8e83444351832de10c676f95d03a11155cfb6a2300d3d46b0dd6502",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+					"locale": "en",
+					"path": "detail_image"
+				},
+				{
+					"collection": "category_info",
+					"slug": "restaurant-guide",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/slideshow/item-1",
+			"file": "images/joomlart/slideshow/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "65c9821f8226277cc91ef54db1de5f12a8978ba6bcd748e6669f7e3699f543d2",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "slideshow",
+					"locale": "en",
+					"path": "items[0].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/slideshow/item-2",
+			"file": "images/joomlart/slideshow/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4d26a9806b87d4f38944e554ef83f7a94c0a932898d92175c8e5cd5e3a6d7a81",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "slideshow",
+					"locale": "en",
+					"path": "items[1].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-1",
+			"file": "images/joomlart/features/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "60cfc0911c28a3dd37dd6ba3a7b1459fe8e6b209c7e22bb12f646677b71ca1ba",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "meet-three-broomsticks",
+					"locale": "en",
+					"path": "items[0].ft_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-2",
+			"file": "images/joomlart/features/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2be21b61aa1aafe25bf6e0bed4ca10c01847a25242d947ff100005dd187b3be7",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "meet-three-broomsticks",
+					"locale": "en",
+					"path": "items[1].ft_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-3",
+			"file": "images/joomlart/features/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ce707ddca395f12d7a94c00fc6889bffc5d0a700d03fb24c6044e63e723f8223",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "gallery",
+					"locale": "en",
+					"path": "items[0].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-4",
+			"file": "images/joomlart/features/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b725cf748ddd6e5ce6751f2ac2f0ae42a4b489021027860058e28661e333fc42",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "gallery",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-5",
+			"file": "images/joomlart/features/item-5.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "2a29185baf751ad84642e5089125f6c10ffb6d2ebcc4a35e076fbf4f4e800484",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "meet-our-chef",
+					"locale": "en",
+					"path": "img_features"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/about/picture-about-1",
+			"file": "images/joomlart/other/about/picture-about-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "01ec9f21e9c1c064763c80b630534eaa50d25814d20dccf5a37156963df49ea5",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-style-4",
+					"locale": "en",
+					"path": "items[0].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/about/picture-about-2",
+			"file": "images/joomlart/other/about/picture-about-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4509796c5c167439cbd7a961f50be41931884252730d1258ff6d98d71e6a4092",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-style-4",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/about/picture-about-3",
+			"file": "images/joomlart/other/about/picture-about-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4230758b9d2ac5eb732802871512c75404de25408adfd59d43c345f7f9f61ac1",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-style-4",
+					"locale": "en",
+					"path": "items[2].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/about/picture-about-4",
+			"file": "images/joomlart/other/about/picture-about-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3199c24b5b80dbd2e4539bf6ba05d734219451be83bd8f54cdf76496de786b6e",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-style-4",
+					"locale": "en",
+					"path": "items[3].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/about/picture-about-5",
+			"file": "images/joomlart/other/about/picture-about-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "60f3ac60291dfe5761a74e6e5021bced1b421855e2510b644d6a3981b879acaf",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-style-5",
+					"locale": "en",
+					"path": "items[0].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/about/picture-about-6",
+			"file": "images/joomlart/other/about/picture-about-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "fa121621b98dfc0138b0b79d44849a87bdf292b51d2a2a73795656365dfeb64a",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-style-5",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/about/picture-about-7",
+			"file": "images/joomlart/other/about/picture-about-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "65288b7ce6625287a1ad65fbf689e8f48dae19caee9f89f0d488ff8a7cecb807",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-style-5",
+					"locale": "en",
+					"path": "items[2].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/about/picture-about-8",
+			"file": "images/joomlart/other/about/picture-about-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ec69af7ce9faaa84484666e67680d9436fad3bf198005a51b6f244695791f895",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-style-5",
+					"locale": "en",
+					"path": "items[3].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/tab-intro",
+			"file": "images/joomlart/others/tab-intro.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "d90657739741cc16295ef8e5ce472f405067910089d3cb15d4aa47268f0213ec",
+			"targets": [
+				{
+					"collection": "container_tabs",
+					"slug": "discover-our-menu",
+					"locale": "en",
+					"path": "image_intro"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/bg-login",
+			"file": "images/joomlart/other/bg-login.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8cd180a0a1a10fbbe4d7e3f3aaeab4bb9617952a2b2a1ff332483f52fd88a051",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "happy-hours-style-3",
+					"locale": "en",
+					"path": "hp_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/bg-offer-2",
+			"file": "images/joomlart/other/bg-offer-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "81a61df20894d9881c35357d7c618adfe712876e614bb0db2e9670284519f793",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "happy-hours-style-1",
+					"locale": "en",
+					"path": "hp_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/bg-offer-1",
+			"file": "images/joomlart/other/bg-offer-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2e582a5584366b82b23e4b19df14d1467d77bb08aa3eaf07f03fd8ab225c5659",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "happy-hours-style-2",
+					"locale": "en",
+					"path": "hp_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/member/Chef-8",
+			"file": "images/joomlart/other/member/Chef-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "585b13ebd5ed4a60c2d66dbca769b52e28475d31b37b21804923c6b8c561c62c",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "teams-style-1",
+					"locale": "en",
+					"path": "items[0].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/member/chef-1",
+			"file": "images/joomlart/other/member/chef-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6c50019af31af664bd741c0709212683b537fa2d8b0b369a20ceb40a48f323b3",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "teams-style-1",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/member/chef-2",
+			"file": "images/joomlart/other/member/chef-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ce95b6a1a2f8ba9716ea6c1d3030be2660a8839f530eae1e894f41c923f6c20f",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "teams-style-1",
+					"locale": "en",
+					"path": "items[2].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/member/chef-3",
+			"file": "images/joomlart/other/member/chef-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0be9a95ccb8882b4e571e86effb6ddb5f14a919a5a3da636eddf472c56513e4c",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "teams-style-1",
+					"locale": "en",
+					"path": "items[3].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/member/chef-4",
+			"file": "images/joomlart/other/member/chef-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6a94c5965b131ce1f7d5c58c67673a2a937579c4a78693540631abecae56901d",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "teams-style-1",
+					"locale": "en",
+					"path": "items[4].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/member/chef-5",
+			"file": "images/joomlart/other/member/chef-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "f729eb809b4246af23fb345a97a3923fc2792d8b943343e6ee29b3b29e953228",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "teams-style-1",
+					"locale": "en",
+					"path": "items[5].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/member/chef-6",
+			"file": "images/joomlart/other/member/chef-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0642db7b90819cad88da7e4d3bf975a0be4299113ceedefa1770b6c0426433e8",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "teams-style-1",
+					"locale": "en",
+					"path": "items[6].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/member/Chef-7",
+			"file": "images/joomlart/other/member/Chef-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e097b81e3b49715d0a666032522867927cb99162f9f8cece2aaf807b7a0c873e",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "teams-style-1",
+					"locale": "en",
+					"path": "items[7].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/bg-contact-02",
+			"file": "images/joomlart/other/bg-contact-02.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2b41bc7518e639abb1bb04ca13e4d9f97feeaba8eae94a73866da48d3ee7141e",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "contact-us",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/banner-offer",
+			"file": "images/joomlart/other/banner-offer.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "147e20c6b8854329d90c80f243f120951c076242ea8da6b652fe64b3562f50b0",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "offers",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/banner-about",
+			"file": "images/joomlart/other/banner-about.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "70630ad86a76d96a144435acec3be92e7367feb8b37b03a3be1f010d569823bc",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "about-us",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/banner-blog",
+			"file": "images/joomlart/other/banner-blog.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b9c399b9174273e0328d812c9f8cc9679e27ccc71276a13dd754a9d26695202b",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "our-blog",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/banner-reservation",
+			"file": "images/joomlart/other/banner-reservation.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3b534389e17f7c423a9a8a03b372264002a7eaf6ebcab2110924dd2b8c985eb2",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "reservation",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/bg-martsearch",
+			"file": "images/joomlart/other/bg-martsearch.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b2e2b0cc305108339114a67899e77739d57f8057b53ac3892135f0760ff429ab",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "search",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/other/banner-contact",
+			"file": "images/joomlart/other/banner-contact.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4550df99e22d888caab73c94c1116a0cf45228dd52f9a724e5f972240a8a7cc6",
+			"targets": [
+				{
+					"collection": "contact",
+					"slug": "contact",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/banner-1",
+			"file": "images/joomlart/others/banner-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "46c029c3f9e229a84440cb985f020f8406951b0f9d5f5a0a8c491a18c5472621",
+			"targets": [
+				{
+					"collection": "modules",
+					"slug": "banner-1",
+					"locale": "en",
+					"path": "content[0].asset"
+				}
+			]
+		}
+	]
+}

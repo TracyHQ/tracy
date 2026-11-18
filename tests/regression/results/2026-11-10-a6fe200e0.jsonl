@@ -1,0 +1,7 @@
+{"id":"REG-PR-541-artifact-write-quality","verdict":"PASS","commit":"a6fe200e04d1180baa4a37daf8df8aaa4ee6bc91","ran_at":"2026-11-10T17:39:45.644Z","evidence":"REG-PR-541-artifact-write-quality.log"}
+{"id":"REG-PR-541-chain-full-backup-recovery","verdict":"BLOCKED","commit":"a6fe200e04d1180baa4a37daf8df8aaa4ee6bc91","ran_at":"2026-11-10T17:39:45.645Z","evidence":"REG-PR-541-chain-full-backup-recovery.log"}
+{"id":"REG-PR-541-media-admission","verdict":"BLOCKED","commit":"a6fe200e04d1180baa4a37daf8df8aaa4ee6bc91","ran_at":"2026-11-10T17:39:45.646Z","evidence":"REG-PR-541-media-admission.log"}
+{"id":"REG-PR-541-native-image-measurement","verdict":"PASS","commit":"a6fe200e04d1180baa4a37daf8df8aaa4ee6bc91","ran_at":"2026-11-10T17:39:46.106Z","evidence":"REG-PR-541-native-image-measurement.log"}
+{"id":"REG-PR-541-object-storage-deadlines","verdict":"PASS","commit":"a6fe200e04d1180baa4a37daf8df8aaa4ee6bc91","ran_at":"2026-11-10T17:39:46.951Z","evidence":"REG-PR-541-object-storage-deadlines.log"}
+{"id":"REG-PR-541-unresolved-bench-checks","verdict":"PASS","commit":"a6fe200e04d1180baa4a37daf8df8aaa4ee6bc91","ran_at":"2026-11-10T17:39:47.043Z","evidence":"REG-PR-541-unresolved-bench-checks.log"}
+{"id":"REG-PR-541-writer-effort","verdict":"PASS","commit":"a6fe200e04d1180baa4a37daf8df8aaa4ee6bc91","ran_at":"2026-11-10T17:39:47.184Z","evidence":"REG-PR-541-writer-effort.log"}

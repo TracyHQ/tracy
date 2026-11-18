@@ -1,0 +1,3 @@
+- **Explicit Retry recovers an owned failed chain brief even when a historical action completed early** — pipeline maintainers · #541 · `fix/wo-artifact-integration` · 2026-11-11
+  **Affects:** WO action acceptance, the durable demo runner and the site brief worker. Deploy the web server together; no site plugin or UI change is required. Recovery reuses the same site and frozen revision, preserving historical actions and QA during the restart.
+  **Why / Measured:** Acceptance records authority for the exact failed brief generation, and restart checks it atomically against the durable action, current site, owner seat and active writers. Database tests cover replay, a failed retry child, changed or replaced sites, revoked ownership, live writers and forged authority.

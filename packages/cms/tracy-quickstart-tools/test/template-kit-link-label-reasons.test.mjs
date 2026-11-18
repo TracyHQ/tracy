@@ -116,6 +116,34 @@ test('relabel drops every labelOf copy, and a settled kit passes the check', () 
   assert.ok(!JSON.stringify(kit).includes('labelOf'))
 })
 
+test('a pager number opening a result page of the list under another address is pagination', () => {
+  const pager = (n) => ({
+    id: `body-team.link-${n}`,
+    label: String(n),
+    target: `/authors/dana?start=${(n - 1) * 4}`,
+    action: 'page-control'
+  })
+  const kit = {
+    pages: [
+      // A menu page shows the author's list; the router writes its pager links to the author's own address.
+      { id: 'page-team', path: '/team', blocks: ['body-team'] },
+      { id: 'page-dana-2', path: '/authors/dana?start=4', blocks: ['body-author'] }
+    ],
+    blocks: [
+      { id: 'body-team', links: [pager(2), pager(4), { ...pager(5), target: '/authors/sam?start=16' }] },
+      { id: 'body-author', links: [] }
+    ],
+    checks: {},
+    errors: []
+  }
+  fixedLinkLabels(kit)
+  assert.deepEqual(
+    kit.blocks[0].links.map((l) => l.fixedLabel?.rule ?? null),
+    ['pagination', 'pagination', null],
+    'a list the kit never paged through is no proof'
+  )
+})
+
 test('a rating control: digits on links with no address are the control value, not a slot', () => {
   const kit = {
     pages: [{ id: 'page-news', path: '/news', blocks: ['body-news'] }],
@@ -272,4 +300,28 @@ test('relabel lists a label slot it names now on the block, as assemble does, so
     [['article-3.1', 'article.title']]
   )
   assert.equal(r.wrong, 0)
+})
+
+test('a category or tag archive link, and an in-page control with no address, are fixed by rule', () => {
+  const kit = {
+    pages: [],
+    blocks: [
+      {
+        id: 'body-blog',
+        links: [
+          { id: 'c1', label: 'Restaurant Marketing', target: '/category/our-blog/restaurant-marketing' },
+          { id: 'c2', label: 'Rye', target: '/tag/rye' },
+          { id: 'c3', label: 'Messages 25', target: null, action: 'page-control' },
+          { id: 'c4', label: 'Sourdough basics', target: '/sourdough', action: 'navigation' }
+        ]
+      }
+    ],
+    checks: {},
+    errors: []
+  }
+  fixedLinkLabels(kit)
+  assert.deepEqual(
+    kit.blocks[0].links.map((l) => l.fixedLabel?.rule ?? null),
+    ['taxonomy-term', 'taxonomy-term', 'page-control', null]
+  )
 })

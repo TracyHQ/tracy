@@ -25,6 +25,22 @@ const RANK = { pass: 0, warn: 1, block: 2 }
 /** A photo this small is a thumbnail at most (`resolutionGradeOf`): not usable on a site. */
 const USABLE_QUALITY = new Set(['high', 'medium'])
 const NOT_A_PHOTO = new Set(['logo', 'text-graphic'])
+/**
+ * The brief items (`itemKindsOfBrief`) a build shows as what the business offers or does: the menu's and the services'
+ * lines, and its posts' dishes, products, services, events, offers and news (`content-pool.mjs`).
+ */
+const CONTENT_ITEM_KINDS = [
+  'menu-item',
+  'service',
+  'content.dish',
+  'content.product',
+  'content.service',
+  'content.event',
+  'content.offer',
+  'content.news'
+]
+/** The facts (`brief-facts.mjs`) that are offerings: a menu link or item, or a service, from any source. */
+const OFFERING_FACT_FIELDS = new Set(['services', 'menu'])
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
@@ -205,6 +221,52 @@ export function briefReadinessOf(brief, { templateKinds = null } = {}) {
       unportrayed,
       (names) => `Can you send a portrait photo of ${names}? None was found.`
     )
+  })
+
+  // A site needs something of the business to say (#554): what it offers, its story or a fact it states. Without any, the
+  // reading came back empty (#544) and the build would be a template with a name on it, so it blocks: research again, or
+  // the seller adds the business's information. A business with no named team is not missing anything here.
+  // 🔒 A BIO ALONE IS NOT CONTENT. The profile bio becomes the story fact (`facts`, field `story`) and the About copy of
+  // every brief; it is what an empty reading leaves (Portland City Boxing, #554), so neither is counted.
+  const kinds = itemKindsOfBrief(brief)
+  const sections = list(brief?.sitemap).flatMap((p) => list(p?.sections))
+  const content = {
+    // The reading's offerings, and offering facts from any source (a menu link, a menu reader's item, a request's item).
+    offerings:
+      offerings.length +
+      list(brief?.facts).filter((f) => OFFERING_FACT_FIELDS.has(f?.field) && f.onSite !== false).length,
+    // The published menus the Menu page is told to show from their source (`brief.mjs`, section `menu`).
+    menus: sections
+      .filter((s) => s?.kind === 'menu')
+      .flatMap((s) => list(s.evidence))
+      .filter((e) => nonEmpty(e?.url)).length,
+    // The reading's story, and stories posts tell (`content.story`, `content-pool.mjs`).
+    story:
+      list(brief?.reading?.story).filter((i) => nonEmpty(i?.label)).length +
+      (kinds.get('content.story') ?? 0),
+    // The facts the About section states: the reading's and the logo's (`logoFactsOf`).
+    facts: sections
+      .filter((s) => s?.kind === 'story')
+      .flatMap((s) => list(s.facts))
+      .filter((f) => nonEmpty(f?.text)).length,
+    items: CONTENT_ITEM_KINDS.reduce((n, k) => n + (kinds.get(k) ?? 0), 0)
+  }
+  const hasContent = Object.values(content).some((n) => n > 0)
+  checks.push({
+    id: 'business-content',
+    verdict: hasContent ? 'pass' : 'block',
+    measured: content,
+    remedy: 'research',
+    questions: hasContent
+      ? []
+      : [
+          {
+            id: 'owner.business-content',
+            field: 'business-content',
+            question:
+              'Which services, menu items or products do you offer? None was found in what was collected, and a description alone does not show them.'
+          }
+        ]
   })
 
   const { unrouted } = routesOfBrief(brief)

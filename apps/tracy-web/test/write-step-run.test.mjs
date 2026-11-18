@@ -171,23 +171,23 @@ test('a site that answers another contract stops the run, naming both', async ()
   assert.equal(site.applies().length, 0)
 })
 
-test('two owners with different content stop the run; the report names the slot and both files', async () => {
+test('two owners with different content are settled on the slot; the report names the slot and both files', async () => {
   const c = copy()
   c.slots.push({ slot: 'block-2.3', owner: 'writer', text: 'Words the plan hides', factIds: [] })
   const { report, site } = await run({ copy: c })
-  assert.equal(report.status, 'stopped')
-  assert.equal(report.cause.code, 'SLOT_DISPUTE')
-  assert.match(report.cause.reason, /block-2\.3/)
+  assert.equal(report.status, 'done')
   assert.deepEqual(report.disputes[0].slot, 'block-2.3')
   assert.deepEqual(report.disputes[0].claims.map((x) => x.file).sort(), ['copy.json', 'plan.json'])
-  assert.equal(site.calls.length, 0)
+  assert.equal(report.disputes[0].settled.owner, 'plan')
+  assert.ok(site.applies().length >= 1)
 })
 
-test('the same slot twice in the copy with different words is a dispute; identical repeats are not', async () => {
+test('the same slot twice in the copy with different words is a dispute settled on the first; identical repeats are not', async () => {
   const twice = copy()
   twice.slots.push({ slot: 'block-1.1', owner: 'writer', text: 'Sign up', factIds: [] })
   const disputed = await run({ copy: twice })
-  assert.equal(disputed.report.cause.code, 'SLOT_DISPUTE')
+  assert.equal(disputed.report.status, 'done')
+  assert.equal(disputed.report.disputes[0].slot, 'block-1.1')
   const same = copy()
   same.slots.push({ ...same.slots[0], owner: 'writer' })
   const repeated = await run({ copy: same })
@@ -199,7 +199,7 @@ test('the same slot twice in the copy with different words is a dispute; identic
 test('a slot in a kept block with no owner is reported, does not stop the run, and fails while its demo stays', async () => {
   const c = copy()
   c.slots = c.slots.filter((s) => s.slot !== 'block-5.1')
-  const { report, line } = await run({ copy: c })
+  const { report, line } = await run({ copy: c }, { overSlot: () => ({ canHide: false }) })
   assert.equal(report.status, 'done')
   // The site cannot empty it, so the closing rule says its demo remains (closing-ladder.js).
   assert.deepEqual(

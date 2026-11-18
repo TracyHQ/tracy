@@ -1,0 +1,36 @@
+{
+  "change": "business gallery role provenance",
+  "issue": 548,
+  "pr": 570,
+  "codeCommit": "7de3ffd69bfe2ea208a61dfe1e40f3321c0d21a4",
+  "before": {
+    "suite": "site-pictures-export-provenance",
+    "passed": 8,
+    "failed": 2,
+    "skipped": 0,
+    "failure": "P07 accepted drawn and extended photos when the kit declared business.gallery_image and the wish used specific."
+  },
+  "after": {
+    "suiteFiles": 40,
+    "passed": 251,
+    "failed": 0,
+    "skipped": 0,
+    "command": "node --test --test-concurrency=2 --test-timeout=120000 apps/tracy-web/test/site-pictures*.test.mjs",
+    "database": "Owned local PostgreSQL for the bench suites; no credentials recorded."
+  },
+  "regression": {
+    "id": "REG-PR-570-gallery-role-provenance",
+    "verdict": "PASS",
+    "commit": "7de3ffd69bfe2ea208a61dfe1e40f3321c0d21a4"
+  },
+  "boundaries": [
+    "The kit role establishes documentary purpose independently of the planner match label.",
+    "The real-photo gallery reuse ladder remains available.",
+    "Generated or extended documentary pictures and twins do not enter changes, uploads or alt text.",
+    "Generic illustrative frames retain their existing behavior."
+  ],
+  "devAcceptance": {
+    "deployed": false,
+    "status": "Pending deployment and a terminal website build; local PASS does not establish website acceptance."
+  }
+}

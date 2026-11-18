@@ -15,9 +15,16 @@ const c = checks()
 const read = (/** @type {string} */ f) => readFileSync(join(THEME, f), 'utf8')
 
 for (const f of ['package.json', 'template.config.json']) {
-  c.check(`${f} is 1.0.1`, JSON.parse(read(f)).version === '1.0.1', JSON.parse(read(f)).version)
+  c.check(
+    `${f} is 1.0.1 or a later patch`,
+    /^1\.0\.[1-9]\d*$/.test(JSON.parse(read(f)).version),
+    JSON.parse(read(f)).version
+  )
 }
-c.check('Dockerfile label is 1.0.1', /io\.tracy\.template\.version="1\.0\.1"/.test(read('Dockerfile')))
+c.check(
+  'Dockerfile label is 1.0.1 or a later patch',
+  /io\.tracy\.template\.version="1\.0\.[1-9]\d*"/.test(read('Dockerfile'))
+)
 
 const css = read('src/styles/global.css')
 const reads = [

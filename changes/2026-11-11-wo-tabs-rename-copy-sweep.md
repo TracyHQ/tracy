@@ -1,0 +1,2 @@
+- **Tabs read Find businesses and Added businesses, and the owner's copy says business where it said place, with the sub-page footer removed** — Akemi · #522 · `feat/wo-ux-512` · 2026-11-11
+  **Affects:** Website Opportunities customers (renamed tabs, reworded buttons and notices) and translators: the English values of the changed keys differ, so the `interface-languages` and `dsh-locale` gates stay red until the English set is approved and every locale is updated. Another sweep keeps the English table free of the old wording.

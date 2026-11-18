@@ -2390,3 +2390,190 @@ export const LABELLED_SITE_SHAPE_CASES = ['clone', 'joomla', 'wordpress'].flatMa
     })
   ]
 })
+
+// ── a template demo folded into the demo farm (scripts/lib/demo-farm.sh, provision/fold.sh) ────────
+// Its `docker-compose.yml` is the forwarder `render-compose.sh` writes (`tracy_compose_forwarder`):
+// `<label>-web-1` as a haproxy TCP forwarder, no db, no webroot — which proves nothing about the CMS.
+// With the runtime marker saying `farm` and the demo's lean marker present, the matchers judge the
+// per-site compose fold.sh kept (`farm/per-demo.compose.yml`) instead, so a folded demo answers what
+// it answered before its fold — never TOKEN_CUSTODY_UNKNOWN for a fold alone, and never `other` for
+// a forwarder without the rest. demo-farm.test.mjs holds `forwarderCompose` to the real generator.
+
+/**
+ * The forwarder compose `tracy_compose_forwarder` writes for the site directory's label.
+ * @param {string} d - the site directory (its basename is the label)
+ * @param {{shared?: boolean, comments?: boolean, farmDir?: string}} [o]
+ */
+export function forwarderCompose(d, { shared = false, comments = true, farmDir = '/srv/tracy/_demos' } = {}) {
+  const label = path.basename(d)
+  const long = `${label}-web-1`.length > 63
+  const named = (svc) =>
+    long ? [`      ${svc}:`, `        aliases: ["${webDnsAlias(label)}"]`] : [`      ${svc}: {}`]
+  return [
+    'services:',
+    '  web:',
+    '    image: haproxy:3.0-alpine@sha256:34cc7d1f6142464d7d2b73e2a1eef7392556dbf304160aef543e513cfd9e5162',
+    ...(comments ? ["    # One process, not the image's master + worker pair."] : []),
+    '    entrypoint: ["haproxy", "-db", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]',
+    '    restart: unless-stopped',
+    '    read_only: true',
+    '    security_opt: ["no-new-privileges:true"]',
+    '    mem_limit: 32m',
+    '    memswap_limit: 32m',
+    '    cpus: 0.5',
+    '    pids_limit: 64',
+    '    labels:',
+    '      tracy.runtime: farm',
+    '    environment:',
+    '      TRACY_DEMO_PORT: "${HOST_PORT:?this site\'s .env has no HOST_PORT}"',
+    '    volumes:',
+    `      - ${farmDir}/forward.haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro`,
+    '    networks:',
+    ...named('default'),
+    ...(shared ? named('tracy') : []),
+    '      farm: {}',
+    '    ports:',
+    '      - "127.0.0.1:${HOST_PORT:?this site\'s .env has no HOST_PORT — refusing to publish it on a default port another site may hold}:80"',
+    '',
+    'networks:',
+    '  default:',
+    '    external: true',
+    `    name: ${label}_default`,
+    ...(shared ? ['  tracy:', '    external: true', '    name: tracy_tracy'] : []),
+    '  farm:',
+    '    external: true',
+    '    name: tracy-demos-front',
+    ''
+  ].join('\n')
+}
+
+/** A folded demo's directory: forwarder, kept per-site compose, runtime marker, lean marker. */
+function folded(
+  d,
+  {
+    env = OLD_ENV,
+    kept = (x) => phpCompose(x, { flavor: 'joomla' }),
+    runtime = 'farm\n',
+    lean = true,
+    shared = false,
+    compose
+  } = {}
+) {
+  put(d, '.env', env)
+  put(d, 'docker-compose.yml', compose ? compose(d) : forwarderCompose(d, { shared }))
+  mkdirSync(path.join(d, 'apache'), { recursive: true })
+  if (lean) put(d, 'apache/tracy-demo-limits.conf', '# lean\n')
+  if (kept) {
+    mkdirSync(path.join(d, 'farm'), { recursive: true })
+    put(d, 'farm/per-demo.compose.yml', kept(d))
+  }
+  if (runtime !== null) put(d, 'runtime', runtime)
+}
+
+/** @type {Array<{name: string, arrange: (siteDir: string) => void, expect: 'emdash'|'other'|'unknown'}>} */
+export const FARM_SITE_SHAPE_CASES = [
+  {
+    name: 'farm: a folded demo, pre-06/09 .env — its kept compose proves it',
+    arrange: (d) => folded(d),
+    expect: 'other'
+  },
+  {
+    name: 'farm: a folded demo on the shared network',
+    arrange: (d) => folded(d, { shared: true }),
+    expect: 'other'
+  },
+  {
+    name: 'farm: a folded WordPress demo',
+    arrange: (d) => folded(d, { kept: (x) => phpCompose(x, { flavor: 'wordpress' }) }),
+    expect: 'other'
+  },
+  {
+    name: 'farm: a folded demo whose .env names its platform',
+    arrange: (d) => folded(d, { env: JOOMLA_ENV }),
+    expect: 'other'
+  },
+  {
+    name: 'farm: a forwarder without the runtime marker proves nothing',
+    arrange: (d) => folded(d, { runtime: null }),
+    expect: 'unknown'
+  },
+  {
+    name: 'farm: a forwarder and marker without the lean marker (no demo) proves nothing',
+    arrange: (d) => folded(d, { lean: false }),
+    expect: 'unknown'
+  },
+  {
+    name: 'farm: a forwarder and marker with the kept compose gone',
+    arrange: (d) => folded(d, { kept: null }),
+    expect: 'unknown'
+  },
+  {
+    name: 'farm: a kept compose that was not a fleet form answers as it did before the fold',
+    arrange: (d) => folded(d, { kept: () => MINIMAL_PHP }),
+    expect: 'unknown'
+  },
+  {
+    name: 'farm: a runtime marker that is not `farm`',
+    arrange: (d) => folded(d, { runtime: 'nginx\n' }),
+    expect: 'unknown'
+  },
+  {
+    name: 'farm: a hand-edited forwarder (an extra volume) is not the form',
+    arrange: (d) =>
+      folded(d, {
+        compose: (x) =>
+          forwarderCompose(x).replace(
+            '    networks:\n',
+            '      - /srv/tracy-sites/other/.webroot:/var/www/html\n    networks:\n'
+          )
+      }),
+    expect: 'unknown'
+  },
+  {
+    name: "farm: a forwarder of another label is not this demo's",
+    arrange: (d) =>
+      folded(d, {
+        compose: (x) =>
+          forwarderCompose(x).replace(`name: ${path.basename(x)}_default`, 'name: other_default')
+      }),
+    expect: 'unknown'
+  },
+  {
+    name: 'farm: an EmDash mark still wins',
+    arrange: (d) => folded(d, { env: 'HOST_PORT=1\nPLATFORM=emdash\n' }),
+    expect: 'emdash'
+  },
+  {
+    name: 'farm: a customer site with a stray marker answers by its own compose',
+    arrange: (d) => {
+      put(d, '.env', OLD_ENV)
+      put(d, 'docker-compose.yml', phpCompose(d, { flavor: 'joomla' }))
+      put(d, 'runtime', 'farm\n')
+    },
+    expect: 'other'
+  }
+]
+
+/** The same, for labels whose `<label>-web-1` exceeds 63 octets (aliased networks). */
+export const LABELLED_FARM_SITE_SHAPE_CASES = [false, true].flatMap((shared) => [
+  {
+    name: `farm, long label${shared ? ', shared' : ''}: a folded demo`,
+    label: LABELS.long,
+    arrange: (d) => folded(d, { shared }),
+    expect: 'other'
+  },
+  {
+    name: `farm, long label${shared ? ', shared' : ''}: the short-label forwarder form is not this label's`,
+    label: LABELS.long,
+    arrange: (d) =>
+      folded(d, {
+        shared,
+        compose: (x) =>
+          forwarderCompose(x, { shared }).replace(
+            `      default:\n        aliases: ["${webDnsAlias(LABELS.long)}"]`,
+            '      default: {}'
+          )
+      }),
+    expect: 'unknown'
+  }
+])

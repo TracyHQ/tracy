@@ -1,0 +1,3 @@
+- **Allow the JA Diner Joomla candidate through the existing step chain template switch while retaining the environment master switch.** — Codex · #541 · `fix/wo-artifact-integration` · 2026-11-11
+  **Affects:** WO pipeline selection and the site creation door. JA Diner J6 can run the chain when `STEP_CHAIN_ENABLED=1`; WordPress Diner and unsupported Joomla templates remain off. This candidate still requires a real personalized WO acceptance run before production release.
+  **Why / Measured:** The individual Diner readiness run passed all seven checks, Customize covered 25/25 slots, and Design system covered 49/49 slots. Switch and database-backed creation tests verify selection and refusal before provisioning.

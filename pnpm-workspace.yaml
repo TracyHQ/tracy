@@ -23,6 +23,8 @@ packages:
   - '!packages/cms/tracy-emdash-theme-coffee'
   # Same shape, same reason: JA Restaurant, the EmDash template built from the JA Restaurant Joomla (T3) site.
   - '!packages/cms/tracy-emdash-theme-restaurant'
+  # Same shape, same reason: JA Diner, the EmDash template built from the JA Diner Joomla (T3) site.
+  - '!packages/cms/tracy-emdash-theme-diner'
   # SPIKE: dsh as workspace source instead of registry.
   - vendor/tracy/dsh-better-locale
   - vendor/tracy/dsh-better-sidebar
@@ -131,6 +133,11 @@ patchedDependencies:
   '@fortune-sheet/core@1.0.4': vendor/tracy/deepseek-harness/patches/@fortune-sheet__core@1.0.4.patch
   '@fortune-sheet/react@1.0.4': vendor/tracy/deepseek-harness/patches/@fortune-sheet__react@1.0.4.patch
   exceljs@4.4.0: vendor/tracy/deepseek-harness/patches/exceljs@4.4.0.patch
+  # GHSA-fc5q-39xc-vjpf (ReDoS through single-branch repeated extglobs such as `+(*a)`): no
+  # picomatch release fixes it, so both copies carry the lib/parse.js part of upstream PR #246.
+  # Drop these two lines once picomatch ships a fixed release.
+  picomatch@2.3.2: patches/picomatch@2.3.2.patch
+  picomatch@4.0.7: patches/picomatch@4.0.7.patch
 
 # pnpm 11 denies dependency lifecycle scripts by default (strictDepBuilds): an unreviewed
 # script is a hard install error, not a warning. This list is upstream's own review, copied

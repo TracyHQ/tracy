@@ -7,7 +7,9 @@ import { REPAIR_LIMITS } from '../src/write-step/repair-pass/repair-limits.js'
 import { checkOf, failure, fakeAgent, fakeClock, stepNine } from './_write-step-nine-repair.mjs'
 
 const ALT = failure('alt-matches-picture', '/index.php/about', 'module-4.1', 'Demo coach lifting weights')
-const OVER = failure('words-over-picture', '/index.php/about', 'module-4.2', 'Join the class')
+const OVER = failure('words-over-picture', '/index.php/about', 'module-4.2', 'Join the class', {
+  target: { path: '#readable', tag: 'p', text: 'Join the class', marks: [], complete: true }
+})
 const DEMO = failure('demo-words', '/', 'module-2.1', 'Call Demo Gym today')
 
 const itemsOf = (agent) => agent.sent.requests.flatMap((r) => r.items)
@@ -16,7 +18,11 @@ test('each visible fault is sent once, with its page, element and one sentence; 
   const agent = fakeAgent()
   const LAYOUT = failure('text-overflow', '/', 'module-3.1', 'The heading runs off the page', { width: 390 })
   const first = checkOf([ALT, OVER, DEMO, { ...ALT, width: 390 }, LAYOUT])
-  const { result } = await stepNine({ checks: [first, checkOf([])], agent })
+  const { result } = await stepNine({
+    checks: [first, checkOf([])],
+    agent,
+    input: { pageHtml: async () => '<body><p id="readable">Join the class</p></body>' }
+  })
   assert.equal(result.report.status, 'done')
   // Two pages, two turns, each page in a session of its own.
   assert.equal(agent.sent.opened, 2)
@@ -79,6 +85,34 @@ test('no faults means no turn, and the site is handed over with the first check'
   assert.equal(saved.get('repair-pass.json').status, 'nothing-to-send')
 })
 
+test('step 9 saves the rejected-picture faults in its final report', async () => {
+  const pictures = {
+    version: 'site-pictures/1',
+    frames: [
+      {
+        frame: 'hero.1',
+        source: 'owner-photo',
+        sitePath: 'images/tracy-content/hero.jpg',
+        filledBy: { rung: 'best-rejected', faults: ['subject cut off'] }
+      }
+    ]
+  }
+  const { result, saved } = await stepNine({
+    checks: [checkOf([])],
+    agent: fakeAgent(),
+    input: { pictures }
+  })
+  assert.deepEqual(result.report.pictureReview, [
+    {
+      frame: 'hero.1',
+      source: 'owner-photo',
+      sitePath: 'images/tracy-content/hero.jpg',
+      filledBy: { rung: 'best-rejected', faults: ['subject cut off'] }
+    }
+  ])
+  assert.deepEqual(saved.get('site-write-report.json').pictureReview, result.report.pictureReview)
+})
+
 test('a turn that causes a new blocking failure on its page is undone, newest first', async () => {
   const agent = fakeAgent()
   const first = checkOf([DEMO, ALT, failure('demo-words', '/contact', 'module-5.1', 'demo@example.test')])
@@ -87,7 +121,11 @@ test('a turn that causes a new blocking failure on its page is undone, newest fi
     failure('text-overflow', '/', 'module-2.1', 'wider than 390 px'),
     failure('dead-links', '/index.php/contact', 'module-5.2', '/missing')
   ])
-  const { result } = await stepNine({ checks: [first, second, checkOf([])], agent })
+  const { result } = await stepNine({
+    checks: [first, second, checkOf([])],
+    agent,
+    input: { limits: { turnsAtOnce: 3 } }
+  })
   const byPage = Object.fromEntries(result.repair.turns.map((t) => [t.page, t.turnId]))
   // Pages go in the order their first fault was named: home, contact, about; undone newest first.
   assert.deepEqual(agent.sent.undone, [byPage['/contact'], byPage['/']])
@@ -118,7 +156,11 @@ test('faults still there after the second check get one resend round, then the p
   const first = checkOf([DEMO, ALT])
   // The home page's demo words are still there; the alt was fixed.
   const second = checkOf([DEMO])
-  const { result, checksRun } = await stepNine({ checks: [first, second, second], agent })
+  const { result, checksRun } = await stepNine({
+    checks: [first, second, second],
+    agent,
+    input: { limits: { turnsAtOnce: 3 } }
+  })
   assert.equal(agent.sent.prompts.length, 3)
   assert.deepEqual(
     agent.sent.requests[2].items.map((i) => i.element.label),
@@ -141,7 +183,8 @@ test('past ten minutes no new turn starts, and the step returns by twelve', asyn
       checkOf([])
     ],
     agent,
-    clock
+    clock,
+    input: { limits: { turnsAtOnce: 3 } }
   })
   assert.equal(agent.sent.prompts.length, 6, 'the seventh page is not started')
   assert.deepEqual(
@@ -165,7 +208,8 @@ test('a site check that cannot run after the turns hands over the written site w
       }
     }
   })
-  assert.equal(result.report.status, 'done')
+  assert.equal(result.report.status, 'stopped')
+  assert.equal(result.report.writeStatus, 'done')
   assert.equal(result.siteCheck, first)
   assert.match(result.repair.error, /the site check answered 500/)
   assert.ok(result.repair.turns.length > 0)
@@ -176,6 +220,43 @@ test('a site check that cannot run after the turns hands over the written site w
   )
   assert.ok(logged.some((line) => /the site check answered 500/.test(line)))
   assert.match(saved.get('repair-pass.json').error, /500/)
+})
+
+test('a build’s agent retires every session of the pass once it is over, and the bench’s agent is never asked to', async () => {
+  const agent = fakeAgent({ canRetire: true })
+  const { result } = await stepNine({ checks: [checkOf([DEMO, ALT]), checkOf([])], agent })
+  assert.deepEqual(agent.sent.retired, result.repair.sessions)
+  assert.ok(agent.sent.retired.length > 0)
+  const plain = fakeAgent()
+  await stepNine({ checks: [checkOf([DEMO, ALT]), checkOf([])], agent: plain })
+  assert.deepEqual(plain.sent.retired, [])
+})
+
+test('the sessions are retired when the pass was taken back too, and a retire that fails is logged, not thrown', async () => {
+  const agent = fakeAgent({ canRetire: true })
+  let thrown = false
+  agent.retire = async () => {
+    if (!thrown) {
+      thrown = true
+      throw new Error('dsh refused the archive')
+    }
+    return { ok: false, reason: 'dsh did not list the session as archived' }
+  }
+  const first = checkOf([DEMO, ALT])
+  const { result, logged } = await stepNine({
+    checks: [first],
+    agent,
+    input: {
+      checkSite: async (_report, options) => {
+        if (options?.pages) throw new Error('the site check answered 500')
+        return first
+      }
+    }
+  })
+  assert.equal(result.report.status, 'stopped')
+  assert.equal(result.report.writeStatus, 'done')
+  assert.ok(logged.some((line) => /could not be retired: dsh refused the archive/.test(line)))
+  assert.ok(logged.some((line) => /could not be retired: dsh did not list/.test(line)))
 })
 
 test('a step 9 run with no site agent writes and checks, and says the repair pass did not run', async () => {

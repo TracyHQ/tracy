@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-558-diner-receiver-door-evidence",
+  "kind": "fix",
+  "title": "Pinned Diner RC2 retains independently extracted write-door readiness evidence",
+  "pr": 558,
+  "area": "website-opportunities/template-readiness",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run readiness judgement against the actual Diner pin and committed package-derived manifest, with missing and unread door negative controls."
+  ],
+  "expect": [
+    "The pinned RC2 package is judged ready for all declared write doors.",
+    "A known older Diner plugin lacking the doors is held with the exact missing-door list.",
+    "Unread package or newly required evidence remains held rather than inferred ready."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/template-readiness-plugin-doors.test.mjs"
+    ],
+    "tests": [
+      "the T3 case: JA Diner j6 on plugin 0.24.80 lacked every write door; on its current pin 0.24.95-rc.2 it has them all",
+      "a pinned plugin the manifest has not read is not checked, which is never a pass",
+      "a door the write step adds is held to the plugin at once: not read in any package yet, it is never a pass"
+    ],
+    "needs": []
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-633-bench-concurrency",
+  "kind": "fix",
+  "title": "Chain builds started together run their plan, copy, pictures and brand bench runs side by side instead of queuing behind one another",
+  "pr": 633,
+  "area": "website-opportunities/step-chain",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed and TEST_DATABASE_URL pointing at a throwaway Postgres, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Each of the four benches (site_planner_run, site_writer_run, site_picture_run, brand_run) admits BENCH_RUNS_AT_ONCE active runs, refuses one more with its *_RUN_ACTIVE code and a reason that names the limit and every active run, writes nothing for the refused start, and admits again once a run ends.",
+    "Starts made at once from two database pools (two processes) admit exactly BENCH_RUNS_AT_ONCE runs between them.",
+    "Two workers over the same run table lease BENCH_RUNS_AT_ONCE runs at once, lease nothing more while those are held, never play one run twice (each run makes exactly one model call and ends with one attempt), and play the next run once a place frees.",
+    "A cancel asked for one of the runs played side by side ends that run cancelled and leaves the others running to success.",
+    "The picture step keeps each run's ready state (looker, finisher) apart while runs are played side by side, and lets a run's state go only when that run's own play ends.",
+    "A chain build takes over its own active planner run among several active ones (another build's run and a person's run on the same revision are left alone) and starts none beside it, even when the bench has room; a run of its own that was asked to stop is never taken over.",
+    "A chain build with no run of its own on a full bench is refused once, waits, and starts its own run once a place frees, beside the other builds' runs."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/bench-runs-at-once.test.mjs",
+      "apps/tracy-web/test/step-chain-own-run.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "site_planner_run: the start admits the bench limit of runs and refuses one more, naming them",
+      "site_writer_run: the start admits the bench limit of runs and refuses one more, naming them",
+      "site_picture_run: the start admits the bench limit of runs and refuses one more, naming them",
+      "brand_run: the start admits the bench limit of runs and refuses one more, naming them",
+      "starts made at once from two processes never pass the limit together",
+      "two workers lease the bench limit of runs side by side, never one run twice; the next waits for a free place",
+      "a cancel asked for one of the runs side by side stops that run only",
+      "the picture step keeps the ready state of every run it plays side by side, each to its own run",
+      "a chain build takes over its own run among several active ones, never another build",
+      "a run of the build asked to stop is not taken over: the step starts a run of its own",
+      "a chain build with no run of its own on a full bench waits, then starts its own beside the others",
+      "with room on the bench, a plan step started again still takes over its own run and starts none beside it",
+      "a plan step started again takes over its own active planner run and queues no second one"
+    ]
+  }
+}

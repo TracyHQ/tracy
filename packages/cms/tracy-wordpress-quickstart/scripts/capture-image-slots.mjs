@@ -2,7 +2,8 @@
 /**
  * Declare the IMAGE slots of a WordPress contract from its own archive: one per named `core/image`
  * block of every page the content map governs, and the featured picture of every post it governs
- * (`target.meta: "_thumbnail_id"`, the attachment the post's thumbnail meta names).
+ * (`target.meta: "_thumbnail_id"`, the attachment the post's thumbnail meta names), and the pictures the theme points at
+ * through the option names and post meta keys `manifest.themePictures` declares (TracyHQ/tracy#459).
  *
  * WHY: a sealed Tracy Business site took words and links only, so an agent asked for a new hero
  * photo answered "I cannot change pictures on this site" (measured 26/09/2026, session on
@@ -21,7 +22,8 @@
  *     --contract tracy-business/wp7/1.2.0 --dump <database.sql.gz> [--check]
  *
  * Rewrites `contracts/<id>/content-map.json`: every existing `type: "image"` slot is dropped and
- * the captured ones are appended, in entity order then document order. Run after it, in this
+ * the captured ones are appended, in entity order then document order; when the map declares slot roles, each captured
+ * slot gets its role from the same rule tables (`withImageRoles`). Run after it, in this
  * order: `capture-inventory.mjs --check` (the lock must not move), `build-wordpress-editions.mjs`,
  * `build-wordpress-demo-trim.mjs`, `build-wordpress-superseded.mjs`.
  */
@@ -29,7 +31,9 @@ import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { proposeContentMapRoles } from '../../../../scripts/slot-roles/rule-tables.mjs'
 import { readDump, tableRows, wordpressPrefix } from '../../tracy-quickstart-tools/mysqldump.mjs'
+import { applyRoleHints } from './role-hints.mjs'
 
 const UPLOADS = /^\/?(wp-content\/uploads\/[A-Za-z0-9/_.-]+\.(?:png|jpe?g|webp))$/
 
@@ -111,12 +115,102 @@ export function featuredImageSlotOf({ postId, entityKey, prefix, postmeta }) {
   }
 }
 
+/** The uploads path of attachment `id` (its `_wp_attached_file`), or why there is none to put back. */
+function attachmentFile(id, postmeta) {
+  const file =
+    postmeta.find((m) => Number(m.post_id) === id && m.meta_key === '_wp_attached_file')?.meta_value ?? null
+  if (file === null) return { why: `attachment ${id} has no file` }
+  const sample = UPLOADS.exec(`wp-content/uploads/${file}`)?.[1]
+  if (!sample || file.includes('..')) return { why: `picture not in uploads: ${file}` }
+  return { sample }
+}
+
+/**
+ * The image slots of one page or post on the post meta keys its theme declares (`manifest.themePictures.postMeta`,
+ * TracyHQ/tracy#459): a key holding an attachment id whose file is in uploads is a slot `target.meta: <key>`. Pure.
+ * @param {{ postId: number, entityKey: string, prefix: string, postmeta: object[], keys: string[] }} post
+ * @returns {{ slots: object[], skipped: string[] }}
+ */
+export function themeMetaSlotsOf({ postId, entityKey, prefix, postmeta, keys }) {
+  const slots = []
+  const skipped = []
+  for (const key of keys) {
+    const value = postmeta.find((m) => Number(m.post_id) === Number(postId) && m.meta_key === key)?.meta_value
+    const id = Number(value)
+    if (value === undefined || !Number.isInteger(id) || id <= 0) continue
+    const file = attachmentFile(id, postmeta)
+    if (file.why) {
+      skipped.push(`${entityKey}:${key} (${file.why})`)
+      continue
+    }
+    slots.push({
+      key: `${prefix}.${key}`,
+      entity: entityKey,
+      target: { meta: key },
+      type: 'image',
+      sample: file.sample,
+      sampleId: id,
+      maxCharacters: 255,
+      label: `${prefix} — ${key}`
+    })
+  }
+  return { slots, skipped }
+}
+
+/**
+ * The image slot of one theme picture option (`manifest.themePictures.options`): the option holds an attachment id.
+ * Its entity is `option-<name>`, which `capture-contract.mjs` makes for every declared option. Pure.
+ * @param {{ name: string, value: string | undefined, postmeta: object[] }} option
+ * @returns {{ slot: object | null, skipped: string | null }}
+ */
+export function themeOptionSlotOf({ name, value, postmeta }) {
+  const entity = `option-${name}`
+  if (!/^\d+$/.test(String(value ?? '')) || Number(value) <= 0)
+    return { slot: null, skipped: `${entity} (the option holds no attachment id)` }
+  const file = attachmentFile(Number(value), postmeta)
+  if (file.why) return { slot: null, skipped: `${entity} (${file.why})` }
+  return {
+    slot: {
+      key: `theme.${name}`,
+      entity,
+      target: { option: name },
+      type: 'image',
+      sample: file.sample,
+      sampleId: Number(value),
+      maxCharacters: 255,
+      label: `Theme picture — ${name}`
+    },
+    skipped: null
+  }
+}
+
 /**
  * The content map with its image slots replaced by `captured`.
  * @param {{ slots: object[] }} contentMap @param {object[]} captured
  */
 export function withImageSlots(contentMap, captured) {
   return { ...contentMap, slots: [...contentMap.slots.filter((s) => s.type !== 'image'), ...captured] }
+}
+
+/**
+ * The content map with a role on every image slot that has none, when the map declares slot roles (ADR 0038): the
+ * image slots are added after capture-contract placed the text roles, so the same rule tables place theirs, in the
+ * vocabulary the map is written in. Every other slot is left as it is. A map that declares no role is returned as it
+ * is, so a released profile recaptures to the same bytes.
+ * @param {{ slots: object[], roleVocabularyVersion?: string }} contentMap
+ */
+export function withImageRoles(contentMap) {
+  if (!contentMap.slots.some((s) => s.role !== undefined)) return contentMap
+  const { contentMap: proposed } = proposeContentMapRoles(contentMap, {
+    cms: 'wordpress',
+    ...(contentMap.roleVocabularyVersion ? { vocabulary: contentMap.roleVocabularyVersion } : {})
+  })
+  return {
+    ...contentMap,
+    slots: contentMap.slots.map((s, i) =>
+      s.type === 'image' && s.role === undefined ? proposed.slots[i] : s
+    )
+  }
 }
 
 function main() {
@@ -129,7 +223,7 @@ function main() {
   }
   if (!args.contract || !args.dump) {
     console.error(
-      'usage: capture-image-slots.mjs --contract <design>/wp<major>/<version> --dump <database.sql.gz> [--contracts-root <dir>] [--check]'
+      'usage: capture-image-slots.mjs --contract <design>/wp<major>/<version> --dump <database.sql.gz> [--contracts-root <dir>] [--role-hints <role-hints.json>] [--check]'
     )
     process.exit(2)
   }
@@ -154,6 +248,11 @@ function main() {
   const sql = readDump(args.dump)
   const posts = new Map(tableRows(sql, `${wordpressPrefix(sql)}posts`).map((p) => [Number(p.ID), p]))
   const postmeta = tableRows(sql, `${wordpressPrefix(sql)}postmeta`)
+  const themeMeta = manifest.themePictures?.postMeta ?? []
+  const themeOptions = manifest.themePictures?.options ?? []
+  const optionValues = new Map(
+    tableRows(sql, `${wordpressPrefix(sql)}options`).map((o) => [o.option_name, o.option_value])
+  )
 
   const captured = []
   const problems = []
@@ -183,12 +282,41 @@ function main() {
       if (featured.slot) captured.push(featured.slot)
       if (featured.skipped) console.error(`  skipped ${featured.skipped}`)
     }
+    // The pictures the theme prints from its own post meta (manifest.themePictures.postMeta), on a page or a post.
+    const theme = themeMetaSlotsOf({
+      postId: rows[0].id,
+      entityKey: entity.key,
+      prefix,
+      postmeta,
+      keys: themeMeta
+    })
+    captured.push(...theme.slots)
+    for (const s of theme.skipped) console.error(`  skipped ${s}`)
+  }
+  for (const name of themeOptions) {
+    if (!contentMap.entities.some((e) => e.kind === 'option' && e.identity?.name === name)) {
+      problems.push(
+        `option-${name}: a declared theme picture option has no entity (capture-contract.mjs makes it)`
+      )
+      continue
+    }
+    const option = themeOptionSlotOf({ name, value: optionValues.get(name), postmeta })
+    if (option.slot) captured.push(option.slot)
+    if (option.skipped) console.error(`  skipped ${option.skipped}`)
   }
   if (problems.length) {
     for (const p of problems) console.error(`  ✖ ${p}`)
     process.exit(1)
   }
-  const next = `${JSON.stringify(withImageSlots(contentMap, captured), null, 2)}\n`
+  const withRoles = withImageRoles(withImageSlots(contentMap, captured))
+  // The committed role hints go last (capture-contract applied the ones for text slots; every key must exist now).
+  const hinted = applyRoleHints(
+    withRoles,
+    args['role-hints'] ? JSON.parse(readFileSync(args['role-hints'], 'utf8')) : undefined,
+    withRoles.roleVocabularyVersion ?? 'place-content-roles/2'
+  )
+  if (hinted.errors.length) throw new Error(hinted.errors.join('\n'))
+  const next = `${JSON.stringify(hinted.contentMap, null, 2)}\n`
   const file = path.join(dir, 'content-map.json')
   if (args.check) {
     if (readFileSync(file, 'utf8') !== next) {

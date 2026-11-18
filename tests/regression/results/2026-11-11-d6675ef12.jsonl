@@ -1,0 +1,1 @@
+{"id":"REG-PR-541-wo-alt-repair-capability","verdict":"PASS","commit":"d6675ef12c0fb8a2c4fde12b0e7730dcc2b33335","ran_at":"2026-11-11T09:09:46.428Z","evidence":"tests/regression/evidence/assigned-non-wo/alt-repair-capability/2026-11-11-d6675ef12/REG-PR-541-wo-alt-repair-capability.log"}

@@ -264,6 +264,50 @@ test('with posts, every published post with one row of its slug is an entity, wi
   )
 })
 
+// ── page titles (TracyHQ/tracy#459): a page's title is its menu label, its masthead and its document title ──
+
+test('with page titles, every page entity gets a title slot, and a page that has only a title becomes an entity', () => {
+  const pages = [
+    { name: 'home', title: 'Home', content: heading('hero.title', 'Hello') },
+    {
+      name: 'menus',
+      title: 'Our menus',
+      content: '<!-- wp:paragraph -->\n<p>Unnamed.</p>\n<!-- /wp:paragraph -->'
+    },
+    { name: 'styled', title: 'A <em>styled</em> title', content: '' },
+    { name: 'blank', title: '', content: '' }
+  ]
+  const out = derive(dump({ pages }), { pageTitles: true })
+  assert.deepEqual(
+    out.contentMap.entities.filter((e) => e.kind === 'page').map((e) => e.key),
+    ['page-home', 'page-menus']
+  )
+  const titles = out.contentMap.slots.filter((s) => s.target.field === 'post_title')
+  assert.deepEqual(
+    titles.map((s) => [s.key, s.entity, s.type, s.sample]),
+    [
+      ['page-home.title', 'page-home', 'text', 'Home'],
+      ['page-menus.title', 'page-menus', 'text', 'Our menus']
+    ]
+  )
+  assert.match(out.coverage.skipped.join('\n'), /page-styled:title \(inline markup\)/)
+  assert.deepEqual(out.coverage.pagesWithoutSlots, ['styled', 'blank'])
+  // Without the flag the pages are captured exactly as before.
+  const without = derive(dump({ pages }))
+  assert.deepEqual(
+    without.contentMap.entities.filter((e) => e.kind === 'page').map((e) => e.key),
+    ['page-home']
+  )
+  assert.equal(
+    without.contentMap.slots.some((s) => s.target.field === 'post_title'),
+    false
+  )
+  assert.deepEqual(
+    out.contentMap.slots.filter((s) => s.target.field !== 'post_title'),
+    without.contentMap.slots
+  )
+})
+
 test('with posts and all text, the unnamed blocks of a post are captured by position like a page', () => {
   const out = derive(dump({ pages: NEWS }), { posts: true, allText: true })
   const first = out.contentMap.slots.filter((s) => s.entity === 'post-first-news')

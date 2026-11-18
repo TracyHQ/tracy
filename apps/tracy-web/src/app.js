@@ -6,6 +6,13 @@ import { lookup as dnsLookup } from 'node:dns/promises'
 import { Hono } from 'hono'
 import { apiRoutes } from './api/route.js'
 import { publicDemoRoutes } from './opportunities-build/public-demos-route.js'
+import {
+  COMPLETED as DEMO_COMPLETED,
+  createPublicDemos,
+  FAILED as DEMO_FAILED
+} from './opportunities-build/public-demos.js'
+import { createDemoWebhooks } from './opportunities-build/demo-webhooks.js'
+import { DEMO_LOOKS_SWITCH, demoLinkRoutes } from './opportunities-build/demo-link-route.js'
 import { apiReferenceRoutes, docsReferenceRoutes, ownsDocsReferencePath } from './api-reference/route.js'
 import { buildOpenApi } from './api-reference/spec.js'
 import { assistantRoutes } from './assistant/route.js'
@@ -49,6 +56,7 @@ import { isApiHost } from './lib/api-host.js'
 import { createBetaAccess } from './lib/beta-access.js'
 import { createBetaLogin } from './lib/beta-login.js'
 import { contractFor, defaultContracts } from './lib/contracts.js'
+import { CHAIN_RETRY_STATE } from './lib/chain-retry-authority.js'
 import { csrfGuard, MIDDLEWARE, WORKSPACE_PROXY } from './lib/csrf.js'
 import { recordDownload } from './lib/desktop-download.js'
 import { recordCheck } from './lib/desktop-install.js'
@@ -117,6 +125,9 @@ import { createClientDemoService } from './opportunities-build/client-demo.js'
 import { createDemoContactPreview } from 'website-opportunities/src/contact-preview.js'
 import { capsFromRuntime, createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
 import { createDemoLook } from './opportunities-build/demo-look.js'
+import { createDemoBuilt } from './opportunities-build/demo-preview.js'
+import { createDemoPageSpeed } from './opportunities-build/demo-pagespeed.js'
+import { readDemoPages } from './opportunities-build/demo-pages.js'
 import { createDemoPhotoLabels } from './opportunities-build/demo-photo-labels.js'
 import { createDemoCopy } from './opportunities-build/demo-copy.js'
 import { ownSiteOn } from './opportunities-build/own-site.js'
@@ -228,9 +239,15 @@ import { releaseWebroot } from './site-pictures/icon-step.js'
 import { createBrandQueue } from './brand-step/brand-worker.js'
 import { productionWiring } from './brand-step/brand-wiring.js'
 import { kitImagesFor } from './site-planner/kit-images.js'
-import { presign, signedCall } from './sites/artifacts.js'
+import { signedCall } from './sites/artifacts.js'
+import { storeObjects } from './lib/store-objects.js'
+export { storeObjects } from './lib/store-objects.js'
 import { readBrandFile } from './sites/brand-files.js'
 import { createBriefBuilds } from './sites/brief-build.js'
+import { createStepChainEngine } from './sites/brief-engines/step-chain.js'
+import { createStepChainSteps } from './step-chain-steps.js'
+import { researchBusinessName } from './lib/research-revision.js'
+import { STEP_CHAIN_WORKFLOW } from './lib/step-chain-switch.js'
 import { createSiteBrand, setSiteBrand } from './sites/brief-engines/brand.js'
 import { createEmdashEngine } from './sites/brief-engines/emdash.js'
 import { createJoomlaEngine } from './sites/brief-engines/joomla.js'
@@ -1167,6 +1184,9 @@ export function buildApp(deps) {
   // through this app's own `POST /api/sites` with the caller's cookie, as the widget's do.
   let readAgentNativeInventory = null
   let clientDemoService = null
+  // A WO demo's other looks for its share page (`sites/design-system-demo-systems.js`): filled once the sites routes
+  // below exist, read by `/d/:token` per request (`opportunities-build/demo-link-route.js`).
+  let demoSystems = null
   // The site planner bench's worker (ADR 0041, #301): one run at a time, started and stopped by server.js; runs are
   // started and read from the bench CLI (scripts/site-planner-bench.mjs).
   app.sitePlannerQueue =
@@ -1184,6 +1204,7 @@ export function buildApp(deps) {
   app.siteWriterQueue =
     deps.config && deps.pool
       ? createSiteWriterQueue({
+          config: deps.config,
           pool: deps.pool,
           secret: deps.config.sessionSecret,
           fetchImpl: deps.fetchImpl ?? fetch,
@@ -1238,6 +1259,7 @@ export function buildApp(deps) {
   app.socialStatsTick = null
   app.socialPrefetchTick = null
   app.demoRetentionTick = null
+  app.demoWebhooksTick = null
   if (deps.config && deps.pool) {
     // The open layer's only way into Tracy's infrastructure (`website-opportunities/src/host.js`, ADR 0036).
     const woHost = createTracyWoHost({ pool: deps.pool, config: deps.config })
@@ -1411,19 +1433,19 @@ export function buildApp(deps) {
     app.socialStatsTick = () => socialStats.tick()
     // Unused demos freeze, then go through the site's own delete (`opportunities-build/demo-retention.js`),
     // acted as the account that built them. `app.teardownSiteAs` is mounted with the site doors below.
+    // The same teardown deletes the demo sites of an opportunity its owner deletes (`demo-removal.js`).
+    const woDemoTeardown = async (build) => {
+      if (typeof app.teardownSiteAs !== 'function') return 'busy'
+      const { rows } = await deps.pool.query('select email from account where id = $1', [build.account_id])
+      return rows[0] ? app.teardownSiteAs(build.site_key, rows[0].email) : 'busy'
+    }
     app.demoRetentionTick = async () => {
       // The feature's switch off stops the sweep too, like the two ticks above.
       if (!(await woSwitchOn())) return { ran: false, reason: 'switch-off' }
       return sweepDemos(deps.pool, {
         now: (deps.now ?? Date.now)(),
         settings: (await woRuntimeOf()).settings,
-        teardown: async (build) => {
-          if (typeof app.teardownSiteAs !== 'function') return 'busy'
-          const { rows } = await deps.pool.query('select email from account where id = $1', [
-            build.account_id
-          ])
-          return rows[0] ? app.teardownSiteAs(build.site_key, rows[0].email) : 'busy'
-        },
+        teardown: woDemoTeardown,
         log: deps.log ?? console
       })
     }
@@ -1433,9 +1455,11 @@ export function buildApp(deps) {
       app.demoQaUnhook = onTurnClosed(({ siteKey }) => claimAndRunQa(deps.pool, qaDeps, { siteKey }))
     }
     const opportunityDeps = {
+      demoTeardown: woDemoTeardown,
       checkDemoGrant: async (accountId, siteKey) =>
         (await grantFor(deps.pool, accountId, siteKey))?.role === 'owner',
-      resumeFill: (build, email, actionId) => app.resumeOpportunityFill?.(build, email, actionId) ?? false,
+      resumeFill: (build, email, actionId, authority) =>
+        app.resumeOpportunityFill?.(build, email, actionId, authority) ?? false,
       config: deps.config,
       pool: deps.pool,
       host: woHost,
@@ -1488,6 +1512,52 @@ export function buildApp(deps) {
       picturesWhere,
       demoQa: woDemoQa,
       demoLook: woDemoLook,
+      // A finished build keeps what it took and a picture of its home page (`opportunities-build/demo-preview.js`),
+      // shot by the site's host (`/_host/capture`). Test-only override: a test's own hook.
+      onBuilt:
+        deps.websiteOpportunitiesOnBuilt ??
+        createDemoBuilt({
+          pool: deps.pool,
+          log: deps.log ?? console,
+          capture: deps.host
+            ? (site) =>
+                deps.host.hostCall(
+                  deps.config,
+                  site.host ?? deps.config.defaultHost,
+                  '/capture',
+                  {
+                    label: site.label,
+                    platform: site.platform,
+                    layouts: [{ key: 'home', path: '/' }],
+                    port: site.port ?? null,
+                    ...demoSelfNames(deps.config, site),
+                    maxBytes: 8 * 1024 * 1024
+                  },
+                  { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 120_000 }
+                )
+            : null,
+          // The demo's own mobile PageSpeed beside the research's score of the current site (`demo-pagespeed.js`).
+          pageSpeed: createDemoPageSpeed({
+            config: deps.config,
+            runtime: woRuntimeOf,
+            fetchImpl: deps.fetchImpl ?? fetch,
+            resolve,
+            ...(deps.now ? { now: deps.now } : {})
+          }),
+          // The demo's own page list, where its old URL → new page map may lead (`demo-pages.js`): read through the
+          // Apply door as the account that built it, like the wordmark below.
+          pages: async (build) => {
+            const { rows } = await deps.pool.query('select email from account where id = $1', [
+              build.account_id
+            ])
+            if (!rows[0] || typeof app.applyAs !== 'function')
+              return { readAt: new Date((deps.now ?? Date.now)()).toISOString(), reason: 'NO_SEAT' }
+            return readDemoPages(
+              (call) => app.applyAs(rows[0].email, { siteKey: build.site_key, ...call }),
+              deps.now ? { now: deps.now } : {}
+            )
+          }
+        }),
       // The sweep's wordmark on a CMS dsh sets no logo on (Joomla, EmDash): its brand writer, as the account that
       // built the demo (`client-demo.js` `wornLogo`).
       wearLogo: async (build, site, { png, applyId }) => {
@@ -1566,9 +1636,14 @@ export function buildApp(deps) {
       return auth.error ?? auth
     }
     const onApiHostForDemos = (c) => isApiHost(c.req.header('host') ?? new URL(c.req.url).host, deps.config)
-    const publicDemos = publicDemoRoutes({
+    const publicDemoDeps = {
       pool: deps.pool,
-      config: { origin: deps.config.origin, apiOrigin: deps.config.apiOrigin ?? deps.config.origin },
+      config: {
+        origin: deps.config.origin,
+        apiOrigin: deps.config.apiOrigin ?? deps.config.origin,
+        // Seals each account's webhook signing secret (`demo-webhooks.js`).
+        sessionSecret: deps.config.sessionSecret
+      },
       isApiHost: onApiHostForDemos,
       // Part A's resolver (account token, scope `demos`); until it is wired every call is refused.
       requireAccountToken: deps.requireAccountToken ?? demosAccount,
@@ -1583,10 +1658,43 @@ export function buildApp(deps) {
       // The agent demo's site and chat (the same service Tracy's own Build demo uses).
       clientDemo: clientDemoService,
       ...(deps.now ? { now: deps.now } : {})
-    })
+    }
+    const publicDemos = publicDemoRoutes(publicDemoDeps)
     for (const route of publicDemos.routes)
       owners.set(route.handler, { stepsAside: (c) => !onApiHostForDemos(c) })
     app.route('/', publicDemos)
+    // The webhooks of `/v1/demos` (`opportunities-build/demo-webhooks.js`): events made from committed rows by this
+    // sweep, never by a build, and sent through the crawler's pinned fetch (no private address at connect time).
+    // Test-only override: a test's own fetch.
+    const demoWebhooks = createDemoWebhooks({
+      pool: deps.pool,
+      sessionSecret: deps.config.sessionSecret,
+      fetchImpl: deps.demoWebhookFetch ?? crawlFetch,
+      demoBody: createPublicDemos(publicDemoDeps).snapshot,
+      completed: [...DEMO_COMPLETED],
+      failed: [...DEMO_FAILED],
+      log: deps.log ?? console,
+      ...(deps.now ? { now: deps.now } : {})
+    })
+    app.demoWebhooksTick = () => demoWebhooks.tick()
+    // A demo's share link (`lib/wo-demo-links.js`): `/d/<token>` sends the visitor on to the demo and counts the open.
+    app.route(
+      '/',
+      demoLinkRoutes({
+        pool: deps.pool,
+        config: deps.config,
+        log: deps.log ?? console,
+        ...(deps.now ? { now: deps.now } : {}),
+        // "See another look" (switch `wo-demo-looks`): the demo previewed in other design systems, nothing written.
+        // Test-only override: a test's own looks.
+        systems: deps.demoSystems ?? {
+          eligible: async (siteKey) => (demoSystems ? demoSystems.eligible(siteKey) : false),
+          systemsOf: async (siteKey) =>
+            demoSystems ? demoSystems.systemsOf(siteKey) : { ok: false, reason: 'NOT_WIRED' }
+        },
+        switchOn: () => uiSwitchOn(deps.pool, DEMO_LOOKS_SWITCH)
+      })
+    )
     const demoRunner = createDemoRunner({
       ...opportunityDeps,
       runtime: woRuntimeOf,
@@ -2118,9 +2226,38 @@ export function buildApp(deps) {
               realPictures,
               applyFor
             })
-          )
+          ),
+          // The step chain (#483): picked by the frame for a chain build of an allow-listed template
+          // (`lib/step-chain-switch.js`). Its model steps run on the bench queues this server already works.
+          [STEP_CHAIN_WORKFLOW]: createStepChainEngine({
+            applyFor,
+            steps: createStepChainSteps({
+              pool: deps.pool,
+              config: deps.config,
+              secret: deps.config.sessionSecret,
+              kitImages: kitImagesFor({
+                pool: deps.pool,
+                config: deps.config,
+                fetchImpl: deps.fetchImpl ?? fetch
+              }),
+              brandWiring: productionWiring(deps.config, {
+                objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch)
+              }),
+              picturesStoreDir: defaultStoreDir(),
+              fetchImpl: deps.fetchImpl ?? fetch,
+              keepFiles: process.env.STEP_CHAIN_KEEP_FILES === '1',
+              log: deps.log ?? console
+            })
+          })
         },
         normalize: async (input) => {
+          // A step chain build names its site by the research it builds from; no model reads a brief it does not have.
+          if (input.brief?.workflow === STEP_CHAIN_WORKFLOW)
+            return {
+              name: await researchBusinessName(deps.pool, input.brief.researchRevisionId),
+              nameFrom: 'answer',
+              languages: []
+            }
           const normalized = await normalizeBrief({
             brief: input.brief,
             label: input.label,
@@ -2141,13 +2278,15 @@ export function buildApp(deps) {
             /** @type {any} */ (sitesApp).setupWebroot('open', {
               siteKey: ctx.siteKey,
               runId: ctx.runId,
-              email: ctx.email
+              email: ctx.email,
+              waitMs: ctx.webrootWaitMs
             }),
           close: (ctx) =>
             /** @type {any} */ (sitesApp).setupWebroot('close', {
               siteKey: ctx.siteKey,
               runId: ctx.runId,
-              email: ctx.email
+              email: ctx.email,
+              waitMs: ctx.webrootWaitMs
             })
         },
         // The customer's name, logo and favicon, written after the words under their own apply id (`brief-engines/brand.js`).
@@ -2165,13 +2304,15 @@ export function buildApp(deps) {
           versionOf: async (siteKey) => (await siteByKey(deps.pool, siteKey))?.quickstart_version ?? null
         })
       })
-    // Resume only the failed fill on an existing demo, through the site's own brief runner.
-    app.resumeOpportunityFill = async (build, email, retryActionId) => {
+    app.siteBriefBuilds = briefs
+    // Resume an existing failed fill, or an explicitly authorized terminal failed chain write, through its brief runner.
+    app.resumeOpportunityFill = async (build, email, retryActionId, retryAuthority = null) => {
       if ((await grantFor(deps.pool, build.account_id, build.site_key))?.role !== 'owner') return false
       const { rows } = await deps.pool.query(
         `select b.*, s.label, s.host, s.quickstart_version from site_brief b
          join site s on s.site_key = b.site_key
-         where b.site_key = $1 and b.account_id = $2 and b.state = 'failed'`,
+         where b.site_key = $1 and b.account_id = $2
+           and ${retryAuthority ? CHAIN_RETRY_STATE : "b.state = 'failed'"}`,
         [build.site_key, build.account_id]
       )
       const row = rows[0]
@@ -2185,10 +2326,13 @@ export function buildApp(deps) {
         quickstart: row.quickstart,
         brief: row.brief,
         retryActionId,
+        retryAuthority,
         contract: contractFor(defaultContracts(), row.quickstart, row.quickstart_version),
         host: row.host,
         jobId: build.site_job_id
       })
+      if (result.code === 'SITE_RECOVERY_POINT_UNAVAILABLE')
+        throw Object.assign(new Error(result.error), { code: result.code })
       return result.started === true
     }
     const sites = sitesRoutes({
@@ -2337,6 +2481,7 @@ export function buildApp(deps) {
     }
     app.route('/', sites)
     sitesApp = sites
+    demoSystems = sites.demoSystems ?? null
     app.applyAs = sites.applyAs
     // A setup run's hold on the webroot (SC-3): what the brief runner above calls, reachable the same way as `applyAs`.
     app.setupWebroot = sites.setupWebroot
@@ -2736,50 +2881,4 @@ export function placeMediaObjectsFor(config, fetchImpl) {
     local: storeObjects(config.artifactStore ?? null, fetchImpl),
     shared: storeObjects(config.placeMediaStore ?? null, fetchImpl)
   })
-}
-
-/**
- * The artifact store as the assistant and Website Opportunities need it: put, read and delete one
- * object by a key the caller chose. Null without a store: staff photos are then refused with a note in
- * the topic, and opportunity media are kept as references only.
- * @param {{ endpoint: string, bucket: string, accessKey: string, secretKey: string } | null} store
- * @param {typeof fetch} fetchImpl
- */
-export function storeObjects(store, fetchImpl) {
-  if (!store) return null
-  const TTL_S = 300
-  return {
-    // A URL the browser may follow itself: only a TLS store (R2) is reachable from outside; a local
-    // MinIO behind the docker network is not, so its bytes are streamed through the door instead.
-    async publicUrl(key) {
-      return store.endpoint.startsWith('https:')
-        ? presign(store, { method: 'GET', key, expiresIn: TTL_S })
-        : null
-    },
-    async put(key, bytes, type) {
-      const url = await presign(store, { method: 'PUT', key, expiresIn: TTL_S })
-      const res = await fetchImpl(url, {
-        method: 'PUT',
-        headers: { 'content-type': type },
-        body: bytes
-      }).catch(() => null)
-      return Boolean(res?.ok)
-    },
-    async get(key) {
-      const url = await presign(store, { method: 'GET', key, expiresIn: TTL_S })
-      return fetchImpl(url, { method: 'GET' }).catch(() => null)
-    },
-    /** `{size}` of the object, or null when it is missing or the store did not answer. */
-    async head(key) {
-      const url = await presign(store, { method: 'HEAD', key, expiresIn: TTL_S })
-      const res = await fetchImpl(url, { method: 'HEAD' }).catch(() => null)
-      if (!res?.ok) return null
-      const size = Number(res.headers.get('content-length'))
-      return Number.isFinite(size) ? { size } : null
-    },
-    async delete(key) {
-      const res = await signedCall(store, { method: 'DELETE', key }, fetchImpl).catch(() => null)
-      return Boolean(res?.ok || res?.status === 404)
-    }
-  }
 }

@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { featuredImageSlotOf, imageSlotsOf, withImageSlots } from '../scripts/capture-image-slots.mjs'
+import {
+  featuredImageSlotOf,
+  imageSlotsOf,
+  withImageRoles,
+  withImageSlots
+} from '../scripts/capture-image-slots.mjs'
 
 const HERO =
   '<!-- wp:image {"className":"wtb-hero__media","sizeSlug":"large","metadata":{"role":"content","name":"hero.img"},"id":91} -->\n' +
@@ -105,4 +110,41 @@ test('a featured picture the slot could not put back is reported, and a post wit
     skipped: 'post-x:featured image (picture not in uploads: ../outside.jpg)'
   })
   assert.deepEqual(of(99), { slot: null, skipped: null })
+})
+
+// A fictional cafe theme's map after capture-contract placed its text roles, with two image slots appended after.
+const placedMap = () => ({
+  entities: [],
+  roleVocabularyVersion: 'place-content-roles/3',
+  slots: [
+    {
+      key: 'home.menu.dish-name.1',
+      type: 'text',
+      sample: 'Pear tart',
+      role: 'offering.name',
+      group: { id: 'home.menu.dish.0', item: 0, kind: 'menu_item' }
+    },
+    { key: 'home.about.mystery', type: 'text', sample: 'Loose words' },
+    { key: 'home.menu.dish-image.1', type: 'image', sample: 'wp-content/uploads/pear.jpg', sampleId: 7 },
+    { key: 'home.hero.img', type: 'image', sample: 'wp-content/uploads/hero.jpg', sampleId: 8 }
+  ]
+})
+
+test('a map that declares roles gets a role on every image slot captured after them, its other slots untouched', () => {
+  const before = placedMap()
+  const after = withImageRoles(before)
+  assert.deepEqual(after.slots.slice(0, 2), before.slots.slice(0, 2))
+  assert.equal(after.slots[2].role, 'offering.image')
+  assert.deepEqual(after.slots[2].group, { id: 'home.menu.dish.0', item: 0, kind: 'menu_item' })
+  assert.equal(typeof after.slots[3].role, 'string')
+  assert.equal(after.roleVocabularyVersion, 'place-content-roles/3')
+})
+
+test('a map that declares no roles stays byte for byte as it was', () => {
+  const map = placedMap()
+  map.slots[0].role = undefined
+  map.slots[0].group = undefined
+  map.roleVocabularyVersion = undefined
+  const plain = JSON.parse(JSON.stringify(map))
+  assert.equal(JSON.stringify(withImageRoles(plain)), JSON.stringify(plain))
 })

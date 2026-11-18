@@ -19,7 +19,12 @@
 // that was answered but not yet recorded is read back, never sent again. Once the hook answers null the parsed answers
 // are merged into one and read and checked as the round's only answer. A fix round continues the conversation of the
 // last turn (reading.conversationFrom of round 0). A step without the hooks (the planner) plays one conversation.
+//
+// Parts (optional, the writer's since 2026-11-15, off unless a run asks for it): a step with parts({ row, ready }) and
+// mergeParts(values) may write round 0 in parts at the same time instead (bench-run-parts.js); the merged answer is
+// read and checked here once, and a fix round continues the conversation of the last part.
 import { isChangeList, objectOf } from './bench-answer.js'
+import { writeInParts } from './bench-run-parts.js'
 
 /** Play one round. Returns the run's verdict when the round ends the run, else null. */
 export async function playRound(ctx, { round, followUp, base, reading: prior }) {
@@ -63,13 +68,25 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
     await save(state, error ? { error } : {})
     return result.ended
   }
-  // Where the conversation this round continues starts in the run's turns: the last writing turn's first call.
+  // Where the conversation this round continues starts in the run's turns: the last writing turn's first call, or the
+  // last part's.
   let from = 0
-  if (step.nextTurn && round > 0)
+  if ((step.nextTurn || step.parts) && round > 0)
     from = (await store.roundsOf(pool, runId))[0]?.reading?.conversationFrom ?? 0
-  // Round 0 in writing turns: the merged answer, read below as the round's only answer.
+  // Round 0 in parts written at the same time (bench-run-parts.js), when the run asks for them.
+  const parts = round === 0 ? (step.parts?.({ row, ready: ctx.ready }) ?? null) : null
+  // Round 0 in writing turns or in parts: the merged answer, read below as the round's only answer.
   let written = null
-  if (step.nextTurn && round === 0) {
+  if (parts) {
+    const out = await writeInParts(ctx, { parts, history, reading, save })
+    if (out.ended) return ended(out)
+    if (out.notADoc) {
+      await notADoc(out.notADoc, { error: out.notADoc.error })
+      return null
+    }
+    history = out.history
+    written = out.written
+  } else if (step.nextTurn && round === 0) {
     const done = reading.writingTurns ?? []
     for (;;) {
       const answers = done.map((d) => objectOf(d.answer, step).value)
@@ -193,7 +210,7 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
       changes = askedFix ? [...carried.validChanges, ...read.value.changes] : read.value.changes
     }
     await must(store.setProgress(pool, { runId, step: 'checking', round, leaseToken }))
-    const checkResult = step.checker.check({ doc, row, ready: ctx.ready })
+    const checkResult = step.checker.check({ doc, row, ready: ctx.ready, history: result.turns })
     await save('checked', {
       answer: result.answer,
       [docColumn]: doc,

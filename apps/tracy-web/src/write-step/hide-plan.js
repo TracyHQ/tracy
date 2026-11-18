@@ -5,8 +5,10 @@
 import { NEW_CONTRACT } from '../lib/new-contract-pointer.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { stockScreensToDrop } from '../lib/stock-screens.js'
+import { guardControlLabels } from './hide-control-labels.js'
 import { goneRowSlots, listRowCounts, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
+import { actsInsidePage, linkDoors } from './link-doors.js'
 import { menuItemOfLabel } from './menu-hides.js'
 import { NO_LAST } from './no-last-report.js'
 
@@ -15,6 +17,7 @@ const slashless = (path) => String(path ?? '').replace(/^\/+|\/+$/g, '')
 const blocksOfPage = (page) => [...new Set(Object.values(page?.blocks ?? {}).flat())]
 const MODULE = /^module-\d+$/
 const ADDRESS_MOVES = /\/(?:text\(\)(?:\[\d+\])?|@[A-Za-z-]+)$/
+const ANCHOR = /<a[\s>]|\(\(a /i
 
 export { NEW_CONTRACT }
 
@@ -100,6 +103,67 @@ function fixedOrder(text, template) {
   return { constants }
 }
 
+/** The kit's picture frames by id. */
+function framesOf(kit) {
+  return new Map(
+    each(kit?.blocks)
+      .flatMap((b) => each(b?.frames))
+      .filter((f) => typeof f?.id === 'string')
+      .map((f) => [f.id, f])
+  )
+}
+
+const TEMPLATE_FILE = /^\/?(?:media\/)?templates\//
+
+/**
+ * The template's own file a frame shows, when no slot holds it (`writable: false`): a mask or a decoration the template's
+ * stylesheet paints, which is the template's look and never the demo's content. A plan that hides such a frame says it is
+ * not a picture to replace (JA Diner 1.0.8's slideshow and masthead masks); nothing is taken off, and nothing needs to be.
+ */
+function templateLookOf(frame) {
+  const file = String(frame?.picture ?? '')
+  return frame?.writable === false && TEMPLATE_FILE.test(file) ? file : null
+}
+
+/**
+ * Where a slot prints that a visitor still reaches: the kit's stored field of the slot names every page that printed it
+ * (`drives`) and the block that lists it (`listedIn`). Null when the kit does not say, or when a kept page or a block that
+ * stays prints it; otherwise the places that took it off the site with them.
+ */
+function printedOnlyOnDropped(slot, { kit, plan, dropped }) {
+  if (neverShown(kit, slot)) return { pages: [], unseen: true }
+  const field = each(kit?.storedFields).find((f) => f?.slot === slot)
+  const drives = each(field?.drives).filter((d) => typeof d?.page === 'string')
+  if (!drives.length) return null
+  const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
+  const kept = each(plan?.pages)
+    .filter((p) => p?.decision === 'keep' && kitPages.has(p.id))
+    .map((p) => kitPages.get(p.id))
+  const keptPaths = new Set(kept.map((p) => slashless(p.path)))
+  if (drives.some((d) => keptPaths.has(slashless(String(d.page).split('?')[0])))) return null
+  const list = field?.listedIn
+  if (
+    typeof list === 'string' &&
+    list &&
+    !dropped.has(list) &&
+    kept.some((p) => blocksOfPage(p).includes(list))
+  )
+    return null
+  const pages = [...new Set(drives.map((d) => d.page))]
+  return { pages, ...(typeof list === 'string' && list ? { list } : {}) }
+}
+
+const NOT_SHOWN = 'the frame is not shown at any captured width'
+
+/** A frame the kit read on no page at any width (its own error says so): it prints nowhere a visitor of a kept page looks. */
+function neverShown(kit, slot) {
+  const tail = `].frames[${slot}].width`
+  return each(kit?.errors).some((e) => {
+    const field = String(e?.field ?? '')
+    return e?.reason === NOT_SHOWN && field.startsWith('blocks[') && field.endsWith(tail)
+  })
+}
+
 /** Why the plugin cannot empty this slot of the site, in terms of the slot. */
 function notEmptiable(key, slot) {
   if (!slot)
@@ -147,14 +211,115 @@ function removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gon
 }
 
 /**
+ * A hidden kit link with no slot of its own goes with the slot that holds it (TracyHQ/tracy#371's doors): a link printed among
+ * the words of a cell leaves with its row when the row goes, with its block when the block goes, and with the words when the
+ * write step puts words with no link in that cell; a link whose address is held by slots the plan hides follows them. Null when
+ * no door holds it; a failed order when its holder stays.
+ */
+function carriedLink(slot, { doorOf, removal, removedAlready, gone, changes, hiddenKeys, onSite, menu }) {
+  const door = doorOf(slot)
+  // The header has no entity of its own, but its captured navigation links name their exact menu items. Carry
+  // only an item already scheduled for removal; its kept-page refusal and native published receipt still apply.
+  if (door.via === 'menu') {
+    const parent = [...menu.values()].find((order) => order.item === `menuItem-${door.item}`)
+    if (parent) return { via: 'menu', ...parent }
+  }
+  const leaves = (key) => key in removedAlready || removal?.remove.has(key)
+  if (door.via === 'words') {
+    const key = door.key
+    const entity = key.slice(0, key.lastIndexOf('.'))
+    if (leaves(key)) return { via: 'carried', key, keys: [key], holder: 'row' }
+    if (gone.has(entity)) return { via: 'block', key, module: entity }
+    if (typeof changes[key] === 'string' && !ANCHOR.test(changes[key])) return { via: 'rewritten', key }
+    if (hiddenKeys.has(key)) return { via: 'carried', key, keys: [key], holder: 'slot' }
+    return {
+      via: 'failed',
+      key,
+      reason: `this link is inside the words of ${key}, which stay on the page, and no door takes one link out of words`
+    }
+  }
+  // A link drawn around a picture of the block (the kit measured the file it wraps) goes when that picture's slot goes.
+  const file = door.link?.icon?.mechanism === 'image-file' ? door.link.icon.file : null
+  if (door.via === 'none' && file) {
+    const entity = door.block?.source?.entity
+    // A Joomla picture value carries its size after a '#' (`...item-2.jpg#joomlaImage://...`).
+    const shows = (value) =>
+      String(value ?? '')
+        .split('#')[0]
+        .endsWith(`/${file}`)
+    const pictures = [...onSite.values()].filter(
+      (s) => s?.entity === entity && s.type === 'image' && (shows(s.sample) || shows(s.current))
+    )
+    if (pictures.length === 1 && (leaves(pictures[0].key) || hiddenKeys.has(pictures[0].key)))
+      return { via: 'carried', key: pictures[0].key, keys: [pictures[0].key], holder: 'picture' }
+  }
+  // Address slots another write of this run fills belong to that write: they do not hold this hidden link, when others do
+  // (JA Diner's second slide button matched the first slide's address too, which a plan link rewrites).
+  const notWritten = (keys) => {
+    const free = keys.filter((key) => !(key in changes))
+    return free.length ? free : keys
+  }
+  // No door by an on-site address: a link the kit measured with an address outside the site, printed from address slots of
+  // its block that hold exactly that demo value, which no other kit link owns and no write fills (JA Diner's contact
+  // "Website" line, printed from the contact's web page).
+  if (door.via === 'none' && /^https?:\/\//i.test(String(door.link?.target ?? ''))) {
+    const entity = door.block?.source?.entity
+    const owned = new Set(
+      [...(door.block?.links ?? [])].filter((l) => l?.id !== door.link.id).map((l) => contentMapKey(l.id))
+    )
+    const keys = [...onSite.values()]
+      .filter(
+        (s) =>
+          s?.entity === entity &&
+          (s.type === 'url' || String(s.role ?? '').endsWith('_url')) &&
+          String(s.sample ?? s.current ?? '').trim() === door.link.target &&
+          !owned.has(s.key) &&
+          !(s.key in changes)
+      )
+      .map((s) => s.key)
+    if (keys.length && keys.every((key) => leaves(key) || hiddenKeys.has(key)))
+      return { via: 'carried', key: keys[0], keys, holder: 'address' }
+  }
+  if ((door.via === 'slot' || door.via === 'shared') && door.keys.length) {
+    const keys = notWritten(door.keys)
+    if (keys.every((key) => leaves(key) || hiddenKeys.has(key)))
+      return { via: 'carried', key: keys[0], keys, holder: 'address' }
+    // A hidden link whose words the plan hides too leaves whole: the slots holding its address go with them when the site can
+    // empty them and no write keeps them (the plugin's review takes a `withRow` address only beside another slot of its row).
+    // Without it the words go and the address stays, an arrow with no words (JA Diner 1.0.8's "View full menu", 16/11/2026).
+    const label = door.link?.labelId ? contentMapKey(door.link.labelId) : null
+    const emptiable = (key) => Boolean(onSite.get(key)?.canHide) && !(key in changes)
+    if (
+      label &&
+      (hiddenKeys.has(label) || leaves(label)) &&
+      keys.every((key) => leaves(key) || hiddenKeys.has(key) || emptiable(key))
+    )
+      return {
+        via: 'carried',
+        key: keys[0],
+        keys,
+        holder: 'address',
+        empties: keys.filter((key) => !leaves(key) && !hiddenKeys.has(key))
+      }
+  }
+  return null
+}
+
+/**
  * @param {{ plan: object, kit: object, owners: Map<string, object>, extras: object, reading: object,
- *   changes: Record<string, string>, cannotHide: string | null, rowsRemove?: boolean, last?: object }} input `cannotHide`: why
+ *   changes: Record<string, string>, cannotHide: string | null, rowsRemove?: boolean, last?: object,
+ *   heldWords?: Map<string, string>, linked?: Set<string>,
+ *   doorOf?: Function | null }} input `cannotHide`: why
  *   this plugin takes no hide order, or null when it does; `rowsRemove`: whether it has the door that takes a row or an element;
- *   `last`: the last report, whose hidden lines are off the site already
+ *   `last`: the last report, whose hidden lines are off the site already; `heldWords`: words a file had for a slot whose hide
+ *   won over them, by content map key (hide-control-labels.js); `linked`: the addresses a kept plan link writes over the plan's hide
+ *   of them (link-lines.js `overHide`); `doorOf`: the link stage's doors, read with the menu rows
+ *   (without them a link whose address only a menu item names has no door here)
  * @returns {{ orders: Map<string, object>, blocks: Map<string, string>, emptySlots: string[], removeSlots: string[],
  *   keepSlots: string[], rowRest: string[], rowLists: object[], strings: Record<string, string>, pages: object[], menu: Map<string, object>,
- *   noWayOut: { slot: string, reason: string }[] }} `orders`: by the line's slot, each with a `via`; `blocks`: block id to module
- *   key; `removeSlots`, `keepSlots`: what `rows.remove` is sent; `noWayOut`: what the plan hides and cannot take off
+ *   noWayOut: { slot: string, reason: string }[], restored: Record<string, string>, controls: Map<string, object> }} `orders`: by the line's slot, each with a `via`; `blocks`: block id to module
+ *   key; `removeSlots`, `keepSlots`: what `rows.remove` is sent; `noWayOut`: what the plan hides and cannot take off;
+ *   `restored`: label words written instead of a hide; `controls`: controls taken with their only label, by link id
  */
 export function hideOrders({
   plan,
@@ -165,11 +330,21 @@ export function hideOrders({
   changes,
   cannotHide,
   rowsRemove = false,
-  last = NO_LAST
+  last = NO_LAST,
+  heldWords = new Map(),
+  linked = new Set(),
+  doorOf: linkDoorOf = null
 }) {
   const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
   const icons = iconsOf(kit)
   const fixed = fixedTexts(kit)
+  const frames = framesOf(kit)
+  const kitLinks = new Map(
+    each(kit?.blocks)
+      .flatMap((b) => each(b?.links))
+      .filter((l) => typeof l?.id === 'string')
+      .map((l) => [l.id, l])
+  )
   const menu = menuOrders({ plan, kit, hide: extras?.mainMenu?.hide })
   const blocks = droppedBlocks(plan, kit)
   const gone = new Set(blocks.values())
@@ -178,6 +353,13 @@ export function hideOrders({
       ? null
       : removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gone })
   const removedAlready = reading?.removedSlots ?? {}
+  const doorOf = linkDoorOf ?? linkDoors({ kit, reading, rows: [] })
+  // The keys the plan's own hides name, for a link whose holder they are.
+  const hiddenKeys = new Set(
+    [...owners.values()]
+      .filter((c) => c.kind === 'hide')
+      .map((c) => contentMapKey(icons.get(c.slot)?.field ?? c.slot))
+  )
   const orders = new Map()
   const emptySlots = []
   const strings = {}
@@ -185,6 +367,38 @@ export function hideOrders({
   for (const claim of owners.values()) {
     if (claim.kind !== 'hide') continue
     const { slot } = claim
+    if (claim.hiddenList) {
+      const unit = claim.hiddenList
+      const blocked = unit.invalid
+        ? unit.list
+        : (unit.conflict ??
+          unit.children.find((id) => {
+            const key = contentMapKey(id)
+            const current = onSite.get(key)?.current
+            const owner = owners.get(id)
+            return (
+              typeof current !== 'string' ||
+              current.trim() !== '' ||
+              onSite.get(key)?.type !== unit.types[id] ||
+              key in changes ||
+              owner?.kind !== 'hide' ||
+              owner.hiddenList?.list !== unit.list
+            )
+          }))
+      const key = contentMapKey(slot)
+      orders.set(
+        slot,
+        blocked
+          ? {
+              via: 'failed',
+              key,
+              hiddenList: unit.list,
+              reason: `the hidden list ${unit.list} cannot be compiled: ${blocked} is missing, not already empty, or has a competing owner or write; no child was hidden`
+            }
+          : { via: 'empty', key, hiddenList: unit.list }
+      )
+      continue
+    }
     if (last.hidden(slot)) {
       orders.set(slot, { via: 'kept', line: last.line(slot) })
       continue
@@ -202,11 +416,45 @@ export function hideOrders({
       }
       continue
     }
+    const look = templateLookOf(frames.get(slot))
+    if (look) {
+      orders.set(slot, { via: 'template', key: contentMapKey(slot), file: look })
+      continue
+    }
     const icon = icons.get(slot)
     const key = contentMapKey(icon?.field ?? slot)
+    // A kept link of the plan writes this address: its button keeps its words, so its address stays (link-lines.js).
+    if (linked.has(key)) {
+      orders.set(slot, { via: 'linked', key })
+      continue
+    }
     const failedAs = (reason) => orders.set(slot, { via: 'failed', key, reason })
     const held = onSite.get(key)
     const entity = key.slice(0, key.lastIndexOf('.'))
+    if (!held && !icon && !cannotHide && !(key in removedAlready) && !removal?.remove.has(key)) {
+      const carried = carriedLink(slot, {
+        doorOf,
+        removal,
+        removedAlready,
+        gone,
+        changes,
+        hiddenKeys,
+        onSite,
+        menu
+      })
+      if (carried) {
+        orders.set(slot, carried)
+        continue
+      }
+      // A tab that opens a panel of this page has no slot and no address: it stays, doing what it does; the plan that hides
+      // it says it leads nowhere (JA Diner's menu tabs, 16/11/2026), and its words are its label's. A form's button is not one:
+      // it follows its form (form-close.js).
+      const control = kitLinks.get(slot)
+      if (actsInsidePage(control) && control.opens?.kind === 'panel') {
+        orders.set(slot, { via: 'inpage', key })
+        continue
+      }
+    }
     if (key in removedAlready || removal?.remove.has(key)) {
       if (key in changes) failedAs(`the write step also writes ${key}, so it cannot be removed as well`)
       else orders.set(slot, { via: 'removed', key, ...(key in removedAlready ? { already: true } : {}) })
@@ -229,9 +477,33 @@ export function hideOrders({
       emptySlots.push(key)
       orders.set(slot, { via: 'slot', key })
     } else {
-      failedAs(notEmptiable(key, held))
+      const places = printedOnlyOnDropped(slot, { kit, plan, dropped: blocks })
+      if (places) orders.set(slot, { via: 'unshown', key, ...places })
+      else failedAs(notEmptiable(key, held))
     }
   }
+  // The only label of a control that stays never leaves alone (hide-control-labels.js).
+  const guarded = guardControlLabels({
+    plan,
+    kit,
+    orders,
+    dropped: blocks,
+    doorOf,
+    onSite,
+    changes,
+    owners,
+    heldWords
+  })
+  const emptiedHere = new Set([
+    ...[...orders.values()].filter((o) => o.via === 'slot').map((o) => o.key),
+    ...[...orders.values()].filter((o) => o.via === 'carried').flatMap((o) => o.empties ?? []),
+    ...[...guarded.controls.values()].flatMap((o) => o.empties)
+  ])
+  emptySlots.splice(
+    0,
+    emptySlots.length,
+    ...[...emptySlots, ...emptiedHere].filter((key) => emptiedHere.has(key))
+  )
   // A button leaves whole or not at all: words gone and an address left draw an empty button, and the other way a dead one.
   const buttons = new Map()
   for (const claim of owners.values())
@@ -253,9 +525,22 @@ export function hideOrders({
     .filter((p) => p?.decision === 'drop')
     .map((p) => each(kit?.pages).find((k) => k?.id === p.id))
     .filter(Boolean)
+  const droppedGroups = new Set(
+    each(plan?.pageGroups)
+      .filter((g) => g?.decision === 'drop')
+      .map((g) => g.id)
+  )
+  for (const page of each(kit?.pages))
+    if (
+      droppedGroups.has(page?.group) &&
+      articleOwners(page, kit).length > 0 &&
+      !each(plan?.pages).some((p) => p.id === page.id && p.decision === 'keep') &&
+      !planDrops.some((p) => p.id === page.id)
+    )
+      planDrops.push(page)
   const stock = stockScreensToDrop(kit, plan).filter((s) => !planDrops.some((page) => page.id === s.id))
   const pages = [...planDrops, ...stock.map(({ id, path }) => ({ id, path }))]
-    .filter((page) => !taken.has(slashless(page.path)))
+    .filter((page) => !taken.has(slashless(page.path)) || articleOwners(page, kit).length > 0)
     .map((page) => ({ page, depends: pageDependingOn(page.path, { plan, kit }) }))
   const claimed = new Set(
     [...owners.values()]
@@ -287,6 +572,23 @@ export function hideOrders({
     strings,
     pages,
     menu,
-    noWayOut: noWayOutOf(orders, pages)
+    noWayOut: noWayOutOf(orders, pages),
+    restored: guarded.restored,
+    controls: guarded.controls
   }
+}
+
+/** Exact native article owners declared by a page's body blocks; paths and aliases never identify them. */
+export function articleOwners(page, kit) {
+  const defined = page?.blocks ? page : each(kit?.pages).find((p) => p?.id === page?.id)
+  const shown = new Set(Object.values(defined?.blocks ?? {}).flat())
+  return [
+    ...new Set(
+      each(kit?.blocks)
+        .filter((block) => shown.has(block?.id) && block?.source?.ownerKind === 'article')
+        .map((block) => /^article-([1-9]\d*)$/.exec(String(block.source.owner))?.[1])
+        .filter(Boolean)
+        .map(Number)
+    )
+  ]
 }

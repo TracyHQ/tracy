@@ -1,0 +1,563 @@
+TAP version 13
+# Subtest: acceptance is durable before any effect; two replicas build/fill/handoff once and only QA PASS reaches Outreach
+ok 1 - acceptance is durable before any effect; two replicas build/fill/handoff once and only QA PASS reaches Outreach
+  ---
+  duration_ms: 2933.596083
+  type: 'test'
+  ...
+# Subtest: a receipted provision failure stops its action; a new Retry alone asks the same build again
+ok 2 - a receipted provision failure stops its action; a new Retry alone asks the same build again
+  ---
+  duration_ms: 267.344125
+  type: 'test'
+  ...
+# Subtest: a crash before the failed provision receipt replays the same build without another charge
+ok 3 - a crash before the failed provision receipt replays the same build without another charge
+  ---
+  duration_ms: 519.525333
+  type: 'test'
+  ...
+# Subtest: restart after site creation but before its receipt reconciles one site and one revision without another charge
+ok 4 - restart after site creation but before its receipt reconciles one site and one revision without another charge
+  ---
+  duration_ms: 173.091459
+  type: 'test'
+  ...
+# Subtest: restart after a chat accepted the prompt but before its receipt repeats the same session and prompt id
+ok 5 - restart after a chat accepted the prompt but before its receipt repeats the same session and prompt id
+  ---
+  duration_ms: 210.028334
+  type: 'test'
+  ...
+# Subtest: a failed fill never starts the agent; Retry resumes that fill on the same site
+ok 6 - a failed fill never starts the agent; Retry resumes that fill on the same site
+  ---
+  duration_ms: 186.824542
+  type: 'test'
+  ...
+# Subtest: a Retry whose fill fails again stops instead of resuming its own failure
+ok 7 - a Retry whose fill fails again stops instead of resuming its own failure
+  ---
+  duration_ms: 170.784375
+  type: 'test'
+  ...
+# Subtest: a later Retry cannot resume writes or mint an agent seat after the creator loses site access
+ok 8 - a later Retry cannot resume writes or mint an agent seat after the creator loses site access
+  ---
+  duration_ms: 117.224333
+  type: 'test'
+  ...
+# Subtest: the same QA action terminates after its retry fails instead of polling or resetting repairs
+ok 9 - the same QA action terminates after its retry fails instead of polling or resetting repairs
+  ---
+  duration_ms: 16.512042
+  type: 'test'
+  ...
+# Subtest: an explicit QA retry gets one attempt; its own later failure needs a new accepted action
+ok 10 - an explicit QA retry gets one attempt; its own later failure needs a new accepted action
+  ---
+  duration_ms: 17.45
+  type: 'test'
+  ...
+# Subtest: a lost explicit QA retry prompt receipt recovers after mode legacy without resetting its finite attempt
+ok 11 - a lost explicit QA retry prompt receipt recovers after mode legacy without resetting its finite attempt
+  ---
+  duration_ms: 13.896417
+  type: 'test'
+  ...
+# Subtest: a lost explicit QA retry prompt receipt recovers after mode initial-baseline without resetting its finite attempt
+ok 12 - a lost explicit QA retry prompt receipt recovers after mode initial-baseline without resetting its finite attempt
+  ---
+  duration_ms: 26.215209
+  type: 'test'
+  ...
+# Subtest: a fill Retry cannot acquire a later QA failure without an accepted QA marker
+ok 13 - a fill Retry cannot acquire a later QA failure without an accepted QA marker
+  ---
+  duration_ms: 14.832875
+  type: 'test'
+  ...
+# Subtest: historical retry ids without acceptance proof never authorize an undelivered prompt
+ok 14 - historical retry ids without acceptance proof never authorize an undelivered prompt
+  ---
+  duration_ms: 12.282166
+  type: 'test'
+  ...
+# Subtest: QA retry CAS refuses a changed generation, measured content or acceptance marker before sending
+ok 15 - QA retry CAS refuses a changed generation, measured content or acceptance marker before sending
+  ---
+  duration_ms: 14.5445
+  type: 'test'
+  ...
+# Subtest: an accepted retry with a lost prompt receipt cannot rebase recovery onto another QA generation
+ok 16 - an accepted retry with a lost prompt receipt cannot rebase recovery onto another QA generation
+  ---
+  duration_ms: 16.178542
+  type: 'test'
+  ...
+# Subtest: a historical receipted QA prompt can finish without granting another prompt or repair budget
+ok 17 - a historical receipted QA prompt can finish without granting another prompt or repair budget
+  ---
+  duration_ms: 13.8655
+  type: 'test'
+  ...
+# Subtest: PostgreSQL QA resume refuses a concurrent generation change with actual CAS
+ok 18 - PostgreSQL QA resume refuses a concurrent generation change with actual CAS
+  ---
+  duration_ms: 170.22375
+  type: 'test'
+  ...
+# Subtest: PostgreSQL QA resume refuses a concurrent content change with actual CAS
+ok 19 - PostgreSQL QA resume refuses a concurrent content change with actual CAS
+  ---
+  duration_ms: 286.338083
+  type: 'test'
+  ...
+# Subtest: PostgreSQL QA resume refuses a concurrent marker change with actual CAS
+ok 20 - PostgreSQL QA resume refuses a concurrent marker change with actual CAS
+  ---
+  duration_ms: 181.59075
+  type: 'test'
+  ...
+# Subtest: PostgreSQL QA prompt receipt recovery uses one CAS generation and the same request and prompt
+ok 21 - PostgreSQL QA prompt receipt recovery uses one CAS generation and the same request and prompt
+  ---
+  duration_ms: 160.591959
+  type: 'test'
+  ...
+# Subtest: new quickstart builds require finite QA receipts and never hand off to an agent
+ok 22 - new quickstart builds require finite QA receipts and never hand off to an agent
+  ---
+  duration_ms: 89.554208
+  type: 'test'
+  ...
+# Subtest: a manual quickstart-first build keeps its action open until the fill applies, then stops without QA or hand-off
+ok 23 - a manual quickstart-first build keeps its action open until the fill applies, then stops without QA or hand-off
+  ---
+  duration_ms: 205.211959
+  type: 'test'
+  ...
+# Subtest: a manual quickstart-first build whose fill fails ends SITE_FILL_FAILED
+ok 24 - a manual quickstart-first build whose fill fails ends SITE_FILL_FAILED
+  ---
+  duration_ms: 141.231459
+  type: 'test'
+  ...
+# Subtest: a manual Retry resumes the failed fill once, waits for it and completes without hand-off
+ok 25 - a manual Retry resumes the failed fill once, waits for it and completes without hand-off
+  ---
+  duration_ms: 229.847625
+  type: 'test'
+  ...
+# Subtest: a manual Retry that lost site access stops before resuming the fill
+ok 26 - a manual Retry that lost site access stops before resuming the fill
+  ---
+  duration_ms: 126.997625
+  type: 'test'
+  ...
+# Subtest: a manual quickstart-first build whose site is deleted while its fill runs stops
+ok 27 - a manual quickstart-first build whose site is deleted while its fill runs stops
+  ---
+  duration_ms: 112.183333
+  type: 'test'
+  ...
+# Subtest: a manual quickstart-first build whose create door started no fill completes at once
+ok 28 - a manual quickstart-first build whose create door started no fill completes at once
+  ---
+  duration_ms: 89.856667
+  type: 'test'
+  ...
+# Subtest: a manual build at a reused address never inherits the deleted site's failed brief
+ok 29 - a manual build at a reused address never inherits the deleted site's failed brief
+  ---
+  duration_ms: 111.422042
+  type: 'test'
+  ...
+# Subtest: an automatic build at a reused address never inherits the deleted site's failed brief
+ok 30 - an automatic build at a reused address never inherits the deleted site's failed brief
+  ---
+  duration_ms: 115.118333
+  type: 'test'
+  ...
+# Subtest: a build at a reused address follows the brief its own create door started
+ok 31 - a build at a reused address follows the brief its own create door started
+  ---
+  duration_ms: 185.35725
+  type: 'test'
+  ...
+# Subtest: an automatic legacy build at a reused address follows its own applied brief to hand-off
+ok 32 - an automatic legacy build at a reused address follows its own applied brief to hand-off
+  ---
+  duration_ms: 274.705875
+  type: 'test'
+  ...
+# Subtest: a manual legacy build still completes as soon as its site is built
+ok 33 - a manual legacy build still completes as soon as its site is built
+  ---
+  duration_ms: 82.590834
+  type: 'test'
+  ...
+# Subtest: finite quickstart strict receipts finish as needs-review without a chat session or Outreach
+ok 34 - finite quickstart strict receipts finish as needs-review without a chat session or Outreach
+  ---
+  duration_ms: 216.353041
+  type: 'test'
+  ...
+# Subtest: finite quickstart source variants receipts finish as needs-review without a chat session or Outreach
+ok 35 - finite quickstart source variants receipts finish as needs-review without a chat session or Outreach
+  ---
+  duration_ms: 158.072125
+  type: 'test'
+  ...
+# Subtest: finite quickstart placeholders receipts finish as needs-review without a chat session or Outreach
+ok 36 - finite quickstart placeholders receipts finish as needs-review without a chat session or Outreach
+  ---
+  duration_ms: 174.747125
+  type: 'test'
+  ...
+# Subtest: finite quickstart placeholder reason without placeholders receipts fail closed
+ok 37 - finite quickstart placeholder reason without placeholders receipts fail closed
+  ---
+  duration_ms: 436.155875
+  type: 'test'
+  ...
+# Subtest: finite quickstart passed QA over a placeholder fill receipts fail closed
+ok 38 - finite quickstart passed QA over a placeholder fill receipts fail closed
+  ---
+  duration_ms: 147.463125
+  type: 'test'
+  ...
+# Subtest: finite quickstart source variants reason over a placeholder fill receipts fail closed
+ok 39 - finite quickstart source variants reason over a placeholder fill receipts fail closed
+  ---
+  duration_ms: 128.091125
+  type: 'test'
+  ...
+# Subtest: finite quickstart placeholder count without a placeholder receipt receipts fail closed
+ok 40 - finite quickstart placeholder count without a placeholder receipt receipts fail closed
+  ---
+  duration_ms: 130.264458
+  type: 'test'
+  ...
+# Subtest: finite quickstart a gap without its placeholder receipt receipts fail closed
+ok 41 - finite quickstart a gap without its placeholder receipt receipts fail closed
+  ---
+  duration_ms: 396.224958
+  type: 'test'
+  ...
+# Subtest: the asynchronous demo worker provisions the explicit choice even with a different CMS default
+ok 42 - the asynchronous demo worker provisions the explicit choice even with a different CMS default
+  ---
+  duration_ms: 174.869083
+  type: 'test'
+  ...
+# Subtest: agent demo provisions intact quickstart without old brief fill and replays one frozen site/chat/prompt
+ok 43 - agent demo provisions intact quickstart without old brief fill and replays one frozen site/chat/prompt
+  ---
+  duration_ms: 594.083333
+  type: 'test'
+  ...
+# Subtest: Stop in the ordinary agent handoff blocks QA wakes and Retry keeps the same snapshot, site and chat
+ok 44 - Stop in the ordinary agent handoff blocks QA wakes and Retry keeps the same snapshot, site and chat
+  ---
+  duration_ms: 323.702375
+  type: 'test'
+  ...
+# Subtest: agent media import persists real PostgreSQL claim/receipt and never reuploads a confirmed or revoked asset
+ok 45 - agent media import persists real PostgreSQL claim/receipt and never reuploads a confirmed or revoked asset
+  ---
+  duration_ms: 170.61
+  type: 'test'
+  ...
+# Subtest: accepted pre-baseline Retry resumes the original frozen prompt once, without provisioning or changing chat
+ok 46 - accepted pre-baseline Retry resumes the original frozen prompt once, without provisioning or changing chat
+  ---
+  duration_ms: 395.376167
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# [demo-check] pho-ba.localhost incremental: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# [demo-check] pho-ba.localhost incremental: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# Subtest: client-send reserves real chat and one native user request before provision; agent tools own install/check and server prompt stays zero
+ok 47 - client-send reserves real chat and one native user request before provision; agent tools own install/check and server prompt stays zero
+  ---
+  duration_ms: 469.115167
+  type: 'test'
+  ...
+# Subtest: only a signed real owner follow-up after normally completed accepted turns can extend client demo authority by CAS
+ok 48 - only a signed real owner follow-up after normally completed accepted turns can extend client demo authority by CAS
+  ---
+  duration_ms: 104.343084
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# Subtest: a client-send turn that ends completed without a passing check fails the action instead of filling forever
+ok 49 - a client-send turn that ends completed without a passing check fails the action instead of filling forever
+  ---
+  duration_ms: 180.315958
+  type: 'test'
+  ...
+# Subtest: a client-send turn that ends completed while its check still runs waits for that check
+ok 50 - a client-send turn that ends completed while its check still runs waits for that check
+  ---
+  duration_ms: 55.211208
+  type: 'test'
+  ...
+# Subtest: a native inventory that keeps failing counts as a baseline try and ends DEMO_BASELINE_UNAVAILABLE
+ok 51 - a native inventory that keeps failing counts as a baseline try and ends DEMO_BASELINE_UNAVAILABLE
+  ---
+  duration_ms: 123.531792
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full sweep round: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look skipped
+# [demo-check] pho-ba.localhost incremental: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# Subtest: a template post no plan row writes is swept from the build structure, not from the saved plan
+ok 52 - a template post no plan row writes is swept from the build structure, not from the saved plan
+  ---
+  duration_ms: 159.754333
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full sweep round: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look skipped
+# [demo-check] pho-ba.localhost incremental: inventory 0.0s, page reads 0.0s (1 page(s), 1 unchanged), look left to the full read
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# [demo-check] pho-ba.localhost incremental sweep round: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look skipped
+# Subtest: dev 27/10/2026: the check after a sweep round asks the host to read again only the pages whose document changed
+ok 53 - dev 27/10/2026: the check after a sweep round asks the host to read again only the pages whose document changed
+  ---
+  duration_ms: 182.802125
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full sweep round: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look skipped
+# Subtest: the sweep's neutral wording is in the language the build wrote the site's slot fills in (Vietnamese)
+ok 54 - the sweep's neutral wording is in the language the build wrote the site's slot fills in (Vietnamese)
+  ---
+  duration_ms: 166.924084
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# Subtest: a slot the replace job refuses to empty, with no wording for it, is no call: the check still names it unresolved
+ok 55 - a slot the replace job refuses to empty, with no wording for it, is no call: the check still names it unresolved
+  ---
+  duration_ms: 254.593625
+  type: 'test'
+  ...
+# Subtest: an action with no selection builds on the account CMS, else the /ops default, with that CMS pinned template
+ok 56 - an action with no selection builds on the account CMS, else the /ops default, with that CMS pinned template
+  ---
+  duration_ms: 39.379917
+  type: 'test'
+  ...
+# Subtest: a client demo waiting for its logo research is never prepared inside a request, and the runner builds it after the deadline with the wordmark
+ok 57 - a client demo waiting for its logo research is never prepared inside a request, and the runner builds it after the deadline with the wordmark
+  ---
+  duration_ms: 124.399125
+  type: 'test'
+  ...
+# Subtest: an own-site build never waits for its photo labelling inside prepare: pending until the run settles, then the runner briefs it (\#250)
+ok 58 - an own-site build never waits for its photo labelling inside prepare: pending until the run settles, then the runner briefs it (\#250)
+  ---
+  duration_ms: 77.372917
+  type: 'test'
+  ...
+# Subtest: a historical server build keeps its existing brief path without new photo-label waits
+ok 59 - a historical server build keeps its existing brief path without new photo-label waits
+  ---
+  duration_ms: 111.949333
+  type: 'test'
+  ...
+# Subtest: a server-owned build waits for the shared photo labels before freezing its first brief
+ok 60 - a server-owned build waits for the shared photo labels before freezing its first brief
+  ---
+  duration_ms: 190.42025
+  type: 'test'
+  ...
+# Subtest: a client demo whose logo research answers in time is briefed from the place read again
+ok 61 - a client demo whose logo research answers in time is briefed from the place read again
+  ---
+  duration_ms: 65.197
+  type: 'test'
+  ...
+# Subtest: an agent that ended in error before any provision fails the action through its failed moment, and Retry is taken
+ok 62 - an agent that ended in error before any provision fails the action through its failed moment, and Retry is taken
+  ---
+  duration_ms: 88.125166
+  type: 'test'
+  ...
+# Subtest: a turn that went stale with no end reason fails the action as lost, saying no more than that
+ok 63 - a turn that went stale with no end reason fails the action as lost, saying no more than that
+  ---
+  duration_ms: 69.759709
+  type: 'test'
+  ...
+# Subtest: a failed QA verdict with no provision job yet ends the action instead of awaiting the agent
+ok 64 - a failed QA verdict with no provision job yet ends the action instead of awaiting the agent
+  ---
+  duration_ms: 70.528417
+  type: 'test'
+  ...
+# Subtest: the 2 h deadline ends an action whose run hangs with its heartbeat alive, and its late result changes nothing after Retry
+ok 65 - the 2 h deadline ends an action whose run hangs with its heartbeat alive, and its late result changes nothing after Retry
+  ---
+  duration_ms: 198.474833
+  type: 'test'
+  ...
+# Subtest: the 2 h deadline ends a queued action while the queue switch is off and claims nothing
+ok 66 - the 2 h deadline ends a queued action while the queue switch is off and claims nothing
+  ---
+  duration_ms: 52.649209
+  type: 'test'
+  ...
+# Subtest: the 2 h deadline waits while the build chat is alive, so status and chat agree, and holds past twice that (\#247)
+ok 67 - the 2 h deadline waits while the build chat is alive, so status and chat agree, and holds past twice that (\#247)
+  ---
+  duration_ms: 83.148542
+  type: 'test'
+  ...
+# Subtest: a provision that succeeded stays done when the agent fails afterwards; only the action fails
+ok 68 - a provision that succeeded stays done when the agent fails afterwards; only the action fails
+  ---
+  duration_ms: 83.447417
+  type: 'test'
+  ...
+# Subtest: a Retry is not ended by the previous attempt’s failed check before its own brief is sent
+ok 69 - a Retry is not ended by the previous attempt’s failed check before its own brief is sent
+  ---
+  duration_ms: 84.454667
+  type: 'test'
+  ...
+# Subtest: a Retry is not ended by the previous attempt’s passed machine check before its own brief is sent
+ok 70 - a Retry is not ended by the previous attempt’s passed machine check before its own brief is sent
+  ---
+  duration_ms: 85.130292
+  type: 'test'
+  ...
+# Subtest: a Retry is not ended by the previous attempt’s turn that ended unchecked before its own brief is sent
+ok 71 - a Retry is not ended by the previous attempt’s turn that ended unchecked before its own brief is sent
+  ---
+  duration_ms: 78.336416
+  type: 'test'
+  ...
+# Subtest: a Retry is not ended by the previous attempt’s failed provision before its own brief is sent
+ok 72 - a Retry is not ended by the previous attempt’s failed provision before its own brief is sent
+  ---
+  duration_ms: 70.0215
+  type: 'test'
+  ...
+# Subtest: after a Retry’s brief is sent, a provision failure only ends it when this attempt started that provision
+ok 73 - after a Retry’s brief is sent, a provision failure only ends it when this attempt started that provision
+  ---
+  duration_ms: 245.477916
+  type: 'test'
+  ...
+# Subtest: after a Retry’s brief is sent, a failed check before any provision ends it only when the verdict is its own
+ok 74 - after a Retry’s brief is sent, a failed check before any provision ends it only when the verdict is its own
+  ---
+  duration_ms: 178.412208
+  type: 'test'
+  ...
+# Subtest: a failed latest action leaves the Demo column failed, never Building, while its build still provisions
+ok 75 - a failed latest action leaves the Demo column failed, never Building, while its build still provisions
+  ---
+  duration_ms: 66.107459
+  type: 'test'
+  ...
+# Subtest: a queued Retry over a build still provisioning reads Building, timed from the Retry, not the first build
+ok 76 - a queued Retry over a build still provisioning reads Building, timed from the Retry, not the first build
+  ---
+  duration_ms: 84.304542
+  type: 'test'
+  ...
+# Subtest: a latest action that is queued over an older passed check puts its opportunity in demo
+ok 77 - a latest action that is queued over an older passed check puts its opportunity in demo
+  ---
+  duration_ms: 62.39925
+  type: 'test'
+  ...
+# Subtest: a latest action that is quality-queued-v1 over an older passed check puts its opportunity in demo
+ok 78 - a latest action that is quality-queued-v1 over an older passed check puts its opportunity in demo
+  ---
+  duration_ms: 47.189334
+  type: 'test'
+  ...
+# Subtest: a latest action that is failed over an older passed check puts its opportunity in demo
+ok 79 - a latest action that is failed over an older passed check puts its opportunity in demo
+  ---
+  duration_ms: 53.491
+  type: 'test'
+  ...
+# Subtest: a latest action that is quality-failed-v1 over an older passed check puts its opportunity in demo
+ok 80 - a latest action that is quality-failed-v1 over an older passed check puts its opportunity in demo
+  ---
+  duration_ms: 53.143333
+  type: 'test'
+  ...
+# Subtest: a latest action that is completed over an older passed check puts its opportunity in outreach
+ok 81 - a latest action that is completed over an older passed check puts its opportunity in outreach
+  ---
+  duration_ms: 50.079542
+  type: 'test'
+  ...
+# Subtest: a latest action that is quality-completed-v1 over an older passed check puts its opportunity in outreach
+ok 82 - a latest action that is quality-completed-v1 over an older passed check puts its opportunity in outreach
+  ---
+  duration_ms: 49.062
+  type: 'test'
+  ...
+# Subtest: a failed latest action keeps its opportunity in Demo with attention, whatever an older check passed
+ok 83 - a failed latest action keeps its opportunity in Demo with attention, whatever an older check passed
+  ---
+  duration_ms: 47.061375
+  type: 'test'
+  ...
+# Subtest: a blocked brief starts no build: the action stops BRIEF_NOT_READY and the revision keeps its owner questions
+ok 84 - a blocked brief starts no build: the action stops BRIEF_NOT_READY and the revision keeps its owner questions
+  ---
+  duration_ms: 55.165875
+  type: 'test'
+  ...
+# Subtest: a blocked client-send brief fails promptly with its readiness cause and leaves the frozen revision unchanged
+ok 85 - a blocked client-send brief fails promptly with its readiness cause and leaves the frozen revision unchanged
+  ---
+  duration_ms: 562.540916
+  type: 'test'
+  ...
+# Subtest: client-send photo-label timeout fails with its actual cause without freezing a brief or adopting late results
+ok 86 - client-send photo-label timeout fails with its actual cause without freezing a brief or adopting late results
+  ---
+  duration_ms: 164.717125
+  type: 'test'
+  ...
+# Subtest: a client-send preparation outage retains the runner bounded retry policy
+ok 87 - a client-send preparation outage retains the runner bounded retry policy
+  ---
+  duration_ms: 43.394125
+  type: 'test'
+  ...
+# Subtest: a warned brief builds and its build carries the owner questions
+ok 88 - a warned brief builds and its build carries the owner questions
+  ---
+  duration_ms: 161.061625
+  type: 'test'
+  ...
+# Subtest: the runner marks the demo action with the chain step identifiers in order as each step starts
+ok 89 - the runner marks the demo action with the chain step identifiers in order as each step starts
+  ---
+  duration_ms: 2945.860417
+  type: 'test'
+  ...
+# Subtest: a chain still writing past the two hour action deadline keeps its action open until it ends
+ok 90 - a chain still writing past the two hour action deadline keeps its action open until it ends
+  ---
+  duration_ms: 608.865709
+  type: 'test'
+  ...
+1..90
+# tests 90
+# suites 0
+# pass 90
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20404.261792

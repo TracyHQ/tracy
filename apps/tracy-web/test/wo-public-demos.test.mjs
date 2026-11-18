@@ -1238,7 +1238,16 @@ test(
     const res = await call('POST', '/v1/demos', { account: acct, key: 'gone-0001', json: body() })
     assert.equal(res.status, 202)
     const action = (await db.pool.query('select * from wo_demo_action where account_id=$1', [acct])).rows[0]
-    await revisionForAction(db.pool, { action, domain, templates: async () => offeredTemplates.cards })
+    await revisionForAction(db.pool, {
+      action,
+      domain,
+      templates: async () => offeredTemplates.cards,
+      // As the runner makes it: with its photograph labelling (here, nothing labelled).
+      pictureLabels: async () => ({
+        labels: new Map(),
+        note: { status: 'none', asked: 0, labelled: 0, cached: 0 }
+      })
+    })
     const opp = (await db.pool.query('select * from wo_opportunity where id=$1', [action.opportunity_id]))
       .rows[0]
     const builder = createWebsiteBuilder({

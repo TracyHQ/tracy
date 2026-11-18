@@ -1,6 +1,7 @@
 import { fetchLimited } from './fetch-limited.mjs'
 import { apifyRunUrl, redactToken } from './apify.mjs'
-import { crawlWebsite, extractPage, keepFallbackCopy } from './website-crawler.mjs'
+import { crawlWebsite, extractPage, keepFallbackCopy, pageRead } from './website-crawler.mjs'
+import { isBookingUrl, linkInBioOf } from './link-platforms.mjs'
 
 export const BROWSER_ACTOR = 'apify~website-content-crawler'
 const RUN_SECS = 240
@@ -91,6 +92,14 @@ export async function crawlWebsiteWithFallback(rootUrl, opts = {}, deps = {}) {
   return { ...plain, fallback: { provider: 'apify-browser', status: browser.status, reason: browser.reason } }
 }
 
+const hostOf = (url) => {
+  try {
+    return new URL(url).hostname.toLowerCase().replace(/^www\./, '')
+  } catch {
+    return null
+  }
+}
+
 /**
  * Rendered pages (`[{url, html, metadata?, text?}]`) read with the plain crawler's `extractPage`, so a
  * browser or a reader service gives the same media, socials, menus and JSON-LD facts as a direct crawl.
@@ -102,11 +111,13 @@ export function renderedPagesResult(items, base, status = 'complete') {
   for (const it of items) {
     if (typeof it?.url !== 'string' || typeof it.html !== 'string') continue
     const page = extractPage(it.html, it.url)
-    out.pages.push({
-      url: page.url,
-      title: page.title || it.metadata?.title || '',
-      text: page.text || it.text || ''
-    })
+    out.pages.push(
+      pageRead(page, {
+        title: it.metadata?.title,
+        text: it.text,
+        description: it.metadata?.description
+      })
+    )
     if (out.pages.length === 1)
       out.logos = page.logos.slice(0, 12).map((l) => ({ ...l, sourceUrl: page.url }))
     if (out.pages.length === 1)
@@ -124,6 +135,14 @@ export function renderedPagesResult(items, base, status = 'complete') {
     if (!out.profile.phone && page.phones[0]) out.profile.phone = page.phones[0]
     for (const [net, u] of Object.entries(page.socials)) out.socials[net] ??= u
     for (const p of page.pdfs) if (p.menu) out.menus.push({ url: p.url, sourceUrl: page.url })
+    // Booking platform links and link-in-bio pages, as the plain crawler keeps them (`crawlWebsite`).
+    const host = hostOf(page.url)
+    for (const l of page.links) {
+      const list = isBookingUrl(l) && hostOf(l) !== host ? 'bookings' : linkInBioOf(l) ? 'bioLinks' : null
+      if (!list || out[list]?.some((x) => x.url === l)) continue
+      if (list === 'bioLinks' && (out.bioLinks?.length ?? 0) >= 5) continue
+      ;(out[list] ??= []).push({ url: l, sourceUrl: page.url })
+    }
     for (const img of page.images) {
       // The same original seen on another page may bring a wider copy to fall back on.
       if (seenMedia.has(img.url)) {

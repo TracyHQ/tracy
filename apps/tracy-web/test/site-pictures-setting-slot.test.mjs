@@ -81,6 +81,8 @@ test('a frame of a setting slot goes to siteSettings, its twins follow the setti
     pictures: manifestOf(got),
     contract: KIT_REF,
     revision: 'rev-1',
+    plan: plan(),
+    brief: brief(),
     kit: k
   })
   assert.deepEqual(out.problems, [])

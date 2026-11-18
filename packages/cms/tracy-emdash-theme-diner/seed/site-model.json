@@ -1,0 +1,2670 @@
+{
+  "$schema": "tracy-site-model/v1",
+  "source": {
+    "kind": "joomla",
+    "parity": "measured",
+    "origin": "ja_diner",
+    "capturedAt": "2026-11-08T02:27:34.668Z"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "site": {
+    "title": {
+      "en": "JA Diner"
+    },
+    "tagline": {
+      "en": ""
+    },
+    "postsPerPage": 10
+  },
+  "types": [
+    {
+      "name": "pages",
+      "mode": "list",
+      "label": {
+        "en": "Pages"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "body",
+          "type": "prose"
+        },
+        {
+          "name": "view",
+          "type": "text"
+        },
+        {
+          "name": "path",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "posts",
+      "mode": "list",
+      "label": {
+        "en": "Posts"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "searchable": true
+        },
+        {
+          "name": "excerpt",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "body",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "date",
+          "type": "date"
+        },
+        {
+          "name": "cover",
+          "type": "image"
+        },
+        {
+          "name": "detail_image",
+          "type": "image"
+        },
+        {
+          "name": "created",
+          "type": "date"
+        },
+        {
+          "name": "path",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "slideshow",
+      "mode": "list",
+      "label": {
+        "en": "slideshow"
+      },
+      "fields": [
+        {
+          "name": "title_link",
+          "type": "url"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "image",
+              "type": "image"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "desc",
+              "type": "text"
+            },
+            {
+              "name": "button1",
+              "type": "text"
+            },
+            {
+              "name": "btn_link1",
+              "type": "text"
+            },
+            {
+              "name": "button2",
+              "type": "text"
+            },
+            {
+              "name": "btn_link2",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "features_intro",
+      "mode": "list",
+      "label": {
+        "en": "features intro"
+      },
+      "fields": [
+        {
+          "name": "basic_description",
+          "type": "text"
+        },
+        {
+          "name": "basic_btn_title",
+          "type": "text"
+        },
+        {
+          "name": "basic_btn_link",
+          "type": "url"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "align",
+          "type": "text"
+        },
+        {
+          "name": "img_features",
+          "type": "image"
+        },
+        {
+          "name": "description",
+          "type": "prose"
+        },
+        {
+          "name": "title_small",
+          "type": "text"
+        },
+        {
+          "name": "title_large",
+          "type": "text"
+        },
+        {
+          "name": "button",
+          "type": "text"
+        },
+        {
+          "name": "button_link",
+          "type": "url"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "ft_img",
+              "type": "image"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "description",
+              "type": "text"
+            },
+            {
+              "name": "btn_title",
+              "type": "text"
+            },
+            {
+              "name": "btn_link",
+              "type": "url"
+            },
+            {
+              "name": "img",
+              "type": "image"
+            },
+            {
+              "name": "link",
+              "type": "url"
+            },
+            {
+              "name": "link_img",
+              "type": "url"
+            }
+          ]
+        },
+        {
+          "name": "sub_heading",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "container_tabs",
+      "mode": "list",
+      "label": {
+        "en": "container tabs"
+      },
+      "fields": [
+        {
+          "name": "image_intro",
+          "type": "image"
+        },
+        {
+          "name": "position",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "sub_heading",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "menu",
+      "mode": "list",
+      "label": {
+        "en": "menu"
+      },
+      "fields": [
+        {
+          "name": "basic_btn_title",
+          "type": "text"
+        },
+        {
+          "name": "basic_btn_link",
+          "type": "url"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "dish_name",
+              "type": "text"
+            },
+            {
+              "name": "dish_description",
+              "type": "text"
+            },
+            {
+              "name": "dish_price",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "happyhours",
+      "mode": "list",
+      "label": {
+        "en": "happyhours"
+      },
+      "fields": [
+        {
+          "name": "hp_img",
+          "type": "image"
+        },
+        {
+          "name": "hp_title",
+          "type": "text"
+        },
+        {
+          "name": "hp_desc",
+          "type": "text"
+        },
+        {
+          "name": "hp_info",
+          "type": "text"
+        },
+        {
+          "name": "hp_badge",
+          "type": "text"
+        },
+        {
+          "name": "hp_link_text",
+          "type": "url"
+        },
+        {
+          "name": "hp_link",
+          "type": "url"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "teams",
+      "mode": "list",
+      "label": {
+        "en": "teams"
+      },
+      "fields": [
+        {
+          "name": "number_column",
+          "type": "text"
+        },
+        {
+          "name": "title_section",
+          "type": "text"
+        },
+        {
+          "name": "description_section",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "img",
+              "type": "image"
+            },
+            {
+              "name": "name_member",
+              "type": "text"
+            },
+            {
+              "name": "name_office",
+              "type": "text"
+            },
+            {
+              "name": "description",
+              "type": "text"
+            },
+            {
+              "name": "link_social",
+              "type": "url"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "modules",
+      "mode": "list",
+      "label": {
+        "en": "Modules"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "content",
+          "type": "prose"
+        }
+      ]
+    },
+    {
+      "name": "chrome",
+      "mode": "single",
+      "label": {
+        "en": "Site chrome"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "brand_name",
+          "type": "text"
+        },
+        {
+          "name": "footer_location_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_address",
+          "type": "text"
+        },
+        {
+          "name": "footer_map_label",
+          "type": "text"
+        },
+        {
+          "name": "footer_hours_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_hours",
+          "type": "text"
+        },
+        {
+          "name": "footer_contact_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_phone",
+          "type": "text"
+        },
+        {
+          "name": "footer_email",
+          "type": "text"
+        },
+        {
+          "name": "subscribe_label",
+          "type": "text"
+        },
+        {
+          "name": "subscribe_title",
+          "type": "text"
+        },
+        {
+          "name": "subscribe_placeholder",
+          "type": "text"
+        },
+        {
+          "name": "subscribe_button",
+          "type": "text"
+        },
+        {
+          "name": "subscribe_note",
+          "type": "text"
+        },
+        {
+          "name": "news_label",
+          "type": "text"
+        },
+        {
+          "name": "news_title",
+          "type": "text"
+        },
+        {
+          "name": "copyright",
+          "type": "text"
+        },
+        {
+          "name": "skip_label",
+          "type": "text"
+        },
+        {
+          "name": "menu_label",
+          "type": "text"
+        },
+        {
+          "name": "appearance_label",
+          "type": "text"
+        },
+        {
+          "name": "categories_title",
+          "type": "text"
+        },
+        {
+          "name": "prev_label",
+          "type": "text"
+        },
+        {
+          "name": "next_label",
+          "type": "text"
+        },
+        {
+          "name": "more_label",
+          "type": "text"
+        },
+        {
+          "name": "read_more",
+          "type": "text"
+        },
+        {
+          "name": "breadcrumb_home",
+          "type": "text"
+        },
+        {
+          "name": "latest_title",
+          "type": "text"
+        },
+        {
+          "name": "not_found_code",
+          "type": "text"
+        },
+        {
+          "name": "not_found_title",
+          "type": "text"
+        },
+        {
+          "name": "not_found_text",
+          "type": "text"
+        },
+        {
+          "name": "not_found_back_label",
+          "type": "text"
+        },
+        {
+          "name": "footer_map_url",
+          "type": "url"
+        },
+        {
+          "name": "logo_dark",
+          "type": "image"
+        },
+        {
+          "name": "form_id",
+          "type": "text"
+        },
+        {
+          "name": "search_title",
+          "type": "text"
+        },
+        {
+          "name": "search_label",
+          "type": "text"
+        },
+        {
+          "name": "search_placeholder",
+          "type": "text"
+        },
+        {
+          "name": "search_button",
+          "type": "text"
+        },
+        {
+          "name": "search_results",
+          "type": "text"
+        },
+        {
+          "name": "search_empty",
+          "type": "text"
+        },
+        {
+          "name": "page_label",
+          "type": "text"
+        },
+        {
+          "name": "start_label",
+          "type": "text"
+        },
+        {
+          "name": "end_label",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "masthead",
+      "mode": "list",
+      "label": {
+        "en": "Mastheads"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "background",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "category_info",
+      "mode": "list",
+      "label": {
+        "en": "Category pages"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "image",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "contact",
+      "mode": "single",
+      "label": {
+        "en": "Contact page"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "image",
+          "type": "image"
+        },
+        {
+          "name": "card_title",
+          "type": "text"
+        },
+        {
+          "name": "card_text",
+          "type": "prose"
+        },
+        {
+          "name": "social_title",
+          "type": "text"
+        },
+        {
+          "name": "social_links",
+          "type": "group",
+          "fields": [
+            {
+              "name": "label",
+              "type": "text"
+            },
+            {
+              "name": "url",
+              "type": "url"
+            }
+          ]
+        },
+        {
+          "name": "address",
+          "type": "text"
+        },
+        {
+          "name": "phone_label",
+          "type": "text"
+        },
+        {
+          "name": "phone",
+          "type": "text"
+        },
+        {
+          "name": "web_label",
+          "type": "text"
+        },
+        {
+          "name": "webpage",
+          "type": "url"
+        },
+        {
+          "name": "form_title",
+          "type": "text"
+        },
+        {
+          "name": "form_note",
+          "type": "text"
+        },
+        {
+          "name": "form_id",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "reservation",
+      "mode": "single",
+      "label": {
+        "en": "Reservation page"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "blocks",
+          "type": "group",
+          "fields": [
+            {
+              "name": "image",
+              "type": "image"
+            },
+            {
+              "name": "label",
+              "type": "text"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "text",
+              "type": "text"
+            },
+            {
+              "name": "button_label",
+              "type": "text"
+            },
+            {
+              "name": "button_link",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "online_image",
+          "type": "image"
+        },
+        {
+          "name": "online_title",
+          "type": "text"
+        },
+        {
+          "name": "online_text",
+          "type": "text"
+        },
+        {
+          "name": "online_phone",
+          "type": "text"
+        },
+        {
+          "name": "online_button",
+          "type": "text"
+        }
+      ]
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "label": {
+        "en": "Categories"
+      },
+      "hierarchical": true,
+      "appliesTo": [
+        "posts"
+      ],
+      "terms": [
+        {
+          "slug": "our-blog",
+          "label": {
+            "en": "Our Blog"
+          }
+        },
+        {
+          "slug": "restaurant-business",
+          "label": {
+            "en": "Restaurant Business"
+          }
+        },
+        {
+          "slug": "restaurant-marketing",
+          "label": {
+            "en": "Restaurant Marketing"
+          }
+        },
+        {
+          "slug": "restaurant-news",
+          "label": {
+            "en": "Restaurant News"
+          }
+        },
+        {
+          "slug": "restaurant-guide",
+          "label": {
+            "en": "Restaurant Guide"
+          }
+        },
+        {
+          "slug": "other",
+          "label": {
+            "en": "Other"
+          }
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "type": "pages",
+      "slug": "home",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Home",
+        "body": "",
+        "view": "front-page",
+        "path": "/"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "contact-us",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Contact Us",
+        "body": "",
+        "view": "page-contact",
+        "path": "/contact-us"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "offers",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Offers",
+        "body": "",
+        "view": "page-landing",
+        "path": "/offers"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "about-us",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "About Us",
+        "body": "",
+        "view": "page",
+        "path": "/about-us"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "reservation",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Reservation",
+        "body": "",
+        "view": "page",
+        "path": "/reservation"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "lorem-ipsum",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "other"
+        ]
+      },
+      "values": {
+        "title": "Lorem ipsum",
+        "excerpt": "",
+        "body": "<p>Lorem ipsum dolor sit amet, ei quando inciderint complectitur eam. Ut option consequat vim. Omnis homero vix in. Vide mollis suscipit pro an, sea in soluta vocent. Sed possim consetetur moderatius an, deseruisse intellegam reprehendunt et mei, phaedrum euripidis intellegam an mei. Deleniti insolens mel et, mel idque facilis fuisset ut. Mei id dico offendit officiis. Verterem consequat sadipscing no quo. Habeo viris id est. Has ne integre democritum, eu labitur mentitum abhorreant vel. Quo ad dicant animal, mel et veniam causae definitionem. Graeco platonem per in, mel laboramus repudiandae ne, per sint possit salutandi ut. Vis ea utamur maluisset, eros incorrupte at eos.</p>",
+        "date": "2021-09-10 01:38:00",
+        "created": "2021-09-06 10:54:21",
+        "path": "/other/lorem-ipsum"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-news"
+        ]
+      },
+      "values": {
+        "title": "Cocktail Bar Alchemist set to open at Mediacity in Salford Quays",
+        "excerpt": "",
+        "body": "<p>\r\n  Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.\r\n</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>",
+        "date": "2021-09-10 01:37:00",
+        "cover": "item-1.jpg",
+        "detail_image": "images/joomlart/blog/marketing-detail-1.jpg",
+        "created": "2021-09-06 10:53:21",
+        "path": "/restaurant-news/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "we-ve-been-nominated-for-the-britain-restaurant-awards",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-business"
+        ]
+      },
+      "values": {
+        "title": "We've been nominated for the Britain Restaurant Awards",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:36:00",
+        "cover": "item-2.jpg",
+        "detail_image": "images/joomlart/blog/marketing-detail-2.jpg",
+        "created": "2021-09-06 10:52:21",
+        "path": "/restaurant-business/we-ve-been-nominated-for-the-britain-restaurant-awards"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "three-broomsticks-welcomes-new-chef-caleb-nunez",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-guide"
+        ]
+      },
+      "values": {
+        "title": "Three Broomsticks welcomes new chef Caleb Nunęz",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:35:00",
+        "cover": "item-3.jpg",
+        "detail_image": "images/joomlart/blog/marketing-detail-2.jpg",
+        "created": "2021-09-06 10:51:21",
+        "path": "/restaurant-guide/three-broomsticks-welcomes-new-chef-caleb-nunez"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "three-broomsticks-s-autumn-menu-unveiled",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-news"
+        ]
+      },
+      "values": {
+        "title": "Three Broomsticks's autumn menu unveiled",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:34:00",
+        "cover": "item-4.jpg",
+        "detail_image": "images/joomlart/blog/news-detail-5.jpg",
+        "created": "2021-09-06 10:50:21",
+        "path": "/restaurant-news/three-broomsticks-s-autumn-menu-unveiled"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "4-habits-that-can-improve-your-customer-service",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-business"
+        ]
+      },
+      "values": {
+        "title": "4 Habits That Can Improve Your Customer Service",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:30:00",
+        "cover": "business-1.jpg",
+        "detail_image": "images/joomlart/blog/business-detail-1.jpg",
+        "created": "2021-09-06 10:46:21",
+        "path": "/restaurant-business/4-habits-that-can-improve-your-customer-service"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "8-trends-trickling-down-to-mainstream-menus",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-business"
+        ]
+      },
+      "values": {
+        "title": "8 trends trickling down to mainstream menus",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:29:00",
+        "cover": "business-2.jpg",
+        "detail_image": "images/joomlart/blog/business-detail-2.jpg",
+        "created": "2021-09-06 10:45:21",
+        "path": "/restaurant-business/8-trends-trickling-down-to-mainstream-menus"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "starbucks-brings-under-armour-exec-on-board",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-business"
+        ]
+      },
+      "values": {
+        "title": "Starbucks brings Under Armour exec on board",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:28:00",
+        "cover": "business-3.jpg",
+        "detail_image": "images/joomlart/blog/business-detail-3.jpg",
+        "created": "2021-09-06 10:44:21",
+        "path": "/restaurant-business/starbucks-brings-under-armour-exec-on-board"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "inside-olive-garden-s-never-ending-pasta-pass",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-business"
+        ]
+      },
+      "values": {
+        "title": "Inside Olive Garden's Never Ending Pasta Pass",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:27:00",
+        "cover": "business-4.jpg",
+        "detail_image": "images/joomlart/blog/business-detail-4.jpg",
+        "created": "2021-09-06 10:43:21",
+        "path": "/restaurant-business/inside-olive-garden-s-never-ending-pasta-pass"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "century-old-nathan-s-famous-aims-for-youth-with-new-look",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-business"
+        ]
+      },
+      "values": {
+        "title": "Century-old Nathan’s Famous aims for youth with new look",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:26:00",
+        "cover": "business-5.jpg",
+        "detail_image": "images/joomlart/blog/business-detail-5.jpg",
+        "created": "2021-09-06 10:42:21",
+        "path": "/restaurant-business/century-old-nathan-s-famous-aims-for-youth-with-new-look"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "did-ihop-s-publicity-stunt-hurt-applebee-s",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-marketing"
+        ]
+      },
+      "values": {
+        "title": "Did IHOP's publicity stunt hurt Applebee's?",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:25:00",
+        "cover": "marketing-1.jpg",
+        "detail_image": "images/joomlart/blog/marketing-detail-1.jpg",
+        "created": "2021-09-06 10:41:21",
+        "path": "/restaurant-marketing/did-ihop-s-publicity-stunt-hurt-applebee-s"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "buffalo-wild-wings-considers-adding-sports-betting",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-marketing"
+        ]
+      },
+      "values": {
+        "title": "Buffalo Wild Wings considers adding sports betting ",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:24:00",
+        "cover": "marketing-2.jpg",
+        "detail_image": "images/joomlart/blog/marketing-detail-2.jpg",
+        "created": "2021-09-06 10:40:21",
+        "path": "/restaurant-marketing/buffalo-wild-wings-considers-adding-sports-betting"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "this-week-s-restaurant-nightmares-language-people",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-marketing"
+        ]
+      },
+      "values": {
+        "title": "This week’s restaurant nightmares: Language, people",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:23:00",
+        "cover": "marketing-3.jpg",
+        "detail_image": "images/joomlart/blog/marketing-detail-3.jpg",
+        "created": "2021-09-06 10:39:21",
+        "path": "/restaurant-marketing/this-week-s-restaurant-nightmares-language-people"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "jason-alexander-is-kfc-s-new-colonel",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-marketing"
+        ]
+      },
+      "values": {
+        "title": "Jason Alexander is KFC’s new colonel",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:22:00",
+        "cover": "marketing-4.jpg",
+        "detail_image": "images/joomlart/blog/marketing-detail-4.jpg",
+        "created": "2021-09-06 10:38:21",
+        "path": "/restaurant-marketing/jason-alexander-is-kfc-s-new-colonel"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "10-most-alluring-ltos-on-menus-in-july",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-news"
+        ]
+      },
+      "values": {
+        "title": "10 most alluring LTOs on menus in July ",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:21:00",
+        "cover": "news-1.jpg",
+        "detail_image": "images/joomlart/blog/news-detail-1.jpg",
+        "created": "2021-09-06 10:37:21",
+        "path": "/restaurant-news/10-most-alluring-ltos-on-menus-in-july"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-news"
+        ]
+      },
+      "values": {
+        "title": "Newk’s Eatery steals a dinner booster from supermarkets",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:20:00",
+        "cover": "news-2.jpg",
+        "detail_image": "images/joomlart/blog/news-detail-2.jpg",
+        "created": "2021-09-06 10:36:21",
+        "path": "/restaurant-news/newk-s-eatery-steals-a-dinner-booster-from-supermarkets"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-news"
+        ]
+      },
+      "values": {
+        "title": "This week’s 5 head-spinning restaurant moments: 1 more inch",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:19:00",
+        "cover": "news-3.jpg",
+        "detail_image": "images/joomlart/blog/news-detail-3.jpg",
+        "created": "2021-09-06 10:35:21",
+        "path": "/restaurant-news/this-week-s-5-head-spinning-restaurant-moments-1-more-inch"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-news"
+        ]
+      },
+      "values": {
+        "title": "5 of the summer’s craziest restaurant marketing stunts",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:18:00",
+        "cover": "news-4.jpg",
+        "detail_image": "images/joomlart/blog/news-detail-4.jpg",
+        "created": "2021-09-06 10:34:21",
+        "path": "/restaurant-news/5-of-the-summer-s-craziest-restaurant-marketing-stunts"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "burger-king-takes-a-stand-on-the-pink-tax",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-news"
+        ]
+      },
+      "values": {
+        "title": "Burger King takes a stand on the ‘pink tax’",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:17:00",
+        "cover": "news-5.jpg",
+        "detail_image": "images/joomlart/blog/news-detail-5.jpg",
+        "created": "2021-09-06 10:33:21",
+        "path": "/restaurant-news/burger-king-takes-a-stand-on-the-pink-tax"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-guide"
+        ]
+      },
+      "values": {
+        "title": "Efforts to curb soda consumption bring results on both coasts",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:16:00",
+        "cover": "guide-1.jpg",
+        "detail_image": "images/joomlart/blog/guide-detail-1.jpg",
+        "created": "2021-09-06 10:32:21",
+        "path": "/restaurant-guide/efforts-to-curb-soda-consumption-bring-results-on-both-coasts"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "how-restaurants-can-promote-a-james-beard-recognition",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-guide"
+        ]
+      },
+      "values": {
+        "title": "How restaurants can promote a James Beard recognition",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:15:00",
+        "cover": "guide-2.jpg",
+        "detail_image": "images/joomlart/blog/guide-detail-2.jpg",
+        "created": "2021-09-06 10:31:21",
+        "path": "/restaurant-guide/how-restaurants-can-promote-a-james-beard-recognition"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "restaurant-guide"
+        ]
+      },
+      "values": {
+        "title": "From IHOP to IHOb: Just how big was the chain’s name reveal?",
+        "excerpt": "",
+        "body": "<p>Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.</p>\r\n\n\r\n<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\r\n<h3>\r\n  Nullam dictum felis eu pede mollis\r\n</h3>\r\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-2.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>\r\n<p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>\r\n<blockquote>\r\n<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>\r\n<small>Quote's author in <cite title=\"Source Title\">Source Title</cite></small></blockquote>\r\n<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>\r\n\r\n<h3>Vestibulum ante ipsum primis in faucibus</h3>\r\n\r\n<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>\r\n\r\n<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>\r\n<p>\r\n  <figure><img src=\"business-detail-4.jpg\" alt=\"\"/><figcaption>Aenean ut eros et nisl sagittis vestibulum</figcaption></figure>\r\n</p>\r\n\r\n<p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien.</p>\r\n\r\n<p>Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>\r\n\r\n<p>Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui.</p>",
+        "date": "2021-09-10 01:14:00",
+        "cover": "guide-3.jpg",
+        "detail_image": "images/joomlart/blog/guide-detail-3.jpg",
+        "created": "2021-09-06 10:30:21",
+        "path": "/restaurant-guide/from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal"
+      }
+    },
+    {
+      "type": "slideshow",
+      "slug": "slideshow",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title_link": "",
+        "title": "Slideshow",
+        "items": [
+          {
+            "image": "item-1.jpg",
+            "title": "Hey Harry!!!<br/> Are you ready for restaurant week?",
+            "desc": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+            "button1": "Book a Table",
+            "btn_link1": "/about-us",
+            "button2": "View full menu",
+            "btn_link2": "/reservation"
+          },
+          {
+            "image": "item-2.jpg",
+            "title": "Hey Harry!!!<br/> Are you ready for restaurant week?",
+            "desc": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+            "button1": "Book a Table",
+            "btn_link1": "/about-us",
+            "button2": "View full menu",
+            "btn_link2": "/reservation"
+          }
+        ]
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "meet-three-broomsticks",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "basic_description": "Nulla dictum felis in libero dignissim, vel semper augue sagittis nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac turpis dolor.",
+        "basic_btn_title": "Discover our Story",
+        "basic_btn_link": "/about-us",
+        "title": "Meet Three Broomsticks.",
+        "items": [
+          {
+            "ft_img": "item-1.jpg",
+            "title": "Location.",
+            "description": "398 North 23th Dumbledore Street,<br/> Hogsmeade Village, Britain.",
+            "btn_title": "Get Direction",
+            "btn_link": "/reservation"
+          },
+          {
+            "ft_img": "item-2.jpg",
+            "title": "Hours.",
+            "description": "Tuesday - Saturday: 9a.m - Close.<br/>\nSunday: 10a.m - Close.<br/>\nMonday: Closed.",
+            "btn_title": "Get Direction",
+            "btn_link": "/contact-us"
+          }
+        ],
+        "sub_heading": "The Three Broomsticks is a <mark>café & restaurant</mark> nestled in the beautiful and quaint Hogsmeade Village."
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "gallery",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "basic_description": "Donec convallis nulla mauris, eget \naucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
+        "title": "Gallery.",
+        "items": [
+          {
+            "img": "item-3.jpg",
+            "title": "Roasted Red Potatoes with Rosemary",
+            "description": "w/ potatoes, rosemary & butter",
+            "link": ""
+          },
+          {
+            "img": "item-4.jpg",
+            "title": "Roasted Red Potatoes with Rosemary",
+            "description": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
+            "link": ""
+          }
+        ],
+        "sub_heading": "Modern Wizard cuisine <mark>inspired</mark> by traditional artisan methods."
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "meet-our-chef",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "align": "1",
+        "img_features": "item-5.png",
+        "description": "<h4>Pokey McKing</h4>\n<p>Executive Chef of Three Broomsticks.</p>",
+        "title": "Meet Our Chef.",
+        "sub_heading": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”"
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "features-style-4",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title_small": "Discover Our Menu.",
+        "title_large": "Efforts to curb <mark>soda consumption</mark> bring results on both coasts",
+        "description": "Get started with the list of our best recipes. Narrow down those great options using our customised recipe filters. One you find the perfect dish, print & share your finds with friends. Sure you can make your meal planning a success.",
+        "button": "Join Now",
+        "button_link": "/reservation",
+        "title": "Features Style 4",
+        "items": [
+          {
+            "img": "picture-about-1.jpg",
+            "link_img": "#"
+          },
+          {
+            "img": "picture-about-2.jpg",
+            "link_img": "#"
+          },
+          {
+            "img": "picture-about-3.jpg",
+            "link_img": "#"
+          },
+          {
+            "img": "picture-about-4.jpg",
+            "link_img": "#"
+          }
+        ]
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "features-style-5",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title_small": "Meet Three BroomSticks",
+        "title_large": "Newk’s Eatery a dinner <mark>café & restaurant</mark> from supermarkets",
+        "description": "Get started with the list of our best recipes. Narrow down those great options using our customised recipe filters. One you find the perfect dish, print & share your finds with friends. Sure you can make your meal planning a success.",
+        "button": "Meet Our Team",
+        "button_link": "/contact-us",
+        "title": "Features Style 5",
+        "items": [
+          {
+            "img": "picture-about-5.jpg",
+            "link_img": "#"
+          },
+          {
+            "img": "picture-about-6.jpg",
+            "link_img": "#"
+          },
+          {
+            "img": "picture-about-7.jpg",
+            "link_img": "#"
+          },
+          {
+            "img": "picture-about-8.jpg",
+            "link_img": "#"
+          }
+        ]
+      }
+    },
+    {
+      "type": "container_tabs",
+      "slug": "discover-our-menu",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "image_intro": "tab-intro.png",
+        "position": "menu-tab",
+        "title": "Discover Our Menu.",
+        "sub_heading": "Menu changes <mark>frequently,</mark> here is a<br/>sample of what may be available."
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "main-dishes",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "basic_btn_title": "View full menu",
+        "basic_btn_link": "/about-us",
+        "title": "Main Dishes",
+        "items": [
+          {
+            "dish_name": "Candied Walnut Salad",
+            "dish_description": "w/ shaved beans, wild flowers",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Candied Fig",
+            "dish_description": "w/ pork, oysters, veggie, ginger",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Baked Squid",
+            "dish_description": "w/ pickled ginger, chili",
+            "dish_price": "$56"
+          },
+          {
+            "dish_name": "Crisped Duck",
+            "dish_description": "w/ sesame, bamboo, nuts",
+            "dish_price": "$33"
+          },
+          {
+            "dish_name": "Mud Crab Congee",
+            "dish_description": "w/ horseradish, soured cream",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Smoked Venison",
+            "dish_description": "w/ prawn, sausage, totatos",
+            "dish_price": "$58"
+          },
+          {
+            "dish_name": "Imported Oysters Grill",
+            "dish_description": "w/ oysters, veggie, ginger",
+            "dish_price": "$89"
+          },
+          {
+            "dish_name": "Fried Chocolate",
+            "dish_description": "w/ english peas, carrots & port sauce",
+            "dish_price": "$29"
+          },
+          {
+            "dish_name": "Roasted Steak Roulade",
+            "dish_description": "w/ apple cider vinegar, salt, sugar & spices",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Poached Fruits",
+            "dish_description": "Frank's hot sauce, creamy blue cheese dip",
+            "dish_price": "$30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "soft-drinks",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "basic_btn_title": "View full menu",
+        "basic_btn_link": "/contact-us",
+        "title": "Soft Drinks",
+        "items": [
+          {
+            "dish_name": "Fried Chocolate",
+            "dish_description": "w/ shaved beans, wild flowers",
+            "dish_price": "$96"
+          },
+          {
+            "dish_name": "Smoked Venison",
+            "dish_description": "w/ pork, oysters, veggie, ginger",
+            "dish_price": "$147"
+          },
+          {
+            "dish_name": "Crisped Duck",
+            "dish_description": "w/ pickled ginger, chili",
+            "dish_price": "$156"
+          },
+          {
+            "dish_name": "Mud Crab Congee",
+            "dish_description": "w/ sesame, bamboo, nuts",
+            "dish_price": "$45"
+          },
+          {
+            "dish_name": "Candied Walnut Salad",
+            "dish_description": "w/ horseradish, soured cream",
+            "dish_price": "$417"
+          },
+          {
+            "dish_name": "Smoked Venison",
+            "dish_description": "w/ prawn, sausage, totatos",
+            "dish_price": "$68"
+          },
+          {
+            "dish_name": "Imported Oysters Grill",
+            "dish_description": "w/ oysters, veggie, ginger",
+            "dish_price": "$49"
+          },
+          {
+            "dish_name": "Fried Chocolate",
+            "dish_description": "w/ english peas, carrots & port sauce",
+            "dish_price": "$59"
+          },
+          {
+            "dish_name": "Roasted Steak Roulade",
+            "dish_description": "w/ apple cider vinegar, salt, sugar & spices",
+            "dish_price": "$75"
+          },
+          {
+            "dish_name": "Poached Fruits",
+            "dish_description": "Frank's hot sauce, creamy blue cheese dip",
+            "dish_price": "$44"
+          }
+        ]
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "dessert",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "basic_btn_title": "View full menu",
+        "basic_btn_link": "/reservation",
+        "title": "Dessert",
+        "items": [
+          {
+            "dish_name": "Poached Fruits",
+            "dish_description": "w/ potatoes, rosemary, butter",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Fried Chocolate",
+            "dish_description": "w/ pork, oysters, veggie, ginger",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Smoked Venison",
+            "dish_description": "w/ pickled ginger, chili",
+            "dish_price": "$56"
+          },
+          {
+            "dish_name": "Crisped Duck",
+            "dish_description": "w/ sesame, bamboo, nuts",
+            "dish_price": "$33"
+          },
+          {
+            "dish_name": "Candied Fig",
+            "dish_description": "w/ horseradish, soured cream",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Baked Squid",
+            "dish_description": "w/ prawn, sausage, totatos",
+            "dish_price": "$58"
+          },
+          {
+            "dish_name": "Imported Oysters Grill",
+            "dish_description": "w/ oysters, veggie, ginger",
+            "dish_price": "$89"
+          },
+          {
+            "dish_name": "Fried Chocolate",
+            "dish_description": "w/ english peas, carrots & port sauce",
+            "dish_price": "$29"
+          },
+          {
+            "dish_name": "Imported Oysters Grill",
+            "dish_description": "w/ apple cider vinegar, salt, sugar & spices",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Poached Fruits",
+            "dish_description": "Frank's hot sauce, creamy blue cheese dip",
+            "dish_price": "$30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "happyhours",
+      "slug": "happy-hours-style-3",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "hp_img": "bg-login.jpg",
+        "hp_title": "Happy Hours",
+        "hp_desc": "Donec convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio interpretaris eu. ",
+        "hp_info": "Mon. Tue. Thu. & Sun<br />\n12 Noon to 11 PM",
+        "hp_badge": "Off 50%",
+        "hp_link_text": "Join now",
+        "hp_link": "https://www.joomlart.com",
+        "title": "Happy Hours Style 3"
+      }
+    },
+    {
+      "type": "happyhours",
+      "slug": "happy-hours-style-1",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "hp_img": "bg-offer-2.jpg",
+        "hp_title": "Happy Hours",
+        "hp_desc": "Donec convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris. Qui quaeque quaerendum interpretaris eu. Laoreet sententiae cu mel, his at modo tempor. Hinc dicam repudiandae eu pri, aliquam vivendum deseruisse et sit.",
+        "hp_info": "Mon. Tue. Thu. & Sun<br />\n12 Noon to 11 PM",
+        "hp_badge": "35% OFF",
+        "hp_link_text": "Join now",
+        "hp_link": "https://www.joomlart.com",
+        "title": "Happy Hours Style 1"
+      }
+    },
+    {
+      "type": "happyhours",
+      "slug": "happy-hours-style-2",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "hp_img": "bg-offer-1.jpg",
+        "hp_title": "Happy Hours",
+        "hp_desc": "Disputando consectetuer ex vim, qui prima eleifend id. In qui affert persius molestiae. Usu et laudem facilisis.Ad est minim fuisset, blandit placerat ex duo.",
+        "hp_info": "Mon. Tue. Thu. & Sun<br />\n12 Noon to 11 PM",
+        "hp_badge": "Off 50%",
+        "hp_link_text": "Don't wait",
+        "hp_link": "https://www.joomlart.com",
+        "title": "Happy Hours Style 2"
+      }
+    },
+    {
+      "type": "teams",
+      "slug": "teams-style-1",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "number_column": "4",
+        "title_section": "Our Team",
+        "description_section": "What makes a good chef the best in the world? Here are a few best chefs recommended by their peers in the field.",
+        "title": "Teams Style 1",
+        "items": [
+          {
+            "img": "Chef-8.jpg",
+            "name_member": "Darren Klein",
+            "name_office": "Head Sommelier",
+            "description": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+            "link_social": "<ul>\n<li><a href='#'><i class='fa fa-facebook' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-twitter' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-google-plus' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-instagram' aria-hidden='true'></i></a></li>\n</ul>"
+          },
+          {
+            "img": "chef-1.jpg",
+            "name_member": "Dewey Hall",
+            "name_office": "Chef Patron",
+            "description": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+            "link_social": "<ul>\n<li><a href='#'><i class='fa fa-facebook' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-twitter' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-google-plus' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-instagram' aria-hidden='true'></i></a></li>\n</ul>"
+          },
+          {
+            "img": "chef-2.jpg",
+            "name_member": "Lorenzo Pope",
+            "name_office": "Restaurant Manager",
+            "description": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+            "link_social": "<ul>\n<li><a href='#'><i class='fa fa-facebook' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-twitter' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-google-plus' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-instagram' aria-hidden='true'></i></a></li>\n</ul>"
+          },
+          {
+            "img": "chef-3.jpg",
+            "name_member": "Perry Larson",
+            "name_office": "General Manager",
+            "description": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+            "link_social": "<ul>\n<li><a href='#'><i class='fa fa-facebook' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-twitter' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-google-plus' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-instagram' aria-hidden='true'></i></a></li>\n</ul>"
+          },
+          {
+            "img": "chef-4.jpg",
+            "name_member": "William Beaudet",
+            "name_office": "Head Sommelier",
+            "description": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+            "link_social": "<ul>\n<li><a href='#'><i class='fa fa-facebook' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-twitter' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-google-plus' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-instagram' aria-hidden='true'></i></a></li>\n</ul>"
+          },
+          {
+            "img": "chef-5.jpg",
+            "name_member": "Rodney Quintana",
+            "name_office": "Manager Restaurant",
+            "description": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+            "link_social": "<ul>\n<li><a href='#'><i class='fa fa-facebook' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-twitter' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-google-plus' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-instagram' aria-hidden='true'></i></a></li>\n</ul>"
+          },
+          {
+            "img": "chef-6.jpg",
+            "name_member": "Amy M. Snow",
+            "name_office": "Chef Restaurant",
+            "description": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+            "link_social": "<ul>\n<li><a href='#'><i class='fa fa-facebook' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-twitter' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-google-plus' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-instagram' aria-hidden='true'></i></a></li>\n</ul>"
+          },
+          {
+            "img": "Chef-7.jpg",
+            "name_member": "Beulah W. Grieco",
+            "name_office": "Chef Restaurant",
+            "description": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+            "link_social": "<ul>\n<li><a href='#'><i class='fa fa-facebook' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-twitter' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-google-plus' aria-hidden='true'></i></a></li>\n<li><a href='#'><i class='fa fa-instagram' aria-hidden='true'></i></a></li>\n</ul>"
+          }
+        ]
+      }
+    },
+    {
+      "type": "modules",
+      "slug": "banner-1",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Banner 1",
+        "content": "<img src=\"banner-1.jpg\" alt=\"\"/>"
+      }
+    },
+    {
+      "type": "chrome",
+      "slug": "chrome",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Site chrome",
+        "brand_name": "JA Diner",
+        "footer_location_title": "Location",
+        "footer_address": "398 North 23th Dumbledore Street,\nHogsmeade Village, Britain.",
+        "footer_map_label": "Get Direction",
+        "footer_map_url": "/contact-us",
+        "footer_hours_title": "Hours",
+        "footer_hours": "Tuesday - Saturday: 9a.m - Close.\nSunday: 10a.m - Close.\nMonday: Closed.",
+        "footer_contact_title": "Contact",
+        "footer_phone": "M. +201 382 348 5327\nP. +201 166 993 7763",
+        "footer_email": "Info@joomlart.com",
+        "subscribe_label": "Subscribe",
+        "subscribe_title": "Join our Newsletter list to get all the latest offers, discounts and other.",
+        "subscribe_placeholder": "Email",
+        "subscribe_button": "Subscribe",
+        "subscribe_note": "We don't do spam. Because we are Wizard :).",
+        "news_label": "News & Events.",
+        "news_title": "Three Broomsticks <mark>is your best</mark> café & restaurant in the Hogsmeade.",
+        "copyright": "Copyright © {year} {name}. All Rights Reserved. Designed by JoomlArt.com.",
+        "skip_label": "Skip to content",
+        "menu_label": "Menu",
+        "appearance_label": "Switch between light and dark appearance",
+        "categories_title": "Categories",
+        "prev_label": "Prev",
+        "next_label": "Next",
+        "more_label": "More Articles …",
+        "read_more": "Read More",
+        "breadcrumb_home": "Home",
+        "latest_title": "Latest News + Updates.",
+        "not_found_code": "404",
+        "not_found_title": "Page not found",
+        "not_found_text": "Please try one of the following pages:",
+        "not_found_back_label": "Home Page",
+        "form_id": "",
+        "search_title": "Search",
+        "search_label": "Search Terms:",
+        "search_placeholder": "Search…",
+        "search_button": "Search",
+        "search_results": "Search results",
+        "search_empty": "No results found.",
+        "page_label": "Page",
+        "start_label": "Start",
+        "end_label": "End"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "contact-us",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Ja Diner",
+        "description": "Responsive joomla template for restaurant",
+        "background": "images/joomlart/other/bg-contact-02.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "offers",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Offers",
+        "description": "Responsive joomla template for restaurant",
+        "background": "images/joomlart/other/banner-offer.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "about-us",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "About Us",
+        "description": "Responsive joomla template for restaurant",
+        "background": "images/joomlart/other/banner-about.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "our-blog",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Our Blog",
+        "description": "Responsive joomla template for restaurant",
+        "background": "images/joomlart/other/banner-blog.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "reservation",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Reservation",
+        "description": "Responsive joomla template for restaurant",
+        "background": "images/joomlart/other/banner-reservation.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "search",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Search",
+        "description": "Responsive joomla template for restaurant",
+        "background": "images/joomlart/other/bg-martsearch.jpg"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "our-blog",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Our Blog",
+        "body": "",
+        "view": "page-blog",
+        "path": "/our-blog"
+      }
+    },
+    {
+      "type": "category_info",
+      "slug": "restaurant-business",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Restaurant Business",
+        "description": "Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.",
+        "image": "images/joomlart/blog/business-detail-1.jpg"
+      }
+    },
+    {
+      "type": "category_info",
+      "slug": "restaurant-marketing",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Restaurant Marketing",
+        "description": "In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.",
+        "image": "images/joomlart/blog/marketing-detail-1.jpg"
+      }
+    },
+    {
+      "type": "category_info",
+      "slug": "restaurant-news",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Restaurant News",
+        "description": "Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus.",
+        "image": "images/joomlart/blog/news-detail-3.jpg"
+      }
+    },
+    {
+      "type": "category_info",
+      "slug": "restaurant-guide",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Restaurant Guide",
+        "description": "Modus commodo laboramus et eos. Usu clita fierent salutatus ad, qui ex nihil animal dolorum labores maluisset dissentiunt in ius.",
+        "image": "images/joomlart/blog/guide-detail-3.jpg"
+      }
+    },
+    {
+      "type": "contact",
+      "slug": "contact",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Contact",
+        "image": "images/joomlart/other/banner-contact.jpg",
+        "card_title": "Ja Diner",
+        "card_text": "<p>Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet.</p>\r\n<p>Ea suavitate accusamus pri, ea noster honestatis sit. Vel debet semper id. Ferri altera quaeque ex usu, an sonet viderer assentior quo..</p>",
+        "social_title": "Social Links",
+        "social_links": [
+          {
+            "label": "facebook",
+            "url": "http://joomlart.com"
+          },
+          {
+            "label": "pinterest",
+            "url": "http://joomlart.com"
+          },
+          {
+            "label": "google +",
+            "url": "http://joomlart.com"
+          },
+          {
+            "label": "twitter",
+            "url": "http://joomlart.com"
+          }
+        ],
+        "address": "1600 Amphitheatre Parkway, Mountain View 5692",
+        "phone_label": "Phone",
+        "phone": "(084) 555-0110",
+        "web_label": "Website",
+        "webpage": "http://joomlart.com",
+        "form_title": "Contact Form",
+        "form_note": "Send an Email. All fields with an asterisk (*) are required.",
+        "form_id": ""
+      }
+    },
+    {
+      "type": "reservation",
+      "slug": "reservation-layout",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Reservation",
+        "blocks": [
+          {
+            "image": "images/joomlart/blog/business-detail-3.jpg",
+            "label": "Reservations for lunch",
+            "title": "We take <mark>reservations</mark> for lunch and dinner efforts to curb soda consumption",
+            "text": "Eos audiam oporteat apeirian no, ut sint erat vel. Deserunt sadipscing accommodare ne sed. Ad sea velit maiorum posidonium, no iusto evertitur nam, qui insolens postulant partiendo ut.",
+            "button_label": "Menu for Lunch",
+            "button_link": "/offers"
+          },
+          {
+            "image": "images/joomlart/blog/news-detail-2.jpg",
+            "label": "Reservations for dinner",
+            "title": "This week’s 5 head-spinning <mark>restaurant</mark> moments for diner",
+            "text": "Eos audiam oporteat apeirian no, ut sint erat vel. Deserunt sadipscing accommodare ne sed. Ad sea velit maiorum posidonium, no iusto evertitur nam, qui insolens postulant partiendo ut.",
+            "button_label": "Menu for Diner",
+            "button_link": "/offers"
+          }
+        ],
+        "online_image": "images/joomlart/blog/marketing-detail-1.jpg",
+        "online_title": "Reservation Online",
+        "online_text": "Eos audiam oporteat apeirian no, ut sint erat vel. Deserunt sadipscing accommodare ne sed. Ad sea velit maiorum posidonium, no iusto evertitur nam",
+        "online_phone": "413-305-7497",
+        "online_button": "Call Now"
+      }
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": {
+        "en": "Primary"
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Home"
+          },
+          "path": "/"
+        },
+        {
+          "label": {
+            "en": "About Us"
+          },
+          "path": "/about-us"
+        },
+        {
+          "label": {
+            "en": "Reservation"
+          },
+          "path": "/reservation"
+        },
+        {
+          "label": {
+            "en": "Offers"
+          },
+          "path": "/offers"
+        },
+        {
+          "label": {
+            "en": "Our Blog"
+          },
+          "path": "/our-blog"
+        },
+        {
+          "label": {
+            "en": "Contact Us"
+          },
+          "path": "/contact-us"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "kind": "page"
+    },
+    {
+      "path": "/contact-us",
+      "kind": "page"
+    },
+    {
+      "path": "/offers",
+      "kind": "page"
+    },
+    {
+      "path": "/about-us",
+      "kind": "page"
+    },
+    {
+      "path": "/reservation",
+      "kind": "page"
+    },
+    {
+      "path": "/our-blog",
+      "kind": "list",
+      "type": "posts"
+    },
+    {
+      "path": "/other/lorem-ipsum",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "lorem-ipsum"
+    },
+    {
+      "path": "/restaurant-news/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays"
+    },
+    {
+      "path": "/restaurant-business/we-ve-been-nominated-for-the-britain-restaurant-awards",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "we-ve-been-nominated-for-the-britain-restaurant-awards"
+    },
+    {
+      "path": "/restaurant-guide/three-broomsticks-welcomes-new-chef-caleb-nunez",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "three-broomsticks-welcomes-new-chef-caleb-nunez"
+    },
+    {
+      "path": "/restaurant-news/three-broomsticks-s-autumn-menu-unveiled",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "three-broomsticks-s-autumn-menu-unveiled"
+    },
+    {
+      "path": "/restaurant-business/4-habits-that-can-improve-your-customer-service",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "4-habits-that-can-improve-your-customer-service"
+    },
+    {
+      "path": "/restaurant-business/8-trends-trickling-down-to-mainstream-menus",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "8-trends-trickling-down-to-mainstream-menus"
+    },
+    {
+      "path": "/restaurant-business/starbucks-brings-under-armour-exec-on-board",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "starbucks-brings-under-armour-exec-on-board"
+    },
+    {
+      "path": "/restaurant-business/inside-olive-garden-s-never-ending-pasta-pass",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "inside-olive-garden-s-never-ending-pasta-pass"
+    },
+    {
+      "path": "/restaurant-business/century-old-nathan-s-famous-aims-for-youth-with-new-look",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "century-old-nathan-s-famous-aims-for-youth-with-new-look"
+    },
+    {
+      "path": "/restaurant-marketing/did-ihop-s-publicity-stunt-hurt-applebee-s",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "did-ihop-s-publicity-stunt-hurt-applebee-s"
+    },
+    {
+      "path": "/restaurant-marketing/buffalo-wild-wings-considers-adding-sports-betting",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "buffalo-wild-wings-considers-adding-sports-betting"
+    },
+    {
+      "path": "/restaurant-marketing/this-week-s-restaurant-nightmares-language-people",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "this-week-s-restaurant-nightmares-language-people"
+    },
+    {
+      "path": "/restaurant-marketing/jason-alexander-is-kfc-s-new-colonel",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "jason-alexander-is-kfc-s-new-colonel"
+    },
+    {
+      "path": "/restaurant-news/10-most-alluring-ltos-on-menus-in-july",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "10-most-alluring-ltos-on-menus-in-july"
+    },
+    {
+      "path": "/restaurant-news/newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "newk-s-eatery-steals-a-dinner-booster-from-supermarkets"
+    },
+    {
+      "path": "/restaurant-news/this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "this-week-s-5-head-spinning-restaurant-moments-1-more-inch"
+    },
+    {
+      "path": "/restaurant-news/5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "5-of-the-summer-s-craziest-restaurant-marketing-stunts"
+    },
+    {
+      "path": "/restaurant-news/burger-king-takes-a-stand-on-the-pink-tax",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "burger-king-takes-a-stand-on-the-pink-tax"
+    },
+    {
+      "path": "/restaurant-guide/efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "efforts-to-curb-soda-consumption-bring-results-on-both-coasts"
+    },
+    {
+      "path": "/restaurant-guide/how-restaurants-can-promote-a-james-beard-recognition",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "how-restaurants-can-promote-a-james-beard-recognition"
+    },
+    {
+      "path": "/restaurant-guide/from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal"
+    }
+  ],
+  "redirects": [
+    {
+      "from": "/submit-an-article",
+      "to": "/",
+      "status": 301
+    },
+    {
+      "from": "/template-settings",
+      "to": "/",
+      "status": 301
+    },
+    {
+      "from": "/site-settings",
+      "to": "/",
+      "status": 301
+    }
+  ],
+  "media": [
+    {
+      "file": "item-1.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays#cover",
+        "slideshow/slideshow#items.0.image",
+        "features_intro/meet-three-broomsticks#items.0.ft_img"
+      ]
+    },
+    {
+      "file": "business-detail-2.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/we-ve-been-nominated-for-the-britain-restaurant-awards#body",
+        "posts/three-broomsticks-welcomes-new-chef-caleb-nunez#body",
+        "posts/three-broomsticks-s-autumn-menu-unveiled#body",
+        "posts/4-habits-that-can-improve-your-customer-service#body",
+        "posts/8-trends-trickling-down-to-mainstream-menus#body",
+        "posts/starbucks-brings-under-armour-exec-on-board#body",
+        "posts/inside-olive-garden-s-never-ending-pasta-pass#body",
+        "posts/century-old-nathan-s-famous-aims-for-youth-with-new-look#body",
+        "posts/did-ihop-s-publicity-stunt-hurt-applebee-s#body",
+        "posts/buffalo-wild-wings-considers-adding-sports-betting#body",
+        "posts/this-week-s-restaurant-nightmares-language-people#body",
+        "posts/jason-alexander-is-kfc-s-new-colonel#body",
+        "posts/10-most-alluring-ltos-on-menus-in-july#body",
+        "posts/newk-s-eatery-steals-a-dinner-booster-from-supermarkets#body",
+        "posts/this-week-s-5-head-spinning-restaurant-moments-1-more-inch#body",
+        "posts/5-of-the-summer-s-craziest-restaurant-marketing-stunts#body",
+        "posts/burger-king-takes-a-stand-on-the-pink-tax#body",
+        "posts/efforts-to-curb-soda-consumption-bring-results-on-both-coasts#body",
+        "posts/how-restaurants-can-promote-a-james-beard-recognition#body",
+        "posts/from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal#body"
+      ]
+    },
+    {
+      "file": "business-detail-4.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/we-ve-been-nominated-for-the-britain-restaurant-awards#body",
+        "posts/three-broomsticks-welcomes-new-chef-caleb-nunez#body",
+        "posts/three-broomsticks-s-autumn-menu-unveiled#body",
+        "posts/4-habits-that-can-improve-your-customer-service#body",
+        "posts/8-trends-trickling-down-to-mainstream-menus#body",
+        "posts/starbucks-brings-under-armour-exec-on-board#body",
+        "posts/inside-olive-garden-s-never-ending-pasta-pass#body",
+        "posts/century-old-nathan-s-famous-aims-for-youth-with-new-look#body",
+        "posts/did-ihop-s-publicity-stunt-hurt-applebee-s#body",
+        "posts/buffalo-wild-wings-considers-adding-sports-betting#body",
+        "posts/this-week-s-restaurant-nightmares-language-people#body",
+        "posts/jason-alexander-is-kfc-s-new-colonel#body",
+        "posts/10-most-alluring-ltos-on-menus-in-july#body",
+        "posts/newk-s-eatery-steals-a-dinner-booster-from-supermarkets#body",
+        "posts/this-week-s-5-head-spinning-restaurant-moments-1-more-inch#body",
+        "posts/5-of-the-summer-s-craziest-restaurant-marketing-stunts#body",
+        "posts/burger-king-takes-a-stand-on-the-pink-tax#body",
+        "posts/efforts-to-curb-soda-consumption-bring-results-on-both-coasts#body",
+        "posts/how-restaurants-can-promote-a-james-beard-recognition#body",
+        "posts/from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal#body"
+      ]
+    },
+    {
+      "file": "item-2.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/we-ve-been-nominated-for-the-britain-restaurant-awards#cover",
+        "slideshow/slideshow#items.1.image",
+        "features_intro/meet-three-broomsticks#items.1.ft_img"
+      ]
+    },
+    {
+      "file": "item-3.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/three-broomsticks-welcomes-new-chef-caleb-nunez#cover",
+        "features_intro/gallery#items.0.img"
+      ]
+    },
+    {
+      "file": "item-4.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/three-broomsticks-s-autumn-menu-unveiled#cover",
+        "features_intro/gallery#items.1.img"
+      ]
+    },
+    {
+      "file": "business-1.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/4-habits-that-can-improve-your-customer-service#cover"
+      ]
+    },
+    {
+      "file": "business-2.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/8-trends-trickling-down-to-mainstream-menus#cover"
+      ]
+    },
+    {
+      "file": "business-3.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/starbucks-brings-under-armour-exec-on-board#cover"
+      ]
+    },
+    {
+      "file": "business-4.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/inside-olive-garden-s-never-ending-pasta-pass#cover"
+      ]
+    },
+    {
+      "file": "business-5.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/century-old-nathan-s-famous-aims-for-youth-with-new-look#cover"
+      ]
+    },
+    {
+      "file": "marketing-1.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/did-ihop-s-publicity-stunt-hurt-applebee-s#cover"
+      ]
+    },
+    {
+      "file": "marketing-2.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/buffalo-wild-wings-considers-adding-sports-betting#cover"
+      ]
+    },
+    {
+      "file": "marketing-3.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/this-week-s-restaurant-nightmares-language-people#cover"
+      ]
+    },
+    {
+      "file": "marketing-4.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/jason-alexander-is-kfc-s-new-colonel#cover"
+      ]
+    },
+    {
+      "file": "news-1.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/10-most-alluring-ltos-on-menus-in-july#cover"
+      ]
+    },
+    {
+      "file": "news-2.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/newk-s-eatery-steals-a-dinner-booster-from-supermarkets#cover"
+      ]
+    },
+    {
+      "file": "news-3.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/this-week-s-5-head-spinning-restaurant-moments-1-more-inch#cover"
+      ]
+    },
+    {
+      "file": "news-4.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/5-of-the-summer-s-craziest-restaurant-marketing-stunts#cover"
+      ]
+    },
+    {
+      "file": "news-5.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/burger-king-takes-a-stand-on-the-pink-tax#cover"
+      ]
+    },
+    {
+      "file": "guide-1.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/efforts-to-curb-soda-consumption-bring-results-on-both-coasts#cover"
+      ]
+    },
+    {
+      "file": "guide-2.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/how-restaurants-can-promote-a-james-beard-recognition#cover"
+      ]
+    },
+    {
+      "file": "guide-3.jpg",
+      "alt": {},
+      "usedBy": [
+        "posts/from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal#cover"
+      ]
+    },
+    {
+      "file": "item-5.png",
+      "alt": {},
+      "usedBy": [
+        "features_intro/meet-our-chef#img_features"
+      ]
+    },
+    {
+      "file": "picture-about-1.jpg",
+      "alt": {},
+      "usedBy": [
+        "features_intro/features-style-4#items.0.img"
+      ]
+    },
+    {
+      "file": "picture-about-2.jpg",
+      "alt": {},
+      "usedBy": [
+        "features_intro/features-style-4#items.1.img"
+      ]
+    },
+    {
+      "file": "picture-about-3.jpg",
+      "alt": {},
+      "usedBy": [
+        "features_intro/features-style-4#items.2.img"
+      ]
+    },
+    {
+      "file": "picture-about-4.jpg",
+      "alt": {},
+      "usedBy": [
+        "features_intro/features-style-4#items.3.img"
+      ]
+    },
+    {
+      "file": "picture-about-5.jpg",
+      "alt": {},
+      "usedBy": [
+        "features_intro/features-style-5#items.0.img"
+      ]
+    },
+    {
+      "file": "picture-about-6.jpg",
+      "alt": {},
+      "usedBy": [
+        "features_intro/features-style-5#items.1.img"
+      ]
+    },
+    {
+      "file": "picture-about-7.jpg",
+      "alt": {},
+      "usedBy": [
+        "features_intro/features-style-5#items.2.img"
+      ]
+    },
+    {
+      "file": "picture-about-8.jpg",
+      "alt": {},
+      "usedBy": [
+        "features_intro/features-style-5#items.3.img"
+      ]
+    },
+    {
+      "file": "tab-intro.png",
+      "alt": {},
+      "usedBy": [
+        "container_tabs/discover-our-menu#image_intro"
+      ]
+    },
+    {
+      "file": "bg-login.jpg",
+      "alt": {},
+      "usedBy": [
+        "happyhours/happy-hours-style-3#hp_img"
+      ]
+    },
+    {
+      "file": "bg-offer-2.jpg",
+      "alt": {},
+      "usedBy": [
+        "happyhours/happy-hours-style-1#hp_img"
+      ]
+    },
+    {
+      "file": "bg-offer-1.jpg",
+      "alt": {},
+      "usedBy": [
+        "happyhours/happy-hours-style-2#hp_img"
+      ]
+    },
+    {
+      "file": "Chef-8.jpg",
+      "alt": {},
+      "usedBy": [
+        "teams/teams-style-1#items.0.img"
+      ]
+    },
+    {
+      "file": "chef-1.jpg",
+      "alt": {},
+      "usedBy": [
+        "teams/teams-style-1#items.1.img"
+      ]
+    },
+    {
+      "file": "chef-2.jpg",
+      "alt": {},
+      "usedBy": [
+        "teams/teams-style-1#items.2.img"
+      ]
+    },
+    {
+      "file": "chef-3.jpg",
+      "alt": {},
+      "usedBy": [
+        "teams/teams-style-1#items.3.img"
+      ]
+    },
+    {
+      "file": "chef-4.jpg",
+      "alt": {},
+      "usedBy": [
+        "teams/teams-style-1#items.4.img"
+      ]
+    },
+    {
+      "file": "chef-5.jpg",
+      "alt": {},
+      "usedBy": [
+        "teams/teams-style-1#items.5.img"
+      ]
+    },
+    {
+      "file": "chef-6.jpg",
+      "alt": {},
+      "usedBy": [
+        "teams/teams-style-1#items.6.img"
+      ]
+    },
+    {
+      "file": "Chef-7.jpg",
+      "alt": {},
+      "usedBy": [
+        "teams/teams-style-1#items.7.img"
+      ]
+    },
+    {
+      "file": "banner-1.jpg",
+      "alt": {},
+      "usedBy": [
+        "modules/banner-1#content"
+      ]
+    }
+  ],
+  "tokens": {},
+  "facts": []
+}

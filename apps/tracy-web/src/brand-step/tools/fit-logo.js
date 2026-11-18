@@ -3,7 +3,7 @@
 // Scales to contain in the spot frame, at 2x, transparent, and picks, in this order:
 //   1. the one-line logo, when the name's letter height in the spot reaches 14 px (1x);
 //   2. else the two-line logo, when each line reaches 14 px;
-//   3. else the side's mark alone.
+//   3. else the side's mark alone, except a phone menu retains the best name variant.
 // A name-only logo (compose_logo nameOnly) has no mark to fall back to: a spot too small for either variant shows
 // the larger name variant, and the note says so.
 // Reports which (`shows`: logo | logo-2-lines | mark) and the letter height of every candidate.
@@ -14,7 +14,7 @@ import { BrandToolError, MIN_LETTER_PX, readJson, sharp, sidecarsIn } from './co
 export const tool = {
   name: 'fit_logo',
   description:
-    "Crops, pads and scales to a spot at 2x, and picks what the spot shows: the one-line logo when the name's letter height reaches 14 px; else the two-line logo when each line reaches 14 px; else the mark alone. It says which (`shows`: `logo`, `logo-2-lines` or `mark`).",
+    "Crops, pads and scales to a spot at 2x, and picks what the spot shows: the one-line logo when the name's letter height reaches 14 px; else the two-line logo when each line reaches 14 px; else the mark alone (phone menus always retain the best name variant). It says which (`shows`: `logo`, `logo-2-lines` or `mark`). With markOnly:true, logo is a standalone transparent mark; no composed name is needed.",
   inputSchema: {
     type: 'object',
     properties: {
@@ -23,16 +23,25 @@ export const tool = {
         description: "Path of the one-line logo of the spot's ground side (logo.<side>.png)."
       },
       spot: { type: 'string', description: 'The id of a kit logo spot.' },
-      align: { type: 'string', enum: ['left', 'center'] }
+      align: { type: 'string', enum: ['left', 'center'] },
+      markOnly: {
+        type: 'boolean',
+        description: 'Fit the supplied standalone mark without a composed name logo.'
+      }
     },
     required: ['logo', 'spot'],
     additionalProperties: false
   },
-  async run({ logo, spot: spotId, align }, ctx) {
+  async run({ logo, spot: spotId, align, markOnly = false }, ctx) {
     if (!logo || !spotId) throw new BrandToolError('usage: fit_logo(logo, spot)')
     const spots = ctx.kit.site.logoSpots
     const spot = spots.find((s) => s.id === spotId)
     if (!spot) throw new BrandToolError(`unknown spot ${spotId}`, { spots: spots.map((s) => s.id) })
+    if (typeof markOnly !== 'boolean') throw new BrandToolError('markOnly must be a boolean')
+    if (markOnly) {
+      const out = await fitImage(logo, spot, align, ctx)
+      return { ...out, shows: 'mark', from: logo, nameLetterHeightPx: null, candidates: [] }
+    }
     const side = spot.ground.side
     const dir = path.posix.dirname(logo)
     const cars = sidecarsIn(ctx.files, dir, 'logo')
@@ -72,22 +81,21 @@ export const tool = {
       ...(two ? [{ shows: 'logo-2-lines', file: two.file, letter: letterIn(two), lines: two.lines }] : [])
     ]
     const nameOnly = !info.mark
+    // A phone menu must identify the business even when its compact frame cannot meet the preferred letter height.
+    const keepName = nameOnly || spot.where === 'offcanvas'
     const pick =
       candidates.find((c) => c.letter >= MIN_LETTER_PX) ??
-      (nameOnly
+      (keepName
         ? candidates.reduce((best, c) => (c.letter > best.letter ? c : best))
         : { shows: 'mark', file: info.mark, letter: null })
 
-    const W = spot.width * 2
-    const H = spot.height * 2
-    const position = align === 'center' ? 'centre' : 'left'
+    const fitted = await fitImage(pick.file, spot, align, ctx)
+    const {
+      file: outFile,
+      run: RUN,
+      size2x: [W, H]
+    } = fitted
     const input = await sharp(ctx.files.read(pick.file)).trim({ threshold: 0 }).png().toBuffer()
-    const png = await sharp(input)
-      .resize(W, H, { fit: 'contain', position, background: { r: 0, g: 0, b: 0, alpha: 0 } })
-      .png()
-      .toBuffer()
-    const outFile = ctx.files.write(`spots/${spotId}.png`, png)
-    const RUN = Number(/\.v(\d+)\.png$/.exec(outFile)?.[1] ?? 1)
     const m = await sharp(input).metadata()
     const s1 = Math.min(spot.width / m.width, spot.height / m.height)
     return {
@@ -117,11 +125,45 @@ export const tool = {
         pick.shows === 'mark'
           ? `name under ${MIN_LETTER_PX} px ${two ? 'on one line and on two lines' : 'on one line (one word: no two-line variant)'}: mark alone`
           : null,
-        nameOnly && pick.letter < MIN_LETTER_PX
-          ? `name only, no mark to fall back to: the name is ${pick.letter} px (< ${MIN_LETTER_PX}) in this spot`
+        keepName && pick.letter < MIN_LETTER_PX
+          ? `the ${nameOnly ? 'name-only logo' : 'phone menu'} keeps the business name: ${pick.letter} px (< ${MIN_LETTER_PX}) in this spot`
           : null,
         spot.setting === null ? 'no setting can write this spot' : null
       ].filter(Boolean)
     }
+  }
+}
+
+/** The same transparent 2x contain operation for composed logos and standalone marks. */
+async function fitImage(file, spot, align, ctx) {
+  const input = ctx.files.read(file)
+  const source = sharp(input)
+  const metadata = await source.metadata()
+  const stats = await source.stats()
+  if (!metadata.hasAlpha || stats.isOpaque)
+    throw new BrandToolError('a fitted logo must have a transparent background')
+  if (stats.channels.at(-1).max < 128) throw new BrandToolError('a fitted logo must have visible ink')
+  const W = spot.width * 2
+  const H = spot.height * 2
+  const cropped = await sharp(input).trim({ threshold: 0 }).png().toBuffer()
+  const png = await sharp(cropped)
+    .resize(W, H, {
+      fit: 'contain',
+      position: align === 'center' ? 'centre' : 'left',
+      background: { r: 0, g: 0, b: 0, alpha: 0 }
+    })
+    .png()
+    .toBuffer()
+  const fileOut = ctx.files.write(`spots/${spot.id}.png`, png)
+  return {
+    ok: true,
+    file: fileOut,
+    run: Number(/\.v(\d+)\.png$/.exec(fileOut)?.[1] ?? 1),
+    spot: spot.id,
+    frame: [spot.width, spot.height],
+    size2x: [W, H],
+    ground: spot.ground,
+    writable: spot.setting !== null,
+    setting: spot.setting
   }
 }

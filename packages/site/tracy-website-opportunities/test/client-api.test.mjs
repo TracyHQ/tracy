@@ -295,6 +295,25 @@ test('My opportunities: one page by its query, and a bulk press with its request
   })
 })
 
+test('Delete: one opportunity by its own door, many through the bulk door by opportunity ids', async () => {
+  const { fetch, calls } = door(() => ({
+    status: 200,
+    body: { ok: true, deleted: { id: 'o 1', siteRemoved: false } }
+  }))
+  const api = createApi(fetch)
+  await api.remove('o 1')
+  assert.equal(calls[0].url, '/api/website-opportunities/o%201')
+  assert.equal(calls[0].method, 'DELETE')
+  assert.equal(calls[0].body, undefined)
+  await api.bulk('delete', 'req-delete-1', { opportunityIds: ['o1', 'o2'] })
+  assert.equal(calls[1].url, '/api/website-opportunities/jobs/bulk')
+  assert.deepEqual(calls[1].body, {
+    action: 'delete',
+    requestId: 'req-delete-1',
+    opportunityIds: ['o1', 'o2']
+  })
+})
+
 test('a demo’s doors: extend and reopen by opportunity, rebuild with its request id', async () => {
   const { fetch, calls } = door(() => ({ status: 200, body: { demo: {} } }))
   const api = createApi(fetch)

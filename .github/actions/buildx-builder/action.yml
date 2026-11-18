@@ -1,0 +1,88 @@
+# The image builder of this runner, written once because `build-app-images.yml` and
+# `build-dsh-image.yml` must not drift: same name, same BuildKit config, same reuse rule.
+# Exports BUILDER for the build steps. A local action, so the caller has checked the repo out.
+#
+# 🔒 THE NAME CARRIES `$RUNNER_NAME`, AND THAT IS NOT COSMETIC. buildx keeps its builder list per
+# USER (`~/.docker/buildx`), so each runner container has its own list — but the `docker-container`
+# driver creates a container on the HOST daemon, `buildx_buildkit_<builder>0`, which every runner
+# on that host shares. Measured on a shared runner host 21/09/2026: a second runner running the
+# identical `create --name tracy` neither fails nor reuses — it RECREATES the container, killing
+# whatever build was running in it. The two image workflows fire as a PAIR on every push, so two
+# runners racing here is the normal case. Distinct names coexist (verified: `tracy-r1` and
+# `tracy-r2` both Up at once).
+#
+# 🔒 RECREATING IS SAFE FOR THE SAME REASON. A runner takes one job at a time, and only jobs of
+# runner X ever touch `tracy-X`; so when this step removes `tracy-X`, no build of another job can
+# be running in it — the job that would own it is this one. (Two runners registered with the SAME
+# name on one host would break this, as they already broke the name rule above.)
+#
+# 🔒 THE CONFIG IS PINNED BY A HASH IN THE BUILDER'S ENVIRONMENT. `buildkitd.toml` is only read
+# when the builder is created, so a builder made before it existed, or before its last edit, would
+# keep the old policy forever. The hash of the config (and of the create flags) is set as
+# `TRACY_BUILDKITD_CONFIG` on the container (`--driver-opt env.…`, documented for this driver) and
+# compared before reuse. Not compared: the file inside the container — buildx re-marshals the TOML
+# (util/confutil/container.go), so its bytes never match ours. Not in the name either: a new name
+# per edit would leave the old container, and its tens of GB of cache, behind on every host.
+# On a mismatch the container goes but its state volume stays (`--keep-state`, or `docker rm`
+# without `-v`), so the new builder starts warm and the new policy trims it about a minute later.
+#
+# 🔒 THE BUILDER'S RAM IS CAPPED AT 8 GB, IN THE CREATE FLAGS SO THE HASH COVERS IT. The builder
+# shares the dev host (8 CPUs, 31 GB, no swap worth relying on) with the customer sites, and had
+# no limit (`HostConfig.Memory=0`). Measured 16/11/2026: the cgroup `memory.peak` of one builder
+# over two `build-app-images` runs (one rebuilding all 8 web images) and two `build-dsh-image`
+# runs was 7363 MiB — mostly page cache; afterwards anon was 167 MiB and file 3.0 GB. At the cap
+# the kernel reclaims that page cache first; a build that truly needs more than 8 GB of anonymous
+# memory is OOM-killed INSIDE the builder and its job fails, instead of the host's OOM killer
+# picking a site. `memory-swap` equals `memory`, i.e. no swap on top of the cap: the host has none
+# to give, and swapping a build would only slow the sites down. Parallelism is bounded in
+# `buildkitd.toml` (`max-parallelism`). Changing either value recreates every builder on its next
+# job, cache kept, like any other config change.
+name: Image builder of this runner
+description: Create or reuse the docker-container buildx builder of this runner, with the repo's BuildKit GC policy.
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -euo pipefail
+        BUILDER="tracy-${RUNNER_NAME:-local}"
+        echo "BUILDER=$BUILDER" >> "$GITHUB_ENV"
+        CONTAINER="buildx_buildkit_${BUILDER}0"
+        CONFIG="$GITHUB_ACTION_PATH/buildkitd.toml"
+        # `--buildkitd-config` since buildx v0.13; older buildx only knows `--config`.
+        create_help=$(docker buildx create --help 2>&1)
+        case "$create_help" in
+          *--buildkitd-config*) config_flag=--buildkitd-config ;;
+          *) config_flag=--config ;;
+        esac
+        create_args="--driver docker-container --driver-opt memory=8g --driver-opt memory-swap=8g"
+        hash=$( { cat "$CONFIG"; echo "$create_args"; } | sha256sum | cut -c1-16)
+
+        # Empty when the container does not exist.
+        env_now=$(docker container inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$CONTAINER" 2>/dev/null || true)
+        listed=no
+        if docker buildx inspect "$BUILDER" > /dev/null 2>&1; then listed=yes; fi
+        case "$env_now" in
+          *"TRACY_BUILDKITD_CONFIG=$hash"*) current=yes ;;
+          *) current=no ;;
+        esac
+
+        if [ "$current" = yes ] && [ "$listed" = yes ]; then
+          echo "Reusing $BUILDER (BuildKit config $hash)"
+        else
+          if [ -n "$env_now" ]; then
+            echo "::notice title=Image builder replaced::$BUILDER had BuildKit config '$(printf '%s\n' "$env_now" | sed -n 's/^TRACY_BUILDKITD_CONFIG=//p')', want $hash; recreating it, cache kept"
+          fi
+          if [ "$listed" = yes ]; then docker buildx rm --keep-state "$BUILDER"; fi
+          # A container this runner's buildx list does not know (a fresh home) — remove it the
+          # plain way; without `-v` its `_state` volume, the cache, stays for the new one.
+          docker container rm -f "$CONTAINER" > /dev/null 2>&1 || true
+          # shellcheck disable=SC2086 # create_args is a word list on purpose
+          docker buildx create --name "$BUILDER" $create_args \
+            "$config_flag" "$CONFIG" \
+            --driver-opt "env.TRACY_BUILDKITD_CONFIG=$hash" \
+            --bootstrap
+        fi
+        # Prints the BuildKit version and the GC rules buildkitd actually loaded.
+        docker buildx inspect "$BUILDER" --bootstrap

@@ -12,7 +12,9 @@ import { validatePlaceProfile } from '../domain/place-profile.mjs'
 
 const AT = '2026-10-27T10:00:00.000Z'
 const IG = 'https://www.instagram.com/harbour.sportclub/'
-const SERVICE_NAME = 'Padel & Tennis Coach'
+// A proper name the own marks contradict: the case that still holds the name (#189). A listing name that is only a
+// trade description gives way to the own marks instead (domain-name-own-marks-over-trade-description.test.mjs).
+const SERVICE_NAME = 'Marina Racquet House'
 const LOGO = {
   readsAs: 'HARBOUR SPORT CLUB EST. 2023',
   showsName: true,
@@ -264,4 +266,34 @@ test('a bio that says "WhatsApp us" backs the WhatsApp button with its own words
   assert.notEqual(wa.derivation?.method, 'inferred')
   assert.notEqual(factDecisions(doc).get(wa.id).confidence, 'inferred')
   assert.deepEqual(validatePlaceProfile(doc).errors ?? [], [])
+})
+
+test('an owner name expanded by its trade keeps the business name instead of a generic country label', () => {
+  const doc = research({
+    profile: {
+      name: 'Harrow Gym',
+      nameCheck: { name: 'Harrow Gym', state: 'check' },
+      nameClaims: [
+        { source: 'website', via: 'name', name: 'Harrow Boxing Gym' },
+        { source: 'facebook', via: 'name', name: 'Harrow Boxing Gym' },
+        { source: 'instagram', via: 'name', name: 'Harrow Gym' }
+      ]
+    }
+  })
+  assert.equal(doc.business.name.value, 'Harrow Gym')
+  assert.equal(factDecisions(doc).get(doc.business.name.id).onSite, true)
+  assert.deepEqual(
+    ownMarkNamesOf({
+      chosen: 'Harrow Gym',
+      claims: [{ source: 'facebook', via: 'name', name: 'Harrow Boxing Gym' }]
+    }),
+    []
+  )
+  assert.equal(
+    ownMarkNamesOf({
+      chosen: 'Harrow Tennis Club',
+      claims: [{ source: 'facebook', via: 'name', name: 'Harrow Boxing Club' }]
+    }).length,
+    1
+  )
 })

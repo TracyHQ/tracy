@@ -67,8 +67,10 @@ export function ownerOfPath(idx, path) {
   const [base, query] = path.split('?')
   const page = idx.pageByPath.get(base)
   const listPage = query ? ` (list position ${query.replace('start=', '')})` : ''
-  // A page entity (WordPress: `page-<slug>`, its post content found by metadata.name) owns the page it is.
-  if (page && idx.entities.get(page.entity)?.kind === 'page') return { owner: page.entity, kind: 'page' }
+  // A page entity (WordPress: `page-<slug>`, its post content found by metadata.name; EmDash: the entry the page is,
+  // `pages.<slug>`) owns the page it is.
+  if (page && ['page', 'entry'].includes(idx.entities.get(page.entity)?.kind))
+    return { owner: page.entity, kind: 'page' }
   if (page && page.link && page.link !== '#') {
     const q = queryOf(page.link)
     const view = q.view ?? ''

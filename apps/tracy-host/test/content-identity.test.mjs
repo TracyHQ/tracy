@@ -13,7 +13,9 @@ import {
   JOOMLA_SCRIPT,
   judgeWordPress,
   judgeDerive,
-  provisionLock
+  provisionLock,
+  FARM_JOOMLA_EXEC,
+  joomlaExecArgs
 } from '../src/content-identity.js'
 import { start } from '../src/server.js'
 
@@ -493,6 +495,102 @@ test('an old Claude Cowork plugin without the derive operation is skipped, not f
   }
 })
 
+// 🔒 16/11/2026: an imported copy of a quickstart site is already bound to that quickstart's contract;
+// the plugin refuses derive over it by design, and tracy-host logged that as a failure on every start.
+const QUICKSTART_CONFLICT = {
+  ok: false,
+  error: 'conflict',
+  message: 'This site is bound to a quickstart contract; derive refuses to replace it'
+}
+
+test('a WordPress site already bound to a quickstart contract keeps it: marked, said once, no failure', async () => {
+  const r = await roots()
+  try {
+    const wp = await site(r, 'wp-quickstart', { platform: 'wordpress', port: 52063, marker: true })
+    await siteJson(r, 'wp-quickstart', { origin: 'imported' })
+    const { fetchImpl, calls: posts } = fakeFetch({
+      answers: { 'http://127.0.0.1:52063/': { status: 409, body: QUICKSTART_CONFLICT } }
+    })
+    const lines = []
+    const log = { log: (m) => lines.push(`log ${m}`), warn: (m) => lines.push(`warn ${m}`) }
+    await backfillContentIdentity({ config: r, run: fakeRun().run, fetchImpl, log })
+    assert.equal(posts.length, 1)
+    assert.ok(await derived(wp))
+    assert.deepEqual(lines, ['log [host] wp-quickstart: keeps its quickstart contract; nothing derived'])
+
+    const again = fakeFetch()
+    await backfillContentIdentity({ config: r, run: fakeRun().run, fetchImpl: again.fetchImpl, log: quiet })
+    assert.equal(again.calls.length, 0)
+  } finally {
+    await rm(r.base, { recursive: true, force: true })
+  }
+})
+
+test('a Joomla site whose script says derived=kept is marked and not reported as a failure', async () => {
+  const r = await roots()
+  try {
+    const jo = await site(r, 'jo-quickstart', { platform: 'joomla', marker: true })
+    await siteJson(r, 'jo-quickstart', { origin: 'imported' })
+    const run = async () => ({ code: 0, tail: ['TRACY_RESULT derived=kept entities=0 slots=0 calibrated=0'] })
+    const lines = []
+    const log = { log: (m) => lines.push(`log ${m}`), warn: (m) => lines.push(`warn ${m}`) }
+    await backfillContentIdentity({ config: r, run, fetchImpl: fakeFetch().fetchImpl, log })
+    assert.ok(await derived(jo))
+    assert.deepEqual(lines, ['log [host] jo-quickstart: keeps its quickstart contract; nothing derived'])
+  } finally {
+    await rm(r.base, { recursive: true, force: true })
+  }
+})
+
+test('any other refusal to derive stays a failure: warned, not marked, asked again next start', async () => {
+  const r = await roots()
+  try {
+    const wp = await site(r, 'wp-conflict', { platform: 'wordpress', port: 52064, marker: true })
+    await siteJson(r, 'wp-conflict', { origin: 'imported' })
+    const { fetchImpl } = fakeFetch({
+      answers: {
+        'http://127.0.0.1:52064/': {
+          status: 409,
+          body: { ok: false, error: 'conflict', message: 'A derive of this site is already running' }
+        }
+      }
+    })
+    const lines = []
+    await backfillContentIdentity({
+      config: r,
+      run: fakeRun().run,
+      fetchImpl,
+      log: { log() {}, warn: (m) => lines.push(m) }
+    })
+    assert.equal(await derived(wp), false)
+    assert.match(
+      lines.join('\n'),
+      /wp-conflict: content contract not derived — A derive of this site is already running; tried again/
+    )
+
+    const jo = await site(r, 'jo-failed', { platform: 'joomla', marker: true })
+    await siteJson(r, 'jo-failed', { origin: 'imported' })
+    const run = async () => ({
+      code: 0,
+      tail: ['TRACY_RESULT derived=failed entities=0 slots=0 calibrated=0']
+    })
+    const warned = []
+    await backfillContentIdentity({
+      config: r,
+      run,
+      fetchImpl: fakeFetch().fetchImpl,
+      log: { log() {}, warn: (m) => warned.push(m) }
+    })
+    assert.equal(await derived(jo), false)
+    assert.match(
+      warned.join('\n'),
+      /jo-failed: content contract not derived — the script reported derived=failed/
+    )
+  } finally {
+    await rm(r.base, { recursive: true, force: true })
+  }
+})
+
 test('a site that is not imported never gets a derive call', async () => {
   const r = await roots()
   try {
@@ -562,6 +660,27 @@ test('judgeDerive reads the plugin the way this pass does', () => {
     'skipped'
   )
   assert.equal(judgeDerive(400, '0').state, 'skipped')
+  assert.equal(judgeDerive(409, JSON.stringify(QUICKSTART_CONFLICT)).state, 'kept')
+  assert.equal(
+    judgeDerive(
+      409,
+      JSON.stringify({
+        ok: false,
+        error: 'conflict',
+        message: 'This site is not bound to a quickstart contract'
+      })
+    ).state,
+    'failed'
+  )
+  assert.equal(
+    judgeDerive(409, JSON.stringify({ ok: false, error: 'conflict', message: 'busy' })).state,
+    'failed'
+  )
+  assert.equal(
+    judgeDerive(409, JSON.stringify({ ok: false, error: 'refused', message: QUICKSTART_CONFLICT.message }))
+      .state,
+    'failed'
+  )
   assert.equal(judgeDerive(500, '<html>fatal</html>').state, 'failed')
 })
 
@@ -594,5 +713,50 @@ test('start: runs the pass in the background after the mtime pass, and TRACY_HOS
     assert.equal(await marked(jo), true)
   } finally {
     await rm(r.base, { recursive: true, force: true })
+  }
+})
+
+test('a folded Joomla demo: identity runs in the farm as the demo, under the same provision lock', async () => {
+  const { mkdtemp, mkdir, writeFile, rm } = await import('node:fs/promises')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const root = await mkdtemp(join(tmpdir(), 'identity-farm-'))
+  try {
+    await mkdir(join(root, 'demo-j'))
+    await writeFile(join(root, 'demo-j', 'runtime'), 'farm\n')
+    const args = await joomlaExecArgs({
+      label: 'demo-j',
+      siteDir: join(root, 'demo-j'),
+      config: { privateRoot: root },
+      name: 'content-identity'
+    })
+    assert.deepEqual(args.slice(0, 4), ['-c', FARM_JOOMLA_EXEC, 'content-identity', provisionLock('demo-j')])
+    const docker = args.slice(4)
+    assert.equal(docker[0], 'exec')
+    assert.ok(docker.includes('tracy-demos-web') && !docker.includes('demo-j-web-1'))
+    assert.ok(docker.includes('TRACY_DOCROOT=/site/demo-j/.webroot'))
+    assert.equal(docker[docker.indexOf('-u') + 1], 'www-data')
+    assert.equal(docker.at(-1), 'php')
+    const derive = await joomlaExecArgs({
+      label: 'demo-j',
+      siteDir: join(root, 'demo-j'),
+      config: { privateRoot: root },
+      name: 'contract-derive',
+      derive: true
+    })
+    assert.ok(derive.includes('TRACY_LABEL=demo-j'))
+    // A per-site Joomla keeps today's command, byte for byte.
+    await mkdir(join(root, 'cust'))
+    assert.deepEqual(
+      await joomlaExecArgs({
+        label: 'cust',
+        siteDir: join(root, 'cust'),
+        config: { privateRoot: root },
+        name: 'content-identity'
+      }),
+      ['-c', JOOMLA_EXEC, 'content-identity', provisionLock('cust'), join(root, 'cust')]
+    )
+  } finally {
+    await rm(root, { recursive: true, force: true })
   }
 })

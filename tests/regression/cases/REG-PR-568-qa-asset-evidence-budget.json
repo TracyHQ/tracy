@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-568-qa-asset-evidence-budget",
+  "kind": "fix",
+  "title": "Agent baseline excludes photo metadata while retaining complete business and review evidence",
+  "pr": 568,
+  "area": "website-opportunities/qa-evidence",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run node --test apps/tracy-web/test/wo-demo-qa-brief-prose.test.mjs."],
+  "expect": [
+    "A frozen asset catalogue larger than 400000 characters does not prevent a baseline request with bounded business evidence.",
+    "Research facts beyond 100000 characters and attributed review testimony still reach the host unchanged.",
+    "Photo metadata cannot authorize invented hours, prices, founding years or phone numbers.",
+    "The frozen revision and asset catalogue remain unchanged.",
+    "Actually oversized complete fact evidence is refused by web and host instead of truncated."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/wo-demo-qa-brief-prose.test.mjs"],
+    "needs": [],
+    "tests": [
+      "agent baseline excludes the frozen asset catalogue without losing late research or review evidence",
+      "oversized complete evidence is refused by web and host instead of silently truncated"
+    ]
+  }
+}

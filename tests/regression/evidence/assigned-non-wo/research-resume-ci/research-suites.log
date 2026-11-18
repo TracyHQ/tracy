@@ -1,0 +1,204 @@
+(node:20687) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ an allow-listed template with the switch on runs the step chain, not the CMS engine (2822.179667ms)
+▶ a build that did not ask for the chain runs the CMS engine exactly as today
+  ✔ a typed brief (23.283042ms)
+  ✔ another workflow (84.169458ms)
+✔ a build that did not ask for the chain runs the CMS engine exactly as today (198.491416ms)
+✔ a chain build stays on the chain when the switch is turned off after the press, never falling back to the old build (137.155ms)
+✔ the kit comes first; base site, brand and planner run together; the Write step waits for the site and every input (92.120833ms)
+✔ a Write step on a site that is not up yet waits for the base site (51.423833ms)
+✔ every Write step write carries the run id, and Site changes shows exactly one Tracy setup row for the build (252.285125ms)
+✔ a failing picture step still writes the plan, copy and brand, and the run ends as a soft failure (23.80575ms)
+✔ a planner that made nothing still lets the Write step run, with the brand and no plan or copy, so no demo is left (21.989583ms)
+✔ a writer whose versions the checks all rejected hands over its best one, which the Write step uses (81.415666ms)
+✔ a template kit that cannot be read hands the base site over as created, ending as a soft failure at the kit (18.21025ms)
+✔ a Write step that stops or throws still hands the site over, ending as a soft failure at the write (39.081042ms)
+✔ the row keeps minutes and USD per step, the totals and the ending (20.173041ms)
+✔ the base site is a step of its own: minutes from the press until the host had it up, no USD (17.909875ms)
+✔ a retried chain base-site duration excludes the previous failed attempt (19.98225ms)
+✔ the customer is told "working" until the chain has handed the site over, a soft failure included (33.027459ms)
+✔ while the chain runs the row keeps a snapshot, and a hard failure leaves it at the step that was under way (20.669125ms)
+✔ a chain build past the frame's old 25 minute cut is not cut (#478) (18.164458ms)
+✔ at the 2 hour deadline the steps still running are stopped, the Write step runs and the site is handed over (#478) (21.862ms)
+(node:20786) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ a press runs a source our setup failed on an hour ago; the automatic rule still waits a day (0.576458ms)
+✔ a press never looks again within thirty days at what the place itself does not have (0.074459ms)
+✔ the plan names each part to run with its reason and price, and each part kept with its reason (0.522166ms)
+✔ a place with nothing due has an empty plan (0.078ms)
+✔ a refresh that found a collected page gone is "none", not failed, for thirty days (0.076375ms)
+✔ a plan over a cap drops its dearest parts first and says so (0.114167ms)
+✔ from scratch, every part runs again whatever its age; only parts this server cannot run are kept (0.114917ms)
+✔ payment refusals stay out of both paid research plans until the operator saves repaired setup (0.13175ms)
+(node:20795) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ the search for each network leaves its own row on the published snapshot (1558.890625ms)
+✔ a place researched before the search existed is searched by Research again, and nothing else runs (138.037375ms)
+✔ Research again with nothing due queues nothing (75.370292ms)
+✔ a Try again of one search that finds nothing new still records the try on the current research (138.21775ms)
+✔ a researched place with every source fresh still gets every part from scratch (165.565125ms)
+✔ a Research again pressed while a run is going joins it and queues nothing more (84.001167ms)
+✔ an account presses Research again on its place card: the run is its own, within its daily limit (93.35425ms)
+✔ a stranger on /find presses Research again: Tracy pays, once a place a day (228.390083ms)
+✔ /ops confirms a page the search left for a person to check, and the place gains it (118.677292ms)
+✔ /ops sees the pages each search found, with their verdict and evidence (151.807417ms)
+✔ Google facts collected before the field mask gained the phone are fetched again by Research again (302.555375ms)
+✔ a Facebook page collected before the logo fix is collected again by Research again (682.303916ms)
+✔ the preview ceiling holds every call a run can make (102.344125ms)
+✔ /ops adds a social page the search did not find; Research again then collects it (117.542417ms)
+✔ provider payment failure blocks the preview and source-only request before quota; repaired setup reopens it (165.847083ms)
+(node:20817) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Dubai pre-runs the full customer Research stages and a later user receives its warm profile and photos (2031.754ms)
+✔ two accounts, one Google place: ONE place job; the second request waits and gets the same snapshot (135.71575ms)
+✔ cancel from one account stops its own request only; the place job goes on for the other (128.549166ms)
+✔ a worker whose lease was taken publishes nothing: the snapshot stays preparing, current unchanged (44.528834ms)
+✔ a failed refresh keeps the published snapshot; freshness is per source, from its last success (212.911083ms)
+✔ a warm Google seed supplies public contact evidence without a client echo or cross-account overlay (114.900708ms)
+✔ a brief of a researched place makes its content from the posts the place collected (142.46975ms)
+✔ a brief made before a refresh still builds the same media after it: the manifest pins id and sha256 (318.189791ms)
+✔ poisoning: a fake website or social in a client's candidate never becomes a source of the shared place (276.217041ms)
+✔ doors: research, list, detail and media read through the place; a revoked picture is withdrawn (315.567708ms)
+✔ WO_SHARED_RESEARCH=0: a new request runs the per-account research; place jobs are not claimed (182.162042ms)
+✔ a paid call over Tracy's research cap pauses the place job with 'budget'; what it reserved is in the ledger (81.351208ms)
+✔ abuse limit: an account sends at most newPlacesPerAccountPerDay never-researched places; a known one is free (125.293667ms)
+✔ a restart during a place job’s paid Apify run: the next holder reads the recorded run, one reservation (227.617ms)
+✔ a warm Google seed supplies public contact evidence without a client echo or cross-account overlay (68.937042ms)
+✔ a user joins the running full campaign job; cancellation preserves campaign demand and Stop blocks further stages (155.7615ms)
+✔ TripAdvisor enriches a previously fresh snapshot once, is shared and reaches profile and brief without replacing Google (210.711792ms)
+✔ TripAdvisor identity collision is recorded without merging places or fetching reviews (113.843292ms)
+✔ TripAdvisor failure preserves successful reviews and budget refusal pauses without a provider call (303.961667ms)
+✔ TripAdvisor response after cancellation cannot publish or leave an identity (62.578042ms)
+✔ TripAdvisor paused budget resumes its persisted search without paying for it twice (159.961542ms)
+✔ OneAPI primary success does not call Litescrape and charges each actual primary attempt (116.236625ms)
+✔ OneAPI failure 401 falls back once with separate provider accounting (132.998167ms)
+✔ OneAPI failure 402 falls back once with separate provider accounting (138.4155ms)
+✔ OneAPI failure 403 falls back once with separate provider accounting (187.079042ms)
+✔ OneAPI failure 429 falls back once with separate provider accounting (153.567833ms)
+✔ OneAPI failure 503 falls back once with separate provider accounting (226.306833ms)
+✔ OneAPI failure application falls back once with separate provider accounting (179.821209ms)
+✔ OneAPI legitimate empty search does not spend fallback quota (101.551875ms)
+✔ budget refusal between failed primary and fallback pauses before fallback network (139.675666ms)
+✔ missing OneAPI branch evidence uses an optional same-brand website association without fallback (599.210041ms)
+✔ OneAPI conflicting branch phone keeps a same-brand review source without creating branch identity (147.079834ms)
+✔ fallback cannot replace a primary matched identity when its review call fails (153.062125ms)
+✔ unknown primary outcome is not paid twice after budget pauses the fallback (199.251209ms)
+✔ refresh cannot remap an existing TripAdvisor source or mix another branch reviews (274.655416ms)
+✔ new research retries a recovered provider instead of inheriting the previous job failure checkpoint (259.533917ms)
+✔ customer Details omits optional provider failures and keeps previous reviews after refresh quota failure (326.519334ms)
+✔ user journey saves a place, starts Research, opens Details and creates an attributed TripAdvisor brief (255.564667ms)
+✔ SerpApi primary persists reviews, avatars and attached photos through customer Details and demo manifest (313.087042ms)
+✔ SerpApi 401 falls through RapidAPI quota to Litescrape with separate attempt records (139.157917ms)
+✔ SerpApi 429 falls through RapidAPI quota to Litescrape with separate attempt records (156.324ms)
+✔ SerpApi 429 once is retried after its wait, and the reviews come from SerpApi (133.939292ms)
+✔ SerpApi 503 once is retried after its wait, and the reviews come from SerpApi (139.6805ms)
+✔ SerpApi 402 (paid quota spent) is not retried: the next provider is asked at once (134.184375ms)
+✔ SerpApi empty search ends enrichment without fallback while transient review failure reuses the verified ID (230.510375ms)
+✔ the operator order on /ops/wo decides which Tripadvisor provider is asked first (140.563375ms)
+✔ an empty Tripadvisor order switches the reviews off (77.737458ms)
+✔ missing photo capability falls back per step without losing successful SerpApi review photos (147.873833ms)
+✔ SerpApi budget pause resumes operation checkpoints without double payment (203.147917ms)
+✔ provider-switch refresh keeps same-review author links, avatar and attached stored photos (295.592375ms)
+✔ TripAdvisor photo capability upgrade leaves fresh Google facts and other collectors cached (371.745708ms)
+✔ photo budget refusal keeps good reviews and resumes only the missing gallery operation (199.374291ms)
+✔ ordinary Research retries a previous not-found source and collects no-website restaurant reviews without creating branch identity (717.390084ms)
+✔ SerpApi twenty reviews reach the shared profile and brief; a fresh reader costs no extra calls (371.812ms)
+✔ SerpApi refresh reuses the accepted place ID without another search and preserves identity checks (329.531375ms)
+✔ doors: the detail lists Google with the collected sources, and Retry on one source queues that source alone (204.604917ms)
+✔ own site resumes a paused shared run behind a queued request once per poll batch, then stops at three (211.983167ms)
+✔ shared resume follows the paused upstream run but refuses another account and terminal requests (104.544542ms)
+error: synthetic resume failure
+    at <local-checkout>:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async resumeRequest (file://<checkout>/packages/wo/website-opportunities/src/place-requests.js:279:9)
+    at async resumeResearch (file://<checkout>/apps/tracy-web/src/opportunities-build/own-site.js:369:23)
+    at async file://<checkout>/apps/tracy-web/src/opportunities-build/own-site.js:220:22
+    at async dispatch (file://<local-checkout>:35:11)
+    at async dispatch (file://<local-checkout>:35:11)
+    at async dispatch (file://<local-checkout>:35:11)
+    at async dispatch (file://<local-checkout>:35:11)
+    at async dispatch (file://<local-checkout>:35:11) {
+  length: 142,
+  severity: 'ERROR',
+  code: 'P0001',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: 'PL/pgSQL function reject_test_resume() line 1 at RAISE',
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'pl_exec.c',
+  line: '3897',
+  routine: 'exec_stmt_raise'
+}
+✔ own site exposes a shared resume failure without spending its automatic resume allowance (124.005083ms)
+✔ from-scratch research recovers failed downloads without reviving blocked or revoked media (323.3965ms)
+✔ from-scratch Tripadvisor research retries its failed media downloads (244.47925ms)
+✔ from-scratch research recovers failed media storage and keeps a newly blocked retry blocked (268.703916ms)
+✔ two executor instances admit only five downloaded pictures until real media storage completes (132.6315ms)
+✔ foreground crash recovery stops after three takeovers and explicit resume keeps paid checkpoints (70.610458ms)
+✔ quota resumes with many prior attempts do not consume automatic crash recoveries (46.150458ms)
+✔ own site polling surfaces the crash recovery limit without automatically resuming it (72.013083ms)
+(node:20997) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ the card lists every source a place research ran, in a fixed order, and nothing else (0.793291ms)
+✔ a Google or Tripadvisor call that failed is listed with its reason (0.091041ms)
+✔ a source the place itself has nothing at is settled for thirty days (0.205125ms)
+✔ transient setup failures are tried again on the next research after a day (0.094209ms)
+✔ a refresh that found the page gone keeps the old data and waits thirty days, a refresh our key failed waits a day (0.068458ms)
+✔ Tripadvisor waits thirty days when absent and payment failures require a later setup repair (0.075417ms)
+✔ the client lists the same sources and the same place reasons as the server (0.25325ms)
+(node:20998) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ the reading prompt lists the trade’s kinds of business and the facts the pick may quote (1.725667ms)
+✔ a model pick whose quotes all stand becomes the sub-trade, with its quotes and sources (50.792209ms)
+✔ a pick with a quote that is not in its source is dropped: the Google type table decides (3.919709ms)
+✔ the name alone is never evidence, and an id off the trade’s list is dropped (3.685833ms)
+✔ sports_club with no usable model answer keeps the fitness words (17.091375ms)
+✔ Harbour Sport Club as coaching: no gym, class or schedule word in the brief or the build prompt (21.784333ms)
+✔ Iron Works: the model's quoted pick gives its own words (gym) (1.458666ms)
+✔ Lotus Room: the model's quoted pick gives its own words (studio) (0.689083ms)
+✔ Westside Racquet Club: the model's quoted pick gives its own words (club) (0.642417ms)
+✔ without a model, Google types settle a gym and a yoga studio, never a sports club (0.150834ms)
+✔ every sub-trade has its own word set, of the shape of its trade’s (0.198584ms)
+✔ the gallery, like the hero, holds photographs only: no logo, no profile picture (7.76325ms)
+✔ a profile picture that is no logo stays out of the gallery too (0.80375ms)
+✔ the template’s words of another kind of business are named only where the business does not use them (1.653208ms)
+(node:20999) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ an inline answer: one POST with the pinned route and the key, the reviews normalized, the cost kept (11.86525ms)
+✔ RUNNING is polled until COMPLETED, then the signed download is fetched without the key (2.524083ms)
+✔ a poll that outlives its budget is a retryable TIMEOUT, never a settled failure (2.617958ms)
+✔ HTTP and application failures map to codes; only a timeout, 429 and 5xx are retried (0.930416ms)
+✔ a wrong shape, another place, or a download link off monid.ai is refused before anything is kept (0.729292ms)
+✔ normalized reviews carry the Maps shape, provenance, owner replies, sub-scores and photos (0.271292ms)
+✔ a Google review id is read off both link shapes: Monid’s and Place Details’ (0.103ms)
+✔ dedupe: by Google review id or link first, then contributor + exact words; a shared name alone is kept (0.21425ms)
+✔ merge: held SerpApi reviews stay first and untouched; a refresh replaces the old Monid set whole (0.178ms)
+✔ off by default: Monid is in the catalogue but not in the default order; a declared order turns it on (0.20975ms)
+✔ cost: a Monid call is reserved at a one-cent ceiling and counted under Google reviews (0.094917ms)
+✔ the last try reads as a source row: due when never tried, fresh for 30 days, a failure waits a day (0.160541ms)
+✔ size: 100 normalized reviews stay within what the full answers measured (0.545417ms)
+✔ Monid reviews stay fresh 90 days; the other sources keep their 30 (0.317167ms)
+✔ the brief quotes the 30 longest Monid reviews and caps their photo lines (3.258959ms)
+ℹ tests 145
+ℹ suites 0
+ℹ pass 145
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28342.572084

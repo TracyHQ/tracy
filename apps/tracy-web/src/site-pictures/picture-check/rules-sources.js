@@ -1,8 +1,13 @@
 // P06 repeats on a page, P07 any-real frames, P08 person frames, P09 owner photo labels, P10 icons, P11 twins.
 import { ANY_PHOTO_MAX_OVERLAP, cropOverlap, neighbours, REUSE_MAX_OVERLAP } from '../gallery-tiles.js'
 import { OWNER_SOURCES as OWNER } from '../manifest-shape.js'
+import { letteringOf } from '../photo-shortlist.js'
 
 const MADE_UP = new Set(['drawn', 'owner-photo-extended'])
+export const documentarySourceProblem = (idx, entry) =>
+  idx.documentaryFrame(entry.frame) && MADE_UP.has(entry.source)
+    ? `the plan asks for any real photo or documents the business, the source is ${entry.source}`
+    : null
 const where = (e) => (e.list === 'siteSettings' ? `siteSettings ${e.frame}` : e.frame)
 const framesOnly = (view) => view.entries.filter((e) => e.list === 'frames')
 
@@ -51,16 +56,14 @@ export function checkP06({ R, view, idx }) {
   }
 }
 
-// P07. A frame the plan asks to fill with any real photo holds a real photo, or is hidden; never drawn or extended.
-// The one exception (card AK): a gallery tile drawn by its ladder's draw rung after no owner photo was left for it
-// (`filledBy.rung` "draw").
+// P07. A documentary frame holds an owner photo or is hidden/returned, never drawn or extended. This includes
+// any-real galleries and photo wishes grounded in observed facts or original posts (#548).
 export function checkP07({ R, view, idx }) {
   const r = R.p07
   for (const e of view.entries) {
-    if (idx.wishes.get(e.frame)?.match !== 'any-real') continue
-    const tileDrawn = e.source === 'drawn' && e.filledBy?.rung === 'draw' && Boolean(idx.galleryTile(e.frame))
-    if (MADE_UP.has(e.source) && !tileDrawn)
-      r.fail(where(e), `the plan asks for any real photo, the source is ${e.source}`, 'pictures')
+    if (!idx.documentaryFrame(e.frame)) continue
+    const problem = documentarySourceProblem(idx, e)
+    if (problem) r.fail(where(e), problem, 'pictures')
     else r.ok()
   }
 }
@@ -98,16 +101,9 @@ export function checkP08({ R, view, idx }) {
 
 const bool = (x) => (typeof x === 'boolean' ? x : null)
 // The brief labels `hasTextOrWatermark` and `showsOtherBusiness` (true, false or null). When a label is absent, the
-// vision label names are read instead (textPresence, hasTextOverlay; otherBusiness). null means nobody knows.
-function lettering(a) {
-  const own = bool(a.hasTextOrWatermark)
-  if (own !== null) return own
-  const vision = [
-    a.textPresence === 'present' ? true : a.textPresence === 'absent' ? false : null,
-    bool(a.hasTextOverlay)
-  ].filter((x) => x !== null)
-  return vision.length ? vision.includes(true) : null
-}
+// vision label names are read instead (textPresence, hasTextOverlay; otherBusiness). null means nobody knows. The
+// lettering rule is the shortlist's own (`photo-shortlist.js` letteringOf), so code never picks what the check fails.
+const lettering = letteringOf
 const otherBusiness = (a) => bool(a.showsOtherBusiness) ?? bool(a.otherBusiness)
 
 // P09. An owner photo is a brief asset whose labels show no lettering (words, logo, watermark) and no other business.

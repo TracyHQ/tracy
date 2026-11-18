@@ -32,6 +32,7 @@ import {
 } from '../src/lib/template-readiness/demo-pages-of-contract.js'
 import { DEMO_MEASURES_FILE } from '../src/lib/template-readiness/demo-measures-file.js'
 import { measureDemo } from '../src/site-check/demo-measures.js'
+import { underIndexHost } from '../src/site-check/host-measure.js'
 
 const USAGE = `usage: ${DEMO_MEASURES_COMMAND}\n`
 
@@ -160,7 +161,9 @@ export async function main(
       : await siteHost(values.site, env)
   let doc
   try {
-    doc = await measureDemo({ host: reader.host, pages, quickstart })
+    // A demo read on this machine is asked its pages as the site's host asks them: under `/index.php` on Joomla.
+    const host = values.base ? underIndexHost(reader.host, platformOfContract(values.contract)) : reader.host
+    doc = await measureDemo({ host, pages, quickstart })
   } finally {
     await reader.close?.()
   }

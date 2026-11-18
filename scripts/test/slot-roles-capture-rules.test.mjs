@@ -6,7 +6,7 @@ import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { checkContentMapRoles } from '../../packages/wo/website-opportunities/domain/content-map-roles.mjs'
-import { FACT_FAMILY_ROLES, proposeContentMapRoles } from '../slot-roles/rule-tables.mjs'
+import { FACT_FAMILY_ROLES, proposeContentMapRoles, proposeJoomla } from '../slot-roles/rule-tables.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const V2 = 'place-content-roles/2'
@@ -208,4 +208,26 @@ test('C4: a bare "label" beside a "value" is a stat label, as the server reads i
 test('C4: every role family of the server fact list has a place in the family table', () => {
   const rules = JSON.parse(readFileSync(path.join(ROOT, 'apps/tracy-web/src/lib/fact-fields.json'), 'utf8'))
   assert.deepEqual(Object.keys(FACT_FAMILY_ROLES).sort(), Object.keys(rules.roles).sort())
+})
+
+test('audio capability binds each source to its exact article and track, leaving covers as pictures', () => {
+  const slots = [0, 1].flatMap((row) =>
+    [11, 12].map((article) => ({
+      key: `article-${article}.${row}`,
+      entity: `article-${article}`,
+      column: 'attribs',
+      jsonPath: ['ctm_audio', 'audio-src', row],
+      type: 'url',
+      sample: 'images/audio/Same.mp3'
+    }))
+  )
+  const bound = proposeJoomla(slots, { vocabulary3: true })
+  assert.ok(bound.bindings.every((b) => b.mode === 'asset'))
+  const result = proposeContentMapRoles({ slots }, { cms: 'joomla', vocabulary: V3 }).contentMap
+  assert.equal(new Set(result.slots.map((s) => s.group?.id)).size, 4)
+  for (const s of result.slots) {
+    assert.equal(s.role, 'business.audio')
+    assert.equal(s.customize, undefined)
+    assert.equal(s.group.id, `${s.entity}.audio.${s.jsonPath[2]}`)
+  }
 })

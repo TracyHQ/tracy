@@ -2,6 +2,8 @@
  * The research a site brief reads: a place's shared snapshot with the account's overlay, or the per-account rows of
  * an opportunity not researched as a place yet. Shared by every builder, so a brief reads the same whoever builds it.
  */
+import { profileWithReviewPicks } from '../domain/owner-site-picks.mjs'
+import { withProfileEdits } from './profile-edits.js'
 import { revokedHubCopy } from './hub/local-cache.js'
 import { mediaJunk } from './media-junk.js'
 import { withoutNearCopies } from '../domain/pictures/brief-media.mjs'
@@ -158,17 +160,21 @@ export async function fromOpportunity(client, opp) {
   ).rows.map((r) => ({ source: r.source, ...r.post }))
   return {
     // The name on the site with the person's pick, made after research or not (`business-name.js`); its links clean.
-    profile: cleanProfileLinks(
-      withPhoneDecision(
-        withRatingDecision(
-          withHoursDecision(
-            withNameDecision(profileRow?.profile ?? {}, { opportunity: opp, brand: profileRow?.brand }),
+    // The seller's own edits on top (`profile-edits.js`), as on the Details page.
+    profile: withProfileEdits(
+      cleanProfileLinks(
+        withPhoneDecision(
+          withRatingDecision(
+            withHoursDecision(
+              withNameDecision(profileRow?.profile ?? {}, { opportunity: opp, brand: profileRow?.brand }),
+              { opportunity: opp }
+            ),
             { opportunity: opp }
           ),
           { opportunity: opp }
-        ),
-        { opportunity: opp }
-      )
+        )
+      ),
+      opp
     ),
     brand: profileRow?.brand ?? null,
     sources,
@@ -179,18 +185,18 @@ export async function fromOpportunity(client, opp) {
 }
 
 /**
- * Facts the place's current snapshot took from a shared hub that has since revoked them (`hub/local-cache.js`):
+ * Facts the snapshot the card reads (the place's current one, or the one an approved card is pinned to,
+ * `approved-research.js`) took from a shared hub that has since revoked them (`hub/local-cache.js`):
  * `[{hubPlaceId, source, revokedAt}]`. Empty where no hub was ever read (the table is absent on such a host).
  */
-async function revokedHubUses(db, placeId) {
+async function revokedHubUses(db, snapshotId) {
   const { rows } = await db.query(`select to_regclass('wo_hub_client_use') is not null as present`)
   if (!rows[0].present) return []
   return (
     await db.query(
-      `select u.hub_place_id, u.source, u.revoked_at from wo_place p
-         join wo_hub_client_use u on u.snapshot_id = p.current_snapshot_id
-        where p.id = $1 and u.revoked_at is not null order by u.hub_place_id`,
-      [placeId]
+      `select u.hub_place_id, u.source, u.revoked_at from wo_hub_client_use u
+        where u.snapshot_id = $1 and u.revoked_at is not null order by u.hub_place_id`,
+      [snapshotId]
     )
   ).rows.map((r) => ({ hubPlaceId: r.hub_place_id, source: r.source, revokedAt: r.revoked_at.toISOString() }))
 }
@@ -267,7 +273,7 @@ export async function briefResearchOf(db, opp) {
     const revoked = await revokedHubCopy(db, read.profile?.googlePlace)
     return { read: revoked ? withoutRevoked(read, [{ ...revoked, source: 'google-places' }]) : read, view }
   }
-  const revoked = await revokedHubUses(db, opp.place_id)
+  const revoked = await revokedHubUses(db, view.snapshot.id)
   const read = await withVision(db, fromPlace(view))
   return { read: revoked.length ? withoutRevoked(read, revoked) : read, view }
 }
@@ -300,7 +306,8 @@ export function makeSiteBrief(domain, read, { opportunity, madeAt, placeProfile 
       ...(Array.isArray(read.observedFacts) ? { observedFacts: read.observedFacts } : {}),
       madeAt
     }),
-    read.profile
+    // Only the reviews the owner keeps on the site (`owner-site-picks.mjs`, #537).
+    profileWithReviewPicks(read.profile, opportunity?.candidate)
   )
   // How the photographs were labelled when this brief was made (F08), failure included: the brief says it.
   // Each asset left unlabelled carries the reason the labelling step gave for it; the note keeps the counts.

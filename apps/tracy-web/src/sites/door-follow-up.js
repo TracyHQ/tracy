@@ -466,7 +466,11 @@ const WORK = {
         ...(Array.isArray(data.outside) ? data.outside : []),
         ...(data.sealed ? [{ ...data.sealed, cause: 'seal' }] : [])
       ])
-      if (owed.turn_id && (await lateSealProvesStart(db, owed, data)))
+      // A successful host job may have skipped sealing because a setup or another conversation
+      // still holds the webroot. Its dirty files can then enter this turn's moment: Undo must not
+      // take them along, even when the host answered within the door's wait.
+      if (owed.turn_id && data.skipped != null) await markUnsealedStart(db, owed.turn_id)
+      else if (owed.turn_id && (await lateSealProvesStart(db, owed, data)))
         await clearUnsealedStart(db, owed.turn_id)
     } else if (owed.turn_id) {
       await markUnsealedStart(db, owed.turn_id)

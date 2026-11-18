@@ -1,0 +1,101 @@
+✖ lists, maps and phones are read as a visitor sees them (42320.370084ms)
+✔ video controls are read with the address they open, and a control the page hides is not (1254.761708ms)
+✔ a button to its own page is read with its holders, and one the self link rule hides is not (574.861916ms)
+✔ a shown link says whether it takes a click (520.171167ms)
+✔ a go-live answers 202 with a job id at once; the job reads running, then done with the script output (54.538542ms)
+✔ a script that exits non-zero, or cannot be started, ends the job failed — never done (16.619541ms)
+✔ one go-live per site: a second call while the first runs is refused GO_LIVE_BUSY with that job, and starts nothing (13.253542ms)
+✔ the site is free again once its job has ended, done or failed (13.343709ms)
+Error: ENOSPC
+    at jobs.put (file://<checkout>/apps/tracy-host/test/site-publish.test.mjs:381:21)
+    at take (file://<checkout>/apps/tracy-host/src/app.js:845:18)
+    at async dispatch (file://<checkout>/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
+    at async file://<checkout>/apps/tracy-host/src/app.js:1213:5
+    at async dispatch (file://<checkout>/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
+    at async file://<checkout>/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/hono-base.js:285:21
+    at async TestContext.<anonymous> (file://<checkout>/apps/tracy-host/test/site-publish.test.mjs:385:18)
+    at async Test.run (node:internal/test_runner/test:1113:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+✔ a job record that cannot be written leaves the site free, not held for ever (12.628333ms)
+✔ no tunnel configuration: publish and back to draft at the Tracy address still run — no domain, no tunnel needed, and no Cloudflare name invented for the script (107.361625ms)
+✔ no tunnel configuration: only an ask that NAMES a domain is refused 501 NOT_CONFIGURED — after its shape was checked, and before anything is recorded or run (54.858459ms)
+✔ every malformed body is refused 400 before a job exists (187.63025ms)
+✔ a label with no site folder — or one that is a file, or a link to nowhere — is 404, and nothing runs (18.2945ms)
+✔ an unknown job id reads 404 NOT_FOUND, which the web door takes as "ask again for the same operation" (10.184167ms)
+✔ every refusal this door gives is on the web door's list of them, on the listed status, and tells a keyed ask its key was never taken — and nothing else it answers reads as one (50.550708ms)
+✔ a key the host has taken is answered with its job BEFORE the folder, the configuration or the request are checked — while it runs and after it ended (26.671667ms)
+✔ a taken key whose record is no outcome, on a host that cannot run it again: the refusal says the key WAS taken and names its job; a key never taken is told so (28.292666ms)
+Error: EIO: the job record could not be read
+    at Object.get (file://<checkout>/apps/tracy-host/test/site-publish.test.mjs:788:31)
+    at file://<checkout>/apps/tracy-host/src/app.js:900:32
+Error: EIO: the job record could not be read
+    at Object.get (file://<checkout>/apps/tracy-host/test/site-publish.test.mjs:788:31)
+    at file://<checkout>/apps/tracy-host/src/app.js:900:32
+Error: EIO: the job record could not be read
+    at Object.get (file://<checkout>/apps/tracy-host/test/site-publish.test.mjs:788:31)
+    at file://<checkout>/apps/tracy-host/src/app.js:900:32
+✔ a job store that cannot be READ is not "never taken": the keyed ask gets no refusal the web door could end on, whatever the host looks like now (20.114709ms)
+✔ a key the host took, whose record is then lost, on a host that has changed: every refusal still says the key WAS taken — never `accepted: false` — and nothing is started (743.432709ms)
+✔ a taken key whose record is lost, on a host that is whole: the same key runs the job again under the same id, from a clean record (171.537708ms)
+✔ the mark is on disk before the record is written, the script is started or 202 is answered — and it is the only thing a key leaves that no later write touches (45.96125ms)
+✔ a mark that cannot be written: the key is NOT taken — 503, no record, no script, the site left free — and the same key is taken once the store writes again (43.766541ms)
+✔ a mark that cannot be LOOKED AT is neither yes nor no: every refusal to that key carries no `accepted`, whatever the record store says (132.962208ms)
+✔ no mark and no record: the key was never taken, and the real store says so — `accepted: false`, the one refusal the web door ends on (60.043458ms)
+✔ a record with no mark beside it still says the key was taken: a record is only ever left by a key this host took (138.887542ms)
+✔ two asks for one key that arrive together with the folder vanishing between them: the second is told the job the first was given, never "never taken" (27.195292ms)
+✔ the same job key names the same job: asked again while it runs, and after it ended, nothing new starts (26.395875ms)
+✔ a record that is no outcome is run again under the same key: after a restart marked it failed, and after the script found the site locked (49.738709ms)
+✔ a script that failed by its own exit is an outcome: the same key answers that job and runs nothing (17.924458ms)
+✔ a run that threw with its script still at work is no outcome: the record carries no exit code, and the same key runs the job again (34.973541ms)
+✔ an ending the job store could not write is no outcome either: no `done`, no script failure, and the same key runs again (162.888ms)
+✔ another key while a job holds the site is refused GO_LIVE_BUSY; a key that is not one is refused 400 (30.157708ms)
+✔ go-live.sh live then draft, no domain: every step through → exit 0 and the closing line of that direction, run twice the same (11131.812375ms)
+✔ go-live.sh: a required step that fails ends the script non-zero, with no closing line (10703.881959ms)
+✔ go-live.sh: Apache that takes neither a reload nor a restart, or a conf that cannot be written, ends it non-zero (12114.28075ms)
+✔ go-live.sh: a firewall chain that cannot be READ ends the script — it is never taken for "no rule" (2732.000459ms)
+✔ go-live.sh: only this site's own rule counts as its mail rule, and an insert that left no rule is not a closed door (7879.642042ms)
+✔ go-live.sh beside another go-live of the same site ends at once with 75, having read and changed nothing — live and draft (5518.942583ms)
+✔ go-live.sh: a lock that cannot be taken — a link, a folder under its name, or an interpreter that will not run — is not a free one (3264.674709ms)
+✔ go-live.sh live: a mail rule the firewall still has, though its listing spells it another way, is not an open door (3007.846125ms)
+✔ go-live.sh live: a firewall check that could not be made is not "no rule" — no OPEN line and no closing line, whatever the listing shows (11806.26625ms)
+✔ go-live.sh: the platform's own mail switch failing ends the script in either direction — no closing line on a site whose mailer was not switched (4253.525167ms)
+✔ POST /_host/routing-target: the tunnel's public name and nothing else — 501 when this host has no tunnel, or its id is not one (312.165291ms)
+✔ a live that carries domains hands each to the script, with the tunnel names, and only when they were proven against THIS host's tunnel (28.605625ms)
+✔ drop-domain is a job like any other go-live: one domain, the same guard, the same key rule (26.8665ms)
+✔ teardown through this door is an operation like the others: teardown.sh under a key — one job however often it is asked for, a failed run taken up again only for the next attempt, and no refusal for a folder that is already gone (72.221458ms)
+✔ a run that a signal, a time limit or a failed start ended is NOT the script failing: no exit code on the record, the signal kept beside it, and the same key runs the job again (2110.217875ms)
+✔ end to end with the real runner: a go-live script killed by a signal leaves a record with the signal and no exit code — the same script exiting 1 by itself leaves exit code 1 (199.00925ms)
+✔ a cleanup that failed is run again under its own key only when the next attempt is asked for — never by being looked at, never a job that ended done, never a publish (223.928584ms)
+✔ go-live.sh live with domains: each is on the site's record BEFORE its rule is asked for, and only a rule the tunnel took is said to be routed (7780.537459ms)
+✔ go-live.sh draft: the names it is given AND the ones on record leave the tunnel, each only as this site's rule — and one that cannot be removed ends the script non-zero with the rest done and written down (11754.890458ms)
+✔ go-live.sh drop-domain: one domain out of the tunnel and off the record — mail, noindex and the other domains untouched; failing, it ends non-zero with the name still on record (6396.257583ms)
+✔ go-live.sh: a domain is said to be out only when its rule AND its place on the record are — a record that cannot be rewritten prints neither line, ends non-zero, and the retry finishes it (12958.588083ms)
+✔ go-live.sh: the record is never written through what was put beside it or under its name — a link at the temporary name is replaced, not followed; a name that cannot be recorded is not added to the tunnel (6848.444625ms)
+✔ go-live.sh: the site's port is read from its own .env and never through a link or a pipe — a domain is not added, or taken out, on a port read from somewhere else (8084.855208ms)
+✔ go-live.sh: a record of domains that cannot be trusted is NOT "no domains" — refused before anything is flipped, for every kind of it and every direction (34584.073792ms)
+✔ go-live.sh draft on a host with no tunnel: no domain on record → it runs to its closing line and never reaches for the tunnel; a domain on record → it ends non-zero, the record kept (5011.081042ms)
+✔ #1037 go-live.sh live: a site connected the old way is brought over — its own old rule (straight to its port) is replaced by the route to tracy-web; another site's rule is left standing and is not said to be routed (2127.846833ms)
+✔ #1037 go-live.sh: the route generation of the run reaches the tunnel script, add and remove; one that is not a number is refused before anything runs (8024.643959ms)
+✔ #1037 go-live.sh: where tracy-web listens is this host's own word — the named service, or tracy-web's loopback origin; a public origin is never a local service, and with none the domain is not added, not recorded and not said to be routed (24510.455792ms)
+✔ #1037 the go-live door: routeGen goes with an ask that names domains, as --route-gen; anything else under that name is refused before a job exists (49.79725ms)
+ℹ tests 61
+ℹ suites 0
+ℹ pass 60
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 206273.247542
+
+✖ failing tests:
+
+test at apps/tracy-host/test/demo-qa-reach-measures-browser.test.mjs:30:1
+✖ lists, maps and phones are read as a visitor sees them (42320.370084ms)
+  page.setContent: Timeout 30000ms exceeded.
+  Call log:
+    - setting frame content, waiting until "load"
+
+      at TestContext.<anonymous> (<checkout>/apps/tracy-host/test/demo-qa-reach-measures-browser.test.mjs:34:16) {
+    name: 'TimeoutError',
+    log: [ '  - setting frame content, waiting until "load"' ]
+  }

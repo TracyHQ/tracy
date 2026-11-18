@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-570-chain-retry-before-usage",
+  "kind": "fix",
+  "title": "Failed chain actions without exact restart authority cannot reserve another build",
+  "pr": 570,
+  "area": "website-opportunities/chain-retry",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the chain handoff suite with real PostgreSQL and check both refused and permitted explicit retries."
+  ],
+  "expect": [
+    "A failed parent and failed stored QA cannot authorize Retry after lost placement, a successful write or another active writer.",
+    "Refusal leaves daily usage, the site brief and the action count unchanged.",
+    "Valid historical and failed-child retries retain exact generation authority and restart once without provisioning another site."
+  ],
+  "selectors": {},
+  "fence": "The current owned chain generation must authorize acceptance before the daily usage reservation.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/wo-step-chain-handoff.test.mjs"],
+    "tests": [
+      "a failed chain action cannot reserve a no-op Retry for lost-applying",
+      "a failed chain action cannot reserve a no-op Retry for lost-placement",
+      "a failed chain action cannot reserve a no-op Retry for successful-write",
+      "a failed chain action cannot reserve a no-op Retry for live-writer",
+      "an explicit historical chain Retry preserves the old verdict and resumes the same failed generation once",
+      "a failed child Retry receives fresh authority for its own failed chain generation"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 120
+  }
+}

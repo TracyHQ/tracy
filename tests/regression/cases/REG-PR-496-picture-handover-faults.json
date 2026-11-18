@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-496-picture-handover-faults",
+  "kind": "fix",
+  "title": "A final site report preserves the looker's named faults when a rejected picture is kept",
+  "pr": 496,
+  "area": "ai/picture-handover",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: read a picture manifest with a best-rejected hero, a drawn card and a best-rejected site setting.",
+    "S2: run step 9 with that manifest and save its final report, then read an absent manifest."
+  ],
+  "expect": [
+    "S1: the review list keeps exactly the hero and site-setting frame, source, site path, fallback rung and fault names.",
+    "S2: site-write-report.json carries the review list, and an absent manifest produces an empty list."
+  ],
+  "selectors": {
+    "source": "apps/tracy-web/src/write-step-nine.js",
+    "test": "apps/tracy-web/test/write-step-picture-review.test.mjs apps/tracy-web/test/write-step-nine-repair.test.mjs"
+  },
+  "evidence": "The picture manifest stored filledBy and its faults, but site-write-report.json did not carry them into handover.",
+  "fence": "Rejected-but-kept picture provenance remains visible in the final write report.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-picture-review.test.mjs",
+      "apps/tracy-web/test/write-step-nine-repair.test.mjs"
+    ],
+    "tests": [
+      "the final write report keeps each rejected picture and the looker fault names",
+      "step 9 saves the rejected-picture faults in its final report"
+    ]
+  }
+}

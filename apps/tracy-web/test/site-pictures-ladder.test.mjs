@@ -321,8 +321,9 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   assert.deepEqual(rungs(m, 'block-b.1'), [...drawAndPhotos, ['fewer-rows', 'skipped'], ['hide', 'hidden']])
   assert.equal(e.get('block-b.1').source, 'hide')
   // A frame that cannot be hidden is drawn again in other compositions first; when every picture it got had a hard
-  // fault (here a wrong subject), the best of them is placed despite the looker: a rejection never leaves the demo
-  // (owner's rule 2026-11-07), and the picture package names no problem for it.
+  // fault (here a wrong subject), the ladder keeps the best of them as best-rejected, but the export does not upload
+  // it: the frame keeps its demo picture and the picture package names the problem (ADR 0043 section 4, #568).
+  // Only a picture with minor faults alone is placed instead of the demo (the minor-fault test below).
   assert.deepEqual(rungs(m, 'block-c.1'), [
     ...drawAndPhotos,
     ['fewer-rows', 'skipped'],
@@ -333,9 +334,22 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   assert.ok(!m.returns.some((r) => r.frame === 'block-c.1'), 'never returned')
   assert.deepEqual(e.get('block-c.1').filledBy, { rung: 'best-rejected', faults: ['wrong subject'] })
   assert.match(e.get('block-c.1').reason, /^placed despite looker: wrong subject, after: draw placed/)
-  const exported = exportPictureMapping({ pictures: m, contract: kit().contract, revision: 'r', kit: kit() })
-  assert.ok(!exported.problems.some((x) => x.where === 'block-c.1'))
-  assert.ok(!packageProblems(exported, kit().contract).some((x) => x.startsWith('block-c.1:')))
+  const exported = exportPictureMapping({
+    pictures: m,
+    contract: kit().contract,
+    revision: 'r',
+    kit: kit(),
+    plan: plan(),
+    brief: brief()
+  })
+  const hard = /the retained picture still has the looker's hard rejection \(wrong subject\)/
+  assert.ok(exported.problems.some((x) => x.where === 'block-c.1' && hard.test(x.detail)))
+  assert.equal(exported.mapping.changes['module-c.1'], undefined, 'the frame keeps its demo picture')
+  assert.ok(
+    !exported.uploads.some((u) => u.file === e.get('block-c.1').file),
+    'the rejected file is not uploaded'
+  )
+  assert.ok(packageProblems(exported, kit().contract).some((x) => x.startsWith('block-c.1:') && hard.test(x)))
   // The redraw names the looker's faults; the first drawing does not.
   const bDraws = doors.drawings.filter((d) => d.frame === 'block-b.1')
   assert.equal(bDraws.length, 2)
@@ -389,7 +403,7 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   // this save.
   assert.equal(doors.drawings.length, 10)
   assert.equal(m.drawer.calls.length, 10)
-  // Drawn pictures on the site: w, k and c (placed despite the looker).
+  // Drawn pictures in the manifest: w, k and c (kept as best-rejected; the export does not upload c).
   assert.equal(m.drawer.count, 3)
   assert.equal(m.drawer.model, DRAWER_MODEL)
   assert.ok(Math.abs(m.cost.drawer - 10 * DRAW_COST) < 1e-9, `${m.cost.drawer}`)
@@ -406,7 +420,13 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
     failed.map((r) => [r.id, r.failures]),
     []
   )
-  assert.equal(out.rule.status, 'pass')
+  // The looker rule fails for block-c.1 alone: keeping a fallback file does not accept its hard rejection (#568).
+  assert.equal(out.rule.status, 'fail')
+  assert.deepEqual(
+    out.rule.failures.map((f) => f.where),
+    ['block-c.1']
+  )
+  assert.match(out.rule.failures[0].detail, /the looker rejected the picture \(wrong subject\)/)
 
   // Finished again (a later round, a resumed run): every drawing and look is read from the store, nothing is paid.
   const again = await fakeDoors({
@@ -507,7 +527,14 @@ test('a frame the plan wants filled that cannot be hidden keeps the best picture
     result.rules.filter((r) => r.status === 'fail').map((r) => [r.id, r.failures]),
     []
   )
-  const exported = exportPictureMapping({ pictures: m, contract: kit().contract, revision: 'r', kit: kit() })
+  const exported = exportPictureMapping({
+    pictures: m,
+    contract: kit().contract,
+    revision: 'r',
+    kit: kit(),
+    plan: plan(),
+    brief: brief()
+  })
   assert.equal(exported.mapping.changes['module-c.1'], c.sitePath)
   assert.ok(!exported.problems.some((x) => x.where === 'block-c.1'))
 })

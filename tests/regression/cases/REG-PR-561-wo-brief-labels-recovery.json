@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-561-wo-brief-labels-recovery",
+  "kind": "fix",
+  "title": "A WO brief whose picture labels are absent, failed or pending is never reused by Refresh or a build: a labelled revision is written once labels exist, and a picture the vision model left unanswered is not asked again",
+  "pr": 561,
+  "area": "wo/brief/picture-labels",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd` with TEST_DATABASE_URL set to a scratch Postgres (torn down after).",
+    "S2: Read the result of each test named in `run.tests`. The tests seed the states themselves: a stored revision whose `brief.assetLabelling` is absent, one with `assetLabelling.status = failed` and `reason = no_bytes`, shared claims in `wo_media_analysis` held by another request, and a vision model double that returns no label (`reasons: not_in_answer`) or times out (`timeout`), counting its calls."
+  ],
+  "expect": [
+    "0 failures.",
+    "Every test named in run.tests reports ok.",
+    "A stored revision with `brief.assetLabelling` absent, or `failed` / `no_bytes`, under the current research hash: `createRevision` with a labeller answers `reused` undefined, a new revision id, `research_hash` = `researchKeySlots(key).relabelled`, every asset `content = venue-exterior`; the stored revision's `brief` and `research_hash` are unchanged.",
+    "`detailOf(opp).brief.current` is false before that Refresh and true, with the new revision id, after it.",
+    "A further Refresh answers `reused = true` with the labelled revision and calls the labeller 0 times.",
+    "A labelling made while another request holds the claims records `assetLabelling.reason = labels_pending` and `pending = 3` (not `no_bytes`); after the claims settle, Refresh writes a new revision with `assetLabelling.status = cached` and the live research hash.",
+    "Three Refreshes, and three build runs (`revisionForAction` with `pictureLabelRuns`), on pictures the model leaves unanswered: the model double is called exactly 1 time and one revision exists; the own picture's `wo_media.labels.visionUnanswered.reason = not_in_answer` and `labels.vision` is absent.",
+    "A picture whose call timed out is asked again: 2 calls over 2 Refreshes."
+  ],
+  "selectors": {
+    "door": "POST /api/website-opportunities/:id/revisions (Refresh, `route.js` createRevision); GET /api/website-opportunities/:id field `brief.current`",
+    "fields": "wo_revision.research_hash, wo_revision.brief.assetLabelling.{status,reason,pending}, brief.readiness.checks[id=labelled-share], wo_media_analysis.result.unanswered, wo_media.labels.visionUnanswered",
+    "function": "apps/tracy-web/src/opportunities-build/revisions.js createRevision, revisionForAction, labelsIncomplete, briefLabelsIncomplete, researchKeySlots; brief-picture-labels.js createBriefPictureLabels; media-analysis.js settleAnalysis, unansweredAnalyses; route.js briefStatus; build-store.js revisionsOf",
+    "test": "apps/tracy-web/test/wo-brief-picture-labels-recovery.test.mjs"
+  },
+  "evidence": "dev, develop f25af7cb7, 2026-11-10 (issues #555, #556): Portland City Boxing revision 1 `80c81573` had no `assetLabelling` and revision 2 `d7526804` recorded `failed / no_bytes` after a cut-off Refresh; both stayed blocked on `labelled-share` (`BRIEF_NOT_READY`) until Research again.",
+  "fence": "A brief is reused only when its labels are complete as readiness judges them (`labelsIncomplete`); an incomplete one is never changed and sits under a derived hash slot, so Refresh writes a labelled revision; a complete brief is looked up before any labelling; a picture the model was shown and gave no label for is kept (shared cache for a place's picture, `wo_media.labels` for an own one) and not asked again, while http_error and timeout stay retryable. Throwaway Postgres and local doubles, no network, no model.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-brief-picture-labels-recovery.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "#555: a brief written with no labelling step says so, and the next labelled Refresh writes a new revision",
+      "#556: labels still being made by another request recover into a new labelled revision",
+      "review 1: Details offers Refresh for a stored brief with absent or failed labels, and Refresh makes a labelled one",
+      "review 2: Refreshes of pictures the model cannot label pay once and keep one brief",
+      "review 3: a partial labelling short of readiness is recovered once the missing labels exist",
+      "review 3: a brief made with no vision model assigned is recovered once a model labels",
+      "review: Refreshes of an own picture the model never answers pay once and keep one brief",
+      "review: an own picture whose call timed out is asked again",
+      "review: build runs of an own picture the model never answers pay once and share one brief",
+      "review: a build run adopts a labelled brief before asking any labelling"
+    ]
+  }
+}

@@ -22,7 +22,9 @@ Look at the picture first, then compare it with the words. The picture fails whe
   the chin or a cap, or a person is shown with no head at all. Look at every person in the picture, in the background
   too.
 - distorted face or body: a face, hand or body looks malformed, melted, doubled or missing parts.
-- stray lettering: readable text, a logo, a watermark or another business's branding is in the picture.
+- stray lettering: words or a logo added on top of the photo, a watermark or stamp, or another business's name or logo
+  shown prominently. Text that belongs to the scene is not stray lettering: the business's own name or logo on its
+  walls, courts, vehicles or clothing, a sign at its place, small print on equipment.
 - visible drawing seam: a line, a change of light or style, or a repeated pattern shows where a picture was extended or
   drawn onto.
 
@@ -60,6 +62,10 @@ light letters over it would read. This fault is named only then:
 
 - text would not read: the picture is so bright, or so busy with detail, that white letters laid over most of it would
   not read.
+
+When the message says the template overlay is unknown, keep that uncertainty: do not assume there is no overlay or
+that an overlay makes the text readable. Apply the same strict text check to the raw picture you see; it does not
+prove how the finished page reads. Keep judging the picture's subject and all other allowed faults independently.
 
 Mood alone never fails a picture. Judge only what you can see; do not guess what is outside the picture.
 

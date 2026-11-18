@@ -1,0 +1,67 @@
+{
+  "source": "mirror of the source site, /gallery",
+  "albums": {
+    "sample-album-1": {
+      "cover": "images/joomlart/gallery/intro-6.jpg",
+      "photos": [
+        "images/joomlart/gallery/intro-6.jpg",
+        "images/joomlart/gallery/intro-4.jpg",
+        "images/joomlart/gallery/intro-3.jpg",
+        "images/joomlart/gallery/intro-2.jpg",
+        "images/joomlart/gallery/intro-1.jpg"
+      ]
+    },
+    "sample-album-2": {
+      "cover": "images/joomlart/gallery/intro-8.jpg",
+      "photos": [
+        "images/joomlart/gallery/intro-8.jpg",
+        "images/joomlart/gallery/intro-4.jpg",
+        "images/joomlart/gallery/intro-3.jpg",
+        "images/joomlart/gallery/intro-2.jpg",
+        "images/joomlart/gallery/intro-1.jpg"
+      ]
+    },
+    "sample-album-3": {
+      "cover": "images/joomlart/gallery/intro-5.jpg",
+      "photos": [
+        "images/joomlart/gallery/intro-5.jpg",
+        "images/joomlart/gallery/intro-4.jpg",
+        "images/joomlart/gallery/intro-3.jpg",
+        "images/joomlart/gallery/intro-2.jpg",
+        "images/joomlart/gallery/intro-1.jpg"
+      ]
+    },
+    "sample-album-4": {
+      "cover": "images/joomlart/gallery/intro-1.jpg",
+      "photos": [
+        "images/joomlart/gallery/intro-1.jpg",
+        "images/joomlart/gallery/intro-3.jpg",
+        "images/joomlart/gallery/intro-2.jpg"
+      ]
+    },
+    "sample-album-5": {
+      "cover": "images/joomlart/gallery/intro-2.jpg",
+      "photos": ["images/joomlart/gallery/intro-2.jpg", "images/joomlart/gallery/intro-1.jpg"]
+    },
+    "sample-album-6": {
+      "cover": "images/joomlart/gallery/intro-4.jpg",
+      "photos": [
+        "images/joomlart/gallery/intro-4.jpg",
+        "images/joomlart/gallery/intro-5.jpg",
+        "images/joomlart/gallery/intro-3.jpg",
+        "images/joomlart/gallery/intro-2.jpg",
+        "images/joomlart/gallery/intro-1.jpg"
+      ]
+    },
+    "sample-album-7": {
+      "cover": "images/joomlart/gallery/intro-3.jpg",
+      "photos": [
+        "images/joomlart/gallery/intro-3.jpg",
+        "images/joomlart/gallery/intro-5.jpg",
+        "images/joomlart/gallery/intro-4.jpg",
+        "images/joomlart/gallery/intro-2.jpg",
+        "images/joomlart/gallery/intro-1.jpg"
+      ]
+    }
+  }
+}

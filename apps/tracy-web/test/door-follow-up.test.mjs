@@ -17,6 +17,8 @@ import {
 } from '../src/sites/door-follow-up.js'
 import { jobAnswer } from '../src/sites/operations.js'
 import { openTurn } from '../src/sites/turns.js'
+import { sessionTurns } from '../src/sites/turn-undo-store.js'
+import { turnsView, undoPlan } from '../src/sites/turn-undo.js'
 import { fileDb } from './_db.mjs'
 
 const db = fileDb()
@@ -206,6 +208,55 @@ const CLEAN_SEAL = {
   outside: []
 }
 const T4B = { answer: CLEAN_SEAL, createdAt: 1791570660534, updatedAt: 1791570675835, lead: 40 }
+
+test('a skipped opening seal blocks Undo of the files its native repair moment swallowed', opts, async () => {
+  const { pool } = db
+  // A setup run holds the webroot while its first repair session opens. The host answers successfully,
+  // but cannot seal the setup's pictures before the repair, so the repair moment includes those too.
+  for (const [i, skipped] of ['turn-open', 'future-host-refusal'].entries()) {
+    const turnId = `session-skipped-${i}:1`
+    await owedMoment(pool, `j-repair-${i}`, { turnId })
+    await fileFollowUp(pool, {
+      jobId: `j-skipped-${i}`,
+      siteKey: SITE,
+      host: 'local',
+      kind: 'webroot-seal-outside',
+      door: 'seal',
+      turnId,
+      payload: { lead: 5 },
+      waitMs: 12_000
+    })
+    if (i === 1) await handOver(pool, `j-skipped-${i}`)
+    await followThrough(pool, `j-skipped-${i}`, 'seal', {
+      state: 'done',
+      output: JSON.stringify({ ...CLEAN_SEAL, skipped })
+    })
+    await followThrough(pool, `j-repair-${i}`, 'moment', { state: 'done', output: MOMENT })
+    const turns = await sessionTurns(pool, SITE, `session-skipped-${i}`)
+    const view = turnsView({
+      platform: 'joomla',
+      now: Date.now(),
+      viewer: { email: 'owner@x.y', seesAll: true },
+      toolsets: { code: true, content: true },
+      turns,
+      openTurns: [],
+      moments: { turns: { [turnId]: [{ sha: SHA, at: 0, files: ['hero.jpg', 'custom.css'] }] } },
+      writes: [],
+      audits: [],
+      laterWrites: [],
+      laterCms: [],
+      operations: [],
+      check: { commits: [{ sha: SHA, zones: { design: 1, content: 1 } }], conflict: null }
+    })
+    const plan = undoPlan(view, turnId, 'turn')
+    assert.equal(
+      plan.error?.code,
+      'BLOCKED',
+      'Undo must preserve setup pictures mixed into this repair moment'
+    )
+    assert.ok(plan.error.reasons.some((r) => r.code === 'SHARED_CHANGE' && r.cause === 'unsealed'))
+  }
+})
 /** A `job` row of the site as the ledger holds it once polled: the host's record in `detail`. */
 const job = (kind, createdAt, updatedAt, output = '{"ok":true}', state = 'done') => ({
   kind,

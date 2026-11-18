@@ -1,0 +1,72 @@
+{
+  "id": "REG-PR-506-wo-brief-rules-and-picture-labels",
+  "kind": "feat",
+  "title": "The brief keeps the business-reading rules (post offerings, own name over trade description, people from reviews, large catalogues, USP themes gate), keys research on the rules versions, and carries vision risk labels to the picture bench with measured sharpness primary",
+  "pr": 506,
+  "area": "website-opportunities/brief",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-reporter=tap packages/wo/website-opportunities/test/business-reading-post-offerings.test.mjs packages/wo/website-opportunities/test/domain-name-own-marks-over-trade-description.test.mjs packages/wo/website-opportunities/test/domain-people-from-reviews.test.mjs packages/wo/website-opportunities/test/business-reading-large-catalogue.test.mjs packages/wo/website-opportunities/test/business-reading-usp-themes.test.mjs packages/wo/website-opportunities/test/domain-hero-usp.test.mjs packages/wo/website-opportunities/test/domain-asset-labels.test.mjs packages/wo/website-opportunities/test/domain-picture-links.test.mjs apps/tracy-web/test/picture-vision-risk-labels.test.mjs apps/tracy-web/test/site-pictures-photo-shortlist.test.mjs apps/tracy-web/test/opportunities-build-research-key.test.mjs",
+    "S2: Record the exit code, the \"# tests\", \"# pass\", \"# fail\", \"# skipped\" lines and the result of each test whose name starts with one of the prefixes listed in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with \"# fail 0\" and \"# skipped 0\", and \"# pass\" equal to \"# tests\".",
+    "Every named test in S2 is \"ok\": an own-post offer with a call to book or buy becomes an offering and hashtags, one-off events, partner products and negated offers never do; a listing name that is a trade description gives way to the logo and handle name; people named in reviews show with a role or after two mentions; a 35-offering catalogue is read whole; USP themes pass only on verbatim quotes of two reviews; the research key changes with BRIEF_RULES_VERSION and BUSINESS_READING_VERSION; brief assets carry isBlurry, hasTextOrWatermark and showsOtherBusiness, and measured sharpness is primary."
+  ],
+  "selectors": {
+    "rules": "packages/wo/website-opportunities/src (business reading, brief, asset labels)",
+    "key": "apps/tracy-web research key built from BRIEF_RULES_VERSION and BUSINESS_READING_VERSION",
+    "labels": "isBlurry, hasTextOrWatermark, showsOtherBusiness on the brief asset"
+  },
+  "fence": "Mechanism only, in code with no model call and no database: the rules, the key and the label hand-off. What a live model reads from a real business is not graded here.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/business-reading-post-offerings.test.mjs",
+      "packages/wo/website-opportunities/test/domain-name-own-marks-over-trade-description.test.mjs",
+      "packages/wo/website-opportunities/test/domain-people-from-reviews.test.mjs",
+      "packages/wo/website-opportunities/test/business-reading-large-catalogue.test.mjs",
+      "packages/wo/website-opportunities/test/business-reading-usp-themes.test.mjs",
+      "packages/wo/website-opportunities/test/domain-hero-usp.test.mjs",
+      "packages/wo/website-opportunities/test/domain-asset-labels.test.mjs",
+      "packages/wo/website-opportunities/test/domain-picture-links.test.mjs",
+      "apps/tracy-web/test/picture-vision-risk-labels.test.mjs",
+      "apps/tracy-web/test/site-pictures-photo-shortlist.test.mjs",
+      "apps/tracy-web/test/opportunities-build-research-key.test.mjs"
+    ],
+    "tests": [
+      "food: an own-post offer omitted by the model",
+      "an explicitly sold service does not need a second mention",
+      "hashtags, one-off events, partner products and negated offers",
+      "a trade description is category words plus a place",
+      "bakery: logo text and handle agree",
+      "dental clinic: two own marks name it differently",
+      "club: coaches only reviews name",
+      "clinic: a person two reviews name is shown without a role",
+      "buildBrief: a coach two reviews name is shown and flagged",
+      "Lantern Noodle Bar: 35 quoted offerings are all kept",
+      "the model is asked for USP themes",
+      "the hero takes the kept model theme",
+      "without a model the reading has no USP themes",
+      "generic words never make a USP",
+      "a review theme two reviews state is the USP",
+      "a model's review theme passes only with quotes",
+      "the brief's assets carry size, orientation, grade and content",
+      "a brief asset carries the lettering and other-business labels",
+      "the one existing prompt asks for the three labels",
+      "one call per batch returns the three labels for each photo",
+      "the brief photo record stores the labels",
+      "the brief validator takes the labels as boolean or null",
+      "a photo the vision model labelled in full reaches the bench usable",
+      "lettering or another business still refuses the photo",
+      "measured sharpness is primary",
+      "the domain exports both versions",
+      "the same research under the same rules gives the same key",
+      "a new brief rules version or reading version changes the key"
+    ]
+  }
+}

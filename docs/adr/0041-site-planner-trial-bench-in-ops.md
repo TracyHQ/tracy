@@ -271,3 +271,26 @@
     the row, its picture and its paired slots. A hidden list is not checked, and a kit without `pairedSlots` (every kit
     measured before the field) leaves R22 skipped. On the sealed run's plan, with the four class pages' rows paired by
     hand in a copy of the 1.0.10 kit, R22 fails rows 2 to 4 of exactly the four video lists and nothing else.
+
+## Amendment 08/11/2026: kept cards print whole, visible buttons keep their words (checker only)
+
+The prompt is unchanged. A chain build on JA Boxing 1.0.11 passed the check after three rounds with a plan that hid the
+description of three of the four feature cards on each class page (keeping their titles and icons, the fourth card
+kept its own) and hid the one "See schedule" label the four class pages share, together with each page's button: the
+buttons stayed on the site as four arrows without words. Two rules now send these back to the planner.
+
+16. **Plan check R23 (`rules-kept-rows.js`), checker `site-plan-check/5`.** Rows come from the kit: the rows of a
+    slots list, the items of an items list, and repeated stored fields (`<prefix><n>.<field>` in `storedFields`). In a
+    kept block, a field hidden in a row that stays (another of its fields is written) while the same field prints in
+    another kept row of that list fails, once per slot, asking the planner to write it from trade knowledge without
+    numbers or to drop the whole row. Optional, never counted: video ids, link urls, fields empty on the demo,
+    `writable: false`, `printed: false` row fields and `site.nameSlots`; a field hidden in every kept row is a column
+    dropped for the whole list and passes.
+17. **Plan check R24 (`rules-labels.js`), checker `site-plan-check/5`.** A link of a kept block whose label slot
+    (role ending in `_label`) is hidden anywhere in the plan fails unless the control goes too: its row or block is
+    dropped, or its link id is in `hiddenSlots`. A shared label (one slot printed by the links of several kit blocks,
+    or listed in `alsoShownIn`) is never excused by hiding the links: the write step takes no button out by shared
+    words, so each kept control that prints it fails and the planner writes one label that fits every page. Menu item
+    labels (`menu_label`, navigation item `labelSlot`) leave with their menu item and stay with R04; contact lines are
+    not label slots. On the chain build's plan R23 fails exactly those 12 descriptions and R24 the four class page
+    buttons; on the reviewed 05/11 plan for the same kit both pass.

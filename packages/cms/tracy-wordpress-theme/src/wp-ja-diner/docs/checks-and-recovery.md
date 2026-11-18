@@ -76,8 +76,8 @@ Keep backups outside the webroot and outside any distributed archive: a database
   `[{"from": "/old", "to": "/new", "status": 301}]`.
 - **Forms**: contact, registration and reminder need a working `wp_mail` route; without one the contact
   form answers with its send-error notice.
-- **The header shows the site name instead of a logo in dark mode**: expected until `tracy_logo_dark` is
-  set (D-34).
+- **The header shows the site name instead of a logo in dark mode**: `tracy_logo_dark` is empty or names
+  no image; set it to the logo drawn for a dark background (D-34).
 
 ## Known limits
 

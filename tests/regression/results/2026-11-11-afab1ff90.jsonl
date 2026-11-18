@@ -1,0 +1,3 @@
+{"id":"REG-PR-558-picture-surface-preparation","verdict":"PASS","commit":"afab1ff901d5205feaf3cdaf957b9eaf5e8cf1d3","ran_at":"2026-11-11T14:53:11.843Z","evidence":"REG-PR-558-picture-surface-preparation.log"}
+{"id":"REG-PR-558-repair-turn-packing","verdict":"PASS","commit":"afab1ff901d5205feaf3cdaf957b9eaf5e8cf1d3","ran_at":"2026-11-11T14:53:11.948Z","evidence":"REG-PR-558-repair-turn-packing.log"}
+{"id":"REG-PR-558-repair-undo-stop","verdict":"PASS","commit":"afab1ff901d5205feaf3cdaf957b9eaf5e8cf1d3","ran_at":"2026-11-11T14:53:12.361Z","evidence":"REG-PR-558-repair-undo-stop.log"}

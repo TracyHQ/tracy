@@ -881,3 +881,20 @@ test('execArgv: site secrets an agent command does not need are blanked, after t
   for (const name of [...BLANKED_SECRET_ENV, ...READ_ONLY_BLANKED_ENV])
     assert.ok(readOnly.includes(`${name}=`), name)
 })
+
+test('mapProgram and siteOf read a hostile path in linear time and keep their meaning', () => {
+  // Inside the packaged folder `rg` must sit at least one folder down, as `bin/rg` does.
+  assert.equal(mapProgram('/x/@vscode/ripgrep/rg'), '/x/@vscode/ripgrep/rg')
+  assert.equal(mapProgram('/x/@vscode/ripgrep/bin/rg.exe'), 'rg')
+  assert.equal(mapProgram('/x/@vscode/ripgrep/bin/rgx'), '/x/@vscode/ripgrep/bin/rgx')
+  assert.equal(mapProgram('/x/@vscode/ripgrep/a\nb/rg'), '/x/@vscode/ripgrep/a\nb/rg')
+  assert.equal(mapProgram('/a\nb/@vscode/ripgrep/bin/rg'), 'rg')
+  assert.deepEqual(siteOf('/site/fijitrips', '/site///'), { label: 'fijitrips', relative: '' })
+  assert.throws(() => siteOf('/x', '////'), /filesystem root/)
+  const started = performance.now()
+  const hostile = `${'/@vscode/ripgrep/'.repeat(20_000)}x`
+  assert.equal(mapProgram(hostile), hostile)
+  assert.throws(() => siteOf('/x', `/${'/'.repeat(50_000)}`), /filesystem root/)
+  assert.throws(() => siteOf('/x', `${'/'.repeat(50_000)}x`), /outside/)
+  assert.ok(performance.now() - started < 500)
+})

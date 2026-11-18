@@ -25,7 +25,7 @@ export function settleSamples(kit, { map }) {
       if (String(s.sample ?? '').includes('…')) cutBefore.add(s.id)
       const m = raw.get(s.id)
       // A slot the content map does not hold keeps its sample; its lengths are read from that sample.
-      const next = m?.sample != null ? sampleOf(m.sample) : null
+      const next = m?.sample != null ? sampleOf(m.sample, m) : null
       if (!next) withoutMapSlot.add(s.id)
       const sample = next?.sample ?? s.sample ?? ''
       const demoChars = next?.demoChars ?? demoCharsOf(partsOfSample(sample))

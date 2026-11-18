@@ -1065,6 +1065,96 @@ test(
 )
 
 test(
+  'send queue: an unexpected error and a Gmail token refusal wait and try the same customer again inside the retry window, then pause',
+  opts,
+  async () =>
+    withRealDb(async ({ pool, keys }) => {
+      const { startRealQueue, readRealQueue, runRealQueues, AMEMBER_RETRY_MS } = await import(
+        '../src/invitations/real-queue.js'
+      )
+      const g = google({ send: () => Response.json({ id: `gmail-${Math.random()}`, threadId: 't' }) })
+      await connect(pool, g.fetcher)
+      const { c, rid } = await approvedDraft({ pool, keys })
+      const others = (
+        await pool.query('select recipient_id from invitations_real_draft where recipient_id<>$1', [rid])
+      ).rows.map((r) => r.recipient_id)
+      for (const id of others) {
+        const d = await readRealRecipient({ ...c, recipientId: id })
+        c.revision = (
+          await approveRealDraft({ ...c, recipientId: id, draftRevision: d.draft.revision })
+        ).revision
+      }
+      const cfg = pilot({ pilotMax: 10, pacingSeconds: 0 })
+      const order = (
+        await startRealQueue({
+          pool,
+          keys,
+          config: cfg,
+          campaignId: c.campaignId,
+          actorId: c.actorId,
+          groups: { group_1: 10 }
+        })
+      ).items.map((i) => i.recipientId)
+      let broken = false,
+        tokenDown = false
+      const fetcher = async (url, init) => {
+        const u = String(url)
+        if (u.includes('check-access'))
+          return Response.json({ ok: true, user_id: 1, subscriptions: { 10: '2099-01-01' } })
+        if (tokenDown && u.endsWith('/token')) return new Response('', { status: 503 })
+        return g.fetcher(url, init)
+      }
+      const run = () => runRealQueues({ pool, keys, config: cfg, fetcher })
+      const pastWindow = () =>
+        pool.query(
+          "update invitations_real_queue set amember_failing_since = clock_timestamp() - ($1::bigint * interval '1 millisecond')",
+          [AMEMBER_RETRY_MS + 60_000]
+        )
+
+      // Gmail cannot hand out a token: nothing left, the customer stays pending, the queue keeps running.
+      tokenDown = true
+      for (let pass = 0; pass < 2; pass++) assert.deepEqual((await run()).paused, [])
+      let q = await readRealQueue({ pool, keys, campaignId: c.campaignId })
+      assert.equal(q.state, 'running')
+      assert.deepEqual(q.counts, { pending: 3, sent: 0, skipped: 0 })
+      // Token back: the same customer goes out under a new request key, once.
+      tokenDown = false
+      assert.equal((await run()).sent, 1)
+      const tries = (
+        await pool.query(
+          "select state from invitations_real_send where recipient_id=$1 and kind='invitation' order by created_at",
+          [order[0]]
+        )
+      ).rows.map((r) => r.state)
+      assert.deepEqual(tries, ['failed', 'failed', 'sent'])
+      assert.equal(g.calls.send, 1)
+
+      // An unexpected error (the database dropping a query) waits too, and pauses only past the window.
+      broken = true
+      const flaky = {
+        connect: () => pool.connect(),
+        query: (text, values) =>
+          broken && typeof text === 'string' && text.includes("state='failed'")
+            ? Promise.reject(new Error('Connection terminated unexpectedly'))
+            : pool.query(text, values)
+      }
+      const runFlaky = () => runRealQueues({ pool: flaky, keys, config: cfg, fetcher })
+      assert.deepEqual((await runFlaky()).paused, [])
+      q = await readRealQueue({ pool, keys, campaignId: c.campaignId })
+      assert.equal(q.state, 'running')
+      assert.deepEqual(q.counts, { pending: 2, sent: 1, skipped: 0 })
+      await pastWindow()
+      assert.deepEqual(
+        (await runFlaky()).paused.map((p) => p.reason),
+        ['REAL_INTERNAL']
+      )
+      q = await readRealQueue({ pool, keys, campaignId: c.campaignId })
+      assert.deepEqual([q.state, q.pauseReason], ['paused', 'REAL_INTERNAL'])
+      assert.deepEqual(q.counts, { pending: 2, sent: 1, skipped: 0 })
+    })
+)
+
+test(
   'send queue: each group stops at its own number sent, groups take turns, skips do not count, a new start sends the rest',
   opts,
   async () =>

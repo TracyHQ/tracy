@@ -1,3 +1,14 @@
+import { researched, researchStateOf, researchStateShape } from './research-state.js'
+import { readProfileEdits, saveProfileEdits, withProfileEdits } from './profile-edits.js'
+import { sellerStatusOf } from './source-rows.js'
+import { approvalOf, markProfileChanged } from './approval.js'
+import { researchRunOf } from './research-progress.js'
+import { stepProgressOf } from './step-progress.js'
+import { OWNER_MEDIA_SOURCE, sellerReviewRoutes } from './seller-review-routes.js'
+import { ownerEditRoutes } from './owner-edit-routes.js'
+import { lockApprovedProfile } from './approval-locks.js'
+import { SOCIAL_NETWORKS, bandsOf, hiddenSetOf, withReviewKeys } from '../domain/owner-site-picks.mjs'
+import { imageInfoWith } from './media-info.js'
 import { mediaJunk } from './media-junk.js'
 import { reviewSourcesRequired } from './tripadvisor-research.js'
 import { findResearchOf, withResearch } from './find-research.js'
@@ -23,6 +34,10 @@ import { apifySearchDaySpent, newPlacesDaySpent, refundApifySearch } from './api
 import { requireHost } from './host.js'
 import { decorateFindCandidates } from './find-ranking.js'
 import { withOutreach } from './outreach.js'
+import { pagespeedPair } from './pagespeed.js'
+import { markOutreach, OUTREACH_MARKS, outreachStatesOf } from './outreach-state.js'
+import { mustHavesView } from './must-haves-view.js'
+import { urlMapProof } from '../domain/url-map.mjs'
 import { creditOf, fetchPlacePhotoName, isPhotoName, isPlaceId, placeIdOfPhotoName } from './place-photo.js'
 import {
   AgainLimitError,
@@ -34,13 +49,12 @@ import {
   resumeRequest
 } from './place-requests.js'
 import { againPartsOf, againShape, placeAgainPlan } from './research-again.js'
+import { bulkDelete, bulkDeleteAnswer, deleteOpportunityOf, deleteSelection } from './opportunity-delete.js'
 import { placeViewOf, searchRowPages } from './place-view.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
 import { cleanProfileLinks, untrackedUrl } from '../domain/social-links.mjs'
-import { readPlaceProfile } from './place-profile-read.js'
-import { validatePlaceProfile } from '../domain/place-profile.mjs'
-import { factDecisions } from '../domain/fact-assessment.mjs'
-import { briefFactsOf } from '../domain/brief-facts.mjs'
+import { savedPlaceProfileOf } from './saved-profile-read.js'
+import { factValueEdit } from './fact-edit-door.js'
 import {
   FACT_OVERRIDES_MAX,
   KEY_MESSAGE_LABEL_MAX,
@@ -52,8 +66,22 @@ import { briefTradeOf } from '../domain/trades.mjs'
 import { identityOf } from './places.js'
 import { urlKeyOf } from './site-checks.js'
 import { SOCIAL_STAT_NETWORKS } from './social-stats.js'
-import { SHOWN_SOURCES, SOCIAL_SOURCES, normalizeUrl, refsOfUrls, sourceOfUrl } from './sources.js'
-import { createLinkFields, linkRequestOf, mergeListings, saveListingSource } from './link-fields.js'
+import {
+  LISTING_SOURCE,
+  SHOWN_SOURCES,
+  SOCIAL_SOURCES,
+  normalizeUrl,
+  refsOfUrls,
+  sourceOfUrl
+} from './sources.js'
+import {
+  createLinkFields,
+  linkRequestOf,
+  mergeListings,
+  pastedLinkField,
+  pastedLinksOf,
+  saveListingSource
+} from './link-fields.js'
 import {
   activeJobOf,
   claimBulkRequest,
@@ -62,7 +90,7 @@ import {
   decodeCursor,
   finishBulkRequest,
   insertJob,
-  insertOpportunity,
+  insertNewOpportunity,
   JobActiveError,
   jobOf,
   jobsOfOpportunity,
@@ -72,6 +100,7 @@ import {
   mediaOf,
   opportunityOf,
   placeMediaOf,
+  sameAsOf,
   NAME_PICK_MAX,
   profileOf,
   releaseBulkRequest,
@@ -228,6 +257,8 @@ export function websiteOpportunitiesRoutes(deps) {
   }
 
   const builder = deps.builder ?? null
+  // The builder's share link of a ready demo (`withOutreach`): the draft hands it out so the builder can count opens.
+  const outreachOptions = { shareLinks: builder?.shareLinksOf ?? null }
   // The builder's half of a row's stage; without it the stage reads research alone (`opportunities/wo-journey.js`).
   const demoJourney = builder?.demoJourneySql ?? null
 
@@ -491,11 +522,13 @@ export function websiteOpportunitiesRoutes(deps) {
               rows.map((r) => r.id)
             )
           : new Map()
-      for (const r of rows)
-        out.set(
-          `${provider}\n${r.provider_id}`,
-          facts.get(r.id)?.built ? 'demo' : r.researched ? 'researched' : 'seen'
-        )
+      // Several cards of one place (#537 R23): the one furthest along names it.
+      const RANK = { seen: 0, researched: 1, demo: 2 }
+      for (const r of rows) {
+        const key = `${provider}\n${r.provider_id}`
+        const mark = facts.get(r.id)?.built ? 'demo' : r.researched ? 'researched' : 'seen'
+        if (!out.has(key) || RANK[mark] > RANK[out.get(key)]) out.set(key, mark)
+      }
     }
     return out
   }
@@ -880,7 +913,7 @@ export function websiteOpportunitiesRoutes(deps) {
         refusal: {
           status: 400,
           code: 'INVALID_AGAIN',
-          next: 'Research again looks only at what is due: send it without "force" or "only".'
+          next: 'Research again researches the place from scratch: send it without "force" or "only".'
         }
       }
     if (again && !(shared && identityOf(opp.provider, opp.provider_id)))
@@ -908,7 +941,9 @@ export function websiteOpportunitiesRoutes(deps) {
         keys: rt.keys,
         settings: rt.settings,
         domain: await loadDomain().catch(() => null),
-        onlyParts: limited.parts
+        onlyParts: limited.parts,
+        // An account's Research again researches from scratch (`research-again.js` AGAIN_REASON).
+        fromScratch: true
       }
     }
     if (shared && identityOf(opp.provider, opp.provider_id)) {
@@ -948,7 +983,9 @@ export function websiteOpportunitiesRoutes(deps) {
             refusal: {
               status: 409,
               code: 'NOTHING_DUE',
-              next: 'Everything about this place is up to date; nothing to look at again yet.',
+              next: error.plan.kept.some((k) => /^HTTP_(401|402|403)$/i.test(k.detail ?? ''))
+                ? 'Ask the operator to repair the source provider account and save its setup before retrying.'
+                : 'Everything about this place is up to date; nothing to look at again yet.',
               extra: { plan: againShape(error.plan) }
             }
           }
@@ -982,6 +1019,9 @@ export function websiteOpportunitiesRoutes(deps) {
   }
 
   // ── Opportunities ─────────────────────────────────────────────────────────────────────────
+  // Every press makes a new card (201), a place the account already has included (#537 R23): an approved card is
+  // final, so a change after approval is made on a new card. `opportunity.sameAs` names the account's other cards of
+  // the same place.
   app.post(BASE, async (c) => {
     const who = await caller(c, { create: true })
     if (who instanceof Response) return who
@@ -1009,13 +1049,19 @@ export function websiteOpportunitiesRoutes(deps) {
         const { status, code, next, extra } = made.refusal
         return refuse(c, status, code, next, extra)
       }
-      const { row, created } = await insertOpportunity(pool, who.accountId, made.fields)
+      const { row } = await insertNewOpportunity(pool, who.accountId, made.fields)
       await saveListingSource(pool, row.id, made.listings)
-      return json(c, { opportunity: opportunityShape(row), links: made.links }, created ? 201 : 200)
+      return json(c, { ...(await createdShape(who.accountId, row)), links: made.links }, 201)
     }
-    const { row, created } = await insertOpportunity(pool, who.accountId, fields)
-    return json(c, { opportunity: opportunityShape(row) }, created ? 201 : 200)
+    const { row } = await insertNewOpportunity(pool, who.accountId, fields)
+    return json(c, await createdShape(who.accountId, row), 201)
   })
+
+  /** A created card's answer: the card, and the account's other cards of the same place (`sameAsOf`). */
+  async function createdShape(accountId, row) {
+    const same = await sameAsOf(pool, accountId, [row], { demoJourney })
+    return { opportunity: { ...opportunityShape(row), sameAs: same.get(row.id) ?? [] } }
+  }
 
   app.get(BASE, async (c) => {
     const who = await caller(c)
@@ -1031,7 +1077,8 @@ export function websiteOpportunitiesRoutes(deps) {
           pool,
           who.accountId,
           await scoredRows(who.accountId, await listedRows(who.accountId, rows)),
-          host
+          host,
+          outreachOptions
         )
       })
     }
@@ -1051,20 +1098,34 @@ export function websiteOpportunitiesRoutes(deps) {
       pool,
       who.accountId,
       await scoredRows(who.accountId, await listedRows(who.accountId, rows)),
-      host
+      host,
+      outreachOptions
     )
     return json(c, { opportunities, counts, nextCursor, total: total ?? rows.length })
   })
 
   /** Listed rows in their answer shape, with the builder's demo columns when this deployment builds. */
   async function listedRows(accountId, rows) {
-    const demos = builder
-      ? await builder.listedDemoOf(
-          accountId,
-          rows.map((r) => r.id)
-        )
-      : new Map()
-    return rows.map((r) => listedShape(r, demos.get(r.id)))
+    const [demos, same, states] = await Promise.all([
+      builder
+        ? builder.listedDemoOf(
+            accountId,
+            rows.map((r) => r.id)
+          )
+        : new Map(),
+      sameAsOf(pool, accountId, rows, { demoJourney }),
+      outreachStatesOf(
+        pool,
+        accountId,
+        rows.map((r) => r.id)
+      )
+    ])
+    return rows.map((r) => ({
+      ...listedShape(r, demos.get(r.id)),
+      sameAs: same.get(r.id) ?? [],
+      // What the seller marked of their outreach (`outreach-state.js`); `state: null` when nothing.
+      outreachState: states.get(r.id)
+    }))
   }
 
   /**
@@ -1117,8 +1178,8 @@ export function websiteOpportunitiesRoutes(deps) {
     if (who instanceof Response) return who
     const b = await body(c)
     const action = b?.action
-    if (action !== 'resume' && action !== 'cancel')
-      return refuse(c, 400, 'INVALID_ACTION', 'Send action as "resume" or "cancel".')
+    if (action !== 'resume' && action !== 'cancel' && action !== 'delete')
+      return refuse(c, 400, 'INVALID_ACTION', 'Send action as "resume", "cancel" or "delete".')
     if (!REQUEST_ID.test(String(b?.requestId ?? '')))
       return refuse(
         c,
@@ -1126,10 +1187,16 @@ export function websiteOpportunitiesRoutes(deps) {
         'INVALID_REQUEST_ID',
         'Send a requestId of 8–100 letters, digits, ".", "_", ":" or "-".'
       )
-    const selection = bulkSelection(b)
+    // A delete names opportunities (a row without a job is deletable too); resume and cancel name jobs.
+    const selection =
+      action === 'delete' ? deleteSelection(b, { max: BULK_MAX, uuid: UUID }) : bulkSelection(b)
     if ('error' in selection) return refuse(c, selection.status, selection.error, selection.next)
     if (action === 'resume' && !(await featureOn())) return featureOff(c)
-    if (!who.accountId) return json(c, { results: [], done: 0, skipped: 0, failed: 0 })
+    if (!who.accountId)
+      return json(
+        c,
+        action === 'delete' ? bulkDeleteAnswer([]) : { results: [], done: 0, skipped: 0, failed: 0 }
+      )
     const hash = createHash('sha256')
       .update(JSON.stringify({ action, ...selection }))
       .digest('hex')
@@ -1142,6 +1209,11 @@ export function websiteOpportunitiesRoutes(deps) {
     if (await overLimitOrClosed(pool, `wo:bulk:${who.accountId}`, BULK_PER_HOUR, now())) {
       await releaseBulkRequest(pool, who.accountId, b.requestId)
       return refuse(c, 429, 'RATE_LIMITED', 'Wait for the next hour before another bulk action.')
+    }
+    if (action === 'delete') {
+      const deleted = await bulkDelete(pool, who.accountId, selection.opportunityIds, { builder })
+      await finishBulkRequest(pool, who.accountId, b.requestId, deleted)
+      return json(c, deleted)
     }
     let jobIds = selection.jobIds
     if (!jobIds) {
@@ -1266,6 +1338,57 @@ export function websiteOpportunitiesRoutes(deps) {
   })
 
   // ── The builder's doors (`opportunities-build/route.js`), fixed paths before `/:id` ──────────────
+  /** When the latest Content brief of an opportunity was made (the one a build uses), or null; null without a builder. */
+  const latestBriefAt = async (row) => (builder?.latestBriefAt ? builder.latestBriefAt(row.id) : null)
+  /** A Profile edit's answer (#537): the Profile needs review again, and a brief made before it reads stale. */
+  async function profileEdited(c, who, row) {
+    const marked = (await markProfileChanged(pool, who.accountId, row.id)) ?? row
+    return json(c, { opportunity: opportunityShape(marked) })
+  }
+  // Photos are measured with the host's picture features when it has them (`media-info.js`).
+  let imageInfo = deps.imageInfo ?? null
+  if (!imageInfo)
+    try {
+      imageInfo = imageInfoWith(deps.host)
+    } catch {
+      imageInfo = null
+    }
+  // 🔒 Approved is final (#537 R23): before every door that writes the Business facts.
+  lockApprovedProfile(app, { pool, caller, refuse, opportunityOf, featureOn, UUID, BASE })
+  sellerReviewRoutes(app, {
+    pool,
+    objects,
+    imageInfo,
+    caller,
+    refuse,
+    notFound,
+    jobActive,
+    json,
+    body,
+    domainOr,
+    featureOn,
+    featureOff,
+    linkFields,
+    opportunityShape,
+    latestBriefAt,
+    opportunityOf,
+    UUID,
+    BASE
+  })
+
+  ownerEditRoutes(app, {
+    pool,
+    caller,
+    refuse,
+    notFound,
+    json,
+    body,
+    opportunityShape,
+    opportunityOf,
+    UUID,
+    BASE
+  })
+
   builder?.routes(app, {
     caller,
     refuse,
@@ -1281,6 +1404,7 @@ export function websiteOpportunitiesRoutes(deps) {
     linkRequestOf,
     saveListingSource,
     jobShape,
+    opportunityShape,
     startResearch,
     UUID,
     REQUEST_ID
@@ -1294,55 +1418,98 @@ export function websiteOpportunitiesRoutes(deps) {
     const { rows } = await listOpportunities(pool, who.accountId, { ids: [id], demoJourney })
     if (!rows.length) return notFound(c, 'opportunity')
     const shaped = await listedRows(who.accountId, rows)
-    const [row] = await withOutreach(pool, who.accountId, await scoredRows(who.accountId, shaped), host)
+    const [row] = await withOutreach(
+      pool,
+      who.accountId,
+      await scoredRows(who.accountId, shaped),
+      host,
+      outreachOptions
+    )
     if (!row.outreach)
       return refuse(c, 409, 'DEMO_NOT_READY', 'Finish the site check, or reopen the demo before sharing it.')
-    return json(c, { outreach: row.outreach })
+    return json(c, {
+      outreach: {
+        ...row.outreach,
+        arguments: await outreachArgumentsOf(rows[0], who.accountId),
+        urlMapProof: await urlMapProofOf(rows[0], who.accountId)
+      }
+    })
   })
 
-  // The place profile (ADR 0037): the place's research as the template-independent document, nothing of the
-  // account's brief or demo. The same owner check as the Details door.
+  // Where the seller's outreach to this business stands (`outreach-state.js`): they mark it sent, replied, won or lost
+  // themselves (`none` clears every mark). It records, never sends, so the feature switch does not gate it.
+  app.put(`${BASE}/:id/outreach/state`, async (c) => {
+    const who = await caller(c)
+    if (who instanceof Response) return who
+    const id = c.req.param('id')
+    const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+    if (!opp) return notFound(c, 'opportunity')
+    const mark = (await body(c))?.state
+    if (typeof mark !== 'string' || !OUTREACH_MARKS.includes(mark))
+      return refuse(c, 400, 'INVALID_OUTREACH_STATE', `Send "state": one of ${OUTREACH_MARKS.join(', ')}.`)
+    const outreachState = await markOutreach(pool, who.accountId, opp.id, mark, now())
+    if (!outreachState) return notFound(c, 'opportunity')
+    return json(c, { outreachState })
+  })
+  /**
+   * The outreach lines of the trade must-haves (`must-haves-view.js`) for a ready demo: one per capability the old site
+   * is known to lack and the demo's brief offers. From this card's own research only; empty when it has none, and when
+   * anything it rests on cannot be read (the draft never fails for them).
+   */
+  async function outreachArgumentsOf(listed, accountId) {
+    try {
+      const opp = await opportunityOf(pool, accountId, listed.id)
+      if (!opp || !researched(await researchStateOf(pool, opp.id))) return []
+      const view = opp.place_id ? await placeViewOf(pool, opp) : null
+      const sources = view ? view.shown : await sourcesOf(pool, opp.id)
+      const profile = view ? view.profile : ((await profileOf(pool, opp.id))?.profile ?? null)
+      const demoOffers = builder?.demoOffersOf ? await builder.demoOffersOf(opp.id) : null
+      return mustHavesView({ opportunity: opp, profile, sources, demoOffers })?.arguments ?? []
+    } catch (error) {
+      console.warn(`[website-opportunities] outreach without must-have lines: ${error?.message ?? error}`)
+      return []
+    }
+  }
+
+  /**
+   * The outreach line of the old URL → new page map (`domain/url-map.mjs urlMapProof`) of the latest live demo, from the
+   * pages its build kept (builder `urlMapOf`): "12 of your 15 current pages have a matching page on the demo…". Null
+   * without a builder that maps, a match, or anything it rests on that can be read (the draft never fails for it).
+   */
+  async function urlMapProofOf(listed, accountId) {
+    try {
+      if (!builder?.urlMapOf) return null
+      const opp = await opportunityOf(pool, accountId, listed.id)
+      return opp ? urlMapProof(await builder.urlMapOf(opp.id)) : null
+    } catch (error) {
+      console.warn(
+        `[website-opportunities] outreach without the old URL map line: ${error?.message ?? error}`
+      )
+      return null
+    }
+  }
+
+  // The place profile (ADR 0037) as the owner saved it (#537 R18): the place's research as the template-independent
+  // document with the owner's changes laid on, nothing of the account's brief or demo. The same owner check as Details.
   app.get(`${BASE}/:id/place-profile`, async (c) => {
     const who = await caller(c)
     if (who instanceof Response) return who
     const id = c.req.param('id')
     const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
     if (!opp) return notFound(c, 'opportunity')
-    // 🔒 One decision per fact (#1791): the profile the latest brief revision froze, judged at the time and with the
-    // dates its assessment used and the owner's choices of today, listing exactly the facts that brief states. Before
-    // any revision (or with a host that keeps none), the place profile of the current research.
-    const frozen =
-      (await deps.host?.frozenPlaceProfileOf?.(pool, { accountId: who.accountId, opportunityId: opp.id })) ??
-      null
-    const profile = frozen?.profile ?? (await readPlaceProfile(pool, { opportunityId: opp.id }))
-    if (!profile || !validatePlaceProfile(profile).ok)
+    // Nothing of the shared place before this card's own research finished (#524).
+    const bands = bandsOf(opp.candidate?.factOverrides)
+    if (!researched(await researchStateOf(pool, opp.id)))
+      return json(c, { profile: null, decisions: [], bands })
+    // 🔒 The saved profile (#537 R18, `saved-profile-read.js`): what the next brief states, the owner's changes on it.
+    const saved = await savedPlaceProfileOf(pool, { host: deps.host, accountId: who.accountId, opp })
+    if (saved.error)
       return refuse(c, 502, 'PROFILE_UNAVAILABLE', 'The place profile could not be read. Try again later.')
-    const decided = factDecisions(profile, {
-      overrides: opp.candidate?.factOverrides ?? null,
-      origin: frozen?.origin ?? 'research',
-      at: frozen?.at ?? new Date().toISOString(),
-      seenAt: frozen?.seenAt ?? {}
-    })
-    const food = briefTradeOf({ candidate: opp.candidate ?? {}, googlePlace: null }) === 'food'
-    const stated = new Set(frozen?.factIds ?? [])
-    const decisions = briefFactsOf(profile, { food, decisions: decided })
-      .filter((f) => !frozen?.factIds || stated.has(f.id))
-      .map((f) => ({
-        factId: f.id,
-        field: f.field,
-        confidence: f.confidence,
-        onSite: f.onSite,
-        decidedBy: f.decidedBy,
-        reasons: f.reasons
-      }))
-    // While the name is held (the brief froze it off and the owner has not shown it since), the card names the neutral
-    // identity the site goes by instead (`siteNameOf`), so it never reads as the name on the site.
-    const nameOff = decisions.some((d) => d.field === 'name' && d.onSite === false)
     return json(c, {
-      profile,
-      decisions,
-      ...(frozen ? { revisionId: frozen.revisionId } : {}),
-      ...(nameOff && frozen?.siteName ? { siteName: frozen.siteName } : {})
+      ...saved,
+      // The Profile's bands (`domain/owner-site-picks.mjs BANDS`), each switched through this door's sibling `PUT /:id/facts`
+      // with `factId: band_<band>`.
+      bands
     })
   })
 
@@ -1355,40 +1522,69 @@ export function websiteOpportunitiesRoutes(deps) {
     if (!opp) return notFound(c, 'opportunity')
     // A researched place: its current snapshot with this account's overlay (`place-view.js`); else the
     // per-account rows, as before shared research.
-    const view = opp.place_id ? await placeViewOf(pool, opp) : null
+    // 🔒 What this card shows of the research is decided by ITS research (#524), never by the shared place: a place saved
+    // again, or saved by another account, reads empty until its own Research finishes.
+    const research = await researchStateOf(pool, opp.id)
+    const shown = researched(research)
+    const view = opp.place_id && shown ? await placeViewOf(pool, opp) : null
     // The research card lists every source the place's run tried (`view.shown`), Google and Tripadvisor too.
     const [[sources, profile, media, jobs], demo] = await Promise.all([
       Promise.all([
         view ? view.shown : sourcesOf(pool, opp.id),
         view
           ? { profile: view.profile, brand: view.brand }
-          : profileOf(pool, opp.id).then(
-              (held) =>
-                held && {
-                  ...held,
-                  profile: cleanProfileLinks(
-                    withPhoneDecision(
-                      withRatingDecision(
-                        withHoursDecision(
-                          withNameDecision(held.profile, { opportunity: opp, brand: held.brand }),
+          : !shown
+            ? null
+            : profileOf(pool, opp.id).then(
+                (held) =>
+                  held && {
+                    ...held,
+                    profile: withProfileEdits(
+                      cleanProfileLinks(
+                        withPhoneDecision(
+                          withRatingDecision(
+                            withHoursDecision(
+                              withNameDecision(held.profile, { opportunity: opp, brand: held.brand }),
+                              { opportunity: opp }
+                            ),
+                            { opportunity: opp }
+                          ),
                           { opportunity: opp }
-                        ),
-                        { opportunity: opp }
+                        )
                       ),
-                      { opportunity: opp }
+                      opp
                     )
-                  )
-                }
-            ),
-        view ? view.media : mediaOf(pool, opp.id),
+                  }
+              ),
+        view
+          ? view.media
+          : shown
+            ? mediaOf(pool, opp.id)
+            : // Before research, only the photos and videos the seller added (#537).
+              mediaOf(pool, opp.id).then((rows) => rows.filter((m) => m.source === OWNER_MEDIA_SOURCE)),
         jobsOfOpportunity(pool, opp.id)
       ]),
       // No builder: the demo fields are left out of the answer.
       builder ? builder.detailOf(opp, who.accountId) : {}
     ])
+    const pasted = pastedLinksOf(opp)
+    // 🔒 The saved profile (#537 R18, `saved-profile-read.js`): the place profile with the owner's changes, the one the
+    // next brief states; null before this card's research, or when it cannot be read (the place-profile door says why).
+    const saved = shown
+      ? await savedPlaceProfileOf(pool, { host: deps.host, accountId: who.accountId, opp })
+      : null
+    // The photos and videos the owner keeps off the site (`mediaPicks`, #537).
+    const mediaHidden = hiddenSetOf(opp.candidate?.mediaPicks)
+    // The account's other cards of the same place, newest first (#537 R23): "also added on …".
+    const sameAs = (await sameAsOf(pool, who.accountId, [opp], { demoJourney })).get(opp.id) ?? []
     return json(c, {
-      opportunity: opportunityShape(opp),
+      opportunity: { ...opportunityShape(opp), sameAs },
+      research,
       demo: demo.demo,
+      // The current site's mobile PageSpeed (`profile.pageSpeed`) beside the demo's own (`demo.pagespeed`), as scores.
+      pagespeed: pagespeedPair(profile?.profile?.pageSpeed ?? null, demo.demo?.pagespeed ?? null),
+      // What the seller marked of their outreach (`outreach-state.js`); `state: null` when nothing.
+      outreachState: (await outreachStatesOf(pool, who.accountId, [opp.id])).get(opp.id),
       place: view
         ? { id: opp.place_id, snapshotId: view.snapshot.id, publishedAt: view.snapshot.published_at }
         : null,
@@ -1398,20 +1594,28 @@ export function websiteOpportunitiesRoutes(deps) {
         source: s.source,
         // A social page's address as Tracy shows it, without share tracking (`social-links.mjs`).
         ref: SOCIAL_SOURCES.includes(s.source) ? untrackedUrl(s.ref, s.source) : s.ref,
-        status: s.status,
-        reason: s.reason,
-        coverage: s.coverage,
-        resumable: Boolean(s.cursor),
+        // A server key problem is the operator's (/ops/wo), never the seller's row (`source-rows.js`).
+        // Before this card's research every row reads not collected yet (#537): no status, coverage or collected time.
+        ...sellerStatusOf(s, { researched: shown }),
+        coverage: shown ? s.coverage : null,
+        resumable: shown && Boolean(s.cursor),
         updatedAt: s.updated_at,
+        // When the data was collected (the shared snapshot's time), not when this card's job ended (#524).
+        collectedAt: shown ? collectedAtOf(s) : null,
         ...(view ? { shared: s.shared === true } : {}),
         // The two search rows: the pages found, with their verdicts (new optional fields).
-        ...searchRowPages(s)
+        ...searchRowPages(s),
+        // A source the person's own pasted link feeds: that link as they pasted it, without share tracking (an old
+        // record kept it; `link-fields.js pastedLinksOf`).
+        // Only pasted links make a listing row, so one saved before `pastedLinks` gives its own first page.
+        ...pastedLinkField(pasted.get(s.source) ?? (s.source === LISTING_SOURCE ? s.ref : null))
       })),
       // With the trade the brief speaks in (`trades.mjs briefTradeOf`), so Details words a food business as today and any
       // other business neutrally (#1780).
+      // Each review with its `key` and `ownerHidden` (`owner-site-picks.mjs withReviewKeys`, #537).
       profile: profile
         ? {
-            ...profile.profile,
+            ...withReviewKeys(profile.profile, opp.candidate),
             brand: profile.brand ?? null,
             trade: briefTradeOf({
               candidate: opp.candidate ?? {},
@@ -1419,6 +1623,19 @@ export function websiteOpportunitiesRoutes(deps) {
               menuItems: profile.profile?.menuItems
             })
           }
+        : null,
+      // The saved profile `{profile, decisions, revisionId?, siteName?}` (`GET /:id/place-profile` answers the same). The
+      // `profile` above is the research as collected (Research details), kept for the readers that still draw it.
+      placeProfile: saved && !saved.error ? saved : null,
+      // What the trade's customers expect on the current website and what it lacks (`must-haves-view.js`), from this
+      // card's own research only: null before it, for a trade with no must-haves, or a place with no website of its own.
+      mustHaves: shown
+        ? mustHavesView({
+            opportunity: opp,
+            profile: profile?.profile ?? null,
+            sources,
+            demoOffers: demo.demoOffers ?? null
+          })
         : null,
       media: media.map((m) => ({
         id: m.id,
@@ -1436,16 +1653,58 @@ export function websiteOpportunitiesRoutes(deps) {
         ...(['tripadvisor', 'google-maps'].includes(m.source)
           ? { postId: m.post_id, credit: m.credit ?? null }
           : {}),
-        ...(m.origin ? { origin: m.origin } : {})
+        ...(m.origin ? { origin: m.origin } : {}),
+        // The owner kept it off the site (`PUT /:id/media/:mediaId/visibility`): still listed, in no brief slot.
+        ownerHidden: mediaHidden.has(m.id)
       })),
+      // The Profile's bands as the owner switched them (`factOverrides.band_<band>`), and the networks a social link
+      // the owner types may name (`PUT /:id/socials`).
+      bands: bandsOf(opp.candidate?.factOverrides),
+      socialNetworks: SOCIAL_NETWORKS,
+      // The seller's approvals (#537, `approval.js`): what the Progress card and the gates read.
+      approval: approvalOf({ opportunity: opp, research, latestBriefAt: await latestBriefAt(opp) }),
+      // The sub steps of the step that runs now (#537, `step-progress.js`), from recorded data only.
+      stepProgress: stepProgressOf({
+        research,
+        researchRun: research.state === 'running' ? await researchRunOf(pool, opp.id) : null,
+        briefJob: demo.briefJob,
+        demoAction: demo.demoAction
+      }),
       jobs: jobs.map(jobShape),
       progress: demo.progress,
       revisions: demo.revisions,
       brief: demo.brief,
+      briefJob: demo.briefJob,
       demoAction: demo.demoAction,
       usage: demo.usage,
       builds: demo.builds
     })
+  })
+
+  // Delete one opportunity (`opportunity-delete.js`): its live job cancelled, its live demo sites torn down, then the
+  // row. Like cancel, it starts no work, so the feature switch does not gate it.
+  app.delete(`${BASE}/:id`, async (c) => {
+    const who = await caller(c)
+    if (who instanceof Response) return who
+    const id = c.req.param('id')
+    if (!who.accountId || !UUID.test(id)) return notFound(c, 'opportunity')
+    const deleted = await deleteOpportunityOf(pool, who.accountId, id, { builder })
+    if (deleted.ok)
+      return json(c, { ok: true, deleted: { id: deleted.id, siteRemoved: deleted.siteRemoved } })
+    if (deleted.code === 'NOT_FOUND') return notFound(c, 'opportunity')
+    if (deleted.code === 'DEMO_BUILD_RUNNING')
+      return refuse(
+        c,
+        409,
+        'DEMO_BUILD_RUNNING',
+        'A demo is still being built: wait for it to finish, then delete.'
+      )
+    return refuse(
+      c,
+      409,
+      'DEMO_TEARDOWN_FAILED',
+      'Its demo site could not be removed now: wait a moment and delete it again.'
+    )
   })
 
   // The name on the site, as the person checked it on the Profile card: final for every later brief and build.
@@ -1466,7 +1725,28 @@ export function websiteOpportunitiesRoutes(deps) {
       )
     const row = await saveNamePick(pool, who.accountId, opp.id, name)
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
+  })
+
+  // The seller's own edits of the Profile's text facts (#524): kept on this card, laid over the shared research on every
+  // read and in every later brief. A null value removes that edit.
+  app.put(`${BASE}/:id/profile`, async (c) => {
+    const who = await caller(c)
+    if (who instanceof Response) return who
+    const id = c.req.param('id')
+    const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+    if (!opp) return notFound(c, 'opportunity')
+    const read = readProfileEdits(await body(c))
+    if ('error' in read)
+      return refuse(
+        c,
+        400,
+        'INVALID_EDITS',
+        'Send "edits" with phone, address, email or bio, each a non-empty text within its length, or null to undo it.'
+      )
+    const row = await saveProfileEdits(pool, who.accountId, opp.id, read.edits)
+    if (!row) return notFound(c, 'opportunity')
+    return profileEdited(c, who, row)
   })
 
   // The opening hours on the site, as the person checked them on the Profile card: keep the hours waiting for a
@@ -1491,7 +1771,7 @@ export function websiteOpportunitiesRoutes(deps) {
       )
     const row = await saveHoursPick(pool, who.accountId, opp.id, { choice, ...(hours ? { hours } : {}) })
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // Google's rating on the site, as the person chose on the Profile card: show it (a rating from few reviews is left
@@ -1508,7 +1788,7 @@ export function websiteOpportunitiesRoutes(deps) {
       return refuse(c, 400, 'INVALID_CHOICE', 'Send "choice" as "show" or "leave".')
     const row = await saveRatingPick(pool, who.accountId, opp.id, { choice })
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // The reading on the Profile card (#1780): Remove (or restore) an item the site would show, and Show on the site (or
@@ -1526,18 +1806,26 @@ export function websiteOpportunitiesRoutes(deps) {
       return refuse(c, 400, 'INVALID_CHOICE', 'Send "choice" as "remove", "restore", "show" or "hide".')
     const row = await saveReadingPick(pool, who.accountId, opp.id, b.item, b.choice)
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // One fact on or off the site, as the owner chose on the Profile card (#1791): `onSite` true or false wins over the
   // rule for every later brief, build and site check, Research again included; null lets the rule decide again.
+  // With `value` (#537 R18), the value the site states for that fact (`fact-edit-door.js`), `onSite` beside it optional.
   app.put(`${BASE}/:id/facts`, async (c) => {
     const who = await caller(c)
     if (who instanceof Response) return who
     const id = c.req.param('id')
     const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
     if (!opp) return notFound(c, 'opportunity')
-    const read = readFactOverride(await body(c))
+    const sent = await body(c)
+    if (sent && typeof sent === 'object' && !Array.isArray(sent) && 'value' in sent)
+      return factValueEdit(
+        c,
+        { pool, host: deps.host, refuse, notFound, json, opportunityShape },
+        { who, opp, body: sent }
+      )
+    const read = readFactOverride(sent)
     if (read.error === 'INVALID_FACT')
       return refuse(c, 400, 'INVALID_FACT', 'Send "factId" as the id of a fact of the place profile.')
     if (read.error) return refuse(c, 400, 'INVALID_ON_SITE', 'Send "onSite" as true, false or null.')
@@ -1554,7 +1842,7 @@ export function websiteOpportunitiesRoutes(deps) {
       )
     }
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // The key messages as the owner edited them on the Profile card (#1791). A save MERGES into the stored picks under a
@@ -1577,7 +1865,7 @@ export function websiteOpportunitiesRoutes(deps) {
       )
     const row = await saveKeyMessagePicks(pool, who.accountId, opp.id, picks)
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   /** Whether a run here can collect this Google or Tripadvisor part of the place: a Retry that cannot is refused. */
@@ -1646,7 +1934,14 @@ export function websiteOpportunitiesRoutes(deps) {
     const { keys, settings } = await runtime()
     const placeId = shared && identityOf(opp.provider, opp.provider_id) ? opp.place_id : null
     const plan = placeId
-      ? await placeAgainPlan(pool, placeId, { now: now(), keys, settings, domain, onlyParts: limited.parts })
+      ? await placeAgainPlan(pool, placeId, {
+          now: now(),
+          keys,
+          settings,
+          domain,
+          onlyParts: limited.parts,
+          fromScratch: true
+        })
       : { run: [], kept: [], ceilingCents: 0, researched: false }
     return json(c, {
       plan: againShape(plan),
@@ -1925,11 +2220,27 @@ export function listQuery(raw) {
  * A listed row's shape. `d` is the builder's demo columns of the row (`listedDemoOf`); an undefined
  * field is left out of the JSON, so a deployment without a builder answers no demo columns.
  */
+/**
+ * When a source row's data was collected, or null when it holds none: a shared row's `updated_at` is the snapshot's
+ * collection time (`places.js asSourceRow`), an own row's the time its collection ended.
+ */
+function collectedAtOf(s) {
+  const at = ['complete', 'partial'].includes(s.status) ? s.updated_at : null
+  return at ? new Date(at).toISOString() : null
+}
+
 function listedShape(r, d) {
   return {
     ...opportunityShape(r),
     job: r.job ? jobShape(r.job) : null,
+    // This card's own research (`research-state.js`), never the shared place's.
+    research: researchStateShape(r),
     latestRevision: d?.latestRevision,
+    approval: approvalOf({
+      opportunity: r,
+      research: researchStateShape(r),
+      latestBriefAt: d?.latestBriefAt ?? d?.latestRevision?.createdAt ?? null
+    }),
     sites: d?.sites,
     stage: r.stage,
     attention: r.attention,
@@ -1949,6 +2260,8 @@ function opportunityShape(r) {
     // As read today, whenever it was saved (`candidate-as-read.mjs`).
     candidate: candidateAsRead(r.candidate),
     status: r.status,
+    // The site label the person chose for its demo, or null: a build then names the site itself.
+    siteLabel: r.site_label ?? null,
     createdAt: r.created_at,
     updatedAt: r.updated_at
   }

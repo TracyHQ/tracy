@@ -11,7 +11,8 @@ import { sealSecret } from '../src/lib/secret-box.js'
 import { mintSession } from '../src/lib/session.js'
 import { saveWoOpsSettings } from 'website-opportunities/src/wo-settings.js'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
-import { chooseTemplate } from '../src/opportunities-build/revisions.js'
+import { chooseTemplate, revisionForAction } from '../src/opportunities-build/revisions.js'
+import { qualityHash } from '../src/opportunities-build/quality-dossier.js'
 import { settleEndedBuilds } from '../src/opportunities-build/builds.js'
 import { fileDb } from './_db.mjs'
 
@@ -55,7 +56,14 @@ const CARDS = [
 
 const PUBLIC = async () => [{ address: '93.184.216.34', family: 4 }]
 
-async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, domainOverrides = {} } = {}) {
+async function world({
+  cards = CARDS,
+  resolve = PUBLIC,
+  objects,
+  extraEnv = {},
+  domainOverrides = {},
+  extraDeps = {}
+} = {}) {
   /** Every URL the app's own fetch was asked for (providers, crawls): the test world has no network. */
   const fetched = []
   const { pool } = db
@@ -163,6 +171,7 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
     websiteOpportunitiesDomain: async () => domain,
     websiteOpportunitiesRequest: request,
     ...(objects ? { websiteOpportunitiesObjects: objects } : {}),
+    ...extraDeps,
     websiteOpportunitiesDemoQa: async (site, payload) => {
       qaAsked.push({ site, payload })
       if (state.qaHold) await state.qaHold
@@ -200,6 +209,38 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
   // two steps (a brief "with" a template, then Build): the template asked for is remembered per opportunity and
   // the build goes through the real door, `POST /:id/demo/build`, with that choice as the selection.
   const asked = new Map()
+  async function briefThroughJob(email, oppId, path, body, extra) {
+    await pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state)
+       select o.account_id, o.id, 'research', 'seed-research-' || o.id, 'completed' from wo_opportunity o
+       where o.id = $1 and not exists (select 1 from wo_job j where j.opportunity_id = o.id and j.state = 'completed')`,
+      [oppId]
+    )
+    // These cards stand for a Profile and a brief the seller approved (#537); the gates have their own tests
+    // (`wo-approval.test.mjs`).
+    await pool.query('update wo_opportunity set profile_approved_at = now() where id = $1', [oppId])
+    const pressed = await rawCall(email, 'POST', path, body, extra)
+    if (pressed.status !== 202) return pressed
+    for (let i = 0; i < 500; i += 1) {
+      const polled = await rawCall(
+        email,
+        'GET',
+        `${path.replace(/\/revisions$/, '')}/brief-jobs/${pressed.body.job.id}`
+      )
+      const job = polled.body?.job
+      if (job?.state === 'done') {
+        await pool.query(
+          "update wo_opportunity set brief_approved_at = now() + interval '1 second' where id = $1",
+          [oppId]
+        )
+        return { status: job.reused ? 200 : 201, body: { revision: polled.body.revision } }
+      }
+      if (job?.state === 'failed')
+        return { status: 422, body: { code: job.error?.code, errors: job.error?.errors } }
+      await new Promise((r) => setTimeout(r, 10))
+    }
+    throw new Error('the brief job never settled')
+  }
   const call = async (email, method, path, body, extra = {}) => {
     const brief =
       method === 'POST' && path.match(/^\/api\/website-opportunities\/([0-9a-f-]{36})\/revisions$/)
@@ -208,8 +249,19 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
       const { template: _template, ...rest } = body
       body = rest
     }
+    // The Content brief is a background job (#524): this file's opportunities stand for researched cards, and a press
+    // is followed through its poll door to the answer the old synchronous door gave (201 new, 200 the same, 422).
+    if (brief) return briefThroughJob(email, brief[1], path, body, extra)
     const build = method === 'POST' && path.match(/^\/api\/website-opportunities\/revisions\/([^/]+)\/build$/)
     if (build) return buildThroughAction(email, build[1], body ?? {}, extra)
+    // A build is made from an approved brief (#537): a card of this file that has none gets one, approved, first.
+    const single =
+      method === 'POST' && path.match(/^\/api\/website-opportunities\/([0-9a-f-]{36})\/demo\/build$/)
+    // An agent build checks its research first (its own test seeds none), so it is left as sent.
+    if (single && !body?.retryOf && body?.fromFind !== true && body?.workflow !== 'agent-demo/1')
+      await approvedBrief(email, single[1])
+    if (method === 'POST' && path === `${BASE}/demo/builds/bulk` && Array.isArray(body?.ids))
+      for (const id of body.ids) if (/^[0-9a-f-]{36}$/.test(String(id))) await approvedBrief(email, id)
     // `manual: true` (test-only): the demo action stops at the provisioned site, as a manual build does.
     if (method === 'POST' && body?.manual === true && path.endsWith('/demo/build')) {
       const { manual: _manual, ...rest } = body
@@ -221,6 +273,24 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
       return answer
     }
     return rawCall(email, method, path, body, extra)
+  }
+  async function approvedBrief(email, oppId) {
+    const held = (await pool.query('select 1 from wo_revision where opportunity_id = $1 limit 1', [oppId]))
+      .rowCount
+    const mine = (
+      await pool.query(
+        'select 1 from wo_opportunity o join account a on a.id = o.account_id where o.id = $1 and a.email = $2',
+        [oppId, email]
+      )
+    ).rowCount
+    if (!mine) return
+    if (!held) await briefThroughJob(email, oppId, `${BASE}/${oppId}/revisions`, {}, {})
+    // The Profile approved before the brief was made (a later approval would read the brief stale).
+    await pool.query(
+      `update wo_opportunity set profile_approved_at = coalesce(profile_approved_at, to_timestamp(0)),
+         brief_approved_at = now() + interval '1 second' where id = $1`,
+      [oppId]
+    )
   }
   async function buildThroughAction(email, revisionId, body, extra) {
     const rev = /^[0-9a-f-]{36}$/.test(revisionId)
@@ -481,15 +551,63 @@ test('search answers deduplicated candidates; a radius over 50 km is refused', o
   assert.equal(wide.body.code, 'INVALID_SEARCH')
 })
 
-test('create: the same candidate twice is one opportunity (201 then 200)', opts, async () => {
-  const { call } = await world()
-  const first = await opportunity(call)
-  const again = await call(A, 'POST', BASE, {
-    candidate: { provider: 'osm', providerId: 'node/1', name: 'Pho Ba', socials: {} }
-  })
-  assert.equal(again.status, 200)
-  assert.equal(again.body.opportunity.id, first.id)
-})
+test(
+  'create: the same place again is a new card (201 each); list and detail name the others in sameAs',
+  opts,
+  async () => {
+    const { call } = await world()
+    const first = await opportunity(call)
+    assert.deepEqual(first.sameAs ?? [], [])
+    const again = await call(A, 'POST', BASE, {
+      candidate: { provider: 'osm', providerId: 'node/1', name: 'Pho Ba', socials: {} }
+    })
+    assert.equal(again.status, 201, JSON.stringify(again.body))
+    const second = again.body.opportunity
+    assert.notEqual(second.id, first.id)
+    assert.deepEqual(
+      second.sameAs.map((o) => o.id),
+      [first.id]
+    )
+    assert.equal(second.sameAs[0].stage, 'research')
+    assert.ok(Date.parse(second.sameAs[0].createdAt))
+    const third = (
+      await call(A, 'POST', BASE, {
+        candidate: { provider: 'osm', providerId: 'node/1', name: 'Pho Ba', socials: {} }
+      })
+    ).body.opportunity
+    // The new card starts fresh: no research of its own, nothing approved.
+    const detail = (await call(A, 'GET', `${BASE}/${third.id}`)).body
+    assert.equal(detail.research.state, 'not_started')
+    assert.equal(detail.approval.profile, 'none')
+    assert.deepEqual(
+      detail.opportunity.sameAs.map((o) => o.id),
+      [second.id, first.id],
+      'newest first'
+    )
+    for (const shape of [undefined, '?limit=10']) {
+      const listed = (await call(A, 'GET', `${BASE}${shape ?? ''}`)).body.opportunities
+      const ofPlace = listed.filter((o) => o.providerId === 'node/1')
+      assert.equal(ofPlace.length, 3)
+      const firstRow = ofPlace.find((o) => o.id === first.id)
+      assert.deepEqual(
+        firstRow.sameAs.map((o) => o.id),
+        [third.id, second.id]
+      )
+      assert.deepEqual(firstRow.sameAs[0], {
+        id: third.id,
+        createdAt: firstRow.sameAs[0].createdAt,
+        stage: 'research'
+      })
+    }
+    // Another account's card of the same place is never named.
+    const other = (
+      await call(B, 'POST', BASE, {
+        candidate: { provider: 'osm', providerId: 'node/1', name: 'Pho Ba', socials: {} }
+      })
+    ).body.opportunity
+    assert.deepEqual(other.sameAs, [])
+  }
+)
 
 test('create from a URL: a private, loopback or rebinding address is refused (SSRF)', opts, async () => {
   const privateDns = async () => [{ address: '10.0.0.5', family: 4 }]
@@ -649,6 +767,237 @@ test(
   }
 )
 
+test(
+  'build from a brief page (#553): the shown brief is built while current, refused once stale or of another place',
+  opts,
+  async () => {
+    const w = await world()
+    const { pool, call, runBuild } = w
+    const opp = await opportunity(call)
+    const rev = (await call(A, 'POST', `${BASE}/${opp.id}/revisions`, {})).body.revision
+    const used = async () =>
+      (await pool.query("select coalesce(sum(used), 0)::int n from wo_demo_usage where kind = 'demo'"))
+        .rows[0].n
+    const actions = async () => (await pool.query('select count(*)::int n from wo_demo_action')).rows[0].n
+    // Another place's brief: refused, nothing accepted or counted.
+    const other = await call(A, 'POST', BASE, {
+      candidate: {
+        provider: 'osm',
+        providerId: 'node/2',
+        name: 'Bun Cha',
+        lat: 15.88,
+        lon: 108.33,
+        socials: {}
+      }
+    })
+    const otherRev = (await call(A, 'POST', `${BASE}/${other.body.opportunity.id}/revisions`, {})).body
+      .revision
+    const foreign = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-bind-0001',
+      selection: { cms: 'joomla' },
+      revisionId: otherRev.id
+    })
+    assert.equal(foreign.status, 404, JSON.stringify(foreign.body))
+    assert.equal(await actions(), 0)
+    assert.equal(await used(), 0)
+    // The shown brief is current: accepted and built from exactly it.
+    const built = await runBuild(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-bind-0002',
+      selection: { cms: 'joomla' },
+      revisionId: rev.id,
+      manual: true
+    })
+    assert.equal(built.status, 202, JSON.stringify(built.body))
+    assert.equal(built.body.actions[0].revisionId, rev.id)
+    const row = (await pool.query("select revision_id from wo_build where request_id = 'brief-bind-0002'"))
+      .rows[0]
+    assert.equal(row.revision_id, rev.id)
+    assert.equal(await used(), 1)
+    // The research or the brief rules move on: the shown brief is stale, so the press is refused before the charge.
+    w.domain.BRIEF_RULES_VERSION += 1
+    const stale = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-bind-0003',
+      selection: { cms: 'wordpress' },
+      revisionId: rev.id
+    })
+    assert.equal(stale.status, 409, JSON.stringify(stale.body))
+    assert.equal(stale.body.code, 'BRIEF_STALE')
+    assert.equal(stale.body.revisionId, rev.id)
+    assert.match(stale.body.next, /refresh the brief/)
+    assert.equal(await actions(), 1)
+    assert.equal(await used(), 1)
+    // Without a revisionId (the list row) the same press still builds from the latest research.
+    const latest = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-bind-0004',
+      selection: { cms: 'wordpress' }
+    })
+    assert.equal(latest.status, 202, JSON.stringify(latest.body))
+    assert.notEqual(latest.body.actions[0].revisionId, rev.id)
+    // A malformed id, or one sent with a Retry, is refused.
+    const bad = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-bind-0005',
+      selection: { cms: 'wordpress' },
+      revisionId: 'not-a-uuid'
+    })
+    assert.equal(bad.status, 400)
+    assert.equal(bad.body.code, 'INVALID_REVISION_ID')
+  }
+)
+
+test(
+  'build from a brief page in quality mode (#553): the brief-page press is accepted and bound; a quality-v1 press cannot bind',
+  opts,
+  async () => {
+    const { pool, call } = await world({
+      extraDeps: {
+        // The quality runner is never ticked here: only acceptance is under test.
+        websiteOpportunitiesQuality: {
+          available: async () => true,
+          accountIds: ['00000000-0000-4000-8000-000000000000'],
+          editorialFor: () => assert.fail('not run'),
+          fill: () => assert.fail('not run'),
+          review: () => assert.fail('not run')
+        }
+      }
+    })
+    const opp = await opportunity(call)
+    // The brief is made before the account turns quality on (the Refresh door refuses in quality mode).
+    const rev = (await call(A, 'POST', `${BASE}/${opp.id}/revisions`, {})).body.revision
+    const { account_id: accountId } = (
+      await pool.query('select account_id from wo_opportunity where id = $1', [opp.id])
+    ).rows[0]
+    await pool.query(
+      `insert into wo_preference (account_id, cms, quality_mode) values ($1, 'joomla', 'apply')
+       on conflict (account_id) do update set quality_mode = 'apply'`,
+      [accountId]
+    )
+    await pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'r-done', 'completed')`,
+      [accountId, opp.id]
+    )
+    // A quality-v1 build writes its own brief: a revisionId cannot bind it, and says so (API callers only).
+    const quality = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-quality-0001',
+      selection: { cms: 'joomla' },
+      revisionId: rev.id
+    })
+    assert.equal(quality.status, 409, JSON.stringify(quality.body))
+    assert.equal(quality.body.code, 'BRIEF_NOT_BINDABLE')
+    // What the brief page sends (`api.ts`): the agent workflow, accepted under the legacy protocol in every mode,
+    // so the shown brief binds.
+    const page = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-quality-0002',
+      workflow: 'agent-demo/1',
+      chatMode: 'client-send/1',
+      selection: { cms: 'joomla', design: 'ja-restaurant', quickstart: 'ja-restaurant/j6' },
+      revisionId: rev.id
+    })
+    assert.equal(page.status, 202, JSON.stringify(page.body))
+    const action = (await pool.query("select * from wo_demo_action where request_id = 'brief-quality-0002'"))
+      .rows[0]
+    assert.equal(action.revision_id, rev.id)
+    assert.equal(action.protocol, 'legacy')
+  }
+)
+
+test(
+  'build from a brief page (#553): a brief the quality workflow wrote binds while its research is current',
+  opts,
+  async () => {
+    const w = await world()
+    const { pool, call } = w
+    const opp = await opportunity(call)
+    const { account_id: accountId } = (
+      await pool.query('select account_id from wo_opportunity where id = $1', [opp.id])
+    ).rows[0]
+    await pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'r-done', 'completed')`,
+      [accountId, opp.id]
+    )
+    // Written as the quality runner writes it (`revisionForAction` with an editorial preparer): no research hash.
+    const made = await revisionForAction(pool, {
+      action: {
+        id: crypto.randomUUID(),
+        account_id: accountId,
+        opportunity_id: opp.id,
+        revision_id: crypto.randomUUID(),
+        build_request_id: crypto.randomUUID(),
+        selection: null
+      },
+      domain: w.domain,
+      templates: async () => CARDS,
+      ops: { defaultCms: 'joomla' },
+      editorial: async (input) => ({
+        frozenHash: qualityHash(input),
+        reference: { mode: 'apply', state: 'ready' },
+        markdown: '# Editorial plan'
+      })
+    })
+    const rev = made.revision
+    assert.equal(rev.research_hash, null, 'a quality brief is never shared by hash')
+    // The seller approved the Profile and this brief (#537): the approval gate is not what is under test here.
+    const press = async (requestId) => {
+      await pool.query(
+        `update wo_opportunity set profile_approved_at = to_timestamp(0),
+           brief_approved_at = now() + interval '1 second' where id = $1`,
+        [opp.id]
+      )
+      return call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+        requestId,
+        workflow: 'agent-demo/1',
+        chatMode: 'client-send/1',
+        selection: { cms: 'joomla', design: 'ja-restaurant', quickstart: 'ja-restaurant/j6' },
+        revisionId: rev.id
+      })
+    }
+    // The Details page reads it as current too (its brief status feeds the brief page's note).
+    assert.equal((await call(A, 'GET', `${BASE}/${opp.id}`)).body.brief.current, true)
+    const current = await press('brief-qwrite-0001')
+    assert.equal(current.status, 202, JSON.stringify(current.body))
+    assert.equal(current.body.actions[0].revisionId, rev.id)
+    // The research moves on (the place's name changed): the quality brief no longer reads it.
+    await pool.query("update wo_demo_action set status = 'completed' where opportunity_id = $1", [opp.id])
+    await pool.query("update wo_opportunity set name = 'Pho Ba Moi' where id = $1", [opp.id])
+    const stale = await press('brief-qwrite-0002')
+    assert.equal(stale.status, 409, JSON.stringify(stale.body))
+    assert.equal(stale.body.code, 'BRIEF_STALE')
+    assert.equal((await call(A, 'GET', `${BASE}/${opp.id}`)).body.brief.current, false)
+  }
+)
+
+test(
+  'build from a brief page (#553): a seller-edited brief of the current research is built exactly (#524)',
+  opts,
+  async () => {
+    const { pool, call } = await world()
+    const opp = await opportunity(call)
+    const made = (await call(A, 'POST', `${BASE}/${opp.id}/revisions`, {})).body.revision
+    // This file's brief press approves the brief; an approved brief is locked, so it is edited before approval.
+    await pool.query('update wo_opportunity set brief_approved_at = null where id = $1', [opp.id])
+    const edited = await call(A, 'POST', `${BASE}/${opp.id}/revisions/${made.id}/edits`, {
+      edits: [{ path: 'business.name', value: 'Pho Ba Hoi An' }]
+    })
+    assert.equal(edited.status, 201, JSON.stringify(edited.body))
+    const rev = edited.body.revision
+    const stored = (await pool.query('select research_hash from wo_revision where id = $1', [rev.id])).rows[0]
+    assert.equal(stored.research_hash, null, 'an edit holds the hash it was made from, not its own')
+    const detail = await call(A, 'GET', `${BASE}/${opp.id}`)
+    assert.equal(detail.body.brief.id, rev.id)
+    assert.equal(detail.body.brief.current, true)
+    const built = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-edit-0001',
+      selection: { cms: 'joomla' },
+      revisionId: rev.id
+    })
+    assert.equal(built.status, 202, JSON.stringify(built.body))
+    assert.equal(built.body.actions[0].revisionId, rev.id)
+    const action = (
+      await pool.query("select revision_id from wo_demo_action where request_id = 'brief-edit-0001'")
+    ).rows[0]
+    assert.equal(action.revision_id, rev.id)
+  }
+)
+
 test('build: acceptance queues the action and does no work; the same request replays it', opts, async () => {
   const { pool, call, forwarded, fetched } = await world()
   const opp = await opportunity(call)
@@ -668,9 +1017,10 @@ test('build: acceptance queues the action and does no work; the same request rep
   assert.equal(action.lease_until, null)
   assert.equal(action.selection.cms, 'joomla')
   assert.equal(action.selection.design, 'ja-restaurant')
-  // The worker makes the brief and the build; acceptance makes neither.
+  // The worker makes the build; acceptance makes no build and no brief of its own (the one revision is the approved
+  // brief the build is made from, #537).
   assert.equal((await pool.query('select count(*)::int n from wo_build')).rows[0].n, 0)
-  assert.equal((await pool.query('select count(*)::int n from wo_revision')).rows[0].n, 0)
+  assert.equal((await pool.query('select count(*)::int n from wo_revision')).rows[0].n, 1)
   const replay = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, body)
   assert.equal(replay.status, 202)
   assert.deepEqual(replay.body.actions, accepted.body.actions)
@@ -714,6 +1064,43 @@ test(
     const read = await call(A, 'GET', `${BASE}/builds/${first.body.build.id}`)
     assert.equal(read.status, 200)
     assert.equal(read.body.build.siteKey, 'phoba.localhost')
+  }
+)
+
+test(
+  'build from a brief page (#553): a bound build that fails before any work gives its daily build back (#566)',
+  opts,
+  async () => {
+    const { app, pool, call, state } = await world()
+    const opp = await opportunity(call)
+    const rev = (await call(A, 'POST', `${BASE}/${opp.id}/revisions`, {})).body.revision
+    const used = async () =>
+      (await pool.query("select coalesce(sum(used), 0)::int n from wo_demo_usage where kind = 'demo'"))
+        .rows[0].n
+    const accepted = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-refund-0001',
+      selection: { cms: 'joomla', design: 'ja-restaurant', quickstart: 'ja-restaurant/j6' },
+      revisionId: rev.id
+    })
+    assert.equal(accepted.status, 202, JSON.stringify(accepted.body))
+    assert.equal(await used(), 1)
+    // The template is withdrawn before the worker runs: the bound brief is reused as it is, so no labelling or logo
+    // research ran for this action, and the failure is one that gives the build back.
+    state.cards = CARDS.filter((c) => c.id !== 'ja-restaurant')
+    await pool.query('update wo_demo_action set next_at = null')
+    await app.demoRunner.tick()
+    await app.demoRunner.drain()
+    const action = (
+      await pool.query(
+        "select status, error, revision_id, work_started_at, usage_refunded_at from wo_demo_action where request_id = 'brief-refund-0001'"
+      )
+    ).rows[0]
+    assert.equal(action.status, 'failed')
+    assert.equal(action.error, 'TEMPLATE_UNAVAILABLE')
+    assert.equal(action.revision_id, rev.id, 'the bound brief is the one the action held')
+    assert.equal(action.work_started_at, null, 'no paid call ran for a bound brief')
+    assert.notEqual(action.usage_refunded_at, null)
+    assert.equal(await used(), 0)
   }
 )
 
@@ -807,6 +1194,66 @@ test(
       'pho-ba-2',
       'a blank label is no label; the site row is not written by this fake'
     )
+  }
+)
+
+test(
+  'site name on Tracy: checked as typed, saved on the opportunity, and used by a build sent without a label',
+  opts,
+  async () => {
+    const { pool, call, runBuild, forwarded } = await world()
+    const opp = await opportunity(call)
+    const read = await call(A, 'GET', `${BASE}/${opp.id}/site-label`)
+    assert.equal(read.status, 200, JSON.stringify(read.body))
+    assert.deepEqual(read.body, {
+      label: null,
+      suggested: 'pho-ba',
+      prefix: '',
+      domain: 'localhost',
+      min: 6,
+      max: 30
+    })
+    await pool.query(
+      `insert into site (site_key, label, host, platform) values ('taken-name.localhost', 'taken-name', 'local', 'joomla')`
+    )
+    const check = async (label) =>
+      (await call(A, 'GET', `${BASE}/${opp.id}/site-label/check?label=${encodeURIComponent(label)}`)).body
+    assert.deepEqual(await check('Pho Ba'), { label: 'Pho Ba', available: false, reason: 'shape' })
+    assert.deepEqual(await check('webmail'), { label: 'webmail', available: false, reason: 'reserved' })
+    assert.deepEqual(await check('taken-name'), { label: 'taken-name', available: false, reason: 'taken' })
+    assert.deepEqual(await check('my-coach'), { label: 'my-coach', available: true })
+
+    const bad = await call(A, 'PUT', `${BASE}/${opp.id}/site-label`, { label: 'Pho Ba' })
+    assert.equal(bad.status, 400)
+    assert.equal(bad.body.code, 'INVALID_LABEL')
+    const taken = await call(A, 'PUT', `${BASE}/${opp.id}/site-label`, { label: 'taken-name' })
+    assert.equal(taken.status, 409)
+    assert.equal(taken.body.code, 'LABEL_TAKEN')
+    const saved = await call(A, 'PUT', `${BASE}/${opp.id}/site-label`, { label: 'my-coach' })
+    assert.equal(saved.status, 200, JSON.stringify(saved.body))
+    assert.equal(saved.body.label, 'my-coach')
+    // Another account cannot read or name this opportunity.
+    assert.equal((await call(B, 'PUT', `${BASE}/${opp.id}/site-label`, { label: 'their-name' })).status, 404)
+
+    // It reloads with the opportunity, and the Build form and a build without a label use it.
+    assert.equal((await call(A, 'GET', `${BASE}/${opp.id}`)).body.opportunity.siteLabel, 'my-coach')
+    assert.equal((await call(A, 'GET', `${BASE}/${opp.id}/site-label`)).body.label, 'my-coach')
+    const rev = (await call(A, 'POST', `${BASE}/${opp.id}/revisions`, {})).body.revision
+    const revRead = (await call(A, 'GET', `${BASE}/revisions/${rev.id}`)).body
+    assert.equal(revRead.suggestedLabel, 'my-coach')
+    assert.equal(revRead.siteLabel, 'my-coach')
+    const built = await runBuild(A, 'POST', `${BASE}/revisions/${rev.id}/build`, {
+      requestId: 'build-named1'
+    })
+    assert.equal(built.status, 202, JSON.stringify(built.body))
+    const sent = JSON.parse(forwarded.filter((f) => f.path === '/api/sites')[0].init.body)
+    assert.equal(sent.label, 'my-coach')
+
+    // Cleared, the build goes back to the name the server suggests.
+    const cleared = await call(A, 'PUT', `${BASE}/${opp.id}/site-label`, { label: null })
+    assert.equal(cleared.status, 200)
+    assert.equal(cleared.body.label, null)
+    assert.equal((await call(A, 'GET', `${BASE}/revisions/${rev.id}`)).body.suggestedLabel, 'pho-ba')
   }
 )
 
@@ -2155,7 +2602,7 @@ test(
     await app.socialStats.drain()
     await app.siteChecks.drain()
     assert.ok(
-      fetched.some((u) => u.includes('tiktok-api23.p.rapidapi.com')),
+      fetched.some((u) => URL.parse(u)?.hostname === 'tiktok-api23.p.rapidapi.com'),
       'the social stats tick ran'
     )
     const [social, site] = await states()
@@ -2540,6 +2987,44 @@ test(
   }
 )
 
+test(
+  'build: a dead create-door claim (no site, no job, idle or refused) does not keep a request alive; one with a job does',
+  opts,
+  async () => {
+    const { pool, call } = await world()
+    const opp = await opportunity(call)
+    const rev = (await call(A, 'POST', `${BASE}/${opp.id}/revisions`, {})).body.revision
+    const accountId = (await pool.query('select id from account where email = $1', [A])).rows[0].id
+    const { deterministicBuildId } = await import('../src/opportunities-build/builds.js')
+    const stale = async (requestId, claim) => {
+      const buildId = deterministicBuildId(accountId, rev.id, requestId)
+      await pool.query(
+        `insert into site_creation (account_id, build_id, payload_hash, state, job_id, updated_at)
+         values ($1, $2, 'h', $3, $4, now() - interval '11 minutes')`,
+        [accountId, buildId, claim.state, claim.jobId ?? null]
+      )
+      return (
+        await pool.query(
+          `insert into wo_build (account_id, revision_id, request_id, build_id, updated_at, choice, choice_key)
+         values ($1, $2, $3, $4, now() - interval '11 minutes', '{"cms":"joomla","cmsSource":"default","template":{"platform":"joomla","quickstart":"fixture","design":"fixture","version":"1"}}'::jsonb, $5) returning id`,
+          [accountId, rev.id, requestId, buildId, `fixture-${requestId}`]
+        )
+      ).rows[0].id
+    }
+    // Comptoir 102 on dev (12/11/2026): a claim that never reached a site or a host job held the build `requesting`.
+    for (const [requestId, claim, expected] of [
+      ['build-dead-claim', { state: 'claiming' }, 'failed'],
+      ['build-refused-claim', { state: 'refused' }, 'failed'],
+      ['build-job-claim', { state: 'provisioning', jobId: 'job-1' }, 'requesting']
+    ]) {
+      const id = await stale(requestId, claim)
+      const read = await call(A, 'GET', `${BASE}/builds/${id}`)
+      assert.equal(read.body.build.state, expected, requestId)
+      if (expected === 'failed') assert.equal(read.body.build.receipt.failure.code, 'REQUEST_LOST')
+    }
+  }
+)
+
 // ── Find box autocomplete (tasks/todo-wo-social-stats.md item F) ──
 
 const SESSION = '0f8b8c1e-4a8e-4c1e-9d55-6a9b1f2b9c11'
@@ -2804,6 +3289,119 @@ test('reopen thaws a frozen demo; extend pushes a live one; each refuses the wro
   assert.equal((await demoRow(w.pool, build.id)).demo_frozen_at, null)
 })
 
+test(
+  'the Details demo carries what the build took and its picture; the picture door serves it to its owner only',
+  opts,
+  async () => {
+    const w = await world()
+    const { opp, build } = await builtDemo(w)
+    const first = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.demo
+    // The completed action kept what the build took: minutes from the press; no step chain, so no cost figure.
+    assert.equal(first.built.minutes, 0)
+    assert.equal(first.built.usd, null)
+    assert.ok(Date.parse(first.built.at) > 0)
+    assert.equal(first.preview, null)
+    assert.deepEqual(first.findings, [])
+    assert.equal((await w.call(A, 'GET', `${BASE}/${opp.id}/demo/preview`)).status, 404)
+    const builtAt = '2026-11-11T10:42:00.000Z'
+    await w.pool.query(`update wo_build set built = $2::jsonb, qa = $3::jsonb where id = $1`, [
+      build.id,
+      JSON.stringify({ at: builtAt, minutes: 26, usd: 1.84 }),
+      JSON.stringify({
+        state: 'needs-review',
+        rounds: [{ n: 1, failed: [{ id: 'cta-real' }, { id: 'no-demo-words' }] }]
+      })
+    ])
+    await w.pool.query(
+      `insert into wo_build_preview (build_id, content_type, bytes, width, height, captured_at)
+     values ($1, 'image/webp', $2, 640, 400, $3)`,
+      [build.id, Buffer.from('RIFF0000WEBPVP8 fake'), '2026-11-11T10:43:00Z']
+    )
+    const demo = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.demo
+    assert.deepEqual(demo.built, { at: builtAt, minutes: 26, usd: 1.84 })
+    assert.deepEqual([...demo.findings].sort(), ['cta-real', 'no-demo-words'])
+    assert.equal(demo.preview.capturedAt, '2026-11-11T10:43:00.000Z')
+    assert.equal(demo.preview.url, `${BASE}/${opp.id}/demo/preview?v=${Date.parse('2026-11-11T10:43:00Z')}`)
+    const listed = (await w.call(A, 'GET', BASE)).body.opportunities[0]
+    assert.equal(listed.latestBuild.chain, undefined, 'the list row keeps its latestBuild shape')
+    const picture = await w.call(A, 'GET', `${BASE}/${opp.id}/demo/preview`)
+    assert.equal(picture.status, 200)
+    assert.equal((await w.call(B, 'GET', `${BASE}/${opp.id}/demo/preview`)).status, 404, 'not yours')
+  }
+)
+
+test(
+  'Details sets the current site’s PageSpeed beside the demo’s own; outreach offers the proof line only with both',
+  opts,
+  async () => {
+    const w = await world()
+    const { opp, build } = await builtDemo(w)
+    // The completed action measured its demo after it ended (`onBuilt`): a `*.localhost` demo is never sent to Google.
+    let kept = null
+    for (let i = 0; i < 200 && !kept; i += 1) {
+      kept = (await w.pool.query(`select built->'pagespeed' as p from wo_build where id = $1`, [build.id]))
+        .rows[0]?.p
+      if (!kept) await new Promise((r) => setTimeout(r, 10))
+    }
+    assert.equal(kept?.reason, 'not_public', JSON.stringify(kept))
+    assert.equal(
+      w.fetched.some((u) => u.includes('pagespeedonline')),
+      false
+    )
+    // Research measured the current site; the demo's measurement is kept with its build (`demo-pagespeed.js`).
+    await w.pool.query(
+      `insert into wo_profile (opportunity_id, profile) values ($1, $2::jsonb)
+       on conflict (opportunity_id) do update set profile = excluded.profile`,
+      [opp.id, JSON.stringify({ pageSpeed: { performance: 34, seo: 80, checkedAt: '2026-11-01T08:00:00Z' } })]
+    )
+    await w.pool.query(`update wo_build set built = $2::jsonb, qa = $3::jsonb where id = $1`, [
+      build.id,
+      JSON.stringify({
+        at: '2026-11-12T08:58:00.000Z',
+        minutes: 26,
+        usd: 1.84,
+        pagespeed: { url: 'https://phoba.localhost', performance: 92, checkedAt: '2026-11-12T09:00:00Z' }
+      }),
+      JSON.stringify({ state: 'passed' })
+    ])
+    const detail = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
+    assert.deepEqual(detail.pagespeed, {
+      old: { score: 34, measuredAt: '2026-11-01T08:00:00.000Z' },
+      demo: { score: 92, measuredAt: '2026-11-12T09:00:00.000Z' }
+    })
+    assert.deepEqual(detail.demo.pagespeed, { score: 92, measuredAt: '2026-11-12T09:00:00.000Z' })
+    assert.deepEqual(detail.demo.built, { at: '2026-11-12T08:58:00.000Z', minutes: 26, usd: 1.84 })
+    const listed = (await w.call(A, 'GET', BASE)).body.opportunities[0]
+    assert.deepEqual(listed.demo.pagespeed, detail.demo.pagespeed)
+    const outreach = (await w.call(A, 'GET', `${BASE}/${opp.id}/outreach`)).body.outreach
+    assert.equal(outreach.pagespeedProof, 'Current site 34 → demo 92 on mobile')
+    assert.doesNotMatch(outreach.message.auto, /PageSpeed|→/, 'the drafts are worded as before')
+    // A demo PageSpeed could not reach keeps its reason: no number, no proof.
+    await w.pool.query(
+      `update wo_build set built = built || jsonb_build_object('pagespeed', $2::jsonb) where id = $1`,
+      [
+        build.id,
+        JSON.stringify({
+          url: 'https://phoba.localhost',
+          reason: 'not_public',
+          checkedAt: '2026-11-12T09:00:00Z'
+        })
+      ]
+    )
+    const unreachable = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.pagespeed
+    assert.deepEqual(unreachable.demo, { reason: 'not_public' })
+    assert.equal((await w.call(A, 'GET', `${BASE}/${opp.id}/outreach`)).body.outreach.pagespeedProof, null)
+    // A build measured before this was kept reads not_measured; no research score reads old null.
+    await w.pool.query(`update wo_build set built = built - 'pagespeed' where id = $1`, [build.id])
+    await w.pool.query(`update wo_profile set profile = '{}'::jsonb where opportunity_id = $1`, [opp.id])
+    assert.deepEqual((await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.pagespeed, {
+      old: null,
+      demo: { reason: 'not_measured' }
+    })
+    assert.equal((await w.call(B, 'GET', `${BASE}/${opp.id}`)).status, 404, 'not yours')
+  }
+)
+
 test('rebuild makes a new demo from the old revision once the old one was deleted', opts, async () => {
   const w = await world()
   const { opp, rev } = await builtDemo(w)
@@ -2926,8 +3524,8 @@ test(
     assert.equal(first.body.usage.used, 1)
     assert.equal(
       (await pool.query('select id from wo_revision')).rowCount,
-      0,
-      '202 is before revision creation'
+      1,
+      '202 makes no revision of its own: the one is the approved brief (#537)'
     )
     const replay = await call(A, 'POST', `${BASE}/${opportunities[0].id}/demo/build`, {
       requestId: 'cap-first-press',
@@ -3370,11 +3968,67 @@ test(
     assert.equal(twice.body.business.action.id, action[0].id)
     const again2 = await w.call(A, 'POST', `${OWN}/${id}/build`, { selection: { auto: true } })
     assert.equal(again2.body.business.action.id, action[0].id)
+    // An explicit Retry keeps the original build/revision/session and replays the same replacement action.
+    const badRetry = await w.call(A, 'POST', `${OWN}/${id}/build`, { retryOf: 'not-a-uuid' })
+    assert.equal(badRetry.status, 400)
+    const activeRetry = await w.call(A, 'POST', `${OWN}/${id}/build`, { retryOf: action[0].id })
+    assert.equal(activeRetry.body.code, 'ACTION_NOT_FAILED')
+    await w.pool.query(
+      `update wo_demo_action set status='failed', error='AGENT_DEMO_ENDED_UNCHECKED' where id=$1`,
+      [action[0].id]
+    )
+    const retried = await w.call(A, 'POST', `${OWN}/${id}/build`, { retryOf: action[0].id })
+    assert.equal(retried.status, 202, JSON.stringify(retried.body))
+    const replacement = (await w.pool.query('select * from wo_demo_action where retry_of=$1', [action[0].id]))
+      .rows[0]
+    assert.equal(replacement.build_request_id, action[0].build_request_id)
+    assert.equal(replacement.revision_id, action[0].revision_id)
+    assert.equal(replacement.session_id, action[0].session_id)
+    const replayedRetry = await w.call(A, 'POST', `${OWN}/${id}/build`, { retryOf: action[0].id })
+    assert.equal(replayedRetry.body.business.action.id, replacement.id)
+    const followingRetry = await w.call(A, 'GET', `${OWN}/${id}`)
+    assert.equal(followingRetry.body.business.action.id, replacement.id)
+    // Completion must not fall back to the original failure, even with equal acceptance timestamps.
+    await w.pool.query(`update wo_demo_action set status='completed' where id=$1`, [replacement.id])
+    const completedRetry = await w.call(A, 'GET', `${OWN}/${id}`)
+    assert.equal(completedRetry.body.business.action.id, replacement.id)
+    await w.pool.query(`update wo_demo_action set status='queued' where id=$1`, [replacement.id])
+    // Keep the remaining assertions on the currently active action.
+    action[0] = replacement
     // Pressed again later (a new request) while that build is still open: the same build, never a new choice
     // that the build door would refuse (24/10/2026).
     const pressedAgain = await w.call(A, 'POST', OWN, { requestId: 'own-press-0002', place: smile })
     assert.equal(pressedAgain.body.business.phase, 'build', JSON.stringify(pressedAgain.body))
     assert.equal(pressedAgain.body.business.action.id, action[0].id)
+
+    // A later research press must also find terminal own-site work whose base still exists.
+    // Otherwise this screen offers a template that acceptance rejects with BUILD_EXISTS.
+    const revision = (await w.call(A, 'POST', `${BASE}/${id}/revisions`, {})).body.revision
+    const base = (
+      await w.pool.query(
+        `insert into wo_build(account_id,revision_id,request_id,build_id,state,site_key,choice,choice_key)
+         values ($1,$2,$3,gen_random_uuid(),'done','smile.localhost',$4::jsonb,'fixture') returning id`,
+        [
+          action[0].account_id,
+          revision.id,
+          action[0].build_request_id,
+          JSON.stringify({ cms: tip.cms, template: tip })
+        ]
+      )
+    ).rows[0]
+    await w.pool.query(`update wo_demo_action set status='failed',error='QA_NEEDS_REVIEW' where id=$1`, [
+      action[0].id
+    ])
+    const stoppedAfterResearch = await w.call(A, 'GET', `${OWN}/${id}`)
+    assert.equal(stoppedAfterResearch.body.business.phase, 'build', JSON.stringify(stoppedAfterResearch.body))
+    assert.equal(stoppedAfterResearch.body.business.action.id, action[0].id)
+    assert.equal(stoppedAfterResearch.body.business.action.state, 'failed')
+    assert.equal((await w.call(B, 'GET', `${OWN}/${id}`)).status, 404)
+    await w.pool.query(`update wo_demo_action set status='completed',error=null where id=$1`, [action[0].id])
+    assert.equal((await w.call(A, 'GET', `${OWN}/${id}`)).body.business.action.id, action[0].id)
+    await w.pool.query(`update wo_build set state='deleted',demo_deleted_at=now() where id=$1`, [base.id])
+    assert.notEqual((await w.call(A, 'GET', `${OWN}/${id}`)).body.business.phase, 'build')
+    await w.pool.query(`update wo_demo_action set status='queued' where id=$1`, [action[0].id])
 
     // Its chat doors stay open with only this switch on, and close with it.
     await setSwitches(w.pool, { 'website-opportunities': false, 'site-from-business': true })

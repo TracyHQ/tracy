@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-568-readability-targets",
+  "kind": "fix",
+  "title": "Readability measurements preserve distinct DOM targets and reject unproven repair locations",
+  "pr": 568,
+  "area": "website-opportunities/step-nine",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run run.cmd without Docker, a server or a model provider.",
+    "Verify all eight tests execute with zero failures and zero skips."
+  ],
+  "expect": [
+    "Four measurements of one complete target become one repair retaining every width and theme observation.",
+    "Three equal email nodes sharing a coarse baseline key remain three independently resolved DOM targets.",
+    "Duplicate IDs, changed text or ownership and missing legacy target metadata remain unresolved without native comment requests.",
+    "Nested inline text retains browser textContent identity without inserting spaces between child nodes; real text changes still remain unresolved.",
+    "The actual delivered comment names the verified selector for page.look and look.set, carries every observation, and prohibits guessed occurrence indices or consent bypass.",
+    "Oversized paths, words or provenance marks and incomplete target metadata never authorize a repair."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-nine-repair-text-targets.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "four width and theme observations of one proven element become one repair retaining all observations",
+      "three identical emails with one coarse key remain three independently verified DOM targets",
+      "duplicate IDs cannot turn an ambiguous measured path into a chosen email",
+      "fresh text or ownership changes leave measured text unresolved without a content lookup",
+      "unchanged nested inline text resolves using browser textContent while real text changes stay blocked",
+      "an unproven legacy diagnostic never becomes a body comment or a guessed occurrence",
+      "one verified repair comment carries all measurements and forbids guessed occurrence indices or consent bypass",
+      "oversized or incomplete target metadata remains unresolved without a guessed repair"
+    ]
+  }
+}

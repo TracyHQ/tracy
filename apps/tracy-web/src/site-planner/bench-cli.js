@@ -15,6 +15,11 @@ export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
   run --kit <ref> --brief-file <path>     queue a run on a brief JSON file
   run --kit <ref> --brief-revision <id>   queue a run on the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
+      [--no-caps]                         run without the USD budget (a step of a chain build)
+      [--require-visual-review]           verify delivered kit images before accepting a WO plan
+      [--kit-in-first-message]            send the whole kit in the first message; the image tool stays (frozen with the run)
+      [--parallel-pages <n>]              plan round 0 in n parts at the same time, by page groups (1 to 8), frozen
+                                          with the run; 1 or absent plans it as one conversation
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, duration, checker summary
   get <runId> --out <dir>                 write every plan version, the check and failure list of each round,
@@ -46,6 +51,10 @@ export async function runCli(argv, deps) {
         'brief-file': { type: 'string' },
         'brief-revision': { type: 'string' },
         by: { type: 'string' },
+        'no-caps': { type: 'boolean' },
+        'require-visual-review': { type: 'boolean' },
+        'kit-in-first-message': { type: 'boolean' },
+        'parallel-pages': { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -158,6 +167,10 @@ async function startRun(d, values) {
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
     kitImages: d.kitImages,
+    noCaps: values['no-caps'] === true,
+    requireVisualReview: values['require-visual-review'] === true,
+    kitInFirstMessage: values['kit-in-first-message'] === true,
+    ...(values['parallel-pages'] !== undefined ? { parallelPages: Number(values['parallel-pages']) } : {}),
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)

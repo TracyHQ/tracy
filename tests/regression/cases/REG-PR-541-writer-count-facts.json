@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-541-writer-count-facts",
+  "kind": "fix",
+  "title": "Writer count facts accept digit and standalone English word equivalence without weakening detail checks",
+  "pr": 541,
+  "area": "website-opportunities/writer",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the site copy count-fact tests against the real W04 checker with a cited two-studio fact and unsupported details."
+  ],
+  "expect": [
+    "A digit count 2 passes when its cited fact states two Dubai studios; uppercase words and created-page facts work without editing copy.",
+    "Unsupported age 18 and uncited counts still fail.",
+    "Compound-number fragments and words inside email addresses or links never supply a count.",
+    "Decimals, leading-zero numbers, times, phones and addresses retain their existing exact checks."
+  ],
+  "selectors": {},
+  "fence": "W04 number backing uses only standalone English cardinal words in the already allowed facts; all other detail kinds retain exact matching",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-copy-check-count-facts.test.mjs"
+    ],
+    "tests": [
+      "W04 accepts a digit count backed by a cited standalone English number word",
+      "W04 keeps unsupported counts and uncited count facts out of writer copy",
+      "W04 never takes part of a compound number or an address as a count word",
+      "W04 number-word equivalence leaves decimals, times, phones and links exact"
+    ],
+    "needs": []
+  }
+}

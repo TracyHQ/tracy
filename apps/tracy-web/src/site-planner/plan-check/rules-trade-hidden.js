@@ -33,6 +33,7 @@ export function checkR21(ctx) {
         .filter(has)
     )
     const excused = (slot) =>
+      str(slotRole.get(slot)).startsWith('article.') ||
       demo.has(slot) ||
       fixed.has(slot) ||
       nameSlotIds.has(slot) ||

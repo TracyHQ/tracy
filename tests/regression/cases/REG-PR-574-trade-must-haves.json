@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-574-trade-must-haves",
+  "kind": "feat",
+  "title": "Assess reads each trade's must-haves off the old site's research: missing only when the read could see it, a score reason and outreach lines only the demo backs",
+  "pr": 574,
+  "area": "website-opportunities/score",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Run run.cmd.", "S2: Confirm every test named in run.tests reports ok."],
+  "expect": [
+    "The table names food, beauty, health, fitness and hospitality by the trade ids of trades.mjs; a pharmacy has none, a coach no class schedule.",
+    "A restaurant whose whole site was read with no menu and no booking has menu missing, booking missing and ordering unknown (not-detectable), so booking-or-ordering is unknown.",
+    "No read, a failed or partial read, a salon's booking and every form are unknown with a reason, never missing; a one-page site's menu or booking words make it present.",
+    "The demo offers a booking only with a verified booking link in its brief and a menu only with the full menu section.",
+    "An outreach line exists only for a capability known missing that the demo offers: 'Your site has no online booking; the demo does.'",
+    "scoreOpportunity without mustHaves is unchanged (golden hash); with them a missing must-have adds trade.missing worth its share of 15, and a slow site reaches at most 40 web points."
+  ],
+  "selectors": {
+    "door": "GET /api/website-opportunities/:id (mustHaves), GET /api/website-opportunities/:id/outreach (outreach.arguments)"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "packages/wo/website-opportunities/test/domain-trade-must-haves.test.mjs",
+      "packages/wo/website-opportunities/test/must-haves-view.test.mjs",
+      "packages/wo/website-opportunities/test/plugins-scoring.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the table names the five trades by the ids WO uses, each must-have met by known capabilities",
+      "a restaurant whose whole site was read with no menu and no booking: the menu is missing, booking known absent",
+      "a one-page site that shows its menu or a booking line in its text is never told it has none",
+      "unknown is unknown: no read, a failed read, a partial read, an undetectable capability, forms",
+      "the demo offers what its brief knows: a verified booking link, the full menu section",
+      "an outreach line only for a capability known missing that the demo really has",
+      "score: a missing must-have is a reason worth its share of 15; without an assessment nothing changes",
+      "score: a slow site that lacks every must-have reaches the 40 web points of a site that is down, not more",
+      "a restaurant read in full with no menu and no booking: the reason, and the lines its demo backs",
+      "golden: the built-in rules score the fixture set exactly as the single function did before the split"
+    ]
+  }
+}

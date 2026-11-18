@@ -9,7 +9,7 @@
  * measurement is stale, never a pass.
  */
 import { createHash } from 'node:crypto'
-import { readFileSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 
 import { coverageFileProblem } from './judge.js'
@@ -83,7 +83,9 @@ function readCoverage(contract, { file, map, lock }) {
   try {
     if (doc.contract?.contentMapSha256 !== sha256(map))
       return { state: 'stale', doc, reason: 'content-map.json changed after it was measured' }
-    if (doc.contract?.presentationLockSha256 !== sha256(lock))
+    // An EmDash theme has no presentation lock (its design is code, not captured state): the file must say it measured none.
+    const lockSha = existsSync(lock) ? sha256(lock) : null
+    if ((doc.contract?.presentationLockSha256 ?? null) !== lockSha)
       return { state: 'stale', doc, reason: 'presentation-lock.json changed after it was measured' }
   } catch {
     return { state: 'invalid', reason: 'the contract files beside it cannot be read' }

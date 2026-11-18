@@ -2,7 +2,7 @@
 // its bytes, so a file is written once however many runs or frames use it, and a resumed run finds what it already
 // wrote. Picture files a run made sit at the top (`<sha256>.<ext>`); owner photos copied in by the bench CLI for a run
 // on a brief file sit under `photos/<sha256>`. Every read checks the hash again: a file changed on disk is never used.
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -20,7 +20,8 @@ export const sha256Hex = (bytes) => createHash('sha256').update(bytes).digest('h
 export function fileStore(dir = defaultStoreDir()) {
   const at = (name) => path.join(dir, name)
 
-  // Write once: a file already there under its hash holds these bytes; a half written one is never seen (rename).
+  // Write once: a file already there under its hash holds these bytes; a half written one is never seen (rename). The
+  // temporary name is unique per write: picture runs side by side (#633) may write the same file in the same moment.
   async function putAt(name, bytes) {
     try {
       const held = await readFile(at(name))
@@ -29,7 +30,7 @@ export function fileStore(dir = defaultStoreDir()) {
       // not there yet
     }
     await mkdir(path.dirname(at(name)), { recursive: true })
-    const temp = at(`${name}.${process.pid}.${Date.now()}.part`)
+    const temp = at(`${name}.${process.pid}.${randomUUID()}.part`)
     await writeFile(temp, bytes)
     await rename(temp, at(name))
   }

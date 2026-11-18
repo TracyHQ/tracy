@@ -32,8 +32,11 @@
 # in both stances, including explicit overrides (Vincent, 27 October 2026).
 # joomla:4-apache and joomla:php8.2-apache still return PHP 8.2.29 after a fresh pull:
 # they are removed and refused too, until upstream provides patched images for them.
-wordpress=tracy/web-wordpress:php8.3-apache-20261027-r1
-joomla=tracy/web-joomla:5-apache-20261027-r1
+# 20261116-r1: Apache replaces a child after 100 connections (web/tracy-prefork.conf; MaxConnectionsPerChild
+# was 0, a child never went). A running site moves with `scripts/provision/set-web-image.sh --label <label> --image <this
+# file's line for the SAME base>` (same PHP; recreates only web); the updater only builds the image.
+wordpress=tracy/web-wordpress:php8.3-apache-20261116-r1
+joomla=tracy/web-joomla:5-apache-20261116-r1
 
 # 🔒 NO php8.0 LINE, ON EITHER PLATFORM — AND IT IS A GAP, NOT AN OVERSIGHT. Removed 08/09/2026.
 #
@@ -63,10 +66,10 @@ joomla=tracy/web-joomla:5-apache-20261027-r1
 
 # WordPress: the tag a clone is provisioned on (php8.3), the rolling tag a fleet-born site gets,
 # and the PHP a captured site may already have been pinned to before it reached us.
-wordpress:apache=tracy/web-wordpress:apache-20261027-r1
-wordpress:php8.2-apache=tracy/web-wordpress:php8.2-apache-20261027-r1
-wordpress:php8.3-apache=tracy/web-wordpress:php8.3-apache-20261027-r1
-wordpress:php8.4-apache=tracy/web-wordpress:php8.4-apache-20261027-r1
+wordpress:apache=tracy/web-wordpress:apache-20261116-r1
+wordpress:php8.2-apache=tracy/web-wordpress:php8.2-apache-20261116-r1
+wordpress:php8.3-apache=tracy/web-wordpress:php8.3-apache-20261116-r1
+wordpress:php8.4-apache=tracy/web-wordpress:php8.4-apache-20261116-r1
 
 # Joomla: the major tags a clone and a fleet-born site run, plus every PHP an upgrade hop can
 # choose. php_matrix.py picks the NEWEST PHP both ends of a hop support, and it also answers for a
@@ -74,7 +77,7 @@ wordpress:php8.4-apache=tracy/web-wordpress:php8.4-apache-20261027-r1
 # includes 8.2 · 8.3 · 8.4, but the upstream 8.2 alias is unpatched and refused here.
 # PHP 8.1 is refused even for an existing pin (see above). **8.0 is
 # reachable in php_matrix and NOT here**; the block above says why, and which hop it costs.
-joomla:5-apache=tracy/web-joomla:5-apache-20261027-r1
-joomla:6-apache=tracy/web-joomla:6-apache-20261027-r1
-joomla:php8.3-apache=tracy/web-joomla:php8.3-apache-20261027-r1
-joomla:php8.4-apache=tracy/web-joomla:php8.4-apache-20261027-r1
+joomla:5-apache=tracy/web-joomla:5-apache-20261116-r1
+joomla:6-apache=tracy/web-joomla:6-apache-20261116-r1
+joomla:php8.3-apache=tracy/web-joomla:php8.3-apache-20261116-r1
+joomla:php8.4-apache=tracy/web-joomla:php8.4-apache-20261116-r1

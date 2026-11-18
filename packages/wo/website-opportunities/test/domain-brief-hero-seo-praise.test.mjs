@@ -64,7 +64,10 @@ test('the hero is key message 1 and the on-site services, up to three, each with
   // Counter-case: a service the owner took off the site is not in the hero.
   const tennis = brief.facts.find((f) => f.field === 'services' && f.value?.name === 'Tennis')
   const off = hscBrief({ overrides: { [tennis.id]: { onSite: false, at: '2026-10-27T09:00:00.000Z' } } })
-  assert.equal(heroOf(off).copy, 'European Coaching in Dubai: padel, swimming lessons.')
+  assert.equal(
+    heroOf(off).copy,
+    'European Coaching in Dubai: padel, swimming lessons, customized fitness lessons.'
+  )
 })
 
 test('the home page carries an SEO title and description of on-site facts, within limits, checked by acceptance', () => {
@@ -172,21 +175,21 @@ test('praise themes from reviews become key message candidates on verbatim revie
   })
   assert.equal(crowded.keyMessages.length, 3)
   assert.ok(crowded.keyMessages.every((m) => m.basis !== 'praise'))
-  // Both its reviews name Alex, whom only reviews name: held reviews are quoted nowhere, so while Alex is held the
-  // brief carries no such message.
-  const held = hscBrief({ answer })
+  // Both its reviews name Alex, whom only reviews name: held reviews are quoted nowhere, so while the owner holds Alex
+  // off the brief carries no such message.
+  const alexId = hscBrief({ answer }).facts.find((f) => f.field === 'team').id
+  const held = hscBrief({
+    answer,
+    overrides: { [alexId]: { onSite: false, at: '2026-10-27T09:00:00.000Z' } }
+  })
   assert.equal(
     held.keyMessages?.find((x) => x.label === 'Wonderful with children'),
     undefined
   )
   assert.doesNotMatch(renderBriefMarkdown(held), /Wonderful with children/)
-  // Once the owner shows Alex, the reviews are usable: in the brief it rests on the on-site service its quotes name,
-  // and says it is what customers praise.
-  const alex = held.facts.find((f) => f.field === 'team')
-  const brief = hscBrief({
-    answer,
-    overrides: { [alex.id]: { onSite: true, at: '2026-10-27T09:00:00.000Z' } }
-  })
+  // Alex is a coach two reviews name, so by rule he is shown and the reviews are usable (`brief-people.mjs`): in the
+  // brief it rests on the on-site service its quotes name, and says it is what customers praise.
+  const brief = hscBrief({ answer })
   assert.deepEqual(validateBrief(brief), { ok: true, errors: [] })
   const m = brief.keyMessages.find((x) => x.label === 'Wonderful with children')
   assert.equal(m.basis, 'praise')

@@ -1,0 +1,95 @@
+TAP version 13
+# Subtest: a write that breaks a previously healthy site restores its pinned full backup and verifies the home
+not ok 1 - a write that breaks a previously healthy site restores its pinned full backup and verifies the home
+  ---
+  duration_ms: 2.167875
+  type: 'test'
+  location: '<tmp>/pr541-recovery-mutant.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file://<tmp>/pr541-recovery-mutant.test.mjs:43:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: ordinary content faults and transient reads never restore the template
+ok 2 - ordinary content faults and transient reads never restore the template
+  ---
+  duration_ms: 0.30825
+  type: 'test'
+  ...
+# Subtest: a missing full baseline refuses writes instead of advertising a files-only recovery point
+ok 3 - a missing full baseline refuses writes instead of advertising a files-only recovery point
+  ---
+  duration_ms: 0.169917
+  type: 'test'
+  ...
+# Subtest: an open repair writer prevents a full restore from racing its writes
+not ok 4 - an open repair writer prevents a full restore from racing its writes
+  ---
+  duration_ms: 0.149542
+  type: 'test'
+  location: '<tmp>/pr541-recovery-mutant.test.mjs:68:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'status')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file://<tmp>/pr541-recovery-mutant.test.mjs:74:29)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: a pending restore or failed read-back is never reported as restored
+not ok 5 - a pending restore or failed read-back is never reported as restored
+  ---
+  duration_ms: 0.183167
+  type: 'test'
+  location: '<tmp>/pr541-recovery-mutant.test.mjs:77:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'status')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file://<tmp>/pr541-recovery-mutant.test.mjs:79:47)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: home recovery probes distinguish confirmed CMS failure from network and access failures
+ok 6 - home recovery probes distinguish confirmed CMS failure from network and access failures
+  ---
+  duration_ms: 1.364792
+  type: 'test'
+  ...
+# Subtest: missing settlement evidence prevents a restore even when no open turn is listed
+not ok 7 - missing settlement evidence prevents a restore even when no open turn is listed
+  ---
+  duration_ms: 0.507084
+  type: 'test'
+  location: '<tmp>/pr541-recovery-mutant.test.mjs:111:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'status')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file://<tmp>/pr541-recovery-mutant.test.mjs:113:41)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 3
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 99.862209

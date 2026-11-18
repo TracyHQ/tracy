@@ -5,26 +5,29 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { after, before, beforeEach, test } from 'node:test'
-import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
-import { normalizeWoOpsSettings } from 'website-opportunities/src/wo-settings.js'
-import { createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
-import { createExecutor } from 'website-opportunities/src/executor.js'
-import { imageInfoWith } from 'website-opportunities/src/media-info.js'
-import { requestResearch } from 'website-opportunities/src/place-requests.js'
-import { addLink } from 'website-opportunities/src/places.js'
-import { insertOpportunity, saveKeyMessagePicks, saveReadingPick } from 'website-opportunities/src/store.js'
-import { placeViewOf } from 'website-opportunities/src/place-view.js'
+import { BUSINESS_READING_SYSTEM, USP_RETRY_SYSTEM } from 'website-opportunities/domain/business-reading.mjs'
+import { validatePlaceProfile } from 'website-opportunities/domain/place-profile.mjs'
 import { briefResearchOf, makeSiteBrief } from 'website-opportunities/src/brief-research.js'
-import { readPlaceProfile } from 'website-opportunities/src/place-profile-read.js'
-import { BUSINESS_READING_SYSTEM } from 'website-opportunities/domain/business-reading.mjs'
 import {
   businessReadingDoorOf,
   businessReadingMaxTokens
 } from 'website-opportunities/src/business-reading.js'
-import { validatePlaceProfile } from 'website-opportunities/domain/place-profile.mjs'
+import { createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
+import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
+import { createExecutor } from 'website-opportunities/src/executor.js'
+import { imageInfoWith } from 'website-opportunities/src/media-info.js'
+import { readPlaceProfile } from 'website-opportunities/src/place-profile-read.js'
+import { requestResearch } from 'website-opportunities/src/place-requests.js'
+import { placeViewOf } from 'website-opportunities/src/place-view.js'
+import { addLink } from 'website-opportunities/src/places.js'
+import { queueResearchAgain } from 'website-opportunities/src/research-again.js'
+import { insertOpportunity, saveKeyMessagePicks, saveReadingPick } from 'website-opportunities/src/store.js'
+import { normalizeWoOpsSettings } from 'website-opportunities/src/wo-settings.js'
 import { fileDb } from './_db.mjs'
+
 // Whether a person shows lives in their fact (brief schema 2, #1791); an older brief said it on the item.
 const onSiteOf = (brief, p) => (p.factId ? brief.facts.find((f) => f.id === p.factId)?.onSite : p.onSite)
+
 import { createTracyWoHost } from '../src/wo-host.js'
 
 const woHost = createTracyWoHost()
@@ -82,7 +85,7 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     providerId: PLACE_ID,
     candidate: { provider: 'google-places', providerId: PLACE_ID, name: 'Harbour Sport Club', ...candidate }
   })
-  const calls = { model: 0, bodies: [], progress: [] }
+  const calls = { model: 0, bodies: [], progress: [], uspRetry: 0, uspBodies: [] }
   const real = await websiteOpportunitiesDomain()
   const blocked = { available: false, collect: async () => ({ status: 'blocked', media: [] }) }
   const domain = {
@@ -120,18 +123,16 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     })
   }
   const ledger = createCostLedger({ pool, caps: async () => ({ dailyCapCents: 1000, jobCapCents: 1000 }) })
+  const settings = {
+    ...normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
+    tripadvisorReviews: false
+  }
   const ex = createExecutor({
     host: woHost,
     pool,
     shared: true,
     loadDomain: async () => domain,
-    runtime: async () => ({
-      keys: { google: 'test-google' },
-      settings: {
-        ...normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
-        tripadvisorReviews: false
-      }
-    }),
+    runtime: async () => ({ keys: { google: 'test-google' }, settings }),
     chargeable: createChargeable(ledger),
     businessReadingDoor: async () =>
       door === 'ready'
@@ -140,9 +141,18 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     apiFetch: async (url, init) => {
       if (String(url) === MODEL_URL) {
         const body = JSON.parse(init.body)
-        assert.equal(body.messages[0].content, BUSINESS_READING_SYSTEM)
         calls.model += 1
         calls.bodies.push(body)
+        if (body.messages[0].content === USP_RETRY_SYSTEM) {
+          calls.uspRetry += 1
+          calls.uspBodies.push(body)
+          return Response.json({
+            id: `usp-retry-${calls.uspRetry}`,
+            choices: [{ message: { content: JSON.stringify({ uspThemes: [] }) } }],
+            usage: { prompt_tokens: 1000, completion_tokens: 10 }
+          })
+        }
+        assert.equal(body.messages[0].content, BUSINESS_READING_SYSTEM)
         // What the page following the research reads while the reading runs (#251).
         calls.progress.push(
           (await pool.query('select stage, progress from wo_place_job order by created_at desc limit 1'))
@@ -170,11 +180,14 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     .rows[0].place_id
   // The club's Instagram, as an operator adds a link to a Google place.
   await addLink(pool, placeId, 'instagram', IG, 'operator', {})
-  for (let i = 0; i < 20; i++) {
-    const { claimed, done } = await ex.tick()
-    if (!claimed) break
-    await done
+  const drain = async () => {
+    for (let i = 0; i < 20; i++) {
+      const { claimed, done } = await ex.tick()
+      if (!claimed) break
+      await done
+    }
   }
+  await drain()
   const opp = (await pool.query('select * from wo_opportunity where id = $1', [opportunity.id])).rows[0]
   const { read } = await briefResearchOf(pool, opp)
   const brief = makeSiteBrief(domain, read, { opportunity: opp, madeAt: '2026-10-26T10:00:00.000Z' })
@@ -184,6 +197,9 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     calls,
     opp,
     domain,
+    drain,
+    placeId,
+    settings,
     brief,
     markdown: domain.renderBriefMarkdown(brief),
     profile: await readPlaceProfile(pool, { opportunityId: opp.id })
@@ -192,12 +208,22 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
 
 const labels = (items) => (items ?? []).map((i) => i.label)
 
+/** The same answer with Sam named without a role: named in one review only, he is held until the owner shows him. */
+const ANSWER_SAM_NO_ROLE = {
+  ...ANSWER,
+  team: [ANSWER.team[0], { name: 'Sam', quote: 'padel coaching with Alex and Sam', ref: 'review:1' }]
+}
+
 test(
   'Harbour Sport Club: services, who it is for, team and story read from its own words',
   opts,
   async () => {
     const r = await research()
-    assert.equal(r.calls.model, 1, 'one model call per research run')
+    assert.equal(r.calls.model, 2, 'one reading call and one USP retry for this fixture')
+    assert.deepEqual(
+      r.calls.bodies.map((body) => body.messages[0].content),
+      [BUSINESS_READING_SYSTEM, USP_RETRY_SYSTEM]
+    )
     // #251: while the reading runs, the job says so and names no source still being collected.
     assert.equal(r.calls.progress[0].stage, 'profile')
     assert.equal(r.calls.progress[0].progress.reading, 'business')
@@ -217,11 +243,14 @@ test(
     assert.deepEqual(
       reading.team.map((p) => [p.label, p.role, onSiteOf(r.brief, p)]),
       [
-        ['Alex', 'coach', false],
-        ['Sam', 'coach', false]
+        ['Alex', 'coach', true],
+        ['Sam', 'coach', true]
       ],
-      'people named only in reviews stay off the site until shown'
+      'people named only in reviews, each with a role, are shown on the site'
     )
+    // Shown from reviews alone: the brief names each one for the owner to check.
+    assert.match(r.markdown, /"Alex" \(coach\), shown from reviews, owner to check/)
+    assert.match(r.markdown, /"Sam" \(coach\), shown from reviews, owner to check/)
     assert.equal(reading.story[0].quote, 'European Coaching in Dubai')
     assert.equal(
       reading.about,
@@ -273,10 +302,20 @@ test(
     assert.equal(coverage.offerings.status, 'found')
     assert.equal(coverage.people.status, 'found')
 
-    // The ledger: one reserved and settled model call, for this purpose.
+    // The fixture proposes no USP: one full reading and one bounded USP retry, both settled on the same ledger.
+    assert.equal(r.calls.uspRetry, 1)
+    assert.equal(r.calls.uspBodies[0].messages[0].content, USP_RETRY_SYSTEM)
+    const storedReading = (
+      await r.pool.query(
+        "select profile->'businessReading' as reading from wo_place_snapshot_profile where profile ? 'businessReading'"
+      )
+    ).rows
+    assert.equal(storedReading.length, 1)
+    assert.equal(storedReading[0].reading.uspRetry, 'rejected')
+    assert.equal(storedReading[0].reading.uspThemes, null)
     const rows = (await r.pool.query("select * from wo_cost_ledger where purpose = 'business-reading'")).rows
-    assert.equal(rows.length, 1)
-    assert.equal(rows[0].provider, 'woEditorial')
+    assert.equal(rows.length, 2)
+    assert.ok(rows.every((row) => row.provider === 'woEditorial' && row.state === 'settled'))
   }
 )
 
@@ -360,13 +399,30 @@ test(
   'Remove takes an item off the brief; Show on the site puts a review-only person on it; the card shows both',
   opts,
   async () => {
-    const r = await research()
+    const r = await research({ answer: ANSWER_SAM_NO_ROLE })
     const swim = r.brief.reading.services.find((s) => s.label === 'Swimming lessons')
-    const alex = r.brief.reading.team.find((p) => p.label === 'Alex')
+    const sam = r.brief.reading.team.find((p) => p.label === 'Sam')
+    // Before any pick: Alex (a role) is shown from reviews, Sam (no role, one review) is held.
+    assert.deepEqual(
+      r.brief.reading.team.map((p) => [p.label, onSiteOf(r.brief, p)]),
+      [
+        ['Alex', true],
+        ['Sam', false]
+      ]
+    )
+    // The Profile card says the same before any pick.
+    const before = (await placeViewOf(r.pool, r.opp)).profile.readingCard
+    assert.deepEqual(
+      before.team.map((p) => [p.label, p.onSite, p.fromReviews === true]),
+      [
+        ['Alex', true, true],
+        ['Sam', false, false]
+      ]
+    )
     assert.ok(await saveReadingPick(r.pool, r.accountId, r.opp.id, swim.id, 'remove'))
-    const row = await saveReadingPick(r.pool, r.accountId, r.opp.id, alex.id, 'show')
+    const row = await saveReadingPick(r.pool, r.accountId, r.opp.id, sam.id, 'show')
     assert.deepEqual(row.candidate.readingPicks.removed, [swim.id], 'the second pick keeps the first')
-    assert.deepEqual(row.candidate.readingPicks.shown, [alex.id])
+    assert.deepEqual(row.candidate.readingPicks.shown, [sam.id])
     assert.equal(
       await saveReadingPick(r.pool, '00000000-0000-4000-8000-000000000000', r.opp.id, swim.id, 'restore'),
       null
@@ -375,11 +431,12 @@ test(
     const view = await placeViewOf(r.pool, row)
     const card = view.profile.readingCard
     assert.equal(card.services.find((s) => s.id === swim.id).removed, true)
+    // The card agrees with the brief: Alex (a role) shown from reviews, Sam on the site because the owner showed him.
     assert.deepEqual(
-      card.team.map((p) => [p.label, p.reviewsOnly, p.onSite]),
+      card.team.map((p) => [p.label, p.reviewsOnly, p.onSite, p.fromReviews === true]),
       [
-        ['Alex', true, true],
-        ['Sam', true, false]
+        ['Alex', true, true, true],
+        ['Sam', true, true, false]
       ]
     )
     const { read } = await briefResearchOf(r.pool, row)
@@ -390,10 +447,10 @@ test(
       brief.reading.team.map((p) => [p.label, onSiteOf(brief, p)]),
       [
         ['Alex', true],
-        ['Sam', false]
+        ['Sam', true]
       ]
     )
-    assert.match(r.domain.renderBriefMarkdown(brief), /Alex/)
+    assert.match(r.domain.renderBriefMarkdown(brief), /Sam/)
   }
 )
 
@@ -424,10 +481,40 @@ test(
   opts,
   async () => {
     const r = await research({ effort: 'off' })
-    assert.equal(r.calls.model, 1)
+    assert.equal(r.calls.model, 2)
     assert.deepEqual(r.calls.bodies[0].thinking, { type: 'disabled' })
     assert.equal(r.calls.bodies[0].max_tokens, 4_000)
     assert.equal(r.calls.bodies[0].reasoning_effort, undefined)
     assert.equal(r.brief.reading.method, 'model')
+  }
+)
+
+test(
+  'a Research again from scratch reads the business again although its texts and version are unchanged',
+  opts,
+  async () => {
+    const r = await research()
+    assert.equal(r.calls.model, 2)
+    const again = (onlyParts) =>
+      queueResearchAgain(r.pool, r.placeId, {
+        now: Date.now(),
+        keys: { google: 'test-google' },
+        settings: r.settings,
+        domain: r.domain,
+        starter: { kind: 'operator' },
+        onlyParts,
+        fromScratch: true
+      })
+    const whole = await again(null)
+    assert.equal(whole.plan.fromScratch.whole, true)
+    assert.ok(whole.plan.run.length > 0)
+    assert.ok(whole.plan.run.every((p) => p.reason === 'again'))
+    await r.drain()
+    assert.equal(r.calls.model, 4, 'the held reading is not reused')
+    // A run limited to some parts keeps the reading it holds when nothing it reads changed.
+    const limited = await again(['google-places'])
+    assert.equal(limited.plan.fromScratch.whole, false)
+    await r.drain()
+    assert.equal(r.calls.model, 4)
   }
 )

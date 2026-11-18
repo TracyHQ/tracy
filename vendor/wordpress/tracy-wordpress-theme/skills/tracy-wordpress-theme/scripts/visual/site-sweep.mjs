@@ -1058,7 +1058,11 @@ export async function runSweep(o) {
   if (wantHeights) {
     const t1 = Date.now()
     const hw = o.heightsWidths ?? o.widths
-    const hm = await measureHeights({ ...o, only, load, passContext, heightsWidths: hw, settleMs: o.settleMs ?? SETTLE_MS })
+    // The heights phase gets its own browser when the caller supplies a launcher: it is the last and longest phase, and it must not
+    // inherit a browser that the ten checks before it have worn (a browser that dies mid-phase turns every remaining cell into
+    // "browser.newContext: Target page, context or browser has been closed").
+    const measure = (browser) => measureHeights({ ...o, browser, only, load, passContext, heightsWidths: hw, settleMs: o.settleMs ?? SETTLE_MS })
+    const hm = o.freshBrowser ? await o.freshBrowser(measure) : await measure(o.browser)
     const jh = judgeHeights(hm.rows)
     j.owed.push(...hm.owed)
     notOwed.push(...(hm.notOwed ?? []))
@@ -1468,7 +1472,7 @@ if (isMain) {
     const asFull = scoped ? { anchorWidths: scope.anchorWidths, schemeWidth: scope.schemeWidth, themeWidths: scope.themeWidths, homePath: scope.homePath, acceptPartial: true } : {}
     const sourceCache = sourceFp ? createSourceCache({ dir: path.join(cfg.runRoot, 'source-cache'), enabled: !args.flag('--no-source-cache') && !args.flag('--reload'), reason: args.flag('--no-source-cache') ? '--no-source-cache' : '--reload', sourceId: sourceFp.id }) : null
     report = await withBrowser((browser) =>
-      runSweep({ browser, sourceCache, site: cfg.site, source: cfg.source, plan, pairs, widths: cfg.widths, heightsWidths: cfg.heightsWidths, schemes: cfg.schemes, only: cfg.only, concurrency: cfg.concurrency, deadlineAt: cfg.deadlineMs ? started + cfg.deadlineMs : null, reload: args.flag('--reload'), settleMs: cfg.settleMs, log, accept: plan.acceptContext, ...asFull })
+      runSweep({ browser, freshBrowser: (fn) => withBrowser(fn), sourceCache, site: cfg.site, source: cfg.source, plan, pairs, widths: cfg.widths, heightsWidths: cfg.heightsWidths, schemes: cfg.schemes, only: cfg.only, concurrency: cfg.concurrency, deadlineAt: cfg.deadlineMs ? started + cfg.deadlineMs : null, reload: args.flag('--reload'), settleMs: cfg.settleMs, log, accept: plan.acceptContext, ...asFull })
     )
   }
   report.theme = { version: zip?.version ?? null, zipSha256: zip?.sha256 ?? null }

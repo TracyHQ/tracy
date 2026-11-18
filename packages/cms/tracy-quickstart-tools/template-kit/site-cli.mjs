@@ -8,7 +8,7 @@
 //
 //   site-cli.mjs --site <url> [--host-header <host>] --contract <dir> --out <dir>
 //                [--db mysql://user:pass@host:port/name | --db-command '<client prefix>']
-//                [--webroot <dir> [--files-command '<prefix>']] [--capture-index <file>] [--max-pages 60]
+//                [--webroot <dir> [--files-command '<prefix>']] [--capture-index <file>] [--max-pages 400]
 //                [--no-hide-measure]
 //
 // Writes into --out: site.json ({site, mainHeadings, errors}) and site-palette.html.
@@ -16,12 +16,15 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
+import { readManifest } from './lib/contract-manifest.mjs'
 import { readContractMap } from './lib/contract-read.mjs'
+import { settleEmdashSections } from './lib/site/emdash-sections-file.mjs'
 import { settleWordPressSections } from './lib/site/wordpress-sections-file.mjs'
 import { pageIdOf } from './lib/ids.mjs'
 import { pathOfRoute, slugOfPath } from './lib/kit-paths.mjs'
 import { indexMap } from './lib/map-index.mjs'
 import { adapterFor, usePlatform } from './lib/site/adapters/index.mjs'
+import { readEmdashSettings } from './lib/site/adapters/emdash.mjs'
 import { siteWriter } from './lib/site/adapters/site-writer.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { buildBrandColours } from './lib/site/brand-colours.mjs'
@@ -44,14 +47,17 @@ export function parseArgs(argv) {
   return o
 }
 
-/** The pages to read: the capture's pages when given, else every map page that opens a page of its own. */
-export function pagesToRead(map, captureIndex, cap) {
+/**
+ * The pages to read: the capture's pages when given, else every map page that opens a page of its own. The cap is the
+ * capture's own (400), so a `build --full` reads every page it shot.
+ */
+export function pagesToRead(map, captureIndex, cap = 400) {
   const list = captureIndex
     ? captureIndex.pages.map((p) => ({ path: p.path, slug: p.slug }))
     : [
         { path: '/', slug: 'home' },
         ...(map.pages ?? [])
-          .filter((p) => /[?&]option=/.test(p.link ?? '') && p.route !== 'home')
+          .filter((p) => (p.link == null || /[?&]option=/.test(p.link)) && p.route !== 'home')
           .map((p) => ({ path: pathOfRoute(p.route), slug: slugOfPath(pathOfRoute(p.route)) }))
       ]
   const seen = new Set()
@@ -59,6 +65,40 @@ export function pagesToRead(map, captureIndex, cap) {
     .filter((p) => !seen.has(p.path) && seen.add(p.path))
     .slice(0, cap)
     .map((p) => ({ ...p, pageId: pageIdOf(p.slug) }))
+}
+
+/** Retain CMS-printed entries together with their measurement errors. */
+export function retainFixedTexts(fixedTexts, errors) {
+  const indices = new Map()
+  const retained = fixedTexts.filter((f, i) => {
+    if (f.notPrintedByCms) return false
+    indices.set(i, indices.size)
+    return true
+  })
+  return {
+    fixedTexts: retained,
+    errors: errors.flatMap((error) => {
+      const match = /^site\.fixedTexts\[(\d+)\](?=\.|$)/.exec(error.field ?? '')
+      if (!match || Number(match[1]) >= fixedTexts.length) return [error]
+      const index = indices.get(Number(match[1]))
+      if (index === undefined) return []
+      return [{ ...error, field: error.field.replace(match[0], `site.fixedTexts[${index}]`) }]
+    })
+  }
+}
+
+/**
+ * What the EmDash adapter reads beyond the theme files: the site settings through the REST door (agent token file,
+ * `--token-file`) and the content map. Other platforms read everything through the source.
+ */
+async function extraOf({ manifest, map, o, hostHeader }) {
+  if (String(manifest.platform).toLowerCase() !== 'emdash') return undefined
+  const r = await readEmdashSettings({
+    siteUrl: o.site,
+    tokenFile: typeof o['token-file'] === 'string' ? o['token-file'] : undefined,
+    hostHeader
+  })
+  return { settings: r.settings, settingsReason: r.reason, map, template: manifest.template }
 }
 
 /**
@@ -69,23 +109,26 @@ export function pagesToRead(map, captureIndex, cap) {
  */
 export async function runSite({ o, out, chromium, capture = null, log: say = log }) {
   const map = readContractMap(o.contract)
-  const manifest = readJson(join(o.contract, 'manifest.json'))
+  const str = (v) => (typeof v === 'string' ? v : undefined)
+  const manifest = readManifest(o.contract, { release: str(o['release-tag']) })
   usePlatform(manifest.platform)
   const hostHeader = typeof o['host-header'] === 'string' ? o['host-header'] : undefined
-  const str = (v) => (typeof v === 'string' ? v : undefined)
   const source = siteSource({
     db: str(o.db),
     dbCommand: str(o['db-command']),
     filesCommand: str(o['files-command']),
     webroot: str(o.webroot)
   })
-  const adapter = adapterFor(manifest.platform, source)
+  const adapter = adapterFor(manifest.platform, source, await extraOf({ manifest, map, o, hostHeader }))
   say(
     'reads',
     source.describe.join(' and ') || 'the pages only',
     `(${adapter.cms}${adapter.framework ? ` ${adapter.framework}` : ''})`
   )
-  const pages = pagesToRead(map, capture, Number(o['max-pages'] ?? 60))
+  const pages = pagesToRead(map, capture, o['max-pages'] ? Number(o['max-pages']) : undefined)
+  // The page cap is reported, never applied silently.
+  const listed = pagesToRead(map, capture, Infinity).length
+  if (pages.length < listed) say(listed - pages.length, 'pages left unread by the page cap (--max-pages)')
   const served = await fetchStyles({ pages, siteUrl: o.site, hostHeader })
   const { htmls } = served
   // A page on another colour theme of the template (a theme showcase) does not paint the brand.
@@ -118,8 +161,9 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
     if (fixed.length && cms && !o['no-hide-measure']) {
       const writer = siteWriter({ filesCommand: str(o['files-command']), webroot: str(o.webroot) })
       say(fixed.length, 'fixed CMS sentences; measuring whether each can be hidden')
-      r.errors.push(
-        ...(await measureFixedTexts({
+      const measured = retainFixedTexts(
+        fixed,
+        await measureFixedTexts({
           browser,
           siteUrl: o.site,
           hostHeader,
@@ -129,10 +173,11 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
           readFile: source.readFile,
           writer,
           log: say
-        }))
+        })
       )
       // Words a short language value only seemed to print stay template words: the kit measures them itself.
-      r.site.fixedTexts = fixed.filter((f) => !f.notPrintedByCms)
+      r.site.fixedTexts = measured.fixedTexts
+      r.errors.push(...measured.errors)
     } else if (fixed.length)
       for (const [i] of fixed.entries())
         r.errors.push({
@@ -168,13 +213,27 @@ async function main() {
   const capture = typeof o['capture-index'] === 'string' ? readJson(o['capture-index']) : null
   // WordPress pages are read as their sections, the way the kit run splits them (wordpress-sections-file.mjs).
   settleWordPressSections({
-    platform: readJson(join(o.contract, 'manifest.json')).platform,
+    platform: readManifest(o.contract).platform,
     out,
     db: typeof o.db === 'string' ? o.db : undefined,
     dbCommand: typeof o['db-command'] === 'string' ? o['db-command'] : undefined
   })
   const mod = await import(process.env.PLAYWRIGHT_MODULE ?? '@playwright/test')
   const chromium = mod.chromium ?? mod.default?.chromium
+  // An EmDash page is read as its parts (the layout's top bar, header, each section of main, footer), from the work
+  // folder's emdash-sections.json, or from the site when none is there yet.
+  const platform = readManifest(o.contract).platform
+  usePlatform(platform)
+  await settleEmdashSections({
+    platform,
+    out,
+    map: readJson(join(o.contract, 'content-map.json')),
+    siteUrl: o.site,
+    hostHeader: typeof o['host-header'] === 'string' ? o['host-header'] : undefined,
+    chromium,
+    tokenFile: typeof o['token-file'] === 'string' ? o['token-file'] : undefined,
+    reread: !!o['reread-sections']
+  })
   const doc = await runSite({ o, out, chromium, capture })
   return doc.errors.length ? 1 : 0
 }

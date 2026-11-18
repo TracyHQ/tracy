@@ -1,0 +1,49 @@
+{
+  "layout": {
+    "id": "Search",
+    "view": "src/views/Search.astro",
+    "family": "search"
+  },
+  "rules": [
+    ["search-label", ".dn-search-form label", "index.php/other-pages/smart-search/index.html", false],
+    ["search-button", ".dn-search-row .dn-btn", "index.php/other-pages/smart-search/index.html", false],
+    ["search-count", ".dn-search-count", "index.php/other-pages/smart-search/index.html", true],
+    ["aside-title-s", ".dn-aside h3", "index.php/other-pages/smart-search/index.html", false]
+  ],
+  "parity": {
+    "search-input": {
+      "site": "#dn-q",
+      "source": "#q"
+    }
+  },
+  "pages": [
+    {
+      "id": "en-search",
+      "path": "/search?q=food",
+      "status": 200,
+      "source": ["index.php/other-pages/smart-search/index.html"],
+      "identity": ".dn-search-form",
+      "collections": ["chrome", "masthead"],
+      "rules": ["masthead-title", "search-label", "search-button", "search-count", "aside-title-s"],
+      "parity": ["nav", "footerTitle", "ground", "search-input"],
+      "content": [
+        [
+          "search-label",
+          ".dn-search-form label",
+          "index.php/other-pages/smart-search/index.html",
+          "field",
+          "chrome.search_label",
+          "Search Terms:"
+        ],
+        [
+          "search-button",
+          ".dn-search-row .dn-btn",
+          "index.php/other-pages/smart-search/index.html",
+          "field",
+          "chrome.search_button",
+          "SEARCH"
+        ]
+      ]
+    }
+  ]
+}

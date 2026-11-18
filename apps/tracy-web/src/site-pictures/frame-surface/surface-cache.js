@@ -5,7 +5,7 @@
 // demo data SQL are taken out of it. Nothing here stops a run: no installer named, a failed download or a hash that does
 // not match gives the surface from the kit alone (every overlay "unknown"), with the reason, and is not kept, so a later
 // run tries again.
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { unzipSync } from 'fflate'
@@ -13,6 +13,8 @@ import { measureSurface, SURFACE_VERSION, wantedQuickstartFile } from './surface
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 const safe = (s) => String(s ?? '').replace(/[^A-Za-z0-9._-]+/g, '_')
+// Share only the same destination, release and exact measurement inputs; never retain a failed attempt.
+const inFlight = new Map()
 
 /** The files of a quickstart installer zip the surface reads, by their path in the archive, as text. */
 export function quickstartFilesOf(zipBytes, template) {
@@ -29,7 +31,29 @@ export function quickstartFilesOf(zipBytes, template) {
  *   kitId: string, fetchAsset?: ((a: { release: string, name: string }) => Promise<{ ok: boolean, bytes?: Buffer, reason?: string }>) | null }} input
  * @returns {Promise<{ surface: object, note: string | null }>}
  */
-export async function surfaceFor({ dir, kit, kitId, fetchAsset = null }) {
+export async function surfaceFor(input) {
+  const { dir, kit, kitId } = input
+  const identity = sha256(
+    Buffer.from(
+      JSON.stringify({
+        dir: path.resolve(dir),
+        kitId,
+        release: kit?.release,
+        installer: kit?.installer,
+        version: SURFACE_VERSION,
+        doc: kit?.doc
+      })
+    )
+  )
+  if (!inFlight.has(identity))
+    inFlight.set(
+      identity,
+      readSurface(input).finally(() => inFlight.delete(identity))
+    )
+  return inFlight.get(identity)
+}
+
+async function readSurface({ dir, kit, kitId, fetchAsset = null }) {
   const doc = kit?.doc
   const base = { kit: doc, contentMap: doc?.contentMap ?? null, kitId }
   const alone = (note) => ({ surface: measureSurface(base), note })
@@ -60,7 +84,7 @@ export async function surfaceFor({ dir, kit, kitId, fetchAsset = null }) {
     }
   })
   await mkdir(path.dirname(file), { recursive: true })
-  const temp = `${file}.${process.pid}.${Date.now()}.part`
+  const temp = `${file}.${randomUUID()}.part`
   await writeFile(temp, JSON.stringify(surface))
   await rename(temp, file)
   return { surface, note: null }

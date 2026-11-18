@@ -28,9 +28,12 @@
 
 import sharp from 'sharp'
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
+import { platformRefusal, withCmsLine } from '../lib/cms-line.js'
 import { kitIdOf } from '../lib/kit-id.js'
+import { altAskFor } from './alt-ask.js'
 import { altCheckFor } from './alt-notes.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
+import { cutMemo } from './cut-photo.js'
 import { demoPictureReader } from './demo-pictures.js'
 import { picturePickerDoor } from './door.js'
 import { runDrawerDoor } from './drawer-door.js'
@@ -45,7 +48,6 @@ import { createFinisher } from './ladder-step.js'
 import { runLookerDoor } from './looker-door.js'
 import { withLooker } from './looker-round.js'
 import { createLooker } from './looker-step.js'
-import { altAskFor } from './alt-ask.js'
 import { PICTURES_VERSION } from './manifest-shape.js'
 import { ownerPhotoBytes } from './owner-photos.js'
 import { usablePhotos } from './photo-shortlist.js'
@@ -62,7 +64,6 @@ import {
 } from './picker-picks.js'
 import { CHECKER_VERSION, checkPictures } from './picture-check/check-pictures.js'
 import { indexInputs } from './picture-check/inputs-index.js'
-import { platformRefusal, withCmsLine } from '../lib/cms-line.js'
 import { picturePrompts } from './picture-prompts.js'
 
 export { BENCH_QUEUE }
@@ -169,6 +170,17 @@ async function prepare(deps, row) {
   const rounds = await SITE_PICTURES_STORE.roundsOf(deps.pool, row.id)
   const recorded = rounds.some((r) => r.state === 'checked')
   const store = fileStore(deps.storeDir)
+  // Preparation includes a cold surface download; it is code time even before owner-photo work starts.
+  const started = Date.now()
+  // Where the preparation's time goes, part by part (`prepareMs` on the manifest): on dev it took minutes where a local
+  // stand took seconds, and one figure ("code") could not say which part.
+  const parts = {}
+  let mark = started
+  const lap = (part) => {
+    const now = Date.now()
+    parts[part] = (parts[part] ?? 0) + (now - mark)
+    mark = now
+  }
   // The frame surface (ADR 0043 section 3e): text over each picture and the template's own overlay over it, read once
   // per kit version and quickstart and joined into the kit's frames; it never changes the kit itself.
   const surface = await surfaceFor({
@@ -178,8 +190,9 @@ async function prepare(deps, row) {
     fetchAsset: deps.quickstart ?? null
   })
   kit = { ...kit, doc: joinSurface(kit.doc, surface.surface) }
-  const started = Date.now()
+  lap('surface')
   const photoBytes = await ownerPhotoBytes({ ...deps, store }, row)
+  lap('photos')
   // The icon step (#345): library icons ranked by a text model, styled like the kit's demo icons.
   const iconStep = await iconStepFor({
     pool: deps.pool,
@@ -191,19 +204,26 @@ async function prepare(deps, row) {
     kit,
     business: typeof row.plan?.site?.name === 'string' ? row.plan.site.name : null
   })
+  // The photos a frame waiting for the picker could take are cut once: the code half marks them by cutting them, and
+  // the picker's input below takes the same cuts for its shortlists.
+  const pickerCut = cutMemo()
   const filled = await fillFrames({
     plan: row.plan,
     brief: row.brief,
     kit: kit.doc,
     photoBytes,
-    icons: iconStep.icons
+    icons: iconStep.icons,
+    pickerCut
   })
   const iconsDone = iconStep.report()
-  const { files: made, refused, ...parts } = filled
+  lap('frames')
+  const { files: made, refused, ...filledParts } = filled
   const idx = indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief, files: {} })
   const { usable } = usablePhotos(row.brief, photoBytes)
   let picker = null
-  if (door.door) picker = await pickerInput({ idx, manifest: parts, usable, photoBytes })
+  if (door.door)
+    picker = await pickerInput({ idx, manifest: filledParts, usable, photoBytes, cut: pickerCut })
+  lap('pickerInput')
   const files = {}
   for (const [file, cut] of [...made, ...(picker?.files ?? [])]) {
     if (files[file]) continue
@@ -224,13 +244,15 @@ async function prepare(deps, row) {
         height: meta.height
       })
   }
+  lap('store')
   const base = {
     version: PICTURES_VERSION,
     fingerprint: {
       kit: kitIdOf(kit.doc, row.kit?.ref),
       planSha256: row.plan_sha256,
       briefSha256: row.brief_sha256,
-      prompts: row.prompts
+      prompts: row.prompts,
+      picturePolicy: picturePrompts().policy
     },
     altNotes: [],
     // Without the writer's copy file the alts are compared by the site check (step 11), and the manifest says so.
@@ -240,7 +262,10 @@ async function prepare(deps, row) {
     cost: { code: 0, iconRanking: iconsDone.cost },
     timing: { code: Date.now() - started - iconsDone.timing, iconRanking: iconsDone.timing },
     iconRanking: iconsDone.ranking,
-    frameSurface: { quickstart: surface.surface.quickstart, note: surface.note }
+    frameSurface: { quickstart: surface.surface.quickstart, note: surface.note },
+    // The preparation by part (ms): the frame surface, the owner photos read (how many), the frames code fills (icons
+    // included), the picker's input and the files stored.
+    prepareMs: { ...parts, photoCount: photoBytes.size }
   }
   const looker = createLooker({
     door: lookerDoor.door,
@@ -299,7 +324,7 @@ async function prepare(deps, row) {
     files,
     idx,
     base,
-    parts,
+    parts: filledParts,
     picker,
     looker,
     finisher,

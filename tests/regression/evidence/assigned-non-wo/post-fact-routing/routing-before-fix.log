@@ -1,0 +1,156 @@
+TAP version 13
+# Subtest: the fictional briefs are valid, so the routing is tested on real brief shapes
+ok 1 - the fictional briefs are valid, so the routing is tested on real brief shapes
+  ---
+  duration_ms: 3.153084
+  type: 'test'
+  ...
+# Subtest: no item of a fictional brief is without a role or a reason
+not ok 2 - no item of a fictional brief is without a role or a reason
+  ---
+  duration_ms: 1.727209
+  type: 'test'
+  location: 'packages/wo/website-opportunities/test/brief-item-routes.test.mjs:129:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    club: kinds with no role and no reason
+    + actual - expected
+    
+    + [
+    +   {
+    +     count: 39,
+    +     kind: 'fact.posts'
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      kind: 'fact.posts'
+      count: 39
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file://packages/wo/website-opportunities/test/brief-item-routes.test.mjs:132:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: the table is well formed: a role of vocabulary 3 or a reason, never neither
+ok 3 - the table is well formed: a role of vocabulary 3 or a reason, never neither
+  ---
+  duration_ms: 0.202584
+  type: 'test'
+  ...
+# Subtest: a kind with no row is reported as unrouted
+not ok 4 - a kind with no row is reported as unrouted
+  ---
+  duration_ms: 0.713167
+  type: 'test'
+  location: 'packages/wo/website-opportunities/test/brief-item-routes.test.mjs:162:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        {
+          count: 1,
+          kind: 'section.testimonials-wall'
+        },
+    +   {
+    +     count: 39,
+    +     kind: 'fact.posts'
+    +   }
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      kind: 'section.testimonials-wall'
+      count: 1
+  actual:
+    0:
+      kind: 'section.testimonials-wall'
+      count: 1
+    1:
+      kind: 'fact.posts'
+      count: 39
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file://packages/wo/website-opportunities/test/brief-item-routes.test.mjs:165:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: every kind the brief schema and the builder can produce has a row (a new kind fails here)
+not ok 5 - every kind the brief schema and the builder can produce has a row (a new kind fails here)
+  ---
+  duration_ms: 0.165875
+  type: 'test'
+  location: 'packages/wo/website-opportunities/test/brief-item-routes.test.mjs:168:1'
+  failureType: 'testCodeFailure'
+  error: 'no role or reason for fact.posts: add it to BRIEF_ITEM_ROUTES'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    has (file://packages/wo/website-opportunities/test/brief-item-routes.test.mjs:170:12)
+    TestContext.<anonymous> (file://packages/wo/website-opportunities/test/brief-item-routes.test.mjs:177:63)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: a price the owner did not publish yields an owner question
+ok 6 - a price the owner did not publish yields an owner question
+  ---
+  duration_ms: 0.243375
+  type: 'test'
+  ...
+# Subtest: every missing or withheld fact of a brief has an owner question, none is a silent gap
+ok 7 - every missing or withheld fact of a brief has an owner question, none is a silent gap
+  ---
+  duration_ms: 0.297792
+  type: 'test'
+  ...
+# Subtest: a source that failed is a research problem: no owner question, routed as not shown with its reason
+ok 8 - a source that failed is a research problem: no owner question, routed as not shown with its reason
+  ---
+  duration_ms: 0.375583
+  type: 'test'
+  ...
+# Subtest: a missing field with no owner wording is never asked with its raw id, it is routed as not shown
+ok 9 - a missing field with no owner wording is never asked with its raw id, it is routed as not shown
+  ---
+  duration_ms: 0.583291
+  type: 'test'
+  ...
+# Subtest: a missing field with owner wording keeps its question
+ok 10 - a missing field with owner wording keeps its question
+  ---
+  duration_ms: 0.560875
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 7
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 227.987917

@@ -9708,6 +9708,7 @@
       "package.json",
       "pnpm-lock.yaml",
       "pnpm-workspace.yaml",
+      "patches",
       "template.config.json",
       "astro.config.mjs",
       "tsconfig.json",

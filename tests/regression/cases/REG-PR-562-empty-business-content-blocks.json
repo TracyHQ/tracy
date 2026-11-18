@@ -1,0 +1,51 @@
+{
+  "id": "REG-PR-562-empty-business-content-blocks",
+  "kind": "fix",
+  "title": "A brief with nothing of the business in it blocks before a build",
+  "pr": 562,
+  "area": "wo/brief/readiness",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the readiness unit suite and the demo runner suite against this checkout with a throwaway TEST_DATABASE_URL. Every business in them is fictional."
+  ],
+  "expect": [
+    "A Portland-like brief (profile bio, sharp labelled photos, empty reading) has check business-content with verdict block, and the brief's readiness is verdict block with next research-again.",
+    "A brief with an empty reading and no menu, post or logo fact also has business-content block.",
+    "A food brief whose only offering source is a published menu URL passes every readiness check, template-kinds included: verdict pass, next build.",
+    "A brief with offerings and no named team passes: people-with-portrait pass, business-content pass, verdict pass.",
+    "Offering items typed into a demo request (profile.menuItems) pass business-content for a trade with and without a menu; the bio alone still blocks.",
+    "In the runner, a measured brief with labelled photos and no business content is stored with business-content block; its demo action ends status failed, error BRIEF_NOT_READY; demoActionOf readiness.checks includes business-content; the create door is never asked and no wo_build row exists; wo_demo_usage is unchanged by the refusal."
+  ],
+  "selectors": {
+    "check": "business-content",
+    "readiness": "verdict, next",
+    "error": "BRIEF_NOT_READY",
+    "tables": "wo_demo_action, wo_build, wo_demo_usage"
+  },
+  "evidence": "Issue #554: Portland City Boxing revision 3 on dev (2026-11-10) had 0 offerings and 0 people, passed every readiness check and built a site with no classes, prices or coaches.",
+  "fence": "briefReadinessOf business-content check (packages/wo/website-opportunities/domain/brief-readiness.mjs) and the BRIEF_NOT_READY refusal before a build",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/brief-readiness.test.mjs",
+      "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs"
+    ],
+    "tests": [
+      "Portland-like: a bio, sharp labelled photos and an empty reading still block",
+      "a reading with no offering, story or fact blocks",
+      "a published menu alone passes",
+      "a business with offerings and no named team still passes",
+      "offering items typed into a demo request pass",
+      "a brief with good photos but no offering, story or fact is refused with its own reason"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

@@ -355,6 +355,15 @@ tracy_wp_bind_contract ja-x/wp7/1.0.2 || exit 3
       assert.doesNotMatch(loose.stdout, /inspect: bound/)
     }
 
+    // A real inspect answer is the whole contract: JA Diner wp7 1.0.3 answered 143 KB (570 slots),
+    // over Linux's 128 KiB cap on ONE argument, and the check then died before printing a word
+    // ("!! inspect after bind: " and nothing after it). 1.5 MB is over that cap and over the whole
+    // argument list macOS allows, so this fails on either machine while an answer rides in argv.
+    const entities = Array.from({ length: 60 }, (_, i) => ({ id: `e${i}`, note: 'x'.repeat(25_000) }))
+    const large = await run({ bind, inspect: { ...inspect, entities } })
+    assert.equal(large.status, 0, large.stderr)
+    assert.match(large.stdout, /inspect: bound, 60 entities/)
+
     // What already worked keeps its words.
     const bound = await run({ bind, inspect })
     assert.equal(bound.status, 0, bound.stderr)
@@ -369,6 +378,27 @@ tracy_wp_bind_contract ja-x/wp7/1.0.2 || exit 3
   } finally {
     server.close()
   }
+})
+
+// A failure always says why. A check that dies before it prints (here a python3 that exits with no
+// word, as one that could not start did on 09/11/2026) is named by its exit code, never handed on as
+// an empty reason after "inspect after bind:".
+test('an inspect check that dies without a word still says why it failed', () => {
+  const bin = mkdtempSync(join(tmpdir(), 'silent-python-'))
+  writeFileSync(join(bin, 'python3'), '#!/bin/sh\nexit 126\n')
+  chmodSync(join(bin, 'python3'), 0o755)
+  const r = spawnSync(
+    'bash',
+    [
+      '-c',
+      '. "$HERE/platform/wordpress.sh"; said="$(tracy_wp_inspect_confirms "$1" ja-x/wp7/1.0.2)"; echo "rc=$? said=$said"',
+      'x',
+      '{"ok":true}\ncurl exit 0, HTTP 200'
+    ],
+    { env: { PATH: `${bin}:${process.env.PATH}`, HERE: PROVISION }, encoding: 'utf8' }
+  )
+  rmSync(bin, { recursive: true, force: true })
+  assert.match(r.stdout, /rc=126 said=the inspect answer could not be read \(python3 exit 126\)/, r.stderr)
 })
 
 // The showcase-navigation phase, through the REAL wordpress.sh against a socket that answers each

@@ -1,0 +1,3 @@
+- **The final site write report carries the looker's faults for every rejected picture kept by fallback** — Codex · #496 · `docs/ai-capabilities-audit-2026-11-08` · 2026-11-09
+  **Affects:** step 9 handover reports for builds whose picture manifest uses `filledBy.rung = best-rejected`. The new `pictureReview` list keeps the frame, source, site path and exact fault names; other pictures do not add a review item.
+  **Why / Measured:** the picture manifest had the faults, but the final write report did not. A local test reads a manifest with accepted, drawn and rejected entries and verifies only the rejected entries reach the review list.

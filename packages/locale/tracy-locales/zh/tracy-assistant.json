@@ -44,6 +44,7 @@
   "onboarding.action.templates.short": "Template",
   "onboarding.attach": "添加file",
   "onboarding.drop": "拖放file以添加file",
+  "onboarding.filesLimit": "Help 可以看到file名称和类型，但无法读取file内容。",
   "onboarding.placeholder": "不知道从哪里开始？直接问吧",
   "onboarding.send": "发送",
   "placeholder.hero": "描述一项更改。/help 询问 Tracy，/ 调用指令，@ file 或 session",

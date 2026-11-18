@@ -79,21 +79,46 @@ async function opportunity(call) {
   return res.body.opportunity
 }
 
+/** This card's own research finished (#524): only then does the card show the place profile. */
+async function researched(opp) {
+  await db.pool.query(
+    `insert into wo_job (account_id, opportunity_id, kind, request_id, state)
+     select account_id, id, 'research', 'seed-research-1', 'completed' from wo_opportunity where id = $1`,
+    [opp.id]
+  )
+}
+
 test(
   'the owner reads a valid place profile with a coverage row per target and no brief or demo',
   opts,
   async () => {
     const { call } = await world()
     const opp = await opportunity(call)
+    const before = await call(A, 'GET', `${BASE}/${opp.id}/place-profile`)
+    assert.deepEqual(
+      before.body,
+      {
+        profile: null,
+        decisions: [],
+        // The Profile's bands are the owner's, so they read before research too (#537).
+        bands: { brand: true, keyMessages: true, reviews: true, media: true, socials: true }
+      },
+      'nothing before its own research'
+    )
+    await researched(opp)
     const res = await call(A, 'GET', `${BASE}/${opp.id}/place-profile`)
     assert.equal(res.status, 200)
-    assert.deepEqual(Object.keys(res.body), ['profile', 'decisions'])
+    assert.deepEqual(Object.keys(res.body), ['profile', 'decisions', 'bands'])
     // One on-site decision per fact (#1791), the rule's while the owner chose nothing.
     const name = res.body.decisions.find((d) => d.factId === res.body.profile.business.name.id)
     assert.equal(name.decidedBy, 'rule')
     assert.equal(typeof name.onSite, 'boolean')
     assert.ok(['corroborated', 'single-source', 'inferred'].includes(name.confidence))
-    assert.equal(validatePlaceProfile(res.body.profile).ok, true)
+    // The saved profile (#537 R18): the research's place profile, each fact with its decision on it and the owner's
+    // block beside; without them it is a valid place profile.
+    assert.equal(res.body.profile.business.name.onSite, name.onSite)
+    assert.deepEqual(res.body.profile.owner.bands, res.body.bands)
+    assert.equal(validatePlaceProfile(withoutSavedMarks(res.body.profile)).ok, true)
     assert.equal(res.body.profile.business.name.value, 'Pho Ba')
     assert.ok(res.body.profile.coverage.length > 0)
     for (const row of res.body.profile.coverage) assert.ok(COVERAGE.includes(row.status), row.target)
@@ -101,6 +126,23 @@ test(
       assert.equal(key in res.body.profile, false, key)
   }
 )
+
+/** A saved profile without what the saved profile adds to each fact and beside them. */
+function withoutSavedMarks(saved) {
+  const MARKS = ['onSite', 'decidedBy', 'confidence', 'reasons', 'mediaId', 'reviewKey', 'teamMemberId']
+  const strip = (v) => {
+    if (Array.isArray(v)) return v.map(strip)
+    if (!v || typeof v !== 'object') return v
+    const isFact = Object.hasOwn(v, 'value') && Array.isArray(v.evidenceRefs)
+    return Object.fromEntries(
+      Object.entries(v)
+        .filter(([k]) => !(isFact && MARKS.includes(k)))
+        .map(([k, child]) => [k, isFact && k === 'value' ? child : strip(child)])
+    )
+  }
+  const { owner: _owner, ...rest } = saved
+  return strip(rest)
+}
 
 test('another account, an unknown id and no session cannot read it', opts, async () => {
   const { call } = await world()

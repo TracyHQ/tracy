@@ -336,7 +336,7 @@ export const INVITATIONS_REAL_ROUTES = [
     method: 'POST',
     path: '/api/ops/invitations/real/campaigns/:id/queue/start',
     summary: 'Queue every approved email whose customer has no invitation yet',
-    description: `${policy}Pilot mode only (403 REAL_PILOT_OFF). 409 REAL_QUEUE_RUNNING while one runs, 409 REAL_QUEUE_EMPTY when nothing is left. The cron then sends the next email once a minute when pacing allows, through the same checks as send-invitation: a customer refusal (no active plan, suppressed, already invited, not approved) skips it; aMember not answering makes it wait and ask again on later passes, and pauses it only after 30 minutes without one clear answer; Gmail not answering, the budget reached or sending off pauses the queue at once; every pause the cron makes is told to the ops topic; an unknown Gmail outcome pauses it and is never resent. Body {}.`,
+    description: `${policy}Pilot mode only (403 REAL_PILOT_OFF). 409 REAL_QUEUE_RUNNING while one runs, 409 REAL_QUEUE_EMPTY when nothing is left. The cron then sends the next email once a minute when pacing allows, through the same checks as send-invitation: a customer refusal (no active plan, suppressed, already invited, not approved) skips it; aMember not answering, an unexpected server error (REAL_INTERNAL) or Gmail not handing out an access token makes it wait and try the same email again on later passes, and pauses it only after 30 minutes without one clear answer; Gmail refusing or not answering a send, the budget reached or sending off pauses the queue at once; every pause the cron makes is told to the ops topic; an unknown Gmail outcome pauses it and is never resent. Body {}.`,
     params: pathParams,
     body: body({}),
     answers: 'The queue, as in GET'

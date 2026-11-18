@@ -12,7 +12,7 @@ import { BODY_BACKGROUND_KEY, writeT4BodyBackground } from '../lib/joomla-t4-bod
 import { brandAsker, said } from './brand-writes.js'
 import { NO_LAST } from './no-last-report.js'
 import { refusalWords } from './contract-write.js'
-import { preparePainted } from './painted-stage.js'
+import { preparePainted, undrawnFrames } from './painted-stage.js'
 import { packageItems, packageStops, PICTURE_OWNER, readPackageFiles } from './picture-package.js'
 
 const ENDED = 'the run ended before this picture was written'
@@ -29,6 +29,7 @@ const idle = {
   changes: {},
   evidence: {},
   unaddressable: [],
+  undrawn: [],
   lines: () => []
 }
 const stoppedBy = (stop) => ({ ...idle, stop })
@@ -270,6 +271,7 @@ export async function preparePictureStage({
     write,
     lines,
     unaddressable,
+    undrawn: undrawnFrames(drawn.left, changes),
     refused: drawn.refused
   }
 }

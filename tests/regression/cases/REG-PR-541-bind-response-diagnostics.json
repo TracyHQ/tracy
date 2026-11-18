@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-541-bind-response-diagnostics",
+  "kind": "fix",
+  "title": "Unreadable Joomla bind responses retain safe diagnostics and refuse acceptance",
+  "pr": 541,
+  "area": "website-opportunities/provision",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the real PHP contract bootstrap response tests."],
+  "expect": [
+    "HTML, warning-prefixed JSON and unexpected JSON report bounded fixed categories without exposing response bodies, arbitrary keys or MIME values.",
+    "Successful bind responses remain unchanged; HTTP refusals retain their status and cannot count as accepted binds."
+  ],
+  "selectors": {},
+  "fence": "Diagnostic decoding only; bind verification and retry behavior remain unchanged.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=unreadable bind responses|response diagnostics",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs"
+    ],
+    "tests": [
+      "unreadable bind responses expose bounded categories without leaking response data",
+      "response diagnostics preserve successful binds and HTTP refusals"
+    ],
+    "needs": []
+  }
+}

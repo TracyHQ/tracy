@@ -7,7 +7,7 @@
  * (`scripts/test/ci-plan.test.mjs`) instead of shell inside a workflow.
  *
  * Three rows always run: `checks` (lint + every gate but the tests), `tests 1/2`, `tests 2/2`
- * (+ the small suites). Five more run only when needed: the five EmDash suites and `e2e`.
+ * (+ the small suites). Seven more run only when needed: the six EmDash suites and `e2e`.
  * A routine PR into `develop` replaces `tests 1/2` and `tests 2/2` by one `tests related` row (or
  * none), see `related-tests.mjs`; `checks` always runs.
  *
@@ -82,7 +82,7 @@ const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
  */
 const EMDASH_INPUTS = String.raw`vendor/emdash/(?!tracy-emdash-skill/)`
 
-/** The five EmDash suites: each reads inside its own directory (checked 29/09/2026; Tracy Coffee 30/10/2026, JA Restaurant 04/11/2026). */
+/** The six EmDash suites: each reads inside its own directory (checked 29/09/2026; Tracy Coffee 30/10/2026, JA Restaurant 04/11/2026). */
 const EMDASH = [
   {
     group: 'tests emdash-business',
@@ -108,6 +108,11 @@ const EMDASH = [
     group: 'tests emdash-restaurant',
     args: '--only tests --tests-part standalone:restaurant',
     own: String.raw`packages/cms/tracy-emdash-theme-restaurant/`
+  },
+  {
+    group: 'tests emdash-diner',
+    args: '--only tests --tests-part standalone:diner',
+    own: String.raw`packages/cms/tracy-emdash-theme-diner/`
   }
 ]
 
@@ -370,7 +375,7 @@ export function planMatrix({
       leftOut.push({ group: row.group, label: E2E_LABEL, wouldRun: runsAll || Boolean(affects) })
       continue
     }
-    // The five EmDash suites are browser rows too: their visual/audit/qa tests open Chromium and
+    // The six EmDash suites are browser rows too: their visual/audit/qa tests open Chromium and
     // nothing separates them from the suite's other files. Without `ci:e2e` a row the paths would have
     // run does not exist; a row the paths would not run stays an ordinary path skip.
     if (isEmdashRow(row.group) && scope.e2eLeftOut && (runsAll || affects)) {
@@ -378,7 +383,7 @@ export function planMatrix({
       continue
     }
     // The label means "run it": no path filter second-guesses a person who asked for the e2e row. The
-    // EmDash rows keep their own paths even with the label (five suites of 5-10 minutes each are not
+    // EmDash rows keep their own paths even with the label (six suites of 5-10 minutes each are not
     // worth running for a change that no theme reads).
     if (row.group === 'tests e2e' && scope.e2eForced) include.push(rest)
     else if (!runsAll && !affects) skipped.push({ group: row.group, paths })
@@ -531,7 +536,7 @@ export function scopeNotes(plan) {
       `SKIPPED ${row.group}: opt-in on a pull request into develop — add the label ${row.label} to run it (this pull request touches its inputs)`
     )
     notes.summary.push(
-      `### ⏭ ${row.group} not run (opt-in)\n\nA pull request into \`develop\` runs the browser suites (the e2e row and the five EmDash rows) only when it carries the label \`${row.label}\` — **this one changes files that suite reads**. Adding the label re-runs Tracy CI by itself. ` +
+      `### ⏭ ${row.group} not run (opt-in)\n\nA pull request into \`develop\` runs the browser suites (the e2e row and the six EmDash rows) only when it carries the label \`${row.label}\` — **this one changes files that suite reads**. Adding the label re-runs Tracy CI by itself. ` +
         'Release pull requests into `staging` and `main`, the nightly and manual runs always run it.\n'
     )
   }

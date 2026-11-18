@@ -1,0 +1,10 @@
+{
+  "baseCommit": "6e5b7e6913f360aee971717a91c35cabcebb434a",
+  "commit": "0ae3b7d1b6caaa67b7e12daf24cea7d17241f847",
+  "paths": [
+    "apps/tracy-web/src/app.js",
+    "apps/tracy-web/src/server.js",
+    "apps/tracy-web/src/sites/brief-build.js",
+    "packages/wo/website-opportunities/src/place-executor.js"
+  ]
+}

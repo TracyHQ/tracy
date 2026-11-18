@@ -1,0 +1,42 @@
+---
+/** Offers: masthead · three Happy Hours entries in the source's order and styles 1, 2, 3 (spec-pack page-map: modules 116, 117, 115). */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import AboutMasthead from '@/components/site/AboutMasthead.astro'
+import AboutHappyHours from '@/components/site/AboutHappyHours.astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const SLUGS = ['happy-hours-style-1', 'happy-hours-style-2', 'happy-hours-style-3']
+const [{ entry: pageEntry }, masthead, ...offers] = await Promise.all([
+  getEmDashEntry('pages', 'offers', { locale }),
+  section('masthead', 'offers', locale),
+  ...SLUGS.map((s) => section('happyhours', s, locale))
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const stamp = (collection: string, row: Record<string, any> | null) =>
+  stampFor(Astro.request, collection, row ? { id: row.id, slug: row.slug } : null)
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'offers' } : null)
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  offers.map((o) => o?.hp_link)
+)
+---
+
+<Base chrome={chrome} title={page.title ?? masthead?.title ?? 'Offers'} currentPath="/offers" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'offers', toPath: () => '/offers' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<AboutMasthead masthead={masthead} stamp={stamp('masthead', masthead)} />
+		{offers.map((o, i) => o && <AboutHappyHours entry={o} stamp={stamp('happyhours', o)} style={(i + 1) as 1 | 2 | 3} live={live} />)}
+	</main>
+</Base>

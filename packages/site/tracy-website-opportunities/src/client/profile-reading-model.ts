@@ -5,7 +5,8 @@
  */
 type Rec = Record<string, unknown>
 
-export type ReadingSource = 'bio' | 'post' | 'review'
+/** Where an item is from: a text research read, or the owner who added it (a team member, #537 R14). */
+export type ReadingSource = 'bio' | 'post' | 'review' | 'owner'
 export type ReadingPick = 'remove' | 'restore' | 'show' | 'hide'
 
 export interface ReadingItemView {
@@ -15,6 +16,8 @@ export interface ReadingItemView {
   from: ReadingSource
   /** The post the quote is from, when it has an address. */
   url: string | null
+  /** The platform of the text (`instagram`, `google`...), when the server names it; a bio carries none. */
+  platform?: string | null
   /** Team only: the role a text gives the person. */
   role: string | null
   /** Removed from the site by the person. */
@@ -23,6 +26,18 @@ export interface ReadingItemView {
   reviewsOnly: boolean
   /** Team only: on the site. */
   onSite: boolean
+  /** Team only: the owner added this person (#537 R14); no quote stands behind them. */
+  owner: boolean
+  /** Team only: the media id of the photo the owner gave, or null. */
+  photoId: string | null
+  /** Team only: the name research read, when the owner renamed the person; else null. */
+  researchLabel: string | null
+  /** Team only: the person's fact in the saved profile (#537 R18); one the reading does not name switches through it. */
+  factId?: string
+  /** Team only: whether that fact is on the site. */
+  factOn?: boolean
+  /** Team only: the owner changed this person in the saved profile. */
+  edited?: boolean
 }
 
 export interface ReadingRowsView {
@@ -39,15 +54,16 @@ export interface ReadingRowsView {
 
 const rec = (v: unknown): Rec => (v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Rec) : {})
 const text = (v: unknown): string | null => (typeof v === 'string' && v.trim() !== '' ? v : null)
-const SOURCES: ReadingSource[] = ['bio', 'post', 'review']
+const SOURCES: ReadingSource[] = ['bio', 'post', 'review', 'owner']
 
 function itemOf(v: unknown): ReadingItemView | null {
   const i = rec(v)
   const id = text(i.id)
   const label = text(i.label)
-  const quote = text(i.quote)
   const source = rec(i.source)
   const from = SOURCES.find((s) => s === source.kind)
+  // A person the owner added stands on no quote.
+  const quote = text(i.quote) ?? (from === 'owner' ? '' : null)
   if (id === null || label === null || quote === null || from === undefined) return null
   const url = text(source.url)
   return {
@@ -56,10 +72,14 @@ function itemOf(v: unknown): ReadingItemView | null {
     quote,
     from,
     url: url !== null && url.startsWith('https://') ? url : null,
+    platform: text(source.source),
     role: text(i.role),
     removed: i.removed === true,
     reviewsOnly: i.reviewsOnly === true,
-    onSite: i.onSite !== false
+    onSite: i.onSite !== false,
+    owner: i.owner === true || from === 'owner',
+    photoId: text(rec(i.photo).id),
+    researchLabel: text(i.researchLabel)
   }
 }
 
@@ -72,7 +92,8 @@ const itemsOf = (v: unknown): ReadingItemView[] =>
 /** The rows, or null when the research read nothing (no reading, or a reading with no item). */
 export function readingRowsView(profile: unknown): ReadingRowsView | null {
   const card = rec(rec(profile).readingCard)
-  if (card.method !== 'model' && card.method !== 'rules') return null
+  // `owner`: no reading yet, only the people the owner added (#537 R14).
+  if (card.method !== 'model' && card.method !== 'rules' && card.method !== 'owner') return null
   const view: ReadingRowsView = {
     servicesLabel: card.trade === 'unknown' ? 'offerings' : 'services',
     rules: card.method === 'rules',

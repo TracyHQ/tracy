@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-558-contact-route-owner",
+  "kind": "fix",
+  "title": "A drifted contact menu alias resolves only through one exact native contact body",
+  "pr": 558,
+  "area": "wo/step-nine",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run contact-route write tests through the existing native door adapters."],
+  "expect": [
+    "One exact contact body resolves form closure, metadata, page links and slug writes to the same menu item; restoration uses its actual original alias.",
+    "The canonical kit path retains precedence even if it opens a different entity.",
+    "Ambiguous owners, duplicate menus, unrelated contacts, other components, unsafe rows and duplicate identity query fields remain unresolved."
+  ],
+  "selectors": {},
+  "fence": "Preserve exact-path precedence and refuse uncertain ownership; do not infer from titles or aliases. No paid calls or live site mutations.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/write-step-contact-route.test.mjs"],
+    "tests": [
+      "one exact contact owner unifies form, metadata, link and slug writes despite live alias drift",
+      "an exact published kit path retains precedence over contact-owner fallback",
+      "contact fallback refuses ambiguity, unrelated owners, other components and unsafe menu rows"
+    ],
+    "needs": []
+  }
+}

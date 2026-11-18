@@ -38,6 +38,7 @@ export const PLACE_SETTLED_REASONS = ['not_found', 'private_or_empty', 'ambiguou
 
 const REASONS = new Set([
   'credential_missing',
+  'not_collected',
   'login_required',
   'rate_limited',
   'not_found',
@@ -58,7 +59,8 @@ const REASONS = new Set([
   'demo_step_timeout',
   'agent_demo_turn_stopped',
   'agent_demo_turn_lost',
-  'agent_demo_ended_unchecked'
+  'agent_demo_ended_unchecked',
+  'brief_stale'
 ])
 
 const JOB_STATES = new Set(['queued', 'running', 'paused', 'blocked', 'failed', 'cancelled', 'completed'])
@@ -76,6 +78,12 @@ export interface SourceInput {
   /** A web search row only (`facebook-search`, `instagram-search`): the pages it found and how many queries it asked. */
   pages?: unknown
   queries?: number | null
+  /** The link the owner pasted that this source reads (Add a business by its links); absent: research found it. */
+  pastedLink?: string | null
+  /** When its data was collected (#524); null when it holds none. */
+  collectedAt?: string | null
+  /** Before research: the Google listing the place was picked from in a search (`source-links-model.ts`). */
+  fromSearch?: boolean
 }
 
 export interface SourceRow {
@@ -93,6 +101,7 @@ export interface SourceRow {
 export function reasonKey(code: unknown): string | null {
   if (typeof code !== 'string' || code === '') return null
   const lower = code.toLowerCase()
+  if (lower === 'http_402') return 'reason.provider_payment_required'
   return REASONS.has(lower) ? `reason.${lower}` : 'reason.other'
 }
 
@@ -107,7 +116,13 @@ export function sourceRow(input: SourceInput): SourceRow {
     reasonKey: reasonKey(input.reason),
     fetched: typeof fetched === 'number' ? fetched : 0,
     total: typeof total === 'number' ? total : null,
-    retryable: input.shared === true && RETRYABLE_TONES.has(tone) && isShownSource(input.source)
+    retryable:
+      input.shared === true &&
+      RETRYABLE_TONES.has(tone) &&
+      isShownSource(input.source) &&
+      !/^(?:http_(?:401|402|403)|credential_missing|switched_off|feature_off|not_configured)$/i.test(
+        input.reason ?? ''
+      )
   }
 }
 

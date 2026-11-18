@@ -1,0 +1,31 @@
+---
+/** One card of the blog list: cover, long date, title, the first paragraph and Read More. Each field is stamped for the comment picker. */
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { postPath, type PostRow } from '@/lib/posts'
+import { firstParagraph } from '@/lib/prose-text'
+import { stampFor } from '@/lib/stamps'
+import { ui } from '@/lib/ui'
+
+interface Props {
+  post: PostRow
+  locale: Locale
+  readMore: string
+  readMoreStamp?: Record<string, string>
+  order: number
+}
+const { post, locale, readMore, readMoreStamp = {}, order } = Astro.props
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+const cover = mediaUrl(post.cover)
+const url = href(locale, postPath(post))
+const intro = firstParagraph(post.excerpt) || firstParagraph(post.body)
+const when = post.date
+---
+
+<article class="dn-card dn-blog-card" style={`--o:${order}`} data-order={order} {...$p()}>
+	{cover && <a class="dn-card-img" href={url} tabindex="-1" aria-hidden="true"><img src={cover} alt="" width={post.cover?.width ?? 276} height={post.cover?.height ?? 184} loading="lazy" {...$p('cover')} /></a>}
+	<p class="dn-card-meta"><time datetime={when} {...$p('date')}>{formatDate(when, ui(locale).tag)}</time></p>
+	<h3><a href={url} {...$p('title')}>{post.title}</a></h3>
+	{intro && <p class="dn-card-intro" {...$p('excerpt')}>{intro}</p>}
+	<a class="dn-readmore" href={url} {...readMoreStamp}>{readMore}<span class="dn-arr" aria-hidden="true"></span></a>
+</article>

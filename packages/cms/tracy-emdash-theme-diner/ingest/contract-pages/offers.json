@@ -1,0 +1,89 @@
+{
+  "layout": {
+    "id": "Offers",
+    "view": "src/views/Offers.astro",
+    "family": "page"
+  },
+  "rules": [
+    ["hh-section-title", ".dn-hh-section", "index.php/offers/index.html"],
+    ["hh-heading", ".is-style-1 .dn-hh-heading", "index.php/offers/index.html"],
+    ["hh-info", ".is-style-1 .dn-hh-info-inner", "index.php/offers/index.html"],
+    ["hh-button", ".is-style-1 .dn-btn", "index.php/offers/index.html"],
+    [
+      "hh-heading-ink",
+      ".is-style-2 .dn-hh-heading, .is-style-3 .dn-hh-heading",
+      "index.php/offers/index.html"
+    ]
+  ],
+  "parity": {},
+  "pages": [
+    {
+      "id": "en-offers",
+      "path": "/offers",
+      "status": 200,
+      "source": ["index.php/offers/index.html"],
+      "identity": ".dn-hh",
+      "collections": ["chrome", "pages", "masthead", "happyhours"],
+      "rules": ["masthead-title", "hh-section-title", "hh-heading", "hh-info", "hh-button", "hh-heading-ink"],
+      "parity": ["nav", "footerTitle", "ground"],
+      "content": [
+        [
+          "offers-masthead",
+          ".dn-masthead-title",
+          "index.php/offers/index.html",
+          "field",
+          "masthead/offers.title",
+          "Offers"
+        ],
+        [
+          "offers-1-title",
+          ".is-style-1 .dn-hh-section",
+          "index.php/offers/index.html",
+          "field",
+          "happyhours/happy-hours-style-1.title",
+          "HAPPY HOURS STYLE 1"
+        ],
+        [
+          "offers-1-badge",
+          ".is-style-1 .dn-hh-badge",
+          "index.php/offers/index.html",
+          "field",
+          "happyhours/happy-hours-style-1.hp_badge",
+          "35% OFF"
+        ],
+        [
+          "offers-1-button",
+          ".is-style-1 .dn-btn",
+          "index.php/offers/index.html",
+          "field",
+          "happyhours/happy-hours-style-1.hp_link_text",
+          "JOIN NOW"
+        ],
+        [
+          "offers-2-title",
+          ".is-style-2 .dn-hh-section",
+          "index.php/offers/index.html",
+          "field",
+          "happyhours/happy-hours-style-2.title",
+          "HAPPY HOURS STYLE 2"
+        ],
+        [
+          "offers-2-button",
+          ".is-style-2 .dn-btn",
+          "index.php/offers/index.html",
+          "field",
+          "happyhours/happy-hours-style-2.hp_link_text",
+          "DON'T WAIT"
+        ],
+        [
+          "offers-3-title",
+          ".is-style-3 .dn-hh-section",
+          "index.php/offers/index.html",
+          "field",
+          "happyhours/happy-hours-style-3.title",
+          "HAPPY HOURS STYLE 3"
+        ]
+      ]
+    }
+  ]
+}

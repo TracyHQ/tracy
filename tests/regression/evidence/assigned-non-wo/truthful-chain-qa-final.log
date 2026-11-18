@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: the runner marks the demo action with the chain step identifiers in order as each step starts
+ok 1 - the runner marks the demo action with the chain step identifiers in order as each step starts
+  ---
+  duration_ms: 2940.569458
+  type: 'test'
+  ...
+# Subtest: a chain still writing past the two hour action deadline keeps its action open until it ends
+ok 2 - a chain still writing past the two hour action deadline keeps its action open until it ends
+  ---
+  duration_ms: 144.625459
+  type: 'test'
+  ...
+# Subtest: a soft-failed model step can hand over when the final write and site check passed
+ok 3 - a soft-failed model step can hand over when the final write and site check passed
+  ---
+  duration_ms: 248.199208
+  type: 'test'
+  ...
+# Subtest: a chain with missing brief never passes QA after base provisioning
+ok 4 - a chain with missing brief never passes QA after base provisioning
+  ---
+  duration_ms: 142.842333
+  type: 'test'
+  ...
+# Subtest: a chain with failed brief never passes QA after base provisioning
+ok 5 - a chain with failed brief never passes QA after base provisioning
+  ---
+  duration_ms: 125.597625
+  type: 'test'
+  ...
+# Subtest: a chain with stale running measurement never passes QA after base provisioning
+ok 6 - a chain with stale running measurement never passes QA after base provisioning
+  ---
+  duration_ms: 103.555041
+  type: 'test'
+  ...
+# Subtest: a chain with missing write measurement never passes QA after base provisioning
+ok 7 - a chain with missing write measurement never passes QA after base provisioning
+  ---
+  duration_ms: 99.443625
+  type: 'test'
+  ...
+# Subtest: a chain with failed final write never passes QA after base provisioning
+ok 8 - a chain with failed final write never passes QA after base provisioning
+  ---
+  duration_ms: 107.630292
+  type: 'test'
+  ...
+# Subtest: a chain with stopped final write never passes QA after base provisioning
+ok 9 - a chain with stopped final write never passes QA after base provisioning
+  ---
+  duration_ms: 105.492709
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4405.846416

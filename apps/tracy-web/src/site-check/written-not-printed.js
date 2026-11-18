@@ -42,7 +42,9 @@ export const writtenNotPrintedGroup = {
         reason:
           values.get(slot).kind === 'picture'
             ? `The picture is written and no page that shows this slot prints it (${read.join(', ')})`
-            : `The words are written and no page that shows this slot prints them (${read.join(', ')})`
+            : values.get(slot).kind === 'icon'
+              ? `The icon is written and no page that shows this slot prints its classes (${read.join(', ')})`
+              : `The words are written and no page that shows this slot prints them (${read.join(', ')})`
       }))
     }
   }

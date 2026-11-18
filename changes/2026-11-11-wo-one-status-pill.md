@@ -1,0 +1,2 @@
+- **One status pill for every state in the Website Opportunities screens: a tinted fill with a glyph, used by Workspace rows, Sources, estimates and brief chips, and a finished step shows its check only** — Akemi · #522 · `feat/wo-ux-512` · 2026-11-11
+  **Affects:** Website Opportunities customers (every state reads the same way in the list, Details and the Workspace card; the collected pill reads Data processed) and anyone styling these screens: the old per-screen chips and the Done pill are removed. The plugin client bundle is rebuilt.

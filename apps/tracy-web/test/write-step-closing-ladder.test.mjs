@@ -42,7 +42,7 @@ function withStatCard() {
   return kit
 }
 
-const hideable = (keys) => (slot) => (keys.includes(slot.key) ? { canHide: true } : {})
+const hideable = (keys) => (slot) => ({ canHide: keys.includes(slot.key) })
 /** The site holds the stat card's slots, which the base kit does not list. */
 const STAT_KEYS = ['module-2.7', 'module-2.8']
 
@@ -131,4 +131,72 @@ test('a frame whose drawn pictures were all rejected is emptied rather than keep
   )
   assert.equal(line('block-2.lost').status, 'hidden')
   assert.match(line('block-2.lost').reason, /the picture step left this frame without a picture/)
+})
+
+for (const capability of ['measured', 'unmeasured']) {
+  test(`native ${capability} permission clears a rejected picture through the full write step`, async () => {
+    const kit = pictureKit()
+    kit.doc.blocks
+      .find((b) => b.id === 'block-2')
+      .slots.push({ id: 'block-2.lost', type: 'image', role: 'business.photo', maxCharacters: 255 })
+    const pictures = picturePackage()
+    pictures.problems = [{ where: 'block-2.lost', detail: 'The documentary picture was refused.' }]
+    const { site, line } = await runPictures({
+      files: { pictures },
+      kit,
+      site: {
+        contract: {
+          extraKeys: [...PICTURE_KEYS, 'module-2.lost'],
+          overSlot: (slot) => (slot.key === 'module-2.lost' ? { canHide: capability } : {})
+        }
+      }
+    })
+    assert.equal(site.contract.held['module-2.lost'], '')
+    assert.equal(line('block-2.lost').status, 'hidden')
+  })
+}
+
+test('conditional native row permissions clear only a complete row with a verified peer', async () => {
+  for (const sameRow of [true, false]) {
+    const kit = withStatCard()
+    const copy = baseCopy()
+    copy.returns = [{ slot: 'block-2.7', reason: 'No supported number.' }]
+    const { site, line } = await runStep(
+      { copy },
+      {
+        extraKeys: STAT_KEYS,
+        overSlot: (slot) =>
+          STAT_KEYS.includes(slot.key)
+            ? { canHide: 'withRow', row: sameRow ? 'module-2:stat' : slot.key }
+            : {}
+      },
+      { kit }
+    )
+    assert.equal(line('block-2.7').status, sameRow ? 'hidden' : 'failed')
+    assert.equal(site.held['module-2.7'], sameRow ? '' : undefined)
+  }
+})
+
+test('unknown native hide tiers stay blocked', async () => {
+  const kit = withStatCard()
+  const { site, line } = await runStep(
+    {},
+    { extraKeys: STAT_KEYS, overSlot: () => ({ canHide: 'unknown-tier' }) },
+    { kit }
+  )
+  assert.equal(line('block-2.7').status, 'failed')
+  assert.equal(site.held['module-2.7'], undefined)
+})
+
+test('a conflicting hidden receipt cannot turn a retry into an unverified success', async () => {
+  const kit = withStatCard()
+  const copy = baseCopy()
+  copy.returns = [{ slot: 'block-2.7', reason: 'No supported number.' }]
+  const script = { extraKeys: STAT_KEYS, overSlot: hideable(STAT_KEYS) }
+  const first = await runStep({ copy }, script, { kit })
+  for (const line of first.report.slots) if (STAT_KEYS.includes(line.key)) line.readBack = 'differs'
+  const again = await runStep({ copy }, script, { kit, last: first.report })
+  assert.equal(again.report.status, 'stopped')
+  assert.equal(again.report.cause.code, 'NEEDS_NEW_SITE')
+  assert.equal(again.site.applies().length, 0)
 })

@@ -6,16 +6,35 @@ import { createHash } from 'node:crypto'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { goneRowSlots } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
-import { linkDoors } from './link-doors.js'
+import { foreignItemLinks } from './item-page-links.js'
+import { audioDecisionProblem, isAudioSlot } from 'website-opportunities/domain/audio-source.mjs'
+import { keptBlocks } from './owner-table.js'
+import { audioBindingMatches, linkDoors } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
 import { NO_LAST } from './no-last-report.js'
 import { articleOfPage, linkTarget } from './link-targets.js'
 import { menuRows } from '../lib/joomla-menu-rows.js'
 import { rowsOpening } from './page-meta-write.js'
-import { doorCall } from './settings-door.js'
+import { doorCall, readRow } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const PAGE_ROWS = 25
+
+// Contract keys survive a clone; only inspect's unique actual row mapping identifies the rendered article.
+function renderedAudioEntity(reading, entity) {
+  const ids = reading?.ids
+  const id = ids?.[entity]
+  if (
+    !ids ||
+    Array.isArray(ids) ||
+    !Number.isSafeInteger(id) ||
+    id <= 0 ||
+    Object.entries(ids).filter(([key, value]) => key.startsWith('article-') && String(value) === String(id))
+      .length !== 1
+  )
+    return null
+  return `article-${id}`
+}
 
 async function articleRows(call) {
   const rows = new Map()
@@ -34,7 +53,7 @@ async function readAddresses({ call, kit, leads }) {
   const pages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
   const rowless = leads
     .map((l) => pages.get(l.leadsTo))
-    .filter((p) => p && !rowsOpening(p, rows).length && articleOfPage(p, kit) !== null)
+    .filter((p) => p && !rowsOpening(p, rows, null, kit).length && articleOfPage(p, kit) !== null)
   return { rows, articles: rowless.length ? await articleRows(call) : new Map() }
 }
 
@@ -97,6 +116,43 @@ function settleControls(orders, doors, owners) {
 }
 
 /**
+ * The menu items a plan link relabels whose target cannot be written (a component item is a page of its own, or the site refused
+ * the target): the label would print the plan's words over the old target, the template's demo page. So each leaves the menus
+ * with its label (ADR 0044, closing ladder): its line is hidden on the item's row, and the write step unpublishes the item and
+ * does not write the label. Decided before any write, so nothing is half written.
+ */
+function strandedMenuItems({ claims, doors, orders, leaving }) {
+  const out = []
+  for (const claim of claims) {
+    const door = doors.get(claim.slot)
+    const order = orders.get(claim.slot)
+    if (door?.via !== 'menu' || !door.row || !claim.label || leaving.has(door.link?.menuItem)) continue
+    if (order?.status !== 'failed' && order?.status !== 'refused') continue
+    const id = Number(door.item)
+    const reason = `${order.reason}; so the item leaves the menus with its label instead of printing the plan's words over its old page`
+    Object.assign(order, {
+      status: 'hidden',
+      reason,
+      key: null,
+      ordered: '0',
+      readFrom: readRow('menuItem', id, 'published')
+    })
+    out.push({ item: `menuItem-${id}`, id, link: claim.slot, label: claim.label, reason })
+  }
+  return out
+}
+
+/** A menu target the site refused after the label was written: the item is unpublished, so the label opens no old page. */
+async function unpublishAfterRefusal(call, item, refusal) {
+  try {
+    await call('content.update', { kind: 'menuItem', id: item, fields: { published: 0 } })
+    return `${refusal}; the item was unpublished so its label does not open the old page`
+  } catch (error) {
+    return `${refusal}; unpublishing the item failed too: ${error.message}`
+  }
+}
+
+/**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, brief?: object, owners: Map<string, object>,
  *   reading: object, extras: object, taken: Record<string, string>, last?: object, createdPages?: Map<string, object> }} input
  *   `taken`: what other files send to the contract call; `last`: the last report, whose menu targets are not written again;
@@ -118,6 +174,18 @@ export async function prepareLinks({
   contentMap,
   createdPages
 }) {
+  const active = new Set(keptBlocks(plan).map((d) => d.block))
+  const media = each(kit?.blocks)
+    .filter((b) => active.has(b.id))
+    .flatMap((block) =>
+      each(block.links)
+        .filter((l) => l.action === 'media-source')
+        .map((link) => ({ link, block }))
+    )
+  const audioFailures = []
+  const audioOrders = []
+  let audioReadback = []
+  const emptySlots = []
   const claims = [...owners.values()].filter((c) => c.kind === 'link')
   const call = doorCall(door, siteKey)
   let site
@@ -128,6 +196,9 @@ export async function prepareLinks({
     return {
       changes: {},
       evidence: {},
+      emptySlots,
+      audioFailures: media.map(({ link }) => ({ slot: link.id, reason })),
+      readbackAudio: async () => [],
       writeMenu: async () => {},
       results: () => new Map(claims.map((c) => [c.slot, failed(reason)]))
     }
@@ -145,13 +216,32 @@ export async function prepareLinks({
   )
   const orders = new Map()
   const doors = new Map(claims.map((claim) => [claim.slot, doorOf(claim.slot)]))
+  // A card sent to another card's item page leads to the page that lists them instead (item-page-links.js).
+  const foreign = foreignItemLinks({ claims, kit, plan, taken })
   for (const claim of claims)
     orders.set(
       claim.slot,
       lineOrder(
         claim,
         doors.get(claim.slot),
-        linkTarget(claim.content, { plan, kit, facts, createdPages, ...site }),
+        foreign.has(claim.slot) && !foreign.get(claim.slot).content
+          ? { kind: 'failed', reason: foreign.get(claim.slot).reason }
+          : doors.get(claim.slot)?.link?.action === 'media-source'
+            ? (() => {
+                const reason = audioDecisionProblem(
+                  doors.get(claim.slot).link,
+                  claim.content,
+                  each(brief?.facts)
+                )
+                return reason ? { kind: 'failed', reason } : { kind: 'audio', url: claim.content }
+              })()
+            : linkTarget(foreign.get(claim.slot)?.content ?? claim.content, {
+                plan,
+                kit,
+                facts,
+                createdPages,
+                ...site
+              }),
         {
           hiddenKeys,
           leaving,
@@ -159,7 +249,114 @@ export async function prepareLinks({
         }
       )
     )
+  for (const { link, block } of media) {
+    const bound = doorOf(link.id)
+    const slot = each(reading?.slots).find((s) => s.key === contentMapKey(link.sourceSlot))
+    const claim = owners.get(link.id)
+    let reason =
+      bound.via !== 'audio'
+        ? bound.reason
+        : !renderedAudioEntity(reading, link.sourceBinding.entity)
+          ? 'audio source has no unique trusted actual article ID'
+          : null
+    if (!reason && claim?.kind === 'link') {
+      const order = orders.get(link.id)
+      if (order?.via !== 'slot') reason = order?.reason ?? 'audio source decision was refused'
+      else audioOrders.push({ link, block, key: slot.key, value: order.url })
+    } else if (!reason && (!claim || claim.kind === 'hide')) {
+      if (slot.canHide !== true || slot.key in taken)
+        reason = 'audio absence requires proven source hide eligibility and no competing write'
+      else {
+        emptySlots.push(slot.key)
+        audioOrders.push({ link, block, key: slot.key, value: '' })
+      }
+    } else if (!reason) reason = 'audio source has a competing non-media owner'
+    if (reason) audioFailures.push({ slot: link.id, reason })
+  }
+  const readbackAudio = async () => {
+    if (!audioOrders.length) return []
+    let after
+    try {
+      after = await call('content.contract', { operation: 'inspect' })
+    } catch (error) {
+      audioReadback = audioOrders.map(({ key }) => ({
+        key,
+        stored: false,
+        status: 'failed',
+        reason: `audio source inspect failed: ${error.message}`
+      }))
+      return audioReadback
+    }
+    audioReadback = audioOrders.map(({ link, block, key, value }) => {
+      const slots = each(after?.slots).filter((s) => s.key === key)
+      const beforeOwner = each(reading?.slots).filter(
+        (s) => s.entity === link.sourceBinding.entity && isAudioSlot(s)
+      )
+      const owner = each(after?.slots).filter((s) => s.entity === link.sourceBinding.entity && isAudioSlot(s))
+      const census =
+        owner.length === beforeOwner.length &&
+        owner.every(
+          (s) =>
+            beforeOwner.filter(
+              (b) =>
+                b.key === s.key &&
+                audioBindingMatches(
+                  s,
+                  {
+                    ...link,
+                    id: b.key,
+                    sourceSlot: b.key,
+                    target: b.sample,
+                    sourceBinding: {
+                      entity: b.entity,
+                      column: b.column,
+                      jsonPath: b.jsonPath,
+                      group: b.group
+                    }
+                  },
+                  block
+                ) &&
+                s.current === (audioOrders.find((o) => o.key === b.key)?.value ?? b.current)
+            ).length === 1
+        )
+      const entity = renderedAudioEntity(after, link.sourceBinding.entity)
+      const stored =
+        !!entity &&
+        entity === renderedAudioEntity(reading, link.sourceBinding.entity) &&
+        census &&
+        after?.contract === reading?.contract &&
+        slots.length === 1 &&
+        audioBindingMatches(slots[0], link, block) &&
+        slots[0].current === value &&
+        (value !== '' || slots[0].canHide === true)
+      return {
+        key,
+        ordered: value,
+        contractEntity: link.sourceBinding.entity,
+        sourceBinding: link.sourceBinding,
+        entity,
+        track: String(link.sourceBinding.group.item),
+        block: block.id,
+        allEmpty: census && owner.every((s) => s.current === ''),
+        ownerTracks: owner.map((s) => ({
+          key: s.key,
+          entity,
+          track: String(s.group?.item),
+          ordered: s.current
+        })),
+        stored,
+        status: stored ? 'pending' : 'failed',
+        reason: stored
+          ? value
+            ? 'stored source verified; initialized player metadata/error-free playback proof is still required'
+            : 'empty source verified; whole track row and all-empty player absence proof is still required'
+          : 'audio source readback did not preserve the exact contract/owner/track/value'
+      }
+    })
+    return audioReadback
+  }
   settleControls(orders, doors, owners)
+  const stranded = strandedMenuItems({ claims, doors, orders, leaving })
 
   const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
   const values = new Map()
@@ -181,6 +378,10 @@ export async function prepareLinks({
       else values.set(key, order.url)
     }
   settleShared(orders, values)
+  for (const order of audioOrders) {
+    if (order.value && values.get(order.key) !== order.value)
+      audioFailures.push({ slot: order.link.id, reason: 'audio source conflicts with another write' })
+  }
   const changes = Object.fromEntries(values)
   const evidence = {}
   for (const claim of claims) {
@@ -211,18 +412,54 @@ export async function prepareLinks({
         await call('content.update', { apply_id: applyId, kind: 'menuItem', id: item, fields: { link: url } })
         menuDone.set(order, 'done')
       } catch (error) {
-        menuDone.set(order, error.message)
+        // Its label is written by now: an item left on its old target would print the plan's words over that page.
+        menuDone.set(order, await unpublishAfterRefusal(call, item, error.message))
       }
     }
   }
 
+  // The addresses a kept plan link writes over the plan's hide of them (link-lines.js `overHide`): the hide stage yields there.
+  const overHides = new Set(
+    [...orders.values()]
+      .filter((o) => o.overHide && (o.via === 'slot' || o.via === 'shared'))
+      .flatMap((o) => [...o.keys, ...(o.alsoKeys ?? [])])
+      .filter((key) => key in changes)
+  )
   return {
     changes,
     evidence,
+    overHides,
+    // The doors, read with the menu rows, which the hide stage reads a hidden link's address by too (hide-plan.js).
+    doorOf,
+    stranded,
+    emptySlots,
+    audioFailures,
+    readbackAudio,
+    acceptAudioProof: (proof) => {
+      audioReadback = proof
+    },
     writeMenu,
     results: (done) => {
       const seen = { ...done, written: new Set(done.written), hiddenKeys, leaving, menuDone }
-      return new Map([...orders].map(([slot, order]) => [slot, lineResult(order, seen)]))
+      return new Map(
+        [...orders].map(([slot, order]) => {
+          const line = lineResult(order, seen)
+          const source = audioReadback.find((a) => a.key === order.keys?.[0])
+          if (source)
+            return [
+              slot,
+              {
+                ...line,
+                status: source.stored && source.status !== 'failed' ? 'written' : 'failed',
+                reason: source.reason,
+                stored: source.stored,
+                mediaProof: source.status
+              }
+            ]
+          const moved = foreign.get(slot)
+          return [slot, moved && line.status === 'written' ? { ...line, reason: moved.reason } : line]
+        })
+      )
     }
   }
 }

@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto'
 import { BUSY_WAITS_MS, refusalWords } from './contract-write.js'
 import { menuRows } from '../lib/joomla-menu-rows.js'
 import { rowsOpening } from './page-meta-write.js'
+import { articleOwners } from './hide-plan.js'
 import { HIDE_ORDERS_DOOR, opens, ROWS_REMOVE_DOOR } from './plugin-doors.js'
 import { answerWords, doorCall, readRow } from './settings-door.js'
 
@@ -47,7 +48,7 @@ async function asked(door, call, sleep) {
 }
 
 /** Unpublishes the items of dropped pages the main menu does not take away. By page id: { status, reason, ... }. */
-export async function dropPages({ door, siteKey, pages, results }) {
+export async function dropPages({ door, siteKey, pages, results, kit, plan }) {
   if (!pages.length) return false
   const call = doorCall(door, siteKey)
   const applyId = `hide-pages-${digest(pages.map((p) => p.page.id)).slice(0, 32)}`
@@ -68,12 +69,41 @@ export async function dropPages({ door, siteKey, pages, results }) {
       })
       continue
     }
+    const articles = articleOwners(page, kit)
+    const kept = new Set((plan?.pages ?? []).filter((p) => p?.decision === 'keep').map((p) => p.id))
+    const shared = articles.find((id) =>
+      (kit?.pages ?? []).some((p) => kept.has(p.id) && articleOwners(p, kit).includes(id))
+    )
+    if (articles.length > 1 || shared !== undefined) {
+      results.set(page.id, {
+        status: 'failed',
+        reason:
+          shared !== undefined
+            ? `article-${shared} also belongs to a kept page, so it stays published`
+            : 'the dropped page has multiple native article owners, so none can be safely unpublished'
+      })
+      continue
+    }
     const opening = rowsOpening(page, rows)
-    if (!opening.length) {
+    if (!opening.length && !articles.length) {
       results.set(page.id, { status: 'skipped', reason: 'no published menu item opens this dropped page' })
       continue
     }
     try {
+      let articleState = '0'
+      for (const id of articles) {
+        const current = await call('content.get', { kind: 'article', id })
+        if (
+          Number(current?.item?.id) !== id ||
+          current?.item?.state == null ||
+          ![-2, 0, 1, 2].includes(Number(current.item.state))
+        )
+          throw new Error(`The site did not return the published state of article-${id}.`)
+        if (Number(current.item.state) === 1) {
+          await call('content.update', { apply_id: applyId, kind: 'article', id, fields: { state: 0 } })
+          wrote = true
+        } else articleState = String(current.item.state)
+      }
       for (const row of opening) {
         await call('content.update', {
           apply_id: applyId,
@@ -85,8 +115,12 @@ export async function dropPages({ door, siteKey, pages, results }) {
       }
       results.set(page.id, {
         status: 'hidden',
-        reason: 'the plan drops this page: its menu item is unpublished',
-        ...unpublishedRead('menuItem', Number(opening[0].id))
+        reason: articles.length
+          ? 'the plan drops this page: its native article is unpublished so category lists and article navigation cannot show it'
+          : 'the plan drops this page: its menu item is unpublished',
+        ...(articles.length
+          ? { ordered: articleState, readFrom: readRow('article', articles[0], 'state') }
+          : unpublishedRead('menuItem', Number(opening[0].id)))
       })
     } catch (error) {
       results.set(page.id, { status: 'failed', reason: error.message })

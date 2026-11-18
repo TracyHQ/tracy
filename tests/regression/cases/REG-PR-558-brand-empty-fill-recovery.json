@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-558-brand-empty-fill-recovery",
+  "kind": "fix",
+  "title": "An empty brand cut mask names the existing opaque proof recovery instead of recommending detail-destroying solid recolouring",
+  "pr": 558,
+  "area": "wo/brand",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the existing cut and recolour tool tests, including the synthetic ring-and-bar zero-mask recovery and fitting regression."
+  ],
+  "expect": [
+    "A transparent-source cut with an empty fill mask refuses inversion and names the actual readable opaque proof and exact cut_mark arguments.",
+    "Recutting that proof with the existing tool produces a nonempty mask; default inversion preserves distinct ring, internal bar and enclosed-fill tones before a real markOnly fit.",
+    "The fitted output has the kit's 2x geometry and every original source, mask and proof remains unchanged.",
+    "A missing, transparent or unreadable proof does not produce a fabricated recovery path, and the refusal warns that solid mode discards internal detail and still requires image review.",
+    "Default and explicit solid modes remain available for lettermarks; no passing reviewer record or acceptance verdict is fabricated."
+  ],
+  "selectors": {},
+  "fence": "Use existing tools and proofs only; preserve the approved prompt, existing thresholds, original images and independent image review. Mechanism PASS is not site or visual acceptance.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brand-tool-cut-recolour.test.mjs"],
+    "tests": [
+      "recolour_mark: an empty mask points to the existing opaque proof, whose recut supports a detailed inverse and fit",
+      "recolour_mark: an empty mask without an opaque proof warns about detail loss without offering a fabricated recovery",
+      "recolour_mark: palette mode for an icon recolours only the colours that do not read; solid for a lettermark"
+    ],
+    "needs": []
+  }
+}

@@ -414,6 +414,65 @@ test('the committed catalogues move whole: every Joomla pin, five values each, n
   assert.equal(changed.length, joomla.length * 5)
 })
 
+test('an existing RC can move to its stable release, but never back to an older stable version', () => {
+  for (const version of ['0.30.1-rc.2', '0.30.2-rc.2', '0.31.0-rc.2']) {
+    const root = tree({
+      alpha: version,
+      mutate: (catalogue) => {
+        const pin = catalogue['quickstart/alpha/j6'].cowork
+        pin.bytes = 1002
+        pin.sha256 = '2'.repeat(64)
+        return catalogue
+      }
+    })
+    try {
+      const before = texts(root)
+      const rel = release(root, '0.30.2', carried())
+      const args = [...rel.args, '--quickstart', 'quickstart/alpha/j6']
+      const preview = run(root, [...args, '--dry-run'])
+      assert.equal(preview.status, 0, preview.stderr)
+      assert.deepEqual(texts(root), before, 'dry run leaves both catalogues unchanged')
+      const out = run(root, args)
+      assert.equal(out.status, 0, out.stderr)
+      const after = texts(root)
+      assert.equal(after[0], after[1])
+      if (version === '0.31.0-rc.2') {
+        assert.deepEqual(after, before, 'a newer RC is never downgraded')
+      } else {
+        const was = JSON.parse(before[0])
+        const now = JSON.parse(after[0])
+        assert.equal(now['quickstart/alpha/j6'].cowork.version, '0.30.2')
+        assert.equal(now['quickstart/alpha/j6'].cowork.sha256, sha(rel.pkg))
+        for (const key of MOVED)
+          was['quickstart/alpha/j6'].cowork[key] = now['quickstart/alpha/j6'].cowork[key]
+        assert.deepEqual(now, was, "only the selected pin's five release values move")
+      }
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  }
+})
+
+test('existing RC pins still refuse incompatible contracts and malformed candidate versions without writes', () => {
+  for (const version of ['0.30.2-rc.2', '0.30.2-rc.01', '0.30.2-rc.', '0.30.2-beta.1']) {
+    const root = tree({ alpha: version })
+    try {
+      const before = texts(root)
+      const profiles = without(carried(), 'alpha/j6/1.0.0')
+      const out = run(root, [
+        ...release(root, '0.30.2', profiles).args,
+        '--quickstart',
+        'quickstart/alpha/j6'
+      ])
+      assert.equal(out.status, 1, out.stderr)
+      assert.match(out.stderr, version === '0.30.2-rc.2' ? /carries no alpha\/j6\/1\.0\.0/ : /pinned version/)
+      assert.deepEqual(texts(root), before)
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  }
+})
+
 /**
  * A SLIM Claude Cowork for Joomla release (after joomla-v0.24.53): the component holds only
  * `administrator/lib/contracts.json`, and each profile is its own release asset,
@@ -492,6 +551,23 @@ test('a slim release: each recorded profile is checked from its own asset, then 
     const now = JSON.parse(texts(root)[0])
     for (const id of ['quickstart/alpha/j6', 'beta/j6']) assert.equal(now[id].cowork.version, '0.30.2', id)
     assert.match(out.stderr, /4 profiles its index lists \(3 fetched\)/)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('a slim release moves an existing RC pin to its stable version, each recorded profile checked from its own asset', () => {
+  // JA Diner j6 sat on 0.24.95-rc.2 when 0.24.96 was cut (16/11/2026): the slim fetch only ran for stable pins, so the
+  // candidate's profile was never fetched and the move was refused with "carries no ja-diner/j6/1.0.8".
+  const root = tree({ alpha: '0.30.2-rc.2' })
+  try {
+    const rel = slimRelease(root, '0.30.2', carried())
+    const out = run(root, [...rel.args, '--quickstart', 'quickstart/alpha/j6'])
+    assert.equal(out.status, 0, out.stderr)
+    const pin = JSON.parse(texts(root)[0])['quickstart/alpha/j6'].cowork
+    assert.equal(pin.version, '0.30.2')
+    assert.equal(pin.sha256, sha(rel.pkg))
+    assert.match(out.stderr, /0\.30\.2-rc\.2 -> 0\.30\.2/)
   } finally {
     rmSync(root, { recursive: true, force: true })
   }

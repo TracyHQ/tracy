@@ -10,8 +10,9 @@
 // shortlist never goes to the picker; it waits for the drawer. Photos are named P1, P2, ... in the brief's order, and
 // only the photos of some shortlist are shown.
 import sharp from 'sharp'
-import { cutPhoto } from './cut-photo.js'
+import { CUTS_AT_ONCE, cutPhoto } from './cut-photo.js'
 import { WAITS_FOR } from './fill-frames.js'
+import { inParallel } from './looker-step.js'
 import { OWNER_SOURCES } from './manifest-shape.js'
 import { rankForFrame, sameService } from './photo-shortlist.js'
 
@@ -35,6 +36,7 @@ export function needsPicker(idx) {
     const frame = idx.frames.get(frameId)
     if (!frame || (frame.writable === false && frame.paintedBehind !== true) || isTwin(idx, frameId)) continue
     if (['logo', 'icon', 'cutout'].includes(frame.kind)) continue
+    if (frame.transparent === true) continue
     if (wish.match !== 'any-real' && wish.match !== 'person') return true
   }
   return false
@@ -53,14 +55,15 @@ const wordsOf = (wish, frame) => ({
 /**
  * Everything the picker needs, made before its call.
  * @param {{ idx: object, manifest: { frames: object[], siteSettings: object[], pending: object[] },
- *   usable: object[], photoBytes: Map<string, Buffer> }} input `manifest` the code half's parts; `usable` the brief
- *   photos code may use (photo-shortlist.js usablePhotos)
+ *   usable: object[], photoBytes: Map<string, Buffer>, cut?: typeof cutPhoto }} input `manifest` the code half's
+ *   parts; `usable` the brief photos code may use (photo-shortlist.js usablePhotos); `cut` what cuts a photo for a
+ *   frame (cut-photo.js cutMemo, the one the code half marked the picker's photos with), cutPhoto when not given
  * @returns {Promise<{ frames: object[], noFit: string[], codes: Map<string, object>, files: Map<string, object>,
  *   thumbnails: Map<string, { base64: string, mediaType: string, width: number, height: number }> }>} `frames` the
  *   frames the picker answers, each `{ frame, list, wish, words, candidates: Map<code, cut> }`; `noFit` the picker
  *   frames no photo fits; `codes` the brief asset of each code; `thumbnails` by code
  */
-export async function pickerInput({ idx, manifest, usable, photoBytes }) {
+export async function pickerInput({ idx, manifest, usable, photoBytes, cut = cutPhoto }) {
   const placed = [...manifest.frames, ...manifest.siteSettings].filter((e) => OWNER_SOURCES.has(e.source))
   const onPage = new Set()
   for (const e of placed) for (const p of idx.wishes.get(e.frame)?.pages ?? []) onPage.add(`${p} ${e.asset}`)
@@ -69,36 +72,36 @@ export async function pickerInput({ idx, manifest, usable, photoBytes }) {
   const order = new Map(usable.map((a, i) => [a.id, i]))
 
   const wanted = manifest.pending.filter((p) => p.waitsFor === WAITS_FOR.picker && !isTwin(idx, p.frame))
-  const shortlisted = []
-  for (const p of wanted) {
+  const lists = wanted.map((p) => {
     const wish = idx.wishes.get(p.frame)
     const frame = idx.frames.get(p.frame)
     const free = rankForFrame(usable, wish, frame, usage)
       .map((r) => r.a)
       .filter((a) => ![...wish.pages].some((pg) => onPage.has(`${pg} ${a.id}`)))
+    return { p, wish, frame, free }
+  })
+  // Every frame's free photos, cut CUTS_AT_ONCE at a time across the frames; each shortlist keeps its frame's order.
+  const pairs = lists.flatMap((l) => l.free.map((a) => [l, a]))
+  const made = await inParallel(pairs, CUTS_AT_ONCE, ([{ p, wish, frame }, a]) =>
+    cut(photoBytes.get(a.id), a, frame, idx.demoSize(p.frame), { matches: sameService(a, wish) })
+  )
+  let at = 0
+  const shortlisted = lists.map(({ p, wish, frame, free }) => {
     const cuts = new Map()
     for (const a of free) {
-      const cut = await cutPhoto(photoBytes.get(a.id), a, frame, idx.demoSize(p.frame), {
-        matches: sameService(a, wish)
-      })
-      if (cut.ok) cuts.set(a.id, cut)
+      const got = made[at++]
+      if (got.ok) cuts.set(a.id, got)
     }
-    shortlisted.push({
-      frame: p.frame,
-      list: idx.listOf(frame),
-      wish,
-      words: wordsOf(wish, frame),
-      cuts
-    })
-  }
+    return { frame: p.frame, list: idx.listOf(frame), wish, words: wordsOf(wish, frame), cuts }
+  })
 
   // Codes in the brief's order, for the photos some shortlist holds.
   const shown = new Set(shortlisted.flatMap((f) => [...f.cuts.keys()]))
   const assets = usable.filter((a) => shown.has(a.id)).sort((x, y) => order.get(x.id) - order.get(y.id))
   const codes = new Map(assets.map((a, i) => [`P${i + 1}`, a]))
   const codeOf = new Map([...codes].map(([code, a]) => [a.id, code]))
-  const thumbnails = new Map()
-  for (const [code, a] of codes) thumbnails.set(code, await thumbnailOf(photoBytes.get(a.id)))
+  const thumbs = await inParallel([...codes.values()], CUTS_AT_ONCE, (a) => thumbnailOf(photoBytes.get(a.id)))
+  const thumbnails = new Map([...codes.keys()].map((code, i) => [code, thumbs[i]]))
 
   const files = new Map()
   const frames = []

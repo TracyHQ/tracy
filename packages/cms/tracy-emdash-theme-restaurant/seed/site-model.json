@@ -801,6 +801,10 @@
           "type": "text"
         },
         {
+          "name": "search_label",
+          "type": "text"
+        },
+        {
           "name": "gallery_link_label",
           "type": "text"
         },
@@ -2549,42 +2553,42 @@
             "dish_description": "Lightly battered squid and seasonal vegetables, fried crisp and finished with lemon and spicy aioli.",
             "dish_price": "$47",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-2.jpg"
+            "dish_image": "images/joomlart/features-intro/intro-4.jpg"
           },
           {
             "dish_name": "Japanese Gyoza",
             "dish_description": "Pan-seared pork and cabbage dumplings with a soy-ginger dipping sauce and hot mustard.",
             "dish_price": "$56",
             "dish_extra_class": "Sale",
-            "dish_image": "images/joomlart/food/fd-3.jpg"
+            "dish_image": "images/joomlart/gallery/intro-8.jpg"
           },
           {
             "dish_name": "Trio of Dips",
             "dish_description": "Smoked trout dip, warm cheese dip and house hummus with freshly sliced baguette.",
             "dish_price": "$33",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-4.jpg"
+            "dish_image": "images/joomlart/food/fd-3.jpg"
           },
           {
             "dish_name": "Szechuan Edamame",
             "dish_description": "Wok-tossed edamame with dried chilies, garlic and soy, made for sharing over a cold beer.",
             "dish_price": "$47",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-5.jpg"
+            "dish_image": "images/joomlart/features-intro/intro-3.jpg"
           },
           {
             "dish_name": "Cheeseburger Sliders",
             "dish_description": "Three mini burgers with our secret sauce, American cheese and pickles on toasted brioche.",
             "dish_price": "$58",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-6.jpg"
+            "dish_image": "images/joomlart/food/fd-5.jpg"
           },
           {
             "dish_name": "Lettuce Wraps",
             "dish_description": "Crisp butter lettuce cups with toasted peanuts, crispy noodles and fresh cilantro.",
             "dish_price": "$89",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-7.jpg"
+            "dish_image": "images/joomlart/blog/rest-6.jpg"
           }
         ],
         "background": "",
@@ -2605,70 +2609,70 @@
             "dish_description": "tempura style, cool cucumbers, chili sauce",
             "dish_price": "$30",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-1.jpg"
+            "dish_image": "images/joomlart/food/fd-1.jpg"
           },
           {
             "dish_name": "Calamari Fritti ",
             "dish_description": "tempura vegetables, spicy aioli",
             "dish_price": "$47",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-2.jpg"
+            "dish_image": "images/joomlart/features-intro/intro-4.jpg"
           },
           {
             "dish_name": "Japanese Gyoza",
             "dish_description": "pork dumplings with hot mustard",
             "dish_price": "$56",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-3.jpg"
+            "dish_image": "images/joomlart/gallery/intro-8.jpg"
           },
           {
             "dish_name": "Trio of Dips",
             "dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
             "dish_price": "$33",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-4.jpg"
+            "dish_image": "images/joomlart/food/fd-3.jpg"
           },
           {
             "dish_name": "Szechuan Edamame",
             "dish_description": "wok tossed with chilies, garlic, soy sauce",
             "dish_price": "$47",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-6.jpg"
+            "dish_image": "images/joomlart/features-intro/intro-3.jpg"
           },
           {
             "dish_name": "Cheeseburger Sliders",
             "dish_description": "secret sauce & American cheese + additional sliders $4/each",
             "dish_price": "$58",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-7.jpg"
+            "dish_image": "images/joomlart/food/fd-5.jpg"
           },
           {
             "dish_name": "Lettuce Wraps",
             "dish_description": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
             "dish_price": "$89",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-8.jpg"
+            "dish_image": "images/joomlart/blog/rest-6.jpg"
           },
           {
             "dish_name": "Pesto Shrimp Flatbread",
             "dish_description": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
             "dish_price": "$29",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-9.jpg"
+            "dish_image": "images/joomlart/blog/rest-7.jpg"
           },
           {
             "dish_name": "Lime Juice",
             "dish_description": "chutney, red onion, cilantro, yogurt",
             "dish_price": "$30",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-10.jpg"
+            "dish_image": "images/joomlart/icream/ic-11.jpg"
           },
           {
             "dish_name": "Hot Wings",
             "dish_description": "Frank's hot sauce, creamy blue cheese dip",
             "dish_price": "$30",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-11.jpg"
+            "dish_image": "images/joomlart/food/fd-2.jpg"
           }
         ],
         "background": "",
@@ -2765,42 +2769,42 @@
             "dish_description": "Lightly battered squid and seasonal vegetables, fried crisp and finished with lemon and spicy aioli.",
             "dish_price": "$47",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-2.jpg"
+            "dish_image": "images/joomlart/features-intro/intro-4.jpg"
           },
           {
             "dish_name": "Japanese Gyoza",
             "dish_description": "Pan-seared pork and cabbage dumplings with a soy-ginger dipping sauce and hot mustard.",
             "dish_price": "$56",
             "dish_extra_class": "Sale",
-            "dish_image": "images/joomlart/food/fd-3.jpg"
+            "dish_image": "images/joomlart/gallery/intro-8.jpg"
           },
           {
             "dish_name": "Trio of Dips",
             "dish_description": "Smoked trout dip, warm cheese dip and house hummus with freshly sliced baguette.",
             "dish_price": "$33",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-4.jpg"
+            "dish_image": "images/joomlart/food/fd-3.jpg"
           },
           {
             "dish_name": "Szechuan Edamame",
             "dish_description": "Wok-tossed edamame with dried chilies, garlic and soy, made for sharing over a cold beer.",
             "dish_price": "$47",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-5.jpg"
+            "dish_image": "images/joomlart/features-intro/intro-3.jpg"
           },
           {
             "dish_name": "Cheeseburger Sliders",
             "dish_description": "Three mini burgers with our secret sauce, American cheese and pickles on toasted brioche.",
             "dish_price": "$58",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-6.jpg"
+            "dish_image": "images/joomlart/food/fd-5.jpg"
           },
           {
             "dish_name": "Lettuce Wraps",
             "dish_description": "Crisp butter lettuce cups with toasted peanuts, crispy noodles and fresh cilantro.",
             "dish_price": "$89",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/food/fd-7.jpg"
+            "dish_image": "images/joomlart/blog/rest-6.jpg"
           }
         ],
         "background": "",
@@ -2821,70 +2825,70 @@
             "dish_description": "tempura style, cool cucumbers, chili sauce",
             "dish_price": "$30",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-1.jpg"
+            "dish_image": "images/joomlart/food/fd-1.jpg"
           },
           {
             "dish_name": "Calamari Fritti ",
             "dish_description": "tempura vegetables, spicy aioli",
             "dish_price": "$47",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-2.jpg"
+            "dish_image": "images/joomlart/features-intro/intro-4.jpg"
           },
           {
             "dish_name": "Japanese Gyoza",
             "dish_description": "pork dumplings with hot mustard",
             "dish_price": "$56",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-3.jpg"
+            "dish_image": "images/joomlart/gallery/intro-8.jpg"
           },
           {
             "dish_name": "Trio of Dips",
             "dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
             "dish_price": "$33",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-4.jpg"
+            "dish_image": "images/joomlart/food/fd-3.jpg"
           },
           {
             "dish_name": "Szechuan Edamame",
             "dish_description": "wok tossed with chilies, garlic, soy sauce",
             "dish_price": "$47",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-6.jpg"
+            "dish_image": "images/joomlart/features-intro/intro-3.jpg"
           },
           {
             "dish_name": "Cheeseburger Sliders",
             "dish_description": "secret sauce & American cheese + additional sliders $4/each",
             "dish_price": "$58",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-7.jpg"
+            "dish_image": "images/joomlart/food/fd-5.jpg"
           },
           {
             "dish_name": "Lettuce Wraps",
             "dish_description": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
             "dish_price": "$89",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-8.jpg"
+            "dish_image": "images/joomlart/blog/rest-6.jpg"
           },
           {
             "dish_name": "Pesto Shrimp Flatbread",
             "dish_description": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
             "dish_price": "$29",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-9.jpg"
+            "dish_image": "images/joomlart/blog/rest-7.jpg"
           },
           {
             "dish_name": "Lime Juice",
             "dish_description": "chutney, red onion, cilantro, yogurt",
             "dish_price": "$30",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-10.jpg"
+            "dish_image": "images/joomlart/icream/ic-11.jpg"
           },
           {
             "dish_name": "Hot Wings",
             "dish_description": "Frank's hot sauce, creamy blue cheese dip",
             "dish_price": "$30",
             "dish_extra_class": "",
-            "dish_image": "images/joomlart/icream/ic-11.jpg"
+            "dish_image": "images/joomlart/food/fd-2.jpg"
           }
         ],
         "background": "",
@@ -3042,7 +3046,7 @@
           {
             "date": "2016-08-16",
             "icon": "",
-            "image": "images/joomlart/map-contact.jpg",
+            "image": "images/joomlart/features-intro/intro-2.jpg",
             "title": "A new chapter for the dining room",
             "description": "We restored the original tin ceiling, opened the back garden for summer dinners and welcomed a new generation of cooks to the kitchen, while keeping the dishes our regulars ask for by name."
           },
@@ -3208,6 +3212,7 @@
         "next_label": "Next",
         "more_label": "More Articles ...",
         "photos_label": "Photos",
+        "search_label": "Search",
         "gallery_link_label": "View more our gallery",
         "not_found_code": "404",
         "not_found_title": "Page not found",
@@ -3433,7 +3438,7 @@
         "card_title": "Contact Us",
         "card_text": "We take reservations for lunch and dinner.<br/> To make a reservation, please call us at <a href=\"tel:+10845550110\">(084) 555-0110</a> between 9 am and 5 pm,<br/> Monday to Friday.",
         "details_title": "Contact",
-        "image": "images/joomlart/map-contact.jpg",
+        "image": "images/joomlart/blog/rest-8.jpg",
         "address": "4 5th Avenue at St. Marks Place, Cathedral District Brooklyn, NY 11217",
         "phone": "(084) 555-0110",
         "mobile": "048 594 5483"
@@ -3446,7 +3451,7 @@
       "status": "published",
       "values": {
         "title": "Reserve by Phone",
-        "intro": "<p>We take reservations for lunch and dinner. To make a reservation, please call us at <a href=\"tel:+10845550110\">(084) 555-0110</a> between 9 am and 5 pm, Monday to Friday.</p>",
+        "intro": "<p>We take reservations for lunch and dinner.<br/>To make a reservation, please call us at <a href=\"tel:+10845550110\">(084) 555-0110</a> between 9 am and 5 pm, Monday to Friday.</p>",
         "blocks": [
           {
             "image": "images/joomlart/features-intro/intro-7.jpg",

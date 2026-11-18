@@ -4,6 +4,8 @@
 // cache write costs more and buys nothing here), images to the agent at a 512 px long edge (the largest logo spot is
 // 195 by 56), and an output budget and effort sized for a brand file, not a site plan. The cost cap is 1 USD per run,
 // checked before every model call (brand-spend.js).
+import { BRAND_SPOT_CHECK } from './gate-spots.js'
+import { BRAND_HELD_NAME_CHECK } from './gate-logo.js'
 import { benchHarnessFor } from '../lib/bench-harness.js'
 
 /** The most one run may spend on model calls, all three parts together, in USD. */
@@ -15,8 +17,11 @@ export const BRAND_MAX_TOKENS = 32_000
 /** Fix rounds after round 0. */
 export const MAX_FIX_ROUNDS = 2
 
-/** The harness a run on this model records. `providerId` is the agent door's provider. */
-export function brandHarnessFor(model, providerId) {
+/**
+ * The harness a run on this model records. `providerId` is the agent door's provider; `noCaps` (a step of a chain build,
+ * #478) leaves the run without a cost cap (`capUsd: null`).
+ */
+export function brandHarnessFor(model, providerId, { noCaps = false } = {}) {
   const {
     writeAfterToolTurns: _planner,
     budgetUsd: _plannerBudget,
@@ -25,12 +30,14 @@ export function brandHarnessFor(model, providerId) {
   } = benchHarnessFor(model, providerId)
   return {
     ...base,
+    brandSpotCheck: BRAND_SPOT_CHECK,
+    brandHeldNameCheck: BRAND_HELD_NAME_CHECK,
     effort: 'high',
     maxTokens: BRAND_MAX_TOKENS,
     cacheTtl: { system: '5m', rolling: '5m' },
     imageLongEdge: BRAND_IMAGE_EDGE,
     maxTurns: 80,
-    capUsd: BRAND_CAP_USD,
+    capUsd: noCaps ? null : BRAND_CAP_USD,
     maxFixRounds: MAX_FIX_ROUNDS
   }
 }

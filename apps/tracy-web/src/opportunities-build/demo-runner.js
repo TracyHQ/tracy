@@ -3,14 +3,21 @@ import { isAgentDemo } from './agent-demo.js'
 import { demoSelectionMatchesRevision } from '../lib/quickstart-selection.js'
 /** Durable one-click demo orchestration, using the existing revision, build and hand-off services. */
 import { mintSession } from '../lib/session.js'
-import { settleBuild, startBuild } from './builds.js'
+import { isStepChainBuild, settleBuild, startBuild } from './builds.js'
 import { resumeDemoQa } from './demo-qa.js'
 import { startDemoClock } from './demo-retention.js'
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { handOffToAgent } from './handoff-service.js'
 import { revisionForAction } from './revisions.js'
-import { briefOf } from '../lib/site-brief-row.js'
+import { markActionWorkStarted } from './logo-research.js'
+import { createPictureLabelRuns } from './picture-label-runs.js'
+import { briefOf, CURRENT_BRIEF } from '../lib/site-brief-row.js'
+import { chainQaPassed } from '../lib/chain-bench-verdict.js'
+import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
+import { chainFailureOf, chainRunOpen, chainStepOf } from '../lib/wo-chain-builds.js'
 import { withHandoffLock } from './handoff.js'
+import { failedChainRetryBrief } from '../lib/chain-retry-authority.js'
+import { refundUnbilledDemoUsage, UNBILLED_FAILURES } from './demo-actions.js'
 
 const POLL_MS = 10_000
 const LEASE_MS = 6 * 60_000
@@ -21,6 +28,22 @@ const CHAT_ALIVE_MS = 30 * 60_000
 const CHAT_ACTION_MAX_MS = 2 * ACTION_TIMEOUT_MS
 
 /**
+ * 🔒 A STEP CHAIN STILL RUNNING IS NOT TIMED OUT EITHER (#516): the action waits for the chain to end, and the chain
+ * has its own outer deadline and hand-over window (`sites/brief-engines/step-chain.js`, 2 h plus 15 min from its start)
+ * and lost-run settling, so a chain at its deadline still hands the site over instead of the action failing a few
+ * minutes before. A chain that ended within the alive window is still alive, so the next poll settles it as built
+ * rather than timed out. Bounded by `CHAT_ACTION_MAX_MS` like a chat. SQL over `wo_demo_action a`; `alive` names the
+ * parameter holding the alive window's start.
+ */
+const chainAliveSql = (
+  alive
+) => `exists (select 1 from wo_build w join site_brief b on b.site_key = w.site_key
+    left join site s on s.site_key = w.site_key
+    where w.account_id = a.account_id and w.request_id = a.build_request_id
+      and w.receipt->>'workflow' = '${STEP_CHAIN_WORKFLOW}' and ${CURRENT_BRIEF}
+      and (b.state in ('queued', 'preparing', 'ready', 'applying') or b.updated_at > ${alive}))`
+
+/**
  * 🔒 A BUILD WHOSE CHAT IS STILL WORKING IS NOT TIMED OUT (#247, dev 30/10/2026). A client-send action stays queued for
  * its whole chat, and a build of six checks of 9–28 min each crossed the 2 h deadline while its agent was still
  * repairing: the action failed `DEMO_STEP_TIMEOUT`, Build from my business said failed, and eight minutes later the
@@ -28,13 +51,14 @@ const CHAT_ACTION_MAX_MS = 2 * ACTION_TIMEOUT_MS
  * write of that turn, a beat of its running check, or the turn opened within `CHAT_ALIVE_MS`), up to
  * `CHAT_ACTION_MAX_MS`. SQL over `wo_demo_action a`: `alive` names the parameter holding the alive window's start.
  */
-const chatAliveSql = (alive) => `(a.selection->>'chatMode' = 'client-send/1' and exists (
+const chatAliveSql = (alive) => `((a.selection->>'chatMode' = 'client-send/1' and exists (
     select 1 from wo_build b join site_turn t on t.site_key = b.site_key and t.session_id = a.session_id
     where b.account_id = a.account_id and b.request_id = a.build_request_id and t.state = 'open'
       and (t.opened_at > ${alive}
         or exists (select 1 from site_write w where w.turn_id = t.turn_id and w.at > ${alive})
         or case when b.qa->'clientCheck'->>'beatAt' ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}T'
-          then (b.qa->'clientCheck'->>'beatAt')::timestamptz end > ${alive})))`
+          then (b.qa->'clientCheck'->>'beatAt')::timestamptz end > ${alive})))
+  or ${chainAliveSql(alive)})`
 
 /** Whether this action's chat turn is alive (`chatAliveSql`), so its deadline waits. */
 export async function chatTurnAlive(db, action, at = Date.now()) {
@@ -125,6 +149,11 @@ export function createDemoRunner(deps) {
   const now = deps.now ?? Date.now
   const origin = String(config.origin).replace(/\/+$/, '')
   const log = deps.log ?? console
+  // Server-owned builds and client-send builds freeze the same labelled research. Reuse the run warmed by the
+  // own-site state door; a queued action must not freeze an unlabelled brief while that run is still working.
+  const pictureRuns =
+    deps.clientDemo?.pictureRuns ??
+    (deps.pictureLabels ? createPictureLabelRuns({ label: deps.pictureLabels, now, log }) : null)
   const expire = () =>
     expireOverdueDemoActions(pool, now()).catch((error) => {
       log.error?.(`[wo-demo] deadline sweep failed: ${error?.code ?? error?.message ?? 'error'}`)
@@ -153,13 +182,39 @@ export function createDemoRunner(deps) {
           new Date(now())
         ])
       }
-      const finish = (state, error = null) =>
-        lease.finish({ status: state, error, step, checked_at: new Date(now()), updated_at: new Date(now()) })
-      const wait = () =>
+      // The build whose site is made, and its step chain measurement: kept once the action completes (`onBuilt`).
+      let builtSite = null
+      const finish = async (state, error = null, readiness = null) => {
+        const out = await lease.finish({
+          status: state,
+          error,
+          step,
+          checked_at: new Date(now()),
+          updated_at: new Date(now()),
+          ...(readiness ? { selection: { ...action.selection, readiness } } : {})
+        })
+        // 🔒 After the action ended and outside its lease: the facts and the picture never hold or fail a build.
+        if (state === 'completed' && builtSite && deps.onBuilt) {
+          const ended = builtSite
+          void Promise.resolve(out)
+            .then(() => deps.onBuilt({ ...ended, acceptedAt: action.accepted_at, at: now() }))
+            .catch((e) =>
+              log.warn?.(`[wo-demo] after-build step failed: ${e?.code ?? e?.message ?? 'error'}`)
+            )
+        }
+        // Refused before any billable work: its daily build is given back now. The next usage read or press gives it
+        // back if this process stops first (`refundUnbilledDemoUsage` is idempotent).
+        if (state === 'failed' && UNBILLED_FAILURES.includes(error))
+          await refundUnbilledDemoUsage(pool, action.account_id, now()).catch((failure) =>
+            log.error?.(`[wo-demo] usage refund failed: ${failure?.code ?? failure?.message ?? 'error'}`)
+          )
+        return out
+      }
+      const wait = (retryAt = now() + POLL_MS) =>
         lease.finish({
           status: 'queued',
           error: null,
-          next_at: new Date(now() + POLL_MS),
+          next_at: new Date(Math.max(now() + 1_000, retryAt)),
           attempts: 0,
           updated_at: new Date(now())
         })
@@ -173,7 +228,9 @@ export function createDemoRunner(deps) {
           if (!deps.clientDemo) return finish('failed', 'DEMO_CHAT_UNAVAILABLE')
           const result = await deps.clientDemo.reconcile(action)
           if (result?.step && result.step !== step) await mark(result.step)
-          return result?.terminal ? finish(result.state, result.error ?? null) : wait()
+          return result?.terminal
+            ? finish(result.state, result.error ?? null, result.readiness ?? null)
+            : wait()
         }
         const account = (await db.query('select email from account where id = $1', [action.account_id]))
           .rows[0]
@@ -194,8 +251,13 @@ export function createDemoRunner(deps) {
             return data.templates
           },
           ops: (await runtime()).settings,
-          now
+          now,
+          markWork: () => markActionWorkStarted(pool, action, now()),
+          ...(pictureRuns && action.selection?.workflow === 'agent-demo/1'
+            ? { pictureLabelRuns: pictureRuns }
+            : {})
         })
+        if (made.pending) return wait(made.retryAt)
         if (made.error) return finish('failed', made.error)
         const revision = made.revision
         if (action.selection?.workflow && action.selection.workflow !== revision.brief?.quickstartWorkflow)
@@ -233,15 +295,100 @@ export function createDemoRunner(deps) {
               error: answer.body.code ?? 'BUILD_UNREACHABLE',
               next_at: new Date(now() + POLL_MS)
             })
-          if (answer.status >= 300) return finish('failed', answer.body.code ?? 'BUILD_FAILED')
+          if (answer.status >= 300)
+            return finish('failed', answer.body.code ?? 'BUILD_FAILED', answer.body.readiness ?? null)
           build = answer.body.build
         }
         build = await settleBuild({ pool: db, request, origin, cookie, build })
         if (['failed', 'refused', 'deleted'].includes(build.state))
           return finish('failed', build.receipt?.failure?.code ?? 'BUILD_FAILED')
+        // 🔒 A CHAIN BUILD'S STEP IS THE CHAIN'S OWN STEP (#516): the run frame keeps the chain's measurement on the
+        // site's brief row as each step starts (`timings.chain`), and each poll marks the furthest step it has reached
+        // (`chainStepOf`: kit, brand, plan, copy, pictures, write), so the progress card and /ops/wo agree on where a
+        // build is. Other builds keep brief, build, fill and check.
+        const chainRun = isStepChainBuild(build) && build.site_key ? await briefOf(db, build.site_key) : null
+        const chainStep = chainStepOf(chainRun?.timings?.chain)
+        if (chainStep && chainStep !== step) await mark(chainStep)
         if (build.state !== 'done') {
-          await mark('build')
+          if (!isStepChainBuild(build)) await mark('build')
           return wait()
+        }
+        builtSite = { build, chain: chainRun?.timings?.chain ?? null }
+        // 🔒 A STEP CHAIN BUILD HAS NO CHAT TO HAND OVER TO (#479): the chain writes the site, so there is no agent
+        // brief to send, no QA baseline to take and no fill to wait for. The action ends with the chain: the host
+        // makes the base site long before the chain has written it (#516), so a brief row still running holds the
+        // action open, and a finished one ends it.
+        // Step 9 records `done` only after its final Site check and repair verification pass. Earlier model failures
+        // may still hand over a verified fallback, but a terminal frame alone never proves that the site passed.
+        if (isStepChainBuild(build)) {
+          const authority = action.selection?.acceptedChainRetry
+          if (authority && chainRun?.timings?.woRetryActionId !== action.id) {
+            const current = await failedChainRetryBrief(db, build)
+            if (
+              !action.retry_of ||
+              authority.acceptedActionId !== action.id ||
+              authority.parentActionId !== action.retry_of ||
+              authority.accountId !== action.account_id ||
+              authority.buildId !== build.id ||
+              authority.siteKey !== build.site_key ||
+              authority.revisionId !== action.revision_id ||
+              current?.retry_hash !== authority.failedBriefHash
+            )
+              return finish('failed', 'CHAIN_RETRY_AUTHORITY_CHANGED')
+            if (!deps.resumeFill || !(await deps.resumeFill(build, account.email, action.id, authority)))
+              return finish('failed', 'CHAIN_RETRY_REFUSED')
+            return wait()
+          }
+          if (chainRun && chainRunOpen(chainRun.state)) return wait()
+          // 🔒 A RESTART BEFORE THE WRITE RESUMES THE CHAIN ONCE (12/11/2026: deploys on dev ended Arabian Tea House and
+          // Fightland mid-plan as LOST_ON_RESTART). Nothing reached the site before `applying`, so the same action
+          // starts the chain again from its brief; `restartBrief` admits one restart per action and never a run lost
+          // while placing (`lostFrom: applying`), which keeps failing with LOST_ON_RESTART for a person to Retry.
+          if (
+            !authority &&
+            chainRun?.state === 'failed' &&
+            chainRun.timings?.lost === 'LOST_ON_RESTART' &&
+            chainRun.timings?.lostFrom !== 'applying' &&
+            chainRun.timings?.woRetryActionId !== action.id &&
+            deps.resumeFill &&
+            (await deps.resumeFill(build, account.email, action.id, null))
+          ) {
+            log.warn?.(
+              `[wo-demo] ${build.site_key}: the chain was lost on a restart before the write; started again`
+            )
+            return wait()
+          }
+          const measured = chainRun?.timings?.chain
+          const write = Array.isArray(measured?.steps)
+            ? measured.steps.findLast((entry) => entry?.step === 'write')
+            : null
+          const passed = chainQaPassed(chainRun)
+          // Only bounded status fields cross into QA. Detailed findings remain on the original chain measurement.
+          const statusOf = (value, known) =>
+            value == null ? null : known.includes(value) ? value : 'unknown'
+          const qa = {
+            state: passed ? 'passed' : 'failed',
+            reason: passed
+              ? null
+              : chainRun?.timings?.lost === 'LOST_ON_RESTART'
+                ? 'LOST_ON_RESTART'
+                : 'QA_NEEDS_REVIEW',
+            workflow: 'step-chain/1',
+            humanAccepted: false,
+            chain: {
+              briefState: statusOf(chainRun?.state, ['applied', 'failed', 'cancelled']),
+              ending: statusOf(measured?.ending, ['complete', 'soft-failure', 'running']),
+              writeOutcome: statusOf(write?.outcome, ['done', 'failed', 'stopped', 'skipped']),
+              // Which step and which check stopped it (bounded codes), so /ops/wo names them.
+              ...(passed ? {} : chainFailureOf(measured))
+            }
+          }
+          await db.query(
+            `update wo_build set qa = coalesce(qa,'{}'::jsonb) || $2::jsonb, updated_at = $3 where id = $1 and account_id = $4`,
+            [build.id, JSON.stringify(qa), new Date(now()), action.account_id]
+          )
+          await startDemoClock(db, build.id, { now: now(), settings: (await runtime()).settings })
+          return finish(passed ? 'completed' : 'failed', passed ? null : 'QA_NEEDS_REVIEW')
         }
         await startDemoClock(db, build.id, { now: now(), settings: (await runtime()).settings })
         // A manual quickstart-first build still owns its site's fill: the fill writes only while this
@@ -474,6 +621,7 @@ export function createDemoRunner(deps) {
         return wait()
       } catch (error) {
         if (error?.code === 'DEMO_LEASE_LOST') return
+        if (error?.code === 'SITE_RECOVERY_POINT_UNAVAILABLE') return finish('failed', error.code)
         if (action.attempts >= 3) return finish('failed', error?.code ?? 'DEMO_STEP_FAILED')
         return lease.finish({
           error: error?.code ?? 'DEMO_STEP_FAILED',

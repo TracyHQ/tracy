@@ -14,7 +14,7 @@ import { RETRY_DEFAULTS } from './agent-over-door-retry.js'
  * medium, as in the Claude Code runs that produced the approved reference plans.
  *
  * Guards (#301, after a DeepSeek V4 Pro run looped 86 calls re-reading kit parts and was cancelled): a run whose
- * answered calls already cost more than budgetUsd stops before its next call (SITE_PLANNER_BUDGET); a run that reads
+ * answered calls already cost at least budgetUsd stops before its next call (SITE_PLANNER_BUDGET); a run that reads
  * the kit with tools is told to write the plan, with tool_choice "none", after writeAfterToolTurns answers that called
  * a tool or as soon as an answer only re-reads parts it was already sent (bench-worker.js); maxTurns bounds the calls.
  */
@@ -31,6 +31,20 @@ export const BENCH_HARNESS = Object.freeze({
   budgetUsd: 2,
   writeAfterToolTurns: 20
 })
+
+/**
+ * The same harness with its cost caps taken off, for a run of the step chain (#478): a chain build is bounded by the
+ * chain's outer deadline, not by a USD figure per step. `budgetUsd` is left out (the agent door sets no budget when it
+ * is absent) and `capUsd` (the brand run's own cap) is `null`. Every other setting stays as it was.
+ * @param {object} harness
+ */
+export function withoutCaps(harness) {
+  const { budgetUsd: _budget, ...rest } = harness
+  return 'capUsd' in rest ? { ...rest, capUsd: null } : rest
+}
+
+/** `withoutCaps(harness)` for a run of a chain build, the harness as it is for any other (#478). */
+export const capsOf = (harness, noCaps) => (noCaps ? withoutCaps(harness) : harness)
 
 /**
  * DeepSeek's peak hours, in UTC: 01:00 to 04:00 and 06:00 to 10:00, Monday to Friday; every other hour is off-peak
@@ -135,13 +149,27 @@ const OTHER_MODEL = { profile: 'other', harness: { toolImages: 'user-message', c
 /**
  * The harness a run on this model records: BENCH_HARNESS with the model's own settings and its profile name.
  * `providerId` is the door's provider (the run's door snapshot); an entry that names a provider matches only it.
+ * An explicit per-run effort is supported only for native DeepSeek Flash, whose low, high and max efforts have
+ * been exercised by the bench. Omission keeps the measured default; other profiles keep their provider settings.
  */
-export function benchHarnessFor(model, providerId) {
+export function benchHarnessFor(model, providerId, { effort } = {}) {
   const entry =
     MODEL_HARNESS.find(
       (m) => (m.providerId === undefined || m.providerId === providerId) && m.match.test(String(model ?? ''))
     ) ?? OTHER_MODEL
-  return { ...BENCH_HARNESS, ...entry.harness, modelProfile: entry.profile }
+  if (
+    effort !== undefined &&
+    (entry.profile !== 'deepseek-flash-native' || !['low', 'high', 'max'].includes(effort))
+  )
+    throw Object.assign(new Error('A per-run effort must be low, high or max on native DeepSeek Flash.'), {
+      code: 'BENCH_EFFORT_UNSUPPORTED'
+    })
+  return {
+    ...BENCH_HARNESS,
+    ...entry.harness,
+    modelProfile: entry.profile,
+    ...(effort !== undefined ? { effort } : {})
+  }
 }
 
 /** Whether a run's harness sends images to this model: false for a text-only profile. */

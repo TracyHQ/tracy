@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-558-interrupted-chain-measurement",
+  "kind": "fix",
+  "title": "Interrupted chains preserve attempt elapsed time and unknown step measurements",
+  "pr": 558,
+  "area": "website-opportunities/chain",
+  "cms": ["jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Interrupt an active planner snapshot during a retry, settle its brief, and read Ops after later unrelated brief updates."
+  ],
+  "expect": [
+    "Interrupted elapsed time uses the current attempt and immutable settlement stamp while retaining the raw chain snapshot.",
+    "Legacy updated-at elapsed is explicitly an upper bound; missing or malformed time keeps the snapshot lower bound.",
+    "The original failure is exposed and unfinished step duration and spend remain null.",
+    "Startup and stale recovery stamp settlement without changing their existing state or retry decisions."
+  ],
+  "selectors": {
+    "api": "/api/ops/wo/chain-builds"
+  },
+  "fence": "Interrupted chain measurement projection and brief settlement timestamps",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-chain-interruption.test.mjs",
+      "apps/tracy-web/test/ops-wo-chain-builds.test.mjs",
+      "apps/tracy-web/test/brief-build.test.mjs"
+    ],
+    "tests": [
+      "an interrupted chain keeps elapsed attempt time and its actual error without inventing step measurements",
+      "an interrupted chain freezes settlement time after later unrelated brief updates",
+      "a legacy interrupted snapshot reports last-update elapsed as an upper bound",
+      "malformed interruption times cannot replace a measured lower bound or create negative elapsed time",
+      "an interrupted retry keeps its settlement elapsed time and original snapshot after later updates",
+      "a process that starts settles at once the open rows a dead process left",
+      "a worker that died as placing began, before any write was kept, does not claim the site is untouched"
+    ],
+    "needs": ["postgres"]
+  }
+}

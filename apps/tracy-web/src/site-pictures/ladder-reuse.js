@@ -29,7 +29,7 @@ export async function reuseRung({ idx, usable, photoBytes, store }, s, frameId, 
   const frame = idx.frames.get(frameId)
   const cuts = s.cutsOn(frameId)
   const tried = []
-  for (const { a } of rankForFrame(usable, wish, frame, s.usageNow())) {
+  for (const { a } of rankForFrame(usable, wish, frame, s.usageFor(frameId))) {
     const uses = cuts.get(a.id)
     if (!uses || p.reused.has(a.id)) continue
     p.reused.add(a.id)
@@ -72,18 +72,19 @@ export async function reuseRung({ idx, usable, photoBytes, store }, s, frameId, 
 /** Below this many usable owner photos, the any-photo rung does not fill and the tile is returned. */
 export const ANY_PHOTO_MIN = 2
 
-export async function anyPhotoRung({ idx, usable, photoBytes, store }, s, frameId, p) {
-  if (usable.length < ANY_PHOTO_MIN)
-    return { skip: `the brief has fewer than ${ANY_PHOTO_MIN} usable owner photos` }
-  p.filled ??= new Set()
+/**
+ * The any-photo rung's next owner photo for a frame and its cut, in the rung's own order, skipping the photos in
+ * `filled` (and adding each photo it considers to it): null when none is left. `tried` collects why photos were passed
+ * over. Shared by the rung and by its look-ahead (anyPhotoAhead), so both pick the same photos the same way.
+ */
+async function nextAnyPhoto({ idx, usable, photoBytes }, s, frameId, filled, tried) {
   const tile = idx.galleryTile(frameId)
   const wish = idx.wishes.get(frameId)
   const frame = idx.frames.get(frameId)
   const cuts = s.cutsOn(frameId)
-  const tried = []
-  for (const { a } of rankForFrame(usable, wish, frame, s.usageNow())) {
-    if (p.filled.has(a.id)) continue
-    p.filled.add(a.id)
+  for (const { a } of rankForFrame(usable, wish, frame, s.usageFor(frameId))) {
+    if (filled.has(a.id)) continue
+    filled.add(a.id)
     const uses = cuts.get(a.id) ?? []
     const near = uses.find((u) => neighbours(tile, idx.gallery(u.frame)))
     if (near) {
@@ -99,19 +100,53 @@ export async function anyPhotoRung({ idx, usable, photoBytes, store }, s, frameI
       tried.push(`${a.id} ${cut.refused}`)
       continue
     }
-    const name = await store.putPicture(cut.bytes, cut.ext)
-    s.keepFile({ ...cut, sha256: name.split('.')[0] })
-    const also = uses.map((u) => u.frame)
-    const list = s.listOf(frame)
-    return {
-      list,
-      entry: placedEntry(frameId, 'owner-photo', cut, {
-        asset: a.id,
-        reuse: { rung: 'any-photo', with: also, overlap: cut.overlap },
-        ...s.extraOf(list),
-        reason: `owner photo ${a.id}${also.length ? `, also in ${also.join(', ')} on this page, cut another way` : ''}: a gallery tile is never hidden alone and no clearly different cut was left; after: ${s.story(frameId)}`
-      })
-    }
+    return { a, cut, uses, frame }
   }
-  return { skip: `every usable owner photo tried${tried.length ? ` (${tried.join(', ')})` : ''}` }
+  return null
+}
+
+export async function anyPhotoRung(ctx, s, frameId, p) {
+  if (ctx.usable.length < ANY_PHOTO_MIN)
+    return { skip: `the brief has fewer than ${ANY_PHOTO_MIN} usable owner photos` }
+  p.filled ??= new Set()
+  const tried = []
+  const next = await nextAnyPhoto(ctx, s, frameId, p.filled, tried)
+  if (!next) return { skip: `every usable owner photo tried${tried.length ? ` (${tried.join(', ')})` : ''}` }
+  const { a, cut, uses, frame } = next
+  const name = await ctx.store.putPicture(cut.bytes, cut.ext)
+  s.keepFile({ ...cut, sha256: name.split('.')[0] })
+  const also = uses.map((u) => u.frame)
+  const list = s.listOf(frame)
+  return {
+    list,
+    entry: placedEntry(frameId, 'owner-photo', cut, {
+      asset: a.id,
+      reuse: { rung: 'any-photo', with: also, overlap: cut.overlap },
+      ...s.extraOf(list),
+      reason: `owner photo ${a.id}${also.length ? `, also in ${also.join(', ')} on this page, cut another way` : ''}: a gallery tile is never hidden alone and no clearly different cut was left; after: ${s.story(frameId)}`
+    })
+  }
+}
+
+/**
+ * The pictures the any-photo rung would place next for a frame if the looker rejected each one, at most `count`, in
+ * order, as `{ list, entry }`: the same photos and the same cuts (nextAnyPhoto), written to the store so the looker can
+ * read them, but nothing changes in the frame's progress or the round's state. The ladder looks at them at once
+ * (ladder-step.js looksAhead), so the passes that place them find their look already taken. A photo another frame takes
+ * in between gets another cut, and that cut is looked at when it is placed.
+ */
+export async function anyPhotoAhead(ctx, s, frameId, p, count) {
+  if (ctx.usable.length < ANY_PHOTO_MIN || count < 1) return []
+  const filled = new Set(p.filled ?? [])
+  const out = []
+  while (out.length < count) {
+    const next = await nextAnyPhoto(ctx, s, frameId, filled, [])
+    if (!next) break
+    await ctx.store.putPicture(next.cut.bytes, next.cut.ext)
+    out.push({
+      list: s.listOf(next.frame),
+      entry: placedEntry(frameId, 'owner-photo', next.cut, { asset: next.a.id })
+    })
+  }
+  return out
 }

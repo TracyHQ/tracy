@@ -95,6 +95,7 @@ test('each declared part parses to itself', () => {
     'standalone:saas',
     'standalone:coffee',
     'standalone:restaurant',
+    'standalone:diner',
     'vendor',
     'rest'
   ]) {

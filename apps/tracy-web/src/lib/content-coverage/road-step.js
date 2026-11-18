@@ -6,7 +6,9 @@
  *
  *   done      every hole and every page hygiene finding the policy counts has an accepted reason
  *             (a raw language constant, PHP error text, an unfilled placeholder), every text and image slot
- *             has a role, or the step does not apply (a platform with no content map or field map, such as Shopify);
+ *             has a role, or the step does not apply (a platform with no content map or field map, such as Shopify:
+ *             `coverage-not-needed`). A platform that binds slot roles but has no audit (`rolesPlatforms` without
+ *             `platforms`) answers `coverage-roles-only`: only its roles were judged, holes and page problems were not;
  *   blocked   the contract is not passed yet (the audit measures it);
  *   todo      not measured, measured on another map or lock (stale), unreadable, or holes, page
  *             problems (`params.hygiene*`, their own group on the panel) or missing slot roles
@@ -16,7 +18,7 @@
  *             system step does for a live release (ADR 0031): a warning only.
  *
  * The roles group runs on every platform (Joomla, WordPress, EmDash). Holes and page hygiene are measured only where the
- * audit exists (`policy.platforms`: Joomla); on the others the roles group alone decides, with the same verdicts.
+ * audit exists (`policy.platforms`: Joomla, WordPress, EmDash); on the others the roles group alone decides, with the same verdicts.
  * The roles group has its own verdict (`judgeRoles`): holes and page hygiene decide `coverage-holes`
  * exactly as before; when only roles are left the code is `coverage-roles` (todo) or
  * `coverage-live-roles` (warn). A contract that declares no roles at all (every template released
@@ -24,7 +26,7 @@
  *
  * The Slot fit group (ADR 0039 decision 7) follows the same rule with its own verdict (`judgeFit`), after holes and
  * roles: when only Slot fit is left the code is `coverage-fit` (todo) or `coverage-live-fit` (warn). It is judged
- * only where the audit measures Slot fit (`policy.fitPlatforms`: Joomla and WordPress); elsewhere its state is `not-applicable`.
+ * only where the audit measures Slot fit (`policy.fitPlatforms`: Joomla, WordPress and EmDash); elsewhere its state is `not-applicable`.
  *
  * The label rules group (ADR 0040, spec #37) is the fifth, judged by `judgeLabelRules` from the `labelRules` block the
  * audit committed in the coverage file (this step never runs the audit): when only a failing rule is left the code is
@@ -35,8 +37,9 @@
  * (`coverage-judge`, todo); a finer mismatch, slots nobody judged, or a wrong group on a live release warn
  * (`coverage-judge-warn`).
  */
-import { contractFor } from '../contracts.js'
+
 import { shownOnInspiration } from '../quickstart-releases.js'
+import { contractOfRelease } from '../slot-roles-of-release.js'
 import {
   COVERAGE_POLICY,
   judgeCoverage,
@@ -61,8 +64,7 @@ const SHOWN_HYGIENE = 8
  * @param {import('../contracts.js').ContractIndex} contracts
  */
 export function coverageOfRelease(release, contracts) {
-  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
-  return coverageOfContract(contractFor(contracts, release?.tag, version))
+  return coverageOfContract(contractOfRelease(release, contracts))
 }
 
 /**
@@ -189,7 +191,7 @@ export function contentCoverageStep(
     if (rolesVerdict.holds) return put(COVERAGE_STEP, 'todo', 'coverage-roles', { ...base, live, measured })
     if (rolesVerdict.warns)
       return put(COVERAGE_STEP, 'warn', 'coverage-live-roles', { ...base, live, measured })
-    return put(COVERAGE_STEP, 'done', 'coverage-not-needed', { ...base, live, measured })
+    return put(COVERAGE_STEP, 'done', 'coverage-roles-only', { ...base, live, measured })
   }
   if (coverage.state === 'none')
     return put(COVERAGE_STEP, failing, 'coverage-not-measured', { ...base, live })

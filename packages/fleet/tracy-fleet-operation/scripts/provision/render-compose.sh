@@ -35,6 +35,12 @@
 # a clone or a fleet-born install refuses rather than writing the other shape over it, because the
 # two differ by an installer that would run against a webroot that already has a site in it.
 
+# The runtime marker and the demo farm's shapes (a folded demo renders its forwarder, below).
+# shellcheck source=../lib/site-runtime.sh
+. "$(dirname "${BASH_SOURCE[0]}")/../lib/site-runtime.sh"
+# shellcheck source=../lib/demo-farm.sh
+. "$(dirname "${BASH_SOURCE[0]}")/../lib/demo-farm.sh"
+
 # ── the shapes ──────────────────────────────────────────────────────────────────────────────
 #
 # Inputs, all through the environment, all required unless noted:
@@ -346,12 +352,24 @@ tracy_render_compose() {
   tracy_site_limits "$PLATFORM" || return 1
   [ -z "$SITE_LIMIT_NOTE" ] || echo "$SITE_LIMIT_NOTE" >&2
 
-  local shape
-  case "$PLATFORM:$COMPOSE_FLAVOR" in
-    emdash:*)          shape=tracy_compose_emdash ;;
-    joomla:fresh)      shape=tracy_compose_joomla_fresh ;;
-    wordpress:fresh)   shape=tracy_compose_wordpress_fresh ;;
-    *:clone)           shape=tracy_compose_clone ;;
+  local shape runtime
+  # A demo folded into the host's demo farm keeps only its forwarder here (provision/fold.sh,
+  # lib/demo-farm.sh): every later re-render of it — set-php, enable-site-mail, this script by hand —
+  # must write the forwarder again, never stand the per-site pair back up beside the farm.
+  # TRACY_COMPOSE_RUNTIME is fold/unfold's own say, for the one render before/after the marker moves.
+  runtime="${TRACY_COMPOSE_RUNTIME:-}"
+  [ -n "$runtime" ] || runtime="$(tracy_runtime_of_dir "$SITE_DIR" "$LABEL")" || return 1
+  case "$runtime:$PLATFORM" in
+    site:*) ;;
+    farm:joomla|farm:wordpress) ;;
+    *) echo "no demo farm runtime for $PLATFORM ($LABEL)" >&2; return 1 ;;
+  esac
+  case "$runtime:$PLATFORM:$COMPOSE_FLAVOR" in
+    farm:*)            shape=tracy_compose_forwarder ;;
+    *:emdash:*)        shape=tracy_compose_emdash ;;
+    *:joomla:fresh)    shape=tracy_compose_joomla_fresh ;;
+    *:wordpress:fresh) shape=tracy_compose_wordpress_fresh ;;
+    *:*:clone)         shape=tracy_compose_clone ;;
     *) echo "no compose shape for $PLATFORM:$COMPOSE_FLAVOR" >&2; return 1 ;;
   esac
 
@@ -690,6 +708,61 @@ COMPOSE
 }
 
 # EmDash: one Node container, SQLite inside the site dir, no database service at all.
+# A demo folded into the host's demo farm (provision/fold.sh, lib/demo-farm.sh): its PHP and its
+# database live in tracy-demos-web / tracy-demos-db, and what stays in its own project is a TCP
+# forwarder that keeps every name the rest of the system dials — `<label>-web-1` on `<label>_default`
+# (and the tracy network for a site that is not isolated), and 127.0.0.1:<HOST_PORT> on the host.
+# The farm picks the demo's vhost by the port the forwarder sends to: the demo's own HOST_PORT.
+# No `db` service: `docker compose up --remove-orphans` takes the container away and keeps the volume,
+# which is what unfold.sh puts the demo back on.
+tracy_compose_forwarder() {
+  local name="${LABEL}-web-1"
+  cat <<COMPOSE
+services:
+  web:
+    image: $TRACY_DEMOS_FORWARD_IMAGE
+    # One process, not the image's master + worker pair: ~4 MiB anonymous instead of ~7 (measured
+    # 14/11/2026). Nothing reloads a forwarder; a changed config is a re-created container.
+    entrypoint: ["haproxy", "-db", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+    restart: unless-stopped
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+COMPOSE
+  _tracy_farm_limits 32m 0.5 64
+  cat <<COMPOSE
+    labels:
+      tracy.runtime: farm
+    environment:
+      TRACY_DEMO_PORT: "\${HOST_PORT:?this site's .env has no HOST_PORT}"
+    volumes:
+      - $(tracy_demos_dir)/forward.haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    networks:
+COMPOSE
+  if [ "${#name}" -gt 63 ]; then
+    printf '      default:\n        aliases: ["%s"]\n' "$(tracy_web_dns_alias "$LABEL")"
+  else
+    printf '      default: {}\n'
+  fi
+  if ! tracy_site_isolated; then
+    if [ "${#name}" -gt 63 ]; then
+      printf '      tracy:\n        aliases: ["%s"]\n' "$(tracy_web_dns_alias "$LABEL")"
+    else
+      printf '      tracy: {}\n'
+    fi
+  fi
+  printf '      farm: {}\n'
+  cat <<COMPOSE
+    ports:
+      - "127.0.0.1:\${HOST_PORT:?this site's .env has no HOST_PORT — refusing to publish it on a default port another site may hold}:80"
+COMPOSE
+  tracy_networks_footer
+  cat <<COMPOSE
+  farm:
+    external: true
+    name: $TRACY_DEMOS_FRONT_NETWORK
+COMPOSE
+}
+
 tracy_compose_emdash() {
   {
     # `init: true` (#205): the image runs `node` as PID 1 (`exec gosu www-data node …`), and PID 1
@@ -756,6 +829,11 @@ COMPOSE
 # would pick today — those two are not the same thing for a site provisioned months ago.
 tracy_read_existing_compose() {
   local file="$SITE_DIR/docker-compose.yml"
+  # A folded demo's compose is its forwarder, which says nothing about the site: the facts are in
+  # the per-site compose fold.sh kept (and unfold.sh puts back).
+  if [ -f "$SITE_DIR/$TRACY_FARM_KEPT_COMPOSE" ] && [ "$(tracy_runtime_of_dir "$SITE_DIR" "$LABEL" 2>/dev/null)" = farm ]; then
+    file="$SITE_DIR/$TRACY_FARM_KEPT_COMPOSE"
+  fi
   [ -f "$file" ] || return 0
   CURRENT_WEB_IMAGE="$(sed -n 's/^ *image: *//p' "$file" | grep -v '^mariadb' | sed -n 1p)"
   [ -n "${DB_NAME:-}" ] || DB_NAME="$(sed -n 's/^ *MARIADB_DATABASE: *//p' "$file" | tr -d '"' | sed -n 1p)"

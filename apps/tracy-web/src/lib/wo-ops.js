@@ -14,9 +14,12 @@
 import { readReleases, templateCards } from './quickstart-releases.js'
 import { bornSiteAddress } from './site-address.js'
 import { rateCountsOf } from './rate.js'
+import { opensOf, systemPicksOf } from './wo-demo-links.js'
+import { outreachStateShape } from 'website-opportunities/src/outreach-state.js'
 import { openSecret, sealSecret } from './secret-box.js'
 import { saveUiSwitches, uiSwitchOn } from './ui-setting.js'
 import { FENCED_ACTIONS, runFencedResearchAction } from './wo-operator-fence.js'
+import { chainFailureLine } from './wo-chain-builds.js'
 import { demoJourneySql } from '../opportunities-build/journey-sql.js'
 import { customerStatus, journeySql } from 'website-opportunities/src/wo-journey.js'
 import { menuVisionDoorFor } from 'website-opportunities/src/menu-photo-reading.js'
@@ -36,6 +39,7 @@ import {
   testProviderKey
 } from 'website-opportunities/src/ops/provider-keys.js'
 import { capabilityGroups, providerStates } from 'website-opportunities/src/ops/provider-states.js'
+import { demoPageSpeedOf, pagespeedPair } from 'website-opportunities/src/pagespeed.js'
 
 /** Tracy's half of the open layer's operator functions: its seal and its rate table (`wo-host.js` has the same). */
 const OPERATOR_HOST = Object.freeze({ openSecret, sealSecret, rateCountsOf })
@@ -140,12 +144,35 @@ function errorTextOf(lastError) {
   return null
 }
 
+function demoContentRunning(opp, build) {
+  return (
+    ['done', 'completed'].includes(build?.state) &&
+    ['queued', 'quality-queued-v1'].includes(opp.customer_action_state) &&
+    !build.qa?.state &&
+    !build.handoff
+  )
+}
+
+/**
+ * "Now" for a job row: the database's clock, read with the row (`db_now`). Its lease, creation and update
+ * times are written by `now()` in SQL, so they are judged on that clock, as the claimer judges the lease.
+ */
+const jobClock = (job) => (job?.db_now ? new Date(job.db_now).getTime() : Date.now())
+
 /**
  * Derive the 0..7 lifecycle stage and attention state of a Website Opportunity row from its
  * latest job (`wo_job`), sources (`wo_source`), media (`wo_media`), revision (`wo_revision`),
- * and demo build (`wo_build`).
+ * demo build (`wo_build`) and latest demo action (`wo_demo_action`).
  */
-function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestRevision, latestBuild) {
+function deriveOpportunityLifecycle(
+  opp,
+  latestJob,
+  sources,
+  mediaStats,
+  latestRevision,
+  latestBuild,
+  latestAction = null
+) {
   const blockedSources = sources.filter(
     (s) => s.status === 'blocked' || s.status === 'failed' || s.status === 'paused'
   )
@@ -157,9 +184,48 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
   const leaseExpired =
     latestJob?.state === 'running' &&
     latestJob?.lease_until &&
-    new Date(latestJob.lease_until).getTime() < Date.now()
+    new Date(latestJob.lease_until).getTime() < jobClock(latestJob)
 
   const jobErrText = errorTextOf(latestJob?.last_error)
+
+  // The latest demo action was refused before it had a build of its own (`BRIEF_NOT_READY` and the like),
+  // and was accepted after the latest build was requested: an older refusal is history (#552). The
+  // research rollup keeps meaning research; the refusal is the row's attention.
+  const refusedCode =
+    latestAction?.status === 'failed' &&
+    !latestAction.has_build &&
+    (!latestBuild ||
+      new Date(latestAction.accepted_at).getTime() > new Date(latestBuild.created_at).getTime())
+      ? latestAction.error || 'unknown error'
+      : null
+  const refusedAction = (stage, stepNum) => {
+    const researchStopped =
+      latestJob?.state === 'paused' || latestJob?.state === 'blocked' || latestJob?.state === 'failed'
+    return {
+      stage,
+      stepNum,
+      needsAttention: true,
+      attentionReason: `Demo action failed before any build (${refusedCode})`,
+      researchRollup: researchStopped ? 'failure' : 'success',
+      currentStep: `Demo action failed · ${refusedCode}`,
+      queueState: 'BLOCKED',
+      statusText: 'Demo action failed'
+    }
+  }
+
+  // Base provisioning can finish before the durable demo action writes the site's content.
+  if (demoContentRunning(opp, latestBuild)) {
+    return {
+      stage: '6-uploading',
+      stepNum: 6,
+      needsAttention: false,
+      attentionReason: null,
+      researchRollup: 'success',
+      currentStep: 'Building demo site',
+      queueState: 'LEASED',
+      statusText: 'Building demo site'
+    }
+  }
 
   // Stage 7: Live demo site (handoff written or build state is ready/live or site_key provisioned with handoff)
   if (
@@ -170,6 +236,8 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
     latestBuild?.handoff ||
     opp.status === 'built'
   ) {
+    // An older demo stays live (its link is kept); a newer action refused before building is the news.
+    if (refusedCode) return refusedAction('7-live', 7)
     const partialWarning = blockedSources.length > 0
     const qa = latestBuild?.qa && typeof latestBuild.qa === 'object' ? latestBuild.qa : null
     const qaState = qa?.state ?? null
@@ -180,8 +248,12 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
 
     let attentionReason = null
     if (qaFailed) {
+      // A chain build names the step and the check that stopped it (`qa.chain`, demo-runner.js); a lost run says so.
+      const chainLine = qa?.reason === 'LOST_ON_RESTART' ? null : chainFailureLine(qa?.chain)
       attentionReason =
-        qa?.reason || `Demo QA gate failed after ${qaRepairs} repair round${qaRepairs === 1 ? '' : 's'}`
+        chainLine ||
+        qa?.reason ||
+        `Demo QA gate failed after ${qaRepairs} repair round${qaRepairs === 1 ? '' : 's'}`
     } else if (partialWarning) {
       attentionReason = `${blockedSources.map((s) => s.source).join(', ')} skipped (${blockedSources[0]?.reason || 'partial'})`
     }
@@ -259,6 +331,7 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
 
   // Stage 4: Brief ready (revision synthesized, waiting to build demo site)
   if (latestRevision || latestJob?.state === 'completed' || opp.status === 'ready') {
+    if (refusedCode) return refusedAction('4-brief-ready', 4)
     const pausedOrFailed =
       latestJob?.state === 'paused' || latestJob?.state === 'blocked' || latestJob?.state === 'failed'
     return {
@@ -288,7 +361,12 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
       latestJob?.state === 'blocked' ||
       opp.status === 'failed' ||
       leaseExpired
-    const activeSource = runningSources[0]
+    const activeSource =
+      latestJob?.state === 'running' && !isFailed
+        ? latestJob.progress?.collecting && latestJob.stage === 'collection'
+          ? { source: latestJob.progress.collecting }
+          : runningSources[0]
+        : null
     const blockedSource = blockedSources[0]
 
     let currentStep = `Stage: ${latestJob?.stage || 'collection'} (${doneSources.length}/${Math.max(1, sources.length)} sources)`
@@ -330,7 +408,7 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
 
   // Stage 1 & 2: Queued / Waiting for worker lease
   if (latestJob?.state === 'queued') {
-    const ageMs = Date.now() - new Date(latestJob.created_at).getTime()
+    const ageMs = jobClock(latestJob) - new Date(latestJob.created_at).getTime()
     if (ageMs > 15_000) {
       return {
         stage: '2-waiting',
@@ -647,12 +725,26 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
             limit 250`
       ),
       pool.query(
-        `select distinct on (opportunity_id)
-                  id, opportunity_id, account_id, kind, request_id, state, stage,
-                  progress, lease_owner, lease_token, lease_until, heartbeat_at,
-                  attempt, last_error, created_at, updated_at
-             from wo_job
-            order by opportunity_id, created_at desc, id desc`
+        `select distinct on (j.opportunity_id)
+                  j.id, j.opportunity_id, j.account_id, j.kind, j.request_id, j.state,
+                  case when pj.id is not null then pj.stage else j.stage end as stage,
+                  case when pj.id is not null then pj.progress else j.progress end as progress,
+                  case when pj.id is not null then pj.lease_owner else j.lease_owner end as lease_owner,
+                  case when pj.id is not null then pj.lease_token else j.lease_token end as lease_token,
+                  case when pj.id is not null then pj.lease_until else j.lease_until end as lease_until,
+                  case when pj.id is not null then pj.heartbeat_at else j.heartbeat_at end as heartbeat_at,
+                  case when pj.id is not null then pj.attempt else j.attempt end as attempt,
+                  case when pj.id is not null then pj.last_error else j.last_error end as last_error,
+                  j.created_at, j.updated_at, now() as db_now,
+                  coalesce((select jsonb_agg(jsonb_build_object(
+                    'source', s.source, 'ref', s.ref, 'status', s.status,
+                    'reason', s.reason, 'coverage', s.coverage))
+                    from wo_place_snapshot_source s where s.snapshot_id = pj.snapshot_id), '[]'::jsonb) as live_sources
+             from wo_job j
+             left join wo_place_job pj on pj.id = j.place_job_id
+               and j.kind = 'research' and j.state in ('queued', 'running', 'paused', 'blocked')
+               and j.result_snapshot_id is null
+            order by j.opportunity_id, j.created_at desc, j.id desc`
       ),
       pool.query(
         `select opportunity_id, source, ref, status, reason, coverage, updated_at
@@ -677,7 +769,8 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         `select distinct on (r.opportunity_id)
                   b.id, r.opportunity_id, b.revision_id, b.site_key, b.site_job_id,
                   b.state, b.receipt, b.handoff, b.pictures, b.qa, b.qa_lease_until,
-                  b.created_at, b.updated_at, b.choice->>'cms' as cms, b.choice->'template' as template
+                  b.created_at, b.updated_at, b.choice->>'cms' as cms, b.choice->'template' as template,
+                  b.built->'pagespeed' as built_pagespeed
              from wo_build b
              join wo_revision r on r.id = b.revision_id
             order by r.opportunity_id, b.created_at desc, b.id desc`
@@ -692,6 +785,35 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
           )
         : Promise.resolve({ rows: [] })
     ])
+
+    // Latest demo action per opportunity, and whether a build row was ever made for it (#552).
+    const actionRes = await pool.query(
+      `select distinct on (a.opportunity_id)
+                a.opportunity_id, a.status, a.step, a.error, a.accepted_at, a.updated_at,
+                exists (select 1 from wo_build b
+                         where b.account_id = a.account_id and b.request_id = a.build_request_id) as has_build
+           from wo_demo_action a
+          where a.opportunity_id = any($1::uuid[])
+          order by a.opportunity_id, a.accepted_at desc, a.id desc`,
+      [oppRes.rows.map((o) => o.id)]
+    )
+
+    // The share link opens of each latest build (`wo-demo-links.js`), the looks its owner liked on the share page, and
+    // what each seller marked of their outreach.
+    const [opensByBuild, picksByBuild, outreachRes] = await Promise.all([
+      opensOf(
+        pool,
+        buildRes.rows.map((b) => b.id)
+      ),
+      systemPicksOf(
+        pool,
+        buildRes.rows.map((b) => b.id)
+      ),
+      pool.query('select * from wo_outreach where opportunity_id = any($1::uuid[])', [
+        oppRes.rows.map((o) => o.id)
+      ])
+    ])
+    const outreachByOpp = new Map(outreachRes.rows.map((r) => [r.opportunity_id, r]))
 
     const jobsByOpp = new Map(jobRes.rows.map((r) => [r.opportunity_id, r]))
     const sourcesByOpp = new Map()
@@ -708,6 +830,7 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
     )
     const revByOpp = new Map(revRes.rows.map((r) => [r.opportunity_id, r]))
     const buildByOpp = new Map(buildRes.rows.map((r) => [r.opportunity_id, r]))
+    const actionByOpp = new Map(actionRes.rows.map((r) => [r.opportunity_id, r]))
     const prefByAccount = new Map(prefRes.rows.map((r) => [r.account_id, r.cms]))
     const readSet = new Set(readRes.rows.map((r) => r.opportunity_id))
 
@@ -717,10 +840,21 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
 
     const opportunities = oppRes.rows.map((opp, idx) => {
       const latestJob = jobsByOpp.get(opp.id) ?? null
-      const sources = sourcesByOpp.get(opp.id) ?? []
+      // The request keeps private sources; shared checkpoints live on the worker's current snapshot.
+      const sourceMap = new Map(
+        (sourcesByOpp.get(opp.id) ?? []).map((source) => [
+          JSON.stringify([source.source, source.ref]),
+          source
+        ])
+      )
+      for (const source of latestJob?.live_sources ?? []) {
+        sourceMap.set(JSON.stringify([source.source, source.ref]), source)
+      }
+      const sources = [...sourceMap.values()]
       const mediaStats = mediaByOpp.get(opp.id) ?? { totalCount: 0, storedCount: 0 }
       const latestRev = revByOpp.get(opp.id) ?? null
       const latestBuild = buildByOpp.get(opp.id) ?? null
+      const latestAction = actionByOpp.get(opp.id) ?? null
       const candidate = opp.candidate && typeof opp.candidate === 'object' ? opp.candidate : {}
 
       const lifecycle = deriveOpportunityLifecycle(
@@ -729,7 +863,8 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         sources,
         mediaStats,
         latestRev,
-        latestBuild
+        latestBuild,
+        latestAction
       )
       const customer = customerStatus({
         stage: opp.customer_stage,
@@ -775,16 +910,18 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         prefByAccount.get(opp.account_id) ||
         settings.defaultCms ||
         DEFAULT_WO_OPS_SETTINGS.defaultCms
+      // Only a build's choice is the built template; without one the row names the pin as a pin.
+      const builtTemplate = latestBuild?.template?.quickstart || null
       const templateSlug =
-        latestBuild?.template?.quickstart ||
-        settings.pinnedTemplates?.[cms] ||
-        DEFAULT_WO_OPS_SETTINGS.pinnedTemplates.joomla
+        builtTemplate || settings.pinnedTemplates?.[cms] || DEFAULT_WO_OPS_SETTINGS.pinnedTemplates.joomla
 
       const durationSec = latestJob
         ? Math.max(
             1,
             Math.round(
-              (new Date(latestJob.updated_at || Date.now()).getTime() -
+              ((['queued', 'running'].includes(latestJob.state)
+                ? jobClock(latestJob)
+                : new Date(latestJob.updated_at).getTime()) -
                 new Date(latestJob.created_at).getTime()) /
                 1000
             )
@@ -795,7 +932,9 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
       const displayNumber = totalRows - idx
 
       let demoStatus = 'none'
-      if (
+      if (demoContentRunning(opp, latestBuild)) {
+        demoStatus = 'uploading'
+      } else if (
         latestBuild?.state === 'done' ||
         latestBuild?.state === 'completed' ||
         latestBuild?.state === 'live' ||
@@ -860,12 +999,19 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         placeId: opp.provider_id || null,
         websiteUrl: candidate.website || candidate.websiteUrl || null,
         pageSpeed: opp.page_speed ?? null,
+        // The same score beside the latest demo's own (`opportunities-build/demo-pagespeed.js`): `{old: {score, measuredAt} |
+        // null, demo: {score, measuredAt} | {reason}}`.
+        pagespeed: pagespeedPair(
+          opp.page_speed ?? null,
+          latestBuild ? demoPageSpeedOf(latestBuild.built_pagespeed ?? null) : null
+        ),
         // Amenities offered, reviews kept and listing photos stored, from the research job's Place Details.
         googlePlace: opp.google_place
           ? { ...opp.google_place, photos: mediaByOpp.get(opp.id)?.googlePhotos ?? 0 }
           : null,
         cms,
         template: templateSlug,
+        templateSource: builtTemplate ? 'build' : 'pinned',
         stage: lifecycle.stage,
         stepNum: lifecycle.stepNum,
         customerStage: opp.customer_stage,
@@ -889,6 +1035,21 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         demoSite: demoStatus === 'none' ? null : demoSlug,
         demoUrl: demoLabel ? bornSiteAddress(demoLabel, config) : demoSlug ? `https://${demoSlug}` : null,
         demoStatus,
+        // Counted opens of the latest build's share link; null while it never had one (`wo-demo-links.js`).
+        demoOpens: latestBuild ? (opensByBuild.get(latestBuild.id) ?? null) : null,
+        // The looks the business owner liked on the latest build's share page ("See another look"); null while it never
+        // had a link (`wo-demo-links.js` `systemPicksShape`).
+        demoSystemPicks: latestBuild ? (picksByBuild.get(latestBuild.id) ?? null) : null,
+        // What the seller marked of their outreach (`outreach-state.js`); `state: null` when nothing.
+        outreachState: outreachStateShape(outreachByOpp.get(opp.id) ?? null),
+        demoAction: latestAction
+          ? {
+              status: latestAction.status,
+              step: latestAction.step,
+              error: latestAction.error ?? null,
+              hasBuild: Boolean(latestAction.has_build)
+            }
+          : null,
         queueState: lifecycle.queueState,
         statusText: lifecycle.statusText,
         notes: notesParts.join(' · ') || 'Saved on map',

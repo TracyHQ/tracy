@@ -31,6 +31,14 @@ are the three stages. **Attention** and **Cancelled** stand apart on the right. 
 copy/share tools and creates no Sent state. The old names New/Researched/Brief are no longer stages in
 My opportunities; Find keeps its existing states.
 
+**A demo's share page** (Website Opportunities, 15/11/2026): the person reading it is the **business owner** the seller
+sent the demo to, not a Tracy customer, so the words are plain: **See another look** (the control and its title),
+**Current look** (the demo as it was built), **Look 1** … **Look 4** (one design system previewed on the demo; never the
+library's name, which would read as that company's design), **I like this look**, **Preview only. Nothing on the site
+changes.** A *look* on this page is one design system worn in preview; on every Tracy customer screen the word stays
+**Design system** (CONTEXT.md §9). Identifiers keep the machine words: `demoSystems`, `systemPicks`,
+`wo_demo_system_pick`; only the switch, `wo-demo-looks`, names the piece the operator sees.
+
 **The `/ops` sidebar:** the **DevOps** group gathers CI and the Release checklist, at the bottom of the sidebar.
 DevOps replaced the name of the Release group on 08/10/2026; the **Release checklist** screen and the `/ops/release` route
 keep their names because they are specifically about checks before and after a release.
@@ -413,6 +421,7 @@ from the block below, and the block must not keep dead names. `scripts/check-voc
 @tracy/emdash-theme-base
 @tracy/emdash-theme-business
 @tracy/emdash-theme-coffee
+@tracy/emdash-theme-diner
 @tracy/emdash-theme-restaurant
 @tracy/emdash-theme-saas
 @tracy/harness-web

@@ -1,0 +1,116 @@
+---
+/**
+ * Contact: masthead · card (text, social links, address, phone, website) · contact form (Forms plugin).
+ * Everything is the `contact/contact` entry; `form_id` names the form. No form id = the form area is drawn disabled, never a fake submit.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import FormWords from '@/components/site/FormWords.astro'
+import { blockComponents } from '@emdash-cms/plugin-forms/astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { PortableText } from 'emdash/ui'
+import { mediaUrl } from '@/lib/media'
+import { uiTag } from '@/lib/ui'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import { liveBlocks, liveLinks } from '@/lib/link-gate'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, c] = await Promise.all([
+  getEmDashEntry('pages', 'contact-us', { locale }),
+  section('masthead', 'contact-us', locale),
+  section('contact', 'contact', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'contact-us' } : null)
+const $ma = stampFor(Astro.request, 'masthead', masthead ? { id: masthead.id, slug: masthead.slug } : null)
+const $c = stampFor(Astro.request, 'contact', c ? { id: c.id, slug: c.slug } : null)
+const FormEmbed = (blockComponents as any)['emdash-form']
+const mastBg = mediaUrl(masthead?.background)
+const cardText = c ? await liveBlocks(Astro.request, locale, stampBlocks($c, 'card_text', c.card_text)) : []
+const social: any[] = c?.social_links ?? []
+const socialLive = await liveLinks(
+  Astro.request,
+  locale,
+  social.map((s) => s.url)
+)
+const img = c ? mediaUrl(c.image) : null
+const formId = String(c?.form_id ?? '').trim()
+const phone = String(c?.phone ?? '').trim()
+const isPhone = /^\+?[\d\s().-]{5,}$/.test(phone)
+const web = String(c?.webpage ?? '').trim()
+---
+
+<Base chrome={chrome} title={page.title ?? masthead?.title ?? c?.title} currentPath="/contact-us" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'contact-us', toPath: () => '/contact-us' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<div class="dn-masthead" style={mastBg ? `background-image:url('${mastBg}')` : undefined}>
+			<div class="dn-wrap">
+				<h1 class="dn-masthead-title" {...$ma('title')}>{masthead?.title}</h1>
+				<div class="dn-masthead-desc" {...$ma('description')}>{masthead?.description}</div>
+			</div>
+		</div>
+
+		{c && (
+			<div class="dn-wrap dn-contact">
+				<div class="dn-contact-info">
+					{img && <img src={img} alt="" width="465" height="247" loading="lazy" {...$c('image')} />}
+					<div class="dn-contact-text" {...$c('card_text')}><PortableText value={cardText} /></div>
+					{social.length > 0 && (
+						<div class="dn-contact-social">
+							<h2 class="dn-sub" {...$c('social_title')}>{c.social_title}</h2>
+							<ul>
+								{social.map((s, i) => socialLive(s.url) && (
+									<li><a href={s.url} rel="noopener" {...$c(`social_links[${i}].label`)}>{s.label}</a></li>
+								))}
+							</ul>
+						</div>
+					)}
+					<ul class="dn-contact-list">
+						{c.address && (
+							<li {...$c('address')}>
+								<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0a4.5 4.5 0 0 0-4.5 4.5C2.5 8 7 14 7 14s4.5-6 4.5-9.5A4.5 4.5 0 0 0 7 0zm0 6.3a1.8 1.8 0 1 1 0-3.6 1.8 1.8 0 0 1 0 3.6z" fill="currentColor" /></svg>
+								<span>{c.address}</span>
+							</li>
+						)}
+						{phone && (
+							<li {...$c('phone')}>
+								<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 .5 5 3 4 4.5c.6 1.4 2 2.9 3.5 3.5L9 7l2.5 2-.7 2.4C6 12 2 8 2.6 1.2z" fill="currentColor" /></svg>
+								<span>{isPhone ? <a href={`tel:${phone.replace(/[^+\d]/g, '')}`}>{phone}</a> : phone}</span>
+							</li>
+						)}
+						{web && (
+							<li {...$c('webpage')}>
+								<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.4" /><path d="M1 7h12M7 1c-3 3-3 9 0 12M7 1c3 3 3 9 0 12" fill="none" stroke="currentColor" stroke-width="1.2" /></svg>
+								<span><a href={web} rel="noopener">{web}</a></span>
+							</li>
+						)}
+					</ul>
+				</div>
+				<div class="dn-contact-form">
+					<h2 class="dn-sub" {...$c('form_title')}>{c.form_title}</h2>
+					<p class="dn-contact-note" {...$c('form_note')}>{c.form_note}</p>
+					{formId ? (
+						<FormWords tag={uiTag(locale)}><FormEmbed node={{ formId }} /></FormWords>
+					) : (
+						<form class="ec-form is-disabled" aria-disabled="true" onsubmit="return false">
+							<fieldset class="ec-form-page" disabled>
+								<div class="ec-form-field ec-form-field--half"><input class="ec-form-input" type="text" aria-hidden="true" tabindex="-1" /></div>
+								<div class="ec-form-field ec-form-field--half"><input class="ec-form-input" type="email" aria-hidden="true" tabindex="-1" /></div>
+								<div class="ec-form-field"><input class="ec-form-input" type="text" aria-hidden="true" tabindex="-1" /></div>
+								<div class="ec-form-field"><textarea class="ec-form-input" aria-hidden="true" tabindex="-1"></textarea></div>
+							</fieldset>
+						</form>
+					)}
+				</div>
+			</div>
+		)}
+	</main>
+</Base>
+{formId && <script>import '@emdash-cms/plugin-forms/client'</script>}

@@ -29,7 +29,7 @@ import {
 import os from 'node:os'
 import path from 'node:path'
 import { SETTING_SCHEMA, validateSetting } from '../../../site/tracy-site-build-core/src/tracy-setting.mjs'
-import { isRouteField, localPathProblems, verifyDistribution } from './distribution.mjs'
+import { isRouteField, localPathProblems, shownOrigin, verifyDistribution } from './distribution.mjs'
 import { personalizeProblems, questionProblems } from './personalize-gate.mjs'
 import { contentApiProblems } from './content-api-gate.mjs'
 import {
@@ -484,7 +484,7 @@ writeRelease(
       report: {
         startedAt: report.startedAt,
         finishedAt: report.finishedAt,
-        origin: report.origin,
+        origin: shownOrigin(report.origin),
         status: report.status,
         node: report.node
       },

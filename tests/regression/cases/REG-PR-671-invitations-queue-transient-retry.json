@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-671-invitations-queue-transient-retry",
+  "kind": "fix",
+  "title": "A send queue waits and tries the same customer again after an unexpected error or a Gmail token refusal, and pauses only after the retry window",
+  "pr": 671,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout, with TEST_DATABASE_URL set, run: node --test --test-reporter=tap apps/tracy-web/test/invitations-real-send.test.mjs",
+    "S2: Read the result of the test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Gmail token endpoint answering 503: two cron passes pause nothing, the queue stays running with 3 pending; when the token is back the same customer is sent once, its send rows are failed, failed, sent.",
+    "A database query failing inside a pass: the queue stays running, nothing sent or skipped; past AMEMBER_RETRY_MS the next failing pass pauses it with REAL_INTERNAL.",
+    "On the code before PR 671 the named test is 'not ok'."
+  ],
+  "selectors": {
+    "queueStart": "/api/ops/invitations/real/campaigns/:id/queue/start",
+    "window": "AMEMBER_RETRY_MS and invitations_real_queue.amember_failing_since in apps/tracy-web/src/invitations/real-queue.js"
+  },
+  "evidence": "16/11/2026: the Black Friday renewal queue paused at 13:23 on REAL_INTERNAL with the mailbox connected and lay still for 20 hours; Resume worked at once. 05/11/2026: a queue paused on MAILBOX_TOKEN_UNAVAILABLE the same way.",
+  "fence": "Retries never double-send: an unexpected error replays the same request key, a token refusal is recorded failed before anything leaves and the next try uses a new key.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-send.test.mjs"
+    ],
+    "tests": [
+      "send queue: an unexpected error and a Gmail token refusal wait and try the same customer again inside the retry window, then pause"
+    ]
+  }
+}

@@ -1324,7 +1324,22 @@ test('🔒 page.text (legacy road): no curl and no node is NO_BROWSER naming the
 
 // ── tracy_emdash: the MCP transport through the real handler ─────────────────────────────────────
 
-const emdashConfig = (execByKind) => ({ emdash: { cms: async () => 'emdash' }, exec: execByKind })
+const emdashConfig = (execByKind) => ({
+  emdash: { cms: async () => 'emdash' },
+  exec: execByKind,
+  // A normal EmDash fixture has a working Tracy write lease. Tests of a broken lease override fetch.
+  fetch: async (url) =>
+    String(url).endsWith('/lease/acquire')
+      ? new Response(JSON.stringify({ ok: true }), { status: 200 })
+      : new Response('', { status: 404 })
+})
+
+const withLease =
+  (fetch) =>
+  async (url, init = {}) =>
+    String(url).endsWith('/lease/acquire')
+      ? new Response(JSON.stringify({ ok: true }), { status: 200 })
+      : fetch(url, init)
 
 test('tracy_emdash: naming another site than the session’s is refused (SITE_OUTSIDE_CONVERSATION), no exec', async () => {
   const { cwd } = siteWorkspace('site-abc')
@@ -3354,7 +3369,7 @@ test('content.replace on an EmDash site — the REAL index and write scripts in 
   const em = createFakeEmdash(SITE)
   const scripts = []
   const doorCalls = []
-  const tools = register({
+  const { tools } = registerWithDoor({
     ...emdashConfig(
       execFor(
         label,
@@ -3377,7 +3392,7 @@ test('content.replace on an EmDash site — the REAL index and write scripts in 
         browser: () => assert.fail('the replace job opens no browser')
       })
     ),
-    fetch: doorFetch({ ok: true }, doorCalls),
+    fetch: withLease(doorFetch({ ok: true }, doorCalls)),
     siteDomain: 'tracy.test',
     deploymentOrigin: 'http://tracy.test:51710'
   })
@@ -3619,7 +3634,7 @@ test("🔒 media.upload {file} on EmDash: the site's own media_upload gets the b
   writeFileSync(path.join(root, label, 'logo.png'), PICTURE)
   const calls = []
   const url = `/_emdash/api/media/file/${EMDASH_ULID}.png`
-  const tools = register(
+  const { tools } = registerWithDoor(
     emdashConfig(
       execFor(
         label,
@@ -4404,7 +4419,10 @@ test('🔒 stage 6: a tracy_emdash write that landed is reported to POST /change
     posted.push({ url: String(url), headers: init.headers, body: JSON.parse(String(init.body)) })
     return new Response(JSON.stringify({ changedAt: '2026-09-29T12:00:00.000Z' }), { status: 200 })
   }
-  const { tools } = registerWithDoor({ ...emdashConfig(execFor(label, root)({ mcp: changedDoor() })), fetch })
+  const { tools } = registerWithDoor({
+    ...emdashConfig(execFor(label, root)({ mcp: changedDoor() })),
+    fetch: withLease(fetch)
+  })
   const settle = () => new Promise((resolve) => setTimeout(resolve, 20))
 
   const read = await runEmdash(
@@ -4470,7 +4488,7 @@ test('C1: a tracy_emdash delete reports every row it removed, by ULID; a row EmD
     })
     const { tools, listeners } = registerWithDoor({
       ...emdashConfig(execFor(label, root)({ mcp: door })),
-      fetch
+      fetch: withLease(fetch)
     })
     const settle = () => new Promise((resolve) => setTimeout(resolve, 20))
     return { tools, listeners, cwd, posted, settle }
@@ -4544,7 +4562,10 @@ test('C1 media: an EmDash upload by media.upload and a tracy_emdash media_delete
     const door = emdashDoor({
       on: (name) => (name === 'media_upload' ? { item: { id: EMDASH_ULID, url } } : { ok: true })
     })
-    const { tools } = registerWithDoor({ ...emdashConfig(execFor(label, root)({ mcp: door })), fetch })
+    const { tools } = registerWithDoor({
+      ...emdashConfig(execFor(label, root)({ mcp: door })),
+      fetch: withLease(fetch)
+    })
     const out = await runSite(tools, { action: 'media.upload', params: { file: 'logo.png' } }, cwd)
     assert.equal(out.ok, true, JSON.stringify(out).slice(0, 300))
     await settle()
@@ -4562,7 +4583,7 @@ test('C1 media: an EmDash upload by media.upload and a tracy_emdash media_delete
     const door = emdashDoor({ on: (name) => (name === 'media_delete' ? { deleted: true } : { ok: true }) })
     const { tools, listeners } = registerWithDoor({
       ...emdashConfig(execFor(label, root)({ mcp: door })),
-      fetch
+      fetch: withLease(fetch)
     })
     const del = { tool: 'media_delete', arguments: { id: EMDASH_ULID } }
     answerAsk(listeners, await runEmdash(tools, del, cwd), cwd)
@@ -4597,7 +4618,10 @@ test('stage 6: a refused EmDash write is not reported, and Tracy failing to reco
     asked++
     throw new Error('connect ECONNREFUSED')
   }
-  const refused = registerWithDoor({ ...emdashConfig(execFor(label, root)({ mcp: refusing })), fetch: down })
+  const refused = registerWithDoor({
+    ...emdashConfig(execFor(label, root)({ mcp: refusing })),
+    fetch: withLease(down)
+  })
   const out = await runEmdash(refused.tools, changedWrite, cwd)
   assert.equal(out.code, 'TOOL_FAILED', JSON.stringify(out))
   await new Promise((resolve) => setTimeout(resolve, 20))
@@ -4605,7 +4629,7 @@ test('stage 6: a refused EmDash write is not reported, and Tracy failing to reco
 
   const landed = registerWithDoor({
     ...emdashConfig(execFor(label, root)({ mcp: changedDoor() })),
-    fetch: down
+    fetch: withLease(down)
   })
   const wrote = await runEmdash(landed.tools, changedWrite, cwd)
   assert.equal(wrote.ok, true, JSON.stringify(wrote))
@@ -4895,6 +4919,31 @@ test('🔒 Q1: Stop while an EmDash write waits for the lease — nothing is sen
     })
     assert.equal(out.code, 'TURN_STOPPED', JSON.stringify(out).slice(0, 300))
     assert.deepEqual(titlesWritten(calls), [], `freeAfterStop=${freeAfterStop}: a write was sent after Stop`)
+  }
+})
+
+test('🔒 Q1: an unavailable or unconfirmed EmDash lease refuses the write before it reaches the site', async () => {
+  for (const answer of [
+    () => new Response('', { status: 503 }),
+    () => new Response('', { status: 404 }),
+    () => new Response(JSON.stringify({ ok: false }), { status: 200 }),
+    () => {
+      throw new TypeError('network unavailable')
+    }
+  ]) {
+    const { root, label, cwd } = siteWorkspace('emleasefail')
+    const calls = []
+    const { tools } = registerWithDoor({
+      ...emdashConfig(execFor(label, root)({ mcp: changedDoorRecording(calls) })),
+      fetch: async (url) => {
+        assert.match(String(url), /\/lease\/acquire$/)
+        return answer()
+      }
+    })
+    const out = await runEmdashAs(tools, emdashTitle('must not land'), cwd)
+    assert.equal(out.ok, false)
+    assert.equal(out.code, 'LEASE_DOOR_UNAVAILABLE')
+    assert.deepEqual(titlesWritten(calls), [])
   }
 })
 

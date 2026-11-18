@@ -1,0 +1,146 @@
+TAP version 13
+# Subtest: Harbour Sport Club: services, who it is for, team and story read from its own words
+not ok 1 - Harbour Sport Club: services, who it is for, team and story read from its own words
+  ---
+  duration_ms: 1981.188
+  type: 'test'
+  location: '<checkout>/apps/tracy-web/test/website-opportunities-business-reading.test.mjs:217:1'
+  failureType: 'hookFailed'
+  error: 'could not extend file "base/5/2604": No space left on device'
+  code: '53100'
+  name: 'error'
+  stack: |-
+    <checkout>/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async migrate (file://<checkout>/apps/tracy-web/src/db/index.js:45:5)
+    async TestContext.open (file://<checkout>/apps/tracy-web/test/_db.mjs:127:9)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+# Subtest: without a model the rules read the bio and posts, and coverage says the model did not run
+not ok 2 - without a model the rules read the bio and posts, and coverage says the model did not run
+  ---
+  duration_ms: 0.989584
+  type: 'test'
+  location: '<checkout>/apps/tracy-web/test/website-opportunities-business-reading.test.mjs:322:1'
+  failureType: 'hookFailed'
+  error: 'could not extend file "base/5/2604": No space left on device'
+  code: '53100'
+  name: 'error'
+  stack: |-
+    <checkout>/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async migrate (file://<checkout>/apps/tracy-web/src/db/index.js:45:5)
+    async TestContext.open (file://<checkout>/apps/tracy-web/test/_db.mjs:127:9)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+# Subtest: the real template post: its placeholder line is cut, the rest of the post is kept (item 8)
+not ok 3 - the real template post: its placeholder line is cut, the rest of the post is kept (item 8)
+  ---
+  duration_ms: 0.054959
+  type: 'test'
+  location: '<checkout>/apps/tracy-web/test/website-opportunities-business-reading.test.mjs:346:1'
+  failureType: 'hookFailed'
+  error: 'could not extend file "base/5/2604": No space left on device'
+  code: '53100'
+  name: 'error'
+  stack: |-
+    <checkout>/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async migrate (file://<checkout>/apps/tracy-web/src/db/index.js:45:5)
+    async TestContext.open (file://<checkout>/apps/tracy-web/test/_db.mjs:127:9)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+# Subtest: two key message saves in a row: the second does not undo the first removal or label
+not ok 4 - two key message saves in a row: the second does not undo the first removal or label
+  ---
+  duration_ms: 0.032209
+  type: 'test'
+  location: '<checkout>/apps/tracy-web/test/website-opportunities-business-reading.test.mjs:366:1'
+  failureType: 'hookFailed'
+  error: 'could not extend file "base/5/2604": No space left on device'
+  code: '53100'
+  name: 'error'
+  stack: |-
+    <checkout>/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async migrate (file://<checkout>/apps/tracy-web/src/db/index.js:45:5)
+    async TestContext.open (file://<checkout>/apps/tracy-web/test/_db.mjs:127:9)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+# Subtest: Remove takes an item off the brief; Show on the site puts a review-only person on it; the card shows both
+not ok 5 - Remove takes an item off the brief; Show on the site puts a review-only person on it; the card shows both
+  ---
+  duration_ms: 0.041792
+  type: 'test'
+  location: '<checkout>/apps/tracy-web/test/website-opportunities-business-reading.test.mjs:398:1'
+  failureType: 'hookFailed'
+  error: 'could not extend file "base/5/2604": No space left on device'
+  code: '53100'
+  name: 'error'
+  stack: |-
+    <checkout>/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async migrate (file://<checkout>/apps/tracy-web/src/db/index.js:45:5)
+    async TestContext.open (file://<checkout>/apps/tracy-web/test/_db.mjs:127:9)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+# Subtest: a reading asks for no reasoning where the provider can turn it off, and a JSON-sized answer (\#251)
+not ok 6 - a reading asks for no reasoning where the provider can turn it off, and a JSON-sized answer (\#251)
+  ---
+  duration_ms: 0.102542
+  type: 'test'
+  location: '<checkout>/apps/tracy-web/test/website-opportunities-business-reading.test.mjs:457:1'
+  failureType: 'hookFailed'
+  error: 'could not extend file "base/5/2604": No space left on device'
+  code: '53100'
+  name: 'error'
+  stack: |-
+    <checkout>/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async migrate (file://<checkout>/apps/tracy-web/src/db/index.js:45:5)
+    async TestContext.open (file://<checkout>/apps/tracy-web/test/_db.mjs:127:9)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+# Subtest: a reading without reasoning sends thinking off and a 4k answer budget, and still reads the business (\#251)
+not ok 7 - a reading without reasoning sends thinking off and a 4k answer budget, and still reads the business (\#251)
+  ---
+  duration_ms: 0.233375
+  type: 'test'
+  location: '<checkout>/apps/tracy-web/test/website-opportunities-business-reading.test.mjs:479:1'
+  failureType: 'hookFailed'
+  error: 'could not extend file "base/5/2604": No space left on device'
+  code: '53100'
+  name: 'error'
+  stack: |-
+    <checkout>/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async migrate (file://<checkout>/apps/tracy-web/src/db/index.js:45:5)
+    async TestContext.open (file://<checkout>/apps/tracy-web/test/_db.mjs:127:9)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+# Subtest: a Research again from scratch reads the business again although its texts and version are unchanged
+not ok 8 - a Research again from scratch reads the business again although its texts and version are unchanged
+  ---
+  duration_ms: 0.041291
+  type: 'test'
+  location: '<checkout>/apps/tracy-web/test/website-opportunities-business-reading.test.mjs:492:1'
+  failureType: 'hookFailed'
+  error: 'could not extend file "base/5/2604": No space left on device'
+  code: '53100'
+  name: 'error'
+  stack: |-
+    <checkout>/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async migrate (file://<checkout>/apps/tracy-web/src/db/index.js:45:5)
+    async TestContext.open (file://<checkout>/apps/tracy-web/test/_db.mjs:127:9)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 0
+# fail 8
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2303.506

@@ -1,0 +1,4 @@
+{"id":"REG-PR-558-logo-only-main-menu","verdict":"PASS","commit":"29e8601a6748e188070bbaa03c3e4210877e0973","ran_at":"2026-11-11T15:05:16.990Z","evidence":"REG-PR-558-logo-only-main-menu.log"}
+{"id":"REG-PR-558-repair-turn-packing","verdict":"PASS","commit":"29e8601a6748e188070bbaa03c3e4210877e0973","ran_at":"2026-11-11T15:05:17.104Z","evidence":"REG-PR-558-repair-turn-packing.log"}
+{"id":"REG-PR-558-repair-undo-stop","verdict":"PASS","commit":"29e8601a6748e188070bbaa03c3e4210877e0973","ran_at":"2026-11-11T15:05:17.432Z","evidence":"REG-PR-558-repair-undo-stop.log"}
+{"id":"REG-PR-558-unknown-native-spend","verdict":"PASS","commit":"29e8601a6748e188070bbaa03c3e4210877e0973","ran_at":"2026-11-11T15:05:17.571Z","evidence":"REG-PR-558-unknown-native-spend.log"}

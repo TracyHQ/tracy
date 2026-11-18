@@ -61,16 +61,28 @@ const sleepFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
  * Run `attempt` until it answers, a non transient error, or the attempts are spent. Resolves to the answer and the
  * failed attempts; rejects with the last error, which carries `retries` (the failed attempts before it).
  * @param {() => Promise<any>} attempt one model call
- * @param {{ policy?: Partial<typeof RETRY_DEFAULTS>, sleep?: (ms: number) => Promise<void>, random?: () => number }} options
+ * @param {{ policy?: Partial<typeof RETRY_DEFAULTS>, sleep?: (ms: number) => Promise<void>, random?: () => number,
+ *   signal?: AbortSignal, abortError?: () => Error }} options
  */
-export async function withRetries(attempt, { policy = {}, sleep = sleepFor, random = Math.random } = {}) {
+export async function withRetries(
+  attempt,
+  {
+    policy = {},
+    sleep = sleepFor,
+    random = Math.random,
+    signal,
+    abortError = () => new Error('aborted')
+  } = {}
+) {
   const p = { ...RETRY_DEFAULTS, ...policy }
   const retries = []
   for (let n = 1; ; n++) {
+    if (signal?.aborted) throw Object.assign(abortError(), { retries })
     try {
       // eslint-disable-next-line no-await-in-loop -- attempts of one call go one after the other.
       return { answer: await attempt(), retries }
     } catch (error) {
+      if (signal?.aborted) throw Object.assign(abortError(), { retries })
       if (n >= p.attempts || !isTransient(error)) throw Object.assign(error, { retries })
       const wait = waitMs(error, n, p, random)
       retries.push({
@@ -83,7 +95,22 @@ export async function withRetries(attempt, { policy = {}, sleep = sleepFor, rand
         at: new Date().toISOString()
       })
       // eslint-disable-next-line no-await-in-loop -- the backoff is the point.
-      await sleep(wait)
+      if (!signal) await sleep(wait)
+      else {
+        let onAbort
+        try {
+          await Promise.race([
+            sleep(wait),
+            new Promise((_, reject) => {
+              onAbort = () => reject(Object.assign(abortError(), { retries }))
+              signal.addEventListener('abort', onAbort, { once: true })
+              if (signal.aborted) onAbort()
+            })
+          ])
+        } finally {
+          signal.removeEventListener('abort', onAbort)
+        }
+      }
     }
   }
 }

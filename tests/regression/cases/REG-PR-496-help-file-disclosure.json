@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-496-help-file-disclosure",
+  "kind": "fix",
+  "title": "Help explains the attachment content limit while a usable file is in the draft",
+  "pr": 496,
+  "area": "assistant/attachments",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: mount the creation chat composer without a file and attach an accepted picture.",
+    "S2: finish the upload and send the file-only question.",
+    "S3: attach a refused file type."
+  ],
+  "expect": [
+    "S1: the note is absent before attachment and visible during upload, stating that Help sees file names and types but cannot read contents.",
+    "S2: the note leaves when the draft is sent.",
+    "S3: a refused file alone does not show the note."
+  ],
+  "selectors": {
+    "note": ".tv-onboarding-file-limit",
+    "test": "packages/ui/tracy-assistant/test/help-ui.test.mjs"
+  },
+  "evidence": "The composer previously showed file chips without telling the person that Help receives metadata only.",
+  "fence": "The customer sees the model's attachment limit at the time the file is in the draft.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/ui/tracy-assistant/test/help-ui.test.mjs"],
+    "tests": [
+      "the creation chat box uploads a picked file, holds Send until it is stored, then sends its id",
+      "a file the chat box cannot take is refused at once with its name, and never uploaded"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+- **Unknown native repair spend remains unknown in chain measurements and Ops, with measured partial spend kept separately.** — WO pipeline maintainer · #558 · `fix/wo-artifact-integration-current` · 2026-11-11
+  **Affects:** Step 9 repair summaries, chain records and the Ops WO data response; rebuild the web image. Existing historical numeric totals remain unchanged, including measured zero.
+  **Why / Measured:** A native repair with unreported spend was converted from null to zero, making a terminal build's known subtotal appear to be its complete cost. Unknown step and total USD now remain null, while agentKnown and knownUsd retain measured subtotals. No prices are estimated and historical artifacts are not rewritten.
+  **Consumer compatibility:** The existing Ops amount formatter accepts nullable measurements and displays the established unavailable marker, preserving measured zero and fractional cents; no layout or interaction changes.

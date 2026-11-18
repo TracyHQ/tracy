@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-663-accent-module-fit",
+  "kind": "fix",
+  "title": "A template whose accent appears in many rules still gets the brand accent: the module fits the limit",
+  "pr": 663,
+  "area": "website-opportunities/brand",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Rules join into selector lists only where the cascade allows; selectors a browser may not know keep their own rule.",
+    "A module over the limit drops the last family shades' markup forms and keeps the accent; routes alone over the limit are refused.",
+    "Markup selectors are case-insensitive."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/brand-accent-module.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "rules with one declaration under the same at-rules join into one selector list, only where the cascade allows",
+      "a module over the limit drops the markup forms of the last family colours and keeps the brand accent",
+      "a module whose stylesheet routes alone pass the limit is refused, never cut",
+      "a page's own markup is reached: SVG paint attributes and inline styles, in any letter case"
+    ]
+  }
+}

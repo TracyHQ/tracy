@@ -6,7 +6,7 @@
  * 🔒 THE RUN READS NOTHING A CLIENT SENT. It starts from the place's identity and its links
  * (`wo_place_link`): Google Place Details (`websiteUri`) and the social pages the place's own website links
  * to. A candidate's website or socials are never read here (`places.js privateRefs`).
- * 🔒 A SOURCE IS COLLECTED AGAIN ONLY WHEN DUE (`sourceDue`, or `force`), and a try that fails keeps the
+ * 🔒 A SOURCE IS COLLECTED AGAIN ONLY WHEN DUE (`sourceDue`, `force`, or a Research again from scratch), and a try that fails keeps the
  * data and `collected_at` of the last success: freshness is per source, and a failing refresh never wipes
  * what the place already has. Place media rows are never changed; a snapshot only stops listing one.
  * 🔒 EVERY PAID CALL IS RESERVED FIRST (`cost-ledger.js`, Tracy pays research): Place Details, each Place
@@ -62,11 +62,12 @@ import {
 } from './menu-photo-reading.js'
 import { mediaJunk } from './media-junk.js'
 import {
+  bindLogoHints,
   logoCandidateImage,
   logoHintsOf,
   logoPaletteOfStored,
-  researchLogo,
-  sameLogoFindings
+  logoResearchToKeep,
+  researchLogo
 } from './place-logo.js'
 import { SEARCH_NETWORKS, SOCIAL_SEARCH_VERSION } from './research-again.js'
 import { sourceVersionOf } from './collector-versions.js'
@@ -75,6 +76,11 @@ import { BUSINESS_READING_DOOR, BUSINESS_READING_PURPOSE, readBusiness } from '.
 import { tradeOfPlace } from '../domain/trades.mjs'
 import { StaleLeaseError, checkpoint, fenced, heartbeat } from './store.js'
 import { HUB_COLLECTOR_VERSION } from './hub/local-cache.js'
+
+/** Transient transport/storage references can be retried by an explicit from-scratch plan. */
+const TRANSIENT_MEDIA_FAILURES = Object.freeze(['download_failed', 'store_failed'])
+const retryableMediaReference = (row) =>
+  row.status === 'reference' && TRANSIENT_MEDIA_FAILURES.includes(row.reason) && !row.revoked_at
 
 /**
  * Who a place run's charges count against on /ops › Usage (migration 167): whoever created or started the run again
@@ -91,13 +97,29 @@ export function payerOfPlaceJob(job) {
 /** The stages a logo-only run goes through: the media step downloads the candidates, the brand step reads them. */
 const LOGO_ONLY_STAGES = Object.freeze(['media', 'brand', 'done'])
 
-/** A one-source run (`only_source`, a research card row's Retry) collects that source alone, due or not. */
-const wanted = (job, source) => !job.only_source || job.only_source === source
-const forced = (job, source) => Boolean(job.force) || job.only_source === source
 /** The parts a Research again run accepted in its preview (`again_plan`); null on an ordinary run. */
 const againParts = (job) => (job.again_plan ? new Set((job.again_plan.run ?? []).map((r) => r.part)) : null)
 /** The web search part for one network. */
 const searchPart = (network) => `${network}-search`
+/**
+ * A Research again from scratch (`research-again.js` AGAIN_REASON): `{at, whole}` of its frozen plan, or null. Every
+ * part it planned is collected again whatever its age, and a whole one reads the business and the logo again too.
+ */
+const scratchOf = (job) => job.again_plan?.fromScratch ?? null
+/** Whether `part` (or the search that finds its page) is a part of this run's from-scratch plan. */
+const inScratch = (job, part) => {
+  if (!scratchOf(job)) return false
+  const again = againParts(job)
+  return again.has(part) || again.has(searchPart(part))
+}
+/** Whether a part's row was tried since the from-scratch plan was made: a resumed run does not pay for it twice. */
+const triedSince = (row, at) => {
+  const tried = row?.attempted_at ? new Date(row.attempted_at).getTime() : Number.NaN
+  return Number.isFinite(tried) && tried >= Date.parse(at)
+}
+/** A one-source run (`only_source`, a research card row's Retry) collects that source alone, due or not. */
+const wanted = (job, source) => !job.only_source || job.only_source === source
+const forced = (job, source) => Boolean(job.force) || job.only_source === source || inScratch(job, source)
 
 /** `collector_version` of a snapshot source this code collected. */
 const COLLECTOR_VERSION = 'wo-place-1'
@@ -114,7 +136,7 @@ export function createPlaceRunner(h) {
    * due, it never adds one.
    */
   const due = (job, part, row, version = null, { maxAgeMs } = {}) => {
-    if (forced(job, part)) return true
+    if (forced(job, part) && !(inScratch(job, part) && triedSince(row, scratchOf(job).at))) return true
     const again = againParts(job)
     if (!again) return sourceDue(row, now(), version, { maxAgeMs })
     return (
@@ -872,6 +894,9 @@ export function createPlaceRunner(h) {
             }
           }
         }
+        // The link-in-bio pages the read points at (the website's links to one, a social page's bio link) are read
+        // into it: the booking links, menus and social pages they list. Not on a campaign's light website check.
+        if (!ctx.prefetch) result = await h.withLinkPages(domain, source, row.ref, result)
         await fenced(pool, lease, async (db) => {
           if (['complete', 'partial'].includes(result.status))
             await collected(
@@ -916,8 +941,15 @@ export function createPlaceRunner(h) {
       if (ctx.prefetch) return
       const { lease, snapshotId, domain } = ctx
       const owner = placeOwner(ctx)
-      const known = await placeMediaByUrl(ctx.place.id)
-      const shown = new Set((await snapshotMediaOf(pool, snapshotId)).map((m) => m.id))
+      const retryMedia = new Map()
+      const retrySources = new Set(
+        [...SOURCES, TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE].filter((source) => inScratch(ctx.job, source))
+      )
+      const known = await placeMediaByUrl(ctx.place.id, { retrySources, retryMedia })
+      const retryIds = new Set(retryMedia.values())
+      const shown = new Set(
+        (await snapshotMediaOf(pool, snapshotId)).filter((m) => !retryIds.has(m.id)).map((m) => m.id)
+      )
       const logoOnly = ctx.job.only_source === 'logo'
       if (logoOnly) await refreshLogoHints(ctx)
       const otherPart = Boolean(ctx.job.only_source) && ctx.job.only_source !== 'facebook'
@@ -969,16 +1001,38 @@ export function createPlaceRunner(h) {
             continue
           }
           const record = await (early[k] ?? h.mediaRecord(domain, owner, m))
+          // A newly blocked retry needs its own immutable reference; ref:url still belongs to the old failure.
+          if (retryMedia.has(m.url) && record.status === 'reference' && !retryableMediaReference(record))
+            record.sha256 = domain.sha256Hex(new TextEncoder().encode(`ref:${record.reason}:${m.url}`))
           if ([TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE].includes(m.source)) {
             record.credit = m.credit
             record.provider = m.provider
             if (m.category === 'menu') record.category = 'menu'
             if (m.source === GOOGLE_MAPS_SOURCE) record.palette = null
           }
-          const mediaId = await fenced(pool, lease, (db) => keepMedia(db, snapshotId, record))
+          const mediaId = await fenced(pool, lease, async (db) => {
+            // Replace only this preparing snapshot's failed reference; published history stays immutable.
+            const failedId = retryMedia.get(m.url)
+            if (failedId)
+              await db.query('delete from wo_place_snapshot_media where snapshot_id = $1 and media_id = $2', [
+                snapshotId,
+                failedId
+              ])
+            return keepMedia(db, snapshotId, record)
+          })
           known.set(m.url, mediaId)
         }
       }
+      // Each logo hint records the row its url became: a re-signed CDN url downloads a picture already stored under
+      // an older url, and the brand stage would otherwise find no row carrying it (dev 09/11/2026: a found logo became
+      // none on a from-scratch run).
+      for (const bound of bindLogoHints(sourceRows, (url) => known.get(url)))
+        await fenced(pool, lease, (db) =>
+          db.query(
+            'update wo_place_snapshot_source set collected = $3::jsonb where snapshot_id = $1 and source = $2',
+            [snapshotId, bound.source, JSON.stringify(bound.collected)]
+          )
+        )
       for (const optionalSource of [TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE]) {
         const ta = await sourceOf(snapshotId, optionalSource)
         if (ta?.collected?.reviews?.length || ta?.collected?.media?.length) {
@@ -1082,11 +1136,11 @@ export function createPlaceRunner(h) {
           ...(googleMaps ? { googleMaps } : {})
         }
       // What the business sells, who it is for, its team and story (`business-reading.js`): once per run, from the texts
-      // collected; a one-part run keeps the reading it had.
+      // collected; a one-part run keeps the reading it had. A whole Research again from scratch reuses no held reading,
+      // even when the texts and the version are unchanged.
+      const heldReading = scratchOf(ctx.job)?.whole ? null : (base?.profile?.businessReading ?? null)
       const readingTask =
-        ctx.prefetch || onePart
-          ? null
-          : readBusinessOf(ctx, profile, google, sources, base?.profile?.businessReading ?? null)
+        ctx.prefetch || onePart ? null : readBusinessOf(ctx, profile, google, sources, heldReading)
       readingTask?.catch(() => {})
       const landPageSpeed = async () => {
         if (!pageSpeedTask) return
@@ -1152,8 +1206,9 @@ export function createPlaceRunner(h) {
         ? ((await snapshotProfileOf(pool, ctx.place.current_snapshot_id))?.brand?.logoResearch ?? null)
         : null
       const found = await findLogo(ctx, { media, sources, name: profile.name ?? place.display_name }, held)
-      // Nothing new found: the research on record stays as it is, its vision bill included (e2e dev 24/10/2026).
-      const logoResearch = sameLogoFindings(found, held) ? held : found
+      // Nothing new found: the research on record stays as it is, its vision bill included (e2e dev 24/10/2026). A
+      // none that looked at zero candidates never replaces a found logo still in the snapshot (`logoResearchToKeep`).
+      const logoResearch = logoResearchToKeep({ found, held, media })
       const logoId = logoResearch?.chosen?.mediaId ?? null
       const brandPictures = media
         .filter((m) => !mediaJunk(m) || m.id === logoId)
@@ -1193,7 +1248,8 @@ export function createPlaceRunner(h) {
         media,
         sources,
         previous,
-        force: Boolean(ctx.job.force),
+        // A whole Research again from scratch looks at every logo candidate again (its text reading included).
+        force: Boolean(ctx.job.force) || Boolean(scratchOf(ctx.job)?.whole),
         door: ctx.prefetch ? { state: 'unavailable', reason: 'prefetch' } : await h.menuVisionDoor(),
         name,
         image: (c) => logoCandidateImage(h.objects, c),
@@ -1349,7 +1405,10 @@ export function createPlaceRunner(h) {
           held: photoRow?.collected ?? null,
           limit,
           door,
-          force: Boolean(job.force),
+          // From scratch: every photo the plan froze is read again, its held reading included.
+          force:
+            Boolean(job.force) ||
+            (inScratch(job, MENU_PHOTOS_PART) && !triedSince(photoRow, scratchOf(job).at)),
           manual: forced(job, MENU_PHOTOS_PART) || Boolean(entry),
           only: entry?.photos ?? null
         })
@@ -1412,6 +1471,9 @@ export function createPlaceRunner(h) {
     ]
     return readBusiness({
       bio: profile.bio ?? null,
+      websitePages: sources
+        .filter((s) => s.source === 'website' && s.collected_at)
+        .flatMap((s) => s.collected?.pages ?? []),
       posts,
       reviews,
       name: profile.name ?? google?.name ?? null,
@@ -1515,14 +1577,23 @@ export function createPlaceRunner(h) {
     shared: true
   })
 
-  async function placeMediaByUrl(placeId) {
-    // Media of places merged into this one count as known: shown again, not downloaded again.
+  async function placeMediaByUrl(placeId, { retrySources = new Set(), retryMedia = new Map() } = {}) {
+    // Prefer stored bytes over an old failed reference, and never revive a revoked URL.
+    // Media of merged places count as known too. The id makes ties deterministic.
     const { rows } = await pool.query(
-      `select id, source_url from wo_place_media
-       where place_id = $1 or place_id in (select id from wo_place where merged_into = $1)`,
-      [placeId]
+      `select id, source_url, source, status, reason, revoked_at from wo_place_media
+       where place_id = $1 or place_id in (select id from wo_place where merged_into = $1)
+       order by (revoked_at is not null), (status = 'stored'),
+         (not coalesce(reason = any($2::text[]), false)), id`,
+      [placeId, TRANSIENT_MEDIA_FAILURES]
     )
-    return new Map(rows.map((r) => [r.source_url, r.id]))
+    const chosen = new Map(rows.map((r) => [r.source_url, r]))
+    const known = new Map()
+    for (const [url, row] of chosen) {
+      if (retrySources.has(row.source) && retryableMediaReference(row)) retryMedia.set(url, row.id)
+      else known.set(url, row.id)
+    }
+    return known
   }
 
   /**
@@ -1592,35 +1663,39 @@ export function createPlaceRunner(h) {
         continue
       }
       if (await ctx.pausePoint({ placePhotos: { done: i, total: photos.length } })) return ctx.stopOutcome
-      let got
-      try {
-        got = await charge(ctx, 'google', 'place-photo', ceilingCents('google', 'place-photo'), () =>
-          domain.fetchPlacePhoto(photo.name, {
-            ...h.domainDeps,
-            googleKey: keys.google,
-            attributions: photo.attributions ?? [],
-            maxBytes: h.imageMax
-          })
-        )
-      } catch (error) {
-        if (error instanceof BudgetExceededError) throw error
-        log.warn(`[opportunities] place ${place.id}: Google photo skipped (${error?.code ?? 'error'})`)
-        continue
-      }
-      const base = {
-        ...placeOwner(ctx).fields,
-        kind: 'image',
-        category: 'other',
-        caption: null,
-        alt: null,
-        source: GOOGLE_FACTS_SOURCE,
-        sourceUrl: got.sourceUrl,
-        postId: null,
-        postedAt: null
-      }
-      const record = await h.storedRecord(domain, placeOwner(ctx), base, got.bytes, () => null)
+      const result = await h.withMediaAdmission('image', async () => {
+        let got
+        try {
+          got = await charge(ctx, 'google', 'place-photo', ceilingCents('google', 'place-photo'), () =>
+            domain.fetchPlacePhoto(photo.name, {
+              ...h.domainDeps,
+              googleKey: keys.google,
+              attributions: photo.attributions ?? [],
+              maxBytes: h.imageMax
+            })
+          )
+        } catch (error) {
+          if (error instanceof BudgetExceededError) throw error
+          log.warn(`[opportunities] place ${place.id}: Google photo skipped (${error?.code ?? 'error'})`)
+          return null
+        }
+        const base = {
+          ...placeOwner(ctx).fields,
+          kind: 'image',
+          category: 'other',
+          caption: null,
+          alt: null,
+          source: GOOGLE_FACTS_SOURCE,
+          sourceUrl: got.sourceUrl,
+          postId: null,
+          postedAt: null
+        }
+        const record = await h.storedRecord(domain, placeOwner(ctx), base, got.bytes, () => null)
+        return { record, attributions: got.attributions }
+      })
+      const { record, attributions } = result ?? {}
       if (!record) continue
-      record.credit = { provider: 'Google', authors: got.attributions ?? [] }
+      record.credit = { provider: 'Google', authors: attributions ?? [] }
       await fenced(pool, lease, (db) => keepMedia(db, snapshotId, record))
     }
     return null

@@ -1,8 +1,8 @@
 {
   "schemaVersion": "tracy-demo-baseline-policy/v1",
   "about": "Which templates the Road to live step Template kit asks for the demo baseline beside the contract (demo-baseline.json, written at step 0 by packages/cms/tracy-quickstart-tools/template-kit/cli.mjs baseline from a measurement of the untouched quickstart site). holdPublishFor: release tags; a release of one of them without a readable baseline of its own version is held from Publish (code kit-demo-baseline-missing), and one already published only warns. Every other template is not asked. Edit this file to opt a template in; no code change is needed.",
-  "holdPublishFor": ["quickstart/ja-boxing/j6"],
+  "holdPublishFor": ["quickstart/ja-boxing/j6", "quickstart/ja-diner/j6", "quickstart/ja-voyara/j6"],
   "reasons": {
-    "holdPublishFor": "Owner, 06/11/2026 (#419): JA Boxing only for now, so no other template gains a refusal or a file before its baseline is measured."
+    "holdPublishFor": "Owner, 06/11/2026 (#419): JA Boxing only for now, so no other template gains a refusal or a file before its baseline is measured. 09/11/2026: JA Diner (1.0.5) and JA Voyara (1.0.12) opted in, both now have a baseline measured on an untouched site beside their contract; a template brought to the JA Boxing level is opted in so /ops holds its next version without one (readiness skill F18)."
   }
 }

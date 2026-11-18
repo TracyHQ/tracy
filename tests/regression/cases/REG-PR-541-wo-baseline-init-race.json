@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-541-wo-baseline-init-race",
+  "kind": "fix",
+  "title": "First history reads and provision retries share a bounded initialization fence",
+  "pr": 541,
+  "area": "website-opportunities/baseline",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Pause a first history read with a real Git index writer, then run the real provision admission block before releasing the reader.",
+    "Hold the provision initialization fence and request history and changes for the same site, then read another site and exercise a contended bounded wait.",
+    "Run the actual provision backup branch against a rebuilt SQLite fixture and compare old and new tagged files and database; compare fresh full initial backup behavior.",
+    "Queue two established readers behind a normal repo writer, then hold two shared admissions while provision waits for both."
+  ],
+  "expect": [
+    "Provision waits before mutation, both baseline operations finish without index.lock errors, and the historical v1 remains unchanged without a rebuilt database trailer.",
+    "Contending readers answer building without initializing a repo; another site remains independent, and a bounded wait refuses mutation on timeout.",
+    "Reprovision preserves file-only v1 and creates a new full point with matching rebuilt files and database; fresh initial provisioning retains full v1.",
+    "Ordinary concurrent readers retain their backup rows without building metadata; exclusive provision admission waits for every shared reader to finish."
+  ],
+  "selectors": {},
+  "fence": "stable per-site initialization lock outside the repo, held across provision writes and first-read initialization",
+  "run": {
+    "cmd": [
+      "env",
+      "DOCKER_HOST=unix:///tmp/tracy-no-daemon-for-sqlite-tests.sock",
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=first history read finishing|history and changes during|concurrent established history|provision admission waits|EmDash: (provision retry|the Initial backup)",
+      "packages/fleet/tracy-fleet-operation/test/webroot-provision-read-race.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/site-backup.test.mjs"
+    ],
+    "tests": [
+      "a first history read finishing before provision mutation cannot race the retry baseline index",
+      "history and changes during guarded provisioning return building without initializing a repo",
+      "concurrent established history reads wait for the writer without claiming the site is building",
+      "provision admission waits until every shared established reader has released its fence",
+      "EmDash: provision retry preserves historical v1 and captures rebuilt files and database in a new point",
+      "EmDash: the Initial backup builds the repo and puts the database on v1; a second call and a later point leave v1 alone"
+    ],
+    "needs": []
+  }
+}

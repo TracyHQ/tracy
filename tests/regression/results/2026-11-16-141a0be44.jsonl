@@ -1,0 +1,2 @@
+{"id":"REG-PR-654-emdash-restaurant-brief-no-demo-facts","verdict":"PASS","commit":"141a0be443a84bf78a820ee733befa5a3cd4fbd5","ran_at":"2026-11-16T13:44:29.409Z","evidence":"tests/regression/.runs/2026-11-16-141a0be44/REG-PR-654-emdash-restaurant-brief-no-demo-facts.log"}
+{"id":"REG-PR-647-emdash-restaurant-brief","verdict":"PASS","commit":"141a0be443a84bf78a820ee733befa5a3cd4fbd5","ran_at":"2026-11-16T13:44:35.090Z","evidence":"tests/regression/.runs/2026-11-16-141a0be44/REG-PR-647-emdash-restaurant-brief.log"}

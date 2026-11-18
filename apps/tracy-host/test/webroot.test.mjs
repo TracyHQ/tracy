@@ -36,6 +36,8 @@ import {
   CUSTODY_CASES,
   HOST_FILE_CASES,
   LABELLED_CUSTODY_CASES,
+  FARM_SITE_SHAPE_CASES,
+  LABELLED_FARM_SITE_SHAPE_CASES,
   LABELLED_SITE_SHAPE_CASES,
   SITE_SHAPE_CASES,
   emdashCompose,
@@ -1204,6 +1206,15 @@ async function mintFunction(name) {
   return fn[0]
 }
 
+/** `site_shape` with the two functions it asks of a folded demo (`compose_of_shape`, `compose_is_forwarder`). */
+async function shapeFunctions() {
+  return [
+    await mintFunction('compose_is_forwarder'),
+    await mintFunction('compose_of_shape'),
+    await mintFunction('site_shape')
+  ].join('\n')
+}
+
 // 🔒 A FEW SHELLS FOR THE WHOLE TABLE, NOT ONE PER ROW (27/09/2026). These three tests used to start
 // one `bash -c` per row, one after another: 477 processes, each then starting the sha256sum, cut,
 // awk or grep its function runs. On the busy CI runners (tracy-ci-01, tracy-ci-04; PRs #482 and
@@ -1340,12 +1351,12 @@ test('🔒 the door and mint-agent-token.sh classify every compose shape as the 
 test('🔒 the door and mint-agent-token.sh answer "is this EmDash" as the shared table says', {
   timeout: AGREEMENT_TIMEOUT_MS
 }, async () => {
-  const shape = await mintFunction('site_shape')
+  const shape = await shapeFunctions()
   const proof = await mintFunction('compose_proves_php')
   const root = await mkdtemp(path.join(tmpdir(), 'tracy-host-shape-'))
   try {
     const rows = []
-    for (const row of SITE_SHAPE_CASES) {
+    for (const row of [...SITE_SHAPE_CASES, ...FARM_SITE_SHAPE_CASES]) {
       const siteDir = await mkdtemp(path.join(root, 'tracy-host-shape-'))
       row.arrange(siteDir)
       rows.push({ ...row, siteDir, argv: [siteDir] })
@@ -1372,7 +1383,7 @@ function askLabelledForms() {
   labelledForms ??= (async () => {
     const custody = await mintFunction('token_mount_custody')
     const proof = await mintFunction('compose_proves_php')
-    const shape = await mintFunction('site_shape')
+    const shape = await shapeFunctions()
     const root = await mkdtemp(path.join(tmpdir(), 'tracy-host-labelled-'))
     tempRoots.push(root)
     const composes = await Promise.all(
@@ -1386,7 +1397,7 @@ function askLabelledForms() {
       })
     )
     const shapes = await Promise.all(
-      LABELLED_SITE_SHAPE_CASES.map(async (row, i) => {
+      [...LABELLED_SITE_SHAPE_CASES, ...LABELLED_FARM_SITE_SHAPE_CASES].map(async (row, i) => {
         const siteDir = path.join(root, `shape-${i}`, row.label)
         await mkdir(siteDir, { recursive: true })
         row.arrange(siteDir)
@@ -1412,7 +1423,7 @@ describe('🔒 the door and mint-agent-token.sh agree on long-label forms, as th
       assert.equal(f.custodyShell[i], row.expect, 'script')
     })
   }
-  for (const [i, row] of LABELLED_SITE_SHAPE_CASES.entries()) {
+  for (const [i, row] of [...LABELLED_SITE_SHAPE_CASES, ...LABELLED_FARM_SITE_SHAPE_CASES].entries()) {
     test(`site shape: ${row.name}`, { timeout: AGREEMENT_TIMEOUT_MS }, async () => {
       const f = await askLabelledForms()
       assert.equal(f.shapeDoor[i], row.expect, 'door')

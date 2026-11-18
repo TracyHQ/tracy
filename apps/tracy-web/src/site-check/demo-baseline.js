@@ -11,7 +11,7 @@ import { createHash } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { baselineOfContractId } from '../lib/template-kit/demo-baseline-file.js'
-import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf, hostPath } from './page-chunks.js'
+import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf, hostPath } from '../lib/page-chunks.js'
 
 export const BASELINE_SCHEMA = 'demo-baseline/1'
 

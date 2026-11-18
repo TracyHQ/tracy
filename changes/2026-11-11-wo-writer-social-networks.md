@@ -1,0 +1,3 @@
+- **Reject social icons that draw a different network than their planned profile link.** — WO pipeline maintainer · #541 · `fix/wo-artifact-integration` · 2026-11-11
+  **Affects:** Site writer copy checks; rebuild tracy-web. Checker version 9 compares each explicit social row icon with the social fact selected by its kept plan link, preserving hidden rows, matching classes and the research alias `x`. Unsupported glyphs still return to planner rather than borrowing another network’s icon.
+  **Why / Measured:** Both frozen GymNation MAX and HIGH outputs passed version 8 with Twitter and Telegram icons linking to TikTok and YouTube. Version 9 rejects both exact mismatches.

@@ -56,6 +56,35 @@ test('a 429 then an answer: one turn, answered, the retry recorded on it and the
   assert.equal(result.totals.cost, 0.02)
 })
 
+test('Stop during retry backoff dispatches no second call and keeps the failed attempt', async () => {
+  const stop = new AbortController()
+  let waiting
+  const backoff = new Promise((resolve) => {
+    waiting = resolve
+  })
+  const saved = []
+  const model = scriptedModel([httpError(429, 'slow down'), finalReply({ content: 'unexpected' })])
+  const run = runAgent({
+    door: DOOR,
+    system: SYSTEM,
+    firstUser: FIRST,
+    fetchImpl: model.fetchImpl,
+    signal: stop.signal,
+    sleep: () => {
+      waiting()
+      return new Promise(() => {})
+    },
+    onTurn: (turn) => saved.push(turn)
+  })
+  await backoff
+  stop.abort()
+  await assert.rejects(run, (error) => error instanceof AgentError && error.code === 'AGENT_ABORTED')
+  assert.equal(model.requests.length, 1)
+  assert.equal(saved.at(-1).state, 'failed')
+  assert.equal(saved.at(-1).error.uncertain, true)
+  assert.equal(saved.at(-1).retries.length, 1)
+})
+
 test('503 five times: five attempts, then the run fails with the last reason and four retries recorded', async () => {
   const replies = [1, 2, 3, 4, 5].map((i) => httpError(503, `unavailable ${i}`))
   const { model, saved, waits, promise } = await run(replies)

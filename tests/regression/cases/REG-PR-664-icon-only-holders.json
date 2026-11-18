@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-664-icon-only-holders",
+  "kind": "fix",
+  "title": "Icons drawn inside a slot that holds only them leave with that slot instead of failing the write",
+  "pr": 664,
+  "area": "website-opportunities/write-step",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A JA Boxing trainer card's linked and hidden icons become hides with their links-only holder; the hide stage empties the holder and carries each icon.",
+    "A holder the plan writes, a slot with words, and a dropped page are unchanged."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-icon-holders.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a slot of links only is told from a slot with words",
+      "every icon the plan decides in a slot of icons only is hidden, and the slot with them; the card's other decisions stay",
+      "a holder the plan writes, a block with no such icon and a dropped page stay as the plan left them",
+      "the hide stage empties the holder and carries its icons with it, where before each icon had no way out"
+    ]
+  }
+}

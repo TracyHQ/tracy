@@ -136,6 +136,7 @@ import {
 } from '../lib/site-design.js'
 import { completeProvisionDesign } from './provision-design-tokens.js'
 import { siteSessionAhead } from '../lib/site-session-ahead.js'
+import { setupRunOfSession } from './setup-session.js'
 import { templateThumbnailOf } from '../lib/template-thumbnail.js'
 import { readUiHidden, uiSwitchOn } from '../lib/ui-setting.js'
 import { mountActivity } from './activity.js'
@@ -335,6 +336,8 @@ import {
   writeComponent
 } from './store.js'
 import { teardownSaid } from './teardown-said.js'
+import { researchRevisionOwned } from '../lib/research-revision.js'
+import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
 
 /** How long a call to a site's component may take. Why this number: the signal it feeds. */
 const COMPONENT_TIMEOUT_MS = 170_000
@@ -1827,27 +1830,32 @@ export function sitesRoutes({
    * `file(jobId)` (opt-in): writes the job's `job` row in place of the plain `putJob` — `runOwedJob`
    * writes it in one statement with what its door owes the job (`door-follow-up.js`).
    */
-  async function runSiteJobOnce(site, input, deadlineMs, onJob, { bounded = false, file } = {}) {
+  async function runSiteJobOnce(site, input, deadlineMs, onJob, { bounded = false, file, resumeJobId } = {}) {
     const started = bounded ? now() : 0
     const left = () => (bounded ? { timeoutMs: Math.max(1, deadlineMs - (now() - started)) } : {})
-    const answer = await host.hostCall(
-      config,
-      site.host,
-      '/site',
-      { ...input, label: site.label },
-      { fetchImpl, ...left() }
-    )
-    if (answer.timedOut) return { ok: false, reason: 'timeout' }
-    if (!answer.ok || typeof answer.body?.jobId !== 'string') {
-      // The host's own refusal names why (`{code: 'BAD_REQUEST', why}` from its job validator); keep
-      // it, so a door can tell "this file is a configuration file" from "the host is down".
-      const why = typeof answer.body?.why === 'string' ? `: ${answer.body.why}` : ''
-      return { ok: false, reason: `${answer.body?.code ?? 'FLEET_REFUSED'}${why}` }
+    // A history reader whose bounded wait expired resumes the same host job. Retrying the
+    // browser door must not queue another whole-webroot read behind the unfinished one.
+    let jobId = input.kind === 'webroot-history' ? resumeJobId : undefined
+    if (!jobId) {
+      const answer = await host.hostCall(
+        config,
+        site.host,
+        '/site',
+        { ...input, label: site.label },
+        { fetchImpl, ...left() }
+      )
+      if (answer.timedOut) return { ok: false, reason: 'timeout' }
+      if (!answer.ok || typeof answer.body?.jobId !== 'string') {
+        // The host's own refusal names why (`{code: 'BAD_REQUEST', why}` from its job validator); keep
+        // it, so a door can tell "this file is a configuration file" from "the host is down".
+        const why = typeof answer.body?.why === 'string' ? `: ${answer.body.why}` : ''
+        return { ok: false, reason: `${answer.body?.code ?? 'FLEET_REFUSED'}${why}` }
+      }
+      jobId = answer.body.jobId
+      if (file) await file(jobId)
+      else await putJob(pool, { id: jobId, siteKey: site.site_key, host: site.host, kind: input.kind })
+      if (onJob) await onJob(jobId)
     }
-    const jobId = answer.body.jobId
-    if (file) await file(jobId)
-    else await putJob(pool, { id: jobId, siteKey: site.site_key, host: site.host, kind: input.kind })
-    if (onJob) await onJob(jobId)
     // Bounded, the deadline counts from the first call (the POST included); unbounded, as before.
     const begun = bounded ? started : now()
     for (let attempt = 0; now() - begun < deadlineMs; attempt++) {
@@ -1866,7 +1874,7 @@ export function sitesRoutes({
       }
     }
     // `pending`: the host took the job and had not ended it when the wait ran out — it goes on.
-    return { ok: false, reason: 'timeout', pending: true }
+    return { ok: false, reason: 'timeout', pending: true, jobId }
   }
 
   /**
@@ -2669,11 +2677,27 @@ export function sitesRoutes({
       !quickstartReleaseMatches(body.expectedQuickstartRelease, quickstartReleaseIdentity(install))
     )
       return json(c, { code: 'TEMPLATE_VERSION_CHANGED' }, 409)
+    // A build that asks for the step chain (#483, spec #472): its research revision is the brief, nothing is built from
+    // chat, and only an enabled template takes it (`lib/step-chain-switch.js`). An enabled template never falls back.
+    const chainAsked = body.workflow === STEP_CHAIN_WORKFLOW
+    let chainBrief = null
+    if (chainAsked) {
+      const refusal = await stepChainRefusal(body, chosenQuickstart, caller.id)
+      if (refusal) return json(c, { code: refusal.code }, refusal.status)
+      chainBrief = {
+        about: '',
+        goal: null,
+        style: null,
+        workflow: STEP_CHAIN_WORKFLOW,
+        researchRevisionId: body.researchRevisionId.toLowerCase()
+      }
+    }
     let agentDemoContext = null
     try {
-      agentDemoContext =
-        (await agentDemo?.createContext({ accountId: caller.id, buildId, body, install })) ?? null
-      if (body.workflow !== undefined && !agentDemoContext)
+      agentDemoContext = chainAsked
+        ? null
+        : ((await agentDemo?.createContext({ accountId: caller.id, buildId, body, install })) ?? null)
+      if (body.workflow !== undefined && !chainAsked && !agentDemoContext)
         return json(c, { code: 'DEMO_WORKFLOW_INVALID' }, 400)
     } catch (error) {
       return json(c, { code: error.code ?? 'AGENT_DEMO_CREATE_REFUSED' }, 409)
@@ -3038,9 +3062,11 @@ export function sitesRoutes({
       // the moment it is up (`brief-build.js`). "I will do it later" sends no brief and this does nothing.
       // `start` never throws and never waits: the site is answered 202 exactly when it would have been.
       const brief =
-        briefs && !qualityContext && !agentDemoContext
-          ? await briefOfPress(body.brief, platform, chosenQuickstart, { accountId: caller.id, siteKey })
-          : null
+        briefs && chainBrief
+          ? chainBrief
+          : briefs && !qualityContext && !agentDemoContext
+            ? await briefOfPress(body.brief, platform, chosenQuickstart, { accountId: caller.id, siteKey })
+            : null
       if (brief)
         await briefs.start({
           siteKey,
@@ -3299,6 +3325,25 @@ export function sitesRoutes({
     const answersWritten = (await modelForChain(pool, ['seedText', 'web'], config)) !== null
     return json(c, { ...resolved, answersWritten }, 200)
   })
+
+  /**
+   * Why a press asking for the step chain cannot have it, or null: the research revision must be the caller's own, and
+   * the template enabled with the master switch on. Nothing is claimed before this answers.
+   * @param {any} body
+   * @param {string | null} quickstart
+   * @param {string} accountId
+   * @returns {Promise<{code: string, status: 400 | 404 | 409} | null>}
+   */
+  async function stepChainRefusal(body, quickstart, accountId) {
+    if (!briefs) return { code: 'STEP_CHAIN_UNAVAILABLE', status: 409 }
+    if (body.brief !== undefined) return { code: 'STEP_CHAIN_BRIEF_GIVEN', status: 400 }
+    if (typeof body.researchRevisionId !== 'string' || !UUID.test(body.researchRevisionId))
+      return { code: 'INVALID_RESEARCH_REVISION', status: 400 }
+    if (!stepChainEnabled({ quickstart })) return { code: 'STEP_CHAIN_OFF', status: 409 }
+    if (!(await researchRevisionOwned(pool, body.researchRevisionId, accountId)))
+      return { code: 'RESEARCH_REVISION_UNKNOWN', status: 404 }
+    return null
+  }
 
   /**
    * The brief a press carries, from `body.brief`.
@@ -4109,7 +4154,10 @@ export function sitesRoutes({
       // What signs the live frame's ticket (`live=1`), read back by the site proxy (`lib/ds-preview-ticket.js`).
       secret: config.sessionSecret
     },
-    previewRate: dsPreviewRate
+    previewRate: dsPreviewRate,
+    // A demo's share page offers other looks only where this server's site proxy answers the demo (the preview's ticket
+    // is read there): a demo on another host is served by that host's tunnel, as the Add site door's `liveServed` says.
+    servedHere: (site) => site.host === config.hostName
   })
   // The design system picked in the Add site form, put on the new site once its install and its brief are done, through
   // the write above as the person who created it (`design-system-at-create.js`, 12/10/2026).
@@ -6725,12 +6773,21 @@ export function sitesRoutes({
     // 🔒 WHERE THE WRITE CAME FROM, AS THIS DOOR KNOWS IT (sweep #4/#2, council 11/10/2026) — never read off a
     // header: a seat key's call is the key's (`/v1`), and `setupRun` reaches here only through `applyAs`, the
     // server writing a new site's brief for its person (never over HTTP). Everything else names none.
+    // A chat session the server opened for a setup run (the 9b repair pass of a step chain build) is that run's: its
+    // writes are the run's too, so Site changes holds them in the one "Tracy setup" row. The pair is the server's own
+    // record (`setup-session.js`); the header only names the session.
+    const sessionRun =
+      auth.kind !== 'key' && writeClass && !(typeof setupRun === 'string' && setupRun !== '')
+        ? await setupRunOfSession(pool, siteKey, auditSession).catch(() => null)
+        : null
     const writeOrigin =
       auth.kind === 'key'
         ? { kind: 'api', ref: auth.key.keyId }
         : typeof setupRun === 'string' && setupRun !== ''
           ? { kind: 'setup', ref: setupRun }
-          : null
+          : sessionRun
+            ? { kind: 'setup', ref: sessionRun }
+            : null
     /**
      * The audit line, and — for a call that changes the site (`writeClass`) — its `site_write` row in
      * the same statement. `outcome`: `ok` the source said it wrote; `refused` it said no cleanly;
@@ -8188,9 +8245,9 @@ export function sitesRoutes({
    *     it committed — one carrier `site_write` of the run naming the commit and its file count.
    * EmDash keeps no webroot history: nothing to hold. A failure is thrown for the run to log; it never fails the site.
    * @param {'open' | 'close'} step
-   * @param {{siteKey: string, runId: string, email: string}} run
+   * @param {{siteKey: string, runId: string, email: string, waitMs?: number}} run
    */
-  async function setupWebroot(step, { siteKey, runId, email }) {
+  async function setupWebroot(step, { siteKey, runId, email, waitMs }) {
     const turn = setupTurnOf(runId)
     if (!turn) throw new Error('not a setup run')
     const site = await siteByKey(pool, siteKey)
@@ -8201,7 +8258,9 @@ export function sitesRoutes({
       step === 'open'
         ? { kind: 'webroot-seal-outside', turn }
         : { kind: 'webroot-moment', title: SETUP_MOMENT_TITLE, turn },
-      SETUP_WEBROOT_WAIT_MS
+      waitMs ?? SETUP_WEBROOT_WAIT_MS,
+      undefined,
+      waitMs === undefined ? undefined : { bounded: true }
     )
     if (!job.ok) throw new Error(job.reason ?? 'the host did not take the job')
     const data = lastLine(job.output)
@@ -8211,6 +8270,9 @@ export function sitesRoutes({
         ...(Array.isArray(data.outside) ? data.outside : []),
         ...(data.sealed ? [{ ...data.sealed, cause: 'seal' }] : [])
       ])
+      // Another turn can hold dirty files on this webroot. A skipped seal does not prove which
+      // files belong to setup; do not let a later setup moment claim them as its own.
+      if (data.skipped != null) throw new Error('The setup opening seal was skipped.')
       return { held: true }
     }
     if (data.committed === true && typeof data.sha === 'string' && Number.isInteger(data.files)) {
@@ -8245,6 +8307,8 @@ export function sitesRoutes({
     designSystemSweep: () => dsAtCreate.sweep(),
     resolveKeyPrincipal: requireKeyGrant,
     closeDeletedSite,
-    teardownSiteAs
+    teardownSiteAs,
+    // A WO demo's other looks for its share page (`design-system-demo-systems.js`), handed to `/d/:token` by `app.js`.
+    demoSystems: dsDoors.demoSystems
   })
 }

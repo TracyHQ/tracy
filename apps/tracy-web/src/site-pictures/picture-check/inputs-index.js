@@ -1,20 +1,12 @@
 // Indexes the plan, the kit and the brief for the picture check rules (ADR 0043). Reads tolerantly: a missing or
 // oddly shaped part yields an empty index and never throws. Nothing here modifies an input.
 import { contentMapKey } from '../../lib/content-map-key.js'
+import { demoFileSize, doorMinWidthOf } from '../../lib/door-min-width.js'
 import { galleryIndex } from '../gallery-tiles.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 const isSize = (x) => Number.isInteger(x) && x > 0
-
-// The demo file size of a content map slot: fit.source, else the width and height the sample's image URL carries
-// (`...?width=1920&height=960`). Both are the size of the file the site holds today.
-function demoFileSize(slot) {
-  const src = slot?.fit?.source
-  if (isSize(src?.width) && isSize(src?.height)) return { width: src.width, height: src.height }
-  const q = /[?&]width=(\d+)&height=(\d+)/.exec(String(slot?.sample ?? ''))
-  return q ? { width: Number(q[1]), height: Number(q[2]) } : null
-}
 
 const pathOnly = (p) => String(p ?? '').split('#')[0]
 
@@ -39,14 +31,26 @@ function indexKit(kit) {
       .filter((s) => isObject(s) && typeof s.key === 'string')
       .map((s) => [s.key, s])
   )
-  // The narrowest file the write door takes for a frame (the slot's fit.minWidth, SlotFit checkPicture): carried on the
-  // frame, so every cut and every drawing for it is written at least that wide (card AI).
+  // The narrowest file the write door takes for a frame (the slot's fit.minWidth, capped at the demo file's width as
+  // SlotFit checkPicture caps it, door-min-width.js): carried on the frame, so every cut and every drawing for it is
+  // written at least that wide (card AI).
+  // A frame a T4 layout paints behind the blocks writes the layout's slots (`writesTo`), not one named after it.
+  const keysOf = (f, id) =>
+    Array.isArray(f?.writesTo) && f.writesTo.length ? f.writesTo : [contentMapKey(id)]
   for (const [id, f] of frames) {
-    const min = slots.get(contentMapKey(id))?.fit?.minWidth
-    if (isSize(min)) frames.set(id, { ...f, minWidth: min })
+    const held = keysOf(f, id).map((k) => slots.get(k))
+    const fits = held.map((slot) => slot?.fit)
+    const mins = held.map(doorMinWidthOf).filter(isSize)
+    // A photo frame can still require alpha (for example a customer-avatar strip). Its classification alone does
+    // not describe what the native slot accepts; retain the contract's requirement before choosing a JPEG cut.
+    frames.set(id, {
+      ...f,
+      ...(mins.length ? { minWidth: Math.max(...mins) } : {}),
+      ...(fits.some((fit) => fit?.transparent === true) ? { transparent: true } : {})
+    })
   }
   const demoSize = (frameId) => {
-    const s = slots.get(contentMapKey(frameId))
+    const s = slots.get(keysOf(frames.get(frameId), frameId)[0])
     return s ? demoFileSize(s) : null
   }
   // The picture lists a frame sits in (gallery-tiles.js): its block, list and row.
@@ -121,9 +125,24 @@ export function indexInputs({ plan, kit, brief, files, icons }) {
   return {
     ...kitIndex,
     ...planIndex,
-    /** A gallery tile: an any-real frame of a picture list (gallery-tiles.js); it is never hidden alone. */
+    /** A gallery tile: a real-photo wish or business gallery role in a picture list; never hidden alone. */
     galleryTile: (frameId) =>
-      planIndex.wishes.get(frameId)?.match === 'any-real' ? kitIndex.gallery(frameId) : null,
+      planIndex.wishes.get(frameId)?.match === 'any-real' ||
+      kitIndex.frames.get(frameId)?.role === 'business.gallery_image'
+        ? kitIndex.gallery(frameId)
+        : null,
+    // The kit's business gallery role, a real-photo request and a photo grounded in observations or an original post
+    // document the business. A planner's specific wish cannot turn its gallery into an illustration.
+    // A cutout can remain a generic illustration; it does not claim to be a portrait of its staff.
+    documentaryFrame: (frameId) => {
+      const wish = planIndex.wishes.get(frameId)
+      if (kitIndex.frames.get(frameId)?.role === 'business.gallery_image') return true
+      if (wish?.match === 'any-real') return true
+      if (kitIndex.frames.get(frameId)?.kind !== 'photo') return false
+      return arr(wish?.factIds).some((id) =>
+        arr(brief?.facts).some((f) => f.id === id && (f.sourceKind === 'observed' || f.field === 'posts'))
+      )
+    },
     assets,
     personIds: (factId) => personIds(brief, factId),
     readFile: fileReader(files),

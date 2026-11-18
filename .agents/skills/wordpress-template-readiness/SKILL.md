@@ -60,6 +60,30 @@ green for the exit code. Never try to turn it `done`.
    Skip `kit-not-approved` and `kit-approval-stale`: the approval comes at green.
 2. Its fix is the piece's `fix` in the verdict JSON. Look its code up in
    [`references/fix-map.md`](references/fix-map.md), which says how that fix runs on WordPress, or that it is a stop.
+   For `coverage-holes`, `coverage-labels` and `coverage-judge`, and for a red release sweep check (`heights`,
+   `scheme`), find the symptom in [`references/coverage-holes.md`](references/coverage-holes.md) section 6 and follow
+   its recipe. Every recipe goal is the same: a built customer site carries zero demo business data in a writable
+   place, with no layout change.
+
+   | State code | Symptom | Recipe |
+   |---|---|---|
+   | `coverage-holes` | business words (phone, address, email) hard-coded in a pattern or part (class `template`) | H1 |
+   | `coverage-holes` | a fact inside a `core/html` band (class `unknown`) | H2 |
+   | `coverage-labels` (R2) | a menu or price item name that carries its price in inline markup | H3 |
+   | `coverage-labels` (R5), `coverage-judge` | cut-out or decoration pictures on an editorial role | H4 |
+   | `coverage-holes` | words in a footer or header template part, not captured | H5 |
+   | `coverage-labels` (R9) | a style guide sample that reads as a fact | H6 |
+   | `coverage-holes` | visible text in an unnamed block (typography, patterns), markup the capture skips | H7 |
+   | `measure-failed` (release gate), sweep checks `heights`, `scheme` | a markup change moved heights | H8 |
+   | `coverage-holes` | a link inside an inline markup slot | H9 |
+   | `coverage-holes` | a page or post title (evidence `post_title`) | H10 |
+   | `coverage-holes` | a picture a theme option or theme post meta points at | H11 |
+| `coverage-labels` (R9) | sample posts of a style guide that carry contact-shaped text (a sample address, phone, email) | H12 |
+| `coverage-labels` (R2) | an hours or schedule sample on a plain editorial role | H13 |
+| `customize-live-failing` (ABOUT-2 names a `part`) | contact words in a template part paragraph that also holds a link, so no slot can hold them | H14 |
+| `demo-main-heading` (step `demo-measures`) | two main headings on a demo page (a repeated masthead `h1` plus the page title), or none on an error, offline or reset page | H15 |
+
+   `apps/tracy-web/test/template-readiness-wordpress-holes.test.mjs` holds each row to a deliberately broken copy.
 3. Run it. Rebuilding the kit goes through [`references/kit-rebuild.md`](references/kit-rebuild.md) (a `build` wipes
    the five hand-declared hidden fields, and needs the database to read pages as sections).
 4. Append one line to `$RUN/fix-log.md`: piece, code, what changed, where (theme, contract folder, kit, tool, release).
@@ -111,9 +135,9 @@ stops are W2, W4 and W5 of that page; in short:
 | Stop | Who must act |
 |---|---|
 | Out of scope (section 0): not a block theme, page builder, WooCommerce, several languages | the preparer |
-| W2: `content-map-missing-lists` (no WordPress tool captures posts into the map) | a person designs it; then procedure W1 |
-| W4: a fix release without the port's dossier on this machine | the person who ran the port |
-| W5: hole of class `unknown`; read-only design data; a piece with no `fix`; a Joomla-only code on WordPress; a blocked command | as in the Joomla skill |
+| W2: `content-map-missing-lists` on a released profile | nobody: cut the next version (W4) and capture it with `--posts` |
+| W4: a fix release without the port's dossier on this machine, or a new sweep difference needing design input ([`references/patch-release.md`](references/patch-release.md) is the release itself) | the person who ran the port, the port owner |
+| W5: a coverage hole with no WordPress door ([`references/coverage-holes.md`](references/coverage-holes.md)); read-only design data; a piece with no `fix`; a Joomla-only code on WordPress; a blocked command | the plugin or port owner, as the fix map says |
 
 ## 6. Done
 

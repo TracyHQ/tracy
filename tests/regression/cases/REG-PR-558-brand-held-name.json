@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-558-brand-held-name",
+  "kind": "fix",
+  "title": "A held business name does not demand unused rendered name files or relax independent logo review",
+  "pr": 558,
+  "area": "wo/brand",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Check a complete held-name brand file and its historical gate, including reviewed fitted marks and owner confirmation."
+  ],
+  "expect": [
+    "A missing or withheld name accepts mark-only spots without fabricating name pictures.",
+    "An authored but explicitly withheld name cannot be composed into new name assets.",
+    "Owner confirmation, independent review and contrast remain required; historical runs retain their recorded behavior.",
+    "New runs freeze the held-name policy; unsupported policy versions refuse."
+  ],
+  "selectors": {},
+  "fence": "Preserve approved prompts, authored research, historical checker semantics and independent review. Never infer a withheld name from a logo.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brand-held-name.test.mjs",
+      "apps/tracy-web/test/brand-tool-name-only-logo.test.mjs",
+      "apps/tracy-web/test/module-graph.test.mjs",
+      "apps/tracy-web/test/site-check-theme-reads.test.mjs"
+    ],
+    "tests": [
+      "a held null name accepts reviewed fitted marks without inventing unused name pictures",
+      "an explicitly withheld authored name also keeps composed name images out of the brand file",
+      "holding a name still requires owner confirmation and independently reviewed spot files",
+      "a historical brand gate retains its recorded missing-name behavior",
+      "new brand runs freeze the held-name policy and unsupported versions refuse",
+      "the safe version never renders an explicitly held name in a new run",
+      "the safe version refuses unsupported held-name versions before invoking tools"
+    ],
+    "needs": []
+  }
+}

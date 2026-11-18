@@ -1,5 +1,5 @@
 ---
-/** "Prev 1 2 3 Next" and "Page n of N" under a list. Pages are `?page=n`. */
+/** "Start Prev 1 2 3 Next End" and "Page n of N" under a list. Pages are `?page=n`. */
 import { ui } from '@/lib/ui'
 import { fillWords } from '@/lib/ui-words'
 import type { Locale } from '@/lib/i18n'
@@ -20,9 +20,11 @@ const to = (n: number) => (n <= 1 ? base : `${base}?page=${n}`)
 {pages > 1 && (
 	<nav class="rs-pagination" aria-label={w.pagination}>
 		<ul>
+			<li class:list={[page <= 1 && 'is-disabled']}>{page > 1 ? <a href={to(1)}>{w.pageStart}</a> : <span>{w.pageStart}</span>}</li>
 			<li class:list={[page <= 1 && 'is-disabled']}>{page > 1 ? <a href={to(page - 1)} rel="prev">{prev}</a> : <span>{prev}</span>}</li>
 			{Array.from({ length: pages }, (_, i) => i + 1).map((n) => <li class:list={[n === page && 'is-active']}>{n === page ? <span aria-current="page">{n}</span> : <a href={to(n)}>{n}</a>}</li>)}
 			<li class:list={[page >= pages && 'is-disabled']}>{page < pages ? <a href={to(page + 1)} rel="next">{next}</a> : <span>{next}</span>}</li>
+			<li class:list={[page >= pages && 'is-disabled']}>{page < pages ? <a href={to(pages)}>{w.pageEnd}</a> : <span>{w.pageEnd}</span>}</li>
 		</ul>
 		<div class="rs-pagination-count">{fillWords(w.pageOf, { page, pages })}</div>
 	</nav>

@@ -1,0 +1,3 @@
+- **A bench Stop now aborts an in-flight model request and prevents a retry after cancellation** — Codex · #496 · `docs/ai-capabilities-audit-2026-11-08` · 2026-11-09
+  **Affects:** the shared planner, writer and other bench model loops. They poll their durable Stop request every two seconds; an interrupted request leaves an uncertain failed turn receipt and a cancelled run, with no automatic replay.
+  **Why / Measured:** the previous loop only checked Stop after an answered turn, so a call could continue until its timeout. Scripted tests abort one pending provider request and one retry backoff; each dispatches exactly one request, saves its receipt and does not replay the ambiguous call.

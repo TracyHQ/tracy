@@ -77,8 +77,10 @@ import { heightsWidths } from '../visual/site-sweep-heights.mjs'
 import { coverageFromReport, coverageProblems, sweepOutcomeProblems } from '../lib/sweep-coverage.mjs'
 import { bindReferenceKinds, SWEEP_APPLICABILITY_VERSION } from '../visual/applicability.mjs'
 import { sweepInputs } from '../visual/site-sweep.mjs'
-import { differsFrom, fingerprintOf, homeUrlOf, templateOf, validateFingerprint } from '../lib/source-fingerprint.mjs'
+import { differsFrom, fingerprintOf, homeUrlOf, templateOf, validateFingerprint, withUrl } from '../lib/source-fingerprint.mjs'
 import { fileURLToPath } from 'node:url'
+import { homedir } from 'node:os'
+import { isDeepStrictEqual } from 'node:util'
 import { settleOutput } from '../visual/site-sweep-publish.mjs'
 import { BINDING_FILE, BINDING_SCHEMA, isCompleteCheckpoint, reportProblems, tierOuts } from '../visual/round.mjs'
 
@@ -1109,7 +1111,11 @@ export function fixProblems({ previous, sweep = null, measure, noBaseline, basel
     }
     fix.measure = { tool: m.tool, ranAt: m.ranAt, site: m.site, source: m.source, artifact: m.artifact, passed: m.passed, total: m.total, checks: m.checks, ...(m.coverage ? { coverage: m.coverage } : {}), ...(m.sourceFingerprint ? { sourceFingerprint: m.sourceFingerprint } : {}), ...(m.applicability ? { applicability: m.applicability } : {}), ...(m.source === null ? { sourceFingerprintApplicability: { status: 'not-applicable', reason: 'all renderable pages bind to reference.kind=none' } } : {}), ...(fix.sweepEvidence ? { sweepEvidence: fix.sweepEvidence } : {}), evidence: tagged(measureBytes) }
     fix.baseline = m.baseline
-    fix.measureBytes = measureBytes
+    // the copy the release publishes as fix-measure.json: a measure that names no stand and no machine path travels byte
+    // for byte, any other is rewritten by portableMeasure; VERIFICATION.json binds the published bytes
+    const portable = portableMeasure(m)
+    fix.measureBytes = isDeepStrictEqual(portable, m) ? measureBytes : Buffer.from(JSON.stringify(portable, null, 2) + '\n')
+    fix.measure.evidence = tagged(fix.measureBytes)
     fix.notDefects = m.notDefects
   }
 
@@ -1538,23 +1544,54 @@ export function buildVerification({ manifest, parity, restoreReport, contracts =
 const STAND_ROLES = { source: 'source stand', restored: 'restored stand' }
 // an http(s) origin of a machine-local stand: loopback, wildcard, a bare IPv4, a docker host name, a .local/.test name
 const STAND_ORIGIN = /https?:\/\/(?:127(?:\.\d+){3}|0\.0\.0\.0|\[(?:::1?|::ffff:\d{1,3}(?:\.\d{1,3}){3})\]|localhost|host\.docker\.internal|[\w.-]+\.(?:local|test|localhost)|\d{1,3}(?:\.\d{1,3}){3})(?::\d+)?/gi
-// a path of the build machine that survived recordData: the home mark, or an absolute path into a user, volume or temp area
-const MACHINE_PATH = /^(?:~|\/(?:Users|home|private|Volumes|tmp|var\/folders))(?:\/|$)/
+// a path of the build machine that survived recordData: the home mark, or an absolute path into a user, volume or temp area.
+// `/home/` is not a machine root by itself: a site route such as /home/home-red starts the same way. Only this machine's own
+// home folder under /home is (a Linux builder); a macOS home is under /Users, which no route of the stands uses.
+const LINUX_HOME = /^\/home\/[^/]+$/.test(homedir()) ? homedir().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : null
+const MACHINE_ROOT = `(?:~|\\/(?:Users|private|Volumes|tmp|var\\/folders)${LINUX_HOME ? `|${LINUX_HOME}` : ''})`
+const MACHINE_PATH = new RegExp(`^${MACHINE_ROOT}(?:\\/|$)`)
 // the same paths anywhere inside a longer text: from the root to the next space or quote
-const MACHINE_PATH_IN_TEXT = /(?:file:\/\/)?(?:(?<![\w.~/-])|(?<=file:\/\/))(?:~|\/(?:Users|home|private|Volumes|tmp|var\/folders))(?:\/[^\s"'`<>),;]*)?/g
+const MACHINE_PATH_IN_TEXT = new RegExp(`(?:file:\\/\\/)?(?:(?<![\\w.~/-])|(?<=file:\\/\\/))${MACHINE_ROOT}(?:\\/[^\\s"'\`<>),;]*)?`, 'g')
 const cutPath = (p) => path.posix.basename(p.replace(/\/+$/, '')) || '<path>'
+const cutMachinePaths = (s) => s.replace(MACHINE_PATH_IN_TEXT, (m) => (m === '~' || m === '/Users' ? '<path>' : cutPath(m)))
+
+/**
+ * A source fingerprint as a release publishes it: a home URL on a stand origin is written on the placeholder origin the
+ * database already uses for every address (PLACEHOLDER_URL), and the id is computed again over that URL (withUrl), so the
+ * published fingerprint still validates. The page hash and the template, which say what the source was, are kept. A
+ * fingerprint that did not validate as measured is not given a fresh id.
+ */
+export function portableFingerprint(f) {
+  if (!obj(f) || typeof f.url !== 'string') return f
+  const url = f.url.replace(STAND_ORIGIN, PLACEHOLDER_URL)
+  if (url === f.url) return f
+  return validateFingerprint(f).length ? { ...f, url } : withUrl(f, url)
+}
+
+/**
+ * fix-measure.json as a release publishes it. Every stand origin becomes the placeholder origin (the fields stay
+ * http(s) URLs, so the copy is still a valid tracy-fix-measure/v1 document), every path of the build machine is cut to
+ * its file name, and every source fingerprint is made portable (portableFingerprint). Checks, counts and hashes are kept.
+ */
+export function portableMeasure(value) {
+  if (typeof value === 'string') return cutMachinePaths(value.replace(STAND_ORIGIN, PLACEHOLDER_URL))
+  if (Array.isArray(value)) return value.map(portableMeasure)
+  if (obj(value)) return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, k === 'sourceFingerprint' ? portableFingerprint(v) : portableMeasure(v)]))
+  return value
+}
 
 /**
  * VERIFICATION.json is published: it keeps the measurements and hashes but not how the build machine is laid out.
  * A stand origin (host:port) becomes the role the stand played, an evidence directory is dropped (the dossier keeps it,
  * the hashes stay), and any other path of the machine is cut to its file name. Keys that readers of `--previous` use
- * (release, version, gate, visual) hold no stand and no machine path and are not touched. A `sourceFingerprint` is kept
- * whole: its id is a hash over its url, so a rewritten url would leave a fingerprint that no longer validates.
+ * (release, version, gate, visual) hold no stand and no machine path and are not touched. A `sourceFingerprint` stays
+ * a valid fingerprint: its id is a hash over its url, so portableFingerprint writes the url on the placeholder origin and
+ * computes the id again, the same way the published fix-measure.json carries it.
  */
 export function portableVerification(value) {
-  if (typeof value === 'string') return value.replace(STAND_ORIGIN, 'a stand').replace(MACHINE_PATH_IN_TEXT, (m) => (m === '~' || m === '/Users' ? '<path>' : cutPath(m)))
+  if (typeof value === 'string') return cutMachinePaths(value.replace(STAND_ORIGIN, 'a stand'))
   if (Array.isArray(value)) return value.map(portableVerification)
-  if (value !== null && typeof value === 'object') return Object.fromEntries(Object.entries(value).filter(([k, v]) => !(k === 'dir' && typeof v === 'string' && MACHINE_PATH.test(v))).map(([k, v]) => [k, k === 'sourceFingerprint' ? v : portableVerification(v)]))
+  if (value !== null && typeof value === 'object') return Object.fromEntries(Object.entries(value).filter(([k, v]) => !(k === 'dir' && typeof v === 'string' && MACHINE_PATH.test(v))).map(([k, v]) => [k, k === 'sourceFingerprint' ? portableFingerprint(v) : portableVerification(v)]))
   return value
 }
 
@@ -2127,7 +2164,7 @@ function accept(o, now) {
     const r = guarded('measure-invalid', 'the fix evidence', () => fixProblems({ previous: o.previous, sweep: o.sweep, measure: o.measure, noBaseline: o.noBaseline, baselineVersion: o.baselineVersion, changedFrom: o.changedFrom, manifest, themeSha: artifacts.theme?.sha256.slice(7) ?? null, themeBytes: files.get(themeName)?.bytes ?? null, siteUrl, restoredAt, now, contract, specDir, runRoot: o.runRoot, readSource: o.readSource ?? readSourceNow }), { problems: [], fix: null })
     problems.push(...r.problems)
     fix = r.fix
-    // the measure the release was accepted on travels with it, byte for byte
+    // the measure the release was accepted on travels with it, as portableMeasure publishes it
     if (fix?.measureBytes) {
       if (files.has(MEASURE_FILE)) problems.push(problem('unsafe-file', `a second asset named ${MEASURE_FILE}: the release writes the measure there`))
       else {

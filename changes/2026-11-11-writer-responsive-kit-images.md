@@ -1,0 +1,2 @@
+- **New WO writer runs read the actual desktop and mobile images of printed kit blocks before their visual check can pass.** — pipeline maintainers · #541 · `fix/wo-artifact-integration` · 2026-11-11
+  **Affects:** WO chain and writer worker; rebuild the web image. The frozen `writer-kit-images/1` policy reuses the existing kit cache, image tool and provider image wire. Historical standalone runs preserve text-only behavior; the approved writer prompt is unchanged.

@@ -6,10 +6,17 @@
 // 🔒 ONE DECISION PER FACT. A brief field a fact backs (the hours, a team member, the WhatsApp button, Google's rating)
 // shows only when its fact is on the site; nothing else turns it on or off.
 import { factDecisions } from './fact-assessment.mjs'
+import { PLACEHOLDER_RE } from './content-pool.mjs'
 import { ratingShownForms } from './google-rating.mjs'
 import { comparable, labelQuoted } from './business-reading.mjs'
 import { cleanSocialUrl } from './social-links.mjs'
 import { OBSERVED_USE_RULE } from './pictures/observed-facts.mjs'
+import { SOCIAL_NETWORKS } from './owner-site-picks.mjs'
+
+/** A link to one of these networks is a social link (`owner-site-picks.mjs`); WhatsApp is its own fact. */
+const SOCIAL_LINK_KINDS = new Set(
+  SOCIAL_NETWORKS.map((n) => n.id).filter((id) => id !== 'whatsapp' && id !== 'other')
+)
 
 // The brief names a source by its platform: Google's two collectors are one Google.
 const SOURCE_NAME = { 'google-places': 'google', 'google-maps': 'google' }
@@ -35,6 +42,7 @@ function fieldOf(path, fact, sourceKind, food) {
     // A summary another platform wrote of its reviews ("Guests praise…", `attribution`) is not the business's story.
     if (fact.value?.attribution) return null
     if (reason.startsWith('story:') || fact.value?.kind === 'story') return 'story'
+    if (fact.value?.kind === 'post') return 'posts'
     return null
   }
   if (group === 'claims' && key === 'statistics') {
@@ -48,7 +56,7 @@ function fieldOf(path, fact, sourceKind, food) {
     if (kind === 'whatsapp' || kind === 'website' || kind === 'menu' || kind === 'booking') return kind
     // A channel the business invites messages on in its own words (`own-channels.mjs`): "DM us" on Instagram.
     if (/^(?:instagram|facebook|tiktok|x)-dm$/.test(kind ?? '')) return 'contactChannels'
-    return ['facebook', 'instagram', 'tiktok', 'youtube', 'x'].includes(kind) ? 'socials' : null
+    return SOCIAL_LINK_KINDS.has(kind) ? 'socials' : null
   }
   if (group === 'extensions' && key === 'research:otherPhones') return 'otherPhones'
   return null
@@ -97,7 +105,17 @@ export function briefFactsOf(profile, { food = false, decisions }) {
     const refs = fact.evidenceRefs.map((r) => evidence.get(r)).filter(Boolean)
     const first = sources.get(refs[0]?.sourceId)
     const field = fieldOf(path, fact, first?.kind, food)
-    if (!field) continue
+    // A person or link the owner added (`saved-profile.mjs`) reaches the brief through its team and links, not as a fact.
+    if (!field || fact.addedByOwner) continue
+    // Preserve the raw profile quote, but never send an unfilled source-template line to the builder.
+    const cleanPostText = (text) =>
+      text
+        .split(/\r?\n/)
+        .filter((line) => !PLACEHOLDER_RE.test(line))
+        .join('\n')
+        .trim()
+    const value = field === 'posts' ? { ...fact.value, text: cleanPostText(fact.value.text) } : fact.value
+    if (field === 'posts' && !value.text) continue
     const d = decisions.get(fact.id) ?? {
       confidence: 'single-source',
       onSite: false,
@@ -107,7 +125,7 @@ export function briefFactsOf(profile, { food = false, decisions }) {
     out.push({
       id: fact.id,
       field,
-      value: fact.value,
+      value,
       evidence: refs.map((e) => {
         const s = sources.get(e.sourceId)
         // A link reads as Tracy shows it, without share tracking (#1780 item 10), like every link of the brief.
@@ -115,13 +133,19 @@ export function briefFactsOf(profile, { food = false, decisions }) {
         return {
           source: sourceName(s?.kind),
           ...(ref ? { ref } : {}),
-          ...(typeof e.excerpt === 'string' && e.excerpt.length <= MAX_QUOTE ? { quote: e.excerpt } : {})
+          ...(typeof e.excerpt === 'string' && e.excerpt.length <= MAX_QUOTE
+            ? { quote: field === 'posts' ? cleanPostText(e.excerpt) : e.excerpt }
+            : {})
         }
       }),
       confidence: d.confidence,
       onSite: d.onSite,
       decidedBy: d.decidedBy,
-      reasons: d.reasons ?? []
+      reasons: d.reasons ?? [],
+      // The owner's value (#537 R18): `value` is what the site states, `researchValue` what research read.
+      ...(fact.editedByOwner && 'researchValue' in fact
+        ? { editedByOwner: true, researchValue: fact.researchValue }
+        : {})
     })
   }
   return out
@@ -527,8 +551,11 @@ export function renderBriefFacts(brief, line, q) {
   const observed = facts.filter((f) => f.sourceKind === 'observed')
   for (const f of stated) {
     const from = [...new Set(f.evidence.map((e) => e.source))].join(', ')
+    // A person only reviews name, shown by rule (`liftReviewPeople`), is named for the owner to check.
     const where = f.onSite
-      ? 'on the site'
+      ? f.decidedBy !== 'owner' && f.reasons.includes('review-only-person')
+        ? 'shown from reviews, owner to check'
+        : 'on the site'
       : `off the site${f.reasons.length ? `: ${f.reasons.filter((r) => r !== 'owner-override').join(', ')}` : ''}`
     line(
       `- ${f.field}: ${valueLine(f.value, q)} · ${CONFIDENCE_WORDS[f.confidence] ?? f.confidence}${from ? ` (${from})` : ''} · ${where}${f.decidedBy === 'owner' ? ', by the owner' : ''}`

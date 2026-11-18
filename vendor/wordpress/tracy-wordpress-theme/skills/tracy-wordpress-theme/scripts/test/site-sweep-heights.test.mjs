@@ -182,13 +182,13 @@ const FOOTER = (extra = '') => `<footer class="site-footer" style="padding:20px"
 const sec = (cls, head, inner, style = '') => `<section class="${cls}" style="${style}"><h2 style="margin:0 0 8px">${head}</h2>${inner}</section>`
 const cards = (n) => Array.from({ length: n }, (_, i) => `<div class="card" style="height:90px;background:#eee"><span>Card ${i}</span></div>`).join('')
 
-async function heights({ port, source, widths = [390, 1180], accept, settle, routes }) {
+async function heights({ port, source, widths = [390, 1180], accept, settle, routes, freshBrowser }) {
   const [p, s] = await Promise.all([serve(port), serve(source)])
   const list = routes ?? Object.keys(port)
   const plan = dossierPlan({ contract: contract(list) })
   const pairs = plan.pages.map((pg) => ({ ...pg, sourceUrl: new URL(pg.sourceRoute, s.origin).href }))
   const b = await browser.get()
-  return runSweep({ browser: b, site: p.origin, source: s.origin, plan, pairs, widths, heightsWidths: widths, schemes: ['light'], only: ['heights'], concurrency: 3, settleMs: 50, heightsQuiet: settle, accept, confirm: false })
+  return runSweep({ browser: b, site: p.origin, source: s.origin, plan, pairs, widths, heightsWidths: widths, schemes: ['light'], only: ['heights'], concurrency: 3, settleMs: 50, heightsQuiet: settle, accept, confirm: false, freshBrowser })
 }
 const causes = (report) => groupDefects(report.defects.heights).map((g) => g.cause)
 const check = (report) => report.checks.find((c) => c.id === 'heights')
@@ -3109,4 +3109,18 @@ test('judgeHeights (synthetic readings): the same words on as many leaves of eac
   const more = await stated(mk(list([110, 200, 290])), mk(list([160, 250, 340, 380])), 600, 600)
   assert.ok(!more.kinds.includes('element-moved'), more.kinds.join())
   assert.notEqual(more.status, 'ok')
+})
+
+test('heights (browser): with freshBrowser the heights phase reads on the browser it is handed, not on the sweep browser', async () => {
+  const page = doc(PAGE(HEADER, sec('intro', 'Welcome', '<p>Hello</p>', 'padding:30px 20px'), FOOTER()))
+  const dead = { newContext: async () => { throw new Error('browser.newContext: Target page, context or browser has been closed') } }
+  const used = []
+  const freshBrowser = async (fn) => { used.push('fresh'); return fn(await browser.get()) }
+  const [p, s] = await Promise.all([serve({ '/a': page }), serve({ '/a': page })])
+  const plan = dossierPlan({ contract: contract(['/a']) })
+  const pairs = plan.pages.map((pg) => ({ ...pg, sourceUrl: new URL(pg.sourceRoute, s.origin).href }))
+  const r = await runSweep({ browser: dead, freshBrowser, site: p.origin, source: s.origin, plan, pairs, widths: [390], heightsWidths: [390], schemes: ['light'], only: ['heights'], concurrency: 1, settleMs: 50, confirm: false })
+  assert.deepEqual(used, ['fresh'])
+  assert.equal(r.heights.cells.length, 1)
+  assert.equal(r.owed?.length ?? 0, 0)
 })

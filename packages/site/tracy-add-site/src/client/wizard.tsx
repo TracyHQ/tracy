@@ -924,9 +924,9 @@ export function AddSiteWizard({
   const allDoneBar = (
     <WizardSteps
       t={t}
-      steps={origin === 'import' ? completedSteps : [...completedSteps, { id: 'create', label: t('submit') }]}
-      current={origin === 'import' ? 'complete' : 'create'}
-      currentState={origin === 'import' ? undefined : createProgressState}
+      steps={[...completedSteps, { id: 'create', label: t(origin === 'import' ? 'import_start' : 'submit') }]}
+      current="create"
+      currentState={createProgressState}
       done={completedSteps.map((step) => step.id)}
     />
   )

@@ -1,4 +1,4 @@
-import { siteAccentOf, siteWhatsAppOf } from './brand-on-site.js'
+import { siteAccentOf, siteSocialLinksOf, siteWhatsAppOf } from './brand-on-site.js'
 import { pageGroundsOfRevision } from './brand-on-site-grounds.js'
 import { AGENT_DEMO, isAgentDemo, checkedResearch, agentDemoInventoryPolicy } from './agent-demo.js'
 import { withBuildChoice } from './build-choice.js'
@@ -104,7 +104,11 @@ export function briefOf(revision) {
   const quoted = [...googleQuoted, ...maps.map((r) => r.text), ...tripadvisor.map((r) => r.text)]
   // The research a brief froze is evidence, not a fact the brief states: an older brief's embedded copy and a newer
   // brief's reference to it are both left out of the facts (#1791 V2).
-  const { agentDemoSnapshot: _snapshot, agentDemoResearch: _reference, ...facts } = heldFacts
+  const { agentDemoSnapshot: _snapshot, agentDemoResearch: _reference, ...withAssets } = heldFacts
+  // The frozen photo catalogue is build input, not business prose: dimensions, hashes and detector labels must not
+  // consume the complete fact-evidence budget or make a number look sourced. Research content still travels below.
+  const { assets: _assets, ...withoutAssets } = withAssets
+  const facts = isAgentDemo(revision) ? withoutAssets : withAssets
   // A revision stored before reviews left the markdown still prints them there, one line each.
   const md = String(revision?.brief_md ?? '')
     .split('\n')
@@ -133,6 +137,7 @@ export function briefOf(revision) {
     // steps were given), and the WhatsApp button beside Call (cta-real). Nothing when the brief has none.
     accentTokens: siteAccentOf(brief, { grounds: pageGroundsOfRevision(revision) })?.tokens ?? {},
     whatsappLinks: [siteWhatsAppOf(brief)?.href].filter(Boolean),
+    socialLinks: siteSocialLinksOf(brief),
     // 🔒 No filler, in any site language; an empty or neutral slot is no finding (`no-demo-words`, plan §7).
     fillers: forbiddenFillers(),
     neutralWords: neutralWords(),
@@ -287,7 +292,7 @@ const REPAIR = {
   'look-kept':
     'The site keeps the template’s design system. Remove each colour, background or font override below and put the token’s value back; a `--ds-c-*` token is never set by hand, except the brand accent rule the build steps give, at exactly its values. Do not add another stylesheet, <style> block or inline style to compensate.',
   'collected-used':
-    "Put each collected fact, review or photo named below on the site, where the quickstart shows such a thing. Where the business's logo is named, it fills frames meant for something else: put a photo of the place, or the mark of the organisation the strip names, in those frames, or take the entry out of a strip of other organisations' marks, and keep the logo for the header and the footer.",
+    "Put each collected fact, review or photo named below on the site, where the quickstart shows such a thing. Where usp is named, it is the home page hero's main heading, word for word. Where the business's logo is named, it fills frames meant for something else: put a photo of the place, or the mark of the organisation the strip names, in those frames, or take the entry out of a strip of other organisations' marks, and keep the logo for the header and the footer.",
   'facts-from-brief':
     'Each fact below contradicts what the research collected: show the collected value instead, preserving its section and card. A price the research holds nowhere is made up: leave its field empty. A map link (kind map) searches another street than the business’s: change the address in its link (the href), its words may already be right.',
   'cta-real':

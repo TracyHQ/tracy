@@ -44,7 +44,8 @@ const lastUserText = (request) => {
 
 async function runOnce(pool, replies, { wrap } = {}) {
   await assignPlannerDoor(pool)
-  const started = await startRun(pool)
+  // These cases measure fix-round transcripts beyond the separate $2 budget guard.
+  const started = await startRun(pool, { noCaps: true })
   const model = scriptedModel(replies)
   const fetchImpl = wrap ? wrap(model.fetchImpl, started) : model.fetchImpl
   await createSitePlannerQueue({

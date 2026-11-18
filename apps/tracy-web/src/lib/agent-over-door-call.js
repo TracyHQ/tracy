@@ -31,12 +31,12 @@ const uncertain = (code, n, reason) =>
  * @param {{ baseUrl: string, apiKey: string }} door
  * @param {object} body the request body; `stream: true` makes it a streamed call
  * @param {{ fetchImpl: typeof fetch, callTimeoutMs: number, idleMs: number, progressMs: number, n: number,
- *   price?: object, progress?: (p: object) => void }} options
+ *   price?: object, progress?: (p: object) => void, signal?: AbortSignal }} options
  */
 export async function callModel(
   door,
   body,
-  { fetchImpl, callTimeoutMs, idleMs, progressMs, n, price, progress }
+  { fetchImpl, callTimeoutMs, idleMs, progressMs, n, price, progress, signal }
 ) {
   const streamed = body.stream === true
   const total = AbortSignal.timeout(callTimeoutMs)
@@ -49,6 +49,8 @@ export async function callModel(
     idleTimer = setTimeout(() => idle.abort(), idleMs)
   }
   const failure = (error) => {
+    if (signal?.aborted)
+      return uncertain('AGENT_ABORTED', n, 'the call was stopped; the provider may already have charged')
     if (idle.signal.aborted)
       return uncertain(
         'AGENT_TIMEOUT',
@@ -67,11 +69,12 @@ export async function callModel(
         method: 'POST',
         headers: { authorization: `Bearer ${door.apiKey}`, 'content-type': 'application/json' },
         body: JSON.stringify(body),
-        signal: streamed ? AbortSignal.any([total, idle.signal]) : total
+        signal: AbortSignal.any([total, ...(streamed ? [idle.signal] : []), ...(signal ? [signal] : [])])
       })
     } catch (error) {
       throw failure(error)
     }
+    if (signal?.aborted) throw failure()
     if (streamed) touch()
     const eventStream = /text\/event-stream/i.test(r.headers?.get?.('content-type') ?? '')
     let json = null
@@ -99,8 +102,11 @@ export async function callModel(
     } else {
       // Unstreamed (or a provider that answered a streamed request with one JSON body): read whole; on a streamed
       // call every chunk still counts as a byte for the idle clock.
-      text = await (streamed && r.body ? textOf(r.body, touch) : r.text()).catch(() => '')
-      if (idle.signal.aborted) throw failure()
+      text = await (streamed && r.body ? textOf(r.body, touch) : r.text()).catch((error) => {
+        if (signal?.aborted || idle.signal.aborted || total.aborted) throw failure(error)
+        return ''
+      })
+      if (signal?.aborted || idle.signal.aborted) throw failure()
       try {
         json = JSON.parse(text)
       } catch {}

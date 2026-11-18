@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-568-coverage-passive-assets",
+  "kind": "fix",
+  "title": "Content coverage preserves original passive assets without bypassing its read-only request fence",
+  "pr": 568,
+  "area": "website-opportunities/content-coverage",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the content coverage passive asset transport regression without external services or model calls."
+  ],
+  "expect": [
+    "External GET images, fonts and stylesheets preserve their original URL and response bytes through bounded transport.",
+    "Same-site and active requests retain their native browser transport.",
+    "POST, PUT, PATCH and DELETE requests abort before any request fetch or fulfillment.",
+    "HEAD and OPTIONS remain native; failed asset fetches retain browser fallback."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-quickstart-tools/test/content-coverage-asset-transport.test.mjs"
+    ],
+    "tests": [
+      "coverage external passive assets",
+      "coverage keeps same-site and active GET",
+      "coverage falls back to the browser"
+    ],
+    "needs": []
+  }
+}

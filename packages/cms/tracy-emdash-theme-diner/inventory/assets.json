@@ -1,0 +1,766 @@
+{
+  "crawled": 153,
+  "files": [
+    {
+      "path": "templates/ja_diner/favicon.ico",
+      "sha256": "0e626ccb9a1ad74985a5813c6741d8702ff7a1a864e3f7d9fe99969d2468d1ce"
+    },
+    {
+      "path": "t3-assets/css/css-1dd42-35230.css",
+      "sha256": "746bb40b6c80dd2d09dd4a792a06e47b1ee0fc627377560584be321eb31c1a3c"
+    },
+    {
+      "path": "t3-assets/css/css-b0baa-95382.css",
+      "sha256": "aebb0322f6b97abb37fe7a8807288556a1b8b4996f428c9ee9a9a60b86ab0b06"
+    },
+    {
+      "path": "t3-assets/css/css-67cae-95378.css",
+      "sha256": "3d7cf8e47b91b4ebfaf91b3a08471fe2e0ecee04b805a0815e07828b6522d6df"
+    },
+    {
+      "path": "t3-assets/css/css-9954d-19530.css",
+      "sha256": "e3465b9a004e3eb7d0f59db914b08e1ebad2fec6b10b920a31b842659ecabc79"
+    },
+    {
+      "path": "t3-assets/css/css-2ab45-95382.css",
+      "sha256": "e0ab40440dd44744d3b262908d0731fdc804fd889b359454f1d0876e731b6abf"
+    },
+    {
+      "path": "t3-assets/css/css-e523a-95382.css",
+      "sha256": "47b07724d33b9ee071a13a54b261db8f607bd0fba5fcb16ff914efd186422aab"
+    },
+    {
+      "path": "t3-assets/css/css-e7010-95376.css",
+      "sha256": "dfcf34cd8530a52233d7170dde28b927fad69f64af3629ae5c6129a68c3762c4"
+    },
+    {
+      "path": "media/vendor/jquery/js/jquery.min.js",
+      "sha256": "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a"
+    },
+    {
+      "path": "media/vendor/jquery/js/jquery-noconflict.min.js",
+      "sha256": "b7bbe381cf509577690654422e09b73e9fdbb0b70d47028146147da7a7a0c5fa"
+    },
+    {
+      "path": "media/system/js/core.min.js",
+      "sha256": "045181e3f5ea2f3afd09831dd18ea871b8a98fcb8cb3233af395fe123bdd3934"
+    },
+    {
+      "path": "t3-assets/js/js-93c77-95382.js",
+      "sha256": "86ffd90e8d3c2ebd8a8c7b0d37ef6737656d85cd062baa8000de702afcb6e58e"
+    },
+    {
+      "path": "media/com_acym/js/module.min.js",
+      "sha256": "810043ff82feb7fb3f83142f3a9b88b9b3eb6c4bfcb750ef20e2377259fbb98b"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/js/respond.min.js",
+      "sha256": "83a8807ef669fa70d0d9375347f5552897f76c6ae8e2e6f97ef592595462d8d1"
+    },
+    {
+      "path": "templates/ja_diner/images/logo.png",
+      "sha256": "e701831090a4154df01a0f964bedb6ce1f09e359545c0d6cf48f929c06146a57"
+    },
+    {
+      "path": "images/joomlart/features/item-1.jpg",
+      "sha256": "60cfc0911c28a3dd37dd6ba3a7b1459fe8e6b209c7e22bb12f646677b71ca1ba"
+    },
+    {
+      "path": "images/joomlart/features/item-2.jpg",
+      "sha256": "2be21b61aa1aafe25bf6e0bed4ca10c01847a25242d947ff100005dd187b3be7"
+    },
+    {
+      "path": "images/joomlart/features/item-3.jpg",
+      "sha256": "ce707ddca395f12d7a94c00fc6889bffc5d0a700d03fb24c6044e63e723f8223"
+    },
+    {
+      "path": "images/joomlart/features/item-4.jpg",
+      "sha256": "b725cf748ddd6e5ce6751f2ac2f0ae42a4b489021027860058e28661e333fc42"
+    },
+    {
+      "path": "images/joomlart/others/tab-intro.png",
+      "sha256": "d90657739741cc16295ef8e5ce472f405067910089d3cb15d4aa47268f0213ec"
+    },
+    {
+      "path": "images/joomlart/blog/item-1.jpg",
+      "sha256": "d34e99e1c4f083e83583cb141fcfcfc302f56c3dc4c530043a5f3cd01e445708"
+    },
+    {
+      "path": "images/joomlart/blog/item-2.jpg",
+      "sha256": "cfe5e82651630e88fe1c9a5320bb15457480f78c6850e2ef8d8ba8887e5e6364"
+    },
+    {
+      "path": "images/joomlart/blog/item-3.jpg",
+      "sha256": "7e616b66dec3587f7a9080e0c9b5a5a72231d58116d9e48d6202a7c956d70173"
+    },
+    {
+      "path": "images/joomlart/blog/item-4.jpg",
+      "sha256": "5e06e9ccfb57f18423ed06ccd8c2efc9530c5d881e7bceace679a55dbfe47f91"
+    },
+    {
+      "path": "images/joomlart/features/item-5.png",
+      "sha256": "2a29185baf751ad84642e5089125f6c10ffb6d2ebcc4a35e076fbf4f4e800484"
+    },
+    {
+      "path": "images/joomlart/slideshow/item-1.jpg",
+      "sha256": "65c9821f8226277cc91ef54db1de5f12a8978ba6bcd748e6669f7e3699f543d2"
+    },
+    {
+      "path": "images/joomlart/slideshow/item-2.jpg",
+      "sha256": "4d26a9806b87d4f38944e554ef83f7a94c0a932898d92175c8e5cd5e3a6d7a81"
+    },
+    {
+      "path": "images/joomlart/others/bg-icon.png",
+      "sha256": "1b9c6ccf41ca999d06d2a2ef5f57764a11544c77d0cbefa747f086b461945e9c"
+    },
+    {
+      "path": "media/vendor/joomla-custom-elements/css/joomla-alert.min.css",
+      "sha256": "df8eb5ad4051778586df18f3e6a7d3368820b8e8134751fa5ac845cead9318cb"
+    },
+    {
+      "path": "t3-assets/css/css-50f93-95376.css",
+      "sha256": "fd5fc744b646aaea2bea246417fb50471ed8f215bc8a008afb788813b4a1b772"
+    },
+    {
+      "path": "media/system/js/keepalive.min.js",
+      "sha256": "983c4e677c121da92edce183d530881200e0ce545ddca1174bdb3eedb7588619"
+    },
+    {
+      "path": "media/system/js/fields/validate.min.js",
+      "sha256": "2eb3c772ac894af82059fcf115b2ee545599cacf490eae2826c6e71a069c1f37"
+    },
+    {
+      "path": "media/system/js/fields/passwordview.min.js",
+      "sha256": "1ba2fcc7648c62b2c7cf2d539092cec381ee03631114f3e5a851b398a2c8ff25"
+    },
+    {
+      "path": "media/system/js/messages.min.js",
+      "sha256": "09426cb3251a9408374f3f37bb5ec75a921c2e71d8717a83e7ab0acf16addf0a"
+    },
+    {
+      "path": "images/joomlart/other/bg-login.jpg",
+      "sha256": "8cd180a0a1a10fbbe4d7e3f3aaeab4bb9617952a2b2a1ff332483f52fd88a051"
+    },
+    {
+      "path": "media/system/js/fields/passwordstrength.min.js",
+      "sha256": "7ad7aae67c8026bfee3db6f01fe3a2cfae4589d09b203ae374d259c2b5139e26"
+    },
+    {
+      "path": "images/joomlart/other/banner-registration.jpg",
+      "sha256": "07f3fe5587fd47de4ad23fc5b578211c82038f0b54ed26798d5be647c05dbb4c"
+    },
+    {
+      "path": "media/com_finder/css/finder.min.css",
+      "sha256": "0376f10fb61436bda3ba56b432ee050ba691a3483118ab57aa7dc07eb42ea4cd"
+    },
+    {
+      "path": "media/vendor/awesomplete/css/awesomplete.css",
+      "sha256": "8570c166966479f18cd0be77bb56947a3abc05b914257698134e652274b5ffa8"
+    },
+    {
+      "path": "media/vendor/awesomplete/js/awesomplete.min.js",
+      "sha256": "b88cd20ce7955245180991050108b764c14a17986e7eae2daee92273eb7f75df"
+    },
+    {
+      "path": "media/com_finder/js/finder.min.js",
+      "sha256": "a3ccb2cd02bb4362be9d0b1f737aec5f7304af71730a1e4017ba003854fce5d6"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/collapse.min.js",
+      "sha256": "c8ac77219eafa1a75f2d2060d075796203c3520c3859ea238a08efa3736adfd6"
+    },
+    {
+      "path": "images/joomlart/other/bg-martsearch.jpg",
+      "sha256": "b2e2b0cc305108339114a67899e77739d57f8057b53ac3892135f0760ff429ab"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/popover.min.js",
+      "sha256": "31e5bb91bbbd5c0645c1501f7d9e6caf20696dfba0bfa4e0ead979df8c6da025"
+    },
+    {
+      "path": "images/joomlart/other/404-page.jpg",
+      "sha256": "729ac004d862ef85aa57c7976d0fc215e56add3c5caa55c21717a4d5e2647d62"
+    },
+    {
+      "path": "images/joomlart/other/bg-offline.jpg",
+      "sha256": "b82f5ee0f416bf3e945649b52695802ed2d85dbc9df911c0beed142c8a71ac47"
+    },
+    {
+      "path": "images/joomlart/blog/business-detail-1.jpg",
+      "sha256": "3844d0193d83e1f8e7bf21b6342aae502995b5aee54c261315c3dac9fab2480c"
+    },
+    {
+      "path": "images/joomlart/blog/marketing-detail-1.jpg",
+      "sha256": "56bdfd9905d79bcf86050065af9d15f6cb3bd0c23ba95b714a4d668571ca7876"
+    },
+    {
+      "path": "images/joomlart/blog/news-detail-3.jpg",
+      "sha256": "517697c7d808634d6b3b13badafa06738920c8a7b09d4bf83786654cd84f97f1"
+    },
+    {
+      "path": "images/joomlart/blog/guide-detail-3.jpg",
+      "sha256": "906a1ec6b8e83444351832de10c676f95d03a11155cfb6a2300d3d46b0dd6502"
+    },
+    {
+      "path": "images/joomlart/other/banner-categories.jpg",
+      "sha256": "fe53c9f0db8bd3dad731684cfddce34e9398d1000c5148c5cac582d9d0246f3d"
+    },
+    {
+      "path": "images/joomlart/blog/business-3.jpg",
+      "sha256": "b783c1fb6b0aa1b4a0a989a28c7be24f1cc709564b3746eb9bba8df79a508986"
+    },
+    {
+      "path": "images/joomlart/blog/marketing-2.jpg",
+      "sha256": "d67bfe8a89be92121eac281afe66cbc82e035a76ba52f50b15683c49436ca2f4"
+    },
+    {
+      "path": "images/joomlart/blog/news-2.jpg",
+      "sha256": "07989e1292d170b86ff607943ffb015a75610f0c0eee52cb0109fa7ab714a885"
+    },
+    {
+      "path": "media/com_tags/js/tag-default.min.js",
+      "sha256": "7c97dc019c350c50f44a79b631a853a7c9dc409c2d252394eaab8201dcd25d27"
+    },
+    {
+      "path": "images/joomlart/blog/news-1.jpg",
+      "sha256": "88ec6e61491736b64e488f043225ab3c274643d6e6e75ce107bcd45bc3b509e6"
+    },
+    {
+      "path": "images/joomlart/blog/business-1.jpg",
+      "sha256": "a63cdc8d870aad46cd587cae6bd62e5fa6a893acf5b8199d37227443f14de9b9"
+    },
+    {
+      "path": "images/joomlart/blog/news-4.jpg",
+      "sha256": "cfcadd6faacb7cc6ea36b2d6f393ad04f6298ef82769f1d3a8f7019e9a30cc6c"
+    },
+    {
+      "path": "images/joomlart/blog/business-2.jpg",
+      "sha256": "a59720de3664e2348a4074868e5a84c94f9776da83642cf24e4d4b462addb25c"
+    },
+    {
+      "path": "images/joomlart/blog/news-5.jpg",
+      "sha256": "5d4bc64b46225991469f7e154cf2803c4050c6a0927beccbb389bafda02c79a5"
+    },
+    {
+      "path": "images/joomlart/blog/business-5.jpg",
+      "sha256": "af70c907e0596d0082cb833c6cc27748bdd3196cd2dfbcb312142764aacf470e"
+    },
+    {
+      "path": "images/joomlart/blog/marketing-1.jpg",
+      "sha256": "33dfecbb21378e48b709af3a5be0fab7bc431fd760b1f3315a4db014833f2797"
+    },
+    {
+      "path": "images/joomlart/blog/guide-1.jpg",
+      "sha256": "02c891dcd4eedc921477e336cc1b293f90f9d9cfa859b41a31406948d6dc0a93"
+    },
+    {
+      "path": "images/joomlart/blog/guide-3.jpg",
+      "sha256": "c8045129aa21bdd7b9d5a3bd8e74ac3137a3dadc897e4cb2780bb77e4d1265c4"
+    },
+    {
+      "path": "images/joomlart/blog/guide-2.jpg",
+      "sha256": "2ccbeb679a8a657f47e9f95ef97e9f474c6794c92dd33e00617fc1bf4be5a9be"
+    },
+    {
+      "path": "images/joomlart/blog/business-4.jpg",
+      "sha256": "9316acecba9786cedaebe5d0db1941d10ddfb9597f30672d4d78ae348c7d411a"
+    },
+    {
+      "path": "images/joomlart/blog/marketing-4.jpg",
+      "sha256": "47788b281c1f71abfb0721817f2d89e7334d86ce4f02639604cbf56bdc0e214b"
+    },
+    {
+      "path": "images/joomlart/blog/news-3.jpg",
+      "sha256": "83d303874e43deb75a9c21b8f7de442a95df67d428350c3c392487967fe90ed8"
+    },
+    {
+      "path": "images/joomlart/blog/marketing-3.jpg",
+      "sha256": "b89b5cd5cd3fdd6cced5d2afd7b613ad7dcbc02d2704846e2411f6b8c74c0df0"
+    },
+    {
+      "path": "images/joomlart/others/banner-1.jpg",
+      "sha256": "46c029c3f9e229a84440cb985f020f8406951b0f9d5f5a0a8c491a18c5472621"
+    },
+    {
+      "path": "media/system/js/joomla-hidden-mail.min.js",
+      "sha256": "1aacba2d5d0e5f070a52691efbf51b7183bba1fe42c6569ed5f2025c6e409f19"
+    },
+    {
+      "path": "t3-assets/css/css-53f64-35230.css",
+      "sha256": "7d92f66fb67b3d4dc9b29495b0ca829125fe4d4534e411f341fefbe3b7eb6e4e"
+    },
+    {
+      "path": "t3-assets/css/css-b24c0-95382.css",
+      "sha256": "f6bde7b06a6f602bbb6083fb9b4930274a467d0918b495a38f86d352f9a22404"
+    },
+    {
+      "path": "t3-assets/css/css-83f8c-19530.css",
+      "sha256": "240f0e6daa2fb856ee1d519b627ef96ba7040ccaf75574150b91ace4683ea868"
+    },
+    {
+      "path": "t3-assets/css/css-004ba-35230.css",
+      "sha256": "8db36282ba0ff761eeb2ad4c12f151d3da9b1e33f60ee6eef8341ba509c8f2ff"
+    },
+    {
+      "path": "t3-assets/css/css-71f5c-95382.css",
+      "sha256": "147d2f79579efd34a5cb6519f3fa3593d56509bedf334e431ac96e6cf1d48a1a"
+    },
+    {
+      "path": "t3-assets/css/css-be16a-19530.css",
+      "sha256": "d3dab49ca3209042c332798badf1d473dc1f8e757a0004313afdf19ef5371303"
+    },
+    {
+      "path": "t3-assets/css/css-e990e-35230.css",
+      "sha256": "48cd41dbc8ae173c7ebd6c2dc085a52e889242b90a33a11470d34c92f5113740"
+    },
+    {
+      "path": "t3-assets/css/css-e7bb1-95382.css",
+      "sha256": "66e7f3abbcaebac3d5c7ce0827b31702b13a7b647a889b1f6f5e7a8b0395b9eb"
+    },
+    {
+      "path": "t3-assets/css/css-85faf-19530.css",
+      "sha256": "1c75b5ba41f20819ababb42ca5036cfe62398f3b9fc40b00b4531fe680836d53"
+    },
+    {
+      "path": "t3-assets/css/css-6ec85-35230.css",
+      "sha256": "ed452ffe5a2e39bb3df1b1dc8cde83fd782e372d657cc34b7d2a174e041983da"
+    },
+    {
+      "path": "t3-assets/css/css-e4754-95382.css",
+      "sha256": "6255475f1cb17dbf2ed5dbef4a644eb05c100796f0277ef9d5907cefbc195c16"
+    },
+    {
+      "path": "t3-assets/css/css-001e2-19530.css",
+      "sha256": "598d93e8f5f68a69123a46ea05a5597eb60851de2b0c08e718b177ef0cbc5f13"
+    },
+    {
+      "path": "images/joomlart/other/about/picture-about-1.jpg",
+      "sha256": "01ec9f21e9c1c064763c80b630534eaa50d25814d20dccf5a37156963df49ea5"
+    },
+    {
+      "path": "images/joomlart/other/about/picture-about-2.jpg",
+      "sha256": "4509796c5c167439cbd7a961f50be41931884252730d1258ff6d98d71e6a4092"
+    },
+    {
+      "path": "images/joomlart/other/about/picture-about-3.jpg",
+      "sha256": "4230758b9d2ac5eb732802871512c75404de25408adfd59d43c345f7f9f61ac1"
+    },
+    {
+      "path": "images/joomlart/other/about/picture-about-4.jpg",
+      "sha256": "3199c24b5b80dbd2e4539bf6ba05d734219451be83bd8f54cdf76496de786b6e"
+    },
+    {
+      "path": "images/joomlart/other/about/picture-about-5.jpg",
+      "sha256": "60f3ac60291dfe5761a74e6e5021bced1b421855e2510b644d6a3981b879acaf"
+    },
+    {
+      "path": "images/joomlart/other/about/picture-about-6.jpg",
+      "sha256": "fa121621b98dfc0138b0b79d44849a87bdf292b51d2a2a73795656365dfeb64a"
+    },
+    {
+      "path": "images/joomlart/other/about/picture-about-7.jpg",
+      "sha256": "65288b7ce6625287a1ad65fbf689e8f48dae19caee9f89f0d488ff8a7cecb807"
+    },
+    {
+      "path": "images/joomlart/other/about/picture-about-8.jpg",
+      "sha256": "ec69af7ce9faaa84484666e67680d9436fad3bf198005a51b6f244695791f895"
+    },
+    {
+      "path": "images/joomlart/other/member/Chef-8.jpg",
+      "sha256": "585b13ebd5ed4a60c2d66dbca769b52e28475d31b37b21804923c6b8c561c62c"
+    },
+    {
+      "path": "images/joomlart/other/member/chef-1.jpg",
+      "sha256": "6c50019af31af664bd741c0709212683b537fa2d8b0b369a20ceb40a48f323b3"
+    },
+    {
+      "path": "images/joomlart/other/member/chef-2.jpg",
+      "sha256": "ce95b6a1a2f8ba9716ea6c1d3030be2660a8839f530eae1e894f41c923f6c20f"
+    },
+    {
+      "path": "images/joomlart/other/member/chef-3.jpg",
+      "sha256": "0be9a95ccb8882b4e571e86effb6ddb5f14a919a5a3da636eddf472c56513e4c"
+    },
+    {
+      "path": "images/joomlart/other/member/chef-4.jpg",
+      "sha256": "6a94c5965b131ce1f7d5c58c67673a2a937579c4a78693540631abecae56901d"
+    },
+    {
+      "path": "images/joomlart/other/member/chef-5.jpg",
+      "sha256": "f729eb809b4246af23fb345a97a3923fc2792d8b943343e6ee29b3b29e953228"
+    },
+    {
+      "path": "images/joomlart/other/member/chef-6.jpg",
+      "sha256": "0642db7b90819cad88da7e4d3bf975a0be4299113ceedefa1770b6c0426433e8"
+    },
+    {
+      "path": "images/joomlart/other/member/Chef-7.jpg",
+      "sha256": "e097b81e3b49715d0a666032522867927cb99162f9f8cece2aaf807b7a0c873e"
+    },
+    {
+      "path": "images/joomlart/other/banner-about.jpg",
+      "sha256": "70630ad86a76d96a144435acec3be92e7367feb8b37b03a3be1f010d569823bc"
+    },
+    {
+      "path": "images/joomlart/blog/business-detail-3.jpg",
+      "sha256": "b16aa344ffa36905425a843f1da4e6bd493b1683b24dbbd33307648fb6f7e5b8"
+    },
+    {
+      "path": "images/joomlart/blog/news-detail-2.jpg",
+      "sha256": "d8a0088515b43e45801b40a93f90fbf7f193d11f2254ff1be94b0981243f475e"
+    },
+    {
+      "path": "images/joomlart/other/banner-reservation.jpg",
+      "sha256": "3b534389e17f7c423a9a8a03b372264002a7eaf6ebcab2110924dd2b8c985eb2"
+    },
+    {
+      "path": "images/joomlart/other/banner-offer.jpg",
+      "sha256": "147e20c6b8854329d90c80f243f120951c076242ea8da6b652fe64b3562f50b0"
+    },
+    {
+      "path": "images/joomlart/other/bg-offer-2.jpg",
+      "sha256": "81a61df20894d9881c35357d7c618adfe712876e614bb0db2e9670284519f793"
+    },
+    {
+      "path": "images/joomlart/other/bg-offer-1.jpg",
+      "sha256": "2e582a5584366b82b23e4b19df14d1467d77bb08aa3eaf07f03fd8ab225c5659"
+    },
+    {
+      "path": "images/joomlart/other/banner-blog.jpg",
+      "sha256": "b9c399b9174273e0328d812c9f8cc9679e27ccc71276a13dd754a9d26695202b"
+    },
+    {
+      "path": "images/joomlart/other/banner-contact.jpg",
+      "sha256": "4550df99e22d888caab73c94c1116a0cf45228dd52f9a724e5f972240a8a7cc6"
+    },
+    {
+      "path": "images/joomlart/other/bg-contact-02.jpg",
+      "sha256": "2b41bc7518e639abb1bb04ca13e4d9f97feeaba8eae94a73866da48d3ee7141e"
+    },
+    {
+      "path": "images/joomlart/blog/marketing-detail-2.jpg",
+      "sha256": "3e27860a73f2068d32927f73620512ed5c9d4ffbf2600bae1cb92b4b47e08947"
+    },
+    {
+      "path": "images/joomlart/blog/business-detail-2.jpg",
+      "sha256": "6cbbc97a02481852d73fe15b03bafa2f2efd2bbee57868098f55a88991f55c9a"
+    },
+    {
+      "path": "images/joomlart/blog/business-detail-4.jpg",
+      "sha256": "1b547a1e880b4a978759b065db18d6990a60d130fe7089b5c28f6f9cc9cb668a"
+    },
+    {
+      "path": "images/joomlart/blog/news-detail-5.jpg",
+      "sha256": "e8b992ee9428b6d2c8a9ba39e06ef14e2cde2c4031fa7ea9b4c99a8777d6667a"
+    },
+    {
+      "path": "images/joomlart/blog/guide-detail-1.jpg",
+      "sha256": "ac12adda776024fff33b72e0d65b01731b67c6e8a019a30d73f6732c31901b76"
+    },
+    {
+      "path": "images/joomlart/blog/news-detail-1.jpg",
+      "sha256": "c8581add00176b673c0a5064fc01adf34dac5f192820175908c452c82d3253d3"
+    },
+    {
+      "path": "images/joomlart/blog/news-detail-4.jpg",
+      "sha256": "2b54d8ed3b3b81641043589377d610bb699c4769201e5a57a52797d4954de4f7"
+    },
+    {
+      "path": "images/joomlart/blog/business-detail-5.jpg",
+      "sha256": "ae0c4a793063928b08d79b06edaf35bf999e8236f11abc01448c2be73820f9bf"
+    },
+    {
+      "path": "images/joomlart/blog/guide-detail-2.jpg",
+      "sha256": "22a603727852e2f1357baa0cc0f1d2dd7806a799d807cf06860697316814828e"
+    },
+    {
+      "path": "images/joomlart/blog/marketing-detail-4.jpg",
+      "sha256": "2eff17d129fad1f6188ba3ba42948049b7e92892c95b583f306f0a2f741ad44b"
+    },
+    {
+      "path": "images/joomlart/blog/marketing-detail-3.jpg",
+      "sha256": "d05bbab7e0fde69cbe9b62632c3b71d4a2b08b69d20d16cea5cf62662266547a"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/bootstrap/fonts/glyphicons-halflings-regular.woff2",
+      "sha256": "fe185d11a49676890d47bb783312a0cda5a44c4039214094e7957b4c040ef11c"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/bootstrap/fonts/glyphicons-halflings-regular.woff",
+      "sha256": "a26394f7ede100ca118eff2eda08596275a9839b959c226e15439557a5a80742"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/bootstrap/fonts/glyphicons-halflings-regular.ttf",
+      "sha256": "e395044093757d82afcb138957d06a1ea9361bdcf0b442d06a18a8051af57456"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/fonts/font-awesome/css/font-awesome-base.css",
+      "sha256": "e245536ad67af96de8ffb12352b93d3e84cd21e8a8e39507510fa6ee4a5e76be"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
+      "sha256": "e3456d1283b9d75337a773dfd147bf908fd02c01b4bf48576d8603a69b13cbe5"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
+      "sha256": "54cf6086f7bb21f9d072ad494a19b4681fa516dd0a14cee52da01d3651a913a3"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
+      "sha256": "aa75998623a391e61c6901794ace832e3ecdd288b56d608f21bea0411acc0b8e"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
+      "sha256": "d2f0593540b0e33ba6de255a54f272d466e31144806956bea8cfdbf7edffc9bd"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
+      "sha256": "d7236a19bf23cbb2027280e8f51dc99d6c45976a2ed60de73382b034b18a2b68"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
+      "sha256": "808443ae6c8204395add8543da8a90a60b9376fb0f87ed8e8ea37d109596d805"
+    },
+    {
+      "path": "templates/ja_diner/images/bg-masthead.jpg",
+      "sha256": "5af3ed5a19f470177e0dd210dccdb765b42f5d4b6fd0acb6792783d345085e17"
+    },
+    {
+      "path": "templates/ja_diner/images/decor/decor_orange.png",
+      "sha256": "632a6657f9910bbbce2af83c9e3fdc44a86422050a4b2cbd2188188058a925ed"
+    },
+    {
+      "path": "templates/ja_diner/images/mask-slideshow.png",
+      "sha256": "11ca71ba1c1dc2549482ba7bcf79602d669a7c6851684904df2e14c28a6fae04"
+    },
+    {
+      "path": "templates/ja_diner/images/ico/search.png",
+      "sha256": "d80a1bd333a8d69909e5bb571fa7c483617558f43ae519d22a9d5ca59e2d6226"
+    },
+    {
+      "path": "templates/ja_diner/images/dot.png",
+      "sha256": "c0b75e60a8299b1eb5d42387babdb252b4d4f60ab2c7509b65daf96baa303ae7"
+    },
+    {
+      "path": "templates/ja_diner/images/pattern.png",
+      "sha256": "64186a60c2992f4d106cedccc6e16398ad117362f2ca41c5cf8b5abde267e48b"
+    },
+    {
+      "path": "templates/ja_diner/fonts/font-awesome/fonts/fontawesome-webfont.woff2",
+      "sha256": "aadc3580d2b64ff5a7e6f1425587db4e8b033efcbf8f5c332ca52a5ed580c87c"
+    },
+    {
+      "path": "templates/ja_diner/fonts/font-awesome/fonts/fontawesome-webfont.woff",
+      "sha256": "e3870de89716b72cb61a4bba0e17c75783b361cdaba35ea96961c3070bd8ca18"
+    },
+    {
+      "path": "templates/ja_diner/fonts/font-awesome/fonts/fontawesome-webfont.ttf",
+      "sha256": "9e540a087924a6e64790149d735cac022640e4fa6bff6bd65f5e9f41529bf0b3"
+    },
+    {
+      "path": "templates/ja_diner/fonts/font-awesome/fonts/fontawesome-webfont.svg",
+      "sha256": "bfdef833219a6edffd9c3cbc28db72739d22bb4d20cc2e2f8d56a7a4d408a206"
+    },
+    {
+      "path": "templates/ja_diner/fonts/ionicons/fonts/ionicons.ttf",
+      "sha256": "2ba7f20b1d8990e17a47fe3d88e4c766628aaa2baf1dd30fca0a0db59836f5f9"
+    },
+    {
+      "path": "templates/ja_diner/fonts/ionicons/fonts/ionicons.woff",
+      "sha256": "709f2789daaff440820ebb975d3ae409af45121bdec47e39e83523490b1bc0fc"
+    },
+    {
+      "path": "templates/ja_diner/fonts/ionicons/fonts/ionicons.svg",
+      "sha256": "a627d9068c1235d9b3c95c405eb6ecb64a290b159cf5e926c0d96d89b24cd5fc"
+    },
+    {
+      "path": "templates/ja_diner/js/owl-carousel/owl.video.play.png",
+      "sha256": "0436045686fddf10ccbbe2568e0cbffb457e7de7d43d1115c0056e81e97149ff"
+    },
+    {
+      "path": "media/com_acym/css/fonts/acymicon.ttf",
+      "sha256": "5704bb91a1565963c2e6db60bec527f88ea3bcb89a35b27eaa5b6a2c701e3f7c"
+    },
+    {
+      "path": "media/com_acym/css/fonts/acymicon.woff",
+      "sha256": "13fe9ac8ec7ac204d630d4e827af4a4dd5a92f73eb00191156071d048dae3055"
+    },
+    {
+      "path": "media/com_acym/css/fonts/acymicon.svg",
+      "sha256": "c1517345b7347aedb7b09c247bf8af65bd699a433e47afb633af12f185007c64"
+    },
+    {
+      "path": "templates/ja_diner/images/decor/decor_red.png",
+      "sha256": "513f30c19c91a6023afd3770c0e8ebe06ea67d51e1b454d7a2e70baed38dcf27"
+    },
+    {
+      "path": "templates/ja_diner/images/decor/decor_pink.png",
+      "sha256": "81d9bd86d8874602293357ad69b8ec9733d65394ab58235ef92d681f16aab8d6"
+    },
+    {
+      "path": "templates/ja_diner/images/decor/decor_green.png",
+      "sha256": "0162f4f87f2cbe40c1f37bbbbf85d477f02d6c20739b2e2ac0a1386da045bafa"
+    },
+    {
+      "path": "templates/ja_diner/images/decor/decor_blue.png",
+      "sha256": "d5685bde295d8c3fcb6af54d6cf95bdc97a52c98fedcf602add4c114f25342d9"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/fonts/font-awesome/font/fontawesome-webfont.woff",
+      "sha256": "18e6b5ff511b90edf098e62ac45ed9d6673a3eee10165d0de4164d4d02a3a77f"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/fonts/font-awesome/font/fontawesome-webfont.ttf",
+      "sha256": "14dcb8f02b3b81c2baab230610c349a94282bbd976693759e9b4a8694d486451"
+    }
+  ],
+  "citedByContent": [
+    {
+      "file": "images/joomlart/blog/marketing-detail-1.jpg",
+      "usedBy": [
+        "posts/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays.detail_image",
+        "posts/did-ihop-s-publicity-stunt-hurt-applebee-s.detail_image",
+        "category_info/restaurant-marketing.image",
+        "reservation/reservation-layout.online_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/marketing-detail-2.jpg",
+      "usedBy": [
+        "posts/we-ve-been-nominated-for-the-britain-restaurant-awards.detail_image",
+        "posts/three-broomsticks-welcomes-new-chef-caleb-nunez.detail_image",
+        "posts/buffalo-wild-wings-considers-adding-sports-betting.detail_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/news-detail-5.jpg",
+      "usedBy": [
+        "posts/three-broomsticks-s-autumn-menu-unveiled.detail_image",
+        "posts/burger-king-takes-a-stand-on-the-pink-tax.detail_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/business-detail-1.jpg",
+      "usedBy": [
+        "posts/4-habits-that-can-improve-your-customer-service.detail_image",
+        "category_info/restaurant-business.image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/business-detail-2.jpg",
+      "usedBy": ["posts/8-trends-trickling-down-to-mainstream-menus.detail_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/business-detail-3.jpg",
+      "usedBy": [
+        "posts/starbucks-brings-under-armour-exec-on-board.detail_image",
+        "reservation/reservation-layout.blocks[0].image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/business-detail-4.jpg",
+      "usedBy": ["posts/inside-olive-garden-s-never-ending-pasta-pass.detail_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/business-detail-5.jpg",
+      "usedBy": ["posts/century-old-nathan-s-famous-aims-for-youth-with-new-look.detail_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/marketing-detail-3.jpg",
+      "usedBy": ["posts/this-week-s-restaurant-nightmares-language-people.detail_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/marketing-detail-4.jpg",
+      "usedBy": ["posts/jason-alexander-is-kfc-s-new-colonel.detail_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/news-detail-1.jpg",
+      "usedBy": ["posts/10-most-alluring-ltos-on-menus-in-july.detail_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/news-detail-2.jpg",
+      "usedBy": [
+        "posts/newk-s-eatery-steals-a-dinner-booster-from-supermarkets.detail_image",
+        "reservation/reservation-layout.blocks[1].image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/news-detail-3.jpg",
+      "usedBy": [
+        "posts/this-week-s-5-head-spinning-restaurant-moments-1-more-inch.detail_image",
+        "category_info/restaurant-news.image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/news-detail-4.jpg",
+      "usedBy": ["posts/5-of-the-summer-s-craziest-restaurant-marketing-stunts.detail_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/guide-detail-1.jpg",
+      "usedBy": ["posts/efforts-to-curb-soda-consumption-bring-results-on-both-coasts.detail_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/guide-detail-2.jpg",
+      "usedBy": ["posts/how-restaurants-can-promote-a-james-beard-recognition.detail_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/guide-detail-3.jpg",
+      "usedBy": [
+        "posts/from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal.detail_image",
+        "category_info/restaurant-guide.image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/other/bg-contact-02.jpg",
+      "usedBy": ["masthead/contact-us.background"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/other/banner-offer.jpg",
+      "usedBy": ["masthead/offers.background"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/other/banner-about.jpg",
+      "usedBy": ["masthead/about-us.background"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/other/banner-blog.jpg",
+      "usedBy": ["masthead/our-blog.background"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/other/banner-reservation.jpg",
+      "usedBy": ["masthead/reservation.background"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/other/bg-martsearch.jpg",
+      "usedBy": ["masthead/search.background"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/other/banner-contact.jpg",
+      "usedBy": ["contact/contact.image"],
+      "inSnapshot": true
+    }
+  ]
+}

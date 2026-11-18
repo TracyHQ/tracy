@@ -318,6 +318,7 @@ const EVERY_CODE = [
     }
   ],
   ['content-coverage', 'coverage-not-needed', {}],
+  ['content-coverage', 'coverage-roles-only', {}],
   ['content-coverage', 'coverage-waiting', {}],
   ['content-coverage', 'coverage-not-measured', COVERAGE_BASE],
   [
@@ -570,6 +571,7 @@ const DONE_CODES = new Set([
   'not-published',
   'polish-done',
   'coverage-not-needed',
+  'coverage-roles-only',
   'coverage-waiting',
   'coverage-ready',
   'kit-not-needed',
@@ -1100,7 +1102,14 @@ test('Customize your site sends each fix where its file lives: the contract in t
     em,
     /fix in the template package in the tch repository \(packages\/cms\/tracy-emdash-theme-business\)/
   )
-  for (const template of ['tracy-business', 'tracy-saas', 'tracy-base', 'tracy-coffee', 'tracy-restaurant'])
+  for (const template of [
+    'tracy-business',
+    'tracy-saas',
+    'tracy-base',
+    'tracy-coffee',
+    'tracy-restaurant',
+    'tracy-diner'
+  ])
     assert.ok(
       existsSync(
         path.join(here, '..', '..', '..', 'cms', `tracy-emdash-theme-${template.replace(/^tracy-/, '')}`)

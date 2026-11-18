@@ -1,0 +1,26 @@
+{
+  "pr": 541,
+  "area": "website-opportunities/step-nine",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "id": "REG-PR-541-wo-transparent-photo-slots",
+  "kind": "fix",
+  "title": "Transparent photo slots refuse opaque JPEG placement before upload",
+  "steps": [
+    "Index an avatar photo frame with a transparent content-map requirement.",
+    "Run specific, any-real and person photo paths on hideable and nonhideable slots.",
+    "Export historical JPEG mappings and call direct photo cutters."
+  ],
+  "expect": [
+    "Transparency requirements survive frame indexing and prevent unsupported picker work.",
+    "Hideable frames use supported hiding; nonhideable frames return to the planner without generating people.",
+    "Opaque JPEG export and cutters refuse before upload; ordinary photos and true cutouts retain their existing paths."
+  ],
+  "fence": "content-map transparency carried into image eligibility, cutters and export",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/site-pictures-transparent-slots.test.mjs"],
+    "needs": []
+  },
+  "selectors": {}
+}

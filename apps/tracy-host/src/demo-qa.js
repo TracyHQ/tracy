@@ -282,6 +282,8 @@ export function demoQaBody(body) {
     accentTokens: accentTokensOf(body.accentTokens),
     // The WhatsApp link the brief gives (ADR 0037 amended 26/10/2026): a button that may leave the demo.
     whatsappLinks: strings(body.whatsappLinks, 5, 200).filter((href) => WHATSAPP_LINK.test(href)),
+    // The business's own social profiles the brief gives (ADR 0037 amended 16/11/2026): buttons that may leave the demo.
+    socialLinks: strings(body.socialLinks, 10, 300).filter((href) => socialProfileKey(href) !== null),
     // What the brief says not to show (`withheld-not-shown`): a field the sources disagree on, with every value given.
     withheld: (Array.isArray(body.withheld) ? body.withheld : [])
       .filter((w) => w && typeof w.field === 'string' && w.field !== '' && w.field.length <= 60)
@@ -882,6 +884,42 @@ const SLOT_TOKEN = /^--ds-c-/
 const ACCENT_TOKEN = /^--ds-c-accent(?:-hover|-active|-on|-text|-text-hover)?$/
 /** A WhatsApp chat link as the brief builds it: wa.me and the number's digits, nothing else. */
 const WHATSAPP_LINK = /^https:\/\/wa\.me\/\d{8,15}$/
+/** The networks a social profile of the brief may be on (`brief.business.socials`, `public-demo-profile.js`). */
+const SOCIAL_HOSTS = new Set([
+  'facebook.com',
+  'instagram.com',
+  'tiktok.com',
+  'youtube.com',
+  'x.com',
+  'twitter.com'
+])
+
+/**
+ * One key for a social profile address, or null when it is not one: https or http, the network's host with or without
+ * `www.`/`m.`, and the profile's path without its trailing slash, in lower case (networks do not tell a handle's case
+ * apart). Query and fragment are left out: `?ref=` is still the same profile. A path of the network's own (its home,
+ * a share or login page) is no profile.
+ * @param {string} href
+ * @returns {string | null}
+ */
+export function socialProfileKey(href) {
+  let url
+  try {
+    url = new URL(String(href ?? '').trim())
+  } catch {
+    return null
+  }
+  if (url.protocol !== 'https:' && url.protocol !== 'http:') return null
+  const host = url.hostname.toLowerCase().replace(/^(?:www|m|mobile)\./, '')
+  if (!SOCIAL_HOSTS.has(host)) return null
+  const path = url.pathname.replace(/\/+$/, '').toLowerCase()
+  if (
+    !/^\/[^/]+(?:\/[^/]+)?$/.test(path) ||
+    /^\/(?:sharer|share|login|dialog|intent|home)(?:\.php)?(?:\/|$)/.test(path)
+  )
+    return null
+  return `${host}${path}`
+}
 
 /**
  * The brand accent a body sends: accent role tokens with a plain hex value, at most six.
@@ -2583,10 +2621,12 @@ const SEARCH_PARAM = /^(?:q|s|search|query|searchword|keyword)$/i
  * and no longer lets a button out). A read from before `button` was recorded counts every non-booking call
  * to action as a button: only those were collected.
  * @param {PageRead[]} reads
- * The WhatsApp link the brief gives (`whatsappLinks`, exactly as built: `https://wa.me/<digits>`) is the one button
- * that may leave the demo besides `tel:` and `mailto:` (ADR 0037 amended 26/10/2026).
+ * The WhatsApp link the brief gives (`whatsappLinks`, exactly as built: `https://wa.me/<digits>`) may leave the demo
+ * besides `tel:` and `mailto:` (ADR 0037 amended 26/10/2026), and so may the business's own social profiles the brief
+ * gives (`socialLinks`, the same profile by `socialProfileKey`; ADR 0037 amended 16/11/2026). Another profile on the
+ * same network, a share link or the network's home still fails.
  * @param {{demoHosts?: string[], publicOrigin?: string | null, host?: string | null, contactPaths?: string[],
- *   whatsappLinks?: string[]}} [asked]
+ *   whatsappLinks?: string[], socialLinks?: string[]}} [asked]
  */
 export function checkCtaReal(
   reads,
@@ -2596,9 +2636,11 @@ export function checkCtaReal(
     host = null,
     contactPaths = [],
     whatsappLinks = [],
+    socialLinks = [],
     residue = null
   } = {}
 ) {
+  const socials = new Set(socialLinks.map(socialProfileKey).filter(Boolean))
   const links = (residue?.items ?? []).filter((i) => i.field === 'link')
   const swept = (page, cta) =>
     links.some(
@@ -2636,6 +2678,9 @@ export function checkCtaReal(
       if (/^(tel|mailto):/i.test(href)) continue
       // The business's WhatsApp, as the brief gives it: a second action beside Call (#1780, ADR 0037 amended).
       if (whatsappLinks.includes(href)) continue
+      // The business's own social profile, as the brief gives it (ADR 0037 amended 16/11/2026): a template that styles its
+      // contact page's network links as buttons (JA Diner's `button-Facebook`) shows where the business is, not a way off.
+      if (socials.size > 0 && socials.has(socialProfileKey(href) ?? '')) continue
       let url
       try {
         url = new URL(href, r.url)
@@ -3446,6 +3491,8 @@ export function collectedOf(value) {
     email: text(value.email, 320),
     address: text(value.address, 500),
     hours: strings(value.hours, 14, 300),
+    // What sets the business apart (the brief's hero USP statement): the home page shows it, word for word.
+    usp: text(value.usp, 200),
     reviews: (Array.isArray(value.reviews) ? value.reviews : [])
       .filter((r) => r && typeof r.text === 'string' && r.text.trim())
       .slice(0, COLLECTED_REVIEWS_MAX)
@@ -3598,6 +3645,10 @@ export function checkCollectedUsed(
       if (!streetWords || !` ${streetWords} `.includes(` ${streetWordsOf(m[0]).join(' ')} `))
         once(r, 'address', m[0])
   }
+  // 🔒 WHAT SETS IT APART IS ON THE FIRST SCREEN (owner decision 09/11/2026): the brief's USP statement, word for word,
+  // on home (the first page read), the hero's main heading by the build steps.
+  if (collected.usp && !phraseIn(wordsOf(reads[0]?.text ?? '').join(' '), collected.usp))
+    missing('usp', collected.usp)
   if (collected.hours.length) {
     const want = timesIn(collected.hours.join(' '))
     const seen = new Set(shown.flatMap((r) => [...timesIn(r.text)]))
@@ -3674,7 +3725,7 @@ export function checkCollectedUsed(
       'collected-used',
       findings,
       `${findings.length} collected facts or photos missing; ${reviewsShown} reviews quoted; ${photos.size} own photos shown`,
-      'the name, phone, email, address, hours, a review and the place’s own photos the research collected are on the site, and no email, phone or street line it did not collect'
+      'the name, phone, email, address, hours, a review and the place’s own photos the research collected are on the site, home shows what sets the business apart, and no email, phone or street line it did not collect'
     ),
     ...(collected.reviewsWaived && reviewsShown === 0 ? { waived: { reviews: collected.reviewsWaived } } : {})
   }

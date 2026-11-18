@@ -1,0 +1,2 @@
+{"id":"REG-PR-541-step-nine-native-verification","verdict":"PASS","commit":"0fb5c724784a856b3ce7a871c6a05cc8beb6c1b1","ran_at":"2026-11-10T19:36:35.045Z","evidence":"tests/regression/.runs/2026-11-10-0fb5c7247/REG-PR-541-step-nine-native-verification.log"}
+{"id":"REG-PR-541-wo-writer-icon-fields","verdict":"PASS","commit":"0fb5c724784a856b3ce7a871c6a05cc8beb6c1b1","ran_at":"2026-11-10T19:36:47.453Z","evidence":"REG-PR-541-wo-writer-icon-fields.log"}

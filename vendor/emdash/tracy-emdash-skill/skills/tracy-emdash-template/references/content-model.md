@@ -50,3 +50,5 @@ Forms are not in the seed: `tools/forms.json` follows the Forms plugin schema (`
 core (`search`, `seo`, `repeater`, i18n) · `@emdash-cms/plugin-forms` · `@emdash-cms/plugin-audit-log` ·
 `emdash-smtp` (Generic SMTP → Mailpit locally). No third-party SEO plugin (peer mismatch), no Field Kit,
 no sitemap plugin (core has `/sitemap.xml`; the HTML sitemap is built from the menu).
+
+- **A singleton record must not share its slug with a page.** `release.mjs --site-pages` counts a `reservation` record next to the `reservation` page as two page records ("matches 2 page records: skipped") and the page is missing from the customer's Pages question; name the record `<slug>-layout`.

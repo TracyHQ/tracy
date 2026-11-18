@@ -73,7 +73,11 @@ export const tool = {
     const args = { data, n, palette, ground, colour, mask, maskFile }
     const done =
       mode === 'palette' ? paletteMode(args) : mode === 'solid' ? solidMode(args) : invertMode(args)
-    if (done.error) throw new BrandToolError(done.error)
+    if (done.error) {
+      if (mode === 'invert' && done.error.startsWith('the mask has no kept fill'))
+        throw await emptyFillError(files, markFile, side)
+      throw new BrandToolError(done.error)
+    }
     const png = await sharp(data, { raw: { width: w, height: h, channels: 4 } })
       .png()
       .toBuffer()
@@ -94,4 +98,30 @@ export const tool = {
             : 'only the figure changes colour; detail drawn by colour differences inside the figure is lost. Record this file in logo.mark.recoloured.<side> and look at the logo again'
     }
   }
+}
+
+/** Recovery uses the existing cut proof and tools; it never recolours or approves a file automatically. */
+async function emptyFillError(files, markFile, side) {
+  const warning =
+    'Solid mode discards internal colour detail; use it only deliberately, and review the result with look_logo before use.'
+  const proof = markFile.replace(/\.png$/i, '.on-white.png')
+  if (files.has(proof)) {
+    try {
+      const { data, w, h } = await raw(files.read(proof))
+      let opaque = true
+      for (let i = 3; i < data.length; i += 4) if (data[i] !== 255) opaque = false
+      if (opaque) {
+        const cut = { mediaId: proof, box: [0, 0, w, h] }
+        return new BrandToolError(
+          `The mask has no kept fill: nothing to invert. Recut the existing opaque proof with cut_mark(${JSON.stringify(cut)}), then call recolour_mark on the returned file for side ${side} with its new fill mask. Fit and review the result with look_logo before use. ${warning}`,
+          { recovery: { cut, side, next: ['recolour_mark', 'fit_logo', 'look_logo'] } }
+        )
+      }
+    } catch {
+      // An unreadable proof cannot establish the supported recovery input.
+    }
+  }
+  return new BrandToolError(
+    `The mask has no kept fill: nothing to invert, and no readable opaque cut proof is available. ${warning}`
+  )
 }

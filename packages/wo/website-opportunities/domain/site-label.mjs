@@ -16,7 +16,18 @@ function slug(text) {
     .toLowerCase()
     .replace(/['’`]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+    .split('-')
+    .filter(Boolean)
+    .join('-')
+}
+
+// Dash trimming without a regex: an anchored `-+$` backtracks per position on dash-heavy input.
+function trimDashes(text) {
+  let start = 0
+  let end = text.length
+  while (start < end && text[start] === '-') start += 1
+  while (end > start && text[end - 1] === '-') end -= 1
+  return text.slice(start, end)
 }
 
 /**
@@ -30,7 +41,7 @@ export function siteLabelFor(name, { cms, suffix, max = DNS_LABEL_MAX } = {}) {
     .map((part) => `-${part}`)
     .join('')
   const room = Math.min(max - NAME_SLACK, max - COUNTER_ROOM - tail.length)
-  const head = slug(name).slice(0, room).replace(/-+$/, '') || 'site'
+  const head = trimDashes(slug(name).slice(0, room)) || 'site'
   return `${head}${tail}`
 }
 

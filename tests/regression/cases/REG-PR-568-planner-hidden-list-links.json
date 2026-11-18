@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-568-planner-hidden-list-links",
+  "kind": "fix",
+  "title": "Planner closes only missing child links already hidden by explicit parent list or removed row decisions",
+  "pr": 568,
+  "area": "website-opportunities/planner",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run run.cmd without a server or provider calls. The exact published Boxing social block is combined with the passing checker fixture.",
+    "Verify all eight tests execute with zero failures or skips."
+  ],
+  "expect": [
+    "The original missing block-171.6 link fails R10b before normalization; an explicit hidden parent closes it and the full checker has zero failures.",
+    "Missing visible links, ambiguous row ownership and contradictory parent decisions still fail; no target is invented.",
+    "Non-leading kept rows, explicit links and explicit row content remain intact; invalid row counts never imply hides.",
+    "Whole-plan answers and fix-round changes use the same idempotent expansion without mutating their inputs."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-planner-hidden-links.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a hidden social parent closes its missing child link without a model round",
+      "a visible undecided child link remains a checker failure",
+      "trimmed social rows close missing links but preserve explicitly named non-leading rows",
+      "explicit links and row content remain intact even when a row count is smaller",
+      "negative or fractional row counts never imply hiding links",
+      "a fix-round change receives the same hidden-parent closure",
+      "ambiguous row ownership and contradictory parent decisions stay unresolved",
+      "a page-local kept block closes its hidden row, while dropped pages remain untouched"
+    ]
+  }
+}

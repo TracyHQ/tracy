@@ -1677,7 +1677,14 @@ test('every export call carries the Basic credential', async () => {
     if (sent.action === 'db.tables') return new Response(JSON.stringify({ ok: true, tables: ['t'] }))
     if (sent.action === 'db.dump')
       return new Response(
-        JSON.stringify({ ok: true, sql_b64: '', next_cursor: null, done: true, rows: 0, total: 0 })
+        JSON.stringify({
+          ok: true,
+          sql_b64: Buffer.from('CREATE TABLE t (id INT);').toString('base64'),
+          next_cursor: null,
+          done: true,
+          rows: 0,
+          total: 0
+        })
       )
     throw new TypeError(`unexpected ${sent.action}`)
   }

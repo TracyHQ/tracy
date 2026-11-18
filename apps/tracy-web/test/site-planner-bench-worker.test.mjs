@@ -4,6 +4,7 @@
 // rounds and answers that are not a plan: site-planner-bench-fix-rounds.test.mjs.
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { BENCH_QUEUE, createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { openKit } from '../src/site-planner/kit-source.js'
@@ -55,9 +56,9 @@ async function runOnce(pool, replies, { wrap, index } = {}) {
   return { run: await readRun(pool, run.id), model }
 }
 
-test('the queue survives redeploys: one run at a time, many claims allowed', () => {
-  // test-quality: contract one run at a time is the limit set for the paid model API (spend and rate limits); raising it is a decision, not a refactor
-  assert.equal(BENCH_QUEUE.concurrency, 1)
+test('the queue survives redeploys: as many runs side by side as a start lets in, many claims allowed', () => {
+  // The worker plays every run the start admits (lib/bench-sql.js), so no admitted run waits behind another (#633).
+  assert.equal(BENCH_QUEUE.concurrency, BENCH_RUNS_AT_ONCE)
   assert.ok(BENCH_QUEUE.maxAttempts >= 10)
 })
 
@@ -153,6 +154,40 @@ test('a door changed after the start fails the run before any call', opts, async
   assert.match(run.error, /^SITE_PLANNER_DOOR_CHANGED/)
   assert.deepEqual(run.rounds, [])
 })
+
+test(
+  'a historical paid run without the frozen brief view fails before image preparation or provider calls',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool)
+    const started = await startRun(pool)
+    await pool.query("update site_planner_run set status='cancelled' where id=$1", [started.id])
+    const {
+      rows: [legacy]
+    } = await pool.query(
+      `insert into site_planner_run (started_by,brief,brief_source,brief_sha256,kit,prompt_sha256,checker_version,door,harness)
+     select started_by,brief,brief_source,brief_sha256,kit,prompt_sha256,checker_version,door,harness-'briefView'
+     from site_planner_run where id=$1 returning id`,
+      [started.id]
+    )
+    const model = scriptedModel([])
+    const images = readyKitImages()
+    await createSitePlannerQueue({
+      pool,
+      secret: SECRET,
+      fetchImpl: model.fetchImpl,
+      kitImages: images,
+      log: quiet
+    }).drain()
+    const run = await readRun(pool, legacy.id)
+    assert.equal(run.status, 'failed')
+    assert.match(run.error, /^SITE_PLANNER_BRIEF_VIEW_CHANGED/)
+    assert.equal(model.requests.length, 0)
+    assert.equal(images.calls.ensure, 0)
+    assert.deepEqual(run.rounds, [])
+  }
+)
 
 test('a cancel asked during a call stops the run after that call', opts, async () => {
   const { pool } = db

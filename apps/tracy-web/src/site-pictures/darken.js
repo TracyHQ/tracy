@@ -43,15 +43,16 @@ export function overlayFor(luminance) {
 }
 
 /**
- * A picture for a dark frame: null when it is already dark enough, else the same picture (same size, JPEG) with a
+ * A picture for a dark frame: null when it is already dark enough, unless a bounded visual-readability retry requires
+ * a minimum overlay strength. Otherwise the same picture (same size, JPEG) with a
  * black overlay baked in, its hash and the overlay record.
  * @returns {Promise<null | { bytes: Buffer, ext: 'jpg', sha256: string, width: number, height: number,
  *   overlay: { colour: string, strength: number, before: number, after: number } }>}
  */
-export async function darkenPicture(bytes) {
+export async function darkenPicture(bytes, { minimumStrength = 0 } = {}) {
   const before = await luminanceOf(bytes)
-  if (before <= DARK_ENOUGH) return null
-  const strength = overlayFor(before)
+  if (before <= DARK_ENOUGH && minimumStrength === 0) return null
+  const strength = Math.min(OVERLAY_MAX, Math.max(minimumStrength, overlayFor(before)))
   const img = sharp(Buffer.from(bytes), { failOn: 'none' }).rotate()
   const { width, height } = await sharp(await img.clone().toBuffer()).metadata()
   const veil = await sharp({

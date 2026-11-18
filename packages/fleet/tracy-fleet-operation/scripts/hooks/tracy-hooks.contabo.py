@@ -52,6 +52,16 @@ JOB_DIR = "/var/lib/tracy-jobs"
 # A job's whole life on disk: one JSON file per job. Not a database, because the only reader is
 # the relay asking "how far along", and the only writer is the thread doing the work — and a
 # file survives this process being restarted mid-provision, which is exactly when someone asks.
+
+# A template demo folded into the demo farm (scripts/lib/demo-farm.sh) is marked by
+# /srv/tracy/<label>/runtime. Its <label>-web-1 is a TCP forwarder and its database a farm schema:
+# every job of this legacy door that execs into a site container, or changes it, would land in the
+# forwarder. Refused by name instead. tracy-host (apps/tracy-host) is the door that knows the farm.
+def farm_refusal(label: str) -> str | None:
+    if os.path.lexists(f"/srv/tracy/{label}/runtime"):
+        return f"{label} is a demo served by the demo farm; this legacy door does not serve it — unfold it first (provision/unfold.sh {label})"
+    return None
+
 def job_path(job_id):
     return f"{JOB_DIR}/{job_id}.json"
 
@@ -92,6 +102,24 @@ def log(msg: str) -> None:
 # The caller is the relay, not a user — but an endpoint that trusts its caller is an endpoint
 # broken the first time its caller is fooled.
 SAFE_ARG = __import__("re").compile(r"^[A-Za-z0-9._:/@-]+$")
+# A site's own folder. SAFE_ARG guards a command line, not a path: it lets `/` and `..` through,
+# so a door that turns a label into a path under /srv/tracy asks site_dir() instead — one plain
+# folder name, and the joined path, symlinks resolved, checked to still sit inside SITES_ROOT.
+# provision.sh makes every site folder with `mkdir -p`, so a site entry that is a link leading out
+# is never a real site; the root itself may be reached through a link (resolved on both sides).
+SITES_ROOT = "/srv/tracy"
+SITE_LABEL = __import__("re").compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,99}")
+
+
+def site_dir(label) -> str | None:
+    """`/srv/tracy/<label>`, or None when the label is not one folder name inside it."""
+    if not isinstance(label, str) or not SITE_LABEL.fullmatch(label):
+        return None
+    root = os.path.realpath(SITES_ROOT)
+    path = os.path.realpath(os.path.join(root, label))
+    if not path.startswith(root + os.sep):
+        return None
+    return path
 PROVISION_FLAGS = {
     "site": "--site",
     "label": "--label",
@@ -277,6 +305,10 @@ def validate_webroot_payload(kind, body):
 
 def run_webroot_job(job_id: str, body: dict) -> None:
     """A webroot job, run locally: answer first, run after, the result goes into the job record."""
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="run_webroot_job", detail=refused)
+        return
     label = body["label"]
     kind = body["kind"]
     script, fixed = WEBROOT_JOBS[kind]
@@ -391,6 +423,10 @@ def provision(job_id: str, body: dict) -> None:
     Progress is written to a file after every line the script prints: the one asking is the relay, and what
     it asks is "how far along", so the answer must exist even while the job is still running.
     """
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="provision", detail=refused)
+        return
     label = body["label"]
     os.makedirs(LOG_DIR, exist_ok=True)
     log_path = f"{LOG_DIR}/provision-{label}.log"
@@ -462,6 +498,10 @@ def go_live(job_id: str, body: dict) -> None:
     traffic. The `publish_state` flag belongs to the relay, and the relay flips it AFTER this job finishes (towards
     live) or BEFORE calling (towards draft) — see the note at `handleGoLive`.
     """
+    refused = farm_refusal(str(body.get("label", "")))
+    if refused:
+        write_job(job_id, state="failed", step="go_live", detail=refused)
+        return
     label = body["label"]
     op = body["op"]
     os.makedirs(LOG_DIR, exist_ok=True)
@@ -657,7 +697,10 @@ class Handler(BaseHTTPRequestHandler):
         label = payload.get("label", "")
         if not label or not SAFE_ARG.match(str(label)):
             return self._answer(400, "bad label")
-        token_path = f"/srv/tracy/{label}/tracy-agent.token"
+        folder = site_dir(label)
+        if folder is None:
+            return self._answer(400, "bad label")
+        token_path = os.path.join(folder, "tracy-agent.token")
         try:
             with open(token_path, encoding="utf-8") as fh:
                 token = fh.read().strip()
@@ -683,7 +726,8 @@ class Handler(BaseHTTPRequestHandler):
         # and the caller goes looking for a correctly typed label while the real error is in `op`. Measured 29/08: an
         # unknown `op`, an unknown key and a bad domain all got that same 404.
         label = str(payload.get("label", ""))
-        if not label or not SAFE_ARG.match(label):
+        folder = site_dir(label) if label and SAFE_ARG.match(label) else None
+        if folder is None:
             return self._answer(400, "refused label")
         if payload.get("op") not in ("live", "draft"):
             return self._answer(400, "need op: live or draft")
@@ -698,7 +742,7 @@ class Handler(BaseHTTPRequestHandler):
             if key not in ("label", "op", "domains"):
                 return self._answer(400, f"refused {key}")
 
-        if not os.path.isdir(f"/srv/tracy/{label}"):
+        if not os.path.isdir(folder):
             return self._answer(404, "no such site")
 
         job_id = uuid.uuid4().hex[:12]
@@ -794,10 +838,10 @@ class Handler(BaseHTTPRequestHandler):
             # Per-site core source (ADR 0070 appendix): the desk fetches the manifest from the site itself via the relay
             # and sends it down here; the Core-zone gate reads this file instead of a static list. Writes one
             # JSON file next to the webroot — no script, no shell.
-            if not SAFE_ARG.match(str(payload.get("label", ""))):
+            folder = site_dir(payload.get("label"))
+            if folder is None or not SAFE_ARG.match(payload["label"]):
                 return self._answer(400, "refused label")
-            site_dir = f"/srv/tracy/{payload['label']}"
-            if not os.path.isdir(site_dir):
+            if not os.path.isdir(folder):
                 return self._answer(404, "no such site")
             raw = payload.get("contentBase64")
             if not isinstance(raw, str) or not raw or len(raw) > 2 * 1024 * 1024:
@@ -812,10 +856,10 @@ class Handler(BaseHTTPRequestHandler):
                     raise ValueError("not a core manifest")
             except Exception:
                 return self._answer(400, "refused contentBase64: not a core manifest")
-            tmp = f"{site_dir}/core-manifest.json.tmp"
+            tmp = os.path.join(folder, "core-manifest.json.tmp")
             with open(tmp, "wb") as f:
                 f.write(decoded)
-            os.replace(tmp, f"{site_dir}/core-manifest.json")
+            os.replace(tmp, os.path.join(folder, "core-manifest.json"))
             job_id = uuid.uuid4().hex[:12]
             write_job(job_id, state="done", step=kind, label=payload["label"],
                       output=json.dumps({"ok": True, "extensions": len(manifest["extensions"])}))

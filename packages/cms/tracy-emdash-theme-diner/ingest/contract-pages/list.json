@@ -1,0 +1,218 @@
+{
+  "layout": {
+    "id": "BlogList",
+    "view": "src/views/BlogList.astro",
+    "family": "list"
+  },
+  "rules": [
+    ["blog-card-title", ".dn-blog-card h3", "index.php/our-blog/index.html", false],
+    ["blog-card-date", ".dn-blog-card .dn-card-meta", "index.php/our-blog/index.html", false],
+    ["blog-card-intro", ".dn-blog-card .dn-card-intro", "index.php/our-blog/index.html", false],
+    ["blog-more-title", ".dn-more h3", "index.php/our-blog/index.html", true],
+    ["blog-pagination", ".dn-pagination a.is-active", "index.php/our-blog/index.html", true],
+    ["aside-title", ".dn-aside h3", "index.php/our-blog/index.html", false]
+  ],
+  "parity": {
+    "blog-card-img": {
+      "site": ".dn-blog-card .dn-card-img img",
+      "source": ".isotope-item .item-image img"
+    },
+    "blog-cats-title": {
+      "site": ".dn-aside h3",
+      "source": ".t3-sidebar .module-title"
+    }
+  },
+  "pages": [
+    {
+      "id": "en-blog",
+      "path": "/our-blog",
+      "status": 200,
+      "source": ["index.php/our-blog/index.html"],
+      "identity": ".dn-post-grid",
+      "collections": ["chrome", "posts", "masthead", "category_info"],
+      "rules": [
+        "masthead-title",
+        "blog-card-title",
+        "blog-card-date",
+        "blog-card-intro",
+        "blog-more-title",
+        "blog-pagination",
+        "aside-title"
+      ],
+      "parity": ["nav", "footerTitle", "ground", "blog-card-img"],
+      "content": [
+        [
+          "blog-masthead",
+          ".dn-masthead-title",
+          "index.php/our-blog/index.html",
+          "field",
+          "masthead.title",
+          "Our Blog"
+        ],
+        [
+          "blog-first-title",
+          ".dn-blog-card h3 a",
+          "index.php/our-blog/index.html",
+          "field",
+          "posts.title",
+          "We've been nominated for the Britain Restaurant Awards"
+        ],
+        [
+          "blog-more-label",
+          ".dn-more h3",
+          "index.php/our-blog/index.html",
+          "field",
+          "chrome.more_label",
+          "More Articles \u2026"
+        ]
+      ]
+    },
+    {
+      "id": "en-blog-2",
+      "path": "/our-blog?page=2",
+      "status": 200,
+      "source": ["index.php/our-blog/index~start=12.html"],
+      "identity": ".dn-post-grid",
+      "collections": ["chrome", "posts", "masthead", "category_info"],
+      "rules": [
+        "masthead-title",
+        "blog-card-title",
+        "blog-card-date",
+        "blog-card-intro",
+        "blog-pagination",
+        "aside-title"
+      ],
+      "parity": ["nav", "footerTitle", "ground", "blog-card-img"],
+      "content": [
+        [
+          "blog-masthead",
+          ".dn-masthead-title",
+          "index.php/our-blog/index~start=12.html",
+          "field",
+          "masthead.title",
+          "Our Blog"
+        ],
+        [
+          "blog-first-title",
+          ".dn-blog-card h3 a",
+          "index.php/our-blog/index~start=12.html",
+          "field",
+          "posts.title",
+          "10 most alluring LTOs on menus in July"
+        ]
+      ]
+    },
+    {
+      "id": "en-category",
+      "path": "/restaurant-news",
+      "status": 200,
+      "source": ["index.php/our-blog/10-restaurant-news/index.html"],
+      "identity": ".dn-post-grid",
+      "collections": ["chrome", "posts", "masthead", "category_info"],
+      "rules": ["masthead-title", "blog-card-title", "blog-card-date", "blog-card-intro", "aside-title"],
+      "parity": ["nav", "footerTitle", "ground", "blog-card-img"],
+      "content": [
+        [
+          "blog-masthead",
+          ".dn-masthead-title",
+          "index.php/our-blog/10-restaurant-news/index.html",
+          "field",
+          "masthead.title",
+          "Our Blog"
+        ],
+        [
+          "blog-first-title",
+          ".dn-blog-card h3 a",
+          "index.php/our-blog/10-restaurant-news/index.html",
+          "field",
+          "posts.title",
+          "Cocktail Bar Alchemist set to open at Mediacity in Salford Quays"
+        ]
+      ]
+    },
+    {
+      "id": "en-category-restaurant-business",
+      "path": "/restaurant-business",
+      "status": 200,
+      "source": ["index.php/our-blog/2-restaurant-business/index.html"],
+      "identity": ".dn-post-grid",
+      "collections": ["chrome", "posts", "masthead", "category_info"],
+      "rules": ["masthead-title", "blog-card-title", "blog-card-date", "blog-card-intro", "aside-title"],
+      "parity": ["nav", "footerTitle", "ground", "blog-card-img"],
+      "content": [
+        [
+          "blog-masthead",
+          ".dn-masthead-title",
+          "index.php/our-blog/2-restaurant-business/index.html",
+          "field",
+          "masthead.title",
+          "Our Blog"
+        ],
+        [
+          "blog-first-title",
+          ".dn-blog-card h3 a",
+          "index.php/our-blog/2-restaurant-business/index.html",
+          "field",
+          "posts.title",
+          "We've been nominated for the Britain Restaurant Awards"
+        ]
+      ]
+    },
+    {
+      "id": "en-category-restaurant-marketing",
+      "path": "/restaurant-marketing",
+      "status": 200,
+      "source": ["index.php/our-blog/9-restaurant-marketing/index.html"],
+      "identity": ".dn-post-grid",
+      "collections": ["chrome", "posts", "masthead", "category_info"],
+      "rules": ["masthead-title", "blog-card-title", "blog-card-date", "blog-card-intro", "aside-title"],
+      "parity": ["nav", "footerTitle", "ground", "blog-card-img"],
+      "content": [
+        [
+          "blog-masthead",
+          ".dn-masthead-title",
+          "index.php/our-blog/9-restaurant-marketing/index.html",
+          "field",
+          "masthead.title",
+          "Our Blog"
+        ],
+        [
+          "blog-first-title",
+          ".dn-blog-card h3 a",
+          "index.php/our-blog/9-restaurant-marketing/index.html",
+          "field",
+          "posts.title",
+          "Did IHOP's publicity stunt hurt Applebee's?"
+        ]
+      ]
+    },
+    {
+      "id": "en-category-restaurant-guide",
+      "path": "/restaurant-guide",
+      "status": 200,
+      "source": ["index.php/our-blog/11-restaurant-guide/index.html"],
+      "identity": ".dn-post-grid",
+      "collections": ["chrome", "posts", "masthead", "category_info"],
+      "rules": ["masthead-title", "blog-card-title", "blog-card-date", "blog-card-intro", "aside-title"],
+      "parity": ["nav", "footerTitle", "ground", "blog-card-img"],
+      "content": [
+        [
+          "blog-masthead",
+          ".dn-masthead-title",
+          "index.php/our-blog/11-restaurant-guide/index.html",
+          "field",
+          "masthead.title",
+          "Our Blog"
+        ],
+        [
+          "blog-first-title",
+          ".dn-blog-card h3 a",
+          "index.php/our-blog/11-restaurant-guide/index.html",
+          "field",
+          "posts.title",
+          "Three Broomsticks welcomes new chef Caleb Nun\u0119z"
+        ]
+      ]
+    }
+  ]
+}

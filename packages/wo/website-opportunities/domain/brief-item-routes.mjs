@@ -67,6 +67,7 @@ export const BRIEF_ITEM_ROUTES = Object.freeze({
   'fact.team': roles('person.name', 'person.role'),
   'fact.audience': roles('business.summary'),
   'fact.story': roles('business.long_description'),
+  'fact.posts': roles('article.title', 'article.lead', 'article.date'),
   'fact.googleRating': roles('quote.rating_or_source'),
   'fact.rating': roles('quote.rating_or_source'),
   'fact.socialFigures': roles('stat.value', 'stat.label'),

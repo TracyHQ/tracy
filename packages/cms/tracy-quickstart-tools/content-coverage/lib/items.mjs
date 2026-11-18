@@ -2,6 +2,10 @@
 import { normText, normPath } from './normalize.mjs'
 
 const keyOf = (it, siteUrl) => {
+  if (it.kind === 'media')
+    return `media|${it.mediaKind}|${it.entity}|${it.track}|${it.selector ?? ''}|${it.value}`
+  if (it.kind === 'text' && typeof it.codeText === 'string') return `code|${it.codeText}`
+  if (it.kind === 'text' && it.inCode) return `unsupported-code|${it.value}`
   if (it.kind === 'image') return `image|${normPath(it.value, siteUrl)}`
   if (it.kind === 'link') return `link|${it.value}`
   return `${it.kind}|${it.attr ?? ''}|${normText(it.value)}`
@@ -9,6 +13,44 @@ const keyOf = (it, siteUrl) => {
 
 /** A block's chrome id (Joomla: `Mod160`, `mod-articles-160`, `module-160`; T4 ACM: `acm-hero-wrap-156`). */
 export const BLOCK_CHROME = /^(?:mod|module)[-_a-z]*\d+$|^acm-[-_a-z]*\d+$/i
+
+/** Complete physical holders, or null when merging discarded or mixed any copy's provenance. */
+export function physicalHolders(item) {
+  if (!item.selector || item.inCode || typeof item.codeText === 'string') return null
+  const out = []
+  for (const v of Object.values(item.viewports ?? {})) {
+    if (!v || !Number.isInteger(v.count) || v.count < 1 || !v.selector) return null
+    const copies =
+      v.holders === undefined
+        ? v.count === 1
+          ? [
+              {
+                selector: v.selector,
+                tag: item.tag,
+                value: item.value,
+                attr: item.attr,
+                href: item.href,
+                scopes: item.scopes,
+                inCode: false
+              }
+            ]
+          : null
+        : v.holders
+    if (
+      !Array.isArray(copies) ||
+      copies.length !== v.count ||
+      copies.some((c) => !c || typeof c.selector !== 'string')
+    )
+      return null
+    if (new Set(copies.map((c) => c.selector)).size !== v.count) return null
+    if (!copies.some((c) => c.selector === v.selector)) return null
+    if (copies.some((c) => !c.selector || c.tag !== item.tag || c.attr !== item.attr || c.inCode !== false))
+      return null
+    out.push(...copies)
+  }
+  if (!out.length) return null
+  return out.some((c) => c.selector === item.selector) ? out : null
+}
 
 /** Collapse repeated items (slider clones, menus rendered twice) per viewport, then union viewports. */
 export function mergeViewports(byViewport, siteUrl) {
@@ -22,6 +64,16 @@ export function mergeViewports(byViewport, siteUrl) {
         m = {
           key: k,
           kind: it.kind,
+          ...(it.kind === 'media'
+            ? {
+                mediaKind: it.mediaKind,
+                entity: it.entity,
+                track: it.track,
+                initialized: it.initialized,
+                metadata: it.metadata,
+                mediaError: it.mediaError
+              }
+            : {}),
           attr: it.attr,
           source: it.source,
           value: it.value,
@@ -32,6 +84,7 @@ export function mergeViewports(byViewport, siteUrl) {
           href: it.href,
           text: it.text,
           ...(typeof it.outsideCode === 'string' ? { outsideCode: it.outsideCode } : {}),
+          ...(typeof it.codeText === 'string' ? { codeText: it.codeText } : {}),
           ...(it.inCode ? { inCode: true } : {}),
           viewports: {}
         }
@@ -51,8 +104,23 @@ export function mergeViewports(byViewport, siteUrl) {
         // (outside every block too) or an off-canvas menu also prints is met as the menu's copy first.
         if (home === '' && (m.bodyRole === undefined || m.bodyRole === 'nav')) m.bodyRole = it.role
       }
-      const v = (m.viewports[vp] ??= { visible: false, count: 0, rect: null, selector: it.selector })
+      const v = (m.viewports[vp] ??= {
+        visible: false,
+        count: 0,
+        rect: null,
+        selector: it.selector,
+        holders: []
+      })
       v.count++
+      v.holders.push({
+        selector: it.selector,
+        tag: it.tag,
+        value: it.value,
+        attr: it.attr,
+        href: it.href,
+        scopes: it.scopes ?? [],
+        inCode: !!it.inCode || typeof it.codeText === 'string'
+      })
       // What the page measured of the picture's own file (Slot fit), the same on every viewport.
       if (it.kind === 'image' && !m.file && data.pictures?.[it.value]) m.file = data.pictures[it.value]
       // Keep the rectangle of the first VISIBLE instance; fall back to the first one.
@@ -68,7 +136,7 @@ export function mergeViewports(byViewport, siteUrl) {
   return [...merged.values()]
 }
 
-export function annotate(items, match, classify) {
+export function annotate(items, match, classify, context = {}) {
   for (const it of items) {
     const m = match(it)
     it.status = m.status
@@ -81,18 +149,26 @@ export function annotate(items, match, classify) {
       it.remainderParts = m.remainderParts
     }
     if (m.status === 'hole') {
-      const c = classify(it, m)
-      it.class = c.class
-      it.classLabel = c.label
+      const c = classify(it, m, context)
       it.evidence = c.evidence
-      if (c.lockState) it.lockState = c.lockState
+      if (c.status === 'matched') {
+        it.status = 'matched'
+        it.matchBy = c.by
+        it.slots = c.slots
+        for (const key of ['class', 'classLabel', 'lockState', 'remainder', 'remainderParts']) delete it[key]
+      } else {
+        it.class = c.class
+        it.classLabel = c.label
+        if (c.lockState) it.lockState = c.lockState
+      }
     }
     it.visibleAnywhere = Object.values(it.viewports).some((v) => v.visible)
   }
   return items
 }
 
-const bucketOf = (it) => (it.kind === 'image' ? 'images' : it.kind === 'link' ? 'links' : 'text')
+const bucketOf = (it) =>
+  it.kind === 'image' ? 'images' : it.kind === 'link' || it.kind === 'media' ? 'links' : 'text'
 
 export function emptyCounts() {
   const c = {}

@@ -860,8 +860,12 @@ const awkSiteShapeAll = (siteDirs) => {
   const source = readFileSync(MINT_SCRIPT, 'utf8')
   const proof = /^compose_proves_php\(\) \{\n[\s\S]*?\n\}\n/m.exec(source)
   const fn = /^site_shape\(\) \{\n[\s\S]*?\n\}\n/m.exec(source)
+  // A folded demo's compose is judged by the kept per-site one (`compose_of_shape`, `compose_is_forwarder`).
+  const farm = ['compose_is_forwarder', 'compose_of_shape'].map(
+    (name) => new RegExp(`^${name}\\(\\) \\{\\n[\\s\\S]*?\\n\\}\\n`, 'm').exec(source)?.[0] ?? ''
+  )
   assert.ok(proof && fn, 'compose_proves_php() or site_shape() is no longer in mint-agent-token.sh')
-  const script = `${proof[0]}\n${fn[0]}\nfor d in "$@"; do printf '%s\n' "$(site_shape "$d")"; done`
+  const script = `${proof[0]}\n${farm.join('\n')}\n${fn[0]}\nfor d in "$@"; do printf '%s\n' "$(site_shape "$d")"; done`
   return execFileSync('bash', ['-c', script, 'shape', ...siteDirs], { encoding: 'utf8' })
     .trim()
     .split('\n')

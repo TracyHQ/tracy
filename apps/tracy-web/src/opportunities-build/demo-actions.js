@@ -9,6 +9,8 @@ import { createHash, randomUUID } from 'node:crypto'
 import { autoTemplate, chooseTemplate, templateRanking } from '../lib/wo-revision-choice.js'
 import { failedQaHash } from './demo-qa.js'
 import { BUILD_LIVE } from './build-store.js'
+import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
+import { failedChainRetryBrief } from '../lib/chain-retry-authority.js'
 
 const DAY_MS = 86_400_000
 
@@ -16,8 +18,63 @@ export function demoUsageAt(used, limit, at = Date.now()) {
   return { used, limit, resetsAt: new Date(Math.floor(at / DAY_MS) * DAY_MS + DAY_MS).toISOString() }
 }
 
+/**
+ * 🔒 A BUILD REFUSED BEFORE ITS WORK GIVES ITS DAILY BUILD BACK (#564): the slot is reserved at accept, before the
+ * brief is made, so a press whose brief is not ready used a build that never ran. Given back only when no paid work
+ * ran for the action: one of these failures, no build row for its request (the row is written before a site is asked
+ * for, so no site, chat or build model), and no paid call of its own while its brief was made (`work_started_at`:
+ * set right before a labelling run it started sends a paid call, or when a logo research run is queued for it). quality-v1 makes its editorial plan with a model, so it is never
+ * refunded. Every code here is raised in `demo-runner.js`, `revisions.js` or `builds.js` before `insertBuild`.
+ * `DEMO_PICTURE_LABELS_TIMEOUT` is not here: its labelling run may have made paid vision calls.
+ */
+export const UNBILLED_FAILURES = Object.freeze([
+  'BRIEF_NOT_READY',
+  'BRIEF_INVALID',
+  'TEMPLATES_UNREADABLE',
+  'TEMPLATE_UNAVAILABLE',
+  'TEMPLATE_VERSION_CHANGED',
+  'TEMPLATE_PIN_UNAVAILABLE',
+  'INVALID_TEMPLATE',
+  'DEMO_WORKFLOW_CHANGED',
+  'DEMO_SELECTION_CHANGED',
+  'DEMO_CHAT_UNAVAILABLE',
+  'BUILD_EXISTS'
+])
+
+// One statement: the marker and the decrement commit together, so a refund happens once (`usage_refunded_at`), on
+// the day and kind the action was charged on, never below zero.
+const REFUND_UNBILLED = `with refunded as (
+    update wo_demo_action a set usage_refunded_at = $2
+    where a.account_id = $1 and a.status = 'failed' and a.usage_day is not null and a.usage_refunded_at is null
+      and a.protocol = 'legacy' and a.error = any($3::text[]) and a.work_started_at is null
+      and not exists (select 1 from wo_build b where b.account_id = a.account_id and b.request_id = a.build_request_id)
+    returning a.usage_day, a.usage_kind
+  ), counted as (select usage_day, usage_kind, count(*)::int as n from refunded group by usage_day, usage_kind)
+  update wo_demo_usage u set used = greatest(0, u.used - c.n) from counted c
+  where u.account_id = $1 and u.day = c.usage_day and u.kind = c.usage_kind`
+
+/**
+ * Give back the daily builds of this account's actions that failed before any billable work (`UNBILLED_FAILURES`).
+ * Idempotent; holds the account's acceptance lock, so it never races a press counting the same row.
+ */
+export async function refundUnbilledDemoUsage(pool, accountId, at = Date.now()) {
+  const client = await pool.connect()
+  try {
+    await client.query('begin')
+    await client.query('select pg_advisory_xact_lock(hashtextextended($1, 0))', [`wo-demo:${accountId}`])
+    await client.query(REFUND_UNBILLED, [accountId, new Date(at), UNBILLED_FAILURES])
+    await client.query('commit')
+  } catch (error) {
+    await client.query('rollback').catch(() => {})
+    throw error
+  } finally {
+    client.release()
+  }
+}
+
 /** `kind`: `demo` (Website Opportunities) or `own-site` (Build from my business), each its own daily count. */
 export async function readDemoUsage(pool, accountId, limit, at = Date.now(), kind = 'demo') {
+  await refundUnbilledDemoUsage(pool, accountId, at)
   const { rows } = await pool.query(
     'select used from wo_demo_usage where account_id = $1 and day = $2::date and kind = $3',
     [accountId, new Date(at).toISOString().slice(0, 10), kind]
@@ -86,7 +143,8 @@ export async function acceptDemoActions(
     requireSelection = false,
     templates = null,
     pins = null,
-    usageKind: countedAs = null
+    usageKind: countedAs = null,
+    briefCurrent = null
   }
 ) {
   if (!['legacy', 'quality-v1'].includes(protocol)) throw new Error('QUALITY_PROTOCOL_INVALID')
@@ -138,7 +196,8 @@ export async function acceptDemoActions(
               : []),
             ...(e.workflow ? [e.workflow] : []),
             ...(e.chatMode ? [e.chatMode] : []),
-            ...(e.ownSite === true ? ['own-site'] : [])
+            ...(e.ownSite === true ? ['own-site'] : []),
+            ...(e.briefRevisionId ? [`brief:${e.briefRevisionId}`] : [])
           ])
         )
         .digest('hex')
@@ -299,6 +358,48 @@ export async function acceptDemoActions(
           })
         }
       }
+      // A build pressed on a brief's page builds that brief (#553), and only while it is the brief the place's
+      // current research gives: checked here, under the account lock, before the day's charge.
+      if (e.briefRevisionId && protocol !== 'legacy') {
+        // A quality-v1 build writes its own brief, so no shown brief can be it. The brief page's agent builds are
+        // accepted as legacy in every mode (`route.js` `acceptActions`), so only an API caller meets this.
+        await client.query('rollback')
+        return refusal(
+          409,
+          'BRIEF_NOT_BINDABLE',
+          'This build writes its own brief from the latest research: send it without revisionId.'
+        )
+      }
+      if (e.briefRevisionId) {
+        const shown = (
+          await client.query(
+            'select id, research_hash, research, brief from wo_revision where id = $1 and account_id = $2 and opportunity_id = $3',
+            [e.briefRevisionId, accountId, e.opportunityId]
+          )
+        ).rows[0]
+        if (!shown) {
+          await client.query('rollback')
+          return refusal(404, 'NOT_FOUND', 'Reload: this brief is gone or is not this place’s.')
+        }
+        if (!briefCurrent || !(await briefCurrent(client, e.opportunityId, shown))) {
+          await client.query('rollback')
+          return refusal(
+            409,
+            'BRIEF_STALE',
+            'This brief is not the one the latest research gives: refresh the brief, or build from the latest one.',
+            { revisionId: shown.id }
+          )
+        }
+      }
+      // A build on the step chain has no chat (#479): the chain writes the site itself, so the press is no
+      // client-send action and the browser opens no chat to send the brief into. A Retry keeps its own mode.
+      if (
+        selection?.chatMode &&
+        !e.retryOf &&
+        ['demo', 'own-site'].includes(usageKind) &&
+        stepChainEnabled({ quickstart: selection.quickstart })
+      )
+        delete selection.chatMode
       if (selection?.workflow === AGENT_DEMO) {
         selection.researchInput = await freezeDemoResearchInput(client, e.opportunityId, accountId, {
           demoRequest: e.demoRequest
@@ -326,15 +427,50 @@ export async function acceptDemoActions(
           ).rows[0]
         : null
       if (retry) retry.qa_failed = retryBuild?.qa?.state === 'failed'
+      const chainRetry =
+        retry &&
+        retryBuild?.revision_id === retry.revision_id &&
+        ['failed', 'quality-failed-v1', 'completed', 'quality-completed-v1'].includes(retry.status) &&
+        retry.protocol === 'legacy' &&
+        retry.selection?.chatMode !== 'client-send/1'
+          ? await failedChainRetryBrief(client, retryBuild, { lock: true })
+          : null
       if (
         e.retryOf &&
-        (!retry || (!['failed', 'quality-failed-v1'].includes(retry.status) && !retry.qa_failed))
+        (!retry ||
+          (!['failed', 'quality-failed-v1'].includes(retry.status) && !retry.qa_failed && !chainRetry))
       ) {
         await client.query('rollback')
         return refusal(
           409,
           'ACTION_NOT_FAILED',
           'Retry an action that has stopped, or wait for the current action.'
+        )
+      }
+      // A failed action alone cannot authorize another write on an existing chain site. Without an exact
+      // restart authority the runner would only read the old failure, after reserving another daily build.
+      if (
+        e.retryOf &&
+        retryBuild?.state === 'done' &&
+        retryBuild.receipt?.workflow === STEP_CHAIN_WORKFLOW &&
+        !chainRetry
+      ) {
+        await client.query('rollback')
+        return refusal(
+          409,
+          'ACTION_NOT_FAILED',
+          'This site cannot safely resume its build. Start a new site from the business.'
+        )
+      }
+      // A retry reuses the same immutable revision. Repeating a readiness refusal cannot repair it.
+      // Refuse before usage is incremented; a new build after research must freeze a new revision.
+      if (retry?.error === 'BRIEF_NOT_READY') {
+        await client.query('rollback')
+        return refusal(
+          409,
+          'BRIEF_NOT_READY',
+          'Resolve the brief checks and make a new revision before building again.',
+          { readiness: retry.selection?.readiness ?? null }
         )
       }
       if (retryBuild?.state === 'deleted' || retryBuild?.demo_deleted_at) {
@@ -369,8 +505,10 @@ export async function acceptDemoActions(
           actionId: active[0].id
         })
       }
-      fresh.push({ ...e, selection, fingerprint, retry, retryBuild })
+      fresh.push({ ...e, selection, fingerprint, retry, retryBuild, chainRetry })
     }
+    // A refund not yet given (its runner stopped between the failure and the refund) is given before counting.
+    await client.query(REFUND_UNBILLED, [accountId, new Date(at), UNBILLED_FAILURES])
     await client.query(
       'insert into wo_demo_usage (account_id, day, kind) values ($1, $2::date, $3) on conflict do nothing',
       [accountId, day, usageKind]
@@ -390,8 +528,24 @@ export async function acceptDemoActions(
     }
     for (const e of fresh) {
       const id = randomUUID()
+      const retrySelection = e.chainRetry
+        ? {
+            ...e.retry.selection,
+            acceptedChainRetry: {
+              schemaVersion: 'tracy-wo-chain-retry/v1',
+              acceptedActionId: id,
+              parentActionId: e.retry.id,
+              accountId,
+              buildId: e.retryBuild.id,
+              siteKey: e.retryBuild.site_key,
+              revisionId: e.retry.revision_id,
+              failedBriefHash: e.chainRetry.retry_hash
+            }
+          }
+        : e.retry?.selection
       if (
         e.retry?.qa_failed &&
+        !e.chainRetry &&
         e.retry.selection?.chatMode !== 'client-send/1' &&
         (e.retry.protocol ?? protocol) === 'legacy'
       ) {
@@ -425,8 +579,9 @@ export async function acceptDemoActions(
       }
       const { rows } = await client.query(
         `insert into wo_demo_action (id, account_id, opportunity_id, request_id, fingerprint, accepted_at,
-           revision_id, build_request_id, session_id, automatic, label, queued_at, step, retry_of,protocol,status,selection)
-         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$6,$12,$13,$14,$15,$16::jsonb) returning *`,
+           revision_id, build_request_id, session_id, automatic, label, queued_at, step, retry_of,protocol,status,selection,
+           usage_day, usage_kind)
+         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$6,$12,$13,$14,$15,$16::jsonb,$17::date,$18) returning *`,
         [
           id,
           accountId,
@@ -434,16 +589,18 @@ export async function acceptDemoActions(
           e.requestId,
           e.fingerprint,
           new Date(at),
-          e.retry?.revision_id ?? e.revisionId ?? randomUUID(),
+          e.retry?.revision_id ?? e.revisionId ?? e.briefRevisionId ?? randomUUID(),
           e.retry?.build_request_id ?? e.buildRequestId ?? e.requestId,
           e.retry?.session_id ?? `wo-demo-${id}`,
           e.retry?.qa_failed ? true : (e.retry?.automatic ?? e.automatic !== false),
           e.retry?.label ?? e.label ?? '',
-          e.retry?.step ?? (e.revisionId ? 'build' : 'brief'),
+          e.retry?.step ?? (e.revisionId || e.briefRevisionId ? 'build' : 'brief'),
           e.retry?.id ?? null,
           e.retry?.protocol ?? protocol,
           (e.retry?.protocol ?? protocol) === 'quality-v1' ? 'quality-queued-v1' : 'queued',
-          JSON.stringify(e.retry?.selection ?? e.selection ?? null)
+          JSON.stringify(retrySelection ?? e.selection ?? null),
+          day,
+          usageKind
         ]
       )
       actions.push(rows[0])
@@ -490,6 +647,8 @@ export function demoActionShape(a) {
       : {}),
     step: a.step,
     error: a.error ?? null,
+    ...(a.error === 'BRIEF_NOT_READY' && a.selection?.readiness ? { readiness: a.selection.readiness } : {}),
+    ...(agentDemo && !a.selection?.chatMode && a.chat_site_key ? { siteKey: a.chat_site_key } : {}),
     acceptedAt: a.accepted_at,
     updatedAt: a.updated_at
   }
@@ -497,7 +656,7 @@ export function demoActionShape(a) {
 
 // Only a receipted, server-created session is a navigation destination. The accepted action's
 // reserved session ID alone does not prove its site workspace or chat exists yet.
-const ACTION_WITH_CHAT = `select a.*, b.site_key as chat_site_key,
+const ACTION_WITH_CHAT = `select a.*, case when b.demo_deleted_at is null then b.site_key end as chat_site_key,
   case when b.demo_deleted_at is null then coalesce(b.content#>>'{agentDemo,clientChat,sessionId}', b.handoff->>'sessionId') end as chat_session_id
   from wo_demo_action a left join wo_build b
     on b.account_id=a.account_id and b.request_id=a.build_request_id`

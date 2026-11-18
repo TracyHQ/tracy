@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-560-wo-ops-refused-demo-action",
+  "kind": "fix",
+  "title": "The /ops/wo row shows a demo action refused before any build (BRIEF_NOT_READY) and a pinned template as pinned",
+  "pr": 560,
+  "area": "wo/ops/queue",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Seed the ops-wo stand-in pool (apps/tracy-web/test/ops-wo.test.mjs) with an opportunity that has a brief revision and whose latest wo_demo_action is status=failed, error=BRIEF_NOT_READY, with no wo_build row for it.",
+    "Call GET /api/ops/wo as an admin seat and read that opportunity's row.",
+    "Repeat with a paused, failed, blocked and completed research job; with an older live wo_build requested before the refused action; with a completed action that owns that build; and read which ids the action query was scoped to."
+  ],
+  "expect": [
+    "row.demoAction.status = failed, row.demoAction.error = BRIEF_NOT_READY, row.demoAction.hasBuild = false",
+    "row.needsAttention = true and row.queueState = BLOCKED; row.attentionReason and row.currentStep contain BRIEF_NOT_READY",
+    "row.templateSource = pinned and row.template = settings.pinnedTemplates[row.cms]; row.demoStatus = none",
+    "row.researchRollup = failure for a paused/failed/blocked research job, success for a completed one",
+    "with an older live build: needsAttention = true, queueState = BLOCKED, demoSite still the old site key; a completed action owning a done build leaves the row at stage 7-live, IDLE, no attention",
+    "the action query is scoped with where a.opportunity_id = any($1) to the loaded opportunity ids"
+  ],
+  "selectors": {
+    "door": "GET /api/ops/wo",
+    "fields": "opportunities[].demoAction.status, opportunities[].demoAction.error, opportunities[].templateSource, opportunities[].needsAttention, opportunities[].queueState, opportunities[].researchRollup"
+  },
+  "evidence": "Issue #552: Portland City Boxing on dev (develop f25af7cb7, 2026-11-10) showed Research Pass and template tracy-base/j6 after demo actions 9893fc3c, 039d28e2, 2690939d, addd37d0, a0e38dbe all failed with BRIEF_NOT_READY and no wo_build row existed.",
+  "fence": "listWoQueue joins the latest wo_demo_action per loaded opportunity and turns a refusal without its own build, newer than the latest build, into attention; the template fallback is labelled pinned.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/ops-wo.test.mjs"],
+    "tests": [
+      "GET /api/ops/wo: a demo action refused before any build shows its failure",
+      "GET /api/ops/wo: a refused demo action keeps the research rollup rule",
+      "GET /api/ops/wo: a demo action refused after an older live build still needs attention",
+      "GET /api/ops/wo reads demo actions only for the opportunities the list loaded"
+    ]
+  }
+}

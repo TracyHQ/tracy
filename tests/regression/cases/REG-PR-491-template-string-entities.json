@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-491-template-string-entities",
+  "kind": "fix",
+  "title": "Joomla capture: a template language string written with HTML entities is captured as plain words, not as the entity",
+  "pr": 491,
+  "area": "contracts/joomla-capture",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run capture-contract.py --full-coverage on a fixture site whose template language file holds TPL_ROOMS=\"Rooms &amp; suites\", TPL_OPEN=\"We&rsquo;re open &#8211; daily\" and TPL_PLAIN=\"Tea & cake\"."
+  ],
+  "expect": [
+    "S1: TPL_ROOMS and TPL_OPEN each get one text slot with the decoded words and an xpath to the text node; the lock keeps the value as written; TPL_PLAIN stays one plain text slot without an xpath."
+  ],
+  "selectors": {
+    "files": "packages/cms/tracy-joomla-quickstart/scripts/capture-contract.py",
+    "tool": "packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs"
+  },
+  "evidence": "Before the fix JA Voyara j6 1.0.12 failed Road to live rule NAME-4 on three &amp; samples; after it NAME-4 passes on the 1.0.12 pack",
+  "fence": "Capture only; the plugin's write through the xpath is the same path a language string with markup already takes",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern",
+      "HTML entities",
+      "packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs"
+    ]
+  }
+}

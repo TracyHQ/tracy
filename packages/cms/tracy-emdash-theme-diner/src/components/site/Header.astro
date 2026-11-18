@@ -1,0 +1,98 @@
+---
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { href } from '@/lib/i18n'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import { DEMO_LOGO } from '@/lib/demo-logo'
+import { liveLinks } from '@/lib/link-gate'
+import { menuUrls, pruneMenu } from '@/lib/menu-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  chrome: Chrome
+  currentPath: string
+}
+const { chrome, currentPath } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
+const active = (item: ChromeMenuItem): boolean => {
+  const u = item.url
+  if (u === '/') return currentPath === '/'
+  return u !== '' && (currentPath === u || currentPath.startsWith(`${u}/`))
+}
+// the menu without the pages the customer unticked, and the pages under them
+const live = await liveLinks(Astro.request, locale, menuUrls(chrome.primary))
+const primary = pruneMenu(chrome.primary, live)
+---
+
+<div class="dn-nav-wrap">
+	<nav class="dn-nav" aria-label="Main">
+		<div class="dn-nav-inner">
+			<button type="button" class="dn-nav-btn is-first" data-offcanvas-toggle aria-expanded="false" aria-controls="offcanvas" aria-label={site.menu_label} {...$c('menu_label')}>
+				<svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="2" /></svg>
+			</button>
+			<ul>
+				{primary.map((item) => (
+					<li class:list={[active(item) && 'is-active']}>
+						<a href={dataHref(item.url, (p) => href(locale, p))}>{item.label}</a>
+					</li>
+				))}
+			</ul>
+			<button type="button" class="dn-nav-btn is-last" data-theme-toggle aria-label={site.appearance_label} {...$c('appearance_label')}>
+				<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" /><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" /></svg>
+			</button>
+		</div>
+		<div class="dn-offcanvas" id="offcanvas">
+			<ul>
+				{primary.map((item) => <li><a href={dataHref(item.url, (p) => href(locale, p))}>{item.label}</a></li>)}
+			</ul>
+		</div>
+	</nav>
+</div>
+<header class="dn-header">
+	<a href={href(locale, '/')} aria-label={site.brand_name}>
+		<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="dn-logo">
+			<img class="dn-logo" src={DEMO_LOGO} alt={site.brand_name} width="128" height="80" />
+		</BrandLogo>
+	</a>
+</header>
+<script is:inline>
+	(function () {
+		const t = document.querySelector('[data-offcanvas-toggle]');
+		const p = document.getElementById('offcanvas');
+		if (t && p) {
+			t.addEventListener('click', function () {
+				const open = p.classList.toggle('is-open');
+				t.setAttribute('aria-expanded', open ? 'true' : 'false');
+			});
+			// a click anywhere outside the panel and its button closes it
+			document.addEventListener('click', function (e) {
+				if (p.classList.contains('is-open') && !p.contains(e.target) && !t.contains(e.target)) {
+					p.classList.remove('is-open');
+					t.setAttribute('aria-expanded', 'false');
+				}
+			});
+			document.addEventListener('keydown', function (e) {
+				if (e.key === 'Escape' && p.classList.contains('is-open')) {
+					p.classList.remove('is-open');
+					t.setAttribute('aria-expanded', 'false');
+					t.focus();
+				}
+			});
+		}
+		const b = document.querySelector('[data-theme-toggle]');
+		if (b)
+			b.addEventListener('click', function () {
+				const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+				if (dark) document.documentElement.removeAttribute('data-theme');
+				else document.documentElement.setAttribute('data-theme', 'dark');
+				const ds = document.getElementById('tracy-ds-slot')?.getAttribute('data-ds');
+				const key = document.documentElement.hasAttribute('data-ds-worn') && ds ? 'tracy-diner-theme@' + ds : 'tracy-diner-theme';
+				try { localStorage.setItem(key, dark ? 'light' : 'dark'); } catch (e) {}
+			});
+	})();
+</script>

@@ -1,3 +1,4 @@
+import type { ChainRun } from '@tracy/wo-views'
 import { parseSocialUrl } from 'website-opportunities/domain/social-stats/handles.mjs'
 
 export interface DemoUsage {
@@ -8,6 +9,8 @@ export interface DemoUsage {
 export interface DemoAction {
   workflow?: string
   chatMode?: string
+  revisionId?: string
+  readiness?: { verdict: string; next: string; checks: string[]; ownerQuestions: unknown[] }
   opportunityId?: string
   chat?: { siteKey: string; sessionId: string; href: string } | null
   id: string
@@ -16,6 +19,8 @@ export interface DemoAction {
   error?: string | null
   acceptedAt?: string
   updatedAt?: string
+  /** A step chain build's progress (#516): its steps, minutes and USD so far, and the measured estimate. */
+  run?: ChainRun | null
 }
 export interface DemoChatPreparation {
   action: DemoAction

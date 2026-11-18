@@ -343,9 +343,10 @@ ours_tables() {
 }
 
 # Whether a try that failed met the copy moving under it (see load_ours): a definition that changed
-# inside the dump's transaction (1412), or a table list that is no longer the one read.
+# inside the dump's transaction (1412), a missing table (1146 / Couldn't find table) even if
+# recreated under the same name before this check, or a table list that is no longer the one read.
 ours_moved() { # err-dir listed
-  grep -qsE '(Error|ERROR|error:) 1412\b|\(1412\)' "$1"/* && return 0
+  grep -qsE "(Error|ERROR|error:) (1412|1146)\\b|\\((1412|1146)\\)|^(mariadb-dump|mysqldump): Couldn't find table:" "$1"/* && return 0
   local now
   now="$(ours_tables 2>/dev/null)" || return 1
   [[ "$(cut -f1 <<< "$now")" != "$(cut -f1 <<< "$2")" ]]
@@ -1189,6 +1190,8 @@ remember_read() { # theirs_commit
   done
   # The read in place holds what a push wrote: the next base needs no word about it.
   rm -f "$PUSHED"
+  # This merge repaired stale record/version pairs and counters (#307, #536, #550).
+  printf '2\n' > "$SYNC_DIR/id-map-revision"
   remember_kept
   # The files' sha1s as this read found them: the next read takes only what moved since.
   if [[ -f "$DIR/live/manifest.json" ]]; then
@@ -1611,6 +1614,11 @@ read_live() {
       # tracy-web's record of the import). A first sync of a live site that did not move stops here.
       fingerprint="$DIR/base-fingerprint.json"
     fi
+    # Older syncs could leave a deleted record in the map. Read once without the
+    # fingerprint shortcut so even an unmoved live site can repair that map (#307).
+    if [[ -f "$ID_MAP" && "$(cat "$SYNC_DIR/id-map-revision" 2>/dev/null || true)" != 2 ]]; then
+      fingerprint="" base_dump=""
+    fi
     if [[ -z "$manifest" ]] && first_read_manifest; then manifest="$DIR/first-manifest.json"; fi
     # WordPress rewrites its transients, WP-Cron, sessions and auto-drafts on every visit: rows the
     # comparison of two reads leaves out (lib/live_sync_wordpress.py `volatile_rows`), with the
@@ -1750,6 +1758,14 @@ answer_state() {
   printf '%s' "$1" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("state", ""))'
 }
 
+# "Sync from live" is an imported site's road (`origin='migrated'`); a template demo folded into the
+# demo farm (lib/site-runtime.sh) never takes it, and could not: the four scratch schemas below are
+# outside the one schema its farm user owns. Refused before anything is read, locked or written.
+case "$(tracy_backup_runtime 2>/dev/null || echo unreadable)" in
+  site) ;;
+  farm) answer_refusal FARM_DEMO_UNSUPPORTED "$LABEL is a demo in the demo farm: Sync from live is not served there — unfold it first"; exit 0 ;;
+  *) answer_refusal RUNTIME_UNKNOWN "the runtime marker of $LABEL cannot be read"; exit 0 ;;
+esac
 case "$OP" in merge|apply|sync) recover_first || exit 0 ;; esac
 sweep_runs
 case "$OP" in

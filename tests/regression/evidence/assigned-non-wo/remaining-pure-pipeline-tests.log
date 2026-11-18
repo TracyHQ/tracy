@@ -1,0 +1,364 @@
+TAP version 13
+# Subtest: a menu link to an unplanned page that prints the demo is blocking
+ok 1 - a menu link to an unplanned page that prints the demo is blocking
+  ---
+  duration_ms: 3.296625
+  type: 'test'
+  ...
+# Subtest: a link that answers nothing is blocking
+ok 2 - a link that answers nothing is blocking
+  ---
+  duration_ms: 0.631333
+  type: 'test'
+  ...
+# Subtest: a card's name that leads to another card's page is blocking, the page's own card is not
+ok 3 - a card's name that leads to another card's page is blocking, the page's own card is not
+  ---
+  duration_ms: 0.770917
+  type: 'test'
+  ...
+# Subtest: an icon in a Font Awesome 6 family on a page that loads Font Awesome 5 draws nothing and blocks
+ok 4 - an icon in a Font Awesome 6 family on a page that loads Font Awesome 5 draws nothing and blocks
+  ---
+  duration_ms: 0.802
+  type: 'test'
+  ...
+# Subtest: both groups run in the site check when a page reader is given
+ok 5 - both groups run in the site check when a page reader is given
+  ---
+  duration_ms: 1.190167
+  type: 'test'
+  ...
+# Subtest: one site check shares page reads across groups and the next check reads fresh HTML
+ok 6 - one site check shares page reads across groups and the next check reads fresh HTML
+  ---
+  duration_ms: 0.679959
+  type: 'test'
+  ...
+# Subtest: a failed page read is shared for one check without turning unavailable evidence green
+ok 7 - a failed page read is shared for one check without turning unavailable evidence green
+  ---
+  duration_ms: 0.251958
+  type: 'test'
+  ...
+# Subtest: native text branding is authorized only by frozen WordPress research without a logo
+ok 8 - native text branding is authorized only by frozen WordPress research without a logo
+  ---
+  duration_ms: 3.125125
+  type: 'test'
+  ...
+# Subtest: plan.read pages through picture proposals and marks unknown native targets explicitly
+ok 9 - plan.read pages through picture proposals and marks unknown native targets explicitly
+  ---
+  duration_ms: 2.983292
+  type: 'test'
+  ...
+# Subtest: full research is frozen, hashed, privately serializable and media pagination reaches beyond first 24
+ok 10 - full research is frozen, hashed, privately serializable and media pagination reaches beyond first 24
+  ---
+  duration_ms: 1.113917
+  type: 'test'
+  ...
+# Subtest: contract plan refuses an unknown live slot and a forged structure under the saved hash
+ok 11 - contract plan refuses an unknown live slot and a forged structure under the saved hash
+  ---
+  duration_ms: 2.643833
+  type: 'test'
+  ...
+# Subtest: review and platform rating views keep verbatim attribution, source paths and honest record counts
+ok 12 - review and platform rating views keep verbatim attribution, source paths and honest record counts
+  ---
+  duration_ms: 0.543375
+  type: 'test'
+  ...
+# Subtest: Google's rating of the place, paid for at discovery, is one of the platform ratings
+ok 13 - Google's rating of the place, paid for at discovery, is one of the platform ratings
+  ---
+  duration_ms: 0.294209
+  type: 'test'
+  ...
+# Subtest: Google's rating left off the site (few reviews) is no rating the agent reads; other platforms' stay
+ok 14 - Google's rating left off the site (few reviews) is no rating the agent reads; other platforms' stay
+  ---
+  duration_ms: 0.409208
+  type: 'test'
+  ...
+# Subtest: old revisions missing canonical snapshot fail explicitly
+ok 15 - old revisions missing canonical snapshot fail explicitly
+  ---
+  duration_ms: 0.070167
+  type: 'test'
+  ...
+# Subtest: plans validate all CMS native targets and refuse outside sources/assets/site/unsupported actions
+ok 16 - plans validate all CMS native targets and refuse outside sources/assets/site/unsupported actions
+  ---
+  duration_ms: 4.168791
+  type: 'test'
+  ...
+# Subtest: provision-only requires frozen server WO build and active action; browser cannot bypass fill
+ok 17 - provision-only requires frozen server WO build and active action; browser cannot bypass fill
+  ---
+  duration_ms: 1.438167
+  type: 'test'
+  ...
+# Subtest: provision refuses changed archive identity, omitted release pin and extra browser instructions
+ok 18 - provision refuses changed archive identity, omitted release pin and extra browser instructions
+  ---
+  duration_ms: 1.204459
+  type: 'test'
+  ...
+# Subtest: capability binds account/site/session, persists plan before import and imports frozen asset 29 with receipts
+ok 19 - capability binds account/site/session, persists plan before import and imports frozen asset 29 with receipts
+  ---
+  duration_ms: 15.738208
+  type: 'test'
+  ...
+# Subtest: identical bytes from distinct research assets reuse the confirmed native attachment and retain attribution
+ok 20 - identical bytes from distinct research assets reuse the confirmed native attachment and retain attribution
+  ---
+  duration_ms: 2.043958
+  type: 'test'
+  ...
+# Subtest: Stop/revocation during byte read blocks import; corrupted store bytes and provider errors never claim receipt
+ok 21 - Stop/revocation during byte read blocks import; corrupted store bytes and provider errors never claim receipt
+  ---
+  duration_ms: 5.365042
+  type: 'test'
+  ...
+# Subtest: new prompt names only implemented capability and requires plan/readback/independent review
+ok 22 - new prompt names only implemented capability and requires plan/readback/independent review
+  ---
+  duration_ms: 38.393459
+  type: 'test'
+  ...
+# Subtest: unknown in-flight import is kept for reconciliation and blocked/budget-stopped turns cannot continue
+ok 23 - unknown in-flight import is kept for reconciliation and blocked/budget-stopped turns cannot continue
+  ---
+  duration_ms: 2.011542
+  type: 'test'
+  ...
+# Subtest: frozen plan crop/source canvas imports real derivative bytes once and keeps parent attribution
+ok 24 - frozen plan crop/source canvas imports real derivative bytes once and keeps parent attribution
+  ---
+  duration_ms: 18.289417
+  type: 'test'
+  ...
+# Subtest: plan guide supplies canonical frozen part refs and valid native keys/field examples without changing the snapshot
+ok 25 - plan guide supplies canonical frozen part refs and valid native keys/field examples without changing the snapshot
+  ---
+  duration_ms: 1.717625
+  type: 'test'
+  ...
+# Subtest: a plan must place what the research collected: a review (or say why the template has none) and own photos
+ok 26 - a plan must place what the research collected: a review (or say why the template has none) and own photos
+  ---
+  duration_ms: 1.256375
+  type: 'test'
+  ...
+# Subtest: collected for the final check: brief facts, every collected review, own photo count and imported paths
+ok 27 - collected for the final check: brief facts, every collected review, own photo count and imported paths
+  ---
+  duration_ms: 1.132458
+  type: 'test'
+  ...
+# Subtest: the brief’s hero USP statement reaches the agent’s steps and the collected-used check, word for word
+ok 28 - the brief’s hero USP statement reaches the agent’s steps and the collected-used check, word for word
+  ---
+  duration_ms: 4.381084
+  type: 'test'
+  ...
+# Subtest: a customer’s own site: its steps say website, never demo or pilot, and travel in the catalogue instructions
+ok 29 - a customer’s own site: its steps say website, never demo or pilot, and travel in the catalogue instructions
+  ---
+  duration_ms: 8.616709
+  type: 'test'
+  ...
+# Subtest: a saved image's tone may be set or changed later; its photo and crop may not
+ok 30 - a saved image's tone may be set or changed later; its photo and crop may not
+  ---
+  duration_ms: 0.15325
+  type: 'test'
+  ...
+# Subtest: a saved plan grows: rows appended and an image given to a row without one; nothing saved moves or changes
+ok 31 - a saved plan grows: rows appended and an image given to a row without one; nothing saved moves or changes
+  ---
+  duration_ms: 0.175459
+  type: 'test'
+  ...
+# Subtest: an agent build's facts check reads its frozen research as evidence, never its reviews
+ok 32 - an agent build's facts check reads its frozen research as evidence, never its reviews
+  ---
+  duration_ms: 3.159042
+  type: 'test'
+  ...
+# Subtest: a dish and price read off a photo travel to the agent in the menu part, with their source
+ok 33 - a dish and price read off a photo travel to the agent in the menu part, with their source
+  ---
+  duration_ms: 1.221458
+  type: 'test'
+  ...
+# Subtest: a row with no source is neutral: sample content is refused, and the prompt names the neutral words and no filler as a stand-in
+ok 34 - a row with no source is neutral: sample content is refused, and the prompt names the neutral words and no filler as a stand-in
+  ---
+  duration_ms: 2.636541
+  type: 'test'
+  ...
+# Subtest: a place with no collected reviews keeps its testimonials empty or neutral; collected reviews are untouched and a collected rating is never replaced
+ok 35 - a place with no collected reviews keeps its testimonials empty or neutral; collected reviews are untouched and a collected rating is never replaced
+  ---
+  duration_ms: 5.383792
+  type: 'test'
+  ...
+# Subtest: the menu is its own paged part with a summary first; the profile no longer carries the dishes
+ok 36 - the menu is its own paged part with a summary first; the profile no longer carries the dishes
+  ---
+  duration_ms: 1.741208
+  type: 'test'
+  ...
+# Subtest: a dish read off a photo or a search result keeps its source in the menu part, ranked under the website
+ok 37 - a dish read off a photo or a search result keeps its source in the menu part, ranked under the website
+  ---
+  duration_ms: 0.243417
+  type: 'test'
+  ...
+# Subtest: a price printed in thousands reaches the agent with its scale, and the prompt says how to write it
+ok 38 - a price printed in thousands reaches the agent with its scale, and the prompt says how to write it
+  ---
+  duration_ms: 9.997916
+  type: 'test'
+  ...
+# Subtest: the research hash changes when a dish changes; a place with no menu has an empty part that says so
+ok 39 - the research hash changes when a dish changes; a place with no menu has an empty part that says so
+  ---
+  duration_ms: 0.25925
+  type: 'test'
+  ...
+# Subtest: a bundle frozen before the menu part still answers it from its profile, without changing its hash
+ok 40 - a bundle frozen before the menu part still answers it from its profile, without changing its hash
+  ---
+  duration_ms: 0.30025
+  type: 'test'
+  ...
+# Subtest: the plan guide and the prompt name the menu part once each
+ok 41 - the plan guide and the prompt name the menu part once each
+  ---
+  duration_ms: 1.624375
+  type: 'test'
+  ...
+# Subtest: structure.read pages are large by default and bounded by size, never by a fixed 20
+ok 42 - structure.read pages are large by default and bounded by size, never by a fixed 20
+  ---
+  duration_ms: 1.379333
+  type: 'test'
+  ...
+# Subtest: the brand part names every WordPress logo option the template reads, its dark one included
+ok 43 - the brand part names every WordPress logo option the template reads, its dark one included
+  ---
+  duration_ms: 0.408167
+  type: 'test'
+  ...
+# Subtest: a source photo over 8 MB imports through its crop, which re-encodes it within the limit
+ok 44 - a source photo over 8 MB imports through its crop, which re-encodes it within the limit
+  ---
+  duration_ms: 63.400833
+  type: 'test'
+  ...
+# Subtest: a logo is the brand's or a file called logo; a photo is not
+ok 45 - a logo is the brand's or a file called logo; a photo is not
+  ---
+  duration_ms: 0.13375
+  type: 'test'
+  ...
+# Subtest: contract plan keeps a drawn section background: a photo into it is refused, into a photo background it is not
+ok 46 - contract plan keeps a drawn section background: a photo into it is refused, into a photo background it is not
+  ---
+  duration_ms: 0.793792
+  type: 'test'
+  ...
+# Subtest: media.look answers a page of the frozen photos, numbered with their ids, and one sheet of them
+ok 47 - media.look answers a page of the frozen photos, numbered with their ids, and one sheet of them
+  ---
+  duration_ms: 320.629375
+  type: 'test'
+  ...
+# Subtest: media.look gives each labelled photo its subject and says where people, posters and logos never go
+ok 48 - media.look gives each labelled photo its subject and says where people, posters and logos never go
+  ---
+  duration_ms: 11.795708
+  type: 'test'
+  ...
+# Subtest: media.look marks a photo on a clear ground as a cut-out
+ok 49 - media.look marks a photo on a clear ground as a cut-out
+  ---
+  duration_ms: 16.458334
+  type: 'test'
+  ...
+# Subtest: media.import on EmDash answers the library item’s id to write into a picture field
+ok 50 - media.import on EmDash answers the library item’s id to write into a picture field
+  ---
+  duration_ms: 1.185291
+  type: 'test'
+  ...
+# Subtest: plan.add appends rows, gives images to rows that had none and tones to saved images, never the whole plan again
+ok 51 - plan.add appends rows, gives images to rows that had none and tones to saved images, never the whole plan again
+  ---
+  duration_ms: 1.9845
+  type: 'test'
+  ...
+# Subtest: a crawled source is read as its index of pages, and one page whole when asked
+ok 52 - a crawled source is read as its index of pages, and one page whole when asked
+  ---
+  duration_ms: 0.7365
+  type: 'test'
+  ...
+# Subtest: copy.start runs the copy tasks once, copy.status says each page, copy.read answers the packs
+ok 53 - copy.start runs the copy tasks once, copy.status says each page, copy.read answers the packs
+  ---
+  duration_ms: 22.769958
+  type: 'test'
+  ...
+# Subtest: copy.status that read the build before the run wrote it answers the written words, not "not started"
+ok 54 - copy.status that read the build before the run wrote it answers the written words, not "not started"
+  ---
+  duration_ms: 22.542959
+  type: 'test'
+  ...
+# Subtest: structure.read with a record answers that record as the template installed it; an unknown one is refused
+ok 55 - structure.read with a record answers that record as the template installed it; an unknown one is refused
+  ---
+  duration_ms: 0.572875
+  type: 'test'
+  ...
+# Subtest: the agent demo names an item with no source by what the business offers: a gym’s is a Service, a cafe’s a Menu item
+ok 56 - the agent demo names an item with no source by what the business offers: a gym’s is a Service, a cafe’s a Menu item
+  ---
+  duration_ms: 3.798625
+  type: 'test'
+  ...
+# Subtest: the prompt carries the logo accent, the WhatsApp button and the areas served when the brief has them (\#1780)
+ok 57 - the prompt carries the logo accent, the WhatsApp button and the areas served when the brief has them (\#1780)
+  ---
+  duration_ms: 3.410542
+  type: 'test'
+  ...
+# Subtest: media source context joins only exact frozen picture URLs and does not certify product identity
+ok 58 - media source context joins only exact frozen picture URLs and does not certify product identity
+  ---
+  duration_ms: 0.12925
+  type: 'test'
+  ...
+# Subtest: empty review evidence never asks the writer or plan guide for a mandatory review
+ok 59 - empty review evidence never asks the writer or plan guide for a mandatory review
+  ---
+  duration_ms: 3.936417
+  type: 'test'
+  ...
+1..59
+# tests 59
+# suites 0
+# pass 59
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 963.942709

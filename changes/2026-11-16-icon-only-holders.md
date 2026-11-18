@@ -1,0 +1,3 @@
+- **Icons drawn inside a slot that holds only them leave with that slot instead of failing the write** — David (with Claude) · #664 · `fix/icon-only-holders` · 2026-11-16
+  **Affects:** Rebuild and deploy tracy-web. Write step on templates whose cards draw icon links inside a text slot (JA Boxing's trainers): a plan's link or hide of such an icon becomes a hide of the icon and its holder, recorded in the write report's `iconHolders`. A holder the plan writes, or one with any words, is untouched.
+  **Why / Measured:** Dev, 16/11/2026, BXR London on JA Boxing 1.0.11: 49 of 96 final-check blocks were trainer icons. Case REG-PR-664-icon-only-holders.

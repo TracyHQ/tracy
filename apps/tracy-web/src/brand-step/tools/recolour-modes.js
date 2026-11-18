@@ -123,7 +123,7 @@ export function invertMode({ data, n, mask, maskFile, ground, colour }) {
     if (mask[i] >= 128) fillL.push(Ls[i])
     else if (data[i * 4 + 3] > 200) figL.push(Ls[i])
   }
-  if (!fillL.length) return { error: 'the mask has no kept fill: nothing to invert, use mode solid' }
+  if (!fillL.length) return { error: 'the mask has no kept fill: nothing to invert' }
   const Lfill = median(fillL)
   const dists = figL.map((L) => Math.abs(L - Lfill)).sort((x, y) => x - y)
   const span = dists[Math.floor(dists.length * 0.99)] || 1

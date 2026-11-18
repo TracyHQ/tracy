@@ -601,6 +601,27 @@ test('collected-used: a timeline of years beside the collected phone is no unsou
   )
 })
 
+// Owner decision 09/11/2026: what the research found sets the business apart is on the first screen, word for word.
+test('collected-used: home shows the brief’s USP statement; on another page only, it is not shown', () => {
+  const collected = collectedOf({ name: 'Harbour Sport Club', usp: 'The same team coaches the whole family' })
+  const home = page({
+    path: '/',
+    text: 'Harbour Sport Club\nThe same team coaches the whole family\nBook a lesson'
+  })
+  assert.deepEqual(checkCollectedUsed([home], { collected }).detail, [])
+  const elsewhere = checkCollectedUsed(
+    [
+      page({ path: '/', text: 'Harbour Sport Club. Tennis, padel and swimming lessons.' }),
+      page({ path: '/about', text: 'The same team coaches the whole family.' })
+    ],
+    { collected }
+  )
+  assert.deepEqual(
+    elsewhere.detail.map((d) => [d.code, d.what, d.value]),
+    [['COLLECTED_NOT_SHOWN', 'usp', 'The same team coaches the whole family']]
+  )
+})
+
 // Harbour Sport Club, 26/10/2026: the bio lists two numbers; the main one must be on the site, the other may be.
 test('collected-used: the main phone is required, the business’s other phones are collected, a third is not', () => {
   const collected = collectedOf({
@@ -3057,6 +3078,40 @@ test('cta-real: the WhatsApp button the brief gives may leave the demo, no other
     checkCtaReal([page({ ctas: stranger })], { whatsappLinks: ['https://wa.me/971500001234'] }).pass,
     false
   )
+})
+
+test("cta-real: the business's own social profiles the brief gives may leave the demo, no other profile", () => {
+  const socialLinks = [
+    'https://www.facebook.com/ArabianTeaHouse',
+    'https://www.instagram.com/arabianteahouse/'
+  ]
+  const own = [
+    { href: 'https://facebook.com/arabianteahouse/', text: 'Facebook', button: true },
+    { href: 'https://www.instagram.com/arabianteahouse?igsh=x', text: 'Instagram', button: true }
+  ]
+  assert.equal(checkCtaReal([page({ ctas: own })]).pass, false)
+  assert.equal(checkCtaReal([page({ ctas: own })], { socialLinks }).pass, true)
+  for (const href of [
+    'https://www.facebook.com/joomlart',
+    'https://www.facebook.com/sharer.php?u=x',
+    'https://www.instagram.com/',
+    'https://evil.test/arabianteahouse'
+  ])
+    assert.equal(
+      checkCtaReal([page({ ctas: [{ href, text: 'Go', button: true }] })], { socialLinks }).pass,
+      false,
+      href
+    )
+})
+
+test('demoQaBody keeps only social profile addresses in socialLinks', () => {
+  const asked = demoQaBody({
+    label: 'acme',
+    platform: 'joomla',
+    socialLinks: ['https://www.facebook.com/Acme', 'https://evil.test/x', 'javascript:alert(1)', 42]
+  })
+  assert.deepEqual(asked.socialLinks, ['https://www.facebook.com/Acme'])
+  assert.deepEqual(demoQaBody({ label: 'acme', platform: 'joomla' }).socialLinks, [])
 })
 
 test('demoQaBody keeps the accent tokens and WhatsApp links it is sent, only those shapes', () => {

@@ -93,7 +93,14 @@ async function withPage(run) {
 }
 
 async function settleRows(page) {
-  await page.clock.runFor(1200)
+  // React commits each revealed row between clock turns. One large clock jump can finish
+  // before those effects run on a busy CI browser; wait for the measured rows themselves.
+  const pending = page.locator('[data-preflight-row][data-state="pending"]')
+  for (let turn = 0; turn < 20; turn++) {
+    await page.clock.runFor(180)
+    if ((await pending.count()) === 0) return
+  }
+  assert.equal(await pending.count(), 0, 'all measured preflight rows finish within twenty clock turns')
 }
 
 async function confirmPlatform(page, address) {
@@ -282,6 +289,8 @@ test('removing Basic Auth clears required server credentials and leaves the chec
     await admin.focus()
     await admin.blur()
     await result
+    // A response event precedes consuming its JSON and committing the new detection.
+    await page.getByLabel('Server username').waitFor({ state: 'hidden' })
     await settleRows(page)
     assert.equal(
       await page.getByLabel('Server username').count(),

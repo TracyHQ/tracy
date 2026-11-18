@@ -56,6 +56,8 @@ export async function stepNineOfRun(d, values, write, inCwd) {
     ? JSON.parse(await readFile(inCwd(values['site-pictures-file']), 'utf8'))
     : null
   const kit = openKit(values.kit, d.index ? { index: d.index } : {})?.doc ?? null
+  // The brief the site was built from gives the off-site links a button may take (site-check/host-pages.js).
+  const brief = write?.files?.brief ? JSON.parse(await readFile(write.files.brief, 'utf8')) : null
   const host = d.makeHost ? await d.makeHost(values.site) : null
   // A check after a repair turn reads only the pages it changed (`pages`, write-step-nine.js).
   const checkSite = (report, { baseline, allGroups = false, pages = null }) =>
@@ -67,6 +69,7 @@ export async function stepNineOfRun(d, values, write, inCwd) {
       baseline,
       kit,
       pictures,
+      brief,
       // Step 9 asks for every group; `--all-groups` says the same.
       allGroups: allGroups || values['all-groups'] === true,
       ...(pages ? { pages } : {}),
@@ -76,6 +79,7 @@ export async function stepNineOfRun(d, values, write, inCwd) {
   const step = await runStepNine({
     write,
     checkSite,
+    pictures,
     agent,
     saveFile,
     // The page as the site serves it, for the element each comment points at (repair-served-element.js).

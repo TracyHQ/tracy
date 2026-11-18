@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-633-chain-own-run",
+  "kind": "fix",
+  "title": "A chain started again after a restart takes over the bench run it already queued instead of waiting and starting the same work again",
+  "pr": 633,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A plan step whose start is refused because a run is active looks for its own run (started by cli:step-chain, same research revision, same kit), takes it over, never waits and never queues a second planner run.",
+    "When the active run is not this build's own, the step waits as before and then starts its own run.",
+    "A pictures (or copy) step takes over only a run on the same plan, and takes over nothing when its plan file cannot be read."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-own-run.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a plan step started again takes over its own active planner run and queues no second one",
+      "another build's active run is still waited for, then this step starts its own",
+      "a pictures step adopts only a run on the same plan, and nothing when its plan cannot be read"
+    ]
+  }
+}

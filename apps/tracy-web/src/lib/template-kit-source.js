@@ -18,8 +18,12 @@
 // view of the kit (preloadedFirstMessage) and the run has no tools. The kit block opens the message and is the same
 // bytes for every run on the same kit version, so the provider's prefix cache can reuse it across briefs; the brief
 // and the instruction to write come last.
-import { defaultContracts } from './contracts.js'
+
+import { openContentMap } from './content-map-source.js'
+import { withMeasuredTitles } from './template-kit/measured-titles.js'
 import { kitOfContract } from './template-kit/reader.js'
+import { kitContracts } from './template-kit-contracts.js'
+import { stockScreenPagesOf } from './stock-screens.js'
 import { compactForPlanner, lookTextOf } from './template-kit-planner-view.js'
 
 export { compactForPlanner, lookTextOf, PLANNER_DROPPED_KIT_FIELDS } from './template-kit-planner-view.js'
@@ -51,7 +55,7 @@ const isPart = (value) => value !== null && typeof value === 'object'
  * Every kit the server can read: contracts whose template-kit.json reads cleanly, sorted by ref.
  * @param {{ index?: Map<string, { id: string, dir?: string, platform?: string }> }} [options]
  */
-export function readableKits({ index = defaultContracts() } = {}) {
+export function readableKits({ index = kitContracts() } = {}) {
   const kits = []
   for (const [key, contract] of index) {
     const kit = kitOfContract(contract)
@@ -74,7 +78,7 @@ export function readableKits({ index = defaultContracts() } = {}) {
  * One readable kit by its ref (the contract id, e.g. "ja-boxing/j6/1.0.10"), with the release tag and version its
  * contract seals (where the kit's image zip is published), or null.
  */
-export function openKit(ref, { index = defaultContracts() } = {}) {
+export function openKit(ref, { index = kitContracts() } = {}) {
   if (typeof ref !== 'string' || ref === '') return null
   for (const [key, contract] of index) {
     if (contract.id !== ref) continue
@@ -86,7 +90,7 @@ export function openKit(ref, { index = defaultContracts() } = {}) {
           release: key.slice(0, at),
           version: key.slice(at + 1),
           platform: contract.platform ?? '',
-          doc: kit.doc
+          doc: withMeasuredTitles(kit.doc, openContentMap(ref, { index })?.doc, { contract: ref })
         }
       : null
   }
@@ -206,6 +210,17 @@ export function kitParts(kitDoc) {
   }
   return {
     contents,
+    /** Every part id the tool answers. */
+    ids: () => [...byId.keys()],
+    /** The parts a first message with the whole kit carries: each holds, or is held in, another carried part. */
+    carried: () => {
+      const listedIds = listed.map((p) => p.id).filter((id) => id !== 'site' && !id.startsWith('site.'))
+      const largeSite = Object.entries(siteView)
+        .filter(([, v]) => v && typeof v === 'object' && typeof v.part === 'string')
+        .map(([key]) => `site.${key}`)
+      const entriesOfLarge = tooLarge.flatMap((key) => list(doc[key]).map((entry) => entry.id))
+      return ['contents', 'site', ...largeSite, ...listedIds, ...entriesOfLarge].filter((id) => byId.has(id))
+    },
     has: (id) => byId.has(id),
     read: (id) => whole(id),
     /** Record parts sent before any call, such as "contents" in the first message. */
@@ -264,10 +279,29 @@ function list(value) {
  *   `history`: the run's saved turns; their read_kit_part calls are replayed (answers dropped), so a resumed run knows
  *   which parts it already sent. `inFirstMessage`: the part ids the first message carries ("contents").
  */
+/**
+ * The pictures of the kit's stock screens (site.stockScreens, lib/stock-screens.js), by image id with the page they show.
+ * Every plan drops those pages (withStockScreensDropped), so their pictures are not opened: on dev (16/11/2026) a
+ * planner opened about 60 page pictures of ja-diner, account pages and colour variants among them, and its later turns
+ * slowed to 70 to 120 s each as the conversation grew.
+ */
+export function stockScreenImages(doc) {
+  const pages = new Map(list(doc?.pages).map((page) => [page?.id, page]))
+  const out = new Map()
+  for (const screen of stockScreenPagesOf(doc)) {
+    if (!screen.inKit) continue
+    const shots = pages.get(screen.id)?.images
+    for (const id of Object.values(shots && typeof shots === 'object' ? shots : {}))
+      if (typeof id === 'string') out.set(id, screen.id)
+  }
+  return out
+}
+
 export function kitTools(doc, { images, imageTool = true, history = [], inFirstMessage = [] } = {}) {
   const parts = kitParts(doc)
   parts.sentFrom(inFirstMessage)
   const imageIds = new Set(list(doc.images).map((image) => image.id))
+  const stockImages = stockScreenImages(doc)
   const idParameter = (description) => ({
     type: 'object',
     properties: { id: { type: 'string', description } },
@@ -317,14 +351,22 @@ export function kitTools(doc, { images, imageTool = true, history = [], inFirstM
       run: ({ id }) =>
         typeof id !== 'string' || id === ''
           ? badId(KIT_TOOL_NAMES.openImage)
-          : images
-            ? images.open(id)
-            : JSON.stringify({
-                error: 'IMAGES_NOT_AVAILABLE',
+          : stockImages.has(id)
+            ? JSON.stringify({
+                skipped: 'STOCK_SCREEN',
                 id,
-                known: imageIds.has(id),
-                detail: 'Kit images are not available on this bench yet. Continue from the kit text.'
+                page: stockImages.get(id),
+                detail:
+                  'This is a picture of a stock screen of the template (site.stockScreens): every plan drops that page, so it is not opened. Decide it as dropped and continue.'
               })
+            : images
+              ? images.open(id)
+              : JSON.stringify({
+                  error: 'IMAGES_NOT_AVAILABLE',
+                  id,
+                  known: imageIds.has(id),
+                  detail: 'Kit images are not available on this bench yet. Continue from the kit text.'
+                })
     }
   ]
   replayReads(tools[0], history)
@@ -357,9 +399,9 @@ export const FIRST_MESSAGE_PARTS = Object.freeze(['contents'])
  * neither) and, when the kit has looks, where they are read, then the kit's "contents" (so the first call need not
  * read it), then the brief: the kit before the brief, as in a preloaded message. `imageTool: false` (a model given no
  * images, door.js): only the part tool is described, and the message says there are no images and the looks stand in.
- * @param {{ kit: { ref: string, doc: any }, brief: object, imageTool?: boolean }} input
+ * @param {{ kit: { ref: string, doc: any }, brief: object, imageTool?: boolean, visualReviewText?: string }} input
  */
-export function firstUserMessage({ kit, brief, imageTool = true }) {
+export function firstUserMessage({ kit, brief, imageTool = true, visualReviewText }) {
   const { readPart, openImage } = KIT_TOOL_NAMES
   const template = kit.doc.template ? ` (template ${kit.doc.template.name} ${kit.doc.template.version})` : ''
   const hasLooks = [...list(kit.doc.pages), ...list(kit.doc.blocks)].some((item) => lookTextOf(item.look))
@@ -375,7 +417,7 @@ export function firstUserMessage({ kit, brief, imageTool = true }) {
       : []),
     ...(imageTool
       ? [
-          `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. Open an image only where your instructions say a look cannot settle a decision.`,
+          `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. ${visualReviewText || 'Open an image only where your instructions say a look cannot settle a decision.'}`,
           '- You may call the tools several times in the same turn: ask for every part and image you need next at once, rather than one per turn.'
         ]
       : [
@@ -391,6 +433,37 @@ export function firstUserMessage({ kit, brief, imageTool = true }) {
     '',
     JSON.stringify(brief)
   ].join('\n')
+}
+
+/**
+ * The first user message of a run whose whole kit goes in that message (harness `kitInFirstMessage`): every part the
+ * part tool answers is below, by id, and the image tool stays, so the visual review is done as before. Measured on the
+ * local stand (Central Padel, 15/11/2026): a planner given only "contents" read nearly the whole kit in four tool turns
+ * (site, page groups, pages, every block), and each turn spent its own reasoning (54k tokens, five and a half minutes)
+ * before the plan. Returns the message and the part ids it carries, for the part tool (`kitTools` `inFirstMessage`).
+ * @param {{ kit: { ref: string, doc: any }, brief: object, visualReviewText?: string }} input
+ * @returns {{ text: string, inFirstMessage: string[] }}
+ */
+export function wholeKitFirstMessage({ kit, brief, visualReviewText }) {
+  const { readPart, openImage } = KIT_TOOL_NAMES
+  const parts = kitParts(kit.doc)
+  const template = kit.doc.template ? ` (template ${kit.doc.template.name} ${kit.doc.template.version})` : ''
+  const carried = parts.carried()
+  const text = [
+    `Input 2, the template kit, is ${kit.ref}${template}. The whole kit is in this message, below, as one JSON object by part id: "contents" lists what the kit holds, then every part your instructions name (the site-wide parts, the page groups, the pages and every block). Read it here: ${readPart} only answers that a part is already in this message.`,
+    '',
+    `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. ${visualReviewText || 'Open an image only where your instructions say a look cannot settle a decision.'}`,
+    '- You may call the image tool several times in the same turn: ask for every image you need at once, rather than one per turn.',
+    '',
+    'The template kit, by part id:',
+    '',
+    `{${carried.map((id) => `${JSON.stringify(id)}:${parts.read(id)}`).join(',')}}`,
+    '',
+    'Input 1, the brief, is this JSON:',
+    '',
+    JSON.stringify(brief)
+  ].join('\n')
+  return { text, inFirstMessage: parts.ids() }
 }
 
 const NO_IMAGES_LINE =

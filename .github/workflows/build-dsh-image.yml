@@ -360,26 +360,14 @@ jobs:
       # `docker-container` can export, so the cache moves to `ghcr.io/...:buildcache` and any runner
       # starts warm. Creating it is idempotent and costs about a second when it already exists.
       #
-      # 🔒 THE BUILDER IS NAMED AFTER THE RUNNER, AND THAT IS NOT COSMETIC. buildx keeps its
-      # builder list per USER (`~/.docker/buildx`), so each runner container has its own empty
-      # list — but the `docker-container` driver creates a container on the HOST daemon, named
-      # `buildx_buildkit_<builder>0`, which every runner on that host shares. Measured on j-static
-      # 21/09/2026: a second runner running the identical `create --name tracy` does not fail and
-      # does not reuse — it RECREATES the container ("Up Less than a second"), which would kill a
-      # build already running in it. And the two image workflows fire as a PAIR on every push, so
-      # two runners on one host racing here is the normal case, not the rare one.
-      #
-      # With `$RUNNER_NAME` in the name the containers coexist (verified: `tracy-r1` and `tracy-r2`
-      # both Up at once). Each runner keeps its own local cache; the SHARED cache is the registry,
-      # which is the whole point — a local cache that travels was never the goal.
+      # 🔒 THE BUILDER IS NAMED AFTER THE RUNNER, AND THAT IS NOT COSMETIC: a second runner running
+      # an identical `create --name tracy` RECREATES the host-wide container and kills the build in
+      # it. Each runner keeps its own local cache, bounded by the repo's BuildKit GC policy (since
+      # 16/11/2026; the builder is recreated when that policy changes); the SHARED cache is the
+      # registry, which is the whole point. Name, policy and why both are safe with two runners on
+      # one host: `.github/actions/buildx-builder/`, shared with `build-app-images.yml`.
       - name: A builder whose cache lives in the registry, not on this disk
-        run: |
-          set -euo pipefail
-          BUILDER="tracy-${RUNNER_NAME:-local}"
-          echo "BUILDER=$BUILDER" >> "$GITHUB_ENV"
-          docker buildx inspect "$BUILDER" > /dev/null 2>&1 \
-            || docker buildx create --name "$BUILDER" --driver docker-container --bootstrap
-          docker buildx inspect "$BUILDER" --bootstrap | sed -n '1,6p'
+        uses: ./.github/actions/buildx-builder
 
       - name: Build the image
         run: |

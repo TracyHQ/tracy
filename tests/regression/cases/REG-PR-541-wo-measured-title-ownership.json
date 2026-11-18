@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-541-wo-measured-title-ownership",
+  "kind": "fix",
+  "title": "Measured page titles use exact writable and brand owners without contradictory planner repairs",
+  "pr": 541,
+  "area": "website-opportunities/step-nine",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Check brand-owned and ordinary measured titles on kept applicable blocks, including unknown, hidden, dropped and unwritable variants.",
+    "Project a stored page title through exact native path, sample, owner and desktop/phone measurements, then run planner, writer index, full write and live read-back.",
+    "Exercise native refusal and a dropped-page title in a kept shared masthead; attempt to resume paid runs frozen on previous checker versions."
+  ],
+  "expect": [
+    "Brand-owned titles pass the planner without forbidden writer claims; unknown title declarations remain kit failures.",
+    "Only an exact measured title receives a writable declaration and measured limit; unrelated or conflicting stored fields remain inaccessible, and released kit/map/plan inputs remain unchanged.",
+    "Native refusal and reopened live values fail; a projected title of a dropped page never enters closing writes. Old paid runs refuse before preparation or provider calls."
+  ],
+  "fence": "exact measured title joins and exact brand name-slot ownership; no prompt changes, arbitrary stored-field writes, native validation bypass or automatic paid-run migration",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/site-plan-check-title-owners.test.mjs",
+      "apps/tracy-web/test/template-kit-measured-titles.test.mjs"
+    ],
+    "needs": []
+  },
+  "selectors": {}
+}

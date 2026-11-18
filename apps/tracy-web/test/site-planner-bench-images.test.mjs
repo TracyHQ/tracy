@@ -8,7 +8,11 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { zipSync } from 'fflate'
-import { DEEPSEEK_FLASH_PRICE, DEEPSEEK_V4_PRO_PRICE } from '../src/site-planner/bench-control.js'
+import {
+  DEEPSEEK_FLASH_PRICE,
+  DEEPSEEK_V4_PRO_PRICE,
+  startBenchRun
+} from '../src/site-planner/bench-control.js'
 import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { kitZipName } from '../src/site-planner/kit-images.js'
@@ -18,6 +22,7 @@ import {
   preloadedKitBlock,
   WRITE_PLAN_INSTRUCTION
 } from '../src/site-planner/kit-source.js'
+import { checkVisualReview } from '../src/site-planner/visual-review.js'
 import { finalReply, scriptedModel, toolCallReply } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
 import { plan } from './_site-plan-check.mjs'
@@ -42,6 +47,8 @@ after(db.close)
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const quiet = { error() {}, warn() {}, log() {} }
+// Image replay cases measure transport and persistence; budget behavior has dedicated tests.
+const startImageRun = (pool) => startRun(pool, { noCaps: true })
 const openImage = (id) => toolCallReply({ calls: [[KIT_TOOL_NAMES.openImage, { id }]] })
 const dataUrl = (id) => `data:image/jpeg;base64,${inventedImageBytes(id).toString('base64')}`
 
@@ -145,7 +152,7 @@ test(
   async () => {
     const { pool } = db
     await assignPlannerDoor(pool)
-    const started = await startRun(pool)
+    const started = await startImageRun(pool)
     // The first process: the planner opens an image, then the process dies while the next call waits for its answer.
     const first = readyKitImages()
     await drain(pool, scriptedModel([openImage('header-1440')]), first, { killOn: 2 })
@@ -182,7 +189,7 @@ test(
   async () => {
     const { pool } = db
     await assignPlannerDoor(pool)
-    const started = await startRun(pool)
+    const started = await startImageRun(pool)
     const bad = plan()
     delete bad.site
     const images = readyKitImages()
@@ -215,7 +222,7 @@ test(
   async () => {
     const { pool } = db
     await assignPlannerDoor(pool, { model: DEEPSEEK_FLASH })
-    const started = await startRun(pool)
+    const started = await startImageRun(pool)
     const details = [{ type: 'reasoning.text', text: 'the header shows a logo', format: 'unknown' }]
     const model = scriptedModel([
       toolCallReply({
@@ -371,6 +378,97 @@ test(
       )
     } finally {
       kit.done()
+    }
+  }
+)
+
+test(
+  'strict WO review follows missing image ids into a fix round and persists actual delivered evidence',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool)
+    const started = await startRun(pool, { noCaps: true, requireVisualReview: true })
+    assert.equal((await readRun(pool, started.id)).harness.visualReview, 'kit-images/1')
+    const kit = openKit(KIT_REF)
+    const required = checkVisualReview({ plan: plan(), kit: kit.doc, kitRef: kit.ref, history: [] }).coverage
+      .required
+    const base = readyKitImages()
+    const realRefs = {
+      ensure: async (opened) => {
+        const ready = await base.ensure(opened)
+        const open = ready.images.open
+        ready.images.open = async (id) => {
+          const reply = await open(id)
+          reply.images[0].ref.sha256 = opened.doc.images.find((image) => image.id === id).sha256
+          return reply
+        }
+        return ready
+      }
+    }
+    const model = scriptedModel([
+      finalReply({ content: JSON.stringify(plan()) }),
+      toolCallReply({ calls: required.map((id) => ['open_kit_image', { id }]) }),
+      finalReply({ content: JSON.stringify(plan()) })
+    ])
+    await drain(pool, model, realRefs)
+    const run = await readRun(pool, started.id)
+    assert.equal(run.status, 'succeeded', run.error)
+    assert.equal(run.standingFailures, null)
+    assert.equal(run.rounds.length, 2)
+    const first = run.rounds[0].checkResult.rules.find((r) => r.id === 'V01')
+    const last = run.rounds[1].checkResult.rules.find((r) => r.id === 'V01')
+    assert.equal(first.status, 'fail')
+    assert.equal(last.status, 'pass')
+    assert.equal(last.coverage.missing.length, 0)
+    assert.equal(sentImages(model.requests.at(-1)).length, required.length)
+  }
+)
+
+test(
+  'strict WO review cannot pass by repeatedly returning a structurally valid plan without images',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool)
+    const started = await startRun(pool, { noCaps: true, requireVisualReview: true })
+    const model = scriptedModel(
+      Array.from({ length: 3 }, () => finalReply({ content: JSON.stringify(plan()) }))
+    )
+    await drain(pool, model, readyKitImages())
+    const run = await readRun(pool, started.id)
+    assert.match(run.standingFailures, /V01/)
+    assert.equal(run.rounds.at(-1).checkResult.rules.find((r) => r.id === 'V01').status, 'fail')
+  }
+)
+
+test(
+  'strict WO review refuses a text-only door before queueing while ordinary text benches stay available',
+  opts,
+  async () => {
+    const { pool } = db
+    const changed = kitIndexWithLooks()
+    try {
+      await assignTextOnlyDoor(pool)
+      const historical = await startRun(pool, { index: changed.index })
+      const stored = await readRun(pool, historical.id)
+      assert.equal(stored.harness.visualReview, undefined)
+      await pool.query("update site_planner_run set status='cancelled' where id=$1", [historical.id])
+      const refused = await startBenchRun({
+        pool,
+        secret: SECRET,
+        brief: stored.brief,
+        briefSource: {},
+        kitRef: KIT_REF,
+        startedBy: 'test',
+        kitImages: readyKitImages(),
+        index: changed.index,
+        requireVisualReview: true
+      })
+      assert.equal(refused.ok, false)
+      assert.equal(refused.code, 'SITE_PLANNER_VISUAL_REVIEW_UNAVAILABLE')
+    } finally {
+      changed.done()
     }
   }
 )

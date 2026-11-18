@@ -1,0 +1,1 @@
+{"id":"REG-PR-659-joomla-quickstart-utf8mb4","verdict":"PASS","commit":"9ae60abff1c9df4dd6115376f795f3092daeb263","ran_at":"2026-11-16T14:19:11.491Z","evidence":"tests/regression/.runs/2026-11-16-9ae60abff/REG-PR-659-joomla-quickstart-utf8mb4.log"}

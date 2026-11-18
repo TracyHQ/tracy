@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-496-emdash-lease-fail-closed",
+  "kind": "fix",
+  "title": "EmDash refuses content writes before the site when Tracy cannot confirm the site write lease, while waiting for a real holder still works",
+  "pr": 496,
+  "area": "site-agent/emdash-lease",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: in the EmDash tool handler, attempt a content_update when lease acquisition returns 503, 404, HTTP 200 without ok:true, or a network error.",
+    "S2: attempt the same write while another conversation holds the lease, then after it becomes free."
+  ],
+  "expect": [
+    "S1: each call returns LEASE_DOOR_UNAVAILABLE and the site's MCP receives zero content_update calls.",
+    "S2: the held call returns SITE_BUSY without a site write; after the lease is free the write succeeds once."
+  ],
+  "selectors": {
+    "source": "packages/tools/tracy-site-tools/src/host/index.ts",
+    "test": "packages/tools/tracy-site-tools/test/handler.test.mjs"
+  },
+  "evidence": "The 8 November 2026 AI audit found emdashWriteLease logging an unavailable lease then returning null, allowing an EmDash write without serialization.",
+  "fence": "A direct EmDash write requires a confirmed site_write_lease from tracy-web before any MCP or script write reaches the site.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=unavailable or unconfirmed EmDash lease|every EmDash write road",
+      "packages/tools/tracy-site-tools/test/handler.test.mjs"
+    ],
+    "tests": [
+      "🔒 Q1: an unavailable or unconfirmed EmDash lease refuses the write before it reaches the site",
+      "🔒 Q1: every EmDash write road takes the lease first"
+    ]
+  }
+}

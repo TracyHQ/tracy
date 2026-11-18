@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-563-wo-build-brief-binding",
+  "kind": "fix",
+  "title": "Build on a numbered brief page builds exactly the brief on screen: a stale revisionId is refused with BRIEF_STALE before any action or charge, another place's revisionId is 404, a current one (shared or quality-written) is accepted on that revision",
+  "pr": 563,
+  "area": "wo/build/brief-binding",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "With a throwaway TEST_DATABASE_URL, from apps/tracy-web run: node --test --test-reporter=tap --test-name-pattern=#553 test/website-opportunities-doors.test.mjs",
+    "Read the TAP lines of the three #553 door tests."
+  ],
+  "expect": [
+    "Test 'build from a brief page (#553): the shown brief is built while current…' reports ok: POST /api/website-opportunities/:id/demo/build with another opportunity's revisionId answers 404 with no wo_demo_action row and wo_demo_usage.used 0; with the current shared brief's revisionId it answers 202, actions[0].revisionId is that revision and the built wo_build.revision_id is that revision; after the brief rules move on the same revisionId answers 409 code BRIEF_STALE with body.revisionId, and the wo_demo_action count and wo_demo_usage.used stay as before the press; without revisionId the press is still 202 on another revision; a malformed revisionId is 400 INVALID_REVISION_ID.",
+    "Test 'build from a brief page (#553): a brief the quality workflow wrote…' reports ok: a revision written by revisionForAction with an editorial preparer (research_hash null) is GET /:id brief.current true and the brief page's press (workflow agent-demo/1, revisionId) answers 202 with actions[0].revisionId equal to it; once the opportunity's research changes the same press answers 409 BRIEF_STALE and brief.current is false.",
+    "Test 'build from a brief page in quality mode (#553)…' reports ok: with quality_mode apply the brief page's agent-demo/1 press with revisionId is 202, stored on that revision with protocol legacy; a quality-v1 press with revisionId answers 409 BRIEF_NOT_BINDABLE."
+  ],
+  "selectors": {
+    "door": "POST /api/website-opportunities/:id/demo/build body.revisionId in apps/tracy-web/src/opportunities-build/route.js",
+    "fence": "the briefRevisionId check in acceptDemoActions, apps/tracy-web/src/opportunities-build/demo-actions.js; briefIsCurrent in revisions.js",
+    "codes": "BRIEF_STALE, BRIEF_NOT_BINDABLE, INVALID_REVISION_ID, NOT_FOUND"
+  },
+  "evidence": "Issue #553 (dev, develop 73b44d40d, action 11da348b): on the page of Brief 2 the Build form sent only the opportunity id and the server wrote and built a new Brief 3 from research that had completed after Brief 2.",
+  "fence": "The real build door and acceptance transaction over a scratch Postgres with the real domain package; the quality brief is written by the real revision writer with an editorial double. Not exercised: the brief page in a browser, a real model, a running CMS.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#553",
+      "test/website-opportunities-doors.test.mjs"
+    ],
+    "cwd": "apps/tracy-web",
+    "needs": ["postgres"],
+    "tests": [
+      "build from a brief page (#553): the shown brief is built while current",
+      "build from a brief page (#553): a brief the quality workflow wrote",
+      "build from a brief page in quality mode (#553)"
+    ]
+  }
+}

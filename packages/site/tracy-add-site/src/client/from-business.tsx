@@ -72,8 +72,8 @@ type Stage =
       ranking: TemplateRanking | null
       card?: ReturnType<typeof suggestionCardOf>
     }
-  | { at: 'opening'; logo?: boolean; pictures?: boolean }
-  | { at: 'failed'; key: string }
+  | { at: 'opening'; logo?: boolean; pictures?: boolean; serverOwned?: boolean; minutes?: number }
+  | { at: 'failed'; key: string; retry?: { id: string; actionId: string } }
 
 /** "A, B and C" in the interface language; a plain comma list where the locale is not one the browser knows. */
 function listOf(items: string[], lang: string): string {
@@ -264,12 +264,32 @@ export function FromBusiness({
 
   /** From the research to the template choice, or from an accepted build to its chat. */
   async function follow(id: string, controller: AbortController): Promise<void> {
+    let retry: { id: string; actionId: string } | undefined
     const done = await followBusiness({
       api,
       id,
       signal: controller.signal,
       onState: (business) => {
-        if (business.phase === 'build') setStage((now) => (now.at === 'opening' ? now : { at: 'opening' }))
+        if (business.phase === 'build') {
+          const action = business.action
+          const serverOwned = action?.workflow === 'agent-demo/1' && !action.chatMode
+          if (
+            serverOwned &&
+            action.state === 'failed' &&
+            action.siteKey &&
+            !['BRIEF_NOT_READY', 'SITE_ACCESS_DENIED', 'DEMO_SITE_DELETED'].includes(action.error)
+          )
+            retry = { id, actionId: action.id }
+          const started = Date.parse(action?.acceptedAt ?? '')
+          setStage((now) => ({
+            ...(now.at === 'opening' ? now : {}),
+            at: 'opening',
+            serverOwned,
+            ...(Number.isFinite(started)
+              ? { minutes: Math.max(0, Math.floor((Date.now() - started) / 60_000)) }
+              : {})
+          }))
+        }
         // What the research has reached, under the sentence: the source, the photos, the minutes.
         // A better name than the host once a source shows one (`bestKnownName` on the server).
         else if (business.phase === 'research')
@@ -305,9 +325,20 @@ export function FromBusiness({
       return
     }
     if ('failed' in done && done.failed !== 'STOPPED') {
-      keepBusiness(storage, null)
-      setStage({ at: 'failed', key: failureKey(done.failed) })
+      // Keep the durable business through a stopped build or lost poll; reload follows it again.
+      setStage({ at: 'failed', key: retry ? 'progress_failed' : failureKey(done.failed), retry })
     }
+  }
+
+  async function retryBuild(failed: { id: string; actionId: string }): Promise<void> {
+    const controller = new AbortController()
+    stop.current?.abort()
+    stop.current = controller
+    setStage({ at: 'opening', serverOwned: true })
+    const accepted = await api.retry(failed.id, failed.actionId)
+    if (controller.signal.aborted) return
+    if (!accepted.ok) return setStage({ at: 'failed', key: failureKey(accepted.body?.code), retry: failed })
+    await follow(failed.id, controller)
   }
 
   /** The person's template: Tracy's pick kept, or another from the picker (`null`: cancelled, nothing built). */
@@ -466,13 +497,26 @@ export function FromBusiness({
         <p className="flex items-center gap-2 text-sm" role="status" data-own-progress="1">
           <Loader2 className="animate-spin" aria-hidden="true" />
           {stage.at === 'opening'
-            ? t(stage.logo ? 'own_logo' : stage.pictures ? 'own_pictures' : 'own_opening')
+            ? t(
+                stage.serverOwned
+                  ? 'progress_running'
+                  : stage.logo
+                    ? 'own_logo'
+                    : stage.pictures
+                      ? 'own_pictures'
+                      : 'own_opening'
+              )
             : stage.sources?.length
               ? t('own_research_links', {
                   name: stage.name,
                   sources: listOf(stage.sources, lang)
                 })
               : t('own_research', { name: stage.name || text.trim() })}
+        </p>
+      ) : null}
+      {stage.at === 'opening' && stage.serverOwned && stage.minutes !== undefined ? (
+        <p className="text-muted-foreground pl-6 text-xs" data-own-build-progress="1">
+          {t('own_progress_minutes', { minutes: stage.minutes })}
         </p>
       ) : null}
       {stage.at === 'research' && stage.progress ? (
@@ -561,7 +605,18 @@ export function FromBusiness({
       ) : null}
       {stage.at === 'failed' ? (
         <Alert variant="destructive" data-own-failed={stage.key}>
-          <AlertDescription>{t(stage.key)}</AlertDescription>
+          <AlertDescription>
+            <p>{t(stage.key)}</p>
+            {stage.retry ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => stage.retry && void retryBuild(stage.retry)}
+              >
+                {t('progress_retry')}
+              </Button>
+            ) : null}
+          </AlertDescription>
         </Alert>
       ) : null}
       <div>

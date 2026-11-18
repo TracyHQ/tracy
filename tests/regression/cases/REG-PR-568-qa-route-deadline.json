@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-568-qa-route-deadline",
+  "kind": "fix",
+  "title": "Initial QA capture retains allocated route time within both transports",
+  "pr": 568,
+  "area": "website-opportunities/qa-deadline",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run run.cmd and verify all eight tests pass without skips."],
+  "expect": [
+    "Initial capture with 45000 ms pages and 90000 ms routes remains live after 60001 ms and expires at 150000 ms.",
+    "The 150000 ms host deadline is below the existing 175000 ms web and 180000 ms native transports.",
+    "Each phase retains its cap, route-free deadlines remain unchanged, and final-check deadlines remain below their web transport.",
+    "Queue time is retained through nested deadlines; caller cancellation propagates and disposing a completed request removes its timer."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-host/test/demo-qa-deadline.test.mjs"],
+    "needs": [],
+    "tests": [
+      "initial capture keeps its route time and ends before both transports",
+      "queue time consumes the original deadline even when the browser creates its own deadline later",
+      "caller cancellation interrupts a queued or running request without waiting for either budget",
+      "disposing a completed request removes its deadline timer"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+PR #541 process-wide research media admission
+
+New deterministic admission tests:3/3 PASS.
+Real PostgreSQL integration: two executor instances, two distinct place research jobs,
+five retained downloads held in pending object storage; second executor cannot fetch
+another image until storage releases; afterward ten downloads and both jobs complete.
+Focused integration1/1 PASS (2320.98ms).
+
+Mutation: bypassing withMediaAdmission failed the real integration test:
+"the other executor cannot fetch buffers while all five stores are pending"
+actual10, expected5. Original source restored in finally before subsequent verification.
+
+Serial PostgreSQL verification command:
+node --test --test-concurrency=1 --test-reporter=tap
+  apps/tracy-web/test/website-opportunities-executor.test.mjs
+  apps/tracy-web/test/website-opportunities-executor-gplaces.test.mjs
+  apps/tracy-web/test/website-opportunities-shared-research.test.mjs
+  apps/tracy-web/test/website-opportunities-media-admission.test.mjs
+Result:97/97 PASS,0 skipped,0 failed,20221.41ms.
+The suite covers both Google Places photo paths and existing fallback/source ordering.
+
+Focused oxlint, Biome formatting, regression-case validation and git diff --check: PASS.
+No runtime job started. No deployed process or global Sharp configuration changed.
+The admission limit bounds in-flight downloaded media units across executor instances;
+it does not establish a native decoder memory bound for every supported input image.

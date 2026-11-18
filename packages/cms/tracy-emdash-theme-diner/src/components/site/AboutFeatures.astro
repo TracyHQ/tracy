@@ -1,0 +1,38 @@
+---
+/** Features style 4 (pictures left, words right) and style 5 (words left, pictures right) of the About page. */
+import { cleanHtml } from '@/lib/html'
+import { mediaUrl } from '@/lib/media'
+import { dataHref } from '@/lib/data-links'
+import { href, type Locale } from '@/lib/i18n'
+import { PortableText } from 'emdash/ui'
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+  stamp: Stamp
+  /** `pictures-first` = style 4, `words-first` = style 5 */
+  order: 'pictures-first' | 'words-first'
+  locale: Locale
+  live: (url: unknown) => boolean
+}
+const { entry, stamp: $e, order, locale, live } = Astro.props
+const items: any[] = entry.items ?? []
+const target = entry.button_link ? dataHref(entry.button_link, (p) => href(locale, p)) : null
+const showButton = Boolean(entry.button && target && live(entry.button_link))
+---
+
+<section class:list={['dn-section', 'dn-about-features', order === 'words-first' && 'is-words-first']}>
+	<div class="dn-wrap dn-about-grid">
+		<ul class="dn-about-pics">
+			{items.map((it, i) => mediaUrl(it.img) && (
+				<li><img src={mediaUrl(it.img)!} alt="" width="318" height="240" loading="lazy" {...$e(`items[${i}].img`)} /></li>
+			))}
+		</ul>
+		<div class="dn-about-words">
+			<h5 class="dn-label" {...$e('title_small')}>{entry.title_small}</h5>
+			<h2 class="dn-sub" set:html={cleanHtml(entry.title_large)} {...$e('title_large')} />
+			<div class="dn-about-desc" {...$e('description')}><PortableText value={entry.description} /></div>
+			{showButton && <a class="dn-btn" href={target!} {...$e('button')}>{entry.button}</a>}
+		</div>
+	</div>
+</section>

@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-526-logo-hint-deduplicated-media",
+  "kind": "fix",
+  "title": "A logo hint whose url was re-signed finds the media row its picture was deduplicated onto, and a from-scratch research reads that logo again",
+  "pr": 526,
+  "area": "website-opportunities/place-logo",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: a social source's profile picture hint carries a new url and the mediaId the media step recorded; the stored row has the older url of the same picture. List the logo candidates.",
+    "S2: bind logo hints of an Instagram, a website and a Tripadvisor source to the rows their urls became.",
+    "S3: decide which logo research to keep when a run found none with zero candidates while the found logo on record is still in the snapshot, and when it is not.",
+    "S4: research the logo of S1 with a vision model, again with the earlier research, and again forced."
+  ],
+  "expect": [
+    "S1: one candidate, the kept row, via social-profile.",
+    "S2: only the Instagram profile picture gains mediaId; a second pass changes nothing.",
+    "S3: the found research is kept while its row is in the snapshot; the none is stored otherwise.",
+    "S4: found; the second run reuses the reading (no call), the forced run calls the model again."
+  ],
+  "selectors": {
+    "files": "packages/wo/website-opportunities/src/place-logo.js",
+    "dom": ""
+  },
+  "evidence": "dev 09/11/2026: a whole Research again stored logoResearch status none with zero candidates over a found Instagram logo; the new signed url of the profile picture was kept as the older row (same sha256), and hints matched rows by url only",
+  "fence": "logoCandidatesOf matches a hint by its recorded mediaId; logoResearchToKeep refuses a zero-candidate none over a found logo still in the snapshot",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-logo-hint-deduplicated-media.test.mjs"
+    ],
+    "tests": [
+      "a social profile picture hint with a re-signed url finds the row its picture was deduplicated onto",
+      "the media step binds each logo hint to the row its url became, and leaves other items alone",
+      "a none that looked at zero candidates never replaces a found logo still in the snapshot",
+      "a from-scratch run reads the logo found under a re-signed url again with vision"
+    ]
+  }
+}

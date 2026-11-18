@@ -195,9 +195,45 @@ test('a brief media row reads as a photo view: its labels, its own-photo answer 
     isOwnPhoto: true,
     quality: 'high',
     isGraphic: false,
+    showsOtherBusiness: null,
+    isBlurry: null,
     sharpness: 'blurry',
     offering: 'Court hire'
   })
+})
+
+test('a brief media row the model saw showing another business is off topic; false or unanswered is not', () => {
+  const row = (id, extra) => ({
+    id,
+    kind: 'image',
+    source: 'website',
+    width: 2000,
+    height: 1200,
+    labels: {
+      vision: {
+        labels: {
+          content: 'venue-interior',
+          caption: 'A bright reception desk.',
+          quality: 'good',
+          isOwnPhoto: true,
+          isGraphic: false,
+          ...extra
+        }
+      }
+    }
+  })
+  const views = [
+    row('wm-30', { showsOtherBusiness: true }),
+    row('wm-31', { showsOtherBusiness: false }),
+    row('wm-32', {})
+  ].map((m) => photoViewOf(m))
+  assert.equal(views[0].showsOtherBusiness, true)
+  const { photos, dropped } = observablePhotos(views)
+  assert.deepEqual(dropped, [{ id: 'wm-30', reason: 'off_topic' }])
+  assert.deepEqual(
+    photos.map((p) => p.id),
+    ['wm-31', 'wm-32']
+  )
 })
 
 // CodeQL polynomial-redos (release 2026-11-05): the stops a value ends on are taken off from its end, in one pass.
@@ -216,4 +252,30 @@ test('the stops a value ends on are taken off; a long run of them inside a value
   const t = performance.now()
   assert.deepEqual(held(`clay courts${','.repeat(100_000)}x`), [])
   assert.ok(performance.now() - t < 500, 'a run of commas read in one pass')
+})
+
+test('a brief media row the model answered blurry is dropped as blurry, beside its quality word', () => {
+  const m = {
+    id: 'wm-40',
+    kind: 'image',
+    source: 'website',
+    width: 2000,
+    height: 1200,
+    labels: {
+      vision: {
+        labels: {
+          content: 'venue-interior',
+          caption: 'A bright reception desk.',
+          quality: 'good',
+          isOwnPhoto: true,
+          isGraphic: false,
+          isBlurry: true
+        }
+      }
+    }
+  }
+  const view = photoViewOf(m)
+  assert.equal(view.isBlurry, true)
+  assert.equal(view.sharpness, 'good')
+  assert.deepEqual(observablePhotos([view]).dropped, [{ id: 'wm-40', reason: 'blurry' }])
 })

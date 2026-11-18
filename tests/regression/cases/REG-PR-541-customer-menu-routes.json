@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-541-customer-menu-routes",
+  "kind": "fix",
+  "title": "Customer menu routes leave demo ancestors and retain customer titles",
+  "pr": 541,
+  "area": "website-opportunities/write",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the specified mechanism suite against this checkout. All data in the suite is fictional."],
+  "expect": [
+    "The planned News page moves to the root and takes its actual title.",
+    "Reruns restore the original parent before restoring its demo alias."
+  ],
+  "selectors": {},
+  "fence": "Customer menu routes leave demo ancestors and retain customer titles",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-page-routes.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 180
+  }
+}

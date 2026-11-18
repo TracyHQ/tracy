@@ -9,7 +9,7 @@
 // A gallery tile (an any-real frame of a picture list, gallery-tiles.js) is never hidden alone: after the next photo
 // and fewer rows it reuses an owner photo already on its page, cut to another region, then takes any usable owner
 // photo (any-photo, heads whole, not its neighbour's photo, at most half shared with another cut of the photo, card AK);
-// with no such cut left the tile is drawn (draw, redraw), and returned only after that.
+// with no such cut left a documentary tile is returned. It never substitutes a drawing for a real photo.
 //
 // A frame the plan wants filled is never left without a picture while one can be had (owner decision 06/11/2026, card
 // AJ): before `return`, a drawn frame is drawn again in other compositions (`redraw-alt`, the subject whole and centred
@@ -34,8 +34,7 @@ export const RUNGS = Object.freeze({
   'any-real': Object.freeze(['next-photo', 'fewer-rows', 'hide', 'best-rejected', 'return']),
   person: Object.freeze(['hide', 'return']),
   cutout: Object.freeze(['draw', 'redraw', 'hide', 'redraw-alt', 'best-rejected', 'return']),
-  // A gallery tile no owner photo is left for is drawn, with one redraw (card AK): the only drawing an any-real frame
-  // may get.
+  // Historical gallery rungs remain explicit; rungsFor removes drawing for every documentary frame.
   gallery: Object.freeze([
     'next-photo',
     'fewer-rows',
@@ -62,8 +61,14 @@ export function rungsOf(wish, frame = null, galleryTile = false) {
 }
 
 /** The rungs of one frame of the round's index. */
-export const rungsFor = (idx, frameId) =>
-  rungsOf(idx.wishes.get(frameId), idx.frames.get(frameId), Boolean(idx.galleryTile?.(frameId)))
+export const rungsFor = (idx, frameId) => {
+  const wish = idx.wishes.get(frameId)
+  if (idx.documentaryFrame?.(frameId)) {
+    const rungs = idx.galleryTile?.(frameId) ? RUNGS.gallery : RUNGS['any-real']
+    return rungs.filter((rung) => !DRAW_RUNGS.has(rung))
+  }
+  return rungsOf(wish, idx.frames.get(frameId), Boolean(idx.galleryTile?.(frameId)))
+}
 
 /**
  * Whether a plan has a cut-out frame that is drawn (a `specific` one the kit lets be written, no twin): such a run

@@ -13,6 +13,7 @@ import {
   currentSnapshotOf,
   linksOf,
   placeSettled,
+  providerRepairReason,
   snapshotMediaOf,
   snapshotProfileOf,
   sourceDue
@@ -40,6 +41,12 @@ export const SEARCH_NETWORKS = Object.freeze(['facebook', 'instagram'])
 export const AGAIN_PARTS = SHOWN_SOURCES
 
 const time = (v) => (v ? new Date(v).getTime() : Number.NaN)
+
+/** No keys or source content leave this read. The operator's existing setup save is the recovery acknowledgement. */
+export async function providerSetupUpdatedAt(db, rows) {
+  if (!Object.values(rows).some((row) => providerRepairReason(row))) return null
+  return (await db.query('select updated_at from wo_ops_setting where id')).rows[0]?.updated_at ?? null
+}
 
 /**
  * The `parts` a door was sent to limit a Research again to ("Read menu again" = `menu-file,menu-photos`): a list or a
@@ -69,19 +76,41 @@ function runReason(row, now, version) {
 }
 
 /**
+ * 🔒 A RESEARCH AGAIN PRESSED BY AN ACCOUNT RESEARCHES FROM SCRATCH (owner decision, 09/11/2026). Running only the
+ * parts that were due kept the cheap steps of an older pass (a logo found before its text was read, a business
+ * reading of last month) and the press changed nothing the user could see. `fromScratch` runs every part this
+ * deployment can collect, each with the reason `again`; only `unavailable` parts (and photos the place has none of)
+ * are kept. The run it freezes re-reads the business and the logo too (`place-executor.js`). The public `/find`
+ * press keeps the due-only plan: Tracy pays for it.
+ */
+export const AGAIN_REASON = 'again'
+export { providerRepairReason } from './places.js'
+
+/**
  * @param {Record<string, object>} rows the place's rows by part (`wo_place_snapshot_source` shape)
  * @param {{now: number, parts: string[], versions?: Record<string, string>, unavailable?: Record<string, string>,
- *   prices?: Record<string, number>, capCents?: number,
+ *   prices?: Record<string, number>, capCents?: number, fromScratch?: boolean,
  *   custom?: Record<string, {due: boolean, reason?: string, kept?: string, photos?: string[]}>}} opts `parts` in
  *   display order; `unavailable` names a part this deployment cannot run (no key, switched off); `capCents` drops the
  *   dearest parts until the rest fits; `custom` decides a part whose due-ness is not its row's age (`menu-photos`:
- *   due while a selected photo has no reading), with the photos it freezes
+ *   due while a selected photo has no reading), with the photos it freezes; `fromScratch` runs every available part
+ *   (a `custom` part still decides whether it has anything to run at all)
  * @returns {{run: {part: string, reason: string, ceilingCents: number, photos?: string[]}[],
  *   kept: {part: string, reason: string, detail?: string}[], ceilingCents: number}}
  */
 export function researchAgainPlan(
   rows,
-  { now, parts, versions = {}, unavailable = {}, prices = {}, capCents, custom = {} }
+  {
+    now,
+    parts,
+    versions = {},
+    unavailable = {},
+    prices = {},
+    capCents,
+    custom = {},
+    fromScratch = false,
+    setupUpdatedAt = null
+  }
 ) {
   let run = []
   const kept = []
@@ -90,7 +119,23 @@ export function researchAgainPlan(
       kept.push({ part, reason: 'unavailable', detail: unavailable[part] })
       continue
     }
+    const repair = providerRepairReason(rows[part], setupUpdatedAt)
+    if (repair) {
+      kept.push({ part, reason: 'unavailable', detail: repair })
+      continue
+    }
     const own = custom[part]
+    if (fromScratch) {
+      if (own && !own.due) kept.push({ part, reason: 'none' })
+      else
+        run.push({
+          part,
+          reason: AGAIN_REASON,
+          ceilingCents: prices[part] ?? 0,
+          ...(own?.photos ? { photos: own.photos } : {})
+        })
+      continue
+    }
     if (own) {
       if (own.due)
         run.push({
@@ -104,7 +149,7 @@ export function researchAgainPlan(
     }
     const row = rows[part]
     const version = versions[part] ?? null
-    if (!row || sourceDue(row, now, version, { manual: true }))
+    if (!row || sourceDue(row, now, version, { manual: true, setupUpdatedAt }))
       run.push({ part, reason: runReason(row, now, version), ceilingCents: prices[part] ?? 0 })
     else kept.push({ part, reason: placeSettled(row) ? 'none' : 'up-to-date' })
   }
@@ -181,13 +226,16 @@ function tripadvisorPrice(providers, { locate }) {
 /**
  * The plan of one place as this deployment would run it now: its current research, its links, the keys and the
  * operator's settings. `domain` gives the social connectors (`connectorsFor`). `onlyParts` limits the plan to those parts
- * ("Read menu again" = `['menu-file', 'menu-photos']`).
- * @returns {Promise<ReturnType<typeof researchAgainPlan> & {researched: boolean}>}
+ * ("Read menu again" = `['menu-file', 'menu-photos']`). `fromScratch` (an account's press) runs every available part
+ * and stamps the plan with `fromScratch: {at, whole}`: when it was planned (a part tried since then is not tried twice
+ * on a resume) and whether it covers the whole place (no `onlyParts`: the business, logo and brand are read again too).
+ * @returns {Promise<ReturnType<typeof researchAgainPlan> & {researched: boolean,
+ *   fromScratch?: {at: string, whole: boolean}}>}
  */
 export async function placeAgainPlan(
   db,
   placeId,
-  { now, keys = {}, settings = {}, domain, capCents, onlyParts = null }
+  { now, keys = {}, settings = {}, domain, capCents, onlyParts = null, fromScratch = false }
 ) {
   const snapshot = await currentSnapshotOf(db, placeId)
   if (!snapshot) return { run: [], kept: [], ceilingCents: 0, researched: false }
@@ -199,6 +247,7 @@ export async function placeAgainPlan(
       ])
     ).rows.length > 0
   const rows = Object.fromEntries(snapshot.sources.map((s) => [s.source, s]))
+  const setupUpdatedAt = await providerSetupUpdatedAt(db, rows)
   const parts = []
   const unavailable = {}
   const prices = {}
@@ -271,12 +320,24 @@ export async function placeAgainPlan(
     versions,
     unavailable,
     prices,
-    custom
+    custom,
+    fromScratch
   })
   const ordered = AGAIN_PARTS.filter((p) => parts.includes(p) && (!onlyParts || onlyParts.includes(p)))
   return {
-    ...researchAgainPlan(rows, { now, parts: ordered, versions, unavailable, prices, capCents, custom }),
-    researched: true
+    ...researchAgainPlan(rows, {
+      now,
+      parts: ordered,
+      versions,
+      unavailable,
+      prices,
+      capCents,
+      custom,
+      fromScratch,
+      setupUpdatedAt
+    }),
+    researched: true,
+    ...(fromScratch ? { fromScratch: { at: new Date(now).toISOString(), whole: !onlyParts } } : {})
   }
 }
 
@@ -284,13 +345,14 @@ export async function placeAgainPlan(
  * The Menu's two parts of a food place (`menuApplicable`): its files and pages (`menu-file`, free, due by age and rule)
  * and its photos (`menu-photos`, due while a selected photo has no reading under the vision model assigned now; the
  * preview freezes WHICH photos and reserves each one's vision ceiling). `keys.menuVision` resolves that model
- * (`menuVisionDoorFor`); without it photo reading counts as not configured.
+ * (`menuVisionDoorFor`); without it photo reading counts as not configured. `fromScratch` reads every selected photo
+ * again, the readings held included.
  */
 async function menuParts(
   db,
   snapshot,
   rows,
-  { now, keys, settings, domain, parts, versions, unavailable, prices, custom }
+  { now, keys, settings, domain, parts, versions, unavailable, prices, custom, fromScratch = false }
 ) {
   const profile = (await snapshotProfileOf(db, snapshot.id))?.profile ?? null
   const media = await snapshotMediaOf(db, snapshot.id)
@@ -322,7 +384,14 @@ async function menuParts(
   const row = rows[MENU_PHOTOS_PART]
   const version = menuPhotoVersion(door.door)
   const held = row?.collected?.photos ?? []
-  const scope = menuPhotoScope({ candidates, limit, held, version, now, manual: true })
+  const scope = menuPhotoScope({
+    candidates,
+    limit,
+    held: fromScratch ? [] : held,
+    version,
+    now,
+    manual: true
+  })
   prices[MENU_PHOTOS_PART] = scope.toRead.length * menuPhotoCeilingCents(door.door.model)
   if (!scope.toRead.length) {
     custom[MENU_PHOTOS_PART] = { due: false, kept: scope.selected.length ? 'up-to-date' : 'none' }
@@ -351,13 +420,21 @@ async function menuParts(
 export async function queueResearchAgain(
   pool,
   placeId,
-  { now, keys, settings, domain, starter, capCents, onlyParts = null }
+  { now, keys, settings, domain, starter, capCents, onlyParts = null, fromScratch = false }
 ) {
   const client = await pool.connect()
   try {
     await client.query('begin')
     await client.query('select 1 from wo_place where id = $1 for no key update', [placeId])
-    const plan = await placeAgainPlan(client, placeId, { now, keys, settings, domain, capCents, onlyParts })
+    const plan = await placeAgainPlan(client, placeId, {
+      now,
+      keys,
+      settings,
+      domain,
+      capCents,
+      onlyParts,
+      fromScratch
+    })
     if (!plan.run.length) {
       await client.query('rollback')
       return { plan }
@@ -388,6 +465,8 @@ export function againShape(plan) {
       reason: k.reason,
       ...(k.detail ? { detail: k.detail } : {})
     })),
-    ceilingCents: plan.ceilingCents
+    ceilingCents: plan.ceilingCents,
+    // An account's press: every available part runs again, the business is read again from scratch.
+    ...(plan.fromScratch ? { fromScratch: true } : {})
   }
 }

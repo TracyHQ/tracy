@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-541-planner-visual-coverage",
+  "kind": "fix",
+  "title": "WO planner cannot pass required visual review using text or unverified image references",
+  "pr": 541,
+  "area": "website-opportunities/planner",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run pure policy and PostgreSQL planner image/CLI regressions with scripted model replies; no provider is called."
+  ],
+  "expect": [
+    "A structurally valid plan without images fails the visual policy.",
+    "Only answered delivery after an image tool call with the exact kit and catalogue hash counts.",
+    "Representative pages, kept mobile pages and every printed block need image coverage.",
+    "Strict first-user instructions replace the optional image advice; historical checker behavior is preserved.",
+    "The WO CLI freezes the policy, missing delivery fails a checked round, and actual image delivery permits the next checked round to pass."
+  ],
+  "selectors": {},
+  "fence": "Mandatory image evidence for opt-in WO planner runs; standalone historical benches preserve their existing policy.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-planner-visual-review.test.mjs",
+      "apps/tracy-web/test/site-planner-bench-images.test.mjs",
+      "apps/tracy-web/test/site-planner-bench-cli.test.mjs"
+    ],
+    "tests": [
+      "visual review fails without delivered images and asks for group representatives first",
+      "actual answered deliveries cover representatives, kept blocks and responsive pages",
+      "tool names, forged refs and unanswered image requests never prove visual review",
+      "an incomplete image catalogue refuses coverage and historical bench checks remain unchanged",
+      "strict prompt replaces optional image advice and all printed block decisions need coverage",
+      "strict WO review follows missing image ids into a fix round and persists actual delivered evidence",
+      "strict WO review cannot pass by repeatedly returning a structurally valid plan without images",
+      "strict WO review refuses a text-only door before queueing while ordinary text benches stay available",
+      "the WO CLI visual-review flag freezes the mandatory policy on its queued run"
+    ],
+    "needs": ["postgres"]
+  }
+}

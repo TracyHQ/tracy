@@ -29,8 +29,40 @@ export function paramsOf(value) {
   }
 }
 
-/** The published items that open this kit page: the home item for the root path, else the item at the path. */
-export function rowsOpening(page, rows, menutype = null) {
+/** A missing path can still identify one exact native contact body; titles and aliases never identify that owner. */
+function contactOpening(page, rows, kit) {
+  const defined = page.blocks ? page : each(kit?.pages).find((p) => p?.id === page.id)
+  const shown = new Set(Object.values(defined?.blocks ?? {}).flat())
+  const bodies = each(kit?.blocks).filter(
+    (b) => shown.has(b?.id) && /^contact-[1-9]\d*$/.test(b?.source?.entity)
+  )
+  const owners = new Set(bodies.map((b) => b.source.entity))
+  if (owners.size !== 1 || bodies.some((b) => b.source.owner && b.source.owner !== b.source.entity)) return []
+  const [owner] = owners
+  const found = rows.filter((row) => {
+    if (
+      Number(row.published) !== 1 ||
+      !Number.isSafeInteger(Number(row.id)) ||
+      Number(row.id) <= 1 ||
+      Number(row.client_id ?? 0) !== 0
+    )
+      return false
+    const link = String(row.link ?? '')
+    if (!/^\/?index\.php\?/.test(link) || row.type !== 'component') return false
+    const query = new URLSearchParams(link.slice(link.indexOf('?') + 1))
+    if (['option', 'view', 'id'].some((key) => query.getAll(key).length !== 1)) return false
+    return (
+      query.get('option') === 'com_contact' &&
+      query.get('view') === 'contact' &&
+      /^[1-9]\d*$/.test(query.get('id')) &&
+      `contact-${query.get('id')}` === owner
+    )
+  })
+  return found.length === 1 ? found : []
+}
+
+/** The published items at the kit path, or one unambiguous native contact owner when its live alias has changed. */
+export function rowsOpening(page, rows, menutype = null, kit = null) {
   const path = slashless(page.path)
   const found = rows.filter(
     (row) =>
@@ -39,7 +71,7 @@ export function rowsOpening(page, rows, menutype = null) {
       (path === '' ? Number(row.home) === 1 : slashless(row.path) === path)
   )
   const inMenu = menutype ? found.filter((row) => row.menutype === menutype) : []
-  return inMenu.length ? inMenu : found
+  return found.length ? (inMenu.length ? inMenu : found) : path && kit ? contactOpening(page, rows, kit) : []
 }
 
 /** The article a kit page prints as its body, as its row id; a page that is a menu item has none of its own. */
@@ -128,7 +160,7 @@ export async function writePageMeta({ call, kit, pageMeta, hide, menutype = null
     rows = null
   }
   for (const [page, fresh] of rows ? stale : []) {
-    const opening = rowsOpening(pages.get(page), rows, menutype)
+    const opening = rowsOpening(pages.get(page), rows, menutype, kit)
     if (!opening.length) {
       const article = articleOfPage(pages.get(page), kit)
       if (article === null) {

@@ -10,7 +10,7 @@
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { defaultContracts } from './contracts.js'
+import { kitContracts } from './template-kit-contracts.js'
 
 export const CONTENT_MAP_FILE = 'content-map.json'
 export const NAVIGATION_SOURCE_FILE = 'navigation-source.json'
@@ -32,7 +32,7 @@ function navigationBytes(contract) {
  * @param {{ index?: Map<string, { id: string, dir?: string, platform?: string }> }} [options]
  * @returns {{ doc: object, sha256: string } | { doc: null, sha256: null, invalid?: string } | null}
  */
-export function openContentMap(ref, { index = defaultContracts() } = {}) {
+export function openContentMap(ref, { index = kitContracts() } = {}) {
   for (const contract of index.values()) {
     if (contract.id !== ref) continue
     if (!contract.dir) return { doc: null, sha256: null }

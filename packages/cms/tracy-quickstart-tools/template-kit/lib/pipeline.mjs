@@ -6,6 +6,7 @@ import { existsSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { runSite } from '../site-cli.mjs'
+import { readManifest } from './contract-manifest.mjs'
 import { readContractMap } from './contract-read.mjs'
 import { assembleKit, readIf, readJson, writeJson } from './assemble.mjs'
 import { captureSite, phase, reshootChanged } from './capture-site.mjs'
@@ -283,7 +284,9 @@ export async function runFull({ o, out, tool, chromium, log }) {
   t.done()
   kit = await assembleKit(o, out, tool)
   t = phase(log, 'classify')
-  const manifest = readJson(join(o.contract, 'manifest.json'))
+  const manifest = readManifest(o.contract, {
+    release: typeof o['release-tag'] === 'string' ? o['release-tag'] : undefined
+  })
   const trade = typeof o.trade === 'string' ? o.trade : `the template named "${manifest.template}"`
   await classifyKitIcons({ kit, out, trade, log, site: { chromium, siteUrl: o.site, hostHeader: host } })
   t.done()

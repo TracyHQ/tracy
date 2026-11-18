@@ -1,4 +1,30 @@
 /**
+ * The contract folder that holds a release's artifacts (content map, content coverage, template kit, demo baseline).
+ * A Joomla or WordPress release is sealed by a profile (`manifest.json`, found by `contractFor`). An EmDash theme has no
+ * profile and gets none: its contract data sits in the theme's own `contracts/<version>/` folder (`emdashContractDir`),
+ * so the answer for an EmDash release is that folder, shaped like a profile so the readers that take a `contract` work:
+ * `id` is `<tag>/<version>`. `contractFor` itself is unchanged; null when nothing holds the release.
+ * @param {any} release
+ * @param {import('./contracts.js').ContractIndex} contracts
+ * @returns {import('./contracts.js').Contract | null}
+ */
+export function contractOfRelease(release, contracts) {
+  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
+  const sealed = contractFor(contracts, release?.tag, version)
+  if (sealed || release?.platform !== 'emdash' || !version) return sealed
+  const dir = emdashContractDir(release, version)
+  if (!dir || !existsSync(dir)) return null
+  return {
+    id: `${String(release.tag)}/${version}`,
+    dir,
+    platform: 'emdash',
+    coworkMinVersion: null,
+    mode: null,
+    design: null
+  }
+}
+
+/**
  * The slot roles of a release's sealing contract, wherever that contract lives: the Joomla and WordPress contract
  * folders, or the EmDash theme (its seed folder in the image or in a checkout). Read through the shared reader
  * (`contract-slot-roles.js`: the content map first, then the `slot-roles.json` sidecar). Used by Content coverage on the
@@ -15,7 +41,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url))
 const IN_IMAGE = path.resolve(HERE, '../contracts')
 const EMDASH_CMS_DIR = path.resolve(HERE, '../../../../packages/cms')
 
-function emdashContractDir(release, version) {
+export function emdashContractDir(release, version) {
   if (!version) return null
   const parts = String(release?.tag ?? '')
     .split('/')

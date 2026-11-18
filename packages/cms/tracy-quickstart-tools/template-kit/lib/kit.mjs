@@ -3,7 +3,13 @@
 import { imagesDigest } from '../../../../../apps/tracy-web/src/lib/template-kit/reader.js'
 import { imageIdOf, neutralKey, pageIdOf } from './ids.mjs'
 import { buildBlock } from './kit-blocks.mjs'
-import { itemListsOf, itemParents, joinMeasuredTwins, listingListKeys } from './kit-item-lists.mjs'
+import {
+  applyItemSliderMinima,
+  itemListsOf,
+  itemParents,
+  joinMeasuredTwins,
+  listingListKeys
+} from './kit-item-lists.mjs'
 import { canonicalPath, pathOfRoute } from './kit-paths.mjs'
 import { applyLayouts } from './layouts.mjs'
 import { listingMax } from './listing-rows.mjs'
@@ -14,7 +20,7 @@ import { representativeChecks } from './pack.mjs'
 import { detailPageChecks, groupPages, LISTING, mixedGroupChecks } from './page-groups.mjs'
 import { sampleIndex } from './sample-index.mjs'
 import { judgeShowcase, showcaseChecks } from './showcase-pages.mjs'
-import { assignSlotOwners, slotOwnerChecks } from './slot-owners.mjs'
+import { assignSlotOwners, ownerTextsOf, slotOwnerChecks } from './slot-owners.mjs'
 import { formatTextSlots } from './text-format.mjs'
 import { harmonizeLimits, limitChecks } from './text-limits.mjs'
 
@@ -244,6 +250,8 @@ export function buildKit({
         if (most && most.maxSource === 'captured-rows' && list.maxFrom === 'view-setting' && list.max != null)
           Object.assign(list, { maxSource: 'view-setting', maxEvidence: most.maxEvidence })
         else if (most) Object.assign(list, most)
+        else if (list.maxFrom === 'view-setting' && Number.isInteger(list.max) && list.max > 0)
+          list.maxSource = 'view-setting'
         else
           errors.push({
             kind: 'missing',
@@ -252,6 +260,7 @@ export function buildKit({
           })
       }
     }
+    applyItemSliderMinima(block, rec.widths[desk]?.details?.repeats, errors)
     return block
   })
   // Pages of one layout: one body shot and one canHide measurement stand for all of them (layouts.mjs).
@@ -267,14 +276,7 @@ export function buildKit({
   // One limit per slot kind of a list, measured from the frame (text-limits.mjs).
   for (const b of blocks) for (const l of b.lists ?? []) harmonizeLimits(l, textFit)
   // One block per slot: the block that renders it, read from the shown words of the read pass (slot-owners.mjs).
-  const wordsOf = new Map(
-    recs.map((r) => [
-      r.id,
-      (r.widths?.[desk]?.details?.texts ?? [])
-        .map((t) => String(t).replace(/\s+/g, ' ').trim().toLowerCase())
-        .join(' | ')
-    ])
-  )
+  const wordsOf = new Map(recs.map((r) => [r.id, ownerTextsOf(r.widths?.[desk]?.details)]))
   const slotByKitId = new Map((map.slots ?? []).map((sl) => [neutralKey(sl.key), sl]))
   assignSlotOwners({
     blocks,

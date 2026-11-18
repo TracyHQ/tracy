@@ -214,11 +214,12 @@ function entryProblems(e, key) {
   const list = Object.values(ef.checks)
   if (ef.exit !== exitOfChecks(list)) out.push(`its effective exit ${ef.exit} does not agree with its checks`)
   const referenced = new Set([e.full, e.latest, ...(isList(e.log) ? e.log : [])])
-  const measured = (m, what, id) => {
+  // an intermittent group records the run that last saw its cause, which may be a run before the full run
+  const measured = (m, what, id, mayPrecedeFull = false) => {
     referenced.add(m.ranAt)
     const r = e.runs[m.ranAt]
     if (!r || r.out !== m.out || r.mode !== m.mode) out.push(`${what} was measured by a run that is not one of its run records`)
-    else if (e.runs[e.full] && r.ranAt < e.full) out.push(`${what} was measured by a run before the full run`)
+    else if (!mayPrecedeFull && e.runs[e.full] && r.ranAt < e.full) out.push(`${what} was measured by a run before the full run`)
     else if (!r.scope.checks.includes(id)) out.push(`${what} was measured by a run that did not measure ${id}`)
     return r
   }
@@ -226,7 +227,7 @@ function entryProblems(e, key) {
     measured(c.measured, `effective.checks.${c.id}`, c.id)
     // a record of the result: the run that measured it is recorded, and every cell it holds lies inside the full run
     const holds = (what, cells, m, exactly = false) => {
-      const r = measured(m, `effective.checks.${c.id}.${what}`, c.id)
+      const r = measured(m, `effective.checks.${c.id}.${what}`, c.id, what === 'intermittent')
       for (const cell of cells) {
         // a debt or an accepted cell lies inside the run that measured it; a group may hold cells carried from earlier runs
         const why = (fullWhole ? cellProblem(c.id, cell, fs) : null) ?? (exactly && r ? runProblem(c.id, cell, r.scope) : null)

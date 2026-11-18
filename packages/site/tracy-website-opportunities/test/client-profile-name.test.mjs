@@ -107,7 +107,7 @@ test('unchecked and the sources disagree: Check this, what each source says (its
   })
   const html = draw(view)
   assert.match(html, /\[name\.label\]/)
-  assert.match(html, /tracy-wo-name-chip is-check/)
+  assert.match(html, /tracy-wo-pill" data-pill="attention"/)
   assert.match(html, /\[name\.chip\.check\]/)
   assert.match(
     html,
@@ -134,7 +134,7 @@ test('after the person picked: Checked and Change, the sources no longer spelled
   assert.equal(view.lines[0].name, 'Padel & Tennis Coach')
   assert.equal(view.other, 'Harbour Sport Club')
   const html = draw(view)
-  assert.match(html, /tracy-wo-name-chip is-checked/)
+  assert.match(html, /tracy-wo-pill" data-pill="done"/)
   assert.match(html, /\[name\.change\]/)
   assert.doesNotMatch(html, /\[name\.keep\]|name\.say/)
 })
@@ -160,7 +160,7 @@ test('sources that agree: the name alone, no chip and no actions', () => {
   assert.equal(view.open, false)
   assert.equal(view.other, null)
   const html = draw(view)
-  assert.doesNotMatch(html, /name-chip|name\.keep|name\.change|name\.say/)
+  assert.doesNotMatch(html, /tracy-wo-pill|name\.keep|name\.change|name\.say/)
   assert.match(html, /Taco Corner No\. 7/)
 })
 
@@ -217,7 +217,7 @@ test('a held name says it is not on the site, which neutral name the site goes b
   const html = draw(view)
   assert.match(html, /\[name\.label\.held\]/)
   assert.doesNotMatch(html, /\[name\.label\]/)
-  assert.match(html, /tracy-wo-name-chip is-held/)
+  assert.match(html, /tracy-wo-pill" data-pill="off"/)
   assert.match(html, /\[name\.chip\.held\]/)
   assert.match(html, /\[name\.held\.uses\{&quot;name&quot;:&quot;Coaching team in Dubai&quot;\}\]/)
   assert.match(html, /\[facts\.reason\.name-differs-from-own-marks\]/)

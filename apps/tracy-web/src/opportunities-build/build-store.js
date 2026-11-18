@@ -15,7 +15,12 @@ export async function revisionOf(pool, accountId, revisionId) {
 
 export async function revisionsOf(pool, opportunityId) {
   const { rows } = await pool.query(
-    `select id, opportunity_id, n, research_hash, created_at
+    // How its pictures were labelled and its labelled-share check: whether its labels are complete (`labelsIncomplete`).
+    `select id, opportunity_id, n, research_hash, created_at, brief->'assetLabelling' as asset_labelling,
+       (select c from jsonb_array_elements(case when jsonb_typeof(brief->'readiness'->'checks') = 'array'
+          then brief->'readiness'->'checks' else '[]'::jsonb end) c where c->>'id' = 'labelled-share' limit 1)
+         as labelled_share,
+       brief->'edited'->>'fromHash' as edited_from_hash, brief->'edited'->>'by' as edited_by
      from wo_revision where opportunity_id = $1 order by n desc`,
     [opportunityId]
   )
@@ -137,6 +142,11 @@ export async function endBuild(pool, id, { state, failure = null }) {
 /**
  * A build left `requesting` with no site for `staleMs` (its process died before the create door answered) reads
  * `failed` `REQUEST_LOST`, so it neither holds the revision's one live build for ever nor spins on the page.
+ *
+ * 🔒 A DEAD CLAIM DOES NOT KEEP IT ALIVE. The create door's own claim (`site_creation`) holds the build only while it
+ * names a site or a host job, or was touched within `staleMs`; a claim with neither, idle or refused, is one the create
+ * door itself takes over (`sites/store.js` `takeOverCreation`). Counting any claim at all kept Comptoir 102 on dev
+ * (12/11/2026) `requesting` with no receipt until the action's own 2 hour deadline.
  * @returns {Promise<object | null>} the row when it was lost, else null
  */
 export async function loseStaleRequest(pool, id, staleMs) {
@@ -147,7 +157,9 @@ export async function loseStaleRequest(pool, id, staleMs) {
      where id = $1 and state = 'requesting' and site_key is null
        and updated_at < now() - ($2::int * interval '1 millisecond')
        and not exists (select 1 from site_creation sc where sc.account_id = wo_build.account_id
-                       and sc.build_id = wo_build.build_id::text)
+                       and sc.build_id = wo_build.build_id::text
+                       and (sc.site_key is not null or sc.job_id is not null
+                            or (sc.state <> 'refused' and sc.updated_at >= now() - ($2::int * interval '1 millisecond'))))
      returning *`,
     [id, staleMs]
   )

@@ -160,16 +160,19 @@ export function menuVisionDoorOf(found, host) {
 }
 
 /**
- * The door, and only when the assigned model passed the paid pixel test (`llm_model_test`), the same proof the quality
- * roles ask for (`quality-model.js`): without it the step is skipped as `not_tested`. A change of assignment (model,
- * effort) is a new fingerprint, so it needs a new test.
+ * The door for logo text reading and menu photo reading: ready whenever the `vision` assignment resolves to a model that
+ * reads pictures, with no pixel-test requirement. It is the same model and the same purpose as the brief's picture
+ * labelling (`visionDoorFor` in `apps/tracy-web/src/app.js`), which has never needed a proof; asking one here made both
+ * steps skip silently whenever the proof aged out (owner decision, 2026-11-09). The pixel test and `currentVisionProof`
+ * stay for the quality roles (`quality-model.js`). The fingerprint is still carried in the door because it is part of
+ * the collector version and the reading key; it is computed from the assignment alone, so a change of assignment (model,
+ * effort) is still a new reading key.
  */
 export async function menuVisionDoorFor(pool, secret, host) {
-  const { lookupDoor, visionFingerprint, currentVisionProof } = requireHost(host, [
+  const { lookupDoor, visionFingerprint } = requireHost(host, [
     'lookupDoor',
     'effortOptions',
-    'visionFingerprint',
-    'currentVisionProof'
+    'visionFingerprint'
   ])
   const found = await lookupDoor(pool, 'vision', secret)
   const door = menuVisionDoorOf(found, host)
@@ -179,9 +182,7 @@ export async function menuVisionDoorFor(pool, secret, host) {
     baseUrl: found.credential.baseUrl,
     model: found.credential.model
   })
-  return (await currentVisionProof({ pool, fingerprint }))
-    ? { ...door, door: { ...door.door, fingerprint } }
-    : { state: 'not_tested' }
+  return { ...door, door: { ...door.door, fingerprint } }
 }
 
 /**

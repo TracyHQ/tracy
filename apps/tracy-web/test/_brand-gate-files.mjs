@@ -116,8 +116,49 @@ export async function drawFiles(id, brand) {
       bytes = await iconPng(icon.colours)
     else if (file === F.ico || file.endsWith('.jpg')) bytes = Buffer.from('not-an-image')
     else if (file === colours.module?.file) bytes = Buffer.from('<style>/* accent module */</style>')
-    else bytes = await blockPng(/logo|spots|name/.test(at) ? '#33261a' : '#7a5a2e')
+    else if (file === L.mark.file) bytes = await blockPng('#986837')
+    else
+      bytes = await blockPng(
+        /\.dark/.test(file) ? '#f2e3b3' : /logo|spots|name/.test(at) ? '#33261a' : '#7a5a2e'
+      )
     files.set(file, bytes)
+  }
+  // Bench runs now validate the actual 2x spot file. Generate real fitted copies instead of the
+  // old generic 120x40 blocks, and keep the final-file review explicit in these scripted fixtures.
+  for (const spot of L.spots) {
+    const kit = KIT.site.logoSpots.find((x) => x.id === spot.spot)
+    const side = kit.ground.side
+    const from =
+      spot.shows === 'mark'
+        ? L.mark.recoloured?.[side] || L.mark.file
+        : spot.shows === 'logo'
+          ? L.logos[side]
+          : L.logos.twoLines[side]
+    const cropped = await sharp(files.get(from)).trim({ threshold: 0 }).png().toBuffer()
+    files.set(
+      spot.file,
+      await sharp(cropped)
+        .resize(kit.width * 2, kit.height * 2, {
+          fit: 'contain',
+          position: 'left',
+          background: '#00000000'
+        })
+        .png()
+        .toBuffer()
+    )
+    if (!L.look.some((look) => look.file === spot.file && look.ground === spot.ground))
+      L.look.push({
+        file: spot.file,
+        ground: spot.ground,
+        verdict: 'pass',
+        checks: [
+          {
+            check: 'the fitted mark or name reads on its spot ground',
+            verdict: 'pass',
+            reason: 'Scripted final-file review of the generated fixture.'
+          }
+        ]
+      })
   }
   return files
 }

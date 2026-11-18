@@ -17,6 +17,7 @@
 // bytes, draws the same file and writes nothing. An icon whose template icon cannot be read is not drawn: the template's own stays.
 // What is drawn is then held to that same file (painted-look-guard.js), and a drawing that moved from it is refused, not written.
 import { readFile } from 'node:fs/promises'
+import { isDeepStrictEqual } from 'node:util'
 import path from 'node:path'
 import { isKeptIcon } from './slot-corrections.js'
 
@@ -62,6 +63,44 @@ async function roleColours(brand, brandPath) {
     'on-dark': sides.dark?.fg,
     surface: sides.dark?.surface
   }
+}
+
+/** Accent-only brands keep the template's neutral backdrop. Read its actual picture, never a preview palette. */
+async function backdropColours(item, colours, slot, templateFile, templateAccent) {
+  if (item.kind !== 'backdrop' || colours.surface || item.paint?.circle !== 'surface' || !templateFile)
+    return { colours }
+  const file = templateFileOf(slot)
+  if (!file) return { colours }
+  const bytes = await templateFile(file).catch(() => null)
+  if (!bytes) return { colours }
+  const { backdropOf } = await import('../lib/picture-paint/cutout-backdrop.js')
+  const measured = await backdropOf(bytes, { accent: templateAccent })
+  // A changed template picture cannot supply a neutral for an old recipe. Keep the existing explicit failure.
+  if (
+    !measured ||
+    measured.paint.circle !== 'surface' ||
+    !isDeepStrictEqual(measured.shape, item.draw?.backdrop)
+  )
+    return { colours }
+  return {
+    colours: { ...colours, surface: measured.demoColours.circle },
+    source: { file, role: 'surface', colour: measured.demoColours.circle }
+  }
+}
+
+/**
+ * The frames the stage leaves without a picture of their own: not drawn, not a kept picture the template holds on purpose, not an
+ * icon (the template's icon is its look, not demo content), and with nothing else sent for them. The write step's closing rule
+ * (closing-ladder.js) empties each, so a frame no brand colour could paint never keeps the template's demo picture.
+ * @param {object[]} left `out.left` of preparePainted
+ * @param {Record<string, string>} changes what the picture stage sends, by content map key
+ * @returns {{ slot: string, key: string, reason: string }[]}
+ */
+export function undrawnFrames(left, changes) {
+  return left
+    .filter(({ item, reason }) => item.kind !== 'icon' && item.kind !== 'backdrop' && reason !== KEPT)
+    .filter(({ item }) => typeof item.key === 'string' && !(item.key in changes))
+    .map(({ item, reason }) => ({ slot: item.frame, key: item.key, reason }))
 }
 
 /** Why this frame is not drawn, or null. */
@@ -185,7 +224,8 @@ export async function preparePainted({
       out.refused.push({ step: PICTURE_STEP, what: item.frame, reason: NO_READER(unreadable) })
       continue
     }
-    const made = await drawPainted(item, colours, {
+    const palette = await backdropColours(item, colours, slots.get(item.key), templateFile, templateAccent)
+    const made = await drawPainted(item, palette.colours, {
       fit: slots.get(item.key)?.fit,
       figures,
       look: held?.look ?? null,
@@ -207,6 +247,7 @@ export async function preparePainted({
       file: sitePath,
       sha256: made.sha256,
       drawnIn: made.drawnIn,
+      ...(palette.source ? { templateColour: palette.source } : {}),
       ...(held ? { template: held.look ? { file: held.file, look: held.look } : null } : {}),
       takes: 'image-path',
       redraw: REDRAW

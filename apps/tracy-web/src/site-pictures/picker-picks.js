@@ -13,10 +13,10 @@
 // of frames code decided, or that wait for another step (the drawer, icons, cut-outs), are kept on the round's check
 // result (`notForPicker`) and never go to the picker. When nothing is left for the picker the run ends.
 import { invalidChangesMessage as invalidChangesMessageFor } from '../lib/bench-changes.js'
-import { addTwins, pendingEntry, placedEntry } from './frame-entries.js'
 import { WAITS_FOR } from './fill-frames.js'
-import { failureListText } from './picture-check/check-pictures.js'
+import { addTwins, pendingEntry, placedEntry } from './frame-entries.js'
 import { ANSWER_FORM, NO_FIT_REASON } from './picker-input.js'
+import { failureListText } from './picture-check/check-pictures.js'
 
 /** What a frame waits for once no owner photo is chosen for it: the drawer (#344). */
 export const WAITS_FOR_DRAWER = 'drawer'
@@ -145,9 +145,39 @@ export function applyPicks(previous, changeList, { ready }) {
     picks.set(change.frame, { photo: change.photo, reason: change.reason.trim() })
     validChanges.push(change)
   }
+  const doc = manifestFor(ready, picks)
+  if (previous?.readabilityRetries?.length) {
+    doc.readabilityRetries = [...previous.readabilityRetries]
+    // A fix round rebuilds cuts from the original owner photos. Reselecting the same candidate keeps its recorded
+    // transformed bytes; the finisher still checks those bytes through the independent looker's durable cache.
+    for (const list of ['frames', 'siteSettings']) {
+      const prior = new Map((previous[list] ?? []).map((entry) => [entry.frame, entry]))
+      doc[list] = doc[list].map((entry) => {
+        const held = prior.get(entry.frame)
+        const sameRetry = previous.readabilityRetries.some(
+          (retry) =>
+            retry.frame === entry.frame &&
+            retry.sourceSha256 === entry.sha256 &&
+            retry.sha256 === held?.sha256
+        )
+        return sameRetry
+          ? {
+              ...entry,
+              file: held.file,
+              sha256: held.sha256,
+              sitePath: held.sitePath,
+              width: held.width,
+              height: held.height,
+              darkened: true,
+              overlay: held.overlay
+            }
+          : entry
+      })
+    }
+  }
   return {
     ok: true,
-    doc: manifestFor(ready, picks),
+    doc,
     replacements: [],
     applied: validChanges.length,
     rejected,

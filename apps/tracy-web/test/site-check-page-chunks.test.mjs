@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { demoQaBody } from '../../tracy-host/src/demo-qa.js'
-import { callPages, chunksOf, hostPath } from '../src/site-check/page-chunks.js'
+import { callPages, chunksOf, hostPath } from '../src/lib/page-chunks.js'
 
 const PATHS = [
   '/',

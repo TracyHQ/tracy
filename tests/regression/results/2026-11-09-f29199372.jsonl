@@ -1,0 +1,1 @@
+{"id":"REG-PR-504-database-import-integrity","verdict":"PASS","commit":"f2919937240a27baa7a8b9fe456c7fd6eb7e36dc","ran_at":"2026-11-09T08:29:40.384Z","evidence":"tests/regression/.runs/2026-11-09-f29199372/REG-PR-504-database-import-integrity.log"}

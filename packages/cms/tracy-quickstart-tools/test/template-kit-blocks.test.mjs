@@ -12,6 +12,7 @@ import { chromium } from '@playwright/test'
 import { capturePage, cropBox, openKitContext } from '../template-kit/lib/capture.mjs'
 import { dropLinksTo } from '../template-kit/lib/exclude.mjs'
 import { measureMin } from '../template-kit/lib/measure-min.mjs'
+import { findBlocks } from '../template-kit/lib/find-blocks.js'
 
 const FIXTURE = pathToFileURL(
   join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'template-kit', 'page.html')
@@ -242,4 +243,50 @@ test('rows in a closed tab are opened by the tab control, then measured', async 
   assert.deepEqual(r.okCounts, [1, 2, 3, 4])
   assert.equal(r.min, 1)
   assert.notEqual(r.checks[4][1440].ok, null, 'the rows were shown, so judged')
+})
+
+test('assigned T3 section chrome exposes each module without guessing layout or ambiguous ids', async (t) => {
+  const browser = await launch()
+  if (!browser) return t.skip('no Chromium available')
+  try {
+    const page = await browser.newPage()
+    await page.setContent(`<div class="t3-wrapper"><div id="t3-header">Header</div>
+      <div class="t3-section module" id="Section121">Menu introduction</div>
+      <div class="t3-section module" id="Section122">Restaurant introduction</div>
+      <div class="t3-section module" id="Section123">Team portraits</div>
+      <div class="t3-section module" id="Section124">Unassigned module</div>
+      <div id="Section125">An unrelated element with matching digits</div>
+      <div class="t3-section module" id="Section126">Ambiguous first wrapper</div>
+      <div id="mod-126">Ambiguous second wrapper</div>
+      <div class="t3-section module" id="Section127" style="display:none">Hidden module</div>
+      <div class="t3-off-canvas"><div class="t3-section module" id="Section128">Closed navigation</div></div>
+      <div class="t3-section module" id="Section129"><div id="acm-feature-129">Already wrapped</div></div>
+      <div class="t3-section module" id="Section0121">A lookalike with a different exact id</div>
+    </div>`)
+    const assigned = [121, 122, 123, 125, 126, 127, 128, 129].map((id) => ({
+      entity: `module-${id}`,
+      position: 'section-top'
+    }))
+    const result = await page.evaluate(findBlocks, assigned)
+    const by = new Map(result.blocks.map((block) => [block.block, block]))
+    for (const id of [121, 122, 123]) {
+      assert.equal(by.get(`module-${id}`)?.visible, true, `assigned section module ${id} is captured`)
+      assert.equal(by.get(`module-${id}`)?.kind, 'module-id')
+    }
+    for (const id of [124, 125, 126]) assert.equal(by.has(`module-${id}`), false)
+    assert.equal(by.has('module-0121'), false)
+    assert.equal(by.get('module-127')?.visible, false)
+    assert.equal(by.get('module-128')?.offCanvas, true)
+    assert.equal(result.blocks.filter((block) => block.block === 'module-129').length, 1)
+    await page.setContent(
+      '<div class="t4-wrapper"><div class="t3-section module" id="Section121">Not T3</div></div>'
+    )
+    const t4 = await page.evaluate(findBlocks, assigned)
+    assert.equal(
+      t4.blocks.some((block) => block.block === 'module-121'),
+      false
+    )
+  } finally {
+    await browser.close()
+  }
 })

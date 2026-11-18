@@ -18,7 +18,8 @@ export function checkW06({ R, view, idx }) {
   const isFact = (run) => factTexts.some((f) => f.includes(` ${run} `))
   const entries = []
   for (const s of view.slots)
-    if (s.owner === 'writer') for (const t of s.items) entries.push({ where: s.slot, text: t })
+    if (s.owner === 'writer' && !idx.iconFields?.get(s.slot)?.has(s.items.join(' ')))
+      for (const t of s.items) entries.push({ where: s.slot, text: t })
   for (const p of view.pages)
     p.body.forEach((t, i) => entries.push({ where: `${p.page} (body ${i + 1})`, text: t }))
   for (const s of view.seo) entries.push({ where: `${s.page} (description)`, text: s.description })
@@ -56,6 +57,7 @@ export function checkW06({ R, view, idx }) {
 export function checkW07({ R, view, idx }) {
   for (const t of allTexts(view)) {
     if (t.kind === 'label') continue
+    if (t.kind === 'slot' && idx.iconFields?.get(t.where)?.has(t.text)) continue
     let bad = false
     const normal = ` ${wordsOf(t.text).join(' ')} `
     if (t.kind === 'slot')

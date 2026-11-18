@@ -1,0 +1,2 @@
+- **Details sub-pages get one title row: a round back button, the page title, a step chip, a short description line and Approve and continue; the progress line, the count and the scroll gate are gone** — Akemi · #522 · `feat/wo-ux-512` · 2026-11-11
+  **Affects:** Website Opportunities customers on Business facts, Site content brief and the build pages: approval is a button in the header, with no need to scroll to the end first. New English strings, not translated yet.

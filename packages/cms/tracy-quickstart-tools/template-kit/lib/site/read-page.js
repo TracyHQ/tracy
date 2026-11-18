@@ -7,7 +7,7 @@
  * block that holds contact details.
  * @param {{siteName: string|null, contactPattern: string}} o
  */
-export function readPage({ siteName, contactPattern }) {
+export function readPage({ siteName, contactPattern, cmsBlock }) {
   const OFF =
     '.t4-offcanvas, .t4-off-canvas, .t3-off-canvas, .js-offcanvas, .offcanvas, .off-canvas, [id^="off-canvas"]'
   const FOOTER = 'footer, [class*="footer"], [class*="footnav"]'
@@ -25,6 +25,63 @@ export function readPage({ siteName, contactPattern }) {
     const cs = getComputedStyle(el)
     return r.width >= 1 && r.height >= 1 && cs.visibility !== 'hidden' && cs.display !== 'none'
   }
+  // Structural identity is not a CMS classification. Repeated shapes cannot be picked by ordinal alone.
+  const cmsLines = () => {
+    const roots = [...document.querySelectorAll('[data-kit-block]')]
+    const shape = (el) => `${el.tagName}|${el.id || ''}|${[...el.classList].sort().join(' ')}`
+    const cache = new Map()
+    const lines = []
+    let complete = true
+    for (const root of roots) {
+      const block = root.getAttribute('data-kit-block')
+      if (cmsBlock !== undefined && block !== cmsBlock) continue
+      const elements = [...root.querySelectorAll('*')].filter((el) => el.closest('[data-kit-block]') === root)
+      if (elements.length > 3000) complete = false
+      const counts = new Map()
+      for (const el of elements) counts.set(shape(el), (counts.get(shape(el)) ?? 0) + 1)
+      cache.set(root, { elements, counts, block })
+    }
+    for (const [root, { elements, counts, block }] of cache) {
+      for (const el of elements) {
+        if (lines.length >= 3000) {
+          complete = false
+          break
+        }
+        if (el.closest('script, style, noscript')) continue
+        const own = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())
+        if (cmsBlock === undefined && (!own || !shown(el))) continue
+        if (!own && el.children.length) continue
+        const text = clean(el.innerText)
+        if (cmsBlock === undefined && (text.length < 2 || text.length > 400)) continue
+        const path = [],
+          lineage = []
+        for (let node = el; node !== root; node = node.parentElement) {
+          const siblings = [...node.parentElement.children]
+          path.unshift(siblings.indexOf(node))
+          lineage.unshift({ shape: shape(node), siblings: siblings.map(shape) })
+        }
+        lines.push({
+          block,
+          text,
+          shown: shown(el),
+          holder: {
+            path,
+            lineage,
+            root: shape(root),
+            unique:
+              counts.get(shape(el)) === 1 &&
+              roots.filter((r) => r.getAttribute('data-kit-block') === block).length === 1,
+            pure: el.children.length === 0,
+            complete: true
+          }
+        })
+      }
+    }
+    for (const l of lines) l.holder.complete = complete
+    return { textLines: lines, cmsLinesComplete: complete }
+  }
+  // The same producer reads empty/hidden holders after an override, without losing their identity.
+  if (cmsBlock !== undefined) return cmsLines()
   const meta = {}
   for (const m of document.querySelectorAll('meta[property], meta[name]')) {
     const k = m.getAttribute('property') ?? m.getAttribute('name')
@@ -141,13 +198,7 @@ export function readPage({ siteName, contactPattern }) {
   }
   // Text lines of every block: each shown element that owns words directly (a text node child), for telling the
   // sentences the CMS prints from its language files.
-  const textLines = []
-  for (const el of document.querySelectorAll('[data-kit-block] *')) {
-    if (textLines.length >= 3000 || el.closest('script, style, noscript') || !shown(el)) continue
-    if (![...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) continue
-    const text = clean(el.innerText)
-    if (text.length >= 2 && text.length <= 400) textLines.push({ block: blockOf(el), text })
-  }
+  const { textLines } = cmsLines()
   // The words and links of the page's own area (outside header, footer and menus), for pages such as not-found.
   const own = document.querySelector('#t4-main-body, #t3-mainbody, main, [role="main"]') ?? document.body
   const ownTexts = []

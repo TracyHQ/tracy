@@ -501,44 +501,34 @@ const found = (extra = {}) => ({
   }
 })
 
-test('the paid pixel test gates the step: no passed test is "not_tested", a passed one opens it', async () => {
-  const asked = []
-  const proof = (answer) => async (args) => {
-    asked.push(args.fingerprint)
-    return answer
+test('a ready vision assignment opens the door with no pixel proof, and never looks one up', async () => {
+  let proofAsked = 0
+  const host = {
+    ...woHost,
+    lookupDoor: async () => found(),
+    currentVisionProof: async () => {
+      proofAsked += 1
+      return null
+    }
   }
-  const lookup = async () => found()
-  const none = await menuVisionDoorFor({}, 's', {
-    ...woHost,
-    lookupDoor: lookup,
-    currentVisionProof: proof(null)
-  })
-  assert.deepEqual(none, { state: 'not_tested' })
-  const ok = await menuVisionDoorFor({}, 's', {
-    ...woHost,
-    lookupDoor: lookup,
-    currentVisionProof: proof({ id: 't1' })
-  })
+  const ok = await menuVisionDoorFor({}, 's', host)
   assert.equal(ok.state, 'ready')
-  // The same fingerprint the quality roles ask for, so one paid test serves both.
+  // The fingerprint stays in the door: it is part of the reading key.
   const f = found()
   assert.equal(
-    asked[0],
+    ok.door.fingerprint,
     visionFingerprint({ snapshot: f.snapshot, baseUrl: f.credential.baseUrl, model: 'deepseek-flash' })
   )
-  // Nothing assigned: the test is not even looked up.
-  asked.length = 0
+  assert.equal(proofAsked, 0)
+  // Nothing assigned, or a model that does not read pictures: still not ready.
   assert.equal(
-    (
-      await menuVisionDoorFor({}, 's', {
-        ...woHost,
-        lookupDoor: async () => ({ state: 'unassigned' }),
-        currentVisionProof: proof(null)
-      })
-    ).state,
+    (await menuVisionDoorFor({}, 's', { ...host, lookupDoor: async () => ({ state: 'unassigned' }) })).state,
     'not_configured'
   )
-  assert.equal(asked.length, 0)
+  const blind = found()
+  blind.snapshot.metadata = { ...blind.snapshot.metadata, vision: false }
+  const out = await menuVisionDoorFor({}, 's', { ...host, lookupDoor: async () => blind })
+  assert.deepEqual(out, { state: 'unavailable', reason: 'model_does_not_read_pictures' })
 })
 
 test('a model that is not tested is skipped by the reader: no call, no charge, status not_tested', async () => {

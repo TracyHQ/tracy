@@ -1,0 +1,154 @@
+$ node --import tsx --test --test-concurrency=1 --test-reporter=tap apps/tracy-web/test/website-opportunities-research-again-plan.test.mjs apps/tracy-web/test/website-opportunities-research-again.test.mjs
+TAP version 13
+# Subtest: a press runs a source our setup failed on an hour ago; the automatic rule still waits a day
+ok 1 - a press runs a source our setup failed on an hour ago; the automatic rule still waits a day
+  ---
+  duration_ms: 0.506917
+  type: 'test'
+  ...
+# Subtest: a press never looks again within thirty days at what the place itself does not have
+ok 2 - a press never looks again within thirty days at what the place itself does not have
+  ---
+  duration_ms: 0.070458
+  type: 'test'
+  ...
+# Subtest: the plan names each part to run with its reason and price, and each part kept with its reason
+ok 3 - the plan names each part to run with its reason and price, and each part kept with its reason
+  ---
+  duration_ms: 0.529542
+  type: 'test'
+  ...
+# Subtest: a place with nothing due has an empty plan
+ok 4 - a place with nothing due has an empty plan
+  ---
+  duration_ms: 0.082042
+  type: 'test'
+  ...
+# Subtest: a refresh that found a collected page gone is "none", not failed, for thirty days
+ok 5 - a refresh that found a collected page gone is "none", not failed, for thirty days
+  ---
+  duration_ms: 0.077625
+  type: 'test'
+  ...
+# Subtest: a plan over a cap drops its dearest parts first and says so
+ok 6 - a plan over a cap drops its dearest parts first and says so
+  ---
+  duration_ms: 0.1105
+  type: 'test'
+  ...
+# Subtest: from scratch, every part runs again whatever its age; only parts this server cannot run are kept
+ok 7 - from scratch, every part runs again whatever its age; only parts this server cannot run are kept
+  ---
+  duration_ms: 0.127084
+  type: 'test'
+  ...
+# Subtest: payment refusals stay out of both paid research plans until the operator saves repaired setup
+ok 8 - payment refusals stay out of both paid research plans until the operator saves repaired setup
+  ---
+  duration_ms: 0.126625
+  type: 'test'
+  ...
+# Subtest: the search for each network leaves its own row on the published snapshot
+ok 9 - the search for each network leaves its own row on the published snapshot
+  ---
+  duration_ms: 1525.962042
+  type: 'test'
+  ...
+# Subtest: a place researched before the search existed is searched by Research again, and nothing else runs
+ok 10 - a place researched before the search existed is searched by Research again, and nothing else runs
+  ---
+  duration_ms: 130.382542
+  type: 'test'
+  ...
+# Subtest: Research again with nothing due queues nothing
+ok 11 - Research again with nothing due queues nothing
+  ---
+  duration_ms: 76.290125
+  type: 'test'
+  ...
+# Subtest: a Try again of one search that finds nothing new still records the try on the current research
+ok 12 - a Try again of one search that finds nothing new still records the try on the current research
+  ---
+  duration_ms: 134.460417
+  type: 'test'
+  ...
+# Subtest: a researched place with every source fresh still gets every part from scratch
+ok 13 - a researched place with every source fresh still gets every part from scratch
+  ---
+  duration_ms: 117.484125
+  type: 'test'
+  ...
+# Subtest: a Research again pressed while a run is going joins it and queues nothing more
+ok 14 - a Research again pressed while a run is going joins it and queues nothing more
+  ---
+  duration_ms: 71.613708
+  type: 'test'
+  ...
+# Subtest: an account presses Research again on its place card: the run is its own, within its daily limit
+ok 15 - an account presses Research again on its place card: the run is its own, within its daily limit
+  ---
+  duration_ms: 86.523542
+  type: 'test'
+  ...
+# Subtest: a stranger on /find presses Research again: Tracy pays, once a place a day
+ok 16 - a stranger on /find presses Research again: Tracy pays, once a place a day
+  ---
+  duration_ms: 142.755042
+  type: 'test'
+  ...
+# Subtest: /ops confirms a page the search left for a person to check, and the place gains it
+ok 17 - /ops confirms a page the search left for a person to check, and the place gains it
+  ---
+  duration_ms: 82.132917
+  type: 'test'
+  ...
+# Subtest: /ops sees the pages each search found, with their verdict and evidence
+ok 18 - /ops sees the pages each search found, with their verdict and evidence
+  ---
+  duration_ms: 132.427667
+  type: 'test'
+  ...
+# Subtest: Google facts collected before the field mask gained the phone are fetched again by Research again
+ok 19 - Google facts collected before the field mask gained the phone are fetched again by Research again
+  ---
+  duration_ms: 201.154875
+  type: 'test'
+  ...
+# Subtest: a Facebook page collected before the logo fix is collected again by Research again
+ok 20 - a Facebook page collected before the logo fix is collected again by Research again
+  ---
+  duration_ms: 123.522291
+  type: 'test'
+  ...
+# Subtest: the preview ceiling holds every call a run can make
+ok 21 - the preview ceiling holds every call a run can make
+  ---
+  duration_ms: 74.598916
+  type: 'test'
+  ...
+# Subtest: /ops adds a social page the search did not find; Research again then collects it
+ok 22 - /ops adds a social page the search did not find; Research again then collects it
+  ---
+  duration_ms: 81.361625
+  type: 'test'
+  ...
+# Subtest: provider payment failure blocks the preview and source-only request before quota; repaired setup reopens it
+ok 23 - provider payment failure blocks the preview and source-only request before quota; repaired setup reopens it
+  ---
+  duration_ms: 145.178584
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3646.277292
+
+--- stderr ---
+
+--- verdict ---
+PASS 

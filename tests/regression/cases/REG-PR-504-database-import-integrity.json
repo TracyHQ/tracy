@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-504-database-import-integrity",
+  "kind": "fix",
+  "title": "Database import refuses malformed and stalled pages, preserves view order, retries storage and fences redirects",
+  "pr": 504,
+  "area": "site/import",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the named HTTP fault cases against the branch exporter."],
+  "expect": [
+    "Malformed and stalled replies never reach storage.",
+    "View DDL follows base tables in dependency order.",
+    "A transient upload recovers and cross-origin redirects receive no token.",
+    "Large binary payloads and WordPress login diagnosis are handled."
+  ],
+  "selectors": {
+    "test": "packages/site/tracy-add-site/test/export-site-limits.test.mjs"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=database export refuses|legacy cursors and offsets|view definitions follow|transient database storage|cross-origin 307|large binary literal|WordPress login form",
+      "packages/site/tracy-add-site/test/export-site-limits.test.mjs"
+    ],
+    "tests": [
+      "database export refuses malformed replies before signing a storage upload",
+      "legacy cursors and offsets stop on a repeated page or zero progress",
+      "view definitions follow all base tables in dependency order from the engine",
+      "a transient database storage refusal or reset retries the complete compressed upload",
+      "cross-origin 307 never forwards an engine token",
+      "a database page with a large binary literal does not overflow base64 validation",
+      "a WordPress login form after a valid engine reply retains the login diagnosis"
+    ]
+  }
+}

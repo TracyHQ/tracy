@@ -72,6 +72,10 @@ case "$LABEL" in
 esac
 
 SITE_DIR="$ROOT/$LABEL"
+# A demo folded into the demo farm has no runtime of its own to change (lib/site-runtime.sh).
+# shellcheck source=../lib/site-runtime.sh
+. "$HERE/../lib/site-runtime.sh"
+tracy_refuse_if_farm "$SITE_DIR" "$LABEL" "attaching its folders to the host dsh" || exit 1
 [ -d "$SITE_DIR" ] || { echo "no site directory at $SITE_DIR" >&2; exit 1; }
 
 # The dev machine still has to get through here. Binds are a Linux thing and need root; on macOS

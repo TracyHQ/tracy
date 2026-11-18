@@ -194,6 +194,18 @@ test('accept: a not-measurable row closes the not-measured cases of its cause up
   assert.equal(chips.chips.notMeasured.length, 0)
 })
 
+test('accept: a not-measurable row declared intermittent is skipped, not stale, when its cause is not among the not-measured causes of the run', () => {
+  const judge = (nm) => ({ icons: { cases: 5, defects: [], notDefects: [], listed: [], notMeasured: nm } })
+  const gone = applyAccept(judge([]), [NM('icons', 'icons-unpairable', { intermittent: true })], {})
+  assert.deepEqual(gone.errors, [])
+  assert.match(gone.skipped[0].why, /intermittent/)
+  // a cause that is there is closed like any other row, and the flag does not widen the count
+  const j = judge(unmeasured('icons-unpairable', 3))
+  assert.match(applyAccept(j, [NM('icons', 'icons-unpairable', { intermittent: true })], {}).errors[0].message, /grew/)
+  // without the flag a row of an absent cause stays stale
+  assert.match(applyAccept(judge([]), [NM('icons', 'icons-unpairable')], {}).errors[0].message, /stale/)
+})
+
 test('accept: a not-measurable row needs its count, reason, hand measurement and evidence that exists, and no route, decision or other scope', () => {
   const errs = (row) => validateSweepAccept([row], { decisions: null, runRoot: '/' })
   assert.deepEqual(errs(NM('icons', 'icons-unpairable')), [])

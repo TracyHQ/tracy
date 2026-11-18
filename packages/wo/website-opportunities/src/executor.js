@@ -27,6 +27,8 @@ import { claimPlaceJob } from './place-jobs.js'
 import { isPlaceholderName, nameClaimsOf, withNameDecision } from './business-name.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
 import { videoSize } from '../domain/video-size.mjs'
+import { isBookingUrl } from '../domain/link-platforms.mjs'
+import { withMediaAdmission } from './media-admission.js'
 import { LISTING_SOURCE, refsOfCandidate, refsOfUrls, SOCIAL_SOURCES, SOURCES } from './sources.js'
 
 const { hoursDisagree } = await import(pathToFileURL(path.join(WO_DOMAIN_DIR, 'opening-hours.mjs')).href)
@@ -55,15 +57,15 @@ export const EXECUTOR_LOCK_ID = 7_243_040
 const RESUMABLE = new Set(['timeout', 'rate_limited', 'quota'])
 const MEDIA_BUDGET = 300
 const WEBSITE_PAGES = 40
-const IMAGE_MAX_BYTES = 25 * 1024 * 1024
-const VIDEO_MAX_BYTES = 200 * 1024 * 1024
+export const IMAGE_MAX_BYTES = 25 * 1024 * 1024
+export const VIDEO_MAX_BYTES = 200 * 1024 * 1024
 const PLACE_FACTS_MAX_AGE_MS = 30 * 24 * 3600 * 1000
 const PLACE_PHOTOS_MAX = 10
 /** `wo_media.source` of a photo from the restaurant's Google Places listing. */
 export const GOOGLE_PLACES_SOURCE = 'google-places'
 /** The most of a caption or alt text kept with a picture: the picture planner reads its opening. */
 const TEXT_MAX = 2000
-const EXT = {
+export const EXT = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
   'image/gif': 'gif',
@@ -339,12 +341,17 @@ export function createExecutor({
             lastError: { code: 'SOURCE_PAUSED', source, reason: 'quota' },
             outcome: 'source_paused'
           }
-        const result = await collectOne(
-          connectors[source],
+        const result = await withLinkPages(
+          domain,
           source,
-          row,
-          settings.maxChargeUsdPerRun,
-          paid ? apifyRunHooks(pool, lease, held) : {}
+          row.ref,
+          await collectOne(
+            connectors[source],
+            source,
+            row,
+            settings.maxChargeUsdPerRun,
+            paid ? apifyRunHooks(pool, lease, held) : {}
+          )
         )
         const collected = mergeCollected(row.collected, result)
         await fenced(pool, lease, async (db) => {
@@ -485,6 +492,15 @@ export function createExecutor({
     }
   }
 
+  /**
+   * A source read with the link-in-bio pages it points at read into it (`domain/link-in-bio.mjs`): the website's links
+   * to one, a social page's bio link. Free and bounded; a read with none comes back unchanged.
+   */
+  async function withLinkPages(domain, source, ref, result) {
+    if (typeof domain.expandLinkPages !== 'function') return result
+    return domain.expandLinkPages(result, { source, ref }, domainDeps)
+  }
+
   /** Preserve paid-run recovery hooks alongside per-job collection limits. */
   async function collectOne(
     connector,
@@ -576,7 +592,13 @@ export function createExecutor({
   })
 
   /** The media row of one collected item (`owner`: `opportunityOwner`, or a place's in `place-executor.js`). */
-  async function mediaRecord(domain, owner, m) {
+  function mediaRecord(domain, owner, m) {
+    return withMediaAdmission(m.kind === 'video' ? 'video' : 'image', () =>
+      admittedMediaRecord(domain, owner, m)
+    )
+  }
+
+  async function admittedMediaRecord(domain, owner, m) {
     const declared = m.kind === 'video' ? 'video' : 'image'
     const base = {
       ...owner.fields,
@@ -682,33 +704,37 @@ export function createExecutor({
     for (const [i, photo] of photos.entries()) {
       if (known.has(`${GOOGLE_PLACES_SOURCE}:${photo.name}`)) continue
       if (await ctx.pausePoint({ placePhotos: { done: i, total: photos.length } })) return FEATURE_OFF
-      let got
-      try {
-        got = await domain.fetchPlacePhoto(photo.name, {
-          ...domainDeps,
-          googleKey: keys.google,
-          attributions: photo.attributions ?? [],
-          maxBytes: IMAGE_MAX_BYTES
-        })
-      } catch (error) {
-        log.warn(`[opportunities] ${opp.id}: Google photo skipped (${error?.code ?? 'error'})`)
-        continue
-      }
-      const base = {
-        accountId: opp.account_id,
-        opportunityId: opp.id,
-        kind: 'image',
-        category: 'other',
-        caption: null,
-        alt: null,
-        source: GOOGLE_PLACES_SOURCE,
-        sourceUrl: got.sourceUrl,
-        postId: null,
-        postedAt: null
-      }
-      const record = await storedRecord(domain, opportunityOwner(opp), base, got.bytes, () => null)
+      const result = await withMediaAdmission('image', async () => {
+        let got
+        try {
+          got = await domain.fetchPlacePhoto(photo.name, {
+            ...domainDeps,
+            googleKey: keys.google,
+            attributions: photo.attributions ?? [],
+            maxBytes: IMAGE_MAX_BYTES
+          })
+        } catch (error) {
+          log.warn(`[opportunities] ${opp.id}: Google photo skipped (${error?.code ?? 'error'})`)
+          return null
+        }
+        const base = {
+          accountId: opp.account_id,
+          opportunityId: opp.id,
+          kind: 'image',
+          category: 'other',
+          caption: null,
+          alt: null,
+          source: GOOGLE_PLACES_SOURCE,
+          sourceUrl: got.sourceUrl,
+          postId: null,
+          postedAt: null
+        }
+        const record = await storedRecord(domain, opportunityOwner(opp), base, got.bytes, () => null)
+        return { record, attributions: got.attributions }
+      })
+      const { record, attributions } = result ?? {}
       if (!record) continue
-      record.labels = { ...record.labels, credit: { provider: 'Google', authors: got.attributions ?? [] } }
+      record.labels = { ...record.labels, credit: { provider: 'Google', authors: attributions ?? [] } }
       await fenced(pool, lease, (db) => insertMedia(db, record))
     }
     return null
@@ -730,9 +756,11 @@ export function createExecutor({
     chargeable,
     researchLedger,
     collectOne,
+    withLinkPages,
     apifyRun: { held: heldApifyRun, hooks: apifyRunHooks, spend: spendApifyRun },
     mediaRecord,
     storedRecord,
+    withMediaAdmission,
     imageMax: IMAGE_MAX_BYTES,
     placePhotosMax: PLACE_PHOTOS_MAX,
     mediaBudget: MEDIA_BUDGET,
@@ -771,20 +799,38 @@ export function mergeCollected(previous, result) {
   const media = new Map()
   for (const m of [...(prev.media ?? []), ...(result.media ?? [])])
     if (typeof m?.url === 'string' && !media.has(m.url)) media.set(m.url, m)
+  // The link-in-bio pages read for this source (`link-in-bio.mjs`), each with every link it listed: the evidence of
+  // the bookings, menus and social pages they gave. Kept only when there are some.
+  const bioPages = uniqueByUrl([...(prev.bioPages ?? []), ...(result.bioPages ?? [])])
   return {
     profile: prev.profile != null || result.profile != null ? profile : null,
-    pages: [...(prev.pages ?? []), ...(result.pages ?? [])]
-      .slice(0, 200)
-      .map((p) => ({ url: p?.url, title: p?.title ?? null, text: String(p?.text ?? '').slice(0, 20_000) })),
+    pages: [...(prev.pages ?? []), ...(result.pages ?? [])].slice(0, 200).map(keptPage),
     posts: [...(prev.posts ?? []), ...(result.posts ?? [])].slice(0, 500),
     media: [...media.values()].slice(0, 1000),
     menus: uniqueByUrl([...(prev.menus ?? []), ...(result.menus ?? [])]),
     logos: uniqueByUrl([...(prev.logos ?? []), ...(result.logos ?? [])]),
-    bookings: uniqueByUrl([...(prev.bookings ?? []), ...(result.bookings ?? [])])
+    bookings: uniqueByUrl([...(prev.bookings ?? []), ...(result.bookings ?? [])]),
+    ...(bioPages.length ? { bioPages } : {})
   }
 }
 
 const PROFILE_FIELDS = ['name', 'bio', 'phone', 'address', 'email']
+
+/**
+ * One page a source keeps: its address, title and text, with the meta description and first heading when the read had
+ * them (`website-crawler.mjs pageRead`; the old-URL map carries the description over, `url-map.mjs`). Bounded.
+ */
+function keptPage(p) {
+  const description = typeof p?.description === 'string' ? p.description.trim().slice(0, 500) : ''
+  const heading = typeof p?.heading === 'string' ? p.heading.trim().slice(0, 200) : ''
+  return {
+    url: p?.url,
+    title: p?.title ?? null,
+    text: String(p?.text ?? '').slice(0, 20_000),
+    ...(description ? { description } : {}),
+    ...(heading ? { heading } : {})
+  }
+}
 
 function uniqueByUrl(list) {
   const seen = new Map()
@@ -882,17 +928,32 @@ export function mergeProfile(opp, allRows, publicProfiles = []) {
     }
     return null
   }
-  // A menu or booking link found on the restaurant's own website is theirs: verified.
-  const menus = (websiteRow?.collected?.menus ?? []).map((m) => ({
-    url: m.url,
-    source: 'website',
-    seenAt: seenAt(websiteRow)
-  }))
-  const booking = (websiteRow?.collected?.bookings ?? []).map((b) => ({
-    url: b.url,
-    verified: true,
-    source: 'website'
-  }))
+  // A menu or booking link found on the business's own pages is theirs: verified. The website's first, then each
+  // social page's, read off the link-in-bio page its bio points at (`link-in-bio.mjs`; `via` is that page). A website
+  // address that is itself a booking platform's page (`link-platforms.mjs`) is the booking link before any other.
+  const ownRows = SOURCES.map((source) => rows.find((r) => r.source === source)).filter(Boolean)
+  const via = (x) => (typeof x?.via === 'string' ? { via: x.via } : {})
+  const menus = uniqueByUrl(
+    ownRows.flatMap((row) =>
+      (row.collected?.menus ?? []).map((m) => ({
+        url: m.url,
+        source: row.source,
+        seenAt: seenAt(row),
+        ...via(m)
+      }))
+    )
+  )
+  const booking = uniqueByUrl([
+    ...(website && isBookingUrl(website) ? [{ url: website, verified: true, source: 'website' }] : []),
+    ...ownRows.flatMap((row) =>
+      (row.collected?.bookings ?? []).map((b) => ({
+        url: b.url,
+        verified: true,
+        source: row.source,
+        ...via(b)
+      }))
+    )
+  ])
   const provenance = {}
   for (const field of PROFILE_FIELDS)
     if (evidence[field][0]) provenance[field] = { source: evidence[field][0].sources[0] }

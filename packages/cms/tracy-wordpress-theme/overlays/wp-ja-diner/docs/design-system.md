@@ -53,8 +53,8 @@ the logo remain (D-35); the panel slides over the page (D-33). `inc/extra.php` f
 
 WordPress core has one logo (`site_logo`). `inc/brand-logo.php` adds `tracy_logo_dark` (an attachment id)
 for the dark-background spot `jd-logo--dark`; when it is unset that spot prints the site name as text
-(class `is-tracy-logo-text`). At build time `site_logo` is the source's `logo.png` and `tracy_logo_dark` is
-unset (D-34, open). Set it with `wp option update tracy_logo_dark <attachment id>`.
+(class `is-tracy-logo-text`). At build time `site_logo` is the source's `logo.png` and `tracy_logo_dark` is its white copy
+`jd-site-logo-dark.png` (D-34). Set another with `wp option update tracy_logo_dark <attachment id>`.
 
 ## Dark mode
 

@@ -4,8 +4,11 @@ import {
   crawlWebsite,
   extractPage,
   keepFallbackCopy,
+  ldBlocksOf,
   nameFromTitle,
-  originalImageUrl
+  originalImageUrl,
+  stripComments,
+  stripTags
 } from '../domain/website-crawler.mjs'
 
 const resolve = async () => [{ address: '93.184.216.34', family: 4 }]
@@ -48,7 +51,7 @@ test('extractPage pulls title, visible text, JSON-LD, images, videos, PDFs and s
   assert.deepEqual(p.business.openingHours, ['Mo-Su 07:00-21:00'])
   assert.equal(p.business.menu, 'https://phin.test/menu.pdf')
   assert.deepEqual(p.business.servesCuisine, ['Vietnamese'])
-  assert.ok(p.business.sameAs.includes('https://www.facebook.com/brewletcoffeehoian'))
+  assert.ok(p.business.sameAs.some((url) => url === 'https://www.facebook.com/brewletcoffeehoian'))
 
   const images = p.images.map((i) => i.url)
   assert.deepEqual(images, [
@@ -70,7 +73,7 @@ test('extractPage pulls title, visible text, JSON-LD, images, videos, PDFs and s
     'share links are ignored, sameAs counts'
   )
   assert.equal(p.phones[0], '+842355550134')
-  assert.ok(p.links.includes('https://phin.test/about'))
+  assert.ok(p.links.some((url) => url === 'https://phin.test/about'))
 })
 
 test('a resized copy on a documented image host offers the original first and keeps the copy as fallback', async () => {
@@ -202,7 +205,8 @@ test('crawlWebsite reads the sitemap index, then pages, staying on the same host
     r.pages.map((p) => p.title),
     ['Brewlet Coffee & Kitchen — Hội An', 'Menu', 'Contact', 'About', 'Gallery']
   )
-  assert.ok(!calls.some((u) => u.startsWith('https://evil.test') || u.startsWith('https://other.test')))
+  const offSite = (host) => ['evil.test', 'other.test'].some((h) => host === h || host.endsWith(`.${h}`))
+  assert.ok(!calls.some((u) => offSite(new URL(u).hostname)))
   assert.equal(r.profile.name, 'Brewlet Coffee')
   assert.equal(r.profile.phone, '+84 235 555 0134')
   assert.equal(r.profile.bio, 'Slow coffee in the old town.')
@@ -223,6 +227,35 @@ test('crawlWebsite reads the sitemap index, then pages, staying on the same host
   )
   assert.ok(r.media.some((m) => m.kind === 'video' && m.url === 'https://phin.test/v/tour.mp4'))
   assert.deepEqual(r.coverage, { fetched: 5, total: 5 })
+})
+
+test('a crawl keeps each page’s meta description and first own heading, for the old URL map', async () => {
+  const { fetch } = site({
+    'https://phin.test/': html(HOME),
+    'https://phin.test/about': html(
+      '<html><head><title>About | Brewlet</title><meta property="og:description" content=" Our story. "></head>' +
+        '<body><header><h1>Brewlet</h1></header><main><h1>About <b>us</b></h1><p>Since 2015</p></main></body></html>'
+    ),
+    'https://phin.test/gallery': html(
+      '<html><title>Gallery</title><body><p>No heading here</p></body></html>'
+    )
+  })
+  const r = await crawlWebsite('https://phin.test/', {}, { fetch, resolve })
+  const byUrl = Object.fromEntries(r.pages.map((p) => [p.url, p]))
+  assert.equal(byUrl['https://phin.test/'].description, 'Slow coffee in the old town.')
+  assert.equal(byUrl['https://phin.test/'].heading, 'Welcome')
+  assert.equal(
+    byUrl['https://phin.test/about'].description,
+    'Our story.',
+    'og:description when no description'
+  )
+  assert.equal(
+    byUrl['https://phin.test/about'].heading,
+    'About us',
+    'the header’s site title is not the heading'
+  )
+  assert.equal('description' in byUrl['https://phin.test/gallery'], false, 'none read, none kept')
+  assert.equal('heading' in byUrl['https://phin.test/gallery'], false)
 })
 
 test('maxPages stops early with a cursor; resuming from it finishes without refetching', async () => {
@@ -433,4 +466,83 @@ test('a page read through the browser fallback lists its logo candidates too', a
   const out = renderedPagesResult([{ url: 'https://bistro.test/', html: LOGO_PAGE }], base)
   assert.equal(out.logos[0].via, 'jsonld-logo')
   assert.equal(out.logos[0].sourceUrl, 'https://bistro.test/')
+})
+
+test('price lists are menus: a PDF whose address or label says so, linked or shown in place; other PDFs are not', () => {
+  const page = extractPage(
+    `<html><body>
+    <a href="/files/Preisliste-2026.pdf">Download</a>
+    <a href="/files/salon-2026.pdf">Our price list</a>
+    <a href="/files/wine-list.pdf">Wines</a>
+    <a href="/files/b%E1%BA%A3ng-gi%C3%A1.pdf">Download</a>
+    <a href="/files/allergy-policy.pdf">Allergy policy</a>
+    <iframe src="/uploads/treatments-prices.pdf" title="Treatments"></iframe>
+    <embed src="/uploads/brochure.pdf" type="application/pdf">
+    <object data="/uploads/menu-summer.pdf" type="application/pdf"></object>
+    </body></html>`,
+    'https://harbourcuts.test/'
+  )
+  assert.deepEqual(
+    page.pdfs.map((p) => [new URL(p.url).pathname, p.menu]),
+    [
+      ['/files/Preisliste-2026.pdf', true],
+      ['/files/salon-2026.pdf', true],
+      ['/files/wine-list.pdf', true],
+      ['/files/b%E1%BA%A3ng-gi%C3%A1.pdf', true],
+      ['/files/allergy-policy.pdf', false],
+      ['/uploads/treatments-prices.pdf', true],
+      ['/uploads/brochure.pdf', false],
+      ['/uploads/menu-summer.pdf', true]
+    ]
+  )
+})
+
+test('the crawl keeps appointment platforms and link-in-bio pages, and no booking link on a platform page itself', async () => {
+  const pages = {
+    'https://harbourcuts.test/':
+      '<html><title>Harbour Cuts</title><body><p>Hair studio</p>' +
+      '<a href="https://www.fresha.com/a/harbour-cuts-bristol-abc123">Book now</a>' +
+      '<a href="https://www.fresha.com/for-business">Powered by Fresha</a>' +
+      '<a href="https://linktr.ee/harbourcuts">All our links</a>' +
+      '<a href="https://linktr.ee/">Linktree</a></body></html>',
+    'https://www.opentable.com/r/the-lantern-cafe':
+      '<html><title>The Lantern Cafe</title><body>' +
+      '<a href="https://www.opentable.com/r/another-restaurant">Nearby</a>' +
+      '<a href="https://www.sevenrooms.com/reservations/thelanterncafe">Private dining</a></body></html>'
+  }
+  const fetch = async (url) =>
+    pages[url]
+      ? new Response(pages[url], { status: 200, headers: { 'content-type': 'text/html' } })
+      : new Response('', { status: 404 })
+  const salon = await crawlWebsite('https://harbourcuts.test/', { maxPages: 3 }, { fetch, resolve })
+  assert.deepEqual(salon.bookings, [
+    { url: 'https://www.fresha.com/a/harbour-cuts-bristol-abc123', sourceUrl: 'https://harbourcuts.test/' }
+  ])
+  assert.deepEqual(salon.bioLinks, [
+    { url: 'https://linktr.ee/harbourcuts', sourceUrl: 'https://harbourcuts.test/' }
+  ])
+  const platform = await crawlWebsite(
+    'https://www.opentable.com/r/the-lantern-cafe',
+    { maxPages: 1 },
+    { fetch, resolve }
+  )
+  assert.deepEqual(
+    platform.bookings.map((b) => b.url),
+    ['https://www.sevenrooms.com/reservations/thelanterncafe'],
+    "another restaurant's page on the platform is not this one's booking link"
+  )
+})
+
+test('JSON-LD, comments and tags are read tag by tag: same answers, linear time on a hostile page', () => {
+  const page = `<script>var a = 1</script><SCRIPT type='application/ld+json'>{"@type":"Cafe"}</SCRIPT>
+    <script type=application/ld+json id=x>[1]</script><script type="application/ld+json">{bad</script>
+    <script type="text/plain">{"@type":"Not"}</script>`
+  assert.deepEqual(ldBlocksOf(page), [{ '@type': 'Cafe' }, [1]])
+  assert.equal(stripComments('a<!-- b -->c<!-- open', ' '), 'a c<!-- open')
+  assert.equal(stripTags('a<b>c<>d<e', ' '), 'a c<>d<e')
+  const started = performance.now()
+  assert.deepEqual(ldBlocksOf('<script type=application/ld+json"'.repeat(20_000)), [])
+  assert.equal(stripComments('<!--'.repeat(50_000), ''), '<!--'.repeat(50_000))
+  assert.equal(stripTags('<'.repeat(50_000), ''), '<'.repeat(50_000))
+  assert.ok(performance.now() - started < 500)
 })

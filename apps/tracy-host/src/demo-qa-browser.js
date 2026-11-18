@@ -900,6 +900,33 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     mainContent.state = words || controls || drawsPicture(main) ? 'present' : 'empty'
   }
 
+  // An optional background layer occupies no picture space when normal-flow text fills its whole parent.
+  const textBackgroundLayer = (el) => {
+    if (getComputedStyle(el).position !== 'absolute' || !el.parentElement) return false
+    if (
+      el.matches('figure,[role="img"]') ||
+      el.querySelector('img,picture,video,canvas,iframe,object,embed,svg,[role="img"]')
+    )
+      return false
+    const parent = el.parentElement
+    const r = el.getBoundingClientRect()
+    const p = parent.getBoundingClientRect()
+    if (['left', 'right', 'top', 'bottom'].some((edge) => Math.abs(r[edge] - p[edge]) > 2)) return false
+    const ps = getComputedStyle(parent)
+    const top = p.top + parent.clientTop + (parseFloat(ps.paddingTop) || 0)
+    const bottom = p.bottom - (parseFloat(ps.borderBottomWidth) || 0) - (parseFloat(ps.paddingBottom) || 0)
+    return [...parent.children].some((sibling) => {
+      if (sibling === el || !visible(sibling) || (sibling.innerText ?? '').trim().length <= 40) return false
+      const cs = getComputedStyle(sibling)
+      if (/^(absolute|fixed)$/.test(cs.position)) return false
+      const box = sibling.getBoundingClientRect()
+      return (
+        box.width >= p.width * 0.8 &&
+        Math.abs(box.top - (parseFloat(cs.marginTop) || 0) - top) <= 2 &&
+        Math.abs(box.bottom + (parseFloat(cs.marginBottom) || 0) - bottom) <= 2
+      )
+    })
+  }
   const emptySlots = []
   for (const el of all) {
     if (emptySlots.length >= 40) break
@@ -925,7 +952,8 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
       (n, c) => n + (c.innerText ?? '').trim().length,
       0
     )
-    if ((el.innerText ?? '').trim().length - caption > 40 || drawsPicture(el)) continue
+    if ((el.innerText ?? '').trim().length - caption > 40 || drawsPicture(el) || textBackgroundLayer(el))
+      continue
     emptySlots.push({
       el,
       selector: sel(el),
@@ -1036,7 +1064,13 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     } catch {
       continue
     }
-    if (href.origin !== location.origin || !TAXONOMY.test(href.pathname + href.search)) continue
+    // Joomla lists an item's tags in `ul.tags` whatever path its router gives them (a hidden menu item per tag routes
+    // one to `/tag-business`), so the list names a tag where the path does not.
+    if (
+      href.origin !== location.origin ||
+      !(TAXONOMY.test(href.pathname + href.search) || a.closest('ul.tags'))
+    )
+      continue
     // A count printed beside the name ("Engineering 5") is not part of it.
     const text = (a.innerText ?? '')
       .replace(/\s+/g, ' ')

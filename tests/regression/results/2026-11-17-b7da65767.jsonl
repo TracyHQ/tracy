@@ -1,0 +1,1 @@
+{"id":"REG-PR-680-brand-crawl-single-decode","verdict":"PASS","commit":"b7da657676bb8e585e76cfad7768ebcb710b6433","ran_at":"2026-11-17T14:33:58.616Z","evidence":"tests/regression/.runs/2026-11-17-b7da65767/REG-PR-680-brand-crawl-single-decode.log"}

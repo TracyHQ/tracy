@@ -67,6 +67,10 @@ SITES="${TRACY_SITES_ROOT:-/srv/tracy-sites}"
 HOST_HOME="${TRACY_HOST_DSH_HOME:-$ROOT/host-dsh/home}"
 DOCKER="${TRACY_DOCKER:-docker}"
 SITE_DIR="$ROOT/$LABEL"
+# A demo folded into the demo farm has no runtime of its own to change (lib/site-runtime.sh).
+# shellcheck source=../lib/site-runtime.sh
+. "$(cd "$(dirname "$0")" && pwd)/../lib/site-runtime.sh"
+tracy_refuse_if_farm "$SITE_DIR" "$LABEL" "rolling it back from the host dsh" || exit 1
 STAMP="$(date +%Y%m%d-%H%M%S)"
 [ -n "$LANE" ] || LANE="$LABEL-dsh"
 

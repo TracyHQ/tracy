@@ -22,7 +22,7 @@ export function createSpend({ pool, runId, capUsd, round, leaseToken = null }) {
   return {
     async check() {
       const spent = await spentOf(pool, runId)
-      if (spent >= capUsd) throw new CostCapReached(spent, capUsd)
+      if (Number.isFinite(capUsd) && spent >= capUsd) throw new CostCapReached(spent, capUsd)
     },
     record: (call) => logCall(pool, { runId, round: round(), leaseToken, ...call })
   }

@@ -2,7 +2,22 @@
 // refused slots are dropped and the rest sent again; a refusal that names no slot stops the run.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { copy, runStep as run } from './_write-step-run.mjs'
+import { copy, runStep as runBase } from './_write-step-run.mjs'
+
+// These cases isolate contract retries; the site refuses fallback empties for the rejected copy.
+const run = (files = {}, site = {}, deps = {}) =>
+  runBase(
+    files,
+    {
+      overSlot: (slot) => ({
+        canHide:
+          !Object.hasOwn(site.refuse ?? {}, slot.key) &&
+          !(site.answers ?? []).some((a) => a.errors?.some((e) => e.field?.slotKey === slot.key))
+      }),
+      ...site
+    },
+    deps
+  )
 
 test('slots the plugin refuses are dropped, the rest written, each refusal in the plugin words', async () => {
   const refuse = {

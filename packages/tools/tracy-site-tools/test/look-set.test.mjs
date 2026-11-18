@@ -2557,3 +2557,39 @@ test('editableSheet: a library’s sheet inside a template or theme folder (ligh
     '/templates/ja_boxing/local/css/custom.css'
   )
 })
+
+test('a precisely located footer email still refuses shared look changes without writing content or CSS', async () => {
+  const site = fakeSite(wpFiles())
+  let asked = 0
+  const { measure } = readings(
+    wpButton(
+      { color: orangeRow },
+      {
+        chrome: true,
+        unique: 'footer p:nth-of-type(3) a',
+        text: 'contact@example.test'
+      }
+    )
+  )
+  const out = await lookSet({
+    params: {
+      path: '/privacy',
+      target: { selector: 'footer p:nth-of-type(3) a' },
+      props: { color: '#000000' },
+      scope: 'element'
+    },
+    platform: 'wordpress',
+    siteRoot: site.siteRoot,
+    measure,
+    io: site.io,
+    wide: () => {
+      asked++
+      return { ok: false, code: 'CONFIRM_FIRST' }
+    }
+  })
+  assert.equal(out.code, 'CONFIRM_FIRST')
+  assert.equal(asked, 1, 'no alternate target or consent retry inside the look door')
+  assert.equal(site.custom.writes, 0)
+  assert.equal(site.undos().length, 0)
+  assertThemeUntouched(site)
+})

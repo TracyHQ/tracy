@@ -243,6 +243,42 @@
         },
         "logoHeight": 80,
         "note": "Same logos as 1.0.4; no logo file or logo rule changed, and every template style keeps logoimage empty, so the header prints the template's own images/logo.png (the contract declares it as one business.logo slot per style). 1.0.5 adds the agent documentation of the ACM module, template fixes in css, less, html, tpls and acm (smart search and tag page language strings, tab picture alt), and three demo links that pointed nowhere now lead to Contact Us and Offers. Proven on the 1.0.5 installer pack (sha256 bb331594) by a clean install whose contract capture pins the lock. The brand writer and favicon proof was not re-run on this release."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "1.0.6 adds a dark mode (a light/dark toggle in the main band, the visitor's choice kept in the tracy_theme cookie, the OS preference followed until then, the dark palette of the JA Diner WordPress port) and a dark logo: the template param logoimage_dark replaces the light logo on a dark page, else the dark page shows the site name as text. Every style keeps logoimage empty (the template's own images/logo.png) and ships logoimage_dark set to images/joomlart/logo-dark.png, the same 128 x 80 artwork in white; the contract declares both as business.logo slots per style, so the brand writer replaces or clears them. Proven on the 1.0.6 installer pack (sha256 5545adc7) by a clean install whose contract capture pins the lock."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Same logos as 1.0.6; 1.0.7 writes logoimage_dark inside the five template style rows of the installer's demo data (1.0.6 set it by an UPDATE appended to custom.sql, which the static dump readers do not apply, so the lock and the dump disagreed: STAB-1, STAB-6, LOGO-2), sets the dark page's site name text in the template's display face (Alegreya on Vietnamese pages, LANG-2), and fills the contact page's social buttons on the link itself on hover (HOVER-1). Built from the 1.0.6 installer pack with its contract; no logo file or logo rule changed."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Same logos as 1.0.7; 1.0.8 sets a text logo (logotype text) in the template display face (Alegreya on Vietnamese pages), keeps one menu button on small screens, prints no server path on the error page, and gives the dark page dark alerts and a light T3 footer badge. Built from the 1.0.7 installer pack with its contract; no logo file, logo param or logo rule changed."
       }
     },
     "quickstart/ja-directory/j6": {
@@ -375,6 +411,42 @@
           "height": 80
         },
         "note": "Same logos and content as 1.0.0; only the theme's home stylesheet changed: the Subscribe band's photograph is declared as a picture to readers of computed styles (an empty gradient layer), nothing is painted differently."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "note": "Theme wp-ja-diner 1.0.2: the header logo, favicon and name fallback are those of 1.0.1 (the patch touches the footer words, the theme text options, the Contact pattern, the motion script and the font licence files, not the brand files)."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "note": "Theme wp-ja-diner 1.0.3: the header logo, favicon and name fallback are those of 1.0.2; the patch only makes every page print exactly one h1 (repeated mastheads become paragraphs with the same class, pages without a title print theirs, the 404 title is the h1), so the logo slots, frames and the footer are unchanged."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "note": "Theme wp-ja-diner 1.0.4 (docs only): the demo now carries a logo for dark backgrounds, jd-site-logo-dark.png (the source logo with every pixel white, 128 x 80) as tracy_logo_dark, so the dark header shows the logo instead of the site name (D-34). Slots, frames and favicon are those of 1.0.3. A customer logo given without a dark one clears tracy_logo_dark, so the dark spot prints the customer's name, never the demo's white logo."
       }
     },
     "quickstart/ja-essence/j6": {
@@ -1051,6 +1123,15 @@
         "framework": "t4",
         "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
         "note": "Template ja_kinetic (T4) 1.0.11 pairs the site logo with the site name: the default, blueprint and signal profiles set site_logo (kinetic-logo.png, -blueprint.png, -signal.png, 78 x 120) and site_logo_dark (the -dark twins), printed by html/layouts/t4/element/logo.php as a .d-light/.d-dark pair, each followed by the site name, and swapped by [data-bs-theme=\"dark\"] (scss/_logo-pair.scss); Blog and home-magz keep the blank T4 logo. The CSS caps the header logo at 40px high, so no logoHeight; the footer brand (acm-social) wears the same pair, so there is no footer slot. other_faviconFile is empty in every profile. Read from the 1.0.11 pack's files; the brand writer and favicon proof was not run on this layout, hence unverified."
+      },
+      "1.0.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "unverified": ["brandReady", "faviconReady"],
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Same logos and profiles as 1.0.11: template ja_kinetic is still 1.0.3 and the 26 profile, logo-layout and logo-style files of the 1.0.12 pack are byte-identical to the 1.0.11 pack. 1.0.12 changes the T4 router, author-page pagination, the sign-in password field corners and some section stylesheets, and edits 29 articles and 1 module; none of them touches the logo, the profiles or the favicon. The brand writer and favicon proof was not run on this layout, hence unverified."
       }
     },
     "quickstart/ja-kinetic/wp7": {
@@ -1405,6 +1486,24 @@
         },
         "logoHeight": 49,
         "note": "Same logos as 1.0.9: the logo pictures, logo layouts and T4 site profile files are byte for byte those of 1.0.9 (the two contracts' presentation locks compared); this release gives every page one h1, uses the finder search form and adds an author info override."
+      },
+      "1.0.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-132.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer item-2.png lum 163, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 161,
+          "height": 49
+        },
+        "logoHeight": 49,
+        "note": "Same logos as 1.0.10: the 64 logo pictures, logo layouts, favicon and T4 site profile files are byte for byte those of 1.0.10 (the two contracts' presentation locks compared; the 7 files that differ hold no logo spot), and the footer slot module-132.0 still holds images/joomlart/logo/item-2.png. This release hides an empty related projects module, prints the contact phone as a link and fixes article headings."
       }
     },
     "quickstart/ja-nova/wp7": {
@@ -2810,6 +2909,22 @@
           "proof": "default site_logo item-1.png lum 196"
         },
         "note": "Same logos as 1.0.8: the logo pictures, logo layouts and T4 site profile files are byte for byte those of 1.0.8 (the two contracts' presentation locks compared); this release gives every page one h1, centres short card rows and uses the finder search form."
+      },
+      "1.0.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "darkSpots": {
+          "profiles": ["default"],
+          "proof": "Exact 1.0.10 item-1.png: 139 x 60, mean opaque-pixel luminance 196.470; header and opened offcanvas are dark in light and dark mode on a fresh exact-pack restore."
+        },
+        "note": "Measured from the exact 1.0.10 pack on a fresh restore (2026-11-09 UTC): stock media.upload and template.siteSettings through LOCAL unpublished Cowork 0.24.93 show the uploaded logo and one customer favicon on home at 1440 and 390 px in both modes. Distinct site_logo/site_logo_dark switch in the header; the offcanvas reads site_logo, so the stock writer puts the dark-background logo in both keys for default. Wide 1200 x 300 and tall 300 x 1200 uploads, padded by prepareBrand to the 139:60 frame, stay within the header cap (40 px; measured about 92.625 x 39.984) and offcanvas cap (32 px). No logoHeight or footerSlot: the template CSS caps uploaded pictures, and static logo-place reading must cover other public pages. All three diagnostic applies reverted to identical original settings; no released carrier or full live-page claim."
       }
     },
     "quickstart/ja-vega/wp7": {
@@ -3666,6 +3781,20 @@
         "note": "Copied from Tracy Base 0.5.6 (template.config.json id tracy-coffee); read off the 0.1.0 pack source 30/10/2026: Logo.astro byte-identical to Base 0.5.6, settings.logo in the light header and site.logo_dark in the dark one, the template icon (/favicon.svg) only while settings.favicon is empty (Base.astro templateIconWanted). Only the header's page list and the theme toggle's stored key (tracy-coffee-theme) differ from Base."
       }
     },
+    "tracy-diner/emdash-0.x": {
+      "0.1.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "Read off the 0.1.0 pack source: the header is the only logo spot (BrandLogo with logoSpots('themed')); settings.logo in the light header and the chrome entry's logo_dark in the dark one, switched by the appearance toggle and the visitor system; the template icon only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
+      },
+      "0.1.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 0.1.0, read off the 0.1.2 release zip: Header.astro, BrandLogo.astro, lib/brand.ts, lib/demo-logo.ts, layouts/Base.astro and public/favicon.svg are byte-identical to 0.1.0 and 0.1.1; 0.1.1 changed only the footer phone lines (tel: links) and the menu tab stamps, 0.1.2 only the blog list's masonry script and the home news slider fit, so the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
+      }
+    },
     "tracy-restaurant/emdash-0.x": {
       "1.0.0": {
         "logos": "pair",
@@ -3678,6 +3807,12 @@
         "brandReady": true,
         "faviconReady": true,
         "note": "As 1.0.0: only the stylesheets changed (type, shape and colour roles read the design-system slot); the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.0.1: only the post view changed (the category label in the meta line is a link only while its list page is live); the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
       }
     },
     "tracy-saas/emdash-0.x": {

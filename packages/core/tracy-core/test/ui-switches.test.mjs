@@ -110,8 +110,10 @@ test('<html> carries the hidden ids at once (defaults), then the door answer', a
   // 34 with Build from my business (`site-from-business`, off by default, #1640);
   // 35 with the sign-in-free Find page (`website-opportunities-public-find`, 23/10/2026);
   // 36 with Sync to live (`site-sync-to-live`, off until an operator turns it on, 24/10/2026);
-  // 37 with Design system in the + menu (`launch-design-system`, off until an operator turns it on, 25/10/2026).
-  assert.equal(root.hidden().length, 37)
+  // 37 with Design system in the + menu (`launch-design-system`, off until an operator turns it on, 25/10/2026);
+  // 38 with See another look on a WO demo's share page (`wo-demo-looks`, off until an operator turns it on, 15/11/2026).
+  assert.equal(root.hidden().length, 38)
+  assert.ok(root.hidden().includes('wo-demo-looks'))
   assert.ok(root.hidden().includes('launch-design-system'))
   assert.ok(root.hidden().includes('site-sync-to-live'))
   assert.ok(root.hidden().includes('site-from-business'))

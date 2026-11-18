@@ -32,18 +32,17 @@ export async function claimAnalyses(pool, shas, vision) {
   return new Set(rows.map((r) => r.media_sha256))
 }
 
-/** The model's answer for a claimed picture (`failed` when it gave none: asked again later). */
-export async function settleAnalysis(pool, sha256, result, vision) {
+/**
+ * The model's answer for a claimed picture (`failed` when it gave none: asked again later). `unanswered`: why the model,
+ * shown the picture, gave no label; kept as `{unanswered}` so the brief's labelling does not pay to ask it again
+ * (`unansweredAnalyses`), while a build may still claim it.
+ */
+export async function settleAnalysis(pool, sha256, result, vision, unanswered = null) {
+  const kept = result ?? (unanswered ? { unanswered } : null)
   await pool.query(
     `update wo_media_analysis set state = $4, result = $5::jsonb, lease_until = null, updated_at = now()
      where media_sha256 = $1 and model = $2 and version = $3 and state = 'pending'`,
-    [
-      sha256,
-      vision.door.model,
-      vision.key,
-      result ? 'done' : 'failed',
-      result ? JSON.stringify(result) : null
-    ]
+    [sha256, vision.door.model, vision.key, result ? 'done' : 'failed', kept ? JSON.stringify(kept) : null]
   )
 }
 
@@ -57,6 +56,19 @@ export async function doneAnalyses(pool, shas, vision) {
     [unique, vision.door.model, vision.key]
   )
   return new Map(rows.map((r) => [r.media_sha256, r.result]))
+}
+
+/** The shas under this key the model was shown and gave no label for: sha256 to why (`settleAnalysis`). */
+export async function unansweredAnalyses(pool, shas, vision) {
+  const unique = [...new Set(shas)]
+  if (unique.length === 0) return new Map()
+  const { rows } = await pool.query(
+    `select media_sha256, result->>'unanswered' as reason from wo_media_analysis
+     where media_sha256 = any($1::text[]) and model = $2 and version = $3 and state = 'failed'
+       and result ? 'unanswered'`,
+    [unique, vision.door.model, vision.key]
+  )
+  return new Map(rows.map((r) => [r.media_sha256, r.reason]))
 }
 
 /**

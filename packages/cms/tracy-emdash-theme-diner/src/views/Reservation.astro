@@ -1,0 +1,111 @@
+---
+/**
+ * Reservation: masthead · two picture + text rows · "Reservation Online" call card · chef quote.
+ * The rows and the card are the `reservation/reservation-layout` entry; the chef is `features_intro/meet-our-chef`
+ * (the source prints the same module under the page as under Home). The newsletter band is Base's.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { PortableText } from 'emdash/ui'
+import { cleanHtml } from '@/lib/html'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { dataHref } from '@/lib/data-links'
+import { liveLinks } from '@/lib/link-gate'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, lay, chef] = await Promise.all([
+  getEmDashEntry('pages', 'reservation', { locale }),
+  section('masthead', 'reservation', locale),
+  section('reservation', 'reservation-layout', locale),
+  section('features_intro', 'meet-our-chef', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'reservation' } : null)
+const $ma = stampFor(Astro.request, 'masthead', masthead ? { id: masthead.id, slug: masthead.slug } : null)
+const $r = stampFor(Astro.request, 'reservation', lay ? { id: lay.id, slug: lay.slug } : null)
+const $ch = stampFor(Astro.request, 'features_intro', chef ? { id: chef.id, slug: chef.slug } : null)
+const link = (u: string) => dataHref(u, (p) => href(locale, p))
+const mastBg = mediaUrl(masthead?.background)
+const blocks: any[] = lay?.blocks ?? []
+// a button whose page the customer unticked is not drawn (link gate)
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  blocks.map((b) => b.button_link)
+)
+const callBg = mediaUrl(lay?.online_image)
+// the number is a link only when it is a phone number: digits with the usual separators
+const phone = String(lay?.online_phone ?? '').trim()
+const isPhone = /^\+?[\d\s().-]{5,}$/.test(phone)
+const tel = `tel:${phone.replace(/[^+\d]/g, '')}`
+---
+
+<Base chrome={chrome} title={page.title ?? masthead?.title ?? lay?.title} currentPath="/reservation" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'reservation', toPath: () => '/reservation' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<div class="dn-masthead" style={mastBg ? `background-image:url('${mastBg}')` : undefined}>
+			<div class="dn-wrap">
+				<h1 class="dn-masthead-title" {...$ma('title')}>{masthead?.title}</h1>
+				<div class="dn-masthead-desc" {...$ma('description')}>{masthead?.description}</div>
+			</div>
+		</div>
+
+		{blocks.length > 0 && (
+			<div class="dn-wrap dn-rsv">
+				{blocks.map((b, i) => (
+					<div class:list={['dn-rsv-row', i % 2 === 1 && 'is-flip']}>
+						{i % 2 === 0 && (
+							<div class="dn-rsv-pic">
+								{mediaUrl(b.image) && <img src={mediaUrl(b.image)!} alt="" width="570" height="371" loading="lazy" {...$r(`blocks[${i}].image`)} />}
+							</div>
+						)}
+							<div class="dn-rsv-text">
+								<h5 class="dn-label" {...$r(`blocks[${i}].label`)}>{b.label}</h5>
+								<h2 class="dn-sub" set:html={cleanHtml(b.title)} {...$r(`blocks[${i}].title`)} />
+								<p {...$r(`blocks[${i}].text`)}>{b.text}</p>
+								{b.button_label && live(b.button_link) && <a class="dn-btn" href={link(b.button_link)} {...$r(`blocks[${i}].button_label`)}>{b.button_label}</a>}
+							</div>
+						{i % 2 === 1 && (
+							<div class="dn-rsv-pic">
+								{mediaUrl(b.image) && <img src={mediaUrl(b.image)!} alt="" width="570" height="371" loading="lazy" {...$r(`blocks[${i}].image`)} />}
+							</div>
+						)}
+						</div>
+				))}
+			</div>
+		)}
+
+		{lay && (lay.online_title || lay.online_text) && (
+			<section class="dn-rsv-call" style={callBg ? `background-image:url('${callBg}')` : undefined}>
+				<div class="dn-rsv-card">
+					<h2 {...$r('online_title')}>{lay.online_title}</h2>
+					<p {...$r('online_text')}>{lay.online_text}</p>
+					{phone && <h3 {...$r('online_phone')}>{isPhone ? <a href={tel}>{phone}</a> : phone}</h3>}
+					{lay.online_button && isPhone && <a class="dn-btn" href={tel} {...$r('online_button')}>{lay.online_button}</a>}
+				</div>
+			</section>
+		)}
+
+		{chef && (
+			<section class="dn-wrap dn-chef">
+				<div class="dn-chef-pic">
+					{mediaUrl(chef.img_features) && <img src={mediaUrl(chef.img_features)!} alt="" width="515" height="729" loading="lazy" {...$ch('img_features')} />}
+				</div>
+				<div class="dn-chef-text">
+					<h5 class="dn-label" {...$ch('title')}>{chef.title}</h5>
+					<blockquote class="dn-sub" {...$ch('sub_heading')}>{chef.sub_heading}</blockquote>
+					<div {...$ch('description')}><PortableText value={chef.description} /></div>
+				</div>
+			</section>
+		)}
+	</main>
+</Base>

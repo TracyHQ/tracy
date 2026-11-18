@@ -1,0 +1,3 @@
+- **Retried site builds measure the current attempt instead of the original failed build** — Codex · #541 · `fix/assigned-non-wo-issues` · 2026-11-10
+  **Affects:** operators reading step chain build starts, elapsed minutes and base-site durations. Rebuild tracy-web. The brief's creation time still identifies the site generation; accepted retries keep a separate attempt start.
+  **Why / Measured:** a local retry started at 14:19 while the table measured from 12:25. The new regression failed before the fix. Full brief-build, chain-build and operator measurement suites pass 73/73 with PostgreSQL, zero skips; they cover the retry stamp, unchanged generation, malformed legacy stamp fallback, attempt ordering and base-site duration.

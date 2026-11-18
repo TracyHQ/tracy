@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-496-unknown-model-cost-budget",
+  "kind": "fix",
+  "title": "A model loop with a dollar budget refuses a second call after an unpriced answer, while an unbudgeted loop may continue",
+  "pr": 496,
+  "area": "ai/model-budget",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run a budgeted scripted model that returns a tool answer without cost and has a second answer ready, then resume from the saved answered turn.",
+    "S2: run the same first answer without budgetUsd."
+  ],
+  "expect": [
+    "S1: AGENT_BUDGET_UNKNOWN is returned before the second call, and resume also dispatches no new call.",
+    "S2: the unbudgeted run dispatches both calls and reports one turn without cost."
+  ],
+  "selectors": {
+    "source": "apps/tracy-web/src/lib/agent-over-door.js",
+    "test": "apps/tracy-web/test/agent-over-door-guards.test.mjs"
+  },
+  "evidence": "The AI audit found that totalsOf(turns).cost sums known costs and an unknown cost contributed zero to the budget guard.",
+  "fence": "An unknown provider cost is not treated as zero when deciding whether another budgeted model call may be dispatched.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/agent-over-door-guards.test.mjs"],
+    "tests": [
+      "a conversation past its budget stops before the next call with AGENT_BUDGET",
+      "a budgeted conversation stops after a call whose cost is unknown, including on resume",
+      "an unbudgeted conversation can continue after a call whose cost is unknown"
+    ]
+  }
+}

@@ -28,6 +28,11 @@ export function ladderState(idx, doc) {
     ladder,
     /** frame -> { at, tried: Set of assets, photos, mode, asset, faults, last, done } */
     progress: new Map(),
+    /**
+     * frame -> the owner photo its drawing in flight extends (ladder-climb.js drawPlan): shown on the frame's pages from
+     * the moment it is chosen, so no other frame takes it while the drawer works.
+     */
+    claims: new Map(),
     files: [],
     draws: [],
     picked: new Set((doc.picks ?? []).filter((p) => p.photo && p.photo !== NONE).map((p) => p.frame)),
@@ -47,14 +52,32 @@ export function ladderState(idx, doc) {
         if (OWNER_SOURCES.has(entry.source)) usage.set(entry.asset, (usage.get(entry.asset) ?? 0) + 1)
       return usage
     },
-    /** The owner photos already shown on a page of this frame, by any other frame. */
+    /**
+     * How many frames use each brief photo, as a rung of this frame ranks them (least used first): this frame and the
+     * frames of its pages as they are now, every other frame as the round began. The frames climb side by side, so how
+     * far a frame of another page has climbed depends on how fast its looks came back: ranked this way, it never
+     * changes which photos this frame tries or in what order. The frames of its own pages still spread their photos
+     * (and keep the page's rules, onPages and cutsOn). A frame climbing alone ranks exactly as by usageNow.
+     */
+    usageFor(frameId) {
+      const pages = idx.wishes.get(frameId)?.pages ?? new Set()
+      const here = (id) => id === frameId || [...(idx.wishes.get(id)?.pages ?? [])].some((p) => pages.has(p))
+      const usage = new Map((doc.usage ?? []).map((u) => [u.asset, 0]))
+      const add = (asset) => usage.set(asset, (usage.get(asset) ?? 0) + 1)
+      for (const [id, asset] of startedWith) if (!here(id)) add(asset)
+      for (const [id, { entry }] of entries) if (here(id) && OWNER_SOURCES.has(entry.source)) add(entry.asset)
+      return usage
+    },
+    /** The owner photos already shown on a page of this frame, by any other frame (or claimed by its drawing). */
     onPages(frameId) {
       const pages = idx.wishes.get(frameId)?.pages ?? new Set()
+      const shares = (id) => [...(idx.wishes.get(id)?.pages ?? [])].some((p) => pages.has(p))
       const used = new Set()
       for (const [id, { entry }] of entries) {
         if (id === frameId || !OWNER_SOURCES.has(entry.source)) continue
-        if ([...(idx.wishes.get(id)?.pages ?? [])].some((p) => pages.has(p))) used.add(entry.asset)
+        if (shares(id)) used.add(entry.asset)
       }
+      for (const [id, asset] of s.claims) if (id !== frameId && shares(id)) used.add(asset)
       return used
     },
     /** The cuts of each owner photo shown on a page of this frame by any other frame: asset -> [{ frame, crop }]. */
@@ -96,5 +119,11 @@ export function ladderState(idx, doc) {
       }
     }
   }
+  // The owner photo each frame showed when the round began (usageFor).
+  const startedWith = new Map(
+    [...entries]
+      .filter(([, { entry }]) => OWNER_SOURCES.has(entry.source))
+      .map(([id, { entry }]) => [id, entry.asset])
+  )
   return s
 }

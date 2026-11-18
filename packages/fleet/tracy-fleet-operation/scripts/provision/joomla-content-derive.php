@@ -14,7 +14,9 @@
  *
  * Always exit 0: a copy without a derived contract is still a working copy. The last stdout line names
  * the outcome for a machine:
- *   TRACY_RESULT derived=<bound|unsupported|failed> entities=<n> slots=<n> calibrated=<0|1>
+ *   TRACY_RESULT derived=<bound|kept|unsupported|failed> entities=<n> slots=<n> calibrated=<0|1>
+ * `kept` = the copy is already bound to a quickstart contract and the component refuses to replace it
+ * (`conflict`, "…bound to a quickstart contract…"): settled, that contract serves the Edit picker.
  * `unsupported` = a component older than the operation (`bad_action`, "unknown contract operation", or
  * a receiver that is not wired for it), or no component / token at all.
  */
@@ -34,7 +36,7 @@ if (!preg_match('/^[a-z0-9-]{3,80}$/D', $label)) {
 }
 
 try {
-    require '/var/www/html/configuration.php';
+    require (getenv('TRACY_DOCROOT') ?: '/var/www/html') . '/configuration.php';
     $config = new JConfig();
     $prefix = (string) $config->dbprefix;
     if (!preg_match('/^[a-zA-Z0-9_]+$/D', $prefix)) throw new RuntimeException('invalid table prefix');
@@ -81,6 +83,12 @@ if (!empty($answer['ok']) && !empty($answer['contract'])) {
 }
 $error = (string) ($answer['error'] ?? '');
 $message = (string) ($answer['message'] ?? '');
+// By design the component never replaces a quickstart contract; only this conflict is settled, any
+// other stays `failed`.
+if ($error === 'conflict' && stripos($message, 'is bound to a quickstart contract; derive refuses to replace it') !== false) {
+    echo "    derive: this copy keeps its quickstart contract\n";
+    tracy_derive_result('kept');
+}
 // Older components: no `derive` branch. With no contract they answer `unavailable` before reading the
 // operation; with one, "Unknown contract operation".
 $old = $error === 'bad_action' || $error === 'unavailable' || stripos($message, 'unknown contract operation') !== false;

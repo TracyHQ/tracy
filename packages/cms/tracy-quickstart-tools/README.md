@@ -357,6 +357,18 @@ back as it was (fixed CMS text, below). One file, `template-kit.json`, beside
 `images/`, in CMS-neutral words: a block is `block-<n>`, `header` or `body-<page>`; the content map key stays only
 in a block's `source`.
 
+Template-kit capture and content-coverage audits, including their module-box review, share this transport.
+External images, fonts and stylesheets retain their original URLs, status, headers and bytes, but use Playwright's
+request transport so a stalled Chromium asset connection does not consume every page's load timeout. Each context
+allows six active requests and 32 waiting requests; fetches time out after 15 seconds, redirects remain browser-followed,
+and every response is disposed. Responses over 16 MiB fall back to the browser (a fulfilled-body limit, not a hard
+download limit). Skipped resources in the DOM pass stay skipped. Documents, scripts, APIs and same-site traffic keep
+their existing paths. Missing fonts are never replaced to obtain a passing measurement.
+
+Slot ownership additionally reads whole visible inline sentences in their DOM order, so a highlighted heading
+belongs to its own module even when an unrelated article prints the same words. This reading leaves atomic
+text counts and formatting unchanged; it never combines separate block paragraphs, nested blocks or hidden text.
+
 ### Page titles, sentences and stored fields
 
 The coverage gate (run by `cli.mjs assemble`) settles three things from what the page prints; none moves a slot, a list or a role.
@@ -678,6 +690,10 @@ list, kept by every later run).
   `writeTo: {action: "template.siteSettings", template, key, file}`, `canHide: true` and the `frames` it covers; every
   frame painted behind with that picture says `writable: true` and `slotId`, its twins included. Tracy writes it with
   `apps/tracy-web/src/lib/joomla-t4-body-background.js` (Claude Cowork for Joomla 0.24.78+).
+  A picture a T4 layout paints behind the blocks (a section's `background_image`, an image slot of a
+  `templateConfig-<id>` entity of the content map) needs no setting slot: every frame painted behind with it says
+  `writable: true` and `writesTo`, the content map keys of every layout section holding that picture, its twins
+  included (`linkLayoutBackgrounds`, `lib/background-slot.mjs`), and the picture step writes the file into all of them.
   `cli.mjs setting-slots --out <dir> --contract <dir> --db-command <prefix> [--webroot <dir>]` settles a written kit
   again (no browser, no image; without `--webroot` the background slot the kit has is kept), then `pack`.
 - **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and
@@ -781,3 +797,64 @@ The kit's images are published as a zip asset on the quickstart's GitHub release
 `template-kit-ja-boxing-1.0.10.zip`). `cli.mjs pack --out <kit dir>` writes it: `template-kit.json` plus `images/`, and
 `approval.imagesSha256` is checked against those images with `imagesDigest`. Tests: `test/template-kit-crawl.test.mjs`,
 `test/template-kit-assemble.test.mjs`, `test/template-kit-blocks.test.mjs`.
+
+### Make a kit for an EmDash theme
+
+An EmDash theme (`packages/cms/tracy-emdash-theme-<name>`) is read like the other platforms, with these differences:
+
+- **The contract folder is the theme's own `contracts/<version>/`.** It has no `manifest.json`; the tool makes one from
+  `content-map.json` (`lib/contract-manifest.mjs`): contract id `<template>/emdash-0.x/<version>` (the id Road to live
+  expects, `--release-tag <tag>` for a theme released under another line), platform `emdash`, template and quickstart
+  version from the map. A `manifest.json`, when there is one, always wins.
+- **The kit is captured on a site built from the theme at that version** (`tools/clean-install.sh`), never the public
+  demo. Pages are addressed with their plain path (`/menu`, no `/index.php`, no trailing slash).
+- **A page's blocks are read from the site.** The content map lists pages and slots but not what the layout prints around
+  an entry. With `build` (or `--reread-sections`) every page of the map is opened with `X-Tracy-Preview: pick`, so the theme
+  stamps which entry field printed each element; the top-level parts (before `<main>`, each child of `<main>`, after it)
+  and the stamps in them are written to `emdash-sections.json` in the work folder (`lib/site/emdash-sections-file.mjs`,
+  `adapters/emdash-map.mjs`). A part every page prints is one block (`header`, `part-<name>`, `footer`); a part that prints
+  the fields of one entry which is no page (a reservation form) is that entry's block; any other part belongs to its page.
+  A slot belongs to the one block that prints it: its own page first, then an entry with no page, then the shared parts.
+  `assemble` and the settle commands read `emdash-sections.json` and need no browser.
+- **`--token-file`** (the site's `data/tracy-agent.token`) lets the tool read two things from the site's REST door, GET
+  only: the site settings (`/_emdash/api/settings`: title, logo, favicon) and which media file each picture slot holds
+  (the map keeps the demo file name, the page serves the stored key; without it no frame is matched to its slot and
+  `errors` names it). `--webroot` is the site folder: the theme files (`src/components/site/Header.astro`,
+  `src/styles/tokens.css`) are read from it, and `package.json` gives the template version. There is no database read
+  (`--db`, `--db-command` are not used).
+- **Not on EmDash, named in `errors` as `not-on-platform`:** a free HTML block for head markup, a CMS contact entity,
+  menu blocks, item lists, CMS language files for fixed sentences. A menu item with no address (`#`) is a
+  `deadControls` check failure a person explains in `reach-accepts.json`.
+
+Commands, from the repository root (`RUN` = a working folder outside the repository, `THEME` = the theme folder,
+`V` = the version, `TAG` = `<template>/emdash-0.x`):
+
+```
+# 0. the contract: content map for this version (and content-coverage.json from the audit), committed beside it
+node packages/cms/tracy-quickstart-tools/content-coverage/emdash-content-map.mjs --theme $THEME --check
+# 1. the site, built from the theme as it is on this branch
+$THEME/tools/clean-install.sh $RUN/site 4361
+#    Slot fit, measured on it and written into the site's own copy of the theme (never the theme folder); the
+#    contract of the next steps is then $RUN/site/contracts/$V (use it for --contract below)
+node packages/cms/tracy-quickstart-tools/content-coverage/emdash-audit.mjs --site http://127.0.0.1:4361 \
+  --theme $RUN/site --out $RUN/audit --fit --write --token-file $RUN/site/data/tracy-agent.token
+# 2. capture: pages, shots at 1440 and 390, site part, assemble, sheets and pack in one run
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs build --full --site http://127.0.0.1:4361 \
+  --contract $RUN/site/contracts/$V --out $RUN/kit --webroot $RUN/site --token-file $RUN/site/data/tracy-agent.token \
+  --trade "<what the demo business does>"
+# 3. check: what Road to live would answer for it, with every flow gap (nothing is written or approved)
+node apps/tracy-web/scripts/template-kit-step.mjs --kit $RUN/kit/pack/template-kit.json --contract $THEME/contracts/$V \
+  --tag $TAG --version $V [--asset template-kit-<template>-$V.zip]
+#    after an edit of a person's file (icon-classes.json, frame-review.json, gap-accepts.json, reach-accepts.json):
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs assemble --site http://127.0.0.1:4361 \
+  --contract $RUN/site/contracts/$V --out $RUN/kit --webroot $RUN/site --token-file $RUN/site/data/tracy-agent.token
+# 4. the image zip: pack, then attach template-kit-<template>-$V.zip to the release (a person's go)
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs pack --out $RUN/kit
+gh release upload $TAG $RUN/kit/template-kit-<template>-$V.zip --repo JoomlArt-Products/joomlart-products
+# 5. looks (step 7 above), then pack again; a person looks at $RUN/kit/contact-sheet/review-*.html
+# 6. approval: ONLY a person, after the eye review
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs approve --out $RUN/kit --by <login>
+cp $RUN/kit/pack/template-kit.json $THEME/contracts/$V/template-kit.json
+```
+
+`test/template-kit-emdash.test.mjs` covers the adapter, the manifest, the page parts and the plain addresses on fixtures.

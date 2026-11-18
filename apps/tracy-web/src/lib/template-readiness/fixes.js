@@ -105,6 +105,7 @@ export const FIXES = Object.freeze({
 
   // content coverage
   'coverage-not-needed': GREEN,
+  'coverage-roles-only': GREEN,
   'coverage-ready': GREEN,
   'coverage-waiting': WAITING('the steps before Content coverage'),
   'coverage-not-measured': {
@@ -258,6 +259,11 @@ export const FIXES = Object.freeze({
   'kit-tool-outdated': {
     text: 'Settle the template kit again with the template kit tool {required} or later: copy template-kit.json from beside the contract into a folder, run samples there (it stamps the tool and moves no image, so the approval stays), and commit it back beside the contract.',
     command: `${KIT_TOOL} samples --out <dir> --contract <contract folder>`
+  },
+  'kit-modules-missing': {
+    text: 'The template kit has no block for {moduleNames}, which the demo prints on pages of the kit, so no plan decides them and their demo words, pictures and buttons stay on every site. Build the kit again with the current template kit tool on a site restored from the pinned version (it reads T3 Section<N> chrome since 3.1.1), into a folder that holds the committed kit so the declared fields are kept, then review and approve it again.',
+    command: `${KIT_TOOL} build --site <a site restored from the pinned version> --contract <contract folder> --out <folder holding template-kit.json> --full`,
+    skill: '.agents/skills/joomla-template-readiness/references/kit-rebuild.md'
   },
   'pin-behind-contract': {
     text: 'Release {latest} of the template if it is not out, then move its pin in the quickstart list from {pinned} to {latest}.',

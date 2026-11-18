@@ -5,6 +5,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends python3 make g+
     && rm -rf /var/lib/apt/lists/* \
     && npm install -g corepack@0.34.0 && corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# patches/ holds the pnpm patches pnpm-workspace.yaml names (patchedDependencies); without it
+# `pnpm install --frozen-lockfile` stops on a missing patch file.
+COPY patches ./patches
 # 🔒 THE RELEASE-AGE CHECK IS OFF HERE, AND ONLY HERE. pnpm 11's supply-chain policy re-reads the
 # registry metadata of every entry in the lockfile before it installs — 1075 packuments, some of
 # them megabytes. Measured 22/09/2026 building the Tracy Business zip: 22m42s and then
@@ -38,7 +41,7 @@ ARG TRACY_CONTENT_API_SCALARS=1
 ENV TRACY_CONTENT_API_SCALARS=$TRACY_CONTENT_API_SCALARS
 LABEL io.tracy.content-api.scalars="$TRACY_CONTENT_API_SCALARS"
 LABEL io.tracy.template.id="tracy-restaurant" \
-      io.tracy.template.version="1.0.1" \
+      io.tracy.template.version="1.0.2" \
       io.tracy.cms="emdash" \
       io.tracy.cms.version="1.1.0"
 WORKDIR /app

@@ -96,3 +96,43 @@ test('with neither store there are no objects; a media/ key without the shared s
   assert.equal(await objects.publicUrl(`media/other/ab/${SHA}.png`), null)
   assert.equal(await objects.put(`media/other/ab/${SHA}.png`, new Uint8Array([1]), 'image/png'), false)
 })
+
+test('routed media storage preserves caller cancellation through real storage requests', {
+  timeout: 5000
+}, async (t) => {
+  const { createServer } = await import('node:http')
+  const { once } = await import('node:events')
+  const { storeObjects } = await import('../src/lib/store-objects.js')
+  const server = createServer((_req, res) => {
+    res.writeHead(200)
+    res.write('first')
+  })
+  server.listen(0, '127.0.0.1')
+  await once(server, 'listening')
+  t.after(() => {
+    server.closeAllConnections()
+    return new Promise((resolve) => server.close(resolve))
+  })
+  const store = storeObjects(
+    {
+      endpoint: `http://127.0.0.1:${server.address().port}`,
+      bucket: 'media',
+      accessKey: 'test',
+      secretKey: 'test'
+    },
+    fetch
+  )
+  const objects = routePlaceMediaObjects({ local: store, shared: store })
+  for (const key of ['places/p1/photo.png', `media/other/ab/${SHA}.png`]) {
+    const controller = new AbortController()
+    const response = await objects.get(key, { signal: controller.signal })
+    const body = response.arrayBuffer()
+    controller.abort()
+    await assert.rejects(body, { name: 'AbortError' })
+    assert.equal(
+      await objects.put(key, new Uint8Array([1]), 'image/png', { signal: controller.signal }),
+      false
+    )
+    assert.equal(await objects.head(key, { signal: controller.signal }), null)
+  }
+})

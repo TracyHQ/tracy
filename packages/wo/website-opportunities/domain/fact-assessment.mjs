@@ -178,7 +178,10 @@ export function assessProfile(
     const ruleOnSite =
       !reasonCodes.some((r) => OFF_SITE_REASONS.has(r)) &&
       (status === 'accepted' || (allowedInference && status === 'unassessed'))
-    const owner = ownerChoice(overrides, fact.id)
+    // The owner's choice: the overrides given, else the one a saved profile carries on the fact (`saved-profile.mjs`).
+    const owner =
+      ownerChoice(overrides, fact.id) ??
+      (fact.decidedBy === 'owner' && typeof fact.onSite === 'boolean' ? fact.onSite : null)
     assessed.push({
       factId: fact.id,
       status,

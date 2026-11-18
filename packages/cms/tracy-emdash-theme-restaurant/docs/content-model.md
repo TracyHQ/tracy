@@ -20,7 +20,7 @@ and the views. The seed describes the baseline only; discover current IDs from t
 | `timeline` | title, items **repeater** [date, icon, image, title, description], … | 1 |
 | `opentime`, `opentable` | opening hours / an OpenTable id: not drawn | 1 + 1 |
 | `happyhours` | hp_bg, hp_brand, hp_title, hp_desc, hp_info, hp_badge, hp_link_text, hp_link, hp_other_info | 3 |
-| `chrome` (single) | brand_name, topbar_text, logo_dark, footer_*, copyright, and the template's own words (`skip_label`, `menu_label`, `prev_label`, `next_label`, `more_label`, `photos_label`, `gallery_link_label`, `not_found_*`) | 1 |
+| `chrome` (single) | brand_name, topbar_text, logo_dark, footer_*, copyright, and the template's own words (`skip_label`, `menu_label`, `prev_label`, `next_label`, `more_label`, `photos_label`, `search_label`, `gallery_link_label`, `not_found_*`) | 1 |
 | `masthead` | title, description, background | 11 (`default` for pages with none) |
 | `banner` (single) | image, price, points **repeater** [text], button_label, button_link | 1 |
 | `category_info` | title, description, image (one per blog category) | 4 |

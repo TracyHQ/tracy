@@ -28,7 +28,7 @@ import {
 } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { isRouteField, localPathProblems, verifyDistribution } from './distribution.mjs'
+import { isRouteField, localPathProblems, shownOrigin, verifyDistribution } from './distribution.mjs'
 import { personalizeProblems, questionProblems } from './personalize-gate.mjs'
 import { contentApiProblems } from './content-api-gate.mjs'
 
@@ -436,7 +436,7 @@ writeRelease(
       report: {
         startedAt: report.startedAt,
         finishedAt: report.finishedAt,
-        origin: report.origin,
+        origin: shownOrigin(report.origin),
         status: report.status,
         node: report.node
       },

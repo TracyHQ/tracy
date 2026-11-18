@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-651-hidden-link-labels",
+  "kind": "fix",
+  "title": "A hidden page control with written words is kept; any other hidden link takes its written label with it",
+  "pr": 651,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database needed).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A form submit (page-control) the plan hid while writing its label ends in the decision's links with its label, not hidden.",
+    "A hidden navigation link's written label is hidden; a label another block owns stays written."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-planner-hidden-links.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a hidden page control whose words the decision writes is kept; any other hidden link takes its written label with it"
+    ]
+  }
+}

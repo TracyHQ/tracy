@@ -111,17 +111,16 @@ test('list and status read the run; get writes the report file', async () => {
   assert.equal(report.counts.written, 9)
 })
 
-test('a dispute exits 1 and records the cause', async () => {
+test('a dispute no longer stops the run: it exits 0, the run is done and the report keeps the dispute', async () => {
   const c = copy()
   c.slots.push({ slot: 'block-2.3', owner: 'writer', text: 'Words the plan hides', factIds: [] })
   const frozen = frozenFiles({ copy: c })
   const h = harness()
-  assert.equal(await h.cli(runArgs(frozen.files)), 1)
+  assert.equal(await h.cli(runArgs(frozen.files)), 0)
   frozen.done()
-  assert.ok(h.err.some((l) => /SLOT_DISPUTE/.test(l) && /block-2\.3/.test(l)))
   const row = h.runs.rows[0]
-  assert.deepEqual([row.status, row.code], ['stopped', 'SLOT_DISPUTE'])
-  assert.equal(h.site.applies().length, 0)
+  assert.equal(row.status, 'done')
+  assert.ok(h.site.applies().length >= 1)
 })
 
 test('a missing file is a recorded stop, not a usage error', async () => {
@@ -233,12 +232,13 @@ test('check prints the group and the verdict, exits 0 on green and writes nothin
     "look-guard-findings: not-applicable 0 checked (the write step's look guard found nothing)"
   )
   assert.match(h.out[2], /^unaddressable-items: not-applicable 0 checked \(the write step left nothing out/)
+  assert.match(h.out[3], /^slot-disputes: not-applicable 0 checked \(no two files claimed one slot/)
   assert.match(
-    h.out[3],
+    h.out[4],
     /^emphasis-codes-left: not-applicable 0 checked \(the write step wrote no emphasis codes/
   )
-  assert.match(h.out[4], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
-  assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn, 0 unmeasured, 3 not applicable)')
+  assert.match(h.out[5], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
+  assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn, 0 unmeasured, 4 not applicable)')
   assert.equal(h.site.calls.filter((c) => c.params.operation !== 'inspect').length, before)
   const { report } = h.runs.rows[0]
   assert.equal(report.siteCheck.version, 'site-check/1')
@@ -255,7 +255,7 @@ test('check exits 1 on red, printing the page, the slot, the step, and --out kee
     line,
     /block step 9 \(write\) page=- slot=block-2\.1 key=module-2\.1 measured="Changed by hand"/
   )
-  assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn, 0 unmeasured, 3 not applicable)')
+  assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn, 0 unmeasured, 4 not applicable)')
   const saved = JSON.parse(readFileSync(path.join(dir, 'site-check.json'), 'utf8'))
   assert.equal(saved.status, 'red')
   assert.equal(h.runs.rows[0].report.slots.find((s) => s.slot === 'block-2.1').readBack, 'differs')
@@ -288,7 +288,7 @@ test('check --all-groups runs the page groups after a red read-back; a default c
       again.out.at(-1),
       wantAll
         ? /^site-check: red \(1 block, 0 warn, [1-9]\d* unmeasured(?:, \d+ not applicable)?\)$/
-        : /^site-check: red \(1 block, 0 warn, 0 unmeasured, 3 not applicable\)$/
+        : /^site-check: red \(1 block, 0 warn, 0 unmeasured, 4 not applicable\)$/
     )
   }
 })
@@ -435,4 +435,82 @@ test('a run still going on the site is what a new run is told about, not its old
   assert.equal(await h.cli(runArgs(frozen.files)), 1)
   frozen.done()
   assert.match(h.err.at(-1), /RUN_ACTIVE/)
+})
+
+test('audio postwrite bench injects its existing host lazily and records a missing browser proof', async () => {
+  const { brief } = await import('./_site-copy-check.mjs')
+  const slot = {
+    key: 'article-7.9',
+    entity: 'article-7',
+    type: 'url',
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', '2'],
+    group: { id: 'article-7.audio.2', item: 2, kind: 'business' },
+    sample: 'images/Old.mp3',
+    current: 'images/Old.mp3',
+    canHide: true
+  }
+  const link = {
+    id: slot.key,
+    sourceSlot: slot.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: slot.sample,
+    sourceBinding: { entity: slot.entity, column: slot.column, jsonPath: slot.jsonPath, group: slot.group }
+  }
+  const kit = structuredClone(made)
+  kit.pages = [{ id: 'page-home', path: '/', blocks: { 1440: ['block-2'] } }]
+  const block = kit.blocks.find((b) => b.id === 'block-2')
+  block.links = [link]
+  block.source = { entity: slot.entity }
+  const dir = mkdtempSync(path.join(tmpdir(), 'audio-bench-kit-'))
+  const kits = new Map([['demo-gym/j6@1.0.0', { id: KIT().ref, dir, platform: 'joomla' }]])
+  writeFileSync(path.join(dir, 'template-kit.json'), JSON.stringify(kit))
+  const value = 'https://media.example/New.mp3?sig=A%2FB'
+  const p = plan()
+  p.pages[0].blocks[0].links = [{ link: slot.key, leadsTo: value }]
+  const b = brief()
+  b.facts.push({ id: 'audio-1', field: 'audio', source: 'stated', value })
+  const frozen = frozenFiles({ plan: p, brief: b })
+  const site = fakeSite({
+    extraKeys: [slot.key],
+    overSlot: (s) => (s.key === slot.key ? { ...slot, current: site.held[slot.key] ?? slot.current } : {})
+  })
+  const apply = site.door.apply
+  site.door.apply = async (call) => {
+    const answer = await apply(call)
+    return call.action === 'content.contract' && call.params.operation === 'inspect'
+      ? { ...answer, ids: { 'article-7': 7 } }
+      : answer
+  }
+  const calls = []
+  const h = harness({
+    site,
+    kits,
+    makeHost: async (key) => {
+      assert.equal(key, SITE)
+      return async (payload) => {
+        calls.push(payload)
+        return { pageMeasures: [] }
+      }
+    }
+  })
+  try {
+    assert.equal(await h.cli(runArgs(frozen.files, ['--brief-file', frozen.files.brief])), 1)
+    assert.equal(calls.length, 1)
+    assert.equal(calls[0].measurePages, true)
+    assert.equal(h.runs.rows[0].report.cause.code, 'AUDIO_PLAYER_READBACK_FAILED')
+    assert.equal(site.held[slot.key], value)
+  } finally {
+    frozen.done()
+    rmSync(dir, { recursive: true, force: true })
+  }
+  const ordinary = frozenFiles()
+  try {
+    const noAudio = harness({ makeHost: () => assert.fail('ordinary run must not create a host reader') })
+    assert.equal(await noAudio.cli(runArgs(ordinary.files)), 0)
+  } finally {
+    ordinary.done()
+  }
 })

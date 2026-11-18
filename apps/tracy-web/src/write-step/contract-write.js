@@ -7,6 +7,16 @@
 /** Lock misses prove nothing ran, so waiting and asking again is safe; the waits are in milliseconds. */
 export const BUSY_WAITS_MS = [5_000, 10_000, 20_000, 30_000, 30_000]
 
+/** Native inspect uses review tiers; a conditional slot needs another member of its exact native row. */
+export function slotCanEmpty(slot, unit = []) {
+  if ([true, 'measured', 'unmeasured'].includes(slot?.canHide)) return true
+  return (
+    slot?.canHide === 'withRow' &&
+    typeof slot.row === 'string' &&
+    unit.some((other) => other?.key !== slot.key && other?.row === slot.row)
+  )
+}
+
 const slotOf = (entry) => entry?.field?.slotKey
 const isBusy = (error) => error?.answer?.error === 'writer_busy'
 

@@ -2,17 +2,19 @@
 // Alt text and post text that name one item link it without any model; a model's answer outside the list, or an unsure
 // one, is "general". The boxes, people count and graphic flag a model returns are held to their shape.
 // Fixtures are fictional: the Lantern Hill Racquet Club and its coaches do not exist.
-import { test } from 'node:test'
+
 import assert from 'node:assert/strict'
+import { test } from 'node:test'
 import {
-  GENERAL,
-  PHOTO_ROLES,
   assetRelationsOf,
+  benchLabelsOf,
   closedListDigest,
   closedListOf,
   focusOfBox,
+  GENERAL,
   heldVisionLinks,
   ownershipOf,
+  PHOTO_ROLES,
   textLinksOf
 } from '../domain/pictures/picture-links.mjs'
 import { PLACE_CONTENT_ROLES_V3 } from '../domain/place-content-roles.mjs'
@@ -188,6 +190,52 @@ test('a brief asset: text links win, then the model in the list, else general; n
     faceBoxes: [],
     peopleCount: null,
     isGraphic: null,
+    isBlurry: null,
+    hasTextOrWatermark: null,
+    showsOtherBusiness: null,
     isOwnPhoto: null
   })
+})
+
+test('a brief asset carries the lettering and other-business labels the picture bench reads, null when unanswered', () => {
+  const asset = (vision) =>
+    assetRelationsOf(
+      { id: 'p9', kind: 'image', source: 'google-places', labels: { vision: { labels: vision } } },
+      { list: LIST }
+    )
+  const clean = asset({
+    subject: 'interior',
+    textPresence: 'absent',
+    hasTextOverlay: false,
+    showsOtherBusiness: false
+  })
+  assert.equal(clean.hasTextOrWatermark, false)
+  assert.equal(clean.showsOtherBusiness, false)
+  assert.equal(asset({ subject: 'interior', textPresence: 'present' }).hasTextOrWatermark, true)
+  // Words laid over the photo count even when the model said no text was in the scene.
+  assert.equal(
+    asset({ subject: 'interior', textPresence: 'absent', hasTextOverlay: true }).hasTextOrWatermark,
+    true
+  )
+  assert.equal(asset({ subject: 'exterior', showsOtherBusiness: true }).showsOtherBusiness, true)
+  // A label made before the model was asked (prompt p5) has no answer: unknown, never a guessed false.
+  const old = asset({ subject: 'interior', hasTextOverlay: false })
+  assert.equal(old.hasTextOrWatermark, null)
+  assert.equal(old.showsOtherBusiness, null)
+  assert.deepEqual(benchLabelsOf(null), {
+    isBlurry: null,
+    hasTextOrWatermark: null,
+    showsOtherBusiness: null
+  })
+})
+
+test('brief assets preserve scene text presence without changing the legacy overlay-only risk answer', () => {
+  const result = assetRelationsOf({
+    id: 'scene',
+    kind: 'image',
+    vision: { textPresence: 'present', hasTextOverlay: false, hasTextOrWatermark: false }
+  })
+  assert.equal(result.textPresence, 'present')
+  assert.equal(result.hasTextOrWatermark, false)
+  assert.equal('textPresence' in assetRelationsOf({ id: 'unknown', kind: 'image', vision: {} }), false)
 })

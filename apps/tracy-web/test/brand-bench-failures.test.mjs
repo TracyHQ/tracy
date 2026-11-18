@@ -4,6 +4,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { cancelBrandRun, startBrandRun } from '../src/brand-step/brand-control.js'
+import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
 import { createRun as createPlannerRun } from '../src/site-planner/bench-store.js'
 import { readRun } from '../src/brand-step/brand-store.js'
 import { createBrandQueue } from '../src/brand-step/brand-worker.js'
@@ -87,7 +88,49 @@ test('a queued run nobody holds is cancelled at once', opts, async () => {
   assert.equal((await cancelBrandRun(pool, run.id)).code, 'BRAND_RUN_NOT_ACTIVE')
 })
 
-test('one brand run at a time; a planner run in flight does not block it', opts, async () => {
+test('a cancel asked while brand preparation is pending prevents the first paid call', opts, async () => {
+  const { pool } = db
+  await assignBrandDoors(pool)
+  const c = await brandCase()
+  const run = await startRun(pool, c)
+  const preparing = Promise.withResolvers()
+  const release = Promise.withResolvers()
+  const model = modelRouter({ agent: [saveCall(c.brand), done()] })
+  const images = readyKitImages()
+  const pending = createBrandQueue({
+    pool,
+    secret: SECRET,
+    fetchImpl: model.fetchImpl.bind(model),
+    kitImages: {
+      async ensure(kit) {
+        preparing.resolve()
+        await release.promise
+        return images.ensure(kit)
+      }
+    },
+    wiring: fakeWiring({ files: c.files }),
+    log: quiet,
+    retry: { attempts: 1 }
+  }).drain()
+  try {
+    await preparing.promise
+    const cancelled = await cancelBrandRun(pool, run.id)
+    assert.equal(cancelled.ok, true)
+    release.resolve()
+    await pending
+    const after = await readRun(pool, run.id)
+    assert.equal(after.status, 'cancelled')
+    assert.equal(model.requests.length, 0, 'cancellation during preparation prevents every paid call')
+    assert.equal(after.rounds.length, 0, 'round zero never opens after cancellation')
+    const { rows } = await pool.query('select count(*)::int as n from brand_call where run_id=$1', [run.id])
+    assert.equal(rows[0].n, 0)
+  } finally {
+    release.resolve()
+    await pending
+  }
+})
+
+test('brand runs up to the bench limit at a time; a planner run in flight does not count', opts, async () => {
   const { pool } = db
   await assignBrandDoors(pool)
   const c = await brandCase()
@@ -104,7 +147,8 @@ test('one brand run at a time; a planner run in flight does not block it', opts,
   })
   assert.ok(planner.run, 'the planner run is queued')
   const first = await startRun(pool, c)
-  const second = await startBrandRun({
+  for (let n = 1; n < BENCH_RUNS_AT_ONCE; n++) await startRun(pool, c)
+  const past = await startBrandRun({
     pool,
     secret: SECRET,
     brief: c.brief,
@@ -114,9 +158,11 @@ test('one brand run at a time; a planner run in flight does not block it', opts,
     kitImages: readyKitImages(),
     wiring: fakeWiring({ files: c.files })
   })
-  assert.equal(second.ok, false)
-  assert.equal(second.code, 'BRAND_RUN_ACTIVE')
-  assert.equal(second.active.id, first.id)
+  assert.equal(past.ok, false)
+  assert.equal(past.code, 'BRAND_RUN_ACTIVE')
+  assert.equal(past.active.id, first.id)
+  assert.equal(past.activeRuns.length, BENCH_RUNS_AT_ONCE)
+  assert.match(past.reason, new RegExp(`At most ${BENCH_RUNS_AT_ONCE} brand runs at a time`))
 })
 
 test('a brief with no usable brand part is refused before it is queued', opts, async () => {

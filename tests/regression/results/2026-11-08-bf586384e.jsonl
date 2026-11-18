@@ -1,0 +1,2 @@
+{"id":"REG-PR-489-quickstart-github-download-504","verdict":"PASS","commit":"bf586384e4b015760e476377ffbd39c52c1872d5","ran_at":"2026-11-08T09:21:05.133Z","evidence":"tests/regression/.runs/2026-11-08-bf586384e/REG-PR-489-quickstart-github-download-504.log"}
+{"id":"REG-PR-491-template-string-entities","verdict":"PASS","commit":"bf586384e4b015760e476377ffbd39c52c1872d5","ran_at":"2026-11-08T09:21:05.947Z","evidence":"tests/regression/.runs/2026-11-08-bf586384e/REG-PR-491-template-string-entities.log"}

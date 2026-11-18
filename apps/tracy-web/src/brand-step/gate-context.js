@@ -5,7 +5,7 @@
 // Every path inside a brand file is relative to that folder (an absolute path or one that leaves the folder is
 // rejected).
 import { posix } from 'node:path'
-import { computeNameSlots } from './name-slots.js'
+import { computeNameSlots } from '../lib/brand-name-slots.js'
 import { kitId, sideText, templateGrounds } from './kit-grounds.js'
 
 export const HEX = /^#[0-9a-f]{6}$/i

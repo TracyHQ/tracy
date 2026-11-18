@@ -205,7 +205,7 @@ export const excludeGlob = (g) => `!$TURBO_ROOT$/${g.path}${g.file ? '' : '/**'}
  * Never inputs, though the trees above contain them. Measured 12/10/2026: every run rewrote
  * `apps/tracy-web/.turbo/turbo-test:ci:1.log`, which changed the hash of the ten tasks that read
  * tracy-web, so the second run served 14 of 47 tasks from the cache instead of all of them. These
- * five patterns only keep files OUT of a hash; they approve no read (see `GENERATED`).
+ * exclusions only keep files OUT of a hash; they approve no read (see `GENERATED`).
  */
 export const EXCLUDE = [
   '!$TURBO_ROOT$/**/.turbo/**',
@@ -215,6 +215,8 @@ export const EXCLUDE = [
   // The logs of the regression runner (`tests/regression/run.mjs`), ignored by git: found in the hash
   // of the two tasks that took `tests/regression/**`, on the first tree where the runner had run.
   '!$TURBO_ROOT$/tests/regression/.runs/**',
+  // Machine-local credentials are never cache inputs; actual reads still fail coverage.
+  '!$TURBO_ROOT$/tch/.credentials.yaml*',
   ...GENERATED.map(excludeGlob)
 ]
 

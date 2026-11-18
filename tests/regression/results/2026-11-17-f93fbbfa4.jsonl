@@ -1,0 +1,1 @@
+{"id":"REG-PR-671-invitations-queue-transient-retry","verdict":"PASS","commit":"f93fbbfa410a6fd99acbb55ba77fd42d1201b0e2","ran_at":"2026-11-17T03:44:00.225Z","evidence":"tests/regression/.runs/2026-11-17-f93fbbfa4/REG-PR-671-invitations-queue-transient-retry.log"}

@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-541-unresolved-bench-checks",
+  "kind": "fix",
+  "title": "A successful final write cannot erase unresolved upstream bench checks",
+  "pr": 541,
+  "area": "website-opportunities/chain",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run chain-bench-verdict.test.mjs sequentially with Node 24. Exhaust checked planner output, run its best content through the chain engine and evaluate the same terminal QA predicate used by the demo runner."
+  ],
+  "expect": [
+    "Planner, copy and picture standing failures produce an explicit failed step.",
+    "The best planner output still reaches the writer, picture step and final write, retaining its recorded cost.",
+    "A successful final write does not pass QA when upstream checks remain; valid verified fallback behavior is preserved."
+  ],
+  "selectors": {},
+  "fence": "Standing failures become a durable chain error code that terminal demo QA must reject",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/chain-bench-verdict.test.mjs"
+    ],
+    "tests": [
+      "a completed model run with remaining check failures is not a successful chain step",
+      "checked planner failures preserve best content for writing but prevent complete handover",
+      "final QA rejects unresolved upstream checks while keeping verified fallback semantics"
+    ],
+    "needs": []
+  }
+}

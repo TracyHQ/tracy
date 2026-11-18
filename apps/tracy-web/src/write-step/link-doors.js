@@ -1,6 +1,8 @@
 // Which door holds a kit link on this site (TracyHQ/tracy#371): nothing here writes. A link's address is held by its own link slot,
 // by the link slot of its label's row or anchor, by a link slot of its block that holds the address the kit measured, by a menu
 // item when a menu module prints it, or inside a slot of words. Several links can share one address (a card's picture and name).
+import { isDeepStrictEqual } from 'node:util'
+import { isAudioSlot } from 'website-opportunities/domain/audio-source.mjs'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { ownTwin } from './kit-buttons.js'
 
@@ -12,7 +14,36 @@ const slashless = (path) =>
 const ANCHOR = /(?:\(\(|<)a href="#"/g
 const anchorParent = (xpath) =>
   /^(.*)\/(?:text\(\)(?:\[\d+\])?|@href)$/.exec(String(xpath ?? ''))?.[1] ?? null
-const NOT_ADDRESSES = new Set(['business.video'])
+const NOT_ADDRESSES = new Set(['business.video', 'business.audio'])
+
+/** Media identity is explicit: no URL, label, row position or shared-slot fallback. */
+export function audioBindingMatches(slot, link, block) {
+  const binding = link?.sourceBinding
+  return (
+    isAudioSlot(slot) &&
+    link?.action === 'media-source' &&
+    link.mediaKind === 'audio' &&
+    contentMapKey(link.sourceSlot) === slot.key &&
+    contentMapKey(link.id) === slot.key &&
+    !link.labelId &&
+    /^article-\d+$/.test(slot.entity) &&
+    slot.column === 'attribs' &&
+    slot.jsonPath?.length === 3 &&
+    slot.jsonPath[0] === 'ctm_audio' &&
+    slot.jsonPath[1] === 'audio-src' &&
+    /^(?:0|[1-9]\d*)$/.test(String(slot.jsonPath[2])) &&
+    Number.isSafeInteger(Number(slot.jsonPath[2])) &&
+    slot.group?.id === `${slot.entity}.audio.${Number(slot.jsonPath[2])}` &&
+    slot.group?.item === Number(slot.jsonPath[2]) &&
+    slot.group?.kind === 'business' &&
+    [block?.source?.entity, ...each(block?.source?.contains)].includes(slot.entity) &&
+    binding?.entity === slot.entity &&
+    binding.column === slot.column &&
+    isDeepStrictEqual(binding.jsonPath, slot.jsonPath) &&
+    isDeepStrictEqual(binding.group, slot.group) &&
+    link.target === slot.sample
+  )
+}
 
 /** A slot that holds an address, as opposed to words: the map's url type, or a `*_url` role kept in a text column. */
 export const holdsAddress = (slot) =>
@@ -73,12 +104,20 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
   const slots = new Map(slotList.map((s) => [s?.key, s]))
   const rowsById = new Map(rows.map((r) => [Number(r.id), r]))
   const byId = new Map()
+  const duplicates = new Set()
   const byLabel = new Map()
   for (const block of each(kit?.blocks))
     for (const link of each(block?.links)) {
+      if (byId.has(link?.id)) duplicates.add(link.id)
       byId.set(link?.id, { link, block })
       if (link?.labelId && !byLabel.has(link.labelId)) byLabel.set(link.labelId, { link, block })
     }
+  // The address slot each kit link is itself (its id is a slot of the map), by content map key.
+  const ownSlotOfOther = new Map(
+    [...byId.keys()]
+      .filter((id) => typeof id === 'string' && holdsAddress(slots.get(contentMapKey(id))))
+      .map((id) => [contentMapKey(id), id])
+  )
   const anchorCache = new Map()
   const anchorsOf = (block) => {
     if (!anchorCache.has(block)) anchorCache.set(block, anchorsOfBlock(block, [...slotList, ...removed]))
@@ -108,8 +147,19 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
     return sameAnchor.length === 1 ? sameAnchor[0].key : null
   }
 
-  /** The link slots of its block that hold the address the kit measured on the link. */
+  /**
+   * The link slots of its block that hold the address the kit measured on the link. A slot that is another kit link's own
+   * address slot is that link's: it is left out when another candidate remains (a demo gives one placeholder address to
+   * every link of a contact, so "Website" matched the four social links' slots too; JA Diner 1.0.8's two slides each print
+   * the about page, and the second slide's button has a kit link of its own).
+   */
   function byItsAddress(link, block) {
+    const all = addressMatches(link, block)
+    const others = all.filter((key) => !(ownSlotOfOther.has(key) && ownSlotOfOther.get(key) !== link?.id))
+    return others.length ? others : all
+  }
+
+  function addressMatches(link, block) {
     if (!link?.target) return []
     const entities = new Set([
       block?.source?.entity,
@@ -127,6 +177,19 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
   return function doorOf(id) {
     const key = contentMapKey(id)
     const own = slots.get(key)
+    const media = byId.get(id)
+    if (media?.link?.action === 'media-source' || isAudioSlot(own)) {
+      const bound =
+        !duplicates.has(id) &&
+        slotList.filter((s) => s.key === key).length === 1 &&
+        audioBindingMatches(own, media?.link, media?.block)
+      return {
+        ...media,
+        via: bound ? 'audio' : 'audio-refused',
+        keys: bound ? [key] : [],
+        reason: bound ? null : 'audio source needs one exact slot/article/track binding; no fallback allowed'
+      }
+    }
     if (own && holdsAddress(own)) return { via: 'slot', keys: [key], ...byId.get(id) }
     const found = byId.get(id) ?? byLabel.get(id)
     if (!found) return own ? { via: 'words-only', key } : { via: 'no-kit-link' }

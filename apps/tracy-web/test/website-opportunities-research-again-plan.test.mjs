@@ -114,3 +114,69 @@ test('a plan over a cap drops its dearest parts first and says so', () => {
   assert.deepEqual(plan.kept.at(-1), { part: 'facebook-search', reason: 'over-cap' })
   assert.equal(plan.ceilingCents, 5)
 })
+
+test('from scratch, every part runs again whatever its age; only parts this server cannot run are kept', () => {
+  const fresh = { status: 'complete', collected_at: at(HOUR), attempted_at: at(HOUR) }
+  const plan = researchAgainPlan(
+    {
+      website: fresh,
+      'google-places': fresh,
+      youtube: { status: 'skipped', reason: 'not_found', attempted_at: at(HOUR) }
+    },
+    {
+      now: NOW,
+      parts: ['website', 'youtube', 'google-places', 'menu-photos', 'tiktok'],
+      unavailable: { tiktok: 'credential_missing' },
+      prices: { website: 3, 'google-places': 2 },
+      // The place has no menu photo to read.
+      custom: { 'menu-photos': { due: false, kept: 'none' } },
+      fromScratch: true
+    }
+  )
+  assert.deepEqual(plan.run, [
+    { part: 'website', reason: 'again', ceilingCents: 3 },
+    { part: 'youtube', reason: 'again', ceilingCents: 0 },
+    { part: 'google-places', reason: 'again', ceilingCents: 2 }
+  ])
+  assert.deepEqual(plan.kept, [
+    { part: 'menu-photos', reason: 'none' },
+    { part: 'tiktok', reason: 'unavailable', detail: 'credential_missing' }
+  ])
+  assert.equal(plan.ceilingCents, 5)
+  // The same rows without it: nothing is due.
+  const due = researchAgainPlan(
+    { website: fresh, 'google-places': fresh },
+    { now: NOW, parts: ['website', 'google-places'] }
+  )
+  assert.deepEqual(due.run, [])
+})
+
+test('payment refusals stay out of both paid research plans until the operator saves repaired setup', () => {
+  const failed = { status: 'failed', reason: 'HTTP_402', attempted_at: at(HOUR) }
+  assert.equal(
+    sourceDue(failed, NOW + 40 * 24 * HOUR),
+    false,
+    'automatic scheduling cannot charge the broken provider again'
+  )
+  for (const fromScratch of [false, true]) {
+    const options = { now: NOW, parts: ['tripadvisor'], prices: { tripadvisor: 12 }, fromScratch }
+    const refused = researchAgainPlan({ tripadvisor: failed }, options)
+    assert.deepEqual(refused.run, [])
+    assert.equal(refused.ceilingCents, 0)
+    assert.deepEqual(refused.kept, [{ part: 'tripadvisor', reason: 'unavailable', detail: 'HTTP_402' }])
+    assert.equal(
+      researchAgainPlan({ tripadvisor: failed }, { ...options, setupUpdatedAt: at(2 * HOUR) }).run.length,
+      0
+    )
+    assert.equal(
+      researchAgainPlan({ tripadvisor: failed }, { ...options, setupUpdatedAt: at(1000) }).run.length,
+      1
+    )
+  }
+  const freshFailure = { ...failed, last_error: { reason: 'HTTP_503' } }
+  assert.equal(
+    researchAgainPlan({ tripadvisor: freshFailure }, { now: NOW, parts: ['tripadvisor'], fromScratch: true })
+      .run.length,
+    1
+  )
+})

@@ -13,6 +13,12 @@ export const failed = (reason, extra = {}) => ({ status: 'failed', reason, key: 
 export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys = new Set() }) {
   const { slot: id, content: leadsTo } = claim
   const { link } = door
+  if (door.via === 'audio-refused') return failed(door.reason)
+  if (door.via === 'audio') {
+    if (claim.label || target.kind !== 'audio')
+      return failed(target.reason ?? 'audio is a source, not a labelled navigation link')
+    return { via: 'slot', keys: door.keys, url: target.url }
+  }
   if (door.via === 'menu' && leaving.has(link.menuItem)) return { via: 'menu', item: door.item }
   const label = claim.label ? hiddenKeys.get(contentMapKey(claim.label)) : null
   if (label && door.via !== 'menu') return { via: 'label', label, leadsTo }
@@ -36,6 +42,14 @@ export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys =
     if (!keys.length) {
       const row = door.keys.find((key) => goneKeys.has(key) && !hiddenKeys.has(key))
       if (row) return { via: 'row', key: row, leadsTo }
+      // The plan hides the address of a button whose words it keeps and whose link it decides: a button leaves whole or not
+      // at all (hide-plan.js), and a kept label over an emptied address draws a button to the page it is on. The link writes
+      // the address, and the hide of it yields (`overHide`, hide-plan.js `linked`). Seen on every JA Diner plan of 16/11/2026:
+      // "the button's destination is set by its link decision, so this URL slot is dropped".
+      // Only the addresses of rows that stay: an address of a row the plan gives up leaves with that row.
+      const staying = door.keys.filter((key) => !goneKeys.has(key))
+      if (claim.label && staying.length)
+        return { via: door.via, keys: staying, url: target.url, overHide: true }
       return { via: 'words', key: door.keys[0], leadsTo }
     }
     return { via: door.via, keys, url: target.url }

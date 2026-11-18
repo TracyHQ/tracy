@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-566-wo-refused-action-refund",
+  "kind": "fix",
+  "title": "A Website Opportunities demo action refused before any paid work gives its daily build back once",
+  "pr": 566,
+  "area": "wo/demo/usage",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Accept a demo action whose brief has no photograph to label and is blocked; drain the runner until it fails BRIEF_NOT_READY; read wo_demo_usage.used and the usage door; run the refund again and record the failure twice.",
+    "S2: Accept the same blocked own-site action whose labelling run sends pictures to the paid vision call (beforePaidCall); drain the runner until it fails BRIEF_NOT_READY.",
+    "S3: Accept an own-site action whose labelling run is in flight past PICTURE_LABELS_OVERDUE_MS; drain the runner until it fails DEMO_PICTURE_LABELS_TIMEOUT.",
+    "S4: Run the demo-actions refund cases: past-day row, own-site kind, build row or site present, quality-v1, and two concurrent presses at the cap after a refund."
+  ],
+  "expect": [
+    "S1: wo_demo_action.status failed, error BRIEF_NOT_READY, work_started_at null, no wo_build row; wo_demo_usage.used goes from 1 to 0 and stays 0 after a second refund or a second recorded failure.",
+    "S2: wo_demo_action.error BRIEF_NOT_READY, work_started_at set; wo_demo_usage.used stays 1.",
+    "S3: wo_demo_action.error DEMO_PICTURE_LABELS_TIMEOUT, work_started_at set; wo_demo_usage.used stays 1.",
+    "S4: the refund lowers only the wo_demo_usage row of the action's usage_day and usage_kind, never below 0; an action with a wo_build row, work_started_at or protocol quality-v1 keeps wo_demo_usage.used; at the cap exactly one of two concurrent presses answers 202 and the other 429 DEMO_BUILD_DAILY_LIMIT."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/demo-actions.js apps/tracy-web/src/opportunities-build/demo-runner.js apps/tracy-web/src/opportunities-build/brief-picture-labels.js apps/tracy-web/src/db/migrations/214-wo-demo-usage-refund.sql"
+  },
+  "evidence": "Issue #564: Portland City Boxing, five actions failed BRIEF_NOT_READY with no wo_build row, and each first press stayed counted in wo_demo_usage.used.",
+  "fence": "refundUnbilledDemoUsage: failed legacy action, error in UNBILLED_FAILURES, no wo_build row, work_started_at null, usage_refunded_at set once",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=#564|BRIEF_NOT_READY|photo-label timeout|refund|daily build|stays charged|refused before its work",
+      "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs",
+      "apps/tracy-web/test/website-opportunities-demo-actions.test.mjs"
+    ],
+    "tests": [
+      "a blocked brief starts no build: the action stops BRIEF_NOT_READY and the revision keeps its owner questions",
+      "a blocked brief with no photograph to label gives its daily build back (#564)",
+      "a blocked brief after its own labelling run sent pictures keeps its daily build (#564)",
+      "client-send photo-label timeout fails with its actual cause without freezing a brief or adopting late results",
+      "a first press refused BRIEF_NOT_READY gives its daily build back",
+      "a refund happens once, however often the failure is recorded or the refund runs",
+      "a refund lands on the day it was charged, never on today",
+      "an own-site build refused before its work gives back an own-site build",
+      "an action that reached a site, failed another way, or ran quality-v1 stays charged",
+      "a labels timeout, paid brief work or a build row keeps the daily build",
+      "after a refund, two presses at the cap still get exactly one build"
+    ],
+    "needs": ["postgres"]
+  }
+}

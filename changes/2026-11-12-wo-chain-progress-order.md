@@ -1,0 +1,3 @@
+- **Keep parallel WO chain progress snapshots in order.** — pipeline maintainers · #568 · `fix/wo-dev-full-flow-acceptance` · 2026-11-12
+  **Affects:** Website Opportunity chain progress and Ops measurements; rebuild the web image. A slow earlier progress write cannot overwrite a newer planner, writer or picture snapshot. The model steps still run in parallel and progress storage failures remain non-fatal.
+  **Why / Measured:** A post-merge dev run showed only the brand branch while preparation was active. A deterministic regression held that earlier write, reproduced the missing parallel planner before the fix, and verifies ordered snapshots afterwards. This fixes progress ordering; it does not claim a reduction in model execution time.

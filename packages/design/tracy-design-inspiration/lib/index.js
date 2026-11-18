@@ -250,6 +250,14 @@ var catalogue_default = {
       defaultOn: false
     },
     {
+      id: "wo-demo-looks",
+      group: "settings-nav",
+      label: "Website Opportunities: See another look on shared demos",
+      hint: "On a demo's share link (/d/\u2026), the business owner previews the same demo in up to four featured design systems and presses I like this look; the seller reads the pick on the opportunity and /ops/wo. Preview only: nothing is written to the demo. Off: the link goes straight to the demo and the server refuses the looks and pick doors.",
+      drawnBy: "Tracy",
+      defaultOn: false
+    },
+    {
       id: "language",
       group: "settings-general",
       label: "Language",
@@ -2918,7 +2926,9 @@ var EXEC_USER = Object.freeze({
   "read-only": "nobody"
 });
 function trimRoot(root) {
-  const trimmed = root.replace(/\/+$/, "");
+  let end = root.length;
+  while (end > 0 && root[end - 1] === "/") end--;
+  const trimmed = root.slice(0, end);
   if (trimmed === "") throw new Error("subprocess-docker: sitesRoot must not be the filesystem root");
   return trimmed;
 }

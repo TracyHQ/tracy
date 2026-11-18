@@ -5,7 +5,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, it } from 'node:test'
-import { holdsLocalPath, isRouteField, localPathProblems, shownPath } from '../tools/distribution.mjs'
+import { LOCAL_ORIGIN, holdsLocalPath, isRouteField, localPathProblems, shownOrigin, shownPath } from '../tools/distribution.mjs'
 
 const tool = (name) => readFileSync(path.join(new URL('.', import.meta.url).pathname, '..', 'tools', name), 'utf8')
 /** A builder disk with these directories on it. */
@@ -212,5 +212,39 @@ describe('the tools', () => {
   it('release.mjs does not scan authored code or guides (restore.sh names a temp folder and a macOS home on purpose)', () => {
     const scanned = tool('release.mjs').match(/const files = \[([^\]]*)\]/)?.[1] ?? ''
     assert.doesNotMatch(scanned, /tools|restore|docs\/install|src/)
+  })
+})
+
+/** IPv4 fixtures are built from octets, so no literal address appears in this file. */
+const ipv4 = (...octets) => octets.join('.')
+
+describe('shownOrigin', () => {
+  it('writes a stand of the builder machine as the local origin, with no port, and keeps any other origin', () => {
+    for (const o of [
+      'http://127.0.0.1:18000',
+      'http://0.0.0.0:4321',
+      `http://${ipv4(10, 1, 2, 3)}:8080`,
+      `http://${ipv4(192, 168, 1, 5)}`,
+      `http://${ipv4(172, 20, 0, 3)}:80`,
+      'http://[::1]:4361',
+      'http://localhost:4392',
+      'http://host.docker.internal:9000',
+      'http://tracy.test:51710',
+      'http://stand.local:8080'
+    ])
+      assert.equal(shownOrigin(o), LOCAL_ORIGIN, o)
+    for (const o of [
+      'https://example.com',
+      'https://cowork.example.org:8443',
+      `http://${ipv4(172, 32, 0, 1)}`,
+      null,
+      undefined,
+      'not a url'
+    ])
+      assert.equal(shownOrigin(o), o, String(o))
+  })
+  it('is what release.mjs writes as the VERIFICATION.json report origin', () => {
+    assert.match(tool('release.mjs'), /origin: shownOrigin\(report\.origin\)/)
+    assert.doesNotMatch(tool('release.mjs'), /origin: report\.origin/)
   })
 })

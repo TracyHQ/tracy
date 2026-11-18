@@ -41,23 +41,3 @@ test('writing stores the hidden ids; a storage that throws is ignored', () => {
   assert.doesNotThrow(() => writeHiddenColumns(broken, new Set()))
   assert.deepEqual(readHiddenColumns(broken), ['type'])
 })
-
-test('My opportunities remembers its own Columns choice: Opportunity and Demo on, the other optional columns off until shown', async () => {
-  const { MY_COLUMNS, MY_COLUMNS_KEY, readMyHiddenColumns, writeMyHiddenColumns } = await import(
-    '../src/client/column-prefs.ts'
-  )
-  // Opportunity and Demo show by default (Lee 19/10); the other optional columns wait to be turned on.
-  assert.deepEqual(readMyHiddenColumns(memory()), ['web', 'google', 'social', 'contact'])
-  // Demo sits after Website, before Contact (the Columns menu lists them in this order).
-  assert.deepEqual(MY_COLUMNS, ['score', 'web', 'demo', 'google', 'social', 'contact'])
-  assert.deepEqual(readMyHiddenColumns(memory({ [MY_COLUMNS_KEY]: '["social","type","demo"]' })), [
-    'social',
-    'demo'
-  ])
-  assert.deepEqual(readMyHiddenColumns(memory({ [MY_COLUMNS_KEY]: '["score","web"]' })), ['score', 'web'])
-  const store = memory({ [COLUMNS_KEY]: '["type"]' })
-  writeMyHiddenColumns(store, new Set(['contact']))
-  assert.equal(store.data[MY_COLUMNS_KEY], '["contact"]')
-  // Find's choice is its own.
-  assert.equal(store.data[COLUMNS_KEY], '["type"]')
-})

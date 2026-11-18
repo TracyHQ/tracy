@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-685-picomatch-test-escape",
+  "kind": "fix",
+  "title": "The picomatch patch test builds its workspace-line RegExp from fully escaped names, and the SaaS contract generator strips script tags in any case until none is left",
+  "pr": 685,
+  "area": "deps/picomatch",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout after pnpm install, run run.cmd (no database, no network).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The root and theme pnpm-workspace.yaml lines for both picomatch patches are matched with every RegExp metacharacter of the name escaped, backslash included.",
+    "build-qa-contract-kinetic.mjs removes <script ...>...</script> regardless of case and repeats until stable, keeping <scripted> and <script-widget>."
+  ],
+  "selectors": {
+    "test": "scripts/test/picomatch-extglob-redos.test.mjs escapeRe",
+    "generator": "packages/cms/tracy-emdash-theme-saas/tools/html-text.mjs withoutScripts escapeRe, used by build-qa-contract-kinetic.mjs htmlOf and menuLabel"
+  },
+  "fence": "Literal strings placed into a RegExp go through escapeRe; script stripping is case-insensitive and loops to a fixed point",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "scripts/test/picomatch-extglob-redos.test.mjs",
+      "packages/cms/tracy-emdash-theme-saas/tests/html-text.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "each EmDash theme carries the root patch files and names them in patchedDependencies",
+      "withoutScripts removes script elements in any case, including one split by a removal",
+      "withoutScripts keeps elements whose name only starts with script",
+      "escapeRe matches every metacharacter literally"
+    ]
+  }
+}

@@ -37,11 +37,35 @@ function briefMenuItems(brief) {
  *   | null} null when there is nothing to read or the profile cannot be made: the caller keeps its path without a sidecar
  */
 export function placeProfileOfRevision(domain, revision, { pictures = [] } = {}) {
-  const read = placeProfileRead(domain, revision)
+  const read = savedRead(domain, revision, placeProfileRead(domain, revision))
   if (!read || typeof domain?.withAcceptedDishPhotos !== 'function') return read
   return {
     ...read,
     profile: domain.withAcceptedDishPhotos(read.profile, { brief: revision?.brief, pictures })
+  }
+}
+
+/**
+ * 🔒 The read with the owner's changes the revision froze laid on (#537 R18, `saved-profile.mjs`): a slot is filled
+ * from the value the owner saved, exactly as the brief states it. The candidate is the revision's overlay's, else its
+ * research's; without one, or when the research cannot be read, the read stays as frozen.
+ * @param {any} domain @param {any} revision @param {any} read
+ */
+function savedRead(domain, revision, read) {
+  if (!read?.profile || typeof domain?.savedProfileOf !== 'function') return read
+  try {
+    const snapshot = researchOfRevision(revision, { optional: true, checkEmbedded: false })?.research
+    const candidate = revision?.overlay?.candidate ?? snapshot?.opportunity?.candidate
+    if (!candidate) return read
+    return {
+      ...read,
+      profile: domain.savedProfileOf(candidate, read.profile, {
+        research: snapshot?.profile ?? null,
+        media: snapshot?.media ?? []
+      })
+    }
+  } catch {
+    return read
   }
 }
 

@@ -117,9 +117,9 @@ function notInHeader(list) {
 const TOGGLES =
   '.navbar-toggler, .navbar-toggle, .off-canvas-toggle, .t3-off-canvas-toggle, .t4-offcanvas-toggle, .menu-toggle, [data-toggle="collapse"], [data-bs-toggle="collapse"], [data-toggle="offcanvas"], [data-bs-toggle="offcanvas"]'
 
-// a toggle's icon drawn as bars (Bootstrap's .icon-bar, T3's off-canvas spans, T4's .toggle-bars): their
-// background is the icon's colour
-const TOGGLE_BARS = '.icon-bar, .bar-first, .bar-mid, .bar-last, .toggle-bars'
+// T4 also puts .toggle-bars on Font Awesome glyphs: filling their box hides the bars (JA Vega).
+const CSS_TOGGLE_BARS = '.toggle-bars:not(.fa, .fas, .far, .fab, .fal, .fad, [class*="fa-"])'
+const TOGGLE_BARS = `.icon-bar, .bar-first, .bar-mid, .bar-last, ${CSS_TOGGLE_BARS}`
 
 /** A button list without the menu toggles. */
 const notToggle = (list) => outsideOf(list, TOGGLES)
@@ -793,7 +793,7 @@ function joomlaSheet(profile, base, contract, brandMode = false, accentOnly = fa
           [
             `${HI} :is(${wornKeys.join(', ')}) :is(${TOGGLES}) :is(${TOGGLE_BARS})`,
             ...['::before', '::after'].map(
-              (p) => `${HI} :is(${wornKeys.join(', ')}) :is(${TOGGLES}) .toggle-bars${p}`
+              (p) => `${HI} :is(${wornKeys.join(', ')}) :is(${TOGGLES}) ${CSS_TOGGLE_BARS}${p}`
             )
           ].join(','),
           { 'background-color': 'currentColor' }

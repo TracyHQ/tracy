@@ -190,8 +190,8 @@ test('reasonText: one line per reason key of opportunity-score.mjs, with signed 
     [['marketing.unknown', null], 'Social pages not collected'],
     [['contact.reachable', 10], 'Phone, chat or email found +10'],
     [['contact.none', 0], 'No phone, chat or email 0'],
-    [['chain.penalty', -45], 'Chain, so halved -45'],
-    [['closed.penalty', -31], 'Temporarily closed, so halved -31']
+    [['chain.penalty', -45], 'Chain, so the score is halved -45'],
+    [['closed.penalty', -31], 'Temporarily closed, so the score is halved -31']
   ]
   for (const [reason, line] of cases) assert.equal(reasonText(t, reason), line, reason[0])
 })

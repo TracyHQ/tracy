@@ -4,9 +4,9 @@
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { callsOf } from './brand-call-store.js'
+import { getRunCommand, refused, startRunCommand, Usage } from './brand-cli-run.js'
 import { brandProblemOfOpenedKit, cancelBrandRun } from './brand-control.js'
 import { listLines, statusLines } from './brand-export.js'
-import { getRunCommand, refused, startRunCommand, Usage } from './brand-cli-run.js'
 import { listRuns, readRun } from './brand-store.js'
 
 export const USAGE = `usage: node scripts/brand-bench.mjs <command>
@@ -16,10 +16,13 @@ export const USAGE = `usage: node scripts/brand-bench.mjs <command>
       [--logo-file <path>]                the brief's logo (brand.logo) as a file on this server, used instead of
                                           looking the media id up (--brief-file only; only its name is stored)
       [--by <label>]                      who started it (stored as cli:<label>)
+      [--no-caps]                         run without the USD cost cap (a step of a chain build)
       [--agent-model <model> --agent-model-reason <text>]
                                           use another agent model for this run only; the reason is recorded
       [--reviewer-model <model>]          also use another reviewer model for this run only (explicit, recorded with
                                           the reason); the two must still differ
+      [--site-language <BCP47>]            selected site language, used only when brand.voice is missing;
+                                          the run records this projection and keeps the source brief unchanged
   list [--limit <n>]                      the newest runs
   status <runId>                          state, round, gate verdict, cost split, duration
   get <runId> --out <dir>                 write the brand file, its images, every rejected attempt, the gate results
@@ -45,8 +48,10 @@ export async function runCli(argv, deps) {
         kit: { type: 'string' },
         'brief-file': { type: 'string' },
         'brief-revision': { type: 'string' },
+        'site-language': { type: 'string' },
         'logo-file': { type: 'string' },
         by: { type: 'string' },
+        'no-caps': { type: 'boolean' },
         limit: { type: 'string' },
         out: { type: 'string' },
         'agent-model': { type: 'string' },

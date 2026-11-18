@@ -3,7 +3,7 @@
 // decisions the picture step takes from it. No model is called and no real template is read.
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdtemp, readFile, rm } from 'node:fs/promises'
+import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -261,6 +261,33 @@ test('the surface: overlay found, none, or unknown; the article picture copied b
   assert.equal(alone.frames['block-31.1'].textOver, true)
 })
 
+test('an unknown template overlay stays unknown while raw text and subject checks remain strict', () => {
+  const image = { width: 10, height: 10, base64: '' }
+  const textOf = (surface) => lookMessage({ words: {}, image, outlined: false, surface })[0].text
+  const absent = surfaceFacts({ textOver: true, templateOverlay: null })
+  assert.equal(absent.overlayUnknown, undefined)
+  assert.match(textOf(absent), /with no overlay of the template/)
+  for (const templateOverlay of ['unknown', undefined]) {
+    const unknown = surfaceFacts({ textOver: true, templateOverlay })
+    assert.equal(unknown.overlayUnknown, true)
+    assert.equal(unknown.overlay, null, 'no covering overlay may be invented')
+    const message = textOf(unknown)
+    assert.match(message, /overlay over it is unknown/)
+    assert.doesNotMatch(message, /with no overlay of the template/)
+    assert.match(message, /Judge the raw picture conservatively/)
+    assert.match(message, /does not prove how the finished page reads/)
+    assert.ok(faultsFor({ surface: unknown }).includes('text would not read'))
+    assert.ok(faultsFor({ surface: unknown }).includes('wrong subject'))
+    const checked = readLook(
+      '{"verdict":"fail","faults":["wrong subject","text would not read"],"seen":"People eating at a bright table."}',
+      { surface: unknown }
+    )
+    assert.equal(checked.verdict, 'fail')
+    assert.deepEqual(checked.faults, ['wrong subject', 'text would not read'])
+    assert.deepEqual(checked.dropped, [])
+  }
+})
+
 test('an overlay of at least 0.45 is never darkened again; text over a picture with no overlay is', () => {
   const { surface } = surfaceOfZip()
   const doc = joinSurface(kit, surface)
@@ -363,4 +390,113 @@ test('the surface is kept per kit and quickstart sha256, and a wrong download is
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
+})
+
+function sharedSurfaceKit(bytes) {
+  return {
+    ref: 'fernhill/j6/1.0.0',
+    release: 'quickstart/fernhill/j6',
+    doc: { ...kit, contentMap },
+    installer: { file: 'qs.zip', sha256: createHash('sha256').update(bytes).digest('hex') }
+  }
+}
+
+const deferred = () => {
+  let resolve
+  const promise = new Promise((done) => {
+    resolve = done
+  })
+  return { promise, resolve }
+}
+
+test('concurrent cold requests for the exact surface share one fetch and preserve the warm disk cache', async (t) => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'surface-shared-'))
+  t.after(() => rm(dir, { recursive: true, force: true }))
+  const bytes = quickstartZip()
+  const held = sharedSurfaceKit(bytes)
+  const started = deferred()
+  const release = deferred()
+  let calls = 0
+  const fetchAsset = async () => {
+    calls++
+    started.resolve()
+    await release.promise
+    return { ok: true, bytes }
+  }
+  const a = surfaceFor({ dir, kit: held, kitId: held.ref, fetchAsset })
+  const b = surfaceFor({ dir, kit: structuredClone(held), kitId: held.ref, fetchAsset })
+  await started.promise
+  release.resolve()
+  const [first, second] = await Promise.all([a, b])
+  assert.equal(calls, 1)
+  assert.deepEqual(first, second)
+  assert.equal(first.surface.frames['block-31.1'].overlay.strength, 0.7)
+  const warm = await surfaceFor({
+    dir,
+    kit: held,
+    kitId: held.ref,
+    fetchAsset: async () => assert.fail('the successful surface must remain on disk')
+  })
+  assert.deepEqual(warm, first)
+})
+
+test('a shared failed fetch remains unknown and the next request retries instead of caching the failure', async (t) => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'surface-retry-'))
+  t.after(() => rm(dir, { recursive: true, force: true }))
+  const bytes = quickstartZip()
+  const held = sharedSurfaceKit(bytes)
+  let calls = 0
+  const fetchAsset = async () => {
+    calls++
+    if (calls === 1) throw new Error('temporary asset timeout')
+    return { ok: true, bytes }
+  }
+  const request = { dir, kit: held, kitId: held.ref, fetchAsset }
+  const failed = await Promise.all([surfaceFor(request), surfaceFor(request)])
+  assert.equal(calls, 1)
+  for (const out of failed) {
+    assert.match(out.note, /temporary asset timeout/)
+    assert.equal(out.surface.frames['block-31.1'].overlay, 'unknown')
+  }
+  const cache = path.join(dir, 'kit-surface', 'fernhill_j6_1.0.0', `${held.installer.sha256}.json`)
+  await assert.rejects(readFile(cache), { code: 'ENOENT' })
+  const retried = await surfaceFor(request)
+  assert.equal(calls, 2)
+  assert.equal(retried.note, null)
+  assert.equal(retried.surface.frames['block-31.1'].overlay.strength, 0.7)
+})
+
+test('different destinations, releases and measurement inputs never borrow an in-flight surface', async (t) => {
+  // Distinct identities can publish to the same legacy cache destination in the same millisecond.
+  t.mock.method(Date, 'now', () => 1_800_000_000_000)
+  const dir = await mkdtemp(path.join(tmpdir(), 'surface-identity-'))
+  t.after(() => rm(dir, { recursive: true, force: true }))
+  const bytes = quickstartZip()
+  const held = sharedSurfaceKit(bytes)
+  const changed = structuredClone(held)
+  changed.doc.blocks[0].frames[0].id = 'changed-frame'
+  const released = deferred()
+  let calls = 0
+  const fetchAsset = async () => {
+    calls++
+    await released.promise
+    return { ok: true, bytes }
+  }
+  const requests = [
+    { dir, kit: held, kitId: held.ref, fetchAsset },
+    { dir: path.join(dir, 'other-store'), kit: held, kitId: held.ref, fetchAsset },
+    { dir, kit: { ...held, release: 'quickstart/other/j6' }, kitId: held.ref, fetchAsset },
+    { dir, kit: changed, kitId: held.ref, fetchAsset }
+  ]
+  const pending = requests.map((request) => surfaceFor(request))
+  released.resolve()
+  const out = await Promise.all(pending)
+  assert.equal(calls, 4)
+  assert.ok(out[0].surface.frames['block-31.1'])
+  assert.equal(out[0].surface.frames['changed-frame'], undefined)
+  assert.ok(out[3].surface.frames['changed-frame'])
+  assert.equal(out[3].surface.frames['block-31.1'], undefined)
+  assert.deepEqual(await readdir(path.join(dir, 'kit-surface', 'fernhill_j6_1.0.0')), [
+    `${held.installer.sha256}.json`
+  ])
 })

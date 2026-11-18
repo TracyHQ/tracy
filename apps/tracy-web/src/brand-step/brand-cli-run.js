@@ -69,6 +69,8 @@ export async function startRunCommand(d, values) {
     startedBy: values.by ? `cli:${values.by}` : 'cli',
     ...(logo ? { logo } : {}),
     kitImages: d.kitImages,
+    noCaps: values['no-caps'] === true,
+    ...(values['site-language'] !== undefined ? { siteLanguage: values['site-language'] } : {}),
     wiring: d.wiring,
     ...(values['agent-model']
       ? {
