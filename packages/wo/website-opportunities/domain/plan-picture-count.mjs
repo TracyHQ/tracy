@@ -51,6 +51,17 @@ export function keptOffPhotosOf(modelLeftOut, withheld, askedOff) {
   return out
 }
 
+/**
+ * The items a plan's left out list keeps off every frame: each it names with a reason other than `no_gallery_room`
+ * (whose sentence says the photo may be used elsewhere). Read at compose time and again by the pictures step at build
+ * time (`picture-step.mjs`), so a photo the owner took off by a change request reaches no frame there either.
+ */
+export function leftOutKeptOff(leftOut) {
+  const out = new Set()
+  for (const e of list(leftOut)) if (e?.item !== undefined && e.code !== GALLERY_ROOM_CODE) out.add(e.item)
+  return out
+}
+
 /** The code of the left out entry that names each item, the first one when several do. */
 export function leftOutCodesOf(leftOut) {
   const codes = new Map()

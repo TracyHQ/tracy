@@ -60,6 +60,7 @@ import { withCountedReasons } from './plan-left-out-plain.mjs'
 import {
   keptOffPhotosOf,
   leftOutCodesOf,
+  leftOutKeptOff,
   pictureCountProblems,
   withFramedPlaced,
   withoutPlacedPhotos
@@ -215,8 +216,6 @@ export function gatePlan(reply, context) {
   const systemProblems = problems.length > before
   // The step chain's intent for the writer (`plan-intent.mjs`): notes, key messages placed, search terms, main action.
   const intent = planIntentOf(composition, rows.pages, context, { fix, problem, index: dropped.index, kept })
-  // Counted on the final pages: a frame of an item the gate took off later is no picture to create.
-  const finalPictures = picturesOf(rows.pages, context.blocks, context.data, { keepOff })
   const plan = {
     schema: BUILD_PLAN_SCHEMA,
     id: context.planId,
@@ -227,7 +226,7 @@ export function gatePlan(reply, context) {
     ...(list(context.data.rows).filter(kept).length ? { rows: context.data.rows.filter(kept) } : {}),
     pages: withLabelCodes(intent.pages, context.blocks),
     look: context.look,
-    pictures: finalPictures.pictures,
+    pictures: pictures.pictures,
     assumptions: [...context.assumptions, ...keptAssumptionsOf(composition, pictures.pages, context, fix)],
     leftOut: [
       ...kitPages,
@@ -245,6 +244,11 @@ export function gatePlan(reply, context) {
     ...intent.fields
   }
   plan.leftOut = withCountedReasons(withReasonCodes(plan.leftOut, plan))
+  // Counted on the final pages: a frame of an item the gate took off later is no picture to create. A photo the final
+  // left out list keeps off (`leftOutKeptOff`) fills no frame, as the pictures step reads it at build time.
+  const finalPictures = picturesOf(rows.pages, context.blocks, context.data, {
+    keepOff: new Set([...keepOff, ...leftOutKeptOff(plan.leftOut)])
+  })
   // One count of the owner's photos (`plan-picture-count.mjs`): a photo a frame takes is placed, not left out, and an
   // unused photo the list names is counted under that entry's code. The guard refuses numbers that still disagree.
   const framedPhotos = withoutPlacedPhotos(plan.leftOut, finalPictures.placedItems)

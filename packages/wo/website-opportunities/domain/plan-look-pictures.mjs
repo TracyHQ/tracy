@@ -6,6 +6,7 @@ import { ownPicturesOf } from './picture-frames.mjs'
 import { assignPictures } from './picture-policy.mjs'
 import { pictureTallyOf } from './picture-tally.mjs'
 import { shownElsewhereLeftOut } from './plan-gallery-spread.mjs'
+import { videosOfPlan } from './plan-videos.mjs'
 import { LOGO_CODES, PICTURES_ESTIMATE_CODE, sourceKindsOf } from './plan-wording-codes.mjs'
 
 const HEX_COLOUR = /^#[0-9a-fA-F]{6}$/
@@ -158,7 +159,14 @@ export function picturesOf(pages, blocks, data, { keepOff = new Set() } = {}) {
   )
   // A photo kept off (`keepOff`, item ids) fills no frame; it is still one of the owner's photos, counted unused.
   const offered = pictures.filter((p) => !keepOff.has(p.item))
-  const assignment = assignPictures({ pages, blocks, data, pictures: offered })
+  const assigned = assignPictures({ pages, blocks, data, pictures: offered })
+  // A video frame counts as taking one of the owner's videos, which join at build time; the videos with no frame are
+  // said once with their count (`plan-videos.mjs`). Such a frame is no empty spot.
+  const videos = videosOfPlan(assigned.frames, data)
+  const assignment = {
+    ...assigned,
+    frames: assigned.frames.map((f) => (videos.filled.has(f.id) ? { ...f, source: 'video' } : f))
+  }
   const { frames, reduced, counts } = assignment
   const from = [...new Set(frames.filter((f) => f.source === 'own').flatMap((f) => f.from))]
   // Photos and spots apart (`picture-tally.mjs`): `frames` counts the spots, `photos` and `placed` the owner's photos.
@@ -208,6 +216,7 @@ export function picturesOf(pages, blocks, data, { keepOff = new Set() } = {}) {
       })
   }
   leftOut.push(...elsewhere.entries)
+  if (videos.leftOut) leftOut.push(videos.leftOut)
   const dropped = new Set(reduced.map((r) => `${r.page}.${r.block}.${r.item}`))
   const kept = list(pages).map((page) => ({
     ...page,

@@ -10,6 +10,7 @@ import { IconSelectionError } from './icon-ranking.mjs'
 import { selectIcons } from './icon-selection.mjs'
 import { labelOwnPictures, PicturePolicyError } from './picture-labelling.mjs'
 import { assignPictures } from './picture-policy.mjs'
+import { leftOutKeptOff } from './plan-picture-count.mjs'
 import { planDataOf } from './plan-data.mjs'
 import { withResearchLabels } from './picture-research-labels.mjs'
 import { emptySpotsOf, pictureTallyOf, unusedReasonOf } from './picture-tally.mjs'
@@ -79,7 +80,9 @@ export async function placeBuildPictures({
   const data = planDataOf(profile)
   // A refused picture is never shown to the vision call nor placed: its frame has no own photo (the policy decides).
   const allowed = (p) => typeof refuse !== 'function' || !refuse(p)
-  const own = [...ownPicturesOf(data), ...list(pictures)].filter(allowed)
+  // A photo the plan leaves out for a reason other than gallery room (the owner took it off) fills no frame either.
+  const keptOff = leftOutKeptOff(plan.leftOut)
+  const own = [...ownPicturesOf(data), ...list(pictures)].filter((p) => allowed(p) && !keptOff.has(p.item))
   const records = labels instanceof Map ? withResearchLabels(own, labels) : own
   const labelled = await labelOwnPictures({ pictures: records, vision })
   const refused = labelled.pictures.filter((p) => !allowed(p)).map((p) => p.id)
