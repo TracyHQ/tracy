@@ -192,6 +192,15 @@ test('the intent notes and the key messages have a pencil button, not only a tra
     assert.ok(button.includes('class="tv-bc-pen"'), `${field} has a pencil`)
     assert.ok(button.includes('aria-label="Edit '), `${field} is a button that opens the editor`)
   }
+  // A section's note is one row of the notes grid: its label cell follows the row before it (a closing tag), never
+  // the opening tag of a wrapper that would squeeze label and value into the grid's label column.
+  const note = `data-field="pages[${home.id}].blocks[${section.id}].message"`
+  assert.ok(
+    new RegExp(
+      `</div><div class="tv-bc-k">[^<]+</div><div class="tv-bc-cell"><div class="tv-bc-val" ${RegExp.escape(note)}`
+    ).test(html),
+    'the section note sits in the notes grid'
+  )
   for (const text of [
     'Can my children learn to play here?',
     'Lessons for every age.',

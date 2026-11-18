@@ -4,7 +4,7 @@
  * holds, the key messages it carries and where the page ends, the notes for the writer folded, and a trash button on
  * each part the kit lets the owner take off. Then the standard pages and each page's search intent with its terms.
  */
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { EditableValue } from './EditableValue'
 import { BlockLists, Fold, holdsText, listOf, onceEach, plural, Section, Trash } from './plan-card-parts'
 import { sectionLabelOf } from './plan-codes'
@@ -160,7 +160,8 @@ function PageView({
                 {messages.map((s) => {
                   const label = sectionLabelOf(t, s.labelCode, s.label)
                   return (
-                    <div key={s.id} className="tv-bc-cell-pair">
+                    // Both cells sit in the notes grid itself: a wrapper would squeeze the pair into the label column.
+                    <Fragment key={s.id}>
                       <div className="tv-bc-k">{label}</div>
                       <div className="tv-bc-cell">
                         <EditableValue
@@ -171,7 +172,7 @@ function PageView({
                           text={s.message as string}
                         />
                       </div>
-                    </div>
+                    </Fragment>
                   )
                 })}
               </div>
