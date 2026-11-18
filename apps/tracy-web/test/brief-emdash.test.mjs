@@ -471,7 +471,8 @@ test('the template’s tool and seed are found for the templates that ship one, 
     'tracy-base',
     'tracy-coffee',
     'tracy-restaurant',
-    'tracy-diner'
+    'tracy-diner',
+    'tracy-essence'
   ]) {
     const found = emdashToolFor(`${id}/emdash-0.x`)
     assert.ok(found && existsSync(found.tool) && existsSync(path.join(found.seedDir, 'seed.json')), id)
