@@ -43,6 +43,13 @@ export const ITEM_KINDS = Object.freeze({
   quote: 'quote.',
   gallery: 'business.gallery_image'
 })
+/**
+ * Whether a data kind holds a picture or a video (`offering.image`, `business.gallery_image`, `brand_logo`,
+ * `business.video`): its value is a reference the pictures step opens, never words for the owner (`picture-frames.mjs`
+ * `ownPicturesOf` reads the same kinds).
+ */
+export const isPictureRole = (kind) =>
+  typeof kind === 'string' && (/(?:\.image|_image|_logo)$/.test(kind) || kind === 'business.video')
 /** The field that names an item: two observations with the same one are the same item. */
 export const primaryRoleOf = (kind) => GROUP_KINDS_V3[kind].requiredRoles[0]
 
@@ -106,7 +113,9 @@ export function settle(kind, at, observations, conflicts) {
   const clusters = clustersOf(kind, observations)
   const [first] = clusters
   const fact = { value: first.observations[0].value, sources: first.sources }
-  if (clusters.length === 1) {
+  // Two pictures of one item are two photos of it, never a disagreement for the owner: the most trusted one stays, as
+  // the step chain only ranked an offering's own photos first (`photo-shortlist.js` `sameService`) and never asked.
+  if (clusters.length === 1 || isPictureRole(kind)) {
     return { ...fact, confidence: fact.sources.length > 1 ? CORROBORATED : SINGLE_SOURCE }
   }
   const id = `conflict-${conflicts.length + 1}`

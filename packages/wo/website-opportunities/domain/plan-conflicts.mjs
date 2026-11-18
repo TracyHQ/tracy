@@ -8,6 +8,12 @@
 // never reads such a fact apart from its item (`modelViewOf`), the gate refuses it in a block's data, and it is shown
 // or left out with its item (`plan-accounting.mjs`). A plan edit of its value is mapped back to the item field
 // (`profileAfterPlan`, `plan-edit-gate.mjs`).
+//
+// 🔒 A picture is never a plan fact or an alternative: its value is a reference the pictures step opens (a map
+// provider's photo resource name runs to hundreds of characters), never words the owner reads or picks. The merge
+// never makes such a conflict (`settle`, `needs-profile-merge.mjs`); one that still reaches here is accounted as
+// `picture` and left off the plan, so a raw reference cannot fail the `facts[].value` limit of the plan gate.
+import { isPictureRole } from './needs-profile-merge.mjs'
 import { FACT_LABELS, idOf, short, sourcesOf } from './plan-data.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -43,7 +49,7 @@ export function addItemFieldFacts(profile, data) {
   const origins = new Map(list(profile?.sources).map((s) => [s.id, s.origin]))
   for (const conflict of open(profile)) {
     const place = conflictPlace(conflict)
-    if (place.scope !== 'item') continue
+    if (place.scope !== 'item' || isPictureRole(place.role)) continue
     const item = data.byId.get(place.id)
     const field = item?.source?.fields?.[place.role]
     if (item?.what !== 'item' || typeof field?.value !== 'string') continue
@@ -77,7 +83,8 @@ function factOf(conflict, data) {
 
 /**
  * The assumptions of every open conflict, each with its alternatives, and the accounting of every conflict of the
- * profile: `{conflict, settledBy: 'answer'}` or `{conflict, assumption}`; a conflict with neither is `unexplained`.
+ * profile: `{conflict, settledBy: 'answer'}`, `{conflict, assumption}` or `{conflict, picture: true}` (never on
+ * the plan, see the head of the file); a conflict with none of them is `unexplained`.
  */
 export function conflictAssumptionsOf(profile, data) {
   const origins = new Map(list(profile?.sources).map((s) => [s.id, s.origin]))
@@ -86,6 +93,10 @@ export function conflictAssumptionsOf(profile, data) {
   for (const conflict of list(profile?.conflicts)) {
     if (conflict?.chosen !== null && conflict?.chosen !== undefined) {
       accounting.push({ conflict: conflict.id, settledBy: 'answer' })
+      continue
+    }
+    if (isPictureRole(conflict?.kind) || isPictureRole(conflictPlace(conflict).role)) {
+      accounting.push({ conflict: conflict?.id, picture: true })
       continue
     }
     const fact = factOf(conflict, data)

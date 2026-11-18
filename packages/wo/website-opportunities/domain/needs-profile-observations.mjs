@@ -5,7 +5,13 @@
 // and a `reason`. `scope` says what was left out: the whole `observation`, or one `field` of it (named in `field`; the
 // rest of the observation is kept). A whole item dropped for one field also names that field.
 import { ROLE_VOCABULARY_V3, isRole } from './place-content-roles.mjs'
-import { ITEM_KINDS, LIST_FACT_KINDS, SINGLE_FACT_KINDS, primaryRoleOf } from './needs-profile-merge.mjs'
+import {
+  ITEM_KINDS,
+  LIST_FACT_KINDS,
+  SINGLE_FACT_KINDS,
+  TRUST_ORDER,
+  primaryRoleOf
+} from './needs-profile-merge.mjs'
 import {
   MIN_EVIDENCE_CHARS,
   SUMMARY_ROLES,
@@ -30,6 +36,7 @@ const REASONS = Object.freeze({
   rating_not_readable: 'the rating is not a number or a text',
   picture_without_ref: 'a picture without a ref',
   portrait_without_person: 'a team member photo whose person the research does not hold',
+  second_portrait: 'a second portrait of a person who already has one; a portrait never fills another frame',
   unknown_kind: 'not a fact or item kind the model reads',
   missing_primary_field: 'the item has no name field',
   unknown_source: 'unknown source',
@@ -92,6 +99,7 @@ function tiedItemOf(picture, typed) {
     if (!isText(name)) continue
     return {
       kind,
+      itemId: link,
       fields: { [nameRole]: name, [imageRole]: picture.ref },
       ...(item.namedBy ? { namedBy: item.namedBy } : {})
     }
@@ -99,9 +107,33 @@ function tiedItemOf(picture, typed) {
   return null
 }
 
+const trustRank = (origin) => {
+  const rank = TRUST_ORDER.indexOf(origin)
+  return rank === -1 ? TRUST_ORDER.length : rank
+}
+
+/**
+ * The one picture each tied item keeps, by research item id: the first tied to it on its most trusted source. An item
+ * shows one photo; the step chain never made a choice between an offering's photos a question or a fact, it only
+ * ranked them first for that offering's frame (`photo-shortlist.js` `sameService`). So the other photos of an offering
+ * stay own photos of the gallery, and a second portrait of a person is dropped (`second_portrait`), as a portrait
+ * never fills another frame (`rankForFrame`).
+ */
+function keptTiesOf(sources, typed) {
+  const kept = new Map()
+  const ordered = [...sources].sort((a, b) => trustRank(a.origin) - trustRank(b.origin))
+  for (const source of ordered)
+    for (const p of list(source.pictures)) {
+      const tied = isText(p?.ref) ? tiedItemOf(p, typed) : null
+      if (tied && !kept.has(tied.itemId)) kept.set(tied.itemId, `${source.id}/${p.id}`)
+    }
+  return kept
+}
+
 /** Observations from structured listing fields, reviews and pictures, taken as they are; the rest goes to `dropped`. */
 export function structuredObservations(sources) {
   const typed = typedItemsOf(sources)
+  const keptTies = keptTiesOf(sources, typed)
   const facts = []
   const items = []
   const dropped = []
@@ -135,8 +167,14 @@ export function structuredObservations(sources) {
         continue
       }
       const tied = tiedItemOf(p, typed)
-      if (tied) {
-        items.push({ ...tied, source: ref, pictureId: p.id })
+      const kept = tied && keptTies.get(tied.itemId) === `${source.id}/${p.id}`
+      if (kept) {
+        const { kind, fields, namedBy } = tied
+        items.push({ kind, fields, ...(namedBy ? { namedBy } : {}), source: ref, pictureId: p.id })
+        continue
+      }
+      if (tied?.kind === 'person') {
+        dropped.push(drop('second_portrait', { ...from, kind: 'person', picture: p.id ?? null }))
         continue
       }
       if (p.portraitOnly) {
