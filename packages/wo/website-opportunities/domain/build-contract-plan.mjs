@@ -14,7 +14,7 @@ import { blockListsProblems, rowDataProblems } from './build-contract-plan-rows.
 import { codeProblems, paramsProblems } from './build-contract-plan-codes.mjs'
 import { systemPagesProblems } from './build-contract-plan-system.mjs'
 import { intentProblems } from './build-contract-plan-intent.mjs'
-import { closedShapeProblems, textProblems } from './build-contract-shapes.mjs'
+import { closedShapeProblems, factValueLimitKey, textProblems } from './build-contract-shapes.mjs'
 import { idListProblems, isName, isObject, isWhole, label } from './build-contract-shared.mjs'
 import {
   BLOCK_TYPES,
@@ -54,7 +54,7 @@ function dataProblems(plan, report) {
       if (!isRole(fact.kind, ROLE_VOCABULARY_V3))
         report(`${at}.kind`, `${JSON.stringify(fact.kind)} is not a data kind of place-content-roles/3`)
       textProblems(fact.label, `${at}.label`, report, 'label', 'a fact needs a label the customer can read')
-      textProblems(fact.value, `${at}.value`, report, 'facts[].value', 'a fact needs a value')
+      textProblems(fact.value, `${at}.value`, report, factValueLimitKey(fact.kind), 'a fact needs a value')
       // The display form code writes from a structured value (opening hours), with its code and parameters.
       if (fact.display !== undefined)
         textProblems(fact.display, `${at}.display`, report, 'facts[].value', 'a display form is a text')

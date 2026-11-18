@@ -98,6 +98,10 @@ export const TEXT_LIMITS = Object.freeze({
   'look.logo.source': 80,
   'pictures.own.from[]': 80,
   'facts[].value': 200,
+  // A link is a different kind of value from a short fact: it is used whole or not at all, never shortened. 2048 is the
+  // longest link the step chain's own fact door takes (`fact-value-kinds.mjs` URL_MAX) and the demo request's
+  // (`demo-request.mjs`); a kit link field declares no length.
+  'facts[].url': 2048,
   reason: 200,
   said: 200,
   says: 200,
@@ -107,6 +111,10 @@ export const TEXT_LIMITS = Object.freeze({
   'request.text': 1000,
   'changed[]': 200
 })
+
+/** The limit key of a fact value of data kind `kind`: a link (`*_url`) takes `facts[].url`, any other `facts[].value`. */
+export const factValueLimitKey = (kind) =>
+  typeof kind === 'string' && kind.endsWith('_url') ? 'facts[].url' : 'facts[].value'
 
 /** The length a customer sees: code points, so one emoji counts once. */
 export const textLength = (value) => [...value].length

@@ -4,7 +4,7 @@
 
 import { codeProblems, kindsProblems, paramsProblems } from './build-contract-plan-codes.mjs'
 import { tallyProblems } from './build-contract-plan-tally.mjs'
-import { closedShapeProblems, textProblems } from './build-contract-shapes.mjs'
+import { closedShapeProblems, factValueLimitKey, textProblems } from './build-contract-shapes.mjs'
 import {
   isName,
   isObject,
@@ -156,7 +156,10 @@ export function editableFieldProblem(plan, path) {
 /** The values sources disagree on for the assumption's field; the composed plan (revision 1) holds one of them. */
 function alternativesProblems(plan, assumption, at, report) {
   const segments = parseFieldPath(assumption.field)
-  const limitKey = segments && ALTERNATIVE_FIELDS[shapeOfPath(segments)]
+  const shape = segments && ALTERNATIVE_FIELDS[shapeOfPath(segments)]
+  // A fact's alternatives keep that fact's own limit: a link's are links (`factValueLimitKey`).
+  const fact = shape === 'facts[].value' ? (plan.facts ?? []).find((f) => f?.id === segments[0].id) : null
+  const limitKey = fact ? factValueLimitKey(fact.kind) : shape
   if (!limitKey)
     return report(
       `${at}.alternatives`,

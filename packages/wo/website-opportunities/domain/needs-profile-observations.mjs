@@ -19,6 +19,7 @@ import {
   provenBy
 } from './needs-profile-grounding.mjs'
 import { MAX_ROW_DEPTH, groundRows } from './needs-profile-rows.mjs'
+import { TEXT_LIMITS, textLength } from './build-contract-shapes.mjs'
 import { audienceOnlyDrop, fromAudienceOnly } from './needs-profile-typed.mjs'
 import { datedEventDrop, datedEventOf } from './needs-profile-events.mjs'
 import { copiesOwner, ownerEchoOf } from './owner-echo.mjs'
@@ -36,6 +37,7 @@ const REASONS = Object.freeze({
   rating_not_readable: 'the rating is not a number or a text',
   picture_without_ref: 'a picture without a ref',
   portrait_without_person: 'a team member photo whose person the research does not hold',
+  link_too_long: `a link longer than ${TEXT_LIMITS['facts[].url']} characters, the longest link the plan takes; never shortened`,
   second_portrait: 'a second portrait of a person who already has one; a portrait never fills another frame',
   unknown_kind: 'not a fact or item kind the model reads',
   missing_primary_field: 'the item has no name field',
@@ -51,6 +53,9 @@ const REASONS = Object.freeze({
     "the summary copies the owner's chat statement (a run of four of its words, or most of one sentence)"
 })
 const drop = (code, what, scope = 'observation') => ({ ...what, code, reason: REASONS[code], scope })
+/** A link no plan can hold whole (`facts[].url`): left out, as the step chain's fact door refused one. */
+const linkTooLong = (kind, value) =>
+  kind.endsWith('_url') && textLength(value.trim()) > TEXT_LIMITS['facts[].url']
 
 /** Everything a source says in words: what a model fact's evidence must be found in. */
 const corpusOf = (source) =>
@@ -144,6 +149,7 @@ export function structuredObservations(sources) {
       for (const value of Array.isArray(raw) ? raw : [raw]) {
         if (!FACT_KINDS.has(kind)) dropped.push(drop('unhandled_field_kind', { ...from, kind }))
         else if (!isText(value)) dropped.push(drop('not_text', { ...from, kind }))
+        else if (linkTooLong(kind, value)) dropped.push(drop('link_too_long', { ...from, kind }))
         else facts.push({ kind, value, source: ref })
       }
     }
@@ -223,6 +229,10 @@ export function modelObservations(reading, sources, { at: madeAt = null } = {}) 
     }
     if (!isText(f.value)) {
       dropped.push(drop('not_text', what))
+      continue
+    }
+    if (linkTooLong(f.kind, f.value)) {
+      dropped.push(drop('link_too_long', { from: 'model', kind: f.kind }))
       continue
     }
     const source = quoted(f, what)

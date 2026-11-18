@@ -231,6 +231,16 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   `{value, sources}` with a distinct `value` (held to the field's text limit) and at least one source. In the plan as
   composed (revision 1) the field's current value is one of them. A plan edit may set the field to any alternative, or
   to the customer's own value; after an edit the value need not be among them.
+- **Long values** are shown whole or not at all; no code cuts or rewrites the business's text. A link is a different
+  kind of value from a short fact: a fact of a `*_url` kind is held to `facts[].url` (2048, the longest link the step
+  chain's fact door takes, `fact-value-kinds.mjs`; a kit link field declares no length), as a fact and as an
+  alternative, and so is a plan edit of it. A link longer than that is left out of the needs profile (`dropped`, code
+  `link_too_long`). A value the sources disagree on that is longer than its limit is never offered as an alternative
+  (`plan-conflicts.mjs`): with fewer than two values left to offer, the assumption has no `alternatives` and its `said`
+  states that the sources differ and which one was used, which the customer can still change. When the trust order's
+  own value is too long to show, the item keeps it as it is, with no plan fact and no assumption (accounted
+  `overLimit`), as an item's long description is never on the card. A picture's value is never a plan fact or an
+  alternative.
 
 ```json
 { "id": "hours", "field": "facts[hours].value", "said": "Google Maps lists the same hours every day; ...",
@@ -677,6 +687,7 @@ reason in a sentence or two. A test compares this table with the code.
 | `look.logo.source` | 80 | where an own logo came from |
 | `pictures.own.from[]` | 80 | each source of the own photos |
 | `facts[].value` | 200 | a fact value, and a fact alternative's value |
+| `facts[].url` | 2048 | a link fact's value (`contact.cta_url`, `contact.social_url`, any `*_url` kind), and its alternatives' |
 | `reason` | 200 | block, left out entry, generated pictures and stop report reasons; a not done entry's `why` |
 | `said` | 200 | an assumption |
 | `says` | 200 | what a created legal page or the not-found page must get across, for the writer |

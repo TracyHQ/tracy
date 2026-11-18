@@ -13,6 +13,14 @@
 // provider's photo resource name runs to hundreds of characters), never words the owner reads or picks. The merge
 // never makes such a conflict (`settle`, `needs-profile-merge.mjs`); one that still reaches here is accounted as
 // `picture` and left off the plan, so a raw reference cannot fail the `facts[].value` limit of the plan gate.
+//
+// 🔒 A value is shown whole or not at all: no rule here cuts or rewrites the business's text. A link is held to a
+// link's limit (`facts[].url`), any other value to `facts[].value`. A value of a conflict longer than its limit is never
+// offered as an alternative: the card says the sources differ and which one was used, and the customer can still type
+// another value (the step chain kept one value with a note that sources differ, `brief.mjs` `priceNote`). When the
+// trust order's own value is too long to show, the item keeps it as it is, with no plan fact and no card line (accounted
+// `overLimit`), as an item's long description is never on the card either.
+import { factValueLimitKey, TEXT_LIMITS, textLength } from './build-contract-shapes.mjs'
 import { isPictureRole } from './needs-profile-merge.mjs'
 import { FACT_LABELS, idOf, short, sourcesOf } from './plan-data.mjs'
 
@@ -41,6 +49,10 @@ export function conflictPlace(conflict) {
   return { scope: 'unknown' }
 }
 
+/** Whether `value` fits the plan's limit for a fact of data kind `kind`, whole. */
+const fits = (kind, value) =>
+  typeof value === 'string' && textLength(value) <= TEXT_LIMITS[factValueLimitKey(kind)]
+
 const open = (profile) =>
   list(profile?.conflicts).filter((c) => c?.chosen === null || c?.chosen === undefined)
 
@@ -52,7 +64,7 @@ export function addItemFieldFacts(profile, data) {
     if (place.scope !== 'item' || isPictureRole(place.role)) continue
     const item = data.byId.get(place.id)
     const field = item?.source?.fields?.[place.role]
-    if (item?.what !== 'item' || typeof field?.value !== 'string') continue
+    if (item?.what !== 'item' || !fits(place.role, field?.value)) continue
     const id = `${place.id}-${idOf(place.role)}`
     const sources = sourcesOf(field.sources, origins)
     if (data.byId.has(id) || sources.length === 0) continue
@@ -83,8 +95,9 @@ function factOf(conflict, data) {
 
 /**
  * The assumptions of every open conflict, each with its alternatives, and the accounting of every conflict of the
- * profile: `{conflict, settledBy: 'answer'}`, `{conflict, assumption}` or `{conflict, picture: true}` (never on
- * the plan, see the head of the file); a conflict with none of them is `unexplained`.
+ * profile: `{conflict, settledBy: 'answer'}`, `{conflict, assumption}`, `{conflict, picture: true}` or
+ * `{conflict, overLimit: true}` (never on the plan, see the head of the file); a conflict with none of them is
+ * `unexplained`.
  */
 export function conflictAssumptionsOf(profile, data) {
   const origins = new Map(list(profile?.sources).map((s) => [s.id, s.origin]))
@@ -100,6 +113,11 @@ export function conflictAssumptionsOf(profile, data) {
       continue
     }
     const fact = factOf(conflict, data)
+    const kind = fact?.kind ?? conflict?.kind
+    if (!fits(kind, fact ? fact.value : conflict?.default)) {
+      accounting.push({ conflict: conflict?.id, overLimit: true })
+      continue
+    }
     const alternatives = []
     for (const v of list(conflict?.values)) {
       const sources = sourcesOf(v.sources, origins)
@@ -116,14 +134,17 @@ export function conflictAssumptionsOf(profile, data) {
       .find((a) => a.value === fact.value)
       .sources.map(sourceWords)
       .join(' and ')
+    // Only the values the plan can show whole are offered; with fewer than two, the card states the disagreement.
+    const shown = alternatives.filter((a) => fits(fact.kind, a.value))
+    const choose = shown.length >= 2 ? 'You can pick another.' : 'You can change it.'
     const said = conflict.question
-      ? `You did not choose the ${what}, so I used the one from ${used}. You can pick another.`
-      : `Your sources show different values for the ${what}. I used the one from ${used}; you can pick another.`
+      ? `You did not choose the ${what}, so I used the one from ${used}. ${choose}`
+      : `Your sources show different values for the ${what}. I used the one from ${used}; ${choose.charAt(0).toLowerCase()}${choose.slice(1)}`
     assumptions.push({
       id: conflict.id,
       field: `facts[${fact.id}].value`,
       said: short(said, 200),
-      alternatives
+      ...(shown.length >= 2 ? { alternatives: shown } : {})
     })
     accounting.push({ conflict: conflict.id, assumption: conflict.id })
   }
