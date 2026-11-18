@@ -229,8 +229,11 @@ async function ask(
   const inside = (turn) => turn.n >= from && turn.n < to
   const harness = harnessOf(row.harness)
   const bounded = Number.isFinite(to) ? { maxTurns: Math.min(harness.maxTurns ?? to - from, to - from) } : {}
+  // A step may answer some doors without a chat call (site-pictures: the picker on Gemini Decision 1); the same
+  // arguments, the same result, each call saved as a turn through onTurn.
+  const agent = step.runAgentFor?.({ ready }) ?? runAgent
   try {
-    const result = await runAgent({
+    const result = await agent({
       door: ready.door,
       system: withCmsLine(ready.prompt.text, ready.kit?.platform),
       ...step.agentRequest({ row, ready, history }),
