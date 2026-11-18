@@ -89,6 +89,27 @@ test('a site without Akeeba, or one whose folder already holds its guard files, 
     assert.equal(readFileSync(join(backup, 'index.html'), 'utf8'), 'akeeba')
   }))
 
+// provision.sh calls `own_webroot` twice (before and after the signed access verifier) under
+// `set -e`, so the second call meets the guard files the first one wrote. When the LAST rule's
+// folder (com_akeeba, 7.x) already held them, the loop ended on a failed `[ ! -e ]` and the
+// function returned 1: the import stopped right after "installing the signed access verifier"
+// with no error printed (logatel.com, 17/11/2026).
+test('a second run over guard files already there exits 0, whichever rule comes last', () =>
+  withWebroot((webroot) => {
+    mkdirSync(join(webroot, AKEEBA_7), { recursive: true })
+    assert.equal(restore(webroot).status, 0)
+    const r = restore(webroot)
+    assert.equal(r.status, 0, r.stderr)
+    assert.equal(r.stdout, '')
+    const strict = spawnSync(
+      'bash',
+      ['-c', 'set -euo pipefail; . "$1"; tracy_webroot_restore_skipped_dirs "$2" >/dev/null; echo reached', 'x', LIB, webroot],
+      { encoding: 'utf8' }
+    )
+    assert.equal(strict.status, 0, strict.stderr)
+    assert.equal(strict.stdout.trim(), 'reached')
+  }))
+
 // An earlier run that died after its `mkdir` left the folder without the files that keep archives
 // from being served: a later run writes the ones missing, and prints only those.
 test('a folder made half-way gets the guard files it lacks, and only those are printed', () =>
