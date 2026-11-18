@@ -129,10 +129,11 @@
 	.es-bar-left, .es-bar-right { display: flex; align-items: center; gap: 12px; }
 	.es-bar-right { justify-content: flex-end; }
 	.es-burger { display: none; }
+	.es-header.is-home .es-burger { display: inline-flex; }
 	.es-searchbox { display: flex; gap: 8px; padding: 12px 0 24px; }
 	.es-searchbox[hidden] { display: none; }
 	.es-searchbox input { flex: 1; height: 48px; padding: 0 18px; background: var(--color-surface); color: var(--color-heading); border: 1px solid var(--color-line); border-radius: 8px; font: inherit; }
-	.es-offcanvas { position: fixed; inset: 0 auto 0 0; width: min(320px, 86vw); z-index: 90; padding: 18px 24px; overflow-y: auto; background: var(--color-surface); box-shadow: 0 1rem 3rem rgba(0, 0, 0, .3); }
+	.es-offcanvas { position: fixed; inset: 0 auto auto 0; max-height: 100vh; width: min(320px, 86vw); z-index: 90; padding: 18px 24px; overflow-y: auto; background: var(--color-surface); box-shadow: 0 1rem 3rem rgba(0, 0, 0, .3); }
 	.es-offcanvas[hidden] { display: none; }
 	.es-offcanvas ul { list-style: none; margin: 18px 0; padding: 0; font-family: var(--font-display); font-size: 18px; }
 	.es-offcanvas ul ul { margin: 0 0 0 18px; font-size: 16px; }
@@ -164,8 +165,13 @@
 	.es-copyright { margin: 16px 0 0; }
 	@media (max-width: 767px) { .es-footer-info { flex-direction: column; align-items: center; text-align: center; } }
 
-	/* 404 */
-	.es-404 { text-align: center; padding: 72px 36px; }
-	.es-404 h1 { font-size: 128px; line-height: 1; margin-bottom: 12px; }
-	.es-404 h2 { font-size: 24px; margin-bottom: 8px; }
+	/* 404: the box of the source's error page (css/error.css), drawn between the site's header and footer (DECISIONS D20) */
+	.es-404 { width: 100%; max-width: 900px; margin: 0 auto; padding: 100px 36px; text-align: center; background: var(--color-surface); border-radius: 8px; }
+	.es-404 h1.es-404-code { font-size: 240px; line-height: 240px; letter-spacing: -2.4px; }
+	.es-404 h2 { margin: 0 0 16px; font-size: 40px; line-height: 48px; letter-spacing: -0.4px; }
+	.es-404 p { margin: 0; }
+	.es-404 strong { font-weight: 500; }
+	.es-404-back { padding-top: 32px; }
+	.es-404 .es-btn { padding: 15.2px 32px; line-height: 18px; }
+	@media (max-width: 575px) { .es-404 h1.es-404-code { font-size: 160px; line-height: 160px; letter-spacing: -1.6px; } .es-404 h2 { font-size: 24px; line-height: 28.8px; letter-spacing: -.24px; } .es-404-back { padding-top: 24px; } }
 }

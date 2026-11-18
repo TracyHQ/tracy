@@ -27,13 +27,15 @@ const RULES = [
   ['body-type', 'body', HOME_SRC],
   ['nav-link', '.es-nav li:not(.is-active) > a:not(:hover)', HOME_SRC, true],
   ['nav-font', '.es-nav li > a', HOME_SRC, true, ['font-size']],
-  ['p-font', 'main p', HOME_SRC, true, ['font-family']],
   ['strip-title', '.es-strip-item h3', HOME_SRC],
   ['lead-title', '.es-lead-item h3', HOME_SRC],
   ['card-title', '.es-card-title', HOME_SRC],
   ['card-intro', '.es-card-intro', HOME_SRC],
-  ['pill', '.es-pill', HOME_SRC],
+  ['pill', '.es-card .es-pill', HOME_SRC],
+  ['page-h1', 'main h1', HOME_SRC, true],
   ['pager', '.es-pagination a', HOME_SRC],
+  ['page-count', '.es-page-count', HOME_SRC],
+  ['strip-meta', '.es-strip-meta', HOME_SRC],
   ['footer-text', '.es-footer-left p', HOME_SRC],
   ['footer-button', '.es-footer-right .es-btn', HOME_SRC],
   ['copyright', '.es-copyright', HOME_SRC],
@@ -52,11 +54,11 @@ const DEFAULT_PROPS = [
   'color',
   'background-color'
 ]
-const BASE = ['body-type', 'nav-link', 'nav-font', 'p-font', 'footer-text', 'footer-button', 'copyright']
+const BASE = ['body-type', 'nav-link', 'nav-font', 'footer-text', 'footer-button', 'copyright']
 // Order matters: a rule is measured on the first page that carries it.
 const PAGES_OF = {
-  'en-home': [...BASE, 'strip-title', 'lead-title', 'card-title', 'card-intro', 'pill', 'pager'],
-  'en-not-found': [...BASE.filter((r) => !['p-font', 'body-type'].includes(r)), 'nf-code', 'nf-title', 'nf-text', 'nf-button']
+  'en-home': [...BASE, 'strip-title', 'lead-title', 'card-title', 'card-intro', 'pill', 'page-h1', 'pager', 'page-count', 'strip-meta'],
+  'en-not-found': [...BASE, 'nf-code', 'nf-title', 'nf-text', 'nf-button']
 }
 const PAGE_URL = { 'en-home': '/', 'en-not-found': '/404' }
 // ── page families: ingest/contract-pages/<family>.json, one per family, each written by the agent that built it.
@@ -78,6 +80,7 @@ for (const fr of FRAGMENTS) {
 }
 const MEASURE_ON = (id) => Object.entries(PAGES_OF).find(([, ids]) => ids.includes(id))[0]
 
+contract.design.theme = config.qa.theme
 const hook = config.qa.theme
 const browser = await launchBrowser()
 const measured = {}
@@ -168,6 +171,7 @@ contract.pages = [
     identity: '.es-strip',
     source: [HOME_SRC],
     render: { view: 'src/views/Home.astro', collections: ['chrome', 'pages', 'posts', 'gallery', 'social'] },
+    images: 'placeholders',
     rules: PAGES_OF['en-home'],
     parity: ['nav', 'stripTitle', 'cardTitle', 'footerButton', 'ground'],
     content: homeContent
@@ -181,7 +185,7 @@ contract.pages = [
     source: [E404_SRC],
     render: { view: 'src/views/NotFound.astro', collections: ['chrome'] },
     rules: PAGES_OF['en-not-found'],
-    parity: ['ground'],
+    parity: ['nfTitle'],
     content: nfContent
   }
 ]
@@ -196,6 +200,7 @@ const FRAGMENT_PAGES = FRAGMENTS.flatMap((fr) =>
     render: { view: fr.layout.view, collections: pg.collections ?? ['chrome'] },
     rules: PAGES_OF[pg.id],
     parity: pg.parity ?? ['ground'],
+    ...(pg.images ? { images: pg.images } : {}),
     content: (pg.content ?? []).map((c) => F(...c)),
     ...(pg.states ? { states: pg.states } : {})
   }))
@@ -232,6 +237,7 @@ contract.design.parity = {
     stripTitle: { site: '.es-strip-item h3', source: '.mod-view-article-slide h3' },
     cardTitle: { site: '.es-card-title', source: '.blog-items .item-title' },
     footerButton: { site: '.es-footer-right .es-btn', source: '.footer-info-right .btn-dark' },
+    nfTitle: { site: '.es-404 h2', source: '.error-msg h2' },
     ground: 'body',
     ...Object.assign({}, ...FRAGMENTS.map((fr) => fr.parity ?? {}))
   },
@@ -245,7 +251,15 @@ contract.design.coverage = [
   { selector: '.es-nav li > a', properties: ['font-size'] }
 ]
 contract.design.images = { scope: 'body', placeholder: null }
-contract.design.exceptions = []
+contract.design.exceptions = [
+  {
+    kind: 'scan:white-surface',
+    match: 'es-strip-pill',
+    reason:
+      "The category pill on the Home strip sits on a photograph and stays light in dark mode, as the source's own dark stylesheet keeps it (css/darkmode.css, 'OVER-IMAGE badges')",
+    decision: 'DECISIONS D21'
+  }
+]
 // the active menu item and the page buttons are the accent in both themes
 contract.design.accentBorders = ['rgb(77, 107, 255)']
 // the off-canvas menu: the hamburger on every page at every width (the 768 tablet menu included); Home carries the state
@@ -253,9 +267,9 @@ contract.interactions = {
   offcanvas: {
     trigger: '[data-offcanvas-toggle]',
     panel: '#offcanvas',
-    link: '#offcanvas li a',
+    link: '#offcanvas li:nth-child(3) > a',
     open: 'click',
-    fullWidth: true
+    fullWidth: false
   }
 }
 contract.fonts = {

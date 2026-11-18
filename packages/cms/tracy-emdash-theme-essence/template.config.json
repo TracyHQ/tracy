@@ -55,7 +55,7 @@
       "selector": "html",
       "attribute": "data-theme",
       "values": {
-        "light": "light",
+        "light": null,
         "dark": "dark"
       },
       "storageKey": "tracy-essence-theme"

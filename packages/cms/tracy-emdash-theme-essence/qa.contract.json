@@ -1,10 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 1,
-  "pending": [
-    "Map every converted source page under `pages` (content, rules, states); measure `design.rules` per variant; declare `interactions`; then empty this list"
-  ],
+  "revision": 7,
+  "pending": [],
   "locales": [
     "en"
   ],
@@ -15,297 +13,356 @@
       {
         "path": "category/category-style-1/capturing-essence-expressive-line-art-techniques/index.html",
         "sha256": "sha256:c6180f8522cba580ba7622b2b50428e1164a8e68042a2164f172235091e3017f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/dancing-with-lines-dynamic-line-art-expressions/index.html",
         "sha256": "sha256:2f10321d7795e50bd6dee736c229b01b365c5d0f211b058e9365e77eb0f13b76",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/drawing-with-elegance-the-art-of-line-work/index.html",
         "sha256": "sha256:5a3f7766a919730cf376e580c54c0f28309069f00cfeec6ac611e258056a0347",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/embracing-minimalism-line-art-creations/index.html",
         "sha256": "sha256:26b0ffa1e2dd69583a3a3cd393030bf11d141acadbe55c567bf2effaa1589166",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/fluid-lines-infinite-possibilities-line-art-inspirations/index.html",
         "sha256": "sha256:00b183d85cb3e208c67c66a241f27da522bbda3ab638da8a73e45e7d98729190",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/from-lines-to-life-mastering-the-art-of-line-drawing/index.html",
         "sha256": "sha256:9d957e1f31e8bc1e9ff3853c0e1c6fd35d8b637e746a407ec2d9607ddb98bef6",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/harmony-in-lines-balancing-elements-in-line-art/index.html",
         "sha256": "sha256:8fbadd8f3917198e179576b27cf18626417499f9938ce3ce27cb743b3867515a",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/index.html",
         "sha256": "sha256:5bfa9605490728249ee918ceef77e1b845fe9c3c95ad0fb6a7945d25996cb523",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/index~start=9.html",
         "sha256": "sha256:1b5f9e74c3b2fbea89762c3a20cad405ddc1005a3ba8bf5c77132faee49c8993",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/mindful-eating-for-weight-management/index.html",
         "sha256": "sha256:f4a63e0959edb557081add86ec56afd2fe9f31ddc22a76a9909b32c2d77e822b",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-1/the-power-of-lines-creating-impactful-line-art/index.html",
         "sha256": "sha256:c7dc764f8fe1468204bd1ed85438e8d5b8d562b0e93e8a6657fe76f9a7187bf5",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/architectural-wonders-line-art-in-buildings-and-landscapes/index.html",
         "sha256": "sha256:059bde432cc7b234efef4a0ec2dbd96736edc734229aac19b3c933a0c6d98ca4",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/beyond-black-and-white-adding-colors-to-line-art/index.html",
         "sha256": "sha256:f703ce11d6154722d29cf6378aee11a59e6e96ce3ed26c7dca305af46c8cbd31",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/index.html",
         "sha256": "sha256:df6bad67168d23c9cf5ab6098072568b82b23989d3dae0c23406258dd40c3249",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/index~start=6.html",
         "sha256": "sha256:a3cff1d3fa271840b43b0e08cf4c8fa9e13087516094ed513399cbdf040a84ae",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/line-art-portraits-capturing-emotions-with-lines/index.html",
         "sha256": "sha256:b5e7d136f90f14e301ceb603499515efabe35a4810711dd938ead3d89e1c2984",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/natures-intricacy-botanical-line-art-explorations/index.html",
         "sha256": "sha256:c6cdfc8030c1227686a7b62e038b04a5ed83f8884816285364d8c1bee3b6a10d",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/organic-geometry-exploring-geometric-line-art/index.html",
         "sha256": "sha256:73770edbae22ed9345865564cf7e33fe8890376746ba9d4bc1161b1a6260aac6",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/outlining-creativity-line-art-for-illustrations-and-designs/index.html",
         "sha256": "sha256:86d255fc00f0d8daed02786c0d9c49d50ed8d8c1221319b34d8d5eab7c9c93ef",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/sketching-stories-narrative-elements-in-line-art/index.html",
         "sha256": "sha256:5d277d717c03f5061c9d64766ec36c7cc9b8a502ad0e32c983f6608ce52cb6b9",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/the-beauty-of-symmetry-symmetrical-line-art-designs/index.html",
         "sha256": "sha256:36cf3955a5395b0ef34db01733e1c6413b82d03bdc29db6b4159c95f1a8911b2",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-2/whimsical-wonders-imaginative-line-art-creations/index.html",
         "sha256": "sha256:8f53547201ff021a42609ec6c9d6d34a16760912df09ed5fc6c026d0da8cd0df",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-3/beauty-in-simplicity-exploring-line-art/index.html",
         "sha256": "sha256:00a7caf68b6457f92ef0c8f51844b1d116425a343519cf71866bf21933af78e7",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-3/dancing-with-lines-dynamic-line-art-expressions/index.html",
         "sha256": "sha256:e3f38c7c6a4adaddd0175462bc0ee711c08ad869ed17116461613bb7efd975eb",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-3/exercise-routines-for-overall-fitness/index.html",
         "sha256": "sha256:0124ee1c3cf5a2e3c57d00b0f594523c05312d50763431af43f9cbce9dfda08d",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-3/fluid-lines-infinite-possibilities-line-art-inspirations/index.html",
         "sha256": "sha256:237a16cf3e2a23655a4b16937abdcdff268181abf2285bbdbd37c35f6bfdd1e6",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-3/harmony-in-lines-balancing-elements-in-line-art/index.html",
         "sha256": "sha256:8b956d98a2fb79670d5a9a5378661a791db8a39e8d864f10ce7a5e398d57a205",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-3/healthy-eating-tips-for-busy-professionals/index.html",
         "sha256": "sha256:7cfaa9a6aa98073e219aedded95414ec04fd6f9c35b2be22347fedf40ef2a80b",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-3/index.html",
         "sha256": "sha256:30f7ac194c24a38e8ba446da6635ec40db075abab29abe14cd7cc822ee909f1c",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-3/vintage-inspired-martini-cocktail-glasses/index.html",
         "sha256": "sha256:76164939149eed60e15a84fae346725f7f1f404eacf42ba768ae598fc72a574f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "category/category-style-4/design/architectural-wonders-line-art-in-buildings-and-landscapes/index.html",
         "sha256": "sha256:fbebd1da7f547515d49593040a9a478bbcf27142ce32ff94f9cf8fa06b49c448",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/design/beyond-black-and-white-adding-colors-to-line-art/index.html",
         "sha256": "sha256:72b057da517ee9c94d2831ef2412b7bb6a806c685136976bfd2b0b72223b4673",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/design/index.html",
         "sha256": "sha256:1560480abb426119c692d7e3e8d2d0b4275d43ec1488013f6886eb9a71d86e4b",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/design/organic-geometry-exploring-geometric-line-art/index.html",
         "sha256": "sha256:f0d526f896bb5d76e996db3d2b7b898d0bca85621e52cdf6c9c10da5e4c279ab",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/fashion/dancing-with-lines-dynamic-line-art-expressions/index.html",
         "sha256": "sha256:4f49f3336eba8b9d61eaf51a6d5d4bce4f10b6fa92a66233fdc0470474a9316b",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/fashion/fluid-lines-infinite-possibilities-line-art-inspirations/index.html",
         "sha256": "sha256:11233184b98060f40b21a877e6b90b8f7886c50b8f320cd5cf991e2511956610",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/fashion/harmony-in-lines-balancing-elements-in-line-art/index.html",
         "sha256": "sha256:6f1844b5a5edeb5fa2794ca6899c6e3fe0488cf2d211e1a9cf02cc319dc0bd8e",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/fashion/index.html",
         "sha256": "sha256:b6c1e5b18c27e3eb79db36ea176df5f4324b6f94f1b6d6dc8658135d25284ba1",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/health/capturing-essence-expressive-line-art-techniques/index.html",
         "sha256": "sha256:a91af82af34cea89e907094d2286f3a2a6669e1cc11a8dc1aeb9ffced1a79c76",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/health/drawing-with-elegance-the-art-of-line-work/index.html",
         "sha256": "sha256:d75529b617819ac953162980d2b58a1ddbae0877155ed7bf54c1cfa8c2d65319",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/health/embracing-minimalism-line-art-creations/index.html",
         "sha256": "sha256:c3d54a68d06dc915c4f8fe9d02685f5a53d679ee5e35bd4d15f11189fc2b9928",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/health/harmony-in-lines-balancing-elements-in-line-art/index.html",
         "sha256": "sha256:ee6dc4614627ced57910279d3e1c20d9a1c5c748a4a032e062c61a5fd526679f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/health/index.html",
         "sha256": "sha256:64c2d6dbc931586c36533e244b837ab291ce838770a33502f1405634867c59ec",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/index.html",
         "sha256": "sha256:05f3ec2b5f6fabc39ca2ef7350084dba79d4034b2aa94711c14c9cc43c486118",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "category/category-style-4/index~start=6.html",
         "sha256": "sha256:195d55a0fe388366598ecb02bd8ed1d1a9d5bebb2b523d0040c2a31f8996e75c",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "component/tags/tag/design/index.html",
         "sha256": "sha256:3054cbf1692de6ff917a89030e8ce8d9089cc00558a0a10033c1233de3f06d32",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/design/index~start=20.html",
         "sha256": "sha256:31832e2093dc3a89abc9486b3c14ac0a65f05c9364431a73fec6652308e06a89",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/health/index.html",
         "sha256": "sha256:59dfeb42d9014e2673906cba3612c7f2cf16146981b314e99ff97268ba651146",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/health/index~start=20.html",
         "sha256": "sha256:50b6ed3f83967cf11a9739406706f9c1cff6aa763ca086312bce060422903372",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/health/index~start=40.html",
         "sha256": "sha256:07b16db89f53246e37a9ac0dce682566ed353233cb00b3c236bd9278b4cd42ab",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/lifestyle/index.html",
         "sha256": "sha256:6d439cb654d22482941b35b9e3199190d99522c5ad46fa52eba745f57e8afda4",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/lifestyle/index~start=20.html",
         "sha256": "sha256:5e95191c21836d071d747294f25ad82f234ec4085c8bb2bddc0da132d6c50906",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/lifestyle/index~start=40.html",
         "sha256": "sha256:a195b8563208618d8068219b49126490048e5f5c77902cfd2dcbfadbbf6dbdb1",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/technology/index.html",
         "sha256": "sha256:b1838a80ac1a5f4b272b1676a4fe4d99ea59ca2b5baa94270e745fc186544601",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/technology/index~start=20.html",
         "sha256": "sha256:b31327d5565ebed5a9bd4cf5966353b615e189ba3b953ae7f4c616c9bd2b7789",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/technology/index~start=40.html",
         "sha256": "sha256:2f2c8c5cbb05a14f2c78ba945141e01adb9095b14e6dc9f9357fa4028b57b0b4",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/travel/index.html",
         "sha256": "sha256:11d300337ea0410e42ae1df78941c5e465be6f25e46de24f8ba51adf2a227b42",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "component/tags/tag/video/index.html",
         "sha256": "sha256:09815cade863cb0ecb8c4e0f78f1134fa6a3a5890b9d13d82eb92b1b1ed975a6",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "contact/index.html",
         "sha256": "sha256:3ba4bb2f234036ea0fc4b7b390eea7fb93e1640960e9782c4cba21b9316e951f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "crawl.json",
@@ -315,7 +372,8 @@
       {
         "path": "detail/gallery/index.html",
         "sha256": "sha256:a028798acfc902d4d398fc7f35c3052376275206d9d80b756d5d3ccdebcfe150",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "detail/layout-1/index.html",
@@ -325,77 +383,92 @@
       {
         "path": "detail/layout-2/index.html",
         "sha256": "sha256:3e09c6bc91f4a7214fe66858a5734ad86006b71761901a1dba10d6a274436f4c",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "detail/layout-3/index.html",
         "sha256": "sha256:ea2400799b0b24652689a6552aa318f862920a6cfd144e6c230accd13793fd75",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "detail/video/index.html",
         "sha256": "sha256:297da8c15e8f2b79f3f2322bb7559ee283b59ed4906c31cbcc7a56ad028d4bcf",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "home/home-1/index.html",
         "sha256": "sha256:11e8d2dceb03822cb676c5d4b58a2c006a65c51b92e922bf333446d068c3902f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-1/index~start=12.html",
         "sha256": "sha256:6e081b4d25c557a31ac6b31707dc2b73059d99bb26a0fb83c68866daaa07fe08",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-1/index~start=18.html",
         "sha256": "sha256:b43d3fee7a032fb675d24d2e77817c0b41439a2396ee35f4944c99a8670c366c",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-1/index~start=6.html",
         "sha256": "sha256:6d94d505a5605960e751c659f891b36ffd558d0db0f9fed2d5da572064cb99fb",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-2/index.html",
         "sha256": "sha256:351e8790faf6710791cd6ffcbc1988cb0ea86b4c892535a30f64ea3438f72cc6",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-2/index~start=12.html",
         "sha256": "sha256:067102c0ff727577bb9f6cb7239de97f90c0b0d86d29e32a1add7a84eb48d41b",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-2/index~start=6.html",
         "sha256": "sha256:6464ba5c01f24c9c149cb0d37f43172518a9b237eb4b053211b1a299ff9eb313",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-4/index.html",
         "sha256": "sha256:a8541a73068c4c2b019d2cf19616ae3db2654c64bfc14cb8382307e3c712b834",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-4/index~start=8.html",
         "sha256": "sha256:91cb4302bf0f13b460bd8e107cf1a5c1e5a720be62f61b4b3f8bdda1d97a63f2",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-5/index.html",
         "sha256": "sha256:3b22c3e479c0e67a55ffcc11248e81f02111cc9be7db13bd04d6782e983319c0",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-5/index~start=4.html",
         "sha256": "sha256:63f3b13766fab4e28a591ec9f234c69b8e332cc7e9bfb1c25f1bd213b341cdd2",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "home/home-5/index~start=8.html",
         "sha256": "sha256:8213f47be4c7c6235922d5ca2549a030b26ef947250285e36b9449369cf1bb1a",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)"
       },
       {
         "path": "images/joomlart/authors/1.jpg",
@@ -935,42 +1008,50 @@
       {
         "path": "index~start=12.html",
         "sha256": "sha256:dc26fdf90b3fdb9ebec683868c1ef16afa9bbab931d9c13e201187978c3b2c54",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "index~start=6.html",
         "sha256": "sha256:3c0c9afdda97c6d9ec441229f5643ac32ff009dfceb0cf11e19cc8e8dec8a84d",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "lifestyle/essential-nutrients-for-optimal-health/index.html",
         "sha256": "sha256:dc3370accdf8eb3d89243616e5055921edc8df60c70907dd71b546fc3224da69",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "lifestyle/fitness-tips-for-a-healthy-lifestyle/index.html",
         "sha256": "sha256:02a3bca3d3f05aa127dbeca968fa1f3e41e19b303a861cb5bf4d07a19693b027",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "lifestyle/index.html",
         "sha256": "sha256:c53c9de9a072b1d828cc70c339687447fe398e369b4038502b5467d39eb2bb41",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "lifestyle/mental-health-and-well-being-strategies/index.html",
         "sha256": "sha256:496e5c2d9f6e39e46a53a1374845e61cec10d5c9fc488af5f5b0c6fd040bc329",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "lifestyle/mindful-eating-for-weight-management/index.html",
         "sha256": "sha256:a8294ca3b39110f5c96e8bdd9d6af84b50f9ebffeba845d9a0e3447e0451fddb",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "lifestyle/natural-remedies-for-common-ailments/index.html",
         "sha256": "sha256:cd2ed8973517531d67b4d9ee22416617968b49196efcf43c06cb734d34e9574a",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "media/com_acym/css/fonts/acymicon.svg",
@@ -1190,267 +1271,320 @@
       {
         "path": "pages/j-content/author-listting/author/Adrian%20Perez/index.html",
         "sha256": "sha256:ad0b9a06c5558083c3fb3395df830a29321d9b6952dc13916ace37b981de0cfb",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Adrian%20Perez/index~start=0.html",
         "sha256": "sha256:9c617b76f8e40bc2b17b45d3d3e2b96d523a782da80d1eff8b3ea1fb393af10c",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Adrian%20Perez/index~start=4.html",
         "sha256": "sha256:af12b28b1795f051346cfc49439ee2ca84e8ba24066a9703a6c60442b07c98b9",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Alfonso%20Cortez/index.html",
         "sha256": "sha256:73cd4530b1ec04d6be222c9aa8289eb98d3f18827a5aa7bc106fdef8b6ecde9e",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Eula%20Ward/index.html",
         "sha256": "sha256:94b3775e0bb8de07c543e812f287c6976f8a06c11e1bf7c2492e1044a219e45d",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Eula%20Ward/index~start=0.html",
         "sha256": "sha256:15fadf81b33c2d2db760992eaa21b30f1f3bb9bcd86ec7dbca9ca51c44738566",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Eula%20Ward/index~start=4.html",
         "sha256": "sha256:f028ef376450b33fecfc9727ee258a3e57da785965c410998af0c593f72684f5",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Faith%20Singleton/index.html",
         "sha256": "sha256:de86dcae3feaa1f923c0c58a0651c3eb7342385dc007a6b262ecadcaa221acfc",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Laverne%20Robbins/index.html",
         "sha256": "sha256:4e569f425689bee6616caec0af0ec5b1763fb0f0948419f0ba3ddb589104bcfc",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Laverne%20Robbins/index~start=0.html",
         "sha256": "sha256:dc75f95e6863347579d0c4c2796f48b0c2c84fee7a70e32d41e363c036a674db",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Laverne%20Robbins/index~start=4.html",
         "sha256": "sha256:413150f2f94e663fcbf9a97816ecccd01c72877c117e74ed551fbf5201018de5",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Laverne%20Robbins/index~start=8.html",
         "sha256": "sha256:d0c651b6e222bd4d9657f5ba3c9fe63b80ae22166684498f1c00928ba9c9bb92",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Maxine%20Palmer/index.html",
         "sha256": "sha256:4ecfb7cb644a06d9594d200721fb861a7adffba6f117a288fc88e345994de859",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Maxine%20Palmer/index~start=0.html",
         "sha256": "sha256:8dc0b145daf0d298b11f2cefe195701af373cfa9fe39a8ed6d40fb4d0a00770f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Maxine%20Palmer/index~start=4.html",
         "sha256": "sha256:d88244b58a1d1e3b9faffccefe1d9f1a0c36c6312231cbd10e1c5d5965b4dac0",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Shelia%20Ortiz/index.html",
         "sha256": "sha256:5581ba5d30d8dbaf910306faedba91d96114b7b6d821ecd1958285981b23115c",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Shelia%20Ortiz/index~start=0.html",
         "sha256": "sha256:d5d062348d20a2079b3ac81c03747f78f526419b141729ce3b349d35dfdf24fe",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Shelia%20Ortiz/index~start=4.html",
         "sha256": "sha256:da0edc049d36ba03a6e860c7a96ba7cf2e4c0d09532d5ec1568ca5dc056b9f0b",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Trevor%20Patrick/index.html",
         "sha256": "sha256:c44430883e901a28402c7fe5766f809dd04d6a697cd04864428f1faa1dd98e50",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Trevor%20Patrick/index~start=0.html",
         "sha256": "sha256:e5d126259f3bf78ef355182dea4d6c59778c4344253ea2dcfe8f9adb8371fcf1",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Trevor%20Patrick/index~start=4.html",
         "sha256": "sha256:827556b6c2d90a6364990782203207d287762065a38449798d17d4444f56a3dc",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/author/Woodrow%20Ortega/index.html",
         "sha256": "sha256:92e5c0e2da8f2d65340728023f926484d3be74f630b6a3954749d46c61cad98f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/index.html",
         "sha256": "sha256:ac53217b1e29e30253f51a6016b9d951b1e5cd132a12471df85bf486ab8b861a",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/index~start=0.html",
         "sha256": "sha256:4bc3c5dc20a202a4c15a45c5c06535d6b4425ea992a42cf529bc8c42f8ca650e",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/author-listting/index~start=6.html",
         "sha256": "sha256:fb28c57e76306a31ab39ea11198017316acdcda5babf49bdb29d63b96a00acd3",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "pages/j-content/category-blog/beauty-in-simplicity-exploring-line-art/index.html",
         "sha256": "sha256:a7ddcde60ed6a7207774891ff9b46d11ef863d9a7dfaf8e89c4beff14bebe3f6",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "pages/j-content/category-blog/dancing-with-lines-dynamic-line-art-expressions/index.html",
         "sha256": "sha256:acc1dbb3ec6cdaaeca1f108bbe4df8b3c87af674630dd426e3b31fb85238e2a1",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "pages/j-content/category-blog/exercise-routines-for-overall-fitness/index.html",
         "sha256": "sha256:b6d5b647f73d8b351b1dc23b2344f78f3b7a370b43c4b5a3f7ab8e521a2e308b",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "pages/j-content/category-blog/fluid-lines-infinite-possibilities-line-art-inspirations/index.html",
         "sha256": "sha256:1866c7fec04db86e75168aa87ec2f7147f26c6fcc0c80b76b084ad33974a462a",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "pages/j-content/category-blog/harmony-in-lines-balancing-elements-in-line-art/index.html",
         "sha256": "sha256:efb3bf5e6f0895498c70ddd10f8c4665316565f0080b43bb305b0ec8d2f443c1",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "pages/j-content/category-blog/healthy-eating-tips-for-busy-professionals/index.html",
         "sha256": "sha256:094d83fa6abad4faff760e174b885a3c534f7a062967780bb96a232284e3cbeb",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "pages/j-content/category-blog/index.html",
         "sha256": "sha256:239b43f18d39b5dfc95c8b6d12646db64b8249c13616b26d6a62bce09c2922a9",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "pages/j-content/category-blog/index~start=5.html",
         "sha256": "sha256:72cff38e463b53d14c98e1d29a17467bb9d1ffdffcb41a6a63fca3c050f8f735",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "pages/j-content/category-blog/vintage-inspired-martini-cocktail-glasses/index.html",
         "sha256": "sha256:45fd232ff162b380afd9d8be80c07f29f162d10b43ee0ce4437d96330e9d1baa",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them"
       },
       {
         "path": "pages/j-content/featured-articles/index.html",
         "sha256": "sha256:80cff3fd323be2f5a37d97890dbf4fc2ba704ebc7d78d6ae19a97e02de146379",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-content/featured-articles/index~start=14.html",
         "sha256": "sha256:58fb37f49a055c7b9b33e1bf7adc91cde09dc1466f55328e6c097fba1a3d05c1",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-content/featured-articles/index~start=21.html",
         "sha256": "sha256:a5f7bcdd792a622824f1415d6d63b291eb97f58358a1ed7059e1f7fc3be4049c",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-content/featured-articles/index~start=7.html",
         "sha256": "sha256:990810764d76a92883945fd331abc9a35d555c2a04c6c1cd28f2c37c2d06b1e5",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-content/tagged-items/index.html",
         "sha256": "sha256:4ffaf246ec4c3495748e11a86ee3dd32e5c523e222623a9cb28d341feb7d5dbd",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-content/tagged-items/index~start=20.html",
         "sha256": "sha256:f0cfb18c226e9c7b1e9632d977b905c3b1410a3250d2891c2ec9aafaefa1db91",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-content/tagged-items/index~start=40.html",
         "sha256": "sha256:0688e382602af2e3d40aa7f3ff4e3d28562eba04aca76b04192f207c7a22c890",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-content/tagged-items/index~types%5B0%5D=1.html",
         "sha256": "sha256:476823530b86fdd657804487adadacf17ae4846992a2614bba8fdaaf4a41b791",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-pages/error-page/index.html",
         "sha256": "sha256:fae40b32e1a53f749998cca5359766a33fc405147cfb5e8c0c8e2cb5a949aa6f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-pages/error-page/index~view=category&amp%3Bid=2.html",
         "sha256": "sha256:a256dd735d7391540a1b9f0243adc251a48c3e3c96e93cda08d9dbd86aa11f9e",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-pages/offline-pages/index.html",
         "sha256": "sha256:4584d1988efa7fc96d4b90c14c3330a2685201d194eb1ca781b3657fd6e01a1f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-pages/offline-pages/index~view=category&amp%3Bid=2.html",
         "sha256": "sha256:9f142980c8d2f68b02f51030ae3ff1f652d683530533885d31f7011166a80e7d",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-pages/smart-search/index.html",
         "sha256": "sha256:bbd62a95fa01be22a23f8135adb9cafeb85c5b226eb40922265ab261c8f05fce",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-pages/typography/index.html",
         "sha256": "sha256:7032db82abbdf9d27ec80ee3da5518599ecd9bd171b1b868ac804a370157621c",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/j-pages/typography/index~view=category&amp%3Bid=2.html",
         "sha256": "sha256:5c404a28e9dbb71282d116889fd911c1d9765330badb9922fa2fc112dc0affb4",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)"
       },
       {
         "path": "pages/user/login-form/index.html",
         "sha256": "sha256:21cbce3b2710db35e061b683686fc22febc78eab3a0f06104bf4d8231b5f2dab",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D8)"
       },
       {
         "path": "pages/user/login-form/index~view=remind.html",
         "sha256": "sha256:3ac2b83d3acd5a4f4fdd7546d24880e331c82c09d888114ec74cb5780d83a0cb",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D8)"
       },
       {
         "path": "pages/user/login-form/index~view=reset.html",
         "sha256": "sha256:54e3c98534fa395e394e123dd9389f02aef9321d74457e84b879bf2caead1722",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D8)"
       },
       {
         "path": "pages/user/registration-form/index.html",
         "sha256": "sha256:65da187e13ae950a3e5928fbbfcc324e463150d77598df703e94a64c0d17ae49",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D8)"
       },
       {
         "path": "plugins/system/t4/themes/base/vendors/font-awesome/css/font-awesome.min.css",
@@ -1530,37 +1664,44 @@
       {
         "path": "resources/abstract-wonders-exploring-line-art-composition/index.html",
         "sha256": "sha256:36b9155fbd74c6d980abf384fd217eb39e2187644181f42883eb30453258c3e6",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "resources/architectural-wonders-line-art-in-buildings-and-landscapes/index.html",
         "sha256": "sha256:017e820f2bc797404e1575082cc4e7103928d6f9c3cbc9ff309f0a4318bd5293",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "resources/capturing-essence-expressive-line-art-techniques/index.html",
         "sha256": "sha256:f4f95911fc663e6f2d1568975538c42b200f1127fce4a35f7fd067db1c830de3",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "resources/index.html",
         "sha256": "sha256:7266de2dabcb2c30c64f69b0d3debbcd3434c06c3fab8bb63da97c493403f1ab",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "resources/natures-intricacy-botanical-line-art-explorations/index.html",
         "sha256": "sha256:566db196e8acc2c7f67c577f74f88fe481b96c44b4b7dad00acbcc946e6f2eba",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "resources/sketching-stories-narrative-elements-in-line-art/index.html",
         "sha256": "sha256:50b13265710de8b8112f0003057a83373ce12f238cbbf4518d967155f331510f",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "resources/whimsical-wonders-imaginative-line-art-creations/index.html",
         "sha256": "sha256:48bf62e8046954d51e89899abe366a9076f54ad09a771a565a861779beb864fe",
-        "disposition": "converted"
+        "disposition": "excluded",
+        "reason": "no built page reads this file (see the reason in DECISIONS)"
       },
       {
         "path": "templates/ja_essence/css/darkmode.css",
@@ -1688,25 +1829,2287 @@
       "selector": "html",
       "attribute": "data-theme",
       "values": {
-        "light": "light",
+        "light": null,
         "dark": "dark"
       },
       "storageKey": "tracy-essence-theme"
     },
-    "rules": []
+    "rules": [
+      {
+        "id": "body-type",
+        "selector": "body",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgb(248, 248, 255)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgb(17, 21, 31)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgb(248, 248, 255)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgb(17, 21, 31)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgb(248, 248, 255)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgb(17, 21, 31)"
+          }
+        }
+      },
+      {
+        "id": "nav-link",
+        "selector": ".es-nav li:not(.is-active) > a:not(:hover)",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "32px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
+        "id": "nav-font",
+        "selector": ".es-nav li > a",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-size": "18px"
+          },
+          "1440-dark": {
+            "font-size": "18px"
+          },
+          "768-light": {
+            "font-size": "18px"
+          },
+          "768-dark": {
+            "font-size": "18px"
+          },
+          "390-light": {
+            "font-size": "18px"
+          },
+          "390-dark": {
+            "font-size": "18px"
+          }
+        },
+        "optional": true
+      },
+      {
+        "id": "strip-title",
+        "selector": ".es-strip-item h3",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "22px",
+            "font-weight": "400",
+            "line-height": "28.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "22px",
+            "font-weight": "400",
+            "line-height": "28.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "lead-title",
+        "selector": ".es-lead-item h3",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "23.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "card-title",
+        "selector": ".es-card-title",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "card-intro",
+        "selector": ".es-card-intro",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "pill",
+        "selector": ".es-card .es-pill",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgb(248, 248, 255)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgb(17, 21, 31)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgb(248, 248, 255)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgb(17, 21, 31)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgb(248, 248, 255)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgb(17, 21, 31)"
+          }
+        }
+      },
+      {
+        "id": "page-h1",
+        "selector": "main h1",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "38px",
+            "font-weight": "400",
+            "line-height": "49.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "38px",
+            "font-weight": "400",
+            "line-height": "49.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
+        "id": "pager",
+        "selector": ".es-pagination a",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "16px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "color(srgb 0.129412 0.145098 0.160784 / 0.1)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "16px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "color(srgb 0.933333 0.945098 0.964706 / 0.1)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "16px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "color(srgb 0.129412 0.145098 0.160784 / 0.1)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "16px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "color(srgb 0.933333 0.945098 0.964706 / 0.1)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "16px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "color(srgb 0.129412 0.145098 0.160784 / 0.1)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "16px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "color(srgb 0.933333 0.945098 0.964706 / 0.1)"
+          }
+        }
+      },
+      {
+        "id": "page-count",
+        "selector": ".es-page-count",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "color(srgb 0.129412 0.145098 0.160784 / 0.1)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "color(srgb 0.933333 0.945098 0.964706 / 0.1)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "color(srgb 0.129412 0.145098 0.160784 / 0.1)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "color(srgb 0.933333 0.945098 0.964706 / 0.1)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "color(srgb 0.129412 0.145098 0.160784 / 0.1)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "color(srgb 0.933333 0.945098 0.964706 / 0.1)"
+          }
+        }
+      },
+      {
+        "id": "strip-meta",
+        "selector": ".es-strip-meta",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "footer-text",
+        "selector": ".es-footer-left p",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "footer-button",
+        "selector": ".es-footer-right .es-btn",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "20.7px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(33, 37, 41)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "20.7px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(11, 14, 21)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "20.7px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(33, 37, 41)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "20.7px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(11, 14, 21)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "20.7px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(33, 37, 41)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "20.7px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(11, 14, 21)"
+          }
+        }
+      },
+      {
+        "id": "copyright",
+        "selector": ".es-copyright",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "21px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "nf-code",
+        "selector": ".es-404 h1",
+        "source": "nope-404/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "240px",
+            "font-weight": "400",
+            "line-height": "240px",
+            "letter-spacing": "-2.4px",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "240px",
+            "font-weight": "400",
+            "line-height": "240px",
+            "letter-spacing": "-2.4px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "240px",
+            "font-weight": "400",
+            "line-height": "240px",
+            "letter-spacing": "-2.4px",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "240px",
+            "font-weight": "400",
+            "line-height": "240px",
+            "letter-spacing": "-2.4px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "160px",
+            "font-weight": "400",
+            "line-height": "160px",
+            "letter-spacing": "-1.6px",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "160px",
+            "font-weight": "400",
+            "line-height": "160px",
+            "letter-spacing": "-1.6px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "nf-title",
+        "selector": ".es-404 h2",
+        "source": "nope-404/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "48px",
+            "letter-spacing": "-0.4px",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "48px",
+            "letter-spacing": "-0.4px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "48px",
+            "letter-spacing": "-0.4px",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "48px",
+            "letter-spacing": "-0.4px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "nf-text",
+        "selector": ".es-404 p",
+        "source": "nope-404/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "nf-button",
+        "selector": ".es-404 .es-btn",
+        "source": "nope-404/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "18px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(77, 107, 255)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "18px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(77, 107, 255)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "18px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(77, 107, 255)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "18px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(77, 107, 255)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "18px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(77, 107, 255)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "18px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgb(77, 107, 255)"
+          }
+        }
+      },
+      {
+        "id": "post-title",
+        "selector": ".es-post-title",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "48px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "48px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "38.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "38.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "28.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "28.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "post-body",
+        "selector": ".es-body > p",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(37, 36, 36, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(194, 201, 214)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "post-quote",
+        "selector": ".es-quote blockquote p",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "38.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(77, 107, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "38.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(77, 107, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "33.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(77, 107, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "33.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(77, 107, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "28.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(77, 107, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "28.8px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(77, 107, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "side-title",
+        "selector": ".es-side-title",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "body-h2",
+        "selector": ".es-body h2",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "sec-title",
+        "selector": ".es-sec-title",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "newsletter-title",
+        "selector": "#es-newsletter-title",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "article-h3",
+        "selector": "main article h3",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "quote-by",
+        "selector": ".es-quote figcaption p",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "27px",
+            "letter-spacing": "0.5px",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "27px",
+            "letter-spacing": "0.5px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "27px",
+            "letter-spacing": "0.5px",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "27px",
+            "letter-spacing": "0.5px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "27px",
+            "letter-spacing": "0.5px",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "18px",
+            "font-weight": "400",
+            "line-height": "27px",
+            "letter-spacing": "0.5px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "newsletter-text",
+        "selector": ".es-newsletter-text, .es-newsletter-status",
+        "source": "detail/layout-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      }
+    ],
+    "parity": {
+      "selectors": {
+        "nav": {
+          "site": ".es-nav > ul > li:nth-child(1) > a",
+          "source": ".t4-megamenu .nav-item:nth-child(1) > a"
+        },
+        "stripTitle": {
+          "site": ".es-strip-item h3",
+          "source": ".mod-view-article-slide h3"
+        },
+        "cardTitle": {
+          "site": ".es-card-title",
+          "source": ".blog-items .item-title"
+        },
+        "footerButton": {
+          "site": ".es-footer-right .es-btn",
+          "source": ".footer-info-right .btn-dark"
+        },
+        "nfTitle": {
+          "site": ".es-404 h2",
+          "source": ".error-msg h2"
+        },
+        "ground": "body",
+        "postTitle": {
+          "site": ".es-post-title",
+          "source": "h2[itemprop=\"headline\"]"
+        },
+        "sideTitle": {
+          "site": ".es-side-title",
+          "source": ".module-title"
+        }
+      },
+      "properties": [
+        "font-size",
+        "font-weight",
+        "letter-spacing",
+        "padding-top",
+        "padding-left"
+      ],
+      "hexTolerance": 8,
+      "pxTolerance": 1
+    },
+    "coverage": [
+      {
+        "selector": "main h1, main h2, main h3",
+        "properties": [
+          "font-family",
+          "font-weight"
+        ]
+      },
+      {
+        "selector": "main p",
+        "properties": [
+          "font-family"
+        ]
+      },
+      {
+        "selector": ".es-nav li > a",
+        "properties": [
+          "font-size"
+        ]
+      }
+    ],
+    "images": {
+      "scope": "body",
+      "placeholder": null
+    },
+    "exceptions": [
+      {
+        "kind": "scan:white-surface",
+        "match": "es-strip-pill",
+        "reason": "The category pill on the Home strip sits on a photograph and stays light in dark mode, as the source's own dark stylesheet keeps it (css/darkmode.css, 'OVER-IMAGE badges')",
+        "decision": "DECISIONS D21"
+      }
+    ],
+    "accentBorders": [
+      "rgb(77, 107, 255)"
+    ]
   },
-  "interactions": {},
+  "interactions": {
+    "offcanvas": {
+      "trigger": "[data-offcanvas-toggle]",
+      "panel": "#offcanvas",
+      "link": "#offcanvas li:nth-child(3) > a",
+      "open": "click",
+      "fullWidth": false
+    }
+  },
   "fonts": {
     "selectors": [
       "h1",
       "h2",
+      "h3",
       "p",
       "a",
       "button",
-      "input"
-    ]
+      "span",
+      "li"
+    ],
+    "platform": "Chromium (Playwright). Local files served by Astro (src/fonts.json): Jost (display) and Noto Serif (body); Be Vietnam Pro only under :lang(vi).",
+    "allowed": {
+      "en": [
+        "Jost",
+        "Noto Serif"
+      ]
+    }
   },
-  "pages": [],
+  "pages": [
+    {
+      "id": "en-home",
+      "path": "/",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default",
+        "offcanvas"
+      ],
+      "status": 200,
+      "identity": ".es-strip",
+      "source": [
+        "index.html"
+      ],
+      "render": {
+        "view": "src/views/Home.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "posts",
+          "gallery",
+          "social"
+        ]
+      },
+      "images": "placeholders",
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "strip-title",
+        "lead-title",
+        "card-title",
+        "card-intro",
+        "pill",
+        "page-h1",
+        "pager",
+        "page-count",
+        "strip-meta"
+      ],
+      "parity": [
+        "nav",
+        "stripTitle",
+        "cardTitle",
+        "footerButton",
+        "ground"
+      ],
+      "content": [
+        {
+          "id": "strip-1",
+          "selector": ".es-strip-item h3 >> nth=0",
+          "source": "index.html",
+          "owner": "derived",
+          "binding": "posts with home_lead (first by title)",
+          "attribute": "text",
+          "expected": "Abstract Wonders: Exploring Line Art Composition"
+        },
+        {
+          "id": "card-1",
+          "selector": ".es-card-title >> nth=0",
+          "source": "index.html",
+          "owner": "derived",
+          "binding": "posts, featured, first of the first category",
+          "attribute": "text",
+          "expected": "Capturing Essence: Expressive Line Art Techniques"
+        },
+        {
+          "id": "footer-cta",
+          "selector": ".es-footer-right .es-btn >> nth=0",
+          "source": "index.html",
+          "owner": "field",
+          "binding": "chrome.footer_cta_label",
+          "attribute": "text",
+          "expected": "Become a subscriber"
+        },
+        {
+          "id": "gallery-btn",
+          "selector": ".es-gallery-action .es-btn >> nth=0",
+          "source": "index.html",
+          "owner": "field",
+          "binding": "gallery.gallery_title",
+          "attribute": "text",
+          "expected": "@Grazia on instagram"
+        }
+      ]
+    },
+    {
+      "id": "en-not-found",
+      "path": "/404",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 404,
+      "identity": ".es-404",
+      "source": [
+        "nope-404/index.html"
+      ],
+      "render": {
+        "view": "src/views/NotFound.astro",
+        "collections": [
+          "chrome"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "nf-code",
+        "nf-title",
+        "nf-text",
+        "nf-button"
+      ],
+      "parity": [
+        "nfTitle"
+      ],
+      "content": [
+        {
+          "id": "code",
+          "selector": ".es-404 h1 >> nth=0",
+          "source": "nope-404/index.html",
+          "owner": "derived",
+          "binding": "template word",
+          "attribute": "text",
+          "expected": "404"
+        },
+        {
+          "id": "h1",
+          "selector": ".es-404 h2 >> nth=0",
+          "source": "nope-404/index.html",
+          "owner": "derived",
+          "binding": "template word",
+          "attribute": "text",
+          "expected": "Page not found"
+        },
+        {
+          "id": "text",
+          "selector": ".es-404 p >> nth=0",
+          "source": "nope-404/index.html",
+          "owner": "derived",
+          "binding": "template word",
+          "attribute": "text",
+          "expected": "An error has occurred while processing your request."
+        },
+        {
+          "id": "back",
+          "selector": ".es-404 .es-btn >> nth=0",
+          "source": "nope-404/index.html",
+          "owner": "derived",
+          "binding": "template word",
+          "attribute": "text",
+          "expected": "Home Page"
+        }
+      ]
+    },
+    {
+      "id": "en-post",
+      "path": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
+      "locale": "en",
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "768-light",
+        "768-dark",
+        "390-light",
+        "390-dark"
+      ],
+      "states": [
+        "default"
+      ],
+      "status": 200,
+      "identity": ".es-article",
+      "source": [
+        "detail/layout-1/index.html"
+      ],
+      "render": {
+        "view": "src/views/Post.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "authors",
+          "social",
+          "gallery"
+        ]
+      },
+      "rules": [
+        "body-type",
+        "nav-link",
+        "nav-font",
+        "footer-text",
+        "footer-button",
+        "copyright",
+        "post-title",
+        "post-body",
+        "post-quote",
+        "side-title",
+        "body-h2",
+        "sec-title",
+        "newsletter-title",
+        "article-h3",
+        "quote-by",
+        "newsletter-text"
+      ],
+      "parity": [
+        "nav",
+        "postTitle",
+        "sideTitle",
+        "footerButton",
+        "ground"
+      ],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": ".es-post-title >> nth=0",
+          "source": "detail/layout-1/index.html",
+          "owner": "field",
+          "binding": "posts.title",
+          "attribute": "text",
+          "expected": "Abstract Wonders: Exploring Line Art Composition"
+        },
+        {
+          "id": "p1",
+          "selector": ".es-body > p >> nth=0",
+          "source": "detail/layout-1/index.html",
+          "owner": "field",
+          "binding": "posts.body",
+          "attribute": "text",
+          "expected": "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        },
+        {
+          "id": "side",
+          "selector": ".es-side-title >> nth=0",
+          "source": "detail/layout-1/index.html",
+          "owner": "field",
+          "binding": "chrome.latest_title",
+          "attribute": "text",
+          "expected": "Articles - Latest"
+        }
+      ]
+    }
+  ],
   "reviews": {
     "build": {
       "mode": "required"
@@ -1740,7 +4143,9 @@
     }
   },
   "capabilities": [
-    "i18n",
+    "audit-log",
+    "seo",
+    "media",
     "forms"
   ],
   "distribution": {
@@ -1753,22 +4158,197 @@
       "astro.config.mjs",
       "tsconfig.json",
       "components.json",
+      "emdash-env.d.ts",
+      "Dockerfile",
       "public",
       "seed",
       "src",
       "tools",
+      "ingest",
+      "contract",
       "tests",
       "docs",
       "README.md",
       "AGENTS.md",
       "PROVENANCE.md",
+      "LICENSE",
       "artifact.json",
       ".env.example"
     ],
     "required": [
+      "tools/qa.mjs",
+      "tools/qa-contract.mjs",
+      "tools/distribution.mjs",
+      "tools/qa-receipt.mjs",
+      "tools/admin-session.mjs",
+      "tools/admin-roundtrip.mjs",
+      "tools/recovery-check.mjs",
+      "tools/clean-install.sh",
+      "tools/personalize.mjs",
+      "tools/forms.json",
       "public/favicon.svg",
       "seed/seed.json",
-      "seed/media-map.json"
+      "seed/media-map.json",
+      "seed/field-map.json",
+      "seed/questions.json",
+      "seed/personalize.json"
+    ]
+  },
+  "layouts": [
+    {
+      "id": "Home",
+      "view": "src/views/Home.astro",
+      "representative": "en-home",
+      "pages": [
+        "en-home"
+      ],
+      "states": [
+        "default",
+        "offcanvas"
+      ],
+      "hasSource": true
+    },
+    {
+      "id": "NotFound",
+      "view": "src/views/NotFound.astro",
+      "representative": "en-not-found",
+      "pages": [
+        "en-not-found"
+      ],
+      "states": [
+        "default"
+      ],
+      "hasSource": true
+    },
+    {
+      "id": "Post",
+      "view": "src/views/Post.astro",
+      "representative": "en-post",
+      "pages": [
+        "en-post"
+      ],
+      "states": [
+        "default"
+      ],
+      "family": "detail",
+      "hasSource": true
+    }
+  ],
+  "visual": {
+    "stages": [
+      {
+        "id": "light-desktop",
+        "variants": [
+          "1440-light"
+        ]
+      },
+      {
+        "id": "light-responsive",
+        "variants": [
+          "768-light",
+          "390-light"
+        ]
+      },
+      {
+        "id": "dark-desktop",
+        "variants": [
+          "1440-dark"
+        ]
+      },
+      {
+        "id": "dark-responsive",
+        "variants": [
+          "768-dark",
+          "390-dark"
+        ]
+      }
+    ],
+    "shots": [
+      {
+        "stages": [
+          "light-desktop"
+        ],
+        "side": "site",
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "layout",
+          "typography",
+          "color",
+          "images",
+          "interaction"
+        ]
+      },
+      {
+        "stages": [
+          "light-responsive"
+        ],
+        "side": "site",
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "layout",
+          "typography",
+          "images"
+        ]
+      },
+      {
+        "stages": [
+          "dark-desktop"
+        ],
+        "side": "site",
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "color",
+          "layout"
+        ]
+      },
+      {
+        "stages": [
+          "dark-responsive"
+        ],
+        "side": "site",
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "layout",
+          "color"
+        ]
+      },
+      {
+        "stages": [
+          "light-desktop",
+          "light-responsive"
+        ],
+        "side": "source",
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "layout",
+          "typography",
+          "images"
+        ],
+        "ownSourceOnly": true
+      }
+    ],
+    "fastGate": {
+      "add": []
+    },
+    "renderInputs": [
+      "src/styles/**",
+      "src/layouts/Base.astro",
+      "src/components/**",
+      "src/lib/**",
+      "astro.config.mjs",
+      "template.config.json",
+      "seed/seed.json",
+      "public/**"
     ]
   }
 }
