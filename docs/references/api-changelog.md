@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-18: The plan card takes parts off the build plan and brings them back
+
+Changed (internal): `POST /api/build-draft/plan-edits` takes a plan edit that carries one `operation` instead of `changes` (`remove-page`, `remove-block`, `remove-item`, `remove-key-message`, `remove-channel`, `remove-later`, `restore`, `revert`), and edits of the plan's intent notes (`keyMessages[].label`, `pages[].keyMessage`, `pages[].visitorQuestion`, `pages[].seo.*`, `pages[].blocks[].message`). The draft answers `review: {count, canRevert, removals}`. Added (internal): `GET /api/build-draft/pictures/:id`, the pictures the plan look names, to their owner only. Public API v1 is unchanged.
+
 ## 2026-11-16: The build chat can start over in a new conversation
 
 Added: `GET /new/build/start-over` asks the signed-in owner whether to discard what the build chat gathered so far, and `POST /new/build/start-over` does it: the account moves to its next build generation and `/new/build` opens a new, empty conversation. Refused with a 409 page while the build runs, while a step works, or once a site was built from the draft. Added (internal): `POST /api/build-draft/start-over {confirm: true}`, the same for the build chat tool `tracy_build`. Changed: `GET /new/build` opens a new conversation once the build stopped for good. Nothing is removed.

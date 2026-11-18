@@ -1289,12 +1289,12 @@ export const PEOPLE_ROUTES = [
     path: '/api/build-draft',
     summary: 'Read my pre site build draft',
     description:
-      "The signed-in account's build draft (#603): the Contract B questions asked and their answers, the chosen template `{slug, name, version}`, the one living build plan (`tracy-build-plan/v1`), the last plan edit applied (`lastEdit`) and whether one undo is offered (`canUndo`) and, when the brand step ran, where the plan's accent and logo came from (`lookSources`: `{accent?, logo?: {from, name, reason?, pictured?}, pictures?}`; a logo the machine drew from the owner's logo says `drawn-from-logo`; `pictures` names the brand step's kept pictures by draft picture id, `{logoLight?, logoDark?, favicon?: {picture, mime}}`, #575). It is the one source of the plan card and of the plan the build engine runs. An account with no draft answers `{draft: null}`; a read never creates an account. 401 `NOT_SIGNED_IN`.",
+      "The signed-in account's build draft (#603): the Contract B questions asked and their answers, the chosen template `{slug, name, version}`, the one living build plan (`tracy-build-plan/v1`), the last plan edit applied (`lastEdit`) and whether one undo is offered (`canUndo`) and, when the brand step ran, where the plan's accent and logo came from (`lookSources`: `{accent?, logo?: {from, name, reason?, pictured?}, pictures?}`; a logo the machine drew from the owner's logo says `drawn-from-logo`; `pictures` names the brand step's kept pictures by draft picture id, `{logoLight?, logoDark?, favicon?: {picture, mime}}`, #575, each opened with `GET /api/build-draft/pictures/:id`) and the owner's review on the plan card (`review: {count, canRevert, removals: [{id, op, target}]}`: how many changes since the plan was composed, whether back to the original is offered, and the parts taken off that a restore can bring back). It is the one source of the plan card and of the plan the build engine runs. An account with no draft answers `{draft: null}`; a read never creates an account. 401 `NOT_SIGNED_IN`.",
     audience: ['customer', 'agent'],
     auth: 'session',
     internal: true,
     answers:
-      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt} | null}`'
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, review, lookSources?, createdAt, updatedAt} | null}`'
   },
   // src/build-draft/route.js
   {
@@ -1307,7 +1307,7 @@ export const PEOPLE_ROUTES = [
     auth: 'session',
     internal: true,
     answers:
-      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, review, lookSources?, createdAt, updatedAt}}`'
   },
   // src/build-draft/route.js
   {
@@ -1325,7 +1325,7 @@ export const PEOPLE_ROUTES = [
       properties: { question: { type: 'object' }, answer: { type: 'object' } }
     },
     answers:
-      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, review, lookSources?, createdAt, updatedAt}}`'
   },
   // src/build-draft/route.js
   {
@@ -1349,7 +1349,7 @@ export const PEOPLE_ROUTES = [
       }
     },
     answers:
-      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, review, lookSources?, createdAt, updatedAt}}`'
   },
   // src/build-draft/route.js
   {
@@ -1357,13 +1357,13 @@ export const PEOPLE_ROUTES = [
     path: '/api/build-draft/plan-edits',
     summary: 'Apply a structured edit to my build plan',
     description:
-      "Body `{edit}`: a Contract B plan edit (`tracy-build-plan-edit/v1`) of the living plan's current revision, held to the rules gate of the AI quickstart build (`gateEditedPlan`: Contract B, the block item counts, data kinds, main blocks and the business details of the needs profile the plan was composed from, with the kit of the plan's template). The plan and that needs profile change together, or not at all: the plan becomes the edited plan (revision raised by one) and `lastEdit` the edit. Its undo replaces the previous one: one step. There is no door that puts a plan: only the build engine writes one. 409 `NO_PLAN` before the build chat composed a plan; 409 `NO_KIT` when the plan's template has no kit on this server; 409 `STALE_EDIT` with `problems` for an edit of another revision; 422 `INVALID_EDIT` with `problems: [{code, at, message}]`, each `message` a sentence for the owner (for example `The Services section shows at least 2 services; this change leaves 1.`); 400 `INVALID_REQUEST`; 409 `ENGINE_BUSY` with `say` (a sentence for the owner) while a build chat step works on the plan, which this door never cancels. A refused edit changes nothing. Every door: 401 `NOT_SIGNED_IN`; 404 `NO_DRAFT` before a draft is started; each refusal carries `code` and `next` (a sentence). Responses are not cached.",
+      "Body `{edit}`: a Contract B plan edit (`tracy-build-plan-edit/v1`) of the living plan's current revision, held to the rules gate of the AI quickstart build (`gateEditedPlan`: Contract B, the block item counts, data kinds, main blocks and the business details of the needs profile the plan was composed from, with the kit of the plan's template). The plan and that needs profile change together, or not at all: the plan becomes the edited plan (revision raised by one) and `lastEdit` the edit. Its undo replaces the previous one: one step. There is no door that puts a plan: only the build engine writes one. 409 `NO_PLAN` before the build chat composed a plan; 409 `NO_KIT` when the plan's template has no kit on this server; 409 `STALE_EDIT` with `problems` for an edit of another revision; 422 `INVALID_EDIT` with `problems: [{code, at, message}]`, each `message` a sentence for the owner (for example `The Services section shows at least 2 services; this change leaves 1.`); 400 `INVALID_REQUEST`; 409 `ENGINE_BUSY` with `say` (a sentence for the owner) while a build chat step works on the plan, which this door never cancels. An edit may carry one `operation` instead of `changes` (#575 plan card, a structured click: `remove-page`, `remove-block`, `remove-item`, `remove-key-message`, `remove-channel`, `remove-later`, `restore` with the `removal` id, `revert`), held to the same gate after the operation (`gateOperatedPlan`); a part that must stay is refused 422 `INVALID_EDIT` with its code (`first_page`, `privacy_page`, `main_block`, `site_chrome`, `end_action`, `main_button`, `too_few_items`, `block_empty`, `restore_target_gone`...). An operation keeps no `lastEdit`; its undo puts back the plan, the needs profile and the review exactly. Every card change counts once in `review.count`. A refused edit changes nothing. Every door: 401 `NOT_SIGNED_IN`; 404 `NO_DRAFT` before a draft is started; each refusal carries `code` and `next` (a sentence). Responses are not cached.",
     audience: ['customer', 'agent'],
     auth: 'session',
     internal: true,
     body: { type: 'object', required: ['edit'], properties: { edit: { type: 'object' } } },
     answers:
-      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, review, lookSources?, createdAt, updatedAt}}`'
   },
   // src/build-draft/route.js
   {
@@ -1371,12 +1371,25 @@ export const PEOPLE_ROUTES = [
     path: '/api/build-draft/plan-undo',
     summary: 'Undo the last edit of my build plan',
     description:
-      'Takes the last applied plan edit back, once: the values before it are put back as a Contract B plan edit `undo-<edit id>`, so the revision keeps rising and `lastEdit` is that undo; the edit gate holds it like any edit, and the needs profile is restored exactly as it was before the edit. No body. 409 `NOTHING_TO_UNDO` when there is no edit to undo or it was already undone; 409 `ENGINE_BUSY` with `say` while a build chat step works on the plan. Every door: 401 `NOT_SIGNED_IN`; 404 `NO_DRAFT` before a draft is started; each refusal carries `code` and `next` (a sentence). Responses are not cached.',
+      'Takes the last applied plan edit back, once, with the plan review as it was before it: the values before it are put back as a Contract B plan edit `undo-<edit id>`, so the revision keeps rising and `lastEdit` is that undo; the edit gate holds it like any edit, and the needs profile is restored exactly as it was before the edit. A plan operation, and a change asked for in the chat, are taken back by putting the plan and the profile before them back as a new revision. No body. 409 `NOTHING_TO_UNDO` when there is no edit to undo or it was already undone; 409 `ENGINE_BUSY` with `say` while a build chat step works on the plan. Every door: 401 `NOT_SIGNED_IN`; 404 `NO_DRAFT` before a draft is started; each refusal carries `code` and `next` (a sentence). Responses are not cached.',
     audience: ['customer', 'agent'],
     auth: 'session',
     internal: true,
     answers:
-      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, lookSources?, createdAt, updatedAt}}`'
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, review, lookSources?, createdAt, updatedAt}}`'
+  },
+  // src/build-draft/route.js
+  {
+    method: 'GET',
+    path: '/api/build-draft/pictures/:id',
+    summary: 'Read a picture of my build plan look',
+    description:
+      "One picture the brand step kept with the signed-in account's draft (#575), when the draft's look names it (`lookSources.pictures`: the logo on a light or a dark ground, the site icon): its bytes with its image type, `x-content-type-options: nosniff` and a sandboxing content security policy. Any other picture, another account's, an id that is no picture id or a picture whose bytes changed answers 404 `NO_PICTURE`. 401 `NOT_SIGNED_IN`. Responses are not cached.",
+    audience: ['customer'],
+    auth: 'session',
+    internal: true,
+    answers:
+      'the picture bytes (`image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/svg+xml` or an icon type)'
   },
   // src/build-draft/start-over-route.js
   {

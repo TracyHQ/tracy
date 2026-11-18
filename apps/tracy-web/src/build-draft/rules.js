@@ -77,6 +77,16 @@ function lookSourcesOf(brand) {
   return { lookSources: { ...brand?.lookSources, ...(kept ? { pictures } : {}) } }
 }
 
+/** What the door answers of the plan review: its count, the removals a restore can name, and whether it can revert. */
+function reviewShapeOf(review) {
+  const removals = Array.isArray(review?.removals) ? review.removals : []
+  return {
+    count: Number.isInteger(review?.count) ? review.count : 0,
+    canRevert: Boolean(review?.base?.plan) && (review?.count ?? 0) > 0,
+    removals: removals.map((r) => ({ id: r.id, op: r.op, target: r.target }))
+  }
+}
+
 /** What the doors answer for a draft row: the Contract B documents as stored, and whether one undo is offered. */
 export function draftShape(row) {
   return {
@@ -88,6 +98,9 @@ export function draftShape(row) {
     lastEdit: row.last_edit,
     // One undo: of the last card edit, or of the last change asked for in the chat (`undo_plan`, `store.js`).
     canUndo: row.undo_edit !== null || (row.undo_plan ?? null) !== null,
+    // The owner's review on the plan card (#575, `plan_review`): how many changes, the parts taken off that a restore
+    // can bring back, and whether "back to the original" is offered. Never the base plan itself.
+    review: reviewShapeOf(row.plan_review ?? null),
     // Where the plan's accent and logo came from (the brand step's own record), when the draft holds one, with the
     // pictures of the brand file the draft keeps, by draft picture id (#575): what the card shows the look with.
     ...lookSourcesOf(row.brand),

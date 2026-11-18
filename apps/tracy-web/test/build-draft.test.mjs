@@ -157,6 +157,7 @@ test('a draft is created with no website opportunity and no site, once per accou
       plan: null,
       lastEdit: null,
       canUndo: false,
+      review: { count: 0, canRevert: false, removals: [] },
       createdAt: 'x',
       updatedAt: 'x'
     }

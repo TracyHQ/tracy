@@ -1251,6 +1251,8 @@ export function buildApp(deps) {
     // links, the step chain's place and account pictures, read where the step chain keeps them (`research-picture-reader.js`).
     // The drawings of a draft run's pictures step, kept as draft pictures by their request (#575 pictures, port 1).
     app.drawnPictures = drawnPicturesStore({ pool: deps.pool, objects: draftPictureObjects })
+    // The owner's own draft pictures only, for the plan card's look (#575, `GET /api/build-draft/pictures/:id`).
+    app.openOwnDraftPicture = draftPictureReader(draftPictureStore)
     app.openDraftPicture = researchPictureReader({
       pool: deps.pool,
       objects: draftPictureObjects,
@@ -1312,7 +1314,8 @@ export function buildApp(deps) {
         // Only while the build chat is on: the brand step spends the brand bench's model doors.
         templateChosen: async (accountId) =>
           (await buildChatOn()) ? app.buildDraftEngine.brandIfDue(accountId) : null,
-        settleEngine: (accountId) => app.buildDraftEngine.read(accountId)
+        settleEngine: (accountId) => app.buildDraftEngine.read(accountId),
+        openPicture: (id, options) => app.openOwnDraftPicture?.(id, options) ?? null
       })
     )
     app.route(

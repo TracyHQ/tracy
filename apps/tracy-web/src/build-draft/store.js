@@ -12,8 +12,13 @@
  * plan that came out of the plan composer and its rules gate) and the gated edits (`editPlan`, `undoPlanEdit`), which
  * run `gateEditedPlan` with the needs profile the plan was composed from and the kit of the plan's template. The plan
  * and that profile are written in one transaction, so an edit the rules refuse changes nothing.
+ *
+ * The owner's review on the plan card (#575, `plan_review`): each card change (an edit or a plan operation, `planOperate`)
+ * counts once and keeps the review before it, so one undo puts back the plan, the profile and the review together. The
+ * plan before the first change is kept as the review's base ("back to the original"), and the records of the parts the
+ * owner took off as its removals (what a restore brings back). Nothing of it is in the plan.
  */
-import { gateEditedPlan } from 'website-opportunities/domain'
+import { gateEditedPlan, gateOperatedPlan } from 'website-opportunities/domain'
 import { profileWithItemNames } from './edit-item-names.js'
 import { answerProblem, draftShape, planProblem, readTemplate, undoEditOf } from './rules.js'
 
@@ -32,7 +37,8 @@ const COLUMNS = [
   'brand',
   'build',
   'plan_research',
-  'undo_plan'
+  'undo_plan',
+  'plan_review'
 ]
 
 /** What a build keeps of the draft's brand record: the brand file and the template it was made on, or null. */
@@ -256,6 +262,7 @@ export function putComposed(
       undo_edit: null,
       undo_profile: null,
       undo_plan: null,
+      plan_review: null,
       // The research the plan is composed from: a later research keeps this plan, and approval builds it from this.
       plan_research: research === undefined ? (row.research ?? null) : research,
       ...(research === undefined ? {} : { research }),
@@ -292,9 +299,27 @@ export function putRevised(pool, accountId, { plan, profile, unchanged }, { runn
       last_edit: null,
       undo_edit: null,
       undo_profile: row.needs_profile,
-      undo_plan: row.plan
+      undo_plan: row.plan,
+      // A change asked for in the chat counts as one change of the review; the plan it revised is a new plan, so what
+      // the owner took off before can no longer be brought back exactly.
+      plan_review: { ...nextReview(row), removals: [] }
     }
   })
+}
+
+/**
+ * The review after one more card change of `row`: the base kept (the plan and profile before the first change), the
+ * count raised, the review before it kept for one undo.
+ */
+function nextReview(row) {
+  const review = row.plan_review ?? null
+  const { before: _before, ...stripped } = review ?? {}
+  return {
+    base: review?.base ?? { plan: row.plan, profile: row.needs_profile },
+    count: (review?.count ?? 0) + 1,
+    removals: review?.removals ?? [],
+    before: review ? stripped : null
+  }
 }
 
 /**
@@ -313,7 +338,8 @@ export function discardPlan(pool, accountId) {
       last_edit: null,
       undo_edit: null,
       undo_profile: null,
-      undo_plan: null
+      undo_plan: null,
+      plan_review: null
     }
   })
 }
@@ -384,7 +410,59 @@ export function editPlan(pool, accountId, edit, { loadKit }, { ended, now = Date
       undo_edit: undoEditOf(row.plan, edit),
       undo_profile: row.needs_profile,
       // One step of undo: the card edit's replaces a chat change's.
-      undo_plan: null
+      undo_plan: null,
+      plan_review: nextReview(row)
+    }
+  })
+}
+
+/**
+ * Apply a plan edit that carries one operation (#575 plan card: take a part off, bring one back, back to the original)
+ * through the operation gate (`gateOperatedPlan`). Its undo is exact: the plan, the profile and the review before it.
+ * A removal's record joins the review; a restore's leaves it; "back to the original" starts the review over from its
+ * base. No last edit is kept: an operation changes no field value the card would mark.
+ * @param {{loadKit: (slug: string) => object | null}} kits
+ */
+export function planOperate(pool, accountId, edit, { loadKit }) {
+  return changeDraft(pool, accountId, (row) => {
+    if (engineBusy(row)) return { error: 'ENGINE_BUSY' }
+    if (!row.plan || !row.needs_profile) return { error: 'NO_PLAN' }
+    const kit = loadKit(row.plan.look?.template?.slug)
+    if (!kit) return { error: 'NO_KIT' }
+    const review = row.plan_review ?? null
+    const gated = gateOperatedPlan({
+      plan: row.plan,
+      edit,
+      profile: row.needs_profile,
+      blockStore: kit.blockStore,
+      pageRecipes: kit.pageRecipes,
+      library: kit.library,
+      review,
+      removal: `removal-${row.plan.revision + 1}`
+    })
+    if (!gated.ok) {
+      const stale = gated.problems.some((p) => p.at === 'plan.revision')
+      return { error: stale ? 'STALE_EDIT' : 'INVALID_EDIT', problems: gated.problems }
+    }
+    const next = nextReview(row)
+    const plan_review =
+      edit.operation.op === 'revert'
+        ? { base: next.base, count: 0, removals: [], before: next.before }
+        : {
+            ...next,
+            removals: gated.removal
+              ? [...next.removals, gated.removal]
+              : next.removals.filter((r) => r.id !== gated.restored)
+          }
+    return {
+      plan: gated.plan,
+      needs_profile: gated.profile,
+      template: gated.plan.look.template,
+      last_edit: null,
+      undo_edit: null,
+      undo_profile: row.needs_profile,
+      undo_plan: row.plan,
+      plan_review
     }
   })
 }
@@ -405,7 +483,8 @@ function undoRevised(row, now) {
     last_edit: null,
     undo_edit: null,
     undo_profile: null,
-    undo_plan: null
+    undo_plan: null,
+    plan_review: row.plan_review?.before ?? null
   }
 }
 
@@ -430,7 +509,8 @@ export function undoPlanEdit(pool, accountId, { loadKit }, { now = Date.now } = 
       last_edit: row.undo_edit,
       undo_edit: null,
       undo_profile: null,
-      undo_plan: null
+      undo_plan: null,
+      plan_review: row.plan_review?.before ?? null
     }
   })
 }

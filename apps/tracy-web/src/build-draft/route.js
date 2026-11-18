@@ -5,14 +5,28 @@
  * as `seen-hints/route.js` does. The app's global csrfGuard enforces the same-origin JSON write policy.
  *
  * 🔒 NO DOOR PUTS A PLAN (#609). A browser or a model cannot write the plan: the build engine puts a composed plan
- * with `putComposed`, and the edit doors go through the edit gate (`store.js`).
+ * with `putComposed`, and the edit doors go through the edit gate (`store.js`). A plan edit that carries one
+ * operation (#575 plan card: take a part off, bring it back, back to the original) goes through the same door to the
+ * operation gate (`planOperate`).
+ *
+ * The plan card shows the business's look with the pictures the brand step kept (#575): `GET .../pictures/:id` answers
+ * one of them, only to the signed-in owner of the draft, and only a picture the draft's look names (the logo on each
+ * ground, the site icon), never any other stored picture.
  */
 import { Hono } from 'hono'
 import { json } from '../lib/http.js'
 import { principalOf } from '../lib/wo-principal.js'
 import { callerOf } from './caller.js'
 import { BUSY_SAY } from './engine-state.js'
-import { chooseTemplate, createDraft, editPlan, readDraft, saveAnswer, undoPlanEdit } from './store.js'
+import {
+  chooseTemplate,
+  createDraft,
+  editPlan,
+  planOperate,
+  readDraft,
+  saveAnswer,
+  undoPlanEdit
+} from './store.js'
 
 const BASE = '/api/build-draft'
 
@@ -36,6 +50,7 @@ const REFUSALS = {
     'This plan was made for the design you chose, and it cannot be moved to another design yet.'
   ],
   NOTHING_TO_UNDO: [409, 'There is no plan edit to undo.'],
+  NO_PICTURE: [404, 'The plan card shows only the pictures of your plan look.'],
   // A step still works on the plan (#609): the card shows this sentence, as it shows the build's.
   ENGINE_BUSY: [409, BUSY_SAY],
   BUILD_RUNNING: [
@@ -57,6 +72,8 @@ const REFUSALS = {
  *   build chat's engine starts the brand step there once the draft has research (`engine.js brandIfDue`)
  * @param {(accountId: string) => Promise<unknown>} [deps.settleEngine] - called before a plan edit or undo: the engine
  *   stops a step whose process ended (`engine.js read`), so a step that is gone never refuses an edit
+ * @param {(id: string, options: {accountId: string}) => Promise<{mime: string, bytes: Buffer} | null>} [deps.openPicture]
+ *   opens one draft picture of the account (`build-draft/pictures.js open`); without it the picture door answers 404
  */
 export function buildDraftRoutes({
   config,
@@ -65,7 +82,8 @@ export function buildDraftRoutes({
   kits,
   buildSessionIdOf,
   templateChosen = async () => {},
-  settleEngine = async () => {}
+  settleEngine = async () => {},
+  openPicture = async () => null
 }) {
   const app = new Hono()
   const answer = (c, result, okStatus = 200) => {
@@ -129,12 +147,46 @@ export function buildDraftRoutes({
   // A step left running by a process that ended is stopped first (`settleEngine`): only a live step refuses an edit.
   app.post(
     `${BASE}/plan-edits`,
-    write('edit', async (id, body) => (await settleEngine(id), editPlan(pool, id, body.edit, kits)))
+    write('edit', async (id, body) => {
+      await settleEngine(id)
+      const operated = body.edit && typeof body.edit === 'object' && Object.hasOwn(body.edit, 'operation')
+      return operated ? planOperate(pool, id, body.edit, kits) : editPlan(pool, id, body.edit, kits)
+    })
   )
   app.post(
     `${BASE}/plan-undo`,
     write(null, async (id) => (await settleEngine(id), undoPlanEdit(pool, id, kits)))
   )
 
+  app.get(`${BASE}/pictures/:id`, async (c) => {
+    const accountId = await accountOf(c)
+    if (accountId instanceof Response) return accountId
+    const id = c.req.param('id')
+    const draft = accountId && UUID.test(id) ? await readDraft(pool, accountId) : null
+    const named = Object.values(draft?.lookSources?.pictures ?? {}).some((p) => p?.picture === id)
+    const picture = named ? await openPicture(id, { accountId }) : null
+    if (!picture || !PICTURE_TYPES.has(picture.mime)) return answer(c, { error: 'NO_PICTURE' })
+    return new Response(picture.bytes, {
+      headers: {
+        'content-type': picture.mime,
+        'cache-control': 'private, no-store',
+        'x-content-type-options': 'nosniff',
+        'content-security-policy': "default-src 'none'; sandbox"
+      }
+    })
+  })
+
   return app
 }
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+/** The picture types the door answers: an SVG logo is drawn under the sandbox policy, never run as a page. */
+const PICTURE_TYPES = new Set([
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/gif',
+  'image/svg+xml',
+  'image/x-icon',
+  'image/vnd.microsoft.icon'
+])

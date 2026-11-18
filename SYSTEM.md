@@ -865,7 +865,12 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   engine writes the plan**: `putComposed` (a plan the plan composer returned through its rules gate, with its profile)
   and the gated edits (`POST /api/build-draft/plan-edits`, `/plan-undo`), which run `gateEditedPlan` with the stored
   profile and the kit of the plan's template, writing plan and profile in one transaction; there is no door that puts a
-  plan. A compose on a draft that holds a plan never composes: with the owner's written request it runs the engine's
+  plan. A plan edit that carries one operation (#575 plan card: take a page, a section, an item, a key message, a footer
+  channel or a later entry off, bring it back, or go back to the original) goes through the same door to
+  `gateOperatedPlan`; migration 224 adds `plan_review` (the plan and profile before the owner's first change, the count
+  of changes, the removal records a restore puts back, and the review before the last change for the one undo), never
+  answered whole. `GET /api/build-draft/pictures/:id` answers the owner a picture the draft's look names (the logo on
+  each ground, the site icon), from `build_draft_picture`, and nothing else. A compose on a draft that holds a plan never composes: with the owner's written request it runs the engine's
   `revise` step ([`build-draft/engine-revise.js`](apps/tracy-web/src/build-draft/engine-revise.js), the plan step's
   `revisePlan` of #617, in the background like compose), whose plan and profile are written with its done state only
   while the plan is still the revision the request was made for (`putRevised`); without a request it answers that plan
