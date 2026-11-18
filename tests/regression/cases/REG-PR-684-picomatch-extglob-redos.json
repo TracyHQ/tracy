@@ -14,7 +14,8 @@
   "expect": [
     "Every picomatch copy the root install holds (2.3.2 and 4.0.7) is the patched one.",
     "picomatch('+(*)') and makeRe('+(*a)') answer a long non-matching input well under the test timeout; *.js, **/*.md, +(a|b), !(x) match as before.",
-    "Each EmDash theme carries the root patch files and names them in patchedDependencies."
+    "Each EmDash theme carries the root patch files and names them in patchedDependencies.",
+    "A patch-only release cut from a published EmDash quickstart (scripts/emdash-patch-release.mjs) carries the same patches, a lockfile byte-identical to what pnpm writes for them, the new version everywhere the zip states it, and a distribution.json, manifest, SHA256SUMS and tracy_setting.json that verify."
   ],
   "selectors": {
     "patches": "patches/picomatch@2.3.2.patch, patches/picomatch@4.0.7.patch",
@@ -27,7 +28,8 @@
       "--test",
       "--test-reporter=tap",
       "--test-concurrency=1",
-      "scripts/test/picomatch-extglob-redos.test.mjs"
+      "scripts/test/picomatch-extglob-redos.test.mjs",
+      "scripts/test/emdash-patch-release.test.mjs"
     ],
     "needs": [],
     "tests": [
@@ -36,7 +38,19 @@
       "picomatch 2.3.2: ordinary globs match as before",
       "picomatch 4.0.7: single-branch repeated extglobs answer a long non-match quickly",
       "picomatch 4.0.7: ordinary globs match as before",
-      "each EmDash theme carries the root patch files and names them in patchedDependencies"
+      "each EmDash theme carries the root patch files and names them in patchedDependencies",
+      "patchLockfile gives back, byte for byte, the lockfile pnpm wrote for the patches on every theme",
+      "the patch hash is the sha256 of the patch file, the one the develop lockfiles record",
+      "patchLockfile patches importer versions and refuses a lockfile that already has patches",
+      "the workspace block and the Dockerfile lines are the develop ones, put where #684 put them",
+      "cut: the new zip carries the patch and the version, verifies, and the release files name it",
+      "cut refuses what it cannot cut honestly",
+      "cut refuses a file it reads or carries that SHA256SUMS does not list, naming it",
+      "cut refuses a release whose aggregate status is not what its gates add up to, or whose receipt disagrees",
+      "cut refuses a release whose recorded gates did not pass, or whose two records disagree",
+      "cut checks the published kit and carries it with the new contract template-kit.json",
+      "notesFor reports a mention of the old version it does not know how to move",
+      "the same published release cuts the same bytes, whenever and wherever it is cut"
     ]
   }
 }
