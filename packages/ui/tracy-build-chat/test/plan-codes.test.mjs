@@ -213,10 +213,19 @@ test('a held back line names its field in the card language, a plan before the f
     assert.equal(lib.en[`plan.heldBack.field.${field}`], name, field)
   const label = (kind, l) => l
   const line = (what, params) => ({ what, code: 'not_collected', params })
-  assert.equal(lib.leftOutWhatOf(vi, line('Prices', { count: 1, field: 'prices' }), label), 'Giá')
+  assert.equal(
+    lib.leftOutWhatOf(vi, line('Prices', { count: 1, field: 'prices' }), label),
+    viTable['plan.heldBack.field.prices']
+  )
   // A plan made before the field: its English name, or the plain form of a field the plan step had no name for.
-  assert.equal(lib.leftOutWhatOf(vi, line('Prices', { count: 1 }), label), 'Giá')
-  assert.equal(lib.leftOutWhatOf(vi, line('Booking', { count: 1 }), label), 'Liên kết đặt chỗ')
+  assert.equal(
+    lib.leftOutWhatOf(vi, line('Prices', { count: 1 }), label),
+    viTable['plan.heldBack.field.prices']
+  )
+  assert.equal(
+    lib.leftOutWhatOf(vi, line('Booking', { count: 1 }), label),
+    viTable['plan.heldBack.field.booking']
+  )
   // A field the card has no words for keeps the plan's text; another code is not a held back line.
   assert.equal(lib.leftOutWhatOf(vi, line('Parking', { count: 1, field: 'parking' }), label), 'Parking')
   assert.equal(lib.leftOutWhatOf(vi, { what: 'Prices', code: 'no_place_in_design' }, label), 'Prices')
