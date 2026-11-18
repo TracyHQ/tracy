@@ -1,0 +1,27 @@
+---
+/** "Written by": the author's picture, name, job title and the start of the bio (layout type-2, in the narrow aside). */
+import type { Chrome } from '@/lib/chrome'
+import type { AuthorRow } from '@/lib/posts'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+
+interface Props { chrome: Chrome; author: AuthorRow | null; href: string | null }
+const { chrome, author, href } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const $a = stampFor(Astro.request, 'authors', author ? { id: author.id, slug: author.slug } : null)
+const pic = author ? mediaUrl(author.avatar) : null
+---
+
+<section class="es-author-box">
+	<h3 {...$c('written_by')}>{chrome.site.written_by}</h3>
+	{author && (
+		<div class="es-author-box-row" {...$a()}>
+			{pic && (href ? <a class="es-abox-pic" href={href} tabindex="-1" aria-hidden="true"><img src={pic} alt="" width="64" height="64" loading="lazy" {...$a('avatar')} /></a> : <span class="es-abox-pic"><img src={pic} alt="" width="64" height="64" loading="lazy" {...$a('avatar')} /></span>)}
+			<div class="es-abox-text">
+				<div class="es-abox-name" {...$a('name')}>{href ? <a href={href}>{author.name}</a> : author.name}</div>
+				{author.jobTitle && <div class="es-abox-job" {...$a('job_title')}>{author.jobTitle}</div>}
+			</div>
+		</div>
+	)}
+	{author?.bio && <p class="es-abox-bio" {...$a('bio')}>{author.bio}</p>}
+</section>

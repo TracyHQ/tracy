@@ -1,0 +1,31 @@
+---
+/** A list card with the picture on the left (200x200): category pill, title, byline, first paragraph, "Read more". Home blog and the stack category. */
+import { href } from '@/lib/i18n'
+import { postPath, type AuthorRow, type PostRow } from '@/lib/posts'
+import { firstParagraph } from '@/lib/prose-text'
+import { stampFor } from '@/lib/stamps'
+import type { Chrome } from '@/lib/chrome'
+import ListPic from '@/components/site/ListPic.astro'
+import ListMeta from '@/components/site/ListMeta.astro'
+import ListPill from '@/components/site/ListPill.astro'
+
+interface Props { post: PostRow; chrome: Chrome; authors: Record<string, AuthorRow>; eager?: boolean }
+const { post, chrome, authors, eager = false } = Astro.props
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const url = href(chrome.locale, postPath(post))
+const intro = firstParagraph(post.excerpt) || firstParagraph(post.body)
+---
+
+<article class="es-card es-stack" {...$p()}>
+	<div class="es-stack-top">
+		<ListPic post={post} locale={chrome.locale} $p={$p} width={200} height={200} eager={eager} />
+		<div class="es-stack-info">
+			<ListPill post={post} chrome={chrome} />
+			<h2 class="es-card-title"><a href={url} {...$p('title')}>{post.title}</a></h2>
+			<ListMeta post={post} chrome={chrome} authors={authors} $p={$p} />
+		</div>
+	</div>
+	{intro && <p class="es-card-intro" {...$p('excerpt')}>{intro}</p>}
+	{chrome.site.read_more && <a class="es-card-more" href={url} {...$c('read_more')}>{chrome.site.read_more}</a>}
+</article>

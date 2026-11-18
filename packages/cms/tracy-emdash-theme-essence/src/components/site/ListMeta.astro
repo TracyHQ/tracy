@@ -1,0 +1,35 @@
+---
+/** The byline of a list card: "By <author> - date - eye Hits: n". */
+import { formatDateMDY, href, type Locale } from '@/lib/i18n'
+import { authorPath, type AuthorRow, type PostRow } from '@/lib/posts'
+import { liveLinks } from '@/lib/link-gate'
+import { fillWords } from '@/lib/ui-words'
+import { ui } from '@/lib/ui'
+import type { Chrome } from '@/lib/chrome'
+import type { Stamp } from '@/lib/stamps'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  post: PostRow
+  chrome: Chrome
+  authors: Record<string, AuthorRow>
+  $p: Stamp
+  hideHits?: boolean
+}
+const { post, chrome, authors, $p, hideHits = false } = Astro.props
+const locale = chrome.locale
+const { tag, w } = ui(locale)
+const author = authors[post.author] ?? null
+const live = author ? await liveLinks(Astro.request, locale, [authorPath(author.slug)]) : () => false
+const date = formatDateMDY(post.date, tag)
+---
+
+<dl class="es-card-meta">
+	{author && (
+		<div class="es-card-by" {...$p('author')}>
+			<dd>{chrome.site.by_label} {live(authorPath(author.slug)) ? <a href={href(locale as Locale, authorPath(author.slug))}>{author.name}</a> : <span class="es-card-author">{author.name}</span>}</dd>
+		</div>
+	)}
+	{date && <div class="es-card-date" {...$p('date')}><dd><time datetime={post.date}>{date}</time></dd></div>}
+	{!hideHits && <div class="es-card-hits" {...$p('hits')}><dd><Icon name="eye" size={16} />{fillWords(w.hits, { count: post.hits })}</dd></div>}
+</dl>

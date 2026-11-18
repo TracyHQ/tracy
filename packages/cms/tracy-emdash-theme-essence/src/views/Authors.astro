@@ -1,0 +1,68 @@
+---
+/** Authors (`/our-authors`): a grid of author cards, 6 per page (`?page=`). Each card links to the author's list (`/author/<slug>`). */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import AuthorCard from '@/components/site/AuthorCard.astro'
+import Icon from '@/components/site/Icon.astro'
+import type { Chrome } from '@/lib/chrome'
+import { fill, href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { loadAuthors } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path?: string
+}
+const { chrome, locale } = Astro.props
+const { w } = ui(locale)
+const PER_PAGE = 6
+const [authors, { entry: pageEntry }] = await Promise.all([loadAuthors(locale), getEmDashEntry('pages', 'our-authors', { locale })])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'our-authors' } : null)
+const pages = Math.max(1, Math.ceil(authors.length / PER_PAGE))
+const asked = Number.parseInt(Astro.url.searchParams.get('page') ?? '1', 10)
+const current = Number.isFinite(asked) ? Math.min(Math.max(asked, 1), pages) : 1
+const shown = authors.slice((current - 1) * PER_PAGE, current * PER_PAGE)
+const url = (n: number) => `${href(locale, '/our-authors')}${n > 1 ? `?page=${n}` : ''}`
+// first · previous · numbers · next · last, as the source draws them
+const steps = [
+  { icon: 'first', label: w.firstPage, to: 1, off: current === 1 },
+  { icon: 'prev', label: w.previousPage, to: current - 1, off: current === 1 },
+  ...Array.from({ length: pages }, (_, i) => ({ icon: '', label: String(i + 1), to: i + 1, off: false })),
+  { icon: 'next', label: w.nextPage, to: current + 1, off: current === pages },
+  { icon: 'last', label: w.lastPage, to: pages, off: current === pages }
+]
+---
+
+<Base chrome={chrome} title={page.title ?? chrome.site.author_articles_title} currentPath="/our-authors" headerVariant="inner" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'our-authors', toPath: () => '/our-authors' } : null}>
+	<main id="main" class="es-main is-wide es-authors-main">
+		<PageOwner stamp={$page} />
+		<h1 class="sr-only" {...$page('title')}>{page.title}</h1>
+		<div class="es-authors">
+			{shown.map((a, i) => <AuthorCard author={a} locale={locale} chrome={chrome} eager={i < 3} />)}
+		</div>
+		{pages > 1 && (
+			<nav class="es-authors-pager" aria-label={w.pagination}>
+				<ul class="es-pagination">
+					{steps.map((s) => (
+						<li class:list={[s.off && 'is-disabled', !s.icon && s.to === current && 'is-active']}>
+							{s.off ? (
+								<span aria-label={s.label}><Icon name={s.icon} size={14} /></span>
+							) : s.icon ? (
+								<a href={url(s.to)} aria-label={s.label}><Icon name={s.icon} size={14} /></a>
+							) : s.to === current ? (
+								<span aria-current="page">{s.label}</span>
+							) : (
+								<a href={url(s.to)}>{s.label}</a>
+							)}
+						</li>
+					))}
+				</ul>
+				<span class="es-page-count">{fill(w.pageOf, { page: current, pages })}</span>
+			</nav>
+		)}
+	</main>
+</Base>

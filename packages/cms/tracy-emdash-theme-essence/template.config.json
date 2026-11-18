@@ -13,7 +13,20 @@
   "contentOrder": [],
   "forms": {
     "file": "tools/forms.json",
-    "bindings": []
+    "bindings": [
+      {
+        "form": "contact-{locale}",
+        "collection": "contact",
+        "slug": "contact-layout",
+        "field": "form_id"
+      },
+      {
+        "form": "subscribe-{locale}",
+        "collection": "chrome",
+        "slug": "chrome",
+        "field": "form_id"
+      }
+    ]
   },
   "mail": {
     "fromEmail": "no-reply@ja-essence.example",

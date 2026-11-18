@@ -1,0 +1,34 @@
+---
+/** Contact: the white box with the heading, the intro and the form (Forms plugin). Everything is the `contact` entry `contact-layout`; `form_id` names the form. */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import ContactForm from '@/components/site/ContactForm.astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path?: string
+}
+const { chrome, locale } = Astro.props
+const c = await section('contact', 'contact-layout', locale)
+const $c = stampFor(Astro.request, 'contact', c ? { id: c.id, slug: c.slug } : null)
+const formId = String(c?.form_id ?? '').trim()
+---
+
+<Base chrome={chrome} title={c?.title ?? chrome.site.brand_name} currentPath="/contact" headerVariant="inner">
+	<main id="main" class="es-main is-wide">
+		<PageOwner stamp={$c} />
+		{c && (
+			<div class="es-box es-contact">
+				<h1 {...$c('title')}>{c.title}</h1>
+				<p class="es-contact-intro" {...$c('intro')}>{c.intro}</p>
+				<ContactForm locale={locale} c={c} stamp={$c} />
+			</div>
+		)}
+	</main>
+</Base>
+{formId && <script>import '@emdash-cms/plugin-forms/client'</script>}

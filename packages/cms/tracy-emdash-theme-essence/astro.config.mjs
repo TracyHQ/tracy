@@ -14,9 +14,9 @@ import { hreflangPlugin } from './src/lib/hreflang.ts'
 import { contentApi } from './tools/content-api/integration.mjs'
 import { withLanguageSubsets } from './src/lib/font-subsets.mjs'
 
-// The design is set in the system UI face (SF Pro on Apple platforms, Segoe/Roboto elsewhere), so
-// there is nothing to download: src/fonts.json is an empty list, kept so the Astro fonts wiring
-// stays in place for a design that does name a webfont (DECISIONS D8).
+// Fonts are local files (DECISIONS D14): Noto Serif and Jost cut in latin, latin-ext and vietnamese from the files of the
+// source's own Google Fonts request, and Be Vietnam Pro (used only under :lang(vi)). `preload: false` in src/fonts.json is read
+// by Base.astro, not by Astro.
 const fonts = JSON.parse(readFileSync(new URL('./src/fonts.json', import.meta.url), 'utf8'))
 
 // Runtime state lives under ./data (SQLite) and ./uploads (media). Both are gitignored: the

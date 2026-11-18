@@ -232,6 +232,7 @@ df8eb5ad4051778586df18f3e6a7d3368820b8e8134751fa5ac845cead9318cb  ./media/vendor
 6fa409c2c72c30d7e21c407339c5a4802c3334660d9b1dc5e3ea2752bb6a4b62  ./media/vendor/jquery-migrate/js/jquery-migrate.min.js
 b7bbe381cf509577690654422e09b73e9fdbb0b70d47028146147da7a7a0c5fa  ./media/vendor/jquery/js/jquery-noconflict.min.js
 fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a  ./media/vendor/jquery/js/jquery.min.js
+011b28fb0d7ce73907d0854d91f82ca7e86b2e3cce881d79356e9404e6f02d2b  ./nope-404/index.html
 ad0b9a06c5558083c3fb3395df830a29321d9b6952dc13916ace37b981de0cfb  ./pages/j-content/author-listting/author/Adrian%20Perez/index.html
 9c617b76f8e40bc2b17b45d3d3e2b96d523a782da80d1eff8b3ea1fb393af10c  ./pages/j-content/author-listting/author/Adrian%20Perez/index~start=0.html
 af12b28b1795f051346cfc49439ee2ca84e8ba24066a9703a6c60442b07c98b9  ./pages/j-content/author-listting/author/Adrian%20Perez/index~start=4.html
@@ -308,6 +309,8 @@ f4f95911fc663e6f2d1568975538c42b200f1127fce4a35f7fd067db1c830de3  ./resources/ca
 50b13265710de8b8112f0003057a83373ce12f238cbbf4518d967155f331510f  ./resources/sketching-stories-narrative-elements-in-line-art/index.html
 48bf62e8046954d51e89899abe366a9076f54ad09a771a565a861779beb864fe  ./resources/whimsical-wonders-imaginative-line-art-creations/index.html
 c05ec0bf641e8dbe4a96933622fcb9644f35541fc6c522ca215871c390a46479  ./templates/ja_essence/css/darkmode.css
+53e49b05eb0ddf29220683b9a39c9e45ef1d8753e83f875fd1c473d21d83db36  ./templates/ja_essence/css/error.css
+44ce8dd9733108912de8929c6eeb3a84e9182cbd0745a1513dcf1978d335e07f  ./templates/ja_essence/css/jpages.css
 04efd3ffa772e664e9501fa85786835a8466f65795a3195c783e61c218d5b870  ./templates/ja_essence/css/language-fonts.css
 7bd9b59d14b126e8c5abcb1c89b60c79e2b2e17c15745fe8d385204d87c40765  ./templates/ja_essence/favicon.ico
 0aacb05b6a50bf4ebb3b53a9e55e59cbebd17f76c7278f18e9670a84181e853e  ./templates/ja_essence/fonts/be-vietnam-pro-400.woff2

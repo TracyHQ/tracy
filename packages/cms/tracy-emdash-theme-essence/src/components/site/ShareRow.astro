@@ -1,0 +1,28 @@
+---
+/** "Share article:" and three round brand links (Facebook, X, LinkedIn) built from this page's own address. */
+import type { Chrome } from '@/lib/chrome'
+import { publicOrigin } from '@/lib/public-origin'
+import { stampFor } from '@/lib/stamps'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props { chrome: Chrome; title: string }
+const { chrome, title } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const url = encodeURIComponent(`${publicOrigin(Astro.url)}${Astro.url.pathname}`)
+const text = encodeURIComponent(title)
+// network names are brand names, not words of the template
+const links = [
+  { id: 'facebook', name: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${url}` },
+  { id: 'x', name: 'X', href: `https://twitter.com/intent/tweet?url=${url}&text=${text}` },
+  { id: 'linkedin', name: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${url}` }
+]
+---
+
+<div class="es-share">
+	<h6 {...$c('share_label')}>{chrome.site.share_label}</h6>
+	<div class="es-share-list">
+		{links.map((l) => (
+			<a class={`es-round is-${l.id}`} href={l.href} target="_blank" rel="noopener noreferrer" title={l.name} aria-label={l.name}><Icon name={l.id} size={16} weight="fill" /></a>
+		))}
+	</div>
+</div>

@@ -222,7 +222,7 @@ model.records = model.records.filter((r) => r.type !== 'pages' || KEEP.has(r.slu
 const home = model.records.find((r) => r.type === 'pages' && r.slug === 'home-3')
 home.slug = 'home'
 home.values = { title: 'Home', body: '', view: 'home' }
-rec('pages', 'authors', { title: 'Authors', body: '', view: 'authors' })
+rec('pages', 'our-authors', { title: 'Authors', body: '', view: 'authors' })
 rec('pages', 'contact', { title: 'Contact', body: '', view: 'contact' })
 
 // ── contact page (a singleton named so Tracy's page rule does not count it as a second `contact` page) ─
@@ -263,6 +263,11 @@ setType({
   label: label('Site chrome'),
   fields: [
     field('brand_name', 'text'),
+    field('logo_dark', 'image'),
+    field('skip_label', 'text'),
+    field('menu_label', 'text'),
+    field('theme_label', 'text'),
+    field('search_label', 'text'),
     field('subscribe_label', 'text'),
     field('subscribe_link', 'text'),
     field('footer_logo', 'image'),
@@ -296,6 +301,11 @@ setType({
 })
 rec('chrome', 'chrome', {
   brand_name: 'JA Essence',
+  logo_dark: '',
+  skip_label: 'Skip to content',
+  menu_label: 'Menu',
+  theme_label: 'Toggle dark mode',
+  search_label: 'Search',
   subscribe_label: 'Subscribe',
   subscribe_link: '/contact',
   footer_logo: footerLogo,
@@ -357,7 +367,7 @@ model.menus = [
     items: [
       { label: label('Home'), path: '/' },
       { label: label('Categories'), path: '', kind: 'heading', children: CATEGORY_MENU.map(catItem) },
-      { label: label('Authors'), path: '/authors' },
+      { label: label('Authors'), path: '/our-authors' },
       { label: label('Contact'), path: '/contact' }
     ]
   },
@@ -365,7 +375,7 @@ model.menus = [
 ]
 model.routes = [
   { path: '/', kind: 'page' },
-  { path: '/authors', kind: 'page' },
+  { path: '/our-authors', kind: 'page' },
   { path: '/contact', kind: 'page' },
   ...[...usedCategories].map((slug) => ({ path: `/category/${slug}`, kind: 'archive', type: 'posts' })),
   ...model.records

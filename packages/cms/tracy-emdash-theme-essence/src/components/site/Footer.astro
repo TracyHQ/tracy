@@ -1,0 +1,44 @@
+---
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { fill, href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { liveLinks } from '@/lib/link-gate'
+import { menuUrls, pruneMenu } from '@/lib/menu-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const copyright = fill(site.copyright, { year: new Date().getUTCFullYear(), name: site.brand_name })
+const live = await liveLinks(Astro.request, locale, [...menuUrls(chrome.footer), site.subscribe_link])
+const links = pruneMenu(chrome.footer, live)
+const logo = mediaUrl(site.footer_logo)
+const ctaUrl = site.subscribe_link && live(site.subscribe_link) ? dataHref(site.subscribe_link, (p) => href(locale, p)) : ''
+---
+
+<footer class="es-footer">
+	<div class="es-wrap">
+		<div class="es-footer-info">
+			<div class="es-footer-left">
+				{logo && <a href={href(locale, '/')} aria-label={site.brand_name}><img src={logo} alt={site.brand_name} width="132" height="40" loading="lazy" {...$c('footer_logo')} /></a>}
+				<p {...$c('footer_text')}>{site.footer_text}</p>
+			</div>
+			{ctaUrl && (
+				<div class="es-footer-right">
+					<a class="es-btn is-dark is-block" href={ctaUrl} {...$c('footer_cta_label')}>{site.footer_cta_label}</a>
+					<small {...$c('footer_cta_text')}>{site.footer_cta_text}</small>
+				</div>
+			)}
+		</div>
+		<div class="es-footer-bottom">
+			<ul class="es-footer-menu">
+				{links.map((l) => <li><a href={dataHref(l.url, (p) => href(locale, p))}>{l.label}</a></li>)}
+			</ul>
+			<p class="es-copyright" {...$c('copyright')}>{copyright}</p>
+		</div>
+	</div>
+</footer>

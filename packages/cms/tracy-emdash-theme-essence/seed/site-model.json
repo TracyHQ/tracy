@@ -326,6 +326,26 @@
           "type": "text"
         },
         {
+          "name": "logo_dark",
+          "type": "image"
+        },
+        {
+          "name": "skip_label",
+          "type": "text"
+        },
+        {
+          "name": "menu_label",
+          "type": "text"
+        },
+        {
+          "name": "theme_label",
+          "type": "text"
+        },
+        {
+          "name": "search_label",
+          "type": "text"
+        },
+        {
           "name": "subscribe_label",
           "type": "text"
         },
@@ -2834,14 +2854,14 @@
     },
     {
       "type": "pages",
-      "slug": "authors",
+      "slug": "our-authors",
       "locale": "en",
       "status": "published",
       "values": {
         "title": "Authors",
         "body": "",
         "view": "authors",
-        "path": "/authors"
+        "path": "/our-authors"
       }
     },
     {
@@ -2880,6 +2900,11 @@
       "status": "published",
       "values": {
         "brand_name": "JA Essence",
+        "logo_dark": "",
+        "skip_label": "Skip to content",
+        "menu_label": "Menu",
+        "theme_label": "Toggle dark mode",
+        "search_label": "Search",
         "subscribe_label": "Subscribe",
         "subscribe_link": "/contact",
         "footer_logo": "images/joomlart/logo/item-1.png",
@@ -2968,7 +2993,7 @@
           "label": {
             "en": "Authors"
           },
-          "path": "/authors"
+          "path": "/our-authors"
         },
         {
           "label": {
@@ -3023,7 +3048,7 @@
       "kind": "page"
     },
     {
-      "path": "/authors",
+      "path": "/our-authors",
       "kind": "page"
     },
     {

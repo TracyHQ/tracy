@@ -1,0 +1,39 @@
+---
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import LeadStrip from '@/components/site/LeadStrip.astro'
+import LeadList from '@/components/site/LeadList.astro'
+import StackCard from '@/components/site/StackCard.astro'
+import Pager from '@/components/site/Pager.astro'
+import { href, type Locale } from '@/lib/i18n'
+import type { Chrome } from '@/lib/chrome'
+import { homeBlog, homeLead, loadAuthors, loadPosts } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
+import { ui } from '@/lib/ui'
+import { stampFor } from '@/lib/stamps'
+
+interface Props { chrome: Chrome; locale: Locale; path?: string }
+const { chrome, locale } = Astro.props
+const PER_PAGE = 6
+const [all, authorRows] = await Promise.all([loadPosts(locale), loadAuthors(locale)])
+const authors = Object.fromEntries(authorRows.map((a) => [a.slug, a]))
+const lead = await livePosts(Astro.request, locale, homeLead(all))
+const blog = await livePosts(Astro.request, locale, homeBlog(all))
+const pages = Math.max(1, Math.ceil(blog.length / PER_PAGE))
+const page = Math.min(pages, Math.max(1, parseInt(Astro.url.searchParams.get('page') ?? '1', 10) || 1))
+const shown = blog.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+---
+
+<Base chrome={chrome} title={ui(locale).w.home} currentPath="/" headerVariant="home" robots="index, follow">
+	<main id="main" class="es-home">
+		<PageOwner stamp={$c} />
+		<h1 class="sr-only" {...$c('brand_name')}>{chrome.site.brand_name}</h1>
+		<LeadStrip posts={lead} chrome={chrome} authors={authors} />
+		<LeadList posts={lead.slice(0, 3)} chrome={chrome} />
+		<div class="es-home-blog">
+			{shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={authors} eager={i === 0} />)}
+			<Pager path={href(locale, '/')} page={page} pages={pages} locale={locale} />
+		</div>
+	</main>
+</Base>

@@ -1,0 +1,114 @@
+---
+/**
+ * An article: `/blog/<slug>`. Three layouts (`post.layout`): `default` (box with the sidebar on the right), `type-1` (one
+ * wide box, narrow text, no sidebar) and `type-2` (title above a wide picture, narrow aside with the author). `post.kind`
+ * (`standard` / `video` / `gallery`) says what stands in place of the hero picture.
+ */
+import Base from '@/layouts/Base.astro'
+import NotFound from '@/views/NotFound.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Sidebar from '@/components/site/Sidebar.astro'
+import Newsletter from '@/components/site/Newsletter.astro'
+import PostHead from '@/components/site/PostHead.astro'
+import PostHero from '@/components/site/PostHero.astro'
+import PostBody from '@/components/site/PostBody.astro'
+import PostFoot from '@/components/site/PostFoot.astro'
+import AuthorLatest from '@/components/site/AuthorLatest.astro'
+import AuthorBox from '@/components/site/AuthorBox.astro'
+import MoreRead from '@/components/site/MoreRead.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { authorPath, categoryPath, loadAuthors, loadPosts, postPath, relatedPosts } from '@/lib/posts'
+import { liveBlocks, liveLinks, livePosts } from '@/lib/link-gate'
+import { mediaUrl } from '@/lib/media'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+
+interface Props { chrome: Chrome; locale: Locale; slug: string }
+const { chrome, locale, slug } = Astro.props
+const all = await loadPosts(locale)
+const post = all.find((p) => p.slug === slug) ?? null
+if (!post) Astro.response.status = 404
+
+let authorRow = null as Awaited<ReturnType<typeof loadAuthors>>[number] | null
+let author: { name: string; href: string | null } | null = null
+let authorHref: string | null = null
+let prev = null as typeof post
+let next = null as typeof post
+let byAuthor: typeof all = []
+let related: typeof all = []
+let visible: typeof all = []
+let body: any[] = []
+let categoryLive = true
+const $p = stampFor(Astro.request, 'posts', post ? { id: post.id, slug: post.slug } : null)
+if (post) {
+  const [authors, posts] = await Promise.all([loadAuthors(locale), livePosts(Astro.request, locale, all)])
+  visible = posts
+  authorRow = authors.find((a) => a.slug === post.author) ?? null
+  const live = await liveLinks(Astro.request, locale, [authorPath(post.author), post.category ? categoryPath(post.category.slug) : ''])
+  authorHref = authorRow && live(authorPath(post.author)) ? href(locale, authorPath(post.author)) : null
+  categoryLive = !post.category || live(categoryPath(post.category.slug))
+  author = authorRow ? { name: authorRow.name, href: authorHref } : null
+  const sameCategory = visible.filter((p) => p.category?.slug === post.category?.slug)
+  const i = sameCategory.findIndex((p) => p.id === post.id)
+  // newest first: the next in the list is the older article
+  prev = i >= 0 ? (sameCategory[i + 1] ?? null) : null
+  next = i > 0 ? sameCategory[i - 1] : null
+  const wide = post.layout === 'default'
+  byAuthor = visible.filter((p) => p.author === post.author && p.id !== post.id).slice(0, wide ? 2 : 3)
+  related = relatedPosts(visible, post, wide ? 4 : 3)
+  body = await liveBlocks(Astro.request, locale, stampBlocks($p, 'body', post.body as any[]))
+}
+const layout = post?.layout ?? 'default'
+const image = post ? mediaUrl(post.hero) : null
+---
+
+{!post ? <NotFound chrome={chrome} locale={locale} /> : (
+<Base chrome={chrome} title={post.title} image={image} currentPath={postPath(post)} type="article" headerVariant="inner" content={{ collection: 'posts', id: post.id, slug, toPath: (s: string) => postPath({ slug: s }) }}>
+	<main id="main" class="es-main is-wide es-post" data-layout={layout}>
+		<PageOwner stamp={$p} />
+		{layout === 'default' && (
+			<div class="es-post-grid">
+				<div class="es-post-col">
+					<article class="es-article" itemscope itemtype="https://schema.org/Article">
+						<PostHero post={post} />
+						<PostHead post={post} chrome={chrome} locale={locale} author={author} categoryLive={categoryLive} />
+						<PostBody value={body} />
+						<PostFoot post={post} chrome={chrome} locale={locale} prev={prev} next={next} />
+					</article>
+					<AuthorLatest chrome={chrome} locale={locale} posts={byAuthor} variant="cards" />
+				</div>
+				<Sidebar chrome={chrome} locale={locale} posts={all} current={post} />
+			</div>
+		)}
+		{layout === 'type-1' && (
+			<article class="es-article is-narrow" itemscope itemtype="https://schema.org/Article">
+				<PostHero post={post} />
+				<div class="es-narrow">
+					<PostHead post={post} chrome={chrome} locale={locale} author={author} categoryLive={categoryLive} />
+				</div>
+				<PostBody value={body} />
+				<PostFoot post={post} chrome={chrome} locale={locale} prev={prev} next={next} />
+			</article>
+			<AuthorLatest chrome={chrome} locale={locale} posts={byAuthor} variant="list" />
+		)}
+		{layout === 'type-2' && (
+			<div class="es-post-top" itemscope itemtype="https://schema.org/Article">
+				<PostHead post={post} chrome={chrome} locale={locale} author={author} white categoryLive={categoryLive} />
+				<PostHero post={post} tall />
+				<div class="es-post-grid is-aside">
+					<div class="es-article">
+						<PostBody value={body} />
+						<PostFoot post={post} chrome={chrome} locale={locale} prev={prev} next={next} />
+					</div>
+					<div class="es-post-aside">
+						<AuthorBox chrome={chrome} author={authorRow} href={authorHref} />
+						<AuthorLatest chrome={chrome} locale={locale} posts={byAuthor} variant="list" />
+						<div class="es-side-news"><Newsletter chrome={chrome} /></div>
+					</div>
+				</div>
+			</div>
+		)}
+		<MoreRead chrome={chrome} locale={locale} posts={related} variant={layout === 'default' ? 'list' : 'cards'} />
+	</main>
+</Base>
+)}

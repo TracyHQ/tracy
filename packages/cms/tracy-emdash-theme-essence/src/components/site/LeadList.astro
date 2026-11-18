@@ -1,0 +1,34 @@
+---
+/** The small list under the Home strip: picture, title and date of the first three. */
+import { formatDate, href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { postPath, type PostRow } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { ui } from '@/lib/ui'
+import type { Chrome } from '@/lib/chrome'
+
+interface Props { posts: PostRow[]; chrome: Chrome }
+const { posts, chrome } = Astro.props
+const { tag } = ui(chrome.locale)
+---
+
+{posts.length > 0 && (
+	<div class="es-wrap">
+		<ul class="es-lead-list">
+			{posts.map((p) => {
+				const $p = stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
+				const src = mediaUrl(p.cover)
+				const url = href(chrome.locale, postPath(p))
+				return (
+					<li class="es-lead-item" {...$p()}>
+						{src && <a class="es-lead-pic" href={url} tabindex="-1" aria-hidden="true"><img src={src} alt="" width={p.cover?.width ?? 105} height={p.cover?.height ?? 105} loading="lazy" decoding="async" {...$p('cover')} /></a>}
+						<div class="es-lead-text">
+							<h3><a href={url} {...$p('title')}>{p.title}</a></h3>
+							<time datetime={p.date} {...$p('date')}>{formatDate(p.date, tag)}</time>
+						</div>
+					</li>
+				)
+			})}
+		</ul>
+	</div>
+)}

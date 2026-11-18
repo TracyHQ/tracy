@@ -1,0 +1,25 @@
+---
+/** Category pill, title and the byline of an article. */
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { categoryPath, type PostRow } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import PostMeta from '@/components/site/PostMeta.astro'
+import PostPill from '@/components/site/PostPill.astro'
+
+interface Props {
+  post: PostRow
+  chrome: Chrome
+  locale: Locale
+  author: { name: string; href: string | null } | null
+  /** the pill sits on the page ground (type-2): white pill */
+  white?: boolean
+  categoryLive?: boolean
+}
+const { post, chrome, locale, author, white = false, categoryLive = true } = Astro.props
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+---
+
+{post.category && <div class="es-post-cat"><PostPill href={categoryLive ? href(locale, categoryPath(post.category.slug)) : null} label={post.category.label} slug={post.category.slug} tone={white ? 'white' : 'grey'} /></div>}
+<h1 class="es-post-title" itemprop="headline" {...$p('title')}>{post.title}</h1>
+<PostMeta post={post} chrome={chrome} locale={locale} mode="byline" author={author} />

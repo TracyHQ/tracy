@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-18T17:53:15.128Z",
+	"generatedAt": "2026-11-18T18:12:19.567Z",
 	"fields": {
 		"pages.title": {
 			"source": "text",
@@ -250,6 +250,31 @@
 			"source": "text",
 			"target": "string",
 			"label": "Brand name"
+		},
+		"chrome.logo_dark": {
+			"source": "image",
+			"target": "image",
+			"label": "Logo dark"
+		},
+		"chrome.skip_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Skip label"
+		},
+		"chrome.menu_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Menu label"
+		},
+		"chrome.theme_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Theme label"
+		},
+		"chrome.search_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Search label"
 		},
 		"chrome.subscribe_label": {
 			"source": "text",

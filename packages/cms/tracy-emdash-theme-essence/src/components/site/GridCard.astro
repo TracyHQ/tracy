@@ -1,0 +1,37 @@
+---
+/**
+ * A list card with the picture on top. `centered` (default): the 3-column grid card, centred title and byline (316x211 picture);
+ * `wide`: the one-column card of the list with a sidebar (668x446 picture, left aligned, intro and tags).
+ */
+import { href } from '@/lib/i18n'
+import { postPath, tagPath, type AuthorRow, type PostRow } from '@/lib/posts'
+import { firstParagraph } from '@/lib/prose-text'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import type { Chrome } from '@/lib/chrome'
+import ListPic from '@/components/site/ListPic.astro'
+import ListMeta from '@/components/site/ListMeta.astro'
+import ListPill from '@/components/site/ListPill.astro'
+
+interface Props { post: PostRow; chrome: Chrome; authors: Record<string, AuthorRow>; wide?: boolean; eager?: boolean }
+const { post, chrome, authors, wide = false, eager = false } = Astro.props
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+const url = href(chrome.locale, postPath(post))
+const intro = wide ? firstParagraph(post.excerpt) || firstParagraph(post.body) : ''
+const liveTag = wide ? await liveLinks(Astro.request, chrome.locale, post.tags.map((t) => tagPath(t.slug))) : () => false
+---
+
+<article class:list={['es-card', 'es-grid-card', { 'is-wide': wide }]} {...$p()}>
+	<ListPic post={post} locale={chrome.locale} $p={$p} width={wide ? 668 : 316} height={wide ? 446 : 211} eager={eager} />
+	<div class="es-grid-info">
+		<ListPill post={post} chrome={chrome} />
+		<h2 class="es-card-title"><a href={url} {...$p('title')}>{post.title}</a></h2>
+		<ListMeta post={post} chrome={chrome} authors={authors} $p={$p} />
+	</div>
+	{intro && <p class="es-card-intro" {...$p('excerpt')}>{intro}</p>}
+	{wide && post.tags.length > 0 && (
+		<ul class="es-card-tags" {...$p('tags')}>
+			{post.tags.map((t) => <li>{liveTag(tagPath(t.slug)) ? <a class="es-pill" href={href(chrome.locale, tagPath(t.slug))}>{t.label}</a> : <span class="es-pill">{t.label}</span>}</li>)}
+		</ul>
+	)}
+</article>

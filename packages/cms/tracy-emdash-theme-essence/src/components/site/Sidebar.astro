@@ -1,0 +1,101 @@
+---
+/**
+ * The sidebar of the article page and of the list with sidebar: white boxes stacked 32px apart: latest articles, the newsletter,
+ * features post, tags cloud, follow me. API: <Sidebar chrome={chrome} locale={locale} posts={allPosts} current={post?} />.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { networkOf } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { featuresPosts, latestPosts, postPath, tagCloud, tagPath, type PostRow } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import Newsletter from '@/components/site/Newsletter.astro'
+import PostMeta from '@/components/site/PostMeta.astro'
+import PostPill from '@/components/site/PostPill.astro'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props { chrome: Chrome; locale: Locale | string; posts: PostRow[]; current?: PostRow | null }
+const { chrome, posts, current = null } = Astro.props
+const locale = Astro.props.locale as Locale
+const { site } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const live = await livePosts(Astro.request, locale, posts)
+const latest = latestPosts(live, 4)
+const features = featuresPosts(live, 4)
+const tags = tagCloud(live, 6)
+const follow = chrome.social['follow-me']
+const $f = stampFor(Astro.request, 'social', follow?.entry)
+const cover = (p: PostRow) => mediaUrl(p.cover)
+// a social link counts only when the editor gave it a real address
+const own = (url: string | undefined) => {
+  const h = url ? dataHref(url, (p) => href(locale, p)) : null
+  return h && h !== '#' ? h : null
+}
+---
+
+<aside class="es-sidebar">
+	{latest.length > 0 && (
+		<section class="es-side-box es-side-latest">
+			<h3 class="es-side-title" {...$c('latest_title')}>{site.latest_title}</h3>
+			<ul class="es-side-list">
+				{latest.map((p) => {
+					const $p = stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
+					return (
+						<li {...$p()}>
+							{cover(p) && <a class="es-side-pic" href={href(locale, postPath(p))} tabindex="-1" aria-hidden="true"><img src={cover(p)!} alt="" width="80" height="80" loading="lazy" {...$p('cover')} /></a>}
+							<div class="es-side-text">
+								<h4><a href={href(locale, postPath(p))} {...$p('title')}>{p.title}</a></h4>
+								<PostMeta post={p} chrome={chrome} locale={locale} mode="dated" />
+							</div>
+						</li>
+					)
+				})}
+			</ul>
+		</section>
+	)}
+	<div class="es-side-news"><Newsletter chrome={chrome} /></div>
+	{features.length > 0 && (
+		<section class="es-side-box es-side-features">
+			<h3 class="es-side-title" {...$c('features_title')}>{site.features_title}</h3>
+			<ol class="es-side-list">
+				{features.map((p, i) => {
+					const $p = stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
+					return (
+						<li class:list={[current?.id === p.id && 'is-current']} {...$p()}>
+							<div class="es-side-num" aria-hidden="true">{i + 1}</div>
+							<div class="es-side-text">
+								<h4><a href={href(locale, postPath(p))} {...$p('title')}>{p.title}</a></h4>
+								<PostMeta post={p} chrome={chrome} locale={locale} mode="dated" dateStyle="dmy" />
+							</div>
+						</li>
+					)
+				})}
+			</ol>
+		</section>
+	)}
+	{tags.length > 0 && (
+		<section class="es-side-box es-side-tags">
+			<h3 class="es-side-title" {...$c('tags_title')}>{site.tags_title}</h3>
+			<ul class="es-tags">
+				{tags.map((t) => <li><PostPill href={href(locale, tagPath(t.slug))} label={t.label} slug={t.slug} /></li>)}
+			</ul>
+		</section>
+	)}
+	{follow && follow.items.length > 0 && (
+		<section class="es-side-box es-side-follow" {...$f()}>
+			<h3 class="es-side-title" {...$c('follow_title')}>{site.follow_title}</h3>
+			<div class="es-follow">
+				{follow.items.map((it) => {
+					const net = networkOf(it.font_icon, it.title)
+					const url = own(it.link)
+					const glyph = <Icon name={net} size={16} weight="fill" />
+					return url
+						? <a class={`es-round is-${net}`} href={url} title={it.title} aria-label={it.title}>{glyph}</a>
+						: <span class={`es-round is-${net}`} title={it.title}>{glyph}</span>
+				})}
+			</div>
+		</section>
+	)}
+</aside>

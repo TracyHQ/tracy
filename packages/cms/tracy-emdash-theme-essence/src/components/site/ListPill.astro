@@ -1,0 +1,16 @@
+---
+/** The category pill of a card: a link while the category page is on, plain words when it is not. */
+import { href } from '@/lib/i18n'
+import { categoryPath, type PostRow } from '@/lib/posts'
+import { liveLinks } from '@/lib/link-gate'
+import type { Chrome } from '@/lib/chrome'
+
+interface Props { post: PostRow; chrome: Chrome; class?: string }
+const { post, chrome, class: cls = '' } = Astro.props
+const cat = post.category
+const live = cat ? await liveLinks(Astro.request, chrome.locale, [categoryPath(cat.slug)]) : () => false
+---
+
+{cat && (live(categoryPath(cat.slug))
+	? <a class:list={['es-pill', cls]} href={href(chrome.locale, categoryPath(cat.slug))}>{cat.label}</a>
+	: <span class:list={['es-pill', cls]}>{cat.label}</span>)}

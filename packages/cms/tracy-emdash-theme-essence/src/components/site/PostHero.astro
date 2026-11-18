@@ -1,0 +1,47 @@
+---
+/** The picture at the head of an article: the hero image, a YouTube player (kind `video`) or a sliding stack of pictures (kind `gallery`). */
+import type { PostRow } from '@/lib/posts'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+
+interface Props { post: PostRow; /** a taller crop (layout type-2) */ tall?: boolean }
+const { post, tall = false } = Astro.props
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+const hero = mediaUrl(post.hero)
+const hw = Number(post.hero?.width) || 1128
+const hh = Number(post.hero?.height) || 752
+const video = post.kind === 'video' && post.videoSource === 'youtube' && /^[\w-]{6,20}$/.test(post.videoId) ? post.videoId : ''
+const pics = post.kind === 'gallery' ? post.gallery.map((g) => ({ src: mediaUrl(g.image), w: Number(g.image?.width) || hw, h: Number(g.image?.height) || hh })).filter((g) => g.src) : []
+---
+
+{video
+	? (
+		<div class="es-hero is-video" {...$p('video_id')}>
+			<iframe src={`https://www.youtube-nocookie.com/embed/${video}`} title={post.title} allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+		</div>
+	)
+	: pics.length > 1
+		? (
+			<div class="es-hero is-gallery" data-es-slider {...$p('gallery')}>
+				<div class="es-slides" data-es-slides>
+					{pics.map((g) => <img src={g.src!} alt="" width={g.w} height={g.h} loading="eager" />)}
+				</div>
+				<div class="es-sl-dots">
+					{pics.map((_, i) => <button type="button" class:list={['es-sl-dot', i === 0 && 'is-active']} data-es-sl-dot={i} aria-label={`${i + 1}`}></button>)}
+				</div>
+			</div>
+		)
+		: hero && <figure class:list={['es-hero', tall && 'is-tall']}><img src={hero} alt="" width={hw} height={hh} loading="eager" fetchpriority="high" {...$p('hero')} /></figure>}
+
+<script is:inline>
+	(function () {
+		document.querySelectorAll('[data-es-slider]').forEach(function (root) {
+			var track = root.querySelector('[data-es-slides]');
+			var dots = root.querySelectorAll('[data-es-sl-dot]');
+			if (!track || !dots.length) return;
+			var show = function (i) { dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); }); };
+			track.addEventListener('scroll', function () { show(Math.round(track.scrollLeft / track.clientWidth)); }, { passive: true });
+			dots.forEach(function (d, i) { d.addEventListener('click', function () { track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' }); show(i); }); });
+		});
+	})();
+</script>

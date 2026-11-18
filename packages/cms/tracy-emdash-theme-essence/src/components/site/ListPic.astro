@@ -1,0 +1,29 @@
+---
+/** The picture of a list card, with the small white badge of a video or gallery article (top left, as in the source). */
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { postPath, type PostRow } from '@/lib/posts'
+import type { Stamp } from '@/lib/stamps'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  post: PostRow
+  locale: Locale
+  $p: Stamp
+  /** pixel size the file is drawn at, for the width/height attributes */
+  width: number
+  height: number
+  eager?: boolean
+}
+const { post, locale, $p, width, height, eager = false } = Astro.props
+const src = mediaUrl(post.cover)
+const url = href(locale, postPath(post))
+const badge = post.kind === 'video' ? 'play' : post.kind === 'gallery' ? 'images' : ''
+---
+
+{src && (
+	<figure class="es-card-pic" {...$p('cover')}>
+		<a href={url} tabindex="-1" aria-hidden="true"><img src={src} alt="" width={post.cover?.width ?? width} height={post.cover?.height ?? height} loading={eager ? 'eager' : 'lazy'} decoding="async" /></a>
+		{badge && <span class="es-card-badge"><Icon name={badge} size={20} weight="fill" /></span>}
+	</figure>
+)}

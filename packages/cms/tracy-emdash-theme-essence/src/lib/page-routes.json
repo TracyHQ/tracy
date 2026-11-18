@@ -6,8 +6,8 @@
       "view": "home"
     },
     {
-      "path": "/authors",
-      "slug": "authors",
+      "path": "/our-authors",
+      "slug": "our-authors",
       "view": "authors"
     },
     {

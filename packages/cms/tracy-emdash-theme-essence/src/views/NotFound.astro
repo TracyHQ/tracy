@@ -1,0 +1,20 @@
+---
+import Base from '@/layouts/Base.astro'
+import { href, type Locale } from '@/lib/i18n'
+import type { Chrome } from '@/lib/chrome'
+import { ui } from '@/lib/ui'
+interface Props { chrome: Chrome; locale: Locale }
+const { chrome, locale } = Astro.props
+const { w } = ui(locale)
+---
+
+<Base chrome={chrome} title={w.pageNotFound} currentPath="/404" robots="noindex, follow">
+	<main id="main" class="es-main is-wide">
+		<div class="es-box es-404">
+			<h1>404</h1>
+			<h2>{w.pageNotFound}</h2>
+			<p>{w.notFoundText}</p>
+			<a class="es-btn" href={href(locale, '/')}>{w.backHome}</a>
+		</div>
+	</main>
+</Base>

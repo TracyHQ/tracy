@@ -1,0 +1,19 @@
+---
+/** A category or tag pill: grey rounded label with a coloured dot (the dot colour cycles by the slug, as the source's `cat-*` classes do). */
+interface Props {
+  href: string | null
+  label: string
+  slug: string
+  /** `bare`: no grey ground (the pill sits on a white card). */
+  tone?: 'grey' | 'white'
+}
+const { href, label, slug, tone = 'grey' } = Astro.props
+const DOTS = ['#dc3545', '#6f42c1', '#4d6bff', '#20c997', '#fd7e14']
+let h = 0
+for (const c of slug) h = (h * 31 + c.charCodeAt(0)) >>> 0
+const dot = DOTS[h % DOTS.length]
+---
+
+{href
+	? <a class:list={['es-pill-cat', tone === 'white' && 'is-white']} href={href} style={`--dot:${dot}`}>{label}</a>
+	: <span class:list={['es-pill-cat', tone === 'white' && 'is-white']} style={`--dot:${dot}`}>{label}</span>}

@@ -1,0 +1,51 @@
+---
+/**
+ * The body of an article (Portable Text): paragraphs, h2, bullet lists drawn as the source's `list-special`, a quote with its
+ * author line, and pictures: one alone is full width, consecutive pictures sit in a row of up to three. Text blocks keep their
+ * provenance stamp on a stamped request.
+ */
+import { PortableText } from 'emdash/ui'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import PostQuote from '@/components/site/PostQuote.astro'
+import PostImage from '@/components/site/PostImage.astro'
+import PostImageRow from '@/components/site/PostImageRow.astro'
+
+interface Props { value: any[] }
+const { value } = Astro.props
+const blocks: any[] = Array.isArray(value) ? value : []
+const textOf = (b: any) => (b?.children ?? []).map((c: any) => c?.text ?? '').join('')
+// an empty paragraph the importer left between a heading and its pictures draws nothing
+const kept = blocks.filter((b) => !(b?._type === 'block' && !b.listItem && textOf(b).trim() === ''))
+// consecutive pictures become one row, three to a row
+const prepared: any[] = []
+const isQuote = (b: any) => b?._type === 'block' && b.style === 'blockquote' && b.listItem === undefined
+for (let i = 0; i < kept.length; i++) {
+  if (isQuote(kept[i])) {
+    const run: any[] = []
+    while (isQuote(kept[i])) run.push(kept[i++])
+    i--
+    prepared.push({ _type: 'essenceQuote', _key: `quote-${run[0]._key ?? i}`, blocks: run })
+    continue
+  }
+  if (kept[i]?._type !== 'image') {
+    prepared.push(kept[i])
+    continue
+  }
+  const run: any[] = []
+  while (kept[i]?._type === 'image') run.push(kept[i++])
+  i--
+  if (run.length === 1) prepared.push(run[0])
+  else for (let k = 0; k < run.length; k += 3) {
+    const part = run.slice(k, k + 3)
+    prepared.push(part.length === 1 ? part[0] : { _type: 'essenceRow', _key: `row-${part[0]._key ?? k}`, images: part })
+  }
+}
+const stamped = prepared.some((b) => b?._tracySrc)
+const components = {
+  ...(stamped ? { block: ProseBlock, listItem: ProseListItem } : {}),
+  type: { essenceQuote: PostQuote, image: PostImage, essenceRow: PostImageRow }
+}
+---
+
+<div class="es-body" itemprop="articleBody"><PortableText value={prepared} components={components} /></div>

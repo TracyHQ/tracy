@@ -1,0 +1,31 @@
+---
+/** Under the body: Prev / Next, then "Share article:" and "Tags in:". */
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { postPath, tagPath, type PostRow } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import Icon from '@/components/site/Icon.astro'
+import PostPill from '@/components/site/PostPill.astro'
+import ShareRow from '@/components/site/ShareRow.astro'
+
+interface Props { post: PostRow; chrome: Chrome; locale: Locale; prev: PostRow | null; next: PostRow | null }
+const { post, chrome, locale, prev, next } = Astro.props
+const { site } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+---
+
+{(prev || next) && (
+	<nav class="es-pn" aria-label={site.prev_label + ' / ' + site.next_label}>
+		{prev ? <a class="es-pn-btn is-prev" href={href(locale, postPath(prev))} rel="prev" title={prev.title}><Icon name="prev" size={12} weight="bold" /><span {...$c('prev_label')}>{site.prev_label}</span></a> : <span></span>}
+		{next ? <a class="es-pn-btn is-next" href={href(locale, postPath(next))} rel="next" title={next.title}><span {...$c('next_label')}>{site.next_label}</span><Icon name="next" size={12} weight="bold" /></a> : <span></span>}
+	</nav>
+)}
+<div class="es-post-foot">
+	<ShareRow chrome={chrome} title={post.title} />
+	{post.tags.length > 0 && (
+		<div class="es-post-tags">
+			<h6 {...$c('tags_in_label')}>{site.tags_in_label}</h6>
+			<ul>{post.tags.map((t) => <li><PostPill href={href(locale, tagPath(t.slug))} label={t.label} slug={t.slug} /></li>)}</ul>
+		</div>
+	)}
+</div>

@@ -1,0 +1,91 @@
+---
+/** `/category/<slug>`, `/tag/<slug>`, `/author/<slug>`: a post list in the style the category's menu item had (grid, stack, sidebar). */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import GridCard from '@/components/site/GridCard.astro'
+import StackCard from '@/components/site/StackCard.astro'
+import Pager from '@/components/site/Pager.astro'
+import Sidebar from '@/components/site/Sidebar.astro'
+import NotFound from '@/views/NotFound.astro'
+import { href, type Locale } from '@/lib/i18n'
+import type { Chrome } from '@/lib/chrome'
+import { authorPath, categoryPath, loadAuthors, loadCategoryInfo, loadPosts, tagPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
+import { stampFor } from '@/lib/stamps'
+import { ui } from '@/lib/ui'
+import { uiCount } from '@/lib/ui-words'
+
+interface Props { chrome: Chrome; locale: Locale; by: 'category' | 'tag' | 'author'; slug: string; path?: string }
+const { chrome, locale, by, slug } = Astro.props
+const { tag, w } = ui(locale)
+const [all, authorRows, infos] = await Promise.all([loadPosts(locale), loadAuthors(locale), loadCategoryInfo(locale)])
+const authors = Object.fromEntries(authorRows.map((a) => [a.slug, a]))
+
+let title = ''
+let description = ''
+let style: 'grid' | 'stack' | 'sidebar' = 'grid'
+let found: typeof all = []
+let basePath = ''
+if (by === 'category') {
+	const info = infos.find((i) => i.slug === slug)
+	if (info) {
+		title = info.title
+		description = info.description
+		style = info.listStyle
+		found = all.filter((p) => p.category?.slug === slug)
+		basePath = categoryPath(slug)
+	}
+} else if (by === 'tag') {
+	const label = all.flatMap((p) => p.tags).find((t) => t.slug === slug)?.label
+	if (label) {
+		title = label
+		found = all.filter((p) => p.tags.some((t) => t.slug === slug))
+		basePath = tagPath(slug)
+	}
+} else {
+	const a = authors[slug]
+	if (a) {
+		title = a.name
+		found = all.filter((p) => p.author === slug)
+		basePath = authorPath(slug)
+	}
+}
+const missing = !title
+if (missing) Astro.response.status = 404
+const posts = missing ? [] : await livePosts(Astro.request, locale, found)
+const perPage = style === 'grid' ? 9 : 6
+const pages = Math.max(1, Math.ceil(posts.length / perPage))
+const page = Math.min(pages, Math.max(1, parseInt(Astro.url.searchParams.get('page') ?? '1', 10) || 1))
+const shown = posts.slice((page - 1) * perPage, page * perPage)
+const count = uiCount(tag, { other: w.countArticles, one: w.countArticlesOne ?? w.countArticles }, posts.length)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+---
+
+{missing ? (
+	<NotFound chrome={chrome} locale={locale} />
+) : (
+	<Base chrome={chrome} title={title} description={description || null} currentPath={basePath} robots="index, follow">
+		<main id="main" class:list={['es-cat', `is-${style}`]}>
+			<PageOwner stamp={$c} />
+			<div class="es-wrap">
+				{style === 'sidebar' ? <h1 class="sr-only">{title}</h1> : (
+					<header class="es-cat-head">
+						<h1 class="es-cat-title"><span>{title}</span></h1>
+						<p class="es-cat-count">{count}</p>
+						{description && <p class="es-cat-desc">{description}</p>}
+					</header>
+				)}
+				{posts.length === 0 && <p class="es-cat-empty">{w.noArticles}</p>}
+				<div class="es-cat-body">
+					<div class="es-cat-list">
+						{style === 'grid' && <div class="es-cat-grid">{shown.map((p, i) => <GridCard post={p} chrome={chrome} authors={authors} eager={i < 3} />)}</div>}
+						{style === 'stack' && shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={authors} eager={i === 0} />)}
+						{style === 'sidebar' && shown.map((p, i) => <GridCard post={p} chrome={chrome} authors={authors} wide eager={i === 0} />)}
+						<Pager path={href(locale, basePath)} page={page} pages={pages} locale={locale} />
+					</div>
+					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} />}
+				</div>
+			</div>
+		</main>
+	</Base>
+)}

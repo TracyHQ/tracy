@@ -12,6 +12,7 @@ export interface Page {
   title?: string;
   body?: PortableTextBlock[];
   view?: string;
+  path?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -28,9 +29,20 @@ export interface Post {
   excerpt?: PortableTextBlock[];
   body?: PortableTextBlock[];
   date?: string;
+  modified?: string;
   cover?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  detail_image?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  created?: string;
+  hero?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  author?: string;
+  hits?: number;
+  featured?: boolean;
+  featured_order?: number;
+  home_lead?: boolean;
+  kind?: string;
+  layout?: string;
+  video_source?: string;
+  video_id?: string;
+  gallery?: { "image"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null }[];
+  path?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -39,13 +51,17 @@ export interface Post {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
-export interface Slideshow {
+export interface Gallery {
   id: string;
   slug: string | null;
   status: string;
-  title_link?: string;
+  number_col?: string;
+  auto_play?: string;
+  auto_time?: string;
+  gallery_title?: string;
+  gallery_link?: string;
   title?: string;
-  items?: { "image"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "title"?: string | null; "desc"?: string | null; "button1"?: string | null; "btn_link1"?: string | null; "button2"?: string | null; "btn_link2"?: string | null }[];
+  items?: { "gallery_image"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "gallery_alt"?: string | null }[];
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -54,23 +70,13 @@ export interface Slideshow {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
-export interface FeaturesIntro {
+export interface Social {
   id: string;
   slug: string | null;
   status: string;
-  basic_description?: string;
-  basic_btn_title?: string;
-  basic_btn_link?: string;
+  social_style?: string;
   title?: string;
-  align?: string;
-  img_features?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  description?: PortableTextBlock[];
-  title_small?: string;
-  title_large?: string;
-  button?: string;
-  button_link?: string;
-  items?: { "ft_img"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "title"?: string | null; "description"?: string | null; "btn_title"?: string | null; "btn_link"?: string | null; "img"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "link"?: string | null; "link_img"?: string | null }[];
-  sub_heading?: string;
+  items?: { "font_icon"?: string | null; "title"?: string | null; "link"?: string | null }[];
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -79,152 +85,14 @@ export interface FeaturesIntro {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
-export interface ContainerTab {
+export interface Author {
   id: string;
   slug: string | null;
   status: string;
-  image_intro?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  position?: string;
-  title?: string;
-  sub_heading?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Menu {
-  id: string;
-  slug: string | null;
-  status: string;
-  basic_btn_title?: string;
-  basic_btn_link?: string;
-  title?: string;
-  items?: { "dish_name"?: string | null; "dish_description"?: string | null; "dish_price"?: string | null }[];
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Happyhour {
-  id: string;
-  slug: string | null;
-  status: string;
-  hp_img?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  hp_title?: string;
-  hp_desc?: string;
-  hp_info?: string;
-  hp_badge?: string;
-  hp_link_text?: string;
-  hp_link?: string;
-  title?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Team {
-  id: string;
-  slug: string | null;
-  status: string;
-  number_column?: string;
-  title_section?: string;
-  description_section?: string;
-  title?: string;
-  items?: { "img"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "name_member"?: string | null; "name_office"?: string | null; "description"?: string | null; "link_social"?: string | null }[];
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Module {
-  id: string;
-  slug: string | null;
-  status: string;
-  title?: string;
-  content?: PortableTextBlock[];
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Chrome {
-  id: string;
-  slug: string | null;
-  status: string;
-  title?: string;
-  brand_name?: string;
-  footer_location_title?: string;
-  footer_address?: string;
-  footer_map_label?: string;
-  footer_hours_title?: string;
-  footer_hours?: string;
-  footer_contact_title?: string;
-  footer_phone?: string;
-  footer_email?: string;
-  subscribe_label?: string;
-  subscribe_title?: string;
-  subscribe_placeholder?: string;
-  subscribe_button?: string;
-  subscribe_note?: string;
-  news_label?: string;
-  news_title?: string;
-  copyright?: string;
-  skip_label?: string;
-  menu_label?: string;
-  appearance_label?: string;
-  categories_title?: string;
-  prev_label?: string;
-  next_label?: string;
-  more_label?: string;
-  read_more?: string;
-  breadcrumb_home?: string;
-  latest_title?: string;
-  not_found_code?: string;
-  not_found_title?: string;
-  not_found_text?: string;
-  not_found_back_label?: string;
-  footer_map_url?: string;
-  logo_dark?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  form_id?: string;
-  search_title?: string;
-  search_label?: string;
-  search_placeholder?: string;
-  search_button?: string;
-  search_results?: string;
-  search_empty?: string;
-  page_label?: string;
-  start_label?: string;
-  end_label?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Masthead {
-  id: string;
-  slug: string | null;
-  status: string;
-  title?: string;
-  description?: string;
-  background?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  name?: string;
+  avatar?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  job_title?: string;
+  bio?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -240,6 +108,7 @@ export interface CategoryInfo {
   title?: string;
   description?: string;
   image?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  list_style?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -253,18 +122,13 @@ export interface Contact {
   slug: string | null;
   status: string;
   title?: string;
-  image?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  card_title?: string;
-  card_text?: PortableTextBlock[];
-  social_title?: string;
-  social_links?: { "label"?: string | null; "url"?: string | null }[];
-  address?: string;
-  phone_label?: string;
-  phone?: string;
-  web_label?: string;
-  webpage?: string;
-  form_title?: string;
-  form_note?: string;
+  intro?: string;
+  name_label?: string;
+  email_label?: string;
+  subject_label?: string;
+  message_label?: string;
+  copy_label?: string;
+  send_label?: string;
   form_id?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -274,17 +138,45 @@ export interface Contact {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
-export interface Reservation {
+export interface Chrome {
   id: string;
   slug: string | null;
   status: string;
-  title?: string;
-  blocks?: { "image"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "label"?: string | null; "title"?: string | null; "text"?: string | null; "button_label"?: string | null; "button_link"?: string | null }[];
-  online_image?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  online_title?: string;
-  online_text?: string;
-  online_phone?: string;
-  online_button?: string;
+  brand_name?: string;
+  logo_dark?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  skip_label?: string;
+  menu_label?: string;
+  theme_label?: string;
+  search_label?: string;
+  subscribe_label?: string;
+  subscribe_link?: string;
+  footer_logo?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  footer_text?: string;
+  footer_cta_label?: string;
+  footer_cta_text?: string;
+  copyright?: string;
+  newsletter_title?: string;
+  newsletter_text?: string;
+  newsletter_email?: string;
+  newsletter_button?: string;
+  newsletter_terms?: string;
+  form_id?: string;
+  latest_title?: string;
+  features_title?: string;
+  tags_title?: string;
+  follow_title?: string;
+  more_read_title?: string;
+  author_articles_title?: string;
+  written_by?: string;
+  share_label?: string;
+  tags_in_label?: string;
+  read_more?: string;
+  prev_label?: string;
+  next_label?: string;
+  by_label?: string;
+  hits_label?: string;
+  search_placeholder?: string;
+  articles_label?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -297,17 +189,11 @@ declare module "emdash" {
   interface EmDashCollections {
     pages: Page;
     posts: Post;
-    slideshow: Slideshow;
-    features_intro: FeaturesIntro;
-    container_tabs: ContainerTab;
-    menu: Menu;
-    happyhours: Happyhour;
-    teams: Team;
-    modules: Module;
-    chrome: Chrome;
-    masthead: Masthead;
+    gallery: Gallery;
+    social: Social;
+    authors: Author;
     category_info: CategoryInfo;
     contact: Contact;
-    reservation: Reservation;
+    chrome: Chrome;
   }
 }

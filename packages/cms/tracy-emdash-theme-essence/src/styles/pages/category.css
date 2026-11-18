@@ -1,0 +1,83 @@
+/* JA Essence: category page styles (class prefix `es-`). Imported by global.css. Also holds the list cards shared with the Home. */
+@layer components {
+	/* ── list cards ── */
+	.es-card { background: var(--color-surface); border-radius: var(--ds-card-radius, 16px); padding: 36px; margin-bottom: 36px; }
+	.es-card-pic { position: relative; margin: 0; }
+	.es-card-pic a { display: block; }
+	.es-card-pic img { display: block; width: 100%; object-fit: cover; border-radius: 8px; }
+	.es-card-badge { position: absolute; top: 20px; left: 20px; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #fff; color: #4d6bff; border-radius: 8px; pointer-events: none; }
+	.es-card .es-pill { padding: 6px 16px; font-size: 16px; line-height: 24px; background: var(--color-bg); margin-bottom: 12px; }
+	.es-card-title { margin: 0 0 12px; font-size: 32px; line-height: 41.6px; }
+	.es-card-title a { color: var(--color-heading); }
+	.es-card-title a:hover { color: var(--color-accent-text-hover); }
+	.es-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; margin: 0; font-size: 14px; line-height: 21px; }
+	.es-card-meta > div { display: flex; align-items: center; }
+	.es-card-meta dd { display: flex; align-items: center; gap: 4px; margin: 0; }
+	.es-card-meta > div + div::before { content: "-"; margin-right: 8px; }
+	.es-card-meta a, .es-card-author { font-weight: 700; color: var(--color-heading); }
+	.es-card-hits svg { color: var(--color-accent-text); }
+	.es-card-intro { margin: 24px 0 0; display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+	.es-card-more { display: inline-block; margin-top: 24px; font-family: var(--font-display); font-size: 18px; line-height: 20.7px; color: var(--color-heading); }
+	.es-card-more:hover { color: var(--color-accent-text-hover); }
+
+	/* stack: picture left */
+	.es-stack-top { display: flex; align-items: flex-start; gap: 36px; }
+	.es-stack-top .es-card-pic { flex: none; width: 200px; }
+	.es-stack-top .es-card-pic img { width: 200px; height: 200px; }
+	.es-stack-top .es-card-badge { top: 12px; left: 12px; width: 40px; height: 40px; }
+	.es-stack-info { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+	.es-stack .es-card-intro { margin-top: 16px; }
+
+	/* grid: picture on top, centred */
+	.es-grid-card { padding: 18px; margin-bottom: 0; text-align: center; }
+	.es-grid-card .es-card-pic img { aspect-ratio: 3 / 2; height: auto; }
+	.es-grid-info { display: flex; flex-direction: column; align-items: center; margin-top: 36px; padding-bottom: 12px; }
+	.es-grid-card .es-card-title { font-size: 24px; line-height: 31.2px; }
+	.es-grid-card .es-card-meta { justify-content: center; padding-inline: 10px; }
+	.es-grid-card.is-wide { padding: 36px; margin-bottom: 36px; text-align: start; }
+	.es-grid-card.is-wide .es-grid-info { align-items: flex-start; margin-top: 36px; padding-bottom: 0; }
+	.es-grid-card.is-wide .es-card-title { font-size: 32px; line-height: 41.6px; }
+	.es-grid-card.is-wide .es-card-meta { justify-content: flex-start; padding-inline: 0; }
+	.es-grid-card.is-wide .es-card-intro { margin-top: 24px; }
+	.es-card-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+	.es-card-tags .es-pill { margin: 0; padding: 2px 12px; font-size: 14px; }
+
+	.es-pager .es-pagination a, .es-pager .es-pagination span { display: flex; align-items: center; justify-content: center; line-height: 1; }
+
+	/* ── the heading block ── */
+	.es-cat { padding-block: 72px; }
+	.es-cat-head { max-width: 640px; margin: 0 auto 48px; text-align: center; }
+	.es-cat-title { margin: 16px 0 8px; font-size: 40px; line-height: 52px; }
+	.es-cat-title span { display: inline-flex; align-items: center; gap: 12px; }
+	.es-cat-title span::before { content: ""; width: 16px; height: 16px; border-radius: 50%; background: var(--color-accent); flex: none; }
+	.es-cat-count { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; }
+	.es-cat-count::before, .es-cat-count::after { content: "–"; }
+	.es-cat-desc { margin: 32px 0 0; }
+	.es-cat-empty { text-align: center; }
+
+	/* ── lists ── */
+	.es-cat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; align-items: start; }
+	.es-cat .es-pager { margin-top: 36px; }
+	.es-cat-body.is-sidebar, .es-cat.is-sidebar .es-cat-body { display: grid; grid-template-columns: minmax(0, 740px) minmax(0, 352px); gap: 36px; align-items: start; }
+	.es-cat.is-stack .es-card { margin-bottom: 36px; }
+
+	@media (max-width: 1199px) { .es-cat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+	@media (max-width: 991px) {
+		.es-cat.is-sidebar .es-cat-body { grid-template-columns: minmax(0, 1fr); }
+	}
+	@media (max-width: 767px) {
+		.es-cat { padding-block: 36px; }
+		.es-cat-head { margin-bottom: 24px; }
+		.es-cat-title { font-size: 28px; line-height: 36.4px; }
+		.es-cat-desc { margin-top: 18px; }
+		.es-cat-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+		.es-card, .es-grid-card.is-wide { padding: 24px; }
+		.es-grid-card { padding: 18px; }
+		.es-grid-card .es-card-title { font-size: 22px; line-height: 28.6px; }
+		.es-grid-card .es-grid-info { margin-top: 18px; }
+		.es-card-title, .es-grid-card.is-wide .es-card-title { font-size: 24px; line-height: 31.2px; }
+		.es-stack-top { flex-direction: column; gap: 18px; }
+		.es-stack-top .es-card-pic, .es-stack-top .es-card-pic img { width: 100%; }
+		.es-stack-top .es-card-pic img { height: auto; aspect-ratio: 3 / 2; }
+	}
+}

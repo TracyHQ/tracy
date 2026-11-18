@@ -1,0 +1,43 @@
+---
+/**
+ * The line under a title: `By <author> - <date> - Hits: N` (mode `byline`), or the small `<date> - <eye> N` of a card (`dated`),
+ * or the eye and the count alone (`hits`). Every word comes from the `chrome` entry.
+ */
+import type { Chrome } from '@/lib/chrome'
+import type { PostRow } from '@/lib/posts'
+import { formatDateMDY, formatDate, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { stampFor } from '@/lib/stamps'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  post: PostRow
+  chrome: Chrome
+  locale: Locale
+  mode?: 'byline' | 'dated' | 'hits'
+  /** `mdy`: June 9, 2023; `dmy`: 09 June 2023 (the "Features post" list). */
+  dateStyle?: 'mdy' | 'dmy'
+  /** The author's name and page, for `byline`. */
+  author?: { name: string; href: string | null } | null
+}
+const { post, chrome, locale, mode = 'dated', dateStyle = 'mdy', author = null } = Astro.props
+const { site } = chrome
+const tag = ui(locale).tag
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const dmy = formatDate(post.date, tag).replace(/^(\d) /, '0$1 ')
+const date = dateStyle === 'dmy' ? dmy : formatDateMDY(post.date, tag)
+---
+
+<div class="es-info">
+	{mode === 'byline' && author && (
+		<span class="es-info-item es-info-author">
+			<span {...$c('by_label')}>{site.by_label}</span>&nbsp;
+			{author.href ? <a href={author.href}>{author.name}</a> : <span class="es-info-name">{author.name}</span>}
+		</span>
+	)}
+	{mode !== 'hits' && <span class="es-info-item"><time datetime={post.date} {...$p('date')}>{date}</time></span>}
+	{mode === 'byline'
+		? <span class="es-info-item"><Icon name="eye" size={14} weight="fill" class="es-eye" /><span><span {...$c('hits_label')}>{site.hits_label}</span>: <span {...$p('hits')}>{post.hits}</span></span></span>
+		: <span class="es-info-item"><Icon name="eye" size={14} weight="fill" class="es-eye" /><span {...$p('hits')}>{post.hits}</span></span>}
+</div>

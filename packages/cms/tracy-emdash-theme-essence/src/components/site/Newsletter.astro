@@ -1,0 +1,30 @@
+---
+/** The newsletter box (AcyMailing module in the source): blue rounded box, email, dark button, consent. Words are the `chrome` entry's; it submits to the Forms plugin through `newsletter-client.ts`. API: <Newsletter chrome={chrome} /> */
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const { site } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+// No form bound yet: the box is drawn complete and its button is disabled, never a fake submit.
+const formId = String(site.form_id ?? '').trim()
+---
+
+<section class="es-newsletter" aria-labelledby="es-newsletter-title">
+	<h3 id="es-newsletter-title" {...$c('newsletter_title')}>{site.newsletter_title}</h3>
+	<p class="es-newsletter-text" {...$c('newsletter_text')}>{site.newsletter_text}</p>
+	<form class="es-newsletter-form" method="post" action="/_emdash/api/plugins/emdash-forms/submit" data-form-id={formId} novalidate>
+		<input type="email" name="email" required placeholder={site.newsletter_email} aria-label={site.newsletter_email} autocomplete="email" {...$c('newsletter_email')} />
+		<input type="text" name="_hp" tabindex="-1" autocomplete="off" class="es-hp" aria-hidden="true" />
+		<button type="submit" class="es-btn is-dark is-block" disabled={!formId} {...$c('newsletter_button')}>{site.newsletter_button}</button>
+		<label class="es-newsletter-terms">
+			<input type="checkbox" name="consent" value="true" required />
+			<span {...$c('newsletter_terms')}>{site.newsletter_terms}</span>
+		</label>
+	</form>
+	<p class="es-newsletter-status" role="status" aria-live="polite"></p>
+</section>
+{formId && <script src="@/lib/newsletter-client.ts"></script>}

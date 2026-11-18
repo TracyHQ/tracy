@@ -1,0 +1,71 @@
+---
+/** Search (the source's Smart Search list): a form, then the posts whose words match. Route: /search?q=… */
+import { search } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Icon from '@/components/site/Icon.astro'
+import type { Chrome } from '@/lib/chrome'
+import { fill, formatDate, href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { stampFor } from '@/lib/stamps'
+import { loadPosts, postPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path?: string
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const { tag, w } = ui(locale)
+Astro.response.headers.set('cache-control', 'no-store')
+
+const q = (Astro.url.searchParams.get('q') ?? '').trim().slice(0, 200)
+const [all, found] = await Promise.all([
+  loadPosts(locale),
+  q
+    ? search(q, { collections: ['posts'], locale, status: 'published', limit: 50 }).then((r: any) => r.items ?? r)
+    : Promise.resolve([])
+])
+const live = await livePosts(Astro.request, locale, all)
+const indexed = (found as any[]).map((r) => live.find((p) => p.slug === r.slug)).filter(Boolean) as typeof live
+// The search index is a CMS feature a site may not have switched on: with no index hit, the posts are matched on their own words.
+const words = q.toLowerCase().split(/\s+/).filter(Boolean)
+const plain = (v: unknown) =>
+  Array.isArray(v) ? v.map((b: any) => (b?.children ?? []).map((c: any) => c.text ?? '').join('')).join(' ') : ''
+const results =
+  indexed.length > 0 || words.length === 0
+    ? indexed
+    : live.filter((p) => {
+        const hay = `${p.title} ${plain(p.excerpt)} ${plain(p.body)}`.toLowerCase()
+        return words.every((x) => hay.includes(x))
+      })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+---
+
+<Base chrome={chrome} title={site.search_label} currentPath="/search" robots="noindex, follow" headerVariant="inner">
+	<main id="main" class="es-main es-search-main">
+		<PageOwner stamp={$c} />
+		<h1 class="sr-only" {...$c('search_label')}>{site.search_label}</h1>
+		<form class="es-search-form" action={href(locale, '/search')} method="get" role="search">
+			<input type="search" name="q" value={q} placeholder={site.search_placeholder} aria-label={site.search_label} autocomplete="off" {...$c('search_placeholder')} />
+			<button type="submit" aria-label={w.searchButton}><Icon name="search" size={18} /></button>
+		</form>
+		{q && (
+			<div class="es-search-results" aria-live="polite">
+				<p class="es-search-count">{results.length > 0 ? fill(w.searchResultsLine, { count: results.length, query: q }) : fill(w.searchEmpty, { query: q })}</p>
+				{results.length > 0 && (
+					<ul class="es-search-list">
+						{results.map((p) => (
+							<li>
+								<a href={href(locale, postPath(p))}>{p.title}</a>
+								<time datetime={p.date}>{formatDate(p.date, tag)}</time>
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
+		)}
+	</main>
+</Base>
