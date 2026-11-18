@@ -1,7 +1,7 @@
 /**
  * EmDash content map and content coverage on the Road to live (PR-A). A release's artifacts (content map, content
  * coverage, template kit, demo baseline) are looked up beside the theme's contract data, with no `manifest.json` and
- * with `contractFor` untouched; the two released themes (JA Diner 0.1.0 to 0.1.2 and 0.1.4, JA Restaurant 1.0.1, 1.0.2 and 1.0.4) are read from the tree as
+ * with `contractFor` untouched; the two released themes (JA Diner 0.1.0 to 0.1.4, JA Restaurant 1.0.1 to 1.0.4) are read from the tree as
  * the image ships them.
  */
 import assert from 'node:assert/strict'
@@ -28,9 +28,11 @@ const RELEASES = [
   ['tracy-diner', '0.1.0', 'tracy-emdash-theme-diner'],
   ['tracy-diner', '0.1.1', 'tracy-emdash-theme-diner'],
   ['tracy-diner', '0.1.2', 'tracy-emdash-theme-diner'],
+  ['tracy-diner', '0.1.3', 'tracy-emdash-theme-diner'],
   ['tracy-diner', '0.1.4', 'tracy-emdash-theme-diner'],
   ['tracy-restaurant', '1.0.1', 'tracy-emdash-theme-restaurant'],
   ['tracy-restaurant', '1.0.2', 'tracy-emdash-theme-restaurant'],
+  ['tracy-restaurant', '1.0.3', 'tracy-emdash-theme-restaurant'],
   ['tracy-restaurant', '1.0.4', 'tracy-emdash-theme-restaurant']
 ]
 const emdash = (template, version) => ({
