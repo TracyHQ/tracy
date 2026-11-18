@@ -103,7 +103,13 @@ test('a second run over guard files already there exits 0, whichever rule comes 
     assert.equal(r.stdout, '')
     const strict = spawnSync(
       'bash',
-      ['-c', 'set -euo pipefail; . "$1"; tracy_webroot_restore_skipped_dirs "$2" >/dev/null; echo reached', 'x', LIB, webroot],
+      [
+        '-c',
+        'set -euo pipefail; . "$1"; tracy_webroot_restore_skipped_dirs "$2" >/dev/null; echo reached',
+        'x',
+        LIB,
+        webroot
+      ],
       { encoding: 'utf8' }
     )
     assert.equal(strict.status, 0, strict.stderr)
