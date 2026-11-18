@@ -595,10 +595,12 @@ function removedOf(plan, removals) {
   }
   const items = itemById(plan);
   const facts = factById(plan);
-  const codes = (part) => {
+  const codes = (part, record) => {
     const out = {};
     if (typeof part?.params?.section === "string") out.section = part.params.section;
     if (typeof part?.params?.later === "string") out.later = part.params.later;
+    else if (record?.op === "remove-later" && typeof record.target?.later === "string")
+      out.later = record.target.later;
     return out;
   };
   const datumLine = (id, fallback) => {
@@ -616,7 +618,8 @@ function removedOf(plan, removals) {
     const record = records.find((r) => r.id === id);
     const target = record?.target ?? {};
     let line;
-    if (found?.part) line = { what: plainTextOf(found.part.what), kind: found.part.kind, ...codes(found.part) };
+    if (found?.part)
+      line = { what: plainTextOf(found.part.what), kind: found.part.kind, ...codes(found.part, record) };
     else if (record?.op === "remove-item" && typeof target.item === "string")
       line = datumLine(target.item, found?.details[0]?.what);
     else if (record?.op === "remove-channel" && typeof target.fact === "string")
@@ -1716,7 +1719,36 @@ var tracy_build_chat_default = {
   "plan.refused.trade_fact_missing": "Dieser Bereich erkl\xE4rt Ihre Branche anhand einer Angabe zu Ihrem Gesch\xE4ft, daher bleibt diese Angabe.",
   "plan.refused.item_repeated_on_page": "Diese \xC4nderung w\xFCrde dasselbe zweimal auf einer Seite zeigen.",
   "plan.refused.form_without_destination": "Ein Formular braucht eine E-Mail-Adresse, an die seine Nachrichten gehen.",
-  "plan.refused.map_without_address": "Eine Karte braucht Ihre Adresse."
+  "plan.refused.map_without_address": "Eine Karte braucht Ihre Adresse.",
+  "plan.leftOut.reason.whatsapp_unconfirmed": "Keine Quelle sagt, dass diese Nummer WhatsApp-Nachrichten annimmt, daher verlinkt Ihre Website nicht auf WhatsApp.",
+  "plan.leftOut.reason.contact_value_missing": "Sie haben gew\xE4hlt, wie Besucher Sie erreichen, aber noch keinen Wert angegeben, daher wird nichts angezeigt. F\xFCgen Sie ihn im Plan hinzu.",
+  "plan.leftOut.reason.fact_longer_than_every_place": "Das ist l\xE4nger als jeder Platz, den Ihr Design daf\xFCr hat, und Tracy k\xFCrzt es nie.",
+  "plan.leftOut.reason.no_room_left": "Jeder Platz, den Ihr Design daf\xFCr hat, ist bereits belegt.",
+  "plan.leftOut.reason.no_room_left.item": "F\xFCr weitere davon ist kein Platz mehr.",
+  "plan.leftOut.reason.fewer_than_section_needs": "Jeder Abschnitt daf\xFCr braucht mindestens {min}. Tracy erfindet nie welche, um einen Abschnitt zu f\xFCllen.",
+  "plan.leftOut.reason.section_below_minimum": "Es stand in einem Abschnitt, der mindestens {min} davon braucht, und daf\xFCr blieben zu wenige \xFCbrig, daher wird es nicht angezeigt.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.one": "Dieses Foto erscheint bereits in einer Galerie auf einer anderen Seite, und jedes Foto erscheint nur einmal auf Ihrer Website, daher zeigt diese Galerie eines weniger.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.other": "Diese {count} Fotos erscheinen bereits in einer Galerie auf einer anderen Seite, und jedes Foto erscheint nur einmal auf Ihrer Website, daher zeigt diese Galerie {count} weniger.",
+  "plan.leftOut.reason.data_over_limit": "Das ist l\xE4nger, als der Abschnitt anzeigen kann, daher wird es dort nicht angezeigt.",
+  "plan.leftOut.reason.value_over_limit": "Das ist l\xE4nger, als der Abschnitt anzeigen kann, daher wird es nicht angezeigt.",
+  "plan.leftOut.reason.row_beyond_stored_places": "Der Abschnitt, der diese zeigt, hat Platz f\xFCr weniger Zeilen, als Sie haben.",
+  "plan.leftOut.reason.row_over_max": "Der Abschnitt, der diese zeigt, hat Platz f\xFCr weniger Zeilen, als Sie haben.",
+  "plan.leftOut.reason.row_field_undeclared": "Der Abschnitt zeigt nur einen Teil dieser Zeile.",
+  "plan.leftOut.reason.row_parts_over_fields": "Diese Zeile hat mehr Teile, als der Abschnitt Pl\xE4tze hat, daher wird sie nicht angezeigt.",
+  "plan.leftOut.reason.row_value_over_limit": "Diese Zeile ist l\xE4nger, als der Abschnitt anzeigen kann, daher wird sie nicht angezeigt.",
+  "plan.leftOut.reason.row_parts_order": "Die Zeiten dieser Zeile stehen vor ihren Tagen, daher wird sie nicht angezeigt.",
+  "plan.leftOut.reason.row_no_list": "Kein Abschnitt der Vorlage zeigt Zeilen wie diese.",
+  "plan.leftOut.reason.social_link_shortened": "Das ist ein gek\xFCrzter Link, daher ist unbekannt, zu welchem Netzwerk er f\xFChrt.",
+  "plan.leftOut.reason.social_network_unknown": "Dieser Link f\xFChrt zu keinem sozialen Netzwerk, das der Abschnitt zeigen kann.",
+  "plan.leftOut.reason.social_handle_without_network": "Dieser Name sagt nicht, in welchem Netzwerk er ist.",
+  "plan.leftOut.reason.social_link_not_web": "Das ist kein Weblink.",
+  "plan.leftOut.reason.no_social_link": "Es gibt keinen Link zum Anzeigen.",
+  "plan.leftOut.reason.social_network_repeated": "Ein anderer Link zum selben Netzwerk wird bereits angezeigt.",
+  "plan.leftOut.reason.social_link_over_rows": "Der Abschnitt, der diese zeigt, hat Platz f\xFCr weniger Zeilen, als Sie haben.",
+  "plan.leftOut.reason.page_removed": "Sie haben gebeten, diese Seite zu entfernen.",
+  "plan.leftOut.reason.no_longer_in_plan": "Es ist nicht Teil Ihres Plans.",
+  "plan.leftOut.reason.requested_off": "Sie haben gebeten, dies aus dem Plan zu nehmen.",
+  "plan.leftOut.reason.removed_page_data": "Es stand nur auf einer Seite, die Sie entfernen lassen wollten."
 };
 
 // ../../locale/tracy-locales/es/tracy-build-chat.json
@@ -2296,7 +2328,36 @@ var tracy_build_chat_default2 = {
   "plan.refused.trade_fact_missing": "Esta secci\xF3n explica su oficio a partir de un dato de su negocio, as\xED que ese dato se mantiene.",
   "plan.refused.item_repeated_on_page": "Este cambio mostrar\xEDa lo mismo dos veces en una p\xE1gina.",
   "plan.refused.form_without_destination": "Un formulario necesita una direcci\xF3n de correo electr\xF3nico a la que enviar sus mensajes.",
-  "plan.refused.map_without_address": "Un mapa necesita su direcci\xF3n."
+  "plan.refused.map_without_address": "Un mapa necesita su direcci\xF3n.",
+  "plan.leftOut.reason.whatsapp_unconfirmed": "Ninguna fuente dice que este n\xFAmero reciba mensajes de WhatsApp, as\xED que tu sitio no enlaza a WhatsApp.",
+  "plan.leftOut.reason.contact_value_missing": "Elegiste c\xF3mo te contactan los visitantes pero a\xFAn no diste el dato, as\xED que no se muestra nada. A\xF1\xE1delo en el plan.",
+  "plan.leftOut.reason.fact_longer_than_every_place": "Es m\xE1s largo que cualquier espacio que tu dise\xF1o tiene para ello, y Tracy nunca lo acorta.",
+  "plan.leftOut.reason.no_room_left": "Todos los espacios que tu dise\xF1o tiene para esto ya est\xE1n ocupados.",
+  "plan.leftOut.reason.no_room_left.item": "No queda espacio para m\xE1s de estos.",
+  "plan.leftOut.reason.fewer_than_section_needs": "Cada secci\xF3n para estos necesita al menos {min}. Tracy nunca inventa m\xE1s para llenar una secci\xF3n.",
+  "plan.leftOut.reason.section_below_minimum": "Estaba en una secci\xF3n que necesita al menos {min} de estos, y quedaron muy pocos para ella, as\xED que no se muestra.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.one": "Esta foto ya aparece en una galer\xEDa de otra p\xE1gina, y cada foto aparece una sola vez en tu sitio, as\xED que esta galer\xEDa muestra una menos.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.other": "Estas {count} fotos ya aparecen en una galer\xEDa de otra p\xE1gina, y cada foto aparece una sola vez en tu sitio, as\xED que esta galer\xEDa muestra {count} menos.",
+  "plan.leftOut.reason.data_over_limit": "Es m\xE1s largo de lo que la secci\xF3n puede mostrar, as\xED que no se muestra ah\xED.",
+  "plan.leftOut.reason.value_over_limit": "Es m\xE1s largo de lo que la secci\xF3n puede mostrar, as\xED que no se muestra.",
+  "plan.leftOut.reason.row_beyond_stored_places": "La secci\xF3n que muestra estas filas tiene espacio para menos de las que tienes.",
+  "plan.leftOut.reason.row_over_max": "La secci\xF3n que muestra estas filas tiene espacio para menos de las que tienes.",
+  "plan.leftOut.reason.row_field_undeclared": "La secci\xF3n muestra solo parte de esta fila.",
+  "plan.leftOut.reason.row_parts_over_fields": "Esta fila tiene m\xE1s partes que espacios en la secci\xF3n, as\xED que no se muestra.",
+  "plan.leftOut.reason.row_value_over_limit": "Esta fila es m\xE1s larga de lo que la secci\xF3n puede mostrar, as\xED que no se muestra.",
+  "plan.leftOut.reason.row_parts_order": "Los horarios de esta fila van antes de sus d\xEDas, as\xED que no se muestra.",
+  "plan.leftOut.reason.row_no_list": "Ninguna secci\xF3n de la plantilla muestra filas como esta.",
+  "plan.leftOut.reason.social_link_shortened": "Es un enlace acortado, as\xED que no se sabe a qu\xE9 red lleva.",
+  "plan.leftOut.reason.social_network_unknown": "Este enlace no es de una red social que la secci\xF3n pueda mostrar.",
+  "plan.leftOut.reason.social_handle_without_network": "Este nombre de usuario no dice en qu\xE9 red est\xE1.",
+  "plan.leftOut.reason.social_link_not_web": "No es un enlace web.",
+  "plan.leftOut.reason.no_social_link": "No hay ning\xFAn enlace que mostrar.",
+  "plan.leftOut.reason.social_network_repeated": "Ya se muestra otro enlace a la misma red.",
+  "plan.leftOut.reason.social_link_over_rows": "La secci\xF3n que muestra estas filas tiene espacio para menos de las que tienes.",
+  "plan.leftOut.reason.page_removed": "Pediste quitar esta p\xE1gina.",
+  "plan.leftOut.reason.no_longer_in_plan": "No forma parte de tu plan.",
+  "plan.leftOut.reason.requested_off": "Pediste quitar esto del plan.",
+  "plan.leftOut.reason.removed_page_data": "Solo estaba en una p\xE1gina que pediste quitar."
 };
 
 // ../../locale/tracy-locales/fr/tracy-build-chat.json
@@ -2876,7 +2937,36 @@ var tracy_build_chat_default3 = {
   "plan.refused.trade_fact_missing": "Cette section explique votre m\xE9tier \xE0 partir d\u2019une information sur votre entreprise, cette information reste donc.",
   "plan.refused.item_repeated_on_page": "Cette modification afficherait deux fois la m\xEAme chose sur une page.",
   "plan.refused.form_without_destination": "Un formulaire a besoin d\u2019une adresse e-mail o\xF9 envoyer ses messages.",
-  "plan.refused.map_without_address": "Une carte a besoin de votre adresse."
+  "plan.refused.map_without_address": "Une carte a besoin de votre adresse.",
+  "plan.leftOut.reason.whatsapp_unconfirmed": "Aucune source ne dit que ce num\xE9ro re\xE7oit des messages WhatsApp, donc votre site ne renvoie pas vers WhatsApp.",
+  "plan.leftOut.reason.contact_value_missing": "Vous avez choisi comment les visiteurs vous joignent mais n\u2019avez pas encore donn\xE9 la valeur, donc rien n\u2019est affich\xE9. Ajoutez-la dans le plan.",
+  "plan.leftOut.reason.fact_longer_than_every_place": "C\u2019est plus long que chaque emplacement pr\xE9vu par votre design, et Tracy ne le raccourcit jamais.",
+  "plan.leftOut.reason.no_room_left": "Chaque emplacement pr\xE9vu par votre design pour cela est d\xE9j\xE0 pris.",
+  "plan.leftOut.reason.no_room_left.item": "Il n\u2019y a plus de place pour d\u2019autres \xE9l\xE9ments de ce type.",
+  "plan.leftOut.reason.fewer_than_section_needs": "Chaque section pour ces \xE9l\xE9ments en demande au moins {min}. Tracy n\u2019en invente jamais pour remplir une section.",
+  "plan.leftOut.reason.section_below_minimum": "Il se trouvait dans une section qui en demande au moins {min}, et il n\u2019en restait pas assez pour elle, donc il n\u2019est pas affich\xE9.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.one": "Cette photo appara\xEEt d\xE9j\xE0 dans une galerie sur une autre page, et chaque photo n\u2019appara\xEEt qu\u2019une fois sur votre site, donc cette galerie en montre une de moins.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.other": "Ces {count} photos apparaissent d\xE9j\xE0 dans une galerie sur une autre page, et chaque photo n\u2019appara\xEEt qu\u2019une fois sur votre site, donc cette galerie en montre {count} de moins.",
+  "plan.leftOut.reason.data_over_limit": "C\u2019est plus long que ce que la section peut afficher, donc ce n\u2019est pas affich\xE9 \xE0 cet endroit.",
+  "plan.leftOut.reason.value_over_limit": "C\u2019est plus long que ce que la section peut afficher, donc ce n\u2019est pas affich\xE9.",
+  "plan.leftOut.reason.row_beyond_stored_places": "La section qui les affiche a de la place pour moins de lignes que vous n\u2019en avez.",
+  "plan.leftOut.reason.row_over_max": "La section qui les affiche a de la place pour moins de lignes que vous n\u2019en avez.",
+  "plan.leftOut.reason.row_field_undeclared": "La section n\u2019affiche qu\u2019une partie de cette ligne.",
+  "plan.leftOut.reason.row_parts_over_fields": "Cette ligne a plus de parties que la section n\u2019a d\u2019emplacements, donc elle n\u2019est pas affich\xE9e.",
+  "plan.leftOut.reason.row_value_over_limit": "Cette ligne est plus longue que ce que la section peut afficher, donc elle n\u2019est pas affich\xE9e.",
+  "plan.leftOut.reason.row_parts_order": "Les horaires de cette ligne viennent avant ses jours, donc elle n\u2019est pas affich\xE9e.",
+  "plan.leftOut.reason.row_no_list": "Aucune section du mod\xE8le n\u2019affiche de lignes comme celle-ci.",
+  "plan.leftOut.reason.social_link_shortened": "C\u2019est un lien raccourci, donc le r\xE9seau vers lequel il m\xE8ne est inconnu.",
+  "plan.leftOut.reason.social_network_unknown": "Ce lien n\u2019est pas sur un r\xE9seau social que la section peut afficher.",
+  "plan.leftOut.reason.social_handle_without_network": "Cet identifiant ne dit pas sur quel r\xE9seau il se trouve.",
+  "plan.leftOut.reason.social_link_not_web": "Ce n\u2019est pas un lien web.",
+  "plan.leftOut.reason.no_social_link": "Il n\u2019y a aucun lien \xE0 afficher.",
+  "plan.leftOut.reason.social_network_repeated": "Un autre lien vers le m\xEAme r\xE9seau est d\xE9j\xE0 affich\xE9.",
+  "plan.leftOut.reason.social_link_over_rows": "La section qui les affiche a de la place pour moins de lignes que vous n\u2019en avez.",
+  "plan.leftOut.reason.page_removed": "Vous avez demand\xE9 de retirer cette page.",
+  "plan.leftOut.reason.no_longer_in_plan": "Cela ne fait pas partie de votre plan.",
+  "plan.leftOut.reason.requested_off": "Vous avez demand\xE9 de retirer cela du plan.",
+  "plan.leftOut.reason.removed_page_data": "Cela ne figurait que sur une page que vous avez demand\xE9 de retirer."
 };
 
 // ../../locale/tracy-locales/it/tracy-build-chat.json
@@ -3456,7 +3546,36 @@ var tracy_build_chat_default4 = {
   "plan.refused.trade_fact_missing": "Questa sezione spiega il suo settore a partire da un dato della sua attivit\xE0, quindi quel dato resta.",
   "plan.refused.item_repeated_on_page": "Questa modifica mostrerebbe la stessa cosa due volte in una pagina.",
   "plan.refused.form_without_destination": "Un modulo ha bisogno di un indirizzo email a cui inviare i messaggi.",
-  "plan.refused.map_without_address": "Una mappa ha bisogno del suo indirizzo."
+  "plan.refused.map_without_address": "Una mappa ha bisogno del suo indirizzo.",
+  "plan.leftOut.reason.whatsapp_unconfirmed": "Nessuna fonte dice che questo numero riceve messaggi WhatsApp, quindi il tuo sito non rimanda a WhatsApp.",
+  "plan.leftOut.reason.contact_value_missing": "Hai scelto come i visitatori ti contattano ma non hai ancora dato il valore, quindi non viene mostrato nulla. Aggiungilo nel piano.",
+  "plan.leftOut.reason.fact_longer_than_every_place": "\xC8 pi\xF9 lungo di ogni spazio che il tuo design ha per questo, e Tracy non lo accorcia mai.",
+  "plan.leftOut.reason.no_room_left": "Ogni spazio che il tuo design ha per questo \xE8 gi\xE0 occupato.",
+  "plan.leftOut.reason.no_room_left.item": "Non c\u2019\xE8 pi\xF9 spazio per altri di questi.",
+  "plan.leftOut.reason.fewer_than_section_needs": "Ogni sezione per questi ne richiede almeno {min}. Tracy non ne inventa mai per riempire una sezione.",
+  "plan.leftOut.reason.section_below_minimum": "Era in una sezione che ne richiede almeno {min}, e ne sono rimasti troppo pochi, quindi non viene mostrato.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.one": "Questa foto compare gi\xE0 in una galleria su un\u2019altra pagina, e ogni foto compare una sola volta sul tuo sito, quindi questa galleria ne mostra una in meno.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.other": "Queste {count} foto compaiono gi\xE0 in una galleria su un\u2019altra pagina, e ogni foto compare una sola volta sul tuo sito, quindi questa galleria ne mostra {count} in meno.",
+  "plan.leftOut.reason.data_over_limit": "\xC8 pi\xF9 lungo di quanto la sezione possa mostrare, quindi l\xEC non viene mostrato.",
+  "plan.leftOut.reason.value_over_limit": "\xC8 pi\xF9 lungo di quanto la sezione possa mostrare, quindi non viene mostrato.",
+  "plan.leftOut.reason.row_beyond_stored_places": "La sezione che le mostra ha spazio per meno righe di quante ne hai.",
+  "plan.leftOut.reason.row_over_max": "La sezione che le mostra ha spazio per meno righe di quante ne hai.",
+  "plan.leftOut.reason.row_field_undeclared": "La sezione mostra solo una parte di questa riga.",
+  "plan.leftOut.reason.row_parts_over_fields": "Questa riga ha pi\xF9 parti degli spazi della sezione, quindi non viene mostrata.",
+  "plan.leftOut.reason.row_value_over_limit": "Questa riga \xE8 pi\xF9 lunga di quanto la sezione possa mostrare, quindi non viene mostrata.",
+  "plan.leftOut.reason.row_parts_order": "Gli orari di questa riga vengono prima dei giorni, quindi non viene mostrata.",
+  "plan.leftOut.reason.row_no_list": "Nessuna sezione del modello mostra righe come questa.",
+  "plan.leftOut.reason.social_link_shortened": "\xC8 un link abbreviato, quindi non si sa a quale rete porti.",
+  "plan.leftOut.reason.social_network_unknown": "Questo link non \xE8 di un social network che la sezione pu\xF2 mostrare.",
+  "plan.leftOut.reason.social_handle_without_network": "Questo nome utente non dice su quale rete si trova.",
+  "plan.leftOut.reason.social_link_not_web": "Non \xE8 un link web.",
+  "plan.leftOut.reason.no_social_link": "Non c\u2019\xE8 nessun link da mostrare.",
+  "plan.leftOut.reason.social_network_repeated": "Un altro link alla stessa rete \xE8 gi\xE0 mostrato.",
+  "plan.leftOut.reason.social_link_over_rows": "La sezione che le mostra ha spazio per meno righe di quante ne hai.",
+  "plan.leftOut.reason.page_removed": "Hai chiesto di togliere questa pagina.",
+  "plan.leftOut.reason.no_longer_in_plan": "Non fa parte del tuo piano.",
+  "plan.leftOut.reason.requested_off": "Hai chiesto di togliere questo dal piano.",
+  "plan.leftOut.reason.removed_page_data": "Era solo su una pagina che hai chiesto di togliere."
 };
 
 // ../../locale/tracy-locales/nl/tracy-build-chat.json
@@ -4036,7 +4155,36 @@ var tracy_build_chat_default5 = {
   "plan.refused.trade_fact_missing": "Dit onderdeel legt uw vak uit aan de hand van een gegeven van uw bedrijf, dus dat gegeven blijft.",
   "plan.refused.item_repeated_on_page": "Deze wijziging zou hetzelfde twee keer op \xE9\xE9n pagina tonen.",
   "plan.refused.form_without_destination": "Een formulier heeft een e-mailadres nodig waar de berichten heen gaan.",
-  "plan.refused.map_without_address": "Een kaart heeft uw adres nodig."
+  "plan.refused.map_without_address": "Een kaart heeft uw adres nodig.",
+  "plan.leftOut.reason.whatsapp_unconfirmed": "Geen bron zegt dat dit nummer WhatsApp-berichten ontvangt, dus je site linkt niet naar WhatsApp.",
+  "plan.leftOut.reason.contact_value_missing": "Je hebt gekozen hoe bezoekers je bereiken, maar nog geen waarde gegeven, dus er wordt niets getoond. Voeg die toe in het plan.",
+  "plan.leftOut.reason.fact_longer_than_every_place": "Dit is langer dan elke plek die je ontwerp ervoor heeft, en Tracy kort het nooit in.",
+  "plan.leftOut.reason.no_room_left": "Elke plek die je ontwerp hiervoor heeft, is al bezet.",
+  "plan.leftOut.reason.no_room_left.item": "Er is geen ruimte meer voor meer hiervan.",
+  "plan.leftOut.reason.fewer_than_section_needs": "Elke sectie hiervoor heeft er minstens {min} nodig. Tracy verzint er nooit bij om een sectie te vullen.",
+  "plan.leftOut.reason.section_below_minimum": "Het stond in een sectie die er minstens {min} nodig heeft, en er bleven te weinig over, dus het wordt niet getoond.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.one": "Deze foto staat al in een galerij op een andere pagina, en elke foto staat maar \xE9\xE9n keer op je site, dus deze galerij toont er \xE9\xE9n minder.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.other": "Deze {count} foto\u2019s staan al in een galerij op een andere pagina, en elke foto staat maar \xE9\xE9n keer op je site, dus deze galerij toont er {count} minder.",
+  "plan.leftOut.reason.data_over_limit": "Dit is langer dan de sectie kan tonen, dus het wordt daar niet getoond.",
+  "plan.leftOut.reason.value_over_limit": "Dit is langer dan de sectie kan tonen, dus het wordt niet getoond.",
+  "plan.leftOut.reason.row_beyond_stored_places": "De sectie die deze toont, heeft ruimte voor minder rijen dan je hebt.",
+  "plan.leftOut.reason.row_over_max": "De sectie die deze toont, heeft ruimte voor minder rijen dan je hebt.",
+  "plan.leftOut.reason.row_field_undeclared": "De sectie toont maar een deel van deze rij.",
+  "plan.leftOut.reason.row_parts_over_fields": "Deze rij heeft meer delen dan de sectie plekken heeft, dus ze wordt niet getoond.",
+  "plan.leftOut.reason.row_value_over_limit": "Deze rij is langer dan de sectie kan tonen, dus ze wordt niet getoond.",
+  "plan.leftOut.reason.row_parts_order": "De tijden van deze rij staan voor de dagen, dus ze wordt niet getoond.",
+  "plan.leftOut.reason.row_no_list": "Geen sectie van de template toont rijen zoals deze.",
+  "plan.leftOut.reason.social_link_shortened": "Dit is een verkorte link, dus het is onbekend naar welk netwerk hij leidt.",
+  "plan.leftOut.reason.social_network_unknown": "Deze link is niet van een sociaal netwerk dat de sectie kan tonen.",
+  "plan.leftOut.reason.social_handle_without_network": "Deze naam zegt niet op welk netwerk hij staat.",
+  "plan.leftOut.reason.social_link_not_web": "Dit is geen weblink.",
+  "plan.leftOut.reason.no_social_link": "Er is geen link om te tonen.",
+  "plan.leftOut.reason.social_network_repeated": "Er wordt al een andere link naar hetzelfde netwerk getoond.",
+  "plan.leftOut.reason.social_link_over_rows": "De sectie die deze toont, heeft ruimte voor minder rijen dan je hebt.",
+  "plan.leftOut.reason.page_removed": "Je hebt gevraagd deze pagina te verwijderen.",
+  "plan.leftOut.reason.no_longer_in_plan": "Het hoort niet bij je plan.",
+  "plan.leftOut.reason.requested_off": "Je hebt gevraagd dit uit het plan te halen.",
+  "plan.leftOut.reason.removed_page_data": "Het stond alleen op een pagina die je liet verwijderen."
 };
 
 // ../../locale/tracy-locales/zh/tracy-build-chat.json
@@ -4616,7 +4764,36 @@ var tracy_build_chat_default6 = {
   "plan.refused.trade_fact_missing": "\u6B64\u90E8\u5206\u6839\u636E\u4F60\u7684\u4E00\u9879\u5546\u5BB6\u4FE1\u606F\u6765\u4ECB\u7ECD\u4F60\u7684\u884C\u4E1A\uFF0C\u56E0\u6B64\u8FD9\u9879\u4FE1\u606F\u4F1A\u4FDD\u7559\u3002",
   "plan.refused.item_repeated_on_page": "\u6B64\u66F4\u6539\u4F1A\u5728\u540C\u4E00\u9875\u9762\u4E0A\u628A\u540C\u4E00\u5185\u5BB9\u663E\u793A\u4E24\u6B21\u3002",
   "plan.refused.form_without_destination": "\u8868\u5355\u9700\u8981\u4E00\u4E2A\u63A5\u6536\u7559\u8A00\u7684\u7535\u5B50\u90AE\u4EF6\u5730\u5740\u3002",
-  "plan.refused.map_without_address": "\u5730\u56FE\u9700\u8981\u4F60\u7684\u5730\u5740\u3002"
+  "plan.refused.map_without_address": "\u5730\u56FE\u9700\u8981\u4F60\u7684\u5730\u5740\u3002",
+  "plan.leftOut.reason.whatsapp_unconfirmed": "\u6CA1\u6709\u6765\u6E90\u8BF4\u660E\u8FD9\u4E2A\u53F7\u7801\u63A5\u6536 WhatsApp \u6D88\u606F\uFF0C\u6240\u4EE5\u4F60\u7684\u7F51\u7AD9\u4E0D\u94FE\u63A5\u5230 WhatsApp\u3002",
+  "plan.leftOut.reason.contact_value_missing": "\u4F60\u9009\u62E9\u4E86\u8BBF\u5BA2\u8054\u7CFB\u4F60\u7684\u65B9\u5F0F\uFF0C\u4F46\u8FD8\u6CA1\u6709\u586B\u5199\u5177\u4F53\u5185\u5BB9\uFF0C\u6240\u4EE5\u4E0D\u663E\u793A\u4EFB\u4F55\u5185\u5BB9\u3002\u8BF7\u5728\u65B9\u6848\u4E2D\u6DFB\u52A0\u3002",
+  "plan.leftOut.reason.fact_longer_than_every_place": "\u8FD9\u9879\u5185\u5BB9\u6BD4\u4F60\u7684\u8BBE\u8BA1\u4E3A\u5B83\u51C6\u5907\u7684\u6BCF\u4E2A\u4F4D\u7F6E\u90FD\u957F\uFF0C\u800C Tracy \u4ECE\u4E0D\u622A\u77ED\u5185\u5BB9\u3002",
+  "plan.leftOut.reason.no_room_left": "\u4F60\u7684\u8BBE\u8BA1\u4E3A\u8FD9\u9879\u5185\u5BB9\u51C6\u5907\u7684\u6BCF\u4E2A\u4F4D\u7F6E\u90FD\u5DF2\u88AB\u5360\u7528\u3002",
+  "plan.leftOut.reason.no_room_left.item": "\u5DF2\u7ECF\u6CA1\u6709\u4F4D\u7F6E\u518D\u653E\u66F4\u591A\u8FD9\u7C7B\u5185\u5BB9\u3002",
+  "plan.leftOut.reason.fewer_than_section_needs": "\u6BCF\u4E2A\u5C55\u793A\u8FD9\u7C7B\u5185\u5BB9\u7684\u7248\u5757\u81F3\u5C11\u9700\u8981 {min} \u4E2A\u3002Tracy \u4ECE\u4E0D\u7F16\u9020\u5185\u5BB9\u6765\u586B\u6EE1\u7248\u5757\u3002",
+  "plan.leftOut.reason.section_below_minimum": "\u5B83\u6240\u5728\u7684\u7248\u5757\u81F3\u5C11\u9700\u8981 {min} \u4E2A\u8FD9\u7C7B\u5185\u5BB9\uFF0C\u800C\u5269\u4E0B\u7684\u4E0D\u591F\uFF0C\u6240\u4EE5\u4E0D\u663E\u793A\u3002",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.one": "\u8FD9\u5F20\u7167\u7247\u5DF2\u7ECF\u663E\u793A\u5728\u53E6\u4E00\u9875\u7684\u76F8\u518C\u4E2D\uFF0C\u6BCF\u5F20\u7167\u7247\u5728\u4F60\u7684\u7F51\u7AD9\u4E0A\u53EA\u663E\u793A\u4E00\u6B21\uFF0C\u6240\u4EE5\u8FD9\u4E2A\u76F8\u518C\u5C11\u663E\u793A\u4E00\u5F20\u3002",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.other": "\u8FD9 {count} \u5F20\u7167\u7247\u5DF2\u7ECF\u663E\u793A\u5728\u53E6\u4E00\u9875\u7684\u76F8\u518C\u4E2D\uFF0C\u6BCF\u5F20\u7167\u7247\u5728\u4F60\u7684\u7F51\u7AD9\u4E0A\u53EA\u663E\u793A\u4E00\u6B21\uFF0C\u6240\u4EE5\u8FD9\u4E2A\u76F8\u518C\u5C11\u663E\u793A {count} \u5F20\u3002",
+  "plan.leftOut.reason.data_over_limit": "\u8FD9\u9879\u5185\u5BB9\u8D85\u51FA\u4E86\u8BE5\u7248\u5757\u80FD\u663E\u793A\u7684\u957F\u5EA6\uFF0C\u6240\u4EE5\u4E0D\u5728\u90A3\u91CC\u663E\u793A\u3002",
+  "plan.leftOut.reason.value_over_limit": "\u8FD9\u9879\u5185\u5BB9\u8D85\u51FA\u4E86\u8BE5\u7248\u5757\u80FD\u663E\u793A\u7684\u957F\u5EA6\uFF0C\u6240\u4EE5\u4E0D\u663E\u793A\u3002",
+  "plan.leftOut.reason.row_beyond_stored_places": "\u663E\u793A\u8FD9\u4E9B\u5185\u5BB9\u7684\u7248\u5757\u80FD\u5BB9\u7EB3\u7684\u884C\u6570\u5C11\u4E8E\u4F60\u62E5\u6709\u7684\u884C\u6570\u3002",
+  "plan.leftOut.reason.row_over_max": "\u663E\u793A\u8FD9\u4E9B\u5185\u5BB9\u7684\u7248\u5757\u80FD\u5BB9\u7EB3\u7684\u884C\u6570\u5C11\u4E8E\u4F60\u62E5\u6709\u7684\u884C\u6570\u3002",
+  "plan.leftOut.reason.row_field_undeclared": "\u8BE5\u7248\u5757\u53EA\u663E\u793A\u8FD9\u4E00\u884C\u7684\u4E00\u90E8\u5206\u3002",
+  "plan.leftOut.reason.row_parts_over_fields": "\u8FD9\u4E00\u884C\u7684\u90E8\u5206\u591A\u4E8E\u8BE5\u7248\u5757\u7684\u4F4D\u7F6E\uFF0C\u6240\u4EE5\u4E0D\u663E\u793A\u3002",
+  "plan.leftOut.reason.row_value_over_limit": "\u8FD9\u4E00\u884C\u8D85\u51FA\u4E86\u8BE5\u7248\u5757\u80FD\u663E\u793A\u7684\u957F\u5EA6\uFF0C\u6240\u4EE5\u4E0D\u663E\u793A\u3002",
+  "plan.leftOut.reason.row_parts_order": "\u8FD9\u4E00\u884C\u7684\u65F6\u95F4\u6392\u5728\u65E5\u671F\u4E4B\u524D\uFF0C\u6240\u4EE5\u4E0D\u663E\u793A\u3002",
+  "plan.leftOut.reason.row_no_list": "\u6A21\u677F\u4E2D\u6CA1\u6709\u7248\u5757\u663E\u793A\u8FD9\u6837\u7684\u884C\u3002",
+  "plan.leftOut.reason.social_link_shortened": "\u8FD9\u662F\u4E00\u4E2A\u77ED\u94FE\u63A5\uFF0C\u65E0\u6CD5\u77E5\u9053\u5B83\u6307\u5411\u54EA\u4E2A\u793E\u4EA4\u7F51\u7EDC\u3002",
+  "plan.leftOut.reason.social_network_unknown": "\u8FD9\u4E2A\u94FE\u63A5\u4E0D\u5C5E\u4E8E\u8BE5\u7248\u5757\u80FD\u663E\u793A\u7684\u793E\u4EA4\u7F51\u7EDC\u3002",
+  "plan.leftOut.reason.social_handle_without_network": "\u8FD9\u4E2A\u8D26\u53F7\u540D\u6CA1\u6709\u8BF4\u660E\u5B83\u5728\u54EA\u4E2A\u7F51\u7EDC\u4E0A\u3002",
+  "plan.leftOut.reason.social_link_not_web": "\u8FD9\u4E0D\u662F\u7F51\u9875\u94FE\u63A5\u3002",
+  "plan.leftOut.reason.no_social_link": "\u6CA1\u6709\u53EF\u663E\u793A\u7684\u94FE\u63A5\u3002",
+  "plan.leftOut.reason.social_network_repeated": "\u5DF2\u7ECF\u663E\u793A\u4E86\u6307\u5411\u540C\u4E00\u7F51\u7EDC\u7684\u53E6\u4E00\u4E2A\u94FE\u63A5\u3002",
+  "plan.leftOut.reason.social_link_over_rows": "\u663E\u793A\u8FD9\u4E9B\u5185\u5BB9\u7684\u7248\u5757\u80FD\u5BB9\u7EB3\u7684\u884C\u6570\u5C11\u4E8E\u4F60\u62E5\u6709\u7684\u884C\u6570\u3002",
+  "plan.leftOut.reason.page_removed": "\u4F60\u8981\u6C42\u5220\u9664\u8FD9\u4E2A\u9875\u9762\u3002",
+  "plan.leftOut.reason.no_longer_in_plan": "\u5B83\u4E0D\u5C5E\u4E8E\u4F60\u7684\u65B9\u6848\u3002",
+  "plan.leftOut.reason.requested_off": "\u4F60\u8981\u6C42\u628A\u8FD9\u9879\u4ECE\u65B9\u6848\u4E2D\u79FB\u9664\u3002",
+  "plan.leftOut.reason.removed_page_data": "\u5B83\u53EA\u51FA\u73B0\u5728\u4F60\u8981\u6C42\u5220\u9664\u7684\u9875\u9762\u4E0A\u3002"
 };
 
 // ../../locale/tracy-locale-vi/vi/tracy-build-chat.json
@@ -5196,7 +5373,36 @@ var tracy_build_chat_default7 = {
   "plan.refused.trade_fact_missing": "Ph\u1EA7n n\xE0y gi\u1EA3i th\xEDch ng\xE0nh c\u1EE7a b\u1EA1n d\u1EF1a tr\xEAn m\u1ED9t th\xF4ng tin v\u1EC1 doanh nghi\u1EC7p, n\xEAn th\xF4ng tin \u0111\xF3 \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.",
   "plan.refused.item_repeated_on_page": "Thay \u0111\u1ED5i n\xE0y s\u1EBD hi\u1EC3n th\u1ECB c\xF9ng m\u1ED9t th\u1EE9 hai l\u1EA7n tr\xEAn m\u1ED9t trang.",
   "plan.refused.form_without_destination": "Bi\u1EC3u m\u1EABu c\u1EA7n m\u1ED9t \u0111\u1ECBa ch\u1EC9 email \u0111\u1EC3 nh\u1EADn tin nh\u1EAFn.",
-  "plan.refused.map_without_address": "B\u1EA3n \u0111\u1ED3 c\u1EA7n \u0111\u1ECBa ch\u1EC9 c\u1EE7a b\u1EA1n."
+  "plan.refused.map_without_address": "B\u1EA3n \u0111\u1ED3 c\u1EA7n \u0111\u1ECBa ch\u1EC9 c\u1EE7a b\u1EA1n.",
+  "plan.leftOut.reason.whatsapp_unconfirmed": "Kh\xF4ng ngu\u1ED3n n\xE0o cho bi\u1EBFt s\u1ED1 n\xE0y nh\u1EADn tin nh\u1EAFn WhatsApp, n\xEAn trang c\u1EE7a b\u1EA1n kh\xF4ng li\xEAn k\u1EBFt t\u1EDBi WhatsApp.",
+  "plan.leftOut.reason.contact_value_missing": "B\u1EA1n \u0111\xE3 ch\u1ECDn c\xE1ch kh\xE1ch li\xEAn h\u1EC7 nh\u01B0ng ch\u01B0a cho gi\xE1 tr\u1ECB, n\xEAn ch\u01B0a hi\u1EC3n th\u1ECB g\xEC. H\xE3y th\xEAm n\xF3 tr\xEAn k\u1EBF ho\u1EA1ch.",
+  "plan.leftOut.reason.fact_longer_than_every_place": "N\u1ED9i dung n\xE0y d\xE0i h\u01A1n m\u1ECDi ch\u1ED7 thi\u1EBFt k\u1EBF c\u1EE7a b\u1EA1n c\xF3 cho n\xF3, v\xE0 Tracy kh\xF4ng bao gi\u1EDD c\u1EAFt ng\u1EAFn.",
+  "plan.leftOut.reason.no_room_left": "M\u1ECDi ch\u1ED7 thi\u1EBFt k\u1EBF c\u1EE7a b\u1EA1n c\xF3 cho n\u1ED9i dung n\xE0y \u0111\u1EC1u \u0111\xE3 \u0111\u01B0\u1EE3c d\xF9ng.",
+  "plan.leftOut.reason.no_room_left.item": "Kh\xF4ng c\xF2n ch\u1ED7 cho th\xEAm nh\u1EEFng m\u1EE5c n\xE0y.",
+  "plan.leftOut.reason.fewer_than_section_needs": "M\u1ED7i ph\u1EA7n cho nh\u1EEFng m\u1EE5c n\xE0y c\u1EA7n \xEDt nh\u1EA5t {min}. Tracy kh\xF4ng bao gi\u1EDD t\u1EF1 b\u1ECBa th\xEAm \u0111\u1EC3 l\u1EA5p ph\u1EA7n \u0111\xF3.",
+  "plan.leftOut.reason.section_below_minimum": "N\xF3 n\u1EB1m trong m\u1ED9t ph\u1EA7n c\u1EA7n \xEDt nh\u1EA5t {min} m\u1EE5c nh\u01B0 v\u1EADy, v\xE0 kh\xF4ng c\xF2n \u0111\u1EE7 m\u1EE5c cho ph\u1EA7n \u0111\xF3, n\xEAn n\xF3 kh\xF4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.one": "\u1EA2nh n\xE0y \u0111\xE3 hi\u1EC7n trong m\u1ED9t th\u01B0 vi\u1EC7n \u1EA3nh \u1EDF trang kh\xE1c, v\xE0 m\u1ED7i \u1EA3nh ch\u1EC9 hi\u1EC7n m\u1ED9t l\u1EA7n tr\xEAn trang c\u1EE7a b\u1EA1n, n\xEAn th\u01B0 vi\u1EC7n n\xE0y hi\u1EC7n \xEDt h\u01A1n m\u1ED9t \u1EA3nh.",
+  "plan.leftOut.reason.gallery_photo_shown_elsewhere.other": "{count} \u1EA3nh n\xE0y \u0111\xE3 hi\u1EC7n trong m\u1ED9t th\u01B0 vi\u1EC7n \u1EA3nh \u1EDF trang kh\xE1c, v\xE0 m\u1ED7i \u1EA3nh ch\u1EC9 hi\u1EC7n m\u1ED9t l\u1EA7n tr\xEAn trang c\u1EE7a b\u1EA1n, n\xEAn th\u01B0 vi\u1EC7n n\xE0y hi\u1EC7n \xEDt h\u01A1n {count} \u1EA3nh.",
+  "plan.leftOut.reason.data_over_limit": "N\u1ED9i dung n\xE0y d\xE0i h\u01A1n ph\u1EA7n \u0111\xF3 c\xF3 th\u1EC3 hi\u1EC3n th\u1ECB, n\xEAn n\xF3 kh\xF4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB \u1EDF \u0111\xF3.",
+  "plan.leftOut.reason.value_over_limit": "N\u1ED9i dung n\xE0y d\xE0i h\u01A1n ph\u1EA7n \u0111\xF3 c\xF3 th\u1EC3 hi\u1EC3n th\u1ECB, n\xEAn n\xF3 kh\xF4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB.",
+  "plan.leftOut.reason.row_beyond_stored_places": "Ph\u1EA7n hi\u1EC3n th\u1ECB nh\u1EEFng d\xF2ng n\xE0y c\xF3 \xEDt ch\u1ED7 h\u01A1n s\u1ED1 d\xF2ng b\u1EA1n c\xF3.",
+  "plan.leftOut.reason.row_over_max": "Ph\u1EA7n hi\u1EC3n th\u1ECB nh\u1EEFng d\xF2ng n\xE0y c\xF3 \xEDt ch\u1ED7 h\u01A1n s\u1ED1 d\xF2ng b\u1EA1n c\xF3.",
+  "plan.leftOut.reason.row_field_undeclared": "Ph\u1EA7n \u0111\xF3 ch\u1EC9 hi\u1EC3n th\u1ECB m\u1ED9t ph\u1EA7n c\u1EE7a d\xF2ng n\xE0y.",
+  "plan.leftOut.reason.row_parts_over_fields": "D\xF2ng n\xE0y c\xF3 nhi\u1EC1u ph\u1EA7n h\u01A1n s\u1ED1 ch\u1ED7 c\u1EE7a ph\u1EA7n \u0111\xF3, n\xEAn n\xF3 kh\xF4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB.",
+  "plan.leftOut.reason.row_value_over_limit": "D\xF2ng n\xE0y d\xE0i h\u01A1n ph\u1EA7n \u0111\xF3 c\xF3 th\u1EC3 hi\u1EC3n th\u1ECB, n\xEAn n\xF3 kh\xF4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB.",
+  "plan.leftOut.reason.row_parts_order": "Gi\u1EDD c\u1EE7a d\xF2ng n\xE0y \u0111\u1EE9ng tr\u01B0\u1EDBc ng\xE0y, n\xEAn n\xF3 kh\xF4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB.",
+  "plan.leftOut.reason.row_no_list": "Kh\xF4ng ph\u1EA7n n\xE0o c\u1EE7a m\u1EABu hi\u1EC3n th\u1ECB nh\u1EEFng d\xF2ng nh\u01B0 th\u1EBF n\xE0y.",
+  "plan.leftOut.reason.social_link_shortened": "\u0110\xE2y l\xE0 li\xEAn k\u1EBFt r\xFAt g\u1ECDn, n\xEAn kh\xF4ng bi\u1EBFt n\xF3 d\u1EABn t\u1EDBi m\u1EA1ng x\xE3 h\u1ED9i n\xE0o.",
+  "plan.leftOut.reason.social_network_unknown": "Li\xEAn k\u1EBFt n\xE0y kh\xF4ng thu\u1ED9c m\u1EA1ng x\xE3 h\u1ED9i m\xE0 ph\u1EA7n \u0111\xF3 hi\u1EC3n th\u1ECB \u0111\u01B0\u1EE3c.",
+  "plan.leftOut.reason.social_handle_without_network": "T\xEAn t\xE0i kho\u1EA3n n\xE0y kh\xF4ng cho bi\u1EBFt n\xF3 thu\u1ED9c m\u1EA1ng n\xE0o.",
+  "plan.leftOut.reason.social_link_not_web": "\u0110\xE2y kh\xF4ng ph\u1EA3i li\xEAn k\u1EBFt web.",
+  "plan.leftOut.reason.no_social_link": "Kh\xF4ng c\xF3 li\xEAn k\u1EBFt n\xE0o \u0111\u1EC3 hi\u1EC3n th\u1ECB.",
+  "plan.leftOut.reason.social_network_repeated": "M\u1ED9t li\xEAn k\u1EBFt kh\xE1c t\u1EDBi c\xF9ng m\u1EA1ng \u0111\xF3 \u0111\xE3 \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB.",
+  "plan.leftOut.reason.social_link_over_rows": "Ph\u1EA7n hi\u1EC3n th\u1ECB nh\u1EEFng d\xF2ng n\xE0y c\xF3 \xEDt ch\u1ED7 h\u01A1n s\u1ED1 d\xF2ng b\u1EA1n c\xF3.",
+  "plan.leftOut.reason.page_removed": "B\u1EA1n \u0111\xE3 y\xEAu c\u1EA7u b\u1ECF trang n\xE0y.",
+  "plan.leftOut.reason.no_longer_in_plan": "N\xF3 kh\xF4ng thu\u1ED9c k\u1EBF ho\u1EA1ch c\u1EE7a b\u1EA1n.",
+  "plan.leftOut.reason.requested_off": "B\u1EA1n \u0111\xE3 y\xEAu c\u1EA7u b\u1ECF m\u1EE5c n\xE0y kh\u1ECFi k\u1EBF ho\u1EA1ch.",
+  "plan.leftOut.reason.removed_page_data": "N\xF3 ch\u1EC9 c\xF3 tr\xEAn m\u1ED9t trang b\u1EA1n \u0111\xE3 y\xEAu c\u1EA7u b\u1ECF."
 };
 
 // src/host/chat-tables.mjs

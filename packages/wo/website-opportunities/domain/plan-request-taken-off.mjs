@@ -17,6 +17,8 @@ import { namesWords } from './plan-request-words.mjs'
 
 /** The left out reason of data the customer asked to take off the plan. */
 export const REQUESTED_OFF_REASON = 'You asked to take this off the plan.'
+/** Its code, which the plan card says it by (`plan-left-out-codes.mjs`). */
+export const REQUESTED_OFF_CODE = 'requested_off'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const shownOn = (pages) => new Set(list(pages).flatMap((p) => list(p.blocks).flatMap((b) => b.data)))

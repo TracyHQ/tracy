@@ -77,30 +77,57 @@ export function leftOutReasonOf(
   entry: { code?: string | null; params?: Params; kind?: string | null },
   reason: string
 ): string {
-  const code = entry.code
-  if (typeof code !== 'string') return reason
+  const code = codeOf(entry.code, reason)
+  if (code === null) return reason
   if (code === 'left_out_neutral') {
     const kind = entry.kind === 'page' || entry.kind === 'block' ? entry.kind : 'item'
     return t(`plan.leftOut.reason.left_out_neutral.${kind}` as StringKey)
   }
-  if (code === 'no_gallery_room') {
+  if (code === 'no_gallery_room' || code === 'gallery_photo_shown_elsewhere') {
     // Only the sentence worded for its number has one: an entry without a count keeps the plan's own.
     const n = count(entry.params)
     if (n === null || n === 0) return reason
-    return t(
-      n === 1 ? 'plan.leftOut.reason.no_gallery_room.one' : 'plan.leftOut.reason.no_gallery_room.other',
-      {
-        count: n
-      }
-    )
+    return t(`plan.leftOut.reason.${code}.${n === 1 ? 'one' : 'other'}` as StringKey, { count: n })
   }
   if (code === LIBRARY_REFUSED) {
     const why = whyOf(t, entry.params)
     return why === null ? reason : t('plan.leftOut.reason.library_section_refused', { why })
   }
+  // An item with no room left names the kind in the plan's sentence; the card's line names it already.
+  if (code === 'no_room_left' && entry.kind === 'item') return t('plan.leftOut.reason.no_room_left.item')
+  if (code === 'fewer_than_section_needs' || code === 'section_below_minimum') {
+    const min = count(entry.params, 'min')
+    return min === null ? reason : t(`plan.leftOut.reason.${code}` as StringKey, { min })
+  }
   const key = `plan.leftOut.reason.${code}`
   return known(key) ? t(key) : reason
 }
+
+/**
+ * The reason sentences that are the whole text of one code, by sentence: a plan stored before its sentence had a code
+ * carries it as the model's words (`model_reason`, `stated`) or under a code of the brief the card does not say
+ * (`stale`, read as `kept_off_site` since, #575 stand). Exact sentences only, and only one code's.
+ */
+const CODE_OF_SENTENCE: ReadonlyMap<string, string> = (() => {
+  const prefix = 'plan.leftOut.reason.'
+  const byText = new Map<string, string[]>()
+  for (const [key, text] of Object.entries(en))
+    if (key.startsWith(prefix) && !key.slice(prefix.length).includes('.') && !text.includes('{'))
+      byText.set(text, [...(byText.get(text) ?? []), key.slice(prefix.length)])
+  return new Map([...byText].filter(([, codes]) => codes.length === 1).map(([text, [code]]) => [text, code]))
+})()
+
+/** The code a line is said by: its own when the card has words for it, else the one of its exact sentence. */
+function codeOf(own: string | null | undefined, reason: string): string | null {
+  const sayable = typeof own === 'string' && own !== 'model_reason' && own !== 'stated' && hasWords(own)
+  return sayable ? own : (CODE_OF_SENTENCE.get(reason) ?? (typeof own === 'string' ? own : null))
+}
+
+/** Whether the card has words for a left out code, in some form. */
+const hasWords = (code: string) =>
+  Object.keys(en).some(
+    (key) => key === `plan.leftOut.reason.${code}` || key.startsWith(`plan.leftOut.reason.${code}.`)
+  )
 
 const LIBRARY_REFUSED = 'library_section_refused'
 /** Why the Tracy reviews section does not show a review, in the interface language, or null for no known code. */

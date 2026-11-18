@@ -8,9 +8,19 @@ import { Fold, listOf, onceEach, plural, Section, Trash } from './plan-card-part
 import { leftOutReasonsOf, leftOutWhatOf, sectionLabelOf } from './plan-codes'
 import type { ReviewContext } from './plan-review-top'
 import { factLabelOf, sentenceOf, sourceNameOf, wordOf } from './plan-words'
-import type { StringKey, Translate } from './strings'
+import { en, type StringKey, type Translate } from './strings'
 
 const groupKey = (group: string) => `plan.notOnSite.group.${group}` as StringKey
+
+/**
+ * The "send later" entry a removal took off, by its name, for a removal stored before it carried its code
+ * (`params.later`, #575 stand: "Your prices" read in English). Exact names only.
+ */
+const LATER_OF_NAME: ReadonlyMap<string, string> = new Map(
+  Object.entries(en)
+    .filter(([key]) => key.startsWith('plan.later.what.'))
+    .map(([key, text]) => [text, key.slice('plan.later.what.'.length)])
+)
 
 /**
  * A removed line's name in the card's words, by the code it carries, as the card names the same part while it is on
@@ -18,7 +28,9 @@ const groupKey = (group: string) => `plan.notOnSite.group.${group}` as StringKey
  */
 function removedWhatOf(t: Translate, line: ReviewContext['card']['notOnSite']['removed'][number]): string {
   if (line.section) return sectionLabelOf(t, line.section, line.what)
-  if (line.later) return wordOf(t, `plan.later.what.${line.later}`, line.what)
+  const later =
+    line.later ?? (line.kind === 'feature' && !line.factKind ? LATER_OF_NAME.get(line.what) : undefined)
+  if (later) return wordOf(t, `plan.later.what.${later}`, line.what)
   if (line.factKind) return factLabelOf(t, line.factKind, line.what)
   return line.dataKind ? wordOf(t, `plan.fact.${line.dataKind}`, line.what) : line.what
 }

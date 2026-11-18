@@ -194,6 +194,49 @@ export const en = {
     'None of your videos fit this space (wide pictures without text on top), so it shows no video.',
   'plan.leftOut.reason.page_nothing_to_show': 'You have nothing yet for these pages to show.',
   'plan.leftOut.reason.page_not_planned': 'Your plan does not need these pages.',
+  // Every other code a left out line can carry (`plan-left-out-codes.mjs`, #575 stand: these read in English).
+  'plan.leftOut.reason.whatsapp_unconfirmed':
+    'No source says this number takes WhatsApp messages, so your site does not link to WhatsApp.',
+  'plan.leftOut.reason.contact_value_missing':
+    'You chose how visitors reach you but gave no value yet, so none is shown. Add it on the plan.',
+  'plan.leftOut.reason.fact_longer_than_every_place':
+    'This is longer than every place your design has for it, and Tracy never shortens it.',
+  'plan.leftOut.reason.no_room_left': 'Every place your design has for this is taken already.',
+  'plan.leftOut.reason.no_room_left.item': 'There is no room left for more of these.',
+  'plan.leftOut.reason.fewer_than_section_needs':
+    'Every section for these needs at least {min}. Tracy never invents more to fill a section.',
+  'plan.leftOut.reason.section_below_minimum':
+    'It was in a section that needs at least {min} of these, and too few were left for it, so it is not shown.',
+  'plan.leftOut.reason.gallery_photo_shown_elsewhere.one':
+    'This photo already shows in a gallery on another page, and each photo shows once on your site, so this gallery shows one fewer.',
+  'plan.leftOut.reason.gallery_photo_shown_elsewhere.other':
+    'These {count} photos already show in a gallery on another page, and each photo shows once on your site, so this gallery shows {count} fewer.',
+  'plan.leftOut.reason.data_over_limit':
+    'This is longer than the section can show, so it is not shown there.',
+  'plan.leftOut.reason.value_over_limit': 'This is longer than the section can show, so it is not shown.',
+  'plan.leftOut.reason.row_beyond_stored_places':
+    'The section that shows these has room for fewer rows than you have.',
+  'plan.leftOut.reason.row_over_max': 'The section that shows these has room for fewer rows than you have.',
+  'plan.leftOut.reason.row_field_undeclared': 'The section shows only part of this row.',
+  'plan.leftOut.reason.row_parts_over_fields':
+    'This row has more parts than the section has places for, so it is not shown.',
+  'plan.leftOut.reason.row_value_over_limit':
+    'This row is longer than the section can show, so it is not shown.',
+  'plan.leftOut.reason.row_parts_order': 'The times of this row come before its days, so it is not shown.',
+  'plan.leftOut.reason.row_no_list': 'No section of the template shows rows like this one.',
+  'plan.leftOut.reason.social_link_shortened':
+    'This is a shortened link, so the network it leads to is unknown.',
+  'plan.leftOut.reason.social_network_unknown': 'This link is not on a social network the section can show.',
+  'plan.leftOut.reason.social_handle_without_network': 'This handle does not say which network it is on.',
+  'plan.leftOut.reason.social_link_not_web': 'This is not a web link.',
+  'plan.leftOut.reason.no_social_link': 'There is no link to show.',
+  'plan.leftOut.reason.social_network_repeated': 'Another link to the same network is already shown.',
+  'plan.leftOut.reason.social_link_over_rows':
+    'The section that shows these has room for fewer rows than you have.',
+  'plan.leftOut.reason.page_removed': 'You asked to remove this page.',
+  'plan.leftOut.reason.no_longer_in_plan': 'It is not part of your plan.',
+  'plan.leftOut.reason.requested_off': 'You asked to take this off the plan.',
+  'plan.leftOut.reason.removed_page_data': 'It was only on a page you asked to remove.',
   // A review the Tracy reviews section does not show (`library_section_refused`), by why (`params.why`); the reasons
   // of one line are said after one lead in, joined by a semicolon.
   'plan.leftOut.reason.library_section_refused': 'Not shown in the Tracy section: {why}.',

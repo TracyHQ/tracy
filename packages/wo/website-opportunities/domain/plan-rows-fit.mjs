@@ -42,6 +42,7 @@ export const CHILD_LIST_REASONS = Object.freeze({
 })
 /** The reason of a left out row the rules never planned at all. */
 export const NO_LIST_REASON = 'No section of the template shows rows like this one.'
+export const NO_LIST_CODE = 'row_no_list'
 /** Every reason a left out row may carry, to tell row entries from other left out entries. */
 export const ROW_REASONS = new Set([...Object.values(CHILD_LIST_REASONS), NO_LIST_REASON])
 

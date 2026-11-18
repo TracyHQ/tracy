@@ -16,6 +16,7 @@ import { sameWords } from './plan-request-words.mjs'
 
 /** The left out reason of data only a page the customer asked to remove showed. */
 export const REMOVED_PAGE_DATA_REASON = 'It was only on a page you asked to remove.'
+export const REMOVED_PAGE_DATA_CODE = 'removed_page_data'
 const MAIN_BLOCK_KEPT =
   'a page cannot lose its main section: remove the page only when the request asks for that, or report the wish under notDone with reason outside_plan'
 

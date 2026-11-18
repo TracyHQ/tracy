@@ -311,6 +311,23 @@ test('every removal has a row with Bring back, said in the card language by its 
   assert.equal(html.includes('>Your prices.<'), false)
 })
 
+test('a "send later" removal stored before it carried its code is named in the card language (#575 stand)', () => {
+  const p = plan()
+  // Stored before the code, its removal no longer kept by the draft: only the plan's own name is left.
+  p.leftOut.push({
+    what: 'Your prices',
+    kind: 'feature',
+    reason: 'You took this off the plan.',
+    code: 'owner_removed',
+    params: { removal: 'removal-6' }
+  })
+  const t = lib.inLanguage(vi, 'vi')
+  const html = lib.card({ t, plan: p, review: REVIEW, onEdit: async () => ({}), onUndo: async () => ({}) })
+  assert.ok(html.includes('data-removal="removal-6"'))
+  assert.ok(html.includes(vi('plan.later.what.later_prices')))
+  assert.equal(html.includes('Your prices'), false)
+})
+
 test('two sections of one page that would read the same are told apart by their own label or message', () => {
   const sections = [
     { id: 'a', label: 'Services', labelCode: 'services' },

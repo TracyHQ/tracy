@@ -7,7 +7,7 @@
 // N of the block's data is written to stored place N, a nested list's parent row to its row's place),
 // `row_unknown` (not a row or fact of the plan data, or not a page of the plan), `row_fields_undeclared` (a row
 // holding no data kind of the list), `row_not_owned` (a row of another item), `row_repeated`.
-import { NO_LIST_REASON } from './plan-rows-fit.mjs'
+import { NO_LIST_CODE, NO_LIST_REASON } from './plan-rows-fit.mjs'
 import { firstRowOf, fitsList, isPageKeyed, listKindsOf, roomOf, shownItemIds } from './plan-rows.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -132,7 +132,7 @@ export function rowsLeftOut(data, planned, dropped, leftOutIds, shown = null) {
       what: record.entry.label,
       kind: 'item',
       reason: why.get(record.id)?.reason ?? NO_LIST_REASON,
-      code: why.get(record.id)?.code ?? 'row_no_list'
+      code: why.get(record.id)?.code ?? NO_LIST_CODE
     })
   }
   for (const [id, d] of why) {

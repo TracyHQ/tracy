@@ -133,7 +133,9 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
                 : 'no_room_left',
         ...(kind !== 'gallery' && REVIEW_PROBLEM_CODES[refusedBy.get(item.id)]
           ? { params: { why: REVIEW_PROBLEM_CODES[refusedBy.get(item.id)] } }
-          : {}),
+          : kind !== 'gallery' && !refusedBy.has(item.id) && fewer
+            ? { params: { min: fewer } }
+            : {}),
         reason:
           kind === 'gallery'
             ? 'No gallery has room for it. It stays with your photos and may be used elsewhere on the site.'

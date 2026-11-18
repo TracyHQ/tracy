@@ -69,6 +69,7 @@ import { withLabelCodes } from './plan-wording-codes.mjs'
 import { wordingProblems } from './plan-gate-wording.mjs'
 import { planRows } from './plan-rows.mjs'
 import { modelLeftOutOf, withNamedIds, withReasonCodes } from './plan-left-out-wording.mjs'
+import { withSentenceCodes } from './plan-left-out-codes.mjs'
 import { withoutProtectedLeftOut } from './plan-left-out-protected.mjs'
 import { withKeyedLeftOut } from './plan-left-out-keyed.mjs'
 import { kitPagesLeftOut } from './plan-left-out-pages.mjs'
@@ -243,7 +244,8 @@ export function gatePlan(reply, context) {
     ...systemPages,
     ...intent.fields
   }
-  plan.leftOut = withCountedReasons(withReasonCodes(plan.leftOut, plan))
+  // A sentence code writes is said by its code, also one carried as model words or kept from an older plan.
+  plan.leftOut = withCountedReasons(withReasonCodes(withSentenceCodes(plan.leftOut), plan))
   // Counted on the final pages: a frame of an item the gate took off later is no picture to create. A photo the final
   // left out list keeps off (`leftOutKeptOff`) fills no frame, as the pictures step reads it at build time.
   const finalPictures = picturesOf(rows.pages, context.blocks, context.data, {

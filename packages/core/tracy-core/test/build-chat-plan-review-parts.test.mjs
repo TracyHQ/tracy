@@ -270,3 +270,22 @@ test('every removal the draft can bring back has its line, and each line carries
   assert.deepEqual([by['removal-8'].what, by['removal-8'].dataKind], ['Adult coaching', 'service'])
   assert.deepEqual([by['removal-9'].what, by['removal-9'].factKind], ['Phone', 'contact.phone'])
 })
+
+test('a "send later" removal stored before its entry carried the code takes it from its record (#575 stand)', () => {
+  const plan = reviewPlan()
+  plan.leftOut.push({
+    what: 'Your prices',
+    kind: 'feature',
+    reason: 'You took this off the plan.',
+    code: 'owner_removed',
+    params: { removal: 'removal-6' }
+  })
+  const review = {
+    count: 1,
+    canRevert: true,
+    removals: [{ id: 'removal-6', op: 'remove-later', target: { later: 'later_prices' } }],
+    locks: LOCKS
+  }
+  const [line] = planCardOf(plan, { review }).notOnSite.removed
+  assert.deepEqual([line.removal, line.what, line.later], ['removal-6', 'Your prices', 'later_prices'])
+})

@@ -255,7 +255,9 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   `code` (optional): the stable code of the reason beside its sentence, lower case words joined by underscores, by
   which the plan card translates the entry; the composer's gate gives every entry one (`model_reason`: a sentence the
   model wrote and code could not derive, to translate as written; `stated`: a code made sentence without a code of
-  its own). `what` names a section, a page or the data in the customer's words, never a block id. `item`
+  its own). Every sentence code writes has its own code, listed in `plan-left-out-codes.mjs` (`LEFT_OUT_CODES`), and
+  the plan card has words for each in every language it ships; an entry carrying a code sentence word for word as
+  `model_reason` or `stated` (a plan stored before its code) is read by that sentence's code (`withSentenceCodes`). `what` names a section, a page or the data in the customer's words, never a block id. `item`
   (optional): the id of the fact, item or row the entry reports, when the plan lists it; a fact listed in `facts`
   and named by a left out entry is known to the plan but not shown on the site. `params` (optional, only beside a
   `code`): the values the code's sentence is worded with (`no_gallery_room` `{count}`, the photos left out that way;
@@ -362,7 +364,10 @@ notes for the writer (#575 plan card): `keyMessages[<id>].label`, `pages[<id>].k
 
 A search term list the owner sets marks the page's terms (`seo.ownerAdded`: the terms the owner typed that code does
 not make; `seo.ownerRemoved`: terms code makes that the owner took off). Code makes the terms again from the data after
-every edit (`withSearchTerms`): the terms it makes but those the owner took off, then the owner's own, at most 10. A
+every edit (`withSearchTerms`): the terms it makes but those the owner took off, then the owner's own, at most 10.
+Each list the owner sets marks the page again from the list before it: a term the owner added and takes off again
+leaves `ownerAdded` (it is no term code makes, so no `ownerRemoved` either), and a term code makes that the owner types
+back leaves `ownerRemoved`; the old marks are not checked against the new list. A
 list the gate cannot save is refused with its code: `search_terms_empty`, `search_term_too_long` (over 60 characters),
 `search_term_twice`, `too_many_search_terms`.
 
@@ -537,6 +542,10 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
   (`block`, `factIds`); on a block `message` and `carries` (key message ids); on the plan `keyMessages` (`{id, label}`),
   `primaryAction` (`factIds`) and `later` (`{what, reason, code, params?}`). Every earlier plan stays valid and the
   schema stays `tracy-build-plan/v1`. A reader that does not know them ignores them; the plan card shows none yet.
+- 18/11/2026 (#575), additive: left out codes `requested_off` (what a change request took off), `removed_page_data`
+  (data only a removed page showed), `no_longer_in_plan` (a carried section whose reason named a removed page); a
+  brief reason the card has no words for is held as `kept_off_site`; `fewer_than_section_needs` carries `params.min`.
+  An owner's search term list is marked again from the list before it, so an added term can be taken off again.
 - 18/11/2026 (#575), additive: a left out entry of code `owner_removed` may carry `params.section` (a removed
   section's `labelCode`) or `params.later` (a removed "send later" entry's code); a left out entry of what the content
   brief holds back carries `params.field` (the brief field). A brief `missing` line about a source that could not be

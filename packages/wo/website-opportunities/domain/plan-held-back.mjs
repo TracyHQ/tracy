@@ -31,14 +31,13 @@ export const FIELD_NAMES = Object.freeze({
 })
 /** A brief `missing` line about a source that could not be read (`brief-sources.mjs`), not about the site's content. */
 const isSourceLine = (field) => field.startsWith('source:')
-/** The sentence of each code; one the card does not know is shown as this sentence. */
+/** The sentence of each code the card says; any other brief code is held as `kept_off_site`. */
 export const HELD_BACK_REASONS = Object.freeze({
   not_collected: 'None of the sources we read gives this, so your site does not show it yet.',
   sources_disagree: 'Your sources disagree on this, so it stays off your site until you confirm it.',
   kept_off_site: 'This stays off your site until you confirm it.',
   owner_withheld: 'You asked to keep this off the site.'
 })
-const FALLBACK_REASON = HELD_BACK_REASONS.kept_off_site
 
 /**
  * The left out lines of what the brief holds back.
@@ -46,21 +45,29 @@ const FALLBACK_REASON = HELD_BACK_REASONS.kept_off_site
  * @returns {Array<{what: string, kind: 'feature', reason: string, code: string, params: {count: number, field: string}}>}
  */
 export function heldBackLeftOutOf(profile) {
-  return list(profile?.heldBack)
-    .filter(
-      (e) => isText(e?.field) && isText(e?.code) && !REPORTED_ELSEWHERE.has(e.field) && !isSourceLine(e.field)
-    )
-    .map((e) => {
-      const code = e.code === 'owner_left_off' ? 'owner_withheld' : e.code
-      const count = Number.isInteger(e.count) && e.count > 0 ? e.count : 1
-      return {
-        what:
-          FIELD_NAMES[e.field] ?? e.field.charAt(0).toUpperCase() + e.field.slice(1).replace(/[-_]/g, ' '),
-        kind: 'feature',
-        reason: HELD_BACK_REASONS[code] ?? FALLBACK_REASON,
-        code,
-        // The field names the line in the card's language (`plan.heldBack.field.<field>`).
-        params: { count, field: e.field }
-      }
+  const lines = []
+  for (const e of list(profile?.heldBack)) {
+    if (!isText(e?.field) || !isText(e?.code) || REPORTED_ELSEWHERE.has(e.field) || isSourceLine(e.field))
+      continue
+    // A brief reason the card has no words for (`stale`, `evidence_not_found`: the brief writes its own reasons) is
+    // held as kept off the site, its true and plain sentence, by that code (#575 stand: it read in English).
+    const own = e.code === 'owner_left_off' ? 'owner_withheld' : e.code
+    const code = Object.hasOwn(HELD_BACK_REASONS, own) ? own : 'kept_off_site'
+    const count = Number.isInteger(e.count) && e.count > 0 ? e.count : 1
+    // Two brief reasons of one field that read the same are one line.
+    const same = lines.find((l) => l.params.field === e.field && l.code === code)
+    if (same) {
+      same.params.count += count
+      continue
+    }
+    lines.push({
+      what: FIELD_NAMES[e.field] ?? e.field.charAt(0).toUpperCase() + e.field.slice(1).replace(/[-_]/g, ' '),
+      kind: 'feature',
+      reason: HELD_BACK_REASONS[code],
+      code,
+      // The field names the line in the card's language (`plan.heldBack.field.<field>`).
+      params: { count, field: e.field }
     })
+  }
+  return lines
 }

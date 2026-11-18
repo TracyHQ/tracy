@@ -310,10 +310,13 @@ function removedOf(plan, removals) {
   }
   const items = itemById(plan)
   const facts = factById(plan)
-  const codes = (part) => {
+  // A part's codes; a "send later" removal stored before its part carried the code has it in its record's target.
+  const codes = (part, record) => {
     const out = {}
     if (typeof part?.params?.section === 'string') out.section = part.params.section
     if (typeof part?.params?.later === 'string') out.later = part.params.later
+    else if (record?.op === 'remove-later' && typeof record.target?.later === 'string')
+      out.later = record.target.later
     return out
   }
   /** A line for one datum: an item by its label and kind, a fact by its label and kind. */
@@ -332,7 +335,8 @@ function removedOf(plan, removals) {
     const record = records.find((r) => r.id === id)
     const target = record?.target ?? {}
     let line
-    if (found?.part) line = { what: text(found.part.what), kind: found.part.kind, ...codes(found.part) }
+    if (found?.part)
+      line = { what: text(found.part.what), kind: found.part.kind, ...codes(found.part, record) }
     else if (record?.op === 'remove-item' && typeof target.item === 'string')
       line = datumLine(target.item, found?.details[0]?.what)
     else if (record?.op === 'remove-channel' && typeof target.fact === 'string')

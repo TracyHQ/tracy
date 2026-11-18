@@ -24,13 +24,20 @@ import { rowDataIdsOf } from './plan-accounting.mjs'
 import { CONTACT_VALUE_MISSING_REASON } from './plan-answers.mjs'
 import { generatedOf, picturesOf } from './plan-look-pictures.mjs'
 import { withSearchTerms } from './plan-intent-seo.mjs'
-import { REQUESTED_OFF_REASON, leftOutEntryOf, namesOf } from './plan-request-taken-off.mjs'
+import { REMOVED_PAGE_DATA_CODE, REMOVED_PAGE_DATA_REASON } from './plan-request-apply.mjs'
+import {
+  REQUESTED_OFF_CODE,
+  REQUESTED_OFF_REASON,
+  leftOutEntryOf,
+  namesOf
+} from './plan-request-taken-off.mjs'
 import { WITHHELD_REASON } from './plan-withheld.mjs'
 
 export const REMOVED_PAGE_REASON = 'You asked to remove this page.'
 export const REMOVED_PAGE_CODE = 'page_removed'
 /** The reason of a left out page or section whose reason named a page the request removed. */
 export const STALE_PAGE_REASON = 'It is not part of your plan.'
+export const STALE_PAGE_CODE = 'no_longer_in_plan'
 const escaped = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 /** Whether a reason names one of the removed pages ("the Trainers page", "the trainers page"). */
 const namesRemoved = (reason, removedPages) =>
@@ -39,6 +46,11 @@ const namesRemoved = (reason, removedPages) =>
       .filter((n) => typeof n === 'string' && n !== '')
       .some((n) => new RegExp(`\\b${escaped(n)}\\s+page\\b`, 'i').test(String(reason)))
   )
+/** The code of each reason a change gives what it takes off (`takenOff`), so the card says it by its code. */
+const TAKEN_OFF_CODES = new Map([
+  [REQUESTED_OFF_REASON, REQUESTED_OFF_CODE],
+  [REMOVED_PAGE_DATA_REASON, REMOVED_PAGE_DATA_CODE]
+])
 const CARRIED_REASONS = new Set([WITHHELD_REASON, CONTACT_VALUE_MISSING_REASON])
 const LOOK_KEYS = ['template', 'accent', 'accentDark', 'logo']
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -64,6 +76,7 @@ export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fr
     if (record.itemField || data.withheld?.has(id) || after.has(id) || fresh.has(id)) continue
     if (takenOff.has(id)) {
       composition.push({ item: id, reason: takenOff.get(id) })
+      if (TAKEN_OFF_CODES.has(takenOff.get(id))) codes.set(id, TAKEN_OFF_CODES.get(takenOff.get(id)))
       continue
     }
     if (before.has(id)) continue
@@ -71,8 +84,10 @@ export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fr
     if (entry) used.add(entry)
     composition.push({ item: id, reason: entry?.reason ?? REQUESTED_OFF_REASON })
     // The entry's code goes beside the composition (whose entries have the model's shape), so a carried sentence code
-    // wrote keeps its code instead of reading as `model_reason`.
-    if (entry?.code) codes.set(id, entry.code)
+    // wrote keeps its code instead of reading as `model_reason`. An entry of a plan stored before its sentence had a
+    // code is read by its exact sentence in the gate (`withSentenceCodes`).
+    const code = entry ? entry.code : REQUESTED_OFF_CODE
+    if (code) codes.set(id, code)
   }
   const names = new Set(pages.map((p) => p.name))
   const types = new Set(pages.map((p) => p.pageType))
@@ -88,7 +103,7 @@ export function carriedLeftOutOf({ plan, data, pages, takenOff, removedPages, fr
     )
     .map((e) =>
       !CARRIED_REASONS.has(e.reason) && namesRemoved(e.reason, removedPages)
-        ? { ...e, reason: STALE_PAGE_REASON }
+        ? { ...e, reason: STALE_PAGE_REASON, code: STALE_PAGE_CODE }
         : e
     )
   for (const page of removedPages)
