@@ -1,9 +1,9 @@
 // tools/personalize.mjs, a `blocks` rule bounded in characters. Measured 16/11/2026 on dev (JA Restaurant EmDash 1.0.2,
 // "Trattoria Lume", 1440x900): the slideshow title the model wrote ran to five lines of 100 px capitals and ended 10 px above
-// the bottom of a 720 px box that cuts what overflows. The contract bounds that slot (template-kit `maxCharacters` 39); the
+// the bottom of a 720 px box that cuts what overflows. The contract bounds that slot (template-kit `maxCharacters` 39, the same in 1.0.2 and 1.0.3); the
 // rule carries the same number, and an answer over it is not taken.
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
@@ -12,7 +12,13 @@ import { rewriteBlock } from '../tools/personalize.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const map = JSON.parse(readFileSync(path.join(ROOT, 'seed', 'personalize.json'), 'utf8'))
-const kit = JSON.parse(readFileSync(path.join(ROOT, 'contracts', '1.0.2', 'template-kit.json'), 'utf8'))
+// The contract of this version (contracts/<version>/template-kit.json) is in the repository only: the package does not
+// ship contracts/, so the case that compares the rule with it skips there and says why (independent review of 1.0.3).
+const VERSION = JSON.parse(readFileSync(path.join(ROOT, 'template.config.json'), 'utf8')).version
+const KIT = path.join(ROOT, 'contracts', VERSION, 'template-kit.json')
+const inRepo = {
+  skip: existsSync(KIT) ? false : `contracts/${VERSION}/template-kit.json is not shipped: a repository test`
+}
 const rule = map.blocks.find((b) => b.collection === 'slideshow' && b.slug === 'slideshow')
 const facts = { name: 'Trattoria Lume', about: 'An Italian trattoria in Da Nang.', sector: 'restaurant' }
 const model = { url: 'http://model.test/v1/chat', key: 'k', model: 'm' }
@@ -27,11 +33,11 @@ function kitLimits() {
       Object.values(v).forEach(walk)
     }
   }
-  walk(kit)
+  walk(JSON.parse(readFileSync(KIT, 'utf8')))
   return out
 }
 
-test('the slideshow rule bounds its titles by the number the contract measured', () => {
+test('the slideshow rule bounds its titles by the number the contract measured', inRepo, () => {
   const limits = kitLimits()
   const seed = JSON.parse(readFileSync(path.join(ROOT, 'seed', 'seed.json'), 'utf8'))
   const rows = seed.content.slideshow.find((e) => e.slug === 'slideshow').data.items

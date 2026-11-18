@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-diner",
     "label": "JA Diner",
-    "version": "0.1.2"
+    "version": "0.1.3"
   },
   "locales": {
     "default": "en",
@@ -993,7 +993,7 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
-    "package.json": "sha256:f5059d16d0b9492a19c145e2a3c64a711716da88d9803705642ccc5d964d1588",
+    "package.json": "sha256:b0d2a9dd4fd549013426a9ca6f1fa379084c77ea125a9ac08d36bbfc8422561e",
     "pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
     "seed/field-map.json": "sha256:f5700102f9e4419713e26be03ac7944903f1b6b9b7e6ca74aff5cc04d439efba",
     "seed/media-map.json": "sha256:8ae8d2c1418af210d859f9b9223b78b5b07311ed977933a63a50b7f7fe0e4b17",
@@ -1066,7 +1066,7 @@
     "src/views/Post.astro": "sha256:a5fa4522bb20f852d6eb24a4342a95937bc5bc55e2d1ea390f1d3efd89f0fe42",
     "src/views/Reservation.astro": "sha256:5e440bdc7da0eadcc0096e5dea40a4c67b65cf888bf3d19a5caf9114c83cb6e5",
     "src/views/Search.astro": "sha256:0f82d395c783589958a7051a04a06970a9d8f0bf43884d8a16aa7c388f04aa1f",
-    "template.config.json": "sha256:5af3d5429d50abcb43895bf9a8ec295986dda8eda2096d482c1492db312ed092",
+    "template.config.json": "sha256:ead2de993abb9a166d633623da7c534a9936756532211a544d1826978252aa89",
     "tools/forms.json": "sha256:b338c304ed95527ce5ac509a14e080734d616136c4a899053b62f24084445409",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

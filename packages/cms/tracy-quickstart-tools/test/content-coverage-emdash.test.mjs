@@ -1,7 +1,7 @@
 /**
  * The EmDash content map and its coverage binding. The map is generated from a theme's seed, field map and content API
  * map (never captured); the audit binds what a page shows to a slot through the provenance stamps the template prints.
- * The two real themes (JA Diner 0.1.2, JA Restaurant 1.0.2) are read from the tree; the binder is run on invented items.
+ * The two real themes (JA Diner 0.1.3, JA Restaurant 1.0.3) are read from the tree; the binder is run on invented items.
  */
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
@@ -33,8 +33,8 @@ import { measureSlotFit } from '../content-coverage/lib/slot-fit.mjs'
 const ULID_STEM = '01ARZ3NDEKTSV4RRFFQ69G5FAV'
 const CMS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const THEMES = [
-  ['tracy-emdash-theme-diner', 'tracy-diner', '0.1.2'],
-  ['tracy-emdash-theme-restaurant', 'tracy-restaurant', '1.0.2']
+  ['tracy-emdash-theme-diner', 'tracy-diner', '0.1.3'],
+  ['tracy-emdash-theme-restaurant', 'tracy-restaurant', '1.0.3']
 ]
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 

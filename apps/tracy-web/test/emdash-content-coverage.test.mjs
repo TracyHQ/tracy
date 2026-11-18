@@ -1,7 +1,7 @@
 /**
  * EmDash content map and content coverage on the Road to live (PR-A). A release's artifacts (content map, content
  * coverage, template kit, demo baseline) are looked up beside the theme's contract data, with no `manifest.json` and
- * with `contractFor` untouched; the two released themes (JA Diner 0.1.0, 0.1.1 and 0.1.2, JA Restaurant 1.0.1 and 1.0.2) are read from the tree as
+ * with `contractFor` untouched; the two released themes (JA Diner 0.1.0 to 0.1.3, JA Restaurant 1.0.1 to 1.0.3) are read from the tree as
  * the image ships them.
  */
 import assert from 'node:assert/strict'
@@ -28,8 +28,10 @@ const RELEASES = [
   ['tracy-diner', '0.1.0', 'tracy-emdash-theme-diner'],
   ['tracy-diner', '0.1.1', 'tracy-emdash-theme-diner'],
   ['tracy-diner', '0.1.2', 'tracy-emdash-theme-diner'],
+  ['tracy-diner', '0.1.3', 'tracy-emdash-theme-diner'],
   ['tracy-restaurant', '1.0.1', 'tracy-emdash-theme-restaurant'],
-  ['tracy-restaurant', '1.0.2', 'tracy-emdash-theme-restaurant']
+  ['tracy-restaurant', '1.0.2', 'tracy-emdash-theme-restaurant'],
+  ['tracy-restaurant', '1.0.3', 'tracy-emdash-theme-restaurant']
 ]
 const emdash = (template, version) => ({
   tag: `${template}/emdash-0.x`,
@@ -107,6 +109,19 @@ test('JA Restaurant 1.0.2: the Chefs category label is no longer a link, so no p
   assert.equal(step.params.pages.failed, 0)
 })
 
+for (const [template, version] of [
+  ['tracy-diner', '0.1.3'],
+  ['tracy-restaurant', '1.0.3']
+])
+  test(`${template} ${version}: the map on role vocabulary v3, measured again, leaves no hole and fails no page`, () => {
+    const step = road(emdash(template, version), version)
+    assert.deepEqual(
+      [step.state, step.code, step.params.holes, step.params.hygiene],
+      ['done', 'coverage-ready', 0, 0]
+    )
+    assert.equal(step.params.pages.failed, 0)
+  })
+
 test('the other readers take the same lookup: a template kit, a demo baseline and the kit map are not "no contract"', () => {
   const release = emdash('tracy-diner', '0.1.0')
   // None is committed for an EmDash theme yet; what matters is that the answer comes from the folder, not from a profile.
@@ -144,7 +159,7 @@ test('the content map gate: current for both themes, red when the map is missing
       filter: (src) => !/node_modules|\.astro|dist$/.test(src)
     })
     assert.deepEqual(problemsOfTheme(theme), [])
-    const map = path.join(theme, 'contracts/0.1.2/content-map.json')
+    const map = path.join(theme, 'contracts/0.1.3/content-map.json')
     // a fit measured again is not drift from the theme's files, but the coverage file measured the other bytes ...
     const refit = JSON.parse(cpRead(map))
     refit.slots.find((s) => s.fit?.measured).fit.maxChars = { desktop: 1 }

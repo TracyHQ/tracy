@@ -16,7 +16,10 @@ const previous = JSON.parse(readFileSync(path.join(ROOT, 'seed', 'field-map.json
 test('a regenerated field map keeps the version 3 vocabulary, the taxonomy roles and the slot roles', () => {
   // What compile-seed.mjs writes: the same fields with no role keys and no declarations at the top.
   const fields = Object.fromEntries(
-    Object.entries(previous.fields).map(([key, { role: _r, group: _g, subRoles: _s, ...rest }]) => [key, rest])
+    Object.entries(previous.fields).map(([key, { role: _r, group: _g, subRoles: _s, ...rest }]) => [
+      key,
+      rest
+    ])
   )
   const carried = carryRolesIntoCompiledMap(previous, { generatedAt: previous.generatedAt, fields })
   assert.equal(carried.roleVocabularyVersion, 'place-content-roles/3')

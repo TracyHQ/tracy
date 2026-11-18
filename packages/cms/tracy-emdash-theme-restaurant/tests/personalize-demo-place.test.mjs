@@ -66,11 +66,11 @@ test('a street word of the demo address ("Place") is no demo place: copy that us
   const out = rowsWithoutDemoPlace({ rule: slideRule, rows, left: [0, 1], places, facts: withAddress })
   assert.deepEqual(
     out.rows.map((r) => r.slide_title),
-    ['Place your order tonight', '']
+    ['Place your order tonight', 'The Best Bar & Restaurant']
   )
 })
 
-test('a sentence naming the demo place goes even when the place is emphasised or the sentence links into the site', () => {
+test('the demo place goes from its sentence even when it is emphasised or split across spans; the sentence and its links stay (second independent review of 1.0.3)', () => {
   const places = demoPlaceWordsOf(map, seedEntries)
   const value = [
     para('a', 'We cook for ', ['Brooklyn', ['em']], ' every night. Order from the menu.'),
@@ -80,7 +80,7 @@ test('a sentence naming the demo place goes even when the place is emphasised or
   assert.ok(left?.readable)
   assert.deepEqual(
     left.value.map((b) => b.children.map((c) => c.text).join('')),
-    ['Order from the menu.', 'Book a table.']
+    ['We cook every night. Order from the menu.', 'The best, on our menu. Book a table.']
   )
 })
 
@@ -92,7 +92,8 @@ test("a slide title still the demo's after the asks loses the demo's place once 
   const out = rowsWithoutDemoPlace({ rule: slideRule, rows, left: [1, 2], places, facts: withAddress })
   assert.deepEqual(
     out.rows.map((r) => r.slide_title),
-    ['Benvenuti at Trattoria Lume', '', '']
+    ['Benvenuti at Trattoria Lume', 'The Best Bar & Restaurant', 'The Best Bar & Restaurant'],
+    'only the place phrase goes; the title stays (second independent review of 1.0.3)'
   )
   assert.deepEqual(out.left, [])
   assert.deepEqual(out.emptied, [1, 2])
@@ -143,7 +144,10 @@ test("the welcome's fallback keeps no demo place and no sentence about it once t
   const left = withoutDemoFacts(demo, withAddress, { places })
   assert.ok(left?.readable)
   const text = textOf(left.value)
-  assert.doesNotMatch(text, /Brooklyn|1982/)
+  assert.doesNotMatch(text, /Brooklyn|5th Avenue|St\. Marks|Cathedral/)
+  // "Brooklyn" is the object of "welcomed": the whole first sentence goes, with the demo address link it carries, and
+  // the paragraph keeps its second sentence (third review round: "has welcomed to one of …" was a broken sentence)
+  assert.doesNotMatch(text, /welcomed|Since 1982/)
   assert.match(text, /^Our kitchen cooks seasonal market produce/)
   // No address: the sentence that links to the demo's address goes, as before; nothing else changes.
   const before = withoutDemoFacts(demo, noAddress, { places })

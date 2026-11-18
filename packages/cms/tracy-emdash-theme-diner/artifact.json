@@ -1,13 +1,13 @@
 {
 	"templateId": "tracy-diner",
 	"label": "JA Diner",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"package": {
 		"name": "@tracy/emdash-theme-diner",
-		"version": "0.1.2"
+		"version": "0.1.3"
 	},
 	"demoContent": "JA Diner",
-	"generatedAt": "2026-11-16T06:05:17.459Z",
+	"generatedAt": "2026-11-17T05:42:58.871Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,14 +75,14 @@
 		"docs/content-model.md": "sha256:e5e00b4d1186c4432873c182b71b915941779fc6ff96f1654b372beaf80cfef1",
 		"docs/content-rules.md": "sha256:334c379ec1dec8d60f34ad52ba51149c81225cfd71921aabcf4ec7bdd04338c6",
 		"docs/design-system.md": "sha256:baef0e467d430d69291fe32bc25ad5a694b6179f6111854b688634ec96a6fe15",
-		"docs/generated/inventory.json": "sha256:0a1bb04161e870541d8398c246253397c467d656075375498b2349e8e36943c9",
+		"docs/generated/inventory.json": "sha256:1d835cf2f7c592f6b2d01416298c3b65a6dc582a95d9358360c39307e3dbb0f1",
 		"docs/generated/inventory.md": "sha256:00cdfca4610599f86aacff858b833df659e9901b27cbd027a0e6b494c0d33e75",
 		"docs/install.md": "sha256:94d06f3dcce8840f200edfa0410d5719f8969361952c0b720f62dadc1c2772d9",
 		"docs/languages.md": "sha256:2d404f1b996cbde1965276643ed278167e2d923db49b8fc11530ffb2662c9f5e",
-		"template.config.json": "sha256:5af3d5429d50abcb43895bf9a8ec295986dda8eda2096d482c1492db312ed092",
+		"template.config.json": "sha256:ead2de993abb9a166d633623da7c534a9936756532211a544d1826978252aa89",
 		"seed/seed.json": "sha256:5ac02a17ac52e79c1c89f4b2dc773310391ab30cc81f73ad08224c159b14d04a",
 		"seed/media-map.json": "sha256:8ae8d2c1418af210d859f9b9223b78b5b07311ed977933a63a50b7f7fe0e4b17",
-		"seed/field-map.json": "sha256:0d2efe032532872c9e5be488e75f1bfc92ca9744c38c5fb070af2e7e3099b6dd",
+		"seed/field-map.json": "sha256:f5700102f9e4419713e26be03ac7944903f1b6b9b7e6ca74aff5cc04d439efba",
 		"pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
 		"tools/forms.json": "sha256:b338c304ed95527ce5ac509a14e080734d616136c4a899053b62f24084445409",
 		"seed/media/*": "sha256:1e7d40ad20c205880798d50ea71c7dd9d09d65ad127b1343ea8397e92f88c79a (73 files)"
