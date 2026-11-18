@@ -16,6 +16,7 @@ import path from 'node:path'
 import { initContract, filesUnder, withPatches } from './qa-contract.mjs'
 import { deriveShots } from './fast-gate.mjs'
 import { importClosure } from './visual-lib.mjs'
+import { escapeRe, withoutScripts } from './html-text.mjs'
 
 const args = process.argv.slice(2)
 const opt = (n, d) => {
@@ -64,10 +65,7 @@ const textOf = (html) =>
 const htmlCache = new Map()
 const htmlOf = (file) => {
   if (!htmlCache.has(file))
-    htmlCache.set(
-      file,
-      readFileSync(path.join(sourceDir, file), 'utf8').replace(/<script[\s\S]*?<\/script>/g, '')
-    )
+    htmlCache.set(file, withoutScripts(readFileSync(path.join(sourceDir, file), 'utf8')))
   return htmlCache.get(file)
 }
 // The text of the first element whose opening tag carries `cls` (a class token). Fails loudly: a
@@ -102,9 +100,7 @@ const pAfter = (file, cls) => {
 // item is the item's title, which every crawled page prints in its megamenu.
 const menuLabel = (file, url) => {
   const m = htmlOf(file).match(
-    new RegExp(
-      `href="${url.replace(/[.?]/g, '\\$&')}"[^>]*>(?:\\s*<span[^>]*>)*\\s*<span class="menu-item-title">([^<]+)<`
-    )
+    new RegExp(`href="${escapeRe(url)}"[^>]*>(?:\\s*<span[^>]*>)*\\s*<span class="menu-item-title">([^<]+)<`)
   )
   if (!m) fail(`source ${file}: no menu item for ${url}`)
   return textOf(m[1])
