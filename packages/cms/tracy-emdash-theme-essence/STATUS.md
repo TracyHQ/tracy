@@ -1,6 +1,6 @@
 # STATUS — tracy-essence
 
-**Phase reached: P0 and P1 done (checkpoint 2/11).** Session 1 (coordinator P0–P1). Evidence is under `/home/agent/out/essence/` (outside the repo).
+**Phase reached: P0 and P1 done (checkpoint 2/11); P2 started (seed compiles mechanically, not yet enriched).** Session 1 (coordinator P0–P1). Evidence is under `/home/agent/out/essence/` (outside the repo).
 
 | Item | State | Evidence |
 |---|---|---|
@@ -16,12 +16,14 @@
 
 Tools run from a copy of the WP skill: `/home/agent/out/essence/wp-skill` (`npm install` done there); `node wp-skill/scripts/ingest/joomla-dump.mjs --out j6 --container essence-db --web-container essence-web --db joomla --prefix jd_ --user root --password root --site-url http://127.0.0.1:18081 --capture` then `from-joomla.mjs j6 --out spec --site-url …`. Playwright's Chromium is installed in `~/.cache/ms-playwright`.
 
-**Next commands** (from this folder), P2:
-1. Copy and adapt Diner's `ingest/{shape-model,enrich-*,bind-paths,build-media-map,build-route-table,html-to-portable-text,normalize-seed-dates,build-inventory}.mjs` to this model (`ingest/rebuild-seed.sh` is the order); `cp /home/agent/out/essence/spec/site-model.json seed/`.
-2. `node tools/compile-seed.mjs seed/site-model.json seed --config seed/compile.config.json`, then `node tools/validate-seed.mjs seed/seed.json`.
-3. Start `AGENTS.md` + `docs/{content-model,content-rules,design-system}.md`; then `node tools/checkpoint.mjs complete checkpoint.json P2 …`.
+**P2 so far:** `seed/site-model.json` = adapter model + `ingest/dedupe-slugs.mjs` (D10); `seed/compile.config.json`; `compile-seed.mjs` runs (5 collections, 79 entries, 2 menus; trial output `/home/agent/out/essence/seedtry`). Not committed as a seed: the model lacks author, hits, tags, intro/full images, `ctm_*` fields (D11).
 
-Restart the stand after a reboot: `docker start essence-db essence-web`.
+**Next commands** (from this folder), P2:
+1. Write `ingest/enrich-essence.mjs` (from `/home/agent/out/essence/spec/content.json` + `j6/inventory.json`: post author/hits/tags/sticky/featured/images/video+gallery fields, authors, category descriptions, header/footer chrome, sidebar blocks) and `ingest/shape-model.mjs` for the pages kept (D8); model on `../tracy-emdash-theme-diner/ingest/` (copy, rename, do not keep Diner names). `ingest/rebuild-seed.sh` is the order.
+2. `node tools/compile-seed.mjs seed/site-model.json seed --config seed/compile.config.json`, `node tools/validate-seed.mjs seed/seed.json`, then `html-to-portable-text`, `build-media-map` (resolve by owning folder, Diner D-4).
+3. `AGENTS.md` + `docs/{content-model,content-rules,design-system}.md`; `node tools/checkpoint.mjs complete checkpoint.json P2 …`.
+
+The stand containers were removed at the end of session 1; rebuild with `source/REBUILD.md` (the extracted, configured webroot is kept at `/home/agent/out/essence/stand/webroot`; the dump import is the only slow step). The crawl, render and `spec/`/`j6/` outputs stay on disk, so P2 needs no stand until a re-render.
 
 ## Owner questions (batched)
 - `[LEE]` Which of the five Home demos (`home-1`…`home-5`, four header/layout variants) are kept as presets (DECISIONS D8)?
