@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 31,
+  "revision": 33,
   "pending": [],
   "locales": [
     "en"
@@ -5939,7 +5939,7 @@
           "owner": "derived",
           "binding": "posts, first paragraph",
           "attribute": "text",
-          "expected": "Its sometimes her behaviour are contented."
+          "expected": "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
         }
       ]
     },
@@ -6564,7 +6564,9 @@
       ],
       "status": 200,
       "identity": ".es-search-form",
-      "source": [],
+      "source": [
+        "index.html"
+      ],
       "render": {
         "view": "src/views/Search.astro",
         "collections": [
@@ -6587,7 +6589,18 @@
       "parity": [
         "ground"
       ],
-      "content": []
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "footer-cta",
+          "selector": ".es-footer-right .es-btn >> nth=0",
+          "source": "index.html",
+          "owner": "field",
+          "binding": "chrome.footer_cta_label",
+          "attribute": "text",
+          "expected": "Become a subscriber"
+        }
+      ]
     }
   ],
   "reviews": {

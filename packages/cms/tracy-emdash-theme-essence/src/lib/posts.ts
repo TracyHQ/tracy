@@ -89,7 +89,8 @@ export async function loadPosts(locale: Locale): Promise<PostRow[]> {
 
 export async function loadAuthors(locale: Locale): Promise<AuthorRow[]> {
   const { entries } = await getEmDashCollection('authors', { locale, status: 'published' })
-  return entries.map((e: any) => ({
+  // the store returns rows in no promised order: entry ids are issued in import order, which is the source's order
+  return [...entries].sort((a: any, b: any) => String(a.data.id).localeCompare(String(b.data.id))).map((e: any) => ({
     id: e.data.id as string,
     slug: e.id as string,
     name: (e.data.name as string) ?? '',

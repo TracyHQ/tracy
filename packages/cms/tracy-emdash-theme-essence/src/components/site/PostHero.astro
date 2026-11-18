@@ -20,7 +20,7 @@ const pics = post.kind === 'gallery' ? post.gallery.map((g) => ({ src: mediaUrl(
 {video
 	? (
 		<div class="es-hero is-video" {...$p('video_id')}>
-			<iframe src={`https://www.youtube-nocookie.com/embed/${video}`} title={post.title} allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+			<iframe src={`https://www.youtube-nocookie.com/embed/${video}`} title={post.title} allow="accelerometer; compute-pressure; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
 		</div>
 	)
 	: pics.length > 1

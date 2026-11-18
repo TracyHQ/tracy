@@ -18,7 +18,9 @@
       "id": "en-search",
       "path": "/search?q=line",
       "status": 200,
-      "source": [],
+      "source": [
+        "index.html"
+      ],
       "identity": ".es-search-form",
       "collections": [
         "chrome",
@@ -33,7 +35,17 @@
       "parity": [
         "ground"
       ],
-      "content": []
+      "content": [
+        [
+          "footer-cta",
+          ".es-footer-right .es-btn",
+          "index.html",
+          "field",
+          "chrome.footer_cta_label",
+          "Become a subscriber"
+        ]
+      ],
+      "images": "placeholders"
     }
   ]
 }
