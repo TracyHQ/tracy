@@ -1,0 +1,1 @@
+{"id":"REG-PR-684-picomatch-extglob-redos","verdict":"PASS","commit":"692f6e8863da4ebe78beb7d71ad7557467da6cbf","ran_at":"2026-11-18T11:12:05.120Z","evidence":"tests/regression/.runs/2026-11-18-692f6e886/REG-PR-684-picomatch-extglob-redos.log"}
