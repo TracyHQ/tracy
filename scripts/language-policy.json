@@ -22420,6 +22420,186 @@
       "sha256": "348f6cf649bda8761703f3b949211b74fea10c4b69da7df4b97c2ddd886a20d5",
       "count": 1,
       "reason": "Exact line of the approved JA Diner EmDash 0.1.2 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.2.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "changes/2026-11-17-language-policy-emdash-kits-013-103.md",
+      "sha256": "d02f330ce3e64f8a28aeef5f77ceef365bad751699d61bdb3050085a0ef17b54",
+      "count": 1,
+      "reason": "The journal entry quotes the JA Diner kit's demo text, which spells cafe with an accented e."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-base/tools/personalize.mjs",
+      "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
+      "count": 1,
+      "reason": "Doc comment of the shared personalize tool: a place name with a Tamil case ending, an example of an inflection glued to a demo place word."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-business/tools/personalize.mjs",
+      "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
+      "count": 1,
+      "reason": "Doc comment of the shared personalize tool: a place name with a Tamil case ending, an example of an inflection glued to a demo place word."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-coffee/tools/personalize.mjs",
+      "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
+      "count": 1,
+      "reason": "Doc comment of the shared personalize tool: a place name with a Tamil case ending, an example of an inflection glued to a demo place word."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/DECISIONS.md",
+      "sha256": "978cb38c3bdb607bec0fb877565d686512eaf34524979e62199613b7c3779173",
+      "count": 1,
+      "reason": "Quotes the JA Diner source design's demo text, which spells cafe with an accented e."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/STATUS.md",
+      "sha256": "10f257b89040855e53aa22ea451aac04e874c27e3cbb849c334349089562820f",
+      "count": 1,
+      "reason": "Quotes the JA Diner source design's demo text, which spells cafe with an accented e."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "17bb97c1edd4473cf215a945a520a754fb3d3009b9d2d58f9406a0a12b7888f7",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "2ce2df947274b7a158bbd2da19daf5b3b9726aa5e44a7bc138b19a18b7fb330e",
+      "count": 28,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "31b5a5328c40f48b81d45342646c70fea4068b11c62ad9473d60ef1794c3f68a",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "348f6cf649bda8761703f3b949211b74fea10c4b69da7df4b97c2ddd886a20d5",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "4598a2534610e75691f9d0d17db91e4293131c8c4f895a47c235edfebf144a40",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "60096fbedfab896d7a4f98ac7407e85d571280b66ff3d72462d5f0717e770b28",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "7e2a4b334515bbd7b0f66b6e51f516f5367a5e58f770389c07a2e1dfb940705e",
+      "count": 2,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "9684eebb7c3f379cb2f3e3f633e76f8a867a002182c099ee50de9c1d58d19883",
+      "count": 27,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "a6aea7d84f0c020a4a2c08397e57de5a83471345ee83e9a1cde8ee3a574716ac",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "a70ed088f67c494fe0c2f4c5872f524bec10140729e6b300fd533fde333fc8fe",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "e4fc12fd9079576ac15e840b24459b43bb9cf9ebef6c59c8a2b3de6cbd2e2b07",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.3/template-kit.json",
+      "sha256": "f9422ff6f8fe223f2e865b39377c6db0074d16dbe4cd27fb3a13eafe83e12ad6",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.3 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.3.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/inventory/content-gaps.md",
+      "sha256": "75281fbc4fca08daa11083d244397df053a2826fb557685a4746a537cd7eda4c",
+      "count": 1,
+      "reason": "Quotes the JA Diner source design's demo text, which spells cafe with an accented e."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/tools/personalize.mjs",
+      "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
+      "count": 1,
+      "reason": "Doc comment of the shared personalize tool: a place name with a Tamil case ending, an example of an inflection glued to a demo place word."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.3/template-kit.json",
+      "sha256": "1073435f8906709bcfeaf8e2834015df547a3ae9011e2d346f2d2e6b90d2fe39",
+      "count": 2,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.3 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.3/template-kit.json",
+      "sha256": "22d97fa0a82f65955c75ce10140a85291269d39749ee6086f1a078d20283eb03",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.3 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.3/template-kit.json",
+      "sha256": "60cb539484098ee1d244125358a5302bf765cf6d2a4a80fd70a986e628b9f916",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.3 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.3/template-kit.json",
+      "sha256": "7333d03274ee1f6f74ce44af34dfa0aa514f7d635b13cce7451b33bf8dbc1664",
+      "count": 2,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.3 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.3/template-kit.json",
+      "sha256": "7f5d731edef7f8053f74cca1a60dbe2529596ec45de70cbe4d5671255f575a97",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.3 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.3/template-kit.json",
+      "sha256": "d330e22cc2e706ec25c6d78e0ced92f38a96c2e1614103772b990357a1716439",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.3 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.3/template-kit.json",
+      "sha256": "e15b643bc50b25c45251d70454b377da48ffa62e9566dc176902e12344cbdcbf",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.3 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/tools/personalize.mjs",
+      "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
+      "count": 1,
+      "reason": "Doc comment of the shared personalize tool: a place name with a Tamil case ending, an example of an inflection glued to a demo place word."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-saas/tools/personalize.mjs",
+      "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
+      "count": 1,
+      "reason": "Doc comment of the shared personalize tool: a place name with a Tamil case ending, an example of an inflection glued to a demo place word."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/scripts/tools/personalize.mjs",
+      "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
+      "count": 1,
+      "reason": "Doc comment of the shared personalize tool: a place name with a Tamil case ending, an example of an inflection glued to a demo place word."
     }
   ],
   "objects": [
