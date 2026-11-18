@@ -126,12 +126,17 @@ export const homeBlog = (all: PostRow[]) =>
 /** The top strip of the Home: posts marked `home_lead`, by title. */
 export const homeLead = (all: PostRow[]) =>
   all.filter((p) => p.homeLead).sort((a, b) => a.title.localeCompare(b.title))
-/** "Articles - Latest": the newest posts of the main categories. */
-export const latestPosts = (all: PostRow[], n = 4) => all.slice(0, n)
+/** One post per title: the demo repeats each article in several categories, a sidebar block lists each once. */
+const oneEach = (rows: PostRow[]) => {
+  const seen = new Set<string>()
+  return rows.filter((p) => (seen.has(p.title) ? false : (seen.add(p.title), true)))
+}
+/** "Articles - Latest": the newest posts. */
+export const latestPosts = (all: PostRow[], n = 4) => oneEach(all).slice(0, n)
 /** "Features post": the first titles A-Z (the source's module sorts by title). */
-export const featuresPosts = (all: PostRow[], n = 4) => [...all].sort((a, b) => a.title.localeCompare(b.title)).slice(0, n)
+export const featuresPosts = (all: PostRow[], n = 4) => oneEach([...all].sort((a, b) => a.title.localeCompare(b.title))).slice(0, n)
 /** "Trending": the least-hit posts first, as the source's module orders them (`a.hits ASC`). */
-export const trendingPosts = (all: PostRow[], n = 3) => [...all].sort((a, b) => a.hits - b.hits).slice(0, n)
+export const trendingPosts = (all: PostRow[], n = 3) => oneEach([...all].sort((a, b) => a.hits - b.hits)).slice(0, n)
 /** Tags by use, most used first. */
 export function tagCloud(all: PostRow[], n = 6): (TermRef & { count: number })[] {
   const m = new Map<string, TermRef & { count: number }>()
@@ -141,5 +146,5 @@ export function tagCloud(all: PostRow[], n = 6): (TermRef & { count: number })[]
 /** "More read": posts that share a tag with this one, newest first. */
 export function relatedPosts(all: PostRow[], post: PostRow, n = 4): PostRow[] {
   const mine = new Set(post.tags.map((t) => t.slug))
-  return all.filter((p) => p.id !== post.id && p.tags.some((t) => mine.has(t.slug))).slice(0, n)
+  return oneEach(all.filter((p) => p.id !== post.id && p.title !== post.title && p.tags.some((t) => mine.has(t.slug)))).slice(0, n)
 }

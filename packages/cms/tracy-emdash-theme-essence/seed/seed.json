@@ -449,11 +449,6 @@
 					"type": "string"
 				},
 				{
-					"slug": "footer_logo",
-					"label": "Footer logo",
-					"type": "image"
-				},
-				{
 					"slug": "footer_text",
 					"label": "Footer text",
 					"type": "string"
@@ -15649,7 +15644,6 @@
 					"search_label": "Search",
 					"subscribe_label": "Subscribe",
 					"subscribe_link": "/contact",
-					"footer_logo": "images/joomlart/logo/item-1.png",
 					"footer_text": "A super modern theme following the latest trends with premium membership",
 					"footer_cta_label": "Become a subscriber",
 					"footer_cta_text": "Get all the latest posts delivered straight to inbox.",
@@ -15664,7 +15658,7 @@
 					"features_title": "Features post",
 					"tags_title": "Tags cloud",
 					"follow_title": "Follow me",
-					"more_read_title": "More Read",
+					"more_read_title": "More reading",
 					"author_articles_title": "Author’s latest articles",
 					"written_by": "Written by",
 					"share_label": "Share article:",

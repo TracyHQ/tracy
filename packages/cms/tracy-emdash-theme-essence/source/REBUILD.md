@@ -19,3 +19,5 @@ node <skill>/scripts/ingest/from-url.mjs http://127.0.0.1:18081/ --out $W/snapsh
 ```
 
 A fresh crawl differs byte for byte in pages (form tokens), not in pictures, fonts, scripts or stylesheets.
+
+The 404 page of the mirror (`nope-404/index.html`) was not crawled (the crawler follows links): it is the rendered DOM of `/nope-404` from `render-source.mjs`, plus `templates/ja_essence/css/{jpages,error}.css` copied from the release webroot. Recrawl it with `curl http://127.0.0.1:18081/nope-404 -o …` when the stand is up and re-pin `snapshot-SHA256SUMS`.

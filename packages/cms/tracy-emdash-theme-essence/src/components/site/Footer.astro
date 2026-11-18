@@ -2,10 +2,13 @@
 import type { Chrome } from '@/lib/chrome'
 import { stampFor } from '@/lib/stamps'
 import { fill, href } from '@/lib/i18n'
-import { mediaUrl } from '@/lib/media'
 import { liveLinks } from '@/lib/link-gate'
 import { menuUrls, pruneMenu } from '@/lib/menu-gate'
 import { dataHref } from '@/lib/data-links'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { DEMO_LOGO } from '@/lib/demo-logo'
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
 
 interface Props {
   chrome: Chrome
@@ -16,7 +19,8 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const copyright = fill(site.copyright, { year: new Date().getUTCFullYear(), name: site.brand_name })
 const live = await liveLinks(Astro.request, locale, [...menuUrls(chrome.footer), site.subscribe_link])
 const links = pruneMenu(chrome.footer, live)
-const logo = mediaUrl(site.footer_logo)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
 const ctaUrl = site.subscribe_link && live(site.subscribe_link) ? dataHref(site.subscribe_link, (p) => href(locale, p)) : ''
 ---
 
@@ -24,7 +28,11 @@ const ctaUrl = site.subscribe_link && live(site.subscribe_link) ? dataHref(site.
 	<div class="es-wrap">
 		<div class="es-footer-info">
 			<div class="es-footer-left">
-				{logo && <a href={href(locale, '/')} aria-label={site.brand_name}><img src={logo} alt={site.brand_name} width="132" height="40" loading="lazy" {...$c('footer_logo')} /></a>}
+				<a href={href(locale, '/')} aria-label={site.brand_name}>
+					<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="es-logo">
+						<img class="es-logo" src={DEMO_LOGO} alt={site.brand_name} width="132" height="40" />
+					</BrandLogo>
+				</a>
 				<p {...$c('footer_text')}>{site.footer_text}</p>
 			</div>
 			{ctaUrl && (

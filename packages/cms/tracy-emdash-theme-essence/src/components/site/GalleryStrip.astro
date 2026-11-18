@@ -6,6 +6,7 @@ import { stampFor } from '@/lib/stamps'
 import { liveLinks } from '@/lib/link-gate'
 import { dataHref } from '@/lib/data-links'
 import { href } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
 
 interface Props {
   chrome: Chrome
@@ -14,18 +15,23 @@ const { chrome } = Astro.props
 const g = chrome.gallery
 const $g = g ? stampFor(Astro.request, 'gallery', g.entry) : null
 const live = g ? await liveLinks(Astro.request, chrome.locale, [g.buttonLink]) : () => false
-const pics = (g?.items ?? []).map((it) => ({ src: mediaUrl(it.gallery_image), alt: it.gallery_alt ?? '' })).filter((p) => p.src).slice(0, g?.columns ?? 5)
+const pics = (g?.items ?? []).map((it) => ({ src: mediaUrl(it.gallery_image), alt: it.gallery_alt ?? '' })).filter((p) => p.src)
 ---
 
 {g && pics.length > 0 && (
 	<div class="es-gallery">
-		<div class="es-wrap">
-			<div class="es-gallery-row" style={`--cols:${Math.min(g.columns, 6)}`} {...($g ? $g() : {})}>
-				{pics.map((p) => <img src={p.src} alt={p.alt} loading="lazy" decoding="async" />)}
+		<div class="es-wrap" data-es-strip data-label={ui(chrome.locale).w.pageOf}>
+			<div class="es-gal-track" data-es-track style={`--cols:${Math.min(g.columns, 6)}`} {...($g ? $g() : {})}>
+				{pics.map((p) => <div class="es-gal-item"><img src={p.src} alt={p.alt} loading="eager" decoding="async" /></div>)}
 			</div>
+			<div class="es-dots" data-es-dots></div>
 			{g.buttonLabel && live(g.buttonLink) && (
 				<div class="es-gallery-action"><a class="es-btn" href={dataHref(g.buttonLink, (p) => href(chrome.locale, p))} {...($g ? $g('gallery_title') : {})}>{g.buttonLabel}</a></div>
 			)}
 		</div>
 	</div>
 )}
+
+<script>
+	import '@/lib/strip-client'
+</script>

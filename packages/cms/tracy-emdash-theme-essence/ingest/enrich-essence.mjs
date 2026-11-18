@@ -256,7 +256,6 @@ rec('contact', 'contact-layout', {
 })
 
 // ── chrome: brand, header and footer, the newsletter box and the words the design prints ──────────────
-const footerLogo = used('images/joomlart/logo/item-1.png')
 setType({
   name: 'chrome',
   mode: 'single',
@@ -270,7 +269,6 @@ setType({
     field('search_label', 'text'),
     field('subscribe_label', 'text'),
     field('subscribe_link', 'text'),
-    field('footer_logo', 'image'),
     field('footer_text', 'text'),
     field('footer_cta_label', 'text'),
     field('footer_cta_text', 'text'),
@@ -308,7 +306,6 @@ rec('chrome', 'chrome', {
   search_label: 'Search',
   subscribe_label: 'Subscribe',
   subscribe_link: '/contact',
-  footer_logo: footerLogo,
   footer_text: 'A super modern theme following the latest trends with premium membership',
   footer_cta_label: 'Become a subscriber',
   footer_cta_text: 'Get all the latest posts delivered straight to inbox.',
@@ -323,7 +320,7 @@ rec('chrome', 'chrome', {
   features_title: 'Features post',
   tags_title: 'Tags cloud',
   follow_title: 'Follow me',
-  more_read_title: 'More Read',
+  more_read_title: 'More reading',
   author_articles_title: 'Author’s latest articles',
   written_by: 'Written by',
   share_label: 'Share article:',

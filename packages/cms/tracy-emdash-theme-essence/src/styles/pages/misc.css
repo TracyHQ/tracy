@@ -76,6 +76,7 @@
 	.es-newsletter-form input[type="email"] { width: 100%; box-sizing: border-box; height: 48px; padding: 12.8px 16px; font-family: var(--font-body); font-size: 16px; text-align: center; color: #252424b3; background: #fff; border: 1px solid transparent; border-radius: 8px; }
 	html[data-theme="dark"] .es-newsletter-form input[type="email"] { background: var(--ds-c-surface-warm, #222a3b); color: var(--color-heading); border-color: var(--ds-c-border, #3a4459); }
 	.es-newsletter-form input[type="email"]::placeholder { color: #252424b3; opacity: 1; }
+	html[data-theme="dark"] .es-newsletter-form input[type="email"]::placeholder { color: var(--color-meta); }
 	.es-newsletter-form input[type="email"]:focus { outline: 1px solid #fff; outline-offset: 2px; }
 	.es-newsletter .es-btn.is-dark:hover { background: var(--color-accent-hover); border-color: #fff; }
 	.es-newsletter .es-btn:disabled { opacity: .6; cursor: not-allowed; }

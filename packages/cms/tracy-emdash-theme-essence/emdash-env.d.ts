@@ -150,7 +150,6 @@ export interface Chrome {
   search_label?: string;
   subscribe_label?: string;
   subscribe_link?: string;
-  footer_logo?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
   footer_text?: string;
   footer_cta_label?: string;
   footer_cta_text?: string;

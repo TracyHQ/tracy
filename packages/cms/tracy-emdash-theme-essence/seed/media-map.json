@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-18T18:12:19.659Z",
+	"generatedAt": "2026-11-18T18:27:33.101Z",
 	"source": "JA Diner j6 1.0.5 webroot",
 	"items": [
 		{
@@ -1721,21 +1721,6 @@
 					"slug": "resources-2",
 					"locale": "en",
 					"path": "image"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/logo/item-1",
-			"file": "images/joomlart/logo/item-1.png",
-			"alt": "",
-			"mime": "image/png",
-			"sha256": "33367f778882d8da29e0f695933449150869269a378e8f6f615c90dc3b74d74b",
-			"targets": [
-				{
-					"collection": "chrome",
-					"slug": "chrome",
-					"locale": "en",
-					"path": "footer_logo"
 				}
 			]
 		},

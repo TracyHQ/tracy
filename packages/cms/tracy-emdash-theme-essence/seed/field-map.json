@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-18T18:12:19.567Z",
+	"generatedAt": "2026-11-18T18:27:33.008Z",
 	"fields": {
 		"pages.title": {
 			"source": "text",
@@ -285,11 +285,6 @@
 			"source": "text",
 			"target": "string",
 			"label": "Subscribe link"
-		},
-		"chrome.footer_logo": {
-			"source": "image",
-			"target": "image",
-			"label": "Footer logo"
 		},
 		"chrome.footer_text": {
 			"source": "text",

@@ -40,7 +40,7 @@ const subscribeUrl = site.subscribe_link && live(site.subscribe_link) ? own(site
 		<div class="es-wrap">
 			<div class="es-header-top">
 				<div class="es-social" {...(social ? stampFor(Astro.request, 'social', social.entry)() : {})}>
-					{(social?.items ?? []).map((it) => <a href={it.link || '#'} title={it.title} aria-label={it.title}><Icon name={networkOf(it.font_icon, it.title)} size={20} weight="fill" /></a>)}
+					{(social?.items ?? []).map((it) => (it.link && it.link !== '#' ? <a href={it.link} title={it.title} aria-label={it.title}><Icon name={networkOf(it.font_icon, it.title)} size={20} weight="fill" /></a> : <span class="es-social-off" title={it.title}><Icon name={networkOf(it.font_icon, it.title)} size={20} weight="fill" /></span>))}
 				</div>
 				<a class="es-brand-link" href={href(locale, '/')} aria-label={site.brand_name}>
 					<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="es-logo"><span class="es-brand" {...$c('brand_name')}>{site.brand_name}</span></BrandLogo>

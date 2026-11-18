@@ -1,2 +1,2 @@
-- **JA Essence EmDash template started (`packages/cms/tracy-emdash-theme-essence`, phases P0–P2: scaffold, source inventory, content model and seed; GPL-2.0-or-later in the licensing table and notices)** — Hano (with Claude) · #pending · `feat/emdash-port-essence` · 2026-11-18
+- **JA Essence EmDash template started (`packages/cms/tracy-emdash-theme-essence`, phases P0–P3: scaffold, source inventory, content model and seed, the front end and a passing Fast Gate; GPL-2.0-or-later in the licensing table and notices)** — Hano (with Claude) · #pending · `feat/emdash-port-essence` · 2026-11-18
   **Affects:** Template authors only. The package is excluded from the root workspace (own lockfile) and ships nowhere yet; no site, image or fleet host changes.

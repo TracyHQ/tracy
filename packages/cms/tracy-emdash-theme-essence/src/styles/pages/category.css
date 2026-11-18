@@ -14,10 +14,10 @@
 	.es-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; margin: 0; font-size: 14px; line-height: 21px; }
 	.es-card-meta > div { display: flex; align-items: center; }
 	.es-card-meta dd { display: flex; align-items: center; gap: 4px; margin: 0; }
-	.es-card-meta > div + div::before { content: "-"; margin-right: 8px; }
+	.es-card-meta > div:not(:last-child)::after { content: "-"; margin: 0 8px; }
 	.es-card-meta a, .es-card-author { font-weight: 700; color: var(--color-heading); }
 	.es-card-hits svg { color: var(--color-accent-text); }
-	.es-card-intro { margin: 24px 0 0; display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+	.es-card-intro { margin: 24px 0 0; }
 	.es-card-more { display: inline-block; margin-top: 24px; font-family: var(--font-display); font-size: 18px; line-height: 20.7px; color: var(--color-heading); }
 	.es-card-more:hover { color: var(--color-accent-text-hover); }
 
