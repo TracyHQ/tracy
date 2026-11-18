@@ -258,7 +258,9 @@ test('the intent notes are edited in place; the search terms keep what the owner
     edit: editOf(b.plan, [
       ['keyMessages[km-1].label', 'Coaching from age four'],
       ['pages[home].keyMessage', 'A club for the whole family.'],
+      ['pages[home].visitorQuestion', 'Can my children learn to play here?'],
       ['pages[home].seo.titleIntent', 'The club and its courts'],
+      ['pages[home].seo.descriptionIntent', 'Lessons and courts for every age, close to town.'],
       [`pages[home].blocks[${services.id}].message`, 'What a member can book.'],
       ['pages[home].seo.searchTerms', typed]
     ]),
@@ -267,6 +269,10 @@ test('the intent notes are edited in place; the search terms keep what the owner
   assert.equal(out.ok, true, JSON.stringify(out.problems))
   assert.equal(out.plan.keyMessages[0].label, 'Coaching from age four')
   assert.equal(out.plan.pages[0].keyMessage, 'A club for the whole family.')
+  assert.equal(out.plan.pages[0].visitorQuestion, 'Can my children learn to play here?')
+  assert.equal(out.plan.pages[0].seo.titleIntent, 'The club and its courts')
+  assert.equal(out.plan.pages[0].seo.descriptionIntent, 'Lessons and courts for every age, close to town.')
+  assert.equal(out.plan.pages[0].blocks.find((x) => x.id === services.id).message, 'What a member can book.')
   assert.deepEqual(out.plan.pages[0].seo.searchTerms, typed)
   assert.deepEqual(out.plan.pages[0].seo.ownerAdded, ['tennis lessons for kids'])
   assert.deepEqual(out.plan.pages[0].seo.ownerRemoved, [home.seo.searchTerms[0]])

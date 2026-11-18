@@ -164,6 +164,42 @@ test('the logo is shown on a light and a dark ground through the owner picture d
   assert.ok(html.includes('data-ground="light"') && html.includes('data-ground="dark"'))
 })
 
+test('the intent notes and the key messages have a pencil button, not only a trash button (#575)', () => {
+  const p = plan()
+  const home = p.pages[0]
+  home.visitorQuestion = 'Can my children learn to play here?'
+  home.keyMessage = 'A club for the whole family.'
+  home.seo = {
+    ...home.seo,
+    titleIntent: 'The club and its courts',
+    descriptionIntent: 'Lessons for every age.'
+  }
+  const section = home.blocks[1]
+  section.message = 'What a member can book.'
+  const html = draw({ plan: p, review: REVIEW })
+  const fields = [
+    'keyMessages[km-coaching].label',
+    `pages[${home.id}].keyMessage`,
+    `pages[${home.id}].visitorQuestion`,
+    `pages[${home.id}].seo.titleIntent`,
+    `pages[${home.id}].seo.descriptionIntent`,
+    `pages[${home.id}].blocks[${section.id}].message`
+  ]
+  for (const field of fields) {
+    const at = html.indexOf(`data-field="${field}"`)
+    assert.ok(at >= 0, `${field} is on the card`)
+    const button = html.slice(at, html.indexOf('</button>', at))
+    assert.ok(button.includes('class="tv-bc-pen"'), `${field} has a pencil`)
+    assert.ok(button.includes('aria-label="Edit '), `${field} is a button that opens the editor`)
+  }
+  for (const text of [
+    'Can my children learn to play here?',
+    'Lessons for every age.',
+    'What a member can book.'
+  ])
+    assert.ok(html.includes(`>${text}<`), text)
+})
+
 test('a plan operation is one plan edit; a refused one is said by its code with its numbers', () => {
   const p = plan()
   assert.deepEqual(lib.planOperationOf(p, { op: 'remove-page', page: 'about' }, 'edit-9'), {

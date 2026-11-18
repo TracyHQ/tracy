@@ -13,9 +13,9 @@
 // - the model's own assumption lines are carried; one whose page or section the revision removed is dropped, with no
 //   line (an assumption explains a part of the plan, and that part is gone);
 // - the ids of every page and section the revision keeps (`pagesOf`, `givenIds`);
-// - the language, the look fields, the item labels and a pictures count the customer changed on the plan card
-//   (`settleRevisedPlan`). Fact values need nothing: a plan edit writes them into the needs profile the revision is
-//   composed from. A request cannot change any of these: they are changed on the plan card. A look field put back is
+// - the language, the look fields, the item labels, the search terms the owner added and took off (#575) and a
+//   pictures count the customer changed on the plan card (`settleRevisedPlan`). Fact values need nothing: a plan
+//   edit writes them into the needs profile the revision is composed from. A request cannot change any of these: they are changed on the plan card. A look field put back is
 //   the customer's own choice, so the template look rules (`lookProblemsOf`) hold for every other look field and line
 //   of the revised plan (`settledLookProblems`), never against the customer's choice.
 // Pure.
@@ -23,6 +23,7 @@ import { lookProblemsOf } from './brand-look-problems.mjs'
 import { rowDataIdsOf } from './plan-accounting.mjs'
 import { CONTACT_VALUE_MISSING_REASON } from './plan-answers.mjs'
 import { generatedOf, picturesOf } from './plan-look-pictures.mjs'
+import { withSearchTerms } from './plan-intent-seo.mjs'
 import { REQUESTED_OFF_REASON, leftOutEntryOf, namesOf } from './plan-request-taken-off.mjs'
 import { WITHHELD_REASON } from './plan-withheld.mjs'
 
@@ -162,7 +163,31 @@ export function settleRevisedPlan(revised, current, blocks, data) {
       generated: generatedOf(was)
     }
   next.leftOut = uniqueEntries(next.leftOut)
+  next.pages = withOwnerTermMarks(next.pages, current.pages, data)
   return next
+}
+
+/**
+ * The revised pages with the search terms the owner added and took off on the plan card (#575, `seo.ownerAdded`,
+ * `seo.ownerRemoved`) kept on each page the revision keeps: the terms are made again from the data, the owner's marks
+ * applied, as after a plan edit (`plan-intent-seo.mjs`). The composer reads a page's intent without the marks, so a
+ * revision put every term the owner took off back on the page and dropped every term the owner typed.
+ */
+function withOwnerTermMarks(pages, currentPages, data) {
+  const marks = new Map()
+  for (const page of list(currentPages)) {
+    const { ownerAdded, ownerRemoved } = page.seo ?? {}
+    if (list(ownerAdded).length || list(ownerRemoved).length)
+      marks.set(page.id, {
+        ...(list(ownerAdded).length ? { ownerAdded: [...ownerAdded] } : {}),
+        ...(list(ownerRemoved).length ? { ownerRemoved: [...ownerRemoved] } : {})
+      })
+  }
+  if (!list(pages).some((p) => marks.has(p.id) && p.seo)) return pages
+  const marked = pages.map((p) =>
+    marks.has(p.id) && p.seo ? { ...p, seo: { ...p.seo, ...marks.get(p.id) } } : p
+  )
+  return withSearchTerms(marked, data)
 }
 
 /**

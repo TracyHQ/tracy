@@ -212,8 +212,9 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   unused, never both: a photo that fills any spot (a gallery, the hero, another section picture) is not in `leftOut`,
   and an unused photo whose item a `leftOut` entry names is counted under that entry's `code`, so the photos left out
   as `no_gallery_room` are exactly the `no_gallery_room` unused count (`plan-picture-count.mjs`; the composer's gate
-  refuses a plan where they differ, code `picture_count`). A photo the owner keeps off the site or asked to take off
-  fills no spot of the plan. Which spot outside the galleries takes which photo is
+  refuses a plan where they differ, code `picture_count`, and so does the plan edit gate after an edit or a plan card
+  operation, which counts the pictures the same way, `plan-picture-recount.mjs`). A photo the owner keeps off the site
+  or asked to take off fills no spot of the plan. Which spot outside the galleries takes which photo is
   decided by the pictures step once the photos are labelled, so the plan names no spot; `empty` lists the spots
   left without a picture the same way. The three own counts are given together or not at all. `generated.frames` has
   a `reason` when above zero. `generated.frames` is an estimate, never a cap (D45): the

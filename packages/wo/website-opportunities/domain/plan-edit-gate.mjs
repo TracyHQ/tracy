@@ -1,8 +1,8 @@
 // A customer's plan edit, held to the rules gate (ticket #593; called by the partial re-run, #599). `checkPlanEdit`
 // (Contract B) knows the plan only, not the block store, so it cannot know how many items a block holds. This applies
 // the edit with `applyPlanEdit` (inside `checkPlanEdit`), then runs the gate's count, kind, main block, fact field and
-// library checks on the edited plan, and counts the pictures summary again (`picturesOf`, #595). Problems are worded
-// for the customer. A changed fact value is written back to the needs profile, item fields included, so the page
+// library checks on the edited plan, and counts the pictures summary again (`recountedPictures`, #595). Problems are
+// worded for the customer. A changed fact value is written back to the needs profile, item fields included, so the page
 // writer reads the customer's value. The child list rows follow the edited data: they are planned again by the same
 // rules in the customer's item order (`plan-edit-rows.mjs`: an item taken off a block takes its rows with it) and held
 // to the block store; the left out entries of the rules are written again, and every row is accounted for.
@@ -20,7 +20,9 @@ import { ITEM_NOUNS, planDataOf } from './plan-data.mjs'
 import { blockItemProblems } from './plan-gate-items.mjs'
 import { factFieldProblems } from './plan-gate-rules.mjs'
 import { withHoursDisplay } from './plan-hours-display.mjs'
-import { generatedOf, picturesOf } from './plan-look-pictures.mjs'
+import { generatedOf } from './plan-look-pictures.mjs'
+import { pictureCountProblems } from './plan-picture-count.mjs'
+import { recountedPictures } from './plan-picture-recount.mjs'
 import { withheldWhatOf } from './plan-withheld.mjs'
 import { replanRows } from './plan-edit-rows.mjs'
 import { editedIdProblems } from './plan-edit-withheld.mjs'
@@ -209,18 +211,25 @@ function gatedPlan(next, { plan, profile, after, changed, asked, terms, blockSto
   if (problems.length > 0) return failed(problems)
   // The pictures summary follows the edited pages; a generated count the customer lowered is kept. An operation keeps
   // the plan's own count only when the customer had lowered it (`asked: 'kept'`: under what the plan's pages count).
+  // Counted as the composer's gate counts them (`plan-picture-recount.mjs`): the photos the left out list names are
+  // counted under its codes, and the videos line follows the pages.
   if (asked === 'kept') {
     const own = plan.pictures?.generated?.frames
     asked =
-      Number.isInteger(own) && own < picturesOf(plan.pages, blocks, data).pictures.generated.frames
+      Number.isInteger(own) && own < recountedPictures(plan, blocks, data).pictures.generated.frames
         ? own
         : null
   }
-  const counted = picturesOf(next.pages, blocks, data).pictures
+  const recounted = recountedPictures(next, blocks, data)
+  const counted = recounted.pictures
   if (Number.isInteger(asked) && asked < counted.generated.frames) {
     counted.generated = generatedOf(asked)
   }
   next.pictures = counted
+  next.leftOut = recounted.leftOut
+  // The composer's guard holds here too: numbers that still disagree are a fault of the gate, never shown to the owner.
+  const miscounted = pictureCountProblems(next).map((p) => ({ code: 'picture_count', ...p }))
+  if (miscounted.length > 0) return failed(miscounted)
   // An hours value changed on the card is shown again from its new value (`plan-hours-display.mjs`).
   next.facts = list(next.facts).map(withHoursDisplay)
   // Search terms are made again from the edited data: a renamed service, a changed address (`plan-intent-seo.mjs`).
