@@ -194,7 +194,7 @@
   },
   "tracy-business/emdash": {
     "platform": "emdash",
-    "version": "1.7.23",
+    "version": "1.7.26",
     "format": "tracy-quickstart/v1",
     "release": "tracy-business/emdash-0.x",
     "template": {
@@ -245,18 +245,18 @@
       ]
     },
     "source": {
-      "file": "tracy-business-emdash-quickstart-1.7.23.zip",
-      "bytes": 6482343,
-      "sha256": "01973cb90881c6f84918e7fd3d9ae36453fda3dd5d6b0cf961fa203199111f6a",
-      "githubAssetId": 683814916,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-quickstart-1.7.23.zip"
+      "file": "tracy-business-emdash-quickstart-1.7.26.zip",
+      "bytes": 6485050,
+      "sha256": "c8d990fc377d81f83f8c0f1610d90b60310e9b0e88799b77e57ecf4adf5448a9",
+      "githubAssetId": 762775103,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-quickstart-1.7.26.zip"
     },
     "state": {
-      "file": "tracy-business-emdash-state-1.7.23.tar.gz",
+      "file": "tracy-business-emdash-state-1.7.26.tar.gz",
       "bytes": 8485789,
       "sha256": "8d6eaff4dfc267822319d795054a27543a10e03400a9f6658f7d075b48c63e55",
-      "githubAssetId": 683821291,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-state-1.7.23.tar.gz"
+      "githubAssetId": 762775109,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-state-1.7.26.tar.gz"
     },
     "questions": {
       "schemaVersion": "tracy-questions/v1",
@@ -684,7 +684,7 @@
   },
   "tracy-base/emdash": {
     "platform": "emdash",
-    "version": "0.5.6",
+    "version": "0.5.9",
     "format": "tracy-quickstart/v1",
     "release": "tracy-base/emdash-0.x",
     "template": {
@@ -694,18 +694,18 @@
       "languages": ["en"]
     },
     "source": {
-      "file": "tracy-base-emdash-quickstart-0.5.6.zip",
-      "bytes": 7075290,
-      "sha256": "fe2ed1d0f7195791e59494c3d7f860893b0fed2ec4c7ba0a9121141ee6c7e02b",
-      "githubAssetId": 683825451,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-quickstart-0.5.6.zip"
+      "file": "tracy-base-emdash-quickstart-0.5.9.zip",
+      "bytes": 7078020,
+      "sha256": "502aa03dcc4353ce40db210317438ad1f2962a4d8a090bc3be326d1b74058264",
+      "githubAssetId": 762771539,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-quickstart-0.5.9.zip"
     },
     "state": {
-      "file": "tracy-base-emdash-state-0.5.6.tar.gz",
+      "file": "tracy-base-emdash-state-0.5.9.tar.gz",
       "bytes": 6168464,
       "sha256": "31ef8740a8e762d50dedd0cbdb6c4fb10bb51c12071fe0e0f993ce2b38330d52",
-      "githubAssetId": 683827337,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-state-0.5.6.tar.gz"
+      "githubAssetId": 762771555,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-state-0.5.9.tar.gz"
     },
     "questions": {
       "schemaVersion": "tracy-questions/v1",
@@ -988,7 +988,7 @@
   },
   "tracy-saas/emdash": {
     "platform": "emdash",
-    "version": "1.4.14",
+    "version": "1.4.17",
     "format": "tracy-quickstart/v1",
     "release": "tracy-saas/emdash-0.x",
     "template": {
@@ -998,18 +998,18 @@
       "languages": ["en"]
     },
     "source": {
-      "file": "tracy-saas-emdash-quickstart-1.4.14.zip",
-      "bytes": 7808844,
-      "sha256": "1cacc1f52d7c504bb313a39b7f194e1fa6e6da7744da63674843f11b6b770071",
-      "githubAssetId": 683789032,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-quickstart-1.4.14.zip"
+      "file": "tracy-saas-emdash-quickstart-1.4.17.zip",
+      "bytes": 7811557,
+      "sha256": "0c7f50cccf86a2d7a0717dde258968c5506aaea23b4a7d709c4cc48ab210dc79",
+      "githubAssetId": 762777014,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-quickstart-1.4.17.zip"
     },
     "state": {
-      "file": "tracy-saas-emdash-state-1.4.14.tar.gz",
+      "file": "tracy-saas-emdash-state-1.4.17.tar.gz",
       "bytes": 7674704,
       "sha256": "6ce7750f76600d246ff01fae12b64ff81ed498b545247e9f4bc406bdebb80f5b",
-      "githubAssetId": 683793552,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-state-1.4.14.tar.gz"
+      "githubAssetId": 762777017,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-state-1.4.17.tar.gz"
     },
     "note": "EmDash pair like tracy-business/emdash: `source` is the packed template (built into an image on the host, no registry per ADR 0014), `state` the scrubbed SQLite + uploads restored ONCE. The package ships no Dockerfile; provision completes it from the fleet’s stock one (provision/emdash/quickstart.Dockerfile). Questions: the CMS default — this release carries no questionnaire of its own."
   },
