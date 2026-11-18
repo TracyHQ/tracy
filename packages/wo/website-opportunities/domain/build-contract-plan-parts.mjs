@@ -28,7 +28,15 @@ export const EDITABLE_FIELDS = Object.freeze([
   'items[].label',
   'pages[].name',
   'pages[].blocks[].data',
-  'pictures.generated.frames'
+  'pictures.generated.frames',
+  // The intent notes for the writer (#575 plan card): the owner corrects them in place, never as copy for the site.
+  'keyMessages[].label',
+  'pages[].keyMessage',
+  'pages[].visitorQuestion',
+  'pages[].seo.titleIntent',
+  'pages[].seo.descriptionIntent',
+  'pages[].seo.searchTerms',
+  'pages[].blocks[].message'
 ])
 /** The fields an assumption may list alternatives for, with the text limit their values keep. */
 const ALTERNATIVE_FIELDS = Object.freeze({ 'facts[].value': 'facts[].value', 'items[].label': 'label' })

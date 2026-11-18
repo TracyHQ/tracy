@@ -46,7 +46,9 @@ export const CONTRACT_SHAPES = Object.freeze({
     ['lists', 'labelCode', 'basis', 'factIds', 'message', 'carries'],
     { plan: true }
   ),
-  'page seo': shape(['searchTerms'], ['titleIntent', 'descriptionIntent'], { plan: true }),
+  'page seo': shape(['searchTerms'], ['titleIntent', 'descriptionIntent', 'ownerAdded', 'ownerRemoved'], {
+    plan: true
+  }),
   'end action': shape(['block', 'factIds'], [], { plan: true }),
   'key message': shape(['id', 'label'], [], { plan: true }),
   'primary action': shape(['factIds'], [], { plan: true }),
@@ -65,7 +67,8 @@ export const CONTRACT_SHAPES = Object.freeze({
   'left out entry': shape(['what', 'kind', 'reason'], ['code', 'item', 'params'], { plan: true }),
   'legal page': shape(['kind', 'use', 'id'], ['says', 'factIds'], { plan: true }),
   'not found page': shape(['says', 'leadsTo'], [], { plan: true }),
-  'plan edit': shape(['schema', 'id', 'plan', 'changes']),
+  'plan edit': shape(['schema', 'id', 'plan'], ['changes', 'operation']),
+  'plan operation': shape(['op'], ['page', 'block', 'item', 'message', 'fact', 'later', 'removal']),
   'plan reference': shape(['id', 'revision']),
   change: shape(['field', 'value']),
   'plan request': shape(['schema', 'id', 'plan', 'text']),

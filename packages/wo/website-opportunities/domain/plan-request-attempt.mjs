@@ -20,6 +20,7 @@ import {
   settledLookProblems,
   settleRevisedPlan
 } from './plan-request-settled.mjs'
+import { OWNER_REMOVED_REASON } from './plan-operations.mjs'
 import { broughtBackProblems, customerTakenOffOf, REQUESTED_OFF_REASON } from './plan-request-taken-off.mjs'
 
 /** The not done line of a request nothing on the plan can follow, when the model gave none. */
@@ -108,7 +109,7 @@ export function revisionOf(reply, { plan, request, context, owner = null }) {
     givenIds: givenIdsOf(applied.pages),
     idTag: `r${plan.revision + 1}`,
     labels: new Map(list(plan.items).map((i) => [i.id, i.label])),
-    askedOff: new Set([REQUESTED_OFF_REASON, REMOVED_PAGE_DATA_REASON])
+    askedOff: new Set([REQUESTED_OFF_REASON, REMOVED_PAGE_DATA_REASON, OWNER_REMOVED_REASON])
   })
   if (!gated.ok)
     return {

@@ -166,7 +166,12 @@ export {
   formatProblem as formatBuildContractProblem
 } from './build-contract.mjs'
 export { BUILD_PLAN_SCHEMA, EDITABLE_FIELDS } from './build-contract-plan.mjs'
-export { PLAN_EDIT_SCHEMA, applyPlanEdit, checkPlanEdit } from './build-contract-plan-edit.mjs'
+export {
+  PLAN_EDIT_SCHEMA,
+  PLAN_OPERATIONS,
+  applyPlanEdit,
+  checkPlanEdit
+} from './build-contract-plan-edit.mjs'
 export { ANSWER_SCHEMA, QUESTION_SCHEMA, QUESTION_TOPICS, checkAnswer } from './build-contract-questions.mjs'
 export { OUTCOME_SCHEMA, PROGRESS_SCHEMA, STEP_KINDS, STEP_STATES } from './build-contract-run.mjs'
 export {
@@ -221,7 +226,9 @@ export {
   heldHoursPickOf,
   heldHoursQuestionOf
 } from './held-hours-question.mjs'
-export { gateEditedPlan } from './plan-edit-gate.mjs'
+export { gateEditedPlan, gateOperatedPlan } from './plan-edit-gate.mjs'
+export { OPERATION_REFUSALS, OWNER_REMOVED, OWNER_REMOVED_REASON } from './plan-operations.mjs'
+export { planLocksOf } from './plan-operation-locks.mjs'
 export {
   NOT_DONE_REASONS,
   PLAN_REQUEST_MAX_LENGTH,

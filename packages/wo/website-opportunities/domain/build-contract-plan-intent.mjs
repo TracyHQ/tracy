@@ -51,6 +51,26 @@ function seoProblems(seo, at, report) {
   seo.searchTerms.forEach((term, i) =>
     textProblems(term, `${at}.searchTerms[${i}]`, report, 'searchTerms[]', 'a search term is a text')
   )
+  // The owner's marks (#575 plan card): the terms the owner added are among the page's terms, and the terms code makes
+  // that the owner took off are not, so a later edit that makes the terms again keeps the owner's choice.
+  for (const key of ['ownerAdded', 'ownerRemoved']) {
+    if (seo[key] === undefined) continue
+    if (!Array.isArray(seo[key])) {
+      report(`${at}.${key}`, `${key} lists search terms`)
+      continue
+    }
+    seo[key].forEach((term, i) => {
+      if (!textProblems(term, `${at}.${key}[${i}]`, report, 'searchTerms[]', 'a search term is a text'))
+        return
+      if ((key === 'ownerAdded') !== seo.searchTerms.includes(term))
+        report(
+          `${at}.${key}[${i}]`,
+          key === 'ownerAdded'
+            ? 'a term the owner added is one of the search terms'
+            : 'a term the owner took off is not one of the search terms'
+        )
+    })
+  }
 }
 
 function pageProblems(page, at, { known, messages }, report) {

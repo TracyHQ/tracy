@@ -335,7 +335,16 @@ and a block without `lists` shows no rows.
 
 A field is a path into the plan: a key, or a list entry selected by its id in brackets. The fields a customer can
 change (`EDITABLE_FIELDS`): `language`, `look.template`, `look.accent`, `look.logo`, `facts[<id>].value`,
-`items[<id>].label`, `pages[<id>].name`, `pages[<id>].blocks[<id>].data`, `pictures.generated.frames`.
+`items[<id>].label`, `pages[<id>].name`, `pages[<id>].blocks[<id>].data`, `pictures.generated.frames`, and the intent
+notes for the writer (#575 plan card): `keyMessages[<id>].label`, `pages[<id>].keyMessage`,
+`pages[<id>].visitorQuestion`, `pages[<id>].seo.titleIntent`, `pages[<id>].seo.descriptionIntent`,
+`pages[<id>].seo.searchTerms`, `pages[<id>].blocks[<id>].message`.
+
+A search term list the owner sets marks the page's terms (`seo.ownerAdded`: the terms the owner typed that code does
+not make; `seo.ownerRemoved`: terms code makes that the owner took off). Code makes the terms again from the data after
+every edit (`withSearchTerms`): the terms it makes but those the owner took off, then the owner's own, at most 10. A
+list the gate cannot save is refused with its code: `search_terms_empty`, `search_term_too_long` (over 60 characters),
+`search_term_twice`, `too_many_search_terms`.
 
 An edit is valid only against the plan it applies to (`checkPlanEdit(edit, plan)`):
 
@@ -345,6 +354,46 @@ An edit is valid only against the plan it applies to (`checkPlanEdit(edit, plan)
 - the edited plan, revision raised by one (`applyPlanEdit`), still passes the plan check, closed shapes and text limits
   included, so a new `look.template` or `look.logo` value with an extra key is rejected; such a problem is reported at
   `plan <place>` with a message starting "after the edit".
+
+### Plan operations
+
+Instead of `changes`, an edit may carry one `operation` (#575 plan card), a structured click with no free text:
+
+```json
+{
+  "schema": "tracy-build-plan-edit/v1",
+  "id": "edit-2",
+  "plan": { "id": "plan-sunrise-tennis", "revision": 2 },
+  "operation": { "op": "remove-block", "page": "home", "block": "home-b4" }
+}
+```
+
+| `op` | Keys | What it does |
+|---|---|---|
+| `remove-page` | `page` | takes a page off (and off `notFound.leadsTo`) |
+| `remove-block` | `page`, `block` | takes a section off one page |
+| `remove-item` | `page`, `block`, `item` | takes one item (a service, a person, a photo, a review) off a section |
+| `remove-key-message` | `message` | takes a key message off, and off every block's `carries` |
+| `remove-channel` | `fact` | takes a contact channel off every footer block (and off `legalPages[].factIds`, `endAction.factIds`) |
+| `remove-later` | `later` | takes the `later` entry with that code off |
+| `restore` | `removal` | brings back what one removal of this review took, exactly, where it was |
+| `revert` | | goes back to the plan (and needs profile) as they were before the review's first change |
+
+`gateOperatedPlan` (`plan-edit-gate.mjs`, the pure code in `plan-operations.mjs`) applies it and holds the result to the
+same checks as an edit (main blocks, item counts, rows planned again, pictures, search terms, the whole document); the
+revision rises by one. What the owner cannot take off is decided from the kit and the plan (`planLocksOf`), each with a
+refusal code: the first page (`first_page`), the page the privacy page is (`privacy_page`), the main block of a page's
+recipe (`main_block`), a block the build writes in place, which every page shares (`site_chrome`), the block a page
+ends on (`end_action`), a fact of the main button (`main_button`), an item that would leave a block under its
+`items.min` (`too_few_items`) or with no detail (`block_empty`). A restore whose place is gone (a section that carried
+it was taken off later) is refused with `restore_target_gone`.
+
+A removal adds left out entries with code `owner_removed` (reason "You took this off the plan.") and `params.removal`,
+the removal's id: the part itself (kind `page`, `block` or `feature`) and every fact or item it leaves shown nowhere.
+Assumptions that named a part taken with it go with it. The removal record (what was taken and its neighbours) is kept
+beside the plan by the draft store, never in the plan; a restore removes the entries and puts each piece back between
+its nearest neighbours still there. A change request treats data left out by `owner_removed` as the customer's
+(`customerTakenOffOf`).
 
 ## Change request and plan revision
 
@@ -563,7 +612,7 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `source` | `kind`, `name` |
 | `page` | `id`, `name`, `pageType`, `blocks`, `visitorQuestion?`, `keyMessage?`, `seo?`, `endAction?` |
 | `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason`, `lists?`, `labelCode?`, `basis?`, `factIds?`, `message?`, `carries?` |
-| `page seo` | `searchTerms`, `titleIntent?`, `descriptionIntent?` |
+| `page seo` | `searchTerms`, `titleIntent?`, `descriptionIntent?`, `ownerAdded?`, `ownerRemoved?` |
 | `end action` | `block`, `factIds` |
 | `key message` | `id`, `label` |
 | `primary action` | `factIds` |
@@ -582,7 +631,8 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `left out entry` | `what`, `kind`, `reason`, `code?`, `item?`, `params?` |
 | `legal page` | `kind`, `use`, `id`, `says?`, `factIds?` |
 | `not found page` | `says`, `leadsTo` |
-| `plan edit` | `schema`, `id`, `plan`, `changes` |
+| `plan edit` | `schema`, `id`, `plan`, `changes?`, `operation?` |
+| `plan operation` | `op`, `page?`, `block?`, `item?`, `message?`, `fact?`, `later?`, `removal?` |
 | `plan reference` | `id`, `revision` |
 | `change` | `field`, `value` |
 | `plan request` | `schema`, `id`, `plan`, `text` |
@@ -648,5 +698,5 @@ all, so the chat sample data cannot quietly disappear. Its unit tests are
 
 - Progress events are full snapshots of the step list, not deltas, so the chat can render any event on its own.
 - The template choice is not a question: the plan's `look.template` is changed by a plan edit.
-- Adding or removing a page or a block is not a plan edit this round; a plan edit changes field values only.
+- Adding a page or a block is not a plan edit; removing one is a plan operation (#575), and so is bringing it back.
 - Per block picture counts are not part of the plan; the pictures summary is for the whole site.
