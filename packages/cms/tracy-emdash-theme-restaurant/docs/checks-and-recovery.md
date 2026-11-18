@@ -2,7 +2,7 @@
 
 ## Acceptance commands (package root)
 
-In the package as shipped only `pnpm test` and the tools that need a running site (`audit.mjs`, `admin-session.mjs`, `admin-roundtrip.mjs`, `forms-check.mjs`, `recovery-check.mjs`) can run. The `qa-contract`, `visual-qa`, `fast-gate`, `qa` and `qa-receipt` commands below need `qa.contract.json` and `source/snapshot`, which are in the repository checkout only.
+In the package as shipped only `pnpm test` (it needs Playwright's Chromium: `pnpm exec playwright install chromium` in the site folder; the cases that need the repository skip and say why) and the tools that need a running site (`audit.mjs`, `admin-session.mjs`, `admin-roundtrip.mjs`, `forms-check.mjs`, `recovery-check.mjs`) can run. The `qa-contract`, `visual-qa`, `fast-gate`, `qa` and `qa-receipt` commands below need `qa.contract.json` and `source/snapshot`, which are in the repository checkout only.
 
 ```bash
 node tools/qa-contract.mjs …                       # contract validation (qa.contract.json, built by ingest/build-contract.mjs)
@@ -15,6 +15,35 @@ node tools/generate-docs.mjs --check               # docs complete and fresh
 ```
 
 Machine runs write their evidence under `evidence/<run>` and the signed receipts under `evidence/reviews`; both are local and not part of the package. The source mirror `source/snapshot` is not part of the package either; `source/REBUILD.md` says how to rebuild it from the pinned release.
+
+## Commands a recipient can run on a built site
+
+`<origin>` is where your site listens, e.g. `http://127.0.0.1:4361`; run them from the installed site folder.
+`audit.mjs`, `admin-session.mjs`, `admin-roundtrip.mjs` and `forms-check.mjs` drive a browser through Playwright, which
+`pnpm install` puts in the installed site's `node_modules` only (the package folder has none): install its Chromium once
+there with `pnpm exec playwright install chromium`, or point `RENDER_CHROME_PATH` at a Chrome of your own. Playwright keeps
+its browsers in `.cache/ms-playwright` in your home folder (about 660 MB), not in the site folder: remove them with
+`pnpm exec playwright uninstall --all`, or delete that folder, when the checks are done.
+
+```bash
+node tools/audit.mjs <origin> <new out dir> --config template.config.json     # routes, SEO, 404s, assets -> <out>/audit.json
+node tools/admin-session.mjs --site <origin> --email tracy-agent@tracy.ai --out admin-state.json
+node tools/admin-roundtrip.mjs --site <origin> --storage-state admin-state.json \
+  --entry /_emdash/admin/content/posts/<entry id> --field field-title --public <the post's public path> --out roundtrip.json
+```
+
+`roundtrip.json` starts with the verdict: `status` (`pass` when every step passed) and `failed` (the names of the steps
+that did not); `steps` holds each step with its detail, and the exit code is 0 for a pass, 1 otherwise.
+
+Pick for `admin-roundtrip.mjs` a field the public page prints: a post's title is printed on its page, while a Pages
+entry's title is not printed by every page view, so the round trip can find no change on the public page although the edit
+was published. The Chefs page is the post `chefs` (category `pages`) at `/pages/chefs`; no page links it, as in the source, so the audit's crawl does not reach it (open it by its address). Pictures drawn with
+`loading="lazy"` (the dish pictures of the Menu pages among them) load only once they are shown and scrolled to: a generic
+image check that does not scroll the page first counts the hidden or unscrolled ones as undecoded, although nothing is
+broken.
+
+In the package, the cases of `tests/release-site-pages.test.mjs` that run `tools/release.mjs` need a Tracy repository
+checkout (`TRACY_CHECKOUT`): they run only in the repository: in the package they are skipped and say why.
 
 ## Backup and restore
 

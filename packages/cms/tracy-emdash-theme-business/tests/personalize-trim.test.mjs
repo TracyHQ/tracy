@@ -358,7 +358,9 @@ test('About left blank, with a model: every demo row stays, renamed; nothing lea
     assert.ok(report.skipped.some((s) => s.rule === 'copy' && /About left blank/.test(s.why)))
     assert.equal(report.rewritten.done, 0, 'no demo entry rewritten')
     assert.deepEqual(report.terms, [], 'no term relabelled')
-    const modelWords = /"(?:C|R|L|F) [^"]*"|"[a-z_]+ \d+"/
+    // The fake model's words: its prefixed lines, or a row field named in its own value (`"title":"title 3"`). A demo title
+    // that only looks like it ("phase 3", "Vorsino phase 3" once the demo's place left it) is the demo's own words.
+    const modelWords = /"(?:C|R|L|F) [^"]*"|"([a-z_]+)":"\1 \d+"/
     for (const e of mock.state.entries.values())
       if (e.status === 'published')
         assert.doesNotMatch(

@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import Database from 'better-sqlite3'
-import { stateResidue } from '../tools/state-residue.mjs'
+import { sqlText, stateResidue } from '../tools/state-residue.mjs'
 
 const rev = (version, at) => Buffer.from(`${version}:${at}`).toString('base64')
 const SEEDED_AT = '2026-11-16T03:00:26.059Z'
@@ -78,4 +78,29 @@ test('a receipted entry the state no longer holds is named', () => {
   const { db, sql, receipts } = freshState()
   db.exec(`delete from ec_posts`)
   assert.deepEqual(stateResidue(sql, receipts), ['posts/seeded/en: the receipted entry is gone'])
+})
+
+test("G5b: a revision one second after the seed is named; the seed's own revision in that second is not", () => {
+  const { db, sql, receipts } = freshState()
+  db.exec(`insert into revisions values ('R3', 'posts', 'P1', '{"title":"Seeded"}', '2026-11-16 03:00:26')`)
+  assert.deepEqual(stateResidue(sql, receipts), [])
+  db.exec(
+    `insert into revisions values ('R2', 'posts', 'P1', '{"title":"Recovery 1"}', '2026-11-16 03:00:27')`
+  )
+  assert.deepEqual(stateResidue(sql, receipts), ['posts/seeded/en: 1 revision(s) written after the seed'])
+})
+
+test('G5: sqlText answers as the sqlite3 CLI list mode, so the release needs no CLI', () => {
+  const db = new Database(':memory:')
+  const sql = sqlText(db)
+  assert.equal(sql('create table t (a text, b integer, c text)'), '')
+  assert.equal(sql("insert into t values ('x', 1, null), ('y', 2, 'z')"), '')
+  assert.equal(sql('select a, b, c from t order by a'), 'x|1|\ny|2|z')
+  assert.equal(sql('select count(*) from t'), '2')
+  assert.equal(sql('select a from t where b > 5'), '')
+  assert.equal(sql('delete from t'), '')
+  assert.equal(sql('vacuum'), '')
+  assert.equal(sql('select count(*) from t'), '0')
+  const { receipts } = freshState()
+  assert.deepEqual(stateResidue(sqlText(freshState().db), receipts), [])
 })

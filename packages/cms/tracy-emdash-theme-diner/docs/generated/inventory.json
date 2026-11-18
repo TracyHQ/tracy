@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-diner",
     "label": "JA Diner",
-    "version": "0.1.2"
+    "version": "0.1.4"
   },
   "locales": {
     "default": "en",
@@ -993,9 +993,9 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
-    "package.json": "sha256:16794fcff48975e0ad6ab9634b99b08c8789c189651d20c1eaadec2b16ce9a97",
+    "package.json": "sha256:9feca16fd2a94823fbe0dfe3f4007cc56ccd2da069939dd64eb3e8f65a840787",
     "pnpm-lock.yaml": "sha256:d7a904f4d0cc00b3c5d5012916f76bcd7a021cfedb84133d3ea15adf598f96af",
-    "seed/field-map.json": "sha256:0d2efe032532872c9e5be488e75f1bfc92ca9744c38c5fb070af2e7e3099b6dd",
+    "seed/field-map.json": "sha256:f5700102f9e4419713e26be03ac7944903f1b6b9b7e6ca74aff5cc04d439efba",
     "seed/media-map.json": "sha256:8ae8d2c1418af210d859f9b9223b78b5b07311ed977933a63a50b7f7fe0e4b17",
     "seed/seed.json": "sha256:5ac02a17ac52e79c1c89f4b2dc773310391ab30cc81f73ad08224c159b14d04a",
     "src/components/site/AboutFeatures.astro": "sha256:e4fb4ab66774a010e077529b1693d4d331a9b19ad435c65ce52705b5af97bec7",
@@ -1066,7 +1066,7 @@
     "src/views/Post.astro": "sha256:a5fa4522bb20f852d6eb24a4342a95937bc5bc55e2d1ea390f1d3efd89f0fe42",
     "src/views/Reservation.astro": "sha256:5e440bdc7da0eadcc0096e5dea40a4c67b65cf888bf3d19a5caf9114c83cb6e5",
     "src/views/Search.astro": "sha256:0f82d395c783589958a7051a04a06970a9d8f0bf43884d8a16aa7c388f04aa1f",
-    "template.config.json": "sha256:5af3d5429d50abcb43895bf9a8ec295986dda8eda2096d482c1492db312ed092",
+    "template.config.json": "sha256:4157eaa3baa4bad4ab8d199a27f475e4be7913fe8ce038bd7054fc1edc838251",
     "tools/forms.json": "sha256:b338c304ed95527ce5ac509a14e080734d616136c4a899053b62f24084445409",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

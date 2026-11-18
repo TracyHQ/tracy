@@ -125,7 +125,8 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
     }
     const missing = (field, reason) =>
       errors.push({ kind: 'missing', field: `site.logoSpots[${spot.id}].${field}`, reason })
-    if (!spot.frameId)
+    // A setting the CMS writes through a door of its own (EmDash core settings.logo) needs no frame.
+    if (!spot.frameId && !setting?.frameless)
       missing('frameId', 'no content map slot prints this logo (free HTML or a template file)')
     if (!spot.emptyShows)
       missing('emptyShows', 'neither a template layout nor the block shows what prints without it')

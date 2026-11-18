@@ -4,10 +4,21 @@
 // `release.mjs --site-pages <dir>` prints that file without cutting a release.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
+
+// tools/release.mjs reads Tracy's page rule from a Tracy repository checkout (TRACY_CHECKOUT, or the checkout this package sits
+// in). The shipped package has none: these release-tool cases then skip, saying why (G-23 of the 1.0.2 independent handover).
+const CHECKOUT =
+  process.env.TRACY_CHECKOUT ??
+  [path.resolve(import.meta.dirname, '../../../..')].find((root) =>
+    existsSync(path.join(root, 'apps/tracy-web/src/lib/template-customization-question-readiness'))
+  )
+const needsCheckout = {
+  skip: CHECKOUT ? false : 'needs a Tracy repository checkout (TRACY_CHECKOUT): a release-tool test'
+}
 
 const RELEASE = path.join(import.meta.dirname, '..', 'tools', 'release.mjs')
 const rec = (type, slug, locale = 'en') => ({
@@ -38,7 +49,7 @@ const base = {
   ]
 }
 
-test('primary menu level 1 -> page record slugs, front page marked home', () => {
+test('primary menu level 1 -> page record slugs, front page marked home', needsCheckout, () => {
   const { doc } = pagesOf({
     ...base,
     menus: [
@@ -64,32 +75,36 @@ test('primary menu level 1 -> page record slugs, front page marked home', () => 
   })
 })
 
-test('a heading at level 1 is no page; its child at "/" is the front page, named by the heading', () => {
-  const { doc, stderr } = pagesOf({
-    ...base,
-    menus: [
-      {
-        name: 'mainmenu',
-        items: [
-          {
-            label: { en: 'Home' },
-            path: '',
-            kind: 'heading',
-            children: [{ label: { en: 'Terminal' }, path: '/' }]
-          },
-          { label: { en: 'About' }, path: '/about' }
-        ]
-      }
-    ]
-  })
-  assert.deepEqual(doc.pages, [
-    { id: 'home', label: 'Home', home: true },
-    { id: 'about', label: 'About' }
-  ])
-  assert.match(stderr, /no "primary" menu: used "mainmenu"/)
-})
+test(
+  'a heading at level 1 is no page; its child at "/" is the front page, named by the heading',
+  needsCheckout,
+  () => {
+    const { doc, stderr } = pagesOf({
+      ...base,
+      menus: [
+        {
+          name: 'mainmenu',
+          items: [
+            {
+              label: { en: 'Home' },
+              path: '',
+              kind: 'heading',
+              children: [{ label: { en: 'Terminal' }, path: '/' }]
+            },
+            { label: { en: 'About' }, path: '/about' }
+          ]
+        }
+      ]
+    })
+    assert.deepEqual(doc.pages, [
+      { id: 'home', label: 'Home', home: true },
+      { id: 'about', label: 'About' }
+    ])
+    assert.match(stderr, /no "primary" menu: used "mainmenu"/)
+  }
+)
 
-test('the pages under a submenu heading are offered too, system pages are not (REL-2)', () => {
+test('the pages under a submenu heading are offered too, system pages are not (REL-2)', needsCheckout, () => {
   const { doc, stderr } = pagesOf({
     ...base,
     records: [
@@ -126,7 +141,7 @@ test('the pages under a submenu heading are offered too, system pages are not (R
   assert.match(stderr, /skipped as system pages: Smart Search/)
 })
 
-test('a path two page records answer is not guessed: skipped and said', () => {
+test('a path two page records answer is not guessed: skipped and said', needsCheckout, () => {
   const { doc, stderr } = pagesOf({
     ...base,
     records: [...base.records, rec('pages', 'about')],
@@ -144,30 +159,34 @@ test('a path two page records answer is not guessed: skipped and said', () => {
   assert.match(stderr, /"About" \(\/about\) matches 2 page records: skipped/)
 })
 
-test('no seed/site-model.json stops the release', () => {
+test('no seed/site-model.json stops the release', needsCheckout, () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'site-pages-'))
   const r = spawnSync(process.execPath, [RELEASE, '--site-pages', dir], { encoding: 'utf8' })
   assert.equal(r.status, 1)
   assert.match(r.stderr, /tracy_site_pages\.json: .*site-model\.json is missing/)
 })
 
-test("the generated list holds every nested page of this template's own seed, Our History included (REL-2)", () => {
-  const r = spawnSync(process.execPath, [RELEASE, '--site-pages', path.join(import.meta.dirname, '..')], {
-    encoding: 'utf8'
-  })
-  assert.equal(r.status, 0, r.stderr)
-  const ids = JSON.parse(r.stdout).pages.map((p) => p.id)
-  for (const id of [
-    'our-history',
-    'simple-menu',
-    'menu-with-image',
-    '2-column-menu',
-    'phone-reservation',
-    'contact-us'
-  ])
-    assert.ok(ids.includes(id), `${id} is listed`)
-  assert.doesNotMatch(r.stderr, /matches 2 page records/, 'no path is answered by two records')
-})
+test(
+  "the generated list holds every nested page of this template's own seed, Our History included (REL-2)",
+  needsCheckout,
+  () => {
+    const r = spawnSync(process.execPath, [RELEASE, '--site-pages', path.join(import.meta.dirname, '..')], {
+      encoding: 'utf8'
+    })
+    assert.equal(r.status, 0, r.stderr)
+    const ids = JSON.parse(r.stdout).pages.map((p) => p.id)
+    for (const id of [
+      'our-history',
+      'simple-menu',
+      'menu-with-image',
+      '2-column-menu',
+      'phone-reservation',
+      'contact-us'
+    ])
+      assert.ok(ids.includes(id), `${id} is listed`)
+    assert.doesNotMatch(r.stderr, /matches 2 page records/, 'no path is answered by two records')
+  }
+)
 
 test('no section that holds one entry shares its slug with a page: the page rule would count both as page records', () => {
   const model = JSON.parse(

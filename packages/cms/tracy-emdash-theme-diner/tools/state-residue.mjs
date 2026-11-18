@@ -11,6 +11,28 @@
 export const SEEDED_PLUGIN_STORAGE = ['emdash-forms/forms']
 
 /**
+ * One statement on a better-sqlite3 database, answered as the sqlite3 CLI's list mode answers it: one row per
+ * line, columns joined by `|`, NULL as an empty column, and nothing for a statement that returns no rows.
+ * tools/release.mjs reads and scrubs the state through it, so a release needs no sqlite3 CLI (G5).
+ * @param {import('better-sqlite3').Database} db
+ * @returns {(q: string) => string}
+ */
+export function sqlText(db) {
+  return (q) => {
+    const statement = db.prepare(q)
+    if (!statement.reader) {
+      statement.run()
+      return ''
+    }
+    return statement
+      .raw()
+      .all()
+      .map((row) => row.map((v) => (v === null ? '' : String(v))).join('|'))
+      .join('\n')
+  }
+}
+
+/**
  * @param {(q: string) => string} sql runs one statement on the state's data.db and returns its rows as text,
  *   one row per line and columns joined by `|` (the sqlite3 CLI's list mode)
  * @param {{ entries?: Record<string, { id: string, rev: string }> }} receipts the state's data/seed-receipts.json
@@ -46,9 +68,12 @@ export function stateResidue(sql, receipts) {
         `${key}: live version ${live.split('|')[0]}, the seed wrote ${version} (an edit after the seed)`
       )
     else {
+      // `created_at` has one-second resolution and the seed stamps its own revision in the second of the
+      // write or before it: a revision in a later second is not the seed's (G5b); one in that very second
+      // is not told apart by its time.
       const later = Number(
         sql(
-          `select count(*) from revisions where collection = '${collection}' and entry_id = '${receipt.id}' and julianday(created_at) > julianday('${updatedAt}') + 2.0 / 86400`
+          `select count(*) from revisions where collection = '${collection}' and entry_id = '${receipt.id}' and cast(strftime('%s', created_at) as integer) > cast(strftime('%s', '${updatedAt}') as integer)`
         )
       )
       if (later > 0) problems.push(`${key}: ${later} revision(s) written after the seed`)

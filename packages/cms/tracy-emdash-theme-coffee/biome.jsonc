@@ -19,6 +19,8 @@
       "!docs/generated/**",
       "!seed/**",
       "!evidence/**",
+      // The design source mirror (source/REBUILD.md): git-ignored, but present on every machine that cut a release.
+      "!source/snapshot/**",
       "!data/**",
       "!uploads/**",
       // The Draco decoder, copied unchanged from `three@0.186.1` `examples/jsm/libs/draco/gltf/`

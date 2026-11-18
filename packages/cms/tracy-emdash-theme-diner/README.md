@@ -72,6 +72,38 @@ Words the template prints itself: `src/lib/ui-words.ts`. Identity, mail, forms a
 reads `TRACY_CONTENT_API_SCALARS` (the Dockerfile sets it to 1; turns on the Content API reader). `SITE_DATA_DIR` also
 holds the optional `ds-slot.css` (see `docs/design-system.md`).
 
+## Personalize (the customer's answers)
+
+`tools/personalize.mjs` writes a customer's answers into a site built from this template, by the map in
+`seed/personalize.json`. Run it from the site folder:
+
+```bash
+node tools/personalize.mjs --site <origin> --token-file data/tracy-agent.token \
+  --answers-json '{"name":"Test Cafe","sector":"restaurant","contact":"1 Main St, Springfield · +1 555 0100"}' \
+  [--dry-run] [--no-model] [--json]
+```
+
+The answer keys are the question ids of `seed/questions.json`: `name`, `languages`, `sector`, `contact` (one line with
+the address and the phone; the tool reads both out of it) and `email`. Without a text model (or with `--no-model`) the
+demo's words stay, renamed, and only the facts below change; the run then exits 3. What a run does with the contact facts:
+
+- **An address** takes the place of the demo's in the footer, on the contact page and in the home intro's Location card,
+  and the demo's place names (Hogsmeade, Dumbledore Street, Amphitheatre Parkway, Mountain View) leave the page words:
+  a detachable phrase goes alone, a sentence where the place is a core word goes whole. No field is left empty: a short
+  field with nothing left takes the entry's title or the customer's name, and one with no such fallback keeps its words
+  and is named in the report (`skipped`, rule `places-kept`). Button and link labels are never touched, and the country
+  of the demo address ("Britain") is not taken for its place, so a post title such as "We've been nominated for the
+  Britain Restaurant Awards" keeps its words.
+- **No address** (and no other contact): the demo's address, phones and e-mail stay as placeholders in the footer, on the
+  contact page and in the Location card (`unanswered: keep-demo` in `seed/personalize.json`; the report lists each under
+  `unanswered`). This is intended: the customer sees where their own details go, and fills them in later.
+- **A phone only**: the phone takes the demo's in the footer and on the contact page, and the footer address keeps the
+  demo's, because the brief gives no address (the same keep-demo rule).
+- **Social links**: the contact page's facebook, pinterest, google + and twitter links keep their labels and lead nowhere
+  (an empty link) until the customer gives a profile; the demo's profiles are never kept.
+- **The credit line** "Designed by JoomlArt.com." always stays: joomlart.com is the template vendor's domain
+  (`vendor.domains` in `template.config.json`), never taken for the demo's web address.
+
 ## Where things live
 
 | Path | What |

@@ -5,9 +5,9 @@
     "tracy-restaurant/emdash-0.x": "1.0.1"
   },
   "maxVersion": {
-    "tracy-restaurant/emdash-0.x": "1.0.3"
+    "tracy-restaurant/emdash-0.x": "1.0.4"
   },
-  "maxVersionNote": "1.0.1 reads the type and shape tokens (--ds-weight-*, --ds-size-*, --ds-leading-display, --ds-tracking-display, --ds-btn-radius, --ds-card-radius) in the rules of the roles this contract declares, and the colour roles systems define (the second colour takes accent-on-ink and accent-band; the on-ink soft words are a mix of on-ink); src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base. 1.0.0 did not read the type and shape tokens (ROLE-1) and read two roles no system defines (DEF-1), so the contract starts at 1.0.1 1.0.3 is 1.0.2 with the picomatch patch (GHSA-fc5q-39xc-vjpf) and the version only: src/ and every stylesheet byte-identical to 1.0.2, the same reader (contracts/1.0.3 carries the 1.0.2 measurement).",
+  "maxVersionNote": "1.0.1 reads the type and shape tokens (--ds-weight-*, --ds-size-*, --ds-leading-display, --ds-tracking-display, --ds-btn-radius, --ds-card-radius) in the rules of the roles this contract declares, and the colour roles systems define (the second colour takes accent-on-ink and accent-band; the on-ink soft words are a mix of on-ink); src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base. 1.0.0 did not read the type and shape tokens (ROLE-1) and read two roles no system defines (DEF-1), so the contract starts at 1.0.1 1.0.3 is 1.0.2 with the picomatch patch (GHSA-fc5q-39xc-vjpf) and the version only: src/ and every stylesheet byte-identical to 1.0.2, the same reader (contracts/1.0.3 carries the 1.0.2 measurement). 1.0.4 changes no stylesheet and no file under src/ or public/ (the content map, Personalize, the recipient docs, one seed line and the QA tools only); measured again on a clean install of the final 1.0.4 pack.",
   "release": "tracy-restaurant/emdash-0.x@1.0.2",
   "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
   "readsComponents": true,

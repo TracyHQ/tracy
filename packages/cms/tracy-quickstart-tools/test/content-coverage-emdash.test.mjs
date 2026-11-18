@@ -1,7 +1,7 @@
 /**
  * The EmDash content map and its coverage binding. The map is generated from a theme's seed, field map and content API
  * map (never captured); the audit binds what a page shows to a slot through the provenance stamps the template prints.
- * The two real themes (JA Diner 0.1.2, JA Restaurant 1.0.2) are read from the tree; the binder is run on invented items.
+ * The two real themes (JA Diner 0.1.4, JA Restaurant 1.0.4) are read from the tree; the binder is run on invented items.
  */
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
@@ -10,6 +10,8 @@ import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { checkContentMapFit } from '../../../wo/website-opportunities/domain/content-map-fit.mjs'
 import { checkContentMapRoles } from '../../../wo/website-opportunities/domain/content-map-roles.mjs'
+import { keepDecisionOfRole } from '../../../wo/website-opportunities/domain/place-content-roles.mjs'
+import { fieldMapRolesOf } from '../../../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
 import {
   buildEmdashCoverageFile,
   crawlKeyOf,
@@ -31,8 +33,8 @@ import { measureSlotFit } from '../content-coverage/lib/slot-fit.mjs'
 const ULID_STEM = '01ARZ3NDEKTSV4RRFFQ69G5FAV'
 const CMS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const THEMES = [
-  ['tracy-emdash-theme-diner', 'tracy-diner', '0.1.2'],
-  ['tracy-emdash-theme-restaurant', 'tracy-restaurant', '1.0.2']
+  ['tracy-emdash-theme-diner', 'tracy-diner', '0.1.4'],
+  ['tracy-emdash-theme-restaurant', 'tracy-restaurant', '1.0.4']
 ]
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 
@@ -87,11 +89,38 @@ for (const [folder, template, version] of THEMES) {
     assert.equal(coverage.contract.presentationLockSha256, null)
   })
 
-  test(`${template}: the label rules run on the generated map (vocabulary 2: reported, not enforced)`, () => {
+  test(`${template}: the generated map is place-content-roles/3 and passes the label rules a map alone can judge`, () => {
+    // Measured on develop 16/11/2026 under version 2: Restaurant R2 19, R3 15; Diner R2 5, R3 31 (reported only). R8 and
+    // R9 need the audit's crawl; R5 the Slot fit it measures.
     const { map } = emdashContentMapOfTheme(themeDir)
+    assert.equal(map.roleVocabularyVersion, 'place-content-roles/3')
     const rules = labelRulesOf({ map })
-    assert.equal(rules.applies, false)
+    assert.equal(rules.applies, true)
     assert.deepEqual(Object.keys(rules.rules), ['R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9'])
+    const failing = Object.fromEntries(
+      Object.entries(rules.rules)
+        .filter(([, r]) => r.count > 0)
+        .map(([id, r]) => [id, r.keys])
+    )
+    assert.deepEqual(failing, {})
+  })
+
+  test(`${template}: every slot has a role, links, dates, rich texts and terms included, the same as the field map's`, () => {
+    const { map } = emdashContentMapOfTheme(themeDir)
+    assert.deepEqual(
+      map.slots.filter((s) => !s.role).map((s) => s.key),
+      []
+    )
+    const derived = fieldMapRolesOf(path.join(themeDir, 'seed'))
+    assert.deepEqual(derived.errors, [])
+    const view = (slots) =>
+      Object.fromEntries(
+        slots.map((s) => [s.key, [s.role, s.group?.id ?? null, s.group?.kind ?? null, s.customize ?? null]])
+      )
+    assert.deepEqual(view(map.slots.filter((s) => s.role)), view(derived.contentMap.slots))
+    // ADR 0040 decision 3: in a version 3 map `customize: "keep"` follows from the role and from nothing else.
+    for (const slot of map.slots)
+      assert.equal(slot.customize === 'keep', keepDecisionOfRole(slot.role) === 'keep', slot.key)
   })
 }
 

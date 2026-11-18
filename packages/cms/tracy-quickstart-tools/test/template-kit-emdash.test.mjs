@@ -21,6 +21,7 @@ import {
   readEmdashSettings
 } from '../template-kit/lib/site/adapters/emdash.mjs'
 import { withEmdashPages } from '../template-kit/lib/site/adapters/emdash-map.mjs'
+import { buildLogoSpots } from '../template-kit/lib/site/logo-spots.mjs'
 import { measureBrandColours } from '../template-kit/lib/site/colour-measure.mjs'
 import { sidesOf } from '../template-kit/lib/site/colour-sides.mjs'
 import { readEmdashSections } from '../template-kit/lib/site/read-emdash-sections.js'
@@ -440,14 +441,59 @@ test('the adapter names the logo settings a theme prints and what is shown witho
     {
       key: 'settings.logo',
       value: '/_emdash/api/media/file/A.png',
-      prints: [{ where: 'header', layout: 'src/components/site/Header.astro', emptyShows: 'template-text' }]
+      prints: [{ where: 'header', layout: 'src/components/site/Header.astro', emptyShows: 'template-text' }],
+      frameless: 'the site settings door writes core settings.logo (tools/personalize.mjs writeBrand)'
     },
     {
       key: 'chrome.logo_dark',
       value: '',
-      prints: [{ where: 'header', layout: 'src/components/site/Header.astro', emptyShows: 'template-text' }]
+      prints: [{ where: 'header', layout: 'src/components/site/Header.astro', emptyShows: 'template-text' }],
+      frameless: "the entry door writes the chrome entry's logo_dark field (tools/personalize.mjs writeBrand)"
     }
   ])
+})
+
+test('the header logo an EmDash site settings door writes is no missing frame (JA Restaurant 1.0.2 kit)', () => {
+  // EmDash keeps the logo in core settings.logo, written through the settings door (tools/personalize.mjs writeBrand,
+  // apps/tracy-web logo-write-path.js `emdash-setting`), never through a content map frame. The 1.0.2 kit listed both
+  // header spots as `missing frameId` all the same.
+  const adapter = emdashAdapter(sourceOf({ 'src/components/site/Header.astro': HEADER }), {
+    settings: { title: 'Bistro', logo: null },
+    map: MAP
+  })
+  const reads = [
+    {
+      pageId: 'page-home',
+      theme: 'base',
+      opening: true,
+      logos: [
+        {
+          file: 'brand/logo.png',
+          region: 'header',
+          block: 'header',
+          themeClass: null,
+          shown: true,
+          width: 178,
+          height: 110,
+          ground: { colour: '#f4f2e7', picture: false }
+        }
+      ]
+    }
+  ]
+  const { logoSpots, errors } = buildLogoSpots({
+    reads,
+    map: MAP,
+    settings: adapter.logoSettings(),
+    isFreeHtml: () => false
+  })
+  assert.equal(logoSpots.length, 1)
+  assert.equal(logoSpots[0].setting, 'settings.logo')
+  assert.equal(logoSpots[0].frameId, null)
+  assert.deepEqual(
+    errors.filter((e) => e.field.startsWith('site.logoSpots')),
+    [],
+    'a spot its setting door writes needs no frame'
+  )
 })
 
 test('a footer drawn on ink prints the dark logo only', () => {
