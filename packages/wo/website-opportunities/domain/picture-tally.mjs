@@ -4,7 +4,9 @@
 //
 //   photos     the owner's own photos the plan holds (stock ones included: they are the owner's to see refused)
 //   placed     the photos that fill at least one spot
-//   unused     every other photo, grouped by a coded reason: photos = placed + every unused count
+//   unused     every other photo, grouped by a coded reason: photos = placed + every unused count. A photo whose item
+//              the plan's left out list names is counted under that entry's code, so a photo has one reason on the
+//              card (`plan-picture-count.mjs`)
 //   spots      the spots the owner's photos fill (a light and dark pair counts once, `assignPictures` counts.own)
 //   empty      the spots left without a picture, grouped by their reason (the brand step's logo spot left out)
 //   drawn      the spots Tracy will draw (counts.generated)
@@ -40,10 +42,11 @@ export const emptySpotsOf = (frames) =>
 /**
  * @param {{frames: object[], reduced?: object[], counts: {own: number, generated: number}}} assignment
  * @param {object[]} pictures every own picture record the placement was given
+ * @param {Map<string, string>} [leftOutCodes] item id -> the code of the plan's left out entry naming it
  * @returns {{photos: number, placed: number, unused: Array<{code: string, count: number}>, spots: number,
  *   empty: Array<{code: string, count: number}>, emptySpots: number, drawn: number}}
  */
-export function pictureTallyOf(assignment, pictures) {
+export function pictureTallyOf(assignment, pictures, leftOutCodes = new Map()) {
   const photos = list(pictures).filter((p) => p?.media === 'photo')
   const used = new Set(
     list(assignment.frames)
@@ -51,7 +54,9 @@ export function pictureTallyOf(assignment, pictures) {
       .map((f) => f.picture)
   )
   const placed = photos.filter((p) => used.has(p.id))
-  const unused = photos.filter((p) => !used.has(p.id)).map((p) => unusedReasonOf(p, assignment))
+  const unused = photos
+    .filter((p) => !used.has(p.id))
+    .map((p) => leftOutCodes.get(p.item) ?? unusedReasonOf(p, assignment))
   const empty = emptySpotsOf(assignment.frames).map((f) => f.reason)
   return {
     photos: photos.length,

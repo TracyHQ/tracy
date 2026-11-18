@@ -48,6 +48,11 @@ function withMorePhotos(n) {
   }
   return { profile, home }
 }
+/**
+ * The extra photos the free picture frames of the florist's home page take before any is left out (the hero and the
+ * section pictures, `picture-policy-own.mjs`): a photo a frame takes is placed, never left out (`plan-picture-count`).
+ */
+const FRAMED = 3
 /** The plan's left out entries other than the template pages code lists. */
 const modelLines = (result) => result.plan.leftOut.filter((e) => e.kind !== 'page')
 const firstOf = (result, n) =>
@@ -114,7 +119,7 @@ test('"no logo" is not said of a plan with a logo, own or drawn by Tracy; it sta
 })
 
 test('a photo the model leaves out takes code sentence whatever the words of its reason (#575 walk)', () => {
-  const { profile, home } = withMorePhotos(2)
+  const { profile, home } = withMorePhotos(FRAMED + 2)
   const ids = profile.items.gallery.map((g) => g.id).filter((id) => !home.includes(id))
   const c = composition([homeOf(profile), contactPage()])
   c.pages[0].blocks.find((b) => b.block === 'block-166').data = home
@@ -125,7 +130,7 @@ test('a photo the model leaves out takes code sentence whatever the words of its
   const photos = result.plan.leftOut.filter((e) => ids.includes(e.item))
   assert.deepEqual(
     photos.map((e) => [e.code, e.reason]),
-    ids.map(() => ['no_gallery_room', galleryRoomReason(2)])
+    ids.slice(FRAMED).map(() => ['no_gallery_room', galleryRoomReason(2)])
   )
 })
 
@@ -133,7 +138,7 @@ test('photos no gallery has room for read one sentence agreeing with their numbe
   const reason =
     'You have more photos than the available gallery sections can show, so this photo is left out.'
   for (const n of [1, 2]) {
-    const { profile, home } = withMorePhotos(n)
+    const { profile, home } = withMorePhotos(FRAMED + n)
     const ids = profile.items.gallery.map((g) => g.id).filter((id) => !home.includes(id))
     const c = composition([homeOf(profile), contactPage()])
     c.pages[0].blocks.find((b) => b.block === 'block-166').data = home

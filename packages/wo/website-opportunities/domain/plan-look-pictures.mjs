@@ -146,30 +146,43 @@ export const generatedOf = (n) =>
  * @param {object[]} pages placed pages of the plan
  * @param {Map<string, object>} blocks block id -> its description (block store or library)
  * @param {ReturnType<import('./plan-data.mjs').planDataOf>} data
- * @returns {{pictures: object, leftOut: object[], pages: object[]}} `pages` with the dropped items taken out
+ * @param {{keepOff?: Set<string>}} [options] `keepOff`: the items whose photos fill no frame (`keptOffPhotosOf`)
+ * @returns {{pictures: object, leftOut: object[], pages: object[], placedItems: Set<string>,
+ *   recount: (leftOutCodes: Map<string, string>) => object}} `pages` with the dropped items taken out; `placedItems`
+ *   the items whose own photo fills a frame; `recount` the summary with each unused photo counted under the code of
+ *   the left out entry naming its item
  */
-export function picturesOf(pages, blocks, data) {
+export function picturesOf(pages, blocks, data, { keepOff = new Set() } = {}) {
   const pictures = ownPicturesOf(data).map((p) =>
     p.stock || isText(p.label) ? p : { ...p, label: TO_BE_LABELLED }
   )
-  const assignment = assignPictures({ pages, blocks, data, pictures })
+  // A photo kept off (`keepOff`, item ids) fills no frame; it is still one of the owner's photos, counted unused.
+  const offered = pictures.filter((p) => !keepOff.has(p.item))
+  const assignment = assignPictures({ pages, blocks, data, pictures: offered })
   const { frames, reduced, counts } = assignment
   const from = [...new Set(frames.filter((f) => f.source === 'own').flatMap((f) => f.from))]
   // Photos and spots apart (`picture-tally.mjs`): `frames` counts the spots, `photos` and `placed` the owner's photos.
-  const tally = pictureTallyOf(assignment, pictures)
-  const summary = {
-    own: {
-      frames: counts.own,
-      from: counts.own > 0 ? from : [],
-      // The kinds of those sources as data (`website`, `google`, `social`, `answer`), beside their names.
-      ...(counts.own > 0 && sourceKindsOf(from).length > 0 ? { fromKinds: sourceKindsOf(from) } : {}),
-      photos: tally.photos,
-      placed: tally.placed,
-      unused: tally.unused
-    },
-    generated: generatedOf(counts.generated),
-    empty: tally.empty
+  // `recount` counts the unused photos again under the codes of the plan's final left out list (`plan-picture-count`).
+  const summaryOf = (leftOutCodes) => {
+    const tally = pictureTallyOf(assignment, pictures, leftOutCodes)
+    return {
+      own: {
+        frames: counts.own,
+        from: counts.own > 0 ? from : [],
+        // The kinds of those sources as data (`website`, `google`, `social`, `answer`), beside their names.
+        ...(counts.own > 0 && sourceKindsOf(from).length > 0 ? { fromKinds: sourceKindsOf(from) } : {}),
+        photos: tally.photos,
+        placed: tally.placed,
+        unused: tally.unused
+      },
+      generated: generatedOf(counts.generated),
+      empty: tally.empty
+    }
   }
+  const summary = summaryOf(new Map())
+  // The items whose own photo fills a frame: a gallery photo no gallery shows may fill the hero or another frame.
+  const pictureItem = new Map(pictures.map((p) => [p.id, p.item]))
+  const placedItems = new Set(frames.filter((f) => f.source === 'own').map((f) => pictureItem.get(f.picture)))
   // A gallery photo dropped because it already shows in another gallery is said once per gallery, with the count.
   const elsewhere = shownElsewhereLeftOut(reduced, frames, pictures)
   const leftOut = elsewhere.rest.map(({ item, reason }) => {
@@ -203,5 +216,5 @@ export function picturesOf(pages, blocks, data) {
       data: block.data.filter((id) => !dropped.has(`${page.id}.${block.id}.${id}`))
     }))
   }))
-  return { pictures: summary, leftOut, pages: kept }
+  return { pictures: summary, leftOut, pages: kept, placedItems, recount: summaryOf }
 }
