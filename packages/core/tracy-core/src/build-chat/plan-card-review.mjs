@@ -288,41 +288,62 @@ function standardOf(plan) {
 }
 
 /**
- * What the owner took off at this review, one line per removal: the part's own entry (`owner_removed` with
- * `params.removal`), the count of details that went with it, and whether a restore can name it now.
+ * What the owner took off at this review, one line per removal: every removal the draft can bring back
+ * (`review.removals`, `{id, op, target}`) has its line, and so does a removal the plan's left out list still names
+ * (`owner_removed` with `params.removal`) that can no longer be brought back. A removal that left nothing shown nowhere
+ * (an item another section still shows, a channel the contact page still shows) adds no left out entry, so its line
+ * is made from its target. Each line carries the codes the card says it by in its own language: the section's
+ * `labelCode` (`section`), a "send later" entry's code (`later`), a fact's kind (`factKind`), an item's kind
+ * (`dataKind`); site content (a page name, an item's label) stays as the plan has it.
  */
 function removedOf(plan, removals) {
-  const restorable = new Set(listOr(removals).map((r) => r?.id))
+  const records = listOr(removals).filter((r) => typeof r?.id === 'string')
+  const restorable = new Set(records.map((r) => r.id))
   const byRemoval = new Map()
   for (const e of listOr(plan.leftOut)) {
     if (e?.code !== 'owner_removed' || typeof e.params?.removal !== 'string') continue
     const id = e.params.removal
-    if (!byRemoval.has(id)) byRemoval.set(id, { removal: id, part: null, details: 0 })
+    if (!byRemoval.has(id)) byRemoval.set(id, { part: null, details: [] })
     const line = byRemoval.get(id)
-    if (typeof e.item === 'string') line.details += 1
-    else line.part = { what: text(e.what), kind: e.kind }
+    if (typeof e.item === 'string') line.details.push(e)
+    else line.part = e
   }
   const items = itemById(plan)
   const facts = factById(plan)
-  return [...byRemoval.values()].map((line) => {
-    const firstDetail = listOr(plan.leftOut).find(
-      (e) => e?.params?.removal === line.removal && typeof e.item === 'string'
-    )
-    const what =
-      line.part?.what ??
-      text(
-        items.get(firstDetail?.item)?.label ?? facts.get(firstDetail?.item)?.label ?? firstDetail?.what ?? ''
-      )
-    const detailKind = items.get(firstDetail?.item)?.kind ?? null
+  const codes = (part) => {
+    const out = {}
+    if (typeof part?.params?.section === 'string') out.section = part.params.section
+    if (typeof part?.params?.later === 'string') out.later = part.params.later
+    return out
+  }
+  /** A line for one datum: an item by its label and kind, a fact by its label and kind. */
+  const datumLine = (id, fallback) => {
+    const item = items.get(id)
+    const fact = item ? null : facts.get(id)
     return {
-      removal: line.removal,
-      what,
-      kind: line.part?.kind ?? 'item',
-      ...(line.part ? {} : { dataKind: detailKind }),
-      details: line.part ? line.details : Math.max(line.details - 1, 0),
-      restorable: restorable.has(line.removal)
+      what: text(item?.label ?? fact?.label ?? fallback ?? ''),
+      kind: 'item',
+      ...(item ? { dataKind: item.kind ?? null } : { dataKind: null }),
+      ...(fact?.kind ? { factKind: fact.kind } : {})
     }
-  })
+  }
+  const lineOf = (id) => {
+    const found = byRemoval.get(id)
+    const record = records.find((r) => r.id === id)
+    const target = record?.target ?? {}
+    let line
+    if (found?.part) line = { what: text(found.part.what), kind: found.part.kind, ...codes(found.part) }
+    else if (record?.op === 'remove-item' && typeof target.item === 'string')
+      line = datumLine(target.item, found?.details[0]?.what)
+    else if (record?.op === 'remove-channel' && typeof target.fact === 'string')
+      line = datumLine(target.fact, found?.details[0]?.what)
+    else if (found?.details.length) line = datumLine(found.details[0].item, found.details[0].what)
+    else return null
+    const details = found ? found.details.length - (found.part ? 0 : 1) : 0
+    return { removal: id, ...line, details: Math.max(details, 0), restorable: restorable.has(id) }
+  }
+  const ids = [...records.map((r) => r.id), ...[...byRemoval.keys()].filter((id) => !restorable.has(id))]
+  return ids.map(lineOf).filter(Boolean)
 }
 
 /**

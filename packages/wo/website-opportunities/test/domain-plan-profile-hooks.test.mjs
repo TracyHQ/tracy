@@ -25,7 +25,9 @@ test('what the brief holds back is a left out line by code and count; hours and 
       { field: 'team', code: 'owner_left_off', count: 1 },
       { field: 'socials', code: 'sources_disagree', count: 2 },
       { field: 'hours', code: 'not_collected', count: 1 },
-      { field: 'whatsapp', code: 'kept_off_site', count: 1 }
+      { field: 'whatsapp', code: 'kept_off_site', count: 1 },
+      // A source that could not be read is no content of the site: the research card says it.
+      { field: 'source:google-maps', code: 'not_collected', count: 1 }
     ]
   })
   assert.deepEqual(lines, [
@@ -34,21 +36,21 @@ test('what the brief holds back is a left out line by code and count; hours and 
       kind: 'feature',
       reason: HELD_BACK_REASONS.not_collected,
       code: 'not_collected',
-      params: { count: 3 }
+      params: { count: 3, field: 'prices' }
     },
     {
       what: 'Team',
       kind: 'feature',
       reason: HELD_BACK_REASONS.owner_withheld,
       code: 'owner_withheld',
-      params: { count: 1 }
+      params: { count: 1, field: 'team' }
     },
     {
       what: 'Social profiles',
       kind: 'feature',
       reason: HELD_BACK_REASONS.sources_disagree,
       code: 'sources_disagree',
-      params: { count: 2 }
+      params: { count: 2, field: 'socials' }
     }
   ])
   assert.deepEqual(heldBackLeftOutOf({}), [])

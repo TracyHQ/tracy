@@ -87,6 +87,15 @@ function pagesWhatOf(pages) {
  * @param {any[]} leftOut the plan's left out entries
  * @param {{facts: any[], items: any[]}} plan the plan whose facts and items the entries report
  */
+/**
+ * A research source that could not be read (the brief's `missing` line `source:<source>`, #575 stand): no content of
+ * the site, so it is not on the "not on the site" list; the research card says which links could not be read. Newer
+ * plans leave it out (`plan-held-back.mjs`); an older plan carries it as `not_collected` named "Source:<source>".
+ */
+const isSourceRead = (l) =>
+  l?.code === 'not_collected' &&
+  (String(l.params?.field ?? '').startsWith('source:') || /^Source:\S/.test(String(l.what ?? '')))
+
 export function leftOutOf(leftOut, plan) {
   const facts = new Map(listOr(plan?.facts).map((f) => [f.id, f]))
   const items = new Map(listOr(plan?.items).map((i) => [i.id, i]))
@@ -98,6 +107,7 @@ export function leftOutOf(leftOut, plan) {
     if (l?.code === 'owner_removed') continue
     const code = typeof l?.code === 'string' && l.code !== '' ? l.code : null
     if (code !== null && TEMPLATE_SPOT_CODES.has(code)) continue
+    if (isSourceRead(l)) continue
     const params = code && isPlainObject(l.params) ? l.params : null
     const fact = typeof l.item === 'string' ? facts.get(l.item) : undefined
     const item = typeof l.item === 'string' && !fact ? items.get(l.item) : undefined

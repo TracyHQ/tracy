@@ -22,6 +22,35 @@ export function sectionNameOf(t: Translate, code: unknown): string | null {
 }
 
 /**
+ * The names of a page's sections as the card shows them (`sectionLabelOf`), told apart when two would read the same
+ * (two sections whose code is "services" both read "Services"): each such section is named by its own label when the
+ * plan gives it one that differs, else by its message, both data the plan holds. Nothing is made up: sections the plan
+ * gives nothing to tell apart keep the same name.
+ */
+export function pageSectionLabelsOf(
+  t: Translate,
+  sections: readonly { id: string; label: string; labelCode?: string; message?: string }[]
+): Map<string, string> {
+  const named = sections.map((s) => [s, sectionLabelOf(t, s.labelCode, s.label)] as const)
+  const count = new Map<string, number>()
+  for (const [, label] of named) count.set(label, (count.get(label) ?? 0) + 1)
+  const out = new Map<string, string>()
+  for (const [s, label] of named) {
+    if ((count.get(label) ?? 0) < 2) {
+      out.set(s.id, label)
+      continue
+    }
+    // Its own label first when no other section of the same name has it, then its message, then its own label.
+    const twins = named.filter(([o, l]) => l === label && o !== s).map(([o]) => o.label)
+    const own = s.label.trim() !== '' && s.label !== label ? s.label : null
+    const message = typeof s.message === 'string' && s.message.trim() !== '' ? s.message : null
+    const by = own && !twins.includes(s.label) ? own : (message ?? own)
+    out.set(s.id, by ? `${label}: ${by}` : label)
+  }
+  return out
+}
+
+/**
  * A section as the card names it: by its code in another language, its own label otherwise. In English the label
  * stays (a design may name its section "Our classes" where the code's name is "Services"), so an English card reads as
  * the plan does. A translator that says its language (`languageOf`) is decided by that language, never by comparing
@@ -97,6 +126,30 @@ function countedWhatOf(t: Translate, line: { code?: string | null; params?: Para
   return null
 }
 
+/** The codes of what the content brief holds back, each line naming a brief field (`plan-held-back.mjs`). */
+const HELD_BACK = new Set(['not_collected', 'sources_disagree', 'kept_off_site', 'owner_withheld', 'stale'])
+const HELD_FIELD_PREFIX = 'plan.heldBack.field.'
+const heldFields = Object.keys(en)
+  .filter((k) => k.startsWith(HELD_FIELD_PREFIX))
+  .map((k) => k.slice(HELD_FIELD_PREFIX.length))
+/** How an older plan named a field the plan step had no name for: "booking" as "Booking". */
+const plainFieldName = (field: string) => field.charAt(0).toUpperCase() + field.slice(1).replace(/[-_]/g, ' ')
+
+/**
+ * The brief field a held back line names, when the card has words for it: its `params.field`, or for a plan made
+ * before the field was given, the field whose English name (or plain form) the line's text is.
+ */
+function heldBackFieldOf(line: { what: string; code?: string | null; params?: Params }): string | null {
+  if (typeof line.code !== 'string' || !HELD_BACK.has(line.code)) return null
+  const given = line.params?.field
+  if (typeof given === 'string') return heldFields.includes(given) ? given : null
+  return (
+    heldFields.find(
+      (f) => line.what === en[`${HELD_FIELD_PREFIX}${f}` as StringKey] || line.what === plainFieldName(f)
+    ) ?? null
+  )
+}
+
 const NAMED_LEFT_OUT = new Set([
   'no_place_for_whatsapp',
   'no_place_for_other_phones',
@@ -133,6 +186,8 @@ export function leftOutWhatOf(
   if (counted !== null) return counted
   if (typeof line.code === 'string' && NAMED_LEFT_OUT.has(line.code))
     return t(`plan.leftOut.what.${line.code}` as StringKey)
+  const field = heldBackFieldOf(line)
+  if (field !== null) return t(`plan.heldBack.field.${field}` as StringKey)
   if (line.code === 'no_fitting_video') {
     const n = count(line.params)
     if (n !== null && n > 0)

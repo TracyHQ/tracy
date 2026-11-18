@@ -72,6 +72,23 @@ export const planReviewEn = {
   'plan.notOnSite.group.pages': 'Template pages not built',
   'plan.notOnSite.group.people_spots': 'Picture spots of people left empty',
   'plan.notOnSite.group.other': 'Other',
+  'plan.heldBack.field.prices': 'Prices',
+  'plan.heldBack.field.offerings': 'Services',
+  'plan.heldBack.field.menu': 'Menu',
+  'plan.heldBack.field.menu-link': 'Menu link',
+  'plan.heldBack.field.name': 'Business name',
+  'plan.heldBack.field.team': 'Team',
+  'plan.heldBack.field.socials': 'Social profiles',
+  'plan.heldBack.field.photos': 'Photos',
+  'plan.heldBack.field.posts': 'Posts',
+  'plan.heldBack.field.email': 'Email address',
+  'plan.heldBack.field.phone': 'Phone number',
+  'plan.heldBack.field.address': 'Address',
+  'plan.heldBack.field.about': 'About the business',
+  'plan.heldBack.field.reviews': 'Reviews',
+  'plan.heldBack.field.booking': 'Booking link',
+  'plan.heldBack.field.offering-descriptions': 'Service descriptions',
+  'plan.heldBack.field.story': 'Your story',
   'plan.notOnSite.lines.one': '{count} line',
   'plan.notOnSite.lines.other': '{count} lines',
   'plan.notOnSite.details.one': 'With it went {count} detail shown nowhere else.',
@@ -157,6 +174,14 @@ export const planReviewEn = {
   'plan.refused.data_unaccounted': 'After this change a detail of your business would be shown nowhere.',
   'plan.refused.picture_count':
     'Your photos could not be counted again after this change, so it was not saved.',
+  'plan.refused.item_field_fact': 'This section shows a whole item, not one of its details.',
+  'plan.refused.trade_terms':
+    'This section is written from what your trade usually does, so it cannot state a number, a price, a schedule or a promise.',
+  'plan.refused.trade_fact_missing':
+    'This section explains your trade from a detail of your business, so that detail stays.',
+  'plan.refused.item_repeated_on_page': 'This change would show the same thing twice on one page.',
+  'plan.refused.form_without_destination': 'A form needs an email address its messages can go to.',
+  'plan.refused.map_without_address': 'A map needs your address.',
   'plan.refused.template_change':
     'This plan was made for the design you chose, and it cannot be moved to another design yet.',
   'plan.refused.plan_fault':

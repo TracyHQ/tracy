@@ -26,6 +26,7 @@ import {
   withIntentNotes
 } from './fixtures/plan-composer/invented-club.mjs'
 import { brief, inputs, reply, richerKit } from './fixtures/plan-composer/intent-kit.mjs'
+import { tradeComposition, tradeRecipes, tradeStore } from './fixtures/plan-composer/trade-blocks.mjs'
 
 /** The invented club composed with a WhatsApp number and a second phone from the brief, each on the contact page. */
 export async function composedWithChannels() {
@@ -135,8 +136,11 @@ test('every operation on a plan with brief channels is accepted or refused only 
 })
 
 /** A plan the composer's gate accepted, from `composition` on `profile` and the invented kit. */
-function gated(composition, profile = clubProfile()) {
-  const kit = { blockStore: blockStore(), pageRecipes: pageRecipes(), library: library() }
+function gated(
+  composition,
+  profile = clubProfile(),
+  kit = { blockStore: blockStore(), pageRecipes: pageRecipes(), library: library() }
+) {
   const context = composerContextOf({
     profile,
     ...kit,
@@ -168,7 +172,21 @@ const PLANS = {
     }),
   'item field facts of open conflicts (a price, a role)': () =>
     gated(goodComposition(), conflictedClubProfile()),
-  'a WhatsApp link and a second phone from the brief': composedWithChannels
+  'a WhatsApp link and a second phone from the brief': composedWithChannels,
+  'a repeating section kept on trade basis with no item of its own': tradePlan
+}
+
+/** The invented club with a services type section kept on trade basis: its copy is written from the trade, no item. */
+function tradePlan() {
+  const out = gated(tradeComposition(), clubProfile(), {
+    blockStore: tradeStore(),
+    pageRecipes: tradeRecipes(),
+    library: library()
+  })
+  const trade = out.plan.pages.flatMap((p) => p.blocks).filter((b) => b.basis === 'trade')
+  assert.equal(trade.length, 1, 'the plan keeps the trade section')
+  assert.deepEqual(trade[0].data, [], 'with no item of its own')
+  return out
 }
 
 /** Every operation the card could send on `plan`. */
@@ -242,6 +260,15 @@ test('random operations on a plan with brief channels, a privacy page and a libr
     'a library block is on the plan'
   )
   assert.ok((start.plan.legalPages ?? []).length > 0, 'a privacy page is on the plan')
+  randomWalk(start)
+})
+
+test('random operations on a plan with a trade basis section stay valid and undo fully', () => {
+  randomWalk(tradePlan())
+})
+
+/** Random operations from `start` (seeds 3, 11, 29), each kept plan valid, then every removal brought back. */
+function randomWalk(start) {
   const withoutRevision = ({ revision: _r, ...rest }) => rest
   for (const seed of [3, 11, 29]) {
     const random = randomOf(seed)
@@ -289,7 +316,7 @@ test('random operations on a plan with brief channels, a privacy page and a libr
     }
     assert.deepEqual(withoutRevision(s.plan), withoutRevision(start.plan), `seed ${seed}`)
   }
-})
+}
 
 test('a change refused for a fault the plan already had says so, never asks to try again', async () => {
   const { plan, profile, kit } = await composedWithChannels()
@@ -354,4 +381,33 @@ test('every code a refusal carries is one the card has words for', async () => {
     for (const p of gateEditedPlan({ plan, profile, edit: editOf(plan, changes), ...kit }).problems)
       seen.add(p.code)
   for (const code of seen) assert.ok(EDIT_DOOR_CODES.includes(code), code)
+})
+
+test('a trade basis section can be taken off and brought back, and offers no item to take off', async () => {
+  const { planLocksOf } = await import('../domain/plan-operation-locks.mjs')
+  const { plan, profile, kit } = tradePlan()
+  const page = plan.pages.find((p) => p.blocks.some((b) => b.basis === 'trade'))
+  const block = page.blocks.find((b) => b.basis === 'trade')
+  const locks = planLocksOf(plan, kit)
+  assert.equal(locks.blocks[block.id], undefined, 'the section itself is not locked')
+  assert.deepEqual(block.data, [], 'no item, so the card offers no item trash')
+  const removed = gateOperatedPlan({
+    plan,
+    profile,
+    edit: opOf(plan, { op: 'remove-block', page: page.id, block: block.id }),
+    review: { base: { plan, profile }, removals: [] },
+    removal: 'removal-1',
+    ...kit
+  })
+  assert.equal(removed.ok, true, JSON.stringify(removed.problems))
+  const restored = gateOperatedPlan({
+    plan: removed.plan,
+    profile: removed.profile,
+    edit: opOf(removed.plan, { op: 'restore', removal: 'removal-1' }),
+    review: { base: { plan, profile }, removals: [removed.removal] },
+    ...kit
+  })
+  assert.equal(restored.ok, true, JSON.stringify(restored.problems))
+  const back = restored.plan.pages.find((p) => p.id === page.id).blocks.find((b) => b.id === block.id)
+  assert.deepEqual(back, block)
 })

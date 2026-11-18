@@ -412,14 +412,21 @@ message taken off after it (bring the key message back first).
 The edit gate and the operation gate judge a plan against the same plan data the composer built it from
 (`planDataOfPlan`, `plan-data-of-plan.mjs`): the needs profile's facts and items, the item field facts of open
 conflicts, and the channel facts the composer carried or added from the brief (a WhatsApp number, a second phone). So a
-plan the compose gate accepted is accepted unchanged by the edit gate and by every operation's gate. When a change is
+plan the compose gate accepted is accepted unchanged by the edit gate and by every operation's gate. Both gates hold a
+block to the same rules (`keptBlockProblems`, `plan-gate-rules.mjs`: a section kept on trade basis with no item of its
+own has no item minimum, item kinds, fact fields, targets) and a page to the same validity rules
+(`pageValidityProblems`, `plan-gate-page-rules.mjs`: an item shown twice on a page, a form with no email, a map with no
+address, something kept off the site). The composer's placement rules (`contact_channel_missing`,
+`person_dropped_block_fits`) and its rules on the model's own words (dashes, wording, a trade block left out) are not
+applied to an owner's change: the owner may take a channel or a person off a page, and the owner's own words are theirs. When a change is
 refused and the unchanged plan fails the same checks, the refusal is `plan_fault` (the plan's own problems in
 `details.problems`) instead of a problem the change did not make. Every code the edit door refuses with is listed in
 `EDIT_DOOR_CODES` and has owner facing words on the plan card (`plan.refused.<code>`); a problem of another code is
 answered as `edit_invalid` with its own code in `details.code`.
 
 A removal adds left out entries with code `owner_removed` (reason "You took this off the plan.") and `params.removal`,
-the removal's id: the part itself (kind `page`, `block` or `feature`) and every fact or item it leaves shown nowhere.
+the removal's id (a removed section's entry also carries `params.section`, its `labelCode`, and a removed "send later"
+entry `params.later`, its code, so the card names them in its language): the part itself (kind `page`, `block` or `feature`) and every fact or item it leaves shown nowhere.
 Assumptions that named a part taken with it go with it. The removal record (what was taken and its neighbours) is kept
 beside the plan by the draft store, never in the plan; a restore removes the entries and puts each piece back between
 its nearest neighbours still there. A change request treats data left out by `owner_removed` as the customer's
@@ -530,6 +537,11 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
   (`block`, `factIds`); on a block `message` and `carries` (key message ids); on the plan `keyMessages` (`{id, label}`),
   `primaryAction` (`factIds`) and `later` (`{what, reason, code, params?}`). Every earlier plan stays valid and the
   schema stays `tracy-build-plan/v1`. A reader that does not know them ignores them; the plan card shows none yet.
+- 18/11/2026 (#575), additive: a left out entry of code `owner_removed` may carry `params.section` (a removed
+  section's `labelCode`) or `params.later` (a removed "send later" entry's code); a left out entry of what the content
+  brief holds back carries `params.field` (the brief field). A brief `missing` line about a source that could not be
+  read (`source:<source>`) is no longer a left out entry. A plan edit refusal may carry `item_field_fact`,
+  `trade_terms`, `trade_fact_missing`, `item_repeated_on_page`, `form_without_destination`, `map_without_address`.
 - 18/11/2026 (#575), additive: a plan edit or operation refusal may carry code `plan_fault` (the unchanged plan fails
   the same checks; its problems in `details.problems`) or `template_change` (tracy-web's door, an edit that moves the
   plan to another template); a problem of a code outside `EDIT_DOOR_CODES` is answered as `edit_invalid` with

@@ -225,3 +225,48 @@ test('a fact kept on the card that no page shows is marked as not on the site (#
   assert.equal(card.facts.find((f) => f.id === 'hours')?.offSite, true)
   assert.equal(card.facts.find((f) => f.id === 'phone')?.offSite, undefined)
 })
+
+test('every removal the draft can bring back has its line, and each line carries the codes the card translates by', () => {
+  const plan = reviewPlan()
+  // A section and a "send later" entry the owner removed: their left out entries carry their codes.
+  plan.leftOut.push(
+    {
+      what: 'Services',
+      kind: 'block',
+      reason: 'You took this off the plan.',
+      code: 'owner_removed',
+      params: { section: 'services', removal: 'removal-6' }
+    },
+    {
+      what: 'Your booking link',
+      kind: 'feature',
+      reason: 'You took this off the plan.',
+      code: 'owner_removed',
+      params: { later: 'later_booking_link', removal: 'removal-7' }
+    }
+  )
+  const review = {
+    count: 5,
+    canRevert: true,
+    removals: [
+      { id: 'removal-5', op: 'remove-page', target: { page: 'coaches' } },
+      { id: 'removal-6', op: 'remove-block', target: { block: 'h2', page: 'home' } },
+      { id: 'removal-7', op: 'remove-later', target: { later: 'later_booking_link' } },
+      // A service another page still shows, and a phone the contact section still shows: no left out entry.
+      { id: 'removal-8', op: 'remove-item', target: { item: 's1', page: 'home', block: 'h2' } },
+      { id: 'removal-9', op: 'remove-channel', target: { fact: 'phone' } }
+    ],
+    locks: LOCKS
+  }
+  const removed = planCardOf(plan, { review }).notOnSite.removed
+  assert.deepEqual(
+    removed.map((l) => l.removal),
+    ['removal-5', 'removal-6', 'removal-7', 'removal-8', 'removal-9']
+  )
+  assert.ok(removed.every((l) => l.restorable))
+  const by = Object.fromEntries(removed.map((l) => [l.removal, l]))
+  assert.equal(by['removal-6'].section, 'services')
+  assert.equal(by['removal-7'].later, 'later_booking_link')
+  assert.deepEqual([by['removal-8'].what, by['removal-8'].dataKind], ['Adult coaching', 'service'])
+  assert.deepEqual([by['removal-9'].what, by['removal-9'].factKind], ['Phone', 'contact.phone'])
+})

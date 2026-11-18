@@ -17,8 +17,8 @@ import { ANSWER_SOURCE } from './plan-answers.mjs'
 import { blockMapOf } from './plan-composer.mjs'
 import { ITEM_NOUNS } from './plan-data.mjs'
 import { planDataOfPlan } from './plan-data-of-plan.mjs'
-import { blockItemProblems } from './plan-gate-items.mjs'
-import { factFieldProblems } from './plan-gate-rules.mjs'
+import { pageValidityProblems } from './plan-gate-page-rules.mjs'
+import { keptBlockProblems } from './plan-gate-rules.mjs'
 import { withHoursDisplay } from './plan-hours-display.mjs'
 import { generatedOf } from './plan-look-pictures.mjs'
 import { pictureCountProblems } from './plan-picture-count.mjs'
@@ -82,6 +82,12 @@ export const EDIT_DOOR_CODES = Object.freeze([
     'value_over_limit',
     'data_unaccounted',
     'picture_count',
+    'item_field_fact',
+    'trade_terms',
+    'trade_fact_missing',
+    'item_repeated_on_page',
+    'form_without_destination',
+    'map_without_address',
     // tracy-web's door refuses an edit that moves the plan to another template before the gate runs.
     'template_change',
     PLAN_FAULT
@@ -122,6 +128,15 @@ function searchTermProblems(edit) {
   return problems
 }
 
+/** The customer's words for a page rule an edited plan breaks (`pageValidityProblems`). */
+const PAGE_RULE_WORDS = Object.freeze({
+  item_repeated_on_page: 'This change would show the same thing twice on one page.',
+  form_without_destination: 'A form needs an email address its messages can go to.',
+  map_without_address: 'A map needs your address.',
+  withheld_shown: 'This change would show something you keep off your site.',
+  other: 'This change would leave a page your site cannot show.'
+})
+
 /** The customer's words for one gate problem of a block. */
 function customerMessage(code, block, description, data, id, withheld) {
   const noun = ITEM_NOUNS[BLOCK_TYPES[description.type]?.itemKind] ?? 'items'
@@ -135,7 +150,10 @@ function customerMessage(code, block, description, data, id, withheld) {
     wrong_item_kind: `The ${block.label} section cannot show ${name}.`,
     library_rule: `The ${block.label} section does not show ${name}.`,
     invented_item: `${name} is not one of your business details.`,
-    fact_without_field: `The ${block.label} section has no place for ${name}.`
+    fact_without_field: `The ${block.label} section has no place for ${name}.`,
+    item_field_fact: `The ${block.label} section shows a whole item, not one of its details.`,
+    trade_terms: `The ${block.label} section is written from what your trade usually does, so it cannot state a number, a price, a schedule or a promise.`,
+    trade_fact_missing: `The ${block.label} section is written from what your trade usually does and needs the detail that shows you do it.`
   }
   return words[code] ?? `The ${block.label} section cannot take this change.`
 }
@@ -303,10 +321,14 @@ function gatedPlan(next, { plan, profile, after, changed, asked, terms, blockSto
           ...(limit && Object.values(limit).every(Number.isInteger) ? { params: limit } : {})
         })
       }
-      blockItemProblems(block, description, at, data, report)
-      factFieldProblems(block, description, at, data, report)
+      // The composer's own rules for a block it keeps (`keptBlockProblems`): one rule, so a plan it accepted passes.
+      keptBlockProblems(block, description, at, data, report)
     }
   }
+  // The composer's page validity rules, on the same data (`pageValidityProblems`).
+  pageValidityProblems(next.pages, { data, blocks, recipes }, (code, where) =>
+    problems.push({ code, at: where, message: PAGE_RULE_WORDS[code] ?? PAGE_RULE_WORDS.other })
+  )
   if (problems.length > 0) return failed(problems)
   replanRows(next, blocks, data, planDataOfPlan(after, next), changed, problems)
   if (problems.length > 0) return failed(problems)

@@ -10,7 +10,7 @@ const isText = (value) => typeof value === 'string' && value.trim() !== ''
 /** Fields reported by another left out line of the plan. */
 const REPORTED_ELSEWHERE = new Set(['hours', 'whatsapp', 'otherPhones', 'googleRating'])
 /** How a brief field is named on the plan. */
-const FIELD_NAMES = Object.freeze({
+export const FIELD_NAMES = Object.freeze({
   prices: 'Prices',
   offerings: 'Services',
   menu: 'Menu',
@@ -24,8 +24,13 @@ const FIELD_NAMES = Object.freeze({
   phone: 'Phone number',
   address: 'Address',
   about: 'About the business',
-  reviews: 'Reviews'
+  reviews: 'Reviews',
+  booking: 'Booking link',
+  'offering-descriptions': 'Service descriptions',
+  story: 'Your story'
 })
+/** A brief `missing` line about a source that could not be read (`brief-sources.mjs`), not about the site's content. */
+const isSourceLine = (field) => field.startsWith('source:')
 /** The sentence of each code; one the card does not know is shown as this sentence. */
 export const HELD_BACK_REASONS = Object.freeze({
   not_collected: 'None of the sources we read gives this, so your site does not show it yet.',
@@ -38,11 +43,13 @@ const FALLBACK_REASON = HELD_BACK_REASONS.kept_off_site
 /**
  * The left out lines of what the brief holds back.
  * @param {object} profile the needs profile (`heldBack`: `{field, code, count}[]`)
- * @returns {Array<{what: string, kind: 'feature', reason: string, code: string, params: {count: number}}>}
+ * @returns {Array<{what: string, kind: 'feature', reason: string, code: string, params: {count: number, field: string}}>}
  */
 export function heldBackLeftOutOf(profile) {
   return list(profile?.heldBack)
-    .filter((e) => isText(e?.field) && isText(e?.code) && !REPORTED_ELSEWHERE.has(e.field))
+    .filter(
+      (e) => isText(e?.field) && isText(e?.code) && !REPORTED_ELSEWHERE.has(e.field) && !isSourceLine(e.field)
+    )
     .map((e) => {
       const code = e.code === 'owner_left_off' ? 'owner_withheld' : e.code
       const count = Number.isInteger(e.count) && e.count > 0 ? e.count : 1
@@ -52,7 +59,8 @@ export function heldBackLeftOutOf(profile) {
         kind: 'feature',
         reason: HELD_BACK_REASONS[code] ?? FALLBACK_REASON,
         code,
-        params: { count }
+        // The field names the line in the card's language (`plan.heldBack.field.<field>`).
+        params: { count, field: e.field }
       }
     })
 }

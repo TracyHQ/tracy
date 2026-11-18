@@ -7,7 +7,7 @@
 import { Fragment, useState } from 'react'
 import { EditableValue } from './EditableValue'
 import { BlockLists, Fold, holdsText, listOf, onceEach, plural, Section, Trash } from './plan-card-parts'
-import { sectionLabelOf } from './plan-codes'
+import { pageSectionLabelsOf } from './plan-codes'
 import type { ReviewContext } from './plan-review-top'
 import { factLabelOf } from './plan-words'
 
@@ -64,6 +64,7 @@ function PageView({
   const { t, card, ctx, busy, operate } = r
   const blocks = new Map((card.pages.find((p) => p.id === page.id)?.blocks ?? []).map((b) => [b.id, b]))
   const messages = page.sections.filter((s) => s.message !== undefined)
+  const labels = pageSectionLabelsOf(t, page.sections)
   return (
     <div className="tv-bc-page" data-page={page.id}>
       <div className="tv-bc-page-h">
@@ -85,7 +86,7 @@ function PageView({
           <ol className="tv-bc-secs">
             {page.sections.map((s) => {
               const block = blocks.get(s.id)
-              const label = sectionLabelOf(t, s.labelCode, s.label)
+              const label = labels.get(s.id) ?? s.label
               return (
                 <li key={s.id} data-block={s.id}>
                   <div className="tv-bc-msg-row">
@@ -158,7 +159,10 @@ function PageView({
                   </>
                 )}
                 {messages.map((s) => {
-                  const label = sectionLabelOf(t, s.labelCode, s.label)
+                  // Here the message is the cell itself: a name told apart by it would say it twice.
+                  const told = labels.get(s.id) ?? s.label
+                  const label =
+                    s.message && told.endsWith(`: ${s.message}`) ? told.slice(0, -s.message.length - 2) : told
                   return (
                     // Both cells sit in the notes grid itself: a wrapper would squeeze the pair into the label column.
                     <Fragment key={s.id}>

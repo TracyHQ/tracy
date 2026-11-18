@@ -119,7 +119,9 @@ function leftOutOf(next, prior, part, removal) {
   const after = shownIdsOf(next)
   const lost = [...shownIdsOf(prior)].filter((id) => !after.has(id))
   const entries = [
-    ...(part ? [{ ...part, reason: OWNER_REMOVED_REASON, code: OWNER_REMOVED, params: { removal } }] : []),
+    ...(part
+      ? [{ ...part, reason: OWNER_REMOVED_REASON, code: OWNER_REMOVED, params: { ...part.params, removal } }]
+      : []),
     ...lost.map((id) => dataEntryOf(prior, id, removal)).filter(Boolean)
   ]
   next.leftOut = [...list(next.leftOut), ...entries]
@@ -154,7 +156,12 @@ function removeBlock(plan, { page: pageId, block: blockId }, locks, removal) {
   const next = structuredClone(plan)
   const [block] = findPage(next, pageId).blocks.splice(index, 1)
   const taken = { page: pageId, block, place: before(page.blocks.map(idOf), index) }
-  const part = { what: block.label, kind: 'block' }
+  // The section's code names it in the card's language (`labelCode`), as the card names it while it is on the plan.
+  const part = {
+    what: block.label,
+    kind: 'block',
+    ...(block.labelCode ? { params: { section: block.labelCode } } : {})
+  }
   return { plan: next, taken, leftOut: leftOutOf(next, plan, part, removal) }
 }
 
@@ -242,7 +249,7 @@ function removeLater(plan, { later: code }, _locks, removal) {
       index
     )
   }
-  const part = { what: entry.what, kind: 'feature' }
+  const part = { what: entry.what, kind: 'feature', params: { later: entry.code } }
   return { plan: next, taken, leftOut: leftOutOf(next, plan, part, removal) }
 }
 

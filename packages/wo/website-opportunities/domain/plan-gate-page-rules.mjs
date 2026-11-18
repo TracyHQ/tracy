@@ -95,14 +95,24 @@ function blockRules(block, at, context, problem) {
   })
 }
 
-/** Report the page rules of a composition whose shape is valid and whose blocks are known. */
-export function pageRuleProblems(composition, context, problem) {
-  composition.pages.forEach((page, i) => {
+/**
+ * The page rules that say whether a page is valid, as against where the model should have placed data: an item shown
+ * twice on a page, a form with no email, a map with no address, something the owner keeps off the site. The plan edit
+ * gate holds an edited plan to these too (`plan-edit-gate.mjs`). The placement rules (`contact_channel_missing`,
+ * `person_dropped_block_fits`) stay the composer's: an owner may take a channel or a person off a page.
+ */
+export function pageValidityProblems(pages, context, problem) {
+  pages.forEach((page, i) => {
     repeatedItems(page, `pages[${i}]`, context, problem)
     page.blocks.forEach((block, j) => {
       if (context.blocks.has(block.block)) blockRules(block, `pages[${i}].blocks[${j}]`, context, problem)
     })
   })
+}
+
+/** Report the page rules of a composition whose shape is valid and whose blocks are known. */
+export function pageRuleProblems(composition, context, problem) {
+  pageValidityProblems(composition.pages, context, problem)
   contactChannelProblems(composition, context, problem)
   droppedPeopleProblems(composition, context, problem)
 }

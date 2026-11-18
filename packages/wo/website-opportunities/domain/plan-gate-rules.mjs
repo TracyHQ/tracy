@@ -19,6 +19,7 @@ import { fitsRecipe, recipeBlocksOf } from './plan-placement-pages.mjs'
 export const DASHES = new RegExp(
   `[${[0x2012, 0x2013, 0x2014, 0x2015, 0x2212].map((c) => String.fromCharCode(c)).join('')}]`
 )
+const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
 function dashFree(value, at, problem) {
@@ -78,11 +79,24 @@ function blockProblems(block, at, page, context, problem) {
     if (!isText(block[key]))
       problem(key === 'reason' ? 'no_reason' : 'reply_shape', `${at}.${key}`, `a block needs its ${key}`)
     else dashFree(block[key], `${at}.${key}`, problem)
-  if (isTradeBlock(block)) tradeBlockProblems(block, description, at, data, problem)
   // A block with no data is left out of the plan (`plan-gate.mjs` `pagesOf`): following a message that takes an id
   // out of a block never fails the second attempt on an empty block (#593 review G2). A trade block is kept.
-  if (block.data.length === 0) return
-  block.data.forEach((id, i) => {
+  if (block.data.length === 0) {
+    if (isTradeBlock(block)) tradeBlockProblems(block, description, at, data, problem)
+    return
+  }
+  keptBlockProblems(block, description, at, data, problem)
+}
+
+/**
+ * The rules one block the plan keeps is held to, by the composer's gate on the model's composition and by the plan edit
+ * gate on every block of an edited plan (`plan-edit-gate.mjs`), so a plan one gate accepted the other accepts: a block
+ * kept on trade basis (`plan-gate-trade.mjs`) and its item minimum, the ids and kinds it shows, a fact that needs a
+ * field, and the fields `targets` names.
+ */
+export function keptBlockProblems(block, description, at, data, problem) {
+  if (isTradeBlock(block)) tradeBlockProblems(block, description, at, data, problem)
+  list(block.data).forEach((id, i) => {
     if (data.byId.get(id)?.itemField)
       problem(
         'item_field_fact',
@@ -93,7 +107,7 @@ function blockProblems(block, at, page, context, problem) {
   blockItemProblems(block, description, at, data, problem, { trade: isTradeBlock(block) })
   factFieldProblems(block, description, at, data, problem)
   const fields = [...(description.fields ?? []), ...(description.itemFields ?? [])]
-  ;(block.targets ?? []).forEach((name, i) => {
+  list(block.targets).forEach((name, i) => {
     const field = fields.find((f) => f?.name === name)
     if (!field)
       problem(

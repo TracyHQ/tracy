@@ -55,3 +55,24 @@ test('a fact a left out entry reports by item is listed under Left out only, unl
   assert.equal(ids.includes(shown.id), true, `${shown.id} stays: a page shows it`)
   assert.equal(planCardOf(p).leftOut.length, 2)
 })
+
+test('a research source that could not be read is not a line of what is not on the site', () => {
+  const p = plan()
+  const reason = 'None of the sources we read gives this, so your site does not show it yet.'
+  p.leftOut = [
+    { what: 'Prices', kind: 'feature', reason, code: 'not_collected', params: { count: 1, field: 'prices' } },
+    // A newer plan names the field; an older one only the plain form of `source:<source>`.
+    {
+      what: 'Source:maps',
+      kind: 'feature',
+      reason,
+      code: 'not_collected',
+      params: { count: 1, field: 'source:maps' }
+    },
+    { what: 'Source:listing site', kind: 'feature', reason, code: 'not_collected', params: { count: 1 } }
+  ]
+  assert.deepEqual(
+    planCardOf(p).leftOut.map((l) => l.what),
+    ['Prices']
+  )
+})

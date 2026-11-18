@@ -21,7 +21,7 @@ before(async () => {
     import { PlanCard } from './PlanCard'
     export { english, en, inLanguage } from './strings'
     export { refusalOf } from './save-plan-edit'
-    export { sectionLabelOf, leftOutWhatOf } from './plan-codes'
+    export { sectionLabelOf, leftOutWhatOf, pageSectionLabelsOf } from './plan-codes'
     export { planOperationOf } from '@tracy/core/build-chat'
     export const card = (props) => renderToStaticMarkup(createElement(PlanCard, props))`))
 })
@@ -270,4 +270,69 @@ test('every code the plan edit door refuses with has words on the card, in Engli
   }
   // A plan that already fails a rule is said as it is, never as a plain "try again".
   assert.equal(lib.en[`plan.refused.${PLAN_FAULT}`], PLAN_FAULT_MESSAGE)
+})
+
+test('every removal has a row with Bring back, said in the card language by its code (#575 stand)', () => {
+  const p = plan()
+  p.leftOut.push(
+    {
+      what: 'Your prices',
+      kind: 'feature',
+      reason: 'You took this off the plan.',
+      code: 'owner_removed',
+      params: { later: 'later_prices', removal: 'removal-6' }
+    },
+    {
+      what: 'Services',
+      kind: 'block',
+      reason: 'You took this off the plan.',
+      code: 'owner_removed',
+      params: { section: 'services', removal: 'removal-7' }
+    }
+  )
+  const review = {
+    ...REVIEW,
+    count: 4,
+    removals: [
+      ...REVIEW.removals,
+      { id: 'removal-6', op: 'remove-later', target: { later: 'later_prices' } },
+      { id: 'removal-7', op: 'remove-block', target: { block: 'v9', page: 'home' } },
+      // A service another section still shows: the plan's left out list has no entry for it.
+      { id: 'removal-8', op: 'remove-item', target: { item: 's1', page: 'home', block: 'h2' } }
+    ]
+  }
+  const t = lib.inLanguage(vi, 'vi')
+  const html = lib.card({ t, plan: p, review, onEdit: async () => ({}), onUndo: async () => ({}) })
+  for (const id of ['removal-5', 'removal-6', 'removal-7', 'removal-8'])
+    assert.ok(html.includes(`data-removal="${id}"`), id)
+  assert.equal(html.split(`>${vi('plan.notOnSite.restore')}<`).length - 1, 4, 'four Bring back buttons')
+  assert.ok(html.includes(vi('plan.later.what.later_prices')))
+  assert.ok(html.includes(viTable['plan.section.services']))
+  assert.equal(html.includes('>Your prices.<'), false)
+})
+
+test('two sections of one page that would read the same are told apart by their own label or message', () => {
+  const sections = [
+    { id: 'a', label: 'Services', labelCode: 'services' },
+    { id: 'b', label: 'Your first lesson', labelCode: 'services' },
+    { id: 'c', label: 'Services', labelCode: 'services', message: 'How a visit runs' },
+    { id: 'd', label: 'Gallery', labelCode: 'gallery' }
+  ]
+  const labels = lib.pageSectionLabelsOf(lib.english, sections)
+  assert.deepEqual(
+    [...labels.values()],
+    ['Services', 'Your first lesson', 'Services: How a visit runs', 'Gallery']
+  )
+  const vt = lib.inLanguage(vi, 'vi')
+  const said = lib.pageSectionLabelsOf(vt, sections)
+  const services = viTable['plan.section.services']
+  assert.deepEqual(
+    [...said.values()],
+    [
+      `${services}: Services`,
+      `${services}: Your first lesson`,
+      `${services}: How a visit runs`,
+      viTable['plan.section.gallery']
+    ]
+  )
 })

@@ -233,6 +233,12 @@ export interface PlanRemovedLine {
   what: string
   kind: string
   dataKind?: string | null
+  /** A fact's kind, for its label in the card's language. */
+  factKind?: string
+  /** The removed section's `labelCode`, for its name in the card's language. */
+  section?: string
+  /** The removed "send later" entry's code (`plan.later.what.<code>`). */
+  later?: string
   details: number
   restorable: boolean
 }

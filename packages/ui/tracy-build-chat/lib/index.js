@@ -315,6 +315,7 @@ function pagesWhatOf(pages) {
   if (more > 0) return `${named.join(", ")} and ${more} more pages`;
   return `${named.slice(0, -1).join(", ")} and ${named.at(-1)} pages`;
 }
+var isSourceRead = (l) => l?.code === "not_collected" && (String(l.params?.field ?? "").startsWith("source:") || /^Source:\S/.test(String(l.what ?? "")));
 function leftOutOf(leftOut, plan) {
   const facts = new Map(listOr(plan?.facts).map((f) => [f.id, f]));
   const items = new Map(listOr(plan?.items).map((i) => [i.id, i]));
@@ -325,6 +326,7 @@ function leftOutOf(leftOut, plan) {
     if (l?.code === "owner_removed") continue;
     const code = typeof l?.code === "string" && l.code !== "" ? l.code : null;
     if (code !== null && TEMPLATE_SPOT_CODES.has(code)) continue;
+    if (isSourceRead(l)) continue;
     const params = code && isPlainObject(l.params) ? l.params : null;
     const fact = typeof l.item === "string" ? facts.get(l.item) : void 0;
     const item = typeof l.item === "string" && !fact ? items.get(l.item) : void 0;
@@ -580,35 +582,52 @@ function standardOf(plan) {
   };
 }
 function removedOf(plan, removals) {
-  const restorable = new Set(listOr2(removals).map((r) => r?.id));
+  const records = listOr2(removals).filter((r) => typeof r?.id === "string");
+  const restorable = new Set(records.map((r) => r.id));
   const byRemoval = /* @__PURE__ */ new Map();
   for (const e of listOr2(plan.leftOut)) {
     if (e?.code !== "owner_removed" || typeof e.params?.removal !== "string") continue;
     const id = e.params.removal;
-    if (!byRemoval.has(id)) byRemoval.set(id, { removal: id, part: null, details: 0 });
+    if (!byRemoval.has(id)) byRemoval.set(id, { part: null, details: [] });
     const line = byRemoval.get(id);
-    if (typeof e.item === "string") line.details += 1;
-    else line.part = { what: plainTextOf(e.what), kind: e.kind };
+    if (typeof e.item === "string") line.details.push(e);
+    else line.part = e;
   }
   const items = itemById(plan);
   const facts = factById(plan);
-  return [...byRemoval.values()].map((line) => {
-    const firstDetail = listOr2(plan.leftOut).find(
-      (e) => e?.params?.removal === line.removal && typeof e.item === "string"
-    );
-    const what = line.part?.what ?? plainTextOf(
-      items.get(firstDetail?.item)?.label ?? facts.get(firstDetail?.item)?.label ?? firstDetail?.what ?? ""
-    );
-    const detailKind = items.get(firstDetail?.item)?.kind ?? null;
+  const codes = (part) => {
+    const out = {};
+    if (typeof part?.params?.section === "string") out.section = part.params.section;
+    if (typeof part?.params?.later === "string") out.later = part.params.later;
+    return out;
+  };
+  const datumLine = (id, fallback) => {
+    const item = items.get(id);
+    const fact = item ? null : facts.get(id);
     return {
-      removal: line.removal,
-      what,
-      kind: line.part?.kind ?? "item",
-      ...line.part ? {} : { dataKind: detailKind },
-      details: line.part ? line.details : Math.max(line.details - 1, 0),
-      restorable: restorable.has(line.removal)
+      what: plainTextOf(item?.label ?? fact?.label ?? fallback ?? ""),
+      kind: "item",
+      ...item ? { dataKind: item.kind ?? null } : { dataKind: null },
+      ...fact?.kind ? { factKind: fact.kind } : {}
     };
-  });
+  };
+  const lineOf = (id) => {
+    const found = byRemoval.get(id);
+    const record = records.find((r) => r.id === id);
+    const target = record?.target ?? {};
+    let line;
+    if (found?.part) line = { what: plainTextOf(found.part.what), kind: found.part.kind, ...codes(found.part) };
+    else if (record?.op === "remove-item" && typeof target.item === "string")
+      line = datumLine(target.item, found?.details[0]?.what);
+    else if (record?.op === "remove-channel" && typeof target.fact === "string")
+      line = datumLine(target.fact, found?.details[0]?.what);
+    else if (found?.details.length) line = datumLine(found.details[0].item, found.details[0].what);
+    else return null;
+    const details = found ? found.details.length - (found.part ? 0 : 1) : 0;
+    return { removal: id, ...line, details: Math.max(details, 0), restorable: restorable.has(id) };
+  };
+  const ids = [...records.map((r) => r.id), ...[...byRemoval.keys()].filter((id) => !restorable.has(id))];
+  return ids.map(lineOf).filter(Boolean);
 }
 function groupsOf(cardLeftOut, plan, removals) {
   const groups = new Map(NOT_ON_SITE_GROUPS.map((g) => [g, []]));
@@ -1674,7 +1693,30 @@ var tracy_build_chat_default = {
   "plan.refused.data_unaccounted": "Nach dieser \xC4nderung w\xFCrde eine Angabe zu Ihrem Gesch\xE4ft nirgends gezeigt.",
   "plan.refused.picture_count": "Ihre Fotos konnten nach dieser \xC4nderung nicht neu gez\xE4hlt werden, daher wurde sie nicht gespeichert.",
   "plan.refused.plan_fault": "Diese \xC4nderung wurde nicht gespeichert: Ihr Plan hat ein eigenes Problem, das Tracy zuerst beheben muss. Sie k\xF6nnen die \xC4nderung im Chat anfragen.",
-  "plan.refused.template_change": "Dieser Plan wurde f\xFCr das von Ihnen gew\xE4hlte Design erstellt und kann noch nicht auf ein anderes Design \xFCbertragen werden."
+  "plan.refused.template_change": "Dieser Plan wurde f\xFCr das von Ihnen gew\xE4hlte Design erstellt und kann noch nicht auf ein anderes Design \xFCbertragen werden.",
+  "plan.heldBack.field.prices": "Preise",
+  "plan.heldBack.field.offerings": "Leistungen",
+  "plan.heldBack.field.menu": "Speisekarte",
+  "plan.heldBack.field.menu-link": "Link zur Speisekarte",
+  "plan.heldBack.field.name": "Name des Unternehmens",
+  "plan.heldBack.field.team": "Team",
+  "plan.heldBack.field.socials": "Social-Media-Profile",
+  "plan.heldBack.field.photos": "Fotos",
+  "plan.heldBack.field.posts": "Beitr\xE4ge",
+  "plan.heldBack.field.email": "E-Mail-Adresse",
+  "plan.heldBack.field.phone": "Telefonnummer",
+  "plan.heldBack.field.address": "Adresse",
+  "plan.heldBack.field.about": "\xDCber das Unternehmen",
+  "plan.heldBack.field.reviews": "Bewertungen",
+  "plan.heldBack.field.booking": "Buchungslink",
+  "plan.heldBack.field.offering-descriptions": "Beschreibungen der Leistungen",
+  "plan.heldBack.field.story": "Ihre Geschichte",
+  "plan.refused.item_field_fact": "Dieser Bereich zeigt einen ganzen Eintrag, nicht eine seiner Angaben.",
+  "plan.refused.trade_terms": "Dieser Bereich beschreibt, wie Ihre Branche \xFCblicherweise arbeitet, und nennt daher keine Zahl, keinen Preis, keine Zeiten und kein Versprechen.",
+  "plan.refused.trade_fact_missing": "Dieser Bereich erkl\xE4rt Ihre Branche anhand einer Angabe zu Ihrem Gesch\xE4ft, daher bleibt diese Angabe.",
+  "plan.refused.item_repeated_on_page": "Diese \xC4nderung w\xFCrde dasselbe zweimal auf einer Seite zeigen.",
+  "plan.refused.form_without_destination": "Ein Formular braucht eine E-Mail-Adresse, an die seine Nachrichten gehen.",
+  "plan.refused.map_without_address": "Eine Karte braucht Ihre Adresse."
 };
 
 // ../../locale/tracy-locales/es/tracy-build-chat.json
@@ -2231,7 +2273,30 @@ var tracy_build_chat_default2 = {
   "plan.refused.data_unaccounted": "Tras este cambio, un dato de su negocio no se mostrar\xEDa en ning\xFAn lugar.",
   "plan.refused.picture_count": "Sus fotos no se pudieron volver a contar tras este cambio, as\xED que no se guard\xF3.",
   "plan.refused.plan_fault": "Este cambio no se guard\xF3: su plan tiene un problema propio que Tracy debe corregir primero. Puede pedir el cambio en el chat.",
-  "plan.refused.template_change": "Este plan se hizo para el dise\xF1o que eligi\xF3 y todav\xEDa no se puede pasar a otro dise\xF1o."
+  "plan.refused.template_change": "Este plan se hizo para el dise\xF1o que eligi\xF3 y todav\xEDa no se puede pasar a otro dise\xF1o.",
+  "plan.heldBack.field.prices": "Precios",
+  "plan.heldBack.field.offerings": "Servicios",
+  "plan.heldBack.field.menu": "Men\xFA",
+  "plan.heldBack.field.menu-link": "Enlace del men\xFA",
+  "plan.heldBack.field.name": "Nombre del negocio",
+  "plan.heldBack.field.team": "Equipo",
+  "plan.heldBack.field.socials": "Perfiles sociales",
+  "plan.heldBack.field.photos": "Fotos",
+  "plan.heldBack.field.posts": "Publicaciones",
+  "plan.heldBack.field.email": "Direcci\xF3n de correo electr\xF3nico",
+  "plan.heldBack.field.phone": "N\xFAmero de tel\xE9fono",
+  "plan.heldBack.field.address": "Direcci\xF3n",
+  "plan.heldBack.field.about": "Sobre el negocio",
+  "plan.heldBack.field.reviews": "Rese\xF1as",
+  "plan.heldBack.field.booking": "Enlace de reserva",
+  "plan.heldBack.field.offering-descriptions": "Descripciones de los servicios",
+  "plan.heldBack.field.story": "Su historia",
+  "plan.refused.item_field_fact": "Esta secci\xF3n muestra un elemento completo, no uno de sus datos.",
+  "plan.refused.trade_terms": "Esta secci\xF3n se escribe a partir de lo que suele hacer su oficio, as\xED que no puede indicar cifras, precios, horarios ni promesas.",
+  "plan.refused.trade_fact_missing": "Esta secci\xF3n explica su oficio a partir de un dato de su negocio, as\xED que ese dato se mantiene.",
+  "plan.refused.item_repeated_on_page": "Este cambio mostrar\xEDa lo mismo dos veces en una p\xE1gina.",
+  "plan.refused.form_without_destination": "Un formulario necesita una direcci\xF3n de correo electr\xF3nico a la que enviar sus mensajes.",
+  "plan.refused.map_without_address": "Un mapa necesita su direcci\xF3n."
 };
 
 // ../../locale/tracy-locales/fr/tracy-build-chat.json
@@ -2788,7 +2853,30 @@ var tracy_build_chat_default3 = {
   "plan.refused.data_unaccounted": "Apr\xE8s cette modification, une information sur votre entreprise ne serait affich\xE9e nulle part.",
   "plan.refused.picture_count": "Vos photos n\u2019ont pas pu \xEAtre recompt\xE9es apr\xE8s cette modification, elle n\u2019a donc pas \xE9t\xE9 enregistr\xE9e.",
   "plan.refused.plan_fault": "Cette modification n\u2019a pas \xE9t\xE9 enregistr\xE9e : votre plan a un probl\xE8me propre que Tracy doit corriger d\u2019abord. Vous pouvez demander la modification dans le chat.",
-  "plan.refused.template_change": "Ce plan a \xE9t\xE9 fait pour le design que vous avez choisi, et il ne peut pas encore passer \xE0 un autre design."
+  "plan.refused.template_change": "Ce plan a \xE9t\xE9 fait pour le design que vous avez choisi, et il ne peut pas encore passer \xE0 un autre design.",
+  "plan.heldBack.field.prices": "Prix",
+  "plan.heldBack.field.offerings": "Services",
+  "plan.heldBack.field.menu": "Menu",
+  "plan.heldBack.field.menu-link": "Lien du menu",
+  "plan.heldBack.field.name": "Nom de l\u2019entreprise",
+  "plan.heldBack.field.team": "\xC9quipe",
+  "plan.heldBack.field.socials": "Profils sociaux",
+  "plan.heldBack.field.photos": "Photos",
+  "plan.heldBack.field.posts": "Publications",
+  "plan.heldBack.field.email": "Adresse e-mail",
+  "plan.heldBack.field.phone": "Num\xE9ro de t\xE9l\xE9phone",
+  "plan.heldBack.field.address": "Adresse",
+  "plan.heldBack.field.about": "\xC0 propos de l\u2019entreprise",
+  "plan.heldBack.field.reviews": "Avis",
+  "plan.heldBack.field.booking": "Lien de r\xE9servation",
+  "plan.heldBack.field.offering-descriptions": "Descriptions des services",
+  "plan.heldBack.field.story": "Votre histoire",
+  "plan.refused.item_field_fact": "Cette section affiche un \xE9l\xE9ment entier, pas l\u2019un de ses d\xE9tails.",
+  "plan.refused.trade_terms": "Cette section d\xE9crit ce que fait habituellement votre m\xE9tier : elle ne peut donc indiquer ni chiffre, ni prix, ni horaire, ni promesse.",
+  "plan.refused.trade_fact_missing": "Cette section explique votre m\xE9tier \xE0 partir d\u2019une information sur votre entreprise, cette information reste donc.",
+  "plan.refused.item_repeated_on_page": "Cette modification afficherait deux fois la m\xEAme chose sur une page.",
+  "plan.refused.form_without_destination": "Un formulaire a besoin d\u2019une adresse e-mail o\xF9 envoyer ses messages.",
+  "plan.refused.map_without_address": "Une carte a besoin de votre adresse."
 };
 
 // ../../locale/tracy-locales/it/tracy-build-chat.json
@@ -3345,7 +3433,30 @@ var tracy_build_chat_default4 = {
   "plan.refused.data_unaccounted": "Dopo questa modifica un dato della sua attivit\xE0 non sarebbe mostrato da nessuna parte.",
   "plan.refused.picture_count": "Le sue foto non hanno potuto essere ricontate dopo questa modifica, quindi non \xE8 stata salvata.",
   "plan.refused.plan_fault": "Questa modifica non \xE8 stata salvata: il suo piano ha un problema proprio che Tracy deve risolvere prima. Pu\xF2 chiedere la modifica nella chat.",
-  "plan.refused.template_change": "Questo piano \xE8 stato fatto per il design che ha scelto e non pu\xF2 ancora essere spostato su un altro design."
+  "plan.refused.template_change": "Questo piano \xE8 stato fatto per il design che ha scelto e non pu\xF2 ancora essere spostato su un altro design.",
+  "plan.heldBack.field.prices": "Prezzi",
+  "plan.heldBack.field.offerings": "Servizi",
+  "plan.heldBack.field.menu": "Men\xF9",
+  "plan.heldBack.field.menu-link": "Link al men\xF9",
+  "plan.heldBack.field.name": "Nome dell\u2019attivit\xE0",
+  "plan.heldBack.field.team": "Team",
+  "plan.heldBack.field.socials": "Profili social",
+  "plan.heldBack.field.photos": "Foto",
+  "plan.heldBack.field.posts": "Post",
+  "plan.heldBack.field.email": "Indirizzo email",
+  "plan.heldBack.field.phone": "Numero di telefono",
+  "plan.heldBack.field.address": "Indirizzo",
+  "plan.heldBack.field.about": "Informazioni sull\u2019attivit\xE0",
+  "plan.heldBack.field.reviews": "Recensioni",
+  "plan.heldBack.field.booking": "Link di prenotazione",
+  "plan.heldBack.field.offering-descriptions": "Descrizioni dei servizi",
+  "plan.heldBack.field.story": "La sua storia",
+  "plan.refused.item_field_fact": "Questa sezione mostra un elemento intero, non uno dei suoi dettagli.",
+  "plan.refused.trade_terms": "Questa sezione descrive come lavora di solito il suo settore, quindi non pu\xF2 indicare numeri, prezzi, orari o promesse.",
+  "plan.refused.trade_fact_missing": "Questa sezione spiega il suo settore a partire da un dato della sua attivit\xE0, quindi quel dato resta.",
+  "plan.refused.item_repeated_on_page": "Questa modifica mostrerebbe la stessa cosa due volte in una pagina.",
+  "plan.refused.form_without_destination": "Un modulo ha bisogno di un indirizzo email a cui inviare i messaggi.",
+  "plan.refused.map_without_address": "Una mappa ha bisogno del suo indirizzo."
 };
 
 // ../../locale/tracy-locales/nl/tracy-build-chat.json
@@ -3902,7 +4013,30 @@ var tracy_build_chat_default5 = {
   "plan.refused.data_unaccounted": "Na deze wijziging zou een gegeven van uw bedrijf nergens worden getoond.",
   "plan.refused.picture_count": "Uw foto\u2019s konden na deze wijziging niet opnieuw worden geteld, dus is ze niet opgeslagen.",
   "plan.refused.plan_fault": "Deze wijziging is niet opgeslagen: uw plan heeft zelf een probleem dat Tracy eerst moet oplossen. U kunt de wijziging in de chat vragen.",
-  "plan.refused.template_change": "Dit plan is gemaakt voor het ontwerp dat u koos, en kan nog niet naar een ander ontwerp worden verplaatst."
+  "plan.refused.template_change": "Dit plan is gemaakt voor het ontwerp dat u koos, en kan nog niet naar een ander ontwerp worden verplaatst.",
+  "plan.heldBack.field.prices": "Prijzen",
+  "plan.heldBack.field.offerings": "Diensten",
+  "plan.heldBack.field.menu": "Menu",
+  "plan.heldBack.field.menu-link": "Link naar het menu",
+  "plan.heldBack.field.name": "Bedrijfsnaam",
+  "plan.heldBack.field.team": "Team",
+  "plan.heldBack.field.socials": "Socialemediaprofielen",
+  "plan.heldBack.field.photos": "Foto\u2019s",
+  "plan.heldBack.field.posts": "Berichten",
+  "plan.heldBack.field.email": "E-mailadres",
+  "plan.heldBack.field.phone": "Telefoonnummer",
+  "plan.heldBack.field.address": "Adres",
+  "plan.heldBack.field.about": "Over het bedrijf",
+  "plan.heldBack.field.reviews": "Beoordelingen",
+  "plan.heldBack.field.booking": "Boekingslink",
+  "plan.heldBack.field.offering-descriptions": "Beschrijvingen van de diensten",
+  "plan.heldBack.field.story": "Uw verhaal",
+  "plan.refused.item_field_fact": "Dit onderdeel toont een heel item, niet een van zijn gegevens.",
+  "plan.refused.trade_terms": "Dit onderdeel beschrijft hoe uw vak meestal werkt, dus het noemt geen getal, prijs, tijden of belofte.",
+  "plan.refused.trade_fact_missing": "Dit onderdeel legt uw vak uit aan de hand van een gegeven van uw bedrijf, dus dat gegeven blijft.",
+  "plan.refused.item_repeated_on_page": "Deze wijziging zou hetzelfde twee keer op \xE9\xE9n pagina tonen.",
+  "plan.refused.form_without_destination": "Een formulier heeft een e-mailadres nodig waar de berichten heen gaan.",
+  "plan.refused.map_without_address": "Een kaart heeft uw adres nodig."
 };
 
 // ../../locale/tracy-locales/zh/tracy-build-chat.json
@@ -4459,7 +4593,30 @@ var tracy_build_chat_default6 = {
   "plan.refused.data_unaccounted": "\u6B64\u66F4\u6539\u540E\uFF0C\u4F60\u7684\u4E00\u9879\u5546\u5BB6\u4FE1\u606F\u5C06\u4E0D\u4F1A\u5728\u4EFB\u4F55\u5730\u65B9\u663E\u793A\u3002",
   "plan.refused.picture_count": "\u6B64\u66F4\u6539\u540E\u65E0\u6CD5\u91CD\u65B0\u7EDF\u8BA1\u4F60\u7684\u7167\u7247\uFF0C\u56E0\u6B64\u6CA1\u6709\u4FDD\u5B58\u3002",
   "plan.refused.plan_fault": "\u6B64\u66F4\u6539\u672A\u4FDD\u5B58\uFF1A\u4F60\u7684\u65B9\u6848\u672C\u8EAB\u6709\u4E00\u4E2A\u95EE\u9898\uFF0C\u9700\u8981 Tracy \u5148\u4FEE\u590D\u3002\u4F60\u53EF\u4EE5\u5728\u804A\u5929\u4E2D\u63D0\u51FA\u8FD9\u9879\u66F4\u6539\u3002",
-  "plan.refused.template_change": "\u6B64\u65B9\u6848\u662F\u4E3A\u4F60\u9009\u62E9\u7684\u8BBE\u8BA1\u5236\u5B9A\u7684\uFF0C\u76EE\u524D\u8FD8\u4E0D\u80FD\u6362\u5230\u5176\u4ED6\u8BBE\u8BA1\u3002"
+  "plan.refused.template_change": "\u6B64\u65B9\u6848\u662F\u4E3A\u4F60\u9009\u62E9\u7684\u8BBE\u8BA1\u5236\u5B9A\u7684\uFF0C\u76EE\u524D\u8FD8\u4E0D\u80FD\u6362\u5230\u5176\u4ED6\u8BBE\u8BA1\u3002",
+  "plan.heldBack.field.prices": "\u4EF7\u683C",
+  "plan.heldBack.field.offerings": "\u670D\u52A1",
+  "plan.heldBack.field.menu": "\u83DC\u5355",
+  "plan.heldBack.field.menu-link": "\u83DC\u5355\u94FE\u63A5",
+  "plan.heldBack.field.name": "\u5546\u5BB6\u540D\u79F0",
+  "plan.heldBack.field.team": "\u56E2\u961F",
+  "plan.heldBack.field.socials": "\u793E\u4EA4\u5A92\u4F53\u4E3B\u9875",
+  "plan.heldBack.field.photos": "\u7167\u7247",
+  "plan.heldBack.field.posts": "\u5E16\u5B50",
+  "plan.heldBack.field.email": "\u7535\u5B50\u90AE\u4EF6\u5730\u5740",
+  "plan.heldBack.field.phone": "\u7535\u8BDD\u53F7\u7801",
+  "plan.heldBack.field.address": "\u5730\u5740",
+  "plan.heldBack.field.about": "\u5546\u5BB6\u7B80\u4ECB",
+  "plan.heldBack.field.reviews": "\u8BC4\u4EF7",
+  "plan.heldBack.field.booking": "\u9884\u8BA2\u94FE\u63A5",
+  "plan.heldBack.field.offering-descriptions": "\u670D\u52A1\u4ECB\u7ECD",
+  "plan.heldBack.field.story": "\u4F60\u7684\u6545\u4E8B",
+  "plan.refused.item_field_fact": "\u6B64\u90E8\u5206\u663E\u793A\u7684\u662F\u5B8C\u6574\u7684\u4E00\u9879\uFF0C\u800C\u4E0D\u662F\u5176\u4E2D\u7684\u67D0\u4E2A\u7EC6\u8282\u3002",
+  "plan.refused.trade_terms": "\u6B64\u90E8\u5206\u4F9D\u636E\u4F60\u6240\u5728\u884C\u4E1A\u7684\u5E38\u89C1\u505A\u6CD5\u64B0\u5199\uFF0C\u56E0\u6B64\u4E0D\u80FD\u5199\u51FA\u6570\u5B57\u3001\u4EF7\u683C\u3001\u65F6\u95F4\u5B89\u6392\u6216\u627F\u8BFA\u3002",
+  "plan.refused.trade_fact_missing": "\u6B64\u90E8\u5206\u6839\u636E\u4F60\u7684\u4E00\u9879\u5546\u5BB6\u4FE1\u606F\u6765\u4ECB\u7ECD\u4F60\u7684\u884C\u4E1A\uFF0C\u56E0\u6B64\u8FD9\u9879\u4FE1\u606F\u4F1A\u4FDD\u7559\u3002",
+  "plan.refused.item_repeated_on_page": "\u6B64\u66F4\u6539\u4F1A\u5728\u540C\u4E00\u9875\u9762\u4E0A\u628A\u540C\u4E00\u5185\u5BB9\u663E\u793A\u4E24\u6B21\u3002",
+  "plan.refused.form_without_destination": "\u8868\u5355\u9700\u8981\u4E00\u4E2A\u63A5\u6536\u7559\u8A00\u7684\u7535\u5B50\u90AE\u4EF6\u5730\u5740\u3002",
+  "plan.refused.map_without_address": "\u5730\u56FE\u9700\u8981\u4F60\u7684\u5730\u5740\u3002"
 };
 
 // ../../locale/tracy-locale-vi/vi/tracy-build-chat.json
@@ -5016,7 +5173,30 @@ var tracy_build_chat_default7 = {
   "plan.refused.data_unaccounted": "Sau thay \u0111\u1ED5i n\xE0y, m\u1ED9t th\xF4ng tin v\u1EC1 doanh nghi\u1EC7p c\u1EE7a b\u1EA1n s\u1EBD kh\xF4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB \u1EDF \u0111\xE2u c\u1EA3.",
   "plan.refused.picture_count": "Kh\xF4ng th\u1EC3 \u0111\u1EBFm l\u1EA1i \u1EA3nh c\u1EE7a b\u1EA1n sau thay \u0111\u1ED5i n\xE0y, n\xEAn thay \u0111\u1ED5i ch\u01B0a \u0111\u01B0\u1EE3c l\u01B0u.",
   "plan.refused.plan_fault": "Thay \u0111\u1ED5i n\xE0y ch\u01B0a \u0111\u01B0\u1EE3c l\u01B0u: k\u1EBF ho\u1EA1ch c\u1EE7a b\u1EA1n \u0111ang c\xF3 m\u1ED9t l\u1ED7i ri\xEAng m\xE0 Tracy c\u1EA7n s\u1EEDa tr\u01B0\u1EDBc. B\u1EA1n c\xF3 th\u1EC3 y\xEAu c\u1EA7u thay \u0111\u1ED5i n\xE0y trong khung chat.",
-  "plan.refused.template_change": "K\u1EBF ho\u1EA1ch n\xE0y \u0111\u01B0\u1EE3c l\u1EADp cho m\u1EABu giao di\u1EC7n b\u1EA1n \u0111\xE3 ch\u1ECDn, v\xE0 hi\u1EC7n ch\u01B0a th\u1EC3 chuy\u1EC3n sang m\u1EABu kh\xE1c."
+  "plan.refused.template_change": "K\u1EBF ho\u1EA1ch n\xE0y \u0111\u01B0\u1EE3c l\u1EADp cho m\u1EABu giao di\u1EC7n b\u1EA1n \u0111\xE3 ch\u1ECDn, v\xE0 hi\u1EC7n ch\u01B0a th\u1EC3 chuy\u1EC3n sang m\u1EABu kh\xE1c.",
+  "plan.heldBack.field.prices": "Gi\xE1",
+  "plan.heldBack.field.offerings": "D\u1ECBch v\u1EE5",
+  "plan.heldBack.field.menu": "Th\u1EF1c \u0111\u01A1n",
+  "plan.heldBack.field.menu-link": "Li\xEAn k\u1EBFt th\u1EF1c \u0111\u01A1n",
+  "plan.heldBack.field.name": "T\xEAn doanh nghi\u1EC7p",
+  "plan.heldBack.field.team": "\u0110\u1ED9i ng\u0169",
+  "plan.heldBack.field.socials": "Trang m\u1EA1ng x\xE3 h\u1ED9i",
+  "plan.heldBack.field.photos": "\u1EA2nh",
+  "plan.heldBack.field.posts": "B\xE0i \u0111\u0103ng",
+  "plan.heldBack.field.email": "\u0110\u1ECBa ch\u1EC9 email",
+  "plan.heldBack.field.phone": "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i",
+  "plan.heldBack.field.address": "\u0110\u1ECBa ch\u1EC9",
+  "plan.heldBack.field.about": "Gi\u1EDBi thi\u1EC7u doanh nghi\u1EC7p",
+  "plan.heldBack.field.reviews": "\u0110\xE1nh gi\xE1",
+  "plan.heldBack.field.booking": "Li\xEAn k\u1EBFt \u0111\u1EB7t ch\u1ED7",
+  "plan.heldBack.field.offering-descriptions": "M\xF4 t\u1EA3 d\u1ECBch v\u1EE5",
+  "plan.heldBack.field.story": "C\xE2u chuy\u1EC7n c\u1EE7a b\u1EA1n",
+  "plan.refused.item_field_fact": "Ph\u1EA7n n\xE0y hi\u1EC3n th\u1ECB c\u1EA3 m\u1ED9t m\u1EE5c, kh\xF4ng ph\u1EA3i m\u1ED9t chi ti\u1EBFt c\u1EE7a m\u1EE5c \u0111\xF3.",
+  "plan.refused.trade_terms": "Ph\u1EA7n n\xE0y \u0111\u01B0\u1EE3c vi\u1EBFt d\u1EF1a tr\xEAn c\xE1ch ng\xE0nh c\u1EE7a b\u1EA1n th\u01B0\u1EDDng l\xE0m, n\xEAn kh\xF4ng th\u1EC3 n\xEAu con s\u1ED1, gi\xE1, l\u1ECBch hay l\u1EDDi cam k\u1EBFt.",
+  "plan.refused.trade_fact_missing": "Ph\u1EA7n n\xE0y gi\u1EA3i th\xEDch ng\xE0nh c\u1EE7a b\u1EA1n d\u1EF1a tr\xEAn m\u1ED9t th\xF4ng tin v\u1EC1 doanh nghi\u1EC7p, n\xEAn th\xF4ng tin \u0111\xF3 \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.",
+  "plan.refused.item_repeated_on_page": "Thay \u0111\u1ED5i n\xE0y s\u1EBD hi\u1EC3n th\u1ECB c\xF9ng m\u1ED9t th\u1EE9 hai l\u1EA7n tr\xEAn m\u1ED9t trang.",
+  "plan.refused.form_without_destination": "Bi\u1EC3u m\u1EABu c\u1EA7n m\u1ED9t \u0111\u1ECBa ch\u1EC9 email \u0111\u1EC3 nh\u1EADn tin nh\u1EAFn.",
+  "plan.refused.map_without_address": "B\u1EA3n \u0111\u1ED3 c\u1EA7n \u0111\u1ECBa ch\u1EC9 c\u1EE7a b\u1EA1n."
 };
 
 // src/host/chat-tables.mjs

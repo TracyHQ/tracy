@@ -14,6 +14,7 @@ import { STAGES, stageDocuments } from '../../../core/tracy-core/test/fixtures/b
 import { LOGO_SOURCE_NAMES } from '../../../wo/website-opportunities/domain/brand-before-site.mjs'
 import { drawnLogoSaid } from '../../../wo/website-opportunities/domain/brand-logo-drawn.mjs'
 import { SECTION_LABELS } from '../../../wo/website-opportunities/domain/plan-gate-fixes.mjs'
+import { FIELD_NAMES } from '../../../wo/website-opportunities/domain/plan-held-back.mjs'
 import { hoursDisplayOf } from '../../../wo/website-opportunities/domain/plan-hours-display.mjs'
 import {
   galleryRoomReason,
@@ -205,4 +206,18 @@ test('the reviews line says its reasons in the interface language, after one lea
     }),
     vi('plan.leftOut.reason.library_section_refused', { why: vi('plan.leftOut.why.no_star_rating') })
   )
+})
+
+test('a held back line names its field in the card language, a plan before the field by its English or plain name', () => {
+  for (const [field, name] of Object.entries(FIELD_NAMES))
+    assert.equal(lib.en[`plan.heldBack.field.${field}`], name, field)
+  const label = (kind, l) => l
+  const line = (what, params) => ({ what, code: 'not_collected', params })
+  assert.equal(lib.leftOutWhatOf(vi, line('Prices', { count: 1, field: 'prices' }), label), 'Giá')
+  // A plan made before the field: its English name, or the plain form of a field the plan step had no name for.
+  assert.equal(lib.leftOutWhatOf(vi, line('Prices', { count: 1 }), label), 'Giá')
+  assert.equal(lib.leftOutWhatOf(vi, line('Booking', { count: 1 }), label), 'Liên kết đặt chỗ')
+  // A field the card has no words for keeps the plan's text; another code is not a held back line.
+  assert.equal(lib.leftOutWhatOf(vi, line('Parking', { count: 1, field: 'parking' }), label), 'Parking')
+  assert.equal(lib.leftOutWhatOf(vi, { what: 'Prices', code: 'no_place_in_design' }, label), 'Prices')
 })
