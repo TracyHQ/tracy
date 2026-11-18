@@ -660,6 +660,6 @@ test('the same published release cuts the same bytes, whenever and wherever it i
     'patches/picomatch@2.3.2.patch',
     'patches/picomatch@4.0.7.patch'
   ])
-    assert.match(dates, new RegExp(`2020-01-01 00:00 +${f.replace(/[.]/g, '\\.')}\\n`), f)
+    assert.match(dates, new RegExp(`2020-01-01 00:00 +${f.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')}\\n`), f)
   assert.doesNotMatch(dates, /2020-01-01 00:00 +README\.md\n/)
 })
