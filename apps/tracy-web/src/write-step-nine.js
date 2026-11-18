@@ -21,7 +21,7 @@ import { contractBaselineStore } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
 import { kitAltSlots } from './write-step/repair-pass/repair-alt-slots.js'
 import { briefValues } from './write-step/repair-pass/repair-brief-values.js'
-import { checkAccepted } from './write-step/repair-pass/repair-faults.js'
+import { checkAccepted, faultsToSend } from './write-step/repair-pass/repair-faults.js'
 import { runRepairPass, undoTurns } from './write-step/repair-pass/repair-pass.js'
 import { sweepTurns } from './write-step/repair-pass/repair-turns.js'
 import { repairClock } from './write-step/repair-pass/repair-limits.js'
@@ -31,6 +31,27 @@ import { runWriteStep } from './write-step/write-step.js'
 const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /** The brief's values a demo fault may name, from the write's brief file; none when it gives no brief. */
+/**
+ * Why 9b cannot leave the site clean, or null when it might: the first check holds a blocking fault of a kind the pass
+ * never sends (one a step before it owns: plan items with no slot, the read-back, the brand accent...), so the check stays
+ * red whatever its turns do. A chain build (`repairOnlyWhenItCanFinish`) then hands the site over without 9b. Dev,
+ * 17/11/2026: in the last three chain builds 9b removed 0, 1 and 0 of 46 to 115 blocking faults and took 2.5 to 3.5
+ * minutes of each, every one of them with faults it never sends; with none, it still runs and can finish the site.
+ * @param {object | null} firstCheck
+ * @param {{ brief?: Map<string, string[]> | null, altSlots?: object | null, contentMap?: object | null }} pass
+ */
+function cannotFinish(firstCheck, pass) {
+  const { skipped } = faultsToSend({
+    firstCheck,
+    brief: pass.brief ?? null,
+    altSlots: pass.altSlots ?? null,
+    contentMap: pass.contentMap ?? null
+  })
+  if (!skipped.length) return null
+  const groups = [...new Set(skipped.map((s) => s.fault?.group ?? s.fault?.kind ?? s.code))]
+  return `the first check holds ${skipped.length} blocking faults the repair pass never sends (${groups.join(', ')}), so it could not leave the site clean`
+}
+
 async function briefOf(files) {
   if (!files?.brief) return null
   try {
@@ -162,6 +183,7 @@ async function repairWriterEvidence(agent, ledger, clock) {
  *   pictures?: object | null,
  *   pageHtml?: ((page: string) => Promise<string | null>) | null,
  *   limits?: object | null, timer?: Function, now?: () => number, sleep?: (ms: number) => Promise<void>,
+ *   repairOnlyWhenItCanFinish?: boolean,
  *   log?: { warn: (line: string) => void } }} input `write` is the write step's input (write-step.js); `agent` the site
  *   agent of the pass (repair-pass.js), none to write and check only; `pageHtml` a page as the site serves it, for the
  *   element each comment points at
@@ -170,6 +192,7 @@ async function repairWriterEvidence(agent, ledger, clock) {
 export async function runStepNine(input) {
   const { write, checkSite, baselines, contracts, agent = null, saveFile = null, pictures = null } = input
   const { limits = null, timer, now = Date.now, sleep = realSleep, log = console, pageHtml = null } = input
+  const { repairOnlyWhenItCanFinish = false } = input
   const t0 = now()
   const timeline = []
   const mark = (stage, from, extra = {}) =>
@@ -233,7 +256,10 @@ export async function runStepNine(input) {
     nextRequestId: () => `step9b-${runId}-${++sequence}`
   }
   let outcome
+  const unfinishable =
+    repairOnlyWhenItCanFinish && agent ? cannotFinish(firstCheck, { brief, ...pass }) : null
   if (!agent) outcome = { status: 'not-run', reason: 'no site agent was given', check: firstCheck }
+  else if (unfinishable) outcome = { status: 'not-run', reason: unfinishable, check: firstCheck }
   else
     try {
       outcome = await runRepairPass(pass, { firstCheck, brief })

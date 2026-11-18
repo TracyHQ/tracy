@@ -617,6 +617,13 @@ changes with Undo. So:
   chat row each. The repair sessions are the build's: the server writes each to `setup_session` before its first prompt,
   the Apply door records a write made in one as setup under the build's run id, Site changes leaves the sessions' turns
   out of the list, and each session is archived when the pass ends so the customer's chat list never shows it.
+  Amended 2026-11-18: a step chain build runs 9b only when it could leave the site clean (`write-step-nine.js`
+  `repairOnlyWhenItCanFinish`, `cannotFinish`). When the first site check holds a blocking fault of a kind 9b never sends
+  (`repair-kinds.js` `NOT_SENT_GROUPS`, `NEVER_SENT`, an unknown kind or no page: a step before it owns the fault), the
+  check stays red whatever its turns do, so the site is handed over with the first check and `repair-pass.json` says
+  `not-run` with the groups that held it. A first check whose every blocking fault is one 9b sends still gets the pass.
+  The write step bench keeps 9b on every run. Dev, 17/11/2026: the last three chain builds' passes removed 0, 1 and 0 of
+  46 to 115 blocking faults in 2.5 to 3.5 minutes each, every first check holding faults 9b never sends.
 
 ### 31. No kept slot is handed over with its demo content
 
