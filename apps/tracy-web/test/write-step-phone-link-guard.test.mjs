@@ -146,3 +146,13 @@ test('a reply for another slot cannot advance the semantic phone capability revi
   assert.equal(second.error, 'look_guard')
   assert.equal(sent.length, 2, 'a new inspect is required after the unverified first result')
 })
+
+test('a long run of digits as the phone text is refused in linear time', async () => {
+  const hostile = `${'0'.repeat(5_000)}x`
+  const { call, sent } = await setup({ ...state(), slots: [{ key: 'module-1.0', current: hostile }] })
+  const started = performance.now()
+  const answer = await call({ ...order(), expected: hostile })
+  assert.ok(performance.now() - started < 500)
+  assert.equal(answer.ok, false)
+  assert.equal(sent.length, 1)
+})

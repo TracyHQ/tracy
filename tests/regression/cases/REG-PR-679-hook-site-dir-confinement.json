@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-679-hook-site-dir-confinement",
+  "kind": "fix",
+  "title": "Hook doors keep a site label inside /srv/tracy: a label that climbs out or a site entry linked outside is refused",
+  "pr": 679,
+  "area": "fleet/hooks",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with python3 on PATH, run run.cmd (no database, no stand: each hook file is served from a temp folder with SITES_ROOT moved there).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Both tracy-hooks.do.py and tracy-hooks.contabo.py answer /agent-token with 400 'bad label' and core-manifest-write with 400 'refused label' for '../outside', 'good-site/../../outside' and 'good-site\\n'; no token from outside is returned and no core-manifest.json is written outside.",
+    "With sites/site-a linked to a folder outside the root, both doors refuse 'site-a' the same way; with the sites root itself reached through a link, 'good-site' still returns its token and gets its manifest.",
+    "contabo /go-live answers 400 'refused label' for '../outside' and 404 'no such site' for a well-formed label with no folder."
+  ],
+  "selectors": {
+    "agent_token": "POST /agent-token",
+    "manifest": "POST /site kind=core-manifest-write",
+    "go_live": "POST /go-live"
+  },
+  "fence": "site_dir() in both hook files: one plain folder name, realpath of root and candidate, containment checked",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/fleet/tracy-fleet-operation/test/hooks-site-dir.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "tracy-hooks.do.py: a label is one folder inside /srv/tracy, never a way out of it",
+      "tracy-hooks.contabo.py: a label is one folder inside /srv/tracy, never a way out of it",
+      "tracy-hooks.do.py: a site entry that links outside the root is refused; a root reached through a link still works",
+      "tracy-hooks.contabo.py: a site entry that links outside the root is refused; a root reached through a link still works",
+      "tracy-hooks.contabo.py: /go-live refuses a label that climbs out before asking whether the site exists"
+    ]
+  }
+}

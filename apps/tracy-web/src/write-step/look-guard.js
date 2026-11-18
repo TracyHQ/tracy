@@ -210,7 +210,8 @@ export function lookGuard({ kit, contentMap = null }) {
       !each(capability.supportedKeys).includes(p.key) ||
       matches.length !== 1 ||
       typeof p.expected !== 'string' ||
-      !/^ *(?:\+|00)?(?:[0-9]+|\([0-9]+\))(?:[ .-]*(?:[0-9]+|\([0-9]+\)))* *$/.test(p.expected) ||
+      // One digit per step: `[0-9]+` on both sides of an empty `[ .-]*` backtracks exponentially on a run of digits.
+      !/^ *(?:\+|00)?(?:[0-9]|\([0-9]+\))(?:[ .-]*(?:[0-9]|\([0-9]+\)))* *$/.test(p.expected) ||
       matches[0].current !== p.expected ||
       !phone ||
       !/^(?:\+[1-9]|[0-9])[0-9]{5,14}$/.test(p.tel) ||

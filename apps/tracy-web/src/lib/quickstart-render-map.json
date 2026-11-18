@@ -1,7 +1,7 @@
 {
   "tracy-base": {
     "revision": 27,
-    "sourceSha256": "63a7844eea9bdab5f6575a46d375eef3a370b29283fcf1d04f26b85ca4b388be",
+    "sourceSha256": "df5d914377133c739f849c868a8aa5d58f86067df3546cacbf39182dd5e68c19",
     "collections": {
       "en:home": ["/", "/#mega", "/#drawer"],
       "en:people": [
@@ -135,7 +135,7 @@
   },
   "tracy-business": {
     "revision": 16,
-    "sourceSha256": "bfbebac7491645094dc5b542ccf1d0473aeb5ee8c45585d43b4d42ea510d449f",
+    "sourceSha256": "a129b1850147287b57537508df1d8e17cc787e358d056366d4fa263f6c8859a2",
     "collections": {
       "en:home": ["/"],
       "en:posts": [
@@ -373,7 +373,7 @@
   },
   "tracy-diner": {
     "revision": 43,
-    "sourceSha256": "c04d1884e98e7caebc433632e77583347e2899d05bdf942ed30678ac764d0468",
+    "sourceSha256": "0653457fd88a3438f24bf1623664b98b066a3004efc054f78ac701da4e06dc0d",
     "collections": {
       "en:chrome": [
         "/",
@@ -519,7 +519,7 @@
   },
   "tracy-restaurant": {
     "revision": 33,
-    "sourceSha256": "94e5c620b9c1b66ddb33669fc8c034ab530ad9418bdb8bc3e2d02efa4038152f",
+    "sourceSha256": "5191c0dda19e03daa819cbf6e17b92c5d6b4a8e8ccd30404390dcb43078810c1",
     "collections": {
       "en:chrome": [
         "/",
@@ -732,7 +732,7 @@
   },
   "tracy-saas": {
     "revision": 8,
-    "sourceSha256": "8e02e4e9f83645327ab99ab9b7eb6b3e2881bdfa2884e87907d15c95475d6e4b",
+    "sourceSha256": "4620775ceee326dea0c4fca7b06fdc8ad8fe2fd62920f27fb7f85b03394698c4",
     "collections": {
       "en:bento": ["/", "/home-menu/home-blueprint", "/home-menu/home-signal", "/pages/landing"],
       "en:clients": [

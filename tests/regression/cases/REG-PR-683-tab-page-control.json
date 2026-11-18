@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-683-tab-page-control",
+  "kind": "fix",
+  "title": "A page control left undecided while its words are written is kept, so R10b does not end the plan step",
+  "pr": 683,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "An undecided page control whose label the decision writes is added to the decision's links with its label slot.",
+    "A tab whose words are hidden, and an undecided link of any other kind, stay with the planner.",
+    "On the JA Diner 1.0.8 kit, block-97 keeps its three tabs and its hidden go-to link stays hidden."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-planner-hidden-links.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "an undecided page control whose words the decision writes is kept; undecided links of any other kind stay with the planner",
+      "JA Diner 1.0.8: the menu block whose tab labels the plan writes keeps its three tabs, and its go-to link stays hidden",
+      "a hidden page control whose words the decision writes is kept; any other hidden link takes its written label with it"
+    ]
+  }
+}

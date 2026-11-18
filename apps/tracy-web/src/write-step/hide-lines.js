@@ -59,6 +59,8 @@ function rewrittenResult({ key }, refused) {
   return {
     status: 'hidden',
     key,
+    // Read back on those words: hidden when they hold no link any more (site-check/read-back.js), not when they are empty.
+    inReplacedWords: true,
     reason: `${PLAN_HIDES}: it was printed inside the words of ${key}, which the write step replaced with words that hold no link`
   }
 }

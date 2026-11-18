@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-683-read-back-replaced-words",
+  "kind": "fix",
+  "title": "A link hidden inside words the write step replaced reads back green while those words hold no link",
+  "pr": 683,
+  "area": "website-opportunities/site-check",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "An inReplacedWords line is green on words that hold no anchor with an address.",
+    "It is red while those words still hold a link.",
+    "Any other hidden line is still held to an empty slot."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-check-read-back.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a link hidden inside words the write step replaced is green while those words hold no link, red while they still do",
+      "a hidden line is green when the slot is empty and red while it still holds words"
+    ]
+  }
+}

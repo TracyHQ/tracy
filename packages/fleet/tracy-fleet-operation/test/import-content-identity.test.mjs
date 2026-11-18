@@ -328,11 +328,8 @@ test('wordpress import: a plugin that cannot derive is said and never fails the 
   const refusals = [
     { ok: false, error: 'bad_action', message: 'unknown action: content.contract' },
     { ok: false, error: 'bad_params', message: 'unknown contract operation: derive' },
-    {
-      ok: false,
-      error: 'conflict',
-      message: 'This site is bound to a quickstart contract; derive refuses to replace it'
-    }
+    { ok: false, error: 'conflict', message: 'A derive of this site is already running' },
+    { ok: false, error: 'conflict', message: 'This site is not bound to a quickstart contract' }
   ]
   for (const refusal of refusals) {
     const r = runImportPostUp('wordpress', {
@@ -349,6 +346,20 @@ test('wordpress import: a plugin that cannot derive is said and never fails the 
   })
   assert.equal(garbled.rc, 0)
   assert.match(garbled.stderr, /derived contract: not bound/)
+})
+
+test('wordpress import: a copy already bound to a quickstart contract keeps it, said plainly', () => {
+  const refusal = {
+    ok: false,
+    error: 'conflict',
+    message: 'This site is bound to a quickstart contract; derive refuses to replace it'
+  }
+  const r = runImportPostUp('wordpress', {
+    env: { STUB_TOKEN: 'a'.repeat(48), STUB_ANSWER_1: ENABLED, STUB_ANSWER_2: JSON.stringify(refusal) }
+  })
+  assert.equal(r.rc, 0, r.stderr)
+  assert.match(r.stdout, /derived contract: none — this copy keeps its quickstart contract/)
+  assert.doesNotMatch(r.stderr, /not bound|refused/)
 })
 
 /**
@@ -528,6 +539,15 @@ test("joomla import: derive runs after identity, over the copy's own component, 
   assert.match(uncalibrated.stdout, /derived contract: 3 entities, 7 slots, not calibrated/)
 })
 
+test('joomla import: a component answering kept to derive is said plainly, not as a failure', () => {
+  const r = runImportPostUp('joomla', {
+    env: { DB_IMPORTED: '1', STUB_DERIVE: 'kept entities=0 slots=0 calibrated=0' }
+  })
+  assert.equal(r.rc, 0, r.stderr)
+  assert.match(r.stdout, /derived contract: none — this copy keeps its quickstart contract/)
+  assert.doesNotMatch(r.stderr, /not bound/)
+})
+
 for (const said of ['unsupported', 'failed entities=0 slots=0 calibrated=0', '']) {
   test(`joomla import: a component answering ${JSON.stringify(said)} to derive is said and never fails the import`, () => {
     const r = runImportPostUp('joomla', { env: { DB_IMPORTED: '1', STUB_DERIVE: said } })
@@ -604,6 +624,11 @@ test('joomla-content-derive.php names itself, calls derive over loopback, and pa
   assert.match(source.split('\n').slice(0, 3).join('\n'), /\/\/ tracy: content-derive/)
   assert.match(source, /'operation' => 'derive'/)
   assert.match(source, /TRACY_RESULT derived=/)
+  // Only the quickstart conflict is settled as `kept`; any other refusal stays `failed`.
+  assert.match(
+    source,
+    /\$error === 'conflict' && stripos\(\$message, 'is bound to a quickstart contract; derive refuses to replace it'\)/
+  )
   assert.match(
     source,
     /http:\/\/127\.0\.0\.1\/index\.php\?option=com_claudecowork&task=api\.exec&format=json/

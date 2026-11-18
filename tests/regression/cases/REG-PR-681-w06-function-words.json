@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-681-w06-function-words",
+  "kind": "fix",
+  "title": "W06 lets two sentences share a run of function words, and still fails a repeat that carries meaning",
+  "pr": 681,
+  "area": "website-opportunities/copy-check",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Two sentences sharing only the run \"are the club s own\" pass W06.",
+    "A shared run with two or more meaningful words, and a whole equal sentence, still fail W06.",
+    "The copy checker reports site-copy-check/13."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-copy-check-content.test.mjs",
+      "apps/tracy-web/test/site-copy-check-structure.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "W06 lets two sentences share a run of function words, and still fails a run that carries meaning",
+      "W06 fails a sentence repeated or nearly repeated anywhere on the site",
+      "W06 still fails prose repeated around a fact value or with no fact in it"
+    ]
+  }
+}

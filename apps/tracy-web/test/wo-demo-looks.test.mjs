@@ -349,7 +349,7 @@ test('the share page frames the asked demo page, hides its control until looks l
   assert.doesNotMatch(html, /box-shadow:\s*0 0 0 [1-9]/)
   assert.doesNotMatch(html, /ring-[23]|outline:\s*[2-9]px/)
   // Every word the script shows comes from the data block: no English sentence in the script itself.
-  const script = /<script>([\s\S]*?)<\/script>/.exec(html)[1]
+  const script = /<script>([\s\S]*?)<\/script\s*>/i.exec(html)[1]
   for (const w of Object.values(WORDS)) assert.ok(!script.includes(w), w)
 })
 

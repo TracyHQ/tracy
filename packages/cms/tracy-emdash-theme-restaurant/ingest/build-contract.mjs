@@ -7,6 +7,7 @@
 //   - `source.files` are hashed by `tools/qa-contract.mjs init` (run first; this script keeps its `source` block).
 //   node ingest/build-contract.mjs --site http://127.0.0.1:18301 [--out qa.contract.json]
 // Run it from the package root after `node tools/qa-contract.mjs init source/snapshot qa.contract.json --config template.config.json`.
+import { withPatches } from '../tools/qa-contract.mjs'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { decodeWith } from './text.mjs'
 import { launchBrowser } from '../tools/qa-browser.mjs'
@@ -1039,7 +1040,7 @@ contract.reviews = { ...contract.reviews, forms: { mode: 'required' } }
 contract.pending = []
 contract.revision = (contract.revision ?? 0) + 1
 contract.distribution = {
-  include: [
+  include: withPatches([
     'package.json',
     'pnpm-lock.yaml',
     'pnpm-workspace.yaml',
@@ -1064,7 +1065,7 @@ contract.distribution = {
     'LICENSE',
     'artifact.json',
     '.env.example'
-  ],
+  ]),
   required: [
     'tools/qa.mjs',
     'tools/qa-contract.mjs',

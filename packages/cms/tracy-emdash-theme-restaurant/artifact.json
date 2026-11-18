@@ -7,14 +7,14 @@
 		"version": "1.0.3"
 	},
 	"demoContent": "JA Restaurant",
-	"generatedAt": "2026-11-18T00:20:11.296Z",
+	"generatedAt": "2026-11-18T02:05:29.809Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
 	},
 	"runtime": {
-		"node": ">=22.16",
-		"astro": "7.3.3",
+		"node": ">=22.23.4",
+		"astro": "7.4.12",
 		"adapter": "@astrojs/node standalone",
 		"database": "sqlite (data/data.db)",
 		"storage": "local (uploads/)"
@@ -68,22 +68,22 @@
 		"config": "template.config.json"
 	},
 	"checksums": {
-		"AGENTS.md": "sha256:280cc52a91dc414a0f01851edb0806e3cc9a679cbd80e000ab830e058999c8bb",
-		"docs/architecture.md": "sha256:b7bffc4354019adf0f3d1dd11724b877a0328c076f84da85cdf78429cc319f02",
+		"AGENTS.md": "sha256:b4af5f487cbf8545c9cbfb7eca934e5e370b0beaf13b70c46c0d8923c9c4fb74",
+		"docs/architecture.md": "sha256:d425041c23e67a3864cd3fabf7b359830a3742d48f1a4fc0dbd447ba8cfacb3f",
 		"docs/checks-and-recovery.md": "sha256:d8d65b013b68fc0f5aef62977a6f53245eb4d2d51906ef56e721c8646e508d45",
 		"docs/content-api.md": "sha256:619c0ad929b7e621c3ae37a00df6c88567bc4bc561e25132bec5b48ed4e5adc5",
 		"docs/content-model.md": "sha256:e03a5d200e23f80fbfda9fcb867c9cace885001d6ca10cf10040640b88af2a38",
 		"docs/content-rules.md": "sha256:3e558db93f8e949e84759b03b9df9529247a23607aa9eaf816f60bed86ad4f91",
 		"docs/design-system.md": "sha256:ef68f4b375faaa5c7ee867ecd6a2b7b08673b62a51095b08a848bda6c29cc685",
-		"docs/generated/inventory.json": "sha256:791f5383cef318749bbf78a29b6f9187fd8857eefdf404f3e96f3d54d09db3b5",
-		"docs/generated/inventory.md": "sha256:765f9d3d1005da751b1c22fd59d8d7e4dee41dccceac43b64a13e7d3c92fc939",
-		"docs/install.md": "sha256:22180adf7e455262788c863f54e007e3bc54548f11eea650cbeaa412c624c1a6",
+		"docs/generated/inventory.json": "sha256:4f3b99edd2ebcd9a6ba0f7dbfea6f13de3a708203a17ee232bb9dd22dedc932a",
+		"docs/generated/inventory.md": "sha256:f698752ae1d54deca3729ff8a0d09ef95483fd72b31c52127fba4861a89d4b25",
+		"docs/install.md": "sha256:e14534cda03505f71377bd2abbdf52f7e2d7a3a9c43e7762f774aed6be83adf9",
 		"docs/languages.md": "sha256:04b96e69bafea8a38ca630452e5f418578e42bf198a4f8e53b848425f0bc7590",
 		"template.config.json": "sha256:8fd8d364df84dc0027f0f6a95a09bc55d00fbe274b01aef9e52fb07faacd90b6",
 		"seed/seed.json": "sha256:44a101a108fa198426955521ab8bcfa71182e6590f375016e32603a58d71b363",
 		"seed/media-map.json": "sha256:abeff3c9896fc913a0521cc254bb885dc4d90db64f4e84a58a3def2d2f95c883",
 		"seed/field-map.json": "sha256:ab54e7247c9dae40fd3e48713303a50e2dac574c6c7eab055444acd951514ac8",
-		"pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
+		"pnpm-lock.yaml": "sha256:d7a904f4d0cc00b3c5d5012916f76bcd7a021cfedb84133d3ea15adf598f96af",
 		"tools/forms.json": "sha256:762e87a9fda1fba307ee2e2ebf2f9535c23d93c4b97801b11e91731dca548777",
 		"seed/media/*": "sha256:281a31fb658d188bb5cb3bee1264043c9a63bceacf643b17eae2021863e84276 (66 files)"
 	}

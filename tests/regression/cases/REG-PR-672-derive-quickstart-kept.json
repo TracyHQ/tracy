@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-672-derive-quickstart-kept",
+  "kind": "fix",
+  "title": "tracy-host: an imported site already bound to a quickstart contract is marked contract-derived and no longer reported as a derive failure at every start; any other refusal still fails and is retried",
+  "pr": 672,
+  "area": "tracy-host/content-identity",
+  "cms": ["wp", "jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-reporter=tap apps/tracy-host/test/content-identity.test.mjs",
+    "S2: Record the exit code and the result of the cases named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with \"# fail 0\".",
+    "A WordPress plugin answering conflict \"This site is bound to a quickstart contract; derive refuses to replace it\" leaves contract-derived.done and logs no \"content contract not derived\" line.",
+    "A Joomla derive script printing TRACY_RESULT derived=kept leaves contract-derived.done and logs no failure.",
+    "Any other refusal, including conflict \"This site is not bound to a quickstart contract\", is warned, writes no marker and is asked again at the next start."
+  ],
+  "selectors": {
+    "host": "apps/tracy-host/src/content-identity.js (deriveSite, deriveJoomla, judgeDerive, QUICKSTART_BOUND)",
+    "joomla": "packages/fleet/tracy-fleet-operation/scripts/provision/joomla-content-derive.php"
+  },
+  "evidence": "16/11/2026 dev host: an imported Joomla customer site logged \"content contract not derived — the script reported derived=failed; tried again at the next start\" at every tracy-host start. Running joomla-content-derive.php in its web container printed \"!! derive: refused: conflict This site is bound to a quickstart contract; derive refuses to replace it\" and TRACY_RESULT derived=failed.",
+  "fence": "Unit cases with a fake run and fetch; the live Cowork component is not called.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-host/test/content-identity.test.mjs"],
+    "tests": [
+      "a WordPress site already bound to a quickstart contract keeps it: marked, said once, no failure",
+      "a Joomla site whose script says derived=kept is marked and not reported as a failure",
+      "any other refusal to derive stays a failure: warned, not marked, asked again next start",
+      "judgeDerive reads the plugin the way this pass does"
+    ]
+  }
+}

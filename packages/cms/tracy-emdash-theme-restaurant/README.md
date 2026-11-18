@@ -6,12 +6,12 @@ port of JoomlArt's Joomla template JA Restaurant (j6 1.0.6): home with slideshow
 the menu page and three menu styles under it (simple, with image, two columns), Offers (Happy Hours), Phone Reservation, Contact and Subscribe forms, 404. English only.
 Identity, form bindings, mail defaults and the SEO audit policy live in `template.config.json`; every tool reads it.
 
-Built with **EmDash 1.1.0** on **Astro 7.3.3** (SSR, Node adapter), **Tailwind CSS 4.3.3**. All copy, images, menus and
+Built with **EmDash 1.1.0** on **Astro 7.4.12** (SSR, Node adapter), **Tailwind CSS 4.3.3**. All copy, images, menus and
 figures are editable in the EmDash admin; the layout is the template's. A dark theme (derived from the source palette) is reachable through the ◐ toggle. Provenance: `PROVENANCE.md`.
 
 ## Requirements
 
-Node ≥ 22.16, pnpm via corepack. Everything else is pinned in `package.json` + `pnpm-lock.yaml`. Network access for
+Node ≥ 22.23.4, pnpm via corepack. Everything else is pinned in `package.json` + `pnpm-lock.yaml`. Network access for
 the install and the build: `pnpm install` fetches the packages, and `astro build` downloads the template's web fonts
 from Google Fonts (`fonts.googleapis.com`, `fonts.gstatic.com`); a fetch that fails stops the build, and running it
 again usually passes. Optional for local mail testing: Docker (Mailpit).

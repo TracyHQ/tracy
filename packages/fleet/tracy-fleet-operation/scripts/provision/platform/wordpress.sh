@@ -796,6 +796,7 @@ PY
 # write and revert. Same request id discipline as identity: the label's, so a retried pass replays.
 # Never fails the import: without it the copy works, the picker just resolves by text. A plugin older
 # than the operation answers `bad_action` or `bad_params` "unknown contract operation" — said, skipped.
+# A copy already bound to a quickstart contract (`conflict`, "…bound to a quickstart contract…") keeps it.
 tracy_wp_derive_contract() {
   local token="$1" body answer kept
   echo '==> deriving the content contract'
@@ -813,6 +814,8 @@ if not isinstance(a, dict):
     sys.exit(1)
 said = str(a.get('message') or a.get('error') or '')
 if not a.get('ok'):
+    if a.get('error') == 'conflict' and 'is bound to a quickstart contract; derive refuses to replace it' in str(a.get('message') or '').lower():
+        print('    derived contract: none — this copy keeps its quickstart contract'); sys.exit(0)
     old = a.get('error') == 'bad_action' or 'unknown contract operation' in said.lower()
     print('!! derive: %s: %s' % ('this Claude Cowork plugin cannot derive' if old else 'refused', said[:300]), file=sys.stderr)
     sys.exit(1)

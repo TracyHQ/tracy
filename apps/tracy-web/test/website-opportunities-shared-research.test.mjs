@@ -1451,7 +1451,7 @@ async function taExecutor(
     website: blocked(),
     details: async () => ({ id: PLACE_ID, displayName: { text: facts.name }, websiteUri: facts.website }),
     fetchLimited: async (url) =>
-      new URL(url).hostname.endsWith('tripadvisor.com')
+      [new URL(url).hostname].some((host) => host === 'tripadvisor.com' || host.endsWith('.tripadvisor.com'))
         ? { status: 200, bytes: url.includes('gallery') ? PNG2 : PNG }
         : {
             status: 200,

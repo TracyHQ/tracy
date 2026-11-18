@@ -548,7 +548,7 @@ docker exec -u www-data -w /app ${slug} tools/bootstrap-site.sh http://127.0.0.1
 
 Run the bootstrap inside the container, as above: the unzipped folder on the host has no \`node_modules\`, so \`tools/mint-admin.cjs\` cannot load \`better-sqlite3\` there. The container owns the mounted \`data/\` (user \`www-data\`): read \`data/tracy-agent.token\` with \`docker exec ${slug} cat /app/data/tracy-agent.token\`.
 
-Without Docker: \`pnpm install --frozen-lockfile && pnpm build && node dist/server/entry.mjs\` (Node ≥ 22.16).
+Without Docker: \`pnpm install --frozen-lockfile && pnpm build && node dist/server/entry.mjs\` (Node ≥ 22.23.4).
 
 ### Files
 

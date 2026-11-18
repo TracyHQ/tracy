@@ -1171,7 +1171,7 @@
     }
   ],
   "dependencies": {
-    "@astrojs/node": "11.1.3",
+    "@astrojs/node": "11.1.13",
     "@astrojs/react": "6.0.0",
     "@cloudflare/kumo": "2.6.0",
     "@emdash-cms/auth": "1.1.0",
@@ -1179,7 +1179,7 @@
     "@emdash-cms/plugin-forms": "0.2.9",
     "@phosphor-icons/react": "2.1.10",
     "@tailwindcss/vite": "4.3.3",
-    "astro": "7.3.3",
+    "astro": "7.4.12",
     "better-sqlite3": "12.11.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
@@ -1277,8 +1277,8 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:81b84d0f0e6516da5f3e30c7b604a4459c1e61955d41199cacac48b5b56b57bf",
-    "package.json": "sha256:3ef47a052cb94100601a1a6d3965a7e0f2f9bd8ffd25e4479d01bcaca69e328c",
-    "pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
+    "package.json": "sha256:f26e930d84991e594d7dcf0cb24d970bed4028f05bafa0b2f451964fc2ba5b3e",
+    "pnpm-lock.yaml": "sha256:d7a904f4d0cc00b3c5d5012916f76bcd7a021cfedb84133d3ea15adf598f96af",
     "seed/field-map.json": "sha256:ab54e7247c9dae40fd3e48713303a50e2dac574c6c7eab055444acd951514ac8",
     "seed/media-map.json": "sha256:abeff3c9896fc913a0521cc254bb885dc4d90db64f4e84a58a3def2d2f95c883",
     "seed/seed.json": "sha256:44a101a108fa198426955521ab8bcfa71182e6590f375016e32603a58d71b363",

@@ -29,7 +29,7 @@ Below: the 0.1.0 state.
 - Tests `node --test tests/*.test.mjs` pass; `astro check` 0 errors, 0 warnings, 0 hints.
 
 ## What exists
-Routes: home, blog list with categories and search, About, Offers, Reservation, Contact and the article pages. One language (English). Runtime identity: package `packages/cms/tracy-emdash-theme-diner`, id `tracy-diner`, label `JA Diner`, EmDash 1.1.0, Astro 7.3.3. `source/snapshot` is git-ignored; `source/snapshot-SHA256SUMS` lists every file of it.
+Routes: home, blog list with categories and search, About, Offers, Reservation, Contact and the article pages. One language (English). Runtime identity: package `packages/cms/tracy-emdash-theme-diner`, id `tracy-diner`, label `JA Diner`, EmDash 1.1.0, Astro 7.4.12. `source/snapshot` is git-ignored; `source/snapshot-SHA256SUMS` lists every file of it.
 
 ## Not done / for the owner
 - Cutting the GitHub release (`tracy-diner/emdash-0.x`) and `scripts/tracy-setting.mjs write` happen after the merge.

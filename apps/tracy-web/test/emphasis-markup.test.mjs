@@ -41,7 +41,7 @@ test('exported paragraphs and lists normalize without making unknown tags or uns
   const codes = '((p))Fish & chips((/p))\n((ol class="list-highlight"))\n((li))One < two((/li))\n((/ol))'
   const html = '<p>Fish &amp; chips</p>\n<ol class="list-highlight">\n<li>One &lt; two</li>\n</ol>'
   assert.equal(codesToHtml(codes), html)
-  assert.equal(tagsToCodes(html), codes.replace('&', '&amp;').replace('<', '&lt;'))
+  assert.equal(tagsToCodes(html), codes.replaceAll('&', '&amp;').replaceAll('<', '&lt;'))
   assert.equal(
     codesToHtml('((p))((script))alert(1)((/script))((/p))'),
     '<p>((script))alert(1)((/script))</p>'

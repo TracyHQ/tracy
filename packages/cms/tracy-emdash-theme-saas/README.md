@@ -18,7 +18,7 @@ design, content and images it is ported from (`docs/content-rules.md`, `PROVENAN
 
 ## Requirements
 
-Node ≥ 22.16 (24.11.1 used), pnpm 11. Everything else is pinned in `package.json` + `pnpm-lock.yaml`.
+Node ≥ 22.23.4 (24.11.1 used), pnpm 11. Everything else is pinned in `package.json` + `pnpm-lock.yaml`.
 
 ## Install and run (development)
 
