@@ -199,17 +199,20 @@ function editedPlanOf({ plan, edit, profile, blockStore, pageRecipes, library = 
   if (termProblems.length > 0) return failed(termProblems)
   const early = edited ? editedIdProblems({ plan, edit, profile: profileAfterEdit(profile, edit, plan) }) : []
   if (early.length > 0) return failed(early)
-  const checked = checkPlanEdit(edit, Array.isArray(plan?.pages) ? bare : plan)
-  if (!checked.ok) return failed(editRefusals(checked.problems, plan))
-  const after = profileAfterEdit(profile, edit, plan)
-  const changed = new Set(edit.changes.map((c) => FACT_VALUE.exec(c.field)?.[1]).filter(Boolean))
-  const asked = edit.changes.find((c) => c.field === 'pictures.generated.frames')?.value
   const terms = new Map(
     edit.changes.flatMap((c) => {
       const page = SEARCH_TERMS.exec(c.field)?.[1]
       return page ? [[page, c.value.map((t) => t.trim())]] : []
     })
   )
+  // A page whose terms the owner sets loses its old marks before the edit is checked: they describe the list before,
+  // and `gatedPlan` marks the new list again from that list (`ownerTermsOf`). Kept, an added term the owner takes off
+  // again would still be marked as added, and the edit refused.
+  const checked = checkPlanEdit(edit, Array.isArray(plan?.pages) ? withoutMarks(bare, terms) : plan)
+  if (!checked.ok) return failed(editRefusals(checked.problems, plan))
+  const after = profileAfterEdit(profile, edit, plan)
+  const changed = new Set(edit.changes.map((c) => FACT_VALUE.exec(c.field)?.[1]).filter(Boolean))
+  const asked = edit.changes.find((c) => c.field === 'pictures.generated.frames')?.value
   const gated = gatedPlan(checked.plan, {
     plan,
     profile,
@@ -233,6 +236,19 @@ function editedPlanOf({ plan, edit, profile, blockStore, pageRecipes, library = 
  *   problem's code is one of `EDIT_DOOR_CODES`
  */
 export const gateEditedPlan = (input) => coded(editedPlanOf(input))
+
+/** The plan with no owner marks on the pages whose search terms `terms` sets (by page id). */
+function withoutMarks(plan, terms) {
+  if (terms.size === 0) return plan
+  return {
+    ...plan,
+    pages: plan.pages.map((page) => {
+      if (!terms.has(page.id) || !page.seo) return page
+      const { ownerAdded: _added, ownerRemoved: _removed, ...seo } = page.seo
+      return { ...page, seo }
+    })
+  }
+}
 
 /** The plan without its child list rows, which every gate plans again. */
 const bareOf = (plan) => ({

@@ -274,6 +274,12 @@ function randomWalk(start) {
     const random = randomOf(seed)
     let s = { plan: start.plan, profile: start.profile, review: { base: start, removals: [] } }
     for (let step = 0; step < 80; step++) {
+      // About one step in five is an owner edit of a page's search terms: one added or one taken off (#575 stand).
+      const termed = s.plan.pages.find((p) => p.seo?.searchTerms?.length)
+      if (termed && random() < 0.2) {
+        s = { ...s, ...termEdit(s, termed, random, start.kit, `${seed}-${step}`) }
+        continue
+      }
       const ops = operationsOf(s.plan, s.review.removals)
       const operation = ops[Math.floor(random() * ops.length)]
       const out = gateOperatedPlan({
@@ -314,8 +320,47 @@ function randomWalk(start) {
         review: { ...s.review, removals: s.review.removals.filter((r) => r.id !== out.restored) }
       }
     }
+    // Every page's terms set back to the first list, the way the card's undo sends them: no mark is left.
+    for (const page of start.plan.pages.filter((p) => p.seo?.searchTerms)) {
+      const now = s.plan.pages.find((p) => p.id === page.id).seo
+      if (JSON.stringify(now) === JSON.stringify(page.seo)) continue
+      const out = gateEditedPlan({
+        plan: s.plan,
+        profile: s.profile,
+        edit: editOf(s.plan, [{ field: `pages[${page.id}].seo.searchTerms`, value: page.seo.searchTerms }]),
+        ...start.kit
+      })
+      assert.equal(out.ok, true, `seed ${seed} undo terms: ${JSON.stringify(out.problems)}`)
+      s = { ...s, plan: out.plan, profile: out.profile }
+    }
     assert.deepEqual(withoutRevision(s.plan), withoutRevision(start.plan), `seed ${seed}`)
   }
+}
+
+/** One owner edit of `page`'s search terms on `s`: an invented term added, or one of the terms taken off. */
+function termEdit(s, page, random, kit, at) {
+  const terms = page.seo.searchTerms
+  const extra = ['lessons near the park', 'open courts this week', 'coaching for beginners'].filter(
+    (t) => !terms.includes(t)
+  )
+  const add = terms.length <= 1 || (extra.length > 0 && terms.length < 10 && random() < 0.5)
+  const gone = Math.floor(random() * terms.length)
+  const value = add
+    ? [...terms, extra[Math.floor(random() * extra.length)]]
+    : terms.filter((_, i) => i !== gone)
+  const out = gateEditedPlan({
+    plan: s.plan,
+    profile: s.profile,
+    edit: editOf(s.plan, [{ field: `pages[${page.id}].seo.searchTerms`, value }]),
+    ...kit
+  })
+  assert.equal(out.ok, true, `${at} terms ${JSON.stringify(value)}: ${JSON.stringify(out.problems)}`)
+  assert.deepEqual(checkBuildDocument(out.plan).problems, [], at)
+  const seo = out.plan.pages.find((p) => p.id === page.id).seo
+  assert.deepEqual([...seo.searchTerms].sort(), [...value].sort(), at)
+  for (const t of seo.ownerAdded ?? []) assert.ok(seo.searchTerms.includes(t), `${at} added ${t}`)
+  for (const t of seo.ownerRemoved ?? []) assert.ok(!seo.searchTerms.includes(t), `${at} removed ${t}`)
+  return { plan: out.plan, profile: out.profile }
 }
 
 test('a change refused for a fault the plan already had says so, never asks to try again', async () => {
