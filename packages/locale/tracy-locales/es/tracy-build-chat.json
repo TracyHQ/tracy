@@ -535,5 +535,21 @@
   "plan.refused.search_terms_empty": "Una página conserva al menos un término de búsqueda.",
   "plan.refused.search_term_too_long": "Un término de búsqueda tiene como máximo 60 caracteres.",
   "plan.refused.search_term_twice": "Este término de búsqueda ya está en la página.",
-  "plan.refused.too_many_search_terms": "Una página tiene como máximo 10 términos de búsqueda."
+  "plan.refused.too_many_search_terms": "Una página tiene como máximo 10 términos de búsqueda.",
+  "plan.refused.too_many_items": "Esta sección muestra como máximo {max}, así que este cambio no cabe.",
+  "plan.refused.wrong_item_kind": "Esta sección no puede mostrar eso.",
+  "plan.refused.library_rule": "Esta sección no muestra eso.",
+  "plan.refused.invented_item": "Este cambio nombra algo que no forma parte de los datos de su negocio.",
+  "plan.refused.fact_without_field": "Esta sección no tiene lugar para ese dato.",
+  "plan.refused.main_block_missing": "Este cambio quitaría la sección principal de su página.",
+  "plan.refused.unknown_block": "Esta sección no forma parte de su plantilla.",
+  "plan.refused.withheld_shown": "Este cambio mostraría algo que usted mantiene fuera de su sitio.",
+  "plan.refused.edit_invalid": "Este cambio no se puede guardar: su plan quedaría incompleto.",
+  "plan.refused.site_name_too_long": "Este nombre es demasiado largo para su sitio.",
+  "plan.refused.site_name_invalid": "Este nombre no se puede usar para su sitio.",
+  "plan.refused.value_over_limit": "Este valor es demasiado largo para la sección que lo muestra.",
+  "plan.refused.data_unaccounted": "Tras este cambio, un dato de su negocio no se mostraría en ningún lugar.",
+  "plan.refused.picture_count": "Sus fotos no se pudieron volver a contar tras este cambio, así que no se guardó.",
+  "plan.refused.plan_fault": "Este cambio no se guardó: su plan tiene un problema propio que Tracy debe corregir primero. Puede pedir el cambio en el chat.",
+  "plan.refused.template_change": "Este plan se hizo para el diseño que eligió y todavía no se puede pasar a otro diseño."
 }

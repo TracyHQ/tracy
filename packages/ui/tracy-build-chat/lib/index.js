@@ -1658,7 +1658,23 @@ var tracy_build_chat_default = {
   "plan.refused.search_terms_empty": "Eine Seite beh\xE4lt mindestens einen Suchbegriff.",
   "plan.refused.search_term_too_long": "Ein Suchbegriff hat h\xF6chstens 60 Zeichen.",
   "plan.refused.search_term_twice": "Dieser Suchbegriff steht bereits auf der Seite.",
-  "plan.refused.too_many_search_terms": "Eine Seite hat h\xF6chstens 10 Suchbegriffe."
+  "plan.refused.too_many_search_terms": "Eine Seite hat h\xF6chstens 10 Suchbegriffe.",
+  "plan.refused.too_many_items": "Dieser Bereich zeigt h\xF6chstens {max} davon, daher passt diese \xC4nderung nicht.",
+  "plan.refused.wrong_item_kind": "Dieser Bereich kann das nicht zeigen.",
+  "plan.refused.library_rule": "Dieser Bereich zeigt das nicht.",
+  "plan.refused.invented_item": "Diese \xC4nderung nennt etwas, das nicht zu Ihren Gesch\xE4ftsangaben geh\xF6rt.",
+  "plan.refused.fact_without_field": "Dieser Bereich hat keinen Platz f\xFCr diese Angabe.",
+  "plan.refused.main_block_missing": "Diese \xC4nderung w\xFCrde den Hauptbereich von seiner Seite entfernen.",
+  "plan.refused.unknown_block": "Dieser Bereich geh\xF6rt nicht zu Ihrer Vorlage.",
+  "plan.refused.withheld_shown": "Diese \xC4nderung w\xFCrde etwas zeigen, das Sie von Ihrer Website fernhalten.",
+  "plan.refused.edit_invalid": "Diese \xC4nderung kann nicht gespeichert werden: Ihr Plan w\xE4re danach unvollst\xE4ndig.",
+  "plan.refused.site_name_too_long": "Dieser Name ist zu lang f\xFCr Ihre Website.",
+  "plan.refused.site_name_invalid": "Dieser Name kann f\xFCr Ihre Website nicht verwendet werden.",
+  "plan.refused.value_over_limit": "Dieser Wert ist zu lang f\xFCr den Bereich, der ihn zeigt.",
+  "plan.refused.data_unaccounted": "Nach dieser \xC4nderung w\xFCrde eine Angabe zu Ihrem Gesch\xE4ft nirgends gezeigt.",
+  "plan.refused.picture_count": "Ihre Fotos konnten nach dieser \xC4nderung nicht neu gez\xE4hlt werden, daher wurde sie nicht gespeichert.",
+  "plan.refused.plan_fault": "Diese \xC4nderung wurde nicht gespeichert: Ihr Plan hat ein eigenes Problem, das Tracy zuerst beheben muss. Sie k\xF6nnen die \xC4nderung im Chat anfragen.",
+  "plan.refused.template_change": "Dieser Plan wurde f\xFCr das von Ihnen gew\xE4hlte Design erstellt und kann noch nicht auf ein anderes Design \xFCbertragen werden."
 };
 
 // ../../locale/tracy-locales/es/tracy-build-chat.json
@@ -2199,7 +2215,23 @@ var tracy_build_chat_default2 = {
   "plan.refused.search_terms_empty": "Una p\xE1gina conserva al menos un t\xE9rmino de b\xFAsqueda.",
   "plan.refused.search_term_too_long": "Un t\xE9rmino de b\xFAsqueda tiene como m\xE1ximo 60 caracteres.",
   "plan.refused.search_term_twice": "Este t\xE9rmino de b\xFAsqueda ya est\xE1 en la p\xE1gina.",
-  "plan.refused.too_many_search_terms": "Una p\xE1gina tiene como m\xE1ximo 10 t\xE9rminos de b\xFAsqueda."
+  "plan.refused.too_many_search_terms": "Una p\xE1gina tiene como m\xE1ximo 10 t\xE9rminos de b\xFAsqueda.",
+  "plan.refused.too_many_items": "Esta secci\xF3n muestra como m\xE1ximo {max}, as\xED que este cambio no cabe.",
+  "plan.refused.wrong_item_kind": "Esta secci\xF3n no puede mostrar eso.",
+  "plan.refused.library_rule": "Esta secci\xF3n no muestra eso.",
+  "plan.refused.invented_item": "Este cambio nombra algo que no forma parte de los datos de su negocio.",
+  "plan.refused.fact_without_field": "Esta secci\xF3n no tiene lugar para ese dato.",
+  "plan.refused.main_block_missing": "Este cambio quitar\xEDa la secci\xF3n principal de su p\xE1gina.",
+  "plan.refused.unknown_block": "Esta secci\xF3n no forma parte de su plantilla.",
+  "plan.refused.withheld_shown": "Este cambio mostrar\xEDa algo que usted mantiene fuera de su sitio.",
+  "plan.refused.edit_invalid": "Este cambio no se puede guardar: su plan quedar\xEDa incompleto.",
+  "plan.refused.site_name_too_long": "Este nombre es demasiado largo para su sitio.",
+  "plan.refused.site_name_invalid": "Este nombre no se puede usar para su sitio.",
+  "plan.refused.value_over_limit": "Este valor es demasiado largo para la secci\xF3n que lo muestra.",
+  "plan.refused.data_unaccounted": "Tras este cambio, un dato de su negocio no se mostrar\xEDa en ning\xFAn lugar.",
+  "plan.refused.picture_count": "Sus fotos no se pudieron volver a contar tras este cambio, as\xED que no se guard\xF3.",
+  "plan.refused.plan_fault": "Este cambio no se guard\xF3: su plan tiene un problema propio que Tracy debe corregir primero. Puede pedir el cambio en el chat.",
+  "plan.refused.template_change": "Este plan se hizo para el dise\xF1o que eligi\xF3 y todav\xEDa no se puede pasar a otro dise\xF1o."
 };
 
 // ../../locale/tracy-locales/fr/tracy-build-chat.json
@@ -2740,7 +2772,23 @@ var tracy_build_chat_default3 = {
   "plan.refused.search_terms_empty": "Une page conserve au moins un terme de recherche.",
   "plan.refused.search_term_too_long": "Un terme de recherche compte au plus 60 caract\xE8res.",
   "plan.refused.search_term_twice": "Ce terme de recherche figure d\xE9j\xE0 sur la page.",
-  "plan.refused.too_many_search_terms": "Une page compte au plus 10 termes de recherche."
+  "plan.refused.too_many_search_terms": "Une page compte au plus 10 termes de recherche.",
+  "plan.refused.too_many_items": "Cette section en affiche au plus {max}, donc cette modification ne rentre pas.",
+  "plan.refused.wrong_item_kind": "Cette section ne peut pas afficher cela.",
+  "plan.refused.library_rule": "Cette section n\u2019affiche pas cela.",
+  "plan.refused.invented_item": "Cette modification cite quelque chose qui ne fait pas partie des informations de votre entreprise.",
+  "plan.refused.fact_without_field": "Cette section n\u2019a pas de place pour cette information.",
+  "plan.refused.main_block_missing": "Cette modification retirerait la section principale de sa page.",
+  "plan.refused.unknown_block": "Cette section ne fait pas partie de votre mod\xE8le.",
+  "plan.refused.withheld_shown": "Cette modification afficherait quelque chose que vous gardez hors de votre site.",
+  "plan.refused.edit_invalid": "Cette modification ne peut pas \xEAtre enregistr\xE9e : votre plan serait incomplet.",
+  "plan.refused.site_name_too_long": "Ce nom est trop long pour votre site.",
+  "plan.refused.site_name_invalid": "Ce nom ne peut pas \xEAtre utilis\xE9 pour votre site.",
+  "plan.refused.value_over_limit": "Cette valeur est trop longue pour la section qui l\u2019affiche.",
+  "plan.refused.data_unaccounted": "Apr\xE8s cette modification, une information sur votre entreprise ne serait affich\xE9e nulle part.",
+  "plan.refused.picture_count": "Vos photos n\u2019ont pas pu \xEAtre recompt\xE9es apr\xE8s cette modification, elle n\u2019a donc pas \xE9t\xE9 enregistr\xE9e.",
+  "plan.refused.plan_fault": "Cette modification n\u2019a pas \xE9t\xE9 enregistr\xE9e : votre plan a un probl\xE8me propre que Tracy doit corriger d\u2019abord. Vous pouvez demander la modification dans le chat.",
+  "plan.refused.template_change": "Ce plan a \xE9t\xE9 fait pour le design que vous avez choisi, et il ne peut pas encore passer \xE0 un autre design."
 };
 
 // ../../locale/tracy-locales/it/tracy-build-chat.json
@@ -3281,7 +3329,23 @@ var tracy_build_chat_default4 = {
   "plan.refused.search_terms_empty": "Una pagina mantiene almeno un termine di ricerca.",
   "plan.refused.search_term_too_long": "Un termine di ricerca ha al massimo 60 caratteri.",
   "plan.refused.search_term_twice": "Questo termine di ricerca \xE8 gi\xE0 presente nella pagina.",
-  "plan.refused.too_many_search_terms": "Una pagina ha al massimo 10 termini di ricerca."
+  "plan.refused.too_many_search_terms": "Una pagina ha al massimo 10 termini di ricerca.",
+  "plan.refused.too_many_items": "Questa sezione mostra al massimo {max} elementi di questo tipo, quindi questa modifica non ci sta.",
+  "plan.refused.wrong_item_kind": "Questa sezione non pu\xF2 mostrarlo.",
+  "plan.refused.library_rule": "Questa sezione non lo mostra.",
+  "plan.refused.invented_item": "Questa modifica nomina qualcosa che non fa parte dei dati della sua attivit\xE0.",
+  "plan.refused.fact_without_field": "Questa sezione non ha spazio per questo dato.",
+  "plan.refused.main_block_missing": "Questa modifica toglierebbe la sezione principale dalla sua pagina.",
+  "plan.refused.unknown_block": "Questa sezione non fa parte del suo modello.",
+  "plan.refused.withheld_shown": "Questa modifica mostrerebbe qualcosa che lei tiene fuori dal suo sito.",
+  "plan.refused.edit_invalid": "Questa modifica non pu\xF2 essere salvata: il suo piano resterebbe incompleto.",
+  "plan.refused.site_name_too_long": "Questo nome \xE8 troppo lungo per il suo sito.",
+  "plan.refused.site_name_invalid": "Questo nome non pu\xF2 essere usato per il suo sito.",
+  "plan.refused.value_over_limit": "Questo valore \xE8 troppo lungo per la sezione che lo mostra.",
+  "plan.refused.data_unaccounted": "Dopo questa modifica un dato della sua attivit\xE0 non sarebbe mostrato da nessuna parte.",
+  "plan.refused.picture_count": "Le sue foto non hanno potuto essere ricontate dopo questa modifica, quindi non \xE8 stata salvata.",
+  "plan.refused.plan_fault": "Questa modifica non \xE8 stata salvata: il suo piano ha un problema proprio che Tracy deve risolvere prima. Pu\xF2 chiedere la modifica nella chat.",
+  "plan.refused.template_change": "Questo piano \xE8 stato fatto per il design che ha scelto e non pu\xF2 ancora essere spostato su un altro design."
 };
 
 // ../../locale/tracy-locales/nl/tracy-build-chat.json
@@ -3822,7 +3886,23 @@ var tracy_build_chat_default5 = {
   "plan.refused.search_terms_empty": "Een pagina behoudt minstens \xE9\xE9n zoekterm.",
   "plan.refused.search_term_too_long": "Een zoekterm heeft maximaal 60 tekens.",
   "plan.refused.search_term_twice": "Deze zoekterm staat al op de pagina.",
-  "plan.refused.too_many_search_terms": "Een pagina heeft maximaal 10 zoektermen."
+  "plan.refused.too_many_search_terms": "Een pagina heeft maximaal 10 zoektermen.",
+  "plan.refused.too_many_items": "Dit onderdeel toont er hoogstens {max}, dus deze wijziging past niet.",
+  "plan.refused.wrong_item_kind": "Dit onderdeel kan dat niet tonen.",
+  "plan.refused.library_rule": "Dit onderdeel toont dat niet.",
+  "plan.refused.invented_item": "Deze wijziging noemt iets dat niet bij uw bedrijfsgegevens hoort.",
+  "plan.refused.fact_without_field": "Dit onderdeel heeft geen plek voor dat gegeven.",
+  "plan.refused.main_block_missing": "Deze wijziging zou het hoofdonderdeel van zijn pagina halen.",
+  "plan.refused.unknown_block": "Dit onderdeel hoort niet bij uw sjabloon.",
+  "plan.refused.withheld_shown": "Deze wijziging zou iets tonen dat u van uw site houdt.",
+  "plan.refused.edit_invalid": "Deze wijziging kan niet worden opgeslagen: uw plan zou onvolledig worden.",
+  "plan.refused.site_name_too_long": "Deze naam is te lang voor uw site.",
+  "plan.refused.site_name_invalid": "Deze naam kan niet voor uw site worden gebruikt.",
+  "plan.refused.value_over_limit": "Deze waarde is te lang voor het onderdeel dat hem toont.",
+  "plan.refused.data_unaccounted": "Na deze wijziging zou een gegeven van uw bedrijf nergens worden getoond.",
+  "plan.refused.picture_count": "Uw foto\u2019s konden na deze wijziging niet opnieuw worden geteld, dus is ze niet opgeslagen.",
+  "plan.refused.plan_fault": "Deze wijziging is niet opgeslagen: uw plan heeft zelf een probleem dat Tracy eerst moet oplossen. U kunt de wijziging in de chat vragen.",
+  "plan.refused.template_change": "Dit plan is gemaakt voor het ontwerp dat u koos, en kan nog niet naar een ander ontwerp worden verplaatst."
 };
 
 // ../../locale/tracy-locales/zh/tracy-build-chat.json
@@ -4363,7 +4443,23 @@ var tracy_build_chat_default6 = {
   "plan.refused.search_terms_empty": "\u6BCF\u4E2A\u9875\u9762\u81F3\u5C11\u4FDD\u7559\u4E00\u4E2A\u641C\u7D22\u8BCD\u3002",
   "plan.refused.search_term_too_long": "\u6BCF\u4E2A\u641C\u7D22\u8BCD\u6700\u591A 60 \u4E2A\u5B57\u7B26\u3002",
   "plan.refused.search_term_twice": "\u6B64\u641C\u7D22\u8BCD\u5DF2\u5728\u8BE5\u9875\u9762\u4E0A\u3002",
-  "plan.refused.too_many_search_terms": "\u6BCF\u4E2A\u9875\u9762\u6700\u591A 10 \u4E2A\u641C\u7D22\u8BCD\u3002"
+  "plan.refused.too_many_search_terms": "\u6BCF\u4E2A\u9875\u9762\u6700\u591A 10 \u4E2A\u641C\u7D22\u8BCD\u3002",
+  "plan.refused.too_many_items": "\u6B64\u90E8\u5206\u6700\u591A\u663E\u793A {max} \u9879\uFF0C\u56E0\u6B64\u6B64\u66F4\u6539\u653E\u4E0D\u4E0B\u3002",
+  "plan.refused.wrong_item_kind": "\u6B64\u90E8\u5206\u65E0\u6CD5\u663E\u793A\u8BE5\u5185\u5BB9\u3002",
+  "plan.refused.library_rule": "\u6B64\u90E8\u5206\u4E0D\u663E\u793A\u8BE5\u5185\u5BB9\u3002",
+  "plan.refused.invented_item": "\u6B64\u66F4\u6539\u63D0\u5230\u7684\u5185\u5BB9\u4E0D\u5C5E\u4E8E\u4F60\u7684\u5546\u5BB6\u4FE1\u606F\u3002",
+  "plan.refused.fact_without_field": "\u6B64\u90E8\u5206\u6CA1\u6709\u4F4D\u7F6E\u653E\u8FD9\u9879\u4FE1\u606F\u3002",
+  "plan.refused.main_block_missing": "\u6B64\u66F4\u6539\u4F1A\u628A\u4E3B\u8981\u90E8\u5206\u4ECE\u5176\u9875\u9762\u4E0A\u79FB\u9664\u3002",
+  "plan.refused.unknown_block": "\u6B64\u90E8\u5206\u4E0D\u5C5E\u4E8E\u4F60\u7684\u6A21\u677F\u3002",
+  "plan.refused.withheld_shown": "\u6B64\u66F4\u6539\u4F1A\u663E\u793A\u4F60\u4E0D\u60F3\u653E\u5728\u7F51\u7AD9\u4E0A\u7684\u5185\u5BB9\u3002",
+  "plan.refused.edit_invalid": "\u65E0\u6CD5\u4FDD\u5B58\u6B64\u66F4\u6539\uFF1A\u4F60\u7684\u65B9\u6848\u4F1A\u56E0\u6B64\u4E0D\u5B8C\u6574\u3002",
+  "plan.refused.site_name_too_long": "\u8FD9\u4E2A\u540D\u79F0\u5BF9\u4F60\u7684\u7F51\u7AD9\u6765\u8BF4\u592A\u957F\u3002",
+  "plan.refused.site_name_invalid": "\u8FD9\u4E2A\u540D\u79F0\u4E0D\u80FD\u7528\u4E8E\u4F60\u7684\u7F51\u7AD9\u3002",
+  "plan.refused.value_over_limit": "\u8FD9\u4E2A\u503C\u5BF9\u663E\u793A\u5B83\u7684\u90E8\u5206\u6765\u8BF4\u592A\u957F\u3002",
+  "plan.refused.data_unaccounted": "\u6B64\u66F4\u6539\u540E\uFF0C\u4F60\u7684\u4E00\u9879\u5546\u5BB6\u4FE1\u606F\u5C06\u4E0D\u4F1A\u5728\u4EFB\u4F55\u5730\u65B9\u663E\u793A\u3002",
+  "plan.refused.picture_count": "\u6B64\u66F4\u6539\u540E\u65E0\u6CD5\u91CD\u65B0\u7EDF\u8BA1\u4F60\u7684\u7167\u7247\uFF0C\u56E0\u6B64\u6CA1\u6709\u4FDD\u5B58\u3002",
+  "plan.refused.plan_fault": "\u6B64\u66F4\u6539\u672A\u4FDD\u5B58\uFF1A\u4F60\u7684\u65B9\u6848\u672C\u8EAB\u6709\u4E00\u4E2A\u95EE\u9898\uFF0C\u9700\u8981 Tracy \u5148\u4FEE\u590D\u3002\u4F60\u53EF\u4EE5\u5728\u804A\u5929\u4E2D\u63D0\u51FA\u8FD9\u9879\u66F4\u6539\u3002",
+  "plan.refused.template_change": "\u6B64\u65B9\u6848\u662F\u4E3A\u4F60\u9009\u62E9\u7684\u8BBE\u8BA1\u5236\u5B9A\u7684\uFF0C\u76EE\u524D\u8FD8\u4E0D\u80FD\u6362\u5230\u5176\u4ED6\u8BBE\u8BA1\u3002"
 };
 
 // ../../locale/tracy-locale-vi/vi/tracy-build-chat.json
@@ -4904,7 +5000,23 @@ var tracy_build_chat_default7 = {
   "plan.refused.search_terms_empty": "M\u1ED7i trang gi\u1EEF l\u1EA1i \xEDt nh\u1EA5t m\u1ED9t t\u1EEB kho\xE1 t\xECm ki\u1EBFm.",
   "plan.refused.search_term_too_long": "M\u1ED9t t\u1EEB kho\xE1 t\xECm ki\u1EBFm d\xE0i t\u1ED1i \u0111a 60 k\xFD t\u1EF1.",
   "plan.refused.search_term_twice": "T\u1EEB kho\xE1 t\xECm ki\u1EBFm n\xE0y \u0111\xE3 c\xF3 tr\xEAn trang.",
-  "plan.refused.too_many_search_terms": "M\u1ED7i trang c\xF3 t\u1ED1i \u0111a 10 t\u1EEB kho\xE1 t\xECm ki\u1EBFm."
+  "plan.refused.too_many_search_terms": "M\u1ED7i trang c\xF3 t\u1ED1i \u0111a 10 t\u1EEB kho\xE1 t\xECm ki\u1EBFm.",
+  "plan.refused.too_many_items": "Ph\u1EA7n n\xE0y hi\u1EC3n th\u1ECB t\u1ED1i \u0111a {max} m\u1EE5c nh\u01B0 v\u1EADy, n\xEAn thay \u0111\u1ED5i n\xE0y kh\xF4ng v\u1EEBa.",
+  "plan.refused.wrong_item_kind": "Ph\u1EA7n n\xE0y kh\xF4ng th\u1EC3 hi\u1EC3n th\u1ECB m\u1EE5c \u0111\xF3.",
+  "plan.refused.library_rule": "Ph\u1EA7n n\xE0y kh\xF4ng hi\u1EC3n th\u1ECB m\u1EE5c \u0111\xF3.",
+  "plan.refused.invented_item": "Thay \u0111\u1ED5i n\xE0y nh\u1EAFc \u0111\u1EBFn m\u1ED9t th\u1EE9 kh\xF4ng thu\u1ED9c th\xF4ng tin doanh nghi\u1EC7p c\u1EE7a b\u1EA1n.",
+  "plan.refused.fact_without_field": "Ph\u1EA7n n\xE0y kh\xF4ng c\xF3 ch\u1ED7 cho th\xF4ng tin \u0111\xF3.",
+  "plan.refused.main_block_missing": "Thay \u0111\u1ED5i n\xE0y s\u1EBD b\u1ECF ph\u1EA7n ch\xEDnh kh\u1ECFi trang c\u1EE7a n\xF3.",
+  "plan.refused.unknown_block": "Ph\u1EA7n n\xE0y kh\xF4ng thu\u1ED9c m\u1EABu giao di\u1EC7n c\u1EE7a b\u1EA1n.",
+  "plan.refused.withheld_shown": "Thay \u0111\u1ED5i n\xE0y s\u1EBD hi\u1EC3n th\u1ECB m\u1ED9t th\u1EE9 b\u1EA1n mu\u1ED1n gi\u1EEF ngo\xE0i site.",
+  "plan.refused.edit_invalid": "Kh\xF4ng th\u1EC3 l\u01B0u thay \u0111\u1ED5i n\xE0y: k\u1EBF ho\u1EA1ch c\u1EE7a b\u1EA1n s\u1EBD b\u1ECB thi\u1EBFu.",
+  "plan.refused.site_name_too_long": "T\xEAn n\xE0y qu\xE1 d\xE0i cho site c\u1EE7a b\u1EA1n.",
+  "plan.refused.site_name_invalid": "Kh\xF4ng th\u1EC3 d\xF9ng t\xEAn n\xE0y cho site c\u1EE7a b\u1EA1n.",
+  "plan.refused.value_over_limit": "Gi\xE1 tr\u1ECB n\xE0y qu\xE1 d\xE0i cho ph\u1EA7n hi\u1EC3n th\u1ECB n\xF3.",
+  "plan.refused.data_unaccounted": "Sau thay \u0111\u1ED5i n\xE0y, m\u1ED9t th\xF4ng tin v\u1EC1 doanh nghi\u1EC7p c\u1EE7a b\u1EA1n s\u1EBD kh\xF4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB \u1EDF \u0111\xE2u c\u1EA3.",
+  "plan.refused.picture_count": "Kh\xF4ng th\u1EC3 \u0111\u1EBFm l\u1EA1i \u1EA3nh c\u1EE7a b\u1EA1n sau thay \u0111\u1ED5i n\xE0y, n\xEAn thay \u0111\u1ED5i ch\u01B0a \u0111\u01B0\u1EE3c l\u01B0u.",
+  "plan.refused.plan_fault": "Thay \u0111\u1ED5i n\xE0y ch\u01B0a \u0111\u01B0\u1EE3c l\u01B0u: k\u1EBF ho\u1EA1ch c\u1EE7a b\u1EA1n \u0111ang c\xF3 m\u1ED9t l\u1ED7i ri\xEAng m\xE0 Tracy c\u1EA7n s\u1EEDa tr\u01B0\u1EDBc. B\u1EA1n c\xF3 th\u1EC3 y\xEAu c\u1EA7u thay \u0111\u1ED5i n\xE0y trong khung chat.",
+  "plan.refused.template_change": "K\u1EBF ho\u1EA1ch n\xE0y \u0111\u01B0\u1EE3c l\u1EADp cho m\u1EABu giao di\u1EC7n b\u1EA1n \u0111\xE3 ch\u1ECDn, v\xE0 hi\u1EC7n ch\u01B0a th\u1EC3 chuy\u1EC3n sang m\u1EABu kh\xE1c."
 };
 
 // src/host/chat-tables.mjs

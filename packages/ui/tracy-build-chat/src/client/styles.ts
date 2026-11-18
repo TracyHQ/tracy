@@ -175,11 +175,12 @@ export const CSS = `
 /* A value shown, not offered, keeps its source in line with the sources of editable values beside it */
 .tv-bc-val > div.tv-bc-val-row:has(.tv-bc-src) { padding-right: 21px; }
 .tv-bc-edit { display: flex; gap: 6px; align-items: center; }
+/* An idle field wears the quiet input border: the terracotta ring reads as an error, so it shows only on focus. */
 .tv-bc-edit input {
-  flex: 1; min-width: 0; height: 30px; padding: 0 8px; border: 1px solid var(--ring); border-radius: 8px;
+  flex: 1; min-width: 0; height: 30px; padding: 0 8px; border: 1px solid var(--input); border-radius: 8px;
   background: var(--card); color: inherit; font: inherit;
 }
-.tv-bc-edit input:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; }
+.tv-bc-edit input:focus-visible { border-color: var(--ring); outline: 1px solid var(--ring); outline-offset: 0; }
 .tv-bc-src { font-size: 11.5px; color: var(--muted-foreground); white-space: nowrap; overflow-wrap: normal; word-break: keep-all; }
 .tv-bc-note { font-size: 12.5px; line-height: 1.45; color: var(--muted-foreground); margin-top: 2px; }
 .tv-bc-swatch {

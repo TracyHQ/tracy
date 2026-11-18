@@ -535,5 +535,21 @@
   "plan.refused.search_terms_empty": "Mỗi trang giữ lại ít nhất một từ khoá tìm kiếm.",
   "plan.refused.search_term_too_long": "Một từ khoá tìm kiếm dài tối đa 60 ký tự.",
   "plan.refused.search_term_twice": "Từ khoá tìm kiếm này đã có trên trang.",
-  "plan.refused.too_many_search_terms": "Mỗi trang có tối đa 10 từ khoá tìm kiếm."
+  "plan.refused.too_many_search_terms": "Mỗi trang có tối đa 10 từ khoá tìm kiếm.",
+  "plan.refused.too_many_items": "Phần này hiển thị tối đa {max} mục như vậy, nên thay đổi này không vừa.",
+  "plan.refused.wrong_item_kind": "Phần này không thể hiển thị mục đó.",
+  "plan.refused.library_rule": "Phần này không hiển thị mục đó.",
+  "plan.refused.invented_item": "Thay đổi này nhắc đến một thứ không thuộc thông tin doanh nghiệp của bạn.",
+  "plan.refused.fact_without_field": "Phần này không có chỗ cho thông tin đó.",
+  "plan.refused.main_block_missing": "Thay đổi này sẽ bỏ phần chính khỏi trang của nó.",
+  "plan.refused.unknown_block": "Phần này không thuộc mẫu giao diện của bạn.",
+  "plan.refused.withheld_shown": "Thay đổi này sẽ hiển thị một thứ bạn muốn giữ ngoài site.",
+  "plan.refused.edit_invalid": "Không thể lưu thay đổi này: kế hoạch của bạn sẽ bị thiếu.",
+  "plan.refused.site_name_too_long": "Tên này quá dài cho site của bạn.",
+  "plan.refused.site_name_invalid": "Không thể dùng tên này cho site của bạn.",
+  "plan.refused.value_over_limit": "Giá trị này quá dài cho phần hiển thị nó.",
+  "plan.refused.data_unaccounted": "Sau thay đổi này, một thông tin về doanh nghiệp của bạn sẽ không được hiển thị ở đâu cả.",
+  "plan.refused.picture_count": "Không thể đếm lại ảnh của bạn sau thay đổi này, nên thay đổi chưa được lưu.",
+  "plan.refused.plan_fault": "Thay đổi này chưa được lưu: kế hoạch của bạn đang có một lỗi riêng mà Tracy cần sửa trước. Bạn có thể yêu cầu thay đổi này trong khung chat.",
+  "plan.refused.template_change": "Kế hoạch này được lập cho mẫu giao diện bạn đã chọn, và hiện chưa thể chuyển sang mẫu khác."
 }

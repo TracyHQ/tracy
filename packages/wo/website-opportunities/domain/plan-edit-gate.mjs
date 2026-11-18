@@ -15,8 +15,8 @@ import { checkBuildDocument } from './build-contract.mjs'
 import { BLOCK_TYPES } from './place-content-roles.mjs'
 import { ANSWER_SOURCE } from './plan-answers.mjs'
 import { blockMapOf } from './plan-composer.mjs'
-import { addItemFieldFacts } from './plan-conflicts.mjs'
-import { ITEM_NOUNS, planDataOf } from './plan-data.mjs'
+import { ITEM_NOUNS } from './plan-data.mjs'
+import { planDataOfPlan } from './plan-data-of-plan.mjs'
 import { blockItemProblems } from './plan-gate-items.mjs'
 import { factFieldProblems } from './plan-gate-rules.mjs'
 import { withHoursDisplay } from './plan-hours-display.mjs'
@@ -30,7 +30,7 @@ import { editRefusals } from './plan-edit-words.mjs'
 import { editedNameProblems } from './plan-edit-site-name.mjs'
 import { renameItems } from './plan-edit-item-names.mjs'
 import { SEARCH_TERMS_MAX, madeTermsOf, ownerTermsOf, withSearchTerms } from './plan-intent-seo.mjs'
-import { operationRefusal, removeFromPlan, restoreToPlan } from './plan-operations.mjs'
+import { OPERATION_REFUSALS, operationRefusal, removeFromPlan, restoreToPlan } from './plan-operations.mjs'
 import { TEXT_LIMITS, textLength } from './build-contract-shapes.mjs'
 import { normalisedSiteName, withheldShowing } from './plan-site-name.mjs'
 
@@ -45,6 +45,59 @@ const TERM_REFUSALS = Object.freeze({
   search_term_twice: 'This search term is already on the page.',
   too_many_search_terms: `A page has at most ${SEARCH_TERMS_MAX} search terms.`
 })
+
+/** The codes of a section's problems after a change (`customerMessage`). */
+const BLOCK_CODES = Object.freeze([
+  'too_few_items',
+  'too_many_items',
+  'wrong_item_kind',
+  'library_rule',
+  'invented_item',
+  'fact_without_field',
+  'main_block_missing',
+  'unknown_block'
+])
+/**
+ * A change the door refuses because the plan as it stands already fails a rule the change did not touch: the same
+ * check fails on the unchanged plan. The card says so instead of asking the owner to try again (#575 stand: every card
+ * edit was refused for a part the composer had made).
+ */
+export const PLAN_FAULT = 'plan_fault'
+export const PLAN_FAULT_MESSAGE =
+  'This change was not saved: your plan has a problem of its own that Tracy has to fix first. You can ask for the change in the chat.'
+
+/**
+ * Every code the plan edit door can refuse with, each with owner facing words on the plan card (`plan.refused.<code>`,
+ * tracy-build-chat). A problem of any other code is answered as `edit_invalid`, its own code kept in `details.code`.
+ */
+export const EDIT_DOOR_CODES = Object.freeze([
+  ...new Set([
+    ...Object.keys(OPERATION_REFUSALS),
+    ...Object.keys(TERM_REFUSALS),
+    ...BLOCK_CODES,
+    'withheld_shown',
+    'edit_invalid',
+    'site_name_too_long',
+    'site_name_invalid',
+    'value_over_limit',
+    'data_unaccounted',
+    'picture_count',
+    // tracy-web's door refuses an edit that moves the plan to another template before the gate runs.
+    'template_change',
+    PLAN_FAULT
+  ])
+])
+const KNOWN_CODES = new Set(EDIT_DOOR_CODES)
+/** A refusal whose problems all carry a code of `EDIT_DOOR_CODES`. */
+function coded(result) {
+  if (result.ok) return result
+  return {
+    ...result,
+    problems: result.problems.map((p) =>
+      KNOWN_CODES.has(p.code) ? p : { ...p, code: 'edit_invalid', details: { ...p.details, code: p.code } }
+    )
+  }
+}
 
 /** The coded problems of the search term lists an edit sets. */
 function searchTermProblems(edit) {
@@ -91,9 +144,9 @@ function customerMessage(code, block, description, data, id, withheld) {
  * A copy of the profile with every fact value the edit changed, an item field's included, and every item renamed on
  * the card under its new name (`plan-edit-item-names.mjs`).
  */
-function profileAfterEdit(profile, edit) {
+function profileAfterEdit(profile, edit, plan) {
   const next = structuredClone(profile)
-  const data = addItemFieldFacts(next, planDataOf(next))
+  const data = planDataOfPlan(next, plan)
   let changed = false
   for (const { field, value } of edit.changes) {
     const id = FACT_VALUE.exec(field)?.[1]
@@ -115,34 +168,22 @@ function profileAfterEdit(profile, edit) {
   return next
 }
 
-/**
- * Gate a customer's plan edit.
- * @param {{plan: object, edit: object, profile: object, blockStore: object, pageRecipes: object, library?: object[]}}
- *   input `plan` and `profile` as `composePlan` returned them (or a later revision)
- * @returns {{ok: true, plan: object, profile: object, problems: []} |
- *   {ok: false, plan: null, profile: null, problems: Array<{code: string, at: string, message: string}>}}
- */
-export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, library = [] }) {
+/** A customer's plan edit held to the gate (`gateEditedPlan`), its problems not yet coded. */
+function editedPlanOf({ plan, edit, profile, blockStore, pageRecipes, library = [] }) {
   const failed = (problems) => ({ ok: false, plan: null, profile: null, problems })
   // The rows are planned again after the edit, so the edit is checked on the plan without them.
-  const bare = {
-    ...plan,
-    pages: list(plan?.pages).map((p) => ({
-      ...p,
-      blocks: list(p?.blocks).map(({ lists: _lists, ...block }) => block)
-    }))
-  }
+  const bare = bareOf(plan)
   const edited = Array.isArray(edit?.changes) && edit.changes.every((c) => c && typeof c === 'object')
   // The edited name is checked first: a name that names a held person would otherwise read as a held item.
   const nameProblems = edited ? editedNameProblems({ plan, edit, profile, blockStore, library }) : []
   if (nameProblems.length > 0) return failed(nameProblems)
   const termProblems = edited ? searchTermProblems(edit) : []
   if (termProblems.length > 0) return failed(termProblems)
-  const early = edited ? editedIdProblems({ plan, edit, profile: profileAfterEdit(profile, edit) }) : []
+  const early = edited ? editedIdProblems({ plan, edit, profile: profileAfterEdit(profile, edit, plan) }) : []
   if (early.length > 0) return failed(early)
   const checked = checkPlanEdit(edit, Array.isArray(plan?.pages) ? bare : plan)
   if (!checked.ok) return failed(editRefusals(checked.problems, plan))
-  const after = profileAfterEdit(profile, edit)
+  const after = profileAfterEdit(profile, edit, plan)
   const changed = new Set(edit.changes.map((c) => FACT_VALUE.exec(c.field)?.[1]).filter(Boolean))
   const asked = edit.changes.find((c) => c.field === 'pictures.generated.frames')?.value
   const terms = new Map(
@@ -151,7 +192,7 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
       return page ? [[page, c.value.map((t) => t.trim())]] : []
     })
   )
-  return gatedPlan(checked.plan, {
+  const gated = gatedPlan(checked.plan, {
     plan,
     profile,
     after,
@@ -162,6 +203,57 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
     pageRecipes,
     library
   })
+  return gated.ok ? gated : faultOrRefusal(gated, { plan, profile, blockStore, pageRecipes, library })
+}
+
+/**
+ * Gate a customer's plan edit.
+ * @param {{plan: object, edit: object, profile: object, blockStore: object, pageRecipes: object, library?: object[]}}
+ *   input `plan` and `profile` as `composePlan` returned them (or a later revision)
+ * @returns {{ok: true, plan: object, profile: object, problems: []} |
+ *   {ok: false, plan: null, profile: null, problems: Array<{code: string, at: string, message: string}>}} every
+ *   problem's code is one of `EDIT_DOOR_CODES`
+ */
+export const gateEditedPlan = (input) => coded(editedPlanOf(input))
+
+/** The plan without its child list rows, which every gate plans again. */
+const bareOf = (plan) => ({
+  ...plan,
+  pages: list(plan?.pages).map((p) => ({
+    ...p,
+    blocks: list(p?.blocks).map(({ lists: _lists, ...block }) => block)
+  }))
+})
+
+/**
+ * The refusal of a change, or `plan_fault` when the unchanged plan fails the same checks: the problem is the plan's
+ * own, not the change's, and the owner is told so (the technical problems stay in `details`).
+ */
+function faultOrRefusal(refusal, { plan, profile, blockStore, pageRecipes, library }) {
+  if (!Array.isArray(plan?.pages)) return refusal
+  const unchanged = gatedPlan(bareOf(plan), {
+    plan,
+    profile,
+    after: structuredClone(profile),
+    changed: new Set(),
+    asked: 'kept',
+    terms: null,
+    blockStore,
+    pageRecipes,
+    library
+  })
+  if (unchanged.ok) return refusal
+  return {
+    ...refusal,
+    problems: [
+      {
+        code: PLAN_FAULT,
+        at: 'plan',
+        message: PLAN_FAULT_MESSAGE,
+        details: { problems: unchanged.problems.map(({ code, at, message }) => ({ code, at, message })) }
+      }
+    ]
+  }
 }
 
 /**
@@ -173,7 +265,9 @@ function gatedPlan(next, { plan, profile, after, changed, asked, terms, blockSto
   const failed = (problems) => ({ ok: false, plan: null, profile: null, problems })
   const blocks = blockMapOf(blockStore, library)
   const recipes = new Map(list(pageRecipes?.recipes).map((r) => [r?.pageType, r]))
-  const data = addItemFieldFacts(profile, planDataOf(profile))
+  // The same plan data the composer's gate judged the plan by (`plan-data-of-plan.mjs`), with the facts the plan
+  // carries from its brief: a part the composer made is never refused here for not being in the profile.
+  const data = planDataOfPlan(profile, next)
   const problems = []
   for (const page of next.pages) {
     const recipe = recipes.get(page.pageType)
@@ -196,10 +290,17 @@ function gatedPlan(next, { plan, profile, after, changed, asked, terms, blockSto
       }
       const report = (code, where) => {
         const id = block.data[Number(/\.data\[(\d+)\]$/.exec(where)?.[1])]
+        const limit =
+          code === 'too_few_items'
+            ? { min: description.items?.min }
+            : code === 'too_many_items'
+              ? { max: description.items?.max }
+              : null
         problems.push({
           code,
           at: where,
-          message: customerMessage(code, block, description, data, id, profile?.withheld)
+          message: customerMessage(code, block, description, data, id, profile?.withheld),
+          ...(limit && Object.values(limit).every(Number.isInteger) ? { params: limit } : {})
         })
       }
       blockItemProblems(block, description, at, data, report)
@@ -207,7 +308,7 @@ function gatedPlan(next, { plan, profile, after, changed, asked, terms, blockSto
     }
   }
   if (problems.length > 0) return failed(problems)
-  replanRows(next, blocks, data, addItemFieldFacts(after, planDataOf(after)), changed, problems)
+  replanRows(next, blocks, data, planDataOfPlan(after, next), changed, problems)
   if (problems.length > 0) return failed(problems)
   // The pictures summary follows the edited pages; a generated count the customer lowered is kept. An operation keeps
   // the plan's own count only when the customer had lowered it (`asked: 'kept'`: under what the plan's pages count).
@@ -234,7 +335,7 @@ function gatedPlan(next, { plan, profile, after, changed, asked, terms, blockSto
   next.facts = list(next.facts).map(withHoursDisplay)
   // Search terms are made again from the edited data: a renamed service, a changed address (`plan-intent-seo.mjs`).
   // A list the owner set marks the terms the owner added and took off first, so they are kept from now on.
-  const edited = planDataOf(after)
+  const edited = planDataOfPlan(after, next)
   if (terms?.size) {
     const made = madeTermsOf(next.pages, edited)
     const before = new Map(list(plan?.pages).map((p) => [p.id, p.seo]))
@@ -266,16 +367,10 @@ function gatedPlan(next, { plan, profile, after, changed, asked, terms, blockSto
  * @returns {{ok: true, plan: object, profile: object, removal?: object, restored?: string, problems: []} |
  *   {ok: false, plan: null, profile: null, problems: Array<{code: string, at: string, message: string}>}}
  */
-export function gateOperatedPlan({
-  plan,
-  edit,
-  profile,
-  blockStore,
-  pageRecipes,
-  library = [],
-  review,
-  removal
-}) {
+export const gateOperatedPlan = (input) => coded(operatedPlanOf(input))
+
+/** A plan edit that carries one operation, held to the gate (`gateOperatedPlan`), its problems not yet coded. */
+function operatedPlanOf({ plan, edit, profile, blockStore, pageRecipes, library = [], review, removal }) {
   const failed = (problems) => ({ ok: false, plan: null, profile: null, problems })
   const reference = planEditReferenceProblems(edit, plan)
   if (reference.length > 0) return failed(editRefusals(reference, plan))
@@ -302,14 +397,7 @@ export function gateOperatedPlan({
   }
   if (done.problems) return failed(done.problems)
   // The rows are planned again: the operation is applied without them, as an edit is checked.
-  const bare = {
-    ...done.plan,
-    pages: done.plan.pages.map((p) => ({
-      ...p,
-      blocks: p.blocks.map(({ lists: _lists, ...block }) => block)
-    }))
-  }
-  const gated = gatedPlan(revised(bare), {
+  const gated = gatedPlan(revised(bareOf(done.plan)), {
     plan,
     profile,
     after: structuredClone(profile),
@@ -320,6 +408,6 @@ export function gateOperatedPlan({
     pageRecipes,
     library
   })
-  if (!gated.ok) return gated
+  if (!gated.ok) return faultOrRefusal(gated, { plan, profile, blockStore, pageRecipes, library })
   return record ? { ...gated, restored: record.id } : { ...gated, removal: done.removal }
 }

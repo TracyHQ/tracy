@@ -141,5 +141,24 @@ export const planReviewEn = {
   'plan.refused.search_terms_empty': 'A page keeps at least one search term.',
   'plan.refused.search_term_too_long': 'A search term has at most 60 characters.',
   'plan.refused.search_term_twice': 'This search term is already on the page.',
-  'plan.refused.too_many_search_terms': 'A page has at most 10 search terms.'
+  'plan.refused.too_many_search_terms': 'A page has at most 10 search terms.',
+  'plan.refused.too_many_items': 'This section shows at most {max} of these, so this change does not fit.',
+  'plan.refused.wrong_item_kind': 'This section cannot show that.',
+  'plan.refused.library_rule': 'This section does not show that.',
+  'plan.refused.invented_item': 'This change names something that is not one of your business details.',
+  'plan.refused.fact_without_field': 'This section has no place for that detail.',
+  'plan.refused.main_block_missing': 'This change would take the main section off its page.',
+  'plan.refused.unknown_block': 'This section is not part of your template.',
+  'plan.refused.withheld_shown': 'This change would show something you keep off your site.',
+  'plan.refused.edit_invalid': 'This change cannot be saved: it would leave your plan incomplete.',
+  'plan.refused.site_name_too_long': 'This name is too long for your site.',
+  'plan.refused.site_name_invalid': 'This name cannot be used for your site.',
+  'plan.refused.value_over_limit': 'This value is too long for the section that shows it.',
+  'plan.refused.data_unaccounted': 'After this change a detail of your business would be shown nowhere.',
+  'plan.refused.picture_count':
+    'Your photos could not be counted again after this change, so it was not saved.',
+  'plan.refused.template_change':
+    'This plan was made for the design you chose, and it cannot be moved to another design yet.',
+  'plan.refused.plan_fault':
+    'This change was not saved: your plan has a problem of its own that Tracy has to fix first. You can ask for the change in the chat.'
 } as const

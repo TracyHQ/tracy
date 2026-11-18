@@ -535,5 +535,21 @@
   "plan.refused.search_terms_empty": "Une page conserve au moins un terme de recherche.",
   "plan.refused.search_term_too_long": "Un terme de recherche compte au plus 60 caractères.",
   "plan.refused.search_term_twice": "Ce terme de recherche figure déjà sur la page.",
-  "plan.refused.too_many_search_terms": "Une page compte au plus 10 termes de recherche."
+  "plan.refused.too_many_search_terms": "Une page compte au plus 10 termes de recherche.",
+  "plan.refused.too_many_items": "Cette section en affiche au plus {max}, donc cette modification ne rentre pas.",
+  "plan.refused.wrong_item_kind": "Cette section ne peut pas afficher cela.",
+  "plan.refused.library_rule": "Cette section n’affiche pas cela.",
+  "plan.refused.invented_item": "Cette modification cite quelque chose qui ne fait pas partie des informations de votre entreprise.",
+  "plan.refused.fact_without_field": "Cette section n’a pas de place pour cette information.",
+  "plan.refused.main_block_missing": "Cette modification retirerait la section principale de sa page.",
+  "plan.refused.unknown_block": "Cette section ne fait pas partie de votre modèle.",
+  "plan.refused.withheld_shown": "Cette modification afficherait quelque chose que vous gardez hors de votre site.",
+  "plan.refused.edit_invalid": "Cette modification ne peut pas être enregistrée : votre plan serait incomplet.",
+  "plan.refused.site_name_too_long": "Ce nom est trop long pour votre site.",
+  "plan.refused.site_name_invalid": "Ce nom ne peut pas être utilisé pour votre site.",
+  "plan.refused.value_over_limit": "Cette valeur est trop longue pour la section qui l’affiche.",
+  "plan.refused.data_unaccounted": "Après cette modification, une information sur votre entreprise ne serait affichée nulle part.",
+  "plan.refused.picture_count": "Vos photos n’ont pas pu être recomptées après cette modification, elle n’a donc pas été enregistrée.",
+  "plan.refused.plan_fault": "Cette modification n’a pas été enregistrée : votre plan a un problème propre que Tracy doit corriger d’abord. Vous pouvez demander la modification dans le chat.",
+  "plan.refused.template_change": "Ce plan a été fait pour le design que vous avez choisi, et il ne peut pas encore passer à un autre design."
 }

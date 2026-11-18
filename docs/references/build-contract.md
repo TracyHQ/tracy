@@ -406,7 +406,17 @@ refusal code: the first page (`first_page`), the page the privacy page is (`priv
 recipe (`main_block`), a block the build writes in place, which every page shares (`site_chrome`), the block a page
 ends on (`end_action`), a fact of the main button (`main_button`), an item that would leave a block under its
 `items.min` (`too_few_items`) or with no detail (`block_empty`). A restore whose place is gone (a section that carried
-it was taken off later) is refused with `restore_target_gone`.
+it was taken off later) is refused with `restore_target_gone`, and so is a restore of a section that carries a key
+message taken off after it (bring the key message back first).
+
+The edit gate and the operation gate judge a plan against the same plan data the composer built it from
+(`planDataOfPlan`, `plan-data-of-plan.mjs`): the needs profile's facts and items, the item field facts of open
+conflicts, and the channel facts the composer carried or added from the brief (a WhatsApp number, a second phone). So a
+plan the compose gate accepted is accepted unchanged by the edit gate and by every operation's gate. When a change is
+refused and the unchanged plan fails the same checks, the refusal is `plan_fault` (the plan's own problems in
+`details.problems`) instead of a problem the change did not make. Every code the edit door refuses with is listed in
+`EDIT_DOOR_CODES` and has owner facing words on the plan card (`plan.refused.<code>`); a problem of another code is
+answered as `edit_invalid` with its own code in `details.code`.
 
 A removal adds left out entries with code `owner_removed` (reason "You took this off the plan.") and `params.removal`,
 the removal's id: the part itself (kind `page`, `block` or `feature`) and every fact or item it leaves shown nowhere.
@@ -520,6 +530,10 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
   (`block`, `factIds`); on a block `message` and `carries` (key message ids); on the plan `keyMessages` (`{id, label}`),
   `primaryAction` (`factIds`) and `later` (`{what, reason, code, params?}`). Every earlier plan stays valid and the
   schema stays `tracy-build-plan/v1`. A reader that does not know them ignores them; the plan card shows none yet.
+- 18/11/2026 (#575), additive: a plan edit or operation refusal may carry code `plan_fault` (the unchanged plan fails
+  the same checks; its problems in `details.problems`) or `template_change` (tracy-web's door, an edit that moves the
+  plan to another template); a problem of a code outside `EDIT_DOOR_CODES` is answered as `edit_invalid` with
+  `details.code`. `too_many_items` carries `params.max` and `too_few_items` `params.min`.
 - 17/11/2026 (#575), additive: a build plan may carry `legalPages` (one Privacy Policy page, the template's own or
   one created with the id `legal:privacy`, a `says` line and `factIds`) and `notFound` (`says`, `leadsTo`), as the step
   chain's site plan does. The plan card shows neither; the draft write builds neither yet and lists both under its

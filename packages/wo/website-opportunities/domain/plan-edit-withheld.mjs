@@ -3,8 +3,7 @@
 // hold is refused in the customer's words: the message names the thing by its neutral label (`withheldWhatOf`),
 // never by its plan id (an id can carry a held person's name) or its value. Contract B alone would word the same
 // refusal with the id (`"person-<name>" is not a fact or item of the plan`), so this runs before it. Pure.
-import { planDataOf } from './plan-data.mjs'
-import { addItemFieldFacts } from './plan-conflicts.mjs'
+import { planDataOfPlan } from './plan-data-of-plan.mjs'
 import { WITHHELD_REASON, withheldWhatOf } from './plan-withheld.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -33,7 +32,7 @@ function refusal(id, data, withheld) {
  * @returns {Array<{code: string, at: string, message: string}>}
  */
 export function editedIdProblems({ plan, edit, profile }) {
-  const data = addItemFieldFacts(profile, planDataOf(profile))
+  const data = planDataOfPlan(profile, plan)
   const known = new Set([...list(plan?.facts), ...list(plan?.items)].map((e) => e?.id))
   const problems = []
   list(edit?.changes).forEach((change, i) => {

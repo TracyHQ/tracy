@@ -471,6 +471,52 @@ test('a change refused while the site is built says so in the card words, never 
     }
 })
 
+test('a change refused for a fault of the plan says so truthfully, and the next change is saved at once', async () => {
+  const { page } = await open(browser, VIEWPORTS[1], 'light', code)
+  await mount(page, 'plan', { plan: PLAN })
+  await page.evaluate(() => {
+    globalThis.refuseOnce = true
+  })
+  await page.getByRole('button', { name: 'Edit Tagline: Tennis for every age and level' }).click()
+  await page.keyboard.insertText(' now')
+  await page.keyboard.press('Enter')
+  const alert = page.getByRole('alert')
+  await alert.waitFor()
+  assert.match(await alert.innerText(), /has a problem of its own that Tracy has to fix first/)
+  // The card is not left busy: the same edit goes through right after, within a short wait.
+  await page
+    .getByRole('button', { name: 'Edit Tagline: Tennis for every age and level' })
+    .click({ timeout: 2000 })
+  await page.keyboard.insertText(' now')
+  await page.keyboard.press('Enter')
+  await page
+    .getByRole('button', { name: 'Edit Tagline: Tennis for every age and level now' })
+    .waitFor({ timeout: 2000 })
+  assert.equal(await page.getByRole('alert').count(), 0)
+  await page.close()
+})
+
+test('an idle, empty search term field wears the quiet border, not the error looking ring', async () => {
+  const plan = structuredClone(PLAN)
+  plan.pages[0].seo = { titleIntent: 'Tennis lessons', searchTerms: ['tennis lessons'] }
+  for (const theme of THEMES) {
+    const { page } = await open(browser, VIEWPORTS[1], theme, code)
+    await mount(page, 'plan', { plan })
+    const input = page.locator('[data-field$=".seo.searchTerms"] input').first()
+    await input.waitFor()
+    const colours = await input.evaluate((el) => {
+      const probe = document.createElement('div')
+      el.parentElement.appendChild(probe)
+      probe.style.color = 'var(--ring)'
+      const ring = getComputedStyle(probe).color
+      probe.remove()
+      return { border: getComputedStyle(el).borderTopColor, ring }
+    })
+    assert.notEqual(colours.border, colours.ring, `${theme}: idle border ${colours.border}`)
+    await page.close()
+  }
+})
+
 test('not on the site: every line in a fold of its group with a count, opened from the keyboard (#575 C4)', async () => {
   const { page } = await open(browser, VIEWPORTS[1], 'light', code)
   await mount(page, 'plan', { plan: manyLeftOut })

@@ -535,5 +535,21 @@
   "plan.refused.search_terms_empty": "Una pagina mantiene almeno un termine di ricerca.",
   "plan.refused.search_term_too_long": "Un termine di ricerca ha al massimo 60 caratteri.",
   "plan.refused.search_term_twice": "Questo termine di ricerca è già presente nella pagina.",
-  "plan.refused.too_many_search_terms": "Una pagina ha al massimo 10 termini di ricerca."
+  "plan.refused.too_many_search_terms": "Una pagina ha al massimo 10 termini di ricerca.",
+  "plan.refused.too_many_items": "Questa sezione mostra al massimo {max} elementi di questo tipo, quindi questa modifica non ci sta.",
+  "plan.refused.wrong_item_kind": "Questa sezione non può mostrarlo.",
+  "plan.refused.library_rule": "Questa sezione non lo mostra.",
+  "plan.refused.invented_item": "Questa modifica nomina qualcosa che non fa parte dei dati della sua attività.",
+  "plan.refused.fact_without_field": "Questa sezione non ha spazio per questo dato.",
+  "plan.refused.main_block_missing": "Questa modifica toglierebbe la sezione principale dalla sua pagina.",
+  "plan.refused.unknown_block": "Questa sezione non fa parte del suo modello.",
+  "plan.refused.withheld_shown": "Questa modifica mostrerebbe qualcosa che lei tiene fuori dal suo sito.",
+  "plan.refused.edit_invalid": "Questa modifica non può essere salvata: il suo piano resterebbe incompleto.",
+  "plan.refused.site_name_too_long": "Questo nome è troppo lungo per il suo sito.",
+  "plan.refused.site_name_invalid": "Questo nome non può essere usato per il suo sito.",
+  "plan.refused.value_over_limit": "Questo valore è troppo lungo per la sezione che lo mostra.",
+  "plan.refused.data_unaccounted": "Dopo questa modifica un dato della sua attività non sarebbe mostrato da nessuna parte.",
+  "plan.refused.picture_count": "Le sue foto non hanno potuto essere ricontate dopo questa modifica, quindi non è stata salvata.",
+  "plan.refused.plan_fault": "Questa modifica non è stata salvata: il suo piano ha un problema proprio che Tracy deve risolvere prima. Può chiedere la modifica nella chat.",
+  "plan.refused.template_change": "Questo piano è stato fatto per il design che ha scelto e non può ancora essere spostato su un altro design."
 }

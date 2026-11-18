@@ -535,5 +535,21 @@
   "plan.refused.search_terms_empty": "Eine Seite behält mindestens einen Suchbegriff.",
   "plan.refused.search_term_too_long": "Ein Suchbegriff hat höchstens 60 Zeichen.",
   "plan.refused.search_term_twice": "Dieser Suchbegriff steht bereits auf der Seite.",
-  "plan.refused.too_many_search_terms": "Eine Seite hat höchstens 10 Suchbegriffe."
+  "plan.refused.too_many_search_terms": "Eine Seite hat höchstens 10 Suchbegriffe.",
+  "plan.refused.too_many_items": "Dieser Bereich zeigt höchstens {max} davon, daher passt diese Änderung nicht.",
+  "plan.refused.wrong_item_kind": "Dieser Bereich kann das nicht zeigen.",
+  "plan.refused.library_rule": "Dieser Bereich zeigt das nicht.",
+  "plan.refused.invented_item": "Diese Änderung nennt etwas, das nicht zu Ihren Geschäftsangaben gehört.",
+  "plan.refused.fact_without_field": "Dieser Bereich hat keinen Platz für diese Angabe.",
+  "plan.refused.main_block_missing": "Diese Änderung würde den Hauptbereich von seiner Seite entfernen.",
+  "plan.refused.unknown_block": "Dieser Bereich gehört nicht zu Ihrer Vorlage.",
+  "plan.refused.withheld_shown": "Diese Änderung würde etwas zeigen, das Sie von Ihrer Website fernhalten.",
+  "plan.refused.edit_invalid": "Diese Änderung kann nicht gespeichert werden: Ihr Plan wäre danach unvollständig.",
+  "plan.refused.site_name_too_long": "Dieser Name ist zu lang für Ihre Website.",
+  "plan.refused.site_name_invalid": "Dieser Name kann für Ihre Website nicht verwendet werden.",
+  "plan.refused.value_over_limit": "Dieser Wert ist zu lang für den Bereich, der ihn zeigt.",
+  "plan.refused.data_unaccounted": "Nach dieser Änderung würde eine Angabe zu Ihrem Geschäft nirgends gezeigt.",
+  "plan.refused.picture_count": "Ihre Fotos konnten nach dieser Änderung nicht neu gezählt werden, daher wurde sie nicht gespeichert.",
+  "plan.refused.plan_fault": "Diese Änderung wurde nicht gespeichert: Ihr Plan hat ein eigenes Problem, das Tracy zuerst beheben muss. Sie können die Änderung im Chat anfragen.",
+  "plan.refused.template_change": "Dieser Plan wurde für das von Ihnen gewählte Design erstellt und kann noch nicht auf ein anderes Design übertragen werden."
 }

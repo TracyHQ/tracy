@@ -364,7 +364,10 @@ function gatedEdit(row, edit, profile, loadKit) {
       (ch.value?.slug !== current?.slug || ch.value?.version !== current?.version)
   )
   if (moved)
-    return { error: 'INVALID_EDIT', problems: [{ at: 'look.template', message: TEMPLATE_CHANGE_SAY }] }
+    return {
+      error: 'INVALID_EDIT',
+      problems: [{ code: 'template_change', at: 'look.template', message: TEMPLATE_CHANGE_SAY }]
+    }
   const kit = loadKit(row.plan.look?.template?.slug)
   if (!kit) return { error: 'NO_KIT' }
   const gated = gateEditedPlan({

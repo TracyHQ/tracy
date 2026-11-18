@@ -47,7 +47,7 @@ import { SiteUpdate } from './SiteUpdate'
 import type { ReviewPresence } from './review-presence'
 import { hasNote, type RevisionNotes } from './revision-notes'
 import type { BuildRunFeed, DraftSource } from './sources'
-import type { Translate } from './strings'
+import { languageOf, type Translate } from './strings'
 import { TemplateCard } from './TemplateCard'
 import { StopTail } from './stop-tail'
 
@@ -177,14 +177,18 @@ export function LivePlan({
     deps.drafts.put(next)
     return next
   }
+  const t = deps.t(sessionId, language)
+  // The card names the site language and the days of the week in the language it speaks, not in English (#575 stand).
+  const locale = languageOf(t) ?? (typeof language === 'string' ? language : undefined)
   return (
     <PlanCard
       plan={draft.plan}
+      locale={locale}
       lastEdit={draft.lastEdit ?? null}
       canUndo={draft.canUndo === true}
       lookSources={draft.lookSources ?? null}
       review={draft.review ?? null}
-      t={deps.t(sessionId, language)}
+      t={t}
       onEdit={(edit) => follow(savePlanEdit(edit, deps.fetch))}
       onUndo={() => follow(undoPlanEdit(deps.fetch))}
       newEditId={newEditId}

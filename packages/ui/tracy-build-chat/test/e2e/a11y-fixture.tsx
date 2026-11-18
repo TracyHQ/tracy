@@ -63,6 +63,12 @@ const door = (async (url: string, init: RequestInit) => {
     const next = 'The door sentence while the site is built.'
     return new Response(JSON.stringify({ code: 'BUILD_RUNNING', next }), { status: 409 })
   }
+  if (url.endsWith('/plan-edits') && (globalThis as Any).refuseOnce) {
+    // The door refusing one change for a fault of the plan itself (#575 stand), then saving the next one.
+    ;(globalThis as Any).refuseOnce = false
+    const problems = [{ code: 'plan_fault', at: 'plan', message: 'The door sentence for a faulty plan.' }]
+    return new Response(JSON.stringify({ code: 'INVALID_EDIT', problems }), { status: 422 })
+  }
   if (url.endsWith('/plan-edits')) {
     const before = draft.plan
     apply(body.edit)

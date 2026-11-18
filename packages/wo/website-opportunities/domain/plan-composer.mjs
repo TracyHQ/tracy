@@ -20,9 +20,9 @@ import { PlanComposerError } from './plan-composer-error.mjs'
 import { briefContextOf } from './plan-composer-brief.mjs'
 import { briefLeftOutWithHoursOf } from './held-hours-left-out.mjs'
 import { heldBackLeftOutOf } from './plan-held-back.mjs'
-import { addItemFieldFacts, conflictAssumptionsOf } from './plan-conflicts.mjs'
+import { conflictAssumptionsOf } from './plan-conflicts.mjs'
 import { intentContextOf } from './plan-composer-intent.mjs'
-import { planDataOf } from './plan-data.mjs'
+import { planDataOfPlan } from './plan-data-of-plan.mjs'
 import { gatePlan } from './plan-gate.mjs'
 import { lookOf } from './plan-look-pictures.mjs'
 import { preflightContext, preflightDeclarations } from './plan-preflight.mjs'
@@ -92,7 +92,8 @@ export function composerContextOf({
   const blocks = blockMapOf(blockStore, library)
   const settled = settleAnswers(given, answers, kindLimitsOf(blocks.values()), answerReadings)
   const profile = settled.profile
-  const data = addItemFieldFacts(profile, planDataOf(profile))
+  // The plan data every gate judges a plan by (`plan-data-of-plan.mjs`); a revision carries its plan's brief facts.
+  const data = planDataOfPlan(profile, fromPlan)
   const recipes = new Map(list(pageRecipes?.recipes).map((r) => [r?.pageType, r]))
   const {
     look,

@@ -535,5 +535,21 @@
   "plan.refused.search_terms_empty": "每个页面至少保留一个搜索词。",
   "plan.refused.search_term_too_long": "每个搜索词最多 60 个字符。",
   "plan.refused.search_term_twice": "此搜索词已在该页面上。",
-  "plan.refused.too_many_search_terms": "每个页面最多 10 个搜索词。"
+  "plan.refused.too_many_search_terms": "每个页面最多 10 个搜索词。",
+  "plan.refused.too_many_items": "此部分最多显示 {max} 项，因此此更改放不下。",
+  "plan.refused.wrong_item_kind": "此部分无法显示该内容。",
+  "plan.refused.library_rule": "此部分不显示该内容。",
+  "plan.refused.invented_item": "此更改提到的内容不属于你的商家信息。",
+  "plan.refused.fact_without_field": "此部分没有位置放这项信息。",
+  "plan.refused.main_block_missing": "此更改会把主要部分从其页面上移除。",
+  "plan.refused.unknown_block": "此部分不属于你的模板。",
+  "plan.refused.withheld_shown": "此更改会显示你不想放在网站上的内容。",
+  "plan.refused.edit_invalid": "无法保存此更改：你的方案会因此不完整。",
+  "plan.refused.site_name_too_long": "这个名称对你的网站来说太长。",
+  "plan.refused.site_name_invalid": "这个名称不能用于你的网站。",
+  "plan.refused.value_over_limit": "这个值对显示它的部分来说太长。",
+  "plan.refused.data_unaccounted": "此更改后，你的一项商家信息将不会在任何地方显示。",
+  "plan.refused.picture_count": "此更改后无法重新统计你的照片，因此没有保存。",
+  "plan.refused.plan_fault": "此更改未保存：你的方案本身有一个问题，需要 Tracy 先修复。你可以在聊天中提出这项更改。",
+  "plan.refused.template_change": "此方案是为你选择的设计制定的，目前还不能换到其他设计。"
 }

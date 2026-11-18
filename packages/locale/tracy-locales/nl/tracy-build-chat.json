@@ -535,5 +535,21 @@
   "plan.refused.search_terms_empty": "Een pagina behoudt minstens één zoekterm.",
   "plan.refused.search_term_too_long": "Een zoekterm heeft maximaal 60 tekens.",
   "plan.refused.search_term_twice": "Deze zoekterm staat al op de pagina.",
-  "plan.refused.too_many_search_terms": "Een pagina heeft maximaal 10 zoektermen."
+  "plan.refused.too_many_search_terms": "Een pagina heeft maximaal 10 zoektermen.",
+  "plan.refused.too_many_items": "Dit onderdeel toont er hoogstens {max}, dus deze wijziging past niet.",
+  "plan.refused.wrong_item_kind": "Dit onderdeel kan dat niet tonen.",
+  "plan.refused.library_rule": "Dit onderdeel toont dat niet.",
+  "plan.refused.invented_item": "Deze wijziging noemt iets dat niet bij uw bedrijfsgegevens hoort.",
+  "plan.refused.fact_without_field": "Dit onderdeel heeft geen plek voor dat gegeven.",
+  "plan.refused.main_block_missing": "Deze wijziging zou het hoofdonderdeel van zijn pagina halen.",
+  "plan.refused.unknown_block": "Dit onderdeel hoort niet bij uw sjabloon.",
+  "plan.refused.withheld_shown": "Deze wijziging zou iets tonen dat u van uw site houdt.",
+  "plan.refused.edit_invalid": "Deze wijziging kan niet worden opgeslagen: uw plan zou onvolledig worden.",
+  "plan.refused.site_name_too_long": "Deze naam is te lang voor uw site.",
+  "plan.refused.site_name_invalid": "Deze naam kan niet voor uw site worden gebruikt.",
+  "plan.refused.value_over_limit": "Deze waarde is te lang voor het onderdeel dat hem toont.",
+  "plan.refused.data_unaccounted": "Na deze wijziging zou een gegeven van uw bedrijf nergens worden getoond.",
+  "plan.refused.picture_count": "Uw foto’s konden na deze wijziging niet opnieuw worden geteld, dus is ze niet opgeslagen.",
+  "plan.refused.plan_fault": "Deze wijziging is niet opgeslagen: uw plan heeft zelf een probleem dat Tracy eerst moet oplossen. U kunt de wijziging in de chat vragen.",
+  "plan.refused.template_change": "Dit plan is gemaakt voor het ontwerp dat u koos, en kan nog niet naar een ander ontwerp worden verplaatst."
 }

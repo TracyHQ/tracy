@@ -43,7 +43,7 @@ before(async () => {
       contents: `
         import { renderToStaticMarkup } from 'react-dom/server'
         import { makeTails } from './tails'
-        export { english } from './strings'
+        export { english, inLanguage } from './strings'
         export const handoffOf = (deps, props) => {
           const element = makeTails(deps).handoff(props)
           return element === null ? null : renderToStaticMarkup(element)
@@ -142,4 +142,15 @@ test("the site's own chat shows the plan it was built from", () => {
 test('a hand off block that names no site shows no plan card', () => {
   const html = lib.handoffOf(depsFor('larkfen.example'), carried(null))
   assert.equal(html.includes('site plan'), false)
+})
+
+test('the plan card names the site language in the language its translator speaks, not in English', () => {
+  const deps = depsFor('larkfen.example')
+  const plan = { ...VIEWER_PLAN, language: 'fr' }
+  deps.drafts.read = () => ({ plan })
+  // English words, but a translator that says it speaks German: the language name follows the translator.
+  deps.t = () => lib.inLanguage((key, vars) => lib.english(key, vars), 'de')
+  const html = lib.handoffOf(deps, carried('larkfen.example'))
+  assert.match(html, /Französisch/)
+  assert.equal(html.includes('French'), false)
 })

@@ -243,3 +243,31 @@ test('every refusal code of the operation gate has the gate sentence word for wo
     assert.equal(lib.en[`plan.later.reason.${code}`], entry.reason, code)
   }
 })
+
+test('every code the plan edit door refuses with has words on the card, in English and every shipped language', async () => {
+  const { EDIT_DOOR_CODES, PLAN_FAULT, PLAN_FAULT_MESSAGE } = await import(
+    '../../../wo/website-opportunities/domain/plan-edit-gate.mjs'
+  )
+  const tables = ['de', 'es', 'fr', 'it', 'nl', 'zh'].map((lang) => [
+    lang,
+    JSON.parse(
+      readFileSync(
+        new URL(`../../../locale/tracy-locales/${lang}/tracy-build-chat.json`, import.meta.url),
+        'utf8'
+      )
+    )
+  ])
+  tables.push(['vi', viTable])
+  for (const code of EDIT_DOOR_CODES) {
+    const key = `plan.refused.${code}`
+    assert.ok(Object.hasOwn(lib.en, key), `English words for ${code}`)
+    for (const [lang, table] of tables) assert.ok(Object.hasOwn(table, key), `${lang} words for ${code}`)
+    const refused = Object.assign(new Error('INVALID_EDIT'), {
+      code: 'INVALID_EDIT',
+      problems: [{ code, at: 'x', message: 'x', params: { min: 2, max: 4 } }]
+    })
+    assert.equal(lib.refusalOf(refused).key, key, code)
+  }
+  // A plan that already fails a rule is said as it is, never as a plain "try again".
+  assert.equal(lib.en[`plan.refused.${PLAN_FAULT}`], PLAN_FAULT_MESSAGE)
+})

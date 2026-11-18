@@ -381,6 +381,12 @@ export function restoreToPlan(plan, record, base = null) {
   if (!record?.op) return refused('removal_unknown', 'operation.removal')
   const next = structuredClone(plan)
   if (!putBack(next, record, base)) return refused('restore_target_gone', 'operation.removal')
+  // A section brought back that carries a key message the owner took off after it waits for that message: bring the
+  // message back first (the message's restore then finds the section, `putBack`).
+  const messages = new Set(list(next.keyMessages).map(idOf))
+  const blocks = list(next.pages).flatMap((p) => list(p?.blocks))
+  if (blocks.some((b) => list(b?.carries).some((id) => !messages.has(id))))
+    return refused('restore_target_gone', 'operation.removal')
   const original = list(base?.assumptions).map(idOf)
   for (const { assumption, place } of list(record.assumptions)) {
     next.assumptions ??= []
