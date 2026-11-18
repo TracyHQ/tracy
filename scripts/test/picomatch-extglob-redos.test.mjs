@@ -14,6 +14,9 @@ import { createRequire } from 'node:module'
 import path from 'node:path'
 import { test } from 'node:test'
 
+/** A literal string as a RegExp source. */
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
 const R = process.cwd()
 const THEMES = ['base', 'business', 'coffee', 'diner', 'restaurant', 'saas'].map(
   (t) => `packages/cms/tracy-emdash-theme-${t}`
@@ -51,10 +54,7 @@ test('the root install has a patched copy of every picomatch version it holds', 
   const workspace = readFileSync(path.join(R, 'pnpm-workspace.yaml'), 'utf8')
   for (const p of PATCHES) {
     const name = p.replace(/\.patch$/, '')
-    assert.match(
-      workspace,
-      new RegExp(`^  ${name.replace(/\./g, '\\.')}: patches/${p.replace(/\./g, '\\.')}$`, 'm')
-    )
+    assert.match(workspace, new RegExp(`^  ${escapeRe(name)}: patches/${escapeRe(p)}$`, 'm'))
   }
 })
 
