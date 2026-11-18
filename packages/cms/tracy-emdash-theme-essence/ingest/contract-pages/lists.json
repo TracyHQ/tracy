@@ -7,7 +7,7 @@
   "rules": [
     [
       "cat-title",
-      "h1.es-cat-title",
+      ".es-cat:not([data-by=\"author\"]) .es-cat-title",
       "category/category-style-1/index.html"
     ],
     [
@@ -34,6 +34,30 @@
       "newsletter-text",
       ".es-newsletter-text, .es-newsletter-status",
       "detail/layout-1/index.html"
+    ],
+    [
+      "grid-card-title",
+      ".es-cat:not([data-by=\"author\"]) .es-grid-card:not(.is-wide) .es-card-title",
+      "category/category-style-1/index.html",
+      true
+    ],
+    [
+      "wide-card-title",
+      ".es-grid-card.is-wide .es-card-title",
+      "category/category-style-1/index.html",
+      true
+    ],
+    [
+      "author-title",
+      ".es-cat[data-by=\"author\"] .es-cat-title",
+      "category/category-style-1/index.html",
+      true
+    ],
+    [
+      "author-card-title",
+      ".es-cat[data-by=\"author\"] .es-grid-card .es-card-title",
+      "category/category-style-1/index.html",
+      true
     ]
   ],
   "parity": {
@@ -45,7 +69,7 @@
       "site": ".es-card-title",
       "source": ".page-header h2"
     },
-    "authorName": {
+    "authorHeading": {
       "site": ".es-cat-title",
       "source": ".author-name"
     }
@@ -69,7 +93,7 @@
         "cat-title",
         "cat-count",
         "cat-desc",
-        "card-title",
+        "grid-card-title",
         "page-count"
       ],
       "parity": [
@@ -180,7 +204,7 @@
         "cat-title",
         "cat-count",
         "cat-desc",
-        "card-title"
+        "grid-card-title"
       ],
       "parity": [
         "nav",
@@ -224,7 +248,7 @@
       ],
       "rules": [
         "page-h1",
-        "card-title",
+        "wide-card-title",
         "card-intro",
         "side-title",
         "newsletter-title",
@@ -273,7 +297,7 @@
       "rules": [
         "cat-title",
         "cat-count",
-        "card-title",
+        "grid-card-title",
         "page-count"
       ],
       "parity": [
@@ -315,13 +339,13 @@
         "social"
       ],
       "rules": [
-        "cat-title",
+        "author-title",
         "cat-count",
-        "card-title"
+        "author-card-title"
       ],
       "parity": [
         "nav",
-        "authorName",
+        "authorHeading",
         "catCard",
         "ground"
       ],

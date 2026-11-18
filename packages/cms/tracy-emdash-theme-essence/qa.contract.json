@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 17,
+  "revision": 20,
   "pending": [],
   "locales": [
     "en"
@@ -2119,7 +2119,7 @@
       },
       {
         "id": "card-title",
-        "selector": ".es-card-title",
+        "selector": ".es-stack .es-card-title",
         "source": "index.html",
         "styles": {
           "1440-light": {
@@ -3393,7 +3393,7 @@
       },
       {
         "id": "cat-title",
-        "selector": "h1.es-cat-title",
+        "selector": ".es-cat:not([data-by=\"author\"]) .es-cat-title",
         "source": "category/category-style-1/index.html",
         "styles": {
           "1440-light": {
@@ -3792,6 +3792,278 @@
             "background-color": "rgba(0, 0, 0, 0)"
           }
         }
+      },
+      {
+        "id": "grid-card-title",
+        "selector": ".es-cat:not([data-by=\"author\"]) .es-grid-card:not(.is-wide) .es-card-title",
+        "source": "category/category-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "22px",
+            "font-weight": "400",
+            "line-height": "28.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "22px",
+            "font-weight": "400",
+            "line-height": "28.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
+        "id": "wide-card-title",
+        "selector": ".es-grid-card.is-wide .es-card-title",
+        "source": "category/category-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
+        "id": "author-title",
+        "selector": ".es-cat[data-by=\"author\"] .es-cat-title",
+        "source": "category/category-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
+        "id": "author-card-title",
+        "selector": ".es-cat[data-by=\"author\"] .es-grid-card .es-card-title",
+        "source": "category/category-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
       },
       {
         "id": "mini-title",
@@ -4691,7 +4963,7 @@
         },
         "ground": "body",
         "authorName": {
-          "site": ".es-cat-title",
+          "site": ".es-author-name",
           "source": ".author-name"
         },
         "authorJob": {
@@ -4713,6 +4985,10 @@
         "catCard": {
           "site": ".es-card-title",
           "source": ".page-header h2"
+        },
+        "authorHeading": {
+          "site": ".es-cat-title",
+          "source": ".author-name"
         },
         "postTitle": {
           "site": ".es-post-title",
@@ -5251,7 +5527,7 @@
         "cat-title",
         "cat-count",
         "cat-desc",
-        "card-title",
+        "grid-card-title",
         "page-count"
       ],
       "parity": [
@@ -5412,7 +5688,7 @@
         "cat-title",
         "cat-count",
         "cat-desc",
-        "card-title"
+        "grid-card-title"
       ],
       "parity": [
         "nav",
@@ -5480,7 +5756,7 @@
         "footer-button",
         "copyright",
         "page-h1",
-        "card-title",
+        "wide-card-title",
         "card-intro",
         "side-title",
         "newsletter-title",
@@ -5553,7 +5829,7 @@
         "copyright",
         "cat-title",
         "cat-count",
-        "card-title",
+        "grid-card-title",
         "page-count"
       ],
       "parity": [
@@ -5619,13 +5895,13 @@
         "footer-text",
         "footer-button",
         "copyright",
-        "cat-title",
+        "author-title",
         "cat-count",
-        "card-title"
+        "author-card-title"
       ],
       "parity": [
         "nav",
-        "authorName",
+        "authorHeading",
         "catCard",
         "ground"
       ],

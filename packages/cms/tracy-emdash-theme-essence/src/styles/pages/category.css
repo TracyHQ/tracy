@@ -59,6 +59,7 @@
 	.es-cat { padding-block: 72px; }
 	.es-cat-head { max-width: 640px; margin: 0 auto 48px; text-align: center; }
 	.es-cat-title { margin: 16px 0 8px; }
+	.es-cat[data-by="author"] .es-cat-title { font-size: 32px; }
 	.es-cat-title span { display: inline-flex; align-items: center; gap: 12px; }
 	.es-cat-title span::before { content: ""; width: 16px; height: 16px; border-radius: 50%; background: var(--color-accent); flex: none; }
 	.es-cat-count { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; }
@@ -89,5 +90,12 @@
 		.es-stack-top { flex-direction: column; gap: 18px; }
 		.es-stack-top .es-card-pic, .es-stack-top .es-card-pic img { width: 100%; }
 		.es-stack-top .es-card-pic img { height: auto; aspect-ratio: 3 / 2; }
+	}
+}
+
+@layer components {
+	@media (max-width: 767px) {
+		.es-cat[data-by="author"] .es-grid-card .es-card-title { font-size: 24px; line-height: 31.2px; }
+		.es-cat[data-by="author"] .es-cat-title { font-size: 24px; line-height: 31.2px; }
 	}
 }

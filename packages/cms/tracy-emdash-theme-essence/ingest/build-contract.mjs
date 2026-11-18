@@ -29,7 +29,7 @@ const RULES = [
   ['nav-font', '.es-nav li > a', HOME_SRC, true, ['font-size']],
   ['strip-title', '.es-strip-item h3', HOME_SRC],
   ['lead-title', '.es-lead-item h3', HOME_SRC],
-  ['card-title', '.es-card-title', HOME_SRC],
+  ['card-title', '.es-stack .es-card-title', HOME_SRC],
   ['card-intro', '.es-card-intro', HOME_SRC],
   ['pill', '.es-card .es-pill', HOME_SRC],
   ['page-h1', 'main h1', HOME_SRC, true],

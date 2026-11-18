@@ -65,7 +65,7 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 	<NotFound chrome={chrome} locale={locale} />
 ) : (
 	<Base chrome={chrome} title={title} description={description || null} currentPath={basePath} robots="index, follow">
-		<main id="main" class:list={['es-cat', `is-${style}`]}>
+		<main id="main" class:list={['es-cat', `is-${style}`]} data-by={by}>
 			<PageOwner stamp={$c} />
 			<div class="es-wrap">
 				{style === 'sidebar' ? <h1 class="sr-only">{title}</h1> : (
